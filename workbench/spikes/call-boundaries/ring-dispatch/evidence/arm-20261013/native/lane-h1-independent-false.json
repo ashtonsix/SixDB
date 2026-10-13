@@ -1,0 +1,114 @@
+{
+  "job": "20261013T114517Z-1906f45e",
+  "role": "lane-h1-independent-false",
+  "source_member": "assembly-neon-lane.txt.gz",
+  "source_member_sha256": "606cdc1385a905ee9aa33bc6c0ff681a62248b87cdf7d4c0defa3f7c0b7235c2",
+  "ranges": [
+    [
+      "62bb8",
+      "62bc4"
+    ],
+    [
+      "62c8c",
+      "62c94"
+    ],
+    [
+      "62cbc",
+      "62ce0"
+    ]
+  ],
+  "instructions": [
+    [
+      {
+        "source_line": 95627,
+        "address": "62bb8",
+        "instruction": "ldurh\tw10, [x9, #0x1]"
+      },
+      {
+        "source_line": 95628,
+        "address": "62bbc",
+        "instruction": "ldrb\tw9, [x9, #0x3]"
+      },
+      {
+        "source_line": 95629,
+        "address": "62bc0",
+        "instruction": "bfi\tx10, x9, #16, #4"
+      },
+      {
+        "source_line": 95630,
+        "address": "62bc4",
+        "instruction": "cbz\tx10, 0x62c8c <void (anonymous namespace)::visit<(loom::Hint)1, hashtable_spike::tiered::table<hashtable_spike::tiered::bucket_plan{40u, 20u, 8u, 64u, 16u, 180u, 0u, 5u, 8u, 20u, 0u, 0u, 4u, hashtable_spike::tiered::bit_field{160u, 80u, 1280u, 16u}, hashtable_spike::tiered::bit_field{176u, 80u, 1280u, 16u}}, hashtable_spike::tiered::bucket_plan{40u, 17u, 8u, 64u, 16u, 184u, 0u, 5u, 8u, 23u, 32u, 32u, 8u, hashtable_spike::tiered::bit_field{192u, 80u, 1280u, 16u}, hashtable_spike::tiered::bit_field{208u, 80u, 1280u, 16u}}, (hashtable_spike::tiered::sharing)0, true, false, false>>(loom::detail::MemoryRing<std::integer_sequence<unsigned long>, std::integer_sequence<unsigned long, 0ul>, std::tuple<>, (anonymous namespace)::job<hashtable_spike::tiered::table<hashtable_spike::tiered::bucket_plan{40u, 20u, 8u, 64u, 16u, 180u, 0u, 5u, 8u, 20u, 0u, 0u, 4u, hashtable_spike::tiered::bit_field{160u, 80u, 1280u, 16u}, hashtable_spike::tiered::bit_field{176u, 80u, 1280u, 16u}}, hashtable_spike::tiered::bucket_plan{40u, 17u, 8u, 64u, 16u, 184u, 0u, 5u, 8u, 23u, 32u, 32u, 8u, hashtable_spike::tiered::bit_field{192u, 80u, 1280u, 16u}, hashtable_spike::tiered::bit_field{208u, 80u, 1280u, 16u}}, (hashtable_spike::tiered::sharing)0, true, false, false>>*>::WithShared<(anonymous namespace)::context<hashtable_spike::tiered::table<hashtable_spike::tiered::bucket_plan{40u, 20u, 8u, 64u, 16u, 180u, 0u, 5u, 8u, 20u, 0u, 0u, 4u, hashtable_spike::tiered::bit_field{160u, 80u, 1280u, 16u}, hashtable_spike::tiered::bit_field{176u, 80u, 1280u, 16u}}, hashtable_spike::tiered::bucket_plan{40u, 17u, 8u, 64u, 16u, 184u, 0u, 5u, 8u, 23u, 32u, 32u, 8u, hashtable_spike::tiered::bit_field{192u, 80u, 1280u, 16u}, hashtable_spike::tiered::bit_field{208u, 80u, 1280u, 16u}}, (hashtable_spike::tiered::sharing)0, true, false, false>> const*>::Cursor, loom::detail::MemoryRing<std::integer_sequence<unsigned long>, std::integer_sequence<unsigned long, 0ul>, std::tuple<>, (anonymous namespace)::job<hashtable_spike::tiered::table<hashtable_spike::tiered::bucket_plan{40u, 20u, 8u, 64u, 16u, 180u, 0u, 5u, 8u, 20u, 0u, 0u, 4u, hashtable_spike::tiered::bit_field{160u, 80u, 1280u, 16u}, hashtable_spike::tiered::bit_field{176u, 80u, 1280u, 16u}}, hashtable_spike::tiered::bucket_plan{40u, 17u, 8u, 64u, 16u, 184u, 0u, 5u, 8u, 23u, 32u, 32u, 8u, hashtable_spike::tiered::bit_field{192u, 80u, 1280u, 16u}, hashtable_spike::tiered::bit_field{208u, 80u, 1280u, 16u}}, (hashtable_spike::tiered::sharing)0, true, false, false>>*>::WithShared<(anonymous namespace)::context<hashtable_spike::tiered::table<hashtable_spike::tiered::bucket_plan{40u, 20u, 8u, 64u, 16u, 180u, 0u, 5u, 8u, 20u, 0u, 0u, 4u, hashtable_spike::tiered::bit_field{160u, 80u, 1280u, 16u}, hashtable_spike::tiered::bit_field{176u, 80u, 1280u, 16u}}, hashtable_spike::tiered::bucket_plan{40u, 17u, 8u, 64u, 16u, 184u, 0u, 5u, 8u, 23u, 32u, 32u, 8u, hashtable_spike::tiered::bit_field{192u, 80u, 1280u, 16u}, hashtable_spike::tiered::bit_field{208u, 80u, 1280u, 16u}}, (hashtable_spike::tiered::sharing)0, true, false, false>> const*>::Slot*, (anonymous namespace)::context<hashtable_spike::tiered::table<hashtable_spike::tiered::bucket_plan{40u, 20u, 8u, 64u, 16u, 180u, 0u, 5u, 8u, 20u, 0u, 0u, 4u, hashtable_spike::tiered::bit_field{160u, 80u, 1280u, 16u}, hashtable_spike::tiered::bit_field{176u, 80u, 1280u, 16u}}, hashtable_spike::tiered::bucket_plan{40u, 17u, 8u, 64u, 16u, 184u, 0u, 5u, 8u, 23u, 32u, 32u, 8u, hashtable_spike::tiered::bit_field{192u, 80u, 1280u, 16u}, hashtable_spike::tiered::bit_field{208u, 80u, 1280u, 16u}}, (hashtable_spike::tiered::sharing)0, true, false, false>> const*, (anonymous namespace)::job<hashtable_spike::tiered::table<hashtable_spike::tiered::bucket_plan{40u, 20u, 8u, 64u, 16u, 180u, 0u, 5u, 8u, 20u, 0u, 0u, 4u, hashtable_spike::tiered::bit_field{160u, 80u, 1280u, 16u}, hashtable_spike::tiered::bit_field{176u, 80u, 1280u, 16u}}, hashtable_spike::tiered::bucket_plan{40u, 17u, 8u, 64u, 16u, 184u, 0u, 5u, 8u, 23u, 32u, 32u, 8u, hashtable_spike::tiered::bit_field{192u, 80u, 1280u, 16u}, hashtable_spike::tiered::bit_field{208u, 80u, 1280u, 16u}}, (hashtable_spike::tiered::sharing)0, true, false, false>>*)+0x40c>"
+      }
+    ],
+    [
+      {
+        "source_line": 95680,
+        "address": "62c8c",
+        "instruction": "mov\tx8, xzr"
+      },
+      {
+        "source_line": 95681,
+        "address": "62c90",
+        "instruction": "mov\tw9, wzr"
+      },
+      {
+        "source_line": 95682,
+        "address": "62c94",
+        "instruction": "b\t0x62cbc <void (anonymous namespace)::visit<(loom::Hint)1, hashtable_spike::tiered::table<hashtable_spike::tiered::bucket_plan{40u, 20u, 8u, 64u, 16u, 180u, 0u, 5u, 8u, 20u, 0u, 0u, 4u, hashtable_spike::tiered::bit_field{160u, 80u, 1280u, 16u}, hashtable_spike::tiered::bit_field{176u, 80u, 1280u, 16u}}, hashtable_spike::tiered::bucket_plan{40u, 17u, 8u, 64u, 16u, 184u, 0u, 5u, 8u, 23u, 32u, 32u, 8u, hashtable_spike::tiered::bit_field{192u, 80u, 1280u, 16u}, hashtable_spike::tiered::bit_field{208u, 80u, 1280u, 16u}}, (hashtable_spike::tiered::sharing)0, true, false, false>>(loom::detail::MemoryRing<std::integer_sequence<unsigned long>, std::integer_sequence<unsigned long, 0ul>, std::tuple<>, (anonymous namespace)::job<hashtable_spike::tiered::table<hashtable_spike::tiered::bucket_plan{40u, 20u, 8u, 64u, 16u, 180u, 0u, 5u, 8u, 20u, 0u, 0u, 4u, hashtable_spike::tiered::bit_field{160u, 80u, 1280u, 16u}, hashtable_spike::tiered::bit_field{176u, 80u, 1280u, 16u}}, hashtable_spike::tiered::bucket_plan{40u, 17u, 8u, 64u, 16u, 184u, 0u, 5u, 8u, 23u, 32u, 32u, 8u, hashtable_spike::tiered::bit_field{192u, 80u, 1280u, 16u}, hashtable_spike::tiered::bit_field{208u, 80u, 1280u, 16u}}, (hashtable_spike::tiered::sharing)0, true, false, false>>*>::WithShared<(anonymous namespace)::context<hashtable_spike::tiered::table<hashtable_spike::tiered::bucket_plan{40u, 20u, 8u, 64u, 16u, 180u, 0u, 5u, 8u, 20u, 0u, 0u, 4u, hashtable_spike::tiered::bit_field{160u, 80u, 1280u, 16u}, hashtable_spike::tiered::bit_field{176u, 80u, 1280u, 16u}}, hashtable_spike::tiered::bucket_plan{40u, 17u, 8u, 64u, 16u, 184u, 0u, 5u, 8u, 23u, 32u, 32u, 8u, hashtable_spike::tiered::bit_field{192u, 80u, 1280u, 16u}, hashtable_spike::tiered::bit_field{208u, 80u, 1280u, 16u}}, (hashtable_spike::tiered::sharing)0, true, false, false>> const*>::Cursor, loom::detail::MemoryRing<std::integer_sequence<unsigned long>, std::integer_sequence<unsigned long, 0ul>, std::tuple<>, (anonymous namespace)::job<hashtable_spike::tiered::table<hashtable_spike::tiered::bucket_plan{40u, 20u, 8u, 64u, 16u, 180u, 0u, 5u, 8u, 20u, 0u, 0u, 4u, hashtable_spike::tiered::bit_field{160u, 80u, 1280u, 16u}, hashtable_spike::tiered::bit_field{176u, 80u, 1280u, 16u}}, hashtable_spike::tiered::bucket_plan{40u, 17u, 8u, 64u, 16u, 184u, 0u, 5u, 8u, 23u, 32u, 32u, 8u, hashtable_spike::tiered::bit_field{192u, 80u, 1280u, 16u}, hashtable_spike::tiered::bit_field{208u, 80u, 1280u, 16u}}, (hashtable_spike::tiered::sharing)0, true, false, false>>*>::WithShared<(anonymous namespace)::context<hashtable_spike::tiered::table<hashtable_spike::tiered::bucket_plan{40u, 20u, 8u, 64u, 16u, 180u, 0u, 5u, 8u, 20u, 0u, 0u, 4u, hashtable_spike::tiered::bit_field{160u, 80u, 1280u, 16u}, hashtable_spike::tiered::bit_field{176u, 80u, 1280u, 16u}}, hashtable_spike::tiered::bucket_plan{40u, 17u, 8u, 64u, 16u, 184u, 0u, 5u, 8u, 23u, 32u, 32u, 8u, hashtable_spike::tiered::bit_field{192u, 80u, 1280u, 16u}, hashtable_spike::tiered::bit_field{208u, 80u, 1280u, 16u}}, (hashtable_spike::tiered::sharing)0, true, false, false>> const*>::Slot*, (anonymous namespace)::context<hashtable_spike::tiered::table<hashtable_spike::tiered::bucket_plan{40u, 20u, 8u, 64u, 16u, 180u, 0u, 5u, 8u, 20u, 0u, 0u, 4u, hashtable_spike::tiered::bit_field{160u, 80u, 1280u, 16u}, hashtable_spike::tiered::bit_field{176u, 80u, 1280u, 16u}}, hashtable_spike::tiered::bucket_plan{40u, 17u, 8u, 64u, 16u, 184u, 0u, 5u, 8u, 23u, 32u, 32u, 8u, hashtable_spike::tiered::bit_field{192u, 80u, 1280u, 16u}, hashtable_spike::tiered::bit_field{208u, 80u, 1280u, 16u}}, (hashtable_spike::tiered::sharing)0, true, false, false>> const*, (anonymous namespace)::job<hashtable_spike::tiered::table<hashtable_spike::tiered::bucket_plan{40u, 20u, 8u, 64u, 16u, 180u, 0u, 5u, 8u, 20u, 0u, 0u, 4u, hashtable_spike::tiered::bit_field{160u, 80u, 1280u, 16u}, hashtable_spike::tiered::bit_field{176u, 80u, 1280u, 16u}}, hashtable_spike::tiered::bucket_plan{40u, 17u, 8u, 64u, 16u, 184u, 0u, 5u, 8u, 23u, 32u, 32u, 8u, hashtable_spike::tiered::bit_field{192u, 80u, 1280u, 16u}, hashtable_spike::tiered::bit_field{208u, 80u, 1280u, 16u}}, (hashtable_spike::tiered::sharing)0, true, false, false>>*)+0x43c>"
+      }
+    ],
+    [
+      {
+        "source_line": 95692,
+        "address": "62cbc",
+        "instruction": "ldp\tx10, x11, [x24]"
+      },
+      {
+        "source_line": 95693,
+        "address": "62cc0",
+        "instruction": "ldp\tx12, x13, [x24, #0x10]"
+      },
+      {
+        "source_line": 95694,
+        "address": "62cc4",
+        "instruction": "eor\tx10, x10, #0x8000000000"
+      },
+      {
+        "source_line": 95695,
+        "address": "62cc8",
+        "instruction": "cmp\tw9, #0x0"
+      },
+      {
+        "source_line": 95696,
+        "address": "62ccc",
+        "instruction": "add\tx9, x12, w9, uxtw"
+      },
+      {
+        "source_line": 95697,
+        "address": "62cd0",
+        "instruction": "add\tx11, x11, x8"
+      },
+      {
+        "source_line": 95698,
+        "address": "62cd4",
+        "instruction": "csel\tx8, x8, x10, ne"
+      },
+      {
+        "source_line": 95699,
+        "address": "62cd8",
+        "instruction": "subs\tx10, x13, #0x1"
+      },
+      {
+        "source_line": 95700,
+        "address": "62cdc",
+        "instruction": "stp\tx8, x11, [x24]"
+      },
+      {
+        "source_line": 95701,
+        "address": "62ce0",
+        "instruction": "stp\tx9, x10, [x24, #0x10]"
+      }
+    ]
+  ],
+  "scope": "Selected native instruction bytes represented by disassembly; full assembly and executable recover from worker archive. No throughput conclusion from instruction count alone."
+}

@@ -1,0 +1,58 @@
+[1/17] Building CXX object loom/CMakeFiles/loom_ring_check.dir/test/ring.cpp.o
+[2/17] Linking CXX executable loom/loom_ring_check
+[3/17] Building CXX object loom/CMakeFiles/loom_ring_rotation_check.dir/test/ring_rotation.cpp.o
+[4/17] Linking CXX executable loom/loom_ring_rotation_check
+[5/17] Building CXX object loom/CMakeFiles/loom_ring_shared_check.dir/test/ring_shared.cpp.o
+[6/17] Linking CXX executable loom/loom_ring_shared_check
+[7/17] Building CXX object loom/CMakeFiles/loom_cohort_check.dir/test/cohort.cpp.o
+[8/17] Linking CXX executable loom/loom_cohort_check
+[9/17] Building CXX object loom/CMakeFiles/loom_hint_check.dir/test/hints.cpp.o
+[10/17] Linking CXX executable loom/loom_hint_check
+[11/17] Building CXX object loom/CMakeFiles/loom_example_hints.dir/examples/hints.cpp.o
+[12/17] Linking CXX executable loom/loom_example_hints
+[13/17] Building CXX object loom/CMakeFiles/loom_hardware_check.dir/test/hardware.cpp.o
+[14/17] Linking CXX executable loom/loom_hardware_check
+[15/17] Building CXX object loom/CMakeFiles/loom_example_partition.dir/examples/partition.cpp.o
+[16/17] Linking CXX executable loom/loom_example_partition
+[16/17] cd /opt/sixdb/source/build/loom-arm-serial-neon/loom && /usr/bin/ctest --test-dir /opt/sixdb/source/build/loom-arm-serial-neon --output-on-failure --no-tests=error -L "^loom-runtime\$"
+Internal ctest changing into directory: /opt/sixdb/source/build/loom-arm-serial-neon
+Test project /opt/sixdb/source/build/loom-arm-serial-neon
+      Start 47: loom_worker_check
+ 1/16 Test #47: loom_worker_check .................   Passed    0.01 sec
+      Start 48: loom_capacity_check
+ 2/16 Test #48: loom_capacity_check ...............   Passed    0.00 sec
+      Start 49: loom_ring_check
+ 3/16 Test #49: loom_ring_check ...................   Passed    0.00 sec
+      Start 50: loom_ring_rotation_check
+ 4/16 Test #50: loom_ring_rotation_check ..........   Passed    0.00 sec
+      Start 51: loom_ring_shared_check
+ 5/16 Test #51: loom_ring_shared_check ............   Passed    0.00 sec
+      Start 52: loom_cohort_check
+ 6/16 Test #52: loom_cohort_check .................   Passed    0.00 sec
+      Start 53: loom_hint_check
+ 7/16 Test #53: loom_hint_check ...................   Passed    0.01 sec
+      Start 54: loom_hardware_check
+ 8/16 Test #54: loom_hardware_check ...............   Passed    0.13 sec
+      Start 55: loom_example_hints
+ 9/16 Test #55: loom_example_hints ................   Passed    0.10 sec
+      Start 56: loom_example_hardware
+10/16 Test #56: loom_example_hardware .............   Passed    0.00 sec
+      Start 57: loom_example_allocation
+11/16 Test #57: loom_example_allocation ...........   Passed    0.00 sec
+      Start 58: loom_example_capacity
+12/16 Test #58: loom_example_capacity .............   Passed    0.00 sec
+      Start 59: loom_example_preparation_window
+13/16 Test #59: loom_example_preparation_window ...   Passed    0.00 sec
+      Start 60: loom_example_preparation_finite
+14/16 Test #60: loom_example_preparation_finite ...   Passed    0.00 sec
+      Start 61: loom_example_partition
+15/16 Test #61: loom_example_partition ............   Passed    0.02 sec
+      Start 62: loom_budget_check
+16/16 Test #62: loom_budget_check .................   Passed    0.01 sec
+
+100% tests passed, 0 tests failed out of 16
+
+Label Time Summary:
+loom-runtime    =   0.30 sec*proc (16 tests)
+
+Total Test time (real) =   0.31 sec

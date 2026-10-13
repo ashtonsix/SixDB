@@ -1,0 +1,40 @@
+{
+  "header_sha256": "e269b53064198f3b201e3a029d1839104a38041f8cb31706809b0084c28c6fff",
+  "command": [
+    "taskset",
+    "-c",
+    "0",
+    "ctest",
+    "--test-dir",
+    "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/local-single-checks",
+    "-R",
+    "^(loom_ring_check|loom_ring_rotation_check|loom_ring_shared_check)$",
+    "--output-on-failure",
+    "--no-tests=error"
+  ],
+  "returncode": 0,
+  "checks_txt_sha256": "5bbde19bb705e7e12328a854912189ea402aadb713ec1c55bcf2f40cad937a36",
+  "compiler": "Clang21.1.8",
+  "build": "local-single-checks",
+  "compile_commands": [
+    {
+      "directory": "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/local-single-checks",
+      "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=1 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN5=0 -I/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/source-experiment/loom/include -I/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/source-experiment/orbital/include -DLOOM_ARM_SINGLE_HANDOFF=1 -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/source-experiment=. -ffunction-sections -fdata-sections -march=armv8-a+simd -mtune=neoverse-v2 -o loom/CMakeFiles/loom_ring_check.dir/test/ring.cpp.o -c /home/ashtonsix/sixdb/build/loom-arm-serial-20261013/source-experiment/loom/test/ring.cpp",
+      "file": "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/source-experiment/loom/test/ring.cpp",
+      "output": "loom/CMakeFiles/loom_ring_check.dir/test/ring.cpp.o"
+    },
+    {
+      "directory": "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/local-single-checks",
+      "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=1 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN5=0 -I/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/source-experiment/loom/include -I/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/source-experiment/orbital/include -DLOOM_ARM_SINGLE_HANDOFF=1 -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/source-experiment=. -ffunction-sections -fdata-sections -march=armv8-a+simd -mtune=neoverse-v2 -o loom/CMakeFiles/loom_ring_rotation_check.dir/test/ring_rotation.cpp.o -c /home/ashtonsix/sixdb/build/loom-arm-serial-20261013/source-experiment/loom/test/ring_rotation.cpp",
+      "file": "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/source-experiment/loom/test/ring_rotation.cpp",
+      "output": "loom/CMakeFiles/loom_ring_rotation_check.dir/test/ring_rotation.cpp.o"
+    },
+    {
+      "directory": "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/local-single-checks",
+      "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=1 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN5=0 -I/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/source-experiment/loom/include -I/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/source-experiment/orbital/include -DLOOM_ARM_SINGLE_HANDOFF=1 -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/source-experiment=. -ffunction-sections -fdata-sections -march=armv8-a+simd -mtune=neoverse-v2 -o loom/CMakeFiles/loom_ring_shared_check.dir/test/ring_shared.cpp.o -c /home/ashtonsix/sixdb/build/loom-arm-serial-20261013/source-experiment/loom/test/ring_shared.cpp",
+      "file": "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/source-experiment/loom/test/ring_shared.cpp",
+      "output": "loom/CMakeFiles/loom_ring_shared_check.dir/test/ring_shared.cpp.o"
+    }
+  ],
+  "scope": "three pinned ARM O3 runtime checks, no timing; default assertions enabled; no sanitizer flag in this build"
+}

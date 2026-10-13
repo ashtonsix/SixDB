@@ -229,15 +229,18 @@ IPC, stalls or cache-source measurements.
 The ordinary timing trace contains 4,190,897 primary and 3,407 secondary keys,
 with no overflow: only 0.0812% downstream. It mainly tests ready-path costs.
 Separate forced controls exercise 32 real secondary and 80 overflow keys,
-ragged masks, exact budgets, promotion and cancellation. The current Ikea
-[complete hierarchy comparison](../../hashtable/RESULTS.md#complete-hierarchy-through-loom)
-owns the genuine aged-chain workload. Its independently checked Zen5 AVX2
+ragged masks, exact budgets, promotion and cancellation. The captured Ikea
+[complete hierarchy comparison](../../hashtable/evidence/table-ring-neon/artifact.json)
+contains the genuine aged-chain workload. Its independently checked Zen5 AVX2
 large-table Ring/manual gaps are 0.32 ns for fresh hits and 0.74 ns after eight
 turnovers; its ready callback is call-free and stack-free. That source/value
 shape and its later local probe-reset edit are separate from this matrix.
 The same caller's V2 32-stream gaps are 1.49/1.21 ns (4.8/3.5%), while its aged
 single-stream Ring/manual times are 175.87/140.17 ns. Large throughput closeness
-does not establish single-stream or hot-work parity.
+does not establish single-stream or hot-work parity. The
+[ARM completion-dependency investigation](arm-single-stream.md) follows that
+single-stream gap with matched caller controls and distinguishes this captured
+hierarchy from Ikea's current prepared reader.
 
 All 16,128 rows and 24 summary cells qualify against source commit
 `8d640b9e3a2a384eaad733f61a92c1c1e019a879`, digest

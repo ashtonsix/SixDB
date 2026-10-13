@@ -1,0 +1,239 @@
+{
+  "format": 1,
+  "status": "all_native_panels_qualified_narrow_ARM_hint_only_reproduction_proof_complete",
+  "selection_reason": "Keep all timing rows/arms for the three qualified causal diagnostics and final paired qualification, including negative singleton/nohint/hot controls. Share identical context/receipts and recover full sources/binaries/assembly from their exact worker archives.",
+  "jobs": [
+    {
+      "label": "initial",
+      "job": "20261013T110137Z-1e139b98",
+      "isa": "neon",
+      "analysis": "build/loom-arm-serial-20261013/analysis/diagnostic-generalized.json"
+    },
+    {
+      "label": "second",
+      "job": "20261013T114517Z-1906f45e",
+      "isa": "neon",
+      "analysis": "build/loom-arm-serial-20261013/analysis/frontier-diagnostic.json"
+    },
+    {
+      "label": "third",
+      "job": "20261013T123321Z-920f324c",
+      "isa": "neon",
+      "analysis": "build/loom-arm-serial-20261013/analysis/control-diagnostic.json"
+    },
+    {
+      "label": "final-v2",
+      "job": "20261013T125940Z-23733a42",
+      "isa": "neon",
+      "role": "final",
+      "analysis": "build/loom-arm-serial-20261013/analysis/final-v2.json"
+    },
+    {
+      "label": "final-zen5-avx2",
+      "job": "20261013T125940Z-948084f1",
+      "isa": "avx2",
+      "role": "final-x86-negative",
+      "analysis": "build/loom-arm-serial-20261013/analysis/final-zen5-avx2.json"
+    }
+  ],
+  "native_excerpts": [
+    {
+      "job": "20261013T114517Z-1906f45e",
+      "member": "assembly-neon-inplace.txt.gz",
+      "role": "inplace-h0-independent-false",
+      "ranges": [
+        [
+          "61d64",
+          "61d70"
+        ],
+        [
+          "61e8c",
+          "61e94"
+        ],
+        [
+          "61ee0",
+          "61ef4"
+        ]
+      ]
+    },
+    {
+      "job": "20261013T114517Z-1906f45e",
+      "member": "assembly-neon-inplace.txt.gz",
+      "role": "inplace-h1-memory-derived-false",
+      "ranges": [
+        [
+          "63358",
+          "63364"
+        ],
+        [
+          "6342c",
+          "63430"
+        ],
+        [
+          "63458",
+          "63470"
+        ]
+      ]
+    },
+    {
+      "job": "20261013T114517Z-1906f45e",
+      "member": "assembly-neon-lane.txt.gz",
+      "role": "lane-h1-independent-false",
+      "ranges": [
+        [
+          "62bb8",
+          "62bc4"
+        ],
+        [
+          "62c8c",
+          "62c94"
+        ],
+        [
+          "62cbc",
+          "62ce0"
+        ]
+      ]
+    },
+    {
+      "job": "20261013T114517Z-1906f45e",
+      "member": "assembly-neon-lane.txt.gz",
+      "role": "lane-manual-h1-memory-derived-false",
+      "ranges": [
+        [
+          "621dc",
+          "621e8"
+        ],
+        [
+          "62364",
+          "6236c"
+        ],
+        [
+          "62384",
+          "623a4"
+        ]
+      ]
+    }
+  ],
+  "local_qualification_receipts": [
+    {
+      "name": "critical-dependency.json",
+      "path": "build/loom-ring-review-20261013/review/ikea-table-ring-neon-serial-20261013/second-worker-loop/critical-dependency-receipt.json",
+      "sha256": "b523930a760369aeb0d4d0d48be3806b74bd694164f16dfd5c71a68acfbc3f68"
+    },
+    {
+      "name": "control-static.json",
+      "path": "build/loom-ring-review-20261013/review/ikea-table-ring-neon-serial-20261013/control-static/receipt.json",
+      "sha256": "0209eee7bf4f45b7d2162e9ea33d4bb3962d0893fa9e78464e8365323cbde1af"
+    },
+    {
+      "name": "single-handoff.json",
+      "path": "build/loom-arm-serial-20261013/single-handoff-audit/qualification.json",
+      "sha256": "5a9de756edcfec04d366b557904efceffb4dc31470e5b930cc2efa5b7db38bbe"
+    },
+    {
+      "name": "frontier-release-san.json",
+      "path": "build/loom-arm-serial-20261013/frontier-audit/qualification.json",
+      "sha256": "40d3ab35dfbc4f956ec47e068e7e51c8f906f9a8e4d38446d534f7ed7c495dec"
+    },
+    {
+      "name": "frontier-proof.json",
+      "path": "build/loom-arm-serial-20261013/frontier-audit/proof.json",
+      "sha256": "24f0b1ce29ce2df80804e1f3b4a5a8a4fea57ffecfb772dd932e081bfbc2718b"
+    },
+    {
+      "name": "plain-static.json",
+      "path": "build/loom-arm-serial-20261013/plain-release/plain-receipt.json",
+      "sha256": "a10c330ed40be82a6c95ccaa1f4f5c0a28824a1785a25b4805f2f1e108871869"
+    },
+    {
+      "name": "plain-forced.json",
+      "path": "build/loom-arm-serial-20261013/plain-release/plain-check-receipt.json",
+      "sha256": "eee7cd188ecf9fd2eca946ff3fb5da98cbd93e4041fca832abfbe42db9b01987"
+    },
+    {
+      "name": "plain-consume.patch",
+      "path": "build/loom-arm-serial-20261013/plain-release/plain-consume.patch",
+      "sha256": "664135fb6a827c1d056ba34fe94302f29a89bf8e53019a9131442732ed8b0f27"
+    },
+    {
+      "name": "plain-sanitizer.json",
+      "path": "build/loom-arm-serial-20261013/plain-sanitize/receipt.json",
+      "sha256": "c7cf3b42348bf9b7053bbfc298033c09c979e31533ba77dd96b0bafce55ecc12"
+    },
+    {
+      "name": "zen-plain-negative.json",
+      "path": "build/loom-ring-review-20261013/review/zen-plain-branch-20261013/receipt.json",
+      "sha256": "9d62f4db5ebf72218473649b65e317f01c096c32edee92cdae472a65099ccbd6"
+    },
+    {
+      "name": "hinted-selector-proof.json",
+      "path": "build/loom-arm-serial-20261013/selected-proof/hinted-selector-proof.json",
+      "sha256": "832088f7fbbae67e446e248119017b770a3d1efc3a7cc969c18ac8fb9f53347c"
+    },
+    {
+      "name": "hinted-selected.patch",
+      "path": "build/loom-arm-serial-20261013/selected-proof/hinted-selected.patch",
+      "sha256": "3b7f968e0f05948cc456583ec66dee0bb00ba4bbd2009c092e1d4ecf8bc50297"
+    },
+    {
+      "name": "hinted-arm-selected-tokens.txt",
+      "path": "build/loom-arm-serial-20261013/selected-proof/hinted-arm-selected-tokens.txt",
+      "sha256": "a757fbb4d825789034bd296ad690213824f75a3b0187a4205b0cc45db56162bf"
+    },
+    {
+      "name": "hinted-arm-expected-tokens.txt",
+      "path": "build/loom-arm-serial-20261013/selected-proof/hinted-arm-expected-tokens.txt",
+      "sha256": "a757fbb4d825789034bd296ad690213824f75a3b0187a4205b0cc45db56162bf"
+    },
+    {
+      "name": "hinted-x86-selected-tokens.txt",
+      "path": "build/loom-arm-serial-20261013/selected-proof/hinted-x86-selected-tokens.txt",
+      "sha256": "c5a0bf1f63f248bc9719c7fee6732541a59f3e7a1bd115d1ea442449700300e7"
+    },
+    {
+      "name": "hinted-x86-expected-tokens.txt",
+      "path": "build/loom-arm-serial-20261013/selected-proof/hinted-x86-expected-tokens.txt",
+      "sha256": "c5a0bf1f63f248bc9719c7fee6732541a59f3e7a1bd115d1ea442449700300e7"
+    },
+    {
+      "name": "hinted-function-comparison.json",
+      "path": "build/loom-arm-serial-20261013/selected-proof/hinted-local/comparison-first-pass.json",
+      "sha256": "aaf1b8458cc9272f93d5521aba49da359f903cfd79ce1c8c27c7bec800531c67"
+    },
+    {
+      "name": "hinted-cold-literals.json",
+      "path": "build/loom-arm-serial-20261013/selected-proof/hinted-local/cold-literal-relocations.json",
+      "sha256": "c03655c962955f90c105ac55bc3c0b93d314d0346cf2ed42550b3a3c4f476a24"
+    }
+  ],
+  "limits": [
+    "Selection is complete and bounded. Retention/promotion is owned by the lead; no worker is launched by the selector.",
+    "All raw timing CSVs, policy receipts, executable order and context bytes are preserved; identical context/receipt payloads can share one indexed file with multiple exact origins.",
+    "Every payload hash must be verified by the checkout-owned report before recomputing. Report must not import/execute any code found in an archive or selected inputs.",
+    "Independent key-law checksum/request recomputation is separate from captured executable full-answer/terminal/individual-found checks; CSV does not expose terminal or per-request traces.",
+    "Source/compile/binary/native/sanitizer qualification comes from exact selected captured audit receipts. Offline report over selected data verifies their identity and reports their declared scope; it does not claim to repeat omitted full-archive or native executable checks.",
+    "Logical stage visits/hint targets and instruction excerpts are not PMU stalls, IPC, cache misses or branch prediction measurements.",
+    "No single register-pressure/scheduling variant is a universal gain. Retain all negative controls; compare within matched jobs and disclose pass-order ratio drift.",
+    "Current Ikea Fuller owner evidence is referenced separately; the frozen old row-key campaign does not justify rewriting its already-independent next-key native path.",
+    "Full plain-branch native panel is retained as measured, including ARM H0 hot-C32 regression and Zen C1 regression. Narrowed ARM hinted-only reproduction selector is proof-defined and not a new native measurement."
+  ],
+  "owner_references": [
+    {
+      "label": "current-ikea-fuller-v2",
+      "job": "20261013T123020Z-1f4ae28f",
+      "source_prefix": "aafa5a315d52",
+      "qualification": "build/loom-ring-review-20261013/review/ikea-current-fuller-v2-20261013/receipt.json",
+      "qualification_sha256": "305cb47b7f1d0d64a68539396c743407013191028fd6745a21a2db8c2d5566f3"
+    }
+  ],
+  "selected_proof": {
+    "selector_proof": "hinted-selector-proof.json",
+    "patch": "hinted-selected.patch",
+    "arm_selected": "hinted-arm-selected-tokens.txt",
+    "arm_expected": "hinted-arm-expected-tokens.txt",
+    "x86_selected": "hinted-x86-selected-tokens.txt",
+    "x86_expected": "hinted-x86-expected-tokens.txt",
+    "function_comparison": "hinted-function-comparison.json",
+    "literal_relocations": "hinted-cold-literals.json"
+  }
+}

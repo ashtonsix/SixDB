@@ -1,0 +1,11 @@
+isa,case,pass,order,factor,target,a,entries,turnovers,mixed,concurrency,reps,seed,start_utc,end_utc
+avx2,hot_serial,0,0,inplace,hashtable_table_ring_inplace,8,3276,8,1,1,7,37913,2026-10-13T13:03:31.569090832Z,2026-10-13T13:03:31.617095289Z
+avx2,hot_serial,0,1,branch,hashtable_table_ring_branch,8,3276,8,1,1,7,37913,2026-10-13T13:03:31.660318750Z,2026-10-13T13:03:31.709303006Z
+avx2,hot_parallel,0,0,branch,hashtable_table_ring_branch,8,3276,8,1,32,7,37913,2026-10-13T13:03:31.751606868Z,2026-10-13T13:03:31.787651201Z
+avx2,hot_parallel,0,1,inplace,hashtable_table_ring_inplace,8,3276,8,1,32,7,37913,2026-10-13T13:03:31.829769012Z,2026-10-13T13:03:31.867589802Z
+avx2,large_aged_serial,0,0,inplace,hashtable_table_ring_inplace,20,13421772,8,1,1,7,37913,2026-10-13T13:03:31.908947516Z,2026-10-13T13:09:30.852143007Z
+avx2,large_aged_serial,0,1,branch,hashtable_table_ring_branch,20,13421772,8,1,1,7,37913,2026-10-13T13:09:30.900585674Z,2026-10-13T13:16:02.657001763Z
+avx2,large_aged_parallel,0,0,branch,hashtable_table_ring_branch,20,13421772,8,1,32,7,37913,2026-10-13T13:16:02.700130807Z,2026-10-13T13:18:18.946376826Z
+avx2,large_aged_parallel,0,1,inplace,hashtable_table_ring_inplace,20,13421772,8,1,32,7,37913,2026-10-13T13:18:18.990283640Z,2026-10-13T13:20:38.529702179Z
+avx2,large_fresh_parallel,0,0,inplace,hashtable_table_ring_inplace,20,13421772,0,0,32,7,37913,2026-10-13T13:20:38.575930573Z,2026-10-13T13:21:42.539834102Z
+avx2,large_fresh_parallel,0,1,branch,hashtable_table_ring_branch,20,13421772,0,0,32,7,37913,2026-10-13T13:21:42.586141042Z,2026-10-13T13:22:43.003457257Z

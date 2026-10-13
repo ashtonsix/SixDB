@@ -1,0 +1,69 @@
+{
+  "scope": "Qualified negative: read-only exact native Zen5 AVX2 final plain-consumer control. No further cause probes, source edits, generic Ring changes or portable recommendations.",
+  "worker": "20261013T125940Z-948084f1",
+  "raw": {
+    "inplace": {
+      "file": "build/workers/20261013T125940Z-948084f1/results/avx2-large_aged_serial-inplace-pass0.csv",
+      "sha256": "2cfb5dd6a3b3d88699246150395d375a94ed643ad04ecbf9b33f86aae11f6cbb",
+      "rows": 49,
+      "medians_ns_per_lookup": {
+        "abseil": 145.514019,
+        "abseil_prefetch": 144.732493,
+        "fused": 168.506575,
+        "manual": 171.696098,
+        "manual_hints": 143.779618,
+        "ring": 173.373024,
+        "ring_hints": 143.812615
+      }
+    },
+    "branch": {
+      "file": "build/workers/20261013T125940Z-948084f1/results/avx2-large_aged_serial-branch-pass0.csv",
+      "sha256": "693ce778934b95546fd7b9ec748db0aece988d8a8de1c69e91e91c667a09d38f",
+      "rows": 49,
+      "medians_ns_per_lookup": {
+        "abseil": 149.459167,
+        "abseil_prefetch": 150.51449,
+        "fused": 176.125898,
+        "manual": 176.748683,
+        "manual_hints": 143.49285,
+        "ring": 227.369931,
+        "ring_hints": 186.953981
+      }
+    }
+  },
+  "ready_summary": {
+    "inplace": {
+      "assembly_sha256": "93a8addd61e0deb3d387bc499227a22b741f6416e8fcb717fbb8ed8fdef689b8",
+      "callbacks": 20,
+      "ordinary_calls": 0,
+      "stack_refs": 0,
+      "push_pop": 0,
+      "cmov": 20
+    },
+    "branch": {
+      "assembly_sha256": "005db5ff543249cba80965368d8172228f4b649c787db7c430f86d2abf298e59",
+      "callbacks": 20,
+      "ordinary_calls": 0,
+      "stack_refs": 0,
+      "push_pop": 0,
+      "cmov": 0
+    }
+  },
+  "critical_sequences": {
+    "reference_Hint0_miss": "count\u2192JE7912e\u2192XOR edx,edx79204+XOR ecx,ecx79206\u2192MOVZX cl79211\u2192TEST79229\u2192CMOVNE7922c. Constant false independent of descendants.",
+    "reference_Hint1_miss": "count\u2192JE7a5ee\u2192XOR edx,edx7a764+XOR ecx,ecx7a766\u2192MOVZX cl7a771\u2192TEST7a789\u2192CMOVNE7a78c. Constant false independent of descendants.",
+    "branch_Hint0_miss": "count\u2192JE787d8\u2192XOR readyoldkey788b8\u2192key store/remaining decrement\u2192direct hash788db. No CMOV or memory-derived selector.",
+    "branch_Hint1_miss": "count\u2192JE79c78\u2192XOR readyoldkey79dfe\u2192key store/remaining decrement\u2192direct hash79e21. No CMOV or memory-derived selector.",
+    "reference_Hint1_hit": "payload value\u2192ADD sum7a774\u2192ADD found7a782\u2192XOR oldkey7a786\u2192TEST constantfound7a789\u2192CMOVNE payload7a78c\u2192storekey7a790\u2192DEC remaining7a793.",
+    "branch_Hint1_hit": "payload value\u2192ADD sum79c5a\u2192INC found79c5e\u2192storekey79e01\u2192DEC remaining79e04. Different consumer RMW/control shape; causal detail not established."
+  },
+  "judgment": "Preserve tested x86 reference consumer; restrict historical branch repair to ARM owning consumer. This is private reproduction/control code, not generic Ring policy or blanket select prohibition. Current owning Ikea all architectures remains unchanged.",
+  "limits": [
+    "The x86 negative is measured; a definitive cause beyond changed consumer lowering was not isolated.",
+    "Both forms are frameless/callfree; regression is not ordinarycall/frame traffic.",
+    "Old x86 false is already independent, so ARM descendants-count explanation does not transfer.",
+    "No PMU/branch predictor/flag or memory-disambiguation diagnosis made.",
+    "This receipt recomputes targeted large aged serial CSV medians, not the full owning campaign qualification."
+  ],
+  "large_C1_Hint1_Ring_regression_percent": 29.998318297737647
+}

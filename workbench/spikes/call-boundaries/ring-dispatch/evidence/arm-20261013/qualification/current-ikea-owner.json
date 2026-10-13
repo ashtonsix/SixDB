@@ -1,0 +1,73 @@
+{
+  "scope": "Read-only current owning Ikea Fuller native V2 codegen. No edits/builds/runtime runs. Timing comparison supplied by parent; primary purpose is preserving an already competitive implementation.",
+  "worker": "20261013T123020Z-1f4ae28f",
+  "owning_source_capture_prefix": "aafa5a315d52",
+  "assembly_member": "results/assembly.gz",
+  "assembly_sha256": "239ee4dae500c3435d73e94c0288d089187fb1c0c5c2b356fd968c9528f8637d",
+  "table": "ht::table<40u,19u,15u,128u,128u,false,false>",
+  "selected": [
+    {
+      "kind": "manual",
+      "hint": 0,
+      "address": "0000000000068fe0",
+      "body_sha256": "cc90f07341bd467d257a67f11c9aca19ca0c97364117780674ec4627e85a60b7",
+      "ordinary_calls": 6,
+      "sp_instructions": 19,
+      "csel_instructions": 1
+    },
+    {
+      "kind": "ready",
+      "hint": 0,
+      "address": "0000000000069fa0",
+      "body_sha256": "ba9bdbf7d5a0c7c11ff656f6fc444ee32ede61b72b870c5b320c26e0ffdc944e",
+      "ordinary_calls": 0,
+      "sp_instructions": 0,
+      "csel_instructions": 0
+    },
+    {
+      "kind": "manual",
+      "hint": 1,
+      "address": "000000000006ade0",
+      "body_sha256": "38d47da8c292296acd156a0fc2e94b12c38cd96a71bb315b533753a2f8263271",
+      "ordinary_calls": 6,
+      "sp_instructions": 19,
+      "csel_instructions": 1
+    },
+    {
+      "kind": "ready",
+      "hint": 1,
+      "address": "000000000006b5a0",
+      "body_sha256": "353a20e06c364af9f7595f57e200e9aecef42e7437a442e76add0742fd7b35a3",
+      "ordinary_calls": 0,
+      "sp_instructions": 0,
+      "csel_instructions": 0
+    }
+  ],
+  "miss_paths": {
+    "Ring_H0": "LDURW bucket+1 descendants at6a164\u2192CBZ6a168\u2192EOR oldkey6a17c + MOV found/value zero6a180/184\u2192hash EOR6a1d0",
+    "Ring_H1": "Direct EOR oldkey6b878 + MOV found/value zero6b87c/880\u2192hash EOR6b8cc",
+    "manual_H0": "Direct oldkey EOR69314\u2192next prepare69084",
+    "manual_H1": "Direct oldkey EOR6b238\u2192next hash EOR6b298"
+  },
+  "remaining_selects": "The manual CSEL at69220/6b040 selects admitted directory index from unrelated directory metadata; it does not select nextkey or reuse descendants as found. Ring selected ready bodies contain no CSEL.",
+  "judgment": "Current Fuller already has independent/direct miss-nextkey path; no fresh adaptation is warranted from the old-capture diagnosis. Preserve its compiler shape and owning mixed/hit performance.",
+  "limits": [
+    "This does not requalify owning raw benchmark/accounting/archive package.",
+    "The source prefix and matched medians came from the parent/owning evidence; this receipt independently verifies actual retained native bodies only.",
+    "No PMU or speculative execution evidence; explicit dependency observations are separate from hardware interpretation."
+  ],
+  "all_ready_summary": {
+    "families": 28,
+    "hint_counts": {
+      "0": 7,
+      "1": 7,
+      "2": 7,
+      "3": 7
+    },
+    "ordinary_calls": 0,
+    "sp_instructions": 0,
+    "csel_instructions": 0,
+    "direct_oldkey_toggle_bodies": 28,
+    "family_receipt": "all-ready-families.json"
+  }
+}

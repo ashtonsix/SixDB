@@ -1,0 +1,192 @@
+{
+  "scope": "Read-only optimized local ARM codegen qualification before next native freeze. No builds, source edits or executions by reviewer.",
+  "configuration": "Actual Linux Clang21.1.8, -O3 armv8-a+simd/tuneNeoverseV2; root compiled and independently owns runtime release/O3ASan checks.",
+  "previous_native_dependency_audit": "../second-worker-loop/critical-dependency-receipt.json",
+  "modes": {
+    "inplace": {
+      "asm": "build/loom-arm-serial-20261013/control-release/inplace.asm",
+      "sha256": "300ecf480305e475f672714b048fd2059d1824dc6f68b71f6a97e3231947c9d3",
+      "ready_families": 20,
+      "ready_hint_counts": {
+        "0": 5,
+        "1": 5,
+        "2": 5,
+        "3": 5
+      },
+      "ready_ordinary_calls": 0,
+      "ready_sp_instructions": 0,
+      "ready_csel_instruction_count": 20,
+      "selected": [
+        {
+          "kind": "manual",
+          "hint": 0,
+          "address": "0000000000060da0",
+          "body_sha256": "3230b308e0017e865b34da01e352642965b2f825d90d23e04f09a2ff9bdd77bc",
+          "csel_count": 0
+        },
+        {
+          "kind": "ready",
+          "hint": 0,
+          "address": "0000000000061a80",
+          "body_sha256": "0ea4b0a09dfeb31a7e0a6b26b29a2dc65fa50994f014132cb5d90dca31222feb",
+          "csel_count": 1
+        },
+        {
+          "kind": "cold",
+          "hint": 0,
+          "address": "0000000000061e80",
+          "body_sha256": "fb410936db240fe56aed880a778a938e044cfff8c8d79c70fcd94483078006c4",
+          "csel_count": 0
+        },
+        {
+          "kind": "manual",
+          "hint": 1,
+          "address": "0000000000062480",
+          "body_sha256": "2509ee8510bed18cea07d382a6b0e8ed07a4640f91261d5b258e84999212ebe2",
+          "csel_count": 0
+        },
+        {
+          "kind": "ready",
+          "hint": 1,
+          "address": "0000000000062f00",
+          "body_sha256": "a103230ddb06930142e679000fe6fea85c80c34516aa0c632c7d016c21aac0a6",
+          "csel_count": 1
+        },
+        {
+          "kind": "cold",
+          "hint": 1,
+          "address": "0000000000063420",
+          "body_sha256": "9b664a25d4013e48e779299f4d1366e8387d9ec9c23514bd83c3e0fa2dd50689",
+          "csel_count": 0
+        }
+      ]
+    },
+    "branch": {
+      "asm": "build/loom-arm-serial-20261013/control-release/branch.asm",
+      "sha256": "a0702f95e66e06316d210efbec7175ecf960d4061ccfe827bf79bb0e3cef79f8",
+      "ready_families": 20,
+      "ready_hint_counts": {
+        "0": 5,
+        "1": 5,
+        "2": 5,
+        "3": 5
+      },
+      "ready_ordinary_calls": 0,
+      "ready_sp_instructions": 0,
+      "ready_csel_instruction_count": 0,
+      "selected": [
+        {
+          "kind": "manual",
+          "hint": 0,
+          "address": "0000000000060180",
+          "body_sha256": "91192c030ffde6edefe7ad1fa4716fdf0049d2a357dcf568e3afa04a30204d13",
+          "csel_count": 0
+        },
+        {
+          "kind": "ready",
+          "hint": 0,
+          "address": "0000000000060e60",
+          "body_sha256": "be920a4d7dd4d78fb5c4e2deba97fa0874ca02dbdad53dd210656159eaa9ffe2",
+          "csel_count": 0
+        },
+        {
+          "kind": "cold",
+          "hint": 0,
+          "address": "0000000000061270",
+          "body_sha256": "191f402b7132c5138e86651f79f8562512b20ebccf2c2949758b481be707f7c4",
+          "csel_count": 0
+        },
+        {
+          "kind": "manual",
+          "hint": 1,
+          "address": "0000000000061860",
+          "body_sha256": "ba1f7314a654c99eedd3f4a70186924bb790e9ffb12d9936efd31f0946399839",
+          "csel_count": 0
+        },
+        {
+          "kind": "ready",
+          "hint": 1,
+          "address": "00000000000622e0",
+          "body_sha256": "6d767215ef16076b042852cfd7efb3ec52ad12c3504ee5377aa17481077ad10f",
+          "csel_count": 0
+        },
+        {
+          "kind": "cold",
+          "hint": 1,
+          "address": "00000000000627f0",
+          "body_sha256": "dbe1395583e58aed6de9ec59efeae212531f42cddbac99eb561c76516d8b9392",
+          "csel_count": 0
+        }
+      ]
+    },
+    "constant": {
+      "asm": "build/loom-arm-serial-20261013/control-release/constant.asm",
+      "sha256": "6b84b2c109a635b64e2cd6b09c3bd574f1236ab130e87e6090ff636c4f075bf0",
+      "ready_families": 20,
+      "ready_hint_counts": {
+        "0": 5,
+        "1": 5,
+        "2": 5,
+        "3": 5
+      },
+      "ready_ordinary_calls": 0,
+      "ready_sp_instructions": 0,
+      "ready_csel_instruction_count": 20,
+      "selected": [
+        {
+          "kind": "manual",
+          "hint": 0,
+          "address": "00000000000614c0",
+          "body_sha256": "75f2dbc41dc0338659c3e7d2bc87890a539b97c53bdf991a6a9d516327d898c9",
+          "csel_count": 0
+        },
+        {
+          "kind": "ready",
+          "hint": 0,
+          "address": "0000000000062200",
+          "body_sha256": "40b03ab3b83ce9610e6de40b26f61882e819548204578eb9d1b7cfdff1e748c2",
+          "csel_count": 1
+        },
+        {
+          "kind": "cold",
+          "hint": 0,
+          "address": "0000000000062630",
+          "body_sha256": "6825c9b5158fe7dc1178cc77a65659c0e87bfbe9147fbb20f90cf1ca8a91cc63",
+          "csel_count": 0
+        },
+        {
+          "kind": "manual",
+          "hint": 1,
+          "address": "0000000000062c20",
+          "body_sha256": "5357a3c1f67c6251cf3c79469472d57f02247b0e7d46d0cf2f73b501e9d65278",
+          "csel_count": 0
+        },
+        {
+          "kind": "ready",
+          "hint": 1,
+          "address": "00000000000636e0",
+          "body_sha256": "c1a300a2bbeb085c623709f70f3c6655bf74c5a8c86244f046bbdeb7225faab4",
+          "csel_count": 1
+        },
+        {
+          "kind": "cold",
+          "hint": 1,
+          "address": "0000000000063c10",
+          "body_sha256": "9a4c671b489bc227cfbde9ee04b4035a4f1af2615b2d46624cf468d03c052abc",
+          "csel_count": 0
+        }
+      ]
+    }
+  },
+  "selected_mechanisms": {
+    "branch": "Both K40/V64 Hint0/1 ready and manual miss paths directly toggle old key and enter hashing without a next-key CSEL. Ready false path6114cLDR\u219261150EOR\u2192remaining decrement\u2192611d0hash; Hint1 626d4LDR\u2192626d8EOR\u2192remaining decrement\u21926273chash. Existing lookup untouched; traffic/control changes in consumer are broader than one MOV.",
+    "constant": "K40/V64 ready Hint0/1 materialize independent w9=0 via W-register MOV at each absence, then TST bit0/CSEL. Ready H0absence62554/62560; H1absence639c4/639d0/63b20. No descendants result feeds that CSEL. One extra AND masks opaque bool for hits increment; CMP becomes TST. Manual gets extra TBZ/TBNZ/AND due opaque bool, but direct miss key toggle independent of bucket count.",
+    "reference": "Reference retains the native-slow Hint1 count\u2192CSEL dependency and fast Hint0 explicitfalse shape."
+  },
+  "limits": [
+    "This proves intended compiler mechanism controls, not causal speedup; native results pending.",
+    "Ready zero-stack/ordinary-call statement excludes same-signature cold body continuation and ordinary read_body helper.",
+    "Constant false inline asm is an AArch64 diagnostic, not a proposed cross-platform production requirement.",
+    "Consumer branch still needs native performance qualification in all workload modes; canonical lookup semantics/paths retained."
+  ]
+}

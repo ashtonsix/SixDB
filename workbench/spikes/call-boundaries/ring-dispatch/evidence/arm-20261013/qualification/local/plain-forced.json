@@ -1,0 +1,77 @@
+{
+  "scope": "Local release semantic consequences only; timings emitted by CLI are not used or claimed. Exact owning expected checksums validated internally by each execution; visit count checked inside ring_run/timed wrapper. Ragged aged mixed long-chain A5 case, C1/C8/C32.",
+  "checks": [
+    {
+      "concurrency": 1,
+      "command": [
+        "taskset",
+        "-c",
+        "0",
+        "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/plain-release/plain",
+        "5",
+        "701",
+        "2",
+        "1",
+        "1",
+        "1",
+        "37913"
+      ],
+      "exit_code": 0,
+      "rows": 7,
+      "checksum": "374506781368963",
+      "requests": 1040,
+      "primary_visits": 1040,
+      "secondary_visits": 569,
+      "chain_body_visits": 1180,
+      "csv_sha256": "cda3f3c6ae6e77e3cc69f100a7600f9409352cc9bd9c7e3501e1b3dc47024645"
+    },
+    {
+      "concurrency": 8,
+      "command": [
+        "taskset",
+        "-c",
+        "0",
+        "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/plain-release/plain",
+        "5",
+        "701",
+        "2",
+        "1",
+        "8",
+        "1",
+        "37913"
+      ],
+      "exit_code": 0,
+      "rows": 7,
+      "checksum": "374506781368963",
+      "requests": 1040,
+      "primary_visits": 1040,
+      "secondary_visits": 569,
+      "chain_body_visits": 1180,
+      "csv_sha256": "a4fa9c1f734cc7c1a6764b1328ceef76129fe650ec3e8e93e257126502ecc40a"
+    },
+    {
+      "concurrency": 32,
+      "command": [
+        "taskset",
+        "-c",
+        "0",
+        "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/plain-release/plain",
+        "5",
+        "701",
+        "2",
+        "1",
+        "32",
+        "1",
+        "37913"
+      ],
+      "exit_code": 0,
+      "rows": 7,
+      "checksum": "374506781368963",
+      "requests": 1040,
+      "primary_visits": 1040,
+      "secondary_visits": 569,
+      "chain_body_visits": 1180,
+      "csv_sha256": "5da1244e02eb18cadc8f7c17d977d39be131dcd1470120e0423c020cf6ef4f34"
+    }
+  ]
+}

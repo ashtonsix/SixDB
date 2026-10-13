@@ -20,10 +20,12 @@ Messages, a local allocation Pool and a bounded Task queue. Adopt the caller
 thread, then configure the Worker with a retained Arena and a Task capacity.
 Zero capacity still permits direct native work and physical Message service.
 
-The assigned owner can borrow `bytes(Allocation)` during a nonsuspending visit
+The assigned owner can borrow `bytes(Allocation)` during a nonsuspending owner call
 while it keeps Allocation and bindings stable: no polling, reentry, growth,
 release or owner change during that borrow. Checked Ikea bindings qualify the
-actual footprint.
+actual footprint. A synchronous Ring drain may reuse those bindings across visits
+and spin returns within that call, provided the whole call preserves this guarantee
+and every borrower finishes or is discarded before the call returns.
 Work that escapes this scope acquires a Hold, which keeps its captured address
 and complete footprint alive. A Hold supplies no content stability, selected
 version or access permission; the operation must preserve those separately.

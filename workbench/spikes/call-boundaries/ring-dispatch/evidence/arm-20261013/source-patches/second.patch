@@ -1,0 +1,364 @@
+--- first-qualified/workbench/spikes/hashtable/table_ring.cpp
++++ second/workbench/spikes/hashtable/table_ring.cpp
+@@ -63,7 +63,16 @@
+     answer out;for(const auto& j:work){out.sum+=j.sum;out.found+=j.found;out.terminal^=j.key;}return out;
+ }
+ template<class L>[[gnu::always_inline]] void consume(L& j,bool found,word value) {
++#if defined(LOOM_ARM_LANE_SNAPSHOT)
++    auto key=j.key,sum=j.sum,hits=j.found;
++    auto remaining=j.remaining;
++    // Compiler ordering only: materialize the old lane before publishing any
++    // part of the new lane. No emitted instruction or global memory clobber.
++    asm volatile("" : "+r"(key), "+r"(sum), "+r"(hits), "+r"(remaining));
++    j.sum=sum+value;j.found=hits+word(found);j.key=found?value:(key^missing_bit);j.remaining=remaining-1;
++#else
+     j.sum+=value;j.found+=word(found);j.key=found?value:(j.key^missing_bit);--j.remaining;
++#endif
+ }
+ template<class Emit>[[gnu::always_inline]] void window(const byte* p,std::size_t bytes,std::size_t line,Emit&& emit) {
+     require(bytes>0);emit(p);
+--- first-qualified/workbench/spikes/hashtable/table.h
++++ second/workbench/spikes/hashtable/table.h
+@@ -130,8 +130,14 @@
+     // transition that can consume them prepares them first.
+     template<class Emit>[[gnu::always_inline]] void prepare_read(read_probe& probe,word key,Emit&& emit)const {
+         static_assert(Storage==sharing::flat);
+-        const auto h=hash1_(key);const auto* p=primary_.at(pi(h));emit(p,P.bytes);
++        const auto h=hash1_(key);const auto* p=primary_.at(pi(h));
++#if !defined(LOOM_ARM_STORE_FIRST)
++        emit(p,P.bytes);
++#endif
+         probe.key=key;probe.hash=h;probe.data=p;probe.stage=read_stage::primary;
++#if defined(LOOM_ARM_STORE_FIRST)
++        emit(p,P.bytes);
++#endif
+     }
+     template<bool IncludeBody=true,class Emit>[[gnu::always_inline]] bool advance_read(read_probe& p,word& out,bool& found,Emit&& emit)const {
+         switch(p.stage) {
+--- first-qualified/loom/include/loom/ring.h
++++ second/loom/include/loom/ring.h
+@@ -56,12 +56,21 @@
+   // than operation arguments or per-visit Ring memory. Authors carry it intact.
+   class Cursor {
+     friend class MemoryRing;
++#if defined(LOOM_ARM_FRONTIER_CURSOR) && LOOM_ARM_FRONTIER_CURSOR
++    Slot* frontier_;
++    std::uint64_t remaining_;
++    Cursor(Slot* frontier, std::uint64_t remaining) noexcept
++        : frontier_(frontier), remaining_(remaining) {}
++  public:
++    [[gnu::always_inline]] MemoryRing* operator->() const noexcept { return frontier_->owner; }
++#else
+     MemoryRing* ring_;
+     std::uint64_t remaining_;
+     Cursor(MemoryRing* ring, std::uint64_t remaining) noexcept
+         : ring_(ring), remaining_(remaining) {}
+   public:
+     [[gnu::always_inline]] MemoryRing* operator->() const noexcept { return ring_; }
++#endif
+   };
+   static_assert(std::is_trivially_copyable_v<Cursor> &&
+       sizeof(Cursor) == 2 * sizeof(std::uint64_t));
+@@ -83,8 +92,13 @@
+     Function function{};
+     Slot* next{};
+     Arguments arguments{};
++#if defined(LOOM_ARM_FRONTIER_CURSOR) && LOOM_ARM_FRONTIER_CURSOR
++    MemoryRing* owner{};
++    Slot* previous{};
++#else
+     Slot* previous{};
+     std::size_t inventory{};
++#endif
+     struct Dependency { const void* address{}; std::uint8_t selector{}; };
+     const void* dependency_address{};
+     std::uint8_t dependency_selector{};
+@@ -131,7 +145,11 @@
+     const auto count = capacity.active + capacity.overflow;
+     for (std::size_t i = 0; i < count; ++i) {
+       std::construct_at(slots_ + i);
++#if defined(LOOM_ARM_FRONTIER_CURSOR) && LOOM_ARM_FRONTIER_CURSOR
++      slots_[i].owner = this;
++#else
+       slots_[i].inventory = i;
++#endif
+       std::construct_at(free_ + i, count - i - 1);
+     }
+     for (std::size_t i = 0; i < capacity.overflow; ++i)
+@@ -223,7 +241,11 @@
+     if (!budget.visits || !live_) return 0;
+     spinning_ = true;
+     Arguments empty{};
++#if defined(LOOM_ARM_FRONTIER_CURSOR) && LOOM_ARM_FRONTIER_CURSOR
++    enter(resume, Cursor{next_, budget.visits}, nullptr,
++#else
+     enter(resume, Cursor{this, budget.visits}, nullptr,
++#endif
+         std::get<S>(shared_)..., std::get<I>(empty)...);
+     spinning_ = false;
+     const auto visits = budget.visits - spin_left_;
+@@ -268,11 +290,23 @@
+   /// its Arguments cease to be live before another callback is dispatched.
+   [[gnu::noinline]] static LOOM_NATIVE_CC void
+   finish(Cursor ring, Slot* slot, Shared... shared, Native... values) {
++#if defined(LOOM_ARM_FRONTIER_CURSOR) && LOOM_ARM_FRONTIER_CURSOR
++    // Capture the owner while the prepublished frontier is still live. A
++    // retirement or FIFO replacement can change that frontier's identity.
++    auto* owner = ring.operator->();
++    owner->retire(*slot);
++    if (!owner->live_) {
++      owner->spin_left_ = ring.remaining_;
++      return;
++    }
++    ring.frontier_ = owner->next_;
++#else
+     ring->retire(*slot);
+     if (!ring->live_) {
+       ring->spin_left_ = ring.remaining_;
+       return;
+     }
++#endif
+     [[clang::musttail]] return resume(ring, nullptr, shared..., values...);
+   }
+ 
+@@ -313,7 +347,7 @@
+       if (predicate(std::as_const(slot->arguments))) {
+         unlink(*slot);
+         --live_;
+-        free_[free_count_++] = slot->inventory;
++        free_[free_count_++] = inventory(*slot);
+         ++removed;
+       }
+       slot = following;
+@@ -326,7 +360,7 @@
+       auto* slot = overflow_[read];
+       increment(read, capacity_.overflow);
+       if (predicate(std::as_const(slot->arguments))) {
+-        free_[free_count_++] = slot->inventory;
++        free_[free_count_++] = inventory(*slot);
+         ++removed;
+       } else {
+         overflow_[write] = slot;
+@@ -439,9 +473,20 @@
+   void retire(Slot& slot) noexcept {
+     --live_;
+     ++counters_.completed;
+-    free_[free_count_++] = slot.inventory;
++    free_[free_count_++] = inventory(slot);
+     if (overflow_count_) promote(&slot);
+     else unlink(slot);
++  }
++
++  [[gnu::always_inline]] std::size_t inventory(const Slot& slot) const noexcept {
++#if defined(LOOM_ARM_FRONTIER_CURSOR) && LOOM_ARM_FRONTIER_CURSOR
++    // The fixed bank qualifies this unsigned byte offset; avoid introducing
++    // a raw-storage array pointer-difference assumption on the cold path.
++    return (reinterpret_cast<std::uintptr_t>(&slot) -
++        reinterpret_cast<std::uintptr_t>(slots_)) / sizeof(Slot);
++#else
++    return slot.inventory;
++#endif
+   }
+ 
+   [[gnu::always_inline]] static LOOM_NATIVE_CC void
+@@ -450,10 +495,22 @@
+       ring->spin_left_ = 0;
+       return;
+     }
++#if defined(LOOM_ARM_FRONTIER_CURSOR) && LOOM_ARM_FRONTIER_CURSOR
++    auto* slot = ring.frontier_;
++    const auto function = slot->function;
++    auto* following = slot->next;
++    slot->owner->next_ = following;
++    ring.frontier_ = following;
++#else
+     auto* slot = ring->next_;
+     ring->next_ = slot->next;
++#endif
+     --ring.remaining_;
++#if defined(LOOM_ARM_FRONTIER_CURSOR) && LOOM_ARM_FRONTIER_CURSOR
++    [[clang::musttail]] return function(ring, slot, shared...,
++#else
+     [[clang::musttail]] return slot->function(ring, slot, shared...,
++#endif
+         std::get<I>(slot->arguments)...);
+   }
+ 
+--- first-qualified/workbench/spikes/hashtable/CMakeLists.txt
++++ second/workbench/spikes/hashtable/CMakeLists.txt
+@@ -154,3 +154,16 @@
+ target_compile_definitions(hashtable_table_ring_single PRIVATE NDEBUG LOOM_ARM_INPLACE_PREPARE=1 LOOM_ARM_SINGLE_HANDOFF=1)
+ target_compile_options(hashtable_table_ring_single PRIVATE -fno-vectorize -fno-slp-vectorize)
+ add_test(NAME hashtable_table_ring_single_check COMMAND hashtable_table_ring_single 5 701 2 1 8 1 37913)
++foreach(loom_factor IN ITEMS lane storefirst frontier)
++  add_executable(hashtable_table_ring_${loom_factor} table_ring.cpp "${hashtable_table_plans}")
++  sixdb_target(hashtable_table_ring_${loom_factor})
++  target_link_libraries(hashtable_table_ring_${loom_factor} PRIVATE hashtable_abseil_baseline
++    ikea::seriespack ikea::tuplepack ikea::streampack orbital::orbital loom::loom)
++  target_include_directories(hashtable_table_ring_${loom_factor} PRIVATE "${CMAKE_CURRENT_BINARY_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}")
++  target_compile_definitions(hashtable_table_ring_${loom_factor} PRIVATE NDEBUG LOOM_ARM_INPLACE_PREPARE=1)
++  target_compile_options(hashtable_table_ring_${loom_factor} PRIVATE -fno-vectorize -fno-slp-vectorize)
++  add_test(NAME hashtable_table_ring_${loom_factor}_check COMMAND hashtable_table_ring_${loom_factor} 5 701 2 1 8 1 37913)
++endforeach()
++target_compile_definitions(hashtable_table_ring_lane PRIVATE LOOM_ARM_LANE_SNAPSHOT=1)
++target_compile_definitions(hashtable_table_ring_storefirst PRIVATE LOOM_ARM_STORE_FIRST=1)
++target_compile_definitions(hashtable_table_ring_frontier PRIVATE LOOM_ARM_FRONTIER_CURSOR=1)
+--- first-qualified/run-arm-serial.sh
++++ second/run-arm-serial.sh
+@@ -97,11 +97,11 @@
+   > "$SIXDB_RESULTS/loom-validation-$isa.txt" 2>&1
+ phase=build-factors
+ progress phase "$phase $isa"
+-cmake --build "$build" --target hashtable_table_ring hashtable_table_ring_inplace hashtable_table_ring_paired hashtable_table_ring_single \
++cmake --build "$build" --target hashtable_table_ring_inplace hashtable_table_ring_lane hashtable_table_ring_storefirst hashtable_table_ring_frontier \
+   -j "$SIXDB_BUILD_JOBS" > "$SIXDB_RESULTS/build-$isa.log" 2>&1
+ dir="$build/workbench/spikes/hashtable"
+-factors=(baseline inplace paired single)
+-targets=(hashtable_table_ring hashtable_table_ring_inplace hashtable_table_ring_paired hashtable_table_ring_single)
++factors=(inplace lane storefirst frontier)
++targets=(hashtable_table_ring_inplace hashtable_table_ring_lane hashtable_table_ring_storefirst hashtable_table_ring_frontier)
+ phase=forced-checks
+ progress phase "$phase $isa"
+ for index in "${!factors[@]}"; do
+--- first-qualified/controls/provenance.json
++++ second/controls/provenance.json
+@@ -1,6 +1,6 @@
+ {
+   "format": 1,
+-  "question": "Discriminate primary probe reset, ARM load/store pairing and single-live handoff behind the captured C1 Ring gap while preserving C32 throughput.",
++  "question": "Locate the hinted-only ARM C1 residual: old lane snapshot ordering, primary probe stores before hints, or register-carried Ring frontier.",
+   "reference_capture_digest": "7a2b737ed98881381953f855145c34060ce47c8f6d340f9c5fc37105ca8cfed9",
+   "reference_worker": "20261013T070146Z-eb763b9f",
+   "reference_binary_sha256": "f3aac7d1a2db141ec406cb49dc66bc000f46a99f072fe5e064f7619b16c60270",
+@@ -8,32 +8,39 @@
+   "reference_generated_plans_sha256": "28e8aff744d0c7e8bb4653f2e515ae1ee0fb9b06a6a69dbe673ee4e5ac6d24d3",
+   "factors": [
+     {
+-      "name": "baseline",
+-      "target": "hashtable_table_ring",
+-      "preparation": "Captured aggregate read_probe reset",
+-      "probe_order": "key,hash,data",
+-      "handoff": "Original generic handoff"
++      "name": "inplace",
++      "target": "hashtable_table_ring_inplace",
++      "preparation": "Primary-only in-place initialization reference",
++      "defines": [
++        "LOOM_ARM_INPLACE_PREPARE=1"
++      ]
+     },
+     {
+-      "name": "inplace",
+-      "target": "hashtable_table_ring_inplace",
+-      "preparation": "Only primary-phase fields initialized in place",
+-      "probe_order": "key,hash,data",
+-      "handoff": "Original generic handoff"
++      "name": "lane",
++      "target": "hashtable_table_ring_lane",
++      "preparation": "In-place; zero-emission register barrier snapshots old lane before publishing new lane stores",
++      "defines": [
++        "LOOM_ARM_INPLACE_PREPARE=1",
++        "LOOM_ARM_LANE_SNAPSHOT=1"
++      ]
+     },
+     {
+-      "name": "paired",
+-      "target": "hashtable_table_ring_paired",
+-      "preparation": "Only primary-phase fields initialized in place",
+-      "probe_order": "hash,data,key; private pairing discriminator",
+-      "handoff": "Original generic handoff"
++      "name": "storefirst",
++      "target": "hashtable_table_ring_storefirst",
++      "preparation": "In-place; primary probe assignments precede identical hint emission",
++      "defines": [
++        "LOOM_ARM_INPLACE_PREPARE=1",
++        "LOOM_ARM_STORE_FIRST=1"
++      ]
+     },
+     {
+-      "name": "single",
+-      "target": "hashtable_table_ring_single",
+-      "preparation": "Only primary-phase fields initialized in place",
+-      "probe_order": "key,hash,data",
+-      "handoff": "Conservative live==1 handoff path; stored arguments still restored; no public API change"
++      "name": "frontier",
++      "target": "hashtable_table_ring_frontier",
++      "preparation": "In-place; register-carried Ring frontier Cursor; stored job arguments retained",
++      "defines": [
++        "LOOM_ARM_INPLACE_PREPARE=1",
++        "LOOM_ARM_FRONTIER_CURSOR=1"
++      ]
+     }
+   ],
+   "arms": [
+@@ -56,10 +63,10 @@
+       "mixed": 1,
+       "concurrency": 1,
+       "factor_order": [
+-        "baseline",
+         "inplace",
+-        "paired",
+-        "single"
++        "lane",
++        "storefirst",
++        "frontier"
+       ]
+     },
+     {
+@@ -70,10 +77,10 @@
+       "mixed": 1,
+       "concurrency": 32,
+       "factor_order": [
+-        "single",
+-        "paired",
+-        "inplace",
+-        "baseline"
++        "frontier",
++        "storefirst",
++        "lane",
++        "inplace"
+       ]
+     },
+     {
+@@ -84,10 +91,10 @@
+       "mixed": 1,
+       "concurrency": 1,
+       "factor_order": [
+-        "baseline",
+         "inplace",
+-        "paired",
+-        "single"
++        "lane",
++        "storefirst",
++        "frontier"
+       ]
+     },
+     {
+@@ -98,10 +105,10 @@
+       "mixed": 1,
+       "concurrency": 32,
+       "factor_order": [
+-        "single",
+-        "paired",
+-        "inplace",
+-        "baseline"
++        "frontier",
++        "storefirst",
++        "lane",
++        "inplace"
+       ]
+     }
+   ],
+@@ -112,6 +119,11 @@
+     "Factor order alternates across different cases; a second optional pass reverses within each same case",
+     "Logical visits and potential hint targets are not PMU stalls, IPC or measured memory traffic",
+     "Original row-key layout; current owning-thread wider-value and key-layout changes excluded",
+-    "Paired probe layout and single-live handoff are separate private causal factors; neither establishes a public ABI or default."
+-  ]
++    "All four factors retain original key/hash/data probe order, job footprint, data, hint windows and operation stages. Frontier Cursor remains a private diagnostic, not a public ABI."
++  ],
++  "prior_diagnostic": {
++    "worker": "20261013T110137Z-1e139b98",
++    "source_digest": "677ff07f6d6913373ab13c384a5038d43b0a4bf6031ba80c4772a3afe1ad6184",
++    "result": "Primary-only preparation closes unhinted C1 gap while approximately35ns hinted gap persists."
++  }
+ }

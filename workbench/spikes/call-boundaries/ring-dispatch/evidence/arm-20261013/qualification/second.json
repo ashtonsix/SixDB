@@ -1,0 +1,290 @@
+{
+  "label": "second",
+  "job": "20261013T114517Z-1906f45e",
+  "worker_archive": {
+    "bucket": "calico-fleet-artifacts",
+    "bytes": 29433210,
+    "files": 111,
+    "format": 1,
+    "key": "sixdb/artifacts/sha256/24d983efc833f6d6e5d296ea296df139642da1d282cdd894b480ab8c571b9c1c.tar.gz",
+    "kind": "files",
+    "region": "us-east-1",
+    "sha256": "24d983efc833f6d6e5d296ea296df139642da1d282cdd894b480ab8c571b9c1c",
+    "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/24d983efc833f6d6e5d296ea296df139642da1d282cdd894b480ab8c571b9c1c.tar.gz"
+  },
+  "source": {
+    "job": "20261013T114517Z-1906f45e",
+    "source_commit": "c5de6b82d41035e8445d54dc329cfecf1f26ffc7",
+    "content_digest": "89eea7601db5089fac548254057eafca02f5e59375386d1f2c85a1b74c374528",
+    "source_archive_sha256": "07f68a1ee04c1017dff6a02404ac13f31629e037fc29445a229167d34c6242c4",
+    "source_manifest_sha256": "dfe1518d90a54fb4a3e021cf49f61cc1e090fb3bddfd96b44faa7df14695b553",
+    "source_files_verified": 3159,
+    "source_stability": {
+      "source_commit": "c5de6b82d41035e8445d54dc329cfecf1f26ffc7",
+      "worker_job": "20261013T114517Z-1906f45e",
+      "cpu": "0",
+      "worker_manifest_sha256": "dfe1518d90a54fb4a3e021cf49f61cc1e090fb3bddfd96b44faa7df14695b553",
+      "files": 3159,
+      "content_digest": "57310c99d3c181f36cd3b2854f08a0c3420920aaa0ca2b8840a1bb25f862b8c5",
+      "selected_sha256": {
+        "CMakeLists.txt": "dc9798382cd1ac56d668ca6e28827a8f915d9f14fd7ddda3ed25eba19b10b1ac",
+        "cmake/ClangVersion.cmake": "cde279b39294bfa37d02f80ff13d19f6489b0e7ee407958a734d54381cc0a20f",
+        "cmake/Tuning.cmake": "6d29c93b4713a8ea7ffd9c1682062a46470235cc74ef2e1194ed71b774940ad9",
+        "workbench/spikes/hashtable/table_ring.cpp": "ecb855ad490ec9f3ce16012fc0cc5ae5f889c8ceab10cbe7fa8857a703b2352f",
+        "workbench/spikes/hashtable/table.h": "bafe6d40d9345e3d6de149fce0c499e2b7aed556dab957813011202386938c4e",
+        "workbench/spikes/hashtable/table_chains.h": "eee07883048e7234b684422384602256ce63ece0be1b9fcde64b14e07900257f",
+        "workbench/spikes/hashtable/CMakeLists.txt": "f8e812694ad1552e5a031b901df2aec677e0366463ad4cb27034dbeccd546e52",
+        "workbench/spikes/hashtable/baseline.cmake": "8786a624f13af117984e80728677a61f2acf9ad106ab381cadded9bfc52bd1ba",
+        "workbench/spikes/hashtable/table_emit.py": "6086feab48941c683c128c866ef3093cc9147e2ac107ee33b321042e07a11bfd",
+        "workbench/spikes/hashtable/layout.py": "5b5374ec12480e267aea78f83b41adf7411c6a3809a8c9c69d98310310aea16c",
+        "loom/include/loom/ring.h": "a01b827b272095f21e2514d8e8bfc0e11c8d0bf227c56d46f022b0a406a9a17e",
+        "loom/include/loom/cohort.h": "aaecd2c4ada55186e1a19011a8ab6a119924f002ef3e523f4c03ab3ebe7c0c97",
+        "loom/include/loom/hints.h": "4348457787bed3b7ede31362f7794694df87af4bc1d479bc8b74ff4b13be0cbe",
+        "run-arm-serial.sh": "e70060e3bc5af36d3773b075fb69629ea87d94522a259711a2a8021076b52210",
+        "controls/provenance.json": "3f84348ed36f462bc559852803484d6764c81990cd99c841febf8607468da3e7"
+      }
+    },
+    "provenance": {
+      "format": 1,
+      "question": "Locate the hinted-only ARM C1 residual: old lane snapshot ordering, primary probe stores before hints, or register-carried Ring frontier.",
+      "reference_capture_digest": "7a2b737ed98881381953f855145c34060ce47c8f6d340f9c5fc37105ca8cfed9",
+      "reference_worker": "20261013T070146Z-eb763b9f",
+      "reference_binary_sha256": "f3aac7d1a2db141ec406cb49dc66bc000f46a99f072fe5e064f7619b16c60270",
+      "reference_source_private_baseline_commit": "8e80555d8d0259bbd861feb565aa294b29b605b1",
+      "reference_generated_plans_sha256": "28e8aff744d0c7e8bb4653f2e515ae1ee0fb9b06a6a69dbe673ee4e5ac6d24d3",
+      "factors": [
+        {
+          "name": "inplace",
+          "target": "hashtable_table_ring_inplace",
+          "preparation": "Primary-only in-place initialization reference",
+          "defines": [
+            "LOOM_ARM_INPLACE_PREPARE=1"
+          ]
+        },
+        {
+          "name": "lane",
+          "target": "hashtable_table_ring_lane",
+          "preparation": "In-place; zero-emission register barrier snapshots old lane before publishing new lane stores",
+          "defines": [
+            "LOOM_ARM_INPLACE_PREPARE=1",
+            "LOOM_ARM_LANE_SNAPSHOT=1"
+          ]
+        },
+        {
+          "name": "storefirst",
+          "target": "hashtable_table_ring_storefirst",
+          "preparation": "In-place; primary probe assignments precede identical hint emission",
+          "defines": [
+            "LOOM_ARM_INPLACE_PREPARE=1",
+            "LOOM_ARM_STORE_FIRST=1"
+          ]
+        },
+        {
+          "name": "frontier",
+          "target": "hashtable_table_ring_frontier",
+          "preparation": "In-place; register-carried Ring frontier Cursor; stored job arguments retained",
+          "defines": [
+            "LOOM_ARM_INPLACE_PREPARE=1",
+            "LOOM_ARM_FRONTIER_CURSOR=1"
+          ]
+        }
+      ],
+      "arms": [
+        "abseil",
+        "abseil_prefetch",
+        "fused",
+        "manual",
+        "manual_hints",
+        "ring",
+        "ring_hints"
+      ],
+      "default_repetitions": 3,
+      "default_passes": 1,
+      "case_order": [
+        {
+          "name": "hot_serial",
+          "a": 8,
+          "entries": 3276,
+          "turnovers": 8,
+          "mixed": 1,
+          "concurrency": 1,
+          "factor_order": [
+            "inplace",
+            "lane",
+            "storefirst",
+            "frontier"
+          ]
+        },
+        {
+          "name": "hot_parallel",
+          "a": 8,
+          "entries": 3276,
+          "turnovers": 8,
+          "mixed": 1,
+          "concurrency": 32,
+          "factor_order": [
+            "frontier",
+            "storefirst",
+            "lane",
+            "inplace"
+          ]
+        },
+        {
+          "name": "large_aged_serial",
+          "a": 20,
+          "entries": 13421772,
+          "turnovers": 8,
+          "mixed": 1,
+          "concurrency": 1,
+          "factor_order": [
+            "inplace",
+            "lane",
+            "storefirst",
+            "frontier"
+          ]
+        },
+        {
+          "name": "large_aged_parallel",
+          "a": 20,
+          "entries": 13421772,
+          "turnovers": 8,
+          "mixed": 1,
+          "concurrency": 32,
+          "factor_order": [
+            "frontier",
+            "storefirst",
+            "lane",
+            "inplace"
+          ]
+        }
+      ],
+      "seed": 37913,
+      "measurement_limits": [
+        "Initial three-repetition diagnostic; not the final seven-repetition panel",
+        "One immutable map per executable invocation; repeated operation preparation and all timed stage visits remain charged",
+        "Factor order alternates across different cases; a second optional pass reverses within each same case",
+        "Logical visits and potential hint targets are not PMU stalls, IPC or measured memory traffic",
+        "Original row-key layout; current owning-thread wider-value and key-layout changes excluded",
+        "All four factors retain original key/hash/data probe order, job footprint, data, hint windows and operation stages. Frontier Cursor remains a private diagnostic, not a public ABI."
+      ],
+      "prior_diagnostic": {
+        "worker": "20261013T110137Z-1e139b98",
+        "source_digest": "677ff07f6d6913373ab13c384a5038d43b0a4bf6031ba80c4772a3afe1ad6184",
+        "result": "Primary-only preparation closes unhinted C1 gap while approximately35ns hinted gap persists."
+      }
+    }
+  },
+  "capture": {
+    "compiler_version_sha256": "0cf7e452648b3754289200426984662d1d8d0a21d56310d301a24e11399ceab8",
+    "compiler_executable_receipt_sha256": "96cf4b011236b519881ec4083528514459399851a3ca505f0b314cd3ec399aca",
+    "compile_database_sha256": "e0a20c81f2ff81e6dd21c500184f7ca10f526e88def8b691f4b7e706088ba105",
+    "compile_qualifiers": {
+      "inplace": {
+        "directory": "/opt/sixdb/source/build/loom-arm-serial-neon",
+        "command": "/usr/bin/clang++-21 -DLOOM_ARM_INPLACE_PREPARE=1 -DNDEBUG -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=1 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN5=0 -I/opt/sixdb/source/build/loom-arm-serial-neon/workbench/spikes/hashtable -I/opt/sixdb/source/workbench/spikes/hashtable -I/opt/sixdb/source/ikea/include -I/opt/sixdb/source/orbital/include -I/opt/sixdb/source/loom/include -isystem /opt/sixdb/source/build/loom-arm-serial-neon/_deps/hashtable_abseil-src -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -fno-vectorize -fno-slp-vectorize -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=armv8-a+simd -mtune=neoverse-v2 -o workbench/spikes/hashtable/CMakeFiles/hashtable_table_ring_inplace.dir/table_ring.cpp.o -c /opt/sixdb/source/workbench/spikes/hashtable/table_ring.cpp",
+        "file": "/opt/sixdb/source/workbench/spikes/hashtable/table_ring.cpp",
+        "output": "workbench/spikes/hashtable/CMakeFiles/hashtable_table_ring_inplace.dir/table_ring.cpp.o"
+      },
+      "lane": {
+        "directory": "/opt/sixdb/source/build/loom-arm-serial-neon",
+        "command": "/usr/bin/clang++-21 -DLOOM_ARM_INPLACE_PREPARE=1 -DLOOM_ARM_LANE_SNAPSHOT=1 -DNDEBUG -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=1 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN5=0 -I/opt/sixdb/source/build/loom-arm-serial-neon/workbench/spikes/hashtable -I/opt/sixdb/source/workbench/spikes/hashtable -I/opt/sixdb/source/ikea/include -I/opt/sixdb/source/orbital/include -I/opt/sixdb/source/loom/include -isystem /opt/sixdb/source/build/loom-arm-serial-neon/_deps/hashtable_abseil-src -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -fno-vectorize -fno-slp-vectorize -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=armv8-a+simd -mtune=neoverse-v2 -o workbench/spikes/hashtable/CMakeFiles/hashtable_table_ring_lane.dir/table_ring.cpp.o -c /opt/sixdb/source/workbench/spikes/hashtable/table_ring.cpp",
+        "file": "/opt/sixdb/source/workbench/spikes/hashtable/table_ring.cpp",
+        "output": "workbench/spikes/hashtable/CMakeFiles/hashtable_table_ring_lane.dir/table_ring.cpp.o"
+      },
+      "storefirst": {
+        "directory": "/opt/sixdb/source/build/loom-arm-serial-neon",
+        "command": "/usr/bin/clang++-21 -DLOOM_ARM_INPLACE_PREPARE=1 -DLOOM_ARM_STORE_FIRST=1 -DNDEBUG -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=1 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN5=0 -I/opt/sixdb/source/build/loom-arm-serial-neon/workbench/spikes/hashtable -I/opt/sixdb/source/workbench/spikes/hashtable -I/opt/sixdb/source/ikea/include -I/opt/sixdb/source/orbital/include -I/opt/sixdb/source/loom/include -isystem /opt/sixdb/source/build/loom-arm-serial-neon/_deps/hashtable_abseil-src -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -fno-vectorize -fno-slp-vectorize -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=armv8-a+simd -mtune=neoverse-v2 -o workbench/spikes/hashtable/CMakeFiles/hashtable_table_ring_storefirst.dir/table_ring.cpp.o -c /opt/sixdb/source/workbench/spikes/hashtable/table_ring.cpp",
+        "file": "/opt/sixdb/source/workbench/spikes/hashtable/table_ring.cpp",
+        "output": "workbench/spikes/hashtable/CMakeFiles/hashtable_table_ring_storefirst.dir/table_ring.cpp.o"
+      },
+      "frontier": {
+        "directory": "/opt/sixdb/source/build/loom-arm-serial-neon",
+        "command": "/usr/bin/clang++-21 -DLOOM_ARM_FRONTIER_CURSOR=1 -DLOOM_ARM_INPLACE_PREPARE=1 -DNDEBUG -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=1 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN5=0 -I/opt/sixdb/source/build/loom-arm-serial-neon/workbench/spikes/hashtable -I/opt/sixdb/source/workbench/spikes/hashtable -I/opt/sixdb/source/ikea/include -I/opt/sixdb/source/orbital/include -I/opt/sixdb/source/loom/include -isystem /opt/sixdb/source/build/loom-arm-serial-neon/_deps/hashtable_abseil-src -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -fno-vectorize -fno-slp-vectorize -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=armv8-a+simd -mtune=neoverse-v2 -o workbench/spikes/hashtable/CMakeFiles/hashtable_table_ring_frontier.dir/table_ring.cpp.o -c /opt/sixdb/source/workbench/spikes/hashtable/table_ring.cpp",
+        "file": "/opt/sixdb/source/workbench/spikes/hashtable/table_ring.cpp",
+        "output": "workbench/spikes/hashtable/CMakeFiles/hashtable_table_ring_frontier.dir/table_ring.cpp.o"
+      }
+    },
+    "binaries": {
+      "inplace": {
+        "binary_sha256": "ae45f182fd8539d9bcff07d4b2c97d473905f1120d0b6c061d63726f9cb3ec5d",
+        "assembly_gzip_sha256": "2cb95ed706a643364d9c86620d75284179556ebe0a977b7dbd9c2c347987ce60"
+      },
+      "lane": {
+        "binary_sha256": "6ef5b574a43020651c8a5df94c6353786194757cf932dffd2a1c9db0eeb75007",
+        "assembly_gzip_sha256": "606cdc1385a905ee9aa33bc6c0ff681a62248b87cdf7d4c0defa3f7c0b7235c2"
+      },
+      "storefirst": {
+        "binary_sha256": "e4a71c989481c17aaefddac80a6aefcb758d4ebf1a01f3096b6b1853ee64bf4d",
+        "assembly_gzip_sha256": "007c1558997f546d4dec4d4f64d1eaa174a49ffdce66e996540f1dabf59c41dc"
+      },
+      "frontier": {
+        "binary_sha256": "4eb2a5cd1228481a7118896b4ef755f9323f7fd7bf5d067a8b577c11addadb86",
+        "assembly_gzip_sha256": "16d39903755184a3c09568f92436e39b5955072366f1de47644ff44d7133e884"
+      }
+    },
+    "generated_plan_sha256": "28e8aff744d0c7e8bb4653f2e515ae1ee0fb9b06a6a69dbe673ee4e5ac6d24d3",
+    "libraries_receipt_sha256": "499330ce923cb672da634e706e316e1cfd3c3f61273cfcf84a9641626dbc0e1f"
+  },
+  "independent_analysis_input_sha256": "69fd12ca1a8013caf2f0eda91f63db4190b939a13ebec83d23c17d24fa36cd8b",
+  "qualification_scope": "Captured independently validated source/binary/compile/native receipts. The offline selected-data report verifies their bytes but does not repeat full-archive/native checks.",
+  "source_archive_member": "source.tar.gz",
+  "source_archive_sha256": "07f68a1ee04c1017dff6a02404ac13f31629e037fc29445a229167d34c6242c4",
+  "source_manifest_member": "source-manifest.json",
+  "omitted_members": {
+    "assembly-neon-frontier.txt.gz": {
+      "bytes": 1654446,
+      "rebuildable": false,
+      "sha256": "16d39903755184a3c09568f92436e39b5955072366f1de47644ff44d7133e884"
+    },
+    "assembly-neon-inplace.txt.gz": {
+      "bytes": 1655326,
+      "rebuildable": false,
+      "sha256": "2cb95ed706a643364d9c86620d75284179556ebe0a977b7dbd9c2c347987ce60"
+    },
+    "assembly-neon-lane.txt.gz": {
+      "bytes": 1653685,
+      "rebuildable": false,
+      "sha256": "606cdc1385a905ee9aa33bc6c0ff681a62248b87cdf7d4c0defa3f7c0b7235c2"
+    },
+    "assembly-neon-storefirst.txt.gz": {
+      "bytes": 1639559,
+      "rebuildable": false,
+      "sha256": "007c1558997f546d4dec4d4f64d1eaa174a49ffdce66e996540f1dabf59c41dc"
+    },
+    "cmake-cache-neon.txt": {
+      "bytes": 21717,
+      "rebuildable": false,
+      "sha256": "9ec0dc63d8dcca15fabc3338ddd6f092d0abc0035960ab6ff56f1e0483025b73"
+    },
+    "compile-neon.json": {
+      "bytes": 382192,
+      "rebuildable": false,
+      "sha256": "e0a20c81f2ff81e6dd21c500184f7ca10f526e88def8b691f4b7e706088ba105"
+    },
+    "table-plans-neon.h": {
+      "bytes": 564219,
+      "rebuildable": false,
+      "sha256": "28e8aff744d0c7e8bb4653f2e515ae1ee0fb9b06a6a69dbe673ee4e5ac6d24d3"
+    },
+    "table-ring-neon-frontier": {
+      "bytes": 10954136,
+      "rebuildable": true,
+      "sha256": "4eb2a5cd1228481a7118896b4ef755f9323f7fd7bf5d067a8b577c11addadb86"
+    },
+    "table-ring-neon-inplace": {
+      "bytes": 10950664,
+      "rebuildable": true,
+      "sha256": "ae45f182fd8539d9bcff07d4b2c97d473905f1120d0b6c061d63726f9cb3ec5d"
+    },
+    "table-ring-neon-lane": {
+      "bytes": 10962160,
+      "rebuildable": true,
+      "sha256": "6ef5b574a43020651c8a5df94c6353786194757cf932dffd2a1c9db0eeb75007"
+    },
+    "table-ring-neon-storefirst": {
+      "bytes": 10952152,
+      "rebuildable": true,
+      "sha256": "e4a71c989481c17aaefddac80a6aefcb758d4ebf1a01f3096b6b1853ee64bf4d"
+    }
+  }
+}

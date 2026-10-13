@@ -1,0 +1,17 @@
+isa,case,pass,order,factor,target,a,entries,turnovers,mixed,concurrency,reps,seed,start_utc,end_utc
+neon,hot_serial,0,0,baseline,hashtable_table_ring,8,3276,8,1,1,3,37913,2026-10-13T11:06:25.506354542Z,2026-10-13T11:06:25.552596177Z
+neon,hot_serial,0,1,inplace,hashtable_table_ring_inplace,8,3276,8,1,1,3,37913,2026-10-13T11:06:25.610648796Z,2026-10-13T11:06:25.657084731Z
+neon,hot_serial,0,2,paired,hashtable_table_ring_paired,8,3276,8,1,1,3,37913,2026-10-13T11:06:25.714377506Z,2026-10-13T11:06:25.761176313Z
+neon,hot_serial,0,3,single,hashtable_table_ring_single,8,3276,8,1,1,3,37913,2026-10-13T11:06:25.817517808Z,2026-10-13T11:06:25.864497450Z
+neon,hot_parallel,0,0,single,hashtable_table_ring_single,8,3276,8,1,32,3,37913,2026-10-13T11:06:25.921030589Z,2026-10-13T11:06:25.957425934Z
+neon,hot_parallel,0,1,paired,hashtable_table_ring_paired,8,3276,8,1,32,3,37913,2026-10-13T11:06:26.014712968Z,2026-10-13T11:06:26.050608481Z
+neon,hot_parallel,0,2,inplace,hashtable_table_ring_inplace,8,3276,8,1,32,3,37913,2026-10-13T11:06:26.108231566Z,2026-10-13T11:06:26.144807912Z
+neon,hot_parallel,0,3,baseline,hashtable_table_ring,8,3276,8,1,32,3,37913,2026-10-13T11:06:26.202002199Z,2026-10-13T11:06:26.238308730Z
+neon,large_aged_serial,0,0,baseline,hashtable_table_ring,20,13421772,8,1,1,3,37913,2026-10-13T11:06:26.295565864Z,2026-10-13T11:09:26.679994962Z
+neon,large_aged_serial,0,1,inplace,hashtable_table_ring_inplace,20,13421772,8,1,1,3,37913,2026-10-13T11:09:26.736266498Z,2026-10-13T11:12:22.602927765Z
+neon,large_aged_serial,0,2,paired,hashtable_table_ring_paired,20,13421772,8,1,1,3,37913,2026-10-13T11:12:22.659361061Z,2026-10-13T11:15:18.440545121Z
+neon,large_aged_serial,0,3,single,hashtable_table_ring_single,20,13421772,8,1,1,3,37913,2026-10-13T11:15:18.498493637Z,2026-10-13T11:18:14.556261557Z
+neon,large_aged_parallel,0,0,single,hashtable_table_ring_single,20,13421772,8,1,32,3,37913,2026-10-13T11:18:14.614029592Z,2026-10-13T11:19:36.321816302Z
+neon,large_aged_parallel,0,1,paired,hashtable_table_ring_paired,20,13421772,8,1,32,3,37913,2026-10-13T11:19:36.379315388Z,2026-10-13T11:20:57.696923827Z
+neon,large_aged_parallel,0,2,inplace,hashtable_table_ring_inplace,20,13421772,8,1,32,3,37913,2026-10-13T11:20:57.754366036Z,2026-10-13T11:22:19.207634251Z
+neon,large_aged_parallel,0,3,baseline,hashtable_table_ring,20,13421772,8,1,32,3,37913,2026-10-13T11:22:19.264111248Z,2026-10-13T11:23:41.295601937Z

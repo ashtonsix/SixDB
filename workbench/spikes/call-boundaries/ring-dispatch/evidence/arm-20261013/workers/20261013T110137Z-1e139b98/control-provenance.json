@@ -1,0 +1,117 @@
+{
+  "format": 1,
+  "question": "Discriminate primary probe reset, ARM load/store pairing and single-live handoff behind the captured C1 Ring gap while preserving C32 throughput.",
+  "reference_capture_digest": "7a2b737ed98881381953f855145c34060ce47c8f6d340f9c5fc37105ca8cfed9",
+  "reference_worker": "20261013T070146Z-eb763b9f",
+  "reference_binary_sha256": "f3aac7d1a2db141ec406cb49dc66bc000f46a99f072fe5e064f7619b16c60270",
+  "reference_source_private_baseline_commit": "8e80555d8d0259bbd861feb565aa294b29b605b1",
+  "reference_generated_plans_sha256": "28e8aff744d0c7e8bb4653f2e515ae1ee0fb9b06a6a69dbe673ee4e5ac6d24d3",
+  "factors": [
+    {
+      "name": "baseline",
+      "target": "hashtable_table_ring",
+      "preparation": "Captured aggregate read_probe reset",
+      "probe_order": "key,hash,data",
+      "handoff": "Original generic handoff"
+    },
+    {
+      "name": "inplace",
+      "target": "hashtable_table_ring_inplace",
+      "preparation": "Only primary-phase fields initialized in place",
+      "probe_order": "key,hash,data",
+      "handoff": "Original generic handoff"
+    },
+    {
+      "name": "paired",
+      "target": "hashtable_table_ring_paired",
+      "preparation": "Only primary-phase fields initialized in place",
+      "probe_order": "hash,data,key; private pairing discriminator",
+      "handoff": "Original generic handoff"
+    },
+    {
+      "name": "single",
+      "target": "hashtable_table_ring_single",
+      "preparation": "Only primary-phase fields initialized in place",
+      "probe_order": "key,hash,data",
+      "handoff": "Conservative live==1 handoff path; stored arguments still restored; no public API change"
+    }
+  ],
+  "arms": [
+    "abseil",
+    "abseil_prefetch",
+    "fused",
+    "manual",
+    "manual_hints",
+    "ring",
+    "ring_hints"
+  ],
+  "default_repetitions": 3,
+  "default_passes": 1,
+  "case_order": [
+    {
+      "name": "hot_serial",
+      "a": 8,
+      "entries": 3276,
+      "turnovers": 8,
+      "mixed": 1,
+      "concurrency": 1,
+      "factor_order": [
+        "baseline",
+        "inplace",
+        "paired",
+        "single"
+      ]
+    },
+    {
+      "name": "hot_parallel",
+      "a": 8,
+      "entries": 3276,
+      "turnovers": 8,
+      "mixed": 1,
+      "concurrency": 32,
+      "factor_order": [
+        "single",
+        "paired",
+        "inplace",
+        "baseline"
+      ]
+    },
+    {
+      "name": "large_aged_serial",
+      "a": 20,
+      "entries": 13421772,
+      "turnovers": 8,
+      "mixed": 1,
+      "concurrency": 1,
+      "factor_order": [
+        "baseline",
+        "inplace",
+        "paired",
+        "single"
+      ]
+    },
+    {
+      "name": "large_aged_parallel",
+      "a": 20,
+      "entries": 13421772,
+      "turnovers": 8,
+      "mixed": 1,
+      "concurrency": 32,
+      "factor_order": [
+        "single",
+        "paired",
+        "inplace",
+        "baseline"
+      ]
+    }
+  ],
+  "seed": 37913,
+  "measurement_limits": [
+    "Initial three-repetition diagnostic; not the final seven-repetition panel",
+    "One immutable map per executable invocation; repeated operation preparation and all timed stage visits remain charged",
+    "Factor order alternates across different cases; a second optional pass reverses within each same case",
+    "Logical visits and potential hint targets are not PMU stalls, IPC or measured memory traffic",
+    "Original row-key layout; current owning-thread wider-value and key-layout changes excluded",
+    "Paired probe layout and single-live handoff are separate private causal factors; neither establishes a public ABI or default."
+  ]
+}

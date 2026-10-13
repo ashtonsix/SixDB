@@ -1,0 +1,217 @@
+{
+  "format": 1,
+  "question": "Qualify plain terminal hit/miss consumer control after native branch and independent-zero controls close the ARM C1 gap",
+  "reference_capture_digest": "7a2b737ed98881381953f855145c34060ce47c8f6d340f9c5fc37105ca8cfed9",
+  "reference_worker": "20261013T070146Z-eb763b9f",
+  "reference_binary_sha256": "f3aac7d1a2db141ec406cb49dc66bc000f46a99f072fe5e064f7619b16c60270",
+  "reference_source_private_baseline_commit": "8e80555d8d0259bbd861feb565aa294b29b605b1",
+  "reference_generated_plans_sha256": "28e8aff744d0c7e8bb4653f2e515ae1ee0fb9b06a6a69dbe673ee4e5ac6d24d3",
+  "factors": [
+    {
+      "name": "inplace",
+      "target": "hashtable_table_ring_inplace",
+      "preparation": "Primary-only in-place reference",
+      "defines": [
+        "LOOM_ARM_INPLACE_PREPARE=1"
+      ]
+    },
+    {
+      "name": "branch",
+      "target": "hashtable_table_ring_branch",
+      "preparation": "Primary-only prepare plus plain hit/miss consumer; misses skip the proven zero sum update, no assembly or prediction weights",
+      "defines": [
+        "LOOM_ARM_INPLACE_PREPARE=1",
+        "LOOM_ARM_CONSUME_BRANCH=1"
+      ]
+    }
+  ],
+  "arms": [
+    "abseil",
+    "abseil_prefetch",
+    "fused",
+    "manual",
+    "manual_hints",
+    "ring",
+    "ring_hints"
+  ],
+  "default_repetitions": 7,
+  "default_passes": 2,
+  "case_order": [
+    {
+      "name": "hot_serial",
+      "a": 8,
+      "entries": 3276,
+      "turnovers": 8,
+      "mixed": 1,
+      "concurrency": 1,
+      "factor_order": [
+        "inplace",
+        "branch"
+      ],
+      "pass_orders": [
+        [
+          "inplace",
+          "branch"
+        ],
+        [
+          "branch",
+          "inplace"
+        ]
+      ]
+    },
+    {
+      "name": "hot_parallel",
+      "a": 8,
+      "entries": 3276,
+      "turnovers": 8,
+      "mixed": 1,
+      "concurrency": 32,
+      "factor_order": [
+        "branch",
+        "inplace"
+      ],
+      "pass_orders": [
+        [
+          "branch",
+          "inplace"
+        ],
+        [
+          "inplace",
+          "branch"
+        ]
+      ]
+    },
+    {
+      "name": "large_aged_serial",
+      "a": 20,
+      "entries": 13421772,
+      "turnovers": 8,
+      "mixed": 1,
+      "concurrency": 1,
+      "factor_order": [
+        "inplace",
+        "branch"
+      ],
+      "pass_orders": [
+        [
+          "inplace",
+          "branch"
+        ],
+        [
+          "branch",
+          "inplace"
+        ]
+      ]
+    },
+    {
+      "name": "large_aged_parallel",
+      "a": 20,
+      "entries": 13421772,
+      "turnovers": 8,
+      "mixed": 1,
+      "concurrency": 32,
+      "factor_order": [
+        "branch",
+        "inplace"
+      ],
+      "pass_orders": [
+        [
+          "branch",
+          "inplace"
+        ],
+        [
+          "inplace",
+          "branch"
+        ]
+      ]
+    },
+    {
+      "name": "large_fresh_parallel",
+      "a": 20,
+      "entries": 13421772,
+      "turnovers": 0,
+      "mixed": 0,
+      "concurrency": 32,
+      "factor_order": [
+        "inplace",
+        "branch"
+      ],
+      "pass_orders": [
+        [
+          "inplace",
+          "branch"
+        ],
+        [
+          "branch",
+          "inplace"
+        ]
+      ]
+    }
+  ],
+  "seed": 37913,
+  "measurement_limits": [
+    "Default seven repetitions per factor and two opposite outer factor orders within each same case. Internal seven-arm rotation remains unchanged.",
+    "One immutable map per executable invocation; repeated operation preparation and all timed stage visits remain charged.",
+    "Fresh C32 is the original fresh hit case: turns0,mixed0. The four aged cases remain turns8,mixed1; actual parameters are verified from each timed CSV, never inferred from a common age.",
+    "Logical visits and potential hint targets are not PMU stalls, IPC or measured memory traffic.",
+    "Original row-key layout; current owning-thread wider-value and key-layout changes excluded.",
+    "Canonical lookup, physical windows, hints, request recurrence, Job footprint, progress hooks and production Ring are identical to source-control. Only reference/branch targets are built and measured; unused controls remain in the inherited CMake/source inventory.",
+    "Consumer branch selection remains pending current native diagnostic review. Preparation of this runner establishes no timing result or promotion."
+  ],
+  "prior_diagnostic": {
+    "worker": "20261013T114517Z-1906f45e",
+    "source_digest": "89eea7601db5089fac548254057eafca02f5e59375386d1f2c85a1b74c374528",
+    "result": "Lane opacity swaps fast/slow paths; scalar range widths unchanged; slow loops reuse descendant count as false found into next-key select."
+  },
+  "selection_status": "Plain branch selected from causal controls; no-assembly final source awaiting native preservation",
+  "source_control_commit": "bd0c227fb774ee26d8a202066a1db66a50b48f56",
+  "parameter_environment": {
+    "REPS": {
+      "default": 7,
+      "constraint": "positive integer"
+    },
+    "PASSES": {
+      "default": 2,
+      "constraint": "1 or2; final V2 requires2, Zen override may use1"
+    }
+  },
+  "supported_native_configs": [
+    {
+      "host": "V2",
+      "isa": "neon",
+      "march": "armv8-a+simd",
+      "tune": "neoverse-v2"
+    },
+    {
+      "host": "Zen5",
+      "isa": "avx2",
+      "march": "x86-64-v3",
+      "tune": "zen5"
+    },
+    {
+      "host": "Zen5",
+      "isa": "avx512",
+      "march": "znver5",
+      "tune": "zen5"
+    }
+  ],
+  "expected_default_counts_per_isa": {
+    "timed_csv_context_policy_resource_groups": 20,
+    "timed_rows": 980,
+    "forced_csv_context_groups": 2,
+    "forced_rows": 14,
+    "native_loom_checks": 16
+  },
+  "causal_diagnostic": {
+    "worker": "20261013T123321Z-920f324c",
+    "native_C1_hinted_ns": {
+      "reference": 172.888197,
+      "branch": 138.288555,
+      "independent_false": 139.272291,
+      "prfm_nops": 183.294154
+    },
+    "branch_C32_hinted_ns": 34.544189,
+    "reference_C32_hinted_ns": 34.555791,
+    "qualification": "independent full identity/answer/accounting report pending"
+  }
+}

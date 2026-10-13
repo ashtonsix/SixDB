@@ -1,0 +1,72 @@
+{
+  "status": "local_qualification_passed_no_timing_claim",
+  "experiment_macro": "LOOM_ARM_FRONTIER_CURSOR=1; LOOM_ARM_SINGLE_HANDOFF unset",
+  "header_path": "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/source-frontier/loom/include/loom/ring.h",
+  "header_sha256": "a01b827b272095f21e2514d8e8bfc0e11c8d0bf227c56d46f022b0a406a9a17e",
+  "cloned_HEAD": "3a6c7cd81405b3c9678b1f4160f8cc50ad87b3f0",
+  "our_source_edit": "loom/include/loom/ring.h only; parent owns conditional Table controls and CMake",
+  "caller_source_identities": [
+    {
+      "path": "workbench/spikes/hashtable/table.h",
+      "clone_HEAD_sha256": "5936d34fab8505f966ebc93b3b7daf0d3f7184b6ecc46fb2fd6ddcbfbbd4bddc",
+      "frontier_working_sha256": "bafe6d40d9345e3d6de149fce0c499e2b7aed556dab957813011202386938c4e",
+      "experiment_working_sha256": "5936d34fab8505f966ebc93b3b7daf0d3f7184b6ecc46fb2fd6ddcbfbbd4bddc",
+      "clone_HEAD_equals_frontier": false,
+      "frontier_equals_experiment": false
+    },
+    {
+      "path": "workbench/spikes/hashtable/table_ring.cpp",
+      "clone_HEAD_sha256": "6c68257a5e18c346b84da50e3e3a620ce16dfe56ebf6d008f64615a452f1ca0c",
+      "frontier_working_sha256": "ecb855ad490ec9f3ce16012fc0cc5ae5f889c8ceab10cbe7fa8857a703b2352f",
+      "experiment_working_sha256": "6c68257a5e18c346b84da50e3e3a620ce16dfe56ebf6d008f64615a452f1ca0c",
+      "clone_HEAD_equals_frontier": false,
+      "frontier_equals_experiment": false
+    },
+    {
+      "path": "workbench/spikes/hashtable/CMakeLists.txt",
+      "clone_HEAD_sha256": "bba338235a62642a9d1fca62f8ee0cef90ebe43c36a64cfcc0f5c9b5666eddeb",
+      "frontier_working_sha256": "f8e812694ad1552e5a031b901df2aec677e0366463ad4cb27034dbeccd546e52",
+      "experiment_working_sha256": "bba338235a62642a9d1fca62f8ee0cef90ebe43c36a64cfcc0f5c9b5666eddeb",
+      "clone_HEAD_equals_frontier": false,
+      "frontier_equals_experiment": false
+    },
+    {
+      "path": "loom/include/loom/cohort.h",
+      "clone_HEAD_sha256": "aaecd2c4ada55186e1a19011a8ab6a119924f002ef3e523f4c03ab3ebe7c0c97",
+      "frontier_working_sha256": "aaecd2c4ada55186e1a19011a8ab6a119924f002ef3e523f4c03ab3ebe7c0c97",
+      "experiment_working_sha256": "aaecd2c4ada55186e1a19011a8ab6a119924f002ef3e523f4c03ab3ebe7c0c97",
+      "clone_HEAD_equals_frontier": true,
+      "frontier_equals_experiment": true
+    }
+  ],
+  "qualification": {
+    "path": "qualification.json",
+    "sha256": "40d3ab35dfbc4f956ec47e068e7e51c8f906f9a8e4d38446d534f7ed7c495dec"
+  },
+  "layout": {
+    "path": "field-layout.json",
+    "sha256": "3d612a3dd449da6b370d51fb4f09ca25a9f9dfda1fa912bedd991e5abface653"
+  },
+  "layout_proof": "Cursor16, Slot size/alignment and function/next/Arguments offsets unchanged for five instantiated families; owner at old previous offset and previous at old inventory offset.",
+  "owner_offsets": {
+    "one_pointer": 24,
+    "two_pointer": 32
+  },
+  "supported_callback_mutation_proof": [
+    "Cursor carries the prepublished frontier pointer value, not a next link reread after a callback may append.",
+    "During spin, push appends membership without changing the non-null published Ring.next_ pointer value. complete marks a slot only.",
+    "finish captures the owner before retiring current, then resynchronizes frontier from authoritative owner.next_ after unlink or FIFO promotion. Empty returns without dereferencing a retired frontier.",
+    "Each admitted bank Slot has the stable same-Ring owner assigned once at configure. push does not overwrite owner; Ring is non-movable.",
+    "Every dispatch still restores Slot-stored Arguments. Remaining is decremented once per callback; budget exhaustion publishes zero, with all finish and promotion accounting at the original points.",
+    "Reentry/spin, release_if/discard, close, shared/policy refresh are forbidden or rejected within spin. Returned-boundary cancellation retains authoritative Ring.next_; next spin initializes a new Cursor from it."
+  ],
+  "cold_inventory": "unsigned uintptr_t byte offset / sizeof(Slot), only retire and release_if; same fixed bank, no new Slot field or typed-array subtraction assumption",
+  "meaningful_oracle_coverage": "Existing independent rotation model includes active widths, overflow widths, callback pushes from C1, accepted/refused inventory, exact finite/zero budgets, retirement with FIFO replacement and returned-boundary cancellation. Shared scalar/vector and unchanged-argument identities, Cohort and hint physical-window checks also pass.",
+  "costs_and_limits": [
+    "Owner must still be loaded to publish Ring.next_ and for Cursor.operator->. Removal of the loop-carried Ring.next_ load is a mechanism claim, not a measured speedup.",
+    "Owner at offset24 in Slot56 extends the consumed prefix to32 bytes: on a64-byte-aligned bank,3/8 Slot prefixes straddle a line versus2/8 for original24-byte function/next/argument prefix. Two-pointer Slot64 owner at32.",
+    "Cold inventory derivation adds arithmetic during retirement/cancellation; can matter for short jobs or high retirement rates.",
+    "Slot.inventory is replaced in this private macro cut. No known production caller uses it; unchanged byte layout does not imply external source compatibility for that public structural field.",
+    "All executions local ARM VM, CPU0 pinned, against reused matching release/sanitized archives. No x86 execution, native timing, public runtime edit or promotion."
+  ]
+}

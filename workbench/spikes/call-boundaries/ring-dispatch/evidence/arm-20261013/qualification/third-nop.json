@@ -1,0 +1,33 @@
+{
+  "format": 1,
+  "transformation": "aarch64-prfm-to-nop",
+  "diagnostic_only": true,
+  "input": "build/loom-arm-serial-neon/workbench/spikes/hashtable/hashtable_table_ring_inplace",
+  "output": "build/loom-arm-serial-neon/workbench/spikes/hashtable/hashtable_table_ring_nops",
+  "disassembly": "/opt/sixdb/jobs/20261013T123321Z-920f324c/results/patch-input-neon.asm",
+  "input_sha256": "6f00502ea135eb7cd9162f33301e05f6ae0ec0ca5c3d29438fe0eb95b4f8ab2a",
+  "output_sha256": "6e2b389aa2eee2b961b07b249a26aa113b86602c23b039b74d18e12d043f13c3",
+  "input_bytes": 10951112,
+  "output_bytes": 10951112,
+  "disassembly_sha256": "235d5490f7e3dfb414d58f0b3697292e04b78087df2c2bc600e8afce8b28391d",
+  "decoded_disassembly_sha256": "235d5490f7e3dfb414d58f0b3697292e04b78087df2c2bc600e8afce8b28391d",
+  "helper_sha256": "1c636fea5fbc52d54e1127dc42e011bd358e5b9cb829f5267709a943e36c1fde",
+  "machine": "aarch64",
+  "entry_virtual_address": 33600,
+  "executable_pt_loads": [
+    {
+      "program_header_index": 2,
+      "flags": 5,
+      "file_offset": 0,
+      "virtual_address": 0,
+      "file_bytes": 905092,
+      "memory_bytes": 905092,
+      "alignment": 65536
+    }
+  ],
+  "patch_count": 2382,
+  "invariant": "Only recorded four-byte PRFM sites changed; ELF layout, addresses and branch instructions unchanged.",
+  "full_receipt_member": "nop-prefetch-neon.json",
+  "full_receipt_sha256": "bbbc2653a215a285e8eaafa7346c4eb9e8e60a4d82da16983b9592c129c6178f",
+  "selection_limit": "Full patch list recoverable from exact worker member; offline selected-data report does not revalidate every executable patch."
+}

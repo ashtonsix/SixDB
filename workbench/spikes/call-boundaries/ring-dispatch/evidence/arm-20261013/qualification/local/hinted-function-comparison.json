@@ -1,0 +1,2322 @@
+{
+  "normalization": "IgnoreNOP padding; branch/ADRtargets\u2192instructionordinals orsymbols, ADRPpages\u2192PAGE only. Allregs/opcodes/fieldoffsets preserved.",
+  "comparisons": [
+    {
+      "kind": "fused",
+      "hint": null,
+      "symbol_sha256": "b6fbfad7db0912abe15bb311b9e918e8ee58c5d8f9f48dc8e69d2aa41891de4a",
+      "selected_address": "000000000001d4c0",
+      "expected": "reference",
+      "expected_address": "000000000001d4c0",
+      "selected_core_sha256": "77083dcaf28728819a6140f7551b6cba2658bb7c4d9eff95ee122853b3b0399f",
+      "expected_core_sha256": "77083dcaf28728819a6140f7551b6cba2658bb7c4d9eff95ee122853b3b0399f",
+      "exact_normalized_equal": true,
+      "selected_padding_nops": 12,
+      "expected_padding_nops": 12
+    },
+    {
+      "kind": "manual",
+      "hint": 0,
+      "symbol_sha256": "53f86dc72b6239ad9c0044e18d43ccc7f04b16d33d5411ff311993db9da7df23",
+      "selected_address": "000000000001dae0",
+      "expected": "reference",
+      "expected_address": "000000000001dae0",
+      "selected_core_sha256": "bd631c62e48686e371cac1de9961b02e4b37aac6fea2412f63fe28a609bfa57b",
+      "expected_core_sha256": "bd631c62e48686e371cac1de9961b02e4b37aac6fea2412f63fe28a609bfa57b",
+      "exact_normalized_equal": true,
+      "selected_padding_nops": 12,
+      "expected_padding_nops": 12
+    },
+    {
+      "kind": "ready",
+      "hint": 0,
+      "symbol_sha256": "fa3771be02712baae0c0d9a6c7f8ea9c0714398d522aa4c99e9e2400ad299aa5",
+      "selected_address": "000000000001e7c0",
+      "expected": "reference",
+      "expected_address": "000000000001e7c0",
+      "selected_core_sha256": "49e12c2e11d61f7e6beb257b3357e3f8f998c6af5d53faad3fb20d5a2455c963",
+      "expected_core_sha256": "49e12c2e11d61f7e6beb257b3357e3f8f998c6af5d53faad3fb20d5a2455c963",
+      "exact_normalized_equal": true,
+      "selected_padding_nops": 0,
+      "expected_padding_nops": 0
+    },
+    {
+      "kind": "manual",
+      "hint": 1,
+      "symbol_sha256": "4ed83948c8489c7e027b1c53d74bf770eef52a19d1e0bad70cb57ca2b295a743",
+      "selected_address": "000000000001f1a0",
+      "expected": "plain",
+      "expected_address": "000000000001f180",
+      "selected_core_sha256": "6a123faafdaf6c7846d769f2f4d94b6f1ce130babd36ad72a8406cfbb2a6c7fe",
+      "expected_core_sha256": "cf117d146de4c46779e6729d358cbf99367799557f833eccfed463d5f86e5a3d",
+      "exact_normalized_equal": false,
+      "selected_padding_nops": 26,
+      "expected_padding_nops": 26
+    },
+    {
+      "kind": "ready",
+      "hint": 1,
+      "symbol_sha256": "4567e4e7f1cb29e959f5c37aa30ee754d147bd1e8b52ecacd480302922a2c0b0",
+      "selected_address": "000000000001fc00",
+      "expected": "plain",
+      "expected_address": "000000000001fbe0",
+      "selected_core_sha256": "37e58dacb35ffa80d15bf4907c1b6da5c8431214e7751fb4b4cf694df3418cb9",
+      "expected_core_sha256": "37e58dacb35ffa80d15bf4907c1b6da5c8431214e7751fb4b4cf694df3418cb9",
+      "exact_normalized_equal": true,
+      "selected_padding_nops": 9,
+      "expected_padding_nops": 9
+    },
+    {
+      "kind": "manual",
+      "hint": 2,
+      "symbol_sha256": "567ea6af19c8346a79cf3ad16c1c1e853a7f58b7ec3a25bafb74ad6b70fbaae8",
+      "selected_address": "0000000000020180",
+      "expected": "plain",
+      "expected_address": "0000000000020160",
+      "selected_core_sha256": "62954121952a79717197c955346c8d06d00332097b00993fd7465ad712691b32",
+      "expected_core_sha256": "eb4d018e05a3e22befb88382bc080987438334e407525280faea8050d25ca6ae",
+      "exact_normalized_equal": false,
+      "selected_padding_nops": 26,
+      "expected_padding_nops": 26
+    },
+    {
+      "kind": "ready",
+      "hint": 2,
+      "symbol_sha256": "da5662502958f70fc349e0f1822dc72a973a40c9e492c541b996dd3572a2c543",
+      "selected_address": "0000000000020be0",
+      "expected": "plain",
+      "expected_address": "0000000000020bc0",
+      "selected_core_sha256": "10e98bf2220a23d8dc3b38ec6dd28eb6c3cb511cc7be7c63100ae07386cc3b9e",
+      "expected_core_sha256": "10e98bf2220a23d8dc3b38ec6dd28eb6c3cb511cc7be7c63100ae07386cc3b9e",
+      "exact_normalized_equal": true,
+      "selected_padding_nops": 9,
+      "expected_padding_nops": 9
+    },
+    {
+      "kind": "manual",
+      "hint": 3,
+      "symbol_sha256": "daf9ea4f21c590e3420a2925b781d26f01d755a39c402a4b58df9fb7c193e59c",
+      "selected_address": "0000000000021160",
+      "expected": "plain",
+      "expected_address": "0000000000021140",
+      "selected_core_sha256": "f34a630b71b762303c0c8cb5d9072c6878be372fb60601b23b220f1362ce7ee9",
+      "expected_core_sha256": "6dbd69adbef7f32e43e18469524c626179e15f174ead7f5e6b313be97555ee8c",
+      "exact_normalized_equal": false,
+      "selected_padding_nops": 26,
+      "expected_padding_nops": 26
+    },
+    {
+      "kind": "ready",
+      "hint": 3,
+      "symbol_sha256": "d52cd77ba7c746bcc712a2c58365e34e3b119842d05c0b8d5351d24cbac23cfd",
+      "selected_address": "0000000000021bc0",
+      "expected": "plain",
+      "expected_address": "0000000000021ba0",
+      "selected_core_sha256": "649bf956a0645108829ad274cff86f7e4e1eb9e6907c96994e81dee6b0266b5b",
+      "expected_core_sha256": "649bf956a0645108829ad274cff86f7e4e1eb9e6907c96994e81dee6b0266b5b",
+      "exact_normalized_equal": true,
+      "selected_padding_nops": 9,
+      "expected_padding_nops": 9
+    },
+    {
+      "kind": "fused",
+      "hint": null,
+      "symbol_sha256": "3c8347055fd719d60c7afcc5e3cc3b31c63e7f6b32504e98d8fcc204f876a1e2",
+      "selected_address": "0000000000022b20",
+      "expected": "reference",
+      "expected_address": "0000000000022b80",
+      "selected_core_sha256": "18b3ea2e8e50b12ac735d9ff29cd39efedd9af2144cc0da0106d88a99d7091e8",
+      "expected_core_sha256": "18b3ea2e8e50b12ac735d9ff29cd39efedd9af2144cc0da0106d88a99d7091e8",
+      "exact_normalized_equal": true,
+      "selected_padding_nops": 14,
+      "expected_padding_nops": 14
+    },
+    {
+      "kind": "manual",
+      "hint": 0,
+      "symbol_sha256": "77d5bfdf4a1fd7075a5adce81b9d99a6f763bf1d1502cf87689b84e1843cb98c",
+      "selected_address": "0000000000023780",
+      "expected": "reference",
+      "expected_address": "00000000000237e0",
+      "selected_core_sha256": "e085627fc3581178ada27cca4bf9d0b2f2f4de0ef6b53252095b0901e7399d49",
+      "expected_core_sha256": "e085627fc3581178ada27cca4bf9d0b2f2f4de0ef6b53252095b0901e7399d49",
+      "exact_normalized_equal": true,
+      "selected_padding_nops": 17,
+      "expected_padding_nops": 17
+    },
+    {
+      "kind": "manual",
+      "hint": 1,
+      "symbol_sha256": "271a887e71d2e7eac54fbd0785448f23c4d015f51a438a4e04abfcc411c38c4e",
+      "selected_address": "00000000000242e0",
+      "expected": "plain",
+      "expected_address": "00000000000242c0",
+      "selected_core_sha256": "e25c357ed30722918fbef8bed0777446b56bde186688cbbdb41c9a89b71f7d64",
+      "expected_core_sha256": "14f0a503ea4b13effc4b81d5c85b2a6ae7624a7ab59cf0b6bee8b3b74f3a1280",
+      "exact_normalized_equal": false,
+      "selected_padding_nops": 28,
+      "expected_padding_nops": 28
+    },
+    {
+      "kind": "manual",
+      "hint": 2,
+      "symbol_sha256": "00d28d17e5e9832a72eef83abe27e6cc20015e3b05fb6c499830dc1d9cd6e7a4",
+      "selected_address": "0000000000024dc0",
+      "expected": "plain",
+      "expected_address": "0000000000024da0",
+      "selected_core_sha256": "20b5406d3abd6b06910505732d2fae31051a01a83b48b322591b92ae660d5af3",
+      "expected_core_sha256": "5f6ccaf89873c64e612fda2172cd02acb2638425ac59d04bb1a62c50b9ad9b27",
+      "exact_normalized_equal": false,
+      "selected_padding_nops": 28,
+      "expected_padding_nops": 28
+    },
+    {
+      "kind": "manual",
+      "hint": 3,
+      "symbol_sha256": "52a9196d69acd8cae1ea9b8999382ef0e574e273aff8d8a6244f82a5fb20e265",
+      "selected_address": "00000000000258a0",
+      "expected": "plain",
+      "expected_address": "0000000000025880",
+      "selected_core_sha256": "d54b7f3a838f475427ea1ef0cc890870a5a0d3bcd8527b5e277801243847bf50",
+      "expected_core_sha256": "e62acd2ca9b94d63c10a1ad46ad63f9fe47adc461032870dcd80f79987890d04",
+      "exact_normalized_equal": false,
+      "selected_padding_nops": 28,
+      "expected_padding_nops": 28
+    },
+    {
+      "kind": "fused",
+      "hint": null,
+      "symbol_sha256": "0b4be33b810e3957a3994e09943db5d4bf53ab77d50ee89e96eff9faee6acb78",
+      "selected_address": "0000000000027500",
+      "expected": "reference",
+      "expected_address": "00000000000275c0",
+      "selected_core_sha256": "1273367d9a848ca4df976cd04483337394d6f45f0aa60b19e68eba2c2d3ef1d6",
+      "expected_core_sha256": "1273367d9a848ca4df976cd04483337394d6f45f0aa60b19e68eba2c2d3ef1d6",
+      "exact_normalized_equal": true,
+      "selected_padding_nops": 17,
+      "expected_padding_nops": 17
+    },
+    {
+      "kind": "manual",
+      "hint": 0,
+      "symbol_sha256": "dab1d24ac30a47507e3b5d97f958cdb0a6d9b3024c9d1ab174d96524ba0ea2cd",
+      "selected_address": "0000000000027ec0",
+      "expected": "reference",
+      "expected_address": "0000000000027f80",
+      "selected_core_sha256": "2ecc5b7e0b5699910fae3ce8632a9303570463fe13c0119e8ff4f8f0a34a2346",
+      "expected_core_sha256": "2ecc5b7e0b5699910fae3ce8632a9303570463fe13c0119e8ff4f8f0a34a2346",
+      "exact_normalized_equal": true,
+      "selected_padding_nops": 17,
+      "expected_padding_nops": 17
+    },
+    {
+      "kind": "manual",
+      "hint": 1,
+      "symbol_sha256": "0f9c73bede5bb3f9a74ccc332092dd1f894594ad00066f4ecc5a8b5052fa165e",
+      "selected_address": "0000000000029260",
+      "expected": "plain",
+      "expected_address": "00000000000291c0",
+      "selected_core_sha256": "1fe3774b6f08c741d63c8787ba9d88015af1c2a86f2ff186bcf07141c558efb6",
+      "expected_core_sha256": "f0f4d958664b05b231cfbfbc10da1a96f3d756b3c20f35bf03d5f04fcba5a7e7",
+      "exact_normalized_equal": false,
+      "selected_padding_nops": 22,
+      "expected_padding_nops": 22
+    },
+    {
+      "kind": "manual",
+      "hint": 2,
+      "symbol_sha256": "394c35f9d4c23a3ff773759b394342c41366c36ad7ed761f76267c685252ceaa",
+      "selected_address": "000000000002a220",
+      "expected": "plain",
+      "expected_address": "000000000002a180",
+      "selected_core_sha256": "34f5517fa16a5873e4d14456c0957c486d3d45c2e19192fde5967d5bef514b30",
+      "expected_core_sha256": "2f284a3002f6f79eda1ab824e2c0e1ab565997315e192e7390a6d1c0412db8b4",
+      "exact_normalized_equal": false,
+      "selected_padding_nops": 22,
+      "expected_padding_nops": 22
+    },
+    {
+      "kind": "manual",
+      "hint": 3,
+      "symbol_sha256": "8beb3b6761ccc902e0a7cd22e76590f6c55aaf3b340950cabd1d1a4bb02716d8",
+      "selected_address": "000000000002b1e0",
+      "expected": "plain",
+      "expected_address": "000000000002b140",
+      "selected_core_sha256": "b4e50a91a365bd83d6839cfff5bb4b04629419d65079bc8c3a887986166857ee",
+      "expected_core_sha256": "ee4d591da416395b99af45030c17bf10e2a43f280b074345f71ca7f5f5e31409",
+      "exact_normalized_equal": false,
+      "selected_padding_nops": 22,
+      "expected_padding_nops": 22
+    },
+    {
+      "kind": "fused",
+      "hint": null,
+      "symbol_sha256": "ed1f12add76aee0b43c5e069759c61c48e9bea1b1359cead0a34cf7ba3a7f59a",
+      "selected_address": "00000000000311c0",
+      "expected": "reference",
+      "expected_address": "0000000000031280",
+      "selected_core_sha256": "2bea29af0be5633b110c2418b873239aac7b8c2eebc3cbbd5fe10f61cb31edd6",
+      "expected_core_sha256": "2bea29af0be5633b110c2418b873239aac7b8c2eebc3cbbd5fe10f61cb31edd6",
+      "exact_normalized_equal": true,
+      "selected_padding_nops": 10,
+      "expected_padding_nops": 10
+    },
+    {
+      "kind": "manual",
+      "hint": 0,
+      "symbol_sha256": "f6d5aed23e64daf608af32e9ae229488a0c80994e3ea97fb80c5115ea3b38362",
+      "selected_address": "0000000000031620",
+      "expected": "reference",
+      "expected_address": "00000000000316e0",
+      "selected_core_sha256": "6b5248738fb6c071423e7a628add24682769ff3c43e608aacee8f391095bb172",
+      "expected_core_sha256": "6b5248738fb6c071423e7a628add24682769ff3c43e608aacee8f391095bb172",
+      "exact_normalized_equal": true,
+      "selected_padding_nops": 14,
+      "expected_padding_nops": 14
+    },
+    {
+      "kind": "ready",
+      "hint": 0,
+      "symbol_sha256": "45574f121b864f1dba83be78742c9e3b19b7c65f3922b9c2f92af9e23e223eb3",
+      "selected_address": "0000000000032360",
+      "expected": "reference",
+      "expected_address": "0000000000032420",
+      "selected_core_sha256": "c093607d49a40575caa51db27104dbc6eb17074f51b271c1790b5e602a72b116",
+      "expected_core_sha256": "c093607d49a40575caa51db27104dbc6eb17074f51b271c1790b5e602a72b116",
+      "exact_normalized_equal": true,
+      "selected_padding_nops": 7,
+      "expected_padding_nops": 7
+    },
+    {
+      "kind": "manual",
+      "hint": 1,
+      "symbol_sha256": "3b74cde50de353a6f02d164f1b62ef2cca417d6daa3cd799a21d8b61b248a620",
+      "selected_address": "0000000000032d80",
+      "expected": "plain",
+      "expected_address": "0000000000032ce0",
+      "selected_core_sha256": "d384b1d44464d97d32a285a436c4b311607f601d82ecb07a6d63eb53ef4e30d6",
+      "expected_core_sha256": "91bcb45d89fc4058c44964561aaa5f5cb94d307e61b8b8100f9b037d29d18e1d",
+      "exact_normalized_equal": false,
+      "selected_padding_nops": 28,
+      "expected_padding_nops": 28
+    },
+    {
+      "kind": "ready",
+      "hint": 1,
+      "symbol_sha256": "d30860f9ed11bef6115c05270548cd5f5083f9d54d5d9e64228075e4165b0c86",
+      "selected_address": "0000000000033820",
+      "expected": "plain",
+      "expected_address": "0000000000033780",
+      "selected_core_sha256": "94817b66af2f236709ef12c3cc585fe32975224f450b7bc24ed9ff54527dee82",
+      "expected_core_sha256": "94817b66af2f236709ef12c3cc585fe32975224f450b7bc24ed9ff54527dee82",
+      "exact_normalized_equal": true,
+      "selected_padding_nops": 12,
+      "expected_padding_nops": 12
+    },
+    {
+      "kind": "manual",
+      "hint": 2,
+      "symbol_sha256": "e3c71c5bc300f4dedc4c4dbf802654c8870ca8219a9511b3acaf7aed7570dbc5",
+      "selected_address": "0000000000033dc0",
+      "expected": "plain",
+      "expected_address": "0000000000033d20",
+      "selected_core_sha256": "e1e6caf9629cbc94442f2791b3ee26c9cc1fb3a7f8205b546405885d6a553bbd",
+      "expected_core_sha256": "d3e53aaa30cc607f69183ff21a26b5ea6415de491172e1df9ce7979e5a2322a0",
+      "exact_normalized_equal": false,
+      "selected_padding_nops": 28,
+      "expected_padding_nops": 28
+    },
+    {
+      "kind": "ready",
+      "hint": 2,
+      "symbol_sha256": "9de75f63affc2d4c3b668905df8cdb745272ab887d406bbb52e8ebec82e577aa",
+      "selected_address": "0000000000034860",
+      "expected": "plain",
+      "expected_address": "00000000000347c0",
+      "selected_core_sha256": "a73d12b7cc9b96a6ed315ccad3fb726f6ddaad88c5adab094b6b1413173f0280",
+      "expected_core_sha256": "a73d12b7cc9b96a6ed315ccad3fb726f6ddaad88c5adab094b6b1413173f0280",
+      "exact_normalized_equal": true,
+      "selected_padding_nops": 12,
+      "expected_padding_nops": 12
+    },
+    {
+      "kind": "manual",
+      "hint": 3,
+      "symbol_sha256": "47b34e9f413ad567060e0133c95b68008a43a7483e159093f6f98693c9dec8e8",
+      "selected_address": "0000000000034e00",
+      "expected": "plain",
+      "expected_address": "0000000000034d60",
+      "selected_core_sha256": "c2a3ab75f677fbf533f2875017fa02d5aa9f2f315c84850e2d84d5e96dd7a21e",
+      "expected_core_sha256": "f6b46681d9e6447536de0a879de339ec56eb625090dbfbdd24a08d237984ad33",
+      "exact_normalized_equal": false,
+      "selected_padding_nops": 28,
+      "expected_padding_nops": 28
+    },
+    {
+      "kind": "ready",
+      "hint": 3,
+      "symbol_sha256": "5377ccdf1d3eb45d1d9d0dd2145c80f882d383449e34d759dbfd10ff657090be",
+      "selected_address": "00000000000358a0",
+      "expected": "plain",
+      "expected_address": "0000000000035800",
+      "selected_core_sha256": "4c98d802513d7666d1936f78959a580898d9bfc4f31e867a73e9be671b2ce632",
+      "expected_core_sha256": "4c98d802513d7666d1936f78959a580898d9bfc4f31e867a73e9be671b2ce632",
+      "exact_normalized_equal": true,
+      "selected_padding_nops": 12,
+      "expected_padding_nops": 12
+    },
+    {
+      "kind": "fused",
+      "hint": null,
+      "symbol_sha256": "981ac9757a7a71c09adc6fbd8007f57e5a83ab9929f0a0a2e1766c7d6c52cbb3",
+      "selected_address": "0000000000035e40",
+      "expected": "reference",
+      "expected_address": "0000000000035f60",
+      "selected_core_sha256": "76ac3d1a5cc9c7d5795f830ead346a3f2581f27aff38c9c5b5ad44da9b8f7dec",
+      "expected_core_sha256": "76ac3d1a5cc9c7d5795f830ead346a3f2581f27aff38c9c5b5ad44da9b8f7dec",
+      "exact_normalized_equal": true,
+      "selected_padding_nops": 12,
+      "expected_padding_nops": 12
+    },
+    {
+      "kind": "manual",
+      "hint": 0,
+      "symbol_sha256": "4a6857c2638d2f99dc64d649206412ffacc7abcecd6516629403053e3421205d",
+      "selected_address": "0000000000036400",
+      "expected": "reference",
+      "expected_address": "0000000000036520",
+      "selected_core_sha256": "e7ba2fb482da6694b11216ecaba610330562180697fb5b31806d52d1a6bf2d4c",
+      "expected_core_sha256": "e7ba2fb482da6694b11216ecaba610330562180697fb5b31806d52d1a6bf2d4c",
+      "exact_normalized_equal": true,
+      "selected_padding_nops": 11,
+      "expected_padding_nops": 11
+    },
+    {
+      "kind": "manual",
+      "hint": 1,
+      "symbol_sha256": "897e757ff4d13e6d3285d044e2a28a886d887236a52d5c1a6c865d2ffac517e5",
+      "selected_address": "0000000000036f80",
+      "expected": "plain",
+      "expected_address": "0000000000036ec0",
+      "selected_core_sha256": "686c21c76e0fc5622004ec4763cff85fb2381a42661a317ea2f1dd497b79285e",
+      "expected_core_sha256": "40efcb37357e9de001f9f5e115016faa283d0389f77d5c0e10e12ac578af6e53",
+      "exact_normalized_equal": false,
+      "selected_padding_nops": 37,
+      "expected_padding_nops": 37
+    },
+    {
+      "kind": "manual",
+      "hint": 2,
+      "symbol_sha256": "b8218b98ff3ef119e40f4c3f1d7ea9bd74f6968d4b2c9e55720ecea0fc0339c6",
+      "selected_address": "0000000000037aa0",
+      "expected": "plain",
+      "expected_address": "00000000000379e0",
+      "selected_core_sha256": "22eb37ddac0ad35d44f91c2beb86a55039b61757e28b31589adb4b0623ab17ce",
+      "expected_core_sha256": "c9211467647662dc9e01a39c00d7b5ffd302482628dba36ddb4124d9ecaceb3d",
+      "exact_normalized_equal": false,
+      "selected_padding_nops": 37,
+      "expected_padding_nops": 37
+    },
+    {
+      "kind": "manual",
+      "hint": 3,
+      "symbol_sha256": "20ad954ebda75faa1830af8a481d32875db2e98466b764d7f1c00c815759d0b9",
+      "selected_address": "00000000000385c0",
+      "expected": "plain",
+      "expected_address": "0000000000038500",
+      "selected_core_sha256": "1691dc8bef70668aa7a122aa148a39dfc1d7feb377ee22fa78dba16c303d3676",
+      "expected_core_sha256": "4c916dfcd96dff1231ead12c6f1590ec057bd733504e17911c9bfd1ce2c27e75",
+      "exact_normalized_equal": false,
+      "selected_padding_nops": 37,
+      "expected_padding_nops": 37
+    },
+    {
+      "kind": "fused",
+      "hint": null,
+      "symbol_sha256": "3b8d897f4dc0a21a40109ef57eb8d887a1c139781af075f452e665b327930dbf",
+      "selected_address": "00000000000390e0",
+      "expected": "reference",
+      "expected_address": "0000000000039200",
+      "selected_core_sha256": "10d582d918230e7344e618597707f207044cf3ba858957f8cf543bcc534bc793",
+      "expected_core_sha256": "10d582d918230e7344e618597707f207044cf3ba858957f8cf543bcc534bc793",
+      "exact_normalized_equal": true,
+      "selected_padding_nops": 15,
+      "expected_padding_nops": 15
+    },
+    {
+      "kind": "manual",
+      "hint": 0,
+      "symbol_sha256": "d04ef8a0529b30368330469c8ed7ddaf1c8bd96616ab32e7a87dea97a80738db",
+      "selected_address": "00000000000396e0",
+      "expected": "reference",
+      "expected_address": "0000000000039800",
+      "selected_core_sha256": "9fcd80aee0c7ca9b14d63d1f76e3a7e5c517f89fc704c13fdbb6459656c4d89e",
+      "expected_core_sha256": "9fcd80aee0c7ca9b14d63d1f76e3a7e5c517f89fc704c13fdbb6459656c4d89e",
+      "exact_normalized_equal": true,
+      "selected_padding_nops": 10,
+      "expected_padding_nops": 10
+    },
+    {
+      "kind": "manual",
+      "hint": 1,
+      "symbol_sha256": "51ea7f0615e84ca39d3836852c0d197c3ddec19db2794d9d858c8403aeaafeb5",
+      "selected_address": "000000000003a7c0",
+      "expected": "plain",
+      "expected_address": "000000000003a6e0",
+      "selected_core_sha256": "903fac029260aa3d2d17fa1a3ab275a0e9cf33412cf07b6a949033b8a5253a2c",
+      "expected_core_sha256": "24a1a2aa32977c8f45e93660cf2449403c941b1822a6a8643c5e218a5a8f111b",
+      "exact_normalized_equal": false,
+      "selected_padding_nops": 31,
+      "expected_padding_nops": 31
+    },
+    {
+      "kind": "manual",
+      "hint": 2,
+      "symbol_sha256": "69a2f0885d6faec234a080a07bb305d946a854305bf166d56057b0142820953f",
+      "selected_address": "000000000003b7c0",
+      "expected": "plain",
+      "expected_address": "000000000003b6e0",
+      "selected_core_sha256": "8185ea2a490aa5ddbdbf9d781cae950a79312313336c523b4bd803393acc0f50",
+      "expected_core_sha256": "f1c813b358a1c630403d9a24499ab75bd0103fc87acc2d72c7878d57f4130401",
+      "exact_normalized_equal": false,
+      "selected_padding_nops": 31,
+      "expected_padding_nops": 31
+    },
+    {
+      "kind": "manual",
+      "hint": 3,
+      "symbol_sha256": "71936ed8c11bc114c7fccf06ce9cf559d12190c3e5fb029967ead5bdf5f80af3",
+      "selected_address": "000000000003c7c0",
+      "expected": "plain",
+      "expected_address": "000000000003c6e0",
+      "selected_core_sha256": "395d1c79896ecbd950d068b3e9ad07d2aaad90c991c41f7b0a3331a1b90a5260",
+      "expected_core_sha256": "bac09854401b9e9dba131aedad2e51fac1c8375d96fd34013776e580222232f9",
+      "exact_normalized_equal": false,
+      "selected_padding_nops": 31,
+      "expected_padding_nops": 31
+    },
+    {
+      "kind": "fused",
+      "hint": null,
+      "symbol_sha256": "e1372160c577a990ad84e146731c3a4edf13cf2a34cfe2650813414414a46846",
+      "selected_address": "0000000000041120",
+      "expected": "reference",
+      "expected_address": "0000000000041240",
+      "selected_core_sha256": "da55762b593975791e9bbc631474ec64ccdaa6c967fab249f9fa1488277f0697",
+      "expected_core_sha256": "da55762b593975791e9bbc631474ec64ccdaa6c967fab249f9fa1488277f0697",
+      "exact_normalized_equal": true,
+      "selected_padding_nops": 16,
+      "expected_padding_nops": 16
+    },
+    {
+      "kind": "manual",
+      "hint": 0,
+      "symbol_sha256": "237dea03bd25f925696022695a8ea445c1e630c878a4fe99481a431f8321816b",
+      "selected_address": "00000000000415a0",
+      "expected": "reference",
+      "expected_address": "00000000000416c0",
+      "selected_core_sha256": "b02e38874a952cb2279df214228fe717f4603af04051ab077e9fb0a713935728",
+      "expected_core_sha256": "b02e38874a952cb2279df214228fe717f4603af04051ab077e9fb0a713935728",
+      "exact_normalized_equal": true,
+      "selected_padding_nops": 16,
+      "expected_padding_nops": 16
+    },
+    {
+      "kind": "ready",
+      "hint": 0,
+      "symbol_sha256": "ae11b79143c46b3382990809dd06a00441822b379f28b0d3bc5269203b86bcf9",
+      "selected_address": "00000000000422c0",
+      "expected": "reference",
+      "expected_address": "00000000000423e0",
+      "selected_core_sha256": "74fe27d3f327b05e570a160b8afb23783010807d47df1ad90d82ee390fac1c78",
+      "expected_core_sha256": "74fe27d3f327b05e570a160b8afb23783010807d47df1ad90d82ee390fac1c78",
+      "exact_normalized_equal": true,
+      "selected_padding_nops": 2,
+      "expected_padding_nops": 2
+    },
+    {
+      "kind": "manual",
+      "hint": 1,
+      "symbol_sha256": "a338ecbac16e9999c3a205f09743ff0495a943d99a37bb257f3217c84fbd8efd",
+      "selected_address": "0000000000042ce0",
+      "expected": "plain",
+      "expected_address": "0000000000042c00",
+      "selected_core_sha256": "a7f0b79a6f9d147b0810fab0cde4806d28111df516128c85a121d9433e23e15d",
+      "expected_core_sha256": "433ac267c49bcd52a937e5fc7ef9f2af1d12ecfb39518dd6ee3b5298265f6823",
+      "exact_normalized_equal": false,
+      "selected_padding_nops": 24,
+      "expected_padding_nops": 24
+    },
+    {
+      "kind": "ready",
+      "hint": 1,
+      "symbol_sha256": "8b980a83d1033736e48d4a67f610da77dfe3b8e8032ddfe74f7204bacb8f0417",
+      "selected_address": "0000000000043760",
+      "expected": "plain",
+      "expected_address": "0000000000043680",
+      "selected_core_sha256": "09802455d5c7fc43cf44f3daab0c88f7b7cf3a1fc102854a9894b8bdad8a60bb",
+      "expected_core_sha256": "09802455d5c7fc43cf44f3daab0c88f7b7cf3a1fc102854a9894b8bdad8a60bb",
+      "exact_normalized_equal": true,
+      "selected_padding_nops": 7,
+      "expected_padding_nops": 7
+    },
+    {
+      "kind": "manual",
+      "hint": 2,
+      "symbol_sha256": "49578609ca02bc90e2946460b7e01b5908ba8f01bf635d9befbff73cf479d381",
+      "selected_address": "0000000000043d00",
+      "expected": "plain",
+      "expected_address": "0000000000043c20",
+      "selected_core_sha256": "ea8961da0f81d7ac8b928cc78888328b21a3b4b339be6cbb51152559d17ff2c8",
+      "expected_core_sha256": "218efd982056ad5bbc2cd384d3e4e119eed5d5251f30daa13c19541f0de3e0ab",
+      "exact_normalized_equal": false,
+      "selected_padding_nops": 24,
+      "expected_padding_nops": 24
+    },
+    {
+      "kind": "ready",
+      "hint": 2,
+      "symbol_sha256": "55f0001ef30d0dbf628f0164f5d959508ae66a897a38c18b99077aa54d9c32ab",
+      "selected_address": "0000000000044780",
+      "expected": "plain",
+      "expected_address": "00000000000446a0",
+      "selected_core_sha256": "1a27c039bd1b47813e000662d40643c4b3d814846f495c86cabaa69ba830391b",
+      "expected_core_sha256": "1a27c039bd1b47813e000662d40643c4b3d814846f495c86cabaa69ba830391b",
+      "exact_normalized_equal": true,
+      "selected_padding_nops": 7,
+      "expected_padding_nops": 7
+    },
+    {
+      "kind": "manual",
+      "hint": 3,
+      "symbol_sha256": "4fda1813afab587cde811b2cf822293d3b594cb96e3c7a3da53edbf62ecec37a",
+      "selected_address": "0000000000044d20",
+      "expected": "plain",
+      "expected_address": "0000000000044c40",
+      "selected_core_sha256": "7132301bfd99b099fb3f5e522305eddfb2b5f462b726b44d6352843825f60b70",
+      "expected_core_sha256": "36f785fefdb351186c91546d8e7fc657938bf35946339b5bb308ad04e5f7c962",
+      "exact_normalized_equal": false,
+      "selected_padding_nops": 24,
+      "expected_padding_nops": 24
+    },
+    {
+      "kind": "ready",
+      "hint": 3,
+      "symbol_sha256": "a7b1c8b32e448af3b93c508457ae8e43095b22a87faa25b37281e2a8983038a0",
+      "selected_address": "00000000000457a0",
+      "expected": "plain",
+      "expected_address": "00000000000456c0",
+      "selected_core_sha256": "f3165fc6e188aab95c95397a647bcdcb949c7982738eacaeb07445add9000302",
+      "expected_core_sha256": "f3165fc6e188aab95c95397a647bcdcb949c7982738eacaeb07445add9000302",
+      "exact_normalized_equal": true,
+      "selected_padding_nops": 7,
+      "expected_padding_nops": 7
+    },
+    {
+      "kind": "fused",
+      "hint": null,
+      "symbol_sha256": "b489422ac3238155434fe9ba2ca0249b4a74c75de23e120b35cfec7d66b6bab1",
+      "selected_address": "0000000000045d40",
+      "expected": "reference",
+      "expected_address": "0000000000045ec0",
+      "selected_core_sha256": "64032ee9ecf1fecff6bc9abc97bb3d4fdf7cebe7941ffd04dc41a3ba3e75a566",
+      "expected_core_sha256": "64032ee9ecf1fecff6bc9abc97bb3d4fdf7cebe7941ffd04dc41a3ba3e75a566",
+      "exact_normalized_equal": true,
+      "selected_padding_nops": 10,
+      "expected_padding_nops": 10
+    },
+    {
+      "kind": "manual",
+      "hint": 0,
+      "symbol_sha256": "d5bb546244bf9a7c45b838c447929a87f4be011ebcac2cb421f9b6fd6d8785f2",
+      "selected_address": "0000000000046300",
+      "expected": "reference",
+      "expected_address": "0000000000046480",
+      "selected_core_sha256": "ed0bf873c74a2cfcc860cbcb3a32c8c8ea1866123aabaa44a7a9b2566a48d965",
+      "expected_core_sha256": "ed0bf873c74a2cfcc860cbcb3a32c8c8ea1866123aabaa44a7a9b2566a48d965",
+      "exact_normalized_equal": true,
+      "selected_padding_nops": 9,
+      "expected_padding_nops": 9
+    },
+    {
+      "kind": "manual",
+      "hint": 1,
+      "symbol_sha256": "92ec5717108eebbfe537092b274dcd9a6c98ea7c009ee6e0661f2e6cf1788a02",
+      "selected_address": "0000000000046e60",
+      "expected": "plain",
+      "expected_address": "0000000000046d80",
+      "selected_core_sha256": "d128b45be33e405082e9167406cfc027c408a639b84f43c7451a1fd8af4ad6e1",
+      "expected_core_sha256": "14163883ed6477bcaa0a0af29d602ea63f66495b265fcded234480234fce921f",
+      "exact_normalized_equal": false,
+      "selected_padding_nops": 26,
+      "expected_padding_nops": 26
+    },
+    {
+      "kind": "manual",
+      "hint": 2,
+      "symbol_sha256": "4b8b5bb7df79a612efc64d091e504dc1ac5f4b588e862d2900409b0688a01549",
+      "selected_address": "0000000000047960",
+      "expected": "plain",
+      "expected_address": "0000000000047880",
+      "selected_core_sha256": "26e976f9247c73f5ca38fc0d115c4c766cfe466e307bfc54831225c6b6dc3d90",
+      "expected_core_sha256": "a4a6435f5dbad2ec8602a7f4aaecc1d654b112bdb95df307f12a47bf278bc3fb",
+      "exact_normalized_equal": false,
+      "selected_padding_nops": 26,
+      "expected_padding_nops": 26
+    },
+    {
+      "kind": "manual",
+      "hint": 3,
+      "symbol_sha256": "be7d0c98600e8923ac6d8320465123c2bae178d1254efba45002f45b24e9e2e2",
+      "selected_address": "0000000000048460",
+      "expected": "plain",
+      "expected_address": "0000000000048380",
+      "selected_core_sha256": "a8f98a119d21937580bd8747c5d37607fcf959e3ea0d52c8bc82eed8879b2efd",
+      "expected_core_sha256": "4dfc99743e2dfdd44caeeac0ea4d2be7f3f9972b9fd4a7851b1c91b7cfabf6c5",
+      "exact_normalized_equal": false,
+      "selected_padding_nops": 26,
+      "expected_padding_nops": 26
+    },
+    {
+      "kind": "fused",
+      "hint": null,
+      "symbol_sha256": "ba0fc1409b41582cf348942e8fb814aace4706ef7d4649cd332167c063dbedab",
+      "selected_address": "0000000000048f60",
+      "expected": "reference",
+      "expected_address": "0000000000049140",
+      "selected_core_sha256": "9bb197d2d79f6d8ef2eca540964adaa2e3de41448b6b7d5888cb0640c3795bff",
+      "expected_core_sha256": "9bb197d2d79f6d8ef2eca540964adaa2e3de41448b6b7d5888cb0640c3795bff",
+      "exact_normalized_equal": true,
+      "selected_padding_nops": 21,
+      "expected_padding_nops": 21
+    },
+    {
+      "kind": "manual",
+      "hint": 0,
+      "symbol_sha256": "96cceea8d56e286b98a49b1732b22fe89878d266af2a18315fb71179f16fb942",
+      "selected_address": "0000000000049580",
+      "expected": "reference",
+      "expected_address": "0000000000049760",
+      "selected_core_sha256": "d8b235921d6f27aae7ea63fb8838aabcfc0be04ba07cdcbd80045d76b4c5a037",
+      "expected_core_sha256": "d8b235921d6f27aae7ea63fb8838aabcfc0be04ba07cdcbd80045d76b4c5a037",
+      "exact_normalized_equal": true,
+      "selected_padding_nops": 9,
+      "expected_padding_nops": 9
+    },
+    {
+      "kind": "manual",
+      "hint": 1,
+      "symbol_sha256": "a8c9bc04bbcb4f222b6aaf65542f35e5e1094d1e9c4be4a1618f9a319348f5e5",
+      "selected_address": "000000000004a660",
+      "expected": "plain",
+      "expected_address": "000000000004a560",
+      "selected_core_sha256": "007fc11559ce4b0101da08b84c1fc8a12369695858ce8bc802661097f774e192",
+      "expected_core_sha256": "d65445f0ff7589e17034b7ef47de36a46adaede45b9d0ec7e89bfa5f4ecddccd",
+      "exact_normalized_equal": false,
+      "selected_padding_nops": 28,
+      "expected_padding_nops": 28
+    },
+    {
+      "kind": "manual",
+      "hint": 2,
+      "symbol_sha256": "16cd1fb69911a06b2f7106bc3746c556746ad688fbefab9958c3d361da7b0348",
+      "selected_address": "000000000004b660",
+      "expected": "plain",
+      "expected_address": "000000000004b560",
+      "selected_core_sha256": "e921b94af7d58d14fb70ec51690048b29896cd4ff3ae4a179ef24e41cc7cc135",
+      "expected_core_sha256": "5312555858be61e387cb34153abcc84c260c71b41a42d95dc0fa7d671a25ed29",
+      "exact_normalized_equal": false,
+      "selected_padding_nops": 28,
+      "expected_padding_nops": 28
+    },
+    {
+      "kind": "manual",
+      "hint": 3,
+      "symbol_sha256": "6eedd8eda7a9ccd9cca52ee0cd55c2e3030d728b22a01afa8fb408dcf887dcfc",
+      "selected_address": "000000000004c660",
+      "expected": "plain",
+      "expected_address": "000000000004c560",
+      "selected_core_sha256": "7907ecb54b1198d266c30bd6c5d496ceec10aae4236da0b8f05c5c29518b9f6f",
+      "expected_core_sha256": "f7293c1092f45fd624a3791210360e725def07328456628e2fa73a04a8927798",
+      "exact_normalized_equal": false,
+      "selected_padding_nops": 28,
+      "expected_padding_nops": 28
+    },
+    {
+      "kind": "fused",
+      "hint": null,
+      "symbol_sha256": "e7482a09cebbcc08a670516462309dec5ecd0c94ff9bd8413b3f3f00fed29b80",
+      "selected_address": "0000000000050c00",
+      "expected": "reference",
+      "expected_address": "0000000000050de0",
+      "selected_core_sha256": "b0ff9e4bd29dfea7d038110e7ba28805d3a684946bb16f8491d4895448aacc7a",
+      "expected_core_sha256": "b0ff9e4bd29dfea7d038110e7ba28805d3a684946bb16f8491d4895448aacc7a",
+      "exact_normalized_equal": true,
+      "selected_padding_nops": 13,
+      "expected_padding_nops": 13
+    },
+    {
+      "kind": "manual",
+      "hint": 0,
+      "symbol_sha256": "81cd067a6a8b4720abf85631646d9d20501cd4b1f8ffc780de141032408c8866",
+      "selected_address": "0000000000051060",
+      "expected": "reference",
+      "expected_address": "0000000000051240",
+      "selected_core_sha256": "e79a7a4d5b5db644a7926625294695b1eba5c95084c7d7bcbe9bf137d9138050",
+      "expected_core_sha256": "e79a7a4d5b5db644a7926625294695b1eba5c95084c7d7bcbe9bf137d9138050",
+      "exact_normalized_equal": true,
+      "selected_padding_nops": 17,
+      "expected_padding_nops": 17
+    },
+    {
+      "kind": "ready",
+      "hint": 0,
+      "symbol_sha256": "efffe1ac5bd1cbb33d30e0c242e060742a4d5c3c25706db921b76790d2b1ab24",
+      "selected_address": "0000000000051d80",
+      "expected": "reference",
+      "expected_address": "0000000000051f60",
+      "selected_core_sha256": "9c9fbd9037e356a31f01827dd5f7d54b77257afa760449da5ccf367cfb429b45",
+      "expected_core_sha256": "9c9fbd9037e356a31f01827dd5f7d54b77257afa760449da5ccf367cfb429b45",
+      "exact_normalized_equal": true,
+      "selected_padding_nops": 5,
+      "expected_padding_nops": 5
+    },
+    {
+      "kind": "manual",
+      "hint": 1,
+      "symbol_sha256": "f4926cba4419749d09a92d5e4831029e819c359346f3efb96ef8d3877a179c71",
+      "selected_address": "00000000000527a0",
+      "expected": "plain",
+      "expected_address": "00000000000526a0",
+      "selected_core_sha256": "a53cf8ea26bbdfd4ffabe5ef4646f55c99f312e71f5134c3eedf88b03a87f13f",
+      "expected_core_sha256": "0fb0a815d5aabbc16acd0549e9ef267eaa117325704f302d87241a5f3dec9860",
+      "exact_normalized_equal": false,
+      "selected_padding_nops": 25,
+      "expected_padding_nops": 25
+    },
+    {
+      "kind": "ready",
+      "hint": 1,
+      "symbol_sha256": "51027d59062c82f6a91d0337cf33987d7000ee8cfd6d0269633b6e54a7113ccf",
+      "selected_address": "0000000000053220",
+      "expected": "plain",
+      "expected_address": "0000000000053120",
+      "selected_core_sha256": "a3e78fe46ecd85fe103f8e395d45f928e04563f9a5c65c74dafa3a2b605bb81f",
+      "expected_core_sha256": "a3e78fe46ecd85fe103f8e395d45f928e04563f9a5c65c74dafa3a2b605bb81f",
+      "exact_normalized_equal": true,
+      "selected_padding_nops": 10,
+      "expected_padding_nops": 10
+    },
+    {
+      "kind": "manual",
+      "hint": 2,
+      "symbol_sha256": "b1efe97b8fb069b0d7aa99b25f36b06a59eae531d91edfb4666d5e841a3887ea",
+      "selected_address": "00000000000537c0",
+      "expected": "plain",
+      "expected_address": "00000000000536c0",
+      "selected_core_sha256": "dd54db2c9f57400e33ae37dd66b7fe134d84647c84b9058bcda89abff98f7f5c",
+      "expected_core_sha256": "ac9a2647e93f6173f0d0a6d5a88f3c7dcd22f650ec4303bec94ab531fbbb2615",
+      "exact_normalized_equal": false,
+      "selected_padding_nops": 25,
+      "expected_padding_nops": 25
+    },
+    {
+      "kind": "ready",
+      "hint": 2,
+      "symbol_sha256": "ca50702b9d687e3fd48c58d9e411726a6611c374710100c8455d30a34343ba60",
+      "selected_address": "0000000000054240",
+      "expected": "plain",
+      "expected_address": "0000000000054140",
+      "selected_core_sha256": "07778cec9f6ac7211c23851b1c559dd62551ad6e46acd5096be2994e43323d94",
+      "expected_core_sha256": "07778cec9f6ac7211c23851b1c559dd62551ad6e46acd5096be2994e43323d94",
+      "exact_normalized_equal": true,
+      "selected_padding_nops": 10,
+      "expected_padding_nops": 10
+    },
+    {
+      "kind": "manual",
+      "hint": 3,
+      "symbol_sha256": "f1df02da4663ac6809b5b62ae81e39e5a7863f4f7aad15e0241c23033a682b29",
+      "selected_address": "00000000000547e0",
+      "expected": "plain",
+      "expected_address": "00000000000546e0",
+      "selected_core_sha256": "72cc284ad44763d1393ed2a4f6a3fb3db51dbac85cfa5621e5fd43f1aabb9951",
+      "expected_core_sha256": "5b9ade9da9a35dd950e5153cb88596472fb8985e197fe44160d47b34b5235096",
+      "exact_normalized_equal": false,
+      "selected_padding_nops": 25,
+      "expected_padding_nops": 25
+    },
+    {
+      "kind": "ready",
+      "hint": 3,
+      "symbol_sha256": "23858b95082898c3178ef6ac52e29c005a2db3473d64fb6461f2b30c81a0829a",
+      "selected_address": "0000000000055260",
+      "expected": "plain",
+      "expected_address": "0000000000055160",
+      "selected_core_sha256": "12451bd05b9608c205f70210a2eba13173cd83263418ba60c69c36b14303f8d8",
+      "expected_core_sha256": "12451bd05b9608c205f70210a2eba13173cd83263418ba60c69c36b14303f8d8",
+      "exact_normalized_equal": true,
+      "selected_padding_nops": 10,
+      "expected_padding_nops": 10
+    },
+    {
+      "kind": "fused",
+      "hint": null,
+      "symbol_sha256": "6f91c28bc75c2a6327c2b79188dd9b21cdd3e6bbac95f9edfdbfc3d0934ddc6f",
+      "selected_address": "0000000000055800",
+      "expected": "reference",
+      "expected_address": "0000000000055a40",
+      "selected_core_sha256": "9f698c455ba569a2d6b1e8e2c72ddc873faafd78ed12ce035cc7e6344a96687a",
+      "expected_core_sha256": "9f698c455ba569a2d6b1e8e2c72ddc873faafd78ed12ce035cc7e6344a96687a",
+      "exact_normalized_equal": true,
+      "selected_padding_nops": 10,
+      "expected_padding_nops": 10
+    },
+    {
+      "kind": "manual",
+      "hint": 0,
+      "symbol_sha256": "3a34859d6d866565d6d39ed36d88c8e3b0de328550a0ae73f0aeee61c7aae262",
+      "selected_address": "0000000000055dc0",
+      "expected": "reference",
+      "expected_address": "0000000000056000",
+      "selected_core_sha256": "9348e8bcf483572a37829fccc5cb6c665d61dd79853328cfae8d41612af5099f",
+      "expected_core_sha256": "9348e8bcf483572a37829fccc5cb6c665d61dd79853328cfae8d41612af5099f",
+      "exact_normalized_equal": true,
+      "selected_padding_nops": 14,
+      "expected_padding_nops": 14
+    },
+    {
+      "kind": "manual",
+      "hint": 1,
+      "symbol_sha256": "ca4839547b8adc51d38ee5285317f0dde8d13399a9b08db92b2cf963ff5a1fec",
+      "selected_address": "0000000000056920",
+      "expected": "plain",
+      "expected_address": "0000000000056800",
+      "selected_core_sha256": "915919a367e59193af9baf89457cc3af2d47dbea355355e937bff28116514a29",
+      "expected_core_sha256": "5edbebc6a7143f1b918bb634841c1d04d157fdf2078cc600b780e7cbbf6f2076",
+      "exact_normalized_equal": false,
+      "selected_padding_nops": 30,
+      "expected_padding_nops": 30
+    },
+    {
+      "kind": "manual",
+      "hint": 2,
+      "symbol_sha256": "b4246df4341e76725a0893dcdbd68edc6db9f2f4db6830590fa503348f9f059b",
+      "selected_address": "0000000000057420",
+      "expected": "plain",
+      "expected_address": "0000000000057300",
+      "selected_core_sha256": "eb60ba82707c32ae31fe467881ff4826751ca4d16b7df36bdb32313903ed7285",
+      "expected_core_sha256": "7ab21b36712c86708144f250719b634a80cf3b59fa5d4f258b3296c56d6cf762",
+      "exact_normalized_equal": false,
+      "selected_padding_nops": 30,
+      "expected_padding_nops": 30
+    },
+    {
+      "kind": "manual",
+      "hint": 3,
+      "symbol_sha256": "8f1bc4baf96983a8e07c9d05cd6f843ee4c862235ff4d67fd282d114a992a99b",
+      "selected_address": "0000000000057f20",
+      "expected": "plain",
+      "expected_address": "0000000000057e00",
+      "selected_core_sha256": "ef1b8516ca98b68fe7c96e7b8a9c4be4a430be66adffedd4a32165efc4ebb7ff",
+      "expected_core_sha256": "a56f26b4e8538a0a2b2829b485c71b2ba2323df8c09af5196a87bcbf897f0a2b",
+      "exact_normalized_equal": false,
+      "selected_padding_nops": 30,
+      "expected_padding_nops": 30
+    },
+    {
+      "kind": "fused",
+      "hint": null,
+      "symbol_sha256": "6d37ac4002e23425620aa8ce77857319de958cf9ad42e0ecf251f29187f5316d",
+      "selected_address": "0000000000058a20",
+      "expected": "reference",
+      "expected_address": "0000000000058c60",
+      "selected_core_sha256": "51c8acb5c9090a7ad835b668c2bd8f16bec5be571d4b4552f9bbdea3641fe22c",
+      "expected_core_sha256": "51c8acb5c9090a7ad835b668c2bd8f16bec5be571d4b4552f9bbdea3641fe22c",
+      "exact_normalized_equal": true,
+      "selected_padding_nops": 21,
+      "expected_padding_nops": 21
+    },
+    {
+      "kind": "manual",
+      "hint": 0,
+      "symbol_sha256": "565ccc9cf56a41696c41daff616c3d5854f6c41a4c5f5254bb503e1f3b705625",
+      "selected_address": "0000000000059040",
+      "expected": "reference",
+      "expected_address": "0000000000059280",
+      "selected_core_sha256": "09043e00ff0d5e49a207f73dfb5a6013c67f405153394f05ba4fafeb2f11a859",
+      "expected_core_sha256": "09043e00ff0d5e49a207f73dfb5a6013c67f405153394f05ba4fafeb2f11a859",
+      "exact_normalized_equal": true,
+      "selected_padding_nops": 13,
+      "expected_padding_nops": 13
+    },
+    {
+      "kind": "manual",
+      "hint": 1,
+      "symbol_sha256": "b26f53c437cca67fb4f7e7d37d49fd3eabd8604eaa4b29c0cedc4db1b27e619f",
+      "selected_address": "000000000005a120",
+      "expected": "plain",
+      "expected_address": "0000000000059fc0",
+      "selected_core_sha256": "f63856e113d83b3d6e22bee5b5081a24155deedee4eee69eaae03ef1e5c075c2",
+      "expected_core_sha256": "8e5d12ef686d549c0a43fdd2a5bf529f71dadb2fcb1b6c98021f075ca3944a9c",
+      "exact_normalized_equal": false,
+      "selected_padding_nops": 24,
+      "expected_padding_nops": 24
+    },
+    {
+      "kind": "manual",
+      "hint": 2,
+      "symbol_sha256": "e7544e3aea0be1631ab0b7036abb4c12aded1b85a3f6d0d08107e62eebb0d11f",
+      "selected_address": "000000000005b100",
+      "expected": "plain",
+      "expected_address": "000000000005afa0",
+      "selected_core_sha256": "870a4fecef39941698ee3721c997805a4ae4cd9bfe3682aba68c313b303c5670",
+      "expected_core_sha256": "9109f275b7ceb42265fde1b0363556f646431a85a6f9a7b49a9538376e9ee9a9",
+      "exact_normalized_equal": false,
+      "selected_padding_nops": 24,
+      "expected_padding_nops": 24
+    },
+    {
+      "kind": "manual",
+      "hint": 3,
+      "symbol_sha256": "16c30df5a7a4e6f260593ca4e1132ada6a4c08daa35d767e793a85bf7aa1b659",
+      "selected_address": "000000000005c0e0",
+      "expected": "plain",
+      "expected_address": "000000000005bf80",
+      "selected_core_sha256": "20717af99c352bce93e5def5aeab5c5417482bf6f758aad0ee01064324bf78ca",
+      "expected_core_sha256": "6f806e8367084161f2dd4cb489997057ee5909d814044b6477d50099a0353ca0",
+      "exact_normalized_equal": false,
+      "selected_padding_nops": 24,
+      "expected_padding_nops": 24
+    },
+    {
+      "kind": "fused",
+      "hint": null,
+      "symbol_sha256": "124c4d791e98f3ad691a39c40bb0a3c9b35d6e15b0579230f6e809e40076a5c0",
+      "selected_address": "00000000000606c0",
+      "expected": "reference",
+      "expected_address": "0000000000060900",
+      "selected_core_sha256": "171f8a61bf0f6f0561daad3c5fec0e9f310356380f19b55fc22a98d35f8e904a",
+      "expected_core_sha256": "171f8a61bf0f6f0561daad3c5fec0e9f310356380f19b55fc22a98d35f8e904a",
+      "exact_normalized_equal": true,
+      "selected_padding_nops": 22,
+      "expected_padding_nops": 22
+    },
+    {
+      "kind": "manual",
+      "hint": 0,
+      "symbol_sha256": "bc09503207c423ae4803ce17b502aaebc961cd0c4a5cd9571b3c6cbb16749236",
+      "selected_address": "0000000000060b60",
+      "expected": "reference",
+      "expected_address": "0000000000060da0",
+      "selected_core_sha256": "cc8129d66ef4124932cfacd56e16f4095d2ed4a0c74cda87af890e59848c6167",
+      "expected_core_sha256": "cc8129d66ef4124932cfacd56e16f4095d2ed4a0c74cda87af890e59848c6167",
+      "exact_normalized_equal": true,
+      "selected_padding_nops": 8,
+      "expected_padding_nops": 8
+    },
+    {
+      "kind": "ready",
+      "hint": 0,
+      "symbol_sha256": "1d4912f3727a3531eda86cacceff79f4aaf690f3a2f3bcf54fa04b5ddaecbc22",
+      "selected_address": "0000000000061840",
+      "expected": "reference",
+      "expected_address": "0000000000061a80",
+      "selected_core_sha256": "b9926f04160c434a505e684502b40d555b732488c415e74467cdb627d960a0a3",
+      "expected_core_sha256": "b9926f04160c434a505e684502b40d555b732488c415e74467cdb627d960a0a3",
+      "exact_normalized_equal": true,
+      "selected_padding_nops": 0,
+      "expected_padding_nops": 0
+    },
+    {
+      "kind": "manual",
+      "hint": 1,
+      "symbol_sha256": "466882c7b3e3c7ca40b4f20925d70e51c2ed4292573b5b389a029406fcc34869",
+      "selected_address": "0000000000062240",
+      "expected": "plain",
+      "expected_address": "00000000000620e0",
+      "selected_core_sha256": "1fbc4a7039280417d36aae5ea8e077984dd7918e697140159bad78a257dd9efc",
+      "expected_core_sha256": "e838c20eabc73aec83e86920d0dfc8adb58cf4130d87fc7616569d860bb868e7",
+      "exact_normalized_equal": false,
+      "selected_padding_nops": 30,
+      "expected_padding_nops": 30
+    },
+    {
+      "kind": "ready",
+      "hint": 1,
+      "symbol_sha256": "35f88aaee62ff5ca8e5d6e36eaf23c09ed6256a1dfb3e8a41880db7ea132419c",
+      "selected_address": "0000000000062cc0",
+      "expected": "plain",
+      "expected_address": "0000000000062b60",
+      "selected_core_sha256": "eac546ff0940206038c8b17e6c0be7d44fe5a7f2cfde3acb1ec3f3aa7ec0a242",
+      "expected_core_sha256": "eac546ff0940206038c8b17e6c0be7d44fe5a7f2cfde3acb1ec3f3aa7ec0a242",
+      "exact_normalized_equal": true,
+      "selected_padding_nops": 5,
+      "expected_padding_nops": 5
+    },
+    {
+      "kind": "manual",
+      "hint": 2,
+      "symbol_sha256": "dd5379c2da5945da175140fb785242c908cf542766c94aff7b71d39e38b4d1d7",
+      "selected_address": "0000000000063240",
+      "expected": "plain",
+      "expected_address": "00000000000630e0",
+      "selected_core_sha256": "35075f90fa5c682a6c826745a0f6217dd297e955fda8ed2bc3cd4615dca06c88",
+      "expected_core_sha256": "3a698262abd1c9347fcd714f1ec9a0b39156b5736225f0014fbcde75800b6a38",
+      "exact_normalized_equal": false,
+      "selected_padding_nops": 30,
+      "expected_padding_nops": 30
+    },
+    {
+      "kind": "ready",
+      "hint": 2,
+      "symbol_sha256": "f4cea6c43c997701ec5943659e303f8f009bb4b0c94ac0cb50c9199f3d888ff8",
+      "selected_address": "0000000000063cc0",
+      "expected": "plain",
+      "expected_address": "0000000000063b60",
+      "selected_core_sha256": "7d4e56e329513bf810045536716cecda79f936905be30d92340a491d595faa8a",
+      "expected_core_sha256": "7d4e56e329513bf810045536716cecda79f936905be30d92340a491d595faa8a",
+      "exact_normalized_equal": true,
+      "selected_padding_nops": 5,
+      "expected_padding_nops": 5
+    },
+    {
+      "kind": "manual",
+      "hint": 3,
+      "symbol_sha256": "b99afb3335c0d6da18f6c3df45520757f7b4f6fa406a04677fc181c57b4cbbf0",
+      "selected_address": "0000000000064240",
+      "expected": "plain",
+      "expected_address": "00000000000640e0",
+      "selected_core_sha256": "8a6eaa4c3ee9b823236902428a9fd599880dfca3c5f368616c6a3a1fe3b872bb",
+      "expected_core_sha256": "a7000ba99b6fc3488cf9aafd75cb93b3a9b03344c0e45171b817d230664beb03",
+      "exact_normalized_equal": false,
+      "selected_padding_nops": 30,
+      "expected_padding_nops": 30
+    },
+    {
+      "kind": "ready",
+      "hint": 3,
+      "symbol_sha256": "c78c83ff268c143819ae9c787449478bad83a33178870cc3d6960bbd99fcc81f",
+      "selected_address": "0000000000064cc0",
+      "expected": "plain",
+      "expected_address": "0000000000064b60",
+      "selected_core_sha256": "3153ebd57ba7d0f846258a9c51d54bd48cb1135e131137c02f4e01bca22ea3b9",
+      "expected_core_sha256": "3153ebd57ba7d0f846258a9c51d54bd48cb1135e131137c02f4e01bca22ea3b9",
+      "exact_normalized_equal": true,
+      "selected_padding_nops": 5,
+      "expected_padding_nops": 5
+    },
+    {
+      "kind": "fused",
+      "hint": null,
+      "symbol_sha256": "8b622a8bc221b88c0e8521342e019f8486176ba2054c0d93f6fa45c550648239",
+      "selected_address": "0000000000065240",
+      "expected": "reference",
+      "expected_address": "0000000000065480",
+      "selected_core_sha256": "9e50255305c64d16412f0310298b6513d9636f2c3444ba47822b751dffab2bdd",
+      "expected_core_sha256": "9e50255305c64d16412f0310298b6513d9636f2c3444ba47822b751dffab2bdd",
+      "exact_normalized_equal": true,
+      "selected_padding_nops": 19,
+      "expected_padding_nops": 19
+    },
+    {
+      "kind": "manual",
+      "hint": 0,
+      "symbol_sha256": "4e4d68a3a38380c38ad7304cfc5966a916c040e055a1c3e6e2e56f507a6f2504",
+      "selected_address": "0000000000065820",
+      "expected": "reference",
+      "expected_address": "0000000000065a60",
+      "selected_core_sha256": "439e0267c74e5347b2668e59ff700e75cf12f935db86c58222409e8cd9ec36e6",
+      "expected_core_sha256": "439e0267c74e5347b2668e59ff700e75cf12f935db86c58222409e8cd9ec36e6",
+      "exact_normalized_equal": true,
+      "selected_padding_nops": 13,
+      "expected_padding_nops": 13
+    },
+    {
+      "kind": "manual",
+      "hint": 1,
+      "symbol_sha256": "4bba4768f5882bf4eecf84a306541faa3c5e872386e7d44a7519acc34ed0e455",
+      "selected_address": "0000000000066380",
+      "expected": "plain",
+      "expected_address": "0000000000066200",
+      "selected_core_sha256": "73d14a725e1a3fadb0f29b5af8fc0612a7cd690d7847eb11b6cf576f304c2b03",
+      "expected_core_sha256": "ebb9973babb55a6f43db2858ee888700b3374a78a5f76adbe07eecba3679c7a5",
+      "exact_normalized_equal": false,
+      "selected_padding_nops": 24,
+      "expected_padding_nops": 24
+    },
+    {
+      "kind": "manual",
+      "hint": 2,
+      "symbol_sha256": "05737f934689a8454aea5d1a107b5ef47d263929dd6b8cbde1390bffca4e3946",
+      "selected_address": "0000000000066e60",
+      "expected": "plain",
+      "expected_address": "0000000000066ce0",
+      "selected_core_sha256": "4a711eb0999db3d8394b258a33d06314e2f746563b6f51799feae4466c3ee1f7",
+      "expected_core_sha256": "7205cf344b14e8e34b2537139d86ec45d6dc7066ba67694ee7b17018dedd1e38",
+      "exact_normalized_equal": false,
+      "selected_padding_nops": 24,
+      "expected_padding_nops": 24
+    },
+    {
+      "kind": "manual",
+      "hint": 3,
+      "symbol_sha256": "5c52291c61bd6c7981ac81de103d5b48f6f867d9f293d48638e62e75cab88a35",
+      "selected_address": "0000000000067940",
+      "expected": "plain",
+      "expected_address": "00000000000677c0",
+      "selected_core_sha256": "13a94c0a256546bec968f80d3d65cb7fce6000c4cb0088dd638dab2a351a9f9d",
+      "expected_core_sha256": "2872937ab698185bc01f7eb99995a739d91193554a1a6641e1b54f675dfdb84b",
+      "exact_normalized_equal": false,
+      "selected_padding_nops": 24,
+      "expected_padding_nops": 24
+    },
+    {
+      "kind": "fused",
+      "hint": null,
+      "symbol_sha256": "6889a295ded1446bb7cfc38a8a79528806eb75a1698a02d497dbf30412786ebe",
+      "selected_address": "0000000000068420",
+      "expected": "reference",
+      "expected_address": "0000000000068720",
+      "selected_core_sha256": "df29037751392a6014514a5c737011416c0f6ca144ba0809f5be17d2a947e3fc",
+      "expected_core_sha256": "df29037751392a6014514a5c737011416c0f6ca144ba0809f5be17d2a947e3fc",
+      "exact_normalized_equal": true,
+      "selected_padding_nops": 27,
+      "expected_padding_nops": 27
+    },
+    {
+      "kind": "manual",
+      "hint": 0,
+      "symbol_sha256": "024a34dbf191d7f6d7346473fa96284f09966a779ec19d0b447945d74ea0785d",
+      "selected_address": "0000000000068a60",
+      "expected": "reference",
+      "expected_address": "0000000000068d60",
+      "selected_core_sha256": "1f49a614b1c2bcac2e88b79c9c79b96c5e4fde233221c99d388575eebb85a73a",
+      "expected_core_sha256": "1f49a614b1c2bcac2e88b79c9c79b96c5e4fde233221c99d388575eebb85a73a",
+      "exact_normalized_equal": true,
+      "selected_padding_nops": 13,
+      "expected_padding_nops": 13
+    },
+    {
+      "kind": "manual",
+      "hint": 1,
+      "symbol_sha256": "a4e27b8f96565a84713b92ed17fffb919b3c67b097237d7f128ebc14033a6189",
+      "selected_address": "0000000000069b40",
+      "expected": "plain",
+      "expected_address": "0000000000069980",
+      "selected_core_sha256": "1076d958b68ca53a6618ef75398632a4d2658014bafffb8d66fe9ed8def20702",
+      "expected_core_sha256": "1ba1390b8a720ca0457fbd38f7fa278e1f860a4931a5b0853f8fcf17da0ee69b",
+      "exact_normalized_equal": false,
+      "selected_padding_nops": 18,
+      "expected_padding_nops": 18
+    },
+    {
+      "kind": "manual",
+      "hint": 2,
+      "symbol_sha256": "a3294c6a2b7d0e8306f6e89a67a8c0c4310532c4338979d8f89499fbc76f15a4",
+      "selected_address": "000000000006ab00",
+      "expected": "plain",
+      "expected_address": "000000000006a940",
+      "selected_core_sha256": "d80cf26fa820f29352214340f2a45c9921d5df986a27bfadb8e881388e0c99b9",
+      "expected_core_sha256": "63168fa6e0f90a831fda0360ad36ce969b8c1f117a08b6ae341dacb3c2f3f6d9",
+      "exact_normalized_equal": false,
+      "selected_padding_nops": 18,
+      "expected_padding_nops": 18
+    },
+    {
+      "kind": "manual",
+      "hint": 3,
+      "symbol_sha256": "8557f75be6241dae3c895ef97d8eef0faccca13081fe5a7e3e9e72a68ab44be0",
+      "selected_address": "000000000006bac0",
+      "expected": "plain",
+      "expected_address": "000000000006b900",
+      "selected_core_sha256": "b996948aca05deb351313f948bccbdcd847e44b305c13d0afcc4ecaedef37b87",
+      "expected_core_sha256": "11df38f4279aa6c8d9d127902b421b655d84778eb7ccf6ce846ab91c10ff1b57",
+      "exact_normalized_equal": false,
+      "selected_padding_nops": 18,
+      "expected_padding_nops": 18
+    }
+  ],
+  "differences": [
+    {
+      "kind": "manual",
+      "hint": 1,
+      "symbol_prefix": "(anonymous namespace)::answer (anonymous namespace)::manual<1u, (loom::Hint)1, hashtable_spike::tiered::table<",
+      "first": 423,
+      "selected": [
+        "adrp x8, PAGE",
+        "adrp x0, PAGE",
+        "add x0, x0, #0x77b",
+        "mov w1, #0x1b",
+        "mov w2, #0x1",
+        "ldr x8, [x8, #0xfd0]"
+      ],
+      "expected": [
+        "adrp x8, PAGE",
+        "adrp x0, PAGE",
+        "add x0, x0, #0x5bb",
+        "mov w1, #0x1b",
+        "mov w2, #0x1",
+        "ldr x8, [x8, #0xfd0]"
+      ],
+      "selected_len": 430,
+      "expected_len": 430
+    },
+    {
+      "kind": "manual",
+      "hint": 2,
+      "symbol_prefix": "(anonymous namespace)::answer (anonymous namespace)::manual<1u, (loom::Hint)2, hashtable_spike::tiered::table<",
+      "first": 423,
+      "selected": [
+        "adrp x8, PAGE",
+        "adrp x0, PAGE",
+        "add x0, x0, #0x77b",
+        "mov w1, #0x1b",
+        "mov w2, #0x1",
+        "ldr x8, [x8, #0xfd0]"
+      ],
+      "expected": [
+        "adrp x8, PAGE",
+        "adrp x0, PAGE",
+        "add x0, x0, #0x5bb",
+        "mov w1, #0x1b",
+        "mov w2, #0x1",
+        "ldr x8, [x8, #0xfd0]"
+      ],
+      "selected_len": 430,
+      "expected_len": 430
+    },
+    {
+      "kind": "manual",
+      "hint": 3,
+      "symbol_prefix": "(anonymous namespace)::answer (anonymous namespace)::manual<1u, (loom::Hint)3, hashtable_spike::tiered::table<",
+      "first": 423,
+      "selected": [
+        "adrp x8, PAGE",
+        "adrp x0, PAGE",
+        "add x0, x0, #0x77b",
+        "mov w1, #0x1b",
+        "mov w2, #0x1",
+        "ldr x8, [x8, #0xfd0]"
+      ],
+      "expected": [
+        "adrp x8, PAGE",
+        "adrp x0, PAGE",
+        "add x0, x0, #0x5bb",
+        "mov w1, #0x1b",
+        "mov w2, #0x1",
+        "ldr x8, [x8, #0xfd0]"
+      ],
+      "selected_len": 430,
+      "expected_len": 430
+    },
+    {
+      "kind": "manual",
+      "hint": 1,
+      "symbol_prefix": "(anonymous namespace)::answer (anonymous namespace)::manual<8u, (loom::Hint)1, hashtable_spike::tiered::table<",
+      "first": 485,
+      "selected": [
+        "adrp x8, PAGE",
+        "adrp x0, PAGE",
+        "add x0, x0, #0x77b",
+        "mov w1, #0x1b",
+        "mov w2, #0x1",
+        "ldr x8, [x8, #0xfd0]"
+      ],
+      "expected": [
+        "adrp x8, PAGE",
+        "adrp x0, PAGE",
+        "add x0, x0, #0x5bb",
+        "mov w1, #0x1b",
+        "mov w2, #0x1",
+        "ldr x8, [x8, #0xfd0]"
+      ],
+      "selected_len": 492,
+      "expected_len": 492
+    },
+    {
+      "kind": "manual",
+      "hint": 2,
+      "symbol_prefix": "(anonymous namespace)::answer (anonymous namespace)::manual<8u, (loom::Hint)2, hashtable_spike::tiered::table<",
+      "first": 485,
+      "selected": [
+        "adrp x8, PAGE",
+        "adrp x0, PAGE",
+        "add x0, x0, #0x77b",
+        "mov w1, #0x1b",
+        "mov w2, #0x1",
+        "ldr x8, [x8, #0xfd0]"
+      ],
+      "expected": [
+        "adrp x8, PAGE",
+        "adrp x0, PAGE",
+        "add x0, x0, #0x5bb",
+        "mov w1, #0x1b",
+        "mov w2, #0x1",
+        "ldr x8, [x8, #0xfd0]"
+      ],
+      "selected_len": 492,
+      "expected_len": 492
+    },
+    {
+      "kind": "manual",
+      "hint": 3,
+      "symbol_prefix": "(anonymous namespace)::answer (anonymous namespace)::manual<8u, (loom::Hint)3, hashtable_spike::tiered::table<",
+      "first": 485,
+      "selected": [
+        "adrp x8, PAGE",
+        "adrp x0, PAGE",
+        "add x0, x0, #0x77b",
+        "mov w1, #0x1b",
+        "mov w2, #0x1",
+        "ldr x8, [x8, #0xfd0]"
+      ],
+      "expected": [
+        "adrp x8, PAGE",
+        "adrp x0, PAGE",
+        "add x0, x0, #0x5bb",
+        "mov w1, #0x1b",
+        "mov w2, #0x1",
+        "ldr x8, [x8, #0xfd0]"
+      ],
+      "selected_len": 492,
+      "expected_len": 492
+    },
+    {
+      "kind": "manual",
+      "hint": 1,
+      "symbol_prefix": "(anonymous namespace)::answer (anonymous namespace)::manual<32u, (loom::Hint)1, hashtable_spike::tiered::table",
+      "first": 643,
+      "selected": [
+        "adrp x8, PAGE",
+        "adrp x0, PAGE",
+        "add x0, x0, #0x77b",
+        "mov w1, #0x1b",
+        "mov w2, #0x1",
+        "ldr x8, [x8, #0xfd0]"
+      ],
+      "expected": [
+        "adrp x8, PAGE",
+        "adrp x0, PAGE",
+        "add x0, x0, #0x5bb",
+        "mov w1, #0x1b",
+        "mov w2, #0x1",
+        "ldr x8, [x8, #0xfd0]"
+      ],
+      "selected_len": 650,
+      "expected_len": 650
+    },
+    {
+      "kind": "manual",
+      "hint": 2,
+      "symbol_prefix": "(anonymous namespace)::answer (anonymous namespace)::manual<32u, (loom::Hint)2, hashtable_spike::tiered::table",
+      "first": 643,
+      "selected": [
+        "adrp x8, PAGE",
+        "adrp x0, PAGE",
+        "add x0, x0, #0x77b",
+        "mov w1, #0x1b",
+        "mov w2, #0x1",
+        "ldr x8, [x8, #0xfd0]"
+      ],
+      "expected": [
+        "adrp x8, PAGE",
+        "adrp x0, PAGE",
+        "add x0, x0, #0x5bb",
+        "mov w1, #0x1b",
+        "mov w2, #0x1",
+        "ldr x8, [x8, #0xfd0]"
+      ],
+      "selected_len": 650,
+      "expected_len": 650
+    },
+    {
+      "kind": "manual",
+      "hint": 3,
+      "symbol_prefix": "(anonymous namespace)::answer (anonymous namespace)::manual<32u, (loom::Hint)3, hashtable_spike::tiered::table",
+      "first": 643,
+      "selected": [
+        "adrp x8, PAGE",
+        "adrp x0, PAGE",
+        "add x0, x0, #0x77b",
+        "mov w1, #0x1b",
+        "mov w2, #0x1",
+        "ldr x8, [x8, #0xfd0]"
+      ],
+      "expected": [
+        "adrp x8, PAGE",
+        "adrp x0, PAGE",
+        "add x0, x0, #0x5bb",
+        "mov w1, #0x1b",
+        "mov w2, #0x1",
+        "ldr x8, [x8, #0xfd0]"
+      ],
+      "selected_len": 650,
+      "expected_len": 650
+    },
+    {
+      "kind": "manual",
+      "hint": 1,
+      "symbol_prefix": "(anonymous namespace)::answer (anonymous namespace)::manual<1u, (loom::Hint)1, hashtable_spike::tiered::table<",
+      "first": 437,
+      "selected": [
+        "adrp x8, PAGE",
+        "adrp x0, PAGE",
+        "add x0, x0, #0x77b",
+        "mov w1, #0x1b",
+        "mov w2, #0x1",
+        "ldr x8, [x8, #0xfd0]"
+      ],
+      "expected": [
+        "adrp x8, PAGE",
+        "adrp x0, PAGE",
+        "add x0, x0, #0x5bb",
+        "mov w1, #0x1b",
+        "mov w2, #0x1",
+        "ldr x8, [x8, #0xfd0]"
+      ],
+      "selected_len": 444,
+      "expected_len": 444
+    },
+    {
+      "kind": "manual",
+      "hint": 2,
+      "symbol_prefix": "(anonymous namespace)::answer (anonymous namespace)::manual<1u, (loom::Hint)2, hashtable_spike::tiered::table<",
+      "first": 437,
+      "selected": [
+        "adrp x8, PAGE",
+        "adrp x0, PAGE",
+        "add x0, x0, #0x77b",
+        "mov w1, #0x1b",
+        "mov w2, #0x1",
+        "ldr x8, [x8, #0xfd0]"
+      ],
+      "expected": [
+        "adrp x8, PAGE",
+        "adrp x0, PAGE",
+        "add x0, x0, #0x5bb",
+        "mov w1, #0x1b",
+        "mov w2, #0x1",
+        "ldr x8, [x8, #0xfd0]"
+      ],
+      "selected_len": 444,
+      "expected_len": 444
+    },
+    {
+      "kind": "manual",
+      "hint": 3,
+      "symbol_prefix": "(anonymous namespace)::answer (anonymous namespace)::manual<1u, (loom::Hint)3, hashtable_spike::tiered::table<",
+      "first": 437,
+      "selected": [
+        "adrp x8, PAGE",
+        "adrp x0, PAGE",
+        "add x0, x0, #0x77b",
+        "mov w1, #0x1b",
+        "mov w2, #0x1",
+        "ldr x8, [x8, #0xfd0]"
+      ],
+      "expected": [
+        "adrp x8, PAGE",
+        "adrp x0, PAGE",
+        "add x0, x0, #0x5bb",
+        "mov w1, #0x1b",
+        "mov w2, #0x1",
+        "ldr x8, [x8, #0xfd0]"
+      ],
+      "selected_len": 444,
+      "expected_len": 444
+    },
+    {
+      "kind": "manual",
+      "hint": 1,
+      "symbol_prefix": "(anonymous namespace)::answer (anonymous namespace)::manual<8u, (loom::Hint)1, hashtable_spike::tiered::table<",
+      "first": 492,
+      "selected": [
+        "adrp x8, PAGE",
+        "adrp x0, PAGE",
+        "add x0, x0, #0x77b",
+        "mov w1, #0x1b",
+        "mov w2, #0x1",
+        "ldr x8, [x8, #0xfd0]"
+      ],
+      "expected": [
+        "adrp x8, PAGE",
+        "adrp x0, PAGE",
+        "add x0, x0, #0x5bb",
+        "mov w1, #0x1b",
+        "mov w2, #0x1",
+        "ldr x8, [x8, #0xfd0]"
+      ],
+      "selected_len": 499,
+      "expected_len": 499
+    },
+    {
+      "kind": "manual",
+      "hint": 2,
+      "symbol_prefix": "(anonymous namespace)::answer (anonymous namespace)::manual<8u, (loom::Hint)2, hashtable_spike::tiered::table<",
+      "first": 492,
+      "selected": [
+        "adrp x8, PAGE",
+        "adrp x0, PAGE",
+        "add x0, x0, #0x77b",
+        "mov w1, #0x1b",
+        "mov w2, #0x1",
+        "ldr x8, [x8, #0xfd0]"
+      ],
+      "expected": [
+        "adrp x8, PAGE",
+        "adrp x0, PAGE",
+        "add x0, x0, #0x5bb",
+        "mov w1, #0x1b",
+        "mov w2, #0x1",
+        "ldr x8, [x8, #0xfd0]"
+      ],
+      "selected_len": 499,
+      "expected_len": 499
+    },
+    {
+      "kind": "manual",
+      "hint": 3,
+      "symbol_prefix": "(anonymous namespace)::answer (anonymous namespace)::manual<8u, (loom::Hint)3, hashtable_spike::tiered::table<",
+      "first": 492,
+      "selected": [
+        "adrp x8, PAGE",
+        "adrp x0, PAGE",
+        "add x0, x0, #0x77b",
+        "mov w1, #0x1b",
+        "mov w2, #0x1",
+        "ldr x8, [x8, #0xfd0]"
+      ],
+      "expected": [
+        "adrp x8, PAGE",
+        "adrp x0, PAGE",
+        "add x0, x0, #0x5bb",
+        "mov w1, #0x1b",
+        "mov w2, #0x1",
+        "ldr x8, [x8, #0xfd0]"
+      ],
+      "selected_len": 499,
+      "expected_len": 499
+    },
+    {
+      "kind": "manual",
+      "hint": 1,
+      "symbol_prefix": "(anonymous namespace)::answer (anonymous namespace)::manual<32u, (loom::Hint)1, hashtable_spike::tiered::table",
+      "first": 650,
+      "selected": [
+        "adrp x8, PAGE",
+        "adrp x0, PAGE",
+        "add x0, x0, #0x77b",
+        "mov w1, #0x1b",
+        "mov w2, #0x1",
+        "ldr x8, [x8, #0xfd0]"
+      ],
+      "expected": [
+        "adrp x8, PAGE",
+        "adrp x0, PAGE",
+        "add x0, x0, #0x5bb",
+        "mov w1, #0x1b",
+        "mov w2, #0x1",
+        "ldr x8, [x8, #0xfd0]"
+      ],
+      "selected_len": 657,
+      "expected_len": 657
+    },
+    {
+      "kind": "manual",
+      "hint": 2,
+      "symbol_prefix": "(anonymous namespace)::answer (anonymous namespace)::manual<32u, (loom::Hint)2, hashtable_spike::tiered::table",
+      "first": 650,
+      "selected": [
+        "adrp x8, PAGE",
+        "adrp x0, PAGE",
+        "add x0, x0, #0x77b",
+        "mov w1, #0x1b",
+        "mov w2, #0x1",
+        "ldr x8, [x8, #0xfd0]"
+      ],
+      "expected": [
+        "adrp x8, PAGE",
+        "adrp x0, PAGE",
+        "add x0, x0, #0x5bb",
+        "mov w1, #0x1b",
+        "mov w2, #0x1",
+        "ldr x8, [x8, #0xfd0]"
+      ],
+      "selected_len": 657,
+      "expected_len": 657
+    },
+    {
+      "kind": "manual",
+      "hint": 3,
+      "symbol_prefix": "(anonymous namespace)::answer (anonymous namespace)::manual<32u, (loom::Hint)3, hashtable_spike::tiered::table",
+      "first": 650,
+      "selected": [
+        "adrp x8, PAGE",
+        "adrp x0, PAGE",
+        "add x0, x0, #0x77b",
+        "mov w1, #0x1b",
+        "mov w2, #0x1",
+        "ldr x8, [x8, #0xfd0]"
+      ],
+      "expected": [
+        "adrp x8, PAGE",
+        "adrp x0, PAGE",
+        "add x0, x0, #0x5bb",
+        "mov w1, #0x1b",
+        "mov w2, #0x1",
+        "ldr x8, [x8, #0xfd0]"
+      ],
+      "selected_len": 657,
+      "expected_len": 657
+    },
+    {
+      "kind": "manual",
+      "hint": 1,
+      "symbol_prefix": "(anonymous namespace)::answer (anonymous namespace)::manual<1u, (loom::Hint)1, hashtable_spike::tiered::table<",
+      "first": 433,
+      "selected": [
+        "adrp x8, PAGE",
+        "adrp x0, PAGE",
+        "add x0, x0, #0x77b",
+        "mov w1, #0x1b",
+        "mov w2, #0x1",
+        "ldr x8, [x8, #0xfd0]"
+      ],
+      "expected": [
+        "adrp x8, PAGE",
+        "adrp x0, PAGE",
+        "add x0, x0, #0x5bb",
+        "mov w1, #0x1b",
+        "mov w2, #0x1",
+        "ldr x8, [x8, #0xfd0]"
+      ],
+      "selected_len": 440,
+      "expected_len": 440
+    },
+    {
+      "kind": "manual",
+      "hint": 2,
+      "symbol_prefix": "(anonymous namespace)::answer (anonymous namespace)::manual<1u, (loom::Hint)2, hashtable_spike::tiered::table<",
+      "first": 433,
+      "selected": [
+        "adrp x8, PAGE",
+        "adrp x0, PAGE",
+        "add x0, x0, #0x77b",
+        "mov w1, #0x1b",
+        "mov w2, #0x1",
+        "ldr x8, [x8, #0xfd0]"
+      ],
+      "expected": [
+        "adrp x8, PAGE",
+        "adrp x0, PAGE",
+        "add x0, x0, #0x5bb",
+        "mov w1, #0x1b",
+        "mov w2, #0x1",
+        "ldr x8, [x8, #0xfd0]"
+      ],
+      "selected_len": 440,
+      "expected_len": 440
+    },
+    {
+      "kind": "manual",
+      "hint": 3,
+      "symbol_prefix": "(anonymous namespace)::answer (anonymous namespace)::manual<1u, (loom::Hint)3, hashtable_spike::tiered::table<",
+      "first": 433,
+      "selected": [
+        "adrp x8, PAGE",
+        "adrp x0, PAGE",
+        "add x0, x0, #0x77b",
+        "mov w1, #0x1b",
+        "mov w2, #0x1",
+        "ldr x8, [x8, #0xfd0]"
+      ],
+      "expected": [
+        "adrp x8, PAGE",
+        "adrp x0, PAGE",
+        "add x0, x0, #0x5bb",
+        "mov w1, #0x1b",
+        "mov w2, #0x1",
+        "ldr x8, [x8, #0xfd0]"
+      ],
+      "selected_len": 440,
+      "expected_len": 440
+    },
+    {
+      "kind": "manual",
+      "hint": 1,
+      "symbol_prefix": "(anonymous namespace)::answer (anonymous namespace)::manual<8u, (loom::Hint)1, hashtable_spike::tiered::table<",
+      "first": 495,
+      "selected": [
+        "adrp x8, PAGE",
+        "adrp x0, PAGE",
+        "add x0, x0, #0x77b",
+        "mov w1, #0x1b",
+        "mov w2, #0x1",
+        "ldr x8, [x8, #0xfd0]"
+      ],
+      "expected": [
+        "adrp x8, PAGE",
+        "adrp x0, PAGE",
+        "add x0, x0, #0x5bb",
+        "mov w1, #0x1b",
+        "mov w2, #0x1",
+        "ldr x8, [x8, #0xfd0]"
+      ],
+      "selected_len": 502,
+      "expected_len": 502
+    },
+    {
+      "kind": "manual",
+      "hint": 2,
+      "symbol_prefix": "(anonymous namespace)::answer (anonymous namespace)::manual<8u, (loom::Hint)2, hashtable_spike::tiered::table<",
+      "first": 495,
+      "selected": [
+        "adrp x8, PAGE",
+        "adrp x0, PAGE",
+        "add x0, x0, #0x77b",
+        "mov w1, #0x1b",
+        "mov w2, #0x1",
+        "ldr x8, [x8, #0xfd0]"
+      ],
+      "expected": [
+        "adrp x8, PAGE",
+        "adrp x0, PAGE",
+        "add x0, x0, #0x5bb",
+        "mov w1, #0x1b",
+        "mov w2, #0x1",
+        "ldr x8, [x8, #0xfd0]"
+      ],
+      "selected_len": 502,
+      "expected_len": 502
+    },
+    {
+      "kind": "manual",
+      "hint": 3,
+      "symbol_prefix": "(anonymous namespace)::answer (anonymous namespace)::manual<8u, (loom::Hint)3, hashtable_spike::tiered::table<",
+      "first": 495,
+      "selected": [
+        "adrp x8, PAGE",
+        "adrp x0, PAGE",
+        "add x0, x0, #0x77b",
+        "mov w1, #0x1b",
+        "mov w2, #0x1",
+        "ldr x8, [x8, #0xfd0]"
+      ],
+      "expected": [
+        "adrp x8, PAGE",
+        "adrp x0, PAGE",
+        "add x0, x0, #0x5bb",
+        "mov w1, #0x1b",
+        "mov w2, #0x1",
+        "ldr x8, [x8, #0xfd0]"
+      ],
+      "selected_len": 502,
+      "expected_len": 502
+    },
+    {
+      "kind": "manual",
+      "hint": 1,
+      "symbol_prefix": "(anonymous namespace)::answer (anonymous namespace)::manual<32u, (loom::Hint)1, hashtable_spike::tiered::table",
+      "first": 653,
+      "selected": [
+        "adrp x8, PAGE",
+        "adrp x0, PAGE",
+        "add x0, x0, #0x77b",
+        "mov w1, #0x1b",
+        "mov w2, #0x1",
+        "ldr x8, [x8, #0xfd0]"
+      ],
+      "expected": [
+        "adrp x8, PAGE",
+        "adrp x0, PAGE",
+        "add x0, x0, #0x5bb",
+        "mov w1, #0x1b",
+        "mov w2, #0x1",
+        "ldr x8, [x8, #0xfd0]"
+      ],
+      "selected_len": 660,
+      "expected_len": 660
+    },
+    {
+      "kind": "manual",
+      "hint": 2,
+      "symbol_prefix": "(anonymous namespace)::answer (anonymous namespace)::manual<32u, (loom::Hint)2, hashtable_spike::tiered::table",
+      "first": 653,
+      "selected": [
+        "adrp x8, PAGE",
+        "adrp x0, PAGE",
+        "add x0, x0, #0x77b",
+        "mov w1, #0x1b",
+        "mov w2, #0x1",
+        "ldr x8, [x8, #0xfd0]"
+      ],
+      "expected": [
+        "adrp x8, PAGE",
+        "adrp x0, PAGE",
+        "add x0, x0, #0x5bb",
+        "mov w1, #0x1b",
+        "mov w2, #0x1",
+        "ldr x8, [x8, #0xfd0]"
+      ],
+      "selected_len": 660,
+      "expected_len": 660
+    },
+    {
+      "kind": "manual",
+      "hint": 3,
+      "symbol_prefix": "(anonymous namespace)::answer (anonymous namespace)::manual<32u, (loom::Hint)3, hashtable_spike::tiered::table",
+      "first": 653,
+      "selected": [
+        "adrp x8, PAGE",
+        "adrp x0, PAGE",
+        "add x0, x0, #0x77b",
+        "mov w1, #0x1b",
+        "mov w2, #0x1",
+        "ldr x8, [x8, #0xfd0]"
+      ],
+      "expected": [
+        "adrp x8, PAGE",
+        "adrp x0, PAGE",
+        "add x0, x0, #0x5bb",
+        "mov w1, #0x1b",
+        "mov w2, #0x1",
+        "ldr x8, [x8, #0xfd0]"
+      ],
+      "selected_len": 660,
+      "expected_len": 660
+    },
+    {
+      "kind": "manual",
+      "hint": 1,
+      "symbol_prefix": "(anonymous namespace)::answer (anonymous namespace)::manual<1u, (loom::Hint)1, hashtable_spike::tiered::table<",
+      "first": 432,
+      "selected": [
+        "adrp x8, PAGE",
+        "adrp x0, PAGE",
+        "add x0, x0, #0x77b",
+        "mov w1, #0x1b",
+        "mov w2, #0x1",
+        "ldr x8, [x8, #0xfd0]"
+      ],
+      "expected": [
+        "adrp x8, PAGE",
+        "adrp x0, PAGE",
+        "add x0, x0, #0x5bb",
+        "mov w1, #0x1b",
+        "mov w2, #0x1",
+        "ldr x8, [x8, #0xfd0]"
+      ],
+      "selected_len": 439,
+      "expected_len": 439
+    },
+    {
+      "kind": "manual",
+      "hint": 2,
+      "symbol_prefix": "(anonymous namespace)::answer (anonymous namespace)::manual<1u, (loom::Hint)2, hashtable_spike::tiered::table<",
+      "first": 432,
+      "selected": [
+        "adrp x8, PAGE",
+        "adrp x0, PAGE",
+        "add x0, x0, #0x77b",
+        "mov w1, #0x1b",
+        "mov w2, #0x1",
+        "ldr x8, [x8, #0xfd0]"
+      ],
+      "expected": [
+        "adrp x8, PAGE",
+        "adrp x0, PAGE",
+        "add x0, x0, #0x5bb",
+        "mov w1, #0x1b",
+        "mov w2, #0x1",
+        "ldr x8, [x8, #0xfd0]"
+      ],
+      "selected_len": 439,
+      "expected_len": 439
+    },
+    {
+      "kind": "manual",
+      "hint": 3,
+      "symbol_prefix": "(anonymous namespace)::answer (anonymous namespace)::manual<1u, (loom::Hint)3, hashtable_spike::tiered::table<",
+      "first": 432,
+      "selected": [
+        "adrp x8, PAGE",
+        "adrp x0, PAGE",
+        "add x0, x0, #0x77b",
+        "mov w1, #0x1b",
+        "mov w2, #0x1",
+        "ldr x8, [x8, #0xfd0]"
+      ],
+      "expected": [
+        "adrp x8, PAGE",
+        "adrp x0, PAGE",
+        "add x0, x0, #0x5bb",
+        "mov w1, #0x1b",
+        "mov w2, #0x1",
+        "ldr x8, [x8, #0xfd0]"
+      ],
+      "selected_len": 439,
+      "expected_len": 439
+    },
+    {
+      "kind": "manual",
+      "hint": 1,
+      "symbol_prefix": "(anonymous namespace)::answer (anonymous namespace)::manual<8u, (loom::Hint)1, hashtable_spike::tiered::table<",
+      "first": 491,
+      "selected": [
+        "adrp x8, PAGE",
+        "adrp x0, PAGE",
+        "add x0, x0, #0x77b",
+        "mov w1, #0x1b",
+        "mov w2, #0x1",
+        "ldr x8, [x8, #0xfd0]"
+      ],
+      "expected": [
+        "adrp x8, PAGE",
+        "adrp x0, PAGE",
+        "add x0, x0, #0x5bb",
+        "mov w1, #0x1b",
+        "mov w2, #0x1",
+        "ldr x8, [x8, #0xfd0]"
+      ],
+      "selected_len": 498,
+      "expected_len": 498
+    },
+    {
+      "kind": "manual",
+      "hint": 2,
+      "symbol_prefix": "(anonymous namespace)::answer (anonymous namespace)::manual<8u, (loom::Hint)2, hashtable_spike::tiered::table<",
+      "first": 491,
+      "selected": [
+        "adrp x8, PAGE",
+        "adrp x0, PAGE",
+        "add x0, x0, #0x77b",
+        "mov w1, #0x1b",
+        "mov w2, #0x1",
+        "ldr x8, [x8, #0xfd0]"
+      ],
+      "expected": [
+        "adrp x8, PAGE",
+        "adrp x0, PAGE",
+        "add x0, x0, #0x5bb",
+        "mov w1, #0x1b",
+        "mov w2, #0x1",
+        "ldr x8, [x8, #0xfd0]"
+      ],
+      "selected_len": 498,
+      "expected_len": 498
+    },
+    {
+      "kind": "manual",
+      "hint": 3,
+      "symbol_prefix": "(anonymous namespace)::answer (anonymous namespace)::manual<8u, (loom::Hint)3, hashtable_spike::tiered::table<",
+      "first": 491,
+      "selected": [
+        "adrp x8, PAGE",
+        "adrp x0, PAGE",
+        "add x0, x0, #0x77b",
+        "mov w1, #0x1b",
+        "mov w2, #0x1",
+        "ldr x8, [x8, #0xfd0]"
+      ],
+      "expected": [
+        "adrp x8, PAGE",
+        "adrp x0, PAGE",
+        "add x0, x0, #0x5bb",
+        "mov w1, #0x1b",
+        "mov w2, #0x1",
+        "ldr x8, [x8, #0xfd0]"
+      ],
+      "selected_len": 498,
+      "expected_len": 498
+    },
+    {
+      "kind": "manual",
+      "hint": 1,
+      "symbol_prefix": "(anonymous namespace)::answer (anonymous namespace)::manual<32u, (loom::Hint)1, hashtable_spike::tiered::table",
+      "first": 649,
+      "selected": [
+        "adrp x8, PAGE",
+        "adrp x0, PAGE",
+        "add x0, x0, #0x77b",
+        "mov w1, #0x1b",
+        "mov w2, #0x1",
+        "ldr x8, [x8, #0xfd0]"
+      ],
+      "expected": [
+        "adrp x8, PAGE",
+        "adrp x0, PAGE",
+        "add x0, x0, #0x5bb",
+        "mov w1, #0x1b",
+        "mov w2, #0x1",
+        "ldr x8, [x8, #0xfd0]"
+      ],
+      "selected_len": 656,
+      "expected_len": 656
+    },
+    {
+      "kind": "manual",
+      "hint": 2,
+      "symbol_prefix": "(anonymous namespace)::answer (anonymous namespace)::manual<32u, (loom::Hint)2, hashtable_spike::tiered::table",
+      "first": 649,
+      "selected": [
+        "adrp x8, PAGE",
+        "adrp x0, PAGE",
+        "add x0, x0, #0x77b",
+        "mov w1, #0x1b",
+        "mov w2, #0x1",
+        "ldr x8, [x8, #0xfd0]"
+      ],
+      "expected": [
+        "adrp x8, PAGE",
+        "adrp x0, PAGE",
+        "add x0, x0, #0x5bb",
+        "mov w1, #0x1b",
+        "mov w2, #0x1",
+        "ldr x8, [x8, #0xfd0]"
+      ],
+      "selected_len": 656,
+      "expected_len": 656
+    },
+    {
+      "kind": "manual",
+      "hint": 3,
+      "symbol_prefix": "(anonymous namespace)::answer (anonymous namespace)::manual<32u, (loom::Hint)3, hashtable_spike::tiered::table",
+      "first": 649,
+      "selected": [
+        "adrp x8, PAGE",
+        "adrp x0, PAGE",
+        "add x0, x0, #0x77b",
+        "mov w1, #0x1b",
+        "mov w2, #0x1",
+        "ldr x8, [x8, #0xfd0]"
+      ],
+      "expected": [
+        "adrp x8, PAGE",
+        "adrp x0, PAGE",
+        "add x0, x0, #0x5bb",
+        "mov w1, #0x1b",
+        "mov w2, #0x1",
+        "ldr x8, [x8, #0xfd0]"
+      ],
+      "selected_len": 656,
+      "expected_len": 656
+    },
+    {
+      "kind": "manual",
+      "hint": 1,
+      "symbol_prefix": "(anonymous namespace)::answer (anonymous namespace)::manual<1u, (loom::Hint)1, hashtable_spike::tiered::table<",
+      "first": 427,
+      "selected": [
+        "adrp x8, PAGE",
+        "adrp x0, PAGE",
+        "add x0, x0, #0x77b",
+        "mov w1, #0x1b",
+        "mov w2, #0x1",
+        "ldr x8, [x8, #0xfd0]"
+      ],
+      "expected": [
+        "adrp x8, PAGE",
+        "adrp x0, PAGE",
+        "add x0, x0, #0x5bb",
+        "mov w1, #0x1b",
+        "mov w2, #0x1",
+        "ldr x8, [x8, #0xfd0]"
+      ],
+      "selected_len": 434,
+      "expected_len": 434
+    },
+    {
+      "kind": "manual",
+      "hint": 2,
+      "symbol_prefix": "(anonymous namespace)::answer (anonymous namespace)::manual<1u, (loom::Hint)2, hashtable_spike::tiered::table<",
+      "first": 427,
+      "selected": [
+        "adrp x8, PAGE",
+        "adrp x0, PAGE",
+        "add x0, x0, #0x77b",
+        "mov w1, #0x1b",
+        "mov w2, #0x1",
+        "ldr x8, [x8, #0xfd0]"
+      ],
+      "expected": [
+        "adrp x8, PAGE",
+        "adrp x0, PAGE",
+        "add x0, x0, #0x5bb",
+        "mov w1, #0x1b",
+        "mov w2, #0x1",
+        "ldr x8, [x8, #0xfd0]"
+      ],
+      "selected_len": 434,
+      "expected_len": 434
+    },
+    {
+      "kind": "manual",
+      "hint": 3,
+      "symbol_prefix": "(anonymous namespace)::answer (anonymous namespace)::manual<1u, (loom::Hint)3, hashtable_spike::tiered::table<",
+      "first": 427,
+      "selected": [
+        "adrp x8, PAGE",
+        "adrp x0, PAGE",
+        "add x0, x0, #0x77b",
+        "mov w1, #0x1b",
+        "mov w2, #0x1",
+        "ldr x8, [x8, #0xfd0]"
+      ],
+      "expected": [
+        "adrp x8, PAGE",
+        "adrp x0, PAGE",
+        "add x0, x0, #0x5bb",
+        "mov w1, #0x1b",
+        "mov w2, #0x1",
+        "ldr x8, [x8, #0xfd0]"
+      ],
+      "selected_len": 434,
+      "expected_len": 434
+    },
+    {
+      "kind": "manual",
+      "hint": 1,
+      "symbol_prefix": "(anonymous namespace)::answer (anonymous namespace)::manual<8u, (loom::Hint)1, hashtable_spike::tiered::table<",
+      "first": 489,
+      "selected": [
+        "adrp x8, PAGE",
+        "adrp x0, PAGE",
+        "add x0, x0, #0x77b",
+        "mov w1, #0x1b",
+        "mov w2, #0x1",
+        "ldr x8, [x8, #0xfd0]"
+      ],
+      "expected": [
+        "adrp x8, PAGE",
+        "adrp x0, PAGE",
+        "add x0, x0, #0x5bb",
+        "mov w1, #0x1b",
+        "mov w2, #0x1",
+        "ldr x8, [x8, #0xfd0]"
+      ],
+      "selected_len": 496,
+      "expected_len": 496
+    },
+    {
+      "kind": "manual",
+      "hint": 2,
+      "symbol_prefix": "(anonymous namespace)::answer (anonymous namespace)::manual<8u, (loom::Hint)2, hashtable_spike::tiered::table<",
+      "first": 489,
+      "selected": [
+        "adrp x8, PAGE",
+        "adrp x0, PAGE",
+        "add x0, x0, #0x77b",
+        "mov w1, #0x1b",
+        "mov w2, #0x1",
+        "ldr x8, [x8, #0xfd0]"
+      ],
+      "expected": [
+        "adrp x8, PAGE",
+        "adrp x0, PAGE",
+        "add x0, x0, #0x5bb",
+        "mov w1, #0x1b",
+        "mov w2, #0x1",
+        "ldr x8, [x8, #0xfd0]"
+      ],
+      "selected_len": 496,
+      "expected_len": 496
+    },
+    {
+      "kind": "manual",
+      "hint": 3,
+      "symbol_prefix": "(anonymous namespace)::answer (anonymous namespace)::manual<8u, (loom::Hint)3, hashtable_spike::tiered::table<",
+      "first": 489,
+      "selected": [
+        "adrp x8, PAGE",
+        "adrp x0, PAGE",
+        "add x0, x0, #0x77b",
+        "mov w1, #0x1b",
+        "mov w2, #0x1",
+        "ldr x8, [x8, #0xfd0]"
+      ],
+      "expected": [
+        "adrp x8, PAGE",
+        "adrp x0, PAGE",
+        "add x0, x0, #0x5bb",
+        "mov w1, #0x1b",
+        "mov w2, #0x1",
+        "ldr x8, [x8, #0xfd0]"
+      ],
+      "selected_len": 496,
+      "expected_len": 496
+    },
+    {
+      "kind": "manual",
+      "hint": 1,
+      "symbol_prefix": "(anonymous namespace)::answer (anonymous namespace)::manual<32u, (loom::Hint)1, hashtable_spike::tiered::table",
+      "first": 647,
+      "selected": [
+        "adrp x8, PAGE",
+        "adrp x0, PAGE",
+        "add x0, x0, #0x77b",
+        "mov w1, #0x1b",
+        "mov w2, #0x1",
+        "ldr x8, [x8, #0xfd0]"
+      ],
+      "expected": [
+        "adrp x8, PAGE",
+        "adrp x0, PAGE",
+        "add x0, x0, #0x5bb",
+        "mov w1, #0x1b",
+        "mov w2, #0x1",
+        "ldr x8, [x8, #0xfd0]"
+      ],
+      "selected_len": 654,
+      "expected_len": 654
+    },
+    {
+      "kind": "manual",
+      "hint": 2,
+      "symbol_prefix": "(anonymous namespace)::answer (anonymous namespace)::manual<32u, (loom::Hint)2, hashtable_spike::tiered::table",
+      "first": 647,
+      "selected": [
+        "adrp x8, PAGE",
+        "adrp x0, PAGE",
+        "add x0, x0, #0x77b",
+        "mov w1, #0x1b",
+        "mov w2, #0x1",
+        "ldr x8, [x8, #0xfd0]"
+      ],
+      "expected": [
+        "adrp x8, PAGE",
+        "adrp x0, PAGE",
+        "add x0, x0, #0x5bb",
+        "mov w1, #0x1b",
+        "mov w2, #0x1",
+        "ldr x8, [x8, #0xfd0]"
+      ],
+      "selected_len": 654,
+      "expected_len": 654
+    },
+    {
+      "kind": "manual",
+      "hint": 3,
+      "symbol_prefix": "(anonymous namespace)::answer (anonymous namespace)::manual<32u, (loom::Hint)3, hashtable_spike::tiered::table",
+      "first": 647,
+      "selected": [
+        "adrp x8, PAGE",
+        "adrp x0, PAGE",
+        "add x0, x0, #0x77b",
+        "mov w1, #0x1b",
+        "mov w2, #0x1",
+        "ldr x8, [x8, #0xfd0]"
+      ],
+      "expected": [
+        "adrp x8, PAGE",
+        "adrp x0, PAGE",
+        "add x0, x0, #0x5bb",
+        "mov w1, #0x1b",
+        "mov w2, #0x1",
+        "ldr x8, [x8, #0xfd0]"
+      ],
+      "selected_len": 654,
+      "expected_len": 654
+    }
+  ]
+}

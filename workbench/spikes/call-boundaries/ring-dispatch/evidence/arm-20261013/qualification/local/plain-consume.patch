@@ -1,0 +1,24 @@
+--- source-control/workbench/spikes/hashtable/table_ring.cpp
++++ source-plain/workbench/spikes/hashtable/table_ring.cpp
+@@ -64,13 +64,16 @@
+ }
+ template<class L>[[gnu::always_inline]] void consume(L& j,bool found,word value) {
+ #if defined(LOOM_ARM_CONSUME_BRANCH)
+-    // Preserve control rather than feeding memory-derived known-zero state
+-    // into a select for the next request. No emitted instruction in this arm.
+-    if(found) {
+-        asm volatile("" :: "r"(value));
++#if defined(LOOM_ARM_PLAIN_EXPECT)
++    if (__builtin_expect(found, true)) {
++#elif defined(LOOM_ARM_PLAIN_PROBABILITY)
++    if (__builtin_expect_with_probability(found, true, 2.0 / 3.0)) {
++#else
++    if (found) {
++#endif
+         j.sum+=value;++j.found;j.key=value;
+     } else {
+-        j.sum+=value;j.key^=missing_bit;
++        j.key^=missing_bit;
+     }
+     --j.remaining;
+ #elif defined(LOOM_ARM_LANE_SNAPSHOT)

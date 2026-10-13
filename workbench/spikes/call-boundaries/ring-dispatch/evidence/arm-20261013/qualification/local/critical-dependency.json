@@ -1,0 +1,159 @@
+{
+  "scope": "Independent static critical data/control dependency audit from worker20261013T114517Z-1906f45e actual optimized ARM assembly. K40/V64 primaryA20 secondaryA17 large aged mixed C1. No source edits, probes or execution by reviewer.",
+  "raw": {
+    "inplace": {
+      "file": "build/workers/20261013T114517Z-1906f45e/results/neon-large_aged_serial-inplace-pass0.csv",
+      "sha256": "8110b3542111d7bc2a8ab4be2c4b46b8133283fc7b11f68c7d6bb04dd8914c8f",
+      "rows": 21,
+      "medians_ns_per_lookup": {
+        "abseil": 161.036825,
+        "abseil_prefetch": 160.535736,
+        "fused": 144.462203,
+        "manual": 145.510004,
+        "manual_hints": 137.645298,
+        "ring": 147.72734,
+        "ring_hints": 172.731834
+      },
+      "entries": 13421772,
+      "requests": 20131319,
+      "secondary_visits": 3559626,
+      "chain_body_visits": 76299
+    },
+    "lane": {
+      "file": "build/workers/20261013T114517Z-1906f45e/results/neon-large_aged_serial-lane-pass0.csv",
+      "sha256": "9f0504a78d625afe905df90b36a4fb8a48a087d9a5361edbda39e672a97a336b",
+      "rows": 21,
+      "medians_ns_per_lookup": {
+        "abseil": 160.859599,
+        "abseil_prefetch": 162.274667,
+        "fused": 177.817753,
+        "manual": 178.449387,
+        "manual_hints": 171.335133,
+        "ring": 180.677223,
+        "ring_hints": 138.453672
+      },
+      "entries": 13421772,
+      "requests": 20131319,
+      "secondary_visits": 3559626,
+      "chain_body_visits": 76299
+    }
+  },
+  "miss_fraction": 0.3332889911485681,
+  "consistent_discriminator": [
+    {
+      "shape": "inplace manual Hint0/1",
+      "observed": "fast",
+      "miss_completion": "Separate miss path directly EOR oldkey, decrement remaining, hash from resulting key. No next-key CSEL conditioned on loaded descendants."
+    },
+    {
+      "shape": "inplace Ring Hint0",
+      "observed": "fast",
+      "miss_completion": "descendants LDURH/LDRB/BFI->CBZ61d70 (or61e4c)->MOV value0 at61e8c +MOV found0 at61e90->CMP found at61ee4->CSEL61ef0. Explicit false severs dependency on descendants result."
+    },
+    {
+      "shape": "inplace Ring Hint1",
+      "observed": "slow",
+      "miss_completion": "descendants LDURH/LDRB/BFI->CBZ63364 (or63270)->MOV value0 at6342c; reused known-zero descendants w10->CMP6345c->CSEL63468->hash/prefetch. No independent false materialization."
+    },
+    {
+      "shape": "lane manual Hint0",
+      "observed": "slow",
+      "miss_completion": "descendants LDURH/LDRB/BFI->CBZ60ac4 (or60a10)->MOV value0 at60b38; count w10 reused as found->CMP60b68->CSEL60b70->next hash."
+    },
+    {
+      "shape": "lane manual Hint1",
+      "observed": "slow",
+      "miss_completion": "descendants LDURH/LDRB/BFI->CBZ621e8 (or62304)->MOV value0 at62364; count w10 reused as found->CMP62394->CSEL6239c->next hash/prefetch."
+    },
+    {
+      "shape": "lane Ring Hint0",
+      "observed": "slow",
+      "miss_completion": "descendants LDURH/LDRB/BFI->CBZ615e4 (or616c4)->MOV value0 at61700; count w10 reused as found->CMP6175c->CSEL61764->next hash."
+    },
+    {
+      "shape": "lane Ring Hint1",
+      "observed": "fast",
+      "miss_completion": "descendants LDURH/LDRB/BFI->CBZ62bc4 (or62ad0)->MOV value0 at62c8c +MOV found0 at62c90->CMP62cc8->CSEL62cd4->next hash/prefetch. Explicit false severs dependency."
+    }
+  ],
+  "line_geometry": {
+    "line_bytes": 64,
+    "primary": {
+      "allocation_alignment": 64,
+      "stride": 180,
+      "descendants_byte_range": [
+        1,
+        4
+      ],
+      "tag_ldur_byte_range": [
+        4,
+        20
+      ],
+      "possible_start_offsets": [
+        0,
+        4,
+        8,
+        12,
+        16,
+        20,
+        24,
+        28,
+        32,
+        36,
+        40,
+        44,
+        48,
+        52,
+        56,
+        60
+      ],
+      "header_disjoint_from_whole_first_tag_demand_at_start_offsets": [
+        60
+      ],
+      "fraction": 0.0625
+    },
+    "secondary": {
+      "allocation_alignment": 64,
+      "stride": 184,
+      "descendants_byte_range": [
+        1,
+        4
+      ],
+      "tag_ldur_byte_range": [
+        8,
+        24
+      ],
+      "possible_start_offsets": [
+        0,
+        8,
+        16,
+        24,
+        32,
+        40,
+        48,
+        56
+      ],
+      "header_disjoint_from_whole_first_tag_demand_at_start_offsets": [
+        56
+      ],
+      "fraction": 0.125
+    },
+    "qualification": "Other starts share at least one demanded tag line. Separate-header DRAM cannot explain a general one-extra-miss-per-absent-request claim."
+  },
+  "mechanistic_inference": "A memory-derived zero used as CSEL condition leaves a true data dependency from current bucket descendants load to next-key selection/hash/prefetch. A predicted absent branch plus constant-false consumer or directly branch-split miss can compute oldkey XOR missing_bit and begin next lookup before current bucket data returns. This can plausibly recover speculative overlap on roughly1/3 absent requests; no PMU measurement establishes the actual stall or recovery.",
+  "arithmetic_inference_ns_per_miss": {
+    "inplace_Ring_Hint1_vs_lane_Ring_Hint1": 102.84816753734307,
+    "lane_manual_Hint1_vs_inplace_manual_Hint1": 101.08295171676498
+  },
+  "minimal_controls": {
+    "constant_false": "At each actual absence completion, output-only bool inline asm: bool zero; asm volatile(\"mov %w0, wzr\" : \"=r\"(zero)); found=zero; return true. One W-register MOV, no input, memory clobber or early-clobber. Verify no extra bool normalization and no descendant input dependency. Diagnostic only.",
+    "branch_consumer": "Common canonical consume: if(found){asm volatile(\"\"::\"r\"(value));sum+=value;++hits;key=value;}else{sum+=value;key^=missing_bit;}--remaining. Qualify actual false path direct EOR/hash and no joined memory-derived CSEL; lookup kernel unchanged.",
+    "avoid": "Initializedfalse +r barrier can admit the already-known-zero descendants as input and preserve its data dependency."
+  },
+  "limits": [
+    "Counts and timings recomputed only for retained large_aged_serial pass0 CSVs; full qualification belongs to owning experiment receipt.",
+    "The shape correlation is consistent across these observed fast/slow bodies, but native constant-false/branch controls are still required for a causal claim.",
+    "Do not credit the effect to unchanged Lane pair widths or general CSEL presence: fast Ring bodies also contain CSEL.",
+    "No PMU IPC/stall/cache/misprediction observations; hardware speculation narrative is explicitly inference."
+  ]
+}

@@ -1,0 +1,344 @@
+{
+  "label": "final-v2",
+  "job": "20261013T125940Z-23733a42",
+  "worker_archive": {
+    "bucket": "calico-fleet-artifacts",
+    "bytes": 20421785,
+    "files": 119,
+    "format": 1,
+    "key": "sixdb/artifacts/sha256/715f0ca3e58ed738bf003880662ee10e46ae17f8dffd228bc2f67f4d6f535560.tar.gz",
+    "kind": "files",
+    "region": "us-east-1",
+    "sha256": "715f0ca3e58ed738bf003880662ee10e46ae17f8dffd228bc2f67f4d6f535560",
+    "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/715f0ca3e58ed738bf003880662ee10e46ae17f8dffd228bc2f67f4d6f535560.tar.gz"
+  },
+  "source": {
+    "job": "20261013T125940Z-23733a42",
+    "source_commit": "1c3bb2fa4135048bb39be918878f8ea33a03c0b5",
+    "content_digest": "44e5268eeafa03688a3f300afd12a4fe488c9b9698b35385f8116ad08d30714f",
+    "source_archive_sha256": "4ab81b2f0d4167614b9e83b432431a4d7ab5f90819cfa3241429c4803f3bd0f9",
+    "source_manifest_sha256": "76f1295af84d69ad2a7edb511004221c72f45da885970d663f4554bb269564fe",
+    "source_files_verified": 3160,
+    "source_stability": {
+      "source_commit": "1c3bb2fa4135048bb39be918878f8ea33a03c0b5",
+      "worker_job": "20261013T125940Z-23733a42",
+      "cpu": "0",
+      "worker_manifest_sha256": "76f1295af84d69ad2a7edb511004221c72f45da885970d663f4554bb269564fe",
+      "files": 3160,
+      "content_digest": "84d14a86f060ea848e60ca7bd824b53852fe2988625ab10f6dd945855f2cc51f",
+      "selected_sha256": {
+        "CMakeLists.txt": "dc9798382cd1ac56d668ca6e28827a8f915d9f14fd7ddda3ed25eba19b10b1ac",
+        "cmake/ClangVersion.cmake": "cde279b39294bfa37d02f80ff13d19f6489b0e7ee407958a734d54381cc0a20f",
+        "cmake/Tuning.cmake": "6d29c93b4713a8ea7ffd9c1682062a46470235cc74ef2e1194ed71b774940ad9",
+        "workbench/spikes/hashtable/table_ring.cpp": "655381287bf6f8638ea88f5b3eed3d609238bf95addc29389df239b6fcd1c703",
+        "workbench/spikes/hashtable/table.h": "3e0365942d166c8bcfb6a98561c359e5532b6955503bfcffec3b2c74edb8c3a8",
+        "workbench/spikes/hashtable/table_chains.h": "eee07883048e7234b684422384602256ce63ece0be1b9fcde64b14e07900257f",
+        "workbench/spikes/hashtable/CMakeLists.txt": "1c09703f6003848aee8ede18607497df05b22bcd8b03a4cbdda95fbfaabf02e9",
+        "workbench/spikes/hashtable/baseline.cmake": "8786a624f13af117984e80728677a61f2acf9ad106ab381cadded9bfc52bd1ba",
+        "workbench/spikes/hashtable/table_emit.py": "6086feab48941c683c128c866ef3093cc9147e2ac107ee33b321042e07a11bfd",
+        "workbench/spikes/hashtable/layout.py": "5b5374ec12480e267aea78f83b41adf7411c6a3809a8c9c69d98310310aea16c",
+        "loom/include/loom/ring.h": "a01b827b272095f21e2514d8e8bfc0e11c8d0bf227c56d46f022b0a406a9a17e",
+        "loom/include/loom/cohort.h": "aaecd2c4ada55186e1a19011a8ab6a119924f002ef3e523f4c03ab3ebe7c0c97",
+        "loom/include/loom/hints.h": "4348457787bed3b7ede31362f7794694df87af4bc1d479bc8b74ff4b13be0cbe",
+        "run-arm-serial.sh": "b4d15cca5537f961a3a78458308f648f11d7d7fd7c12317b782b7acc50ce538d",
+        "controls/provenance.json": "29c142309a44a2c6afb4f56390f8dc52876c41cd970ae3cab795851cd30cc089"
+      }
+    },
+    "provenance": {
+      "format": 1,
+      "question": "Qualify plain terminal hit/miss consumer control after native branch and independent-zero controls close the ARM C1 gap",
+      "reference_capture_digest": "7a2b737ed98881381953f855145c34060ce47c8f6d340f9c5fc37105ca8cfed9",
+      "reference_worker": "20261013T070146Z-eb763b9f",
+      "reference_binary_sha256": "f3aac7d1a2db141ec406cb49dc66bc000f46a99f072fe5e064f7619b16c60270",
+      "reference_source_private_baseline_commit": "8e80555d8d0259bbd861feb565aa294b29b605b1",
+      "reference_generated_plans_sha256": "28e8aff744d0c7e8bb4653f2e515ae1ee0fb9b06a6a69dbe673ee4e5ac6d24d3",
+      "factors": [
+        {
+          "name": "inplace",
+          "target": "hashtable_table_ring_inplace",
+          "preparation": "Primary-only in-place reference",
+          "defines": [
+            "LOOM_ARM_INPLACE_PREPARE=1"
+          ]
+        },
+        {
+          "name": "branch",
+          "target": "hashtable_table_ring_branch",
+          "preparation": "Primary-only prepare plus plain hit/miss consumer; misses skip the proven zero sum update, no assembly or prediction weights",
+          "defines": [
+            "LOOM_ARM_INPLACE_PREPARE=1",
+            "LOOM_ARM_CONSUME_BRANCH=1"
+          ]
+        }
+      ],
+      "arms": [
+        "abseil",
+        "abseil_prefetch",
+        "fused",
+        "manual",
+        "manual_hints",
+        "ring",
+        "ring_hints"
+      ],
+      "default_repetitions": 7,
+      "default_passes": 2,
+      "case_order": [
+        {
+          "name": "hot_serial",
+          "a": 8,
+          "entries": 3276,
+          "turnovers": 8,
+          "mixed": 1,
+          "concurrency": 1,
+          "factor_order": [
+            "inplace",
+            "branch"
+          ],
+          "pass_orders": [
+            [
+              "inplace",
+              "branch"
+            ],
+            [
+              "branch",
+              "inplace"
+            ]
+          ]
+        },
+        {
+          "name": "hot_parallel",
+          "a": 8,
+          "entries": 3276,
+          "turnovers": 8,
+          "mixed": 1,
+          "concurrency": 32,
+          "factor_order": [
+            "branch",
+            "inplace"
+          ],
+          "pass_orders": [
+            [
+              "branch",
+              "inplace"
+            ],
+            [
+              "inplace",
+              "branch"
+            ]
+          ]
+        },
+        {
+          "name": "large_aged_serial",
+          "a": 20,
+          "entries": 13421772,
+          "turnovers": 8,
+          "mixed": 1,
+          "concurrency": 1,
+          "factor_order": [
+            "inplace",
+            "branch"
+          ],
+          "pass_orders": [
+            [
+              "inplace",
+              "branch"
+            ],
+            [
+              "branch",
+              "inplace"
+            ]
+          ]
+        },
+        {
+          "name": "large_aged_parallel",
+          "a": 20,
+          "entries": 13421772,
+          "turnovers": 8,
+          "mixed": 1,
+          "concurrency": 32,
+          "factor_order": [
+            "branch",
+            "inplace"
+          ],
+          "pass_orders": [
+            [
+              "branch",
+              "inplace"
+            ],
+            [
+              "inplace",
+              "branch"
+            ]
+          ]
+        },
+        {
+          "name": "large_fresh_parallel",
+          "a": 20,
+          "entries": 13421772,
+          "turnovers": 0,
+          "mixed": 0,
+          "concurrency": 32,
+          "factor_order": [
+            "inplace",
+            "branch"
+          ],
+          "pass_orders": [
+            [
+              "inplace",
+              "branch"
+            ],
+            [
+              "branch",
+              "inplace"
+            ]
+          ]
+        }
+      ],
+      "seed": 37913,
+      "measurement_limits": [
+        "Default seven repetitions per factor and two opposite outer factor orders within each same case. Internal seven-arm rotation remains unchanged.",
+        "One immutable map per executable invocation; repeated operation preparation and all timed stage visits remain charged.",
+        "Fresh C32 is the original fresh hit case: turns0,mixed0. The four aged cases remain turns8,mixed1; actual parameters are verified from each timed CSV, never inferred from a common age.",
+        "Logical visits and potential hint targets are not PMU stalls, IPC or measured memory traffic.",
+        "Original row-key layout; current owning-thread wider-value and key-layout changes excluded.",
+        "Canonical lookup, physical windows, hints, request recurrence, Job footprint, progress hooks and production Ring are identical to source-control. Only reference/branch targets are built and measured; unused controls remain in the inherited CMake/source inventory.",
+        "Consumer branch selection remains pending current native diagnostic review. Preparation of this runner establishes no timing result or promotion."
+      ],
+      "prior_diagnostic": {
+        "worker": "20261013T114517Z-1906f45e",
+        "source_digest": "89eea7601db5089fac548254057eafca02f5e59375386d1f2c85a1b74c374528",
+        "result": "Lane opacity swaps fast/slow paths; scalar range widths unchanged; slow loops reuse descendant count as false found into next-key select."
+      },
+      "selection_status": "Plain branch selected from causal controls; no-assembly final source awaiting native preservation",
+      "source_control_commit": "bd0c227fb774ee26d8a202066a1db66a50b48f56",
+      "parameter_environment": {
+        "REPS": {
+          "default": 7,
+          "constraint": "positive integer"
+        },
+        "PASSES": {
+          "default": 2,
+          "constraint": "1 or2; final V2 requires2, Zen override may use1"
+        }
+      },
+      "supported_native_configs": [
+        {
+          "host": "V2",
+          "isa": "neon",
+          "march": "armv8-a+simd",
+          "tune": "neoverse-v2"
+        },
+        {
+          "host": "Zen5",
+          "isa": "avx2",
+          "march": "x86-64-v3",
+          "tune": "zen5"
+        },
+        {
+          "host": "Zen5",
+          "isa": "avx512",
+          "march": "znver5",
+          "tune": "zen5"
+        }
+      ],
+      "expected_default_counts_per_isa": {
+        "timed_csv_context_policy_resource_groups": 20,
+        "timed_rows": 980,
+        "forced_csv_context_groups": 2,
+        "forced_rows": 14,
+        "native_loom_checks": 16
+      },
+      "causal_diagnostic": {
+        "worker": "20261013T123321Z-920f324c",
+        "native_C1_hinted_ns": {
+          "reference": 172.888197,
+          "branch": 138.288555,
+          "independent_false": 139.272291,
+          "prfm_nops": 183.294154
+        },
+        "branch_C32_hinted_ns": 34.544189,
+        "reference_C32_hinted_ns": 34.555791,
+        "qualification": "independent full identity/answer/accounting report pending"
+      }
+    },
+    "transformation_helper_sha256": {},
+    "run_environment": {
+      "PASSES": "2",
+      "REPS": "7",
+      "SIXDB_CPU": "0"
+    }
+  },
+  "capture": {
+    "compiler_version_sha256": "0cf7e452648b3754289200426984662d1d8d0a21d56310d301a24e11399ceab8",
+    "compiler_executable_receipt_sha256": "96cf4b011236b519881ec4083528514459399851a3ca505f0b314cd3ec399aca",
+    "compile_database_sha256": "6b380da69cd2728e4ce178e3987da6043ec06a18fba9a450ece6b902c01f1794",
+    "compile_qualifiers": {
+      "inplace": {
+        "directory": "/opt/sixdb/source/build/loom-arm-serial-neon",
+        "command": "/usr/bin/clang++-21 -DLOOM_ARM_INPLACE_PREPARE=1 -DNDEBUG -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=1 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN5=0 -I/opt/sixdb/source/build/loom-arm-serial-neon/workbench/spikes/hashtable -I/opt/sixdb/source/workbench/spikes/hashtable -I/opt/sixdb/source/ikea/include -I/opt/sixdb/source/orbital/include -I/opt/sixdb/source/loom/include -isystem /opt/sixdb/source/build/loom-arm-serial-neon/_deps/hashtable_abseil-src -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -fno-vectorize -fno-slp-vectorize -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=armv8-a+simd -mtune=neoverse-v2 -o workbench/spikes/hashtable/CMakeFiles/hashtable_table_ring_inplace.dir/table_ring.cpp.o -c /opt/sixdb/source/workbench/spikes/hashtable/table_ring.cpp",
+        "file": "/opt/sixdb/source/workbench/spikes/hashtable/table_ring.cpp",
+        "output": "workbench/spikes/hashtable/CMakeFiles/hashtable_table_ring_inplace.dir/table_ring.cpp.o"
+      },
+      "branch": {
+        "directory": "/opt/sixdb/source/build/loom-arm-serial-neon",
+        "command": "/usr/bin/clang++-21 -DLOOM_ARM_CONSUME_BRANCH=1 -DLOOM_ARM_INPLACE_PREPARE=1 -DNDEBUG -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=1 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN5=0 -I/opt/sixdb/source/build/loom-arm-serial-neon/workbench/spikes/hashtable -I/opt/sixdb/source/workbench/spikes/hashtable -I/opt/sixdb/source/ikea/include -I/opt/sixdb/source/orbital/include -I/opt/sixdb/source/loom/include -isystem /opt/sixdb/source/build/loom-arm-serial-neon/_deps/hashtable_abseil-src -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -fno-vectorize -fno-slp-vectorize -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=armv8-a+simd -mtune=neoverse-v2 -o workbench/spikes/hashtable/CMakeFiles/hashtable_table_ring_branch.dir/table_ring.cpp.o -c /opt/sixdb/source/workbench/spikes/hashtable/table_ring.cpp",
+        "file": "/opt/sixdb/source/workbench/spikes/hashtable/table_ring.cpp",
+        "output": "workbench/spikes/hashtable/CMakeFiles/hashtable_table_ring_branch.dir/table_ring.cpp.o"
+      }
+    },
+    "binaries": {
+      "inplace": {
+        "binary_sha256": "1d69a23a9ac94f593cbb9a67a41bb857c0486c2f0f0bb9aac831e4cf334a488e",
+        "assembly_gzip_sha256": "2cb95ed706a643364d9c86620d75284179556ebe0a977b7dbd9c2c347987ce60"
+      },
+      "branch": {
+        "binary_sha256": "2b31ccfaf169beeb3cec118bceed4bbccd906e428361623f36edb6217f9bb3d2",
+        "assembly_gzip_sha256": "3a5fe3d5de81b076bd578e0c5253183cdb38bbcdcc150673fc2a60c184be1af1"
+      }
+    },
+    "generated_plan_sha256": "28e8aff744d0c7e8bb4653f2e515ae1ee0fb9b06a6a69dbe673ee4e5ac6d24d3",
+    "libraries_receipt_sha256": "499330ce923cb672da634e706e316e1cfd3c3f61273cfcf84a9641626dbc0e1f"
+  },
+  "independent_analysis_input_sha256": "3a1f1e3a53de7a97b7a1f92a63262c0a854c25f6347fce526d128650ec6ca303",
+  "qualification_scope": "Captured independently validated source/binary/compile/native receipts. The offline selected-data report verifies their bytes but does not repeat full-archive/native checks.",
+  "source_archive_member": "source.tar.gz",
+  "source_archive_sha256": "4ab81b2f0d4167614b9e83b432431a4d7ab5f90819cfa3241429c4803f3bd0f9",
+  "source_manifest_member": "source-manifest.json",
+  "omitted_members": {
+    "assembly-neon-branch.txt.gz": {
+      "bytes": 1643938,
+      "rebuildable": false,
+      "sha256": "3a5fe3d5de81b076bd578e0c5253183cdb38bbcdcc150673fc2a60c184be1af1"
+    },
+    "assembly-neon-inplace.txt.gz": {
+      "bytes": 1655326,
+      "rebuildable": false,
+      "sha256": "2cb95ed706a643364d9c86620d75284179556ebe0a977b7dbd9c2c347987ce60"
+    },
+    "cmake-cache-neon.txt": {
+      "bytes": 21717,
+      "rebuildable": false,
+      "sha256": "9ec0dc63d8dcca15fabc3338ddd6f092d0abc0035960ab6ff56f1e0483025b73"
+    },
+    "compile-neon.json": {
+      "bytes": 384645,
+      "rebuildable": false,
+      "sha256": "6b380da69cd2728e4ce178e3987da6043ec06a18fba9a450ece6b902c01f1794"
+    },
+    "table-plans-neon.h": {
+      "bytes": 564219,
+      "rebuildable": false,
+      "sha256": "28e8aff744d0c7e8bb4653f2e515ae1ee0fb9b06a6a69dbe673ee4e5ac6d24d3"
+    },
+    "table-ring-neon-branch": {
+      "bytes": 10936248,
+      "rebuildable": true,
+      "sha256": "2b31ccfaf169beeb3cec118bceed4bbccd906e428361623f36edb6217f9bb3d2"
+    },
+    "table-ring-neon-inplace": {
+      "bytes": 10951136,
+      "rebuildable": true,
+      "sha256": "1d69a23a9ac94f593cbb9a67a41bb857c0486c2f0f0bb9aac831e4cf334a488e"
+    }
+  }
+}

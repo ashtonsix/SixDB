@@ -1,0 +1,1002 @@
+{
+  "header_sha256": "a01b827b272095f21e2514d8e8bfc0e11c8d0bf227c56d46f022b0a406a9a17e",
+  "commands": [
+    {
+      "command": [
+        "/usr/bin/clang++-21",
+        "-I/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/source-frontier/loom/include",
+        "-DLOOM_ARM_FRONTIER_CURSOR=1",
+        "-DSIXDB_TUNE_GENERIC=0",
+        "-DSIXDB_TUNE_GRANITE_RAPIDS=0",
+        "-DSIXDB_TUNE_NEOVERSE_V2=1",
+        "-DSIXDB_TUNE_NEOVERSE_V3=0",
+        "-DSIXDB_TUNE_ZEN5=0",
+        "-I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/source-experiment/loom/include",
+        "-I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/source-experiment/orbital/include",
+        "-O3",
+        "-g",
+        "-std=c++23",
+        "-fvisibility=hidden",
+        "-fvisibility-inlines-hidden",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-fno-fast-math",
+        "-ffp-contract=off",
+        "-fdenormal-fp-math=ieee",
+        "-ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/source-experiment=.",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-march=armv8-a+simd",
+        "-mtune=neoverse-v2",
+        "-o",
+        "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/frontier-audit/release-loom_ring_check.o",
+        "-c",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/source-experiment/loom/test/ring.cpp"
+      ],
+      "cwd": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/local-release",
+      "returncode": 0,
+      "log": "release-loom_ring_check-compile.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "/usr/bin/clang++-21",
+        "-O3",
+        "-g",
+        "-fno-fast-math",
+        "-Wl,--gc-sections",
+        "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/frontier-audit/release-loom_ring_check.o",
+        "-o",
+        "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/frontier-audit/release-loom_ring_check",
+        "loom/libloom.a",
+        "orbital/liborbital.a"
+      ],
+      "cwd": "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/local-release",
+      "returncode": 0,
+      "log": "release-loom_ring_check-link.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "taskset",
+        "-c",
+        "0",
+        "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/frontier-audit/release-loom_ring_check"
+      ],
+      "cwd": "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/local-release",
+      "returncode": 0,
+      "log": "release-loom_ring_check-check.txt",
+      "sha256": "ad33feff9b8db2704d28f4fa2bf8811211464c4e41263bbd745864ac9a4a282a"
+    },
+    {
+      "command": [
+        "/usr/bin/clang++-21",
+        "-I/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/source-frontier/loom/include",
+        "-DLOOM_ARM_FRONTIER_CURSOR=1",
+        "-DSIXDB_TUNE_GENERIC=0",
+        "-DSIXDB_TUNE_GRANITE_RAPIDS=0",
+        "-DSIXDB_TUNE_NEOVERSE_V2=1",
+        "-DSIXDB_TUNE_NEOVERSE_V3=0",
+        "-DSIXDB_TUNE_ZEN5=0",
+        "-I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/source-experiment/loom/include",
+        "-I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/source-experiment/orbital/include",
+        "-O3",
+        "-g",
+        "-std=c++23",
+        "-fvisibility=hidden",
+        "-fvisibility-inlines-hidden",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-fno-fast-math",
+        "-ffp-contract=off",
+        "-fdenormal-fp-math=ieee",
+        "-ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/source-experiment=.",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-march=armv8-a+simd",
+        "-mtune=neoverse-v2",
+        "-o",
+        "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/frontier-audit/release-loom_ring_rotation_check.o",
+        "-c",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/source-experiment/loom/test/ring_rotation.cpp"
+      ],
+      "cwd": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/local-release",
+      "returncode": 0,
+      "log": "release-loom_ring_rotation_check-compile.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "/usr/bin/clang++-21",
+        "-O3",
+        "-g",
+        "-fno-fast-math",
+        "-Wl,--gc-sections",
+        "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/frontier-audit/release-loom_ring_rotation_check.o",
+        "-o",
+        "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/frontier-audit/release-loom_ring_rotation_check",
+        "loom/libloom.a",
+        "orbital/liborbital.a"
+      ],
+      "cwd": "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/local-release",
+      "returncode": 0,
+      "log": "release-loom_ring_rotation_check-link.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "taskset",
+        "-c",
+        "0",
+        "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/frontier-audit/release-loom_ring_rotation_check"
+      ],
+      "cwd": "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/local-release",
+      "returncode": 0,
+      "log": "release-loom_ring_rotation_check-check.txt",
+      "sha256": "b73c4ae635422ce3ff0d5be6d4a0fcf7e35bc121d32aab0dc1f5c8b4a918273f"
+    },
+    {
+      "command": [
+        "/usr/bin/clang++-21",
+        "-I/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/source-frontier/loom/include",
+        "-DLOOM_ARM_FRONTIER_CURSOR=1",
+        "-DSIXDB_TUNE_GENERIC=0",
+        "-DSIXDB_TUNE_GRANITE_RAPIDS=0",
+        "-DSIXDB_TUNE_NEOVERSE_V2=1",
+        "-DSIXDB_TUNE_NEOVERSE_V3=0",
+        "-DSIXDB_TUNE_ZEN5=0",
+        "-I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/source-experiment/loom/include",
+        "-I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/source-experiment/orbital/include",
+        "-O3",
+        "-g",
+        "-std=c++23",
+        "-fvisibility=hidden",
+        "-fvisibility-inlines-hidden",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-fno-fast-math",
+        "-ffp-contract=off",
+        "-fdenormal-fp-math=ieee",
+        "-ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/source-experiment=.",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-march=armv8-a+simd",
+        "-mtune=neoverse-v2",
+        "-o",
+        "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/frontier-audit/release-loom_ring_shared_check.o",
+        "-c",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/source-experiment/loom/test/ring_shared.cpp"
+      ],
+      "cwd": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/local-release",
+      "returncode": 0,
+      "log": "release-loom_ring_shared_check-compile.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "/usr/bin/clang++-21",
+        "-O3",
+        "-g",
+        "-fno-fast-math",
+        "-Wl,--gc-sections",
+        "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/frontier-audit/release-loom_ring_shared_check.o",
+        "-o",
+        "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/frontier-audit/release-loom_ring_shared_check",
+        "loom/libloom.a",
+        "orbital/liborbital.a"
+      ],
+      "cwd": "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/local-release",
+      "returncode": 0,
+      "log": "release-loom_ring_shared_check-link.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "taskset",
+        "-c",
+        "0",
+        "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/frontier-audit/release-loom_ring_shared_check"
+      ],
+      "cwd": "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/local-release",
+      "returncode": 0,
+      "log": "release-loom_ring_shared_check-check.txt",
+      "sha256": "3141ed2ce6c40b5577f7b8337f2f76af66a09c4ce48951948662507cba985f27"
+    },
+    {
+      "command": [
+        "/usr/bin/clang++-21",
+        "-I/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/source-frontier/loom/include",
+        "-DLOOM_ARM_FRONTIER_CURSOR=1",
+        "-DSIXDB_TUNE_GENERIC=0",
+        "-DSIXDB_TUNE_GRANITE_RAPIDS=0",
+        "-DSIXDB_TUNE_NEOVERSE_V2=1",
+        "-DSIXDB_TUNE_NEOVERSE_V3=0",
+        "-DSIXDB_TUNE_ZEN5=0",
+        "-I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/source-experiment/loom/include",
+        "-I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/source-experiment/orbital/include",
+        "-O3",
+        "-g",
+        "-std=c++23",
+        "-fvisibility=hidden",
+        "-fvisibility-inlines-hidden",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-fno-fast-math",
+        "-ffp-contract=off",
+        "-fdenormal-fp-math=ieee",
+        "-ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/source-experiment=.",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-march=armv8-a+simd",
+        "-mtune=neoverse-v2",
+        "-o",
+        "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/frontier-audit/release-loom_cohort_check.o",
+        "-c",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/source-experiment/loom/test/cohort.cpp"
+      ],
+      "cwd": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/local-release",
+      "returncode": 0,
+      "log": "release-loom_cohort_check-compile.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "/usr/bin/clang++-21",
+        "-O3",
+        "-g",
+        "-fno-fast-math",
+        "-Wl,--gc-sections",
+        "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/frontier-audit/release-loom_cohort_check.o",
+        "-o",
+        "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/frontier-audit/release-loom_cohort_check",
+        "loom/libloom.a",
+        "orbital/liborbital.a"
+      ],
+      "cwd": "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/local-release",
+      "returncode": 0,
+      "log": "release-loom_cohort_check-link.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "taskset",
+        "-c",
+        "0",
+        "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/frontier-audit/release-loom_cohort_check"
+      ],
+      "cwd": "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/local-release",
+      "returncode": 0,
+      "log": "release-loom_cohort_check-check.txt",
+      "sha256": "d1dc1d998c86ba5650aa47b6557fd40838a9ed90034baf9c2cdc2ec7275ab293"
+    },
+    {
+      "command": [
+        "/usr/bin/clang++-21",
+        "-I/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/source-frontier/loom/include",
+        "-DLOOM_ARM_FRONTIER_CURSOR=1",
+        "-DSIXDB_TUNE_GENERIC=0",
+        "-DSIXDB_TUNE_GRANITE_RAPIDS=0",
+        "-DSIXDB_TUNE_NEOVERSE_V2=1",
+        "-DSIXDB_TUNE_NEOVERSE_V3=0",
+        "-DSIXDB_TUNE_ZEN5=0",
+        "-I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/source-experiment/loom/include",
+        "-I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/source-experiment/orbital/include",
+        "-I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/source-experiment/ikea/include",
+        "-O3",
+        "-g",
+        "-std=c++23",
+        "-fvisibility=hidden",
+        "-fvisibility-inlines-hidden",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-fno-fast-math",
+        "-ffp-contract=off",
+        "-fdenormal-fp-math=ieee",
+        "-ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/source-experiment=.",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-march=armv8-a+simd",
+        "-mtune=neoverse-v2",
+        "-o",
+        "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/frontier-audit/release-loom_hint_check.o",
+        "-c",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/source-experiment/loom/test/hints.cpp"
+      ],
+      "cwd": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/local-release",
+      "returncode": 0,
+      "log": "release-loom_hint_check-compile.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "/usr/bin/clang++-21",
+        "-O3",
+        "-g",
+        "-fno-fast-math",
+        "-Wl,--gc-sections",
+        "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/frontier-audit/release-loom_hint_check.o",
+        "-o",
+        "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/frontier-audit/release-loom_hint_check",
+        "loom/libloom.a",
+        "ikea/libikea_tuplepack.a",
+        "orbital/liborbital.a",
+        "ikea/libikea_core.a"
+      ],
+      "cwd": "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/local-release",
+      "returncode": 0,
+      "log": "release-loom_hint_check-link.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "taskset",
+        "-c",
+        "0",
+        "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/frontier-audit/release-loom_hint_check"
+      ],
+      "cwd": "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/local-release",
+      "returncode": 0,
+      "log": "release-loom_hint_check-check.txt",
+      "sha256": "d3965a22d14828be0886df91214e52ba0afcaef321c313473cf35448b2d40a8b"
+    },
+    {
+      "command": [
+        "/usr/bin/clang++-21",
+        "-I/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/source-frontier/loom/include",
+        "-DLOOM_ARM_FRONTIER_CURSOR=1",
+        "-DSIXDB_TUNE_GENERIC=0",
+        "-DSIXDB_TUNE_GRANITE_RAPIDS=0",
+        "-DSIXDB_TUNE_NEOVERSE_V2=1",
+        "-DSIXDB_TUNE_NEOVERSE_V3=0",
+        "-DSIXDB_TUNE_ZEN5=0",
+        "-I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/source-experiment/loom/include",
+        "-I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/source-experiment/orbital/include",
+        "-O3",
+        "-g",
+        "-std=c++23",
+        "-fvisibility=hidden",
+        "-fvisibility-inlines-hidden",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-fno-fast-math",
+        "-ffp-contract=off",
+        "-fdenormal-fp-math=ieee",
+        "-ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/source-experiment=.",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-march=armv8-a+simd",
+        "-mtune=neoverse-v2",
+        "-o",
+        "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/frontier-audit/release-loom_example_hints.o",
+        "-c",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/source-experiment/loom/examples/hints.cpp"
+      ],
+      "cwd": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/local-release",
+      "returncode": 0,
+      "log": "release-loom_example_hints-compile.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "/usr/bin/clang++-21",
+        "-O3",
+        "-g",
+        "-fno-fast-math",
+        "-Wl,--gc-sections",
+        "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/frontier-audit/release-loom_example_hints.o",
+        "-o",
+        "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/frontier-audit/release-loom_example_hints",
+        "loom/libloom.a",
+        "orbital/liborbital.a"
+      ],
+      "cwd": "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/local-release",
+      "returncode": 0,
+      "log": "release-loom_example_hints-link.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "taskset",
+        "-c",
+        "0",
+        "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/frontier-audit/release-loom_example_hints"
+      ],
+      "cwd": "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/local-release",
+      "returncode": 0,
+      "log": "release-loom_example_hints-check.txt",
+      "sha256": "8704f1e237e88aa7b485bb0f7f84a9b20aefb33a17f8f1f8673dac3711c21a9e"
+    },
+    {
+      "command": [
+        "/usr/bin/clang++-21",
+        "-I/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/source-frontier/loom/include",
+        "-DLOOM_ARM_FRONTIER_CURSOR=1",
+        "-DSIXDB_TUNE_GENERIC=0",
+        "-DSIXDB_TUNE_GRANITE_RAPIDS=0",
+        "-DSIXDB_TUNE_NEOVERSE_V2=1",
+        "-DSIXDB_TUNE_NEOVERSE_V3=0",
+        "-DSIXDB_TUNE_ZEN5=0",
+        "-I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/source-experiment/loom/include",
+        "-I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/source-experiment/orbital/include",
+        "-fsanitize=address,undefined",
+        "-fsanitize-address-use-after-return=always",
+        "-fno-omit-frame-pointer",
+        "-O3",
+        "-g",
+        "-std=c++23",
+        "-fvisibility=hidden",
+        "-fvisibility-inlines-hidden",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-fno-fast-math",
+        "-ffp-contract=off",
+        "-fdenormal-fp-math=ieee",
+        "-ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/source-experiment=.",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-march=armv8-a+simd",
+        "-mtune=neoverse-v2",
+        "-o",
+        "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/frontier-audit/sanitize-loom_ring_check.o",
+        "-c",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/source-experiment/loom/test/ring.cpp"
+      ],
+      "cwd": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/local-sanitize",
+      "returncode": 0,
+      "log": "sanitize-loom_ring_check-compile.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "/usr/bin/clang++-21",
+        "-fsanitize=address,undefined",
+        "-fsanitize-address-use-after-return=always",
+        "-fno-omit-frame-pointer",
+        "-O3",
+        "-g",
+        "-fno-fast-math",
+        "-Wl,--gc-sections",
+        "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/frontier-audit/sanitize-loom_ring_check.o",
+        "-o",
+        "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/frontier-audit/sanitize-loom_ring_check",
+        "loom/libloom.a",
+        "orbital/liborbital.a"
+      ],
+      "cwd": "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/local-sanitize",
+      "returncode": 0,
+      "log": "sanitize-loom_ring_check-link.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "taskset",
+        "-c",
+        "0",
+        "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/frontier-audit/sanitize-loom_ring_check"
+      ],
+      "cwd": "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/local-sanitize",
+      "returncode": 0,
+      "log": "sanitize-loom_ring_check-check.txt",
+      "sha256": "ad33feff9b8db2704d28f4fa2bf8811211464c4e41263bbd745864ac9a4a282a"
+    },
+    {
+      "command": [
+        "/usr/bin/clang++-21",
+        "-I/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/source-frontier/loom/include",
+        "-DLOOM_ARM_FRONTIER_CURSOR=1",
+        "-DSIXDB_TUNE_GENERIC=0",
+        "-DSIXDB_TUNE_GRANITE_RAPIDS=0",
+        "-DSIXDB_TUNE_NEOVERSE_V2=1",
+        "-DSIXDB_TUNE_NEOVERSE_V3=0",
+        "-DSIXDB_TUNE_ZEN5=0",
+        "-I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/source-experiment/loom/include",
+        "-I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/source-experiment/orbital/include",
+        "-fsanitize=address,undefined",
+        "-fsanitize-address-use-after-return=always",
+        "-fno-omit-frame-pointer",
+        "-O3",
+        "-g",
+        "-std=c++23",
+        "-fvisibility=hidden",
+        "-fvisibility-inlines-hidden",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-fno-fast-math",
+        "-ffp-contract=off",
+        "-fdenormal-fp-math=ieee",
+        "-ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/source-experiment=.",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-march=armv8-a+simd",
+        "-mtune=neoverse-v2",
+        "-o",
+        "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/frontier-audit/sanitize-loom_ring_rotation_check.o",
+        "-c",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/source-experiment/loom/test/ring_rotation.cpp"
+      ],
+      "cwd": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/local-sanitize",
+      "returncode": 0,
+      "log": "sanitize-loom_ring_rotation_check-compile.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "/usr/bin/clang++-21",
+        "-fsanitize=address,undefined",
+        "-fsanitize-address-use-after-return=always",
+        "-fno-omit-frame-pointer",
+        "-O3",
+        "-g",
+        "-fno-fast-math",
+        "-Wl,--gc-sections",
+        "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/frontier-audit/sanitize-loom_ring_rotation_check.o",
+        "-o",
+        "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/frontier-audit/sanitize-loom_ring_rotation_check",
+        "loom/libloom.a",
+        "orbital/liborbital.a"
+      ],
+      "cwd": "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/local-sanitize",
+      "returncode": 0,
+      "log": "sanitize-loom_ring_rotation_check-link.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "taskset",
+        "-c",
+        "0",
+        "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/frontier-audit/sanitize-loom_ring_rotation_check"
+      ],
+      "cwd": "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/local-sanitize",
+      "returncode": 0,
+      "log": "sanitize-loom_ring_rotation_check-check.txt",
+      "sha256": "b73c4ae635422ce3ff0d5be6d4a0fcf7e35bc121d32aab0dc1f5c8b4a918273f"
+    },
+    {
+      "command": [
+        "/usr/bin/clang++-21",
+        "-I/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/source-frontier/loom/include",
+        "-DLOOM_ARM_FRONTIER_CURSOR=1",
+        "-DSIXDB_TUNE_GENERIC=0",
+        "-DSIXDB_TUNE_GRANITE_RAPIDS=0",
+        "-DSIXDB_TUNE_NEOVERSE_V2=1",
+        "-DSIXDB_TUNE_NEOVERSE_V3=0",
+        "-DSIXDB_TUNE_ZEN5=0",
+        "-I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/source-experiment/loom/include",
+        "-I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/source-experiment/orbital/include",
+        "-fsanitize=address,undefined",
+        "-fsanitize-address-use-after-return=always",
+        "-fno-omit-frame-pointer",
+        "-O3",
+        "-g",
+        "-std=c++23",
+        "-fvisibility=hidden",
+        "-fvisibility-inlines-hidden",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-fno-fast-math",
+        "-ffp-contract=off",
+        "-fdenormal-fp-math=ieee",
+        "-ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/source-experiment=.",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-march=armv8-a+simd",
+        "-mtune=neoverse-v2",
+        "-o",
+        "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/frontier-audit/sanitize-loom_ring_shared_check.o",
+        "-c",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/source-experiment/loom/test/ring_shared.cpp"
+      ],
+      "cwd": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/local-sanitize",
+      "returncode": 0,
+      "log": "sanitize-loom_ring_shared_check-compile.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "/usr/bin/clang++-21",
+        "-fsanitize=address,undefined",
+        "-fsanitize-address-use-after-return=always",
+        "-fno-omit-frame-pointer",
+        "-O3",
+        "-g",
+        "-fno-fast-math",
+        "-Wl,--gc-sections",
+        "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/frontier-audit/sanitize-loom_ring_shared_check.o",
+        "-o",
+        "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/frontier-audit/sanitize-loom_ring_shared_check",
+        "loom/libloom.a",
+        "orbital/liborbital.a"
+      ],
+      "cwd": "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/local-sanitize",
+      "returncode": 0,
+      "log": "sanitize-loom_ring_shared_check-link.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "taskset",
+        "-c",
+        "0",
+        "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/frontier-audit/sanitize-loom_ring_shared_check"
+      ],
+      "cwd": "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/local-sanitize",
+      "returncode": 0,
+      "log": "sanitize-loom_ring_shared_check-check.txt",
+      "sha256": "3141ed2ce6c40b5577f7b8337f2f76af66a09c4ce48951948662507cba985f27"
+    },
+    {
+      "command": [
+        "/usr/bin/clang++-21",
+        "-I/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/source-frontier/loom/include",
+        "-DLOOM_ARM_FRONTIER_CURSOR=1",
+        "-DSIXDB_TUNE_GENERIC=0",
+        "-DSIXDB_TUNE_GRANITE_RAPIDS=0",
+        "-DSIXDB_TUNE_NEOVERSE_V2=1",
+        "-DSIXDB_TUNE_NEOVERSE_V3=0",
+        "-DSIXDB_TUNE_ZEN5=0",
+        "-I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/source-experiment/loom/include",
+        "-I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/source-experiment/orbital/include",
+        "-fsanitize=address,undefined",
+        "-fsanitize-address-use-after-return=always",
+        "-fno-omit-frame-pointer",
+        "-O3",
+        "-g",
+        "-std=c++23",
+        "-fvisibility=hidden",
+        "-fvisibility-inlines-hidden",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-fno-fast-math",
+        "-ffp-contract=off",
+        "-fdenormal-fp-math=ieee",
+        "-ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/source-experiment=.",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-march=armv8-a+simd",
+        "-mtune=neoverse-v2",
+        "-o",
+        "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/frontier-audit/sanitize-loom_cohort_check.o",
+        "-c",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/source-experiment/loom/test/cohort.cpp"
+      ],
+      "cwd": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/local-sanitize",
+      "returncode": 0,
+      "log": "sanitize-loom_cohort_check-compile.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "/usr/bin/clang++-21",
+        "-fsanitize=address,undefined",
+        "-fsanitize-address-use-after-return=always",
+        "-fno-omit-frame-pointer",
+        "-O3",
+        "-g",
+        "-fno-fast-math",
+        "-Wl,--gc-sections",
+        "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/frontier-audit/sanitize-loom_cohort_check.o",
+        "-o",
+        "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/frontier-audit/sanitize-loom_cohort_check",
+        "loom/libloom.a",
+        "orbital/liborbital.a"
+      ],
+      "cwd": "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/local-sanitize",
+      "returncode": 0,
+      "log": "sanitize-loom_cohort_check-link.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "taskset",
+        "-c",
+        "0",
+        "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/frontier-audit/sanitize-loom_cohort_check"
+      ],
+      "cwd": "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/local-sanitize",
+      "returncode": 0,
+      "log": "sanitize-loom_cohort_check-check.txt",
+      "sha256": "d1dc1d998c86ba5650aa47b6557fd40838a9ed90034baf9c2cdc2ec7275ab293"
+    },
+    {
+      "command": [
+        "/usr/bin/clang++-21",
+        "-I/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/source-frontier/loom/include",
+        "-DLOOM_ARM_FRONTIER_CURSOR=1",
+        "-DSIXDB_TUNE_GENERIC=0",
+        "-DSIXDB_TUNE_GRANITE_RAPIDS=0",
+        "-DSIXDB_TUNE_NEOVERSE_V2=1",
+        "-DSIXDB_TUNE_NEOVERSE_V3=0",
+        "-DSIXDB_TUNE_ZEN5=0",
+        "-I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/source-experiment/loom/include",
+        "-I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/source-experiment/orbital/include",
+        "-I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/source-experiment/ikea/include",
+        "-fsanitize=address,undefined",
+        "-fsanitize-address-use-after-return=always",
+        "-fno-omit-frame-pointer",
+        "-O3",
+        "-g",
+        "-std=c++23",
+        "-fvisibility=hidden",
+        "-fvisibility-inlines-hidden",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-fno-fast-math",
+        "-ffp-contract=off",
+        "-fdenormal-fp-math=ieee",
+        "-ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/source-experiment=.",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-march=armv8-a+simd",
+        "-mtune=neoverse-v2",
+        "-o",
+        "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/frontier-audit/sanitize-loom_hint_check.o",
+        "-c",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/source-experiment/loom/test/hints.cpp"
+      ],
+      "cwd": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/local-sanitize",
+      "returncode": 0,
+      "log": "sanitize-loom_hint_check-compile.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "/usr/bin/clang++-21",
+        "-fsanitize=address,undefined",
+        "-fsanitize-address-use-after-return=always",
+        "-fno-omit-frame-pointer",
+        "-O3",
+        "-g",
+        "-fno-fast-math",
+        "-Wl,--gc-sections",
+        "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/frontier-audit/sanitize-loom_hint_check.o",
+        "-o",
+        "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/frontier-audit/sanitize-loom_hint_check",
+        "loom/libloom.a",
+        "ikea/libikea_tuplepack.a",
+        "orbital/liborbital.a",
+        "ikea/libikea_core.a"
+      ],
+      "cwd": "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/local-sanitize",
+      "returncode": 0,
+      "log": "sanitize-loom_hint_check-link.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "taskset",
+        "-c",
+        "0",
+        "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/frontier-audit/sanitize-loom_hint_check"
+      ],
+      "cwd": "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/local-sanitize",
+      "returncode": 0,
+      "log": "sanitize-loom_hint_check-check.txt",
+      "sha256": "d3965a22d14828be0886df91214e52ba0afcaef321c313473cf35448b2d40a8b"
+    },
+    {
+      "command": [
+        "/usr/bin/clang++-21",
+        "-I/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/source-frontier/loom/include",
+        "-DLOOM_ARM_FRONTIER_CURSOR=1",
+        "-DSIXDB_TUNE_GENERIC=0",
+        "-DSIXDB_TUNE_GRANITE_RAPIDS=0",
+        "-DSIXDB_TUNE_NEOVERSE_V2=1",
+        "-DSIXDB_TUNE_NEOVERSE_V3=0",
+        "-DSIXDB_TUNE_ZEN5=0",
+        "-I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/source-experiment/loom/include",
+        "-I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/source-experiment/orbital/include",
+        "-fsanitize=address,undefined",
+        "-fsanitize-address-use-after-return=always",
+        "-fno-omit-frame-pointer",
+        "-O3",
+        "-g",
+        "-std=c++23",
+        "-fvisibility=hidden",
+        "-fvisibility-inlines-hidden",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-fno-fast-math",
+        "-ffp-contract=off",
+        "-fdenormal-fp-math=ieee",
+        "-ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/source-experiment=.",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-march=armv8-a+simd",
+        "-mtune=neoverse-v2",
+        "-o",
+        "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/frontier-audit/sanitize-loom_example_hints.o",
+        "-c",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/source-experiment/loom/examples/hints.cpp"
+      ],
+      "cwd": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/local-sanitize",
+      "returncode": 0,
+      "log": "sanitize-loom_example_hints-compile.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "/usr/bin/clang++-21",
+        "-fsanitize=address,undefined",
+        "-fsanitize-address-use-after-return=always",
+        "-fno-omit-frame-pointer",
+        "-O3",
+        "-g",
+        "-fno-fast-math",
+        "-Wl,--gc-sections",
+        "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/frontier-audit/sanitize-loom_example_hints.o",
+        "-o",
+        "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/frontier-audit/sanitize-loom_example_hints",
+        "loom/libloom.a",
+        "orbital/liborbital.a"
+      ],
+      "cwd": "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/local-sanitize",
+      "returncode": 0,
+      "log": "sanitize-loom_example_hints-link.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "taskset",
+        "-c",
+        "0",
+        "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/frontier-audit/sanitize-loom_example_hints"
+      ],
+      "cwd": "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/local-sanitize",
+      "returncode": 0,
+      "log": "sanitize-loom_example_hints-check.txt",
+      "sha256": "2049ccb730a9ca4b46d1b02972bace75bd411257af4fb55f25ec38e82e887252"
+    }
+  ],
+  "cases": [
+    {
+      "kind": "release",
+      "target": "loom_ring_check",
+      "binary_sha256": "772987b38c20d0b8ece3722e941ce36869f3a9850774d0aae34d72424ae67a89",
+      "object_sha256": "1550cd911efb336aa4da4fff5a28c4843d47dbec47a9cf57dbd81049dc0e5b60",
+      "library_sha256": {
+        "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/local-release/loom/libloom.a": "168098d8fb96134002a6f9522257f81ae428e25b81fe4ef9913acedf79dd6f84",
+        "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/local-release/orbital/liborbital.a": "9db02110d032579c4116865450d93fe276b5d2ad8c76bf3286619822c58d4e05"
+      },
+      "passed": true
+    },
+    {
+      "kind": "release",
+      "target": "loom_ring_rotation_check",
+      "binary_sha256": "8cb9358dacd291eee9eedf5f538d6d6277db4b45c2950cbac1e5ac0338b5cf90",
+      "object_sha256": "6dc82b3a9def1614f8054b5719714a7f2a0c2eab063407b1af68d9013f858be8",
+      "library_sha256": {
+        "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/local-release/loom/libloom.a": "168098d8fb96134002a6f9522257f81ae428e25b81fe4ef9913acedf79dd6f84",
+        "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/local-release/orbital/liborbital.a": "9db02110d032579c4116865450d93fe276b5d2ad8c76bf3286619822c58d4e05"
+      },
+      "passed": true
+    },
+    {
+      "kind": "release",
+      "target": "loom_ring_shared_check",
+      "binary_sha256": "9a0aad73729ae4b6478d2df98e047839fa5b3caf18d546dea70b2454aaf04118",
+      "object_sha256": "ea34ccc2767daf4fc2f77d5d61423500dd2a4670432f93b4472264168a3ce6ae",
+      "library_sha256": {
+        "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/local-release/loom/libloom.a": "168098d8fb96134002a6f9522257f81ae428e25b81fe4ef9913acedf79dd6f84",
+        "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/local-release/orbital/liborbital.a": "9db02110d032579c4116865450d93fe276b5d2ad8c76bf3286619822c58d4e05"
+      },
+      "passed": true
+    },
+    {
+      "kind": "release",
+      "target": "loom_cohort_check",
+      "binary_sha256": "b6e36a3d623a90588c77dae183da8ae4b46e67f0853f2b0c637a2276e5c32d0a",
+      "object_sha256": "aabe51a933c6d15b0063b11106ab891891518a34e71823d9950d7bfc02f04593",
+      "library_sha256": {
+        "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/local-release/loom/libloom.a": "168098d8fb96134002a6f9522257f81ae428e25b81fe4ef9913acedf79dd6f84",
+        "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/local-release/orbital/liborbital.a": "9db02110d032579c4116865450d93fe276b5d2ad8c76bf3286619822c58d4e05"
+      },
+      "passed": true
+    },
+    {
+      "kind": "release",
+      "target": "loom_hint_check",
+      "binary_sha256": "e093864d904ab81ced754b819942db634d8399816044405d9b20e2b8c564d6e2",
+      "object_sha256": "e5845574602c4c21a0a055200801d34bd7d5ea0ac3cb1019accad44c79087343",
+      "library_sha256": {
+        "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/local-release/loom/libloom.a": "168098d8fb96134002a6f9522257f81ae428e25b81fe4ef9913acedf79dd6f84",
+        "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/local-release/ikea/libikea_tuplepack.a": "e44a044e5fbd6deb0df7a56ae95fec1b0e28123a860d77877fa8967ae3140b0c",
+        "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/local-release/orbital/liborbital.a": "9db02110d032579c4116865450d93fe276b5d2ad8c76bf3286619822c58d4e05",
+        "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/local-release/ikea/libikea_core.a": "99c9c6b88149d4c98ad0c0ee5a5330d6829c690c9579f086c151045a306bcb8e"
+      },
+      "passed": true
+    },
+    {
+      "kind": "release",
+      "target": "loom_example_hints",
+      "binary_sha256": "757822f2b39bc65ac68e3ca8e20e23efcac78de8563966fa3b66a15da7dea6c6",
+      "object_sha256": "b4509888ee6e6e8b89e251ed820caa9a7880fb57e845a46af35506a6d23957e4",
+      "library_sha256": {
+        "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/local-release/loom/libloom.a": "168098d8fb96134002a6f9522257f81ae428e25b81fe4ef9913acedf79dd6f84",
+        "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/local-release/orbital/liborbital.a": "9db02110d032579c4116865450d93fe276b5d2ad8c76bf3286619822c58d4e05"
+      },
+      "passed": true
+    },
+    {
+      "kind": "sanitize",
+      "target": "loom_ring_check",
+      "binary_sha256": "5d1a8fad9305db65bd7e17982d37fbff0a73833df3c1c3f65c50c3ed0e3db1e2",
+      "object_sha256": "bd4891677df0ee9008c1e8dc2469ca1fe7932578cba89a779344f0ca8976d979",
+      "library_sha256": {
+        "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/local-sanitize/loom/libloom.a": "6990b5b3c79da0c1213fd8a7ed5729d33b293a41b1019c33104df1358a358082",
+        "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/local-sanitize/orbital/liborbital.a": "711258d2d768e4e8a26510775cfbeb5832132a3738172c4c1f1bd5c9ab6d5e10"
+      },
+      "passed": true
+    },
+    {
+      "kind": "sanitize",
+      "target": "loom_ring_rotation_check",
+      "binary_sha256": "62cbf65e925db71f5ca6569b3d02377aaac2a574c859a3517660411dc91c539d",
+      "object_sha256": "4f714a9058c6f9079654468d65ccac4383dc9582eb54c56cc50ab822094b8ae1",
+      "library_sha256": {
+        "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/local-sanitize/loom/libloom.a": "6990b5b3c79da0c1213fd8a7ed5729d33b293a41b1019c33104df1358a358082",
+        "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/local-sanitize/orbital/liborbital.a": "711258d2d768e4e8a26510775cfbeb5832132a3738172c4c1f1bd5c9ab6d5e10"
+      },
+      "passed": true
+    },
+    {
+      "kind": "sanitize",
+      "target": "loom_ring_shared_check",
+      "binary_sha256": "cd1cfc6eda236b85b0c14995637e92400b81c645ebdde1fc4386ac8ca1e789fd",
+      "object_sha256": "a3e3c42c9402765e0d7078bc9dfd274652353696ed5a6a01f2188ca1a6d275b2",
+      "library_sha256": {
+        "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/local-sanitize/loom/libloom.a": "6990b5b3c79da0c1213fd8a7ed5729d33b293a41b1019c33104df1358a358082",
+        "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/local-sanitize/orbital/liborbital.a": "711258d2d768e4e8a26510775cfbeb5832132a3738172c4c1f1bd5c9ab6d5e10"
+      },
+      "passed": true
+    },
+    {
+      "kind": "sanitize",
+      "target": "loom_cohort_check",
+      "binary_sha256": "f320efa6cf240baa296dbe68a233a87f3a7dce6de2aaccf910b537b7699343ab",
+      "object_sha256": "75f275405b16c296b8e7a465d23641077ab71889c8252ee24e5a6056d4d5e116",
+      "library_sha256": {
+        "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/local-sanitize/loom/libloom.a": "6990b5b3c79da0c1213fd8a7ed5729d33b293a41b1019c33104df1358a358082",
+        "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/local-sanitize/orbital/liborbital.a": "711258d2d768e4e8a26510775cfbeb5832132a3738172c4c1f1bd5c9ab6d5e10"
+      },
+      "passed": true
+    },
+    {
+      "kind": "sanitize",
+      "target": "loom_hint_check",
+      "binary_sha256": "f18f2e8914cf22dd6934233b0ed76ca983e05770c27420b7a8aba58eb8419b0d",
+      "object_sha256": "17eae658d0b0bcb7b3278e402e814fe0d4d2e614548abc49a3d9fec6841a11a0",
+      "library_sha256": {
+        "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/local-sanitize/loom/libloom.a": "6990b5b3c79da0c1213fd8a7ed5729d33b293a41b1019c33104df1358a358082",
+        "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/local-sanitize/ikea/libikea_tuplepack.a": "823c3ffa408fc3e8eb9c14acf77029842451cd1d69067b47581406f27bb313a8",
+        "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/local-sanitize/orbital/liborbital.a": "711258d2d768e4e8a26510775cfbeb5832132a3738172c4c1f1bd5c9ab6d5e10",
+        "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/local-sanitize/ikea/libikea_core.a": "a9eefbe4705d99390f87d77f237ec7a883dd0bf31858275d4e55f421286f51f8"
+      },
+      "passed": true
+    },
+    {
+      "kind": "sanitize",
+      "target": "loom_example_hints",
+      "binary_sha256": "50d6280739893088bac8cb7223f425d603b65ecc7936b85b5efaad3845f699d0",
+      "object_sha256": "73fd382d4b383bfb7f27028177111e0e08f3ba4c4c9bd4cde532babbae21847c",
+      "library_sha256": {
+        "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/local-sanitize/loom/libloom.a": "6990b5b3c79da0c1213fd8a7ed5729d33b293a41b1019c33104df1358a358082",
+        "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/local-sanitize/orbital/liborbital.a": "711258d2d768e4e8a26510775cfbeb5832132a3738172c4c1f1bd5c9ab6d5e10"
+      },
+      "passed": true
+    }
+  ],
+  "scope": "Pinned ARM check TUs only, parent libraries reused; no timings, native worker or library rebuild."
+}

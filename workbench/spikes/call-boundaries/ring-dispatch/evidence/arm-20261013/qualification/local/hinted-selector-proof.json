@@ -1,0 +1,72 @@
+{
+  "scope": "Final reproduction-only hinted ARM selector, pending sourcecommit. No main/product/currentIkea/runtime/API edits, newAWS or measurements.",
+  "native_parent_commit": "1c3bb2fa4135048bb39be918878f8ea33a03c0b5",
+  "previous_broad_guard_commit": "08d5060ee6d7f0a3ddcd8fb0738b0031a3a18c48",
+  "source_files_compared_excluding_git": 3160,
+  "source_differences": [
+    "workbench/spikes/hashtable/table_ring.cpp"
+  ],
+  "selected_consumer_sha256": "ab1dbaa92cbcfd0048d45ccaabed5c1ca279dfc596c5bf6ff2ee6a332a4cc4ba",
+  "patch_sha256": "3b7f968e0f05948cc456583ec66dee0bb00ba4bbd2009c092e1d4ecf8bc50297",
+  "selection": {
+    "ARM_hinted": "plain semantic branch",
+    "ARM_none": "original reference expression",
+    "ARM_fused": "default reference expression",
+    "x86_all": "original literal template/call syntax and expression"
+  },
+  "token_comparisons": {
+    "arm": {
+      "selected": {
+        "file": "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/selected-proof/hinted-arm-selected-tokens.txt",
+        "sha256": "a757fbb4d825789034bd296ad690213824f75a3b0187a4205b0cc45db56162bf"
+      },
+      "expected": {
+        "file": "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/selected-proof/hinted-arm-expected-tokens.txt",
+        "sha256": "a757fbb4d825789034bd296ad690213824f75a3b0187a4205b0cc45db56162bf"
+      },
+      "exact_equal": true,
+      "interpretation": "ARM component tokens unchanged from locally compiled95-function selector"
+    },
+    "x86": {
+      "selected": {
+        "file": "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/selected-proof/hinted-x86-selected-tokens.txt",
+        "sha256": "c5a0bf1f63f248bc9719c7fee6732541a59f3e7a1bd115d1ea442449700300e7"
+      },
+      "expected": {
+        "file": "/home/ashtonsix/sixdb/build/loom-arm-serial-20261013/selected-proof/hinted-x86-expected-tokens.txt",
+        "sha256": "c5a0bf1f63f248bc9719c7fee6732541a59f3e7a1bd115d1ea442449700300e7"
+      },
+      "exact_equal": true,
+      "interpretation": "x86 consume declaration, body, visit/manual callsites and fused exactly reference tokens"
+    }
+  },
+  "native_local_function_comparison": {
+    "functions": 95,
+    "ready": {
+      "none_equals_reference": 5,
+      "hinted_equals_plain": 15
+    },
+    "manual": {
+      "none_equals_reference": 15,
+      "hinted_equals_plain_except_verified_cold_literal_address": 45
+    },
+    "fused_map_equals_reference": 15,
+    "padding_count_differences": 0,
+    "ordinary_calls_or_frame_added_to_ready": 0,
+    "comparison": "hinted-local/comparison-first-pass.json",
+    "literal_proof": "hinted-local/cold-literal-relocations.json",
+    "literal_utf8": "hashtable invariant failed\n",
+    "literal_sha256": "137fe1c2f4f5ad52288e5cc608774c0e119c812a79be46515414210b74797559",
+    "limit": "Targets/ADRP addresses normalized; the only remaining45 differences are the decoded equal cold error string address. This is not whole-binary equality or an additional native run."
+  },
+  "limits": [
+    "Current source selection is proved by actual target preprocessing; ARM components match the source form already compiled in the95-function comparison.",
+    "Other source files including lookup/core/hints are byte identical to native-tested parent capture.",
+    "No performance rerun of selected capture; native evidence belongs to the tested component forms.",
+    "Broad ARM branch evidence retains unhinted hotC32 regression; narrowed selector explicitly excludes that path.",
+    "No portable branch mandate or blanket select prohibition."
+  ],
+  "reproduction_commit": "ff6a6b4f65b8a4def069a400d3b9e91532b55294",
+  "commit_status": "Parent-reviewed reproduction-only narrowed selector, clean checkout.",
+  "proof_body_sha256_before_commit_record": "c57e913257fdb19d7a9415dbf8f3de958d041049f3413a69d5df5aced5f21035"
+}

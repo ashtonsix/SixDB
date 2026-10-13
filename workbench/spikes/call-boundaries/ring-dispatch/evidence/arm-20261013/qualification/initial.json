@@ -1,0 +1,278 @@
+{
+  "label": "initial",
+  "job": "20261013T110137Z-1e139b98",
+  "worker_archive": {
+    "bucket": "calico-fleet-artifacts",
+    "bytes": 29462653,
+    "files": 112,
+    "format": 1,
+    "key": "sixdb/artifacts/sha256/f46f5cd6d363e1286515b564bd5d09464f180e0460e69fe51aa15a663799e8ab.tar.gz",
+    "kind": "files",
+    "region": "us-east-1",
+    "sha256": "f46f5cd6d363e1286515b564bd5d09464f180e0460e69fe51aa15a663799e8ab",
+    "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/f46f5cd6d363e1286515b564bd5d09464f180e0460e69fe51aa15a663799e8ab.tar.gz"
+  },
+  "source": {
+    "job": "20261013T110137Z-1e139b98",
+    "source_commit": "3a6c7cd81405b3c9678b1f4160f8cc50ad87b3f0",
+    "content_digest": "677ff07f6d6913373ab13c384a5038d43b0a4bf6031ba80c4772a3afe1ad6184",
+    "source_archive_sha256": "7810f7409a11f2e1c14ed9d6466913146aba42fc5341db69f053660d6c113015",
+    "source_manifest_sha256": "ff600878e59ef54925fb9736f98c6fa0f4ef3b10c45b8151305e263d80fce170",
+    "source_files_verified": 3159,
+    "source_stability": {
+      "source_commit": "3a6c7cd81405b3c9678b1f4160f8cc50ad87b3f0",
+      "worker_job": "20261013T110137Z-1e139b98",
+      "cpu": "0",
+      "worker_manifest_sha256": "ff600878e59ef54925fb9736f98c6fa0f4ef3b10c45b8151305e263d80fce170",
+      "files": 3159,
+      "content_digest": "57766a752312364e2fd2c22ad0162f567b2764290338c5340b1a16f69606a94c",
+      "selected_sha256": {
+        "CMakeLists.txt": "dc9798382cd1ac56d668ca6e28827a8f915d9f14fd7ddda3ed25eba19b10b1ac",
+        "cmake/ClangVersion.cmake": "cde279b39294bfa37d02f80ff13d19f6489b0e7ee407958a734d54381cc0a20f",
+        "cmake/Tuning.cmake": "6d29c93b4713a8ea7ffd9c1682062a46470235cc74ef2e1194ed71b774940ad9",
+        "workbench/spikes/hashtable/table_ring.cpp": "6c68257a5e18c346b84da50e3e3a620ce16dfe56ebf6d008f64615a452f1ca0c",
+        "workbench/spikes/hashtable/table.h": "5936d34fab8505f966ebc93b3b7daf0d3f7184b6ecc46fb2fd6ddcbfbbd4bddc",
+        "workbench/spikes/hashtable/table_chains.h": "eee07883048e7234b684422384602256ce63ece0be1b9fcde64b14e07900257f",
+        "workbench/spikes/hashtable/CMakeLists.txt": "bba338235a62642a9d1fca62f8ee0cef90ebe43c36a64cfcc0f5c9b5666eddeb",
+        "workbench/spikes/hashtable/baseline.cmake": "8786a624f13af117984e80728677a61f2acf9ad106ab381cadded9bfc52bd1ba",
+        "workbench/spikes/hashtable/table_emit.py": "6086feab48941c683c128c866ef3093cc9147e2ac107ee33b321042e07a11bfd",
+        "workbench/spikes/hashtable/layout.py": "5b5374ec12480e267aea78f83b41adf7411c6a3809a8c9c69d98310310aea16c",
+        "loom/include/loom/ring.h": "e269b53064198f3b201e3a029d1839104a38041f8cb31706809b0084c28c6fff",
+        "loom/include/loom/cohort.h": "aaecd2c4ada55186e1a19011a8ab6a119924f002ef3e523f4c03ab3ebe7c0c97",
+        "loom/include/loom/hints.h": "4348457787bed3b7ede31362f7794694df87af4bc1d479bc8b74ff4b13be0cbe",
+        "run-arm-serial.sh": "7d887f5d4a7f5611a023b340eedc105dfbc03acf88fa3088a44f4df9565f9c7d",
+        "controls/provenance.json": "84d86181ba303fea32f192e4df133968dafa60b244129004c67737bd4f4bd31b"
+      }
+    },
+    "provenance": {
+      "format": 1,
+      "question": "Discriminate primary probe reset, ARM load/store pairing and single-live handoff behind the captured C1 Ring gap while preserving C32 throughput.",
+      "reference_capture_digest": "7a2b737ed98881381953f855145c34060ce47c8f6d340f9c5fc37105ca8cfed9",
+      "reference_worker": "20261013T070146Z-eb763b9f",
+      "reference_binary_sha256": "f3aac7d1a2db141ec406cb49dc66bc000f46a99f072fe5e064f7619b16c60270",
+      "reference_source_private_baseline_commit": "8e80555d8d0259bbd861feb565aa294b29b605b1",
+      "reference_generated_plans_sha256": "28e8aff744d0c7e8bb4653f2e515ae1ee0fb9b06a6a69dbe673ee4e5ac6d24d3",
+      "factors": [
+        {
+          "name": "baseline",
+          "target": "hashtable_table_ring",
+          "preparation": "Captured aggregate read_probe reset",
+          "probe_order": "key,hash,data",
+          "handoff": "Original generic handoff"
+        },
+        {
+          "name": "inplace",
+          "target": "hashtable_table_ring_inplace",
+          "preparation": "Only primary-phase fields initialized in place",
+          "probe_order": "key,hash,data",
+          "handoff": "Original generic handoff"
+        },
+        {
+          "name": "paired",
+          "target": "hashtable_table_ring_paired",
+          "preparation": "Only primary-phase fields initialized in place",
+          "probe_order": "hash,data,key; private pairing discriminator",
+          "handoff": "Original generic handoff"
+        },
+        {
+          "name": "single",
+          "target": "hashtable_table_ring_single",
+          "preparation": "Only primary-phase fields initialized in place",
+          "probe_order": "key,hash,data",
+          "handoff": "Conservative live==1 handoff path; stored arguments still restored; no public API change"
+        }
+      ],
+      "arms": [
+        "abseil",
+        "abseil_prefetch",
+        "fused",
+        "manual",
+        "manual_hints",
+        "ring",
+        "ring_hints"
+      ],
+      "default_repetitions": 3,
+      "default_passes": 1,
+      "case_order": [
+        {
+          "name": "hot_serial",
+          "a": 8,
+          "entries": 3276,
+          "turnovers": 8,
+          "mixed": 1,
+          "concurrency": 1,
+          "factor_order": [
+            "baseline",
+            "inplace",
+            "paired",
+            "single"
+          ]
+        },
+        {
+          "name": "hot_parallel",
+          "a": 8,
+          "entries": 3276,
+          "turnovers": 8,
+          "mixed": 1,
+          "concurrency": 32,
+          "factor_order": [
+            "single",
+            "paired",
+            "inplace",
+            "baseline"
+          ]
+        },
+        {
+          "name": "large_aged_serial",
+          "a": 20,
+          "entries": 13421772,
+          "turnovers": 8,
+          "mixed": 1,
+          "concurrency": 1,
+          "factor_order": [
+            "baseline",
+            "inplace",
+            "paired",
+            "single"
+          ]
+        },
+        {
+          "name": "large_aged_parallel",
+          "a": 20,
+          "entries": 13421772,
+          "turnovers": 8,
+          "mixed": 1,
+          "concurrency": 32,
+          "factor_order": [
+            "single",
+            "paired",
+            "inplace",
+            "baseline"
+          ]
+        }
+      ],
+      "seed": 37913,
+      "measurement_limits": [
+        "Initial three-repetition diagnostic; not the final seven-repetition panel",
+        "One immutable map per executable invocation; repeated operation preparation and all timed stage visits remain charged",
+        "Factor order alternates across different cases; a second optional pass reverses within each same case",
+        "Logical visits and potential hint targets are not PMU stalls, IPC or measured memory traffic",
+        "Original row-key layout; current owning-thread wider-value and key-layout changes excluded",
+        "Paired probe layout and single-live handoff are separate private causal factors; neither establishes a public ABI or default."
+      ]
+    }
+  },
+  "capture": {
+    "compiler_version_sha256": "0cf7e452648b3754289200426984662d1d8d0a21d56310d301a24e11399ceab8",
+    "compiler_executable_receipt_sha256": "96cf4b011236b519881ec4083528514459399851a3ca505f0b314cd3ec399aca",
+    "compile_database_sha256": "4b37936163df1c6c0945a9f8f137a74d3117055f5b18bbcd688d63529f90c897",
+    "compile_qualifiers": {
+      "baseline": {
+        "directory": "/opt/sixdb/source/build/loom-arm-serial-neon",
+        "command": "/usr/bin/clang++-21 -DNDEBUG -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=1 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN5=0 -I/opt/sixdb/source/build/loom-arm-serial-neon/workbench/spikes/hashtable -I/opt/sixdb/source/workbench/spikes/hashtable -I/opt/sixdb/source/ikea/include -I/opt/sixdb/source/orbital/include -I/opt/sixdb/source/loom/include -isystem /opt/sixdb/source/build/loom-arm-serial-neon/_deps/hashtable_abseil-src -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -fno-vectorize -fno-slp-vectorize -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=armv8-a+simd -mtune=neoverse-v2 -o workbench/spikes/hashtable/CMakeFiles/hashtable_table_ring.dir/table_ring.cpp.o -c /opt/sixdb/source/workbench/spikes/hashtable/table_ring.cpp",
+        "file": "/opt/sixdb/source/workbench/spikes/hashtable/table_ring.cpp",
+        "output": "workbench/spikes/hashtable/CMakeFiles/hashtable_table_ring.dir/table_ring.cpp.o"
+      },
+      "inplace": {
+        "directory": "/opt/sixdb/source/build/loom-arm-serial-neon",
+        "command": "/usr/bin/clang++-21 -DLOOM_ARM_INPLACE_PREPARE=1 -DNDEBUG -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=1 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN5=0 -I/opt/sixdb/source/build/loom-arm-serial-neon/workbench/spikes/hashtable -I/opt/sixdb/source/workbench/spikes/hashtable -I/opt/sixdb/source/ikea/include -I/opt/sixdb/source/orbital/include -I/opt/sixdb/source/loom/include -isystem /opt/sixdb/source/build/loom-arm-serial-neon/_deps/hashtable_abseil-src -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -fno-vectorize -fno-slp-vectorize -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=armv8-a+simd -mtune=neoverse-v2 -o workbench/spikes/hashtable/CMakeFiles/hashtable_table_ring_inplace.dir/table_ring.cpp.o -c /opt/sixdb/source/workbench/spikes/hashtable/table_ring.cpp",
+        "file": "/opt/sixdb/source/workbench/spikes/hashtable/table_ring.cpp",
+        "output": "workbench/spikes/hashtable/CMakeFiles/hashtable_table_ring_inplace.dir/table_ring.cpp.o"
+      },
+      "paired": {
+        "directory": "/opt/sixdb/source/build/loom-arm-serial-neon",
+        "command": "/usr/bin/clang++-21 -DLOOM_ARM_INPLACE_PREPARE=1 -DLOOM_ARM_PAIRED_PROBE=1 -DNDEBUG -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=1 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN5=0 -I/opt/sixdb/source/build/loom-arm-serial-neon/workbench/spikes/hashtable -I/opt/sixdb/source/workbench/spikes/hashtable -I/opt/sixdb/source/ikea/include -I/opt/sixdb/source/orbital/include -I/opt/sixdb/source/loom/include -isystem /opt/sixdb/source/build/loom-arm-serial-neon/_deps/hashtable_abseil-src -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -fno-vectorize -fno-slp-vectorize -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=armv8-a+simd -mtune=neoverse-v2 -o workbench/spikes/hashtable/CMakeFiles/hashtable_table_ring_paired.dir/table_ring.cpp.o -c /opt/sixdb/source/workbench/spikes/hashtable/table_ring.cpp",
+        "file": "/opt/sixdb/source/workbench/spikes/hashtable/table_ring.cpp",
+        "output": "workbench/spikes/hashtable/CMakeFiles/hashtable_table_ring_paired.dir/table_ring.cpp.o"
+      },
+      "single": {
+        "directory": "/opt/sixdb/source/build/loom-arm-serial-neon",
+        "command": "/usr/bin/clang++-21 -DLOOM_ARM_INPLACE_PREPARE=1 -DLOOM_ARM_SINGLE_HANDOFF=1 -DNDEBUG -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=1 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN5=0 -I/opt/sixdb/source/build/loom-arm-serial-neon/workbench/spikes/hashtable -I/opt/sixdb/source/workbench/spikes/hashtable -I/opt/sixdb/source/ikea/include -I/opt/sixdb/source/orbital/include -I/opt/sixdb/source/loom/include -isystem /opt/sixdb/source/build/loom-arm-serial-neon/_deps/hashtable_abseil-src -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -fno-vectorize -fno-slp-vectorize -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=armv8-a+simd -mtune=neoverse-v2 -o workbench/spikes/hashtable/CMakeFiles/hashtable_table_ring_single.dir/table_ring.cpp.o -c /opt/sixdb/source/workbench/spikes/hashtable/table_ring.cpp",
+        "file": "/opt/sixdb/source/workbench/spikes/hashtable/table_ring.cpp",
+        "output": "workbench/spikes/hashtable/CMakeFiles/hashtable_table_ring_single.dir/table_ring.cpp.o"
+      }
+    },
+    "binaries": {
+      "baseline": {
+        "binary_sha256": "00af13f460ddd9cba8de3e46877c5037fa042725b6ce658299087b7c190fe357",
+        "assembly_gzip_sha256": "1cceb0fe94268d2a162037841db7afe48afa287ec17a015118fd308c4d56c617"
+      },
+      "inplace": {
+        "binary_sha256": "31ee7424765a7a9eacfbe855749eeacc20744aba04daf05ae022624622aedcf4",
+        "assembly_gzip_sha256": "2cb95ed706a643364d9c86620d75284179556ebe0a977b7dbd9c2c347987ce60"
+      },
+      "paired": {
+        "binary_sha256": "c46c13f82faf33e917dbdd9010fe2664a8fab33e8327545ad2815b0df5e40588",
+        "assembly_gzip_sha256": "f75987f0190fdb1f351bb70bb37be10c7defd8266f3375e8f08d120cc24057f7"
+      },
+      "single": {
+        "binary_sha256": "764ac2b26f4264009979e6e3917631eedd7d4770d2de4db4dd54860ee6fa2445",
+        "assembly_gzip_sha256": "c061a59b654f2d2396417e28c2607fd4553dccc6445aac692e172d7ce66833ef"
+      }
+    },
+    "generated_plan_sha256": "28e8aff744d0c7e8bb4653f2e515ae1ee0fb9b06a6a69dbe673ee4e5ac6d24d3",
+    "libraries_receipt_sha256": "499330ce923cb672da634e706e316e1cfd3c3f61273cfcf84a9641626dbc0e1f"
+  },
+  "independent_analysis_input_sha256": "a5b68470566ac7667c939a3c9bf7b7e1a95a9fbabc1c49134a0c005a7eb8a947",
+  "qualification_scope": "Captured independently validated source/binary/compile/native receipts. The offline selected-data report verifies their bytes but does not repeat full-archive/native checks.",
+  "source_archive_member": "source.tar.gz",
+  "source_archive_sha256": "7810f7409a11f2e1c14ed9d6466913146aba42fc5341db69f053660d6c113015",
+  "source_manifest_member": "source-manifest.json",
+  "omitted_members": {
+    "assembly-neon-baseline.txt.gz": {
+      "bytes": 1655335,
+      "rebuildable": false,
+      "sha256": "1cceb0fe94268d2a162037841db7afe48afa287ec17a015118fd308c4d56c617"
+    },
+    "assembly-neon-inplace.txt.gz": {
+      "bytes": 1655326,
+      "rebuildable": false,
+      "sha256": "2cb95ed706a643364d9c86620d75284179556ebe0a977b7dbd9c2c347987ce60"
+    },
+    "assembly-neon-paired.txt.gz": {
+      "bytes": 1652497,
+      "rebuildable": false,
+      "sha256": "f75987f0190fdb1f351bb70bb37be10c7defd8266f3375e8f08d120cc24057f7"
+    },
+    "assembly-neon-single.txt.gz": {
+      "bytes": 1657236,
+      "rebuildable": false,
+      "sha256": "c061a59b654f2d2396417e28c2607fd4553dccc6445aac692e172d7ce66833ef"
+    },
+    "cmake-cache-neon.txt": {
+      "bytes": 21683,
+      "rebuildable": false,
+      "sha256": "30e293382a4b08a564086f77cd4595b91522e6d238575305cc3302c748fb9606"
+    },
+    "compile-neon.json": {
+      "bytes": 378518,
+      "rebuildable": false,
+      "sha256": "4b37936163df1c6c0945a9f8f137a74d3117055f5b18bbcd688d63529f90c897"
+    },
+    "table-plans-neon.h": {
+      "bytes": 564219,
+      "rebuildable": false,
+      "sha256": "28e8aff744d0c7e8bb4653f2e515ae1ee0fb9b06a6a69dbe673ee4e5ac6d24d3"
+    },
+    "table-ring-neon-baseline": {
+      "bytes": 10950528,
+      "rebuildable": true,
+      "sha256": "00af13f460ddd9cba8de3e46877c5037fa042725b6ce658299087b7c190fe357"
+    },
+    "table-ring-neon-inplace": {
+      "bytes": 10945000,
+      "rebuildable": true,
+      "sha256": "31ee7424765a7a9eacfbe855749eeacc20744aba04daf05ae022624622aedcf4"
+    },
+    "table-ring-neon-paired": {
+      "bytes": 10944952,
+      "rebuildable": true,
+      "sha256": "c46c13f82faf33e917dbdd9010fe2664a8fab33e8327545ad2815b0df5e40588"
+    },
+    "table-ring-neon-single": {
+      "bytes": 10957704,
+      "rebuildable": true,
+      "sha256": "764ac2b26f4264009979e6e3917631eedd7d4770d2de4db4dd54860ee6fa2445"
+    }
+  }
+}
