@@ -1,0 +1,72 @@
+{
+  "fixture_git_commit": "7fe87873b1adf6d18301510131c7803b8927b5ab",
+  "source_mapping": {
+    "production-frame.cpp": {
+      "selected": "production.cpp",
+      "sha256": "954441d7cf0189699a08be4cb898a10f7104582b1d2b4d4660900ab1678f301e"
+    },
+    "probe.cpp": {
+      "selected": "prototype.cpp",
+      "sha256": "aaa0cbc7c0e917a4c6b7275e110a0ca8b4de0a6fc421941f551b74acbf6b0616"
+    },
+    "production-receipt.json": {
+      "selected": "production-receipt.json",
+      "sha256": "b65096ad6a453cccf2c07fa42534a8750e79f371cfec40aa9b607c6282ee0fd8"
+    },
+    "receipt.json": {
+      "selected": "prototype-receipt.json",
+      "sha256": "a9ae7f32d73ce13ec6e7e3b1718a2493561b45646c33431f1a1c5360755a20d3"
+    },
+    "checks.txt": {
+      "selected": "prototype-checks.txt",
+      "sha256": "64c541ed68e8b80e397ecf8ba74d18a3c4bdf3f786ba4d8d23de7c47b93c6ed7"
+    },
+    "production-check-0.txt": {
+      "selected": "production-check-0.txt",
+      "sha256": "fa168faedf3357ca01d0456c81fbc311bf20bdb5392478504c74b14b6f3075bf"
+    },
+    "production-check-1.txt": {
+      "selected": "production-check-1.txt",
+      "sha256": "875dd66b302c21f38d7fd7061d5f917bad1cc0ebf78e322f2e3cec045173e06b"
+    }
+  },
+  "root_header_sha256": "c20f1d37871f9652035e63b0bfd33068e394e06ad91e55a1be29f9976ae0f117",
+  "root_public_headers_match_fixture": true,
+  "root_public_header_hashes": {
+    "loom/include/loom/worker.h": "ecd115c4e06e6611f474b781f14a742edef1c9e26410c12a565c09dc7d03008a",
+    "loom/include/loom/ring.h": "c20f1d37871f9652035e63b0bfd33068e394e06ad91e55a1be29f9976ae0f117",
+    "loom/include/loom/preparation.h": "1d1f11dd28511794885d1165eaa8cebd610433dca37de0839a236d6be6340fad",
+    "loom/include/loom/hints.h": "4348457787bed3b7ede31362f7794694df87af4bc1d479bc8b74ff4b13be0cbe",
+    "loom/include/loom/hardware.h": "c2509a3f6a13575fab4fa8b73ad5acaef3455bc4176ea0ce7df2d2fb88e99dd8",
+    "loom/include/loom/cohort.h": "be3e7ac03b3f304789ef68fc507ed414f25c60c96eb37327f4912cda9f9bcd76",
+    "loom/include/loom/detail/ring_storage.h": "38c90432aff8caa1f9de1a3b7d67e01e212da68881c378ed5e3429bf1eeeb17e",
+    "orbital/include/orbital/types.h": "f16fa83013aadafe0cb539e06dc56834d894605e8419bebf32fa17b53abfe00b",
+    "orbital/include/orbital/preparation.h": "5a50bb22b0e719a6f98be8b97eb57196e2a703324ea9f383a222edfe12110e38",
+    "orbital/include/orbital/worker.h": "5a57d7745ea210734241786178df710bec086d9e4193cb94815132ce668be09f",
+    "orbital/include/orbital/allocation.h": "2cefa580af1b77c2f65e93c78305f7e07a08c8de42e8e60bc2f10689cab811c7",
+    "orbital/include/orbital/object.h": "10303c156733191d3d67404e570c629b69f2eb96246ffa63227a0b369ecf09e6",
+    "orbital/include/orbital/representation.h": "ed0870277597e8bda717cc78ea3916dc32153e067f72f4f55c1304b1ced412e7",
+    "orbital/include/orbital/platform.h": "905ad05f4667fdcf63fa2379c761c5ac6f8f9669c141aecb53929d669da1b78b",
+    "orbital/include/orbital/detail/object/debt_queue.h": "07b81f9ede72b33bbb37ca917d4d1ceab1dfab7cc324bc5bab348feff6382152",
+    "orbital/include/orbital/detail/object/directory.h": "597e9d1e9518b537a8772df0da8b894321e7066f8b585f6868c07fbbb9a53dca",
+    "orbital/include/orbital/detail/object/history.h": "548aa06bc961686feff21a262754ec6e2a97c5f18de9c45f7fda863a09d3a1a7",
+    "orbital/include/orbital/detail/object/memory.h": "cf42ddd687f93c139b152d874789baf3a31e72dcedc863b31b076cd18fa6b51d",
+    "orbital/include/orbital/detail/object/physical.h": "2ab5b7d8eb0e75e8b48978980f349fe22eb27b0de754f73a8ec9c77b7511ac4a",
+    "orbital/include/orbital/detail/object/versions.h": "91326ec0bf97543bf841316b9e9078c187feb8e545249ef0c498067d4c09ab3c",
+    "orbital/include/orbital/detail/object/binding.h": "b8aa265e1b42e266572123042ec52efb308686100fb3b6188689366b13013891",
+    "orbital/include/orbital/detail/object/representation.h": "8d2f658e58c66b78e96e3a4a2e3346c016bccae6d33e52e9ac6dd638188ff77f"
+  },
+  "linked_libraries": {
+    "build/loom-ring-review-20261013/native-adapter-source/build/local-controls/loom/libloom.a": "9efa5fe33c88c79b5da262b9e4cf8dffeafb23f2e96d98eab47e3136b565b91a",
+    "build/loom-ring-review-20261013/native-adapter-source/build/local-controls/orbital/liborbital.a": "c7b50cfe04895cfa2c05e88c583d85c560d3acc08e5c8961ee7c613813c4664c"
+  },
+  "warm_raw_logs": {
+    "production-timing-0-0.txt": "d7480d64a00b86d178c6928d35f8be5874eea7da7b67bc1a46b6794e437bac7f",
+    "production-timing-0-1.txt": "8a54518c3a856d860a3d6334d4af9ad1441ec46634be4835f980afd077b055ae",
+    "production-timing-1-0.txt": "9e01e46ee8ca1d4746710a53b79c84d5a3cc195493f268518f8ae3245e907fa1",
+    "production-timing-1-1.txt": "63abdda6af17dd2519b9a2e89c4115f7ea8a747cda461fe2f522c125d68e2c48",
+    "production-timing-2-0.txt": "f215945b02b190dd0a5f50c0979227524e2cf3e112d68f9cbec199614d869c07",
+    "production-timing-2-1.txt": "133aa14a6f0de0a9bf53b113ef66bce35a97d017959190c73557a9867aa75161"
+  },
+  "raw_source_locations": "original ignored static-restore-scratch and native-adapter-source/build/local-controls; whole logs and binaries deliberately omitted"
+}

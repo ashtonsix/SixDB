@@ -1,0 +1,52 @@
+{
+  "cases": [
+    {
+      "blocks": 4,
+      "family": "width",
+      "hints": 1,
+      "name": "hot-width-ring-c1-h1",
+      "placement": "grouped",
+      "reps": 20,
+      "requests": 65536,
+      "route": "ring",
+      "tier": "hot",
+      "width": 1
+    },
+    {
+      "blocks": 4,
+      "family": "width",
+      "hints": 1,
+      "name": "hot-width-manual-c1-h1",
+      "placement": "grouped",
+      "reps": 20,
+      "requests": 65536,
+      "route": "manual",
+      "tier": "hot",
+      "width": 1
+    },
+    {
+      "blocks": 4,
+      "family": "direct",
+      "hints": 1,
+      "name": "hot-direct-ring-c1-h1",
+      "placement": "grouped",
+      "reps": 20,
+      "requests": 65536,
+      "route": "ring",
+      "tier": "hot",
+      "width": 1
+    },
+    {
+      "blocks": 4,
+      "family": "direct",
+      "hints": 1,
+      "name": "hot-direct-manual-c1-h1",
+      "placement": "grouped",
+      "reps": 20,
+      "requests": 65536,
+      "route": "manual",
+      "tier": "hot",
+      "width": 1
+    }
+  ]
+}

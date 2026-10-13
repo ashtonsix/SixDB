@@ -1,0 +1,29 @@
+[1/20] Building CXX object orbital/CMakeFiles/orbital.dir/src/types.cpp.o
+[2/20] Building CXX object orbital/CMakeFiles/orbital.dir/src/worker.cpp.o
+[3/20] Building CXX object orbital/CMakeFiles/orbital.dir/src/platform.cpp.o
+[4/20] Building CXX object orbital/CMakeFiles/orbital.dir/src/object/storage.cpp.o
+[5/20] Building CXX object orbital/CMakeFiles/orbital.dir/src/object/representation.cpp.o
+[6/20] Building CXX object orbital/CMakeFiles/orbital.dir/src/allocation/allocation.cpp.o
+[7/20] Building CXX object orbital/CMakeFiles/orbital.dir/src/allocation/arena.cpp.o
+[8/20] Building CXX object orbital/CMakeFiles/orbital.dir/src/allocation/group.cpp.o
+[9/20] Building CXX object orbital/CMakeFiles/orbital.dir/src/allocation/window.cpp.o
+[10/20] Building CXX object orbital/CMakeFiles/orbital.dir/src/allocation/finite.cpp.o
+[11/20] Linking CXX static library orbital/liborbital.a
+[12/20] Building CXX object loom/CMakeFiles/loom.dir/src/worker.cpp.o
+[13/20] Building CXX object loom/CMakeFiles/loom.dir/src/ring.cpp.o
+[14/20] Building CXX object loom/CMakeFiles/loom.dir/src/hints.cpp.o
+[15/20] Building CXX object loom/CMakeFiles/loom.dir/src/hardware.cpp.o
+[16/20] Linking CXX static library loom/libloom.a
+[17/20] Building CXX object loom/CMakeFiles/loom_ring_check.dir/test/ring.cpp.o
+[18/20] Linking CXX executable loom/loom_ring_check
+[19/20] Building CXX object loom/CMakeFiles/loom_ring_rotation_check.dir/test/ring_rotation.cpp.o
+FAILED: loom/CMakeFiles/loom_ring_rotation_check.dir/test/ring_rotation.cpp.o 
+/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=1 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN5=0 -I/opt/sixdb/source/loom/include -I/opt/sixdb/source/orbital/include -fsanitize=address,undefined -fno-omit-frame-pointer -fsanitize-address-use-after-return=always -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=x86-64-v3 -mtune=graniterapids -MD -MT loom/CMakeFiles/loom_ring_rotation_check.dir/test/ring_rotation.cpp.o -MF loom/CMakeFiles/loom_ring_rotation_check.dir/test/ring_rotation.cpp.o.d -o loom/CMakeFiles/loom_ring_rotation_check.dir/test/ring_rotation.cpp.o -c /opt/sixdb/source/loom/test/ring_rotation.cpp
+error: Stack realignment in presence of dynamic allocas is not supported with this calling convention.
+error: Stack realignment in presence of dynamic allocas is not supported with this calling convention.
+error: Stack realignment in presence of dynamic allocas is not supported with this calling convention.
+error: Stack realignment in presence of dynamic allocas is not supported with this calling convention.
+error: Stack realignment in presence of dynamic allocas is not supported with this calling convention.
+error: Stack realignment in presence of dynamic allocas is not supported with this calling convention.
+6 errors generated.
+ninja: build stopped: subcommand failed.

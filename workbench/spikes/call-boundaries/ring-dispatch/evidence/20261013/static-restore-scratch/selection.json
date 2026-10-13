@@ -1,0 +1,24 @@
+{
+  "decision": "Prefer existing Ring<Frame*> with stable per-job packet and stage-specific loads. No static/dummy ABI implementation promoted.",
+  "packetBytes": 128,
+  "packet_shape": "eight mutable 16 B vectors, each two uint64 lanes; per-job values differ initially and after every payload stage",
+  "per_job_oracle": "Independent scalar std::array updates all 16 lanes for each of eight jobs over seven metadata/payload cycles; verifies remaining=0, sum and all lanes separately plus total checksum=61480. Production additionally verifies eight completions and 112 native visits.",
+  "storageFootprint": {
+    "production_frame_bytes": 192,
+    "production_native_slot_bytes": 208,
+    "production_pointer_slot_bytes": 56,
+    "eight_native_frames_plus_slots_bytes": 3200,
+    "eight_pointer_frames_plus_slots_bytes": 1984,
+    "standalone_prototype_slot_bytes": 176,
+    "limits": "sizeof(Frame)/sizeof(Slot) only. Excludes Ring object, inventory arrays, allocator rounding and Worker/arena. Native arm retains initialized Frame packet while its mutable packet is carried in Slot; pointer arm has one mutable owning packet."
+  },
+  "bounded_negatives": {
+    "prototype_mode1": "Static wrapper inlines and selective scalar store removes 128 B writes, but metadata still restores 128 B vectors because forwarded opaque transfer arguments remain live.",
+    "prototype_modes2_3": "Zero/nondeterministic dummies eliminate packet loads/stores, but both emit eight vector clears; Clang freeze poison chooses zero. No observed benefit of nondeterministic builtin.",
+    "qualification": "Standalone static prototype admits only bound wrappers. No mixed raw/static fallback qualified; existing generic raw callbacks retain eager restore. No uninitialized reads or UB dummies."
+  },
+  "codegen_limits": "AArch64 Clang 21.1.8 local compilation. Instruction counts include exit and alignment nops and are not cycle estimates. Selected metadata snippets only; one indirect branch and no ordinary call in each.",
+  "timing_limits": "Warm OrbStack Apple AArch64 VM, CPU 0; tune flag neoverse-v2 is codegen setting, not measured V2 hardware. Eight warm jobs with no required cache miss or prefetch. Samples are exploratory composition mechanism evidence, not native AMAC throughput.",
+  "full_yield_vs_unchanged_confound": "Production native packet metadata uses current full yield to persist changed sum and all arguments, including compatibility completed branch. Pointer metadata updates Frame sum directly then uses yield_unchanged. Comparison includes that API/control-flow difference, Slot size and reset/admission/publication work; it does not isolate restore-only savings.",
+  "selection": "Exact two source files, exact original receipts/check outputs, six metadata snippets, frontend/optimized builtin excerpt, all 66 warm sample rows with order, header snapshot and provenance. No binaries, full LLVM IR or full disassembly retained."
+}

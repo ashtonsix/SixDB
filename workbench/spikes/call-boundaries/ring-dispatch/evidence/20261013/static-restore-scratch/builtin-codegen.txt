@@ -1,0 +1,16 @@
+Clang 21.1.8 MODE=3, exact frontend IR lines (disable LLVM passes):
+  %73 = freeze i64 poison
+  %74 = freeze i64 poison
+  %75 = freeze <2 x i64> poison
+  %76 = freeze <2 x i64> poison
+  %77 = freeze <2 x i64> poison
+  %78 = freeze <2 x i64> poison
+  %79 = freeze <2 x i64> poison
+  %80 = freeze <2 x i64> poison
+  %81 = freeze <2 x i64> poison
+  %82 = freeze <2 x i64> poison
+
+Exact optimized resume tail transfer:
+  musttail call preserve_nonecc void %29(ptr noundef nonnull %0, ptr noundef nonnull %22, i64 noundef 0, i64 noundef 0, <2 x i64> noundef zeroinitializer, <2 x i64> noundef zeroinitializer, <2 x i64> noundef zeroinitializer, <2 x i64> noundef zeroinitializer, <2 x i64> noundef zeroinitializer, <2 x i64> noundef zeroinitializer, <2 x i64> noundef zeroinitializer, <2 x i64> noundef zeroinitializer), !dbg !1804
+
+Final metadata-3.asm has eight movi vector clears and is byte-identical to metadata-2.asm.

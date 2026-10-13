@@ -1,0 +1,178 @@
+{
+  "status": "complete",
+  "compiler": "Ubuntu clang version 21.1.8 (++20251221033104+2078da43e25a-1~exp1~20251221153121.57)",
+  "before": {
+    "path": "rotation-x86-sanitized.ll",
+    "sha256": "dab9b688a83338658b8b336ca8295526b54f45eda141bba4b3ed21fb88edbd0e",
+    "native_functions": [
+      {
+        "symbol": "_ZN12_GLOBAL__N_18metadataEN4loom6detail10MemoryRingISt16integer_sequenceImJEES3_ImJLm0ELm1ELm2EEESt5tupleIJEEJPNS_3JobEjmEE6CursorEPNSA_4SlotES9_jm",
+        "name": "(anonymous namespace)::metadata(loom::detail::MemoryRing<std::integer_sequence<unsigned long>, std::integer_sequence<unsigned long, 0ul, 1ul, 2ul>, std::tuple<>, (anonymous namespace)::Job*, unsigned int, unsigned long>::Cursor, loom::detail::MemoryRing<std::integer_sequence<unsigned long>, std::integer_sequence<unsigned long, 0ul, 1ul, 2ul>, std::tuple<>, (anonymous namespace)::Job*, unsigned int, unsigned long>::Slot*, (anonymous namespace)::Job*, unsigned int, unsigned long)",
+        "allocas": [],
+        "asan_stack_malloc_calls": [],
+        "native_invokes": []
+      },
+      {
+        "symbol": "_ZN12_GLOBAL__N_17payloadEN4loom6detail10MemoryRingISt16integer_sequenceImJEES3_ImJLm0ELm1ELm2EEESt5tupleIJEEJPNS_3JobEjmEE6CursorEPNSA_4SlotES9_jm",
+        "name": "(anonymous namespace)::payload(loom::detail::MemoryRing<std::integer_sequence<unsigned long>, std::integer_sequence<unsigned long, 0ul, 1ul, 2ul>, std::tuple<>, (anonymous namespace)::Job*, unsigned int, unsigned long>::Cursor, loom::detail::MemoryRing<std::integer_sequence<unsigned long>, std::integer_sequence<unsigned long, 0ul, 1ul, 2ul>, std::tuple<>, (anonymous namespace)::Job*, unsigned int, unsigned long>::Slot*, (anonymous namespace)::Job*, unsigned int, unsigned long)",
+        "allocas": [],
+        "asan_stack_malloc_calls": [],
+        "native_invokes": []
+      },
+      {
+        "symbol": "_ZN4loom6detail10MemoryRingISt16integer_sequenceImJEES2_ImJLm0ELm1ELm2EEESt5tupleIJEEJPN12_GLOBAL__N_13JobEjmEE6finishENSA_6CursorEPNSA_4SlotES9_jm",
+        "name": "loom::detail::MemoryRing<std::integer_sequence<unsigned long>, std::integer_sequence<unsigned long, 0ul, 1ul, 2ul>, std::tuple<>, (anonymous namespace)::Job*, unsigned int, unsigned long>::finish(loom::detail::MemoryRing<std::integer_sequence<unsigned long>, std::integer_sequence<unsigned long, 0ul, 1ul, 2ul>, std::tuple<>, (anonymous namespace)::Job*, unsigned int, unsigned long>::Cursor, loom::detail::MemoryRing<std::integer_sequence<unsigned long>, std::integer_sequence<unsigned long, 0ul, 1ul, 2ul>, std::tuple<>, (anonymous namespace)::Job*, unsigned int, unsigned long>::Slot*, (anonymous namespace)::Job*, unsigned int, unsigned long)",
+        "allocas": [],
+        "asan_stack_malloc_calls": [],
+        "native_invokes": []
+      },
+      {
+        "symbol": "_ZN12_GLOBAL__N_116pointer_metadataEN4loom6detail10MemoryRingISt16integer_sequenceImJEES3_ImJLm0ELm1EEESt5tupleIJEEJPNS_10PointerJobEPKNS_7ContextEEE6CursorEPNSD_4SlotES9_SC_",
+        "name": "(anonymous namespace)::pointer_metadata(loom::detail::MemoryRing<std::integer_sequence<unsigned long>, std::integer_sequence<unsigned long, 0ul, 1ul>, std::tuple<>, (anonymous namespace)::PointerJob*, (anonymous namespace)::Context const*>::Cursor, loom::detail::MemoryRing<std::integer_sequence<unsigned long>, std::integer_sequence<unsigned long, 0ul, 1ul>, std::tuple<>, (anonymous namespace)::PointerJob*, (anonymous namespace)::Context const*>::Slot*, (anonymous namespace)::PointerJob*, (anonymous namespace)::Context const*)",
+        "allocas": [],
+        "asan_stack_malloc_calls": [],
+        "native_invokes": []
+      },
+      {
+        "symbol": "_ZN12_GLOBAL__N_115pointer_payloadEN4loom6detail10MemoryRingISt16integer_sequenceImJEES3_ImJLm0ELm1EEESt5tupleIJEEJPNS_10PointerJobEPKNS_7ContextEEE6CursorEPNSD_4SlotES9_SC_",
+        "name": "(anonymous namespace)::pointer_payload(loom::detail::MemoryRing<std::integer_sequence<unsigned long>, std::integer_sequence<unsigned long, 0ul, 1ul>, std::tuple<>, (anonymous namespace)::PointerJob*, (anonymous namespace)::Context const*>::Cursor, loom::detail::MemoryRing<std::integer_sequence<unsigned long>, std::integer_sequence<unsigned long, 0ul, 1ul>, std::tuple<>, (anonymous namespace)::PointerJob*, (anonymous namespace)::Context const*>::Slot*, (anonymous namespace)::PointerJob*, (anonymous namespace)::Context const*)",
+        "allocas": [],
+        "asan_stack_malloc_calls": [],
+        "native_invokes": []
+      },
+      {
+        "symbol": "_ZN4loom6detail10MemoryRingISt16integer_sequenceImJEES2_ImJLm0ELm1EEESt5tupleIJEEJPN12_GLOBAL__N_110PointerJobEPKNS7_7ContextEEE6finishENSD_6CursorEPNSD_4SlotES9_SC_",
+        "name": "loom::detail::MemoryRing<std::integer_sequence<unsigned long>, std::integer_sequence<unsigned long, 0ul, 1ul>, std::tuple<>, (anonymous namespace)::PointerJob*, (anonymous namespace)::Context const*>::finish(loom::detail::MemoryRing<std::integer_sequence<unsigned long>, std::integer_sequence<unsigned long, 0ul, 1ul>, std::tuple<>, (anonymous namespace)::PointerJob*, (anonymous namespace)::Context const*>::Cursor, loom::detail::MemoryRing<std::integer_sequence<unsigned long>, std::integer_sequence<unsigned long, 0ul, 1ul>, std::tuple<>, (anonymous namespace)::PointerJob*, (anonymous namespace)::Context const*>::Slot*, (anonymous namespace)::PointerJob*, (anonymous namespace)::Context const*)",
+        "allocas": [],
+        "asan_stack_malloc_calls": [],
+        "native_invokes": []
+      }
+    ],
+    "native_invoke_callers": [
+      {
+        "symbol": "_ZN12_GLOBAL__N_119unchanged_argumentsERNS_7FixtureE",
+        "name": "(anonymous namespace)::unchanged_arguments((anonymous namespace)::Fixture&)",
+        "allocas": [
+          "%predicate.i = alloca %class.anon.86, align 8, !annotation !10826, !DIAssignID !10828",
+          "%active15 = alloca %\"class.std::vector\", align 8, !annotation !10829, !DIAssignID !10831",
+          "%overflow29 = alloca %\"class.std::vector\", align 8, !annotation !10832, !DIAssignID !10834",
+          "%expected_events = alloca %\"class.std::vector.14\", align 8, !annotation !10835, !DIAssignID !10837",
+          "%ref.tmp207 = alloca %\"struct.(anonymous namespace)::Event\", align 8, !annotation !7953",
+          "%asan_local_stack_base = alloca i64, align 8",
+          "%MyAlloca = alloca i8, i64 1376, align 64"
+        ],
+        "asan_stack_malloc_calls": [
+          "%0 = call i64 @__asan_stack_malloc_always_5(i64 1376)"
+        ],
+        "native_invokes": [
+          "invoke preserve_nonecc void %1457(ptr nonnull align 64 dereferenceable(273) %7, i64 %dec.i.i955, ptr noundef nonnull %1430, ptr noundef %1476, ptr noundef %1485)"
+        ]
+      },
+      {
+        "symbol": "_ZN12_GLOBAL__N_18Scenario4spinEm",
+        "name": "(anonymous namespace)::Scenario::spin(unsigned long)",
+        "allocas": [
+          "%ref.tmp.i364.i = alloca %\"struct.(anonymous namespace)::Admission\", align 4, !annotation !7953",
+          "%ref.tmp.i354.i = alloca %\"struct.(anonymous namespace)::Admission\", align 4, !annotation !7953",
+          "%id.i = alloca i32, align 4, !annotation !14108, !DIAssignID !14110",
+          "%ref.tmp60.i = alloca %\"struct.(anonymous namespace)::Event\", align 8, !annotation !7953",
+          "%expected_events = alloca %\"class.std::vector.14\", align 8, !annotation !10835, !DIAssignID !14111",
+          "%expected_admissions = alloca %\"class.std::vector.19\", align 8, !annotation !14112, !DIAssignID !14114",
+          "%asan_local_stack_base = alloca i64, align 8",
+          "%MyAlloca = alloca i8, i64 64, align 32"
+        ],
+        "asan_stack_malloc_calls": [
+          "%0 = call i64 @__asan_stack_malloc_always_0(i64 64)"
+        ],
+        "native_invokes": [
+          "invoke preserve_nonecc void %743(ptr nonnull align 64 dereferenceable(273) %this, i64 %dec.i.i, ptr noundef nonnull %708, ptr noundef %762, i32 noundef %776, i64 noundef %785)"
+        ]
+      }
+    ]
+  },
+  "after": {
+    "path": "rotation-x86-fixed.ll",
+    "sha256": "3cf1c5cbdd16147d307a0b82cd486d597ae1a0ec4f220daf3f467bda4172331b",
+    "native_functions": [
+      {
+        "symbol": "_ZN12_GLOBAL__N_18metadataEN4loom6detail10MemoryRingISt16integer_sequenceImJEES3_ImJLm0ELm1ELm2EEESt5tupleIJEEJPNS_3JobEjmEE6CursorEPNSA_4SlotES9_jm",
+        "name": "(anonymous namespace)::metadata(loom::detail::MemoryRing<std::integer_sequence<unsigned long>, std::integer_sequence<unsigned long, 0ul, 1ul, 2ul>, std::tuple<>, (anonymous namespace)::Job*, unsigned int, unsigned long>::Cursor, loom::detail::MemoryRing<std::integer_sequence<unsigned long>, std::integer_sequence<unsigned long, 0ul, 1ul, 2ul>, std::tuple<>, (anonymous namespace)::Job*, unsigned int, unsigned long>::Slot*, (anonymous namespace)::Job*, unsigned int, unsigned long)",
+        "allocas": [],
+        "asan_stack_malloc_calls": [],
+        "native_invokes": []
+      },
+      {
+        "symbol": "_ZN12_GLOBAL__N_17payloadEN4loom6detail10MemoryRingISt16integer_sequenceImJEES3_ImJLm0ELm1ELm2EEESt5tupleIJEEJPNS_3JobEjmEE6CursorEPNSA_4SlotES9_jm",
+        "name": "(anonymous namespace)::payload(loom::detail::MemoryRing<std::integer_sequence<unsigned long>, std::integer_sequence<unsigned long, 0ul, 1ul, 2ul>, std::tuple<>, (anonymous namespace)::Job*, unsigned int, unsigned long>::Cursor, loom::detail::MemoryRing<std::integer_sequence<unsigned long>, std::integer_sequence<unsigned long, 0ul, 1ul, 2ul>, std::tuple<>, (anonymous namespace)::Job*, unsigned int, unsigned long>::Slot*, (anonymous namespace)::Job*, unsigned int, unsigned long)",
+        "allocas": [],
+        "asan_stack_malloc_calls": [],
+        "native_invokes": []
+      },
+      {
+        "symbol": "_ZN4loom6detail10MemoryRingISt16integer_sequenceImJEES2_ImJLm0ELm1ELm2EEESt5tupleIJEEJPN12_GLOBAL__N_13JobEjmEE6finishENSA_6CursorEPNSA_4SlotES9_jm",
+        "name": "loom::detail::MemoryRing<std::integer_sequence<unsigned long>, std::integer_sequence<unsigned long, 0ul, 1ul, 2ul>, std::tuple<>, (anonymous namespace)::Job*, unsigned int, unsigned long>::finish(loom::detail::MemoryRing<std::integer_sequence<unsigned long>, std::integer_sequence<unsigned long, 0ul, 1ul, 2ul>, std::tuple<>, (anonymous namespace)::Job*, unsigned int, unsigned long>::Cursor, loom::detail::MemoryRing<std::integer_sequence<unsigned long>, std::integer_sequence<unsigned long, 0ul, 1ul, 2ul>, std::tuple<>, (anonymous namespace)::Job*, unsigned int, unsigned long>::Slot*, (anonymous namespace)::Job*, unsigned int, unsigned long)",
+        "allocas": [],
+        "asan_stack_malloc_calls": [],
+        "native_invokes": []
+      },
+      {
+        "symbol": "_ZN12_GLOBAL__N_116pointer_metadataEN4loom6detail10MemoryRingISt16integer_sequenceImJEES3_ImJLm0ELm1EEESt5tupleIJEEJPNS_10PointerJobEPKNS_7ContextEEE6CursorEPNSD_4SlotES9_SC_",
+        "name": "(anonymous namespace)::pointer_metadata(loom::detail::MemoryRing<std::integer_sequence<unsigned long>, std::integer_sequence<unsigned long, 0ul, 1ul>, std::tuple<>, (anonymous namespace)::PointerJob*, (anonymous namespace)::Context const*>::Cursor, loom::detail::MemoryRing<std::integer_sequence<unsigned long>, std::integer_sequence<unsigned long, 0ul, 1ul>, std::tuple<>, (anonymous namespace)::PointerJob*, (anonymous namespace)::Context const*>::Slot*, (anonymous namespace)::PointerJob*, (anonymous namespace)::Context const*)",
+        "allocas": [],
+        "asan_stack_malloc_calls": [],
+        "native_invokes": []
+      },
+      {
+        "symbol": "_ZN12_GLOBAL__N_115pointer_payloadEN4loom6detail10MemoryRingISt16integer_sequenceImJEES3_ImJLm0ELm1EEESt5tupleIJEEJPNS_10PointerJobEPKNS_7ContextEEE6CursorEPNSD_4SlotES9_SC_",
+        "name": "(anonymous namespace)::pointer_payload(loom::detail::MemoryRing<std::integer_sequence<unsigned long>, std::integer_sequence<unsigned long, 0ul, 1ul>, std::tuple<>, (anonymous namespace)::PointerJob*, (anonymous namespace)::Context const*>::Cursor, loom::detail::MemoryRing<std::integer_sequence<unsigned long>, std::integer_sequence<unsigned long, 0ul, 1ul>, std::tuple<>, (anonymous namespace)::PointerJob*, (anonymous namespace)::Context const*>::Slot*, (anonymous namespace)::PointerJob*, (anonymous namespace)::Context const*)",
+        "allocas": [],
+        "asan_stack_malloc_calls": [],
+        "native_invokes": []
+      },
+      {
+        "symbol": "_ZN4loom6detail10MemoryRingISt16integer_sequenceImJEES2_ImJLm0ELm1EEESt5tupleIJEEJPN12_GLOBAL__N_110PointerJobEPKNS7_7ContextEEE6finishENSD_6CursorEPNSD_4SlotES9_SC_",
+        "name": "loom::detail::MemoryRing<std::integer_sequence<unsigned long>, std::integer_sequence<unsigned long, 0ul, 1ul>, std::tuple<>, (anonymous namespace)::PointerJob*, (anonymous namespace)::Context const*>::finish(loom::detail::MemoryRing<std::integer_sequence<unsigned long>, std::integer_sequence<unsigned long, 0ul, 1ul>, std::tuple<>, (anonymous namespace)::PointerJob*, (anonymous namespace)::Context const*>::Cursor, loom::detail::MemoryRing<std::integer_sequence<unsigned long>, std::integer_sequence<unsigned long, 0ul, 1ul>, std::tuple<>, (anonymous namespace)::PointerJob*, (anonymous namespace)::Context const*>::Slot*, (anonymous namespace)::PointerJob*, (anonymous namespace)::Context const*)",
+        "allocas": [],
+        "asan_stack_malloc_calls": [],
+        "native_invokes": []
+      }
+    ],
+    "native_invoke_callers": [
+      {
+        "symbol": "_ZN4loom6detail10MemoryRingISt16integer_sequenceImJEES2_ImJLm0ELm1ELm2EEESt5tupleIJEEJPN12_GLOBAL__N_13JobEjmEE5enterEPFvNSA_6CursorEPNSA_4SlotES9_jmESB_SD_S9_jm",
+        "name": "loom::detail::MemoryRing<std::integer_sequence<unsigned long>, std::integer_sequence<unsigned long, 0ul, 1ul, 2ul>, std::tuple<>, (anonymous namespace)::Job*, unsigned int, unsigned long>::enter(void (*)(loom::detail::MemoryRing<std::integer_sequence<unsigned long>, std::integer_sequence<unsigned long, 0ul, 1ul, 2ul>, std::tuple<>, (anonymous namespace)::Job*, unsigned int, unsigned long>::Cursor, loom::detail::MemoryRing<std::integer_sequence<unsigned long>, std::integer_sequence<unsigned long, 0ul, 1ul, 2ul>, std::tuple<>, (anonymous namespace)::Job*, unsigned int, unsigned long>::Slot*, (anonymous namespace)::Job*, unsigned int, unsigned long), loom::detail::MemoryRing<std::integer_sequence<unsigned long>, std::integer_sequence<unsigned long, 0ul, 1ul, 2ul>, std::tuple<>, (anonymous namespace)::Job*, unsigned int, unsigned long>::Cursor, loom::detail::MemoryRing<std::integer_sequence<unsigned long>, std::integer_sequence<unsigned long, 0ul, 1ul, 2ul>, std::tuple<>, (anonymous namespace)::Job*, unsigned int, unsigned long>::Slot*, (anonymous namespace)::Job*, unsigned int, unsigned long)",
+        "allocas": [],
+        "asan_stack_malloc_calls": [],
+        "native_invokes": [
+          "invoke preserve_nonecc void %22(ptr nonnull %ring.coerce0, i64 %dec.i, ptr noundef nonnull %11, ptr noundef %33, i32 noundef %34, i64 noundef %35)"
+        ]
+      },
+      {
+        "symbol": "_ZN4loom6detail10MemoryRingISt16integer_sequenceImJEES2_ImJLm0ELm1EEESt5tupleIJEEJPN12_GLOBAL__N_110PointerJobEPKNS7_7ContextEEE5enterEPFvNSD_6CursorEPNSD_4SlotES9_SC_ESE_SG_S9_SC_",
+        "name": "loom::detail::MemoryRing<std::integer_sequence<unsigned long>, std::integer_sequence<unsigned long, 0ul, 1ul>, std::tuple<>, (anonymous namespace)::PointerJob*, (anonymous namespace)::Context const*>::enter(void (*)(loom::detail::MemoryRing<std::integer_sequence<unsigned long>, std::integer_sequence<unsigned long, 0ul, 1ul>, std::tuple<>, (anonymous namespace)::PointerJob*, (anonymous namespace)::Context const*>::Cursor, loom::detail::MemoryRing<std::integer_sequence<unsigned long>, std::integer_sequence<unsigned long, 0ul, 1ul>, std::tuple<>, (anonymous namespace)::PointerJob*, (anonymous namespace)::Context const*>::Slot*, (anonymous namespace)::PointerJob*, (anonymous namespace)::Context const*), loom::detail::MemoryRing<std::integer_sequence<unsigned long>, std::integer_sequence<unsigned long, 0ul, 1ul>, std::tuple<>, (anonymous namespace)::PointerJob*, (anonymous namespace)::Context const*>::Cursor, loom::detail::MemoryRing<std::integer_sequence<unsigned long>, std::integer_sequence<unsigned long, 0ul, 1ul>, std::tuple<>, (anonymous namespace)::PointerJob*, (anonymous namespace)::Context const*>::Slot*, (anonymous namespace)::PointerJob*, (anonymous namespace)::Context const*)",
+        "allocas": [],
+        "asan_stack_malloc_calls": [],
+        "native_invokes": [
+          "invoke preserve_nonecc void %22(ptr nonnull %ring.coerce0, i64 %dec.i, ptr noundef nonnull %11, ptr noundef %33, ptr noundef %34)"
+        ]
+      }
+    ]
+  },
+  "primary_sources": [
+    {
+      "url": "https://raw.githubusercontent.com/llvm/llvm-project/llvmorg-21.1.8/llvm/lib/Target/X86/X86RegisterInfo.cpp",
+      "path": "llvm21-primary-sources/X86RegisterInfo.cpp",
+      "sha256": "065d6a05f1384508482481e438a1821a48672385e1830f82677688a90c8ff8a7"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/llvm/llvm-project/llvmorg-21.1.8/llvm/lib/Target/X86/X86ISelLoweringCall.cpp",
+      "path": "llvm21-primary-sources/X86ISelLoweringCall.cpp",
+      "sha256": "21a7a9d4593980b813f8d2a1ae657443c021c221f3b2d2f664f57514917e5732"
+    }
+  ],
+  "root_cause": "Ordinary ASan realigned callers invoke preserve_none callbacks directly. ASan fallback allocas are outside entry blocks; the caller then needs a base pointer that the native invoke mask clobbers. The backend diagnostic does not establish an escaping alloca in the native callback.",
+  "fix": "The ordinary fixed entry bridge moves the native invoke out of the realigned caller. Actual callback and caller instrumentation remains enabled; no test logging/state code was changed for this repair.",
+  "current_ring_sha256": "c20f1d37871f9652035e63b0bfd33068e394e06ad91e55a1be29f9976ae0f117",
+  "qualification": "Cross x86-64 code generation with libstdc++15 only; actual native libstdc++13 qualification remains separate.",
+  "additional_tus_receipt": "shared-x86-fixed-qualification/receipt.json"
+}

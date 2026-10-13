@@ -1,0 +1,145 @@
+{
+  "format": 1,
+  "qualification": "independent hash and LLVM IR body checks; cross compile, no native x86 execution",
+  "ring_sha256": "c20f1d37871f9652035e63b0bfd33068e394e06ad91e55a1be29f9976ae0f117",
+  "cuts": {
+    "before": {
+      "ir_sha256": "dab9b688a83338658b8b336ca8295526b54f45eda141bba4b3ed21fb88edbd0e",
+      "native_functions": 6,
+      "entries": [
+        {
+          "name": "(anonymous namespace)::metadata(loom::detail::MemoryRing<std::integer_sequence<unsigned long>, std::integer_sequence<unsigned long, 0ul, 1ul, 2ul>, std::tuple<>, (anonymous namespace)::Job*, unsigned int, unsigned long>::Cursor, loom::detail::MemoryRing<std::integer_sequence<unsigned long>, std::integer_sequence<unsigned long, 0ul, 1ul, 2ul>, std::tuple<>, (anonymous namespace)::Job*, unsigned int, unsigned long>::Slot*, (anonymous namespace)::Job*, unsigned int, unsigned long)",
+          "native": true,
+          "allocas": 0,
+          "native_invokes": 0,
+          "function_body_sha256": "c913e9fb3dcf83911b517a21961dfc58b99a29430248ad95499b9286fc329c40"
+        },
+        {
+          "name": "(anonymous namespace)::payload(loom::detail::MemoryRing<std::integer_sequence<unsigned long>, std::integer_sequence<unsigned long, 0ul, 1ul, 2ul>, std::tuple<>, (anonymous namespace)::Job*, unsigned int, unsigned long>::Cursor, loom::detail::MemoryRing<std::integer_sequence<unsigned long>, std::integer_sequence<unsigned long, 0ul, 1ul, 2ul>, std::tuple<>, (anonymous namespace)::Job*, unsigned int, unsigned long>::Slot*, (anonymous namespace)::Job*, unsigned int, unsigned long)",
+          "native": true,
+          "allocas": 0,
+          "native_invokes": 0,
+          "function_body_sha256": "3a585a0f8fd697f3732506067fe102614ae2bd44e9f0dda515a1206552b3c14a"
+        },
+        {
+          "name": "loom::detail::MemoryRing<std::integer_sequence<unsigned long>, std::integer_sequence<unsigned long, 0ul, 1ul, 2ul>, std::tuple<>, (anonymous namespace)::Job*, unsigned int, unsigned long>::finish(loom::detail::MemoryRing<std::integer_sequence<unsigned long>, std::integer_sequence<unsigned long, 0ul, 1ul, 2ul>, std::tuple<>, (anonymous namespace)::Job*, unsigned int, unsigned long>::Cursor, loom::detail::MemoryRing<std::integer_sequence<unsigned long>, std::integer_sequence<unsigned long, 0ul, 1ul, 2ul>, std::tuple<>, (anonymous namespace)::Job*, unsigned int, unsigned long>::Slot*, (anonymous namespace)::Job*, unsigned int, unsigned long)",
+          "native": true,
+          "allocas": 0,
+          "native_invokes": 0,
+          "function_body_sha256": "073125f568dc2fa5f67d1d9ffb37e8c09f93396cfe378ef21a307bec36b3e66c"
+        },
+        {
+          "name": "(anonymous namespace)::pointer_metadata(loom::detail::MemoryRing<std::integer_sequence<unsigned long>, std::integer_sequence<unsigned long, 0ul, 1ul>, std::tuple<>, (anonymous namespace)::PointerJob*, (anonymous namespace)::Context const*>::Cursor, loom::detail::MemoryRing<std::integer_sequence<unsigned long>, std::integer_sequence<unsigned long, 0ul, 1ul>, std::tuple<>, (anonymous namespace)::PointerJob*, (anonymous namespace)::Context const*>::Slot*, (anonymous namespace)::PointerJob*, (anonymous namespace)::Context const*)",
+          "native": true,
+          "allocas": 0,
+          "native_invokes": 0,
+          "function_body_sha256": "b568e8d4220a8a9f9f71035c068aeb7605f89b596a85b150e99a5957e75db6f8"
+        },
+        {
+          "name": "(anonymous namespace)::pointer_payload(loom::detail::MemoryRing<std::integer_sequence<unsigned long>, std::integer_sequence<unsigned long, 0ul, 1ul>, std::tuple<>, (anonymous namespace)::PointerJob*, (anonymous namespace)::Context const*>::Cursor, loom::detail::MemoryRing<std::integer_sequence<unsigned long>, std::integer_sequence<unsigned long, 0ul, 1ul>, std::tuple<>, (anonymous namespace)::PointerJob*, (anonymous namespace)::Context const*>::Slot*, (anonymous namespace)::PointerJob*, (anonymous namespace)::Context const*)",
+          "native": true,
+          "allocas": 0,
+          "native_invokes": 0,
+          "function_body_sha256": "5ccc1ee62f727b494e7031de163a8160fc43224464145deab00dbc1003a72bf1"
+        },
+        {
+          "name": "loom::detail::MemoryRing<std::integer_sequence<unsigned long>, std::integer_sequence<unsigned long, 0ul, 1ul>, std::tuple<>, (anonymous namespace)::PointerJob*, (anonymous namespace)::Context const*>::finish(loom::detail::MemoryRing<std::integer_sequence<unsigned long>, std::integer_sequence<unsigned long, 0ul, 1ul>, std::tuple<>, (anonymous namespace)::PointerJob*, (anonymous namespace)::Context const*>::Cursor, loom::detail::MemoryRing<std::integer_sequence<unsigned long>, std::integer_sequence<unsigned long, 0ul, 1ul>, std::tuple<>, (anonymous namespace)::PointerJob*, (anonymous namespace)::Context const*>::Slot*, (anonymous namespace)::PointerJob*, (anonymous namespace)::Context const*)",
+          "native": true,
+          "allocas": 0,
+          "native_invokes": 0,
+          "function_body_sha256": "2763dc1c656bf78d5e27366cce7d9786ac681537833648fa05db60249e71a3fb"
+        },
+        {
+          "name": "(anonymous namespace)::unchanged_arguments((anonymous namespace)::Fixture&)",
+          "native": false,
+          "allocas": 7,
+          "native_invokes": 1,
+          "function_body_sha256": "7259938f3b9838c8d28714a3369c37e87ec5c5142c669950161727f668a186f9"
+        },
+        {
+          "name": "(anonymous namespace)::Scenario::spin(unsigned long)",
+          "native": false,
+          "allocas": 8,
+          "native_invokes": 1,
+          "function_body_sha256": "0d21fc1e0b1c6a3edbde6261a045f2e55d223fedfb16efa71293e4900276a3c5"
+        }
+      ]
+    },
+    "after": {
+      "ir_sha256": "3cf1c5cbdd16147d307a0b82cd486d597ae1a0ec4f220daf3f467bda4172331b",
+      "native_functions": 6,
+      "entries": [
+        {
+          "name": "(anonymous namespace)::metadata(loom::detail::MemoryRing<std::integer_sequence<unsigned long>, std::integer_sequence<unsigned long, 0ul, 1ul, 2ul>, std::tuple<>, (anonymous namespace)::Job*, unsigned int, unsigned long>::Cursor, loom::detail::MemoryRing<std::integer_sequence<unsigned long>, std::integer_sequence<unsigned long, 0ul, 1ul, 2ul>, std::tuple<>, (anonymous namespace)::Job*, unsigned int, unsigned long>::Slot*, (anonymous namespace)::Job*, unsigned int, unsigned long)",
+          "native": true,
+          "allocas": 0,
+          "native_invokes": 0,
+          "function_body_sha256": "7a9a31b999a4d322417eae3b65438c228b1d26b4948fc711003f1c7ca15d4460"
+        },
+        {
+          "name": "(anonymous namespace)::payload(loom::detail::MemoryRing<std::integer_sequence<unsigned long>, std::integer_sequence<unsigned long, 0ul, 1ul, 2ul>, std::tuple<>, (anonymous namespace)::Job*, unsigned int, unsigned long>::Cursor, loom::detail::MemoryRing<std::integer_sequence<unsigned long>, std::integer_sequence<unsigned long, 0ul, 1ul, 2ul>, std::tuple<>, (anonymous namespace)::Job*, unsigned int, unsigned long>::Slot*, (anonymous namespace)::Job*, unsigned int, unsigned long)",
+          "native": true,
+          "allocas": 0,
+          "native_invokes": 0,
+          "function_body_sha256": "afde805dc400e21008ad5de5f6f3f54a85b4a8025d28fde87efbf5072d447b2f"
+        },
+        {
+          "name": "loom::detail::MemoryRing<std::integer_sequence<unsigned long>, std::integer_sequence<unsigned long, 0ul, 1ul, 2ul>, std::tuple<>, (anonymous namespace)::Job*, unsigned int, unsigned long>::finish(loom::detail::MemoryRing<std::integer_sequence<unsigned long>, std::integer_sequence<unsigned long, 0ul, 1ul, 2ul>, std::tuple<>, (anonymous namespace)::Job*, unsigned int, unsigned long>::Cursor, loom::detail::MemoryRing<std::integer_sequence<unsigned long>, std::integer_sequence<unsigned long, 0ul, 1ul, 2ul>, std::tuple<>, (anonymous namespace)::Job*, unsigned int, unsigned long>::Slot*, (anonymous namespace)::Job*, unsigned int, unsigned long)",
+          "native": true,
+          "allocas": 0,
+          "native_invokes": 0,
+          "function_body_sha256": "54661a502f30ab6a70efb3a5e243dc36e13b3b74fd5e3b98f03f216485135a27"
+        },
+        {
+          "name": "(anonymous namespace)::pointer_metadata(loom::detail::MemoryRing<std::integer_sequence<unsigned long>, std::integer_sequence<unsigned long, 0ul, 1ul>, std::tuple<>, (anonymous namespace)::PointerJob*, (anonymous namespace)::Context const*>::Cursor, loom::detail::MemoryRing<std::integer_sequence<unsigned long>, std::integer_sequence<unsigned long, 0ul, 1ul>, std::tuple<>, (anonymous namespace)::PointerJob*, (anonymous namespace)::Context const*>::Slot*, (anonymous namespace)::PointerJob*, (anonymous namespace)::Context const*)",
+          "native": true,
+          "allocas": 0,
+          "native_invokes": 0,
+          "function_body_sha256": "4e1218d9d6d2a69d7a2346863ea9f5561ccfd0cfcbe70d619b003ba7566b7bc3"
+        },
+        {
+          "name": "(anonymous namespace)::pointer_payload(loom::detail::MemoryRing<std::integer_sequence<unsigned long>, std::integer_sequence<unsigned long, 0ul, 1ul>, std::tuple<>, (anonymous namespace)::PointerJob*, (anonymous namespace)::Context const*>::Cursor, loom::detail::MemoryRing<std::integer_sequence<unsigned long>, std::integer_sequence<unsigned long, 0ul, 1ul>, std::tuple<>, (anonymous namespace)::PointerJob*, (anonymous namespace)::Context const*>::Slot*, (anonymous namespace)::PointerJob*, (anonymous namespace)::Context const*)",
+          "native": true,
+          "allocas": 0,
+          "native_invokes": 0,
+          "function_body_sha256": "10f40289cd1f0d4ae89b55f22117b325cafc4e2429fbcc9514b4ce4f580ac109"
+        },
+        {
+          "name": "loom::detail::MemoryRing<std::integer_sequence<unsigned long>, std::integer_sequence<unsigned long, 0ul, 1ul>, std::tuple<>, (anonymous namespace)::PointerJob*, (anonymous namespace)::Context const*>::finish(loom::detail::MemoryRing<std::integer_sequence<unsigned long>, std::integer_sequence<unsigned long, 0ul, 1ul>, std::tuple<>, (anonymous namespace)::PointerJob*, (anonymous namespace)::Context const*>::Cursor, loom::detail::MemoryRing<std::integer_sequence<unsigned long>, std::integer_sequence<unsigned long, 0ul, 1ul>, std::tuple<>, (anonymous namespace)::PointerJob*, (anonymous namespace)::Context const*>::Slot*, (anonymous namespace)::PointerJob*, (anonymous namespace)::Context const*)",
+          "native": true,
+          "allocas": 0,
+          "native_invokes": 0,
+          "function_body_sha256": "dc3541f7786ba8d362ce1ab2181781e9be4b035ab97d6e475fd53eac3002b62a"
+        },
+        {
+          "name": "loom::detail::MemoryRing<std::integer_sequence<unsigned long>, std::integer_sequence<unsigned long, 0ul, 1ul, 2ul>, std::tuple<>, (anonymous namespace)::Job*, unsigned int, unsigned long>::enter(void (*)(loom::detail::MemoryRing<std::integer_sequence<unsigned long>, std::integer_sequence<unsigned long, 0ul, 1ul, 2ul>, std::tuple<>, (anonymous namespace)::Job*, unsigned int, unsigned long>::Cursor, loom::detail::MemoryRing<std::integer_sequence<unsigned long>, std::integer_sequence<unsigned long, 0ul, 1ul, 2ul>, std::tuple<>, (anonymous namespace)::Job*, unsigned int, unsigned long>::Slot*, (anonymous namespace)::Job*, unsigned int, unsigned long), loom::detail::MemoryRing<std::integer_sequence<unsigned long>, std::integer_sequence<unsigned long, 0ul, 1ul, 2ul>, std::tuple<>, (anonymous namespace)::Job*, unsigned int, unsigned long>::Cursor, loom::detail::MemoryRing<std::integer_sequence<unsigned long>, std::integer_sequence<unsigned long, 0ul, 1ul, 2ul>, std::tuple<>, (anonymous namespace)::Job*, unsigned int, unsigned long>::Slot*, (anonymous namespace)::Job*, unsigned int, unsigned long)",
+          "native": false,
+          "allocas": 0,
+          "native_invokes": 1,
+          "function_body_sha256": "f785b40bf7c6f7ea6f1f1256632e8c059ecbd2c0cdc1af696b28efa137da9702"
+        },
+        {
+          "name": "loom::detail::MemoryRing<std::integer_sequence<unsigned long>, std::integer_sequence<unsigned long, 0ul, 1ul>, std::tuple<>, (anonymous namespace)::PointerJob*, (anonymous namespace)::Context const*>::enter(void (*)(loom::detail::MemoryRing<std::integer_sequence<unsigned long>, std::integer_sequence<unsigned long, 0ul, 1ul>, std::tuple<>, (anonymous namespace)::PointerJob*, (anonymous namespace)::Context const*>::Cursor, loom::detail::MemoryRing<std::integer_sequence<unsigned long>, std::integer_sequence<unsigned long, 0ul, 1ul>, std::tuple<>, (anonymous namespace)::PointerJob*, (anonymous namespace)::Context const*>::Slot*, (anonymous namespace)::PointerJob*, (anonymous namespace)::Context const*), loom::detail::MemoryRing<std::integer_sequence<unsigned long>, std::integer_sequence<unsigned long, 0ul, 1ul>, std::tuple<>, (anonymous namespace)::PointerJob*, (anonymous namespace)::Context const*>::Cursor, loom::detail::MemoryRing<std::integer_sequence<unsigned long>, std::integer_sequence<unsigned long, 0ul, 1ul>, std::tuple<>, (anonymous namespace)::PointerJob*, (anonymous namespace)::Context const*>::Slot*, (anonymous namespace)::PointerJob*, (anonymous namespace)::Context const*)",
+          "native": false,
+          "allocas": 0,
+          "native_invokes": 1,
+          "function_body_sha256": "ded372ccb9884a9bd350522f92cf4bca9f6a5396738e509db4852e01720f5e59"
+        }
+      ]
+    }
+  },
+  "primary_sources": [
+    {
+      "url": "https://raw.githubusercontent.com/llvm/llvm-project/llvmorg-21.1.8/llvm/lib/Target/X86/X86RegisterInfo.cpp",
+      "path": "llvm21-primary-sources/X86RegisterInfo.cpp",
+      "sha256": "065d6a05f1384508482481e438a1821a48672385e1830f82677688a90c8ff8a7"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/llvm/llvm-project/llvmorg-21.1.8/llvm/lib/Target/X86/X86ISelLoweringCall.cpp",
+      "path": "llvm21-primary-sources/X86ISelLoweringCall.cpp",
+      "sha256": "21a7a9d4593980b813f8d2a1ae657443c021c221f3b2d2f664f57514917e5732"
+    }
+  ],
+  "diagnosis_sha256": "501b78c18ec69694dec6ffb865e2287643c71bd34f241661437a4ed75a9229c2",
+  "cross_qualification_receipt_sha256": "9a8021439dd1d259572b935c8cef7c2f8d577a587034051f6eb964b39f0fed1e"
+}

@@ -1,0 +1,81 @@
+{
+  "scope": "standalone codegen feasibility only; no throughput timings or Root Ring implementation change",
+  "compiler": "clang++-21 21.1.8, AArch64",
+  "flags": [
+    "-std=c++23",
+    "-O3",
+    "-g",
+    "-fno-fast-math",
+    "-ffp-contract=off",
+    "-march=armv8-a+simd",
+    "-mtune=neoverse-v2"
+  ],
+  "state": "8 independent jobs, each 128 B mutable vectors; 7 metadata/payload cycles; independently verified scalar oracle over every final lane, remaining count, sum and total checksum",
+  "modes": {
+    "0": "eager restore/full stores",
+    "1": "bound restore wrapper/selective stores/previous incoming values forwarded as unused transfer arguments",
+    "2": "bound restore wrapper/selective stores/zero transfer arguments",
+    "3": "bound restore wrapper/selective stores/nondeterministic builtin transfer arguments"
+  },
+  "builtin_frontend": "freeze i64 poison and freeze <2 x i64> poison; no uninitialized reads",
+  "builtin_optimized": "zero scalars and zeroinitializer vectors; same eight vector clears as explicit zero mode",
+  "qualification_limits": "single-core serial execution; no mixed raw/static fallback test; generic Raw dispatch remains eager outside scratch. Static dispatch is safe only when every target is a bound wrapper that restores its own Slot tuple. Wrapper cannot observe transfer dummies.",
+  "codegen_counts_note": "counts include emitted branches, exit and alignment nops; not cycle estimates",
+  "checks": [
+    "mode=0 checksum=61480 expected=61480 slot_bytes=176",
+    "mode=1 checksum=61480 expected=61480 slot_bytes=176",
+    "mode=2 checksum=61480 expected=61480 slot_bytes=176",
+    "mode=3 checksum=61480 expected=61480 slot_bytes=176"
+  ],
+  "codegen": [
+    {
+      "mode": 0,
+      "emitted_instructions": 32,
+      "q_loads": 4,
+      "q_stores": 4,
+      "vector_clear": 0,
+      "indirect_jumps": 1,
+      "ordinary_calls": 0
+    },
+    {
+      "mode": 1,
+      "emitted_instructions": 25,
+      "q_loads": 4,
+      "q_stores": 0,
+      "vector_clear": 0,
+      "indirect_jumps": 1,
+      "ordinary_calls": 0
+    },
+    {
+      "mode": 2,
+      "emitted_instructions": 35,
+      "q_loads": 0,
+      "q_stores": 0,
+      "vector_clear": 8,
+      "indirect_jumps": 1,
+      "ordinary_calls": 0
+    },
+    {
+      "mode": 3,
+      "emitted_instructions": 35,
+      "q_loads": 0,
+      "q_stores": 0,
+      "vector_clear": 8,
+      "indirect_jumps": 1,
+      "ordinary_calls": 0
+    }
+  ],
+  "sha256": {
+    "probe.cpp": "aaa0cbc7c0e917a4c6b7275e110a0ca8b4de0a6fc421941f551b74acbf6b0616",
+    "metadata-0.asm": "ee2038793079c03375791d3b00ff13e687df2b62f00f822fde298f893a512c75",
+    "metadata-1.asm": "070f36a713b8a069965a9d495315438e639865afbb2d72d410375059b87c85ed",
+    "metadata-2.asm": "54cbed40ebf148454a4b21e8c38b8602452777514ef54d02ddccca9535e813e5",
+    "ir-0.ll": "88c5c0d1a4e9e76438ee3802e20c34c8c95ac50d8c11ac2b36e47318aed438da",
+    "ir-1.ll": "190cf3412e3b1c9fb8cb23c923136c796b838eb29974c576937f3e466ca6c4bc",
+    "ir-2.ll": "e2a0b2779f660fcd1b7c8dfeace09d3223659bce64c6b6782d7fe3479ee33c40",
+    "ir-3.ll": "c1717b7e15b1883ee5800d34f788f7f092f2f9fa53a4bbad348a9587f7f9e496",
+    "frontend-3.ll": "156f0146ac9ee593fde9f7ddce1fcb51fec807e10c5832800e108b3b96f5d167",
+    "metadata-3.asm": "54cbed40ebf148454a4b21e8c38b8602452777514ef54d02ddccca9535e813e5",
+    "checks.txt": "64c541ed68e8b80e397ecf8ba74d18a3c4bdf3f786ba4d8d23de7c47b93c6ed7"
+  }
+}

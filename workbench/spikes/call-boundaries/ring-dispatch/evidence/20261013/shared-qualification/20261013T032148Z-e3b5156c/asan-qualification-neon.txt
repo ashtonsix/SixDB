@@ -1,0 +1,21 @@
+Internal ctest changing into directory: /opt/sixdb/source/build/loom-shared-asan-neon
+Test project /opt/sixdb/source/build/loom-shared-asan-neon
+    Start 49: loom_ring_check
+1/6 Test #49: loom_ring_check ..................   Passed    0.01 sec
+    Start 50: loom_ring_rotation_check
+2/6 Test #50: loom_ring_rotation_check .........   Passed    0.03 sec
+    Start 51: loom_ring_shared_check
+3/6 Test #51: loom_ring_shared_check ...........   Passed    0.01 sec
+    Start 52: loom_cohort_check
+4/6 Test #52: loom_cohort_check ................   Passed    0.01 sec
+    Start 53: loom_hint_check
+5/6 Test #53: loom_hint_check ..................   Passed    0.02 sec
+    Start 55: loom_example_hints
+6/6 Test #55: loom_example_hints ...............   Passed    0.11 sec
+
+100% tests passed, 0 tests failed out of 6
+
+Label Time Summary:
+loom-runtime    =   0.18 sec*proc (6 tests)
+
+Total Test time (real) =   0.19 sec

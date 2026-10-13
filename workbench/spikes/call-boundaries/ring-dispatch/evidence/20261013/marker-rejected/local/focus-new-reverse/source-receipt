@@ -1,0 +1,41 @@
+{
+  "source_difference": [
+    "loom/include/loom/ring.h"
+  ],
+  "old_source_digest": "c1495dbeba73436a9993fc5878ede13340ba348d7df045fc89c50eb171be5c1c",
+  "new_source_digest": "28a3446aa6c60567e4eedcd8b5f7a4b0497c2aad2101d2f90a6b56e0595db5c1",
+  "old_ring_sha256": "d152716cc8ea0484c48218a3ebb9979a64a74dfd86bf42c06b8b9d35d5f35ef4",
+  "new_ring_sha256": "bc98eb245dda4b33130bb8a2688a49c2673663caa86daa084c55db0657c6142f",
+  "compiler": "Clang21.1.8",
+  "flags": "O3 generic noLTO; consumer vectorizers disabled",
+  "capture_old": "source-old.capture.json",
+  "capture_new": "source-new.capture.json",
+  "binaries": {
+    "old": {
+      "path": "/home/ashtonsix/sixdb/build/loom-ring-review-20261013/streampack-local/old/workbench/spikes/streampack/streampack_implementation_loom_check",
+      "sha256": "97a337718cae66f77b6727f69ad4bff4a7e18db9fb3b5d9fad78b4834ced84c0"
+    },
+    "new": {
+      "path": "/home/ashtonsix/sixdb/build/loom-ring-review-20261013/streampack-local/new/workbench/spikes/streampack/streampack_implementation_loom_check",
+      "sha256": "e4a0c09ab9352ec913b40ac133c01c52511861962af0421edb3fd258574a7ea4"
+    }
+  },
+  "header_dependency": {
+    "old": [
+      "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/loom-ring-review-20261013/streampack-local/source-old/loom/include/loom/ring.h"
+    ],
+    "new": [
+      "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/loom-ring-review-20261013/streampack-local/source-new/loom/include/loom/ring.h"
+    ]
+  },
+  "correctness_old": {
+    "log": "old/Testing/Temporary/LastTest.log",
+    "sha256": "580833814b64807ac18d98dcad798976fdf1ed5c349df4f8536711f5f4d7f5f5",
+    "passed": true
+  },
+  "correctness_new": {
+    "log": "new/Testing/Temporary/LastTest.log",
+    "sha256": "58ac1f6990b32eb1dde38b20617ef70062406c9e4d82c895033de4ec9f755681",
+    "passed": true
+  }
+}

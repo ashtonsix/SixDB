@@ -1,0 +1,443 @@
+{
+  "format": 1,
+  "status": "rejected marker control",
+  "source": {
+    "source_difference": [
+      "loom/include/loom/ring.h"
+    ],
+    "old_source_digest": "c1495dbeba73436a9993fc5878ede13340ba348d7df045fc89c50eb171be5c1c",
+    "new_source_digest": "28a3446aa6c60567e4eedcd8b5f7a4b0497c2aad2101d2f90a6b56e0595db5c1",
+    "old_ring_sha256": "d152716cc8ea0484c48218a3ebb9979a64a74dfd86bf42c06b8b9d35d5f35ef4",
+    "new_ring_sha256": "bc98eb245dda4b33130bb8a2688a49c2673663caa86daa084c55db0657c6142f",
+    "compiler": "Clang21.1.8",
+    "flags": "O3 generic noLTO; consumer vectorizers disabled",
+    "capture_old": "source-old.capture.json",
+    "capture_new": "source-new.capture.json",
+    "binaries": {
+      "old": {
+        "path": "/home/ashtonsix/sixdb/build/loom-ring-review-20261013/streampack-local/old/workbench/spikes/streampack/streampack_implementation_loom_check",
+        "sha256": "97a337718cae66f77b6727f69ad4bff4a7e18db9fb3b5d9fad78b4834ced84c0"
+      },
+      "new": {
+        "path": "/home/ashtonsix/sixdb/build/loom-ring-review-20261013/streampack-local/new/workbench/spikes/streampack/streampack_implementation_loom_check",
+        "sha256": "e4a0c09ab9352ec913b40ac133c01c52511861962af0421edb3fd258574a7ea4"
+      }
+    },
+    "header_dependency": {
+      "old": [
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/loom-ring-review-20261013/streampack-local/source-old/loom/include/loom/ring.h"
+      ],
+      "new": [
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/loom-ring-review-20261013/streampack-local/source-new/loom/include/loom/ring.h"
+      ]
+    },
+    "correctness_old": {
+      "log": "old/Testing/Temporary/LastTest.log",
+      "sha256": "580833814b64807ac18d98dcad798976fdf1ed5c349df4f8536711f5f4d7f5f5",
+      "passed": true
+    },
+    "correctness_new": {
+      "log": "new/Testing/Temporary/LastTest.log",
+      "sha256": "58ac1f6990b32eb1dde38b20617ef70062406c9e4d82c895033de4ec9f755681",
+      "passed": true
+    }
+  },
+  "focused_comparison": {
+    "status": "complete",
+    "process_order": [
+      "focus-old-forward",
+      "focus-new-reverse",
+      "focus-new-forward",
+      "focus-old-reverse"
+    ],
+    "matrix": [
+      {
+        "case": "hot-direct-manual-c1-h1",
+        "arms": {
+          "old": {
+            "median": 10.368465846794587,
+            "min": 10.075046369771648,
+            "max": 12.042908641262821,
+            "samples": 40,
+            "processes": {
+              "focus-old-forward": {
+                "median": 10.36894321714804,
+                "min": 10.075046369771648,
+                "max": 12.042908641262821
+              },
+              "focus-old-reverse": {
+                "median": 10.365557872235588,
+                "min": 10.156843636598499,
+                "max": 10.98781494593709
+              }
+            }
+          },
+          "new": {
+            "median": 10.903240180572563,
+            "min": 10.518821100967607,
+            "max": 17.416171630398154,
+            "samples": 40,
+            "processes": {
+              "focus-new-reverse": {
+                "median": 10.817329924115562,
+                "min": 10.518821100967607,
+                "max": 17.416171630398154
+              },
+              "focus-new-forward": {
+                "median": 11.029755304071633,
+                "min": 10.595996235206858,
+                "max": 13.438582254323547
+              }
+            }
+          }
+        },
+        "counts": {
+          "accepted": 59578,
+          "refused": 30057,
+          "completed": 65536,
+          "promoted": 59204,
+          "visits": 3839786,
+          "quanta": 30059,
+          "refill_boundaries": 30057,
+          "consumed": 1919893
+        },
+        "old_over_new": 0.9509527145214283
+      },
+      {
+        "case": "hot-direct-ring-c1-h1",
+        "arms": {
+          "old": {
+            "median": 12.119041790349776,
+            "min": 11.57877704642915,
+            "max": 15.379338327708888,
+            "samples": 40,
+            "processes": {
+              "focus-old-forward": {
+                "median": 12.397486214075471,
+                "min": 11.992342281575066,
+                "max": 15.379338327708888
+              },
+              "focus-old-reverse": {
+                "median": 11.874876620728344,
+                "min": 11.57877704642915,
+                "max": 12.972714104379776
+              }
+            }
+          },
+          "new": {
+            "median": 14.020721988152465,
+            "min": 13.274315287362368,
+            "max": 18.44706762303941,
+            "samples": 40,
+            "processes": {
+              "focus-new-reverse": {
+                "median": 14.334824388650826,
+                "min": 13.414730925108847,
+                "max": 16.70449967784663
+              },
+              "focus-new-forward": {
+                "median": 13.786225846961262,
+                "min": 13.274315287362368,
+                "max": 18.44706762303941
+              }
+            }
+          }
+        },
+        "counts": {
+          "accepted": 59578,
+          "refused": 30057,
+          "completed": 65536,
+          "promoted": 59204,
+          "visits": 3839786,
+          "quanta": 30059,
+          "refill_boundaries": 30057,
+          "consumed": 1919893
+        },
+        "old_over_new": 0.8643664570619394
+      },
+      {
+        "case": "hot-width-manual-c1-h1",
+        "arms": {
+          "old": {
+            "median": 13.808112483351938,
+            "min": 13.30406902884692,
+            "max": 47.844578317645826,
+            "samples": 40,
+            "processes": {
+              "focus-old-forward": {
+                "median": 14.051149465100398,
+                "min": 13.388709683300059,
+                "max": 47.844578317645826
+              },
+              "focus-old-reverse": {
+                "median": 13.67280780751844,
+                "min": 13.30406902884692,
+                "max": 14.205639064260351
+              }
+            }
+          },
+          "new": {
+            "median": 13.981158324969153,
+            "min": 13.396826802327004,
+            "max": 22.98360794065086,
+            "samples": 40,
+            "processes": {
+              "focus-new-reverse": {
+                "median": 13.952304894074826,
+                "min": 13.396826802327004,
+                "max": 21.72574617439618
+              },
+              "focus-new-forward": {
+                "median": 14.021232172834633,
+                "min": 13.615588993761632,
+                "max": 22.98360794065086
+              }
+            }
+          }
+        },
+        "counts": {
+          "accepted": 59578,
+          "refused": 30057,
+          "completed": 65536,
+          "promoted": 59204,
+          "visits": 3839786,
+          "quanta": 30059,
+          "refill_boundaries": 30057,
+          "consumed": 1919893
+        },
+        "old_over_new": 0.9876229252544713
+      },
+      {
+        "case": "hot-width-ring-c1-h1",
+        "arms": {
+          "old": {
+            "median": 14.616556235165188,
+            "min": 13.86343249337333,
+            "max": 20.228569508821586,
+            "samples": 40,
+            "processes": {
+              "focus-old-forward": {
+                "median": 15.097822899505337,
+                "min": 14.281424537721634,
+                "max": 20.228569508821586
+              },
+              "focus-old-reverse": {
+                "median": 14.42983827744567,
+                "min": 13.86343249337333,
+                "max": 15.538809194054044
+              }
+            }
+          },
+          "new": {
+            "median": 15.829938699708785,
+            "min": 14.926903738906283,
+            "max": 37.384549034763914,
+            "samples": 40,
+            "processes": {
+              "focus-new-reverse": {
+                "median": 16.489915323406045,
+                "min": 15.451868411416678,
+                "max": 37.384549034763914
+              },
+              "focus-new-forward": {
+                "median": 15.418175127468041,
+                "min": 14.926903738906283,
+                "max": 16.6450994925238
+              }
+            }
+          }
+        },
+        "counts": {
+          "accepted": 59578,
+          "refused": 30057,
+          "completed": 65536,
+          "promoted": 59204,
+          "visits": 3839786,
+          "quanta": 30059,
+          "refill_boundaries": 30057,
+          "consumed": 1919893
+        },
+        "old_over_new": 0.9233488841895566
+      }
+    ],
+    "limits": "Focused local VM followup of apparent marker-only C1/hinted regression; not native architecture qualification."
+  },
+  "source_note_discrepancies": [
+    {
+      "job_id": "20261013T013200Z-0865760d",
+      "source_note_discrepancy": {
+        "actual_captured_and_runtime_ring_sha256": "bc98eb245dda4b33130bb8a2688a49c2673663caa86daa084c55db0657c6142f",
+        "stale_copied_note_sha256": "4c116153c9a1a909d9688a5c2c97cb940bf9130097fa4bd70327fb0c26620752",
+        "interpretation": "Classify this job by actual source bytes, retaining the stale copy-note discrepancy."
+      },
+      "qualified_timing_rows_retained": 0
+    },
+    {
+      "job_id": "20261013T013206Z-726128bc",
+      "source_note_discrepancy": {
+        "actual_captured_and_runtime_ring_sha256": "bc98eb245dda4b33130bb8a2688a49c2673663caa86daa084c55db0657c6142f",
+        "stale_copied_note_sha256": "4c116153c9a1a909d9688a5c2c97cb940bf9130097fa4bd70327fb0c26620752",
+        "interpretation": "Classify this job by actual source bytes, retaining the stale copy-note discrepancy."
+      },
+      "qualified_timing_rows_retained": 0
+    },
+    {
+      "job_id": "20261013T013332Z-458c5129",
+      "source_note_discrepancy": {
+        "actual_captured_and_runtime_ring_sha256": "bc98eb245dda4b33130bb8a2688a49c2673663caa86daa084c55db0657c6142f",
+        "stale_copied_note_sha256": "4c116153c9a1a909d9688a5c2c97cb940bf9130097fa4bd70327fb0c26620752",
+        "interpretation": "Classify this job by actual source bytes, retaining the stale copy-note discrepancy."
+      },
+      "qualified_timing_rows_retained": 0
+    }
+  ],
+  "raw_local_files": [
+    {
+      "source": "build/loom-ring-review-20261013/streampack-local/focus-old-forward/01-hot-direct-manual-c1-h1.txt",
+      "retained_as": "marker-rejected/local/focus-old-forward/01-hot-direct-manual-c1-h1.txt",
+      "sha256": "d3e736dafb73a6141d9c1248cd0b2474fa76b715a6c42b8455a371facfdf72bc"
+    },
+    {
+      "source": "build/loom-ring-review-20261013/streampack-local/focus-old-forward/02-hot-direct-ring-c1-h1.txt",
+      "retained_as": "marker-rejected/local/focus-old-forward/02-hot-direct-ring-c1-h1.txt",
+      "sha256": "836eb13d2fb04e7d62ca10b43194c80b6491c543eca12069ef7b691ddfb46e4a"
+    },
+    {
+      "source": "build/loom-ring-review-20261013/streampack-local/focus-old-forward/03-hot-width-manual-c1-h1.txt",
+      "retained_as": "marker-rejected/local/focus-old-forward/03-hot-width-manual-c1-h1.txt",
+      "sha256": "522217ae6fb2dc661b50c59fe138143db5d31786d0990556ea2649908abe1f6a"
+    },
+    {
+      "source": "build/loom-ring-review-20261013/streampack-local/focus-old-forward/04-hot-width-ring-c1-h1.txt",
+      "retained_as": "marker-rejected/local/focus-old-forward/04-hot-width-ring-c1-h1.txt",
+      "sha256": "1e11703041c8e518d91752df177956d0e48c896aa7c0b31391f2f5bc10807479"
+    },
+    {
+      "source": "build/loom-ring-review-20261013/streampack-local/focus-old-forward/measure.json",
+      "retained_as": "marker-rejected/local/focus-old-forward/measure.json",
+      "sha256": "ef4af19eab2a868b7d33320509b027738b2bbb4eeb2e79ff06a7fecaa9622615"
+    },
+    {
+      "source": "build/loom-ring-review-20261013/streampack-local/focus-old-forward/source-receipt",
+      "retained_as": "marker-rejected/local/focus-old-forward/source-receipt",
+      "sha256": "8ea63b16375a38d21d4cd963bf181c1bc86b6aeff3dfc8d8184829d306448958"
+    },
+    {
+      "source": "build/loom-ring-review-20261013/streampack-local/focus-old-forward/cases.json",
+      "retained_as": "marker-rejected/local/focus-old-forward/cases.json",
+      "sha256": "1085ba37b5fecf612d1f127a04c775132ddfc57b12dba4e89ccc0207d846480f"
+    },
+    {
+      "source": "build/loom-ring-review-20261013/streampack-local/focus-new-reverse/01-hot-width-ring-c1-h1.txt",
+      "retained_as": "marker-rejected/local/focus-new-reverse/01-hot-width-ring-c1-h1.txt",
+      "sha256": "00450cf870945105607ca13c0275dea26eef03b60cb758ad460a0306257d04ee"
+    },
+    {
+      "source": "build/loom-ring-review-20261013/streampack-local/focus-new-reverse/02-hot-width-manual-c1-h1.txt",
+      "retained_as": "marker-rejected/local/focus-new-reverse/02-hot-width-manual-c1-h1.txt",
+      "sha256": "da91d1e51d0334faafd2e77ca28e513a8710f7d865219a060c07241e6d640bea"
+    },
+    {
+      "source": "build/loom-ring-review-20261013/streampack-local/focus-new-reverse/03-hot-direct-ring-c1-h1.txt",
+      "retained_as": "marker-rejected/local/focus-new-reverse/03-hot-direct-ring-c1-h1.txt",
+      "sha256": "dbd0991f2d5c3f4eaa0a7b462308191c518bbf1f503cad9923d693c969b60352"
+    },
+    {
+      "source": "build/loom-ring-review-20261013/streampack-local/focus-new-reverse/04-hot-direct-manual-c1-h1.txt",
+      "retained_as": "marker-rejected/local/focus-new-reverse/04-hot-direct-manual-c1-h1.txt",
+      "sha256": "a393429fa794d6e91215ca99b8ad426a44cae537c66a116a5ace4649218bb0a2"
+    },
+    {
+      "source": "build/loom-ring-review-20261013/streampack-local/focus-new-reverse/measure.json",
+      "retained_as": "marker-rejected/local/focus-new-reverse/measure.json",
+      "sha256": "bf6cca570420948f4fc443c4a15935ef674a4176837b873c22e04c45ea603495"
+    },
+    {
+      "source": "build/loom-ring-review-20261013/streampack-local/focus-new-reverse/source-receipt",
+      "retained_as": "marker-rejected/local/focus-new-reverse/source-receipt",
+      "sha256": "8ea63b16375a38d21d4cd963bf181c1bc86b6aeff3dfc8d8184829d306448958"
+    },
+    {
+      "source": "build/loom-ring-review-20261013/streampack-local/focus-new-reverse/cases.json",
+      "retained_as": "marker-rejected/local/focus-new-reverse/cases.json",
+      "sha256": "8458a0c0c471390893c64b253698e8bddeaee4514e5b0137ebad65142ababc40"
+    },
+    {
+      "source": "build/loom-ring-review-20261013/streampack-local/focus-new-forward/01-hot-direct-manual-c1-h1.txt",
+      "retained_as": "marker-rejected/local/focus-new-forward/01-hot-direct-manual-c1-h1.txt",
+      "sha256": "ed07d70cf3b810f8b99a01ed294b01b5a428c76502b7c632e091f38767745bb1"
+    },
+    {
+      "source": "build/loom-ring-review-20261013/streampack-local/focus-new-forward/02-hot-direct-ring-c1-h1.txt",
+      "retained_as": "marker-rejected/local/focus-new-forward/02-hot-direct-ring-c1-h1.txt",
+      "sha256": "3af75fdab3488655ec73fd2c8b89a31e3f2f1ba35f355b73f573f2b957ef19c8"
+    },
+    {
+      "source": "build/loom-ring-review-20261013/streampack-local/focus-new-forward/03-hot-width-manual-c1-h1.txt",
+      "retained_as": "marker-rejected/local/focus-new-forward/03-hot-width-manual-c1-h1.txt",
+      "sha256": "acddfba0ce33ed5aefb9926d9c7c45c7b3deddcbe62090a3f6d771e14016f321"
+    },
+    {
+      "source": "build/loom-ring-review-20261013/streampack-local/focus-new-forward/04-hot-width-ring-c1-h1.txt",
+      "retained_as": "marker-rejected/local/focus-new-forward/04-hot-width-ring-c1-h1.txt",
+      "sha256": "8a0dfd9b69a10f9b08d27e958dec76ad319ed2b7edab1bb9b382a50ba681396e"
+    },
+    {
+      "source": "build/loom-ring-review-20261013/streampack-local/focus-new-forward/measure.json",
+      "retained_as": "marker-rejected/local/focus-new-forward/measure.json",
+      "sha256": "3327fd7ac0630aa5ef674122d4a48221fd05287194991cbc869bb2cd437157e5"
+    },
+    {
+      "source": "build/loom-ring-review-20261013/streampack-local/focus-new-forward/source-receipt",
+      "retained_as": "marker-rejected/local/focus-new-forward/source-receipt",
+      "sha256": "8ea63b16375a38d21d4cd963bf181c1bc86b6aeff3dfc8d8184829d306448958"
+    },
+    {
+      "source": "build/loom-ring-review-20261013/streampack-local/focus-new-forward/cases.json",
+      "retained_as": "marker-rejected/local/focus-new-forward/cases.json",
+      "sha256": "1085ba37b5fecf612d1f127a04c775132ddfc57b12dba4e89ccc0207d846480f"
+    },
+    {
+      "source": "build/loom-ring-review-20261013/streampack-local/focus-old-reverse/01-hot-width-ring-c1-h1.txt",
+      "retained_as": "marker-rejected/local/focus-old-reverse/01-hot-width-ring-c1-h1.txt",
+      "sha256": "196cf0951fe75fb8887ef7473a65cc5939136b0a48c3b0ad265351f68578effb"
+    },
+    {
+      "source": "build/loom-ring-review-20261013/streampack-local/focus-old-reverse/02-hot-width-manual-c1-h1.txt",
+      "retained_as": "marker-rejected/local/focus-old-reverse/02-hot-width-manual-c1-h1.txt",
+      "sha256": "706b507151d26cdc134dadb8d94404861902d51523bb2a69ea18d73ddd79d80e"
+    },
+    {
+      "source": "build/loom-ring-review-20261013/streampack-local/focus-old-reverse/03-hot-direct-ring-c1-h1.txt",
+      "retained_as": "marker-rejected/local/focus-old-reverse/03-hot-direct-ring-c1-h1.txt",
+      "sha256": "6c910649e8488f4b15f276b563c13bb289df33f507c8e7028a1fe03d4ecb987a"
+    },
+    {
+      "source": "build/loom-ring-review-20261013/streampack-local/focus-old-reverse/04-hot-direct-manual-c1-h1.txt",
+      "retained_as": "marker-rejected/local/focus-old-reverse/04-hot-direct-manual-c1-h1.txt",
+      "sha256": "afa3817dca657ce9ddf7cfea460fec6bf1a2e0cc5389499f877bea2a4169c4fe"
+    },
+    {
+      "source": "build/loom-ring-review-20261013/streampack-local/focus-old-reverse/measure.json",
+      "retained_as": "marker-rejected/local/focus-old-reverse/measure.json",
+      "sha256": "e59644733e682504e3955c4e6aea3ef53e46985d9cfe07bd7b02007ab54d7b06"
+    },
+    {
+      "source": "build/loom-ring-review-20261013/streampack-local/focus-old-reverse/source-receipt",
+      "retained_as": "marker-rejected/local/focus-old-reverse/source-receipt",
+      "sha256": "8ea63b16375a38d21d4cd963bf181c1bc86b6aeff3dfc8d8184829d306448958"
+    },
+    {
+      "source": "build/loom-ring-review-20261013/streampack-local/focus-old-reverse/cases.json",
+      "retained_as": "marker-rejected/local/focus-old-reverse/cases.json",
+      "sha256": "8458a0c0c471390893c64b253698e8bddeaee4514e5b0137ebad65142ababc40"
+    }
+  ],
+  "raw_rows": "local.csv",
+  "local_rows": 320,
+  "limits": [
+    "Local OrbStack VM screen, not native performance qualification.",
+    "No remote archive was made for this local screen; selected raw logs are retained here.",
+    "Source archives of native marker jobs contain the exact bc98 header; copied source note described a different later layout hash."
+  ]
+}

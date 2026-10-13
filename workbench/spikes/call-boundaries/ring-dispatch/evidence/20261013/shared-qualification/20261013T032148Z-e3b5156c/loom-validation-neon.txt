@@ -1,0 +1,104 @@
+[1/63] Building CXX object ikea/CMakeFiles/ikea_core.dir/src/overlap.cpp.o
+[2/63] Linking CXX static library ikea/libikea_core.a
+[3/63] Building CXX object ikea/CMakeFiles/ikea_seriespack.dir/src/seriespack/readers.cpp.o
+[4/63] Building CXX object ikea/CMakeFiles/ikea_seriespack.dir/src/seriespack/admission.cpp.o
+[5/63] Building CXX object ikea/CMakeFiles/ikea_seriespack.dir/src/seriespack/representation.cpp.o
+[6/63] Linking CXX static library ikea/libikea_seriespack.a
+[7/63] Building CXX object ikea/CMakeFiles/ikea_tuplepack.dir/src/tuplepack/description.cpp.o
+[8/63] Building CXX object ikea/CMakeFiles/ikea_tuplepack.dir/src/tuplepack/construction.cpp.o
+[9/63] Building CXX object ikea/CMakeFiles/ikea_tuplepack.dir/src/tuplepack/prepare.cpp.o
+[10/63] Building CXX object ikea/CMakeFiles/ikea_tuplepack.dir/src/tuplepack/kernels.cpp.o
+[11/63] Building CXX object ikea/CMakeFiles/ikea_tuplepack.dir/src/tuplepack/gpr.cpp.o
+[12/63] Building CXX object ikea/CMakeFiles/ikea_tuplepack.dir/src/tuplepack/routes.cpp.o
+[13/63] Building CXX object ikea/CMakeFiles/ikea_tuplepack.dir/src/tuplepack/packet_layout.cpp.o
+[14/63] Building CXX object ikea/CMakeFiles/ikea_tuplepack.dir/src/tuplepack/packet_prepare.cpp.o
+[15/63] Building CXX object ikea/CMakeFiles/ikea_tuplepack.dir/src/tuplepack/packet.cpp.o
+[16/63] Linking CXX static library ikea/libikea_tuplepack.a
+[17/63] Building CXX object orbital/CMakeFiles/orbital.dir/src/types.cpp.o
+[18/63] Building CXX object orbital/CMakeFiles/orbital.dir/src/worker.cpp.o
+[19/63] Building CXX object orbital/CMakeFiles/orbital.dir/src/platform.cpp.o
+[20/63] Building CXX object orbital/CMakeFiles/orbital.dir/src/object/storage.cpp.o
+[21/63] Building CXX object orbital/CMakeFiles/orbital.dir/src/object/representation.cpp.o
+[22/63] Building CXX object orbital/CMakeFiles/orbital.dir/src/allocation/allocation.cpp.o
+[23/63] Building CXX object orbital/CMakeFiles/orbital.dir/src/allocation/arena.cpp.o
+[24/63] Building CXX object orbital/CMakeFiles/orbital.dir/src/allocation/group.cpp.o
+[25/63] Building CXX object orbital/CMakeFiles/orbital.dir/src/allocation/window.cpp.o
+[26/63] Building CXX object orbital/CMakeFiles/orbital.dir/src/allocation/finite.cpp.o
+[27/63] Linking CXX static library orbital/liborbital.a
+[28/63] Building CXX object loom/CMakeFiles/loom.dir/src/worker.cpp.o
+[29/63] Building CXX object loom/CMakeFiles/loom.dir/src/ring.cpp.o
+[30/63] Building CXX object loom/CMakeFiles/loom.dir/src/hints.cpp.o
+[31/63] Building CXX object loom/CMakeFiles/loom.dir/src/hardware.cpp.o
+[32/63] Linking CXX static library loom/libloom.a
+[33/63] Building CXX object loom/CMakeFiles/loom_worker_check.dir/test/worker.cpp.o
+[34/63] Linking CXX executable loom/loom_worker_check
+[35/63] Building CXX object loom/CMakeFiles/loom_capacity_check.dir/test/capacity.cpp.o
+[36/63] Linking CXX executable loom/loom_capacity_check
+[37/63] Building CXX object loom/CMakeFiles/loom_ring_check.dir/test/ring.cpp.o
+[38/63] Linking CXX executable loom/loom_ring_check
+[39/63] Building CXX object loom/CMakeFiles/loom_ring_rotation_check.dir/test/ring_rotation.cpp.o
+[40/63] Linking CXX executable loom/loom_ring_rotation_check
+[41/63] Building CXX object loom/CMakeFiles/loom_ring_shared_check.dir/test/ring_shared.cpp.o
+[42/63] Linking CXX executable loom/loom_ring_shared_check
+[43/63] Building CXX object loom/CMakeFiles/loom_cohort_check.dir/test/cohort.cpp.o
+[44/63] Linking CXX executable loom/loom_cohort_check
+[45/63] Building CXX object loom/CMakeFiles/loom_hint_check.dir/test/hints.cpp.o
+[46/63] Linking CXX executable loom/loom_hint_check
+[47/63] Building CXX object loom/CMakeFiles/loom_hardware_check.dir/test/hardware.cpp.o
+[48/63] Linking CXX executable loom/loom_hardware_check
+[49/63] Building CXX object loom/CMakeFiles/loom_example_hints.dir/examples/hints.cpp.o
+[50/63] Linking CXX executable loom/loom_example_hints
+[51/63] Building CXX object loom/CMakeFiles/loom_example_hardware.dir/examples/hardware.cpp.o
+[52/63] Linking CXX executable loom/loom_example_hardware
+[53/63] Building CXX object loom/CMakeFiles/loom_example_allocation.dir/examples/allocation.cpp.o
+[54/63] Linking CXX executable loom/loom_example_allocation
+[55/63] Building CXX object loom/CMakeFiles/loom_example_capacity.dir/examples/capacity.cpp.o
+[56/63] Linking CXX executable loom/loom_example_capacity
+[57/63] Building CXX object loom/CMakeFiles/loom_example_preparation.dir/examples/preparation.cpp.o
+[58/63] Linking CXX executable loom/loom_example_preparation
+[59/63] Building CXX object loom/CMakeFiles/loom_example_partition.dir/examples/partition.cpp.o
+[60/63] Linking CXX executable loom/loom_example_partition
+[61/63] Building CXX object loom/CMakeFiles/loom_budget_check.dir/test/budget.cpp.o
+[62/63] Linking CXX executable loom/loom_budget_check
+[62/63] cd /opt/sixdb/source/build/loom-shared-neon/loom && /usr/bin/ctest --test-dir /opt/sixdb/source/build/loom-shared-neon --output-on-failure --no-tests=error -L "^loom-runtime\$"
+Internal ctest changing into directory: /opt/sixdb/source/build/loom-shared-neon
+Test project /opt/sixdb/source/build/loom-shared-neon
+      Start 47: loom_worker_check
+ 1/16 Test #47: loom_worker_check .................   Passed    0.01 sec
+      Start 48: loom_capacity_check
+ 2/16 Test #48: loom_capacity_check ...............   Passed    0.00 sec
+      Start 49: loom_ring_check
+ 3/16 Test #49: loom_ring_check ...................   Passed    0.00 sec
+      Start 50: loom_ring_rotation_check
+ 4/16 Test #50: loom_ring_rotation_check ..........   Passed    0.00 sec
+      Start 51: loom_ring_shared_check
+ 5/16 Test #51: loom_ring_shared_check ............   Passed    0.00 sec
+      Start 52: loom_cohort_check
+ 6/16 Test #52: loom_cohort_check .................   Passed    0.00 sec
+      Start 53: loom_hint_check
+ 7/16 Test #53: loom_hint_check ...................   Passed    0.01 sec
+      Start 54: loom_hardware_check
+ 8/16 Test #54: loom_hardware_check ...............   Passed    0.13 sec
+      Start 55: loom_example_hints
+ 9/16 Test #55: loom_example_hints ................   Passed    0.10 sec
+      Start 56: loom_example_hardware
+10/16 Test #56: loom_example_hardware .............   Passed    0.00 sec
+      Start 57: loom_example_allocation
+11/16 Test #57: loom_example_allocation ...........   Passed    0.00 sec
+      Start 58: loom_example_capacity
+12/16 Test #58: loom_example_capacity .............   Passed    0.00 sec
+      Start 59: loom_example_preparation_window
+13/16 Test #59: loom_example_preparation_window ...   Passed    0.00 sec
+      Start 60: loom_example_preparation_finite
+14/16 Test #60: loom_example_preparation_finite ...   Passed    0.00 sec
+      Start 61: loom_example_partition
+15/16 Test #61: loom_example_partition ............   Passed    0.02 sec
+      Start 62: loom_budget_check
+16/16 Test #62: loom_budget_check .................   Passed    0.01 sec
+
+100% tests passed, 0 tests failed out of 16
+
+Label Time Summary:
+loom-runtime    =   0.31 sec*proc (16 tests)
+
+Total Test time (real) =   0.38 sec

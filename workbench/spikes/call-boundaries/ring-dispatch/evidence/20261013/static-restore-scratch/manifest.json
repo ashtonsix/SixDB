@@ -1,0 +1,89 @@
+{
+  "schema": 1,
+  "selection": "bounded production Frame-pointer composition + rejected static/dummy controls",
+  "file_count": 20,
+  "selected_bytes": 72192,
+  "verification": "exact source copies, exact header, 66 complete sample rows with executable order and work/checksum validated; reproduce.sh bash -n passes; no new compilation or timing iteration during selection",
+  "files": {
+    "builtin-codegen.txt": {
+      "bytes": 919,
+      "sha256": "4f69751ce8cf0e5d58d73172f6b9b0ac53df59940fa0ff5e3776fd4245472606"
+    },
+    "headers/loom/ring.h": {
+      "bytes": 19121,
+      "sha256": "c20f1d37871f9652035e63b0bfd33068e394e06ad91e55a1be29f9976ae0f117"
+    },
+    "metadata-0.asm": {
+      "bytes": 2177,
+      "sha256": "ee2038793079c03375791d3b00ff13e687df2b62f00f822fde298f893a512c75"
+    },
+    "metadata-1.asm": {
+      "bytes": 2706,
+      "sha256": "070f36a713b8a069965a9d495315438e639865afbb2d72d410375059b87c85ed"
+    },
+    "metadata-2.asm": {
+      "bytes": 3121,
+      "sha256": "54cbed40ebf148454a4b21e8c38b8602452777514ef54d02ddccca9535e813e5"
+    },
+    "metadata-3.asm": {
+      "bytes": 3121,
+      "sha256": "54cbed40ebf148454a4b21e8c38b8602452777514ef54d02ddccca9535e813e5"
+    },
+    "production-check-0.txt": {
+      "bytes": 89,
+      "sha256": "fa168faedf3357ca01d0456c81fbc311bf20bdb5392478504c74b14b6f3075bf"
+    },
+    "production-check-1.txt": {
+      "bytes": 88,
+      "sha256": "875dd66b302c21f38d7fd7061d5f917bad1cc0ebf78e322f2e3cec045173e06b"
+    },
+    "production-metadata-0.asm": {
+      "bytes": 6155,
+      "sha256": "5aa517d2d1edc15752c129618966ec89bd0648cd218a5827092bff713016e02e"
+    },
+    "production-metadata-1.asm": {
+      "bytes": 1414,
+      "sha256": "a4abf8b661c946acc3d1aacf41fdee32517b8e87e3a4ae3f3ae0f50b66917d79"
+    },
+    "production-receipt.json": {
+      "bytes": 3085,
+      "sha256": "b65096ad6a453cccf2c07fa42534a8750e79f371cfec40aa9b607c6282ee0fd8"
+    },
+    "production.cpp": {
+      "bytes": 5584,
+      "sha256": "954441d7cf0189699a08be4cb898a10f7104582b1d2b4d4660900ab1678f301e"
+    },
+    "prototype-checks.txt": {
+      "bytes": 208,
+      "sha256": "64c541ed68e8b80e397ecf8ba74d18a3c4bdf3f786ba4d8d23de7c47b93c6ed7"
+    },
+    "prototype-receipt.json": {
+      "bytes": 3418,
+      "sha256": "a9ae7f32d73ce13ec6e7e3b1718a2493561b45646c33431f1a1c5360755a20d3"
+    },
+    "prototype.cpp": {
+      "bytes": 4522,
+      "sha256": "aaa0cbc7c0e917a4c6b7275e110a0ca8b4de0a6fc421941f551b74acbf6b0616"
+    },
+    "provenance.json": {
+      "bytes": 5038,
+      "sha256": "0fbebcf9f7709a150025541846b2bd38f52425e5146c28e6db2f374dcec8dc6f"
+    },
+    "reproduce.sh": {
+      "bytes": 2810,
+      "sha256": "80e143f3ab7de6abc10d35da331b241d2e50460eb634c4d77e39209a8c0ab240"
+    },
+    "reproduction.txt": {
+      "bytes": 3088,
+      "sha256": "c0fa39ea85eb005714d7dc18fdbff1065e1e9bf25a3d506ae32c633e8eb03050"
+    },
+    "selection.json": {
+      "bytes": 2940,
+      "sha256": "b8a7e933c0805aa9bcd65441c9b5dcd48e8c506cabaecb1c502720b2aa3f7f31"
+    },
+    "warm-samples.csv": {
+      "bytes": 2588,
+      "sha256": "e9bcf12ccb7d3a3a8afda6a3dcbfb8ad635946f7005144d09cd4a71a4cb1dc70"
+    }
+  }
+}

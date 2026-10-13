@@ -1,0 +1,1445 @@
+{
+  "format": 1,
+  "scope": "Native compiled Hashtable N16 two-stage callbacks; valid common continuation handoff, with rare branches recorded separately. Instruction counts are static executed-path counts, not cycles or micro-ops.",
+  "baseline_v2": {
+    "assembly": {
+      "path": "build/workers/20261013T010243Z-8c261d06/results/assembly-neon.txt",
+      "sha256": "2da42e86ead54cff15bd41e30cd507806029981c81cc4c81494ab8c90d4e7a8b"
+    },
+    "callback_address": "0x116a0",
+    "common_path_instructions": 21,
+    "path": [
+      {
+        "address": "0x117b4",
+        "instruction": "adrp x8, 0x11000",
+        "line": 12920
+      },
+      {
+        "address": "0x117b8",
+        "instruction": "add x8, x8, #0x840",
+        "line": 12921
+      },
+      {
+        "address": "0x117bc",
+        "instruction": "str x8, [x21]",
+        "line": 12922
+      },
+      {
+        "address": "0x117c0",
+        "instruction": "ldrb w8, [x21, #0x40]",
+        "line": 12923
+      },
+      {
+        "address": "0x117c4",
+        "instruction": "cmp w8, #0x1",
+        "line": 12924
+      },
+      {
+        "address": "0x117c8",
+        "instruction": "b.ne 0x117d4",
+        "line": 12925
+      },
+      {
+        "address": "0x117d4",
+        "instruction": "ldr x8, [x20, #0xb0]",
+        "line": 12928
+      },
+      {
+        "address": "0x117d8",
+        "instruction": "stp x23, x22, [x21, #0x8]",
+        "line": 12929
+      },
+      {
+        "address": "0x117dc",
+        "instruction": "cbz x8, 0x117ec",
+        "line": 12930
+      },
+      {
+        "address": "0x117e0",
+        "instruction": "ldp x8, x9, [x20, #0x108]",
+        "line": 12931
+      },
+      {
+        "address": "0x117e4",
+        "instruction": "cmp x8, x9",
+        "line": 12932
+      },
+      {
+        "address": "0x117e8",
+        "instruction": "b.ne 0x117f4",
+        "line": 12933
+      },
+      {
+        "address": "0x117f4",
+        "instruction": "ldr x21, [x20, #0xa0]",
+        "line": 12936
+      },
+      {
+        "address": "0x117f8",
+        "instruction": "add x8, x8, #0x1",
+        "line": 12937
+      },
+      {
+        "address": "0x117fc",
+        "instruction": "str x8, [x20, #0x108]",
+        "line": 12938
+      },
+      {
+        "address": "0x11800",
+        "instruction": "ldr x9, [x21, #0x28]",
+        "line": 12939
+      },
+      {
+        "address": "0x11804",
+        "instruction": "ldr x0, [x21]",
+        "line": 12940
+      },
+      {
+        "address": "0x11808",
+        "instruction": "ldp x23, x22, [x21, #0x8]",
+        "line": 12941
+      },
+      {
+        "address": "0x1180c",
+        "instruction": "str x9, [x20, #0xa0]",
+        "line": 12942
+      },
+      {
+        "address": "0x11810",
+        "instruction": "ldp x29, x30, [sp], #0x10",
+        "line": 12943
+      },
+      {
+        "address": "0x11814",
+        "instruction": "br x0",
+        "line": 12944
+      }
+    ]
+  },
+  "targets": [
+    {
+      "hardware": "Neoverse V2",
+      "job_id": "20261013T014818Z-c881630c",
+      "assembly": {
+        "path": "build/workers/20261013T014818Z-c881630c/results/assembly-neon-explicit.txt",
+        "sha256": "dedaa634d6a32b17d25878981267ce1f34f0d88d34978ee861b6cf1ae4860fb5"
+      },
+      "sources": {
+        "controls/old/loom/ring.h": "d152716cc8ea0484c48218a3ebb9979a64a74dfd86bf42c06b8b9d35d5f35ef4",
+        "controls/new/loom/ring.h": "292d2ee6b34d5fb92fb6a16d64f97b0e1d961da5db806fb03d607cd7014735d2",
+        "controls/new/ring.cpp": "2af0eea70e9b0bb211e5e4698b81386822787ea1977a071ccec2f5a1cfaa979a",
+        "controls/explicit/ring.cpp": "8243955c30b2b3ff265c0193b49c9ccc44cf6b9054ae131ff493732fb868e19b",
+        "workbench/spikes/hashtable/ring.cpp": "97b3a05928aa51051376d7c3fae530ed6b786e9e5801c8211f176ad239be459a",
+        "workbench/spikes/hashtable/map.h": "865404bd45748f1a08aba58a55b0bb8f19546c65a397171e3a9765c0821eb548",
+        "workbench/spikes/hashtable/CMakeLists.txt": "66c415597f240bce8947c3aa2a961e16132a565c9119e851c74d78979c8c58ca",
+        "run-dispatch.sh": "5ca9132e5346f11328c9a42db14ae8f95bec17c5f54e5e33a61f0a979ccb79a1"
+      },
+      "callbacks": [
+        {
+          "stage": "metadata",
+          "hints": false,
+          "hint_code": 0,
+          "address": "0x102d0",
+          "instruction_count_including_cold_blocks_and_padding": 48,
+          "ordinary_calls": [],
+          "stack_instructions": [],
+          "atomic_or_clock_instructions": []
+        },
+        {
+          "stage": "payload",
+          "hints": false,
+          "hint_code": 0,
+          "address": "0x108a0",
+          "instruction_count_including_cold_blocks_and_padding": 100,
+          "ordinary_calls": [
+            {
+              "address": "0x10924",
+              "instruction": "bl 0xfa00",
+              "line": 11974,
+              "category": "synchronous_downstream_map",
+              "target": "hashtable_spike::basic_map<false, 1u, 64u, 64u, false, 0u, 0u>::get_downstream(unsigned long) const"
+            }
+          ],
+          "stack_instructions": [
+            {
+              "address": "0x108a0",
+              "instruction": "stp x29, x30, [sp, #-0x10]!",
+              "line": 11941
+            },
+            {
+              "address": "0x10a14",
+              "instruction": "ldp x29, x30, [sp], #0x10",
+              "line": 12034
+            },
+            {
+              "address": "0x10a1c",
+              "instruction": "ldp x29, x30, [sp], #0x10",
+              "line": 12036
+            },
+            {
+              "address": "0x10a28",
+              "instruction": "ldp x29, x30, [sp], #0x10",
+              "line": 12039
+            }
+          ],
+          "atomic_or_clock_instructions": []
+        },
+        {
+          "stage": "metadata",
+          "hints": true,
+          "hint_code": 1,
+          "address": "0x11640",
+          "instruction_count_including_cold_blocks_and_padding": 96,
+          "ordinary_calls": [
+            {
+              "address": "0x117a8",
+              "instruction": "bl 0x5c50",
+              "line": 12917,
+              "category": "invalid_window_fwrite",
+              "target": "fwrite@plt"
+            },
+            {
+              "address": "0x117ac",
+              "instruction": "bl 0x5ba0",
+              "line": 12918,
+              "category": "invalid_window_abort",
+              "target": "abort@plt"
+            }
+          ],
+          "stack_instructions": [
+            {
+              "address": "0x11640",
+              "instruction": "stp x29, x30, [sp, #-0x10]!",
+              "line": 12827
+            },
+            {
+              "address": "0x11778",
+              "instruction": "ldp x29, x30, [sp], #0x10",
+              "line": 12905
+            },
+            {
+              "address": "0x11784",
+              "instruction": "ldp x29, x30, [sp], #0x10",
+              "line": 12908
+            }
+          ],
+          "atomic_or_clock_instructions": []
+        },
+        {
+          "stage": "payload",
+          "hints": true,
+          "hint_code": 1,
+          "address": "0x117c0",
+          "instruction_count_including_cold_blocks_and_padding": 128,
+          "ordinary_calls": [
+            {
+              "address": "0x11844",
+              "instruction": "bl 0xfa00",
+              "line": 12958,
+              "category": "synchronous_downstream_map",
+              "target": "hashtable_spike::basic_map<false, 1u, 64u, 64u, false, 0u, 0u>::get_downstream(unsigned long) const"
+            },
+            {
+              "address": "0x119ac",
+              "instruction": "bl 0x5c50",
+              "line": 13048,
+              "category": "invalid_window_fwrite",
+              "target": "fwrite@plt"
+            },
+            {
+              "address": "0x119b0",
+              "instruction": "bl 0x5ba0",
+              "line": 13049,
+              "category": "invalid_window_abort",
+              "target": "abort@plt"
+            }
+          ],
+          "stack_instructions": [
+            {
+              "address": "0x117c0",
+              "instruction": "stp x29, x30, [sp, #-0x10]!",
+              "line": 12925
+            },
+            {
+              "address": "0x11974",
+              "instruction": "ldp x29, x30, [sp], #0x10",
+              "line": 13034
+            },
+            {
+              "address": "0x1197c",
+              "instruction": "ldp x29, x30, [sp], #0x10",
+              "line": 13036
+            },
+            {
+              "address": "0x11988",
+              "instruction": "ldp x29, x30, [sp], #0x10",
+              "line": 13039
+            }
+          ],
+          "atomic_or_clock_instructions": []
+        },
+        {
+          "stage": "metadata",
+          "hints": true,
+          "hint_code": 2,
+          "address": "0x11fa0",
+          "instruction_count_including_cold_blocks_and_padding": 96,
+          "ordinary_calls": [
+            {
+              "address": "0x12108",
+              "instruction": "bl 0x5c50",
+              "line": 13525,
+              "category": "invalid_window_fwrite",
+              "target": "fwrite@plt"
+            },
+            {
+              "address": "0x1210c",
+              "instruction": "bl 0x5ba0",
+              "line": 13526,
+              "category": "invalid_window_abort",
+              "target": "abort@plt"
+            }
+          ],
+          "stack_instructions": [
+            {
+              "address": "0x11fa0",
+              "instruction": "stp x29, x30, [sp, #-0x10]!",
+              "line": 13435
+            },
+            {
+              "address": "0x120d8",
+              "instruction": "ldp x29, x30, [sp], #0x10",
+              "line": 13513
+            },
+            {
+              "address": "0x120e4",
+              "instruction": "ldp x29, x30, [sp], #0x10",
+              "line": 13516
+            }
+          ],
+          "atomic_or_clock_instructions": []
+        },
+        {
+          "stage": "payload",
+          "hints": true,
+          "hint_code": 2,
+          "address": "0x12120",
+          "instruction_count_including_cold_blocks_and_padding": 128,
+          "ordinary_calls": [
+            {
+              "address": "0x121a4",
+              "instruction": "bl 0xfa00",
+              "line": 13566,
+              "category": "synchronous_downstream_map",
+              "target": "hashtable_spike::basic_map<false, 1u, 64u, 64u, false, 0u, 0u>::get_downstream(unsigned long) const"
+            },
+            {
+              "address": "0x1230c",
+              "instruction": "bl 0x5c50",
+              "line": 13656,
+              "category": "invalid_window_fwrite",
+              "target": "fwrite@plt"
+            },
+            {
+              "address": "0x12310",
+              "instruction": "bl 0x5ba0",
+              "line": 13657,
+              "category": "invalid_window_abort",
+              "target": "abort@plt"
+            }
+          ],
+          "stack_instructions": [
+            {
+              "address": "0x12120",
+              "instruction": "stp x29, x30, [sp, #-0x10]!",
+              "line": 13533
+            },
+            {
+              "address": "0x122d4",
+              "instruction": "ldp x29, x30, [sp], #0x10",
+              "line": 13642
+            },
+            {
+              "address": "0x122dc",
+              "instruction": "ldp x29, x30, [sp], #0x10",
+              "line": 13644
+            },
+            {
+              "address": "0x122e8",
+              "instruction": "ldp x29, x30, [sp], #0x10",
+              "line": 13647
+            }
+          ],
+          "atomic_or_clock_instructions": []
+        },
+        {
+          "stage": "metadata",
+          "hints": true,
+          "hint_code": 3,
+          "address": "0x12900",
+          "instruction_count_including_cold_blocks_and_padding": 96,
+          "ordinary_calls": [
+            {
+              "address": "0x12a68",
+              "instruction": "bl 0x5c50",
+              "line": 14133,
+              "category": "invalid_window_fwrite",
+              "target": "fwrite@plt"
+            },
+            {
+              "address": "0x12a6c",
+              "instruction": "bl 0x5ba0",
+              "line": 14134,
+              "category": "invalid_window_abort",
+              "target": "abort@plt"
+            }
+          ],
+          "stack_instructions": [
+            {
+              "address": "0x12900",
+              "instruction": "stp x29, x30, [sp, #-0x10]!",
+              "line": 14043
+            },
+            {
+              "address": "0x12a38",
+              "instruction": "ldp x29, x30, [sp], #0x10",
+              "line": 14121
+            },
+            {
+              "address": "0x12a44",
+              "instruction": "ldp x29, x30, [sp], #0x10",
+              "line": 14124
+            }
+          ],
+          "atomic_or_clock_instructions": []
+        },
+        {
+          "stage": "payload",
+          "hints": true,
+          "hint_code": 3,
+          "address": "0x12a80",
+          "instruction_count_including_cold_blocks_and_padding": 128,
+          "ordinary_calls": [
+            {
+              "address": "0x12b04",
+              "instruction": "bl 0xfa00",
+              "line": 14174,
+              "category": "synchronous_downstream_map",
+              "target": "hashtable_spike::basic_map<false, 1u, 64u, 64u, false, 0u, 0u>::get_downstream(unsigned long) const"
+            },
+            {
+              "address": "0x12c6c",
+              "instruction": "bl 0x5c50",
+              "line": 14264,
+              "category": "invalid_window_fwrite",
+              "target": "fwrite@plt"
+            },
+            {
+              "address": "0x12c70",
+              "instruction": "bl 0x5ba0",
+              "line": 14265,
+              "category": "invalid_window_abort",
+              "target": "abort@plt"
+            }
+          ],
+          "stack_instructions": [
+            {
+              "address": "0x12a80",
+              "instruction": "stp x29, x30, [sp, #-0x10]!",
+              "line": 14141
+            },
+            {
+              "address": "0x12c34",
+              "instruction": "ldp x29, x30, [sp], #0x10",
+              "line": 14250
+            },
+            {
+              "address": "0x12c3c",
+              "instruction": "ldp x29, x30, [sp], #0x10",
+              "line": 14252
+            },
+            {
+              "address": "0x12c48",
+              "instruction": "ldp x29, x30, [sp], #0x10",
+              "line": 14255
+            }
+          ],
+          "atomic_or_clock_instructions": []
+        }
+      ],
+      "common_handoff_clock_or_profile_atomic": false,
+      "common_handoff_ordinary_helper": false,
+      "remaining_work": "Map/probe fields and cached native line geometry are reloaded at stage entry; this does not establish an isolated cost. Secondary fallback remains synchronous.",
+      "budget_register": "x21",
+      "ring_register": "x20",
+      "slot_register": "x22",
+      "job_register": "x23",
+      "context_register": "x24",
+      "metadata_common_path_instructions_including_target_and_frame_restore": 11,
+      "metadata_common_path": [
+        {
+          "address": "0x11754",
+          "instruction": "adrp x8, 0x11000",
+          "line": 12896
+        },
+        {
+          "address": "0x11758",
+          "instruction": "add x8, x8, #0x7c0",
+          "line": 12897
+        },
+        {
+          "address": "0x1175c",
+          "instruction": "str x8, [x22]",
+          "line": 12898
+        },
+        {
+          "address": "0x11760",
+          "instruction": "cbz x21, 0x11780",
+          "line": 12899
+        },
+        {
+          "address": "0x11764",
+          "instruction": "ldr x22, [x20, #0xa0]",
+          "line": 12900
+        },
+        {
+          "address": "0x11768",
+          "instruction": "sub x21, x21, #0x1",
+          "line": 12901
+        },
+        {
+          "address": "0x1176c",
+          "instruction": "ldp x0, x8, [x22]",
+          "line": 12902
+        },
+        {
+          "address": "0x11770",
+          "instruction": "str x8, [x20, #0xa0]",
+          "line": 12903
+        },
+        {
+          "address": "0x11774",
+          "instruction": "ldp x24, x23, [x22, #0x10]",
+          "line": 12904
+        },
+        {
+          "address": "0x11778",
+          "instruction": "ldp x29, x30, [sp], #0x10",
+          "line": 12905
+        },
+        {
+          "address": "0x1177c",
+          "instruction": "br x0",
+          "line": 12906
+        }
+      ],
+      "pure_resume_instructions": 7,
+      "pure_resume": [
+        {
+          "address": "0x10ae0",
+          "instruction": "cbz x21, 0x10afc",
+          "line": 12089
+        },
+        {
+          "address": "0x10ae4",
+          "instruction": "ldr x22, [x20, #0xa0]",
+          "line": 12090
+        },
+        {
+          "address": "0x10ae8",
+          "instruction": "sub x21, x21, #0x1",
+          "line": 12091
+        },
+        {
+          "address": "0x10aec",
+          "instruction": "ldp x0, x8, [x22]",
+          "line": 12092
+        },
+        {
+          "address": "0x10af0",
+          "instruction": "ldp x24, x23, [x22, #0x10]",
+          "line": 12093
+        },
+        {
+          "address": "0x10af4",
+          "instruction": "str x8, [x20, #0xa0]",
+          "line": 12094
+        },
+        {
+          "address": "0x10af8",
+          "instruction": "br x0",
+          "line": 12095
+        }
+      ],
+      "hot_slot_loads": "ldp x0,x8,[x22] loads function+next; ldp x24,x23,[x22,#16] loads cached Context and Job. Both pairs lie in the first32 bytes of each64-byte Slot.",
+      "metadata_frame_bytes": 16,
+      "payload_frame_bytes": 16,
+      "residual_invariants": [
+        {
+          "address": "0x11648",
+          "instruction": "ldr x9, [x23]",
+          "line": 12829
+        },
+        {
+          "address": "0x1164c",
+          "instruction": "ldp x8, x10, [x23, #0x10]",
+          "line": 12830
+        },
+        {
+          "address": "0x11650",
+          "instruction": "ldr w11, [x9, #0x5c]",
+          "line": 12831
+        },
+        {
+          "address": "0x11654",
+          "instruction": "ldr w12, [x9, #0x54]",
+          "line": 12832
+        },
+        {
+          "address": "0x1165c",
+          "instruction": "ldr w11, [x9, #0x4c]",
+          "line": 12834
+        },
+        {
+          "address": "0x116c8",
+          "instruction": "ldr w12, [x9, #0x50]",
+          "line": 12861
+        },
+        {
+          "address": "0x116d4",
+          "instruction": "ldr w14, [x9, #0x64]",
+          "line": 12864
+        },
+        {
+          "address": "0x116d8",
+          "instruction": "ldrb w9, [x9, #0x68]",
+          "line": 12865
+        },
+        {
+          "address": "0x116ec",
+          "instruction": "ldr x12, [x24, #0x8]",
+          "line": 12870
+        },
+        {
+          "address": "0x117c8",
+          "instruction": "ldr x19, [x23]",
+          "line": 12927
+        },
+        {
+          "address": "0x117cc",
+          "instruction": "ldr x10, [x23, #0x28]",
+          "line": 12928
+        },
+        {
+          "address": "0x117d0",
+          "instruction": "ldr x9, [x23, #0x18]",
+          "line": 12929
+        },
+        {
+          "address": "0x117dc",
+          "instruction": "ldp w15, w11, [x19, #0x4c]",
+          "line": 12932
+        },
+        {
+          "address": "0x11884",
+          "instruction": "ldrb w9, [x19, #0x298]",
+          "line": 12974
+        },
+        {
+          "address": "0x118b4",
+          "instruction": "ldr x9, [x19, #0x18]",
+          "line": 12986
+        },
+        {
+          "address": "0x118bc",
+          "instruction": "ldr x11, [x19, #0x7c0]",
+          "line": 12988
+        },
+        {
+          "address": "0x118d4",
+          "instruction": "ldp w12, w8, [x19, #0x5c]",
+          "line": 12994
+        },
+        {
+          "address": "0x1191c",
+          "instruction": "ldr x8, [x24, #0x8]",
+          "line": 13012
+        }
+      ]
+    },
+    {
+      "hardware": "Granite AVX512",
+      "job_id": "20261013T014818Z-0e3eca70",
+      "assembly": {
+        "path": "build/workers/20261013T014818Z-0e3eca70/results/assembly-avx512-explicit.txt",
+        "sha256": "2dac07373ba8674d3f6f5022b3a26b9be4a33f15da34f1ac865f1f912f69fffd"
+      },
+      "sources": {
+        "controls/old/loom/ring.h": "d152716cc8ea0484c48218a3ebb9979a64a74dfd86bf42c06b8b9d35d5f35ef4",
+        "controls/new/loom/ring.h": "292d2ee6b34d5fb92fb6a16d64f97b0e1d961da5db806fb03d607cd7014735d2",
+        "controls/new/ring.cpp": "2af0eea70e9b0bb211e5e4698b81386822787ea1977a071ccec2f5a1cfaa979a",
+        "controls/explicit/ring.cpp": "8243955c30b2b3ff265c0193b49c9ccc44cf6b9054ae131ff493732fb868e19b",
+        "workbench/spikes/hashtable/ring.cpp": "97b3a05928aa51051376d7c3fae530ed6b786e9e5801c8211f176ad239be459a",
+        "workbench/spikes/hashtable/map.h": "865404bd45748f1a08aba58a55b0bb8f19546c65a397171e3a9765c0821eb548",
+        "workbench/spikes/hashtable/CMakeLists.txt": "66c415597f240bce8947c3aa2a961e16132a565c9119e851c74d78979c8c58ca",
+        "run-dispatch.sh": "5ca9132e5346f11328c9a42db14ae8f95bec17c5f54e5e33a61f0a979ccb79a1"
+      },
+      "callbacks": [
+        {
+          "stage": "metadata",
+          "hints": false,
+          "hint_code": 0,
+          "address": "0x12230",
+          "instruction_count_including_cold_blocks_and_padding": 42,
+          "ordinary_calls": [],
+          "stack_instructions": [],
+          "atomic_or_clock_instructions": []
+        },
+        {
+          "stage": "payload",
+          "hints": false,
+          "hint_code": 0,
+          "address": "0x127a0",
+          "instruction_count_including_cold_blocks_and_padding": 118,
+          "ordinary_calls": [
+            {
+              "address": "0x1282f",
+              "instruction": "callq 0x119a0",
+              "line": 11920,
+              "category": "synchronous_downstream_map",
+              "target": "hashtable_spike::basic_map<false, 1u, 64u, 64u, false, 0u, 0u>::get_downstream(unsigned long) const"
+            }
+          ],
+          "stack_instructions": [
+            {
+              "address": "0x127a0",
+              "instruction": "pushq %rbp",
+              "line": 11881
+            },
+            {
+              "address": "0x127a1",
+              "instruction": "subq $0x10, %rsp",
+              "line": 11882
+            },
+            {
+              "address": "0x127a5",
+              "instruction": "movq %r14, 0x8(%rsp)",
+              "line": 11883
+            },
+            {
+              "address": "0x127aa",
+              "instruction": "movq %r12, (%rsp)",
+              "line": 11884
+            },
+            {
+              "address": "0x128fc",
+              "instruction": "movq 0x8(%rsp), %rcx",
+              "line": 11973
+            },
+            {
+              "address": "0x12909",
+              "instruction": "movq (%rsp), %r12",
+              "line": 11977
+            },
+            {
+              "address": "0x1292f",
+              "instruction": "addq $0x10, %rsp",
+              "line": 11985
+            },
+            {
+              "address": "0x12933",
+              "instruction": "popq %rbp",
+              "line": 11986
+            },
+            {
+              "address": "0x12936",
+              "instruction": "movq (%rsp), %r12",
+              "line": 11988
+            },
+            {
+              "address": "0x1293a",
+              "instruction": "movq 0x8(%rsp), %r14",
+              "line": 11989
+            },
+            {
+              "address": "0x1293f",
+              "instruction": "addq $0x10, %rsp",
+              "line": 11990
+            },
+            {
+              "address": "0x12943",
+              "instruction": "popq %rbp",
+              "line": 11991
+            },
+            {
+              "address": "0x12949",
+              "instruction": "movq (%rsp), %rax",
+              "line": 11993
+            },
+            {
+              "address": "0x12958",
+              "instruction": "addq $0x10, %rsp",
+              "line": 11995
+            },
+            {
+              "address": "0x1295c",
+              "instruction": "popq %rbp",
+              "line": 11996
+            }
+          ],
+          "atomic_or_clock_instructions": []
+        },
+        {
+          "stage": "metadata",
+          "hints": true,
+          "hint_code": 1,
+          "address": "0x13590",
+          "instruction_count_including_cold_blocks_and_padding": 89,
+          "ordinary_calls": [
+            {
+              "address": "0x136db",
+              "instruction": "callq 0x6820",
+              "line": 12849,
+              "category": "invalid_window_fwrite",
+              "target": "fwrite@plt"
+            },
+            {
+              "address": "0x136e0",
+              "instruction": "callq 0x6260",
+              "line": 12850,
+              "category": "invalid_window_abort",
+              "target": "abort@plt"
+            }
+          ],
+          "stack_instructions": [
+            {
+              "address": "0x13590",
+              "instruction": "pushq %rax",
+              "line": 12764
+            },
+            {
+              "address": "0x136af",
+              "instruction": "popq %rcx",
+              "line": 12839
+            },
+            {
+              "address": "0x136be",
+              "instruction": "popq %rax",
+              "line": 12842
+            }
+          ],
+          "atomic_or_clock_instructions": []
+        },
+        {
+          "stage": "payload",
+          "hints": true,
+          "hint_code": 1,
+          "address": "0x136f0",
+          "instruction_count_including_cold_blocks_and_padding": 142,
+          "ordinary_calls": [
+            {
+              "address": "0x1377f",
+              "instruction": "callq 0x119a0",
+              "line": 12894,
+              "category": "synchronous_downstream_map",
+              "target": "hashtable_spike::basic_map<false, 1u, 64u, 64u, false, 0u, 0u>::get_downstream(unsigned long) const"
+            },
+            {
+              "address": "0x138ff",
+              "instruction": "callq 0x6820",
+              "line": 12994,
+              "category": "invalid_window_fwrite",
+              "target": "fwrite@plt"
+            },
+            {
+              "address": "0x13904",
+              "instruction": "callq 0x6260",
+              "line": 12995,
+              "category": "invalid_window_abort",
+              "target": "abort@plt"
+            }
+          ],
+          "stack_instructions": [
+            {
+              "address": "0x136f0",
+              "instruction": "pushq %rbp",
+              "line": 12855
+            },
+            {
+              "address": "0x136f1",
+              "instruction": "subq $0x10, %rsp",
+              "line": 12856
+            },
+            {
+              "address": "0x136f5",
+              "instruction": "movq %r14, 0x8(%rsp)",
+              "line": 12857
+            },
+            {
+              "address": "0x136fa",
+              "instruction": "movq %r12, (%rsp)",
+              "line": 12858
+            },
+            {
+              "address": "0x13882",
+              "instruction": "movq 0x8(%rsp), %rcx",
+              "line": 12964
+            },
+            {
+              "address": "0x1388f",
+              "instruction": "movq (%rsp), %r12",
+              "line": 12968
+            },
+            {
+              "address": "0x138b5",
+              "instruction": "addq $0x10, %rsp",
+              "line": 12976
+            },
+            {
+              "address": "0x138b9",
+              "instruction": "popq %rbp",
+              "line": 12977
+            },
+            {
+              "address": "0x138bc",
+              "instruction": "movq (%rsp), %r12",
+              "line": 12979
+            },
+            {
+              "address": "0x138c0",
+              "instruction": "movq 0x8(%rsp), %r14",
+              "line": 12980
+            },
+            {
+              "address": "0x138c5",
+              "instruction": "addq $0x10, %rsp",
+              "line": 12981
+            },
+            {
+              "address": "0x138c9",
+              "instruction": "popq %rbp",
+              "line": 12982
+            },
+            {
+              "address": "0x138cf",
+              "instruction": "movq (%rsp), %rax",
+              "line": 12984
+            },
+            {
+              "address": "0x138de",
+              "instruction": "addq $0x10, %rsp",
+              "line": 12986
+            },
+            {
+              "address": "0x138e2",
+              "instruction": "popq %rbp",
+              "line": 12987
+            }
+          ],
+          "atomic_or_clock_instructions": []
+        },
+        {
+          "stage": "metadata",
+          "hints": true,
+          "hint_code": 2,
+          "address": "0x14000",
+          "instruction_count_including_cold_blocks_and_padding": 89,
+          "ordinary_calls": [
+            {
+              "address": "0x1414b",
+              "instruction": "callq 0x6820",
+              "line": 13499,
+              "category": "invalid_window_fwrite",
+              "target": "fwrite@plt"
+            },
+            {
+              "address": "0x14150",
+              "instruction": "callq 0x6260",
+              "line": 13500,
+              "category": "invalid_window_abort",
+              "target": "abort@plt"
+            }
+          ],
+          "stack_instructions": [
+            {
+              "address": "0x14000",
+              "instruction": "pushq %rax",
+              "line": 13414
+            },
+            {
+              "address": "0x1411f",
+              "instruction": "popq %rcx",
+              "line": 13489
+            },
+            {
+              "address": "0x1412e",
+              "instruction": "popq %rax",
+              "line": 13492
+            }
+          ],
+          "atomic_or_clock_instructions": []
+        },
+        {
+          "stage": "payload",
+          "hints": true,
+          "hint_code": 2,
+          "address": "0x14160",
+          "instruction_count_including_cold_blocks_and_padding": 142,
+          "ordinary_calls": [
+            {
+              "address": "0x141ef",
+              "instruction": "callq 0x119a0",
+              "line": 13544,
+              "category": "synchronous_downstream_map",
+              "target": "hashtable_spike::basic_map<false, 1u, 64u, 64u, false, 0u, 0u>::get_downstream(unsigned long) const"
+            },
+            {
+              "address": "0x1436f",
+              "instruction": "callq 0x6820",
+              "line": 13644,
+              "category": "invalid_window_fwrite",
+              "target": "fwrite@plt"
+            },
+            {
+              "address": "0x14374",
+              "instruction": "callq 0x6260",
+              "line": 13645,
+              "category": "invalid_window_abort",
+              "target": "abort@plt"
+            }
+          ],
+          "stack_instructions": [
+            {
+              "address": "0x14160",
+              "instruction": "pushq %rbp",
+              "line": 13505
+            },
+            {
+              "address": "0x14161",
+              "instruction": "subq $0x10, %rsp",
+              "line": 13506
+            },
+            {
+              "address": "0x14165",
+              "instruction": "movq %r14, 0x8(%rsp)",
+              "line": 13507
+            },
+            {
+              "address": "0x1416a",
+              "instruction": "movq %r12, (%rsp)",
+              "line": 13508
+            },
+            {
+              "address": "0x142f2",
+              "instruction": "movq 0x8(%rsp), %rcx",
+              "line": 13614
+            },
+            {
+              "address": "0x142ff",
+              "instruction": "movq (%rsp), %r12",
+              "line": 13618
+            },
+            {
+              "address": "0x14325",
+              "instruction": "addq $0x10, %rsp",
+              "line": 13626
+            },
+            {
+              "address": "0x14329",
+              "instruction": "popq %rbp",
+              "line": 13627
+            },
+            {
+              "address": "0x1432c",
+              "instruction": "movq (%rsp), %r12",
+              "line": 13629
+            },
+            {
+              "address": "0x14330",
+              "instruction": "movq 0x8(%rsp), %r14",
+              "line": 13630
+            },
+            {
+              "address": "0x14335",
+              "instruction": "addq $0x10, %rsp",
+              "line": 13631
+            },
+            {
+              "address": "0x14339",
+              "instruction": "popq %rbp",
+              "line": 13632
+            },
+            {
+              "address": "0x1433f",
+              "instruction": "movq (%rsp), %rax",
+              "line": 13634
+            },
+            {
+              "address": "0x1434e",
+              "instruction": "addq $0x10, %rsp",
+              "line": 13636
+            },
+            {
+              "address": "0x14352",
+              "instruction": "popq %rbp",
+              "line": 13637
+            }
+          ],
+          "atomic_or_clock_instructions": []
+        },
+        {
+          "stage": "metadata",
+          "hints": true,
+          "hint_code": 3,
+          "address": "0x14a70",
+          "instruction_count_including_cold_blocks_and_padding": 89,
+          "ordinary_calls": [
+            {
+              "address": "0x14bbb",
+              "instruction": "callq 0x6820",
+              "line": 14149,
+              "category": "invalid_window_fwrite",
+              "target": "fwrite@plt"
+            },
+            {
+              "address": "0x14bc0",
+              "instruction": "callq 0x6260",
+              "line": 14150,
+              "category": "invalid_window_abort",
+              "target": "abort@plt"
+            }
+          ],
+          "stack_instructions": [
+            {
+              "address": "0x14a70",
+              "instruction": "pushq %rax",
+              "line": 14064
+            },
+            {
+              "address": "0x14b8f",
+              "instruction": "popq %rcx",
+              "line": 14139
+            },
+            {
+              "address": "0x14b9e",
+              "instruction": "popq %rax",
+              "line": 14142
+            }
+          ],
+          "atomic_or_clock_instructions": []
+        },
+        {
+          "stage": "payload",
+          "hints": true,
+          "hint_code": 3,
+          "address": "0x14bd0",
+          "instruction_count_including_cold_blocks_and_padding": 142,
+          "ordinary_calls": [
+            {
+              "address": "0x14c5f",
+              "instruction": "callq 0x119a0",
+              "line": 14194,
+              "category": "synchronous_downstream_map",
+              "target": "hashtable_spike::basic_map<false, 1u, 64u, 64u, false, 0u, 0u>::get_downstream(unsigned long) const"
+            },
+            {
+              "address": "0x14ddf",
+              "instruction": "callq 0x6820",
+              "line": 14294,
+              "category": "invalid_window_fwrite",
+              "target": "fwrite@plt"
+            },
+            {
+              "address": "0x14de4",
+              "instruction": "callq 0x6260",
+              "line": 14295,
+              "category": "invalid_window_abort",
+              "target": "abort@plt"
+            }
+          ],
+          "stack_instructions": [
+            {
+              "address": "0x14bd0",
+              "instruction": "pushq %rbp",
+              "line": 14155
+            },
+            {
+              "address": "0x14bd1",
+              "instruction": "subq $0x10, %rsp",
+              "line": 14156
+            },
+            {
+              "address": "0x14bd5",
+              "instruction": "movq %r14, 0x8(%rsp)",
+              "line": 14157
+            },
+            {
+              "address": "0x14bda",
+              "instruction": "movq %r12, (%rsp)",
+              "line": 14158
+            },
+            {
+              "address": "0x14d62",
+              "instruction": "movq 0x8(%rsp), %rcx",
+              "line": 14264
+            },
+            {
+              "address": "0x14d6f",
+              "instruction": "movq (%rsp), %r12",
+              "line": 14268
+            },
+            {
+              "address": "0x14d95",
+              "instruction": "addq $0x10, %rsp",
+              "line": 14276
+            },
+            {
+              "address": "0x14d99",
+              "instruction": "popq %rbp",
+              "line": 14277
+            },
+            {
+              "address": "0x14d9c",
+              "instruction": "movq (%rsp), %r12",
+              "line": 14279
+            },
+            {
+              "address": "0x14da0",
+              "instruction": "movq 0x8(%rsp), %r14",
+              "line": 14280
+            },
+            {
+              "address": "0x14da5",
+              "instruction": "addq $0x10, %rsp",
+              "line": 14281
+            },
+            {
+              "address": "0x14da9",
+              "instruction": "popq %rbp",
+              "line": 14282
+            },
+            {
+              "address": "0x14daf",
+              "instruction": "movq (%rsp), %rax",
+              "line": 14284
+            },
+            {
+              "address": "0x14dbe",
+              "instruction": "addq $0x10, %rsp",
+              "line": 14286
+            },
+            {
+              "address": "0x14dc2",
+              "instruction": "popq %rbp",
+              "line": 14287
+            }
+          ],
+          "atomic_or_clock_instructions": []
+        }
+      ],
+      "common_handoff_clock_or_profile_atomic": false,
+      "common_handoff_ordinary_helper": false,
+      "remaining_work": "Map/probe fields and cached native line geometry are reloaded at stage entry; this does not establish an isolated cost. Secondary fallback remains synchronous.",
+      "budget_register": "r13",
+      "ring_register": "r12",
+      "slot_register": "r14",
+      "job_register": "r15",
+      "context_register": "rdi",
+      "metadata_common_path_instructions_including_target_and_frame_restore": 13,
+      "metadata_common_path": [
+        {
+          "address": "0x1367e",
+          "instruction": "leaq 0x6b(%rip), %rax        # 0x136f0",
+          "line": 12828
+        },
+        {
+          "address": "0x13685",
+          "instruction": "movq %rax, (%r14)",
+          "line": 12829
+        },
+        {
+          "address": "0x13688",
+          "instruction": "testq %r13, %r13",
+          "line": 12830
+        },
+        {
+          "address": "0x1368b",
+          "instruction": "je 0x136b2",
+          "line": 12831
+        },
+        {
+          "address": "0x1368d",
+          "instruction": "movq 0xa0(%r12), %r14",
+          "line": 12832
+        },
+        {
+          "address": "0x13695",
+          "instruction": "movq 0x8(%r14), %rax",
+          "line": 12833
+        },
+        {
+          "address": "0x13699",
+          "instruction": "movq %rax, 0xa0(%r12)",
+          "line": 12834
+        },
+        {
+          "address": "0x136a1",
+          "instruction": "decq %r13",
+          "line": 12835
+        },
+        {
+          "address": "0x136a4",
+          "instruction": "movq 0x18(%r14), %r15",
+          "line": 12836
+        },
+        {
+          "address": "0x136a8",
+          "instruction": "movq (%r14), %rax",
+          "line": 12837
+        },
+        {
+          "address": "0x136ab",
+          "instruction": "movq 0x10(%r14), %rdi",
+          "line": 12838
+        },
+        {
+          "address": "0x136af",
+          "instruction": "popq %rcx",
+          "line": 12839
+        },
+        {
+          "address": "0x136b0",
+          "instruction": "jmpq *%rax",
+          "line": 12840
+        }
+      ],
+      "hot_slot_loads": "Scalar loads from offsets0/8/16/24 of a64-byte Slot; co-located hot prefix, without ARM paired-load instructions.",
+      "metadata_frame_bytes": 8,
+      "payload_frame_bytes": 24,
+      "payload_spills": "Ring r12 and Slot r14 are stored at rsp/rsp+8 on every hinted payload entry and reloaded before continuation; budget r13 stays in a register. RBP also saved.",
+      "residual_invariants": [
+        {
+          "address": "0x13591",
+          "instruction": "movq (%r15), %rdx",
+          "line": 12765
+        },
+        {
+          "address": "0x13594",
+          "instruction": "movq 0x18(%r15), %rax",
+          "line": 12766
+        },
+        {
+          "address": "0x13598",
+          "instruction": "movl 0x5c(%rdx), %ecx",
+          "line": 12767
+        },
+        {
+          "address": "0x1359b",
+          "instruction": "movzbl 0x4c(%rdx), %esi",
+          "line": 12768
+        },
+        {
+          "address": "0x135a5",
+          "instruction": "movl 0x54(%rdx), %r9d",
+          "line": 12770
+        },
+        {
+          "address": "0x1360f",
+          "instruction": "movl 0x50(%rdx), %esi",
+          "line": 12797
+        },
+        {
+          "address": "0x13623",
+          "instruction": "movl 0x64(%rdx), %r10d",
+          "line": 12802
+        },
+        {
+          "address": "0x1362a",
+          "instruction": "cmpb $0x0, 0x68(%rdx)",
+          "line": 12804
+        },
+        {
+          "address": "0x13632",
+          "instruction": "movq 0x8(%rdi), %rdx",
+          "line": 12806
+        },
+        {
+          "address": "0x136f5",
+          "instruction": "movq %r14, 0x8(%rsp)",
+          "line": 12857
+        },
+        {
+          "address": "0x136fa",
+          "instruction": "movq %r12, (%rsp)",
+          "line": 12858
+        },
+        {
+          "address": "0x136fe",
+          "instruction": "movq (%r15), %rbx",
+          "line": 12859
+        },
+        {
+          "address": "0x13701",
+          "instruction": "movq 0x18(%r15), %rcx",
+          "line": 12860
+        },
+        {
+          "address": "0x13705",
+          "instruction": "movq 0x28(%r15), %rsi",
+          "line": 12861
+        },
+        {
+          "address": "0x1370e",
+          "instruction": "movl 0x64(%rbx), %eax",
+          "line": 12864
+        },
+        {
+          "address": "0x13711",
+          "instruction": "movzbl 0x68(%rbx), %r12d",
+          "line": 12865
+        },
+        {
+          "address": "0x13716",
+          "instruction": "movl 0x4c(%rbx), %r9d",
+          "line": 12866
+        },
+        {
+          "address": "0x1371a",
+          "instruction": "movl 0x50(%rbx), %edx",
+          "line": 12867
+        },
+        {
+          "address": "0x137ba",
+          "instruction": "movzbl 0x298(%rbx), %eax",
+          "line": 12914
+        },
+        {
+          "address": "0x137e0",
+          "instruction": "movq 0x18(%rbx), %rax",
+          "line": 12922
+        },
+        {
+          "address": "0x1382b",
+          "instruction": "movl 0x60(%rbx), %eax",
+          "line": 12940
+        },
+        {
+          "address": "0x13832",
+          "instruction": "addq 0x7c0(%rbx), %rax",
+          "line": 12942
+        },
+        {
+          "address": "0x13845",
+          "instruction": "movl 0x5c(%rbx), %ecx",
+          "line": 12946
+        },
+        {
+          "address": "0x13856",
+          "instruction": "movq 0x8(%rdi), %rcx",
+          "line": 12951
+        }
+      ]
+    }
+  ],
+  "instruction_text_validation": "Every retained instruction/address/line rebound to tab-delimited objdump source; static executed-path counts unchanged."
+}

@@ -1,0 +1,54 @@
+This selection records a bounded scratch comparison. No Loom implementation,
+native measurement capture, or worker runner was changed by these probes.
+
+Preferred caller pattern: keep the operation's mutable 128 B packet in a stable
+per-job Frame and admit Frame* through existing Ring. Metadata loads only its
+id/sum fields; payload loads and updates the packet. Native vector arguments
+remain available for callbacks that consume them. No static/dummy ABI was added.
+
+The exact source bytes are renamed without changes:
+  production-frame.cpp -> production.cpp
+  probe.cpp -> prototype.cpp
+Original receipts retain original filenames/hashes. provenance.json maps them
+to selected filenames and records linked-library hashes. Full LLVM IR,
+disassembly and binaries are omitted; metadata snippets and the builtin IR
+excerpt preserve the relevant observations.
+
+Reproduce on pinned Clang 21.1.8, AArch64 Linux. From macOS prefix the Linux
+commands with orb -m ubuntu. The local run was an OrbStack Apple AArch64 VM,
+not Neoverse V2 hardware; neoverse-v2 was the compiler tuning flag.
+
+SOURCE_ROOT must point to the final native-adapter-source fixture (private Git
+commit 7fe87873b1adf6d18301510131c7803b8927b5ab), or its final paired worker
+source capture. All root Loom/Orbital public headers used by the production
+probe were byte-identical to that fixture; reproduce.sh verifies their hashes.
+The script also carries the exact Ring header snapshot in headers/loom/ring.h.
+
+If the existing local-controls libraries have not been recovered, build only
+the reusable libraries into a separate directory from the qualified snapshot:
+
+  cmake -S "$SOURCE_ROOT" -B "$LIB_ROOT" -G Ninja \
+    -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER=/usr/bin/clang++-21 \
+    -DSIXDB_MARCH=armv8-a+simd -DSIXDB_TUNE=neoverse-v2
+  cmake --build "$LIB_ROOT" --target loom
+
+Then run the recorded compilation/check/codegen/timing commands:
+
+  SOURCE_ROOT=/path/to/qualified/source LIB_ROOT=/path/to/library/build \
+    OUTPUT_ROOT=/path/to/ignored/reproduction bash /path/to/selected/reproduce.sh
+
+Without overrides, reproduce.sh uses the original sibling native-adapter-source
+and its build/local-controls libraries, and writes to sibling reproduce-output.
+Source filenames/absolute debug paths may change whole object/IR hashes upon
+reproduction; original source/header hashes and the selected observed bytes are
+preserved here. No complete binary identity is claimed for a new build.
+
+Every production timing operation charges Frame/packet reset, eight pushes,
+drain of 112 native stage visits, result publication and summing. Worker/arena/
+Ring configure, 100 warm operations, full lane validation and formatting are
+outside timing. Each timed sample batches 1000 full operations under one pair
+of Clock reads. All 66 original samples and executable order are retained.
+
+Read selection.json for the independent per-job oracle, Slot/Frame footprint
+bounds, full-yield-versus-yield_unchanged confound and bounded negative results.
+The noisy warm VM timings establish no native memory-latency/AMAC speedup.

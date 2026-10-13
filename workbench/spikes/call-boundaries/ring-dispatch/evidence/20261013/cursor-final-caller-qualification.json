@@ -1,0 +1,327 @@
+{
+  "status": "pass",
+  "started_utc": "2026-10-13T03:26:59.410904+00:00",
+  "source_digest": "405d2ba13864ed6123764ab27f3e9dac142387ee42026ab6d5dba6b7df87929b",
+  "ring_sha256": "c20f1d37871f9652035e63b0bfd33068e394e06ad91e55a1be29f9976ae0f117",
+  "ring_source_sha256": "af9109504294614a9f1f914609a35269df5032e22873e02aab96ffc26e48b984",
+  "source_capture": "source-cursor-entry-final.capture.json",
+  "build_receipt": "cursor-final-build-receipt.json",
+  "prior_qualification": "cursor-entry-final-history/cursor-final-caller-qualification.json",
+  "history": [
+    "cursor-entry-final-history",
+    "cursor-final-history"
+  ],
+  "source_difference": [
+    "loom/include/loom/ring.h"
+  ],
+  "other_frozen_sources_unchanged": true,
+  "registered_tests": [
+    "streampack_implementation_loom_check",
+    "loom_hardware_policy_check",
+    "loom_object_access_check",
+    "loom_object_ring_check"
+  ],
+  "extra_checks": [
+    {
+      "name": "call-boundary",
+      "argv": [
+        "/home/ashtonsix/sixdb/build/loom-ring-review-20261013/streampack-local/cursor-validation/workbench/spikes/call-boundaries/call_boundary_probe"
+      ],
+      "returncode": 0,
+      "seconds": 0.0014775549643673003,
+      "log": "cursor-entry-final-caller-checks/call-boundary.log",
+      "log_sha256": "7f9a85c1939c3b475188b723b27e2091ce3301cf2bb68b21e89bf08fdc3f8159",
+      "binary_sha256": "942d119f127e2fbdf625ed3571b17992b62058872ddde337dece26a63e0acf52"
+    },
+    {
+      "name": "access-interleaving",
+      "argv": [
+        "/home/ashtonsix/sixdb/build/loom-ring-review-20261013/streampack-local/cursor-validation/workbench/spikes/call-boundaries/access-interleaving/call_boundary_access_interleaving",
+        "check"
+      ],
+      "returncode": 0,
+      "seconds": 0.0030519439605996013,
+      "log": "cursor-entry-final-caller-checks/access-interleaving.log",
+      "log_sha256": "c0f52a8e1d722a65b371d4e2eda39d66dc92dd0512814e208cdfe068da23768f",
+      "binary_sha256": "fc9b134b0ce432c086f36580b26edb87920bb307a772215a954f784d2001aae0"
+    },
+    {
+      "name": "orbital-workload-packed-owner",
+      "argv": [
+        "/home/ashtonsix/sixdb/build/loom-ring-review-20261013/streampack-local/cursor-validation/workbench/benchmarks/orbital/orbital_workload_check",
+        "packed-owner",
+        "/home/ashtonsix/sixdb/build/loom-ring-review-20261013/streampack-local/cursor-entry-final-caller-checks/packed-owner-empty"
+      ],
+      "returncode": 0,
+      "seconds": 0.49779046495677903,
+      "log": "cursor-entry-final-caller-checks/orbital-workload-packed-owner.log",
+      "log_sha256": "362287ea120d54573e953930164df72c4f8df4ce873ae194874eca6e29469124",
+      "binary_sha256": "688cc6097c0d7d8182b6b10c9fa47c1febcd0af388ab9e1f5495c5fbb1e878bf"
+    },
+    {
+      "name": "object-performance-direct",
+      "argv": [
+        "/home/ashtonsix/sixdb/build/loom-ring-review-20261013/streampack-local/cursor-validation/workbench/spikes/orbital-mvcc/performance/loom_object_ring_performance",
+        "--rows",
+        "1024",
+        "--objects",
+        "2",
+        "--ops",
+        "2053",
+        "--width",
+        "1",
+        "--group",
+        "127",
+        "--steps",
+        "3",
+        "--hints",
+        "0",
+        "--execution",
+        "direct"
+      ],
+      "returncode": 0,
+      "seconds": 0.003505405969917774,
+      "log": "cursor-entry-final-caller-checks/object-performance-direct.log",
+      "log_sha256": "d69fc25a6bb2e66dd975b16d437c60c0c45dfba393a3a980406eac474118511c",
+      "binary_sha256": "294e6ecf23ec19258f9fef3f6658ac80a59185c832807c8e8f792472f985a7eb"
+    },
+    {
+      "name": "object-performance-manual",
+      "argv": [
+        "/home/ashtonsix/sixdb/build/loom-ring-review-20261013/streampack-local/cursor-validation/workbench/spikes/orbital-mvcc/performance/loom_object_ring_performance",
+        "--rows",
+        "1024",
+        "--objects",
+        "2",
+        "--ops",
+        "2053",
+        "--width",
+        "8",
+        "--group",
+        "127",
+        "--steps",
+        "3",
+        "--hints",
+        "0",
+        "--execution",
+        "manual"
+      ],
+      "returncode": 0,
+      "seconds": 0.0026321900077164173,
+      "log": "cursor-entry-final-caller-checks/object-performance-manual.log",
+      "log_sha256": "df49a2e9ad4f197647a31f3c916dc37fe3e2a423640e82daa176d9d4c45b43a8",
+      "binary_sha256": "294e6ecf23ec19258f9fef3f6658ac80a59185c832807c8e8f792472f985a7eb"
+    },
+    {
+      "name": "object-performance-ring",
+      "argv": [
+        "/home/ashtonsix/sixdb/build/loom-ring-review-20261013/streampack-local/cursor-validation/workbench/spikes/orbital-mvcc/performance/loom_object_ring_performance",
+        "--rows",
+        "1024",
+        "--objects",
+        "2",
+        "--ops",
+        "2053",
+        "--width",
+        "8",
+        "--group",
+        "127",
+        "--steps",
+        "3",
+        "--hints",
+        "0",
+        "--execution",
+        "ring"
+      ],
+      "returncode": 0,
+      "seconds": 0.0020363510120660067,
+      "log": "cursor-entry-final-caller-checks/object-performance-ring.log",
+      "log_sha256": "289c0d04ab06e99673995d095ca574ef439209f7587dcabe1cdea5c2156ec270",
+      "binary_sha256": "294e6ecf23ec19258f9fef3f6658ac80a59185c832807c8e8f792472f985a7eb"
+    },
+    {
+      "name": "streampack-ring-direct16",
+      "argv": [
+        "/home/ashtonsix/sixdb/build/loom-ring-review-20261013/streampack-local/cursor-validation/workbench/spikes/streampack/streampack_ring_inline",
+        "direct16",
+        "1024",
+        "256",
+        "8",
+        "1",
+        "ring-hints"
+      ],
+      "returncode": 0,
+      "seconds": 0.11919308098731562,
+      "log": "cursor-entry-final-caller-checks/streampack-ring-direct16.log",
+      "log_sha256": "d7ffc227cab169e0fcc1b3325c528d4aaf7ba77a45aa30442e3644024fa96982",
+      "binary_sha256": "3e850da04108115f679f63b59e061482ce92ed5fa0f54f4c346623364ed11f3f"
+    },
+    {
+      "name": "streampack-ring-widths8-native",
+      "argv": [
+        "/home/ashtonsix/sixdb/build/loom-ring-review-20261013/streampack-local/cursor-validation/workbench/spikes/streampack/streampack_ring_inline",
+        "widths8-native",
+        "1024",
+        "256",
+        "8",
+        "1",
+        "ring-hints"
+      ],
+      "returncode": 0,
+      "seconds": 0.11998096195748076,
+      "log": "cursor-entry-final-caller-checks/streampack-ring-widths8-native.log",
+      "log_sha256": "9057e9719684efae6a709774fc4a94be5228fcd85d4c73983654a4ec7eaeeffc",
+      "binary_sha256": "3e850da04108115f679f63b59e061482ce92ed5fa0f54f4c346623364ed11f3f"
+    },
+    {
+      "name": "streampack-ring-location8",
+      "argv": [
+        "/home/ashtonsix/sixdb/build/loom-ring-review-20261013/streampack-local/cursor-validation/workbench/spikes/streampack/streampack_ring_inline",
+        "location8",
+        "1024",
+        "256",
+        "8",
+        "1",
+        "ring-hints"
+      ],
+      "returncode": 0,
+      "seconds": 0.10130184097215533,
+      "log": "cursor-entry-final-caller-checks/streampack-ring-location8.log",
+      "log_sha256": "9cc8e345b7f6c116625667458c6959160d0408336848c6af485488edfb02f40d",
+      "binary_sha256": "3e850da04108115f679f63b59e061482ce92ed5fa0f54f4c346623364ed11f3f"
+    },
+    {
+      "name": "streampack-ring-duckdb16",
+      "argv": [
+        "/home/ashtonsix/sixdb/build/loom-ring-review-20261013/streampack-local/cursor-validation/workbench/spikes/streampack/streampack_ring_inline",
+        "duckdb16",
+        "1024",
+        "256",
+        "8",
+        "1",
+        "ring-hints"
+      ],
+      "returncode": 0,
+      "seconds": 0.10598621499957517,
+      "log": "cursor-entry-final-caller-checks/streampack-ring-duckdb16.log",
+      "log_sha256": "16654db64db3351ef62c03be0663f352776ee5048ff346e5a707441fc75536a4",
+      "binary_sha256": "3e850da04108115f679f63b59e061482ce92ed5fa0f54f4c346623364ed11f3f"
+    }
+  ],
+  "header_dependencies": {
+    "workbench/benchmarks/orbital/lookup.cpp": {
+      "object": "workbench/benchmarks/orbital/CMakeFiles/orbital_bench_packed.dir/lookup.cpp.o",
+      "header": [
+        "/home/ashtonsix/sixdb/build/loom-ring-review-20261013/streampack-local/source-cursor-current/loom/include/loom/ring.h"
+      ],
+      "source_sha256": "e23d4656c06770eec27107d956fa10122a80bced91e3836fc75ad59cc74008e1",
+      "object_sha256": "37ff983e423c7b8f81751a2ce15c5df0fa295eec5cea2280e6bc7763c0295d6c"
+    },
+    "workbench/spikes/streampack/implementation_loom.cpp": {
+      "object": "workbench/spikes/streampack/CMakeFiles/streampack_implementation_loom_consumer.dir/implementation_loom.cpp.o",
+      "header": [
+        "/home/ashtonsix/sixdb/build/loom-ring-review-20261013/streampack-local/source-cursor-current/loom/include/loom/ring.h"
+      ],
+      "source_sha256": "0ef136c9b9978a094393534e3a5552c26e5d6a324050730aec044738d887d0d9",
+      "object_sha256": "f1e5f0900ea7df77d05c20ccd68439418a15b69e97cdf677f7b975dd44fb9033"
+    },
+    "workbench/spikes/streampack/ring.cpp": {
+      "object": "workbench/spikes/streampack/CMakeFiles/streampack_ring_inline.dir/ring.cpp.o",
+      "header": [
+        "/home/ashtonsix/sixdb/build/loom-ring-review-20261013/streampack-local/source-cursor-current/loom/include/loom/ring.h"
+      ],
+      "source_sha256": "64c059af003e088a40456449827499feddd94e726d560ba814439373713f5db2",
+      "object_sha256": "2d62b9c3b7cd6390fd946d21a46a63dc878bf265f7619be9579c29b48bf7922d"
+    },
+    "workbench/spikes/call-boundaries/ring.cpp": {
+      "object": "workbench/spikes/call-boundaries/CMakeFiles/call_boundary_probe.dir/ring.cpp.o",
+      "header": [
+        "/home/ashtonsix/sixdb/build/loom-ring-review-20261013/streampack-local/source-cursor-current/loom/include/loom/ring.h"
+      ],
+      "source_sha256": "690fb8efb5fc19de2b853a25d1d88d89b0ec4c150e3c0f0f65785ec63bac59c0",
+      "object_sha256": "aa6065de40f3baa535a6609eebeaf843bf78fda68fbf38e7aa02430d6e59dc93"
+    },
+    "workbench/spikes/call-boundaries/access-interleaving/kernels.cpp": {
+      "object": "workbench/spikes/call-boundaries/access-interleaving/CMakeFiles/call_boundary_access_interleaving.dir/kernels.cpp.o",
+      "header": [
+        "/home/ashtonsix/sixdb/build/loom-ring-review-20261013/streampack-local/source-cursor-current/loom/include/loom/ring.h"
+      ],
+      "source_sha256": "05da08e2095d0ee4fe290be66aa0225b5b9d438d26e7bfa6a557d8315b6c9e0b",
+      "object_sha256": "ba3aaf0aaf8145a686930a0ccc90ba109edd204fef091961f6455a8cb8c931d5"
+    },
+    "workbench/spikes/loom-hardware-policy/native.cpp": {
+      "object": "workbench/spikes/loom-hardware-policy/CMakeFiles/loom_hardware_policy.dir/native.cpp.o",
+      "header": [
+        "/home/ashtonsix/sixdb/build/loom-ring-review-20261013/streampack-local/source-cursor-current/loom/include/loom/ring.h"
+      ],
+      "source_sha256": "2e1f15323230502f96a1df4c0a292693a8235d0d41637ae53a45ad4f9d13b6d1",
+      "object_sha256": "dc4cfa78028d0b031e3685d33ba8c2844af4c602f23407cd314f3075fd752e90"
+    },
+    "workbench/spikes/orbital-mvcc/callers/loom.cpp": {
+      "object": "workbench/spikes/orbital-mvcc/CMakeFiles/loom_object_access_check.dir/callers/loom.cpp.o",
+      "header": [
+        "/home/ashtonsix/sixdb/build/loom-ring-review-20261013/streampack-local/source-cursor-current/loom/include/loom/ring.h"
+      ],
+      "source_sha256": "8328266f8922c48e7a8bcb848e6b3c95267406f6127e076f1ec3ed72e2e4e815",
+      "object_sha256": "f2c66310dfae4024561c47e0d3f4ae35aed3e2c42871492d889150ad826a8fee"
+    },
+    "workbench/spikes/orbital-mvcc/callers/object_ring.cpp": {
+      "object": "workbench/spikes/orbital-mvcc/metadata/CMakeFiles/loom_object_ring.dir/__/callers/object_ring.cpp.o",
+      "header": [
+        "/home/ashtonsix/sixdb/build/loom-ring-review-20261013/streampack-local/source-cursor-current/loom/include/loom/ring.h"
+      ],
+      "source_sha256": "a1777d964c860e52365a378597189a9deaaf360f484ce9bda6040c40751bade4",
+      "object_sha256": "ed4b389598b2313b4c3a5cfdb3707cd84b770aa7b34c00d34892c6e033ca08ee"
+    },
+    "workbench/spikes/orbital-mvcc/callers/object_ring_check.cpp": {
+      "object": "workbench/spikes/orbital-mvcc/metadata/CMakeFiles/loom_object_ring_check.dir/__/callers/object_ring_check.cpp.o",
+      "header": [
+        "/home/ashtonsix/sixdb/build/loom-ring-review-20261013/streampack-local/source-cursor-current/loom/include/loom/ring.h"
+      ],
+      "source_sha256": "88c2d07e5902fb166986790b6700ebfa744e434f369d872382005c9ca4c7e770",
+      "object_sha256": "31498aea9afa77e09fffedfaea88251f63bbe5efb1ed8395015881bed0e69a5d"
+    }
+  },
+  "limits": "Pinned Release Linux ARM local VM; final universal entry bridge caller compatibility/correctness qualification. No throughput or sanitizer claim.",
+  "registered": {
+    "argv": [
+      "ctest",
+      "--test-dir",
+      "/home/ashtonsix/sixdb/build/loom-ring-review-20261013/streampack-local/cursor-validation",
+      "-R",
+      "^(streampack_implementation_loom_check|loom_hardware_policy_check|loom_object_access_check|loom_object_ring_check)$",
+      "--output-on-failure",
+      "--no-tests=error"
+    ],
+    "returncode": 0,
+    "seconds": 0.24044163804501295,
+    "log": "cursor-entry-final-caller-checks/registered-ctest.log",
+    "log_sha256": "8c78bff0af5dc190ef1c590efd79345b4f1e098f3c331566f339074c3a63b17a"
+  },
+  "ctest_log": "cursor-entry-final-caller-checks/registered-ctest.log",
+  "ctest_log_sha256": "8c78bff0af5dc190ef1c590efd79345b4f1e098f3c331566f339074c3a63b17a",
+  "registered_binaries": {
+    "streampack_implementation_loom_check": {
+      "path": "/home/ashtonsix/sixdb/build/loom-ring-review-20261013/streampack-local/cursor-validation/workbench/spikes/streampack/streampack_implementation_loom_check",
+      "sha256": "20bfa7525cc46ee655259a8836e8e0604f3e4086a73d37e45ff852056b22595b"
+    },
+    "loom_hardware_policy_check": {
+      "path": "/home/ashtonsix/sixdb/build/loom-ring-review-20261013/streampack-local/cursor-validation/workbench/spikes/loom-hardware-policy/loom_hardware_policy_check",
+      "sha256": "0a0bc341233187f640f09afceaa74498e0ec0b8ad643f27d9f79ca1cd6fa8ca0"
+    },
+    "loom_object_access_check": {
+      "path": "/home/ashtonsix/sixdb/build/loom-ring-review-20261013/streampack-local/cursor-validation/workbench/spikes/orbital-mvcc/loom_object_access_check",
+      "sha256": "7507bfcf8bfb6fb1d5e27c6062f1c5cf718453d7d6932b22a886116078af43bd"
+    },
+    "loom_object_ring_check": {
+      "path": "/home/ashtonsix/sixdb/build/loom-ring-review-20261013/streampack-local/cursor-validation/workbench/spikes/orbital-mvcc/metadata/loom_object_ring_check",
+      "sha256": "37e663f18d9c86a228e0584a6a39e7c2d5e77fb19819296d33d22adc6db778de"
+    }
+  },
+  "overlays_match_current_main": {
+    "loom/include/loom/ring.h": true,
+    "loom/src/ring.cpp": true
+  },
+  "completed_utc": "2026-10-13T03:27:00.911822+00:00",
+  "source_files_verified": 3124
+}

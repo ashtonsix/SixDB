@@ -1,0 +1,119 @@
+{
+  "scope": "local OrbStack AArch64 VM mechanism control only; not native host or memory-latency throughput evidence",
+  "header_sha256": "c20f1d37871f9652035e63b0bfd33068e394e06ad91e55a1be29f9976ae0f117",
+  "source_sha256": "954441d7cf0189699a08be4cb898a10f7104582b1d2b4d4660900ab1678f301e",
+  "packet_bytes": 128,
+  "stable_frame_bytes": 192,
+  "slot_bytes": {
+    "native_packet": 208,
+    "frame_pointer": 56
+  },
+  "chains": 8,
+  "cycles": 7,
+  "item_stage_visits_per_operation": 112,
+  "checks": [
+    "independent all-lane scalar array oracle",
+    "per-job remaining/sum",
+    "total checksum 61480",
+    "eight completed frames, 112 actual native visits"
+  ],
+  "codegen": {
+    "native_packet_metadata": {
+      "vector_read_bytes": 128,
+      "vector_write_bytes": 128,
+      "indirect_branches": 1,
+      "ordinary_calls": 0,
+      "emitted_instructions_including_exit_and_padding": 32
+    },
+    "frame_pointer_metadata": {
+      "vector_read_bytes": 0,
+      "vector_write_bytes": 0,
+      "vector_clears": 0,
+      "indirect_branches": 1,
+      "ordinary_calls": 0,
+      "emitted_instructions_including_exit_and_padding": 20
+    }
+  },
+  "baseline_caveat": "native baseline uses current yield to persist changed sum and whole tuple, including compatibility completed test; frame pointer uses yield_unchanged. Thus this is caller composition comparison, not isolated packet restore-only factor.",
+  "timing_method": {
+    "cpu": 0,
+    "warm_operations": 100,
+    "pairs": 3,
+    "orders": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        0
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "samples_per_executable": 11,
+    "operations_per_sample": 1000,
+    "charged": "every operation resets all frames/packet, pushes eight slots, drains 112 native stage visits, publishes and sums results; outer Clock reads once per 1000 operations",
+    "excluded": "Worker/arena/Ring configure, warmup, independent full-lane validation, formatting; checksum comparison after timing",
+    "data": "eight warm Frames, no memory dependency hints or cache misses required",
+    "no_per_callback_timing_or_telemetry": true
+  },
+  "timings": [
+    {
+      "pair": 0,
+      "frame_arg": 0,
+      "ns_per_operation_median": 529.337,
+      "range": [
+        389.878,
+        887.256
+      ]
+    },
+    {
+      "pair": 0,
+      "frame_arg": 1,
+      "ns_per_operation_median": 368.461,
+      "range": [
+        287.669,
+        451.962
+      ]
+    },
+    {
+      "pair": 1,
+      "frame_arg": 0,
+      "ns_per_operation_median": 421.794,
+      "range": [
+        397.587,
+        1318.426
+      ]
+    },
+    {
+      "pair": 1,
+      "frame_arg": 1,
+      "ns_per_operation_median": 316.294,
+      "range": [
+        281.752,
+        530.629
+      ]
+    },
+    {
+      "pair": 2,
+      "frame_arg": 0,
+      "ns_per_operation_median": 509.92,
+      "range": [
+        394.419,
+        649.171
+      ]
+    },
+    {
+      "pair": 2,
+      "frame_arg": 1,
+      "ns_per_operation_median": 355.96,
+      "range": [
+        293.086,
+        509.462
+      ]
+    }
+  ]
+}

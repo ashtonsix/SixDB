@@ -8,6 +8,11 @@ hint described below while closing its allocation TU refactor. Architecture
 subsequently integrated a 16-byte Progress; the follow-up below qualifies its
 actual caller assembly. The initial 32-byte evidence remains frozen.
 
+The October 13 [Ring dispatch follow-up](ring-dispatch/README.md) measures real
+manual/typed-Ring gaps on V2, Zen5 and Granite, including native argument traffic
+and PMU counts. It qualifies the new Cursor, shared register prefix and bounded
+cohort adapter; the initial Ring ABI evidence below remains historical.
+
 The useful targets are **repeated Task results, live continuation state and
 avoidable ownership wrappers**. `std::expected` can force materialization, but
 replacing every result or calling convention is not supported. An ordinary
