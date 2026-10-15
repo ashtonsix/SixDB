@@ -1,0 +1,8 @@
+{
+  "script": "workbench/spikes/packed-filters/native.sh",
+  "members": {
+    "zen5": {"config": {"machine": "zen5", "idle_seconds": 600}},
+    "granite": {"config": {"machine": "granite-rapids", "idle_seconds": 600, "env": {"FILTER_TUNE": "granite-rapids"}}},
+    "neon": {"config": {"machine": "neoverse-v2", "idle_seconds": 600}}
+  }
+}
