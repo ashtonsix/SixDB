@@ -52,8 +52,12 @@ copies its pointer/count proof and does not borrow a view object.
 | Construct/reinitialize | `write.initialize(input, effects)` | Exactly `size()` values; initializes owned slack, preserves gaps; no old-value summary |
 | Read a point | `read.get(row)` | `expected<U,error>` |
 | Read a range | `read.read(first, output_span)` | Output length determines count; arbitrary edges |
+| Filter a window | `sp::filter<Op>(*storage, first, count, rhs, active)` | Up to 64 values; one result bit per original position |
 | Replace a point | `write.set(row, value, summary, effects)` | A scalar value crosses the boundary directly |
 | Replace a selected range | `write.replace(first, input_span, selection, summary, effects)` | All checks precede any local write |
+
+[Filtering packed values](../filters.md) covers all five unsigned comparisons,
+full-width query semantics and native composition.
 
 The example initializes values 0..511, then changes row 7 from 7 to 1000.
 That replacement adds 993 to `sum_change`. A later attempt to set row 7 to 123

@@ -72,6 +72,10 @@ when choosing a width. The [packet-width study](../../../workbench/benchmarks/tu
 gives examples. [Native composition](extending.md#keep-native-payloads-native)
 keeps payloads in registers.
 
+[Filtering packed values](../filters.md) shows how to bind a one-code predicate
+returning original-row masks, or share a native projection between predicates
+using packet-byte masks.
+
 ## Group slots for the consumer
 
 A group keeps consecutive map slots together for each row. TuplePack emits that

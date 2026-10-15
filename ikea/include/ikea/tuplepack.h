@@ -4,3 +4,4 @@
 #include <ikea/tuplepack/write.h>
 #include <ikea/tuplepack/construction.h>
 #include <ikea/tuplepack/transfer.h>
+#include <ikea/tuplepack/filter.h>

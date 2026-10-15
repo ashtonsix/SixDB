@@ -74,6 +74,17 @@ template <class F, bool Dense, unsigned N>
 template <class F, bool Dense, unsigned N>
 [[gnu::always_inline]] inline values<F::body * 8, N> body(const std::uint8_t* base,
                                                           std::size_t stride, std::size_t i) {
+    // Complete standard-width Local lanes are one contiguous array. Loading
+    // their ZMM groups directly avoids assembling pairs of YMM packets, and
+    // reads exactly the same occupied bytes as those constituent bodies.
+    if constexpr (Dense && F::storage == geometry::local && F::tail == 0 &&
+                  std::has_single_bit(F::body) && N * F::body >= 64) {
+        values<F::body * 8, N> out;
+        detail::each<values<F::body * 8, N>::parts>([&](auto p) {
+            out.v[p] = _mm512_loadu_si512(base + i * F::body + p * 64);
+        });
+        return out;
+    }
     if constexpr (F::storage == geometry::striped && N == 32) {
         if (i % 32 == 0) {
             const auto* p = base + (i / F::tile_rows) * (Dense ? F::tile_bytes : stride) +

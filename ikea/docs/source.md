@@ -51,6 +51,31 @@ ready arithmetic and native decoding inline within that work. A scheduler can
 overlap independent lookups; splitting one dependent decode into more stages does
 not create independent accesses. Share the semantic body between those callers.
 
+A shared stage should remove a specialization dimension from its downstream work.
+For example, physical decoders can normalize unsigned values to 1/2/4/8-byte
+lanes so predicates share bodies across source bit widths. Matching register
+shapes alone is insufficient: value meaning and mask coordinates must agree.
+Keep ordinary hot calls and comparisons on packed bits directly fused. Within an
+existing CPS operation, a physical decoder can hand canonical lanes to a shared
+consumer; keep adjacent cheap predicates together in that consumer. This removes
+the source-width axis without requiring a boundary for every arithmetic step.
+Use one canonical chain type throughout that composition; equal register shapes
+do not make differently typed stage function pointers interchangeable.
+The maintained [filter composition example](../examples/filters/composition.cpp)
+uses two physical decoders with a shared 16-bit range-and-count stage; the
+[ordinary example](../examples/filters/ordinary.cpp) keeps a direct filter and
+a reused TuplePack projection inline.
+
+The [native filter measurements](../../workbench/spikes/filter-composition/RUNTIME.md)
+support this selective arrangement. Entering CPS for each small window costs
+latency and throughput; splitting an already-entered SeriesPack operation is
+usually much closer to a fused stage. Large mixed catalogues can recover
+throughput through sharing on Zen 5, but the same policy loses on NEON. TuplePack
+also retains its direct encoded-column path: sharing a generic projection can
+discard that algorithmic advantage. Choose sharing at the enclosing consumer,
+with its complete entry, context, projection and return costs measured. There is
+no automatic catalogue-size or platform-wide dispatch rule.
+
 ## Shared facilities
 
 | Facility | Shared mechanism | Module-owned behavior |
@@ -58,6 +83,7 @@ not create independent accesses. Share the semantic body between those callers.
 | `ikea/effects.h` | Issued byte spans qualified by named source views | Physical footprints, traversal and capacity bounds |
 | `detail/overlap.h`, `src/overlap.cpp` | Cold overlap analysis for repeating spans and interleaving | Semantic conflicts, view rules and diagnostics |
 | `detail/native_chain.h` | Bounded straight-through tables, native argument handoff and early completion | Carrier, mask meaning, stage grain and semantic body |
+| `comparison.h`, `detail/filter/compare.h` | Unsigned predicates and explicit native lane-to-mask bodies | Stored-width admission, packed shortcuts and original-position coordinates |
 
 Shared mechanics need checks from affected modules. Hooks must remain
 infallible and cannot suspend after admission. Persistent summary writes need
@@ -74,6 +100,7 @@ write instantiations through the ordinary umbrella.
 | Ordinary calls and erasure | `{read,write,read_operation,mutation_operation}.h` |
 | Format, placement and recovery | `format.h`, `view.h`, `presets.h`, `representation.h` |
 | Logical expressions and evaluation | `author/{expression,read,record,native,summaries}.h` |
+| Predicate masks from storage or native values | `filter.h`; `author/filter.h` |
 | Typed mutation binding and preflight | `author/write.h` |
 | Runtime dense read dispatch | `src/seriespack/readers.cpp` |
 | Cold placement/alias rules and diagnostics | `src/seriespack/admission.cpp`; leaf walk in `detail/mutation/admission.h` |
@@ -101,6 +128,7 @@ unless marked `src/`.
 | --- | --- |
 | Physical description and recovery | `description.h`; `src/tuplepack/description.cpp` |
 | Ordinary placement, plans and commands | `{view,plan,read,write,construction,transfer,selection}.h` |
+| Bound code predicates and native packet masks | `filter.h` |
 | Decoded packet grouping | `packet_layout.h`; `src/tuplepack/packet_layout.cpp` |
 | Code-map admission and ISA controls | `src/tuplepack/{prepare,packet_prepare}.cpp` |
 | Construction preparation | `src/tuplepack/construction.cpp` |

@@ -12,6 +12,10 @@ Ikea operates over storage supplied by its caller.
 | Bec256 | Headless 256-position bitsets; caller retains population, exact body length and location | [Use and compose](docs/bec256/usage.md) · [Representation](docs/bec256/representation.md) |
 | StreamPack | Variable-length byte values; caller-owned Direct/Width sidecars and coherent count/extent | [Use and compose](docs/streampack/usage.md) · [Reference](docs/streampack/reference.md) |
 
+[Unsigned filters](docs/filters.md) return position masks directly from SeriesPack
+and TuplePack storage or native values. Their maintained examples cover ordinary
+calls, reused projections and shared canonical consumers inside composed operations.
+
 These modules support construction, reads and replacement, native composition
 and source-qualified byte effects. StreamPack also supplies retirement, reverse
 byte ownership, rank-preserving packing and selected transfer for owner rewrites.

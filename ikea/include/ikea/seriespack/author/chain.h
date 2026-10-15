@@ -5,7 +5,7 @@
 namespace ikea::seriespack {
 #if defined(__aarch64__) || defined(__AVX2__)
 
-/// Provisional straight-through shell, with a type-specific native carrier.
+/// Bounded synchronous chain, with a type-specific native carrier.
 /// Different carriers require a checked bridge; incompatible function casts are
 /// not an interface. Stopping/suspension occurs after returning to the owner.
 template <unsigned K, unsigned Slots = 8>

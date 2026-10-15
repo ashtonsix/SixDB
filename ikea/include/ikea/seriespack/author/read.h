@@ -1,5 +1,5 @@
 #pragma once
-#include <ikea/seriespack/author/expression.h>
+#include <ikea/seriespack/author/filter.h>
 
 namespace ikea::seriespack::composition {
 namespace detail {
@@ -41,6 +41,14 @@ template <class Expression> class prepared {
     }
     std::size_t size() const {
         return count_;
+    }
+    template <comparison Op>
+    [[nodiscard]] std::expected<std::uint64_t, error>
+    filter(std::size_t first, unsigned count, std::uint64_t rhs,
+           std::uint64_t active = ~std::uint64_t{0}) const {
+        if (count > 64 || first > count_ || count > count_ - first)
+            return std::unexpected(error::range);
+        return composition::filter_unchecked<Op>(expression_, first, count, rhs, active);
     }
     const Expression& expression() const {
         return expression_;

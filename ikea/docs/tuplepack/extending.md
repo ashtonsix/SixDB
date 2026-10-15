@@ -121,7 +121,8 @@ zero per output bit. Combine it with `decoding_routes(layout, map)` and call
 
 `apply_routes` recognizes byte permutations and rotations; other supported wiring
 uses the general lowering. This can remove an intermediate packet conversion.
-Arithmetic and predicates require authored bodies. The
+Arithmetic and composite predicates require authored bodies.
+[Unsigned code filters](../filters.md) supply the standard comparisons. The
 [route contract](reference.md#routes-and-native-execution) gives applicability
 and storage limits. Test new lowerings against an independent bit reference and
 exercise the fallback outside their applicability.

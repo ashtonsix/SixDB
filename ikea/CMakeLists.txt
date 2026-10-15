@@ -115,6 +115,27 @@ add_executable(ikea_seriespack_admission_check EXCLUDE_FROM_ALL
 sixdb_target(ikea_seriespack_admission_check)
 target_link_libraries(ikea_seriespack_admission_check PRIVATE ikea::seriespack)
 
+add_executable(ikea_filters_check EXCLUDE_FROM_ALL test/filters/check.cpp test/filters/tuple.cpp
+  test/filters/widths_1.cpp
+  test/filters/widths_9.cpp
+  test/filters/widths_17.cpp
+  test/filters/widths_25.cpp
+  test/filters/widths_33.cpp
+  test/filters/widths_41.cpp
+  test/filters/widths_49.cpp
+  test/filters/widths_57.cpp
+)
+sixdb_target(ikea_filters_check)
+target_compile_options(ikea_filters_check PRIVATE -fno-vectorize -fno-slp-vectorize)
+target_link_libraries(ikea_filters_check PRIVATE ikea::seriespack ikea::tuplepack)
+
+foreach(example ordinary composition)
+  add_executable(ikea_example_filters_${example} EXCLUDE_FROM_ALL examples/filters/${example}.cpp)
+  sixdb_target(ikea_example_filters_${example})
+  target_compile_options(ikea_example_filters_${example} PRIVATE -fno-vectorize -fno-slp-vectorize)
+  target_link_libraries(ikea_example_filters_${example} PRIVATE ikea::seriespack ikea::tuplepack)
+endforeach()
+
 foreach(example ordinary composition pipeline integration)
   add_executable(ikea_example_seriespack_${example} EXCLUDE_FROM_ALL examples/seriespack/${example}.cpp)
   sixdb_target(ikea_example_seriespack_${example})
@@ -126,6 +147,7 @@ foreach(example ordinary composition integration packets words groups)
   target_link_libraries(ikea_example_tuplepack_${example} PRIVATE ikea::tuplepack)
 endforeach()
 set(ikea_example_targets
+  ikea_example_filters_ordinary ikea_example_filters_composition
   ikea_example_streampack_ordinary ikea_example_streampack_composition
   ikea_example_seriespack_ordinary ikea_example_seriespack_composition
   ikea_example_seriespack_pipeline ikea_example_seriespack_integration
@@ -136,7 +158,7 @@ set(ikea_example_targets
 set(ikea_check_targets
   ikea_streampack_check ikea_streampack_boundaries_check
   ikea_seriespack_check ikea_seriespack_descriptor_check ikea_seriespack_ownership_check
-  ikea_seriespack_admission_check
+  ikea_seriespack_admission_check ikea_filters_check
   ikea_tuplepack_wire_check ikea_tuplepack_transfer_check
   ikea_tuplepack_operations_check ikea_tuplepack_execution_check
   ikea_tuplepack_packets_check ikea_tuplepack_gpr_check ikea_tuplepack_ownership_check

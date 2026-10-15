@@ -249,7 +249,8 @@ used sequence then fits in the first eight bytes. Compaction of a larger map
 discards data; expansion does not supply values for additional write destinations.
 
 The restricted route algebra carries input bits or zeros. Conflicting OR,
-arithmetic and predicates require authored bodies. A normalized route requires
+arithmetic and composite predicates require authored bodies;
+[unsigned code comparisons](../filters.md) have shared filter bodies. A normalized route requires
 each output byte to be a complete permutation/rotation of one input byte;
 other supported wiring uses the general lowering. General plans borrow at most
 16 caller-owned terms.
