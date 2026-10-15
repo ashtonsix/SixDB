@@ -1,0 +1,67 @@
+{
+  "consumers": [
+    {
+      "owner": "abseil",
+      "ready": false,
+      "hints": false,
+      "instructions": 160,
+      "allowed_outer_calls": [],
+      "rbp_preservation": [],
+      "ready_frame": []
+    },
+    {
+      "owner": "abseil",
+      "ready": false,
+      "hints": false,
+      "instructions": 104,
+      "allowed_outer_calls": [],
+      "rbp_preservation": [],
+      "ready_frame": []
+    },
+    {
+      "owner": "generic",
+      "ready": true,
+      "hints": false,
+      "instructions": 184,
+      "allowed_outer_calls": [],
+      "rbp_preservation": [],
+      "ready_frame": []
+    },
+    {
+      "owner": "generic",
+      "ready": true,
+      "hints": true,
+      "instructions": 232,
+      "allowed_outer_calls": [],
+      "rbp_preservation": [],
+      "ready_frame": []
+    },
+    {
+      "owner": "abseil",
+      "ready": false,
+      "hints": false,
+      "instructions": 608,
+      "allowed_outer_calls": [
+        "18a34: 97ffb51b     \tbl\t0x5ea0 <memset@plt>"
+      ],
+      "rbp_preservation": [],
+      "ready_frame": []
+    },
+    {
+      "owner": "abseil",
+      "ready": false,
+      "hints": false,
+      "instructions": 376,
+      "allowed_outer_calls": [
+        "193b4: 97ffb2bb     \tbl\t0x5ea0 <memset@plt>"
+      ],
+      "rbp_preservation": [],
+      "ready_frame": []
+    }
+  ],
+  "ready_calls": 0,
+  "ready_other_stack_references": 0,
+  "ready_callbacks_preserving_rbp": 0,
+  "outlined_baseline_lookup": 0,
+  "limitation": "Static calls and frame references only; not instruction quality, lifetime, traffic or performance."
+}

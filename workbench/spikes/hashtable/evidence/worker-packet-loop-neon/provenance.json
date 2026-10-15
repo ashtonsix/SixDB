@@ -1,0 +1,37 @@
+{
+  "files_sha256": {
+    "context.json": "5d66e0f7ad69c5892ff5b993d0c0db84a0d107fe2e840e1a93c61e4a683351c7",
+    "lscpu.json": "4e7f8ea57f30a04fe88978c811bfcb0abad1e379a63803802c0765eed40841cb",
+    "profiles/hashtable_design_worker_epochs_40_1_2_policy5-n1024.record.txt": "49ee51cc115d62527869b81a1ae220e1407f522663a935575c87a6d127c88eed",
+    "profiles/hashtable_design_worker_epochs_40_1_2_policy5-n256.record.txt": "49ee51cc115d62527869b81a1ae220e1407f522663a935575c87a6d127c88eed",
+    "qualified/inputs.json": "e36afa0a69a604444195786399ae5d7e7c4729c2e07a2a56b94d01254ab0763b",
+    "qualified/summary.csv": "265bc80fe5e985907dbda96d72a995aa0ccf05bcf645a79240f4598542fe24e4"
+  },
+  "format": 2,
+  "full_bundle": "artifact.json",
+  "kind": "files",
+  "regenerate": [
+    [
+      "python3",
+      "workbench/spikes/hashtable/worker-epochs-report.py",
+      "{evidence}",
+      "--output",
+      "{evidence}/qualified"
+    ],
+    [
+      "python3",
+      "workbench/spikes/hashtable/check_epoch_codegen.py",
+      "{evidence}/codegen",
+      "--output",
+      "{evidence}/codegen-summary.json"
+    ],
+    [
+      "python3",
+      "workbench/spikes/hashtable/worker-packet-profile-report.py",
+      "{evidence}/profiles",
+      "--output",
+      "{evidence}/profile-summary.json"
+    ]
+  ],
+  "regenerate_from": "archive"
+}

@@ -1,0 +1,19 @@
+{
+  "scope": "Wide-value consumer and packing-transfer experiment. Overall hashtable goal remains active; broad targets unmet.",
+  "selection": "Final full/tail read summaries for every case/contender/packetwidth/cardinality; raw complete histories and exact ELFs in surface/replay. Selected correctness/sanitizer checks and final audit. Earlier outlining diagnostics retained, superseded pre-fusion timings omitted.",
+  "decision": "No extra projection API for these exact byte-plane consumers. Preserve full and selected-field workloads. Fix forwarding callback fusion above packing primitives. Keep shared lookup, geometry/growth and bag ownership as next optimization subjects.",
+  "qualifications": [
+    "Local generic AArch64 in OrbStack only",
+    "Shared-routing Direct field control is not independently routed competitor",
+    "All144 final read roots call-free;36composed/direct pairs instruction-identical modulo root-relative branch addresses",
+    "No isolated call-cost or isolated lookup-cost subtraction",
+    "No serial latency, target-native, RSS/peak or retained-reader claim"
+  ],
+  "regenerate": [
+    "python3 hierarchy-consumer-run.py report surface",
+    "python3 hierarchy-consumer-run.py report replay"
+  ],
+  "final_source_digest": "173da826a640c4e21253248200f432c9e2b3f23c4887a0e4258b33673ac81d63",
+  "codegen_index_sha256": "ca0b1efef8c1e85fd81a316dfc03960aa04409b99a552e3da2614a62660fd3b4",
+  "codegen_selected_bundle_sha256": "483fe9c056d1ff3cc8beb1c712e06f5c0cc132434b3ffe3e438d95afbde4c61c"
+}

@@ -1,0 +1,30 @@
+{
+  "scope": "Selected-field consumer diagnostic, local generic AArch64/OrbStack only. Overall spike active; no architecture, public batch width or preset selected.",
+  "selection": "All6cases/4contenders/2consumers/allphases; keep both gains and losses. Repeat uses exact same6ELFs as final broadpanel.",
+  "source_capture": "build/captures/hashtable-selected-consumer-v3",
+  "source_digest": "173da826a640c4e21253248200f432c9e2b3f23c4887a0e4258b33673ac81d63",
+  "arms": {
+    "0": "composed",
+    "1": "ordinary Abseil",
+    "2": "exact-width Abseil",
+    "3": "direct bucket fields; shared routing, composed overflow/bag paths"
+  },
+  "consumers": {
+    "0": "weighted full-value byte reduction",
+    "1": "little-endian final8-byte word; enumerate every MM value"
+  },
+  "validation": "Independent full-byte contents and lane multiplicity; selected-word oracle uses shifts; all-tier refusal/retry and clone checks. Timed traces checked against independent ordered histories.",
+  "limits": [
+    "Warm repeated throughput, no serial latency or named cache residence claim",
+    "No full/tail subtraction as isolated lookup cost",
+    "Ordinary baseline borrows stored bytes; full consumer also changed, so not directly comparable with earlier driver receipts",
+    "Largest fixed-geometry histories deliberately spill most keys; not proposed growth policy",
+    "Logical requested and owner bytes, not RSS or transient peak",
+    "Read mode selected once per complete trace; no per-key dispatch",
+    "Lifecycle excludes queries; unchanged write phases are noise controls"
+  ],
+  "regenerate": "python3 hierarchy-consumer-run.py report .",
+  "run": "192 processes,59520rows,31repeats perpass,scalar,n64/192",
+  "codegen": "Final144full/tail read roots call-free;36composed/direct pairs instruction-identical modulo root-relative branch targets; review in codegen-v3.",
+  "fusion": "V1 had checksum wrapper outlines. V2 repaired driverwrappers but6scalarMMroots stilloutlined ownercallback. V3 also inlines promoted::get_bytes forwarding; no isolated-call-cost claim acrossversions."
+}

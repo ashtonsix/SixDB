@@ -1,0 +1,256 @@
+{
+  "rows": 59400,
+  "process_cases": 220,
+  "processes": 1320,
+  "repetitions_per_process": 5,
+  "forward_reverse_runs_per_variant": 2,
+  "read_regions": 540,
+  "update_regions": 180,
+  "report_sha256": "c20614483e21728f52a9c84a7eba22ce7689a61e302aee9ab4ff0d757daca53e",
+  "source_elf_audits": {
+    "control/W2": {
+      "binary_sha256": "e813f142f661c92e018074a8b5c82c5817b43a821883194466105ea582693a10",
+      "source_sha256": "310cbb41d43f13fd5d4f862804779666e92a130d12a9bd5327ca13ed538087ad",
+      "generated_header_sha256": {
+        "promoted.h": "5fb810c84c6211b6e5055d07fbed8a78d75fcec2c15f09edea2175d755dfedda"
+      },
+      "probe_receipt_sha256": "9e5f0595b4b6b7e111c431123bc2c8ac50e3af864b41a7ac7c3051994fb37516",
+      "read_locations": {
+        "candidate_inline": 15,
+        "candidate_whole_loop": 21,
+        "baseline_inline": 20,
+        "baseline_whole_loop": 4
+      },
+      "update_locations": {
+        "timed_cfg": 20
+      },
+      "repeated_update_boundary_categories": {
+        "promoted_owner": 12,
+        "abseil_boundary": 20
+      }
+    },
+    "control/W8": {
+      "binary_sha256": "825423a67f1f8d354713e557681995043ccdd73c5871eb9d45fb1c21623bce40",
+      "source_sha256": "310cbb41d43f13fd5d4f862804779666e92a130d12a9bd5327ca13ed538087ad",
+      "generated_header_sha256": {
+        "promoted.h": "5fb810c84c6211b6e5055d07fbed8a78d75fcec2c15f09edea2175d755dfedda"
+      },
+      "probe_receipt_sha256": "9e5f0595b4b6b7e111c431123bc2c8ac50e3af864b41a7ac7c3051994fb37516",
+      "read_locations": {
+        "candidate_inline": 24,
+        "baseline_inline": 20,
+        "candidate_whole_loop": 12,
+        "baseline_whole_loop": 4
+      },
+      "update_locations": {
+        "timed_cfg": 20
+      },
+      "repeated_update_boundary_categories": {
+        "promoted_owner": 12,
+        "abseil_boundary": 20
+      }
+    },
+    "control/W16": {
+      "binary_sha256": "3c46b3757c3c108441eaad7c21fbfa41282812f046987dc418a270a949b0de61",
+      "source_sha256": "310cbb41d43f13fd5d4f862804779666e92a130d12a9bd5327ca13ed538087ad",
+      "generated_header_sha256": {
+        "promoted.h": "5fb810c84c6211b6e5055d07fbed8a78d75fcec2c15f09edea2175d755dfedda"
+      },
+      "probe_receipt_sha256": "9e5f0595b4b6b7e111c431123bc2c8ac50e3af864b41a7ac7c3051994fb37516",
+      "read_locations": {
+        "candidate_inline": 36,
+        "baseline_inline": 19,
+        "baseline_whole_loop": 5
+      },
+      "update_locations": {
+        "timed_cfg": 20
+      },
+      "repeated_update_boundary_categories": {
+        "promoted_owner": 12,
+        "abseil_boundary": 20
+      }
+    },
+    "fused/W2": {
+      "binary_sha256": "8d0c551d97767716cb7d033accba8524b77c0c5c14ba912f978e0ede6286e8a1",
+      "source_sha256": "310cbb41d43f13fd5d4f862804779666e92a130d12a9bd5327ca13ed538087ad",
+      "generated_header_sha256": {
+        "promoted.h": "dfd87544001f7752e8f94e664077e1a1f08afdf50071b341d8522d56bc523f66"
+      },
+      "probe_receipt_sha256": "9e5f0595b4b6b7e111c431123bc2c8ac50e3af864b41a7ac7c3051994fb37516",
+      "read_locations": {
+        "candidate_inline": 15,
+        "candidate_whole_loop": 21,
+        "baseline_inline": 20,
+        "baseline_whole_loop": 4
+      },
+      "update_locations": {
+        "whole_loop_helper": 12,
+        "timed_cfg": 8
+      },
+      "repeated_update_boundary_categories": {
+        "key_overflow": 12,
+        "abseil_boundary": 20,
+        "allocation_runtime": 18,
+        "orbital_owner_runtime": 6,
+        "linked_values": 6,
+        "byte_transfer": 6,
+        "cold_format_init": 84,
+        "other_spike_boundary": 18
+      }
+    },
+    "fused/W8": {
+      "binary_sha256": "eabd146a48cdf8ba5e34fb1e8c608356ef9a373f752d8ab856164739c069130c",
+      "source_sha256": "310cbb41d43f13fd5d4f862804779666e92a130d12a9bd5327ca13ed538087ad",
+      "generated_header_sha256": {
+        "promoted.h": "dfd87544001f7752e8f94e664077e1a1f08afdf50071b341d8522d56bc523f66"
+      },
+      "probe_receipt_sha256": "9e5f0595b4b6b7e111c431123bc2c8ac50e3af864b41a7ac7c3051994fb37516",
+      "read_locations": {
+        "candidate_inline": 24,
+        "baseline_inline": 20,
+        "candidate_whole_loop": 12,
+        "baseline_whole_loop": 4
+      },
+      "update_locations": {
+        "whole_loop_helper": 12,
+        "timed_cfg": 8
+      },
+      "repeated_update_boundary_categories": {
+        "key_overflow": 12,
+        "abseil_boundary": 20,
+        "allocation_runtime": 18,
+        "orbital_owner_runtime": 6,
+        "linked_values": 6,
+        "byte_transfer": 8,
+        "cold_format_init": 84,
+        "other_spike_boundary": 18
+      }
+    },
+    "fused/W16": {
+      "binary_sha256": "3d8ad60edfbdf925f19509061caeed7b5c198755f8844d6f84587ac961fefc10",
+      "source_sha256": "310cbb41d43f13fd5d4f862804779666e92a130d12a9bd5327ca13ed538087ad",
+      "generated_header_sha256": {
+        "promoted.h": "dfd87544001f7752e8f94e664077e1a1f08afdf50071b341d8522d56bc523f66"
+      },
+      "probe_receipt_sha256": "9e5f0595b4b6b7e111c431123bc2c8ac50e3af864b41a7ac7c3051994fb37516",
+      "read_locations": {
+        "candidate_inline": 36,
+        "baseline_inline": 19,
+        "baseline_whole_loop": 5
+      },
+      "update_locations": {
+        "whole_loop_helper": 12,
+        "timed_cfg": 8
+      },
+      "repeated_update_boundary_categories": {
+        "key_overflow": 12,
+        "abseil_boundary": 20,
+        "allocation_runtime": 18,
+        "orbital_owner_runtime": 6,
+        "linked_values": 6,
+        "byte_transfer": 6,
+        "cold_format_init": 84,
+        "other_spike_boundary": 18
+      }
+    },
+    "partial/W2": {
+      "binary_sha256": "c40584ee1b18e3c360b485f02bb56f30cb8969cecbdd56f84122157fe3044200",
+      "source_sha256": "310cbb41d43f13fd5d4f862804779666e92a130d12a9bd5327ca13ed538087ad",
+      "generated_header_sha256": {
+        "promoted.h": "b01bbd42da1c82d769c20e8f19e07c732c0307a6f1d8df25125b1ed4b8587498",
+        "record_table.h": "cb6ea07907472d6bdac733b4493affa97276a10e629e66cdde8d202711c2068e"
+      },
+      "probe_receipt_sha256": "9e5f0595b4b6b7e111c431123bc2c8ac50e3af864b41a7ac7c3051994fb37516",
+      "read_locations": {
+        "candidate_inline": 15,
+        "candidate_whole_loop": 21,
+        "baseline_inline": 20,
+        "baseline_whole_loop": 4
+      },
+      "update_locations": {
+        "whole_loop_helper": 12,
+        "timed_cfg": 8
+      },
+      "repeated_update_boundary_categories": {
+        "key_overflow": 12,
+        "abseil_boundary": 20,
+        "allocation_runtime": 18,
+        "orbital_owner_runtime": 6,
+        "linked_values": 6,
+        "byte_transfer": 6,
+        "cold_format_init": 84,
+        "other_spike_boundary": 18
+      }
+    },
+    "partial/W8": {
+      "binary_sha256": "b7ed79d9be06aeb9fa6f47e01211b9ffdd69915af1ef358dd96b11acbba04deb",
+      "source_sha256": "310cbb41d43f13fd5d4f862804779666e92a130d12a9bd5327ca13ed538087ad",
+      "generated_header_sha256": {
+        "promoted.h": "b01bbd42da1c82d769c20e8f19e07c732c0307a6f1d8df25125b1ed4b8587498",
+        "record_table.h": "cb6ea07907472d6bdac733b4493affa97276a10e629e66cdde8d202711c2068e"
+      },
+      "probe_receipt_sha256": "9e5f0595b4b6b7e111c431123bc2c8ac50e3af864b41a7ac7c3051994fb37516",
+      "read_locations": {
+        "candidate_inline": 24,
+        "baseline_inline": 20,
+        "candidate_whole_loop": 12,
+        "baseline_whole_loop": 4
+      },
+      "update_locations": {
+        "whole_loop_helper": 12,
+        "timed_cfg": 8
+      },
+      "repeated_update_boundary_categories": {
+        "key_overflow": 12,
+        "abseil_boundary": 20,
+        "allocation_runtime": 18,
+        "orbital_owner_runtime": 6,
+        "linked_values": 6,
+        "byte_transfer": 8,
+        "cold_format_init": 84,
+        "other_spike_boundary": 18
+      }
+    },
+    "partial/W16": {
+      "binary_sha256": "c62bfdcb18afb247ee5102e5059490653ad3b59c11344bd64a33dcf2591be154",
+      "source_sha256": "310cbb41d43f13fd5d4f862804779666e92a130d12a9bd5327ca13ed538087ad",
+      "generated_header_sha256": {
+        "promoted.h": "b01bbd42da1c82d769c20e8f19e07c732c0307a6f1d8df25125b1ed4b8587498",
+        "record_table.h": "cb6ea07907472d6bdac733b4493affa97276a10e629e66cdde8d202711c2068e"
+      },
+      "probe_receipt_sha256": "9e5f0595b4b6b7e111c431123bc2c8ac50e3af864b41a7ac7c3051994fb37516",
+      "read_locations": {
+        "candidate_inline": 36,
+        "baseline_inline": 19,
+        "baseline_whole_loop": 5
+      },
+      "update_locations": {
+        "whole_loop_helper": 12,
+        "timed_cfg": 8
+      },
+      "repeated_update_boundary_categories": {
+        "key_overflow": 12,
+        "abseil_boundary": 20,
+        "allocation_runtime": 18,
+        "orbital_owner_runtime": 6,
+        "linked_values": 6,
+        "byte_transfer": 6,
+        "cold_format_init": 84,
+        "other_spike_boundary": 18
+      }
+    }
+  },
+  "checks": [
+    "exact seed947 case schedule and forward/reverse variant order",
+    "all argv, return codes, stderr, serialized timestamps and raw process chunks",
+    "timed ELF equals generated probe receipt and audited ELF for every variant/width",
+    "archived summary exactly reproduced from captured report source",
+    "full physical inventories and populations equal across variants"
+  ],
+  "limitations": [
+    "CFG recurrence is not measured call frequency or cost.",
+    "Fresh processes share one machine; repetitions are not independent machine trials.",
+    "Unchanged-source Abseil controls still vary in placement and runtime seed.",
+    "Population fields describe build; memory snapshots exclude transient peaks."
+  ]
+}

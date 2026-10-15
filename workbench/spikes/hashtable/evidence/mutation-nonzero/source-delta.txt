@@ -1,0 +1,11 @@
+--- partial/promoted.h
++++ nonzero/promoted.h
+@@ -132,7 +132,7 @@
+                 },observed,existing);
+             }
+         }();
+-        if(r){owner_.keys+=r->keys;owner_.values+=r->values;
++        if(r){if(r->keys)owner_.keys+=r->keys;if(r->values)owner_.values+=r->values;
+             effects.before({small_event::kind::caller_delta,this,nullptr,0,0,0,*r});}return r;
+     }
+     template<class Effects> [[gnu::always_inline]] std::expected<mutation_delta,mutation_error>

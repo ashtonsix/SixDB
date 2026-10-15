@@ -1,0 +1,279 @@
+{
+  "processes": [
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T044031Z-5b3a7289/results/hashtable_design_consolidation_40_0_0-order0-resources.txt",
+        "taskset",
+        "-c",
+        "0",
+        "/opt/sixdb/jobs/20261015T044031Z-5b3a7289/results/bin/hashtable_design_consolidation_40_0_0",
+        "bench",
+        "5",
+        "16"
+      ],
+      "start": 1792039408.8837626,
+      "end": 1792039409.640089,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T044031Z-5b3a7289/results/hashtable_design_consolidation_40_1_2-order0-resources.txt",
+        "taskset",
+        "-c",
+        "0",
+        "/opt/sixdb/jobs/20261015T044031Z-5b3a7289/results/bin/hashtable_design_consolidation_40_1_2",
+        "bench",
+        "5",
+        "16"
+      ],
+      "start": 1792039409.641007,
+      "end": 1792039410.4020762,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T044031Z-5b3a7289/results/hashtable_design_consolidation_40_2_2_patch-order0-resources.txt",
+        "taskset",
+        "-c",
+        "0",
+        "/opt/sixdb/jobs/20261015T044031Z-5b3a7289/results/bin/hashtable_design_consolidation_40_2_2_patch",
+        "bench",
+        "5",
+        "16"
+      ],
+      "start": 1792039410.4030082,
+      "end": 1792039418.4163487,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T044031Z-5b3a7289/results/hashtable_design_consolidation_64_1_64-order0-resources.txt",
+        "taskset",
+        "-c",
+        "0",
+        "/opt/sixdb/jobs/20261015T044031Z-5b3a7289/results/bin/hashtable_design_consolidation_64_1_64",
+        "bench",
+        "5",
+        "16"
+      ],
+      "start": 1792039418.4183576,
+      "end": 1792039419.470129,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T044031Z-5b3a7289/results/hashtable_design_consolidation_64_2_64_patch-order0-resources.txt",
+        "taskset",
+        "-c",
+        "0",
+        "/opt/sixdb/jobs/20261015T044031Z-5b3a7289/results/bin/hashtable_design_consolidation_64_2_64_patch",
+        "bench",
+        "5",
+        "16"
+      ],
+      "start": 1792039419.4713123,
+      "end": 1792039436.3511364,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T044031Z-5b3a7289/results/hashtable_design_consolidation_8_0_0-order0-resources.txt",
+        "taskset",
+        "-c",
+        "0",
+        "/opt/sixdb/jobs/20261015T044031Z-5b3a7289/results/bin/hashtable_design_consolidation_8_0_0",
+        "bench",
+        "5",
+        "16"
+      ],
+      "start": 1792039436.353166,
+      "end": 1792039436.4177957,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T044031Z-5b3a7289/results/hashtable_design_consolidation_8_2_64_patch-order0-resources.txt",
+        "taskset",
+        "-c",
+        "0",
+        "/opt/sixdb/jobs/20261015T044031Z-5b3a7289/results/bin/hashtable_design_consolidation_8_2_64_patch",
+        "bench",
+        "5",
+        "16"
+      ],
+      "start": 1792039436.4184875,
+      "end": 1792039438.0385058,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T044031Z-5b3a7289/results/hashtable_design_consolidation_8_2_64_patch-order1-resources.txt",
+        "taskset",
+        "-c",
+        "0",
+        "/opt/sixdb/jobs/20261015T044031Z-5b3a7289/results/bin/hashtable_design_consolidation_8_2_64_patch",
+        "bench",
+        "5",
+        "16"
+      ],
+      "start": 1792039438.0396934,
+      "end": 1792039439.66357,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T044031Z-5b3a7289/results/hashtable_design_consolidation_8_0_0-order1-resources.txt",
+        "taskset",
+        "-c",
+        "0",
+        "/opt/sixdb/jobs/20261015T044031Z-5b3a7289/results/bin/hashtable_design_consolidation_8_0_0",
+        "bench",
+        "5",
+        "16"
+      ],
+      "start": 1792039439.6648579,
+      "end": 1792039439.730768,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T044031Z-5b3a7289/results/hashtable_design_consolidation_64_2_64_patch-order1-resources.txt",
+        "taskset",
+        "-c",
+        "0",
+        "/opt/sixdb/jobs/20261015T044031Z-5b3a7289/results/bin/hashtable_design_consolidation_64_2_64_patch",
+        "bench",
+        "5",
+        "16"
+      ],
+      "start": 1792039439.7313724,
+      "end": 1792039456.7804008,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T044031Z-5b3a7289/results/hashtable_design_consolidation_64_1_64-order1-resources.txt",
+        "taskset",
+        "-c",
+        "0",
+        "/opt/sixdb/jobs/20261015T044031Z-5b3a7289/results/bin/hashtable_design_consolidation_64_1_64",
+        "bench",
+        "5",
+        "16"
+      ],
+      "start": 1792039456.7825022,
+      "end": 1792039457.8442495,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T044031Z-5b3a7289/results/hashtable_design_consolidation_40_2_2_patch-order1-resources.txt",
+        "taskset",
+        "-c",
+        "0",
+        "/opt/sixdb/jobs/20261015T044031Z-5b3a7289/results/bin/hashtable_design_consolidation_40_2_2_patch",
+        "bench",
+        "5",
+        "16"
+      ],
+      "start": 1792039457.8455443,
+      "end": 1792039465.8393137,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T044031Z-5b3a7289/results/hashtable_design_consolidation_40_1_2-order1-resources.txt",
+        "taskset",
+        "-c",
+        "0",
+        "/opt/sixdb/jobs/20261015T044031Z-5b3a7289/results/bin/hashtable_design_consolidation_40_1_2",
+        "bench",
+        "5",
+        "16"
+      ],
+      "start": 1792039465.8413627,
+      "end": 1792039466.602079,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T044031Z-5b3a7289/results/hashtable_design_consolidation_40_0_0-order1-resources.txt",
+        "taskset",
+        "-c",
+        "0",
+        "/opt/sixdb/jobs/20261015T044031Z-5b3a7289/results/bin/hashtable_design_consolidation_40_0_0",
+        "bench",
+        "5",
+        "16"
+      ],
+      "start": 1792039466.6033325,
+      "end": 1792039467.354124,
+      "returncode": 0,
+      "stderr": ""
+    }
+  ],
+  "binary_sha256": {
+    "hashtable_design_consolidation_40_0_0": "0f7a14fe644c4943b8a7fbdf991884dc6074e4e3924ab4969d595ee2a23f956e",
+    "hashtable_design_consolidation_40_1_2": "55467dfee9f6b48dc2e0b4aaeb6156c942f4bd3df6ff1fdffc43406b9f416036",
+    "hashtable_design_consolidation_40_2_2_patch": "3ed3556d03a0976c02552ef3a86ee968c69359d3ad9a93cfcc47a1c27c652ff8",
+    "hashtable_design_consolidation_64_1_64": "e3b1dcf5736871ec8c70c556a2421a6f3e54cb5f61fe3471db63c54c2c8d7f0d",
+    "hashtable_design_consolidation_64_2_64_patch": "d53d53e150e1fe8f4db5e01d383d9d291a32f7431c54c2c1430e749f18f8be31",
+    "hashtable_design_consolidation_8_0_0": "df67079c6b643aa566edc09d2ade5dd25f85410f8df950d8ebf37dba32d64700",
+    "hashtable_design_consolidation_8_2_64_patch": "e9c9bbee7cbbbeac1f041e2828213196ddbf86c74af7a1f15213057eefed95c2"
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "group": "20261014T020027Z-52f78b61",
+  "workers": {
+    "granite": "20261014T020034Z-ee6b9482",
+    "neon": "20261014T020046Z-a8a9ead3",
+    "zen5": "20261014T020040Z-9acddf54"
+  },
+  "capture": {
+    "base": "/home/ashtonsix/sixdb/build/captures/hashtable-occupancy-v1",
+    "base_digest": "128a25d60fdf46c389d3f4cf6bd949452e1d4551b2597d778ecb12c3470547b8",
+    "source_commit": "7f5e21ef6b1c2e99b4ec000dd2aa249b2053e216",
+    "source_digest": "579783af989d57a19d1d4c2576d7d69117c55a5e8e9c51bcbc37249404f743ea"
+  },
+  "source_sha256": {
+    "recipe_view.h": "f020afb177cefc4b91760a9ceb6ed7adc438a6f85c3b677c7a6b4d6c21709630",
+    "record_table.h": "04d5507c9ef3370bd589eaed047d80e2d44add432f31dbc7469de8ab44ab7b36",
+    "value_width_bench.cpp": "1cf685fbd84797c2b9f315ffa19ed3181969ef341669cdfde6fe52ee62b0c4bb",
+    "inactive_check.cpp": "3bad89ae7e9f196dd588cfc2dd7e819aca3d367e8b9edbb0364fc0eb0d8840a3",
+    "occupancy-run.py": "e9bc6a745cbeecd765ec04de47397b88c912978321344292345968e98addbdc0",
+    "occupancy-native.sh": "1ff8597b208b48b357c1217e8189babca5edfd7ac537943a885859a32ae09a73",
+    "CMakeLists.txt": "052704ca21e5d4317b3954a2eea0b7c7e2ebadf77e5dcdcf289947877cfd4c92"
+  },
+  "status": "v2 submitted; native results and code generation not yet qualified",
+  "supersedes": {
+    "group": "20261014T015155Z-2f5300e6",
+    "workers": {
+      "granite": "20261014T015203Z-69bcf3af",
+      "neon": "20261014T015218Z-173b7c3b",
+      "zen5": "20261014T015211Z-2d22651f"
+    },
+    "reason": "cancelled intentionally before qualification: corrected post-churn point oracle and construction memory snapshot; no v1 native performance claim"
+  }
+}

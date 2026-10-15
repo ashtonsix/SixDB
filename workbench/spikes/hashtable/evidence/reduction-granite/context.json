@@ -1,0 +1,101 @@
+{
+  "format": 1,
+  "authored_analysis": true,
+  "group": "20261013T193308Z-e0e59a57",
+  "job": "20261013T193329Z-b6bb6394",
+  "platform": "granite",
+  "source_manifest_digest": "bf37c64adce223c504554b094d60d56cd714fe7dffc9e26be854dc8b39fd9d0e",
+  "source_archive_sha256": "77322f2a073ba9900571d3a1fc99579355e958ba499850ae551964808948c783",
+  "source_driver_sha256": "e50367ff9f5de2f68706aa12f47ef3661d9b5c023d82a79e0ec98d3e4848e9e4",
+  "resource_receipt": [
+    {
+      "id": "i-02f1ce5c430a3b465",
+      "state": "terminated"
+    }
+  ],
+  "coverage": {
+    "cases": 45,
+    "arms": [
+      0,
+      1,
+      8,
+      9
+    ],
+    "contenders": [
+      "borrowed",
+      "local"
+    ],
+    "repetitions": 9,
+    "csv_rows": 29160,
+    "cells": 3240,
+    "case_processes": 360
+  },
+  "selection": "All cases, forms, arms and repetitions retained; no minimum selection. Full executable, frozen source, compile commands and assembly recoverable through artifact.json.",
+  "checks": {
+    "borrowed": "all-width/all-kind bucket-read permissions, promotion, bags, deletion, reuse, and refusal passed",
+    "local": "all-width/all-kind bucket-read permissions, promotion, bags, deletion, reuse, and refusal passed",
+    "recipe": "recipe exact and widened access, guard thresholds, poisoned neighbors, independent bytes, damage and refusal passed"
+  },
+  "worker_state": {
+    "state": "complete",
+    "script_returncode": 0,
+    "script_seconds": 1373.3696687221527,
+    "worker_seconds_before_collection": 1406.6670870780945
+  },
+  "codegen": {
+    "borrowed": {
+      "assembly_sha256": "7d3e8f29595016cc5b3f3380a5e351ab14aebb95845f136ebb7f997a14e6cc7a",
+      "binary_sha256": "915a617848ee8bcf36b0bf430aaf323dc9414709b45f5f48f1c643c06f672fe9",
+      "source_sha256": "e50367ff9f5de2f68706aa12f47ef3661d9b5c023d82a79e0ec98d3e4848e9e4",
+      "outlined_timing_wrappers": 0,
+      "phase_assignment": "DWARF inline caller locations matched to frozen source assignments; no clock ordinal or lambda number",
+      "timed_regions": 720,
+      "read_regions": 540,
+      "unknown_branches": 0,
+      "indirect_calls": 0,
+      "per_key_or_value_calls_in_read_loops": 0,
+      "read_locations": {
+        "candidate_whole_loop": 270,
+        "baseline_inline": 270
+      }
+    },
+    "local": {
+      "assembly_sha256": "72974dbcaa89ecf1a729a8b7a710a28b8aabb962882675914e1203a55bb83090",
+      "binary_sha256": "b9768d8017d55b9deac43e2d22e2d077a90034d8d7ade66517f74262bce5fd28",
+      "source_sha256": "e50367ff9f5de2f68706aa12f47ef3661d9b5c023d82a79e0ec98d3e4848e9e4",
+      "outlined_timing_wrappers": 14,
+      "phase_assignment": "DWARF inline caller locations matched to frozen source assignments; no clock ordinal or lambda number",
+      "timed_regions": 720,
+      "read_regions": 540,
+      "unknown_branches": 0,
+      "indirect_calls": 0,
+      "per_key_or_value_calls_in_read_loops": 0,
+      "read_locations": {
+        "candidate_whole_loop": 270,
+        "baseline_inline": 238,
+        "baseline_whole_loop": 32
+      }
+    }
+  },
+  "limitations": [
+    "Single-writer exclusive-owner experiment. No concurrent writer, MVCC publication, DRAM, Loom prefetch or established cache-residence claim.",
+    "This compares complete caller codegen: borrowed checksum versus local result returned at loop end. Baseline loops change too, including metadata/constant hoisting, branch and whole-loop outlining. It does not isolate one checksum memory store.",
+    "Same frozen source and flags build both contenders on each host. All45 cases and arms0/1/8/9 retained. Paired process order is randomized with seed127 (borrowed first86 pairs; local first94); case order is shuffled. Nine repetitions each have fresh Pool and complete read warmup. Process placement, temporal drift and Abseil seed differences remain.",
+    "K8..64, set/map/multimap, A6/A10 except K8A6 only, exact arbitrary-fit bucket recipes. Cardinality follows the explicit historical capacity control; formats are not compared at their own equal occupancy. K8 bypasses compact-list policy.",
+    "Direct replaces bucket-field operations only; owner, hashing, routing and chains stay common. It is not an independent whole table.",
+    "Timing uses std::chrono::steady_clock. Hit/miss results have independent per-key checks. Map serial depends on values; multimap XORs all values and proves the complete cycle; set serial includes caller dependency.",
+    "Full lifetime sums separately timed construct/build/update/erase/release. Reads, inventories, checks and Pool setup/drain are excluded. This is not uninterrupted lifetime throughput.",
+    "Requested bytes, owned backing and metadata are separate. Logical bytes=requested+metadata. Baseline owned_capacity zero means unknown, not measured zero. RSS, transient peaks and residence are not established. Per-repetition logical bytes, geometry, populations and operations match between caller forms.",
+    "Inventory is after build for construct/build/read, after update for update, and after erase for erase/release/lifecycle. Population fields always describe build. Data backing histories are retained but equality is not assumed.",
+    "Abseil reserves known cardinality in construct. Its InlinedVector<word,1> actually holds two inline values on these ABIs; candidate holds one. Multimap append allocation asymmetry remains and is not the separate admitted-append experiment.",
+    "Host ISA and microarchitecture change together (Zen5 AVX2 x86-64-v3, Granite native AVX512, V2 NEON); this is not an ISA-only comparison.",
+    "Complete timed CFG and helper audit resolves phase through frozen-source DWARF callsites, including outlined timers. It establishes call boundaries, not runtime branch frequency, PMU profiling or cycle causality. Medians across cases are descriptive; no default or preset is selected.",
+    "Earlier access and later prepared captures change other owner/driver bytes; only borrowed/local within this cohort is the matched reduction comparison."
+  ],
+  "regenerate": [
+    "python3 workbench/spikes/hashtable-design/evidence/reduction-native/compare.py workbench/spikes/hashtable-design/evidence/reduction-granite build/reduction-granite-comparison",
+    "python3 workbench/tools/worker.py fetch 20261013T193329Z-b6bb6394 --file borrowed --file local",
+    "python3 workbench/spikes/hashtable-design/evidence/reduction-native/audit-dwarf.py build/workers/20261013T193329Z-b6bb6394/results/FORM-assembly.gz build/workers/20261013T193329Z-b6bb6394/results/FORM build/captures/hashtable-reduction-native/workbench/spikes/hashtable-design/formats.cpp build/reduction-granite-FORM-audit",
+    "python3 workbench/spikes/hashtable-design/evidence/reduction-native/codegen-summary.py build/reduction-granite-FORM-audit/codegen.json build/reduction-granite-FORM-audit"
+  ]
+}

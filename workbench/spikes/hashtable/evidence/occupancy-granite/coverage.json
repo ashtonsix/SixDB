@@ -1,0 +1,63 @@
+{
+  "rows": 46800,
+  "processes": 720,
+  "complete_case_comparisons": 4680,
+  "passes": 2,
+  "repetitions_per_process": 5,
+  "elf_count": 10,
+  "timed_regions": 2520,
+  "read_regions": 2160,
+  "update_regions": 360,
+  "ordered_set_regions": 72,
+  "map_serial_regions": 216,
+  "multimap_serial_regions": 72,
+  "encodings": [
+    "count",
+    "inactive"
+  ],
+  "cases": [
+    "16_2_1",
+    "40_0_0",
+    "40_2_1",
+    "40_8_2",
+    "64_16_1"
+  ],
+  "source_version": "v2",
+  "source_manifest_digest": "579783af989d57a19d1d4c2576d7d69117c55a5e8e9c51bcbc37249404f743ea",
+  "source_archive_sha256": "167c35ab369ff77ffa4b86457a15806cc12c24a33adef6384be3240cbd6259e0",
+  "source_driver_sha256": "1cf685fbd84797c2b9f315ffa19ed3181969ef341669cdfde6fe52ee62b0c4bb",
+  "report_sha256": "e9bc6a745cbeecd765ec04de47397b88c912978321344292345968e98addbdc0",
+  "timed_elf_sha256": {
+    "occupancy-16_2_1-count": "0b0991e9e2919445fcba200f91c125080d52c5a8b70b13d83860984fc7ebdde5",
+    "occupancy-16_2_1-inactive": "89e225feeb21f33e0c3927c99a689c4ed53c8fd3076a78cc07552f28ef03eeae",
+    "occupancy-40_0_0-count": "0c9d3238acdc7710c23ac4c36f575ab3b11526f2bf789a3c4d87a4ad3473d39e",
+    "occupancy-40_0_0-inactive": "61f5877c5e07d61f10037aa21d55b5ace60a8fc8927a01a560c71a372fba3208",
+    "occupancy-40_2_1-count": "1509d2207b690bb83aacf79c707ea6663836accb87721a9736ae97e39dfd0e57",
+    "occupancy-40_2_1-inactive": "1df7c22dae2fd1061438b77da8eaacdaabb3c007f75d00ec39f3bc624dbabf2c",
+    "occupancy-40_8_2-count": "50b8e15f4267ae6b7803b29b79a187268176d4e3422b18b806876373c1ad8536",
+    "occupancy-40_8_2-inactive": "b87eaa0d18e2f5bb5c8ece5b4ccff154d96a5772cacaf85c7bb0981e4780aa37",
+    "occupancy-64_16_1-count": "30e157446cac3bfc2a20998a591c97b646a5c779ea3fdce133cdaa722ed8b702",
+    "occupancy-64_16_1-inactive": "f75d843b1c0fedbe9f6c6c07e355ba0b18e08db835e9e8b70b020b434418469e"
+  },
+  "checks": [
+    "complete seeded schedule, forward/reverse process order and all13 phase operation counts",
+    "serialized process timestamps, zero returns and empty stderr",
+    "complete frozen report reproduces exactly, including losses and per-pass medians",
+    "every phase requested/owned/metadata inventory and geometry agrees across encodings",
+    "independent fitting capacities, padding, build populations and reference/actual geometry",
+    "all ten native audited ELF identities equal timed process identities",
+    "six read phases and update resolve through actual frozen-source DWARF callsites; reuse timer recognized but not mutation-audited"
+  ],
+  "limitations": [
+    "Five domain/value/kind cases only; not full API/domain/width/growth or DRAM coverage.",
+    "Cancelled v1 is excluded; revised post-churn point oracle and construction snapshot are from reviewed v2.",
+    "Map/MM serial is the driver label. Call fusion alone does not prove full value-byte dataflow or the actual machine-code dependency chain.",
+    "Ordered set traversal is not strict serial lookup latency.",
+    "MM starts singleton, updates to pairs, deletes half and reuses those keys as singletons. Reused reads cover a half-pair/half-singleton history, not original uniform fanout.",
+    "Build tier populations remain build measurements on every row; they do not report post-deletion or post-reuse populations.",
+    "Phase inventories exclude transient peaks; table bytes do not establish cache residence.",
+    "Static CFG recurrence is not dynamic call frequency or cost. Conditional cold allocation and spill calls remain reported.",
+    "Repeated processes on one host are not independent host trials. Unchanged Abseil source can vary with code placement/runtime seed.",
+    "Encoding changes keep inventories matched but alter complete generated code; timing differences are not isolated instruction costs. No preset or promotion follows from this audit."
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "kind": "authored interpretation of archived matched-feature study",
+  "group": "20261013T163310Z-03d2e9c2",
+  "job": "20261013T163323Z-5278c299",
+  "source_manifest_digest": "3d008206c7e1e17374ff09a1f872d1aed3f1681052d4d6c0707672f1d2044b6d",
+  "source_tar_gz_sha256": "d9e133fa393e5aba2f28ed24d7ffc459ae4268cc3023cdb3e1ebabc73c955d77",
+  "source_changes_from_surface": "Only rich-features-native.sh addition and surface-report.py helper update; rich driver, all primitive headers and CMake unchanged.",
+  "rich_composition_cpp_sha256": "a5f1bb5ea1ee3e2627ee329801ad0bdb7c936391ce88d4e98cd007d489459256",
+  "scope": [
+    "Same frozen rich-format driver/header source for all tiers and hosts; script/report additions only.",
+    "AVX2 and AVX2+GFNI are feature-matched across hosts; native enables additional platform-specific features.",
+    "No cache-residence claim; allocated payload, query state and shared controls all occupy memory.",
+    "Three rotated process passes; each cell below is the median of eight internal repetitions per process.",
+    "All five complete operations/tails/layouts retained; raw fused independently encodes and routes the same bytes.",
+    "This is a primitive composition control, not a complete hash table or a multi-writer result.",
+    "F7+C13 is an independent packing-composition stress case, not clamp-derived hash geometry: Kb<8 implies Kc=0. Its GFNI speedup must not be claimed for default F8 K40 tables. No hashing/table cost is included.",
+    "Native extra features are not uniformly best: Zen5 one-bucket F7 6B changed-update active1 is9.467ns native vs5.093ns AVX2+GFNI. All tails/operations and per-process repetitions are available in summary.json and raw CSVs in the archive."
+  ],
+  "flags": {
+    "avx2": "-march=x86-64-v3",
+    "avx2-gfni": "-march=x86-64-v3 -mgfni",
+    "native": "-march=graniterapids",
+    "tune": "-mtune=graniterapids",
+    "shared": "-fno-vectorize -fno-slp-vectorize -fno-fast-math -ffp-contract=off; exact full command in each tier compile.json"
+  },
+  "codegen": "Each SP/TP split6 getter is call-free. AVX2+GFNI and native have one vgf2p8affineqb and no stack access. Native also uses exact14B masked byte load and mask-register equality; AVX2+GFNI uses bounded scalar assembly of14B plus movemask. Instruction count alone does not establish throughput mechanism."
+}

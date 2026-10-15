@@ -43,6 +43,18 @@ template <unsigned Rows, class Address>
                                                       std::size_t stride = 0) {
     return detail::read_gpr_body<Rows>(p, std::forward<Address>(address), active, stride);
 }
+/// Requires a prepared Rows projection with transfer.bytes == Bytes, admitted
+/// before entering the authored consumer. Preserves that transfer's exact read
+/// window, shift and mask. Only active rows request addresses; a nonzero stride
+/// promises one strided allocation. Row/window admission belongs to the caller.
+template <unsigned Rows, unsigned Bytes, class Address>
+[[gnu::always_inline]] inline std::uint64_t
+read_transfer_body(const detail::gpr_read &p, Address &&address, std::uint64_t active,
+                   std::size_t stride = 0) {
+    static_assert(Bytes > 0 && Bytes <= 8 / Rows);
+    return detail::read_gpr_transfer<Rows, Bytes>(p, std::forward<Address>(address), active,
+                                                 stride);
+}
 template <unsigned Rows, class Address>
 [[gnu::always_inline]] inline void write_body(const detail::gpr_write &p, Address &&address,
                                               std::uint64_t input, std::uint64_t active,

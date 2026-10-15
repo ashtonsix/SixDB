@@ -1,0 +1,37 @@
+{
+  "purpose": "Pinned concurrent baseline adapters, API semantics and complete-operation smoke check; not a candidate comparison or scaling result.",
+  "source_sha256": {
+    "workbench/spikes/hashtable-design/concurrent_baselines.h": "6157795fdead95af492ab36f9235bd568551c32406ed1f1bd5bc5b0fa82e10e3",
+    "workbench/spikes/hashtable-design/concurrent_baselines_check.cpp": "d4add00c7fcdc24cd6cff266539ac489b868169d094d654d968301e9ea2dba1e",
+    "workbench/spikes/hashtable-design/concurrent_baselines.cmake": "c45c17a4ad5d455bd161ade56251ae8c503969eb9830ff963a4f47cca2e5be65",
+    "workbench/spikes/hashtable/baseline.cmake": "8786a624f13af117984e80728677a61f2acf9ad106ab381cadded9bfc52bd1ba",
+    "cmake/Targets.cmake": "b7eb38013405d31473c08d747bf260712b5d64841567a0c3736460941f0d24bf",
+    "cmake/Tuning.cmake": "6d29c93b4713a8ea7ffd9c1682062a46470235cc74ef2e1194ed71b774940ad9"
+  },
+  "binary_sha256": {
+    "concurrent-baselines-release": "902d3a06b8b83ff77d5541c874cba89066f6acd7dbe5a29c2915de9b37ccdc57",
+    "concurrent-baselines-k40-asan": "c5ae30747d32be1ff71b883cc051571eaf2594893ab1a2a1cfe53118b119bf29"
+  },
+  "release_cases": 96,
+  "oracle_writers": 4,
+  "asan_ubsan_cases": 12,
+  "asan_K": 40,
+  "asan_source": "source/asan (only final quiescent-read commentary differs from Release header)",
+  "timing_rows": 96,
+  "timing_workers": 2,
+  "timing_repetitions": 1,
+  "timing_digest_groups": 24,
+  "timing_digest_match": true,
+  "boost_release": "1.90.0",
+  "boost_unordered_revision": "11e05a3c4c449a46819f0030e7d105fbc154d476",
+  "boost_archive_sha256": "49551aff3b22cbc5c5a9ed3dbc92f0e23ea50a0f7325b0d198b705e8ee3fc305",
+  "gtl_revision": "4c0a7a1d4a86143247b6ea7a5e4c7d6104d78590",
+  "gtl_archive_sha256": "42bc863a546e31af4e017fb60c4b225a13de80ce167b2e442fdcb86ec2e4da51",
+  "pinned_dependencies": "Reacquired from the immutable/hash-checked public URLs in captured CMake; vendor archives and toolchain are not duplicated in this bundle.",
+  "owner_bytes": {
+    "boost": 8424,
+    "gtl": 4096
+  },
+  "timing_qualification": "Local AArch64 OrbStack VM; no CPU pinning and one repetition. Thread creation/input setup excluded; measured ingestion barriers, online growth, protected full-value consume and destruction. No winner/scalability/ISA claim.",
+  "quiescent_read_qualification": "GTL consume<true> uses if_contains_unsafe only after all mutations stop. Boost still uses cvisit; native downgrade is a separate unmeasured ownership operation."
+}

@@ -1,0 +1,97 @@
+{
+  "consumers": [
+    {
+      "owner": "abseil",
+      "ready": false,
+      "hints": false,
+      "instructions": 208,
+      "allowed_outer_calls": [],
+      "rbp_preservation": [],
+      "ready_frame": []
+    },
+    {
+      "owner": "abseil",
+      "ready": false,
+      "hints": false,
+      "instructions": 152,
+      "allowed_outer_calls": [],
+      "rbp_preservation": [],
+      "ready_frame": []
+    },
+    {
+      "owner": "generic",
+      "ready": true,
+      "hints": false,
+      "instructions": 332,
+      "allowed_outer_calls": [],
+      "rbp_preservation": [],
+      "ready_frame": [
+        "1b240: d10083ff     \tsub\tsp, sp, #0x20",
+        "1b264: 910083ff     \tadd\tsp, sp, #0x20",
+        "1b4f0: f9000fff     \tstr\txzr, [sp, #0x18]",
+        "1b508: a9002fe9     \tstp\tx9, x11, [sp]",
+        "1b50c: 390043ed     \tstrb\tw13, [sp, #0x10]",
+        "1b558: 910003ec     \tmov\tx12, sp",
+        "1b59c: f9000fff     \tstr\txzr, [sp, #0x18]",
+        "1b5b4: a9002fe9     \tstp\tx9, x11, [sp]",
+        "1b5b8: 390043ed     \tstrb\tw13, [sp, #0x10]",
+        "1b614: 910003ec     \tmov\tx12, sp",
+        "1b650: 910003ed     \tmov\tx13, sp",
+        "1b750: 910083ff     \tadd\tsp, sp, #0x20",
+        "1b75c: 910083ff     \tadd\tsp, sp, #0x20",
+        "1b764: 910083ff     \tadd\tsp, sp, #0x20"
+      ]
+    },
+    {
+      "owner": "generic",
+      "ready": true,
+      "hints": true,
+      "instructions": 440,
+      "allowed_outer_calls": [],
+      "rbp_preservation": [],
+      "ready_frame": [
+        "1c980: d10083ff     \tsub\tsp, sp, #0x20",
+        "1c9a4: 910083ff     \tadd\tsp, sp, #0x20",
+        "1cd00: f9000fff     \tstr\txzr, [sp, #0x18]",
+        "1cd18: a90033ea     \tstp\tx10, x12, [sp]",
+        "1cd1c: 390043ee     \tstrb\tw14, [sp, #0x10]",
+        "1cd84: f9000fff     \tstr\txzr, [sp, #0x18]",
+        "1cd9c: a90033ea     \tstp\tx10, x12, [sp]",
+        "1cda0: 390043ee     \tstrb\tw14, [sp, #0x10]",
+        "1ce44: 910003ed     \tmov\tx13, sp",
+        "1cec0: 910003ed     \tmov\tx13, sp",
+        "1cefc: 910003ee     \tmov\tx14, sp",
+        "1d02c: 910083ff     \tadd\tsp, sp, #0x20",
+        "1d038: 910083ff     \tadd\tsp, sp, #0x20",
+        "1d040: 910083ff     \tadd\tsp, sp, #0x20"
+      ]
+    },
+    {
+      "owner": "abseil",
+      "ready": false,
+      "hints": false,
+      "instructions": 656,
+      "allowed_outer_calls": [
+        "1eb74: 97ffa037     \tbl\t0x6c50 <memset@plt>"
+      ],
+      "rbp_preservation": [],
+      "ready_frame": []
+    },
+    {
+      "owner": "abseil",
+      "ready": false,
+      "hints": false,
+      "instructions": 440,
+      "allowed_outer_calls": [
+        "1f5b4: 97ff9da7     \tbl\t0x6c50 <memset@plt>"
+      ],
+      "rbp_preservation": [],
+      "ready_frame": []
+    }
+  ],
+  "ready_calls": 0,
+  "ready_other_stack_references": 28,
+  "ready_callbacks_preserving_rbp": 0,
+  "outlined_baseline_lookup": 0,
+  "limitation": "Static calls and frame references only; not instruction quality, lifetime, traffic or performance."
+}

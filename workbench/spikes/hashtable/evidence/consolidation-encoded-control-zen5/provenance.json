@@ -1,0 +1,23 @@
+{
+  "files_sha256": {
+    "compiler.txt": "5b17cd9bfa01ae4b276d020d757aeed82b232d4dacef417a833e5ba69a5307da",
+    "context.json": "074e434df32c59c3f96987e4118b31a6b70d3a48d325bfb2b27045a505dd7a98",
+    "hashtable_design_consolidation_40_1_2-check.txt": "765e19bee438937fd9db2d1011b08a848c5459d431f9c5ea0156bb0ef02146bf",
+    "hashtable_design_consolidation_40_1_2-order0.csv": "1b0f6177bb24c90bebe1aa503018ebefad46a3baf80085f39850de2118a96323",
+    "hashtable_design_consolidation_40_1_2-order1.csv": "3a8e8e79315d0cca204cdd09ee008c04807ac4a564154c717e70c4e9abde8232",
+    "hashtable_design_consolidation_64_1_64-check.txt": "765e19bee438937fd9db2d1011b08a848c5459d431f9c5ea0156bb0ef02146bf",
+    "hashtable_design_consolidation_64_1_64-order0.csv": "0b1dd3e0a04cfa6d8bd0ee512aa76f22a6cc0a827bf1aab5458ac7c7caad8813",
+    "hashtable_design_consolidation_64_1_64-order1.csv": "eddd0e7a8e4d919eda64256cd3ee598caf4c9d1bfcff23e5c68000ddd2f01da7",
+    "lscpu.json": "63bec28bf3a4771fad8dbac75fd88d0b5baa94d46f34a8a69c6980668920a449"
+  },
+  "format": 2,
+  "full_bundle": "artifact.json",
+  "kind": "files",
+  "regenerate": [
+    "python3",
+    "workbench/spikes/hashtable/consolidation-report.py",
+    "{evidence}",
+    "--output",
+    "{evidence}/summary"
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "avx2": {
+    "__AVX2__": true,
+    "__GFNI__": false,
+    "__AVX512F__": false,
+    "__AVX512BW__": false,
+    "__AVX512VL__": false,
+    "__AVX512VBMI__": false,
+    "fingerprint_bits": 8
+  },
+  "avx2-gfni": {
+    "__AVX2__": true,
+    "__GFNI__": true,
+    "__AVX512F__": false,
+    "__AVX512BW__": false,
+    "__AVX512VL__": false,
+    "__AVX512VBMI__": false,
+    "fingerprint_bits": 8
+  },
+  "native": {
+    "__AVX2__": true,
+    "__GFNI__": true,
+    "__AVX512F__": true,
+    "__AVX512BW__": true,
+    "__AVX512VL__": true,
+    "__AVX512VBMI__": true,
+    "fingerprint_bits": 8
+  }
+}

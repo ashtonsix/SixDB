@@ -1,0 +1,38 @@
+{
+  "files_sha256": {
+    "compiler.txt": "0cf7e452648b3754289200426984662d1d8d0a21d56310d301a24e11399ceab8",
+    "context.json": "a2539f1c59a2f644b15a23f6ca139de7c96747b84258ffc45fc1dab14739de74",
+    "hashtable_design_consolidation_40_0_0-check.txt": "765e19bee438937fd9db2d1011b08a848c5459d431f9c5ea0156bb0ef02146bf",
+    "hashtable_design_consolidation_40_0_0-order0.csv": "17bafd170a8b258599a0d687a245ecd31e20759262384a7e9f4ea8d0ebbcad73",
+    "hashtable_design_consolidation_40_0_0-order1.csv": "743adc34a67b1438eb4aee6f2bfc57c849eb62460603289ea556c215de9155f7",
+    "hashtable_design_consolidation_40_1_2-check.txt": "765e19bee438937fd9db2d1011b08a848c5459d431f9c5ea0156bb0ef02146bf",
+    "hashtable_design_consolidation_40_1_2-order0.csv": "62cf582b560a1ed276be31a62a2ef1b5f2a8c275e63cb0b0363d432cb7c29ecd",
+    "hashtable_design_consolidation_40_1_2-order1.csv": "adf9e266f819d4366b806fb5e36fb84248a160a2f302a5e84ad401e573a71159",
+    "hashtable_design_consolidation_40_2_2_patch-check.txt": "765e19bee438937fd9db2d1011b08a848c5459d431f9c5ea0156bb0ef02146bf",
+    "hashtable_design_consolidation_40_2_2_patch-order0.csv": "ad03ef8bf4143259703badca04648750ea713301103595b2ae61bb44df639712",
+    "hashtable_design_consolidation_40_2_2_patch-order1.csv": "82211dfe98f035b7647a1d0882efe14bab04697af6515cdd9894802f4c4fd76d",
+    "hashtable_design_consolidation_64_1_64-check.txt": "765e19bee438937fd9db2d1011b08a848c5459d431f9c5ea0156bb0ef02146bf",
+    "hashtable_design_consolidation_64_1_64-order0.csv": "97f4c3288e19d4c852759f092f6b76ded18c0e0de53f745e55c8cdb5db4fbbb7",
+    "hashtable_design_consolidation_64_1_64-order1.csv": "d31b9a8767f28259cc7460380ff77d0f11dc94ed23a34789e7130ba3db8f0c15",
+    "hashtable_design_consolidation_64_2_64_patch-check.txt": "765e19bee438937fd9db2d1011b08a848c5459d431f9c5ea0156bb0ef02146bf",
+    "hashtable_design_consolidation_64_2_64_patch-order0.csv": "816ccc9e6b69485d6264ec2e95d5d150c0c9ca2444edf593a538467ba05673d5",
+    "hashtable_design_consolidation_64_2_64_patch-order1.csv": "ab7deae3be5bf7301fe4d6a0e7ab8ab2687d14ada04d2f0cd14b7ebbbf82bdf5",
+    "hashtable_design_consolidation_8_0_0-check.txt": "765e19bee438937fd9db2d1011b08a848c5459d431f9c5ea0156bb0ef02146bf",
+    "hashtable_design_consolidation_8_0_0-order0.csv": "323c38da2bf0acb078448bfd4f8504b2b76e442336621248e19c0431decf5d88",
+    "hashtable_design_consolidation_8_0_0-order1.csv": "a5129facf9141224d2a6fc5d34bf88896b68d5cda0c9d7640a43d64030acf8b8",
+    "hashtable_design_consolidation_8_2_64_patch-check.txt": "765e19bee438937fd9db2d1011b08a848c5459d431f9c5ea0156bb0ef02146bf",
+    "hashtable_design_consolidation_8_2_64_patch-order0.csv": "66bb2bb0bce4b047be324bf4ab842d572d8fd0dfd7ea12d646a808e8a9a21d7c",
+    "hashtable_design_consolidation_8_2_64_patch-order1.csv": "96425340c10335968f68adeacc2291d18092cbb223e3642351df54003ac45296",
+    "lscpu.json": "6d1b3478b5d53e41a853af9e2137c628b708c15d4c70b8963eeb019da3a8688f"
+  },
+  "format": 2,
+  "full_bundle": "artifact.json",
+  "kind": "files",
+  "regenerate": [
+    "python3",
+    "workbench/spikes/hashtable/consolidation-report.py",
+    "{evidence}",
+    "--output",
+    "{evidence}/summary"
+  ]
+}

@@ -1,0 +1,3717 @@
+{
+  "updates": [
+    {
+      "K": 16,
+      "value_bytes": 2,
+      "kind": 1,
+      "reference_A": 10,
+      "A": 10,
+      "arm": 0,
+      "clock": "0xac1b",
+      "location": "whole_loop_helper",
+      "helper_address": "0x1a630",
+      "effective_calls": [
+        {
+          "address": "0x1ab6b",
+          "opcode": "callq",
+          "target": "0x19bb0 <std::optional<unsigned int> ht::links<16u, false, 2u, false, false, 16u>::acquire<ht::promoted_observer<ht::no_small_effects, false>>(unsigned int, ht::promoted_observer<ht::no_small_effects, false>&)>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "key_overflow"
+        },
+        {
+          "address": "0x1adbe",
+          "opcode": "callq",
+          "target": "0x5500 <fprintf@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "other"
+        },
+        {
+          "address": "0x1adc3",
+          "opcode": "callq",
+          "target": "0x5200 <abort@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        },
+        {
+          "address": "0x1ade2",
+          "opcode": "callq",
+          "target": "0x5500 <fprintf@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "other"
+        },
+        {
+          "address": "0x1ade7",
+          "opcode": "callq",
+          "target": "0x5200 <abort@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        },
+        {
+          "address": "0x1ae09",
+          "opcode": "callq",
+          "target": "0x5500 <fprintf@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "other"
+        },
+        {
+          "address": "0x1ae0e",
+          "opcode": "callq",
+          "target": "0x5200 <abort@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        },
+        {
+          "address": "0x1ae1b",
+          "opcode": "callq",
+          "target": "0x19b30 <std::_Optional_base<ht::links<16u, false, 2u, false, false, 16u>::reservation<ht::promoted_observer<ht::no_small_effects, false>>, false, false>::~_Optional_base()>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "key_overflow"
+        },
+        {
+          "address": "0x1ae23",
+          "opcode": "callq",
+          "target": "0x5640 <_Unwind_Resume@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        }
+      ],
+      "unresolved_branches": [],
+      "encoding": "count",
+      "case": "16_2_1"
+    },
+    {
+      "K": 16,
+      "value_bytes": 2,
+      "kind": 1,
+      "reference_A": 10,
+      "A": 9,
+      "arm": 1,
+      "clock": "0x2332f",
+      "location": "whole_loop_helper",
+      "helper_address": "0x2e9d0",
+      "effective_calls": [
+        {
+          "address": "0x2ef0b",
+          "opcode": "callq",
+          "target": "0x19bb0 <std::optional<unsigned int> ht::links<16u, false, 2u, false, false, 16u>::acquire<ht::promoted_observer<ht::no_small_effects, false>>(unsigned int, ht::promoted_observer<ht::no_small_effects, false>&)>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "key_overflow"
+        },
+        {
+          "address": "0x2f15e",
+          "opcode": "callq",
+          "target": "0x5500 <fprintf@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "other"
+        },
+        {
+          "address": "0x2f163",
+          "opcode": "callq",
+          "target": "0x5200 <abort@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        },
+        {
+          "address": "0x2f182",
+          "opcode": "callq",
+          "target": "0x5500 <fprintf@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "other"
+        },
+        {
+          "address": "0x2f187",
+          "opcode": "callq",
+          "target": "0x5200 <abort@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        },
+        {
+          "address": "0x2f1a9",
+          "opcode": "callq",
+          "target": "0x5500 <fprintf@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "other"
+        },
+        {
+          "address": "0x2f1ae",
+          "opcode": "callq",
+          "target": "0x5200 <abort@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        },
+        {
+          "address": "0x2f1bb",
+          "opcode": "callq",
+          "target": "0x19b30 <std::_Optional_base<ht::links<16u, false, 2u, false, false, 16u>::reservation<ht::promoted_observer<ht::no_small_effects, false>>, false, false>::~_Optional_base()>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "key_overflow"
+        },
+        {
+          "address": "0x2f1c3",
+          "opcode": "callq",
+          "target": "0x5640 <_Unwind_Resume@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        }
+      ],
+      "unresolved_branches": [],
+      "encoding": "count",
+      "case": "16_2_1"
+    },
+    {
+      "K": 16,
+      "value_bytes": 2,
+      "kind": 1,
+      "reference_A": 10,
+      "A": 10,
+      "arm": 16,
+      "clock": "0x1526ea",
+      "location": "timed_cfg",
+      "helper_address": null,
+      "effective_calls": [
+        {
+          "address": "0x15285b",
+          "opcode": "callq",
+          "target": "0x17cd30 <absl::lts_20260817::container_internal::PrepareInsertLarge(absl::lts_20260817::container_internal::CommonFields&, absl::lts_20260817::container_internal::PolicyFunctions const&, unsigned long, absl::lts_20260817::container_internal::NonIterableBitMask<unsigned int, 16, 0>, absl::lts_20260817::container_internal::FindInfo)>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "abseil_boundary"
+        },
+        {
+          "address": "0x1528a4",
+          "opcode": "callq",
+          "target": "0x17e8a0 <void* absl::lts_20260817::container_internal::GrowSooTableToNextCapacityAndPrepareInsert<8ul, true>(absl::lts_20260817::container_internal::CommonFields&, absl::lts_20260817::container_internal::PolicyFunctions const&, absl::lts_20260817::FunctionRef<unsigned long (unsigned long)>, bool)>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "abseil_boundary"
+        }
+      ],
+      "unresolved_branches": [],
+      "encoding": "count",
+      "case": "16_2_1"
+    },
+    {
+      "K": 16,
+      "value_bytes": 2,
+      "kind": 1,
+      "reference_A": 10,
+      "A": 10,
+      "arm": 17,
+      "clock": "0x16349a",
+      "location": "timed_cfg",
+      "helper_address": null,
+      "effective_calls": [
+        {
+          "address": "0x16360b",
+          "opcode": "callq",
+          "target": "0x17cd30 <absl::lts_20260817::container_internal::PrepareInsertLarge(absl::lts_20260817::container_internal::CommonFields&, absl::lts_20260817::container_internal::PolicyFunctions const&, unsigned long, absl::lts_20260817::container_internal::NonIterableBitMask<unsigned int, 16, 0>, absl::lts_20260817::container_internal::FindInfo)>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "abseil_boundary"
+        },
+        {
+          "address": "0x163654",
+          "opcode": "callq",
+          "target": "0x17e8a0 <void* absl::lts_20260817::container_internal::GrowSooTableToNextCapacityAndPrepareInsert<8ul, true>(absl::lts_20260817::container_internal::CommonFields&, absl::lts_20260817::container_internal::PolicyFunctions const&, absl::lts_20260817::FunctionRef<unsigned long (unsigned long)>, bool)>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "abseil_boundary"
+        }
+      ],
+      "unresolved_branches": [],
+      "encoding": "count",
+      "case": "16_2_1"
+    },
+    {
+      "K": 16,
+      "value_bytes": 2,
+      "kind": 1,
+      "reference_A": 10,
+      "A": 10,
+      "arm": 0,
+      "clock": "0xac75",
+      "location": "whole_loop_helper",
+      "helper_address": "0x1b210",
+      "effective_calls": [
+        {
+          "address": "0x1b76a",
+          "opcode": "callq",
+          "target": "0x1a790 <std::optional<unsigned int> ht::links<16u, false, 2u, false, false, 16u>::acquire<ht::promoted_observer<ht::no_small_effects, false>>(unsigned int, ht::promoted_observer<ht::no_small_effects, false>&)>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "key_overflow"
+        },
+        {
+          "address": "0x1ba09",
+          "opcode": "callq",
+          "target": "0x5500 <fprintf@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "other"
+        },
+        {
+          "address": "0x1ba0e",
+          "opcode": "callq",
+          "target": "0x5200 <abort@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        },
+        {
+          "address": "0x1ba2d",
+          "opcode": "callq",
+          "target": "0x5500 <fprintf@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "other"
+        },
+        {
+          "address": "0x1ba32",
+          "opcode": "callq",
+          "target": "0x5200 <abort@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        },
+        {
+          "address": "0x1ba54",
+          "opcode": "callq",
+          "target": "0x5500 <fprintf@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "other"
+        },
+        {
+          "address": "0x1ba59",
+          "opcode": "callq",
+          "target": "0x5200 <abort@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        },
+        {
+          "address": "0x1ba66",
+          "opcode": "callq",
+          "target": "0x1a710 <std::_Optional_base<ht::links<16u, false, 2u, false, false, 16u>::reservation<ht::promoted_observer<ht::no_small_effects, false>>, false, false>::~_Optional_base()>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "key_overflow"
+        },
+        {
+          "address": "0x1ba6e",
+          "opcode": "callq",
+          "target": "0x5640 <_Unwind_Resume@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        }
+      ],
+      "unresolved_branches": [],
+      "encoding": "inactive",
+      "case": "16_2_1"
+    },
+    {
+      "K": 16,
+      "value_bytes": 2,
+      "kind": 1,
+      "reference_A": 10,
+      "A": 9,
+      "arm": 1,
+      "clock": "0x248a0",
+      "location": "whole_loop_helper",
+      "helper_address": "0x307a0",
+      "effective_calls": [
+        {
+          "address": "0x30cfa",
+          "opcode": "callq",
+          "target": "0x1a790 <std::optional<unsigned int> ht::links<16u, false, 2u, false, false, 16u>::acquire<ht::promoted_observer<ht::no_small_effects, false>>(unsigned int, ht::promoted_observer<ht::no_small_effects, false>&)>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "key_overflow"
+        },
+        {
+          "address": "0x30f99",
+          "opcode": "callq",
+          "target": "0x5500 <fprintf@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "other"
+        },
+        {
+          "address": "0x30f9e",
+          "opcode": "callq",
+          "target": "0x5200 <abort@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        },
+        {
+          "address": "0x30fbd",
+          "opcode": "callq",
+          "target": "0x5500 <fprintf@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "other"
+        },
+        {
+          "address": "0x30fc2",
+          "opcode": "callq",
+          "target": "0x5200 <abort@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        },
+        {
+          "address": "0x30fe4",
+          "opcode": "callq",
+          "target": "0x5500 <fprintf@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "other"
+        },
+        {
+          "address": "0x30fe9",
+          "opcode": "callq",
+          "target": "0x5200 <abort@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        },
+        {
+          "address": "0x30ff6",
+          "opcode": "callq",
+          "target": "0x1a710 <std::_Optional_base<ht::links<16u, false, 2u, false, false, 16u>::reservation<ht::promoted_observer<ht::no_small_effects, false>>, false, false>::~_Optional_base()>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "key_overflow"
+        },
+        {
+          "address": "0x30ffe",
+          "opcode": "callq",
+          "target": "0x5640 <_Unwind_Resume@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        }
+      ],
+      "unresolved_branches": [],
+      "encoding": "inactive",
+      "case": "16_2_1"
+    },
+    {
+      "K": 16,
+      "value_bytes": 2,
+      "kind": 1,
+      "reference_A": 10,
+      "A": 10,
+      "arm": 16,
+      "clock": "0x1655ba",
+      "location": "timed_cfg",
+      "helper_address": null,
+      "effective_calls": [
+        {
+          "address": "0x16572b",
+          "opcode": "callq",
+          "target": "0x18fc00 <absl::lts_20260817::container_internal::PrepareInsertLarge(absl::lts_20260817::container_internal::CommonFields&, absl::lts_20260817::container_internal::PolicyFunctions const&, unsigned long, absl::lts_20260817::container_internal::NonIterableBitMask<unsigned int, 16, 0>, absl::lts_20260817::container_internal::FindInfo)>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "abseil_boundary"
+        },
+        {
+          "address": "0x165774",
+          "opcode": "callq",
+          "target": "0x191770 <void* absl::lts_20260817::container_internal::GrowSooTableToNextCapacityAndPrepareInsert<8ul, true>(absl::lts_20260817::container_internal::CommonFields&, absl::lts_20260817::container_internal::PolicyFunctions const&, absl::lts_20260817::FunctionRef<unsigned long (unsigned long)>, bool)>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "abseil_boundary"
+        }
+      ],
+      "unresolved_branches": [],
+      "encoding": "inactive",
+      "case": "16_2_1"
+    },
+    {
+      "K": 16,
+      "value_bytes": 2,
+      "kind": 1,
+      "reference_A": 10,
+      "A": 10,
+      "arm": 17,
+      "clock": "0x17636a",
+      "location": "timed_cfg",
+      "helper_address": null,
+      "effective_calls": [
+        {
+          "address": "0x1764db",
+          "opcode": "callq",
+          "target": "0x18fc00 <absl::lts_20260817::container_internal::PrepareInsertLarge(absl::lts_20260817::container_internal::CommonFields&, absl::lts_20260817::container_internal::PolicyFunctions const&, unsigned long, absl::lts_20260817::container_internal::NonIterableBitMask<unsigned int, 16, 0>, absl::lts_20260817::container_internal::FindInfo)>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "abseil_boundary"
+        },
+        {
+          "address": "0x176524",
+          "opcode": "callq",
+          "target": "0x191770 <void* absl::lts_20260817::container_internal::GrowSooTableToNextCapacityAndPrepareInsert<8ul, true>(absl::lts_20260817::container_internal::CommonFields&, absl::lts_20260817::container_internal::PolicyFunctions const&, absl::lts_20260817::FunctionRef<unsigned long (unsigned long)>, bool)>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "abseil_boundary"
+        }
+      ],
+      "unresolved_branches": [],
+      "encoding": "inactive",
+      "case": "16_2_1"
+    },
+    {
+      "K": 40,
+      "value_bytes": 0,
+      "kind": 0,
+      "reference_A": 10,
+      "A": 10,
+      "arm": 0,
+      "clock": "0xac8e",
+      "location": "whole_loop_helper",
+      "helper_address": "0x1a580",
+      "effective_calls": [
+        {
+          "address": "0x1ab26",
+          "opcode": "callq",
+          "target": "0x19b30 <std::optional<unsigned int> ht::links<40u, false, 0u, false, false, 16u>::acquire<ht::promoted_observer<ht::no_small_effects, false>>(unsigned int, ht::promoted_observer<ht::no_small_effects, false>&)>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "key_overflow"
+        },
+        {
+          "address": "0x1ad51",
+          "opcode": "callq",
+          "target": "0x5500 <fprintf@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "other"
+        },
+        {
+          "address": "0x1ad56",
+          "opcode": "callq",
+          "target": "0x5200 <abort@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        },
+        {
+          "address": "0x1ad78",
+          "opcode": "callq",
+          "target": "0x5500 <fprintf@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "other"
+        },
+        {
+          "address": "0x1ad7d",
+          "opcode": "callq",
+          "target": "0x5200 <abort@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        },
+        {
+          "address": "0x1ad9f",
+          "opcode": "callq",
+          "target": "0x5500 <fprintf@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "other"
+        },
+        {
+          "address": "0x1ada4",
+          "opcode": "callq",
+          "target": "0x5200 <abort@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        },
+        {
+          "address": "0x1adc3",
+          "opcode": "callq",
+          "target": "0x5500 <fprintf@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "other"
+        },
+        {
+          "address": "0x1adc8",
+          "opcode": "callq",
+          "target": "0x5200 <abort@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        },
+        {
+          "address": "0x1add5",
+          "opcode": "callq",
+          "target": "0x19ab0 <std::_Optional_base<ht::links<40u, false, 0u, false, false, 16u>::reservation<ht::promoted_observer<ht::no_small_effects, false>>, false, false>::~_Optional_base()>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "key_overflow"
+        },
+        {
+          "address": "0x1addd",
+          "opcode": "callq",
+          "target": "0x5640 <_Unwind_Resume@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        }
+      ],
+      "unresolved_branches": [],
+      "encoding": "count",
+      "case": "40_0_0"
+    },
+    {
+      "K": 40,
+      "value_bytes": 0,
+      "kind": 0,
+      "reference_A": 10,
+      "A": 9,
+      "arm": 1,
+      "clock": "0x2245e",
+      "location": "whole_loop_helper",
+      "helper_address": "0x2d2c0",
+      "effective_calls": [
+        {
+          "address": "0x2d866",
+          "opcode": "callq",
+          "target": "0x19b30 <std::optional<unsigned int> ht::links<40u, false, 0u, false, false, 16u>::acquire<ht::promoted_observer<ht::no_small_effects, false>>(unsigned int, ht::promoted_observer<ht::no_small_effects, false>&)>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "key_overflow"
+        },
+        {
+          "address": "0x2da91",
+          "opcode": "callq",
+          "target": "0x5500 <fprintf@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "other"
+        },
+        {
+          "address": "0x2da96",
+          "opcode": "callq",
+          "target": "0x5200 <abort@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        },
+        {
+          "address": "0x2dab8",
+          "opcode": "callq",
+          "target": "0x5500 <fprintf@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "other"
+        },
+        {
+          "address": "0x2dabd",
+          "opcode": "callq",
+          "target": "0x5200 <abort@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        },
+        {
+          "address": "0x2dadf",
+          "opcode": "callq",
+          "target": "0x5500 <fprintf@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "other"
+        },
+        {
+          "address": "0x2dae4",
+          "opcode": "callq",
+          "target": "0x5200 <abort@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        },
+        {
+          "address": "0x2db03",
+          "opcode": "callq",
+          "target": "0x5500 <fprintf@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "other"
+        },
+        {
+          "address": "0x2db08",
+          "opcode": "callq",
+          "target": "0x5200 <abort@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        },
+        {
+          "address": "0x2db15",
+          "opcode": "callq",
+          "target": "0x19ab0 <std::_Optional_base<ht::links<40u, false, 0u, false, false, 16u>::reservation<ht::promoted_observer<ht::no_small_effects, false>>, false, false>::~_Optional_base()>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "key_overflow"
+        },
+        {
+          "address": "0x2db1d",
+          "opcode": "callq",
+          "target": "0x5640 <_Unwind_Resume@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        }
+      ],
+      "unresolved_branches": [],
+      "encoding": "count",
+      "case": "40_0_0"
+    },
+    {
+      "K": 40,
+      "value_bytes": 0,
+      "kind": 0,
+      "reference_A": 10,
+      "A": 10,
+      "arm": 16,
+      "clock": "0x144afd",
+      "location": "timed_cfg",
+      "helper_address": null,
+      "effective_calls": [
+        {
+          "address": "0x144b88",
+          "opcode": "callq",
+          "target": "0x166d90 <absl::lts_20260817::container_internal::PrepareInsertLarge(absl::lts_20260817::container_internal::CommonFields&, absl::lts_20260817::container_internal::PolicyFunctions const&, unsigned long, absl::lts_20260817::container_internal::NonIterableBitMask<unsigned int, 16, 0>, absl::lts_20260817::container_internal::FindInfo)>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "abseil_boundary"
+        },
+        {
+          "address": "0x144c82",
+          "opcode": "callq",
+          "target": "0x168900 <void* absl::lts_20260817::container_internal::GrowSooTableToNextCapacityAndPrepareInsert<8ul, true>(absl::lts_20260817::container_internal::CommonFields&, absl::lts_20260817::container_internal::PolicyFunctions const&, absl::lts_20260817::FunctionRef<unsigned long (unsigned long)>, bool)>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "abseil_boundary"
+        }
+      ],
+      "unresolved_branches": [],
+      "encoding": "count",
+      "case": "40_0_0"
+    },
+    {
+      "K": 40,
+      "value_bytes": 0,
+      "kind": 0,
+      "reference_A": 10,
+      "A": 10,
+      "arm": 17,
+      "clock": "0x14f1b7",
+      "location": "timed_cfg",
+      "helper_address": null,
+      "effective_calls": [
+        {
+          "address": "0x14f258",
+          "opcode": "callq",
+          "target": "0x166d90 <absl::lts_20260817::container_internal::PrepareInsertLarge(absl::lts_20260817::container_internal::CommonFields&, absl::lts_20260817::container_internal::PolicyFunctions const&, unsigned long, absl::lts_20260817::container_internal::NonIterableBitMask<unsigned int, 16, 0>, absl::lts_20260817::container_internal::FindInfo)>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "abseil_boundary"
+        },
+        {
+          "address": "0x14f37c",
+          "opcode": "callq",
+          "target": "0x168900 <void* absl::lts_20260817::container_internal::GrowSooTableToNextCapacityAndPrepareInsert<8ul, true>(absl::lts_20260817::container_internal::CommonFields&, absl::lts_20260817::container_internal::PolicyFunctions const&, absl::lts_20260817::FunctionRef<unsigned long (unsigned long)>, bool)>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "abseil_boundary"
+        }
+      ],
+      "unresolved_branches": [],
+      "encoding": "count",
+      "case": "40_0_0"
+    },
+    {
+      "K": 40,
+      "value_bytes": 0,
+      "kind": 0,
+      "reference_A": 10,
+      "A": 10,
+      "arm": 0,
+      "clock": "0xb078",
+      "location": "whole_loop_helper",
+      "helper_address": "0x1ba30",
+      "effective_calls": [
+        {
+          "address": "0x1c039",
+          "opcode": "callq",
+          "target": "0x1afe0 <std::optional<unsigned int> ht::links<40u, false, 0u, false, false, 16u>::acquire<ht::promoted_observer<ht::no_small_effects, false>>(unsigned int, ht::promoted_observer<ht::no_small_effects, false>&)>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "key_overflow"
+        },
+        {
+          "address": "0x1c275",
+          "opcode": "callq",
+          "target": "0x5500 <fprintf@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "other"
+        },
+        {
+          "address": "0x1c27a",
+          "opcode": "callq",
+          "target": "0x5200 <abort@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        },
+        {
+          "address": "0x1c29c",
+          "opcode": "callq",
+          "target": "0x5500 <fprintf@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "other"
+        },
+        {
+          "address": "0x1c2a1",
+          "opcode": "callq",
+          "target": "0x5200 <abort@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        },
+        {
+          "address": "0x1c2c3",
+          "opcode": "callq",
+          "target": "0x5500 <fprintf@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "other"
+        },
+        {
+          "address": "0x1c2c8",
+          "opcode": "callq",
+          "target": "0x5200 <abort@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        },
+        {
+          "address": "0x1c2e7",
+          "opcode": "callq",
+          "target": "0x5500 <fprintf@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "other"
+        },
+        {
+          "address": "0x1c2ec",
+          "opcode": "callq",
+          "target": "0x5200 <abort@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        },
+        {
+          "address": "0x1c2f9",
+          "opcode": "callq",
+          "target": "0x1af60 <std::_Optional_base<ht::links<40u, false, 0u, false, false, 16u>::reservation<ht::promoted_observer<ht::no_small_effects, false>>, false, false>::~_Optional_base()>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "key_overflow"
+        },
+        {
+          "address": "0x1c301",
+          "opcode": "callq",
+          "target": "0x5640 <_Unwind_Resume@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        }
+      ],
+      "unresolved_branches": [],
+      "encoding": "inactive",
+      "case": "40_0_0"
+    },
+    {
+      "K": 40,
+      "value_bytes": 0,
+      "kind": 0,
+      "reference_A": 10,
+      "A": 9,
+      "arm": 1,
+      "clock": "0x247d8",
+      "location": "whole_loop_helper",
+      "helper_address": "0x30370",
+      "effective_calls": [
+        {
+          "address": "0x30969",
+          "opcode": "callq",
+          "target": "0x1afe0 <std::optional<unsigned int> ht::links<40u, false, 0u, false, false, 16u>::acquire<ht::promoted_observer<ht::no_small_effects, false>>(unsigned int, ht::promoted_observer<ht::no_small_effects, false>&)>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "key_overflow"
+        },
+        {
+          "address": "0x30ba5",
+          "opcode": "callq",
+          "target": "0x5500 <fprintf@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "other"
+        },
+        {
+          "address": "0x30baa",
+          "opcode": "callq",
+          "target": "0x5200 <abort@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        },
+        {
+          "address": "0x30bcc",
+          "opcode": "callq",
+          "target": "0x5500 <fprintf@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "other"
+        },
+        {
+          "address": "0x30bd1",
+          "opcode": "callq",
+          "target": "0x5200 <abort@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        },
+        {
+          "address": "0x30bf3",
+          "opcode": "callq",
+          "target": "0x5500 <fprintf@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "other"
+        },
+        {
+          "address": "0x30bf8",
+          "opcode": "callq",
+          "target": "0x5200 <abort@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        },
+        {
+          "address": "0x30c17",
+          "opcode": "callq",
+          "target": "0x5500 <fprintf@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "other"
+        },
+        {
+          "address": "0x30c1c",
+          "opcode": "callq",
+          "target": "0x5200 <abort@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        },
+        {
+          "address": "0x30c29",
+          "opcode": "callq",
+          "target": "0x1af60 <std::_Optional_base<ht::links<40u, false, 0u, false, false, 16u>::reservation<ht::promoted_observer<ht::no_small_effects, false>>, false, false>::~_Optional_base()>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "key_overflow"
+        },
+        {
+          "address": "0x30c31",
+          "opcode": "callq",
+          "target": "0x5640 <_Unwind_Resume@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        }
+      ],
+      "unresolved_branches": [],
+      "encoding": "inactive",
+      "case": "40_0_0"
+    },
+    {
+      "K": 40,
+      "value_bytes": 0,
+      "kind": 0,
+      "reference_A": 10,
+      "A": 10,
+      "arm": 16,
+      "clock": "0x15cf5d",
+      "location": "timed_cfg",
+      "helper_address": null,
+      "effective_calls": [
+        {
+          "address": "0x15cfe8",
+          "opcode": "callq",
+          "target": "0x17f1f0 <absl::lts_20260817::container_internal::PrepareInsertLarge(absl::lts_20260817::container_internal::CommonFields&, absl::lts_20260817::container_internal::PolicyFunctions const&, unsigned long, absl::lts_20260817::container_internal::NonIterableBitMask<unsigned int, 16, 0>, absl::lts_20260817::container_internal::FindInfo)>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "abseil_boundary"
+        },
+        {
+          "address": "0x15d0e2",
+          "opcode": "callq",
+          "target": "0x180d60 <void* absl::lts_20260817::container_internal::GrowSooTableToNextCapacityAndPrepareInsert<8ul, true>(absl::lts_20260817::container_internal::CommonFields&, absl::lts_20260817::container_internal::PolicyFunctions const&, absl::lts_20260817::FunctionRef<unsigned long (unsigned long)>, bool)>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "abseil_boundary"
+        }
+      ],
+      "unresolved_branches": [],
+      "encoding": "inactive",
+      "case": "40_0_0"
+    },
+    {
+      "K": 40,
+      "value_bytes": 0,
+      "kind": 0,
+      "reference_A": 10,
+      "A": 10,
+      "arm": 17,
+      "clock": "0x167617",
+      "location": "timed_cfg",
+      "helper_address": null,
+      "effective_calls": [
+        {
+          "address": "0x1676b8",
+          "opcode": "callq",
+          "target": "0x17f1f0 <absl::lts_20260817::container_internal::PrepareInsertLarge(absl::lts_20260817::container_internal::CommonFields&, absl::lts_20260817::container_internal::PolicyFunctions const&, unsigned long, absl::lts_20260817::container_internal::NonIterableBitMask<unsigned int, 16, 0>, absl::lts_20260817::container_internal::FindInfo)>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "abseil_boundary"
+        },
+        {
+          "address": "0x1677dc",
+          "opcode": "callq",
+          "target": "0x180d60 <void* absl::lts_20260817::container_internal::GrowSooTableToNextCapacityAndPrepareInsert<8ul, true>(absl::lts_20260817::container_internal::CommonFields&, absl::lts_20260817::container_internal::PolicyFunctions const&, absl::lts_20260817::FunctionRef<unsigned long (unsigned long)>, bool)>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "abseil_boundary"
+        }
+      ],
+      "unresolved_branches": [],
+      "encoding": "inactive",
+      "case": "40_0_0"
+    },
+    {
+      "K": 40,
+      "value_bytes": 2,
+      "kind": 1,
+      "reference_A": 10,
+      "A": 10,
+      "arm": 0,
+      "clock": "0xb424",
+      "location": "whole_loop_helper",
+      "helper_address": "0x1b6f0",
+      "effective_calls": [
+        {
+          "address": "0x1bd33",
+          "opcode": "callq",
+          "target": "0x1ac50 <std::optional<unsigned int> ht::links<40u, false, 2u, false, false, 16u>::acquire<ht::promoted_observer<ht::no_small_effects, false>>(unsigned int, ht::promoted_observer<ht::no_small_effects, false>&)>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "key_overflow"
+        },
+        {
+          "address": "0x1bf9f",
+          "opcode": "callq",
+          "target": "0x5500 <fprintf@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "other"
+        },
+        {
+          "address": "0x1bfa4",
+          "opcode": "callq",
+          "target": "0x5200 <abort@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        },
+        {
+          "address": "0x1bfc3",
+          "opcode": "callq",
+          "target": "0x5500 <fprintf@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "other"
+        },
+        {
+          "address": "0x1bfc8",
+          "opcode": "callq",
+          "target": "0x5200 <abort@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        },
+        {
+          "address": "0x1bfea",
+          "opcode": "callq",
+          "target": "0x5500 <fprintf@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "other"
+        },
+        {
+          "address": "0x1bfef",
+          "opcode": "callq",
+          "target": "0x5200 <abort@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        },
+        {
+          "address": "0x1bffc",
+          "opcode": "callq",
+          "target": "0x1abd0 <std::_Optional_base<ht::links<40u, false, 2u, false, false, 16u>::reservation<ht::promoted_observer<ht::no_small_effects, false>>, false, false>::~_Optional_base()>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "key_overflow"
+        },
+        {
+          "address": "0x1c004",
+          "opcode": "callq",
+          "target": "0x5640 <_Unwind_Resume@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        }
+      ],
+      "unresolved_branches": [],
+      "encoding": "count",
+      "case": "40_2_1"
+    },
+    {
+      "K": 40,
+      "value_bytes": 2,
+      "kind": 1,
+      "reference_A": 10,
+      "A": 9,
+      "arm": 1,
+      "clock": "0x24c24",
+      "location": "whole_loop_helper",
+      "helper_address": "0x30880",
+      "effective_calls": [
+        {
+          "address": "0x30ec3",
+          "opcode": "callq",
+          "target": "0x1ac50 <std::optional<unsigned int> ht::links<40u, false, 2u, false, false, 16u>::acquire<ht::promoted_observer<ht::no_small_effects, false>>(unsigned int, ht::promoted_observer<ht::no_small_effects, false>&)>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "key_overflow"
+        },
+        {
+          "address": "0x3112f",
+          "opcode": "callq",
+          "target": "0x5500 <fprintf@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "other"
+        },
+        {
+          "address": "0x31134",
+          "opcode": "callq",
+          "target": "0x5200 <abort@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        },
+        {
+          "address": "0x31153",
+          "opcode": "callq",
+          "target": "0x5500 <fprintf@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "other"
+        },
+        {
+          "address": "0x31158",
+          "opcode": "callq",
+          "target": "0x5200 <abort@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        },
+        {
+          "address": "0x3117a",
+          "opcode": "callq",
+          "target": "0x5500 <fprintf@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "other"
+        },
+        {
+          "address": "0x3117f",
+          "opcode": "callq",
+          "target": "0x5200 <abort@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        },
+        {
+          "address": "0x3118c",
+          "opcode": "callq",
+          "target": "0x1abd0 <std::_Optional_base<ht::links<40u, false, 2u, false, false, 16u>::reservation<ht::promoted_observer<ht::no_small_effects, false>>, false, false>::~_Optional_base()>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "key_overflow"
+        },
+        {
+          "address": "0x31194",
+          "opcode": "callq",
+          "target": "0x5640 <_Unwind_Resume@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        }
+      ],
+      "unresolved_branches": [],
+      "encoding": "count",
+      "case": "40_2_1"
+    },
+    {
+      "K": 40,
+      "value_bytes": 2,
+      "kind": 1,
+      "reference_A": 10,
+      "A": 10,
+      "arm": 16,
+      "clock": "0x15f7ef",
+      "location": "timed_cfg",
+      "helper_address": null,
+      "effective_calls": [
+        {
+          "address": "0x15f84d",
+          "opcode": "callq",
+          "target": "0x182080 <absl::lts_20260817::container_internal::PrepareInsertSmallNonSoo(absl::lts_20260817::container_internal::CommonFields&, absl::lts_20260817::container_internal::PolicyFunctions const&, absl::lts_20260817::FunctionRef<unsigned long (unsigned long)>)>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "abseil_boundary"
+        },
+        {
+          "address": "0x15f9bb",
+          "opcode": "callq",
+          "target": "0x1835d0 <absl::lts_20260817::container_internal::PrepareInsertLarge(absl::lts_20260817::container_internal::CommonFields&, absl::lts_20260817::container_internal::PolicyFunctions const&, unsigned long, absl::lts_20260817::container_internal::NonIterableBitMask<unsigned int, 16, 0>, absl::lts_20260817::container_internal::FindInfo)>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "abseil_boundary"
+        }
+      ],
+      "unresolved_branches": [],
+      "encoding": "count",
+      "case": "40_2_1"
+    },
+    {
+      "K": 40,
+      "value_bytes": 2,
+      "kind": 1,
+      "reference_A": 10,
+      "A": 10,
+      "arm": 17,
+      "clock": "0x16b0ee",
+      "location": "timed_cfg",
+      "helper_address": null,
+      "effective_calls": [
+        {
+          "address": "0x16b28f",
+          "opcode": "callq",
+          "target": "0x1835d0 <absl::lts_20260817::container_internal::PrepareInsertLarge(absl::lts_20260817::container_internal::CommonFields&, absl::lts_20260817::container_internal::PolicyFunctions const&, unsigned long, absl::lts_20260817::container_internal::NonIterableBitMask<unsigned int, 16, 0>, absl::lts_20260817::container_internal::FindInfo)>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "abseil_boundary"
+        },
+        {
+          "address": "0x16b2fb",
+          "opcode": "callq",
+          "target": "0x185140 <void* absl::lts_20260817::container_internal::GrowSooTableToNextCapacityAndPrepareInsert<8ul, true>(absl::lts_20260817::container_internal::CommonFields&, absl::lts_20260817::container_internal::PolicyFunctions const&, absl::lts_20260817::FunctionRef<unsigned long (unsigned long)>, bool)>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "abseil_boundary"
+        }
+      ],
+      "unresolved_branches": [],
+      "encoding": "count",
+      "case": "40_2_1"
+    },
+    {
+      "K": 40,
+      "value_bytes": 2,
+      "kind": 1,
+      "reference_A": 10,
+      "A": 10,
+      "arm": 0,
+      "clock": "0xb8b3",
+      "location": "whole_loop_helper",
+      "helper_address": "0x1cb70",
+      "effective_calls": [
+        {
+          "address": "0x1d221",
+          "opcode": "callq",
+          "target": "0x1c0d0 <std::optional<unsigned int> ht::links<40u, false, 2u, false, false, 16u>::acquire<ht::promoted_observer<ht::no_small_effects, false>>(unsigned int, ht::promoted_observer<ht::no_small_effects, false>&)>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "key_overflow"
+        },
+        {
+          "address": "0x1d4bf",
+          "opcode": "callq",
+          "target": "0x5500 <fprintf@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "other"
+        },
+        {
+          "address": "0x1d4c4",
+          "opcode": "callq",
+          "target": "0x5200 <abort@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        },
+        {
+          "address": "0x1d4e3",
+          "opcode": "callq",
+          "target": "0x5500 <fprintf@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "other"
+        },
+        {
+          "address": "0x1d4e8",
+          "opcode": "callq",
+          "target": "0x5200 <abort@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        },
+        {
+          "address": "0x1d50a",
+          "opcode": "callq",
+          "target": "0x5500 <fprintf@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "other"
+        },
+        {
+          "address": "0x1d50f",
+          "opcode": "callq",
+          "target": "0x5200 <abort@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        },
+        {
+          "address": "0x1d51c",
+          "opcode": "callq",
+          "target": "0x1c050 <std::_Optional_base<ht::links<40u, false, 2u, false, false, 16u>::reservation<ht::promoted_observer<ht::no_small_effects, false>>, false, false>::~_Optional_base()>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "key_overflow"
+        },
+        {
+          "address": "0x1d524",
+          "opcode": "callq",
+          "target": "0x5640 <_Unwind_Resume@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        }
+      ],
+      "unresolved_branches": [],
+      "encoding": "inactive",
+      "case": "40_2_1"
+    },
+    {
+      "K": 40,
+      "value_bytes": 2,
+      "kind": 1,
+      "reference_A": 10,
+      "A": 9,
+      "arm": 1,
+      "clock": "0x26ee3",
+      "location": "whole_loop_helper",
+      "helper_address": "0x33830",
+      "effective_calls": [
+        {
+          "address": "0x33ee1",
+          "opcode": "callq",
+          "target": "0x1c0d0 <std::optional<unsigned int> ht::links<40u, false, 2u, false, false, 16u>::acquire<ht::promoted_observer<ht::no_small_effects, false>>(unsigned int, ht::promoted_observer<ht::no_small_effects, false>&)>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "key_overflow"
+        },
+        {
+          "address": "0x3417f",
+          "opcode": "callq",
+          "target": "0x5500 <fprintf@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "other"
+        },
+        {
+          "address": "0x34184",
+          "opcode": "callq",
+          "target": "0x5200 <abort@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        },
+        {
+          "address": "0x341a3",
+          "opcode": "callq",
+          "target": "0x5500 <fprintf@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "other"
+        },
+        {
+          "address": "0x341a8",
+          "opcode": "callq",
+          "target": "0x5200 <abort@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        },
+        {
+          "address": "0x341ca",
+          "opcode": "callq",
+          "target": "0x5500 <fprintf@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "other"
+        },
+        {
+          "address": "0x341cf",
+          "opcode": "callq",
+          "target": "0x5200 <abort@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        },
+        {
+          "address": "0x341dc",
+          "opcode": "callq",
+          "target": "0x1c050 <std::_Optional_base<ht::links<40u, false, 2u, false, false, 16u>::reservation<ht::promoted_observer<ht::no_small_effects, false>>, false, false>::~_Optional_base()>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "key_overflow"
+        },
+        {
+          "address": "0x341e4",
+          "opcode": "callq",
+          "target": "0x5640 <_Unwind_Resume@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        }
+      ],
+      "unresolved_branches": [],
+      "encoding": "inactive",
+      "case": "40_2_1"
+    },
+    {
+      "K": 40,
+      "value_bytes": 2,
+      "kind": 1,
+      "reference_A": 10,
+      "A": 10,
+      "arm": 16,
+      "clock": "0x17b37f",
+      "location": "timed_cfg",
+      "helper_address": null,
+      "effective_calls": [
+        {
+          "address": "0x17b3dd",
+          "opcode": "callq",
+          "target": "0x19dc10 <absl::lts_20260817::container_internal::PrepareInsertSmallNonSoo(absl::lts_20260817::container_internal::CommonFields&, absl::lts_20260817::container_internal::PolicyFunctions const&, absl::lts_20260817::FunctionRef<unsigned long (unsigned long)>)>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "abseil_boundary"
+        },
+        {
+          "address": "0x17b54b",
+          "opcode": "callq",
+          "target": "0x19f160 <absl::lts_20260817::container_internal::PrepareInsertLarge(absl::lts_20260817::container_internal::CommonFields&, absl::lts_20260817::container_internal::PolicyFunctions const&, unsigned long, absl::lts_20260817::container_internal::NonIterableBitMask<unsigned int, 16, 0>, absl::lts_20260817::container_internal::FindInfo)>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "abseil_boundary"
+        }
+      ],
+      "unresolved_branches": [],
+      "encoding": "inactive",
+      "case": "40_2_1"
+    },
+    {
+      "K": 40,
+      "value_bytes": 2,
+      "kind": 1,
+      "reference_A": 10,
+      "A": 10,
+      "arm": 17,
+      "clock": "0x186c7e",
+      "location": "timed_cfg",
+      "helper_address": null,
+      "effective_calls": [
+        {
+          "address": "0x186e1f",
+          "opcode": "callq",
+          "target": "0x19f160 <absl::lts_20260817::container_internal::PrepareInsertLarge(absl::lts_20260817::container_internal::CommonFields&, absl::lts_20260817::container_internal::PolicyFunctions const&, unsigned long, absl::lts_20260817::container_internal::NonIterableBitMask<unsigned int, 16, 0>, absl::lts_20260817::container_internal::FindInfo)>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "abseil_boundary"
+        },
+        {
+          "address": "0x186e8b",
+          "opcode": "callq",
+          "target": "0x1a0cd0 <void* absl::lts_20260817::container_internal::GrowSooTableToNextCapacityAndPrepareInsert<8ul, true>(absl::lts_20260817::container_internal::CommonFields&, absl::lts_20260817::container_internal::PolicyFunctions const&, absl::lts_20260817::FunctionRef<unsigned long (unsigned long)>, bool)>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "abseil_boundary"
+        }
+      ],
+      "unresolved_branches": [],
+      "encoding": "inactive",
+      "case": "40_2_1"
+    },
+    {
+      "K": 40,
+      "value_bytes": 8,
+      "kind": 2,
+      "reference_A": 10,
+      "A": 10,
+      "arm": 0,
+      "clock": "0xb830",
+      "location": "whole_loop_helper",
+      "helper_address": "0x1f9f0",
+      "effective_calls": [
+        {
+          "address": "0x20122",
+          "opcode": "callq",
+          "target": "0x53f0 <_Znwm@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "allocation_runtime"
+        },
+        {
+          "address": "0x201d6",
+          "opcode": "callq",
+          "target": "0x221350 <orbital::allocation::Allocation::~Allocation()>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "orbital_owner_runtime"
+        },
+        {
+          "address": "0x201fc",
+          "opcode": "callq",
+          "target": "0x5400 <_ZdlPvm@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "allocation_runtime"
+        },
+        {
+          "address": "0x2020c",
+          "opcode": "callq",
+          "target": "0x5400 <_ZdlPvm@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "allocation_runtime"
+        },
+        {
+          "address": "0x20668",
+          "opcode": "callq",
+          "target": "0x1ea40 <std::optional<unsigned int> ht::links<0u, false, 8u, true, true, 16u>::acquire<ht::promoted_observer<ht::no_small_effects, true>>(unsigned int, ht::promoted_observer<ht::no_small_effects, true>&)>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "linked_values"
+        },
+        {
+          "address": "0x2091d",
+          "opcode": "callq",
+          "target": "0x5380 <memcpy@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "byte_transfer"
+        },
+        {
+          "address": "0x20aee",
+          "opcode": "callq",
+          "target": "0x5380 <memcpy@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "byte_transfer"
+        },
+        {
+          "address": "0x20e35",
+          "opcode": "callq",
+          "target": "0x1e040 <std::optional<unsigned int> ht::links<40u, false, 9u, false, false, 16u>::acquire<ht::promoted_observer<ht::no_small_effects, false>>(unsigned int, ht::promoted_observer<ht::no_small_effects, false>&)>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "key_overflow"
+        },
+        {
+          "address": "0x20ee6",
+          "opcode": "callq",
+          "target": "0x5770 <__cxa_guard_acquire@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "cold_format_init"
+        },
+        {
+          "address": "0x20eff",
+          "opcode": "callq",
+          "target": "0x1e780 <ht::links<0u, false, 8u, true, true, 16u>::formats()::'lambda'()::operator()() const>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "cold_format_init"
+        },
+        {
+          "address": "0x20f19",
+          "opcode": "callq",
+          "target": "0x5390 <__cxa_atexit@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "cold_format_init"
+        },
+        {
+          "address": "0x20f25",
+          "opcode": "callq",
+          "target": "0x52b0 <__cxa_guard_release@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "cold_format_init"
+        },
+        {
+          "address": "0x20f39",
+          "opcode": "callq",
+          "target": "0x5770 <__cxa_guard_acquire@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "cold_format_init"
+        },
+        {
+          "address": "0x20f52",
+          "opcode": "callq",
+          "target": "0x1e780 <ht::links<0u, false, 8u, true, true, 16u>::formats()::'lambda'()::operator()() const>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "cold_format_init"
+        },
+        {
+          "address": "0x20f6c",
+          "opcode": "callq",
+          "target": "0x5390 <__cxa_atexit@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "cold_format_init"
+        },
+        {
+          "address": "0x20f78",
+          "opcode": "callq",
+          "target": "0x52b0 <__cxa_guard_release@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "cold_format_init"
+        },
+        {
+          "address": "0x20f8c",
+          "opcode": "callq",
+          "target": "0x5770 <__cxa_guard_acquire@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "cold_format_init"
+        },
+        {
+          "address": "0x20f9e",
+          "opcode": "callq",
+          "target": "0x198b0 <ht::identity<2u>::admit()::'lambda'()::operator()() const>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "other_spike_boundary"
+        },
+        {
+          "address": "0x20fb0",
+          "opcode": "callq",
+          "target": "0x52b0 <__cxa_guard_release@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "cold_format_init"
+        },
+        {
+          "address": "0x20fc4",
+          "opcode": "callq",
+          "target": "0x5770 <__cxa_guard_acquire@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "cold_format_init"
+        },
+        {
+          "address": "0x20fd6",
+          "opcode": "callq",
+          "target": "0x19c60 <ht::identity<4u>::admit()::'lambda'()::operator()() const>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "other_spike_boundary"
+        },
+        {
+          "address": "0x20fe8",
+          "opcode": "callq",
+          "target": "0x52b0 <__cxa_guard_release@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "cold_format_init"
+        },
+        {
+          "address": "0x20ffc",
+          "opcode": "callq",
+          "target": "0x5770 <__cxa_guard_acquire@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "cold_format_init"
+        },
+        {
+          "address": "0x2100e",
+          "opcode": "callq",
+          "target": "0x19a70 <ht::identity<8u>::admit()::'lambda'()::operator()() const>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "other_spike_boundary"
+        },
+        {
+          "address": "0x21020",
+          "opcode": "callq",
+          "target": "0x52b0 <__cxa_guard_release@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "cold_format_init"
+        },
+        {
+          "address": "0x21073",
+          "opcode": "callq",
+          "target": "0x5290 <__cxa_guard_abort@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        },
+        {
+          "address": "0x2107b",
+          "opcode": "callq",
+          "target": "0x1c2c0 <std::vector<ht::links<0u, false, 8u, true, true, 16u>::block, std::allocator<ht::links<0u, false, 8u, true, true, 16u>::block>>::~vector()>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "linked_values"
+        },
+        {
+          "address": "0x21091",
+          "opcode": "callq",
+          "target": "0x5290 <__cxa_guard_abort@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        },
+        {
+          "address": "0x2109e",
+          "opcode": "callq",
+          "target": "0x5400 <_ZdlPvm@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "allocation_runtime"
+        },
+        {
+          "address": "0x210bb",
+          "opcode": "callq",
+          "target": "0x51b0 <__cxa_begin_catch@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "exception_handling"
+        },
+        {
+          "address": "0x210c8",
+          "opcode": "callq",
+          "target": "0x56a0 <__cxa_end_catch@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "exception_handling"
+        },
+        {
+          "address": "0x2113c",
+          "opcode": "callq",
+          "target": "0x5580 <fprintf@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "other"
+        },
+        {
+          "address": "0x21141",
+          "opcode": "callq",
+          "target": "0x5230 <abort@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        },
+        {
+          "address": "0x21163",
+          "opcode": "callq",
+          "target": "0x5580 <fprintf@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "other"
+        },
+        {
+          "address": "0x21168",
+          "opcode": "callq",
+          "target": "0x5230 <abort@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        },
+        {
+          "address": "0x2118a",
+          "opcode": "callq",
+          "target": "0x5580 <fprintf@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "other"
+        },
+        {
+          "address": "0x2118f",
+          "opcode": "callq",
+          "target": "0x5230 <abort@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        },
+        {
+          "address": "0x211b1",
+          "opcode": "callq",
+          "target": "0x5580 <fprintf@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "other"
+        },
+        {
+          "address": "0x211b6",
+          "opcode": "callq",
+          "target": "0x5230 <abort@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        },
+        {
+          "address": "0x211d8",
+          "opcode": "callq",
+          "target": "0x5580 <fprintf@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "other"
+        },
+        {
+          "address": "0x211dd",
+          "opcode": "callq",
+          "target": "0x5230 <abort@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        },
+        {
+          "address": "0x211ef",
+          "opcode": "callq",
+          "target": "0x1dfc0 <std::_Optional_base<ht::links<40u, false, 9u, false, false, 16u>::reservation<ht::promoted_observer<ht::no_small_effects, false>>, false, false>::~_Optional_base()>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "key_overflow"
+        },
+        {
+          "address": "0x211f7",
+          "opcode": "callq",
+          "target": "0x5730 <_Unwind_Resume@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        },
+        {
+          "address": "0x21207",
+          "opcode": "callq",
+          "target": "0x1e700 <std::expected<ht::mutation_delta, ht::mutation_error> ht::promoted_table<40u, (ht::layout_solver::container)2, 8u, 10u, 6u, 128u, 128u, (ht::record_format)1, false, (ht::record_access)3, true, ht::links<0u, false, 8u, true, true, 16u>, 8u>::try_set_bytes<ht::no_small_effects>(unsigned long, std::array<unsigned char, 8ul> const&, ht::no_small_effects&)::'lambda'()::operator()() const::proposal::~proposal()>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "promoted_owner"
+        },
+        {
+          "address": "0x21214",
+          "opcode": "callq",
+          "target": "0x1dfc0 <std::_Optional_base<ht::links<40u, false, 9u, false, false, 16u>::reservation<ht::promoted_observer<ht::no_small_effects, false>>, false, false>::~_Optional_base()>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "key_overflow"
+        },
+        {
+          "address": "0x2121c",
+          "opcode": "callq",
+          "target": "0x5730 <_Unwind_Resume@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        }
+      ],
+      "unresolved_branches": [],
+      "encoding": "count",
+      "case": "40_8_2"
+    },
+    {
+      "K": 40,
+      "value_bytes": 8,
+      "kind": 2,
+      "reference_A": 10,
+      "A": 9,
+      "arm": 1,
+      "clock": "0x30420",
+      "location": "whole_loop_helper",
+      "helper_address": "0x3ecc0",
+      "effective_calls": [
+        {
+          "address": "0x3f40c",
+          "opcode": "callq",
+          "target": "0x53f0 <_Znwm@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "allocation_runtime"
+        },
+        {
+          "address": "0x3f4b6",
+          "opcode": "callq",
+          "target": "0x221350 <orbital::allocation::Allocation::~Allocation()>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "orbital_owner_runtime"
+        },
+        {
+          "address": "0x3f4e1",
+          "opcode": "callq",
+          "target": "0x5400 <_ZdlPvm@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "allocation_runtime"
+        },
+        {
+          "address": "0x3f4f1",
+          "opcode": "callq",
+          "target": "0x5400 <_ZdlPvm@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "allocation_runtime"
+        },
+        {
+          "address": "0x3f96f",
+          "opcode": "callq",
+          "target": "0x1ea40 <std::optional<unsigned int> ht::links<0u, false, 8u, true, true, 16u>::acquire<ht::promoted_observer<ht::no_small_effects, true>>(unsigned int, ht::promoted_observer<ht::no_small_effects, true>&)>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "linked_values"
+        },
+        {
+          "address": "0x3fc35",
+          "opcode": "callq",
+          "target": "0x5380 <memcpy@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "byte_transfer"
+        },
+        {
+          "address": "0x3fdfb",
+          "opcode": "callq",
+          "target": "0x5380 <memcpy@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "byte_transfer"
+        },
+        {
+          "address": "0x40121",
+          "opcode": "callq",
+          "target": "0x1e040 <std::optional<unsigned int> ht::links<40u, false, 9u, false, false, 16u>::acquire<ht::promoted_observer<ht::no_small_effects, false>>(unsigned int, ht::promoted_observer<ht::no_small_effects, false>&)>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "key_overflow"
+        },
+        {
+          "address": "0x401f0",
+          "opcode": "callq",
+          "target": "0x5770 <__cxa_guard_acquire@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "cold_format_init"
+        },
+        {
+          "address": "0x40209",
+          "opcode": "callq",
+          "target": "0x1e780 <ht::links<0u, false, 8u, true, true, 16u>::formats()::'lambda'()::operator()() const>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "cold_format_init"
+        },
+        {
+          "address": "0x40223",
+          "opcode": "callq",
+          "target": "0x5390 <__cxa_atexit@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "cold_format_init"
+        },
+        {
+          "address": "0x4022f",
+          "opcode": "callq",
+          "target": "0x52b0 <__cxa_guard_release@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "cold_format_init"
+        },
+        {
+          "address": "0x40243",
+          "opcode": "callq",
+          "target": "0x5770 <__cxa_guard_acquire@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "cold_format_init"
+        },
+        {
+          "address": "0x4025c",
+          "opcode": "callq",
+          "target": "0x1e780 <ht::links<0u, false, 8u, true, true, 16u>::formats()::'lambda'()::operator()() const>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "cold_format_init"
+        },
+        {
+          "address": "0x40276",
+          "opcode": "callq",
+          "target": "0x5390 <__cxa_atexit@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "cold_format_init"
+        },
+        {
+          "address": "0x40282",
+          "opcode": "callq",
+          "target": "0x52b0 <__cxa_guard_release@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "cold_format_init"
+        },
+        {
+          "address": "0x4029b",
+          "opcode": "callq",
+          "target": "0x5770 <__cxa_guard_acquire@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "cold_format_init"
+        },
+        {
+          "address": "0x402ad",
+          "opcode": "callq",
+          "target": "0x198b0 <ht::identity<2u>::admit()::'lambda'()::operator()() const>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "other_spike_boundary"
+        },
+        {
+          "address": "0x402bf",
+          "opcode": "callq",
+          "target": "0x52b0 <__cxa_guard_release@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "cold_format_init"
+        },
+        {
+          "address": "0x402d8",
+          "opcode": "callq",
+          "target": "0x5770 <__cxa_guard_acquire@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "cold_format_init"
+        },
+        {
+          "address": "0x402ea",
+          "opcode": "callq",
+          "target": "0x19c60 <ht::identity<4u>::admit()::'lambda'()::operator()() const>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "other_spike_boundary"
+        },
+        {
+          "address": "0x402fc",
+          "opcode": "callq",
+          "target": "0x52b0 <__cxa_guard_release@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "cold_format_init"
+        },
+        {
+          "address": "0x40315",
+          "opcode": "callq",
+          "target": "0x5770 <__cxa_guard_acquire@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "cold_format_init"
+        },
+        {
+          "address": "0x40327",
+          "opcode": "callq",
+          "target": "0x19a70 <ht::identity<8u>::admit()::'lambda'()::operator()() const>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "other_spike_boundary"
+        },
+        {
+          "address": "0x40339",
+          "opcode": "callq",
+          "target": "0x52b0 <__cxa_guard_release@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "cold_format_init"
+        },
+        {
+          "address": "0x40391",
+          "opcode": "callq",
+          "target": "0x5290 <__cxa_guard_abort@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        },
+        {
+          "address": "0x40399",
+          "opcode": "callq",
+          "target": "0x1c2c0 <std::vector<ht::links<0u, false, 8u, true, true, 16u>::block, std::allocator<ht::links<0u, false, 8u, true, true, 16u>::block>>::~vector()>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "linked_values"
+        },
+        {
+          "address": "0x403af",
+          "opcode": "callq",
+          "target": "0x5290 <__cxa_guard_abort@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        },
+        {
+          "address": "0x403bc",
+          "opcode": "callq",
+          "target": "0x5400 <_ZdlPvm@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "allocation_runtime"
+        },
+        {
+          "address": "0x403d9",
+          "opcode": "callq",
+          "target": "0x51b0 <__cxa_begin_catch@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "exception_handling"
+        },
+        {
+          "address": "0x403e6",
+          "opcode": "callq",
+          "target": "0x56a0 <__cxa_end_catch@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "exception_handling"
+        },
+        {
+          "address": "0x40465",
+          "opcode": "callq",
+          "target": "0x5580 <fprintf@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "other"
+        },
+        {
+          "address": "0x4046a",
+          "opcode": "callq",
+          "target": "0x5230 <abort@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        },
+        {
+          "address": "0x4048c",
+          "opcode": "callq",
+          "target": "0x5580 <fprintf@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "other"
+        },
+        {
+          "address": "0x40491",
+          "opcode": "callq",
+          "target": "0x5230 <abort@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        },
+        {
+          "address": "0x404b3",
+          "opcode": "callq",
+          "target": "0x5580 <fprintf@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "other"
+        },
+        {
+          "address": "0x404b8",
+          "opcode": "callq",
+          "target": "0x5230 <abort@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        },
+        {
+          "address": "0x404da",
+          "opcode": "callq",
+          "target": "0x5580 <fprintf@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "other"
+        },
+        {
+          "address": "0x404df",
+          "opcode": "callq",
+          "target": "0x5230 <abort@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        },
+        {
+          "address": "0x40501",
+          "opcode": "callq",
+          "target": "0x5580 <fprintf@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "other"
+        },
+        {
+          "address": "0x40506",
+          "opcode": "callq",
+          "target": "0x5230 <abort@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        },
+        {
+          "address": "0x40518",
+          "opcode": "callq",
+          "target": "0x1dfc0 <std::_Optional_base<ht::links<40u, false, 9u, false, false, 16u>::reservation<ht::promoted_observer<ht::no_small_effects, false>>, false, false>::~_Optional_base()>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "key_overflow"
+        },
+        {
+          "address": "0x40520",
+          "opcode": "callq",
+          "target": "0x5730 <_Unwind_Resume@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        },
+        {
+          "address": "0x4052d",
+          "opcode": "callq",
+          "target": "0x3e3b0 <std::expected<ht::mutation_delta, ht::mutation_error> ht::promoted_table<40u, (ht::layout_solver::container)2, 8u, 9u, 5u, 128u, 128u, (ht::record_format)1, false, (ht::record_access)3, true, ht::links<0u, false, 8u, true, true, 16u>, 8u>::try_set_bytes<ht::no_small_effects>(unsigned long, std::array<unsigned char, 8ul> const&, ht::no_small_effects&)::'lambda'()::operator()() const::proposal::~proposal()>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "promoted_owner"
+        },
+        {
+          "address": "0x4053a",
+          "opcode": "callq",
+          "target": "0x1dfc0 <std::_Optional_base<ht::links<40u, false, 9u, false, false, 16u>::reservation<ht::promoted_observer<ht::no_small_effects, false>>, false, false>::~_Optional_base()>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "key_overflow"
+        },
+        {
+          "address": "0x40542",
+          "opcode": "callq",
+          "target": "0x5730 <_Unwind_Resume@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        }
+      ],
+      "unresolved_branches": [],
+      "encoding": "count",
+      "case": "40_8_2"
+    },
+    {
+      "K": 40,
+      "value_bytes": 8,
+      "kind": 2,
+      "reference_A": 10,
+      "A": 10,
+      "arm": 16,
+      "clock": "0x201c82",
+      "location": "timed_cfg",
+      "helper_address": null,
+      "effective_calls": [
+        {
+          "address": "0x201dff",
+          "opcode": "callq",
+          "target": "0x228f60 <absl::lts_20260817::container_internal::PrepareInsertSmallNonSoo(absl::lts_20260817::container_internal::CommonFields&, absl::lts_20260817::container_internal::PolicyFunctions const&, absl::lts_20260817::FunctionRef<unsigned long (unsigned long)>)>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "abseil_boundary"
+        },
+        {
+          "address": "0x201e1b",
+          "opcode": "callq",
+          "target": "0x22a4b0 <absl::lts_20260817::container_internal::PrepareInsertLarge(absl::lts_20260817::container_internal::CommonFields&, absl::lts_20260817::container_internal::PolicyFunctions const&, unsigned long, absl::lts_20260817::container_internal::NonIterableBitMask<unsigned int, 16, 0>, absl::lts_20260817::container_internal::FindInfo)>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "abseil_boundary"
+        },
+        {
+          "address": "0x201ea7",
+          "opcode": "callq",
+          "target": "0x20c280 <unsigned long& absl::lts_20260817::inlined_vector_internal::Storage<unsigned long, 1ul, std::allocator<unsigned long>>::EmplaceBackSlow<unsigned long const&>(unsigned long const&)>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "abseil_boundary"
+        },
+        {
+          "address": "0x204b8c",
+          "opcode": "callq",
+          "target": "0x2424e0 <absl::lts_20260817::ThrowStdLengthError(char const*)>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        }
+      ],
+      "unresolved_branches": [],
+      "encoding": "count",
+      "case": "40_8_2"
+    },
+    {
+      "K": 40,
+      "value_bytes": 8,
+      "kind": 2,
+      "reference_A": 10,
+      "A": 10,
+      "arm": 17,
+      "clock": "0x20ffe4",
+      "location": "timed_cfg",
+      "helper_address": null,
+      "effective_calls": [
+        {
+          "address": "0x21018e",
+          "opcode": "callq",
+          "target": "0x228f60 <absl::lts_20260817::container_internal::PrepareInsertSmallNonSoo(absl::lts_20260817::container_internal::CommonFields&, absl::lts_20260817::container_internal::PolicyFunctions const&, absl::lts_20260817::FunctionRef<unsigned long (unsigned long)>)>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "abseil_boundary"
+        },
+        {
+          "address": "0x2101af",
+          "opcode": "callq",
+          "target": "0x22a4b0 <absl::lts_20260817::container_internal::PrepareInsertLarge(absl::lts_20260817::container_internal::CommonFields&, absl::lts_20260817::container_internal::PolicyFunctions const&, unsigned long, absl::lts_20260817::container_internal::NonIterableBitMask<unsigned int, 16, 0>, absl::lts_20260817::container_internal::FindInfo)>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "abseil_boundary"
+        },
+        {
+          "address": "0x210247",
+          "opcode": "callq",
+          "target": "0x20c280 <unsigned long& absl::lts_20260817::inlined_vector_internal::Storage<unsigned long, 1ul, std::allocator<unsigned long>>::EmplaceBackSlow<unsigned long const&>(unsigned long const&)>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "abseil_boundary"
+        },
+        {
+          "address": "0x213094",
+          "opcode": "callq",
+          "target": "0x2424e0 <absl::lts_20260817::ThrowStdLengthError(char const*)>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        }
+      ],
+      "unresolved_branches": [],
+      "encoding": "count",
+      "case": "40_8_2"
+    },
+    {
+      "K": 40,
+      "value_bytes": 8,
+      "kind": 2,
+      "reference_A": 10,
+      "A": 10,
+      "arm": 0,
+      "clock": "0xab53",
+      "location": "whole_loop_helper",
+      "helper_address": "0x1d6b0",
+      "effective_calls": [
+        {
+          "address": "0x1de6e",
+          "opcode": "callq",
+          "target": "0x53f0 <_Znwm@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "allocation_runtime"
+        },
+        {
+          "address": "0x1df26",
+          "opcode": "callq",
+          "target": "0x1ffaa0 <orbital::allocation::Allocation::~Allocation()>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "orbital_owner_runtime"
+        },
+        {
+          "address": "0x1df4c",
+          "opcode": "callq",
+          "target": "0x5400 <_ZdlPvm@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "allocation_runtime"
+        },
+        {
+          "address": "0x1df5c",
+          "opcode": "callq",
+          "target": "0x5400 <_ZdlPvm@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "allocation_runtime"
+        },
+        {
+          "address": "0x1e3f4",
+          "opcode": "callq",
+          "target": "0x1c700 <std::optional<unsigned int> ht::links<0u, false, 8u, true, true, 16u>::acquire<ht::promoted_observer<ht::no_small_effects, true>>(unsigned int, ht::promoted_observer<ht::no_small_effects, true>&)>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "linked_values"
+        },
+        {
+          "address": "0x1e6a9",
+          "opcode": "callq",
+          "target": "0x5380 <memcpy@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "byte_transfer"
+        },
+        {
+          "address": "0x1e87c",
+          "opcode": "callq",
+          "target": "0x5380 <memcpy@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "byte_transfer"
+        },
+        {
+          "address": "0x1ebbd",
+          "opcode": "callq",
+          "target": "0x1bd00 <std::optional<unsigned int> ht::links<40u, false, 9u, false, false, 16u>::acquire<ht::promoted_observer<ht::no_small_effects, false>>(unsigned int, ht::promoted_observer<ht::no_small_effects, false>&)>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "key_overflow"
+        },
+        {
+          "address": "0x1ec6e",
+          "opcode": "callq",
+          "target": "0x5770 <__cxa_guard_acquire@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "cold_format_init"
+        },
+        {
+          "address": "0x1ec8c",
+          "opcode": "callq",
+          "target": "0x1c440 <ht::links<0u, false, 8u, true, true, 16u>::formats()::'lambda'()::operator()() const>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "cold_format_init"
+        },
+        {
+          "address": "0x1eca6",
+          "opcode": "callq",
+          "target": "0x5390 <__cxa_atexit@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "cold_format_init"
+        },
+        {
+          "address": "0x1ecb2",
+          "opcode": "callq",
+          "target": "0x52b0 <__cxa_guard_release@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "cold_format_init"
+        },
+        {
+          "address": "0x1eccb",
+          "opcode": "callq",
+          "target": "0x5770 <__cxa_guard_acquire@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "cold_format_init"
+        },
+        {
+          "address": "0x1ece9",
+          "opcode": "callq",
+          "target": "0x1c440 <ht::links<0u, false, 8u, true, true, 16u>::formats()::'lambda'()::operator()() const>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "cold_format_init"
+        },
+        {
+          "address": "0x1ed03",
+          "opcode": "callq",
+          "target": "0x5390 <__cxa_atexit@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "cold_format_init"
+        },
+        {
+          "address": "0x1ed0f",
+          "opcode": "callq",
+          "target": "0x52b0 <__cxa_guard_release@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "cold_format_init"
+        },
+        {
+          "address": "0x1ed28",
+          "opcode": "callq",
+          "target": "0x5770 <__cxa_guard_acquire@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "cold_format_init"
+        },
+        {
+          "address": "0x1ed3f",
+          "opcode": "callq",
+          "target": "0x173e0 <ht::identity<2u>::admit()::'lambda'()::operator()() const>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "other_spike_boundary"
+        },
+        {
+          "address": "0x1ed51",
+          "opcode": "callq",
+          "target": "0x52b0 <__cxa_guard_release@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "cold_format_init"
+        },
+        {
+          "address": "0x1ed6a",
+          "opcode": "callq",
+          "target": "0x5770 <__cxa_guard_acquire@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "cold_format_init"
+        },
+        {
+          "address": "0x1ed81",
+          "opcode": "callq",
+          "target": "0x17790 <ht::identity<4u>::admit()::'lambda'()::operator()() const>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "other_spike_boundary"
+        },
+        {
+          "address": "0x1ed93",
+          "opcode": "callq",
+          "target": "0x52b0 <__cxa_guard_release@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "cold_format_init"
+        },
+        {
+          "address": "0x1edac",
+          "opcode": "callq",
+          "target": "0x5770 <__cxa_guard_acquire@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "cold_format_init"
+        },
+        {
+          "address": "0x1edc3",
+          "opcode": "callq",
+          "target": "0x175a0 <ht::identity<8u>::admit()::'lambda'()::operator()() const>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "other_spike_boundary"
+        },
+        {
+          "address": "0x1edd5",
+          "opcode": "callq",
+          "target": "0x52b0 <__cxa_guard_release@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "cold_format_init"
+        },
+        {
+          "address": "0x1ee2d",
+          "opcode": "callq",
+          "target": "0x5290 <__cxa_guard_abort@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        },
+        {
+          "address": "0x1ee35",
+          "opcode": "callq",
+          "target": "0x19e70 <std::vector<ht::links<0u, false, 8u, true, true, 16u>::block, std::allocator<ht::links<0u, false, 8u, true, true, 16u>::block>>::~vector()>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "linked_values"
+        },
+        {
+          "address": "0x1ee4b",
+          "opcode": "callq",
+          "target": "0x5290 <__cxa_guard_abort@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        },
+        {
+          "address": "0x1ee58",
+          "opcode": "callq",
+          "target": "0x5400 <_ZdlPvm@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "allocation_runtime"
+        },
+        {
+          "address": "0x1ee7a",
+          "opcode": "callq",
+          "target": "0x51b0 <__cxa_begin_catch@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "exception_handling"
+        },
+        {
+          "address": "0x1ee87",
+          "opcode": "callq",
+          "target": "0x56a0 <__cxa_end_catch@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "exception_handling"
+        },
+        {
+          "address": "0x1ef0b",
+          "opcode": "callq",
+          "target": "0x5580 <fprintf@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "other"
+        },
+        {
+          "address": "0x1ef10",
+          "opcode": "callq",
+          "target": "0x5230 <abort@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        },
+        {
+          "address": "0x1ef32",
+          "opcode": "callq",
+          "target": "0x5580 <fprintf@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "other"
+        },
+        {
+          "address": "0x1ef37",
+          "opcode": "callq",
+          "target": "0x5230 <abort@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        },
+        {
+          "address": "0x1ef59",
+          "opcode": "callq",
+          "target": "0x5580 <fprintf@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "other"
+        },
+        {
+          "address": "0x1ef5e",
+          "opcode": "callq",
+          "target": "0x5230 <abort@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        },
+        {
+          "address": "0x1ef80",
+          "opcode": "callq",
+          "target": "0x5580 <fprintf@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "other"
+        },
+        {
+          "address": "0x1ef85",
+          "opcode": "callq",
+          "target": "0x5230 <abort@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        },
+        {
+          "address": "0x1efa7",
+          "opcode": "callq",
+          "target": "0x5580 <fprintf@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "other"
+        },
+        {
+          "address": "0x1efac",
+          "opcode": "callq",
+          "target": "0x5230 <abort@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        },
+        {
+          "address": "0x1efbe",
+          "opcode": "callq",
+          "target": "0x1bc80 <std::_Optional_base<ht::links<40u, false, 9u, false, false, 16u>::reservation<ht::promoted_observer<ht::no_small_effects, false>>, false, false>::~_Optional_base()>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "key_overflow"
+        },
+        {
+          "address": "0x1efc6",
+          "opcode": "callq",
+          "target": "0x5730 <_Unwind_Resume@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        },
+        {
+          "address": "0x1efd3",
+          "opcode": "callq",
+          "target": "0x1c3c0 <std::expected<ht::mutation_delta, ht::mutation_error> ht::promoted_table<40u, (ht::layout_solver::container)2, 8u, 10u, 6u, 128u, 128u, (ht::record_format)1, false, (ht::record_access)3, true, ht::links<0u, false, 8u, true, true, 16u>, 8u>::try_set_bytes<ht::no_small_effects>(unsigned long, std::array<unsigned char, 8ul> const&, ht::no_small_effects&)::'lambda'()::operator()() const::proposal::~proposal()>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "promoted_owner"
+        },
+        {
+          "address": "0x1efe0",
+          "opcode": "callq",
+          "target": "0x1bc80 <std::_Optional_base<ht::links<40u, false, 9u, false, false, 16u>::reservation<ht::promoted_observer<ht::no_small_effects, false>>, false, false>::~_Optional_base()>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "key_overflow"
+        },
+        {
+          "address": "0x1efe8",
+          "opcode": "callq",
+          "target": "0x5730 <_Unwind_Resume@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        }
+      ],
+      "unresolved_branches": [],
+      "encoding": "inactive",
+      "case": "40_8_2"
+    },
+    {
+      "K": 40,
+      "value_bytes": 8,
+      "kind": 2,
+      "reference_A": 10,
+      "A": 9,
+      "arm": 1,
+      "clock": "0x2d9e9",
+      "location": "whole_loop_helper",
+      "helper_address": "0x3aa80",
+      "effective_calls": [
+        {
+          "address": "0x3b23c",
+          "opcode": "callq",
+          "target": "0x53f0 <_Znwm@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "allocation_runtime"
+        },
+        {
+          "address": "0x3b2e6",
+          "opcode": "callq",
+          "target": "0x1ffaa0 <orbital::allocation::Allocation::~Allocation()>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "orbital_owner_runtime"
+        },
+        {
+          "address": "0x3b30c",
+          "opcode": "callq",
+          "target": "0x5400 <_ZdlPvm@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "allocation_runtime"
+        },
+        {
+          "address": "0x3b31c",
+          "opcode": "callq",
+          "target": "0x5400 <_ZdlPvm@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "allocation_runtime"
+        },
+        {
+          "address": "0x3b7ac",
+          "opcode": "callq",
+          "target": "0x1c700 <std::optional<unsigned int> ht::links<0u, false, 8u, true, true, 16u>::acquire<ht::promoted_observer<ht::no_small_effects, true>>(unsigned int, ht::promoted_observer<ht::no_small_effects, true>&)>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "linked_values"
+        },
+        {
+          "address": "0x3ba80",
+          "opcode": "callq",
+          "target": "0x5380 <memcpy@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "byte_transfer"
+        },
+        {
+          "address": "0x3bc66",
+          "opcode": "callq",
+          "target": "0x5380 <memcpy@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "byte_transfer"
+        },
+        {
+          "address": "0x3bfe6",
+          "opcode": "callq",
+          "target": "0x1bd00 <std::optional<unsigned int> ht::links<40u, false, 9u, false, false, 16u>::acquire<ht::promoted_observer<ht::no_small_effects, false>>(unsigned int, ht::promoted_observer<ht::no_small_effects, false>&)>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "key_overflow"
+        },
+        {
+          "address": "0x3c0b0",
+          "opcode": "callq",
+          "target": "0x5770 <__cxa_guard_acquire@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "cold_format_init"
+        },
+        {
+          "address": "0x3c0c9",
+          "opcode": "callq",
+          "target": "0x1c440 <ht::links<0u, false, 8u, true, true, 16u>::formats()::'lambda'()::operator()() const>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "cold_format_init"
+        },
+        {
+          "address": "0x3c0e3",
+          "opcode": "callq",
+          "target": "0x5390 <__cxa_atexit@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "cold_format_init"
+        },
+        {
+          "address": "0x3c0ef",
+          "opcode": "callq",
+          "target": "0x52b0 <__cxa_guard_release@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "cold_format_init"
+        },
+        {
+          "address": "0x3c108",
+          "opcode": "callq",
+          "target": "0x5770 <__cxa_guard_acquire@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "cold_format_init"
+        },
+        {
+          "address": "0x3c121",
+          "opcode": "callq",
+          "target": "0x1c440 <ht::links<0u, false, 8u, true, true, 16u>::formats()::'lambda'()::operator()() const>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "cold_format_init"
+        },
+        {
+          "address": "0x3c13b",
+          "opcode": "callq",
+          "target": "0x5390 <__cxa_atexit@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "cold_format_init"
+        },
+        {
+          "address": "0x3c147",
+          "opcode": "callq",
+          "target": "0x52b0 <__cxa_guard_release@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "cold_format_init"
+        },
+        {
+          "address": "0x3c160",
+          "opcode": "callq",
+          "target": "0x5770 <__cxa_guard_acquire@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "cold_format_init"
+        },
+        {
+          "address": "0x3c172",
+          "opcode": "callq",
+          "target": "0x173e0 <ht::identity<2u>::admit()::'lambda'()::operator()() const>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "other_spike_boundary"
+        },
+        {
+          "address": "0x3c184",
+          "opcode": "callq",
+          "target": "0x52b0 <__cxa_guard_release@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "cold_format_init"
+        },
+        {
+          "address": "0x3c19d",
+          "opcode": "callq",
+          "target": "0x5770 <__cxa_guard_acquire@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "cold_format_init"
+        },
+        {
+          "address": "0x3c1af",
+          "opcode": "callq",
+          "target": "0x17790 <ht::identity<4u>::admit()::'lambda'()::operator()() const>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "other_spike_boundary"
+        },
+        {
+          "address": "0x3c1c1",
+          "opcode": "callq",
+          "target": "0x52b0 <__cxa_guard_release@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "cold_format_init"
+        },
+        {
+          "address": "0x3c1da",
+          "opcode": "callq",
+          "target": "0x5770 <__cxa_guard_acquire@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "cold_format_init"
+        },
+        {
+          "address": "0x3c1ec",
+          "opcode": "callq",
+          "target": "0x175a0 <ht::identity<8u>::admit()::'lambda'()::operator()() const>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "other_spike_boundary"
+        },
+        {
+          "address": "0x3c1fe",
+          "opcode": "callq",
+          "target": "0x52b0 <__cxa_guard_release@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "cold_format_init"
+        },
+        {
+          "address": "0x3c256",
+          "opcode": "callq",
+          "target": "0x5290 <__cxa_guard_abort@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        },
+        {
+          "address": "0x3c25e",
+          "opcode": "callq",
+          "target": "0x19e70 <std::vector<ht::links<0u, false, 8u, true, true, 16u>::block, std::allocator<ht::links<0u, false, 8u, true, true, 16u>::block>>::~vector()>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "linked_values"
+        },
+        {
+          "address": "0x3c274",
+          "opcode": "callq",
+          "target": "0x5290 <__cxa_guard_abort@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        },
+        {
+          "address": "0x3c281",
+          "opcode": "callq",
+          "target": "0x5400 <_ZdlPvm@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "allocation_runtime"
+        },
+        {
+          "address": "0x3c29e",
+          "opcode": "callq",
+          "target": "0x51b0 <__cxa_begin_catch@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "exception_handling"
+        },
+        {
+          "address": "0x3c2ab",
+          "opcode": "callq",
+          "target": "0x56a0 <__cxa_end_catch@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "exception_handling"
+        },
+        {
+          "address": "0x3c324",
+          "opcode": "callq",
+          "target": "0x5580 <fprintf@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "other"
+        },
+        {
+          "address": "0x3c329",
+          "opcode": "callq",
+          "target": "0x5230 <abort@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        },
+        {
+          "address": "0x3c34b",
+          "opcode": "callq",
+          "target": "0x5580 <fprintf@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "other"
+        },
+        {
+          "address": "0x3c350",
+          "opcode": "callq",
+          "target": "0x5230 <abort@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        },
+        {
+          "address": "0x3c372",
+          "opcode": "callq",
+          "target": "0x5580 <fprintf@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "other"
+        },
+        {
+          "address": "0x3c377",
+          "opcode": "callq",
+          "target": "0x5230 <abort@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        },
+        {
+          "address": "0x3c399",
+          "opcode": "callq",
+          "target": "0x5580 <fprintf@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "other"
+        },
+        {
+          "address": "0x3c39e",
+          "opcode": "callq",
+          "target": "0x5230 <abort@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        },
+        {
+          "address": "0x3c3c0",
+          "opcode": "callq",
+          "target": "0x5580 <fprintf@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "other"
+        },
+        {
+          "address": "0x3c3c5",
+          "opcode": "callq",
+          "target": "0x5230 <abort@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        },
+        {
+          "address": "0x3c3d7",
+          "opcode": "callq",
+          "target": "0x1bc80 <std::_Optional_base<ht::links<40u, false, 9u, false, false, 16u>::reservation<ht::promoted_observer<ht::no_small_effects, false>>, false, false>::~_Optional_base()>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "key_overflow"
+        },
+        {
+          "address": "0x3c3df",
+          "opcode": "callq",
+          "target": "0x5730 <_Unwind_Resume@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        },
+        {
+          "address": "0x3c3ef",
+          "opcode": "callq",
+          "target": "0x3a170 <std::expected<ht::mutation_delta, ht::mutation_error> ht::promoted_table<40u, (ht::layout_solver::container)2, 8u, 9u, 5u, 128u, 128u, (ht::record_format)1, false, (ht::record_access)3, true, ht::links<0u, false, 8u, true, true, 16u>, 8u>::try_set_bytes<ht::no_small_effects>(unsigned long, std::array<unsigned char, 8ul> const&, ht::no_small_effects&)::'lambda'()::operator()() const::proposal::~proposal()>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "promoted_owner"
+        },
+        {
+          "address": "0x3c3fc",
+          "opcode": "callq",
+          "target": "0x1bc80 <std::_Optional_base<ht::links<40u, false, 9u, false, false, 16u>::reservation<ht::promoted_observer<ht::no_small_effects, false>>, false, false>::~_Optional_base()>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "key_overflow"
+        },
+        {
+          "address": "0x3c404",
+          "opcode": "callq",
+          "target": "0x5730 <_Unwind_Resume@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        }
+      ],
+      "unresolved_branches": [],
+      "encoding": "inactive",
+      "case": "40_8_2"
+    },
+    {
+      "K": 40,
+      "value_bytes": 8,
+      "kind": 2,
+      "reference_A": 10,
+      "A": 10,
+      "arm": 16,
+      "clock": "0x1e03d2",
+      "location": "timed_cfg",
+      "helper_address": null,
+      "effective_calls": [
+        {
+          "address": "0x1e054f",
+          "opcode": "callq",
+          "target": "0x2076b0 <absl::lts_20260817::container_internal::PrepareInsertSmallNonSoo(absl::lts_20260817::container_internal::CommonFields&, absl::lts_20260817::container_internal::PolicyFunctions const&, absl::lts_20260817::FunctionRef<unsigned long (unsigned long)>)>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "abseil_boundary"
+        },
+        {
+          "address": "0x1e056b",
+          "opcode": "callq",
+          "target": "0x208c00 <absl::lts_20260817::container_internal::PrepareInsertLarge(absl::lts_20260817::container_internal::CommonFields&, absl::lts_20260817::container_internal::PolicyFunctions const&, unsigned long, absl::lts_20260817::container_internal::NonIterableBitMask<unsigned int, 16, 0>, absl::lts_20260817::container_internal::FindInfo)>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "abseil_boundary"
+        },
+        {
+          "address": "0x1e05f7",
+          "opcode": "callq",
+          "target": "0x1ea9d0 <unsigned long& absl::lts_20260817::inlined_vector_internal::Storage<unsigned long, 1ul, std::allocator<unsigned long>>::EmplaceBackSlow<unsigned long const&>(unsigned long const&)>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "abseil_boundary"
+        },
+        {
+          "address": "0x1e32dc",
+          "opcode": "callq",
+          "target": "0x220c30 <absl::lts_20260817::ThrowStdLengthError(char const*)>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        }
+      ],
+      "unresolved_branches": [],
+      "encoding": "inactive",
+      "case": "40_8_2"
+    },
+    {
+      "K": 40,
+      "value_bytes": 8,
+      "kind": 2,
+      "reference_A": 10,
+      "A": 10,
+      "arm": 17,
+      "clock": "0x1ee734",
+      "location": "timed_cfg",
+      "helper_address": null,
+      "effective_calls": [
+        {
+          "address": "0x1ee8de",
+          "opcode": "callq",
+          "target": "0x2076b0 <absl::lts_20260817::container_internal::PrepareInsertSmallNonSoo(absl::lts_20260817::container_internal::CommonFields&, absl::lts_20260817::container_internal::PolicyFunctions const&, absl::lts_20260817::FunctionRef<unsigned long (unsigned long)>)>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "abseil_boundary"
+        },
+        {
+          "address": "0x1ee8ff",
+          "opcode": "callq",
+          "target": "0x208c00 <absl::lts_20260817::container_internal::PrepareInsertLarge(absl::lts_20260817::container_internal::CommonFields&, absl::lts_20260817::container_internal::PolicyFunctions const&, unsigned long, absl::lts_20260817::container_internal::NonIterableBitMask<unsigned int, 16, 0>, absl::lts_20260817::container_internal::FindInfo)>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "abseil_boundary"
+        },
+        {
+          "address": "0x1ee997",
+          "opcode": "callq",
+          "target": "0x1ea9d0 <unsigned long& absl::lts_20260817::inlined_vector_internal::Storage<unsigned long, 1ul, std::allocator<unsigned long>>::EmplaceBackSlow<unsigned long const&>(unsigned long const&)>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "abseil_boundary"
+        },
+        {
+          "address": "0x1f17e4",
+          "opcode": "callq",
+          "target": "0x220c30 <absl::lts_20260817::ThrowStdLengthError(char const*)>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        }
+      ],
+      "unresolved_branches": [],
+      "encoding": "inactive",
+      "case": "40_8_2"
+    },
+    {
+      "K": 64,
+      "value_bytes": 16,
+      "kind": 1,
+      "reference_A": 10,
+      "A": 10,
+      "arm": 0,
+      "clock": "0xba89",
+      "location": "whole_loop_helper",
+      "helper_address": "0x1d740",
+      "effective_calls": [
+        {
+          "address": "0x1dd47",
+          "opcode": "callq",
+          "target": "0x1ccb0 <std::optional<unsigned int> ht::links<64u, false, 16u, false, false, 16u>::acquire<ht::promoted_observer<ht::no_small_effects, false>>(unsigned int, ht::promoted_observer<ht::no_small_effects, false>&)>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "key_overflow"
+        },
+        {
+          "address": "0x1dfbf",
+          "opcode": "callq",
+          "target": "0x5500 <fprintf@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "other"
+        },
+        {
+          "address": "0x1dfc4",
+          "opcode": "callq",
+          "target": "0x5200 <abort@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        },
+        {
+          "address": "0x1dfe3",
+          "opcode": "callq",
+          "target": "0x5500 <fprintf@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "other"
+        },
+        {
+          "address": "0x1dfe8",
+          "opcode": "callq",
+          "target": "0x5200 <abort@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        },
+        {
+          "address": "0x1e007",
+          "opcode": "callq",
+          "target": "0x5500 <fprintf@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "other"
+        },
+        {
+          "address": "0x1e00c",
+          "opcode": "callq",
+          "target": "0x5200 <abort@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        },
+        {
+          "address": "0x1e019",
+          "opcode": "callq",
+          "target": "0x1cc30 <std::_Optional_base<ht::links<64u, false, 16u, false, false, 16u>::reservation<ht::promoted_observer<ht::no_small_effects, false>>, false, false>::~_Optional_base()>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "key_overflow"
+        },
+        {
+          "address": "0x1e021",
+          "opcode": "callq",
+          "target": "0x5640 <_Unwind_Resume@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        }
+      ],
+      "unresolved_branches": [],
+      "encoding": "count",
+      "case": "64_16_1"
+    },
+    {
+      "K": 64,
+      "value_bytes": 16,
+      "kind": 1,
+      "reference_A": 10,
+      "A": 9,
+      "arm": 1,
+      "clock": "0x271f1",
+      "location": "whole_loop_helper",
+      "helper_address": "0x33680",
+      "effective_calls": [
+        {
+          "address": "0x33c87",
+          "opcode": "callq",
+          "target": "0x1ccb0 <std::optional<unsigned int> ht::links<64u, false, 16u, false, false, 16u>::acquire<ht::promoted_observer<ht::no_small_effects, false>>(unsigned int, ht::promoted_observer<ht::no_small_effects, false>&)>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "key_overflow"
+        },
+        {
+          "address": "0x33eff",
+          "opcode": "callq",
+          "target": "0x5500 <fprintf@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "other"
+        },
+        {
+          "address": "0x33f04",
+          "opcode": "callq",
+          "target": "0x5200 <abort@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        },
+        {
+          "address": "0x33f23",
+          "opcode": "callq",
+          "target": "0x5500 <fprintf@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "other"
+        },
+        {
+          "address": "0x33f28",
+          "opcode": "callq",
+          "target": "0x5200 <abort@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        },
+        {
+          "address": "0x33f47",
+          "opcode": "callq",
+          "target": "0x5500 <fprintf@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "other"
+        },
+        {
+          "address": "0x33f4c",
+          "opcode": "callq",
+          "target": "0x5200 <abort@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        },
+        {
+          "address": "0x33f59",
+          "opcode": "callq",
+          "target": "0x1cc30 <std::_Optional_base<ht::links<64u, false, 16u, false, false, 16u>::reservation<ht::promoted_observer<ht::no_small_effects, false>>, false, false>::~_Optional_base()>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "key_overflow"
+        },
+        {
+          "address": "0x33f61",
+          "opcode": "callq",
+          "target": "0x5640 <_Unwind_Resume@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        }
+      ],
+      "unresolved_branches": [],
+      "encoding": "count",
+      "case": "64_16_1"
+    },
+    {
+      "K": 64,
+      "value_bytes": 16,
+      "kind": 1,
+      "reference_A": 10,
+      "A": 10,
+      "arm": 16,
+      "clock": "0x16d3ec",
+      "location": "timed_cfg",
+      "helper_address": null,
+      "effective_calls": [
+        {
+          "address": "0x16d452",
+          "opcode": "callq",
+          "target": "0x1941f0 <absl::lts_20260817::container_internal::PrepareInsertSmallNonSoo(absl::lts_20260817::container_internal::CommonFields&, absl::lts_20260817::container_internal::PolicyFunctions const&, absl::lts_20260817::FunctionRef<unsigned long (unsigned long)>)>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "abseil_boundary"
+        },
+        {
+          "address": "0x16d5bb",
+          "opcode": "callq",
+          "target": "0x195740 <absl::lts_20260817::container_internal::PrepareInsertLarge(absl::lts_20260817::container_internal::CommonFields&, absl::lts_20260817::container_internal::PolicyFunctions const&, unsigned long, absl::lts_20260817::container_internal::NonIterableBitMask<unsigned int, 16, 0>, absl::lts_20260817::container_internal::FindInfo)>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "abseil_boundary"
+        }
+      ],
+      "unresolved_branches": [],
+      "encoding": "count",
+      "case": "64_16_1"
+    },
+    {
+      "K": 64,
+      "value_bytes": 16,
+      "kind": 1,
+      "reference_A": 10,
+      "A": 10,
+      "arm": 17,
+      "clock": "0x17b54c",
+      "location": "timed_cfg",
+      "helper_address": null,
+      "effective_calls": [
+        {
+          "address": "0x17b6dc",
+          "opcode": "callq",
+          "target": "0x1941f0 <absl::lts_20260817::container_internal::PrepareInsertSmallNonSoo(absl::lts_20260817::container_internal::CommonFields&, absl::lts_20260817::container_internal::PolicyFunctions const&, absl::lts_20260817::FunctionRef<unsigned long (unsigned long)>)>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "abseil_boundary"
+        },
+        {
+          "address": "0x17b6fb",
+          "opcode": "callq",
+          "target": "0x195740 <absl::lts_20260817::container_internal::PrepareInsertLarge(absl::lts_20260817::container_internal::CommonFields&, absl::lts_20260817::container_internal::PolicyFunctions const&, unsigned long, absl::lts_20260817::container_internal::NonIterableBitMask<unsigned int, 16, 0>, absl::lts_20260817::container_internal::FindInfo)>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "abseil_boundary"
+        }
+      ],
+      "unresolved_branches": [],
+      "encoding": "count",
+      "case": "64_16_1"
+    },
+    {
+      "K": 64,
+      "value_bytes": 16,
+      "kind": 1,
+      "reference_A": 10,
+      "A": 10,
+      "arm": 0,
+      "clock": "0xbeb2",
+      "location": "whole_loop_helper",
+      "helper_address": "0x1ece0",
+      "effective_calls": [
+        {
+          "address": "0x1f3c9",
+          "opcode": "callq",
+          "target": "0x1e250 <std::optional<unsigned int> ht::links<64u, false, 16u, false, false, 16u>::acquire<ht::promoted_observer<ht::no_small_effects, false>>(unsigned int, ht::promoted_observer<ht::no_small_effects, false>&)>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "key_overflow"
+        },
+        {
+          "address": "0x1f63b",
+          "opcode": "callq",
+          "target": "0x5500 <fprintf@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "other"
+        },
+        {
+          "address": "0x1f640",
+          "opcode": "callq",
+          "target": "0x5200 <abort@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        },
+        {
+          "address": "0x1f65f",
+          "opcode": "callq",
+          "target": "0x5500 <fprintf@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "other"
+        },
+        {
+          "address": "0x1f664",
+          "opcode": "callq",
+          "target": "0x5200 <abort@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        },
+        {
+          "address": "0x1f683",
+          "opcode": "callq",
+          "target": "0x5500 <fprintf@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "other"
+        },
+        {
+          "address": "0x1f688",
+          "opcode": "callq",
+          "target": "0x5200 <abort@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        },
+        {
+          "address": "0x1f695",
+          "opcode": "callq",
+          "target": "0x1e1d0 <std::_Optional_base<ht::links<64u, false, 16u, false, false, 16u>::reservation<ht::promoted_observer<ht::no_small_effects, false>>, false, false>::~_Optional_base()>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "key_overflow"
+        },
+        {
+          "address": "0x1f69d",
+          "opcode": "callq",
+          "target": "0x5640 <_Unwind_Resume@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        }
+      ],
+      "unresolved_branches": [],
+      "encoding": "inactive",
+      "case": "64_16_1"
+    },
+    {
+      "K": 64,
+      "value_bytes": 16,
+      "kind": 1,
+      "reference_A": 10,
+      "A": 9,
+      "arm": 1,
+      "clock": "0x298bd",
+      "location": "whole_loop_helper",
+      "helper_address": "0x36cb0",
+      "effective_calls": [
+        {
+          "address": "0x37399",
+          "opcode": "callq",
+          "target": "0x1e250 <std::optional<unsigned int> ht::links<64u, false, 16u, false, false, 16u>::acquire<ht::promoted_observer<ht::no_small_effects, false>>(unsigned int, ht::promoted_observer<ht::no_small_effects, false>&)>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "key_overflow"
+        },
+        {
+          "address": "0x3760b",
+          "opcode": "callq",
+          "target": "0x5500 <fprintf@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "other"
+        },
+        {
+          "address": "0x37610",
+          "opcode": "callq",
+          "target": "0x5200 <abort@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        },
+        {
+          "address": "0x3762f",
+          "opcode": "callq",
+          "target": "0x5500 <fprintf@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "other"
+        },
+        {
+          "address": "0x37634",
+          "opcode": "callq",
+          "target": "0x5200 <abort@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        },
+        {
+          "address": "0x37653",
+          "opcode": "callq",
+          "target": "0x5500 <fprintf@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "other"
+        },
+        {
+          "address": "0x37658",
+          "opcode": "callq",
+          "target": "0x5200 <abort@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        },
+        {
+          "address": "0x37665",
+          "opcode": "callq",
+          "target": "0x1e1d0 <std::_Optional_base<ht::links<64u, false, 16u, false, false, 16u>::reservation<ht::promoted_observer<ht::no_small_effects, false>>, false, false>::~_Optional_base()>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "key_overflow"
+        },
+        {
+          "address": "0x3766d",
+          "opcode": "callq",
+          "target": "0x5640 <_Unwind_Resume@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false,
+          "category": "failure_path"
+        }
+      ],
+      "unresolved_branches": [],
+      "encoding": "inactive",
+      "case": "64_16_1"
+    },
+    {
+      "K": 64,
+      "value_bytes": 16,
+      "kind": 1,
+      "reference_A": 10,
+      "A": 10,
+      "arm": 16,
+      "clock": "0x18b31c",
+      "location": "timed_cfg",
+      "helper_address": null,
+      "effective_calls": [
+        {
+          "address": "0x18b382",
+          "opcode": "callq",
+          "target": "0x1b2120 <absl::lts_20260817::container_internal::PrepareInsertSmallNonSoo(absl::lts_20260817::container_internal::CommonFields&, absl::lts_20260817::container_internal::PolicyFunctions const&, absl::lts_20260817::FunctionRef<unsigned long (unsigned long)>)>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "abseil_boundary"
+        },
+        {
+          "address": "0x18b4eb",
+          "opcode": "callq",
+          "target": "0x1b3670 <absl::lts_20260817::container_internal::PrepareInsertLarge(absl::lts_20260817::container_internal::CommonFields&, absl::lts_20260817::container_internal::PolicyFunctions const&, unsigned long, absl::lts_20260817::container_internal::NonIterableBitMask<unsigned int, 16, 0>, absl::lts_20260817::container_internal::FindInfo)>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "abseil_boundary"
+        }
+      ],
+      "unresolved_branches": [],
+      "encoding": "inactive",
+      "case": "64_16_1"
+    },
+    {
+      "K": 64,
+      "value_bytes": 16,
+      "kind": 1,
+      "reference_A": 10,
+      "A": 10,
+      "arm": 17,
+      "clock": "0x19947c",
+      "location": "timed_cfg",
+      "helper_address": null,
+      "effective_calls": [
+        {
+          "address": "0x19960c",
+          "opcode": "callq",
+          "target": "0x1b2120 <absl::lts_20260817::container_internal::PrepareInsertSmallNonSoo(absl::lts_20260817::container_internal::CommonFields&, absl::lts_20260817::container_internal::PolicyFunctions const&, absl::lts_20260817::FunctionRef<unsigned long (unsigned long)>)>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "abseil_boundary"
+        },
+        {
+          "address": "0x19962b",
+          "opcode": "callq",
+          "target": "0x1b3670 <absl::lts_20260817::container_internal::PrepareInsertLarge(absl::lts_20260817::container_internal::CommonFields&, absl::lts_20260817::container_internal::PolicyFunctions const&, unsigned long, absl::lts_20260817::container_internal::NonIterableBitMask<unsigned int, 16, 0>, absl::lts_20260817::container_internal::FindInfo)>",
+          "indirect": false,
+          "inside_cfg_cycle": true,
+          "category": "abseil_boundary"
+        }
+      ],
+      "unresolved_branches": [],
+      "encoding": "inactive",
+      "case": "64_16_1"
+    }
+  ],
+  "scope": "Effective direct calls only; full reachable graph recoverable with frozen audit. Static cycles are not measured frequencies or costs."
+}

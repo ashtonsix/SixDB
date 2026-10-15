@@ -62,6 +62,17 @@ and [design selection](../../orbital/spec/evidence/design-revision/README.md) pr
 exact evidence. [RESULTS](../../orbital/spec/RESULTS.md) owns current coverage.
 These two retired narratives are history, not additional current specifications.
 
+## Hashtable consolidation — October 15, 2026
+
+The separated-control/transposed-payload experiment is closed and archived.
+[Findings and verified recovery references](../spikes/hashtable/SEPARATED-EXPERIMENT.md)
+preserve its hot, cold and allocation comparisons. Its remaining requirements
+carry into the selected hierarchy; the negative result does not waive them.
+There is now one top-level [hashtable spike](../spikes/hashtable/README.md).
+Earlier benchmark controls remain live in its `reference/` directory. All three
+pre-move trees have verified archive references; those archives, rather than the
+September checkpoint below, recover this consolidation's original paths.
+
 ## Recovery
 
 Browse the [complete checkpoint](https://github.com/ashtonsix/SixDB/tree/275698524c58dea08f19961dbc2940cae68b405b/workbench/spikes)

@@ -1,0 +1,47 @@
+{
+  "rows": 38880,
+  "processes": 864,
+  "complete_case_comparisons": 3888,
+  "passes": 2,
+  "repetitions_per_process": 5,
+  "elf_count": 12,
+  "timed_regions": 1728,
+  "read_regions": 1296,
+  "update_regions": 432,
+  "ordered_set_regions": 108,
+  "map_serial_regions": 324,
+  "source_manifest_digest": "4e6e037b706978fdbc4967e0fdce3499b5d591703346070e0904014cab06e809",
+  "source_archive_sha256": "82491d88b46830ff0f24b69785e58616217327744d854a7b875901fa5e9fdb49",
+  "source_driver_sha256": "7ecb95d377ae5e989e0e31c62a8f6bc31c9f607d36c57f6aa8f145b85d642408",
+  "report_sha256": "8f4d8c5f1b2a7470b3291425f0c00ba925b14f8d9d2c56af3d3339adc06d6569",
+  "timed_elf_sha256": {
+    "16-0": "f2decb2f8fccf02fbd023b31ff8b8174b880589654ea8763647cf1eeb8ef9a2c",
+    "16-2": "d2f996f28bb7197954074c5754195f758a9f2f696bb3b31119b3acca4e8ca32e",
+    "16-8": "3b8cf6a7cf59b606c45ab7f23f72dc3ace6ab1e4fb03813c57108411b6a124a9",
+    "16-16": "16299d6a556bf1f800852c52e5220686e97f3d6a938304427583f5839ea221ad",
+    "40-0": "4413de16db9c7c059944e5aebdbb6e396fe51d858547714b835dbc36e17076b5",
+    "40-2": "17295ff8dd723d83eb8fed54d596340b4a5c8f8336839bf04df587d79c202707",
+    "40-8": "4d12c993a703330a4e0813549e4ad54083d91a764a5d5970ba91c90215610b7a",
+    "40-16": "adbbb5e477f13e1d0b9d486dfa5204910a35f1ac36e1255f68eba4bad6fd8800",
+    "64-0": "fd87da0cdbd84644d85e4a1f0956c4a9ec9a1d7f9ad9dc8dc427e479912efc87",
+    "64-2": "3060f6fb9bc949c7a1ba9eff92db4ec7dd933c160b06a4a281b4ad760b4b4827",
+    "64-8": "ce7986260ed69268639c12808c81454f5c8da5d2955ef1cb62884468ad4d6ad1",
+    "64-16": "5b5a2da0b35268b874620ed2e3efb221529892e973298592accde2536145b249"
+  },
+  "checks": [
+    "complete seeded schedule, forward/reverse order and all phase operation counts",
+    "serialized process timestamps, zero returns and empty stderr",
+    "complete report reproduced exactly, including losses and per-pass medians",
+    "independent fitting capacities, padding, tier populations and reference/actual geometry",
+    "all twelve native audited ELF identities equal timed process identities"
+  ],
+  "limitations": [
+    "Ordered set reads are not strict serial lookup latency; branch-synthesized Boolean results invalidate that interpretation.",
+    "Map serial is the driver label. Call fusion alone does not prove complete value-byte dataflow or a machine-code dependency chain.",
+    "Static CFG recurrence is not dynamic call frequency or timing cost.",
+    "Geometry controls change primary and secondary organization jointly, at fixed input cardinality.",
+    "Repeated processes on one host are not independent host trials; unchanged Abseil source can still vary with placement or runtime seed.",
+    "Build tier populations and phase memory inventories do not measure transient peaks or establish cache residence.",
+    "K16/K40/K64 sets and W2/W8/W16 maps only; no preset, growth policy, or broad-domain conclusion follows."
+  ]
+}

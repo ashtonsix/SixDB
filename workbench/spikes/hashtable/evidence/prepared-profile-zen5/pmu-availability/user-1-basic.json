@@ -1,0 +1,55 @@
+{
+  "schema": 1,
+  "scope": "PMU availability probe only",
+  "iterations": 1000000,
+  "consumed": 16402829526176732198,
+  "measurement": {
+    "mode": "basic",
+    "status": "complete",
+    "scope": "calling_thread_user_space",
+    "pid": 0,
+    "cpu": -1,
+    "inherit": false,
+    "exclude_kernel": true,
+    "exclude_hv": true,
+    "scaled": false,
+    "time_enabled_ns": 34515730,
+    "time_running_ns": 34515730,
+    "coverage": 1,
+    "multiplexed": false,
+    "ipc": 0.9160886787430915,
+    "ipc_scope": "observed_same_group",
+    "opened_event_set": [
+      "cpu_cycles",
+      "retired_instructions"
+    ],
+    "errors": [],
+    "errors_truncated": false,
+    "events": [
+      {
+        "name": "cpu_cycles",
+        "type": 0,
+        "config": "0x0",
+        "required": true,
+        "opened": true,
+        "in_group": true,
+        "id": 2,
+        "status": "measured",
+        "count": 6003874,
+        "errors": []
+      },
+      {
+        "name": "retired_instructions",
+        "type": 0,
+        "config": "0x1",
+        "required": true,
+        "opened": true,
+        "in_group": true,
+        "id": 3,
+        "status": "measured",
+        "count": 5500081,
+        "errors": []
+      }
+    ]
+  }
+}

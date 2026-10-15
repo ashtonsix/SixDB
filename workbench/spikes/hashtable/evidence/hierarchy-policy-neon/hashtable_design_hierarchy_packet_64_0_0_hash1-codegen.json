@@ -1,0 +1,87 @@
+{
+  "consumers": [
+    {
+      "owner": "candidate",
+      "N": 1,
+      "symbol": "ht::hierarchy_packet::answer ht::hierarchy_packet::read<1u, false, ht::promoted_table<64u, (ht::layout_solver::container)0, 0u, 6u, 2u, 128u, 128u, (ht::record_format)1, false, (ht::record_access)3, true, ht::links<0u, false, 8u, true, true, 16u, false>, 16u>>(ht::promoted_table<64u, (ht::layout_solver::container)0, 0u, 6u, 2u, 128u, 128u, (ht::record_format)1, false, (ht::record_access)3, true, ht::links<0u, false, 8u, true, true, 16u, false>, 16u> const&, std::vector<ht::hierarchy_packet::packet, std::allocator<ht::hierarchy_packet::packet>> const&, unsigned int)",
+      "instructions": 216,
+      "calls": [],
+      "stack_references": 23,
+      "explicit_widening_multiplies": 0
+    },
+    {
+      "owner": "candidate",
+      "N": 4,
+      "symbol": "ht::hierarchy_packet::answer ht::hierarchy_packet::read<4u, false, ht::promoted_table<64u, (ht::layout_solver::container)0, 0u, 6u, 2u, 128u, 128u, (ht::record_format)1, false, (ht::record_access)3, true, ht::links<0u, false, 8u, true, true, 16u, false>, 16u>>(ht::promoted_table<64u, (ht::layout_solver::container)0, 0u, 6u, 2u, 128u, 128u, (ht::record_format)1, false, (ht::record_access)3, true, ht::links<0u, false, 8u, true, true, 16u, false>, 16u> const&, std::vector<ht::hierarchy_packet::packet, std::allocator<ht::hierarchy_packet::packet>> const&, unsigned int)",
+      "instructions": 320,
+      "calls": [],
+      "stack_references": 34,
+      "explicit_widening_multiplies": 16
+    },
+    {
+      "owner": "candidate",
+      "N": 8,
+      "symbol": "ht::hierarchy_packet::answer ht::hierarchy_packet::read<8u, false, ht::promoted_table<64u, (ht::layout_solver::container)0, 0u, 6u, 2u, 128u, 128u, (ht::record_format)1, false, (ht::record_access)3, true, ht::links<0u, false, 8u, true, true, 16u, false>, 16u>>(ht::promoted_table<64u, (ht::layout_solver::container)0, 0u, 6u, 2u, 128u, 128u, (ht::record_format)1, false, (ht::record_access)3, true, ht::links<0u, false, 8u, true, true, 16u, false>, 16u> const&, std::vector<ht::hierarchy_packet::packet, std::allocator<ht::hierarchy_packet::packet>> const&, unsigned int)",
+      "instructions": 384,
+      "calls": [],
+      "stack_references": 33,
+      "explicit_widening_multiplies": 32
+    },
+    {
+      "owner": "ordinary",
+      "N": 1,
+      "symbol": "ht::hierarchy_packet::answer ht::hierarchy_packet::read<1u, false, ht::hierarchy_packet::baseline<false>>(ht::hierarchy_packet::baseline<false> const&, std::vector<ht::hierarchy_packet::packet, std::allocator<ht::hierarchy_packet::packet>> const&, unsigned int)",
+      "instructions": 216,
+      "calls": [],
+      "stack_references": 2,
+      "explicit_widening_multiplies": 0
+    },
+    {
+      "owner": "ordinary",
+      "N": 4,
+      "symbol": "ht::hierarchy_packet::answer ht::hierarchy_packet::read<4u, false, ht::hierarchy_packet::baseline<false>>(ht::hierarchy_packet::baseline<false> const&, std::vector<ht::hierarchy_packet::packet, std::allocator<ht::hierarchy_packet::packet>> const&, unsigned int)",
+      "instructions": 264,
+      "calls": [],
+      "stack_references": 8,
+      "explicit_widening_multiplies": 0
+    },
+    {
+      "owner": "ordinary",
+      "N": 8,
+      "symbol": "ht::hierarchy_packet::answer ht::hierarchy_packet::read<8u, false, ht::hierarchy_packet::baseline<false>>(ht::hierarchy_packet::baseline<false> const&, std::vector<ht::hierarchy_packet::packet, std::allocator<ht::hierarchy_packet::packet>> const&, unsigned int)",
+      "instructions": 448,
+      "calls": [],
+      "stack_references": 4,
+      "explicit_widening_multiplies": 0
+    },
+    {
+      "owner": "exact",
+      "N": 1,
+      "symbol": "ht::hierarchy_packet::answer ht::hierarchy_packet::read<1u, false, ht::hierarchy_packet::baseline<true>>(ht::hierarchy_packet::baseline<true> const&, std::vector<ht::hierarchy_packet::packet, std::allocator<ht::hierarchy_packet::packet>> const&, unsigned int)",
+      "instructions": 216,
+      "calls": [],
+      "stack_references": 2,
+      "explicit_widening_multiplies": 0
+    },
+    {
+      "owner": "exact",
+      "N": 4,
+      "symbol": "ht::hierarchy_packet::answer ht::hierarchy_packet::read<4u, false, ht::hierarchy_packet::baseline<true>>(ht::hierarchy_packet::baseline<true> const&, std::vector<ht::hierarchy_packet::packet, std::allocator<ht::hierarchy_packet::packet>> const&, unsigned int)",
+      "instructions": 264,
+      "calls": [],
+      "stack_references": 8,
+      "explicit_widening_multiplies": 0
+    },
+    {
+      "owner": "exact",
+      "N": 8,
+      "symbol": "ht::hierarchy_packet::answer ht::hierarchy_packet::read<8u, false, ht::hierarchy_packet::baseline<true>>(ht::hierarchy_packet::baseline<true> const&, std::vector<ht::hierarchy_packet::packet, std::allocator<ht::hierarchy_packet::packet>> const&, unsigned int)",
+      "instructions": 448,
+      "calls": [],
+      "stack_references": 4,
+      "explicit_widening_multiplies": 0
+    }
+  ],
+  "read_calls": 0,
+  "limitation": "Static caller inventory only. Stack references are not dynamic spills; instruction counts do not predict throughput, latency or memory service."
+}

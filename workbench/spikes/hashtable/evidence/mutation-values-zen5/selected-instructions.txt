@@ -1,0 +1,41 @@
+Selected W2/A10/arm0 multimap mutation witnesses. Full timed CFGs regenerate from the archived ELF and source receipt.
+
+The control per-key callee is the complete demangled nested lambda; the fused outer call encloses the query loop. Partial excerpt shows the existing-inline primary-row value and tag stores. This is not a dynamic instruction-count attribution.
+
+control ELF 825f26a9b37508b6a43610baa490c5203d0bb61805949315b29fda6f54cfbedd
+
+K40-W2-kind2-A10-arm0-update.asm
+58301: movq %rcx, 0x168(%rsp)
+58309: movq %rbx, 0x170(%rsp)
+58311: movq %rbp, %rdi
+58314: movq %r13, %rsi
+58317: callq 0x619a0 <std::expected<ht::mutation_delta, ht::mutation_error> ht::promoted_table<40u, (ht::layout_solver::container)2, 2u, 10u, 6u, 128u, 128u, (ht::record_format)1, false, (ht::record_access)3, true, ht::links<0u, false, 2u, true, true>, 8u>::try_set_bytes<ht::no_small_effects>(unsigned long, std::array<unsigned char, 2ul> const&, ht::no_small_effects&)::'lambda'()::operator()() const>
+5831c: cmpb $0x0, 0x290(%rsp)
+58324: je 0x598a9 <void ht::trial<(ht::layout_solver::container)2, 10u, 0u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x41d9>
+5832a: movl 0x280(%rsp), %eax
+58331: movq 0x288(%rsp), %rcx
+
+fused ELF d477964653f258554f73ea129a05d1d1e883ce3deffead65f2a00807c541693c
+
+K40-W2-kind2-A10-arm0-update.asm
+Phase resolved from ['/opt/sixdb/jobs/20261013T214914Z-c3b12143/results/probe/fused/value_width_bench.cpp:71', '/opt/sixdb/jobs/20261013T214914Z-c3b12143/results/probe/fused/value_width_bench.cpp:103']
+Complete timed CFG, address order.
+5af46: movq %rax, %rbx
+5af49: leaq 0x138(%rsp), %rdi
+5af51: callq 0x678b0 <void ht::trial<(ht::layout_solver::container)2, 10u, 0u>(orbital::allocation::Pool&, unsigned int, unsigned int)::'lambda5'()::operator()() const>
+5af56: movq %r15, 0x68(%rsp)
+
+partial ELF 3939981d8122fe7b69c6e7d36b9b8ee610cc9bf0e9b7491c5a7bece7c82a048d
+
+K40-W2-kind2-A10-arm0-update-helper.asm
+   689d2:      	movq	0xc8(%rsp), %rdi
+   689da:      	movq	0x10(%rsp), %r14
+   689df:      	shll	$0x7, %r15d
+   689e3:      	leaq	(%rax,%rax,8), %rax
+   689e7:      	addq	%r15, %r11
+   689ea:      	movzwl	(%rdi,%rcx,2), %ecx
+   689ee:      	leaq	(%r11,%rax), %rdi
+   689f2:      	movw	%cx, 0x29(%rdi,%rdx,2)
+   689f7:      	movb	%sil, 0x31(%r11,%rax)
+   689fc:      	jmp	0x68bd0 <void ht::trial<(ht::layout_solver::container)2, 10u, 0u>(orbital::allocation::Pool&, unsigned int, unsigned int)::'lambda5'()::operator()() const+0x940>
+   68a01:      	movq	0x10(%rsp), %rax

@@ -1,0 +1,74 @@
+[
+  {
+    "function": "void ht::format_trial<40u, (ht::layout_solver::container)0, 10u, 0u>(orbital::allocation::Pool&, unsigned int)",
+    "clock_indices": [
+      4,
+      5
+    ],
+    "original_addresses": [
+      "0xa74f",
+      "0xab5e"
+    ]
+  },
+  {
+    "function": "void ht::format_trial<40u, (ht::layout_solver::container)0, 10u, 1u>(orbital::allocation::Pool&, unsigned int)",
+    "clock_indices": [
+      4,
+      5
+    ],
+    "original_addresses": [
+      "0x21ede",
+      "0x222fb"
+    ]
+  },
+  {
+    "function": "void ht::format_trial<40u, (ht::layout_solver::container)2, 10u, 6u>(orbital::allocation::Pool&, unsigned int)",
+    "clock_indices": [
+      4,
+      5
+    ],
+    "original_addresses": [
+      "0x15ccae",
+      "0x15d17b"
+    ]
+  },
+  {
+    "function": "void ht::format_trial<40u, (ht::layout_solver::container)2, 10u, 8u>(orbital::allocation::Pool&, unsigned int)",
+    "clock_indices": [
+      4,
+      5
+    ],
+    "original_addresses": [
+      "0x1900dd",
+      "0x1902ff"
+    ]
+  },
+  {
+    "function": "double ht::format_time<void ht::format_trial<40u, (ht::layout_solver::container)0, 10u, 8u>(orbital::allocation::Pool&, unsigned int)::'lambda1'()>(void ht::format_trial<40u, (ht::layout_solver::container)0, 10u, 8u>(orbital::allocation::Pool&, unsigned int)::'lambda1'()&&)",
+    "clock_indices": [
+      0,
+      1
+    ],
+    "original_addresses": [
+      "0xa2ec1",
+      "0xa3026"
+    ],
+    "root": "void ht::format_trial<40u, (ht::layout_solver::container)0, 10u, 8u>(orbital::allocation::Pool&, unsigned int)",
+    "root_call": "0x9bb79",
+    "root_frames": "_ZN2ht12format_trialILj40ELNS_13layout_solver9containerE0ELj10ELj8EEEvRN7orbital10allocation4PoolEj\n./build/bzhi-control-native/./workbench/spikes/hashtable-design/formats.cpp:131\n"
+  },
+  {
+    "function": "double ht::format_time<void ht::format_trial<40u, (ht::layout_solver::container)2, 10u, 0u>(orbital::allocation::Pool&, unsigned int)::'lambda1'()>(void ht::format_trial<40u, (ht::layout_solver::container)2, 10u, 0u>(orbital::allocation::Pool&, unsigned int)::'lambda1'()&&)",
+    "clock_indices": [
+      0,
+      1
+    ],
+    "original_addresses": [
+      "0xc3ff1",
+      "0xc44b5"
+    ],
+    "root": "void ht::format_trial<40u, (ht::layout_solver::container)2, 10u, 0u>(orbital::allocation::Pool&, unsigned int)",
+    "root_call": "0xb393a",
+    "root_frames": "_ZN2ht12format_trialILj40ELNS_13layout_solver9containerE2ELj10ELj0EEEvRN7orbital10allocation4PoolEj\n./build/bzhi-control-native/./workbench/spikes/hashtable-design/formats.cpp:131\n"
+  }
+]

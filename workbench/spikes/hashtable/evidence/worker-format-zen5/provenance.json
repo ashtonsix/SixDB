@@ -1,0 +1,28 @@
+{
+  "files_sha256": {
+    "context.json": "2a8a508505a1a1b8d96a7693df372ff493898089fa4b28baebc78ea384c8ebb6",
+    "lscpu.json": "f312d788ff1e64a428d127a707f13a8f8e6dce0402425d3b7f4f0c5a5b4c2588",
+    "qualified/inputs.json": "e8efd70fe27867ee4d5b05c0a27589900e5217a3fbbb5c31e4e2a453e7160d2b",
+    "qualified/summary.csv": "ceb3d1413da398f88bda3cdd56c70b6a02c982be2d1ca0b252de4749d24f0878"
+  },
+  "format": 2,
+  "full_bundle": "artifact.json",
+  "kind": "files",
+  "regenerate": [
+    [
+      "python3",
+      "workbench/spikes/hashtable/worker-epochs-report.py",
+      "{evidence}",
+      "--output",
+      "{evidence}/qualified"
+    ],
+    [
+      "python3",
+      "workbench/spikes/hashtable/check_epoch_codegen.py",
+      "{evidence}/codegen",
+      "--output",
+      "{evidence}/dispatcher-inventory.json"
+    ]
+  ],
+  "regenerate_from": "archive"
+}

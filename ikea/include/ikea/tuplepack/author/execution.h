@@ -81,7 +81,7 @@ template <unsigned N, class Byte, unsigned Rows = 1> class native_reader {
             return 0;
         const auto base = source_->row_unchecked(first);
         const auto stride = source_->stride();
-        return detail::read_gpr_transfer<Rows, Bytes>(plan_->controls(),
+        return native::read_transfer_body<Rows, Bytes>(plan_->controls(),
             [&](unsigned r) { return base + r * stride; }, active, stride);
     }
     [[gnu::always_inline]] native::packet_for<N>

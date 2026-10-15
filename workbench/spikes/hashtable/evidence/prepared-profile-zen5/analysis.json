@@ -1,0 +1,236 @@
+{
+  "original_elf_sha256": "9907b313adb693150c7717f758150bc2b981b1a566a672eeb588d59743f0a6ac",
+  "profile_job": "20261013T201821Z-34e68e97",
+  "interpretation": "Only audited timed-hit addresses; arbitrary-skid cycles:u samples are locations, not causal instruction or region cycle fractions.",
+  "original_elf_source_manifest": "2013b46d6f86a483ebf11d70ab78e6dffcd5a5b2c702eb57ec3eba8c6756238e",
+  "runs": [
+    {
+      "run": "set-composed",
+      "input_sha256": {
+        ".data": "cfde02d309861325152e43a0d7d647f3f6ef58279f6e6d655aa72900db4beaee",
+        "-events.txt": "43b4356e724370f0580d2e2f557778d3623c1b7c2a3affc562488fe422fcb7f1",
+        ".csv": "fb8705a29e47c513d7afc12e1e6466d345f0aecedee6bc8e624dc4508d9c9a30",
+        ".log": "f02b043b39e02ee107e1d1eb15e5df17fabcdae29391b14e93e6b4c6b9c7f239"
+      },
+      "native_record_log_samples": 15637,
+      "records": {
+        "69": 1,
+        "78": 1,
+        "73": 1,
+        "74": 1,
+        "3": 3,
+        "82": 1,
+        "10": 11,
+        "9": 15637,
+        "7": 1000,
+        "68": 4,
+        "4": 1
+      },
+      "samples": 15637,
+      "samples_in_original_elf": 8866,
+      "hit_samples": 738,
+      "hit_samples_fraction": 0.04719575366118821,
+      "hit_sample_period_min": 3713539,
+      "hit_sample_period_median": 3858937.0,
+      "hit_sample_period_max": 4163129,
+      "hit_sample_period_sum": 2851838155,
+      "hit_cpu_counts": {
+        "0": 738
+      },
+      "lost_records": 0,
+      "throttle_records": 0,
+      "unthrottle_records": 0,
+      "precise_ip": 0,
+      "frequency_hz": 997,
+      "read_format": 20,
+      "per_phase_enabled_running_available": false,
+      "mapping": {
+        "pid": 5797,
+        "tid": 5797,
+        "start": 106452515176448,
+        "span": 17932288,
+        "pgoff": 28672,
+        "path": "/opt/sixdb/source/build/hashtable-prepared-profile-source/formats",
+        "buildid": "1d99b3271bbae9ab6ab16b4104062cdac4a512d2"
+      },
+      "load_bias": "0x60d16859d000",
+      "hit_range": [
+        "0x800334",
+        "0x80073e"
+      ],
+      "hit_timed_seconds": 0.764558567,
+      "hit_sampling_density_per_timed_second": 965.2628743613307
+    },
+    {
+      "run": "set-direct",
+      "input_sha256": {
+        ".data": "3c179c7350eebbb2f3271ca257ad29f4ab03dc8f0276c011d9540f3d248ba9d9",
+        "-events.txt": "9ebe3b9ca971055bbd2afb6a56e8c9b41825d69cb769a2323ef4626378ebf31a",
+        ".csv": "873adec6ade40a5430ae24875046467e58ca422793fe9d796d4b79953eb5dab2",
+        ".log": "887d57826551ba611cf67f6e4cafc62f69161df87a48d65392e341a2de579f4f"
+      },
+      "native_record_log_samples": 16135,
+      "records": {
+        "69": 1,
+        "78": 1,
+        "73": 1,
+        "74": 1,
+        "3": 3,
+        "82": 1,
+        "10": 11,
+        "9": 16135,
+        "7": 1000,
+        "68": 4,
+        "4": 1
+      },
+      "samples": 16135,
+      "samples_in_original_elf": 9435,
+      "hit_samples": 1836,
+      "hit_samples_fraction": 0.113789897737837,
+      "hit_sample_period_min": 3344520,
+      "hit_sample_period_median": 3880612.5,
+      "hit_sample_period_max": 4147542,
+      "hit_sample_period_sum": 7138131930,
+      "hit_cpu_counts": {
+        "0": 1836
+      },
+      "lost_records": 0,
+      "throttle_records": 0,
+      "unthrottle_records": 0,
+      "precise_ip": 0,
+      "frequency_hz": 997,
+      "read_format": 20,
+      "per_phase_enabled_running_available": false,
+      "mapping": {
+        "pid": 6806,
+        "tid": 6806,
+        "start": 94549168087040,
+        "span": 17932288,
+        "pgoff": 28672,
+        "path": "/opt/sixdb/source/build/hashtable-prepared-profile-source/formats",
+        "buildid": "1d99b3271bbae9ab6ab16b4104062cdac4a512d2"
+      },
+      "load_bias": "0x55fdf1937000",
+      "hit_range": [
+        "0x813583",
+        "0x81399b"
+      ],
+      "hit_timed_seconds": 1.836713564,
+      "hit_sampling_density_per_timed_second": 999.6114995751183
+    },
+    {
+      "run": "mm-exact",
+      "input_sha256": {
+        ".data": "00c55b778c3e627b0667827cc09fdd883928241f0b5856af6a6466357f83f662",
+        "-events.txt": "b432ffd861326dead126a604dc73ecb6e8c1a1442a6bd289287a0ca119b32326",
+        ".csv": "94f7edb0913aa0b36ba9ef9c8b82f6ee05f6e727d525b86c58bab06fd3e307f4",
+        ".log": "b7dec8be38d4ea78442cdf96ccf5a1d1d1918c0beccb2ec7e1438fef853b3cad"
+      },
+      "native_record_log_samples": 14282,
+      "records": {
+        "69": 1,
+        "78": 1,
+        "73": 1,
+        "74": 1,
+        "3": 3,
+        "82": 1,
+        "10": 11,
+        "9": 14282,
+        "7": 1000,
+        "68": 3,
+        "4": 1
+      },
+      "samples": 14282,
+      "samples_in_original_elf": 10044,
+      "hit_samples": 1706,
+      "hit_samples_fraction": 0.11945105727489147,
+      "hit_sample_period_min": 3147805,
+      "hit_sample_period_median": 3744584.5,
+      "hit_sample_period_max": 4295834,
+      "hit_sample_period_sum": 6417540498,
+      "hit_cpu_counts": {
+        "0": 1706
+      },
+      "lost_records": 0,
+      "throttle_records": 0,
+      "unthrottle_records": 0,
+      "precise_ip": 0,
+      "frequency_hz": 997,
+      "read_format": 20,
+      "per_phase_enabled_running_available": false,
+      "mapping": {
+        "pid": 7809,
+        "tid": 7809,
+        "start": 107943405400064,
+        "span": 17932288,
+        "pgoff": 28672,
+        "path": "/opt/sixdb/source/build/hashtable-prepared-profile-source/formats",
+        "buildid": "1d99b3271bbae9ab6ab16b4104062cdac4a512d2"
+      },
+      "load_bias": "0x622c88554000",
+      "hit_range": [
+        "0x957436",
+        "0x9578f5"
+      ],
+      "hit_timed_seconds": 1.683744138,
+      "hit_sampling_density_per_timed_second": 1013.218078387157
+    },
+    {
+      "run": "mm-wide",
+      "input_sha256": {
+        ".data": "8c188cede2e15e7c91b3646d2e92e041086abb9416aa13690f0eaeb330b1f68d",
+        "-events.txt": "f3fad378b4ea5e3584f3fca9b1e85157fc11942752268c7a29d3cd856b8f39bc",
+        ".csv": "e30e5de1d92f70e3d61dd050c5af04e783f6ab203b09549e9c317472e01e22db",
+        ".log": "a8805e6068dbc93323f1451673d24896ccfc110d72e1178190807332ea1d00c8"
+      },
+      "native_record_log_samples": 13407,
+      "records": {
+        "69": 1,
+        "78": 1,
+        "73": 1,
+        "74": 1,
+        "3": 3,
+        "82": 1,
+        "10": 11,
+        "9": 13407,
+        "7": 1000,
+        "68": 3,
+        "4": 1
+      },
+      "samples": 13407,
+      "samples_in_original_elf": 9127,
+      "hit_samples": 705,
+      "hit_samples_fraction": 0.05258447079883643,
+      "hit_sample_period_min": 3111396,
+      "hit_sample_period_median": 3668502,
+      "hit_sample_period_max": 4279363,
+      "hit_sample_period_sum": 2604836780,
+      "hit_cpu_counts": {
+        "0": 705
+      },
+      "lost_records": 0,
+      "throttle_records": 0,
+      "unthrottle_records": 0,
+      "precise_ip": 0,
+      "frequency_hz": 997,
+      "read_format": 20,
+      "per_phase_enabled_running_available": false,
+      "mapping": {
+        "pid": 8812,
+        "tid": 8812,
+        "start": 105861333004288,
+        "span": 17932288,
+        "pgoff": 28672,
+        "path": "/opt/sixdb/source/build/hashtable-prepared-profile-source/formats",
+        "buildid": "1d99b3271bbae9ab6ab16b4104062cdac4a512d2"
+      },
+      "load_bias": "0x6047c325c000",
+      "hit_range": [
+        "0x9f00f3",
+        "0x9f05bb"
+      ],
+      "hit_timed_seconds": 0.679312393,
+      "hit_sampling_density_per_timed_second": 1037.814129794626
+    }
+  ]
+}

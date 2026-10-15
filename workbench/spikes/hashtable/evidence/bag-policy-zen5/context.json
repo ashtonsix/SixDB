@@ -1,0 +1,115 @@
+{
+  "format": 1,
+  "authored_analysis": true,
+  "group": "20261014T000002Z-69d5c61c",
+  "source_manifest_digest": "0354c3e814aba6f2ecaedfdf52d305a0fd44ff1059d214b73ecc6574c985054c",
+  "source_archive_sha256": "41e8ec5fad3a2d20392b5442bfa8815661f6888712ddcfc7b5c28a5d4896455b",
+  "source_driver_sha256": "3e3abd11f5a5632162a67f23b51b05aed810525b8aeefaca832a081862b2fd90",
+  "analysis_sha256": {
+    "audit-dwarf.py": "1439843ab163f5eb6f5c02ad81c5da7febe150e6802daaa1f1f5f42f7dbbf52d",
+    "summarize.py": "da4cabf37e5c3949e0064ef2076f3d907542f28d42f5f45f1e7d86176a82d0f6",
+    "qualify.py": "311693dfe49f9da98073cd3d7aed219ce6e5f761e13de56586ecc880b55c978e",
+    "bag-policy-report.py": "36ea7d2f053e9782117f6e86d8c0475cf24a9c8255e3883afe7848780c0775bb",
+    "bag-events-report.py": "32753ea0c19539364dc0ba54d35b8d7464a3649439ee772dbb1eecec766079c2"
+  },
+  "qualification": "Native frozen coupled policy panel only; no preset selection or broad competitiveness claim.",
+  "platform": "zen5",
+  "job": "20261014T000019Z-781016fc",
+  "artifact": {
+    "bucket": "calico-fleet-artifacts",
+    "bytes": 34125040,
+    "files": 39,
+    "format": 1,
+    "key": "sixdb/artifacts/sha256/6f8a5c0ac96905a354cbfc8ee803005b8ef55f7c28448eeaa119b392d96a2be8.tar.gz",
+    "kind": "files",
+    "region": "us-east-1",
+    "sha256": "6f8a5c0ac96905a354cbfc8ee803005b8ef55f7c28448eeaa119b392d96a2be8",
+    "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/6f8a5c0ac96905a354cbfc8ee803005b8ef55f7c28448eeaa119b392d96a2be8.tar.gz"
+  },
+  "worker_state": {
+    "state": "complete",
+    "script_returncode": 0,
+    "script_seconds": 295.849764585495,
+    "worker_seconds_before_collection": 331.5743319988251
+  },
+  "audits": {
+    "2": {
+      "value_bytes": 2,
+      "binary_sha256": "345b48e1b06d8a645320ab11f694d546b5cfc8cc7c71f45b3e58912abdb5a58e",
+      "assembly_sha256": "94b237e1733e1090ffcf540345e03de6b387062242f5f906cfad70e3f45603a7",
+      "source_sha256": "3e3abd11f5a5632162a67f23b51b05aed810525b8aeefaca832a081862b2fd90",
+      "compile_commands_sha256": "fd5ea0e8312c005c9810c96fd1dc3aa160194fafead5548800a9371a4d6ae25c",
+      "timed_regions": 80,
+      "read_regions": 60,
+      "update_regions": 20,
+      "read_locations": {
+        "candidate_whole_loop": 48,
+        "baseline_whole_loop": 4,
+        "baseline_inline": 8
+      },
+      "update_locations": {
+        "whole_loop_helper": 16,
+        "timed_cfg": 4
+      },
+      "outlined_timing_wrappers": 0,
+      "regions_with_cloned_ending_clock": 0,
+      "update_callgraph_truncated": []
+    },
+    "8": {
+      "value_bytes": 8,
+      "binary_sha256": "a0e457f4c75ac56459e475df53c21394cd58af3364c6fd6c1946efac4b858c62",
+      "assembly_sha256": "057881ef22aa6b5ef874151e1699a06f5fc5acb7e0c59b59804b7f4b28a1cb9e",
+      "source_sha256": "3e3abd11f5a5632162a67f23b51b05aed810525b8aeefaca832a081862b2fd90",
+      "compile_commands_sha256": "fd5ea0e8312c005c9810c96fd1dc3aa160194fafead5548800a9371a4d6ae25c",
+      "timed_regions": 80,
+      "read_regions": 60,
+      "update_regions": 20,
+      "read_locations": {
+        "candidate_inline": 6,
+        "candidate_whole_loop": 42,
+        "baseline_whole_loop": 4,
+        "baseline_inline": 8
+      },
+      "update_locations": {
+        "whole_loop_helper": 16,
+        "timed_cfg": 4
+      },
+      "outlined_timing_wrappers": 0,
+      "regions_with_cloned_ending_clock": 2,
+      "update_callgraph_truncated": []
+    },
+    "16": {
+      "value_bytes": 16,
+      "binary_sha256": "9034cd82e7a1f303aa4f7e7321882bfc74a7497cc21798de0c64804a89187f2e",
+      "assembly_sha256": "60ea35c2497f5cb9d00e0e347c1b5efc8fe2f41939c336a4867a38651f2ba4ee",
+      "source_sha256": "3e3abd11f5a5632162a67f23b51b05aed810525b8aeefaca832a081862b2fd90",
+      "compile_commands_sha256": "fd5ea0e8312c005c9810c96fd1dc3aa160194fafead5548800a9371a4d6ae25c",
+      "timed_regions": 80,
+      "read_regions": 60,
+      "update_regions": 20,
+      "read_locations": {
+        "candidate_inline": 36,
+        "candidate_whole_loop": 12,
+        "baseline_whole_loop": 4,
+        "baseline_inline": 8
+      },
+      "update_locations": {
+        "whole_loop_helper": 16,
+        "timed_cfg": 4
+      },
+      "outlined_timing_wrappers": 21,
+      "regions_with_cloned_ending_clock": 3,
+      "update_callgraph_truncated": []
+    }
+  },
+  "selected_update_boundary_note": "Calls and static CFG cycles only; conditional allocation/reservation calls are not assigned dynamic frequency or cost.",
+  "assembly_verified": "Re-running llvm-objdump-21 on every recovered ELF matches the archived disassembly byte-for-byte from the first Disassembly of section header; only the input-path prologue is excluded.",
+  "event_binary_sha256": {
+    "events-2.jsonl": "2b6402355d2dc663c76a93cae33a5d5bb8fa5656dbb68952f42d0a810267b97c",
+    "events-2": "b6573cb6d2b98621f516d6bba3d0438adca5a411fbf44b7b3cf4835b6f52b7fb",
+    "events-8.jsonl": "2e05adeb6e6c08f449ad2399840de19934ef99abbe63e28d35796b7ccf4f8ae6",
+    "events-8": "3eab4ed84294eb9b266b89eaadb0d47c776bc0ae9b52a153944934980419afbe",
+    "events-16.jsonl": "d7bcc18659ffd2d2e587b661aa34e43a57971371cab366957c864973dd120d22",
+    "events-16": "d33de75de4ab028e37b7367f3c4153553e5da7e6632d4911a31b07a94e01299e"
+  }
+}

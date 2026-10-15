@@ -1,0 +1,51 @@
+{
+  "panel": "bag_policy",
+  "value_bytes": 8,
+  "key_bits": 40,
+  "assembly_sha256": "20894f6d683f4a16c2930917d4ab117d3291bc3c0028756f3487fa1e3890b5f9",
+  "binary_sha256": "f4505b4b83bc4e2371f0aa0600563bdca03633395ce133db10036d17af00f344",
+  "source_sha256": "3e3abd11f5a5632162a67f23b51b05aed810525b8aeefaca832a081862b2fd90",
+  "compile_command": "/usr/bin/clang++-21 -DHT_BAG_POLICIES=1 -DHT_VALUE_BYTES=8 -DNDEBUG -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=1 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN5=0 -I/opt/sixdb/source/workbench/spikes/hashtable -I/opt/sixdb/source/ikea/include -I/opt/sixdb/source/orbital/include -isystem /opt/sixdb/source/build/hashtable-design-bag-policy-avx512/_deps/hashtable_abseil-src -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -fno-vectorize -fno-slp-vectorize -mllvm -inline-threshold=1000 -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=graniterapids -mtune=graniterapids -o workbench/spikes/hashtable-design/CMakeFiles/hashtable_design_bag_policy_8_bench.dir/value_width_bench.cpp.o -c /opt/sixdb/source/workbench/spikes/hashtable-design/value_width_bench.cpp",
+  "compile_commands_sha256": "3dccd14544cf4eacde0b3a003772cdc2c8934ad610bafd5ab51a645cad024119",
+  "expected_regions": 80,
+  "expected_read_regions": 60,
+  "expected_update_regions": 20,
+  "qualified": true,
+  "update_callgraph_truncated": [],
+  "phase_assignment": "DWARF caller assignments in supplied frozen source; multiple reachable ending clocks must share phase; no clock ordinal or lambda number",
+  "timed_regions": 80,
+  "read_regions": 60,
+  "outlined_timing_wrappers": 0,
+  "regions_with_cloned_ending_clock": 2,
+  "read_locations": {
+    "candidate_inline": 6,
+    "candidate_whole_loop": 42,
+    "baseline_whole_loop": 4,
+    "baseline_inline": 8
+  },
+  "failures": [],
+  "limitations": [
+    "Compile receipt selects the bag-policy target and verifies W/K, HT_BAG_POLICIES and disabled autovectorization. TU, ELF, disassembly and receipt hashes are recorded; cohort retention must bind them to the frozen source/build artifacts. This is not a reproducible-build proof.",
+    "A trial closure is called a whole-loop helper only outside a caller CFG cycle and with no hot calls or unresolved external branches inside.",
+    "Cold format and failure calls are reported separately. This audit does not assign runtime branch frequencies or costs.",
+    "Full-byte-load/dataflow inspection is a separate selected-witness check; fused calls alone do not prove the digest consumes every byte."
+  ],
+  "read_and_root_qualified": true,
+  "update_effective_cfg_qualified": true,
+  "update_regions": 20,
+  "update_locations": {
+    "whole_loop_helper": 16,
+    "timed_cfg": 4
+  },
+  "repeated_update_boundary_categories": {
+    "key_overflow": 16,
+    "allocation_runtime": 48,
+    "orbital_owner_runtime": 36,
+    "linked_values": 14,
+    "byte_transfer": 20,
+    "cold_format_init": 200,
+    "other_spike_boundary": 44,
+    "buffer_values": 2,
+    "abseil_boundary": 12
+  }
+}

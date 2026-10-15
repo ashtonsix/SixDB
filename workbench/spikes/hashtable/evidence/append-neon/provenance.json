@@ -1,0 +1,26 @@
+{
+  "files_sha256": {
+    "bench-resources.txt": "3dca1c77966fc95890b232cd51533465d6346dd7289909ab27d3d95a7ac7a15a",
+    "check.txt": "5dc4b7626ba6d0aefd1f02c55523ba9cfc35e7b52a279d747d49e02f01e409b2",
+    "compiler.txt": "0cf7e452648b3754289200426984662d1d8d0a21d56310d301a24e11399ceab8",
+    "formats.csv": "aa8f63d3a0e0a102ab60a6c445da907804bfd8d4b1c014f72872d267f1daa5e1",
+    "job.json": "1e0dba2c0aa56ba8b3290059cc5e01af368eab22cf9352661d9cb1629a27f048",
+    "links-check.txt": "b8483952cce40dbede5671528347ec94dcba8315498331452ebe1840b8f125aa",
+    "lscpu.json": "6d1b3478b5d53e41a853af9e2137c628b708c15d4c70b8963eeb019da3a8688f",
+    "processes.csv": "d138bb4e691c72e2f2d5a38276b469b45c70149c41613df78e660f8b66844c6a",
+    "recipe-check.txt": "43f0e1e81d76c6089c55341e755bd3e394697c197bc5e12cbe8fb7f876989a4f",
+    "worker-result.json": "e75500ca336e11a0f1aa0f4417d5754715f0db2f69f4169a92de66b746f78279"
+  },
+  "format": 2,
+  "full_bundle": "artifact.json",
+  "kind": "files",
+  "regenerate": [
+    "python3",
+    "workbench/spikes/hashtable/formats-report.py",
+    "{evidence}/formats.csv",
+    "--append",
+    "--complete",
+    "--output",
+    "{evidence}/summary.json"
+  ]
+}

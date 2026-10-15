@@ -1,0 +1,68 @@
+{
+  "commands": [
+    {
+      "name": "configure",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "build",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_combine_8_64-check",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_combine_8_64-bench",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_combine_8_64-asm",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_combine_64_1-check",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_combine_64_1-bench",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_combine_64_1-asm",
+      "required": true,
+      "returncode": 0
+    }
+  ],
+  "config": {
+    "question": "integrated fused opaque combines, ordinary/exact Abseil and double-search control",
+    "sanitizer": false
+  },
+  "configure_flags": [
+    "-DCMAKE_BUILD_TYPE=Release",
+    "-DSIXDB_SPIKES=hashtable-design",
+    "-DSIXDB_MARCH=armv8-a+simd",
+    "-DSIXDB_TUNE=neoverse-v2"
+  ],
+  "files_sha256": {
+    "hashtable_design_combine_64_1.csv": "34d71531a1c0236d7c69e3d8e6e4fcfd1be489f10d1755af96161a60a1877ff3",
+    "hashtable_design_combine_8_64.csv": "23db203a0eb431f3dac3441da2c2cb2c41a2245f97c7b4bc4b748e838bf1c03b"
+  },
+  "format": 2,
+  "full_bundle": "artifact.json",
+  "inputs": {},
+  "platform": "Linux-7.0.14-orbstack-00380-ga7e0a2dc9535-aarch64-with-glibc2.42",
+  "regenerate": [],
+  "source_archive_sha256": "1b1647e034cee9cb62dab917e0c7b5ac5cf4f5c8d2e2478e6ea2096a532f08ec",
+  "source_digest": "ff03131a879863142210351f613aaf5989a1fc0d468d256420da4dae13f2cfd3",
+  "source_unchanged": true,
+  "started_utc": "2026-10-15T02:24:59.070198+00:00",
+  "status": "complete"
+}

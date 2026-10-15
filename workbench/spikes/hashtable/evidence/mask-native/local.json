@@ -1,0 +1,117 @@
+{
+  "note": "Correctness/emulation and NEON fallback complete-operation checks only; no target-native performance qualification.",
+  "hash_check_sha256": "11f2ffa3e2a216ba9ea1555c8673314c1092319115d80671facf8c9589d3acdf",
+  "mask_helper_sha256": "227f341c5487eac81b5d4ec49ad8485087020e3ed3cf87a8500e712e2a04d8fd",
+  "emulated_x86": {
+    "0": "ed3de14ea88df753c2cbbe0d72864a6bb32eadc0091e468dd3da451f94b717a9",
+    "1": "e1b208181497af09a60e02dd098e10306cc9123e77c5c5dd772b6bdab4837ab6",
+    "2": "c3b951e2a991b27a70719ec090590214f76c35b715325ce8c1223aef03fbeb13",
+    "3": "8833f49f97ecae3130c762b943e558691c213f615d5a9710e0011c18577f9890"
+  },
+  "neon_fallback_rows": 324,
+  "neon_fallback_processes": 36,
+  "x86_commands": [
+    [
+      "clang++-21",
+      "--target=x86_64-linux-gnu",
+      "-march=x86-64-v3",
+      "-mtune=znver5",
+      "-std=c++23",
+      "-O3",
+      "-g",
+      "-fno-vectorize",
+      "-fno-slp-vectorize",
+      "-fno-fast-math",
+      "-ffp-contract=off",
+      "-Werror",
+      "-Iorbital/include",
+      "-DHT_HASH_MASK=0",
+      "workbench/spikes/hashtable-design/hash_mask_check.cpp",
+      "-o",
+      "build/hashtable-design/hash-masks/check-0"
+    ],
+    [
+      "clang++-21",
+      "--target=x86_64-linux-gnu",
+      "-march=x86-64-v3",
+      "-mtune=znver5",
+      "-std=c++23",
+      "-O3",
+      "-g",
+      "-fno-vectorize",
+      "-fno-slp-vectorize",
+      "-fno-fast-math",
+      "-ffp-contract=off",
+      "-Werror",
+      "-Iorbital/include",
+      "-DHT_HASH_MASK=1",
+      "workbench/spikes/hashtable-design/hash_mask_check.cpp",
+      "-o",
+      "build/hashtable-design/hash-masks/check-1"
+    ],
+    [
+      "clang++-21",
+      "--target=x86_64-linux-gnu",
+      "-march=x86-64-v3",
+      "-mtune=znver5",
+      "-std=c++23",
+      "-O3",
+      "-g",
+      "-fno-vectorize",
+      "-fno-slp-vectorize",
+      "-fno-fast-math",
+      "-ffp-contract=off",
+      "-Werror",
+      "-Iorbital/include",
+      "-DHT_HASH_MASK=2",
+      "workbench/spikes/hashtable-design/hash_mask_check.cpp",
+      "-o",
+      "build/hashtable-design/hash-masks/check-2"
+    ],
+    [
+      "clang++-21",
+      "--target=x86_64-linux-gnu",
+      "-march=x86-64-v3",
+      "-mtune=znver5",
+      "-std=c++23",
+      "-O3",
+      "-g",
+      "-fno-vectorize",
+      "-fno-slp-vectorize",
+      "-fno-fast-math",
+      "-ffp-contract=off",
+      "-Werror",
+      "-Iorbital/include",
+      "-DHT_HASH_MASK=3",
+      "workbench/spikes/hashtable-design/hash_mask_check.cpp",
+      "-o",
+      "build/hashtable-design/hash-masks/check-3"
+    ]
+  ],
+  "x86_execution": [
+    [
+      "qemu-x86_64",
+      "-L",
+      "/usr/x86_64-linux-gnu",
+      "build/hashtable-design/hash-masks/check-0"
+    ],
+    [
+      "qemu-x86_64",
+      "-L",
+      "/usr/x86_64-linux-gnu",
+      "build/hashtable-design/hash-masks/check-1"
+    ],
+    [
+      "qemu-x86_64",
+      "-L",
+      "/usr/x86_64-linux-gnu",
+      "build/hashtable-design/hash-masks/check-2"
+    ],
+    [
+      "qemu-x86_64",
+      "-L",
+      "/usr/x86_64-linux-gnu",
+      "build/hashtable-design/hash-masks/check-3"
+    ]
+  ]
+}

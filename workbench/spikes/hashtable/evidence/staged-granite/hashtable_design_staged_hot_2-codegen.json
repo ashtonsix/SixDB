@@ -1,0 +1,73 @@
+{
+  "consumers": [
+    {
+      "owner": "abseil",
+      "ready": false,
+      "hints": false,
+      "instructions": 242,
+      "allowed_outer_calls": [],
+      "rbp_preservation": []
+    },
+    {
+      "owner": "abseil",
+      "ready": false,
+      "hints": false,
+      "instructions": 175,
+      "allowed_outer_calls": [],
+      "rbp_preservation": []
+    },
+    {
+      "owner": "generic",
+      "ready": true,
+      "hints": false,
+      "instructions": 290,
+      "allowed_outer_calls": [],
+      "rbp_preservation": [
+        "1e940: 55                           \tpushq\t%rbp",
+        "1e958: 5d                           \tpopq\t%rbp",
+        "1ec1b: 5d                           \tpopq\t%rbp",
+        "1ed97: 5d                           \tpopq\t%rbp",
+        "1eda6: 5d                           \tpopq\t%rbp"
+      ]
+    },
+    {
+      "owner": "generic",
+      "ready": true,
+      "hints": true,
+      "instructions": 396,
+      "allowed_outer_calls": [],
+      "rbp_preservation": [
+        "1ff30: 55                           \tpushq\t%rbp",
+        "1ff48: 5d                           \tpopq\t%rbp",
+        "201ae: 5d                           \tpopq\t%rbp",
+        "201bd: 5d                           \tpopq\t%rbp",
+        "202fe: 5d                           \tpopq\t%rbp"
+      ]
+    },
+    {
+      "owner": "abseil",
+      "ready": false,
+      "hints": false,
+      "instructions": 458,
+      "allowed_outer_calls": [
+        "22039: e8 92 52 fe ff               \tcallq\t0x72d0 <memset@plt>"
+      ],
+      "rbp_preservation": []
+    },
+    {
+      "owner": "abseil",
+      "ready": false,
+      "hints": false,
+      "instructions": 387,
+      "allowed_outer_calls": [
+        "22969: e8 62 49 fe ff               \tcallq\t0x72d0 <memset@plt>"
+      ],
+      "rbp_preservation": []
+    }
+  ],
+  "ready_calls": 0,
+  "ready_other_stack_references": 0,
+  "ready_callbacks_preserving_rbp": 2,
+  "outlined_baseline_lookup": 0,
+  "limitation": "Static calls and frame references only; not instruction quality, lifetime, traffic or performance."
+}

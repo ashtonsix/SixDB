@@ -1,0 +1,145 @@
+{
+  "perf": "/usr/lib/linux-tools/7.0.0-1012-aws/perf",
+  "version": "perf version 7.0.14",
+  "cpu": 0,
+  "repetitions": 1000,
+  "runs": [
+    {
+      "name": "set-composed",
+      "argv": [
+        "/usr/lib/linux-tools/7.0.0-1012-aws/perf",
+        "record",
+        "--no-inherit",
+        "-e",
+        "cycles:u",
+        "-F",
+        "997",
+        "--sample-cpu",
+        "-o",
+        "/opt/sixdb/jobs/20261013T201821Z-34e68e97/results/set-composed.data",
+        "--",
+        "taskset",
+        "-c",
+        "0",
+        "/opt/sixdb/source/build/hashtable-prepared-profile-source/formats",
+        "run",
+        "40",
+        "0",
+        "0",
+        "1000",
+        "1"
+      ],
+      "returncode": 0,
+      "start_ns": 1791922802480942115,
+      "end_ns": 1791922818976710115,
+      "elf_hit_range": [
+        "0x800334",
+        "0x80073e"
+      ],
+      "data_sha256": "cfde02d309861325152e43a0d7d647f3f6ef58279f6e6d655aa72900db4beaee"
+    },
+    {
+      "name": "set-direct",
+      "argv": [
+        "/usr/lib/linux-tools/7.0.0-1012-aws/perf",
+        "record",
+        "--no-inherit",
+        "-e",
+        "cycles:u",
+        "-F",
+        "997",
+        "--sample-cpu",
+        "-o",
+        "/opt/sixdb/jobs/20261013T201821Z-34e68e97/results/set-direct.data",
+        "--",
+        "taskset",
+        "-c",
+        "0",
+        "/opt/sixdb/source/build/hashtable-prepared-profile-source/formats",
+        "run",
+        "40",
+        "0",
+        "1",
+        "1000",
+        "1"
+      ],
+      "returncode": 0,
+      "start_ns": 1791922819031347982,
+      "end_ns": 1791922835385359803,
+      "elf_hit_range": [
+        "0x813583",
+        "0x81399b"
+      ],
+      "data_sha256": "3c179c7350eebbb2f3271ca257ad29f4ab03dc8f0276c011d9540f3d248ba9d9"
+    },
+    {
+      "name": "mm-exact",
+      "argv": [
+        "/usr/lib/linux-tools/7.0.0-1012-aws/perf",
+        "record",
+        "--no-inherit",
+        "-e",
+        "cycles:u",
+        "-F",
+        "997",
+        "--sample-cpu",
+        "-o",
+        "/opt/sixdb/jobs/20261013T201821Z-34e68e97/results/mm-exact.data",
+        "--",
+        "taskset",
+        "-c",
+        "0",
+        "/opt/sixdb/source/build/hashtable-prepared-profile-source/formats",
+        "run",
+        "40",
+        "2",
+        "0",
+        "1000",
+        "1"
+      ],
+      "returncode": 0,
+      "start_ns": 1791922835440751802,
+      "end_ns": 1791922849975029544,
+      "elf_hit_range": [
+        "0x957436",
+        "0x9578f5"
+      ],
+      "data_sha256": "00c55b778c3e627b0667827cc09fdd883928241f0b5856af6a6466357f83f662"
+    },
+    {
+      "name": "mm-wide",
+      "argv": [
+        "/usr/lib/linux-tools/7.0.0-1012-aws/perf",
+        "record",
+        "--no-inherit",
+        "-e",
+        "cycles:u",
+        "-F",
+        "997",
+        "--sample-cpu",
+        "-o",
+        "/opt/sixdb/jobs/20261013T201821Z-34e68e97/results/mm-wide.data",
+        "--",
+        "taskset",
+        "-c",
+        "0",
+        "/opt/sixdb/source/build/hashtable-prepared-profile-source/formats",
+        "run",
+        "40",
+        "2",
+        "6",
+        "1000",
+        "1"
+      ],
+      "returncode": 0,
+      "start_ns": 1791922850028305563,
+      "end_ns": 1791922863690816862,
+      "elf_hit_range": [
+        "0x9f00f3",
+        "0x9f05bb"
+      ],
+      "data_sha256": "8c188cede2e15e7c91b3646d2e92e041086abb9416aa13690f0eaeb330b1f68d"
+    }
+  ],
+  "status": "complete"
+}

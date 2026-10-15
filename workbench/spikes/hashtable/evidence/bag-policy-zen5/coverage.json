@@ -1,0 +1,38 @@
+{
+  "rows": 45000,
+  "processes": 1000,
+  "complete_case_comparisons": 4500,
+  "passes": 2,
+  "repetitions_per_process": 5,
+  "observer_histories": 9,
+  "observer_phases": 27,
+  "matching_timed_rows": 270,
+  "read_regions": 180,
+  "update_regions": 60,
+  "source_manifest_digest": "0354c3e814aba6f2ecaedfdf52d305a0fd44ff1059d214b73ecc6574c985054c",
+  "source_archive_sha256": "41e8ec5fad3a2d20392b5442bfa8815661f6888712ddcfc7b5c28a5d4896455b",
+  "source_driver_sha256": "3e3abd11f5a5632162a67f23b51b05aed810525b8aeefaca832a081862b2fd90",
+  "report_sha256": {
+    "bag-policy-report.py": "36ea7d2f053e9782117f6e86d8c0475cf24a9c8255e3883afe7848780c0775bb",
+    "bag-events-report.py": "32753ea0c19539364dc0ba54d35b8d7464a3649439ee772dbb1eecec766079c2"
+  },
+  "timed_elf_sha256": {
+    "2": "345b48e1b06d8a645320ab11f694d546b5cfc8cc7c71f45b3e58912abdb5a58e",
+    "8": "a0e457f4c75ac56459e475df53c21394cd58af3364c6fd6c1946efac4b858c62",
+    "16": "9034cd82e7a1f303aa4f7e7321882bfc74a7497cc21798de0c64804a89187f2e"
+  },
+  "checks": [
+    "complete seeded schedule, forward/reverse order and phase inventories",
+    "serialized process timestamps, zero return codes and empty stderr",
+    "all comparisons reproduced, including losses and each pass median",
+    "all 27 observer inventories equal matching timed phase inventories",
+    "native audited ELF identities equal actual timed process identities"
+  ],
+  "limitations": [
+    "Logical observer counts are untimed; issued damage overlaps and is not traffic or MVCC copying.",
+    "Static CFG recurrence is not dynamic call frequency or timing cost.",
+    "Repeated processes on one host are not independent host trials.",
+    "Policies change geometry, inline capacity and/or spill ownership; no single-factor attribution is implied.",
+    "Measured widths are 2/8/16 bytes, K40 multimaps only; bytes do not establish cache residence."
+  ]
+}

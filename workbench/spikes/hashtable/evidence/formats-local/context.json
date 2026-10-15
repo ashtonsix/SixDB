@@ -1,0 +1,17 @@
+{
+  "host": "AArch64 OrbStack VM",
+  "cpu": 2,
+  "reps": 3,
+  "cases": "K16 map, K64 map/multimap; A6, all 16 arms",
+  "concurrent_activity": "other local build activity; not native selection evidence",
+  "source_manifest": "58ca2ea54a6419c37610162759e880fd17a316066d9f580c419babee71402bd9",
+  "binary_sha256": "9355c6ed1fc88173b88a6dca401e137d6761319083acf37d479b5b3cd8d1a553",
+  "limitations": [
+    "Same fixed hierarchy and content; not own-capacity comparison.",
+    "No residence claim.",
+    "Direct replaces bucket field primitives only. Legacy pair also changes view implementation.",
+    "One process per case/arm, fresh Pool per rep. Executable placement/allocator/randomized Abseil hash effects remain.",
+    "MM serial successors XOR entire bags and entire cycle is verified; build and lifecycle per distinct key.",
+    "Unknown baseline backing and no transient rehash peak; table-owner phase sums exclude queries and Pool setup/drain."
+  ]
+}

@@ -1,0 +1,120 @@
+{
+  "consumers": [
+    {
+      "owner": "abseil",
+      "ready": false,
+      "hints": false,
+      "instructions": 253,
+      "allowed_outer_calls": [],
+      "rbp_preservation": [],
+      "ready_frame": []
+    },
+    {
+      "owner": "abseil",
+      "ready": false,
+      "hints": false,
+      "instructions": 188,
+      "allowed_outer_calls": [],
+      "rbp_preservation": [],
+      "ready_frame": []
+    },
+    {
+      "owner": "generic",
+      "ready": true,
+      "hints": false,
+      "instructions": 455,
+      "allowed_outer_calls": [],
+      "rbp_preservation": [
+        "1f080: 55                           \tpushq\t%rbp",
+        "1f098: 5d                           \tpopq\t%rbp",
+        "1f47e: 5d                           \tpopq\t%rbp",
+        "1f48d: 5d                           \tpopq\t%rbp",
+        "1f48f: 5d                           \tpopq\t%rbp"
+      ],
+      "ready_frame": [
+        "1f49c: 48 c7 44 24 f8 00 00 00 00   \tmovq\t$0x0, -0x8(%rsp)",
+        "1f4ad: 48 89 4c 24 e0               \tmovq\t%rcx, -0x20(%rsp)",
+        "1f4b7: 4c 89 4c 24 e8               \tmovq\t%r9, -0x18(%rsp)",
+        "1f4c6: 44 88 44 24 f0               \tmovb\t%r8b, -0x10(%rsp)",
+        "1f53f: 48 c7 44 24 f8 00 00 00 00   \tmovq\t$0x0, -0x8(%rsp)",
+        "1f550: 48 89 4c 24 e0               \tmovq\t%rcx, -0x20(%rsp)",
+        "1f55a: 4c 89 4c 24 e8               \tmovq\t%r9, -0x18(%rsp)",
+        "1f569: 44 88 44 24 f0               \tmovb\t%r8b, -0x10(%rsp)",
+        "1f5f1: 48 8d 5c 24 f0               \tleaq\t-0x10(%rsp), %rbx",
+        "1f5f6: 48 89 44 24 d8               \tmovq\t%rax, -0x28(%rsp)",
+        "1f660: 48 8b 44 24 d8               \tmovq\t-0x28(%rsp), %rax",
+        "1f67d: 4e 8d 54 54 e0               \tleaq\t-0x20(%rsp,%r10,2), %r10",
+        "1f6ba: 48 8d 5c 24 f0               \tleaq\t-0x10(%rsp), %rbx",
+        "1f6bf: 4c 89 4c 24 d8               \tmovq\t%r9, -0x28(%rsp)",
+        "1f72a: 4c 8b 44 24 d8               \tmovq\t-0x28(%rsp), %r8",
+        "1f747: 4e 8d 54 54 e0               \tleaq\t-0x20(%rsp,%r10,2), %r10"
+      ]
+    },
+    {
+      "owner": "generic",
+      "ready": true,
+      "hints": true,
+      "instructions": 577,
+      "allowed_outer_calls": [],
+      "rbp_preservation": [
+        "20b60: 55                           \tpushq\t%rbp",
+        "20b78: 5d                           \tpopq\t%rbp",
+        "20e5e: 5d                           \tpopq\t%rbp",
+        "20e6d: 5d                           \tpopq\t%rbp",
+        "21430: 5d                           \tpopq\t%rbp"
+      ],
+      "ready_frame": [
+        "20ba9: 4c 89 74 24 d0               \tmovq\t%r14, -0x30(%rsp)",
+        "20e72: 4c 8b 74 24 d0               \tmovq\t-0x30(%rsp), %r14",
+        "20fae: 48 c7 44 24 f8 00 00 00 00   \tmovq\t$0x0, -0x8(%rsp)",
+        "20fbf: 48 89 4c 24 e0               \tmovq\t%rcx, -0x20(%rsp)",
+        "20fc9: 4c 89 4c 24 e8               \tmovq\t%r9, -0x18(%rsp)",
+        "20fd8: 40 88 74 24 f0               \tmovb\t%sil, -0x10(%rsp)",
+        "21044: 48 c7 44 24 f8 00 00 00 00   \tmovq\t$0x0, -0x8(%rsp)",
+        "21055: 48 89 4c 24 e0               \tmovq\t%rcx, -0x20(%rsp)",
+        "2105f: 4c 89 4c 24 e8               \tmovq\t%r9, -0x18(%rsp)",
+        "2106e: 40 88 74 24 f0               \tmovb\t%sil, -0x10(%rsp)",
+        "21107: 4c 89 74 24 d0               \tmovq\t%r14, -0x30(%rsp)",
+        "21185: 4c 89 4c 24 d0               \tmovq\t%r9, -0x30(%rsp)",
+        "211a9: 48 8d 5c 24 f0               \tleaq\t-0x10(%rsp), %rbx",
+        "211ae: 4c 89 54 24 d8               \tmovq\t%r10, -0x28(%rsp)",
+        "2121c: 4c 8b 4c 24 d8               \tmovq\t-0x28(%rsp), %r9",
+        "21237: 4c 8b 74 24 d0               \tmovq\t-0x30(%rsp), %r14",
+        "21245: 4c 8d 54 74 e0               \tleaq\t-0x20(%rsp,%rsi,2), %r10",
+        "21279: 48 8d 5c 24 f0               \tleaq\t-0x10(%rsp), %rbx",
+        "2127e: 4c 89 54 24 d8               \tmovq\t%r10, -0x28(%rsp)",
+        "212ec: 4c 8b 4c 24 d8               \tmovq\t-0x28(%rsp), %r9",
+        "21304: 48 83 7c 24 d0 00            \tcmpq\t$0x0, -0x30(%rsp)",
+        "2130f: 48 8b 54 24 d0               \tmovq\t-0x30(%rsp), %rdx",
+        "21314: 4c 8d 54 74 e0               \tleaq\t-0x20(%rsp,%rsi,2), %r10"
+      ]
+    },
+    {
+      "owner": "abseil",
+      "ready": false,
+      "hints": false,
+      "instructions": 501,
+      "allowed_outer_calls": [
+        "2333c: e8 8f 3f fe ff               \tcallq\t0x72d0 <memset@plt>"
+      ],
+      "rbp_preservation": [],
+      "ready_frame": []
+    },
+    {
+      "owner": "abseil",
+      "ready": false,
+      "hints": false,
+      "instructions": 430,
+      "allowed_outer_calls": [
+        "23d4c: e8 7f 35 fe ff               \tcallq\t0x72d0 <memset@plt>"
+      ],
+      "rbp_preservation": [],
+      "ready_frame": []
+    }
+  ],
+  "ready_calls": 0,
+  "ready_other_stack_references": 39,
+  "ready_callbacks_preserving_rbp": 2,
+  "outlined_baseline_lookup": 0,
+  "limitation": "Static calls and frame references only; not instruction quality, lifetime, traffic or performance."
+}

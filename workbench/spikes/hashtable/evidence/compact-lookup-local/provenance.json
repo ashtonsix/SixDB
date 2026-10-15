@@ -1,0 +1,584 @@
+{
+  "commands": [
+    {
+      "name": "configure",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "40_1_2-build",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_worker_epochs_40_1_2_policy5_packet2-check",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_worker_epochs_40_1_2_policy5_packet2-n256-p8-order0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_worker_epochs_40_1_2_policy5_packet2-n256-p128-order0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_worker_epochs_40_1_2_policy5_packet2-n1024-p8-order0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_worker_epochs_40_1_2_policy5_packet2-n1024-p128-order0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_worker_epochs_40_1_2_policy5_packet2_lookup-check",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_worker_epochs_40_1_2_policy5_packet2_lookup-n256-p8-order0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_worker_epochs_40_1_2_policy5_packet2_lookup-n256-p128-order0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_worker_epochs_40_1_2_policy5_packet2_lookup-n1024-p8-order0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_worker_epochs_40_1_2_policy5_packet2_lookup-n1024-p128-order0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_worker_epochs_40_1_2_policy5_packet1_lookup-check",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_worker_epochs_40_1_2_policy5_packet1_lookup-n256-p8-order0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_worker_epochs_40_1_2_policy5_packet1_lookup-n256-p128-order0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_worker_epochs_40_1_2_policy5_packet1_lookup-n1024-p8-order0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_worker_epochs_40_1_2_policy5_packet1_lookup-n1024-p128-order0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "40_1_2-interim-report",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "40_0_0-build",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_worker_epochs_40_0_0_policy5_packet2-check",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_worker_epochs_40_0_0_policy5_packet2-n256-p8-order0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_worker_epochs_40_0_0_policy5_packet2-n256-p128-order0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_worker_epochs_40_0_0_policy5_packet2-n1024-p8-order0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_worker_epochs_40_0_0_policy5_packet2-n1024-p128-order0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_worker_epochs_40_0_0_policy5_packet2_lookup-check",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_worker_epochs_40_0_0_policy5_packet2_lookup-n256-p8-order0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_worker_epochs_40_0_0_policy5_packet2_lookup-n256-p128-order0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_worker_epochs_40_0_0_policy5_packet2_lookup-n1024-p8-order0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_worker_epochs_40_0_0_policy5_packet2_lookup-n1024-p128-order0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_worker_epochs_40_0_0_policy5_packet1_lookup-check",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_worker_epochs_40_0_0_policy5_packet1_lookup-n256-p8-order0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_worker_epochs_40_0_0_policy5_packet1_lookup-n256-p128-order0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_worker_epochs_40_0_0_policy5_packet1_lookup-n1024-p8-order0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_worker_epochs_40_0_0_policy5_packet1_lookup-n1024-p128-order0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "40_0_0-interim-report",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "40_2_2-build",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_worker_epochs_40_2_2_policy5_packet2-check",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_worker_epochs_40_2_2_policy5_packet2-n256-p8-order0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_worker_epochs_40_2_2_policy5_packet2-n256-p128-order0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_worker_epochs_40_2_2_policy5_packet2-n1024-p8-order0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_worker_epochs_40_2_2_policy5_packet2-n1024-p128-order0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_worker_epochs_40_2_2_policy5_packet2_lookup-check",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_worker_epochs_40_2_2_policy5_packet2_lookup-n256-p8-order0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_worker_epochs_40_2_2_policy5_packet2_lookup-n256-p128-order0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_worker_epochs_40_2_2_policy5_packet2_lookup-n1024-p8-order0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_worker_epochs_40_2_2_policy5_packet2_lookup-n1024-p128-order0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_worker_epochs_40_2_2_policy5_packet1_lookup-check",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_worker_epochs_40_2_2_policy5_packet1_lookup-n256-p8-order0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_worker_epochs_40_2_2_policy5_packet1_lookup-n256-p128-order0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_worker_epochs_40_2_2_policy5_packet1_lookup-n1024-p8-order0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_worker_epochs_40_2_2_policy5_packet1_lookup-n1024-p128-order0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "40_2_2-interim-report",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "64_1_64-build",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_worker_epochs_64_1_64_policy5_packet2-check",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_worker_epochs_64_1_64_policy5_packet2-n256-p8-order0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_worker_epochs_64_1_64_policy5_packet2-n256-p128-order0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_worker_epochs_64_1_64_policy5_packet2-n1024-p8-order0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_worker_epochs_64_1_64_policy5_packet2-n1024-p128-order0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_worker_epochs_64_1_64_policy5_packet2_lookup-check",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_worker_epochs_64_1_64_policy5_packet2_lookup-n256-p8-order0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_worker_epochs_64_1_64_policy5_packet2_lookup-n256-p128-order0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_worker_epochs_64_1_64_policy5_packet2_lookup-n1024-p8-order0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_worker_epochs_64_1_64_policy5_packet2_lookup-n1024-p128-order0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_worker_epochs_64_1_64_policy5_packet1_lookup-check",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_worker_epochs_64_1_64_policy5_packet1_lookup-n256-p8-order0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_worker_epochs_64_1_64_policy5_packet1_lookup-n256-p128-order0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_worker_epochs_64_1_64_policy5_packet1_lookup-n1024-p8-order0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_worker_epochs_64_1_64_policy5_packet1_lookup-n1024-p128-order0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "64_1_64-interim-report",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "64_2_64-build",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_worker_epochs_64_2_64_policy5_packet2-check",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_worker_epochs_64_2_64_policy5_packet2-n256-p8-order0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_worker_epochs_64_2_64_policy5_packet2-n256-p128-order0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_worker_epochs_64_2_64_policy5_packet2-n1024-p8-order0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_worker_epochs_64_2_64_policy5_packet2-n1024-p128-order0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_worker_epochs_64_2_64_policy5_packet2_lookup-check",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_worker_epochs_64_2_64_policy5_packet2_lookup-n256-p8-order0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_worker_epochs_64_2_64_policy5_packet2_lookup-n256-p128-order0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_worker_epochs_64_2_64_policy5_packet2_lookup-n1024-p8-order0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_worker_epochs_64_2_64_policy5_packet2_lookup-n1024-p128-order0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_worker_epochs_64_2_64_policy5_packet1_lookup-check",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_worker_epochs_64_2_64_policy5_packet1_lookup-n256-p8-order0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_worker_epochs_64_2_64_policy5_packet1_lookup-n256-p128-order0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_worker_epochs_64_2_64_policy5_packet1_lookup-n1024-p8-order0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_worker_epochs_64_2_64_policy5_packet1_lookup-n1024-p128-order0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "64_2_64-interim-report",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "8_2_64-build",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_worker_epochs_8_2_64_policy5_packet2-check",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_worker_epochs_8_2_64_policy5_packet2-n256-p8-order0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_worker_epochs_8_2_64_policy5_packet2-n256-p128-order0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_worker_epochs_8_2_64_policy5_packet2_lookup-check",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_worker_epochs_8_2_64_policy5_packet2_lookup-n256-p8-order0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_worker_epochs_8_2_64_policy5_packet2_lookup-n256-p128-order0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_worker_epochs_8_2_64_policy5_packet1_lookup-check",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_worker_epochs_8_2_64_policy5_packet1_lookup-n256-p8-order0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_worker_epochs_8_2_64_policy5_packet1_lookup-n256-p128-order0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "8_2_64-interim-report",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "boundary-build",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_small_40_grow1-check",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_combine_8_1_lookup-check",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_combine_8_64_lookup-check",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_combine_16_2_lookup-check",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_combine_24_3_lookup-check",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_combine_32_7_lookup-check",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_combine_40_16_lookup-check",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_combine_48_8_lookup-check",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_combine_56_32_lookup-check",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_combine_64_1_lookup-check",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_combine_64_64_lookup-check",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "report",
+      "required": true,
+      "returncode": 0
+    }
+  ],
+  "config": {
+    "question": "share compact selector work across a bounded ordered packet; preserve growth ranks, new duplicates and prefix retry while charging actual Worker input preparation"
+  },
+  "configure_flags": [
+    "-DCMAKE_BUILD_TYPE=Release",
+    "-DSIXDB_SPIKES=hashtable-design",
+    "-DSIXDB_MARCH=armv8-a+simd",
+    "-DSIXDB_TUNE=neoverse-v2"
+  ],
+  "files_sha256": {
+    "qualified/inputs.json": "abb6a2a657005822b0cd113d4dcca1bf0e4f88c4f3cb7231638a03f1226bf482",
+    "qualified/summary.csv": "2c43e1c92c283eaaadedaa9649395cd4d8f0fede87cc294ecfa2c88fa9a3cc5f"
+  },
+  "format": 2,
+  "full_bundle": "artifact.json",
+  "inputs": {},
+  "platform": "Linux-7.0.14-orbstack-00380-ga7e0a2dc9535-aarch64-with-glibc2.42",
+  "regenerate": [
+    "python3",
+    "workbench/spikes/hashtable/worker-epochs-report.py",
+    "{evidence}/panel",
+    "--output",
+    "{evidence}/qualified"
+  ],
+  "regenerate_from": "archive",
+  "source_archive_sha256": "e268914f4b4da61587958f8c098c31d83e0d7237ad9ede6f2496de2ef456ffa1",
+  "source_digest": "d1e68635be0f863393942c971a7fcb69c5ac922cf89199c4c59b1e02b6f21827",
+  "source_unchanged": true,
+  "started_utc": "2026-10-15T08:29:13.194352+00:00",
+  "status": "complete"
+}

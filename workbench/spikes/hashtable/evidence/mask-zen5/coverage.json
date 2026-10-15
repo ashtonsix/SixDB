@@ -1,0 +1,50 @@
+{
+  "rows": 25920,
+  "processes": 576,
+  "complete_case_comparisons": 2592,
+  "passes": 2,
+  "repetitions_per_process": 5,
+  "elf_count": 8,
+  "timed_regions": 1152,
+  "read_regions": 864,
+  "update_regions": 288,
+  "ordered_set_regions": 144,
+  "map_serial_regions": 144,
+  "mask_variants": [
+    "ordinary",
+    "split",
+    "paired",
+    "and"
+  ],
+  "source_manifest_digest": "7dd5c574e1e3b6860b58bff783924aafc0a99c796934b002fe3a46e280c83a4f",
+  "source_archive_sha256": "3719f57492207d5317bd5ae1b10dca0bc5dcca2e83c3d8da8c61f950a20b12e6",
+  "source_driver_sha256": "e8b82cd8f891dd76cc560c33f4ea854c18e69476a1bdad426b69e48f3fc5501a",
+  "report_sha256": "1c103d34df0dc892c06a831d480cf0ac22d6508165c3cd6ecce6505c7fc5e7e1",
+  "timed_elf_sha256": {
+    "ordinary-40-0": "6a33033294f8bc50d3ad93cfd576003bb6a96069afb5f52847bf1206ca59c1c2",
+    "ordinary-40-2": "3c462c5efcf7164174f47c69a924294e9850f78f905c3488e5f1d3a5deab76fd",
+    "split-40-0": "0c17904d3297257acbeb76d8b145ccc29bca815342c703ed812f464f518bd48b",
+    "split-40-2": "b61ef1bf7c4a648ff26a64c88d66ded6d3c08329c3837b84188fad0682ae5105",
+    "paired-40-0": "36f4e1ec7bcd50345c2f4716d871a01242b0ad701d8dd05f7bc18fcff32ddae2",
+    "paired-40-2": "357ae3b9b1de4803d08e957f64c98e8f3bdc850157f19278d0d59211471121f4",
+    "and-40-0": "9ec0c4213c78b9040da92c49700d80b49cb0966e59c32ed5cfc0b5f838596c35",
+    "and-40-2": "c9d1405c8be314576bea6e5cf6b279c57f9d2f0969b1f962c4221eb04b936770"
+  },
+  "checks": [
+    "complete seeded schedule, forward/reverse order and all phase operation counts",
+    "serialized process timestamps, zero returns and empty stderr",
+    "complete report reproduced exactly, including losses and per-pass medians",
+    "every phase requested/owned/metadata inventory and geometry/population agrees across variants",
+    "independent fitting capacities, padding, tier populations and reference/actual geometry",
+    "all eight native audited ELF identities equal timed process identities"
+  ],
+  "limitations": [
+    "K40 sets/W2 maps only; no multimap, other-width/domain or growth-path performance is qualified.",
+    "Map serial is the driver label. Call fusion alone does not prove complete value-byte dataflow or a machine-code dependency chain.",
+    "Static CFG recurrence is not dynamic call frequency or timing cost.",
+    "Mask controls keep selector mode and complete physical inventories fixed. Other register allocation and instruction placement may still change, so whole-operation differences are not isolated instruction costs.",
+    "Repeated processes on one host are not independent host trials; unchanged Abseil source can still vary with placement or runtime seed.",
+    "Build tier populations and phase memory inventories do not measure transient peaks or establish cache residence.",
+    "Ordered set traversal is not strict serial latency. Primitive-only codegen evidence does not establish full-table latency or throughput; instruction-level causal attribution requires a matched control."
+  ]
+}

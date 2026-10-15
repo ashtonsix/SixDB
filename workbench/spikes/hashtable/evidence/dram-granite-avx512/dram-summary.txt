@@ -1,0 +1,13 @@
+compact      mixed=0 C= 1: abseil 215.863 abseil_prefetch 218.047 direct 215.966 manual 214.974 manual_hints 213.059 ring 220.605 ring_hints 216.879
+compact      mixed=0 C= 8: abseil 39.111 abseil_prefetch 41.798 direct 54.470 manual 60.642 manual_hints 41.548 ring 61.091 ring_hints 41.723
+compact      mixed=0 C=32: abseil 34.018 abseil_prefetch 30.670 direct 54.223 manual 55.675 manual_hints 21.283 ring 56.654 ring_hints 21.612
+compact      mixed=1 C= 1: abseil 178.281 abseil_prefetch 183.988 direct 159.535 manual 166.556 manual_hints 160.138 ring 164.794 ring_hints 159.111
+compact      mixed=1 C= 8: abseil 46.378 abseil_prefetch 40.131 direct 58.450 manual 62.219 manual_hints 41.350 ring 63.429 ring_hints 42.650
+compact      mixed=1 C=32: abseil 40.977 abseil_prefetch 33.548 direct 59.172 manual 59.617 manual_hints 23.652 ring 61.904 ring_hints 24.175
+fuller       mixed=0 C= 1: abseil 217.306 abseil_prefetch 220.092 direct 236.613 manual 240.993 manual_hints 205.669 ring 241.900 ring_hints 205.041
+fuller       mixed=0 C= 8: abseil 39.584 abseil_prefetch 41.071 direct 44.277 manual 54.469 manual_hints 31.921 ring 55.554 ring_hints 32.164
+fuller       mixed=0 C=32: abseil 35.727 abseil_prefetch 31.045 direct 43.133 manual 51.522 manual_hints 21.490 ring 49.452 ring_hints 22.032
+fuller       mixed=1 C= 1: abseil 181.921 abseil_prefetch 187.867 direct 192.324 manual 192.670 manual_hints 175.045 ring 194.567 ring_hints 175.223
+fuller       mixed=1 C= 8: abseil 44.108 abseil_prefetch 41.399 direct 47.008 manual 51.430 manual_hints 31.333 ring 52.570 ring_hints 31.343
+fuller       mixed=1 C=32: abseil 40.371 abseil_prefetch 34.791 direct 47.056 manual 50.294 manual_hints 21.605 ring 51.151 ring_hints 22.163
+Validated 84 timing rows with geometry, ownership and graph accounting

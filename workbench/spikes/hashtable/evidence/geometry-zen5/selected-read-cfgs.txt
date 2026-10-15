@@ -1,0 +1,965 @@
+K40-W2-kind1-RefA10-arm0-hit.asm
+Phase resolved from ['./build/hashtable-design-geometry-avx2/./workbench/spikes/hashtable-design/value_width_bench.cpp:111', './build/hashtable-design-geometry-avx2/./workbench/spikes/hashtable-design/value_width_bench.cpp:178']
+Complete timed CFG, address order.
+abe6: movq 0xf8(%rsp), %rcx
+abee: movq 0x100(%rsp), %r9
+abf6: movq %rax, 0x110(%rsp)
+abfe: movq %rcx, 0x90(%rsp)
+ac06: cmpq %r9, %rcx
+ac09: je 0xb007 <void ht::trial<(ht::layout_solver::container)1, 10u, 0u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x2fc7>
+ac0f: movq 0x1b8(%rsp), %rax
+ac17: movq 0x178(%rsp), %r11
+ac1f: movq 0x1b0(%rsp), %r10
+ac27: movl $0xffffff, %r13d        # imm = 0xFFFFFF
+ac2d: movabsq $0x79d5f9e0de1e8cf5, %rdi # imm = 0x79D5F9E0DE1E8CF5
+ac37: xorl %ebp, %ebp
+ac39: movq %rax, 0x8(%rsp)
+ac3e: movq 0x198(%rsp), %rax
+ac46: movq %r10, 0x30(%rsp)
+ac4b: movq %rax, (%rsp)
+ac4f: leaq 0x55(%r11), %rax
+ac53: movq %rax, 0x40(%rsp)
+ac58: movq 0x1c0(%rsp), %rax
+ac60: movq %rax, 0x18(%rsp)
+ac65: movq 0x1d0(%rsp), %rax
+ac6d: movq %rax, 0x20(%rsp)
+ac72: movq 0x1d8(%rsp), %rax
+ac7a: movq %rax, 0x38(%rsp)
+ac7f: movq 0x1e0(%rsp), %rax
+ac87: movq %rax, 0x50(%rsp)
+ac8c: movq 0x200(%rsp), %rax
+ac94: movq %rax, 0x48(%rsp)
+ac99: movq 0x1f8(%rsp), %rax
+aca1: movq %rax, 0x58(%rsp)
+aca6: xorl %eax, %eax
+aca8: jmp 0xacc2 <void ht::trial<(ht::layout_solver::container)1, 10u, 0u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x2c82>
+acb0: movl 0x98(%rsp), %eax
+acb7: incl %eax
+acb9: cmpl $0xa, %eax
+acbc: je 0xb009 <void ht::trial<(ht::layout_solver::container)1, 10u, 0u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x2fc9>
+acc2: movq 0x90(%rsp), %r15
+acca: movl %eax, 0x98(%rsp)
+acd1: jmp 0xacf4 <void ht::trial<(ht::layout_solver::container)1, 10u, 0u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x2cb4>
+ace0: xorl %eax, %eax
+ace2: movq %rbp, %rcx
+ace5: movq %rax, %rbp
+ace8: addq %rcx, %rbp
+aceb: addq $0x4, %r15
+acef: cmpq %r9, %r15
+acf2: je 0xacb0 <void ht::trial<(ht::layout_solver::container)1, 10u, 0u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x2c70>
+acf4: movl (%r15), %r8d
+acf7: movabsq $0xb86659fd93, %rax     # imm = 0xB86659FD93
+ad01: imulq %rax, %r8
+ad05: movb $0x28, %al
+ad07: movq %r8, %r12
+ad0a: xorq %r10, %r12
+ad0d: bzhiq %rax, %r12, %r14
+ad12: movq %r14, %rcx
+ad15: shrq $0xa, %rcx
+ad19: movq %rcx, %rdx
+ad1c: xorq 0x8(%rsp), %rdx
+ad21: mulxq %rdi, %rdx, %rax
+ad26: xorl %edx, %r12d
+ad29: xorl %eax, %r12d
+ad2c: shll $0x7, %r12d
+ad30: andl $0x1ff80, %r12d         # imm = 0x1FF80
+ad37: movzbl (%r11,%r12), %eax
+ad3c: leaq (%r11,%r12), %rsi
+ad40: testl %eax, %eax
+ad42: je 0xae10 <void ht::trial<(ht::layout_solver::container)1, 10u, 0u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x2dd0>
+ad48: movq 0x18(%rsp), %rdx
+ad4d: shrq $0x12, %r14
+ad51: xorq %r14, %rdx
+ad54: mulxq %rdi, %rbx, %rdx
+ad59: xorl %ebx, %ecx
+ad5b: xorl %edx, %ecx
+ad5d: cmpl $0x10, %eax
+ad60: movl $0x10, %edx
+ad65: vmovd %ecx, %xmm0
+ad69: cmovbl %eax, %edx
+ad6c: vpbroadcastb %xmm0, %xmm0
+ad71: vpcmpeqb 0x5(%rsi), %xmm0, %xmm1
+ad76: vpmovmskb %xmm1, %ecx
+ad7a: bzhil %edx, %ecx, %edx
+ad7f: je 0xadb8 <void ht::trial<(ht::layout_solver::container)1, 10u, 0u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x2d78>
+ad81: nopw %cs:(%rax,%rax)
+ad90: tzcntq %rdx, %rcx
+ad95: leaq (%rcx,%rcx,2), %rbx
+ad99: movl 0x19(%rsi,%rbx), %ebx
+ad9d: andl %r13d, %ebx
+ada0: cmpl %ebx, %r14d
+ada3: je 0xafa0 <void ht::trial<(ht::layout_solver::container)1, 10u, 0u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x2f60>
+ada9: movq $-0x2, %rbx
+adb0: rolq %cl, %rbx
+adb3: andq %rbx, %rdx
+adb6: jne 0xad90 <void ht::trial<(ht::layout_solver::container)1, 10u, 0u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x2d50>
+adb8: cmpb $0x11, %al
+adba: jb 0xae10 <void ht::trial<(ht::layout_solver::container)1, 10u, 0u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x2dd0>
+adbc: vpcmpeqb 0x15(%rsi), %xmm0, %xmm0
+adc1: addl $-0x10, %eax
+adc4: movl $0x4, %ecx
+adc9: cmpl $0x4, %eax
+adcc: cmovael %ecx, %eax
+adcf: vpmovmskb %xmm0, %ecx
+add3: bzhil %eax, %ecx, %edx
+add8: je 0xae10 <void ht::trial<(ht::layout_solver::container)1, 10u, 0u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x2dd0>
+adda: nopw (%rax,%rax)
+ade0: tzcntq %rdx, %rax
+ade5: leal 0x10(%rax), %ecx
+ade8: leaq (%rcx,%rcx,2), %rbx
+adec: movl 0x19(%rsi,%rbx), %ebx
+adf0: andl %r13d, %ebx
+adf3: cmpl %ebx, %r14d
+adf6: je 0xafa0 <void ht::trial<(ht::layout_solver::container)1, 10u, 0u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x2f60>
+adfc: movq $-0x2, %rbx
+ae03: movl %eax, %ecx
+ae05: rolq %cl, %rbx
+ae08: andq %rbx, %rdx
+ae0b: jne 0xade0 <void ht::trial<(ht::layout_solver::container)1, 10u, 0u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x2da0>
+ae0d: nopl (%rax)
+ae10: cmpl $0x0, 0x1(%rsi)
+ae14: je 0xace0 <void ht::trial<(ht::layout_solver::container)1, 10u, 0u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x2ca0>
+ae1a: movq 0x20(%rsp), %rbx
+ae1f: movb $0x28, %al
+ae21: movq (%rsp), %r12
+ae25: xorq %r8, %rbx
+ae28: bzhiq %rax, %rbx, %rax
+ae2d: movq %rax, %rcx
+ae30: shrq $0x6, %rcx
+ae34: movq %rcx, %rdx
+ae37: xorq 0x38(%rsp), %rdx
+ae3c: mulxq %rdi, %rsi, %rdx
+ae41: xorl %esi, %ebx
+ae43: xorl %edx, %ebx
+ae45: andl $0x3f, %ebx
+ae48: shll $0x7, %ebx
+ae4b: movzbl (%r12,%rbx), %r14d
+ae50: leaq (%r12,%rbx), %rsi
+ae54: testb %r14b, %r14b
+ae57: je 0xaee0 <void ht::trial<(ht::layout_solver::container)1, 10u, 0u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x2ea0>
+ae5d: movq 0x50(%rsp), %rdx
+ae62: shrq $0xe, %rax
+ae66: xorq %rax, %rdx
+ae69: mulxq %rdi, %rbx, %rdx
+ae6e: xorl %ebx, %ecx
+ae70: movl $0x10, %ebx
+ae75: xorl %edx, %ecx
+ae77: movzbl %r14b, %edx
+ae7b: cmpb $0x10, %r14b
+ae7f: vmovd %ecx, %xmm0
+ae83: cmovael %ebx, %edx
+ae86: vpbroadcastb %xmm0, %xmm0
+ae8b: vpcmpeqb 0x9(%rsi), %xmm0, %xmm1
+ae90: vpmovmskb %xmm1, %ecx
+ae94: bzhil %edx, %ecx, %edx
+ae99: je 0xaebe <void ht::trial<(ht::layout_solver::container)1, 10u, 0u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x2e7e>
+ae9b: nopl (%rax,%rax)
+aea0: tzcntq %rdx, %rcx
+aea5: cmpl 0x1a(%rsi,%rcx,4), %eax
+aea9: je 0xafd7 <void ht::trial<(ht::layout_solver::container)1, 10u, 0u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x2f97>
+aeaf: movq $-0x2, %rbx
+aeb6: rolq %cl, %rbx
+aeb9: andq %rbx, %rdx
+aebc: jne 0xaea0 <void ht::trial<(ht::layout_solver::container)1, 10u, 0u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x2e60>
+aebe: cmpb $0x11, %r14b
+aec2: jb 0xaee0 <void ht::trial<(ht::layout_solver::container)1, 10u, 0u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x2ea0>
+aec4: vpcmpeqb 0x19(%rsi), %xmm0, %xmm0
+aec9: vpmovmskb %xmm0, %ecx
+aecd: testb $0x1, %cl
+aed0: je 0xaee0 <void ht::trial<(ht::layout_solver::container)1, 10u, 0u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x2ea0>
+aed2: movl $0x20, %ecx
+aed7: cmpl 0x5a(%rsi), %eax
+aeda: je 0xafd9 <void ht::trial<(ht::layout_solver::container)1, 10u, 0u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x2f99>
+aee0: cmpl $0x0, 0x1(%rsi)
+aee4: je 0xace0 <void ht::trial<(ht::layout_solver::container)1, 10u, 0u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x2ca0>
+aeea: movl 0x5(%rsi), %esi
+aeed: testl %esi, %esi
+aeef: je 0xace0 <void ht::trial<(ht::layout_solver::container)1, 10u, 0u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x2ca0>
+aef5: movb $0x28, %al
+aef7: movq %r9, %r10
+aefa: bzhiq %rax, %r8, %rax
+aeff: jmp 0xaf1d <void ht::trial<(ht::layout_solver::container)1, 10u, 0u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x2edd>
+af10: movl 0x2(%rdx,%r12), %esi
+af15: testl %esi, %esi
+af17: je 0xafee <void ht::trial<(ht::layout_solver::container)1, 10u, 0u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x2fae>
+af1d: movq 0x48(%rsp), %rdi
+af22: movl %esi, %ecx
+af24: shrl $0x8, %ecx
+af27: movzbl %sil, %r14d
+af2b: decl %ecx
+af2d: movq %r14, %r12
+af30: leaq (%rcx,%rcx,4), %rcx
+af34: movl 0x20(%rdi,%rcx,8), %edx
+af38: imulq $0x2c, %rdx, %rbx
+af3c: movq 0x8(%rdi,%rcx,8), %rdx
+af41: movq 0x58(%rsp), %rdi
+af46: movzbl 0xa(%rdi,%rbx), %r8d
+af4c: movzwl 0x8(%rdi,%rbx), %ecx
+af51: movl $0x0, %ebx
+af56: testb %r8b, %r8b
+af59: cmovnel %ecx, %ebx
+af5c: imulq %rbx, %r12
+af60: movzwl 0x6(%rdx,%r12), %ebx
+af66: testq %rbx, %rbx
+af69: je 0xaf10 <void ht::trial<(ht::layout_solver::container)1, 10u, 0u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x2ed0>
+af6b: leaq 0xd(%rdx), %rsi
+af6f: nop 
+af70: movzbl -0x1(%rsi,%r12), %r9d
+af76: movl -0x5(%rsi,%r12), %edi
+af7b: shlq $0x20, %r9
+af7f: orq %rdi, %r9
+af82: cmpq %rax, %r9
+af85: je 0xafad <void ht::trial<(ht::layout_solver::container)1, 10u, 0u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x2f6d>
+af87: addq $0x7, %rsi
+af8b: decq %rbx
+af8e: jne 0xaf70 <void ht::trial<(ht::layout_solver::container)1, 10u, 0u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x2f30>
+af90: jmp 0xaf10 <void ht::trial<(ht::layout_solver::container)1, 10u, 0u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x2ed0>
+afa0: addq 0x40(%rsp), %r12
+afa5: movl %ecx, %eax
+afa7: leaq (%r12,%rax,2), %rsi
+afab: jmp 0xafde <void ht::trial<(ht::layout_solver::container)1, 10u, 0u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x2f9e>
+afad: testb %r8b, %r8b
+afb0: movl $0x0, %eax
+afb5: movq %r10, %r9
+afb8: movq 0x30(%rsp), %r10
+afbd: movabsq $0x79d5f9e0de1e8cf5, %rdi # imm = 0x79D5F9E0DE1E8CF5
+afc7: cmoveq %rax, %rcx
+afcb: movl %r14d, %eax
+afce: imulq %rcx, %rax
+afd2: addq %rax, %rsi
+afd5: jmp 0xafde <void ht::trial<(ht::layout_solver::container)1, 10u, 0u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x2f9e>
+afd7: addl %ecx, %ecx
+afd9: leaq 0x5e(%rsi,%rcx), %rsi
+afde: movzwl (%rsi), %eax
+afe1: addq %rax, %rbp
+afe4: movl $0x1, %eax
+afe9: jmp 0xace2 <void ht::trial<(ht::layout_solver::container)1, 10u, 0u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x2ca2>
+afee: movq %r10, %r9
+aff1: movq 0x30(%rsp), %r10
+aff6: xorl %eax, %eax
+aff8: movabsq $0x79d5f9e0de1e8cf5, %rdi # imm = 0x79D5F9E0DE1E8CF5
+b002: jmp 0xace2 <void ht::trial<(ht::layout_solver::container)1, 10u, 0u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x2ca2>
+b007: xorl %ebp, %ebp
+
+
+K40-W2-kind1-RefA10-arm0-serial.asm
+Phase resolved from ['./build/hashtable-design-geometry-avx2/./workbench/spikes/hashtable-design/value_width_bench.cpp:111', './build/hashtable-design-geometry-avx2/./workbench/spikes/hashtable-design/value_width_bench.cpp:180']
+Complete timed CFG, address order.
+b4e4: movq 0x1b8(%rsp), %rcx
+b4ec: movq 0x198(%rsp), %rsi
+b4f4: movq 0x178(%rsp), %r8
+b4fc: movq 0xf8(%rsp), %rdx
+b504: movq 0x1b0(%rsp), %rdi
+b50c: movl $0xffffff, %r13d        # imm = 0xFFFFFF
+b512: movq %rax, 0x98(%rsp)
+b51a: xorl %r14d, %r14d
+b51d: xorl %r12d, %r12d
+b520: movq %rcx, 0x8(%rsp)
+b525: movq %rsi, (%rsp)
+b529: leaq 0x55(%r8), %rcx
+b52d: movq 0x1c0(%rsp), %rsi
+b535: movl (%rdx), %edx
+b537: movq %rdi, 0x30(%rsp)
+b53c: movq %rcx, 0x40(%rsp)
+b541: movq 0x1d0(%rsp), %rcx
+b549: movq %rsi, 0x18(%rsp)
+b54e: movq 0x1d8(%rsp), %rsi
+b556: movq %rcx, 0x20(%rsp)
+b55b: movq 0x1e0(%rsp), %rcx
+b563: movq %rsi, 0x38(%rsp)
+b568: movq 0x200(%rsp), %rsi
+b570: movq %rcx, 0x50(%rsp)
+b575: movq 0x1f8(%rsp), %rcx
+b57d: movq %rsi, 0x48(%rsp)
+b582: movabsq $0x79d5f9e0de1e8cf5, %rsi # imm = 0x79D5F9E0DE1E8CF5
+b58c: movq %rcx, 0x58(%rsp)
+b591: jmp 0xb5d7 <void ht::trial<(ht::layout_solver::container)1, 10u, 0u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x3597>
+b5a0: xorl %eax, %eax
+b5a2: xorl %edx, %edx
+b5a4: movq %r12, %rcx
+b5a7: movq %rax, %r12
+b5aa: addq %r10, %rdx
+b5ad: movabsq $0xaaaaaaaaaaaab, %rax  # imm = 0xAAAAAAAAAAAAB
+b5b7: addq %rcx, %r12
+b5ba: incl %r14d
+b5bd: mulxq %rax, %rax, %rax
+b5c2: shll $0xb, %eax
+b5c5: leal (%rax,%rax,2), %eax
+b5c8: subl %eax, %edx
+b5ca: cmpl $0xf000, %r14d          # imm = 0xF000
+b5d1: je 0xb8f3 <void ht::trial<(ht::layout_solver::container)1, 10u, 0u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x38b3>
+b5d7: movabsq $0xb86659fd93, %rax     # imm = 0xB86659FD93
+b5e1: movl %edx, %r10d
+b5e4: movq %r10, %r11
+b5e7: imulq %rax, %r11
+b5eb: movb $0x28, %al
+b5ed: movq %r11, %r15
+b5f0: xorq %rdi, %r15
+b5f3: bzhiq %rax, %r15, %rbp
+b5f8: movq %rbp, %rcx
+b5fb: shrq $0xa, %rcx
+b5ff: movq %rcx, %rdx
+b602: xorq 0x8(%rsp), %rdx
+b607: mulxq %rsi, %rdx, %rax
+b60c: xorl %edx, %r15d
+b60f: xorl %eax, %r15d
+b612: shll $0x7, %r15d
+b616: andl $0x1ff80, %r15d         # imm = 0x1FF80
+b61d: movzbl (%r8,%r15), %eax
+b622: leaq (%r8,%r15), %rbx
+b626: testl %eax, %eax
+b628: je 0xb6f0 <void ht::trial<(ht::layout_solver::container)1, 10u, 0u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x36b0>
+b62e: movq 0x18(%rsp), %rdx
+b633: shrq $0x12, %rbp
+b637: xorq %rbp, %rdx
+b63a: mulxq %rsi, %r9, %rdx
+b63f: xorl %r9d, %ecx
+b642: xorl %edx, %ecx
+b644: cmpl $0x10, %eax
+b647: movl $0x10, %edx
+b64c: vmovd %ecx, %xmm0
+b650: cmovbl %eax, %edx
+b653: vpbroadcastb %xmm0, %xmm0
+b658: vpcmpeqb 0x5(%rbx), %xmm0, %xmm1
+b65d: vpmovmskb %xmm1, %ecx
+b661: bzhil %edx, %ecx, %edx
+b666: je 0xb699 <void ht::trial<(ht::layout_solver::container)1, 10u, 0u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x3659>
+b668: nopl (%rax,%rax)
+b670: tzcntq %rdx, %rcx
+b675: leaq (%rcx,%rcx,2), %r9
+b679: movl 0x19(%rbx,%r9), %r9d
+b67e: andl %r13d, %r9d
+b681: cmpl %r9d, %ebp
+b684: je 0xb890 <void ht::trial<(ht::layout_solver::container)1, 10u, 0u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x3850>
+b68a: movq $-0x2, %r9
+b691: rolq %cl, %r9
+b694: andq %r9, %rdx
+b697: jne 0xb670 <void ht::trial<(ht::layout_solver::container)1, 10u, 0u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x3630>
+b699: cmpb $0x11, %al
+b69b: jb 0xb6f0 <void ht::trial<(ht::layout_solver::container)1, 10u, 0u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x36b0>
+b69d: vpcmpeqb 0x15(%rbx), %xmm0, %xmm0
+b6a2: addl $-0x10, %eax
+b6a5: movl $0x4, %ecx
+b6aa: cmpl $0x4, %eax
+b6ad: cmovael %ecx, %eax
+b6b0: vpmovmskb %xmm0, %ecx
+b6b4: bzhil %eax, %ecx, %edx
+b6b9: je 0xb6f0 <void ht::trial<(ht::layout_solver::container)1, 10u, 0u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x36b0>
+b6bb: nopl (%rax,%rax)
+b6c0: tzcntq %rdx, %rax
+b6c5: leal 0x10(%rax), %ecx
+b6c8: leaq (%rcx,%rcx,2), %r9
+b6cc: movl 0x19(%rbx,%r9), %r9d
+b6d1: andl %r13d, %r9d
+b6d4: cmpl %r9d, %ebp
+b6d7: je 0xb890 <void ht::trial<(ht::layout_solver::container)1, 10u, 0u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x3850>
+b6dd: movq $-0x2, %r9
+b6e4: movl %eax, %ecx
+b6e6: rolq %cl, %r9
+b6e9: andq %r9, %rdx
+b6ec: jne 0xb6c0 <void ht::trial<(ht::layout_solver::container)1, 10u, 0u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x3680>
+b6ee: nop 
+b6f0: cmpl $0x0, 0x1(%rbx)
+b6f4: je 0xb5a0 <void ht::trial<(ht::layout_solver::container)1, 10u, 0u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x3560>
+b6fa: movq 0x20(%rsp), %r9
+b6ff: movb $0x28, %al
+b701: movq (%rsp), %r15
+b705: xorq %r11, %r9
+b708: bzhiq %rax, %r9, %rax
+b70d: movq %rax, %rcx
+b710: shrq $0x6, %rcx
+b714: movq %rcx, %rdx
+b717: xorq 0x38(%rsp), %rdx
+b71c: mulxq %rsi, %rbx, %rdx
+b721: xorl %ebx, %r9d
+b724: xorl %edx, %r9d
+b727: andl $0x3f, %r9d
+b72b: shll $0x7, %r9d
+b72f: movzbl (%r15,%r9), %ebp
+b734: leaq (%r15,%r9), %rbx
+b738: testb %bpl, %bpl
+b73b: je 0xb7d0 <void ht::trial<(ht::layout_solver::container)1, 10u, 0u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x3790>
+b741: movq 0x50(%rsp), %rdx
+b746: shrq $0xe, %rax
+b74a: xorq %rax, %rdx
+b74d: mulxq %rsi, %r9, %rdx
+b752: xorl %r9d, %ecx
+b755: movl $0x10, %r9d
+b75b: xorl %edx, %ecx
+b75d: movzbl %bpl, %edx
+b761: cmpb $0x10, %bpl
+b765: vmovd %ecx, %xmm0
+b769: cmovael %r9d, %edx
+b76d: vpbroadcastb %xmm0, %xmm0
+b772: vpcmpeqb 0x9(%rbx), %xmm0, %xmm1
+b777: vpmovmskb %xmm1, %ecx
+b77b: bzhil %edx, %ecx, %edx
+b780: je 0xb7ae <void ht::trial<(ht::layout_solver::container)1, 10u, 0u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x376e>
+b782: nopw %cs:(%rax,%rax)
+b790: tzcntq %rdx, %rcx
+b795: cmpl 0x1a(%rbx,%rcx,4), %eax
+b799: je 0xb8c3 <void ht::trial<(ht::layout_solver::container)1, 10u, 0u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x3883>
+b79f: movq $-0x2, %r9
+b7a6: rolq %cl, %r9
+b7a9: andq %r9, %rdx
+b7ac: jne 0xb790 <void ht::trial<(ht::layout_solver::container)1, 10u, 0u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x3750>
+b7ae: cmpb $0x11, %bpl
+b7b2: jb 0xb7d0 <void ht::trial<(ht::layout_solver::container)1, 10u, 0u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x3790>
+b7b4: vpcmpeqb 0x19(%rbx), %xmm0, %xmm0
+b7b9: vpmovmskb %xmm0, %ecx
+b7bd: testb $0x1, %cl
+b7c0: je 0xb7d0 <void ht::trial<(ht::layout_solver::container)1, 10u, 0u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x3790>
+b7c2: movl $0x20, %ecx
+b7c7: cmpl 0x5a(%rbx), %eax
+b7ca: je 0xb8c5 <void ht::trial<(ht::layout_solver::container)1, 10u, 0u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x3885>
+b7d0: cmpl $0x0, 0x1(%rbx)
+b7d4: je 0xb5a0 <void ht::trial<(ht::layout_solver::container)1, 10u, 0u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x3560>
+b7da: movl 0x5(%rbx), %r9d
+b7de: testl %r9d, %r9d
+b7e1: je 0xb5a0 <void ht::trial<(ht::layout_solver::container)1, 10u, 0u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x3560>
+b7e7: movb $0x28, %al
+b7e9: bzhiq %rax, %r11, %rax
+b7ee: jmp 0xb7fe <void ht::trial<(ht::layout_solver::container)1, 10u, 0u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x37be>
+b7f0: movl 0x2(%rdx,%rbp), %r9d
+b7f5: testl %r9d, %r9d
+b7f8: je 0xb8db <void ht::trial<(ht::layout_solver::container)1, 10u, 0u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x389b>
+b7fe: movq 0x48(%rsp), %rsi
+b803: movl %r9d, %ecx
+b806: shrl $0x8, %ecx
+b809: movzbl %r9b, %r15d
+b80d: decl %ecx
+b80f: movq %r15, %rbp
+b812: leaq (%rcx,%rcx,4), %rcx
+b816: movl 0x20(%rsi,%rcx,8), %edx
+b81a: imulq $0x2c, %rdx, %r11
+b81e: movq 0x8(%rsi,%rcx,8), %rdx
+b823: movq 0x58(%rsp), %rsi
+b828: movzbl 0xa(%rsi,%r11), %ebx
+b82e: movzwl 0x8(%rsi,%r11), %ecx
+b834: movl $0x0, %r11d
+b83a: testb %bl, %bl
+b83c: cmovnel %ecx, %r11d
+b840: imulq %r11, %rbp
+b844: movzwl 0x6(%rdx,%rbp), %r9d
+b84a: testq %r9, %r9
+b84d: je 0xb7f0 <void ht::trial<(ht::layout_solver::container)1, 10u, 0u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x37b0>
+b84f: leaq 0xd(%rdx), %r11
+b853: nopw %cs:(%rax,%rax)
+b860: movzbl -0x1(%r11,%rbp), %edi
+b866: movl -0x5(%r11,%rbp), %esi
+b86b: shlq $0x20, %rdi
+b86f: orq %rsi, %rdi
+b872: cmpq %rax, %rdi
+b875: je 0xb89d <void ht::trial<(ht::layout_solver::container)1, 10u, 0u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x385d>
+b877: addq $0x7, %r11
+b87b: decq %r9
+b87e: jne 0xb860 <void ht::trial<(ht::layout_solver::container)1, 10u, 0u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x3820>
+b880: jmp 0xb7f0 <void ht::trial<(ht::layout_solver::container)1, 10u, 0u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x37b0>
+b890: addq 0x40(%rsp), %r15
+b895: movl %ecx, %eax
+b897: leaq (%r15,%rax,2), %r11
+b89b: jmp 0xb8ca <void ht::trial<(ht::layout_solver::container)1, 10u, 0u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x388a>
+b89d: testb %bl, %bl
+b89f: movl $0x0, %eax
+b8a4: movq 0x30(%rsp), %rdi
+b8a9: movabsq $0x79d5f9e0de1e8cf5, %rsi # imm = 0x79D5F9E0DE1E8CF5
+b8b3: cmoveq %rax, %rcx
+b8b7: movl %r15d, %eax
+b8ba: imulq %rcx, %rax
+b8be: addq %rax, %r11
+b8c1: jmp 0xb8ca <void ht::trial<(ht::layout_solver::container)1, 10u, 0u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x388a>
+b8c3: addl %ecx, %ecx
+b8c5: leaq 0x5e(%rbx,%rcx), %r11
+b8ca: movzwl (%r11), %edx
+b8ce: movl $0x1, %eax
+b8d3: addq %rdx, %r12
+b8d6: jmp 0xb5a4 <void ht::trial<(ht::layout_solver::container)1, 10u, 0u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x3564>
+b8db: movq 0x30(%rsp), %rdi
+b8e0: xorl %eax, %eax
+b8e2: xorl %edx, %edx
+b8e4: movabsq $0x79d5f9e0de1e8cf5, %rsi # imm = 0x79D5F9E0DE1E8CF5
+b8ee: jmp 0xb5a4 <void ht::trial<(ht::layout_solver::container)1, 10u, 0u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x3564>
+
+
+K40-W2-kind1-RefA10-arm1-hit.asm
+Phase resolved from ['./build/hashtable-design-geometry-avx2/./workbench/spikes/hashtable-design/value_width_bench.cpp:111', './build/hashtable-design-geometry-avx2/./workbench/spikes/hashtable-design/value_width_bench.cpp:178']
+Complete timed CFG, address order.
+20596: movq 0x110(%rsp), %rcx
+2059e: movq 0x118(%rsp), %r9
+205a6: movq %rax, 0xa8(%rsp)
+205ae: movq %rcx, 0x90(%rsp)
+205b6: cmpq %r9, %rcx
+205b9: je 0x209a7 <void ht::trial<(ht::layout_solver::container)1, 10u, 1u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x33f7>
+205bf: movq 0x1c8(%rsp), %rax
+205c7: movq 0x188(%rsp), %r11
+205cf: movq 0x1c0(%rsp), %r10
+205d7: movl $0xffffff, %r13d        # imm = 0xFFFFFF
+205dd: movabsq $0x79d5f9e0de1e8cf5, %rdi # imm = 0x79D5F9E0DE1E8CF5
+205e7: xorl %ebp, %ebp
+205e9: movq %rax, 0x8(%rsp)
+205ee: movq 0x1a8(%rsp), %rax
+205f6: movq %r10, 0x30(%rsp)
+205fb: movq %rax, (%rsp)
+205ff: leaq 0x55(%r11), %rax
+20603: movq %rax, 0x40(%rsp)
+20608: movq 0x1d0(%rsp), %rax
+20610: movq %rax, 0x20(%rsp)
+20615: movq 0x1e0(%rsp), %rax
+2061d: movq %rax, 0x18(%rsp)
+20622: movq 0x1e8(%rsp), %rax
+2062a: movq %rax, 0x38(%rsp)
+2062f: movq 0x1f0(%rsp), %rax
+20637: movq %rax, 0x50(%rsp)
+2063c: movq 0x210(%rsp), %rax
+20644: movq %rax, 0x48(%rsp)
+20649: movq 0x208(%rsp), %rax
+20651: movq %rax, 0x58(%rsp)
+20656: xorl %eax, %eax
+20658: jmp 0x20672 <void ht::trial<(ht::layout_solver::container)1, 10u, 1u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x30c2>
+20660: movl 0x98(%rsp), %eax
+20667: incl %eax
+20669: cmpl $0xa, %eax
+2066c: je 0x209a9 <void ht::trial<(ht::layout_solver::container)1, 10u, 1u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x33f9>
+20672: movq 0x90(%rsp), %r15
+2067a: movl %eax, 0x98(%rsp)
+20681: jmp 0x206a4 <void ht::trial<(ht::layout_solver::container)1, 10u, 1u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x30f4>
+20690: xorl %eax, %eax
+20692: movq %rbp, %rcx
+20695: movq %rax, %rbp
+20698: addq %rcx, %rbp
+2069b: addq $0x4, %r15
+2069f: cmpq %r9, %r15
+206a2: je 0x20660 <void ht::trial<(ht::layout_solver::container)1, 10u, 1u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x30b0>
+206a4: movl (%r15), %r12d
+206a7: movabsq $0xb86659fd93, %rax     # imm = 0xB86659FD93
+206b1: movb $0x28, %cl
+206b3: imulq %rax, %r12
+206b7: movq %r12, %rax
+206ba: xorq %r10, %rax
+206bd: bzhiq %rcx, %rax, %r8
+206c2: movq %r8, %rcx
+206c5: shrq $0x9, %rcx
+206c9: movq %rcx, %rdx
+206cc: xorq 0x8(%rsp), %rdx
+206d1: mulxq %rdi, %rsi, %rdx
+206d6: xorl %esi, %eax
+206d8: xorl %edx, %eax
+206da: shll $0x7, %eax
+206dd: movzwl %ax, %r14d
+206e1: movzbl (%r11,%r14), %eax
+206e6: leaq (%r11,%r14), %rsi
+206ea: testl %eax, %eax
+206ec: je 0x207b0 <void ht::trial<(ht::layout_solver::container)1, 10u, 1u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x3200>
+206f2: movq 0x20(%rsp), %rdx
+206f7: shrq $0x11, %r8
+206fb: xorq %r8, %rdx
+206fe: mulxq %rdi, %rbx, %rdx
+20703: xorl %ebx, %ecx
+20705: xorl %edx, %ecx
+20707: cmpl $0x10, %eax
+2070a: movl $0x10, %edx
+2070f: vmovd %ecx, %xmm0
+20713: cmovbl %eax, %edx
+20716: vpbroadcastb %xmm0, %xmm0
+2071b: vpcmpeqb 0x5(%rsi), %xmm0, %xmm1
+20720: vpmovmskb %xmm1, %ecx
+20724: bzhil %edx, %ecx, %edx
+20729: je 0x20758 <void ht::trial<(ht::layout_solver::container)1, 10u, 1u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x31a8>
+2072b: nopl (%rax,%rax)
+20730: tzcntq %rdx, %rcx
+20735: leaq (%rcx,%rcx,2), %rbx
+20739: movl 0x19(%rsi,%rbx), %ebx
+2073d: andl %r13d, %ebx
+20740: cmpl %ebx, %r8d
+20743: je 0x20940 <void ht::trial<(ht::layout_solver::container)1, 10u, 1u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x3390>
+20749: movq $-0x2, %rbx
+20750: rolq %cl, %rbx
+20753: andq %rbx, %rdx
+20756: jne 0x20730 <void ht::trial<(ht::layout_solver::container)1, 10u, 1u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x3180>
+20758: cmpb $0x11, %al
+2075a: jb 0x207b0 <void ht::trial<(ht::layout_solver::container)1, 10u, 1u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x3200>
+2075c: vpcmpeqb 0x15(%rsi), %xmm0, %xmm0
+20761: addl $-0x10, %eax
+20764: movl $0x4, %ecx
+20769: cmpl $0x4, %eax
+2076c: cmovael %ecx, %eax
+2076f: vpmovmskb %xmm0, %ecx
+20773: bzhil %eax, %ecx, %edx
+20778: je 0x207b0 <void ht::trial<(ht::layout_solver::container)1, 10u, 1u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x3200>
+2077a: nopw (%rax,%rax)
+20780: tzcntq %rdx, %rax
+20785: leal 0x10(%rax), %ecx
+20788: leaq (%rcx,%rcx,2), %rbx
+2078c: movl 0x19(%rsi,%rbx), %ebx
+20790: andl %r13d, %ebx
+20793: cmpl %ebx, %r8d
+20796: je 0x20940 <void ht::trial<(ht::layout_solver::container)1, 10u, 1u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x3390>
+2079c: movq $-0x2, %rbx
+207a3: movl %eax, %ecx
+207a5: rolq %cl, %rbx
+207a8: andq %rbx, %rdx
+207ab: jne 0x20780 <void ht::trial<(ht::layout_solver::container)1, 10u, 1u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x31d0>
+207ad: nopl (%rax)
+207b0: cmpl $0x0, 0x1(%rsi)
+207b4: je 0x20690 <void ht::trial<(ht::layout_solver::container)1, 10u, 1u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x30e0>
+207ba: movq 0x18(%rsp), %r8
+207bf: movb $0x28, %al
+207c1: movq (%rsp), %rbx
+207c5: xorq %r12, %r8
+207c8: bzhiq %rax, %r8, %rax
+207cd: movq %rax, %rcx
+207d0: shrq $0x5, %rcx
+207d4: movq %rcx, %rdx
+207d7: xorq 0x38(%rsp), %rdx
+207dc: mulxq %rdi, %rsi, %rdx
+207e1: xorl %esi, %r8d
+207e4: xorl %edx, %r8d
+207e7: andl $0x1f, %r8d
+207eb: shll $0x7, %r8d
+207ef: leaq (%rbx,%r8), %rsi
+207f3: movzbl (%rbx,%r8), %r8d
+207f8: testb %r8b, %r8b
+207fb: je 0x20880 <void ht::trial<(ht::layout_solver::container)1, 10u, 1u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x32d0>
+20801: movq 0x50(%rsp), %rdx
+20806: shrq $0xd, %rax
+2080a: xorq %rax, %rdx
+2080d: mulxq %rdi, %rbx, %rdx
+20812: xorl %ebx, %ecx
+20814: movl $0x10, %ebx
+20819: xorl %edx, %ecx
+2081b: movzbl %r8b, %edx
+2081f: cmpb $0x10, %r8b
+20823: vmovd %ecx, %xmm0
+20827: cmovael %ebx, %edx
+2082a: vpbroadcastb %xmm0, %xmm0
+2082f: vpcmpeqb 0x9(%rsi), %xmm0, %xmm1
+20834: vpmovmskb %xmm1, %ecx
+20838: bzhil %edx, %ecx, %edx
+2083d: je 0x2085e <void ht::trial<(ht::layout_solver::container)1, 10u, 1u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x32ae>
+2083f: nop 
+20840: tzcntq %rdx, %rcx
+20845: cmpl 0x1a(%rsi,%rcx,4), %eax
+20849: je 0x20977 <void ht::trial<(ht::layout_solver::container)1, 10u, 1u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x33c7>
+2084f: movq $-0x2, %rbx
+20856: rolq %cl, %rbx
+20859: andq %rbx, %rdx
+2085c: jne 0x20840 <void ht::trial<(ht::layout_solver::container)1, 10u, 1u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x3290>
+2085e: cmpb $0x11, %r8b
+20862: jb 0x20880 <void ht::trial<(ht::layout_solver::container)1, 10u, 1u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x32d0>
+20864: vpcmpeqb 0x19(%rsi), %xmm0, %xmm0
+20869: vpmovmskb %xmm0, %ecx
+2086d: testb $0x1, %cl
+20870: je 0x20880 <void ht::trial<(ht::layout_solver::container)1, 10u, 1u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x32d0>
+20872: movl $0x20, %ecx
+20877: cmpl 0x5a(%rsi), %eax
+2087a: je 0x20979 <void ht::trial<(ht::layout_solver::container)1, 10u, 1u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x33c9>
+20880: cmpl $0x0, 0x1(%rsi)
+20884: je 0x20690 <void ht::trial<(ht::layout_solver::container)1, 10u, 1u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x30e0>
+2088a: movl 0x5(%rsi), %esi
+2088d: testl %esi, %esi
+2088f: je 0x20690 <void ht::trial<(ht::layout_solver::container)1, 10u, 1u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x30e0>
+20895: movb $0x28, %al
+20897: movq %r9, %r10
+2089a: bzhiq %rax, %r12, %rax
+2089f: jmp 0x208bd <void ht::trial<(ht::layout_solver::container)1, 10u, 1u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x330d>
+208b0: movl 0x2(%rdx,%r12), %esi
+208b5: testl %esi, %esi
+208b7: je 0x2098e <void ht::trial<(ht::layout_solver::container)1, 10u, 1u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x33de>
+208bd: movq 0x48(%rsp), %rdi
+208c2: movl %esi, %ecx
+208c4: shrl $0x8, %ecx
+208c7: movzbl %sil, %r14d
+208cb: decl %ecx
+208cd: movq %r14, %r12
+208d0: leaq (%rcx,%rcx,4), %rcx
+208d4: movl 0x20(%rdi,%rcx,8), %edx
+208d8: imulq $0x2c, %rdx, %rbx
+208dc: movq 0x8(%rdi,%rcx,8), %rdx
+208e1: movq 0x58(%rsp), %rdi
+208e6: movzbl 0xa(%rdi,%rbx), %r8d
+208ec: movzwl 0x8(%rdi,%rbx), %ecx
+208f1: movl $0x0, %ebx
+208f6: testb %r8b, %r8b
+208f9: cmovnel %ecx, %ebx
+208fc: imulq %rbx, %r12
+20900: movzwl 0x6(%rdx,%r12), %ebx
+20906: testq %rbx, %rbx
+20909: je 0x208b0 <void ht::trial<(ht::layout_solver::container)1, 10u, 1u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x3300>
+2090b: leaq 0xd(%rdx), %rsi
+2090f: nop 
+20910: movzbl -0x1(%rsi,%r12), %r9d
+20916: movl -0x5(%rsi,%r12), %edi
+2091b: shlq $0x20, %r9
+2091f: orq %rdi, %r9
+20922: cmpq %rax, %r9
+20925: je 0x2094d <void ht::trial<(ht::layout_solver::container)1, 10u, 1u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x339d>
+20927: addq $0x7, %rsi
+2092b: decq %rbx
+2092e: jne 0x20910 <void ht::trial<(ht::layout_solver::container)1, 10u, 1u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x3360>
+20930: jmp 0x208b0 <void ht::trial<(ht::layout_solver::container)1, 10u, 1u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x3300>
+20940: addq 0x40(%rsp), %r14
+20945: movl %ecx, %eax
+20947: leaq (%r14,%rax,2), %rsi
+2094b: jmp 0x2097e <void ht::trial<(ht::layout_solver::container)1, 10u, 1u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x33ce>
+2094d: testb %r8b, %r8b
+20950: movl $0x0, %eax
+20955: movq %r10, %r9
+20958: movq 0x30(%rsp), %r10
+2095d: movabsq $0x79d5f9e0de1e8cf5, %rdi # imm = 0x79D5F9E0DE1E8CF5
+20967: cmoveq %rax, %rcx
+2096b: movl %r14d, %eax
+2096e: imulq %rcx, %rax
+20972: addq %rax, %rsi
+20975: jmp 0x2097e <void ht::trial<(ht::layout_solver::container)1, 10u, 1u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x33ce>
+20977: addl %ecx, %ecx
+20979: leaq 0x5e(%rsi,%rcx), %rsi
+2097e: movzwl (%rsi), %eax
+20981: addq %rax, %rbp
+20984: movl $0x1, %eax
+20989: jmp 0x20692 <void ht::trial<(ht::layout_solver::container)1, 10u, 1u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x30e2>
+2098e: movq %r10, %r9
+20991: movq 0x30(%rsp), %r10
+20996: xorl %eax, %eax
+20998: movabsq $0x79d5f9e0de1e8cf5, %rdi # imm = 0x79D5F9E0DE1E8CF5
+209a2: jmp 0x20692 <void ht::trial<(ht::layout_solver::container)1, 10u, 1u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x30e2>
+209a7: xorl %ebp, %ebp
+
+
+K40-W2-kind1-RefA10-arm1-serial.asm
+Phase resolved from ['./build/hashtable-design-geometry-avx2/./workbench/spikes/hashtable-design/value_width_bench.cpp:111', './build/hashtable-design-geometry-avx2/./workbench/spikes/hashtable-design/value_width_bench.cpp:180']
+Complete timed CFG, address order.
+20e73: movq 0x1c8(%rsp), %rcx
+20e7b: movq 0x1a8(%rsp), %rsi
+20e83: movq 0x188(%rsp), %r8
+20e8b: movq 0x110(%rsp), %rdx
+20e93: movq 0x1c0(%rsp), %rdi
+20e9b: movl $0xffffff, %r13d        # imm = 0xFFFFFF
+20ea1: movq %rax, 0x98(%rsp)
+20ea9: xorl %r14d, %r14d
+20eac: xorl %r12d, %r12d
+20eaf: movq %rcx, 0x8(%rsp)
+20eb4: movq %rsi, (%rsp)
+20eb8: leaq 0x55(%r8), %rcx
+20ebc: movq 0x1d0(%rsp), %rsi
+20ec4: movl (%rdx), %edx
+20ec6: movq %rdi, 0x30(%rsp)
+20ecb: movq %rcx, 0x40(%rsp)
+20ed0: movq 0x1e0(%rsp), %rcx
+20ed8: movq %rsi, 0x20(%rsp)
+20edd: movq 0x1e8(%rsp), %rsi
+20ee5: movq %rcx, 0x18(%rsp)
+20eea: movq 0x1f0(%rsp), %rcx
+20ef2: movq %rsi, 0x38(%rsp)
+20ef7: movq 0x210(%rsp), %rsi
+20eff: movq %rcx, 0x50(%rsp)
+20f04: movq 0x208(%rsp), %rcx
+20f0c: movq %rsi, 0x48(%rsp)
+20f11: movabsq $0x79d5f9e0de1e8cf5, %rsi # imm = 0x79D5F9E0DE1E8CF5
+20f1b: movq %rcx, 0x58(%rsp)
+20f20: jmp 0x20f67 <void ht::trial<(ht::layout_solver::container)1, 10u, 1u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x39b7>
+20f30: xorl %eax, %eax
+20f32: xorl %edx, %edx
+20f34: movq %r12, %rcx
+20f37: movq %rax, %r12
+20f3a: addq %r11, %rdx
+20f3d: movabsq $0xaaaaaaaaaaaab, %rax  # imm = 0xAAAAAAAAAAAAB
+20f47: addq %rcx, %r12
+20f4a: incl %r14d
+20f4d: mulxq %rax, %rax, %rax
+20f52: shll $0xb, %eax
+20f55: leal (%rax,%rax,2), %eax
+20f58: subl %eax, %edx
+20f5a: cmpl $0xf000, %r14d          # imm = 0xF000
+20f61: je 0x212a4 <void ht::trial<(ht::layout_solver::container)1, 10u, 1u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x3cf4>
+20f67: movabsq $0xb86659fd93, %rax     # imm = 0xB86659FD93
+20f71: movl %edx, %r11d
+20f74: movq %r11, %r15
+20f77: movb $0x28, %cl
+20f79: imulq %rax, %r15
+20f7d: movq %r15, %rax
+20f80: xorq %rdi, %rax
+20f83: bzhiq %rcx, %rax, %r10
+20f88: movq %r10, %rcx
+20f8b: shrq $0x9, %rcx
+20f8f: movq %rcx, %rdx
+20f92: xorq 0x8(%rsp), %rdx
+20f97: mulxq %rsi, %r9, %rdx
+20f9c: xorl %r9d, %eax
+20f9f: xorl %edx, %eax
+20fa1: shll $0x7, %eax
+20fa4: movzwl %ax, %ebp
+20fa7: movzbl (%r8,%rbp), %eax
+20fac: leaq (%r8,%rbp), %rbx
+20fb0: testl %eax, %eax
+20fb2: je 0x21080 <void ht::trial<(ht::layout_solver::container)1, 10u, 1u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x3ad0>
+20fb8: movq 0x20(%rsp), %rdx
+20fbd: shrq $0x11, %r10
+20fc1: xorq %r10, %rdx
+20fc4: mulxq %rsi, %r9, %rdx
+20fc9: xorl %r9d, %ecx
+20fcc: xorl %edx, %ecx
+20fce: cmpl $0x10, %eax
+20fd1: movl $0x10, %edx
+20fd6: vmovd %ecx, %xmm0
+20fda: cmovbl %eax, %edx
+20fdd: vpbroadcastb %xmm0, %xmm0
+20fe2: vpcmpeqb 0x5(%rbx), %xmm0, %xmm1
+20fe7: vpmovmskb %xmm1, %ecx
+20feb: bzhil %edx, %ecx, %edx
+20ff0: je 0x21029 <void ht::trial<(ht::layout_solver::container)1, 10u, 1u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x3a79>
+20ff2: nopw %cs:(%rax,%rax)
+21000: tzcntq %rdx, %rcx
+21005: leaq (%rcx,%rcx,2), %r9
+21009: movl 0x19(%rbx,%r9), %r9d
+2100e: andl %r13d, %r9d
+21011: cmpl %r9d, %r10d
+21014: je 0x21240 <void ht::trial<(ht::layout_solver::container)1, 10u, 1u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x3c90>
+2101a: movq $-0x2, %r9
+21021: rolq %cl, %r9
+21024: andq %r9, %rdx
+21027: jne 0x21000 <void ht::trial<(ht::layout_solver::container)1, 10u, 1u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x3a50>
+21029: cmpb $0x11, %al
+2102b: jb 0x21080 <void ht::trial<(ht::layout_solver::container)1, 10u, 1u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x3ad0>
+2102d: vpcmpeqb 0x15(%rbx), %xmm0, %xmm0
+21032: addl $-0x10, %eax
+21035: movl $0x4, %ecx
+2103a: cmpl $0x4, %eax
+2103d: cmovael %ecx, %eax
+21040: vpmovmskb %xmm0, %ecx
+21044: bzhil %eax, %ecx, %edx
+21049: je 0x21080 <void ht::trial<(ht::layout_solver::container)1, 10u, 1u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x3ad0>
+2104b: nopl (%rax,%rax)
+21050: tzcntq %rdx, %rax
+21055: leal 0x10(%rax), %ecx
+21058: leaq (%rcx,%rcx,2), %r9
+2105c: movl 0x19(%rbx,%r9), %r9d
+21061: andl %r13d, %r9d
+21064: cmpl %r9d, %r10d
+21067: je 0x21240 <void ht::trial<(ht::layout_solver::container)1, 10u, 1u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x3c90>
+2106d: movq $-0x2, %r9
+21074: movl %eax, %ecx
+21076: rolq %cl, %r9
+21079: andq %r9, %rdx
+2107c: jne 0x21050 <void ht::trial<(ht::layout_solver::container)1, 10u, 1u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x3aa0>
+2107e: nop 
+21080: cmpl $0x0, 0x1(%rbx)
+21084: je 0x20f30 <void ht::trial<(ht::layout_solver::container)1, 10u, 1u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x3980>
+2108a: movq 0x18(%rsp), %r9
+2108f: movb $0x28, %al
+21091: movq (%rsp), %rbp
+21095: xorq %r15, %r9
+21098: bzhiq %rax, %r9, %rax
+2109d: movq %rax, %rcx
+210a0: shrq $0x5, %rcx
+210a4: movq %rcx, %rdx
+210a7: xorq 0x38(%rsp), %rdx
+210ac: mulxq %rsi, %r10, %rdx
+210b1: xorl %r10d, %r9d
+210b4: xorl %edx, %r9d
+210b7: andl $0x1f, %r9d
+210bb: shll $0x7, %r9d
+210bf: movzbl (%rbp,%r9), %ebx
+210c5: leaq (%rbp,%r9), %r10
+210ca: testb %bl, %bl
+210cc: je 0x21170 <void ht::trial<(ht::layout_solver::container)1, 10u, 1u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x3bc0>
+210d2: movq 0x50(%rsp), %rdx
+210d7: shrq $0xd, %rax
+210db: xorq %rax, %rdx
+210de: mulxq %rsi, %r9, %rdx
+210e3: xorl %r9d, %ecx
+210e6: movl $0x10, %r9d
+210ec: xorl %edx, %ecx
+210ee: movzbl %bl, %edx
+210f1: cmpb $0x10, %bl
+210f4: vmovd %ecx, %xmm0
+210f8: cmovael %r9d, %edx
+210fc: vpbroadcastb %xmm0, %xmm0
+21101: vpcmpeqb 0x9(%r10), %xmm0, %xmm1
+21107: vpmovmskb %xmm1, %ecx
+2110b: bzhil %edx, %ecx, %edx
+21110: je 0x2113f <void ht::trial<(ht::layout_solver::container)1, 10u, 1u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x3b8f>
+21112: nopw %cs:(%rax,%rax)
+21120: tzcntq %rdx, %rcx
+21125: cmpl 0x1a(%r10,%rcx,4), %eax
+2112a: je 0x21274 <void ht::trial<(ht::layout_solver::container)1, 10u, 1u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x3cc4>
+21130: movq $-0x2, %r9
+21137: rolq %cl, %r9
+2113a: andq %r9, %rdx
+2113d: jne 0x21120 <void ht::trial<(ht::layout_solver::container)1, 10u, 1u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x3b70>
+2113f: cmpb $0x11, %bl
+21142: jb 0x21170 <void ht::trial<(ht::layout_solver::container)1, 10u, 1u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x3bc0>
+21144: vpcmpeqb 0x19(%r10), %xmm0, %xmm0
+2114a: vpmovmskb %xmm0, %ecx
+2114e: testb $0x1, %cl
+21151: je 0x21170 <void ht::trial<(ht::layout_solver::container)1, 10u, 1u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x3bc0>
+21153: movl $0x20, %ecx
+21158: cmpl 0x5a(%r10), %eax
+2115c: je 0x21276 <void ht::trial<(ht::layout_solver::container)1, 10u, 1u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x3cc6>
+21162: nopw %cs:(%rax,%rax)
+21170: cmpl $0x0, 0x1(%r10)
+21175: je 0x20f30 <void ht::trial<(ht::layout_solver::container)1, 10u, 1u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x3980>
+2117b: movl 0x5(%r10), %r9d
+2117f: testl %r9d, %r9d
+21182: je 0x20f30 <void ht::trial<(ht::layout_solver::container)1, 10u, 1u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x3980>
+21188: movb $0x28, %al
+2118a: bzhiq %rax, %r15, %rax
+2118f: jmp 0x211ae <void ht::trial<(ht::layout_solver::container)1, 10u, 1u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x3bfe>
+211a0: movl 0x2(%rdx,%rbp), %r9d
+211a5: testl %r9d, %r9d
+211a8: je 0x2128c <void ht::trial<(ht::layout_solver::container)1, 10u, 1u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x3cdc>
+211ae: movq 0x48(%rsp), %rsi
+211b3: movl %r9d, %ecx
+211b6: shrl $0x8, %ecx
+211b9: movzbl %r9b, %r15d
+211bd: decl %ecx
+211bf: movq %r15, %rbp
+211c2: leaq (%rcx,%rcx,4), %rcx
+211c6: movl 0x20(%rsi,%rcx,8), %edx
+211ca: imulq $0x2c, %rdx, %r10
+211ce: movq 0x8(%rsi,%rcx,8), %rdx
+211d3: movq 0x58(%rsp), %rsi
+211d8: movzbl 0xa(%rsi,%r10), %ebx
+211de: movzwl 0x8(%rsi,%r10), %ecx
+211e4: movl $0x0, %r10d
+211ea: testb %bl, %bl
+211ec: cmovnel %ecx, %r10d
+211f0: imulq %r10, %rbp
+211f4: movzwl 0x6(%rdx,%rbp), %r9d
+211fa: testq %r9, %r9
+211fd: je 0x211a0 <void ht::trial<(ht::layout_solver::container)1, 10u, 1u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x3bf0>
+211ff: leaq 0xd(%rdx), %r10
+21203: nopw %cs:(%rax,%rax)
+21210: movzbl -0x1(%r10,%rbp), %edi
+21216: movl -0x5(%r10,%rbp), %esi
+2121b: shlq $0x20, %rdi
+2121f: orq %rsi, %rdi
+21222: cmpq %rax, %rdi
+21225: je 0x2124e <void ht::trial<(ht::layout_solver::container)1, 10u, 1u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x3c9e>
+21227: addq $0x7, %r10
+2122b: decq %r9
+2122e: jne 0x21210 <void ht::trial<(ht::layout_solver::container)1, 10u, 1u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x3c60>
+21230: jmp 0x211a0 <void ht::trial<(ht::layout_solver::container)1, 10u, 1u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x3bf0>
+21240: addq 0x40(%rsp), %rbp
+21245: movl %ecx, %eax
+21247: leaq (%rbp,%rax,2), %r10
+2124c: jmp 0x2127b <void ht::trial<(ht::layout_solver::container)1, 10u, 1u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x3ccb>
+2124e: testb %bl, %bl
+21250: movl $0x0, %eax
+21255: movq 0x30(%rsp), %rdi
+2125a: movabsq $0x79d5f9e0de1e8cf5, %rsi # imm = 0x79D5F9E0DE1E8CF5
+21264: cmoveq %rax, %rcx
+21268: movl %r15d, %eax
+2126b: imulq %rcx, %rax
+2126f: addq %rax, %r10
+21272: jmp 0x2127b <void ht::trial<(ht::layout_solver::container)1, 10u, 1u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x3ccb>
+21274: addl %ecx, %ecx
+21276: leaq 0x5e(%r10,%rcx), %r10
+2127b: movzwl (%r10), %edx
+2127f: movl $0x1, %eax
+21284: addq %rdx, %r12
+21287: jmp 0x20f34 <void ht::trial<(ht::layout_solver::container)1, 10u, 1u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x3984>
+2128c: movq 0x30(%rsp), %rdi
+21291: xorl %eax, %eax
+21293: xorl %edx, %edx
+21295: movabsq $0x79d5f9e0de1e8cf5, %rsi # imm = 0x79D5F9E0DE1E8CF5
+2129f: jmp 0x20f34 <void ht::trial<(ht::layout_solver::container)1, 10u, 1u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x3984>

@@ -1,0 +1,50 @@
+{
+  "rows": 25920,
+  "processes": 576,
+  "complete_case_comparisons": 2592,
+  "passes": 2,
+  "repetitions_per_process": 5,
+  "elf_count": 8,
+  "timed_regions": 1152,
+  "read_regions": 864,
+  "update_regions": 288,
+  "ordered_set_regions": 0,
+  "map_serial_regions": 288,
+  "selector_variants": [
+    "composed16",
+    "direct16",
+    "composed32",
+    "direct32"
+  ],
+  "source_manifest_digest": "d01ce893c648d9d64348ebae2227c3094e29c83ff41ae35a8468a8e5bbea6c59",
+  "source_archive_sha256": "8c72350e742fdcc67ddbc424b46d93b7a7d817f7d3c06bb84f500ec66b3ebe94",
+  "source_driver_sha256": "e8b82cd8f891dd76cc560c33f4ea854c18e69476a1bdad426b69e48f3fc5501a",
+  "report_sha256": "5efd3e6b6e11c84d7e11763a1a38dd3bd282b74f7399d42c17a905b21e11625f",
+  "timed_elf_sha256": {
+    "composed16-16-2": "24a963691349e91d6b5543321ea01e8f47b1079a9b73f99c418bf88e32803c92",
+    "composed16-40-2": "00bbe19d27f71096ebbaa5d04ddaf92bce9ee57829d0f9e5264f5d0751c07ac0",
+    "direct16-16-2": "f611fcaa5fde4b3a4c8203df2e7ca5da686ae5d77746b82596b5abc2f677af0e",
+    "direct16-40-2": "77c37eeb9c0b5175de85557144a9a4179d14aeffed7c7106458f38de32d04d92",
+    "composed32-16-2": "89d4eeeeda7d6a437b40f7c9058b6cc6f31848e47c0ef00175476b9361b95c8a",
+    "composed32-40-2": "c925314692a64f319644cb581b6d9a71ebe4bea168116b493c5a6332cc5f928a",
+    "direct32-16-2": "a174846d5921c897034e0daa5b5e623653be8bbefd3085bd8b8f3ae5ed4467f5",
+    "direct32-40-2": "0fcee3b90998fc1eb28794707190f563fc74f3bb5764ca11fff0ce86afd7220a"
+  },
+  "checks": [
+    "complete seeded schedule, forward/reverse order and all phase operation counts",
+    "serialized process timestamps, zero returns and empty stderr",
+    "complete report reproduced exactly, including losses and per-pass medians",
+    "every phase requested/owned/metadata inventory and geometry/population agrees across variants",
+    "independent fitting capacities, padding, tier populations and reference/actual geometry",
+    "all eight native audited ELF identities equal timed process identities"
+  ],
+  "limitations": [
+    "K16/K40 W2 maps only; no set, multimap, other-width or growth-path performance is qualified.",
+    "Map serial is the driver label. Call fusion alone does not prove complete value-byte dataflow or a machine-code dependency chain.",
+    "Static CFG recurrence is not dynamic call frequency or timing cost.",
+    "Variant comparisons keep geometry and logical representation equal. Code generation changes beyond selector instructions, so whole-operation differences are not isolated selector cost.",
+    "Repeated processes on one host are not independent host trials; unchanged Abseil source can still vary with placement or runtime seed.",
+    "Build tier populations and phase memory inventories do not measure transient peaks or establish cache residence.",
+    "Hash count-register feedback must be checked before attributing changes to selector width. Primitive-only codegen evidence does not establish full-table latency or throughput."
+  ]
+}

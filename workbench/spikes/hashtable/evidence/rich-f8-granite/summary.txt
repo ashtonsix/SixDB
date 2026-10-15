@@ -1,0 +1,25 @@
+F8 row=6 active=16 buckets=256 independent_hit avx2: sp_tp_split median=4.9108 range=[4.8313,5.0476]; raw_fused median=4.9924 range=[4.8509,5.3170]
+F8 row=6 active=16 buckets=256 independent_hit avx2-gfni: sp_tp_split median=4.6567 range=[4.6202,4.8899]; raw_fused median=5.1453 range=[4.9432,5.1924]
+F8 row=6 active=16 buckets=256 independent_hit native: sp_tp_split median=5.3743 range=[5.2960,5.4330]; raw_fused median=4.3105 range=[4.2009,4.3455]
+F8 row=6 active=16 buckets=256 serial_hit avx2: sp_tp_split median=17.6876 range=[17.6421,17.6904]; raw_fused median=18.2593 range=[18.2411,18.2847]
+F8 row=6 active=16 buckets=256 serial_hit avx2-gfni: sp_tp_split median=17.6810 range=[17.6303,17.7059]; raw_fused median=18.2172 range=[18.1448,18.2850]
+F8 row=6 active=16 buckets=256 serial_hit native: sp_tp_split median=18.5004 range=[18.4462,18.5184]; raw_fused median=19.1090 range=[19.0602,19.1465]
+F8 row=6 active=16 buckets=256 changed_update avx2: sp_tp_split median=5.5783 range=[5.5709,5.7550]; raw_fused median=7.1812 range=[7.1185,7.3772]
+F8 row=6 active=16 buckets=256 changed_update avx2-gfni: sp_tp_split median=5.6842 range=[5.4834,6.0519]; raw_fused median=6.9640 range=[6.9234,7.3975]
+F8 row=6 active=16 buckets=256 changed_update native: sp_tp_split median=5.6841 range=[5.6380,6.2299]; raw_fused median=7.1631 range=[6.9988,7.2384]
+F8 row=10 active=16 buckets=256 independent_hit avx2: sp_tp_split median=5.8640 range=[5.8331,5.9026]; raw_fused median=4.8291 range=[4.6738,4.8344]
+F8 row=10 active=16 buckets=256 independent_hit avx2-gfni: sp_tp_split median=6.0118 range=[5.7271,6.1507]; raw_fused median=4.6509 range=[4.5659,4.7416]
+F8 row=10 active=16 buckets=256 independent_hit native: sp_tp_split median=5.4080 range=[5.2373,5.6764]; raw_fused median=4.2422 range=[4.2343,4.4664]
+F8 row=10 active=16 buckets=256 serial_hit avx2: sp_tp_split median=18.6983 range=[18.6917,18.7179]; raw_fused median=19.3820 range=[19.3481,19.4137]
+F8 row=10 active=16 buckets=256 serial_hit avx2-gfni: sp_tp_split median=18.6608 range=[18.6221,18.6802]; raw_fused median=19.4269 range=[19.3936,19.4611]
+F8 row=10 active=16 buckets=256 serial_hit native: sp_tp_split median=19.4944 range=[19.4865,19.5191]; raw_fused median=20.1586 range=[20.1493,20.1726]
+F8 row=10 active=16 buckets=256 changed_update avx2: sp_tp_split median=6.2473 range=[5.8735,6.3778]; raw_fused median=5.2155 range=[4.9797,5.4314]
+F8 row=10 active=16 buckets=256 changed_update avx2-gfni: sp_tp_split median=6.3148 range=[6.2911,6.3459]; raw_fused median=5.2210 range=[5.1451,5.3888]
+F8 row=10 active=16 buckets=256 changed_update native: sp_tp_split median=6.1482 range=[6.0537,6.9689]; raw_fused median=5.8680 range=[5.5249,5.8684]
+F8+C13 matches K40/A19 bucket components, but excludes hash/table costs.
+Same frozen rich-format driver/header source for all tiers and hosts.
+AVX2 and AVX2+GFNI are feature-matched across x86 hosts; native enables additional platform-specific features. V2 has a single NEON tier.
+No cache-residence claim; allocated payload, query state and shared controls all occupy memory.
+Three rotated process passes; each cell below is the median of eight internal repetitions per process.
+All five complete operations/tails/layouts retained; raw fused independently encodes and routes the same bytes.
+This is a primitive composition control, not a complete hash table or a multi-writer result.

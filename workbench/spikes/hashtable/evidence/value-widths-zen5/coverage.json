@@ -1,0 +1,95 @@
+{
+  "rows": 17820,
+  "processes": 220,
+  "repetitions": 9,
+  "phases": 9,
+  "cases": 220,
+  "keys": [
+    40
+  ],
+  "value_bytes": [
+    2,
+    8,
+    16
+  ],
+  "kinds": [
+    "map",
+    "multimap"
+  ],
+  "fanouts": {
+    "2": [
+      1,
+      2,
+      4,
+      5,
+      8,
+      9,
+      16,
+      32
+    ],
+    "8": [
+      1,
+      2,
+      3,
+      4,
+      8,
+      32
+    ],
+    "16": [
+      1,
+      2,
+      3,
+      8,
+      32
+    ]
+  },
+  "source_elf_audits": {
+    "2": {
+      "binary_sha256": "5d9b5967cb7f7a1dbd0136ab9f3821e2cb8fee63e6bd8baa5530c9c1b6fd0a65",
+      "source_sha256": "310cbb41d43f13fd5d4f862804779666e92a130d12a9bd5327ca13ed538087ad",
+      "read_locations": {
+        "candidate_inline": 15,
+        "candidate_whole_loop": 21,
+        "baseline_inline": 20,
+        "baseline_whole_loop": 4
+      },
+      "timed_regions": 60,
+      "outlined_timing_wrappers": 3
+    },
+    "8": {
+      "binary_sha256": "a78c878cca1a376ec991f9a9c10df0ff6f000edb185da8ed20d981aa67f08724",
+      "source_sha256": "310cbb41d43f13fd5d4f862804779666e92a130d12a9bd5327ca13ed538087ad",
+      "read_locations": {
+        "candidate_inline": 24,
+        "baseline_inline": 20,
+        "candidate_whole_loop": 12,
+        "baseline_whole_loop": 4
+      },
+      "timed_regions": 60,
+      "outlined_timing_wrappers": 0
+    },
+    "16": {
+      "binary_sha256": "42b5751ee51356dba7e4f411539d699ea37ff634d54545c19ef15da1479318d1",
+      "source_sha256": "310cbb41d43f13fd5d4f862804779666e92a130d12a9bd5327ca13ed538087ad",
+      "read_locations": {
+        "candidate_inline": 36,
+        "baseline_inline": 19,
+        "baseline_whole_loop": 5
+      },
+      "timed_regions": 60,
+      "outlined_timing_wrappers": 14
+    }
+  },
+  "checks": [
+    "retained analysis report reproduction",
+    "exact seed912 serialized process schedule",
+    "all archived argv/returncodes/stderr and raw case chunks",
+    "audited ELF equals timed receipt for each width",
+    "duplicate map arm0/1 inventories and populations"
+  ],
+  "limitations": [
+    "Per-process repetitions are not independent machine trials.",
+    "Unchanged net inventory is not a direct transient-allocation counter.",
+    "Source-inline append branch and inventory together qualify selected allocation-free cases; no claim is made for arbitrary arrivals or other value widths."
+  ]
+}

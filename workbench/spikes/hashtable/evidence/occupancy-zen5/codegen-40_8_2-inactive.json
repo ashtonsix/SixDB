@@ -1,0 +1,142 @@
+{
+  "panel": "geometry",
+  "value_bytes": 8,
+  "key_bits": 40,
+  "assembly_sha256": "0bde0049f92b53b6f652482b866c39aea26af14b3615332c8e03308e93bd6741",
+  "binary_sha256": "f4a21db8660c1f72d882ea2f9d61b25c8ab67d7103f6b6d7099f59bda7a220db",
+  "source_sha256": "1cf685fbd84797c2b9f315ffa19ed3181969ef341669cdfde6fe52ee62b0c4bb",
+  "compile_command": "/usr/bin/clang++-21 -DHT_BUCKET_SENTINEL=1 -DHT_GEOMETRY_KIND=2 -DHT_GEOMETRY_POLICIES=1 -DHT_HASH_MASK=2 -DHT_OCCUPANCY_STUDY=1 -DHT_RECIPE_SCAN32=1 -DHT_VALUE_BYTES=8 -DHT_VALUE_KEY=40 -DNDEBUG -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN5=1 -I/opt/sixdb/source/workbench/spikes/hashtable -I/opt/sixdb/source/ikea/include -I/opt/sixdb/source/orbital/include -isystem /opt/sixdb/source/build/hashtable-design-occupancy-avx2/_deps/hashtable_abseil-src -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -fno-vectorize -fno-slp-vectorize -mllvm -inline-threshold=1000 -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=x86-64-v3 -mtune=znver5 -o workbench/spikes/hashtable-design/CMakeFiles/hashtable_design_occupancy_40_8_2_inactive.dir/value_width_bench.cpp.o -c /opt/sixdb/source/workbench/spikes/hashtable-design/value_width_bench.cpp",
+  "compile_commands_sha256": "d34a181973d7a7d6088681fd41d7ce102e57420f69749d44cdfa81d7180922bf",
+  "expected_regions": 252,
+  "expected_read_regions": 216,
+  "expected_update_regions": 36,
+  "geometries": [
+    {
+      "arm": 0,
+      "bucket_shift": 0,
+      "unit_bytes": 128
+    },
+    {
+      "arm": 1,
+      "bucket_shift": -1,
+      "unit_bytes": 128
+    },
+    {
+      "arm": 2,
+      "bucket_shift": -2,
+      "unit_bytes": 128
+    },
+    {
+      "arm": 3,
+      "bucket_shift": 1,
+      "unit_bytes": 128
+    },
+    {
+      "arm": 4,
+      "bucket_shift": 0,
+      "unit_bytes": 96
+    },
+    {
+      "arm": 5,
+      "bucket_shift": -1,
+      "unit_bytes": 96
+    },
+    {
+      "arm": 6,
+      "bucket_shift": 0,
+      "unit_bytes": 192
+    },
+    {
+      "arm": 7,
+      "bucket_shift": -1,
+      "unit_bytes": 192
+    },
+    {
+      "arm": 8,
+      "bucket_shift": 0,
+      "unit_bytes": 64
+    },
+    {
+      "arm": 9,
+      "bucket_shift": 1,
+      "unit_bytes": 64
+    },
+    {
+      "arm": 10,
+      "bucket_shift": -2,
+      "unit_bytes": 96
+    },
+    {
+      "arm": 11,
+      "bucket_shift": 1,
+      "unit_bytes": 96
+    },
+    {
+      "arm": 12,
+      "bucket_shift": -2,
+      "unit_bytes": 192
+    },
+    {
+      "arm": 13,
+      "bucket_shift": 1,
+      "unit_bytes": 192
+    },
+    {
+      "arm": 14,
+      "bucket_shift": -1,
+      "unit_bytes": 64
+    },
+    {
+      "arm": 15,
+      "bucket_shift": -2,
+      "unit_bytes": 64
+    }
+  ],
+  "phase_semantics": "driver value-dependent serial; this audit qualifies call boundaries only",
+  "occupancy_variant": "inactive",
+  "occupancy_controls": {
+    "HT_OCCUPANCY_STUDY": 1,
+    "HT_GEOMETRY_KIND": 2,
+    "HT_RECIPE_SCAN32": 1,
+    "HT_HASH_MASK": 2,
+    "HT_BUCKET_SENTINEL": 1
+  },
+  "occupancy_source_version": "v2",
+  "container_kind": 2,
+  "qualified": true,
+  "update_callgraph_truncated": [],
+  "phase_assignment": "DWARF caller assignments in supplied frozen source; multiple reachable ending clocks must share phase; no clock ordinal or lambda number",
+  "timed_regions": 252,
+  "read_regions": 216,
+  "outlined_timing_wrappers": 0,
+  "regions_with_cloned_ending_clock": 0,
+  "read_locations": {
+    "candidate_whole_loop": 192,
+    "baseline_inline": 24
+  },
+  "failures": [],
+  "limitations": [
+    "Compile receipt selects the geometry target and verifies W/K/kind, HT_GEOMETRY_POLICIES and disabled autovectorization. TU, ELF, disassembly and receipt hashes are recorded; cohort retention must bind them to the frozen source/build artifacts. This is not a reproducible-build proof.",
+    "A trial closure is called a whole-loop helper only outside a caller CFG cycle and with no hot calls or unresolved external branches inside.",
+    "Cold format and failure calls are reported separately. This audit does not assign runtime branch frequencies or costs.",
+    "Ordered set traversal is not qualified serial latency: predicted-hit branches can synthesize constants. Fusion qualification does not repair that limitation.",
+    "Full-byte-load/dataflow inspection is a separate selected-witness check; fused calls alone do not prove the map digest consumes every byte or establish the actual serial dependency."
+  ],
+  "read_and_root_qualified": true,
+  "update_effective_cfg_qualified": true,
+  "update_regions": 36,
+  "update_locations": {
+    "whole_loop_helper": 32,
+    "timed_cfg": 4
+  },
+  "repeated_update_boundary_categories": {
+    "allocation_runtime": 96,
+    "orbital_owner_runtime": 32,
+    "linked_values": 32,
+    "byte_transfer": 64,
+    "key_overflow": 32,
+    "cold_format_init": 448,
+    "other_spike_boundary": 96,
+    "abseil_boundary": 12
+  }
+}

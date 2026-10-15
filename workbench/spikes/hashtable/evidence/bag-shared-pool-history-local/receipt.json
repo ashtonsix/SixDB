@@ -1,0 +1,11 @@
+{
+  "binary_sha256": "0b94c6d533b4666aadd7c14b4293939ed0d8221d2315a7a4bb20595f4b6e667e",
+  "sources": {
+    "links.h": "4a7c3e9169ecc8d76fa44f74f14a4c1a37875b83ed2f65a353f30dd991ed808e",
+    "fields.h": "312682f0f46b034e21001ffac035aaadaae9266be03a481b884dd54f334124a4",
+    "common.h": "618ba1d46d065c93b93654adfa1e5f91acbc8cadfbec79d8b8b1f0037029ef9c",
+    "bag_compare.cpp": "e9752753d35b454613cf70231a8944b873f7856f587de30ce13a2ceadc870331"
+  },
+  "selection": "One accounting row per arm/history per independent process. All repeated rows in each process reuse the same separate census; raw complete lifecycle CSVs remain in the full recovery bundle.",
+  "qualification": "Historical shared-Pool census runs baseline, links, hinted links, then buffers in that order, reusing inventory accumulated by earlier histories and replays. Different owned capacity here is a real history-sensitive allocator observation, not an isolated format comparison or a production policy recommendation. Later fresh-Pool controls retain equal initial conditions separately in bag-count-reuse-local and bag-physical-clone-local. No RSS claim; these are Orbital accessible capacity and baseline malloc_usable_size. Local Apple ARM64 OrbStack."
+}

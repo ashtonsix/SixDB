@@ -45,7 +45,7 @@ use-after-return checks on the local Linux host. Focused cases cover ranking,
 uncertain mapping retries, cancellation, trim failure, Holds, refusal, rollover
 and implicit Arena teardown. Independent review caught and repaired a final-Hold
 teardown error in the first draft; the reviewed version matches the native core
-hashes. The matched [complete-container comparison](../../hashtable-design/multimap-vectors.md#complete-container-allocator-repair-comparison)
+hashes. The matched [complete-container comparison](../../hashtable/multimap-vectors.md#complete-container-allocator-repair-comparison)
 confirms the benefit: W64 bag append at 64 → 65 values falls from 6.30 → 3.02 µs
 per key on Zen 5 and 11.42 → 3.91 µs on V2, with logical work and relocations
 unchanged. Ordinary Abseil remains about 0.29 / 0.31 µs: repairing selection does

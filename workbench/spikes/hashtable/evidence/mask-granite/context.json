@@ -1,0 +1,660 @@
+{
+  "format": 1,
+  "authored_analysis": true,
+  "group": "20261014T011154Z-32f018d2",
+  "source_manifest_digest": "7dd5c574e1e3b6860b58bff783924aafc0a99c796934b002fe3a46e280c83a4f",
+  "source_archive_sha256": "3719f57492207d5317bd5ae1b10dca0bc5dcca2e83c3d8da8c61f950a20b12e6",
+  "source_driver_sha256": "e8b82cd8f891dd76cc560c33f4ea854c18e69476a1bdad426b69e48f3fc5501a",
+  "source_sha256": {
+    "hash.h": "885345652fa813a65687e69e4122c70fd7b71de4b16e89365b850965351a0f5a",
+    "hash_mask.h": "227f341c5487eac81b5d4ec49ad8485087020e3ed3cf87a8500e712e2a04d8fd",
+    "hash_mask_check.cpp": "11f2ffa3e2a216ba9ea1555c8673314c1092319115d80671facf8c9589d3acdf",
+    "value_width_bench.cpp": "e8b82cd8f891dd76cc560c33f4ea854c18e69476a1bdad426b69e48f3fc5501a",
+    "geometry-run.py": "e09d3ed50a2716deda48fb2d9373742b7263564cd47b0283c3db15df7b7fe70f",
+    "geometry-report.py": "1c103d34df0dc892c06a831d480cf0ac22d6508165c3cd6ecce6505c7fc5e7e1",
+    "mask-native.sh": "1b35467ddb45025de1b068a87aa548da6d911c50509d37a20661da05db55da59"
+  },
+  "analysis_sha256": {
+    "audit-dwarf.py": "0877dae5567bc6ad37f2f07acc693f366d30805d3a664ec3b2f2369420d86713",
+    "summarize.py": "6b00d2e1169e35179c52a38f8c5746af2ffd27421f0d9e4154226c79e21b62b6",
+    "qualify.py": "264507a69900006e9f75279ab61f507261d4f1f571466617f5856d26437f204b",
+    "geometry-report.py": "1c103d34df0dc892c06a831d480cf0ac22d6508165c3cd6ecce6505c7fc5e7e1"
+  },
+  "scope": "Frozen K40 W0 sets/W2 maps; ordinary/split/paired/and mask controls, all18 geometry arms and reference A6/A10; composed16 selectors fixed.",
+  "excluded": "Strict set latency, standalone instruction costs, independent map dataflow proof, cache residence, preset adoption or graduation.",
+  "platform": "granite",
+  "job": "20261014T011204Z-f355e648",
+  "artifact": {
+    "bucket": "calico-fleet-artifacts",
+    "bytes": 66783769,
+    "files": 46,
+    "format": 1,
+    "key": "sixdb/artifacts/sha256/d8d8121106d55b4e976e070f796177c52abd2e952504dfc66d9e859efae7ed3e.tar.gz",
+    "kind": "files",
+    "region": "us-east-1",
+    "sha256": "d8d8121106d55b4e976e070f796177c52abd2e952504dfc66d9e859efae7ed3e",
+    "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/d8d8121106d55b4e976e070f796177c52abd2e952504dfc66d9e859efae7ed3e.tar.gz"
+  },
+  "worker_state": {
+    "state": "complete",
+    "script_returncode": 0,
+    "script_seconds": 422.9744484424591,
+    "worker_seconds_before_collection": 456.25550651550293
+  },
+  "audits": {
+    "ordinary-40-0": {
+      "mask_variant": "ordinary",
+      "mask_controls": {
+        "HT_HASH_MASK": 0,
+        "HT_VALUE_DIRECT": 0,
+        "HT_RECIPE_SCAN32": 0
+      },
+      "key_bits": 40,
+      "value_bytes": 0,
+      "binary_sha256": "4d144e3bea2bc559db725682ebfa3e9e5bce5ee767d7c2188f58a2ff11ac1e9e",
+      "assembly_sha256": "a2bfe1175d69518dd8fe3f1e0699d7d473f219149de2cbd2d0d6e163b31f8d54",
+      "source_sha256": "e8b82cd8f891dd76cc560c33f4ea854c18e69476a1bdad426b69e48f3fc5501a",
+      "compile_commands_sha256": "7ee4beb4e47fdf3e10b6aa8d8447b1ab942f259533499ef4f5fb83bef2701015",
+      "timed_regions": 144,
+      "read_regions": 108,
+      "update_regions": 36,
+      "read_locations": {
+        "candidate_inline": 96,
+        "baseline_inline": 12
+      },
+      "update_locations": {
+        "whole_loop_helper": 32,
+        "timed_cfg": 4
+      },
+      "outlined_timing_wrappers": 16,
+      "regions_with_cloned_ending_clock": 24,
+      "update_callgraph_truncated": [],
+      "phase_semantics": "ordered set traversal; not strict serial latency"
+    },
+    "ordinary-40-2": {
+      "mask_variant": "ordinary",
+      "mask_controls": {
+        "HT_HASH_MASK": 0,
+        "HT_VALUE_DIRECT": 0,
+        "HT_RECIPE_SCAN32": 0
+      },
+      "key_bits": 40,
+      "value_bytes": 2,
+      "binary_sha256": "148ff389c816b4684504e31e828acdfb0670c8f772c59c46bc5b63f3d80396fc",
+      "assembly_sha256": "d6fcca18162cca76eb4b59df172c455c4a3bcab7c9b5f3f8db0f93209b7b6cb1",
+      "source_sha256": "e8b82cd8f891dd76cc560c33f4ea854c18e69476a1bdad426b69e48f3fc5501a",
+      "compile_commands_sha256": "7ee4beb4e47fdf3e10b6aa8d8447b1ab942f259533499ef4f5fb83bef2701015",
+      "timed_regions": 144,
+      "read_regions": 108,
+      "update_regions": 36,
+      "read_locations": {
+        "candidate_inline": 86,
+        "candidate_whole_loop": 10,
+        "baseline_inline": 12
+      },
+      "update_locations": {
+        "whole_loop_helper": 32,
+        "timed_cfg": 4
+      },
+      "outlined_timing_wrappers": 11,
+      "regions_with_cloned_ending_clock": 25,
+      "update_callgraph_truncated": [],
+      "phase_semantics": "driver value-dependent serial; this audit qualifies call boundaries only"
+    },
+    "split-40-0": {
+      "mask_variant": "split",
+      "mask_controls": {
+        "HT_HASH_MASK": 1,
+        "HT_VALUE_DIRECT": 0,
+        "HT_RECIPE_SCAN32": 0
+      },
+      "key_bits": 40,
+      "value_bytes": 0,
+      "binary_sha256": "e0918c674e805fb1997dcdd9b97c1d0b179b78940e3b1bdf26fccfc8b0965280",
+      "assembly_sha256": "56876d5248f83fa933c7441f0c9dc61c6fc06d33e9fb5eb8bd7f9e15f9aa78b6",
+      "source_sha256": "e8b82cd8f891dd76cc560c33f4ea854c18e69476a1bdad426b69e48f3fc5501a",
+      "compile_commands_sha256": "7ee4beb4e47fdf3e10b6aa8d8447b1ab942f259533499ef4f5fb83bef2701015",
+      "timed_regions": 144,
+      "read_regions": 108,
+      "update_regions": 36,
+      "read_locations": {
+        "candidate_inline": 96,
+        "baseline_inline": 12
+      },
+      "update_locations": {
+        "whole_loop_helper": 32,
+        "timed_cfg": 4
+      },
+      "outlined_timing_wrappers": 42,
+      "regions_with_cloned_ending_clock": 0,
+      "update_callgraph_truncated": [],
+      "phase_semantics": "ordered set traversal; not strict serial latency"
+    },
+    "split-40-2": {
+      "mask_variant": "split",
+      "mask_controls": {
+        "HT_HASH_MASK": 1,
+        "HT_VALUE_DIRECT": 0,
+        "HT_RECIPE_SCAN32": 0
+      },
+      "key_bits": 40,
+      "value_bytes": 2,
+      "binary_sha256": "68f1c9e44254752460155c02992b31cf3c056f7b7bf761154b4a6407426cfc73",
+      "assembly_sha256": "91290c3d5b251b937e9e751460983448b7c91061726906283a58accd5650b591",
+      "source_sha256": "e8b82cd8f891dd76cc560c33f4ea854c18e69476a1bdad426b69e48f3fc5501a",
+      "compile_commands_sha256": "7ee4beb4e47fdf3e10b6aa8d8447b1ab942f259533499ef4f5fb83bef2701015",
+      "timed_regions": 144,
+      "read_regions": 108,
+      "update_regions": 36,
+      "read_locations": {
+        "candidate_inline": 75,
+        "candidate_whole_loop": 21,
+        "baseline_inline": 12
+      },
+      "update_locations": {
+        "whole_loop_helper": 32,
+        "timed_cfg": 4
+      },
+      "outlined_timing_wrappers": 15,
+      "regions_with_cloned_ending_clock": 0,
+      "update_callgraph_truncated": [],
+      "phase_semantics": "driver value-dependent serial; this audit qualifies call boundaries only"
+    },
+    "paired-40-0": {
+      "mask_variant": "paired",
+      "mask_controls": {
+        "HT_HASH_MASK": 2,
+        "HT_VALUE_DIRECT": 0,
+        "HT_RECIPE_SCAN32": 0
+      },
+      "key_bits": 40,
+      "value_bytes": 0,
+      "binary_sha256": "98cbb62453f883c8b3e23300fbecce9a441ce06256a65e7172ec4cc5b5b03ad5",
+      "assembly_sha256": "276a12417ccc2381823363901ae2db8a4521f74f36c3c2408c83ea143f38b9a3",
+      "source_sha256": "e8b82cd8f891dd76cc560c33f4ea854c18e69476a1bdad426b69e48f3fc5501a",
+      "compile_commands_sha256": "7ee4beb4e47fdf3e10b6aa8d8447b1ab942f259533499ef4f5fb83bef2701015",
+      "timed_regions": 144,
+      "read_regions": 108,
+      "update_regions": 36,
+      "read_locations": {
+        "candidate_inline": 96,
+        "baseline_inline": 12
+      },
+      "update_locations": {
+        "whole_loop_helper": 32,
+        "timed_cfg": 4
+      },
+      "outlined_timing_wrappers": 42,
+      "regions_with_cloned_ending_clock": 0,
+      "update_callgraph_truncated": [],
+      "phase_semantics": "ordered set traversal; not strict serial latency"
+    },
+    "paired-40-2": {
+      "mask_variant": "paired",
+      "mask_controls": {
+        "HT_HASH_MASK": 2,
+        "HT_VALUE_DIRECT": 0,
+        "HT_RECIPE_SCAN32": 0
+      },
+      "key_bits": 40,
+      "value_bytes": 2,
+      "binary_sha256": "0d653fe0a11063df7964377d56b1fc115f916e326183aa3cb71395b91531a8eb",
+      "assembly_sha256": "ec99536c60da2fd5ceed8017133a94c549016f6a3270b42eda5e73472b7c086e",
+      "source_sha256": "e8b82cd8f891dd76cc560c33f4ea854c18e69476a1bdad426b69e48f3fc5501a",
+      "compile_commands_sha256": "7ee4beb4e47fdf3e10b6aa8d8447b1ab942f259533499ef4f5fb83bef2701015",
+      "timed_regions": 144,
+      "read_regions": 108,
+      "update_regions": 36,
+      "read_locations": {
+        "candidate_inline": 75,
+        "candidate_whole_loop": 21,
+        "baseline_inline": 12
+      },
+      "update_locations": {
+        "whole_loop_helper": 32,
+        "timed_cfg": 4
+      },
+      "outlined_timing_wrappers": 10,
+      "regions_with_cloned_ending_clock": 0,
+      "update_callgraph_truncated": [],
+      "phase_semantics": "driver value-dependent serial; this audit qualifies call boundaries only"
+    },
+    "and-40-0": {
+      "mask_variant": "and",
+      "mask_controls": {
+        "HT_HASH_MASK": 3,
+        "HT_VALUE_DIRECT": 0,
+        "HT_RECIPE_SCAN32": 0
+      },
+      "key_bits": 40,
+      "value_bytes": 0,
+      "binary_sha256": "e4fb2455a85735bc0652dd31112df00430d136b7785171e5f41b57c33061eab4",
+      "assembly_sha256": "fceef4ea751e3b77a09f9f3c8eaf647d2e0bfc3e27e2ddcf5d3fe4326363b66b",
+      "source_sha256": "e8b82cd8f891dd76cc560c33f4ea854c18e69476a1bdad426b69e48f3fc5501a",
+      "compile_commands_sha256": "7ee4beb4e47fdf3e10b6aa8d8447b1ab942f259533499ef4f5fb83bef2701015",
+      "timed_regions": 144,
+      "read_regions": 108,
+      "update_regions": 36,
+      "read_locations": {
+        "candidate_inline": 96,
+        "baseline_inline": 12
+      },
+      "update_locations": {
+        "whole_loop_helper": 32,
+        "timed_cfg": 4
+      },
+      "outlined_timing_wrappers": 42,
+      "regions_with_cloned_ending_clock": 0,
+      "update_callgraph_truncated": [],
+      "phase_semantics": "ordered set traversal; not strict serial latency"
+    },
+    "and-40-2": {
+      "mask_variant": "and",
+      "mask_controls": {
+        "HT_HASH_MASK": 3,
+        "HT_VALUE_DIRECT": 0,
+        "HT_RECIPE_SCAN32": 0
+      },
+      "key_bits": 40,
+      "value_bytes": 2,
+      "binary_sha256": "e3e48c6190baf7d4d22f054fccd58f17811e2e323e0009b25b1b85b2eb2d94f4",
+      "assembly_sha256": "6074d3f502fe54a40a4f338bf877e1b17bb7cda7f2af6609a6b49fb7f7c9d279",
+      "source_sha256": "e8b82cd8f891dd76cc560c33f4ea854c18e69476a1bdad426b69e48f3fc5501a",
+      "compile_commands_sha256": "7ee4beb4e47fdf3e10b6aa8d8447b1ab942f259533499ef4f5fb83bef2701015",
+      "timed_regions": 144,
+      "read_regions": 108,
+      "update_regions": 36,
+      "read_locations": {
+        "candidate_inline": 75,
+        "candidate_whole_loop": 21,
+        "baseline_inline": 12
+      },
+      "update_locations": {
+        "whole_loop_helper": 32,
+        "timed_cfg": 4
+      },
+      "outlined_timing_wrappers": 10,
+      "regions_with_cloned_ending_clock": 0,
+      "update_callgraph_truncated": [],
+      "phase_semantics": "driver value-dependent serial; this audit qualifies call boundaries only"
+    }
+  },
+  "selected_read_regions": [
+    {
+      "K": 40,
+      "value_bytes": 2,
+      "kind": 1,
+      "reference_A": 10,
+      "A": 10,
+      "arm": 0,
+      "phase": "hit",
+      "source_phase": "hit",
+      "symbol": "void ht::trial<(ht::layout_solver::container)1, 10u, 0u>(orbital::allocation::Pool&, unsigned int, unsigned int)",
+      "clock": "0xa9e7",
+      "end": [
+        "0xae4c"
+      ],
+      "instructions": 238,
+      "calls": [],
+      "unknown_branches": [],
+      "phase_source_frames": [
+        "./build/hashtable-design-mask-avx512/./workbench/spikes/hashtable-design/value_width_bench.cpp:114",
+        "./build/hashtable-design-mask-avx512/./workbench/spikes/hashtable-design/value_width_bench.cpp:181"
+      ],
+      "mask_variant": "ordinary"
+    },
+    {
+      "K": 40,
+      "value_bytes": 2,
+      "kind": 1,
+      "reference_A": 10,
+      "A": 10,
+      "arm": 0,
+      "phase": "serial",
+      "source_phase": "serial",
+      "symbol": "void ht::trial<(ht::layout_solver::container)1, 10u, 0u>(orbital::allocation::Pool&, unsigned int, unsigned int)",
+      "clock": "0xb321",
+      "end": [
+        "0xb757"
+      ],
+      "instructions": 232,
+      "calls": [],
+      "unknown_branches": [],
+      "phase_source_frames": [
+        "./build/hashtable-design-mask-avx512/./workbench/spikes/hashtable-design/value_width_bench.cpp:114",
+        "./build/hashtable-design-mask-avx512/./workbench/spikes/hashtable-design/value_width_bench.cpp:183"
+      ],
+      "mask_variant": "ordinary"
+    },
+    {
+      "K": 40,
+      "value_bytes": 2,
+      "kind": 1,
+      "reference_A": 10,
+      "A": 9,
+      "arm": 1,
+      "phase": "hit",
+      "source_phase": "hit",
+      "symbol": "void ht::trial<(ht::layout_solver::container)1, 10u, 1u>(orbital::allocation::Pool&, unsigned int, unsigned int)",
+      "clock": "0x1fed1",
+      "end": [
+        "0x20309"
+      ],
+      "instructions": 238,
+      "calls": [],
+      "unknown_branches": [],
+      "phase_source_frames": [
+        "./build/hashtable-design-mask-avx512/./workbench/spikes/hashtable-design/value_width_bench.cpp:114",
+        "./build/hashtable-design-mask-avx512/./workbench/spikes/hashtable-design/value_width_bench.cpp:181"
+      ],
+      "mask_variant": "ordinary"
+    },
+    {
+      "K": 40,
+      "value_bytes": 2,
+      "kind": 1,
+      "reference_A": 10,
+      "A": 9,
+      "arm": 1,
+      "phase": "serial",
+      "source_phase": "serial",
+      "symbol": "void ht::trial<(ht::layout_solver::container)1, 10u, 1u>(orbital::allocation::Pool&, unsigned int, unsigned int)",
+      "clock": "0x207dd",
+      "end": [
+        "0x20c05"
+      ],
+      "instructions": 232,
+      "calls": [],
+      "unknown_branches": [],
+      "phase_source_frames": [
+        "./build/hashtable-design-mask-avx512/./workbench/spikes/hashtable-design/value_width_bench.cpp:114",
+        "./build/hashtable-design-mask-avx512/./workbench/spikes/hashtable-design/value_width_bench.cpp:183"
+      ],
+      "mask_variant": "ordinary"
+    },
+    {
+      "K": 40,
+      "value_bytes": 2,
+      "kind": 1,
+      "reference_A": 10,
+      "A": 10,
+      "arm": 0,
+      "phase": "hit",
+      "source_phase": "hit",
+      "symbol": "double ht::timed<void ht::trial<(ht::layout_solver::container)1, 10u, 0u>(orbital::allocation::Pool&, unsigned int, unsigned int)::'lambda2'()>(void ht::trial<(ht::layout_solver::container)1, 10u, 0u>(orbital::allocation::Pool&, unsigned int, unsigned int)::'lambda2'()&&)",
+      "clock": "0x116a1",
+      "end": [
+        "0x11ab3"
+      ],
+      "instructions": 232,
+      "calls": [],
+      "unknown_branches": [],
+      "phase_source_frames": [
+        "./build/hashtable-design-mask-avx512/./workbench/spikes/hashtable-design/value_width_bench.cpp:181"
+      ],
+      "wrapper_callsite": "0xa9ea",
+      "mask_variant": "split"
+    },
+    {
+      "K": 40,
+      "value_bytes": 2,
+      "kind": 1,
+      "reference_A": 10,
+      "A": 10,
+      "arm": 0,
+      "phase": "serial",
+      "source_phase": "serial",
+      "symbol": "double ht::timed<void ht::trial<(ht::layout_solver::container)1, 10u, 0u>(orbital::allocation::Pool&, unsigned int, unsigned int)::'lambda4'()>(void ht::trial<(ht::layout_solver::container)1, 10u, 0u>(orbital::allocation::Pool&, unsigned int, unsigned int)::'lambda4'()&&)",
+      "clock": "0x11f41",
+      "end": [
+        "0x1234e"
+      ],
+      "instructions": 230,
+      "calls": [],
+      "unknown_branches": [],
+      "phase_source_frames": [
+        "./build/hashtable-design-mask-avx512/./workbench/spikes/hashtable-design/value_width_bench.cpp:183"
+      ],
+      "wrapper_callsite": "0xaa58",
+      "mask_variant": "split"
+    },
+    {
+      "K": 40,
+      "value_bytes": 2,
+      "kind": 1,
+      "reference_A": 10,
+      "A": 9,
+      "arm": 1,
+      "phase": "hit",
+      "source_phase": "hit",
+      "symbol": "double ht::timed<void ht::trial<(ht::layout_solver::container)1, 10u, 1u>(orbital::allocation::Pool&, unsigned int, unsigned int)::'lambda2'()>(void ht::trial<(ht::layout_solver::container)1, 10u, 1u>(orbital::allocation::Pool&, unsigned int, unsigned int)::'lambda2'()&&)",
+      "clock": "0x26731",
+      "end": [
+        "0x26b43"
+      ],
+      "instructions": 232,
+      "calls": [],
+      "unknown_branches": [],
+      "phase_source_frames": [
+        "./build/hashtable-design-mask-avx512/./workbench/spikes/hashtable-design/value_width_bench.cpp:181"
+      ],
+      "wrapper_callsite": "0x2002c",
+      "mask_variant": "split"
+    },
+    {
+      "K": 40,
+      "value_bytes": 2,
+      "kind": 1,
+      "reference_A": 10,
+      "A": 9,
+      "arm": 1,
+      "phase": "serial",
+      "source_phase": "serial",
+      "symbol": "double ht::timed<void ht::trial<(ht::layout_solver::container)1, 10u, 1u>(orbital::allocation::Pool&, unsigned int, unsigned int)::'lambda4'()>(void ht::trial<(ht::layout_solver::container)1, 10u, 1u>(orbital::allocation::Pool&, unsigned int, unsigned int)::'lambda4'()&&)",
+      "clock": "0x26fd1",
+      "end": [
+        "0x273ce"
+      ],
+      "instructions": 230,
+      "calls": [],
+      "unknown_branches": [],
+      "phase_source_frames": [
+        "./build/hashtable-design-mask-avx512/./workbench/spikes/hashtable-design/value_width_bench.cpp:183"
+      ],
+      "wrapper_callsite": "0x2009a",
+      "mask_variant": "split"
+    },
+    {
+      "K": 40,
+      "value_bytes": 2,
+      "kind": 1,
+      "reference_A": 10,
+      "A": 10,
+      "arm": 0,
+      "phase": "hit",
+      "source_phase": "hit",
+      "symbol": "double ht::timed<void ht::trial<(ht::layout_solver::container)1, 10u, 0u>(orbital::allocation::Pool&, unsigned int, unsigned int)::'lambda2'()>(void ht::trial<(ht::layout_solver::container)1, 10u, 0u>(orbital::allocation::Pool&, unsigned int, unsigned int)::'lambda2'()&&)",
+      "clock": "0x11b51",
+      "end": [
+        "0x11f4d"
+      ],
+      "instructions": 230,
+      "calls": [],
+      "unknown_branches": [],
+      "phase_source_frames": [
+        "./build/hashtable-design-mask-avx512/./workbench/spikes/hashtable-design/value_width_bench.cpp:181"
+      ],
+      "wrapper_callsite": "0xaa5c",
+      "mask_variant": "paired"
+    },
+    {
+      "K": 40,
+      "value_bytes": 2,
+      "kind": 1,
+      "reference_A": 10,
+      "A": 10,
+      "arm": 0,
+      "phase": "serial",
+      "source_phase": "serial",
+      "symbol": "void ht::trial<(ht::layout_solver::container)1, 10u, 0u>(orbital::allocation::Pool&, unsigned int, unsigned int)",
+      "clock": "0xaaaa",
+      "end": [
+        "0xaf0e"
+      ],
+      "instructions": 236,
+      "calls": [],
+      "unknown_branches": [],
+      "phase_source_frames": [
+        "./build/hashtable-design-mask-avx512/./workbench/spikes/hashtable-design/value_width_bench.cpp:114",
+        "./build/hashtable-design-mask-avx512/./workbench/spikes/hashtable-design/value_width_bench.cpp:183"
+      ],
+      "mask_variant": "paired"
+    },
+    {
+      "K": 40,
+      "value_bytes": 2,
+      "kind": 1,
+      "reference_A": 10,
+      "A": 9,
+      "arm": 1,
+      "phase": "hit",
+      "source_phase": "hit",
+      "symbol": "double ht::timed<void ht::trial<(ht::layout_solver::container)1, 10u, 1u>(orbital::allocation::Pool&, unsigned int, unsigned int)::'lambda2'()>(void ht::trial<(ht::layout_solver::container)1, 10u, 1u>(orbital::allocation::Pool&, unsigned int, unsigned int)::'lambda2'()&&)",
+      "clock": "0x26a91",
+      "end": [
+        "0x26e8d"
+      ],
+      "instructions": 230,
+      "calls": [],
+      "unknown_branches": [],
+      "phase_source_frames": [
+        "./build/hashtable-design-mask-avx512/./workbench/spikes/hashtable-design/value_width_bench.cpp:181"
+      ],
+      "wrapper_callsite": "0x1fffc",
+      "mask_variant": "paired"
+    },
+    {
+      "K": 40,
+      "value_bytes": 2,
+      "kind": 1,
+      "reference_A": 10,
+      "A": 9,
+      "arm": 1,
+      "phase": "serial",
+      "source_phase": "serial",
+      "symbol": "void ht::trial<(ht::layout_solver::container)1, 10u, 1u>(orbital::allocation::Pool&, unsigned int, unsigned int)",
+      "clock": "0x2004a",
+      "end": [
+        "0x2047e"
+      ],
+      "instructions": 234,
+      "calls": [],
+      "unknown_branches": [],
+      "phase_source_frames": [
+        "./build/hashtable-design-mask-avx512/./workbench/spikes/hashtable-design/value_width_bench.cpp:114",
+        "./build/hashtable-design-mask-avx512/./workbench/spikes/hashtable-design/value_width_bench.cpp:183"
+      ],
+      "mask_variant": "paired"
+    },
+    {
+      "K": 40,
+      "value_bytes": 2,
+      "kind": 1,
+      "reference_A": 10,
+      "A": 10,
+      "arm": 0,
+      "phase": "hit",
+      "source_phase": "hit",
+      "symbol": "double ht::timed<void ht::trial<(ht::layout_solver::container)1, 10u, 0u>(orbital::allocation::Pool&, unsigned int, unsigned int)::'lambda2'()>(void ht::trial<(ht::layout_solver::container)1, 10u, 0u>(orbital::allocation::Pool&, unsigned int, unsigned int)::'lambda2'()&&)",
+      "clock": "0x11b71",
+      "end": [
+        "0x11f8e"
+      ],
+      "instructions": 229,
+      "calls": [],
+      "unknown_branches": [],
+      "phase_source_frames": [
+        "./build/hashtable-design-mask-avx512/./workbench/spikes/hashtable-design/value_width_bench.cpp:181"
+      ],
+      "wrapper_callsite": "0xaa58",
+      "mask_variant": "and"
+    },
+    {
+      "K": 40,
+      "value_bytes": 2,
+      "kind": 1,
+      "reference_A": 10,
+      "A": 10,
+      "arm": 0,
+      "phase": "serial",
+      "source_phase": "serial",
+      "symbol": "void ht::trial<(ht::layout_solver::container)1, 10u, 0u>(orbital::allocation::Pool&, unsigned int, unsigned int)",
+      "clock": "0xaaa6",
+      "end": [
+        "0xaefd"
+      ],
+      "instructions": 234,
+      "calls": [],
+      "unknown_branches": [],
+      "phase_source_frames": [
+        "./build/hashtable-design-mask-avx512/./workbench/spikes/hashtable-design/value_width_bench.cpp:114",
+        "./build/hashtable-design-mask-avx512/./workbench/spikes/hashtable-design/value_width_bench.cpp:183"
+      ],
+      "mask_variant": "and"
+    },
+    {
+      "K": 40,
+      "value_bytes": 2,
+      "kind": 1,
+      "reference_A": 10,
+      "A": 9,
+      "arm": 1,
+      "phase": "hit",
+      "source_phase": "hit",
+      "symbol": "double ht::timed<void ht::trial<(ht::layout_solver::container)1, 10u, 1u>(orbital::allocation::Pool&, unsigned int, unsigned int)::'lambda2'()>(void ht::trial<(ht::layout_solver::container)1, 10u, 1u>(orbital::allocation::Pool&, unsigned int, unsigned int)::'lambda2'()&&)",
+      "clock": "0x26c41",
+      "end": [
+        "0x2705e"
+      ],
+      "instructions": 229,
+      "calls": [],
+      "unknown_branches": [],
+      "phase_source_frames": [
+        "./build/hashtable-design-mask-avx512/./workbench/spikes/hashtable-design/value_width_bench.cpp:181"
+      ],
+      "wrapper_callsite": "0x20108",
+      "mask_variant": "and"
+    },
+    {
+      "K": 40,
+      "value_bytes": 2,
+      "kind": 1,
+      "reference_A": 10,
+      "A": 9,
+      "arm": 1,
+      "phase": "serial",
+      "source_phase": "serial",
+      "symbol": "void ht::trial<(ht::layout_solver::container)1, 10u, 1u>(orbital::allocation::Pool&, unsigned int, unsigned int)",
+      "clock": "0x20156",
+      "end": [
+        "0x2059d"
+      ],
+      "instructions": 233,
+      "calls": [],
+      "unknown_branches": [],
+      "phase_source_frames": [
+        "./build/hashtable-design-mask-avx512/./workbench/spikes/hashtable-design/value_width_bench.cpp:114",
+        "./build/hashtable-design-mask-avx512/./workbench/spikes/hashtable-design/value_width_bench.cpp:183"
+      ],
+      "mask_variant": "and"
+    }
+  ],
+  "assembly_verified": "All archived assembly matches llvm-objdump-21 output from each recovered timed ELF, except the input-path prologue.",
+  "limitations": [
+    "All reads fuse; map-byte dataflow and actual serial dependence require separate proof.",
+    "Set ordered rows are not strict serial lookup latency.",
+    "Mask controls retain composed16 selectors and identical physical inventories; other codegen changes are not ruled out.",
+    "Static CFG cycles do not establish dynamic call frequency or cost.",
+    "No instruction-cost, broad key/value-domain, multimap, growth, residence or preset conclusion."
+  ]
+}

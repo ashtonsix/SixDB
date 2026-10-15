@@ -1,0 +1,1956 @@
+{
+  "scope": "Actual successful continuing serial dataflow in12 selected composed32 map cases only: K16/W2 ReferenceA10 arm14(A9/U64),K40/W2 ReferenceA10 arm1(A9/U128),matched ordinary/exact Abseil arms16/17 in each binary,on Zen5 and Granite. No new builds/timings or ELF audits.",
+  "source_driver_sha256": "e8b82cd8f891dd76cc560c33f4ea854c18e69476a1bdad426b69e48f3fc5501a",
+  "source_semantics": {
+    "payload_bytes": 2,
+    "digest": "For W2, memcpy of both bytes into zero-initialized word; equivalent to unsigned16-bit load. No other payload lanes exist.",
+    "transition": "rank_next=(rank+digest(payload))%6144",
+    "source_edge_oracle": "Every payload delta independently checked against(next[rank]+6144-rank)%6144 outside timing; complete native phase checks passed in owning receipts.",
+    "cardinality": 6144,
+    "serial_iterations": 61440,
+    "ordinary_arm": 16,
+    "exact_arm": 17
+  },
+  "decision": "All12 selected backing-array/recipe successful paths have a true loaded-payload\u2192next-key/hash/address dependency. No constant hit result, Boolean branch or external next[] load replaces the2-byte delta.",
+  "cases": [
+    {
+      "host": "zen5",
+      "K": 16,
+      "W": 2,
+      "ReferenceA": 10,
+      "arm": 14,
+      "role": "candidate",
+      "complete_serial_CFG": {
+        "path": "build/hashtable-design/selector-native/zen5/audit-composed32-16-2/K16-W2-kind1-RefA10-arm14-serial.asm",
+        "sha256": "abdcdbf6c70098919406f17593ca6f22c79243e95ee4a8df8ab94f56a64a182b",
+        "bytes": 7224
+      },
+      "existing_native_audit": {
+        "path": "build/hashtable-design/selector-native/zen5/audit-composed32-16-2/codegen.json",
+        "sha256": "a75d20f37b2726c074849466af11fcdfd6d1002de7bcebcf1f379e48af4e6d7f",
+        "bytes": 227190
+      },
+      "binary_sha256_from_existing_audit": "7a24dcd222dbfd38242873babf940bc37594aa06a286b813feafad545b3efd67",
+      "retained_platform_context": {
+        "path": "workbench/spikes/hashtable-design/evidence/selector-zen5/context.json",
+        "sha256": "d6ab6c7b760d0c13e93d5313036dac8ec47b0d10531d6588f18d700cfdf20d29",
+        "bytes": 23229
+      },
+      "two_byte_payload_load": {
+        "address": "0xe6c70",
+        "instruction": "movzwl (%r10), %ecx"
+      },
+      "continuing_success_trace": [
+        {
+          "address": "0xe6c70",
+          "instruction": "movzwl (%r10), %ecx"
+        },
+        {
+          "address": "0xe6c74",
+          "instruction": "movl $0x1, %edx"
+        },
+        {
+          "address": "0xe6c79",
+          "instruction": "addq %rcx, %r13"
+        },
+        {
+          "address": "0xe6c7c",
+          "instruction": "jmp 0xe6a24"
+        },
+        {
+          "address": "0xe6a24",
+          "instruction": "movl %eax, %eax"
+        },
+        {
+          "address": "0xe6a26",
+          "instruction": "addq %rcx, %rax"
+        },
+        {
+          "address": "0xe6a29",
+          "instruction": "movabsq $0xaaaaaaaaaaaab, %rcx  # imm = 0xAAAAAAAAAAAAB"
+        },
+        {
+          "address": "0xe6a33",
+          "instruction": "movq %r13, %r10"
+        },
+        {
+          "address": "0xe6a36",
+          "instruction": "movq %rdx, %r13"
+        },
+        {
+          "address": "0xe6a39",
+          "instruction": "addq %r10, %r13"
+        },
+        {
+          "address": "0xe6a3c",
+          "instruction": "incl %r14d"
+        },
+        {
+          "address": "0xe6a3f",
+          "instruction": "movq %rax, %rdx"
+        },
+        {
+          "address": "0xe6a42",
+          "instruction": "mulxq %rcx, %rcx, %rcx"
+        },
+        {
+          "address": "0xe6a47",
+          "instruction": "shll $0xb, %ecx"
+        },
+        {
+          "address": "0xe6a4a",
+          "instruction": "leal (%rcx,%rcx,2), %ecx"
+        },
+        {
+          "address": "0xe6a4d",
+          "instruction": "subl %ecx, %eax"
+        },
+        {
+          "address": "0xe6a4f",
+          "instruction": "cmpl $0xf000, %r14d          # imm = 0xF000"
+        },
+        {
+          "address": "0xe6a56",
+          "instruction": "je 0xe6c81"
+        },
+        {
+          "address": "0xe6a5c",
+          "instruction": "imull $0xfd93, %eax, %r12d    # imm = 0xFD93"
+        },
+        {
+          "address": "0xe6a63",
+          "instruction": "movl %esi, %r11d"
+        },
+        {
+          "address": "0xe6a66",
+          "instruction": "movabsq $0x79d5f9e0de1e8cf5, %rcx # imm = 0x79D5F9E0DE1E8CF5"
+        },
+        {
+          "address": "0xe6a70",
+          "instruction": "movzwl %r12w, %r15d"
+        },
+        {
+          "address": "0xe6a74",
+          "instruction": "xorl %r15d, %r11d"
+        },
+        {
+          "address": "0xe6a77",
+          "instruction": "movl %r11d, %r10d"
+        },
+        {
+          "address": "0xe6a7a",
+          "instruction": "shrl $0x9, %r10d"
+        },
+        {
+          "address": "0xe6a7e",
+          "instruction": "movq %r10, %rdx"
+        },
+        {
+          "address": "0xe6a81",
+          "instruction": "xorq %rdi, %rdx"
+        },
+        {
+          "address": "0xe6a84",
+          "instruction": "mulxq %rcx, %rdx, %rcx"
+        },
+        {
+          "address": "0xe6a89",
+          "instruction": "xorl %edx, %ecx"
+        },
+        {
+          "address": "0xe6a8b",
+          "instruction": "xorl %r11d, %ecx"
+        },
+        {
+          "address": "0xe6a8e",
+          "instruction": "shll $0x6, %ecx"
+        },
+        {
+          "address": "0xe6a91",
+          "instruction": "andl $0x7fc0, %ecx           # imm = 0x7FC0"
+        },
+        {
+          "address": "0xe6a97",
+          "instruction": "movzbl (%r8,%rcx), %edx"
+        }
+      ],
+      "trace_instructions": 33,
+      "result": "true payload dependency; both bytes are loaded and the value reaches the next key/hash/lookup address",
+      "rank_transition_note": "No success flag substitutes for delta; MOV1 belongs to found/reduction only."
+    },
+    {
+      "host": "zen5",
+      "K": 16,
+      "W": 2,
+      "ReferenceA": 10,
+      "arm": 16,
+      "role": "ordinary-Abseil",
+      "complete_serial_CFG": {
+        "path": "build/hashtable-design/selector-native/zen5/audit-composed32-16-2/K16-W2-kind1-RefA10-arm16-serial.asm",
+        "sha256": "b582444a3ea9529488a03132db579feb52c3b2e8271fbbddf0a6797e3e1349a1",
+        "bytes": 7380
+      },
+      "existing_native_audit": {
+        "path": "build/hashtable-design/selector-native/zen5/audit-composed32-16-2/codegen.json",
+        "sha256": "a75d20f37b2726c074849466af11fcdfd6d1002de7bcebcf1f379e48af4e6d7f",
+        "bytes": 227190
+      },
+      "binary_sha256_from_existing_audit": "7a24dcd222dbfd38242873babf940bc37594aa06a286b813feafad545b3efd67",
+      "retained_platform_context": {
+        "path": "workbench/spikes/hashtable-design/evidence/selector-zen5/context.json",
+        "sha256": "d6ab6c7b760d0c13e93d5313036dac8ec47b0d10531d6588f18d700cfdf20d29",
+        "bytes": 23229
+      },
+      "two_byte_payload_load": {
+        "address": "0x1084b0",
+        "instruction": "movzwl 0x2(%r8,%r13,4), %edx"
+      },
+      "continuing_success_trace": [
+        {
+          "address": "0x1084b0",
+          "instruction": "movzwl 0x2(%r8,%r13,4), %edx"
+        },
+        {
+          "address": "0x1084b6",
+          "instruction": "movl $0x1, %r10d"
+        },
+        {
+          "address": "0x1084bc",
+          "instruction": "movabsq $0x79d5f9e0de1e8cf5, %r13 # imm = 0x79D5F9E0DE1E8CF5"
+        },
+        {
+          "address": "0x1084c6",
+          "instruction": "addq %rdx, %rbx"
+        },
+        {
+          "address": "0x1084c9",
+          "instruction": "movl %eax, %eax"
+        },
+        {
+          "address": "0x1084cb",
+          "instruction": "addq %rdx, %rax"
+        },
+        {
+          "address": "0x1084ce",
+          "instruction": "addq %r10, %rbx"
+        },
+        {
+          "address": "0x1084d1",
+          "instruction": "incl %r9d"
+        },
+        {
+          "address": "0x1084d4",
+          "instruction": "movq %rax, %rdx"
+        },
+        {
+          "address": "0x1084d7",
+          "instruction": "mulxq %r15, %rdx, %rdx"
+        },
+        {
+          "address": "0x1084dc",
+          "instruction": "shll $0xb, %edx"
+        },
+        {
+          "address": "0x1084df",
+          "instruction": "leal (%rdx,%rdx,2), %edx"
+        },
+        {
+          "address": "0x1084e2",
+          "instruction": "subl %edx, %eax"
+        },
+        {
+          "address": "0x1084e4",
+          "instruction": "cmpl $0xf000, %r9d           # imm = 0xF000"
+        },
+        {
+          "address": "0x1084eb",
+          "instruction": "je 0x10872e"
+        },
+        {
+          "address": "0x1084f1",
+          "instruction": "imull $0xfffffd93, %eax, %r10d # imm = 0xFFFFFD93"
+        },
+        {
+          "address": "0x1084f8",
+          "instruction": "prefetcht2 (%rdi)"
+        },
+        {
+          "address": "0x1084fb",
+          "instruction": "movzwl %r10w, %edx"
+        },
+        {
+          "address": "0x1084ff",
+          "instruction": "xorq %rcx, %rdx"
+        },
+        {
+          "address": "0x108502",
+          "instruction": "mulxq %r13, %r11, %rdx"
+        },
+        {
+          "address": "0x108507",
+          "instruction": "xorq %r11, %rdx"
+        },
+        {
+          "address": "0x10850a",
+          "instruction": "shrq $0x39, %r11"
+        },
+        {
+          "address": "0x10850e",
+          "instruction": "vmovd %r11d, %xmm0"
+        },
+        {
+          "address": "0x108513",
+          "instruction": "xorl %r11d, %r11d"
+        },
+        {
+          "address": "0x108516",
+          "instruction": "vpbroadcastb %xmm0, %xmm0"
+        },
+        {
+          "address": "0x10851b",
+          "instruction": "jmp 0x108450"
+        },
+        {
+          "address": "0x108450",
+          "instruction": "andq %rsi, %rdx"
+        },
+        {
+          "address": "0x108453",
+          "instruction": "prefetcht0 (%r8,%rdx,4)"
+        },
+        {
+          "address": "0x108458",
+          "instruction": "vmovdqu (%rdi,%rdx), %xmm1"
+        }
+      ],
+      "trace_instructions": 29,
+      "result": "true payload dependency; both bytes are loaded and the value reaches the next key/hash/lookup address",
+      "rank_transition_note": "No success flag substitutes for delta; MOV1 belongs to found/reduction only.",
+      "modulo_multiplier_definition": {
+        "address": "0x1051ed",
+        "instruction": "movabsq $0xaaaaaaaaaaaab, %r15",
+        "qualification": "Inspected enclosing archived assembly: no subsequentR15 writes before serial entry; ordinary calls preserveR15. Timed path uses invariantR15 withMULX thenquotient*6144 subtract."
+      }
+    },
+    {
+      "host": "zen5",
+      "K": 16,
+      "W": 2,
+      "ReferenceA": 10,
+      "arm": 17,
+      "role": "exact-Abseil",
+      "complete_serial_CFG": {
+        "path": "build/hashtable-design/selector-native/zen5/audit-composed32-16-2/K16-W2-kind1-RefA10-arm17-serial.asm",
+        "sha256": "f12fc8bb381d45267fe528628fec2157ff9d0e665ea0ee26710733467c814546",
+        "bytes": 7380
+      },
+      "existing_native_audit": {
+        "path": "build/hashtable-design/selector-native/zen5/audit-composed32-16-2/codegen.json",
+        "sha256": "a75d20f37b2726c074849466af11fcdfd6d1002de7bcebcf1f379e48af4e6d7f",
+        "bytes": 227190
+      },
+      "binary_sha256_from_existing_audit": "7a24dcd222dbfd38242873babf940bc37594aa06a286b813feafad545b3efd67",
+      "retained_platform_context": {
+        "path": "workbench/spikes/hashtable-design/evidence/selector-zen5/context.json",
+        "sha256": "d6ab6c7b760d0c13e93d5313036dac8ec47b0d10531d6588f18d700cfdf20d29",
+        "bytes": 23229
+      },
+      "two_byte_payload_load": {
+        "address": "0x114c40",
+        "instruction": "movzwl 0x2(%r8,%r13,4), %edx"
+      },
+      "continuing_success_trace": [
+        {
+          "address": "0x114c40",
+          "instruction": "movzwl 0x2(%r8,%r13,4), %edx"
+        },
+        {
+          "address": "0x114c46",
+          "instruction": "movl $0x1, %r10d"
+        },
+        {
+          "address": "0x114c4c",
+          "instruction": "movabsq $0x79d5f9e0de1e8cf5, %r13 # imm = 0x79D5F9E0DE1E8CF5"
+        },
+        {
+          "address": "0x114c56",
+          "instruction": "addq %rdx, %rbx"
+        },
+        {
+          "address": "0x114c59",
+          "instruction": "movl %eax, %eax"
+        },
+        {
+          "address": "0x114c5b",
+          "instruction": "addq %rdx, %rax"
+        },
+        {
+          "address": "0x114c5e",
+          "instruction": "addq %r10, %rbx"
+        },
+        {
+          "address": "0x114c61",
+          "instruction": "incl %r9d"
+        },
+        {
+          "address": "0x114c64",
+          "instruction": "movq %rax, %rdx"
+        },
+        {
+          "address": "0x114c67",
+          "instruction": "mulxq %r15, %rdx, %rdx"
+        },
+        {
+          "address": "0x114c6c",
+          "instruction": "shll $0xb, %edx"
+        },
+        {
+          "address": "0x114c6f",
+          "instruction": "leal (%rdx,%rdx,2), %edx"
+        },
+        {
+          "address": "0x114c72",
+          "instruction": "subl %edx, %eax"
+        },
+        {
+          "address": "0x114c74",
+          "instruction": "cmpl $0xf000, %r9d           # imm = 0xF000"
+        },
+        {
+          "address": "0x114c7b",
+          "instruction": "je 0x114ebe"
+        },
+        {
+          "address": "0x114c81",
+          "instruction": "imull $0xfffffd93, %eax, %r10d # imm = 0xFFFFFD93"
+        },
+        {
+          "address": "0x114c88",
+          "instruction": "prefetcht2 (%rdi)"
+        },
+        {
+          "address": "0x114c8b",
+          "instruction": "movzwl %r10w, %edx"
+        },
+        {
+          "address": "0x114c8f",
+          "instruction": "xorq %rcx, %rdx"
+        },
+        {
+          "address": "0x114c92",
+          "instruction": "mulxq %r13, %r11, %rdx"
+        },
+        {
+          "address": "0x114c97",
+          "instruction": "xorq %r11, %rdx"
+        },
+        {
+          "address": "0x114c9a",
+          "instruction": "shrq $0x39, %r11"
+        },
+        {
+          "address": "0x114c9e",
+          "instruction": "vmovd %r11d, %xmm0"
+        },
+        {
+          "address": "0x114ca3",
+          "instruction": "xorl %r11d, %r11d"
+        },
+        {
+          "address": "0x114ca6",
+          "instruction": "vpbroadcastb %xmm0, %xmm0"
+        },
+        {
+          "address": "0x114cab",
+          "instruction": "jmp 0x114be0"
+        },
+        {
+          "address": "0x114be0",
+          "instruction": "andq %rsi, %rdx"
+        },
+        {
+          "address": "0x114be3",
+          "instruction": "prefetcht0 (%r8,%rdx,4)"
+        },
+        {
+          "address": "0x114be8",
+          "instruction": "vmovdqu (%rdi,%rdx), %xmm1"
+        }
+      ],
+      "trace_instructions": 29,
+      "result": "true payload dependency; both bytes are loaded and the value reaches the next key/hash/lookup address",
+      "rank_transition_note": "No success flag substitutes for delta; MOV1 belongs to found/reduction only.",
+      "modulo_multiplier_definition": {
+        "address": "0x11197d",
+        "instruction": "movabsq $0xaaaaaaaaaaaab, %r15",
+        "qualification": "Inspected enclosing archived assembly: no subsequentR15 writes before serial entry; ordinary calls preserveR15. Timed path uses invariantR15 withMULX thenquotient*6144 subtract."
+      }
+    },
+    {
+      "host": "zen5",
+      "K": 40,
+      "W": 2,
+      "ReferenceA": 10,
+      "arm": 1,
+      "role": "candidate",
+      "complete_serial_CFG": {
+        "path": "build/hashtable-design/selector-native/zen5/audit-composed32-40-2/K40-W2-kind1-RefA10-arm1-serial.asm",
+        "sha256": "d823e3aa441be3f40038ffbd8f9ea2ebbd3c31ee9889cd1d310bf880eccd79c8",
+        "bytes": 7969
+      },
+      "existing_native_audit": {
+        "path": "build/hashtable-design/selector-native/zen5/audit-composed32-40-2/codegen.json",
+        "sha256": "d146cc09746ee62cd48cf941a4d1900866c782072bf065a717f09302b2880925",
+        "bytes": 229819
+      },
+      "binary_sha256_from_existing_audit": "a19254b0d8bb467f598aa58ded34ba45a1067e7522f6fbd9936237e9e4ff34ff",
+      "retained_platform_context": {
+        "path": "workbench/spikes/hashtable-design/evidence/selector-zen5/context.json",
+        "sha256": "d6ab6c7b760d0c13e93d5313036dac8ec47b0d10531d6588f18d700cfdf20d29",
+        "bytes": 23229
+      },
+      "two_byte_payload_load": {
+        "address": "0x20050",
+        "instruction": "movzwl (%r15), %edx"
+      },
+      "continuing_success_trace": [
+        {
+          "address": "0x20050",
+          "instruction": "movzwl (%r15), %edx"
+        },
+        {
+          "address": "0x20054",
+          "instruction": "movl $0x1, %edi"
+        },
+        {
+          "address": "0x20059",
+          "instruction": "addq %rdx, %r14"
+        },
+        {
+          "address": "0x2005c",
+          "instruction": "jmp 0x1fdd4"
+        },
+        {
+          "address": "0x1fdd4",
+          "instruction": "movq %r14, %rax"
+        },
+        {
+          "address": "0x1fdd7",
+          "instruction": "movq %rdi, %r14"
+        },
+        {
+          "address": "0x1fdda",
+          "instruction": "addq %rax, %r14"
+        },
+        {
+          "address": "0x1fddd",
+          "instruction": "addq %r10, %rdx"
+        },
+        {
+          "address": "0x1fde0",
+          "instruction": "movabsq $0xaaaaaaaaaaaab, %rax  # imm = 0xAAAAAAAAAAAAB"
+        },
+        {
+          "address": "0x1fdea",
+          "instruction": "incl %r8d"
+        },
+        {
+          "address": "0x1fded",
+          "instruction": "mulxq %rax, %rax, %rax"
+        },
+        {
+          "address": "0x1fdf2",
+          "instruction": "shll $0xb, %eax"
+        },
+        {
+          "address": "0x1fdf5",
+          "instruction": "leal (%rax,%rax,2), %eax"
+        },
+        {
+          "address": "0x1fdf8",
+          "instruction": "subl %eax, %edx"
+        },
+        {
+          "address": "0x1fdfa",
+          "instruction": "cmpl $0xf000, %r8d           # imm = 0xF000"
+        },
+        {
+          "address": "0x1fe01",
+          "instruction": "je 0x20072"
+        },
+        {
+          "address": "0x1fe07",
+          "instruction": "movabsq $0xb86659fd93, %rax     # imm = 0xB86659FD93"
+        },
+        {
+          "address": "0x1fe11",
+          "instruction": "movl %edx, %r10d"
+        },
+        {
+          "address": "0x1fe14",
+          "instruction": "movq %r10, %r11"
+        },
+        {
+          "address": "0x1fe17",
+          "instruction": "imulq %rax, %r11"
+        },
+        {
+          "address": "0x1fe1b",
+          "instruction": "movabsq $0x79d5f9e0de1e8cf5, %rax # imm = 0x79D5F9E0DE1E8CF5"
+        },
+        {
+          "address": "0x1fe25",
+          "instruction": "movq %r11, %rdi"
+        },
+        {
+          "address": "0x1fe28",
+          "instruction": "xorq %rcx, %rdi"
+        },
+        {
+          "address": "0x1fe2b",
+          "instruction": "bzhiq %rbp, %rdi, %r15"
+        },
+        {
+          "address": "0x1fe30",
+          "instruction": "movq %r15, %rbx"
+        },
+        {
+          "address": "0x1fe33",
+          "instruction": "shrq $0x9, %rbx"
+        },
+        {
+          "address": "0x1fe37",
+          "instruction": "movq %rbx, %rdx"
+        },
+        {
+          "address": "0x1fe3a",
+          "instruction": "xorq 0x8(%rsp), %rdx"
+        },
+        {
+          "address": "0x1fe3f",
+          "instruction": "mulxq %rax, %r9, %rdx"
+        },
+        {
+          "address": "0x1fe44",
+          "instruction": "xorl %r9d, %edi"
+        },
+        {
+          "address": "0x1fe47",
+          "instruction": "xorl %edx, %edi"
+        },
+        {
+          "address": "0x1fe49",
+          "instruction": "shll $0x7, %edi"
+        },
+        {
+          "address": "0x1fe4c",
+          "instruction": "movzwl %di, %r9d"
+        },
+        {
+          "address": "0x1fe50",
+          "instruction": "movzbl (%rsi,%r9), %edi"
+        }
+      ],
+      "trace_instructions": 34,
+      "result": "true payload dependency; both bytes are loaded and the value reaches the next key/hash/lookup address",
+      "rank_transition_note": "No success flag substitutes for delta; MOV1 belongs to found/reduction only."
+    },
+    {
+      "host": "zen5",
+      "K": 40,
+      "W": 2,
+      "ReferenceA": 10,
+      "arm": 16,
+      "role": "ordinary-Abseil",
+      "complete_serial_CFG": {
+        "path": "build/hashtable-design/selector-native/zen5/audit-composed32-40-2/K40-W2-kind1-RefA10-arm16-serial.asm",
+        "sha256": "8266efdea0da9ff786061159a9965d5c4cef10a1d21f3d69df349d0683eafa5a",
+        "bytes": 9235
+      },
+      "existing_native_audit": {
+        "path": "build/hashtable-design/selector-native/zen5/audit-composed32-40-2/codegen.json",
+        "sha256": "d146cc09746ee62cd48cf941a4d1900866c782072bf065a717f09302b2880925",
+        "bytes": 229819
+      },
+      "binary_sha256_from_existing_audit": "a19254b0d8bb467f598aa58ded34ba45a1067e7522f6fbd9936237e9e4ff34ff",
+      "retained_platform_context": {
+        "path": "workbench/spikes/hashtable-design/evidence/selector-zen5/context.json",
+        "sha256": "d6ab6c7b760d0c13e93d5313036dac8ec47b0d10531d6588f18d700cfdf20d29",
+        "bytes": 23229
+      },
+      "two_byte_payload_load": {
+        "address": "0x115059",
+        "instruction": "movzwl 0x8(%r15), %edx"
+      },
+      "continuing_success_trace": [
+        {
+          "address": "0x115059",
+          "instruction": "movzwl 0x8(%r15), %edx"
+        },
+        {
+          "address": "0x11505e",
+          "instruction": "addq %rdx, %rbx"
+        },
+        {
+          "address": "0x115061",
+          "instruction": "addq %r10, %rdx"
+        },
+        {
+          "address": "0x115064",
+          "instruction": "movabsq $0xaaaaaaaaaaaab, %r10  # imm = 0xAAAAAAAAAAAAB"
+        },
+        {
+          "address": "0x11506e",
+          "instruction": "addq %r11, %rbx"
+        },
+        {
+          "address": "0x115071",
+          "instruction": "incl %r8d"
+        },
+        {
+          "address": "0x115074",
+          "instruction": "mulxq %r10, %r10, %r10"
+        },
+        {
+          "address": "0x115079",
+          "instruction": "shll $0xb, %r10d"
+        },
+        {
+          "address": "0x11507d",
+          "instruction": "leal (%r10,%r10,2), %r10d"
+        },
+        {
+          "address": "0x115081",
+          "instruction": "subl %r10d, %edx"
+        },
+        {
+          "address": "0x115084",
+          "instruction": "cmpl $0xf000, %r8d           # imm = 0xF000"
+        },
+        {
+          "address": "0x11508b",
+          "instruction": "je 0x1150f9"
+        },
+        {
+          "address": "0x11508d",
+          "instruction": "movabsq $0xb86659fd93, %r11     # imm = 0xB86659FD93"
+        },
+        {
+          "address": "0x115097",
+          "instruction": "movl %edx, %r10d"
+        },
+        {
+          "address": "0x11509a",
+          "instruction": "movq %r10, %rdx"
+        },
+        {
+          "address": "0x11509d",
+          "instruction": "movabsq $0x79d5f9e0de1e8cf5, %r15 # imm = 0x79D5F9E0DE1E8CF5"
+        },
+        {
+          "address": "0x1150a7",
+          "instruction": "prefetcht2 (%rsi)"
+        },
+        {
+          "address": "0x1150aa",
+          "instruction": "xorl %r13d, %r13d"
+        },
+        {
+          "address": "0x1150ad",
+          "instruction": "imulq %r11, %rdx"
+        },
+        {
+          "address": "0x1150b1",
+          "instruction": "bzhiq %r9, %rdx, %r11"
+        },
+        {
+          "address": "0x1150b6",
+          "instruction": "movq %r11, %rdx"
+        },
+        {
+          "address": "0x1150b9",
+          "instruction": "xorq %rax, %rdx"
+        },
+        {
+          "address": "0x1150bc",
+          "instruction": "mulxq %r15, %r15, %rdx"
+        },
+        {
+          "address": "0x1150c1",
+          "instruction": "xorq %r15, %rdx"
+        },
+        {
+          "address": "0x1150c4",
+          "instruction": "shrq $0x39, %r15"
+        },
+        {
+          "address": "0x1150c8",
+          "instruction": "vmovd %r15d, %xmm0"
+        },
+        {
+          "address": "0x1150cd",
+          "instruction": "vpbroadcastb %xmm0, %xmm0"
+        },
+        {
+          "address": "0x1150d2",
+          "instruction": "jmp 0x114ff0"
+        },
+        {
+          "address": "0x114ff0",
+          "instruction": "andq %rcx, %rdx"
+        },
+        {
+          "address": "0x114ff3",
+          "instruction": "movq %rdx, %r15"
+        },
+        {
+          "address": "0x114ff6",
+          "instruction": "shlq $0x4, %r15"
+        },
+        {
+          "address": "0x114ffa",
+          "instruction": "prefetcht0 (%rdi,%r15)"
+        },
+        {
+          "address": "0x114fff",
+          "instruction": "vmovdqu (%rsi,%rdx), %xmm1"
+        }
+      ],
+      "trace_instructions": 33,
+      "result": "true payload dependency; both bytes are loaded and the value reaches the next key/hash/lookup address",
+      "rank_transition_note": "No success flag substitutes for delta; MOV1 belongs to found/reduction only."
+    },
+    {
+      "host": "zen5",
+      "K": 40,
+      "W": 2,
+      "ReferenceA": 10,
+      "arm": 17,
+      "role": "exact-Abseil",
+      "complete_serial_CFG": {
+        "path": "build/hashtable-design/selector-native/zen5/audit-composed32-40-2/K40-W2-kind1-RefA10-arm17-serial.asm",
+        "sha256": "73a4d24f2068c4feabc86291d0651703a4e47e0c13950a5c323fba72bb6e8e5f",
+        "bytes": 7995
+      },
+      "existing_native_audit": {
+        "path": "build/hashtable-design/selector-native/zen5/audit-composed32-40-2/codegen.json",
+        "sha256": "d146cc09746ee62cd48cf941a4d1900866c782072bf065a717f09302b2880925",
+        "bytes": 229819
+      },
+      "binary_sha256_from_existing_audit": "a19254b0d8bb467f598aa58ded34ba45a1067e7522f6fbd9936237e9e4ff34ff",
+      "retained_platform_context": {
+        "path": "workbench/spikes/hashtable-design/evidence/selector-zen5/context.json",
+        "sha256": "d6ab6c7b760d0c13e93d5313036dac8ec47b0d10531d6588f18d700cfdf20d29",
+        "bytes": 23229
+      },
+      "two_byte_payload_load": {
+        "address": "0x125620",
+        "instruction": "movzwl 0x6(%rdi,%r15,8), %edx"
+      },
+      "continuing_success_trace": [
+        {
+          "address": "0x125620",
+          "instruction": "movzwl 0x6(%rdi,%r15,8), %edx"
+        },
+        {
+          "address": "0x125626",
+          "instruction": "movl $0x1, %r11d"
+        },
+        {
+          "address": "0x12562c",
+          "instruction": "addq %rdx, %rbx"
+        },
+        {
+          "address": "0x12562f",
+          "instruction": "addq %r10, %rdx"
+        },
+        {
+          "address": "0x125632",
+          "instruction": "movabsq $0xaaaaaaaaaaaab, %r10  # imm = 0xAAAAAAAAAAAAB"
+        },
+        {
+          "address": "0x12563c",
+          "instruction": "addq %r11, %rbx"
+        },
+        {
+          "address": "0x12563f",
+          "instruction": "incl %r8d"
+        },
+        {
+          "address": "0x125642",
+          "instruction": "mulxq %r10, %r10, %r10"
+        },
+        {
+          "address": "0x125647",
+          "instruction": "shll $0xb, %r10d"
+        },
+        {
+          "address": "0x12564b",
+          "instruction": "leal (%r10,%r10,2), %r10d"
+        },
+        {
+          "address": "0x12564f",
+          "instruction": "subl %r10d, %edx"
+        },
+        {
+          "address": "0x125652",
+          "instruction": "cmpl $0xf000, %r8d           # imm = 0xF000"
+        },
+        {
+          "address": "0x125659",
+          "instruction": "je 0x1258fa"
+        },
+        {
+          "address": "0x12565f",
+          "instruction": "movl %edx, %r10d"
+        },
+        {
+          "address": "0x125662",
+          "instruction": "movabsq $0xb86659fd93, %rdx     # imm = 0xB86659FD93"
+        },
+        {
+          "address": "0x12566c",
+          "instruction": "movq %r10, %r11"
+        },
+        {
+          "address": "0x12566f",
+          "instruction": "movabsq $0x79d5f9e0de1e8cf5, %r14 # imm = 0x79D5F9E0DE1E8CF5"
+        },
+        {
+          "address": "0x125679",
+          "instruction": "prefetcht2 (%rsi)"
+        },
+        {
+          "address": "0x12567c",
+          "instruction": "xorl %r13d, %r13d"
+        },
+        {
+          "address": "0x12567f",
+          "instruction": "imulq %rdx, %r11"
+        },
+        {
+          "address": "0x125683",
+          "instruction": "bzhiq %r9, %r11, %rdx"
+        },
+        {
+          "address": "0x125688",
+          "instruction": "bzhiq %r9, %r11, %r11"
+        },
+        {
+          "address": "0x12568d",
+          "instruction": "xorq %rax, %rdx"
+        },
+        {
+          "address": "0x125690",
+          "instruction": "mulxq %r14, %r15, %rdx"
+        },
+        {
+          "address": "0x125695",
+          "instruction": "xorq %r15, %rdx"
+        },
+        {
+          "address": "0x125698",
+          "instruction": "shrq $0x39, %r15"
+        },
+        {
+          "address": "0x12569c",
+          "instruction": "vmovd %r15d, %xmm0"
+        },
+        {
+          "address": "0x1256a1",
+          "instruction": "vpbroadcastb %xmm0, %xmm0"
+        },
+        {
+          "address": "0x1256a6",
+          "instruction": "jmp 0x1255c0"
+        },
+        {
+          "address": "0x1255c0",
+          "instruction": "andq %rcx, %rdx"
+        },
+        {
+          "address": "0x1255c3",
+          "instruction": "prefetcht0 (%rdi,%rdx,8)"
+        },
+        {
+          "address": "0x1255c7",
+          "instruction": "vmovdqu (%rsi,%rdx), %xmm1"
+        }
+      ],
+      "trace_instructions": 32,
+      "result": "true payload dependency; both bytes are loaded and the value reaches the next key/hash/lookup address",
+      "rank_transition_note": "No success flag substitutes for delta; MOV1 belongs to found/reduction only."
+    },
+    {
+      "host": "granite",
+      "K": 16,
+      "W": 2,
+      "ReferenceA": 10,
+      "arm": 14,
+      "role": "candidate",
+      "complete_serial_CFG": {
+        "path": "build/hashtable-design/selector-native/granite/audit-composed32-16-2/K16-W2-kind1-RefA10-arm14-serial.asm",
+        "sha256": "fee3c7aa4a667616b968721ac44795e9567565c6ce3d787b81e71147f3e5db4c",
+        "bytes": 7337
+      },
+      "existing_native_audit": {
+        "path": "build/hashtable-design/selector-native/granite/audit-composed32-16-2/codegen.json",
+        "sha256": "941bb7a963ea2eedf0074cd4e2ce42be6d747f531eaf8554667448fdba6f9920",
+        "bytes": 227768
+      },
+      "binary_sha256_from_existing_audit": "89d4eeeeda7d6a437b40f7c9058b6cc6f31848e47c0ef00175476b9361b95c8a",
+      "retained_platform_context": {
+        "path": "workbench/spikes/hashtable-design/evidence/selector-granite/context.json",
+        "sha256": "2ed4bdccddb1f829b489e3e10e29fe1caf636f436860b554e5d2e2323d4efa98",
+        "bytes": 23295
+      },
+      "two_byte_payload_load": {
+        "address": "0xe4be0",
+        "instruction": "movzwl (%r10), %ecx"
+      },
+      "continuing_success_trace": [
+        {
+          "address": "0xe4be0",
+          "instruction": "movzwl (%r10), %ecx"
+        },
+        {
+          "address": "0xe4be4",
+          "instruction": "addq %rcx, %r13"
+        },
+        {
+          "address": "0xe4be7",
+          "instruction": "movl $0x1, %edx"
+        },
+        {
+          "address": "0xe4bec",
+          "instruction": "jmp 0xe49a4"
+        },
+        {
+          "address": "0xe49a4",
+          "instruction": "movq %r13, %r10"
+        },
+        {
+          "address": "0xe49a7",
+          "instruction": "movq %rdx, %r13"
+        },
+        {
+          "address": "0xe49aa",
+          "instruction": "addq %r10, %r13"
+        },
+        {
+          "address": "0xe49ad",
+          "instruction": "movl %eax, %eax"
+        },
+        {
+          "address": "0xe49af",
+          "instruction": "addq %rcx, %rax"
+        },
+        {
+          "address": "0xe49b2",
+          "instruction": "movq %rax, %rdx"
+        },
+        {
+          "address": "0xe49b5",
+          "instruction": "movabsq $0xaaaaaaaaaaaab, %rcx  # imm = 0xAAAAAAAAAAAAB"
+        },
+        {
+          "address": "0xe49bf",
+          "instruction": "mulxq %rcx, %rcx, %rcx"
+        },
+        {
+          "address": "0xe49c4",
+          "instruction": "shll $0xb, %ecx"
+        },
+        {
+          "address": "0xe49c7",
+          "instruction": "leal (%rcx,%rcx,2), %ecx"
+        },
+        {
+          "address": "0xe49ca",
+          "instruction": "subl %ecx, %eax"
+        },
+        {
+          "address": "0xe49cc",
+          "instruction": "incl %ebx"
+        },
+        {
+          "address": "0xe49ce",
+          "instruction": "cmpl $0xf000, %ebx           # imm = 0xF000"
+        },
+        {
+          "address": "0xe49d4",
+          "instruction": "je 0xe4bff"
+        },
+        {
+          "address": "0xe49da",
+          "instruction": "imull $0xfd93, %eax, %r12d    # imm = 0xFD93"
+        },
+        {
+          "address": "0xe49e1",
+          "instruction": "movzwl %r12w, %r15d"
+        },
+        {
+          "address": "0xe49e5",
+          "instruction": "movl %esi, %r11d"
+        },
+        {
+          "address": "0xe49e8",
+          "instruction": "xorl %r15d, %r11d"
+        },
+        {
+          "address": "0xe49eb",
+          "instruction": "movl %r11d, %r10d"
+        },
+        {
+          "address": "0xe49ee",
+          "instruction": "shrl $0x9, %r10d"
+        },
+        {
+          "address": "0xe49f2",
+          "instruction": "movq %r10, %rdx"
+        },
+        {
+          "address": "0xe49f5",
+          "instruction": "xorq %rdi, %rdx"
+        },
+        {
+          "address": "0xe49f8",
+          "instruction": "movabsq $0x79d5f9e0de1e8cf5, %rcx # imm = 0x79D5F9E0DE1E8CF5"
+        },
+        {
+          "address": "0xe4a02",
+          "instruction": "mulxq %rcx, %rdx, %rcx"
+        },
+        {
+          "address": "0xe4a07",
+          "instruction": "xorl %edx, %ecx"
+        },
+        {
+          "address": "0xe4a09",
+          "instruction": "xorl %r11d, %ecx"
+        },
+        {
+          "address": "0xe4a0c",
+          "instruction": "shll $0x6, %ecx"
+        },
+        {
+          "address": "0xe4a0f",
+          "instruction": "andl $0x7fc0, %ecx           # imm = 0x7FC0"
+        },
+        {
+          "address": "0xe4a15",
+          "instruction": "movzbl (%r8,%rcx), %edx"
+        }
+      ],
+      "trace_instructions": 33,
+      "result": "true payload dependency; both bytes are loaded and the value reaches the next key/hash/lookup address",
+      "rank_transition_note": "No success flag substitutes for delta; MOV1 belongs to found/reduction only."
+    },
+    {
+      "host": "granite",
+      "K": 16,
+      "W": 2,
+      "ReferenceA": 10,
+      "arm": 16,
+      "role": "ordinary-Abseil",
+      "complete_serial_CFG": {
+        "path": "build/hashtable-design/selector-native/granite/audit-composed32-16-2/K16-W2-kind1-RefA10-arm16-serial.asm",
+        "sha256": "878c51fbc49bd7dee3833067447b7960d2097473e0c79a7d52a33e97145284ae",
+        "bytes": 6065
+      },
+      "existing_native_audit": {
+        "path": "build/hashtable-design/selector-native/granite/audit-composed32-16-2/codegen.json",
+        "sha256": "941bb7a963ea2eedf0074cd4e2ce42be6d747f531eaf8554667448fdba6f9920",
+        "bytes": 227768
+      },
+      "binary_sha256_from_existing_audit": "89d4eeeeda7d6a437b40f7c9058b6cc6f31848e47c0ef00175476b9361b95c8a",
+      "retained_platform_context": {
+        "path": "workbench/spikes/hashtable-design/evidence/selector-granite/context.json",
+        "sha256": "2ed4bdccddb1f829b489e3e10e29fe1caf636f436860b554e5d2e2323d4efa98",
+        "bytes": 23295
+      },
+      "two_byte_payload_load": {
+        "address": "0x105190",
+        "instruction": "movzwl 0x2(%r8,%r13,4), %edx"
+      },
+      "continuing_success_trace": [
+        {
+          "address": "0x105190",
+          "instruction": "movzwl 0x2(%r8,%r13,4), %edx"
+        },
+        {
+          "address": "0x105196",
+          "instruction": "addq %rdx, %rbx"
+        },
+        {
+          "address": "0x105199",
+          "instruction": "movl $0x1, %r10d"
+        },
+        {
+          "address": "0x10519f",
+          "instruction": "movabsq $0x79d5f9e0de1e8cf5, %r13 # imm = 0x79D5F9E0DE1E8CF5"
+        },
+        {
+          "address": "0x1051a9",
+          "instruction": "addq %r10, %rbx"
+        },
+        {
+          "address": "0x1051ac",
+          "instruction": "movl %eax, %eax"
+        },
+        {
+          "address": "0x1051ae",
+          "instruction": "addq %rdx, %rax"
+        },
+        {
+          "address": "0x1051b1",
+          "instruction": "movq %rax, %rdx"
+        },
+        {
+          "address": "0x1051b4",
+          "instruction": "mulxq %r15, %rdx, %rdx"
+        },
+        {
+          "address": "0x1051b9",
+          "instruction": "shll $0xb, %edx"
+        },
+        {
+          "address": "0x1051bc",
+          "instruction": "leal (%rdx,%rdx,2), %edx"
+        },
+        {
+          "address": "0x1051bf",
+          "instruction": "subl %edx, %eax"
+        },
+        {
+          "address": "0x1051c1",
+          "instruction": "incl %r9d"
+        },
+        {
+          "address": "0x1051c4",
+          "instruction": "cmpl $0xf000, %r9d           # imm = 0xF000"
+        },
+        {
+          "address": "0x1051cb",
+          "instruction": "je 0x105352"
+        },
+        {
+          "address": "0x1051d1",
+          "instruction": "imull $0xfffffd93, %eax, %r10d # imm = 0xFFFFFD93"
+        },
+        {
+          "address": "0x1051d8",
+          "instruction": "prefetcht2 (%rdi)"
+        },
+        {
+          "address": "0x1051db",
+          "instruction": "movzwl %r10w, %edx"
+        },
+        {
+          "address": "0x1051df",
+          "instruction": "xorq %rcx, %rdx"
+        },
+        {
+          "address": "0x1051e2",
+          "instruction": "mulxq %r13, %r11, %rdx"
+        },
+        {
+          "address": "0x1051e7",
+          "instruction": "xorq %r11, %rdx"
+        },
+        {
+          "address": "0x1051ea",
+          "instruction": "shrq $0x39, %r11"
+        },
+        {
+          "address": "0x1051ee",
+          "instruction": "vpbroadcastb %r11d, %xmm0"
+        },
+        {
+          "address": "0x1051f4",
+          "instruction": "xorl %r11d, %r11d"
+        },
+        {
+          "address": "0x1051f7",
+          "instruction": "jmp 0x105130"
+        },
+        {
+          "address": "0x105130",
+          "instruction": "andq %rsi, %rdx"
+        },
+        {
+          "address": "0x105133",
+          "instruction": "prefetcht0 (%r8,%rdx,4)"
+        },
+        {
+          "address": "0x105138",
+          "instruction": "vmovdqu (%rdi,%rdx), %xmm1"
+        }
+      ],
+      "trace_instructions": 28,
+      "result": "true payload dependency; both bytes are loaded and the value reaches the next key/hash/lookup address",
+      "rank_transition_note": "No success flag substitutes for delta; MOV1 belongs to found/reduction only.",
+      "modulo_multiplier_definition": {
+        "address": "0x10296d",
+        "instruction": "movabsq $0xaaaaaaaaaaaab, %r15",
+        "qualification": "Inspected enclosing archived assembly: no subsequentR15 writes before serial entry; ordinary calls preserveR15. Timed path uses invariantR15 withMULX thenquotient*6144 subtract."
+      }
+    },
+    {
+      "host": "granite",
+      "K": 16,
+      "W": 2,
+      "ReferenceA": 10,
+      "arm": 17,
+      "role": "exact-Abseil",
+      "complete_serial_CFG": {
+        "path": "build/hashtable-design/selector-native/granite/audit-composed32-16-2/K16-W2-kind1-RefA10-arm17-serial.asm",
+        "sha256": "5757e0344d2d636b6d36e470e267e59e111c02d101b053d235cf68b5defbdca3",
+        "bytes": 6065
+      },
+      "existing_native_audit": {
+        "path": "build/hashtable-design/selector-native/granite/audit-composed32-16-2/codegen.json",
+        "sha256": "941bb7a963ea2eedf0074cd4e2ce42be6d747f531eaf8554667448fdba6f9920",
+        "bytes": 227768
+      },
+      "binary_sha256_from_existing_audit": "89d4eeeeda7d6a437b40f7c9058b6cc6f31848e47c0ef00175476b9361b95c8a",
+      "retained_platform_context": {
+        "path": "workbench/spikes/hashtable-design/evidence/selector-granite/context.json",
+        "sha256": "2ed4bdccddb1f829b489e3e10e29fe1caf636f436860b554e5d2e2323d4efa98",
+        "bytes": 23295
+      },
+      "two_byte_payload_load": {
+        "address": "0x1104d0",
+        "instruction": "movzwl 0x2(%r8,%r13,4), %edx"
+      },
+      "continuing_success_trace": [
+        {
+          "address": "0x1104d0",
+          "instruction": "movzwl 0x2(%r8,%r13,4), %edx"
+        },
+        {
+          "address": "0x1104d6",
+          "instruction": "addq %rdx, %rbx"
+        },
+        {
+          "address": "0x1104d9",
+          "instruction": "movl $0x1, %r10d"
+        },
+        {
+          "address": "0x1104df",
+          "instruction": "movabsq $0x79d5f9e0de1e8cf5, %r13 # imm = 0x79D5F9E0DE1E8CF5"
+        },
+        {
+          "address": "0x1104e9",
+          "instruction": "addq %r10, %rbx"
+        },
+        {
+          "address": "0x1104ec",
+          "instruction": "movl %eax, %eax"
+        },
+        {
+          "address": "0x1104ee",
+          "instruction": "addq %rdx, %rax"
+        },
+        {
+          "address": "0x1104f1",
+          "instruction": "movq %rax, %rdx"
+        },
+        {
+          "address": "0x1104f4",
+          "instruction": "mulxq %r15, %rdx, %rdx"
+        },
+        {
+          "address": "0x1104f9",
+          "instruction": "shll $0xb, %edx"
+        },
+        {
+          "address": "0x1104fc",
+          "instruction": "leal (%rdx,%rdx,2), %edx"
+        },
+        {
+          "address": "0x1104ff",
+          "instruction": "subl %edx, %eax"
+        },
+        {
+          "address": "0x110501",
+          "instruction": "incl %r9d"
+        },
+        {
+          "address": "0x110504",
+          "instruction": "cmpl $0xf000, %r9d           # imm = 0xF000"
+        },
+        {
+          "address": "0x11050b",
+          "instruction": "je 0x110692"
+        },
+        {
+          "address": "0x110511",
+          "instruction": "imull $0xfffffd93, %eax, %r10d # imm = 0xFFFFFD93"
+        },
+        {
+          "address": "0x110518",
+          "instruction": "prefetcht2 (%rdi)"
+        },
+        {
+          "address": "0x11051b",
+          "instruction": "movzwl %r10w, %edx"
+        },
+        {
+          "address": "0x11051f",
+          "instruction": "xorq %rcx, %rdx"
+        },
+        {
+          "address": "0x110522",
+          "instruction": "mulxq %r13, %r11, %rdx"
+        },
+        {
+          "address": "0x110527",
+          "instruction": "xorq %r11, %rdx"
+        },
+        {
+          "address": "0x11052a",
+          "instruction": "shrq $0x39, %r11"
+        },
+        {
+          "address": "0x11052e",
+          "instruction": "vpbroadcastb %r11d, %xmm0"
+        },
+        {
+          "address": "0x110534",
+          "instruction": "xorl %r11d, %r11d"
+        },
+        {
+          "address": "0x110537",
+          "instruction": "jmp 0x110470"
+        },
+        {
+          "address": "0x110470",
+          "instruction": "andq %rsi, %rdx"
+        },
+        {
+          "address": "0x110473",
+          "instruction": "prefetcht0 (%r8,%rdx,4)"
+        },
+        {
+          "address": "0x110478",
+          "instruction": "vmovdqu (%rdi,%rdx), %xmm1"
+        }
+      ],
+      "trace_instructions": 28,
+      "result": "true payload dependency; both bytes are loaded and the value reaches the next key/hash/lookup address",
+      "rank_transition_note": "No success flag substitutes for delta; MOV1 belongs to found/reduction only.",
+      "modulo_multiplier_definition": {
+        "address": "0x10dcad",
+        "instruction": "movabsq $0xaaaaaaaaaaaab, %r15",
+        "qualification": "Inspected enclosing archived assembly: no subsequentR15 writes before serial entry; ordinary calls preserveR15. Timed path uses invariantR15 withMULX thenquotient*6144 subtract."
+      }
+    },
+    {
+      "host": "granite",
+      "K": 40,
+      "W": 2,
+      "ReferenceA": 10,
+      "arm": 1,
+      "role": "candidate",
+      "complete_serial_CFG": {
+        "path": "build/hashtable-design/selector-native/granite/audit-composed32-40-2/K40-W2-kind1-RefA10-arm1-serial.asm",
+        "sha256": "5d30ab0e6c359cbf77691a09be9e1700014126101d81d02bece1c668c1cc6ee6",
+        "bytes": 7866
+      },
+      "existing_native_audit": {
+        "path": "build/hashtable-design/selector-native/granite/audit-composed32-40-2/codegen.json",
+        "sha256": "2dcee453814ad96b67e0fb80b1284863203b9874afc9f6f9d2816aa2444ebc38",
+        "bytes": 230390
+      },
+      "binary_sha256_from_existing_audit": "c925314692a64f319644cb581b6d9a71ebe4bea168116b493c5a6332cc5f928a",
+      "retained_platform_context": {
+        "path": "workbench/spikes/hashtable-design/evidence/selector-granite/context.json",
+        "sha256": "2ed4bdccddb1f829b489e3e10e29fe1caf636f436860b554e5d2e2323d4efa98",
+        "bytes": 23295
+      },
+      "two_byte_payload_load": {
+        "address": "0x1fae0",
+        "instruction": "movzwl (%r15), %edx"
+      },
+      "continuing_success_trace": [
+        {
+          "address": "0x1fae0",
+          "instruction": "movzwl (%r15), %edx"
+        },
+        {
+          "address": "0x1fae4",
+          "instruction": "addq %rdx, %rbx"
+        },
+        {
+          "address": "0x1fae7",
+          "instruction": "movl $0x1, %edi"
+        },
+        {
+          "address": "0x1faec",
+          "instruction": "jmp 0x1f864"
+        },
+        {
+          "address": "0x1f864",
+          "instruction": "movq %rbx, %rax"
+        },
+        {
+          "address": "0x1f867",
+          "instruction": "movq %rdi, %rbx"
+        },
+        {
+          "address": "0x1f86a",
+          "instruction": "addq %rax, %rbx"
+        },
+        {
+          "address": "0x1f86d",
+          "instruction": "addq %r10, %rdx"
+        },
+        {
+          "address": "0x1f870",
+          "instruction": "movabsq $0xaaaaaaaaaaaab, %rax  # imm = 0xAAAAAAAAAAAAB"
+        },
+        {
+          "address": "0x1f87a",
+          "instruction": "mulxq %rax, %rax, %rax"
+        },
+        {
+          "address": "0x1f87f",
+          "instruction": "shll $0xb, %eax"
+        },
+        {
+          "address": "0x1f882",
+          "instruction": "leal (%rax,%rax,2), %eax"
+        },
+        {
+          "address": "0x1f885",
+          "instruction": "subl %eax, %edx"
+        },
+        {
+          "address": "0x1f887",
+          "instruction": "incl %r8d"
+        },
+        {
+          "address": "0x1f88a",
+          "instruction": "cmpl $0xf000, %r8d           # imm = 0xF000"
+        },
+        {
+          "address": "0x1f891",
+          "instruction": "je 0x1faff"
+        },
+        {
+          "address": "0x1f897",
+          "instruction": "movl %edx, %r10d"
+        },
+        {
+          "address": "0x1f89a",
+          "instruction": "movq %r10, %r11"
+        },
+        {
+          "address": "0x1f89d",
+          "instruction": "movabsq $0xb86659fd93, %rax     # imm = 0xB86659FD93"
+        },
+        {
+          "address": "0x1f8a7",
+          "instruction": "imulq %rax, %r11"
+        },
+        {
+          "address": "0x1f8ab",
+          "instruction": "movq %r11, %rdi"
+        },
+        {
+          "address": "0x1f8ae",
+          "instruction": "xorq %rcx, %rdi"
+        },
+        {
+          "address": "0x1f8b1",
+          "instruction": "movb $0x28, %al"
+        },
+        {
+          "address": "0x1f8b3",
+          "instruction": "bzhiq %rax, %rdi, %r15"
+        },
+        {
+          "address": "0x1f8b8",
+          "instruction": "movq %r15, %r14"
+        },
+        {
+          "address": "0x1f8bb",
+          "instruction": "shrq $0x9, %r14"
+        },
+        {
+          "address": "0x1f8bf",
+          "instruction": "movq %r14, %rdx"
+        },
+        {
+          "address": "0x1f8c2",
+          "instruction": "xorq 0x8(%rsp), %rdx"
+        },
+        {
+          "address": "0x1f8c7",
+          "instruction": "movabsq $0x79d5f9e0de1e8cf5, %rax # imm = 0x79D5F9E0DE1E8CF5"
+        },
+        {
+          "address": "0x1f8d1",
+          "instruction": "mulxq %rax, %r9, %rdx"
+        },
+        {
+          "address": "0x1f8d6",
+          "instruction": "xorl %edx, %edi"
+        },
+        {
+          "address": "0x1f8d8",
+          "instruction": "xorl %r9d, %edi"
+        },
+        {
+          "address": "0x1f8db",
+          "instruction": "shll $0x7, %edi"
+        },
+        {
+          "address": "0x1f8de",
+          "instruction": "movzwl %di, %r9d"
+        },
+        {
+          "address": "0x1f8e2",
+          "instruction": "leaq (%rsi,%r9), %r12"
+        },
+        {
+          "address": "0x1f8e6",
+          "instruction": "movzbl (%rsi,%r9), %edi"
+        }
+      ],
+      "trace_instructions": 36,
+      "result": "true payload dependency; both bytes are loaded and the value reaches the next key/hash/lookup address",
+      "rank_transition_note": "No success flag substitutes for delta; MOV1 belongs to found/reduction only."
+    },
+    {
+      "host": "granite",
+      "K": 40,
+      "W": 2,
+      "ReferenceA": 10,
+      "arm": 16,
+      "role": "ordinary-Abseil",
+      "complete_serial_CFG": {
+        "path": "build/hashtable-design/selector-native/granite/audit-composed32-40-2/K40-W2-kind1-RefA10-arm16-serial.asm",
+        "sha256": "31f4588f7556e054f375809e53ec9e58a4511d3d38bc5fdbf1c172c2766169a6",
+        "bytes": 7583
+      },
+      "existing_native_audit": {
+        "path": "build/hashtable-design/selector-native/granite/audit-composed32-40-2/codegen.json",
+        "sha256": "2dcee453814ad96b67e0fb80b1284863203b9874afc9f6f9d2816aa2444ebc38",
+        "bytes": 230390
+      },
+      "binary_sha256_from_existing_audit": "c925314692a64f319644cb581b6d9a71ebe4bea168116b493c5a6332cc5f928a",
+      "retained_platform_context": {
+        "path": "workbench/spikes/hashtable-design/evidence/selector-granite/context.json",
+        "sha256": "2ed4bdccddb1f829b489e3e10e29fe1caf636f436860b554e5d2e2323d4efa98",
+        "bytes": 23295
+      },
+      "two_byte_payload_load": {
+        "address": "0x111823",
+        "instruction": "movzwl 0x8(%r15), %edx"
+      },
+      "continuing_success_trace": [
+        {
+          "address": "0x111823",
+          "instruction": "movzwl 0x8(%r15), %edx"
+        },
+        {
+          "address": "0x111828",
+          "instruction": "addq %rdx, %rbx"
+        },
+        {
+          "address": "0x11182b",
+          "instruction": "movl $0x1, %r11d"
+        },
+        {
+          "address": "0x111831",
+          "instruction": "addq %r11, %rbx"
+        },
+        {
+          "address": "0x111834",
+          "instruction": "addq %r10, %rdx"
+        },
+        {
+          "address": "0x111837",
+          "instruction": "movabsq $0xaaaaaaaaaaaab, %r10  # imm = 0xAAAAAAAAAAAAB"
+        },
+        {
+          "address": "0x111841",
+          "instruction": "mulxq %r10, %r10, %r10"
+        },
+        {
+          "address": "0x111846",
+          "instruction": "shll $0xb, %r10d"
+        },
+        {
+          "address": "0x11184a",
+          "instruction": "leal (%r10,%r10,2), %r10d"
+        },
+        {
+          "address": "0x11184e",
+          "instruction": "subl %r10d, %edx"
+        },
+        {
+          "address": "0x111851",
+          "instruction": "incl %r8d"
+        },
+        {
+          "address": "0x111854",
+          "instruction": "cmpl $0xf000, %r8d           # imm = 0xF000"
+        },
+        {
+          "address": "0x11185b",
+          "instruction": "je 0x1118c9"
+        },
+        {
+          "address": "0x11185d",
+          "instruction": "movl %edx, %r10d"
+        },
+        {
+          "address": "0x111860",
+          "instruction": "movq %r10, %rdx"
+        },
+        {
+          "address": "0x111863",
+          "instruction": "movabsq $0xb86659fd93, %r11     # imm = 0xB86659FD93"
+        },
+        {
+          "address": "0x11186d",
+          "instruction": "imulq %r11, %rdx"
+        },
+        {
+          "address": "0x111871",
+          "instruction": "bzhiq %r9, %rdx, %r11"
+        },
+        {
+          "address": "0x111876",
+          "instruction": "prefetcht2 (%rsi)"
+        },
+        {
+          "address": "0x111879",
+          "instruction": "movq %r11, %rdx"
+        },
+        {
+          "address": "0x11187c",
+          "instruction": "xorq %rax, %rdx"
+        },
+        {
+          "address": "0x11187f",
+          "instruction": "movabsq $0x79d5f9e0de1e8cf5, %r15 # imm = 0x79D5F9E0DE1E8CF5"
+        },
+        {
+          "address": "0x111889",
+          "instruction": "mulxq %r15, %r15, %rdx"
+        },
+        {
+          "address": "0x11188e",
+          "instruction": "xorq %r15, %rdx"
+        },
+        {
+          "address": "0x111891",
+          "instruction": "shrq $0x39, %r15"
+        },
+        {
+          "address": "0x111895",
+          "instruction": "vpbroadcastb %r15d, %xmm0"
+        },
+        {
+          "address": "0x11189b",
+          "instruction": "xorl %r13d, %r13d"
+        },
+        {
+          "address": "0x11189e",
+          "instruction": "jmp 0x1117c0"
+        },
+        {
+          "address": "0x1117c0",
+          "instruction": "andq %rcx, %rdx"
+        },
+        {
+          "address": "0x1117c3",
+          "instruction": "movq %rdx, %r15"
+        },
+        {
+          "address": "0x1117c6",
+          "instruction": "shlq $0x4, %r15"
+        },
+        {
+          "address": "0x1117ca",
+          "instruction": "prefetcht0 (%rdi,%r15)"
+        },
+        {
+          "address": "0x1117cf",
+          "instruction": "vmovdqu (%rsi,%rdx), %xmm1"
+        }
+      ],
+      "trace_instructions": 33,
+      "result": "true payload dependency; both bytes are loaded and the value reaches the next key/hash/lookup address",
+      "rank_transition_note": "No success flag substitutes for delta; MOV1 belongs to found/reduction only."
+    },
+    {
+      "host": "granite",
+      "K": 40,
+      "W": 2,
+      "ReferenceA": 10,
+      "arm": 17,
+      "role": "exact-Abseil",
+      "complete_serial_CFG": {
+        "path": "build/hashtable-design/selector-native/granite/audit-composed32-40-2/K40-W2-kind1-RefA10-arm17-serial.asm",
+        "sha256": "32e8a0b077cb23a876ad688a1ca09ce326108316cbd2002111f668063737b425",
+        "bytes": 8026
+      },
+      "existing_native_audit": {
+        "path": "build/hashtable-design/selector-native/granite/audit-composed32-40-2/codegen.json",
+        "sha256": "2dcee453814ad96b67e0fb80b1284863203b9874afc9f6f9d2816aa2444ebc38",
+        "bytes": 230390
+      },
+      "binary_sha256_from_existing_audit": "c925314692a64f319644cb581b6d9a71ebe4bea168116b493c5a6332cc5f928a",
+      "retained_platform_context": {
+        "path": "workbench/spikes/hashtable-design/evidence/selector-granite/context.json",
+        "sha256": "2ed4bdccddb1f829b489e3e10e29fe1caf636f436860b554e5d2e2323d4efa98",
+        "bytes": 23295
+      },
+      "two_byte_payload_load": {
+        "address": "0x11f3b0",
+        "instruction": "movzwl 0x6(%rdi,%r15,8), %edx"
+      },
+      "continuing_success_trace": [
+        {
+          "address": "0x11f3b0",
+          "instruction": "movzwl 0x6(%rdi,%r15,8), %edx"
+        },
+        {
+          "address": "0x11f3b6",
+          "instruction": "addq %rdx, %rbx"
+        },
+        {
+          "address": "0x11f3b9",
+          "instruction": "movl $0x1, %r11d"
+        },
+        {
+          "address": "0x11f3bf",
+          "instruction": "addq %r11, %rbx"
+        },
+        {
+          "address": "0x11f3c2",
+          "instruction": "addq %r10, %rdx"
+        },
+        {
+          "address": "0x11f3c5",
+          "instruction": "movabsq $0xaaaaaaaaaaaab, %r10  # imm = 0xAAAAAAAAAAAAB"
+        },
+        {
+          "address": "0x11f3cf",
+          "instruction": "mulxq %r10, %r10, %r10"
+        },
+        {
+          "address": "0x11f3d4",
+          "instruction": "shll $0xb, %r10d"
+        },
+        {
+          "address": "0x11f3d8",
+          "instruction": "leal (%r10,%r10,2), %r10d"
+        },
+        {
+          "address": "0x11f3dc",
+          "instruction": "subl %r10d, %edx"
+        },
+        {
+          "address": "0x11f3df",
+          "instruction": "incl %r8d"
+        },
+        {
+          "address": "0x11f3e2",
+          "instruction": "cmpl $0xf000, %r8d           # imm = 0xF000"
+        },
+        {
+          "address": "0x11f3e9",
+          "instruction": "je 0x11f459"
+        },
+        {
+          "address": "0x11f3eb",
+          "instruction": "movl %edx, %r10d"
+        },
+        {
+          "address": "0x11f3ee",
+          "instruction": "movq %r10, %r11"
+        },
+        {
+          "address": "0x11f3f1",
+          "instruction": "movabsq $0xb86659fd93, %rdx     # imm = 0xB86659FD93"
+        },
+        {
+          "address": "0x11f3fb",
+          "instruction": "imulq %rdx, %r11"
+        },
+        {
+          "address": "0x11f3ff",
+          "instruction": "bzhiq %r9, %r11, %rdx"
+        },
+        {
+          "address": "0x11f404",
+          "instruction": "xorq %rax, %rdx"
+        },
+        {
+          "address": "0x11f407",
+          "instruction": "movabsq $0x79d5f9e0de1e8cf5, %r14 # imm = 0x79D5F9E0DE1E8CF5"
+        },
+        {
+          "address": "0x11f411",
+          "instruction": "mulxq %r14, %r14, %rdx"
+        },
+        {
+          "address": "0x11f416",
+          "instruction": "prefetcht2 (%rsi)"
+        },
+        {
+          "address": "0x11f419",
+          "instruction": "xorq %r14, %rdx"
+        },
+        {
+          "address": "0x11f41c",
+          "instruction": "shrq $0x39, %r14"
+        },
+        {
+          "address": "0x11f420",
+          "instruction": "vpbroadcastb %r14d, %xmm0"
+        },
+        {
+          "address": "0x11f426",
+          "instruction": "bzhiq %r9, %r11, %r11"
+        },
+        {
+          "address": "0x11f42b",
+          "instruction": "xorl %r14d, %r14d"
+        },
+        {
+          "address": "0x11f42e",
+          "instruction": "jmp 0x11f340"
+        },
+        {
+          "address": "0x11f340",
+          "instruction": "andq %rcx, %rdx"
+        },
+        {
+          "address": "0x11f343",
+          "instruction": "prefetcht0 (%rdi,%rdx,8)"
+        },
+        {
+          "address": "0x11f347",
+          "instruction": "vmovdqu (%rsi,%rdx), %xmm1"
+        }
+      ],
+      "trace_instructions": 31,
+      "result": "true payload dependency; both bytes are loaded and the value reaches the next key/hash/lookup address",
+      "rank_transition_note": "No success flag substitutes for delta; MOV1 belongs to found/reduction only."
+    }
+  ],
+  "limits": [
+    "Only inspected K16 arm14,K40 arm1 and eachmatched Abseil baseline,ReferenceA10,W2,composed32,onthese two native builds. No broader serial qualification.",
+    "Dataflow is for continuing successful lookups. Last iteration exits and missing-key alternatives have0 delta; independent full-hit cycle oracles constrain the measured history.",
+    "Abseil binaries include small-table/SOO alternatives. These are excluded from the backing-array proof:6144 distinct live keys cannot use one-element SOO; reserve/build/content oracles establish the large table.",
+    "This validates dependency,not lookup-only latency: measured serial operation includes payload digest,rank addition/modulo,key production,hash,lookup and reduction.",
+    "No memory-level service,cache-residence,hardware scheduling or performance-causality claim."
+  ]
+}

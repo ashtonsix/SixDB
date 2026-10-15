@@ -1,0 +1,23 @@
+{
+  "files_sha256": {
+    "compiler.txt": "5b17cd9bfa01ae4b276d020d757aeed82b232d4dacef417a833e5ba69a5307da",
+    "host.json": "c8dcbf3f695fa741c13ef07206a99fbf5238fec1035cb073d94839189bdadfeb",
+    "job.json": "f6cec08ab2758d4dabd69203a516abb6f74621eef30b149423b01080c5b17b98",
+    "lscpu.json": "63bec28bf3a4771fad8dbac75fd88d0b5baa94d46f34a8a69c6980668920a449",
+    "qualified.txt": "e401e3006c533060b5f2141a3fbec18636b8b7dee85b3742d1911257c52794e6",
+    "qualified/inputs.json": "6f0004a5fb7e3202cb089ec53cedfb0adbdc69df5dc614ab663ea32ce23436a3",
+    "qualified/summary.csv": "bb4c42294e5fd397ad38d254c515c7d5f0598caf32c4043d26eb8464b9db5760",
+    "worker-result.json": "b9d1630f964ab019043710765f48c32444ee98f4d3b337258da66483702e92a6"
+  },
+  "format": 2,
+  "full_bundle": "artifact.json",
+  "kind": "files",
+  "regenerate": [
+    "python3",
+    "workbench/spikes/hashtable/capacity-report.py",
+    "{evidence}/panel",
+    "--output",
+    "{evidence}/reproduced"
+  ],
+  "regenerate_from": "archive"
+}

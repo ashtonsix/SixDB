@@ -1,0 +1,40 @@
+{
+  "files_sha256": {
+    "codegen.json": "56758f6348a5bca8d35694f42f3190fe9d07a3878c669220856dbcf20516d4e6",
+    "compiler.txt": "5b17cd9bfa01ae4b276d020d757aeed82b232d4dacef417a833e5ba69a5307da",
+    "hot-resources.txt": "c2bb34857e15ff00eef72d0139a6fa3249c2d5551dab0baf04f9e85d1db6ca60",
+    "hot-summary.json": "5ad2804dfe471a7ed906fd4b3b59004bb7334c7844c1d3cd102d46adac29f6bc",
+    "hot.csv": "3795f6e59b845276ba6e81fbedd7c0e660c789e2bccdb47addb2b7852cba6588",
+    "job.json": "162e1266cb51d99a933bb4dd4de920ab141124e4332d54877bbd2e29c1994f22",
+    "large-resources.txt": "331b024cd0164911e5ea2dfe9d68718c5bc1d145aea8ccbdd506b77571f5ef68",
+    "large-summary.json": "eeb837841fdf9ef20bbb2652968ef8b4b69910c23f7ae42594f8048f4c6bd56a",
+    "large.csv": "e1a87965d99ec1e9ac4f0e9bbe7991c6d38e97f70232d71af2a9f9175b01cd36",
+    "lscpu.json": "b6816ad6943b3f5d140971ea83efc0e3ea061ae5f07133f519e10d44b0257bd8",
+    "topology.txt": "e706a1ef8ead4214a0b67a5ba11aee5bacb9c8a1da80971efab0e6362d5583aa",
+    "worker-result.json": "1d2a55f1f2878261723808ca7d5000578bccf71a49d974805f3d93c15496e3bd",
+    "workers-check.csv": "0a9b10e974b94bc98e5dd874629f26fc3d31658998b345349a286659c11f0283"
+  },
+  "format": 2,
+  "full_bundle": "artifact.json",
+  "kind": "files",
+  "regenerate": [
+    [
+      "python3",
+      "workbench/spikes/hashtable/workers-report.py",
+      "{evidence}/hot.csv",
+      "--n",
+      "1800",
+      "--output",
+      "{evidence}/hot-report.json"
+    ],
+    [
+      "python3",
+      "workbench/spikes/hashtable/workers-report.py",
+      "{evidence}/large.csv",
+      "--n",
+      "110000",
+      "--output",
+      "{evidence}/large-report.json"
+    ]
+  ]
+}

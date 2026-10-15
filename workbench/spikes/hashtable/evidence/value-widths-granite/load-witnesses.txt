@@ -1,0 +1,131 @@
+Selected native value-load witnesses; addresses refer to ELF identities in codegen-W*.json.
+These excerpts supplement the complete source/DWARF call-boundary audit, not a timing model.
+W2 uses actual two-byte loads; W16 folds both eight-byte halves. MM serial folds every value into the next-rank dependency.
+Full CFGs and helpers regenerate with the retained audit scripts.
+
+K40-W2-kind1-A10-arm0-hit.asm
+b10c: leaq 0x5e(%r10,%rcx), %r10
+b111: movzwl (%r10), %eax
+b115: addq %rax, %r12
+b118: movl $0x1, %eax
+
+K40-W2-kind1-A10-arm3-hit.asm
+3eea8: movzwl 0x8(%rax), %edi
+3eeac: addq %rdi, %r8
+3eeaf: xorl %edi, %edi
+
+K40-W16-kind1-A10-arm0-hit.asm
+afe0: shll $0x4, %ecx
+afe3: leaq (%rbx,%rcx), %rax
+afe7: leaq 0x8(%rcx,%rbx), %rcx
+afec: jmp 0xb034 <void ht::trial<(ht::layout_solver::container)1, 10u, 0u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x2dc4>
+afee: testb %r10b, %r10b
+aff1: movl $0x0, %eax
+aff6: cmoveq %rax, %r9
+affa: movl %ebx, %eax
+affc: imulq %r9, %rax
+b000: addq %rax, %rcx
+b003: subq %r14, %rcx
+b006: leaq 0xd(%rcx), %rax
+b00a: addq $0x15, %rcx
+b00e: movabsq $0x79d5f9e0de1e8cf5, %rbp # imm = 0x79D5F9E0DE1E8CF5
+b018: movq 0x50(%rsp), %r8
+b01d: movq 0xa8(%rsp), %r14
+b025: jmp 0xb034 <void ht::trial<(ht::layout_solver::container)1, 10u, 0u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x2dc4>
+b027: shll $0x4, %ecx
+b02a: leaq 0x22(%rbx,%rcx), %rax
+b02f: leaq 0x2a(%rbx,%rcx), %rcx
+b034: movq (%rcx), %rcx
+b037: xorq (%rax), %rcx
+b03a: addq %rcx, %r12
+b03d: movl $0x1, %eax
+
+K40-W16-kind1-A10-arm3-hit.asm
+430e9: movq 0x10(%rdi), %r11
+430ed: xorq 0x8(%rdi), %r11
+430f1: addq %r11, %rsi
+430f4: jmp 0x430c0 <double ht::timed<void ht::trial<(ht::layout_solver::container)1, 10u, 3u>(orbital::allocation::Pool&, unsigned int, unsigned int)::'lambda2'()>(void ht::trial<(ht::layout_solver::container)1, 10u, 3u>(orbital::allocation::Pool&, unsigned int, unsigned int)::'lambda2'()&&)+0x1d0>
+
+K40-W16-kind2-A10-arm1-hit.asm
+70ae0: movq (%rsi,%r9), %rdi
+70ae4: xorq -0x8(%rsi,%r9), %rdi
+70ae9: addq %rdi, %r14
+70aec: addq $0x10, %r9
+70af0: cmpq %r9, %r11
+70af3: jne 0x70ae0 <double ht::timed<void ht::trial<(ht::layout_solver::container)2, 10u, 1u>(orbital::allocation::Pool&, unsigned int, unsigned int)::'lambda2'()>(void ht::trial<(ht::layout_solver::container)2, 10u, 1u>(orbital::allocation::Pool&, unsigned int, unsigned int)::'lambda2'()&&)+0x460>
+70af5: jmp 0x709d0 <double ht::timed<void ht::trial<(ht::layout_solver::container)2, 10u, 1u>(orbital::allocation::Pool&, unsigned int, unsigned int)::'lambda2'()>(void ht::trial<(ht::layout_solver::container)2, 10u, 1u>(orbital::allocation::Pool&, unsigned int, unsigned int)::'lambda2'()&&)+0x350>
+
+K40-W16-kind2-A10-arm1-hit.asm
+70b0d: leaq (%r12,%rsi), %rcx
+70b11: leaq -0x8(%r12,%rsi), %rdx
+70b16: movzbl 0x8(%r12,%rsi), %r9d
+70b1c: movq 0x18(%rsp), %rdi
+70b21: movq 0x10(%rsp), %r8
+70b26: movq 0x8(%rsp), %r15
+70b2b: movq (%rsp), %r12
+70b2f: movq (%rdx), %rsi
+70b32: cmpb $0x1, %r9b
+70b36: je 0x709b2 <double ht::timed<void ht::trial<(ht::layout_solver::container)2, 10u, 1u>(orbital::allocation::Pool&, unsigned int, unsigned int)::'lambda2'()>(void ht::trial<(ht::layout_solver::container)2, 10u, 1u>(orbital::allocation::Pool&, unsigned int, unsigned int)::'lambda2'()&&)+0x332>
+70b3c: xorq (%rcx), %rsi
+70b3f: addq %rsi, %r14
+70b42: movl $0x1, %ecx
+70b47: jmp 0x70712 <double ht::timed<void ht::trial<(ht::layout_solver::container)2, 10u, 1u>(orbital::allocation::Pool&, unsigned int, unsigned int)::'lambda2'()>(void ht::trial<(ht::layout_solver::container)2, 10u, 1u>(orbital::allocation::Pool&, unsigned int, unsigned int)::'lambda2'()&&)+0x92>
+70b4c: movl %ecx, %esi
+70b4e: shll $0x4, %esi
+
+K40-W16-kind2-A10-arm3-hit-helper.asm
+   9cfe0:      	movq	0x8(%r15), %r13
+   9cfe4:      	xorq	(%r15), %r13
+   9cfe7:      	addq	%r13, %rax
+   9cfea:      	addq	$0x10, %r15
+   9cfee:      	incq	%r12
+   9cff1:      	jne	0x9cfe0 <void ht::trial<(ht::layout_solver::container)2, 10u, 3u>(orbital::allocation::Pool&, unsigned int, unsigned int)::'lambda'(bool)::operator()(bool) const+0xe80>
+   9cff3:      	cmpq	$0x70, %r8
+
+K40-W16-kind1-A10-arm0-serial.asm
+b7cb: leaq 0x22(%r13,%rcx), %rax
+b7d0: leaq 0x2a(%r13,%rcx), %rcx
+b7d5: movq (%rcx), %rdx
+b7d8: xorq (%rax), %rdx
+b7db: addq %rdx, %r15
+b7de: movl $0x1, %eax
+b7e3: jmp 0xb514 <void ht::trial<(ht::layout_solver::container)1, 10u, 0u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x32a4>
+
+K40-W16-kind1-A10-arm3-serial.asm
+3dc86: movq 0x10(%rsi), %rcx
+3dc8a: xorq 0x8(%rsi), %rcx
+3dc8e: addq %rcx, %r10
+3dc91: jmp 0x3dca2 <void ht::trial<(ht::layout_solver::container)1, 10u, 3u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x3742>
+3dca0: xorl %ecx, %ecx
+3dca2: xorl %r11d, %r11d
+3dca5: cmpq %rdx, %rdi
+3dca8: sete %r11b
+3dcac: addq %r10, %r11
+3dcaf: addq %rax, %rcx
+3dcb2: movq %rcx, %rdx
+3dcb5: mulxq %r14, %rax, %rax
+3dcba: shrq %rax
+3dcbd: andq $-0x800, %rax           # imm = 0xF800
+3dcc3: leaq (%rax,%rax,2), %rax
+3dcc7: subq %rax, %rcx
+3dcca: movq %rcx, %rax
+
+K40-W16-kind2-A10-arm1-serial.asm
+71600: movq (%rsi,%r9), %rax
+71604: xorq -0x8(%rsi,%r9), %rax
+71609: xorq %rax, %rdx
+7160c: addq %rax, %rbp
+7160f: addq $0x10, %r9
+71613: cmpq %r9, %r8
+71616: jne 0x71600 <double ht::timed<void ht::trial<(ht::layout_solver::container)2, 10u, 1u>(orbital::allocation::Pool&, unsigned int, unsigned int)::'lambda4'()>(void ht::trial<(ht::layout_solver::container)2, 10u, 1u>(orbital::allocation::Pool&, unsigned int, unsigned int)::'lambda4'()&&)+0x4f0>
+71618: jmp 0x714d0 <double ht::timed<void ht::trial<(ht::layout_solver::container)2, 10u, 1u>(orbital::allocation::Pool&, unsigned int, unsigned int)::'lambda4'()>(void ht::trial<(ht::layout_solver::container)2, 10u, 1u>(orbital::allocation::Pool&, unsigned int, unsigned int)::'lambda4'()&&)+0x3c0>
+
+K40-W16-kind2-A10-arm3-serial.asm
+95f00: movq 0x8(%r11,%r14), %r8
+95f05: xorq (%r11,%r14), %r8
+95f09: xorq %r8, %rdx
+95f0c: addq %r8, %rbx
+95f0f: addq $0x10, %r14
+95f13: cmpq %r14, %r12
+95f16: jne 0x95f00 <void ht::trial<(ht::layout_solver::container)2, 10u, 3u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x4980>
+95f18: jmp 0x95db2 <void ht::trial<(ht::layout_solver::container)2, 10u, 3u>(orbital::allocation::Pool&, unsigned int, unsigned int)+0x4832>

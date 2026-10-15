@@ -1,0 +1,247 @@
+{
+  "rows": 59400,
+  "process_cases": 220,
+  "processes": 1320,
+  "repetitions_per_process": 5,
+  "forward_reverse_runs_per_variant": 2,
+  "read_regions": 540,
+  "update_regions": 180,
+  "report_sha256": "c20614483e21728f52a9c84a7eba22ce7689a61e302aee9ab4ff0d757daca53e",
+  "source_elf_audits": {
+    "control/W2": {
+      "binary_sha256": "353416a203be69c460efa243f6a4313a92e16d7bde9281e5a822f5a82f6c6743",
+      "source_sha256": "310cbb41d43f13fd5d4f862804779666e92a130d12a9bd5327ca13ed538087ad",
+      "generated_header_sha256": {
+        "promoted.h": "5fb810c84c6211b6e5055d07fbed8a78d75fcec2c15f09edea2175d755dfedda"
+      },
+      "probe_receipt_sha256": "37df3c99d4c369ceecf0c4a7a0da63b9699ee5b3ca2b8069ae72015187446541",
+      "read_locations": {
+        "candidate_whole_loop": 30,
+        "candidate_inline": 6,
+        "baseline_inline": 20,
+        "baseline_whole_loop": 4
+      },
+      "update_locations": {
+        "timed_cfg": 20
+      },
+      "repeated_update_boundary_categories": {
+        "promoted_owner": 12,
+        "abseil_boundary": 20
+      }
+    },
+    "control/W8": {
+      "binary_sha256": "4affebc7269f1d89a4cc3ce83421ec529ffb1f40f5ac9c40890a6273c1ed91d8",
+      "source_sha256": "310cbb41d43f13fd5d4f862804779666e92a130d12a9bd5327ca13ed538087ad",
+      "generated_header_sha256": {
+        "promoted.h": "5fb810c84c6211b6e5055d07fbed8a78d75fcec2c15f09edea2175d755dfedda"
+      },
+      "probe_receipt_sha256": "37df3c99d4c369ceecf0c4a7a0da63b9699ee5b3ca2b8069ae72015187446541",
+      "read_locations": {
+        "candidate_inline": 24,
+        "baseline_inline": 20,
+        "candidate_whole_loop": 12,
+        "baseline_whole_loop": 4
+      },
+      "update_locations": {
+        "timed_cfg": 20
+      },
+      "repeated_update_boundary_categories": {
+        "promoted_owner": 12,
+        "abseil_boundary": 20
+      }
+    },
+    "control/W16": {
+      "binary_sha256": "d1c8b5796d473ae77de41dbb7f5b979ce882e54c1e3ea2a1437b50fc992f3450",
+      "source_sha256": "310cbb41d43f13fd5d4f862804779666e92a130d12a9bd5327ca13ed538087ad",
+      "generated_header_sha256": {
+        "promoted.h": "5fb810c84c6211b6e5055d07fbed8a78d75fcec2c15f09edea2175d755dfedda"
+      },
+      "probe_receipt_sha256": "37df3c99d4c369ceecf0c4a7a0da63b9699ee5b3ca2b8069ae72015187446541",
+      "read_locations": {
+        "candidate_inline": 25,
+        "baseline_inline": 20,
+        "candidate_whole_loop": 11,
+        "baseline_whole_loop": 4
+      },
+      "update_locations": {
+        "timed_cfg": 20
+      },
+      "repeated_update_boundary_categories": {
+        "promoted_owner": 12,
+        "abseil_boundary": 20
+      }
+    },
+    "fused/W2": {
+      "binary_sha256": "a1d489ebb63a0e9424c30a1e6d77baef4e76add597c484b54a934dab861d6d51",
+      "source_sha256": "310cbb41d43f13fd5d4f862804779666e92a130d12a9bd5327ca13ed538087ad",
+      "generated_header_sha256": {
+        "promoted.h": "dfd87544001f7752e8f94e664077e1a1f08afdf50071b341d8522d56bc523f66"
+      },
+      "probe_receipt_sha256": "37df3c99d4c369ceecf0c4a7a0da63b9699ee5b3ca2b8069ae72015187446541",
+      "read_locations": {
+        "candidate_whole_loop": 30,
+        "candidate_inline": 6,
+        "baseline_inline": 20,
+        "baseline_whole_loop": 4
+      },
+      "update_locations": {
+        "whole_loop_helper": 12,
+        "timed_cfg": 8
+      },
+      "repeated_update_boundary_categories": {
+        "key_overflow": 12,
+        "abseil_boundary": 20,
+        "linked_values": 12,
+        "orbital_owner_runtime": 12,
+        "allocation_runtime": 24,
+        "byte_transfer": 6
+      }
+    },
+    "fused/W8": {
+      "binary_sha256": "0cd04952ec7e768678e50cabb2a63fb0e99ec172302bc38d9594e6e984f128ed",
+      "source_sha256": "310cbb41d43f13fd5d4f862804779666e92a130d12a9bd5327ca13ed538087ad",
+      "generated_header_sha256": {
+        "promoted.h": "dfd87544001f7752e8f94e664077e1a1f08afdf50071b341d8522d56bc523f66"
+      },
+      "probe_receipt_sha256": "37df3c99d4c369ceecf0c4a7a0da63b9699ee5b3ca2b8069ae72015187446541",
+      "read_locations": {
+        "candidate_inline": 24,
+        "baseline_inline": 20,
+        "candidate_whole_loop": 12,
+        "baseline_whole_loop": 4
+      },
+      "update_locations": {
+        "whole_loop_helper": 12,
+        "timed_cfg": 8
+      },
+      "repeated_update_boundary_categories": {
+        "key_overflow": 12,
+        "abseil_boundary": 20,
+        "linked_values": 12,
+        "orbital_owner_runtime": 12,
+        "allocation_runtime": 24,
+        "byte_transfer": 8
+      }
+    },
+    "fused/W16": {
+      "binary_sha256": "bbe1bed46a9e9d153f05df19ca9144fa024c8806f7224ebc6e94b57df681ee5f",
+      "source_sha256": "310cbb41d43f13fd5d4f862804779666e92a130d12a9bd5327ca13ed538087ad",
+      "generated_header_sha256": {
+        "promoted.h": "dfd87544001f7752e8f94e664077e1a1f08afdf50071b341d8522d56bc523f66"
+      },
+      "probe_receipt_sha256": "37df3c99d4c369ceecf0c4a7a0da63b9699ee5b3ca2b8069ae72015187446541",
+      "read_locations": {
+        "candidate_inline": 25,
+        "baseline_inline": 20,
+        "candidate_whole_loop": 11,
+        "baseline_whole_loop": 4
+      },
+      "update_locations": {
+        "whole_loop_helper": 12,
+        "timed_cfg": 8
+      },
+      "repeated_update_boundary_categories": {
+        "key_overflow": 12,
+        "abseil_boundary": 20,
+        "linked_values": 12,
+        "orbital_owner_runtime": 12,
+        "allocation_runtime": 24,
+        "byte_transfer": 6
+      }
+    },
+    "partial/W2": {
+      "binary_sha256": "1495ae19e797de4b3025523436b91a70b20eb7dad7220f254400ff7f1f1f5549",
+      "source_sha256": "310cbb41d43f13fd5d4f862804779666e92a130d12a9bd5327ca13ed538087ad",
+      "generated_header_sha256": {
+        "promoted.h": "b01bbd42da1c82d769c20e8f19e07c732c0307a6f1d8df25125b1ed4b8587498",
+        "record_table.h": "cb6ea07907472d6bdac733b4493affa97276a10e629e66cdde8d202711c2068e"
+      },
+      "probe_receipt_sha256": "37df3c99d4c369ceecf0c4a7a0da63b9699ee5b3ca2b8069ae72015187446541",
+      "read_locations": {
+        "candidate_whole_loop": 30,
+        "candidate_inline": 6,
+        "baseline_inline": 20,
+        "baseline_whole_loop": 4
+      },
+      "update_locations": {
+        "whole_loop_helper": 12,
+        "timed_cfg": 8
+      },
+      "repeated_update_boundary_categories": {
+        "key_overflow": 12,
+        "abseil_boundary": 20,
+        "linked_values": 12,
+        "orbital_owner_runtime": 12,
+        "allocation_runtime": 24,
+        "byte_transfer": 6
+      }
+    },
+    "partial/W8": {
+      "binary_sha256": "5492ef9aabac9065885a04e2d7d4b7f7c57ff6774d90fbfe93bd837bcacbee81",
+      "source_sha256": "310cbb41d43f13fd5d4f862804779666e92a130d12a9bd5327ca13ed538087ad",
+      "generated_header_sha256": {
+        "promoted.h": "b01bbd42da1c82d769c20e8f19e07c732c0307a6f1d8df25125b1ed4b8587498",
+        "record_table.h": "cb6ea07907472d6bdac733b4493affa97276a10e629e66cdde8d202711c2068e"
+      },
+      "probe_receipt_sha256": "37df3c99d4c369ceecf0c4a7a0da63b9699ee5b3ca2b8069ae72015187446541",
+      "read_locations": {
+        "candidate_inline": 24,
+        "baseline_inline": 20,
+        "candidate_whole_loop": 12,
+        "baseline_whole_loop": 4
+      },
+      "update_locations": {
+        "whole_loop_helper": 12,
+        "timed_cfg": 8
+      },
+      "repeated_update_boundary_categories": {
+        "key_overflow": 12,
+        "abseil_boundary": 20,
+        "linked_values": 12,
+        "orbital_owner_runtime": 12,
+        "allocation_runtime": 24,
+        "byte_transfer": 8
+      }
+    },
+    "partial/W16": {
+      "binary_sha256": "9dd460e649839148cfc899162d6fd933740799555e88cf0b6bc4598cba4187b6",
+      "source_sha256": "310cbb41d43f13fd5d4f862804779666e92a130d12a9bd5327ca13ed538087ad",
+      "generated_header_sha256": {
+        "promoted.h": "b01bbd42da1c82d769c20e8f19e07c732c0307a6f1d8df25125b1ed4b8587498",
+        "record_table.h": "cb6ea07907472d6bdac733b4493affa97276a10e629e66cdde8d202711c2068e"
+      },
+      "probe_receipt_sha256": "37df3c99d4c369ceecf0c4a7a0da63b9699ee5b3ca2b8069ae72015187446541",
+      "read_locations": {
+        "candidate_inline": 25,
+        "baseline_inline": 20,
+        "candidate_whole_loop": 11,
+        "baseline_whole_loop": 4
+      },
+      "update_locations": {
+        "whole_loop_helper": 12,
+        "timed_cfg": 8
+      },
+      "repeated_update_boundary_categories": {
+        "key_overflow": 12,
+        "abseil_boundary": 20,
+        "linked_values": 12,
+        "orbital_owner_runtime": 12,
+        "allocation_runtime": 24,
+        "byte_transfer": 6
+      }
+    }
+  },
+  "checks": [
+    "exact seed947 case schedule and forward/reverse variant order",
+    "all argv, return codes, stderr, serialized timestamps and raw process chunks",
+    "timed ELF equals generated probe receipt and audited ELF for every variant/width",
+    "archived summary exactly reproduced from captured report source",
+    "full physical inventories and populations equal across variants"
+  ],
+  "limitations": [
+    "CFG recurrence is not measured call frequency or cost.",
+    "Fresh processes share one machine; repetitions are not independent machine trials.",
+    "Unchanged-source Abseil controls still vary in placement and runtime seed.",
+    "Population fields describe build; memory snapshots exclude transient peaks."
+  ]
+}

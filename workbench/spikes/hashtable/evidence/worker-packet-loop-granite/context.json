@@ -1,0 +1,2268 @@
+{
+  "processes": [
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_40_0_0_policy5-n256-p8-order0-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_40_0_0_policy5",
+        "bench",
+        "5",
+        "256",
+        "8"
+      ],
+      "start": 1792051582.3922336,
+      "end": 1792051582.5121286,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_40_0_0_policy5-n256-p128-order0-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_40_0_0_policy5",
+        "bench",
+        "5",
+        "256",
+        "128"
+      ],
+      "start": 1792051582.512287,
+      "end": 1792051582.64194,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_40_0_0_policy5-n1024-p8-order0-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_40_0_0_policy5",
+        "bench",
+        "5",
+        "1024",
+        "8"
+      ],
+      "start": 1792051582.6421149,
+      "end": 1792051582.76449,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_40_0_0_policy5-n1024-p128-order0-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_40_0_0_policy5",
+        "bench",
+        "5",
+        "1024",
+        "128"
+      ],
+      "start": 1792051582.7646637,
+      "end": 1792051583.082648,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_40_0_0_policy5_packet1-n256-p8-order0-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_40_0_0_policy5_packet1",
+        "bench",
+        "5",
+        "256",
+        "8"
+      ],
+      "start": 1792051583.0829017,
+      "end": 1792051583.2001107,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_40_0_0_policy5_packet1-n256-p128-order0-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_40_0_0_policy5_packet1",
+        "bench",
+        "5",
+        "256",
+        "128"
+      ],
+      "start": 1792051583.200284,
+      "end": 1792051583.3319771,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_40_0_0_policy5_packet1-n1024-p8-order0-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_40_0_0_policy5_packet1",
+        "bench",
+        "5",
+        "1024",
+        "8"
+      ],
+      "start": 1792051583.332151,
+      "end": 1792051583.4545565,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_40_0_0_policy5_packet1-n1024-p128-order0-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_40_0_0_policy5_packet1",
+        "bench",
+        "5",
+        "1024",
+        "128"
+      ],
+      "start": 1792051583.4547591,
+      "end": 1792051583.7737021,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_40_0_0_policy5_packet2-n256-p8-order0-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_40_0_0_policy5_packet2",
+        "bench",
+        "5",
+        "256",
+        "8"
+      ],
+      "start": 1792051583.7738945,
+      "end": 1792051583.8931096,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_40_0_0_policy5_packet2-n256-p128-order0-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_40_0_0_policy5_packet2",
+        "bench",
+        "5",
+        "256",
+        "128"
+      ],
+      "start": 1792051583.8932948,
+      "end": 1792051584.0250826,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_40_0_0_policy5_packet2-n1024-p8-order0-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_40_0_0_policy5_packet2",
+        "bench",
+        "5",
+        "1024",
+        "8"
+      ],
+      "start": 1792051584.0252762,
+      "end": 1792051584.1474802,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_40_0_0_policy5_packet2-n1024-p128-order0-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_40_0_0_policy5_packet2",
+        "bench",
+        "5",
+        "1024",
+        "128"
+      ],
+      "start": 1792051584.1476943,
+      "end": 1792051584.4622176,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_40_1_2_policy5-n256-p8-order0-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_40_1_2_policy5",
+        "bench",
+        "5",
+        "256",
+        "8"
+      ],
+      "start": 1792051584.4624305,
+      "end": 1792051584.5791273,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_40_1_2_policy5-n256-p128-order0-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_40_1_2_policy5",
+        "bench",
+        "5",
+        "256",
+        "128"
+      ],
+      "start": 1792051584.579343,
+      "end": 1792051584.7109358,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_40_1_2_policy5-n1024-p8-order0-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_40_1_2_policy5",
+        "bench",
+        "5",
+        "1024",
+        "8"
+      ],
+      "start": 1792051584.711152,
+      "end": 1792051584.8335345,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_40_1_2_policy5-n1024-p128-order0-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_40_1_2_policy5",
+        "bench",
+        "5",
+        "1024",
+        "128"
+      ],
+      "start": 1792051584.8337831,
+      "end": 1792051585.1929877,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_40_1_2_policy5_packet1-n256-p8-order0-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_40_1_2_policy5_packet1",
+        "bench",
+        "5",
+        "256",
+        "8"
+      ],
+      "start": 1792051585.1932244,
+      "end": 1792051585.3131194,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_40_1_2_policy5_packet1-n256-p128-order0-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_40_1_2_policy5_packet1",
+        "bench",
+        "5",
+        "256",
+        "128"
+      ],
+      "start": 1792051585.3133464,
+      "end": 1792051585.4459395,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_40_1_2_policy5_packet1-n1024-p8-order0-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_40_1_2_policy5_packet1",
+        "bench",
+        "5",
+        "1024",
+        "8"
+      ],
+      "start": 1792051585.4461718,
+      "end": 1792051585.5684779,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_40_1_2_policy5_packet1-n1024-p128-order0-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_40_1_2_policy5_packet1",
+        "bench",
+        "5",
+        "1024",
+        "128"
+      ],
+      "start": 1792051585.5687335,
+      "end": 1792051585.9024417,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_40_1_2_policy5_packet2-n256-p8-order0-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_40_1_2_policy5_packet2",
+        "bench",
+        "5",
+        "256",
+        "8"
+      ],
+      "start": 1792051585.9027069,
+      "end": 1792051586.0201313,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_40_1_2_policy5_packet2-n256-p128-order0-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_40_1_2_policy5_packet2",
+        "bench",
+        "5",
+        "256",
+        "128"
+      ],
+      "start": 1792051586.0203943,
+      "end": 1792051586.1528854,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_40_1_2_policy5_packet2-n1024-p8-order0-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_40_1_2_policy5_packet2",
+        "bench",
+        "5",
+        "1024",
+        "8"
+      ],
+      "start": 1792051586.1531475,
+      "end": 1792051586.2754412,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_40_1_2_policy5_packet2-n1024-p128-order0-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_40_1_2_policy5_packet2",
+        "bench",
+        "5",
+        "1024",
+        "128"
+      ],
+      "start": 1792051586.2757225,
+      "end": 1792051586.6022897,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_40_2_2_policy5-n256-p8-order0-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_40_2_2_policy5",
+        "bench",
+        "5",
+        "256",
+        "8"
+      ],
+      "start": 1792051586.602641,
+      "end": 1792051586.7222683,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_40_2_2_policy5-n256-p128-order0-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_40_2_2_policy5",
+        "bench",
+        "5",
+        "256",
+        "128"
+      ],
+      "start": 1792051586.722541,
+      "end": 1792051586.9892135,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_40_2_2_policy5-n1024-p8-order0-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_40_2_2_policy5",
+        "bench",
+        "5",
+        "1024",
+        "8"
+      ],
+      "start": 1792051586.9894943,
+      "end": 1792051587.113112,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_40_2_2_policy5-n1024-p128-order0-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_40_2_2_policy5",
+        "bench",
+        "5",
+        "1024",
+        "128"
+      ],
+      "start": 1792051587.113399,
+      "end": 1792051587.8686414,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_40_2_2_policy5_packet1-n256-p8-order0-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_40_2_2_policy5_packet1",
+        "bench",
+        "5",
+        "256",
+        "8"
+      ],
+      "start": 1792051587.86898,
+      "end": 1792051587.9886382,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_40_2_2_policy5_packet1-n256-p128-order0-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_40_2_2_policy5_packet1",
+        "bench",
+        "5",
+        "256",
+        "128"
+      ],
+      "start": 1792051587.9889536,
+      "end": 1792051588.255253,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_40_2_2_policy5_packet1-n1024-p8-order0-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_40_2_2_policy5_packet1",
+        "bench",
+        "5",
+        "1024",
+        "8"
+      ],
+      "start": 1792051588.2555578,
+      "end": 1792051588.3780632,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_40_2_2_policy5_packet1-n1024-p128-order0-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_40_2_2_policy5_packet1",
+        "bench",
+        "5",
+        "1024",
+        "128"
+      ],
+      "start": 1792051588.3783689,
+      "end": 1792051589.1387641,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_40_2_2_policy5_packet2-n256-p8-order0-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_40_2_2_policy5_packet2",
+        "bench",
+        "5",
+        "256",
+        "8"
+      ],
+      "start": 1792051589.1390848,
+      "end": 1792051589.258273,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_40_2_2_policy5_packet2-n256-p128-order0-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_40_2_2_policy5_packet2",
+        "bench",
+        "5",
+        "256",
+        "128"
+      ],
+      "start": 1792051589.2585907,
+      "end": 1792051589.5252063,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_40_2_2_policy5_packet2-n1024-p8-order0-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_40_2_2_policy5_packet2",
+        "bench",
+        "5",
+        "1024",
+        "8"
+      ],
+      "start": 1792051589.52553,
+      "end": 1792051589.6470563,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_40_2_2_policy5_packet2-n1024-p128-order0-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_40_2_2_policy5_packet2",
+        "bench",
+        "5",
+        "1024",
+        "128"
+      ],
+      "start": 1792051589.64739,
+      "end": 1792051590.3931983,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_64_1_64_policy5-n256-p8-order0-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_64_1_64_policy5",
+        "bench",
+        "5",
+        "256",
+        "8"
+      ],
+      "start": 1792051590.3935556,
+      "end": 1792051590.513247,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_64_1_64_policy5-n256-p128-order0-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_64_1_64_policy5",
+        "bench",
+        "5",
+        "256",
+        "128"
+      ],
+      "start": 1792051590.5135834,
+      "end": 1792051590.7119267,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_64_1_64_policy5-n1024-p8-order0-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_64_1_64_policy5",
+        "bench",
+        "5",
+        "1024",
+        "8"
+      ],
+      "start": 1792051590.7122715,
+      "end": 1792051590.8349562,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_64_1_64_policy5-n1024-p128-order0-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_64_1_64_policy5",
+        "bench",
+        "5",
+        "1024",
+        "128"
+      ],
+      "start": 1792051590.8353019,
+      "end": 1792051591.482832,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_64_1_64_policy5_packet1-n256-p8-order0-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_64_1_64_policy5_packet1",
+        "bench",
+        "5",
+        "256",
+        "8"
+      ],
+      "start": 1792051591.483198,
+      "end": 1792051591.6011884,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_64_1_64_policy5_packet1-n256-p128-order0-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_64_1_64_policy5_packet1",
+        "bench",
+        "5",
+        "256",
+        "128"
+      ],
+      "start": 1792051591.6015465,
+      "end": 1792051591.7954328,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_64_1_64_policy5_packet1-n1024-p8-order0-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_64_1_64_policy5_packet1",
+        "bench",
+        "5",
+        "1024",
+        "8"
+      ],
+      "start": 1792051591.7958012,
+      "end": 1792051591.9189503,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_64_1_64_policy5_packet1-n1024-p128-order0-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_64_1_64_policy5_packet1",
+        "bench",
+        "5",
+        "1024",
+        "128"
+      ],
+      "start": 1792051591.919329,
+      "end": 1792051592.6000834,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_64_1_64_policy5_packet2-n256-p8-order0-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_64_1_64_policy5_packet2",
+        "bench",
+        "5",
+        "256",
+        "8"
+      ],
+      "start": 1792051592.6004663,
+      "end": 1792051592.7202091,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_64_1_64_policy5_packet2-n256-p128-order0-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_64_1_64_policy5_packet2",
+        "bench",
+        "5",
+        "256",
+        "128"
+      ],
+      "start": 1792051592.7205849,
+      "end": 1792051592.91548,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_64_1_64_policy5_packet2-n1024-p8-order0-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_64_1_64_policy5_packet2",
+        "bench",
+        "5",
+        "1024",
+        "8"
+      ],
+      "start": 1792051592.9158657,
+      "end": 1792051593.037938,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_64_1_64_policy5_packet2-n1024-p128-order0-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_64_1_64_policy5_packet2",
+        "bench",
+        "5",
+        "1024",
+        "128"
+      ],
+      "start": 1792051593.038324,
+      "end": 1792051593.6872706,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_64_2_64_policy5-n256-p8-order0-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_64_2_64_policy5",
+        "bench",
+        "5",
+        "256",
+        "8"
+      ],
+      "start": 1792051593.6876917,
+      "end": 1792051593.8077683,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_64_2_64_policy5-n256-p128-order0-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_64_2_64_policy5",
+        "bench",
+        "5",
+        "256",
+        "128"
+      ],
+      "start": 1792051593.80817,
+      "end": 1792051594.3833795,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_64_2_64_policy5-n1024-p8-order0-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_64_2_64_policy5",
+        "bench",
+        "5",
+        "1024",
+        "8"
+      ],
+      "start": 1792051594.3838134,
+      "end": 1792051594.588835,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_64_2_64_policy5-n1024-p128-order0-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_64_2_64_policy5",
+        "bench",
+        "5",
+        "1024",
+        "128"
+      ],
+      "start": 1792051594.589254,
+      "end": 1792051596.8215728,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_64_2_64_policy5_packet1-n256-p8-order0-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_64_2_64_policy5_packet1",
+        "bench",
+        "5",
+        "256",
+        "8"
+      ],
+      "start": 1792051596.8221445,
+      "end": 1792051596.9447348,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_64_2_64_policy5_packet1-n256-p128-order0-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_64_2_64_policy5_packet1",
+        "bench",
+        "5",
+        "256",
+        "128"
+      ],
+      "start": 1792051596.9452493,
+      "end": 1792051597.5287719,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_64_2_64_policy5_packet1-n1024-p8-order0-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_64_2_64_policy5_packet1",
+        "bench",
+        "5",
+        "1024",
+        "8"
+      ],
+      "start": 1792051597.529271,
+      "end": 1792051597.7318287,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_64_2_64_policy5_packet1-n1024-p128-order0-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_64_2_64_policy5_packet1",
+        "bench",
+        "5",
+        "1024",
+        "128"
+      ],
+      "start": 1792051597.7323284,
+      "end": 1792051599.8759184,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_64_2_64_policy5_packet2-n256-p8-order0-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_64_2_64_policy5_packet2",
+        "bench",
+        "5",
+        "256",
+        "8"
+      ],
+      "start": 1792051599.876517,
+      "end": 1792051599.9987388,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_64_2_64_policy5_packet2-n256-p128-order0-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_64_2_64_policy5_packet2",
+        "bench",
+        "5",
+        "256",
+        "128"
+      ],
+      "start": 1792051599.9992738,
+      "end": 1792051600.5740008,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_64_2_64_policy5_packet2-n1024-p8-order0-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_64_2_64_policy5_packet2",
+        "bench",
+        "5",
+        "1024",
+        "8"
+      ],
+      "start": 1792051600.5745234,
+      "end": 1792051600.7797382,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_64_2_64_policy5_packet2-n1024-p128-order0-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_64_2_64_policy5_packet2",
+        "bench",
+        "5",
+        "1024",
+        "128"
+      ],
+      "start": 1792051600.780226,
+      "end": 1792051602.954181,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_8_2_64_policy5-n256-p8-order0-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_8_2_64_policy5",
+        "bench",
+        "5",
+        "256",
+        "8"
+      ],
+      "start": 1792051602.9547997,
+      "end": 1792051603.0778024,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_8_2_64_policy5-n256-p128-order0-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_8_2_64_policy5",
+        "bench",
+        "5",
+        "256",
+        "128"
+      ],
+      "start": 1792051603.078368,
+      "end": 1792051603.656815,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_8_2_64_policy5_packet1-n256-p8-order0-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_8_2_64_policy5_packet1",
+        "bench",
+        "5",
+        "256",
+        "8"
+      ],
+      "start": 1792051603.6573756,
+      "end": 1792051603.7796853,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_8_2_64_policy5_packet1-n256-p128-order0-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_8_2_64_policy5_packet1",
+        "bench",
+        "5",
+        "256",
+        "128"
+      ],
+      "start": 1792051603.780219,
+      "end": 1792051604.3545194,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_8_2_64_policy5_packet2-n256-p8-order0-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_8_2_64_policy5_packet2",
+        "bench",
+        "5",
+        "256",
+        "8"
+      ],
+      "start": 1792051604.355059,
+      "end": 1792051604.4776752,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_8_2_64_policy5_packet2-n256-p128-order0-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_8_2_64_policy5_packet2",
+        "bench",
+        "5",
+        "256",
+        "128"
+      ],
+      "start": 1792051604.4782112,
+      "end": 1792051605.043356,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_8_2_64_policy5_packet2-n256-p8-order1-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_8_2_64_policy5_packet2",
+        "bench",
+        "5",
+        "256",
+        "8"
+      ],
+      "start": 1792051605.0438976,
+      "end": 1792051605.1637008,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_8_2_64_policy5_packet2-n256-p128-order1-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_8_2_64_policy5_packet2",
+        "bench",
+        "5",
+        "256",
+        "128"
+      ],
+      "start": 1792051605.1642942,
+      "end": 1792051605.7456145,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_8_2_64_policy5_packet1-n256-p8-order1-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_8_2_64_policy5_packet1",
+        "bench",
+        "5",
+        "256",
+        "8"
+      ],
+      "start": 1792051605.7461474,
+      "end": 1792051605.8667154,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_8_2_64_policy5_packet1-n256-p128-order1-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_8_2_64_policy5_packet1",
+        "bench",
+        "5",
+        "256",
+        "128"
+      ],
+      "start": 1792051605.8672369,
+      "end": 1792051606.4394026,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_8_2_64_policy5-n256-p8-order1-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_8_2_64_policy5",
+        "bench",
+        "5",
+        "256",
+        "8"
+      ],
+      "start": 1792051606.4399357,
+      "end": 1792051606.5596693,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_8_2_64_policy5-n256-p128-order1-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_8_2_64_policy5",
+        "bench",
+        "5",
+        "256",
+        "128"
+      ],
+      "start": 1792051606.5601993,
+      "end": 1792051607.1391096,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_64_2_64_policy5_packet2-n256-p8-order1-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_64_2_64_policy5_packet2",
+        "bench",
+        "5",
+        "256",
+        "8"
+      ],
+      "start": 1792051607.1396854,
+      "end": 1792051607.2616441,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_64_2_64_policy5_packet2-n256-p128-order1-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_64_2_64_policy5_packet2",
+        "bench",
+        "5",
+        "256",
+        "128"
+      ],
+      "start": 1792051607.262198,
+      "end": 1792051607.8332407,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_64_2_64_policy5_packet2-n1024-p8-order1-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_64_2_64_policy5_packet2",
+        "bench",
+        "5",
+        "1024",
+        "8"
+      ],
+      "start": 1792051607.8338165,
+      "end": 1792051608.0418456,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_64_2_64_policy5_packet2-n1024-p128-order1-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_64_2_64_policy5_packet2",
+        "bench",
+        "5",
+        "1024",
+        "128"
+      ],
+      "start": 1792051608.042398,
+      "end": 1792051610.2389348,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_64_2_64_policy5_packet1-n256-p8-order1-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_64_2_64_policy5_packet1",
+        "bench",
+        "5",
+        "256",
+        "8"
+      ],
+      "start": 1792051610.2395983,
+      "end": 1792051610.3617752,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_64_2_64_policy5_packet1-n256-p128-order1-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_64_2_64_policy5_packet1",
+        "bench",
+        "5",
+        "256",
+        "128"
+      ],
+      "start": 1792051610.3623617,
+      "end": 1792051610.9468002,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_64_2_64_policy5_packet1-n1024-p8-order1-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_64_2_64_policy5_packet1",
+        "bench",
+        "5",
+        "1024",
+        "8"
+      ],
+      "start": 1792051610.9474084,
+      "end": 1792051611.15488,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_64_2_64_policy5_packet1-n1024-p128-order1-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_64_2_64_policy5_packet1",
+        "bench",
+        "5",
+        "1024",
+        "128"
+      ],
+      "start": 1792051611.1554782,
+      "end": 1792051613.344873,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_64_2_64_policy5-n256-p8-order1-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_64_2_64_policy5",
+        "bench",
+        "5",
+        "256",
+        "8"
+      ],
+      "start": 1792051613.3455937,
+      "end": 1792051613.4677331,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_64_2_64_policy5-n256-p128-order1-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_64_2_64_policy5",
+        "bench",
+        "5",
+        "256",
+        "128"
+      ],
+      "start": 1792051613.4683669,
+      "end": 1792051614.043461,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_64_2_64_policy5-n1024-p8-order1-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_64_2_64_policy5",
+        "bench",
+        "5",
+        "1024",
+        "8"
+      ],
+      "start": 1792051614.04412,
+      "end": 1792051614.2528784,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_64_2_64_policy5-n1024-p128-order1-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_64_2_64_policy5",
+        "bench",
+        "5",
+        "1024",
+        "128"
+      ],
+      "start": 1792051614.253483,
+      "end": 1792051616.4227028,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_64_1_64_policy5_packet2-n256-p8-order1-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_64_1_64_policy5_packet2",
+        "bench",
+        "5",
+        "256",
+        "8"
+      ],
+      "start": 1792051616.4233959,
+      "end": 1792051616.544219,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_64_1_64_policy5_packet2-n256-p128-order1-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_64_1_64_policy5_packet2",
+        "bench",
+        "5",
+        "256",
+        "128"
+      ],
+      "start": 1792051616.5448916,
+      "end": 1792051616.7414973,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_64_1_64_policy5_packet2-n1024-p8-order1-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_64_1_64_policy5_packet2",
+        "bench",
+        "5",
+        "1024",
+        "8"
+      ],
+      "start": 1792051616.7421122,
+      "end": 1792051616.8648815,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_64_1_64_policy5_packet2-n1024-p128-order1-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_64_1_64_policy5_packet2",
+        "bench",
+        "5",
+        "1024",
+        "128"
+      ],
+      "start": 1792051616.8654785,
+      "end": 1792051617.5001311,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_64_1_64_policy5_packet1-n256-p8-order1-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_64_1_64_policy5_packet1",
+        "bench",
+        "5",
+        "256",
+        "8"
+      ],
+      "start": 1792051617.5007606,
+      "end": 1792051617.6201756,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_64_1_64_policy5_packet1-n256-p128-order1-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_64_1_64_policy5_packet1",
+        "bench",
+        "5",
+        "256",
+        "128"
+      ],
+      "start": 1792051617.6208665,
+      "end": 1792051617.8174474,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_64_1_64_policy5_packet1-n1024-p8-order1-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_64_1_64_policy5_packet1",
+        "bench",
+        "5",
+        "1024",
+        "8"
+      ],
+      "start": 1792051617.8180623,
+      "end": 1792051617.9410098,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_64_1_64_policy5_packet1-n1024-p128-order1-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_64_1_64_policy5_packet1",
+        "bench",
+        "5",
+        "1024",
+        "128"
+      ],
+      "start": 1792051617.941639,
+      "end": 1792051618.5890586,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_64_1_64_policy5-n256-p8-order1-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_64_1_64_policy5",
+        "bench",
+        "5",
+        "256",
+        "8"
+      ],
+      "start": 1792051618.5896974,
+      "end": 1792051618.7091982,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_64_1_64_policy5-n256-p128-order1-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_64_1_64_policy5",
+        "bench",
+        "5",
+        "256",
+        "128"
+      ],
+      "start": 1792051618.709843,
+      "end": 1792051618.911956,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_64_1_64_policy5-n1024-p8-order1-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_64_1_64_policy5",
+        "bench",
+        "5",
+        "1024",
+        "8"
+      ],
+      "start": 1792051618.912576,
+      "end": 1792051619.0349548,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_64_1_64_policy5-n1024-p128-order1-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_64_1_64_policy5",
+        "bench",
+        "5",
+        "1024",
+        "128"
+      ],
+      "start": 1792051619.0355883,
+      "end": 1792051619.6778255,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_40_2_2_policy5_packet2-n256-p8-order1-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_40_2_2_policy5_packet2",
+        "bench",
+        "5",
+        "256",
+        "8"
+      ],
+      "start": 1792051619.6784744,
+      "end": 1792051619.7982674,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_40_2_2_policy5_packet2-n256-p128-order1-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_40_2_2_policy5_packet2",
+        "bench",
+        "5",
+        "256",
+        "128"
+      ],
+      "start": 1792051619.798923,
+      "end": 1792051620.0652635,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_40_2_2_policy5_packet2-n1024-p8-order1-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_40_2_2_policy5_packet2",
+        "bench",
+        "5",
+        "1024",
+        "8"
+      ],
+      "start": 1792051620.0659208,
+      "end": 1792051620.1900098,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_40_2_2_policy5_packet2-n1024-p128-order1-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_40_2_2_policy5_packet2",
+        "bench",
+        "5",
+        "1024",
+        "128"
+      ],
+      "start": 1792051620.1906774,
+      "end": 1792051620.933054,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_40_2_2_policy5_packet1-n256-p8-order1-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_40_2_2_policy5_packet1",
+        "bench",
+        "5",
+        "256",
+        "8"
+      ],
+      "start": 1792051620.9337356,
+      "end": 1792051621.051286,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_40_2_2_policy5_packet1-n256-p128-order1-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_40_2_2_policy5_packet1",
+        "bench",
+        "5",
+        "256",
+        "128"
+      ],
+      "start": 1792051621.0519683,
+      "end": 1792051621.318305,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_40_2_2_policy5_packet1-n1024-p8-order1-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_40_2_2_policy5_packet1",
+        "bench",
+        "5",
+        "1024",
+        "8"
+      ],
+      "start": 1792051621.3189752,
+      "end": 1792051621.4420705,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_40_2_2_policy5_packet1-n1024-p128-order1-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_40_2_2_policy5_packet1",
+        "bench",
+        "5",
+        "1024",
+        "128"
+      ],
+      "start": 1792051621.4427612,
+      "end": 1792051622.1701944,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_40_2_2_policy5-n256-p8-order1-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_40_2_2_policy5",
+        "bench",
+        "5",
+        "256",
+        "8"
+      ],
+      "start": 1792051622.1708822,
+      "end": 1792051622.2902584,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_40_2_2_policy5-n256-p128-order1-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_40_2_2_policy5",
+        "bench",
+        "5",
+        "256",
+        "128"
+      ],
+      "start": 1792051622.2909563,
+      "end": 1792051622.551031,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_40_2_2_policy5-n1024-p8-order1-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_40_2_2_policy5",
+        "bench",
+        "5",
+        "1024",
+        "8"
+      ],
+      "start": 1792051622.551726,
+      "end": 1792051622.6740222,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_40_2_2_policy5-n1024-p128-order1-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_40_2_2_policy5",
+        "bench",
+        "5",
+        "1024",
+        "128"
+      ],
+      "start": 1792051622.6747196,
+      "end": 1792051623.4176598,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_40_1_2_policy5_packet2-n256-p8-order1-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_40_1_2_policy5_packet2",
+        "bench",
+        "5",
+        "256",
+        "8"
+      ],
+      "start": 1792051623.4183903,
+      "end": 1792051623.535908,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_40_1_2_policy5_packet2-n256-p128-order1-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_40_1_2_policy5_packet2",
+        "bench",
+        "5",
+        "256",
+        "128"
+      ],
+      "start": 1792051623.5366414,
+      "end": 1792051623.6679175,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_40_1_2_policy5_packet2-n1024-p8-order1-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_40_1_2_policy5_packet2",
+        "bench",
+        "5",
+        "1024",
+        "8"
+      ],
+      "start": 1792051623.6686547,
+      "end": 1792051623.7904515,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_40_1_2_policy5_packet2-n1024-p128-order1-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_40_1_2_policy5_packet2",
+        "bench",
+        "5",
+        "1024",
+        "128"
+      ],
+      "start": 1792051623.7911823,
+      "end": 1792051624.119405,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_40_1_2_policy5_packet1-n256-p8-order1-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_40_1_2_policy5_packet1",
+        "bench",
+        "5",
+        "256",
+        "8"
+      ],
+      "start": 1792051624.1201284,
+      "end": 1792051624.2401285,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_40_1_2_policy5_packet1-n256-p128-order1-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_40_1_2_policy5_packet1",
+        "bench",
+        "5",
+        "256",
+        "128"
+      ],
+      "start": 1792051624.240865,
+      "end": 1792051624.3718622,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_40_1_2_policy5_packet1-n1024-p8-order1-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_40_1_2_policy5_packet1",
+        "bench",
+        "5",
+        "1024",
+        "8"
+      ],
+      "start": 1792051624.372589,
+      "end": 1792051624.49448,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_40_1_2_policy5_packet1-n1024-p128-order1-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_40_1_2_policy5_packet1",
+        "bench",
+        "5",
+        "1024",
+        "128"
+      ],
+      "start": 1792051624.495215,
+      "end": 1792051624.8275115,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_40_1_2_policy5-n256-p8-order1-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_40_1_2_policy5",
+        "bench",
+        "5",
+        "256",
+        "8"
+      ],
+      "start": 1792051624.8282504,
+      "end": 1792051624.9481103,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_40_1_2_policy5-n256-p128-order1-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_40_1_2_policy5",
+        "bench",
+        "5",
+        "256",
+        "128"
+      ],
+      "start": 1792051624.9488595,
+      "end": 1792051625.0808945,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_40_1_2_policy5-n1024-p8-order1-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_40_1_2_policy5",
+        "bench",
+        "5",
+        "1024",
+        "8"
+      ],
+      "start": 1792051625.0816514,
+      "end": 1792051625.2035313,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_40_1_2_policy5-n1024-p128-order1-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_40_1_2_policy5",
+        "bench",
+        "5",
+        "1024",
+        "128"
+      ],
+      "start": 1792051625.204283,
+      "end": 1792051625.5629568,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_40_0_0_policy5_packet2-n256-p8-order1-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_40_0_0_policy5_packet2",
+        "bench",
+        "5",
+        "256",
+        "8"
+      ],
+      "start": 1792051625.5637295,
+      "end": 1792051625.6831071,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_40_0_0_policy5_packet2-n256-p128-order1-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_40_0_0_policy5_packet2",
+        "bench",
+        "5",
+        "256",
+        "128"
+      ],
+      "start": 1792051625.6838784,
+      "end": 1792051625.8160129,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_40_0_0_policy5_packet2-n1024-p8-order1-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_40_0_0_policy5_packet2",
+        "bench",
+        "5",
+        "1024",
+        "8"
+      ],
+      "start": 1792051625.816803,
+      "end": 1792051625.9384933,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_40_0_0_policy5_packet2-n1024-p128-order1-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_40_0_0_policy5_packet2",
+        "bench",
+        "5",
+        "1024",
+        "128"
+      ],
+      "start": 1792051625.939282,
+      "end": 1792051626.25724,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_40_0_0_policy5_packet1-n256-p8-order1-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_40_0_0_policy5_packet1",
+        "bench",
+        "5",
+        "256",
+        "8"
+      ],
+      "start": 1792051626.258033,
+      "end": 1792051626.3771067,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_40_0_0_policy5_packet1-n256-p128-order1-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_40_0_0_policy5_packet1",
+        "bench",
+        "5",
+        "256",
+        "128"
+      ],
+      "start": 1792051626.377905,
+      "end": 1792051626.509928,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_40_0_0_policy5_packet1-n1024-p8-order1-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_40_0_0_policy5_packet1",
+        "bench",
+        "5",
+        "1024",
+        "8"
+      ],
+      "start": 1792051626.510723,
+      "end": 1792051626.6325479,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_40_0_0_policy5_packet1-n1024-p128-order1-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_40_0_0_policy5_packet1",
+        "bench",
+        "5",
+        "1024",
+        "128"
+      ],
+      "start": 1792051626.6333365,
+      "end": 1792051626.9547608,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_40_0_0_policy5-n256-p8-order1-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_40_0_0_policy5",
+        "bench",
+        "5",
+        "256",
+        "8"
+      ],
+      "start": 1792051626.9555597,
+      "end": 1792051627.0731459,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_40_0_0_policy5-n256-p128-order1-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_40_0_0_policy5",
+        "bench",
+        "5",
+        "256",
+        "128"
+      ],
+      "start": 1792051627.0739813,
+      "end": 1792051627.2028956,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_40_0_0_policy5-n1024-p8-order1-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_40_0_0_policy5",
+        "bench",
+        "5",
+        "1024",
+        "8"
+      ],
+      "start": 1792051627.203714,
+      "end": 1792051627.3255029,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/hashtable_design_worker_epochs_40_0_0_policy5-n1024-p128-order1-resources.txt",
+        "/opt/sixdb/jobs/20261015T080147Z-ed6c28f1/results/bin/hashtable_design_worker_epochs_40_0_0_policy5",
+        "bench",
+        "5",
+        "1024",
+        "128"
+      ],
+      "start": 1792051627.3263438,
+      "end": 1792051627.6464934,
+      "returncode": 0,
+      "stderr": ""
+    }
+  ],
+  "binary_sha256": {
+    "hashtable_design_worker_epochs_40_0_0_policy5": "98a6d1f3b3f85913b5ad9171d1a9f2d8a30ea37d494b6e213ae34a11b7007c74",
+    "hashtable_design_worker_epochs_40_0_0_policy5_packet1": "ed0f3370fda273bedfaec81e021a4a7ec085e901024b66b926beb8e937611115",
+    "hashtable_design_worker_epochs_40_0_0_policy5_packet2": "a6a00b5f6f5ee7237a747ad8b2fa4530fd0a689603259c2fce26fab9e13677ff",
+    "hashtable_design_worker_epochs_40_1_2_policy5": "ba0c69c5e1c3c185325d1ee2a3a81b96b54da1290b61fec64187e3c7714be1b1",
+    "hashtable_design_worker_epochs_40_1_2_policy5_packet1": "960358c6aa8025e450f604870efcff703193f372e47369cd29ba4d03b3d630d1",
+    "hashtable_design_worker_epochs_40_1_2_policy5_packet2": "ad456a7679cbd803460011199841d1c41fe29523458a652c9f50f947a28493ed",
+    "hashtable_design_worker_epochs_40_2_2_policy5": "a61b34162be56d206911700255cc032d9b72f607a6ca37f2787230b395130882",
+    "hashtable_design_worker_epochs_40_2_2_policy5_packet1": "358e933960377face42d645f35a9405b6f8285c877ad5efd5e077e4ae33dd7e3",
+    "hashtable_design_worker_epochs_40_2_2_policy5_packet2": "3b734ba08aa3d22dc1ae1c198e209a516b65d9553bcf8ead8220bd7d07b8fb1a",
+    "hashtable_design_worker_epochs_64_1_64_policy5": "51cc11891fa5301063c5c5a67bdfa23d7fd4b8f065023b612fe885fbfb77fc49",
+    "hashtable_design_worker_epochs_64_1_64_policy5_packet1": "8a02379c10ff85ae89aef99a65523b398503d7195d53f14445520d2f46c7dd1d",
+    "hashtable_design_worker_epochs_64_1_64_policy5_packet2": "d5b7057cf1c358c098fd72820adef8ddd6e082822fa9dc6a4e237395d35afffb",
+    "hashtable_design_worker_epochs_64_2_64_policy5": "abeb1083170e925bc90c92d76edf324b2584715dc4437f24d0c49a8ce4fc8270",
+    "hashtable_design_worker_epochs_64_2_64_policy5_packet1": "070def21643ba29ea73a438379c50838b7968ddd2fa3510d9024ad02bb6d85c5",
+    "hashtable_design_worker_epochs_64_2_64_policy5_packet2": "53aabe23405f0b288d616008e346cdf1244e87241c9dbd597db3972b10d9f04f",
+    "hashtable_design_worker_epochs_8_2_64_policy5": "a5f3af1a3412560517f7366848bf172333eeeca45e12355c9a1a72d6c2e82ee3",
+    "hashtable_design_worker_epochs_8_2_64_policy5_packet1": "91f0ead91062694edcaa793dda9b1296dc61cca53cb9273525d3071e3f0f5ec8",
+    "hashtable_design_worker_epochs_8_2_64_policy5_packet2": "d9ab921c14345420780394161b7c886bc8d2789c9813850ac8721d9be95fa8e9"
+  }
+}

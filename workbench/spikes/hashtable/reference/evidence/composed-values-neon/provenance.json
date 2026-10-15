@@ -1,0 +1,27 @@
+{
+  "job": "20261013T004222Z-f34fddfe",
+  "capture": "build/captures/hashtable-composed-values",
+  "source_sha256": "e69d7c9608b8320ffc522f68e4c2e0693c06777a36ffdaa07657767cfb54e4a0",
+  "note": "Complete typed map comparisons; requested allocation bytes, not RSS; no cache-residence claim. Historical workload has different update/churn patterns and only low16bits of dependency values; do not compare absolute historical and new timings.",
+  "files_sha256": {
+    "check-neon.txt": "1c167fe0623807debaaef4ebdf947d04cfb5622905a78ab30ca09a468ddf7bba",
+    "compiler.txt": "0cf7e452648b3754289200426984662d1d8d0a21d56310d301a24e11399ceab8",
+    "host.json": "cc5be8b57c04eb54ddaa8c8bdd19018c5a2e09fe6b74bf7e62ee0c01cfd915c2",
+    "keys16-neon.csv": "475e144775b657c6349672b615e3165633b609f447964850a772989922d763e8",
+    "lscpu.json": "9f4b7feadfb69a3e39295e2a6eab4ce78d8b29015e52545a7e8caecc85f0db3e",
+    "neon-1048576-16.csv": "4e31fcd7ab6f983c56d52697c3400362d2a9cb7b2a47d04fe2e726643390358d",
+    "neon-1048576-6.csv": "8eb758d5973062d4a839ae3dc65fd3fc756310acd920612f070a98ea429323da",
+    "neon-128-16.csv": "2b23e044d913fc0863dccec21d3071c242e491225c66b46ad374f3049db19346",
+    "neon-128-6.csv": "2d136413eb07a95ed411aebbabcfd0492ee9c7889e00636837addafe0b8c93cd",
+    "neon-4096-16.csv": "8a2661c30a78fbe5fc77dd7f3b0031a7b765a104bc3ec5396a4eb061b777e14d",
+    "neon-4096-6.csv": "8c03b9ff05723440c6bc3df64df81e2d1d43393350bf93a3498bbe87080f5114",
+    "neon-65536-16.csv": "c814f7de8da40c12b8a44bf9ea042597958a9ff133213c82fe04fc409fb425cc",
+    "neon-65536-6.csv": "e33438f3a1fa8f4539fff922377c850e5c64feb9c645897d50d99f586d4a4e68",
+    "prior-check-neon.txt": "14f86e8f14cacffd910c2135245621fd0c93712ff1eec37bdba92eb05d80881d",
+    "prior-neon.csv": "152098e114a6cd4de5a8b36a9dc0339d6c41aad2cdac4892db1f139425605e88",
+    "transfer-check-neon.txt": "cccf393af2899b9d26b58d2439c68e0a555e7c4d9d99f1189066aa48ee2c25e3",
+    "width-check-neon.txt": "6f2031cfd1c5c28651f5293843f049dcd7eb0de0dda653430f30b9c37e940e14",
+    "worker-result.json": "6a3548f552de8afb51ed879d1ee30b6301bfb3cb91868988bc5131dc9fb547a4",
+    "artifact.json": "f54c98c7fd1841822a3d3b5f07c5c891afd416f9602a45deb83b6ff9176ff767"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "files_sha256": {
+    "check.txt": "96f47f4667c64359261b6f4175af4920fbf2a5869ce2bf07057f4e09b27528ae",
+    "compiler.txt": "5b17cd9bfa01ae4b276d020d757aeed82b232d4dacef417a833e5ba69a5307da",
+    "kernel.txt": "544199757adab1aa9cf1c8ccfbef42b7d44e40140a436d786398b3dd950137d3",
+    "lscpu.json": "24a74141052b8cbf79e9c400d5609cf0f0ffd254e588065b7165790ec18618bb",
+    "operations.csv": "72b359a7cf3038cd63e770c607f8555ec937bc1feebeeeb9727272e0752322c2",
+    "operations.resources": "68ad1f47141905a1b7e4fc1b97886400610f5d06ac5310f7db11667a43fdbc67"
+  },
+  "format": 2,
+  "full_bundle": "artifact.json",
+  "kind": "files",
+  "regenerate": [
+    "python3",
+    "workbench/spikes/hashtable/reference/growth-report.py",
+    "target={evidence}/operations.csv",
+    "--output",
+    "{evidence}/summary.json"
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "scope": "Compact SIMD hash-fact experiment only; overall hashtable spike remains active and below broad targets.",
+  "selection": "All paired representation/contender/phase rows in broad local panel and longer exact-binary replay; both gains and losses retained. Initial raw repeats and actual caller audit remain recoverable.",
+  "source": "source/ is complete frozen capture v2. Timed C++ sources match v1; v2 updates report/documentation only. local/source retains original v1 report source. Root report.py regenerates each summary/paired file and verifies timed hashes.",
+  "regenerate": [
+    "python3 report.py report local",
+    "python3 report.py report surface",
+    "python3 report.py report replay"
+  ],
+  "decision": "Keep compact facts default-off. Smaller audited frames did not yield broad local throughput benefit; stable replay shows map read losses. No native ISA or public batch-width choice.",
+  "codegen_index_sha256": "400b9c7d52a88ad57ee0a752878567b0bff00cdc809a281466f82fc1eb74a765"
+}

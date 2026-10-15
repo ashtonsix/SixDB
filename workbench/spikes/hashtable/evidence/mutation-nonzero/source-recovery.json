@@ -1,0 +1,41 @@
+{
+  "source_snapshot": "source.tar.gz",
+  "source_snapshot_sha256": "9342aa30ae0843d9b972cd0cb6a0641ac2d9c7b1e48c9ed767b67b78bab4d93b",
+  "capture_receipt": "source-capture.json",
+  "capture_receipt_sha256": "061c071388dc641796906c488c6c2cd92da7ebae4a3688dc0e6c2eb15cd0e61e",
+  "verified_original_spike_headers": {
+    "common.h": "618ba1d46d065c93b93654adfa1e5f91acbc8cadfbec79d8b8b1f0037029ef9c",
+    "hash.h": "a14a9ce17ef8c3e8c8dbd20b7235b520f0c36e8a1df6d36a05d4057f19ce65b5",
+    "fields.h": "312682f0f46b034e21001ffac035aaadaae9266be03a481b884dd54f334124a4",
+    "layout.h": "e4815f8db95a67ba794d0bab0251b110d6f042779fdc2464f441f69250a4eae2",
+    "links.h": "8ba4bea2aad6add9db8baf7fc69e35594ab3c798092785621d85d23e5116d1a9",
+    "table.h": "6cd7335bf1e50fe79cf9050a193aa96d4ec553c0dc2057caaa345fd7953bb1c4",
+    "baseline.h": "4b5243e1c4b5c018a761b93321826cc6dc9c1e9a01ad7944d1d2d565244dd036",
+    "input.h": "1a476e816273087ba361b68cba74fa42fc31fa1bd7cd88842d596410925476d9",
+    "aggregate.h": "b616996a751cef84e7e7b0d7fb5116c6562a5dc9bb0a3417426f188037086857",
+    "set_baseline.h": "87cdbc44a7baaf278da10f134ec6b9cccb8244764b8d5ef26545f4a7797cb319",
+    "layout_solver.h": "c8528272678eabb4ddee6ef33f0617afecb64253b6b5553c81f70956b96d7bfe",
+    "hash_packet.h": "4b3a349b00395898be75a4bb347d27a47ece5819eebaf69979f8cc3669e81887",
+    "list.h": "9b78d3261adc719a7856baf4745f02e3396829f99e41248a3403e187cac21e4f",
+    "small_baseline.h": "d03b39410e0eb43a214724857be74320c712d0f4aa16a8d0c5e8ae774e5b5681",
+    "small.h": "5465c5178d78bdcc5d844c2022155b471ea1074108ed3e8153598e17b266ea2c",
+    "publication.h": "41defa33bf9fbb41f70d9007f5c4f2c2b7ee6421bde014c371b6199a762d924d",
+    "record_table.h": "19a2a95b649e803166f3476748578807b6931e5deec43375cdc9bd3a74becc22",
+    "promoted.h": "5fb810c84c6211b6e5055d07fbed8a78d75fcec2c15f09edea2175d755dfedda",
+    "compact_hash.h": "c5d6018329a5f1ba55f14d9bb14119f0a115828263e9e90ad6de6687ebbab955",
+    "domain_advisory.h": "04ba9c6d78380a8b69ff57d1a619c30c2c8f8381747fc255f98118eca7784e69",
+    "migration.h": "d8a2954cab4fb6a6674a2b4a2b23d94767b9fd2328335cebdf1178cced0b0311",
+    "concurrent_baselines.h": "6157795fdead95af492ab36f9235bd568551c32406ed1f1bd5bc5b0fa82e10e3",
+    "recipe_view.h": "d3bdce1746a3c272209348ad3030b4c80c17c67f5d93913931b60c1104298ab0",
+    "ordinary_baseline.h": "805ad22c3c4d1f924b417645f078cdeee61f3eed66b79850836f31c11d0834a8",
+    "bag_buffers.h": "0133a2951230a939c4148aa951683be8c04785fca4f596b357b107587016ae9c",
+    "inline_bag.h": "fcf8b02060f38401bef7eea6351e9f1539c81f6bc120aad8dee16051ce38c9c8"
+  },
+  "variant_overrides": [
+    "partial/promoted.h",
+    "partial/record_table.h",
+    "nonzero/promoted.h",
+    "nonzero/record_table.h"
+  ],
+  "qualification": "Base snapshot headers match the compile receipt. Variant TU/override/binary hashes are independently checked by qualify-mechanism.py. Captured source is supplied for recovery; toolchain and fetched dependencies are not embedded."
+}

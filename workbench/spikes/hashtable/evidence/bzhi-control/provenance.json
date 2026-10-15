@@ -1,0 +1,32 @@
+{
+  "files_sha256": {
+    "README.md": "43d1b378053a918f8ebab4f747d17d96669c2a25d7c0794c23924b57f0c745ad",
+    "SOURCE-AVENUES.md": "7ff3af8abcdcb70c4d823abeb5137dad1ee8b12ccf02de828df4d575316ce437",
+    "build/elf-parity.json": "dc2f861aaf519463d4e0b660728a8632b6a9e804819da139c765c0ef22df0fa8",
+    "build/kind0-object-parity.json": "36485714c0a140f2b15c77be2ca23fe13cf657938890dbb94a686ef196dfd148",
+    "build/kind2-object-parity.json": "19ef62de4b85f8401e12f8080b7413fcab9be460a238287868f610e543e71756",
+    "provenance/failed-file-matcher-artifact.json": "7c6a87305c3603911d2e217cdd1e98f9d4e82be6295bbb1d8228d983e7483585",
+    "provenance/failed-path-artifact.json": "73d12e50c814266fbd68acfd1e3fbdcacb23a30910548802ddcd2e3c11458a68",
+    "provenance/timing-artifact.json": "707315116aaa13ee8b1826fa206284d9b661771e9b27a910d6c145722b2abbe4",
+    "provenance/timing-job.json": "92c0e08f040d20c901c8ac8d06c064f8dd650f3a8e6ff82b80e4f26486cf7d8d",
+    "provenance/verified-build-artifact.json": "0e1d3bd295abe6bf192723f33f5e3d81a9dba2a91511f71df125c9e918e775a1",
+    "provenance/verified-build-job.json": "0563cde7eba71844d69e6216900f76bfbe24da696ff78ef57c952f7f65985f8e",
+    "report/hit-ranges.json": "f0ee1c12f3958acc9f83ca382cd1865c03604afbfbba6673bdd916cfdb701133",
+    "report/hit-wrapper-calls.json": "d66dccb98ef8c64f3e8102a20dad229f9f33e9cc1d4869aa5381361e92a55f82",
+    "report/summarize.py": "de05b559b4fcb5af7fdc6d2a60fa77c4c3d0429c443e37a6cc8fb064326ac5a0",
+    "report/summary.csv": "545481b2bdaaeacdaf1350de4e48b82c0cc64d2babfbb1ea8ee9243c86cd34d6",
+    "report/summary.json": "58fa17709ffbd0f2281c9b824e71422137f3be5f9068f3a03318f7dbd0c68117",
+    "timing/binary-input.json": "3b2262c4621d7168ea629a56e0d425a0ab22c1bd954cfb112714815dc1facbcb",
+    "timing/receipt.json": "fbcd1a5e5c99fb31fc81f733b76cc42667954ace769e19f6e265168844f4b260"
+  },
+  "format": 2,
+  "full_bundle": "artifact.json",
+  "kind": "files",
+  "regenerate": [
+    "python3",
+    "{evidence}/report/summarize.py",
+    "{evidence}/timing",
+    "{evidence}/report"
+  ],
+  "regenerate_from": "archive"
+}

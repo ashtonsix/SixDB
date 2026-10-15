@@ -1,0 +1,16 @@
+{
+  "binary_sha256": "2c193f45d067ae81c4cb46bc666466c1e70875922d951ddec08c242beaf88e35",
+  "reference_binary_sha256": "f0c014c0e7a166ea2f6b382b11c834a406794416a4aecd1d4589aa45778b45fa",
+  "sources": {
+    "links.h": "d5b18fbd0d930046cf3a8083f0d363cbdb69a041e3ad5da85e7772a529737389",
+    "fields.h": "312682f0f46b034e21001ffac035aaadaae9266be03a481b884dd54f334124a4",
+    "common.h": "618ba1d46d065c93b93654adfa1e5f91acbc8cadfbec79d8b8b1f0037029ef9c",
+    "bag_compare.cpp": "70585932b8b0ce7e31caac241fa9dab60e7af0cbc7214f34072cb8f1c6df3cb3"
+  },
+  "timed_trials_per_version": 384,
+  "checks": "Release and ASan/UBSan: all32histories plus allocation-pressure promotion/growth/clone refusal passed",
+  "command": "3 alternating old/new process pairs; taskset -c 2 <binary> local 4",
+  "qualification": "Local Apple ARM64 OrbStack diagnosis. Fresh Pool accounting is isolated geometry control, not a production recommendation; earlier history-sensitive live backing retained in before-hoist/after-hoist/hint receipts. Timed Pool remains shared and prewarmed. Whole owner clone/lifecycle, not ObjectStore MVCC. No pointer caching.",
+  "concurrent_activity": "Root small_publication/list_transition -j1 compilation active on other CPUs; thin gains qualified.",
+  "source_recovery_scope": "Four experiment inputs frozen before build; binaries and exact build commands preserved. Toolchain and general repository/dependency sources are not embedded."
+}

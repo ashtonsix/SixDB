@@ -1,0 +1,68 @@
+{
+  "consumers": [
+    {
+      "owner": "abseil",
+      "ready": false,
+      "hints": false,
+      "instructions": 144,
+      "allowed_outer_calls": []
+    },
+    {
+      "owner": "abseil",
+      "ready": false,
+      "hints": false,
+      "instructions": 88,
+      "allowed_outer_calls": []
+    },
+    {
+      "owner": "generic",
+      "ready": true,
+      "hints": false,
+      "instructions": 224,
+      "allowed_outer_calls": []
+    },
+    {
+      "owner": "generic",
+      "ready": true,
+      "hints": true,
+      "instructions": 272,
+      "allowed_outer_calls": []
+    },
+    {
+      "owner": "word",
+      "ready": true,
+      "hints": false,
+      "instructions": 208,
+      "allowed_outer_calls": []
+    },
+    {
+      "owner": "word",
+      "ready": true,
+      "hints": true,
+      "instructions": 272,
+      "allowed_outer_calls": []
+    },
+    {
+      "owner": "abseil",
+      "ready": false,
+      "hints": false,
+      "instructions": 448,
+      "allowed_outer_calls": [
+        "1ed34: 97ff9c3b     \tbl\t0x5e20 <memset@plt>"
+      ]
+    },
+    {
+      "owner": "abseil",
+      "ready": false,
+      "hints": false,
+      "instructions": 360,
+      "allowed_outer_calls": [
+        "1f434: 97ff9a7b     \tbl\t0x5e20 <memset@plt>"
+      ]
+    }
+  ],
+  "ready_calls": 0,
+  "ready_stack_references": 0,
+  "outlined_baseline_lookup": 0,
+  "limitation": "Static calls and frame references only; not instruction quality, lifetime, traffic or performance."
+}

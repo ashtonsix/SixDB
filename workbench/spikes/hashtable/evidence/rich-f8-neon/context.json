@@ -1,0 +1,470 @@
+{
+  "kind": "Authored derivation of completed worker evidence; not original worker bytes",
+  "job": "20261013T165603Z-4e92b940",
+  "source_manifest_digest": "e289c214d8540989592b13487de04236d401865ec62d2b3e899c05b402fceed2",
+  "source_tar_gz_sha256": "7c7dc4b0267d5b0a53dc0a6e671160428cf915cc38d9c83ccbd649e15bb5125c",
+  "rich_composition_cpp_sha256": "54f6fd1e8a72c70518850265549cd20a5eb97f4adada7a123f9ac31e418059d3",
+  "archived_summary_json_sha256": "767341c79fe89194a6c04a5946412a796cac01b4590f4e56a5cda9cfbb0bfa3c",
+  "fingerprint_bits": 8,
+  "paired_csv_sha256": "d25833d4123b1a44f0efa176554091bfc207074a4ad0ff391fbeaee9831094e0",
+  "reproduction": "python3 workbench/spikes/hashtable-design/rich-report.py RECOVERED_WORKER_RESULTS DESTINATION",
+  "report_script_sha256": "c351efb92d7b903c7a117370764c658e51a12bd5e9e275cd0a50506bcd29168d",
+  "scope": [
+    "F8+C13 matches K40/A19 bucket components, but excludes hash/table costs.",
+    "Same frozen rich-format driver/header source for all tiers and hosts.",
+    "AVX2 and AVX2+GFNI are feature-matched across x86 hosts; native enables additional platform-specific features. V2 has a single NEON tier.",
+    "No cache-residence claim; allocated payload, query state and shared controls all occupy memory.",
+    "Three rotated process passes; each cell below is the median of eight internal repetitions per process.",
+    "All five complete operations/tails/layouts retained; raw fused independently encodes and routes the same bytes.",
+    "This is a primitive composition control, not a complete hash table or a multi-writer result.",
+    "Each paired.csv cell is one process median of eight rotated-arm repetitions; all four arms and all tails remain.",
+    "Ranges use the ratio of the medians of the three process medians; ranges exclude active=0, which remains in paired.csv.",
+    "sp_tp_split uses spike-only fixed controls checked against production preparation; this is not a finished public API.",
+    "The 2216-byte prepared object is shared per format and used in setup; it is not per-bucket metadata or a claim about hot accessed bytes.",
+    "Serial timing includes the full-value consumer and dependent query-index calculation.",
+    "F7/C13 is noncanonical under the original fingerprint clamp; F8/C13 is a legal K40/A19 component. Neither measures hashing/table costs.",
+    "Point instruction counts do not establish throughput: complete inlined loops can have different schedules, branches, and register spills."
+  ],
+  "compile_commands": {
+    "neon": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=1 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN5=0 -I/opt/sixdb/source/ikea/include -I/opt/sixdb/source/orbital/include -DHT_RICH_FP_BITS=8 -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -fno-vectorize -fno-slp-vectorize -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=armv8-a+simd -mtune=neoverse-v2 -o workbench/spikes/hashtable-design/CMakeFiles/hashtable_design_rich_composition.dir/rich_composition.cpp.o -c /opt/sixdb/source/workbench/spikes/hashtable-design/rich_composition.cpp"
+  },
+  "codegen": {
+    "neon": {
+      "gfni_instruction_count": 0,
+      "point_witnesses": {
+        "rich_split6_get": {
+          "instructions_including_alignment": 48,
+          "calls": 0,
+          "stack_instructions": 0
+        },
+        "rich_split6_update": {
+          "instructions_including_alignment": 64,
+          "calls": 0,
+          "stack_instructions": 0
+        },
+        "rich_split10_get": {
+          "instructions_including_alignment": 48,
+          "calls": 0,
+          "stack_instructions": 0
+        },
+        "rich_split10_update": {
+          "instructions_including_alignment": 56,
+          "calls": 0,
+          "stack_instructions": 0
+        },
+        "rich_fused6_get": {
+          "instructions_including_alignment": 48,
+          "calls": 0,
+          "stack_instructions": 0
+        },
+        "rich_fused6_update": {
+          "instructions_including_alignment": 72,
+          "calls": 0,
+          "stack_instructions": 0
+        },
+        "rich_fused10_get": {
+          "instructions_including_alignment": 48,
+          "calls": 0,
+          "stack_instructions": 0
+        },
+        "rich_fused10_update": {
+          "instructions_including_alignment": 56,
+          "calls": 0,
+          "stack_instructions": 0
+        }
+      }
+    }
+  },
+  "strongest_to_raw_ranges": [
+    {
+      "tier": "neon",
+      "row_bytes": 6,
+      "operation": "independent_hit",
+      "minimum": {
+        "active": 16,
+        "buckets": 1,
+        "ratio": 0.8856142767777442,
+        "process_medians_ns": {
+          "sp_tp_split": [
+            6.29995,
+            6.128349999999999,
+            6.5532
+          ],
+          "raw_fused": [
+            7.0411,
+            7.30455,
+            7.11365
+          ]
+        }
+      },
+      "maximum": {
+        "active": 16,
+        "buckets": 256,
+        "ratio": 1.1063917253327265,
+        "process_medians_ns": {
+          "sp_tp_split": [
+            6.948,
+            7.9913,
+            7.5358
+          ],
+          "raw_fused": [
+            7.1766000000000005,
+            6.81115,
+            6.783250000000001
+          ]
+        }
+      }
+    },
+    {
+      "tier": "neon",
+      "row_bytes": 6,
+      "operation": "fingerprint_miss",
+      "minimum": {
+        "active": 8,
+        "buckets": 256,
+        "ratio": 0.9689720427036098,
+        "process_medians_ns": {
+          "sp_tp_split": [
+            1.3846,
+            1.3569,
+            1.3396
+          ],
+          "raw_fused": [
+            1.3374,
+            1.40035,
+            1.4026
+          ]
+        }
+      },
+      "maximum": {
+        "active": 8,
+        "buckets": 1,
+        "ratio": 1.0038610038610039,
+        "process_medians_ns": {
+          "sp_tp_split": [
+            1.36555,
+            1.36395,
+            1.365
+          ],
+          "raw_fused": [
+            1.3666,
+            1.35675,
+            1.35975
+          ]
+        }
+      }
+    },
+    {
+      "tier": "neon",
+      "row_bytes": 6,
+      "operation": "suffix_miss",
+      "minimum": {
+        "active": 1,
+        "buckets": 1,
+        "ratio": 0.9944242576118281,
+        "process_medians_ns": {
+          "sp_tp_split": [
+            2.4088000000000003,
+            2.38095,
+            2.3790500000000003
+          ],
+          "raw_fused": [
+            2.39595,
+            2.3943,
+            2.39145
+          ]
+        }
+      },
+      "maximum": {
+        "active": 1,
+        "buckets": 256,
+        "ratio": 1.0052276419377681,
+        "process_medians_ns": {
+          "sp_tp_split": [
+            2.4132499999999997,
+            2.38435,
+            2.4135
+          ],
+          "raw_fused": [
+            2.4006999999999996,
+            2.3954,
+            2.4047
+          ]
+        }
+      }
+    },
+    {
+      "tier": "neon",
+      "row_bytes": 6,
+      "operation": "serial_hit",
+      "minimum": {
+        "active": 8,
+        "buckets": 1,
+        "ratio": 0.9717566003447602,
+        "process_medians_ns": {
+          "sp_tp_split": [
+            17.6729,
+            17.676250000000003,
+            17.664450000000002
+          ],
+          "raw_fused": [
+            18.18655,
+            18.1713,
+            18.19055
+          ]
+        }
+      },
+      "maximum": {
+        "active": 1,
+        "buckets": 1,
+        "ratio": 0.9875707433885821,
+        "process_medians_ns": {
+          "sp_tp_split": [
+            14.1765,
+            14.18675,
+            14.1937
+          ],
+          "raw_fused": [
+            14.364550000000001,
+            14.365300000000001,
+            14.374649999999999
+          ]
+        }
+      }
+    },
+    {
+      "tier": "neon",
+      "row_bytes": 6,
+      "operation": "changed_update",
+      "minimum": {
+        "active": 1,
+        "buckets": 256,
+        "ratio": 0.8633878731397058,
+        "process_medians_ns": {
+          "sp_tp_split": [
+            4.4932,
+            4.48205,
+            4.4938
+          ],
+          "raw_fused": [
+            5.20415,
+            5.1953,
+            5.2052
+          ]
+        }
+      },
+      "maximum": {
+        "active": 1,
+        "buckets": 1,
+        "ratio": 0.9216534589847933,
+        "process_medians_ns": {
+          "sp_tp_split": [
+            5.379,
+            5.3824000000000005,
+            5.3742
+          ],
+          "raw_fused": [
+            5.8373,
+            5.8255,
+            5.83625
+          ]
+        }
+      }
+    },
+    {
+      "tier": "neon",
+      "row_bytes": 10,
+      "operation": "independent_hit",
+      "minimum": {
+        "active": 15,
+        "buckets": 256,
+        "ratio": 0.977025172503143,
+        "process_medians_ns": {
+          "sp_tp_split": [
+            5.07225,
+            5.13175,
+            5.09035
+          ],
+          "raw_fused": [
+            5.21005,
+            5.25605,
+            5.1343499999999995
+          ]
+        }
+      },
+      "maximum": {
+        "active": 1,
+        "buckets": 1,
+        "ratio": 1.0042361452664645,
+        "process_medians_ns": {
+          "sp_tp_split": [
+            3.1586499999999997,
+            3.1647999999999996,
+            3.16825
+          ],
+          "raw_fused": [
+            3.1496500000000003,
+            3.15145,
+            3.15695
+          ]
+        }
+      }
+    },
+    {
+      "tier": "neon",
+      "row_bytes": 10,
+      "operation": "fingerprint_miss",
+      "minimum": {
+        "active": 8,
+        "buckets": 256,
+        "ratio": 0.9856919134396356,
+        "process_medians_ns": {
+          "sp_tp_split": [
+            1.3683,
+            1.4046,
+            1.3847
+          ],
+          "raw_fused": [
+            1.40095,
+            1.4055,
+            1.4048
+          ]
+        }
+      },
+      "maximum": {
+        "active": 16,
+        "buckets": 1,
+        "ratio": 1.01806694746176,
+        "process_medians_ns": {
+          "sp_tp_split": [
+            1.35895,
+            1.3826,
+            1.3777499999999998
+          ],
+          "raw_fused": [
+            1.3533,
+            1.3489,
+            1.3635
+          ]
+        }
+      }
+    },
+    {
+      "tier": "neon",
+      "row_bytes": 10,
+      "operation": "suffix_miss",
+      "minimum": {
+        "active": 15,
+        "buckets": 1,
+        "ratio": 0.9996554277461309,
+        "process_medians_ns": {
+          "sp_tp_split": [
+            6.8078,
+            6.8299,
+            6.8177
+          ],
+          "raw_fused": [
+            6.8108,
+            6.8223,
+            6.82005
+          ]
+        }
+      },
+      "maximum": {
+        "active": 7,
+        "buckets": 256,
+        "ratio": 1.0084389261402749,
+        "process_medians_ns": {
+          "sp_tp_split": [
+            3.9675,
+            3.932,
+            3.9554
+          ],
+          "raw_fused": [
+            3.9223,
+            3.9363,
+            3.9217
+          ]
+        }
+      }
+    },
+    {
+      "tier": "neon",
+      "row_bytes": 10,
+      "operation": "serial_hit",
+      "minimum": {
+        "active": 1,
+        "buckets": 1,
+        "ratio": 0.9496355320517402,
+        "process_medians_ns": {
+          "sp_tp_split": [
+            13.2936,
+            13.288250000000001,
+            13.281600000000001
+          ],
+          "raw_fused": [
+            13.988800000000001,
+            13.993,
+            13.9997
+          ]
+        }
+      },
+      "maximum": {
+        "active": 16,
+        "buckets": 256,
+        "ratio": 0.9793821188177426,
+        "process_medians_ns": {
+          "sp_tp_split": [
+            21.740099999999998,
+            21.672600000000003,
+            21.6558
+          ],
+          "raw_fused": [
+            22.12355,
+            22.1966,
+            22.12885
+          ]
+        }
+      }
+    },
+    {
+      "tier": "neon",
+      "row_bytes": 10,
+      "operation": "changed_update",
+      "minimum": {
+        "active": 15,
+        "buckets": 256,
+        "ratio": 0.983255353758951,
+        "process_medians_ns": {
+          "sp_tp_split": [
+            5.85555,
+            5.863250000000001,
+            5.94895
+          ],
+          "raw_fused": [
+            5.93325,
+            5.96315,
+            5.9631
+          ]
+        }
+      },
+      "maximum": {
+        "active": 1,
+        "buckets": 1,
+        "ratio": 1.0060683073571743,
+        "process_medians_ns": {
+          "sp_tp_split": [
+            3.8795,
+            3.87705,
+            3.8846
+          ],
+          "raw_fused": [
+            3.8561,
+            3.8440000000000003,
+            3.8668500000000003
+          ]
+        }
+      }
+    }
+  ]
+}

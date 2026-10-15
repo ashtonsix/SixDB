@@ -1,0 +1,908 @@
+	.file	"probe.cpp"
+	.text
+	.globl	split_0                         # -- Begin function split_0
+	.p2align	4
+	.type	split_0,@function
+split_0:                                # @split_0
+	.cfi_startproc
+# %bb.0:
+	xorl	%eax, %eax
+	retq
+.Lfunc_end0:
+	.size	split_0, .Lfunc_end0-split_0
+	.cfi_endproc
+                                        # -- End function
+	.globl	pair_0                          # -- Begin function pair_0
+	.p2align	4
+	.type	pair_0,@function
+pair_0:                                 # @pair_0
+	.cfi_startproc
+# %bb.0:
+	xorl	%eax, %eax
+	retq
+.Lfunc_end1:
+	.size	pair_0, .Lfunc_end1-pair_0
+	.cfi_endproc
+                                        # -- End function
+	.globl	cpp_0                           # -- Begin function cpp_0
+	.p2align	4
+	.type	cpp_0,@function
+cpp_0:                                  # @cpp_0
+	.cfi_startproc
+# %bb.0:
+	xorl	%eax, %eax
+	retq
+.Lfunc_end2:
+	.size	cpp_0, .Lfunc_end2-cpp_0
+	.cfi_endproc
+                                        # -- End function
+	.globl	split_1                         # -- Begin function split_1
+	.p2align	4
+	.type	split_1,@function
+split_1:                                # @split_1
+	.cfi_startproc
+# %bb.0:
+	movq	%rdi, %rax
+	andl	$1, %eax
+	retq
+.Lfunc_end3:
+	.size	split_1, .Lfunc_end3-split_1
+	.cfi_endproc
+                                        # -- End function
+	.globl	pair_1                          # -- Begin function pair_1
+	.p2align	4
+	.type	pair_1,@function
+pair_1:                                 # @pair_1
+	.cfi_startproc
+# %bb.0:
+	movq	%rdi, %rax
+	andl	$1, %eax
+	retq
+.Lfunc_end4:
+	.size	pair_1, .Lfunc_end4-pair_1
+	.cfi_endproc
+                                        # -- End function
+	.globl	cpp_1                           # -- Begin function cpp_1
+	.p2align	4
+	.type	cpp_1,@function
+cpp_1:                                  # @cpp_1
+	.cfi_startproc
+# %bb.0:
+	movq	%rdi, %rax
+	andl	$1, %eax
+	retq
+.Lfunc_end5:
+	.size	cpp_1, .Lfunc_end5-cpp_1
+	.cfi_endproc
+                                        # -- End function
+	.globl	split_8                         # -- Begin function split_8
+	.p2align	4
+	.type	split_8,@function
+split_8:                                # @split_8
+	.cfi_startproc
+# %bb.0:
+	movzbl	%dil, %eax
+	retq
+.Lfunc_end6:
+	.size	split_8, .Lfunc_end6-split_8
+	.cfi_endproc
+                                        # -- End function
+	.globl	pair_8                          # -- Begin function pair_8
+	.p2align	4
+	.type	pair_8,@function
+pair_8:                                 # @pair_8
+	.cfi_startproc
+# %bb.0:
+	movzbl	%dil, %eax
+	retq
+.Lfunc_end7:
+	.size	pair_8, .Lfunc_end7-pair_8
+	.cfi_endproc
+                                        # -- End function
+	.globl	cpp_8                           # -- Begin function cpp_8
+	.p2align	4
+	.type	cpp_8,@function
+cpp_8:                                  # @cpp_8
+	.cfi_startproc
+# %bb.0:
+	movzbl	%dil, %eax
+	retq
+.Lfunc_end8:
+	.size	cpp_8, .Lfunc_end8-cpp_8
+	.cfi_endproc
+                                        # -- End function
+	.globl	split_16                        # -- Begin function split_16
+	.p2align	4
+	.type	split_16,@function
+split_16:                               # @split_16
+	.cfi_startproc
+# %bb.0:
+	movzwl	%di, %eax
+	retq
+.Lfunc_end9:
+	.size	split_16, .Lfunc_end9-split_16
+	.cfi_endproc
+                                        # -- End function
+	.globl	pair_16                         # -- Begin function pair_16
+	.p2align	4
+	.type	pair_16,@function
+pair_16:                                # @pair_16
+	.cfi_startproc
+# %bb.0:
+	movzwl	%di, %eax
+	retq
+.Lfunc_end10:
+	.size	pair_16, .Lfunc_end10-pair_16
+	.cfi_endproc
+                                        # -- End function
+	.globl	cpp_16                          # -- Begin function cpp_16
+	.p2align	4
+	.type	cpp_16,@function
+cpp_16:                                 # @cpp_16
+	.cfi_startproc
+# %bb.0:
+	movzwl	%di, %eax
+	retq
+.Lfunc_end11:
+	.size	cpp_16, .Lfunc_end11-cpp_16
+	.cfi_endproc
+                                        # -- End function
+	.globl	split_24                        # -- Begin function split_24
+	.p2align	4
+	.type	split_24,@function
+split_24:                               # @split_24
+	.cfi_startproc
+# %bb.0:
+	movq	%rdi, %rax
+	andl	$16777215, %eax                 # imm = 0xFFFFFF
+	retq
+.Lfunc_end12:
+	.size	split_24, .Lfunc_end12-split_24
+	.cfi_endproc
+                                        # -- End function
+	.globl	pair_24                         # -- Begin function pair_24
+	.p2align	4
+	.type	pair_24,@function
+pair_24:                                # @pair_24
+	.cfi_startproc
+# %bb.0:
+	movq	%rdi, %rax
+	andl	$16777215, %eax                 # imm = 0xFFFFFF
+	retq
+.Lfunc_end13:
+	.size	pair_24, .Lfunc_end13-pair_24
+	.cfi_endproc
+                                        # -- End function
+	.globl	cpp_24                          # -- Begin function cpp_24
+	.p2align	4
+	.type	cpp_24,@function
+cpp_24:                                 # @cpp_24
+	.cfi_startproc
+# %bb.0:
+	movq	%rdi, %rax
+	andl	$16777215, %eax                 # imm = 0xFFFFFF
+	retq
+.Lfunc_end14:
+	.size	cpp_24, .Lfunc_end14-cpp_24
+	.cfi_endproc
+                                        # -- End function
+	.globl	split_32                        # -- Begin function split_32
+	.p2align	4
+	.type	split_32,@function
+split_32:                               # @split_32
+	.cfi_startproc
+# %bb.0:
+	movl	%edi, %eax
+	retq
+.Lfunc_end15:
+	.size	split_32, .Lfunc_end15-split_32
+	.cfi_endproc
+                                        # -- End function
+	.globl	pair_32                         # -- Begin function pair_32
+	.p2align	4
+	.type	pair_32,@function
+pair_32:                                # @pair_32
+	.cfi_startproc
+# %bb.0:
+	movl	%edi, %eax
+	retq
+.Lfunc_end16:
+	.size	pair_32, .Lfunc_end16-pair_32
+	.cfi_endproc
+                                        # -- End function
+	.globl	cpp_32                          # -- Begin function cpp_32
+	.p2align	4
+	.type	cpp_32,@function
+cpp_32:                                 # @cpp_32
+	.cfi_startproc
+# %bb.0:
+	movl	%edi, %eax
+	retq
+.Lfunc_end17:
+	.size	cpp_32, .Lfunc_end17-cpp_32
+	.cfi_endproc
+                                        # -- End function
+	.globl	split_33                        # -- Begin function split_33
+	.p2align	4
+	.type	split_33,@function
+split_33:                               # @split_33
+	.cfi_startproc
+# %bb.0:
+	#APP
+	movl	$33, %eax
+	#NO_APP
+	#APP
+	bzhiq	%rax, %rdi, %rax
+	#NO_APP
+	retq
+.Lfunc_end18:
+	.size	split_33, .Lfunc_end18-split_33
+	.cfi_endproc
+                                        # -- End function
+	.globl	pair_33                         # -- Begin function pair_33
+	.p2align	4
+	.type	pair_33,@function
+pair_33:                                # @pair_33
+	.cfi_startproc
+# %bb.0:
+	#APP
+	movl	$33, %ecx
+	bzhiq	%rcx, %rdi, %rax
+	#NO_APP
+	retq
+.Lfunc_end19:
+	.size	pair_33, .Lfunc_end19-pair_33
+	.cfi_endproc
+                                        # -- End function
+	.globl	cpp_33                          # -- Begin function cpp_33
+	.p2align	4
+	.type	cpp_33,@function
+cpp_33:                                 # @cpp_33
+	.cfi_startproc
+# %bb.0:
+	movb	$33, %al
+	bzhiq	%rax, %rdi, %rax
+	retq
+.Lfunc_end20:
+	.size	cpp_33, .Lfunc_end20-cpp_33
+	.cfi_endproc
+                                        # -- End function
+	.globl	split_40                        # -- Begin function split_40
+	.p2align	4
+	.type	split_40,@function
+split_40:                               # @split_40
+	.cfi_startproc
+# %bb.0:
+	#APP
+	movl	$40, %eax
+	#NO_APP
+	#APP
+	bzhiq	%rax, %rdi, %rax
+	#NO_APP
+	retq
+.Lfunc_end21:
+	.size	split_40, .Lfunc_end21-split_40
+	.cfi_endproc
+                                        # -- End function
+	.globl	pair_40                         # -- Begin function pair_40
+	.p2align	4
+	.type	pair_40,@function
+pair_40:                                # @pair_40
+	.cfi_startproc
+# %bb.0:
+	#APP
+	movl	$40, %ecx
+	bzhiq	%rcx, %rdi, %rax
+	#NO_APP
+	retq
+.Lfunc_end22:
+	.size	pair_40, .Lfunc_end22-pair_40
+	.cfi_endproc
+                                        # -- End function
+	.globl	cpp_40                          # -- Begin function cpp_40
+	.p2align	4
+	.type	cpp_40,@function
+cpp_40:                                 # @cpp_40
+	.cfi_startproc
+# %bb.0:
+	movb	$40, %al
+	bzhiq	%rax, %rdi, %rax
+	retq
+.Lfunc_end23:
+	.size	cpp_40, .Lfunc_end23-cpp_40
+	.cfi_endproc
+                                        # -- End function
+	.globl	split_48                        # -- Begin function split_48
+	.p2align	4
+	.type	split_48,@function
+split_48:                               # @split_48
+	.cfi_startproc
+# %bb.0:
+	#APP
+	movl	$48, %eax
+	#NO_APP
+	#APP
+	bzhiq	%rax, %rdi, %rax
+	#NO_APP
+	retq
+.Lfunc_end24:
+	.size	split_48, .Lfunc_end24-split_48
+	.cfi_endproc
+                                        # -- End function
+	.globl	pair_48                         # -- Begin function pair_48
+	.p2align	4
+	.type	pair_48,@function
+pair_48:                                # @pair_48
+	.cfi_startproc
+# %bb.0:
+	#APP
+	movl	$48, %ecx
+	bzhiq	%rcx, %rdi, %rax
+	#NO_APP
+	retq
+.Lfunc_end25:
+	.size	pair_48, .Lfunc_end25-pair_48
+	.cfi_endproc
+                                        # -- End function
+	.globl	cpp_48                          # -- Begin function cpp_48
+	.p2align	4
+	.type	cpp_48,@function
+cpp_48:                                 # @cpp_48
+	.cfi_startproc
+# %bb.0:
+	movb	$48, %al
+	bzhiq	%rax, %rdi, %rax
+	retq
+.Lfunc_end26:
+	.size	cpp_48, .Lfunc_end26-cpp_48
+	.cfi_endproc
+                                        # -- End function
+	.globl	split_56                        # -- Begin function split_56
+	.p2align	4
+	.type	split_56,@function
+split_56:                               # @split_56
+	.cfi_startproc
+# %bb.0:
+	#APP
+	movl	$56, %eax
+	#NO_APP
+	#APP
+	bzhiq	%rax, %rdi, %rax
+	#NO_APP
+	retq
+.Lfunc_end27:
+	.size	split_56, .Lfunc_end27-split_56
+	.cfi_endproc
+                                        # -- End function
+	.globl	pair_56                         # -- Begin function pair_56
+	.p2align	4
+	.type	pair_56,@function
+pair_56:                                # @pair_56
+	.cfi_startproc
+# %bb.0:
+	#APP
+	movl	$56, %ecx
+	bzhiq	%rcx, %rdi, %rax
+	#NO_APP
+	retq
+.Lfunc_end28:
+	.size	pair_56, .Lfunc_end28-pair_56
+	.cfi_endproc
+                                        # -- End function
+	.globl	cpp_56                          # -- Begin function cpp_56
+	.p2align	4
+	.type	cpp_56,@function
+cpp_56:                                 # @cpp_56
+	.cfi_startproc
+# %bb.0:
+	movb	$56, %al
+	bzhiq	%rax, %rdi, %rax
+	retq
+.Lfunc_end29:
+	.size	cpp_56, .Lfunc_end29-cpp_56
+	.cfi_endproc
+                                        # -- End function
+	.globl	split_63                        # -- Begin function split_63
+	.p2align	4
+	.type	split_63,@function
+split_63:                               # @split_63
+	.cfi_startproc
+# %bb.0:
+	#APP
+	movl	$63, %eax
+	#NO_APP
+	#APP
+	bzhiq	%rax, %rdi, %rax
+	#NO_APP
+	retq
+.Lfunc_end30:
+	.size	split_63, .Lfunc_end30-split_63
+	.cfi_endproc
+                                        # -- End function
+	.globl	pair_63                         # -- Begin function pair_63
+	.p2align	4
+	.type	pair_63,@function
+pair_63:                                # @pair_63
+	.cfi_startproc
+# %bb.0:
+	#APP
+	movl	$63, %ecx
+	bzhiq	%rcx, %rdi, %rax
+	#NO_APP
+	retq
+.Lfunc_end31:
+	.size	pair_63, .Lfunc_end31-pair_63
+	.cfi_endproc
+                                        # -- End function
+	.globl	cpp_63                          # -- Begin function cpp_63
+	.p2align	4
+	.type	cpp_63,@function
+cpp_63:                                 # @cpp_63
+	.cfi_startproc
+# %bb.0:
+	movb	$63, %al
+	bzhiq	%rax, %rdi, %rax
+	retq
+.Lfunc_end32:
+	.size	cpp_63, .Lfunc_end32-cpp_63
+	.cfi_endproc
+                                        # -- End function
+	.globl	split_64                        # -- Begin function split_64
+	.p2align	4
+	.type	split_64,@function
+split_64:                               # @split_64
+	.cfi_startproc
+# %bb.0:
+	movq	%rdi, %rax
+	retq
+.Lfunc_end33:
+	.size	split_64, .Lfunc_end33-split_64
+	.cfi_endproc
+                                        # -- End function
+	.globl	pair_64                         # -- Begin function pair_64
+	.p2align	4
+	.type	pair_64,@function
+pair_64:                                # @pair_64
+	.cfi_startproc
+# %bb.0:
+	movq	%rdi, %rax
+	retq
+.Lfunc_end34:
+	.size	pair_64, .Lfunc_end34-pair_64
+	.cfi_endproc
+                                        # -- End function
+	.globl	cpp_64                          # -- Begin function cpp_64
+	.p2align	4
+	.type	cpp_64,@function
+cpp_64:                                 # @cpp_64
+	.cfi_startproc
+# %bb.0:
+	movq	%rdi, %rax
+	retq
+.Lfunc_end35:
+	.size	cpp_64, .Lfunc_end35-cpp_64
+	.cfi_endproc
+                                        # -- End function
+	.globl	split_65                        # -- Begin function split_65
+	.p2align	4
+	.type	split_65,@function
+split_65:                               # @split_65
+	.cfi_startproc
+# %bb.0:
+	movq	%rdi, %rax
+	retq
+.Lfunc_end36:
+	.size	split_65, .Lfunc_end36-split_65
+	.cfi_endproc
+                                        # -- End function
+	.globl	pair_65                         # -- Begin function pair_65
+	.p2align	4
+	.type	pair_65,@function
+pair_65:                                # @pair_65
+	.cfi_startproc
+# %bb.0:
+	movq	%rdi, %rax
+	retq
+.Lfunc_end37:
+	.size	pair_65, .Lfunc_end37-pair_65
+	.cfi_endproc
+                                        # -- End function
+	.globl	cpp_65                          # -- Begin function cpp_65
+	.p2align	4
+	.type	cpp_65,@function
+cpp_65:                                 # @cpp_65
+	.cfi_startproc
+# %bb.0:
+	movq	%rdi, %rax
+	retq
+.Lfunc_end38:
+	.size	cpp_65, .Lfunc_end38-cpp_65
+	.cfi_endproc
+                                        # -- End function
+	.globl	split_256                       # -- Begin function split_256
+	.p2align	4
+	.type	split_256,@function
+split_256:                              # @split_256
+	.cfi_startproc
+# %bb.0:
+	movq	%rdi, %rax
+	retq
+.Lfunc_end39:
+	.size	split_256, .Lfunc_end39-split_256
+	.cfi_endproc
+                                        # -- End function
+	.globl	pair_256                        # -- Begin function pair_256
+	.p2align	4
+	.type	pair_256,@function
+pair_256:                               # @pair_256
+	.cfi_startproc
+# %bb.0:
+	movq	%rdi, %rax
+	retq
+.Lfunc_end40:
+	.size	pair_256, .Lfunc_end40-pair_256
+	.cfi_endproc
+                                        # -- End function
+	.globl	cpp_256                         # -- Begin function cpp_256
+	.p2align	4
+	.type	cpp_256,@function
+cpp_256:                                # @cpp_256
+	.cfi_startproc
+# %bb.0:
+	movq	%rdi, %rax
+	retq
+.Lfunc_end41:
+	.size	cpp_256, .Lfunc_end41-cpp_256
+	.cfi_endproc
+                                        # -- End function
+	.globl	split_4294967295u               # -- Begin function split_4294967295u
+	.p2align	4
+	.type	split_4294967295u,@function
+split_4294967295u:                      # @split_4294967295u
+	.cfi_startproc
+# %bb.0:
+	movq	%rdi, %rax
+	retq
+.Lfunc_end42:
+	.size	split_4294967295u, .Lfunc_end42-split_4294967295u
+	.cfi_endproc
+                                        # -- End function
+	.globl	pair_4294967295u                # -- Begin function pair_4294967295u
+	.p2align	4
+	.type	pair_4294967295u,@function
+pair_4294967295u:                       # @pair_4294967295u
+	.cfi_startproc
+# %bb.0:
+	movq	%rdi, %rax
+	retq
+.Lfunc_end43:
+	.size	pair_4294967295u, .Lfunc_end43-pair_4294967295u
+	.cfi_endproc
+                                        # -- End function
+	.globl	cpp_4294967295u                 # -- Begin function cpp_4294967295u
+	.p2align	4
+	.type	cpp_4294967295u,@function
+cpp_4294967295u:                        # @cpp_4294967295u
+	.cfi_startproc
+# %bb.0:
+	movq	%rdi, %rax
+	retq
+.Lfunc_end44:
+	.size	cpp_4294967295u, .Lfunc_end44-cpp_4294967295u
+	.cfi_endproc
+                                        # -- End function
+	.globl	dynamic_width                   # -- Begin function dynamic_width
+	.p2align	4
+	.type	dynamic_width,@function
+dynamic_width:                          # @dynamic_width
+	.cfi_startproc
+# %bb.0:
+	movq	%rdi, %rax
+	cmpl	$63, %esi
+	ja	.LBB45_4
+# %bb.1:
+	testl	%esi, %esi
+	je	.LBB45_2
+# %bb.3:
+	#APP
+	movl	%esi, %ecx
+	bzhiq	%rcx, %rax, %rax
+	#NO_APP
+.LBB45_4:
+	retq
+.LBB45_2:
+	xorl	%eax, %eax
+	retq
+.Lfunc_end45:
+	.size	dynamic_width, .Lfunc_end45-dynamic_width
+	.cfi_endproc
+                                        # -- End function
+	.globl	constant_value                  # -- Begin function constant_value
+	.p2align	4
+	.type	constant_value,@function
+constant_value:                         # @constant_value
+	.cfi_startproc
+# %bb.0:
+	movabsq	$517992144624, %rax             # imm = 0x789ABCDEF0
+	retq
+.Lfunc_end46:
+	.size	constant_value, .Lfunc_end46-constant_value
+	.cfi_endproc
+                                        # -- End function
+	.globl	bounded_result                  # -- Begin function bounded_result
+	.p2align	4
+	.type	bounded_result,@function
+bounded_result:                         # @bounded_result
+	.cfi_startproc
+# %bb.0:
+	xorl	%eax, %eax
+	retq
+.Lfunc_end47:
+	.size	bounded_result, .Lfunc_end47-bounded_result
+	.cfi_endproc
+                                        # -- End function
+	.globl	hint_40                         # -- Begin function hint_40
+	.p2align	4
+	.type	hint_40,@function
+hint_40:                                # @hint_40
+	.cfi_startproc
+# %bb.0:
+	#APP
+	movl	$40, %eax
+	#NO_APP
+	movl	%eax, %eax
+	bzhiq	%rax, %rdi, %rax
+	retq
+.Lfunc_end48:
+	.size	hint_40, .Lfunc_end48-hint_40
+	.cfi_endproc
+                                        # -- End function
+	.globl	cpp_producer                    # -- Begin function cpp_producer
+	.p2align	4
+	.type	cpp_producer,@function
+cpp_producer:                           # @cpp_producer
+	.cfi_startproc
+# %bb.0:
+	movabsq	$791991156115, %rcx             # imm = 0xB86659FD93
+	movl	%edi, %eax
+	imulq	%rax, %rcx
+	movb	$40, %al
+	xorq	%rsi, %rcx
+	bzhiq	%rax, %rcx, %rax
+	retq
+.Lfunc_end49:
+	.size	cpp_producer, .Lfunc_end49-cpp_producer
+	.cfi_endproc
+                                        # -- End function
+	.globl	split_producer                  # -- Begin function split_producer
+	.p2align	4
+	.type	split_producer,@function
+split_producer:                         # @split_producer
+	.cfi_startproc
+# %bb.0:
+	movabsq	$791991156115, %rcx             # imm = 0xB86659FD93
+	movl	%edi, %eax
+	imulq	%rax, %rcx
+	movb	$40, %al
+	bzhiq	%rax, %rcx, %rax
+	#APP
+	movl	$40, %ecx
+	#NO_APP
+	xorq	%rsi, %rax
+	#APP
+	bzhiq	%rcx, %rax, %rax
+	#NO_APP
+	retq
+.Lfunc_end50:
+	.size	split_producer, .Lfunc_end50-split_producer
+	.cfi_endproc
+                                        # -- End function
+	.globl	pair_producer                   # -- Begin function pair_producer
+	.p2align	4
+	.type	pair_producer,@function
+pair_producer:                          # @pair_producer
+	.cfi_startproc
+# %bb.0:
+	movabsq	$791991156115, %rcx             # imm = 0xB86659FD93
+	movl	%edi, %eax
+	imulq	%rax, %rcx
+	movb	$40, %al
+	bzhiq	%rax, %rcx, %rax
+	xorq	%rsi, %rax
+	#APP
+	movl	$40, %ecx
+	bzhiq	%rcx, %rax, %rax
+	#NO_APP
+	retq
+.Lfunc_end51:
+	.size	pair_producer, .Lfunc_end51-pair_producer
+	.cfi_endproc
+                                        # -- End function
+	.globl	hint_producer                   # -- Begin function hint_producer
+	.p2align	4
+	.type	hint_producer,@function
+hint_producer:                          # @hint_producer
+	.cfi_startproc
+# %bb.0:
+	movabsq	$791991156115, %rdx             # imm = 0xB86659FD93
+	movl	%edi, %ecx
+	#APP
+	movl	$40, %eax
+	#NO_APP
+	movl	%eax, %eax
+	imulq	%rcx, %rdx
+	movb	$40, %cl
+	bzhiq	%rcx, %rdx, %rcx
+	xorq	%rsi, %rcx
+	bzhiq	%rax, %rcx, %rax
+	retq
+.Lfunc_end52:
+	.size	hint_producer, .Lfunc_end52-hint_producer
+	.cfi_endproc
+                                        # -- End function
+	.globl	cpp_loop                        # -- Begin function cpp_loop
+	.p2align	4
+	.type	cpp_loop,@function
+cpp_loop:                               # @cpp_loop
+	.cfi_startproc
+# %bb.0:
+	testl	%esi, %esi
+	je	.LBB53_1
+# %bb.3:
+	movl	$7690, %r8d                     # imm = 0x1E0A
+	movabsq	$791991156115, %r9              # imm = 0xB86659FD93
+	movl	%esi, %ecx
+	xorl	%esi, %esi
+	xorl	%eax, %eax
+	.p2align	4
+.LBB53_4:                               # =>This Inner Loop Header: Depth=1
+	movq	%rsi, %r10
+	xorq	%rdx, %r10
+	addq	%r9, %rsi
+	movzbl	%r10b, %r11d
+	bextrq	%r8, %r10, %r10
+	xorq	(%rdi,%r11,8), %r10
+	addq	%r10, %rax
+	decq	%rcx
+	jne	.LBB53_4
+# %bb.2:
+	retq
+.LBB53_1:
+	xorl	%eax, %eax
+	retq
+.Lfunc_end53:
+	.size	cpp_loop, .Lfunc_end53-cpp_loop
+	.cfi_endproc
+                                        # -- End function
+	.globl	split_loop                      # -- Begin function split_loop
+	.p2align	4
+	.type	split_loop,@function
+split_loop:                             # @split_loop
+	.cfi_startproc
+# %bb.0:
+	testl	%esi, %esi
+	je	.LBB54_1
+# %bb.3:
+	pushq	%rbx
+	.cfi_def_cfa_offset 16
+	.cfi_offset %rbx, -16
+	movl	%esi, %ecx
+	#APP
+	movl	$40, %esi
+	#NO_APP
+	movb	$40, %r9b
+	movabsq	$791991156115, %r10             # imm = 0xB86659FD93
+	xorl	%r8d, %r8d
+	xorl	%eax, %eax
+	.p2align	4
+.LBB54_4:                               # =>This Inner Loop Header: Depth=1
+	bzhiq	%r9, %r8, %r11
+	addq	%r10, %r8
+	xorq	%rdx, %r11
+	#APP
+	bzhiq	%rsi, %r11, %r11
+	#NO_APP
+	movzbl	%r11b, %ebx
+	shrq	$10, %r11
+	xorq	(%rdi,%rbx,8), %r11
+	addq	%r11, %rax
+	decq	%rcx
+	jne	.LBB54_4
+# %bb.5:
+	popq	%rbx
+	.cfi_def_cfa_offset 8
+	.cfi_restore %rbx
+	retq
+.LBB54_1:
+	xorl	%eax, %eax
+	retq
+.Lfunc_end54:
+	.size	split_loop, .Lfunc_end54-split_loop
+	.cfi_endproc
+                                        # -- End function
+	.globl	pair_loop                       # -- Begin function pair_loop
+	.p2align	4
+	.type	pair_loop,@function
+pair_loop:                              # @pair_loop
+	.cfi_startproc
+# %bb.0:
+	testl	%esi, %esi
+	je	.LBB55_1
+# %bb.3:
+	movb	$40, %r8b
+	movabsq	$791991156115, %r9              # imm = 0xB86659FD93
+	movl	%esi, %ecx
+	xorl	%esi, %esi
+	xorl	%eax, %eax
+	.p2align	4
+.LBB55_4:                               # =>This Inner Loop Header: Depth=1
+	bzhiq	%r8, %rsi, %r10
+	addq	%r9, %rsi
+	xorq	%rdx, %r10
+	#APP
+	movl	$40, %r11d
+	bzhiq	%r11, %r10, %r10
+	#NO_APP
+	movzbl	%r10b, %r11d
+	shrq	$10, %r10
+	xorq	(%rdi,%r11,8), %r10
+	addq	%r10, %rax
+	decq	%rcx
+	jne	.LBB55_4
+# %bb.2:
+	retq
+.LBB55_1:
+	xorl	%eax, %eax
+	retq
+.Lfunc_end55:
+	.size	pair_loop, .Lfunc_end55-pair_loop
+	.cfi_endproc
+                                        # -- End function
+	.globl	hint_loop                       # -- Begin function hint_loop
+	.p2align	4
+	.type	hint_loop,@function
+hint_loop:                              # @hint_loop
+	.cfi_startproc
+# %bb.0:
+	testl	%esi, %esi
+	je	.LBB56_1
+# %bb.3:
+	pushq	%rbx
+	.cfi_def_cfa_offset 16
+	.cfi_offset %rbx, -16
+	movb	$40, %r9b
+	movabsq	$791991156115, %r10             # imm = 0xB86659FD93
+	movl	%esi, %ecx
+	#APP
+	movl	$40, %eax
+	#NO_APP
+	movl	%eax, %esi
+	xorl	%r8d, %r8d
+	xorl	%eax, %eax
+	.p2align	4
+.LBB56_4:                               # =>This Inner Loop Header: Depth=1
+	bzhiq	%r9, %r8, %r11
+	addq	%r10, %r8
+	xorq	%rdx, %r11
+	bzhiq	%rsi, %r11, %r11
+	movzbl	%r11b, %ebx
+	shrq	$10, %r11
+	xorq	(%rdi,%rbx,8), %r11
+	addq	%r11, %rax
+	decq	%rcx
+	jne	.LBB56_4
+# %bb.5:
+	popq	%rbx
+	.cfi_def_cfa_offset 8
+	.cfi_restore %rbx
+	retq
+.LBB56_1:
+	xorl	%eax, %eax
+	retq
+.Lfunc_end56:
+	.size	hint_loop, .Lfunc_end56-hint_loop
+	.cfi_endproc
+                                        # -- End function
+	.ident	"Ubuntu clang version 21.1.8 (++20251221033104+2078da43e25a-1~exp1~20251221153121.57)"
+	.section	".note.GNU-stack","",@progbits
+	.addrsig

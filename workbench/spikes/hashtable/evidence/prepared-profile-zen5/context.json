@@ -1,0 +1,36 @@
+{
+  "format": 1,
+  "authored_analysis": true,
+  "job": "20261013T201821Z-34e68e97",
+  "instance": "i-0e638f4bdfeba6301",
+  "instance_state": "terminated",
+  "platform": "Zen5 AVX2; unchanged retained ELF",
+  "profile_runner_source_manifest": "6b8d026747f277be4dcf2dbb92f7ebfb3217401f430af9fa9e9470ae7c490899",
+  "profile_runner_source_archive_sha256": "82640958d4b70d7dea43ca16999b121e925d5c86a5c5df0ca8d5917309125802",
+  "original_elf_source_manifest": "2013b46d6f86a483ebf11d70ab78e6dffcd5a5b2c702eb57ec3eba8c6756238e",
+  "original_elf_sha256": "9907b313adb693150c7717f758150bc2b981b1a566a672eeb588d59743f0a6ac",
+  "original_elf_build_id": "1d99b3271bbae9ab6ab16b4104062cdac4a512d2",
+  "scope": "Four original-driver hit anomalies, all complete owner phases retained, sampling of exact unchanged native ELF.",
+  "validated": [
+    "All four data SHA256 values match profile.json",
+    "ELF SHA256 and build ID match original native capture and perf mmap records",
+    "Binary perf samples agree exactly with native perf-script IP/period/PID/TID sequence; timestamps agree within printed precision",
+    "All hit samples land at audited instructions on CPU0 with user-space sample mode",
+    "All 1000 repetitions and nine phases per process present; logical bytes/populations/operations match original cases",
+    "No LOST, LOST_SAMPLES, THROTTLE or UNTHROTTLE records in the recorded data section"
+  ],
+  "limitations": [
+    "Frequency-mode cycles:u at 997 Hz, precise_ip=0. Arbitrary skid; sample IP/region fractions are not causal cycle fractions.",
+    "No per-phase time_enabled/time_running data; full PMU coverage observed in availability probes does not establish sampling coverage.",
+    "Only cycles were sampled. No workload IPC, retired-instruction, branch-misprediction, front-end/backend stall, cache-miss or residency attribution. Availability probe backend stalls were unavailable.",
+    "Four sequential one-process runs, no randomized profile order or repeated machine trials. Original full driver checked all lifecycle mutations; this profile did not rerun the standalone all-width guard driver.",
+    "Profiled replay timings are roughly 15–18 percent above original medians and are not replacement benchmark results.",
+    "Finite hit-address coverage intentionally excludes independent warmups, misses, serial loops, construction, mutation, pool and background work.",
+    "No native modified-register control in this receipt. Partial-register dependency remains a focused hypothesis, not proof of cause or graduation readiness."
+  ],
+  "recovery": [
+    "python3 workbench/tools/artifacts.py fetch workbench/spikes/hashtable-design/evidence/prepared-profile-zen5/artifact.json build/prepared-profile-recovered",
+    "python3 workbench/tools/artifacts.py fetch workbench/spikes/hashtable-design/evidence/prepared-zen5/artifact.json build/prepared-profile-original --file formats",
+    "python3 workbench/spikes/hashtable-design/evidence/prepared-profile-zen5/analyze.py build/prepared-profile-recovered build/prepared-profile-original/formats workbench/spikes/hashtable-design/evidence/prepared-zen5 build/prepared-profile-analysis"
+  ]
+}

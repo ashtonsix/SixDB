@@ -53,8 +53,10 @@ template <unsigned Rows> void transfers() {
                             for (unsigned r = 0; r < count; ++r)
                                 if (active & (1u << r))
                                     for (unsigned i = 0; i < bytes; ++i) {
+                                        const auto wire = tp::byte(0xa5 + 37 * r + 19 * i);
+                                        data[r * stride + i] = wire;
                                         expected |=
-                                            std::uint64_t((0xa5 >> shift) & ((1u << width) - 1))
+                                            std::uint64_t((wire >> shift) & ((1u << width) - 1))
                                             << (8 * (r * bytes + i));
                                         input |= std::uint64_t((1u << width) - 1)
                                                  << (8 * (r * bytes + i));
@@ -74,6 +76,16 @@ template <unsigned Rows> void transfers() {
                                                 "fixed transfer window admission");
                                         require(nr.template get_transfer_unchecked<Bytes>(0, active) == expected,
                                                 Rows, bytes, "fixed guarded transfer independent value");
+                                        for (unsigned hint : {0u, stride}) {
+                                            auto address = [&](unsigned r) {
+                                                require(r < count && (active & (1u << r)),
+                                                        Rows, bytes, "fixed raw active callbacks");
+                                                return data.data() + r * stride;
+                                            };
+                                            require(tp::native::read_transfer_body<Rows, Bytes>(
+                                                        rp.controls(), address, active, hint) == expected,
+                                                    Rows, bytes, "fixed raw guarded transfer independent value");
+                                        }
                                         require(nr.template get_transfer_unchecked<Bytes>(
                                                     std::numeric_limits<std::size_t>::max(), 0) == 0,
                                                 Rows, bytes, "empty fixed transfer performs no address access");

@@ -1,0 +1,307 @@
+{
+  "scope": "Local AArch64 K40/W2 complete-operation binaries; instruction-level mechanism only, no timing or native-host conclusion.",
+  "map_assumption": "Successful existing primary match; one iteration followed until the next-key loop boundary.",
+  "mm_assumption": "A10 arm0 primary inline record with tag 0, 2 or 3, so the W2/B8 append does not allocate.",
+  "variants": {
+    "partial": {
+      "binary_sha256": "62a4cf196d9466a75798929fa9595f480bfcea9c1c04b24c174bdf4a2ff6b983",
+      "source_sha256": "310cbb41d43f13fd5d4f862804779666e92a130d12a9bd5327ca13ed538087ad",
+      "promoted_sha256": "b01bbd42da1c82d769c20e8f19e07c732c0307a6f1d8df25125b1ed4b8587498",
+      "record_table_sha256": "cb6ea07907472d6bdac733b4493affa97276a10e629e66cdde8d202711c2068e",
+      "assembly_sha256": "cd4026e2bef9774da47f717ef655f6dc09439341143337555cc243035c360be7",
+      "codegen_sha256": "e946dcd4255a9419597bdac7a393424e208798e80fec46b5b98a61ef42d73719",
+      "update_roots": 20,
+      "audit_failures": 0,
+      "isa": "armv8.2-a+crypto",
+      "tune": "generic",
+      "compiler": "/usr/bin/clang++-21",
+      "optimization": "-O3",
+      "autovectorization": false
+    },
+    "nonzero": {
+      "binary_sha256": "a635d93dca04e453c41238f1e03ac256db1192676c7a5a02e2a83b868ed3a42b",
+      "source_sha256": "310cbb41d43f13fd5d4f862804779666e92a130d12a9bd5327ca13ed538087ad",
+      "promoted_sha256": "e6173e9ddc79f620d844c74fb51ea9f8560af5af884b9d52fb4874f6c7e21253",
+      "record_table_sha256": "cb6ea07907472d6bdac733b4493affa97276a10e629e66cdde8d202711c2068e",
+      "assembly_sha256": "c55031ccb3206eb49a78932f1b156d7c8906c7052dba3eb438350203ec17a6e6",
+      "codegen_sha256": "f1d22d72bcc1b499839023fc8bf383c245d03a5dd6ab7083eed30490832bc6aa",
+      "update_roots": 20,
+      "audit_failures": 0,
+      "isa": "armv8.2-a+crypto",
+      "tune": "generic",
+      "compiler": "/usr/bin/clang++-21",
+      "optimization": "-O3",
+      "autovectorization": false
+    }
+  },
+  "map_paths": [
+    {
+      "variant": "partial",
+      "A": 6,
+      "arm": 0,
+      "source": "partial/audit/K40-W2-kind1-A6-arm0-update-helper.asm",
+      "match_branch": "0x17ed4",
+      "entry": "0x182e8",
+      "last": "0x17e18",
+      "loop": "0x17e1c",
+      "owner_register": "x26",
+      "counter_reads": [
+        "17df8: ldr w10, [x26, #0x118]",
+        "17dfc: ldr x11, [x26, #0x120]"
+      ],
+      "counter_stores": [
+        "17e10: str w9, [x26, #0x118]",
+        "17e14: str x8, [x26, #0x120]"
+      ]
+    },
+    {
+      "variant": "partial",
+      "A": 6,
+      "arm": 1,
+      "source": "partial/audit/K40-W2-kind1-A6-arm1-update-helper.asm",
+      "match_branch": "0x236c4",
+      "entry": "0x23ad8",
+      "last": "0x23608",
+      "loop": "0x2360c",
+      "owner_register": "x26",
+      "counter_reads": [
+        "235e8: ldr w10, [x26, #0x118]",
+        "235ec: ldr x11, [x26, #0x120]"
+      ],
+      "counter_stores": [
+        "23600: str w9, [x26, #0x118]",
+        "23604: str x8, [x26, #0x120]"
+      ]
+    },
+    {
+      "variant": "partial",
+      "A": 6,
+      "arm": 2,
+      "source": "partial/audit/K40-W2-kind1-A6-arm2-update-helper.asm",
+      "match_branch": "0x301bc",
+      "entry": "0x30618",
+      "last": "0x300fc",
+      "loop": "0x30100",
+      "owner_register": "x24",
+      "counter_reads": [
+        "300dc: ldr w10, [x24, #0x118]",
+        "300e0: ldr x11, [x24, #0x120]"
+      ],
+      "counter_stores": [
+        "300f4: str w9, [x24, #0x118]",
+        "300f8: str x8, [x24, #0x120]"
+      ]
+    },
+    {
+      "variant": "partial",
+      "A": 10,
+      "arm": 0,
+      "source": "partial/audit/K40-W2-kind1-A10-arm0-update-helper.asm",
+      "match_branch": "0x14934",
+      "entry": "0x14838",
+      "last": "0x14870",
+      "loop": "0x14874",
+      "owner_register": "x26",
+      "counter_reads": [
+        "14850: ldr w10, [x26, #0x118]",
+        "14854: ldr x11, [x26, #0x120]"
+      ],
+      "counter_stores": [
+        "14868: str w9, [x26, #0x118]",
+        "1486c: str x8, [x26, #0x120]"
+      ]
+    },
+    {
+      "variant": "partial",
+      "A": 10,
+      "arm": 1,
+      "source": "partial/audit/K40-W2-kind1-A10-arm1-update-helper.asm",
+      "match_branch": "0x20e6c",
+      "entry": "0x20d70",
+      "last": "0x20da8",
+      "loop": "0x20dac",
+      "owner_register": "x26",
+      "counter_reads": [
+        "20d88: ldr w10, [x26, #0x118]",
+        "20d8c: ldr x11, [x26, #0x120]"
+      ],
+      "counter_stores": [
+        "20da0: str w9, [x26, #0x118]",
+        "20da4: str x8, [x26, #0x120]"
+      ]
+    },
+    {
+      "variant": "partial",
+      "A": 10,
+      "arm": 2,
+      "source": "partial/audit/K40-W2-kind1-A10-arm2-update-helper.asm",
+      "match_branch": "0x2c32c",
+      "entry": "0x2c228",
+      "last": "0x2c264",
+      "loop": "0x2c268",
+      "owner_register": "x24",
+      "counter_reads": [
+        "2c244: ldr w10, [x24, #0x118]",
+        "2c248: ldr x11, [x24, #0x120]"
+      ],
+      "counter_stores": [
+        "2c25c: str w9, [x24, #0x118]",
+        "2c260: str x8, [x24, #0x120]"
+      ]
+    },
+    {
+      "variant": "nonzero",
+      "A": 6,
+      "arm": 0,
+      "source": "nonzero/audit/K40-W2-kind1-A6-arm0-update-helper.asm",
+      "match_branch": "0x17ed8",
+      "entry": "0x182ec",
+      "last": "0x18308",
+      "loop": "0x17e20",
+      "owner_register": "x26",
+      "counter_reads": [],
+      "counter_stores": []
+    },
+    {
+      "variant": "nonzero",
+      "A": 6,
+      "arm": 1,
+      "source": "nonzero/audit/K40-W2-kind1-A6-arm1-update-helper.asm",
+      "match_branch": "0x23708",
+      "entry": "0x23b1c",
+      "last": "0x23b38",
+      "loop": "0x23650",
+      "owner_register": "x26",
+      "counter_reads": [],
+      "counter_stores": []
+    },
+    {
+      "variant": "nonzero",
+      "A": 6,
+      "arm": 2,
+      "source": "nonzero/audit/K40-W2-kind1-A6-arm2-update-helper.asm",
+      "match_branch": "0x30220",
+      "entry": "0x3067c",
+      "last": "0x30160",
+      "loop": "0x30164",
+      "owner_register": "x24",
+      "counter_reads": [],
+      "counter_stores": []
+    },
+    {
+      "variant": "nonzero",
+      "A": 10,
+      "arm": 0,
+      "source": "nonzero/audit/K40-W2-kind1-A10-arm0-update-helper.asm",
+      "match_branch": "0x14914",
+      "entry": "0x1483c",
+      "last": "0x14850",
+      "loop": "0x14854",
+      "owner_register": "x26",
+      "counter_reads": [],
+      "counter_stores": []
+    },
+    {
+      "variant": "nonzero",
+      "A": 10,
+      "arm": 1,
+      "source": "nonzero/audit/K40-W2-kind1-A10-arm1-update-helper.asm",
+      "match_branch": "0x20e8c",
+      "entry": "0x20db4",
+      "last": "0x20dc8",
+      "loop": "0x20dcc",
+      "owner_register": "x26",
+      "counter_reads": [],
+      "counter_stores": []
+    },
+    {
+      "variant": "nonzero",
+      "A": 10,
+      "arm": 2,
+      "source": "nonzero/audit/K40-W2-kind1-A10-arm2-update-helper.asm",
+      "match_branch": "0x2c390",
+      "entry": "0x2c2ac",
+      "last": "0x2c2c8",
+      "loop": "0x2c2cc",
+      "owner_register": "x24",
+      "counter_reads": [],
+      "counter_stores": []
+    }
+  ],
+  "mm_paths": [
+    {
+      "variant": "partial",
+      "A": 10,
+      "arm": 0,
+      "source": "partial/audit/K40-W2-kind2-A10-arm0-update-helper.asm",
+      "path_ranges": [
+        [
+          "0x4b6ac",
+          "0x4b6cc"
+        ],
+        [
+          "0x4b750",
+          "0x4b78c"
+        ],
+        [
+          "0x4b914",
+          "0x4b91c"
+        ],
+        [
+          "0x4b28c",
+          "0x4b2b0"
+        ]
+      ],
+      "value_delta": 1,
+      "value_counter_stores": [
+        "4b2ac: str x9, [x27, #0x128]"
+      ],
+      "key_counter_stores": [
+        "4b2a8: str w8, [x27, #0x120]"
+      ],
+      "path_decisions": "Take inline eligibility; primary tier=1; skip secondary and overflow branches; follow final unconditional branch to owner accounting."
+    },
+    {
+      "variant": "nonzero",
+      "A": 10,
+      "arm": 0,
+      "source": "nonzero/audit/K40-W2-kind2-A10-arm0-update-helper.asm",
+      "path_ranges": [
+        [
+          "0x4b744",
+          "0x4b764"
+        ],
+        [
+          "0x4b7e8",
+          "0x4b828"
+        ],
+        [
+          "0x4b330",
+          "0x4b348"
+        ]
+      ],
+      "value_delta": 1,
+      "value_counter_stores": [
+        "4b338: str x8, [x27, #0x128]"
+      ],
+      "key_counter_stores": [],
+      "path_decisions": "Take inline eligibility; primary tier=1; skip secondary and overflow branches; follow final unconditional branch to owner accounting."
+    }
+  ],
+  "local_context": {
+    "rows": 10800,
+    "rows_by_variant": {
+      "partial": 5400,
+      "nonzero": 5400
+    },
+    "successful_processes": 240,
+    "matched_inventory_cells": 540,
+    "schedule_seed": 947,
+    "cpu_affinity": [
+      "2"
+    ],
+    "warning": "Unchanged Abseil arms vary between local runs. This receipt makes no causal performance estimate or platform-selection claim.",
+    "raw_csv_sha256": "1d2b35ae6be9bbb564b54b59ad35648e804ddbfc6ab8aa774feb79a11c688901",
+    "processes_sha256": "40ad477c64d201b8e9af256f218104df6888dd90669cca8e810d12ab1bd98bee"
+  }
+}

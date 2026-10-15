@@ -1,0 +1,31 @@
+F8 row=6 active=16 buckets=256 independent_hit c64r32: sp_tp_split median=4.7511 range=[4.7303,4.8230]; raw_fused median=5.1212 range=[5.1030,5.3123]
+F8 row=6 active=16 buckets=256 independent_hit c32r64: sp_tp_split median=6.1745 range=[6.1421,6.2611]; raw_fused median=7.0128 range=[6.9498,7.0662]
+F8 row=6 active=16 buckets=256 independent_hit c32r32: sp_tp_split median=3.9224 range=[3.8905,4.1092]; raw_fused median=4.9357 range=[4.8019,4.9945]
+F8 row=6 active=16 buckets=256 independent_hit c64r64: sp_tp_split median=5.8398 range=[5.7383,5.9515]; raw_fused median=7.0003 range=[6.9573,7.0809]
+F8 row=6 active=16 buckets=256 serial_hit c64r32: sp_tp_split median=17.6585 range=[17.6435,17.6833]; raw_fused median=18.2254 range=[18.2214,18.2363]
+F8 row=6 active=16 buckets=256 serial_hit c32r64: sp_tp_split median=18.0498 range=[18.0363,18.0615]; raw_fused median=18.3861 range=[18.3794,18.4160]
+F8 row=6 active=16 buckets=256 serial_hit c32r32: sp_tp_split median=17.6125 range=[17.5511,17.6497]; raw_fused median=18.2716 range=[18.1994,18.3575]
+F8 row=6 active=16 buckets=256 serial_hit c64r64: sp_tp_split median=17.6007 range=[17.5863,17.6423]; raw_fused median=18.6250 range=[18.5964,18.6343]
+F8 row=6 active=16 buckets=256 changed_update c64r32: sp_tp_split median=5.6919 range=[5.6410,5.9041]; raw_fused median=7.0244 range=[6.9405,7.0656]
+F8 row=6 active=16 buckets=256 changed_update c32r64: sp_tp_split median=7.3089 range=[7.1738,7.3172]; raw_fused median=7.3112 range=[7.2278,7.3238]
+F8 row=6 active=16 buckets=256 changed_update c32r32: sp_tp_split median=5.5499 range=[5.5348,5.5714]; raw_fused median=6.9108 range=[6.7621,7.0412]
+F8 row=6 active=16 buckets=256 changed_update c64r64: sp_tp_split median=5.6681 range=[5.4825,5.6868]; raw_fused median=7.4327 range=[7.1375,7.6688]
+F8 row=10 active=16 buckets=256 independent_hit c64r32: sp_tp_split median=5.6975 range=[5.5779,5.9537]; raw_fused median=4.6563 range=[4.5623,4.8533]
+F8 row=10 active=16 buckets=256 independent_hit c32r64: sp_tp_split median=5.2073 range=[5.1738,5.2372]; raw_fused median=4.2202 range=[4.1821,4.5170]
+F8 row=10 active=16 buckets=256 independent_hit c32r32: sp_tp_split median=4.2786 range=[4.2532,4.4891]; raw_fused median=6.8811 range=[6.8699,7.0102]
+F8 row=10 active=16 buckets=256 independent_hit c64r64: sp_tp_split median=4.7913 range=[4.6873,4.8944]; raw_fused median=5.1119 range=[5.0220,5.1212]
+F8 row=10 active=16 buckets=256 serial_hit c64r32: sp_tp_split median=18.6812 range=[18.6799,18.7106]; raw_fused median=19.3672 range=[19.3515,19.4106]
+F8 row=10 active=16 buckets=256 serial_hit c32r64: sp_tp_split median=18.6165 range=[18.5821,18.6974]; raw_fused median=19.3140 range=[19.3065,19.3314]
+F8 row=10 active=16 buckets=256 serial_hit c32r32: sp_tp_split median=18.7600 range=[18.6752,18.7942]; raw_fused median=19.3195 range=[19.2953,19.3227]
+F8 row=10 active=16 buckets=256 serial_hit c64r64: sp_tp_split median=18.7433 range=[18.7172,18.7610]; raw_fused median=19.1243 range=[19.0462,19.2385]
+F8 row=10 active=16 buckets=256 changed_update c64r32: sp_tp_split median=6.1846 range=[6.0137,6.2510]; raw_fused median=5.1270 range=[4.9590,5.2753]
+F8 row=10 active=16 buckets=256 changed_update c32r64: sp_tp_split median=5.8400 range=[5.7004,5.8533]; raw_fused median=5.9236 range=[5.8415,6.3116]
+F8 row=10 active=16 buckets=256 changed_update c32r32: sp_tp_split median=5.3630 range=[5.2761,5.4003]; raw_fused median=6.3406 range=[6.1231,6.5356]
+F8 row=10 active=16 buckets=256 changed_update c64r64: sp_tp_split median=4.6189 range=[4.5829,5.1484]; raw_fused median=5.3710 range=[5.3087,5.8622]
+F8+C13 matches K40/A19 bucket components, but excludes hash/table costs.
+Same frozen rich-format driver/header source for all tiers and hosts.
+Granite AVX2 only: composed/raw candidate-mask widths cross over independently; bytes, SIMD predicates and logical queries remain fixed.
+No cache-residence claim; allocated payload, query state and shared controls all occupy memory.
+Three rotated process passes; each cell below is the median of eight internal repetitions per process.
+All five complete operations/tails/layouts retained; raw fused independently encodes and routes the same bytes.
+This is a primitive composition control, not a complete hash table or a multi-writer result.

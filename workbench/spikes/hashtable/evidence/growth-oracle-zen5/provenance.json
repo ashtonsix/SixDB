@@ -1,0 +1,18 @@
+{
+  "files_sha256": {
+    "compiler.txt": "5b17cd9bfa01ae4b276d020d757aeed82b232d4dacef417a833e5ba69a5307da",
+    "lscpu.json": "b6816ad6943b3f5d140971ea83efc0e3ea061ae5f07133f519e10d44b0257bd8",
+    "panel/inputs.json": "d36ada09eb891e692a6adbe837fb0d5d2822acd91a93541e8c3e911c46317226",
+    "panel/summary.csv": "7022e11066b431a9171416aa73b3540e10d5aff89587bdcf2dcedb9f919bbde0",
+    "qualified.txt": "379fcdfe08092787880e6864fa7ac69c6ab3624840a6987fcd3f356e7902d6ea"
+  },
+  "format": 2,
+  "full_bundle": "artifact.json",
+  "kind": "files",
+  "regenerate": [
+    "python3",
+    "workbench/spikes/hashtable/growth-cycle-report.py",
+    "{evidence}/panel"
+  ],
+  "regenerate_from": "archive"
+}

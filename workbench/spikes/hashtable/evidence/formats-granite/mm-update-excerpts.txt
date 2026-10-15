@@ -1,0 +1,278 @@
+void ht::format_trial<40u, (ht::layout_solver::container)2, 10u, 2u>(orbital::allocation::Pool&, unsigned int)
+1042a90: movq %rax, 0x118(%rsp)
+1042a98: movq 0x148(%rsp), %rbp
+1042aa0: movq 0x150(%rsp), %rbx
+1042aa8: cmpq %rbx, %rbp
+1042aab: je 0x1042bc7 <void ht::format_trial<40u, (ht::layout_solver::container)2, 10u, 2u>(orbital::allocation::Pool&, unsigned int)+0x29b7>
+1042ab1: leaq 0x57(%rsp), %r15
+1042ab6: leaq 0x160(%rsp), %r14
+1042abe: leaq 0xd0(%rsp), %r13
+1042ac6: leaq 0x190(%rsp), %r12
+1042ace: nop 
+1042ad0: movl (%rbp), %eax
+1042ad3: movl %eax, %ecx
+1042ad5: shrl $0x1e, %ecx
+1042ad8: xorl %eax, %ecx
+1042ada: movabsq $0xb86659fd93, %rdx     # imm = 0xB86659FD93
+1042ae4: imulq %rdx, %rax
+1042ae8: movb $0x28, %dl
+1042aea: bzhiq %rdx, %rax, %rax
+1042aef: movabsq $-0x40a7b892e31b1a47, %rdx # imm = 0xBF58476D1CE4E5B9
+1042af9: imulq %rdx, %rcx
+1042afd: movq %rcx, %rdx
+1042b00: shrq $0x1b, %rdx
+1042b04: xorq %rcx, %rdx
+1042b07: movabsq $-0x6b2fb644ecceee15, %rcx # imm = 0x94D049BB133111EB
+1042b11: imulq %rcx, %rdx
+1042b15: movq %rdx, %rcx
+1042b18: shrq $0x1f, %rcx
+1042b1c: xorq %rdx, %rcx
+1042b1f: movq %rax, 0x38(%rsp)
+1042b24: movq %rcx, 0x48(%rsp)
+1042b29: movq %r15, 0x160(%rsp)
+1042b31: movq %r15, 0x188(%rsp)
+1042b39: leaq 0x2c0(%rsp), %rax
+1042b41: movq %rax, 0x190(%rsp)
+1042b49: leaq 0x38(%rsp), %rax
+1042b4e: movq %rax, 0x198(%rsp)
+1042b56: leaq 0x48(%rsp), %rax
+1042b5b: movq %rax, 0x1a0(%rsp)
+1042b63: movq %r15, 0x1a8(%rsp)
+1042b6b: leaq 0x188(%rsp), %rax
+1042b73: movq %rax, 0x1b0(%rsp)
+1042b7b: movq %r14, 0x1b8(%rsp)
+1042b83: movq %r13, %rdi
+1042b86: movq %r12, %rsi
+1042b89: callq 0x10518f0 <std::expected<ht::mutation_delta, ht::mutation_error> ht::promoted_table<40u, (ht::layout_solver::container)2, 8u, 10u, 6u, 128u, 128u, (ht::record_format)1, false>::try_set<ht::no_small_effects>(unsigned long, unsigned long, ht::no_small_effects&) requires T1 <= 8::'lambda'()::operator()() const>
+1042b8e: cmpb $0x0, 0xe0(%rsp)
+1042b96: je 0x104473a <void ht::format_trial<40u, (ht::layout_solver::container)2, 10u, 2u>(orbital::allocation::Pool&, unsigned int)+0x452a>
+1042b9c: movl 0xd0(%rsp), %eax
+1042ba3: addl %eax, 0x3d8(%rsp)
+1042baa: movq 0xd8(%rsp), %rax
+1042bb2: addq %rax, 0x3e0(%rsp)
+1042bba: addq $0x4, %rbp
+1042bbe: cmpq %rbx, %rbp
+1042bc1: jne 0x1042ad0 <void ht::format_trial<40u, (ht::layout_solver::container)2, 10u, 2u>(orbital::allocation::Pool&, unsigned int)+0x28c0>
+104473a: movq 0xfda82f(%rip), %rax    # 0x201ef70 <vsnprintf@GLIBC_2.2.5+0x201ef70>
+1044741: movq (%rax), %rdi
+1044744: leaq 0xd67f46(%rip), %rsi    # 0x1dac691 <vsnprintf@GLIBC_2.2.5+0x1dac691>
+104474b: leaq 0xd6815a(%rip), %rdx    # 0x1dac8ac <vsnprintf@GLIBC_2.2.5+0x1dac8ac>
+1044752: xorl %eax, %eax
+1044754: callq 0x7580 <fprintf@plt>
+1044759: callq 0x7230 <abort@plt>
+
+
+void ht::format_trial<40u, (ht::layout_solver::container)2, 10u, 14u>(orbital::allocation::Pool&, unsigned int)
+11a3a8a: movq %rax, 0x70(%rsp)
+11a3a8f: movq 0x120(%rsp), %r15
+11a3a97: movq 0x128(%rsp), %rbx
+11a3a9f: cmpq %rbx, %r15
+11a3aa2: je 0x11a3cea <void ht::format_trial<40u, (ht::layout_solver::container)2, 10u, 14u>(orbital::allocation::Pool&, unsigned int)+0x2fca>
+11a3aa8: movb $0x28, %r14b
+11a3aab: movabsq $0x1fffffffffffffff, %rbp # imm = 0x1FFFFFFFFFFFFFFF
+11a3ab5: movq $-0x1, %r13
+11a3abc: nopl (%rax)
+11a3ac0: movl (%r15), %eax
+11a3ac3: movl %eax, %ecx
+11a3ac5: shrl $0x1e, %ecx
+11a3ac8: xorl %eax, %ecx
+11a3aca: movabsq $0xb86659fd93, %rdx     # imm = 0xB86659FD93
+11a3ad4: imulq %rdx, %rax
+11a3ad8: bzhiq %r14, %rax, %rsi
+11a3add: movabsq $-0x40a7b892e31b1a47, %rax # imm = 0xBF58476D1CE4E5B9
+11a3ae7: imulq %rax, %rcx
+11a3aeb: movq %rcx, %rax
+11a3aee: shrq $0x1b, %rax
+11a3af2: xorq %rcx, %rax
+11a3af5: movabsq $-0x6b2fb644ecceee15, %rcx # imm = 0x94D049BB133111EB
+11a3aff: imulq %rcx, %rax
+11a3b03: movq %rax, %rcx
+11a3b06: shrq $0x1f, %rcx
+11a3b0a: xorq %rax, %rcx
+11a3b0d: movq %rcx, 0x138(%rsp)
+11a3b15: movq %rsi, 0x110(%rsp)
+11a3b1d: movq 0x80(%rsp), %rdx
+11a3b25: testb $0x3e, %dl
+11a3b28: je 0x11a3bf0 <void ht::format_trial<40u, (ht::layout_solver::container)2, 10u, 14u>(orbital::allocation::Pool&, unsigned int)+0x2ed0>
+11a3b2e: movq 0x88(%rsp), %rdi
+11a3b36: shlxq %rdx, %r13, %r10
+11a3b3b: movq %rdi, %rax
+11a3b3e: subq %r10, %rax
+11a3b41: addq $0xf, %rax
+11a3b45: prefetcht2 (%rdi)
+11a3b48: notq %r10
+11a3b4b: andl $0x7c0, %edx            # imm = 0x7C0
+11a3b51: xorq %rsi, %rdx
+11a3b54: movabsq $0x79d5f9e0de1e8cf5, %rcx # imm = 0x79D5F9E0DE1E8CF5
+11a3b5e: mulxq %rcx, %rcx, %rdx
+11a3b63: xorq %rcx, %rdx
+11a3b66: shrq $0x39, %rcx
+11a3b6a: vpbroadcastb %ecx, %xmm0
+11a3b70: movq %rdx, %r8
+11a3b73: xorl %r9d, %r9d
+11a3b76: andq %r10, %r8
+11a3b79: movq %r8, %rcx
+11a3b7c: shlq $0x5, %rcx
+11a3b80: prefetcht0 (%rax,%rcx)
+11a3b84: vmovdqu (%rdi,%r8), %xmm1
+11a3b8a: vpcmpeqb %xmm1, %xmm0, %k0
+11a3b90: kmovw %k0, %ecx
+11a3b94: testl %ecx, %ecx
+11a3b96: je 0x11a3bc0 <void ht::format_trial<40u, (ht::layout_solver::container)2, 10u, 14u>(orbital::allocation::Pool&, unsigned int)+0x2ea0>
+11a3b98: tzcntl %ecx, %r11d
+11a3b9d: addq %r8, %r11
+11a3ba0: andq %r10, %r11
+11a3ba3: shlq $0x5, %r11
+11a3ba7: cmpq %rsi, (%rax,%r11)
+11a3bab: je 0x11a3be0 <void ht::format_trial<40u, (ht::layout_solver::container)2, 10u, 14u>(orbital::allocation::Pool&, unsigned int)+0x2ec0>
+11a3bad: blsrl %ecx, %ecx
+11a3bb2: jne 0x11a3b98 <void ht::format_trial<40u, (ht::layout_solver::container)2, 10u, 14u>(orbital::allocation::Pool&, unsigned int)+0x2e78>
+11a3bb4: nopw %cs:(%rax,%rax)
+11a3bc0: vpsignb %xmm1, %xmm1, %xmm1
+11a3bc5: vpmovmskb %xmm1, %ecx
+11a3bc9: testl %ecx, %ecx
+11a3bcb: jne 0x11a3c50 <void ht::format_trial<40u, (ht::layout_solver::container)2, 10u, 14u>(orbital::allocation::Pool&, unsigned int)+0x2f30>
+11a3bd1: leaq 0x10(%r9,%r8), %r8
+11a3bd6: addq $0x10, %r9
+11a3bda: jmp 0x11a3b76 <void ht::format_trial<40u, (ht::layout_solver::container)2, 10u, 14u>(orbital::allocation::Pool&, unsigned int)+0x2e56>
+11a3be0: addq %r11, %rax
+11a3be3: jmp 0x11a3c77 <void ht::format_trial<40u, (ht::layout_solver::container)2, 10u, 14u>(orbital::allocation::Pool&, unsigned int)+0x2f57>
+11a3bf0: cmpq $0x8000, %rdx           # imm = 0x8000
+11a3bf7: jb 0x11a3c06 <void ht::format_trial<40u, (ht::layout_solver::container)2, 10u, 14u>(orbital::allocation::Pool&, unsigned int)+0x2ee6>
+11a3bf9: movq 0x88(%rsp), %rax
+11a3c01: cmpq %rsi, (%rax)
+11a3c04: je 0x11a3c77 <void ht::format_trial<40u, (ht::layout_solver::container)2, 10u, 14u>(orbital::allocation::Pool&, unsigned int)+0x2f57>
+11a3c06: leaq 0x80(%rsp), %rdi
+11a3c0e: movq %rdi, 0xa0(%rsp)
+11a3c16: leaq 0x110(%rsp), %rax
+11a3c1e: movq %rax, 0xa8(%rsp)
+11a3c26: leaq 0xe7a71b(%rip), %rsi    # 0x201e348 <absl::lts_20260817::container_internal::raw_hash_set<absl::lts_20260817::container_internal::FlatHashMapPolicy<unsigned long, absl::lts_20260817::InlinedVector<unsigned long, 1ul, std::allocator<unsigned long>>>>::GetPolicyFunctions()::value>
+11a3c2d: leaq 0xa0(%rsp), %rdx
+11a3c35: leaq -0x2ce07c(%rip), %rcx   # 0xed5bc0 <unsigned long absl::lts_20260817::functional_internal::InvokeObject<absl::lts_20260817::container_internal::HashKey<absl::lts_20260817::hash_internal::Hash<unsigned long>, unsigned long, true>&, unsigned long, unsigned long>(absl::lts_20260817::functional_internal::VoidPtr, absl::lts_20260817::functional_internal::ForwardT<unsigned long>::type)>
+11a3c3c: callq 0x1d91f30 <absl::lts_20260817::container_internal::PrepareInsertSmallNonSoo(absl::lts_20260817::container_internal::CommonFields&, absl::lts_20260817::container_internal::PolicyFunctions const&, absl::lts_20260817::FunctionRef<unsigned long (unsigned long)>)>
+11a3c41: jmp 0x11a3c64 <void ht::format_trial<40u, (ht::layout_solver::container)2, 10u, 14u>(orbital::allocation::Pool&, unsigned int)+0x2f44>
+11a3c50: leaq 0x80(%rsp), %rdi
+11a3c58: leaq 0xe7a6e9(%rip), %rsi    # 0x201e348 <absl::lts_20260817::container_internal::raw_hash_set<absl::lts_20260817::container_internal::FlatHashMapPolicy<unsigned long, absl::lts_20260817::InlinedVector<unsigned long, 1ul, std::allocator<unsigned long>>>>::GetPolicyFunctions()::value>
+11a3c5f: callq 0x1d93490 <absl::lts_20260817::container_internal::PrepareInsertLarge(absl::lts_20260817::container_internal::CommonFields&, absl::lts_20260817::container_internal::PolicyFunctions const&, unsigned long, absl::lts_20260817::container_internal::NonIterableBitMask<unsigned int, 16, 0>, absl::lts_20260817::container_internal::FindInfo)>
+11a3c64: movq 0x110(%rsp), %rcx
+11a3c6c: movq %rcx, (%rax)
+11a3c6f: movq $0x0, 0x8(%rax)
+11a3c77: movq 0x8(%rax), %rdx
+11a3c7b: movq %rdx, %rcx
+11a3c7e: shrq %rcx
+11a3c81: cmpq %rbp, %rcx
+11a3c84: je 0x11a5b95 <void ht::format_trial<40u, (ht::layout_solver::container)2, 10u, 14u>(orbital::allocation::Pool&, unsigned int)+0x4e75>
+11a3c8a: movl $0x2, %esi
+11a3c8f: testb $0x1, %dl
+11a3c92: je 0x11a3c98 <void ht::format_trial<40u, (ht::layout_solver::container)2, 10u, 14u>(orbital::allocation::Pool&, unsigned int)+0x2f78>
+11a3c94: movq 0x18(%rax), %rsi
+11a3c98: cmpq %rsi, %rcx
+11a3c9b: je 0x11a3cd4 <void ht::format_trial<40u, (ht::layout_solver::container)2, 10u, 14u>(orbital::allocation::Pool&, unsigned int)+0x2fb4>
+11a3c9d: testb $0x1, %dl
+11a3ca0: je 0x11a3cb0 <void ht::format_trial<40u, (ht::layout_solver::container)2, 10u, 14u>(orbital::allocation::Pool&, unsigned int)+0x2f90>
+11a3ca2: movq 0x10(%rax), %rdx
+11a3ca6: jmp 0x11a3cb4 <void ht::format_trial<40u, (ht::layout_solver::container)2, 10u, 14u>(orbital::allocation::Pool&, unsigned int)+0x2f94>
+11a3cb0: leaq 0x10(%rax), %rdx
+11a3cb4: movq 0x138(%rsp), %rsi
+11a3cbc: movq %rsi, (%rdx,%rcx,8)
+11a3cc0: addq $0x2, 0x8(%rax)
+11a3cc5: addq $0x4, %r15
+11a3cc9: cmpq %rbx, %r15
+11a3ccc: jne 0x11a3ac0 <void ht::format_trial<40u, (ht::layout_solver::container)2, 10u, 14u>(orbital::allocation::Pool&, unsigned int)+0x2da0>
+11a3cd2: jmp 0x11a3cea <void ht::format_trial<40u, (ht::layout_solver::container)2, 10u, 14u>(orbital::allocation::Pool&, unsigned int)+0x2fca>
+11a3cd4: addq $0x8, %rax
+11a3cd8: movq %rax, %rdi
+11a3cdb: leaq 0x138(%rsp), %rsi
+11a3ce3: callq 0x252410 <unsigned long& absl::lts_20260817::inlined_vector_internal::Storage<unsigned long, 1ul, std::allocator<unsigned long>>::EmplaceBackSlow<unsigned long const&>(unsigned long const&)>
+11a3ce8: jmp 0x11a3cc5 <void ht::format_trial<40u, (ht::layout_solver::container)2, 10u, 14u>(orbital::allocation::Pool&, unsigned int)+0x2fa5>
+11a3cea: movabsq $0xffffffffffff8, %rbx  # imm = 0xFFFFFFFFFFFF8
+11a5b95: leaq 0xc06fa6(%rip), %rdi    # 0x1dacb42 <vsnprintf@GLIBC_2.2.5+0x1dacb42>
+11a5b9c: callq 0x1dab700 <absl::lts_20260817::ThrowStdLengthError(char const*)>
+
+
+Acquisition excerpts; gaps omitted, full body is recoverable from native assembly.
+std::optional<unsigned int> ht::links<64u, false, 0u>::acquire<ht::promoted_observer<ht::no_small_effects, true>>(unsigned int, ht::promoted_observer<ht::no_small_effects, true>&)
+
+  1599d0:      	pushq	%rbp
+  1599d1:      	pushq	%r15
+  1599d3:      	pushq	%r14
+  1599d5:      	pushq	%r13
+  1599d7:      	pushq	%r12
+  1599d9:      	pushq	%rbx
+  1599da:      	subq	$0x40b8, %rsp           # imm = 0x40B8
+  1599e1:      	movq	%rdi, %rbx
+  1599e4:      	movl	%esi, %ebp
+  1599e6:      	movl	0x48(%rdi,%rbp,4), %r12d
+  1599eb:      	testq	%r12, %r12
+  1599ee:      	je	0x159a5a <std::optional<unsigned int> ht::links<64u, false, 0u>::acquire<ht::promoted_observer<ht::no_small_effects, true>>(unsigned int, ht::promoted_observer<ht::no_small_effects, true>&)+0x8a>
+  1599f0:      	movq	0x8(%rbx), %r14
+  1599f4:      	movzbl	0x1ec63d5(%rip), %eax   # 0x201fdd0 <guard variable for ht::links<64u, false, 0u>::formats()::p>
+  1599fb:      	testb	%al, %al
+  1599fd:      	je	0x15a091 <std::optional<unsigned int> ht::links<64u, false, 0u>::acquire<ht::promoted_observer<ht::no_small_effects, true>>(unsigned int, ht::promoted_observer<ht::no_small_effects, true>&)+0x6c1>
+  159a03:      	movabsq	$0x100000000, %r8       # imm = 0x100000000
+  159a0d:      	movl	%r12d, %eax
+  159a10:      	shrl	$0x8, %eax
+  159a13:      	decl	%eax
+  159a15:      	leaq	(%rax,%rax,4), %rax
+  159a19:      	movl	0x20(%r14,%rax,8), %ecx
+  159a1e:      	movq	0x1ec6393(%rip), %rdx   # 0x201fdb8 <ht::links<64u, false, 0u>::formats()::p>
+  159a25:      	imulq	$0x2c, %rcx, %rcx
+  159a29:      	movq	0x8(%r14,%rax,8), %rax
+  159a2e:      	movzwl	0x8(%rdx,%rcx), %esi
+  159a33:      	xorl	%edi, %edi
+  159a35:      	cmpb	$0x0, 0xa(%rdx,%rcx)
+  159a3a:      	cmovnel	%esi, %edi
+  159a3d:      	movzbl	%r12b, %ecx
+  159a41:      	imulq	%rcx, %rdi
+  159a45:      	movl	0x2(%rax,%rdi), %ecx
+  159a49:      	movl	%ecx, 0x48(%rbx,%rbp,4)
+  159d5f:      	movq	0x1ec6052(%rip), %rcx   # 0x201fdb8 <ht::links<64u, false, 0u>::formats()::p>
+  159d66:      	imulq	$0x2c, %rax, %rax
+  159d6a:      	movq	-0x20(%r14), %rdi
+  159d6e:      	movzbl	0x28(%rcx,%rax), %edx
+  159d73:      	xorl	%esi, %esi
+  159d75:      	callq	0x7220 <memset@plt>
+  159d7a:      	cmpb	$0x1, 0xd0(%rsp)
+  159d82:      	jne	0x159d91 <std::optional<unsigned int> ht::links<64u, false, 0u>::acquire<ht::promoted_observer<ht::no_small_effects, true>>(unsigned int, ht::promoted_observer<ht::no_small_effects, true>&)+0x3c1>
+  159d84:      	leaq	0xb0(%rsp), %rdi
+  159d8c:      	callq	0x1d8a6b0 <orbital::allocation::Allocation::~Allocation()>
+  159ec1:      	movl	%ebp, %r13d
+  159ec4:      	leaq	0xb0(%rsp), %rdi
+  159ecc:      	xorl	%esi, %esi
+  159ece:      	movq	%r13, %rdx
+  159ed1:      	vzeroupper
+  159ed4:      	callq	0x7220 <memset@plt>
+  159ed9:      	leaq	0xb0(%rsp), %rax
+  159ee1:      	movq	%rax, 0x88(%rsp)
+  159ee9:      	movq	%r13, 0x90(%rsp)
+  159ef1:      	movl	%ebp, 0x2c(%rsp)
+  159f53:      	movzwl	%ax, %eax
+  159f56:      	cmpl	$0xff, %eax
+  159f5b:      	ja	0x15a06d <std::optional<unsigned int> ht::links<64u, false, 0u>::acquire<ht::promoted_observer<ht::no_small_effects, true>>(unsigned int, ht::promoted_observer<ht::no_small_effects, true>&)+0x69d>
+  159f61:      	incl	%esi
+  159f63:      	movq	%rdi, %rbx
+  159f66:      	callq	0x1d84810 <ikea::streampack::layout::lengths_bytes(unsigned int) const>
+  159f6b:      	testl	%eax, %eax
+  159f6d:      	jne	0x15a06d <std::optional<unsigned int> ht::links<64u, false, 0u>::acquire<ht::promoted_observer<ht::no_small_effects, true>>(unsigned int, ht::promoted_observer<ht::no_small_effects, true>&)+0x69d>
+  159f73:      	movl	0x4(%rbx), %eax
+  159f76:      	subl	%r15d, %eax
+  159f9c:      	leaq	0x30(%rsp), %rdi
+  159fa1:      	leaq	0xb0(%rsp), %rsi
+  159fa9:      	leaq	0x1f(%rsp), %r14
+  159fae:      	movq	%r13, %rdx
+  159fb1:      	movq	%r14, %rcx
+  159fb4:      	callq	0x122e0 <bool ikea::streampack::detail::input_alias<ikea::no_coverage>(ikea::streampack::basic_view<std::byte> const&, std::span<std::byte const, 18446744073709551615ul>, ikea::no_coverage const&)>
+  159fb9:      	testb	%al, %al
+  159fbb:      	jne	0x15a06d <std::optional<unsigned int> ht::links<64u, false, 0u>::acquire<ht::promoted_observer<ht::no_small_effects, true>>(unsigned int, ht::promoted_observer<ht::no_small_effects, true>&)+0x69d>
+  159fc1:      	leaq	0x88(%rsp), %rax
+  159fc9:      	movq	%rax, 0x98(%rsp)
+  159fd1:      	leaq	0x2c(%rsp), %rax
+  159fd6:      	movq	%rax, 0xa0(%rsp)
+  159fde:      	movq	%r14, 0xa8(%rsp)
+  159fe6:      	leaq	0x30(%rsp), %rdi
+  159feb:      	leaq	0x98(%rsp), %rsi
+  159ff3:      	callq	0x12400 <decltype(auto) ikea::streampack::author::dispatch<std::byte, std::expected<void, ikea::streampack::error> ikea::streampack::append<ikea::no_coverage>(ikea::streampack::basic_view<std::byte> const&, std::span<std::byte const, 18446744073709551615ul>, unsigned int, ikea::no_coverage&)::'lambda'(ikea::no_coverage)>(ikea::streampack::basic_view<ikea::no_coverage> const&, std::expected<void, ikea::streampack::error> ikea::streampack::append<ikea::no_coverage>(ikea::streampack::basic_view<std::byte> const&, std::span<std::byte const, 18446744073709551615ul>, unsigned int, ikea::no_coverage&)::'lambda'(ikea::no_coverage)&&)>
+  159ff8:      	shll	$0x8, %r12d
+  159ffc:      	orl	0x80(%rsp), %r12d
+  15a004:      	movabsq	$0x100000000, %r8       # imm = 0x100000000
+  15a00e:      	movl	%r12d, %eax

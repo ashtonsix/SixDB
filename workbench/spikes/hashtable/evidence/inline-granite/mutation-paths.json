@@ -1,0 +1,869 @@
+{
+  "scope": "K40 multimap A10, arms0/2/4/6; static reachable calls, no dynamic branch-frequency or time attribution",
+  "regions": [
+    {
+      "K": 40,
+      "kind": 2,
+      "A": 10,
+      "arm": 0,
+      "clock": "0x5a9a34",
+      "end": [
+        "0x5a9b7c"
+      ],
+      "calls": [
+        {
+          "address": "0x5a9b3e",
+          "opcode": "callq",
+          "target": "0x5b9b20 <std::expected<ht::mutation_delta, ht::mutation_error> ht::promoted_table<40u, (ht::layout_solver::container)2, 8u, 10u, 6u, 128u, 128u, (ht::record_format)1, false, (ht::record_access)3, true, ht::links<64u, false, 0u, true>, 1u>::try_set<ht::no_small_effects>(unsigned long, unsigned long, ht::no_small_effects&) requires T1 <= 8::'lambda'()::operator()() const>",
+          "indirect": false,
+          "inside_cfg_cycle": true
+        },
+        {
+          "address": "0x5ab79c",
+          "opcode": "callq",
+          "target": "0x7580 <fprintf@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false
+        },
+        {
+          "address": "0x5ab7a1",
+          "opcode": "callq",
+          "target": "0x7230 <abort@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false
+        }
+      ],
+      "functions": [
+        {
+          "address": "0x5b9b20",
+          "depth": 0,
+          "symbol": "std::expected<ht::mutation_delta, ht::mutation_error> ht::promoted_table<40u, (ht::layout_solver::container)2, 8u, 10u, 6u, 128u, 128u, (ht::record_format)1, false, (ht::record_access)3, true, ht::links<64u, false, 0u, true>, 1u>::try_set<ht::no_small_effects>(unsigned long, unsigned long, ht::no_small_effects&) requires T1 <= 8::'lambda'()::operator()() const",
+          "calls": [
+            {
+              "address": "0x5ba1bc",
+              "target": "0x5ba8d0",
+              "symbol": "std::expected<ht::mutation_delta, ht::mutation_error> ht::promoted_table<40u, (ht::layout_solver::container)2, 8u, 10u, 6u, 128u, 128u, (ht::record_format)1, false, (ht::record_access)3, true, ht::links<64u, false, 0u, true>, 1u>::try_set<ht::no_small_effects>(unsigned long, unsigned long, ht::no_small_effects&) requires T1 <= 8::'lambda'()::operator()() const::'lambda'(std::optional<ht::slot_record<8u>> const&)::operator()(std::optional<ht::slot_record<8u>> const&) const"
+            },
+            {
+              "address": "0x5ba782",
+              "target": "0x5b6770",
+              "symbol": "std::optional<unsigned int> ht::links<40u, false, 9u, false>::acquire<ht::promoted_observer<ht::no_small_effects, false>>(unsigned int, ht::promoted_observer<ht::no_small_effects, false>&)"
+            },
+            {
+              "address": "0x5ba861",
+              "target": "0x7580",
+              "symbol": "fprintf@plt"
+            },
+            {
+              "address": "0x5ba866",
+              "target": "0x7230",
+              "symbol": "abort@plt"
+            },
+            {
+              "address": "0x5ba885",
+              "target": "0x7580",
+              "symbol": "fprintf@plt"
+            },
+            {
+              "address": "0x5ba88a",
+              "target": "0x7230",
+              "symbol": "abort@plt"
+            },
+            {
+              "address": "0x5ba8a9",
+              "target": "0x7580",
+              "symbol": "fprintf@plt"
+            },
+            {
+              "address": "0x5ba8ae",
+              "target": "0x7230",
+              "symbol": "abort@plt"
+            },
+            {
+              "address": "0x5ba8c0",
+              "target": "0x5b5df0",
+              "symbol": "std::_Optional_base<ht::links<40u, false, 9u, false>::reservation<ht::promoted_observer<ht::no_small_effects, false>>, false, false>::~_Optional_base()"
+            },
+            {
+              "address": "0x5ba8c8",
+              "target": "0x7740",
+              "symbol": "_Unwind_Resume@plt"
+            }
+          ]
+        },
+        {
+          "address": "0x5ba8d0",
+          "depth": 1,
+          "symbol": "std::expected<ht::mutation_delta, ht::mutation_error> ht::promoted_table<40u, (ht::layout_solver::container)2, 8u, 10u, 6u, 128u, 128u, (ht::record_format)1, false, (ht::record_access)3, true, ht::links<64u, false, 0u, true>, 1u>::try_set<ht::no_small_effects>(unsigned long, unsigned long, ht::no_small_effects&) requires T1 <= 8::'lambda'()::operator()() const::'lambda'(std::optional<ht::slot_record<8u>> const&)::operator()(std::optional<ht::slot_record<8u>> const&) const",
+          "calls": [
+            {
+              "address": "0x5ba93f",
+              "target": "0x73f0",
+              "symbol": "_Znwm@plt"
+            },
+            {
+              "address": "0x5ba9f6",
+              "target": "0xa97130",
+              "symbol": "orbital::allocation::Allocation::~Allocation()"
+            },
+            {
+              "address": "0x5baa1a",
+              "target": "0x7400",
+              "symbol": "_ZdlPvm@plt"
+            },
+            {
+              "address": "0x5baa2a",
+              "target": "0x7400",
+              "symbol": "_ZdlPvm@plt"
+            },
+            {
+              "address": "0x5bac73",
+              "target": "0x7d950",
+              "symbol": "std::optional<unsigned int> ht::links<64u, false, 0u, true>::acquire<ht::promoted_observer<ht::no_small_effects, true>>(unsigned int, ht::promoted_observer<ht::no_small_effects, true>&)"
+            },
+            {
+              "address": "0x5bafa5",
+              "target": "0x7580",
+              "symbol": "fprintf@plt"
+            },
+            {
+              "address": "0x5bafaa",
+              "target": "0x7230",
+              "symbol": "abort@plt"
+            },
+            {
+              "address": "0x5bafb6",
+              "target": "0x7780",
+              "symbol": "__cxa_guard_acquire@plt"
+            },
+            {
+              "address": "0x5bafd4",
+              "target": "0x79b20",
+              "symbol": "ht::links<64u, false, 0u, true>::formats()::'lambda'()::operator()() const"
+            },
+            {
+              "address": "0x5bafee",
+              "target": "0x7390",
+              "symbol": "__cxa_atexit@plt"
+            },
+            {
+              "address": "0x5baffa",
+              "target": "0x72b0",
+              "symbol": "__cxa_guard_release@plt"
+            },
+            {
+              "address": "0x5bb016",
+              "target": "0x7780",
+              "symbol": "__cxa_guard_acquire@plt"
+            },
+            {
+              "address": "0x5bb034",
+              "target": "0x79b20",
+              "symbol": "ht::links<64u, false, 0u, true>::formats()::'lambda'()::operator()() const"
+            },
+            {
+              "address": "0x5bb04e",
+              "target": "0x7390",
+              "symbol": "__cxa_atexit@plt"
+            },
+            {
+              "address": "0x5bb05a",
+              "target": "0x72b0",
+              "symbol": "__cxa_guard_release@plt"
+            },
+            {
+              "address": "0x5bb076",
+              "target": "0x7780",
+              "symbol": "__cxa_guard_acquire@plt"
+            },
+            {
+              "address": "0x5bb08d",
+              "target": "0x11f50",
+              "symbol": "ht::identity<2u>::admit()::'lambda'()::operator()() const"
+            },
+            {
+              "address": "0x5bb09f",
+              "target": "0x72b0",
+              "symbol": "__cxa_guard_release@plt"
+            },
+            {
+              "address": "0x5bb0bb",
+              "target": "0x7780",
+              "symbol": "__cxa_guard_acquire@plt"
+            },
+            {
+              "address": "0x5bb0d2",
+              "target": "0x12140",
+              "symbol": "ht::identity<4u>::admit()::'lambda'()::operator()() const"
+            },
+            {
+              "address": "0x5bb0e4",
+              "target": "0x72b0",
+              "symbol": "__cxa_guard_release@plt"
+            },
+            {
+              "address": "0x5bb100",
+              "target": "0x7780",
+              "symbol": "__cxa_guard_acquire@plt"
+            },
+            {
+              "address": "0x5bb117",
+              "target": "0x43eb0",
+              "symbol": "ht::identity<8u>::admit()::'lambda'()::operator()() const"
+            },
+            {
+              "address": "0x5bb129",
+              "target": "0x72b0",
+              "symbol": "__cxa_guard_release@plt"
+            },
+            {
+              "address": "0x5bb150",
+              "target": "0x7290",
+              "symbol": "__cxa_guard_abort@plt"
+            },
+            {
+              "address": "0x5bb158",
+              "target": "0x79ac0",
+              "symbol": "std::vector<ht::links<64u, false, 0u, true>::block, std::allocator<ht::links<64u, false, 0u, true>::block>>::~vector()"
+            },
+            {
+              "address": "0x5bb16c",
+              "target": "0x7290",
+              "symbol": "__cxa_guard_abort@plt"
+            },
+            {
+              "address": "0x5bb17b",
+              "target": "0x7400",
+              "symbol": "_ZdlPvm@plt"
+            },
+            {
+              "address": "0x5bb191",
+              "target": "0x71b0",
+              "symbol": "__cxa_begin_catch@plt"
+            },
+            {
+              "address": "0x5bb19a",
+              "target": "0x76b0",
+              "symbol": "__cxa_end_catch@plt"
+            },
+            {
+              "address": "0x5bb1c0",
+              "target": "0x5bb1d0",
+              "symbol": "std::expected<ht::mutation_delta, ht::mutation_error> ht::promoted_table<40u, (ht::layout_solver::container)2, 8u, 10u, 6u, 128u, 128u, (ht::record_format)1, false, (ht::record_access)3, true, ht::links<64u, false, 0u, true>, 1u>::try_set<ht::no_small_effects>(unsigned long, unsigned long, ht::no_small_effects&) requires T1 <= 8::'lambda'()::operator()() const::proposal::~proposal()"
+            },
+            {
+              "address": "0x5bb1c8",
+              "target": "0x7740",
+              "symbol": "_Unwind_Resume@plt"
+            }
+          ]
+        },
+        {
+          "address": "0x5bb1d0",
+          "depth": 2,
+          "symbol": "std::expected<ht::mutation_delta, ht::mutation_error> ht::promoted_table<40u, (ht::layout_solver::container)2, 8u, 10u, 6u, 128u, 128u, (ht::record_format)1, false, (ht::record_access)3, true, ht::links<64u, false, 0u, true>, 1u>::try_set<ht::no_small_effects>(unsigned long, unsigned long, ht::no_small_effects&) requires T1 <= 8::'lambda'()::operator()() const::proposal::~proposal()",
+          "calls": []
+        }
+      ]
+    },
+    {
+      "K": 40,
+      "kind": 2,
+      "A": 10,
+      "arm": 2,
+      "clock": "0x5e211d",
+      "end": [
+        "0x5e225c"
+      ],
+      "calls": [
+        {
+          "address": "0x5e221e",
+          "opcode": "callq",
+          "target": "0x5f2740 <std::expected<ht::mutation_delta, ht::mutation_error> ht::promoted_table<40u, (ht::layout_solver::container)2, 8u, 10u, 6u, 128u, 128u, (ht::record_format)1, false, (ht::record_access)3, true, ht::links<64u, false, 0u, true>, 2u>::try_set<ht::no_small_effects>(unsigned long, unsigned long, ht::no_small_effects&) requires T1 <= 8::'lambda'()::operator()() const>",
+          "indirect": false,
+          "inside_cfg_cycle": true
+        },
+        {
+          "address": "0x5e3eac",
+          "opcode": "callq",
+          "target": "0x7580 <fprintf@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false
+        },
+        {
+          "address": "0x5e3eb1",
+          "opcode": "callq",
+          "target": "0x7230 <abort@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false
+        }
+      ],
+      "functions": [
+        {
+          "address": "0x5f2740",
+          "depth": 0,
+          "symbol": "std::expected<ht::mutation_delta, ht::mutation_error> ht::promoted_table<40u, (ht::layout_solver::container)2, 8u, 10u, 6u, 128u, 128u, (ht::record_format)1, false, (ht::record_access)3, true, ht::links<64u, false, 0u, true>, 2u>::try_set<ht::no_small_effects>(unsigned long, unsigned long, ht::no_small_effects&) requires T1 <= 8::'lambda'()::operator()() const",
+          "calls": [
+            {
+              "address": "0x5f2de7",
+              "target": "0x5f3520",
+              "symbol": "std::expected<ht::mutation_delta, ht::mutation_error> ht::promoted_table<40u, (ht::layout_solver::container)2, 8u, 10u, 6u, 128u, 128u, (ht::record_format)1, false, (ht::record_access)3, true, ht::links<64u, false, 0u, true>, 2u>::try_set<ht::no_small_effects>(unsigned long, unsigned long, ht::no_small_effects&) requires T1 <= 8::'lambda'()::operator()() const::'lambda'(std::optional<ht::slot_record<16u>> const&)::operator()(std::optional<ht::slot_record<16u>> const&) const"
+            },
+            {
+              "address": "0x5f33cc",
+              "target": "0x5ee7f0",
+              "symbol": "std::optional<unsigned int> ht::links<40u, false, 17u, false>::acquire<ht::promoted_observer<ht::no_small_effects, false>>(unsigned int, ht::promoted_observer<ht::no_small_effects, false>&)"
+            },
+            {
+              "address": "0x5f34a9",
+              "target": "0x7580",
+              "symbol": "fprintf@plt"
+            },
+            {
+              "address": "0x5f34ae",
+              "target": "0x7230",
+              "symbol": "abort@plt"
+            },
+            {
+              "address": "0x5f34cd",
+              "target": "0x7580",
+              "symbol": "fprintf@plt"
+            },
+            {
+              "address": "0x5f34d2",
+              "target": "0x7230",
+              "symbol": "abort@plt"
+            },
+            {
+              "address": "0x5f34f1",
+              "target": "0x7580",
+              "symbol": "fprintf@plt"
+            },
+            {
+              "address": "0x5f34f6",
+              "target": "0x7230",
+              "symbol": "abort@plt"
+            },
+            {
+              "address": "0x5f3508",
+              "target": "0x5eddf0",
+              "symbol": "std::_Optional_base<ht::links<40u, false, 17u, false>::reservation<ht::promoted_observer<ht::no_small_effects, false>>, false, false>::~_Optional_base()"
+            },
+            {
+              "address": "0x5f3510",
+              "target": "0x7740",
+              "symbol": "_Unwind_Resume@plt"
+            }
+          ]
+        },
+        {
+          "address": "0x5f3520",
+          "depth": 1,
+          "symbol": "std::expected<ht::mutation_delta, ht::mutation_error> ht::promoted_table<40u, (ht::layout_solver::container)2, 8u, 10u, 6u, 128u, 128u, (ht::record_format)1, false, (ht::record_access)3, true, ht::links<64u, false, 0u, true>, 2u>::try_set<ht::no_small_effects>(unsigned long, unsigned long, ht::no_small_effects&) requires T1 <= 8::'lambda'()::operator()() const::'lambda'(std::optional<ht::slot_record<16u>> const&)::operator()(std::optional<ht::slot_record<16u>> const&) const",
+          "calls": [
+            {
+              "address": "0x5f35b7",
+              "target": "0x73f0",
+              "symbol": "_Znwm@plt"
+            },
+            {
+              "address": "0x5f3666",
+              "target": "0xa97130",
+              "symbol": "orbital::allocation::Allocation::~Allocation()"
+            },
+            {
+              "address": "0x5f368a",
+              "target": "0x7400",
+              "symbol": "_ZdlPvm@plt"
+            },
+            {
+              "address": "0x5f369a",
+              "target": "0x7400",
+              "symbol": "_ZdlPvm@plt"
+            },
+            {
+              "address": "0x5f3910",
+              "target": "0x7d950",
+              "symbol": "std::optional<unsigned int> ht::links<64u, false, 0u, true>::acquire<ht::promoted_observer<ht::no_small_effects, true>>(unsigned int, ht::promoted_observer<ht::no_small_effects, true>&)"
+            },
+            {
+              "address": "0x5f3c69",
+              "target": "0x7580",
+              "symbol": "fprintf@plt"
+            },
+            {
+              "address": "0x5f3c6e",
+              "target": "0x7230",
+              "symbol": "abort@plt"
+            },
+            {
+              "address": "0x5f3c7a",
+              "target": "0x7780",
+              "symbol": "__cxa_guard_acquire@plt"
+            },
+            {
+              "address": "0x5f3c98",
+              "target": "0x79b20",
+              "symbol": "ht::links<64u, false, 0u, true>::formats()::'lambda'()::operator()() const"
+            },
+            {
+              "address": "0x5f3cb2",
+              "target": "0x7390",
+              "symbol": "__cxa_atexit@plt"
+            },
+            {
+              "address": "0x5f3cbe",
+              "target": "0x72b0",
+              "symbol": "__cxa_guard_release@plt"
+            },
+            {
+              "address": "0x5f3cda",
+              "target": "0x7780",
+              "symbol": "__cxa_guard_acquire@plt"
+            },
+            {
+              "address": "0x5f3cf8",
+              "target": "0x79b20",
+              "symbol": "ht::links<64u, false, 0u, true>::formats()::'lambda'()::operator()() const"
+            },
+            {
+              "address": "0x5f3d12",
+              "target": "0x7390",
+              "symbol": "__cxa_atexit@plt"
+            },
+            {
+              "address": "0x5f3d1e",
+              "target": "0x72b0",
+              "symbol": "__cxa_guard_release@plt"
+            },
+            {
+              "address": "0x5f3d3a",
+              "target": "0x7780",
+              "symbol": "__cxa_guard_acquire@plt"
+            },
+            {
+              "address": "0x5f3d51",
+              "target": "0x11f50",
+              "symbol": "ht::identity<2u>::admit()::'lambda'()::operator()() const"
+            },
+            {
+              "address": "0x5f3d63",
+              "target": "0x72b0",
+              "symbol": "__cxa_guard_release@plt"
+            },
+            {
+              "address": "0x5f3d7f",
+              "target": "0x7780",
+              "symbol": "__cxa_guard_acquire@plt"
+            },
+            {
+              "address": "0x5f3d96",
+              "target": "0x12140",
+              "symbol": "ht::identity<4u>::admit()::'lambda'()::operator()() const"
+            },
+            {
+              "address": "0x5f3da8",
+              "target": "0x72b0",
+              "symbol": "__cxa_guard_release@plt"
+            },
+            {
+              "address": "0x5f3dc4",
+              "target": "0x7780",
+              "symbol": "__cxa_guard_acquire@plt"
+            },
+            {
+              "address": "0x5f3ddb",
+              "target": "0x43eb0",
+              "symbol": "ht::identity<8u>::admit()::'lambda'()::operator()() const"
+            },
+            {
+              "address": "0x5f3ded",
+              "target": "0x72b0",
+              "symbol": "__cxa_guard_release@plt"
+            },
+            {
+              "address": "0x5f3e14",
+              "target": "0x7290",
+              "symbol": "__cxa_guard_abort@plt"
+            },
+            {
+              "address": "0x5f3e1c",
+              "target": "0x79ac0",
+              "symbol": "std::vector<ht::links<64u, false, 0u, true>::block, std::allocator<ht::links<64u, false, 0u, true>::block>>::~vector()"
+            },
+            {
+              "address": "0x5f3e30",
+              "target": "0x7290",
+              "symbol": "__cxa_guard_abort@plt"
+            },
+            {
+              "address": "0x5f3e3f",
+              "target": "0x7400",
+              "symbol": "_ZdlPvm@plt"
+            },
+            {
+              "address": "0x5f3e55",
+              "target": "0x71b0",
+              "symbol": "__cxa_begin_catch@plt"
+            },
+            {
+              "address": "0x5f3e5e",
+              "target": "0x76b0",
+              "symbol": "__cxa_end_catch@plt"
+            },
+            {
+              "address": "0x5f3e84",
+              "target": "0x5f3ea0",
+              "symbol": "std::expected<ht::mutation_delta, ht::mutation_error> ht::promoted_table<40u, (ht::layout_solver::container)2, 8u, 10u, 6u, 128u, 128u, (ht::record_format)1, false, (ht::record_access)3, true, ht::links<64u, false, 0u, true>, 2u>::try_set<ht::no_small_effects>(unsigned long, unsigned long, ht::no_small_effects&) requires T1 <= 8::'lambda'()::operator()() const::proposal::~proposal()"
+            },
+            {
+              "address": "0x5f3e8c",
+              "target": "0x7740",
+              "symbol": "_Unwind_Resume@plt"
+            }
+          ]
+        },
+        {
+          "address": "0x5f3ea0",
+          "depth": 2,
+          "symbol": "std::expected<ht::mutation_delta, ht::mutation_error> ht::promoted_table<40u, (ht::layout_solver::container)2, 8u, 10u, 6u, 128u, 128u, (ht::record_format)1, false, (ht::record_access)3, true, ht::links<64u, false, 0u, true>, 2u>::try_set<ht::no_small_effects>(unsigned long, unsigned long, ht::no_small_effects&) requires T1 <= 8::'lambda'()::operator()() const::proposal::~proposal()",
+          "calls": []
+        }
+      ]
+    },
+    {
+      "K": 40,
+      "kind": 2,
+      "A": 10,
+      "arm": 4,
+      "clock": "0x619863",
+      "end": [
+        "0x6199ac"
+      ],
+      "calls": [
+        {
+          "address": "0x61996e",
+          "opcode": "callq",
+          "target": "0x623b00 <std::expected<ht::mutation_delta, ht::mutation_error> ht::promoted_table<40u, (ht::layout_solver::container)2, 8u, 10u, 6u, 256u, 192u, (ht::record_format)1, false, (ht::record_access)3, true, ht::links<64u, false, 0u, true>, 2u>::try_set<ht::no_small_effects>(unsigned long, unsigned long, ht::no_small_effects&) requires T1 <= 8::'lambda'()::operator()() const>",
+          "indirect": false,
+          "inside_cfg_cycle": true
+        },
+        {
+          "address": "0x61b5fc",
+          "opcode": "callq",
+          "target": "0x7580 <fprintf@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false
+        },
+        {
+          "address": "0x61b601",
+          "opcode": "callq",
+          "target": "0x7230 <abort@plt>",
+          "indirect": false,
+          "inside_cfg_cycle": false
+        }
+      ],
+      "functions": [
+        {
+          "address": "0x623b00",
+          "depth": 0,
+          "symbol": "std::expected<ht::mutation_delta, ht::mutation_error> ht::promoted_table<40u, (ht::layout_solver::container)2, 8u, 10u, 6u, 256u, 192u, (ht::record_format)1, false, (ht::record_access)3, true, ht::links<64u, false, 0u, true>, 2u>::try_set<ht::no_small_effects>(unsigned long, unsigned long, ht::no_small_effects&) requires T1 <= 8::'lambda'()::operator()() const",
+          "calls": [
+            {
+              "address": "0x6241b5",
+              "target": "0x624910",
+              "symbol": "std::expected<ht::mutation_delta, ht::mutation_error> ht::promoted_table<40u, (ht::layout_solver::container)2, 8u, 10u, 6u, 256u, 192u, (ht::record_format)1, false, (ht::record_access)3, true, ht::links<64u, false, 0u, true>, 2u>::try_set<ht::no_small_effects>(unsigned long, unsigned long, ht::no_small_effects&) requires T1 <= 8::'lambda'()::operator()() const::'lambda'(std::optional<ht::slot_record<16u>> const&)::operator()(std::optional<ht::slot_record<16u>> const&) const"
+            },
+            {
+              "address": "0x6247bb",
+              "target": "0x5ee7f0",
+              "symbol": "std::optional<unsigned int> ht::links<40u, false, 17u, false>::acquire<ht::promoted_observer<ht::no_small_effects, false>>(unsigned int, ht::promoted_observer<ht::no_small_effects, false>&)"
+            },
+            {
+              "address": "0x624898",
+              "target": "0x7580",
+              "symbol": "fprintf@plt"
+            },
+            {
+              "address": "0x62489d",
+              "target": "0x7230",
+              "symbol": "abort@plt"
+            },
+            {
+              "address": "0x6248bc",
+              "target": "0x7580",
+              "symbol": "fprintf@plt"
+            },
+            {
+              "address": "0x6248c1",
+              "target": "0x7230",
+              "symbol": "abort@plt"
+            },
+            {
+              "address": "0x6248e0",
+              "target": "0x7580",
+              "symbol": "fprintf@plt"
+            },
+            {
+              "address": "0x6248e5",
+              "target": "0x7230",
+              "symbol": "abort@plt"
+            },
+            {
+              "address": "0x6248f7",
+              "target": "0x5eddf0",
+              "symbol": "std::_Optional_base<ht::links<40u, false, 17u, false>::reservation<ht::promoted_observer<ht::no_small_effects, false>>, false, false>::~_Optional_base()"
+            },
+            {
+              "address": "0x6248ff",
+              "target": "0x7740",
+              "symbol": "_Unwind_Resume@plt"
+            }
+          ]
+        },
+        {
+          "address": "0x624910",
+          "depth": 1,
+          "symbol": "std::expected<ht::mutation_delta, ht::mutation_error> ht::promoted_table<40u, (ht::layout_solver::container)2, 8u, 10u, 6u, 256u, 192u, (ht::record_format)1, false, (ht::record_access)3, true, ht::links<64u, false, 0u, true>, 2u>::try_set<ht::no_small_effects>(unsigned long, unsigned long, ht::no_small_effects&) requires T1 <= 8::'lambda'()::operator()() const::'lambda'(std::optional<ht::slot_record<16u>> const&)::operator()(std::optional<ht::slot_record<16u>> const&) const",
+          "calls": [
+            {
+              "address": "0x6249a7",
+              "target": "0x73f0",
+              "symbol": "_Znwm@plt"
+            },
+            {
+              "address": "0x624a56",
+              "target": "0xa97130",
+              "symbol": "orbital::allocation::Allocation::~Allocation()"
+            },
+            {
+              "address": "0x624a7a",
+              "target": "0x7400",
+              "symbol": "_ZdlPvm@plt"
+            },
+            {
+              "address": "0x624a8a",
+              "target": "0x7400",
+              "symbol": "_ZdlPvm@plt"
+            },
+            {
+              "address": "0x624d00",
+              "target": "0x7d950",
+              "symbol": "std::optional<unsigned int> ht::links<64u, false, 0u, true>::acquire<ht::promoted_observer<ht::no_small_effects, true>>(unsigned int, ht::promoted_observer<ht::no_small_effects, true>&)"
+            },
+            {
+              "address": "0x625059",
+              "target": "0x7580",
+              "symbol": "fprintf@plt"
+            },
+            {
+              "address": "0x62505e",
+              "target": "0x7230",
+              "symbol": "abort@plt"
+            },
+            {
+              "address": "0x62506a",
+              "target": "0x7780",
+              "symbol": "__cxa_guard_acquire@plt"
+            },
+            {
+              "address": "0x625088",
+              "target": "0x79b20",
+              "symbol": "ht::links<64u, false, 0u, true>::formats()::'lambda'()::operator()() const"
+            },
+            {
+              "address": "0x6250a2",
+              "target": "0x7390",
+              "symbol": "__cxa_atexit@plt"
+            },
+            {
+              "address": "0x6250ae",
+              "target": "0x72b0",
+              "symbol": "__cxa_guard_release@plt"
+            },
+            {
+              "address": "0x6250ca",
+              "target": "0x7780",
+              "symbol": "__cxa_guard_acquire@plt"
+            },
+            {
+              "address": "0x6250e8",
+              "target": "0x79b20",
+              "symbol": "ht::links<64u, false, 0u, true>::formats()::'lambda'()::operator()() const"
+            },
+            {
+              "address": "0x625102",
+              "target": "0x7390",
+              "symbol": "__cxa_atexit@plt"
+            },
+            {
+              "address": "0x62510e",
+              "target": "0x72b0",
+              "symbol": "__cxa_guard_release@plt"
+            },
+            {
+              "address": "0x62512a",
+              "target": "0x7780",
+              "symbol": "__cxa_guard_acquire@plt"
+            },
+            {
+              "address": "0x625141",
+              "target": "0x11f50",
+              "symbol": "ht::identity<2u>::admit()::'lambda'()::operator()() const"
+            },
+            {
+              "address": "0x625153",
+              "target": "0x72b0",
+              "symbol": "__cxa_guard_release@plt"
+            },
+            {
+              "address": "0x62516f",
+              "target": "0x7780",
+              "symbol": "__cxa_guard_acquire@plt"
+            },
+            {
+              "address": "0x625186",
+              "target": "0x12140",
+              "symbol": "ht::identity<4u>::admit()::'lambda'()::operator()() const"
+            },
+            {
+              "address": "0x625198",
+              "target": "0x72b0",
+              "symbol": "__cxa_guard_release@plt"
+            },
+            {
+              "address": "0x6251b4",
+              "target": "0x7780",
+              "symbol": "__cxa_guard_acquire@plt"
+            },
+            {
+              "address": "0x6251cb",
+              "target": "0x43eb0",
+              "symbol": "ht::identity<8u>::admit()::'lambda'()::operator()() const"
+            },
+            {
+              "address": "0x6251dd",
+              "target": "0x72b0",
+              "symbol": "__cxa_guard_release@plt"
+            },
+            {
+              "address": "0x625204",
+              "target": "0x7290",
+              "symbol": "__cxa_guard_abort@plt"
+            },
+            {
+              "address": "0x62520c",
+              "target": "0x79ac0",
+              "symbol": "std::vector<ht::links<64u, false, 0u, true>::block, std::allocator<ht::links<64u, false, 0u, true>::block>>::~vector()"
+            },
+            {
+              "address": "0x625220",
+              "target": "0x7290",
+              "symbol": "__cxa_guard_abort@plt"
+            },
+            {
+              "address": "0x62522f",
+              "target": "0x7400",
+              "symbol": "_ZdlPvm@plt"
+            },
+            {
+              "address": "0x625245",
+              "target": "0x71b0",
+              "symbol": "__cxa_begin_catch@plt"
+            },
+            {
+              "address": "0x62524e",
+              "target": "0x76b0",
+              "symbol": "__cxa_end_catch@plt"
+            },
+            {
+              "address": "0x625274",
+              "target": "0x625290",
+              "symbol": "std::expected<ht::mutation_delta, ht::mutation_error> ht::promoted_table<40u, (ht::layout_solver::container)2, 8u, 10u, 6u, 256u, 192u, (ht::record_format)1, false, (ht::record_access)3, true, ht::links<64u, false, 0u, true>, 2u>::try_set<ht::no_small_effects>(unsigned long, unsigned long, ht::no_small_effects&) requires T1 <= 8::'lambda'()::operator()() const::proposal::~proposal()"
+            },
+            {
+              "address": "0x62527c",
+              "target": "0x7740",
+              "symbol": "_Unwind_Resume@plt"
+            }
+          ]
+        },
+        {
+          "address": "0x625290",
+          "depth": 2,
+          "symbol": "std::expected<ht::mutation_delta, ht::mutation_error> ht::promoted_table<40u, (ht::layout_solver::container)2, 8u, 10u, 6u, 256u, 192u, (ht::record_format)1, false, (ht::record_access)3, true, ht::links<64u, false, 0u, true>, 2u>::try_set<ht::no_small_effects>(unsigned long, unsigned long, ht::no_small_effects&) requires T1 <= 8::'lambda'()::operator()() const::proposal::~proposal()",
+          "calls": []
+        }
+      ]
+    },
+    {
+      "K": 40,
+      "kind": 2,
+      "A": 10,
+      "arm": 6,
+      "clock": "0x643134",
+      "end": [
+        "0x6433a4"
+      ],
+      "calls": [
+        {
+          "address": "0x6432f8",
+          "opcode": "callq",
+          "target": "0xa9e9b0 <absl::lts_20260817::container_internal::PrepareInsertSmallNonSoo(absl::lts_20260817::container_internal::CommonFields&, absl::lts_20260817::container_internal::PolicyFunctions const&, absl::lts_20260817::FunctionRef<unsigned long (unsigned long)>)>",
+          "indirect": false,
+          "inside_cfg_cycle": true
+        },
+        {
+          "address": "0x64330b",
+          "opcode": "callq",
+          "target": "0xa9ff10 <absl::lts_20260817::container_internal::PrepareInsertLarge(absl::lts_20260817::container_internal::CommonFields&, absl::lts_20260817::container_internal::PolicyFunctions const&, unsigned long, absl::lts_20260817::container_internal::NonIterableBitMask<unsigned int, 16, 0>, absl::lts_20260817::container_internal::FindInfo)>",
+          "indirect": false,
+          "inside_cfg_cycle": true
+        },
+        {
+          "address": "0x643393",
+          "opcode": "callq",
+          "target": "0xd09e0 <unsigned long& absl::lts_20260817::inlined_vector_internal::Storage<unsigned long, 1ul, std::allocator<unsigned long>>::EmplaceBackSlow<unsigned long const&>(unsigned long const&)>",
+          "indirect": false,
+          "inside_cfg_cycle": true
+        },
+        {
+          "address": "0x643ad5",
+          "opcode": "callq",
+          "target": "0xab8180 <absl::lts_20260817::ThrowStdLengthError(char const*)>",
+          "indirect": false,
+          "inside_cfg_cycle": false
+        }
+      ],
+      "functions": [
+        {
+          "address": "0xd09e0",
+          "depth": 0,
+          "symbol": "unsigned long& absl::lts_20260817::inlined_vector_internal::Storage<unsigned long, 1ul, std::allocator<unsigned long>>::EmplaceBackSlow<unsigned long const&>(unsigned long const&)",
+          "calls": [
+            {
+              "address": "0xd0a35",
+              "target": "0x73f0",
+              "symbol": "_Znwm@plt"
+            },
+            {
+              "address": "0xd0b08",
+              "target": "0x7400",
+              "symbol": "_ZdlPvm@plt"
+            },
+            {
+              "address": "0xd0b3b",
+              "target": "0x7360",
+              "symbol": "_ZSt28__throw_bad_array_new_lengthv@plt"
+            },
+            {
+              "address": "0xd0b40",
+              "target": "0x7170",
+              "symbol": "_ZSt17__throw_bad_allocv@plt"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,1346 @@
+{
+  "kind": "Authored derivation of completed worker evidence; not original worker bytes",
+  "job": "20261013T165557Z-47eb629d",
+  "source_manifest_digest": "e289c214d8540989592b13487de04236d401865ec62d2b3e899c05b402fceed2",
+  "source_tar_gz_sha256": "7c7dc4b0267d5b0a53dc0a6e671160428cf915cc38d9c83ccbd649e15bb5125c",
+  "rich_composition_cpp_sha256": "54f6fd1e8a72c70518850265549cd20a5eb97f4adada7a123f9ac31e418059d3",
+  "archived_summary_json_sha256": "6b4ff56656ffa225a61f8b63166550c90720cf1da9315a8abc1872602d098b2c",
+  "fingerprint_bits": 8,
+  "paired_csv_sha256": "8f7e22cb4b314b02f73acf5eccda0504f8decc311007d1118f30936172e9dc24",
+  "reproduction": "python3 workbench/spikes/hashtable-design/rich-report.py RECOVERED_WORKER_RESULTS DESTINATION",
+  "report_script_sha256": "c351efb92d7b903c7a117370764c658e51a12bd5e9e275cd0a50506bcd29168d",
+  "scope": [
+    "F8+C13 matches K40/A19 bucket components, but excludes hash/table costs.",
+    "Same frozen rich-format driver/header source for all tiers and hosts.",
+    "AVX2 and AVX2+GFNI are feature-matched across x86 hosts; native enables additional platform-specific features. V2 has a single NEON tier.",
+    "No cache-residence claim; allocated payload, query state and shared controls all occupy memory.",
+    "Three rotated process passes; each cell below is the median of eight internal repetitions per process.",
+    "All five complete operations/tails/layouts retained; raw fused independently encodes and routes the same bytes.",
+    "This is a primitive composition control, not a complete hash table or a multi-writer result.",
+    "Each paired.csv cell is one process median of eight rotated-arm repetitions; all four arms and all tails remain.",
+    "Ranges use the ratio of the medians of the three process medians; ranges exclude active=0, which remains in paired.csv.",
+    "sp_tp_split uses spike-only fixed controls checked against production preparation; this is not a finished public API.",
+    "The 2216-byte prepared object is shared per format and used in setup; it is not per-bucket metadata or a claim about hot accessed bytes.",
+    "Serial timing includes the full-value consumer and dependent query-index calculation.",
+    "F7/C13 is noncanonical under the original fingerprint clamp; F8/C13 is a legal K40/A19 component. Neither measures hashing/table costs.",
+    "Point instruction counts do not establish throughput: complete inlined loops can have different schedules, branches, and register spills."
+  ],
+  "compile_commands": {
+    "avx2": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=1 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN5=0 -I/opt/sixdb/source/ikea/include -I/opt/sixdb/source/orbital/include -DHT_RICH_FP_BITS=8 -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -fno-vectorize -fno-slp-vectorize -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=x86-64-v3 -mtune=graniterapids -o workbench/spikes/hashtable-design/CMakeFiles/hashtable_design_rich_composition.dir/rich_composition.cpp.o -c /opt/sixdb/source/workbench/spikes/hashtable-design/rich_composition.cpp",
+    "avx2-gfni": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=1 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN5=0 -I/opt/sixdb/source/ikea/include -I/opt/sixdb/source/orbital/include -DHT_RICH_FP_BITS=8 -mgfni -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -fno-vectorize -fno-slp-vectorize -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=x86-64-v3 -mtune=graniterapids -o workbench/spikes/hashtable-design/CMakeFiles/hashtable_design_rich_composition.dir/rich_composition.cpp.o -c /opt/sixdb/source/workbench/spikes/hashtable-design/rich_composition.cpp",
+    "native": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=1 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN5=0 -I/opt/sixdb/source/ikea/include -I/opt/sixdb/source/orbital/include -DHT_RICH_FP_BITS=8 -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -fno-vectorize -fno-slp-vectorize -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=graniterapids -mtune=graniterapids -o workbench/spikes/hashtable-design/CMakeFiles/hashtable_design_rich_composition.dir/rich_composition.cpp.o -c /opt/sixdb/source/workbench/spikes/hashtable-design/rich_composition.cpp"
+  },
+  "codegen": {
+    "avx2": {
+      "gfni_instruction_count": 0,
+      "point_witnesses": {
+        "rich_split6_get": {
+          "instructions_including_alignment": 49,
+          "calls": 0,
+          "stack_instructions": 0
+        },
+        "rich_split6_update": {
+          "instructions_including_alignment": 64,
+          "calls": 0,
+          "stack_instructions": 0
+        },
+        "rich_split10_get": {
+          "instructions_including_alignment": 46,
+          "calls": 0,
+          "stack_instructions": 0
+        },
+        "rich_split10_update": {
+          "instructions_including_alignment": 53,
+          "calls": 0,
+          "stack_instructions": 0
+        },
+        "rich_fused6_get": {
+          "instructions_including_alignment": 51,
+          "calls": 0,
+          "stack_instructions": 0
+        },
+        "rich_fused6_update": {
+          "instructions_including_alignment": 77,
+          "calls": 0,
+          "stack_instructions": 0
+        },
+        "rich_fused10_get": {
+          "instructions_including_alignment": 46,
+          "calls": 0,
+          "stack_instructions": 0
+        },
+        "rich_fused10_update": {
+          "instructions_including_alignment": 54,
+          "calls": 0,
+          "stack_instructions": 0
+        }
+      }
+    },
+    "avx2-gfni": {
+      "gfni_instruction_count": 0,
+      "point_witnesses": {
+        "rich_split6_get": {
+          "instructions_including_alignment": 49,
+          "calls": 0,
+          "stack_instructions": 0
+        },
+        "rich_split6_update": {
+          "instructions_including_alignment": 64,
+          "calls": 0,
+          "stack_instructions": 0
+        },
+        "rich_split10_get": {
+          "instructions_including_alignment": 46,
+          "calls": 0,
+          "stack_instructions": 0
+        },
+        "rich_split10_update": {
+          "instructions_including_alignment": 53,
+          "calls": 0,
+          "stack_instructions": 0
+        },
+        "rich_fused6_get": {
+          "instructions_including_alignment": 51,
+          "calls": 0,
+          "stack_instructions": 0
+        },
+        "rich_fused6_update": {
+          "instructions_including_alignment": 77,
+          "calls": 0,
+          "stack_instructions": 0
+        },
+        "rich_fused10_get": {
+          "instructions_including_alignment": 46,
+          "calls": 0,
+          "stack_instructions": 0
+        },
+        "rich_fused10_update": {
+          "instructions_including_alignment": 54,
+          "calls": 0,
+          "stack_instructions": 0
+        }
+      }
+    },
+    "native": {
+      "gfni_instruction_count": 0,
+      "point_witnesses": {
+        "rich_split6_get": {
+          "instructions_including_alignment": 48,
+          "calls": 0,
+          "stack_instructions": 0
+        },
+        "rich_split6_update": {
+          "instructions_including_alignment": 63,
+          "calls": 0,
+          "stack_instructions": 0
+        },
+        "rich_split10_get": {
+          "instructions_including_alignment": 45,
+          "calls": 0,
+          "stack_instructions": 0
+        },
+        "rich_split10_update": {
+          "instructions_including_alignment": 52,
+          "calls": 0,
+          "stack_instructions": 0
+        },
+        "rich_fused6_get": {
+          "instructions_including_alignment": 50,
+          "calls": 0,
+          "stack_instructions": 0
+        },
+        "rich_fused6_update": {
+          "instructions_including_alignment": 76,
+          "calls": 0,
+          "stack_instructions": 0
+        },
+        "rich_fused10_get": {
+          "instructions_including_alignment": 45,
+          "calls": 0,
+          "stack_instructions": 0
+        },
+        "rich_fused10_update": {
+          "instructions_including_alignment": 53,
+          "calls": 0,
+          "stack_instructions": 0
+        }
+      }
+    },
+    "avx2_vs_gfni": {
+      "complete_strong_or_raw_loops": 20,
+      "changed_normalized_bodies": []
+    }
+  },
+  "strongest_to_raw_ranges": [
+    {
+      "tier": "avx2",
+      "row_bytes": 6,
+      "operation": "independent_hit",
+      "minimum": {
+        "active": 15,
+        "buckets": 1,
+        "ratio": 0.9116105889297551,
+        "process_medians_ns": {
+          "sp_tp_split": [
+            4.904999999999999,
+            5.3906,
+            5.0191
+          ],
+          "raw_fused": [
+            5.505750000000001,
+            4.9967500000000005,
+            5.66985
+          ]
+        }
+      },
+      "maximum": {
+        "active": 16,
+        "buckets": 256,
+        "ratio": 0.9836750227848609,
+        "process_medians_ns": {
+          "sp_tp_split": [
+            4.91085,
+            5.04755,
+            4.831300000000001
+          ],
+          "raw_fused": [
+            4.99235,
+            5.317,
+            4.850949999999999
+          ]
+        }
+      }
+    },
+    {
+      "tier": "avx2",
+      "row_bytes": 6,
+      "operation": "fingerprint_miss",
+      "minimum": {
+        "active": 8,
+        "buckets": 256,
+        "ratio": 0.9960700698189726,
+        "process_medians_ns": {
+          "sp_tp_split": [
+            1.1912500000000001,
+            1.19115,
+            1.1914
+          ],
+          "raw_fused": [
+            1.1959499999999998,
+            1.1963499999999998,
+            1.1924
+          ]
+        }
+      },
+      "maximum": {
+        "active": 1,
+        "buckets": 1,
+        "ratio": 1.0071192260982451,
+        "process_medians_ns": {
+          "sp_tp_split": [
+            1.2024499999999998,
+            1.19255,
+            1.20975
+          ],
+          "raw_fused": [
+            1.19555,
+            1.1907,
+            1.19395
+          ]
+        }
+      }
+    },
+    {
+      "tier": "avx2",
+      "row_bytes": 6,
+      "operation": "suffix_miss",
+      "minimum": {
+        "active": 7,
+        "buckets": 1,
+        "ratio": 0.9892739986187846,
+        "process_medians_ns": {
+          "sp_tp_split": [
+            2.32015,
+            2.28805,
+            2.29195
+          ],
+          "raw_fused": [
+            2.28675,
+            2.3167999999999997,
+            2.3175499999999998
+          ]
+        }
+      },
+      "maximum": {
+        "active": 15,
+        "buckets": 1,
+        "ratio": 1.0191749064298086,
+        "process_medians_ns": {
+          "sp_tp_split": [
+            3.63755,
+            3.6488500000000004,
+            3.65515
+          ],
+          "raw_fused": [
+            3.5802,
+            3.5438,
+            3.5953999999999997
+          ]
+        }
+      }
+    },
+    {
+      "tier": "avx2",
+      "row_bytes": 6,
+      "operation": "serial_hit",
+      "minimum": {
+        "active": 7,
+        "buckets": 1,
+        "ratio": 0.93909862673374,
+        "process_medians_ns": {
+          "sp_tp_split": [
+            13.68155,
+            13.6837,
+            13.6872
+          ],
+          "raw_fused": [
+            14.571100000000001,
+            14.590250000000001,
+            14.56165
+          ]
+        }
+      },
+      "maximum": {
+        "active": 1,
+        "buckets": 256,
+        "ratio": 0.9793319800701237,
+        "process_medians_ns": {
+          "sp_tp_split": [
+            12.2061,
+            12.15775,
+            12.217600000000001
+          ],
+          "raw_fused": [
+            12.4713,
+            12.43165,
+            12.4637
+          ]
+        }
+      }
+    },
+    {
+      "tier": "avx2",
+      "row_bytes": 6,
+      "operation": "changed_update",
+      "minimum": {
+        "active": 15,
+        "buckets": 1,
+        "ratio": 0.7491688639229623,
+        "process_medians_ns": {
+          "sp_tp_split": [
+            5.5512,
+            5.55475,
+            5.7844
+          ],
+          "raw_fused": [
+            7.2231000000000005,
+            7.41455,
+            7.5572
+          ]
+        }
+      },
+      "maximum": {
+        "active": 8,
+        "buckets": 256,
+        "ratio": 0.950570499251381,
+        "process_medians_ns": {
+          "sp_tp_split": [
+            4.6029,
+            4.48655,
+            4.6775
+          ],
+          "raw_fused": [
+            4.84225,
+            4.7789,
+            5.01195
+          ]
+        }
+      }
+    },
+    {
+      "tier": "avx2",
+      "row_bytes": 10,
+      "operation": "independent_hit",
+      "minimum": {
+        "active": 1,
+        "buckets": 256,
+        "ratio": 0.9807817589576547,
+        "process_medians_ns": {
+          "sp_tp_split": [
+            2.25495,
+            2.26135,
+            2.2582500000000003
+          ],
+          "raw_fused": [
+            2.3194,
+            2.3025,
+            2.28965
+          ]
+        }
+      },
+      "maximum": {
+        "active": 16,
+        "buckets": 1,
+        "ratio": 1.3452309436100878,
+        "process_medians_ns": {
+          "sp_tp_split": [
+            5.93415,
+            5.81465,
+            5.967549999999999
+          ],
+          "raw_fused": [
+            4.41125,
+            4.4178999999999995,
+            4.26945
+          ]
+        }
+      }
+    },
+    {
+      "tier": "avx2",
+      "row_bytes": 10,
+      "operation": "fingerprint_miss",
+      "minimum": {
+        "active": 7,
+        "buckets": 1,
+        "ratio": 0.9873275718796741,
+        "process_medians_ns": {
+          "sp_tp_split": [
+            1.18805,
+            1.1888,
+            1.1881499999999998
+          ],
+          "raw_fused": [
+            1.2034,
+            1.2091500000000002,
+            1.2027999999999999
+          ]
+        }
+      },
+      "maximum": {
+        "active": 7,
+        "buckets": 256,
+        "ratio": 0.9914102243349179,
+        "process_medians_ns": {
+          "sp_tp_split": [
+            1.1903,
+            1.1887,
+            1.1888
+          ],
+          "raw_fused": [
+            1.20255,
+            1.1977000000000002,
+            1.1991
+          ]
+        }
+      }
+    },
+    {
+      "tier": "avx2",
+      "row_bytes": 10,
+      "operation": "suffix_miss",
+      "minimum": {
+        "active": 7,
+        "buckets": 1,
+        "ratio": 0.9914267157393375,
+        "process_medians_ns": {
+          "sp_tp_split": [
+            2.3197,
+            2.27665,
+            2.2897
+          ],
+          "raw_fused": [
+            2.3095,
+            2.3093,
+            2.338
+          ]
+        }
+      },
+      "maximum": {
+        "active": 8,
+        "buckets": 1,
+        "ratio": 1.0093013147886558,
+        "process_medians_ns": {
+          "sp_tp_split": [
+            2.3221499999999997,
+            2.2862,
+            2.3294
+          ],
+          "raw_fused": [
+            2.33825,
+            2.2852,
+            2.30075
+          ]
+        }
+      }
+    },
+    {
+      "tier": "avx2",
+      "row_bytes": 10,
+      "operation": "serial_hit",
+      "minimum": {
+        "active": 1,
+        "buckets": 1,
+        "ratio": 0.8936230274001294,
+        "process_medians_ns": {
+          "sp_tp_split": [
+            9.80125,
+            9.81705,
+            9.813500000000001
+          ],
+          "raw_fused": [
+            10.908349999999999,
+            10.9817,
+            10.99515
+          ]
+        }
+      },
+      "maximum": {
+        "active": 15,
+        "buckets": 256,
+        "ratio": 0.9685383450152766,
+        "process_medians_ns": {
+          "sp_tp_split": [
+            18.82995,
+            18.869500000000002,
+            18.861800000000002
+          ],
+          "raw_fused": [
+            19.51855,
+            19.4745,
+            19.391350000000003
+          ]
+        }
+      }
+    },
+    {
+      "tier": "avx2",
+      "row_bytes": 10,
+      "operation": "changed_update",
+      "minimum": {
+        "active": 1,
+        "buckets": 1,
+        "ratio": 0.9743020304568528,
+        "process_medians_ns": {
+          "sp_tp_split": [
+            3.1144,
+            3.06865,
+            3.071
+          ],
+          "raw_fused": [
+            3.1022999999999996,
+            3.152,
+            3.15745
+          ]
+        }
+      },
+      "maximum": {
+        "active": 15,
+        "buckets": 1,
+        "ratio": 1.2109662218430726,
+        "process_medians_ns": {
+          "sp_tp_split": [
+            5.6742,
+            5.96195,
+            6.13715
+          ],
+          "raw_fused": [
+            4.9233,
+            5.19325,
+            4.77325
+          ]
+        }
+      }
+    },
+    {
+      "tier": "avx2-gfni",
+      "row_bytes": 6,
+      "operation": "independent_hit",
+      "minimum": {
+        "active": 16,
+        "buckets": 1,
+        "ratio": 0.8876388653922066,
+        "process_medians_ns": {
+          "sp_tp_split": [
+            4.72215,
+            4.8222000000000005,
+            4.63205
+          ],
+          "raw_fused": [
+            5.0311,
+            5.4689,
+            5.3199000000000005
+          ]
+        }
+      },
+      "maximum": {
+        "active": 1,
+        "buckets": 256,
+        "ratio": 0.9824571331560181,
+        "process_medians_ns": {
+          "sp_tp_split": [
+            2.6041499999999997,
+            2.6159,
+            2.5552
+          ],
+          "raw_fused": [
+            2.6469,
+            2.6577,
+            2.65065
+          ]
+        }
+      }
+    },
+    {
+      "tier": "avx2-gfni",
+      "row_bytes": 6,
+      "operation": "fingerprint_miss",
+      "minimum": {
+        "active": 7,
+        "buckets": 256,
+        "ratio": 0.9966131460110386,
+        "process_medians_ns": {
+          "sp_tp_split": [
+            1.1928,
+            1.1917499999999999,
+            1.1912
+          ],
+          "raw_fused": [
+            1.1972999999999998,
+            1.1945000000000001,
+            1.1958
+          ]
+        }
+      },
+      "maximum": {
+        "active": 8,
+        "buckets": 1,
+        "ratio": 1.0028031127102335,
+        "process_medians_ns": {
+          "sp_tp_split": [
+            1.19845,
+            1.1926,
+            1.2027
+          ],
+          "raw_fused": [
+            1.19725,
+            1.1951,
+            1.1672500000000001
+          ]
+        }
+      }
+    },
+    {
+      "tier": "avx2-gfni",
+      "row_bytes": 6,
+      "operation": "suffix_miss",
+      "minimum": {
+        "active": 1,
+        "buckets": 1,
+        "ratio": 0.9916344729427484,
+        "process_medians_ns": {
+          "sp_tp_split": [
+            1.70575,
+            1.73325,
+            1.70695
+          ],
+          "raw_fused": [
+            1.751,
+            1.70295,
+            1.72135
+          ]
+        }
+      },
+      "maximum": {
+        "active": 16,
+        "buckets": 1,
+        "ratio": 1.0246880732660233,
+        "process_medians_ns": {
+          "sp_tp_split": [
+            3.6621,
+            3.63675,
+            3.6586999999999996
+          ],
+          "raw_fused": [
+            3.54315,
+            3.5722,
+            3.57055
+          ]
+        }
+      }
+    },
+    {
+      "tier": "avx2-gfni",
+      "row_bytes": 6,
+      "operation": "serial_hit",
+      "minimum": {
+        "active": 7,
+        "buckets": 1,
+        "ratio": 0.9379138732365401,
+        "process_medians_ns": {
+          "sp_tp_split": [
+            13.6821,
+            13.700099999999999,
+            13.67905
+          ],
+          "raw_fused": [
+            14.58645,
+            14.591000000000001,
+            14.587800000000001
+          ]
+        }
+      },
+      "maximum": {
+        "active": 1,
+        "buckets": 1,
+        "ratio": 0.978247470101196,
+        "process_medians_ns": {
+          "sp_tp_split": [
+            10.6493,
+            10.619250000000001,
+            10.63355
+          ],
+          "raw_fused": [
+            10.854,
+            10.909400000000002,
+            10.87
+          ]
+        }
+      }
+    },
+    {
+      "tier": "avx2-gfni",
+      "row_bytes": 6,
+      "operation": "changed_update",
+      "minimum": {
+        "active": 16,
+        "buckets": 1,
+        "ratio": 0.768017181411118,
+        "process_medians_ns": {
+          "sp_tp_split": [
+            5.6859,
+            5.5588999999999995,
+            5.7129
+          ],
+          "raw_fused": [
+            7.60155,
+            7.1229499999999994,
+            7.40335
+          ]
+        }
+      },
+      "maximum": {
+        "active": 1,
+        "buckets": 256,
+        "ratio": 0.9538518535670456,
+        "process_medians_ns": {
+          "sp_tp_split": [
+            4.1194,
+            4.1110500000000005,
+            4.131
+          ],
+          "raw_fused": [
+            4.32965,
+            4.3187,
+            4.2814
+          ]
+        }
+      }
+    },
+    {
+      "tier": "avx2-gfni",
+      "row_bytes": 10,
+      "operation": "independent_hit",
+      "minimum": {
+        "active": 1,
+        "buckets": 256,
+        "ratio": 0.9788115376274126,
+        "process_medians_ns": {
+          "sp_tp_split": [
+            2.2588,
+            2.25665,
+            2.2561999999999998
+          ],
+          "raw_fused": [
+            2.3055000000000003,
+            2.3026999999999997,
+            2.3173
+          ]
+        }
+      },
+      "maximum": {
+        "active": 16,
+        "buckets": 1,
+        "ratio": 1.3514657673168085,
+        "process_medians_ns": {
+          "sp_tp_split": [
+            5.86265,
+            5.28485,
+            5.73035
+          ],
+          "raw_fused": [
+            4.21715,
+            4.513999999999999,
+            4.2401
+          ]
+        }
+      }
+    },
+    {
+      "tier": "avx2-gfni",
+      "row_bytes": 10,
+      "operation": "fingerprint_miss",
+      "minimum": {
+        "active": 8,
+        "buckets": 1,
+        "ratio": 0.9885224768162348,
+        "process_medians_ns": {
+          "sp_tp_split": [
+            1.18925,
+            1.18805,
+            1.18855
+          ],
+          "raw_fused": [
+            1.2049,
+            1.20235,
+            1.2003499999999998
+          ]
+        }
+      },
+      "maximum": {
+        "active": 15,
+        "buckets": 256,
+        "ratio": 0.9952279291724226,
+        "process_medians_ns": {
+          "sp_tp_split": [
+            1.1907,
+            1.1887500000000002,
+            1.1879
+          ],
+          "raw_fused": [
+            1.1955,
+            1.19085,
+            1.19445
+          ]
+        }
+      }
+    },
+    {
+      "tier": "avx2-gfni",
+      "row_bytes": 10,
+      "operation": "suffix_miss",
+      "minimum": {
+        "active": 7,
+        "buckets": 256,
+        "ratio": 0.9828434518461473,
+        "process_medians_ns": {
+          "sp_tp_split": [
+            2.3272,
+            2.2972,
+            2.2968
+          ],
+          "raw_fused": [
+            2.3183,
+            2.3373,
+            2.3462
+          ]
+        }
+      },
+      "maximum": {
+        "active": 1,
+        "buckets": 1,
+        "ratio": 1.0052436676047993,
+        "process_medians_ns": {
+          "sp_tp_split": [
+            1.74545,
+            1.6966,
+            1.6771
+          ],
+          "raw_fused": [
+            1.7364000000000002,
+            1.6877499999999999,
+            1.686
+          ]
+        }
+      }
+    },
+    {
+      "tier": "avx2-gfni",
+      "row_bytes": 10,
+      "operation": "serial_hit",
+      "minimum": {
+        "active": 1,
+        "buckets": 1,
+        "ratio": 0.8967900784242203,
+        "process_medians_ns": {
+          "sp_tp_split": [
+            9.7986,
+            9.8342,
+            9.8447
+          ],
+          "raw_fused": [
+            10.97565,
+            10.966,
+            10.9409
+          ]
+        }
+      },
+      "maximum": {
+        "active": 15,
+        "buckets": 256,
+        "ratio": 0.9671006062844304,
+        "process_medians_ns": {
+          "sp_tp_split": [
+            18.8271,
+            18.858400000000003,
+            18.8544
+          ],
+          "raw_fused": [
+            19.50645,
+            19.4958,
+            19.473399999999998
+          ]
+        }
+      }
+    },
+    {
+      "tier": "avx2-gfni",
+      "row_bytes": 10,
+      "operation": "changed_update",
+      "minimum": {
+        "active": 1,
+        "buckets": 256,
+        "ratio": 0.9940050466899178,
+        "process_medians_ns": {
+          "sp_tp_split": [
+            3.08375,
+            3.0923,
+            3.1563499999999998
+          ],
+          "raw_fused": [
+            3.11095,
+            3.10825,
+            3.1394
+          ]
+        }
+      },
+      "maximum": {
+        "active": 16,
+        "buckets": 256,
+        "ratio": 1.209498089464763,
+        "process_medians_ns": {
+          "sp_tp_split": [
+            6.3459,
+            6.31485,
+            6.2911
+          ],
+          "raw_fused": [
+            5.145099999999999,
+            5.22105,
+            5.38885
+          ]
+        }
+      }
+    },
+    {
+      "tier": "native",
+      "row_bytes": 6,
+      "operation": "independent_hit",
+      "minimum": {
+        "active": 7,
+        "buckets": 1,
+        "ratio": 0.9660651549025869,
+        "process_medians_ns": {
+          "sp_tp_split": [
+            3.047,
+            3.02035,
+            3.02475
+          ],
+          "raw_fused": [
+            3.1104000000000003,
+            3.1310000000000002,
+            3.1335499999999996
+          ]
+        }
+      },
+      "maximum": {
+        "active": 16,
+        "buckets": 1,
+        "ratio": 1.2500672821520928,
+        "process_medians_ns": {
+          "sp_tp_split": [
+            5.56105,
+            5.3416,
+            5.0927500000000006
+          ],
+          "raw_fused": [
+            4.27305,
+            4.3042,
+            4.1901
+          ]
+        }
+      }
+    },
+    {
+      "tier": "native",
+      "row_bytes": 6,
+      "operation": "fingerprint_miss",
+      "minimum": {
+        "active": 8,
+        "buckets": 256,
+        "ratio": 1.046944539541253,
+        "process_medians_ns": {
+          "sp_tp_split": [
+            1.2229,
+            1.2234500000000001,
+            1.2232500000000002
+          ],
+          "raw_fused": [
+            1.1635499999999999,
+            1.16955,
+            1.1684
+          ]
+        }
+      },
+      "maximum": {
+        "active": 1,
+        "buckets": 256,
+        "ratio": 1.0515322130055444,
+        "process_medians_ns": {
+          "sp_tp_split": [
+            1.223,
+            1.22335,
+            1.2233
+          ],
+          "raw_fused": [
+            1.1633499999999999,
+            1.1696499999999999,
+            1.1620499999999998
+          ]
+        }
+      }
+    },
+    {
+      "tier": "native",
+      "row_bytes": 6,
+      "operation": "suffix_miss",
+      "minimum": {
+        "active": 1,
+        "buckets": 1,
+        "ratio": 1.0051267445172316,
+        "process_medians_ns": {
+          "sp_tp_split": [
+            1.7641,
+            1.7663,
+            1.7645
+          ],
+          "raw_fused": [
+            1.7523,
+            1.7591,
+            1.7555
+          ]
+        }
+      },
+      "maximum": {
+        "active": 7,
+        "buckets": 1,
+        "ratio": 1.0258741555848239,
+        "process_medians_ns": {
+          "sp_tp_split": [
+            2.4146,
+            2.4312500000000004,
+            2.3992500000000003
+          ],
+          "raw_fused": [
+            2.3693999999999997,
+            2.3532,
+            2.3537
+          ]
+        }
+      }
+    },
+    {
+      "tier": "native",
+      "row_bytes": 6,
+      "operation": "serial_hit",
+      "minimum": {
+        "active": 7,
+        "buckets": 1,
+        "ratio": 0.9433669838938693,
+        "process_medians_ns": {
+          "sp_tp_split": [
+            14.5225,
+            14.517050000000001,
+            14.487449999999999
+          ],
+          "raw_fused": [
+            15.40315,
+            15.388549999999999,
+            15.3798
+          ]
+        }
+      },
+      "maximum": {
+        "active": 1,
+        "buckets": 256,
+        "ratio": 0.9756735852457047,
+        "process_medians_ns": {
+          "sp_tp_split": [
+            12.99285,
+            12.9924,
+            12.994150000000001
+          ],
+          "raw_fused": [
+            13.35255,
+            13.3042,
+            13.3168
+          ]
+        }
+      }
+    },
+    {
+      "tier": "native",
+      "row_bytes": 6,
+      "operation": "changed_update",
+      "minimum": {
+        "active": 16,
+        "buckets": 1,
+        "ratio": 0.7920108144643461,
+        "process_medians_ns": {
+          "sp_tp_split": [
+            5.9199,
+            5.8589,
+            5.8076
+          ],
+          "raw_fused": [
+            7.09315,
+            7.3975,
+            7.4821
+          ]
+        }
+      },
+      "maximum": {
+        "active": 1,
+        "buckets": 256,
+        "ratio": 0.9488102535525215,
+        "process_medians_ns": {
+          "sp_tp_split": [
+            4.2566,
+            4.25915,
+            4.2285
+          ],
+          "raw_fused": [
+            4.49275,
+            4.48625,
+            4.4834
+          ]
+        }
+      }
+    },
+    {
+      "tier": "native",
+      "row_bytes": 10,
+      "operation": "independent_hit",
+      "minimum": {
+        "active": 1,
+        "buckets": 256,
+        "ratio": 0.9799861539429795,
+        "process_medians_ns": {
+          "sp_tp_split": [
+            2.38485,
+            2.3345000000000002,
+            2.3356500000000002
+          ],
+          "raw_fused": [
+            2.38335,
+            2.36945,
+            2.3897
+          ]
+        }
+      },
+      "maximum": {
+        "active": 15,
+        "buckets": 256,
+        "ratio": 1.2965955194919738,
+        "process_medians_ns": {
+          "sp_tp_split": [
+            5.264900000000001,
+            5.5128,
+            5.5297
+          ],
+          "raw_fused": [
+            4.2277000000000005,
+            4.877800000000001,
+            4.25175
+          ]
+        }
+      }
+    },
+    {
+      "tier": "native",
+      "row_bytes": 10,
+      "operation": "fingerprint_miss",
+      "minimum": {
+        "active": 15,
+        "buckets": 256,
+        "ratio": 0.9550099751638776,
+        "process_medians_ns": {
+          "sp_tp_split": [
+            1.17205,
+            1.1728,
+            1.1734
+          ],
+          "raw_fused": [
+            1.22805,
+            1.2304,
+            1.22675
+          ]
+        }
+      },
+      "maximum": {
+        "active": 7,
+        "buckets": 256,
+        "ratio": 0.956677670456861,
+        "process_medians_ns": {
+          "sp_tp_split": [
+            1.1737,
+            1.1732,
+            1.1742
+          ],
+          "raw_fused": [
+            1.22785,
+            1.22685,
+            1.2262499999999998
+          ]
+        }
+      }
+    },
+    {
+      "tier": "native",
+      "row_bytes": 10,
+      "operation": "suffix_miss",
+      "minimum": {
+        "active": 8,
+        "buckets": 1,
+        "ratio": 0.9768523345776075,
+        "process_medians_ns": {
+          "sp_tp_split": [
+            2.34215,
+            2.3419499999999998,
+            2.34485
+          ],
+          "raw_fused": [
+            2.4013999999999998,
+            2.3884499999999997,
+            2.3976499999999996
+          ]
+        }
+      },
+      "maximum": {
+        "active": 1,
+        "buckets": 256,
+        "ratio": 0.9970147540042482,
+        "process_medians_ns": {
+          "sp_tp_split": [
+            1.73465,
+            1.7367,
+            1.7373500000000002
+          ],
+          "raw_fused": [
+            1.7462,
+            1.7419,
+            1.7396500000000001
+          ]
+        }
+      }
+    },
+    {
+      "tier": "native",
+      "row_bytes": 10,
+      "operation": "serial_hit",
+      "minimum": {
+        "active": 1,
+        "buckets": 1,
+        "ratio": 0.908952413557001,
+        "process_medians_ns": {
+          "sp_tp_split": [
+            10.637,
+            10.6202,
+            10.6046
+          ],
+          "raw_fused": [
+            11.68825,
+            11.684000000000001,
+            11.636800000000001
+          ]
+        }
+      },
+      "maximum": {
+        "active": 15,
+        "buckets": 256,
+        "ratio": 0.9687593249765102,
+        "process_medians_ns": {
+          "sp_tp_split": [
+            19.689700000000002,
+            19.64145,
+            19.628999999999998
+          ],
+          "raw_fused": [
+            20.27485,
+            20.287399999999998,
+            20.267850000000003
+          ]
+        }
+      }
+    },
+    {
+      "tier": "native",
+      "row_bytes": 10,
+      "operation": "changed_update",
+      "minimum": {
+        "active": 1,
+        "buckets": 256,
+        "ratio": 0.9792829176557635,
+        "process_medians_ns": {
+          "sp_tp_split": [
+            3.22635,
+            3.1553500000000003,
+            3.1765
+          ],
+          "raw_fused": [
+            3.1985,
+            3.2437,
+            3.2540500000000003
+          ]
+        }
+      },
+      "maximum": {
+        "active": 16,
+        "buckets": 1,
+        "ratio": 1.0947756253919587,
+        "process_medians_ns": {
+          "sp_tp_split": [
+            6.3815,
+            6.28445,
+            6.2208000000000006
+          ],
+          "raw_fused": [
+            5.28445,
+            5.7404,
+            5.80835
+          ]
+        }
+      }
+    }
+  ]
+}

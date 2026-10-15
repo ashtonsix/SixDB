@@ -1,0 +1,164 @@
+{
+  "commands": [
+    {
+      "name": "configure",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "build",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_combine_8_1-check",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_combine_8_1-bench",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_combine_8_1-asm",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_combine_16_2-check",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_combine_16_2-bench",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_combine_16_2-asm",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_combine_24_3-check",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_combine_24_3-bench",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_combine_24_3-asm",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_combine_32_7-check",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_combine_32_7-bench",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_combine_32_7-asm",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_combine_40_16-check",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_combine_40_16-bench",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_combine_40_16-asm",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_combine_48_8-check",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_combine_48_8-bench",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_combine_48_8-asm",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_combine_56_32-check",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_combine_56_32-bench",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_combine_56_32-asm",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_combine_64_64-check",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_combine_64_64-bench",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hashtable_design_combine_64_64-asm",
+      "required": true,
+      "returncode": 0
+    }
+  ],
+  "config": {
+    "question": "integrated fused opaque combines, ordinary/exact Abseil and double-search control",
+    "sanitizer": false
+  },
+  "configure_flags": [
+    "-DCMAKE_BUILD_TYPE=Release",
+    "-DSIXDB_SPIKES=hashtable-design",
+    "-DSIXDB_MARCH=armv8-a+simd",
+    "-DSIXDB_TUNE=neoverse-v2"
+  ],
+  "files_sha256": {
+    "hashtable_design_combine_16_2.csv": "cb84caf910828f9f3f5e81c4c1755f08631afc456b8801cb8f0a446693ea0184",
+    "hashtable_design_combine_24_3.csv": "9aa51c7ff9b0110938b89d51be456f7f268a653798f7b7e72936e76241fdf6e4",
+    "hashtable_design_combine_32_7.csv": "07cccd709ff68cf8c379d9ad55d69a962956d4ed8642dca0e088603f0ce807e3",
+    "hashtable_design_combine_40_16.csv": "b408ed0188d97efadb78cbf87286c1ef97a393bedbe2fcba964165f71e53b5fb",
+    "hashtable_design_combine_48_8.csv": "9865927d6c0f81f3a8c0f657a18d45be2a20c280203cbcdca7d06ddc2a2352d9",
+    "hashtable_design_combine_56_32.csv": "5edafcbe4f3d28c6d1848d1065ecc2070482537773af6bd83c351fa001bb3beb",
+    "hashtable_design_combine_64_64.csv": "6a895b5b2b6d18b6e708158ab6d2580535ef5026dce071fca7ecf68c3ce713b2",
+    "hashtable_design_combine_8_1.csv": "e65bd758b443e499b45368f981a982dcf8e1a7639ec90a1b5f406b6b31b8c030"
+  },
+  "format": 2,
+  "full_bundle": "artifact.json",
+  "inputs": {},
+  "platform": "Linux-7.0.14-orbstack-00380-ga7e0a2dc9535-aarch64-with-glibc2.42",
+  "regenerate": [],
+  "source_archive_sha256": "1cf2241b5a550cd972cbc0bf52a45326112a4411c7825cda47c7646a870e205c",
+  "source_digest": "5660f16fa39a1b97532ee81cf75d2605d37a76cccbbfdceac7cf9a9f8c0eb8cc",
+  "source_unchanged": true,
+  "started_utc": "2026-10-15T02:23:08.680062+00:00",
+  "status": "complete"
+}

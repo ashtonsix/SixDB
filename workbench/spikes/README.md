@@ -18,7 +18,7 @@ experiments and checks under Object, Allocation, Journal, Port and Worker.
 - [Layout analyser](layout-analyser/README.md): workload objectives, plane splitting, hardware fitting and reusable layout selection.
 - [Tuple layout](tuple-layout/README.md): physical layout, bound operations and native batching.
 - [StreamPack](streampack/README.md): variable-byte packing and sidecar comparisons, with production qualification through Ikea, Loom and Orbital.
-- [Hashtable](hashtable/README.md): packed sets, maps and multimaps; quotienting, bucket composition, overflow, concurrency and Loom throughput.
+- [Hashtable](hashtable/README.md): hierarchy design, absolute latency/throughput/memory scorecards and graduation gaps for sets, maps and multimaps. Earlier controls are nested here; the separated-layout experiment is archived.
 - [Bec256 with current Ikea](bec256-composition/README.md): exact codec operations, native pairs and larger-bitset population/length directories built with SeriesPack and TuplePack.
 - [Ikea on Neoverse V3](ikea-neoverse-v3/README.md): C8g/C9g comparisons, compiler scheduling, lookup and exact-span experiments.
 - [Ikea CPU comparison](ikea-cpu-comparison/README.md): October 2026 snapshot across six processors, matched case evidence and a frozen cloud-price model.

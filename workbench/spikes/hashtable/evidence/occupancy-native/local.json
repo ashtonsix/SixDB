@@ -1,0 +1,42 @@
+{
+  "scope": "Audit machinery validation only; preserved local AArch64 K40/W8 MM inactive ELF, not native performance qualification",
+  "source_capture": "build/captures/hashtable-occupancy-v2",
+  "inputs": "build/hashtable-design/occupancy-local-v2",
+  "audit_output": "build/hashtable-design/occupancy-native/local-phase-check",
+  "frontend_checks": {
+    "passed": 37,
+    "positive": 21,
+    "expected_rejections": 16,
+    "receipt_sha256": "aa70c2821ca0478f66111f723cbfde16a81c6fc79d7ffddbc8fb942dab1dc6a7"
+  },
+  "audit": {
+    "binary_sha256": "8f9bd36549a732f0a9698e71f6251cc22fa40617ae3ec900017c9020c6615a55",
+    "source_sha256": "1cf685fbd84797c2b9f315ffa19ed3181969ef341669cdfde6fe52ee62b0c4bb",
+    "assembly_sha256": "1a3ec9588dcab345e7cbae6c6231f48f47a0ec36acdee5dca842d3b7ff12d80d",
+    "compile_commands_sha256": "4c53082f45acac56844692c19e77d482f187cfed26b8284d0999a0cf8d8a6138",
+    "occupancy_variant": "inactive",
+    "occupancy_controls": {
+      "HT_OCCUPANCY_STUDY": 1,
+      "HT_GEOMETRY_KIND": 2,
+      "HT_RECIPE_SCAN32": 1,
+      "HT_HASH_MASK": 2,
+      "HT_BUCKET_SENTINEL": 1
+    },
+    "timed_regions": 252,
+    "read_regions": 216,
+    "update_regions": 36,
+    "read_locations": {
+      "candidate_whole_loop": 192,
+      "baseline_whole_loop": 10,
+      "baseline_inline": 14
+    },
+    "update_locations": {
+      "whole_loop_helper": 32,
+      "timed_cfg": 4
+    },
+    "update_callgraph_truncated": [],
+    "qualified": true
+  },
+  "audit_script_sha256": "41e80b5c8e7a01c96c59494a9b12dec305843bb9bad910ad31bd289b93b914e6",
+  "summarize_script_sha256": "7e08617379e6178fe6bce214e94ec73ac4a835e0c4b8004ce52b4b60ace079d7"
+}

@@ -1,0 +1,1256 @@
+{
+  "histories_per_timer": 64,
+  "repetitions": 7,
+  "processes": [
+    {
+      "key": 8,
+      "grow": 0,
+      "owner_state": "selected",
+      "order": 0,
+      "command": [
+        "taskset",
+        "-c",
+        "0",
+        "/opt/sixdb/jobs/20261015T021815Z-3f766a57/results/bin/hashtable_design_small_batch_8_grow0",
+        "bench",
+        "7",
+        "64"
+      ],
+      "start": 1792031205.6636796,
+      "end": 1792031206.2343204,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "key": 8,
+      "grow": 0,
+      "owner_state": "full",
+      "order": 0,
+      "command": [
+        "taskset",
+        "-c",
+        "0",
+        "/opt/sixdb/jobs/20261015T021815Z-3f766a57/results/bin/hashtable_design_small_batch_8_grow0_full",
+        "bench",
+        "7",
+        "64"
+      ],
+      "start": 1792031206.2577426,
+      "end": 1792031206.8267934,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "key": 8,
+      "grow": 1,
+      "owner_state": "selected",
+      "order": 0,
+      "command": [
+        "taskset",
+        "-c",
+        "0",
+        "/opt/sixdb/jobs/20261015T021815Z-3f766a57/results/bin/hashtable_design_small_batch_8_grow1",
+        "bench",
+        "7",
+        "64"
+      ],
+      "start": 1792031206.848227,
+      "end": 1792031207.4043016,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "key": 8,
+      "grow": 1,
+      "owner_state": "full",
+      "order": 0,
+      "command": [
+        "taskset",
+        "-c",
+        "0",
+        "/opt/sixdb/jobs/20261015T021815Z-3f766a57/results/bin/hashtable_design_small_batch_8_grow1_full",
+        "bench",
+        "7",
+        "64"
+      ],
+      "start": 1792031207.4258945,
+      "end": 1792031207.980103,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "key": 16,
+      "grow": 0,
+      "owner_state": "selected",
+      "order": 0,
+      "command": [
+        "taskset",
+        "-c",
+        "0",
+        "/opt/sixdb/jobs/20261015T021815Z-3f766a57/results/bin/hashtable_design_small_batch_16_grow0",
+        "bench",
+        "7",
+        "64"
+      ],
+      "start": 1792031208.0017908,
+      "end": 1792031208.623028,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "key": 16,
+      "grow": 0,
+      "owner_state": "full",
+      "order": 0,
+      "command": [
+        "taskset",
+        "-c",
+        "0",
+        "/opt/sixdb/jobs/20261015T021815Z-3f766a57/results/bin/hashtable_design_small_batch_16_grow0_full",
+        "bench",
+        "7",
+        "64"
+      ],
+      "start": 1792031208.6448128,
+      "end": 1792031209.262928,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "key": 16,
+      "grow": 1,
+      "owner_state": "selected",
+      "order": 0,
+      "command": [
+        "taskset",
+        "-c",
+        "0",
+        "/opt/sixdb/jobs/20261015T021815Z-3f766a57/results/bin/hashtable_design_small_batch_16_grow1",
+        "bench",
+        "7",
+        "64"
+      ],
+      "start": 1792031209.28174,
+      "end": 1792031209.885372,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "key": 16,
+      "grow": 1,
+      "owner_state": "full",
+      "order": 0,
+      "command": [
+        "taskset",
+        "-c",
+        "0",
+        "/opt/sixdb/jobs/20261015T021815Z-3f766a57/results/bin/hashtable_design_small_batch_16_grow1_full",
+        "bench",
+        "7",
+        "64"
+      ],
+      "start": 1792031209.905172,
+      "end": 1792031210.5100386,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "key": 24,
+      "grow": 0,
+      "owner_state": "selected",
+      "order": 0,
+      "command": [
+        "taskset",
+        "-c",
+        "0",
+        "/opt/sixdb/jobs/20261015T021815Z-3f766a57/results/bin/hashtable_design_small_batch_24_grow0",
+        "bench",
+        "7",
+        "64"
+      ],
+      "start": 1792031210.532241,
+      "end": 1792031211.1746151,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "key": 24,
+      "grow": 0,
+      "owner_state": "full",
+      "order": 0,
+      "command": [
+        "taskset",
+        "-c",
+        "0",
+        "/opt/sixdb/jobs/20261015T021815Z-3f766a57/results/bin/hashtable_design_small_batch_24_grow0_full",
+        "bench",
+        "7",
+        "64"
+      ],
+      "start": 1792031211.194692,
+      "end": 1792031211.8332927,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "key": 24,
+      "grow": 1,
+      "owner_state": "selected",
+      "order": 0,
+      "command": [
+        "taskset",
+        "-c",
+        "0",
+        "/opt/sixdb/jobs/20261015T021815Z-3f766a57/results/bin/hashtable_design_small_batch_24_grow1",
+        "bench",
+        "7",
+        "64"
+      ],
+      "start": 1792031211.8532104,
+      "end": 1792031212.4819345,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "key": 24,
+      "grow": 1,
+      "owner_state": "full",
+      "order": 0,
+      "command": [
+        "taskset",
+        "-c",
+        "0",
+        "/opt/sixdb/jobs/20261015T021815Z-3f766a57/results/bin/hashtable_design_small_batch_24_grow1_full",
+        "bench",
+        "7",
+        "64"
+      ],
+      "start": 1792031212.5017464,
+      "end": 1792031213.125129,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "key": 32,
+      "grow": 0,
+      "owner_state": "selected",
+      "order": 0,
+      "command": [
+        "taskset",
+        "-c",
+        "0",
+        "/opt/sixdb/jobs/20261015T021815Z-3f766a57/results/bin/hashtable_design_small_batch_32_grow0",
+        "bench",
+        "7",
+        "64"
+      ],
+      "start": 1792031213.1475708,
+      "end": 1792031213.7754433,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "key": 32,
+      "grow": 0,
+      "owner_state": "full",
+      "order": 0,
+      "command": [
+        "taskset",
+        "-c",
+        "0",
+        "/opt/sixdb/jobs/20261015T021815Z-3f766a57/results/bin/hashtable_design_small_batch_32_grow0_full",
+        "bench",
+        "7",
+        "64"
+      ],
+      "start": 1792031213.7976527,
+      "end": 1792031214.4258099,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "key": 32,
+      "grow": 1,
+      "owner_state": "selected",
+      "order": 0,
+      "command": [
+        "taskset",
+        "-c",
+        "0",
+        "/opt/sixdb/jobs/20261015T021815Z-3f766a57/results/bin/hashtable_design_small_batch_32_grow1",
+        "bench",
+        "7",
+        "64"
+      ],
+      "start": 1792031214.4455063,
+      "end": 1792031215.0648046,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "key": 32,
+      "grow": 1,
+      "owner_state": "full",
+      "order": 0,
+      "command": [
+        "taskset",
+        "-c",
+        "0",
+        "/opt/sixdb/jobs/20261015T021815Z-3f766a57/results/bin/hashtable_design_small_batch_32_grow1_full",
+        "bench",
+        "7",
+        "64"
+      ],
+      "start": 1792031215.0873868,
+      "end": 1792031215.7017968,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "key": 40,
+      "grow": 0,
+      "owner_state": "selected",
+      "order": 0,
+      "command": [
+        "taskset",
+        "-c",
+        "0",
+        "/opt/sixdb/jobs/20261015T021815Z-3f766a57/results/bin/hashtable_design_small_batch_40_grow0",
+        "bench",
+        "7",
+        "64"
+      ],
+      "start": 1792031215.7228785,
+      "end": 1792031216.3664744,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "key": 40,
+      "grow": 0,
+      "owner_state": "full",
+      "order": 0,
+      "command": [
+        "taskset",
+        "-c",
+        "0",
+        "/opt/sixdb/jobs/20261015T021815Z-3f766a57/results/bin/hashtable_design_small_batch_40_grow0_full",
+        "bench",
+        "7",
+        "64"
+      ],
+      "start": 1792031216.3885095,
+      "end": 1792031217.0280662,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "key": 40,
+      "grow": 1,
+      "owner_state": "selected",
+      "order": 0,
+      "command": [
+        "taskset",
+        "-c",
+        "0",
+        "/opt/sixdb/jobs/20261015T021815Z-3f766a57/results/bin/hashtable_design_small_batch_40_grow1",
+        "bench",
+        "7",
+        "64"
+      ],
+      "start": 1792031217.05795,
+      "end": 1792031217.680187,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "key": 40,
+      "grow": 1,
+      "owner_state": "full",
+      "order": 0,
+      "command": [
+        "taskset",
+        "-c",
+        "0",
+        "/opt/sixdb/jobs/20261015T021815Z-3f766a57/results/bin/hashtable_design_small_batch_40_grow1_full",
+        "bench",
+        "7",
+        "64"
+      ],
+      "start": 1792031217.7039165,
+      "end": 1792031218.3349462,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "key": 48,
+      "grow": 0,
+      "owner_state": "selected",
+      "order": 0,
+      "command": [
+        "taskset",
+        "-c",
+        "0",
+        "/opt/sixdb/jobs/20261015T021815Z-3f766a57/results/bin/hashtable_design_small_batch_48_grow0",
+        "bench",
+        "7",
+        "64"
+      ],
+      "start": 1792031218.3580532,
+      "end": 1792031219.008853,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "key": 48,
+      "grow": 0,
+      "owner_state": "full",
+      "order": 0,
+      "command": [
+        "taskset",
+        "-c",
+        "0",
+        "/opt/sixdb/jobs/20261015T021815Z-3f766a57/results/bin/hashtable_design_small_batch_48_grow0_full",
+        "bench",
+        "7",
+        "64"
+      ],
+      "start": 1792031219.0328164,
+      "end": 1792031219.6778548,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "key": 48,
+      "grow": 1,
+      "owner_state": "selected",
+      "order": 0,
+      "command": [
+        "taskset",
+        "-c",
+        "0",
+        "/opt/sixdb/jobs/20261015T021815Z-3f766a57/results/bin/hashtable_design_small_batch_48_grow1",
+        "bench",
+        "7",
+        "64"
+      ],
+      "start": 1792031219.6972537,
+      "end": 1792031220.3316388,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "key": 48,
+      "grow": 1,
+      "owner_state": "full",
+      "order": 0,
+      "command": [
+        "taskset",
+        "-c",
+        "0",
+        "/opt/sixdb/jobs/20261015T021815Z-3f766a57/results/bin/hashtable_design_small_batch_48_grow1_full",
+        "bench",
+        "7",
+        "64"
+      ],
+      "start": 1792031220.351804,
+      "end": 1792031220.9928334,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "key": 56,
+      "grow": 0,
+      "owner_state": "selected",
+      "order": 0,
+      "command": [
+        "taskset",
+        "-c",
+        "0",
+        "/opt/sixdb/jobs/20261015T021815Z-3f766a57/results/bin/hashtable_design_small_batch_56_grow0",
+        "bench",
+        "7",
+        "64"
+      ],
+      "start": 1792031221.0159595,
+      "end": 1792031221.666259,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "key": 56,
+      "grow": 0,
+      "owner_state": "full",
+      "order": 0,
+      "command": [
+        "taskset",
+        "-c",
+        "0",
+        "/opt/sixdb/jobs/20261015T021815Z-3f766a57/results/bin/hashtable_design_small_batch_56_grow0_full",
+        "bench",
+        "7",
+        "64"
+      ],
+      "start": 1792031221.6894343,
+      "end": 1792031222.3386476,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "key": 56,
+      "grow": 1,
+      "owner_state": "selected",
+      "order": 0,
+      "command": [
+        "taskset",
+        "-c",
+        "0",
+        "/opt/sixdb/jobs/20261015T021815Z-3f766a57/results/bin/hashtable_design_small_batch_56_grow1",
+        "bench",
+        "7",
+        "64"
+      ],
+      "start": 1792031222.3589733,
+      "end": 1792031222.9965048,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "key": 56,
+      "grow": 1,
+      "owner_state": "full",
+      "order": 0,
+      "command": [
+        "taskset",
+        "-c",
+        "0",
+        "/opt/sixdb/jobs/20261015T021815Z-3f766a57/results/bin/hashtable_design_small_batch_56_grow1_full",
+        "bench",
+        "7",
+        "64"
+      ],
+      "start": 1792031223.0166543,
+      "end": 1792031223.6597195,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "key": 64,
+      "grow": 0,
+      "owner_state": "selected",
+      "order": 0,
+      "command": [
+        "taskset",
+        "-c",
+        "0",
+        "/opt/sixdb/jobs/20261015T021815Z-3f766a57/results/bin/hashtable_design_small_batch_64_grow0",
+        "bench",
+        "7",
+        "64"
+      ],
+      "start": 1792031223.6793935,
+      "end": 1792031224.3200133,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "key": 64,
+      "grow": 0,
+      "owner_state": "full",
+      "order": 0,
+      "command": [
+        "taskset",
+        "-c",
+        "0",
+        "/opt/sixdb/jobs/20261015T021815Z-3f766a57/results/bin/hashtable_design_small_batch_64_grow0_full",
+        "bench",
+        "7",
+        "64"
+      ],
+      "start": 1792031224.3397596,
+      "end": 1792031224.9742274,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "key": 64,
+      "grow": 1,
+      "owner_state": "selected",
+      "order": 0,
+      "command": [
+        "taskset",
+        "-c",
+        "0",
+        "/opt/sixdb/jobs/20261015T021815Z-3f766a57/results/bin/hashtable_design_small_batch_64_grow1",
+        "bench",
+        "7",
+        "64"
+      ],
+      "start": 1792031224.9945776,
+      "end": 1792031225.6188698,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "key": 64,
+      "grow": 1,
+      "owner_state": "full",
+      "order": 0,
+      "command": [
+        "taskset",
+        "-c",
+        "0",
+        "/opt/sixdb/jobs/20261015T021815Z-3f766a57/results/bin/hashtable_design_small_batch_64_grow1_full",
+        "bench",
+        "7",
+        "64"
+      ],
+      "start": 1792031225.6401827,
+      "end": 1792031226.2662776,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "key": 64,
+      "grow": 1,
+      "owner_state": "full",
+      "order": 1,
+      "command": [
+        "taskset",
+        "-c",
+        "0",
+        "/opt/sixdb/jobs/20261015T021815Z-3f766a57/results/bin/hashtable_design_small_batch_64_grow1_full",
+        "bench",
+        "7",
+        "64"
+      ],
+      "start": 1792031226.2864704,
+      "end": 1792031226.9122524,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "key": 64,
+      "grow": 1,
+      "owner_state": "selected",
+      "order": 1,
+      "command": [
+        "taskset",
+        "-c",
+        "0",
+        "/opt/sixdb/jobs/20261015T021815Z-3f766a57/results/bin/hashtable_design_small_batch_64_grow1",
+        "bench",
+        "7",
+        "64"
+      ],
+      "start": 1792031226.9323568,
+      "end": 1792031227.5557618,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "key": 64,
+      "grow": 0,
+      "owner_state": "full",
+      "order": 1,
+      "command": [
+        "taskset",
+        "-c",
+        "0",
+        "/opt/sixdb/jobs/20261015T021815Z-3f766a57/results/bin/hashtable_design_small_batch_64_grow0_full",
+        "bench",
+        "7",
+        "64"
+      ],
+      "start": 1792031227.5760672,
+      "end": 1792031228.2051203,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "key": 64,
+      "grow": 0,
+      "owner_state": "selected",
+      "order": 1,
+      "command": [
+        "taskset",
+        "-c",
+        "0",
+        "/opt/sixdb/jobs/20261015T021815Z-3f766a57/results/bin/hashtable_design_small_batch_64_grow0",
+        "bench",
+        "7",
+        "64"
+      ],
+      "start": 1792031228.2259789,
+      "end": 1792031228.8621898,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "key": 56,
+      "grow": 1,
+      "owner_state": "full",
+      "order": 1,
+      "command": [
+        "taskset",
+        "-c",
+        "0",
+        "/opt/sixdb/jobs/20261015T021815Z-3f766a57/results/bin/hashtable_design_small_batch_56_grow1_full",
+        "bench",
+        "7",
+        "64"
+      ],
+      "start": 1792031228.8846626,
+      "end": 1792031229.5253758,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "key": 56,
+      "grow": 1,
+      "owner_state": "selected",
+      "order": 1,
+      "command": [
+        "taskset",
+        "-c",
+        "0",
+        "/opt/sixdb/jobs/20261015T021815Z-3f766a57/results/bin/hashtable_design_small_batch_56_grow1",
+        "bench",
+        "7",
+        "64"
+      ],
+      "start": 1792031229.545706,
+      "end": 1792031230.1850953,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "key": 56,
+      "grow": 0,
+      "owner_state": "full",
+      "order": 1,
+      "command": [
+        "taskset",
+        "-c",
+        "0",
+        "/opt/sixdb/jobs/20261015T021815Z-3f766a57/results/bin/hashtable_design_small_batch_56_grow0_full",
+        "bench",
+        "7",
+        "64"
+      ],
+      "start": 1792031230.2057834,
+      "end": 1792031230.8560236,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "key": 56,
+      "grow": 0,
+      "owner_state": "selected",
+      "order": 1,
+      "command": [
+        "taskset",
+        "-c",
+        "0",
+        "/opt/sixdb/jobs/20261015T021815Z-3f766a57/results/bin/hashtable_design_small_batch_56_grow0",
+        "bench",
+        "7",
+        "64"
+      ],
+      "start": 1792031230.8771846,
+      "end": 1792031231.5329974,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "key": 48,
+      "grow": 1,
+      "owner_state": "full",
+      "order": 1,
+      "command": [
+        "taskset",
+        "-c",
+        "0",
+        "/opt/sixdb/jobs/20261015T021815Z-3f766a57/results/bin/hashtable_design_small_batch_48_grow1_full",
+        "bench",
+        "7",
+        "64"
+      ],
+      "start": 1792031231.5528715,
+      "end": 1792031232.1901033,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "key": 48,
+      "grow": 1,
+      "owner_state": "selected",
+      "order": 1,
+      "command": [
+        "taskset",
+        "-c",
+        "0",
+        "/opt/sixdb/jobs/20261015T021815Z-3f766a57/results/bin/hashtable_design_small_batch_48_grow1",
+        "bench",
+        "7",
+        "64"
+      ],
+      "start": 1792031232.210529,
+      "end": 1792031232.8538387,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "key": 48,
+      "grow": 0,
+      "owner_state": "full",
+      "order": 1,
+      "command": [
+        "taskset",
+        "-c",
+        "0",
+        "/opt/sixdb/jobs/20261015T021815Z-3f766a57/results/bin/hashtable_design_small_batch_48_grow0_full",
+        "bench",
+        "7",
+        "64"
+      ],
+      "start": 1792031232.8742652,
+      "end": 1792031233.5218685,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "key": 48,
+      "grow": 0,
+      "owner_state": "selected",
+      "order": 1,
+      "command": [
+        "taskset",
+        "-c",
+        "0",
+        "/opt/sixdb/jobs/20261015T021815Z-3f766a57/results/bin/hashtable_design_small_batch_48_grow0",
+        "bench",
+        "7",
+        "64"
+      ],
+      "start": 1792031233.5427015,
+      "end": 1792031234.1892457,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "key": 40,
+      "grow": 1,
+      "owner_state": "full",
+      "order": 1,
+      "command": [
+        "taskset",
+        "-c",
+        "0",
+        "/opt/sixdb/jobs/20261015T021815Z-3f766a57/results/bin/hashtable_design_small_batch_40_grow1_full",
+        "bench",
+        "7",
+        "64"
+      ],
+      "start": 1792031234.2097151,
+      "end": 1792031234.8410418,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "key": 40,
+      "grow": 1,
+      "owner_state": "selected",
+      "order": 1,
+      "command": [
+        "taskset",
+        "-c",
+        "0",
+        "/opt/sixdb/jobs/20261015T021815Z-3f766a57/results/bin/hashtable_design_small_batch_40_grow1",
+        "bench",
+        "7",
+        "64"
+      ],
+      "start": 1792031234.8613586,
+      "end": 1792031235.484046,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "key": 40,
+      "grow": 0,
+      "owner_state": "full",
+      "order": 1,
+      "command": [
+        "taskset",
+        "-c",
+        "0",
+        "/opt/sixdb/jobs/20261015T021815Z-3f766a57/results/bin/hashtable_design_small_batch_40_grow0_full",
+        "bench",
+        "7",
+        "64"
+      ],
+      "start": 1792031235.5049236,
+      "end": 1792031236.143769,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "key": 40,
+      "grow": 0,
+      "owner_state": "selected",
+      "order": 1,
+      "command": [
+        "taskset",
+        "-c",
+        "0",
+        "/opt/sixdb/jobs/20261015T021815Z-3f766a57/results/bin/hashtable_design_small_batch_40_grow0",
+        "bench",
+        "7",
+        "64"
+      ],
+      "start": 1792031236.1652515,
+      "end": 1792031236.8036935,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "key": 32,
+      "grow": 1,
+      "owner_state": "full",
+      "order": 1,
+      "command": [
+        "taskset",
+        "-c",
+        "0",
+        "/opt/sixdb/jobs/20261015T021815Z-3f766a57/results/bin/hashtable_design_small_batch_32_grow1_full",
+        "bench",
+        "7",
+        "64"
+      ],
+      "start": 1792031236.8249002,
+      "end": 1792031237.4386306,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "key": 32,
+      "grow": 1,
+      "owner_state": "selected",
+      "order": 1,
+      "command": [
+        "taskset",
+        "-c",
+        "0",
+        "/opt/sixdb/jobs/20261015T021815Z-3f766a57/results/bin/hashtable_design_small_batch_32_grow1",
+        "bench",
+        "7",
+        "64"
+      ],
+      "start": 1792031237.4586124,
+      "end": 1792031238.0743153,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "key": 32,
+      "grow": 0,
+      "owner_state": "full",
+      "order": 1,
+      "command": [
+        "taskset",
+        "-c",
+        "0",
+        "/opt/sixdb/jobs/20261015T021815Z-3f766a57/results/bin/hashtable_design_small_batch_32_grow0_full",
+        "bench",
+        "7",
+        "64"
+      ],
+      "start": 1792031238.0947046,
+      "end": 1792031238.7221932,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "key": 32,
+      "grow": 0,
+      "owner_state": "selected",
+      "order": 1,
+      "command": [
+        "taskset",
+        "-c",
+        "0",
+        "/opt/sixdb/jobs/20261015T021815Z-3f766a57/results/bin/hashtable_design_small_batch_32_grow0",
+        "bench",
+        "7",
+        "64"
+      ],
+      "start": 1792031238.7428014,
+      "end": 1792031239.3693917,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "key": 24,
+      "grow": 1,
+      "owner_state": "full",
+      "order": 1,
+      "command": [
+        "taskset",
+        "-c",
+        "0",
+        "/opt/sixdb/jobs/20261015T021815Z-3f766a57/results/bin/hashtable_design_small_batch_24_grow1_full",
+        "bench",
+        "7",
+        "64"
+      ],
+      "start": 1792031239.3901064,
+      "end": 1792031240.0125406,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "key": 24,
+      "grow": 1,
+      "owner_state": "selected",
+      "order": 1,
+      "command": [
+        "taskset",
+        "-c",
+        "0",
+        "/opt/sixdb/jobs/20261015T021815Z-3f766a57/results/bin/hashtable_design_small_batch_24_grow1",
+        "bench",
+        "7",
+        "64"
+      ],
+      "start": 1792031240.0329723,
+      "end": 1792031240.6607673,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "key": 24,
+      "grow": 0,
+      "owner_state": "full",
+      "order": 1,
+      "command": [
+        "taskset",
+        "-c",
+        "0",
+        "/opt/sixdb/jobs/20261015T021815Z-3f766a57/results/bin/hashtable_design_small_batch_24_grow0_full",
+        "bench",
+        "7",
+        "64"
+      ],
+      "start": 1792031240.6818867,
+      "end": 1792031241.321183,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "key": 24,
+      "grow": 0,
+      "owner_state": "selected",
+      "order": 1,
+      "command": [
+        "taskset",
+        "-c",
+        "0",
+        "/opt/sixdb/jobs/20261015T021815Z-3f766a57/results/bin/hashtable_design_small_batch_24_grow0",
+        "bench",
+        "7",
+        "64"
+      ],
+      "start": 1792031241.3415487,
+      "end": 1792031241.9795816,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "key": 16,
+      "grow": 1,
+      "owner_state": "full",
+      "order": 1,
+      "command": [
+        "taskset",
+        "-c",
+        "0",
+        "/opt/sixdb/jobs/20261015T021815Z-3f766a57/results/bin/hashtable_design_small_batch_16_grow1_full",
+        "bench",
+        "7",
+        "64"
+      ],
+      "start": 1792031241.9998944,
+      "end": 1792031242.606269,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "key": 16,
+      "grow": 1,
+      "owner_state": "selected",
+      "order": 1,
+      "command": [
+        "taskset",
+        "-c",
+        "0",
+        "/opt/sixdb/jobs/20261015T021815Z-3f766a57/results/bin/hashtable_design_small_batch_16_grow1",
+        "bench",
+        "7",
+        "64"
+      ],
+      "start": 1792031242.6275017,
+      "end": 1792031243.235038,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "key": 16,
+      "grow": 0,
+      "owner_state": "full",
+      "order": 1,
+      "command": [
+        "taskset",
+        "-c",
+        "0",
+        "/opt/sixdb/jobs/20261015T021815Z-3f766a57/results/bin/hashtable_design_small_batch_16_grow0_full",
+        "bench",
+        "7",
+        "64"
+      ],
+      "start": 1792031243.2557266,
+      "end": 1792031243.8787522,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "key": 16,
+      "grow": 0,
+      "owner_state": "selected",
+      "order": 1,
+      "command": [
+        "taskset",
+        "-c",
+        "0",
+        "/opt/sixdb/jobs/20261015T021815Z-3f766a57/results/bin/hashtable_design_small_batch_16_grow0",
+        "bench",
+        "7",
+        "64"
+      ],
+      "start": 1792031243.898875,
+      "end": 1792031244.5184457,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "key": 8,
+      "grow": 1,
+      "owner_state": "full",
+      "order": 1,
+      "command": [
+        "taskset",
+        "-c",
+        "0",
+        "/opt/sixdb/jobs/20261015T021815Z-3f766a57/results/bin/hashtable_design_small_batch_8_grow1_full",
+        "bench",
+        "7",
+        "64"
+      ],
+      "start": 1792031244.538323,
+      "end": 1792031245.0938966,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "key": 8,
+      "grow": 1,
+      "owner_state": "selected",
+      "order": 1,
+      "command": [
+        "taskset",
+        "-c",
+        "0",
+        "/opt/sixdb/jobs/20261015T021815Z-3f766a57/results/bin/hashtable_design_small_batch_8_grow1",
+        "bench",
+        "7",
+        "64"
+      ],
+      "start": 1792031245.115359,
+      "end": 1792031245.6723983,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "key": 8,
+      "grow": 0,
+      "owner_state": "full",
+      "order": 1,
+      "command": [
+        "taskset",
+        "-c",
+        "0",
+        "/opt/sixdb/jobs/20261015T021815Z-3f766a57/results/bin/hashtable_design_small_batch_8_grow0_full",
+        "bench",
+        "7",
+        "64"
+      ],
+      "start": 1792031245.6925483,
+      "end": 1792031246.26098,
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "key": 8,
+      "grow": 0,
+      "owner_state": "selected",
+      "order": 1,
+      "command": [
+        "taskset",
+        "-c",
+        "0",
+        "/opt/sixdb/jobs/20261015T021815Z-3f766a57/results/bin/hashtable_design_small_batch_8_grow0",
+        "bench",
+        "7",
+        "64"
+      ],
+      "start": 1792031246.2804816,
+      "end": 1792031246.8615818,
+      "returncode": 0,
+      "stderr": ""
+    }
+  ],
+  "binary_sha256": {
+    "hashtable_design_small_batch_8_grow0": "ddfa5da9ea8b4774aaf6bb4fc19b48d6aa39aedec0d63e8393dcb9ada800db66",
+    "hashtable_design_small_batch_8_grow0_full": "57b278c2b01d8456a5b426614fa8eba301e7415c290cb93bb35c57b1dfa63ff7",
+    "hashtable_design_small_batch_8_grow1": "d7ce63e45baa1a3b7e5b9201084f820437568e2283b0cfc386651d0221658297",
+    "hashtable_design_small_batch_8_grow1_full": "61223c1f6b3269fe1a91b2e4ef33722eda762b23cffc68dff5d035aeacada999",
+    "hashtable_design_small_batch_16_grow0": "c194229bc4a67279c9c3e2a9d43a5890d6011484e60881002b8d49fd1bec047e",
+    "hashtable_design_small_batch_16_grow0_full": "92f90cb881291a8881497a5117d7466f1c75bb8a9ca57bddcd2e88bc4048e19a",
+    "hashtable_design_small_batch_16_grow1": "5b47e78683b967b884462302584c2ff6e205142206ebbf4613114f930424216e",
+    "hashtable_design_small_batch_16_grow1_full": "8085e3cf7180f118db6b1544b610a5ac6e2f2883fa0dddf392aea052bb9e9c9f",
+    "hashtable_design_small_batch_24_grow0": "f51a655c5bc031ed74aca673dc3280a874c1cffacc3b9efc1683dc44be43fb99",
+    "hashtable_design_small_batch_24_grow0_full": "cb15bd606fb5b288388980f68ec0d6b802c3b5ac7dae684a6a8bc16ef8e2e917",
+    "hashtable_design_small_batch_24_grow1": "242c4ef9514a6ed4b596ff93e60b3e6e3342711eee2597e7ed592509920af14a",
+    "hashtable_design_small_batch_24_grow1_full": "377a2d3824044423e6b282d7c44ffcb4275f8d7490a541401b94c13aa83051eb",
+    "hashtable_design_small_batch_32_grow0": "5f97ff59b281ffbdb3578f83629f45e74c82238038a484c7241f27bfd98e3e8e",
+    "hashtable_design_small_batch_32_grow0_full": "f759e7624a603f8e5c72f0f6fc6e5dd19990715339848f78a0fac8eae97f2076",
+    "hashtable_design_small_batch_32_grow1": "d7cdc830e384edd30966349578132d229cd7b3642e09bfe854fac295c5087588",
+    "hashtable_design_small_batch_32_grow1_full": "36e638b03a198aad566c95eb7638d77eafcde37ad09c2ed61057645e2daced64",
+    "hashtable_design_small_batch_40_grow0": "579222479e684aa9f11634859a93885eefe66c31ad204bc04752cc825f4db828",
+    "hashtable_design_small_batch_40_grow0_full": "e0bc775c1413d5679c6688d2b278f8f7f009af1c30f923a6ceab64c97f09c235",
+    "hashtable_design_small_batch_40_grow1": "e6322d403c62222fcf6e31985d0157395de76f6a75028c4fee54999ae4d2ab6f",
+    "hashtable_design_small_batch_40_grow1_full": "608e0b5829d42346b2f9606dbf24d07b715715693ebd5a1ae189c58989527894",
+    "hashtable_design_small_batch_48_grow0": "6f083724105da7c6e0d9d22561559e54cbacd17cc6061d94056d2614deacee51",
+    "hashtable_design_small_batch_48_grow0_full": "5c2c7b49084f9ec9f9137dfa40a4775fc20dece3d2b8af1ee3e31ce670e2d8c4",
+    "hashtable_design_small_batch_48_grow1": "34b24ad146d4a8823ddf61abbe90b55f4d6d1467179cae62bb1662154a6fc78f",
+    "hashtable_design_small_batch_48_grow1_full": "48c3a14cdf2b0da4c2253d2ad79d5eab2f2cea94634ca7b8d229894199ebe9b6",
+    "hashtable_design_small_batch_56_grow0": "070e7d154de365d0e8d2c40352d96b2e8909672a1e84d3e60a564f0d443083c8",
+    "hashtable_design_small_batch_56_grow0_full": "83b9190b5856ff5683a04a29dda172e33f8300871157edb394638de4081ff953",
+    "hashtable_design_small_batch_56_grow1": "253905de31a9cfff99d8465892fdc924228a0bef9e373a067149a01fdd75286d",
+    "hashtable_design_small_batch_56_grow1_full": "d1f2e2e808cb6179f933185f313cb0b08ece6d9f9820b56a5850a48cf1070ccc",
+    "hashtable_design_small_batch_64_grow0": "a9494013e009598033f65fe973321576cf918c2073d7a170d89962fa768ef2c2",
+    "hashtable_design_small_batch_64_grow0_full": "b5afc6d5e4c218ce8b0f5e22424dcf1ff5749821e3a9f9e42865d6cf43540214",
+    "hashtable_design_small_batch_64_grow1": "77722ef975e7655c4c8554c28c654f0c5ede89ab7aba8ebf59c3dfb1c7b484f1",
+    "hashtable_design_small_batch_64_grow1_full": "cb21f9e582f9beb85c1c85f930e1240bd35b1a036d9b475a305b3488c3f9ba60"
+  }
+}

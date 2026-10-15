@@ -1,0 +1,54 @@
+{
+  "consumers": [
+    {
+      "owner": "abseil",
+      "ready": false,
+      "hints": false,
+      "instructions": 192,
+      "allowed_outer_calls": []
+    },
+    {
+      "owner": "abseil",
+      "ready": false,
+      "hints": false,
+      "instructions": 152,
+      "allowed_outer_calls": []
+    },
+    {
+      "owner": "generic",
+      "ready": true,
+      "hints": false,
+      "instructions": 244,
+      "allowed_outer_calls": []
+    },
+    {
+      "owner": "generic",
+      "ready": true,
+      "hints": true,
+      "instructions": 344,
+      "allowed_outer_calls": []
+    },
+    {
+      "owner": "abseil",
+      "ready": false,
+      "hints": false,
+      "instructions": 536,
+      "allowed_outer_calls": [
+        "1e314: 97ffa233     \tbl\t0x6be0 <memset@plt>"
+      ]
+    },
+    {
+      "owner": "abseil",
+      "ready": false,
+      "hints": false,
+      "instructions": 432,
+      "allowed_outer_calls": [
+        "1eb74: 97ffa01b     \tbl\t0x6be0 <memset@plt>"
+      ]
+    }
+  ],
+  "ready_calls": 0,
+  "ready_stack_references": 0,
+  "outlined_baseline_lookup": 0,
+  "limitation": "Static calls and frame references only; not instruction quality, lifetime, traffic or performance."
+}

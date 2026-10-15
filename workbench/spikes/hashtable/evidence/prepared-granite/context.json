@@ -1,0 +1,86 @@
+{
+  "format": 1,
+  "authored_analysis": true,
+  "group": "20261013T194639Z-67e2aec2",
+  "job": "20261013T194645Z-f2a5e3f1",
+  "platform": "granite",
+  "source_manifest_digest": "2013b46d6f86a483ebf11d70ab78e6dffcd5a5b2c702eb57ec3eba8c6756238e",
+  "source_archive_sha256": "36af717170c981de54fe86245129d635b3291d63660c7b5233ac8194263b1ba7",
+  "source_driver_sha256": "e50367ff9f5de2f68706aa12f47ef3661d9b5c023d82a79e0ec98d3e4848e9e4",
+  "resource_receipt": [
+    {
+      "id": "i-0a8767042cc14ad8f",
+      "state": "terminated"
+    }
+  ],
+  "coverage": {
+    "cases": 45,
+    "arms": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
+    "repetitions": 9,
+    "csv_rows": 36450,
+    "cells": 4050,
+    "case_processes": 450
+  },
+  "checks": {
+    "check": "all-width/all-kind bucket-read permissions, promotion, bags, deletion, reuse, and refusal passed",
+    "recipe-check": "recipe exact and widened access, guard thresholds, poisoned neighbors, independent bytes, damage and refusal passed",
+    "links-check": "checked/admitted reservations, refusal, relocation, clones and all-family physical/event parity passed"
+  },
+  "worker_state": {
+    "state": "complete",
+    "script_returncode": 0,
+    "script_seconds": 819.2647614479065,
+    "worker_seconds_before_collection": 855.7456393241882
+  },
+  "codegen": {
+    "assembly_sha256": "8c10d9ce191193653f5363b11226ec4e12ef4c8ac5037d7dbaf61e3c8f838d61",
+    "binary_sha256": "8a57e296df50a1afc4c7b379cdfc125d3eec85b6b5c74ecee3311e7b6fac969d",
+    "source_sha256": "e50367ff9f5de2f68706aa12f47ef3661d9b5c023d82a79e0ec98d3e4848e9e4",
+    "outlined_timing_wrappers": 147,
+    "phase_assignment": "DWARF inline caller locations matched to frozen source assignments; no clock ordinal or lambda number",
+    "timed_regions": 1800,
+    "read_regions": 1350,
+    "unknown_branches": 0,
+    "indirect_calls": 0,
+    "per_key_or_value_calls_in_read_loops": 0,
+    "read_locations": {
+      "candidate_inline": 1062,
+      "baseline_inline": 238,
+      "baseline_whole_loop": 32,
+      "candidate_whole_loop": 18
+    }
+  },
+  "limitations": [
+    "Single-writer exclusive-owner experiment. No concurrent writer, MVCC publication, DRAM, Loom prefetch or established cache-residence claim.",
+    "Combined cached link-format pointer and byte-coordinate read change; local-result caller in all arms. Versus the earlier paired capture, requested storage and build populations match for comparable arms, but metadata increases 8 B per set/map owner and 16 B per multimap owner. These separate jobs are not a matched causal decomposition.",
+    "All 45 cases and all 10 arms retained: exact/wider-FP/wider-suffix/wider-both, composed/Direct, ordinary/exact-key Abseil. One fresh process per case/arm in shuffled seed 127 order; nine fresh-Pool reps and complete read warmup. Process placement, temporal drift and Abseil seed differences remain; within-process reps are not independent machine trials.",
+    "Requested bytes plus metadata, geometry, build populations and operation counts match per repetition across the eight candidate arms. Owned backing is retained; baseline backing zero means unknown. No transient peak, RSS or cache-residence measurement.",
+    "Wider reads require stable initialized ownership of the complete bucket, mask inactive neighbors and preserve exact store/damage bounds. Widening often changes no loaded bytes; identical helper controls retain those negative cases. This is not permission to read independently mutable neighboring storage.",
+    "K8..64, set/map/multimap, A6/A10 except K8A6 only, exact arbitrary-fit bucket recipes. Cardinality follows the explicit historical capacity control; formats are not compared at their own equal occupancy. K8 bypasses compact-list policy.",
+    "Direct replaces bucket-field operations only; owner, hashing, routing and chains stay common. It is not an independent whole table.",
+    "Timing uses std::chrono::steady_clock. Hit/miss results have independent per-key checks. Map serial depends on values; multimap XORs all values and proves the complete cycle; set serial includes caller dependency.",
+    "Full lifetime sums separately timed construct/build/update/erase/release. Reads, inventories, checks and Pool setup/drain are excluded. This is not uninterrupted lifetime throughput.",
+    "Inventory is after build for construct/build/read, after update for update, and after erase for erase/release/lifecycle. Population fields always describe build. Data backing histories are retained but equality is not assumed.",
+    "Abseil reserves known cardinality in construct. Its InlinedVector<word,1> actually holds two inline values on these ABIs; candidate holds one. Multimap append allocation asymmetry remains and is not the separate admitted-append experiment.",
+    "Host ISA and microarchitecture change together (Zen5 AVX2 x86-64-v3, Granite native AVX512, V2 NEON); this is not an ISA-only comparison.",
+    "Complete timed CFG and helper audit resolves phase through frozen-source DWARF callsites, including outlined timers. It establishes call boundaries, not runtime branch frequency, PMU profiling or cycle causality. Medians across cases are descriptive; no default or preset is selected."
+  ],
+  "selection": "All native case/arm/repetition rows and populations retained. Full source, compile commands, binary and assembly recoverable via artifact.json.",
+  "regenerate": [
+    "python3 workbench/spikes/hashtable-design/evidence/prepared-native/compare.py workbench/spikes/hashtable-design/evidence/prepared-granite build/prepared-granite-comparison workbench/spikes/hashtable-design/evidence/prepared-granite",
+    "python3 workbench/tools/worker.py fetch 20261013T194645Z-f2a5e3f1 --file formats",
+    "python3 workbench/spikes/hashtable-design/evidence/reduction-native/audit-dwarf.py build/workers/20261013T194645Z-f2a5e3f1/results/assembly.gz build/workers/20261013T194645Z-f2a5e3f1/results/formats build/captures/hashtable-prepared-native/workbench/spikes/hashtable-design/formats.cpp build/prepared-granite-audit --arms 0 1 2 3 4 5 6 7 8 9",
+    "python3 workbench/spikes/hashtable-design/evidence/reduction-native/codegen-summary.py build/prepared-granite-audit/codegen.json build/prepared-granite-audit 1800"
+  ]
+}
