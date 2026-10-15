@@ -1,0 +1,91 @@
+{
+  "checks_normal": {
+    "passed": 23,
+    "checks": [
+      "complete-independent-logical-matrix",
+      "CSV-hash-tamper",
+      "missing-cell",
+      "duplicate-cell",
+      "sample-relabels-useful-work",
+      "mode-order-did-not-rotate",
+      "cutoff-order-did-not-rotate",
+      "policy-variant-mismatch",
+      "sample-not-complete-probe",
+      "sample-cost-uncharged",
+      "disabled-control-sampled",
+      "sampling-only-selects-direct",
+      "wrong-checksum",
+      "nonfinite-timing",
+      "candidate-order-did-not-alternate",
+      "execution-codegen-inventory-positive",
+      "native-call",
+      "native-stack",
+      "serial-call",
+      "ready-call",
+      "missing-execution-function",
+      "decision-codegen-positive",
+      "decision-call"
+    ]
+  },
+  "checks_python_optimized": {
+    "passed": 23,
+    "checks": [
+      "complete-independent-logical-matrix",
+      "CSV-hash-tamper",
+      "missing-cell",
+      "duplicate-cell",
+      "sample-relabels-useful-work",
+      "mode-order-did-not-rotate",
+      "cutoff-order-did-not-rotate",
+      "policy-variant-mismatch",
+      "sample-not-complete-probe",
+      "sample-cost-uncharged",
+      "disabled-control-sampled",
+      "sampling-only-selects-direct",
+      "wrong-checksum",
+      "nonfinite-timing",
+      "candidate-order-did-not-alternate",
+      "execution-codegen-inventory-positive",
+      "native-call",
+      "native-stack",
+      "serial-call",
+      "ready-call",
+      "missing-execution-function",
+      "decision-codegen-positive",
+      "decision-call"
+    ]
+  },
+  "tool_sha256": {
+    "workbench/spikes/loom-locality-execution/graduation_check.py": "61e9dcfa0a0f1684bb02f881b2da350cc7e191c689ddfab75cbd406001720334",
+    "workbench/spikes/loom-locality-execution/graduation_report.py": "595823718b71f0c365dcc8dfb47f47704c623471ba4e6fd61d511017146a1de0",
+    "workbench/spikes/loom-locality-execution/graduation_codegen.py": "a03363d3e86c0874c1e3a4eab7b3db4f8b6e1dde6ff53dcff5de6f600640b00b"
+  },
+  "actual_rows_exercised": {
+    "policy_rows": 336,
+    "cost_rows": 40,
+    "external_pass": 3,
+    "kind": "hot-map",
+    "logical_fixture_qualification_only": true
+  },
+  "native_callback_comparison": {
+    "architecture": "local ARM",
+    "private_instructions": 265,
+    "product_instructions": 265,
+    "normalized_identical": true
+  },
+  "source_limits": [
+    "Native workers will provide authoritative V2/Zen measurements; local rows are parser checks only",
+    "Private policy_bytes80 excludes24-byte owned options; full private wrapper104 vs product88",
+    "No worker results mutated"
+  ],
+  "compiled_state_layout": {
+    "private_wrapper_bytes": 104,
+    "private_reported_bytes": 80,
+    "private_options_bytes": 24,
+    "product_wrapper_bytes": 88,
+    "proofs": [
+      "build/loom-graduation-private-layout.txt",
+      "build/loom-graduation-product-layout.txt"
+    ]
+  }
+}

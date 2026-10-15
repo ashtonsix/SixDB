@@ -13,6 +13,13 @@ The [execution study](../workbench/spikes/loom-execution/FINDINGS.md#minimum-via
 informs these paths. Its prototypes and [Calico ancestry](../workbench/notebook/calico.md)
 do not establish the runtime contracts.
 
+An owner-local [execution policy](include/loom/execution.h) can select legal
+direct/Ring paths from completed serial consumer samples at an ordinary operation
+boundary. The caller supplies cohort/version/placement identity, useful
+independence and a consumer-qualified cutoff. Loom owns evidence expiry and
+retry cadence; samples, clocks and decisions stay outside native visits. The
+[execution guide](docs/execution.md) explains sampling cost, limits and lifetimes.
+
 ## Allocation stage
 
 An embedded [Worker](include/loom/worker.h) has a stable Lane for physical
@@ -178,6 +185,8 @@ lifetimes:
   cleanup needs an explicit `retry_cleanup`; placement proves no NUMA residence.
 - [Hints](examples/hints.cpp): serve held native input during a shared startup
   miss, copy policy at returned boundaries, and settle calibration and storage.
+- [Execution](examples/execution.cpp): sample complete serial chains and choose
+  direct/Ring execution for one cohort while keeping its storage stable.
 
 The [allocation consumer](../workbench/benchmarks/orbital/README.md) owns the composed
 SeriesPack/TuplePack workloads and actual LMDB comparisons.

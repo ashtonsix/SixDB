@@ -2,7 +2,9 @@
 
 Ashton's 15 October request asks whether Loom can own reusable execution policy
 without losing the few-nanosecond native path or the existing Ikea cold gains.
-This is a spike. Product interfaces, Ring ABI and Ikea formats are unchanged.
+The original experiments are private; the subsequent
+[execution-policy graduation](GRADUATION.md) owns implementation and fresh native
+qualification. Ring ABI and Ikea formats are unchanged.
 
 Two questions are separate. Can actual recent serial performance cheaply select
 direct execution versus a memory Ring? Can abstract hints describe a random

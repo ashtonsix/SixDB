@@ -1,0 +1,12 @@
+{
+  "source_digest": "434d3ade5845700b22c37f62a0cd1a16824b388c873fdfd739e077094adff201",
+  "files": {
+    "loom/include/loom/execution.h": "0a22e04959aa3c869ffa3d5c834e235ab06c8801b79f62a6e1855b205a3c11ad",
+    "loom/src/execution.cpp": "d67ab5384339dcdad01590a5cc54b7bdf19a5a743b0072ec1f4e9a947993dd83",
+    "loom/test/execution.cpp": "d13cd72cf389e782e212b23c0f455b6e21289b03138973b72a4c52f31bd4ad8e",
+    "loom/examples/execution.cpp": "800d3eacfe23730b8a25ad54a10be77e0fc5cff2643598b4aa12cc1aa883f03b",
+    "loom/CMakeLists.txt": "3616b5ad0dec1216dd0b0c475f580d5b76d3e3ef36a3b2177ef77fdcecbb1850"
+  },
+  "checks": "Final flow: release18/18, O3ASan/UBSan always-UAR policy/example2/2",
+  "scope": "Local checks and independent analysis controls; final native source/assembly/timing qualification retained separately"
+}

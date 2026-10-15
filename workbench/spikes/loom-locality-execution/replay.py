@@ -11,7 +11,9 @@ from pathlib import Path, PurePosixPath
 
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument("root", type=Path)
-parser.add_argument("--followup", action="store_true")
+campaign = parser.add_mutually_exclusive_group()
+campaign.add_argument("--followup", action="store_true")
+campaign.add_argument("--graduation", action="store_true")
 parser.add_argument("--source-output", type=Path, help="recover the full verified source into a new directory for consumer input")
 args = parser.parse_args()
 member = "workbench/spikes/hashtable-design/staged.cpp"
@@ -22,7 +24,7 @@ with tempfile.TemporaryDirectory(prefix="loom-replay-") as temporary:
         if source_root.exists():
             parser.error("source output must be a new directory")
         source_root.mkdir(parents=True)
-    full_tree = args.followup or args.source_output is not None
+    full_tree = args.followup or args.graduation or args.source_output is not None
     seen = set()
     with tarfile.open(args.root / "source.tar.gz", "r:gz") as archive:
         for item in archive:
@@ -41,6 +43,7 @@ with tempfile.TemporaryDirectory(prefix="loom-replay-") as temporary:
             seen.add(item.name)
     if seen != (set(manifest) if full_tree else {member}):
         parser.error("captured source inventory incomplete")
-    script = Path(__file__).with_name("followup_report.py" if args.followup else "report.py")
+    report = "graduation_report.py" if args.graduation else "followup_report.py" if args.followup else "report.py"
+    script = Path(__file__).with_name(report)
     subprocess.run([sys.executable, "-B", str(script), str(args.root), "--qualify",
                     "--source-root", str(source_root)], check=True)

@@ -1,0 +1,85 @@
+{
+  "consumers": [
+    {
+      "owner": "abseil",
+      "ready": false,
+      "hints": false,
+      "instructions": 206,
+      "allowed_outer_calls": [],
+      "rbp_preservation": []
+    },
+    {
+      "owner": "abseil",
+      "ready": false,
+      "hints": false,
+      "instructions": 110,
+      "allowed_outer_calls": [],
+      "rbp_preservation": []
+    },
+    {
+      "owner": "generic",
+      "ready": true,
+      "hints": false,
+      "instructions": 156,
+      "allowed_outer_calls": [],
+      "rbp_preservation": []
+    },
+    {
+      "owner": "generic",
+      "ready": true,
+      "hints": true,
+      "instructions": 245,
+      "allowed_outer_calls": [],
+      "rbp_preservation": []
+    },
+    {
+      "owner": "word",
+      "ready": true,
+      "hints": false,
+      "instructions": 140,
+      "allowed_outer_calls": [],
+      "rbp_preservation": []
+    },
+    {
+      "owner": "word",
+      "ready": true,
+      "hints": true,
+      "instructions": 200,
+      "allowed_outer_calls": [],
+      "rbp_preservation": [
+        "1dc10: 55                           \tpushq\t%rbp",
+        "1dc1d: 5d                           \tpopq\t%rbp",
+        "1ddae: 5d                           \tpopq\t%rbp",
+        "1ddbd: 5d                           \tpopq\t%rbp",
+        "1df1f: 5d                           \tpopq\t%rbp"
+      ]
+    },
+    {
+      "owner": "abseil",
+      "ready": false,
+      "hints": false,
+      "instructions": 563,
+      "allowed_outer_calls": [
+        "1fe7c: e8 ff 63 fe ff               \tcallq\t0x6280 <memset@plt>",
+        "207ed: e8 5e 03 00 00               \tcallq\t0x20b50 <ht::staged_test::answer ht::staged_test::result<std::array<ht::staged_test::lane, 32ul>>(std::array<ht::staged_test::lane, 32ul> const&)>"
+      ],
+      "rbp_preservation": []
+    },
+    {
+      "owner": "abseil",
+      "ready": false,
+      "hints": false,
+      "instructions": 194,
+      "allowed_outer_calls": [
+        "2083c: e8 3f 5a fe ff               \tcallq\t0x6280 <memset@plt>",
+        "20b2c: e8 1f 00 00 00               \tcallq\t0x20b50 <ht::staged_test::answer ht::staged_test::result<std::array<ht::staged_test::lane, 32ul>>(std::array<ht::staged_test::lane, 32ul> const&)>"
+      ],
+      "rbp_preservation": []
+    }
+  ],
+  "ready_calls": 0,
+  "ready_other_stack_references": 0,
+  "ready_callbacks_preserving_rbp": 1,
+  "outlined_baseline_lookup": 0,
+  "limitation": "Static calls and frame references only; not instruction quality, lifetime, traffic or performance."
+}

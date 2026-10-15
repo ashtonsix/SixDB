@@ -1,4 +1,4 @@
-add_library(loom STATIC src/worker.cpp src/ring.cpp src/hints.cpp src/hardware.cpp)
+add_library(loom STATIC src/worker.cpp src/ring.cpp src/hints.cpp src/hardware.cpp src/execution.cpp)
 add_library(loom::loom ALIAS loom)
 sixdb_target(loom)
 target_include_directories(loom PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
@@ -37,6 +37,18 @@ sixdb_target(loom_cohort_check)
 target_link_libraries(loom_cohort_check PRIVATE loom)
 add_test(NAME loom_cohort_check COMMAND loom_cohort_check)
 set_tests_properties(loom_cohort_check PROPERTIES TIMEOUT 30)
+
+add_executable(loom_execution_check EXCLUDE_FROM_ALL test/execution.cpp)
+sixdb_target(loom_execution_check)
+target_link_libraries(loom_execution_check PRIVATE loom)
+add_test(NAME loom_execution_check COMMAND loom_execution_check)
+set_tests_properties(loom_execution_check PROPERTIES TIMEOUT 30)
+
+add_executable(loom_example_execution EXCLUDE_FROM_ALL examples/execution.cpp)
+sixdb_target(loom_example_execution)
+target_link_libraries(loom_example_execution PRIVATE loom)
+add_test(NAME loom_example_execution COMMAND loom_example_execution 32)
+set_tests_properties(loom_example_execution PROPERTIES TIMEOUT 30)
 
 add_executable(loom_hint_check EXCLUDE_FROM_ALL test/hints.cpp)
 sixdb_target(loom_hint_check)
@@ -98,7 +110,7 @@ add_test(NAME loom_budget_check COMMAND loom_budget_check)
 set_tests_properties(loom_budget_check PROPERTIES TIMEOUT 60)
 
 set_tests_properties(
-  loom_worker_check loom_capacity_check loom_ring_check loom_ring_rotation_check loom_ring_shared_check loom_cohort_check loom_hint_check
+  loom_worker_check loom_capacity_check loom_ring_check loom_ring_rotation_check loom_ring_shared_check loom_cohort_check loom_execution_check loom_example_execution loom_hint_check
   loom_hardware_check loom_example_hints loom_example_hardware loom_example_allocation
   loom_example_capacity loom_example_partition loom_example_preparation_window
   loom_example_preparation_finite loom_budget_check
@@ -107,5 +119,5 @@ set_tests_properties(
 add_custom_target(loom_validate
   COMMAND "${CMAKE_CTEST_COMMAND}" --test-dir "${PROJECT_BINARY_DIR}"
     --output-on-failure --no-tests=error -L "^loom-runtime$"
-  DEPENDS loom_worker_check loom_capacity_check loom_ring_check loom_ring_rotation_check loom_ring_shared_check loom_cohort_check loom_hint_check loom_hardware_check loom_example_hints loom_example_hardware loom_example_allocation loom_example_capacity loom_example_partition loom_example_preparation loom_budget_check
+  DEPENDS loom_worker_check loom_capacity_check loom_ring_check loom_ring_rotation_check loom_ring_shared_check loom_cohort_check loom_execution_check loom_example_execution loom_hint_check loom_hardware_check loom_example_hints loom_example_hardware loom_example_allocation loom_example_capacity loom_example_partition loom_example_preparation loom_budget_check
   USES_TERMINAL VERBATIM)

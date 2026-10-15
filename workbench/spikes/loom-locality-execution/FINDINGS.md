@@ -205,7 +205,9 @@ general unique-line selector is rejected: removing hint duplicates does not
 consistently pay for its arithmetic and dispatch. The existing L1
 emission and Ring implementation remain the product path. Simple endpoint classes
 remain an experimental control; these results do not establish a faster general
-bulk-hint replacement. No product API has been promoted by this spike.
+bulk-hint replacement. These campaigns did not promote a product API. The
+subsequent [graduation account](GRADUATION.md) follows the caller-cohort policy
+into Loom with fresh matched qualification; contiguous lowering remains private.
 
 ## Recovery
 

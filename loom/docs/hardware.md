@@ -206,11 +206,12 @@ Orbital's `ReleaseHint` supplies temporal advice for Group/window reclamation;
 it is not a cache-residency query. The historical spatial epoch-bank spike also
 has no promoted bucket oracle.
 
-The private [locality/execution study](../../workbench/spikes/loom-locality-execution/README.md)
-tests a caller-cohort record using completed serial consumer samples, full outer
-epochs and generation/population/worker/cache-domain qualification. Sampling and
-direct/Ring selection occur at ordinary operation boundaries; native visits keep
-their existing ABI and hint path. Its fixed and instrumentation-disabled controls
-charge sample work and distinguish cheap serial cost from pipelined throughput.
-The same study tests random-start, contiguous-consumed demand separately from
-stream training. Neither prototype has entered the runtime policy.
+The [execution policy](execution.md) uses completed serial consumer samples, full
+outer epochs and generation/population/worker/cache-domain qualification.
+Sampling and direct/Ring selection occur at ordinary operation boundaries;
+native visits keep their existing ABI and hint path. Its cutoff is qualified
+for a complete consumer, rather than inferred from a hardware table or treated
+as a universal crossover. The
+[locality/execution study](../../workbench/spikes/loom-locality-execution/README.md)
+retains fixed and instrumentation-disabled controls with sample costs charged.
+Its separate random-start contiguous-demand prototypes remain experimental.

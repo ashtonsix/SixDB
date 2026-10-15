@@ -1,0 +1,79 @@
+{
+  "consumers": [
+    {
+      "owner": "abseil",
+      "ready": false,
+      "hints": false,
+      "instructions": 152,
+      "allowed_outer_calls": [],
+      "rbp_preservation": []
+    },
+    {
+      "owner": "abseil",
+      "ready": false,
+      "hints": false,
+      "instructions": 88,
+      "allowed_outer_calls": [],
+      "rbp_preservation": []
+    },
+    {
+      "owner": "generic",
+      "ready": true,
+      "hints": false,
+      "instructions": 224,
+      "allowed_outer_calls": [],
+      "rbp_preservation": []
+    },
+    {
+      "owner": "generic",
+      "ready": true,
+      "hints": true,
+      "instructions": 272,
+      "allowed_outer_calls": [],
+      "rbp_preservation": []
+    },
+    {
+      "owner": "word",
+      "ready": true,
+      "hints": false,
+      "instructions": 180,
+      "allowed_outer_calls": [],
+      "rbp_preservation": []
+    },
+    {
+      "owner": "word",
+      "ready": true,
+      "hints": true,
+      "instructions": 232,
+      "allowed_outer_calls": [],
+      "rbp_preservation": []
+    },
+    {
+      "owner": "abseil",
+      "ready": false,
+      "hints": false,
+      "instructions": 368,
+      "allowed_outer_calls": [
+        "1d0d4: 97ffa24f     \tbl\t0x5a10 <memset@plt>",
+        "1d62c: 94000095     \tbl\t0x1d880 <ht::staged_test::answer ht::staged_test::result<std::array<ht::staged_test::lane, 32ul>>(std::array<ht::staged_test::lane, 32ul> const&)>"
+      ],
+      "rbp_preservation": []
+    },
+    {
+      "owner": "abseil",
+      "ready": false,
+      "hints": false,
+      "instructions": 136,
+      "allowed_outer_calls": [
+        "1d694: 97ffa0df     \tbl\t0x5a10 <memset@plt>",
+        "1d864: 94000007     \tbl\t0x1d880 <ht::staged_test::answer ht::staged_test::result<std::array<ht::staged_test::lane, 32ul>>(std::array<ht::staged_test::lane, 32ul> const&)>"
+      ],
+      "rbp_preservation": []
+    }
+  ],
+  "ready_calls": 0,
+  "ready_other_stack_references": 0,
+  "ready_callbacks_preserving_rbp": 0,
+  "outlined_baseline_lookup": 0,
+  "limitation": "Static calls and frame references only; not instruction quality, lifetime, traffic or performance."
+}

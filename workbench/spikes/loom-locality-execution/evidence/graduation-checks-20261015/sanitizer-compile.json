@@ -1,0 +1,20 @@
+[
+  {
+    "directory": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/loom-execution-graduation-20261015/sanitizer",
+    "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=1 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN5=0 -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/loom/include -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/orbital/include -fsanitize=address,undefined -fsanitize-address-use-after-return=always -fno-omit-frame-pointer -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb=. -ffunction-sections -fdata-sections -mtune=generic -o loom/CMakeFiles/loom.dir/src/execution.cpp.o -c /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/loom/src/execution.cpp",
+    "file": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/loom/src/execution.cpp",
+    "output": "loom/CMakeFiles/loom.dir/src/execution.cpp.o"
+  },
+  {
+    "directory": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/loom-execution-graduation-20261015/sanitizer",
+    "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=1 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN5=0 -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/loom/include -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/orbital/include -fsanitize=address,undefined -fsanitize-address-use-after-return=always -fno-omit-frame-pointer -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb=. -ffunction-sections -fdata-sections -mtune=generic -o loom/CMakeFiles/loom_execution_check.dir/test/execution.cpp.o -c /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/loom/test/execution.cpp",
+    "file": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/loom/test/execution.cpp",
+    "output": "loom/CMakeFiles/loom_execution_check.dir/test/execution.cpp.o"
+  },
+  {
+    "directory": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/loom-execution-graduation-20261015/sanitizer",
+    "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=1 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN5=0 -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/loom/include -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/orbital/include -fsanitize=address,undefined -fsanitize-address-use-after-return=always -fno-omit-frame-pointer -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb=. -ffunction-sections -fdata-sections -mtune=generic -o loom/CMakeFiles/loom_example_execution.dir/examples/execution.cpp.o -c /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/loom/examples/execution.cpp",
+    "file": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/loom/examples/execution.cpp",
+    "output": "loom/CMakeFiles/loom_example_execution.dir/examples/execution.cpp.o"
+  }
+]

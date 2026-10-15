@@ -1,0 +1,67 @@
+[1/22] Building CXX object loom/CMakeFiles/loom.dir/src/execution.cpp.o
+[2/22] Linking CXX static library loom/libloom.a
+[3/22] Building CXX object loom/CMakeFiles/loom_execution_check.dir/test/execution.cpp.o
+[4/22] Linking CXX executable loom/loom_worker_check
+[5/22] Linking CXX executable loom/loom_capacity_check
+[6/22] Linking CXX executable loom/loom_ring_check
+[7/22] Linking CXX executable loom/loom_ring_rotation_check
+[8/22] Linking CXX executable loom/loom_ring_shared_check
+[9/22] Linking CXX executable loom/loom_cohort_check
+[10/22] Linking CXX executable loom/loom_execution_check
+[11/22] Linking CXX executable loom/loom_hint_check
+[12/22] Building CXX object loom/CMakeFiles/loom_example_execution.dir/examples/execution.cpp.o
+[13/22] Linking CXX executable loom/loom_example_execution
+[14/22] Linking CXX executable loom/loom_hardware_check
+[15/22] Linking CXX executable loom/loom_example_hints
+[16/22] Linking CXX executable loom/loom_example_hardware
+[17/22] Linking CXX executable loom/loom_example_capacity
+[18/22] Linking CXX executable loom/loom_example_allocation
+[19/22] Linking CXX executable loom/loom_example_preparation
+[20/22] Linking CXX executable loom/loom_example_partition
+[21/22] Linking CXX executable loom/loom_budget_check
+[21/22] cd /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/loom-execution-graduation-20261015/release/loom && /usr/bin/ctest --test-dir /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/loom-execution-graduation-20261015/release --output-on-failure --no-tests=error -L "^loom-runtime\$"
+Internal ctest changing into directory: /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/loom-execution-graduation-20261015/release
+Test project /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/loom-execution-graduation-20261015/release
+      Start 48: loom_worker_check
+ 1/18 Test #48: loom_worker_check .................   Passed    0.02 sec
+      Start 49: loom_capacity_check
+ 2/18 Test #49: loom_capacity_check ...............   Passed    0.01 sec
+      Start 50: loom_ring_check
+ 3/18 Test #50: loom_ring_check ...................   Passed    0.00 sec
+      Start 51: loom_ring_rotation_check
+ 4/18 Test #51: loom_ring_rotation_check ..........   Passed    0.01 sec
+      Start 52: loom_ring_shared_check
+ 5/18 Test #52: loom_ring_shared_check ............   Passed    0.00 sec
+      Start 53: loom_cohort_check
+ 6/18 Test #53: loom_cohort_check .................   Passed    0.00 sec
+      Start 54: loom_execution_check
+ 7/18 Test #54: loom_execution_check ..............   Passed    0.00 sec
+      Start 55: loom_example_execution
+ 8/18 Test #55: loom_example_execution ............   Passed    0.00 sec
+      Start 56: loom_hint_check
+ 9/18 Test #56: loom_hint_check ...................   Passed    0.01 sec
+      Start 57: loom_hardware_check
+10/18 Test #57: loom_hardware_check ...............   Passed    0.16 sec
+      Start 58: loom_example_hints
+11/18 Test #58: loom_example_hints ................   Passed    0.10 sec
+      Start 59: loom_example_hardware
+12/18 Test #59: loom_example_hardware .............   Passed    0.01 sec
+      Start 60: loom_example_allocation
+13/18 Test #60: loom_example_allocation ...........   Passed    0.00 sec
+      Start 61: loom_example_capacity
+14/18 Test #61: loom_example_capacity .............   Passed    0.01 sec
+      Start 62: loom_example_preparation_window
+15/18 Test #62: loom_example_preparation_window ...   Passed    0.01 sec
+      Start 63: loom_example_preparation_finite
+16/18 Test #63: loom_example_preparation_finite ...   Passed    0.00 sec
+      Start 64: loom_example_partition
+17/18 Test #64: loom_example_partition ............   Passed    0.01 sec
+      Start 65: loom_budget_check
+18/18 Test #65: loom_budget_check .................   Passed    0.01 sec
+
+100% tests passed, 0 tests failed out of 18
+
+Label Time Summary:
+loom-runtime    =   0.35 sec*proc (18 tests)
+
+Total Test time (real) =   0.37 sec
