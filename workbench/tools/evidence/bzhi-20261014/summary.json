@@ -1,0 +1,786 @@
+{
+  "date": "2026-10-14",
+  "scope": "Compile-only, no x86 execution or timing.",
+  "compiler": "Ubuntu clang version 21.1.8 (++20251221033104+2078da43e25a-1~exp1~20251221153121.57)",
+  "sources": {
+    "count.cpp": "d3ccff7d58205e8d1fe2baa12a490e05f658374fa6b253b1ec80fd52376d0599",
+    "run.py": "c45a832a4a6cb0ed09b4c15c12ec4b9af44f67382d7e7905e215879aafb73240"
+  },
+  "qualification": "Existing compile-only receipt; all 12 recorded source/output hashes rechecked on retention, 2026-10-15.",
+  "options": {
+    "baseline": [],
+    "no_and_shrink": [
+      "-mllvm",
+      "-x86-and-imm-shrink=false"
+    ],
+    "no_bw_fixup": [
+      "-mllvm",
+      "-fixup-byte-word-insts=false"
+    ],
+    "clearance256": [
+      "-mllvm",
+      "-partial-reg-update-clearance=256"
+    ]
+  },
+  "targets": {
+    "zen5": {
+      "flags": [
+        "-std=c++23",
+        "-O3",
+        "-fno-vectorize",
+        "-fno-slp-vectorize",
+        "-fno-unroll-loops",
+        "-fno-fast-math",
+        "-ffp-contract=off",
+        "--target=x86_64-linux-gnu",
+        "-march=x86-64-v3",
+        "-mtune=znver5"
+      ],
+      "selected_functions": {
+        "plain": {
+          "movb": 1,
+          "movl": 0,
+          "bzhi": 1,
+          "bextr": 0,
+          "push": 0,
+          "call": 0,
+          "instructions": [
+            "movb\t$40, %al",
+            "bzhiq\t%rax, %rdi, %rax",
+            "retq"
+          ]
+        },
+        "plain_producer": {
+          "movb": 1,
+          "movl": 1,
+          "bzhi": 1,
+          "bextr": 0,
+          "push": 0,
+          "call": 0,
+          "instructions": [
+            "movabsq\t$791991156115, %rcx",
+            "movl\t%edi, %eax",
+            "imulq\t%rax, %rcx",
+            "movb\t$40, %al",
+            "xorq\t%rsi, %rcx",
+            "bzhiq\t%rax, %rcx, %rax",
+            "retq"
+          ]
+        },
+        "plain_loop": {
+          "movb": 0,
+          "movl": 2,
+          "bzhi": 0,
+          "bextr": 1,
+          "push": 0,
+          "call": 0,
+          "instructions": [
+            "testl\t%esi, %esi",
+            "je\t.LBB2_1",
+            "movl\t$7690, %r8d",
+            "movabsq\t$791991156115, %r9",
+            "movl\t%esi, %ecx",
+            "xorl\t%esi, %esi",
+            "xorl\t%eax, %eax",
+            "movq\t%rsi, %r10",
+            "xorq\t%rdx, %r10",
+            "addq\t%r9, %rsi",
+            "movzbl\t%r10b, %r11d",
+            "bextrq\t%r8, %r10, %r10",
+            "xorq\t(%rdi,%r11,8), %r10",
+            "addq\t%r10, %rax",
+            "decq\t%rcx",
+            "jne\t.LBB2_4",
+            "retq",
+            "xorl\t%eax, %eax",
+            "retq"
+          ]
+        },
+        "intrinsic_producer": {
+          "movb": 1,
+          "movl": 2,
+          "bzhi": 2,
+          "bextr": 0,
+          "push": 0,
+          "call": 0,
+          "instructions": [
+            "movabsq\t$791991156115, %rcx",
+            "movl\t%edi, %eax",
+            "imulq\t%rax, %rcx",
+            "movb\t$40, %al",
+            "bzhiq\t%rax, %rcx, %rax",
+            "movl\t$40, %ecx",
+            "xorq\t%rsi, %rax",
+            "bzhiq\t%rcx, %rax, %rax",
+            "retq"
+          ]
+        },
+        "count_only_producer": {
+          "movb": 1,
+          "movl": 3,
+          "bzhi": 2,
+          "bextr": 0,
+          "push": 0,
+          "call": 0,
+          "instructions": [
+            "movabsq\t$791991156115, %rcx",
+            "movl\t%edi, %eax",
+            "imulq\t%rax, %rcx",
+            "movb\t$40, %al",
+            "bzhiq\t%rax, %rcx, %rax",
+            "movl\t$40, %ecx",
+            "movl\t%ecx, %ecx",
+            "xorq\t%rsi, %rax",
+            "bzhiq\t%rcx, %rax, %rax",
+            "retq"
+          ]
+        },
+        "extract_producer": {
+          "movb": 0,
+          "movl": 2,
+          "bzhi": 0,
+          "bextr": 1,
+          "push": 0,
+          "call": 0,
+          "instructions": [
+            "movabsq\t$791991156115, %rcx",
+            "movl\t%edi, %eax",
+            "imulq\t%rax, %rcx",
+            "movl\t$10240, %eax",
+            "xorq\t%rsi, %rcx",
+            "bextrq\t%rax, %rcx, %rax",
+            "retq"
+          ]
+        },
+        "extract_loop": {
+          "movb": 0,
+          "movl": 2,
+          "bzhi": 0,
+          "bextr": 1,
+          "push": 0,
+          "call": 0,
+          "instructions": [
+            "testl\t%esi, %esi",
+            "je\t.LBB8_1",
+            "movl\t$10240, %r8d",
+            "movabsq\t$791991156115, %r9",
+            "movl\t%esi, %ecx",
+            "xorl\t%esi, %esi",
+            "xorl\t%eax, %eax",
+            "movq\t%rsi, %r10",
+            "xorq\t%rdx, %r10",
+            "addq\t%r9, %rsi",
+            "bextrq\t%r8, %r10, %r10",
+            "movzbl\t%r10b, %r11d",
+            "shrq\t$10, %r10",
+            "xorq\t(%rdi,%r11,8), %r10",
+            "addq\t%r10, %rax",
+            "decq\t%rcx",
+            "jne\t.LBB8_4",
+            "retq",
+            "xorl\t%eax, %eax",
+            "retq"
+          ]
+        },
+        "plain_load": {
+          "movb": 1,
+          "movl": 0,
+          "bzhi": 1,
+          "bextr": 0,
+          "push": 0,
+          "call": 0,
+          "instructions": [
+            "movb\t$40, %al",
+            "bzhiq\t%rax, (%rdi), %rax",
+            "retq"
+          ]
+        },
+        "extract_load": {
+          "movb": 0,
+          "movl": 1,
+          "bzhi": 0,
+          "bextr": 1,
+          "push": 0,
+          "call": 0,
+          "instructions": [
+            "movl\t$10240, %eax",
+            "bextrq\t%rax, (%rdi), %rax",
+            "retq"
+          ]
+        }
+      },
+      "all_option_function_lists_identical": true,
+      "extract_widths": {
+        "extract_width_0": {
+          "movb": 0,
+          "movl": 0,
+          "bzhi": 0,
+          "bextr": 0,
+          "push": 0,
+          "call": 0,
+          "instructions": [
+            "xorl\t%eax, %eax",
+            "retq"
+          ]
+        },
+        "extract_width_1": {
+          "movb": 0,
+          "movl": 0,
+          "bzhi": 0,
+          "bextr": 0,
+          "push": 0,
+          "call": 0,
+          "instructions": [
+            "movq\t%rdi, %rax",
+            "andl\t$1, %eax",
+            "retq"
+          ]
+        },
+        "extract_width_8": {
+          "movb": 0,
+          "movl": 0,
+          "bzhi": 0,
+          "bextr": 0,
+          "push": 0,
+          "call": 0,
+          "instructions": [
+            "movzbl\t%dil, %eax",
+            "retq"
+          ]
+        },
+        "extract_width_16": {
+          "movb": 0,
+          "movl": 0,
+          "bzhi": 0,
+          "bextr": 0,
+          "push": 0,
+          "call": 0,
+          "instructions": [
+            "movzwl\t%di, %eax",
+            "retq"
+          ]
+        },
+        "extract_width_24": {
+          "movb": 0,
+          "movl": 0,
+          "bzhi": 0,
+          "bextr": 0,
+          "push": 0,
+          "call": 0,
+          "instructions": [
+            "movq\t%rdi, %rax",
+            "andl\t$16777215, %eax",
+            "retq"
+          ]
+        },
+        "extract_width_32": {
+          "movb": 0,
+          "movl": 1,
+          "bzhi": 0,
+          "bextr": 0,
+          "push": 0,
+          "call": 0,
+          "instructions": [
+            "movl\t%edi, %eax",
+            "retq"
+          ]
+        },
+        "extract_width_33": {
+          "movb": 0,
+          "movl": 1,
+          "bzhi": 0,
+          "bextr": 1,
+          "push": 0,
+          "call": 0,
+          "instructions": [
+            "movl\t$8448, %eax",
+            "bextrq\t%rax, %rdi, %rax",
+            "retq"
+          ]
+        },
+        "extract_width_40": {
+          "movb": 0,
+          "movl": 1,
+          "bzhi": 0,
+          "bextr": 1,
+          "push": 0,
+          "call": 0,
+          "instructions": [
+            "movl\t$10240, %eax",
+            "bextrq\t%rax, %rdi, %rax",
+            "retq"
+          ]
+        },
+        "extract_width_48": {
+          "movb": 0,
+          "movl": 1,
+          "bzhi": 0,
+          "bextr": 1,
+          "push": 0,
+          "call": 0,
+          "instructions": [
+            "movl\t$12288, %eax",
+            "bextrq\t%rax, %rdi, %rax",
+            "retq"
+          ]
+        },
+        "extract_width_56": {
+          "movb": 0,
+          "movl": 1,
+          "bzhi": 0,
+          "bextr": 1,
+          "push": 0,
+          "call": 0,
+          "instructions": [
+            "movl\t$14336, %eax",
+            "bextrq\t%rax, %rdi, %rax",
+            "retq"
+          ]
+        },
+        "extract_width_63": {
+          "movb": 0,
+          "movl": 1,
+          "bzhi": 0,
+          "bextr": 1,
+          "push": 0,
+          "call": 0,
+          "instructions": [
+            "movl\t$16128, %eax",
+            "bextrq\t%rax, %rdi, %rax",
+            "retq"
+          ]
+        },
+        "extract_width_64": {
+          "movb": 0,
+          "movl": 0,
+          "bzhi": 0,
+          "bextr": 0,
+          "push": 0,
+          "call": 0,
+          "instructions": [
+            "movq\t%rdi, %rax",
+            "retq"
+          ]
+        },
+        "extract_width_65": {
+          "movb": 0,
+          "movl": 0,
+          "bzhi": 0,
+          "bextr": 0,
+          "push": 0,
+          "call": 0,
+          "instructions": [
+            "movq\t%rdi, %rax",
+            "retq"
+          ]
+        },
+        "extract_width_256": {
+          "movb": 0,
+          "movl": 0,
+          "bzhi": 0,
+          "bextr": 0,
+          "push": 0,
+          "call": 0,
+          "instructions": [
+            "movq\t%rdi, %rax",
+            "retq"
+          ]
+        },
+        "extract_width_4294967295u": {
+          "movb": 0,
+          "movl": 0,
+          "bzhi": 0,
+          "bextr": 0,
+          "push": 0,
+          "call": 0,
+          "instructions": [
+            "movq\t%rdi, %rax",
+            "retq"
+          ]
+        }
+      }
+    },
+    "granite": {
+      "flags": [
+        "-std=c++23",
+        "-O3",
+        "-fno-vectorize",
+        "-fno-slp-vectorize",
+        "-fno-unroll-loops",
+        "-fno-fast-math",
+        "-ffp-contract=off",
+        "--target=x86_64-linux-gnu",
+        "-march=x86-64-v4",
+        "-mtune=graniterapids"
+      ],
+      "selected_functions": {
+        "plain": {
+          "movb": 1,
+          "movl": 0,
+          "bzhi": 1,
+          "bextr": 0,
+          "push": 0,
+          "call": 0,
+          "instructions": [
+            "movb\t$40, %al",
+            "bzhiq\t%rax, %rdi, %rax",
+            "retq"
+          ]
+        },
+        "plain_producer": {
+          "movb": 1,
+          "movl": 1,
+          "bzhi": 1,
+          "bextr": 0,
+          "push": 0,
+          "call": 0,
+          "instructions": [
+            "movl\t%edi, %eax",
+            "movabsq\t$791991156115, %rcx",
+            "imulq\t%rax, %rcx",
+            "xorq\t%rsi, %rcx",
+            "movb\t$40, %al",
+            "bzhiq\t%rax, %rcx, %rax",
+            "retq"
+          ]
+        },
+        "plain_loop": {
+          "movb": 0,
+          "movl": 1,
+          "bzhi": 0,
+          "bextr": 0,
+          "push": 0,
+          "call": 0,
+          "instructions": [
+            "testl\t%esi, %esi",
+            "je\t.LBB2_1",
+            "movl\t%esi, %ecx",
+            "xorl\t%esi, %esi",
+            "movabsq\t$791991156115, %r8",
+            "xorl\t%eax, %eax",
+            "movq\t%rsi, %r9",
+            "xorq\t%rdx, %r9",
+            "movzbl\t%r9b, %r10d",
+            "shrq\t$10, %r9",
+            "andl\t$1073741823, %r9d",
+            "xorq\t(%rdi,%r10,8), %r9",
+            "addq\t%r9, %rax",
+            "addq\t%r8, %rsi",
+            "decq\t%rcx",
+            "jne\t.LBB2_4",
+            "retq",
+            "xorl\t%eax, %eax",
+            "retq"
+          ]
+        },
+        "intrinsic_producer": {
+          "movb": 1,
+          "movl": 2,
+          "bzhi": 2,
+          "bextr": 0,
+          "push": 0,
+          "call": 0,
+          "instructions": [
+            "movl\t%edi, %eax",
+            "movabsq\t$791991156115, %rcx",
+            "imulq\t%rax, %rcx",
+            "movb\t$40, %al",
+            "bzhiq\t%rax, %rcx, %rax",
+            "xorq\t%rsi, %rax",
+            "movl\t$40, %ecx",
+            "bzhiq\t%rcx, %rax, %rax",
+            "retq"
+          ]
+        },
+        "count_only_producer": {
+          "movb": 1,
+          "movl": 3,
+          "bzhi": 2,
+          "bextr": 0,
+          "push": 0,
+          "call": 0,
+          "instructions": [
+            "movl\t%edi, %eax",
+            "movabsq\t$791991156115, %rcx",
+            "imulq\t%rax, %rcx",
+            "movb\t$40, %al",
+            "bzhiq\t%rax, %rcx, %rax",
+            "xorq\t%rsi, %rax",
+            "movl\t$40, %ecx",
+            "movl\t%ecx, %ecx",
+            "bzhiq\t%rcx, %rax, %rax",
+            "retq"
+          ]
+        },
+        "extract_producer": {
+          "movb": 0,
+          "movl": 2,
+          "bzhi": 0,
+          "bextr": 1,
+          "push": 0,
+          "call": 0,
+          "instructions": [
+            "movl\t%edi, %eax",
+            "movabsq\t$791991156115, %rcx",
+            "imulq\t%rax, %rcx",
+            "xorq\t%rsi, %rcx",
+            "movl\t$10240, %eax",
+            "bextrq\t%rax, %rcx, %rax",
+            "retq"
+          ]
+        },
+        "extract_loop": {
+          "movb": 0,
+          "movl": 2,
+          "bzhi": 0,
+          "bextr": 1,
+          "push": 0,
+          "call": 0,
+          "instructions": [
+            "testl\t%esi, %esi",
+            "je\t.LBB8_1",
+            "movl\t%esi, %ecx",
+            "xorl\t%esi, %esi",
+            "movl\t$10240, %r8d",
+            "movabsq\t$791991156115, %r9",
+            "xorl\t%eax, %eax",
+            "movq\t%rsi, %r10",
+            "xorq\t%rdx, %r10",
+            "bextrq\t%r8, %r10, %r10",
+            "movzbl\t%r10b, %r11d",
+            "shrq\t$10, %r10",
+            "xorq\t(%rdi,%r11,8), %r10",
+            "addq\t%r10, %rax",
+            "addq\t%r9, %rsi",
+            "decq\t%rcx",
+            "jne\t.LBB8_4",
+            "retq",
+            "xorl\t%eax, %eax",
+            "retq"
+          ]
+        },
+        "plain_load": {
+          "movb": 1,
+          "movl": 0,
+          "bzhi": 1,
+          "bextr": 0,
+          "push": 0,
+          "call": 0,
+          "instructions": [
+            "movb\t$40, %al",
+            "bzhiq\t%rax, (%rdi), %rax",
+            "retq"
+          ]
+        },
+        "extract_load": {
+          "movb": 0,
+          "movl": 1,
+          "bzhi": 0,
+          "bextr": 1,
+          "push": 0,
+          "call": 0,
+          "instructions": [
+            "movl\t$10240, %eax",
+            "bextrq\t%rax, (%rdi), %rax",
+            "retq"
+          ]
+        }
+      },
+      "all_option_function_lists_identical": true,
+      "extract_widths": {
+        "extract_width_0": {
+          "movb": 0,
+          "movl": 0,
+          "bzhi": 0,
+          "bextr": 0,
+          "push": 0,
+          "call": 0,
+          "instructions": [
+            "xorl\t%eax, %eax",
+            "retq"
+          ]
+        },
+        "extract_width_1": {
+          "movb": 0,
+          "movl": 0,
+          "bzhi": 0,
+          "bextr": 0,
+          "push": 0,
+          "call": 0,
+          "instructions": [
+            "movq\t%rdi, %rax",
+            "andl\t$1, %eax",
+            "retq"
+          ]
+        },
+        "extract_width_8": {
+          "movb": 0,
+          "movl": 0,
+          "bzhi": 0,
+          "bextr": 0,
+          "push": 0,
+          "call": 0,
+          "instructions": [
+            "movzbl\t%dil, %eax",
+            "retq"
+          ]
+        },
+        "extract_width_16": {
+          "movb": 0,
+          "movl": 0,
+          "bzhi": 0,
+          "bextr": 0,
+          "push": 0,
+          "call": 0,
+          "instructions": [
+            "movzwl\t%di, %eax",
+            "retq"
+          ]
+        },
+        "extract_width_24": {
+          "movb": 0,
+          "movl": 0,
+          "bzhi": 0,
+          "bextr": 0,
+          "push": 0,
+          "call": 0,
+          "instructions": [
+            "movq\t%rdi, %rax",
+            "andl\t$16777215, %eax",
+            "retq"
+          ]
+        },
+        "extract_width_32": {
+          "movb": 0,
+          "movl": 1,
+          "bzhi": 0,
+          "bextr": 0,
+          "push": 0,
+          "call": 0,
+          "instructions": [
+            "movl\t%edi, %eax",
+            "retq"
+          ]
+        },
+        "extract_width_33": {
+          "movb": 0,
+          "movl": 1,
+          "bzhi": 0,
+          "bextr": 1,
+          "push": 0,
+          "call": 0,
+          "instructions": [
+            "movl\t$8448, %eax",
+            "bextrq\t%rax, %rdi, %rax",
+            "retq"
+          ]
+        },
+        "extract_width_40": {
+          "movb": 0,
+          "movl": 1,
+          "bzhi": 0,
+          "bextr": 1,
+          "push": 0,
+          "call": 0,
+          "instructions": [
+            "movl\t$10240, %eax",
+            "bextrq\t%rax, %rdi, %rax",
+            "retq"
+          ]
+        },
+        "extract_width_48": {
+          "movb": 0,
+          "movl": 1,
+          "bzhi": 0,
+          "bextr": 1,
+          "push": 0,
+          "call": 0,
+          "instructions": [
+            "movl\t$12288, %eax",
+            "bextrq\t%rax, %rdi, %rax",
+            "retq"
+          ]
+        },
+        "extract_width_56": {
+          "movb": 0,
+          "movl": 1,
+          "bzhi": 0,
+          "bextr": 1,
+          "push": 0,
+          "call": 0,
+          "instructions": [
+            "movl\t$14336, %eax",
+            "bextrq\t%rax, %rdi, %rax",
+            "retq"
+          ]
+        },
+        "extract_width_63": {
+          "movb": 0,
+          "movl": 1,
+          "bzhi": 0,
+          "bextr": 1,
+          "push": 0,
+          "call": 0,
+          "instructions": [
+            "movl\t$16128, %eax",
+            "bextrq\t%rax, %rdi, %rax",
+            "retq"
+          ]
+        },
+        "extract_width_64": {
+          "movb": 0,
+          "movl": 0,
+          "bzhi": 0,
+          "bextr": 0,
+          "push": 0,
+          "call": 0,
+          "instructions": [
+            "movq\t%rdi, %rax",
+            "retq"
+          ]
+        },
+        "extract_width_65": {
+          "movb": 0,
+          "movl": 0,
+          "bzhi": 0,
+          "bextr": 0,
+          "push": 0,
+          "call": 0,
+          "instructions": [
+            "movq\t%rdi, %rax",
+            "retq"
+          ]
+        },
+        "extract_width_256": {
+          "movb": 0,
+          "movl": 0,
+          "bzhi": 0,
+          "bextr": 0,
+          "push": 0,
+          "call": 0,
+          "instructions": [
+            "movq\t%rdi, %rax",
+            "retq"
+          ]
+        },
+        "extract_width_4294967295u": {
+          "movb": 0,
+          "movl": 0,
+          "bzhi": 0,
+          "bextr": 0,
+          "push": 0,
+          "call": 0,
+          "instructions": [
+            "movq\t%rdi, %rax",
+            "retq"
+          ]
+        }
+      }
+    }
+  },
+  "limitations": [
+    "BEXTR can lose mask/shift fusion and has different host cost; reduced pattern does not establish complete caller performance",
+    "BZHI builtin and count-only asm retain extra producer mask",
+    "candidate LLVM patch not built or selected; no global flag/pin/production edit"
+  ]
+}

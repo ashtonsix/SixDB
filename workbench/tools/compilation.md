@@ -49,3 +49,8 @@ compiler PID sets `compiler_pid_confirmed`; a killed driver child may not match.
 A cgroup OOM increment or an unexplained SIGKILL is context, not that confirmation.
 Unavailable records remain unavailable; the helper needs no new privileges and
 does not reset counters or alter resource limits.
+
+For a small example of investigating emitted instructions and unsuccessful
+compiler options, see the retained [Clang 21.1.8 constant-mask probe](evidence/bzhi-20261014/README.md).
+It keeps a reduced reproducer and source diagnosis separate from native timing
+or production selection.

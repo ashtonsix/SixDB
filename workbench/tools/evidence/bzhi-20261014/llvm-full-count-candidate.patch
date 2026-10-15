@@ -1,0 +1,34 @@
+--- a/llvm/lib/Target/X86/X86InstrMisc.td
++++ b/llvm/lib/Target/X86/X86InstrMisc.td
+@@ -1363,23 +1363,23 @@
+ let Predicates = [HasBMI2, NoTBM, NoEGPR] in {
+   def : Pat<(and GR64:$src, AndMask64:$mask),
+             (BZHI64rr GR64:$src,
+-              (INSERT_SUBREG (i64 (IMPLICIT_DEF)),
+-                             (MOV8ri (CountTrailingOnes imm:$mask)), sub_8bit))>;
++              (SUBREG_TO_REG (i64 0),
++                             (MOV32ri (CountTrailingOnes imm:$mask)), sub_32bit))>;
+   def : Pat<(and (loadi64 addr:$src), AndMask64:$mask),
+             (BZHI64rm addr:$src,
+-              (INSERT_SUBREG (i64 (IMPLICIT_DEF)),
+-                             (MOV8ri (CountTrailingOnes imm:$mask)), sub_8bit))>;
++              (SUBREG_TO_REG (i64 0),
++                             (MOV32ri (CountTrailingOnes imm:$mask)), sub_32bit))>;
+ }
+ 
+ let Predicates = [HasBMI2, NoTBM, HasEGPR] in {
+   def : Pat<(and GR64:$src, AndMask64:$mask),
+             (BZHI64rr_EVEX GR64:$src,
+-              (INSERT_SUBREG (i64 (IMPLICIT_DEF)),
+-                             (MOV8ri (CountTrailingOnes imm:$mask)), sub_8bit))>;
++              (SUBREG_TO_REG (i64 0),
++                             (MOV32ri (CountTrailingOnes imm:$mask)), sub_32bit))>;
+   def : Pat<(and (loadi64 addr:$src), AndMask64:$mask),
+             (BZHI64rm_EVEX addr:$src,
+-              (INSERT_SUBREG (i64 (IMPLICIT_DEF)),
+-                             (MOV8ri (CountTrailingOnes imm:$mask)), sub_8bit))>;
++              (SUBREG_TO_REG (i64 0),
++                             (MOV32ri (CountTrailingOnes imm:$mask)), sub_32bit))>;
+ }
+ 
+ multiclass PdepPext<string m, X86TypeInfo t, SDPatternOperator node,
