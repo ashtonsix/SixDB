@@ -1,0 +1,83 @@
+{
+  "format": 1,
+  "date": "2026-10-15",
+  "compiler": "Clang21.1.8",
+  "target": "aarch64 armv8-a+simd tuned neoverse-v2; compiled and executed on local OrbStack VM",
+  "source_cut": "Ikea selected-source digest ae6c9a99e327a4afaa347594750fd1ea585c821bbaa7b575aaf55e0acc2a1a62",
+  "domain": "64 Local widths x5 unsigned comparisons,16-row native packets, partial and empty masks, boundary rhs",
+  "qualification": "Single serial local compile per arm; time trace overhead included. Not native hardware timing or complete production-build cost.",
+  "profiles": [
+    {
+      "variant": "all_fused",
+      "text_section_bytes": 179604,
+      "llvm_size_text_bytes": 190845,
+      "compile_wall_seconds": 11.645783161977306,
+      "compile_user_seconds": 11.218225,
+      "peak_compiler_rss_kib": 546576,
+      "object_bytes": 5075424,
+      "fused_bodies": 320,
+      "decode_stages": 0,
+      "compare_stages": 0,
+      "ordinary_stage_calls": 0,
+      "stage_stack_accesses": 0,
+      "scalar_oracle_windows": 30720,
+      "oracle_checksum": "345767890"
+    },
+    {
+      "variant": "all_shared",
+      "text_section_bytes": 58468,
+      "llvm_size_text_bytes": 68753,
+      "compile_wall_seconds": 5.644770304963458,
+      "compile_user_seconds": 5.319656,
+      "peak_compiler_rss_kib": 295156,
+      "object_bytes": 2483968,
+      "fused_bodies": 0,
+      "decode_stages": 64,
+      "compare_stages": 20,
+      "ordinary_stage_calls": 0,
+      "stage_stack_accesses": 0,
+      "scalar_oracle_windows": 30720,
+      "oracle_checksum": "345767890"
+    },
+    {
+      "variant": "selective_fusion",
+      "text_section_bytes": 65284,
+      "llvm_size_text_bytes": 75949,
+      "compile_wall_seconds": 4.929199776030146,
+      "compile_user_seconds": 4.785736,
+      "peak_compiler_rss_kib": 324272,
+      "object_bytes": 2703416,
+      "fused_bodies": 47,
+      "decode_stages": 55,
+      "compare_stages": 20,
+      "ordinary_stage_calls": 0,
+      "stage_stack_accesses": 0,
+      "scalar_oracle_windows": 30720,
+      "oracle_checksum": "345767890"
+    }
+  ],
+  "selected_fused_object_text_identical": 47,
+  "cold_harness_control": [
+    {
+      "width": 3,
+      "baseline_text": 45086,
+      "shared_driver_text": 45622
+    },
+    {
+      "width": 17,
+      "baseline_text": 70070,
+      "shared_driver_text": 88470
+    },
+    {
+      "width": 64,
+      "baseline_text": 55326,
+      "shared_driver_text": 73118
+    }
+  ],
+  "decisions": [
+    "Width/op TU sharding lowers peak but leaves whole-matrix expansion.",
+    "Reject tested cold driver/opaque verifier split: text grew despite faster compilation.",
+    "Prototype supports shared decode/compare CPS islands plus selected direct packed/native fused paths.",
+    "No production dispatch is selected until full native consumer measurements charge the seam and context costs."
+  ]
+}

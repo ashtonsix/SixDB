@@ -1,0 +1,27 @@
+{
+  "script": "workbench/spikes/filter-composition/native.sh",
+  "members": {
+    "zen5": {
+      "config": {
+        "machine": "zen5",
+        "capacity": "on-demand",
+        "idle_seconds": 900
+      }
+    },
+    "granite": {
+      "config": {
+        "machine": "granite-rapids",
+        "idle_seconds": 900,
+        "env": {
+          "FILTER_TUNE": "granite-rapids"
+        }
+      }
+    },
+    "neon": {
+      "config": {
+        "machine": "neoverse-v2",
+        "idle_seconds": 900
+      }
+    }
+  }
+}

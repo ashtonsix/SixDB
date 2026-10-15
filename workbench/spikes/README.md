@@ -15,6 +15,7 @@ For Orbital, the [research map](../notebook/orbital/reference/README.md) groups 
 experiments and checks under Object, Allocation, Journal, Port and Worker.
 
 - [Ikea composition](ikea-composition/README.md): reusable stages, ergonomics and interface seams.
+- [Filter composition](filter-composition/README.md): compiler expansion and native AVX2/AVX-512/NEON consumer costs select fused hot filters and shared canonical CPS consumers; latency and throughput remain separate.
 - [Packed filters](packed-filters/README.md): SeriesPack/TuplePack predicate masks, direct packed comparisons and independent native latency/throughput controls.
 - [Layout analyser](layout-analyser/README.md): workload objectives, plane splitting, hardware fitting and reusable layout selection.
 - [Tuple layout](tuple-layout/README.md): physical layout, bound operations and native batching.
