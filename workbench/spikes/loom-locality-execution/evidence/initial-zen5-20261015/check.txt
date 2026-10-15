@@ -1,0 +1,72 @@
+Internal ctest changing into directory: /opt/sixdb/source/build/loom-locality-execution-avx2
+Test project /opt/sixdb/source/build/loom-locality-execution-avx2
+      Start 63: loom_contiguous_check
+ 1/33 Test #63: loom_contiguous_check ..................   Passed    0.05 sec
+      Start 64: loom_locality_check
+ 2/33 Test #64: loom_locality_check ....................   Passed    0.00 sec
+      Start 65: loom_contiguous_identity_check
+ 3/33 Test #65: loom_contiguous_identity_check .........   Passed    0.05 sec
+      Start 66: loom_window_hot_0_reference_check
+ 4/33 Test #66: loom_window_hot_0_reference_check ......   Passed    0.00 sec
+      Start 67: loom_window_hot_0_contiguous_check
+ 5/33 Test #67: loom_window_hot_0_contiguous_check .....   Passed    0.00 sec
+      Start 68: loom_window_hot_0_merged_check
+ 6/33 Test #68: loom_window_hot_0_merged_check .........   Passed    0.00 sec
+      Start 69: loom_window_hot_0_busy_check
+ 7/33 Test #69: loom_window_hot_0_busy_check ...........   Passed    0.00 sec
+      Start 70: loom_execution_hot_0_check
+ 8/33 Test #70: loom_execution_hot_0_check .............   Passed    0.28 sec
+      Start 71: loom_window_large_0_reference_check
+ 9/33 Test #71: loom_window_large_0_reference_check ....   Passed    0.04 sec
+      Start 72: loom_window_large_0_contiguous_check
+10/33 Test #72: loom_window_large_0_contiguous_check ...   Passed    0.04 sec
+      Start 73: loom_window_large_0_merged_check
+11/33 Test #73: loom_window_large_0_merged_check .......   Passed    0.03 sec
+      Start 74: loom_window_large_0_busy_check
+12/33 Test #74: loom_window_large_0_busy_check .........   Passed    0.04 sec
+      Start 75: loom_execution_large_0_check
+13/33 Test #75: loom_execution_large_0_check ...........   Passed    0.30 sec
+      Start 76: loom_window_hot_1_reference_check
+14/33 Test #76: loom_window_hot_1_reference_check ......   Passed    0.00 sec
+      Start 77: loom_window_hot_1_contiguous_check
+15/33 Test #77: loom_window_hot_1_contiguous_check .....   Passed    0.00 sec
+      Start 78: loom_window_hot_1_merged_check
+16/33 Test #78: loom_window_hot_1_merged_check .........   Passed    0.00 sec
+      Start 79: loom_window_hot_1_busy_check
+17/33 Test #79: loom_window_hot_1_busy_check ...........   Passed    0.00 sec
+      Start 80: loom_execution_hot_1_check
+18/33 Test #80: loom_execution_hot_1_check .............   Passed    0.30 sec
+      Start 81: loom_window_large_1_reference_check
+19/33 Test #81: loom_window_large_1_reference_check ....   Passed    0.04 sec
+      Start 82: loom_window_large_1_contiguous_check
+20/33 Test #82: loom_window_large_1_contiguous_check ...   Passed    0.04 sec
+      Start 83: loom_window_large_1_merged_check
+21/33 Test #83: loom_window_large_1_merged_check .......   Passed    0.04 sec
+      Start 84: loom_window_large_1_busy_check
+22/33 Test #84: loom_window_large_1_busy_check .........   Passed    0.04 sec
+      Start 85: loom_execution_large_1_check
+23/33 Test #85: loom_execution_large_1_check ...........   Passed    0.30 sec
+      Start 86: loom_window_hot_2_reference_check
+24/33 Test #86: loom_window_hot_2_reference_check ......   Passed    0.00 sec
+      Start 87: loom_window_hot_2_contiguous_check
+25/33 Test #87: loom_window_hot_2_contiguous_check .....   Passed    0.00 sec
+      Start 88: loom_window_hot_2_merged_check
+26/33 Test #88: loom_window_hot_2_merged_check .........   Passed    0.00 sec
+      Start 89: loom_window_hot_2_busy_check
+27/33 Test #89: loom_window_hot_2_busy_check ...........   Passed    0.00 sec
+      Start 90: loom_execution_hot_2_check
+28/33 Test #90: loom_execution_hot_2_check .............   Passed    0.29 sec
+      Start 91: loom_window_large_2_reference_check
+29/33 Test #91: loom_window_large_2_reference_check ....   Passed    0.03 sec
+      Start 92: loom_window_large_2_contiguous_check
+30/33 Test #92: loom_window_large_2_contiguous_check ...   Passed    0.03 sec
+      Start 93: loom_window_large_2_merged_check
+31/33 Test #93: loom_window_large_2_merged_check .......   Passed    0.03 sec
+      Start 94: loom_window_large_2_busy_check
+32/33 Test #94: loom_window_large_2_busy_check .........   Passed    0.03 sec
+      Start 95: loom_execution_large_2_check
+33/33 Test #95: loom_execution_large_2_check ...........   Passed    0.32 sec
+
+100% tests passed, 0 tests failed out of 33
+
+Total Test time (real) =   2.33 sec

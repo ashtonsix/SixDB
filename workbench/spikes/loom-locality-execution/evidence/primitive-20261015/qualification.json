@@ -1,0 +1,2984 @@
+{
+  "kind": "bounded unique-line compiler/semantic qualifier; no timing claim",
+  "compiler": "Clang21.1.8",
+  "source_sha256": {
+    "contiguous.h": "e4e5d16bad472865d00ce4cf133f77ce8c2d0549d8357d04a91903a62f02216c",
+    "contiguous_check.cpp": "240cc7f17ea76b054149e0f41162b4675ac3ebe75b6691c7ba503eef6c7f96dc",
+    "contiguous_codegen.cpp": "289c0eb1b7bb45eef7ba2b1dcce7967fa7a906aef13098dc5f711f8d0179dc34"
+  },
+  "plan_bytes_native64": 16,
+  "selector": "geometry=(code>>3)&1; raw=(address_offset+tail)>>shift; clamp=raw-(raw>>3); inert16selectedwithCMOV/CSEL",
+  "tests": {
+    "default_release_exit_code": 0,
+    "default_strict_sanitize_exit_code": 0,
+    "identity_release_exit_code": 0,
+    "identity_strict_sanitize_exit_code": 0,
+    "strict_flags": [
+      "-O3",
+      "-fsanitize=address,undefined",
+      "-fsanitize-address-use-after-return=always",
+      "-fno-omit-frame-pointer"
+    ],
+    "oracle": "all lengths1..8L and all64/128linealignments atfourpagepositions; independently enumerate intersectedphysical lines, asserttargetwithincoveredprefix, exactcount=m forfootprints1..7 and9 form8/9; inertnullandnonnull/refusalcases"
+  },
+  "limits": [
+    "Codegen counts are static, not timings or readiness.",
+    "Selector has added arithmetic before hints; full-consumer compiled cost/performance unqualified.",
+    "Largest class always emits9hints; eight-line footprint duplicates the lastline.",
+    "Plan hint_count() describes endpoint emitter only; unique count depends on address."
+  ],
+  "aarch64": {
+    "default": {
+      "path": "build/loom-locality-execution/contiguous/unique/aarch64-default.s",
+      "sha256": "2a85cfcb91b43c3e7005576d43b49575e7a16883751bdf270d0ec8389c52a418",
+      "functions": {
+        "contiguous_selected_l1": {
+          "instructions_including_returns": 96,
+          "hint_instructions_static": 45,
+          "conditional_branches": 0,
+          "unconditional_branches": 13,
+          "ordinary_calls": 0,
+          "stack_instructions": 0,
+          "dispatch_instructions_through_indirect_jump": 11
+        },
+        "contiguous_selected_l2": {
+          "instructions_including_returns": 96,
+          "hint_instructions_static": 45,
+          "conditional_branches": 0,
+          "unconditional_branches": 13,
+          "ordinary_calls": 0,
+          "stack_instructions": 0,
+          "dispatch_instructions_through_indirect_jump": 11
+        },
+        "contiguous_unique_selected_l1": {
+          "instructions_including_returns": 120,
+          "hint_instructions_static": 58,
+          "conditional_branches": 0,
+          "unconditional_branches": 13,
+          "ordinary_calls": 0,
+          "stack_instructions": 0,
+          "dispatch_instructions_through_indirect_jump": 25
+        },
+        "contiguous_unique_selected_l2": {
+          "instructions_including_returns": 120,
+          "hint_instructions_static": 58,
+          "conditional_branches": 0,
+          "unconditional_branches": 13,
+          "ordinary_calls": 0,
+          "stack_instructions": 0,
+          "dispatch_instructions_through_indirect_jump": 25
+        },
+        "contiguous_fixed_64_1": {
+          "instructions_including_returns": 3,
+          "hint_instructions_static": 2,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_fixed_64_2": {
+          "instructions_including_returns": 4,
+          "hint_instructions_static": 3,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_fixed_64_3": {
+          "instructions_including_returns": 5,
+          "hint_instructions_static": 4,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_fixed_64_4": {
+          "instructions_including_returns": 6,
+          "hint_instructions_static": 5,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_fixed_64_5": {
+          "instructions_including_returns": 7,
+          "hint_instructions_static": 6,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_fixed_64_6": {
+          "instructions_including_returns": 8,
+          "hint_instructions_static": 7,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_fixed_64_7": {
+          "instructions_including_returns": 9,
+          "hint_instructions_static": 8,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_fixed_64_8": {
+          "instructions_including_returns": 10,
+          "hint_instructions_static": 9,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_fixed_128_1": {
+          "instructions_including_returns": 3,
+          "hint_instructions_static": 2,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_fixed_128_2": {
+          "instructions_including_returns": 4,
+          "hint_instructions_static": 3,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_fixed_128_3": {
+          "instructions_including_returns": 5,
+          "hint_instructions_static": 4,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_fixed_128_4": {
+          "instructions_including_returns": 6,
+          "hint_instructions_static": 5,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_fixed_128_5": {
+          "instructions_including_returns": 7,
+          "hint_instructions_static": 6,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_fixed_128_6": {
+          "instructions_including_returns": 8,
+          "hint_instructions_static": 7,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_fixed_128_7": {
+          "instructions_including_returns": 9,
+          "hint_instructions_static": 8,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_fixed_128_8": {
+          "instructions_including_returns": 10,
+          "hint_instructions_static": 9,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_unique_fixed_64_1": {
+          "instructions_including_returns": 2,
+          "hint_instructions_static": 1,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_unique_fixed_64_2": {
+          "instructions_including_returns": 3,
+          "hint_instructions_static": 2,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_unique_fixed_64_3": {
+          "instructions_including_returns": 5,
+          "hint_instructions_static": 3,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_unique_fixed_64_4": {
+          "instructions_including_returns": 6,
+          "hint_instructions_static": 4,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_unique_fixed_64_5": {
+          "instructions_including_returns": 7,
+          "hint_instructions_static": 5,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_unique_fixed_64_6": {
+          "instructions_including_returns": 8,
+          "hint_instructions_static": 6,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_unique_fixed_64_7": {
+          "instructions_including_returns": 9,
+          "hint_instructions_static": 7,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_unique_fixed_64_8": {
+          "instructions_including_returns": 11,
+          "hint_instructions_static": 9,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_unique_fixed_128_1": {
+          "instructions_including_returns": 2,
+          "hint_instructions_static": 1,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_unique_fixed_128_2": {
+          "instructions_including_returns": 3,
+          "hint_instructions_static": 2,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_unique_fixed_128_3": {
+          "instructions_including_returns": 5,
+          "hint_instructions_static": 3,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_unique_fixed_128_4": {
+          "instructions_including_returns": 6,
+          "hint_instructions_static": 4,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_unique_fixed_128_5": {
+          "instructions_including_returns": 7,
+          "hint_instructions_static": 5,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_unique_fixed_128_6": {
+          "instructions_including_returns": 8,
+          "hint_instructions_static": 6,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_unique_fixed_128_7": {
+          "instructions_including_returns": 9,
+          "hint_instructions_static": 7,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_unique_fixed_128_8": {
+          "instructions_including_returns": 11,
+          "hint_instructions_static": 9,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_identity_selected_l1": {
+          "instructions_including_returns": 112,
+          "hint_instructions_static": 88,
+          "conditional_branches": 0,
+          "unconditional_branches": 1,
+          "ordinary_calls": 0,
+          "stack_instructions": 0,
+          "dispatch_instructions_through_indirect_jump": 8
+        },
+        "contiguous_identity_selected_l2": {
+          "instructions_including_returns": 112,
+          "hint_instructions_static": 88,
+          "conditional_branches": 0,
+          "unconditional_branches": 1,
+          "ordinary_calls": 0,
+          "stack_instructions": 0,
+          "dispatch_instructions_through_indirect_jump": 8
+        }
+      }
+    },
+    "identity": {
+      "path": "build/loom-locality-execution/contiguous/unique/aarch64-identity.s",
+      "sha256": "ddf19e312c6ae07973dfe75bf207ea86f4f77de34bf11bf0a8921c8c37c4fc4e",
+      "functions": {
+        "contiguous_selected_l1": {
+          "instructions_including_returns": 112,
+          "hint_instructions_static": 88,
+          "conditional_branches": 0,
+          "unconditional_branches": 1,
+          "ordinary_calls": 0,
+          "stack_instructions": 0,
+          "dispatch_instructions_through_indirect_jump": 8
+        },
+        "contiguous_selected_l2": {
+          "instructions_including_returns": 112,
+          "hint_instructions_static": 88,
+          "conditional_branches": 0,
+          "unconditional_branches": 1,
+          "ordinary_calls": 0,
+          "stack_instructions": 0,
+          "dispatch_instructions_through_indirect_jump": 8
+        },
+        "contiguous_unique_selected_l1": {
+          "instructions_including_returns": 127,
+          "hint_instructions_static": 74,
+          "conditional_branches": 0,
+          "unconditional_branches": 1,
+          "ordinary_calls": 0,
+          "stack_instructions": 0,
+          "dispatch_instructions_through_indirect_jump": 25,
+          "classes": [
+            {
+              "code": 0,
+              "ordered_targets": [
+                [
+                  "base",
+                  0
+                ]
+              ],
+              "class_instructions_including_return": 2,
+              "empty_has_no_derived_pointer_or_hint": false
+            },
+            {
+              "code": 1,
+              "ordered_targets": [
+                [
+                  "base",
+                  0
+                ],
+                [
+                  "following",
+                  0
+                ]
+              ],
+              "class_instructions_including_return": 3,
+              "empty_has_no_derived_pointer_or_hint": false
+            },
+            {
+              "code": 2,
+              "ordered_targets": [
+                [
+                  "base",
+                  0
+                ],
+                [
+                  "following",
+                  0
+                ],
+                [
+                  "following",
+                  64
+                ]
+              ],
+              "class_instructions_including_return": 5,
+              "empty_has_no_derived_pointer_or_hint": false
+            },
+            {
+              "code": 3,
+              "ordered_targets": [
+                [
+                  "base",
+                  0
+                ],
+                [
+                  "following",
+                  0
+                ],
+                [
+                  "following",
+                  64
+                ],
+                [
+                  "following",
+                  128
+                ]
+              ],
+              "class_instructions_including_return": 6,
+              "empty_has_no_derived_pointer_or_hint": false
+            },
+            {
+              "code": 4,
+              "ordered_targets": [
+                [
+                  "base",
+                  0
+                ],
+                [
+                  "following",
+                  0
+                ],
+                [
+                  "following",
+                  64
+                ],
+                [
+                  "following",
+                  128
+                ],
+                [
+                  "following",
+                  192
+                ]
+              ],
+              "class_instructions_including_return": 7,
+              "empty_has_no_derived_pointer_or_hint": false
+            },
+            {
+              "code": 5,
+              "ordered_targets": [
+                [
+                  "base",
+                  0
+                ],
+                [
+                  "following",
+                  0
+                ],
+                [
+                  "following",
+                  64
+                ],
+                [
+                  "following",
+                  128
+                ],
+                [
+                  "following",
+                  192
+                ],
+                [
+                  "following",
+                  256
+                ]
+              ],
+              "class_instructions_including_return": 8,
+              "empty_has_no_derived_pointer_or_hint": false
+            },
+            {
+              "code": 6,
+              "ordered_targets": [
+                [
+                  "base",
+                  0
+                ],
+                [
+                  "following",
+                  0
+                ],
+                [
+                  "following",
+                  64
+                ],
+                [
+                  "following",
+                  128
+                ],
+                [
+                  "following",
+                  192
+                ],
+                [
+                  "following",
+                  256
+                ],
+                [
+                  "following",
+                  320
+                ]
+              ],
+              "class_instructions_including_return": 9,
+              "empty_has_no_derived_pointer_or_hint": false
+            },
+            {
+              "code": 7,
+              "ordered_targets": [
+                [
+                  "base",
+                  0
+                ],
+                [
+                  "following",
+                  0
+                ],
+                [
+                  "following",
+                  64
+                ],
+                [
+                  "following",
+                  128
+                ],
+                [
+                  "following",
+                  192
+                ],
+                [
+                  "following",
+                  256
+                ],
+                [
+                  "following",
+                  320
+                ],
+                [
+                  "following",
+                  384
+                ],
+                [
+                  "tail",
+                  0
+                ]
+              ],
+              "class_instructions_including_return": 11,
+              "empty_has_no_derived_pointer_or_hint": false
+            },
+            {
+              "code": 8,
+              "ordered_targets": [
+                [
+                  "base",
+                  0
+                ]
+              ],
+              "class_instructions_including_return": 2,
+              "empty_has_no_derived_pointer_or_hint": false
+            },
+            {
+              "code": 9,
+              "ordered_targets": [
+                [
+                  "base",
+                  0
+                ],
+                [
+                  "following",
+                  0
+                ]
+              ],
+              "class_instructions_including_return": 3,
+              "empty_has_no_derived_pointer_or_hint": false
+            },
+            {
+              "code": 10,
+              "ordered_targets": [
+                [
+                  "base",
+                  0
+                ],
+                [
+                  "following",
+                  0
+                ],
+                [
+                  "following",
+                  128
+                ]
+              ],
+              "class_instructions_including_return": 5,
+              "empty_has_no_derived_pointer_or_hint": false
+            },
+            {
+              "code": 11,
+              "ordered_targets": [
+                [
+                  "base",
+                  0
+                ],
+                [
+                  "following",
+                  0
+                ],
+                [
+                  "following",
+                  128
+                ],
+                [
+                  "following",
+                  256
+                ]
+              ],
+              "class_instructions_including_return": 6,
+              "empty_has_no_derived_pointer_or_hint": false
+            },
+            {
+              "code": 12,
+              "ordered_targets": [
+                [
+                  "base",
+                  0
+                ],
+                [
+                  "following",
+                  0
+                ],
+                [
+                  "following",
+                  128
+                ],
+                [
+                  "following",
+                  256
+                ],
+                [
+                  "following",
+                  384
+                ]
+              ],
+              "class_instructions_including_return": 7,
+              "empty_has_no_derived_pointer_or_hint": false
+            },
+            {
+              "code": 13,
+              "ordered_targets": [
+                [
+                  "base",
+                  0
+                ],
+                [
+                  "following",
+                  0
+                ],
+                [
+                  "following",
+                  128
+                ],
+                [
+                  "following",
+                  256
+                ],
+                [
+                  "following",
+                  384
+                ],
+                [
+                  "following",
+                  512
+                ]
+              ],
+              "class_instructions_including_return": 8,
+              "empty_has_no_derived_pointer_or_hint": false
+            },
+            {
+              "code": 14,
+              "ordered_targets": [
+                [
+                  "base",
+                  0
+                ],
+                [
+                  "following",
+                  0
+                ],
+                [
+                  "following",
+                  128
+                ],
+                [
+                  "following",
+                  256
+                ],
+                [
+                  "following",
+                  384
+                ],
+                [
+                  "following",
+                  512
+                ],
+                [
+                  "following",
+                  640
+                ]
+              ],
+              "class_instructions_including_return": 9,
+              "empty_has_no_derived_pointer_or_hint": false
+            },
+            {
+              "code": 15,
+              "ordered_targets": [
+                [
+                  "base",
+                  0
+                ],
+                [
+                  "following",
+                  0
+                ],
+                [
+                  "following",
+                  128
+                ],
+                [
+                  "following",
+                  256
+                ],
+                [
+                  "following",
+                  384
+                ],
+                [
+                  "following",
+                  512
+                ],
+                [
+                  "following",
+                  640
+                ],
+                [
+                  "following",
+                  768
+                ],
+                [
+                  "tail",
+                  0
+                ]
+              ],
+              "class_instructions_including_return": 11,
+              "empty_has_no_derived_pointer_or_hint": false
+            },
+            {
+              "code": 16,
+              "ordered_targets": [],
+              "class_instructions_including_return": 1,
+              "empty_has_no_derived_pointer_or_hint": true
+            }
+          ]
+        },
+        "contiguous_unique_selected_l2": {
+          "instructions_including_returns": 127,
+          "hint_instructions_static": 74,
+          "conditional_branches": 0,
+          "unconditional_branches": 1,
+          "ordinary_calls": 0,
+          "stack_instructions": 0,
+          "dispatch_instructions_through_indirect_jump": 25,
+          "classes": [
+            {
+              "code": 0,
+              "ordered_targets": [
+                [
+                  "base",
+                  0
+                ]
+              ],
+              "class_instructions_including_return": 2,
+              "empty_has_no_derived_pointer_or_hint": false
+            },
+            {
+              "code": 1,
+              "ordered_targets": [
+                [
+                  "base",
+                  0
+                ],
+                [
+                  "following",
+                  0
+                ]
+              ],
+              "class_instructions_including_return": 3,
+              "empty_has_no_derived_pointer_or_hint": false
+            },
+            {
+              "code": 2,
+              "ordered_targets": [
+                [
+                  "base",
+                  0
+                ],
+                [
+                  "following",
+                  0
+                ],
+                [
+                  "following",
+                  64
+                ]
+              ],
+              "class_instructions_including_return": 5,
+              "empty_has_no_derived_pointer_or_hint": false
+            },
+            {
+              "code": 3,
+              "ordered_targets": [
+                [
+                  "base",
+                  0
+                ],
+                [
+                  "following",
+                  0
+                ],
+                [
+                  "following",
+                  64
+                ],
+                [
+                  "following",
+                  128
+                ]
+              ],
+              "class_instructions_including_return": 6,
+              "empty_has_no_derived_pointer_or_hint": false
+            },
+            {
+              "code": 4,
+              "ordered_targets": [
+                [
+                  "base",
+                  0
+                ],
+                [
+                  "following",
+                  0
+                ],
+                [
+                  "following",
+                  64
+                ],
+                [
+                  "following",
+                  128
+                ],
+                [
+                  "following",
+                  192
+                ]
+              ],
+              "class_instructions_including_return": 7,
+              "empty_has_no_derived_pointer_or_hint": false
+            },
+            {
+              "code": 5,
+              "ordered_targets": [
+                [
+                  "base",
+                  0
+                ],
+                [
+                  "following",
+                  0
+                ],
+                [
+                  "following",
+                  64
+                ],
+                [
+                  "following",
+                  128
+                ],
+                [
+                  "following",
+                  192
+                ],
+                [
+                  "following",
+                  256
+                ]
+              ],
+              "class_instructions_including_return": 8,
+              "empty_has_no_derived_pointer_or_hint": false
+            },
+            {
+              "code": 6,
+              "ordered_targets": [
+                [
+                  "base",
+                  0
+                ],
+                [
+                  "following",
+                  0
+                ],
+                [
+                  "following",
+                  64
+                ],
+                [
+                  "following",
+                  128
+                ],
+                [
+                  "following",
+                  192
+                ],
+                [
+                  "following",
+                  256
+                ],
+                [
+                  "following",
+                  320
+                ]
+              ],
+              "class_instructions_including_return": 9,
+              "empty_has_no_derived_pointer_or_hint": false
+            },
+            {
+              "code": 7,
+              "ordered_targets": [
+                [
+                  "base",
+                  0
+                ],
+                [
+                  "following",
+                  0
+                ],
+                [
+                  "following",
+                  64
+                ],
+                [
+                  "following",
+                  128
+                ],
+                [
+                  "following",
+                  192
+                ],
+                [
+                  "following",
+                  256
+                ],
+                [
+                  "following",
+                  320
+                ],
+                [
+                  "following",
+                  384
+                ],
+                [
+                  "tail",
+                  0
+                ]
+              ],
+              "class_instructions_including_return": 11,
+              "empty_has_no_derived_pointer_or_hint": false
+            },
+            {
+              "code": 8,
+              "ordered_targets": [
+                [
+                  "base",
+                  0
+                ]
+              ],
+              "class_instructions_including_return": 2,
+              "empty_has_no_derived_pointer_or_hint": false
+            },
+            {
+              "code": 9,
+              "ordered_targets": [
+                [
+                  "base",
+                  0
+                ],
+                [
+                  "following",
+                  0
+                ]
+              ],
+              "class_instructions_including_return": 3,
+              "empty_has_no_derived_pointer_or_hint": false
+            },
+            {
+              "code": 10,
+              "ordered_targets": [
+                [
+                  "base",
+                  0
+                ],
+                [
+                  "following",
+                  0
+                ],
+                [
+                  "following",
+                  128
+                ]
+              ],
+              "class_instructions_including_return": 5,
+              "empty_has_no_derived_pointer_or_hint": false
+            },
+            {
+              "code": 11,
+              "ordered_targets": [
+                [
+                  "base",
+                  0
+                ],
+                [
+                  "following",
+                  0
+                ],
+                [
+                  "following",
+                  128
+                ],
+                [
+                  "following",
+                  256
+                ]
+              ],
+              "class_instructions_including_return": 6,
+              "empty_has_no_derived_pointer_or_hint": false
+            },
+            {
+              "code": 12,
+              "ordered_targets": [
+                [
+                  "base",
+                  0
+                ],
+                [
+                  "following",
+                  0
+                ],
+                [
+                  "following",
+                  128
+                ],
+                [
+                  "following",
+                  256
+                ],
+                [
+                  "following",
+                  384
+                ]
+              ],
+              "class_instructions_including_return": 7,
+              "empty_has_no_derived_pointer_or_hint": false
+            },
+            {
+              "code": 13,
+              "ordered_targets": [
+                [
+                  "base",
+                  0
+                ],
+                [
+                  "following",
+                  0
+                ],
+                [
+                  "following",
+                  128
+                ],
+                [
+                  "following",
+                  256
+                ],
+                [
+                  "following",
+                  384
+                ],
+                [
+                  "following",
+                  512
+                ]
+              ],
+              "class_instructions_including_return": 8,
+              "empty_has_no_derived_pointer_or_hint": false
+            },
+            {
+              "code": 14,
+              "ordered_targets": [
+                [
+                  "base",
+                  0
+                ],
+                [
+                  "following",
+                  0
+                ],
+                [
+                  "following",
+                  128
+                ],
+                [
+                  "following",
+                  256
+                ],
+                [
+                  "following",
+                  384
+                ],
+                [
+                  "following",
+                  512
+                ],
+                [
+                  "following",
+                  640
+                ]
+              ],
+              "class_instructions_including_return": 9,
+              "empty_has_no_derived_pointer_or_hint": false
+            },
+            {
+              "code": 15,
+              "ordered_targets": [
+                [
+                  "base",
+                  0
+                ],
+                [
+                  "following",
+                  0
+                ],
+                [
+                  "following",
+                  128
+                ],
+                [
+                  "following",
+                  256
+                ],
+                [
+                  "following",
+                  384
+                ],
+                [
+                  "following",
+                  512
+                ],
+                [
+                  "following",
+                  640
+                ],
+                [
+                  "following",
+                  768
+                ],
+                [
+                  "tail",
+                  0
+                ]
+              ],
+              "class_instructions_including_return": 11,
+              "empty_has_no_derived_pointer_or_hint": false
+            },
+            {
+              "code": 16,
+              "ordered_targets": [],
+              "class_instructions_including_return": 1,
+              "empty_has_no_derived_pointer_or_hint": true
+            }
+          ]
+        },
+        "contiguous_fixed_64_1": {
+          "instructions_including_returns": 3,
+          "hint_instructions_static": 2,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_fixed_64_2": {
+          "instructions_including_returns": 4,
+          "hint_instructions_static": 3,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_fixed_64_3": {
+          "instructions_including_returns": 5,
+          "hint_instructions_static": 4,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_fixed_64_4": {
+          "instructions_including_returns": 6,
+          "hint_instructions_static": 5,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_fixed_64_5": {
+          "instructions_including_returns": 7,
+          "hint_instructions_static": 6,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_fixed_64_6": {
+          "instructions_including_returns": 8,
+          "hint_instructions_static": 7,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_fixed_64_7": {
+          "instructions_including_returns": 9,
+          "hint_instructions_static": 8,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_fixed_64_8": {
+          "instructions_including_returns": 10,
+          "hint_instructions_static": 9,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_fixed_128_1": {
+          "instructions_including_returns": 3,
+          "hint_instructions_static": 2,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_fixed_128_2": {
+          "instructions_including_returns": 4,
+          "hint_instructions_static": 3,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_fixed_128_3": {
+          "instructions_including_returns": 5,
+          "hint_instructions_static": 4,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_fixed_128_4": {
+          "instructions_including_returns": 6,
+          "hint_instructions_static": 5,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_fixed_128_5": {
+          "instructions_including_returns": 7,
+          "hint_instructions_static": 6,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_fixed_128_6": {
+          "instructions_including_returns": 8,
+          "hint_instructions_static": 7,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_fixed_128_7": {
+          "instructions_including_returns": 9,
+          "hint_instructions_static": 8,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_fixed_128_8": {
+          "instructions_including_returns": 10,
+          "hint_instructions_static": 9,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_unique_fixed_64_1": {
+          "instructions_including_returns": 2,
+          "hint_instructions_static": 1,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_unique_fixed_64_2": {
+          "instructions_including_returns": 3,
+          "hint_instructions_static": 2,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_unique_fixed_64_3": {
+          "instructions_including_returns": 5,
+          "hint_instructions_static": 3,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_unique_fixed_64_4": {
+          "instructions_including_returns": 6,
+          "hint_instructions_static": 4,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_unique_fixed_64_5": {
+          "instructions_including_returns": 7,
+          "hint_instructions_static": 5,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_unique_fixed_64_6": {
+          "instructions_including_returns": 8,
+          "hint_instructions_static": 6,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_unique_fixed_64_7": {
+          "instructions_including_returns": 9,
+          "hint_instructions_static": 7,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_unique_fixed_64_8": {
+          "instructions_including_returns": 11,
+          "hint_instructions_static": 9,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_unique_fixed_128_1": {
+          "instructions_including_returns": 2,
+          "hint_instructions_static": 1,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_unique_fixed_128_2": {
+          "instructions_including_returns": 3,
+          "hint_instructions_static": 2,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_unique_fixed_128_3": {
+          "instructions_including_returns": 5,
+          "hint_instructions_static": 3,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_unique_fixed_128_4": {
+          "instructions_including_returns": 6,
+          "hint_instructions_static": 4,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_unique_fixed_128_5": {
+          "instructions_including_returns": 7,
+          "hint_instructions_static": 5,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_unique_fixed_128_6": {
+          "instructions_including_returns": 8,
+          "hint_instructions_static": 6,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_unique_fixed_128_7": {
+          "instructions_including_returns": 9,
+          "hint_instructions_static": 7,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_unique_fixed_128_8": {
+          "instructions_including_returns": 11,
+          "hint_instructions_static": 9,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_identity_selected_l1": {
+          "instructions_including_returns": 112,
+          "hint_instructions_static": 88,
+          "conditional_branches": 0,
+          "unconditional_branches": 1,
+          "ordinary_calls": 0,
+          "stack_instructions": 0,
+          "dispatch_instructions_through_indirect_jump": 8
+        },
+        "contiguous_identity_selected_l2": {
+          "instructions_including_returns": 112,
+          "hint_instructions_static": 88,
+          "conditional_branches": 0,
+          "unconditional_branches": 1,
+          "ordinary_calls": 0,
+          "stack_instructions": 0,
+          "dispatch_instructions_through_indirect_jump": 8
+        }
+      }
+    }
+  },
+  "x86_64": {
+    "default": {
+      "path": "build/loom-locality-execution/contiguous/unique/x86_64-default.s",
+      "sha256": "358635f3120cf80068897d96b9cb62f94985868f5355e9a555cebd1c8cf051f9",
+      "functions": {
+        "contiguous_selected_l1": {
+          "instructions_including_returns": 94,
+          "hint_instructions_static": 45,
+          "conditional_branches": 0,
+          "unconditional_branches": 14,
+          "ordinary_calls": 0,
+          "stack_instructions": 0,
+          "dispatch_instructions_through_indirect_jump": 7
+        },
+        "contiguous_selected_l2": {
+          "instructions_including_returns": 94,
+          "hint_instructions_static": 45,
+          "conditional_branches": 0,
+          "unconditional_branches": 14,
+          "ordinary_calls": 0,
+          "stack_instructions": 0,
+          "dispatch_instructions_through_indirect_jump": 7
+        },
+        "contiguous_unique_selected_l1": {
+          "instructions_including_returns": 103,
+          "hint_instructions_static": 58,
+          "conditional_branches": 0,
+          "unconditional_branches": 13,
+          "ordinary_calls": 0,
+          "stack_instructions": 0,
+          "dispatch_instructions_through_indirect_jump": 21
+        },
+        "contiguous_unique_selected_l2": {
+          "instructions_including_returns": 103,
+          "hint_instructions_static": 58,
+          "conditional_branches": 0,
+          "unconditional_branches": 13,
+          "ordinary_calls": 0,
+          "stack_instructions": 0,
+          "dispatch_instructions_through_indirect_jump": 21
+        },
+        "contiguous_fixed_64_1": {
+          "instructions_including_returns": 3,
+          "hint_instructions_static": 2,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_fixed_64_2": {
+          "instructions_including_returns": 4,
+          "hint_instructions_static": 3,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_fixed_64_3": {
+          "instructions_including_returns": 5,
+          "hint_instructions_static": 4,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_fixed_64_4": {
+          "instructions_including_returns": 6,
+          "hint_instructions_static": 5,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_fixed_64_5": {
+          "instructions_including_returns": 7,
+          "hint_instructions_static": 6,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_fixed_64_6": {
+          "instructions_including_returns": 8,
+          "hint_instructions_static": 7,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_fixed_64_7": {
+          "instructions_including_returns": 9,
+          "hint_instructions_static": 8,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_fixed_64_8": {
+          "instructions_including_returns": 10,
+          "hint_instructions_static": 9,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_fixed_128_1": {
+          "instructions_including_returns": 3,
+          "hint_instructions_static": 2,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_fixed_128_2": {
+          "instructions_including_returns": 4,
+          "hint_instructions_static": 3,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_fixed_128_3": {
+          "instructions_including_returns": 5,
+          "hint_instructions_static": 4,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_fixed_128_4": {
+          "instructions_including_returns": 6,
+          "hint_instructions_static": 5,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_fixed_128_5": {
+          "instructions_including_returns": 7,
+          "hint_instructions_static": 6,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_fixed_128_6": {
+          "instructions_including_returns": 8,
+          "hint_instructions_static": 7,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_fixed_128_7": {
+          "instructions_including_returns": 9,
+          "hint_instructions_static": 8,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_fixed_128_8": {
+          "instructions_including_returns": 10,
+          "hint_instructions_static": 9,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_unique_fixed_64_1": {
+          "instructions_including_returns": 2,
+          "hint_instructions_static": 1,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_unique_fixed_64_2": {
+          "instructions_including_returns": 3,
+          "hint_instructions_static": 2,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_unique_fixed_64_3": {
+          "instructions_including_returns": 4,
+          "hint_instructions_static": 3,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_unique_fixed_64_4": {
+          "instructions_including_returns": 5,
+          "hint_instructions_static": 4,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_unique_fixed_64_5": {
+          "instructions_including_returns": 6,
+          "hint_instructions_static": 5,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_unique_fixed_64_6": {
+          "instructions_including_returns": 7,
+          "hint_instructions_static": 6,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_unique_fixed_64_7": {
+          "instructions_including_returns": 8,
+          "hint_instructions_static": 7,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_unique_fixed_64_8": {
+          "instructions_including_returns": 10,
+          "hint_instructions_static": 9,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_unique_fixed_128_1": {
+          "instructions_including_returns": 2,
+          "hint_instructions_static": 1,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_unique_fixed_128_2": {
+          "instructions_including_returns": 3,
+          "hint_instructions_static": 2,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_unique_fixed_128_3": {
+          "instructions_including_returns": 4,
+          "hint_instructions_static": 3,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_unique_fixed_128_4": {
+          "instructions_including_returns": 5,
+          "hint_instructions_static": 4,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_unique_fixed_128_5": {
+          "instructions_including_returns": 6,
+          "hint_instructions_static": 5,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_unique_fixed_128_6": {
+          "instructions_including_returns": 7,
+          "hint_instructions_static": 6,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_unique_fixed_128_7": {
+          "instructions_including_returns": 8,
+          "hint_instructions_static": 7,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_unique_fixed_128_8": {
+          "instructions_including_returns": 10,
+          "hint_instructions_static": 9,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_identity_selected_l1": {
+          "instructions_including_returns": 110,
+          "hint_instructions_static": 88,
+          "conditional_branches": 0,
+          "unconditional_branches": 1,
+          "ordinary_calls": 0,
+          "stack_instructions": 0,
+          "dispatch_instructions_through_indirect_jump": 6
+        },
+        "contiguous_identity_selected_l2": {
+          "instructions_including_returns": 110,
+          "hint_instructions_static": 88,
+          "conditional_branches": 0,
+          "unconditional_branches": 1,
+          "ordinary_calls": 0,
+          "stack_instructions": 0,
+          "dispatch_instructions_through_indirect_jump": 6
+        }
+      }
+    },
+    "identity": {
+      "path": "build/loom-locality-execution/contiguous/unique/x86_64-identity.s",
+      "sha256": "7d1c443d50dcfd1fe3df86a84a83edbd0b8779f081db12e3e398f488bda9e26d",
+      "functions": {
+        "contiguous_selected_l1": {
+          "instructions_including_returns": 110,
+          "hint_instructions_static": 88,
+          "conditional_branches": 0,
+          "unconditional_branches": 1,
+          "ordinary_calls": 0,
+          "stack_instructions": 0,
+          "dispatch_instructions_through_indirect_jump": 6
+        },
+        "contiguous_selected_l2": {
+          "instructions_including_returns": 110,
+          "hint_instructions_static": 88,
+          "conditional_branches": 0,
+          "unconditional_branches": 1,
+          "ordinary_calls": 0,
+          "stack_instructions": 0,
+          "dispatch_instructions_through_indirect_jump": 6
+        },
+        "contiguous_unique_selected_l1": {
+          "instructions_including_returns": 111,
+          "hint_instructions_static": 74,
+          "conditional_branches": 0,
+          "unconditional_branches": 1,
+          "ordinary_calls": 0,
+          "stack_instructions": 0,
+          "dispatch_instructions_through_indirect_jump": 21,
+          "classes": [
+            {
+              "code": 0,
+              "ordered_targets": [
+                [
+                  "base",
+                  0
+                ]
+              ],
+              "class_instructions_including_return": 2,
+              "empty_has_no_derived_pointer_or_hint": false
+            },
+            {
+              "code": 1,
+              "ordered_targets": [
+                [
+                  "base",
+                  0
+                ],
+                [
+                  "following",
+                  0
+                ]
+              ],
+              "class_instructions_including_return": 3,
+              "empty_has_no_derived_pointer_or_hint": false
+            },
+            {
+              "code": 2,
+              "ordered_targets": [
+                [
+                  "base",
+                  0
+                ],
+                [
+                  "following",
+                  0
+                ],
+                [
+                  "following",
+                  64
+                ]
+              ],
+              "class_instructions_including_return": 4,
+              "empty_has_no_derived_pointer_or_hint": false
+            },
+            {
+              "code": 3,
+              "ordered_targets": [
+                [
+                  "base",
+                  0
+                ],
+                [
+                  "following",
+                  0
+                ],
+                [
+                  "following",
+                  64
+                ],
+                [
+                  "following",
+                  128
+                ]
+              ],
+              "class_instructions_including_return": 5,
+              "empty_has_no_derived_pointer_or_hint": false
+            },
+            {
+              "code": 4,
+              "ordered_targets": [
+                [
+                  "base",
+                  0
+                ],
+                [
+                  "following",
+                  0
+                ],
+                [
+                  "following",
+                  64
+                ],
+                [
+                  "following",
+                  128
+                ],
+                [
+                  "following",
+                  192
+                ]
+              ],
+              "class_instructions_including_return": 6,
+              "empty_has_no_derived_pointer_or_hint": false
+            },
+            {
+              "code": 5,
+              "ordered_targets": [
+                [
+                  "base",
+                  0
+                ],
+                [
+                  "following",
+                  0
+                ],
+                [
+                  "following",
+                  64
+                ],
+                [
+                  "following",
+                  128
+                ],
+                [
+                  "following",
+                  192
+                ],
+                [
+                  "following",
+                  256
+                ]
+              ],
+              "class_instructions_including_return": 7,
+              "empty_has_no_derived_pointer_or_hint": false
+            },
+            {
+              "code": 6,
+              "ordered_targets": [
+                [
+                  "base",
+                  0
+                ],
+                [
+                  "following",
+                  0
+                ],
+                [
+                  "following",
+                  64
+                ],
+                [
+                  "following",
+                  128
+                ],
+                [
+                  "following",
+                  192
+                ],
+                [
+                  "following",
+                  256
+                ],
+                [
+                  "following",
+                  320
+                ]
+              ],
+              "class_instructions_including_return": 8,
+              "empty_has_no_derived_pointer_or_hint": false
+            },
+            {
+              "code": 7,
+              "ordered_targets": [
+                [
+                  "base",
+                  0
+                ],
+                [
+                  "following",
+                  0
+                ],
+                [
+                  "following",
+                  64
+                ],
+                [
+                  "following",
+                  128
+                ],
+                [
+                  "following",
+                  192
+                ],
+                [
+                  "following",
+                  256
+                ],
+                [
+                  "following",
+                  320
+                ],
+                [
+                  "following",
+                  384
+                ],
+                [
+                  "tail",
+                  0
+                ]
+              ],
+              "class_instructions_including_return": 10,
+              "empty_has_no_derived_pointer_or_hint": false
+            },
+            {
+              "code": 8,
+              "ordered_targets": [
+                [
+                  "base",
+                  0
+                ]
+              ],
+              "class_instructions_including_return": 2,
+              "empty_has_no_derived_pointer_or_hint": false
+            },
+            {
+              "code": 9,
+              "ordered_targets": [
+                [
+                  "base",
+                  0
+                ],
+                [
+                  "following",
+                  0
+                ]
+              ],
+              "class_instructions_including_return": 3,
+              "empty_has_no_derived_pointer_or_hint": false
+            },
+            {
+              "code": 10,
+              "ordered_targets": [
+                [
+                  "base",
+                  0
+                ],
+                [
+                  "following",
+                  0
+                ],
+                [
+                  "following",
+                  128
+                ]
+              ],
+              "class_instructions_including_return": 4,
+              "empty_has_no_derived_pointer_or_hint": false
+            },
+            {
+              "code": 11,
+              "ordered_targets": [
+                [
+                  "base",
+                  0
+                ],
+                [
+                  "following",
+                  0
+                ],
+                [
+                  "following",
+                  128
+                ],
+                [
+                  "following",
+                  256
+                ]
+              ],
+              "class_instructions_including_return": 5,
+              "empty_has_no_derived_pointer_or_hint": false
+            },
+            {
+              "code": 12,
+              "ordered_targets": [
+                [
+                  "base",
+                  0
+                ],
+                [
+                  "following",
+                  0
+                ],
+                [
+                  "following",
+                  128
+                ],
+                [
+                  "following",
+                  256
+                ],
+                [
+                  "following",
+                  384
+                ]
+              ],
+              "class_instructions_including_return": 6,
+              "empty_has_no_derived_pointer_or_hint": false
+            },
+            {
+              "code": 13,
+              "ordered_targets": [
+                [
+                  "base",
+                  0
+                ],
+                [
+                  "following",
+                  0
+                ],
+                [
+                  "following",
+                  128
+                ],
+                [
+                  "following",
+                  256
+                ],
+                [
+                  "following",
+                  384
+                ],
+                [
+                  "following",
+                  512
+                ]
+              ],
+              "class_instructions_including_return": 7,
+              "empty_has_no_derived_pointer_or_hint": false
+            },
+            {
+              "code": 14,
+              "ordered_targets": [
+                [
+                  "base",
+                  0
+                ],
+                [
+                  "following",
+                  0
+                ],
+                [
+                  "following",
+                  128
+                ],
+                [
+                  "following",
+                  256
+                ],
+                [
+                  "following",
+                  384
+                ],
+                [
+                  "following",
+                  512
+                ],
+                [
+                  "following",
+                  640
+                ]
+              ],
+              "class_instructions_including_return": 8,
+              "empty_has_no_derived_pointer_or_hint": false
+            },
+            {
+              "code": 15,
+              "ordered_targets": [
+                [
+                  "base",
+                  0
+                ],
+                [
+                  "following",
+                  0
+                ],
+                [
+                  "following",
+                  128
+                ],
+                [
+                  "following",
+                  256
+                ],
+                [
+                  "following",
+                  384
+                ],
+                [
+                  "following",
+                  512
+                ],
+                [
+                  "following",
+                  640
+                ],
+                [
+                  "following",
+                  768
+                ],
+                [
+                  "tail",
+                  0
+                ]
+              ],
+              "class_instructions_including_return": 10,
+              "empty_has_no_derived_pointer_or_hint": false
+            },
+            {
+              "code": 16,
+              "ordered_targets": [],
+              "class_instructions_including_return": 1,
+              "empty_has_no_derived_pointer_or_hint": true
+            }
+          ]
+        },
+        "contiguous_unique_selected_l2": {
+          "instructions_including_returns": 111,
+          "hint_instructions_static": 74,
+          "conditional_branches": 0,
+          "unconditional_branches": 1,
+          "ordinary_calls": 0,
+          "stack_instructions": 0,
+          "dispatch_instructions_through_indirect_jump": 21,
+          "classes": [
+            {
+              "code": 0,
+              "ordered_targets": [
+                [
+                  "base",
+                  0
+                ]
+              ],
+              "class_instructions_including_return": 2,
+              "empty_has_no_derived_pointer_or_hint": false
+            },
+            {
+              "code": 1,
+              "ordered_targets": [
+                [
+                  "base",
+                  0
+                ],
+                [
+                  "following",
+                  0
+                ]
+              ],
+              "class_instructions_including_return": 3,
+              "empty_has_no_derived_pointer_or_hint": false
+            },
+            {
+              "code": 2,
+              "ordered_targets": [
+                [
+                  "base",
+                  0
+                ],
+                [
+                  "following",
+                  0
+                ],
+                [
+                  "following",
+                  64
+                ]
+              ],
+              "class_instructions_including_return": 4,
+              "empty_has_no_derived_pointer_or_hint": false
+            },
+            {
+              "code": 3,
+              "ordered_targets": [
+                [
+                  "base",
+                  0
+                ],
+                [
+                  "following",
+                  0
+                ],
+                [
+                  "following",
+                  64
+                ],
+                [
+                  "following",
+                  128
+                ]
+              ],
+              "class_instructions_including_return": 5,
+              "empty_has_no_derived_pointer_or_hint": false
+            },
+            {
+              "code": 4,
+              "ordered_targets": [
+                [
+                  "base",
+                  0
+                ],
+                [
+                  "following",
+                  0
+                ],
+                [
+                  "following",
+                  64
+                ],
+                [
+                  "following",
+                  128
+                ],
+                [
+                  "following",
+                  192
+                ]
+              ],
+              "class_instructions_including_return": 6,
+              "empty_has_no_derived_pointer_or_hint": false
+            },
+            {
+              "code": 5,
+              "ordered_targets": [
+                [
+                  "base",
+                  0
+                ],
+                [
+                  "following",
+                  0
+                ],
+                [
+                  "following",
+                  64
+                ],
+                [
+                  "following",
+                  128
+                ],
+                [
+                  "following",
+                  192
+                ],
+                [
+                  "following",
+                  256
+                ]
+              ],
+              "class_instructions_including_return": 7,
+              "empty_has_no_derived_pointer_or_hint": false
+            },
+            {
+              "code": 6,
+              "ordered_targets": [
+                [
+                  "base",
+                  0
+                ],
+                [
+                  "following",
+                  0
+                ],
+                [
+                  "following",
+                  64
+                ],
+                [
+                  "following",
+                  128
+                ],
+                [
+                  "following",
+                  192
+                ],
+                [
+                  "following",
+                  256
+                ],
+                [
+                  "following",
+                  320
+                ]
+              ],
+              "class_instructions_including_return": 8,
+              "empty_has_no_derived_pointer_or_hint": false
+            },
+            {
+              "code": 7,
+              "ordered_targets": [
+                [
+                  "base",
+                  0
+                ],
+                [
+                  "following",
+                  0
+                ],
+                [
+                  "following",
+                  64
+                ],
+                [
+                  "following",
+                  128
+                ],
+                [
+                  "following",
+                  192
+                ],
+                [
+                  "following",
+                  256
+                ],
+                [
+                  "following",
+                  320
+                ],
+                [
+                  "following",
+                  384
+                ],
+                [
+                  "tail",
+                  0
+                ]
+              ],
+              "class_instructions_including_return": 10,
+              "empty_has_no_derived_pointer_or_hint": false
+            },
+            {
+              "code": 8,
+              "ordered_targets": [
+                [
+                  "base",
+                  0
+                ]
+              ],
+              "class_instructions_including_return": 2,
+              "empty_has_no_derived_pointer_or_hint": false
+            },
+            {
+              "code": 9,
+              "ordered_targets": [
+                [
+                  "base",
+                  0
+                ],
+                [
+                  "following",
+                  0
+                ]
+              ],
+              "class_instructions_including_return": 3,
+              "empty_has_no_derived_pointer_or_hint": false
+            },
+            {
+              "code": 10,
+              "ordered_targets": [
+                [
+                  "base",
+                  0
+                ],
+                [
+                  "following",
+                  0
+                ],
+                [
+                  "following",
+                  128
+                ]
+              ],
+              "class_instructions_including_return": 4,
+              "empty_has_no_derived_pointer_or_hint": false
+            },
+            {
+              "code": 11,
+              "ordered_targets": [
+                [
+                  "base",
+                  0
+                ],
+                [
+                  "following",
+                  0
+                ],
+                [
+                  "following",
+                  128
+                ],
+                [
+                  "following",
+                  256
+                ]
+              ],
+              "class_instructions_including_return": 5,
+              "empty_has_no_derived_pointer_or_hint": false
+            },
+            {
+              "code": 12,
+              "ordered_targets": [
+                [
+                  "base",
+                  0
+                ],
+                [
+                  "following",
+                  0
+                ],
+                [
+                  "following",
+                  128
+                ],
+                [
+                  "following",
+                  256
+                ],
+                [
+                  "following",
+                  384
+                ]
+              ],
+              "class_instructions_including_return": 6,
+              "empty_has_no_derived_pointer_or_hint": false
+            },
+            {
+              "code": 13,
+              "ordered_targets": [
+                [
+                  "base",
+                  0
+                ],
+                [
+                  "following",
+                  0
+                ],
+                [
+                  "following",
+                  128
+                ],
+                [
+                  "following",
+                  256
+                ],
+                [
+                  "following",
+                  384
+                ],
+                [
+                  "following",
+                  512
+                ]
+              ],
+              "class_instructions_including_return": 7,
+              "empty_has_no_derived_pointer_or_hint": false
+            },
+            {
+              "code": 14,
+              "ordered_targets": [
+                [
+                  "base",
+                  0
+                ],
+                [
+                  "following",
+                  0
+                ],
+                [
+                  "following",
+                  128
+                ],
+                [
+                  "following",
+                  256
+                ],
+                [
+                  "following",
+                  384
+                ],
+                [
+                  "following",
+                  512
+                ],
+                [
+                  "following",
+                  640
+                ]
+              ],
+              "class_instructions_including_return": 8,
+              "empty_has_no_derived_pointer_or_hint": false
+            },
+            {
+              "code": 15,
+              "ordered_targets": [
+                [
+                  "base",
+                  0
+                ],
+                [
+                  "following",
+                  0
+                ],
+                [
+                  "following",
+                  128
+                ],
+                [
+                  "following",
+                  256
+                ],
+                [
+                  "following",
+                  384
+                ],
+                [
+                  "following",
+                  512
+                ],
+                [
+                  "following",
+                  640
+                ],
+                [
+                  "following",
+                  768
+                ],
+                [
+                  "tail",
+                  0
+                ]
+              ],
+              "class_instructions_including_return": 10,
+              "empty_has_no_derived_pointer_or_hint": false
+            },
+            {
+              "code": 16,
+              "ordered_targets": [],
+              "class_instructions_including_return": 1,
+              "empty_has_no_derived_pointer_or_hint": true
+            }
+          ]
+        },
+        "contiguous_fixed_64_1": {
+          "instructions_including_returns": 3,
+          "hint_instructions_static": 2,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_fixed_64_2": {
+          "instructions_including_returns": 4,
+          "hint_instructions_static": 3,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_fixed_64_3": {
+          "instructions_including_returns": 5,
+          "hint_instructions_static": 4,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_fixed_64_4": {
+          "instructions_including_returns": 6,
+          "hint_instructions_static": 5,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_fixed_64_5": {
+          "instructions_including_returns": 7,
+          "hint_instructions_static": 6,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_fixed_64_6": {
+          "instructions_including_returns": 8,
+          "hint_instructions_static": 7,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_fixed_64_7": {
+          "instructions_including_returns": 9,
+          "hint_instructions_static": 8,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_fixed_64_8": {
+          "instructions_including_returns": 10,
+          "hint_instructions_static": 9,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_fixed_128_1": {
+          "instructions_including_returns": 3,
+          "hint_instructions_static": 2,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_fixed_128_2": {
+          "instructions_including_returns": 4,
+          "hint_instructions_static": 3,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_fixed_128_3": {
+          "instructions_including_returns": 5,
+          "hint_instructions_static": 4,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_fixed_128_4": {
+          "instructions_including_returns": 6,
+          "hint_instructions_static": 5,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_fixed_128_5": {
+          "instructions_including_returns": 7,
+          "hint_instructions_static": 6,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_fixed_128_6": {
+          "instructions_including_returns": 8,
+          "hint_instructions_static": 7,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_fixed_128_7": {
+          "instructions_including_returns": 9,
+          "hint_instructions_static": 8,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_fixed_128_8": {
+          "instructions_including_returns": 10,
+          "hint_instructions_static": 9,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_unique_fixed_64_1": {
+          "instructions_including_returns": 2,
+          "hint_instructions_static": 1,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_unique_fixed_64_2": {
+          "instructions_including_returns": 3,
+          "hint_instructions_static": 2,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_unique_fixed_64_3": {
+          "instructions_including_returns": 4,
+          "hint_instructions_static": 3,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_unique_fixed_64_4": {
+          "instructions_including_returns": 5,
+          "hint_instructions_static": 4,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_unique_fixed_64_5": {
+          "instructions_including_returns": 6,
+          "hint_instructions_static": 5,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_unique_fixed_64_6": {
+          "instructions_including_returns": 7,
+          "hint_instructions_static": 6,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_unique_fixed_64_7": {
+          "instructions_including_returns": 8,
+          "hint_instructions_static": 7,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_unique_fixed_64_8": {
+          "instructions_including_returns": 10,
+          "hint_instructions_static": 9,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_unique_fixed_128_1": {
+          "instructions_including_returns": 2,
+          "hint_instructions_static": 1,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_unique_fixed_128_2": {
+          "instructions_including_returns": 3,
+          "hint_instructions_static": 2,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_unique_fixed_128_3": {
+          "instructions_including_returns": 4,
+          "hint_instructions_static": 3,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_unique_fixed_128_4": {
+          "instructions_including_returns": 5,
+          "hint_instructions_static": 4,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_unique_fixed_128_5": {
+          "instructions_including_returns": 6,
+          "hint_instructions_static": 5,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_unique_fixed_128_6": {
+          "instructions_including_returns": 7,
+          "hint_instructions_static": 6,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_unique_fixed_128_7": {
+          "instructions_including_returns": 8,
+          "hint_instructions_static": 7,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_unique_fixed_128_8": {
+          "instructions_including_returns": 10,
+          "hint_instructions_static": 9,
+          "conditional_branches": 0,
+          "unconditional_branches": 0,
+          "ordinary_calls": 0,
+          "stack_instructions": 0
+        },
+        "contiguous_identity_selected_l1": {
+          "instructions_including_returns": 110,
+          "hint_instructions_static": 88,
+          "conditional_branches": 0,
+          "unconditional_branches": 1,
+          "ordinary_calls": 0,
+          "stack_instructions": 0,
+          "dispatch_instructions_through_indirect_jump": 6
+        },
+        "contiguous_identity_selected_l2": {
+          "instructions_including_returns": 110,
+          "hint_instructions_static": 88,
+          "conditional_branches": 0,
+          "unconditional_branches": 1,
+          "ordinary_calls": 0,
+          "stack_instructions": 0,
+          "dispatch_instructions_through_indirect_jump": 6
+        }
+      }
+    }
+  },
+  "selector_cost_summary": {
+    "aarch64": {
+      "default": {
+        "contiguous_selected_l1": 11,
+        "contiguous_unique_selected_l1": 25
+      },
+      "identity": {
+        "contiguous_selected_l1": 8,
+        "contiguous_unique_selected_l1": 25
+      }
+    },
+    "x86_64": {
+      "default": {
+        "contiguous_selected_l1": 7,
+        "contiguous_unique_selected_l1": 21
+      },
+      "identity": {
+        "contiguous_selected_l1": 6,
+        "contiguous_unique_selected_l1": 21
+      }
+    }
+  }
+}

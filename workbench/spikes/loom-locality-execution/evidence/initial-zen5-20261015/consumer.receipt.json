@@ -1,0 +1,19 @@
+{
+  "source": "/opt/sixdb/source/workbench/spikes/hashtable-design/staged.cpp",
+  "source_sha256": "d7b858ccde4517e2b476a01bb6f624e843ce1f0b4c83f40395b5758561be157b",
+  "derived_sha256": "25b671afffe97d9725bb5d760ad62035e98a94c88f31416c0043850dafe2c49d",
+  "changes": [
+    "Include private contiguous header",
+    "Replace window hint emitter only",
+    "Prebind shapes and independently inventory emitted windows before timing"
+  ],
+  "unchanged": [
+    "all readers and storage",
+    "complete-byte and request graph oracles",
+    "direct/manual/Ring loops",
+    "native signature",
+    "visit inventory",
+    "caller successor hints",
+    "Abseil controls"
+  ]
+}

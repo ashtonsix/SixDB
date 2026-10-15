@@ -206,12 +206,11 @@ Orbital's `ReleaseHint` supplies temporal advice for Group/window reclamation;
 it is not a cache-residency query. The historical spatial epoch-bank spike also
 has no promoted bucket oracle.
 
-Ashton's proposed compact timestamp and confidence indicator is separate Loom
-policy work. A meaningful experiment must distinguish a completed demand from an
-issued hint, define confidence in a conditional cheap-access prediction, and
-carry storage generation and worker/cache domain. A 16-bit timestamp aliases
-after 65,536 ticks; ordering requires a bounded horizon and expiry across long
-idle intervals. A caller-held field or sidecar can test the idea without assuming
-an address directory is free. Timestamp reads, metadata traffic, false sharing
-and cache-line costs must be included against an instrumentation-disabled
-control before that oracle enters the few-nanosecond continuation path.
+The private [locality/execution study](../../workbench/spikes/loom-locality-execution/README.md)
+tests a caller-cohort record using completed serial consumer samples, full outer
+epochs and generation/population/worker/cache-domain qualification. Sampling and
+direct/Ring selection occur at ordinary operation boundaries; native visits keep
+their existing ABI and hint path. Its fixed and instrumentation-disabled controls
+charge sample work and distinguish cheap serial cost from pipelined throughput.
+The same study tests random-start, contiguous-consumed demand separately from
+stream training. Neither prototype has entered the runtime policy.

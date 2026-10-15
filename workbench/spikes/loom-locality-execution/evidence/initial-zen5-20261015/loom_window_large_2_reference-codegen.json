@@ -1,0 +1,69 @@
+{
+  "consumers": [
+    {
+      "owner": "abseil",
+      "ready": false,
+      "hints": false,
+      "instructions": 268,
+      "allowed_outer_calls": [],
+      "rbp_preservation": []
+    },
+    {
+      "owner": "abseil",
+      "ready": false,
+      "hints": false,
+      "instructions": 175,
+      "allowed_outer_calls": [],
+      "rbp_preservation": []
+    },
+    {
+      "owner": "generic",
+      "ready": true,
+      "hints": false,
+      "instructions": 302,
+      "allowed_outer_calls": [],
+      "rbp_preservation": []
+    },
+    {
+      "owner": "generic",
+      "ready": true,
+      "hints": true,
+      "instructions": 422,
+      "allowed_outer_calls": [],
+      "rbp_preservation": [
+        "1e710: 55                           \tpushq\t%rbp",
+        "1e728: 5d                           \tpopq\t%rbp",
+        "1e9ee: 5d                           \tpopq\t%rbp",
+        "1e9fd: 5d                           \tpopq\t%rbp",
+        "1eb3e: 5d                           \tpopq\t%rbp"
+      ]
+    },
+    {
+      "owner": "abseil",
+      "ready": false,
+      "hints": false,
+      "instructions": 661,
+      "allowed_outer_calls": [
+        "2065c: e8 4f 6c fe ff               \tcallq\t0x72b0 <memset@plt>",
+        "2113c: e8 1f 05 00 00               \tcallq\t0x21660 <ht::staged_test::answer ht::staged_test::result<std::array<ht::staged_test::lane, 32ul>>(std::array<ht::staged_test::lane, 32ul> const&)>"
+      ],
+      "rbp_preservation": []
+    },
+    {
+      "owner": "abseil",
+      "ready": false,
+      "hints": false,
+      "instructions": 299,
+      "allowed_outer_calls": [
+        "2118c: e8 1f 61 fe ff               \tcallq\t0x72b0 <memset@plt>",
+        "21637: e8 24 00 00 00               \tcallq\t0x21660 <ht::staged_test::answer ht::staged_test::result<std::array<ht::staged_test::lane, 32ul>>(std::array<ht::staged_test::lane, 32ul> const&)>"
+      ],
+      "rbp_preservation": []
+    }
+  ],
+  "ready_calls": 0,
+  "ready_other_stack_references": 0,
+  "ready_callbacks_preserving_rbp": 1,
+  "outlined_baseline_lookup": 0,
+  "limitation": "Static calls and frame references only; not instruction quality, lifetime, traffic or performance."
+}
