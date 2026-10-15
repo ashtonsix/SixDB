@@ -169,7 +169,9 @@ template <class F, bool Dense>
         const auto pos = i + k * N;
         const auto* p = base + (pos / F::tile_rows) * (Dense ? F::tile_bytes : stride) +
                         detail::body_offset<F>(pos % F::tile_rows);
-        if constexpr (L == 1 && F::storage == geometry::local)
+        if constexpr (L == 1 && F::storage == geometry::local && Dense && F::tile_bytes == 8)
+            out.v[k] = vld1q_u8(p);
+        else if constexpr (L == 1 && F::storage == geometry::local)
             out.v[k] = vcombine_u8(vld1_u8(p), vld1_u8(p + (Dense ? F::tile_bytes : stride)));
         else if constexpr (Q == L)
             out.v[k] = vld1q_u8(p);
