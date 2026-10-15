@@ -2,7 +2,6 @@
 #include <orbital/types.h>
 #include <orbital/detail/object/binding.h>
 #include <orbital/detail/object/history.h>
-#include <expected>
 #include <unordered_map>
 
 namespace orbital {
