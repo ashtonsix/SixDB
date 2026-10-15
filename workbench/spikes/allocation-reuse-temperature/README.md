@@ -11,6 +11,10 @@ their ready-candidate cache and search prepared homes before unprepared homes.
 Release temperature and timestamps remain useful for cold-first trim and stale
 advice. Neither is proof of cache residence.
 
+The current-API [reuse and page-retention comparison](slack/README.md) separates
+accessible capacity from resident RAM, prices closer-fit searches and examines
+stable address reuse with tail-page reclamation.
+
 `allocator.cpp` exercises actual Orbital allocation through Loom. It includes
 partial Groups with rotating classes that miss the candidate cache, and Window
 traces with size bursts, retained live allocations and mixed release hints.

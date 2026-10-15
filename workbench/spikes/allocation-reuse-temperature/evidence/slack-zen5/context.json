@@ -1,0 +1,51 @@
+{
+  "scope": "Selector block means and separate synchronous private-tail residency episodes; no integrated policy or multicore claim.",
+  "source_runs": {
+    "selector": {
+      "job": "20261013T115257Z-a8deed30",
+      "archive": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 30524741,
+        "files": 3326,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/6b9607205d5788d6477e4241bd4e3e089474d22e7ee37df0926df85226e6446f.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "6b9607205d5788d6477e4241bd4e3e089474d22e7ee37df0926df85226e6446f",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/6b9607205d5788d6477e4241bd4e3e089474d22e7ee37df0926df85226e6446f.tar.gz"
+      },
+      "source_digest": "9c191b44abc7290552fa1bdf355ad364068fb3113c4399d16a8490a6b2b4f65d",
+      "result": {
+        "state": "complete",
+        "script_returncode": 0,
+        "script_seconds": 39.468506813049316,
+        "worker_seconds_before_collection": 67.69722080230713
+      }
+    },
+    "tail": {
+      "job": "20261013T123028Z-a1b30de2",
+      "archive": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 11793070,
+        "files": 51,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/42ec8e79daf8fce10eab4b1d5c652cbdeb285037daa3fb6bf42f7e524d44a4bf.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "42ec8e79daf8fce10eab4b1d5c652cbdeb285037daa3fb6bf42f7e524d44a4bf",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/42ec8e79daf8fce10eab4b1d5c652cbdeb285037daa3fb6bf42f7e524d44a4bf.tar.gz"
+      },
+      "source_digest": "2189e827b8fc7eacb4d27fcb3bf67460d7f5d8638d6a81a6a2035b82b42c15c8",
+      "result": {
+        "state": "complete",
+        "script_returncode": 0,
+        "script_seconds": 10.316364288330078,
+        "worker_seconds_before_collection": 43.12970995903015
+      }
+    }
+  },
+  "analysis_sha256": {
+    "retain.py": "bef8d683415191a5fdb8cbb6a51598fd612e13fb5247d3b8a975d8ed720f3538",
+    "report.py": "77a433868c973c8d4c30613163ed4f2631e59d16e23ed795b3195cbe2f5d3e0a"
+  }
+}
