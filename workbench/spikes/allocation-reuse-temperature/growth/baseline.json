@@ -1,0 +1,14 @@
+{
+  "purpose": "Reverse only the reservation-size index; all other captured sources are identical between versions.",
+  "files": {
+    "orbital/src/allocation/internal.h": {
+      "candidate": "36cc8c371b8d6ca0458ac4e024b232940001a3f8efa017b354d3c88bdfdc03e4",
+      "baseline": "750d7ddf4ff765915e5f3f2d533e53e2022c29d388df5965a1d0273a2612e372"
+    },
+    "orbital/src/allocation/window.cpp": {
+      "candidate": "128c5c67474bd8ff39c2eb0e7650501197e45a7209d88689806dab418f28c1d4",
+      "baseline": "f527db3f07c0cdeb23fc3d22b9cfc9829cc4a93bf4ba3e71281f3b0608ea02ce"
+    }
+  },
+  "patch_sha256": "36272ed032ac84a96593fbcf216cef82c79ce41bb2e7bf03ee297147522514d3"
+}

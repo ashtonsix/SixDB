@@ -1,0 +1,115 @@
+{
+  "command": [
+    "workbench/spikes/allocation-reuse-temperature/growth/run.py",
+    "--output",
+    "/opt/sixdb/jobs/20261015T010619Z-1b901bca/results/comparison",
+    "--cpu",
+    "0",
+    "--tune",
+    "neoverse-v2",
+    "--trials",
+    "6",
+    "--operations",
+    "131072"
+  ],
+  "settings": {
+    "output": "/opt/sixdb/jobs/20261015T010619Z-1b901bca/results/comparison",
+    "cpu": 0,
+    "reclaimer_cpu": 1,
+    "trials": 6,
+    "operations": 131072,
+    "march": "native",
+    "tune": "neoverse-v2",
+    "sanitizers": false,
+    "checks_only": false
+  },
+  "host": {
+    "system": "Linux",
+    "node": "ip-172-31-24-179",
+    "release": "7.0.0-1012-aws",
+    "version": "#12~24.04.1-Ubuntu SMP PREEMPT Wed Aug 12 13:54:00 UTC 2026",
+    "machine": "aarch64",
+    "processor": "aarch64"
+  },
+  "source_digests": {
+    "candidate": "d53de8263150989f4a11c8f1142a5a1bded129238206d0c975bb2d939ccfb3cc",
+    "baseline": "db38b8d591a3ef3fcebc7540555effb19d804d8aae87639740982bbf7e81bd64"
+  },
+  "reverse_patch_sha256": "36272ed032ac84a96593fbcf216cef82c79ce41bb2e7bf03ee297147522514d3",
+  "instrumented_window_sha256": {
+    "baseline": "4cfd4bbd1a6f681ecac1f4af8a8b5ca7accee228390d68c9d2fef2fd3a67aa73",
+    "candidate": "e80687bd89c5c81aee2777674ebaa296f50d9bb117f7e120b4868dca315cd979"
+  },
+  "binary_sha256": {
+    "baseline": "d0ff6d4c39cd0e652159698a5494b5042acb9e144dc8f597f2c93a1d411d4b10",
+    "candidate": "92e413c9b92cd70e2bfaa001a981120eb3e01f4aafde4430b7b39f46cccb0669"
+  },
+  "counter_binary_sha256": {
+    "baseline": "e2a739a7631535e8442fd3bb83bc3b94e44b2fe0dd52afb2b606b3d8fb9c1665",
+    "candidate": "69083b30a65376b64c8d3ebd6087eb1e95fc6bd591e33d5e91b06814b8be0c2b"
+  },
+  "executions": [
+    {
+      "variant": "baseline",
+      "trial": 0,
+      "csv": "baseline-0.csv"
+    },
+    {
+      "variant": "candidate",
+      "trial": 0,
+      "csv": "candidate-0.csv"
+    },
+    {
+      "variant": "candidate",
+      "trial": 1,
+      "csv": "candidate-1.csv"
+    },
+    {
+      "variant": "baseline",
+      "trial": 1,
+      "csv": "baseline-1.csv"
+    },
+    {
+      "variant": "baseline",
+      "trial": 2,
+      "csv": "baseline-2.csv"
+    },
+    {
+      "variant": "candidate",
+      "trial": 2,
+      "csv": "candidate-2.csv"
+    },
+    {
+      "variant": "candidate",
+      "trial": 3,
+      "csv": "candidate-3.csv"
+    },
+    {
+      "variant": "baseline",
+      "trial": 3,
+      "csv": "baseline-3.csv"
+    },
+    {
+      "variant": "baseline",
+      "trial": 4,
+      "csv": "baseline-4.csv"
+    },
+    {
+      "variant": "candidate",
+      "trial": 4,
+      "csv": "candidate-4.csv"
+    },
+    {
+      "variant": "candidate",
+      "trial": 5,
+      "csv": "candidate-5.csv"
+    },
+    {
+      "variant": "baseline",
+      "trial": 5,
+      "csv": "baseline-5.csv"
+    }
+  ],
+  "qualification": "All fresh-Pool byte, placement, reuse and zero-charge close checks passed.",
+  "scope": "Whole-cohort means, alternating paired fresh processes. Separate counter replay. Allocator accessible/idle/reserved accounting, not RSS; no individual-operation percentiles. Index node count and record sizeof are not total allocator heap footprint."
+}

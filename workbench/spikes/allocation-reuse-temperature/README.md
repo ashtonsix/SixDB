@@ -14,6 +14,8 @@ advice. Neither is proof of cache residence.
 The current-API [reuse and page-retention comparison](slack/README.md) separates
 accessible capacity from resident RAM, prices closer-fit searches and examines
 stable address reuse with tail-page reclamation.
+The [growth study](growth/README.md) repairs the large-cohort undersized search
+without changing reuse ranking or default address-space headroom.
 
 `allocator.cpp` exercises actual Orbital allocation through Loom. It includes
 partial Groups with rotating classes that miss the candidate cache, and Window

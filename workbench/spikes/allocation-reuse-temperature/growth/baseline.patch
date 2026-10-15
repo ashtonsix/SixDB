@@ -1,0 +1,192 @@
+--- a/orbital/src/allocation/internal.h
++++ b/orbital/src/allocation/internal.h
+@@ -10,7 +10,6 @@
+ #include <cassert>
+ #include <condition_variable>
+ #include <limits>
+-#include <map>
+ #include <mutex>
+ #include <vector>
+ #include <unistd.h>
+@@ -106,23 +105,12 @@
+   std::uint64_t retire_charge{}, retire_mapped{}, retire_reserved{};
+ };
+ 
+-struct IdleWindows {
+-  PoolState* owner{};
+-  Window* head{};
+-  std::size_t records{}; // All registered Windows, including active/preparing ones.
+-};
+-using WindowSizes = std::map<std::size_t, IdleWindows>;
+-
+ struct Window {
+   StorageOwner<1> uses;
+   std::size_t owner_index{}; // Pool owning-vector position, not an allocation identity.
+   Ref<Arena> active_lifetime;
+   Window* next_idle{};
+   Window** previous_idle{};
+-  WindowSizes::value_type* size_entry{};
+-  Window* next_size{};
+-  Window** previous_size{};
+-  std::uint64_t idle_order{};
+   std::byte* mapping{};
+   std::size_t mapping_bytes{};
+   std::byte* address{};
+@@ -154,12 +142,8 @@
+   Pool* previous_interested{};
+   std::vector<std::unique_ptr<Group>> groups;
+   Group* available_groups{};
+-  // Register sizes before VM publication; returns/reuse never allocate index nodes.
+-  // Index and intrusive heads outlive Window destruction, including final-pin teardown.
+-  WindowSizes window_sizes;
++  std::vector<std::unique_ptr<Window>> windows;
+   Window* idle_windows{};
+-  std::uint64_t idle_order{};
+-  std::vector<std::unique_ptr<Window>> windows;
+   worker::Message notice;
+   std::atomic<bool> notice_pending{};
+   Ref<Arena> notice_lifetime;
+@@ -257,24 +241,14 @@
+   return refused_claim(pool, amount);
+ }
+ 
+-void renumber_idle(PoolState&) noexcept;
+-
+ inline void add_idle(Window& window) noexcept {
+   if (window.previous_idle || window.trim_pending || window.uses[0].users.load(std::memory_order_acquire) ||
+       window.uses.domain.queued.load(std::memory_order_acquire)) return;
+-  auto& state = *window.uses.domain.pool->internal;
+-  if (state.idle_order == std::numeric_limits<std::uint64_t>::max()) renumber_idle(state);
+-  window.idle_order = ++state.idle_order;
+-  auto& head = state.idle_windows;
++  auto& head = window.uses.domain.pool->internal->idle_windows;
+   window.next_idle = head;
+   window.previous_idle = &head;
+   if (head) head->previous_idle = &window.next_idle;
+   head = &window;
+-  auto& size_head = window.size_entry->second.head;
+-  window.next_size = size_head;
+-  window.previous_size = &size_head;
+-  if (size_head) size_head->previous_size = &window.next_size;
+-  size_head = &window;
+ }
+ 
+ inline void remove_idle(Window& window) noexcept {
+@@ -283,10 +257,6 @@
+   if (window.next_idle) window.next_idle->previous_idle = window.previous_idle;
+   window.next_idle = nullptr;
+   window.previous_idle = nullptr;
+-  *window.previous_size = window.next_size;
+-  if (window.next_size) window.next_size->previous_size = window.previous_size;
+-  window.next_size = nullptr;
+-  window.previous_size = nullptr;
+ }
+ 
+ inline void add_available(Group& group) noexcept {
+--- a/orbital/src/allocation/window.cpp
++++ b/orbital/src/allocation/window.cpp
+@@ -9,33 +9,7 @@
+ 
+ namespace orbital::allocation::detail {
+ 
+-Window::~Window() {
+-  // The final physical use can destroy its Arena/Pool without explicit close.
+-  // PoolState and its index still live; Pool::internal may already be resetting.
+-  remove_idle(*this);
+-  if (mapping) (void)::munmap(mapping, mapping_bytes);
+-  if (size_entry && !--size_entry->second.records) {
+-    assert(!size_entry->second.head);
+-    size_entry->second.owner->window_sizes.erase(size_entry->first);
+-  }
+-}
+-
+-void register_window(Pool& pool, Window& window, std::size_t reserved) {
+-  // The fresh record owns this registration before any mapping or charge exists.
+-  initialize(window.uses.domain, pool, &window, false);
+-  const auto entry = pool.internal->window_sizes.try_emplace(
+-      reserved, IdleWindows{.owner = pool.internal.get()}).first;
+-  window.size_entry = std::addressof(*entry);
+-  ++entry->second.records;
+-}
+-
+-void renumber_idle(PoolState& state) noexcept {
+-  std::uint64_t count{};
+-  for (auto* window = state.idle_windows; window; window = window->next_idle) ++count;
+-  state.idle_order = count;
+-  for (auto* window = state.idle_windows; window; window = window->next_idle)
+-    window->idle_order = count--;
+-}
++Window::~Window() { if (mapping) (void)::munmap(mapping, mapping_bytes); }
+ 
+ void window_trim_run(Job& job) noexcept {
+   auto& window = *static_cast<Window*>(job.context);
+@@ -177,29 +151,17 @@
+ 
+ Window* select_idle_window(Pool& pool, std::size_t reserved, std::size_t prepared,
+     std::size_t alignment) noexcept {
+-  auto& state = *pool.internal;
+-  auto* head = state.idle_windows;
+-  if (!head) return nullptr;
+-  if (head->reserved >= reserved &&
+-      reinterpret_cast<std::uintptr_t>(head->address) % alignment == 0 &&
+-      prepared <= head->prepared && prepared <= head->charged) return head;
+-
+   Window* selected = nullptr;
+   std::size_t best_extra = maximum;
+   bool best_prepared = false;
+-  // Only reservation-eligible sizes participate. Tickets preserve the original
+-  // global LIFO preference across size lists; this is not a best-fit policy.
+-  for (auto entry = state.window_sizes.lower_bound(reserved); entry != state.window_sizes.end(); ++entry) {
+-    for (auto* window = entry->second.head; window; window = window->next_size) {
+-      if (selected && !best_extra && best_prepared && window->idle_order <= selected->idle_order) break;
+-      if (reinterpret_cast<std::uintptr_t>(window->address) % alignment) continue;
+-      const auto extra = prepared > window->charged ? prepared - window->charged : 0;
+-      const bool ready = prepared <= window->prepared;
+-      if (!selected || extra < best_extra || (extra == best_extra &&
+-          (ready > best_prepared || (ready == best_prepared && window->idle_order > selected->idle_order)))) {
+-        selected = window; best_extra = extra; best_prepared = ready;
+-      }
+-      if (!extra && ready) break; // Older members of this size cannot win.
++  for (auto* window = pool.internal->idle_windows; window; window = window->next_idle) {
++    if (window->reserved < reserved ||
++        reinterpret_cast<std::uintptr_t>(window->address) % alignment) continue;
++    const auto extra = prepared > window->charged ? prepared - window->charged : 0;
++    const bool ready = prepared <= window->prepared;
++    if (!extra && ready) return window;
++    if (extra < best_extra || (extra == best_extra && ready && !best_prepared)) {
++      selected = window; best_extra = extra; best_prepared = ready;
+     }
+   }
+   return selected;
+@@ -240,7 +202,6 @@
+             std::max<std::size_t>(8, inventory.capacity() * 2);
+         inventory.reserve(next);
+       }
+-      register_window(pool, *fresh, reserved);
+     } catch (const std::bad_alloc&) { return std::unexpected(Error::capacity); }
+     if (!claim(pool, prepared + metadata)) return std::unexpected(Error::capacity);
+     auto* mapping = ::mmap(nullptr, mapping_bytes, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+@@ -257,6 +218,7 @@
+     selected->reserved = reserved;
+     selected->charged = prepared;
+     selected->metadata_charge = metadata;
++    initialize(selected->uses.domain, pool, selected, false);
+     selected->job = {nullptr, selected, window_trim_run};
+     selected->trimmed.context = selected;
+     selected->trimmed.ops = &window_trim_ops;
+@@ -321,7 +283,6 @@
+       auto& inventory = pool.internal->windows;
+       if (inventory.size() == inventory.capacity())
+         inventory.reserve(std::max<std::size_t>(8, inventory.capacity() * 2));
+-      register_window(pool, *fresh, reserved);
+     } catch (const std::bad_alloc&) { return std::unexpected(Error::capacity); }
+     if (!claim(pool, prepared + sizeof(Window))) return std::unexpected(Error::capacity);
+     selected = fresh.get();
+@@ -329,6 +290,7 @@
+     selected->mapping_bytes = reserved + slack;
+     selected->charged = prepared;
+     selected->metadata_charge = sizeof(Window);
++    initialize(selected->uses.domain, pool, selected, false);
+   } else {
+     const auto extra = prepared > selected->charged ? prepared - selected->charged : 0;
+     if (extra && !claim(pool, extra)) return std::unexpected(Error::capacity);
