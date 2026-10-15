@@ -10,6 +10,7 @@
 #include <cassert>
 #include <condition_variable>
 #include <limits>
+#include <map>
 #include <mutex>
 #include <vector>
 #include <unistd.h>
@@ -105,12 +106,23 @@ struct Group {
   std::uint64_t retire_charge{}, retire_mapped{}, retire_reserved{};
 };
 
+struct IdleWindows {
+  PoolState* owner{};
+  Window* head{};
+  std::size_t records{}; // All registered Windows, including active/preparing ones.
+};
+using WindowSizes = std::map<std::size_t, IdleWindows>;
+
 struct Window {
   StorageOwner<1> uses;
   std::size_t owner_index{}; // Pool owning-vector position, not an allocation identity.
   Ref<Arena> active_lifetime;
   Window* next_idle{};
   Window** previous_idle{};
+  WindowSizes::value_type* size_entry{};
+  Window* next_size{};
+  Window** previous_size{};
+  std::uint64_t idle_order{};
   std::byte* mapping{};
   std::size_t mapping_bytes{};
   std::byte* address{};
@@ -142,8 +154,12 @@ struct PoolState {
   Pool* previous_interested{};
   std::vector<std::unique_ptr<Group>> groups;
   Group* available_groups{};
-  std::vector<std::unique_ptr<Window>> windows;
+  // Register sizes before VM publication; returns/reuse never allocate index nodes.
+  // Index and intrusive heads outlive Window destruction, including final-pin teardown.
+  WindowSizes window_sizes;
   Window* idle_windows{};
+  std::uint64_t idle_order{};
+  std::vector<std::unique_ptr<Window>> windows;
   worker::Message notice;
   std::atomic<bool> notice_pending{};
   Ref<Arena> notice_lifetime;
@@ -241,14 +257,24 @@ bool claim_bytes(Arena& arena, std::uint64_t amount) noexcept {
   return refused_claim(pool, amount);
 }
 
+void renumber_idle(PoolState&) noexcept;
+
 inline void add_idle(Window& window) noexcept {
   if (window.previous_idle || window.trim_pending || window.uses[0].users.load(std::memory_order_acquire) ||
       window.uses.domain.queued.load(std::memory_order_acquire)) return;
-  auto& head = window.uses.domain.pool->internal->idle_windows;
+  auto& state = *window.uses.domain.pool->internal;
+  if (state.idle_order == std::numeric_limits<std::uint64_t>::max()) renumber_idle(state);
+  window.idle_order = ++state.idle_order;
+  auto& head = state.idle_windows;
   window.next_idle = head;
   window.previous_idle = &head;
   if (head) head->previous_idle = &window.next_idle;
   head = &window;
+  auto& size_head = window.size_entry->second.head;
+  window.next_size = size_head;
+  window.previous_size = &size_head;
+  if (size_head) size_head->previous_size = &window.next_size;
+  size_head = &window;
 }
 
 inline void remove_idle(Window& window) noexcept {
@@ -257,6 +283,10 @@ inline void remove_idle(Window& window) noexcept {
   if (window.next_idle) window.next_idle->previous_idle = window.previous_idle;
   window.next_idle = nullptr;
   window.previous_idle = nullptr;
+  *window.previous_size = window.next_size;
+  if (window.next_size) window.next_size->previous_size = window.previous_size;
+  window.next_size = nullptr;
+  window.previous_size = nullptr;
 }
 
 inline void add_available(Group& group) noexcept {

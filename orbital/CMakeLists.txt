@@ -49,6 +49,13 @@ target_include_directories(orbital_window_check PRIVATE src/allocation)
 target_link_libraries(orbital_window_check PRIVATE orbital)
 target_link_options(orbital_window_check PRIVATE -Wl,--wrap=mprotect)
 add_test(NAME orbital_window_check COMMAND orbital_window_check)
+add_executable(orbital_window_index_check EXCLUDE_FROM_ALL test/window_index.cpp)
+sixdb_target(orbital_window_index_check)
+target_include_directories(orbital_window_index_check PRIVATE src/allocation)
+target_link_libraries(orbital_window_index_check PRIVATE orbital)
+target_link_options(orbital_window_index_check PRIVATE -Wl,--wrap=mprotect,--wrap=munmap)
+add_test(NAME orbital_window_index_check COMMAND orbital_window_index_check)
+set_tests_properties(orbital_window_index_check PROPERTIES TIMEOUT 30)
 add_executable(orbital_return_check EXCLUDE_FROM_ALL test/returns.cpp)
 sixdb_target(orbital_return_check)
 target_link_libraries(orbital_return_check PRIVATE orbital)
@@ -92,7 +99,7 @@ add_test(NAME orbital_budget_check COMMAND orbital_budget_check)
 set_tests_properties(orbital_budget_check PROPERTIES TIMEOUT 60)
 
 set_tests_properties(orbital_allocation_check orbital_object_check orbital_representation_check orbital_finite_check orbital_palette_check
-  orbital_reclamation_check orbital_window_check orbital_return_check
+  orbital_reclamation_check orbital_window_check orbital_window_index_check orbital_return_check
   orbital_worker_check orbital_lifetime_check orbital_thread_check
   orbital_preparation_check orbital_notification_check orbital_budget_check orbital_platform_check
   PROPERTIES LABELS "orbital-runtime")
@@ -101,6 +108,6 @@ add_custom_target(orbital_validate
   COMMAND "${CMAKE_CTEST_COMMAND}" --test-dir "${PROJECT_BINARY_DIR}"
     --output-on-failure --no-tests=error -L "^orbital-runtime$"
   DEPENDS orbital_allocation_check orbital_object_check orbital_representation_check orbital_finite_check orbital_palette_check orbital_reclamation_check
-    orbital_window_check orbital_return_check orbital_worker_check
+    orbital_window_check orbital_window_index_check orbital_return_check orbital_worker_check
     orbital_lifetime_check orbital_thread_check orbital_preparation_check orbital_notification_check orbital_budget_check orbital_platform_check
   USES_TERMINAL VERBATIM)

@@ -136,8 +136,9 @@ void release(Allocation&, ReleaseHint = {}) noexcept;
 /// Rejects new allocation/growth, then drains actual uses, Messages and reclamation.
 [[nodiscard]] Progress close(Pool&);
 Statistics statistics(const Pool&) noexcept;
-/// Accessible backing bytes, not initialized logical extent. Finite capacity
-/// uses the reused Group's palette; identical requests can round differently.
+/// Accessible bytes, not initialized length or resident RAM. A reused Window
+/// can expose more than the request; finite capacity follows its Group's palette,
+/// so identical requests can round differently.
 std::size_t capacity(const Allocation&) noexcept;
 /// Address space retained for growth; virtual windows may reserve beyond capacity.
 std::size_t reserved_bytes(const Allocation&) noexcept;

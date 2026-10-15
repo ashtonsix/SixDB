@@ -47,9 +47,12 @@ alive. A Hold supplies no immutability, selected version or access permission.
 Small allocations use finite Groups, each with a fixed palette of size classes.
 The one-byte binding selects a home whose address, capacity and page range derive
 from Group geometry. Quiescent growth can change the home without changing its
-binding identity. Large allocations use reserved virtual windows. Both expose a
-resolved ordinary pointer; native access needs no repeated trampoline resolution or scheduler
-entry. Owner-local selection caches suggest candidates; geometry and actual page
+binding identity. A large allocation uses a Window: private contiguous virtual
+storage with a writable prefix and optional extra address space for growth.
+`size` is the caller's body, `capacity` is accessible bytes, and `reserved_bytes`
+is retained address space; neither capacity nor reservation measures resident RAM.
+Both backends expose an ordinary pointer; native access needs no repeated
+trampoline resolution or scheduler entry. Owner-local selection caches suggest candidates; geometry and actual page
 state authorize each claim. Owning records stay at stable addresses.
 Each Group embeds 256 four-byte identity records and shares release advice.
 The finite cutoff is 3 KiB. Native 4 KiB pages retain the original A/B palettes;
@@ -104,6 +107,8 @@ without refunding unfinished physical work.
 
 Reuse takes the first compatible prepared Window; finite Groups keep their
 ready-candidate cache and search prepared homes before unprepared homes.
+An exact reservation-size index skips undersized Windows while preserving their
+return order. Its nodes are admitted before a fresh mapping; returns allocate none.
 HOT/WARM/COLD advice guides reclamation; timestamps reject stale advice and
 omitted fields preserve earlier hints. Advice does not prove cache residency.
 Explicit trim reclaims idle ranges on one Arena helper and returns budget after
@@ -117,6 +122,7 @@ Failed runs keep their complete membership, exclusion and charge until retry.
 The budget counts prepared payload, retained allocation metadata and unresolved
 preparation bounds, including unresolved pages after a failed syscall. Reserved
 virtual space, mapped bytes and RSS differ. Arena/Pool setup, controller containers
+(including inventory vectors and the reservation-size index)
 and allocator-library overhead are outside this limit; statistics report concrete
 allocation-record estimates, not whole-process memory. Shutdown waits for actual
 users, returns, reclamation and notifications. Closed Pool statistics remain

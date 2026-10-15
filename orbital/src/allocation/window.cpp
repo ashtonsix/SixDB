@@ -9,7 +9,33 @@
 
 namespace orbital::allocation::detail {
 
-Window::~Window() { if (mapping) (void)::munmap(mapping, mapping_bytes); }
+Window::~Window() {
+  // The final physical use can destroy its Arena/Pool without explicit close.
+  // PoolState and its index still live; Pool::internal may already be resetting.
+  remove_idle(*this);
+  if (mapping) (void)::munmap(mapping, mapping_bytes);
+  if (size_entry && !--size_entry->second.records) {
+    assert(!size_entry->second.head);
+    size_entry->second.owner->window_sizes.erase(size_entry->first);
+  }
+}
+
+void register_window(Pool& pool, Window& window, std::size_t reserved) {
+  // The fresh record owns this registration before any mapping or charge exists.
+  initialize(window.uses.domain, pool, &window, false);
+  const auto entry = pool.internal->window_sizes.try_emplace(
+      reserved, IdleWindows{.owner = pool.internal.get()}).first;
+  window.size_entry = std::addressof(*entry);
+  ++entry->second.records;
+}
+
+void renumber_idle(PoolState& state) noexcept {
+  std::uint64_t count{};
+  for (auto* window = state.idle_windows; window; window = window->next_idle) ++count;
+  state.idle_order = count;
+  for (auto* window = state.idle_windows; window; window = window->next_idle)
+    window->idle_order = count--;
+}
 
 void window_trim_run(Job& job) noexcept {
   auto& window = *static_cast<Window*>(job.context);
@@ -151,17 +177,29 @@ const worker::MessageOps window_prepare_lane_ops{
 
 Window* select_idle_window(Pool& pool, std::size_t reserved, std::size_t prepared,
     std::size_t alignment) noexcept {
+  auto& state = *pool.internal;
+  auto* head = state.idle_windows;
+  if (!head) return nullptr;
+  if (head->reserved >= reserved &&
+      reinterpret_cast<std::uintptr_t>(head->address) % alignment == 0 &&
+      prepared <= head->prepared && prepared <= head->charged) return head;
+
   Window* selected = nullptr;
   std::size_t best_extra = maximum;
   bool best_prepared = false;
-  for (auto* window = pool.internal->idle_windows; window; window = window->next_idle) {
-    if (window->reserved < reserved ||
-        reinterpret_cast<std::uintptr_t>(window->address) % alignment) continue;
-    const auto extra = prepared > window->charged ? prepared - window->charged : 0;
-    const bool ready = prepared <= window->prepared;
-    if (!extra && ready) return window;
-    if (extra < best_extra || (extra == best_extra && ready && !best_prepared)) {
-      selected = window; best_extra = extra; best_prepared = ready;
+  // Only reservation-eligible sizes participate. Tickets preserve the original
+  // global LIFO preference across size lists; this is not a best-fit policy.
+  for (auto entry = state.window_sizes.lower_bound(reserved); entry != state.window_sizes.end(); ++entry) {
+    for (auto* window = entry->second.head; window; window = window->next_size) {
+      if (selected && !best_extra && best_prepared && window->idle_order <= selected->idle_order) break;
+      if (reinterpret_cast<std::uintptr_t>(window->address) % alignment) continue;
+      const auto extra = prepared > window->charged ? prepared - window->charged : 0;
+      const bool ready = prepared <= window->prepared;
+      if (!selected || extra < best_extra || (extra == best_extra &&
+          (ready > best_prepared || (ready == best_prepared && window->idle_order > selected->idle_order)))) {
+        selected = window; best_extra = extra; best_prepared = ready;
+      }
+      if (!extra && ready) break; // Older members of this size cannot win.
     }
   }
   return selected;
@@ -202,6 +240,7 @@ Result<void> window_allocate(Pool& pool, const AllocationRequest& request, std::
             std::max<std::size_t>(8, inventory.capacity() * 2);
         inventory.reserve(next);
       }
+      register_window(pool, *fresh, reserved);
     } catch (const std::bad_alloc&) { return std::unexpected(Error::capacity); }
     if (!claim(pool, prepared + metadata)) return std::unexpected(Error::capacity);
     auto* mapping = ::mmap(nullptr, mapping_bytes, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
@@ -218,7 +257,6 @@ Result<void> window_allocate(Pool& pool, const AllocationRequest& request, std::
     selected->reserved = reserved;
     selected->charged = prepared;
     selected->metadata_charge = metadata;
-    initialize(selected->uses.domain, pool, selected, false);
     selected->job = {nullptr, selected, window_trim_run};
     selected->trimmed.context = selected;
     selected->trimmed.ops = &window_trim_ops;
@@ -283,6 +321,7 @@ Result<void> prepare_window(Pool& pool, Preparation& preparation,
       auto& inventory = pool.internal->windows;
       if (inventory.size() == inventory.capacity())
         inventory.reserve(std::max<std::size_t>(8, inventory.capacity() * 2));
+      register_window(pool, *fresh, reserved);
     } catch (const std::bad_alloc&) { return std::unexpected(Error::capacity); }
     if (!claim(pool, prepared + sizeof(Window))) return std::unexpected(Error::capacity);
     selected = fresh.get();
@@ -290,7 +329,6 @@ Result<void> prepare_window(Pool& pool, Preparation& preparation,
     selected->mapping_bytes = reserved + slack;
     selected->charged = prepared;
     selected->metadata_charge = sizeof(Window);
-    initialize(selected->uses.domain, pool, selected, false);
   } else {
     const auto extra = prepared > selected->charged ? prepared - selected->charged : 0;
     if (extra && !claim(pool, extra)) return std::unexpected(Error::capacity);
