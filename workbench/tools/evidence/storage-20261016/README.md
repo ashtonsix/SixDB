@@ -7,6 +7,8 @@ storage checkpoint, with no new performance or correctness claims.
 
 The later [released review checkpoint](reviews/README.md) preserves source,
 qualification context and exact old-path recovery for seven Orbital/Loom reviews.
+The [completed Loom v3 recovery checks](loom-v3/README.md) have a separate map
+for their released archive copies; differing reports and verification receipts stay.
 
 All 17 parts are complete: 33.79 GB of matching local output was released.
 The separate launch-source cleanup removed 880 duplicate copies (7.28 GB).
