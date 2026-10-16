@@ -190,8 +190,10 @@ class StorageChecks(unittest.TestCase):
 
     def test_budget_reclaims_old_closed_results_preserving_active_recent_pinned_and_edits(self):
         (self.source / 'large.csv').write_bytes(b'measured data\n' * 100000)
+        (self.source / 'source.tar.gz').write_bytes(b'original captured source fixture')
         self.repack()
         cache.collect(self.job, self.reference)
+        shutil.copyfile(self.source / 'source.tar.gz', self.job / 'source.tar.gz')
         storage.write_json(self.job / 'artifact.json', self.reference)
         storage.write_json(self.job / 'status.json', {'state': 'complete'})
         destination = self.job / 'results'
@@ -208,6 +210,7 @@ class StorageChecks(unittest.TestCase):
                 self.stream(), redirect_stdout(io.StringIO()):
             cache.maintain(self.root, protect=self.job)
             self.assertTrue((destination / 'large.csv').exists())
+            self.assertTrue((self.job / 'source.tar.gz').exists())
             (self.job / '.keep-local').touch()
             cache.maintain(self.root)
             self.assertTrue((destination / 'large.csv').exists())
@@ -222,12 +225,24 @@ class StorageChecks(unittest.TestCase):
             access(0)
             cache.maintain(self.root)
         self.assertFalse((destination / 'large.csv').exists())
+        self.assertFalse((self.job / 'source.tar.gz').exists())
+        self.assertEqual(cache.read(self.job / 'collection.json')['root_evicted']['source.tar.gz']['sha256'],
+                         artifacts.sha256(self.source / 'source.tar.gz'))
         self.assertFalse((destination / 'case-0.csv').exists())
         self.assertEqual((destination / 'case-1.csv').read_text(), 'local edited data\n')
         self.assertEqual((destination / 'notes.txt').read_text(), 'unarchived note\n')
         self.assertIn('large.csv', cache.read(self.job / 'collection.json')['evicted'])
         cache.collect(self.job, self.reference, selected=['large.csv'])
         self.assertEqual((destination / 'large.csv').read_bytes(), (self.source / 'large.csv').read_bytes())
+
+    def test_full_eviction_keeps_a_changed_launch_source_copy(self):
+        (self.source / 'source.tar.gz').write_bytes(b'original')
+        self.repack()
+        cache.collect(self.job, self.reference)
+        (self.job / 'source.tar.gz').write_bytes(b'changed!')  # Same size, different bytes.
+        with self.stream():
+            cache.evict(self.job, {'state': 'complete', 'artifact': self.reference})
+        self.assertEqual((self.job / 'source.tar.gz').read_bytes(), b'changed!')
 
     def test_explicit_eviction_preserves_edits_and_supports_selective_then_normal_recovery(self):
         (self.source / 'source.tar.gz').write_bytes(b'captured source fixture')

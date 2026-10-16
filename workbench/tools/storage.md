@@ -27,6 +27,10 @@ keeps its recovery identity. Edited/unarchived files, active jobs, recent access
 and `.keep-local` pins stay; these can exceed the budget. `cache --prune` applies
 this now; `--older-hours N` changes the age threshold. Pin an ongoing local audit
 before relying on an older collection. Ordinary fetching renews its access age.
+The job's duplicate launch `source.tar.gz` is included in the budget and can leave
+only when it matches the freshly verified archive member. `fetch JOB --file
+source.tar.gz` recovers the source under `results/`; checkpoint resume already
+downloads the original source from S3.
 
 The former compiler-only pruning left old raw collections permanently over
 budget even after their binaries were omitted. Closed archived results are now

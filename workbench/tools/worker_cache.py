@@ -186,6 +186,14 @@ def inventory(root, older_hours=24):
                                     reclaimable += length
                 except FileNotFoundError:
                     continue
+            # The launch copy duplicates results/source.tar.gz, but used to sit
+            # outside every cache budget. Resume already fetches it from S3.
+            source = directory / 'source.tar.gz'
+            try:
+                if source.is_file() and not source.is_symlink():
+                    size += source.stat().st_size
+            except FileNotFoundError:
+                pass
             try:
                 created = datetime.strptime(directory.name[:16], '%Y%m%dT%H%M%SZ').replace(tzinfo=timezone.utc).timestamp()
             except ValueError:
@@ -219,15 +227,22 @@ def reclaim(directory, reference, *, older_hours=0, include_results=False):
         destination = directory / 'results'
         candidates = {name: expected for name, expected in members.items()
                       if (include_results or expected['rebuildable']) and matches(destination, name, expected)}
-        if not candidates:
+        root_candidates = {name: members[name] for name in ['source.tar.gz']
+                           if include_results and name in members and matches(directory, name, members[name])}
+        if not candidates and not root_candidates:
             return 0
         receipt = read(directory / 'collection.json')
         evicted = set(receipt.get('evicted', [])) if receipt.get('artifact') == reference else set()
+        root_evicted = receipt.get('root_evicted', {}) if receipt.get('artifact') == reference else {}
+        if not isinstance(root_evicted, dict):
+            root_evicted = {}
         # The recovery receipt is durable before any removal. If interrupted,
         # remaining files are still checked, and already removed ones are explicit.
         storage.write_json(directory / 'collection.json', {
             'format': 1, 'artifact': reference, 'members': members,
             'evicted': sorted(evicted | candidates.keys()),
+            'root_evicted': root_evicted | {
+                name: {'archive_member': name, **expected} for name, expected in root_candidates.items()},
             'accessed_at': receipt.get('accessed_at', 0), 'reclaimed_at': time.time()})
         removed = 0
         for name, expected in candidates.items():
@@ -237,6 +252,13 @@ def reclaim(directory, reference, *, older_hours=0, include_results=False):
                 path = destination / name
                 path.unlink()
                 storage.sync_directory(path.parent)
+                removed += expected['bytes']
+        for name, expected in root_candidates.items():
+            if (directory / '.keep-local').exists():
+                break
+            if matches(directory, name, expected):
+                (directory / name).unlink()
+                storage.sync_directory(directory)
                 removed += expected['bytes']
         retained = 'recovery reference retained' if include_results else 'measurements retained'
         print(f'Reclaimed {removed / storage.GIB:.2f} GiB; {retained}: {directory.name}', flush=True)
@@ -288,9 +310,9 @@ def maintain(root, *, prune=True, older_hours=24, protect=None):
             print(f"{entry['bytes'] / storage.GIB:6.2f} GiB  {label:25} {entry['directory']}")
         for name, info in storage.headroom(root).items():
             print(f"{name}: {info['free'] / storage.GIB:.2f} GiB free ({info['path']})")
-        print(f'Worker results: {total / storage.GIB:.2f} GiB; cache budget {budget / storage.GIB:g} GiB')
+        print(f'Worker cache (results and launch sources): {total / storage.GIB:.2f} GiB; budget {budget / storage.GIB:g} GiB')
         print(f'Largest {len(largest)} of {len(entries)} collections shown; '
-              f"{sum(e['reclaimable'] for e in entries if e['eligible']) / storage.GIB:.2f} GiB old compiler output to verify")
+              f"{sum(e['bytes'] for e in entries if e['eligible']) / storage.GIB:.2f} GiB in old closed collections to verify")
         print('Old, closed archived collections are cache entries: budget pruning can release sources and measurements.\n'
               'Use .keep-local for ongoing local audits; worker.py fetch recovers evicted files.\n'
               'worker.py evict JOB explicitly releases a finished collection regardless of age.')
@@ -313,7 +335,7 @@ def maintain(root, *, prune=True, older_hours=24, protect=None):
             except (OSError, ValueError, tarfile.TarError) as error:
                 print(f"Kept {entry['directory'].name}: archive check failed: {error}", flush=True)
     if total > budget:
-        print(f'Worker results use {total / storage.GIB:.2f} GiB (cache budget {budget / storage.GIB:g}); '
+        print(f'Worker cache uses {total / storage.GIB:.2f} GiB (budget {budget / storage.GIB:g}); '
               'recent/pinned/unarchived or edited output is preserved. Inspect: worker.py cache', flush=True)
 
 
