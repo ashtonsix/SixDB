@@ -6,12 +6,38 @@ Python extensions. Repository settings select `clangd-21`, disable duplicate
 C/C++ IntelliSense and automatic CMake reconfiguration, and exclude build output
 from search and Python analysis.
 
-## Compilation commands
+## Automatic compiler configuration
+
+The Linux user watcher notices newly added `workbench/spikes/*/CMakeLists.txt`
+and activates those spikes for clangd. It also refreshes on CMake edits and
+removes renamed/deleted selections. It configures metadata only; it never builds
+targets or changes experiment configurations. The watcher is installed on this
+device. On another checkout, install it once:
+
+```sh
+python3 workbench/tools/dev.py --install-watch
+```
+
+It runs as a per-checkout systemd user service, including after the next login.
+Edits settle for one polling interval before configuration. An incomplete new
+target keeps the previous working commands, retries quietly, and cannot block
+another valid new spike. The latest failure is in
+`build/clang/dev/.editor-watch-error.log`. Historical tracked spikes remain
+opt-in; existing untracked spikes are discovered on first installation too.
+Add source files to their CMake target so its includes and definitions reach
+clangd. The repository enables vscode-clangd's automatic config reload; the
+installer applies the same settings to an existing Remote SSH installation for
+multi-root workspaces. A changed-byte-only root `compile_commands.json` mirror
+triggers that extension's watcher, so already-open files reload too. No manual
+language-server restart is needed after setup.
+
+## Manual selection and diagnostics
 
 ```sh
 python3 workbench/tools/dev.py --add NAME           # activate a spike
 python3 workbench/tools/dev.py --add-benchmark NAME # activate a recurring suite
-python3 workbench/tools/dev.py                     # refresh after CMake changes
+python3 workbench/tools/dev.py                     # refresh active targets now
+python3 workbench/tools/dev.py --sync              # run automatic discovery once
 ```
 
 Run on Linux, or prefix with `orb -m ubuntu` from the Mac. Selections and cache

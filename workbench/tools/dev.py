@@ -34,7 +34,12 @@ def active_selection(variable):
     return set(filter(None, match[1].split(";"))) if match else set()
 
 
-def refresh(selected, benchmarks):
+def refresh(selected, benchmarks, *, log=None):
+    # A half-written new target must not replace working editor commands or
+    # poison the next refresh's cached selection.
+    paths = [BUILD / "CMakeCache.txt", BUILD / "compile_commands.json",
+             BUILD / "ikea/compile_commands.json"]
+    previous = {path: path.read_bytes() if path.exists() else None for path in paths}
     # File API distinguishes a genuinely empty configuration from a stale
     # compile_commands.json left by CMake after its last source target disappears.
     query = BUILD / ".cmake/api/v1/query/client-sixdb-dev"
@@ -42,8 +47,16 @@ def refresh(selected, benchmarks):
     (query / "codemodel-v2").touch()
     command = ["cmake", "--preset", "dev", "-DSIXDB_SPIKES=" + ";".join(sorted(selected)),
                "-DSIXDB_BENCHMARKS=" + ";".join(sorted(benchmarks))]
-    result = subprocess.run(command, cwd=ROOT)
+    result = subprocess.run(command, cwd=ROOT, stdout=log,
+                            stderr=subprocess.STDOUT if log is not None else None)
     if result.returncode:
+        for path, content in previous.items():
+            if content is None:
+                path.unlink(missing_ok=True)
+            else:
+                temporary = path.with_suffix('.restore')
+                temporary.write_bytes(content)
+                temporary.replace(path)
         return result.returncode
     reply = BUILD / ".cmake/api/v1/reply"
     index = json.loads(max(reply.glob("index-*.json")).read_text())
@@ -69,6 +82,15 @@ def refresh(selected, benchmarks):
     temporary.write_text(json.dumps([row for row in commands
         if Path(row['file']).is_relative_to(ROOT / 'ikea')], indent=2) + "\n")
     temporary.replace(ikea_database)
+    # vscode-clangd's optional reload watcher observes the checkout root, not
+    # this custom build directory. Publish only changed bytes to avoid restarts
+    # on no-op refreshes; the real compiler database remains in build/clang/dev.
+    mirror = ROOT / 'compile_commands.json'
+    content = database.read_bytes()
+    if not mirror.exists() or mirror.read_bytes() != content:
+        temporary = mirror.with_suffix('.tmp')
+        temporary.write_bytes(content)
+        temporary.replace(mirror)
     print("Active spikes: " + (", ".join(sorted(selected)) or "(none)"))
     print("Active benchmarks: " + (", ".join(sorted(benchmarks)) or "(none)"))
     print(f"Editor compilation database: {database}")
@@ -82,17 +104,28 @@ def main():
     parser.add_argument("--add-benchmark", action="append", default=[], help="Activate a recurring benchmark suite")
     parser.add_argument("--remove-benchmark", action="append", default=[], help="Deactivate a benchmark suite")
     parser.add_argument("--list", action="store_true", help="List current selection without configuring")
+    parser.add_argument("--watch", action="store_true", help="Watch CMake edits and activate newly added spikes")
+    parser.add_argument("--sync", action="store_true", help="Apply one automatic editor refresh now")
+    parser.add_argument("--install-watch", action="store_true", help="Install and start the Linux user editor watcher")
     args = parser.parse_args()
     changes = [("spike", args.add, args.remove),
                ("benchmark", args.add_benchmark, args.remove_benchmark)]
-    if args.list and any(add or remove for _, add, remove in changes):
-        parser.error("--list cannot be combined with changes")
+    modes = [args.list, args.watch, args.sync, args.install_watch]
+    if sum(modes) > 1 or (any(modes) and any(add or remove for _, add, remove in changes)):
+        parser.error("--list, --watch, --sync and --install-watch are separate modes")
     for kind, add, remove in changes:
         if set(add) & set(remove):
             parser.error(f"a {kind} cannot be added and removed together")
         for name in add + remove:
             if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_-]*", name):
                 parser.error(f"invalid {kind} name: {name}")
+    if args.watch or args.sync or args.install_watch:
+        import dev_watch
+        if args.install_watch:
+            return dev_watch.install()
+        if args.watch:
+            return dev_watch.watch()
+        return dev_watch.sync()
     BUILD.parent.mkdir(parents=True, exist_ok=True)
     with (BUILD.parent / ".dev-configure.lock").open("a") as lock:
         # Concurrent workbench runs merge their selections under one lock.

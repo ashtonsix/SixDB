@@ -1,5 +1,5 @@
-# The workbench workflow refreshes this configuration explicitly. clangd only
-# reads its compilation database; it does not configure or build the project.
+# The editor watcher refreshes compiler metadata when spikes/CMake inputs change.
+# clangd reads that database; neither process builds the project.
 CompileFlags:
   CompilationDatabase: build/clang/dev
 ---

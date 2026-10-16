@@ -1,5 +1,7 @@
 {
   "clangd.path": "clangd-21",
+  "clangd.onConfigChanged": "restart",
+  "clangd.onConfigChangedForceEnable": true,
   "C_Cpp.intelliSenseEngine": "disabled",
   "cmake.configureOnOpen": false,
   "cmake.configureOnEdit": false,

@@ -2,6 +2,7 @@
 """Exercise spike/benchmark compilation databases in a disposable project."""
 
 import json
+import re
 import shutil
 import subprocess
 import sys
@@ -39,11 +40,12 @@ def main():
         (root / "workbench/benchmarks").mkdir()
         # Other Workbench modules are configured too; keep their bodies out of
         # this editor fixture without duplicating the module inventory.
-        for module in sorted(p.parent.name for p in ROOT.glob('workbench/*/CMakeLists.txt')
-                             if p.parent.name not in {'spikes', 'benchmarks'}):
-            (root / "workbench" / module).mkdir()
+        for module in re.findall(r'add_subdirectory\(([^\s)]+)', (ROOT / 'workbench/CMakeLists.txt').read_text()):
+            if module in {'spikes', 'benchmarks'}:
+                continue
+            (root / "workbench" / module).mkdir(parents=True)
             (root / "workbench" / module / "CMakeLists.txt").write_text("# empty fixture module\n")
-        for file in ["workbench/CMakeLists.txt", "workbench/spikes/CMakeLists.txt", "workbench/benchmarks/CMakeLists.txt", "workbench/tools/dev.py"]:
+        for file in ["workbench/CMakeLists.txt", "workbench/spikes/CMakeLists.txt", "workbench/benchmarks/CMakeLists.txt", "workbench/tools/dev.py", "workbench/tools/dev_watch.py"]:
             shutil.copy2(ROOT / file, root / file)
         for kind, name in [("spikes", "first"), ("spikes", "second"), ("benchmarks", "recurring")]:
             path = root / "workbench" / kind / name
@@ -91,6 +93,11 @@ def main():
         assert set(entries()) == {"first", "second", "recurring"}
         dev()
         assert set(entries()) == {"first", "second", "recurring"}
+        mirror = root / 'compile_commands.json'
+        assert mirror.read_bytes() == (root / 'build/clang/dev/compile_commands.json').read_bytes()
+        unchanged = mirror.stat().st_mtime_ns
+        dev()
+        assert mirror.stat().st_mtime_ns == unchanged
         dev("--remove-benchmark", "recurring")
         assert set(entries()) == {"first", "second"}
         dev("--remove", "first")
@@ -133,9 +140,77 @@ def main():
         (ikea / 'CMakeLists.txt').write_text('# empty fixture module\n')
         dev()
         assert json.loads((root / 'build/clang/dev/ikea/compile_commands.json').read_text()) == []
+
+        # Initial discovery leaves old, inactive (and even broken) studies alone.
+        # Subsequent creation activates targets without --add or a build.
+        dev('--sync')
+        automatic = root / 'workbench/spikes/automatic'
+        (automatic / 'include').mkdir(parents=True)
+        (automatic / 'include/editor_fixture.h').write_text('inline constexpr int editor_value = 19;\n')
+        (automatic / 'probe.cpp').write_text(
+            '#include "editor_fixture.h"\nstatic_assert(EDITOR_FIXTURE == 19);\n'
+            'int editor_probe() { return editor_value; }\n')
+        automatic_cmake = (
+            'add_library(automatic STATIC probe.cpp)\nsixdb_target(automatic)\n'
+            'target_include_directories(automatic PRIVATE include)\n'
+            'target_compile_definitions(automatic PRIVATE EDITOR_FIXTURE=19)\n')
+        (automatic / 'CMakeLists.txt').write_text(automatic_cmake)
+        dev('--sync')
+        database = root / 'build/clang/dev/compile_commands.json'
+        cache = root / 'build/clang/dev/CMakeCache.txt'
+        rows = json.loads(database.read_text())
+        command = next(row['command'] for row in rows if row['file'] == str(automatic / 'probe.cpp'))
+        assert '-DEDITOR_FIXTURE=19' in command and str(automatic / 'include') in command
+        parsed = subprocess.run(['clangd-21', '--check=' + str(automatic / 'probe.cpp'), '--tweaks='],
+                                cwd=root, capture_output=True, text=True)
+        assert parsed.returncode == 0, parsed.stderr
+        # Manual failure must also restore the selection and known working bytes.
+        before = database.read_bytes(), cache.read_bytes(), mirror.read_bytes()
+        failed = subprocess.run([sys.executable, str(root / 'workbench/tools/dev.py'), '--add', 'broken'],
+                                cwd=root, capture_output=True, text=True)
+        assert failed.returncode and (database.read_bytes(), cache.read_bytes(), mirror.read_bytes()) == before
+
+        # An incomplete new study cannot block a different valid new study.
+        incomplete = root / 'workbench/spikes/incomplete'
+        incomplete.mkdir()
+        (incomplete / 'CMakeLists.txt').write_text('add_library(incomplete STATIC not-yet.cpp)\n')
+        later = root / 'workbench/spikes/later'
+        later.mkdir()
+        (later / 'CMakeLists.txt').write_text('add_library(later STATIC probe.cpp)\n')
+        (later / 'probe.cpp').write_text('int later_probe;\n')
+        failed = subprocess.run([sys.executable, str(root / 'workbench/tools/dev.py'), '--sync'],
+                                cwd=root, capture_output=True, text=True)
+        assert failed.returncode
+        assert any(row['file'] == str(later / 'probe.cpp') for row in json.loads(database.read_text()))
+        assert 'incomplete' not in dev('--list').splitlines()
+        (incomplete / 'not-yet.cpp').write_text('int finished_later;\n')
+        dev('--sync')  # Retry even though CMake itself has not changed.
+        assert 'incomplete' in dev('--list').splitlines()
+        (automatic / 'CMakeLists.txt').write_text(automatic_cmake.replace('=19', '=23'))
+        dev('--sync')
+        assert any('-DEDITOR_FIXTURE=23' in row['command'] for row in json.loads(database.read_text()))
+        renamed = automatic.with_name('renamed')
+        automatic.rename(renamed)
+        dev('--sync')
+        assert 'automatic' not in dev('--list').splitlines() and 'renamed' in dev('--list').splitlines()
+        assert any(row['file'] == str(renamed / 'probe.cpp') for row in json.loads(database.read_text()))
+        shutil.rmtree(renamed)
+        dev('--sync')
+        assert not any('renamed' in row['file'] for row in json.loads(database.read_text()))
+        globbed = root / 'workbench/spikes/globbed'
+        globbed.mkdir()
+        (globbed / 'CMakeLists.txt').write_text(
+            'file(GLOB sources *.cpp)\nif(sources)\nadd_library(globbed STATIC ${sources})\nendif()\n')
+        dev('--sync')
+        (globbed / 'arrived-after-configure.cpp').write_text('int globbed_source;\n')
+        dev('--sync')
+        assert any(row['file'] == str(globbed / 'arrived-after-configure.cpp')
+                   for row in json.loads(database.read_text()))
+        assert not list((root / 'build').rglob('*.o'))
         print("PASS: independent spike/benchmark activation, removal, target include paths/definitions, C++23/tuning flags, "
               "inactive broken-study isolation, empty-database cleanup, configure-only operation, "
-              "and Ikea header isolation from same-named spike sources.")
+              "Ikea header isolation, automatic create/edit/rename/removal, failed-config rollback, "
+              "and recovery from incomplete new spikes without blocking valid additions.")
 
 
 if __name__ == "__main__":
