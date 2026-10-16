@@ -1,0 +1,87 @@
+{
+  "authority": "Orbital released the five named historical review roots and Loom released old completed review output; unique material remains recoverable.",
+  "completed_at": 1792174177.4615881,
+  "directory": "build/reviews",
+  "limits": "Storage checkpoint only; no new performance/qualification claim. orbital-primary-choice remains a qualified private unselected alternative with undecided policy.",
+  "lookup": "lookup.json",
+  "parts": [
+    {
+      "files": 49331,
+      "part": "part-001",
+      "reference": "part-001.json",
+      "removed_logical_bytes": 1695653033,
+      "selected_bytes": 2146385399,
+      "trees": [
+        "loom-object-module",
+        "loom-object-ring",
+        "orbital-20261007",
+        "orbital-20261008-reuse-ablation",
+        "orbital-primary-choice"
+      ]
+    },
+    {
+      "files": 72531,
+      "part": "part-002",
+      "reference": "part-002.json",
+      "removed_logical_bytes": 1224823967,
+      "selected_bytes": 2147363000,
+      "trees": [
+        "orbital-primary-choice",
+        "orbital-quick-feedback",
+        "orbital-stage2-reattempt"
+      ]
+    },
+    {
+      "files": 56038,
+      "part": "part-003",
+      "reference": "part-003.json",
+      "removed_logical_bytes": 305208508,
+      "selected_bytes": 1113583579,
+      "trees": [
+        "orbital-stage2-reattempt"
+      ]
+    }
+  ],
+  "scope": [
+    "orbital-stage2-reattempt",
+    "orbital-20261008-reuse-ablation",
+    "orbital-quick-feedback",
+    "orbital-20261007",
+    "orbital-primary-choice",
+    "loom-object-module",
+    "loom-object-ring"
+  ],
+  "selection": "Regular files settled one hour; Git metadata, links, pins and fresh files excluded. Embedded Git source bytes are archived but the existing eviction helper preserves their local worktrees.",
+  "skipped": [],
+  "state": "complete",
+  "totals": {
+    "removed_logical_bytes": 3225685508,
+    "selected_bytes": 5407331978,
+    "selected_files": 177900
+  },
+  "tree_parts": {
+    "loom-object-module": [
+      "part-001.json"
+    ],
+    "loom-object-ring": [
+      "part-001.json"
+    ],
+    "orbital-20261007": [
+      "part-001.json"
+    ],
+    "orbital-20261008-reuse-ablation": [
+      "part-001.json"
+    ],
+    "orbital-primary-choice": [
+      "part-001.json",
+      "part-002.json"
+    ],
+    "orbital-quick-feedback": [
+      "part-002.json"
+    ],
+    "orbital-stage2-reattempt": [
+      "part-002.json",
+      "part-003.json"
+    ]
+  }
+}
