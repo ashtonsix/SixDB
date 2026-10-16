@@ -33,11 +33,17 @@ The job's duplicate launch `source.tar.gz` is included in the budget and can lea
 only when it matches the freshly verified archive member. `fetch JOB --file
 source.tar.gz` recovers the source under `results/`; checkpoint resume already
 downloads the original source from S3.
+Partial downloads, replacement/conflict trees and job metadata also count in
+worker storage. They are preserved unless covered by explicit verified recovery;
+metadata-only jobs do not trigger repeated archive reads just because the total
+is over budget.
 
 This device has a per-user background timer for full cache sweeps, roughly every
-30 minutes after the preceding sweep finishes. Foreground worker preflights
-reclaim from at most one collection; a cache backlog must not hold a submission behind
-hundreds of archive reads. A shared nonblocking maintenance lock prevents
+30 minutes after the preceding sweep finishes. Healthy foreground launches and
+fetches only check space reserves; they do no online cache pruning, including
+after results become available. If the reserve check fails, preflight can try
+one emergency collection before checking the reserve again. A cache backlog must
+not hold a submission behind archive reads. A shared nonblocking maintenance lock prevents
 controllers from duplicating a background sweep. Space reserves still apply.
 
 The former compiler-only pruning left old raw collections permanently over

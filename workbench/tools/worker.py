@@ -575,7 +575,6 @@ def fetch(job, directory, state, aws, *, full=False, selected=None):
             size = sum(manifest[name]['bytes'] for name in omitted)
             print(f'{len(omitted)} files ({size / storage.GIB:.2f} GiB) remain in S3. '
                   f'Retrieve one: worker.py fetch {job["id"]} --file PATH; everything: --full', flush=True)
-        worker_cache.maintain(ROOT)
     else:
         destination = directory / 'partial'
         subprocess.run(['aws', 's3', 'sync', '--only-show-errors', job['uri'] + '/live/',

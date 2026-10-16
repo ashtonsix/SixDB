@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Collection corruption, disk-pressure failures and verified cache eviction; no cloud allocation."""
 from contextlib import redirect_stdout
+import errno
 import fcntl
 import io
 import json
@@ -270,6 +271,61 @@ class StorageChecks(unittest.TestCase):
             fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
             cache.maintain(self.root)
         maintain.assert_not_called()
+
+    def test_healthy_foreground_preflight_does_not_scan_or_verify_old_archives(self):
+        with patch.object(storage, 'headroom', return_value={'destination': {'free': 100 * storage.GIB}}), \
+                patch.object(cache, 'inventory', side_effect=AssertionError('foreground cache scan')), \
+                patch.object(artifacts, 'remote_manifest', side_effect=AssertionError('foreground archive read')):
+            cache.preflight(self.root)
+
+    def test_result_fetch_does_not_wait_for_post_collection_maintenance(self):
+        with patch.object(worker, 'ROOT', self.root), \
+                patch.object(storage, 'headroom', return_value={'destination': {'free': 100 * storage.GIB}}), \
+                patch.object(cache, 'maintain', side_effect=AssertionError('post-fetch cache sweep')), \
+                redirect_stdout(io.StringIO()):
+            worker.fetch({'id': self.job.name}, self.job, {'state': 'complete', 'artifact': self.reference}, Mock())
+        self.assertEqual((self.job / 'results/case-74.csv').read_text(), 'value\n74\n')
+
+    def test_partial_conflict_and_metadata_bytes_count_without_rechecking_evicted_jobs(self):
+        cache.collect(self.job, self.reference)
+        storage.write_json(self.job / 'artifact.json', self.reference)
+        storage.write_json(self.job / 'status.json', {'state': 'complete'})
+        storage.write_json(self.job / 'collection.json', cache.read(self.job / 'collection.json') | {'accessed_at': 0})
+        before = sum(e['bytes'] for e in cache.inventory(self.root))
+        extra = {self.job / 'partial/raw.log': b'partial data' * 1000,
+                 self.job / 'replaced-results-witness/notes.txt': b'unique conflict' * 1000,
+                 self.job / 'job.json': b'{}\n',
+                 self.job / 'source.tar.gz': b'old launch copy absent from the result archive',
+                 self.job.parent / 'controller-notes.txt': b'unscoped worker metadata'}
+        for path, data in extra.items():
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_bytes(data)
+        self.assertEqual(sum(e['bytes'] for e in cache.inventory(self.root)), before + sum(map(len, extra.values())))
+        with patch.dict(os.environ, {'SIXDB_WORKER_CACHE_GIB': '0'}), self.stream(), \
+                patch.object(storage, 'headroom', return_value={'destination': {'free': 100 * storage.GIB}}), \
+                redirect_stdout(io.StringIO()):
+            cache.maintain(self.root)
+            with patch.object(artifacts, 'remote_manifest', side_effect=AssertionError('no archived payload left')):
+                cache.maintain(self.root)
+        self.assertFalse((self.job / 'results/case-74.csv').exists())
+        for path, data in extra.items():
+            self.assertEqual(path.read_bytes(), data)
+
+    def test_emergency_preflight_reclaims_at_most_one_collection_and_rechecks_reserve(self):
+        second = self.job.with_name('20000101T000001Z-second')
+        for job in [self.job, second]:
+            job.mkdir(exist_ok=True)
+            cache.collect(job, self.reference)
+            storage.write_json(job / 'artifact.json', self.reference)
+            storage.write_json(job / 'status.json', {'state': 'complete'})
+            storage.write_json(job / 'collection.json', cache.read(job / 'collection.json') | {'accessed_at': 0})
+        with patch.dict(os.environ, {'SIXDB_WORKER_CACHE_GIB': '0'}), self.stream(), \
+                patch.object(storage, 'headroom', return_value={'destination': {'free': 100 * storage.GIB}}), \
+                patch.object(storage, 'require_space', side_effect=[OSError(errno.ENOSPC, 'reserve unmet'), None]) as reserve, \
+                redirect_stdout(io.StringIO()):
+            cache.preflight(self.root)
+        self.assertEqual(reserve.call_count, 2)
+        self.assertEqual(sum((j / 'results/case-74.csv').exists() for j in [self.job, second]), 1)
 
     def test_combined_prune_reclaims_local_objects_and_closed_worker_results(self):
         import local_cache

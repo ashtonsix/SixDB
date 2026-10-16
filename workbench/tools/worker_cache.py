@@ -1,5 +1,6 @@
 """Verified local worker collection, recovery and cache reclamation."""
 from datetime import datetime, timezone
+import errno
 import fcntl
 import hashlib
 import json
@@ -173,21 +174,33 @@ def roots(root):
 def inventory(root, older_hours=24):
     entries = []
     for workers in roots(root):
+        root_files = 0
+        for path in workers.iterdir():
+            try:
+                if path.is_file() and not path.is_symlink():
+                    root_files += path.stat().st_size
+            except FileNotFoundError:
+                pass
+        if root_files:
+            entries.append({'directory': workers, 'bytes': root_files, 'prunable_bytes': 0,
+                            'eligible': False, 'accessed': time.time(), 'reference': {}, 'reclaimable': 0})
         for directory in sorted(workers.iterdir()):
             if not directory.is_dir() or directory.is_symlink():
                 continue
             reference = read(directory / 'artifact.json')
             receipt = read(directory / 'collection.json')
             status = read(directory / 'status.json')
-            size = reclaimable = 0
+            size = reclaimable = prunable = 0
+            members = receipt.get('members') if receipt.get('artifact') == reference else None
+            known = isinstance(members, dict) and len(members) == reference.get('files')
             results = directory / 'results'
-            if results.is_symlink():
-                continue
-            for path in results.rglob('*'):
+            for path in results.rglob('*') if not results.is_symlink() else []:
                 try:
                     if path.is_file() and not path.is_symlink():
                         length = path.stat().st_size
                         size += length
+                        if not known or path.relative_to(results).as_posix() in members:
+                            prunable += length
                         if length >= 1024 ** 2:
                             with path.open('rb') as handle:
                                 if artifacts.rebuildable(path.name, length, handle.read(512)):
@@ -200,8 +213,24 @@ def inventory(root, older_hours=24):
             try:
                 if source.is_file() and not source.is_symlink():
                     size += source.stat().st_size
+                    if not known or 'source.tar.gz' in members:
+                        prunable += source.stat().st_size
             except FileNotFoundError:
                 pass
+            # Partial downloads, conflict witnesses and metadata are real local
+            # storage too. Count them without treating them as archived payload.
+            for parent, children, filenames in os.walk(directory, followlinks=False):
+                if Path(parent) == directory:
+                    children[:] = [name for name in children if name != 'results']
+                for name in filenames:
+                    path = Path(parent) / name
+                    if path == source:
+                        continue
+                    try:
+                        if path.is_file() and not path.is_symlink():
+                            size += path.stat().st_size
+                    except FileNotFoundError:
+                        pass
             try:
                 created = datetime.strptime(directory.name[:16], '%Y%m%dT%H%M%SZ').replace(tzinfo=timezone.utc).timestamp()
             except ValueError:
@@ -210,9 +239,10 @@ def inventory(root, older_hours=24):
             has_reference = ({'bucket', 'region', 'key', 'bytes', 'sha256', 'files'} <= reference.keys())
             eligible = (has_reference and status.get('state') in {'complete', 'failed', 'timeout', 'interrupted'}
                         and time.time() - accessed >= older_hours * 3600
-                        and not (directory / '.keep-local').exists())
+                        and not (directory / '.keep-local').exists() and not results.is_symlink())
             entries.append({'directory': directory, 'bytes': size, 'eligible': eligible,
-                            'accessed': accessed, 'reference': reference, 'reclaimable': reclaimable})
+                            'accessed': accessed, 'reference': reference, 'reclaimable': reclaimable,
+                            'prunable_bytes': prunable})
     return sorted(entries, key=lambda entry: entry['accessed'])
 
 
@@ -322,9 +352,9 @@ def _maintain(root, *, prune=True, older_hours=24, protect=None, max_collections
             print(f"{entry['bytes'] / storage.GIB:6.2f} GiB  {label:25} {entry['directory']}")
         for name, info in storage.headroom(root).items():
             print(f"{name}: {info['free'] / storage.GIB:.2f} GiB free ({info['path']})")
-        print(f'Worker cache (results and launch sources): {total / storage.GIB:.2f} GiB; budget {budget / storage.GIB:g} GiB')
+        print(f'Worker storage (all local job files): {total / storage.GIB:.2f} GiB; budget {budget / storage.GIB:g} GiB')
         print(f'Largest {len(largest)} of {len(entries)} collections shown; '
-              f"{sum(e['bytes'] for e in entries if e['eligible']) / storage.GIB:.2f} GiB in old closed collections to verify")
+              f"{sum(e['prunable_bytes'] for e in entries if e['eligible']) / storage.GIB:.2f} GiB in old closed collections to verify")
         print('Old, closed archived collections are cache entries: budget pruning can release sources and measurements.\n'
               'Use .keep-local for ongoing local audits; worker.py fetch recovers evicted files.\n'
               'worker.py evict JOB explicitly releases a finished collection regardless of age.')
@@ -335,7 +365,7 @@ def _maintain(root, *, prune=True, older_hours=24, protect=None, max_collections
     for entry in sorted(entries, key=lambda entry: -entry['bytes']):
         if total <= budget and free >= 10 * storage.GIB:
             break
-        if entry['eligible'] and entry['bytes']:
+        if entry['eligible'] and entry['prunable_bytes']:
             if protect is not None and protect.exists() and entry['directory'].samefile(protect):
                 continue
             if max_collections is not None and attempts >= max_collections:
@@ -356,10 +386,15 @@ def _maintain(root, *, prune=True, older_hours=24, protect=None, max_collections
 
 
 def preflight(root, *, protect=None):
-    # A foreground submission/fetch must not inherit an hours-long cache backlog.
-    # Background/explicit sweeps handle the rest; space reserves still apply.
-    maintain(root, protect=protect, max_collections=1)
-    storage.require_space(root)
+    # Healthy launches/fetches must not inherit online cache verification.
+    # Try one emergency reclamation only if the actual space reserve is unmet.
+    try:
+        storage.require_space(root)
+    except OSError as error:
+        if error.errno != errno.ENOSPC:
+            raise
+        maintain(root, protect=protect, max_collections=1)
+        storage.require_space(root)
 
 
 def install_maintenance(root):
