@@ -362,7 +362,7 @@ def _maintain(root, *, prune=True, older_hours=24, protect=None, max_collections
         return
     # Reclaim substantial space with fewer S3 reads; age still protects live work.
     attempts = 0
-    for entry in sorted(entries, key=lambda entry: -entry['bytes']):
+    for entry in sorted(entries, key=lambda entry: -entry['prunable_bytes']):
         if total <= budget and free >= 10 * storage.GIB:
             break
         if entry['eligible'] and entry['prunable_bytes']:

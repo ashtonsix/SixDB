@@ -327,6 +327,28 @@ class StorageChecks(unittest.TestCase):
         self.assertEqual(reserve.call_count, 2)
         self.assertEqual(sum((j / 'results/case-74.csv').exists() for j in [self.job, second]), 1)
 
+    def test_bounded_reclamation_prioritizes_payload_not_large_unarchived_partials(self):
+        (self.source / 'large.csv').write_bytes(b'measured\n' * 150000)
+        self.repack()
+        second = self.job.with_name('20000101T000001Z-second')
+        for job in [self.job, second]:
+            job.mkdir(exist_ok=True)
+            cache.collect(job, self.reference)
+            storage.write_json(job / 'artifact.json', self.reference)
+            storage.write_json(job / 'status.json', {'state': 'complete'})
+            storage.write_json(job / 'collection.json', cache.read(job / 'collection.json') | {'accessed_at': 0})
+        (self.job / 'results/large.csv').unlink()
+        partial = self.job / 'partial/unique'
+        partial.parent.mkdir()
+        partial.write_bytes(b'partial' * 500000)
+        with patch.dict(os.environ, {'SIXDB_WORKER_CACHE_GIB': '0'}), self.stream(), \
+                patch.object(storage, 'headroom', return_value={'destination': {'free': 100 * storage.GIB}}), \
+                redirect_stdout(io.StringIO()):
+            cache.maintain(self.root, max_collections=1)
+        self.assertFalse((second / 'results/large.csv').exists())
+        self.assertTrue((self.job / 'results/case-74.csv').exists())
+        self.assertEqual(partial.read_bytes(), b'partial' * 500000)
+
     def test_combined_prune_reclaims_local_objects_and_closed_worker_results(self):
         import local_cache
         obj = self.root / 'build/old/CMakeFiles/probe.dir/probe.cpp.o'
