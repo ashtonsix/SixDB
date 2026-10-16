@@ -24,9 +24,10 @@ exercise the first module; database functionality is still to come.
 [Recurring benchmark suites](workbench/benchmarks/README.md) use
 `-DSIXDB_BENCHMARKS=NAME`, independently of spike selection.
 
-For editor support, start with `python3 workbench/tools/dev.py --add NAME`;
-see the [editor guide](workbench/tools/editors.md) for compilation-database setup
-and troubleshooting. [Experiment helpers](workbench/tools/README.md#captured-experiment-runs)
+For automatic editor support, install `python3 workbench/tools/dev.py --install-watch`
+once on Linux. New spikes and CMake changes then refresh IntelliSense without
+building targets. The [editor guide](workbench/tools/editors.md) covers manual
+selection and troubleshooting. [Experiment helpers](workbench/tools/README.md#captured-experiment-runs)
 support building captured sources while editing; [workers](workbench/tools/workers.md)
 run scripts on EC2.
 

@@ -29,7 +29,8 @@ clangd. The repository enables vscode-clangd's automatic config reload; the
 installer applies the same settings to an existing Remote SSH installation for
 multi-root workspaces. A changed-byte-only root `compile_commands.json` mirror
 triggers that extension's watcher, so already-open files reload too. No manual
-language-server restart is needed after setup.
+language-server restart is needed after setup. If installing into an already
+open VS Code session, restart clangd once to enable its extension watcher.
 
 ## Manual selection and diagnostics
 
