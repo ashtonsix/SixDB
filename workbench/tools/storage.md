@@ -36,7 +36,10 @@ downloads the original source from S3.
 Partial downloads, replacement/conflict trees and job metadata also count in
 worker storage. They are preserved unless covered by explicit verified recovery;
 metadata-only jobs do not trigger repeated archive reads just because the total
-is over budget.
+is over budget. A complete local collection receipt also lets maintenance skip
+an archive read when only differing local edits remain. Restoring matching bytes
+makes them eligible again; every actual removal still requires fresh remote
+verification.
 
 This device has a per-user background timer for full cache sweeps, roughly every
 30 minutes after the preceding sweep finishes. Healthy foreground launches and

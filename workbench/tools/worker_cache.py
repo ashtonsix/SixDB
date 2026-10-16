@@ -325,6 +325,23 @@ def maintenance_lock():
     return Path(os.environ.get('XDG_CACHE_HOME', Path.home() / '.cache')) / 'sixdb/worker-cache-maintenance.lock'
 
 
+def may_reclaim(directory, reference):
+    """Skip online verification when a complete receipt only has local edits left.
+
+    This is a scheduling hint, never permission to unlink: reclaim still reads
+    and verifies the remote archive before removing any matching local bytes.
+    """
+    receipt = read(directory / 'collection.json')
+    members = receipt.get('members')
+    if (receipt.get('artifact') != reference or not isinstance(members, dict) or
+            len(members) != reference.get('files') or
+            any(not isinstance(entry, dict) or not {'bytes', 'sha256'} <= entry.keys()
+                for entry in members.values())):
+        return True  # No complete local manifest: verify the archive normally.
+    return (any(matches(directory / 'results', name, expected) for name, expected in members.items()) or
+            ('source.tar.gz' in members and matches(directory, 'source.tar.gz', members['source.tar.gz'])))
+
+
 def maintain(root, *, prune=True, older_hours=24, protect=None, max_collections=None):
     if not prune:
         return _maintain(root, prune=False, older_hours=older_hours)
@@ -370,8 +387,10 @@ def _maintain(root, *, prune=True, older_hours=24, protect=None, max_collections
                 continue
             if max_collections is not None and attempts >= max_collections:
                 break
-            attempts += 1
             try:
+                if not may_reclaim(entry['directory'], entry['reference']):
+                    continue
+                attempts += 1
                 removed = reclaim(entry['directory'], entry['reference'], older_hours=older_hours, include_results=True)
                 total -= removed
                 free = min(info['free'] for info in storage.headroom(root).values())

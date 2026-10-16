@@ -327,6 +327,59 @@ class StorageChecks(unittest.TestCase):
         self.assertEqual(reserve.call_count, 2)
         self.assertEqual(sum((j / 'results/case-74.csv').exists() for j in [self.job, second]), 1)
 
+    def test_edited_remainders_skip_archive_reads_but_restored_bytes_requalify(self):
+        (self.source / 'source.tar.gz').write_bytes(b'original launch source')
+        self.repack()
+        cache.collect(self.job, self.reference)
+        storage.write_json(self.job / 'artifact.json', self.reference)
+        storage.write_json(self.job / 'status.json', {'state': 'complete'})
+        storage.write_json(self.job / 'collection.json', cache.read(self.job / 'collection.json') | {'accessed_at': 0})
+        destination = self.job / 'results'
+        edits = {destination / 'case-0.csv': b'VALUE\n0\n',  # Same size as the archive member.
+                 destination / 'case-1.csv': b'longer local edit\n',
+                 self.job / 'source.tar.gz': b'changed launch source!'}
+        for path, data in edits.items():
+            path.write_bytes(data)
+        with patch.dict(os.environ, {'SIXDB_WORKER_CACHE_GIB': '0'}), self.stream(), \
+                patch.object(storage, 'headroom', return_value={'destination': {'free': 100 * storage.GIB}}), \
+                redirect_stdout(io.StringIO()):
+            cache.maintain(self.root)
+            before = sum(e['bytes'] for e in cache.inventory(self.root))
+            with patch.object(artifacts, 'remote_manifest', side_effect=AssertionError('only local edits remain')):
+                cache.maintain(self.root)
+            self.assertEqual(sum(e['bytes'] for e in cache.inventory(self.root)), before)
+            for path, data in edits.items():
+                self.assertEqual(path.read_bytes(), data)
+            shutil.copyfile(self.source / 'case-0.csv', destination / 'case-0.csv')
+            with patch.object(artifacts, 'remote_manifest', wraps=artifacts.remote_manifest) as verify:
+                cache.maintain(self.root)
+            verify.assert_called_once_with(self.reference)
+        self.assertFalse((destination / 'case-0.csv').exists())
+        self.assertEqual((destination / 'case-1.csv').read_bytes(), edits[destination / 'case-1.csv'])
+        self.assertEqual((self.job / 'source.tar.gz').read_bytes(), edits[self.job / 'source.tar.gz'])
+
+    def test_incomplete_or_stale_receipt_still_verifies_remote_archive(self):
+        for change in ['missing', 'incomplete', 'stale']:
+            with self.subTest(change=change):
+                cache.collect(self.job, self.reference)
+                storage.write_json(self.job / 'artifact.json', self.reference)
+                storage.write_json(self.job / 'status.json', {'state': 'complete'})
+                receipt = cache.read(self.job / 'collection.json') | {'accessed_at': 0}
+                if change == 'missing':
+                    receipt.pop('members')
+                elif change == 'incomplete':
+                    receipt['members'].pop('case-0.csv')
+                else:
+                    receipt['artifact'] = self.reference | {'sha256': '0' * 64}
+                storage.write_json(self.job / 'collection.json', receipt)
+                with patch.dict(os.environ, {'SIXDB_WORKER_CACHE_GIB': '0'}), self.stream(), \
+                        patch.object(storage, 'headroom', return_value={'destination': {'free': 100 * storage.GIB}}), \
+                        patch.object(artifacts, 'remote_manifest', wraps=artifacts.remote_manifest) as verify, \
+                        redirect_stdout(io.StringIO()):
+                    cache.maintain(self.root)
+                verify.assert_called_once_with(self.reference)
+                self.assertFalse((self.job / 'results/case-0.csv').exists())
+
     def test_bounded_reclamation_prioritizes_payload_not_large_unarchived_partials(self):
         (self.source / 'large.csv').write_bytes(b'measured\n' * 150000)
         self.repack()
