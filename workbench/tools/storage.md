@@ -19,11 +19,18 @@ volume when local space is tight.
 
 ## Older local output
 
-Worker commands reclaim verified archived compiler output after 24 hours without
-collection access, toward a 10 GiB soft budget or 10 GiB free space. A fresh S3
-read verifies each removed file. Measurements, datasets, edits and recent
-collections stay; the budget can therefore be exceeded. `cache --prune` applies
-this now; `--older-hours N` changes the age threshold.
+Worker commands reclaim byte-identical archived results from closed collections
+after 24 hours without collection access, toward a 10 GiB cache budget or 10 GiB
+free space. This includes sources, logs and measurements as well as compiler
+output. A fresh full S3 read verifies each removed file, and the durable receipt
+keeps its recovery identity. Edited/unarchived files, active jobs, recent access
+and `.keep-local` pins stay; these can exceed the budget. `cache --prune` applies
+this now; `--older-hours N` changes the age threshold. Pin an ongoing local audit
+before relying on an older collection. Ordinary fetching renews its access age.
+
+The former compiler-only pruning left old raw collections permanently over
+budget even after their binaries were omitted. Closed archived results are now
+treated as a recoverable local cache, rather than accumulating without a limit.
 
 For a finished collection you no longer need locally, `evict JOB` also removes
 archived sources, logs and measurements. It streams and verifies the entire S3

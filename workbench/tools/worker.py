@@ -812,7 +812,7 @@ def main():
             selection.add_argument('--list', action='store_true', dest='list_files', help='list member paths, sizes and local presence without extracting')
     commands.add_parser('list', help='list SixDB worker instances')
     cache = commands.add_parser('cache', help='inspect local worker storage and host headroom')
-    cache.add_argument('--prune', action='store_true', help='reclaim older verified archived compiler output toward the soft budget')
+    cache.add_argument('--prune', action='store_true', help='reclaim older closed archived results toward the cache budget')
     cache.add_argument('--older-hours', type=float, default=24, help='preserve recent collections; default 24 hours')
     argv = sys.argv[1:]
     arguments = []

@@ -203,8 +203,8 @@ def inventory(root, older_hours=24):
 def reclaim(directory, reference, *, older_hours=0, include_results=False):
     """Remove byte-identical archived files after a fresh full S3 read.
 
-    Automatic maintenance only removes compiler output. Explicit eviction can
-    include sources and measurements; fetch restores them from the same receipt.
+    Budget maintenance can include old, closed results. Fetch restores them from
+    the same receipt; edits, recent access and pins remain protected.
     """
     with storage.lock(directory / '.collection.lock'):
         if (directory / '.keep-local').exists() or (directory / 'results').is_symlink():
@@ -212,6 +212,8 @@ def reclaim(directory, reference, *, older_hours=0, include_results=False):
         receipt = read(directory / 'collection.json')
         if time.time() - receipt.get('accessed_at', 0) < older_hours * 3600:
             return 0  # A fetch after inventory took priority while we waited for the lock.
+        if include_results and read(directory / 'status.json').get('state') not in {'complete', 'failed', 'timeout', 'interrupted'}:
+            return 0
         print(f'Checking archived {"results" if include_results else "compiler output"}: {directory.name}', flush=True)
         members = artifacts.remote_manifest(reference)
         destination = directory / 'results'
@@ -286,22 +288,23 @@ def maintain(root, *, prune=True, older_hours=24, protect=None):
             print(f"{entry['bytes'] / storage.GIB:6.2f} GiB  {label:25} {entry['directory']}")
         for name, info in storage.headroom(root).items():
             print(f"{name}: {info['free'] / storage.GIB:.2f} GiB free ({info['path']})")
-        print(f'Worker results: {total / storage.GIB:.2f} GiB; soft budget {budget / storage.GIB:g} GiB')
+        print(f'Worker results: {total / storage.GIB:.2f} GiB; cache budget {budget / storage.GIB:g} GiB')
         print(f'Largest {len(largest)} of {len(entries)} collections shown; '
               f"{sum(e['reclaimable'] for e in entries if e['eligible']) / storage.GIB:.2f} GiB old compiler output to verify")
-        print('Finished collections can be explicitly evicted after a fresh S3 check: worker.py evict JOB\n'
-              'This includes sources and measurements; local edits and .keep-local pins survive.')
+        print('Old, closed archived collections are cache entries: budget pruning can release sources and measurements.\n'
+              'Use .keep-local for ongoing local audits; worker.py fetch recovers evicted files.\n'
+              'worker.py evict JOB explicitly releases a finished collection regardless of age.')
         show_build_usage(root)
         return
     # Reclaim substantial space with fewer S3 reads; age still protects live work.
-    for entry in sorted(entries, key=lambda entry: -entry['reclaimable']):
+    for entry in sorted(entries, key=lambda entry: -entry['bytes']):
         if total <= budget and free >= 10 * storage.GIB:
             break
-        if entry['eligible'] and entry['reclaimable']:
+        if entry['eligible'] and entry['bytes']:
             if protect is not None and protect.exists() and entry['directory'].samefile(protect):
                 continue
             try:
-                removed = reclaim(entry['directory'], entry['reference'], older_hours=older_hours)
+                removed = reclaim(entry['directory'], entry['reference'], older_hours=older_hours, include_results=True)
                 total -= removed
                 free = min(info['free'] for info in storage.headroom(root).values())
             except RuntimeError as error:
@@ -310,8 +313,8 @@ def maintain(root, *, prune=True, older_hours=24, protect=None):
             except (OSError, ValueError, tarfile.TarError) as error:
                 print(f"Kept {entry['directory'].name}: archive check failed: {error}", flush=True)
     if total > budget:
-        print(f'Worker results use {total / storage.GIB:.2f} GiB (soft budget {budget / storage.GIB:g}); '
-              'recent/pinned output and measurements are preserved. Inspect: worker.py cache', flush=True)
+        print(f'Worker results use {total / storage.GIB:.2f} GiB (cache budget {budget / storage.GIB:g}); '
+              'recent/pinned/unarchived or edited output is preserved. Inspect: worker.py cache', flush=True)
 
 
 def preflight(root, *, protect=None):

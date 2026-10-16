@@ -56,7 +56,7 @@ class StorageChecks(unittest.TestCase):
         original = subprocess.Popen
         return patch.object(artifacts.subprocess, 'Popen', side_effect=lambda command, **kwargs:
             original([sys.executable, '-c', 'import sys; sys.stdout.buffer.write(open(sys.argv[1], "rb").read())',
-                      str(self.bundle)], **kwargs))
+                      str(self.bundle)] if command[0] == 'aws' else command, **kwargs))
 
     def test_fetch_repairs_75_zero_files_and_preserves_local_additions(self):
         destination = self.job / 'results'
@@ -187,6 +187,47 @@ class StorageChecks(unittest.TestCase):
         with self.stream(), self.assertRaisesRegex(ValueError, 'SHA-256'):
             cache.reclaim(self.job, reference)
         self.assertTrue((self.job / 'results/probe').exists())
+
+    def test_budget_reclaims_old_closed_results_preserving_active_recent_pinned_and_edits(self):
+        (self.source / 'large.csv').write_bytes(b'measured data\n' * 100000)
+        self.repack()
+        cache.collect(self.job, self.reference)
+        storage.write_json(self.job / 'artifact.json', self.reference)
+        storage.write_json(self.job / 'status.json', {'state': 'complete'})
+        destination = self.job / 'results'
+        (destination / 'case-1.csv').write_text('local edited data\n')
+        (destination / 'notes.txt').write_text('unarchived note\n')
+
+        def access(when):
+            receipt = cache.read(self.job / 'collection.json')
+            storage.write_json(self.job / 'collection.json', receipt | {'accessed_at': when})
+
+        access(0)
+        with patch.dict(os.environ, {'SIXDB_WORKER_CACHE_GIB': '0'}), \
+                patch.object(storage, 'headroom', return_value={'destination': {'free': 100 * storage.GIB}}), \
+                self.stream(), redirect_stdout(io.StringIO()):
+            cache.maintain(self.root, protect=self.job)
+            self.assertTrue((destination / 'large.csv').exists())
+            (self.job / '.keep-local').touch()
+            cache.maintain(self.root)
+            self.assertTrue((destination / 'large.csv').exists())
+            (self.job / '.keep-local').unlink()
+            storage.write_json(self.job / 'status.json', {'state': 'running'})
+            cache.maintain(self.root)
+            self.assertTrue((destination / 'large.csv').exists())
+            storage.write_json(self.job / 'status.json', {'state': 'complete'})
+            access(time.time())
+            cache.maintain(self.root)
+            self.assertTrue((destination / 'large.csv').exists())
+            access(0)
+            cache.maintain(self.root)
+        self.assertFalse((destination / 'large.csv').exists())
+        self.assertFalse((destination / 'case-0.csv').exists())
+        self.assertEqual((destination / 'case-1.csv').read_text(), 'local edited data\n')
+        self.assertEqual((destination / 'notes.txt').read_text(), 'unarchived note\n')
+        self.assertIn('large.csv', cache.read(self.job / 'collection.json')['evicted'])
+        cache.collect(self.job, self.reference, selected=['large.csv'])
+        self.assertEqual((destination / 'large.csv').read_bytes(), (self.source / 'large.csv').read_bytes())
 
     def test_explicit_eviction_preserves_edits_and_supports_selective_then_normal_recovery(self):
         (self.source / 'source.tar.gz').write_bytes(b'captured source fixture')
