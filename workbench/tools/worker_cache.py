@@ -1,9 +1,12 @@
 """Verified local worker collection, recovery and cache reclamation."""
 from datetime import datetime, timezone
+import fcntl
+import hashlib
 import json
 import os
 from pathlib import Path
 import subprocess
+import sys
 import tarfile
 import tempfile
 import time
@@ -296,7 +299,24 @@ def show_build_usage(root):
         print('Build usage scan was incomplete; some paths could not be read.')
 
 
-def maintain(root, *, prune=True, older_hours=24, protect=None):
+def maintenance_lock():
+    return Path(os.environ.get('XDG_CACHE_HOME', Path.home() / '.cache')) / 'sixdb/worker-cache-maintenance.lock'
+
+
+def maintain(root, *, prune=True, older_hours=24, protect=None, max_collections=None):
+    if not prune:
+        return _maintain(root, prune=False, older_hours=older_hours)
+    path = maintenance_lock()
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open('a') as lock:
+        try:
+            fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except BlockingIOError:
+            return  # Another controller/background sweep already owns maintenance.
+        return _maintain(root, older_hours=older_hours, protect=protect, max_collections=max_collections)
+
+
+def _maintain(root, *, prune=True, older_hours=24, protect=None, max_collections=None):
     entries = inventory(root, older_hours)
     total = sum(entry['bytes'] for entry in entries)
     budget = int(float(os.environ.get('SIXDB_WORKER_CACHE_GIB', '10')) * storage.GIB)
@@ -319,12 +339,16 @@ def maintain(root, *, prune=True, older_hours=24, protect=None):
         show_build_usage(root)
         return
     # Reclaim substantial space with fewer S3 reads; age still protects live work.
+    attempts = 0
     for entry in sorted(entries, key=lambda entry: -entry['bytes']):
         if total <= budget and free >= 10 * storage.GIB:
             break
         if entry['eligible'] and entry['bytes']:
             if protect is not None and protect.exists() and entry['directory'].samefile(protect):
                 continue
+            if max_collections is not None and attempts >= max_collections:
+                break
+            attempts += 1
             try:
                 removed = reclaim(entry['directory'], entry['reference'], older_hours=older_hours, include_results=True)
                 total -= removed
@@ -340,5 +364,36 @@ def maintain(root, *, prune=True, older_hours=24, protect=None):
 
 
 def preflight(root, *, protect=None):
-    maintain(root, protect=protect)
+    # A foreground submission/fetch must not inherit an hours-long cache backlog.
+    # Background/explicit sweeps handle the rest; space reserves still apply.
+    maintain(root, protect=protect, max_collections=1)
     storage.require_space(root)
+
+
+def install_maintenance(root):
+    from dev import checkout_root
+    root = checkout_root(root, Path.home())
+    name = 'sixdb-cache-' + hashlib.sha256(str(root).encode()).hexdigest()[:12]
+    units = Path.home() / '.config/systemd/user'
+    units.mkdir(parents=True, exist_ok=True)
+
+    def quote(value):
+        return '"' + str(value).replace('%', '%%').replace('\\', '\\\\').replace('"', '\\"') + '"'
+
+    environment = ''.join('Environment=' + quote(key + '=' + os.environ[key]) + '\n'
+        for key in ['AWS_PROFILE', 'AWS_REGION', 'AWS_DEFAULT_REGION', 'SIXDB_WORKER_CACHE_GIB',
+                    'SIXDB_MIN_FREE_GIB', 'SIXDB_HOST_STORAGE_PATH', 'XDG_CACHE_HOME'] if key in os.environ)
+    service = units / (name + '.service')
+    timer = units / (name + '.timer')
+    service.write_text('[Unit]\nDescription=SixDB verified worker cache maintenance\n\n'
+        '[Service]\nType=oneshot\n'
+        f'WorkingDirectory={str(root).replace("%", "%%")}\n'
+        f'ExecStart={quote(sys.executable)} {quote(root / "workbench/tools/worker.py")} cache --prune\n'
+        + environment + 'Nice=15\nIOSchedulingClass=idle\nTimeoutStartSec=0\n')
+    timer.write_text('[Unit]\nDescription=Keep old SixDB worker data within its cache budget\n\n'
+        '[Timer]\nOnActiveSec=5min\nOnUnitInactiveSec=30min\nRandomizedDelaySec=2min\n'
+        f'Unit={name}.service\n\n[Install]\nWantedBy=timers.target\n')
+    subprocess.run(['systemd-analyze', '--user', 'verify', str(service), str(timer)], check=True)
+    subprocess.run(['systemctl', '--user', 'daemon-reload'], check=True)
+    subprocess.run(['systemctl', '--user', 'enable', '--now', timer.name], check=True)
+    print(f'Installed {timer.name}; maintenance runs in the background, with the same archive/age/pin checks.')

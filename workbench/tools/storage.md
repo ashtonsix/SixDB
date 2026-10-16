@@ -10,6 +10,7 @@ python3 workbench/tools/worker.py fetch JOB --list             # paths, sizes, l
 python3 workbench/tools/worker.py fetch JOB --file study/probe # add one member; repeat --file
 python3 workbench/tools/worker.py fetch JOB --full             # all output and prepared inputs
 python3 workbench/tools/worker.py cache                       # disk use and headroom
+python3 workbench/tools/worker.py cache --install-maintenance # once on another Linux checkout
 python3 workbench/tools/worker.py evict JOB                   # release a finished local collection
 ```
 
@@ -31,6 +32,12 @@ The job's duplicate launch `source.tar.gz` is included in the budget and can lea
 only when it matches the freshly verified archive member. `fetch JOB --file
 source.tar.gz` recovers the source under `results/`; checkpoint resume already
 downloads the original source from S3.
+
+This device has a per-user background timer for full cache sweeps, roughly every
+30 minutes after the preceding sweep finishes. Foreground worker preflights
+reclaim from at most one collection; a cache backlog must not hold a submission behind
+hundreds of archive reads. A shared nonblocking maintenance lock prevents
+controllers from duplicating a background sweep. Space reserves still apply.
 
 The former compiler-only pruning left old raw collections permanently over
 budget even after their binaries were omitted. Closed archived results are now

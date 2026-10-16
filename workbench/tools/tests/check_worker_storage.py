@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Collection corruption, disk-pressure failures and verified cache eviction; no cloud allocation."""
 from contextlib import redirect_stdout
+import fcntl
 import io
 import json
 import os
@@ -243,6 +244,32 @@ class StorageChecks(unittest.TestCase):
         with self.stream():
             cache.evict(self.job, {'state': 'complete', 'artifact': self.reference})
         self.assertEqual((self.job / 'source.tar.gz').read_bytes(), b'changed!')
+
+    def test_bounded_maintenance_leaves_remaining_collections_for_a_full_sweep(self):
+        (self.source / 'large.csv').write_bytes(b'data\n' * 100000)
+        self.repack()
+        second = self.job.with_name('20000101T000001Z-second')
+        for job in [self.job, second]:
+            job.mkdir(exist_ok=True)
+            cache.collect(job, self.reference)
+            storage.write_json(job / 'artifact.json', self.reference)
+            storage.write_json(job / 'status.json', {'state': 'complete'})
+            storage.write_json(job / 'collection.json', cache.read(job / 'collection.json') | {'accessed_at': 0})
+        with patch.dict(os.environ, {'SIXDB_WORKER_CACHE_GIB': '0'}), self.stream(), \
+                patch.object(storage, 'headroom', return_value={'destination': {'free': 100 * storage.GIB}}), \
+                redirect_stdout(io.StringIO()):
+            cache.maintain(self.root, max_collections=1)
+            self.assertEqual(sum((job / 'results/large.csv').exists() for job in [self.job, second]), 1)
+            cache.maintain(self.root)
+            self.assertFalse(any((job / 'results/large.csv').exists() for job in [self.job, second]))
+
+    def test_busy_background_maintenance_does_not_block_a_controller(self):
+        lock_path = cache.maintenance_lock()
+        lock_path.parent.mkdir(parents=True, exist_ok=True)
+        with lock_path.open('a') as lock, patch.object(cache, '_maintain') as maintain:
+            fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            cache.maintain(self.root)
+        maintain.assert_not_called()
 
     def test_explicit_eviction_preserves_edits_and_supports_selective_then_normal_recovery(self):
         (self.source / 'source.tar.gz').write_bytes(b'captured source fixture')
