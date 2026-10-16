@@ -99,19 +99,25 @@ def inventory(root, *, now=None):
         tracked_result = subprocess.run(['git', '-C', str(build.parent), 'ls-files', '-z', '--', 'build'],
                                         capture_output=True, text=True)
         tracked = {build.parent / p for p in tracked_result.stdout.split('\0') if p} if tracked_result.returncode == 0 else set()
+        device = build.stat().st_dev
         def scan_error(error):
             errors.append(str(error))
         # Discovery needs names only. Pinned/Git trees still count above, but are
         # never traversed as possible automatic deletion candidates.
         for directory, children, names in os.walk(build, followlinks=False, onerror=scan_error):
             directory = Path(directory)
-            if (directory in workers or (directory / '.keep-local').exists() or (directory / '.git').exists()):
+            try:
+                same_device = directory.stat().st_dev == device
+            except FileNotFoundError:
+                children[:] = []
+                continue
+            if (not same_device or directory in workers or (directory / '.keep-local').exists() or (directory / '.git').exists()):
                 children[:] = []
                 continue
             children[:] = [n for n in children if not (directory / n).is_symlink()]
             if 'CMakeCache.txt' in names and not (directory / 'CMakeCache.txt').is_symlink():
-                cmakes[directory] = (build, tracked)
-    for cmake, (build, tracked) in sorted(cmakes.items(), key=lambda p: -len(p[0].parts)):
+                cmakes[directory] = (build, tracked, device)
+    for cmake, (build, tracked, device) in sorted(cmakes.items(), key=lambda p: -len(p[0].parts)):
         try:
             recent = subprocess.run(['find', str(cmake), '-xdev', '-newermt', f'@{cutoff:.6f}', '-print', '-quit'],
                                     capture_output=True)
@@ -135,7 +141,7 @@ def inventory(root, *, now=None):
                 if path in candidates or path in tracked or pinned(path, build):
                     continue
                 info = path.lstat()
-                if stat.S_ISREG(info.st_mode) and info.st_nlink == 1:
+                if stat.S_ISREG(info.st_mode) and info.st_nlink == 1 and info.st_dev == device:
                     group = str(build / path.relative_to(build).parts[0])
                     candidates[path] = {'path': str(path), 'cmake': str(cmake), 'group': group,
                         'allocated_bytes': info.st_blocks * 512,

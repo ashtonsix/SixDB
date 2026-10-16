@@ -166,6 +166,19 @@ class LocalCacheChecks(unittest.TestCase):
         with patch.object(cache.worker_cache, 'checkouts', return_value={alias, nested}):
             self.assertEqual(cache.build_roots(self.root), [self.root / 'build'])
 
+    def test_other_filesystem_objects_cannot_be_automatic_candidates(self):
+        real_stat = Path.stat
+        def different_device(path, *args, **kwargs):
+            info = real_stat(path, *args, **kwargs)
+            if path == self.object:
+                fields = list(info)
+                fields[2] += 1  # st_dev: simulate a nested filesystem boundary.
+                return os.stat_result(fields)
+            return info
+        with patch.object(Path, 'stat', different_device):
+            self.assertEqual(cache.inventory(self.root)['candidates'], [])
+        self.assertTrue(self.object.exists())
+
 
 if __name__ == '__main__':
     unittest.main()
