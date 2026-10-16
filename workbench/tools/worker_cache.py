@@ -144,16 +144,21 @@ def collect(directory, reference, *, full=False, selected=None):
             print(f'Preserved differing local output: {previous}', flush=True)
 
 
-def roots(root):
-    """This repository's shared checkout, worktrees and conventional workspaces."""
+def checkouts(root):
+    """The shared checkout and Git worktrees, including those without workers."""
     result = subprocess.run(['git', '-C', str(root), 'worktree', 'list', '--porcelain'],
                             capture_output=True, text=True)
     checkouts = {root.resolve()}
     if result.returncode == 0:
         checkouts.update(Path(line.removeprefix('worktree ')).resolve()
                          for line in result.stdout.splitlines() if line.startswith('worktree '))
+    return checkouts
+
+
+def roots(root):
+    """This repository's shared checkout, worktrees and conventional workspaces."""
     found = set()
-    for checkout in checkouts:
+    for checkout in checkouts(root):
         found.add(checkout / 'build/workers')
         found.update(checkout.glob('build/workspaces/*/build/workers'))
     unique = {}
@@ -282,21 +287,8 @@ def evict(directory, state):
 
 
 def show_build_usage(root):
-    """Show the wider build footprint without classifying it as disposable."""
-    build = root / 'build'
-    if not build.is_dir():
-        return
-    result = subprocess.run(['du', '-x', '-k', '-d', '1', str(build)], capture_output=True, text=True)
-    entries = []
-    for line in result.stdout.splitlines():
-        size, separator, name = line.partition('\t')
-        if separator and size.isdigit():
-            entries.append((int(size) * 1024, Path(name)))
-    print('Build usage (includes worker results; other directories need inspection):')
-    for size, path in sorted(entries, reverse=True)[:11]:
-        print(f'{size / storage.GIB:6.2f} GiB  {path}')
-    if result.returncode:
-        print('Build usage scan was incomplete; some paths could not be read.')
+    import local_cache
+    local_cache.maintain(root, prune=False)
 
 
 def maintenance_lock():
@@ -382,15 +374,16 @@ def install_maintenance(root):
 
     environment = ''.join('Environment=' + quote(key + '=' + os.environ[key]) + '\n'
         for key in ['AWS_PROFILE', 'AWS_REGION', 'AWS_DEFAULT_REGION', 'SIXDB_WORKER_CACHE_GIB',
-                    'SIXDB_MIN_FREE_GIB', 'SIXDB_HOST_STORAGE_PATH', 'XDG_CACHE_HOME'] if key in os.environ)
+                    'SIXDB_MIN_FREE_GIB', 'SIXDB_HOST_STORAGE_PATH', 'XDG_CACHE_HOME',
+                    'SIXDB_LOCAL_BUILD_GIB', 'SIXDB_LOCAL_BUILD_DAYS'] if key in os.environ)
     service = units / (name + '.service')
     timer = units / (name + '.timer')
-    service.write_text('[Unit]\nDescription=SixDB verified worker cache maintenance\n\n'
+    service.write_text('[Unit]\nDescription=SixDB local build and verified worker cache maintenance\n\n'
         '[Service]\nType=oneshot\n'
         f'WorkingDirectory={str(root).replace("%", "%%")}\n'
         f'ExecStart={quote(sys.executable)} {quote(root / "workbench/tools/worker.py")} cache --prune\n'
         + environment + 'Nice=15\nIOSchedulingClass=idle\nTimeoutStartSec=0\n')
-    timer.write_text('[Unit]\nDescription=Keep old SixDB worker data within its cache budget\n\n'
+    timer.write_text('[Unit]\nDescription=Keep SixDB build and worker storage within their budgets\n\n'
         '[Timer]\nOnActiveSec=5min\nOnUnitInactiveSec=30min\nRandomizedDelaySec=2min\n'
         f'Unit={name}.service\n\n[Install]\nWantedBy=timers.target\n')
     subprocess.run(['systemd-analyze', '--user', 'verify', str(service), str(timer)], check=True)

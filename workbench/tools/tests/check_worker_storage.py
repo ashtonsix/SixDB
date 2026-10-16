@@ -271,6 +271,30 @@ class StorageChecks(unittest.TestCase):
             cache.maintain(self.root)
         maintain.assert_not_called()
 
+    def test_combined_prune_reclaims_local_objects_and_closed_worker_results(self):
+        import local_cache
+        obj = self.root / 'build/old/CMakeFiles/probe.dir/probe.cpp.o'
+        obj.parent.mkdir(parents=True)
+        obj.write_bytes(b'\x7fELF' + b'compiler output' * 1000)
+        cmake = self.root / 'build/old'
+        (cmake / 'CMakeCache.txt').touch()
+        old = time.time() - 9 * 86400
+        for path in sorted(cmake.rglob('*'), key=lambda p: -len(p.parts)) + [cmake]:
+            os.utime(path, (old, old))
+        cache.collect(self.job, self.reference)
+        storage.write_json(self.job / 'artifact.json', self.reference)
+        storage.write_json(self.job / 'status.json', {'state': 'complete'})
+        storage.write_json(self.job / 'collection.json', cache.read(self.job / 'collection.json') | {'accessed_at': 0})
+        with patch.dict(os.environ, {'SIXDB_WORKER_CACHE_GIB': '0', 'SIXDB_LOCAL_BUILD_GIB': '0'}), \
+                patch.object(worker, 'ROOT', self.root), \
+                patch.object(sys, 'argv', ['worker.py', 'cache', '--prune']), \
+                patch.object(local_cache, 'compiler_running', return_value=False), \
+                patch.object(storage, 'headroom', return_value={'destination': {'free': 100 * storage.GIB}}), \
+                self.stream(), redirect_stdout(io.StringIO()):
+            self.assertEqual(worker.main(), 0)
+        self.assertFalse(obj.exists())
+        self.assertFalse((self.job / 'results/case-74.csv').exists())
+
     def test_explicit_eviction_preserves_edits_and_supports_selective_then_normal_recovery(self):
         (self.source / 'source.tar.gz').write_bytes(b'captured source fixture')
         self.repack()

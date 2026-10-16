@@ -31,6 +31,11 @@ selection and troubleshooting. [Experiment helpers](workbench/tools/README.md#ca
 support building captured sources while editing; [workers](workbench/tools/workers.md)
 run scripts on EC2.
 
+[Local storage maintenance](workbench/tools/storage.md#local-builds-captures-and-other-ignored-output)
+budgets ordinary `build/` output as well as worker results. Old idle CMake objects
+can be rebuilt after expiry; use `.keep-local` for incremental work that must stay.
+Pinned and unique output remains visible in accounting and Tooling handles growth.
+
 Floating-point settings disable fast-math and implicit contraction.
 `SIXDB_MARCH` selects the ISA; `SIXDB_TUNE` independently selects `generic`,
 `granite-rapids`, `zen5`, `neoverse-v2`, or `neoverse-v3`. See [tuning flags](workbench/design/tuning.md)

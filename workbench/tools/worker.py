@@ -811,9 +811,9 @@ def main():
             selection.add_argument('--file', action='append', dest='selected', help='retrieve an exact archive member; repeat as needed')
             selection.add_argument('--list', action='store_true', dest='list_files', help='list member paths, sizes and local presence without extracting')
     commands.add_parser('list', help='list SixDB worker instances')
-    cache = commands.add_parser('cache', help='inspect local worker storage and host headroom')
+    cache = commands.add_parser('cache', help='inspect local build/worker storage and host headroom')
     cache_mode = cache.add_mutually_exclusive_group()
-    cache_mode.add_argument('--prune', action='store_true', help='reclaim older closed archived results toward the cache budget')
+    cache_mode.add_argument('--prune', action='store_true', help='maintain local builds and older archived results toward their budgets')
     cache_mode.add_argument('--install-maintenance', action='store_true', help='install periodic Linux user cache maintenance')
     cache.add_argument('--older-hours', type=float, default=24, help='preserve recent collections; default 24 hours')
     argv = sys.argv[1:]
@@ -828,6 +828,9 @@ def main():
         if args.install_maintenance:
             worker_cache.install_maintenance(ROOT)
         else:
+            if args.prune:
+                import local_cache
+                local_cache.maintain(ROOT)
             worker_cache.maintain(ROOT, prune=args.prune, older_hours=args.older_hours)
         return 0
     if arguments and args.command != 'run':

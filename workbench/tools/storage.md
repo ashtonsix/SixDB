@@ -1,4 +1,4 @@
-# Local worker storage
+# Local storage
 
 Ordinary collection keeps measurements, logs, sources and metadata locally.
 Recognized compiler output of at least 1 MiB stays in S3, as do referenced
@@ -10,6 +10,7 @@ python3 workbench/tools/worker.py fetch JOB --list             # paths, sizes, l
 python3 workbench/tools/worker.py fetch JOB --file study/probe # add one member; repeat --file
 python3 workbench/tools/worker.py fetch JOB --full             # all output and prepared inputs
 python3 workbench/tools/worker.py cache                       # disk use and headroom
+python3 workbench/tools/local_cache.py                        # whole local-build accounting
 python3 workbench/tools/worker.py cache --install-maintenance # once on another Linux checkout
 python3 workbench/tools/worker.py evict JOB                   # release a finished local collection
 ```
@@ -54,9 +55,7 @@ explicit, independent of age and free-space reserves, and respects `.keep-local`
 `touch build/workers/JOB/.keep-local` protects fetched output; remove the file
 to release it. Pins do not request a full fetch. The cache covers this checkout,
 Git worktrees and `build/workspaces/*/build/workers`, deduplicating OrbStack aliases.
-`cache` also shows the checkout's largest build directories: these can dwarf
-worker collections and may contain unique prototypes or checkpoints. They remain
-deliberate cleanup decisions, not automatically disposable caches.
+`cache` also reports the separate local build budget below.
 For finished local studies with an existing artifact reference,
 [`artifacts.py evict`](artifacts.md#recover-or-reduce-retained-evidence) verifies
 and releases unchanged archived copies, including renamed selected logs.
@@ -65,6 +64,36 @@ and releases unchanged archived copies, including renamed selected logs.
 5 GiB reserve checked before submission and transfers. OrbStack checks both
 the destination and Mac backing volume. Set `SIXDB_HOST_STORAGE_PATH` if its
 image lives elsewhere. These checks cannot bound other applications' disk use.
+
+## Local builds, captures and other ignored output
+
+The separate **60 GiB local build budget** counts output files under every
+checkout/worktree's `build/`, including captures, datasets, experiments, reviews,
+frozen workspaces and pinned/unique files. Worker subtrees are counted by the
+10 GiB worker budget instead. OrbStack aliases, nested worktree roots and
+hardlinked files are deduplicated; sparse files count allocated bytes.
+`SIXDB_LOCAL_BUILD_GIB` changes this budget.
+
+The same background timer now accounts for local output before pruning workers.
+`worker.py cache --prune` does both; `local_cache.py --prune` handles local output
+alone. Under budget pressure, or below a 20 GiB free-space target, it can remove
+recognised CMake object/PCH products from build trees idle for **seven days**
+(`SIXDB_LOCAL_BUILD_DAYS`). Any recent activity in that build tree keeps its old
+objects. A running compiler, linker or build controller defers automatic removal.
+Ancestor `.keep-local` pins protect incremental work; pins still count toward
+the budget. Tracked files, links, executables, libraries, sources, measurements
+and arbitrary files with compiler-looking names are preserved.
+
+These are retention budgets, not filesystem quotas. Recent, pinned and unique
+material can exceed them. A durable report at
+`~/.cache/sixdb/local-build-cache-CHECKOUT_HASH.json` records over-budget output,
+scan errors and the largest directories; they are not silently excluded from
+accounting. This device also has an hourly follow-up in the Tooling chat to
+resolve remaining growth, consult owners and verify archival before removing
+inactive unique output. It stays quiet during normal operation and asks Ashton
+only when a human decision is required or an unresolved failure matters.
+The [artifact helper](artifacts.md#recover-or-reduce-retained-evidence) preserves
+recovery references for that curation.
 
 ## Repairing a collection
 
