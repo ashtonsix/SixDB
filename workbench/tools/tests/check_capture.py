@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Exercise live/derived capture boundaries and compatibility with worker snapshots."""
 import json
+import errno
 import os
 from pathlib import Path
 import shutil
@@ -13,6 +14,7 @@ from unittest.mock import patch
 import capture
 import worker
 from experiment import sha256, source_files
+import experiment
 
 
 class CaptureCheck(unittest.TestCase):
@@ -54,6 +56,11 @@ class CaptureCheck(unittest.TestCase):
         self.assertEqual(before, self.git('status', '--porcelain'))
         self.assertFalse((destination / 'workbench/spikes/test/evidence/summary.csv').exists())
         self.assertEqual(metadata, capture.verify(destination))
+        self.assertEqual(subprocess.check_output(['git', 'diff', '--', 'src/keep.cpp'],
+            cwd=destination, text=True), '')
+        changed = subprocess.check_output(['git', 'diff', '--', 'src/change.cpp'], cwd=destination, text=True)
+        self.assertIn('-committed', changed)
+        self.assertIn('+dirty working bytes', changed)
         packed = self.root / 'build/packed'
         packed.mkdir()
         with patch.object(worker, 'ROOT', destination):
@@ -97,6 +104,20 @@ class CaptureCheck(unittest.TestCase):
         (destination / 'src/change.cpp').write_text('changed after capture')
         with self.assertRaisesRegex(ValueError, 'src/change.cpp'):
             capture.verify(destination)
+
+    def test_excluded_evidence_is_never_materialized_by_initial_checkout(self):
+        destination = self.output('no-transient-evidence')
+        real_run = subprocess.run
+        observed = []
+        def observe(command, *args, **kwargs):
+            result = real_run(command, *args, **kwargs)
+            if 'worktree' in command and 'add' in command:
+                observed.append((destination / 'workbench/spikes/test/evidence/summary.csv').exists())
+            return result
+        with patch.object(capture.subprocess, 'run', observe):
+            capture.capture(self.root, destination)
+        self.assertEqual(observed, [False])
+        capture.verify(destination)
 
     def test_previous_commit_symlink_cannot_write_outside_new_capture(self):
         outside = Path(self.temp.name) / 'outside'
@@ -183,6 +204,71 @@ class CaptureCheck(unittest.TestCase):
         self.assertFalse(failed.exists())
         self.assertFalse(capture.receipt_path(failed).exists())
         self.assertEqual(before, self.git('worktree', 'list', '--porcelain'))
+
+
+class SnapshotStorageCheck(unittest.TestCase):
+    def setUp(self):
+        self.temp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.temp.cleanup)
+        self.root = Path(self.temp.name)
+        self.source = self.root / 'source'
+        self.destination = self.root / 'destination'
+        self.data = b'original captured bytes\n' * 4096 + b'EOF'
+        self.source.write_bytes(self.data)
+
+    def test_reflinked_capture_has_independent_inode_and_private_later_writes(self):
+        cloned = experiment.write_snapshot(self.destination, self.data, self.source)
+        self.assertNotEqual(self.source.stat().st_ino, self.destination.stat().st_ino)
+        self.source.write_bytes(b'new working source')
+        self.assertEqual(self.destination.read_bytes(), self.data)
+        self.destination.write_bytes(b'independent capture edit')
+        self.assertEqual(self.source.read_bytes(), b'new working source')
+        if not cloned:
+            self.skipTest('reflink unavailable; byte-copy independence verified')
+
+    def test_changed_working_source_cannot_override_previously_selected_bytes(self):
+        self.source.write_bytes(b'newer working bytes')
+        experiment.write_snapshot(self.destination, self.data, self.source)
+        self.assertEqual(self.destination.read_bytes(), self.data)
+        self.assertEqual(self.source.read_bytes(), b'newer working bytes')
+
+    def test_unsupported_clone_falls_back_but_disk_full_is_reported(self):
+        with patch.object(experiment.fcntl, 'ioctl', side_effect=OSError(errno.EOPNOTSUPP, 'fixture')):
+            self.assertFalse(experiment.write_snapshot(self.destination, self.data, self.source))
+        self.assertEqual(self.destination.read_bytes(), self.data)
+        with patch.object(experiment.fcntl, 'ioctl', side_effect=OSError(errno.ENOSPC, 'fixture')):
+            with self.assertRaises(OSError) as caught:
+                experiment.write_snapshot(self.destination, self.data, self.source)
+        self.assertEqual(caught.exception.errno, errno.ENOSPC)
+        self.assertEqual(self.source.read_bytes(), self.data)
+
+    def test_kernel_dedup_preserves_bytes_mtime_and_independent_writes(self):
+        self.destination.write_bytes(self.data)
+        mtime = self.destination.stat().st_mtime_ns
+        try:
+            shared = experiment.deduplicate_snapshot(self.source, self.destination)
+        except OSError as error:
+            if error.errno in experiment.CLONE_UNAVAILABLE:
+                self.skipTest('kernel dedup unsupported on fixture filesystem')
+            raise
+        self.assertEqual(shared, len(self.data))
+        self.assertEqual(self.destination.read_bytes(), self.data)
+        self.assertEqual(self.destination.stat().st_mtime_ns, mtime)
+        self.destination.write_bytes(b'private edit after dedup')
+        self.assertEqual(self.source.read_bytes(), self.data)
+
+    def test_kernel_refuses_to_dedup_same_size_different_bytes(self):
+        changed = self.data[:-1] + b'!'
+        self.destination.write_bytes(changed)
+        try:
+            shared = experiment.deduplicate_snapshot(self.source, self.destination)
+        except OSError as error:
+            if error.errno in experiment.CLONE_UNAVAILABLE:
+                self.skipTest('kernel dedup unsupported on fixture filesystem')
+            raise
+        self.assertEqual(shared, 0)
+        self.assertEqual(self.destination.read_bytes(), changed)
+        self.assertEqual(self.source.read_bytes(), self.data)
 
 
 if __name__ == '__main__':

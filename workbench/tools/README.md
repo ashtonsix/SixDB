@@ -32,6 +32,10 @@ python3 workbench/tools/worker.py run workbench/benchmarks/seriespack/run.sh \
 input into the capture. `capture.py create --help` covers deletion and hash checks.
 The adjacent `.capture.json` identifies the result; `capture.py verify PATH`
 checks it later. Builds, spike evidence and Python caches are excluded.
+On reflink-capable Linux filesystems, unchanged source data is shared through
+copy-on-write clones with independent inodes; later edits remain private.
+Other filesystems use ordinary copies. Captures populate only selected sources,
+without first checking out and deleting retained evidence.
 
 For a local runner, `experiment.Run(..., workspace=...)` captures sources and
 preserves incremental builds. Build from `run.source_root` into `run.build_dir`;

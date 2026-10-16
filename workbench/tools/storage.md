@@ -95,6 +95,13 @@ only when a human decision is required or an unresolved failure matters.
 The [artifact helper](artifacts.md#recover-or-reduce-retained-evidence) preserves
 recovery references for that curation.
 
+Frozen captures and new local runner workspaces use verified copy-on-write source
+clones where supported. This avoids another full physical copy of unchanged
+sources without coupling later edits. Existing snapshots can have identical
+data ranges shared by the kernel without changing their bytes, paths or modes.
+Ordinary `du` still counts shared extents at each file; budget accounting is
+conservative after reflinking, rather than a measure of exclusive physical use.
+
 ## Repairing a collection
 
 Retry `wait JOB` or `fetch JOB`. They check sizes and hashes against

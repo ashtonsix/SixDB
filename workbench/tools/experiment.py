@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import hashlib
+import errno
 import fcntl
 import io
 import json
@@ -10,6 +11,9 @@ import os
 import platform
 import resource
 import subprocess
+import stat
+import struct
+import sys
 import tarfile
 import time
 from datetime import datetime, timezone
@@ -18,6 +22,64 @@ from pathlib import Path
 
 def sha256(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
+
+
+# Linux fs.h: independent inodes sharing copy-on-write data, never hardlinks.
+# https://man7.org/linux/man-pages/man2/ioctl_ficlone.2.html
+FICLONE = 0x40049409
+FIDEDUPERANGE = 0xc0189436
+CLONE_UNAVAILABLE = {errno.EINVAL, errno.ENOTTY, errno.EOPNOTSUPP, errno.EXDEV, errno.ENOSYS, errno.EBADF}
+
+
+def write_snapshot(destination: Path, data: bytes, source: Path):
+    """Write exactly the selected bytes, using a reflink when the source still matches."""
+    if destination.exists() and source.exists() and destination.samefile(source):
+        raise ValueError('snapshot source and destination must differ')
+    flags = os.O_WRONLY | os.O_CREAT | os.O_TRUNC | getattr(os, 'O_NOFOLLOW', 0)
+    with os.fdopen(os.open(destination, flags, 0o644), 'wb') as target:
+        if sys.platform == 'linux':
+            try:
+                with os.fdopen(os.open(source, os.O_RDONLY | os.O_NOFOLLOW), 'rb') as original:
+                    fcntl.ioctl(target.fileno(), FICLONE, original.fileno())
+                # The working source can change after source_files selected its bytes.
+                # Never silently capture a newer version through the reflink fast path.
+                if destination.read_bytes() == data:
+                    return True
+            except OSError as error:
+                if error.errno not in CLONE_UNAVAILABLE | {errno.ENOENT, errno.ELOOP}:
+                    raise
+        target.seek(0)
+        target.truncate()
+        target.write(data)
+    return False
+
+
+def deduplicate_snapshot(source: Path, destination: Path):
+    """Kernel-compare existing file ranges before sharing their unchanged data.
+
+    No unlink, truncate, chmod or byte rewrite. Concurrent writes stay private.
+    https://man7.org/linux/man-pages/man2/ioctl_fideduperange.2.html
+    Returns logical bytes compared/shared, not a physical free-space measurement.
+    """
+    with os.fdopen(os.open(source, os.O_RDONLY | os.O_NOFOLLOW), 'rb') as original, \
+            os.fdopen(os.open(destination, os.O_RDWR | os.O_NOFOLLOW), 'rb+') as target:
+        a, b = os.fstat(original.fileno()), os.fstat(target.fileno())
+        if (not stat.S_ISREG(a.st_mode) or not stat.S_ISREG(b.st_mode) or a.st_size != b.st_size or
+                (a.st_dev, a.st_ino) == (b.st_dev, b.st_ino)):
+            return 0
+        shared = 0
+        for offset in range(0, a.st_size, 16 * 1024 ** 2):
+            length = min(a.st_size - offset, 16 * 1024 ** 2)
+            request = bytearray(struct.pack('=QQHHI', offset, length, 1, 0, 0) +
+                                struct.pack('=qQQiI', target.fileno(), offset, 0, 0, 0))
+            fcntl.ioctl(original.fileno(), FIDEDUPERANGE, request, True)
+            _, _, count, status, _ = struct.unpack_from('=qQQiI', request, 24)
+            if status < 0:
+                raise OSError(-status, os.strerror(-status))
+            if status:  # FILE_DEDUPE_RANGE_DIFFERS: leave differing bytes alone.
+                break
+            shared += count
+        return shared
 
 
 def source_files(root: Path) -> dict[str, bytes]:
@@ -70,7 +132,7 @@ class Run:
                     path.parent.mkdir(parents=True, exist_ok=True)
                     if not path.exists() or path.read_bytes() != data:
                         temporary = path.with_name(path.name + '.snapshot-tmp')
-                        temporary.write_bytes(data)
+                        write_snapshot(temporary, data, root / name)
                         temporary.chmod(0o555 if (root / name).stat().st_mode & 0o111 else 0o444)
                         temporary.replace(path)
             except BaseException:

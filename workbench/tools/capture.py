@@ -7,7 +7,7 @@ from pathlib import Path, PurePosixPath
 import shutil
 import subprocess
 
-from experiment import sha256, source_files
+from experiment import sha256, source_files, write_snapshot
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -123,8 +123,13 @@ def capture(base, destination, *, replacements=(), removed=(), expected=None, in
     created = False
     receipt_created = False
     try:
-        subprocess.run([*worktree_git, 'add', '--quiet', '--detach', str(destination), commit], cwd=base, check=True)
+        # Populate only selected sources. Checking out retained evidence first
+        # created a large temporary copy which was immediately thrown away.
+        subprocess.run([*worktree_git, 'add', '--quiet', '--no-checkout', '--detach', str(destination), commit], cwd=base, check=True)
         created = True
+        # Keep the original baseline in this worktree's private index without
+        # materializing it. Git diffs must still describe only source changes.
+        subprocess.run(['git', 'read-tree', commit], cwd=destination, check=True)
         tracked = subprocess.check_output(['git', 'ls-files', '--cached', '-z'], cwd=destination).decode().split('\0')
         for name in filter(None, tracked):
             path = destination / name
@@ -135,7 +140,7 @@ def capture(base, destination, *, replacements=(), removed=(), expected=None, in
             if path.is_dir():
                 shutil.rmtree(path)
             path.parent.mkdir(parents=True, exist_ok=True)
-            path.write_bytes(data)
+            write_snapshot(path, data, base / name)
             path.chmod(modes[name])
         # Explicit replacements can originate in ignored prototype directories.
         # Record their destination names without committing or touching the live index.
