@@ -142,6 +142,11 @@ By default inputs are copies of the hashed retained files. A recipe marked
 [network cohorts](../spikes/cft-commit-latency/evidence.md#network-cohorts)
 exercise both, including a report that recovers a second cohort.
 
+Once a recovery check is complete and no active audit needs its working copies,
+keep the small proofs and execution receipts, then use verified `evict` above
+for the archive input copies, including separately fetched raw inputs. Keep
+new or differing reports and logs until their own recovery is retained.
+
 Record a recipe during `retain`, or change one without uploading via `revise`:
 
 ```sh
