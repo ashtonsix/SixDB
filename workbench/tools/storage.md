@@ -10,8 +10,8 @@ python3 workbench/tools/worker.py fetch JOB --list             # paths, sizes, l
 python3 workbench/tools/worker.py fetch JOB --file study/probe # add one member; repeat --file
 python3 workbench/tools/worker.py fetch JOB --full             # all output and prepared inputs
 python3 workbench/tools/worker.py cache                       # disk use and headroom
+python3 workbench/tools/worker.py cache --prune               # explicit verified reclamation
 python3 workbench/tools/local_cache.py                        # whole local-build accounting
-python3 workbench/tools/worker.py cache --install-maintenance # once on another Linux checkout
 python3 workbench/tools/worker.py evict JOB                   # release a finished local collection
 ```
 
@@ -21,7 +21,7 @@ volume when local space is tight.
 
 ## Older local output
 
-Worker commands reclaim byte-identical archived results from closed collections
+Explicit pruning reclaims byte-identical archived results from closed collections
 after 24 hours without collection access, toward a 10 GiB cache budget or 10 GiB
 free space. This includes sources, logs and measurements as well as compiler
 output. A fresh full S3 read verifies each removed file, and the durable receipt
@@ -41,17 +41,13 @@ an archive read when only differing local edits remain. Restoring matching bytes
 makes them eligible again; every actual removal still requires fresh remote
 verification.
 
-This device has a per-user background timer for full cache sweeps, roughly every
-30 minutes after the preceding sweep finishes. Healthy foreground launches and
-fetches only check space reserves; they do no online cache pruning, including
-after results become available. If the reserve check fails, preflight can try
+Scheduled cache sweeps and the hourly storage heartbeat were removed from this
+device at Ashton's request. Use `worker.py cache --prune` for an explicit sweep.
+Healthy foreground launches and fetches only check space reserves; they do no
+online cache pruning after results become available. If the reserve check fails, preflight can try
 one emergency collection before checking the reserve again. A cache backlog must
-not hold a submission behind archive reads. A shared nonblocking maintenance lock prevents
-controllers from duplicating a background sweep. Space reserves still apply.
-
-The former compiler-only pruning left old raw collections permanently over
-budget even after their binaries were omitted. Closed archived results are now
-treated as a recoverable local cache, rather than accumulating without a limit.
+not hold a submission behind archive reads. A shared nonblocking maintenance lock
+prevents simultaneous pruners. Space reserves still apply.
 
 For a finished collection you no longer need locally, `evict JOB` also removes
 archived sources, logs and measurements. It streams and verifies the entire S3
@@ -83,9 +79,9 @@ frozen workspaces and pinned/unique files. Worker subtrees are counted by the
 hardlinked files are deduplicated; sparse files count allocated bytes.
 `SIXDB_LOCAL_BUILD_GIB` changes this budget.
 
-The same background timer now accounts for local output before pruning workers.
-`worker.py cache --prune` does both; `local_cache.py --prune` handles local output
-alone. Under budget pressure, or below a 20 GiB free-space target, it can remove
+`worker.py cache --prune` accounts for local output before pruning workers;
+`local_cache.py --prune` handles local output alone. Under budget pressure, or
+below a 20 GiB free-space target, it can remove
 recognised CMake object/PCH products from build trees idle for **seven days**
 (`SIXDB_LOCAL_BUILD_DAYS`). Any recent activity in that build tree keeps its old
 objects. A running compiler, linker or build controller defers automatic removal.
@@ -97,12 +93,10 @@ These are retention budgets, not filesystem quotas. Recent, pinned and unique
 material can exceed them. A durable report at
 `~/.cache/sixdb/local-build-cache-CHECKOUT_HASH.json` records over-budget output,
 scan errors and the largest directories; they are not silently excluded from
-accounting. This device also has an hourly follow-up in the Tooling chat to
-resolve remaining growth, consult owners and verify archival before removing
-inactive unique output. It stays quiet during normal operation and asks Ashton
-only when a human decision is required or an unresolved failure matters.
-The [artifact helper](artifacts.md#recover-or-reduce-retained-evidence) preserves
-recovery references for that curation.
+accounting. The report reflects its most recent invocation; no scheduled scanner
+refreshes it on this device. The
+[artifact helper](artifacts.md#recover-or-reduce-retained-evidence) preserves
+recovery references for explicit curation.
 
 Frozen captures and new local runner workspaces use verified copy-on-write source
 clones where supported. This avoids another full physical copy of unchanged
