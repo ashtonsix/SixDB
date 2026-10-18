@@ -1,5 +1,5 @@
 #include "object_material.h"
-#include <object/store_impl.h>
+#include <orbital/instantiate/object.h>
 #include <cassert>
 
 namespace object_test {

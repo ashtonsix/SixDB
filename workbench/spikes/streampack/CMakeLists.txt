@@ -16,7 +16,6 @@ add_test(NAME streampack_implementation_loom_check COMMAND streampack_implementa
 # publication/allocation, without introducing an allocator into Ikea.
 add_library(streampack_implementation_orbital_material STATIC implementation_orbital.cpp)
 sixdb_target(streampack_implementation_orbital_material)
-target_include_directories(streampack_implementation_orbital_material PRIVATE "${PROJECT_SOURCE_DIR}/orbital/src")
 target_link_libraries(streampack_implementation_orbital_material PUBLIC ikea::streampack loom::loom)
 add_executable(streampack_implementation_orbital_check implementation_orbital_check.cpp)
 sixdb_target(streampack_implementation_orbital_check)
@@ -74,7 +73,6 @@ target_link_libraries(streampack_geometry PRIVATE ikea::seriespack orbital::orbi
 add_test(NAME streampack_geometry_check COMMAND streampack_geometry check)
 add_executable(streampack_publication_check publication_check.cpp material.cpp)
 sixdb_target(streampack_publication_check)
-target_include_directories(streampack_publication_check PRIVATE "${PROJECT_SOURCE_DIR}/orbital/src")
 target_link_libraries(streampack_publication_check PRIVATE ikea::seriespack orbital::orbital)
 add_test(NAME streampack_publication_check COMMAND streampack_publication_check)
 
@@ -113,13 +111,11 @@ endif()
 
 add_executable(streampack_rewrite_check rewrite_check.cpp material.cpp rewrite.cpp)
 sixdb_target(streampack_rewrite_check)
-target_include_directories(streampack_rewrite_check PRIVATE "${PROJECT_SOURCE_DIR}/orbital/src")
 target_link_libraries(streampack_rewrite_check PRIVATE ikea::seriespack orbital::orbital)
 add_test(NAME streampack_rewrite_check COMMAND streampack_rewrite_check)
 
 add_executable(streampack_lifecycle lifecycle.cpp material.cpp rewrite.cpp)
 sixdb_target(streampack_lifecycle)
-target_include_directories(streampack_lifecycle PRIVATE "${PROJECT_SOURCE_DIR}/orbital/src")
 target_link_libraries(streampack_lifecycle PRIVATE ikea::seriespack orbital::orbital)
 
 add_executable(streampack_mutable_population mutable_population.cpp)
@@ -128,7 +124,6 @@ target_link_libraries(streampack_mutable_population PRIVATE ikea::seriespack orb
 
 add_executable(streampack_widths_publication_check widths_publication_check.cpp material.cpp rewrite.cpp)
 sixdb_target(streampack_widths_publication_check)
-target_include_directories(streampack_widths_publication_check PRIVATE "${PROJECT_SOURCE_DIR}/orbital/src")
 target_link_libraries(streampack_widths_publication_check PRIVATE ikea::seriespack orbital::orbital)
 add_test(NAME streampack_widths_publication_check COMMAND streampack_widths_publication_check)
 
@@ -152,7 +147,6 @@ target_link_libraries(streampack_mutable_fused PRIVATE ikea::seriespack orbital:
 add_executable(streampack_lifecycle_prepared lifecycle.cpp material.cpp rewrite.cpp)
 sixdb_target(streampack_lifecycle_prepared)
 target_compile_definitions(streampack_lifecycle_prepared PRIVATE STREAMPACK_PREPARED_PROJECTION=1)
-target_include_directories(streampack_lifecycle_prepared PRIVATE "${PROJECT_SOURCE_DIR}/orbital/src")
 target_link_libraries(streampack_lifecycle_prepared PRIVATE ikea::seriespack orbital::orbital)
 
 if(EXISTS "${STREAMPACK_DUCKDB_INCLUDE}/duckdb/common/types/string_type.hpp")

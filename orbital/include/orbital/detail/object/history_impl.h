@@ -1,5 +1,6 @@
 #pragma once
 #include <orbital/detail/object/history.h>
+// Cold history definitions are included by orbital/instantiate/object.h.
 namespace orbital::object_detail {
 template<class Physical>
 void History<Physical>::reserve(std::span<const Change> changes) {

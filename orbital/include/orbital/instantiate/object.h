@@ -1,8 +1,9 @@
 #pragma once
 #include <orbital/object.h>
-#include "history_impl.h"
+#include <orbital/detail/object/history_impl.h>
 
-// Included by one explicit-instantiation TU for each concrete physical material.
+// Opt in from the material's explicit-instantiation TU. Ordinary callers include
+// orbital/object.h; format-specific adapters and instantiations stay with them.
 namespace orbital {
 template<class Physical>
 ObjectStore<Physical>::ObjectStore(std::pmr::memory_resource& memory)

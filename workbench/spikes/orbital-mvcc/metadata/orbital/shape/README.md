@@ -35,7 +35,7 @@ Their validity comes from the protected catalog scope, not from per-read pins.
 
 `shape_private.h` owns the caller Shape layout and static geometry operations.
 Orbital's `detail/object/representation.h` owns the actual Representation,
-Part/View and address-tail layouts; `src/object/representation_impl.h` owns
+Part/View and address-tail layouts; `orbital/instantiate/representation.h` owns
 physical capture, rollback, release and escape. `shape.cpp` explicitly
 instantiates those operations once for the 16-byte caller Control and retains
 format admission, selected interpretation copying and diagnostic accounting. A composed native consumer may deliberately depend on this private

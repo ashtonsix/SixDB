@@ -1,7 +1,7 @@
 #include <orbital/allocation.h>
-#include <allocation/capture.h>
+#include <orbital/detail/allocation/capture.h>
 #include <allocation/internal.h>
-#include <object/representation_impl.h>
+#include <orbital/instantiate/representation.h>
 #include <array>
 #include <chrono>
 #include <cstdio>

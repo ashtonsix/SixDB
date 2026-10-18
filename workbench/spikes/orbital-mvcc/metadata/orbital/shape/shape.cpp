@@ -1,5 +1,5 @@
 #include "shape_private.h"
-#include <object/representation_impl.h>
+#include <orbital/instantiate/representation.h>
 
 #include <algorithm>
 #include <bit>

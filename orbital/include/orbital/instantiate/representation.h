@@ -1,5 +1,5 @@
 #pragma once
-#include "representation_ops.h"
+#include <orbital/detail/object/representation_ops.h>
 #include <algorithm>
 #include <cassert>
 #include <vector>

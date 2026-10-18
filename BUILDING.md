@@ -54,9 +54,9 @@ Stage 1 allocation, preparation, worker and execution support.
 Select `-DSIXDB_BENCHMARKS=orbital` for the
 [allocation comparison](workbench/benchmarks/orbital/README.md).
 
-The embedded `orbital::ObjectStore<Physical>` catalog uses the production
-Orbital storage library. A concrete material compiles its cold operations once
-with `orbital/src/object/store_impl.h`; its ordinary read definitions stay visible.
+Concrete Orbital materials instantiate cold operations once through public
+opt-in headers; see [supplying material](orbital/docs/material.md#compile-once).
+Ordinary read TUs omit those cold definitions.
 The [Orbital MVCC study](workbench/spikes/orbital-mvcc/README.md) retains the rejected
 baseline and experimental controls. Select `-DSIXDB_SPIKES=orbital-mvcc` independently
 of benchmark selection, then build `orbital_mvcc_composed_check` and

@@ -1,6 +1,6 @@
 #pragma once
 #include <orbital/object.h>
-#include <object/store_impl.h>
+#include <orbital/instantiate/object.h>
 #include "descriptor_policy.h"
 #include "shape_policy.h"
 

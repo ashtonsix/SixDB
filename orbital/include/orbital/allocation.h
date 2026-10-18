@@ -1,7 +1,7 @@
 #pragma once
 
 // Physical storage, reuse and reclamation under a shared byte budget.
-// Loom selects the owning Pool; Ikea qualifies the format of its bytes.
+// The caller selects the owning Pool and qualifies the format of its bytes.
 
 #include <orbital/worker.h>
 #include <atomic>

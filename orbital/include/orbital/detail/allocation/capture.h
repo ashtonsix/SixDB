@@ -2,7 +2,7 @@
 #include <orbital/allocation.h>
 
 namespace orbital::allocation::detail {
-// Capture validates every source after metadata callbacks, then transfers uses
+// Object capture validates every source after metadata callbacks, then transfers uses
 // without calls that can refuse or change another source.
 Result<void> ready_for_capture(const Allocation&) noexcept;
 inline Storage* take_for_capture(Allocation& allocation) noexcept {

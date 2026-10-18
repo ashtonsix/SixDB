@@ -108,7 +108,6 @@ list(APPEND metadata_checks orbital_mvcc_consumer_point_write_check)
 
 add_library(orbital_mvcc_catalog STATIC composed/catalog.cpp)
 sixdb_target(orbital_mvcc_catalog)
-target_include_directories(orbital_mvcc_catalog PRIVATE "${PROJECT_SOURCE_DIR}/orbital/src")
 target_link_libraries(orbital_mvcc_catalog PUBLIC orbital_mvcc_shape)
 
 add_library(orbital_mvcc_composed STATIC composed/material.cpp composed/read_fusion.cpp)
@@ -179,7 +178,6 @@ foreach(pair IN ITEMS "catalog|check" "shape|shape_store_check" "bounded|bounded
   sixdb_target(${target})
   target_compile_definitions(${target} PRIVATE SIXDB_OBJECT_MODULE_TEST=1)
   target_compile_options(${target} PRIVATE -UNDEBUG)
-  target_include_directories(${target} PRIVATE "${PROJECT_SOURCE_DIR}/orbital/src")
   target_link_libraries(${target} PRIVATE orbital_mvcc_shape orbital_mvcc_descriptor orbital_mvcc_directory)
   add_test(NAME ${target} COMMAND ${target})
   set_tests_properties(${target} PROPERTIES LABELS orbital-mvcc-metadata TIMEOUT 60)

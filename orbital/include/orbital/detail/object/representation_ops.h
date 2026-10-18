@@ -1,6 +1,6 @@
 #pragma once
 #include <orbital/detail/object/representation.h>
-#include "../allocation/capture.h"
+#include <orbital/detail/allocation/capture.h>
 namespace orbital::object_detail {
 bool valid(Bytes, std::size_t padding = 0);
 inline Result<void> capture_ready(allocation::Allocation* source) noexcept {

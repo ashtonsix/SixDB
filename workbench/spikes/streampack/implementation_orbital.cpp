@@ -1,7 +1,7 @@
 #include "implementation_orbital.h"
 #include <orbital/detail/object/representation.h>
-#include <object/representation_impl.h>
-#include <object/store_impl.h>
+#include <orbital/instantiate/representation.h>
+#include <orbital/instantiate/object.h>
 #include <algorithm>
 #include <cstring>
 

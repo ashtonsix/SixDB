@@ -13,7 +13,7 @@ enum class PublicationState { empty, accepted, installed, aborted };
 /// owners and escaped Parts. Calls, including owner destruction, stay on one owner.
 /// Resource allocation/deallocation callbacks must not reenter this catalog.
 /// This differs from physical-owner disposal callbacks supported during cleanup.
-/// A material instantiates cold operations once using src/object/store_impl.h.
+/// A material instantiates cold operations once using orbital/instantiate/object.h.
 template<class Physical> class ObjectStore {
   friend struct object_detail::Access<Physical>;
   using Value = typename Physical::Value;

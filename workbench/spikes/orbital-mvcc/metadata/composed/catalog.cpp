@@ -1,5 +1,5 @@
 #include "read_fusion.h"
-#include <object/store_impl.h>
+#include <orbital/instantiate/object.h>
 
 template struct orbital::object_detail::History<compact_history::ShapePhysical>;
 template class orbital::ObjectStore<compact_history::ShapePhysical>;

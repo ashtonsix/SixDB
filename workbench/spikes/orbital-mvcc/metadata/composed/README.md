@@ -218,9 +218,9 @@ wrong-count adoption refusal, the fused appended-tail read, new-count Tuple
 and Series point updates and reverse conversion, private tail and metadata
 refusal, and physical settlement after retained Scopes close.
 
-The selected catalog now lives in `orbital/include/orbital/object.h` and
-`orbital/src/object/`. `catalog.cpp` explicitly instantiates its cold operations
-once for this fixture's `ShapePhysical`; `read_fusion.cpp` owns the private
+The selected catalog uses public `orbital/object.h` and the opt-in
+`orbital/instantiate/object.h`. [catalog.cpp](catalog.cpp) instantiates its cold
+operations once for this fixture's `ShapePhysical`; `read_fusion.cpp` owns the private
 `Access<ShapePhysical>` specialization. Counting/refusal `Memory`, physical Shape,
 row interpretation and all comparison controls remain in this study. Resource
 totals are read from that same Memory exactly once; private structural counters

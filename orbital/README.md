@@ -1,19 +1,24 @@
 # Orbital
 
-Orbital implements allocation, preparation, worker services and an embedded
-single-owner Object catalog. The [MVCC study](../workbench/spikes/orbital-mvcc/README.md)
-retains the rejected first implementation, competing layouts and the disposable
-TuplePack/SeriesPack driver used to develop and measure the selected catalog.
-Journal, Port and distributed execution remain in the
-[combined Orbital/Loom design](../workbench/design/orbital/DESIGN.md).
+Orbital owns storage and Object lifetimes beneath the database. Its current
+services are allocation and reclamation, physical Representations and Parts,
+an embedded single-owner Object catalog, OS threads and completion queues,
+and Linux platform reports. Journal, Port and distributed execution remain in
+the [combined design](../workbench/design/orbital/DESIGN.md).
 
-Start with [Loom's caller path](../loom/README.md). A Loom Worker adopts an
-application thread, owns a local allocation Pool and handles completion Messages.
-Ready Ikea work uses ordinary functions over qualified bytes. Longer waits use
-Tasks; independent memory dependencies can use a typed Ring.
-The [ObjectStore caller](../workbench/spikes/orbital-mvcc/callers/object_module.md)
-exercises coherent reads across suspension, publication and catalog teardown,
-then keeps an escaping Part alive through foreign use and owner-Lane completion.
+Callers supply the meaning of the bytes: formats, container layouts, keys,
+navigation, cloning and conversion algorithms. Orbital retains their physical
+owners and interpretation dependencies, and publishes the material they supply.
+For example, a hashtable owner decides which planes to allocate and which bytes
+remain useful; Orbital provides allocation, retention and reclamation. That
+owner's storage adapter stays with the container or its caller.
+
+[Loom](../loom/README.md) supplies scheduling and Pool selection around these
+services; Orbital can also be called directly on an adopted Lane. The
+[ObjectStore caller](../workbench/spikes/orbital-mvcc/callers/object_module.md)
+shows their composition through suspension and escaping Part lifetime. This and
+the [MVCC study](../workbench/spikes/orbital-mvcc/README.md) are integration
+consumers, not definitions of Engine's data structures.
 
 ## Reported platform
 
@@ -35,7 +40,7 @@ limited topology, heterogeneous CPUs and actual Linux reporting.
 - Pool owns reusable storage on one stable Lane.
 - Allocation owns mutable storage; Hold captures an address and full byte footprint.
 
-Loom selects a Pool for new allocation. Growth and capture follow the storage's
+The caller selects a Pool for new allocation. Growth and capture follow the storage's
 existing owner and run on its assigned thread. Release can run elsewhere: one
 reserved return Message per packing group or virtual window brings final returns
 back to the Lane. Actual users keep storage alive after Allocation release.
@@ -79,8 +84,8 @@ The private allocation submodule keeps each backend's transactions together:
 - [finite.cpp](src/allocation/finite.cpp), [finite.h](src/allocation/finite.h): Group geometry, bindings and backing-page state.
 
 Ordinary allocation confirms writable mapping and initializes readable padding;
-it does not prefault or initialize an uninitialized body. Ikea separately
-qualifies format, row extent and native transfer shape. Bind once around stable
+it does not prefault or initialize an uninitialized body. The caller separately
+qualifies format, logical extent and native transfer shape. Bind once around stable
 native work and rebuild address-qualified bindings after relocation or extent
 change. Raw zeroing does not establish initialized encoded values.
 
@@ -141,9 +146,8 @@ Orbital also owns opaque Object identity, completed logical versions,
 coherent discovery, publication and selection of an equivalent Representation.
 It does not inspect records or decide clone, container or navigation policy.
 
-For a minimal material integration, read the format-independent
-[test material](test/object_material.h) and its
-[explicit-instantiation TU](test/object_material.cpp) before the larger driver.
+Start with the [material guide](docs/material.md), then its small
+[caller](test/extension.cpp) and [material TU](test/extension_material.cpp).
 The [Stage 2 handover](../workbench/spikes/orbital-mvcc/OUTCOMES.md) maps the
 implementation, evidence and lessons for the next real Ikea/Engine caller.
 
@@ -174,45 +178,36 @@ operation, with no publication, reentry, suspension or escape.
 
 The metadata resource is an ordinary `std::pmr::memory_resource` and must outlive
 all derived lifetimes. Every `Prepared` packet constructed from a live Store
-pins its Core, including empty, refused, installed and aborted packets. Resource allocation/deallocation callbacks must not reenter
-this catalog; the supported physical-owner disposal callbacks are a different
+pins its Core, including empty, refused, installed and aborted packets. Resource
+allocation/deallocation callbacks must not reenter this catalog; the supported physical-owner disposal callbacks are a different
 boundary. Allocation failure refuses preparation; diagnostics and
-refusal injection can remain in the caller's resource. The selected layout keeps
-the current version in its Object directory entry and uses 16-byte historical
-nodes with separately charged 8-byte physical-pointer directory slots and
-distinct active-cut retention. Competing layouts stay in the study.
+refusal injection can remain in the caller's resource. Layout comparisons and
+metadata costs stay in the study.
 
 Representations embed the caller's static Control without per-Part extent
-metadata or read callbacks. The driver Control contains a Shape pointer and
-record count: admitted geometry derives byte extents. Shape construction,
-count rules, TuplePack/SeriesPack laws and cloning remain with the caller.
-Orbital holds the proof and its dependencies through physical capture and
-escape. A selected-copy escape asks that same Control to copy only the needed
-interpretation into the Part's allocation.
+metadata or read callbacks. Control supplies immutable admitted geometry and
+interpretation lifetime; Orbital retains it through physical capture and escape.
+A selected-copy escape asks that same Control to copy the needed interpretation
+into the Part's allocation. Format validation, value operations and conversion
+algorithms remain with the caller.
 
-Capture reserves metadata before validating the sources, then transfers their
-existing Allocation uses without a retain/release round trip. No source is
-consumed on refusal; metadata exhaustion can precede an invalid-source error.
-Geometry queries observe immutable proof. Existing Holds keep their own uses,
-and the transferred use preserves the allocation's pin and final return route.
-Shared-backing capture instead retains the supplied shared owner. Its caller
-must preserve the captured body's address and full readable footprint; shared
-ownership alone does not prevent a growable Allocation from relocating. Capture
-seals those bytes, including readable padding, while caller/Ikea authority may
-permit physically disjoint writes. Unpublished captured owners and accepted
-packets also protect their footprints until those owners end.
+Capture reserves metadata and validates sources before consuming any fresh
+Allocation; refusal preserves those Allocations. Metadata exhaustion can precede
+an invalid-source error. The [material guide](docs/material.md) explains the
+concrete integration and compilation boundary.
 
 The implementation keeps these compilation seams:
 
 - [storage.cpp](src/object/storage.cpp) compiles directory, history-slab and debt-storage allocation once in Orbital. [representation.cpp](src/object/representation.cpp) compiles non-format physical-owner operations.
-- [representation_impl.h](src/object/representation_impl.h) compiles capture, release, selection and Part escape once per admitted Control. The fixture retains only its interpretation operations and measurements in [shape.cpp](../workbench/spikes/orbital-mvcc/metadata/orbital/shape/shape.cpp).
-- [store_impl.h](src/object/store_impl.h) and [history_impl.h](src/object/history_impl.h) compile publication, conversion and maintenance once for each concrete material's explicit-instantiation TU. The driver example is [catalog.cpp](../workbench/spikes/orbital-mvcc/metadata/composed/catalog.cpp).
+- [instantiate/representation.h](include/orbital/instantiate/representation.h) compiles capture, release, selection and Part escape once per admitted Control.
+- [instantiate/object.h](include/orbital/instantiate/object.h) compiles publication, conversion authority and maintenance once for each concrete material's explicit-instantiation TU. Actual material conversion runs in the caller.
 - Scope enrollment, ordinary selection and private storage layout remain visible for short reads. A deliberately coupled `object_detail::Access<Physical>` specialization lets one native composition fuse catalog selection with its own interpretation/kernel; Orbital names no driver type or runtime callback.
+
+The opt-in instantiation headers use Orbital's public include path and library.
+Concrete material definitions and instantiations remain with their caller.
 
 All catalog calls and material-owner destruction run on the same owner. Physical
 Allocation's foreign final-return support does not make Object operations concurrent.
-The driver keeps whole-resource accounting, structural counters and the matched
-LMDB comparator; extraction alone is no claim of performance parity.
 
 ## Build and exercise
 
@@ -224,7 +219,7 @@ orb -m ubuntu cmake --build build/orbital-stage1/clang --target orbital_validate
 `orbital_validate` includes format-independent logical Object histories and
 physical Representation checks. The Object material instantiates cold catalog
 operations in a separate TU; its caller checks coherent discovery, publication
-refusal and abort, conversion authority, and retained lifetimes. These module
+refusal and abort, conversion authority, and retained lifetimes. These Object/Representation
 checks require no spike or Ikea format. The opt-in study also runs its interrupted
 maintenance histories against the selected catalog, alongside composed
 TuplePack/SeriesPack and Loom integration checks and performance comparisons.
