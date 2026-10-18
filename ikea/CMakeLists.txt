@@ -187,3 +187,5 @@ add_custom_target(ikea_validate
     --output-on-failure --no-tests=error -R "^ikea_"
   DEPENDS ${ikea_check_targets} ikea_examples
   USES_TERMINAL)
+
+include(cmake/Hashtable.cmake)

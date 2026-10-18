@@ -1,0 +1,41 @@
+add_library(ikea_hashtable INTERFACE)
+add_library(ikea::hashtable ALIAS ikea_hashtable)
+target_compile_features(ikea_hashtable INTERFACE cxx_std_23)
+target_link_libraries(ikea_hashtable INTERFACE
+  ikea::seriespack ikea::tuplepack)
+
+set(ikea_hashtable_checks)
+foreach(check accumulate mutation guarded modify word-tail value storage clone descriptor rebuild rebuild-storage)
+  string(REPLACE "-" "_" name "${check}")
+  set(target ikea_hashtable_${name}_check)
+  add_executable(${target} EXCLUDE_FROM_ALL test/hashtable/${check}-check.cpp)
+  sixdb_target(${target})
+  target_link_libraries(${target} PRIVATE ikea::hashtable)
+  list(APPEND ikea_hashtable_checks ${target})
+endforeach()
+foreach(first 1 9 17 25 33 41 49 57)
+  set(target ikea_hashtable_widths_${first})
+  add_executable(${target} EXCLUDE_FROM_ALL test/hashtable/widths.cpp)
+  sixdb_target(${target})
+  target_compile_definitions(${target} PRIVATE WIDTH_START=${first})
+  target_link_libraries(${target} PRIVATE ikea::hashtable)
+  list(APPEND ikea_hashtable_checks ${target})
+endforeach()
+foreach(example ordinary composition accumulation)
+  set(target ikea_example_hashtable_${example})
+  add_executable(${target} EXCLUDE_FROM_ALL examples/hashtable/${example}.cpp)
+  sixdb_target(${target})
+  target_link_libraries(${target} PRIVATE ikea::hashtable)
+  list(APPEND ikea_hashtable_checks ${target})
+  add_dependencies(ikea_examples ${target})
+endforeach()
+foreach(target IN LISTS ikea_hashtable_checks)
+  add_test(NAME ${target} COMMAND $<TARGET_FILE:${target}>)
+endforeach()
+add_dependencies(ikea_validate ${ikea_hashtable_checks})
+add_custom_target(ikea_hashtable_validate
+  COMMAND "${CMAKE_CTEST_COMMAND}" --test-dir "${PROJECT_BINARY_DIR}"
+    --output-on-failure --no-tests=error -R "^ikea_(hashtable_|example_hashtable_)"
+  DEPENDS ${ikea_hashtable_checks}
+  VERBATIM
+  USES_TERMINAL)

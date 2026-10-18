@@ -2,19 +2,21 @@
 
 Ikea supplies composable data containers, codecs and computational kernels for
 SixDB. Its parts serve records, indexes, strings and standalone structures such
-as hash tables and sketches. Engine chooses field semantics and representations;
-Ikea operates over storage supplied by its caller.
+as hash tables and sketches. Engine chooses field semantics and representations.
+Packed primitives borrow caller-supplied storage; owning containers expose their
+allocation and lifetime policies.
 
 Start with [Building fast consumers](docs/consumers.md) for operation choice,
 preparation reuse, fusion, masks and measured tradeoffs. The module guides below
 provide the concrete calls and maintained examples.
 
-| Choose a primitive | Physical model | Start here |
+| Choose a component | Physical model | Start here |
 | --- | --- | --- |
 | SeriesPack | Packed unsigned arrays, 1–64 bits per value; tiled payload and optional head planes | [Use](docs/seriespack/usage.md) · [Physical tour](docs/seriespack/representation.md) · [Compose](docs/seriespack/extending.md) · [Reference](docs/seriespack/reference.md) |
 | TuplePack | Fixed-layout units containing byte-contained unsigned codes; ordered projections with caller-chosen packet grouping | [Use](docs/tuplepack/usage.md) · [Compose](docs/tuplepack/extending.md) · [Reference](docs/tuplepack/reference.md) |
 | Bec256 | Headless 256-position bitsets; caller retains population, exact body length and location | [Use and compose](docs/bec256/usage.md) · [Representation](docs/bec256/representation.md) |
 | StreamPack | Variable-length byte values; caller-owned Direct/Width sidecars and coherent count/extent | [Use and compose](docs/streampack/usage.md) · [Reference](docs/streampack/reference.md) |
+| Hashtable | Compact integer-key sets/maps, Swiss overflow, same-seed growth and mutable accumulation | [Usage](docs/hashtable/usage.md) · [Rationale](docs/hashtable/rationale.md) · [Performance and qualification](../workbench/benchmarks/hashtable/README.md) |
 
 [Unsigned filters](docs/filters.md) return position masks directly from SeriesPack
 and TuplePack storage or native values. Their maintained examples cover ordinary
@@ -60,7 +62,9 @@ Link `ikea::seriespack`, `ikea::tuplepack`, `ikea::bec256` or `ikea::streampack`
 include the corresponding `<ikea/seriespack.h>`, `<ikea/tuplepack.h>`,
 `<ikea/bec256.h>` or `<ikea/streampack.h>`.
 `ikea_validate` runs the modules' correctness checks, independent wire checks
-and examples. For performance measurement and retained comparisons, use the
+and examples. For sets and maps, link `ikea::hashtable` and include
+`<ikea/hashtable.h>`; [usage](docs/hashtable/usage.md) covers concrete owners and
+runtime bindings. For performance measurement and retained comparisons, use the
 [SeriesPack](../workbench/benchmarks/seriespack/README.md),
 [TuplePack](../workbench/benchmarks/tuplepack/README.md) and
 [Bec256](../workbench/benchmarks/bec256/README.md) benchmark guides.

@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="404" viewBox="0 0 1280 404" role="img" aria-labelledby="title description">
+<title id="title">The bucket address carries part of the key</title>
+<desc id="description">A reversible permutation maps a 16-bit key to 0xa35a. Its high four bits, 1010, select bucket ten. Its low twelve bits, 0011 0101 1010, are stored as quotient 0x35a. The bucket and quotient reconstruct the complete permuted key, which the inverse permutation recovers using the same seed.</desc>
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L8,4 L0,8" fill="#586579"/></marker></defs>
+<rect width="1280" height="100%" fill="white"/>
+<g font-family="Arial, Helvetica, sans-serif" fill="#233047" font-size="21">
+<text x="32" y="42" font-size="26" font-weight="bold" fill="#233047" text-anchor="start">The bucket address carries part of the key</text>
+<text x="32" y="80" font-size="22" font-weight="normal" fill="#586579" text-anchor="start">Worked example · W = 16 · b = 4 · K = 12 · seed = 713</text>
+<text x="32" y="154" font-size="22" font-weight="normal" fill="#233047" text-anchor="start">Key 0x149f</text>
+<text x="32" y="186" font-size="22" font-weight="normal" fill="#233047" text-anchor="start">reversibly permuted</text>
+<path d="M252,172 H332" fill="none" stroke="#586579" stroke-width="1.8" marker-end="url(#arrow)"/>
+<rect x="352" y="136" width="54" height="72" rx="3" fill="#98c9f3" stroke="white" stroke-width="1.5"/>
+<text x="379" y="182" font-size="27" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">1</text>
+<rect x="408" y="136" width="54" height="72" rx="3" fill="#98c9f3" stroke="white" stroke-width="1.5"/>
+<text x="435" y="182" font-size="27" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">0</text>
+<rect x="464" y="136" width="54" height="72" rx="3" fill="#98c9f3" stroke="white" stroke-width="1.5"/>
+<text x="491" y="182" font-size="27" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">1</text>
+<rect x="520" y="136" width="54" height="72" rx="3" fill="#98c9f3" stroke="white" stroke-width="1.5"/>
+<text x="547" y="182" font-size="27" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">0</text>
+<rect x="576" y="136" width="54" height="72" rx="3" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="603" y="182" font-size="27" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">0</text>
+<rect x="632" y="136" width="54" height="72" rx="3" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="659" y="182" font-size="27" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">0</text>
+<rect x="688" y="136" width="54" height="72" rx="3" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="715" y="182" font-size="27" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">1</text>
+<rect x="744" y="136" width="54" height="72" rx="3" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="771" y="182" font-size="27" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">1</text>
+<rect x="800" y="136" width="54" height="72" rx="3" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="827" y="182" font-size="27" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">0</text>
+<rect x="856" y="136" width="54" height="72" rx="3" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="883" y="182" font-size="27" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">1</text>
+<rect x="912" y="136" width="54" height="72" rx="3" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="939" y="182" font-size="27" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">0</text>
+<rect x="968" y="136" width="54" height="72" rx="3" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="995" y="182" font-size="27" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">1</text>
+<rect x="1024" y="136" width="54" height="72" rx="3" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="1051" y="182" font-size="27" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">1</text>
+<rect x="1080" y="136" width="54" height="72" rx="3" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="1107" y="182" font-size="27" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">0</text>
+<rect x="1136" y="136" width="54" height="72" rx="3" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="1163" y="182" font-size="27" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">1</text>
+<rect x="1192" y="136" width="54" height="72" rx="3" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="1219" y="182" font-size="27" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">0</text>
+<path d="M352,218 V232 H574 V218" fill="none" stroke="#586579" stroke-width="1.8"/>
+<text x="463.0" y="270" font-size="24" font-weight="bold" fill="#233047" text-anchor="middle">Bucket 1010</text>
+<text x="463.0" y="306" font-size="21" font-weight="normal" fill="#586579" text-anchor="middle">4 bits select bucket ten</text>
+<path d="M576,218 V232 H1246 V218" fill="none" stroke="#586579" stroke-width="1.8"/>
+<text x="911.0" y="270" font-size="24" font-weight="bold" fill="#233047" text-anchor="middle">Quotient 0011 0101 1010</text>
+<text x="911.0" y="306" font-size="21" font-weight="normal" fill="#586579" text-anchor="middle">Only these 12 bits are stored in the bucket</text>
+<path d="M32,336 H1248" fill="none" stroke="#d9e0e9" stroke-width="1.8"/>
+<text x="640" y="378" font-size="22" font-weight="normal" fill="#233047" text-anchor="middle">Address + quotient preserve the full permuted key; the same seed recovers the original.</text>
+</g></svg>

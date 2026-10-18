@@ -185,6 +185,30 @@ Allocation, transaction integration and maintenance policies remain with callers
 The [StreamPack guide](streampack/usage.md) and
 [checks](../test/streampack/README.md) cover these boundaries.
 
+## Hashtable source boundaries
+
+The [set/map guide](hashtable/usage.md) owns consumer obligations. Paths below are
+relative to `include/ikea/hashtable`; owning multimap remains in Workbench.
+
+| Surface | Owner |
+| --- | --- |
+| `table.h` | Concrete owner orchestration, direct/staged reads and mixed/existing mutations |
+| `detail/bucket.h`, `detail/representation.h`, `detail/hash.h` | Data-free physical access/matching, packed value layout and reversible routing |
+| `descriptor.h` | Once-bound function table, retained native/erased readers and replacement publication |
+| `rebuild.h` | Source-preserving same-seed growth; private destination until success |
+| `accumulate.h`, `capacity.h`, `detail/accumulation/` | Fixed-backing ordered accumulation and separate caller-requested Swiss preparation |
+| `geometry.h`, `encoding-selection.h` | One capacity/admission law and generated construction-time bindings; provenance stays in Workbench |
+| `mutation.h`, `storage.h` | Caller grants, before-store damage and substitutable packed allocation policy |
+| `author/table.h` | Exclusive coherent access for authored owner operations; not durable row handles |
+| `detail/packed30.h`, `detail/bucket-filter.h` | Whole-bucket SIMD loads under the owner's initialized access window |
+
+Reader and writer strategies share the same representation. Changing either must
+preserve the other through complete consumer comparisons. Rebuild mask changes
+need live/dead rows, encoding transitions, Swiss promotion, allocation refusal and
+retained-reader checks. `ikea_hashtable_validate` runs those histories and all key
+widths; [paired native controls](../../workbench/benchmarks/hashtable/README.md)
+retain the promotion baseline and real Abseil comparisons.
+
 ## Shared execution entry
 
 The modules use `include/ikea/detail/native_chain.h`. A plan has a power-of-two

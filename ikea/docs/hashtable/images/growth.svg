@@ -1,0 +1,100 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="624" viewBox="0 0 1280 624" role="img" aria-labelledby="title description">
+<title id="title">Same-seed growth preserves row positions in compatible layouts</title>
+<desc id="description">The displayed parent tile has live rows zero, one, three, five and six. Their top quotient bits are zero, one, zero, one and zero. Child 2i keeps rows zero, three and six; child 2i plus one keeps rows one and five. The top quotient bit moves into the bucket address. Other rows become empty; live values keep their row positions. The actual split is checked against grow.</desc>
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L8,4 L0,8" fill="#586579"/></marker></defs>
+<rect width="1280" height="100%" fill="white"/>
+<g font-family="Arial, Helvetica, sans-serif" fill="#233047" font-size="21">
+<text x="32" y="42" font-size="26" font-weight="bold" fill="#233047" text-anchor="start">Growth moves one quotient bit into the bucket address</text>
+<text x="32" y="80" font-size="22" font-weight="normal" fill="#586579" text-anchor="start">Same seed · K: 14 → 13 · physical E stays 14 · one eight-row tile shown</text>
+<text x="32" y="192" font-size="24" font-weight="bold" fill="#233047" text-anchor="start">Parent i</text>
+<text x="32" y="224" font-size="20" font-weight="normal" fill="#586579" text-anchor="start">split bit : low quotient</text>
+<text x="361" y="150" font-size="20" font-weight="normal" fill="#586579" text-anchor="middle">0</text>
+<rect x="304" y="164" width="114" height="72" rx="3" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<rect x="312" y="180" width="26" height="40" rx="3" fill="#98c9f3" stroke="white" stroke-width="1.5"/>
+<text x="325" y="207" font-size="23" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">0</text>
+<text x="378" y="208" font-size="23" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">011</text>
+<text x="479" y="150" font-size="20" font-weight="normal" fill="#586579" text-anchor="middle">1</text>
+<rect x="422" y="164" width="114" height="72" rx="3" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<rect x="430" y="180" width="26" height="40" rx="3" fill="#98c9f3" stroke="white" stroke-width="1.5"/>
+<text x="443" y="207" font-size="23" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">1</text>
+<text x="496" y="208" font-size="23" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">022</text>
+<text x="597" y="150" font-size="20" font-weight="normal" fill="#586579" text-anchor="middle">2</text>
+<rect x="540" y="164" width="114" height="72" rx="3" fill="#f0f3f7" stroke="white" stroke-width="1.5"/>
+<text x="597" y="210" font-size="25" font-weight="normal" fill="#586579" text-anchor="middle">–</text>
+<text x="715" y="150" font-size="20" font-weight="normal" fill="#586579" text-anchor="middle">3</text>
+<rect x="658" y="164" width="114" height="72" rx="3" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<rect x="666" y="180" width="26" height="40" rx="3" fill="#98c9f3" stroke="white" stroke-width="1.5"/>
+<text x="679" y="207" font-size="23" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">0</text>
+<text x="732" y="208" font-size="23" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">044</text>
+<text x="833" y="150" font-size="20" font-weight="normal" fill="#586579" text-anchor="middle">4</text>
+<rect x="776" y="164" width="114" height="72" rx="3" fill="#f0f3f7" stroke="white" stroke-width="1.5"/>
+<text x="833" y="210" font-size="25" font-weight="normal" fill="#586579" text-anchor="middle">–</text>
+<text x="951" y="150" font-size="20" font-weight="normal" fill="#586579" text-anchor="middle">5</text>
+<rect x="894" y="164" width="114" height="72" rx="3" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<rect x="902" y="180" width="26" height="40" rx="3" fill="#98c9f3" stroke="white" stroke-width="1.5"/>
+<text x="915" y="207" font-size="23" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">1</text>
+<text x="968" y="208" font-size="23" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">066</text>
+<text x="1069" y="150" font-size="20" font-weight="normal" fill="#586579" text-anchor="middle">6</text>
+<rect x="1012" y="164" width="114" height="72" rx="3" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<rect x="1020" y="180" width="26" height="40" rx="3" fill="#98c9f3" stroke="white" stroke-width="1.5"/>
+<text x="1033" y="207" font-size="23" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">0</text>
+<text x="1086" y="208" font-size="23" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">077</text>
+<text x="1187" y="150" font-size="20" font-weight="normal" fill="#586579" text-anchor="middle">7</text>
+<rect x="1130" y="164" width="114" height="72" rx="3" fill="#f0f3f7" stroke="white" stroke-width="1.5"/>
+<text x="1187" y="210" font-size="25" font-weight="normal" fill="#586579" text-anchor="middle">–</text>
+<text x="32" y="360" font-size="24" font-weight="bold" fill="#233047" text-anchor="start">Child 2i</text>
+<text x="32" y="392" font-size="20" font-weight="normal" fill="#586579" text-anchor="start">top bit was 0</text>
+<text x="361" y="318" font-size="20" font-weight="normal" fill="#586579" text-anchor="middle">0</text>
+<rect x="304" y="332" width="114" height="72" rx="3" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="361" y="378" font-size="25" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">011</text>
+<text x="479" y="318" font-size="20" font-weight="normal" fill="#586579" text-anchor="middle">1</text>
+<rect x="422" y="332" width="114" height="72" rx="3" fill="#f0f3f7" stroke="white" stroke-width="1.5"/>
+<text x="479" y="378" font-size="25" font-weight="normal" fill="#586579" text-anchor="middle">–</text>
+<text x="597" y="318" font-size="20" font-weight="normal" fill="#586579" text-anchor="middle">2</text>
+<rect x="540" y="332" width="114" height="72" rx="3" fill="#f0f3f7" stroke="white" stroke-width="1.5"/>
+<text x="597" y="378" font-size="25" font-weight="normal" fill="#586579" text-anchor="middle">–</text>
+<text x="715" y="318" font-size="20" font-weight="normal" fill="#586579" text-anchor="middle">3</text>
+<rect x="658" y="332" width="114" height="72" rx="3" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="715" y="378" font-size="25" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">044</text>
+<text x="833" y="318" font-size="20" font-weight="normal" fill="#586579" text-anchor="middle">4</text>
+<rect x="776" y="332" width="114" height="72" rx="3" fill="#f0f3f7" stroke="white" stroke-width="1.5"/>
+<text x="833" y="378" font-size="25" font-weight="normal" fill="#586579" text-anchor="middle">–</text>
+<text x="951" y="318" font-size="20" font-weight="normal" fill="#586579" text-anchor="middle">5</text>
+<rect x="894" y="332" width="114" height="72" rx="3" fill="#f0f3f7" stroke="white" stroke-width="1.5"/>
+<text x="951" y="378" font-size="25" font-weight="normal" fill="#586579" text-anchor="middle">–</text>
+<text x="1069" y="318" font-size="20" font-weight="normal" fill="#586579" text-anchor="middle">6</text>
+<rect x="1012" y="332" width="114" height="72" rx="3" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="1069" y="378" font-size="25" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">077</text>
+<text x="1187" y="318" font-size="20" font-weight="normal" fill="#586579" text-anchor="middle">7</text>
+<rect x="1130" y="332" width="114" height="72" rx="3" fill="#f0f3f7" stroke="white" stroke-width="1.5"/>
+<text x="1187" y="378" font-size="25" font-weight="normal" fill="#586579" text-anchor="middle">–</text>
+<text x="32" y="480" font-size="24" font-weight="bold" fill="#233047" text-anchor="start">Child 2i + 1</text>
+<text x="32" y="512" font-size="20" font-weight="normal" fill="#586579" text-anchor="start">top bit was 1</text>
+<text x="361" y="438" font-size="20" font-weight="normal" fill="#586579" text-anchor="middle">0</text>
+<rect x="304" y="452" width="114" height="72" rx="3" fill="#f0f3f7" stroke="white" stroke-width="1.5"/>
+<text x="361" y="498" font-size="25" font-weight="normal" fill="#586579" text-anchor="middle">–</text>
+<text x="479" y="438" font-size="20" font-weight="normal" fill="#586579" text-anchor="middle">1</text>
+<rect x="422" y="452" width="114" height="72" rx="3" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="479" y="498" font-size="25" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">022</text>
+<text x="597" y="438" font-size="20" font-weight="normal" fill="#586579" text-anchor="middle">2</text>
+<rect x="540" y="452" width="114" height="72" rx="3" fill="#f0f3f7" stroke="white" stroke-width="1.5"/>
+<text x="597" y="498" font-size="25" font-weight="normal" fill="#586579" text-anchor="middle">–</text>
+<text x="715" y="438" font-size="20" font-weight="normal" fill="#586579" text-anchor="middle">3</text>
+<rect x="658" y="452" width="114" height="72" rx="3" fill="#f0f3f7" stroke="white" stroke-width="1.5"/>
+<text x="715" y="498" font-size="25" font-weight="normal" fill="#586579" text-anchor="middle">–</text>
+<text x="833" y="438" font-size="20" font-weight="normal" fill="#586579" text-anchor="middle">4</text>
+<rect x="776" y="452" width="114" height="72" rx="3" fill="#f0f3f7" stroke="white" stroke-width="1.5"/>
+<text x="833" y="498" font-size="25" font-weight="normal" fill="#586579" text-anchor="middle">–</text>
+<text x="951" y="438" font-size="20" font-weight="normal" fill="#586579" text-anchor="middle">5</text>
+<rect x="894" y="452" width="114" height="72" rx="3" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="951" y="498" font-size="25" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">066</text>
+<text x="1069" y="438" font-size="20" font-weight="normal" fill="#586579" text-anchor="middle">6</text>
+<rect x="1012" y="452" width="114" height="72" rx="3" fill="#f0f3f7" stroke="white" stroke-width="1.5"/>
+<text x="1069" y="498" font-size="25" font-weight="normal" fill="#586579" text-anchor="middle">–</text>
+<text x="1187" y="438" font-size="20" font-weight="normal" fill="#586579" text-anchor="middle">7</text>
+<rect x="1130" y="452" width="114" height="72" rx="3" fill="#f0f3f7" stroke="white" stroke-width="1.5"/>
+<text x="1187" y="498" font-size="25" font-weight="normal" fill="#586579" text-anchor="middle">–</text>
+<path d="M282,236 V368 H296" fill="none" stroke="#586579" stroke-width="1.8" marker-end="url(#arrow)"/>
+<path d="M282,368 V488 H296" fill="none" stroke="#586579" stroke-width="1.8" marker-end="url(#arrow)"/>
+<text x="32" y="582" font-size="21" font-weight="normal" fill="#586579" text-anchor="start">Quotients are hexadecimal. Live values keep their rows; excluded rows become canonical empties.</text>
+</g></svg>

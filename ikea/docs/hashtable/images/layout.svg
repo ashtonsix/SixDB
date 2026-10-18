@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="656" viewBox="0 0 1280 656" role="img" aria-labelledby="title description">
+<title id="title">A K30 bucket: key tiles, empty flags and map values</title>
+<desc id="description">The 64-byte key region has tile zero at bytes zero to 29, tile one at 30 to 59, empty flags at 60 and 61, zero padding at 62, and overflow count at 63. Each tile contains eight 30-bit quotients in Local geometry. A set stops at byte 64; an eight-byte-value map appends sixteen values, making a 192-byte bucket stride.</desc>
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L8,4 L0,8" fill="#586579"/></marker></defs>
+<rect width="1280" height="100%" fill="white"/>
+<g font-family="Arial, Helvetica, sans-serif" fill="#233047" font-size="21">
+<text x="32" y="42" font-size="26" font-weight="bold" fill="#233047" text-anchor="start">Sixteen exact quotients in a 64-byte key region</text>
+<text x="32" y="80" font-size="22" font-weight="normal" fill="#586579" text-anchor="start">K = E = 30 · two eight-row tiles · byte offsets increase left to right</text>
+<text x="32" y="126" font-size="20" font-weight="normal" fill="#586579" text-anchor="start">0</text>
+<text x="602" y="126" font-size="20" font-weight="normal" fill="#586579" text-anchor="start">30</text>
+<text x="1172" y="126" font-size="20" font-weight="normal" fill="#586579" text-anchor="start">60</text>
+<text x="1248" y="126" font-size="20" font-weight="normal" fill="#586579" text-anchor="end">64</text>
+<rect x="32" y="140" width="570" height="80" rx="2" fill="#98c9f3" stroke="white" stroke-width="1.5"/>
+<text x="317" y="175" font-size="24" font-weight="bold" fill="#233047" text-anchor="middle">Tile 0 · positions 0–7</text>
+<text x="317" y="205" font-size="22" font-weight="normal" fill="#233047" text-anchor="middle">8 × 30 bits = 30 bytes</text>
+<rect x="602" y="140" width="570" height="80" rx="2" fill="#98c9f3" stroke="white" stroke-width="1.5"/>
+<text x="887" y="175" font-size="24" font-weight="bold" fill="#233047" text-anchor="middle">Tile 1 · positions 8–15</text>
+<text x="887" y="205" font-size="22" font-weight="normal" fill="#233047" text-anchor="middle">8 × 30 bits = 30 bytes</text>
+<rect x="1172" y="140" width="19" height="80" rx="0" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<rect x="1191" y="140" width="19" height="80" rx="0" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<rect x="1210" y="140" width="19" height="80" rx="0" fill="#f0f3f7" stroke="white" stroke-width="1.5"/>
+<rect x="1229" y="140" width="19" height="80" rx="0" fill="#ffdb79" stroke="white" stroke-width="1.5"/>
+<path d="M1172,228 V242 H1248 V228" fill="none" stroke="#586579" stroke-width="1.8"/>
+<path d="M1210,242 V256 H976 V280" fill="none" stroke="#586579" stroke-width="1.8" marker-end="url(#arrow)"/>
+<text x="32" y="296" font-size="26" font-weight="bold" fill="#233047" text-anchor="start">Inside each Local tile</text>
+<text x="32" y="336" font-size="22" font-weight="normal" fill="#233047" text-anchor="start">24 bytes: eight high 24-bit bodies</text>
+<text x="32" y="370" font-size="22" font-weight="normal" fill="#233047" text-anchor="start">6 bytes: low bits in six eight-row bit planes</text>
+<text x="770" y="300" font-size="20" font-weight="normal" fill="#586579" text-anchor="middle">byte 60</text>
+<rect x="704" y="314" width="132" height="64" rx="3" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="770" y="354" font-size="22" font-weight="bold" fill="#233047" text-anchor="middle">Flags 0</text>
+<text x="906" y="300" font-size="20" font-weight="normal" fill="#586579" text-anchor="middle">byte 61</text>
+<rect x="840" y="314" width="132" height="64" rx="3" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="906" y="354" font-size="22" font-weight="bold" fill="#233047" text-anchor="middle">Flags 1</text>
+<text x="1042" y="300" font-size="20" font-weight="normal" fill="#586579" text-anchor="middle">byte 62</text>
+<rect x="976" y="314" width="132" height="64" rx="3" fill="#f0f3f7" stroke="white" stroke-width="1.5"/>
+<text x="1042" y="354" font-size="22" font-weight="bold" fill="#233047" text-anchor="middle">Zero</text>
+<text x="1178" y="300" font-size="20" font-weight="normal" fill="#586579" text-anchor="middle">byte 63</text>
+<rect x="1112" y="314" width="132" height="64" rx="3" fill="#ffdb79" stroke="white" stroke-width="1.5"/>
+<text x="1178" y="354" font-size="22" font-weight="bold" fill="#233047" text-anchor="middle">Overflow</text>
+<text x="976" y="410" font-size="21" font-weight="normal" fill="#586579" text-anchor="middle">Flag bit: 1 = empty, 0 = occupied</text>
+<path d="M32,446 H1248" fill="none" stroke="#d9e0e9" stroke-width="1.8"/>
+<text x="32" y="488" font-size="26" font-weight="bold" fill="#233047" text-anchor="start">Sets stop at byte 64; maps append value storage</text>
+<text x="32.0" y="534" font-size="20" font-weight="normal" fill="#586579" text-anchor="start">0</text>
+<text x="437.3333333333333" y="534" font-size="20" font-weight="normal" fill="#586579" text-anchor="start">64</text>
+<text x="1248.0" y="534" font-size="20" font-weight="normal" fill="#586579" text-anchor="end">192</text>
+<rect x="32" y="548" width="405.3333333333333" height="60" rx="2" fill="#98c9f3" stroke="white" stroke-width="1.5"/>
+<text x="234.66666666666666" y="586" font-size="22" font-weight="bold" fill="#233047" text-anchor="middle">Key region · 64 B</text>
+<rect x="437.3333333333333" y="548" width="49.666666666666664" height="60" rx="2" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="462.66666666666663" y="586" font-size="21" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">0</text>
+<rect x="488.0" y="548" width="49.666666666666664" height="60" rx="2" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="513.3333333333333" y="586" font-size="21" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">1</text>
+<rect x="538.6666666666666" y="548" width="49.666666666666664" height="60" rx="2" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="564.0" y="586" font-size="21" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">2</text>
+<rect x="589.3333333333333" y="548" width="49.666666666666664" height="60" rx="2" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="614.6666666666666" y="586" font-size="21" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">3</text>
+<rect x="640.0" y="548" width="49.666666666666664" height="60" rx="2" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="665.3333333333333" y="586" font-size="21" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">4</text>
+<rect x="690.6666666666666" y="548" width="49.666666666666664" height="60" rx="2" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="716.0" y="586" font-size="21" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">5</text>
+<rect x="741.3333333333333" y="548" width="49.666666666666664" height="60" rx="2" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="766.6666666666666" y="586" font-size="21" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">6</text>
+<rect x="792.0" y="548" width="49.666666666666664" height="60" rx="2" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="817.3333333333333" y="586" font-size="21" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">7</text>
+<rect x="842.6666666666666" y="548" width="49.666666666666664" height="60" rx="2" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="868.0" y="586" font-size="21" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">8</text>
+<rect x="893.3333333333333" y="548" width="49.666666666666664" height="60" rx="2" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="918.6666666666666" y="586" font-size="21" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">9</text>
+<rect x="944.0" y="548" width="49.666666666666664" height="60" rx="2" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="969.3333333333333" y="586" font-size="21" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">10</text>
+<rect x="994.6666666666665" y="548" width="49.666666666666664" height="60" rx="2" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="1020.0" y="586" font-size="21" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">11</text>
+<rect x="1045.3333333333333" y="548" width="49.666666666666664" height="60" rx="2" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="1070.6666666666665" y="586" font-size="21" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">12</text>
+<rect x="1096.0" y="548" width="49.666666666666664" height="60" rx="2" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="1121.3333333333333" y="586" font-size="21" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">13</text>
+<rect x="1146.6666666666665" y="548" width="49.666666666666664" height="60" rx="2" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="1172.0" y="586" font-size="21" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">14</text>
+<rect x="1197.3333333333333" y="548" width="49.666666666666664" height="60" rx="2" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="1222.6666666666665" y="586" font-size="21" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">15</text>
+<text x="640" y="642" font-size="21" font-weight="normal" fill="#586579" text-anchor="middle">V = 8 example · 16 value rows × 8 B = 128 B · complete bucket stride = 192 B</text>
+</g></svg>

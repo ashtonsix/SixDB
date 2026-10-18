@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Compile each ordinary/author header independently using the configured profile."""
+"""Compile ordinary/author and hashtable detail headers independently."""
 import argparse
 import json
 from pathlib import Path
@@ -8,7 +8,7 @@ import subprocess
 
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('build', type=Path)
-parser.add_argument('--module', choices=('seriespack', 'tuplepack', 'bec256', 'streampack'),
+parser.add_argument('--module', choices=('seriespack', 'tuplepack', 'bec256', 'streampack', 'hashtable'),
                     help='Check only this module; the default checks every supported header')
 args = parser.parse_args()
 entries = json.loads((args.build / 'compile_commands.json').read_text())
@@ -28,14 +28,17 @@ for part in parts:
     command.append(part)
 command += ['-fsyntax-only', '-x', 'c++', '-']
 include = Path(__file__).resolve().parents[1] / 'include'
-headers = sorted(p for p in include.rglob('*.h') if 'detail' not in p.parts)
+headers = sorted(p for p in include.rglob('*.h')
+                 if 'detail' not in p.parts or 'hashtable' in p.relative_to(include).parts)
 if args.module:
     headers = [p for p in headers if args.module in p.relative_to(include).parts
                or p.name == args.module + '.h']
+if not headers:
+    raise SystemExit(f'No headers selected under {include}')
 for header in headers:
     name = header.relative_to(include)
     result = subprocess.run(command, input=f'#include <{name}>\n', text=True,
                             cwd=entry['directory'], capture_output=True)
     if result.returncode:
         raise SystemExit(f'{name}\n{result.stderr}')
-print(f'Ikea: {len(headers)} ordinary/author headers compile independently')
+print(f'Ikea: {len(headers)} headers compile independently')

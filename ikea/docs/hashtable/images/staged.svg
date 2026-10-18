@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="576" viewBox="0 0 1280 576" role="img" aria-labelledby="title description">
+<title id="title">Staged reads return at dependent address boundaries</title>
+<desc id="description">Three traces show caller-controlled waits between preparation and advances. A primary set hit emits the key region and finishes in advance one. A primary map hit emits its selected value and consumes it in advance two. A Swiss hit emits controls after the primary miss, a tuple after a tag matches, then verifies the full key. False tags and more groups can require further advances.</desc>
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L8,4 L0,8" fill="#586579"/></marker></defs>
+<rect width="1280" height="100%" fill="white"/>
+<g font-family="Arial, Helvetica, sans-serif" fill="#233047" font-size="21">
+<text x="32" y="42" font-size="26" font-weight="bold" fill="#233047" text-anchor="start">Pause where the next address becomes known</text>
+<text x="32" y="80" font-size="21" font-weight="normal" fill="#586579" text-anchor="start">Default dependent scheduling · dashed lines let the caller run other work</text>
+<rect x="244" y="122" width="236" height="48" rx="3" fill="#f0f3f7" stroke="white" stroke-width="1.5"/>
+<text x="362" y="154" font-size="23" font-weight="bold" fill="#233047" text-anchor="middle">Prepare</text>
+<rect x="500" y="122" width="236" height="48" rx="3" fill="#f0f3f7" stroke="white" stroke-width="1.5"/>
+<text x="618" y="154" font-size="23" font-weight="bold" fill="#233047" text-anchor="middle">Advance 1</text>
+<path d="M488,184 V474" fill="none" stroke="#d9e0e9" stroke-width="1.8" stroke-dasharray="6 5"/>
+<rect x="756" y="122" width="236" height="48" rx="3" fill="#f0f3f7" stroke="white" stroke-width="1.5"/>
+<text x="874" y="154" font-size="23" font-weight="bold" fill="#233047" text-anchor="middle">Advance 2</text>
+<path d="M744,184 V474" fill="none" stroke="#d9e0e9" stroke-width="1.8" stroke-dasharray="6 5"/>
+<rect x="1012" y="122" width="236" height="48" rx="3" fill="#f0f3f7" stroke="white" stroke-width="1.5"/>
+<text x="1130" y="154" font-size="23" font-weight="bold" fill="#233047" text-anchor="middle">Advance 3</text>
+<path d="M1000,184 V474" fill="none" stroke="#d9e0e9" stroke-width="1.8" stroke-dasharray="6 5"/>
+<text x="32" y="241" font-size="23" font-weight="bold" fill="#233047" text-anchor="start">Primary set hit</text>
+<rect x="244" y="202" width="236" height="64" rx="3" fill="#98c9f3" stroke="white" stroke-width="1.5"/>
+<text x="362" y="242" font-size="21" font-weight="normal" fill="#233047" text-anchor="middle">Emit key region</text>
+<path d="M480,234 H494" fill="none" stroke="#586579" stroke-width="1.8" marker-end="url(#arrow)"/>
+<rect x="500" y="202" width="236" height="64" rx="3" fill="#98c9f3" stroke="white" stroke-width="1.5"/>
+<text x="618" y="242" font-size="21" font-weight="normal" fill="#233047" text-anchor="middle">Exact match · done</text>
+<text x="32" y="341" font-size="23" font-weight="bold" fill="#233047" text-anchor="start">Primary map hit</text>
+<rect x="244" y="302" width="236" height="64" rx="3" fill="#98c9f3" stroke="white" stroke-width="1.5"/>
+<text x="362" y="342" font-size="21" font-weight="normal" fill="#233047" text-anchor="middle">Emit key region</text>
+<path d="M480,334 H494" fill="none" stroke="#586579" stroke-width="1.8" marker-end="url(#arrow)"/>
+<rect x="500" y="302" width="236" height="64" rx="3" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="618" y="342" font-size="21" font-weight="normal" fill="#233047" text-anchor="middle">Match · emit value</text>
+<path d="M736,334 H750" fill="none" stroke="#586579" stroke-width="1.8" marker-end="url(#arrow)"/>
+<rect x="756" y="302" width="236" height="64" rx="3" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="874" y="342" font-size="21" font-weight="normal" fill="#233047" text-anchor="middle">Consume · done</text>
+<text x="32" y="441" font-size="23" font-weight="bold" fill="#233047" text-anchor="start">Swiss spill hit</text>
+<rect x="244" y="402" width="236" height="64" rx="3" fill="#98c9f3" stroke="white" stroke-width="1.5"/>
+<text x="362" y="442" font-size="21" font-weight="normal" fill="#233047" text-anchor="middle">Emit key region</text>
+<path d="M480,434 H494" fill="none" stroke="#586579" stroke-width="1.8" marker-end="url(#arrow)"/>
+<rect x="500" y="402" width="236" height="64" rx="3" fill="#ffdb79" stroke="white" stroke-width="1.5"/>
+<text x="618" y="442" font-size="21" font-weight="normal" fill="#233047" text-anchor="middle">Miss · emit controls</text>
+<path d="M736,434 H750" fill="none" stroke="#586579" stroke-width="1.8" marker-end="url(#arrow)"/>
+<rect x="756" y="402" width="236" height="64" rx="3" fill="#ffdb79" stroke="white" stroke-width="1.5"/>
+<text x="874" y="442" font-size="21" font-weight="normal" fill="#233047" text-anchor="middle">Tag · emit tuple</text>
+<path d="M992,434 H1006" fill="none" stroke="#586579" stroke-width="1.8" marker-end="url(#arrow)"/>
+<rect x="1012" y="402" width="236" height="64" rx="3" fill="#ffdb79" stroke="white" stroke-width="1.5"/>
+<text x="1130" y="442" font-size="21" font-weight="normal" fill="#233047" text-anchor="middle">Verify key · done</text>
+<text x="32" y="520" font-size="21" font-weight="normal" fill="#586579" text-anchor="start">A primary miss with overflow count zero also finishes in advance 1.</text>
+<text x="32" y="552" font-size="21" font-weight="normal" fill="#586579" text-anchor="start">False tags or further groups may require more advances. Emitting an extent does not wait for it.</text>
+</g></svg>
