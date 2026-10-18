@@ -11,15 +11,14 @@ orbital::Result<Policy> Policy::bind(Options options) noexcept {
 
 void Policy::reset() noexcept {
   forget_sample();
-  identity_ = {};
   sample_epoch_ = last_epoch_ = 0;
 }
 
-bool Policy::observe(const Identity& identity, Epoch now, SerialSample sample) noexcept {
-  if (!identity.qualified() || !sample.elapsed_ns || !sample.completed_requests) return false;
+bool Policy::observe(Epoch now, SerialSample sample) noexcept {
+  if (!sample.elapsed_ns || !sample.completed_requests) return false;
   const auto cost = sample.elapsed_ns / sample.completed_requests +
       std::uint64_t(sample.elapsed_ns % sample.completed_requests != 0);
-  touch(identity, now);
+  touch(now);
   sample_epoch_ = now;
   if (cost > options_.cheap_ns_per_request) {
     state_ = SampleState::expensive;

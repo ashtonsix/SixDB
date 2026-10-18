@@ -1,10 +1,13 @@
 # Locality, execution and contiguous demand
 
-Ashton's 15 October request asks whether Loom can own reusable execution policy
+Ashton's 15 October request asked whether Loom can own reusable execution policy
 without losing the few-nanosecond native path or the existing Ikea cold gains.
-The original experiments are private; the subsequent
-[execution-policy graduation](GRADUATION.md) owns implementation and fresh native
-qualification. Ring ABI and Ikea formats are unchanged.
+This directory retains the private experiments and the subsequent historical
+[execution-policy graduation](GRADUATION.md). For the current generic API, use
+the [execution guide](../../../loom/docs/execution.md): callers qualify their
+legal procedures and evidence cohort, then explicitly reset Policy when that
+qualification changes. The retained native timings measured an earlier
+identity-bearing interface and do not qualify the revised API automatically.
 
 Two questions are separate. Can actual recent serial performance cheaply select
 direct execution versus a memory Ring? Can abstract hints describe a random
@@ -14,12 +17,16 @@ trained sequence between queries?
 [Findings and native comparisons](FINDINGS.md) retain the successful controls,
 regressions and limits. This is caller-cohort policy, not a bucket heat directory.
 
-`locality.h` holds a 56-byte caller-cohort record, qualified by owner incarnation,
-storage generation, access population and assigned worker/cache domain. Only
-completed, genuinely serial useful work supplies cheap-access evidence. Issued
-hints and pipelined reciprocal throughput do not. Full outer epochs reject
-backward time, long idle and timestamp aliasing. The record owns no bytes or
-interpretation. Decisions, clocks and samples stay outside native Ring visits.
+## Private experiments
+
+The private [`locality.h`](locality.h) holds a 56-byte caller-cohort record,
+qualified by owner incarnation, storage generation, access population and
+assigned worker/cache domain. Only completed serial useful work supplies
+cheap-access evidence. Issued hints and pipelined reciprocal throughput do not.
+Full outer epochs reject backward time, long idle and timestamp aliasing. The
+record owns no bytes or interpretation. Decisions, clocks and samples stay
+outside native Ring visits. Its `Tag` is this caller experiment's schema, not a
+public Loom protocol.
 
 `execution.cpp` uses the captured Ikea generic set/map/multimap reader and its
 same result-dependent graph, with complete-byte independent answers. It compares
@@ -37,8 +44,8 @@ samples qualify direct selection. The additional cadence state is 24 bytes.
 Small probes can miss heterogeneous costs; rotation does not guarantee coverage
 before every decision.
 
-`contiguous.h` binds exact contiguous windows once, selecting sixteen classes
-for 64/128-byte native lines. Each class hints fixed offsets and the last covered
+[`contiguous.h`](contiguous.h) binds exact contiguous windows once, selecting
+sixteen classes for 64/128-byte native lines. Each class hints fixed offsets and the last covered
 byte, covering unaligned tails with no size/alignment loop. Duplicate physical
 line hints are counted explicitly. A nine-hint cap limits larger windows to an
 explicit prefix; the entire requested read window still needs qualification.
@@ -62,6 +69,8 @@ finite indexed table (1,025 × 16 bytes); that additional storage is not hidden
 in the table's own allocation total. An untimed full-window inventory proves
 every later plan index. This table tests binding/codegen cost, not a proposed
 global lookup cache. L2 is a fixed locality arm, not measured busy pressure.
+
+## Build a current composition
 
 Build only wanted targets, using the pinned Linux compiler:
 
@@ -91,11 +100,15 @@ orb -m ubuntu cmake --build build/loom-locality --target \
   loom_window_hot_1_unique loom_execution_hot_1_budgeted -j2
 ```
 
-This composes the captured caller with current module libraries and needs fresh
-qualification if they change. Exact measured sources/binaries remain in the
-archive. Worker runners expect an explicit complete source capture via
+This composes the captured caller with current module libraries; it does not
+recreate the measured cut. The graduation adapter in `graduation.cpp` translates
+its private cohort changes into explicit Policy resets. Source compatibility
+supplies no performance qualification. Exact measured sources/binaries remain
+in the archive. Worker runners expect an explicit complete source capture via
 `worker.py run ... --source CAPTURE`; they select that captured root as their
 consumer input.
+
+## Read and recover the measured comparisons
 
 `native.sh` retains matched hot/large all-three-kind panels and actual native
 assembly. `report.py` checks logical/job/graph/visit equality, keeps every mode
@@ -112,6 +125,6 @@ panels and compact receipts; its archive-backed recipe invokes current `replay.p
 and analysis tools, never captured scripts or binaries. Full source, binaries,
 assembly, mapping receipts and build logs remain recoverable from each archive.
 
-Ikea's captured staged consumer remains the reference. The working capture freezes
-allocator and format bytes across all policy variants so unrelated repairs cannot
-explain their differences.
+Ikea's captured staged consumer remains the historical reference. The frozen
+capture keeps allocator and format bytes across all policy variants so unrelated
+repairs cannot explain their differences.

@@ -2,10 +2,13 @@
 
 Loom owns hardware interpretation, bounded experiments and scheduling policy.
 Orbital supplies reported platform facts, worker affinity, physical storage and
-lifetimes. Ikea supplies kernels and formats over
-admitted byte windows. Engine and Shore compose useful operations; their runtime
+lifetimes. Ikea supplies kernels and formats over admitted byte windows.
+Engine and Shore compose useful operations; their runtime
 callers are still to be built. Loom examples and the composed StreamPack/Object
 drivers currently exercise these seams.
+
+For caller setup, start with [demand binding and policy adoption](#bind-demand-and-adopt-policy).
+For reported and calibrated fields, see [inspection](#inspect-and-use).
 
 ## Organising model
 
@@ -51,6 +54,84 @@ copies the selected policy at a returned boundary. Native callbacks execute
 admitted inline hint bodies without a clock, hardware query, profile lock or
 atomic read. Physical reporting is independent of calibration: it remains useful
 when experiments are disabled, unsupported, cancelled or inconclusive.
+
+## Bind demand and adopt policy
+
+Use the [hint example](../examples/hints.cpp) for a complete startup-to-cleanup
+consumer. Set up an optional shared `HardwareService`, discover the actual
+context, request its profile and attach the handle in `configure`. Known/default
+fields are available immediately while one coalesced background job calibrates
+missing fields. A complete known hit needs no calibration. Choose the service's
+memory/time allowance and retain it through cancellation/join; those bounds are
+cooperative, including scheduling and VM calls. Workers without a service use
+reported geometry and provisional defaults. Native execution need not wait for
+calibration to finish.
+
+Callers describe `MemoryDemand` as irregular or linear access with an approximate
+extent. `bind_demand` rounds it down to one of eight extent classes for that
+pattern, bounded by the minimum contiguous qualified window at every later
+address.
+The smallest class needs one occupied byte; it does not permit a complete
+cache-line load. The resulting class is small operation state: bind once, then use
+`ring.prefetch(class, address)` or `MemoryDependency` at admission. No per-address
+size/null validation belongs inside the emitted hint body. Activity, physical
+lifetime and version/content stability must already qualify each address.
+
+Separate planes need separate demands. An address envelope spanning a gap does
+not authorize hints through that gap. Random starting addresses followed by
+contiguous consumption are not a trained stream across requests. The product
+uses its existing bounded class mapping; the alternative contiguous/unique-line
+emitters remain experimental. Fixed `Hint` controls remain available for matched
+mechanism comparisons, with their own stride/page qualification.
+
+After a spin returns, call `refresh_hints(worker)` and then
+`ring.refresh_hints()` to adopt newly qualified fields. `set_hint_pressure`
+accepts a caller's coarse low/busy observation; the mapping is provisional,
+not an automatic pressure sensor. Pending frames retain their admitted class
+envelopes. Geometry stays fixed until close/rebind, and a width candidate does
+not resize a live bank. Native visits read no hardware, clock, profile atomic or
+lock. Keep inspection through `inspect()` on cold paths.
+
+The retained behavior table is compiled into Loom;
+[its generator](../tools/generate_hardware_table.py) checks the original context
+keys and input hash. Runtime lookup uses no Python or subprocess. A missing or
+partial match preserves unknown fields rather than extending old observations
+to an unqualified environment. Neither training, neighbor benefit nor the width
+candidate is per-address heat or a promise that the next load will be cheap.
+Use caller facts or the [execution policy](execution.md) for operation choice.
+
+### Stage demands and fixed locality controls
+
+Bind separate `DemandClass` values for independently qualified stage windows,
+such as primary metadata, overflow control bytes and a later value. Normal
+callers describe irregular/linear access and extent; the current hardware and
+pressure mapping selects the hint body. A larger extent is not a request to
+target a farther cache level. Current irregular demands select a first-line
+L1 hint at low pressure or L2 at busy pressure; this mapping is provisional.
+It does not currently infer a cache tier from execution-policy evidence.
+
+For matched L1/L2/LLC experiments, `<loom/hints.h>` exposes fixed controls:
+
+| Use | Maintained interface |
+| --- | --- |
+| Bind an initial address and its actual qualified bytes | `bind_dependency(Hint::l1_1, bytes, page_bytes)` returning `BoundDependency`; pass it to `Ring::push` |
+| Bind a fixed shape once for later stage addresses | `bind_hint_shape(Hint::l2_1, minimum_bytes, page_bytes)` returning the admitted `Hint` |
+| Emit that admitted shape at a later address | `prefetch_selected(hint, address, HintGeometry{64, page_bytes})` |
+| A compile-time single-line mechanism control | `prefetch<Hint::l1_1>`, `prefetch<Hint::l2_1>` or `prefetch<Hint::l3_1>`, with the qualified address and page/line geometry |
+
+`Ring::prefetch` takes an abstract DemandClass; fixed later-stage controls use
+the free functions above. Binding can downgrade an oversized fixed shape, so use
+the returned Hint. The fixed controls preserve their original 64-byte stride;
+match the Ring's page geometry. For a compile-time control, the caller must
+establish the shape/window proof before the native region. Select a concrete
+stage at setup when that removes runtime selection from the measured body.
+
+These names request prefetch locality, not exclusive L1/L2/LLC placement or a
+readiness guarantee. `l3_1` uses builtin locality 1; it is not a portable promise
+about an LLC. Keep each target active and qualified, including speculative
+later-stage hints. For dependent loads, hint and rotate before consuming the target;
+known-ready arithmetic may stay in the current visit. The
+[Ring guide](ring.md#dependent-prefetch-and-admission) owns those transitions.
 
 ## Automatic characterisation
 
@@ -162,11 +243,12 @@ demand at randomized regions under separated cold/hot controls. A negative
 observation concerns that same history. Neither identifies a named hardware
 prefetch engine, a servicing cache level, or present residence of an address.
 
-Cold consumers can read a startup handle's snapshot when choosing an experiment
-or operation shape. This fact may inform a two-line bucket comparison. It does
-not authorize a wider load, promise the second line is already ready, or justify
-omitting a second software hint: software-prefetch triggering is measured
-separately. Cross-page observations also need separate evidence. The
+On cold control paths, callers can read a startup handle's snapshot when choosing
+an experiment or operation shape. This observation may inform a comparison of
+one-line and two-line reads. It does not authorize a wider load, promise the
+second line is already ready, or justify omitting a second software hint:
+software-prefetch triggering is measured separately. Cross-page observations
+also need separate evidence. The
 [controlled diagnostic](../../workbench/spikes/memory-characterisation/ADJACENT.md)
 retains those controls and their timing horizons.
 
@@ -202,16 +284,30 @@ with their physical capabilities and complete operation consumers.
 
 Loom currently has no address/bucket heat or timestamp/confidence oracle. Its
 hardware observations provide a prior for a policy, not per-address history.
+The [retired heat studies](../../workbench/notebook/retired-spikes.md#hashtable-promotion-and-curation--october-17-2026)
+tested a 16-bit timestamp/tag predictor separately from cohort identity and
+physical ownership, then calibrated consumer age/fill route choices with complete
+operation costs charged. Synthetic decay profiles were not hardware calibration,
+and the tested bounded consumer batches regressed. Neither supplied a promoted
+heat oracle.
+
+[`ColdPromotion`](execution.md#cold-promotion-without-hot-path-observation)
+instead confirms measured useful direct-batch cost only in a caller's cold
+method. The owner installs a hot entry and owns its periodic demotion; no heat
+observer runs in the hot method. This predicts a qualified complete procedure's
+cost, with maintenance charged, rather than querying an address's cache tier.
 Orbital's `ReleaseHint` supplies temporal advice for Group/window reclamation;
 it is not a cache-residency query. The historical spatial epoch-bank spike also
 has no promoted bucket oracle.
 
-The [execution policy](execution.md) uses completed serial consumer samples, full
-outer epochs and generation/population/worker/cache-domain qualification.
-Sampling and direct/Ring selection occur at ordinary operation boundaries;
-native visits keep their existing ABI and hint path. Its cutoff is qualified
-for a complete consumer, rather than inferred from a hardware table or treated
-as a universal crossover. The
+The [execution policy](execution.md) uses completed serial consumer samples and
+full outer epochs. The caller qualifies its legal complete procedures and
+evidence cohort, and explicitly resets the Policy when those assumptions
+change. Sampling and direct/Ring selection occur at ordinary operation
+boundaries; native visits keep their existing ABI and hint path. Its cutoff is
+qualified for a complete consumer, rather than inferred from a hardware table
+or treated as a universal crossover. The
 [locality/execution study](../../workbench/spikes/loom-locality-execution/README.md)
-retains fixed and instrumentation-disabled controls with sample costs charged.
+retains frozen controls for the earlier identity-bearing interface, with sample
+costs charged; those timings do not qualify the current API automatically.
 Its separate random-start contiguous-demand prototypes remain experimental.

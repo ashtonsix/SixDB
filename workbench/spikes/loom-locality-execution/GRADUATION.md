@@ -1,21 +1,29 @@
-# Graduating execution policy
+# Historical execution-policy graduation
 
-The caller-cohort policy now lives in
+Generic execution feedback lives in
 [`loom/execution.h`](../../../loom/include/loom/execution.h), with checked
 construction and observation in Loom's compiled library. The
 [execution guide](../../../loom/docs/execution.md) owns its caller contract.
-The original private implementations remain matched experimental controls.
-The general unique-line contiguous selector remains rejected.
+The current API accepts epochs, paths and samples. Callers qualify their legal
+procedures and evidence cohort, then call `reset()` when that qualification
+changes. Loom defines no container identity schema.
 
-## What graduated
+This page preserves the initial graduation's frozen, identity-bearing interface
+and native results. Its layout, codegen, checks and timings do not automatically
+qualify the revised API or the caller's reset adapter. The original private
+implementations remain matched experimental controls. The general unique-line
+contiguous selector remains rejected.
 
-One owner-held Policy combines qualified serial evidence and bounded retry
-cadence. Options require an explicit consumer-qualified cutoff and maximum age.
-Identity covers the complete compared procedure pair, distribution, owner
-incarnation, generation and assigned worker/cache domain. Identity changes,
-expiry and backward time discard history permanently. Invalid observations do
-not change history. A saturating countdown replaces the private sampler's
-wrapping batch/deadline arithmetic.
+## Measured interface
+
+In the measured interface, one owner-held Policy combined qualified serial
+evidence and bounded retry cadence. Options required an explicit
+consumer-qualified cutoff and maximum age. Its historical `Identity` covered
+the complete compared procedure pair,
+distribution, owner incarnation, generation and assigned worker/cache domain.
+Identity changes, expiry and backward time discarded history permanently.
+Invalid observations did not change history. A saturating countdown replaced
+the private sampler's wrapping batch/deadline arithmetic.
 
 The caller retains its legal complete kernels, representative bounded sample
 work, head rotation, content/version stability and physical protection. Only
@@ -24,44 +32,45 @@ direct/Ring decisions stay at ordinary operation boundaries. No Worker fields,
 Ring fields, native callback arguments, per-bucket observer or hint procedure
 were added. Tasks and suspension remain separate caller choices.
 
-The public API contains no experiment instrumentation switches, hint counters
-or fixed-path controls. Callers can execute known legal paths directly, or
-supply an explicit direct prior without inventing evidence. Changing options
-constructs a new Policy. Changing a kernel/width/hint snapshot that changes the
-qualified crossover also requires requalification of the cohort/options.
+The measured public API contained no experiment instrumentation switches, hint
+counters or fixed-path controls. As with the current API, callers could execute
+known legal paths directly or supply an explicit direct prior without inventing
+evidence. Changing options required a new Policy. A kernel, width or hint
+snapshot change that altered the qualified crossover also required
+requalification of the cohort/options.
 
-## Few-nanosecond boundary
+## Measured boundary cost
 
 An initial native Zen run passed all 20 correctness checks, then the strict
 ordinary-wrapper guard found two unnecessary callee-save register spills.
 Qualification of an unchanged, already-qualified identity kept excess temporary
-values live. Validating identity on cohort change removes that work from the
+values live. Validating identity on cohort change removed that work from the
 common path while preserving invalidation on every boundary. Both pinned ARM
-and x86 compilation then produce call-free, stack-free ordinary wrappers. Native
-callbacks contain no policy work.
+and x86 compilation then produced call-free, stack-free ordinary wrappers.
+Those native callbacks contained no policy work.
 
-The public Policy is 88 bytes on the measured ABIs, including its options. The
-private wrapper is 104 bytes: its existing 80-byte CSV counter counts only the
-record and cadence, excluding 24 bytes of options. Those counters are not an
-apples-to-apples memory ranking. Independent compiled layout diagnostics are
+At that cut, public Policy was 88 bytes on the measured ABIs, including its
+options. The private wrapper was 104 bytes: its 80-byte CSV counter counted only
+the record and cadence, excluding 24 bytes of options. Those counters are not
+an apples-to-apples memory ranking. Independent compiled layout diagnostics are
 retained with the checks.
 
-## Qualification
+## Qualification of the frozen cut
 
-All 18 Loom runtime checks pass after the flow repair. O3 ASan/UBSan with
-always-UAR passes the policy and complete direct/Ring example. Public tests cover
-identity fields, inclusive age/cutoff boundaries, rollback/wrap, exact cadence,
-rejected observations, legality, numeric limits, confirmation saturation and a
-heterogeneous-sample counterexample. The report/codegen checker has 23 positive
-and refusal controls in normal Python and optimized mode.
+All 18 Loom runtime checks passed after that flow repair. O3 ASan/UBSan with
+always-UAR passed the policy and complete direct/Ring example. Those public
+tests covered identity fields, inclusive age/cutoff boundaries, rollback/wrap,
+exact cadence, rejected observations, legality, numeric limits, confirmation
+saturation and a heterogeneous-sample counterexample. The report/codegen checker
+has 23 positive and refusal controls in normal Python and optimized mode.
 [Checks and source identity](evidence/graduation-checks-20261015/artifact.json)
 retain logs, compilation settings and layout diagnostics.
 
-The final native campaigns use Ikea's verified V4 caller, explicitly selecting
-`HT_RECORD_READ_WINDOWS=2` in every current reference/private/product consumer.
-All source, allocator and format bytes are matched. Five passes alternate
-private/product process order and rotate internal mode/cutoff order. Each host
-covers 186 original full-graph cells and 2,016 execution-policy cells, including
+The final native campaigns used Ikea's verified V4 caller, explicitly selecting
+`HT_RECORD_READ_WINDOWS=2` in every measured reference/private/product consumer.
+All source, allocator and format bytes were matched. Five passes alternated
+private/product process order and rotated internal mode/cutoff order. Each host
+covered 186 original full-graph cells and 2,016 execution-policy cells, including
 all-hit/mixed, hot/large, set/map/multimap, all seven phases and six controls at
 cutoffs 32 and 128. Actual serial samples are fully charged without increasing
 the useful request denominator. Actual execution callbacks, serial probes and
@@ -87,8 +96,8 @@ noinline-wrapper diagnostics include ordinary argument transfer and return,
 not observation work or native visit cost. Actual operations charge their
 clocks, samples and selection separately below. Caller-known direct costs
 2.238 / 1.723 ns on V2 / Zen versus the private control's 0.716 / 0.991 ns;
-the public prior still maintains context/epoch invalidation. Callers already
-choosing a legal path can execute it directly.
+the measured public prior still maintains context/epoch invalidation. Callers
+already choosing a legal path can execute it directly.
 
 ## Complete-operation results
 
@@ -149,7 +158,7 @@ wrapper guard before timings. The completed pre-repair V2 run is auxiliary;
 its timings are not pooled with the final policy. Worker archives preserve
 those outcomes.
 
-## Recovery
+## Replay reports or rebuild consumers
 
 The selected evidence retains every used timing cell/repetition, sample and
 decision count, unchanged competitor and compact control receipt. Full source,
@@ -168,8 +177,11 @@ Use the Zen evidence directory for its comparison. To rebuild consumers, recover
 the full verified source through `replay.py --graduation --source-output NEWDIR`,
 then configure with `SIXDB_LOOM_CONSUMER_SOURCE_ROOT=NEWDIR` and
 `SIXDB_LOOM_GRADUATION_ONLY=ON`. Primitive targets remain independent of Ikea's
-private header graph. Current libraries composed with a recovered caller need
-fresh qualification if they change; exact measured binaries remain archived.
+private header graph. The current `graduation.cpp` adapter keeps its own
+experimental `Tag` and resets the public Policy when that cohort changes.
+Rebuilding it with current libraries creates a new composition requiring
+qualification; it does not reproduce the measured identity-bearing interface.
+Exact measured sources and binaries remain archived.
 
 ## Comparison limits
 

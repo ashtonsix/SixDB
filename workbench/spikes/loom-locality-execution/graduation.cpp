@@ -195,18 +195,24 @@ Epoch epoch() {
 
 // State belongs to the entire trace, so return/publication/migration phases
 // exercise recency and identity transitions rather than pre-seeding heat.
+// Tag is this caller's cohort schema in both branches. Current module Policy
+// has no identity API; this wrapper explicitly resets it on caller tag changes.
+// Frozen graduation measurements precede this adapter/API change.
+using Identity=Tag;
 #if LOOM_GRADUATED_POLICY
-using Identity=loom::execution::Identity;
 using ExecutionPath=loom::execution::Path;
 #else
-using Identity=Tag;
 using ExecutionPath=Path;
 #endif
 
 class BoundaryPolicy {
 #if LOOM_GRADUATED_POLICY
   loom::execution::Policy state_;
+  Identity cohort_{};
   explicit BoundaryPolicy(loom::execution::Policy state):state_(std::move(state)){}
+  void adopt_cohort(const Identity& identity) noexcept {
+    if(cohort_!=identity){state_.reset();cohort_=identity;}
+  }
 #else
   Record state_;
   ProbeCadence cadence_;
@@ -224,14 +230,16 @@ public:
   }
   bool due(const Identity& identity,Epoch now) {
 #if LOOM_GRADUATED_POLICY
-    return state_.sample_due(identity,now,{true,true,width,width});
+    adopt_cohort(identity);
+    return state_.sample_due(now,{true,true,width,width});
 #else
     return cadence_.due(state_.inspect(identity,now,options_));
 #endif
   }
   bool observe(const Identity& identity,Epoch now,std::uint64_t elapsed,unsigned completed) {
 #if LOOM_GRADUATED_POLICY
-    return state_.observe(identity,now,{elapsed,completed});
+    adopt_cohort(identity);
+    return state_.observe(now,{elapsed,completed});
 #else
     if(!state_.observe(identity,now,{Path::direct,elapsed,completed,0,1},options_))return false;
     cadence_.completed(state_.inspect(identity,now,options_));return true;
@@ -239,9 +247,10 @@ public:
   }
   ExecutionPath select(const Identity& identity,Epoch now,Mode mode) {
 #if LOOM_GRADUATED_POLICY
+    adopt_cohort(identity);
     // Sampling-only exercises selection with only Ring legal for execution.
     // Its sample request used both paths, preserving the separate sample charge.
-    return state_.select(identity,now,{mode!=Mode::sampling_only,true,width,width}).path;
+    return state_.select(now,{mode!=Mode::sampling_only,true,width,width}).path;
 #else
     return decide(state_,identity,now,{true,true,width,width},options_,
         mode==Mode::sampling_only?Control::fixed_ring:Control::adaptive).path;
@@ -254,7 +263,7 @@ public:
   }
   static constexpr std::size_t state_bytes() {
 #if LOOM_GRADUATED_POLICY
-    return sizeof(loom::execution::Policy);
+    return sizeof(state_)+sizeof(cohort_);
 #else
     return sizeof(Record)+sizeof(ProbeCadence);
 #endif
@@ -262,11 +271,7 @@ public:
 };
 
 void population(Identity& identity,unsigned value) {
-#if LOOM_GRADUATED_POLICY
-  identity.population=value;
-#else
   identity.access_population=value;
-#endif
 }
 
 template<class Read> void trial(loom::Worker& worker,const Read& read,const input& source,

@@ -65,8 +65,8 @@ int main(int argc, char** argv) {
   loom::Worker worker;
   const auto cpu = sched_getcpu(); check(cpu >= 0);
   check(bool(loom::adopt(worker, cpu)));
-  // A single pinned CPU is a conservative caller-assigned placement domain.
-  const ex::Identity identity{1, 1, 1, unsigned(cpu), unsigned(cpu)};
+  // This caller keeps one unchanged complete procedure pair. If its evidence
+  // cohort changes, it must reset the Policy before reusing learned feedback.
   auto arena = orbital::allocation::open_arena(1024 * 1024); check(bool(arena));
   check(bool(loom::configure(worker, *arena, 0)));
   auto storage = loom::allocate(worker, {.bytes = count * sizeof(Node), .alignment = alignof(Node)});
@@ -94,7 +94,7 @@ int main(int argc, char** argv) {
   const auto begin = Clock::now();
   for (unsigned batch = 0; batch < 64; ++batch) {
     auto now = epoch(Clock::now());
-    if (policy->sample_due(identity, now, paths)) {
+    if (policy->sample_due(now, paths)) {
       // The caller owns representativeness and rotation. Each selected chain
       // completes serially; it does not advance the useful batch's denominator.
       const unsigned head = batch % width;
@@ -105,10 +105,10 @@ int main(int argc, char** argv) {
       const auto elapsed = std::chrono::duration_cast<std::chrono::nanoseconds>(finish - start).count();
       now = epoch(finish);
       // One useful request is this complete eight-node chain, not each load.
-      if (elapsed) check(policy->observe(identity, now, {std::uint64_t(elapsed), 1}));
+      if (elapsed) check(policy->observe(now, {std::uint64_t(elapsed), 1}));
       ++probes;
     }
-    const auto decision = policy->select(identity, now, paths);
+    const auto decision = policy->select(now, paths);
     direct += decision.path == ex::Path::direct;
     execute(decision.path);
   }

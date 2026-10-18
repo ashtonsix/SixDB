@@ -38,11 +38,29 @@ target_link_libraries(loom_cohort_check PRIVATE loom)
 add_test(NAME loom_cohort_check COMMAND loom_cohort_check)
 set_tests_properties(loom_cohort_check PROPERTIES TIMEOUT 30)
 
+add_executable(loom_stream_check EXCLUDE_FROM_ALL test/stream.cpp)
+sixdb_target(loom_stream_check)
+target_link_libraries(loom_stream_check PRIVATE loom)
+add_test(NAME loom_stream_check COMMAND loom_stream_check)
+set_tests_properties(loom_stream_check PROPERTIES TIMEOUT 30)
+
+add_executable(loom_example_stream EXCLUDE_FROM_ALL examples/stream.cpp)
+sixdb_target(loom_example_stream)
+target_link_libraries(loom_example_stream PRIVATE loom)
+add_test(NAME loom_example_stream COMMAND loom_example_stream)
+set_tests_properties(loom_example_stream PROPERTIES TIMEOUT 30)
+
 add_executable(loom_execution_check EXCLUDE_FROM_ALL test/execution.cpp)
 sixdb_target(loom_execution_check)
 target_link_libraries(loom_execution_check PRIVATE loom)
 add_test(NAME loom_execution_check COMMAND loom_execution_check)
 set_tests_properties(loom_execution_check PROPERTIES TIMEOUT 30)
+
+add_executable(loom_cold_promotion_check EXCLUDE_FROM_ALL test/cold_promotion.cpp)
+sixdb_target(loom_cold_promotion_check)
+target_link_libraries(loom_cold_promotion_check PRIVATE loom)
+add_test(NAME loom_cold_promotion_check COMMAND loom_cold_promotion_check)
+set_tests_properties(loom_cold_promotion_check PROPERTIES TIMEOUT 30)
 
 add_executable(loom_example_execution EXCLUDE_FROM_ALL examples/execution.cpp)
 sixdb_target(loom_example_execution)
@@ -110,7 +128,7 @@ add_test(NAME loom_budget_check COMMAND loom_budget_check)
 set_tests_properties(loom_budget_check PROPERTIES TIMEOUT 60)
 
 set_tests_properties(
-  loom_worker_check loom_capacity_check loom_ring_check loom_ring_rotation_check loom_ring_shared_check loom_cohort_check loom_execution_check loom_example_execution loom_hint_check
+  loom_worker_check loom_capacity_check loom_ring_check loom_ring_rotation_check loom_ring_shared_check loom_cohort_check loom_stream_check loom_example_stream loom_execution_check loom_cold_promotion_check loom_example_execution loom_hint_check
   loom_hardware_check loom_example_hints loom_example_hardware loom_example_allocation
   loom_example_capacity loom_example_partition loom_example_preparation_window
   loom_example_preparation_finite loom_budget_check
@@ -119,5 +137,5 @@ set_tests_properties(
 add_custom_target(loom_validate
   COMMAND "${CMAKE_CTEST_COMMAND}" --test-dir "${PROJECT_BINARY_DIR}"
     --output-on-failure --no-tests=error -L "^loom-runtime$"
-  DEPENDS loom_worker_check loom_capacity_check loom_ring_check loom_ring_rotation_check loom_ring_shared_check loom_cohort_check loom_execution_check loom_example_execution loom_hint_check loom_hardware_check loom_example_hints loom_example_hardware loom_example_allocation loom_example_capacity loom_example_partition loom_example_preparation loom_budget_check
+  DEPENDS loom_worker_check loom_capacity_check loom_ring_check loom_ring_rotation_check loom_ring_shared_check loom_cohort_check loom_stream_check loom_example_stream loom_execution_check loom_cold_promotion_check loom_example_execution loom_hint_check loom_hardware_check loom_example_hints loom_example_hardware loom_example_allocation loom_example_capacity loom_example_partition loom_example_preparation loom_budget_check
   USES_TERMINAL VERBATIM)

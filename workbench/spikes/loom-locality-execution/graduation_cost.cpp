@@ -17,7 +17,8 @@ CostPolicy policy() {
 void observe(CostPolicy& policy,const CostIdentity& identity,std::uint64_t epoch,
     std::uint64_t elapsed) {
 #if LOOM_GRADUATED_POLICY
-  const bool accepted=policy.observe(identity,epoch,{elapsed,128});
+  (void)identity; // This probe's caller cohort is constant; no reset is due.
+  const bool accepted=policy.observe(epoch,{elapsed,128});
 #else
   const bool accepted=policy.observe(identity,epoch,{loom_locality::Path::direct,elapsed,128,0,1},{32,32,2,2});
 #endif
