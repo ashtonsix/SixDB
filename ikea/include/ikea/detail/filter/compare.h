@@ -83,9 +83,9 @@ template <unsigned Bytes, comparison Op>
         const auto packed = vmovn_u16(vreinterpretq_u16_u8(p));
         return vaddv_u8(vand_u8(packed, vreinterpret_u8_u64(vcreate_u64(0x8040201008040201ULL))));
     } else if constexpr (Bytes == 4) {
-        const auto packed =
-            vmovn_u16(vcombine_u16(vmovn_u32(vreinterpretq_u32_u8(p)), vdup_n_u16(0)));
-        return vaddv_u8(vand_u8(packed, vreinterpret_u8_u64(vcreate_u64(0x08040201ULL))));
+        // Each predicate is zero or all ones: weight and sum the four words
+        // directly. This avoids narrowing and preserves all four result bits.
+        return vaddvq_u32(vandq_u32(vreinterpretq_u32_u8(p), uint32x4_t{1, 2, 4, 8}));
     } else {
         return (vgetq_lane_u64(vreinterpretq_u64_u8(p), 0) & 1) |
                (vgetq_lane_u64(vreinterpretq_u64_u8(p), 1) & 2);

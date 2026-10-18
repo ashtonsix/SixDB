@@ -16,7 +16,8 @@ for profile in $profiles; do
   cmake -S . -B "$dir" -G Ninja -DCMAKE_BUILD_TYPE=Release \
     -DSIXDB_MARCH="$march" -DSIXDB_TUNE="$tune" -DSIXDB_SPIKES=
   cmake --build "$dir" --target ikea_filters_check \
-    ikea_example_filters_ordinary ikea_example_filters_composition -j "$SIXDB_BUILD_JOBS"
+    ikea_example_filters_ordinary ikea_example_filters_composition ikea_example_filters_guarded \
+    -j "$SIXDB_BUILD_JOBS"
   taskset -c "$SIXDB_CPU" ctest --test-dir "$dir" --output-on-failure --no-tests=error \
     -R '^ikea_(filters_check|example_filters_.*)$' > "$SIXDB_RESULTS/$profile-check.txt"
   llvm-objdump-21 -d --demangle "$dir/ikea/ikea_example_filters_composition" \

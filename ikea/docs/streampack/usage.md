@@ -58,6 +58,21 @@ theoretical 256 × 65,535 extent. An allocated payload span alone cannot establi
 that persistent encoding bound. The owner can grow within the schema bound or
 seal and start another block; schema bounds do not change with allocation size.
 
+For a growing block, request only the payload extent needed now and reserve
+address space separately. In a shared allocation, putting metadata before the
+payload leaves an allocation tail that can later be reclaimed; independent
+planes also work. On sealing, `view::extent()` includes all reservations still
+owned by the block, including retired values and slack. A sum of used/live
+lengths is not a safe replacement for that extent.
+
+An Orbital owner can relinquish unused suffix access with
+`allocation::relinquish_tail`, then request backing maintenance with `trim_cold`.
+Retained readers protect their captured footprints. Include every sidecar and
+readable padding byte in the retained prefix, and rebind views to the contracted
+windows. The [allocation contract](../../../orbital/README.md#allocation) owns
+settlement, growth conflicts and accounting. Neither exhausting ranks nor
+compacting packed bytes automatically returns physical pages.
+
 Width is useful when byte limits leave blocks partly occupied because its length
 groups grow with occupancy. Direct pays its endpoint directory upfront and favors
 cheap point lookup. For the long-tail schema above, full Direct needs 546 metadata
@@ -74,6 +89,20 @@ admitted contents. Newly appended groups initialize all readable vector padding.
 
 ## Read at the useful grain
 
+| Needed result | Starting path |
+| --- | --- |
+| One rank | Checked `value` or `length`; a retained typed reader for repeated points |
+| Consecutive live values | `range`, carrying geometry across ranks |
+| A few ranks in caller order | `select` without scratch |
+| Many shuffled ranks from one block | Scratch-backed `select`, paying one starts decode for that operation |
+| Offsets/lengths feeding a native predicate or reduction | `native::read16` inside the complete typed consumer |
+| Rank containing a known byte offset | `reverse`, rather than testing every slot |
+
+The [implementation measurements](../../../workbench/spikes/streampack/IMPLEMENTATION.md#native-primitive-findings)
+show why repeated ordinary point calls are a poor substitute for carried ranges
+or dense selection. The crossover for paid decoding depends on occupancy and
+reuse; there is no universal selection-count threshold.
+
 `value` and `length` check rank and liveness. `reverse` maps an occupied byte offset
 to its rank and tombstone state, including reservation slack. No zero-width slot
 owns bytes. Offsets beyond the current occupied extent have no owner.
@@ -82,13 +111,16 @@ owns bytes. Offsets beyond the current occupied extent have no owner.
 preserves requested order and duplicates, skipping retired ranks. Sparse selection
 uses direct point decoding; the scratch overload pays once to decode all starts
 for dense reuse. Scratch and encoded inputs must be disjoint. Neither operation
-retains callbacks or decoded state beyond its return.
+retains callbacks or decoded state beyond its return. Charge scratch setup to
+the selection that uses it. If an authored consumer retains decoded starts,
+geometry changes invalidate them; storage lifetime alone is not enough.
 
-For repeated/fused work, dispatch once around the complete consumer:
+For repeated point work, dispatch once around the complete consumer. Here
+`ranks` is a sparse request list; use `range` for a sequential traversal:
 
 ```cpp
 sp::author::dispatch(block, [&](auto reader) {
-    for (unsigned rank = 0; rank < reader.size(); ++rank) {
+    for (unsigned rank : ranks) {
         const auto value = reader.get(rank); // Checked rank/liveness.
         if (value) consume(*value);
     }
@@ -108,7 +140,13 @@ intermediate array. NEON, AVX2 and AVX-512 have explicit implementations.
 
 The [composition example](../../examples/streampack/composition.cpp) exercises the
 existing Ikea chain machinery with both scalar location and native group carriers.
-Use a CPS boundary for a useful unresolved dependency; keep ready arithmetic inline.
+Resolve schema dispatch before constructing the typed stage. Keep `read16` and
+its consumer together so a native packet need not cross an aggregate-return
+boundary through memory. Use a CPS boundary for useful work around an unresolved
+dependency; keep ready arithmetic inline. For cold independent requests, the
+owner can choose Loom's Ring using complete-consumer evidence, as described in
+[Building fast consumers](../consumers.md). Adding stages to one dependent lookup
+does not create memory-level parallelism.
 `visit_value_metadata` gives exact admitted hint windows to the owner's policy.
 It neither issues prefetches nor establishes readiness or authority to read.
 

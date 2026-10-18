@@ -3,7 +3,8 @@
 
 namespace ikea::seriespack {
 /// Trusted window of at most 64 values. Bit i names first+i. Empty activity
-/// reads nothing; nonempty aligned groups may read their other occupied lanes.
+/// reads nothing; a nonempty window may read all of its occupied lanes.
+/// Multiples of eight rows use native groups; byte origins need no alignment.
 /// The complete window is readable and within the admitted source's extent.
 template <comparison Op, class Source>
 [[gnu::always_inline]] inline std::uint64_t

@@ -28,7 +28,8 @@ inline bool oracle(C op, std::uint64_t a, std::uint64_t b) {
 }
 template <class F, C Op> void series_case() {
     constexpr unsigned n = 83;
-    alignas(64) std::array<std::uint8_t, 16384> payload{}, heads{}, heads2{};
+    alignas(64) std::array<std::uint8_t, 16384> payload_storage{}, heads{}, heads2{};
+    auto payload = std::span(payload_storage).subspan(1);
     auto v = *sp::view<F, std::uint8_t>::attach(
         n,
         {{{payload, F::tile_bytes + 64}, {heads, F::tile_rows + 8}, {heads2, F::tile_rows + 16}}});
@@ -40,10 +41,17 @@ template <class F, C Op> void series_case() {
         sp::set_unchecked(v, i, truth[i]);
     }
     const auto composed = *sp::composition::prepare(sp::composition::describe(v), n);
+    const auto guarded = [&] {
+        if constexpr (F::heads == 8 && F::width > 8)
+            return *sp::composition::prepare(
+                sp::composition::guarded(sp::composition::describe(v)), n);
+        else
+            return composed;
+    }();
     for (auto rhs :
          {std::uint64_t{0}, std::uint64_t{1}, limit / 2, limit, limit + 1, ~std::uint64_t{0}})
         for (unsigned first : {0u, 1u, 8u, 16u, 31u, 63u, 83u})
-            for (unsigned count : {0u, 1u, 15u, 16u, 17u, 32u, 64u}) {
+            for (unsigned count : {0u, 1u, 8u, 15u, 16u, 17u, 24u, 32u, 40u, 48u, 56u, 64u}) {
                 if (count > n - first)
                     continue;
                 for (auto active :
@@ -54,6 +62,18 @@ template <class F, C Op> void series_case() {
                             wanted |= std::uint64_t{1} << i;
                     assert(sp::filter<Op>(v, first, count, rhs, active) == wanted);
                     assert(composed.template filter<Op>(first, count, rhs, active) == wanted);
+                    assert(guarded.template filter<Op>(first, count, rhs, active) == wanted);
+                    if constexpr (Op == C::equal) {
+                        unsigned rank = count;
+                        for (unsigned i = 0; i < count; ++i)
+                            if (((active >> i) & 1) && truth[first + i] == rhs) {
+                                rank = i;
+                                break;
+                            }
+                        assert(sp::indexof(v, first, count, rhs, active) == rank);
+                        assert(composed.indexof(first, count, rhs, active) == rank);
+                        assert(guarded.indexof(first, count, rhs, active) == rank);
+                    }
                 }
             }
 #if defined(__aarch64__) || defined(__AVX2__)
@@ -86,6 +106,11 @@ template <class F, C Op> void series_case() {
 #endif
     assert(!sp::filter<Op>(v, 84, 0, 0));
     assert(!sp::filter<Op>(v, 0, 65, 0));
+    assert(!sp::indexof(v, 84, 0, 0));
+    assert(!sp::indexof(v, 0, 65, 0));
+    assert(!composed.indexof(84, 0, 0));
+    assert(!guarded.template filter<Op>(84, 0, 0));
+    assert(!guarded.template filter<Op>(0, 65, 0));
     if constexpr (F::width < 8 && F::storage == sp::geometry::local)
         for (unsigned q = 0; q <= (1u << F::width); ++q)
             for (unsigned i = 0; i < 80; i += 8) {

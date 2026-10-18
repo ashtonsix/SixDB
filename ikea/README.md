@@ -5,6 +5,10 @@ SixDB. Its parts serve records, indexes, strings and standalone structures such
 as hash tables and sketches. Engine chooses field semantics and representations;
 Ikea operates over storage supplied by its caller.
 
+Start with [Building fast consumers](docs/consumers.md) for operation choice,
+preparation reuse, fusion, masks and measured tradeoffs. The module guides below
+provide the concrete calls and maintained examples.
+
 | Choose a primitive | Physical model | Start here |
 | --- | --- | --- |
 | SeriesPack | Packed unsigned arrays, 1–64 bits per value; tiled payload and optional head planes | [Use](docs/seriespack/usage.md) · [Physical tour](docs/seriespack/representation.md) · [Compose](docs/seriespack/extending.md) · [Reference](docs/seriespack/reference.md) |
@@ -14,7 +18,8 @@ Ikea operates over storage supplied by its caller.
 
 [Unsigned filters](docs/filters.md) return position masks directly from SeriesPack
 and TuplePack storage or native values. Their maintained examples cover ordinary
-calls, reused projections and shared canonical consumers inside composed operations.
+calls, reused projections, opt-in head rejection and shared canonical consumers
+inside composed operations.
 
 These modules support construction, reads and replacement, native composition
 and source-qualified byte effects. StreamPack also supplies retirement, reverse

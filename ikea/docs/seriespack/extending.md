@@ -1,5 +1,7 @@
 # Composing and extending SeriesPack
 
+For consumer selection, start with [Building fast consumers](../consumers.md).
+This guide covers substitution, native bodies and execution contracts.
 The examples build through `ikea_examples`. Start with
 [composition.cpp](../../examples/seriespack/composition.cpp), then [pipeline.cpp](../../examples/seriespack/pipeline.cpp).
 
@@ -90,6 +92,14 @@ for that recipe. Fuse cheap adjacent work or choose inline execution when useful
 The [benchmark suite](../../../workbench/benchmarks/seriespack/README.md) compares
 whole pipelines at several grains for runtime, compile cost and code size.
 Changing execution style must preserve the logical operation's semantics.
+For shared filters, normalize decoded values once to a canonical lane width and
+use one matching chain type through the operation. Keep adjacent range tests
+in one consumer and direct packed filters with their format; the
+[filter example](../../examples/filters/composition.cpp) and
+[runtime comparison](../../../workbench/spikes/filter-composition/RUNTIME.md)
+show the selected boundary and its measured costs. Apply a
+[head guard](../filters.md#select-head-first-execution) after child substitution
+when the enclosing workload benefits; it does not change the physical format.
 
 ## Validate the extension
 

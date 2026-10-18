@@ -116,6 +116,19 @@ sixdb_target(ikea_seriespack_admission_check)
 target_link_libraries(ikea_seriespack_admission_check PRIVATE ikea::seriespack)
 
 add_executable(ikea_filters_check EXCLUDE_FROM_ALL test/filters/check.cpp test/filters/tuple.cpp
+  test/filters/local_equal.cpp
+  test/filters/masks.cpp
+  test/filters/custom.cpp
+  test/filters/tiles.cpp
+  test/filters/tiles_1.cpp
+  test/filters/tiles_9.cpp
+  test/filters/tiles_17.cpp
+  test/filters/tiles_25.cpp
+  test/filters/tiles_33.cpp
+  test/filters/tiles_41.cpp
+  test/filters/tiles_49.cpp
+  test/filters/tiles_57.cpp
+  test/filters/guarded.cpp
   test/filters/widths_1.cpp
   test/filters/widths_9.cpp
   test/filters/widths_17.cpp
@@ -129,7 +142,7 @@ sixdb_target(ikea_filters_check)
 target_compile_options(ikea_filters_check PRIVATE -fno-vectorize -fno-slp-vectorize)
 target_link_libraries(ikea_filters_check PRIVATE ikea::seriespack ikea::tuplepack)
 
-foreach(example ordinary composition)
+foreach(example ordinary composition guarded)
   add_executable(ikea_example_filters_${example} EXCLUDE_FROM_ALL examples/filters/${example}.cpp)
   sixdb_target(ikea_example_filters_${example})
   target_compile_options(ikea_example_filters_${example} PRIVATE -fno-vectorize -fno-slp-vectorize)
@@ -147,7 +160,7 @@ foreach(example ordinary composition integration packets words groups)
   target_link_libraries(ikea_example_tuplepack_${example} PRIVATE ikea::tuplepack)
 endforeach()
 set(ikea_example_targets
-  ikea_example_filters_ordinary ikea_example_filters_composition
+  ikea_example_filters_ordinary ikea_example_filters_composition ikea_example_filters_guarded
   ikea_example_streampack_ordinary ikea_example_streampack_composition
   ikea_example_seriespack_ordinary ikea_example_seriespack_composition
   ikea_example_seriespack_pipeline ikea_example_seriespack_integration

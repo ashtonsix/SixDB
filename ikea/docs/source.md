@@ -33,48 +33,26 @@ as the leaf kernel: a vector aggregate or outlined helper can introduce memory
 handoff. Compare complete operations, including their admission and effects.
 Research history and timing comparisons belong with Workbench evidence.
 
-Point, range and selected access can need different lowerings of the same format.
-Keep a useful batch visible so sequential traversal can carry a running position
-and dense selections can reuse decoding. Charge temporary preparation to that
-operation; sparse selections must retain a cheap point path. Neither an obligatory
-decoded array nor repeated generic point calls is a suitable universal interface.
-Likewise, a narrow consumer should request its useful projection rather than a
-full record whose unused fields require opaque helper calls. Resolve that
-projection outside the loop; a dynamic fact-mask interpreter is not a required
-alternative. Shared immutable schema/operation preparation belongs apart from
-block-local storage windows and count-dependent admission. Preparing native
-controls once does not by itself remove their runtime routing costs; inspect
-the resulting composed body before treating a codec choice as a layout result.
+[Building fast consumers](consumers.md) owns the usage decisions: point versus
+range traversal, reuse of projections and proofs, placement visibility, selective
+canonical sharing, masks and guarded execution. Keep those choices expressible
+through existing ordinary and author entries rather than adding an execution
+mode for each successful experiment.
 
-Place CPS boundaries around useful work or unresolved memory dependencies. Keep
-ready arithmetic and native decoding inline within that work. A scheduler can
-overlap independent lookups; splitting one dependent decode into more stages does
-not create independent accesses. Share the semantic body between those callers.
+For implementation, preserve shared immutable preparation separately from
+block-local windows and command admission. Resolve format applicability around
+a useful whole operation. A native packet should remain native across the body;
+inspect the actual caller for hidden aggregate returns or outlined helpers.
+An inlinable implementation still needs measurements of routing, admission,
+effects and result handling, alongside its correctness and lifetime checks.
 
-A shared stage should remove a specialization dimension from its downstream work.
-For example, physical decoders can normalize unsigned values to 1/2/4/8-byte
-lanes so predicates share bodies across source bit widths. Matching register
-shapes alone is insufficient: value meaning and mask coordinates must agree.
-Keep ordinary hot calls and comparisons on packed bits directly fused. Within an
-existing CPS operation, a physical decoder can hand canonical lanes to a shared
-consumer; keep adjacent cheap predicates together in that consumer. This removes
-the source-width axis without requiring a boundary for every arithmetic step.
-Use one canonical chain type throughout that composition; equal register shapes
-do not make differently typed stage function pointers interchangeable.
-The maintained [filter composition example](../examples/filters/composition.cpp)
-uses two physical decoders with a shared 16-bit range-and-count stage; the
-[ordinary example](../examples/filters/ordinary.cpp) keeps a direct filter and
-a reused TuplePack projection inline.
-
-The [native filter measurements](../../workbench/spikes/filter-composition/RUNTIME.md)
-support this selective arrangement. Entering CPS for each small window costs
-latency and throughput; splitting an already-entered SeriesPack operation is
-usually much closer to a fused stage. Large mixed catalogues can recover
-throughput through sharing on Zen 5, but the same policy loses on NEON. TuplePack
-also retains its direct encoded-column path: sharing a generic projection can
-discard that algorithmic advantage. Choose sharing at the enclosing consumer,
-with its complete entry, context, projection and return costs measured. There is
-no automatic catalogue-size or platform-wide dispatch rule.
+A shared stage should remove a real specialization dimension. For example,
+physical decoders can normalize unsigned values to 1/2/4/8-byte lanes before a
+shared consumer. Preserve value meaning and mask coordinates, and use one
+canonical chain type throughout that composition; equal register shapes do not
+make differently typed stage function pointers interchangeable. The maintained
+[filter composition example](../examples/filters/composition.cpp) shows this
+boundary. Keep direct packed alternatives available to ordinary callers.
 
 ## Shared facilities
 

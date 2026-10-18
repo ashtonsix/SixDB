@@ -146,7 +146,8 @@ uses those descriptors and owner mappings, never current preset policy.
 
 `attach_representation<F>` checks an exact physical match before admitting the
 supplied plane spans. The descriptor identifies representation; actual residency,
-accessible extent, base alignment and overlap still require view admission.
+accessible extent and overlap still require view admission. Plane origins may
+have any byte alignment; this does not add padding to an occupied field.
 A runtime owner can choose a compiled typed binding or use the compiled dense
 headless binder.
 

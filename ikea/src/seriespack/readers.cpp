@@ -25,8 +25,6 @@ template <class U> std::expected<decoder<U>, error> bind_decoder(const dense_inp
         return std::unexpected(error::overflow);
     if (source.bytes.size() < tiles * bytes)
         return std::unexpected(error::capacity);
-    if (source.count && reinterpret_cast<std::uintptr_t>(source.bytes.data()) % 64)
-        return std::unexpected(error::alignment);
     std::expected<decoder<U>, error> result = std::unexpected(error::description);
     detail::each<sizeof(U) * 8>([&](auto k) {
         if (source.width == k + 1)

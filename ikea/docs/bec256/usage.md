@@ -11,6 +11,32 @@ Include `<ikea/bec256.h>` and link `ikea::bec256`. Encode into caller storage,
 retain the returned length with the population, admit a source for reading,
 and decode it when plain bits are needed.
 
+## Choose the result and access grant
+
+| Needed result | Starting path |
+| --- | --- |
+| Plain bits for an external caller | Ordinary `decode` or `decode_pair` |
+| Boolean operation followed by a count or another encode | Native pair composition; consume/reduce before returning |
+| Encode and write now | Immediate checked encode, or an admitted exact native write inside a composed owner operation |
+| Owner must wait for allocation or coordinate destinations | `prepare`, retain its owned candidate, then admit and write |
+
+Pairs accept independent addresses; do not copy bodies together just to use them.
+Native pair composition is supported on NEON and the required AVX-512 profile;
+AVX2-only builds use the ordinary scalar fallback. Terminal population evidence
+can sometimes decide the enclosing Boolean operation without decoding, but that
+algebra and its coherent metadata belong to the caller.
+
+Start with exact readable body spans. If the owner already supplies a qualified
+64-byte initialized read window, native reads can avoid the short-span adapter.
+Allocation capacity alone is not that grant, and wide writes have different
+obligations from exact writes. [Memory bounds](#memory-access-bounds) owns these
+rules. Include owner metadata lookup in the complete comparison: the
+[pair measurements](../../../workbench/benchmarks/bec256/README.md) and
+[directory study](../../../workbench/spikes/bec256-composition/metadata-findings.md)
+show that simple pair and larger directory consumers can favor different
+boundaries. [Building fast consumers](../consumers.md) connects these choices to
+inline execution, shared stages and owner waits.
+
 ## Encode a block and read it back
 
 A named `destination` describes writable storage; a write journal records the

@@ -8,6 +8,11 @@ void check_widths_41();
 void check_widths_49();
 void check_widths_57();
 void check_tuple_filters();
+void check_guarded_filters();
+void check_filter_masks();
+void check_filter_tiles();
+void check_authored_filters();
+void check_local_equal();
 void guards() {
 #if defined(__aarch64__) || defined(__AVX2__)
     const auto page = std::size_t(sysconf(_SC_PAGESIZE));
@@ -40,7 +45,21 @@ void guards() {
     auto dense = sp::dense_source<sp::format<7>>{memory + page * 2 - 14, 16};
     auto empty = sp::dense_source<sp::format<7>>{memory + page * 2, 16};
     assert(sp::filter<C::equal>(empty, 0, 16, 0, 0) == 0);
+    assert(sp::indexof(empty, 0, 16, 0, 0) == 16);
+    assert(sp::indexof(empty, 0, 16, 1ull << 63) == 16);
     assert(sp::filter<C::greater_equal>(dense, 0, 16, 0) == 65535);
+    // Runtime guards on both selected x86 mixed-width families. Constant
+    // activity would let an inlined caller erase even an unwanted load.
+    const auto absent_local = [&]<unsigned K>() {
+        const sp::dense_source<sp::format<K>> absent{memory + page * 2, 16};
+        volatile std::uint64_t inactive = 0, outside = std::uint64_t{1} << K;
+        assert(sp::indexof(absent, 0, 16, 0, inactive) == 16);
+        assert(sp::indexof(absent, 0, 16, outside) == 16);
+        volatile std::size_t bad_first = 17;
+        assert(!sp::indexof(absent, bad_first, 1, 0));
+    };
+    absent_local.template operator()<30>();
+    absent_local.template operator()<38>();
     assert(munmap(memory, page * 3) == 0);
 #endif
 }
@@ -59,11 +78,19 @@ void substitution() {
     auto expression = sp::composition::with_payload(
         original, sp::composition::with_tail(original.payload, sp::composition::describe(c)));
     auto filter = *sp::composition::prepare(expression, 64);
-    std::uint64_t expected = 0;
-    for (unsigned i = 0; i < 64; ++i)
-        if ((((i * 37) & ~15u) | i % 16) < 1000)
-            expected |= std::uint64_t{1} << i;
-    assert(filter.filter<C::less>(0, 64, 1000) == expected);
+    for (unsigned first : {0u, 8u})
+        for (unsigned count : {8u, 16u, 24u, 40u, 56u}) {
+            std::uint64_t expected = 0;
+            for (unsigned i = 0; i < count; ++i) {
+                const auto row = first + i;
+                if ((((row * 37) & ~15u) | row % 16) < 1000)
+                    expected |= std::uint64_t{1} << i;
+            }
+            assert(filter.filter<C::less>(first, count, 1000) == expected);
+            const auto rank = first + count - 1;
+            const auto target = ((rank * 37) & ~15u) | rank % 16;
+            assert(filter.indexof(first, count, target) == count - 1);
+        }
 }
 int main() {
     check_widths_1();
@@ -75,6 +102,11 @@ int main() {
     check_widths_49();
     check_widths_57();
     check_tuple_filters();
+    check_guarded_filters();
+    check_filter_masks();
+    check_filter_tiles();
+    check_authored_filters();
+    check_local_equal();
     [&]<C... Ops>(operations<Ops...>) {
         (tuple_case<8, 1, Ops>(), ...);
         (tuple_case<8, 8, Ops>(), ...);

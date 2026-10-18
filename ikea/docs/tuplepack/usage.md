@@ -66,15 +66,27 @@ and the high four to row 1.
 Ordinary eight-byte packets are `uint64_t`; 64-byte packets are byte arrays. The
 [reference](reference.md#packet-shape-and-coordinates) lists all supported shapes.
 
-Small scalar consumers can fit in a GPR; scans can fill vector packets.
-Placement and shifts also affect transfer cost, so compare the complete consumer
-when choosing a width. The [packet-width study](../../../workbench/benchmarks/tuplepack/words.md)
-gives examples. [Native composition](extending.md#keep-native-payloads-native)
-keeps payloads in registers.
+Choose packet width and useful row count together:
+
+| Work and physical map | Starting packet |
+| --- | --- |
+| Small word computation, consecutive bytes with a common shift | `reader<8, Rows>` / `writer<8, Rows>` over the useful rows |
+| Same small result, but scattered bytes or mixed shifts | Compare a 64-byte native packet with the same Rows; `compact_word`/`expand_word` can retain the scalar computation |
+| A scan with many useful rows | Fill a wider packet rather than issuing one point call per row |
+
+Keep the same logical map and grouping when comparing carriers. Wider stores
+may reissue preserved bytes and change effect cost, so include the owner's write
+permission in that choice. The [packet-width study](../../../workbench/benchmarks/tuplepack/words.md)
+records compact GPR wins, scattered-map counterexamples and scan batching gains.
+[Native composition](extending.md#keep-native-payloads-native) keeps payloads in
+registers; [the consumer guide](../consumers.md) covers the surrounding boundaries.
 
 [Filtering packed values](../filters.md) shows how to bind a one-code predicate
 returning original-row masks, or share a native projection between predicates
-using packet-byte masks.
+using packet-byte masks. For one predicate, start with the bound filter: a tight
+column can compare encoded bytes without a general projection. For multiple
+predicates, reuse a projection only when its saved work outweighs that direct
+path. Keep original-row activity distinct from native packet-byte masks.
 
 ## Group slots for the consumer
 
@@ -156,7 +168,13 @@ uses sparse rows in a wider carrier.
 ## Keep the binding valid
 
 Keep borrowed storage live and named views and plans at stable addresses.
-Preparation copies layout, map and groups; those descriptions can then expire.
+Prepare plans and bind readers/writers outside the row loop. Preparation copies
+layout, map and groups; those descriptions can then expire. An ordinary GPR plan
+already selects a transfer endpoint at preparation. A generic inline native
+reader may still branch on runtime controls; inlining alone is not a guarantee
+of improvement. If the consumer fixes a supported transfer width, the
+[admitted transfer entry](extending.md#keep-native-payloads-native) qualifies that
+shape once while retaining separate row admission.
 The [reference](reference.md#borrowing-and-admission) lists all borrowing obligations.
 
 Checked rejection leaves that call's data, effects and maintenance unchanged.

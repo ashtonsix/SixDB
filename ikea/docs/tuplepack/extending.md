@@ -6,6 +6,9 @@ storage or execution. The executable
 and recomputes a signature that also depends on untouched C. It illustrates
 two independent choices: where writes go, and what maintenance must read.
 
+[Building fast consumers](../consumers.md) helps choose packet width, projection
+reuse and inline versus shared execution before extending an operation.
+
 ## Substitute storage under a parent
 
 The example moves A's role from a one-bit code in the original unit to a one-bit
@@ -125,7 +128,9 @@ Arithmetic and composite predicates require authored bodies.
 [Unsigned code filters](../filters.md) supply the standard comparisons. The
 [route contract](reference.md#routes-and-native-execution) gives applicability
 and storage limits. Test new lowerings against an independent bit reference and
-exercise the fallback outside their applicability.
+exercise the fallback outside their applicability. Route preparation is for
+static bit wiring; it does not imply that decoding to shared lanes is faster for
+one predicate. Tight encoded-column filters keep their direct packed path.
 
 ## Share bodies across execution styles
 

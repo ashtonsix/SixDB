@@ -11,7 +11,7 @@ std::string_view describe(error reason) noexcept {
     case error::stride:
         return "tile stride is too small or violates the physical alignment rule";
     case error::alignment:
-        return "payload base must be aligned to 64 bytes";
+        return "operation requires aligned logical coordinates";
     case error::overlap:
         return "occupied writable fields overlap";
     case error::range:
@@ -48,8 +48,6 @@ std::expected<void, error> admit_view(std::size_t count, std::size_t rows,
             if (stream.bytes < extent)
                 return std::unexpected(error::capacity);
             const auto begin = reinterpret_cast<std::uintptr_t>(stream.data);
-            if (p == 0 && begin % 64)
-                return std::unexpected(error::alignment);
             if (begin > UINTPTR_MAX - extent)
                 return std::unexpected(error::overflow);
             occupied[p] = {begin, stream.stride, used[p], tiles};

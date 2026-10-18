@@ -37,13 +37,13 @@ template <class F, class Byte = const std::uint8_t> class view {
                                                {planes_[2].bytes, planes_[2].stride}}});
     }
     /// Trusted adapter entry. The caller has already proved attach()'s extent,
-    /// alignment, stride, overflow and occupied-field non-overlap requirements.
+    /// stride, overflow and occupied-field non-overlap requirements.
     static view assume_valid(std::size_t n, std::array<plane<Byte>, 3> p) {
         return {p, n};
     }
     /// Metadata-only admission. n counts logical values; planes are payload,
     /// highest byte, next byte. Include every occupied final-tile byte. Payload
-    /// starts at 64B alignment; striped payload stride is a multiple of 32B.
+    /// origins have byte alignment; striped payload stride is a multiple of 32B.
     /// Empty input needs no storage. Failure reads/writes no data or effects.
     [[nodiscard]] static std::expected<view, error> attach(std::size_t n,
                                                            std::array<plane<Byte>, 3> p) {

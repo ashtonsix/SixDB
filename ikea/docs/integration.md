@@ -38,6 +38,20 @@ old values for a delta.
 *The teaching adapter returns from Ikea at a complete work frontier. The owner
 can then suspend or publish while retaining responsibility for the dirty state.*
 
+## Choose the work boundary
+
+Keep ready decode, comparison and reduction in one useful operation. A packet,
+physical tile, transaction and scheduling step can have different sizes. Returning
+after a bounded range gives the owner a place to poll, retain state or wait;
+turning every native stage into a Task adds a different cost.
+
+For independent memory dependencies, use Loom's [direct/Ring policy](../../loom/docs/execution.md)
+and [Ring guide](../../loom/docs/ring.md). Preserve the whole footprint and
+interpretation across visits. Prefetch can overlap future work only when there
+is useful independence; splitting one dependent arithmetic body cannot create it.
+The [consumer guide](consumers.md) covers the measured inline/CPS choices inside
+a ready Ikea operation. Ikea chain completion is not a Loom suspension.
+
 ## Bind once, invoke bounded work
 
 The SeriesPack adapter moves the only readable lease into a stable-address work
@@ -61,6 +75,10 @@ while its owner prevents release, growth or reentrant invalidation. Named views
 and prepared bindings still need stable addresses. A use that escapes this
 guarantee needs retained physical protection, such as a Hold covering its complete
 footprint. A Hold retains backing, not immutable contents.
+Retain once for a complete operation or batch when its ownership permits, and
+reuse the admitted native binding within it. A new Hold for every point lookup
+adds reader-tracking work; the [allocation measurements](../../workbench/spikes/allocation-live-tail/README.md)
+separate that cost from ordinary allocation and page reclamation.
 
 End borrowed access before relocation and bind again against the new storage.
 An old binding does not acquire a larger extent when allocation grows. For a

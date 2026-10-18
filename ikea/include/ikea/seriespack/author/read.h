@@ -1,5 +1,5 @@
 #pragma once
-#include <ikea/seriespack/author/filter.h>
+#include <ikea/seriespack/author/indexof.h>
 
 namespace ikea::seriespack::composition {
 namespace detail {
@@ -52,6 +52,13 @@ template <class Expression> class prepared {
     }
     const Expression& expression() const {
         return expression_;
+    }
+    [[nodiscard]] std::expected<unsigned, error>
+    indexof(std::size_t first, unsigned count, std::uint64_t rhs,
+            std::uint64_t active = ~std::uint64_t{0}) const {
+        if (count > 64 || first > count_ || count > count_ - first)
+            return std::unexpected(error::range);
+        return composition::indexof_unchecked(expression_, first, count, rhs, active);
     }
 #if defined(__aarch64__) || defined(__AVX2__)
     template <class Prefilter>

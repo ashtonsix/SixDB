@@ -7,9 +7,28 @@ with a 20-bit array: construction, point/range replacement, reads, failures and
 physical-description serialization. Build and run it with `ikea_example_seriespack_ordinary`.
 See [Ikea's build instructions](../../README.md#build-and-run).
 
+## Choose the useful operation
+
+| Work | Starting path |
+| --- | --- |
+| One point | A retained decoder binding and `get`; keep format selection outside repeated lookup |
+| Consecutive values | One `read` over the range, rather than repeated point calls |
+| A predicate returning positions | `filter<Op>`; let the filter retain its direct packed comparison where available |
+| Decode plus arithmetic or several predicates | A native composed body that reads once and consumes its values inline |
+| Repeated replacement | A retained typed mutation or erased whole operation, with preallocated effects and only the required summary |
+
+Keep a checked ordinary call until the owner can reuse all its proofs. Moving to
+`_unchecked` saves checks, not storage accesses or format dispatch by itself.
+The [consumer guide](../consumers.md) explains when sharing, erasure and native
+composition help, and when a direct filter is the better algorithm.
+
 ## Choose and place the representation
 
 Include `<ikea/seriespack.h>` and link `ikea::seriespack`.
+Start with `compact` for point access and small arrays; try `bulk_x86` or
+`bulk_arm` when the useful operation reconstructs many values. A scan that only
+returns a predicate mask need not benefit from the same layout as a decode scan.
+Presets are starting choices, not a requirement to convert existing storage.
 `preset_format<20, preset::bulk_x86, 8>` selects eight separated head bits and a
 striped 12-bit payload. The [physical tour](representation.md#byte-layout-tour)
 shows those bytes; the [preset catalogue](representation.md#preset-policy) explains
@@ -36,7 +55,9 @@ auto read = sp::bind_decoder<std::uint32_t>(*storage);
 ```
 
 `attach` inspects metadata, not bytes. It checks full occupied extents, stride,
-64-byte payload alignment, arithmetic overflow and occupied-field overlap.
+arithmetic overflow and occupied-field overlap. Payload origins can have any
+byte alignment, including keys after a header or alternating offsets in a
+96-byte bucket array. Striped payload strides remain multiples of 32 bytes.
 Disjoint fields may interleave inside overlapping span envelopes; gaps remain
 owned by their siblings, as in `ordinary.cpp`'s shared-partition example.
 
@@ -53,11 +74,19 @@ copies its pointer/count proof and does not borrow a view object.
 | Read a point | `read.get(row)` | `expected<U,error>` |
 | Read a range | `read.read(first, output_span)` | Output length determines count; arbitrary edges |
 | Filter a window | `sp::filter<Op>(*storage, first, count, rhs, active)` | Up to 64 values; one result bit per original position |
+| Find the first equality match | `sp::indexof(*storage, first, count, rhs, active)` | Position relative to first, or count when absent; up to 64 values |
 | Replace a point | `write.set(row, value, summary, effects)` | A scalar value crosses the boundary directly |
 | Replace a selected range | `write.replace(first, input_span, selection, summary, effects)` | All checks precede any local write |
 
 [Filtering packed values](../filters.md) covers all five unsigned comparisons,
-full-width query semantics and native composition.
+full-width query semantics and native composition. One call filters any count
+from 0 to 64. Windows starting at a multiple of eight with 8, 16, 24, …, 64 values
+use bounded native groups; no padding or extra rows are needed. Other edges use
+scalar reads. Row alignment is independent of the byte address. On AVX-512,
+the ordinary 64-value path can exploit wider carriers for supported standard
+widths. A guarded head path instead makes its decisions in complete groups of
+eight or sixteen rows. Larger windows and early rejection solve different problems;
+neither is a universal replacement.
 
 The example initializes values 0..511, then changes row 7 from 7 to 1000.
 That replacement adds 993 to `sum_change`. A later attempt to set row 7 to 123
@@ -66,7 +95,8 @@ Checked rejection preserves that call's outputs; it does not undo earlier calls.
 
 Trusted `_unchecked` entries reuse command proofs and keep concrete traversal
 behind the erased call. The [reference](reference.md#borrowing-and-failure-guarantees)
-owns their bounds, readable-input requirements and sixteen-row entry alignment.
+owns their bounds and readable-input requirements. Native reconstructed-value
+entries retain sixteen-row alignment; packed filters also have eight-row entries.
 Lifetime, isolation and non-aliasing remain caller obligations for both surfaces.
 
 Use the typed prepared operation directly when erasure has no benefit. It also
@@ -76,6 +106,12 @@ bytes. Reserve that many slots beyond existing records before entering trusted
 execution. Coalescing can make the actual output smaller. The query reads only
 placement/selection metadata. `replace` and `initialize` perform their own checks;
 do not query capacity on every call when the owner already has a reusable bound.
+Likewise, create the erased operation outside repeated calls. Erase a complete
+range or useful operation so its inner traversal stays concrete. When the caller
+knows the format and placement, keeping those facts visible to its inline body
+can avoid runtime stride/control loads; named views and proofs still have their
+normal lifetime requirements. [The author guide](extending.md) shows how to keep
+one native body available inline and inside an existing chain.
 
 ## Selection and effects
 

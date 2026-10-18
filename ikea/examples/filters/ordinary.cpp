@@ -56,4 +56,16 @@ int main() {
     // The scalar operand is never narrowed to the stored width.
     assert(sp::filter<C::less>(series, first, count, 256, active) == active);
     assert(predicate.filter<C::equal>(first, 256, active) == 0);
+    // A bucket can place 24 keys directly after a one-byte header. One filter
+    // returns the complete 24-bit mask without reading a padded fourth tile.
+    using Keys = sp::format<16>;
+    std::array<std::uint8_t, 1 + 24 * 2> bucket{};
+    auto keys = *sp::view<Keys, std::uint8_t>::attach(
+        24, {{{std::span(bucket).subspan(1), Keys::tile_bytes}, {}, {}}});
+    for (unsigned i = 0; i < 24; ++i)
+        sp::set_unchecked(keys, i, i * 11);
+    assert(sp::filter<C::equal>(keys, 0, 24, 23 * 11) == (1u << 23));
+    // indexof returns a position relative to the requested window, or count.
+    assert(sp::indexof(keys, 8, 16, 23 * 11) == 15);
+    assert(sp::indexof(keys, 8, 16, 999) == 16);
 }
