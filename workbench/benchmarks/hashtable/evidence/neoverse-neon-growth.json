@@ -1,0 +1,352 @@
+{
+  "receipt": "neoverse-v2 neon growth complete",
+  "source_files_verified": 30,
+  "normal_files": 600,
+  "normal_rows": 600,
+  "sanitized_complete_operations": 0,
+  "public_checks_passed": null,
+  "summary": [
+    {
+      "phase": "grow",
+      "W": 24,
+      "b": 10,
+      "K": 14,
+      "V": 0,
+      "occupancy": 85,
+      "new_percent": 0,
+      "miss": 0,
+      "conditioning": 0,
+      "measurements": {
+        "ikea": {
+          "ns": 1.772295,
+          "mad": 0.02690999999999999,
+          "samples": 20,
+          "bytes": 131192.0
+        },
+        "before": {
+          "ns": 1.7315450000000001,
+          "mad": 0.022834999999999828,
+          "samples": 20,
+          "bytes": 131192.0
+        },
+        "abseil": {
+          "ns": 20.79645,
+          "mad": 0.4460499999999996,
+          "samples": 20,
+          "bytes": 327692.0
+        },
+        "abseil_insert": {
+          "ns": 9.242840000000001,
+          "mad": 0.12798500000000068,
+          "samples": 20,
+          "bytes": 327672.0
+        },
+        "ikea_descriptor": {
+          "ns": 1.7724199999999999,
+          "mad": 0.02273999999999987,
+          "samples": 20,
+          "bytes": 131192.0
+        }
+      },
+      "comparisons": {
+        "ikea": {
+          "before_ratio": 1.0201003878952348,
+          "before_ratio_mad": 0.021432120690848044,
+          "abseil_control": "abseil_insert",
+          "abseil_ratio": 0.19174788268540835
+        },
+        "ikea_descriptor": {
+          "before_ratio": 1.0250301886543989,
+          "before_ratio_mad": 0.013309797699319947,
+          "abseil_control": "abseil_insert",
+          "abseil_ratio": 0.1917614066672148
+        }
+      }
+    },
+    {
+      "phase": "grow",
+      "W": 24,
+      "b": 10,
+      "K": 14,
+      "V": 8,
+      "occupancy": 85,
+      "new_percent": 0,
+      "miss": 0,
+      "conditioning": 0,
+      "measurements": {
+        "ikea": {
+          "ns": 5.559295,
+          "mad": 0.09332999999999991,
+          "samples": 20,
+          "bytes": 655480.0
+        },
+        "before": {
+          "ns": 5.62651,
+          "mad": 0.1619849999999996,
+          "samples": 20,
+          "bytes": 655480.0
+        },
+        "abseil": {
+          "ns": 27.02525,
+          "mad": 0.17629999999999946,
+          "samples": 20,
+          "bytes": 851972.0
+        },
+        "abseil_insert": {
+          "ns": 13.25105,
+          "mad": 0.16669999999999963,
+          "samples": 20,
+          "bytes": 851912.0
+        },
+        "ikea_descriptor": {
+          "ns": 5.69636,
+          "mad": 0.22953500000000027,
+          "samples": 20,
+          "bytes": 655480.0
+        }
+      },
+      "comparisons": {
+        "ikea": {
+          "before_ratio": 0.9894109834331584,
+          "before_ratio_mad": 0.03649516895448496,
+          "abseil_control": "abseil_insert",
+          "abseil_ratio": 0.41953618769833334
+        },
+        "ikea_descriptor": {
+          "before_ratio": 1.0115572244073046,
+          "before_ratio_mad": 0.038966290362766554,
+          "abseil_control": "abseil_insert",
+          "abseil_ratio": 0.42987989631010376
+        }
+      }
+    },
+    {
+      "phase": "grow",
+      "W": 24,
+      "b": 10,
+      "K": 14,
+      "V": 64,
+      "occupancy": 85,
+      "new_percent": 0,
+      "miss": 0,
+      "conditioning": 0,
+      "measurements": {
+        "ikea": {
+          "ns": 38.816500000000005,
+          "mad": 0.5127999999999986,
+          "samples": 20,
+          "bytes": 4325496.0
+        },
+        "before": {
+          "ns": 39.4965,
+          "mad": 0.5762500000000017,
+          "samples": 20,
+          "bytes": 4325496.0
+        },
+        "abseil": {
+          "ns": 77.326,
+          "mad": 0.5113000000000127,
+          "samples": 20,
+          "bytes": 4521932.0
+        },
+        "abseil_insert": {
+          "ns": 45.0687,
+          "mad": 0.3667999999999978,
+          "samples": 20,
+          "bytes": 4521592.0
+        },
+        "ikea_descriptor": {
+          "ns": 39.0589,
+          "mad": 0.5037500000000001,
+          "samples": 20,
+          "bytes": 4325496.0
+        }
+      },
+      "comparisons": {
+        "ikea": {
+          "before_ratio": 0.987643854581649,
+          "before_ratio_mad": 0.021727388894026756,
+          "abseil_control": "abseil_insert",
+          "abseil_ratio": 0.8612740105660914
+        },
+        "ikea_descriptor": {
+          "before_ratio": 0.9942930331779676,
+          "before_ratio_mad": 0.02148570768769037,
+          "abseil_control": "abseil_insert",
+          "abseil_ratio": 0.8666524661239398
+        }
+      }
+    },
+    {
+      "phase": "grow",
+      "W": 40,
+      "b": 10,
+      "K": 30,
+      "V": 0,
+      "occupancy": 85,
+      "new_percent": 0,
+      "miss": 0,
+      "conditioning": 0,
+      "measurements": {
+        "ikea": {
+          "ns": 3.1890349999999996,
+          "mad": 0.03367999999999971,
+          "samples": 20,
+          "bytes": 131288.0
+        },
+        "before": {
+          "ns": 3.21668,
+          "mad": 0.03500499999999995,
+          "samples": 20,
+          "bytes": 131288.0
+        },
+        "abseil": {
+          "ns": 23.46775,
+          "mad": 0.579699999999999,
+          "samples": 20,
+          "bytes": 294920.0
+        },
+        "abseil_insert": {
+          "ns": 10.70565,
+          "mad": 0.1645500000000002,
+          "samples": 20,
+          "bytes": 294880.0
+        },
+        "ikea_descriptor": {
+          "ns": 3.19686,
+          "mad": 0.023984999999999923,
+          "samples": 20,
+          "bytes": 131288.0
+        }
+      },
+      "comparisons": {
+        "ikea": {
+          "before_ratio": 0.9922288301541653,
+          "before_ratio_mad": 0.010810406009194584,
+          "abseil_control": "abseil_insert",
+          "abseil_ratio": 0.2978833606553548
+        },
+        "ikea_descriptor": {
+          "before_ratio": 0.9969992701896782,
+          "before_ratio_mad": 0.014688224939271854,
+          "abseil_control": "abseil_insert",
+          "abseil_ratio": 0.2986142831121884
+        }
+      }
+    },
+    {
+      "phase": "grow",
+      "W": 40,
+      "b": 10,
+      "K": 30,
+      "V": 8,
+      "occupancy": 85,
+      "new_percent": 0,
+      "miss": 0,
+      "conditioning": 0,
+      "measurements": {
+        "ikea": {
+          "ns": 6.89961,
+          "mad": 0.1271,
+          "samples": 20,
+          "bytes": 393496.0
+        },
+        "before": {
+          "ns": 6.752085,
+          "mad": 0.10419500000000026,
+          "samples": 20,
+          "bytes": 393496.0
+        },
+        "abseil": {
+          "ns": 29.5415,
+          "mad": 0.5251500000000018,
+          "samples": 20,
+          "bytes": 557056.0
+        },
+        "abseil_insert": {
+          "ns": 14.5495,
+          "mad": 0.22029999999999994,
+          "samples": 20,
+          "bytes": 556976.0
+        },
+        "ikea_descriptor": {
+          "ns": 6.93286,
+          "mad": 0.11873500000000003,
+          "samples": 20,
+          "bytes": 393496.0
+        }
+      },
+      "comparisons": {
+        "ikea": {
+          "before_ratio": 1.016270724978117,
+          "before_ratio_mad": 0.019509749111060737,
+          "abseil_control": "abseil_insert",
+          "abseil_ratio": 0.4742162960926492
+        },
+        "ikea_descriptor": {
+          "before_ratio": 1.022168217126055,
+          "before_ratio_mad": 0.03562948920807829,
+          "abseil_control": "abseil_insert",
+          "abseil_ratio": 0.4765015979930582
+        }
+      }
+    },
+    {
+      "phase": "grow",
+      "W": 40,
+      "b": 10,
+      "K": 30,
+      "V": 64,
+      "occupancy": 85,
+      "new_percent": 0,
+      "miss": 0,
+      "conditioning": 0,
+      "measurements": {
+        "ikea": {
+          "ns": 38.956900000000005,
+          "mad": 0.9899999999999949,
+          "samples": 20,
+          "bytes": 2228952.0
+        },
+        "before": {
+          "ns": 39.4568,
+          "mad": 0.6239500000000007,
+          "samples": 20,
+          "bytes": 2228952.0
+        },
+        "abseil": {
+          "ns": 78.97295,
+          "mad": 0.6801999999999992,
+          "samples": 20,
+          "bytes": 2392008.0
+        },
+        "abseil_insert": {
+          "ns": 45.47625,
+          "mad": 0.71115,
+          "samples": 20,
+          "bytes": 2391648.0
+        },
+        "ikea_descriptor": {
+          "ns": 39.52185,
+          "mad": 0.7424500000000016,
+          "samples": 20,
+          "bytes": 2228952.0
+        }
+      },
+      "comparisons": {
+        "ikea": {
+          "before_ratio": 0.9984486426581176,
+          "before_ratio_mad": 0.020031082831066638,
+          "abseil_control": "abseil_insert",
+          "abseil_ratio": 0.8566427530854018
+        },
+        "ikea_descriptor": {
+          "before_ratio": 0.9985111913398238,
+          "before_ratio_mad": 0.029094172593366552,
+          "abseil_control": "abseil_insert",
+          "abseil_ratio": 0.869065721118166
+        }
+      }
+    }
+  ]
+}

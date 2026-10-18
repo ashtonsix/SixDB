@@ -1,0 +1,44 @@
+[
+  {
+    "isa": "avx512",
+    "K": 14,
+    "identical_disassembly": false,
+    "zen4_asm_sha256": "dab474f7455fa62ce6db7299796fa60e8e8b753d9652d391afe3e5a67cd2dbf4",
+    "zen5_asm_sha256": "dcb33f83c76c3ecae6c48812cdebf2c062add403131e01e937009d4c3326936d"
+  },
+  {
+    "isa": "avx512",
+    "K": 30,
+    "identical_disassembly": false,
+    "zen4_asm_sha256": "c04f763aaba3d4476892a340a8f7e250a8d526e38a273509092c8dd8746050c2",
+    "zen5_asm_sha256": "771ee3b39802843baf8636c7af0064da3095ddd7c83a9597cbe9aeee270b6328"
+  },
+  {
+    "isa": "avx2-gfni",
+    "K": 14,
+    "identical_disassembly": false,
+    "zen4_asm_sha256": "448d00370722c00091ced941506774682a44816f68f6071b673a4044cf8f5a7c",
+    "zen5_asm_sha256": "aae18ba40a024c28b953daec0312299bf16e31f75f34f6d8339c74b738ea0da8"
+  },
+  {
+    "isa": "avx2-gfni",
+    "K": 30,
+    "identical_disassembly": false,
+    "zen4_asm_sha256": "716ed60f75642e67347ca66a0076864b57b78dafab50464ffbf5524357375a87",
+    "zen5_asm_sha256": "49421038a55c6c613f8261772d6048f305004fea52f8c787f3a045a6600a25f0"
+  },
+  {
+    "isa": "avx2",
+    "K": 14,
+    "identical_disassembly": false,
+    "zen4_asm_sha256": "60a3b5d09f88f788efed8c9fe8617e5801f134182a2b8233180167b7e097b465",
+    "zen5_asm_sha256": "26f0fbde532f6b86d121b8939085cefb512010c09ec8b85ead82695e3e0ae6e5"
+  },
+  {
+    "isa": "avx2",
+    "K": 30,
+    "identical_disassembly": false,
+    "zen4_asm_sha256": "c0625fceef6e990f952f4cc73e16c70fe361c11a7d6f9cf053deb15d3fb478d3",
+    "zen5_asm_sha256": "13de7e96a14e725fde0972ab8dd1cc46b2c8cc4bbd0573613185a8cfd930e6ed"
+  }
+]

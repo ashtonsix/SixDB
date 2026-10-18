@@ -1,0 +1,16 @@
+{
+  "location": "/home/ashtonsix/sixdb-archive/hashtable-maintenance-20261017",
+  "archive": "reference-and-promotion.tar.gz",
+  "archive_sha256": "563adbfdd43065b18d8144f1f6af71dbfe1dccb2107be2167754dce621bf1df1",
+  "verified_files": 28,
+  "source_capture": "badd1c0e41b05c3392e380fd37def042ee97173a529cfa764b4f05bc8abc1ee9",
+  "comparison_input": {
+    "location": "/home/ashtonsix/sixdb-archive/hashtable-merge-20261017",
+    "archive": "consolidated-source-with-header-fix.tar.gz",
+    "archive_sha256": "f3d85962775d669480fd7fde3eff2bab3bd56252b9d610918fb1cfe31b198b1c",
+    "source_digest": "badd1c0e41b05c3392e380fd37def042ee97173a529cfa764b4f05bc8abc1ee9",
+    "capture_path": "workbench/benchmarks/hashtable/verification/before-source.tar.gz",
+    "recovery_receipt": "workbench/spikes/hashtable-merge/archive.json:consolidated_source",
+    "instructions": "Place the complete archive unchanged at capture_path in an isolated working source tree before capturing/submitting native.sh with HASHTABLE_COMPARE_CAPTURE=1. The frozen-reference archive above and the maintenance-20261018 closeout snapshot do not contain this input."
+  }
+}

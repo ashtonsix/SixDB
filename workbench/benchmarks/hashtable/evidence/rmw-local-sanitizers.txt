@@ -1,0 +1,46 @@
+Final rebuild: ASan + UBSan + stack use after return. Includes fallible-storage Swiss-growth batch regression.
+Test project /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/hashtable-promotion/check
+      Start 36: ikea_hashtable_mutation_check
+ 1/20 Test #36: ikea_hashtable_mutation_check ..........   Passed    1.67 sec
+      Start 37: ikea_hashtable_guarded_check
+ 2/20 Test #37: ikea_hashtable_guarded_check ...........   Passed    0.13 sec
+      Start 38: ikea_hashtable_modify_check
+ 3/20 Test #38: ikea_hashtable_modify_check ............   Passed    0.01 sec
+      Start 39: ikea_hashtable_word_tail_check
+ 4/20 Test #39: ikea_hashtable_word_tail_check .........   Passed    0.01 sec
+      Start 40: ikea_hashtable_value_check
+ 5/20 Test #40: ikea_hashtable_value_check .............   Passed    0.04 sec
+      Start 41: ikea_hashtable_storage_check
+ 6/20 Test #41: ikea_hashtable_storage_check ...........   Passed    0.01 sec
+      Start 42: ikea_hashtable_clone_check
+ 7/20 Test #42: ikea_hashtable_clone_check .............   Passed    0.03 sec
+      Start 43: ikea_hashtable_descriptor_check
+ 8/20 Test #43: ikea_hashtable_descriptor_check ........   Passed    0.01 sec
+      Start 44: ikea_hashtable_rebuild_check
+ 9/20 Test #44: ikea_hashtable_rebuild_check ...........   Passed    0.04 sec
+      Start 45: ikea_hashtable_rebuild_storage_check
+10/20 Test #45: ikea_hashtable_rebuild_storage_check ...   Passed    0.03 sec
+      Start 46: ikea_hashtable_widths_1
+11/20 Test #46: ikea_hashtable_widths_1 ................   Passed    0.02 sec
+      Start 47: ikea_hashtable_widths_9
+12/20 Test #47: ikea_hashtable_widths_9 ................   Passed    0.15 sec
+      Start 48: ikea_hashtable_widths_17
+13/20 Test #48: ikea_hashtable_widths_17 ...............   Passed    0.11 sec
+      Start 49: ikea_hashtable_widths_25
+14/20 Test #49: ikea_hashtable_widths_25 ...............   Passed    0.12 sec
+      Start 50: ikea_hashtable_widths_33
+15/20 Test #50: ikea_hashtable_widths_33 ...............   Passed    0.12 sec
+      Start 51: ikea_hashtable_widths_41
+16/20 Test #51: ikea_hashtable_widths_41 ...............   Passed    0.12 sec
+      Start 52: ikea_hashtable_widths_49
+17/20 Test #52: ikea_hashtable_widths_49 ...............   Passed    0.12 sec
+      Start 53: ikea_hashtable_widths_57
+18/20 Test #53: ikea_hashtable_widths_57 ...............   Passed    0.12 sec
+      Start 54: ikea_example_hashtable_ordinary
+19/20 Test #54: ikea_example_hashtable_ordinary ........   Passed    0.01 sec
+      Start 55: ikea_example_hashtable_composition
+20/20 Test #55: ikea_example_hashtable_composition .....   Passed    0.00 sec
+
+100% tests passed, 0 tests failed out of 20
+
+Total Test time (real) =   2.87 sec

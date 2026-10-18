@@ -1,0 +1,23 @@
+{
+  "job": "20261017T131511Z-d76933d4",
+  "member": "ikea_hashtable_promotion_k30_b10_v0.asm.gz",
+  "normalization": "Drop instruction addresses/encoding bytes/comments; normalize link targets and RIP-relative constant addresses. Register names, instructions and other operands retained. This checks instruction sequences, not code-placement equivalence.",
+  "comparisons": [
+    {
+      "phase": "independent",
+      "instructions": 142,
+      "normalized_instructions_equal": true,
+      "normalized_sha256": "161f1fb87995f311fa579402963483e6514205b2d5c7b651428c9a7c560d6144",
+      "promoted_raw_sha256": "deac6ae751883fb098c6700d2857ab9345e947f33bd5a0e6f04626d6b2b294e2",
+      "before_raw_sha256": "07b48240801ece96bdbd6315576f466c826a02430629fa8eb914dca91a37d0ae"
+    },
+    {
+      "phase": "prefetch32",
+      "instructions": 228,
+      "normalized_instructions_equal": true,
+      "normalized_sha256": "836653b474e8ebff8d94eb5f83fcf5b38ab824c4aa0c75d01cac86f9f40304ce",
+      "promoted_raw_sha256": "ba946bb456c1168acf4f7255c4a9ab615c656abee118ae44b0840310aa8116e7",
+      "before_raw_sha256": "e728befb1759127bc7f3ea737b2f36bd63dafe284a8cb0f7415035e4d88c5457"
+    }
+  ]
+}

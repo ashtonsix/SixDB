@@ -4,6 +4,8 @@ Recurring component and system workloads, plus shared measurement machinery.
 The [SeriesPack suite](seriespack/README.md) measures packed arrays, access,
 composition and caller costs. The [TuplePack suite](tuplepack/README.md) measures
 ordered code maps, mutation effects, native batching and pipeline boundaries.
+The [Hashtable suite](hashtable/README.md) compares maintained packed owners with
+actual Abseil for sets and maps, including reads, mutations and growth.
 The [Bec256 suite](bec256/README.md) measures headless bitset reads, exact writes,
 analysis and native pair consumers.
 The [Orbital allocation consumer](orbital/README.md) replays ordered packed

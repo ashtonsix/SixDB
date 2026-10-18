@@ -1,0 +1,76 @@
+{
+  "job": "20261017T132718Z-eeeab688",
+  "cell": "K30,b10,V0,50% misses,1,048,576 requests",
+  "summary": [
+    {
+      "phase": "independent",
+      "owner": "abseil",
+      "median_ns": 10.5795,
+      "mad": 0.016350000000000087,
+      "samples": 20
+    },
+    {
+      "phase": "independent",
+      "owner": "before",
+      "median_ns": 9.708285,
+      "mad": 0.08731499999999937,
+      "samples": 20
+    },
+    {
+      "phase": "independent",
+      "owner": "before_split",
+      "median_ns": 10.329550000000001,
+      "mad": 0.10685000000000056,
+      "samples": 20
+    },
+    {
+      "phase": "independent",
+      "owner": "ikea",
+      "median_ns": 10.38015,
+      "mad": 0.11955000000000027,
+      "samples": 20
+    },
+    {
+      "phase": "independent",
+      "owner": "ikea_split",
+      "median_ns": 9.689150000000001,
+      "mad": 0.04772000000000176,
+      "samples": 20
+    },
+    {
+      "phase": "prefetch32",
+      "owner": "abseil",
+      "median_ns": 10.89225,
+      "mad": 0.03240000000000087,
+      "samples": 20
+    },
+    {
+      "phase": "prefetch32",
+      "owner": "before",
+      "median_ns": 9.771374999999999,
+      "mad": 0.10152500000000053,
+      "samples": 20
+    },
+    {
+      "phase": "prefetch32",
+      "owner": "before_split",
+      "median_ns": 10.234649999999998,
+      "mad": 0.09370000000000012,
+      "samples": 20
+    },
+    {
+      "phase": "prefetch32",
+      "owner": "ikea",
+      "median_ns": 9.903955,
+      "mad": 0.09848000000000035,
+      "samples": 20
+    },
+    {
+      "phase": "prefetch32",
+      "owner": "ikea_split",
+      "median_ns": 9.88903,
+      "mad": 0.04101999999999961,
+      "samples": 20
+    }
+  ]
+}

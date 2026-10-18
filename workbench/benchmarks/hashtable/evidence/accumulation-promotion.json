@@ -1,0 +1,523 @@
+{
+  "jobs": {
+    "zen5": {
+      "full": {
+        "job": "20261017T224148Z-f21a2016",
+        "source": {
+          "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+          "digest": "1a281c82ae96bc3926da966556104239abfa666cac783d0540c1c8ed6509b59f",
+          "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+          "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c",
+          "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+          "sha256": "c4afaa27dc4e9106fc2cf985095a601a01f20a702b120345d6ce7516d23f65c3"
+        },
+        "artifact": {
+          "bucket": "calico-fleet-artifacts",
+          "bytes": 80663893,
+          "files": 5564,
+          "format": 1,
+          "key": "sixdb/artifacts/sha256/1ca75cd151a09c4c0df27a5238c12ea98e60a8f81e44e8a702986ee4baec36ca.tar.gz",
+          "kind": "files",
+          "region": "us-east-1",
+          "sha256": "1ca75cd151a09c4c0df27a5238c12ea98e60a8f81e44e8a702986ee4baec36ca",
+          "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/1ca75cd151a09c4c0df27a5238c12ea98e60a8f81e44e8a702986ee4baec36ca.tar.gz"
+        }
+      },
+      "rmw": {
+        "job": "20261017T230600Z-bd6f859a",
+        "source": {
+          "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+          "digest": "bc272c9d3f82b04d518e814a19ea5d2a39c0d97bf368fb07510cee88745a65ff",
+          "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+          "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c",
+          "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+          "sha256": "ca410b9cfecc0a3b4f7160fe842b27ac774d6bf557eac93ceb7c6a0d8d068203"
+        },
+        "artifact": {
+          "bucket": "calico-fleet-artifacts",
+          "bytes": 42947132,
+          "files": 1196,
+          "format": 1,
+          "key": "sixdb/artifacts/sha256/3dcbbd08537a1e5f7359677f4ee2f66546f4c19e2b939bf769a640f29a915a64.tar.gz",
+          "kind": "files",
+          "region": "us-east-1",
+          "sha256": "3dcbbd08537a1e5f7359677f4ee2f66546f4c19e2b939bf769a640f29a915a64",
+          "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/3dcbbd08537a1e5f7359677f4ee2f66546f4c19e2b939bf769a640f29a915a64.tar.gz"
+        }
+      },
+      "audited_rows": 38304,
+      "cells": 540,
+      "codegen": {
+        "native": {
+          "entries_identical": 21,
+          "outlined_identical": 12,
+          "receipt_sha256": "d52b7432b5b7c3da798319f354714994ea3702033843c9971a0c92a1cb2b277e"
+        },
+        "avx2": {
+          "entries_identical": 21,
+          "outlined_identical": 6,
+          "receipt_sha256": "5f62f850724fc61c357e31be9aa6a7c1f61698270a9151ee35c9abda0b9f3155"
+        }
+      }
+    },
+    "granite": {
+      "full": {
+        "job": "20261017T224148Z-d209b84f",
+        "source": {
+          "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+          "digest": "1a281c82ae96bc3926da966556104239abfa666cac783d0540c1c8ed6509b59f",
+          "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+          "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c",
+          "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+          "sha256": "c4afaa27dc4e9106fc2cf985095a601a01f20a702b120345d6ce7516d23f65c3"
+        },
+        "artifact": {
+          "bucket": "calico-fleet-artifacts",
+          "bytes": 79654525,
+          "files": 5564,
+          "format": 1,
+          "key": "sixdb/artifacts/sha256/969fb6fa194378c8da7616d2fd9e91d6b2bd1bebe01d35bc910580742465c8e0.tar.gz",
+          "kind": "files",
+          "region": "us-east-1",
+          "sha256": "969fb6fa194378c8da7616d2fd9e91d6b2bd1bebe01d35bc910580742465c8e0",
+          "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/969fb6fa194378c8da7616d2fd9e91d6b2bd1bebe01d35bc910580742465c8e0.tar.gz"
+        }
+      },
+      "rmw": {
+        "job": "20261017T230616Z-b3a8ddd7",
+        "source": {
+          "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+          "digest": "bc272c9d3f82b04d518e814a19ea5d2a39c0d97bf368fb07510cee88745a65ff",
+          "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+          "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c",
+          "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+          "sha256": "ca410b9cfecc0a3b4f7160fe842b27ac774d6bf557eac93ceb7c6a0d8d068203"
+        },
+        "artifact": {
+          "bucket": "calico-fleet-artifacts",
+          "bytes": 42647285,
+          "files": 1196,
+          "format": 1,
+          "key": "sixdb/artifacts/sha256/3026cf6f6f6324b6174816008ea8697b9367a52279a1e0fdcdf98be6b07de6b6.tar.gz",
+          "kind": "files",
+          "region": "us-east-1",
+          "sha256": "3026cf6f6f6324b6174816008ea8697b9367a52279a1e0fdcdf98be6b07de6b6",
+          "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/3026cf6f6f6324b6174816008ea8697b9367a52279a1e0fdcdf98be6b07de6b6.tar.gz"
+        }
+      },
+      "audited_rows": 38304,
+      "cells": 540,
+      "codegen": {
+        "native": {
+          "entries_identical": 21,
+          "outlined_identical": 12,
+          "receipt_sha256": "54478be312da80bf783aa7e64083d1f2187a968386fce5ea5f1e9f669dc4f8ed"
+        },
+        "avx2": {
+          "entries_identical": 21,
+          "outlined_identical": 6,
+          "receipt_sha256": "ef1043d381f834ab09820d964ff7c19b96b5176375fdec83424d7af33646f037"
+        }
+      }
+    },
+    "neoverse": {
+      "full": {
+        "job": "20261017T224531Z-7f5a851a",
+        "source": {
+          "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+          "digest": "1a281c82ae96bc3926da966556104239abfa666cac783d0540c1c8ed6509b59f",
+          "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+          "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c",
+          "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+          "sha256": "c4afaa27dc4e9106fc2cf985095a601a01f20a702b120345d6ce7516d23f65c3"
+        },
+        "artifact": {
+          "bucket": "calico-fleet-artifacts",
+          "bytes": 58690124,
+          "files": 3018,
+          "format": 1,
+          "key": "sixdb/artifacts/sha256/38413c8040297a70f9e14b5085134dfc9a1431c349b3e2fc6e37e20f6596d156.tar.gz",
+          "kind": "files",
+          "region": "us-east-1",
+          "sha256": "38413c8040297a70f9e14b5085134dfc9a1431c349b3e2fc6e37e20f6596d156",
+          "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/38413c8040297a70f9e14b5085134dfc9a1431c349b3e2fc6e37e20f6596d156.tar.gz"
+        }
+      },
+      "rmw": {
+        "job": "20261017T230617Z-9d33e05e",
+        "source": {
+          "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+          "digest": "bc272c9d3f82b04d518e814a19ea5d2a39c0d97bf368fb07510cee88745a65ff",
+          "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+          "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c",
+          "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+          "sha256": "ca410b9cfecc0a3b4f7160fe842b27ac774d6bf557eac93ceb7c6a0d8d068203"
+        },
+        "artifact": {
+          "bucket": "calico-fleet-artifacts",
+          "bytes": 33202974,
+          "files": 604,
+          "format": 1,
+          "key": "sixdb/artifacts/sha256/76dc387ceb8f7350ecc4141cae37ea2239246ac1d5b7eda8352e9c39912dd854.tar.gz",
+          "kind": "files",
+          "region": "us-east-1",
+          "sha256": "76dc387ceb8f7350ecc4141cae37ea2239246ac1d5b7eda8352e9c39912dd854",
+          "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/76dc387ceb8f7350ecc4141cae37ea2239246ac1d5b7eda8352e9c39912dd854.tar.gz"
+        }
+      },
+      "audited_rows": 21384,
+      "cells": 342,
+      "codegen": {
+        "native": {
+          "entries_identical": 21,
+          "outlined_identical": 6,
+          "receipt_sha256": "8f0ade30784a3b6caf2c86630396c2096c695a3bcff451151e0740e1e81e429a"
+        }
+      }
+    }
+  },
+  "profile_identity": {
+    "bindings": 1365,
+    "profiles": 21,
+    "identical": true,
+    "sha256": "8acdc1af650284f6b515ef70487bb2c1d8571a82d4d03ad9c72a443e3e5d4913",
+    "baseline_source_digest": "badd1c0e41b05c3392e380fd37def042ee97173a529cfa764b4f05bc8abc1ee9",
+    "scope": "Actual compiled pre-change selection including Granite override versus generated maintained selection; every retained K0..64 set/map binding."
+  },
+  "checks": {
+    "module_tests": 22,
+    "standalone_headers": 30,
+    "sanitizer_targets_per_cpu": 5,
+    "local_research_checks": [
+      "K-way ordered histories",
+      "multimap ordinary compatibility",
+      "multimap Loom read compatibility"
+    ]
+  },
+  "timing_limits": [
+    "Unweighted cell medians and MADs; all losses retained.",
+    "Old accumulation uses four controls; maintained uses two, same-host rather than same-binary pairing.",
+    "RMW supplement restores inline fixture mixer; original raw RMW rows are superseded.",
+    "Byte-fold reducer qualification; copy/add/partial-value throughput unqualified.",
+    "This maintenance growth control is Abseil copy/reserve; original growth qualification also retains reserved insertion.",
+    "Assembly normalization removes addresses, RIP-relative constant addresses and NOPs; not a semantic proof of constants/callees."
+  ],
+  "production_sources": [
+    {
+      "path": "ikea/include/ikea/hashtable/encoding-profiles.h",
+      "sha256": "4a979637778706291144cd843b04d64b2d4cb3d96f0b15ca998fcbe9455100da",
+      "native_capture_identical": true
+    },
+    {
+      "path": "ikea/include/ikea/hashtable/storage.h",
+      "sha256": "36ab6ee0f31c72592b7ceaea800dd6ce6281fcce9a3cc440a00aeed0b3c84456",
+      "native_capture_identical": true
+    },
+    {
+      "path": "ikea/include/ikea/hashtable/geometry.h",
+      "sha256": "fb823fc3771fb47963c2075c7c27675eb1330425ccab076a62ebd452186b81c0",
+      "native_capture_identical": true
+    },
+    {
+      "path": "ikea/include/ikea/hashtable/mutation.h",
+      "sha256": "b23c253d2a74ca49774add84623a7416ddce60dda30e47b99eb249b6d17cdb68",
+      "native_capture_identical": true
+    },
+    {
+      "path": "ikea/include/ikea/hashtable/table.h",
+      "sha256": "ad0b1c95bc47758f4eb32af2c20db8ef16c6aee7e9b94168a6769b3297695289",
+      "native_capture_identical": true
+    },
+    {
+      "path": "ikea/include/ikea/hashtable/kernel.h",
+      "sha256": "5ff1698fb4a5ae12aa13c23e080aa00a2c127dd97efe93c972c846b584ad3e05",
+      "native_capture_identical": true
+    },
+    {
+      "path": "ikea/include/ikea/hashtable/descriptor.h",
+      "sha256": "89f77b260bea533f7235d7de04cfc50c62a0f52515e938ff31c62e67cd9c283e",
+      "native_capture_identical": true
+    },
+    {
+      "path": "ikea/include/ikea/hashtable/encoding-selection.h",
+      "sha256": "78ca70af88b722df55649a7fc2659f6757a85dc765b2b744a29742ae9bd64d83",
+      "native_capture_identical": true
+    },
+    {
+      "path": "ikea/include/ikea/hashtable/rebuild.h",
+      "sha256": "7980dee5734f4598f1a6687d0db3089b907a9966b36719dafbcf57c51bea397f",
+      "native_capture_identical": true
+    },
+    {
+      "path": "ikea/include/ikea/hashtable/capacity.h",
+      "sha256": "933c06cc5b1fb113f085ae83e66e1cb605c7fcb41626118b12539f7dddf1ad3f",
+      "native_capture_identical": true
+    },
+    {
+      "path": "ikea/include/ikea/hashtable/accumulate.h",
+      "sha256": "1e1c735fb9c886eb1cb7453befb64157a26ce89463f06d094cec22dfa478e58c",
+      "native_capture_identical": true
+    },
+    {
+      "path": "ikea/include/ikea/hashtable/author/table.h",
+      "sha256": "36f428ad5b7b7debf5926734b8036c4e01df5ed6d5dfd6380dd360e9a6fa44cd",
+      "native_capture_identical": true
+    },
+    {
+      "path": "ikea/include/ikea/hashtable/detail/bucket-filter.h",
+      "sha256": "eacecc84e78f70ab759612a3ccc8ba16558abc86cd08186852ab5aa8e8d863d5",
+      "native_capture_identical": true
+    },
+    {
+      "path": "ikea/include/ikea/hashtable/detail/packed30.h",
+      "sha256": "3011360caaf6ffcde9d21964b25c7ee399c639b995ca46c9046dcf92d8f2a641",
+      "native_capture_identical": true
+    },
+    {
+      "path": "ikea/include/ikea/hashtable/detail/bits.h",
+      "sha256": "c5c5f657e3fc2eced276340fdcf68ca65b8c4cd5e8415c608799c1a5fb970c28",
+      "native_capture_identical": true
+    },
+    {
+      "path": "ikea/include/ikea/hashtable/detail/representation.h",
+      "sha256": "ff9fac232858751d5407a1fb9733ecfd514f35a47fafd14f7e1aa1d3f8c31fb0",
+      "native_capture_identical": true
+    },
+    {
+      "path": "ikea/include/ikea/hashtable/detail/hash.h",
+      "sha256": "e31e6d7ab83a21aa892e2e077cb1dcd6921675ee9c4df52e9d897a02716a689a",
+      "native_capture_identical": true
+    },
+    {
+      "path": "ikea/include/ikea/hashtable/detail/bucket-write.h",
+      "sha256": "b27c03d5b621fc771e6be5ffb8a3aed3dc1ed5fbf6323832b292a08f6fdf5293",
+      "native_capture_identical": true
+    },
+    {
+      "path": "ikea/include/ikea/hashtable/detail/control.h",
+      "sha256": "b5f3fa26628adaa753db33bd14b06db6b44408ce6825039d8e8b6988100b6c59",
+      "native_capture_identical": true
+    },
+    {
+      "path": "ikea/include/ikea/hashtable/detail/bucket.h",
+      "sha256": "9235a26e43597444e9a0841bd52bc29bbb8ca17511b5fd7fac2bdc91fdf4f765",
+      "native_capture_identical": true
+    },
+    {
+      "path": "ikea/include/ikea/hashtable/detail/accumulation/points.h",
+      "sha256": "453fecaaf68b620a6d62a368a742eb56adf0b29b22b88f738d747b8bc061245f",
+      "native_capture_identical": true
+    },
+    {
+      "path": "ikea/include/ikea/hashtable/detail/accumulation/packed32.h",
+      "sha256": "f7c6f4525fd72479a2cca0b3c21a106c334e4e4cb2e90b9129b4d814ec8fb951",
+      "native_capture_identical": true
+    },
+    {
+      "path": "ikea/include/ikea/hashtable/detail/accumulation/flat.h",
+      "sha256": "ea40adc60f29e9daa5b1adda4b3273a0d0dca3b6f01647134a2b4dff251ef826",
+      "native_capture_identical": true
+    },
+    {
+      "path": "ikea/include/ikea/hashtable/detail/accumulation/wide.h",
+      "sha256": "ddb4b5b457638c14774a84aae1bfa2820ea1b2ccd3ae522d43f65906f397d9c1",
+      "native_capture_identical": true
+    },
+    {
+      "path": "ikea/include/ikea/hashtable/detail/accumulation/codec.h",
+      "sha256": "cf88fcc4d27c4d1e060398db613083c756a924e49f251ba3948207f5916e977f",
+      "native_capture_identical": true
+    },
+    {
+      "path": "ikea/include/ikea/hashtable/detail/accumulation/engine.h",
+      "sha256": "f87dfb0b2b04783615190a5204141cf24f6c39f04eb4e2f03c4b402cc7732f2b",
+      "native_capture_identical": true
+    },
+    {
+      "path": "ikea/include/ikea/hashtable/detail/accumulation/swiss.h",
+      "sha256": "6222176de4a0f5e6a5cc8ee000d6d41af57b2a87e7bd3c25bb1f6a45dc53ddf6",
+      "native_capture_identical": true
+    },
+    {
+      "path": "ikea/include/ikea/hashtable/detail/accumulation/common.h",
+      "sha256": "01d4836359f14a5dd9442e6b327ee7ab0f3695b9ab0bad6ac789f1166e21c2b2",
+      "native_capture_identical": true
+    },
+    {
+      "path": "ikea/include/ikea/hashtable/detail/accumulation/resolve.h",
+      "sha256": "b617dc3810fcab361cf7e41b8389894c58e4277ff6ea096e854ca89e832fe7e0",
+      "native_capture_identical": true
+    },
+    {
+      "path": "ikea/test/hashtable/mutation-check.cpp",
+      "sha256": "3c801cc8e9fe8f5d51608eb31be48833170f6358505d41db1332b477d019ce03",
+      "native_capture_identical": true
+    },
+    {
+      "path": "ikea/test/hashtable/word-tail-check.cpp",
+      "sha256": "6f681e208b1a8d0fa3a3a0b1c26e0fc2e76d43510d27a08481025fb89d2d8ffa",
+      "native_capture_identical": true
+    },
+    {
+      "path": "ikea/test/hashtable/value-check.cpp",
+      "sha256": "338089301f48329ffe4984385410bdefdf882e21e41d69d1bd60dba4b8e8f94a",
+      "native_capture_identical": true
+    },
+    {
+      "path": "ikea/test/hashtable/storage-check.cpp",
+      "sha256": "7af4543394e0ee02a616f5a7c49fa69090d5797390e3e8527587a23564c28877",
+      "native_capture_identical": true
+    },
+    {
+      "path": "ikea/test/hashtable/clone-check.cpp",
+      "sha256": "e826b886fafac3e39ebe71d92dc3145e9b296cef2f25d95fb0c274a37781f8de",
+      "native_capture_identical": true
+    },
+    {
+      "path": "ikea/test/hashtable/widths.cpp",
+      "sha256": "3f4145243b67a705c2789d977c9dc3c688bb12225ee8bc19c9a9fff7082c0524",
+      "native_capture_identical": true
+    },
+    {
+      "path": "ikea/test/hashtable/descriptor-check.cpp",
+      "sha256": "0632e208fb2430555dd884d7819bc7955dd0f16160d7d91e6959d82b6c957d9c",
+      "native_capture_identical": true
+    },
+    {
+      "path": "ikea/test/hashtable/rebuild-check.cpp",
+      "sha256": "674f25a7d5d77f3e82f36b6dc3d57f783ef078ae36ebb559cbc6d2a0cc6ee377",
+      "native_capture_identical": true
+    },
+    {
+      "path": "ikea/test/hashtable/rebuild-storage-check.cpp",
+      "sha256": "dff3b9b54aece5dda7b60ad4403db390c316f99aeca9cd7e9465a97e6d4f337c",
+      "native_capture_identical": true
+    },
+    {
+      "path": "ikea/test/hashtable/guarded-check.cpp",
+      "sha256": "da545d06e5bbcb346eec51a629a67048073f59928885d528e39a23cd89c3c68d",
+      "native_capture_identical": true
+    },
+    {
+      "path": "ikea/test/hashtable/modify-check.cpp",
+      "sha256": "aabd7f1a88a9d09dde1ffbd34160df7dc85e81be6fee088d9c20279ab19fcaa2",
+      "native_capture_identical": true
+    },
+    {
+      "path": "ikea/test/hashtable/accumulate-check.cpp",
+      "sha256": "07ea4b1f9fe9d4e8437bf7d594d19f29de84c178f39d8165a7322844d0c0bfe6",
+      "native_capture_identical": true
+    },
+    {
+      "path": "ikea/test/hashtable/damage.h",
+      "sha256": "03c75dfb0f4012ba624fa9896f3ddf7935d44a794b2cfe0cd0671f980fe161a1",
+      "native_capture_identical": true
+    },
+    {
+      "path": "ikea/test/hashtable/accumulation-history.h",
+      "sha256": "a61c67b90048425ab16fc032a44ea85384d207f9e783bf55e1ec64907bdaf92d",
+      "native_capture_identical": true
+    },
+    {
+      "path": "ikea/examples/hashtable/ordinary.cpp",
+      "sha256": "7e6a187c9c029528246d458338cbfd3d127dd185fe730d091e25d8d733275b16",
+      "native_capture_identical": true
+    },
+    {
+      "path": "ikea/examples/hashtable/composition.cpp",
+      "sha256": "a638b62d1568857291c00c8e785e90ded2df1d969b33238451913a0f2673858f",
+      "native_capture_identical": true
+    },
+    {
+      "path": "ikea/examples/hashtable/accumulation.cpp",
+      "sha256": "b0fa38a99890a0cd10a233830ce966851bcc4a48fc50d19169913f183b5a6a34",
+      "native_capture_identical": true
+    },
+    {
+      "path": "ikea/include/ikea/hashtable.h",
+      "sha256": "2d68d9f94ac67e4e6eb4d2dab7646976bbf67fded6d64a08c0fb5f293b3c316f",
+      "native_capture_identical": true
+    }
+  ],
+  "footprint": {
+    "scope": "C++/Python/shell/CMake in production, merge research, benchmarks, tests/examples; excludes evidence and generated encoding-profiles.h. Whitespace removal is a formatting adjustment, not token/complexity analysis.",
+    "groups": [
+      {
+        "group": "production",
+        "before": {
+          "files": 13,
+          "bytes": 122180,
+          "nonspace_bytes": 100616,
+          "lines": 2117
+        },
+        "after": {
+          "files": 29,
+          "bytes": 195262,
+          "nonspace_bytes": 133862,
+          "lines": 4261
+        }
+      },
+      {
+        "group": "research",
+        "before": {
+          "files": 14,
+          "bytes": 110140,
+          "nonspace_bytes": 76823,
+          "lines": 2323
+        },
+        "after": {
+          "files": 7,
+          "bytes": 43525,
+          "nonspace_bytes": 33279,
+          "lines": 880
+        }
+      },
+      {
+        "group": "benchmark",
+        "before": {
+          "files": 27,
+          "bytes": 215012,
+          "nonspace_bytes": 179542,
+          "lines": 3590
+        },
+        "after": {
+          "files": 16,
+          "bytes": 90781,
+          "nonspace_bytes": 68124,
+          "lines": 1915
+        }
+      },
+      {
+        "group": "tests/examples",
+        "before": {
+          "files": 14,
+          "bytes": 72904,
+          "nonspace_bytes": 61844,
+          "lines": 1230
+        },
+        "after": {
+          "files": 17,
+          "bytes": 120085,
+          "nonspace_bytes": 81490,
+          "lines": 2800
+        }
+      }
+    ],
+    "generated_profile_bytes": {
+      "before": 127743,
+      "after": 17299
+    },
+    "before": {
+      "files": 68,
+      "bytes": 520236,
+      "nonspace_bytes": 418825,
+      "lines": 9260
+    },
+    "after": {
+      "files": 69,
+      "bytes": 449653,
+      "nonspace_bytes": 316755,
+      "lines": 9856
+    }
+  }
+}

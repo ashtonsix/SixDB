@@ -1,0 +1,32 @@
+Zen 5 AVX-512, K14/b10/map8, RMW native capture 48725132061567b704bc7e84c2c45f5c0978b25c2ef7652c09072896cd704930.
+Extracted from the complete promotion consumer disassembly; existing-primary branch only.
+
+Concrete
+0000000000015d10 <auto void qualification::modifies<ikea::hashtable::table<24u, 10u, 8u, 14u, (ikea::hashtable::search_kernel)7, ikea::hashtable::heap_storage_policy>>(std::basic_string_view<char, std::char_traits<char>>, qualification::history const&, unsigned int)::'lambda'(auto&)::operator()<ikea::hashtable::table<24u, 10u, 8u, 14u, (ikea::hashtable::search_kernel)7, ikea::hashtable::heap_storage_policy>>(auto&) const>:
+   15d68: 62 f2 7d 48 5a 35 9e 35 04 00	vbroadcasti32x4	0x4359e(%rip), %zmm6 # zmm6 = mem[0,1,2,3,0,1,2,3,0,1,2,3,0,1,2,3]
+                                                                        # 0x59310 <absl::lts_20260817::time_internal::cctz::(anonymous namespace)::kDaysPerYear+0x30>
+   15d72: c4 e2 79 78 3d 05 3d 04 00   	vpbroadcastb	0x43d05(%rip), %xmm7 # 0x59a80 <absl::lts_20260817::time_internal::cctz::(anonymous namespace)::kDaysPerYear+0x7a0>
+   15d7b: c4 62 79 78 05 fd 3c 04 00   	vpbroadcastb	0x43cfd(%rip), %xmm8 # 0x59a81 <absl::lts_20260817::time_internal::cctz::(anonymous namespace)::kDaysPerYear+0x7a1>
+   15d84: 49 ba 87 ca eb 85 b1 79 37 9e	movabsq	$-0x61c8864e7a143579, %r10 # imm = 0x9E3779B185EBCA87
+   15d8e: 4c 89 7c 24 08               	movq	%r15, 0x8(%rsp)
+   15d93: eb 18                        	jmp	0x15dad <auto void qualification::modifies<ikea::hashtable::table<24u, 10u, 8u, 14u, (ikea::hashtable::search_kernel)7, ikea::hashtable::heap_storage_policy>>(std::basic_string_view<char, std::char_traits<char>>, qualification::history const&, unsigned int)::'lambda'(auto&)::operator()<ikea::hashtable::table<24u, 10u, 8u, 14u, (ikea::hashtable::search_kernel)7, ikea::hashtable::heap_storage_policy>>(auto&) const+0x9d>
+   15d95: 48 01 fa                     	addq	%rdi, %rdx
+   15d98: 48 ff 44 f2 40               	incq	0x40(%rdx,%rsi,8)
+   15d9d: 0f 1f 00                     	nopl	(%rax)
+   15da0: 48 83 c3 10                  	addq	$0x10, %rbx
+   15da4: 4c 39 fb                     	cmpq	%r15, %rbx
+
+Descriptor native batch
+000000000003c4e0 <auto void qualification::modifies<qualification::DescriptorRmw>(std::basic_string_view<char, std::char_traits<char>>, qualification::history const&, unsigned int)::'lambda'(auto&)::operator()<ikea::hashtable::table<24u, 10u, 8u, 14u, (ikea::hashtable::search_kernel)7, ikea::hashtable::heap_storage_policy>>(auto&) const>:
+   3c538: 62 f2 7d 48 5a 35 ce cd 01 00	vbroadcasti32x4	0x1cdce(%rip), %zmm6 # zmm6 = mem[0,1,2,3,0,1,2,3,0,1,2,3,0,1,2,3]
+                                                                        # 0x59310 <absl::lts_20260817::time_internal::cctz::(anonymous namespace)::kDaysPerYear+0x30>
+   3c542: c4 e2 79 78 3d 75 f2 01 00   	vpbroadcastb	0x1f275(%rip), %xmm7 # 0x5b7c0 <absl::lts_20260817::time_internal::cctz::(anonymous namespace)::kDaysPerYear+0x24e0>
+   3c54b: c4 62 79 78 05 6d f2 01 00   	vpbroadcastb	0x1f26d(%rip), %xmm8 # 0x5b7c1 <absl::lts_20260817::time_internal::cctz::(anonymous namespace)::kDaysPerYear+0x24e1>
+   3c554: 49 ba 87 ca eb 85 b1 79 37 9e	movabsq	$-0x61c8864e7a143579, %r10 # imm = 0x9E3779B185EBCA87
+   3c55e: 4c 89 7c 24 08               	movq	%r15, 0x8(%rsp)
+   3c563: eb 18                        	jmp	0x3c57d <auto void qualification::modifies<qualification::DescriptorRmw>(std::basic_string_view<char, std::char_traits<char>>, qualification::history const&, unsigned int)::'lambda'(auto&)::operator()<ikea::hashtable::table<24u, 10u, 8u, 14u, (ikea::hashtable::search_kernel)7, ikea::hashtable::heap_storage_policy>>(auto&) const+0x9d>
+   3c565: 48 01 fa                     	addq	%rdi, %rdx
+   3c568: 48 ff 44 f2 40               	incq	0x40(%rdx,%rsi,8)
+   3c56d: 0f 1f 00                     	nopl	(%rax)
+   3c570: 48 83 c3 10                  	addq	$0x10, %rbx
+   3c574: 4c 39 fb                     	cmpq	%r15, %rbx

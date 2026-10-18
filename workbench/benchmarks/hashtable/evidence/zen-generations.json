@@ -1,0 +1,7873 @@
+{
+  "scope": "Existing Zen5 construction recipes transferred unchanged to native Zen4/Zen5 compiler tunes; all V0/8/64 and 0/50/100% misses retained. No Zen4 encoding search or new measured profile claimed.",
+  "normal_rows": 6480,
+  "receipts": [
+    {
+      "cpu": "zen4",
+      "model": "AMD EPYC 9R14",
+      "job": {
+        "format": 2,
+        "profile": "207be62222113ccc0f23b89a37af74078550fed6acea681d4d50f96228298fea",
+        "id": "20261017T143712Z-aa52139a",
+        "created_at": 1792247840.5591276,
+        "source": {
+          "sha256": "7047425b550cf2433383b03f76fc368d70dc6cfc047d68b3618bdeb73a2e5811",
+          "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+          "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+          "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+          "digest": "efdd6cea61dfdb4f33944976ed2001ba0ee737dce1417eee8cacdc200d141bc9",
+          "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c"
+        },
+        "source_commit": "10e315a2997cc8fd06659c7a10923181cc8a9376",
+        "script": "workbench/benchmarks/hashtable/generation-native.sh",
+        "args": [],
+        "config": {
+          "region": "us-east-1",
+          "bucket": "calico-fleet-artifacts",
+          "machine": "zen5",
+          "capacity": "spot-or-on-demand",
+          "deadline_seconds": 7200,
+          "idle_seconds": 600,
+          "max_age_seconds": 14400,
+          "disk_gb": 24,
+          "setup": "toolchain",
+          "sync_seconds": 0,
+          "instance_type": "c7a.xlarge",
+          "ami": "ami-025d99823a4caad37",
+          "fresh": false,
+          "env": {
+            "GENERATION_CPU": "zen4",
+            "SIXDB_BUILD_JOBS": "2"
+          },
+          "checkpoint_seconds": 300,
+          "checkpoint_timeout": 90,
+          "hardware": {
+            "VCpuInfo": {
+              "DefaultVCpus": 4,
+              "DefaultCores": 4,
+              "DefaultThreadsPerCore": 1,
+              "ValidCores": [
+                1,
+                2,
+                3,
+                4
+              ],
+              "ValidThreadsPerCore": [
+                1
+              ]
+            },
+            "MemoryInfo": {
+              "SizeInMiB": 8192
+            },
+            "ProcessorInfo": {
+              "SupportedArchitectures": [
+                "x86_64"
+              ],
+              "SustainedClockSpeedInGhz": 3.7,
+              "Manufacturer": "AMD"
+            },
+            "EbsInfo": {
+              "EbsOptimizedSupport": "default",
+              "EncryptionSupport": "supported",
+              "EbsOptimizedInfo": {
+                "BaselineBandwidthInMbps": 1250,
+                "BaselineThroughputInMBps": 156.25,
+                "BaselineIops": 6000,
+                "MaximumBandwidthInMbps": 10000,
+                "MaximumThroughputInMBps": 1250.0,
+                "MaximumIops": 40000
+              },
+              "NvmeSupport": "required",
+              "MaximumEbsAttachments": 32,
+              "AttachmentLimitType": "dedicated"
+            },
+            "Hypervisor": "nitro",
+            "NetworkInfo": {
+              "NetworkPerformance": "Up to 12.5 Gigabit",
+              "MaximumNetworkInterfaces": 4,
+              "MaximumNetworkCards": 1,
+              "DefaultNetworkCardIndex": 0,
+              "NetworkCards": [
+                {
+                  "NetworkCardIndex": 0,
+                  "NetworkPerformance": "Up to 12.5 Gigabit",
+                  "MaximumNetworkInterfaces": 4,
+                  "BaselineBandwidthInGbps": 1.562,
+                  "PeakBandwidthInGbps": 12.5,
+                  "DefaultEnaQueueCountPerInterface": 4
+                }
+              ],
+              "Ipv4AddressesPerInterface": 15,
+              "Ipv6AddressesPerInterface": 15,
+              "Ipv6Supported": true,
+              "EnaSupport": "required",
+              "EfaSupported": false,
+              "EncryptionInTransitSupported": true,
+              "EnaSrdSupported": false,
+              "FlexibleEnaQueuesSupport": "unsupported"
+            }
+          },
+          "architecture": "x86_64",
+          "root_device": "/dev/sda1",
+          "image_name": "ubuntu/images/hvm-ssd-gp3/ubuntu-noble-24.04-amd64-server-20260904",
+          "instance_store_nvme": false,
+          "instance_store_mappings": [],
+          "data_volumes": [],
+          "vpc_id": "vpc-5e2d0124",
+          "subnets": [
+            {
+              "id": "subnet-75288838",
+              "zone": "us-east-1a"
+            },
+            {
+              "id": "subnet-c29a879e",
+              "zone": "us-east-1b"
+            },
+            {
+              "id": "subnet-800010e7",
+              "zone": "us-east-1c"
+            },
+            {
+              "id": "subnet-d1aeb1ff",
+              "zone": "us-east-1d"
+            },
+            {
+              "id": "subnet-0912d807",
+              "zone": "us-east-1f"
+            }
+          ],
+          "security_group_id": "sg-079dafaf1d39f43b0",
+          "instance_profile": "sixdb-worker",
+          "actual_capacity": "spot"
+        },
+        "prefix": "sixdb/workers/20261017T143712Z-aa52139a",
+        "uri": "s3://calico-fleet-artifacts/sixdb/workers/20261017T143712Z-aa52139a",
+        "worker": {
+          "id": "20261017T143712Z-aa52139a",
+          "instance_id": "i-0e94348dc149ce26e",
+          "reused": false,
+          "reuse_count": 0,
+          "max_end": 1792262240.5591276
+        }
+      }
+    },
+    {
+      "cpu": "zen5",
+      "model": "AMD EPYC 9R45",
+      "job": {
+        "format": 2,
+        "profile": "817ae663b92b0be977c6f1d867b20e3351597c48c2c3c6f7f396840fb64f1d80",
+        "id": "20261017T143712Z-d93097e9",
+        "created_at": 1792247840.5467725,
+        "source": {
+          "sha256": "7047425b550cf2433383b03f76fc368d70dc6cfc047d68b3618bdeb73a2e5811",
+          "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+          "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+          "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+          "digest": "efdd6cea61dfdb4f33944976ed2001ba0ee737dce1417eee8cacdc200d141bc9",
+          "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c"
+        },
+        "source_commit": "10e315a2997cc8fd06659c7a10923181cc8a9376",
+        "script": "workbench/benchmarks/hashtable/generation-native.sh",
+        "args": [],
+        "config": {
+          "region": "us-east-1",
+          "bucket": "calico-fleet-artifacts",
+          "machine": "zen5",
+          "capacity": "spot-or-on-demand",
+          "deadline_seconds": 7200,
+          "idle_seconds": 600,
+          "max_age_seconds": 14400,
+          "disk_gb": 24,
+          "setup": "toolchain",
+          "sync_seconds": 0,
+          "instance_type": "c8a.xlarge",
+          "ami": "ami-025d99823a4caad37",
+          "fresh": false,
+          "env": {
+            "GENERATION_CPU": "zen5",
+            "SIXDB_BUILD_JOBS": "2"
+          },
+          "checkpoint_seconds": 300,
+          "checkpoint_timeout": 90,
+          "hardware": {
+            "VCpuInfo": {
+              "DefaultVCpus": 4,
+              "DefaultCores": 4,
+              "DefaultThreadsPerCore": 1,
+              "ValidCores": [
+                1,
+                2,
+                3,
+                4
+              ],
+              "ValidThreadsPerCore": [
+                1
+              ]
+            },
+            "MemoryInfo": {
+              "SizeInMiB": 8192
+            },
+            "ProcessorInfo": {
+              "SupportedArchitectures": [
+                "x86_64"
+              ],
+              "SustainedClockSpeedInGhz": 4.5,
+              "Manufacturer": "AMD"
+            },
+            "EbsInfo": {
+              "EbsOptimizedSupport": "default",
+              "EncryptionSupport": "supported",
+              "EbsOptimizedInfo": {
+                "BaselineBandwidthInMbps": 1250,
+                "BaselineThroughputInMBps": 156.25,
+                "BaselineIops": 6000,
+                "MaximumBandwidthInMbps": 10000,
+                "MaximumThroughputInMBps": 1250.0,
+                "MaximumIops": 40000
+              },
+              "NvmeSupport": "required",
+              "MaximumEbsAttachments": 32,
+              "AttachmentLimitType": "dedicated"
+            },
+            "Hypervisor": "nitro",
+            "NetworkInfo": {
+              "NetworkPerformance": "Up to 12.5 Gigabit",
+              "MaximumNetworkInterfaces": 4,
+              "MaximumNetworkCards": 1,
+              "DefaultNetworkCardIndex": 0,
+              "NetworkCards": [
+                {
+                  "NetworkCardIndex": 0,
+                  "NetworkPerformance": "Up to 12.5 Gigabit",
+                  "MaximumNetworkInterfaces": 4,
+                  "BaselineBandwidthInGbps": 1.875,
+                  "PeakBandwidthInGbps": 12.5,
+                  "DefaultEnaQueueCountPerInterface": 4,
+                  "MaximumEnaQueueCount": 16,
+                  "MaximumEnaQueueCountPerInterface": 4
+                }
+              ],
+              "Ipv4AddressesPerInterface": 20,
+              "Ipv6AddressesPerInterface": 20,
+              "Ipv6Supported": true,
+              "EnaSupport": "required",
+              "EfaSupported": false,
+              "EncryptionInTransitSupported": true,
+              "EnaSrdSupported": false,
+              "BandwidthWeightings": [
+                "default",
+                "ebs-1",
+                "vpc-1"
+              ],
+              "FlexibleEnaQueuesSupport": "supported"
+            }
+          },
+          "architecture": "x86_64",
+          "root_device": "/dev/sda1",
+          "image_name": "ubuntu/images/hvm-ssd-gp3/ubuntu-noble-24.04-amd64-server-20260904",
+          "instance_store_nvme": false,
+          "instance_store_mappings": [],
+          "data_volumes": [],
+          "vpc_id": "vpc-5e2d0124",
+          "subnets": [
+            {
+              "id": "subnet-75288838",
+              "zone": "us-east-1a"
+            },
+            {
+              "id": "subnet-c29a879e",
+              "zone": "us-east-1b"
+            },
+            {
+              "id": "subnet-800010e7",
+              "zone": "us-east-1c"
+            },
+            {
+              "id": "subnet-d1aeb1ff",
+              "zone": "us-east-1d"
+            },
+            {
+              "id": "subnet-0912d807",
+              "zone": "us-east-1f"
+            }
+          ],
+          "security_group_id": "sg-079dafaf1d39f43b0",
+          "instance_profile": "sixdb-worker",
+          "actual_capacity": "spot"
+        },
+        "prefix": "sixdb/workers/20261017T143712Z-d93097e9",
+        "uri": "s3://calico-fleet-artifacts/sixdb/workers/20261017T143712Z-d93097e9",
+        "worker": {
+          "id": "20261017T143712Z-d93097e9",
+          "instance_id": "i-0e52371079aa18051",
+          "reused": false,
+          "reuse_count": 0,
+          "max_end": 1792262240.5467725
+        }
+      }
+    }
+  ],
+  "summary": [
+    {
+      "cpu": "zen4",
+      "isa": "avx512",
+      "K": 14,
+      "V": 0,
+      "mode": "independent",
+      "miss_percent": 0,
+      "measurements": {
+        "abseil": {
+          "ns": 2.87549,
+          "mad": 0.030079999999999885,
+          "samples": 15,
+          "bytes": 163840,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        },
+        "ikea": {
+          "ns": 2.17129,
+          "mad": 0.013560000000000016,
+          "samples": 15,
+          "bytes": 69752,
+          "E": [
+            14
+          ],
+          "kernel": [
+            7
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.3243233285282021
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx512",
+      "K": 14,
+      "V": 0,
+      "mode": "independent",
+      "miss_percent": 50,
+      "measurements": {
+        "abseil": {
+          "ns": 12.7674,
+          "mad": 0.021900000000000475,
+          "samples": 15,
+          "bytes": 163840,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        },
+        "ikea": {
+          "ns": 11.96,
+          "mad": 0.026100000000001344,
+          "samples": 15,
+          "bytes": 69752,
+          "E": [
+            14
+          ],
+          "kernel": [
+            7
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.0675083612040133
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx512",
+      "K": 14,
+      "V": 0,
+      "mode": "independent",
+      "miss_percent": 100,
+      "measurements": {
+        "abseil": {
+          "ns": 11.7402,
+          "mad": 0.02059999999999995,
+          "samples": 15,
+          "bytes": 163840,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        },
+        "ikea": {
+          "ns": 4.86836,
+          "mad": 0.052669999999999995,
+          "samples": 15,
+          "bytes": 69752,
+          "E": [
+            14
+          ],
+          "kernel": [
+            7
+          ]
+        }
+      },
+      "ikea_throughput_factor": 2.4115307824400825
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx512",
+      "K": 14,
+      "V": 8,
+      "mode": "independent",
+      "miss_percent": 0,
+      "measurements": {
+        "ikea": {
+          "ns": 3.14384,
+          "mad": 0.0047399999999999665,
+          "samples": 15,
+          "bytes": 340088,
+          "E": [
+            14
+          ],
+          "kernel": [
+            7
+          ]
+        },
+        "abseil": {
+          "ns": 3.53222,
+          "mad": 0.011099999999999888,
+          "samples": 15,
+          "bytes": 425936,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.1235368212122754
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx512",
+      "K": 14,
+      "V": 8,
+      "mode": "independent",
+      "miss_percent": 50,
+      "measurements": {
+        "ikea": {
+          "ns": 13.6766,
+          "mad": 0.03250000000000064,
+          "samples": 15,
+          "bytes": 340088,
+          "E": [
+            14
+          ],
+          "kernel": [
+            7
+          ]
+        },
+        "abseil": {
+          "ns": 13.5855,
+          "mad": 0.037200000000000344,
+          "samples": 15,
+          "bytes": 425936,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 0.9933389877601158
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx512",
+      "K": 14,
+      "V": 8,
+      "mode": "independent",
+      "miss_percent": 100,
+      "measurements": {
+        "ikea": {
+          "ns": 5.21072,
+          "mad": 0.07193000000000005,
+          "samples": 15,
+          "bytes": 340088,
+          "E": [
+            14
+          ],
+          "kernel": [
+            7
+          ]
+        },
+        "abseil": {
+          "ns": 12.1002,
+          "mad": 0.09499999999999886,
+          "samples": 15,
+          "bytes": 425936,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 2.3221742868547914
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx512",
+      "K": 14,
+      "V": 64,
+      "mode": "independent",
+      "miss_percent": 0,
+      "measurements": {
+        "ikea": {
+          "ns": 5.83308,
+          "mad": 0.019429999999999836,
+          "samples": 15,
+          "bytes": 2232440,
+          "E": [
+            14
+          ],
+          "kernel": [
+            7
+          ]
+        },
+        "abseil": {
+          "ns": 5.5372,
+          "mad": 0.01499999999999968,
+          "samples": 15,
+          "bytes": 2260608,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 0.9492755113936377
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx512",
+      "K": 14,
+      "V": 64,
+      "mode": "independent",
+      "miss_percent": 50,
+      "measurements": {
+        "ikea": {
+          "ns": 14.8857,
+          "mad": 0.07980000000000054,
+          "samples": 15,
+          "bytes": 2232440,
+          "E": [
+            14
+          ],
+          "kernel": [
+            7
+          ]
+        },
+        "abseil": {
+          "ns": 14.9722,
+          "mad": 0.04780000000000051,
+          "samples": 15,
+          "bytes": 2260608,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.005810946075764
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx512",
+      "K": 14,
+      "V": 64,
+      "mode": "independent",
+      "miss_percent": 100,
+      "measurements": {
+        "ikea": {
+          "ns": 5.84378,
+          "mad": 0.0956999999999999,
+          "samples": 15,
+          "bytes": 2232440,
+          "E": [
+            14
+          ],
+          "kernel": [
+            7
+          ]
+        },
+        "abseil": {
+          "ns": 11.9002,
+          "mad": 0.02710000000000079,
+          "samples": 15,
+          "bytes": 2260608,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 2.0363874067812273
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx512",
+      "K": 14,
+      "V": 0,
+      "mode": "prefetch32",
+      "miss_percent": 0,
+      "measurements": {
+        "abseil": {
+          "ns": 3.63391,
+          "mad": 0.01878000000000002,
+          "samples": 15,
+          "bytes": 163840,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        },
+        "ikea": {
+          "ns": 2.56359,
+          "mad": 0.021529999999999827,
+          "samples": 15,
+          "bytes": 69752,
+          "E": [
+            14
+          ],
+          "kernel": [
+            7
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.4175082599011544
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx512",
+      "K": 14,
+      "V": 0,
+      "mode": "prefetch32",
+      "miss_percent": 50,
+      "measurements": {
+        "abseil": {
+          "ns": 13.4577,
+          "mad": 0.010399999999998855,
+          "samples": 15,
+          "bytes": 163840,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        },
+        "ikea": {
+          "ns": 11.7791,
+          "mad": 0.07349999999999923,
+          "samples": 15,
+          "bytes": 69752,
+          "E": [
+            14
+          ],
+          "kernel": [
+            7
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.1425066431221402
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx512",
+      "K": 14,
+      "V": 0,
+      "mode": "prefetch32",
+      "miss_percent": 100,
+      "measurements": {
+        "abseil": {
+          "ns": 12.2518,
+          "mad": 0.19459999999999944,
+          "samples": 15,
+          "bytes": 163840,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        },
+        "ikea": {
+          "ns": 4.7923,
+          "mad": 0.05093999999999976,
+          "samples": 15,
+          "bytes": 69752,
+          "E": [
+            14
+          ],
+          "kernel": [
+            7
+          ]
+        }
+      },
+      "ikea_throughput_factor": 2.5565594808338377
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx512",
+      "K": 14,
+      "V": 8,
+      "mode": "prefetch32",
+      "miss_percent": 0,
+      "measurements": {
+        "ikea": {
+          "ns": 3.46412,
+          "mad": 0.0037400000000000766,
+          "samples": 15,
+          "bytes": 340088,
+          "E": [
+            14
+          ],
+          "kernel": [
+            7
+          ]
+        },
+        "abseil": {
+          "ns": 4.47255,
+          "mad": 0.013749999999999929,
+          "samples": 15,
+          "bytes": 425936,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.2911071210004272
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx512",
+      "K": 14,
+      "V": 8,
+      "mode": "prefetch32",
+      "miss_percent": 50,
+      "measurements": {
+        "ikea": {
+          "ns": 12.8696,
+          "mad": 0.045999999999999375,
+          "samples": 15,
+          "bytes": 340088,
+          "E": [
+            14
+          ],
+          "kernel": [
+            7
+          ]
+        },
+        "abseil": {
+          "ns": 14.562,
+          "mad": 0.015600000000000946,
+          "samples": 15,
+          "bytes": 425936,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.1315036986386522
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx512",
+      "K": 14,
+      "V": 8,
+      "mode": "prefetch32",
+      "miss_percent": 100,
+      "measurements": {
+        "ikea": {
+          "ns": 5.14825,
+          "mad": 0.07953999999999972,
+          "samples": 15,
+          "bytes": 340088,
+          "E": [
+            14
+          ],
+          "kernel": [
+            7
+          ]
+        },
+        "abseil": {
+          "ns": 13.231,
+          "mad": 0.1059000000000001,
+          "samples": 15,
+          "bytes": 425936,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 2.5699995143980963
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx512",
+      "K": 14,
+      "V": 64,
+      "mode": "prefetch32",
+      "miss_percent": 0,
+      "measurements": {
+        "ikea": {
+          "ns": 6.30629,
+          "mad": 0.017700000000000493,
+          "samples": 15,
+          "bytes": 2232440,
+          "E": [
+            14
+          ],
+          "kernel": [
+            7
+          ]
+        },
+        "abseil": {
+          "ns": 7.1084,
+          "mad": 0.014769999999999506,
+          "samples": 15,
+          "bytes": 2260608,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.1271920574537486
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx512",
+      "K": 14,
+      "V": 64,
+      "mode": "prefetch32",
+      "miss_percent": 50,
+      "measurements": {
+        "ikea": {
+          "ns": 14.3966,
+          "mad": 0.03139999999999965,
+          "samples": 15,
+          "bytes": 2232440,
+          "E": [
+            14
+          ],
+          "kernel": [
+            7
+          ]
+        },
+        "abseil": {
+          "ns": 15.1708,
+          "mad": 0.029399999999998983,
+          "samples": 15,
+          "bytes": 2260608,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.0537765861383939
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx512",
+      "K": 14,
+      "V": 64,
+      "mode": "prefetch32",
+      "miss_percent": 100,
+      "measurements": {
+        "ikea": {
+          "ns": 5.71399,
+          "mad": 0.05090000000000039,
+          "samples": 15,
+          "bytes": 2232440,
+          "E": [
+            14
+          ],
+          "kernel": [
+            7
+          ]
+        },
+        "abseil": {
+          "ns": 12.4482,
+          "mad": 0.009800000000000253,
+          "samples": 15,
+          "bytes": 2260608,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 2.178547739845537
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx512",
+      "K": 30,
+      "V": 0,
+      "mode": "independent",
+      "miss_percent": 0,
+      "measurements": {
+        "abseil": {
+          "ns": 2.879,
+          "mad": 0.017240000000000144,
+          "samples": 15,
+          "bytes": 147432,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        },
+        "ikea": {
+          "ns": 2.86859,
+          "mad": 0.007480000000000153,
+          "samples": 15,
+          "bytes": 71800,
+          "E": [
+            30
+          ],
+          "kernel": [
+            3
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.0036289605694784
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx512",
+      "K": 30,
+      "V": 0,
+      "mode": "independent",
+      "miss_percent": 50,
+      "measurements": {
+        "abseil": {
+          "ns": 12.6674,
+          "mad": 0.022500000000000853,
+          "samples": 15,
+          "bytes": 147432,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        },
+        "ikea": {
+          "ns": 12.5481,
+          "mad": 0.1181000000000001,
+          "samples": 15,
+          "bytes": 71800,
+          "E": [
+            30
+          ],
+          "kernel": [
+            3
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.0095074154652897
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx512",
+      "K": 30,
+      "V": 0,
+      "mode": "independent",
+      "miss_percent": 100,
+      "measurements": {
+        "abseil": {
+          "ns": 11.4632,
+          "mad": 0.26060000000000016,
+          "samples": 15,
+          "bytes": 147432,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        },
+        "ikea": {
+          "ns": 6.51645,
+          "mad": 0.09771999999999981,
+          "samples": 15,
+          "bytes": 71800,
+          "E": [
+            30
+          ],
+          "kernel": [
+            3
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.7591173108057303
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx512",
+      "K": 30,
+      "V": 8,
+      "mode": "independent",
+      "miss_percent": 0,
+      "measurements": {
+        "ikea": {
+          "ns": 3.71181,
+          "mad": 0.012029999999999763,
+          "samples": 15,
+          "bytes": 211064,
+          "E": [
+            30
+          ],
+          "kernel": [
+            1
+          ]
+        },
+        "abseil": {
+          "ns": 3.41952,
+          "mad": 0.06784999999999997,
+          "samples": 15,
+          "bytes": 278456,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 0.9212540512580116
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx512",
+      "K": 30,
+      "V": 8,
+      "mode": "independent",
+      "miss_percent": 50,
+      "measurements": {
+        "ikea": {
+          "ns": 13.7493,
+          "mad": 0.11710000000000065,
+          "samples": 15,
+          "bytes": 211064,
+          "E": [
+            30
+          ],
+          "kernel": [
+            1
+          ]
+        },
+        "abseil": {
+          "ns": 13.2894,
+          "mad": 0.2386999999999997,
+          "samples": 15,
+          "bytes": 278456,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 0.9665510244157884
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx512",
+      "K": 30,
+      "V": 8,
+      "mode": "independent",
+      "miss_percent": 100,
+      "measurements": {
+        "ikea": {
+          "ns": 6.94191,
+          "mad": 0.15050000000000008,
+          "samples": 15,
+          "bytes": 211064,
+          "E": [
+            30
+          ],
+          "kernel": [
+            1
+          ]
+        },
+        "abseil": {
+          "ns": 12.0268,
+          "mad": 0.44179999999999886,
+          "samples": 15,
+          "bytes": 278456,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.7324914900942248
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx512",
+      "K": 30,
+      "V": 64,
+      "mode": "independent",
+      "miss_percent": 0,
+      "measurements": {
+        "ikea": {
+          "ns": 5.9278,
+          "mad": 0.010600000000000165,
+          "samples": 15,
+          "bytes": 1185912,
+          "E": [
+            30
+          ],
+          "kernel": [
+            1
+          ]
+        },
+        "abseil": {
+          "ns": 4.7192,
+          "mad": 0.0407099999999998,
+          "samples": 15,
+          "bytes": 1195624,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 0.7961132291912681
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx512",
+      "K": 30,
+      "V": 64,
+      "mode": "independent",
+      "miss_percent": 50,
+      "measurements": {
+        "ikea": {
+          "ns": 15.29,
+          "mad": 0.14970000000000105,
+          "samples": 15,
+          "bytes": 1185912,
+          "E": [
+            30
+          ],
+          "kernel": [
+            1
+          ]
+        },
+        "abseil": {
+          "ns": 14.3975,
+          "mad": 0.020600000000001728,
+          "samples": 15,
+          "bytes": 1195624,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 0.9416285153695226
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx512",
+      "K": 30,
+      "V": 64,
+      "mode": "independent",
+      "miss_percent": 100,
+      "measurements": {
+        "ikea": {
+          "ns": 7.49508,
+          "mad": 0.03788000000000036,
+          "samples": 15,
+          "bytes": 1185912,
+          "E": [
+            30
+          ],
+          "kernel": [
+            1
+          ]
+        },
+        "abseil": {
+          "ns": 11.754,
+          "mad": 0.08389999999999986,
+          "samples": 15,
+          "bytes": 1195624,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.5682287580652907
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx512",
+      "K": 30,
+      "V": 0,
+      "mode": "prefetch32",
+      "miss_percent": 0,
+      "measurements": {
+        "abseil": {
+          "ns": 3.63339,
+          "mad": 0.009390000000000231,
+          "samples": 15,
+          "bytes": 147432,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        },
+        "ikea": {
+          "ns": 3.11184,
+          "mad": 0.01576999999999984,
+          "samples": 15,
+          "bytes": 71800,
+          "E": [
+            30
+          ],
+          "kernel": [
+            3
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.167601804720037
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx512",
+      "K": 30,
+      "V": 0,
+      "mode": "prefetch32",
+      "miss_percent": 50,
+      "measurements": {
+        "abseil": {
+          "ns": 13.3006,
+          "mad": 0.06339999999999968,
+          "samples": 15,
+          "bytes": 147432,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        },
+        "ikea": {
+          "ns": 12.1329,
+          "mad": 0.13289999999999935,
+          "samples": 15,
+          "bytes": 71800,
+          "E": [
+            30
+          ],
+          "kernel": [
+            3
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.0962424482193045
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx512",
+      "K": 30,
+      "V": 0,
+      "mode": "prefetch32",
+      "miss_percent": 100,
+      "measurements": {
+        "abseil": {
+          "ns": 12.0845,
+          "mad": 0.2676999999999996,
+          "samples": 15,
+          "bytes": 147432,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        },
+        "ikea": {
+          "ns": 6.32846,
+          "mad": 0.19211000000000045,
+          "samples": 15,
+          "bytes": 71800,
+          "E": [
+            30
+          ],
+          "kernel": [
+            3
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.909548294529791
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx512",
+      "K": 30,
+      "V": 8,
+      "mode": "prefetch32",
+      "miss_percent": 0,
+      "measurements": {
+        "ikea": {
+          "ns": 3.95002,
+          "mad": 0.012350000000000083,
+          "samples": 15,
+          "bytes": 211064,
+          "E": [
+            30
+          ],
+          "kernel": [
+            1
+          ]
+        },
+        "abseil": {
+          "ns": 4.54188,
+          "mad": 0.07828999999999997,
+          "samples": 15,
+          "bytes": 278456,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.1498372160140962
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx512",
+      "K": 30,
+      "V": 8,
+      "mode": "prefetch32",
+      "miss_percent": 50,
+      "measurements": {
+        "ikea": {
+          "ns": 13.4344,
+          "mad": 0.10870000000000068,
+          "samples": 15,
+          "bytes": 211064,
+          "E": [
+            30
+          ],
+          "kernel": [
+            1
+          ]
+        },
+        "abseil": {
+          "ns": 14.0002,
+          "mad": 0.24929999999999986,
+          "samples": 15,
+          "bytes": 278456,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.0421157625200976
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx512",
+      "K": 30,
+      "V": 8,
+      "mode": "prefetch32",
+      "miss_percent": 100,
+      "measurements": {
+        "ikea": {
+          "ns": 6.80084,
+          "mad": 0.1503300000000003,
+          "samples": 15,
+          "bytes": 211064,
+          "E": [
+            30
+          ],
+          "kernel": [
+            1
+          ]
+        },
+        "abseil": {
+          "ns": 12.5056,
+          "mad": 0.4360999999999997,
+          "samples": 15,
+          "bytes": 278456,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.838831673734421
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx512",
+      "K": 30,
+      "V": 64,
+      "mode": "prefetch32",
+      "miss_percent": 0,
+      "measurements": {
+        "ikea": {
+          "ns": 6.60883,
+          "mad": 0.01625999999999994,
+          "samples": 15,
+          "bytes": 1185912,
+          "E": [
+            30
+          ],
+          "kernel": [
+            1
+          ]
+        },
+        "abseil": {
+          "ns": 6.20956,
+          "mad": 0.035660000000000025,
+          "samples": 15,
+          "bytes": 1195624,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 0.9395853729026166
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx512",
+      "K": 30,
+      "V": 64,
+      "mode": "prefetch32",
+      "miss_percent": 50,
+      "measurements": {
+        "ikea": {
+          "ns": 14.7494,
+          "mad": 0.0691000000000006,
+          "samples": 15,
+          "bytes": 1185912,
+          "E": [
+            30
+          ],
+          "kernel": [
+            1
+          ]
+        },
+        "abseil": {
+          "ns": 14.9064,
+          "mad": 0.040099999999998914,
+          "samples": 15,
+          "bytes": 1195624,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.0106445007932525
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx512",
+      "K": 30,
+      "V": 64,
+      "mode": "prefetch32",
+      "miss_percent": 100,
+      "measurements": {
+        "ikea": {
+          "ns": 7.41431,
+          "mad": 0.09283999999999981,
+          "samples": 15,
+          "bytes": 1185912,
+          "E": [
+            30
+          ],
+          "kernel": [
+            1
+          ]
+        },
+        "abseil": {
+          "ns": 12.3202,
+          "mad": 0.1554000000000002,
+          "samples": 15,
+          "bytes": 1195624,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.6616785648293637
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx2-gfni",
+      "K": 14,
+      "V": 0,
+      "mode": "independent",
+      "miss_percent": 0,
+      "measurements": {
+        "abseil": {
+          "ns": 2.8507,
+          "mad": 0.020989999999999842,
+          "samples": 15,
+          "bytes": 163840,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        },
+        "ikea": {
+          "ns": 2.18201,
+          "mad": 0.012680000000000025,
+          "samples": 15,
+          "bytes": 69752,
+          "E": [
+            14
+          ],
+          "kernel": [
+            10
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.3064559740789454
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx2-gfni",
+      "K": 14,
+      "V": 0,
+      "mode": "independent",
+      "miss_percent": 50,
+      "measurements": {
+        "abseil": {
+          "ns": 12.4969,
+          "mad": 0.043900000000000716,
+          "samples": 15,
+          "bytes": 163840,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        },
+        "ikea": {
+          "ns": 9.94498,
+          "mad": 0.04685999999999879,
+          "samples": 15,
+          "bytes": 69752,
+          "E": [
+            14
+          ],
+          "kernel": [
+            10
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.2566038342962984
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx2-gfni",
+      "K": 14,
+      "V": 0,
+      "mode": "independent",
+      "miss_percent": 100,
+      "measurements": {
+        "abseil": {
+          "ns": 11.5089,
+          "mad": 0.036300000000000665,
+          "samples": 15,
+          "bytes": 163840,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        },
+        "ikea": {
+          "ns": 4.31781,
+          "mad": 0.0810499999999994,
+          "samples": 15,
+          "bytes": 69752,
+          "E": [
+            14
+          ],
+          "kernel": [
+            10
+          ]
+        }
+      },
+      "ikea_throughput_factor": 2.665448456509203
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx2-gfni",
+      "K": 14,
+      "V": 8,
+      "mode": "independent",
+      "miss_percent": 0,
+      "measurements": {
+        "ikea": {
+          "ns": 3.06365,
+          "mad": 0.005980000000000096,
+          "samples": 15,
+          "bytes": 340088,
+          "E": [
+            14
+          ],
+          "kernel": [
+            10
+          ]
+        },
+        "abseil": {
+          "ns": 3.5537,
+          "mad": 0.021830000000000016,
+          "samples": 15,
+          "bytes": 425936,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.159956261322279
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx2-gfni",
+      "K": 14,
+      "V": 8,
+      "mode": "independent",
+      "miss_percent": 50,
+      "measurements": {
+        "ikea": {
+          "ns": 11.226,
+          "mad": 0.02549999999999919,
+          "samples": 15,
+          "bytes": 340088,
+          "E": [
+            14
+          ],
+          "kernel": [
+            10
+          ]
+        },
+        "abseil": {
+          "ns": 13.1286,
+          "mad": 0.03319999999999901,
+          "samples": 15,
+          "bytes": 425936,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.169481560662747
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx2-gfni",
+      "K": 14,
+      "V": 8,
+      "mode": "independent",
+      "miss_percent": 100,
+      "measurements": {
+        "ikea": {
+          "ns": 4.59552,
+          "mad": 0.07486999999999977,
+          "samples": 15,
+          "bytes": 340088,
+          "E": [
+            14
+          ],
+          "kernel": [
+            10
+          ]
+        },
+        "abseil": {
+          "ns": 12.3012,
+          "mad": 0.09779999999999944,
+          "samples": 15,
+          "bytes": 425936,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 2.6767808648422813
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx2-gfni",
+      "K": 14,
+      "V": 64,
+      "mode": "independent",
+      "miss_percent": 0,
+      "measurements": {
+        "ikea": {
+          "ns": 5.43397,
+          "mad": 0.025000000000000355,
+          "samples": 15,
+          "bytes": 2232440,
+          "E": [
+            14
+          ],
+          "kernel": [
+            10
+          ]
+        },
+        "abseil": {
+          "ns": 5.37459,
+          "mad": 0.03279000000000032,
+          "samples": 15,
+          "bytes": 2260608,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 0.9890724461121427
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx2-gfni",
+      "K": 14,
+      "V": 64,
+      "mode": "independent",
+      "miss_percent": 50,
+      "measurements": {
+        "ikea": {
+          "ns": 12.7135,
+          "mad": 0.05090000000000039,
+          "samples": 15,
+          "bytes": 2232440,
+          "E": [
+            14
+          ],
+          "kernel": [
+            10
+          ]
+        },
+        "abseil": {
+          "ns": 15.1729,
+          "mad": 0.025000000000000355,
+          "samples": 15,
+          "bytes": 2260608,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.193447909702285
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx2-gfni",
+      "K": 14,
+      "V": 64,
+      "mode": "independent",
+      "miss_percent": 100,
+      "measurements": {
+        "ikea": {
+          "ns": 5.29606,
+          "mad": 0.05579999999999963,
+          "samples": 15,
+          "bytes": 2232440,
+          "E": [
+            14
+          ],
+          "kernel": [
+            10
+          ]
+        },
+        "abseil": {
+          "ns": 12.5437,
+          "mad": 0.01810000000000045,
+          "samples": 15,
+          "bytes": 2260608,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 2.3684965804768074
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx2-gfni",
+      "K": 14,
+      "V": 0,
+      "mode": "prefetch32",
+      "miss_percent": 0,
+      "measurements": {
+        "abseil": {
+          "ns": 3.59551,
+          "mad": 0.006930000000000103,
+          "samples": 15,
+          "bytes": 163840,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        },
+        "ikea": {
+          "ns": 2.53979,
+          "mad": 0.019420000000000215,
+          "samples": 15,
+          "bytes": 69752,
+          "E": [
+            14
+          ],
+          "kernel": [
+            10
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.4156721618716508
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx2-gfni",
+      "K": 14,
+      "V": 0,
+      "mode": "prefetch32",
+      "miss_percent": 50,
+      "measurements": {
+        "abseil": {
+          "ns": 13.3694,
+          "mad": 0.11129999999999995,
+          "samples": 15,
+          "bytes": 163840,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        },
+        "ikea": {
+          "ns": 9.95173,
+          "mad": 0.05577000000000076,
+          "samples": 15,
+          "bytes": 69752,
+          "E": [
+            14
+          ],
+          "kernel": [
+            10
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.3434247110803852
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx2-gfni",
+      "K": 14,
+      "V": 0,
+      "mode": "prefetch32",
+      "miss_percent": 100,
+      "measurements": {
+        "abseil": {
+          "ns": 12.1577,
+          "mad": 0.02210000000000001,
+          "samples": 15,
+          "bytes": 163840,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        },
+        "ikea": {
+          "ns": 4.25662,
+          "mad": 0.054349999999999454,
+          "samples": 15,
+          "bytes": 69752,
+          "E": [
+            14
+          ],
+          "kernel": [
+            10
+          ]
+        }
+      },
+      "ikea_throughput_factor": 2.8561863638285776
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx2-gfni",
+      "K": 14,
+      "V": 8,
+      "mode": "prefetch32",
+      "miss_percent": 0,
+      "measurements": {
+        "ikea": {
+          "ns": 3.22028,
+          "mad": 0.011879999999999669,
+          "samples": 15,
+          "bytes": 340088,
+          "E": [
+            14
+          ],
+          "kernel": [
+            10
+          ]
+        },
+        "abseil": {
+          "ns": 4.40403,
+          "mad": 0.026370000000000005,
+          "samples": 15,
+          "bytes": 425936,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.3675922590582186
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx2-gfni",
+      "K": 14,
+      "V": 8,
+      "mode": "prefetch32",
+      "miss_percent": 50,
+      "measurements": {
+        "ikea": {
+          "ns": 10.977,
+          "mad": 0.020500000000000185,
+          "samples": 15,
+          "bytes": 340088,
+          "E": [
+            14
+          ],
+          "kernel": [
+            10
+          ]
+        },
+        "abseil": {
+          "ns": 14.2033,
+          "mad": 0.01649999999999885,
+          "samples": 15,
+          "bytes": 425936,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.2939145486016215
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx2-gfni",
+      "K": 14,
+      "V": 8,
+      "mode": "prefetch32",
+      "miss_percent": 100,
+      "measurements": {
+        "ikea": {
+          "ns": 4.46977,
+          "mad": 0.10382999999999942,
+          "samples": 15,
+          "bytes": 340088,
+          "E": [
+            14
+          ],
+          "kernel": [
+            10
+          ]
+        },
+        "abseil": {
+          "ns": 13.3129,
+          "mad": 0.029600000000000293,
+          "samples": 15,
+          "bytes": 425936,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 2.978430657505868
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx2-gfni",
+      "K": 14,
+      "V": 64,
+      "mode": "prefetch32",
+      "miss_percent": 0,
+      "measurements": {
+        "ikea": {
+          "ns": 5.78487,
+          "mad": 0.020220000000000127,
+          "samples": 15,
+          "bytes": 2232440,
+          "E": [
+            14
+          ],
+          "kernel": [
+            10
+          ]
+        },
+        "abseil": {
+          "ns": 6.84553,
+          "mad": 0.024980000000000224,
+          "samples": 15,
+          "bytes": 2260608,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.183350706238861
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx2-gfni",
+      "K": 14,
+      "V": 64,
+      "mode": "prefetch32",
+      "miss_percent": 50,
+      "measurements": {
+        "ikea": {
+          "ns": 12.5765,
+          "mad": 0.025399999999999423,
+          "samples": 15,
+          "bytes": 2232440,
+          "E": [
+            14
+          ],
+          "kernel": [
+            10
+          ]
+        },
+        "abseil": {
+          "ns": 14.8714,
+          "mad": 0.03089999999999904,
+          "samples": 15,
+          "bytes": 2260608,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.1824752514610584
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx2-gfni",
+      "K": 14,
+      "V": 64,
+      "mode": "prefetch32",
+      "miss_percent": 100,
+      "measurements": {
+        "ikea": {
+          "ns": 5.20556,
+          "mad": 0.04065999999999992,
+          "samples": 15,
+          "bytes": 2232440,
+          "E": [
+            14
+          ],
+          "kernel": [
+            10
+          ]
+        },
+        "abseil": {
+          "ns": 12.333,
+          "mad": 0.04589999999999961,
+          "samples": 15,
+          "bytes": 2260608,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 2.36919755031159
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx2-gfni",
+      "K": 30,
+      "V": 0,
+      "mode": "independent",
+      "miss_percent": 0,
+      "measurements": {
+        "abseil": {
+          "ns": 2.82866,
+          "mad": 0.012429999999999719,
+          "samples": 15,
+          "bytes": 147432,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        },
+        "ikea": {
+          "ns": 3.9891,
+          "mad": 0.01595000000000013,
+          "samples": 15,
+          "bytes": 71800,
+          "E": [
+            30
+          ],
+          "kernel": [
+            4
+          ]
+        }
+      },
+      "ikea_throughput_factor": 0.709097290115565
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx2-gfni",
+      "K": 30,
+      "V": 0,
+      "mode": "independent",
+      "miss_percent": 50,
+      "measurements": {
+        "abseil": {
+          "ns": 12.4294,
+          "mad": 0.06350000000000122,
+          "samples": 15,
+          "bytes": 147432,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        },
+        "ikea": {
+          "ns": 12.4614,
+          "mad": 0.08949999999999925,
+          "samples": 15,
+          "bytes": 71800,
+          "E": [
+            30
+          ],
+          "kernel": [
+            4
+          ]
+        }
+      },
+      "ikea_throughput_factor": 0.9974320702328792
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx2-gfni",
+      "K": 30,
+      "V": 0,
+      "mode": "independent",
+      "miss_percent": 100,
+      "measurements": {
+        "abseil": {
+          "ns": 11.3754,
+          "mad": 0.2567000000000004,
+          "samples": 15,
+          "bytes": 147432,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        },
+        "ikea": {
+          "ns": 6.50141,
+          "mad": 0.1347700000000005,
+          "samples": 15,
+          "bytes": 71800,
+          "E": [
+            30
+          ],
+          "kernel": [
+            4
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.749681992060184
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx2-gfni",
+      "K": 30,
+      "V": 8,
+      "mode": "independent",
+      "miss_percent": 0,
+      "measurements": {
+        "ikea": {
+          "ns": 4.99236,
+          "mad": 0.014100000000000001,
+          "samples": 15,
+          "bytes": 211064,
+          "E": [
+            30
+          ],
+          "kernel": [
+            4
+          ]
+        },
+        "abseil": {
+          "ns": 3.52589,
+          "mad": 0.06354000000000015,
+          "samples": 15,
+          "bytes": 278456,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 0.7062571609419193
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx2-gfni",
+      "K": 30,
+      "V": 8,
+      "mode": "independent",
+      "miss_percent": 50,
+      "measurements": {
+        "ikea": {
+          "ns": 13.5817,
+          "mad": 0.08919999999999995,
+          "samples": 15,
+          "bytes": 211064,
+          "E": [
+            30
+          ],
+          "kernel": [
+            4
+          ]
+        },
+        "abseil": {
+          "ns": 12.6691,
+          "mad": 0.22770000000000046,
+          "samples": 15,
+          "bytes": 278456,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 0.9328066442345215
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx2-gfni",
+      "K": 30,
+      "V": 8,
+      "mode": "independent",
+      "miss_percent": 100,
+      "measurements": {
+        "ikea": {
+          "ns": 6.76002,
+          "mad": 0.1620999999999997,
+          "samples": 15,
+          "bytes": 211064,
+          "E": [
+            30
+          ],
+          "kernel": [
+            4
+          ]
+        },
+        "abseil": {
+          "ns": 11.6632,
+          "mad": 0.4192,
+          "samples": 15,
+          "bytes": 278456,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.725320339288937
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx2-gfni",
+      "K": 30,
+      "V": 64,
+      "mode": "independent",
+      "miss_percent": 0,
+      "measurements": {
+        "ikea": {
+          "ns": 7.22516,
+          "mad": 0.017890000000000406,
+          "samples": 15,
+          "bytes": 1185912,
+          "E": [
+            30
+          ],
+          "kernel": [
+            4
+          ]
+        },
+        "abseil": {
+          "ns": 4.66932,
+          "mad": 0.021069999999999922,
+          "samples": 15,
+          "bytes": 1195624,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 0.6462583527562019
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx2-gfni",
+      "K": 30,
+      "V": 64,
+      "mode": "independent",
+      "miss_percent": 50,
+      "measurements": {
+        "ikea": {
+          "ns": 14.9887,
+          "mad": 0.10839999999999961,
+          "samples": 15,
+          "bytes": 1185912,
+          "E": [
+            30
+          ],
+          "kernel": [
+            4
+          ]
+        },
+        "abseil": {
+          "ns": 14.0997,
+          "mad": 0.04359999999999964,
+          "samples": 15,
+          "bytes": 1195624,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 0.9406886521179288
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx2-gfni",
+      "K": 30,
+      "V": 64,
+      "mode": "independent",
+      "miss_percent": 100,
+      "measurements": {
+        "ikea": {
+          "ns": 7.69675,
+          "mad": 0.13327000000000044,
+          "samples": 15,
+          "bytes": 1185912,
+          "E": [
+            30
+          ],
+          "kernel": [
+            4
+          ]
+        },
+        "abseil": {
+          "ns": 11.542,
+          "mad": 0.08530000000000015,
+          "samples": 15,
+          "bytes": 1195624,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.4995939844739663
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx2-gfni",
+      "K": 30,
+      "V": 0,
+      "mode": "prefetch32",
+      "miss_percent": 0,
+      "measurements": {
+        "abseil": {
+          "ns": 3.58323,
+          "mad": 0.009640000000000093,
+          "samples": 15,
+          "bytes": 147432,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        },
+        "ikea": {
+          "ns": 4.0137,
+          "mad": 0.014950000000000241,
+          "samples": 15,
+          "bytes": 71800,
+          "E": [
+            30
+          ],
+          "kernel": [
+            4
+          ]
+        }
+      },
+      "ikea_throughput_factor": 0.892749831825996
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx2-gfni",
+      "K": 30,
+      "V": 0,
+      "mode": "prefetch32",
+      "miss_percent": 50,
+      "measurements": {
+        "abseil": {
+          "ns": 12.9652,
+          "mad": 0.029200000000001225,
+          "samples": 15,
+          "bytes": 147432,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        },
+        "ikea": {
+          "ns": 12.3009,
+          "mad": 0.08980000000000032,
+          "samples": 15,
+          "bytes": 71800,
+          "E": [
+            30
+          ],
+          "kernel": [
+            4
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.0540041785560406
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx2-gfni",
+      "K": 30,
+      "V": 0,
+      "mode": "prefetch32",
+      "miss_percent": 100,
+      "measurements": {
+        "abseil": {
+          "ns": 11.7365,
+          "mad": 0.23939999999999984,
+          "samples": 15,
+          "bytes": 147432,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        },
+        "ikea": {
+          "ns": 6.31911,
+          "mad": 0.17145999999999972,
+          "samples": 15,
+          "bytes": 71800,
+          "E": [
+            30
+          ],
+          "kernel": [
+            4
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.857302689777516
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx2-gfni",
+      "K": 30,
+      "V": 8,
+      "mode": "prefetch32",
+      "miss_percent": 0,
+      "measurements": {
+        "ikea": {
+          "ns": 5.12178,
+          "mad": 0.015350000000000641,
+          "samples": 15,
+          "bytes": 211064,
+          "E": [
+            30
+          ],
+          "kernel": [
+            4
+          ]
+        },
+        "abseil": {
+          "ns": 4.45578,
+          "mad": 0.07571999999999957,
+          "samples": 15,
+          "bytes": 278456,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 0.869967081756733
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx2-gfni",
+      "K": 30,
+      "V": 8,
+      "mode": "prefetch32",
+      "miss_percent": 50,
+      "measurements": {
+        "ikea": {
+          "ns": 13.2316,
+          "mad": 0.08460000000000001,
+          "samples": 15,
+          "bytes": 211064,
+          "E": [
+            30
+          ],
+          "kernel": [
+            4
+          ]
+        },
+        "abseil": {
+          "ns": 13.8153,
+          "mad": 0.23900000000000077,
+          "samples": 15,
+          "bytes": 278456,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.044114090510596
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx2-gfni",
+      "K": 30,
+      "V": 8,
+      "mode": "prefetch32",
+      "miss_percent": 100,
+      "measurements": {
+        "ikea": {
+          "ns": 6.71543,
+          "mad": 0.1812100000000001,
+          "samples": 15,
+          "bytes": 211064,
+          "E": [
+            30
+          ],
+          "kernel": [
+            4
+          ]
+        },
+        "abseil": {
+          "ns": 12.7435,
+          "mad": 0.4836999999999989,
+          "samples": 15,
+          "bytes": 278456,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.897644678002749
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx2-gfni",
+      "K": 30,
+      "V": 64,
+      "mode": "prefetch32",
+      "miss_percent": 0,
+      "measurements": {
+        "ikea": {
+          "ns": 7.54155,
+          "mad": 0.01497999999999955,
+          "samples": 15,
+          "bytes": 1185912,
+          "E": [
+            30
+          ],
+          "kernel": [
+            4
+          ]
+        },
+        "abseil": {
+          "ns": 5.94474,
+          "mad": 0.016850000000000698,
+          "samples": 15,
+          "bytes": 1195624,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 0.7882650118344373
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx2-gfni",
+      "K": 30,
+      "V": 64,
+      "mode": "prefetch32",
+      "miss_percent": 50,
+      "measurements": {
+        "ikea": {
+          "ns": 14.6975,
+          "mad": 0.0907,
+          "samples": 15,
+          "bytes": 1185912,
+          "E": [
+            30
+          ],
+          "kernel": [
+            4
+          ]
+        },
+        "abseil": {
+          "ns": 14.7317,
+          "mad": 0.06359999999999921,
+          "samples": 15,
+          "bytes": 1195624,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.0023269263480183
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx2-gfni",
+      "K": 30,
+      "V": 64,
+      "mode": "prefetch32",
+      "miss_percent": 100,
+      "measurements": {
+        "ikea": {
+          "ns": 7.23259,
+          "mad": 0.13544,
+          "samples": 15,
+          "bytes": 1185912,
+          "E": [
+            30
+          ],
+          "kernel": [
+            4
+          ]
+        },
+        "abseil": {
+          "ns": 12.5221,
+          "mad": 0.1775000000000002,
+          "samples": 15,
+          "bytes": 1195624,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.731343820125294
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx2",
+      "K": 14,
+      "V": 0,
+      "mode": "independent",
+      "miss_percent": 0,
+      "measurements": {
+        "abseil": {
+          "ns": 2.84365,
+          "mad": 0.013729999999999798,
+          "samples": 15,
+          "bytes": 163840,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        },
+        "ikea": {
+          "ns": 4.71483,
+          "mad": 0.014780000000000015,
+          "samples": 15,
+          "bytes": 69752,
+          "E": [
+            14
+          ],
+          "kernel": [
+            8
+          ]
+        }
+      },
+      "ikea_throughput_factor": 0.6031288508811558
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx2",
+      "K": 14,
+      "V": 0,
+      "mode": "independent",
+      "miss_percent": 50,
+      "measurements": {
+        "abseil": {
+          "ns": 12.4946,
+          "mad": 0.03359999999999985,
+          "samples": 15,
+          "bytes": 163840,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        },
+        "ikea": {
+          "ns": 10.8088,
+          "mad": 0.016199999999999548,
+          "samples": 15,
+          "bytes": 69752,
+          "E": [
+            14
+          ],
+          "kernel": [
+            8
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.1559655095847827
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx2",
+      "K": 14,
+      "V": 0,
+      "mode": "independent",
+      "miss_percent": 100,
+      "measurements": {
+        "abseil": {
+          "ns": 11.5169,
+          "mad": 0.040099999999998914,
+          "samples": 15,
+          "bytes": 163840,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        },
+        "ikea": {
+          "ns": 6.14286,
+          "mad": 0.049889999999999546,
+          "samples": 15,
+          "bytes": 69752,
+          "E": [
+            14
+          ],
+          "kernel": [
+            8
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.8748433140263656
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx2",
+      "K": 14,
+      "V": 8,
+      "mode": "independent",
+      "miss_percent": 0,
+      "measurements": {
+        "ikea": {
+          "ns": 5.35053,
+          "mad": 0.005329999999999835,
+          "samples": 15,
+          "bytes": 340088,
+          "E": [
+            14
+          ],
+          "kernel": [
+            8
+          ]
+        },
+        "abseil": {
+          "ns": 3.55941,
+          "mad": 0.01933999999999969,
+          "samples": 15,
+          "bytes": 425936,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 0.6652443776597833
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx2",
+      "K": 14,
+      "V": 8,
+      "mode": "independent",
+      "miss_percent": 50,
+      "measurements": {
+        "ikea": {
+          "ns": 11.575,
+          "mad": 0.0517000000000003,
+          "samples": 15,
+          "bytes": 340088,
+          "E": [
+            14
+          ],
+          "kernel": [
+            8
+          ]
+        },
+        "abseil": {
+          "ns": 13.1367,
+          "mad": 0.027200000000000557,
+          "samples": 15,
+          "bytes": 425936,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.1349200863930886
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx2",
+      "K": 14,
+      "V": 8,
+      "mode": "independent",
+      "miss_percent": 100,
+      "measurements": {
+        "ikea": {
+          "ns": 6.84142,
+          "mad": 0.023140000000000605,
+          "samples": 15,
+          "bytes": 340088,
+          "E": [
+            14
+          ],
+          "kernel": [
+            8
+          ]
+        },
+        "abseil": {
+          "ns": 12.3124,
+          "mad": 0.09580000000000055,
+          "samples": 15,
+          "bytes": 425936,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.7996848607452838
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx2",
+      "K": 14,
+      "V": 64,
+      "mode": "independent",
+      "miss_percent": 0,
+      "measurements": {
+        "ikea": {
+          "ns": 7.93284,
+          "mad": 0.041860000000000674,
+          "samples": 15,
+          "bytes": 2232440,
+          "E": [
+            14
+          ],
+          "kernel": [
+            8
+          ]
+        },
+        "abseil": {
+          "ns": 5.39461,
+          "mad": 0.027269999999999683,
+          "samples": 15,
+          "bytes": 2260608,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 0.680035145042633
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx2",
+      "K": 14,
+      "V": 64,
+      "mode": "independent",
+      "miss_percent": 50,
+      "measurements": {
+        "ikea": {
+          "ns": 12.9853,
+          "mad": 0.07319999999999993,
+          "samples": 15,
+          "bytes": 2232440,
+          "E": [
+            14
+          ],
+          "kernel": [
+            8
+          ]
+        },
+        "abseil": {
+          "ns": 15.1936,
+          "mad": 0.032999999999999474,
+          "samples": 15,
+          "bytes": 2260608,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.1700615311159541
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx2",
+      "K": 14,
+      "V": 64,
+      "mode": "independent",
+      "miss_percent": 100,
+      "measurements": {
+        "ikea": {
+          "ns": 7.04821,
+          "mad": 0.040899999999999714,
+          "samples": 15,
+          "bytes": 2232440,
+          "E": [
+            14
+          ],
+          "kernel": [
+            8
+          ]
+        },
+        "abseil": {
+          "ns": 12.5798,
+          "mad": 0.007900000000001128,
+          "samples": 15,
+          "bytes": 2260608,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.7848219618881958
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx2",
+      "K": 14,
+      "V": 0,
+      "mode": "prefetch32",
+      "miss_percent": 0,
+      "measurements": {
+        "abseil": {
+          "ns": 3.59428,
+          "mad": 0.010799999999999699,
+          "samples": 15,
+          "bytes": 163840,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        },
+        "ikea": {
+          "ns": 5.04462,
+          "mad": 0.01053000000000015,
+          "samples": 15,
+          "bytes": 69752,
+          "E": [
+            14
+          ],
+          "kernel": [
+            8
+          ]
+        }
+      },
+      "ikea_throughput_factor": 0.7124976707859065
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx2",
+      "K": 14,
+      "V": 0,
+      "mode": "prefetch32",
+      "miss_percent": 50,
+      "measurements": {
+        "abseil": {
+          "ns": 13.3625,
+          "mad": 0.09379999999999988,
+          "samples": 15,
+          "bytes": 163840,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        },
+        "ikea": {
+          "ns": 11.0278,
+          "mad": 0.06369999999999898,
+          "samples": 15,
+          "bytes": 69752,
+          "E": [
+            14
+          ],
+          "kernel": [
+            8
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.2117104046137943
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx2",
+      "K": 14,
+      "V": 0,
+      "mode": "prefetch32",
+      "miss_percent": 100,
+      "measurements": {
+        "abseil": {
+          "ns": 12.1644,
+          "mad": 0.04579999999999984,
+          "samples": 15,
+          "bytes": 163840,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        },
+        "ikea": {
+          "ns": 6.42237,
+          "mad": 0.07469999999999999,
+          "samples": 15,
+          "bytes": 69752,
+          "E": [
+            14
+          ],
+          "kernel": [
+            8
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.894067143437703
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx2",
+      "K": 14,
+      "V": 8,
+      "mode": "prefetch32",
+      "miss_percent": 0,
+      "measurements": {
+        "ikea": {
+          "ns": 5.55958,
+          "mad": 0.016600000000000392,
+          "samples": 15,
+          "bytes": 340088,
+          "E": [
+            14
+          ],
+          "kernel": [
+            8
+          ]
+        },
+        "abseil": {
+          "ns": 4.41433,
+          "mad": 0.0170300000000001,
+          "samples": 15,
+          "bytes": 425936,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 0.7940042233406119
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx2",
+      "K": 14,
+      "V": 8,
+      "mode": "prefetch32",
+      "miss_percent": 50,
+      "measurements": {
+        "ikea": {
+          "ns": 11.5185,
+          "mad": 0.023299999999998988,
+          "samples": 15,
+          "bytes": 340088,
+          "E": [
+            14
+          ],
+          "kernel": [
+            8
+          ]
+        },
+        "abseil": {
+          "ns": 14.2028,
+          "mad": 0.025299999999999656,
+          "samples": 15,
+          "bytes": 425936,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.2330424968528888
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx2",
+      "K": 14,
+      "V": 8,
+      "mode": "prefetch32",
+      "miss_percent": 100,
+      "measurements": {
+        "ikea": {
+          "ns": 6.86173,
+          "mad": 0.02563999999999922,
+          "samples": 15,
+          "bytes": 340088,
+          "E": [
+            14
+          ],
+          "kernel": [
+            8
+          ]
+        },
+        "abseil": {
+          "ns": 13.424,
+          "mad": 0.03200000000000003,
+          "samples": 15,
+          "bytes": 425936,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.9563579447165658
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx2",
+      "K": 14,
+      "V": 64,
+      "mode": "prefetch32",
+      "miss_percent": 0,
+      "measurements": {
+        "ikea": {
+          "ns": 8.11128,
+          "mad": 0.03106999999999971,
+          "samples": 15,
+          "bytes": 2232440,
+          "E": [
+            14
+          ],
+          "kernel": [
+            8
+          ]
+        },
+        "abseil": {
+          "ns": 6.83858,
+          "mad": 0.042609999999999815,
+          "samples": 15,
+          "bytes": 2260608,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 0.8430950478839344
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx2",
+      "K": 14,
+      "V": 64,
+      "mode": "prefetch32",
+      "miss_percent": 50,
+      "measurements": {
+        "ikea": {
+          "ns": 12.9649,
+          "mad": 0.06780000000000008,
+          "samples": 15,
+          "bytes": 2232440,
+          "E": [
+            14
+          ],
+          "kernel": [
+            8
+          ]
+        },
+        "abseil": {
+          "ns": 14.7506,
+          "mad": 0.019999999999999574,
+          "samples": 15,
+          "bytes": 2260608,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.137733418692007
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx2",
+      "K": 14,
+      "V": 64,
+      "mode": "prefetch32",
+      "miss_percent": 100,
+      "measurements": {
+        "ikea": {
+          "ns": 7.35658,
+          "mad": 0.22609999999999975,
+          "samples": 15,
+          "bytes": 2232440,
+          "E": [
+            14
+          ],
+          "kernel": [
+            8
+          ]
+        },
+        "abseil": {
+          "ns": 12.2746,
+          "mad": 0.025100000000000122,
+          "samples": 15,
+          "bytes": 2260608,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.66851988288036
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx2",
+      "K": 30,
+      "V": 0,
+      "mode": "independent",
+      "miss_percent": 0,
+      "measurements": {
+        "abseil": {
+          "ns": 2.83129,
+          "mad": 0.014990000000000059,
+          "samples": 15,
+          "bytes": 147432,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        },
+        "ikea": {
+          "ns": 5.26874,
+          "mad": 0.013459999999999361,
+          "samples": 15,
+          "bytes": 71800,
+          "E": [
+            30
+          ],
+          "kernel": [
+            4
+          ]
+        }
+      },
+      "ikea_throughput_factor": 0.5373751599054043
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx2",
+      "K": 30,
+      "V": 0,
+      "mode": "independent",
+      "miss_percent": 50,
+      "measurements": {
+        "abseil": {
+          "ns": 12.432,
+          "mad": 0.049999999999998934,
+          "samples": 15,
+          "bytes": 147432,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        },
+        "ikea": {
+          "ns": 13.0759,
+          "mad": 0.08230000000000004,
+          "samples": 15,
+          "bytes": 71800,
+          "E": [
+            30
+          ],
+          "kernel": [
+            4
+          ]
+        }
+      },
+      "ikea_throughput_factor": 0.9507567356740262
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx2",
+      "K": 30,
+      "V": 0,
+      "mode": "independent",
+      "miss_percent": 100,
+      "measurements": {
+        "abseil": {
+          "ns": 11.362,
+          "mad": 0.2553000000000001,
+          "samples": 15,
+          "bytes": 147432,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        },
+        "ikea": {
+          "ns": 7.55,
+          "mad": 0.1346400000000001,
+          "samples": 15,
+          "bytes": 71800,
+          "E": [
+            30
+          ],
+          "kernel": [
+            4
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.5049006622516556
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx2",
+      "K": 30,
+      "V": 8,
+      "mode": "independent",
+      "miss_percent": 0,
+      "measurements": {
+        "ikea": {
+          "ns": 6.24478,
+          "mad": 0.024690000000000545,
+          "samples": 15,
+          "bytes": 211064,
+          "E": [
+            30
+          ],
+          "kernel": [
+            4
+          ]
+        },
+        "abseil": {
+          "ns": 3.51298,
+          "mad": 0.06489000000000011,
+          "samples": 15,
+          "bytes": 278456,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 0.5625466389528534
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx2",
+      "K": 30,
+      "V": 8,
+      "mode": "independent",
+      "miss_percent": 50,
+      "measurements": {
+        "ikea": {
+          "ns": 14.0696,
+          "mad": 0.06989999999999874,
+          "samples": 15,
+          "bytes": 211064,
+          "E": [
+            30
+          ],
+          "kernel": [
+            4
+          ]
+        },
+        "abseil": {
+          "ns": 12.7968,
+          "mad": 0.25289999999999857,
+          "samples": 15,
+          "bytes": 278456,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 0.9095354523227384
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx2",
+      "K": 30,
+      "V": 8,
+      "mode": "independent",
+      "miss_percent": 100,
+      "measurements": {
+        "ikea": {
+          "ns": 7.98398,
+          "mad": 0.1388000000000007,
+          "samples": 15,
+          "bytes": 211064,
+          "E": [
+            30
+          ],
+          "kernel": [
+            4
+          ]
+        },
+        "abseil": {
+          "ns": 11.8292,
+          "mad": 0.4303000000000008,
+          "samples": 15,
+          "bytes": 278456,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.4816169379181812
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx2",
+      "K": 30,
+      "V": 64,
+      "mode": "independent",
+      "miss_percent": 0,
+      "measurements": {
+        "ikea": {
+          "ns": 9.14045,
+          "mad": 0.01930999999999905,
+          "samples": 15,
+          "bytes": 1185912,
+          "E": [
+            30
+          ],
+          "kernel": [
+            4
+          ]
+        },
+        "abseil": {
+          "ns": 4.63415,
+          "mad": 0.032110000000000305,
+          "samples": 15,
+          "bytes": 1195624,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 0.5069936381687992
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx2",
+      "K": 30,
+      "V": 64,
+      "mode": "independent",
+      "miss_percent": 50,
+      "measurements": {
+        "ikea": {
+          "ns": 15.8267,
+          "mad": 0.10289999999999999,
+          "samples": 15,
+          "bytes": 1185912,
+          "E": [
+            30
+          ],
+          "kernel": [
+            4
+          ]
+        },
+        "abseil": {
+          "ns": 13.9962,
+          "mad": 0.0257000000000005,
+          "samples": 15,
+          "bytes": 1195624,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 0.8843410186583431
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx2",
+      "K": 30,
+      "V": 64,
+      "mode": "independent",
+      "miss_percent": 100,
+      "measurements": {
+        "ikea": {
+          "ns": 9.30633,
+          "mad": 0.07432999999999979,
+          "samples": 15,
+          "bytes": 1185912,
+          "E": [
+            30
+          ],
+          "kernel": [
+            4
+          ]
+        },
+        "abseil": {
+          "ns": 11.6744,
+          "mad": 0.07670000000000066,
+          "samples": 15,
+          "bytes": 1195624,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.2544579871979609
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx2",
+      "K": 30,
+      "V": 0,
+      "mode": "prefetch32",
+      "miss_percent": 0,
+      "measurements": {
+        "abseil": {
+          "ns": 3.58229,
+          "mad": 0.01332000000000022,
+          "samples": 15,
+          "bytes": 147432,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        },
+        "ikea": {
+          "ns": 5.49298,
+          "mad": 0.010440000000000005,
+          "samples": 15,
+          "bytes": 71800,
+          "E": [
+            30
+          ],
+          "kernel": [
+            4
+          ]
+        }
+      },
+      "ikea_throughput_factor": 0.6521578451041147
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx2",
+      "K": 30,
+      "V": 0,
+      "mode": "prefetch32",
+      "miss_percent": 50,
+      "measurements": {
+        "abseil": {
+          "ns": 12.9879,
+          "mad": 0.014200000000000657,
+          "samples": 15,
+          "bytes": 147432,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        },
+        "ikea": {
+          "ns": 12.86,
+          "mad": 0.07590000000000074,
+          "samples": 15,
+          "bytes": 71800,
+          "E": [
+            30
+          ],
+          "kernel": [
+            4
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.009945567651633
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx2",
+      "K": 30,
+      "V": 0,
+      "mode": "prefetch32",
+      "miss_percent": 100,
+      "measurements": {
+        "abseil": {
+          "ns": 11.7206,
+          "mad": 0.25680000000000014,
+          "samples": 15,
+          "bytes": 147432,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        },
+        "ikea": {
+          "ns": 7.34884,
+          "mad": 0.15352000000000032,
+          "samples": 15,
+          "bytes": 71800,
+          "E": [
+            30
+          ],
+          "kernel": [
+            4
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.5948911664970253
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx2",
+      "K": 30,
+      "V": 8,
+      "mode": "prefetch32",
+      "miss_percent": 0,
+      "measurements": {
+        "ikea": {
+          "ns": 6.56329,
+          "mad": 0.012140000000000484,
+          "samples": 15,
+          "bytes": 211064,
+          "E": [
+            30
+          ],
+          "kernel": [
+            4
+          ]
+        },
+        "abseil": {
+          "ns": 4.4687,
+          "mad": 0.07072000000000056,
+          "samples": 15,
+          "bytes": 278456,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 0.6808627989925784
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx2",
+      "K": 30,
+      "V": 8,
+      "mode": "prefetch32",
+      "miss_percent": 50,
+      "measurements": {
+        "ikea": {
+          "ns": 13.7322,
+          "mad": 0.07560000000000144,
+          "samples": 15,
+          "bytes": 211064,
+          "E": [
+            30
+          ],
+          "kernel": [
+            4
+          ]
+        },
+        "abseil": {
+          "ns": 13.8205,
+          "mad": 0.26479999999999926,
+          "samples": 15,
+          "bytes": 278456,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.006430142293296
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx2",
+      "K": 30,
+      "V": 8,
+      "mode": "prefetch32",
+      "miss_percent": 100,
+      "measurements": {
+        "ikea": {
+          "ns": 7.97474,
+          "mad": 0.16274000000000033,
+          "samples": 15,
+          "bytes": 211064,
+          "E": [
+            30
+          ],
+          "kernel": [
+            4
+          ]
+        },
+        "abseil": {
+          "ns": 12.6012,
+          "mad": 0.4451999999999998,
+          "samples": 15,
+          "bytes": 278456,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.5801392898075675
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx2",
+      "K": 30,
+      "V": 64,
+      "mode": "prefetch32",
+      "miss_percent": 0,
+      "measurements": {
+        "ikea": {
+          "ns": 9.57344,
+          "mad": 0.020049999999999457,
+          "samples": 15,
+          "bytes": 1185912,
+          "E": [
+            30
+          ],
+          "kernel": [
+            4
+          ]
+        },
+        "abseil": {
+          "ns": 5.96937,
+          "mad": 0.010890000000000732,
+          "samples": 15,
+          "bytes": 1195624,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 0.6235344870809238
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx2",
+      "K": 30,
+      "V": 64,
+      "mode": "prefetch32",
+      "miss_percent": 50,
+      "measurements": {
+        "ikea": {
+          "ns": 15.5761,
+          "mad": 0.054999999999999716,
+          "samples": 15,
+          "bytes": 1185912,
+          "E": [
+            30
+          ],
+          "kernel": [
+            4
+          ]
+        },
+        "abseil": {
+          "ns": 14.8157,
+          "mad": 0.10389999999999944,
+          "samples": 15,
+          "bytes": 1195624,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 0.9511816179916667
+    },
+    {
+      "cpu": "zen4",
+      "isa": "avx2",
+      "K": 30,
+      "V": 64,
+      "mode": "prefetch32",
+      "miss_percent": 100,
+      "measurements": {
+        "ikea": {
+          "ns": 9.12506,
+          "mad": 0.16782000000000075,
+          "samples": 15,
+          "bytes": 1185912,
+          "E": [
+            30
+          ],
+          "kernel": [
+            4
+          ]
+        },
+        "abseil": {
+          "ns": 12.5934,
+          "mad": 0.23550000000000004,
+          "samples": 15,
+          "bytes": 1195624,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.380089555575525
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx512",
+      "K": 14,
+      "V": 0,
+      "mode": "independent",
+      "miss_percent": 0,
+      "measurements": {
+        "abseil": {
+          "ns": 2.14255,
+          "mad": 0.013830000000000009,
+          "samples": 15,
+          "bytes": 163840,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        },
+        "ikea": {
+          "ns": 1.49679,
+          "mad": 0.00731000000000015,
+          "samples": 15,
+          "bytes": 69752,
+          "E": [
+            14
+          ],
+          "kernel": [
+            7
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.4314299267098256
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx512",
+      "K": 14,
+      "V": 0,
+      "mode": "independent",
+      "miss_percent": 50,
+      "measurements": {
+        "abseil": {
+          "ns": 10.967,
+          "mad": 0.04560000000000031,
+          "samples": 15,
+          "bytes": 163840,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        },
+        "ikea": {
+          "ns": 9.3549,
+          "mad": 0.15814999999999912,
+          "samples": 15,
+          "bytes": 69752,
+          "E": [
+            14
+          ],
+          "kernel": [
+            7
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.1723268019968145
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx512",
+      "K": 14,
+      "V": 0,
+      "mode": "independent",
+      "miss_percent": 100,
+      "measurements": {
+        "abseil": {
+          "ns": 9.35114,
+          "mad": 0.05394999999999861,
+          "samples": 15,
+          "bytes": 163840,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        },
+        "ikea": {
+          "ns": 3.30459,
+          "mad": 0.051730000000000054,
+          "samples": 15,
+          "bytes": 69752,
+          "E": [
+            14
+          ],
+          "kernel": [
+            7
+          ]
+        }
+      },
+      "ikea_throughput_factor": 2.8297428727920857
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx512",
+      "K": 14,
+      "V": 8,
+      "mode": "independent",
+      "miss_percent": 0,
+      "measurements": {
+        "ikea": {
+          "ns": 1.95339,
+          "mad": 0.007970000000000033,
+          "samples": 15,
+          "bytes": 340088,
+          "E": [
+            14
+          ],
+          "kernel": [
+            7
+          ]
+        },
+        "abseil": {
+          "ns": 2.62806,
+          "mad": 0.012570000000000192,
+          "samples": 15,
+          "bytes": 425936,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.3453841782746918
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx512",
+      "K": 14,
+      "V": 8,
+      "mode": "independent",
+      "miss_percent": 50,
+      "measurements": {
+        "ikea": {
+          "ns": 9.6339,
+          "mad": 0.11796999999999969,
+          "samples": 15,
+          "bytes": 340088,
+          "E": [
+            14
+          ],
+          "kernel": [
+            7
+          ]
+        },
+        "abseil": {
+          "ns": 11.4951,
+          "mad": 0.059499999999999886,
+          "samples": 15,
+          "bytes": 425936,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.1931927879674897
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx512",
+      "K": 14,
+      "V": 8,
+      "mode": "independent",
+      "miss_percent": 100,
+      "measurements": {
+        "ikea": {
+          "ns": 3.39218,
+          "mad": 0.055030000000000356,
+          "samples": 15,
+          "bytes": 340088,
+          "E": [
+            14
+          ],
+          "kernel": [
+            7
+          ]
+        },
+        "abseil": {
+          "ns": 10.3985,
+          "mad": 0.05900000000000105,
+          "samples": 15,
+          "bytes": 425936,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 3.06543284849271
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx512",
+      "K": 14,
+      "V": 64,
+      "mode": "independent",
+      "miss_percent": 0,
+      "measurements": {
+        "ikea": {
+          "ns": 3.69894,
+          "mad": 0.005999999999999783,
+          "samples": 15,
+          "bytes": 2232440,
+          "E": [
+            14
+          ],
+          "kernel": [
+            7
+          ]
+        },
+        "abseil": {
+          "ns": 3.92241,
+          "mad": 0.01924999999999999,
+          "samples": 15,
+          "bytes": 2260608,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.0604146052652923
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx512",
+      "K": 14,
+      "V": 64,
+      "mode": "independent",
+      "miss_percent": 50,
+      "measurements": {
+        "ikea": {
+          "ns": 10.4382,
+          "mad": 0.16060000000000052,
+          "samples": 15,
+          "bytes": 2232440,
+          "E": [
+            14
+          ],
+          "kernel": [
+            7
+          ]
+        },
+        "abseil": {
+          "ns": 11.9613,
+          "mad": 0.040300000000000225,
+          "samples": 15,
+          "bytes": 2260608,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.145915962522274
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx512",
+      "K": 14,
+      "V": 64,
+      "mode": "independent",
+      "miss_percent": 100,
+      "measurements": {
+        "ikea": {
+          "ns": 3.78664,
+          "mad": 0.04728999999999983,
+          "samples": 15,
+          "bytes": 2232440,
+          "E": [
+            14
+          ],
+          "kernel": [
+            7
+          ]
+        },
+        "abseil": {
+          "ns": 9.81063,
+          "mad": 0.011509999999999465,
+          "samples": 15,
+          "bytes": 2260608,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 2.590853632772062
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx512",
+      "K": 14,
+      "V": 0,
+      "mode": "prefetch32",
+      "miss_percent": 0,
+      "measurements": {
+        "abseil": {
+          "ns": 2.67365,
+          "mad": 0.02210000000000001,
+          "samples": 15,
+          "bytes": 163840,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        },
+        "ikea": {
+          "ns": 1.6417,
+          "mad": 0.005990000000000162,
+          "samples": 15,
+          "bytes": 69752,
+          "E": [
+            14
+          ],
+          "kernel": [
+            7
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.6285862215995615
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx512",
+      "K": 14,
+      "V": 0,
+      "mode": "prefetch32",
+      "miss_percent": 50,
+      "measurements": {
+        "abseil": {
+          "ns": 11.3035,
+          "mad": 0.022800000000000153,
+          "samples": 15,
+          "bytes": 163840,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        },
+        "ikea": {
+          "ns": 9.20502,
+          "mad": 0.12912999999999997,
+          "samples": 15,
+          "bytes": 69752,
+          "E": [
+            14
+          ],
+          "kernel": [
+            7
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.2279712591607623
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx512",
+      "K": 14,
+      "V": 0,
+      "mode": "prefetch32",
+      "miss_percent": 100,
+      "measurements": {
+        "abseil": {
+          "ns": 9.76053,
+          "mad": 0.05117999999999867,
+          "samples": 15,
+          "bytes": 163840,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        },
+        "ikea": {
+          "ns": 3.41475,
+          "mad": 0.051449999999999996,
+          "samples": 15,
+          "bytes": 69752,
+          "E": [
+            14
+          ],
+          "kernel": [
+            7
+          ]
+        }
+      },
+      "ikea_throughput_factor": 2.8583439490445857
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx512",
+      "K": 14,
+      "V": 8,
+      "mode": "prefetch32",
+      "miss_percent": 0,
+      "measurements": {
+        "ikea": {
+          "ns": 2.26483,
+          "mad": 0.007369999999999877,
+          "samples": 15,
+          "bytes": 340088,
+          "E": [
+            14
+          ],
+          "kernel": [
+            7
+          ]
+        },
+        "abseil": {
+          "ns": 3.29582,
+          "mad": 0.021689999999999987,
+          "samples": 15,
+          "bytes": 425936,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.4552173893846339
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx512",
+      "K": 14,
+      "V": 8,
+      "mode": "prefetch32",
+      "miss_percent": 50,
+      "measurements": {
+        "ikea": {
+          "ns": 9.41194,
+          "mad": 0.04562999999999917,
+          "samples": 15,
+          "bytes": 340088,
+          "E": [
+            14
+          ],
+          "kernel": [
+            7
+          ]
+        },
+        "abseil": {
+          "ns": 12.3831,
+          "mad": 0.026400000000000645,
+          "samples": 15,
+          "bytes": 425936,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.3156798704624129
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx512",
+      "K": 14,
+      "V": 8,
+      "mode": "prefetch32",
+      "miss_percent": 100,
+      "measurements": {
+        "ikea": {
+          "ns": 3.44051,
+          "mad": 0.046250000000000124,
+          "samples": 15,
+          "bytes": 340088,
+          "E": [
+            14
+          ],
+          "kernel": [
+            7
+          ]
+        },
+        "abseil": {
+          "ns": 11.1794,
+          "mad": 0.05320000000000036,
+          "samples": 15,
+          "bytes": 425936,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 3.2493438472784555
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx512",
+      "K": 14,
+      "V": 64,
+      "mode": "prefetch32",
+      "miss_percent": 0,
+      "measurements": {
+        "ikea": {
+          "ns": 4.32869,
+          "mad": 0.010570000000000412,
+          "samples": 15,
+          "bytes": 2232440,
+          "E": [
+            14
+          ],
+          "kernel": [
+            7
+          ]
+        },
+        "abseil": {
+          "ns": 5.14689,
+          "mad": 0.01625999999999994,
+          "samples": 15,
+          "bytes": 2260608,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.1890179245915047
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx512",
+      "K": 14,
+      "V": 64,
+      "mode": "prefetch32",
+      "miss_percent": 50,
+      "measurements": {
+        "ikea": {
+          "ns": 10.1476,
+          "mad": 0.04239999999999888,
+          "samples": 15,
+          "bytes": 2232440,
+          "E": [
+            14
+          ],
+          "kernel": [
+            7
+          ]
+        },
+        "abseil": {
+          "ns": 12.2414,
+          "mad": 0.023999999999999133,
+          "samples": 15,
+          "bytes": 2260608,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.206334502739564
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx512",
+      "K": 14,
+      "V": 64,
+      "mode": "prefetch32",
+      "miss_percent": 100,
+      "measurements": {
+        "ikea": {
+          "ns": 3.8004,
+          "mad": 0.03685999999999989,
+          "samples": 15,
+          "bytes": 2232440,
+          "E": [
+            14
+          ],
+          "kernel": [
+            7
+          ]
+        },
+        "abseil": {
+          "ns": 10.4163,
+          "mad": 0.020400000000000418,
+          "samples": 15,
+          "bytes": 2260608,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 2.740843069150616
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx512",
+      "K": 30,
+      "V": 0,
+      "mode": "independent",
+      "miss_percent": 0,
+      "measurements": {
+        "abseil": {
+          "ns": 2.10375,
+          "mad": 0.014740000000000197,
+          "samples": 15,
+          "bytes": 147432,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        },
+        "ikea": {
+          "ns": 1.957,
+          "mad": 0.011410000000000142,
+          "samples": 15,
+          "bytes": 71800,
+          "E": [
+            30
+          ],
+          "kernel": [
+            3
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.0749872253449155
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx512",
+      "K": 30,
+      "V": 0,
+      "mode": "independent",
+      "miss_percent": 50,
+      "measurements": {
+        "abseil": {
+          "ns": 10.8671,
+          "mad": 0.05710000000000015,
+          "samples": 15,
+          "bytes": 147432,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        },
+        "ikea": {
+          "ns": 10.0833,
+          "mad": 0.0710999999999995,
+          "samples": 15,
+          "bytes": 71800,
+          "E": [
+            30
+          ],
+          "kernel": [
+            3
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.0777324883718624
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx512",
+      "K": 30,
+      "V": 0,
+      "mode": "independent",
+      "miss_percent": 100,
+      "measurements": {
+        "abseil": {
+          "ns": 9.44363,
+          "mad": 0.26837999999999873,
+          "samples": 15,
+          "bytes": 147432,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        },
+        "ikea": {
+          "ns": 4.40952,
+          "mad": 0.15800999999999998,
+          "samples": 15,
+          "bytes": 71800,
+          "E": [
+            30
+          ],
+          "kernel": [
+            3
+          ]
+        }
+      },
+      "ikea_throughput_factor": 2.1416458027177563
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx512",
+      "K": 30,
+      "V": 8,
+      "mode": "independent",
+      "miss_percent": 0,
+      "measurements": {
+        "ikea": {
+          "ns": 2.42778,
+          "mad": 0.028719999999999857,
+          "samples": 15,
+          "bytes": 211064,
+          "E": [
+            30
+          ],
+          "kernel": [
+            1
+          ]
+        },
+        "abseil": {
+          "ns": 2.52519,
+          "mad": 0.0651600000000001,
+          "samples": 15,
+          "bytes": 278456,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.0401230754022193
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx512",
+      "K": 30,
+      "V": 8,
+      "mode": "independent",
+      "miss_percent": 50,
+      "measurements": {
+        "ikea": {
+          "ns": 10.4338,
+          "mad": 0.07070000000000043,
+          "samples": 15,
+          "bytes": 211064,
+          "E": [
+            30
+          ],
+          "kernel": [
+            1
+          ]
+        },
+        "abseil": {
+          "ns": 11.2467,
+          "mad": 0.08440000000000047,
+          "samples": 15,
+          "bytes": 278456,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.0779102532155111
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx512",
+      "K": 30,
+      "V": 8,
+      "mode": "independent",
+      "miss_percent": 100,
+      "measurements": {
+        "ikea": {
+          "ns": 4.71512,
+          "mad": 0.12520000000000042,
+          "samples": 15,
+          "bytes": 211064,
+          "E": [
+            30
+          ],
+          "kernel": [
+            1
+          ]
+        },
+        "abseil": {
+          "ns": 9.7594,
+          "mad": 0.35859999999999914,
+          "samples": 15,
+          "bytes": 278456,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 2.0698094640221245
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx512",
+      "K": 30,
+      "V": 64,
+      "mode": "independent",
+      "miss_percent": 0,
+      "measurements": {
+        "ikea": {
+          "ns": 3.74049,
+          "mad": 0.012250000000000316,
+          "samples": 15,
+          "bytes": 1185912,
+          "E": [
+            30
+          ],
+          "kernel": [
+            1
+          ]
+        },
+        "abseil": {
+          "ns": 3.21445,
+          "mad": 0.03166000000000002,
+          "samples": 15,
+          "bytes": 1195624,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 0.8593660188905732
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx512",
+      "K": 30,
+      "V": 64,
+      "mode": "independent",
+      "miss_percent": 50,
+      "measurements": {
+        "ikea": {
+          "ns": 11.457,
+          "mad": 0.09889999999999866,
+          "samples": 15,
+          "bytes": 1185912,
+          "E": [
+            30
+          ],
+          "kernel": [
+            1
+          ]
+        },
+        "abseil": {
+          "ns": 11.5515,
+          "mad": 0.09820000000000029,
+          "samples": 15,
+          "bytes": 1195624,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.0082482325216024
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx512",
+      "K": 30,
+      "V": 64,
+      "mode": "independent",
+      "miss_percent": 100,
+      "measurements": {
+        "ikea": {
+          "ns": 5.08552,
+          "mad": 0.10406000000000049,
+          "samples": 15,
+          "bytes": 1185912,
+          "E": [
+            30
+          ],
+          "kernel": [
+            1
+          ]
+        },
+        "abseil": {
+          "ns": 9.51563,
+          "mad": 0.0853900000000003,
+          "samples": 15,
+          "bytes": 1195624,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.8711223237741668
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx512",
+      "K": 30,
+      "V": 0,
+      "mode": "prefetch32",
+      "miss_percent": 0,
+      "measurements": {
+        "abseil": {
+          "ns": 2.7022,
+          "mad": 0.019670000000000076,
+          "samples": 15,
+          "bytes": 147432,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        },
+        "ikea": {
+          "ns": 2.14937,
+          "mad": 0.015639999999999876,
+          "samples": 15,
+          "bytes": 71800,
+          "E": [
+            30
+          ],
+          "kernel": [
+            3
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.2572055997804008
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx512",
+      "K": 30,
+      "V": 0,
+      "mode": "prefetch32",
+      "miss_percent": 50,
+      "measurements": {
+        "abseil": {
+          "ns": 11.2491,
+          "mad": 0.030900000000000816,
+          "samples": 15,
+          "bytes": 147432,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        },
+        "ikea": {
+          "ns": 10.0561,
+          "mad": 0.10659999999999847,
+          "samples": 15,
+          "bytes": 71800,
+          "E": [
+            30
+          ],
+          "kernel": [
+            3
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.1186344606756098
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx512",
+      "K": 30,
+      "V": 0,
+      "mode": "prefetch32",
+      "miss_percent": 100,
+      "measurements": {
+        "abseil": {
+          "ns": 9.58513,
+          "mad": 0.3066000000000013,
+          "samples": 15,
+          "bytes": 147432,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        },
+        "ikea": {
+          "ns": 4.58977,
+          "mad": 0.13369000000000053,
+          "samples": 15,
+          "bytes": 71800,
+          "E": [
+            30
+          ],
+          "kernel": [
+            3
+          ]
+        }
+      },
+      "ikea_throughput_factor": 2.0883682624619535
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx512",
+      "K": 30,
+      "V": 8,
+      "mode": "prefetch32",
+      "miss_percent": 0,
+      "measurements": {
+        "ikea": {
+          "ns": 2.77681,
+          "mad": 0.029699999999999616,
+          "samples": 15,
+          "bytes": 211064,
+          "E": [
+            30
+          ],
+          "kernel": [
+            1
+          ]
+        },
+        "abseil": {
+          "ns": 3.2227,
+          "mad": 0.07078000000000007,
+          "samples": 15,
+          "bytes": 278456,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.160576344798528
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx512",
+      "K": 30,
+      "V": 8,
+      "mode": "prefetch32",
+      "miss_percent": 50,
+      "measurements": {
+        "ikea": {
+          "ns": 10.202,
+          "mad": 0.07629999999999981,
+          "samples": 15,
+          "bytes": 211064,
+          "E": [
+            30
+          ],
+          "kernel": [
+            1
+          ]
+        },
+        "abseil": {
+          "ns": 11.7062,
+          "mad": 0.17620000000000147,
+          "samples": 15,
+          "bytes": 278456,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.1474416781023329
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx512",
+      "K": 30,
+      "V": 8,
+      "mode": "prefetch32",
+      "miss_percent": 100,
+      "measurements": {
+        "ikea": {
+          "ns": 4.7686,
+          "mad": 0.1272000000000002,
+          "samples": 15,
+          "bytes": 211064,
+          "E": [
+            30
+          ],
+          "kernel": [
+            1
+          ]
+        },
+        "abseil": {
+          "ns": 10.6437,
+          "mad": 0.34830000000000005,
+          "samples": 15,
+          "bytes": 278456,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 2.2320387535125614
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx512",
+      "K": 30,
+      "V": 64,
+      "mode": "prefetch32",
+      "miss_percent": 0,
+      "measurements": {
+        "ikea": {
+          "ns": 4.2584,
+          "mad": 0.02137000000000011,
+          "samples": 15,
+          "bytes": 1185912,
+          "E": [
+            30
+          ],
+          "kernel": [
+            1
+          ]
+        },
+        "abseil": {
+          "ns": 4.33512,
+          "mad": 0.03864999999999963,
+          "samples": 15,
+          "bytes": 1195624,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.0180161563028367
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx512",
+      "K": 30,
+      "V": 64,
+      "mode": "prefetch32",
+      "miss_percent": 50,
+      "measurements": {
+        "ikea": {
+          "ns": 11.1689,
+          "mad": 0.02880000000000038,
+          "samples": 15,
+          "bytes": 1185912,
+          "E": [
+            30
+          ],
+          "kernel": [
+            1
+          ]
+        },
+        "abseil": {
+          "ns": 12.0249,
+          "mad": 0.06380000000000052,
+          "samples": 15,
+          "bytes": 1195624,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.0766413881402823
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx512",
+      "K": 30,
+      "V": 64,
+      "mode": "prefetch32",
+      "miss_percent": 100,
+      "measurements": {
+        "ikea": {
+          "ns": 5.10424,
+          "mad": 0.13797000000000015,
+          "samples": 15,
+          "bytes": 1185912,
+          "E": [
+            30
+          ],
+          "kernel": [
+            1
+          ]
+        },
+        "abseil": {
+          "ns": 10.4752,
+          "mad": 0.11619999999999919,
+          "samples": 15,
+          "bytes": 1195624,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 2.0522545961788627
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx2-gfni",
+      "K": 14,
+      "V": 0,
+      "mode": "independent",
+      "miss_percent": 0,
+      "measurements": {
+        "abseil": {
+          "ns": 2.04115,
+          "mad": 0.020620000000000083,
+          "samples": 15,
+          "bytes": 163840,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        },
+        "ikea": {
+          "ns": 1.48758,
+          "mad": 0.007549999999999946,
+          "samples": 15,
+          "bytes": 69752,
+          "E": [
+            14
+          ],
+          "kernel": [
+            10
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.3721278855590961
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx2-gfni",
+      "K": 14,
+      "V": 0,
+      "mode": "independent",
+      "miss_percent": 50,
+      "measurements": {
+        "abseil": {
+          "ns": 10.4978,
+          "mad": 0.04320000000000057,
+          "samples": 15,
+          "bytes": 163840,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        },
+        "ikea": {
+          "ns": 8.86829,
+          "mad": 0.16156999999999933,
+          "samples": 15,
+          "bytes": 69752,
+          "E": [
+            14
+          ],
+          "kernel": [
+            10
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.1837456826513342
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx2-gfni",
+      "K": 14,
+      "V": 0,
+      "mode": "independent",
+      "miss_percent": 100,
+      "measurements": {
+        "abseil": {
+          "ns": 9.35697,
+          "mad": 0.03255000000000052,
+          "samples": 15,
+          "bytes": 163840,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        },
+        "ikea": {
+          "ns": 2.88993,
+          "mad": 0.043239999999999945,
+          "samples": 15,
+          "bytes": 69752,
+          "E": [
+            14
+          ],
+          "kernel": [
+            10
+          ]
+        }
+      },
+      "ikea_throughput_factor": 3.2377843061942677
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx2-gfni",
+      "K": 14,
+      "V": 8,
+      "mode": "independent",
+      "miss_percent": 0,
+      "measurements": {
+        "ikea": {
+          "ns": 1.98042,
+          "mad": 0.0032200000000000006,
+          "samples": 15,
+          "bytes": 340088,
+          "E": [
+            14
+          ],
+          "kernel": [
+            10
+          ]
+        },
+        "abseil": {
+          "ns": 2.62957,
+          "mad": 0.0026199999999998447,
+          "samples": 15,
+          "bytes": 425936,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.3277840054129932
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx2-gfni",
+      "K": 14,
+      "V": 8,
+      "mode": "independent",
+      "miss_percent": 50,
+      "measurements": {
+        "ikea": {
+          "ns": 8.91962,
+          "mad": 0.1372099999999996,
+          "samples": 15,
+          "bytes": 340088,
+          "E": [
+            14
+          ],
+          "kernel": [
+            10
+          ]
+        },
+        "abseil": {
+          "ns": 11.1099,
+          "mad": 0.03500000000000014,
+          "samples": 15,
+          "bytes": 425936,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.2455575461734916
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx2-gfni",
+      "K": 14,
+      "V": 8,
+      "mode": "independent",
+      "miss_percent": 100,
+      "measurements": {
+        "ikea": {
+          "ns": 3.05606,
+          "mad": 0.04559999999999986,
+          "samples": 15,
+          "bytes": 340088,
+          "E": [
+            14
+          ],
+          "kernel": [
+            10
+          ]
+        },
+        "abseil": {
+          "ns": 10.0589,
+          "mad": 0.10437999999999903,
+          "samples": 15,
+          "bytes": 425936,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 3.2914602461993545
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx2-gfni",
+      "K": 14,
+      "V": 64,
+      "mode": "independent",
+      "miss_percent": 0,
+      "measurements": {
+        "ikea": {
+          "ns": 3.64221,
+          "mad": 0.006229999999999958,
+          "samples": 15,
+          "bytes": 2232440,
+          "E": [
+            14
+          ],
+          "kernel": [
+            10
+          ]
+        },
+        "abseil": {
+          "ns": 3.83315,
+          "mad": 0.026820000000000288,
+          "samples": 15,
+          "bytes": 2260608,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.0524242149683845
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx2-gfni",
+      "K": 14,
+      "V": 64,
+      "mode": "independent",
+      "miss_percent": 50,
+      "measurements": {
+        "ikea": {
+          "ns": 9.27365,
+          "mad": 0.04011000000000031,
+          "samples": 15,
+          "bytes": 2232440,
+          "E": [
+            14
+          ],
+          "kernel": [
+            10
+          ]
+        },
+        "abseil": {
+          "ns": 11.9766,
+          "mad": 0.02990000000000137,
+          "samples": 15,
+          "bytes": 2260608,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.2914656041580175
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx2-gfni",
+      "K": 14,
+      "V": 64,
+      "mode": "independent",
+      "miss_percent": 100,
+      "measurements": {
+        "ikea": {
+          "ns": 3.45114,
+          "mad": 0.04078999999999988,
+          "samples": 15,
+          "bytes": 2232440,
+          "E": [
+            14
+          ],
+          "kernel": [
+            10
+          ]
+        },
+        "abseil": {
+          "ns": 9.88033,
+          "mad": 0.013619999999999521,
+          "samples": 15,
+          "bytes": 2260608,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 2.862917760508122
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx2-gfni",
+      "K": 14,
+      "V": 0,
+      "mode": "prefetch32",
+      "miss_percent": 0,
+      "measurements": {
+        "abseil": {
+          "ns": 2.60291,
+          "mad": 0.01847000000000021,
+          "samples": 15,
+          "bytes": 163840,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        },
+        "ikea": {
+          "ns": 1.66498,
+          "mad": 0.03788999999999998,
+          "samples": 15,
+          "bytes": 69752,
+          "E": [
+            14
+          ],
+          "kernel": [
+            10
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.5633280880250815
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx2-gfni",
+      "K": 14,
+      "V": 0,
+      "mode": "prefetch32",
+      "miss_percent": 50,
+      "measurements": {
+        "abseil": {
+          "ns": 10.9813,
+          "mad": 0.04699999999999882,
+          "samples": 15,
+          "bytes": 163840,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        },
+        "ikea": {
+          "ns": 8.66998,
+          "mad": 0.13926000000000016,
+          "samples": 15,
+          "bytes": 69752,
+          "E": [
+            14
+          ],
+          "kernel": [
+            10
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.2665888502626301
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx2-gfni",
+      "K": 14,
+      "V": 0,
+      "mode": "prefetch32",
+      "miss_percent": 100,
+      "measurements": {
+        "abseil": {
+          "ns": 9.7526,
+          "mad": 0.0933099999999989,
+          "samples": 15,
+          "bytes": 163840,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        },
+        "ikea": {
+          "ns": 2.96936,
+          "mad": 0.061739999999999906,
+          "samples": 15,
+          "bytes": 69752,
+          "E": [
+            14
+          ],
+          "kernel": [
+            10
+          ]
+        }
+      },
+      "ikea_throughput_factor": 3.284411455667214
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx2-gfni",
+      "K": 14,
+      "V": 8,
+      "mode": "prefetch32",
+      "miss_percent": 0,
+      "measurements": {
+        "ikea": {
+          "ns": 2.22141,
+          "mad": 0.013279999999999959,
+          "samples": 15,
+          "bytes": 340088,
+          "E": [
+            14
+          ],
+          "kernel": [
+            10
+          ]
+        },
+        "abseil": {
+          "ns": 3.19382,
+          "mad": 0.008299999999999752,
+          "samples": 15,
+          "bytes": 425936,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.4377444956131467
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx2-gfni",
+      "K": 14,
+      "V": 8,
+      "mode": "prefetch32",
+      "miss_percent": 50,
+      "measurements": {
+        "ikea": {
+          "ns": 8.79101,
+          "mad": 0.1179900000000007,
+          "samples": 15,
+          "bytes": 340088,
+          "E": [
+            14
+          ],
+          "kernel": [
+            10
+          ]
+        },
+        "abseil": {
+          "ns": 11.5615,
+          "mad": 0.04839999999999911,
+          "samples": 15,
+          "bytes": 425936,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.3151503638376023
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx2-gfni",
+      "K": 14,
+      "V": 8,
+      "mode": "prefetch32",
+      "miss_percent": 100,
+      "measurements": {
+        "ikea": {
+          "ns": 3.30663,
+          "mad": 0.06615000000000038,
+          "samples": 15,
+          "bytes": 340088,
+          "E": [
+            14
+          ],
+          "kernel": [
+            10
+          ]
+        },
+        "abseil": {
+          "ns": 10.5875,
+          "mad": 0.09220000000000006,
+          "samples": 15,
+          "bytes": 425936,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 3.2019004242990596
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx2-gfni",
+      "K": 14,
+      "V": 64,
+      "mode": "prefetch32",
+      "miss_percent": 0,
+      "measurements": {
+        "ikea": {
+          "ns": 4.22736,
+          "mad": 0.01051999999999964,
+          "samples": 15,
+          "bytes": 2232440,
+          "E": [
+            14
+          ],
+          "kernel": [
+            10
+          ]
+        },
+        "abseil": {
+          "ns": 4.94917,
+          "mad": 0.007079999999999309,
+          "samples": 15,
+          "bytes": 2260608,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.1707472275841186
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx2-gfni",
+      "K": 14,
+      "V": 64,
+      "mode": "prefetch32",
+      "miss_percent": 50,
+      "measurements": {
+        "ikea": {
+          "ns": 9.96681,
+          "mad": 0.051020000000001176,
+          "samples": 15,
+          "bytes": 2232440,
+          "E": [
+            14
+          ],
+          "kernel": [
+            10
+          ]
+        },
+        "abseil": {
+          "ns": 11.9837,
+          "mad": 0.053300000000000125,
+          "samples": 15,
+          "bytes": 2260608,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.2023606349473903
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx2-gfni",
+      "K": 14,
+      "V": 64,
+      "mode": "prefetch32",
+      "miss_percent": 100,
+      "measurements": {
+        "ikea": {
+          "ns": 3.57692,
+          "mad": 0.03794999999999993,
+          "samples": 15,
+          "bytes": 2232440,
+          "E": [
+            14
+          ],
+          "kernel": [
+            10
+          ]
+        },
+        "abseil": {
+          "ns": 10.1737,
+          "mad": 0.019499999999998963,
+          "samples": 15,
+          "bytes": 2260608,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 2.8442626617313223
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx2-gfni",
+      "K": 30,
+      "V": 0,
+      "mode": "independent",
+      "miss_percent": 0,
+      "measurements": {
+        "abseil": {
+          "ns": 2.08825,
+          "mad": 0.011820000000000164,
+          "samples": 15,
+          "bytes": 147432,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        },
+        "ikea": {
+          "ns": 2.6,
+          "mad": 0.018369999999999997,
+          "samples": 15,
+          "bytes": 71800,
+          "E": [
+            30
+          ],
+          "kernel": [
+            4
+          ]
+        }
+      },
+      "ikea_throughput_factor": 0.8031730769230768
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx2-gfni",
+      "K": 30,
+      "V": 0,
+      "mode": "independent",
+      "miss_percent": 50,
+      "measurements": {
+        "abseil": {
+          "ns": 10.559,
+          "mad": 0.02549999999999919,
+          "samples": 15,
+          "bytes": 147432,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        },
+        "ikea": {
+          "ns": 10.433,
+          "mad": 0.07029999999999959,
+          "samples": 15,
+          "bytes": 71800,
+          "E": [
+            30
+          ],
+          "kernel": [
+            4
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.0120770631649574
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx2-gfni",
+      "K": 30,
+      "V": 0,
+      "mode": "independent",
+      "miss_percent": 100,
+      "measurements": {
+        "abseil": {
+          "ns": 9.0007,
+          "mad": 0.22433000000000014,
+          "samples": 15,
+          "bytes": 147432,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        },
+        "ikea": {
+          "ns": 4.32371,
+          "mad": 0.11643999999999988,
+          "samples": 15,
+          "bytes": 71800,
+          "E": [
+            30
+          ],
+          "kernel": [
+            4
+          ]
+        }
+      },
+      "ikea_throughput_factor": 2.0817076075870027
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx2-gfni",
+      "K": 30,
+      "V": 8,
+      "mode": "independent",
+      "miss_percent": 0,
+      "measurements": {
+        "ikea": {
+          "ns": 3.17952,
+          "mad": 0.008650000000000269,
+          "samples": 15,
+          "bytes": 211064,
+          "E": [
+            30
+          ],
+          "kernel": [
+            4
+          ]
+        },
+        "abseil": {
+          "ns": 2.49937,
+          "mad": 0.06599999999999984,
+          "samples": 15,
+          "bytes": 278456,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 0.7860840630032205
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx2-gfni",
+      "K": 30,
+      "V": 8,
+      "mode": "independent",
+      "miss_percent": 50,
+      "measurements": {
+        "ikea": {
+          "ns": 10.711,
+          "mad": 0.06189999999999962,
+          "samples": 15,
+          "bytes": 211064,
+          "E": [
+            30
+          ],
+          "kernel": [
+            4
+          ]
+        },
+        "abseil": {
+          "ns": 10.8738,
+          "mad": 0.24519999999999875,
+          "samples": 15,
+          "bytes": 278456,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.0151993277938567
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx2-gfni",
+      "K": 30,
+      "V": 8,
+      "mode": "independent",
+      "miss_percent": 100,
+      "measurements": {
+        "ikea": {
+          "ns": 4.63545,
+          "mad": 0.13482000000000038,
+          "samples": 15,
+          "bytes": 211064,
+          "E": [
+            30
+          ],
+          "kernel": [
+            4
+          ]
+        },
+        "abseil": {
+          "ns": 9.70295,
+          "mad": 0.3369599999999995,
+          "samples": 15,
+          "bytes": 278456,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 2.093205621892157
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx2-gfni",
+      "K": 30,
+      "V": 64,
+      "mode": "independent",
+      "miss_percent": 0,
+      "measurements": {
+        "ikea": {
+          "ns": 4.64187,
+          "mad": 0.008099999999999774,
+          "samples": 15,
+          "bytes": 1185912,
+          "E": [
+            30
+          ],
+          "kernel": [
+            4
+          ]
+        },
+        "abseil": {
+          "ns": 3.17067,
+          "mad": 0.006729999999999681,
+          "samples": 15,
+          "bytes": 1195624,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 0.6830587672640552
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx2-gfni",
+      "K": 30,
+      "V": 64,
+      "mode": "independent",
+      "miss_percent": 50,
+      "measurements": {
+        "ikea": {
+          "ns": 11.3089,
+          "mad": 0.06520000000000081,
+          "samples": 15,
+          "bytes": 1185912,
+          "E": [
+            30
+          ],
+          "kernel": [
+            4
+          ]
+        },
+        "abseil": {
+          "ns": 11.3807,
+          "mad": 0.06339999999999968,
+          "samples": 15,
+          "bytes": 1195624,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.0063489817754159
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx2-gfni",
+      "K": 30,
+      "V": 64,
+      "mode": "independent",
+      "miss_percent": 100,
+      "measurements": {
+        "ikea": {
+          "ns": 5.04709,
+          "mad": 0.12359999999999971,
+          "samples": 15,
+          "bytes": 1185912,
+          "E": [
+            30
+          ],
+          "kernel": [
+            4
+          ]
+        },
+        "abseil": {
+          "ns": 9.23826,
+          "mad": 0.11127000000000109,
+          "samples": 15,
+          "bytes": 1195624,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.8304131687764633
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx2-gfni",
+      "K": 30,
+      "V": 0,
+      "mode": "prefetch32",
+      "miss_percent": 0,
+      "measurements": {
+        "abseil": {
+          "ns": 2.64291,
+          "mad": 0.010159999999999947,
+          "samples": 15,
+          "bytes": 147432,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        },
+        "ikea": {
+          "ns": 2.71448,
+          "mad": 0.024849999999999817,
+          "samples": 15,
+          "bytes": 71800,
+          "E": [
+            30
+          ],
+          "kernel": [
+            4
+          ]
+        }
+      },
+      "ikea_throughput_factor": 0.9736339925142201
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx2-gfni",
+      "K": 30,
+      "V": 0,
+      "mode": "prefetch32",
+      "miss_percent": 50,
+      "measurements": {
+        "abseil": {
+          "ns": 10.9885,
+          "mad": 0.06579999999999941,
+          "samples": 15,
+          "bytes": 147432,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        },
+        "ikea": {
+          "ns": 10.2174,
+          "mad": 0.0801999999999996,
+          "samples": 15,
+          "bytes": 71800,
+          "E": [
+            30
+          ],
+          "kernel": [
+            4
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.0754692974729383
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx2-gfni",
+      "K": 30,
+      "V": 0,
+      "mode": "prefetch32",
+      "miss_percent": 100,
+      "measurements": {
+        "abseil": {
+          "ns": 9.69631,
+          "mad": 0.20047999999999888,
+          "samples": 15,
+          "bytes": 147432,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        },
+        "ikea": {
+          "ns": 4.23708,
+          "mad": 0.09895999999999994,
+          "samples": 15,
+          "bytes": 71800,
+          "E": [
+            30
+          ],
+          "kernel": [
+            4
+          ]
+        }
+      },
+      "ikea_throughput_factor": 2.2884415682498327
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx2-gfni",
+      "K": 30,
+      "V": 8,
+      "mode": "prefetch32",
+      "miss_percent": 0,
+      "measurements": {
+        "ikea": {
+          "ns": 3.52493,
+          "mad": 0.013640000000000096,
+          "samples": 15,
+          "bytes": 211064,
+          "E": [
+            30
+          ],
+          "kernel": [
+            4
+          ]
+        },
+        "abseil": {
+          "ns": 3.13003,
+          "mad": 0.0734499999999998,
+          "samples": 15,
+          "bytes": 278456,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 0.8879694064846678
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx2-gfni",
+      "K": 30,
+      "V": 8,
+      "mode": "prefetch32",
+      "miss_percent": 50,
+      "measurements": {
+        "ikea": {
+          "ns": 11.1466,
+          "mad": 0.0647000000000002,
+          "samples": 15,
+          "bytes": 211064,
+          "E": [
+            30
+          ],
+          "kernel": [
+            4
+          ]
+        },
+        "abseil": {
+          "ns": 11.459,
+          "mad": 0.2441999999999993,
+          "samples": 15,
+          "bytes": 278456,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.028026483411982
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx2-gfni",
+      "K": 30,
+      "V": 8,
+      "mode": "prefetch32",
+      "miss_percent": 100,
+      "measurements": {
+        "ikea": {
+          "ns": 4.70448,
+          "mad": 0.11153000000000013,
+          "samples": 15,
+          "bytes": 211064,
+          "E": [
+            30
+          ],
+          "kernel": [
+            4
+          ]
+        },
+        "abseil": {
+          "ns": 10.5282,
+          "mad": 0.3500999999999994,
+          "samples": 15,
+          "bytes": 278456,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 2.237909397000306
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx2-gfni",
+      "K": 30,
+      "V": 64,
+      "mode": "prefetch32",
+      "miss_percent": 0,
+      "measurements": {
+        "ikea": {
+          "ns": 5.10873,
+          "mad": 0.013060000000000294,
+          "samples": 15,
+          "bytes": 1185912,
+          "E": [
+            30
+          ],
+          "kernel": [
+            4
+          ]
+        },
+        "abseil": {
+          "ns": 4.11339,
+          "mad": 0.011879999999999669,
+          "samples": 15,
+          "bytes": 1195624,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 0.8051687992906259
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx2-gfni",
+      "K": 30,
+      "V": 64,
+      "mode": "prefetch32",
+      "miss_percent": 50,
+      "measurements": {
+        "ikea": {
+          "ns": 11.142,
+          "mad": 0.06700000000000017,
+          "samples": 15,
+          "bytes": 1185912,
+          "E": [
+            30
+          ],
+          "kernel": [
+            4
+          ]
+        },
+        "abseil": {
+          "ns": 11.535,
+          "mad": 0.08670000000000044,
+          "samples": 15,
+          "bytes": 1195624,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.0352719439956921
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx2-gfni",
+      "K": 30,
+      "V": 64,
+      "mode": "prefetch32",
+      "miss_percent": 100,
+      "measurements": {
+        "ikea": {
+          "ns": 5.11843,
+          "mad": 0.11883999999999961,
+          "samples": 15,
+          "bytes": 1185912,
+          "E": [
+            30
+          ],
+          "kernel": [
+            4
+          ]
+        },
+        "abseil": {
+          "ns": 10.1208,
+          "mad": 0.08919999999999995,
+          "samples": 15,
+          "bytes": 1195624,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.9773250781978067
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx2",
+      "K": 14,
+      "V": 0,
+      "mode": "independent",
+      "miss_percent": 0,
+      "measurements": {
+        "abseil": {
+          "ns": 2.02864,
+          "mad": 0.012410000000000032,
+          "samples": 15,
+          "bytes": 163840,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        },
+        "ikea": {
+          "ns": 3.34064,
+          "mad": 0.009139999999999926,
+          "samples": 15,
+          "bytes": 69752,
+          "E": [
+            14
+          ],
+          "kernel": [
+            8
+          ]
+        }
+      },
+      "ikea_throughput_factor": 0.6072608841419609
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx2",
+      "K": 14,
+      "V": 0,
+      "mode": "independent",
+      "miss_percent": 50,
+      "measurements": {
+        "abseil": {
+          "ns": 10.6078,
+          "mad": 0.0259999999999998,
+          "samples": 15,
+          "bytes": 163840,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        },
+        "ikea": {
+          "ns": 8.96773,
+          "mad": 0.018119999999999692,
+          "samples": 15,
+          "bytes": 69752,
+          "E": [
+            14
+          ],
+          "kernel": [
+            8
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.18288574700621
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx2",
+      "K": 14,
+      "V": 0,
+      "mode": "independent",
+      "miss_percent": 100,
+      "measurements": {
+        "abseil": {
+          "ns": 9.40223,
+          "mad": 0.05509999999999948,
+          "samples": 15,
+          "bytes": 163840,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        },
+        "ikea": {
+          "ns": 4.58064,
+          "mad": 0.08230000000000004,
+          "samples": 15,
+          "bytes": 69752,
+          "E": [
+            14
+          ],
+          "kernel": [
+            8
+          ]
+        }
+      },
+      "ikea_throughput_factor": 2.0526018198330362
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx2",
+      "K": 14,
+      "V": 8,
+      "mode": "independent",
+      "miss_percent": 0,
+      "measurements": {
+        "ikea": {
+          "ns": 3.78797,
+          "mad": 0.0040599999999999525,
+          "samples": 15,
+          "bytes": 340088,
+          "E": [
+            14
+          ],
+          "kernel": [
+            8
+          ]
+        },
+        "abseil": {
+          "ns": 2.63596,
+          "mad": 0.0056800000000003514,
+          "samples": 15,
+          "bytes": 425936,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 0.6958766832894664
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx2",
+      "K": 14,
+      "V": 8,
+      "mode": "independent",
+      "miss_percent": 50,
+      "measurements": {
+        "ikea": {
+          "ns": 9.11604,
+          "mad": 0.05879000000000012,
+          "samples": 15,
+          "bytes": 340088,
+          "E": [
+            14
+          ],
+          "kernel": [
+            8
+          ]
+        },
+        "abseil": {
+          "ns": 11.0713,
+          "mad": 0.018700000000000827,
+          "samples": 15,
+          "bytes": 425936,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.2144856757978246
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx2",
+      "K": 14,
+      "V": 8,
+      "mode": "independent",
+      "miss_percent": 100,
+      "measurements": {
+        "ikea": {
+          "ns": 4.71171,
+          "mad": 0.026349999999999874,
+          "samples": 15,
+          "bytes": 340088,
+          "E": [
+            14
+          ],
+          "kernel": [
+            8
+          ]
+        },
+        "abseil": {
+          "ns": 10.0821,
+          "mad": 0.0887999999999991,
+          "samples": 15,
+          "bytes": 425936,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 2.139796379658341
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx2",
+      "K": 14,
+      "V": 64,
+      "mode": "independent",
+      "miss_percent": 0,
+      "measurements": {
+        "ikea": {
+          "ns": 5.54482,
+          "mad": 0.005129999999999413,
+          "samples": 15,
+          "bytes": 2232440,
+          "E": [
+            14
+          ],
+          "kernel": [
+            8
+          ]
+        },
+        "abseil": {
+          "ns": 3.8613,
+          "mad": 0.008259999999999934,
+          "samples": 15,
+          "bytes": 2260608,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 0.6963796841015579
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx2",
+      "K": 14,
+      "V": 64,
+      "mode": "independent",
+      "miss_percent": 50,
+      "measurements": {
+        "ikea": {
+          "ns": 9.91914,
+          "mad": 0.016630000000001033,
+          "samples": 15,
+          "bytes": 2232440,
+          "E": [
+            14
+          ],
+          "kernel": [
+            8
+          ]
+        },
+        "abseil": {
+          "ns": 12.1834,
+          "mad": 0.05790000000000006,
+          "samples": 15,
+          "bytes": 2260608,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.2282718058218758
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx2",
+      "K": 14,
+      "V": 64,
+      "mode": "independent",
+      "miss_percent": 100,
+      "measurements": {
+        "ikea": {
+          "ns": 5.07063,
+          "mad": 0.036610000000000475,
+          "samples": 15,
+          "bytes": 2232440,
+          "E": [
+            14
+          ],
+          "kernel": [
+            8
+          ]
+        },
+        "abseil": {
+          "ns": 10.0906,
+          "mad": 0.021900000000000475,
+          "samples": 15,
+          "bytes": 2260608,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.990009131015278
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx2",
+      "K": 14,
+      "V": 0,
+      "mode": "prefetch32",
+      "miss_percent": 0,
+      "measurements": {
+        "abseil": {
+          "ns": 2.58951,
+          "mad": 0.01487000000000016,
+          "samples": 15,
+          "bytes": 163840,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        },
+        "ikea": {
+          "ns": 3.52645,
+          "mad": 0.01634000000000002,
+          "samples": 15,
+          "bytes": 69752,
+          "E": [
+            14
+          ],
+          "kernel": [
+            8
+          ]
+        }
+      },
+      "ikea_throughput_factor": 0.7343107090700279
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx2",
+      "K": 14,
+      "V": 0,
+      "mode": "prefetch32",
+      "miss_percent": 50,
+      "measurements": {
+        "abseil": {
+          "ns": 10.9365,
+          "mad": 0.05310000000000059,
+          "samples": 15,
+          "bytes": 163840,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        },
+        "ikea": {
+          "ns": 8.98283,
+          "mad": 0.03272999999999904,
+          "samples": 15,
+          "bytes": 69752,
+          "E": [
+            14
+          ],
+          "kernel": [
+            8
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.2174893658234656
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx2",
+      "K": 14,
+      "V": 0,
+      "mode": "prefetch32",
+      "miss_percent": 100,
+      "measurements": {
+        "abseil": {
+          "ns": 9.7848,
+          "mad": 0.10519000000000034,
+          "samples": 15,
+          "bytes": 163840,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        },
+        "ikea": {
+          "ns": 4.75532,
+          "mad": 0.03387000000000029,
+          "samples": 15,
+          "bytes": 69752,
+          "E": [
+            14
+          ],
+          "kernel": [
+            8
+          ]
+        }
+      },
+      "ikea_throughput_factor": 2.057653323015065
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx2",
+      "K": 14,
+      "V": 8,
+      "mode": "prefetch32",
+      "miss_percent": 0,
+      "measurements": {
+        "ikea": {
+          "ns": 3.924,
+          "mad": 0.02546999999999988,
+          "samples": 15,
+          "bytes": 340088,
+          "E": [
+            14
+          ],
+          "kernel": [
+            8
+          ]
+        },
+        "abseil": {
+          "ns": 3.18975,
+          "mad": 0.006690000000000307,
+          "samples": 15,
+          "bytes": 425936,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 0.8128822629969419
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx2",
+      "K": 14,
+      "V": 8,
+      "mode": "prefetch32",
+      "miss_percent": 50,
+      "measurements": {
+        "ikea": {
+          "ns": 9.28528,
+          "mad": 0.05277000000000065,
+          "samples": 15,
+          "bytes": 340088,
+          "E": [
+            14
+          ],
+          "kernel": [
+            8
+          ]
+        },
+        "abseil": {
+          "ns": 11.4749,
+          "mad": 0.06109999999999971,
+          "samples": 15,
+          "bytes": 425936,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.2358162597143005
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx2",
+      "K": 14,
+      "V": 8,
+      "mode": "prefetch32",
+      "miss_percent": 100,
+      "measurements": {
+        "ikea": {
+          "ns": 4.94121,
+          "mad": 0.027619999999999756,
+          "samples": 15,
+          "bytes": 340088,
+          "E": [
+            14
+          ],
+          "kernel": [
+            8
+          ]
+        },
+        "abseil": {
+          "ns": 10.6535,
+          "mad": 0.09790000000000099,
+          "samples": 15,
+          "bytes": 425936,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 2.1560508458454506
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx2",
+      "K": 14,
+      "V": 64,
+      "mode": "prefetch32",
+      "miss_percent": 0,
+      "measurements": {
+        "ikea": {
+          "ns": 5.70913,
+          "mad": 0.005519999999999747,
+          "samples": 15,
+          "bytes": 2232440,
+          "E": [
+            14
+          ],
+          "kernel": [
+            8
+          ]
+        },
+        "abseil": {
+          "ns": 4.9591,
+          "mad": 0.01576999999999984,
+          "samples": 15,
+          "bytes": 2260608,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 0.8686262180051952
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx2",
+      "K": 14,
+      "V": 64,
+      "mode": "prefetch32",
+      "miss_percent": 50,
+      "measurements": {
+        "ikea": {
+          "ns": 10.0381,
+          "mad": 0.07632000000000083,
+          "samples": 15,
+          "bytes": 2232440,
+          "E": [
+            14
+          ],
+          "kernel": [
+            8
+          ]
+        },
+        "abseil": {
+          "ns": 11.9094,
+          "mad": 0.08479999999999954,
+          "samples": 15,
+          "bytes": 2260608,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.1864197407875992
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx2",
+      "K": 14,
+      "V": 64,
+      "mode": "prefetch32",
+      "miss_percent": 100,
+      "measurements": {
+        "ikea": {
+          "ns": 5.1747,
+          "mad": 0.037649999999999295,
+          "samples": 15,
+          "bytes": 2232440,
+          "E": [
+            14
+          ],
+          "kernel": [
+            8
+          ]
+        },
+        "abseil": {
+          "ns": 10.4116,
+          "mad": 0.03420000000000023,
+          "samples": 15,
+          "bytes": 2260608,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 2.0120200204842793
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx2",
+      "K": 30,
+      "V": 0,
+      "mode": "independent",
+      "miss_percent": 0,
+      "measurements": {
+        "abseil": {
+          "ns": 2.08751,
+          "mad": 0.01277000000000017,
+          "samples": 15,
+          "bytes": 147432,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        },
+        "ikea": {
+          "ns": 3.34702,
+          "mad": 0.012620000000000076,
+          "samples": 15,
+          "bytes": 71800,
+          "E": [
+            30
+          ],
+          "kernel": [
+            4
+          ]
+        }
+      },
+      "ikea_throughput_factor": 0.623692120154645
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx2",
+      "K": 30,
+      "V": 0,
+      "mode": "independent",
+      "miss_percent": 50,
+      "measurements": {
+        "abseil": {
+          "ns": 10.568,
+          "mad": 0.03240000000000087,
+          "samples": 15,
+          "bytes": 147432,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        },
+        "ikea": {
+          "ns": 9.67651,
+          "mad": 0.06283999999999956,
+          "samples": 15,
+          "bytes": 71800,
+          "E": [
+            30
+          ],
+          "kernel": [
+            4
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.0921292904156559
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx2",
+      "K": 30,
+      "V": 0,
+      "mode": "independent",
+      "miss_percent": 100,
+      "measurements": {
+        "abseil": {
+          "ns": 8.9745,
+          "mad": 0.2065399999999986,
+          "samples": 15,
+          "bytes": 147432,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        },
+        "ikea": {
+          "ns": 4.85484,
+          "mad": 0.14058999999999955,
+          "samples": 15,
+          "bytes": 71800,
+          "E": [
+            30
+          ],
+          "kernel": [
+            4
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.8485676149986405
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx2",
+      "K": 30,
+      "V": 8,
+      "mode": "independent",
+      "miss_percent": 0,
+      "measurements": {
+        "ikea": {
+          "ns": 4.07137,
+          "mad": 0.00678999999999963,
+          "samples": 15,
+          "bytes": 211064,
+          "E": [
+            30
+          ],
+          "kernel": [
+            4
+          ]
+        },
+        "abseil": {
+          "ns": 2.50277,
+          "mad": 0.06449000000000016,
+          "samples": 15,
+          "bytes": 278456,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 0.6147242819984428
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx2",
+      "K": 30,
+      "V": 8,
+      "mode": "independent",
+      "miss_percent": 50,
+      "measurements": {
+        "ikea": {
+          "ns": 10.3555,
+          "mad": 0.04260000000000019,
+          "samples": 15,
+          "bytes": 211064,
+          "E": [
+            30
+          ],
+          "kernel": [
+            4
+          ]
+        },
+        "abseil": {
+          "ns": 10.8702,
+          "mad": 0.2665000000000006,
+          "samples": 15,
+          "bytes": 278456,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.049703056346869
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx2",
+      "K": 30,
+      "V": 8,
+      "mode": "independent",
+      "miss_percent": 100,
+      "measurements": {
+        "ikea": {
+          "ns": 5.21706,
+          "mad": 0.12389000000000028,
+          "samples": 15,
+          "bytes": 211064,
+          "E": [
+            30
+          ],
+          "kernel": [
+            4
+          ]
+        },
+        "abseil": {
+          "ns": 9.70232,
+          "mad": 0.36618999999999957,
+          "samples": 15,
+          "bytes": 278456,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.859729426151894
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx2",
+      "K": 30,
+      "V": 64,
+      "mode": "independent",
+      "miss_percent": 0,
+      "measurements": {
+        "ikea": {
+          "ns": 5.93452,
+          "mad": 0.020929999999999893,
+          "samples": 15,
+          "bytes": 1185912,
+          "E": [
+            30
+          ],
+          "kernel": [
+            4
+          ]
+        },
+        "abseil": {
+          "ns": 3.18803,
+          "mad": 0.018590000000000106,
+          "samples": 15,
+          "bytes": 1195624,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 0.5372009867689383
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx2",
+      "K": 30,
+      "V": 64,
+      "mode": "independent",
+      "miss_percent": 50,
+      "measurements": {
+        "ikea": {
+          "ns": 11.3202,
+          "mad": 0.052400000000000446,
+          "samples": 15,
+          "bytes": 1185912,
+          "E": [
+            30
+          ],
+          "kernel": [
+            4
+          ]
+        },
+        "abseil": {
+          "ns": 11.5318,
+          "mad": 0.03139999999999965,
+          "samples": 15,
+          "bytes": 1195624,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.0186922492535468
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx2",
+      "K": 30,
+      "V": 64,
+      "mode": "independent",
+      "miss_percent": 100,
+      "measurements": {
+        "ikea": {
+          "ns": 5.77152,
+          "mad": 0.11509999999999998,
+          "samples": 15,
+          "bytes": 1185912,
+          "E": [
+            30
+          ],
+          "kernel": [
+            4
+          ]
+        },
+        "abseil": {
+          "ns": 9.56833,
+          "mad": 0.07354999999999912,
+          "samples": 15,
+          "bytes": 1195624,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.6578526973830117
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx2",
+      "K": 30,
+      "V": 0,
+      "mode": "prefetch32",
+      "miss_percent": 0,
+      "measurements": {
+        "abseil": {
+          "ns": 2.64305,
+          "mad": 0.008809999999999985,
+          "samples": 15,
+          "bytes": 147432,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        },
+        "ikea": {
+          "ns": 3.36817,
+          "mad": 0.007010000000000183,
+          "samples": 15,
+          "bytes": 71800,
+          "E": [
+            30
+          ],
+          "kernel": [
+            4
+          ]
+        }
+      },
+      "ikea_throughput_factor": 0.7847139544619185
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx2",
+      "K": 30,
+      "V": 0,
+      "mode": "prefetch32",
+      "miss_percent": 50,
+      "measurements": {
+        "abseil": {
+          "ns": 11.0352,
+          "mad": 0.03249999999999886,
+          "samples": 15,
+          "bytes": 147432,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        },
+        "ikea": {
+          "ns": 9.72093,
+          "mad": 0.0498800000000017,
+          "samples": 15,
+          "bytes": 71800,
+          "E": [
+            30
+          ],
+          "kernel": [
+            4
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.1352000271578955
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx2",
+      "K": 30,
+      "V": 0,
+      "mode": "prefetch32",
+      "miss_percent": 100,
+      "measurements": {
+        "abseil": {
+          "ns": 9.68153,
+          "mad": 0.23129999999999917,
+          "samples": 15,
+          "bytes": 147432,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        },
+        "ikea": {
+          "ns": 4.73478,
+          "mad": 0.13893000000000022,
+          "samples": 15,
+          "bytes": 71800,
+          "E": [
+            30
+          ],
+          "kernel": [
+            4
+          ]
+        }
+      },
+      "ikea_throughput_factor": 2.044768711534644
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx2",
+      "K": 30,
+      "V": 8,
+      "mode": "prefetch32",
+      "miss_percent": 0,
+      "measurements": {
+        "ikea": {
+          "ns": 4.29711,
+          "mad": 0.006890000000000285,
+          "samples": 15,
+          "bytes": 211064,
+          "E": [
+            30
+          ],
+          "kernel": [
+            4
+          ]
+        },
+        "abseil": {
+          "ns": 3.13072,
+          "mad": 0.07038000000000011,
+          "samples": 15,
+          "bytes": 278456,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 0.7285640814407823
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx2",
+      "K": 30,
+      "V": 8,
+      "mode": "prefetch32",
+      "miss_percent": 50,
+      "measurements": {
+        "ikea": {
+          "ns": 10.3869,
+          "mad": 0.022999999999999687,
+          "samples": 15,
+          "bytes": 211064,
+          "E": [
+            30
+          ],
+          "kernel": [
+            4
+          ]
+        },
+        "abseil": {
+          "ns": 11.4925,
+          "mad": 0.29990000000000094,
+          "samples": 15,
+          "bytes": 278456,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.106441767996226
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx2",
+      "K": 30,
+      "V": 8,
+      "mode": "prefetch32",
+      "miss_percent": 100,
+      "measurements": {
+        "ikea": {
+          "ns": 5.23668,
+          "mad": 0.1356900000000003,
+          "samples": 15,
+          "bytes": 211064,
+          "E": [
+            30
+          ],
+          "kernel": [
+            4
+          ]
+        },
+        "abseil": {
+          "ns": 10.5213,
+          "mad": 0.37930000000000064,
+          "samples": 15,
+          "bytes": 278456,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 2.0091546552395796
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx2",
+      "K": 30,
+      "V": 64,
+      "mode": "prefetch32",
+      "miss_percent": 0,
+      "measurements": {
+        "ikea": {
+          "ns": 6.07222,
+          "mad": 0.02350999999999992,
+          "samples": 15,
+          "bytes": 1185912,
+          "E": [
+            30
+          ],
+          "kernel": [
+            4
+          ]
+        },
+        "abseil": {
+          "ns": 4.21637,
+          "mad": 0.02583000000000002,
+          "samples": 15,
+          "bytes": 1195624,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 0.6943704279489216
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx2",
+      "K": 30,
+      "V": 64,
+      "mode": "prefetch32",
+      "miss_percent": 50,
+      "measurements": {
+        "ikea": {
+          "ns": 11.1945,
+          "mad": 0.08169999999999966,
+          "samples": 15,
+          "bytes": 1185912,
+          "E": [
+            30
+          ],
+          "kernel": [
+            4
+          ]
+        },
+        "abseil": {
+          "ns": 11.7997,
+          "mad": 0.07089999999999996,
+          "samples": 15,
+          "bytes": 1195624,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.0540622627182992
+    },
+    {
+      "cpu": "zen5",
+      "isa": "avx2",
+      "K": 30,
+      "V": 64,
+      "mode": "prefetch32",
+      "miss_percent": 100,
+      "measurements": {
+        "ikea": {
+          "ns": 5.5898,
+          "mad": 0.09474999999999945,
+          "samples": 15,
+          "bytes": 1185912,
+          "E": [
+            30
+          ],
+          "kernel": [
+            4
+          ]
+        },
+        "abseil": {
+          "ns": 10.044,
+          "mad": 0.11153000000000013,
+          "samples": 15,
+          "bytes": 1195624,
+          "E": [
+            0
+          ],
+          "kernel": [
+            0
+          ]
+        }
+      },
+      "ikea_throughput_factor": 1.7968442520304841
+    }
+  ]
+}
