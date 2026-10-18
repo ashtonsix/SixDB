@@ -1,0 +1,38 @@
+{
+  "granite-avx2": {
+    "job": "20261015T230616Z-2e8cd251",
+    "file": "avx2-index-selected.txt",
+    "sha256": "7a59cba0097669e4f6adbd1e8151a73a23ce881deeb1a31d9a8dc97015aa5ac6",
+    "selected_consumer": "K30 N16, all seven arms, complete validation/warmup/timed functions",
+    "packing_helper_calls": []
+  },
+  "granite-avx512": {
+    "job": "20261015T230616Z-2e8cd251",
+    "file": "avx512-index-selected.txt",
+    "sha256": "27f0d7cd419ea3b8b7956832a84e30bd7ebe59fc2e8b5b62805d80d232471a89",
+    "selected_consumer": "K30 N16, all seven arms, complete validation/warmup/timed functions",
+    "packing_helper_calls": []
+  },
+  "neon-neon": {
+    "job": "20261015T230623Z-4b30450a",
+    "file": "neon-index-selected.txt",
+    "sha256": "c5218a37d06e17471802e395bc3f395fce638af3b5e2a316565e11a2cc662cf0",
+    "selected_consumer": "K30 N16, all seven arms, complete validation/warmup/timed functions",
+    "packing_helper_calls": []
+  },
+  "zen5-avx2": {
+    "job": "20261015T230608Z-791e3b62",
+    "file": "avx2-index-selected.txt",
+    "sha256": "17e5fbf86411b46261ea33dfb5a227449cc67f46bcc726e3f3e7c7c4ee61ed83",
+    "selected_consumer": "K30 N16, all seven arms, complete validation/warmup/timed functions",
+    "packing_helper_calls": []
+  },
+  "zen5-avx512": {
+    "job": "20261015T230608Z-791e3b62",
+    "file": "avx512-index-selected.txt",
+    "sha256": "3f137418f6447a1f858bc45c285be384b5e2d7fba292551120cf3ad2cba18b31",
+    "selected_consumer": "K30 N16, all seven arms, complete validation/warmup/timed functions",
+    "packing_helper_calls": []
+  },
+  "inspection": "Zen5 AVX512 arm6 timed serial block 0x254a0..0x255bc: query load, broadcast/reversal at 0x254f3..0x254fd are inside recurrence; result tzcnt at0x254a4 feeds multiply/shift and next query address at0x254d7. Both residual loads use GFNI m64 broadcast at offsets24/54. Constants hoist outside loop. Missing path returns a constant cursor contribution: do not call its predictable all-miss one-stream result dependent latency."
+}

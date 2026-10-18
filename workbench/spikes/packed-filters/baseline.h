@@ -54,8 +54,9 @@ template<unsigned K, int Op>
             auto x=vmovn_u16(vreinterpretq_u16_u8(keep));
             bits=vaddv_u8(vand_u8(x,vreinterpret_u8_u64(vcreate_u64(0x8040201008040201ULL))));
         } else if constexpr(B==4) {
-            auto x=vmovn_u16(vcombine_u16(vmovn_u32(vreinterpretq_u32_u8(keep)),vdup_n_u16(0)));
-            bits=vaddv_u8(vand_u8(x,vreinterpret_u8_u64(vcreate_u64(0x08040201ULL))));
+            // Independent full-word reduction: avoid the zero-padded double
+            // narrowing that Clang scalarizes in the historical control.
+            bits=vaddvq_u32(vandq_u32(vreinterpretq_u32_u8(keep),uint32x4_t{1,2,4,8}));
         } else bits=(vgetq_lane_u64(vreinterpretq_u64_u8(keep),0)&1)|(vgetq_lane_u64(vreinterpretq_u64_u8(keep),1)&2);
         result|=bits<<(part*(16/B));
     }

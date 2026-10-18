@@ -1,0 +1,1322 @@
+00000000000388a0 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)>:
+   388a0: d104c3ff     	sub	sp, sp, #0x130
+   388a4: 6d0b2beb     	stp	d11, d10, [sp, #0xb0]
+   388a8: 6d0c23e9     	stp	d9, d8, [sp, #0xc0]
+   388ac: a90d7bfd     	stp	x29, x30, [sp, #0xd0]
+   388b0: a90e6ffc     	stp	x28, x27, [sp, #0xe0]
+   388b4: a90f67fa     	stp	x26, x25, [sp, #0xf0]
+   388b8: a9105ff8     	stp	x24, x23, [sp, #0x100]
+   388bc: a91157f6     	stp	x22, x21, [sp, #0x110]
+   388c0: a9124ff4     	stp	x20, x19, [sp, #0x120]
+   388c4: 910343fd     	add	x29, sp, #0xd0
+   388c8: 91404819     	add	x25, x0, #0x12, lsl #12 // =0x12000
+   388cc: f2403c43     	ands	x3, x2, #0xffff
+   388d0: 9100041b     	add	x27, x0, #0x1
+   388d4: d000074b     	adrp	x11, 0x122000 <void index_probe::measure<62u, 8u, 0u>(index_probe::Data<62u, 8u> const&, unsigned int, unsigned long)+0xe20>
+   388d8: d0000748     	adrp	x8, 0x122000 <void index_probe::measure<62u, 8u, 0u>(index_probe::Data<62u, 8u> const&, unsigned int, unsigned long)+0xe20>
+   388dc: d0000749     	adrp	x9, 0x122000 <void index_probe::measure<62u, 8u, 0u>(index_probe::Data<62u, 8u> const&, unsigned int, unsigned long)+0xe20>
+   388e0: d000074a     	adrp	x10, 0x122000 <void index_probe::measure<62u, 8u, 0u>(index_probe::Data<62u, 8u> const&, unsigned int, unsigned long)+0xe20>
+   388e4: d348fc5c     	lsr	x28, x2, #8
+   388e8: aa0203f3     	mov	x19, x2
+   388ec: b90017e1     	str	w1, [sp, #0x14]
+   388f0: 54002260     	b.eq	0x38d3c <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x49c>
+   388f4: fd43f160     	ldr	d0, [x11, #0x7e0]
+   388f8: 3dc20101     	ldr	q1, [x8, #0x800]
+   388fc: 3dc20522     	ldr	q2, [x9, #0x810]
+   38900: 9140400c     	add	x12, x0, #0x10, lsl #12 // =0x10000
+   38904: 928007ee     	mov	x14, #-0x40             // =-64
+   38908: aa1903ef     	mov	x15, x25
+   3890c: 3dc20943     	ldr	q3, [x10, #0x820]
+   38910: b942032d     	ldr	w13, [x25, #0x200]
+   38914: d503201f     	nop
+   38918: d503201f     	nop
+   3891c: d503201f     	nop
+   38920: 36000173     	tbz	w19, #0x0, 0x3894c <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0xac>
+   38924: f9400190     	ldr	x16, [x12]
+   38928: f94001f1     	ldr	x17, [x15]
+   3892c: eb11021f     	cmp	x16, x17
+   38930: 540000e1     	b.ne	0x3894c <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0xac>
+   38934: 2a1f03f0     	mov	w16, wzr
+   38938: 110101d1     	add	w17, w14, #0x40
+   3893c: f8715b20     	ldr	x0, [x25, w17, uxtw #3]
+   38940: d35efc12     	lsr	x18, x0, #30
+   38944: b4001612     	cbz	x18, 0x38c04 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x364>
+   38948: 140000f6     	b	0x38d20 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x480>
+   3894c: 360801b3     	tbz	w19, #0x1, 0x38980 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0xe0>
+   38950: f9400590     	ldr	x16, [x12, #0x8]
+   38954: f94001f1     	ldr	x17, [x15]
+   38958: eb11021f     	cmp	x16, x17
+   3895c: 54000121     	b.ne	0x38980 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0xe0>
+   38960: 52800030     	mov	w16, #0x1               // =1
+   38964: 110101d1     	add	w17, w14, #0x40
+   38968: f8715b20     	ldr	x0, [x25, w17, uxtw #3]
+   3896c: d35efc12     	lsr	x18, x0, #30
+   38970: b5001d92     	cbnz	x18, 0x38d20 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x480>
+   38974: 140000a4     	b	0x38c04 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x364>
+   38978: d503201f     	nop
+   3897c: d503201f     	nop
+   38980: 36100173     	tbz	w19, #0x2, 0x389ac <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x10c>
+   38984: f9400990     	ldr	x16, [x12, #0x10]
+   38988: f94001f1     	ldr	x17, [x15]
+   3898c: eb11021f     	cmp	x16, x17
+   38990: 540000e1     	b.ne	0x389ac <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x10c>
+   38994: 52800050     	mov	w16, #0x2               // =2
+   38998: 110101d1     	add	w17, w14, #0x40
+   3899c: f8715b20     	ldr	x0, [x25, w17, uxtw #3]
+   389a0: d35efc12     	lsr	x18, x0, #30
+   389a4: b5001bf2     	cbnz	x18, 0x38d20 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x480>
+   389a8: 14000097     	b	0x38c04 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x364>
+   389ac: 361801b3     	tbz	w19, #0x3, 0x389e0 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x140>
+   389b0: f9400d90     	ldr	x16, [x12, #0x18]
+   389b4: f94001f1     	ldr	x17, [x15]
+   389b8: eb11021f     	cmp	x16, x17
+   389bc: 54000121     	b.ne	0x389e0 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x140>
+   389c0: 52800070     	mov	w16, #0x3               // =3
+   389c4: 110101d1     	add	w17, w14, #0x40
+   389c8: f8715b20     	ldr	x0, [x25, w17, uxtw #3]
+   389cc: d35efc12     	lsr	x18, x0, #30
+   389d0: b5001a92     	cbnz	x18, 0x38d20 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x480>
+   389d4: 1400008c     	b	0x38c04 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x364>
+   389d8: d503201f     	nop
+   389dc: d503201f     	nop
+   389e0: 36200173     	tbz	w19, #0x4, 0x38a0c <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x16c>
+   389e4: f9401190     	ldr	x16, [x12, #0x20]
+   389e8: f94001f1     	ldr	x17, [x15]
+   389ec: eb11021f     	cmp	x16, x17
+   389f0: 540000e1     	b.ne	0x38a0c <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x16c>
+   389f4: 52800090     	mov	w16, #0x4               // =4
+   389f8: 110101d1     	add	w17, w14, #0x40
+   389fc: f8715b20     	ldr	x0, [x25, w17, uxtw #3]
+   38a00: d35efc12     	lsr	x18, x0, #30
+   38a04: b50018f2     	cbnz	x18, 0x38d20 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x480>
+   38a08: 1400007f     	b	0x38c04 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x364>
+   38a0c: 36280173     	tbz	w19, #0x5, 0x38a38 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x198>
+   38a10: f9401590     	ldr	x16, [x12, #0x28]
+   38a14: f94001f1     	ldr	x17, [x15]
+   38a18: eb11021f     	cmp	x16, x17
+   38a1c: 540000e1     	b.ne	0x38a38 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x198>
+   38a20: 528000b0     	mov	w16, #0x5               // =5
+   38a24: 110101d1     	add	w17, w14, #0x40
+   38a28: f8715b20     	ldr	x0, [x25, w17, uxtw #3]
+   38a2c: d35efc12     	lsr	x18, x0, #30
+   38a30: b5001792     	cbnz	x18, 0x38d20 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x480>
+   38a34: 14000074     	b	0x38c04 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x364>
+   38a38: 36300173     	tbz	w19, #0x6, 0x38a64 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x1c4>
+   38a3c: f9401990     	ldr	x16, [x12, #0x30]
+   38a40: f94001f1     	ldr	x17, [x15]
+   38a44: eb11021f     	cmp	x16, x17
+   38a48: 540000e1     	b.ne	0x38a64 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x1c4>
+   38a4c: 528000d0     	mov	w16, #0x6               // =6
+   38a50: 110101d1     	add	w17, w14, #0x40
+   38a54: f8715b20     	ldr	x0, [x25, w17, uxtw #3]
+   38a58: d35efc12     	lsr	x18, x0, #30
+   38a5c: b5001632     	cbnz	x18, 0x38d20 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x480>
+   38a60: 14000069     	b	0x38c04 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x364>
+   38a64: 36380173     	tbz	w19, #0x7, 0x38a90 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x1f0>
+   38a68: f9401d90     	ldr	x16, [x12, #0x38]
+   38a6c: f94001f1     	ldr	x17, [x15]
+   38a70: eb11021f     	cmp	x16, x17
+   38a74: 540000e1     	b.ne	0x38a90 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x1f0>
+   38a78: 528000f0     	mov	w16, #0x7               // =7
+   38a7c: 110101d1     	add	w17, w14, #0x40
+   38a80: f8715b20     	ldr	x0, [x25, w17, uxtw #3]
+   38a84: d35efc12     	lsr	x18, x0, #30
+   38a88: b50014d2     	cbnz	x18, 0x38d20 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x480>
+   38a8c: 1400005e     	b	0x38c04 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x364>
+   38a90: 36400173     	tbz	w19, #0x8, 0x38abc <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x21c>
+   38a94: f9402190     	ldr	x16, [x12, #0x40]
+   38a98: f94001f1     	ldr	x17, [x15]
+   38a9c: eb11021f     	cmp	x16, x17
+   38aa0: 540000e1     	b.ne	0x38abc <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x21c>
+   38aa4: 52800110     	mov	w16, #0x8               // =8
+   38aa8: 110101d1     	add	w17, w14, #0x40
+   38aac: f8715b20     	ldr	x0, [x25, w17, uxtw #3]
+   38ab0: d35efc12     	lsr	x18, x0, #30
+   38ab4: b5001372     	cbnz	x18, 0x38d20 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x480>
+   38ab8: 14000053     	b	0x38c04 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x364>
+   38abc: 36480173     	tbz	w19, #0x9, 0x38ae8 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x248>
+   38ac0: f9402590     	ldr	x16, [x12, #0x48]
+   38ac4: f94001f1     	ldr	x17, [x15]
+   38ac8: eb11021f     	cmp	x16, x17
+   38acc: 540000e1     	b.ne	0x38ae8 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x248>
+   38ad0: 52800130     	mov	w16, #0x9               // =9
+   38ad4: 110101d1     	add	w17, w14, #0x40
+   38ad8: f8715b20     	ldr	x0, [x25, w17, uxtw #3]
+   38adc: d35efc12     	lsr	x18, x0, #30
+   38ae0: b5001212     	cbnz	x18, 0x38d20 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x480>
+   38ae4: 14000048     	b	0x38c04 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x364>
+   38ae8: 36500173     	tbz	w19, #0xa, 0x38b14 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x274>
+   38aec: f9402990     	ldr	x16, [x12, #0x50]
+   38af0: f94001f1     	ldr	x17, [x15]
+   38af4: eb11021f     	cmp	x16, x17
+   38af8: 540000e1     	b.ne	0x38b14 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x274>
+   38afc: 52800150     	mov	w16, #0xa               // =10
+   38b00: 110101d1     	add	w17, w14, #0x40
+   38b04: f8715b20     	ldr	x0, [x25, w17, uxtw #3]
+   38b08: d35efc12     	lsr	x18, x0, #30
+   38b0c: b50010b2     	cbnz	x18, 0x38d20 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x480>
+   38b10: 1400003d     	b	0x38c04 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x364>
+   38b14: 36580173     	tbz	w19, #0xb, 0x38b40 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x2a0>
+   38b18: f9402d90     	ldr	x16, [x12, #0x58]
+   38b1c: f94001f1     	ldr	x17, [x15]
+   38b20: eb11021f     	cmp	x16, x17
+   38b24: 540000e1     	b.ne	0x38b40 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x2a0>
+   38b28: 52800170     	mov	w16, #0xb               // =11
+   38b2c: 110101d1     	add	w17, w14, #0x40
+   38b30: f8715b20     	ldr	x0, [x25, w17, uxtw #3]
+   38b34: d35efc12     	lsr	x18, x0, #30
+   38b38: b5000f52     	cbnz	x18, 0x38d20 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x480>
+   38b3c: 14000032     	b	0x38c04 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x364>
+   38b40: 36600173     	tbz	w19, #0xc, 0x38b6c <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x2cc>
+   38b44: f9403190     	ldr	x16, [x12, #0x60]
+   38b48: f94001f1     	ldr	x17, [x15]
+   38b4c: eb11021f     	cmp	x16, x17
+   38b50: 540000e1     	b.ne	0x38b6c <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x2cc>
+   38b54: 52800190     	mov	w16, #0xc               // =12
+   38b58: 110101d1     	add	w17, w14, #0x40
+   38b5c: f8715b20     	ldr	x0, [x25, w17, uxtw #3]
+   38b60: d35efc12     	lsr	x18, x0, #30
+   38b64: b5000df2     	cbnz	x18, 0x38d20 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x480>
+   38b68: 14000027     	b	0x38c04 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x364>
+   38b6c: 36680173     	tbz	w19, #0xd, 0x38b98 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x2f8>
+   38b70: f9403590     	ldr	x16, [x12, #0x68]
+   38b74: f94001f1     	ldr	x17, [x15]
+   38b78: eb11021f     	cmp	x16, x17
+   38b7c: 540000e1     	b.ne	0x38b98 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x2f8>
+   38b80: 528001b0     	mov	w16, #0xd               // =13
+   38b84: 110101d1     	add	w17, w14, #0x40
+   38b88: f8715b20     	ldr	x0, [x25, w17, uxtw #3]
+   38b8c: d35efc12     	lsr	x18, x0, #30
+   38b90: b5000c92     	cbnz	x18, 0x38d20 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x480>
+   38b94: 1400001c     	b	0x38c04 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x364>
+   38b98: 36700173     	tbz	w19, #0xe, 0x38bc4 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x324>
+   38b9c: f9403990     	ldr	x16, [x12, #0x70]
+   38ba0: f94001f1     	ldr	x17, [x15]
+   38ba4: eb11021f     	cmp	x16, x17
+   38ba8: 540000e1     	b.ne	0x38bc4 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x324>
+   38bac: 528001d0     	mov	w16, #0xe               // =14
+   38bb0: 110101d1     	add	w17, w14, #0x40
+   38bb4: f8715b20     	ldr	x0, [x25, w17, uxtw #3]
+   38bb8: d35efc12     	lsr	x18, x0, #30
+   38bbc: b5000b32     	cbnz	x18, 0x38d20 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x480>
+   38bc0: 14000011     	b	0x38c04 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x364>
+   38bc4: 36780173     	tbz	w19, #0xf, 0x38bf0 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x350>
+   38bc8: f9403d90     	ldr	x16, [x12, #0x78]
+   38bcc: f94001f1     	ldr	x17, [x15]
+   38bd0: eb11021f     	cmp	x16, x17
+   38bd4: 540000e1     	b.ne	0x38bf0 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x350>
+   38bd8: 528001f0     	mov	w16, #0xf               // =15
+   38bdc: 110101d1     	add	w17, w14, #0x40
+   38be0: f8715b20     	ldr	x0, [x25, w17, uxtw #3]
+   38be4: d35efc12     	lsr	x18, x0, #30
+   38be8: b50009d2     	cbnz	x18, 0x38d20 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x480>
+   38bec: 14000006     	b	0x38c04 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x364>
+   38bf0: 52800210     	mov	w16, #0x10              // =16
+   38bf4: 110101d1     	add	w17, w14, #0x40
+   38bf8: f8715b20     	ldr	x0, [x25, w17, uxtw #3]
+   38bfc: d35efc12     	lsr	x18, x0, #30
+   38c00: b5000912     	cbnz	x18, 0x38d20 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x480>
+   38c04: 12001412     	and	w18, w0, #0x3f
+   38c08: d346fc00     	lsr	x0, x0, #6
+   38c0c: 1b117db1     	mul	w17, w13, w17
+   38c10: 0e010e44     	dup	v4.8b, w18
+   38c14: 8b110371     	add	x17, x27, x17
+   38c18: 0e208c84     	cmtst	v4.8b, v4.8b, v0.8b
+   38c1c: 9e660092     	fmov	x18, d4
+   38c20: 4e040c04     	dup	v4.4s, w0
+   38c24: 72001e7f     	tst	w19, #0xff
+   38c28: 540003c0     	b.eq	0x38ca0 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x400>
+   38c2c: 3dc00225     	ldr	q5, [x17]
+   38c30: 4e0100a5     	tbl	v5.16b, { v5.16b }, v1.16b
+   38c34: 6ea58c85     	cmeq	v5.4s, v4.4s, v5.4s
+   38c38: 4e221ca5     	and	v5.16b, v5.16b, v2.16b
+   38c3c: 4eb1b8a5     	addv	s5, v5.4s
+   38c40: 1e2600a0     	fmov	w0, s5
+   38c44: 3cc08225     	ldur	q5, [x17, #0x8]
+   38c48: 4e0300a5     	tbl	v5.16b, { v5.16b }, v3.16b
+   38c4c: 6ea58c85     	cmeq	v5.4s, v4.4s, v5.4s
+   38c50: 4e221ca5     	and	v5.16b, v5.16b, v2.16b
+   38c54: 4eb1b8a5     	addv	s5, v5.4s
+   38c58: 1e2600a1     	fmov	w1, s5
+   38c5c: 2a011000     	orr	w0, w0, w1, lsl #4
+   38c60: 0a130000     	and	w0, w0, w19
+   38c64: 72001c1f     	tst	w0, #0xff
+   38c68: 540001c0     	b.eq	0x38ca0 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x400>
+   38c6c: b9401a21     	ldr	w1, [x17, #0x18]
+   38c70: b841a222     	ldur	w2, [x17, #0x1a]
+   38c74: aa024021     	orr	x1, x1, x2, lsl #16
+   38c78: ca320021     	eon	x1, x1, x18
+   38c7c: 8a414021     	and	x1, x1, x1, lsr #16
+   38c80: 0a414021     	and	w1, w1, w1, lsr #16
+   38c84: 0a412021     	and	w1, w1, w1, lsr #8
+   38c88: 6a010000     	ands	w0, w0, w1
+   38c8c: 540000a0     	b.eq	0x38ca0 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x400>
+   38c90: 2a1f03f1     	mov	w17, wzr
+   38c94: 1400001f     	b	0x38d10 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x470>
+   38c98: d503201f     	nop
+   38c9c: d503201f     	nop
+   38ca0: 53083e60     	ubfx	w0, w19, #8, #8
+   38ca4: 340003e0     	cbz	w0, 0x38d20 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x480>
+   38ca8: 3cc1e225     	ldur	q5, [x17, #0x1e]
+   38cac: 4e0100a5     	tbl	v5.16b, { v5.16b }, v1.16b
+   38cb0: 6ea58c85     	cmeq	v5.4s, v4.4s, v5.4s
+   38cb4: 4e221ca5     	and	v5.16b, v5.16b, v2.16b
+   38cb8: 4eb1b8a5     	addv	s5, v5.4s
+   38cbc: 1e2600a0     	fmov	w0, s5
+   38cc0: 3cc26225     	ldur	q5, [x17, #0x26]
+   38cc4: 4e0300a5     	tbl	v5.16b, { v5.16b }, v3.16b
+   38cc8: 6ea58c84     	cmeq	v4.4s, v4.4s, v5.4s
+   38ccc: 4e221c84     	and	v4.16b, v4.16b, v2.16b
+   38cd0: 4eb1b884     	addv	s4, v4.4s
+   38cd4: 1e260081     	fmov	w1, s4
+   38cd8: 2a011000     	orr	w0, w0, w1, lsl #4
+   38cdc: 0a1c0000     	and	w0, w0, w28
+   38ce0: 72001c1f     	tst	w0, #0xff
+   38ce4: 540001e0     	b.eq	0x38d20 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x480>
+   38ce8: b8436221     	ldur	w1, [x17, #0x36]
+   38cec: b9403a31     	ldr	w17, [x17, #0x38]
+   38cf0: aa114031     	orr	x17, x1, x17, lsl #16
+   38cf4: ca320231     	eon	x17, x17, x18
+   38cf8: 8a514231     	and	x17, x17, x17, lsr #16
+   38cfc: 0a514231     	and	w17, w17, w17, lsr #16
+   38d00: 0a512231     	and	w17, w17, w17, lsr #8
+   38d04: 6a110000     	ands	w0, w0, w17
+   38d08: 540000c0     	b.eq	0x38d20 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x480>
+   38d0c: 52800111     	mov	w17, #0x8               // =8
+   38d10: 5ac00012     	rbit	w18, w0
+   38d14: 5ac01252     	clz	w18, w18
+   38d18: 2a120231     	orr	w17, w17, w18
+   38d1c: 14000002     	b	0x38d24 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x484>
+   38d20: 52800211     	mov	w17, #0x10              // =16
+   38d24: 6b10023f     	cmp	w17, w16
+   38d28: 54007f01     	b.ne	0x39d08 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x1468>
+   38d2c: b10005ce     	adds	x14, x14, #0x1
+   38d30: 910021ef     	add	x15, x15, #0x8
+   38d34: 9102018c     	add	x12, x12, #0x80
+   38d38: 54ffdf43     	b.lo	0x38920 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x80>
+   38d3c: 5280002c     	mov	w12, #0x1               // =1
+   38d40: 781d43ac     	sturh	w12, [x29, #-0x2c]
+   38d44: 9000084c     	adrp	x12, 0x140000 <_GLOBAL_OFFSET_TABLE_+0x50>
+   38d48: b940c58c     	ldr	w12, [x12, #0xc4]
+   38d4c: 34007cac     	cbz	w12, 0x39ce0 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x1440>
+   38d50: fd43f16a     	ldr	d10, [x11, #0x7e0]
+   38d54: 3dc20102     	ldr	q2, [x8, #0x800]
+   38d58: 3dc20523     	ldr	q3, [x9, #0x810]
+   38d5c: d28f82b1     	mov	x17, #0x7c15            // =31765
+   38d60: 1e641008     	fmov	d8, #8.00000000
+   38d64: 1e6e1009     	fmov	d9, #1.00000000
+   38d68: 3dc20944     	ldr	q4, [x10, #0x820]
+   38d6c: f2afe951     	movk	x17, #0x7f4a, lsl #16
+   38d70: 5280002c     	mov	w12, #0x1               // =1
+   38d74: d10143b4     	sub	x20, x29, #0x50
+   38d78: aa1f03ed     	mov	x13, xzr
+   38d7c: f2cf3731     	movk	x17, #0x79b9, lsl #32
+   38d80: f9002fe3     	str	x3, [sp, #0x58]
+   38d84: f2f3c6f1     	movk	x17, #0x9e37, lsl #48
+   38d88: ad018be3     	stp	q3, q2, [sp, #0x30]
+   38d8c: 3d800be4     	str	q4, [sp, #0x20]
+   38d90: 14000008     	b	0x38db0 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x510>
+   38d94: d503201f     	nop
+   38d98: d503201f     	nop
+   38d9c: d503201f     	nop
+   38da0: f94007ed     	ldr	x13, [sp, #0x8]
+   38da4: 910005ad     	add	x13, x13, #0x1
+   38da8: f10009bf     	cmp	x13, #0x2
+   38dac: 540079a0     	b.eq	0x39ce0 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x1440>
+   38db0: 34ffffac     	cbz	w12, 0x38da4 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x504>
+   38db4: d100b3a8     	sub	x8, x29, #0x2c
+   38db8: d0000749     	adrp	x9, 0x122000 <void index_probe::measure<62u, 8u, 0u>(index_probe::Data<62u, 8u> const&, unsigned int, unsigned long)+0xe20>
+   38dbc: 913ab529     	add	x9, x9, #0xead
+   38dc0: 2a1f03f2     	mov	w18, wzr
+   38dc4: f90007ed     	str	x13, [sp, #0x8]
+   38dc8: 386d6908     	ldrb	w8, [x8, x13]
+   38dcc: 7100011f     	cmp	w8, #0x0
+   38dd0: b90013e8     	str	w8, [sp, #0x10]
+   38dd4: d0000748     	adrp	x8, 0x122000 <void index_probe::measure<62u, 8u, 0u>(index_probe::Data<62u, 8u> const&, unsigned int, unsigned long)+0xe20>
+   38dd8: 913ad108     	add	x8, x8, #0xeb4
+   38ddc: 1e681d2b     	fcsel	d11, d9, d8, ne
+   38de0: 9a881128     	csel	x8, x9, x8, ne
+   38de4: f9000fe8     	str	x8, [sp, #0x18]
+   38de8: 14000032     	b	0x38eb0 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x610>
+   38dec: 29340fa2     	stp	w2, w3, [x29, #-0x60]
+   38df0: 293517a4     	stp	w4, w5, [x29, #-0x58]
+   38df4: 2936dbb5     	stp	w21, w22, [x29, #-0x4c]
+   38df8: b81bc3ba     	stur	w26, [x29, #-0x44]
+   38dfc: b859c3b8     	ldur	w24, [x29, #-0x64]
+   38e00: 97ff1fbc     	bl	0xcf0 <_ZNSt6chrono3_V212steady_clock3nowEv@plt>
+   38e04: 90000849     	adrp	x9, 0x140000 <_GLOBAL_OFFSET_TABLE_+0x50>
+   38e08: 29742bab     	ldp	w11, w10, [x29, #-0x60]
+   38e0c: b94017e3     	ldr	w3, [sp, #0x14]
+   38e10: f9400fe6     	ldr	x6, [sp, #0x18]
+   38e14: 528003c1     	mov	w1, #0x1e               // =30
+   38e18: f9406d28     	ldr	x8, [x9, #0xd8]
+   38e1c: 52800202     	mov	w2, #0x10               // =16
+   38e20: 52800165     	mov	w5, #0xb                // =11
+   38e24: aa1303e4     	mov	x4, x19
+   38e28: 2a1803e7     	mov	w7, w24
+   38e2c: 8b374108     	add	x8, x8, w23, uxtw
+   38e30: 8b354108     	add	x8, x8, w21, uxtw
+   38e34: 8b364108     	add	x8, x8, w22, uxtw
+   38e38: 8b3a4108     	add	x8, x8, w26, uxtw
+   38e3c: 8b2b4108     	add	x8, x8, w11, uxtw
+   38e40: 8b2a4108     	add	x8, x8, w10, uxtw
+   38e44: 29752bab     	ldp	w11, w10, [x29, #-0x58]
+   38e48: 8b2b4108     	add	x8, x8, w11, uxtw
+   38e4c: 8b2a4108     	add	x8, x8, w10, uxtw
+   38e50: f9006d28     	str	x8, [x9, #0xd8]
+   38e54: f94033e8     	ldr	x8, [sp, #0x60]
+   38e58: cb080008     	sub	x8, x0, x8
+   38e5c: d0000740     	adrp	x0, 0x122000 <void index_probe::measure<62u, 8u, 0u>(index_probe::Data<62u, 8u> const&, unsigned int, unsigned long)+0xe20>
+   38e60: 913a4000     	add	x0, x0, #0xe90
+   38e64: 9e620100     	scvtf	d0, x8
+   38e68: 90000848     	adrp	x8, 0x140000 <_GLOBAL_OFFSET_TABLE_+0x50>
+   38e6c: bd40c101     	ldr	s1, [x8, #0xc0]
+   38e70: 7e61d821     	ucvtf	d1, d1
+   38e74: 1e610961     	fmul	d1, d11, d1
+   38e78: 1e611800     	fdiv	d0, d0, d1
+   38e7c: 97ff1fb5     	bl	0xd50 <printf@plt>
+   38e80: ad418be3     	ldp	q3, q2, [sp, #0x30]
+   38e84: 3dc00be4     	ldr	q4, [sp, #0x20]
+   38e88: 90000848     	adrp	x8, 0x140000 <_GLOBAL_OFFSET_TABLE_+0x50>
+   38e8c: d28f82b1     	mov	x17, #0x7c15            // =31765
+   38e90: b940c50c     	ldr	w12, [x8, #0xc4]
+   38e94: f9402fe3     	ldr	x3, [sp, #0x58]
+   38e98: f2afe951     	movk	x17, #0x7f4a, lsl #16
+   38e9c: 11000712     	add	w18, w24, #0x1
+   38ea0: f2cf3731     	movk	x17, #0x79b9, lsl #32
+   38ea4: f2f3c6f1     	movk	x17, #0x9e37, lsl #48
+   38ea8: 6b0c025f     	cmp	w18, w12
+   38eac: 54fff7a2     	b.hs	0x38da0 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x500>
+   38eb0: 90000788     	adrp	x8, 0x128000 <strlen@GLIBC_2.17+0x128000>
+   38eb4: 910a8108     	add	x8, x8, #0x2a0
+   38eb8: 53083e78     	ubfx	w24, w19, #8, #8
+   38ebc: b819c3b2     	stur	w18, [x29, #-0x64]
+   38ec0: ad400500     	ldp	q0, q1, [x8]
+   38ec4: ad3d87a0     	stp	q0, q1, [x29, #-0x50]
+   38ec8: b4000dc3     	cbz	x3, 0x39080 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x7e0>
+   38ecc: b9420329     	ldr	w9, [x25, #0x200]
+   38ed0: aa1f03e8     	mov	x8, xzr
+   38ed4: 14000006     	b	0x38eec <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x64c>
+   38ed8: d503201f     	nop
+   38edc: d503201f     	nop
+   38ee0: 91000508     	add	x8, x8, #0x1
+   38ee4: f104011f     	cmp	x8, #0x100
+   38ee8: 54000b00     	b.eq	0x39048 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x7a8>
+   38eec: aa1f03ea     	mov	x10, xzr
+   38ef0: 2a0803eb     	mov	w11, w8
+   38ef4: 1400000b     	b	0x38f20 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x680>
+   38ef8: d503201f     	nop
+   38efc: d503201f     	nop
+   38f00: 5280070c     	mov	w12, #0x38              // =56
+   38f04: 1200156d     	and	w13, w11, #0x3f
+   38f08: 1100dd6b     	add	w11, w11, #0x37
+   38f0c: 4a0d018c     	eor	w12, w12, w13
+   38f10: b82a6a8c     	str	w12, [x20, x10]
+   38f14: 9100114a     	add	x10, x10, #0x4
+   38f18: f100815f     	cmp	x10, #0x20
+   38f1c: 54fffe20     	b.eq	0x38ee0 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x640>
+   38f20: b86a6a8c     	ldr	w12, [x20, x10]
+   38f24: f86c5b2e     	ldr	x14, [x25, w12, uxtw #3]
+   38f28: d35efdcd     	lsr	x13, x14, #30
+   38f2c: b5fffead     	cbnz	x13, 0x38f00 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x660>
+   38f30: 120015cd     	and	w13, w14, #0x3f
+   38f34: d346fdce     	lsr	x14, x14, #6
+   38f38: 1b0c7d2c     	mul	w12, w9, w12
+   38f3c: 0e010da0     	dup	v0.8b, w13
+   38f40: 8b0c036c     	add	x12, x27, x12
+   38f44: 0e2a8c00     	cmtst	v0.8b, v0.8b, v10.8b
+   38f48: 9e66000d     	fmov	x13, d0
+   38f4c: 4e040dc0     	dup	v0.4s, w14
+   38f50: 72001e7f     	tst	w19, #0xff
+   38f54: 54000380     	b.eq	0x38fc4 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x724>
+   38f58: 3dc00181     	ldr	q1, [x12]
+   38f5c: 4e020021     	tbl	v1.16b, { v1.16b }, v2.16b
+   38f60: 6ea18c01     	cmeq	v1.4s, v0.4s, v1.4s
+   38f64: 4e231c21     	and	v1.16b, v1.16b, v3.16b
+   38f68: 4eb1b821     	addv	s1, v1.4s
+   38f6c: 1e26002e     	fmov	w14, s1
+   38f70: 3cc08181     	ldur	q1, [x12, #0x8]
+   38f74: 4e040021     	tbl	v1.16b, { v1.16b }, v4.16b
+   38f78: 6ea18c01     	cmeq	v1.4s, v0.4s, v1.4s
+   38f7c: 4e231c21     	and	v1.16b, v1.16b, v3.16b
+   38f80: 4eb1b821     	addv	s1, v1.4s
+   38f84: 1e26002f     	fmov	w15, s1
+   38f88: 2a0f11ce     	orr	w14, w14, w15, lsl #4
+   38f8c: 0a1301ce     	and	w14, w14, w19
+   38f90: 72001ddf     	tst	w14, #0xff
+   38f94: 54000180     	b.eq	0x38fc4 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x724>
+   38f98: b940198f     	ldr	w15, [x12, #0x18]
+   38f9c: b841a190     	ldur	w16, [x12, #0x1a]
+   38fa0: aa1041ef     	orr	x15, x15, x16, lsl #16
+   38fa4: ca2d01ef     	eon	x15, x15, x13
+   38fa8: 8a4f41ef     	and	x15, x15, x15, lsr #16
+   38fac: 0a4f41ef     	and	w15, w15, w15, lsr #16
+   38fb0: 0a4f21ef     	and	w15, w15, w15, lsr #8
+   38fb4: 6a0f01ce     	ands	w14, w14, w15
+   38fb8: 54000060     	b.eq	0x38fc4 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x724>
+   38fbc: aa1f03ec     	mov	x12, xzr
+   38fc0: 1400001c     	b	0x39030 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x790>
+   38fc4: 34fff9f8     	cbz	w24, 0x38f00 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x660>
+   38fc8: 3cc1e181     	ldur	q1, [x12, #0x1e]
+   38fcc: 4e020021     	tbl	v1.16b, { v1.16b }, v2.16b
+   38fd0: 6ea18c01     	cmeq	v1.4s, v0.4s, v1.4s
+   38fd4: 4e231c21     	and	v1.16b, v1.16b, v3.16b
+   38fd8: 4eb1b821     	addv	s1, v1.4s
+   38fdc: 1e26002e     	fmov	w14, s1
+   38fe0: 3cc26181     	ldur	q1, [x12, #0x26]
+   38fe4: 4e040021     	tbl	v1.16b, { v1.16b }, v4.16b
+   38fe8: 6ea18c00     	cmeq	v0.4s, v0.4s, v1.4s
+   38fec: 4e231c00     	and	v0.16b, v0.16b, v3.16b
+   38ff0: 4eb1b800     	addv	s0, v0.4s
+   38ff4: 1e26000f     	fmov	w15, s0
+   38ff8: 2a0f11ce     	orr	w14, w14, w15, lsl #4
+   38ffc: 0a1c01ce     	and	w14, w14, w28
+   39000: 72001ddf     	tst	w14, #0xff
+   39004: 54fff7e0     	b.eq	0x38f00 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x660>
+   39008: b843618f     	ldur	w15, [x12, #0x36]
+   3900c: b940398c     	ldr	w12, [x12, #0x38]
+   39010: aa0c41ec     	orr	x12, x15, x12, lsl #16
+   39014: ca2d018c     	eon	x12, x12, x13
+   39018: 8a4c418c     	and	x12, x12, x12, lsr #16
+   3901c: 0a4c418c     	and	w12, w12, w12, lsr #16
+   39020: 0a4c218c     	and	w12, w12, w12, lsr #8
+   39024: 6a0c01ce     	ands	w14, w14, w12
+   39028: 54fff6c0     	b.eq	0x38f00 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x660>
+   3902c: 5280010c     	mov	w12, #0x8               // =8
+   39030: 5ac001cd     	rbit	w13, w14
+   39034: 5ac011ad     	clz	w13, w13
+   39038: aa0d018c     	orr	x12, x12, x13
+   3903c: 9b117d8c     	mul	x12, x12, x17
+   39040: d37afd8c     	lsr	x12, x12, #58
+   39044: 17ffffb0     	b	0x38f04 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x664>
+   39048: 297823a9     	ldp	w9, w8, [x29, #-0x40]
+   3904c: 297657b7     	ldp	w23, w21, [x29, #-0x50]
+   39050: 29776bb6     	ldp	w22, w26, [x29, #-0x48]
+   39054: 293423a9     	stp	w9, w8, [x29, #-0x60]
+   39058: 297923a9     	ldp	w9, w8, [x29, #-0x38]
+   3905c: 293523a9     	stp	w9, w8, [x29, #-0x58]
+   39060: 97ff1f24     	bl	0xcf0 <_ZNSt6chrono3_V212steady_clock3nowEv@plt>
+   39064: f0000828     	adrp	x8, 0x140000 <_GLOBAL_OFFSET_TABLE_+0x50>
+   39068: f90033e0     	str	x0, [sp, #0x60]
+   3906c: b940c10a     	ldr	w10, [x8, #0xc0]
+   39070: 3500054a     	cbnz	w10, 0x39118 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x878>
+   39074: 17ffff62     	b	0x38dfc <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x55c>
+   39078: d503201f     	nop
+   3907c: d503201f     	nop
+   39080: 92801fe9     	mov	x9, #-0x100             // =-256
+   39084: aa0903e8     	mov	x8, x9
+   39088: b1000529     	adds	x9, x9, #0x1
+   3908c: 54ffffc3     	b.lo	0x39084 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x7e4>
+   39090: 11040109     	add	w9, w8, #0x100
+   39094: 12001529     	and	w9, w9, #0x3f
+   39098: 521d0937     	eor	w23, w9, #0x38
+   3909c: 1104dd09     	add	w9, w8, #0x137
+   390a0: 12001529     	and	w9, w9, #0x3f
+   390a4: 521d0935     	eor	w21, w9, #0x38
+   390a8: 1104b909     	add	w9, w8, #0x12e
+   390ac: 12001529     	and	w9, w9, #0x3f
+   390b0: 521d0936     	eor	w22, w9, #0x38
+   390b4: 11049509     	add	w9, w8, #0x125
+   390b8: 12001529     	and	w9, w9, #0x3f
+   390bc: 521d093a     	eor	w26, w9, #0x38
+   390c0: 11047109     	add	w9, w8, #0x11c
+   390c4: 12001529     	and	w9, w9, #0x3f
+   390c8: 521d092b     	eor	w11, w9, #0x38
+   390cc: 11044d09     	add	w9, w8, #0x113
+   390d0: 12001529     	and	w9, w9, #0x3f
+   390d4: 521d092a     	eor	w10, w9, #0x38
+   390d8: 11042909     	add	w9, w8, #0x10a
+   390dc: 11040508     	add	w8, w8, #0x101
+   390e0: 12001529     	and	w9, w9, #0x3f
+   390e4: 12001508     	and	w8, w8, #0x3f
+   390e8: 29342bab     	stp	w11, w10, [x29, #-0x60]
+   390ec: 29382bab     	stp	w11, w10, [x29, #-0x40]
+   390f0: 521d0929     	eor	w9, w9, #0x38
+   390f4: 521d0908     	eor	w8, w8, #0x38
+   390f8: 2935dfa8     	stp	w8, w23, [x29, #-0x54]
+   390fc: b81a83a9     	stur	w9, [x29, #-0x58]
+   39100: b81c83a9     	stur	w9, [x29, #-0x38]
+   39104: 97ff1efb     	bl	0xcf0 <_ZNSt6chrono3_V212steady_clock3nowEv@plt>
+   39108: f0000828     	adrp	x8, 0x140000 <_GLOBAL_OFFSET_TABLE_+0x50>
+   3910c: f90033e0     	str	x0, [sp, #0x60]
+   39110: b940c10a     	ldr	w10, [x8, #0xc0]
+   39114: 34ffe74a     	cbz	w10, 0x38dfc <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x55c>
+   39118: ad418be3     	ldp	q3, q2, [sp, #0x30]
+   3911c: 3dc00be4     	ldr	q4, [sp, #0x20]
+   39120: d28f82a7     	mov	x7, #0x7c15             // =31765
+   39124: 4b0a03ea     	neg	w10, w10
+   39128: b9420329     	ldr	w9, [x25, #0x200]
+   3912c: f9402fe6     	ldr	x6, [sp, #0x58]
+   39130: b94013fe     	ldr	w30, [sp, #0x10]
+   39134: f2afe947     	movk	x7, #0x7f4a, lsl #16
+   39138: 528006eb     	mov	w11, #0x37              // =55
+   3913c: 2a1f03e8     	mov	w8, wzr
+   39140: 297517a4     	ldp	w4, w5, [x29, #-0x58]
+   39144: 29740fa2     	ldp	w2, w3, [x29, #-0x60]
+   39148: f2cf3727     	movk	x7, #0x79b9, lsl #32
+   3914c: f2f3c6e7     	movk	x7, #0x9e37, lsl #48
+   39150: 1400001d     	b	0x391c4 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x924>
+   39154: 52800701     	mov	w1, #0x38               // =56
+   39158: 1200158c     	and	w12, w12, #0x3f
+   3915c: 11000508     	add	w8, w8, #0x1
+   39160: 4a0c01b7     	eor	w23, w13, w12
+   39164: 1200156c     	and	w12, w11, #0x3f
+   39168: 4a0c01d5     	eor	w21, w14, w12
+   3916c: 5100256c     	sub	w12, w11, #0x9
+   39170: 1200158c     	and	w12, w12, #0x3f
+   39174: 4a0c01f6     	eor	w22, w15, w12
+   39178: 5100496c     	sub	w12, w11, #0x12
+   3917c: 1200158c     	and	w12, w12, #0x3f
+   39180: 4a0c021a     	eor	w26, w16, w12
+   39184: 51006d6c     	sub	w12, w11, #0x1b
+   39188: 1200158c     	and	w12, w12, #0x3f
+   3918c: 4a0c0222     	eor	w2, w17, w12
+   39190: 5100916c     	sub	w12, w11, #0x24
+   39194: 1200158c     	and	w12, w12, #0x3f
+   39198: 4a0c0243     	eor	w3, w18, w12
+   3919c: 5100b56c     	sub	w12, w11, #0x2d
+   391a0: 1200158c     	and	w12, w12, #0x3f
+   391a4: 4a0c0004     	eor	w4, w0, w12
+   391a8: 5100d96c     	sub	w12, w11, #0x36
+   391ac: 1200158c     	and	w12, w12, #0x3f
+   391b0: 4a0c0025     	eor	w5, w1, w12
+   391b4: 1100056b     	add	w11, w11, #0x1
+   391b8: 0b0b014c     	add	w12, w10, w11
+   391bc: 7100dd9f     	cmp	w12, #0x37
+   391c0: 54ffe160     	b.eq	0x38dec <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x54c>
+   391c4: f8775b2f     	ldr	x15, [x25, w23, uxtw #3]
+   391c8: f10000df     	cmp	x6, #0x0
+   391cc: 1b177d2d     	mul	w13, w9, w23
+   391d0: 5100dd6c     	sub	w12, w11, #0x37
+   391d4: 8b0d036d     	add	x13, x27, x13
+   391d8: d35efdee     	lsr	x14, x15, #30
+   391dc: fa4019c0     	ccmp	x14, #0x0, #0x0, ne
+   391e0: 1a9f17ee     	cset	w14, eq
+   391e4: 340004fe     	cbz	w30, 0x39280 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x9e0>
+   391e8: 34000dce     	cbz	w14, 0x393a0 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0xb00>
+   391ec: 120015ee     	and	w14, w15, #0x3f
+   391f0: d346fdef     	lsr	x15, x15, #6
+   391f4: 0e010dc0     	dup	v0.8b, w14
+   391f8: 0e2a8c00     	cmtst	v0.8b, v0.8b, v10.8b
+   391fc: 9e66000e     	fmov	x14, d0
+   39200: 4e040de0     	dup	v0.4s, w15
+   39204: 72001e7f     	tst	w19, #0xff
+   39208: 54000840     	b.eq	0x39310 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0xa70>
+   3920c: 3dc001a1     	ldr	q1, [x13]
+   39210: 4e020021     	tbl	v1.16b, { v1.16b }, v2.16b
+   39214: 6ea18c01     	cmeq	v1.4s, v0.4s, v1.4s
+   39218: 4e231c21     	and	v1.16b, v1.16b, v3.16b
+   3921c: 4eb1b821     	addv	s1, v1.4s
+   39220: 1e26002f     	fmov	w15, s1
+   39224: 3cc081a1     	ldur	q1, [x13, #0x8]
+   39228: 4e040021     	tbl	v1.16b, { v1.16b }, v4.16b
+   3922c: 6ea18c01     	cmeq	v1.4s, v0.4s, v1.4s
+   39230: 4e231c21     	and	v1.16b, v1.16b, v3.16b
+   39234: 4eb1b821     	addv	s1, v1.4s
+   39238: 1e260030     	fmov	w16, s1
+   3923c: 2a1011ef     	orr	w15, w15, w16, lsl #4
+   39240: 0a1301ef     	and	w15, w15, w19
+   39244: 72001dff     	tst	w15, #0xff
+   39248: 54000640     	b.eq	0x39310 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0xa70>
+   3924c: b94019b0     	ldr	w16, [x13, #0x18]
+   39250: b841a1b1     	ldur	w17, [x13, #0x1a]
+   39254: aa114210     	orr	x16, x16, x17, lsl #16
+   39258: ca2e0210     	eon	x16, x16, x14
+   3925c: 8a504210     	and	x16, x16, x16, lsr #16
+   39260: 0a504210     	and	w16, w16, w16, lsr #16
+   39264: 0a502210     	and	w16, w16, w16, lsr #8
+   39268: 6a1001ef     	ands	w15, w15, w16
+   3926c: 54000520     	b.eq	0x39310 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0xa70>
+   39270: aa1f03ed     	mov	x13, xzr
+   39274: 14000042     	b	0x3937c <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0xadc>
+   39278: d503201f     	nop
+   3927c: d503201f     	nop
+   39280: 34000f0e     	cbz	w14, 0x39460 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0xbc0>
+   39284: 120015ee     	and	w14, w15, #0x3f
+   39288: d346fdef     	lsr	x15, x15, #6
+   3928c: 0e010dc0     	dup	v0.8b, w14
+   39290: 0e2a8c00     	cmtst	v0.8b, v0.8b, v10.8b
+   39294: 9e66000e     	fmov	x14, d0
+   39298: 4e040de0     	dup	v0.4s, w15
+   3929c: 72001e7f     	tst	w19, #0xff
+   392a0: 54000920     	b.eq	0x393c4 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0xb24>
+   392a4: 3dc001a1     	ldr	q1, [x13]
+   392a8: 4e020021     	tbl	v1.16b, { v1.16b }, v2.16b
+   392ac: 6ea18c01     	cmeq	v1.4s, v0.4s, v1.4s
+   392b0: 4e231c21     	and	v1.16b, v1.16b, v3.16b
+   392b4: 4eb1b821     	addv	s1, v1.4s
+   392b8: 1e26002f     	fmov	w15, s1
+   392bc: 3cc081a1     	ldur	q1, [x13, #0x8]
+   392c0: 4e040021     	tbl	v1.16b, { v1.16b }, v4.16b
+   392c4: 6ea18c01     	cmeq	v1.4s, v0.4s, v1.4s
+   392c8: 4e231c21     	and	v1.16b, v1.16b, v3.16b
+   392cc: 4eb1b821     	addv	s1, v1.4s
+   392d0: 1e260030     	fmov	w16, s1
+   392d4: 2a1011ef     	orr	w15, w15, w16, lsl #4
+   392d8: 0a1301ef     	and	w15, w15, w19
+   392dc: 72001dff     	tst	w15, #0xff
+   392e0: 54000720     	b.eq	0x393c4 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0xb24>
+   392e4: b94019b0     	ldr	w16, [x13, #0x18]
+   392e8: b841a1b1     	ldur	w17, [x13, #0x1a]
+   392ec: aa114210     	orr	x16, x16, x17, lsl #16
+   392f0: ca2e0210     	eon	x16, x16, x14
+   392f4: 8a504210     	and	x16, x16, x16, lsr #16
+   392f8: 0a504210     	and	w16, w16, w16, lsr #16
+   392fc: 0a502210     	and	w16, w16, w16, lsr #8
+   39300: 6a1001ef     	ands	w15, w15, w16
+   39304: 54000600     	b.eq	0x393c4 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0xb24>
+   39308: aa1f03ed     	mov	x13, xzr
+   3930c: 14000049     	b	0x39430 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0xb90>
+   39310: 34000498     	cbz	w24, 0x393a0 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0xb00>
+   39314: 3cc1e1a1     	ldur	q1, [x13, #0x1e]
+   39318: 4e020021     	tbl	v1.16b, { v1.16b }, v2.16b
+   3931c: 6ea18c01     	cmeq	v1.4s, v0.4s, v1.4s
+   39320: 4e231c21     	and	v1.16b, v1.16b, v3.16b
+   39324: 4eb1b821     	addv	s1, v1.4s
+   39328: 1e26002f     	fmov	w15, s1
+   3932c: 3cc261a1     	ldur	q1, [x13, #0x26]
+   39330: 4e040021     	tbl	v1.16b, { v1.16b }, v4.16b
+   39334: 6ea18c00     	cmeq	v0.4s, v0.4s, v1.4s
+   39338: 4e231c00     	and	v0.16b, v0.16b, v3.16b
+   3933c: 4eb1b800     	addv	s0, v0.4s
+   39340: 1e260010     	fmov	w16, s0
+   39344: 2a1011ef     	orr	w15, w15, w16, lsl #4
+   39348: 0a1c01ef     	and	w15, w15, w28
+   3934c: 72001dff     	tst	w15, #0xff
+   39350: 54000280     	b.eq	0x393a0 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0xb00>
+   39354: b84361b0     	ldur	w16, [x13, #0x36]
+   39358: b94039ad     	ldr	w13, [x13, #0x38]
+   3935c: aa0d420d     	orr	x13, x16, x13, lsl #16
+   39360: ca2e01ad     	eon	x13, x13, x14
+   39364: 8a4d41ad     	and	x13, x13, x13, lsr #16
+   39368: 0a4d41ad     	and	w13, w13, w13, lsr #16
+   3936c: 0a4d21ad     	and	w13, w13, w13, lsr #8
+   39370: 6a0d01ef     	ands	w15, w15, w13
+   39374: 54000160     	b.eq	0x393a0 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0xb00>
+   39378: 5280010d     	mov	w13, #0x8               // =8
+   3937c: 5ac001ee     	rbit	w14, w15
+   39380: 5ac011ce     	clz	w14, w14
+   39384: aa0e01ad     	orr	x13, x13, x14
+   39388: 9b077dad     	mul	x13, x13, x7
+   3938c: d37afdad     	lsr	x13, x13, #58
+   39390: 14000005     	b	0x393a4 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0xb04>
+   39394: d503201f     	nop
+   39398: d503201f     	nop
+   3939c: d503201f     	nop
+   393a0: 5280070d     	mov	w13, #0x38              // =56
+   393a4: 1200158c     	and	w12, w12, #0x3f
+   393a8: 11000508     	add	w8, w8, #0x1
+   393ac: 4a0c01b7     	eor	w23, w13, w12
+   393b0: 1100056b     	add	w11, w11, #0x1
+   393b4: 0b0b014c     	add	w12, w10, w11
+   393b8: 7100dd9f     	cmp	w12, #0x37
+   393bc: 54fff041     	b.ne	0x391c4 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x924>
+   393c0: 17fffe8b     	b	0x38dec <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x54c>
+   393c4: 340004f8     	cbz	w24, 0x39460 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0xbc0>
+   393c8: 3cc1e1a1     	ldur	q1, [x13, #0x1e]
+   393cc: 4e020021     	tbl	v1.16b, { v1.16b }, v2.16b
+   393d0: 6ea18c01     	cmeq	v1.4s, v0.4s, v1.4s
+   393d4: 4e231c21     	and	v1.16b, v1.16b, v3.16b
+   393d8: 4eb1b821     	addv	s1, v1.4s
+   393dc: 1e26002f     	fmov	w15, s1
+   393e0: 3cc261a1     	ldur	q1, [x13, #0x26]
+   393e4: 4e040021     	tbl	v1.16b, { v1.16b }, v4.16b
+   393e8: 6ea18c00     	cmeq	v0.4s, v0.4s, v1.4s
+   393ec: 4e231c00     	and	v0.16b, v0.16b, v3.16b
+   393f0: 4eb1b800     	addv	s0, v0.4s
+   393f4: 1e260010     	fmov	w16, s0
+   393f8: 2a1011ef     	orr	w15, w15, w16, lsl #4
+   393fc: 0a1c01ef     	and	w15, w15, w28
+   39400: 72001dff     	tst	w15, #0xff
+   39404: 540002e0     	b.eq	0x39460 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0xbc0>
+   39408: b84361b0     	ldur	w16, [x13, #0x36]
+   3940c: b94039ad     	ldr	w13, [x13, #0x38]
+   39410: aa0d420d     	orr	x13, x16, x13, lsl #16
+   39414: ca2e01ad     	eon	x13, x13, x14
+   39418: 8a4d41ad     	and	x13, x13, x13, lsr #16
+   3941c: 0a4d41ad     	and	w13, w13, w13, lsr #16
+   39420: 0a4d21ad     	and	w13, w13, w13, lsr #8
+   39424: 6a0d01ef     	ands	w15, w15, w13
+   39428: 540001c0     	b.eq	0x39460 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0xbc0>
+   3942c: 5280010d     	mov	w13, #0x8               // =8
+   39430: 5ac001ee     	rbit	w14, w15
+   39434: 5ac011ce     	clz	w14, w14
+   39438: aa0e01ad     	orr	x13, x13, x14
+   3943c: 9b077dad     	mul	x13, x13, x7
+   39440: d37afdad     	lsr	x13, x13, #58
+   39444: 5280070e     	mov	w14, #0x38              // =56
+   39448: b5000126     	cbnz	x6, 0x3946c <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0xbcc>
+   3944c: 14000050     	b	0x3958c <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0xcec>
+   39450: d503201f     	nop
+   39454: d503201f     	nop
+   39458: d503201f     	nop
+   3945c: d503201f     	nop
+   39460: 5280070d     	mov	w13, #0x38              // =56
+   39464: 5280070e     	mov	w14, #0x38              // =56
+   39468: b4000926     	cbz	x6, 0x3958c <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0xcec>
+   3946c: f8755b30     	ldr	x16, [x25, w21, uxtw #3]
+   39470: d35efe0f     	lsr	x15, x16, #30
+   39474: b50008cf     	cbnz	x15, 0x3958c <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0xcec>
+   39478: 1200160f     	and	w15, w16, #0x3f
+   3947c: d346fe10     	lsr	x16, x16, #6
+   39480: 1b097eae     	mul	w14, w21, w9
+   39484: 0e010de0     	dup	v0.8b, w15
+   39488: 8b0e036e     	add	x14, x27, x14
+   3948c: 0e2a8c00     	cmtst	v0.8b, v0.8b, v10.8b
+   39490: 9e66000f     	fmov	x15, d0
+   39494: 4e040e00     	dup	v0.4s, w16
+   39498: 72001e7f     	tst	w19, #0xff
+   3949c: 54000380     	b.eq	0x3950c <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0xc6c>
+   394a0: 3dc001c1     	ldr	q1, [x14]
+   394a4: 4e020021     	tbl	v1.16b, { v1.16b }, v2.16b
+   394a8: 6ea18c01     	cmeq	v1.4s, v0.4s, v1.4s
+   394ac: 4e231c21     	and	v1.16b, v1.16b, v3.16b
+   394b0: 4eb1b821     	addv	s1, v1.4s
+   394b4: 1e260030     	fmov	w16, s1
+   394b8: 3cc081c1     	ldur	q1, [x14, #0x8]
+   394bc: 4e040021     	tbl	v1.16b, { v1.16b }, v4.16b
+   394c0: 6ea18c01     	cmeq	v1.4s, v0.4s, v1.4s
+   394c4: 4e231c21     	and	v1.16b, v1.16b, v3.16b
+   394c8: 4eb1b821     	addv	s1, v1.4s
+   394cc: 1e260031     	fmov	w17, s1
+   394d0: 2a111210     	orr	w16, w16, w17, lsl #4
+   394d4: 0a130210     	and	w16, w16, w19
+   394d8: 72001e1f     	tst	w16, #0xff
+   394dc: 54000180     	b.eq	0x3950c <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0xc6c>
+   394e0: b94019d1     	ldr	w17, [x14, #0x18]
+   394e4: b841a1d2     	ldur	w18, [x14, #0x1a]
+   394e8: aa124231     	orr	x17, x17, x18, lsl #16
+   394ec: ca2f0231     	eon	x17, x17, x15
+   394f0: 8a514231     	and	x17, x17, x17, lsr #16
+   394f4: 0a514231     	and	w17, w17, w17, lsr #16
+   394f8: 0a512231     	and	w17, w17, w17, lsr #8
+   394fc: 6a110210     	ands	w16, w16, w17
+   39500: 54000060     	b.eq	0x3950c <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0xc6c>
+   39504: aa1f03ee     	mov	x14, xzr
+   39508: 1400001c     	b	0x39578 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0xcd8>
+   3950c: 34000478     	cbz	w24, 0x39598 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0xcf8>
+   39510: 3cc1e1c1     	ldur	q1, [x14, #0x1e]
+   39514: 4e020021     	tbl	v1.16b, { v1.16b }, v2.16b
+   39518: 6ea18c01     	cmeq	v1.4s, v0.4s, v1.4s
+   3951c: 4e231c21     	and	v1.16b, v1.16b, v3.16b
+   39520: 4eb1b821     	addv	s1, v1.4s
+   39524: 1e260030     	fmov	w16, s1
+   39528: 3cc261c1     	ldur	q1, [x14, #0x26]
+   3952c: 4e040021     	tbl	v1.16b, { v1.16b }, v4.16b
+   39530: 6ea18c00     	cmeq	v0.4s, v0.4s, v1.4s
+   39534: 4e231c00     	and	v0.16b, v0.16b, v3.16b
+   39538: 4eb1b800     	addv	s0, v0.4s
+   3953c: 1e260011     	fmov	w17, s0
+   39540: 2a111210     	orr	w16, w16, w17, lsl #4
+   39544: 0a1c0210     	and	w16, w16, w28
+   39548: 72001e1f     	tst	w16, #0xff
+   3954c: 54000260     	b.eq	0x39598 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0xcf8>
+   39550: b84361d1     	ldur	w17, [x14, #0x36]
+   39554: b94039ce     	ldr	w14, [x14, #0x38]
+   39558: aa0e422e     	orr	x14, x17, x14, lsl #16
+   3955c: ca2f01ce     	eon	x14, x14, x15
+   39560: 8a4e41ce     	and	x14, x14, x14, lsr #16
+   39564: 0a4e41ce     	and	w14, w14, w14, lsr #16
+   39568: 0a4e21ce     	and	w14, w14, w14, lsr #8
+   3956c: 6a0e0210     	ands	w16, w16, w14
+   39570: 54000140     	b.eq	0x39598 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0xcf8>
+   39574: 5280010e     	mov	w14, #0x8               // =8
+   39578: 5ac0020f     	rbit	w15, w16
+   3957c: 5ac011ef     	clz	w15, w15
+   39580: aa0f01ce     	orr	x14, x14, x15
+   39584: 9b077dce     	mul	x14, x14, x7
+   39588: d37afdce     	lsr	x14, x14, #58
+   3958c: 5280070f     	mov	w15, #0x38              // =56
+   39590: b50000a6     	cbnz	x6, 0x395a4 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0xd04>
+   39594: 1400004c     	b	0x396c4 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0xe24>
+   39598: 5280070e     	mov	w14, #0x38              // =56
+   3959c: 5280070f     	mov	w15, #0x38              // =56
+   395a0: b4000926     	cbz	x6, 0x396c4 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0xe24>
+   395a4: f8765b31     	ldr	x17, [x25, w22, uxtw #3]
+   395a8: d35efe30     	lsr	x16, x17, #30
+   395ac: b50008d0     	cbnz	x16, 0x396c4 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0xe24>
+   395b0: 12001630     	and	w16, w17, #0x3f
+   395b4: d346fe31     	lsr	x17, x17, #6
+   395b8: 1b097ecf     	mul	w15, w22, w9
+   395bc: 0e010e00     	dup	v0.8b, w16
+   395c0: 8b0f036f     	add	x15, x27, x15
+   395c4: 0e2a8c00     	cmtst	v0.8b, v0.8b, v10.8b
+   395c8: 9e660010     	fmov	x16, d0
+   395cc: 4e040e20     	dup	v0.4s, w17
+   395d0: 72001e7f     	tst	w19, #0xff
+   395d4: 54000380     	b.eq	0x39644 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0xda4>
+   395d8: 3dc001e1     	ldr	q1, [x15]
+   395dc: 4e020021     	tbl	v1.16b, { v1.16b }, v2.16b
+   395e0: 6ea18c01     	cmeq	v1.4s, v0.4s, v1.4s
+   395e4: 4e231c21     	and	v1.16b, v1.16b, v3.16b
+   395e8: 4eb1b821     	addv	s1, v1.4s
+   395ec: 1e260031     	fmov	w17, s1
+   395f0: 3cc081e1     	ldur	q1, [x15, #0x8]
+   395f4: 4e040021     	tbl	v1.16b, { v1.16b }, v4.16b
+   395f8: 6ea18c01     	cmeq	v1.4s, v0.4s, v1.4s
+   395fc: 4e231c21     	and	v1.16b, v1.16b, v3.16b
+   39600: 4eb1b821     	addv	s1, v1.4s
+   39604: 1e260032     	fmov	w18, s1
+   39608: 2a121231     	orr	w17, w17, w18, lsl #4
+   3960c: 0a130231     	and	w17, w17, w19
+   39610: 72001e3f     	tst	w17, #0xff
+   39614: 54000180     	b.eq	0x39644 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0xda4>
+   39618: b94019f2     	ldr	w18, [x15, #0x18]
+   3961c: b841a1e0     	ldur	w0, [x15, #0x1a]
+   39620: aa004252     	orr	x18, x18, x0, lsl #16
+   39624: ca300252     	eon	x18, x18, x16
+   39628: 8a524252     	and	x18, x18, x18, lsr #16
+   3962c: 0a524252     	and	w18, w18, w18, lsr #16
+   39630: 0a522252     	and	w18, w18, w18, lsr #8
+   39634: 6a120231     	ands	w17, w17, w18
+   39638: 54000060     	b.eq	0x39644 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0xda4>
+   3963c: aa1f03ef     	mov	x15, xzr
+   39640: 1400001c     	b	0x396b0 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0xe10>
+   39644: 34000478     	cbz	w24, 0x396d0 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0xe30>
+   39648: 3cc1e1e1     	ldur	q1, [x15, #0x1e]
+   3964c: 4e020021     	tbl	v1.16b, { v1.16b }, v2.16b
+   39650: 6ea18c01     	cmeq	v1.4s, v0.4s, v1.4s
+   39654: 4e231c21     	and	v1.16b, v1.16b, v3.16b
+   39658: 4eb1b821     	addv	s1, v1.4s
+   3965c: 1e260031     	fmov	w17, s1
+   39660: 3cc261e1     	ldur	q1, [x15, #0x26]
+   39664: 4e040021     	tbl	v1.16b, { v1.16b }, v4.16b
+   39668: 6ea18c00     	cmeq	v0.4s, v0.4s, v1.4s
+   3966c: 4e231c00     	and	v0.16b, v0.16b, v3.16b
+   39670: 4eb1b800     	addv	s0, v0.4s
+   39674: 1e260012     	fmov	w18, s0
+   39678: 2a121231     	orr	w17, w17, w18, lsl #4
+   3967c: 0a1c0231     	and	w17, w17, w28
+   39680: 72001e3f     	tst	w17, #0xff
+   39684: 54000260     	b.eq	0x396d0 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0xe30>
+   39688: b84361f2     	ldur	w18, [x15, #0x36]
+   3968c: b94039ef     	ldr	w15, [x15, #0x38]
+   39690: aa0f424f     	orr	x15, x18, x15, lsl #16
+   39694: ca3001ef     	eon	x15, x15, x16
+   39698: 8a4f41ef     	and	x15, x15, x15, lsr #16
+   3969c: 0a4f41ef     	and	w15, w15, w15, lsr #16
+   396a0: 0a4f21ef     	and	w15, w15, w15, lsr #8
+   396a4: 6a0f0231     	ands	w17, w17, w15
+   396a8: 54000140     	b.eq	0x396d0 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0xe30>
+   396ac: 5280010f     	mov	w15, #0x8               // =8
+   396b0: 5ac00230     	rbit	w16, w17
+   396b4: 5ac01210     	clz	w16, w16
+   396b8: aa1001ef     	orr	x15, x15, x16
+   396bc: 9b077def     	mul	x15, x15, x7
+   396c0: d37afdef     	lsr	x15, x15, #58
+   396c4: 52800710     	mov	w16, #0x38              // =56
+   396c8: b50000a6     	cbnz	x6, 0x396dc <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0xe3c>
+   396cc: 1400004c     	b	0x397fc <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0xf5c>
+   396d0: 5280070f     	mov	w15, #0x38              // =56
+   396d4: 52800710     	mov	w16, #0x38              // =56
+   396d8: b4000926     	cbz	x6, 0x397fc <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0xf5c>
+   396dc: f87a5b32     	ldr	x18, [x25, w26, uxtw #3]
+   396e0: d35efe51     	lsr	x17, x18, #30
+   396e4: b50008d1     	cbnz	x17, 0x397fc <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0xf5c>
+   396e8: 12001651     	and	w17, w18, #0x3f
+   396ec: d346fe52     	lsr	x18, x18, #6
+   396f0: 1b097f50     	mul	w16, w26, w9
+   396f4: 0e010e20     	dup	v0.8b, w17
+   396f8: 8b100370     	add	x16, x27, x16
+   396fc: 0e2a8c00     	cmtst	v0.8b, v0.8b, v10.8b
+   39700: 9e660011     	fmov	x17, d0
+   39704: 4e040e40     	dup	v0.4s, w18
+   39708: 72001e7f     	tst	w19, #0xff
+   3970c: 54000380     	b.eq	0x3977c <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0xedc>
+   39710: 3dc00201     	ldr	q1, [x16]
+   39714: 4e020021     	tbl	v1.16b, { v1.16b }, v2.16b
+   39718: 6ea18c01     	cmeq	v1.4s, v0.4s, v1.4s
+   3971c: 4e231c21     	and	v1.16b, v1.16b, v3.16b
+   39720: 4eb1b821     	addv	s1, v1.4s
+   39724: 1e260032     	fmov	w18, s1
+   39728: 3cc08201     	ldur	q1, [x16, #0x8]
+   3972c: 4e040021     	tbl	v1.16b, { v1.16b }, v4.16b
+   39730: 6ea18c01     	cmeq	v1.4s, v0.4s, v1.4s
+   39734: 4e231c21     	and	v1.16b, v1.16b, v3.16b
+   39738: 4eb1b821     	addv	s1, v1.4s
+   3973c: 1e260020     	fmov	w0, s1
+   39740: 2a001252     	orr	w18, w18, w0, lsl #4
+   39744: 0a130252     	and	w18, w18, w19
+   39748: 72001e5f     	tst	w18, #0xff
+   3974c: 54000180     	b.eq	0x3977c <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0xedc>
+   39750: b9401a00     	ldr	w0, [x16, #0x18]
+   39754: b841a201     	ldur	w1, [x16, #0x1a]
+   39758: aa014000     	orr	x0, x0, x1, lsl #16
+   3975c: ca310000     	eon	x0, x0, x17
+   39760: 8a404000     	and	x0, x0, x0, lsr #16
+   39764: 0a404000     	and	w0, w0, w0, lsr #16
+   39768: 0a402000     	and	w0, w0, w0, lsr #8
+   3976c: 6a000252     	ands	w18, w18, w0
+   39770: 54000060     	b.eq	0x3977c <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0xedc>
+   39774: aa1f03f0     	mov	x16, xzr
+   39778: 1400001c     	b	0x397e8 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0xf48>
+   3977c: 34000478     	cbz	w24, 0x39808 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0xf68>
+   39780: 3cc1e201     	ldur	q1, [x16, #0x1e]
+   39784: 4e020021     	tbl	v1.16b, { v1.16b }, v2.16b
+   39788: 6ea18c01     	cmeq	v1.4s, v0.4s, v1.4s
+   3978c: 4e231c21     	and	v1.16b, v1.16b, v3.16b
+   39790: 4eb1b821     	addv	s1, v1.4s
+   39794: 1e260032     	fmov	w18, s1
+   39798: 3cc26201     	ldur	q1, [x16, #0x26]
+   3979c: 4e040021     	tbl	v1.16b, { v1.16b }, v4.16b
+   397a0: 6ea18c00     	cmeq	v0.4s, v0.4s, v1.4s
+   397a4: 4e231c00     	and	v0.16b, v0.16b, v3.16b
+   397a8: 4eb1b800     	addv	s0, v0.4s
+   397ac: 1e260000     	fmov	w0, s0
+   397b0: 2a001252     	orr	w18, w18, w0, lsl #4
+   397b4: 0a1c0252     	and	w18, w18, w28
+   397b8: 72001e5f     	tst	w18, #0xff
+   397bc: 54000260     	b.eq	0x39808 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0xf68>
+   397c0: b8436200     	ldur	w0, [x16, #0x36]
+   397c4: b9403a10     	ldr	w16, [x16, #0x38]
+   397c8: aa104010     	orr	x16, x0, x16, lsl #16
+   397cc: ca310210     	eon	x16, x16, x17
+   397d0: 8a504210     	and	x16, x16, x16, lsr #16
+   397d4: 0a504210     	and	w16, w16, w16, lsr #16
+   397d8: 0a502210     	and	w16, w16, w16, lsr #8
+   397dc: 6a100252     	ands	w18, w18, w16
+   397e0: 54000140     	b.eq	0x39808 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0xf68>
+   397e4: 52800110     	mov	w16, #0x8               // =8
+   397e8: 5ac00251     	rbit	w17, w18
+   397ec: 5ac01231     	clz	w17, w17
+   397f0: aa110210     	orr	x16, x16, x17
+   397f4: 9b077e10     	mul	x16, x16, x7
+   397f8: d37afe10     	lsr	x16, x16, #58
+   397fc: 52800711     	mov	w17, #0x38              // =56
+   39800: b50000a6     	cbnz	x6, 0x39814 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0xf74>
+   39804: 1400004c     	b	0x39934 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x1094>
+   39808: 52800710     	mov	w16, #0x38              // =56
+   3980c: 52800711     	mov	w17, #0x38              // =56
+   39810: b4000926     	cbz	x6, 0x39934 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x1094>
+   39814: f8625b20     	ldr	x0, [x25, w2, uxtw #3]
+   39818: d35efc12     	lsr	x18, x0, #30
+   3981c: b50008d2     	cbnz	x18, 0x39934 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x1094>
+   39820: 12001412     	and	w18, w0, #0x3f
+   39824: d346fc00     	lsr	x0, x0, #6
+   39828: 1b097c51     	mul	w17, w2, w9
+   3982c: 0e010e40     	dup	v0.8b, w18
+   39830: 8b110371     	add	x17, x27, x17
+   39834: 0e2a8c00     	cmtst	v0.8b, v0.8b, v10.8b
+   39838: 9e660012     	fmov	x18, d0
+   3983c: 4e040c00     	dup	v0.4s, w0
+   39840: 72001e7f     	tst	w19, #0xff
+   39844: 54000380     	b.eq	0x398b4 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x1014>
+   39848: 3dc00221     	ldr	q1, [x17]
+   3984c: 4e020021     	tbl	v1.16b, { v1.16b }, v2.16b
+   39850: 6ea18c01     	cmeq	v1.4s, v0.4s, v1.4s
+   39854: 4e231c21     	and	v1.16b, v1.16b, v3.16b
+   39858: 4eb1b821     	addv	s1, v1.4s
+   3985c: 1e260020     	fmov	w0, s1
+   39860: 3cc08221     	ldur	q1, [x17, #0x8]
+   39864: 4e040021     	tbl	v1.16b, { v1.16b }, v4.16b
+   39868: 6ea18c01     	cmeq	v1.4s, v0.4s, v1.4s
+   3986c: 4e231c21     	and	v1.16b, v1.16b, v3.16b
+   39870: 4eb1b821     	addv	s1, v1.4s
+   39874: 1e260021     	fmov	w1, s1
+   39878: 2a011000     	orr	w0, w0, w1, lsl #4
+   3987c: 0a130000     	and	w0, w0, w19
+   39880: 72001c1f     	tst	w0, #0xff
+   39884: 54000180     	b.eq	0x398b4 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x1014>
+   39888: b9401a21     	ldr	w1, [x17, #0x18]
+   3988c: b841a222     	ldur	w2, [x17, #0x1a]
+   39890: aa024021     	orr	x1, x1, x2, lsl #16
+   39894: ca320021     	eon	x1, x1, x18
+   39898: 8a414021     	and	x1, x1, x1, lsr #16
+   3989c: 0a414021     	and	w1, w1, w1, lsr #16
+   398a0: 0a412021     	and	w1, w1, w1, lsr #8
+   398a4: 6a010000     	ands	w0, w0, w1
+   398a8: 54000060     	b.eq	0x398b4 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x1014>
+   398ac: aa1f03f1     	mov	x17, xzr
+   398b0: 1400001c     	b	0x39920 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x1080>
+   398b4: 34000478     	cbz	w24, 0x39940 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x10a0>
+   398b8: 3cc1e221     	ldur	q1, [x17, #0x1e]
+   398bc: 4e020021     	tbl	v1.16b, { v1.16b }, v2.16b
+   398c0: 6ea18c01     	cmeq	v1.4s, v0.4s, v1.4s
+   398c4: 4e231c21     	and	v1.16b, v1.16b, v3.16b
+   398c8: 4eb1b821     	addv	s1, v1.4s
+   398cc: 1e260020     	fmov	w0, s1
+   398d0: 3cc26221     	ldur	q1, [x17, #0x26]
+   398d4: 4e040021     	tbl	v1.16b, { v1.16b }, v4.16b
+   398d8: 6ea18c00     	cmeq	v0.4s, v0.4s, v1.4s
+   398dc: 4e231c00     	and	v0.16b, v0.16b, v3.16b
+   398e0: 4eb1b800     	addv	s0, v0.4s
+   398e4: 1e260001     	fmov	w1, s0
+   398e8: 2a011000     	orr	w0, w0, w1, lsl #4
+   398ec: 0a1c0000     	and	w0, w0, w28
+   398f0: 72001c1f     	tst	w0, #0xff
+   398f4: 54000260     	b.eq	0x39940 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x10a0>
+   398f8: b8436221     	ldur	w1, [x17, #0x36]
+   398fc: b9403a31     	ldr	w17, [x17, #0x38]
+   39900: aa114031     	orr	x17, x1, x17, lsl #16
+   39904: ca320231     	eon	x17, x17, x18
+   39908: 8a514231     	and	x17, x17, x17, lsr #16
+   3990c: 0a514231     	and	w17, w17, w17, lsr #16
+   39910: 0a512231     	and	w17, w17, w17, lsr #8
+   39914: 6a110000     	ands	w0, w0, w17
+   39918: 54000140     	b.eq	0x39940 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x10a0>
+   3991c: 52800111     	mov	w17, #0x8               // =8
+   39920: 5ac00012     	rbit	w18, w0
+   39924: 5ac01252     	clz	w18, w18
+   39928: aa120231     	orr	x17, x17, x18
+   3992c: 9b077e31     	mul	x17, x17, x7
+   39930: d37afe31     	lsr	x17, x17, #58
+   39934: 52800712     	mov	w18, #0x38              // =56
+   39938: b50000a6     	cbnz	x6, 0x3994c <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x10ac>
+   3993c: 1400004c     	b	0x39a6c <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x11cc>
+   39940: 52800711     	mov	w17, #0x38              // =56
+   39944: 52800712     	mov	w18, #0x38              // =56
+   39948: b4000926     	cbz	x6, 0x39a6c <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x11cc>
+   3994c: f8635b21     	ldr	x1, [x25, w3, uxtw #3]
+   39950: d35efc20     	lsr	x0, x1, #30
+   39954: b50008c0     	cbnz	x0, 0x39a6c <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x11cc>
+   39958: 12001420     	and	w0, w1, #0x3f
+   3995c: d346fc21     	lsr	x1, x1, #6
+   39960: 1b097c72     	mul	w18, w3, w9
+   39964: 0e010c00     	dup	v0.8b, w0
+   39968: 8b120372     	add	x18, x27, x18
+   3996c: 0e2a8c00     	cmtst	v0.8b, v0.8b, v10.8b
+   39970: 9e660000     	fmov	x0, d0
+   39974: 4e040c20     	dup	v0.4s, w1
+   39978: 72001e7f     	tst	w19, #0xff
+   3997c: 54000380     	b.eq	0x399ec <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x114c>
+   39980: 3dc00241     	ldr	q1, [x18]
+   39984: 4e020021     	tbl	v1.16b, { v1.16b }, v2.16b
+   39988: 6ea18c01     	cmeq	v1.4s, v0.4s, v1.4s
+   3998c: 4e231c21     	and	v1.16b, v1.16b, v3.16b
+   39990: 4eb1b821     	addv	s1, v1.4s
+   39994: 1e260021     	fmov	w1, s1
+   39998: 3cc08241     	ldur	q1, [x18, #0x8]
+   3999c: 4e040021     	tbl	v1.16b, { v1.16b }, v4.16b
+   399a0: 6ea18c01     	cmeq	v1.4s, v0.4s, v1.4s
+   399a4: 4e231c21     	and	v1.16b, v1.16b, v3.16b
+   399a8: 4eb1b821     	addv	s1, v1.4s
+   399ac: 1e260022     	fmov	w2, s1
+   399b0: 2a021021     	orr	w1, w1, w2, lsl #4
+   399b4: 0a130021     	and	w1, w1, w19
+   399b8: 72001c3f     	tst	w1, #0xff
+   399bc: 54000180     	b.eq	0x399ec <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x114c>
+   399c0: b9401a42     	ldr	w2, [x18, #0x18]
+   399c4: b841a243     	ldur	w3, [x18, #0x1a]
+   399c8: aa034042     	orr	x2, x2, x3, lsl #16
+   399cc: ca200042     	eon	x2, x2, x0
+   399d0: 8a424042     	and	x2, x2, x2, lsr #16
+   399d4: 0a424042     	and	w2, w2, w2, lsr #16
+   399d8: 0a422042     	and	w2, w2, w2, lsr #8
+   399dc: 6a020021     	ands	w1, w1, w2
+   399e0: 54000060     	b.eq	0x399ec <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x114c>
+   399e4: aa1f03f2     	mov	x18, xzr
+   399e8: 1400001c     	b	0x39a58 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x11b8>
+   399ec: 34000478     	cbz	w24, 0x39a78 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x11d8>
+   399f0: 3cc1e241     	ldur	q1, [x18, #0x1e]
+   399f4: 4e020021     	tbl	v1.16b, { v1.16b }, v2.16b
+   399f8: 6ea18c01     	cmeq	v1.4s, v0.4s, v1.4s
+   399fc: 4e231c21     	and	v1.16b, v1.16b, v3.16b
+   39a00: 4eb1b821     	addv	s1, v1.4s
+   39a04: 1e260021     	fmov	w1, s1
+   39a08: 3cc26241     	ldur	q1, [x18, #0x26]
+   39a0c: 4e040021     	tbl	v1.16b, { v1.16b }, v4.16b
+   39a10: 6ea18c00     	cmeq	v0.4s, v0.4s, v1.4s
+   39a14: 4e231c00     	and	v0.16b, v0.16b, v3.16b
+   39a18: 4eb1b800     	addv	s0, v0.4s
+   39a1c: 1e260002     	fmov	w2, s0
+   39a20: 2a021021     	orr	w1, w1, w2, lsl #4
+   39a24: 0a1c0021     	and	w1, w1, w28
+   39a28: 72001c3f     	tst	w1, #0xff
+   39a2c: 54000260     	b.eq	0x39a78 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x11d8>
+   39a30: b8436242     	ldur	w2, [x18, #0x36]
+   39a34: b9403a52     	ldr	w18, [x18, #0x38]
+   39a38: aa124052     	orr	x18, x2, x18, lsl #16
+   39a3c: ca200252     	eon	x18, x18, x0
+   39a40: 8a524252     	and	x18, x18, x18, lsr #16
+   39a44: 0a524252     	and	w18, w18, w18, lsr #16
+   39a48: 0a522252     	and	w18, w18, w18, lsr #8
+   39a4c: 6a120021     	ands	w1, w1, w18
+   39a50: 54000140     	b.eq	0x39a78 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x11d8>
+   39a54: 52800112     	mov	w18, #0x8               // =8
+   39a58: 5ac00020     	rbit	w0, w1
+   39a5c: 5ac01000     	clz	w0, w0
+   39a60: aa000252     	orr	x18, x18, x0
+   39a64: 9b077e52     	mul	x18, x18, x7
+   39a68: d37afe52     	lsr	x18, x18, #58
+   39a6c: 52800700     	mov	w0, #0x38               // =56
+   39a70: b50000a6     	cbnz	x6, 0x39a84 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x11e4>
+   39a74: 1400004c     	b	0x39ba4 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x1304>
+   39a78: 52800712     	mov	w18, #0x38              // =56
+   39a7c: 52800700     	mov	w0, #0x38               // =56
+   39a80: b4000926     	cbz	x6, 0x39ba4 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x1304>
+   39a84: f8645b22     	ldr	x2, [x25, w4, uxtw #3]
+   39a88: d35efc41     	lsr	x1, x2, #30
+   39a8c: b50008c1     	cbnz	x1, 0x39ba4 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x1304>
+   39a90: 12001441     	and	w1, w2, #0x3f
+   39a94: d346fc42     	lsr	x2, x2, #6
+   39a98: 1b097c80     	mul	w0, w4, w9
+   39a9c: 0e010c20     	dup	v0.8b, w1
+   39aa0: 8b000360     	add	x0, x27, x0
+   39aa4: 0e2a8c00     	cmtst	v0.8b, v0.8b, v10.8b
+   39aa8: 9e660001     	fmov	x1, d0
+   39aac: 4e040c40     	dup	v0.4s, w2
+   39ab0: 72001e7f     	tst	w19, #0xff
+   39ab4: 54000380     	b.eq	0x39b24 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x1284>
+   39ab8: 3dc00001     	ldr	q1, [x0]
+   39abc: 4e020021     	tbl	v1.16b, { v1.16b }, v2.16b
+   39ac0: 6ea18c01     	cmeq	v1.4s, v0.4s, v1.4s
+   39ac4: 4e231c21     	and	v1.16b, v1.16b, v3.16b
+   39ac8: 4eb1b821     	addv	s1, v1.4s
+   39acc: 1e260022     	fmov	w2, s1
+   39ad0: 3cc08001     	ldur	q1, [x0, #0x8]
+   39ad4: 4e040021     	tbl	v1.16b, { v1.16b }, v4.16b
+   39ad8: 6ea18c01     	cmeq	v1.4s, v0.4s, v1.4s
+   39adc: 4e231c21     	and	v1.16b, v1.16b, v3.16b
+   39ae0: 4eb1b821     	addv	s1, v1.4s
+   39ae4: 1e260023     	fmov	w3, s1
+   39ae8: 2a031042     	orr	w2, w2, w3, lsl #4
+   39aec: 0a130042     	and	w2, w2, w19
+   39af0: 72001c5f     	tst	w2, #0xff
+   39af4: 54000180     	b.eq	0x39b24 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x1284>
+   39af8: b9401803     	ldr	w3, [x0, #0x18]
+   39afc: b841a004     	ldur	w4, [x0, #0x1a]
+   39b00: aa044063     	orr	x3, x3, x4, lsl #16
+   39b04: ca210063     	eon	x3, x3, x1
+   39b08: 8a434063     	and	x3, x3, x3, lsr #16
+   39b0c: 0a434063     	and	w3, w3, w3, lsr #16
+   39b10: 0a432063     	and	w3, w3, w3, lsr #8
+   39b14: 6a030042     	ands	w2, w2, w3
+   39b18: 54000060     	b.eq	0x39b24 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x1284>
+   39b1c: aa1f03e0     	mov	x0, xzr
+   39b20: 1400001c     	b	0x39b90 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x12f0>
+   39b24: 34000478     	cbz	w24, 0x39bb0 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x1310>
+   39b28: 3cc1e001     	ldur	q1, [x0, #0x1e]
+   39b2c: 4e020021     	tbl	v1.16b, { v1.16b }, v2.16b
+   39b30: 6ea18c01     	cmeq	v1.4s, v0.4s, v1.4s
+   39b34: 4e231c21     	and	v1.16b, v1.16b, v3.16b
+   39b38: 4eb1b821     	addv	s1, v1.4s
+   39b3c: 1e260022     	fmov	w2, s1
+   39b40: 3cc26001     	ldur	q1, [x0, #0x26]
+   39b44: 4e040021     	tbl	v1.16b, { v1.16b }, v4.16b
+   39b48: 6ea18c00     	cmeq	v0.4s, v0.4s, v1.4s
+   39b4c: 4e231c00     	and	v0.16b, v0.16b, v3.16b
+   39b50: 4eb1b800     	addv	s0, v0.4s
+   39b54: 1e260003     	fmov	w3, s0
+   39b58: 2a031042     	orr	w2, w2, w3, lsl #4
+   39b5c: 0a1c0042     	and	w2, w2, w28
+   39b60: 72001c5f     	tst	w2, #0xff
+   39b64: 54000260     	b.eq	0x39bb0 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x1310>
+   39b68: b8436003     	ldur	w3, [x0, #0x36]
+   39b6c: b9403800     	ldr	w0, [x0, #0x38]
+   39b70: aa004060     	orr	x0, x3, x0, lsl #16
+   39b74: ca210000     	eon	x0, x0, x1
+   39b78: 8a404000     	and	x0, x0, x0, lsr #16
+   39b7c: 0a404000     	and	w0, w0, w0, lsr #16
+   39b80: 0a402000     	and	w0, w0, w0, lsr #8
+   39b84: 6a000042     	ands	w2, w2, w0
+   39b88: 54000140     	b.eq	0x39bb0 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x1310>
+   39b8c: 52800100     	mov	w0, #0x8                // =8
+   39b90: 5ac00041     	rbit	w1, w2
+   39b94: 5ac01021     	clz	w1, w1
+   39b98: aa010000     	orr	x0, x0, x1
+   39b9c: 9b077c00     	mul	x0, x0, x7
+   39ba0: d37afc00     	lsr	x0, x0, #58
+   39ba4: 52800701     	mov	w1, #0x38               // =56
+   39ba8: b50000a6     	cbnz	x6, 0x39bbc <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x131c>
+   39bac: 17fffd6b     	b	0x39158 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x8b8>
+   39bb0: 52800700     	mov	w0, #0x38               // =56
+   39bb4: 52800701     	mov	w1, #0x38               // =56
+   39bb8: b4ffad06     	cbz	x6, 0x39158 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x8b8>
+   39bbc: f8655b23     	ldr	x3, [x25, w5, uxtw #3]
+   39bc0: d35efc62     	lsr	x2, x3, #30
+   39bc4: b5ffaca2     	cbnz	x2, 0x39158 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x8b8>
+   39bc8: 12001462     	and	w2, w3, #0x3f
+   39bcc: d346fc63     	lsr	x3, x3, #6
+   39bd0: 1b097ca1     	mul	w1, w5, w9
+   39bd4: 0e010c40     	dup	v0.8b, w2
+   39bd8: 8b010361     	add	x1, x27, x1
+   39bdc: 0e2a8c00     	cmtst	v0.8b, v0.8b, v10.8b
+   39be0: 9e660002     	fmov	x2, d0
+   39be4: 4e040c60     	dup	v0.4s, w3
+   39be8: 72001e7f     	tst	w19, #0xff
+   39bec: 54000380     	b.eq	0x39c5c <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x13bc>
+   39bf0: 3dc00021     	ldr	q1, [x1]
+   39bf4: 4e020021     	tbl	v1.16b, { v1.16b }, v2.16b
+   39bf8: 6ea18c01     	cmeq	v1.4s, v0.4s, v1.4s
+   39bfc: 4e231c21     	and	v1.16b, v1.16b, v3.16b
+   39c00: 4eb1b821     	addv	s1, v1.4s
+   39c04: 1e260023     	fmov	w3, s1
+   39c08: 3cc08021     	ldur	q1, [x1, #0x8]
+   39c0c: 4e040021     	tbl	v1.16b, { v1.16b }, v4.16b
+   39c10: 6ea18c01     	cmeq	v1.4s, v0.4s, v1.4s
+   39c14: 4e231c21     	and	v1.16b, v1.16b, v3.16b
+   39c18: 4eb1b821     	addv	s1, v1.4s
+   39c1c: 1e260024     	fmov	w4, s1
+   39c20: 2a041063     	orr	w3, w3, w4, lsl #4
+   39c24: 0a130063     	and	w3, w3, w19
+   39c28: 72001c7f     	tst	w3, #0xff
+   39c2c: 54000180     	b.eq	0x39c5c <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x13bc>
+   39c30: b9401824     	ldr	w4, [x1, #0x18]
+   39c34: b841a025     	ldur	w5, [x1, #0x1a]
+   39c38: aa054084     	orr	x4, x4, x5, lsl #16
+   39c3c: ca220084     	eon	x4, x4, x2
+   39c40: 8a444084     	and	x4, x4, x4, lsr #16
+   39c44: 0a444084     	and	w4, w4, w4, lsr #16
+   39c48: 0a442084     	and	w4, w4, w4, lsr #8
+   39c4c: 6a040063     	ands	w3, w3, w4
+   39c50: 54000060     	b.eq	0x39c5c <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x13bc>
+   39c54: aa1f03e1     	mov	x1, xzr
+   39c58: 1400001c     	b	0x39cc8 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x1428>
+   39c5c: 34ffa7d8     	cbz	w24, 0x39154 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x8b4>
+   39c60: 3cc1e021     	ldur	q1, [x1, #0x1e]
+   39c64: 4e020021     	tbl	v1.16b, { v1.16b }, v2.16b
+   39c68: 6ea18c01     	cmeq	v1.4s, v0.4s, v1.4s
+   39c6c: 4e231c21     	and	v1.16b, v1.16b, v3.16b
+   39c70: 4eb1b821     	addv	s1, v1.4s
+   39c74: 1e260023     	fmov	w3, s1
+   39c78: 3cc26021     	ldur	q1, [x1, #0x26]
+   39c7c: 4e040021     	tbl	v1.16b, { v1.16b }, v4.16b
+   39c80: 6ea18c00     	cmeq	v0.4s, v0.4s, v1.4s
+   39c84: 4e231c00     	and	v0.16b, v0.16b, v3.16b
+   39c88: 4eb1b800     	addv	s0, v0.4s
+   39c8c: 1e260004     	fmov	w4, s0
+   39c90: 2a041063     	orr	w3, w3, w4, lsl #4
+   39c94: 0a1c0063     	and	w3, w3, w28
+   39c98: 72001c7f     	tst	w3, #0xff
+   39c9c: 54ffa5c0     	b.eq	0x39154 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x8b4>
+   39ca0: b8436024     	ldur	w4, [x1, #0x36]
+   39ca4: b9403821     	ldr	w1, [x1, #0x38]
+   39ca8: aa014081     	orr	x1, x4, x1, lsl #16
+   39cac: ca220021     	eon	x1, x1, x2
+   39cb0: 8a414021     	and	x1, x1, x1, lsr #16
+   39cb4: 0a414021     	and	w1, w1, w1, lsr #16
+   39cb8: 0a412021     	and	w1, w1, w1, lsr #8
+   39cbc: 6a010063     	ands	w3, w3, w1
+   39cc0: 54ffa4a0     	b.eq	0x39154 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x8b4>
+   39cc4: 52800101     	mov	w1, #0x8                // =8
+   39cc8: 5ac00062     	rbit	w2, w3
+   39ccc: 5ac01042     	clz	w2, w2
+   39cd0: aa020021     	orr	x1, x1, x2
+   39cd4: 9b077c21     	mul	x1, x1, x7
+   39cd8: d37afc21     	lsr	x1, x1, #58
+   39cdc: 17fffd1f     	b	0x39158 <void index_probe::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&, unsigned int, unsigned long)+0x8b8>
+   39ce0: 6d4c23e9     	ldp	d9, d8, [sp, #0xc0]
+   39ce4: 6d4b2beb     	ldp	d11, d10, [sp, #0xb0]
+   39ce8: a9524ff4     	ldp	x20, x19, [sp, #0x120]
+   39cec: a95157f6     	ldp	x22, x21, [sp, #0x110]
+   39cf0: a9505ff8     	ldp	x24, x23, [sp, #0x100]
+   39cf4: a94f67fa     	ldp	x26, x25, [sp, #0xf0]
+   39cf8: a94e6ffc     	ldp	x28, x27, [sp, #0xe0]
+   39cfc: a94d7bfd     	ldp	x29, x30, [sp, #0xd0]
+   39d00: 9104c3ff     	add	sp, sp, #0x130
+   39d04: d65f03c0     	ret
+   39d08: b0000740     	adrp	x0, 0x122000 <void index_probe::measure<62u, 8u, 0u>(index_probe::Data<62u, 8u> const&, unsigned int, unsigned long)+0xe20>
+   39d0c: 9137b000     	add	x0, x0, #0xdec
+   39d10: b0000741     	adrp	x1, 0x122000 <void index_probe::measure<62u, 8u, 0u>(index_probe::Data<62u, 8u> const&, unsigned int, unsigned long)+0xe20>
+   39d14: 91380021     	add	x1, x1, #0xe00
+   39d18: d0000743     	adrp	x3, 0x123000 <strlen@GLIBC_2.17+0x123000>
+   39d1c: 912f0463     	add	x3, x3, #0xbc1
+   39d20: 52801742     	mov	w2, #0xba               // =186
+   39d24: 97ff1bc7     	bl	0xc40 <__assert_fail@plt>
+   39d28: d503201f     	nop
+   39d2c: d503201f     	nop
+   39d30: d503201f     	nop
+   39d34: d503201f     	nop
+   39d38: d503201f     	nop
+   39d3c: d503201f     	nop
+

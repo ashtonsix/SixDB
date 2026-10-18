@@ -1,0 +1,11 @@
+{
+  "file": "zmm-disassembly.txt",
+  "sha256": "102f59100d4fc91adb848b2cae1fc69e54775cb4dfd0ad71b5c830d2de5d83e6",
+  "measurement_functions": 95,
+  "unexpected_calls": [],
+  "option_filter_calls": {
+    "<strlen@plt>": 190,
+    "<bcmp@plt>": 190
+  },
+  "scope": "All actual measure functions. This checks fusion, not cache residence, latency dataflow, or placement of allowed setup calls."
+}

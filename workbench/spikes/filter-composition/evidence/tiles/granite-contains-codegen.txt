@@ -1,0 +1,29 @@
+
+build/filter-tiles/avx512/workbench/spikes/filter-composition/filter_contains:	file format elf64-x86-64
+
+Disassembly of section .text:
+
+0000000000001150 <contains_local_prepared>:
+    1150: 62 f3 fd 18 ce 07 00         	vgf2p8affineqb	$0x0, (%rdi){1to2}, %xmm0, %xmm0
+    1157: c5 f1 ef c0                  	vpxor	%xmm0, %xmm1, %xmm0
+    115b: 62 f2 7e 08 26 c2            	vptestnmb	%xmm2, %xmm0, %k0
+    1161: c5 f8 98 c0                  	kortestw	%k0, %k0
+    1165: 0f 95 c0                     	setne	%al
+    1168: c3                           	retq
+    1169: 0f 1f 80 00 00 00 00         	nopl	(%rax)
+
+0000000000001170 <contains6_runtime>:
+    1170: 83 fe 3f                     	cmpl	$0x3f, %esi
+    1173: 76 03                        	jbe	0x1178 <contains6_runtime+0x8>
+    1175: 31 c0                        	xorl	%eax, %eax
+    1177: c3                           	retq
+    1178: 62 f2 7d 08 7a c6            	vpbroadcastb	%esi, %xmm0
+    117e: c4 e2 79 59 0d 79 0e 00 00   	vpbroadcastq	0xe79(%rip), %xmm1 # 0x2000 <puts@GLIBC_2.2.5+0x2000>
+    1187: c4 e3 f9 ce c1 00            	vgf2p8affineqb	$0x0, %xmm1, %xmm0, %xmm0
+    118d: 62 f3 f5 18 ce 0f 00         	vgf2p8affineqb	$0x0, (%rdi){1to2}, %xmm1, %xmm1
+    1194: c5 f1 ef c0                  	vpxor	%xmm0, %xmm1, %xmm0
+    1198: 62 f3 7d 08 3e 05 6d 0e 00 00 01     	vpcmpltub	0xe6d(%rip), %xmm0, %k0 # 0x2010 <puts@GLIBC_2.2.5+0x2010>
+    11a3: c5 f8 98 c0                  	kortestw	%k0, %k0
+    11a7: 0f 95 c0                     	setne	%al
+    11aa: c3                           	retq
+    11ab: 0f 1f 44 00 00               	nopl	(%rax,%rax)

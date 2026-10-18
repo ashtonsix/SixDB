@@ -1,0 +1,739 @@
+
+build/filter-mask-graduation/avx2/workbench/spikes/filter-composition/CMakeFiles/filter_mask_codegen.dir/mask-codegen.cpp.o:	file format elf64-x86-64
+
+Disassembly of section .text.mask_128_1_0:
+
+0000000000000000 <mask_128_1_0>:
+       0: c5 f9 6e cf                  	vmovd	%edi, %xmm1
+       4: c4 e2 79 78 c9               	vpbroadcastb	%xmm1, %xmm1
+       9: c5 f1 74 c0                  	vpcmpeqb	%xmm0, %xmm1, %xmm0
+       d: c5 f9 d7 c0                  	vpmovmskb	%xmm0, %eax
+      11: c3                           	retq
+
+Disassembly of section .text.mask_128_1_1:
+
+0000000000000000 <mask_128_1_1>:
+       0: 40 80 c7 80                  	addb	$-0x80, %dil
+       4: c5 f9 6e cf                  	vmovd	%edi, %xmm1
+       8: c4 e2 79 78 c9               	vpbroadcastb	%xmm1, %xmm1
+       d: c5 f9 ef 05 00 00 00 00      	vpxor	(%rip), %xmm0, %xmm0    # 0x15 <mask_128_1_1+0x15>
+      15: c5 f1 64 c0                  	vpcmpgtb	%xmm0, %xmm1, %xmm0
+      19: c5 f9 d7 c0                  	vpmovmskb	%xmm0, %eax
+      1d: c3                           	retq
+
+Disassembly of section .text.mask_128_1_2:
+
+0000000000000000 <mask_128_1_2>:
+       0: c5 f9 ef 05 00 00 00 00      	vpxor	(%rip), %xmm0, %xmm0    # 0x8 <mask_128_1_2+0x8>
+       8: 40 80 c7 80                  	addb	$-0x80, %dil
+       c: c5 f9 6e cf                  	vmovd	%edi, %xmm1
+      10: c4 e2 79 78 c9               	vpbroadcastb	%xmm1, %xmm1
+      15: c5 f9 64 c1                  	vpcmpgtb	%xmm1, %xmm0, %xmm0
+      19: c5 f9 d7 c0                  	vpmovmskb	%xmm0, %eax
+      1d: 35 ff ff 00 00               	xorl	$0xffff, %eax           # imm = 0xFFFF
+      22: c3                           	retq
+
+Disassembly of section .text.mask_128_1_3:
+
+0000000000000000 <mask_128_1_3>:
+       0: c5 f9 ef 05 00 00 00 00      	vpxor	(%rip), %xmm0, %xmm0    # 0x8 <mask_128_1_3+0x8>
+       8: 40 80 c7 80                  	addb	$-0x80, %dil
+       c: c5 f9 6e cf                  	vmovd	%edi, %xmm1
+      10: c4 e2 79 78 c9               	vpbroadcastb	%xmm1, %xmm1
+      15: c5 f9 64 c1                  	vpcmpgtb	%xmm1, %xmm0, %xmm0
+      19: c5 f9 d7 c0                  	vpmovmskb	%xmm0, %eax
+      1d: c3                           	retq
+
+Disassembly of section .text.mask_128_1_4:
+
+0000000000000000 <mask_128_1_4>:
+       0: 40 80 c7 80                  	addb	$-0x80, %dil
+       4: c5 f9 6e cf                  	vmovd	%edi, %xmm1
+       8: c4 e2 79 78 c9               	vpbroadcastb	%xmm1, %xmm1
+       d: c5 f9 ef 05 00 00 00 00      	vpxor	(%rip), %xmm0, %xmm0    # 0x15 <mask_128_1_4+0x15>
+      15: c5 f1 64 c0                  	vpcmpgtb	%xmm0, %xmm1, %xmm0
+      19: c5 f9 d7 c0                  	vpmovmskb	%xmm0, %eax
+      1d: 35 ff ff 00 00               	xorl	$0xffff, %eax           # imm = 0xFFFF
+      22: c3                           	retq
+
+Disassembly of section .text.mask_128_2_0:
+
+0000000000000000 <mask_128_2_0>:
+       0: c5 f9 6e cf                  	vmovd	%edi, %xmm1
+       4: c4 e2 79 79 c9               	vpbroadcastw	%xmm1, %xmm1
+       9: c5 f1 75 c0                  	vpcmpeqw	%xmm0, %xmm1, %xmm0
+       d: c5 f9 63 c0                  	vpacksswb	%xmm0, %xmm0, %xmm0
+      11: c5 f9 d7 c0                  	vpmovmskb	%xmm0, %eax
+      15: 0f b6 c0                     	movzbl	%al, %eax
+      18: c3                           	retq
+
+Disassembly of section .text.mask_128_2_1:
+
+0000000000000000 <mask_128_2_1>:
+       0: 81 f7 00 80 00 00            	xorl	$0x8000, %edi           # imm = 0x8000
+       6: c5 f9 6e cf                  	vmovd	%edi, %xmm1
+       a: c4 e2 79 79 c9               	vpbroadcastw	%xmm1, %xmm1
+       f: c5 f9 ef 05 00 00 00 00      	vpxor	(%rip), %xmm0, %xmm0    # 0x17 <mask_128_2_1+0x17>
+      17: c5 f1 65 c0                  	vpcmpgtw	%xmm0, %xmm1, %xmm0
+      1b: c5 f9 63 c0                  	vpacksswb	%xmm0, %xmm0, %xmm0
+      1f: c5 f9 d7 c0                  	vpmovmskb	%xmm0, %eax
+      23: 0f b6 c0                     	movzbl	%al, %eax
+      26: c3                           	retq
+
+Disassembly of section .text.mask_128_2_2:
+
+0000000000000000 <mask_128_2_2>:
+       0: c5 f9 ef 05 00 00 00 00      	vpxor	(%rip), %xmm0, %xmm0    # 0x8 <mask_128_2_2+0x8>
+       8: 81 f7 00 80 00 00            	xorl	$0x8000, %edi           # imm = 0x8000
+       e: c5 f9 6e cf                  	vmovd	%edi, %xmm1
+      12: c4 e2 79 79 c9               	vpbroadcastw	%xmm1, %xmm1
+      17: c5 f9 65 c1                  	vpcmpgtw	%xmm1, %xmm0, %xmm0
+      1b: c5 f9 63 c0                  	vpacksswb	%xmm0, %xmm0, %xmm0
+      1f: c5 f9 d7 c0                  	vpmovmskb	%xmm0, %eax
+      23: f7 d0                        	notl	%eax
+      25: 0f b6 c0                     	movzbl	%al, %eax
+      28: c3                           	retq
+
+Disassembly of section .text.mask_128_2_3:
+
+0000000000000000 <mask_128_2_3>:
+       0: c5 f9 ef 05 00 00 00 00      	vpxor	(%rip), %xmm0, %xmm0    # 0x8 <mask_128_2_3+0x8>
+       8: 81 f7 00 80 00 00            	xorl	$0x8000, %edi           # imm = 0x8000
+       e: c5 f9 6e cf                  	vmovd	%edi, %xmm1
+      12: c4 e2 79 79 c9               	vpbroadcastw	%xmm1, %xmm1
+      17: c5 f9 65 c1                  	vpcmpgtw	%xmm1, %xmm0, %xmm0
+      1b: c5 f9 63 c0                  	vpacksswb	%xmm0, %xmm0, %xmm0
+      1f: c5 f9 d7 c0                  	vpmovmskb	%xmm0, %eax
+      23: 0f b6 c0                     	movzbl	%al, %eax
+      26: c3                           	retq
+
+Disassembly of section .text.mask_128_2_4:
+
+0000000000000000 <mask_128_2_4>:
+       0: 81 f7 00 80 00 00            	xorl	$0x8000, %edi           # imm = 0x8000
+       6: c5 f9 6e cf                  	vmovd	%edi, %xmm1
+       a: c5 f9 ef 05 00 00 00 00      	vpxor	(%rip), %xmm0, %xmm0    # 0x12 <mask_128_2_4+0x12>
+      12: c4 e2 79 79 c9               	vpbroadcastw	%xmm1, %xmm1
+      17: c5 f1 65 c0                  	vpcmpgtw	%xmm0, %xmm1, %xmm0
+      1b: c5 f9 63 c0                  	vpacksswb	%xmm0, %xmm0, %xmm0
+      1f: c5 f9 d7 c0                  	vpmovmskb	%xmm0, %eax
+      23: f7 d0                        	notl	%eax
+      25: 0f b6 c0                     	movzbl	%al, %eax
+      28: c3                           	retq
+
+Disassembly of section .text.mask_128_4_0:
+
+0000000000000000 <mask_128_4_0>:
+       0: c5 f9 6e cf                  	vmovd	%edi, %xmm1
+       4: c4 e2 79 58 c9               	vpbroadcastd	%xmm1, %xmm1
+       9: c5 f1 76 c0                  	vpcmpeqd	%xmm0, %xmm1, %xmm0
+       d: c5 f8 50 c0                  	vmovmskps	%xmm0, %eax
+      11: c3                           	retq
+
+Disassembly of section .text.mask_128_4_1:
+
+0000000000000000 <mask_128_4_1>:
+       0: 81 c7 00 00 00 80            	addl	$0x80000000, %edi       # imm = 0x80000000
+       6: c5 f9 6e cf                  	vmovd	%edi, %xmm1
+       a: c4 e2 79 58 c9               	vpbroadcastd	%xmm1, %xmm1
+       f: c4 e2 79 58 15 00 00 00 00   	vpbroadcastd	(%rip), %xmm2   # 0x18 <mask_128_4_1+0x18>
+      18: c5 f9 ef c2                  	vpxor	%xmm2, %xmm0, %xmm0
+      1c: c5 f1 66 c0                  	vpcmpgtd	%xmm0, %xmm1, %xmm0
+      20: c5 f8 50 c0                  	vmovmskps	%xmm0, %eax
+      24: c3                           	retq
+
+Disassembly of section .text.mask_128_4_2:
+
+0000000000000000 <mask_128_4_2>:
+       0: c4 e2 79 58 0d 00 00 00 00   	vpbroadcastd	(%rip), %xmm1   # 0x9 <mask_128_4_2+0x9>
+       9: c5 f9 ef c1                  	vpxor	%xmm1, %xmm0, %xmm0
+       d: 81 c7 00 00 00 80            	addl	$0x80000000, %edi       # imm = 0x80000000
+      13: c5 f9 6e cf                  	vmovd	%edi, %xmm1
+      17: c4 e2 79 58 c9               	vpbroadcastd	%xmm1, %xmm1
+      1c: c5 f9 66 c1                  	vpcmpgtd	%xmm1, %xmm0, %xmm0
+      20: c5 f8 50 c0                  	vmovmskps	%xmm0, %eax
+      24: 83 f0 0f                     	xorl	$0xf, %eax
+      27: c3                           	retq
+
+Disassembly of section .text.mask_128_4_3:
+
+0000000000000000 <mask_128_4_3>:
+       0: c4 e2 79 58 0d 00 00 00 00   	vpbroadcastd	(%rip), %xmm1   # 0x9 <mask_128_4_3+0x9>
+       9: c5 f9 ef c1                  	vpxor	%xmm1, %xmm0, %xmm0
+       d: 81 c7 00 00 00 80            	addl	$0x80000000, %edi       # imm = 0x80000000
+      13: c5 f9 6e cf                  	vmovd	%edi, %xmm1
+      17: c4 e2 79 58 c9               	vpbroadcastd	%xmm1, %xmm1
+      1c: c5 f9 66 c1                  	vpcmpgtd	%xmm1, %xmm0, %xmm0
+      20: c5 f8 50 c0                  	vmovmskps	%xmm0, %eax
+      24: c3                           	retq
+
+Disassembly of section .text.mask_128_4_4:
+
+0000000000000000 <mask_128_4_4>:
+       0: 81 c7 00 00 00 80            	addl	$0x80000000, %edi       # imm = 0x80000000
+       6: c5 f9 6e cf                  	vmovd	%edi, %xmm1
+       a: c4 e2 79 58 c9               	vpbroadcastd	%xmm1, %xmm1
+       f: c4 e2 79 58 15 00 00 00 00   	vpbroadcastd	(%rip), %xmm2   # 0x18 <mask_128_4_4+0x18>
+      18: c5 f9 ef c2                  	vpxor	%xmm2, %xmm0, %xmm0
+      1c: c5 f1 66 c0                  	vpcmpgtd	%xmm0, %xmm1, %xmm0
+      20: c5 f8 50 c0                  	vmovmskps	%xmm0, %eax
+      24: 83 f0 0f                     	xorl	$0xf, %eax
+      27: c3                           	retq
+
+Disassembly of section .text.mask_128_8_0:
+
+0000000000000000 <mask_128_8_0>:
+       0: c4 e1 f9 6e cf               	vmovq	%rdi, %xmm1
+       5: c4 e2 79 59 c9               	vpbroadcastq	%xmm1, %xmm1
+       a: c4 e2 79 29 c1               	vpcmpeqq	%xmm1, %xmm0, %xmm0
+       f: c5 f9 50 c0                  	vmovmskpd	%xmm0, %eax
+      13: c3                           	retq
+
+Disassembly of section .text.mask_128_8_1:
+
+0000000000000000 <mask_128_8_1>:
+       0: c5 f9 ef 05 00 00 00 00      	vpxor	(%rip), %xmm0, %xmm0    # 0x8 <mask_128_8_1+0x8>
+       8: 48 b8 00 00 00 00 00 00 00 80	movabsq	$-0x8000000000000000, %rax # imm = 0x8000000000000000
+      12: 48 31 f8                     	xorq	%rdi, %rax
+      15: c4 e1 f9 6e c8               	vmovq	%rax, %xmm1
+      1a: c4 e2 79 59 c9               	vpbroadcastq	%xmm1, %xmm1
+      1f: c4 e2 71 37 c0               	vpcmpgtq	%xmm0, %xmm1, %xmm0
+      24: c5 f9 50 c0                  	vmovmskpd	%xmm0, %eax
+      28: c3                           	retq
+
+Disassembly of section .text.mask_128_8_2:
+
+0000000000000000 <mask_128_8_2>:
+       0: c5 f9 ef 05 00 00 00 00      	vpxor	(%rip), %xmm0, %xmm0    # 0x8 <mask_128_8_2+0x8>
+       8: 48 b8 00 00 00 00 00 00 00 80	movabsq	$-0x8000000000000000, %rax # imm = 0x8000000000000000
+      12: 48 31 f8                     	xorq	%rdi, %rax
+      15: c4 e1 f9 6e c8               	vmovq	%rax, %xmm1
+      1a: c4 e2 79 59 c9               	vpbroadcastq	%xmm1, %xmm1
+      1f: c4 e2 79 37 c1               	vpcmpgtq	%xmm1, %xmm0, %xmm0
+      24: c5 f9 50 c0                  	vmovmskpd	%xmm0, %eax
+      28: 83 f0 03                     	xorl	$0x3, %eax
+      2b: c3                           	retq
+
+Disassembly of section .text.mask_128_8_3:
+
+0000000000000000 <mask_128_8_3>:
+       0: c5 f9 ef 05 00 00 00 00      	vpxor	(%rip), %xmm0, %xmm0    # 0x8 <mask_128_8_3+0x8>
+       8: 48 b8 00 00 00 00 00 00 00 80	movabsq	$-0x8000000000000000, %rax # imm = 0x8000000000000000
+      12: 48 31 f8                     	xorq	%rdi, %rax
+      15: c4 e1 f9 6e c8               	vmovq	%rax, %xmm1
+      1a: c4 e2 79 59 c9               	vpbroadcastq	%xmm1, %xmm1
+      1f: c4 e2 79 37 c1               	vpcmpgtq	%xmm1, %xmm0, %xmm0
+      24: c5 f9 50 c0                  	vmovmskpd	%xmm0, %eax
+      28: c3                           	retq
+
+Disassembly of section .text.mask_128_8_4:
+
+0000000000000000 <mask_128_8_4>:
+       0: c5 f9 ef 05 00 00 00 00      	vpxor	(%rip), %xmm0, %xmm0    # 0x8 <mask_128_8_4+0x8>
+       8: 48 b8 00 00 00 00 00 00 00 80	movabsq	$-0x8000000000000000, %rax # imm = 0x8000000000000000
+      12: 48 31 f8                     	xorq	%rdi, %rax
+      15: c4 e1 f9 6e c8               	vmovq	%rax, %xmm1
+      1a: c4 e2 79 59 c9               	vpbroadcastq	%xmm1, %xmm1
+      1f: c4 e2 71 37 c0               	vpcmpgtq	%xmm0, %xmm1, %xmm0
+      24: c5 f9 50 c0                  	vmovmskpd	%xmm0, %eax
+      28: 83 f0 03                     	xorl	$0x3, %eax
+      2b: c3                           	retq
+
+Disassembly of section .text.mask_256_1_0:
+
+0000000000000000 <mask_256_1_0>:
+       0: c5 f9 6e cf                  	vmovd	%edi, %xmm1
+       4: c4 e2 7d 78 c9               	vpbroadcastb	%xmm1, %ymm1
+       9: c5 f5 74 c0                  	vpcmpeqb	%ymm0, %ymm1, %ymm0
+       d: c5 fd d7 c0                  	vpmovmskb	%ymm0, %eax
+      11: c5 f8 77                     	vzeroupper
+      14: c3                           	retq
+
+Disassembly of section .text.mask_256_1_1:
+
+0000000000000000 <mask_256_1_1>:
+       0: 40 80 c7 80                  	addb	$-0x80, %dil
+       4: c5 f9 6e cf                  	vmovd	%edi, %xmm1
+       8: c4 e2 7d 78 c9               	vpbroadcastb	%xmm1, %ymm1
+       d: c5 fd ef 05 00 00 00 00      	vpxor	(%rip), %ymm0, %ymm0    # 0x15 <mask_256_1_1+0x15>
+      15: c5 f5 64 c0                  	vpcmpgtb	%ymm0, %ymm1, %ymm0
+      19: c5 fd d7 c0                  	vpmovmskb	%ymm0, %eax
+      1d: c5 f8 77                     	vzeroupper
+      20: c3                           	retq
+
+Disassembly of section .text.mask_256_1_2:
+
+0000000000000000 <mask_256_1_2>:
+       0: c5 fd ef 05 00 00 00 00      	vpxor	(%rip), %ymm0, %ymm0    # 0x8 <mask_256_1_2+0x8>
+       8: 40 80 c7 80                  	addb	$-0x80, %dil
+       c: c5 f9 6e cf                  	vmovd	%edi, %xmm1
+      10: c4 e2 7d 78 c9               	vpbroadcastb	%xmm1, %ymm1
+      15: c5 fd 64 c1                  	vpcmpgtb	%ymm1, %ymm0, %ymm0
+      19: c5 fd d7 c0                  	vpmovmskb	%ymm0, %eax
+      1d: f7 d0                        	notl	%eax
+      1f: c5 f8 77                     	vzeroupper
+      22: c3                           	retq
+
+Disassembly of section .text.mask_256_1_3:
+
+0000000000000000 <mask_256_1_3>:
+       0: c5 fd ef 05 00 00 00 00      	vpxor	(%rip), %ymm0, %ymm0    # 0x8 <mask_256_1_3+0x8>
+       8: 40 80 c7 80                  	addb	$-0x80, %dil
+       c: c5 f9 6e cf                  	vmovd	%edi, %xmm1
+      10: c4 e2 7d 78 c9               	vpbroadcastb	%xmm1, %ymm1
+      15: c5 fd 64 c1                  	vpcmpgtb	%ymm1, %ymm0, %ymm0
+      19: c5 fd d7 c0                  	vpmovmskb	%ymm0, %eax
+      1d: c5 f8 77                     	vzeroupper
+      20: c3                           	retq
+
+Disassembly of section .text.mask_256_1_4:
+
+0000000000000000 <mask_256_1_4>:
+       0: 40 80 c7 80                  	addb	$-0x80, %dil
+       4: c5 f9 6e cf                  	vmovd	%edi, %xmm1
+       8: c4 e2 7d 78 c9               	vpbroadcastb	%xmm1, %ymm1
+       d: c5 fd ef 05 00 00 00 00      	vpxor	(%rip), %ymm0, %ymm0    # 0x15 <mask_256_1_4+0x15>
+      15: c5 f5 64 c0                  	vpcmpgtb	%ymm0, %ymm1, %ymm0
+      19: c5 fd d7 c0                  	vpmovmskb	%ymm0, %eax
+      1d: f7 d0                        	notl	%eax
+      1f: c5 f8 77                     	vzeroupper
+      22: c3                           	retq
+
+Disassembly of section .text.mask_256_2_0:
+
+0000000000000000 <mask_256_2_0>:
+       0: c5 f9 6e cf                  	vmovd	%edi, %xmm1
+       4: c4 e2 7d 79 c9               	vpbroadcastw	%xmm1, %ymm1
+       9: c5 f5 75 c0                  	vpcmpeqw	%ymm0, %ymm1, %ymm0
+       d: c4 e3 7d 39 c1 01            	vextracti128	$0x1, %ymm0, %xmm1
+      13: c5 f9 63 c1                  	vpacksswb	%xmm1, %xmm0, %xmm0
+      17: c5 f9 d7 c0                  	vpmovmskb	%xmm0, %eax
+      1b: c5 f8 77                     	vzeroupper
+      1e: c3                           	retq
+
+Disassembly of section .text.mask_256_2_1:
+
+0000000000000000 <mask_256_2_1>:
+       0: 81 f7 00 80 00 00            	xorl	$0x8000, %edi           # imm = 0x8000
+       6: c5 f9 6e cf                  	vmovd	%edi, %xmm1
+       a: c4 e2 7d 79 c9               	vpbroadcastw	%xmm1, %ymm1
+       f: c5 fd ef 05 00 00 00 00      	vpxor	(%rip), %ymm0, %ymm0    # 0x17 <mask_256_2_1+0x17>
+      17: c5 f5 65 c0                  	vpcmpgtw	%ymm0, %ymm1, %ymm0
+      1b: c4 e3 7d 39 c1 01            	vextracti128	$0x1, %ymm0, %xmm1
+      21: c5 f9 63 c1                  	vpacksswb	%xmm1, %xmm0, %xmm0
+      25: c5 f9 d7 c0                  	vpmovmskb	%xmm0, %eax
+      29: c5 f8 77                     	vzeroupper
+      2c: c3                           	retq
+
+Disassembly of section .text.mask_256_2_2:
+
+0000000000000000 <mask_256_2_2>:
+       0: c5 fd ef 05 00 00 00 00      	vpxor	(%rip), %ymm0, %ymm0    # 0x8 <mask_256_2_2+0x8>
+       8: 81 f7 00 80 00 00            	xorl	$0x8000, %edi           # imm = 0x8000
+       e: c5 f9 6e cf                  	vmovd	%edi, %xmm1
+      12: c4 e2 7d 79 c9               	vpbroadcastw	%xmm1, %ymm1
+      17: c5 fd 65 c1                  	vpcmpgtw	%ymm1, %ymm0, %ymm0
+      1b: c5 f5 76 c9                  	vpcmpeqd	%ymm1, %ymm1, %ymm1
+      1f: c5 fd ef c1                  	vpxor	%ymm1, %ymm0, %ymm0
+      23: c4 e3 7d 39 c1 01            	vextracti128	$0x1, %ymm0, %xmm1
+      29: c5 f9 63 c1                  	vpacksswb	%xmm1, %xmm0, %xmm0
+      2d: c5 f9 d7 c0                  	vpmovmskb	%xmm0, %eax
+      31: c5 f8 77                     	vzeroupper
+      34: c3                           	retq
+
+Disassembly of section .text.mask_256_2_3:
+
+0000000000000000 <mask_256_2_3>:
+       0: c5 fd ef 05 00 00 00 00      	vpxor	(%rip), %ymm0, %ymm0    # 0x8 <mask_256_2_3+0x8>
+       8: 81 f7 00 80 00 00            	xorl	$0x8000, %edi           # imm = 0x8000
+       e: c5 f9 6e cf                  	vmovd	%edi, %xmm1
+      12: c4 e2 7d 79 c9               	vpbroadcastw	%xmm1, %ymm1
+      17: c5 fd 65 c1                  	vpcmpgtw	%ymm1, %ymm0, %ymm0
+      1b: c4 e3 7d 39 c1 01            	vextracti128	$0x1, %ymm0, %xmm1
+      21: c5 f9 63 c1                  	vpacksswb	%xmm1, %xmm0, %xmm0
+      25: c5 f9 d7 c0                  	vpmovmskb	%xmm0, %eax
+      29: c5 f8 77                     	vzeroupper
+      2c: c3                           	retq
+
+Disassembly of section .text.mask_256_2_4:
+
+0000000000000000 <mask_256_2_4>:
+       0: 81 f7 00 80 00 00            	xorl	$0x8000, %edi           # imm = 0x8000
+       6: c5 f9 6e cf                  	vmovd	%edi, %xmm1
+       a: c4 e2 7d 79 c9               	vpbroadcastw	%xmm1, %ymm1
+       f: c5 fd ef 05 00 00 00 00      	vpxor	(%rip), %ymm0, %ymm0    # 0x17 <mask_256_2_4+0x17>
+      17: c5 f5 65 c0                  	vpcmpgtw	%ymm0, %ymm1, %ymm0
+      1b: c5 f5 76 c9                  	vpcmpeqd	%ymm1, %ymm1, %ymm1
+      1f: c5 fd ef c1                  	vpxor	%ymm1, %ymm0, %ymm0
+      23: c4 e3 7d 39 c1 01            	vextracti128	$0x1, %ymm0, %xmm1
+      29: c5 f9 63 c1                  	vpacksswb	%xmm1, %xmm0, %xmm0
+      2d: c5 f9 d7 c0                  	vpmovmskb	%xmm0, %eax
+      31: c5 f8 77                     	vzeroupper
+      34: c3                           	retq
+
+Disassembly of section .text.mask_256_4_0:
+
+0000000000000000 <mask_256_4_0>:
+       0: c5 f9 6e cf                  	vmovd	%edi, %xmm1
+       4: c4 e2 7d 58 c9               	vpbroadcastd	%xmm1, %ymm1
+       9: c5 f5 76 c0                  	vpcmpeqd	%ymm0, %ymm1, %ymm0
+       d: c5 fc 50 c0                  	vmovmskps	%ymm0, %eax
+      11: c5 f8 77                     	vzeroupper
+      14: c3                           	retq
+
+Disassembly of section .text.mask_256_4_1:
+
+0000000000000000 <mask_256_4_1>:
+       0: 81 c7 00 00 00 80            	addl	$0x80000000, %edi       # imm = 0x80000000
+       6: c5 f9 6e cf                  	vmovd	%edi, %xmm1
+       a: c4 e2 7d 58 c9               	vpbroadcastd	%xmm1, %ymm1
+       f: c4 e2 7d 58 15 00 00 00 00   	vpbroadcastd	(%rip), %ymm2   # 0x18 <mask_256_4_1+0x18>
+      18: c5 fd ef c2                  	vpxor	%ymm2, %ymm0, %ymm0
+      1c: c5 f5 66 c0                  	vpcmpgtd	%ymm0, %ymm1, %ymm0
+      20: c5 fc 50 c0                  	vmovmskps	%ymm0, %eax
+      24: c5 f8 77                     	vzeroupper
+      27: c3                           	retq
+
+Disassembly of section .text.mask_256_4_2:
+
+0000000000000000 <mask_256_4_2>:
+       0: c4 e2 7d 58 0d 00 00 00 00   	vpbroadcastd	(%rip), %ymm1   # 0x9 <mask_256_4_2+0x9>
+       9: c5 fd ef c1                  	vpxor	%ymm1, %ymm0, %ymm0
+       d: 81 c7 00 00 00 80            	addl	$0x80000000, %edi       # imm = 0x80000000
+      13: c5 f9 6e cf                  	vmovd	%edi, %xmm1
+      17: c4 e2 7d 58 c9               	vpbroadcastd	%xmm1, %ymm1
+      1c: c5 fd 66 c1                  	vpcmpgtd	%ymm1, %ymm0, %ymm0
+      20: c5 fc 50 c0                  	vmovmskps	%ymm0, %eax
+      24: 35 ff 00 00 00               	xorl	$0xff, %eax
+      29: c5 f8 77                     	vzeroupper
+      2c: c3                           	retq
+
+Disassembly of section .text.mask_256_4_3:
+
+0000000000000000 <mask_256_4_3>:
+       0: c4 e2 7d 58 0d 00 00 00 00   	vpbroadcastd	(%rip), %ymm1   # 0x9 <mask_256_4_3+0x9>
+       9: c5 fd ef c1                  	vpxor	%ymm1, %ymm0, %ymm0
+       d: 81 c7 00 00 00 80            	addl	$0x80000000, %edi       # imm = 0x80000000
+      13: c5 f9 6e cf                  	vmovd	%edi, %xmm1
+      17: c4 e2 7d 58 c9               	vpbroadcastd	%xmm1, %ymm1
+      1c: c5 fd 66 c1                  	vpcmpgtd	%ymm1, %ymm0, %ymm0
+      20: c5 fc 50 c0                  	vmovmskps	%ymm0, %eax
+      24: c5 f8 77                     	vzeroupper
+      27: c3                           	retq
+
+Disassembly of section .text.mask_256_4_4:
+
+0000000000000000 <mask_256_4_4>:
+       0: 81 c7 00 00 00 80            	addl	$0x80000000, %edi       # imm = 0x80000000
+       6: c5 f9 6e cf                  	vmovd	%edi, %xmm1
+       a: c4 e2 7d 58 c9               	vpbroadcastd	%xmm1, %ymm1
+       f: c4 e2 7d 58 15 00 00 00 00   	vpbroadcastd	(%rip), %ymm2   # 0x18 <mask_256_4_4+0x18>
+      18: c5 fd ef c2                  	vpxor	%ymm2, %ymm0, %ymm0
+      1c: c5 f5 66 c0                  	vpcmpgtd	%ymm0, %ymm1, %ymm0
+      20: c5 fc 50 c0                  	vmovmskps	%ymm0, %eax
+      24: 35 ff 00 00 00               	xorl	$0xff, %eax
+      29: c5 f8 77                     	vzeroupper
+      2c: c3                           	retq
+
+Disassembly of section .text.mask_256_8_0:
+
+0000000000000000 <mask_256_8_0>:
+       0: c4 e1 f9 6e cf               	vmovq	%rdi, %xmm1
+       5: c4 e2 7d 59 c9               	vpbroadcastq	%xmm1, %ymm1
+       a: c4 e2 7d 29 c1               	vpcmpeqq	%ymm1, %ymm0, %ymm0
+       f: c5 fd 50 c0                  	vmovmskpd	%ymm0, %eax
+      13: c5 f8 77                     	vzeroupper
+      16: c3                           	retq
+
+Disassembly of section .text.mask_256_8_1:
+
+0000000000000000 <mask_256_8_1>:
+       0: c4 e2 7d 59 0d 00 00 00 00   	vpbroadcastq	(%rip), %ymm1   # 0x9 <mask_256_8_1+0x9>
+       9: c5 fd ef c1                  	vpxor	%ymm1, %ymm0, %ymm0
+       d: 48 b8 00 00 00 00 00 00 00 80	movabsq	$-0x8000000000000000, %rax # imm = 0x8000000000000000
+      17: 48 31 f8                     	xorq	%rdi, %rax
+      1a: c4 e1 f9 6e c8               	vmovq	%rax, %xmm1
+      1f: c4 e2 7d 59 c9               	vpbroadcastq	%xmm1, %ymm1
+      24: c4 e2 75 37 c0               	vpcmpgtq	%ymm0, %ymm1, %ymm0
+      29: c5 fd 50 c0                  	vmovmskpd	%ymm0, %eax
+      2d: c5 f8 77                     	vzeroupper
+      30: c3                           	retq
+
+Disassembly of section .text.mask_256_8_2:
+
+0000000000000000 <mask_256_8_2>:
+       0: c4 e2 7d 59 0d 00 00 00 00   	vpbroadcastq	(%rip), %ymm1   # 0x9 <mask_256_8_2+0x9>
+       9: c5 fd ef c1                  	vpxor	%ymm1, %ymm0, %ymm0
+       d: 48 b8 00 00 00 00 00 00 00 80	movabsq	$-0x8000000000000000, %rax # imm = 0x8000000000000000
+      17: 48 31 f8                     	xorq	%rdi, %rax
+      1a: c4 e1 f9 6e c8               	vmovq	%rax, %xmm1
+      1f: c4 e2 7d 59 c9               	vpbroadcastq	%xmm1, %ymm1
+      24: c4 e2 7d 37 c1               	vpcmpgtq	%ymm1, %ymm0, %ymm0
+      29: c5 fd 50 c0                  	vmovmskpd	%ymm0, %eax
+      2d: 83 f0 0f                     	xorl	$0xf, %eax
+      30: c5 f8 77                     	vzeroupper
+      33: c3                           	retq
+
+Disassembly of section .text.mask_256_8_3:
+
+0000000000000000 <mask_256_8_3>:
+       0: c4 e2 7d 59 0d 00 00 00 00   	vpbroadcastq	(%rip), %ymm1   # 0x9 <mask_256_8_3+0x9>
+       9: c5 fd ef c1                  	vpxor	%ymm1, %ymm0, %ymm0
+       d: 48 b8 00 00 00 00 00 00 00 80	movabsq	$-0x8000000000000000, %rax # imm = 0x8000000000000000
+      17: 48 31 f8                     	xorq	%rdi, %rax
+      1a: c4 e1 f9 6e c8               	vmovq	%rax, %xmm1
+      1f: c4 e2 7d 59 c9               	vpbroadcastq	%xmm1, %ymm1
+      24: c4 e2 7d 37 c1               	vpcmpgtq	%ymm1, %ymm0, %ymm0
+      29: c5 fd 50 c0                  	vmovmskpd	%ymm0, %eax
+      2d: c5 f8 77                     	vzeroupper
+      30: c3                           	retq
+
+Disassembly of section .text.mask_256_8_4:
+
+0000000000000000 <mask_256_8_4>:
+       0: c4 e2 7d 59 0d 00 00 00 00   	vpbroadcastq	(%rip), %ymm1   # 0x9 <mask_256_8_4+0x9>
+       9: c5 fd ef c1                  	vpxor	%ymm1, %ymm0, %ymm0
+       d: 48 b8 00 00 00 00 00 00 00 80	movabsq	$-0x8000000000000000, %rax # imm = 0x8000000000000000
+      17: 48 31 f8                     	xorq	%rdi, %rax
+      1a: c4 e1 f9 6e c8               	vmovq	%rax, %xmm1
+      1f: c4 e2 7d 59 c9               	vpbroadcastq	%xmm1, %ymm1
+      24: c4 e2 75 37 c0               	vpcmpgtq	%ymm0, %ymm1, %ymm0
+      29: c5 fd 50 c0                  	vmovmskpd	%ymm0, %eax
+      2d: 83 f0 0f                     	xorl	$0xf, %eax
+      30: c5 f8 77                     	vzeroupper
+      33: c3                           	retq
+
+Disassembly of section .text.tuple_8_0:
+
+0000000000000000 <tuple_8_0>:
+       0: 48 81 fe ff 00 00 00         	cmpq	$0xff, %rsi
+       7: 76 03                        	jbe	0xc <tuple_8_0+0xc>
+       9: 31 c0                        	xorl	%eax, %eax
+       b: c3                           	retq
+       c: c4 e1 f9 6e c7               	vmovq	%rdi, %xmm0
+      11: c5 f9 6e ce                  	vmovd	%esi, %xmm1
+      15: c4 e2 79 78 c9               	vpbroadcastb	%xmm1, %xmm1
+      1a: c5 f1 74 c0                  	vpcmpeqb	%xmm0, %xmm1, %xmm0
+      1e: c5 f9 d7 c0                  	vpmovmskb	%xmm0, %eax
+      22: 21 c2                        	andl	%eax, %edx
+      24: 0f b6 c2                     	movzbl	%dl, %eax
+      27: c3                           	retq
+
+Disassembly of section .text.tuple_8_1:
+
+0000000000000000 <tuple_8_1>:
+       0: 48 89 d0                     	movq	%rdx, %rax
+       3: b9 ff 00 00 00               	movl	$0xff, %ecx
+       8: 48 81 fe ff 00 00 00         	cmpq	$0xff, %rsi
+       f: 77 25                        	ja	0x36 <tuple_8_1+0x36>
+      11: c4 e1 f9 6e c7               	vmovq	%rdi, %xmm0
+      16: 40 80 c6 80                  	addb	$-0x80, %sil
+      1a: c5 f9 6e ce                  	vmovd	%esi, %xmm1
+      1e: c4 e2 79 78 c9               	vpbroadcastb	%xmm1, %xmm1
+      23: c5 f9 ef 05 00 00 00 00      	vpxor	(%rip), %xmm0, %xmm0    # 0x2b <tuple_8_1+0x2b>
+      2b: c5 f1 64 c0                  	vpcmpgtb	%xmm0, %xmm1, %xmm0
+      2f: c5 f9 d7 c8                  	vpmovmskb	%xmm0, %ecx
+      33: 0f b6 c9                     	movzbl	%cl, %ecx
+      36: 21 c8                        	andl	%ecx, %eax
+      38: c3                           	retq
+
+Disassembly of section .text.tuple_8_2:
+
+0000000000000000 <tuple_8_2>:
+       0: 48 89 d0                     	movq	%rdx, %rax
+       3: b9 ff 00 00 00               	movl	$0xff, %ecx
+       8: 48 81 fe ff 00 00 00         	cmpq	$0xff, %rsi
+       f: 77 27                        	ja	0x38 <tuple_8_2+0x38>
+      11: c4 e1 f9 6e c7               	vmovq	%rdi, %xmm0
+      16: c5 f9 ef 05 00 00 00 00      	vpxor	(%rip), %xmm0, %xmm0    # 0x1e <tuple_8_2+0x1e>
+      1e: 40 80 c6 80                  	addb	$-0x80, %sil
+      22: c5 f9 6e ce                  	vmovd	%esi, %xmm1
+      26: c4 e2 79 78 c9               	vpbroadcastb	%xmm1, %xmm1
+      2b: c5 f9 64 c1                  	vpcmpgtb	%xmm1, %xmm0, %xmm0
+      2f: c5 f9 d7 c8                  	vpmovmskb	%xmm0, %ecx
+      33: f7 d1                        	notl	%ecx
+      35: 0f b6 c9                     	movzbl	%cl, %ecx
+      38: 21 c8                        	andl	%ecx, %eax
+      3a: c3                           	retq
+
+Disassembly of section .text.tuple_8_3:
+
+0000000000000000 <tuple_8_3>:
+       0: 48 81 fe ff 00 00 00         	cmpq	$0xff, %rsi
+       7: 76 03                        	jbe	0xc <tuple_8_3+0xc>
+       9: 31 c0                        	xorl	%eax, %eax
+       b: c3                           	retq
+       c: c4 e1 f9 6e c7               	vmovq	%rdi, %xmm0
+      11: c5 f9 ef 05 00 00 00 00      	vpxor	(%rip), %xmm0, %xmm0    # 0x19 <tuple_8_3+0x19>
+      19: 40 80 c6 80                  	addb	$-0x80, %sil
+      1d: c5 f9 6e ce                  	vmovd	%esi, %xmm1
+      21: c4 e2 79 78 c9               	vpbroadcastb	%xmm1, %xmm1
+      26: c5 f9 64 c1                  	vpcmpgtb	%xmm1, %xmm0, %xmm0
+      2a: c5 f9 d7 c0                  	vpmovmskb	%xmm0, %eax
+      2e: 21 c2                        	andl	%eax, %edx
+      30: 0f b6 c2                     	movzbl	%dl, %eax
+      33: c3                           	retq
+
+Disassembly of section .text.tuple_8_4:
+
+0000000000000000 <tuple_8_4>:
+       0: 48 81 fe ff 00 00 00         	cmpq	$0xff, %rsi
+       7: 76 03                        	jbe	0xc <tuple_8_4+0xc>
+       9: 31 c0                        	xorl	%eax, %eax
+       b: c3                           	retq
+       c: c4 e1 f9 6e c7               	vmovq	%rdi, %xmm0
+      11: 40 80 c6 80                  	addb	$-0x80, %sil
+      15: c5 f9 6e ce                  	vmovd	%esi, %xmm1
+      19: c4 e2 79 78 c9               	vpbroadcastb	%xmm1, %xmm1
+      1e: c5 f9 ef 05 00 00 00 00      	vpxor	(%rip), %xmm0, %xmm0    # 0x26 <tuple_8_4+0x26>
+      26: c5 f1 64 c0                  	vpcmpgtb	%xmm0, %xmm1, %xmm0
+      2a: c5 f9 d7 c0                  	vpmovmskb	%xmm0, %eax
+      2e: c4 e2 78 f2 c2               	andnl	%edx, %eax, %eax
+      33: 0f b6 c0                     	movzbl	%al, %eax
+      36: c3                           	retq
+
+Disassembly of section .text.tuple_64_0:
+
+0000000000000000 <tuple_64_0>:
+       0: 48 81 ff ff 00 00 00         	cmpq	$0xff, %rdi
+       7: 76 03                        	jbe	0xc <tuple_64_0+0xc>
+       9: 31 c0                        	xorl	%eax, %eax
+       b: c3                           	retq
+       c: 55                           	pushq	%rbp
+       d: 48 89 e5                     	movq	%rsp, %rbp
+      10: 48 83 e4 e0                  	andq	$-0x20, %rsp
+      14: 48 83 ec 20                  	subq	$0x20, %rsp
+      18: 48 89 f0                     	movq	%rsi, %rax
+      1b: 48 8d 4d 10                  	leaq	0x10(%rbp), %rcx
+      1f: c5 f9 6e c7                  	vmovd	%edi, %xmm0
+      23: c4 e2 7d 78 c0               	vpbroadcastb	%xmm0, %ymm0
+      28: c5 fd 74 09                  	vpcmpeqb	(%rcx), %ymm0, %ymm1
+      2c: c5 fd d7 d1                  	vpmovmskb	%ymm1, %edx
+      30: c5 fd 74 41 20               	vpcmpeqb	0x20(%rcx), %ymm0, %ymm0
+      35: c5 fd d7 c8                  	vpmovmskb	%ymm0, %ecx
+      39: 48 c1 e1 20                  	shlq	$0x20, %rcx
+      3d: 48 09 d1                     	orq	%rdx, %rcx
+      40: 48 21 c8                     	andq	%rcx, %rax
+      43: 48 89 ec                     	movq	%rbp, %rsp
+      46: 5d                           	popq	%rbp
+      47: c5 f8 77                     	vzeroupper
+      4a: c3                           	retq
+
+Disassembly of section .text.tuple_64_1:
+
+0000000000000000 <tuple_64_1>:
+       0: 48 89 f0                     	movq	%rsi, %rax
+       3: 48 81 ff ff 00 00 00         	cmpq	$0xff, %rdi
+       a: 77 4d                        	ja	0x59 <tuple_64_1+0x59>
+       c: 55                           	pushq	%rbp
+       d: 48 89 e5                     	movq	%rsp, %rbp
+      10: 48 83 e4 e0                  	andq	$-0x20, %rsp
+      14: 48 83 ec 20                  	subq	$0x20, %rsp
+      18: 48 8d 4d 10                  	leaq	0x10(%rbp), %rcx
+      1c: 40 80 c7 80                  	addb	$-0x80, %dil
+      20: c5 f9 6e c7                  	vmovd	%edi, %xmm0
+      24: c4 e2 7d 78 c0               	vpbroadcastb	%xmm0, %ymm0
+      29: c4 e2 7d 58 0d 00 00 00 00   	vpbroadcastd	(%rip), %ymm1   # 0x32 <tuple_64_1+0x32>
+      32: c5 f5 ef 51 20               	vpxor	0x20(%rcx), %ymm1, %ymm2
+      37: c5 f5 ef 09                  	vpxor	(%rcx), %ymm1, %ymm1
+      3b: c5 fd 64 c9                  	vpcmpgtb	%ymm1, %ymm0, %ymm1
+      3f: c5 fd d7 c9                  	vpmovmskb	%ymm1, %ecx
+      43: c5 fd 64 c2                  	vpcmpgtb	%ymm2, %ymm0, %ymm0
+      47: c5 fd d7 d0                  	vpmovmskb	%ymm0, %edx
+      4b: 48 c1 e2 20                  	shlq	$0x20, %rdx
+      4f: 48 09 ca                     	orq	%rcx, %rdx
+      52: 48 21 d0                     	andq	%rdx, %rax
+      55: 48 89 ec                     	movq	%rbp, %rsp
+      58: 5d                           	popq	%rbp
+      59: c5 f8 77                     	vzeroupper
+      5c: c3                           	retq
+
+Disassembly of section .text.tuple_64_2:
+
+0000000000000000 <tuple_64_2>:
+       0: 48 89 f0                     	movq	%rsi, %rax
+       3: 48 81 ff ff 00 00 00         	cmpq	$0xff, %rdi
+       a: 77 4f                        	ja	0x5b <tuple_64_2+0x5b>
+       c: 55                           	pushq	%rbp
+       d: 48 89 e5                     	movq	%rsp, %rbp
+      10: 48 83 e4 e0                  	andq	$-0x20, %rsp
+      14: 48 83 ec 20                  	subq	$0x20, %rsp
+      18: 48 8d 4d 10                  	leaq	0x10(%rbp), %rcx
+      1c: c4 e2 7d 58 05 00 00 00 00   	vpbroadcastd	(%rip), %ymm0   # 0x25 <tuple_64_2+0x25>
+      25: c5 fd ef 49 20               	vpxor	0x20(%rcx), %ymm0, %ymm1
+      2a: 40 80 c7 80                  	addb	$-0x80, %dil
+      2e: c5 fd ef 01                  	vpxor	(%rcx), %ymm0, %ymm0
+      32: c5 f9 6e d7                  	vmovd	%edi, %xmm2
+      36: c4 e2 7d 78 d2               	vpbroadcastb	%xmm2, %ymm2
+      3b: c5 fd 64 c2                  	vpcmpgtb	%ymm2, %ymm0, %ymm0
+      3f: c5 fd d7 c8                  	vpmovmskb	%ymm0, %ecx
+      43: c5 f5 64 c2                  	vpcmpgtb	%ymm2, %ymm1, %ymm0
+      47: c5 fd d7 d0                  	vpmovmskb	%ymm0, %edx
+      4b: 48 c1 e2 20                  	shlq	$0x20, %rdx
+      4f: 48 09 ca                     	orq	%rcx, %rdx
+      52: c4 e2 e8 f2 c0               	andnq	%rax, %rdx, %rax
+      57: 48 89 ec                     	movq	%rbp, %rsp
+      5a: 5d                           	popq	%rbp
+      5b: c5 f8 77                     	vzeroupper
+      5e: c3                           	retq
+
+Disassembly of section .text.tuple_64_3:
+
+0000000000000000 <tuple_64_3>:
+       0: 48 81 ff ff 00 00 00         	cmpq	$0xff, %rdi
+       7: 76 03                        	jbe	0xc <tuple_64_3+0xc>
+       9: 31 c0                        	xorl	%eax, %eax
+       b: c3                           	retq
+       c: 55                           	pushq	%rbp
+       d: 48 89 e5                     	movq	%rsp, %rbp
+      10: 48 83 e4 e0                  	andq	$-0x20, %rsp
+      14: 48 83 ec 20                  	subq	$0x20, %rsp
+      18: 48 89 f0                     	movq	%rsi, %rax
+      1b: 48 8d 4d 10                  	leaq	0x10(%rbp), %rcx
+      1f: c4 e2 7d 58 05 00 00 00 00   	vpbroadcastd	(%rip), %ymm0   # 0x28 <tuple_64_3+0x28>
+      28: c5 fd ef 49 20               	vpxor	0x20(%rcx), %ymm0, %ymm1
+      2d: 40 80 c7 80                  	addb	$-0x80, %dil
+      31: c5 fd ef 01                  	vpxor	(%rcx), %ymm0, %ymm0
+      35: c5 f9 6e d7                  	vmovd	%edi, %xmm2
+      39: c4 e2 7d 78 d2               	vpbroadcastb	%xmm2, %ymm2
+      3e: c5 fd 64 c2                  	vpcmpgtb	%ymm2, %ymm0, %ymm0
+      42: c5 fd d7 c8                  	vpmovmskb	%ymm0, %ecx
+      46: c5 f5 64 c2                  	vpcmpgtb	%ymm2, %ymm1, %ymm0
+      4a: c5 fd d7 d0                  	vpmovmskb	%ymm0, %edx
+      4e: 48 c1 e2 20                  	shlq	$0x20, %rdx
+      52: 48 09 ca                     	orq	%rcx, %rdx
+      55: 48 21 d0                     	andq	%rdx, %rax
+      58: 48 89 ec                     	movq	%rbp, %rsp
+      5b: 5d                           	popq	%rbp
+      5c: c5 f8 77                     	vzeroupper
+      5f: c3                           	retq
+
+Disassembly of section .text.tuple_64_4:
+
+0000000000000000 <tuple_64_4>:
+       0: 48 81 ff ff 00 00 00         	cmpq	$0xff, %rdi
+       7: 76 03                        	jbe	0xc <tuple_64_4+0xc>
+       9: 31 c0                        	xorl	%eax, %eax
+       b: c3                           	retq
+       c: 55                           	pushq	%rbp
+       d: 48 89 e5                     	movq	%rsp, %rbp
+      10: 48 83 e4 e0                  	andq	$-0x20, %rsp
+      14: 48 83 ec 20                  	subq	$0x20, %rsp
+      18: 48 8d 45 10                  	leaq	0x10(%rbp), %rax
+      1c: 40 80 c7 80                  	addb	$-0x80, %dil
+      20: c5 f9 6e c7                  	vmovd	%edi, %xmm0
+      24: c4 e2 7d 78 c0               	vpbroadcastb	%xmm0, %ymm0
+      29: c4 e2 7d 58 0d 00 00 00 00   	vpbroadcastd	(%rip), %ymm1   # 0x32 <tuple_64_4+0x32>
+      32: c5 f5 ef 50 20               	vpxor	0x20(%rax), %ymm1, %ymm2
+      37: c5 f5 ef 08                  	vpxor	(%rax), %ymm1, %ymm1
+      3b: c5 fd 64 c9                  	vpcmpgtb	%ymm1, %ymm0, %ymm1
+      3f: c5 fd d7 c1                  	vpmovmskb	%ymm1, %eax
+      43: c5 fd 64 c2                  	vpcmpgtb	%ymm2, %ymm0, %ymm0
+      47: c5 fd d7 c8                  	vpmovmskb	%ymm0, %ecx
+      4b: 48 c1 e1 20                  	shlq	$0x20, %rcx
+      4f: 48 09 c1                     	orq	%rax, %rcx
+      52: c4 e2 f0 f2 c6               	andnq	%rsi, %rcx, %rax
+      57: 48 89 ec                     	movq	%rbp, %rsp
+      5a: 5d                           	popq	%rbp
+      5b: c5 f8 77                     	vzeroupper
+      5e: c3                           	retq

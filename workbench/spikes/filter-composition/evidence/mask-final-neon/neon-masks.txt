@@ -1,0 +1,1317 @@
+
+build/filter-mask-graduation/neon/workbench/spikes/filter-composition/CMakeFiles/filter_mask_codegen.dir/mask-codegen.cpp.o:	file format elf64-littleaarch64
+
+Disassembly of section .text.mask_128_1_0:
+
+0000000000000000 <mask_128_1_0>:
+       0: 4e010c01     	dup	v1.16b, w0
+       4: 90000008     	adrp	x8, 0x0 <mask_128_1_0>
+       8: 6e218c00     	cmeq	v0.16b, v0.16b, v1.16b
+       c: 3dc00101     	ldr	q1, [x8]
+      10: 4e211c00     	and	v0.16b, v0.16b, v1.16b
+      14: 0e31b801     	addv	b1, v0.8b
+      18: 6e004000     	ext	v0.16b, v0.16b, v0.16b, #0x8
+      1c: 0e31b800     	addv	b0, v0.8b
+      20: 1e260020     	fmov	w0, s1
+      24: 1e260008     	fmov	w8, s0
+      28: 33181d00     	bfi	w0, w8, #8, #8
+      2c: d65f03c0     	ret
+
+Disassembly of section .text.mask_128_1_1:
+
+0000000000000000 <mask_128_1_1>:
+       0: 4e010c01     	dup	v1.16b, w0
+       4: 90000008     	adrp	x8, 0x0 <mask_128_1_1>
+       8: 6e203420     	cmhi	v0.16b, v1.16b, v0.16b
+       c: 3dc00101     	ldr	q1, [x8]
+      10: 4e211c00     	and	v0.16b, v0.16b, v1.16b
+      14: 0e31b801     	addv	b1, v0.8b
+      18: 6e004000     	ext	v0.16b, v0.16b, v0.16b, #0x8
+      1c: 0e31b800     	addv	b0, v0.8b
+      20: 1e260020     	fmov	w0, s1
+      24: 1e260008     	fmov	w8, s0
+      28: 33181d00     	bfi	w0, w8, #8, #8
+      2c: d65f03c0     	ret
+
+Disassembly of section .text.mask_128_1_2:
+
+0000000000000000 <mask_128_1_2>:
+       0: 4e010c01     	dup	v1.16b, w0
+       4: 90000008     	adrp	x8, 0x0 <mask_128_1_2>
+       8: 6e203c20     	cmhs	v0.16b, v1.16b, v0.16b
+       c: 3dc00101     	ldr	q1, [x8]
+      10: 4e211c00     	and	v0.16b, v0.16b, v1.16b
+      14: 0e31b801     	addv	b1, v0.8b
+      18: 6e004000     	ext	v0.16b, v0.16b, v0.16b, #0x8
+      1c: 0e31b800     	addv	b0, v0.8b
+      20: 1e260020     	fmov	w0, s1
+      24: 1e260008     	fmov	w8, s0
+      28: 33181d00     	bfi	w0, w8, #8, #8
+      2c: d65f03c0     	ret
+
+Disassembly of section .text.mask_128_1_3:
+
+0000000000000000 <mask_128_1_3>:
+       0: 4e010c01     	dup	v1.16b, w0
+       4: 90000008     	adrp	x8, 0x0 <mask_128_1_3>
+       8: 6e213400     	cmhi	v0.16b, v0.16b, v1.16b
+       c: 3dc00101     	ldr	q1, [x8]
+      10: 4e211c00     	and	v0.16b, v0.16b, v1.16b
+      14: 0e31b801     	addv	b1, v0.8b
+      18: 6e004000     	ext	v0.16b, v0.16b, v0.16b, #0x8
+      1c: 0e31b800     	addv	b0, v0.8b
+      20: 1e260020     	fmov	w0, s1
+      24: 1e260008     	fmov	w8, s0
+      28: 33181d00     	bfi	w0, w8, #8, #8
+      2c: d65f03c0     	ret
+
+Disassembly of section .text.mask_128_1_4:
+
+0000000000000000 <mask_128_1_4>:
+       0: 4e010c01     	dup	v1.16b, w0
+       4: 90000008     	adrp	x8, 0x0 <mask_128_1_4>
+       8: 6e213c00     	cmhs	v0.16b, v0.16b, v1.16b
+       c: 3dc00101     	ldr	q1, [x8]
+      10: 4e211c00     	and	v0.16b, v0.16b, v1.16b
+      14: 0e31b801     	addv	b1, v0.8b
+      18: 6e004000     	ext	v0.16b, v0.16b, v0.16b, #0x8
+      1c: 0e31b800     	addv	b0, v0.8b
+      20: 1e260020     	fmov	w0, s1
+      24: 1e260008     	fmov	w8, s0
+      28: 33181d00     	bfi	w0, w8, #8, #8
+      2c: d65f03c0     	ret
+
+Disassembly of section .text.mask_128_2_0:
+
+0000000000000000 <mask_128_2_0>:
+       0: 4e020c01     	dup	v1.8h, w0
+       4: 90000008     	adrp	x8, 0x0 <mask_128_2_0>
+       8: 6e608c20     	cmeq	v0.8h, v1.8h, v0.8h
+       c: fd400101     	ldr	d1, [x8]
+      10: 0e212800     	xtn	v0.8b, v0.8h
+      14: 0e211c00     	and	v0.8b, v0.8b, v1.8b
+      18: 0e31b800     	addv	b0, v0.8b
+      1c: 1e260000     	fmov	w0, s0
+      20: d65f03c0     	ret
+
+Disassembly of section .text.mask_128_2_1:
+
+0000000000000000 <mask_128_2_1>:
+       0: 4e020c01     	dup	v1.8h, w0
+       4: 90000008     	adrp	x8, 0x0 <mask_128_2_1>
+       8: 6e603420     	cmhi	v0.8h, v1.8h, v0.8h
+       c: fd400101     	ldr	d1, [x8]
+      10: 0e212800     	xtn	v0.8b, v0.8h
+      14: 0e211c00     	and	v0.8b, v0.8b, v1.8b
+      18: 0e31b800     	addv	b0, v0.8b
+      1c: 1e260000     	fmov	w0, s0
+      20: d65f03c0     	ret
+
+Disassembly of section .text.mask_128_2_2:
+
+0000000000000000 <mask_128_2_2>:
+       0: 4e020c01     	dup	v1.8h, w0
+       4: 90000008     	adrp	x8, 0x0 <mask_128_2_2>
+       8: 6e613400     	cmhi	v0.8h, v0.8h, v1.8h
+       c: fd400101     	ldr	d1, [x8]
+      10: 0e212800     	xtn	v0.8b, v0.8h
+      14: 0e601c20     	bic	v0.8b, v1.8b, v0.8b
+      18: 0e31b800     	addv	b0, v0.8b
+      1c: 1e260000     	fmov	w0, s0
+      20: d65f03c0     	ret
+
+Disassembly of section .text.mask_128_2_3:
+
+0000000000000000 <mask_128_2_3>:
+       0: 4e020c01     	dup	v1.8h, w0
+       4: 90000008     	adrp	x8, 0x0 <mask_128_2_3>
+       8: 6e613400     	cmhi	v0.8h, v0.8h, v1.8h
+       c: fd400101     	ldr	d1, [x8]
+      10: 0e212800     	xtn	v0.8b, v0.8h
+      14: 0e211c00     	and	v0.8b, v0.8b, v1.8b
+      18: 0e31b800     	addv	b0, v0.8b
+      1c: 1e260000     	fmov	w0, s0
+      20: d65f03c0     	ret
+
+Disassembly of section .text.mask_128_2_4:
+
+0000000000000000 <mask_128_2_4>:
+       0: 4e020c01     	dup	v1.8h, w0
+       4: 90000008     	adrp	x8, 0x0 <mask_128_2_4>
+       8: 6e603420     	cmhi	v0.8h, v1.8h, v0.8h
+       c: fd400101     	ldr	d1, [x8]
+      10: 0e212800     	xtn	v0.8b, v0.8h
+      14: 0e601c20     	bic	v0.8b, v1.8b, v0.8b
+      18: 0e31b800     	addv	b0, v0.8b
+      1c: 1e260000     	fmov	w0, s0
+      20: d65f03c0     	ret
+
+Disassembly of section .text.mask_128_4_0:
+
+0000000000000000 <mask_128_4_0>:
+       0: 4e040c01     	dup	v1.4s, w0
+       4: 90000008     	adrp	x8, 0x0 <mask_128_4_0>
+       8: 6ea08c20     	cmeq	v0.4s, v1.4s, v0.4s
+       c: 3dc00101     	ldr	q1, [x8]
+      10: 4e211c00     	and	v0.16b, v0.16b, v1.16b
+      14: 4eb1b800     	addv	s0, v0.4s
+      18: 1e260000     	fmov	w0, s0
+      1c: d65f03c0     	ret
+
+Disassembly of section .text.mask_128_4_1:
+
+0000000000000000 <mask_128_4_1>:
+       0: 4e040c01     	dup	v1.4s, w0
+       4: 90000008     	adrp	x8, 0x0 <mask_128_4_1>
+       8: 6ea03420     	cmhi	v0.4s, v1.4s, v0.4s
+       c: 3dc00101     	ldr	q1, [x8]
+      10: 4e211c00     	and	v0.16b, v0.16b, v1.16b
+      14: 4eb1b800     	addv	s0, v0.4s
+      18: 1e260000     	fmov	w0, s0
+      1c: d65f03c0     	ret
+
+Disassembly of section .text.mask_128_4_2:
+
+0000000000000000 <mask_128_4_2>:
+       0: 4e040c01     	dup	v1.4s, w0
+       4: 90000008     	adrp	x8, 0x0 <mask_128_4_2>
+       8: 6ea03c20     	cmhs	v0.4s, v1.4s, v0.4s
+       c: 3dc00101     	ldr	q1, [x8]
+      10: 4e211c00     	and	v0.16b, v0.16b, v1.16b
+      14: 4eb1b800     	addv	s0, v0.4s
+      18: 1e260000     	fmov	w0, s0
+      1c: d65f03c0     	ret
+
+Disassembly of section .text.mask_128_4_3:
+
+0000000000000000 <mask_128_4_3>:
+       0: 4e040c01     	dup	v1.4s, w0
+       4: 90000008     	adrp	x8, 0x0 <mask_128_4_3>
+       8: 6ea13400     	cmhi	v0.4s, v0.4s, v1.4s
+       c: 3dc00101     	ldr	q1, [x8]
+      10: 4e211c00     	and	v0.16b, v0.16b, v1.16b
+      14: 4eb1b800     	addv	s0, v0.4s
+      18: 1e260000     	fmov	w0, s0
+      1c: d65f03c0     	ret
+
+Disassembly of section .text.mask_128_4_4:
+
+0000000000000000 <mask_128_4_4>:
+       0: 4e040c01     	dup	v1.4s, w0
+       4: 90000008     	adrp	x8, 0x0 <mask_128_4_4>
+       8: 6ea13c00     	cmhs	v0.4s, v0.4s, v1.4s
+       c: 3dc00101     	ldr	q1, [x8]
+      10: 4e211c00     	and	v0.16b, v0.16b, v1.16b
+      14: 4eb1b800     	addv	s0, v0.4s
+      18: 1e260000     	fmov	w0, s0
+      1c: d65f03c0     	ret
+
+Disassembly of section .text.mask_128_8_0:
+
+0000000000000000 <mask_128_8_0>:
+       0: 4e080c01     	dup	v1.2d, x0
+       4: 6ee08c20     	cmeq	v0.2d, v1.2d, v0.2d
+       8: 4e183c08     	mov	x8, v0.d[1]
+       c: 9e660009     	fmov	x9, d0
+      10: 927f0108     	and	x8, x8, #0x2
+      14: cb090100     	sub	x0, x8, x9
+      18: d65f03c0     	ret
+
+Disassembly of section .text.mask_128_8_1:
+
+0000000000000000 <mask_128_8_1>:
+       0: 4e080c01     	dup	v1.2d, x0
+       4: 6ee03420     	cmhi	v0.2d, v1.2d, v0.2d
+       8: 4e183c08     	mov	x8, v0.d[1]
+       c: 9e660009     	fmov	x9, d0
+      10: 927f0108     	and	x8, x8, #0x2
+      14: cb090100     	sub	x0, x8, x9
+      18: d65f03c0     	ret
+
+Disassembly of section .text.mask_128_8_2:
+
+0000000000000000 <mask_128_8_2>:
+       0: 4e080c01     	dup	v1.2d, x0
+       4: 6ee03c20     	cmhs	v0.2d, v1.2d, v0.2d
+       8: 4e183c08     	mov	x8, v0.d[1]
+       c: 9e660009     	fmov	x9, d0
+      10: 927f0108     	and	x8, x8, #0x2
+      14: cb090100     	sub	x0, x8, x9
+      18: d65f03c0     	ret
+
+Disassembly of section .text.mask_128_8_3:
+
+0000000000000000 <mask_128_8_3>:
+       0: 4e080c01     	dup	v1.2d, x0
+       4: 6ee13400     	cmhi	v0.2d, v0.2d, v1.2d
+       8: 4e183c08     	mov	x8, v0.d[1]
+       c: 9e660009     	fmov	x9, d0
+      10: 927f0108     	and	x8, x8, #0x2
+      14: cb090100     	sub	x0, x8, x9
+      18: d65f03c0     	ret
+
+Disassembly of section .text.mask_128_8_4:
+
+0000000000000000 <mask_128_8_4>:
+       0: 4e080c01     	dup	v1.2d, x0
+       4: 6ee13c00     	cmhs	v0.2d, v0.2d, v1.2d
+       8: 4e183c08     	mov	x8, v0.d[1]
+       c: 9e660009     	fmov	x9, d0
+      10: 927f0108     	and	x8, x8, #0x2
+      14: cb090100     	sub	x0, x8, x9
+      18: d65f03c0     	ret
+
+Disassembly of section .text.tuple_8_0:
+
+0000000000000000 <tuple_8_0>:
+       0: f103fc3f     	cmp	x1, #0xff
+       4: 54000069     	b.ls	0x10 <tuple_8_0+0x10>
+       8: aa1f03e0     	mov	x0, xzr
+       c: d65f03c0     	ret
+      10: 6f00e400     	movi	v0.2d, #0000000000000000
+      14: 4e081c00     	mov	v0.d[0], x0
+      18: 90000008     	adrp	x8, 0x0 <tuple_8_0>
+      1c: 4e010c21     	dup	v1.16b, w1
+      20: 6e208c20     	cmeq	v0.16b, v1.16b, v0.16b
+      24: fd400101     	ldr	d1, [x8]
+      28: 0e211c00     	and	v0.8b, v0.8b, v1.8b
+      2c: 0e31b800     	addv	b0, v0.8b
+      30: 1e260008     	fmov	w8, s0
+      34: 8a080040     	and	x0, x2, x8
+      38: d65f03c0     	ret
+
+Disassembly of section .text.tuple_8_1:
+
+0000000000000000 <tuple_8_1>:
+       0: f103fc3f     	cmp	x1, #0xff
+       4: 54000089     	b.ls	0x14 <tuple_8_1+0x14>
+       8: 52801fe8     	mov	w8, #0xff               // =255
+       c: 8a080040     	and	x0, x2, x8
+      10: d65f03c0     	ret
+      14: 6f00e400     	movi	v0.2d, #0000000000000000
+      18: 4e081c00     	mov	v0.d[0], x0
+      1c: 90000008     	adrp	x8, 0x0 <tuple_8_1>
+      20: 4e010c21     	dup	v1.16b, w1
+      24: 6e203420     	cmhi	v0.16b, v1.16b, v0.16b
+      28: fd400101     	ldr	d1, [x8]
+      2c: 0e211c00     	and	v0.8b, v0.8b, v1.8b
+      30: 0e31b800     	addv	b0, v0.8b
+      34: 1e260008     	fmov	w8, s0
+      38: 8a080040     	and	x0, x2, x8
+      3c: d65f03c0     	ret
+
+Disassembly of section .text.tuple_8_2:
+
+0000000000000000 <tuple_8_2>:
+       0: f103fc3f     	cmp	x1, #0xff
+       4: 54000089     	b.ls	0x14 <tuple_8_2+0x14>
+       8: 52801fe8     	mov	w8, #0xff               // =255
+       c: 8a080040     	and	x0, x2, x8
+      10: d65f03c0     	ret
+      14: 6f00e400     	movi	v0.2d, #0000000000000000
+      18: 4e081c00     	mov	v0.d[0], x0
+      1c: 90000008     	adrp	x8, 0x0 <tuple_8_2>
+      20: 4e010c21     	dup	v1.16b, w1
+      24: 6e203c20     	cmhs	v0.16b, v1.16b, v0.16b
+      28: fd400101     	ldr	d1, [x8]
+      2c: 0e211c00     	and	v0.8b, v0.8b, v1.8b
+      30: 0e31b800     	addv	b0, v0.8b
+      34: 1e260008     	fmov	w8, s0
+      38: 8a080040     	and	x0, x2, x8
+      3c: d65f03c0     	ret
+
+Disassembly of section .text.tuple_8_3:
+
+0000000000000000 <tuple_8_3>:
+       0: f103fc3f     	cmp	x1, #0xff
+       4: 54000069     	b.ls	0x10 <tuple_8_3+0x10>
+       8: aa1f03e0     	mov	x0, xzr
+       c: d65f03c0     	ret
+      10: 6f00e400     	movi	v0.2d, #0000000000000000
+      14: 4e081c00     	mov	v0.d[0], x0
+      18: 90000008     	adrp	x8, 0x0 <tuple_8_3>
+      1c: 4e010c21     	dup	v1.16b, w1
+      20: 6e213400     	cmhi	v0.16b, v0.16b, v1.16b
+      24: fd400101     	ldr	d1, [x8]
+      28: 0e211c00     	and	v0.8b, v0.8b, v1.8b
+      2c: 0e31b800     	addv	b0, v0.8b
+      30: 1e260008     	fmov	w8, s0
+      34: 8a080040     	and	x0, x2, x8
+      38: d65f03c0     	ret
+
+Disassembly of section .text.tuple_8_4:
+
+0000000000000000 <tuple_8_4>:
+       0: f103fc3f     	cmp	x1, #0xff
+       4: 54000069     	b.ls	0x10 <tuple_8_4+0x10>
+       8: aa1f03e0     	mov	x0, xzr
+       c: d65f03c0     	ret
+      10: 6f00e400     	movi	v0.2d, #0000000000000000
+      14: 4e081c00     	mov	v0.d[0], x0
+      18: 90000008     	adrp	x8, 0x0 <tuple_8_4>
+      1c: 4e010c21     	dup	v1.16b, w1
+      20: 6e213c00     	cmhs	v0.16b, v0.16b, v1.16b
+      24: fd400101     	ldr	d1, [x8]
+      28: 0e211c00     	and	v0.8b, v0.8b, v1.8b
+      2c: 0e31b800     	addv	b0, v0.8b
+      30: 1e260008     	fmov	w8, s0
+      34: 8a080040     	and	x0, x2, x8
+      38: d65f03c0     	ret
+
+Disassembly of section .text.tuple_64_0:
+
+0000000000000000 <tuple_64_0>:
+       0: f103fc1f     	cmp	x0, #0xff
+       4: 54000069     	b.ls	0x10 <tuple_64_0+0x10>
+       8: aa1f03e0     	mov	x0, xzr
+       c: d65f03c0     	ret
+      10: 90000008     	adrp	x8, 0x0 <tuple_64_0>
+      14: 4e010c04     	dup	v4.16b, w0
+      18: 3dc00105     	ldr	q5, [x8]
+      1c: 6e248c00     	cmeq	v0.16b, v0.16b, v4.16b
+      20: 4e251c00     	and	v0.16b, v0.16b, v5.16b
+      24: 0e31b806     	addv	b6, v0.8b
+      28: 6e004000     	ext	v0.16b, v0.16b, v0.16b, #0x8
+      2c: 0e31b800     	addv	b0, v0.8b
+      30: 1e2600c8     	fmov	w8, s6
+      34: 1e260009     	fmov	w9, s0
+      38: 6e248c20     	cmeq	v0.16b, v1.16b, v4.16b
+      3c: 4e251c00     	and	v0.16b, v0.16b, v5.16b
+      40: 33181d28     	bfi	w8, w9, #8, #8
+      44: 0e31b801     	addv	b1, v0.8b
+      48: 6e004000     	ext	v0.16b, v0.16b, v0.16b, #0x8
+      4c: 0e31b800     	addv	b0, v0.8b
+      50: 1e260029     	fmov	w9, s1
+      54: 1e26000a     	fmov	w10, s0
+      58: 6e248c40     	cmeq	v0.16b, v2.16b, v4.16b
+      5c: 53101d29     	ubfiz	w9, w9, #16, #8
+      60: 4e251c00     	and	v0.16b, v0.16b, v5.16b
+      64: 2a0a6129     	orr	w9, w9, w10, lsl #24
+      68: 2a080128     	orr	w8, w9, w8
+      6c: 0e31b801     	addv	b1, v0.8b
+      70: 6e004000     	ext	v0.16b, v0.16b, v0.16b, #0x8
+      74: 0e31b800     	addv	b0, v0.8b
+      78: 1e260029     	fmov	w9, s1
+      7c: 1e26000a     	fmov	w10, s0
+      80: 6e248c60     	cmeq	v0.16b, v3.16b, v4.16b
+      84: 4e251c00     	and	v0.16b, v0.16b, v5.16b
+      88: 33181d49     	bfi	w9, w10, #8, #8
+      8c: 0e31b801     	addv	b1, v0.8b
+      90: 6e004000     	ext	v0.16b, v0.16b, v0.16b, #0x8
+      94: aa098108     	orr	x8, x8, x9, lsl #32
+      98: 0e31b800     	addv	b0, v0.8b
+      9c: 1e260029     	fmov	w9, s1
+      a0: 1e26000a     	fmov	w10, s0
+      a4: 33185d49     	bfi	w9, w10, #8, #24
+      a8: aa09c108     	orr	x8, x8, x9, lsl #48
+      ac: 8a010100     	and	x0, x8, x1
+      b0: d65f03c0     	ret
+
+Disassembly of section .text.tuple_64_1:
+
+0000000000000000 <tuple_64_1>:
+       0: f103fc1f     	cmp	x0, #0xff
+       4: 54000528     	b.hi	0xa8 <tuple_64_1+0xa8>
+       8: 90000008     	adrp	x8, 0x0 <tuple_64_1>
+       c: 4e010c04     	dup	v4.16b, w0
+      10: 3dc00105     	ldr	q5, [x8]
+      14: 6e203480     	cmhi	v0.16b, v4.16b, v0.16b
+      18: 4e251c00     	and	v0.16b, v0.16b, v5.16b
+      1c: 0e31b806     	addv	b6, v0.8b
+      20: 6e004000     	ext	v0.16b, v0.16b, v0.16b, #0x8
+      24: 0e31b800     	addv	b0, v0.8b
+      28: 1e2600c8     	fmov	w8, s6
+      2c: 1e260009     	fmov	w9, s0
+      30: 6e213480     	cmhi	v0.16b, v4.16b, v1.16b
+      34: 4e251c00     	and	v0.16b, v0.16b, v5.16b
+      38: 33181d28     	bfi	w8, w9, #8, #8
+      3c: 0e31b801     	addv	b1, v0.8b
+      40: 6e004000     	ext	v0.16b, v0.16b, v0.16b, #0x8
+      44: 0e31b800     	addv	b0, v0.8b
+      48: 1e260029     	fmov	w9, s1
+      4c: 1e26000a     	fmov	w10, s0
+      50: 6e223480     	cmhi	v0.16b, v4.16b, v2.16b
+      54: 53101d29     	ubfiz	w9, w9, #16, #8
+      58: 4e251c00     	and	v0.16b, v0.16b, v5.16b
+      5c: 2a0a6129     	orr	w9, w9, w10, lsl #24
+      60: 2a080128     	orr	w8, w9, w8
+      64: 0e31b801     	addv	b1, v0.8b
+      68: 6e004000     	ext	v0.16b, v0.16b, v0.16b, #0x8
+      6c: 0e31b800     	addv	b0, v0.8b
+      70: 1e260029     	fmov	w9, s1
+      74: 1e26000a     	fmov	w10, s0
+      78: 6e233480     	cmhi	v0.16b, v4.16b, v3.16b
+      7c: 4e251c00     	and	v0.16b, v0.16b, v5.16b
+      80: 33181d49     	bfi	w9, w10, #8, #8
+      84: 0e31b801     	addv	b1, v0.8b
+      88: 6e004000     	ext	v0.16b, v0.16b, v0.16b, #0x8
+      8c: aa098108     	orr	x8, x8, x9, lsl #32
+      90: 0e31b800     	addv	b0, v0.8b
+      94: 1e260029     	fmov	w9, s1
+      98: 1e26000a     	fmov	w10, s0
+      9c: 33185d49     	bfi	w9, w10, #8, #24
+      a0: aa09c108     	orr	x8, x8, x9, lsl #48
+      a4: 8a010101     	and	x1, x8, x1
+      a8: aa0103e0     	mov	x0, x1
+      ac: d65f03c0     	ret
+
+Disassembly of section .text.tuple_64_2:
+
+0000000000000000 <tuple_64_2>:
+       0: f103fc1f     	cmp	x0, #0xff
+       4: 54000528     	b.hi	0xa8 <tuple_64_2+0xa8>
+       8: 90000008     	adrp	x8, 0x0 <tuple_64_2>
+       c: 4e010c04     	dup	v4.16b, w0
+      10: 3dc00105     	ldr	q5, [x8]
+      14: 6e203c80     	cmhs	v0.16b, v4.16b, v0.16b
+      18: 4e251c00     	and	v0.16b, v0.16b, v5.16b
+      1c: 0e31b806     	addv	b6, v0.8b
+      20: 6e004000     	ext	v0.16b, v0.16b, v0.16b, #0x8
+      24: 0e31b800     	addv	b0, v0.8b
+      28: 1e2600c8     	fmov	w8, s6
+      2c: 1e260009     	fmov	w9, s0
+      30: 6e213c80     	cmhs	v0.16b, v4.16b, v1.16b
+      34: 4e251c00     	and	v0.16b, v0.16b, v5.16b
+      38: 33181d28     	bfi	w8, w9, #8, #8
+      3c: 0e31b801     	addv	b1, v0.8b
+      40: 6e004000     	ext	v0.16b, v0.16b, v0.16b, #0x8
+      44: 0e31b800     	addv	b0, v0.8b
+      48: 1e260029     	fmov	w9, s1
+      4c: 1e26000a     	fmov	w10, s0
+      50: 6e223c80     	cmhs	v0.16b, v4.16b, v2.16b
+      54: 53101d29     	ubfiz	w9, w9, #16, #8
+      58: 4e251c00     	and	v0.16b, v0.16b, v5.16b
+      5c: 2a0a6129     	orr	w9, w9, w10, lsl #24
+      60: 2a080128     	orr	w8, w9, w8
+      64: 0e31b801     	addv	b1, v0.8b
+      68: 6e004000     	ext	v0.16b, v0.16b, v0.16b, #0x8
+      6c: 0e31b800     	addv	b0, v0.8b
+      70: 1e260029     	fmov	w9, s1
+      74: 1e26000a     	fmov	w10, s0
+      78: 6e233c80     	cmhs	v0.16b, v4.16b, v3.16b
+      7c: 4e251c00     	and	v0.16b, v0.16b, v5.16b
+      80: 33181d49     	bfi	w9, w10, #8, #8
+      84: 0e31b801     	addv	b1, v0.8b
+      88: 6e004000     	ext	v0.16b, v0.16b, v0.16b, #0x8
+      8c: aa098108     	orr	x8, x8, x9, lsl #32
+      90: 0e31b800     	addv	b0, v0.8b
+      94: 1e260029     	fmov	w9, s1
+      98: 1e26000a     	fmov	w10, s0
+      9c: 33185d49     	bfi	w9, w10, #8, #24
+      a0: aa09c108     	orr	x8, x8, x9, lsl #48
+      a4: 8a010101     	and	x1, x8, x1
+      a8: aa0103e0     	mov	x0, x1
+      ac: d65f03c0     	ret
+
+Disassembly of section .text.tuple_64_3:
+
+0000000000000000 <tuple_64_3>:
+       0: f103fc1f     	cmp	x0, #0xff
+       4: 54000069     	b.ls	0x10 <tuple_64_3+0x10>
+       8: aa1f03e0     	mov	x0, xzr
+       c: d65f03c0     	ret
+      10: 90000008     	adrp	x8, 0x0 <tuple_64_3>
+      14: 4e010c04     	dup	v4.16b, w0
+      18: 3dc00105     	ldr	q5, [x8]
+      1c: 6e243400     	cmhi	v0.16b, v0.16b, v4.16b
+      20: 4e251c00     	and	v0.16b, v0.16b, v5.16b
+      24: 0e31b806     	addv	b6, v0.8b
+      28: 6e004000     	ext	v0.16b, v0.16b, v0.16b, #0x8
+      2c: 0e31b800     	addv	b0, v0.8b
+      30: 1e2600c8     	fmov	w8, s6
+      34: 1e260009     	fmov	w9, s0
+      38: 6e243420     	cmhi	v0.16b, v1.16b, v4.16b
+      3c: 4e251c00     	and	v0.16b, v0.16b, v5.16b
+      40: 33181d28     	bfi	w8, w9, #8, #8
+      44: 0e31b801     	addv	b1, v0.8b
+      48: 6e004000     	ext	v0.16b, v0.16b, v0.16b, #0x8
+      4c: 0e31b800     	addv	b0, v0.8b
+      50: 1e260029     	fmov	w9, s1
+      54: 1e26000a     	fmov	w10, s0
+      58: 6e243440     	cmhi	v0.16b, v2.16b, v4.16b
+      5c: 53101d29     	ubfiz	w9, w9, #16, #8
+      60: 4e251c00     	and	v0.16b, v0.16b, v5.16b
+      64: 2a0a6129     	orr	w9, w9, w10, lsl #24
+      68: 2a080128     	orr	w8, w9, w8
+      6c: 0e31b801     	addv	b1, v0.8b
+      70: 6e004000     	ext	v0.16b, v0.16b, v0.16b, #0x8
+      74: 0e31b800     	addv	b0, v0.8b
+      78: 1e260029     	fmov	w9, s1
+      7c: 1e26000a     	fmov	w10, s0
+      80: 6e243460     	cmhi	v0.16b, v3.16b, v4.16b
+      84: 4e251c00     	and	v0.16b, v0.16b, v5.16b
+      88: 33181d49     	bfi	w9, w10, #8, #8
+      8c: 0e31b801     	addv	b1, v0.8b
+      90: 6e004000     	ext	v0.16b, v0.16b, v0.16b, #0x8
+      94: aa098108     	orr	x8, x8, x9, lsl #32
+      98: 0e31b800     	addv	b0, v0.8b
+      9c: 1e260029     	fmov	w9, s1
+      a0: 1e26000a     	fmov	w10, s0
+      a4: 33185d49     	bfi	w9, w10, #8, #24
+      a8: aa09c108     	orr	x8, x8, x9, lsl #48
+      ac: 8a010100     	and	x0, x8, x1
+      b0: d65f03c0     	ret
+
+Disassembly of section .text.tuple_64_4:
+
+0000000000000000 <tuple_64_4>:
+       0: f103fc1f     	cmp	x0, #0xff
+       4: 54000069     	b.ls	0x10 <tuple_64_4+0x10>
+       8: aa1f03e0     	mov	x0, xzr
+       c: d65f03c0     	ret
+      10: 90000008     	adrp	x8, 0x0 <tuple_64_4>
+      14: 4e010c04     	dup	v4.16b, w0
+      18: 3dc00105     	ldr	q5, [x8]
+      1c: 6e243c00     	cmhs	v0.16b, v0.16b, v4.16b
+      20: 4e251c00     	and	v0.16b, v0.16b, v5.16b
+      24: 0e31b806     	addv	b6, v0.8b
+      28: 6e004000     	ext	v0.16b, v0.16b, v0.16b, #0x8
+      2c: 0e31b800     	addv	b0, v0.8b
+      30: 1e2600c8     	fmov	w8, s6
+      34: 1e260009     	fmov	w9, s0
+      38: 6e243c20     	cmhs	v0.16b, v1.16b, v4.16b
+      3c: 4e251c00     	and	v0.16b, v0.16b, v5.16b
+      40: 33181d28     	bfi	w8, w9, #8, #8
+      44: 0e31b801     	addv	b1, v0.8b
+      48: 6e004000     	ext	v0.16b, v0.16b, v0.16b, #0x8
+      4c: 0e31b800     	addv	b0, v0.8b
+      50: 1e260029     	fmov	w9, s1
+      54: 1e26000a     	fmov	w10, s0
+      58: 6e243c40     	cmhs	v0.16b, v2.16b, v4.16b
+      5c: 53101d29     	ubfiz	w9, w9, #16, #8
+      60: 4e251c00     	and	v0.16b, v0.16b, v5.16b
+      64: 2a0a6129     	orr	w9, w9, w10, lsl #24
+      68: 2a080128     	orr	w8, w9, w8
+      6c: 0e31b801     	addv	b1, v0.8b
+      70: 6e004000     	ext	v0.16b, v0.16b, v0.16b, #0x8
+      74: 0e31b800     	addv	b0, v0.8b
+      78: 1e260029     	fmov	w9, s1
+      7c: 1e26000a     	fmov	w10, s0
+      80: 6e243c60     	cmhs	v0.16b, v3.16b, v4.16b
+      84: 4e251c00     	and	v0.16b, v0.16b, v5.16b
+      88: 33181d49     	bfi	w9, w10, #8, #8
+      8c: 0e31b801     	addv	b1, v0.8b
+      90: 6e004000     	ext	v0.16b, v0.16b, v0.16b, #0x8
+      94: aa098108     	orr	x8, x8, x9, lsl #32
+      98: 0e31b800     	addv	b0, v0.8b
+      9c: 1e260029     	fmov	w9, s1
+      a0: 1e26000a     	fmov	w10, s0
+      a4: 33185d49     	bfi	w9, w10, #8, #24
+      a8: aa09c108     	orr	x8, x8, x9, lsl #48
+      ac: 8a010100     	and	x0, x8, x1
+      b0: d65f03c0     	ret
+
+Disassembly of section .text.control_8_0:
+
+0000000000000000 <control_8_0>:
+       0: f103fc3f     	cmp	x1, #0xff
+       4: 54000069     	b.ls	0x10 <control_8_0+0x10>
+       8: 2a1f03e0     	mov	w0, wzr
+       c: d65f03c0     	ret
+      10: 3dc00000     	ldr	q0, [x0]
+      14: 4e010c21     	dup	v1.16b, w1
+      18: 90000008     	adrp	x8, 0x0 <control_8_0>
+      1c: 6e218c00     	cmeq	v0.16b, v0.16b, v1.16b
+      20: 3dc00101     	ldr	q1, [x8]
+      24: 4e211c00     	and	v0.16b, v0.16b, v1.16b
+      28: 0e31b801     	addv	b1, v0.8b
+      2c: 6e004000     	ext	v0.16b, v0.16b, v0.16b, #0x8
+      30: 0e31b800     	addv	b0, v0.8b
+      34: 1e260020     	fmov	w0, s1
+      38: 1e260008     	fmov	w8, s0
+      3c: 33181d00     	bfi	w0, w8, #8, #8
+      40: d65f03c0     	ret
+
+Disassembly of section .text.control_8_1:
+
+0000000000000000 <control_8_1>:
+       0: f103fc3f     	cmp	x1, #0xff
+       4: 54000069     	b.ls	0x10 <control_8_1+0x10>
+       8: 529fffe0     	mov	w0, #0xffff             // =65535
+       c: d65f03c0     	ret
+      10: 3dc00000     	ldr	q0, [x0]
+      14: 4e010c21     	dup	v1.16b, w1
+      18: 90000008     	adrp	x8, 0x0 <control_8_1>
+      1c: 6e203420     	cmhi	v0.16b, v1.16b, v0.16b
+      20: 3dc00101     	ldr	q1, [x8]
+      24: 4e211c00     	and	v0.16b, v0.16b, v1.16b
+      28: 0e31b801     	addv	b1, v0.8b
+      2c: 6e004000     	ext	v0.16b, v0.16b, v0.16b, #0x8
+      30: 0e31b800     	addv	b0, v0.8b
+      34: 1e260020     	fmov	w0, s1
+      38: 1e260008     	fmov	w8, s0
+      3c: 33181d00     	bfi	w0, w8, #8, #8
+      40: d65f03c0     	ret
+
+Disassembly of section .text.control_8_2:
+
+0000000000000000 <control_8_2>:
+       0: f103fc3f     	cmp	x1, #0xff
+       4: 54000069     	b.ls	0x10 <control_8_2+0x10>
+       8: 529fffe0     	mov	w0, #0xffff             // =65535
+       c: d65f03c0     	ret
+      10: 3dc00000     	ldr	q0, [x0]
+      14: 4e010c21     	dup	v1.16b, w1
+      18: 90000008     	adrp	x8, 0x0 <control_8_2>
+      1c: 6e203c20     	cmhs	v0.16b, v1.16b, v0.16b
+      20: 3dc00101     	ldr	q1, [x8]
+      24: 4e211c00     	and	v0.16b, v0.16b, v1.16b
+      28: 0e31b801     	addv	b1, v0.8b
+      2c: 6e004000     	ext	v0.16b, v0.16b, v0.16b, #0x8
+      30: 0e31b800     	addv	b0, v0.8b
+      34: 1e260020     	fmov	w0, s1
+      38: 1e260008     	fmov	w8, s0
+      3c: 33181d00     	bfi	w0, w8, #8, #8
+      40: d65f03c0     	ret
+
+Disassembly of section .text.control_8_3:
+
+0000000000000000 <control_8_3>:
+       0: f103fc3f     	cmp	x1, #0xff
+       4: 54000069     	b.ls	0x10 <control_8_3+0x10>
+       8: 2a1f03e0     	mov	w0, wzr
+       c: d65f03c0     	ret
+      10: 3dc00000     	ldr	q0, [x0]
+      14: 4e010c21     	dup	v1.16b, w1
+      18: 90000008     	adrp	x8, 0x0 <control_8_3>
+      1c: 6e213400     	cmhi	v0.16b, v0.16b, v1.16b
+      20: 3dc00101     	ldr	q1, [x8]
+      24: 4e211c00     	and	v0.16b, v0.16b, v1.16b
+      28: 0e31b801     	addv	b1, v0.8b
+      2c: 6e004000     	ext	v0.16b, v0.16b, v0.16b, #0x8
+      30: 0e31b800     	addv	b0, v0.8b
+      34: 1e260020     	fmov	w0, s1
+      38: 1e260008     	fmov	w8, s0
+      3c: 33181d00     	bfi	w0, w8, #8, #8
+      40: d65f03c0     	ret
+
+Disassembly of section .text.control_8_4:
+
+0000000000000000 <control_8_4>:
+       0: f103fc3f     	cmp	x1, #0xff
+       4: 54000069     	b.ls	0x10 <control_8_4+0x10>
+       8: 2a1f03e0     	mov	w0, wzr
+       c: d65f03c0     	ret
+      10: 3dc00000     	ldr	q0, [x0]
+      14: 4e010c21     	dup	v1.16b, w1
+      18: 90000008     	adrp	x8, 0x0 <control_8_4>
+      1c: 6e213c00     	cmhs	v0.16b, v0.16b, v1.16b
+      20: 3dc00101     	ldr	q1, [x8]
+      24: 4e211c00     	and	v0.16b, v0.16b, v1.16b
+      28: 0e31b801     	addv	b1, v0.8b
+      2c: 6e004000     	ext	v0.16b, v0.16b, v0.16b, #0x8
+      30: 0e31b800     	addv	b0, v0.8b
+      34: 1e260020     	fmov	w0, s1
+      38: 1e260008     	fmov	w8, s0
+      3c: 33181d00     	bfi	w0, w8, #8, #8
+      40: d65f03c0     	ret
+
+Disassembly of section .text.control_16_0:
+
+0000000000000000 <control_16_0>:
+       0: d350fc28     	lsr	x8, x1, #16
+       4: b4000068     	cbz	x8, 0x10 <control_16_0+0x10>
+       8: 2a1f03e0     	mov	w0, wzr
+       c: d65f03c0     	ret
+      10: ad400801     	ldp	q1, q2, [x0]
+      14: 4e020c20     	dup	v0.8h, w1
+      18: 90000008     	adrp	x8, 0x0 <control_16_0>
+      1c: fd400103     	ldr	d3, [x8]
+      20: 6e608c21     	cmeq	v1.8h, v1.8h, v0.8h
+      24: 6e608c40     	cmeq	v0.8h, v2.8h, v0.8h
+      28: 0e212821     	xtn	v1.8b, v1.8h
+      2c: 0e212800     	xtn	v0.8b, v0.8h
+      30: 0e231c21     	and	v1.8b, v1.8b, v3.8b
+      34: 0e231c00     	and	v0.8b, v0.8b, v3.8b
+      38: 0e31b821     	addv	b1, v1.8b
+      3c: 0e31b800     	addv	b0, v0.8b
+      40: 1e260020     	fmov	w0, s1
+      44: 1e260008     	fmov	w8, s0
+      48: 33181d00     	bfi	w0, w8, #8, #8
+      4c: d65f03c0     	ret
+
+Disassembly of section .text.control_16_1:
+
+0000000000000000 <control_16_1>:
+       0: d350fc28     	lsr	x8, x1, #16
+       4: b4000068     	cbz	x8, 0x10 <control_16_1+0x10>
+       8: 529fffe0     	mov	w0, #0xffff             // =65535
+       c: d65f03c0     	ret
+      10: ad400801     	ldp	q1, q2, [x0]
+      14: 4e020c20     	dup	v0.8h, w1
+      18: 90000008     	adrp	x8, 0x0 <control_16_1>
+      1c: fd400103     	ldr	d3, [x8]
+      20: 6e613401     	cmhi	v1.8h, v0.8h, v1.8h
+      24: 6e623400     	cmhi	v0.8h, v0.8h, v2.8h
+      28: 0e212821     	xtn	v1.8b, v1.8h
+      2c: 0e212800     	xtn	v0.8b, v0.8h
+      30: 0e231c21     	and	v1.8b, v1.8b, v3.8b
+      34: 0e231c00     	and	v0.8b, v0.8b, v3.8b
+      38: 0e31b821     	addv	b1, v1.8b
+      3c: 0e31b800     	addv	b0, v0.8b
+      40: 1e260020     	fmov	w0, s1
+      44: 1e260008     	fmov	w8, s0
+      48: 33181d00     	bfi	w0, w8, #8, #8
+      4c: d65f03c0     	ret
+
+Disassembly of section .text.control_16_2:
+
+0000000000000000 <control_16_2>:
+       0: d350fc28     	lsr	x8, x1, #16
+       4: b4000068     	cbz	x8, 0x10 <control_16_2+0x10>
+       8: 529fffe0     	mov	w0, #0xffff             // =65535
+       c: d65f03c0     	ret
+      10: ad400801     	ldp	q1, q2, [x0]
+      14: 4e020c20     	dup	v0.8h, w1
+      18: 90000008     	adrp	x8, 0x0 <control_16_2>
+      1c: fd400103     	ldr	d3, [x8]
+      20: 6e603421     	cmhi	v1.8h, v1.8h, v0.8h
+      24: 6e603440     	cmhi	v0.8h, v2.8h, v0.8h
+      28: 0e212821     	xtn	v1.8b, v1.8h
+      2c: 0e212800     	xtn	v0.8b, v0.8h
+      30: 0e611c61     	bic	v1.8b, v3.8b, v1.8b
+      34: 0e601c60     	bic	v0.8b, v3.8b, v0.8b
+      38: 0e31b821     	addv	b1, v1.8b
+      3c: 0e31b800     	addv	b0, v0.8b
+      40: 1e260020     	fmov	w0, s1
+      44: 1e260008     	fmov	w8, s0
+      48: 33181d00     	bfi	w0, w8, #8, #8
+      4c: d65f03c0     	ret
+
+Disassembly of section .text.control_16_3:
+
+0000000000000000 <control_16_3>:
+       0: d350fc28     	lsr	x8, x1, #16
+       4: b4000068     	cbz	x8, 0x10 <control_16_3+0x10>
+       8: 2a1f03e0     	mov	w0, wzr
+       c: d65f03c0     	ret
+      10: ad400801     	ldp	q1, q2, [x0]
+      14: 4e020c20     	dup	v0.8h, w1
+      18: 90000008     	adrp	x8, 0x0 <control_16_3>
+      1c: fd400103     	ldr	d3, [x8]
+      20: 6e603421     	cmhi	v1.8h, v1.8h, v0.8h
+      24: 6e603440     	cmhi	v0.8h, v2.8h, v0.8h
+      28: 0e212821     	xtn	v1.8b, v1.8h
+      2c: 0e212800     	xtn	v0.8b, v0.8h
+      30: 0e231c21     	and	v1.8b, v1.8b, v3.8b
+      34: 0e231c00     	and	v0.8b, v0.8b, v3.8b
+      38: 0e31b821     	addv	b1, v1.8b
+      3c: 0e31b800     	addv	b0, v0.8b
+      40: 1e260020     	fmov	w0, s1
+      44: 1e260008     	fmov	w8, s0
+      48: 33181d00     	bfi	w0, w8, #8, #8
+      4c: d65f03c0     	ret
+
+Disassembly of section .text.control_16_4:
+
+0000000000000000 <control_16_4>:
+       0: d350fc28     	lsr	x8, x1, #16
+       4: b4000068     	cbz	x8, 0x10 <control_16_4+0x10>
+       8: 2a1f03e0     	mov	w0, wzr
+       c: d65f03c0     	ret
+      10: ad400801     	ldp	q1, q2, [x0]
+      14: 4e020c20     	dup	v0.8h, w1
+      18: 90000008     	adrp	x8, 0x0 <control_16_4>
+      1c: fd400103     	ldr	d3, [x8]
+      20: 6e613401     	cmhi	v1.8h, v0.8h, v1.8h
+      24: 6e623400     	cmhi	v0.8h, v0.8h, v2.8h
+      28: 0e212821     	xtn	v1.8b, v1.8h
+      2c: 0e212800     	xtn	v0.8b, v0.8h
+      30: 0e611c61     	bic	v1.8b, v3.8b, v1.8b
+      34: 0e601c60     	bic	v0.8b, v3.8b, v0.8b
+      38: 0e31b821     	addv	b1, v1.8b
+      3c: 0e31b800     	addv	b0, v0.8b
+      40: 1e260020     	fmov	w0, s1
+      44: 1e260008     	fmov	w8, s0
+      48: 33181d00     	bfi	w0, w8, #8, #8
+      4c: d65f03c0     	ret
+
+Disassembly of section .text.control_32_0:
+
+0000000000000000 <control_32_0>:
+       0: d360fc28     	lsr	x8, x1, #32
+       4: b4000068     	cbz	x8, 0x10 <control_32_0+0x10>
+       8: 2a1f03e0     	mov	w0, wzr
+       c: d65f03c0     	ret
+      10: ad400801     	ldp	q1, q2, [x0]
+      14: 90000008     	adrp	x8, 0x0 <control_32_0>
+      18: 4e040c20     	dup	v0.4s, w1
+      1c: 3dc00103     	ldr	q3, [x8]
+      20: 6ea08c21     	cmeq	v1.4s, v1.4s, v0.4s
+      24: 4e231c21     	and	v1.16b, v1.16b, v3.16b
+      28: 4eb1b821     	addv	s1, v1.4s
+      2c: 1e260028     	fmov	w8, s1
+      30: 6ea08c41     	cmeq	v1.4s, v2.4s, v0.4s
+      34: 4e231c21     	and	v1.16b, v1.16b, v3.16b
+      38: 4eb1b821     	addv	s1, v1.4s
+      3c: 1e260029     	fmov	w9, s1
+      40: 2a091108     	orr	w8, w8, w9, lsl #4
+      44: ad410801     	ldp	q1, q2, [x0, #0x20]
+      48: 6ea08c21     	cmeq	v1.4s, v1.4s, v0.4s
+      4c: 6ea08c40     	cmeq	v0.4s, v2.4s, v0.4s
+      50: 4e231c21     	and	v1.16b, v1.16b, v3.16b
+      54: 4e231c00     	and	v0.16b, v0.16b, v3.16b
+      58: 4eb1b821     	addv	s1, v1.4s
+      5c: 4eb1b800     	addv	s0, v0.4s
+      60: 1e26002a     	fmov	w10, s1
+      64: 2a0a2108     	orr	w8, w8, w10, lsl #8
+      68: 1e260009     	fmov	w9, s0
+      6c: 2a093100     	orr	w0, w8, w9, lsl #12
+      70: d65f03c0     	ret
+
+Disassembly of section .text.control_32_1:
+
+0000000000000000 <control_32_1>:
+       0: d360fc28     	lsr	x8, x1, #32
+       4: b4000068     	cbz	x8, 0x10 <control_32_1+0x10>
+       8: 529fffe0     	mov	w0, #0xffff             // =65535
+       c: d65f03c0     	ret
+      10: ad400801     	ldp	q1, q2, [x0]
+      14: 90000008     	adrp	x8, 0x0 <control_32_1>
+      18: 4e040c20     	dup	v0.4s, w1
+      1c: 3dc00103     	ldr	q3, [x8]
+      20: 6ea13401     	cmhi	v1.4s, v0.4s, v1.4s
+      24: 4e231c21     	and	v1.16b, v1.16b, v3.16b
+      28: 4eb1b821     	addv	s1, v1.4s
+      2c: 1e260028     	fmov	w8, s1
+      30: 6ea23401     	cmhi	v1.4s, v0.4s, v2.4s
+      34: 4e231c21     	and	v1.16b, v1.16b, v3.16b
+      38: 4eb1b821     	addv	s1, v1.4s
+      3c: 1e260029     	fmov	w9, s1
+      40: 2a091108     	orr	w8, w8, w9, lsl #4
+      44: ad410801     	ldp	q1, q2, [x0, #0x20]
+      48: 6ea13401     	cmhi	v1.4s, v0.4s, v1.4s
+      4c: 6ea23400     	cmhi	v0.4s, v0.4s, v2.4s
+      50: 4e231c21     	and	v1.16b, v1.16b, v3.16b
+      54: 4e231c00     	and	v0.16b, v0.16b, v3.16b
+      58: 4eb1b821     	addv	s1, v1.4s
+      5c: 4eb1b800     	addv	s0, v0.4s
+      60: 1e26002a     	fmov	w10, s1
+      64: 2a0a2108     	orr	w8, w8, w10, lsl #8
+      68: 1e260009     	fmov	w9, s0
+      6c: 2a093100     	orr	w0, w8, w9, lsl #12
+      70: d65f03c0     	ret
+
+Disassembly of section .text.control_32_2:
+
+0000000000000000 <control_32_2>:
+       0: d360fc28     	lsr	x8, x1, #32
+       4: b4000068     	cbz	x8, 0x10 <control_32_2+0x10>
+       8: 529fffe0     	mov	w0, #0xffff             // =65535
+       c: d65f03c0     	ret
+      10: ad400801     	ldp	q1, q2, [x0]
+      14: 90000008     	adrp	x8, 0x0 <control_32_2>
+      18: 4e040c20     	dup	v0.4s, w1
+      1c: 3dc00103     	ldr	q3, [x8]
+      20: 6ea13c01     	cmhs	v1.4s, v0.4s, v1.4s
+      24: 4e231c21     	and	v1.16b, v1.16b, v3.16b
+      28: 4eb1b821     	addv	s1, v1.4s
+      2c: 1e260028     	fmov	w8, s1
+      30: 6ea23c01     	cmhs	v1.4s, v0.4s, v2.4s
+      34: 4e231c21     	and	v1.16b, v1.16b, v3.16b
+      38: 4eb1b821     	addv	s1, v1.4s
+      3c: 1e260029     	fmov	w9, s1
+      40: 2a091108     	orr	w8, w8, w9, lsl #4
+      44: ad410801     	ldp	q1, q2, [x0, #0x20]
+      48: 6ea13c01     	cmhs	v1.4s, v0.4s, v1.4s
+      4c: 6ea23c00     	cmhs	v0.4s, v0.4s, v2.4s
+      50: 4e231c21     	and	v1.16b, v1.16b, v3.16b
+      54: 4e231c00     	and	v0.16b, v0.16b, v3.16b
+      58: 4eb1b821     	addv	s1, v1.4s
+      5c: 4eb1b800     	addv	s0, v0.4s
+      60: 1e26002a     	fmov	w10, s1
+      64: 2a0a2108     	orr	w8, w8, w10, lsl #8
+      68: 1e260009     	fmov	w9, s0
+      6c: 2a093100     	orr	w0, w8, w9, lsl #12
+      70: d65f03c0     	ret
+
+Disassembly of section .text.control_32_3:
+
+0000000000000000 <control_32_3>:
+       0: d360fc28     	lsr	x8, x1, #32
+       4: b4000068     	cbz	x8, 0x10 <control_32_3+0x10>
+       8: 2a1f03e0     	mov	w0, wzr
+       c: d65f03c0     	ret
+      10: ad400801     	ldp	q1, q2, [x0]
+      14: 90000008     	adrp	x8, 0x0 <control_32_3>
+      18: 4e040c20     	dup	v0.4s, w1
+      1c: 3dc00103     	ldr	q3, [x8]
+      20: 6ea03421     	cmhi	v1.4s, v1.4s, v0.4s
+      24: 4e231c21     	and	v1.16b, v1.16b, v3.16b
+      28: 4eb1b821     	addv	s1, v1.4s
+      2c: 1e260028     	fmov	w8, s1
+      30: 6ea03441     	cmhi	v1.4s, v2.4s, v0.4s
+      34: 4e231c21     	and	v1.16b, v1.16b, v3.16b
+      38: 4eb1b821     	addv	s1, v1.4s
+      3c: 1e260029     	fmov	w9, s1
+      40: 2a091108     	orr	w8, w8, w9, lsl #4
+      44: ad410801     	ldp	q1, q2, [x0, #0x20]
+      48: 6ea03421     	cmhi	v1.4s, v1.4s, v0.4s
+      4c: 6ea03440     	cmhi	v0.4s, v2.4s, v0.4s
+      50: 4e231c21     	and	v1.16b, v1.16b, v3.16b
+      54: 4e231c00     	and	v0.16b, v0.16b, v3.16b
+      58: 4eb1b821     	addv	s1, v1.4s
+      5c: 4eb1b800     	addv	s0, v0.4s
+      60: 1e26002a     	fmov	w10, s1
+      64: 2a0a2108     	orr	w8, w8, w10, lsl #8
+      68: 1e260009     	fmov	w9, s0
+      6c: 2a093100     	orr	w0, w8, w9, lsl #12
+      70: d65f03c0     	ret
+
+Disassembly of section .text.control_32_4:
+
+0000000000000000 <control_32_4>:
+       0: d360fc28     	lsr	x8, x1, #32
+       4: b4000068     	cbz	x8, 0x10 <control_32_4+0x10>
+       8: 2a1f03e0     	mov	w0, wzr
+       c: d65f03c0     	ret
+      10: ad400801     	ldp	q1, q2, [x0]
+      14: 90000008     	adrp	x8, 0x0 <control_32_4>
+      18: 4e040c20     	dup	v0.4s, w1
+      1c: 3dc00103     	ldr	q3, [x8]
+      20: 6ea03c21     	cmhs	v1.4s, v1.4s, v0.4s
+      24: 4e231c21     	and	v1.16b, v1.16b, v3.16b
+      28: 4eb1b821     	addv	s1, v1.4s
+      2c: 1e260028     	fmov	w8, s1
+      30: 6ea03c41     	cmhs	v1.4s, v2.4s, v0.4s
+      34: 4e231c21     	and	v1.16b, v1.16b, v3.16b
+      38: 4eb1b821     	addv	s1, v1.4s
+      3c: 1e260029     	fmov	w9, s1
+      40: 2a091108     	orr	w8, w8, w9, lsl #4
+      44: ad410801     	ldp	q1, q2, [x0, #0x20]
+      48: 6ea03c21     	cmhs	v1.4s, v1.4s, v0.4s
+      4c: 6ea03c40     	cmhs	v0.4s, v2.4s, v0.4s
+      50: 4e231c21     	and	v1.16b, v1.16b, v3.16b
+      54: 4e231c00     	and	v0.16b, v0.16b, v3.16b
+      58: 4eb1b821     	addv	s1, v1.4s
+      5c: 4eb1b800     	addv	s0, v0.4s
+      60: 1e26002a     	fmov	w10, s1
+      64: 2a0a2108     	orr	w8, w8, w10, lsl #8
+      68: 1e260009     	fmov	w9, s0
+      6c: 2a093100     	orr	w0, w8, w9, lsl #12
+      70: d65f03c0     	ret
+
+Disassembly of section .text.control_64_0:
+
+0000000000000000 <control_64_0>:
+       0: ad400801     	ldp	q1, q2, [x0]
+       4: 4e080c20     	dup	v0.2d, x1
+       8: 6ee08c21     	cmeq	v1.2d, v1.2d, v0.2d
+       c: 0ea12821     	xtn	v1.2s, v1.2d
+      10: 0e0c3c29     	mov	w9, v1.s[1]
+      14: 1e260028     	fmov	w8, s1
+      18: 6ee08c41     	cmeq	v1.2d, v2.2d, v0.2d
+      1c: 0ea12821     	xtn	v1.2s, v1.2d
+      20: 121f0129     	and	w9, w9, #0x2
+      24: 4b080128     	sub	w8, w9, w8
+      28: 0e0c3c2b     	mov	w11, v1.s[1]
+      2c: 1e26002a     	fmov	w10, s1
+      30: ad410801     	ldp	q1, q2, [x0, #0x20]
+      34: 121f0169     	and	w9, w11, #0x2
+      38: 4b0a0129     	sub	w9, w9, w10
+      3c: 2a090908     	orr	w8, w8, w9, lsl #2
+      40: 6ee08c21     	cmeq	v1.2d, v1.2d, v0.2d
+      44: 0ea12821     	xtn	v1.2s, v1.2d
+      48: 0e0c3c2c     	mov	w12, v1.s[1]
+      4c: 1e26002d     	fmov	w13, s1
+      50: 6ee08c41     	cmeq	v1.2d, v2.2d, v0.2d
+      54: 0ea12821     	xtn	v1.2s, v1.2d
+      58: 121f0189     	and	w9, w12, #0x2
+      5c: 4b0d0129     	sub	w9, w9, w13
+      60: 0e0c3c2e     	mov	w14, v1.s[1]
+      64: 1e26002f     	fmov	w15, s1
+      68: ad420801     	ldp	q1, q2, [x0, #0x40]
+      6c: 2a091108     	orr	w8, w8, w9, lsl #4
+      70: 121f01c9     	and	w9, w14, #0x2
+      74: 4b0f0129     	sub	w9, w9, w15
+      78: 2a091908     	orr	w8, w8, w9, lsl #6
+      7c: 6ee08c21     	cmeq	v1.2d, v1.2d, v0.2d
+      80: 0ea12821     	xtn	v1.2s, v1.2d
+      84: 0e0c3c30     	mov	w16, v1.s[1]
+      88: 1e260031     	fmov	w17, s1
+      8c: 6ee08c41     	cmeq	v1.2d, v2.2d, v0.2d
+      90: 0ea12821     	xtn	v1.2s, v1.2d
+      94: 121f0209     	and	w9, w16, #0x2
+      98: 4b110129     	sub	w9, w9, w17
+      9c: 0e0c3c32     	mov	w18, v1.s[1]
+      a0: 1e260021     	fmov	w1, s1
+      a4: ad430801     	ldp	q1, q2, [x0, #0x60]
+      a8: 2a092108     	orr	w8, w8, w9, lsl #8
+      ac: 121f0249     	and	w9, w18, #0x2
+      b0: 4b010129     	sub	w9, w9, w1
+      b4: 2a092908     	orr	w8, w8, w9, lsl #10
+      b8: 6ee08c21     	cmeq	v1.2d, v1.2d, v0.2d
+      bc: 6ee08c40     	cmeq	v0.2d, v2.2d, v0.2d
+      c0: 0ea12821     	xtn	v1.2s, v1.2d
+      c4: 0ea12800     	xtn	v0.2s, v0.2d
+      c8: 0e0c3c20     	mov	w0, v1.s[1]
+      cc: 1e260022     	fmov	w2, s1
+      d0: 0e0c3c0a     	mov	w10, v0.s[1]
+      d4: 121f0009     	and	w9, w0, #0x2
+      d8: 121f014a     	and	w10, w10, #0x2
+      dc: 4b020129     	sub	w9, w9, w2
+      e0: 2a093108     	orr	w8, w8, w9, lsl #12
+      e4: 1e260009     	fmov	w9, s0
+      e8: 4b090149     	sub	w9, w10, w9
+      ec: 2a093900     	orr	w0, w8, w9, lsl #14
+      f0: d65f03c0     	ret
+
+Disassembly of section .text.control_64_1:
+
+0000000000000000 <control_64_1>:
+       0: ad400801     	ldp	q1, q2, [x0]
+       4: 4e080c20     	dup	v0.2d, x1
+       8: 6ee13401     	cmhi	v1.2d, v0.2d, v1.2d
+       c: 0ea12821     	xtn	v1.2s, v1.2d
+      10: 0e0c3c29     	mov	w9, v1.s[1]
+      14: 1e260028     	fmov	w8, s1
+      18: 6ee23401     	cmhi	v1.2d, v0.2d, v2.2d
+      1c: 0ea12821     	xtn	v1.2s, v1.2d
+      20: 121f0129     	and	w9, w9, #0x2
+      24: 4b080128     	sub	w8, w9, w8
+      28: 0e0c3c2b     	mov	w11, v1.s[1]
+      2c: 1e26002a     	fmov	w10, s1
+      30: ad410801     	ldp	q1, q2, [x0, #0x20]
+      34: 121f0169     	and	w9, w11, #0x2
+      38: 4b0a0129     	sub	w9, w9, w10
+      3c: 2a090908     	orr	w8, w8, w9, lsl #2
+      40: 6ee13401     	cmhi	v1.2d, v0.2d, v1.2d
+      44: 0ea12821     	xtn	v1.2s, v1.2d
+      48: 0e0c3c2c     	mov	w12, v1.s[1]
+      4c: 1e26002d     	fmov	w13, s1
+      50: 6ee23401     	cmhi	v1.2d, v0.2d, v2.2d
+      54: 0ea12821     	xtn	v1.2s, v1.2d
+      58: 121f0189     	and	w9, w12, #0x2
+      5c: 4b0d0129     	sub	w9, w9, w13
+      60: 0e0c3c2e     	mov	w14, v1.s[1]
+      64: 1e26002f     	fmov	w15, s1
+      68: ad420801     	ldp	q1, q2, [x0, #0x40]
+      6c: 2a091108     	orr	w8, w8, w9, lsl #4
+      70: 121f01c9     	and	w9, w14, #0x2
+      74: 4b0f0129     	sub	w9, w9, w15
+      78: 2a091908     	orr	w8, w8, w9, lsl #6
+      7c: 6ee13401     	cmhi	v1.2d, v0.2d, v1.2d
+      80: 0ea12821     	xtn	v1.2s, v1.2d
+      84: 0e0c3c30     	mov	w16, v1.s[1]
+      88: 1e260031     	fmov	w17, s1
+      8c: 6ee23401     	cmhi	v1.2d, v0.2d, v2.2d
+      90: 0ea12821     	xtn	v1.2s, v1.2d
+      94: 121f0209     	and	w9, w16, #0x2
+      98: 4b110129     	sub	w9, w9, w17
+      9c: 0e0c3c32     	mov	w18, v1.s[1]
+      a0: 1e260021     	fmov	w1, s1
+      a4: ad430801     	ldp	q1, q2, [x0, #0x60]
+      a8: 2a092108     	orr	w8, w8, w9, lsl #8
+      ac: 121f0249     	and	w9, w18, #0x2
+      b0: 4b010129     	sub	w9, w9, w1
+      b4: 2a092908     	orr	w8, w8, w9, lsl #10
+      b8: 6ee13401     	cmhi	v1.2d, v0.2d, v1.2d
+      bc: 6ee23400     	cmhi	v0.2d, v0.2d, v2.2d
+      c0: 0ea12821     	xtn	v1.2s, v1.2d
+      c4: 0ea12800     	xtn	v0.2s, v0.2d
+      c8: 0e0c3c20     	mov	w0, v1.s[1]
+      cc: 1e260022     	fmov	w2, s1
+      d0: 0e0c3c0a     	mov	w10, v0.s[1]
+      d4: 121f0009     	and	w9, w0, #0x2
+      d8: 121f014a     	and	w10, w10, #0x2
+      dc: 4b020129     	sub	w9, w9, w2
+      e0: 2a093108     	orr	w8, w8, w9, lsl #12
+      e4: 1e260009     	fmov	w9, s0
+      e8: 4b090149     	sub	w9, w10, w9
+      ec: 2a093900     	orr	w0, w8, w9, lsl #14
+      f0: d65f03c0     	ret
+
+Disassembly of section .text.control_64_2:
+
+0000000000000000 <control_64_2>:
+       0: ad400801     	ldp	q1, q2, [x0]
+       4: 4e080c20     	dup	v0.2d, x1
+       8: 6ee13c01     	cmhs	v1.2d, v0.2d, v1.2d
+       c: 0ea12821     	xtn	v1.2s, v1.2d
+      10: 0e0c3c29     	mov	w9, v1.s[1]
+      14: 1e260028     	fmov	w8, s1
+      18: 6ee23c01     	cmhs	v1.2d, v0.2d, v2.2d
+      1c: 0ea12821     	xtn	v1.2s, v1.2d
+      20: 121f0129     	and	w9, w9, #0x2
+      24: 4b080128     	sub	w8, w9, w8
+      28: 0e0c3c2b     	mov	w11, v1.s[1]
+      2c: 1e26002a     	fmov	w10, s1
+      30: ad410801     	ldp	q1, q2, [x0, #0x20]
+      34: 121f0169     	and	w9, w11, #0x2
+      38: 4b0a0129     	sub	w9, w9, w10
+      3c: 2a090908     	orr	w8, w8, w9, lsl #2
+      40: 6ee13c01     	cmhs	v1.2d, v0.2d, v1.2d
+      44: 0ea12821     	xtn	v1.2s, v1.2d
+      48: 0e0c3c2c     	mov	w12, v1.s[1]
+      4c: 1e26002d     	fmov	w13, s1
+      50: 6ee23c01     	cmhs	v1.2d, v0.2d, v2.2d
+      54: 0ea12821     	xtn	v1.2s, v1.2d
+      58: 121f0189     	and	w9, w12, #0x2
+      5c: 4b0d0129     	sub	w9, w9, w13
+      60: 0e0c3c2e     	mov	w14, v1.s[1]
+      64: 1e26002f     	fmov	w15, s1
+      68: ad420801     	ldp	q1, q2, [x0, #0x40]
+      6c: 2a091108     	orr	w8, w8, w9, lsl #4
+      70: 121f01c9     	and	w9, w14, #0x2
+      74: 4b0f0129     	sub	w9, w9, w15
+      78: 2a091908     	orr	w8, w8, w9, lsl #6
+      7c: 6ee13c01     	cmhs	v1.2d, v0.2d, v1.2d
+      80: 0ea12821     	xtn	v1.2s, v1.2d
+      84: 0e0c3c30     	mov	w16, v1.s[1]
+      88: 1e260031     	fmov	w17, s1
+      8c: 6ee23c01     	cmhs	v1.2d, v0.2d, v2.2d
+      90: 0ea12821     	xtn	v1.2s, v1.2d
+      94: 121f0209     	and	w9, w16, #0x2
+      98: 4b110129     	sub	w9, w9, w17
+      9c: 0e0c3c32     	mov	w18, v1.s[1]
+      a0: 1e260021     	fmov	w1, s1
+      a4: ad430801     	ldp	q1, q2, [x0, #0x60]
+      a8: 2a092108     	orr	w8, w8, w9, lsl #8
+      ac: 121f0249     	and	w9, w18, #0x2
+      b0: 4b010129     	sub	w9, w9, w1
+      b4: 2a092908     	orr	w8, w8, w9, lsl #10
+      b8: 6ee13c01     	cmhs	v1.2d, v0.2d, v1.2d
+      bc: 6ee23c00     	cmhs	v0.2d, v0.2d, v2.2d
+      c0: 0ea12821     	xtn	v1.2s, v1.2d
+      c4: 0ea12800     	xtn	v0.2s, v0.2d
+      c8: 0e0c3c20     	mov	w0, v1.s[1]
+      cc: 1e260022     	fmov	w2, s1
+      d0: 0e0c3c0a     	mov	w10, v0.s[1]
+      d4: 121f0009     	and	w9, w0, #0x2
+      d8: 121f014a     	and	w10, w10, #0x2
+      dc: 4b020129     	sub	w9, w9, w2
+      e0: 2a093108     	orr	w8, w8, w9, lsl #12
+      e4: 1e260009     	fmov	w9, s0
+      e8: 4b090149     	sub	w9, w10, w9
+      ec: 2a093900     	orr	w0, w8, w9, lsl #14
+      f0: d65f03c0     	ret
+
+Disassembly of section .text.control_64_3:
+
+0000000000000000 <control_64_3>:
+       0: ad400801     	ldp	q1, q2, [x0]
+       4: 4e080c20     	dup	v0.2d, x1
+       8: 6ee03421     	cmhi	v1.2d, v1.2d, v0.2d
+       c: 0ea12821     	xtn	v1.2s, v1.2d
+      10: 0e0c3c29     	mov	w9, v1.s[1]
+      14: 1e260028     	fmov	w8, s1
+      18: 6ee03441     	cmhi	v1.2d, v2.2d, v0.2d
+      1c: 0ea12821     	xtn	v1.2s, v1.2d
+      20: 121f0129     	and	w9, w9, #0x2
+      24: 4b080128     	sub	w8, w9, w8
+      28: 0e0c3c2b     	mov	w11, v1.s[1]
+      2c: 1e26002a     	fmov	w10, s1
+      30: ad410801     	ldp	q1, q2, [x0, #0x20]
+      34: 121f0169     	and	w9, w11, #0x2
+      38: 4b0a0129     	sub	w9, w9, w10
+      3c: 2a090908     	orr	w8, w8, w9, lsl #2
+      40: 6ee03421     	cmhi	v1.2d, v1.2d, v0.2d
+      44: 0ea12821     	xtn	v1.2s, v1.2d
+      48: 0e0c3c2c     	mov	w12, v1.s[1]
+      4c: 1e26002d     	fmov	w13, s1
+      50: 6ee03441     	cmhi	v1.2d, v2.2d, v0.2d
+      54: 0ea12821     	xtn	v1.2s, v1.2d
+      58: 121f0189     	and	w9, w12, #0x2
+      5c: 4b0d0129     	sub	w9, w9, w13
+      60: 0e0c3c2e     	mov	w14, v1.s[1]
+      64: 1e26002f     	fmov	w15, s1
+      68: ad420801     	ldp	q1, q2, [x0, #0x40]
+      6c: 2a091108     	orr	w8, w8, w9, lsl #4
+      70: 121f01c9     	and	w9, w14, #0x2
+      74: 4b0f0129     	sub	w9, w9, w15
+      78: 2a091908     	orr	w8, w8, w9, lsl #6
+      7c: 6ee03421     	cmhi	v1.2d, v1.2d, v0.2d
+      80: 0ea12821     	xtn	v1.2s, v1.2d
+      84: 0e0c3c30     	mov	w16, v1.s[1]
+      88: 1e260031     	fmov	w17, s1
+      8c: 6ee03441     	cmhi	v1.2d, v2.2d, v0.2d
+      90: 0ea12821     	xtn	v1.2s, v1.2d
+      94: 121f0209     	and	w9, w16, #0x2
+      98: 4b110129     	sub	w9, w9, w17
+      9c: 0e0c3c32     	mov	w18, v1.s[1]
+      a0: 1e260021     	fmov	w1, s1
+      a4: ad430801     	ldp	q1, q2, [x0, #0x60]
+      a8: 2a092108     	orr	w8, w8, w9, lsl #8
+      ac: 121f0249     	and	w9, w18, #0x2
+      b0: 4b010129     	sub	w9, w9, w1
+      b4: 2a092908     	orr	w8, w8, w9, lsl #10
+      b8: 6ee03421     	cmhi	v1.2d, v1.2d, v0.2d
+      bc: 6ee03440     	cmhi	v0.2d, v2.2d, v0.2d
+      c0: 0ea12821     	xtn	v1.2s, v1.2d
+      c4: 0ea12800     	xtn	v0.2s, v0.2d
+      c8: 0e0c3c20     	mov	w0, v1.s[1]
+      cc: 1e260022     	fmov	w2, s1
+      d0: 0e0c3c0a     	mov	w10, v0.s[1]
+      d4: 121f0009     	and	w9, w0, #0x2
+      d8: 121f014a     	and	w10, w10, #0x2
+      dc: 4b020129     	sub	w9, w9, w2
+      e0: 2a093108     	orr	w8, w8, w9, lsl #12
+      e4: 1e260009     	fmov	w9, s0
+      e8: 4b090149     	sub	w9, w10, w9
+      ec: 2a093900     	orr	w0, w8, w9, lsl #14
+      f0: d65f03c0     	ret
+
+Disassembly of section .text.control_64_4:
+
+0000000000000000 <control_64_4>:
+       0: ad400801     	ldp	q1, q2, [x0]
+       4: 4e080c20     	dup	v0.2d, x1
+       8: 6ee03c21     	cmhs	v1.2d, v1.2d, v0.2d
+       c: 0ea12821     	xtn	v1.2s, v1.2d
+      10: 0e0c3c29     	mov	w9, v1.s[1]
+      14: 1e260028     	fmov	w8, s1
+      18: 6ee03c41     	cmhs	v1.2d, v2.2d, v0.2d
+      1c: 0ea12821     	xtn	v1.2s, v1.2d
+      20: 121f0129     	and	w9, w9, #0x2
+      24: 4b080128     	sub	w8, w9, w8
+      28: 0e0c3c2b     	mov	w11, v1.s[1]
+      2c: 1e26002a     	fmov	w10, s1
+      30: ad410801     	ldp	q1, q2, [x0, #0x20]
+      34: 121f0169     	and	w9, w11, #0x2
+      38: 4b0a0129     	sub	w9, w9, w10
+      3c: 2a090908     	orr	w8, w8, w9, lsl #2
+      40: 6ee03c21     	cmhs	v1.2d, v1.2d, v0.2d
+      44: 0ea12821     	xtn	v1.2s, v1.2d
+      48: 0e0c3c2c     	mov	w12, v1.s[1]
+      4c: 1e26002d     	fmov	w13, s1
+      50: 6ee03c41     	cmhs	v1.2d, v2.2d, v0.2d
+      54: 0ea12821     	xtn	v1.2s, v1.2d
+      58: 121f0189     	and	w9, w12, #0x2
+      5c: 4b0d0129     	sub	w9, w9, w13
+      60: 0e0c3c2e     	mov	w14, v1.s[1]
+      64: 1e26002f     	fmov	w15, s1
+      68: ad420801     	ldp	q1, q2, [x0, #0x40]
+      6c: 2a091108     	orr	w8, w8, w9, lsl #4
+      70: 121f01c9     	and	w9, w14, #0x2
+      74: 4b0f0129     	sub	w9, w9, w15
+      78: 2a091908     	orr	w8, w8, w9, lsl #6
+      7c: 6ee03c21     	cmhs	v1.2d, v1.2d, v0.2d
+      80: 0ea12821     	xtn	v1.2s, v1.2d
+      84: 0e0c3c30     	mov	w16, v1.s[1]
+      88: 1e260031     	fmov	w17, s1
+      8c: 6ee03c41     	cmhs	v1.2d, v2.2d, v0.2d
+      90: 0ea12821     	xtn	v1.2s, v1.2d
+      94: 121f0209     	and	w9, w16, #0x2
+      98: 4b110129     	sub	w9, w9, w17
+      9c: 0e0c3c32     	mov	w18, v1.s[1]
+      a0: 1e260021     	fmov	w1, s1
+      a4: ad430801     	ldp	q1, q2, [x0, #0x60]
+      a8: 2a092108     	orr	w8, w8, w9, lsl #8
+      ac: 121f0249     	and	w9, w18, #0x2
+      b0: 4b010129     	sub	w9, w9, w1
+      b4: 2a092908     	orr	w8, w8, w9, lsl #10
+      b8: 6ee03c21     	cmhs	v1.2d, v1.2d, v0.2d
+      bc: 6ee03c40     	cmhs	v0.2d, v2.2d, v0.2d
+      c0: 0ea12821     	xtn	v1.2s, v1.2d
+      c4: 0ea12800     	xtn	v0.2s, v0.2d
+      c8: 0e0c3c20     	mov	w0, v1.s[1]
+      cc: 1e260022     	fmov	w2, s1
+      d0: 0e0c3c0a     	mov	w10, v0.s[1]
+      d4: 121f0009     	and	w9, w0, #0x2
+      d8: 121f014a     	and	w10, w10, #0x2
+      dc: 4b020129     	sub	w9, w9, w2
+      e0: 2a093108     	orr	w8, w8, w9, lsl #12
+      e4: 1e260009     	fmov	w9, s0
+      e8: 4b090149     	sub	w9, w10, w9
+      ec: 2a093900     	orr	w0, w8, w9, lsl #14
+      f0: d65f03c0     	ret

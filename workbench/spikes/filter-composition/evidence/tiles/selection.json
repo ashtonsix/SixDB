@@ -1,0 +1,83 @@
+{
+  "cohort": "20261015T222517Z-4f38a740",
+  "scope": "Selection cohort; native8 body is final. Complete16 policy subsequently selected and separately confirmed. Timings are warmed whole mask-to-address consumers.",
+  "members": {
+    "granite": {
+      "job": "20261015T222530Z-4136e9c8",
+      "artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 100240962,
+        "files": 44,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/ec7dece60102a348c0f4d53953e662b2eaedf622faeb41273c523084a3529524.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "ec7dece60102a348c0f4d53953e662b2eaedf622faeb41273c523084a3529524",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/ec7dece60102a348c0f4d53953e662b2eaedf622faeb41273c523084a3529524.tar.gz"
+      },
+      "regressions": {
+        "avx2-regression.txt": "filters: unsigned boundaries, layouts, selections and projection checks passed",
+        "avx512-regression.txt": "filters: unsigned boundaries, layouts, selections and projection checks passed"
+      },
+      "source": {
+        "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+        "digest": "0078ae2791c0243673d5d0444161b6b10ed758f876ec4258883d4177d8c6f773",
+        "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+        "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c",
+        "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+        "sha256": "828655f619ac86aef0f76fab48684e61456a68ac5a1275d94699b704fd6ecb81"
+      }
+    },
+    "neon": {
+      "job": "20261015T222536Z-01d7d2de",
+      "artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 54997966,
+        "files": 26,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/59723df43f19d432af671c973c4bec88ae408b0fee4052a10b9a8a3a5a09f653.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "59723df43f19d432af671c973c4bec88ae408b0fee4052a10b9a8a3a5a09f653",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/59723df43f19d432af671c973c4bec88ae408b0fee4052a10b9a8a3a5a09f653.tar.gz"
+      },
+      "regressions": {
+        "neon-regression.txt": "filters: unsigned boundaries, layouts, selections and projection checks passed"
+      },
+      "source": {
+        "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+        "digest": "0078ae2791c0243673d5d0444161b6b10ed758f876ec4258883d4177d8c6f773",
+        "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+        "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c",
+        "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+        "sha256": "828655f619ac86aef0f76fab48684e61456a68ac5a1275d94699b704fd6ecb81"
+      }
+    },
+    "zen5": {
+      "job": "20261015T222524Z-0f1d5240",
+      "artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 101512795,
+        "files": 44,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/fcb7f311e25632778dca0aaac34062e3e8af0e397998cae8636be5f0feb7c232.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "fcb7f311e25632778dca0aaac34062e3e8af0e397998cae8636be5f0feb7c232",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/fcb7f311e25632778dca0aaac34062e3e8af0e397998cae8636be5f0feb7c232.tar.gz"
+      },
+      "regressions": {
+        "avx2-regression.txt": "filters: unsigned boundaries, layouts, selections and projection checks passed",
+        "avx512-regression.txt": "filters: unsigned boundaries, layouts, selections and projection checks passed"
+      },
+      "source": {
+        "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+        "digest": "0078ae2791c0243673d5d0444161b6b10ed758f876ec4258883d4177d8c6f773",
+        "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+        "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c",
+        "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+        "sha256": "828655f619ac86aef0f76fab48684e61456a68ac5a1275d94699b704fd6ecb81"
+      }
+    }
+  }
+}

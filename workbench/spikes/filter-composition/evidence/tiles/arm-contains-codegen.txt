@@ -1,0 +1,73 @@
+Native AArch64 scalar/NEON prepared and runtime witnesses; pinned Clang21.1.8, -O3 -fno-vectorize -fno-slp-vectorize -mcpu=neoverse-v2 -march=armv8-a+simd
+
+build/filter-tiles/contains-arm:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+0000000000000840 <contains6_arm_prepared>:
+     840:      	ldr	x8, [x0]
+     844:      	eon	x8, x1, x8
+     848:      	and	x8, x8, x8, lsr #16
+     84c:      	and	w8, w8, w8, lsr #16
+     850:      	tst	w8, w8, lsr #8
+     854:      	cset	w0, ne
+     858:      	ret
+     85c:      	nop
+
+0000000000000860 <contains4_arm_prepared>:
+     860:      	ldr	w8, [x0]
+     864:      	eon	x8, x1, x8
+     868:      	and	w8, w8, w8, lsr #16
+     86c:      	tst	w8, w8, lsr #8
+     870:      	cset	w0, ne
+     874:      	ret
+     878:      	nop
+     87c:      	nop
+
+0000000000000880 <match6_arm_prepared>:
+     880:      	ldr	x8, [x0]
+     884:      	eon	x8, x1, x8
+     888:      	and	x8, x8, x8, lsr #16
+     88c:      	and	w8, w8, w8, lsr #16
+     890:      	and	w0, w8, w8, lsr #8
+     894:      	ret
+     898:      	nop
+     89c:      	nop
+
+00000000000008a0 <contains6_arm_runtime>:
+     8a0:      	cmp	w1, #0x3f
+     8a4:      	b.ls	0x8b0 <contains6_arm_runtime+0x10>
+     8a8:      	mov	w0, wzr
+     8ac:      	ret
+     8b0:      	adrp	x8, 0x2000 <main+0x1720>
+     8b4:      	dup	v0.8b, w1
+     8b8:      	ldr	x9, [x0]
+     8bc:      	ldr	d1, [x8, #0xae0]
+     8c0:      	cmtst	v0.8b, v0.8b, v1.8b
+     8c4:      	fmov	x8, d0
+     8c8:      	eon	x8, x9, x8
+     8cc:      	and	x8, x8, x8, lsr #16
+     8d0:      	and	w8, w8, w8, lsr #16
+     8d4:      	tst	w8, w8, lsr #8
+     8d8:      	cset	w0, ne
+     8dc:      	ret
+
+Compile-only SVE2 BitPerm control; -mcpu=neoverse-v2, not executed on this Apple host
+
+build/filter-tiles/contains-arm-sve:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+00000000000008e0 <contains6_sve_prepared>:
+     8e0:      	ptrue	p1.d, vl1
+     8e4:      	ld1rqd	{ z2.d }, p1/z, [x0]
+     8e8:      	bgrp	z2.d, z2.d, z0.d
+     8ec:      	bgrp	z2.d, z2.d, z0.d
+     8f0:      	bgrp	z0.d, z2.d, z0.d
+     8f4:      	and	z0.b, z0.b, #0x3f
+     8f8:      	cmpeq	p0.b, p0/z, z0.b, z1.b
+     8fc:      	cset	w0, ne
+     900:      	ret
+     904:      	nop
+     908:      	nop
+     90c:      	nop

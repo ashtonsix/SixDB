@@ -49,6 +49,11 @@ void catalogue_bench();
 [[gnu::always_inline]] inline unsigned next(word mask, unsigned salt) {
     return unsigned((mask * 0x9e3779b97f4a7c15ULL) >> 58) ^ (salt & 63);
 }
+[[gnu::always_inline]] inline unsigned stream_salt(unsigned iteration, unsigned stream) {
+    // Distinct residues modulo 64 prevent equal results from locking all
+    // recurrences onto the same window. Stream zero keeps the serial trace.
+    return iteration + stream * 0x9e37u;
+}
 template <class CallBody>
 [[gnu::noinline]] void measure(const Fixture &fixture, unsigned op, const char *name,
                                std::uint16_t active, CallBody call, const char *workload = "mono") {
@@ -59,13 +64,15 @@ template <class CallBody>
             std::array<unsigned, 8> cursor{0, 7, 13, 21, 32, 41, 54, 63};
             for (unsigned i = 0; i < 512; ++i)
                 for (unsigned j = 0; j < 8; ++j)
-                    cursor[j] = next(call(cursor[j], j), i);
+                    cursor[j] = next(call(cursor[j], j), stream_salt(i, j));
             auto start = std::chrono::steady_clock::now();
             for (unsigned i = 0; i < iterations; ++i) {
                 if (serial)
                     cursor[0] = next(call(cursor[0], 0), i);
                 else
-                    sp::detail::each<8>([&](auto j) { cursor[j] = next(call(cursor[j], j), i); });
+                    sp::detail::each<8>([&](auto j) {
+                        cursor[j] = next(call(cursor[j], j), stream_salt(i, j));
+                    });
             }
             auto stop = std::chrono::steady_clock::now();
             for (auto c : cursor)

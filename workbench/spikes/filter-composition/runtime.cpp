@@ -109,13 +109,13 @@ void catalogue_bench() {
                     };
                     for (unsigned i = 0; i < 2048; ++i)
                         for (unsigned j = 0; j < 8; ++j)
-                            step(j, i);
+                            step(j, stream_salt(i, j));
                     auto start = std::chrono::steady_clock::now();
                     for (unsigned i = 0; i < iterations; ++i) {
                         if (serial)
                             step(0, i);
                         else
-                            sp::detail::each<8>([&](auto j) { step(j, i); });
+                            sp::detail::each<8>([&](auto j) { step(j, stream_salt(i, j)); });
                     }
                     auto stop = std::chrono::steady_clock::now();
                     for (auto x : cursor)

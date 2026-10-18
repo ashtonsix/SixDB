@@ -28,11 +28,12 @@ template<class Call> [[gnu::noinline]] void measure(const char* module,unsigned 
     for(bool serial:{true,false})for(unsigned rep=0;rep<repeats;++rep) {
         std::array<unsigned,8> cursor{0,7,13,21,32,41,54,63};
         const unsigned streams=serial?1:8;
-        for(unsigned i=0;i<2048;++i)cursor[0]=next_window(call(cursor[0]),i);
+        for(unsigned i=0;i<2048;++i)
+            for(unsigned j=0;j<8;++j)cursor[j]=next_window(call(cursor[j]),i+j*0x9e37u);
         auto begin=std::chrono::steady_clock::now();
         for(unsigned i=0;i<iterations;++i) {
             if(serial)cursor[0]=next_window(call(cursor[0]),i);
-            else sp::detail::each<8>([&](auto j){cursor[j]=next_window(call(cursor[j]),i);});
+            else sp::detail::each<8>([&](auto j){cursor[j]=next_window(call(cursor[j]),i+unsigned(j)*0x9e37u);});
         }
         auto end=std::chrono::steady_clock::now();
         for(auto c:cursor)observed+=c;

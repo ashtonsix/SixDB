@@ -1,0 +1,243 @@
+{
+  "job": "20261016T000542Z-d0e784f0",
+  "owner": "Iceberg\u2013Swiss",
+  "input_sha256": {
+    "iceberg_swiss_40_10_0_30_f0-3191-0-0.csv": "33fe1a644c090f3a84f83493f18c13b17f26d39e7d90ffc9b39941c6a2f9a6db",
+    "iceberg_swiss_40_10_0_30_f0-713-0-0.csv": "0b6edab54cd036c5c29ca17958fe143a6cb751497af2f10ee4930113526cbedb",
+    "iceberg_swiss_40_10_0_30_f0-76543-0-0.csv": "3ec205497296285c73247ad829c0350630d55c9eb288b95be41da831c6d18bca",
+    "iceberg_swiss_40_10_0_30_f11-3191-0-0.csv": "9300da22c79a12c01c5fc6f69e5c12f3aaf827d1a8de4ea6890a9e99a5e71b5c",
+    "iceberg_swiss_40_10_0_30_f11-713-0-0.csv": "10f17b405226879f4715e62ed212fd53df05e37bc64cab20829d95b74f0d2cd8",
+    "iceberg_swiss_40_10_0_30_f11-76543-0-0.csv": "8087561816c064fcef015bee4d2cbfec17031b10660e5ffdb1c2281a16c1a7d0",
+    "iceberg_swiss_40_10_8_30_1_f0-3191-0-0.csv": "ee5fa122bcf35400c762d4b22e4b8165f3428ea66826cdf48606648501178ea6",
+    "iceberg_swiss_40_10_8_30_1_f0-713-0-0.csv": "33adff5e5a0ead3f6007d13809ef2c67971ab396c9fcb951c4a5dc77ba72726c",
+    "iceberg_swiss_40_10_8_30_1_f0-76543-0-0.csv": "84787a3f8efb47e58490deab1c739f06883980c8c14504dde16af075cef09fcb",
+    "iceberg_swiss_40_10_8_30_1_f11-3191-0-0.csv": "c88e248aeea9f945b8cf6afc37f77d4f7550fbf6ecfa809cf106c8230c2b6c68",
+    "iceberg_swiss_40_10_8_30_1_f11-713-0-0.csv": "5def934d46acb3424f1c68c0d4392cd9bdf18aaeb6cff20f8fe3b6b88fae9074",
+    "iceberg_swiss_40_10_8_30_1_f11-76543-0-0.csv": "af19f97bc02049ea932010d1040c160b71bfb527161cc3c8ef7b186d21f3fb10",
+    "iceberg_swiss_40_10_8_30_f0-3191-0-0.csv": "bacd369becb1d6a36b9f4248bf93658b4f5288b8d13a35b6b749537b09cf1d13",
+    "iceberg_swiss_40_10_8_30_f0-713-0-0.csv": "e133099e26e5c4047477fcd0c7c6ba6ed8569f699a3b953d4b7e41478db1b82c",
+    "iceberg_swiss_40_10_8_30_f0-76543-0-0.csv": "936d692fede2a44fb8bb5c4234eef293d61f34e33d38259df3b64bc6de731fe6",
+    "iceberg_swiss_40_10_8_30_f11-3191-0-0.csv": "6960d037690e931cc606fe54b36ff453e04c762c1f6834c008bfe6ca18915f3c",
+    "iceberg_swiss_40_10_8_30_f11-713-0-0.csv": "899dc8695b8cfb74f31ee80df0e0cdf0b72105629cf2fa6eba554c8a409ae04f",
+    "iceberg_swiss_40_10_8_30_f11-76543-0-0.csv": "397731f462840fa6f70c879ec45a410d9085cc1e303c5f509521026a0177535f"
+  },
+  "rows": [
+    {
+      "arm": 0,
+      "implementation": "abseil",
+      "value_bytes": 0,
+      "multi": 0,
+      "metric": "independent",
+      "samples": 15,
+      "median_ns": 3.16808
+    },
+    {
+      "arm": 0,
+      "implementation": "abseil",
+      "value_bytes": 0,
+      "multi": 0,
+      "metric": "serial",
+      "samples": 15,
+      "median_ns": 5.17744
+    },
+    {
+      "arm": 0,
+      "implementation": "abseil",
+      "value_bytes": 8,
+      "multi": 0,
+      "metric": "independent",
+      "samples": 15,
+      "median_ns": 3.72909
+    },
+    {
+      "arm": 0,
+      "implementation": "abseil",
+      "value_bytes": 8,
+      "multi": 0,
+      "metric": "serial",
+      "samples": 15,
+      "median_ns": 11.0556
+    },
+    {
+      "arm": 0,
+      "implementation": "abseil",
+      "value_bytes": 8,
+      "multi": 1,
+      "metric": "independent",
+      "samples": 15,
+      "median_ns": 6.16121
+    },
+    {
+      "arm": 0,
+      "implementation": "abseil",
+      "value_bytes": 8,
+      "multi": 1,
+      "metric": "serial",
+      "samples": 15,
+      "median_ns": 14.4757
+    },
+    {
+      "arm": 0,
+      "implementation": "iceberg",
+      "value_bytes": 0,
+      "multi": 0,
+      "metric": "independent",
+      "samples": 15,
+      "median_ns": 5.27019
+    },
+    {
+      "arm": 0,
+      "implementation": "iceberg",
+      "value_bytes": 0,
+      "multi": 0,
+      "metric": "serial",
+      "samples": 15,
+      "median_ns": 6.99629
+    },
+    {
+      "arm": 0,
+      "implementation": "iceberg",
+      "value_bytes": 8,
+      "multi": 0,
+      "metric": "independent",
+      "samples": 15,
+      "median_ns": 6.66328
+    },
+    {
+      "arm": 0,
+      "implementation": "iceberg",
+      "value_bytes": 8,
+      "multi": 0,
+      "metric": "serial",
+      "samples": 15,
+      "median_ns": 18.3175
+    },
+    {
+      "arm": 0,
+      "implementation": "iceberg",
+      "value_bytes": 8,
+      "multi": 1,
+      "metric": "independent",
+      "samples": 15,
+      "median_ns": 7.93719
+    },
+    {
+      "arm": 0,
+      "implementation": "iceberg",
+      "value_bytes": 8,
+      "multi": 1,
+      "metric": "serial",
+      "samples": 15,
+      "median_ns": 21.6431
+    },
+    {
+      "arm": 11,
+      "implementation": "abseil",
+      "value_bytes": 0,
+      "multi": 0,
+      "metric": "independent",
+      "samples": 15,
+      "median_ns": 2.91611
+    },
+    {
+      "arm": 11,
+      "implementation": "abseil",
+      "value_bytes": 0,
+      "multi": 0,
+      "metric": "serial",
+      "samples": 15,
+      "median_ns": 5.04076
+    },
+    {
+      "arm": 11,
+      "implementation": "abseil",
+      "value_bytes": 8,
+      "multi": 0,
+      "metric": "independent",
+      "samples": 15,
+      "median_ns": 3.61999
+    },
+    {
+      "arm": 11,
+      "implementation": "abseil",
+      "value_bytes": 8,
+      "multi": 0,
+      "metric": "serial",
+      "samples": 15,
+      "median_ns": 11.0323
+    },
+    {
+      "arm": 11,
+      "implementation": "abseil",
+      "value_bytes": 8,
+      "multi": 1,
+      "metric": "independent",
+      "samples": 15,
+      "median_ns": 6.19852
+    },
+    {
+      "arm": 11,
+      "implementation": "abseil",
+      "value_bytes": 8,
+      "multi": 1,
+      "metric": "serial",
+      "samples": 15,
+      "median_ns": 14.3218
+    },
+    {
+      "arm": 11,
+      "implementation": "iceberg",
+      "value_bytes": 0,
+      "multi": 0,
+      "metric": "independent",
+      "samples": 15,
+      "median_ns": 7.30037
+    },
+    {
+      "arm": 11,
+      "implementation": "iceberg",
+      "value_bytes": 0,
+      "multi": 0,
+      "metric": "serial",
+      "samples": 15,
+      "median_ns": 10.1383
+    },
+    {
+      "arm": 11,
+      "implementation": "iceberg",
+      "value_bytes": 8,
+      "multi": 0,
+      "metric": "independent",
+      "samples": 15,
+      "median_ns": 8.93774
+    },
+    {
+      "arm": 11,
+      "implementation": "iceberg",
+      "value_bytes": 8,
+      "multi": 0,
+      "metric": "serial",
+      "samples": 15,
+      "median_ns": 21.2372
+    },
+    {
+      "arm": 11,
+      "implementation": "iceberg",
+      "value_bytes": 8,
+      "multi": 1,
+      "metric": "independent",
+      "samples": 15,
+      "median_ns": 11.2929
+    },
+    {
+      "arm": 11,
+      "implementation": "iceberg",
+      "value_bytes": 8,
+      "multi": 1,
+      "metric": "serial",
+      "samples": 15,
+      "median_ns": 23.8695
+    }
+  ],
+  "scope": "Complete table K30, 13926 entries, three seeds/five reps. f0 current full filter; f11 public indexof. ARM capture predates x86-only graduation."
+}

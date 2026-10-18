@@ -1,0 +1,341 @@
+{
+  "qualification": [
+    {
+      "host": "zen5",
+      "stage": "final",
+      "job": "20261016T002636Z-77167422",
+      "archive": "s3://calico-fleet-artifacts/sixdb/workers/20261016T002636Z-77167422",
+      "result": {
+        "state": "complete",
+        "script_returncode": 0,
+        "script_seconds": 435.01048469543457,
+        "worker_seconds_before_collection": 438.45571732521057
+      },
+      "instance": {
+        "accountId": "728776296140",
+        "architecture": "x86_64",
+        "availabilityZone": "us-east-1a",
+        "billingProducts": null,
+        "devpayProductCodes": null,
+        "marketplaceProductCodes": null,
+        "imageId": "ami-025d99823a4caad37",
+        "instanceId": "i-03740edac93947a74",
+        "instanceType": "c8a.xlarge",
+        "kernelId": null,
+        "pendingTime": "2026-10-15T22:00:08Z",
+        "privateIp": "172.31.22.58",
+        "ramdiskId": null,
+        "region": "us-east-1",
+        "version": "2017-09-30"
+      },
+      "cpu": {
+        "CPU(s):": "4",
+        "Model name:": "AMD EPYC 9R45",
+        "Thread(s) per core:": "1",
+        "L1d cache:": "192 KiB (4 instances)",
+        "L2 cache:": "4 MiB (4 instances)",
+        "L3 cache:": "16 MiB (1 instance)"
+      },
+      "compiler": "Ubuntu clang version 21.1.8 (++20251221032922+2078da43e25a-1~exp1~20251221153059.70)\nTarget: x86_64-pc-linux-gnu\nThread model: posix\nInstalledDir: /usr/lib/llvm-21/bin\n",
+      "matching_current_files": 76,
+      "nonmatching_current_files": [
+        "ikea/test/filters/check.cpp"
+      ],
+      "checks": {
+        "avx2-check.txt": "filters: unsigned boundaries, layouts, selections and projection checks passed",
+        "avx2-entropy-0-check.txt": "x86 varied-query truth checks passed; observation=1351250",
+        "avx2-entropy-1-check.txt": "x86 varied-query truth checks passed; observation=1351250",
+        "avx2-index-0-check.txt": "x86 indexof truth checks passed; observation=7286850",
+        "avx2-index-1-check.txt": "x86 indexof truth checks passed; observation=7286850",
+        "avx512-check.txt": "filters: unsigned boundaries, layouts, selections and projection checks passed",
+        "avx512-entropy-0-check.txt": "x86 varied-query truth checks passed; observation=1351250",
+        "avx512-entropy-1-check.txt": "x86 varied-query truth checks passed; observation=1351250",
+        "avx512-index-0-check.txt": "x86 indexof truth checks passed; observation=7286850",
+        "avx512-index-1-check.txt": "x86 indexof truth checks passed; observation=7286850",
+        "gfni-avx2-check.txt": "GFNI without AVX512: all prepared queries and masks passed",
+        "avx2-sanitize.txt": "x86 graduation ASan/UBSan: indexof windows/activity/domain, Local/Striped/heads, exact page ends and all prepared widths passed",
+        "avx512-sanitize.txt": "x86 graduation ASan/UBSan: indexof windows/activity/domain, Local/Striped/heads, exact page ends and all prepared widths passed"
+      },
+      "sample_sha256": {
+        "avx2-entropy-0.csv": "114437ff7d1dfdf306b372ec57ed07f28837611b9ef3f42e62744cf673749e51",
+        "avx2-entropy-1.csv": "03545a72b585c2c37ce488734e6f62bd95c91312d1d00cf6f6fd4d89d53bd2a1",
+        "avx2-index-0.csv": "e107daa719c5a4c54ac272732b41dc011d383284ab418264517224325c93fb4a",
+        "avx2-index-1.csv": "ec723da210564a96f2cbbda7d2acf1fe7ae976133c6d046ad0f1d725c47dc2c4",
+        "avx512-entropy-0.csv": "01178550c8faf5db974328ef72e13b20641f59ddfd011b8ea3bd66a37ee1df3f",
+        "avx512-entropy-1.csv": "e54332886d7fc889766f14d342b09ccab5cc64fbf5340dfd674fc3153e3bed59",
+        "avx512-index-0.csv": "d473ba3a57eabb4983d69905f3aaff3be57ade14d1c98134003e4e35a4d1cd0a",
+        "avx512-index-1.csv": "0be6ac409b48a7ab05fcc9e881dd9b115ca03b13b20f06d2c0ae0d8b7ea9ccd5"
+      }
+    },
+    {
+      "host": "zen5",
+      "stage": "owner",
+      "job": "20261016T003717Z-d156ca39",
+      "archive": "s3://calico-fleet-artifacts/sixdb/workers/20261016T003717Z-d156ca39",
+      "result": {
+        "state": "complete",
+        "script_returncode": 0,
+        "script_seconds": 20.366395473480225,
+        "worker_seconds_before_collection": 23.76383137702942
+      },
+      "instance": {
+        "accountId": "728776296140",
+        "architecture": "x86_64",
+        "availabilityZone": "us-east-1a",
+        "billingProducts": null,
+        "devpayProductCodes": null,
+        "marketplaceProductCodes": null,
+        "imageId": "ami-025d99823a4caad37",
+        "instanceId": "i-03740edac93947a74",
+        "instanceType": "c8a.xlarge",
+        "kernelId": null,
+        "pendingTime": "2026-10-15T22:00:08Z",
+        "privateIp": "172.31.22.58",
+        "ramdiskId": null,
+        "region": "us-east-1",
+        "version": "2017-09-30"
+      },
+      "cpu": {
+        "CPU(s):": "4",
+        "Model name:": "AMD EPYC 9R45",
+        "Thread(s) per core:": "1",
+        "L1d cache:": "192 KiB (4 instances)",
+        "L2 cache:": "4 MiB (4 instances)",
+        "L3 cache:": "16 MiB (1 instance)"
+      },
+      "compiler": "Ubuntu clang version 21.1.8 (++20251221032922+2078da43e25a-1~exp1~20251221153059.70)\nTarget: x86_64-pc-linux-gnu\nThread model: posix\nInstalledDir: /usr/lib/llvm-21/bin\n",
+      "matching_current_files": 77,
+      "nonmatching_current_files": [],
+      "checks": {
+        "avx2-check.txt": "filters: unsigned boundaries, layouts, selections and projection checks passed",
+        "avx2-index-0-check.txt": "x86 varied-query truth checks passed; observation=1891750",
+        "avx2-index-1-check.txt": "x86 varied-query truth checks passed; observation=1891750",
+        "avx512-check.txt": "filters: unsigned boundaries, layouts, selections and projection checks passed",
+        "avx512-index-0-check.txt": "x86 varied-query truth checks passed; observation=1891750",
+        "avx512-index-1-check.txt": "x86 varied-query truth checks passed; observation=1891750"
+      },
+      "sample_sha256": {
+        "avx2-index-0.csv": "fdbd3b667bccaa3f5ecfc9829e170779f00608284db96cd95fccd7067bc0fc82",
+        "avx2-index-1.csv": "5c943acce8e883aab7d0763b55b1e574faf4559f5746afda9881125439439c3e",
+        "avx512-index-0.csv": "682d31ba646880666388617362588844911d9b3b572324d6cc14069bf5f0ab64",
+        "avx512-index-1.csv": "31b196821dd75c426503c3ced39cb9c8ac5870bd464ef47976b7e02b85bb7e44"
+      }
+    },
+    {
+      "host": "granite",
+      "stage": "final",
+      "job": "20261016T002642Z-a0fe18cd",
+      "archive": "s3://calico-fleet-artifacts/sixdb/workers/20261016T002642Z-a0fe18cd",
+      "result": {
+        "state": "complete",
+        "script_returncode": 0,
+        "script_seconds": 561.6316556930542,
+        "worker_seconds_before_collection": 566.169248342514
+      },
+      "instance": {
+        "accountId": "728776296140",
+        "architecture": "x86_64",
+        "availabilityZone": "us-east-1a",
+        "billingProducts": null,
+        "devpayProductCodes": null,
+        "marketplaceProductCodes": null,
+        "imageId": "ami-025d99823a4caad37",
+        "instanceId": "i-0f9fc9b4d13befdff",
+        "instanceType": "c8i.xlarge",
+        "kernelId": null,
+        "pendingTime": "2026-10-15T23:42:53Z",
+        "privateIp": "172.31.21.63",
+        "ramdiskId": null,
+        "region": "us-east-1",
+        "version": "2017-09-30"
+      },
+      "cpu": {
+        "CPU(s):": "2",
+        "Model name:": "Intel(R) Xeon(R) 6975P-C",
+        "Thread(s) per core:": "1",
+        "L1d cache:": "96 KiB (2 instances)",
+        "L2 cache:": "4 MiB (2 instances)",
+        "L3 cache:": "480 MiB (1 instance)"
+      },
+      "compiler": "Ubuntu clang version 21.1.8 (++20251221032922+2078da43e25a-1~exp1~20251221153059.70)\nTarget: x86_64-pc-linux-gnu\nThread model: posix\nInstalledDir: /usr/lib/llvm-21/bin\n",
+      "matching_current_files": 76,
+      "nonmatching_current_files": [
+        "ikea/test/filters/check.cpp"
+      ],
+      "checks": {
+        "avx2-check.txt": "filters: unsigned boundaries, layouts, selections and projection checks passed",
+        "avx2-entropy-0-check.txt": "x86 varied-query truth checks passed; observation=1351250",
+        "avx2-entropy-1-check.txt": "x86 varied-query truth checks passed; observation=1351250",
+        "avx2-index-0-check.txt": "x86 indexof truth checks passed; observation=7286850",
+        "avx2-index-1-check.txt": "x86 indexof truth checks passed; observation=7286850",
+        "avx512-check.txt": "filters: unsigned boundaries, layouts, selections and projection checks passed",
+        "avx512-entropy-0-check.txt": "x86 varied-query truth checks passed; observation=1351250",
+        "avx512-entropy-1-check.txt": "x86 varied-query truth checks passed; observation=1351250",
+        "avx512-index-0-check.txt": "x86 indexof truth checks passed; observation=7286850",
+        "avx512-index-1-check.txt": "x86 indexof truth checks passed; observation=7286850",
+        "gfni-avx2-check.txt": "GFNI without AVX512: all prepared queries and masks passed",
+        "avx2-sanitize.txt": "x86 graduation ASan/UBSan: indexof windows/activity/domain, Local/Striped/heads, exact page ends and all prepared widths passed",
+        "avx512-sanitize.txt": "x86 graduation ASan/UBSan: indexof windows/activity/domain, Local/Striped/heads, exact page ends and all prepared widths passed"
+      },
+      "sample_sha256": {
+        "avx2-entropy-0.csv": "3322566ab39f0ea2270d520b747ce94b462e7674fc62770a7812796b9f8f505b",
+        "avx2-entropy-1.csv": "05145fc7fedac46d9aa205571ae18454a47fd27b0185f861595e2af6f8fe8f13",
+        "avx2-index-0.csv": "20a718939dcc97f9e1b49d602b391fe933c71b9e940b32d2cde8208e7cd468ec",
+        "avx2-index-1.csv": "97c61a39c258ffbd0e636169ed1c8f0bec99b3e8472c173867138a5fabcca8df",
+        "avx512-entropy-0.csv": "6f94a758da3a6ab4f6215217e7a24cded455d07fb708fa2214c4111ed268c00d",
+        "avx512-entropy-1.csv": "a86aec0919e6a20de4f1abe6e53ffc71d46b811c83872ca628633d2f0e75a672",
+        "avx512-index-0.csv": "33436775dde1ca8400e99f24c93d2ff1304e6d200f5290829ff89adb597d0076",
+        "avx512-index-1.csv": "f13da7965f84c5a9daf3c54d70aab4aeaca42d83e7d041814d8d6551d33295c1"
+      }
+    },
+    {
+      "host": "granite",
+      "stage": "owner",
+      "job": "20261016T003723Z-f5913397",
+      "archive": "s3://calico-fleet-artifacts/sixdb/workers/20261016T003723Z-f5913397",
+      "result": {
+        "state": "complete",
+        "script_returncode": 0,
+        "script_seconds": 26.867369890213013,
+        "worker_seconds_before_collection": 31.354656219482422
+      },
+      "instance": {
+        "accountId": "728776296140",
+        "architecture": "x86_64",
+        "availabilityZone": "us-east-1a",
+        "billingProducts": null,
+        "devpayProductCodes": null,
+        "marketplaceProductCodes": null,
+        "imageId": "ami-025d99823a4caad37",
+        "instanceId": "i-0f9fc9b4d13befdff",
+        "instanceType": "c8i.xlarge",
+        "kernelId": null,
+        "pendingTime": "2026-10-15T23:42:53Z",
+        "privateIp": "172.31.21.63",
+        "ramdiskId": null,
+        "region": "us-east-1",
+        "version": "2017-09-30"
+      },
+      "cpu": {
+        "CPU(s):": "2",
+        "Model name:": "Intel(R) Xeon(R) 6975P-C",
+        "Thread(s) per core:": "1",
+        "L1d cache:": "96 KiB (2 instances)",
+        "L2 cache:": "4 MiB (2 instances)",
+        "L3 cache:": "480 MiB (1 instance)"
+      },
+      "compiler": "Ubuntu clang version 21.1.8 (++20251221032922+2078da43e25a-1~exp1~20251221153059.70)\nTarget: x86_64-pc-linux-gnu\nThread model: posix\nInstalledDir: /usr/lib/llvm-21/bin\n",
+      "matching_current_files": 77,
+      "nonmatching_current_files": [],
+      "checks": {
+        "avx2-check.txt": "filters: unsigned boundaries, layouts, selections and projection checks passed",
+        "avx2-index-0-check.txt": "x86 varied-query truth checks passed; observation=1891750",
+        "avx2-index-1-check.txt": "x86 varied-query truth checks passed; observation=1891750",
+        "avx512-check.txt": "filters: unsigned boundaries, layouts, selections and projection checks passed",
+        "avx512-index-0-check.txt": "x86 varied-query truth checks passed; observation=1891750",
+        "avx512-index-1-check.txt": "x86 varied-query truth checks passed; observation=1891750"
+      },
+      "sample_sha256": {
+        "avx2-index-0.csv": "a7198da3255275b795a877af68d888d7a928523776802119aa5705d383e3dfd7",
+        "avx2-index-1.csv": "77ae1f8f8e265235c26a3235106192350db3ba27aff4c803509e65ad6d1457e5",
+        "avx512-index-0.csv": "16086abc84744a86b87a5c1db0a59be2d6589aaf734381013d885249c00b2d81",
+        "avx512-index-1.csv": "f76fd0813c8486df482a61fa0a23c851bfa75498b41a9d7f08e911c10f31db37"
+      }
+    }
+  ],
+  "current_source_sha256": {
+    "ikea/CMakeLists.txt": "a5c5cb2322a4b01a7a77391a4d6e5f81950ff3a8975a934c7c1626562354fa6e",
+    "ikea/examples/filters/ordinary.cpp": "8d655a7f875251252c104bf8171b909e0383153e62164db09cb49cf50cccc781",
+    "ikea/include/ikea/detail/filter/compare.h": "43e967fc6653fad34182b39e042a2d4d9bc107f1f8c14ff1449a7759cef7bde9",
+    "ikea/include/ikea/seriespack/author/chain.h": "3d857ed41d2d93d328bd0b5fda6571684a9357ee9915e8e4c8311199ad3c947a",
+    "ikea/include/ikea/seriespack/author/expression.h": "4d5e1c79a203b8a937e876a91fba0ec9d68fb2aba9d2cf1c0f2f8bdf1e638e59",
+    "ikea/include/ikea/seriespack/author/filter.h": "61742f03607a2ccdf78aef0ea9d98e08cc9e9a78140e1e7b91773a70144822e1",
+    "ikea/include/ikea/seriespack/author/indexof.h": "84801b6c55671aafe35cd6e5137c469b145be43eda264c2d1c04eb7a7c36f7b5",
+    "ikea/include/ikea/seriespack/author/local_equal.h": "9647177deb3cafee59d6c52c1cb1edda602d5e0ac48e343b49306289cdf1a01a",
+    "ikea/include/ikea/seriespack/author/native.h": "789d3b86f07a7581ba47f9b2372fd3c864eb7516786740c6999806b4c607ca45",
+    "ikea/include/ikea/seriespack/author/read.h": "007cdc20db15bfec379906bb5801fc1a40a44e3cb7e26d6b6d95aec9e3f7c4c2",
+    "ikea/include/ikea/seriespack/author/record.h": "a36ae9f0d5d2a9a89117fe706a45774f88ec7d90a825d6216f836935e3a5aa20",
+    "ikea/include/ikea/seriespack/author/summaries.h": "119d03ef8404ad3f461518201962c6e8042cae43b0a50dcadf05ca5d2e4438a9",
+    "ikea/include/ikea/seriespack/author/write.h": "4b1324df2dfc085a9d3bb26e6c366585a13be2dd5436c3b6073fc8f9366a49cc",
+    "ikea/include/ikea/seriespack/detail/admission.h": "f3c04985ba39675ab9481f8e59b41dda90e928d0ec8c6df1ccc16af4c5c7d6a5",
+    "ikea/include/ikea/seriespack/detail/dense_read.h": "d0140e4ebc352a57ce7cd0081d27720d53da5cc4a5d57b3ce25737b9c355e858",
+    "ikea/include/ikea/seriespack/detail/filter8.h": "0121b020e1431170e06e37b98e27a151fe53736fe99594da360f370d1abee8e0",
+    "ikea/include/ikea/seriespack/detail/mutation/admission.h": "5fae5445b3c15402e8328a1c67acd1728760dc826f26b891d2be9dda5a71aaa9",
+    "ikea/include/ikea/seriespack/detail/mutation/admission_state.h": "49f19e40439ffa2dde9dfce51a8f5d627b97d9aa553fd5265683d8a2f8ac93e2",
+    "ikea/include/ikea/seriespack/detail/mutation/assignment.h": "c0d80a6fbe63af266af95eb38a87f96659ee8a9e85ab1cc11e16da78132118f5",
+    "ikea/include/ikea/seriespack/detail/mutation/composed.h": "b56c4d0c0d0ba2d70b559e331518fc34a98cef4f77e260028f9c1e712658658a",
+    "ikea/include/ikea/seriespack/detail/mutation/composed_construction.h": "0de20caeb5f339a864b9c18622bd3fc1ae7c1138bcb99da922cf4b9a8f60a2ab",
+    "ikea/include/ikea/seriespack/detail/mutation/construction.h": "12051f76112d1824e4a36866a660f13e12e3dfc53379a7ecd458f913a8a10b8a",
+    "ikea/include/ikea/seriespack/detail/mutation/fields.h": "54bcd05be66c76f4d6a1dde87afcd62fdcafa4481c71d9dbac423b8326267d2a",
+    "ikea/include/ikea/seriespack/detail/mutation/footprint.h": "8ad67182fbf1edd5535289cca5df12d6aa47b3de8942fe12e24838d6078d9a36",
+    "ikea/include/ikea/seriespack/detail/mutation/physical.h": "78968c3d7fed29dfbe9eef466fd43208489211ef245c2341e691bd941490bf99",
+    "ikea/include/ikea/seriespack/detail/native/avx2/read.h": "d84c2f019a7f84efeb1e729f5e9874fc0b9edecb52daa304b40ab05d94fa64ec",
+    "ikea/include/ikea/seriespack/detail/native/avx2/write.h": "81b9076d474fcfcb11b495bebf138878ad357449d53e7bfbdaf9362b4face721",
+    "ikea/include/ikea/seriespack/detail/native/avx512/read.h": "8e0d5abad1e06b5bcb1f7b9efa9358c02377292d0ff7934aa8281e90e74fbb03",
+    "ikea/include/ikea/seriespack/detail/native/avx512/write.h": "6d2dd532222ab80af7119a24af3e1b0d0017b733ad76851486d24e1cbd26318a",
+    "ikea/include/ikea/seriespack/detail/native/neon/groups.h": "251da31571a0b8f1bd572d447ab284f31e48469492d93752b4a64520e263db4c",
+    "ikea/include/ikea/seriespack/detail/native/neon/read.h": "b32a230ea5673814491e6b7e8a22c6ca7c1e4dae69ef47b321853a377c3f6e4d",
+    "ikea/include/ikea/seriespack/detail/native/neon/write.h": "205713faf444cf585093def1c8ede6cb31dda0f4b022555703450bc7404d5a70",
+    "ikea/include/ikea/seriespack/detail/placed_read.h": "50c2339fe23527c578805665a32380f917de34bff208f8bb7a1b0e9e0d2328dc",
+    "ikea/include/ikea/seriespack/detail/point.h": "23451983f927641e1ace80175c06d1a65e1ce2543b688ef9abbfe08d98a9dbf3",
+    "ikea/include/ikea/seriespack/detail/wire.h": "05b92ca7dcb2864049aae1cf3105426798c46dbcd527f411ee480c3833d92b66",
+    "ikea/include/ikea/seriespack/effects.h": "3cf5a0b4fb80ff6c673357aa432319e2fcf009521f13d53b24c691353f767acb",
+    "ikea/include/ikea/seriespack/filter.h": "32a052e3cc0c21e177986213fcc70b2bb1aaf434036e95272fd9ba81b0c89b0b",
+    "ikea/include/ikea/seriespack/format.h": "adf284014207305ffbeb4d726fc93fa4020220beb7d627a26027ec92711f01b9",
+    "ikea/include/ikea/seriespack/indexof.h": "ef8c87d8d5e063455c9cb6857101b08788834846325afd008f2fe878fff4358c",
+    "ikea/include/ikea/seriespack/mutation_operation.h": "4a8a2c3d3f2858a57c11db7a860ce0bf2b9f593ea727711658d2b752689c4a8c",
+    "ikea/include/ikea/seriespack/presets.h": "a5c8b2061c83da4c40511b7f7797bfd2d2174097fa65d43171a26fe7d044e1e1",
+    "ikea/include/ikea/seriespack/read.h": "b8e860e444216912a308fd0ce47b8b38c29553606da1b458174c57e7726d16e4",
+    "ikea/include/ikea/seriespack/read_operation.h": "b52426a8019150d16c69d0c25173f16b5a2ac6bfd427d36749f888056bb0bb53",
+    "ikea/include/ikea/seriespack/representation.h": "236c3dfd832fb0151d98571f4334a38bb2e84a5a269bf4adca3f29e26ca42409",
+    "ikea/include/ikea/seriespack/selection.h": "7cbf31ee1fd649c6aaaa752f7a51b89eaabcc82944de9131de84f907f401e489",
+    "ikea/include/ikea/seriespack/status.h": "a19b016e4aad84e22e3f68cccd4aa87445f5595e25f4913dabba26133e44c74c",
+    "ikea/include/ikea/seriespack/view.h": "a4182644ea8da9c36dd7ee31b37167268e48d5b4b4080981c2f6609a8bf53348",
+    "ikea/include/ikea/seriespack/write.h": "8ec6830b81fbc70faee7cbb0c0ef0d82e5906fb0e314f72af308cc4426fdd7ec",
+    "ikea/include/ikea/seriespack.h": "e56538f15ee21b6a663ec97b3537fd37ffd1941ee1fdde071b621b4ce80fc47e",
+    "ikea/src/seriespack/admission.cpp": "bd8f41d2eb13e892f1c4a48d875a53f04eaea75933a28efd6005e4172bbfdb33",
+    "ikea/src/seriespack/readers.cpp": "54ed941ee8cc194796c95c2dcb68cfa49427c0de4482a73a40ebe7fef4667e5a",
+    "ikea/src/seriespack/representation.cpp": "042b996b473dc0b87f62b90a4f52745940b66e21fa7050b6d9871a75bea3dbb7",
+    "ikea/test/filters/check.cpp": "6fa6d5494edf7d8ab82ebf3b261417bbdfdd2b76207f92f9f24e4852e41ac442",
+    "ikea/test/filters/custom.cpp": "65fa0f8139d8840e5f6ef4d334e0a5d6d6c8163d0a05fa70c9e4d6b22de0008a",
+    "ikea/test/filters/guarded.cpp": "87b8303572fa8914543e765249068acaaa1ab5388513f1898257ee1e6a24cff1",
+    "ikea/test/filters/local_equal.cpp": "314152514b0e86fac73ca8f0378c6672bf012fd59ee7747049a41aef5bb016c5",
+    "ikea/test/filters/masks.cpp": "30f57114bd5d139cca0e3042aa4efc7e0fd3421552fa467efb0ebaeaf0dea68d",
+    "ikea/test/filters/support.h": "13bcde267283c54534f87c5515eaf44ddf913565d72317cc8f8514d07a1fe66d",
+    "ikea/test/filters/tile_support.h": "d3c2e3efaac1317d6b8234baeb0453f039c0d7323d082713c26588ebcc7d0c47",
+    "ikea/test/filters/tiles.cpp": "e7c3bff4c6756f53cb6b25de6e725fe608d59be47f92c5979cebd521b0a8feef",
+    "ikea/test/filters/tiles_1.cpp": "d0772f19f9ec4defb86f447f813952dd91b85d14c7264e3398078bf35723ba0d",
+    "ikea/test/filters/tiles_17.cpp": "def7431f21a3f2476be36fc0e2cfad0712375a262b0b62071ea9188df722e2b7",
+    "ikea/test/filters/tiles_25.cpp": "1fb36af1a12f1654856683b3ba47ae9a39d85b3f9faa2946e27d1b9537362998",
+    "ikea/test/filters/tiles_33.cpp": "057afe9d4b9a5673f09bf5c6a7cd1f511202adb39eb0d9d6366484b58ed3ae88",
+    "ikea/test/filters/tiles_41.cpp": "e53339a2a637c7e8d0f1bfcf8301874c0e68254a144a993c5469b6e1a7dc0351",
+    "ikea/test/filters/tiles_49.cpp": "0266bdb75c74e59f3dfd929f72692965174dccfb60fb4dae213c742d4f4106eb",
+    "ikea/test/filters/tiles_57.cpp": "e32d5d2ef67e0f8995f7a0c8bb3fbcbfbcab15058754b90eb352f89043ed187b",
+    "ikea/test/filters/tiles_9.cpp": "6cd571b3f6cb0e139e405ca012636be09c94bbc2b3df88789890d6e0f7440d0a",
+    "ikea/test/filters/tuple.cpp": "dc4cbfebb463452c7c3119acee2aac0b332f926a45432f8ed2499680e4cd8998",
+    "ikea/test/filters/widths_1.cpp": "2244a961d5d45fc9265837a8d9584253757b104e119959df52107cfa6080c2d6",
+    "ikea/test/filters/widths_17.cpp": "273a3139876ba13f10f6401ce71fbcf20d2a2f148df8e85407a0e149848cf952",
+    "ikea/test/filters/widths_25.cpp": "6fd9e994c745195f7b8786243827212296bf667388c68dae352e48f638c75916",
+    "ikea/test/filters/widths_33.cpp": "616bba0c55024165f7d551e9a0c3686047a1a137b807b79c94130918787c44bc",
+    "ikea/test/filters/widths_41.cpp": "693025b77e1ba3e98a273a96de1038a8b13d7a413f8d4962624c7672c5f7225f",
+    "ikea/test/filters/widths_49.cpp": "6f5205bba0d8ca301d24d21853f4b37a4ea94820860c3709cadf0b7da15b04a2",
+    "ikea/test/filters/widths_57.cpp": "2defbd37d7f15600847e759e267ec0cdb81c828b1e97de6e41c9758373905188",
+    "ikea/test/filters/widths_9.cpp": "fea06a447ea90405355960cd6544ead15eb915225fff7921ba1689fcf8cd3f66"
+  },
+  "scope": "GFNI arithmetic; tuned AVX2 prepared full-mask index; GFNI wider-body full-mask index. ARM lowering unchanged.",
+  "earlier_captures": {
+    "candidates": {
+      "zen5": "20261016T000523Z-0049446d",
+      "granite": "20261016T000529Z-09ca9519"
+    },
+    "rejected_early_public": {
+      "zen5": "20261016T001315Z-17931dc7",
+      "granite": "20261016T001322Z-2da9739f"
+    },
+    "branch_rejection": {
+      "zen5": "20261016T002329Z-74b45b52",
+      "granite": "20261016T002335Z-06ffa2a1"
+    }
+  },
+  "note": "The final cohort predates only the added runtime guard assertions in check.cpp. The owner cohort reruns the entire native filter check with those assertions on all four profiles; all relevant source hashes match current. Focused ASan/UBSan and GFNI-without-AVX512 tests are from the final cohort; their implementation/test sources match current."
+}

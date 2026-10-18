@@ -1,0 +1,13 @@
+{
+  "source": "workbench/spikes/filter-composition/contains-arm.cpp",
+  "sha256": "ad5385ffba1ff8f399d4e416e17ac16d9c4f2d55f3a195624dff8676bdbdad60",
+  "compiler": "Ubuntu clang version 21.1.8 (++20251221033104+2078da43e25a-1~exp1~20251221153121.57)",
+  "machine": "aarch64",
+  "host": "local Apple AArch64 under OrbStack Ubuntu; not a Neoverse timing host",
+  "checks": {
+    "contains-arm": "ARM Local contains: R4..8, every in-domain query, 2048 randomized unaligned tiles per width, arbitrary extra bytes: passed",
+    "contains-arm-asan": "ARM Local contains: R4..8, every in-domain query, 2048 randomized unaligned tiles per width, arbitrary extra bytes: passed"
+  },
+  "sve": "compiled only; scalar model verifies all 64 basis vectors for three alternating-mask stable bit partitions; no native SVE execution or timing",
+  "timings": "none"
+}

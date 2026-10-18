@@ -1,0 +1,24 @@
+{
+  "native_job": "20261015T233825Z-1e2ffbee",
+  "function": "index_probe::measure<30,16,11>",
+  "runtime_query_load": "0x391c4",
+  "serial_query_expansion": [
+    "0x391f4",
+    "0x391f8",
+    "0x391fc"
+  ],
+  "serial_rank_extraction": [
+    "0x3937c",
+    "0x39380"
+  ],
+  "rank_hash": "0x39388",
+  "inspection": "Runtime query preparation lies inside the timed loop; its prepared GPR serves both residual tiles. Hit rank feeds the next cursor. Eight-stream path expands each independent query. Predictable miss branches may return a constant sentinel without this dependence. No filter/indexof calls in the hot body; timing/printing/assertion calls outside it.",
+  "standalone_k30_instruction_counts": {
+    "previous": 95,
+    "fused": 138,
+    "bounded_full": 69,
+    "bounded_first": 76,
+    "graduated": 89
+  },
+  "count_limits": "Static instruction counts include mutually exclusive branches, domain/activity guards and constant setup; they are not dynamic path counts or timings."
+}

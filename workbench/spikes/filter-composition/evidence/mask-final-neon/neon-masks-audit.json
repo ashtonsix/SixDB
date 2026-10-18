@@ -1,0 +1,961 @@
+{
+  "sha256": "927445205343685905a0cc2d62845c98f970a28e8073d8e38031d79d5a696215",
+  "functions": {
+    "mask_128_1_0": {
+      "instructions": 12,
+      "opcodes": {
+        "dup": 1,
+        "adrp": 1,
+        "cmeq": 1,
+        "ldr": 1,
+        "and": 1,
+        "addv": 2,
+        "ext": 1,
+        "fmov": 2,
+        "bfi": 1,
+        "ret": 1
+      },
+      "calls": [],
+      "scalarized": [],
+      "stack": []
+    },
+    "mask_128_1_1": {
+      "instructions": 12,
+      "opcodes": {
+        "dup": 1,
+        "adrp": 1,
+        "cmhi": 1,
+        "ldr": 1,
+        "and": 1,
+        "addv": 2,
+        "ext": 1,
+        "fmov": 2,
+        "bfi": 1,
+        "ret": 1
+      },
+      "calls": [],
+      "scalarized": [],
+      "stack": []
+    },
+    "mask_128_1_2": {
+      "instructions": 12,
+      "opcodes": {
+        "dup": 1,
+        "adrp": 1,
+        "cmhs": 1,
+        "ldr": 1,
+        "and": 1,
+        "addv": 2,
+        "ext": 1,
+        "fmov": 2,
+        "bfi": 1,
+        "ret": 1
+      },
+      "calls": [],
+      "scalarized": [],
+      "stack": []
+    },
+    "mask_128_1_3": {
+      "instructions": 12,
+      "opcodes": {
+        "dup": 1,
+        "adrp": 1,
+        "cmhi": 1,
+        "ldr": 1,
+        "and": 1,
+        "addv": 2,
+        "ext": 1,
+        "fmov": 2,
+        "bfi": 1,
+        "ret": 1
+      },
+      "calls": [],
+      "scalarized": [],
+      "stack": []
+    },
+    "mask_128_1_4": {
+      "instructions": 12,
+      "opcodes": {
+        "dup": 1,
+        "adrp": 1,
+        "cmhs": 1,
+        "ldr": 1,
+        "and": 1,
+        "addv": 2,
+        "ext": 1,
+        "fmov": 2,
+        "bfi": 1,
+        "ret": 1
+      },
+      "calls": [],
+      "scalarized": [],
+      "stack": []
+    },
+    "mask_128_2_0": {
+      "instructions": 9,
+      "opcodes": {
+        "dup": 1,
+        "adrp": 1,
+        "cmeq": 1,
+        "ldr": 1,
+        "xtn": 1,
+        "and": 1,
+        "addv": 1,
+        "fmov": 1,
+        "ret": 1
+      },
+      "calls": [],
+      "scalarized": [],
+      "stack": []
+    },
+    "mask_128_2_1": {
+      "instructions": 9,
+      "opcodes": {
+        "dup": 1,
+        "adrp": 1,
+        "cmhi": 1,
+        "ldr": 1,
+        "xtn": 1,
+        "and": 1,
+        "addv": 1,
+        "fmov": 1,
+        "ret": 1
+      },
+      "calls": [],
+      "scalarized": [],
+      "stack": []
+    },
+    "mask_128_2_2": {
+      "instructions": 9,
+      "opcodes": {
+        "dup": 1,
+        "adrp": 1,
+        "cmhi": 1,
+        "ldr": 1,
+        "xtn": 1,
+        "bic": 1,
+        "addv": 1,
+        "fmov": 1,
+        "ret": 1
+      },
+      "calls": [],
+      "scalarized": [],
+      "stack": []
+    },
+    "mask_128_2_3": {
+      "instructions": 9,
+      "opcodes": {
+        "dup": 1,
+        "adrp": 1,
+        "cmhi": 1,
+        "ldr": 1,
+        "xtn": 1,
+        "and": 1,
+        "addv": 1,
+        "fmov": 1,
+        "ret": 1
+      },
+      "calls": [],
+      "scalarized": [],
+      "stack": []
+    },
+    "mask_128_2_4": {
+      "instructions": 9,
+      "opcodes": {
+        "dup": 1,
+        "adrp": 1,
+        "cmhi": 1,
+        "ldr": 1,
+        "xtn": 1,
+        "bic": 1,
+        "addv": 1,
+        "fmov": 1,
+        "ret": 1
+      },
+      "calls": [],
+      "scalarized": [],
+      "stack": []
+    },
+    "mask_128_4_0": {
+      "instructions": 8,
+      "opcodes": {
+        "dup": 1,
+        "adrp": 1,
+        "cmeq": 1,
+        "ldr": 1,
+        "and": 1,
+        "addv": 1,
+        "fmov": 1,
+        "ret": 1
+      },
+      "calls": [],
+      "scalarized": [],
+      "stack": []
+    },
+    "mask_128_4_1": {
+      "instructions": 8,
+      "opcodes": {
+        "dup": 1,
+        "adrp": 1,
+        "cmhi": 1,
+        "ldr": 1,
+        "and": 1,
+        "addv": 1,
+        "fmov": 1,
+        "ret": 1
+      },
+      "calls": [],
+      "scalarized": [],
+      "stack": []
+    },
+    "mask_128_4_2": {
+      "instructions": 8,
+      "opcodes": {
+        "dup": 1,
+        "adrp": 1,
+        "cmhs": 1,
+        "ldr": 1,
+        "and": 1,
+        "addv": 1,
+        "fmov": 1,
+        "ret": 1
+      },
+      "calls": [],
+      "scalarized": [],
+      "stack": []
+    },
+    "mask_128_4_3": {
+      "instructions": 8,
+      "opcodes": {
+        "dup": 1,
+        "adrp": 1,
+        "cmhi": 1,
+        "ldr": 1,
+        "and": 1,
+        "addv": 1,
+        "fmov": 1,
+        "ret": 1
+      },
+      "calls": [],
+      "scalarized": [],
+      "stack": []
+    },
+    "mask_128_4_4": {
+      "instructions": 8,
+      "opcodes": {
+        "dup": 1,
+        "adrp": 1,
+        "cmhs": 1,
+        "ldr": 1,
+        "and": 1,
+        "addv": 1,
+        "fmov": 1,
+        "ret": 1
+      },
+      "calls": [],
+      "scalarized": [],
+      "stack": []
+    },
+    "mask_128_8_0": {
+      "instructions": 7,
+      "opcodes": {
+        "dup": 1,
+        "cmeq": 1,
+        "mov": 1,
+        "fmov": 1,
+        "and": 1,
+        "sub": 1,
+        "ret": 1
+      },
+      "calls": [],
+      "scalarized": [],
+      "stack": []
+    },
+    "mask_128_8_1": {
+      "instructions": 7,
+      "opcodes": {
+        "dup": 1,
+        "cmhi": 1,
+        "mov": 1,
+        "fmov": 1,
+        "and": 1,
+        "sub": 1,
+        "ret": 1
+      },
+      "calls": [],
+      "scalarized": [],
+      "stack": []
+    },
+    "mask_128_8_2": {
+      "instructions": 7,
+      "opcodes": {
+        "dup": 1,
+        "cmhs": 1,
+        "mov": 1,
+        "fmov": 1,
+        "and": 1,
+        "sub": 1,
+        "ret": 1
+      },
+      "calls": [],
+      "scalarized": [],
+      "stack": []
+    },
+    "mask_128_8_3": {
+      "instructions": 7,
+      "opcodes": {
+        "dup": 1,
+        "cmhi": 1,
+        "mov": 1,
+        "fmov": 1,
+        "and": 1,
+        "sub": 1,
+        "ret": 1
+      },
+      "calls": [],
+      "scalarized": [],
+      "stack": []
+    },
+    "mask_128_8_4": {
+      "instructions": 7,
+      "opcodes": {
+        "dup": 1,
+        "cmhs": 1,
+        "mov": 1,
+        "fmov": 1,
+        "and": 1,
+        "sub": 1,
+        "ret": 1
+      },
+      "calls": [],
+      "scalarized": [],
+      "stack": []
+    },
+    "tuple_8_0": {
+      "instructions": 15,
+      "opcodes": {
+        "cmp": 1,
+        "b.ls": 1,
+        "mov": 2,
+        "ret": 2,
+        "movi": 1,
+        "adrp": 1,
+        "dup": 1,
+        "cmeq": 1,
+        "ldr": 1,
+        "and": 2,
+        "addv": 1,
+        "fmov": 1
+      },
+      "calls": [],
+      "scalarized": [],
+      "stack": []
+    },
+    "tuple_8_1": {
+      "instructions": 16,
+      "opcodes": {
+        "cmp": 1,
+        "b.ls": 1,
+        "mov": 2,
+        "and": 3,
+        "ret": 2,
+        "movi": 1,
+        "adrp": 1,
+        "dup": 1,
+        "cmhi": 1,
+        "ldr": 1,
+        "addv": 1,
+        "fmov": 1
+      },
+      "calls": [],
+      "scalarized": [],
+      "stack": []
+    },
+    "tuple_8_2": {
+      "instructions": 16,
+      "opcodes": {
+        "cmp": 1,
+        "b.ls": 1,
+        "mov": 2,
+        "and": 3,
+        "ret": 2,
+        "movi": 1,
+        "adrp": 1,
+        "dup": 1,
+        "cmhs": 1,
+        "ldr": 1,
+        "addv": 1,
+        "fmov": 1
+      },
+      "calls": [],
+      "scalarized": [],
+      "stack": []
+    },
+    "tuple_8_3": {
+      "instructions": 15,
+      "opcodes": {
+        "cmp": 1,
+        "b.ls": 1,
+        "mov": 2,
+        "ret": 2,
+        "movi": 1,
+        "adrp": 1,
+        "dup": 1,
+        "cmhi": 1,
+        "ldr": 1,
+        "and": 2,
+        "addv": 1,
+        "fmov": 1
+      },
+      "calls": [],
+      "scalarized": [],
+      "stack": []
+    },
+    "tuple_8_4": {
+      "instructions": 15,
+      "opcodes": {
+        "cmp": 1,
+        "b.ls": 1,
+        "mov": 2,
+        "ret": 2,
+        "movi": 1,
+        "adrp": 1,
+        "dup": 1,
+        "cmhs": 1,
+        "ldr": 1,
+        "and": 2,
+        "addv": 1,
+        "fmov": 1
+      },
+      "calls": [],
+      "scalarized": [],
+      "stack": []
+    },
+    "tuple_64_0": {
+      "instructions": 45,
+      "opcodes": {
+        "cmp": 1,
+        "b.ls": 1,
+        "mov": 1,
+        "ret": 2,
+        "adrp": 1,
+        "dup": 1,
+        "ldr": 1,
+        "cmeq": 4,
+        "and": 5,
+        "addv": 8,
+        "ext": 4,
+        "fmov": 8,
+        "bfi": 3,
+        "ubfiz": 1,
+        "orr": 4
+      },
+      "calls": [],
+      "scalarized": [],
+      "stack": []
+    },
+    "tuple_64_1": {
+      "instructions": 44,
+      "opcodes": {
+        "cmp": 1,
+        "b.hi": 1,
+        "adrp": 1,
+        "dup": 1,
+        "ldr": 1,
+        "cmhi": 4,
+        "and": 5,
+        "addv": 8,
+        "ext": 4,
+        "fmov": 8,
+        "bfi": 3,
+        "ubfiz": 1,
+        "orr": 4,
+        "mov": 1,
+        "ret": 1
+      },
+      "calls": [],
+      "scalarized": [],
+      "stack": []
+    },
+    "tuple_64_2": {
+      "instructions": 44,
+      "opcodes": {
+        "cmp": 1,
+        "b.hi": 1,
+        "adrp": 1,
+        "dup": 1,
+        "ldr": 1,
+        "cmhs": 4,
+        "and": 5,
+        "addv": 8,
+        "ext": 4,
+        "fmov": 8,
+        "bfi": 3,
+        "ubfiz": 1,
+        "orr": 4,
+        "mov": 1,
+        "ret": 1
+      },
+      "calls": [],
+      "scalarized": [],
+      "stack": []
+    },
+    "tuple_64_3": {
+      "instructions": 45,
+      "opcodes": {
+        "cmp": 1,
+        "b.ls": 1,
+        "mov": 1,
+        "ret": 2,
+        "adrp": 1,
+        "dup": 1,
+        "ldr": 1,
+        "cmhi": 4,
+        "and": 5,
+        "addv": 8,
+        "ext": 4,
+        "fmov": 8,
+        "bfi": 3,
+        "ubfiz": 1,
+        "orr": 4
+      },
+      "calls": [],
+      "scalarized": [],
+      "stack": []
+    },
+    "tuple_64_4": {
+      "instructions": 45,
+      "opcodes": {
+        "cmp": 1,
+        "b.ls": 1,
+        "mov": 1,
+        "ret": 2,
+        "adrp": 1,
+        "dup": 1,
+        "ldr": 1,
+        "cmhs": 4,
+        "and": 5,
+        "addv": 8,
+        "ext": 4,
+        "fmov": 8,
+        "bfi": 3,
+        "ubfiz": 1,
+        "orr": 4
+      },
+      "calls": [],
+      "scalarized": [],
+      "stack": []
+    },
+    "control_8_0": {
+      "instructions": 17,
+      "opcodes": {
+        "cmp": 1,
+        "b.ls": 1,
+        "mov": 1,
+        "ret": 2,
+        "ldr": 2,
+        "dup": 1,
+        "adrp": 1,
+        "cmeq": 1,
+        "and": 1,
+        "addv": 2,
+        "ext": 1,
+        "fmov": 2,
+        "bfi": 1
+      },
+      "calls": [],
+      "scalarized": [],
+      "stack": []
+    },
+    "control_8_1": {
+      "instructions": 17,
+      "opcodes": {
+        "cmp": 1,
+        "b.ls": 1,
+        "mov": 1,
+        "ret": 2,
+        "ldr": 2,
+        "dup": 1,
+        "adrp": 1,
+        "cmhi": 1,
+        "and": 1,
+        "addv": 2,
+        "ext": 1,
+        "fmov": 2,
+        "bfi": 1
+      },
+      "calls": [],
+      "scalarized": [],
+      "stack": []
+    },
+    "control_8_2": {
+      "instructions": 17,
+      "opcodes": {
+        "cmp": 1,
+        "b.ls": 1,
+        "mov": 1,
+        "ret": 2,
+        "ldr": 2,
+        "dup": 1,
+        "adrp": 1,
+        "cmhs": 1,
+        "and": 1,
+        "addv": 2,
+        "ext": 1,
+        "fmov": 2,
+        "bfi": 1
+      },
+      "calls": [],
+      "scalarized": [],
+      "stack": []
+    },
+    "control_8_3": {
+      "instructions": 17,
+      "opcodes": {
+        "cmp": 1,
+        "b.ls": 1,
+        "mov": 1,
+        "ret": 2,
+        "ldr": 2,
+        "dup": 1,
+        "adrp": 1,
+        "cmhi": 1,
+        "and": 1,
+        "addv": 2,
+        "ext": 1,
+        "fmov": 2,
+        "bfi": 1
+      },
+      "calls": [],
+      "scalarized": [],
+      "stack": []
+    },
+    "control_8_4": {
+      "instructions": 17,
+      "opcodes": {
+        "cmp": 1,
+        "b.ls": 1,
+        "mov": 1,
+        "ret": 2,
+        "ldr": 2,
+        "dup": 1,
+        "adrp": 1,
+        "cmhs": 1,
+        "and": 1,
+        "addv": 2,
+        "ext": 1,
+        "fmov": 2,
+        "bfi": 1
+      },
+      "calls": [],
+      "scalarized": [],
+      "stack": []
+    },
+    "control_16_0": {
+      "instructions": 20,
+      "opcodes": {
+        "lsr": 1,
+        "cbz": 1,
+        "mov": 1,
+        "ret": 2,
+        "ldp": 1,
+        "dup": 1,
+        "adrp": 1,
+        "ldr": 1,
+        "cmeq": 2,
+        "xtn": 2,
+        "and": 2,
+        "addv": 2,
+        "fmov": 2,
+        "bfi": 1
+      },
+      "calls": [],
+      "scalarized": [],
+      "stack": []
+    },
+    "control_16_1": {
+      "instructions": 20,
+      "opcodes": {
+        "lsr": 1,
+        "cbz": 1,
+        "mov": 1,
+        "ret": 2,
+        "ldp": 1,
+        "dup": 1,
+        "adrp": 1,
+        "ldr": 1,
+        "cmhi": 2,
+        "xtn": 2,
+        "and": 2,
+        "addv": 2,
+        "fmov": 2,
+        "bfi": 1
+      },
+      "calls": [],
+      "scalarized": [],
+      "stack": []
+    },
+    "control_16_2": {
+      "instructions": 20,
+      "opcodes": {
+        "lsr": 1,
+        "cbz": 1,
+        "mov": 1,
+        "ret": 2,
+        "ldp": 1,
+        "dup": 1,
+        "adrp": 1,
+        "ldr": 1,
+        "cmhi": 2,
+        "xtn": 2,
+        "bic": 2,
+        "addv": 2,
+        "fmov": 2,
+        "bfi": 1
+      },
+      "calls": [],
+      "scalarized": [],
+      "stack": []
+    },
+    "control_16_3": {
+      "instructions": 20,
+      "opcodes": {
+        "lsr": 1,
+        "cbz": 1,
+        "mov": 1,
+        "ret": 2,
+        "ldp": 1,
+        "dup": 1,
+        "adrp": 1,
+        "ldr": 1,
+        "cmhi": 2,
+        "xtn": 2,
+        "and": 2,
+        "addv": 2,
+        "fmov": 2,
+        "bfi": 1
+      },
+      "calls": [],
+      "scalarized": [],
+      "stack": []
+    },
+    "control_16_4": {
+      "instructions": 20,
+      "opcodes": {
+        "lsr": 1,
+        "cbz": 1,
+        "mov": 1,
+        "ret": 2,
+        "ldp": 1,
+        "dup": 1,
+        "adrp": 1,
+        "ldr": 1,
+        "cmhi": 2,
+        "xtn": 2,
+        "bic": 2,
+        "addv": 2,
+        "fmov": 2,
+        "bfi": 1
+      },
+      "calls": [],
+      "scalarized": [],
+      "stack": []
+    },
+    "control_32_0": {
+      "instructions": 29,
+      "opcodes": {
+        "lsr": 1,
+        "cbz": 1,
+        "mov": 1,
+        "ret": 2,
+        "ldp": 2,
+        "adrp": 1,
+        "dup": 1,
+        "ldr": 1,
+        "cmeq": 4,
+        "and": 4,
+        "addv": 4,
+        "fmov": 4,
+        "orr": 3
+      },
+      "calls": [],
+      "scalarized": [],
+      "stack": []
+    },
+    "control_32_1": {
+      "instructions": 29,
+      "opcodes": {
+        "lsr": 1,
+        "cbz": 1,
+        "mov": 1,
+        "ret": 2,
+        "ldp": 2,
+        "adrp": 1,
+        "dup": 1,
+        "ldr": 1,
+        "cmhi": 4,
+        "and": 4,
+        "addv": 4,
+        "fmov": 4,
+        "orr": 3
+      },
+      "calls": [],
+      "scalarized": [],
+      "stack": []
+    },
+    "control_32_2": {
+      "instructions": 29,
+      "opcodes": {
+        "lsr": 1,
+        "cbz": 1,
+        "mov": 1,
+        "ret": 2,
+        "ldp": 2,
+        "adrp": 1,
+        "dup": 1,
+        "ldr": 1,
+        "cmhs": 4,
+        "and": 4,
+        "addv": 4,
+        "fmov": 4,
+        "orr": 3
+      },
+      "calls": [],
+      "scalarized": [],
+      "stack": []
+    },
+    "control_32_3": {
+      "instructions": 29,
+      "opcodes": {
+        "lsr": 1,
+        "cbz": 1,
+        "mov": 1,
+        "ret": 2,
+        "ldp": 2,
+        "adrp": 1,
+        "dup": 1,
+        "ldr": 1,
+        "cmhi": 4,
+        "and": 4,
+        "addv": 4,
+        "fmov": 4,
+        "orr": 3
+      },
+      "calls": [],
+      "scalarized": [],
+      "stack": []
+    },
+    "control_32_4": {
+      "instructions": 29,
+      "opcodes": {
+        "lsr": 1,
+        "cbz": 1,
+        "mov": 1,
+        "ret": 2,
+        "ldp": 2,
+        "adrp": 1,
+        "dup": 1,
+        "ldr": 1,
+        "cmhs": 4,
+        "and": 4,
+        "addv": 4,
+        "fmov": 4,
+        "orr": 3
+      },
+      "calls": [],
+      "scalarized": [],
+      "stack": []
+    },
+    "control_64_0": {
+      "instructions": 61,
+      "opcodes": {
+        "ldp": 4,
+        "dup": 1,
+        "cmeq": 8,
+        "xtn": 8,
+        "mov": 8,
+        "fmov": 8,
+        "and": 8,
+        "sub": 8,
+        "orr": 7,
+        "ret": 1
+      },
+      "calls": [],
+      "scalarized": [],
+      "stack": []
+    },
+    "control_64_1": {
+      "instructions": 61,
+      "opcodes": {
+        "ldp": 4,
+        "dup": 1,
+        "cmhi": 8,
+        "xtn": 8,
+        "mov": 8,
+        "fmov": 8,
+        "and": 8,
+        "sub": 8,
+        "orr": 7,
+        "ret": 1
+      },
+      "calls": [],
+      "scalarized": [],
+      "stack": []
+    },
+    "control_64_2": {
+      "instructions": 61,
+      "opcodes": {
+        "ldp": 4,
+        "dup": 1,
+        "cmhs": 8,
+        "xtn": 8,
+        "mov": 8,
+        "fmov": 8,
+        "and": 8,
+        "sub": 8,
+        "orr": 7,
+        "ret": 1
+      },
+      "calls": [],
+      "scalarized": [],
+      "stack": []
+    },
+    "control_64_3": {
+      "instructions": 61,
+      "opcodes": {
+        "ldp": 4,
+        "dup": 1,
+        "cmhi": 8,
+        "xtn": 8,
+        "mov": 8,
+        "fmov": 8,
+        "and": 8,
+        "sub": 8,
+        "orr": 7,
+        "ret": 1
+      },
+      "calls": [],
+      "scalarized": [],
+      "stack": []
+    },
+    "control_64_4": {
+      "instructions": 61,
+      "opcodes": {
+        "ldp": 4,
+        "dup": 1,
+        "cmhs": 8,
+        "xtn": 8,
+        "mov": 8,
+        "fmov": 8,
+        "and": 8,
+        "sub": 8,
+        "orr": 7,
+        "ret": 1
+      },
+      "calls": [],
+      "scalarized": [],
+      "stack": []
+    }
+  },
+  "failures": []
+}

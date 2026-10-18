@@ -1,0 +1,128 @@
+{
+  "group": "20261015T225132Z-7e6e7a61",
+  "members": {
+    "granite": {
+      "job": "20261015T225148Z-9c28f0d7",
+      "artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 13853933,
+        "files": 28,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/da45c427aee87e7b3caede2c6b03042fea3838e6b7d330fb4a7370e34b2d3c81.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "da45c427aee87e7b3caede2c6b03042fea3838e6b7d330fb4a7370e34b2d3c81",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/da45c427aee87e7b3caede2c6b03042fea3838e6b7d330fb4a7370e34b2d3c81.tar.gz"
+      },
+      "source": {
+        "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+        "digest": "0187d4dc30e7ba494163b54141abb4bf550fad6296004d9cecc5cd905ca65675",
+        "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+        "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c",
+        "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+        "sha256": "35cdc9d9eb3b886ed8c5103496300096fdc4a50171b1721e72eb907856497902"
+      },
+      "regressions": {
+        "avx2-regression.txt": "filters: unsigned boundaries, layouts, selections and projection checks passed",
+        "avx512-regression.txt": "filters: unsigned boundaries, layouts, selections and projection checks passed"
+      },
+      "samples": [
+        {
+          "file": "avx2-tiles-0.csv",
+          "sha256": "650e5c9fdcb6e5592786d6db2f439360dfee31cad26439d03481a70a7f151e34"
+        },
+        {
+          "file": "avx2-tiles-1.csv",
+          "sha256": "71e9db5c6e8459073bc8642fe08c2486afebeefb8d8315f521cd0d794fe55cdd"
+        },
+        {
+          "file": "avx512-tiles-0.csv",
+          "sha256": "de48546b575ae063a171309d24780bd6f71ea10ad74774d5d5d13305bd854d5e"
+        },
+        {
+          "file": "avx512-tiles-1.csv",
+          "sha256": "a182e20de72a0336454942790852ed04f1898b5f9649fb1aa1b071a28b982a5e"
+        }
+      ]
+    },
+    "neon": {
+      "job": "20261015T225154Z-857a7da1",
+      "artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 13093503,
+        "files": 18,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/1b704408d495ed2d0fb77602c5b3bf20641c345ec68cf64c3f5599570ca650c5.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "1b704408d495ed2d0fb77602c5b3bf20641c345ec68cf64c3f5599570ca650c5",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/1b704408d495ed2d0fb77602c5b3bf20641c345ec68cf64c3f5599570ca650c5.tar.gz"
+      },
+      "source": {
+        "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+        "digest": "0187d4dc30e7ba494163b54141abb4bf550fad6296004d9cecc5cd905ca65675",
+        "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+        "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c",
+        "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+        "sha256": "35cdc9d9eb3b886ed8c5103496300096fdc4a50171b1721e72eb907856497902"
+      },
+      "regressions": {
+        "neon-regression.txt": "filters: unsigned boundaries, layouts, selections and projection checks passed"
+      },
+      "samples": [
+        {
+          "file": "neon-tiles-0.csv",
+          "sha256": "13db7910ca5a48ffe66fff7e3b0f107f4d1c25e859339556b48d09f91637f30a"
+        },
+        {
+          "file": "neon-tiles-1.csv",
+          "sha256": "851f71c68f3402e1d8be153869e214c6f5a5d9a0eb2103211b40f8b61aa372bc"
+        }
+      ]
+    },
+    "zen5": {
+      "job": "20261015T225141Z-43cdf6d8",
+      "artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 13837452,
+        "files": 28,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/b765e626eb0e0c316d0d111ddc2d77f35406587c7e989053609a999aafd04681.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "b765e626eb0e0c316d0d111ddc2d77f35406587c7e989053609a999aafd04681",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/b765e626eb0e0c316d0d111ddc2d77f35406587c7e989053609a999aafd04681.tar.gz"
+      },
+      "source": {
+        "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+        "digest": "0187d4dc30e7ba494163b54141abb4bf550fad6296004d9cecc5cd905ca65675",
+        "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+        "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c",
+        "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+        "sha256": "35cdc9d9eb3b886ed8c5103496300096fdc4a50171b1721e72eb907856497902"
+      },
+      "regressions": {
+        "avx2-regression.txt": "filters: unsigned boundaries, layouts, selections and projection checks passed",
+        "avx512-regression.txt": "filters: unsigned boundaries, layouts, selections and projection checks passed"
+      },
+      "samples": [
+        {
+          "file": "avx2-tiles-0.csv",
+          "sha256": "2375e2a749fc2fe8b10ffcf2d137e4e720f86e7a50de73e3a4833ffbf389705c"
+        },
+        {
+          "file": "avx2-tiles-1.csv",
+          "sha256": "61b73bc327fd27581f2602dced6f23512707cac5bdc51829e8dbbadf06acf3dd"
+        },
+        {
+          "file": "avx512-tiles-0.csv",
+          "sha256": "1c8222129f03ecbc8456e81ae05633163fd70cbf4d7406496526bae31b52f48b"
+        },
+        {
+          "file": "avx512-tiles-1.csv",
+          "sha256": "91f2f6435aed97da73c26dcab96709f243d8a3b20bf84c10db0e8e60093718ec"
+        }
+      ]
+    }
+  }
+}

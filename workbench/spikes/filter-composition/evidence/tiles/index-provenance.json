@@ -1,0 +1,126 @@
+{
+  "group": "20261015T230600Z-a3ba129e",
+  "members": {
+    "granite": {
+      "job": "20261015T230616Z-2e8cd251",
+      "artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 13903426,
+        "files": 22,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/a33e055613dbe7c99bb15a39ddbd78926dbc93292602887e9800c296354a36a6.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "a33e055613dbe7c99bb15a39ddbd78926dbc93292602887e9800c296354a36a6",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/a33e055613dbe7c99bb15a39ddbd78926dbc93292602887e9800c296354a36a6.tar.gz"
+      },
+      "source": {
+        "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+        "digest": "ff008b068a5174a927c3fdefb006fdeaf299e1c28e38899cbf0d83bee8d14588",
+        "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+        "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c",
+        "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+        "sha256": "1ef04a863be4f3dcbf94fedc124bec7c5aba7541858e9f5a557f5f9496d128a5"
+      },
+      "regression": {}
+    },
+    "neon": {
+      "job": "20261015T230623Z-4b30450a",
+      "artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 13136740,
+        "files": 14,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/9f1500184ccd7f337c2d1d15400b8e64d549d53a8d7dcd712fbc5d7efed89727.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "9f1500184ccd7f337c2d1d15400b8e64d549d53a8d7dcd712fbc5d7efed89727",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/9f1500184ccd7f337c2d1d15400b8e64d549d53a8d7dcd712fbc5d7efed89727.tar.gz"
+      },
+      "source": {
+        "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+        "digest": "ff008b068a5174a927c3fdefb006fdeaf299e1c28e38899cbf0d83bee8d14588",
+        "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+        "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c",
+        "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+        "sha256": "1ef04a863be4f3dcbf94fedc124bec7c5aba7541858e9f5a557f5f9496d128a5"
+      },
+      "regression": {}
+    },
+    "zen5": {
+      "job": "20261015T230608Z-791e3b62",
+      "artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 13923667,
+        "files": 22,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/74a60c066d5e3140286f5a7d124fd7c33abd673a3406c1477f463deb4a8c1a37.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "74a60c066d5e3140286f5a7d124fd7c33abd673a3406c1477f463deb4a8c1a37",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/74a60c066d5e3140286f5a7d124fd7c33abd673a3406c1477f463deb4a8c1a37.tar.gz"
+      },
+      "source": {
+        "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+        "digest": "ff008b068a5174a927c3fdefb006fdeaf299e1c28e38899cbf0d83bee8d14588",
+        "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+        "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c",
+        "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+        "sha256": "1ef04a863be4f3dcbf94fedc124bec7c5aba7541858e9f5a557f5f9496d128a5"
+      },
+      "regression": {}
+    }
+  },
+  "index_sources": [
+    {
+      "job": "20261015T230616Z-2e8cd251",
+      "file": "avx2-index-0.csv",
+      "sha256": "e71e46ca920a7f36b492dba8fcd7e2752d23e5460ef1ee20ef85bb9adbbcd575"
+    },
+    {
+      "job": "20261015T230616Z-2e8cd251",
+      "file": "avx2-index-1.csv",
+      "sha256": "edb8b6476f7b5eacd5f900e7a2d05e77b5d0d705f1e0df86c3d1f37ad2e93cbb"
+    },
+    {
+      "job": "20261015T230616Z-2e8cd251",
+      "file": "avx512-index-0.csv",
+      "sha256": "6fe45668d21d08299f665a4d868ae80c3aec4404f781fa88b6a1ad9845955995"
+    },
+    {
+      "job": "20261015T230616Z-2e8cd251",
+      "file": "avx512-index-1.csv",
+      "sha256": "3b18b2030df444ea5e2fe901ad166b99984d40178e432ad31e6f9e9956901c87"
+    },
+    {
+      "job": "20261015T230623Z-4b30450a",
+      "file": "neon-index-0.csv",
+      "sha256": "9488c7a66c96a029abcf916172d510baee30bf52bac864c7702a3fd194f96a0f"
+    },
+    {
+      "job": "20261015T230623Z-4b30450a",
+      "file": "neon-index-1.csv",
+      "sha256": "b56c5161660cbf60fceb9b1062f9cc78790ff97811966dcbafb9eeffd1e8be0a"
+    },
+    {
+      "job": "20261015T230608Z-791e3b62",
+      "file": "avx2-index-0.csv",
+      "sha256": "a64ea79438bf9d2136acedd5b2f2ff10ea085bfc9fdbb1cd58698f707f7c11a2"
+    },
+    {
+      "job": "20261015T230608Z-791e3b62",
+      "file": "avx2-index-1.csv",
+      "sha256": "38d47c9825afd3ff4b67fbad40c87a61eaafefabb9070c5076a637fca4b48e24"
+    },
+    {
+      "job": "20261015T230608Z-791e3b62",
+      "file": "avx512-index-0.csv",
+      "sha256": "21d33f40c82314387bcd149b5805e397658adffaaf62b7a793733446ad10924c"
+    },
+    {
+      "job": "20261015T230608Z-791e3b62",
+      "file": "avx512-index-1.csv",
+      "sha256": "a56a4ae91acf8f09f5b28595ad1e72e34a991522e240794ff449eb3ece633742"
+    }
+  ]
+}

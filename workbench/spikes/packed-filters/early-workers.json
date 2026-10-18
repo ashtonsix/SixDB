@@ -1,0 +1,10 @@
+{
+  "script": "workbench/spikes/packed-filters/early-qualify.sh",
+  "config": {"capacity": "on-demand", "env": {"SIXDB_BUILD_JOBS": "2"}},
+  "members": {
+    "zen5": {"config": {"machine": "zen5", "instance_type": "c8a.large", "idle_seconds": 900}},
+    "granite": {"config": {"machine": "granite-rapids", "instance_type": "c8i.xlarge", "idle_seconds": 900,
+      "env": {"FILTER_TUNE": "granite-rapids"}}},
+    "neon": {"config": {"machine": "neoverse-v2", "instance_type": "c8g.large", "idle_seconds": 900}}
+  }
+}

@@ -1,0 +1,134 @@
+[
+  {
+    "file": "zen5-avx2-timed.txt",
+    "symbol": "000000000001ab40 <void x86_entropy::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&)>:",
+    "start_clock_address": "0x1b073",
+    "stop_clock_address": "0x1ae31",
+    "instructions_in_timed_cfg": 641,
+    "pdep_count": 9,
+    "affine_count": 0,
+    "helper_calls": [],
+    "note": "CFG union of one-stream and eight-stream measured paths; repetitions/loop edges traversed once. Clock boundaries excluded; warmup, truth checks and printf excluded."
+  },
+  {
+    "file": "zen5-avx2-timed.txt",
+    "symbol": "0000000000021130 <void x86_entropy::measure<30u, 16u, 0u>(index_probe::Data<30u, 16u> const&)>:",
+    "start_clock_address": "0x216a3",
+    "stop_clock_address": "0x21446",
+    "instructions_in_timed_cfg": 731,
+    "pdep_count": 9,
+    "affine_count": 0,
+    "helper_calls": [],
+    "note": "CFG union of one-stream and eight-stream measured paths; repetitions/loop edges traversed once. Clock boundaries excluded; warmup, truth checks and printf excluded."
+  },
+  {
+    "file": "zen5-avx2-timed.txt",
+    "symbol": "000000000002a780 <void x86_entropy::measure<38u, 16u, 0u>(index_probe::Data<38u, 16u> const&)>:",
+    "start_clock_address": "0x2acc3",
+    "stop_clock_address": "0x2aa81",
+    "instructions_in_timed_cfg": 682,
+    "pdep_count": 9,
+    "affine_count": 0,
+    "helper_calls": [],
+    "note": "CFG union of one-stream and eight-stream measured paths; repetitions/loop edges traversed once. Clock boundaries excluded; warmup, truth checks and printf excluded."
+  },
+  {
+    "file": "zen5-avx512-timed.txt",
+    "symbol": "0000000000017bc0 <void x86_entropy::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&)>:",
+    "start_clock_address": "0x180a8",
+    "stop_clock_address": "0x17e91",
+    "instructions_in_timed_cfg": 438,
+    "pdep_count": 0,
+    "affine_count": 27,
+    "helper_calls": [],
+    "note": "CFG union of one-stream and eight-stream measured paths; repetitions/loop edges traversed once. Clock boundaries excluded; warmup, truth checks and printf excluded."
+  },
+  {
+    "file": "zen5-avx512-timed.txt",
+    "symbol": "000000000001d660 <void x86_entropy::measure<30u, 16u, 0u>(index_probe::Data<30u, 16u> const&)>:",
+    "start_clock_address": "0x1db73",
+    "stop_clock_address": "0x1d948",
+    "instructions_in_timed_cfg": 520,
+    "pdep_count": 0,
+    "affine_count": 9,
+    "helper_calls": [],
+    "note": "CFG union of one-stream and eight-stream measured paths; repetitions/loop edges traversed once. Clock boundaries excluded; warmup, truth checks and printf excluded."
+  },
+  {
+    "file": "zen5-avx512-timed.txt",
+    "symbol": "0000000000026160 <void x86_entropy::measure<38u, 16u, 0u>(index_probe::Data<38u, 16u> const&)>:",
+    "start_clock_address": "0x26643",
+    "stop_clock_address": "0x26431",
+    "instructions_in_timed_cfg": 501,
+    "pdep_count": 0,
+    "affine_count": 27,
+    "helper_calls": [],
+    "note": "CFG union of one-stream and eight-stream measured paths; repetitions/loop edges traversed once. Clock boundaries excluded; warmup, truth checks and printf excluded."
+  },
+  {
+    "file": "granite-avx2-timed.txt",
+    "symbol": "000000000001a500 <void x86_entropy::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&)>:",
+    "start_clock_address": "0x1aa13",
+    "stop_clock_address": "0x1a7e6",
+    "instructions_in_timed_cfg": 623,
+    "pdep_count": 9,
+    "affine_count": 0,
+    "helper_calls": [],
+    "note": "CFG union of one-stream and eight-stream measured paths; repetitions/loop edges traversed once. Clock boundaries excluded; warmup, truth checks and printf excluded."
+  },
+  {
+    "file": "granite-avx2-timed.txt",
+    "symbol": "0000000000020a90 <void x86_entropy::measure<30u, 16u, 0u>(index_probe::Data<30u, 16u> const&)>:",
+    "start_clock_address": "0x21003",
+    "stop_clock_address": "0x20da6",
+    "instructions_in_timed_cfg": 731,
+    "pdep_count": 9,
+    "affine_count": 0,
+    "helper_calls": [],
+    "note": "CFG union of one-stream and eight-stream measured paths; repetitions/loop edges traversed once. Clock boundaries excluded; warmup, truth checks and printf excluded."
+  },
+  {
+    "file": "granite-avx2-timed.txt",
+    "symbol": "0000000000029dc0 <void x86_entropy::measure<38u, 16u, 0u>(index_probe::Data<38u, 16u> const&)>:",
+    "start_clock_address": "0x2a2f3",
+    "stop_clock_address": "0x2a0c6",
+    "instructions_in_timed_cfg": 685,
+    "pdep_count": 9,
+    "affine_count": 0,
+    "helper_calls": [],
+    "note": "CFG union of one-stream and eight-stream measured paths; repetitions/loop edges traversed once. Clock boundaries excluded; warmup, truth checks and printf excluded."
+  },
+  {
+    "file": "granite-avx512-timed.txt",
+    "symbol": "00000000000177e0 <void x86_entropy::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&)>:",
+    "start_clock_address": "0x17cc8",
+    "stop_clock_address": "0x17ab1",
+    "instructions_in_timed_cfg": 430,
+    "pdep_count": 0,
+    "affine_count": 27,
+    "helper_calls": [],
+    "note": "CFG union of one-stream and eight-stream measured paths; repetitions/loop edges traversed once. Clock boundaries excluded; warmup, truth checks and printf excluded."
+  },
+  {
+    "file": "granite-avx512-timed.txt",
+    "symbol": "000000000001d200 <void x86_entropy::measure<30u, 16u, 0u>(index_probe::Data<30u, 16u> const&)>:",
+    "start_clock_address": "0x1d713",
+    "stop_clock_address": "0x1d4e8",
+    "instructions_in_timed_cfg": 520,
+    "pdep_count": 0,
+    "affine_count": 9,
+    "helper_calls": [],
+    "note": "CFG union of one-stream and eight-stream measured paths; repetitions/loop edges traversed once. Clock boundaries excluded; warmup, truth checks and printf excluded."
+  },
+  {
+    "file": "granite-avx512-timed.txt",
+    "symbol": "0000000000025a20 <void x86_entropy::measure<38u, 16u, 0u>(index_probe::Data<38u, 16u> const&)>:",
+    "start_clock_address": "0x25f03",
+    "stop_clock_address": "0x25cf1",
+    "instructions_in_timed_cfg": 501,
+    "pdep_count": 0,
+    "affine_count": 27,
+    "helper_calls": [],
+    "note": "CFG union of one-stream and eight-stream measured paths; repetitions/loop edges traversed once. Clock boundaries excluded; warmup, truth checks and printf excluded."
+  }
+]

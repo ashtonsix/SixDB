@@ -1,0 +1,12 @@
+{
+  "source_sha256": {
+    "ikea/include/ikea/seriespack/detail/filter8.h": "9c79302506ba9c8da0f138df65775a817a19ae9990327a91559c284f2fe2c0cd",
+    "ikea/include/ikea/seriespack/author/filter.h": "61742f03607a2ccdf78aef0ea9d98e08cc9e9a78140e1e7b91773a70144822e1",
+    "ikea/src/seriespack/admission.cpp": "bd8f41d2eb13e892f1c4a48d875a53f04eaea75933a28efd6005e4172bbfdb33",
+    "ikea/src/seriespack/readers.cpp": "54ed941ee8cc194796c95c2dcb68cfa49427c0de4482a73a40ebe7fef4667e5a",
+    "ikea/test/filters/custom.cpp": "21dc9dc94a047742b88ca08732b1e8ccea34b88738438e94663ffd75a32b716e"
+  },
+  "local_checks": "Internal ctest changing into directory: /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/filter-tiles\nTest project /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/filter-tiles\n    Start  7: ikea_filters_check\n1/4 Test  #7: ikea_filters_check .................   Passed    0.07 sec\n    Start 17: ikea_example_filters_ordinary\n2/4 Test #17: ikea_example_filters_ordinary ......   Passed    0.00 sec\n    Start 18: ikea_example_filters_composition\n3/4 Test #18: ikea_example_filters_composition ...   Passed    0.00 sec\n    Start 19: ikea_example_filters_guarded\n4/4 Test #19: ikea_example_filters_guarded .......   Passed    0.00 sec\n\n100% tests passed, 0 tests failed out of 4\n\nTotal Test time (real) =   0.08 sec\n",
+  "native_confirmation": "confirmation.json",
+  "asan_ubsan": "filters: unsigned boundaries, layouts, selections and projection checks passed\n"
+}

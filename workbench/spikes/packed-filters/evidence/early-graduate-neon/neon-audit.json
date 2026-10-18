@@ -1,0 +1,11 @@
+{
+  "file": "neon-disassembly.txt",
+  "sha256": "6b4cfb1fc7a3b586f818e28b00281f968e7748fc4d2b47b5580887fe516522c2",
+  "measurement_functions": 111,
+  "unexpected_calls": [],
+  "option_filter_calls": {
+    "<strlen@plt>": 222,
+    "<bcmp@plt>": 222
+  },
+  "scope": "All actual measure functions. This checks fusion, not cache residence, latency dataflow, or placement of allowed setup calls."
+}

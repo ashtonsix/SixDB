@@ -1,0 +1,27 @@
+{
+  "script": "workbench/spikes/filter-composition/x86-index-native.sh",
+  "config": {
+    "capacity": "on-demand",
+    "idle_seconds": 900,
+    "env": {
+      "SIXDB_BUILD_JOBS": "2"
+    }
+  },
+  "members": {
+    "zen5": {
+      "config": {
+        "machine": "zen5",
+        "instance_type": "c8a.xlarge"
+      }
+    },
+    "granite": {
+      "config": {
+        "machine": "granite-rapids",
+        "instance_type": "c8i.xlarge",
+        "env": {
+          "FILTER_TUNE": "granite-rapids"
+        }
+      }
+    }
+  }
+}

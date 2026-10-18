@@ -12,6 +12,15 @@ appropriate existing CPS operations, and keep cheap neighboring predicates fused
 The selected pattern is maintained in [Ikea's filter guide](../../../ikea/docs/filters.md)
 and its [composition example](../../../ikea/examples/filters/composition.cpp).
 The experimental catalogue policies below remain controls, not library dispatch.
+The [eight-slot qualification](TILE-FILTERS.md) and [K1–64 table](seriespack-tiles.md)
+cover bounded native tiles and byte origins. The [first-match comparison](TILE-FILTERS.md#first-match-decision)
+and [short GFNI/AArch64 contains cores](CONTAINS.md) explore a smaller search
+operation without adding public filter modes. The [x86 GFNI/AVX2 qualification](X86-INDEXOF.md)
+and [ARM indexof graduation](ARM-INDEXOF.md) measure runtime preparation and
+complete public consumers on Zen 5, Granite Rapids and Neoverse.
+The [earlier sixteen-slot table](seriespack-widths.md) reports latency and
+reciprocal throughput after the [NEON mask repair and harness correction](MASK-GRADUATION.md).
+The older composition experiments below retain their measured source/trace.
 
 ## What failed
 
@@ -93,9 +102,9 @@ scheduler yield or a memory-materialized decoded array.
 The selective control cuts `.text` **63.7%** and compiler peak RSS **40.7%** in
 this matrix while preserving those fused bodies. The [runtime study](RUNTIME.md)
 qualifies complete consumers separately: ordinary hot calls favor fusion; shared
-stages can be useful after CPS entry, and a large mixed catalogue favors selective
-sharing for Zen 5 throughput while losing dependent latency. The NEON catalogue
-does not show that throughput win. These observations select an authoring pattern,
+stages can be useful after CPS entry. The old large-catalogue throughput advantage
+did not survive the [distinct-stream refresh](MASK-GRADUATION.md); prepared fusion
+wins that comparison. These observations select an authoring pattern,
 not a mandatory library dispatch, compiler change or global inlining policy.
 
 ## Evidence and reproduction

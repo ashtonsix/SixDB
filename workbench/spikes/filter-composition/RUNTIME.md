@@ -5,6 +5,15 @@ The existing production filter bodies and native-chain ABI are unchanged.
 The selected pattern is documented and exercised by [Ikea's maintained filter
 examples](../../../ikea/docs/filters.md); the catalogues here remain measurement controls.
 
+The subsequent [NEON K17–32 diagnostic](NEON-MASK.md) identified scalarized
+predicate-mask narrowing in the measured kernel and qualifies a shared-harness
+limitation: independent recurrence streams can converge onto the same data
+window. The historical measurements below retain their original trace; the
+diagnostic supplies paired kernel and distinct-trace controls.
+The [graduation report](MASK-GRADUATION.md) and [corresponding sixteen-slot table](seriespack-widths.md)
+cover the repaired production kernel and corrected harness. The tables in this
+document describe the original cohort, not the current kernel's absolute cost.
+
 ## Comparisons
 
 Every operation consumes sixteen original values and returns the complete mask:
@@ -88,14 +97,14 @@ Some combinations still lose; the broad sweep and mixed catalogues prevent a
 single favorable kernel from setting a global policy.
 
 Retain selective catalogue sharing as a supported authoring pattern, not a
-threshold-based library preset. On Zen 5 the large-catalogue throughput gain can
-justify its latency cost. The NEON catalogue loses both; it provides no reason
-to switch its default. The earlier 63.7% text reduction and 40.7% compiler-RSS
+threshold-based library preset. The [corrected distinct-stream runs](MASK-GRADUATION.md)
+favor prepared fusion; the original x86 catalogue throughput gain below no longer
+supports a performance recommendation. The earlier 63.7% text reduction and 40.7% compiler-RSS
 reduction remain code-size observations from the separate controlled probe,
 not size measurements of these multi-variant benchmark executables.
 
-The ordinary filter kernels and public interfaces are unchanged by this runtime
-qualification. `ikea/docs/source.md` and `ikea/docs/filters.md` now state the
+The original runtime qualification left kernels and public interfaces unchanged;
+the follow-up repairs the shared NEON mask kernel. `ikea/docs/source.md` and `ikea/docs/filters.md` state the
 selected composition policy. Hashtable remains parked.
 
 Across K9–64, all five predicates and both activity masks (560 cases per metric
@@ -182,11 +191,11 @@ and usually adds throughput cost. At K12:
 
 ## Mixed catalogue
 
-With 320 width/predicate choices, selective sharing can improve throughput even
-though it adds dependent latency. The same binary contains all alternatives;
-this is not a clean experiment isolating instruction-cache footprint. Corrected
-Granite tuning yields a modest throughput gain in both ISA profiles; Zen 5
-retains the larger gain. NEON still loses throughput and latency.
+These are the **historical shared-salt results**, superseded for recommendations
+by the [distinct-stream comparison](MASK-GRADUATION.md). The original 320-entry
+catalogue favored selective sharing on x86 throughput; that advantage did not
+survive correction. The same binary contains all alternatives, so neither run
+isolates instruction-cache footprint from routing, data trace and code placement.
 
 | Platform | Latency prepared fused | Latency selective | Throughput prepared fused | Throughput selective |
 | --- | ---: | ---: | ---: | ---: |
@@ -197,8 +206,8 @@ retains the larger gain. NEON still loses throughput and latency.
 | V2 NEON | 40.91 | 44.49 | 15.77 | 18.10 |
 
 The 20-entry catalogue favors prepared fusion on every profile in both metrics.
-Its results and all shared/one-stage alternatives are retained, not just the
-large-catalogue wins. There is no measured universal catalogue-size crossover.
+Its results and all shared/one-stage alternatives are retained. There is no
+measured universal catalogue-size crossover.
 
 ## What the generated code establishes
 

@@ -1,0 +1,11 @@
+{
+  "file": "avx512-disassembly.txt",
+  "sha256": "bb682e73ee0dafac0e6cb8a45c4d60a7e3b24e6429a2857d3d9baaea5f90fe2d",
+  "measurement_functions": 950,
+  "unexpected_calls": [],
+  "option_filter_calls": {
+    "<strlen@plt>": 1900,
+    "<bcmp@plt>": 1900
+  },
+  "scope": "All actual measure functions. This checks fusion, not cache residence, latency dataflow, or placement of allowed setup calls."
+}

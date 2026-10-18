@@ -1,0 +1,2333 @@
+0000000000017bc0 <void x86_entropy::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&)>:
+   17bc0: 55                           	pushq	%rbp
+   17bc1: 41 57                        	pushq	%r15
+   17bc3: 41 56                        	pushq	%r14
+   17bc5: 41 55                        	pushq	%r13
+   17bc7: 41 54                        	pushq	%r12
+   17bc9: 53                           	pushq	%rbx
+   17bca: 48 81 ec b8 00 00 00         	subq	$0xb8, %rsp
+   17bd1: c4 e2 79 59 2d 26 04 01 00   	vpbroadcastq	0x10426(%rip), %xmm5 # 0x28000 <strlen@GLIBC_2.2.5+0x28000>
+   17bda: c5 fd 6f 35 9e 05 01 00      	vmovdqa	0x1059e(%rip), %ymm6    # 0x28180 <strlen@GLIBC_2.2.5+0x28180>
+   17be2: c4 e2 79 78 3d 4e 05 01 00   	vpbroadcastb	0x1054e(%rip), %xmm7 # 0x28139 <strlen@GLIBC_2.2.5+0x28139>
+   17beb: 8b 87 00 22 01 00            	movl	0x12200(%rdi), %eax
+   17bf1: 4c 8d af 00 00 01 00         	leaq	0x10000(%rdi), %r13
+   17bf8: 48 8d 6f 01                  	leaq	0x1(%rdi), %rbp
+   17bfc: 31 c9                        	xorl	%ecx, %ecx
+   17bfe: 48 89 7c 24 48               	movq	%rdi, 0x48(%rsp)
+   17c03: 66 66 66 66 2e 0f 1f 84 00 00 00 00 00       	nopw	%cs:(%rax,%rax)
+   17c10: 41 89 c8                     	movl	%ecx, %r8d
+   17c13: 41 c1 e8 04                  	shrl	$0x4, %r8d
+   17c17: 89 ca                        	movl	%ecx, %edx
+   17c19: 83 e2 0f                     	andl	$0xf, %edx
+   17c1c: 49 c1 e0 07                  	shlq	$0x7, %r8
+   17c20: 4b 8d 74 05 00               	leaq	(%r13,%r8), %rsi
+   17c25: 48 8b 3c d6                  	movq	(%rsi,%rdx,8), %rdi
+   17c29: ba 00 00 00 00               	movl	$0x0, %edx
+   17c2e: 4b 39 7c 05 00               	cmpq	%rdi, (%r13,%r8)
+   17c33: 0f 84 b7 00 00 00            	je	0x17cf0 <void x86_entropy::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&)+0x130>
+   17c39: ba 01 00 00 00               	movl	$0x1, %edx
+   17c3e: 48 39 7e 08                  	cmpq	%rdi, 0x8(%rsi)
+   17c42: 0f 84 a8 00 00 00            	je	0x17cf0 <void x86_entropy::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&)+0x130>
+   17c48: ba 02 00 00 00               	movl	$0x2, %edx
+   17c4d: 48 39 7e 10                  	cmpq	%rdi, 0x10(%rsi)
+   17c51: 0f 84 99 00 00 00            	je	0x17cf0 <void x86_entropy::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&)+0x130>
+   17c57: ba 03 00 00 00               	movl	$0x3, %edx
+   17c5c: 48 39 7e 18                  	cmpq	%rdi, 0x18(%rsi)
+   17c60: 0f 84 8a 00 00 00            	je	0x17cf0 <void x86_entropy::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&)+0x130>
+   17c66: ba 04 00 00 00               	movl	$0x4, %edx
+   17c6b: 48 39 7e 20                  	cmpq	%rdi, 0x20(%rsi)
+   17c6f: 74 7f                        	je	0x17cf0 <void x86_entropy::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&)+0x130>
+   17c71: ba 05 00 00 00               	movl	$0x5, %edx
+   17c76: 48 39 7e 28                  	cmpq	%rdi, 0x28(%rsi)
+   17c7a: 74 74                        	je	0x17cf0 <void x86_entropy::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&)+0x130>
+   17c7c: ba 06 00 00 00               	movl	$0x6, %edx
+   17c81: 48 39 7e 30                  	cmpq	%rdi, 0x30(%rsi)
+   17c85: 74 69                        	je	0x17cf0 <void x86_entropy::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&)+0x130>
+   17c87: ba 07 00 00 00               	movl	$0x7, %edx
+   17c8c: 48 39 7e 38                  	cmpq	%rdi, 0x38(%rsi)
+   17c90: 74 5e                        	je	0x17cf0 <void x86_entropy::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&)+0x130>
+   17c92: ba 08 00 00 00               	movl	$0x8, %edx
+   17c97: 48 39 7e 40                  	cmpq	%rdi, 0x40(%rsi)
+   17c9b: 74 53                        	je	0x17cf0 <void x86_entropy::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&)+0x130>
+   17c9d: ba 09 00 00 00               	movl	$0x9, %edx
+   17ca2: 48 39 7e 48                  	cmpq	%rdi, 0x48(%rsi)
+   17ca6: 74 48                        	je	0x17cf0 <void x86_entropy::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&)+0x130>
+   17ca8: ba 0a 00 00 00               	movl	$0xa, %edx
+   17cad: 48 39 7e 50                  	cmpq	%rdi, 0x50(%rsi)
+   17cb1: 74 3d                        	je	0x17cf0 <void x86_entropy::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&)+0x130>
+   17cb3: ba 0b 00 00 00               	movl	$0xb, %edx
+   17cb8: 48 39 7e 58                  	cmpq	%rdi, 0x58(%rsi)
+   17cbc: 74 32                        	je	0x17cf0 <void x86_entropy::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&)+0x130>
+   17cbe: ba 0c 00 00 00               	movl	$0xc, %edx
+   17cc3: 48 39 7e 60                  	cmpq	%rdi, 0x60(%rsi)
+   17cc7: 74 27                        	je	0x17cf0 <void x86_entropy::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&)+0x130>
+   17cc9: ba 0d 00 00 00               	movl	$0xd, %edx
+   17cce: 48 39 7e 68                  	cmpq	%rdi, 0x68(%rsi)
+   17cd2: 74 1c                        	je	0x17cf0 <void x86_entropy::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&)+0x130>
+   17cd4: ba 0e 00 00 00               	movl	$0xe, %edx
+   17cd9: 48 39 7e 70                  	cmpq	%rdi, 0x70(%rsi)
+   17cdd: 74 11                        	je	0x17cf0 <void x86_entropy::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&)+0x130>
+   17cdf: 31 d2                        	xorl	%edx, %edx
+   17ce1: 48 39 7e 78                  	cmpq	%rdi, 0x78(%rsi)
+   17ce5: 0f 95 c2                     	setne	%dl
+   17ce8: 83 c2 0f                     	addl	$0xf, %edx
+   17ceb: 0f 1f 44 00 00               	nopl	(%rax,%rax)
+   17cf0: 89 cf                        	movl	%ecx, %edi
+   17cf2: 89 fe                        	movl	%edi, %esi
+   17cf4: c1 ee 04                     	shrl	$0x4, %esi
+   17cf7: 83 e7 0f                     	andl	$0xf, %edi
+   17cfa: 49 89 f0                     	movq	%rsi, %r8
+   17cfd: 49 c1 e0 07                  	shlq	$0x7, %r8
+   17d01: 4d 01 e8                     	addq	%r13, %r8
+   17d04: 49 8b 3c f8                  	movq	(%r8,%rdi,8), %rdi
+   17d08: 41 b8 10 00 00 00            	movl	$0x10, %r8d
+   17d0e: 48 81 ff ff ff ff 3f         	cmpq	$0x3fffffff, %rdi       # imm = 0x3FFFFFFF
+   17d15: 0f 87 95 00 00 00            	ja	0x17db0 <void x86_entropy::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&)+0x1f0>
+   17d1b: 0f af f0                     	imull	%eax, %esi
+   17d1e: 41 89 f8                     	movl	%edi, %r8d
+   17d21: 48 c1 ef 06                  	shrq	$0x6, %rdi
+   17d25: 41 80 e0 3f                  	andb	$0x3f, %r8b
+   17d29: 62 f2 7d 28 7c cf            	vpbroadcastd	%edi, %ymm1
+   17d2f: 62 d2 7d 08 7a c0            	vpbroadcastb	%r8d, %xmm0
+   17d35: 62 f3 d5 18 ce 64 35 03 00   	vgf2p8affineqb	$0x0, 0x18(%rbp,%rsi){1to2}, %xmm5, %xmm4
+   17d3e: c5 fa 6f 54 35 00            	vmovdqu	(%rbp,%rsi), %xmm2
+   17d44: c4 e3 f9 ce c5 00            	vgf2p8affineqb	$0x0, %xmm5, %xmm0, %xmm0
+   17d4a: c5 fa 6f 5c 35 1e            	vmovdqu	0x1e(%rbp,%rsi), %xmm3
+   17d50: c4 e3 6d 38 54 35 08 01      	vinserti128	$0x1, 0x8(%rbp,%rsi), %ymm2, %ymm2
+   17d58: c4 e2 6d 00 d6               	vpshufb	%ymm6, %ymm2, %ymm2
+   17d5d: c5 d9 ef e0                  	vpxor	%xmm0, %xmm4, %xmm4
+   17d61: 62 f3 5d 08 3e cf 01         	vpcmpltub	%xmm7, %xmm4, %k1
+   17d68: 62 f3 d5 18 ce a4 35 36 00 00 00 00  	vgf2p8affineqb	$0x0, 0x36(%rbp,%rsi){1to2}, %xmm5, %xmm4
+   17d74: 62 f1 75 29 76 c2            	vpcmpeqd	%ymm2, %ymm1, %k0 {%k1}
+   17d7a: c4 e3 65 38 54 35 26 01      	vinserti128	$0x1, 0x26(%rbp,%rsi), %ymm3, %ymm2
+   17d82: c5 f9 93 f8                  	kmovb	%k0, %edi
+   17d86: c4 e2 6d 00 d6               	vpshufb	%ymm6, %ymm2, %ymm2
+   17d8b: c5 d9 ef c0                  	vpxor	%xmm0, %xmm4, %xmm0
+   17d8f: 62 f3 7d 08 3e cf 01         	vpcmpltub	%xmm7, %xmm0, %k1
+   17d96: 62 f1 75 29 76 c2            	vpcmpeqd	%ymm2, %ymm1, %k0 {%k1}
+   17d9c: c5 f9 93 f0                  	kmovb	%k0, %esi
+   17da0: c1 e6 08                     	shll	$0x8, %esi
+   17da3: 48 8d b4 3e 00 00 01 00      	leaq	0x10000(%rsi,%rdi), %rsi
+   17dab: f3 4c 0f bc c6               	tzcntq	%rsi, %r8
+   17db0: 41 39 d0                     	cmpl	%edx, %r8d
+   17db3: 0f 85 fb 0b 00 00            	jne	0x189b4 <void x86_entropy::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&)+0xdf4>
+   17db9: ff c1                        	incl	%ecx
+   17dbb: 81 f9 00 04 00 00            	cmpl	$0x400, %ecx            # imm = 0x400
+   17dc1: 0f 85 49 fe ff ff            	jne	0x17c10 <void x86_entropy::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&)+0x50>
+   17dc7: 83 3d ce 32 01 00 00         	cmpl	$0x0, 0x132ce(%rip)     # 0x2b09c <tiles::repeats>
+   17dce: 66 c7 44 24 0e 01 00         	movw	$0x1, 0xe(%rsp)
+   17dd5: 0f 84 c4 0b 00 00            	je	0x1899f <void x86_entropy::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&)+0xddf>
+   17ddb: 49 bc 95 ef 82 de 43 25 34 d1	movabsq	$-0x2ecbdabc217d106b, %r12 # imm = 0xD1342543DE82EF95
+   17de5: b8 01 00 00 00               	movl	$0x1, %eax
+   17dea: 49 bf 15 7c 4a 7f b9 79 37 9e	movabsq	$-0x61c8864680b583eb, %r15 # imm = 0x9E3779B97F4A7C15
+   17df4: 49 bb 03 6f ff 9d e9 e4 33 21	movabsq	$0x2133e4e99dff6f03, %r11 # imm = 0x2133E4E99DFF6F03
+   17dfe: 48 c7 44 24 28 00 00 00 00   	movq	$0x0, 0x28(%rsp)
+   17e07: eb 1e                        	jmp	0x17e27 <void x86_entropy::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&)+0x267>
+   17e09: 0f 1f 80 00 00 00 00         	nopl	(%rax)
+   17e10: 48 8b 54 24 28               	movq	0x28(%rsp), %rdx
+   17e15: 48 ff c2                     	incq	%rdx
+   17e18: 48 89 54 24 28               	movq	%rdx, 0x28(%rsp)
+   17e1d: 48 83 fa 02                  	cmpq	$0x2, %rdx
+   17e21: 0f 84 78 0b 00 00            	je	0x1899f <void x86_entropy::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&)+0xddf>
+   17e27: 85 c0                        	testl	%eax, %eax
+   17e29: b8 00 00 00 00               	movl	$0x0, %eax
+   17e2e: 74 e0                        	je	0x17e10 <void x86_entropy::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&)+0x250>
+   17e30: 48 8b 44 24 28               	movq	0x28(%rsp), %rax
+   17e35: c5 fb 10 05 cb 01 01 00      	vmovsd	0x101cb(%rip), %xmm0    # 0x28008 <strlen@GLIBC_2.2.5+0x28008>
+   17e3d: 48 8d 0d 16 05 01 00         	leaq	0x10516(%rip), %rcx     # 0x2835a <strlen@GLIBC_2.2.5+0x2835a>
+   17e44: 0f b6 44 04 0e               	movzbl	0xe(%rsp,%rax), %eax
+   17e49: c5 fb 92 c8                  	kmovd	%eax, %k1
+   17e4d: 89 44 24 40                  	movl	%eax, 0x40(%rsp)
+   17e51: 84 c0                        	testb	%al, %al
+   17e53: 48 8d 05 f9 04 01 00         	leaq	0x104f9(%rip), %rax     # 0x28353 <strlen@GLIBC_2.2.5+0x28353>
+   17e5a: 62 f1 ff 09 10 05 ac 01 01 00	vmovsd	0x101ac(%rip), %xmm0 {%k1} # 0x28010 <strlen@GLIBC_2.2.5+0x28010>
+   17e64: 48 0f 45 c8                  	cmovneq	%rax, %rcx
+   17e68: 45 31 f6                     	xorl	%r14d, %r14d
+   17e6b: 48 89 4c 24 78               	movq	%rcx, 0x78(%rsp)
+   17e70: c5 f9 29 84 24 a0 00 00 00   	vmovapd	%xmm0, 0xa0(%rsp)
+   17e79: e9 d2 00 00 00               	jmp	0x17f50 <void x86_entropy::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&)+0x390>
+   17e7e: 66 90                        	nop
+   17e80: 41 89 fc                     	movl	%edi, %r12d
+   17e83: 44 89 c3                     	movl	%r8d, %ebx
+   17e86: 45 89 cb                     	movl	%r9d, %r11d
+   17e89: 4c 89 5c 24 20               	movq	%r11, 0x20(%rsp)
+   17e8e: c5 f8 77                     	vzeroupper
+   17e91: e8 6a 92 fe ff               	callq	0x1100 <_ZNSt6chrono3_V212steady_clock3nowEv@plt>
+   17e96: 48 2b 84 24 80 00 00 00      	subq	0x80(%rsp), %rax
+   17e9e: 8b 54 24 20                  	movl	0x20(%rsp), %edx
+   17ea2: 8b 74 24 10                  	movl	0x10(%rsp), %esi
+   17ea6: 44 89 f1                     	movl	%r14d, %ecx
+   17ea9: 48 03 0d 00 32 01 00         	addq	0x13200(%rip), %rcx     # 0x2b0b0 <tiles::observed>
+   17eb0: 44 8b 74 24 44               	movl	0x44(%rsp), %r14d
+   17eb5: 4c 8b 4c 24 78               	movq	0x78(%rsp), %r9
+   17eba: 48 8d 3d 75 04 01 00         	leaq	0x10475(%rip), %rdi     # 0x28336 <strlen@GLIBC_2.2.5+0x28336>
+   17ec1: 41 b8 0b 00 00 00            	movl	$0xb, %r8d
+   17ec7: c4 e1 83 2a c0               	vcvtsi2sd	%rax, %xmm15, %xmm0
+   17ecc: 62 f1 07 08 7b 0d c2 31 01 00	vcvtusi2sdl	0x131c2(%rip), %xmm15, %xmm1 # 0x2b098 <tiles::iterations>
+   17ed6: 48 01 d6                     	addq	%rdx, %rsi
+   17ed9: 89 da                        	movl	%ebx, %edx
+   17edb: b0 01                        	movb	$0x1, %al
+   17edd: 44 89 34 24                  	movl	%r14d, (%rsp)
+   17ee1: 48 01 f2                     	addq	%rsi, %rdx
+   17ee4: 8b 74 24 18                  	movl	0x18(%rsp), %esi
+   17ee8: c5 f3 59 8c 24 a0 00 00 00   	vmulsd	0xa0(%rsp), %xmm1, %xmm1
+   17ef1: 48 01 d6                     	addq	%rdx, %rsi
+   17ef4: 44 89 e2                     	movl	%r12d, %edx
+   17ef7: 48 01 f2                     	addq	%rsi, %rdx
+   17efa: 8b 74 24 38                  	movl	0x38(%rsp), %esi
+   17efe: 48 01 d6                     	addq	%rdx, %rsi
+   17f01: 8b 54 24 30                  	movl	0x30(%rsp), %edx
+   17f05: c5 fb 5e c1                  	vdivsd	%xmm1, %xmm0, %xmm0
+   17f09: 48 01 f2                     	addq	%rsi, %rdx
+   17f0c: be 1e 00 00 00               	movl	$0x1e, %esi
+   17f11: 48 01 ca                     	addq	%rcx, %rdx
+   17f14: b9 ff ff 00 00               	movl	$0xffff, %ecx           # imm = 0xFFFF
+   17f19: 48 89 15 90 31 01 00         	movq	%rdx, 0x13190(%rip)     # 0x2b0b0 <tiles::observed>
+   17f20: ba 10 00 00 00               	movl	$0x10, %edx
+   17f25: e8 16 91 fe ff               	callq	0x1040 <printf@plt>
+   17f2a: 8b 05 6c 31 01 00            	movl	0x1316c(%rip), %eax     # 0x2b09c <tiles::repeats>
+   17f30: 41 ff c6                     	incl	%r14d
+   17f33: 49 bc 95 ef 82 de 43 25 34 d1	movabsq	$-0x2ecbdabc217d106b, %r12 # imm = 0xD1342543DE82EF95
+   17f3d: 49 bb 03 6f ff 9d e9 e4 33 21	movabsq	$0x2133e4e99dff6f03, %r11 # imm = 0x2133E4E99DFF6F03
+   17f47: 41 39 c6                     	cmpl	%eax, %r14d
+   17f4a: 0f 83 c0 fe ff ff            	jae	0x17e10 <void x86_entropy::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&)+0x250>
+   17f50: c5 fe 6f 05 68 02 01 00      	vmovdqu	0x10268(%rip), %ymm0    # 0x281c0 <strlen@GLIBC_2.2.5+0x281c0>
+   17f58: 48 8b 44 24 48               	movq	0x48(%rsp), %rax
+   17f5d: c4 e2 79 59 2d 9a 00 01 00   	vpbroadcastq	0x1009a(%rip), %xmm5 # 0x28000 <strlen@GLIBC_2.2.5+0x28000>
+   17f66: c5 fd 6f 35 12 02 01 00      	vmovdqa	0x10212(%rip), %ymm6    # 0x28180 <strlen@GLIBC_2.2.5+0x28180>
+   17f6e: c4 e2 79 78 3d c2 01 01 00   	vpbroadcastb	0x101c2(%rip), %xmm7 # 0x28139 <strlen@GLIBC_2.2.5+0x28139>
+   17f77: 31 c9                        	xorl	%ecx, %ecx
+   17f79: 31 d2                        	xorl	%edx, %edx
+   17f7b: c5 fe 7f 44 24 50            	vmovdqu	%ymm0, 0x50(%rsp)
+   17f81: 8b 80 00 22 01 00            	movl	0x12200(%rax), %eax
+   17f87: eb 1a                        	jmp	0x17fa3 <void x86_entropy::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&)+0x3e3>
+   17f89: 0f 1f 80 00 00 00 00         	nopl	(%rax)
+   17f90: 48 ff c2                     	incq	%rdx
+   17f93: 4c 01 e1                     	addq	%r12, %rcx
+   17f96: 48 81 fa 00 01 00 00         	cmpq	$0x100, %rdx            # imm = 0x100
+   17f9d: 0f 84 fd 00 00 00            	je	0x180a0 <void x86_entropy::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&)+0x4e0>
+   17fa3: 48 89 ce                     	movq	%rcx, %rsi
+   17fa6: 31 ff                        	xorl	%edi, %edi
+   17fa8: eb 22                        	jmp	0x17fcc <void x86_entropy::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&)+0x40c>
+   17faa: 66 0f 1f 44 00 00            	nopw	(%rax,%rax)
+   17fb0: 49 31 f2                     	xorq	%rsi, %r10
+   17fb3: 4c 01 de                     	addq	%r11, %rsi
+   17fb6: 4d 0f af d7                  	imulq	%r15, %r10
+   17fba: 49 c1 ea 36                  	shrq	$0x36, %r10
+   17fbe: 44 89 54 bc 50               	movl	%r10d, 0x50(%rsp,%rdi,4)
+   17fc3: 48 ff c7                     	incq	%rdi
+   17fc6: 48 83 ff 08                  	cmpq	$0x8, %rdi
+   17fca: 74 c4                        	je	0x17f90 <void x86_entropy::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&)+0x3d0>
+   17fcc: 44 8b 4c bc 50               	movl	0x50(%rsp,%rdi,4), %r9d
+   17fd1: 45 89 c8                     	movl	%r9d, %r8d
+   17fd4: 41 c1 e8 04                  	shrl	$0x4, %r8d
+   17fd8: 41 83 e1 0f                  	andl	$0xf, %r9d
+   17fdc: 4d 89 c2                     	movq	%r8, %r10
+   17fdf: 49 c1 e2 07                  	shlq	$0x7, %r10
+   17fe3: 4d 01 ea                     	addq	%r13, %r10
+   17fe6: 4f 8b 0c ca                  	movq	(%r10,%r9,8), %r9
+   17fea: 41 ba 10 00 00 00            	movl	$0x10, %r10d
+   17ff0: 49 81 f9 ff ff ff 3f         	cmpq	$0x3fffffff, %r9        # imm = 0x3FFFFFFF
+   17ff7: 77 b7                        	ja	0x17fb0 <void x86_entropy::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&)+0x3f0>
+   17ff9: 44 0f af c0                  	imull	%eax, %r8d
+   17ffd: 45 89 ca                     	movl	%r9d, %r10d
+   18000: 49 c1 e9 06                  	shrq	$0x6, %r9
+   18004: 41 80 e2 3f                  	andb	$0x3f, %r10b
+   18008: 62 d2 7d 28 7c c9            	vpbroadcastd	%r9d, %ymm1
+   1800e: 62 d2 7d 08 7a c2            	vpbroadcastb	%r10d, %xmm0
+   18014: 62 b3 d5 18 ce 64 05 03 00   	vgf2p8affineqb	$0x0, 0x18(%rbp,%r8){1to2}, %xmm5, %xmm4
+   1801d: c4 a1 7a 6f 54 05 00         	vmovdqu	(%rbp,%r8), %xmm2
+   18024: c4 e3 f9 ce c5 00            	vgf2p8affineqb	$0x0, %xmm5, %xmm0, %xmm0
+   1802a: c4 a1 7a 6f 5c 05 1e         	vmovdqu	0x1e(%rbp,%r8), %xmm3
+   18031: c4 a3 6d 38 54 05 08 01      	vinserti128	$0x1, 0x8(%rbp,%r8), %ymm2, %ymm2
+   18039: c4 e2 6d 00 d6               	vpshufb	%ymm6, %ymm2, %ymm2
+   1803e: c5 d9 ef e0                  	vpxor	%xmm0, %xmm4, %xmm4
+   18042: 62 f3 5d 08 3e cf 01         	vpcmpltub	%xmm7, %xmm4, %k1
+   18049: 62 b3 d5 18 ce a4 05 36 00 00 00 00  	vgf2p8affineqb	$0x0, 0x36(%rbp,%r8){1to2}, %xmm5, %xmm4
+   18055: 62 f1 75 29 76 c2            	vpcmpeqd	%ymm2, %ymm1, %k0 {%k1}
+   1805b: c4 a3 65 38 54 05 26 01      	vinserti128	$0x1, 0x26(%rbp,%r8), %ymm3, %ymm2
+   18063: c5 79 93 c8                  	kmovb	%k0, %r9d
+   18067: c4 e2 6d 00 d6               	vpshufb	%ymm6, %ymm2, %ymm2
+   1806c: c5 d9 ef c0                  	vpxor	%xmm0, %xmm4, %xmm0
+   18070: 62 f3 7d 08 3e cf 01         	vpcmpltub	%xmm7, %xmm0, %k1
+   18077: 62 f1 75 29 76 c2            	vpcmpeqd	%ymm2, %ymm1, %k0 {%k1}
+   1807d: c5 79 93 c0                  	kmovb	%k0, %r8d
+   18081: 41 c1 e0 08                  	shll	$0x8, %r8d
+   18085: 4f 8d 84 08 00 00 01 00      	leaq	0x10000(%r8,%r9), %r8
+   1808d: f3 4d 0f bc d0               	tzcntq	%r8, %r10
+   18092: e9 19 ff ff ff               	jmp	0x17fb0 <void x86_entropy::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&)+0x3f0>
+   18097: 66 0f 1f 84 00 00 00 00 00   	nopw	(%rax,%rax)
+   180a0: 44 89 74 24 44               	movl	%r14d, 0x44(%rsp)
+   180a5: c5 f8 77                     	vzeroupper
+   180a8: e8 53 90 fe ff               	callq	0x1100 <_ZNSt6chrono3_V212steady_clock3nowEv@plt>
+   180ad: 8b 4c 24 58                  	movl	0x58(%rsp), %ecx
+   180b1: 48 89 84 24 80 00 00 00      	movq	%rax, 0x80(%rsp)
+   180b9: 8b 54 24 6c                  	movl	0x6c(%rsp), %edx
+   180bd: 8b 05 d5 2f 01 00            	movl	0x12fd5(%rip), %eax     # 0x2b098 <tiles::iterations>
+   180c3: 44 8b 74 24 50               	movl	0x50(%rsp), %r14d
+   180c8: 44 8b 4c 24 54               	movl	0x54(%rsp), %r9d
+   180cd: 44 8b 44 24 5c               	movl	0x5c(%rsp), %r8d
+   180d2: 8b 7c 24 64                  	movl	0x64(%rsp), %edi
+   180d6: 48 89 4c 24 10               	movq	%rcx, 0x10(%rsp)
+   180db: 8b 4c 24 60                  	movl	0x60(%rsp), %ecx
+   180df: 48 89 54 24 30               	movq	%rdx, 0x30(%rsp)
+   180e4: 48 89 4c 24 18               	movq	%rcx, 0x18(%rsp)
+   180e9: 8b 4c 24 68                  	movl	0x68(%rsp), %ecx
+   180ed: 48 89 4c 24 38               	movq	%rcx, 0x38(%rsp)
+   180f2: 48 85 c0                     	testq	%rax, %rax
+   180f5: 0f 84 85 fd ff ff            	je	0x17e80 <void x86_entropy::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&)+0x2c0>
+   180fb: 48 8b 4c 24 48               	movq	0x48(%rsp), %rcx
+   18100: c4 e2 79 59 2d f7 fe 00 00   	vpbroadcastq	0xfef7(%rip), %xmm5 # 0x28000 <strlen@GLIBC_2.2.5+0x28000>
+   18109: c5 fd 6f 35 6f 00 01 00      	vmovdqa	0x1006f(%rip), %ymm6    # 0x28180 <strlen@GLIBC_2.2.5+0x28180>
+   18111: c4 e2 79 78 3d 1f 00 01 00   	vpbroadcastb	0x1001f(%rip), %xmm7 # 0x28139 <strlen@GLIBC_2.2.5+0x28139>
+   1811a: 80 7c 24 40 00               	cmpb	$0x0, 0x40(%rsp)
+   1811f: 8b 89 00 22 01 00            	movl	0x12200(%rcx), %ecx
+   18125: 0f 84 e5 00 00 00            	je	0x18210 <void x86_entropy::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&)+0x650>
+   1812b: 31 d2                        	xorl	%edx, %edx
+   1812d: eb 18                        	jmp	0x18147 <void x86_entropy::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&)+0x587>
+   1812f: 90                           	nop
+   18130: 49 31 d6                     	xorq	%rdx, %r14
+   18133: 4c 01 e2                     	addq	%r12, %rdx
+   18136: 4d 0f af f7                  	imulq	%r15, %r14
+   1813a: 49 c1 ee 36                  	shrq	$0x36, %r14
+   1813e: 48 ff c8                     	decq	%rax
+   18141: 0f 84 39 fd ff ff            	je	0x17e80 <void x86_entropy::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&)+0x2c0>
+   18147: 44 89 f6                     	movl	%r14d, %esi
+   1814a: c1 ee 04                     	shrl	$0x4, %esi
+   1814d: 41 83 e6 0f                  	andl	$0xf, %r14d
+   18151: 49 89 f2                     	movq	%rsi, %r10
+   18154: 49 c1 e2 07                  	shlq	$0x7, %r10
+   18158: 4d 01 ea                     	addq	%r13, %r10
+   1815b: 4f 8b 14 f2                  	movq	(%r10,%r14,8), %r10
+   1815f: 41 be 10 00 00 00            	movl	$0x10, %r14d
+   18165: 49 81 fa ff ff ff 3f         	cmpq	$0x3fffffff, %r10       # imm = 0x3FFFFFFF
+   1816c: 77 c2                        	ja	0x18130 <void x86_entropy::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&)+0x570>
+   1816e: 0f af f1                     	imull	%ecx, %esi
+   18171: 45 89 d3                     	movl	%r10d, %r11d
+   18174: 49 c1 ea 06                  	shrq	$0x6, %r10
+   18178: 41 80 e3 3f                  	andb	$0x3f, %r11b
+   1817c: 62 d2 7d 28 7c ca            	vpbroadcastd	%r10d, %ymm1
+   18182: 62 d2 7d 08 7a c3            	vpbroadcastb	%r11d, %xmm0
+   18188: 62 f3 d5 18 ce 64 35 03 00   	vgf2p8affineqb	$0x0, 0x18(%rbp,%rsi){1to2}, %xmm5, %xmm4
+   18191: c5 fa 6f 54 35 00            	vmovdqu	(%rbp,%rsi), %xmm2
+   18197: c4 e3 f9 ce c5 00            	vgf2p8affineqb	$0x0, %xmm5, %xmm0, %xmm0
+   1819d: c5 fa 6f 5c 35 1e            	vmovdqu	0x1e(%rbp,%rsi), %xmm3
+   181a3: c4 e3 6d 38 54 35 08 01      	vinserti128	$0x1, 0x8(%rbp,%rsi), %ymm2, %ymm2
+   181ab: c4 e2 6d 00 d6               	vpshufb	%ymm6, %ymm2, %ymm2
+   181b0: c5 d9 ef e0                  	vpxor	%xmm0, %xmm4, %xmm4
+   181b4: 62 f3 5d 08 3e cf 01         	vpcmpltub	%xmm7, %xmm4, %k1
+   181bb: 62 f3 d5 18 ce a4 35 36 00 00 00 00  	vgf2p8affineqb	$0x0, 0x36(%rbp,%rsi){1to2}, %xmm5, %xmm4
+   181c7: 62 f1 75 29 76 c2            	vpcmpeqd	%ymm2, %ymm1, %k0 {%k1}
+   181cd: c4 e3 65 38 54 35 26 01      	vinserti128	$0x1, 0x26(%rbp,%rsi), %ymm3, %ymm2
+   181d5: c5 79 93 d0                  	kmovb	%k0, %r10d
+   181d9: c4 e2 6d 00 d6               	vpshufb	%ymm6, %ymm2, %ymm2
+   181de: c5 d9 ef c0                  	vpxor	%xmm0, %xmm4, %xmm0
+   181e2: 62 f3 7d 08 3e cf 01         	vpcmpltub	%xmm7, %xmm0, %k1
+   181e9: 62 f1 75 29 76 c2            	vpcmpeqd	%ymm2, %ymm1, %k0 {%k1}
+   181ef: c5 f9 93 f0                  	kmovb	%k0, %esi
+   181f3: c1 e6 08                     	shll	$0x8, %esi
+   181f6: 4a 8d b4 16 00 00 01 00      	leaq	0x10000(%rsi,%r10), %rsi
+   181fe: f3 4c 0f bc f6               	tzcntq	%rsi, %r14
+   18203: e9 28 ff ff ff               	jmp	0x18130 <void x86_entropy::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&)+0x570>
+   18208: 0f 1f 84 00 00 00 00 00      	nopl	(%rax,%rax)
+   18210: 48 f7 d8                     	negq	%rax
+   18213: ba dc 78 02 00               	movl	$0x278dc, %edx          # imm = 0x278DC
+   18218: 31 f6                        	xorl	%esi, %esi
+   1821a: 48 89 84 24 88 00 00 00      	movq	%rax, 0x88(%rsp)
+   18222: e9 0b 01 00 00               	jmp	0x18332 <void x86_entropy::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&)+0x772>
+   18227: 66 0f 1f 84 00 00 00 00 00   	nopw	(%rax,%rax)
+   18230: 4c 8b 5c 24 20               	movq	0x20(%rsp), %r11
+   18235: 44 8d 82 5b 25 fe ff         	leal	-0x1daa5(%rdx), %r8d
+   1823c: 49 b9 95 ef 82 de 43 25 34 d1	movabsq	$-0x2ecbdabc217d106b, %r9 # imm = 0xD1342543DE82EF95
+   18246: 89 c8                        	movl	%ecx, %eax
+   18248: 48 8b 4c 24 10               	movq	0x10(%rsp), %rcx
+   1824d: 48 8b 9c 24 90 00 00 00      	movq	0x90(%rsp), %rbx
+   18255: 49 31 f6                     	xorq	%rsi, %r14
+   18258: 4d 0f af c1                  	imulq	%r9, %r8
+   1825c: 4d 0f af f7                  	imulq	%r15, %r14
+   18260: 4c 01 ce                     	addq	%r9, %rsi
+   18263: 49 c1 ee 36                  	shrq	$0x36, %r14
+   18267: 4d 31 c3                     	xorq	%r8, %r11
+   1826a: 44 8d 82 92 c3 fe ff         	leal	-0x13c6e(%rdx), %r8d
+   18271: 4d 0f af c1                  	imulq	%r9, %r8
+   18275: 4d 0f af df                  	imulq	%r15, %r11
+   18279: 4c 31 c1                     	xorq	%r8, %rcx
+   1827c: 44 8d 82 c9 61 ff ff         	leal	-0x9e37(%rdx), %r8d
+   18283: 49 c1 eb 36                  	shrq	$0x36, %r11
+   18287: 49 0f af cf                  	imulq	%r15, %rcx
+   1828b: 4d 0f af c1                  	imulq	%r9, %r8
+   1828f: 48 c1 e9 36                  	shrq	$0x36, %rcx
+   18293: 4c 31 c3                     	xorq	%r8, %rbx
+   18296: 41 89 d0                     	movl	%edx, %r8d
+   18299: 4d 0f af c1                  	imulq	%r9, %r8
+   1829d: 48 89 4c 24 10               	movq	%rcx, 0x10(%rsp)
+   182a2: 89 c1                        	movl	%eax, %ecx
+   182a4: 48 8b 44 24 18               	movq	0x18(%rsp), %rax
+   182a9: 49 0f af df                  	imulq	%r15, %rbx
+   182ad: 48 c1 eb 36                  	shrq	$0x36, %rbx
+   182b1: 4c 31 c0                     	xorq	%r8, %rax
+   182b4: 44 8d 82 37 9e 00 00         	leal	0x9e37(%rdx), %r8d
+   182bb: 49 0f af c7                  	imulq	%r15, %rax
+   182bf: 4d 0f af c1                  	imulq	%r9, %r8
+   182c3: 48 c1 e8 36                  	shrq	$0x36, %rax
+   182c7: 4d 31 c4                     	xorq	%r8, %r12
+   182ca: 44 8d 82 6e 3c 01 00         	leal	0x13c6e(%rdx), %r8d
+   182d1: 48 89 44 24 18               	movq	%rax, 0x18(%rsp)
+   182d6: 8d 82 a5 da 01 00            	leal	0x1daa5(%rdx), %eax
+   182dc: 4d 0f af c1                  	imulq	%r9, %r8
+   182e0: 4d 0f af e7                  	imulq	%r15, %r12
+   182e4: 49 0f af c1                  	imulq	%r9, %rax
+   182e8: 45 89 d9                     	movl	%r11d, %r9d
+   182eb: 4d 31 c2                     	xorq	%r8, %r10
+   182ee: 49 c1 ec 36                  	shrq	$0x36, %r12
+   182f2: 41 89 d8                     	movl	%ebx, %r8d
+   182f5: 48 31 f8                     	xorq	%rdi, %rax
+   182f8: 48 8b bc 24 88 00 00 00      	movq	0x88(%rsp), %rdi
+   18300: 4d 0f af d7                  	imulq	%r15, %r10
+   18304: 49 0f af c7                  	imulq	%r15, %rax
+   18308: 49 c1 ea 36                  	shrq	$0x36, %r10
+   1830c: 4c 89 54 24 38               	movq	%r10, 0x38(%rsp)
+   18311: 48 c1 e8 36                  	shrq	$0x36, %rax
+   18315: 4c 8d 54 17 01               	leaq	0x1(%rdi,%rdx), %r10
+   1831a: 48 ff c2                     	incq	%rdx
+   1831d: 48 89 44 24 30               	movq	%rax, 0x30(%rsp)
+   18322: 44 89 e7                     	movl	%r12d, %edi
+   18325: 49 81 fa dc 78 02 00         	cmpq	$0x278dc, %r10          # imm = 0x278DC
+   1832c: 0f 84 57 fb ff ff            	je	0x17e89 <void x86_entropy::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&)+0x2c9>
+   18332: 45 89 f2                     	movl	%r14d, %r10d
+   18335: 41 c1 ea 04                  	shrl	$0x4, %r10d
+   18339: 41 83 e6 0f                  	andl	$0xf, %r14d
+   1833d: 48 89 94 24 98 00 00 00      	movq	%rdx, 0x98(%rsp)
+   18345: ba 10 00 00 00               	movl	$0x10, %edx
+   1834a: 4d 89 d3                     	movq	%r10, %r11
+   1834d: 49 c1 e3 07                  	shlq	$0x7, %r11
+   18351: 48 89 54 24 20               	movq	%rdx, 0x20(%rsp)
+   18356: 4d 01 eb                     	addq	%r13, %r11
+   18359: 4f 8b 1c f3                  	movq	(%r11,%r14,8), %r11
+   1835d: 41 be 10 00 00 00            	movl	$0x10, %r14d
+   18363: 49 81 fb ff ff ff 3f         	cmpq	$0x3fffffff, %r11       # imm = 0x3FFFFFFF
+   1836a: 0f 87 99 00 00 00            	ja	0x18409 <void x86_entropy::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&)+0x849>
+   18370: 44 0f af d1                  	imull	%ecx, %r10d
+   18374: 45 89 de                     	movl	%r11d, %r14d
+   18377: 49 c1 eb 06                  	shrq	$0x6, %r11
+   1837b: 41 80 e6 3f                  	andb	$0x3f, %r14b
+   1837f: 62 d2 7d 28 7c cb            	vpbroadcastd	%r11d, %ymm1
+   18385: 62 d2 7d 08 7a c6            	vpbroadcastb	%r14d, %xmm0
+   1838b: 62 b3 d5 18 ce 64 15 03 00   	vgf2p8affineqb	$0x0, 0x18(%rbp,%r10){1to2}, %xmm5, %xmm4
+   18394: c4 a1 7a 6f 54 15 00         	vmovdqu	(%rbp,%r10), %xmm2
+   1839b: c4 e3 f9 ce c5 00            	vgf2p8affineqb	$0x0, %xmm5, %xmm0, %xmm0
+   183a1: c4 a1 7a 6f 5c 15 1e         	vmovdqu	0x1e(%rbp,%r10), %xmm3
+   183a8: c4 a3 6d 38 54 15 08 01      	vinserti128	$0x1, 0x8(%rbp,%r10), %ymm2, %ymm2
+   183b0: c4 e2 6d 00 d6               	vpshufb	%ymm6, %ymm2, %ymm2
+   183b5: c5 d9 ef e0                  	vpxor	%xmm0, %xmm4, %xmm4
+   183b9: 62 f3 5d 08 3e cf 01         	vpcmpltub	%xmm7, %xmm4, %k1
+   183c0: 62 b3 d5 18 ce a4 15 36 00 00 00 00  	vgf2p8affineqb	$0x0, 0x36(%rbp,%r10){1to2}, %xmm5, %xmm4
+   183cc: 62 f1 75 29 76 c2            	vpcmpeqd	%ymm2, %ymm1, %k0 {%k1}
+   183d2: c4 a3 65 38 54 15 26 01      	vinserti128	$0x1, 0x26(%rbp,%r10), %ymm3, %ymm2
+   183da: c5 79 93 d8                  	kmovb	%k0, %r11d
+   183de: c4 e2 6d 00 d6               	vpshufb	%ymm6, %ymm2, %ymm2
+   183e3: c5 d9 ef c0                  	vpxor	%xmm0, %xmm4, %xmm0
+   183e7: 62 f3 7d 08 3e cf 01         	vpcmpltub	%xmm7, %xmm0, %k1
+   183ee: 62 f1 75 29 76 c2            	vpcmpeqd	%ymm2, %ymm1, %k0 {%k1}
+   183f4: c5 79 93 d0                  	kmovb	%k0, %r10d
+   183f8: 41 c1 e2 08                  	shll	$0x8, %r10d
+   183fc: 4f 8d 94 1a 00 00 01 00      	leaq	0x10000(%r10,%r11), %r10
+   18404: f3 4d 0f bc f2               	tzcntq	%r10, %r14
+   18409: 45 89 ca                     	movl	%r9d, %r10d
+   1840c: 41 c1 ea 04                  	shrl	$0x4, %r10d
+   18410: 41 83 e1 0f                  	andl	$0xf, %r9d
+   18414: 4c 8b 64 24 10               	movq	0x10(%rsp), %r12
+   18419: 4d 89 d3                     	movq	%r10, %r11
+   1841c: 49 c1 e3 07                  	shlq	$0x7, %r11
+   18420: 4d 01 eb                     	addq	%r13, %r11
+   18423: 4f 8b 0c cb                  	movq	(%r11,%r9,8), %r9
+   18427: 49 81 f9 ff ff ff 3f         	cmpq	$0x3fffffff, %r9        # imm = 0x3FFFFFFF
+   1842e: 0f 87 9e 00 00 00            	ja	0x184d2 <void x86_entropy::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&)+0x912>
+   18434: 44 0f af d1                  	imull	%ecx, %r10d
+   18438: 45 89 cb                     	movl	%r9d, %r11d
+   1843b: 49 c1 e9 06                  	shrq	$0x6, %r9
+   1843f: 41 80 e3 3f                  	andb	$0x3f, %r11b
+   18443: 62 d2 7d 28 7c c9            	vpbroadcastd	%r9d, %ymm1
+   18449: 62 d2 7d 08 7a c3            	vpbroadcastb	%r11d, %xmm0
+   1844f: 62 b3 d5 18 ce 64 15 03 00   	vgf2p8affineqb	$0x0, 0x18(%rbp,%r10){1to2}, %xmm5, %xmm4
+   18458: c4 a1 7a 6f 54 15 00         	vmovdqu	(%rbp,%r10), %xmm2
+   1845f: c4 e3 f9 ce c5 00            	vgf2p8affineqb	$0x0, %xmm5, %xmm0, %xmm0
+   18465: c4 a1 7a 6f 5c 15 1e         	vmovdqu	0x1e(%rbp,%r10), %xmm3
+   1846c: c4 a3 6d 38 54 15 08 01      	vinserti128	$0x1, 0x8(%rbp,%r10), %ymm2, %ymm2
+   18474: c4 e2 6d 00 d6               	vpshufb	%ymm6, %ymm2, %ymm2
+   18479: c5 d9 ef e0                  	vpxor	%xmm0, %xmm4, %xmm4
+   1847d: 62 f3 5d 08 3e cf 01         	vpcmpltub	%xmm7, %xmm4, %k1
+   18484: 62 b3 d5 18 ce a4 15 36 00 00 00 00  	vgf2p8affineqb	$0x0, 0x36(%rbp,%r10){1to2}, %xmm5, %xmm4
+   18490: 62 f1 75 29 76 c2            	vpcmpeqd	%ymm2, %ymm1, %k0 {%k1}
+   18496: c4 a3 65 38 54 15 26 01      	vinserti128	$0x1, 0x26(%rbp,%r10), %ymm3, %ymm2
+   1849e: c5 79 93 c8                  	kmovb	%k0, %r9d
+   184a2: c4 e2 6d 00 d6               	vpshufb	%ymm6, %ymm2, %ymm2
+   184a7: c5 d9 ef c0                  	vpxor	%xmm0, %xmm4, %xmm0
+   184ab: 62 f3 7d 08 3e cf 01         	vpcmpltub	%xmm7, %xmm0, %k1
+   184b2: 62 f1 75 29 76 c2            	vpcmpeqd	%ymm2, %ymm1, %k0 {%k1}
+   184b8: c5 79 93 d0                  	kmovb	%k0, %r10d
+   184bc: 41 c1 e2 08                  	shll	$0x8, %r10d
+   184c0: 4f 8d 8c 0a 00 00 01 00      	leaq	0x10000(%r10,%r9), %r9
+   184c8: f3 49 0f bc d1               	tzcntq	%r9, %rdx
+   184cd: 48 89 54 24 20               	movq	%rdx, 0x20(%rsp)
+   184d2: 45 89 e1                     	movl	%r12d, %r9d
+   184d5: 41 c1 e9 04                  	shrl	$0x4, %r9d
+   184d9: 41 83 e4 0f                  	andl	$0xf, %r12d
+   184dd: ba 10 00 00 00               	movl	$0x10, %edx
+   184e2: 41 bb 10 00 00 00            	movl	$0x10, %r11d
+   184e8: 4d 89 ca                     	movq	%r9, %r10
+   184eb: 49 c1 e2 07                  	shlq	$0x7, %r10
+   184ef: 4d 01 ea                     	addq	%r13, %r10
+   184f2: 4f 8b 14 e2                  	movq	(%r10,%r12,8), %r10
+   184f6: 49 81 fa ff ff ff 3f         	cmpq	$0x3fffffff, %r10       # imm = 0x3FFFFFFF
+   184fd: 0f 87 99 00 00 00            	ja	0x1859c <void x86_entropy::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&)+0x9dc>
+   18503: 44 0f af c9                  	imull	%ecx, %r9d
+   18507: 45 89 d3                     	movl	%r10d, %r11d
+   1850a: 49 c1 ea 06                  	shrq	$0x6, %r10
+   1850e: 41 80 e3 3f                  	andb	$0x3f, %r11b
+   18512: 62 d2 7d 28 7c ca            	vpbroadcastd	%r10d, %ymm1
+   18518: 62 d2 7d 08 7a c3            	vpbroadcastb	%r11d, %xmm0
+   1851e: 62 b3 d5 18 ce 64 0d 03 00   	vgf2p8affineqb	$0x0, 0x18(%rbp,%r9){1to2}, %xmm5, %xmm4
+   18527: c4 a1 7a 6f 54 0d 00         	vmovdqu	(%rbp,%r9), %xmm2
+   1852e: c4 e3 f9 ce c5 00            	vgf2p8affineqb	$0x0, %xmm5, %xmm0, %xmm0
+   18534: c4 a1 7a 6f 5c 0d 1e         	vmovdqu	0x1e(%rbp,%r9), %xmm3
+   1853b: c4 a3 6d 38 54 0d 08 01      	vinserti128	$0x1, 0x8(%rbp,%r9), %ymm2, %ymm2
+   18543: c4 e2 6d 00 d6               	vpshufb	%ymm6, %ymm2, %ymm2
+   18548: c5 d9 ef e0                  	vpxor	%xmm0, %xmm4, %xmm4
+   1854c: 62 f3 5d 08 3e cf 01         	vpcmpltub	%xmm7, %xmm4, %k1
+   18553: 62 b3 d5 18 ce a4 0d 36 00 00 00 00  	vgf2p8affineqb	$0x0, 0x36(%rbp,%r9){1to2}, %xmm5, %xmm4
+   1855f: 62 f1 75 29 76 c2            	vpcmpeqd	%ymm2, %ymm1, %k0 {%k1}
+   18565: c4 a3 65 38 54 0d 26 01      	vinserti128	$0x1, 0x26(%rbp,%r9), %ymm3, %ymm2
+   1856d: c5 79 93 d0                  	kmovb	%k0, %r10d
+   18571: c4 e2 6d 00 d6               	vpshufb	%ymm6, %ymm2, %ymm2
+   18576: c5 d9 ef c0                  	vpxor	%xmm0, %xmm4, %xmm0
+   1857a: 62 f3 7d 08 3e cf 01         	vpcmpltub	%xmm7, %xmm0, %k1
+   18581: 62 f1 75 29 76 c2            	vpcmpeqd	%ymm2, %ymm1, %k0 {%k1}
+   18587: c5 79 93 c8                  	kmovb	%k0, %r9d
+   1858b: 41 c1 e1 08                  	shll	$0x8, %r9d
+   1858f: 4f 8d 8c 11 00 00 01 00      	leaq	0x10000(%r9,%r10), %r9
+   18597: f3 4d 0f bc d9               	tzcntq	%r9, %r11
+   1859c: 45 89 c1                     	movl	%r8d, %r9d
+   1859f: 41 c1 e9 04                  	shrl	$0x4, %r9d
+   185a3: 41 83 e0 0f                  	andl	$0xf, %r8d
+   185a7: 48 89 f3                     	movq	%rsi, %rbx
+   185aa: 4c 89 5c 24 10               	movq	%r11, 0x10(%rsp)
+   185af: 4d 89 ca                     	movq	%r9, %r10
+   185b2: 49 c1 e2 07                  	shlq	$0x7, %r10
+   185b6: 4d 01 ea                     	addq	%r13, %r10
+   185b9: 4f 8b 04 c2                  	movq	(%r10,%r8,8), %r8
+   185bd: 49 81 f8 ff ff ff 3f         	cmpq	$0x3fffffff, %r8        # imm = 0x3FFFFFFF
+   185c4: 0f 87 99 00 00 00            	ja	0x18663 <void x86_entropy::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&)+0xaa3>
+   185ca: 44 0f af c9                  	imull	%ecx, %r9d
+   185ce: 45 89 c2                     	movl	%r8d, %r10d
+   185d1: 49 c1 e8 06                  	shrq	$0x6, %r8
+   185d5: 41 80 e2 3f                  	andb	$0x3f, %r10b
+   185d9: 62 d2 7d 28 7c c8            	vpbroadcastd	%r8d, %ymm1
+   185df: 62 d2 7d 08 7a c2            	vpbroadcastb	%r10d, %xmm0
+   185e5: 62 b3 d5 18 ce 64 0d 03 00   	vgf2p8affineqb	$0x0, 0x18(%rbp,%r9){1to2}, %xmm5, %xmm4
+   185ee: c4 a1 7a 6f 54 0d 00         	vmovdqu	(%rbp,%r9), %xmm2
+   185f5: c4 e3 f9 ce c5 00            	vgf2p8affineqb	$0x0, %xmm5, %xmm0, %xmm0
+   185fb: c4 a1 7a 6f 5c 0d 1e         	vmovdqu	0x1e(%rbp,%r9), %xmm3
+   18602: c4 a3 6d 38 54 0d 08 01      	vinserti128	$0x1, 0x8(%rbp,%r9), %ymm2, %ymm2
+   1860a: c4 e2 6d 00 d6               	vpshufb	%ymm6, %ymm2, %ymm2
+   1860f: c5 d9 ef e0                  	vpxor	%xmm0, %xmm4, %xmm4
+   18613: 62 f3 5d 08 3e cf 01         	vpcmpltub	%xmm7, %xmm4, %k1
+   1861a: 62 b3 d5 18 ce a4 0d 36 00 00 00 00  	vgf2p8affineqb	$0x0, 0x36(%rbp,%r9){1to2}, %xmm5, %xmm4
+   18626: 62 f1 75 29 76 c2            	vpcmpeqd	%ymm2, %ymm1, %k0 {%k1}
+   1862c: c4 a3 65 38 54 0d 26 01      	vinserti128	$0x1, 0x26(%rbp,%r9), %ymm3, %ymm2
+   18634: c5 79 93 c0                  	kmovb	%k0, %r8d
+   18638: c4 e2 6d 00 d6               	vpshufb	%ymm6, %ymm2, %ymm2
+   1863d: c5 d9 ef c0                  	vpxor	%xmm0, %xmm4, %xmm0
+   18641: 62 f3 7d 08 3e cf 01         	vpcmpltub	%xmm7, %xmm0, %k1
+   18648: 62 f1 75 29 76 c2            	vpcmpeqd	%ymm2, %ymm1, %k0 {%k1}
+   1864e: c5 79 93 c8                  	kmovb	%k0, %r9d
+   18652: 41 c1 e1 08                  	shll	$0x8, %r9d
+   18656: 4f 8d 84 01 00 00 01 00      	leaq	0x10000(%r9,%r8), %r8
+   1865e: f3 49 0f bc d0               	tzcntq	%r8, %rdx
+   18663: 4c 8b 54 24 18               	movq	0x18(%rsp), %r10
+   18668: 45 89 d0                     	movl	%r10d, %r8d
+   1866b: 41 c1 e8 04                  	shrl	$0x4, %r8d
+   1866f: 41 83 e2 0f                  	andl	$0xf, %r10d
+   18673: 41 bc 10 00 00 00            	movl	$0x10, %r12d
+   18679: be 10 00 00 00               	movl	$0x10, %esi
+   1867e: 4d 89 c1                     	movq	%r8, %r9
+   18681: 49 c1 e1 07                  	shlq	$0x7, %r9
+   18685: 4d 01 e9                     	addq	%r13, %r9
+   18688: 4f 8b 0c d1                  	movq	(%r9,%r10,8), %r9
+   1868c: 49 81 f9 ff ff ff 3f         	cmpq	$0x3fffffff, %r9        # imm = 0x3FFFFFFF
+   18693: 0f 87 99 00 00 00            	ja	0x18732 <void x86_entropy::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&)+0xb72>
+   18699: 44 0f af c1                  	imull	%ecx, %r8d
+   1869d: 45 89 ca                     	movl	%r9d, %r10d
+   186a0: 49 c1 e9 06                  	shrq	$0x6, %r9
+   186a4: 41 80 e2 3f                  	andb	$0x3f, %r10b
+   186a8: 62 d2 7d 28 7c c9            	vpbroadcastd	%r9d, %ymm1
+   186ae: 62 d2 7d 08 7a c2            	vpbroadcastb	%r10d, %xmm0
+   186b4: 62 b3 d5 18 ce 64 05 03 00   	vgf2p8affineqb	$0x0, 0x18(%rbp,%r8){1to2}, %xmm5, %xmm4
+   186bd: c4 a1 7a 6f 54 05 00         	vmovdqu	(%rbp,%r8), %xmm2
+   186c4: c4 e3 f9 ce c5 00            	vgf2p8affineqb	$0x0, %xmm5, %xmm0, %xmm0
+   186ca: c4 a1 7a 6f 5c 05 1e         	vmovdqu	0x1e(%rbp,%r8), %xmm3
+   186d1: c4 a3 6d 38 54 05 08 01      	vinserti128	$0x1, 0x8(%rbp,%r8), %ymm2, %ymm2
+   186d9: c4 e2 6d 00 d6               	vpshufb	%ymm6, %ymm2, %ymm2
+   186de: c5 d9 ef e0                  	vpxor	%xmm0, %xmm4, %xmm4
+   186e2: 62 f3 5d 08 3e cf 01         	vpcmpltub	%xmm7, %xmm4, %k1
+   186e9: 62 b3 d5 18 ce a4 05 36 00 00 00 00  	vgf2p8affineqb	$0x0, 0x36(%rbp,%r8){1to2}, %xmm5, %xmm4
+   186f5: 62 f1 75 29 76 c2            	vpcmpeqd	%ymm2, %ymm1, %k0 {%k1}
+   186fb: c4 a3 65 38 54 05 26 01      	vinserti128	$0x1, 0x26(%rbp,%r8), %ymm3, %ymm2
+   18703: c5 79 93 c8                  	kmovb	%k0, %r9d
+   18707: c4 e2 6d 00 d6               	vpshufb	%ymm6, %ymm2, %ymm2
+   1870c: c5 d9 ef c0                  	vpxor	%xmm0, %xmm4, %xmm0
+   18710: 62 f3 7d 08 3e cf 01         	vpcmpltub	%xmm7, %xmm0, %k1
+   18717: 62 f1 75 29 76 c2            	vpcmpeqd	%ymm2, %ymm1, %k0 {%k1}
+   1871d: c5 79 93 c0                  	kmovb	%k0, %r8d
+   18721: 41 c1 e0 08                  	shll	$0x8, %r8d
+   18725: 4f 8d 84 08 00 00 01 00      	leaq	0x10000(%r8,%r9), %r8
+   1872d: f3 49 0f bc f0               	tzcntq	%r8, %rsi
+   18732: 41 89 f8                     	movl	%edi, %r8d
+   18735: 41 c1 e8 04                  	shrl	$0x4, %r8d
+   18739: 83 e7 0f                     	andl	$0xf, %edi
+   1873c: 48 89 94 24 90 00 00 00      	movq	%rdx, 0x90(%rsp)
+   18744: 4d 89 c1                     	movq	%r8, %r9
+   18747: 49 c1 e1 07                  	shlq	$0x7, %r9
+   1874b: 4d 01 e9                     	addq	%r13, %r9
+   1874e: 49 8b 3c f9                  	movq	(%r9,%rdi,8), %rdi
+   18752: 48 81 ff ff ff ff 3f         	cmpq	$0x3fffffff, %rdi       # imm = 0x3FFFFFFF
+   18759: 0f 87 99 00 00 00            	ja	0x187f8 <void x86_entropy::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&)+0xc38>
+   1875f: 44 0f af c1                  	imull	%ecx, %r8d
+   18763: 41 89 f9                     	movl	%edi, %r9d
+   18766: 48 c1 ef 06                  	shrq	$0x6, %rdi
+   1876a: 41 80 e1 3f                  	andb	$0x3f, %r9b
+   1876e: 62 f2 7d 28 7c cf            	vpbroadcastd	%edi, %ymm1
+   18774: 62 d2 7d 08 7a c1            	vpbroadcastb	%r9d, %xmm0
+   1877a: 62 b3 d5 18 ce 64 05 03 00   	vgf2p8affineqb	$0x0, 0x18(%rbp,%r8){1to2}, %xmm5, %xmm4
+   18783: c4 a1 7a 6f 54 05 00         	vmovdqu	(%rbp,%r8), %xmm2
+   1878a: c4 e3 f9 ce c5 00            	vgf2p8affineqb	$0x0, %xmm5, %xmm0, %xmm0
+   18790: c4 a1 7a 6f 5c 05 1e         	vmovdqu	0x1e(%rbp,%r8), %xmm3
+   18797: c4 a3 6d 38 54 05 08 01      	vinserti128	$0x1, 0x8(%rbp,%r8), %ymm2, %ymm2
+   1879f: c4 e2 6d 00 d6               	vpshufb	%ymm6, %ymm2, %ymm2
+   187a4: c5 d9 ef e0                  	vpxor	%xmm0, %xmm4, %xmm4
+   187a8: 62 f3 5d 08 3e cf 01         	vpcmpltub	%xmm7, %xmm4, %k1
+   187af: 62 b3 d5 18 ce a4 05 36 00 00 00 00  	vgf2p8affineqb	$0x0, 0x36(%rbp,%r8){1to2}, %xmm5, %xmm4
+   187bb: 62 f1 75 29 76 c2            	vpcmpeqd	%ymm2, %ymm1, %k0 {%k1}
+   187c1: c4 a3 65 38 54 05 26 01      	vinserti128	$0x1, 0x26(%rbp,%r8), %ymm3, %ymm2
+   187c9: c5 f9 93 f8                  	kmovb	%k0, %edi
+   187cd: c4 e2 6d 00 d6               	vpshufb	%ymm6, %ymm2, %ymm2
+   187d2: c5 d9 ef c0                  	vpxor	%xmm0, %xmm4, %xmm0
+   187d6: 62 f3 7d 08 3e cf 01         	vpcmpltub	%xmm7, %xmm0, %k1
+   187dd: 62 f1 75 29 76 c2            	vpcmpeqd	%ymm2, %ymm1, %k0 {%k1}
+   187e3: c5 79 93 c0                  	kmovb	%k0, %r8d
+   187e7: 41 c1 e0 08                  	shll	$0x8, %r8d
+   187eb: 49 8d bc 38 00 00 01 00      	leaq	0x10000(%r8,%rdi), %rdi
+   187f3: f3 4c 0f bc e7               	tzcntq	%rdi, %r12
+   187f8: 4c 8b 4c 24 38               	movq	0x38(%rsp), %r9
+   187fd: 45 89 c8                     	movl	%r9d, %r8d
+   18800: 41 c1 e8 04                  	shrl	$0x4, %r8d
+   18804: 41 83 e1 0f                  	andl	$0xf, %r9d
+   18808: 41 ba 10 00 00 00            	movl	$0x10, %r10d
+   1880e: 48 89 74 24 18               	movq	%rsi, 0x18(%rsp)
+   18813: 48 89 de                     	movq	%rbx, %rsi
+   18816: 4c 89 c7                     	movq	%r8, %rdi
+   18819: 48 c1 e7 07                  	shlq	$0x7, %rdi
+   1881d: 4c 01 ef                     	addq	%r13, %rdi
+   18820: 4e 8b 0c cf                  	movq	(%rdi,%r9,8), %r9
+   18824: bf 10 00 00 00               	movl	$0x10, %edi
+   18829: 49 81 f9 ff ff ff 3f         	cmpq	$0x3fffffff, %r9        # imm = 0x3FFFFFFF
+   18830: 0f 87 99 00 00 00            	ja	0x188cf <void x86_entropy::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&)+0xd0f>
+   18836: 44 0f af c1                  	imull	%ecx, %r8d
+   1883a: 45 89 ca                     	movl	%r9d, %r10d
+   1883d: 49 c1 e9 06                  	shrq	$0x6, %r9
+   18841: 41 80 e2 3f                  	andb	$0x3f, %r10b
+   18845: 62 d2 7d 28 7c c9            	vpbroadcastd	%r9d, %ymm1
+   1884b: 62 d2 7d 08 7a c2            	vpbroadcastb	%r10d, %xmm0
+   18851: 62 b3 d5 18 ce 64 05 03 00   	vgf2p8affineqb	$0x0, 0x18(%rbp,%r8){1to2}, %xmm5, %xmm4
+   1885a: c4 a1 7a 6f 54 05 00         	vmovdqu	(%rbp,%r8), %xmm2
+   18861: c4 e3 f9 ce c5 00            	vgf2p8affineqb	$0x0, %xmm5, %xmm0, %xmm0
+   18867: c4 a1 7a 6f 5c 05 1e         	vmovdqu	0x1e(%rbp,%r8), %xmm3
+   1886e: c4 a3 6d 38 54 05 08 01      	vinserti128	$0x1, 0x8(%rbp,%r8), %ymm2, %ymm2
+   18876: c4 e2 6d 00 d6               	vpshufb	%ymm6, %ymm2, %ymm2
+   1887b: c5 d9 ef e0                  	vpxor	%xmm0, %xmm4, %xmm4
+   1887f: 62 f3 5d 08 3e cf 01         	vpcmpltub	%xmm7, %xmm4, %k1
+   18886: 62 b3 d5 18 ce a4 05 36 00 00 00 00  	vgf2p8affineqb	$0x0, 0x36(%rbp,%r8){1to2}, %xmm5, %xmm4
+   18892: 62 f1 75 29 76 c2            	vpcmpeqd	%ymm2, %ymm1, %k0 {%k1}
+   18898: c4 a3 65 38 54 05 26 01      	vinserti128	$0x1, 0x26(%rbp,%r8), %ymm3, %ymm2
+   188a0: c5 79 93 c8                  	kmovb	%k0, %r9d
+   188a4: c4 e2 6d 00 d6               	vpshufb	%ymm6, %ymm2, %ymm2
+   188a9: c5 d9 ef c0                  	vpxor	%xmm0, %xmm4, %xmm0
+   188ad: 62 f3 7d 08 3e cf 01         	vpcmpltub	%xmm7, %xmm0, %k1
+   188b4: 62 f1 75 29 76 c2            	vpcmpeqd	%ymm2, %ymm1, %k0 {%k1}
+   188ba: c5 79 93 c0                  	kmovb	%k0, %r8d
+   188be: 41 c1 e0 08                  	shll	$0x8, %r8d
+   188c2: 4f 8d 84 08 00 00 01 00      	leaq	0x10000(%r8,%r9), %r8
+   188ca: f3 4d 0f bc d0               	tzcntq	%r8, %r10
+   188cf: 48 8b 44 24 30               	movq	0x30(%rsp), %rax
+   188d4: 41 89 c0                     	movl	%eax, %r8d
+   188d7: 41 c1 e8 04                  	shrl	$0x4, %r8d
+   188db: 83 e0 0f                     	andl	$0xf, %eax
+   188de: 48 8b 94 24 98 00 00 00      	movq	0x98(%rsp), %rdx
+   188e6: 4d 89 c1                     	movq	%r8, %r9
+   188e9: 49 c1 e1 07                  	shlq	$0x7, %r9
+   188ed: 4d 01 e9                     	addq	%r13, %r9
+   188f0: 4d 8b 0c c1                  	movq	(%r9,%rax,8), %r9
+   188f4: 49 81 f9 ff ff ff 3f         	cmpq	$0x3fffffff, %r9        # imm = 0x3FFFFFFF
+   188fb: 0f 87 2f f9 ff ff            	ja	0x18230 <void x86_entropy::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&)+0x670>
+   18901: 44 0f af c1                  	imull	%ecx, %r8d
+   18905: 44 89 cf                     	movl	%r9d, %edi
+   18908: 49 c1 e9 06                  	shrq	$0x6, %r9
+   1890c: 40 80 e7 3f                  	andb	$0x3f, %dil
+   18910: 62 d2 7d 28 7c c9            	vpbroadcastd	%r9d, %ymm1
+   18916: 62 f2 7d 08 7a c7            	vpbroadcastb	%edi, %xmm0
+   1891c: 62 b3 d5 18 ce 64 05 03 00   	vgf2p8affineqb	$0x0, 0x18(%rbp,%r8){1to2}, %xmm5, %xmm4
+   18925: c4 a1 7a 6f 54 05 00         	vmovdqu	(%rbp,%r8), %xmm2
+   1892c: c4 e3 f9 ce c5 00            	vgf2p8affineqb	$0x0, %xmm5, %xmm0, %xmm0
+   18932: c4 a1 7a 6f 5c 05 1e         	vmovdqu	0x1e(%rbp,%r8), %xmm3
+   18939: c4 a3 6d 38 54 05 08 01      	vinserti128	$0x1, 0x8(%rbp,%r8), %ymm2, %ymm2
+   18941: c4 e2 6d 00 d6               	vpshufb	%ymm6, %ymm2, %ymm2
+   18946: c5 d9 ef e0                  	vpxor	%xmm0, %xmm4, %xmm4
+   1894a: 62 f3 5d 08 3e cf 01         	vpcmpltub	%xmm7, %xmm4, %k1
+   18951: 62 b3 d5 18 ce a4 05 36 00 00 00 00  	vgf2p8affineqb	$0x0, 0x36(%rbp,%r8){1to2}, %xmm5, %xmm4
+   1895d: 62 f1 75 29 76 c2            	vpcmpeqd	%ymm2, %ymm1, %k0 {%k1}
+   18963: c4 a3 65 38 54 05 26 01      	vinserti128	$0x1, 0x26(%rbp,%r8), %ymm3, %ymm2
+   1896b: c5 f9 93 f8                  	kmovb	%k0, %edi
+   1896f: c4 e2 6d 00 d6               	vpshufb	%ymm6, %ymm2, %ymm2
+   18974: c5 d9 ef c0                  	vpxor	%xmm0, %xmm4, %xmm0
+   18978: 62 f3 7d 08 3e cf 01         	vpcmpltub	%xmm7, %xmm0, %k1
+   1897f: 62 f1 75 29 76 c2            	vpcmpeqd	%ymm2, %ymm1, %k0 {%k1}
+   18985: c5 79 93 c0                  	kmovb	%k0, %r8d
+   18989: 41 c1 e0 08                  	shll	$0x8, %r8d
+   1898d: 49 8d bc 38 00 00 01 00      	leaq	0x10000(%r8,%rdi), %rdi
+   18995: f3 48 0f bc ff               	tzcntq	%rdi, %rdi
+   1899a: e9 91 f8 ff ff               	jmp	0x18230 <void x86_entropy::measure<30u, 16u, 11u>(index_probe::Data<30u, 16u> const&)+0x670>
+   1899f: 48 81 c4 b8 00 00 00         	addq	$0xb8, %rsp
+   189a6: 5b                           	popq	%rbx
+   189a7: 41 5c                        	popq	%r12
+   189a9: 41 5d                        	popq	%r13
+   189ab: 41 5e                        	popq	%r14
+   189ad: 41 5f                        	popq	%r15
+   189af: 5d                           	popq	%rbp
+   189b0: c5 f8 77                     	vzeroupper
+   189b3: c3                           	retq
+   189b4: 48 8d 3d da f8 00 00         	leaq	0xf8da(%rip), %rdi      # 0x28295 <strlen@GLIBC_2.2.5+0x28295>
+   189bb: 48 8d 35 e7 f8 00 00         	leaq	0xf8e7(%rip), %rsi      # 0x282a9 <strlen@GLIBC_2.2.5+0x282a9>
+   189c2: 48 8d 0d 72 fe 00 00         	leaq	0xfe72(%rip), %rcx      # 0x2883b <strlen@GLIBC_2.2.5+0x2883b>
+   189c9: ba 17 00 00 00               	movl	$0x17, %edx
+   189ce: c5 f8 77                     	vzeroupper
+   189d1: e8 ca 86 fe ff               	callq	0x10a0 <__assert_fail@plt>
+   189d6: 66 2e 0f 1f 84 00 00 00 00 00	nopw	%cs:(%rax,%rax)
+
+000000000001d660 <void x86_entropy::measure<30u, 16u, 0u>(index_probe::Data<30u, 16u> const&)>:
+   1d660: 55                           	pushq	%rbp
+   1d661: 41 57                        	pushq	%r15
+   1d663: 41 56                        	pushq	%r14
+   1d665: 41 55                        	pushq	%r13
+   1d667: 41 54                        	pushq	%r12
+   1d669: 53                           	pushq	%rbx
+   1d66a: 48 81 ec 98 00 00 00         	subq	$0x98, %rsp
+   1d671: c5 fd 6f 2d 27 ab 00 00      	vmovdqa	0xab27(%rip), %ymm5     # 0x281a0 <strlen@GLIBC_2.2.5+0x281a0>
+   1d679: c5 f9 6f 35 af a9 00 00      	vmovdqa	0xa9af(%rip), %xmm6     # 0x28030 <strlen@GLIBC_2.2.5+0x28030>
+   1d681: c4 e2 79 59 3d 76 a9 00 00   	vpbroadcastq	0xa976(%rip), %xmm7 # 0x28000 <strlen@GLIBC_2.2.5+0x28000>
+   1d68a: 8b 87 00 22 01 00            	movl	0x12200(%rdi), %eax
+   1d690: 4c 8d af 00 00 01 00         	leaq	0x10000(%rdi), %r13
+   1d697: 48 8d 6f 01                  	leaq	0x1(%rdi), %rbp
+   1d69b: ba ff ff ff 00               	movl	$0xffffff, %edx         # imm = 0xFFFFFF
+   1d6a0: be 10 00 00 00               	movl	$0x10, %esi
+   1d6a5: 48 89 7c 24 48               	movq	%rdi, 0x48(%rsp)
+   1d6aa: 31 c9                        	xorl	%ecx, %ecx
+   1d6ac: c5 f9 ef c0                  	vpxor	%xmm0, %xmm0, %xmm0
+   1d6b0: 41 89 ca                     	movl	%ecx, %r10d
+   1d6b3: 41 c1 ea 04                  	shrl	$0x4, %r10d
+   1d6b7: 89 cf                        	movl	%ecx, %edi
+   1d6b9: 83 e7 0f                     	andl	$0xf, %edi
+   1d6bc: 49 c1 e2 07                  	shlq	$0x7, %r10
+   1d6c0: 4f 8d 44 15 00               	leaq	(%r13,%r10), %r8
+   1d6c5: 4d 8b 0c f8                  	movq	(%r8,%rdi,8), %r9
+   1d6c9: bf 00 00 00 00               	movl	$0x0, %edi
+   1d6ce: 4f 39 4c 15 00               	cmpq	%r9, (%r13,%r10)
+   1d6d3: 0f 84 b7 00 00 00            	je	0x1d790 <void x86_entropy::measure<30u, 16u, 0u>(index_probe::Data<30u, 16u> const&)+0x130>
+   1d6d9: bf 01 00 00 00               	movl	$0x1, %edi
+   1d6de: 4d 39 48 08                  	cmpq	%r9, 0x8(%r8)
+   1d6e2: 0f 84 a8 00 00 00            	je	0x1d790 <void x86_entropy::measure<30u, 16u, 0u>(index_probe::Data<30u, 16u> const&)+0x130>
+   1d6e8: bf 02 00 00 00               	movl	$0x2, %edi
+   1d6ed: 4d 39 48 10                  	cmpq	%r9, 0x10(%r8)
+   1d6f1: 0f 84 99 00 00 00            	je	0x1d790 <void x86_entropy::measure<30u, 16u, 0u>(index_probe::Data<30u, 16u> const&)+0x130>
+   1d6f7: bf 03 00 00 00               	movl	$0x3, %edi
+   1d6fc: 4d 39 48 18                  	cmpq	%r9, 0x18(%r8)
+   1d700: 0f 84 8a 00 00 00            	je	0x1d790 <void x86_entropy::measure<30u, 16u, 0u>(index_probe::Data<30u, 16u> const&)+0x130>
+   1d706: bf 04 00 00 00               	movl	$0x4, %edi
+   1d70b: 4d 39 48 20                  	cmpq	%r9, 0x20(%r8)
+   1d70f: 74 7f                        	je	0x1d790 <void x86_entropy::measure<30u, 16u, 0u>(index_probe::Data<30u, 16u> const&)+0x130>
+   1d711: bf 05 00 00 00               	movl	$0x5, %edi
+   1d716: 4d 39 48 28                  	cmpq	%r9, 0x28(%r8)
+   1d71a: 74 74                        	je	0x1d790 <void x86_entropy::measure<30u, 16u, 0u>(index_probe::Data<30u, 16u> const&)+0x130>
+   1d71c: bf 06 00 00 00               	movl	$0x6, %edi
+   1d721: 4d 39 48 30                  	cmpq	%r9, 0x30(%r8)
+   1d725: 74 69                        	je	0x1d790 <void x86_entropy::measure<30u, 16u, 0u>(index_probe::Data<30u, 16u> const&)+0x130>
+   1d727: bf 07 00 00 00               	movl	$0x7, %edi
+   1d72c: 4d 39 48 38                  	cmpq	%r9, 0x38(%r8)
+   1d730: 74 5e                        	je	0x1d790 <void x86_entropy::measure<30u, 16u, 0u>(index_probe::Data<30u, 16u> const&)+0x130>
+   1d732: bf 08 00 00 00               	movl	$0x8, %edi
+   1d737: 4d 39 48 40                  	cmpq	%r9, 0x40(%r8)
+   1d73b: 74 53                        	je	0x1d790 <void x86_entropy::measure<30u, 16u, 0u>(index_probe::Data<30u, 16u> const&)+0x130>
+   1d73d: bf 09 00 00 00               	movl	$0x9, %edi
+   1d742: 4d 39 48 48                  	cmpq	%r9, 0x48(%r8)
+   1d746: 74 48                        	je	0x1d790 <void x86_entropy::measure<30u, 16u, 0u>(index_probe::Data<30u, 16u> const&)+0x130>
+   1d748: bf 0a 00 00 00               	movl	$0xa, %edi
+   1d74d: 4d 39 48 50                  	cmpq	%r9, 0x50(%r8)
+   1d751: 74 3d                        	je	0x1d790 <void x86_entropy::measure<30u, 16u, 0u>(index_probe::Data<30u, 16u> const&)+0x130>
+   1d753: bf 0b 00 00 00               	movl	$0xb, %edi
+   1d758: 4d 39 48 58                  	cmpq	%r9, 0x58(%r8)
+   1d75c: 74 32                        	je	0x1d790 <void x86_entropy::measure<30u, 16u, 0u>(index_probe::Data<30u, 16u> const&)+0x130>
+   1d75e: bf 0c 00 00 00               	movl	$0xc, %edi
+   1d763: 4d 39 48 60                  	cmpq	%r9, 0x60(%r8)
+   1d767: 74 27                        	je	0x1d790 <void x86_entropy::measure<30u, 16u, 0u>(index_probe::Data<30u, 16u> const&)+0x130>
+   1d769: bf 0d 00 00 00               	movl	$0xd, %edi
+   1d76e: 4d 39 48 68                  	cmpq	%r9, 0x68(%r8)
+   1d772: 74 1c                        	je	0x1d790 <void x86_entropy::measure<30u, 16u, 0u>(index_probe::Data<30u, 16u> const&)+0x130>
+   1d774: bf 0e 00 00 00               	movl	$0xe, %edi
+   1d779: 4d 39 48 70                  	cmpq	%r9, 0x70(%r8)
+   1d77d: 74 11                        	je	0x1d790 <void x86_entropy::measure<30u, 16u, 0u>(index_probe::Data<30u, 16u> const&)+0x130>
+   1d77f: 31 ff                        	xorl	%edi, %edi
+   1d781: 4d 39 48 78                  	cmpq	%r9, 0x78(%r8)
+   1d785: 40 0f 95 c7                  	setne	%dil
+   1d789: 83 c7 0f                     	addl	$0xf, %edi
+   1d78c: 0f 1f 40 00                  	nopl	(%rax)
+   1d790: 41 89 c8                     	movl	%ecx, %r8d
+   1d793: 45 89 c1                     	movl	%r8d, %r9d
+   1d796: 41 c1 e9 04                  	shrl	$0x4, %r9d
+   1d79a: 41 83 e0 0f                  	andl	$0xf, %r8d
+   1d79e: 4d 89 ca                     	movq	%r9, %r10
+   1d7a1: 49 c1 e2 07                  	shlq	$0x7, %r10
+   1d7a5: 4d 01 ea                     	addq	%r13, %r10
+   1d7a8: 4f 8b 04 c2                  	movq	(%r10,%r8,8), %r8
+   1d7ac: 49 81 f8 ff ff ff 3f         	cmpq	$0x3fffffff, %r8        # imm = 0x3FFFFFFF
+   1d7b3: 0f 87 a7 00 00 00            	ja	0x1d860 <void x86_entropy::measure<30u, 16u, 0u>(index_probe::Data<30u, 16u> const&)+0x200>
+   1d7b9: 44 0f af c8                  	imull	%eax, %r9d
+   1d7bd: c5 fb 92 ca                  	kmovd	%edx, %k1
+   1d7c1: 46 8b 5c 0d 38               	movl	0x38(%rbp,%r9), %r11d
+   1d7c6: 46 8b 54 0d 36               	movl	0x36(%rbp,%r9), %r10d
+   1d7cb: 62 b1 7f a9 6f 4c 0d 00      	vmovdqu8	(%rbp,%r9), %ymm1 {%k1} {z}
+   1d7d3: 62 b1 7f a9 6f 94 0d 1e 00 00 00     	vmovdqu8	0x1e(%rbp,%r9), %ymm2 {%k1} {z}
+   1d7de: 49 c1 e3 10                  	shlq	$0x10, %r11
+   1d7e2: 4d 09 d3                     	orq	%r10, %r11
+   1d7e5: 46 8b 54 0d 18               	movl	0x18(%rbp,%r9), %r10d
+   1d7ea: 46 8b 4c 0d 1a               	movl	0x1a(%rbp,%r9), %r9d
+   1d7ef: c4 c1 f9 6e db               	vmovq	%r11, %xmm3
+   1d7f4: 62 f2 55 28 7d c8            	vpermt2b	%ymm0, %ymm5, %ymm1
+   1d7fa: 62 f2 55 28 7d d0            	vpermt2b	%ymm0, %ymm5, %ymm2
+   1d800: 49 c1 e1 10                  	shlq	$0x10, %r9
+   1d804: 4d 09 d1                     	orq	%r10, %r9
+   1d807: c5 f5 72 f1 06               	vpslld	$0x6, %ymm1, %ymm1
+   1d80c: c5 ed 72 f2 06               	vpslld	$0x6, %ymm2, %ymm2
+   1d811: c4 c1 f9 6e e1               	vmovq	%r9, %xmm4
+   1d816: c5 d9 6c db                  	vpunpcklqdq	%xmm3, %xmm4, %xmm3 # xmm3 = xmm4[0],xmm3[0]
+   1d81a: c4 e2 61 00 de               	vpshufb	%xmm6, %xmm3, %xmm3
+   1d81f: c4 e3 c1 ce db 00            	vgf2p8affineqb	$0x0, %xmm3, %xmm7, %xmm3
+   1d825: c4 e2 7d 31 e3               	vpmovzxbd	%xmm3, %ymm4    # ymm4 = xmm3[0],zero,zero,zero,xmm3[1],zero,zero,zero,xmm3[2],zero,zero,zero,xmm3[3],zero,zero,zero,xmm3[4],zero,zero,zero,xmm3[5],zero,zero,zero,xmm3[6],zero,zero,zero,xmm3[7],zero,zero,zero
+   1d82a: c5 f9 70 db ee               	vpshufd	$0xee, %xmm3, %xmm3     # xmm3 = xmm3[2,3,2,3]
+   1d82f: c4 e2 7d 31 db               	vpmovzxbd	%xmm3, %ymm3    # ymm3 = xmm3[0],zero,zero,zero,xmm3[1],zero,zero,zero,xmm3[2],zero,zero,zero,xmm3[3],zero,zero,zero,xmm3[4],zero,zero,zero,xmm3[5],zero,zero,zero,xmm3[6],zero,zero,zero,xmm3[7],zero,zero,zero
+   1d834: c5 f5 eb cc                  	vpor	%ymm4, %ymm1, %ymm1
+   1d838: 62 d2 7d 28 7c e0            	vpbroadcastd	%r8d, %ymm4
+   1d83e: c5 ed eb d3                  	vpor	%ymm3, %ymm2, %ymm2
+   1d842: 62 f1 75 28 76 c4            	vpcmpeqd	%ymm4, %ymm1, %k0
+   1d848: 62 f1 6d 28 76 cc            	vpcmpeqd	%ymm4, %ymm2, %k1
+   1d84e: c5 f5 4b c0                  	kunpckbw	%k0, %k1, %k0
+   1d852: c5 78 93 c0                  	kmovw	%k0, %r8d
+   1d856: eb 0b                        	jmp	0x1d863 <void x86_entropy::measure<30u, 16u, 0u>(index_probe::Data<30u, 16u> const&)+0x203>
+   1d858: 0f 1f 84 00 00 00 00 00      	nopl	(%rax,%rax)
+   1d860: 45 31 c0                     	xorl	%r8d, %r8d
+   1d863: f3 4d 0f bc c0               	tzcntq	%r8, %r8
+   1d868: 41 83 f8 10                  	cmpl	$0x10, %r8d
+   1d86c: 44 0f 43 c6                  	cmovael	%esi, %r8d
+   1d870: 41 39 f8                     	cmpl	%edi, %r8d
+   1d873: 0f 85 eb 0c 00 00            	jne	0x1e564 <void x86_entropy::measure<30u, 16u, 0u>(index_probe::Data<30u, 16u> const&)+0xf04>
+   1d879: ff c1                        	incl	%ecx
+   1d87b: 81 f9 00 04 00 00            	cmpl	$0x400, %ecx            # imm = 0x400
+   1d881: 0f 85 29 fe ff ff            	jne	0x1d6b0 <void x86_entropy::measure<30u, 16u, 0u>(index_probe::Data<30u, 16u> const&)+0x50>
+   1d887: 83 3d 0e d8 00 00 00         	cmpl	$0x0, 0xd80e(%rip)      # 0x2b09c <tiles::repeats>
+   1d88e: 66 c7 44 24 0e 01 00         	movw	$0x1, 0xe(%rsp)
+   1d895: 0f 84 b4 0c 00 00            	je	0x1e54f <void x86_entropy::measure<30u, 16u, 0u>(index_probe::Data<30u, 16u> const&)+0xeef>
+   1d89b: 48 bb 95 ef 82 de 43 25 34 d1	movabsq	$-0x2ecbdabc217d106b, %rbx # imm = 0xD1342543DE82EF95
+   1d8a5: b8 01 00 00 00               	movl	$0x1, %eax
+   1d8aa: 49 be 15 7c 4a 7f b9 79 37 9e	movabsq	$-0x61c8864680b583eb, %r14 # imm = 0x9E3779B97F4A7C15
+   1d8b4: 41 bf ff ff ff 00            	movl	$0xffffff, %r15d        # imm = 0xFFFFFF
+   1d8ba: 41 bc 10 00 00 00            	movl	$0x10, %r12d
+   1d8c0: 48 c7 44 24 38 00 00 00 00   	movq	$0x0, 0x38(%rsp)
+   1d8c9: eb 1c                        	jmp	0x1d8e7 <void x86_entropy::measure<30u, 16u, 0u>(index_probe::Data<30u, 16u> const&)+0x287>
+   1d8cb: 0f 1f 44 00 00               	nopl	(%rax,%rax)
+   1d8d0: 48 8b 54 24 38               	movq	0x38(%rsp), %rdx
+   1d8d5: 48 ff c2                     	incq	%rdx
+   1d8d8: 48 89 54 24 38               	movq	%rdx, 0x38(%rsp)
+   1d8dd: 48 83 fa 02                  	cmpq	$0x2, %rdx
+   1d8e1: 0f 84 68 0c 00 00            	je	0x1e54f <void x86_entropy::measure<30u, 16u, 0u>(index_probe::Data<30u, 16u> const&)+0xeef>
+   1d8e7: 85 c0                        	testl	%eax, %eax
+   1d8e9: b8 00 00 00 00               	movl	$0x0, %eax
+   1d8ee: 74 e0                        	je	0x1d8d0 <void x86_entropy::measure<30u, 16u, 0u>(index_probe::Data<30u, 16u> const&)+0x270>
+   1d8f0: 48 8b 44 24 38               	movq	0x38(%rsp), %rax
+   1d8f5: c5 fb 10 05 0b a7 00 00      	vmovsd	0xa70b(%rip), %xmm0     # 0x28008 <strlen@GLIBC_2.2.5+0x28008>
+   1d8fd: 48 8d 0d 56 aa 00 00         	leaq	0xaa56(%rip), %rcx      # 0x2835a <strlen@GLIBC_2.2.5+0x2835a>
+   1d904: 0f b6 44 04 0e               	movzbl	0xe(%rsp,%rax), %eax
+   1d909: c5 fb 92 c8                  	kmovd	%eax, %k1
+   1d90d: 89 44 24 40                  	movl	%eax, 0x40(%rsp)
+   1d911: 84 c0                        	testb	%al, %al
+   1d913: 48 8d 05 39 aa 00 00         	leaq	0xaa39(%rip), %rax      # 0x28353 <strlen@GLIBC_2.2.5+0x28353>
+   1d91a: 62 f1 ff 09 10 05 ec a6 00 00	vmovsd	0xa6ec(%rip), %xmm0 {%k1} # 0x28010 <strlen@GLIBC_2.2.5+0x28010>
+   1d924: 48 0f 45 c8                  	cmovneq	%rax, %rcx
+   1d928: 48 89 4c 24 68               	movq	%rcx, 0x68(%rsp)
+   1d92d: 31 c9                        	xorl	%ecx, %ecx
+   1d92f: c5 f9 29 84 24 80 00 00 00   	vmovapd	%xmm0, 0x80(%rsp)
+   1d938: e9 d5 00 00 00               	jmp	0x1da12 <void x86_entropy::measure<30u, 16u, 0u>(index_probe::Data<30u, 16u> const&)+0x3b2>
+   1d93d: 0f 1f 00                     	nopl	(%rax)
+   1d940: 44 8b 7c 24 10               	movl	0x10(%rsp), %r15d
+   1d945: c5 f8 77                     	vzeroupper
+   1d948: e8 b3 37 fe ff               	callq	0x1100 <_ZNSt6chrono3_V212steady_clock3nowEv@plt>
+   1d94d: 8b 54 24 14                  	movl	0x14(%rsp), %edx
+   1d951: 8b 74 24 18                  	movl	0x18(%rsp), %esi
+   1d955: 48 2b 44 24 70               	subq	0x70(%rsp), %rax
+   1d95a: 44 89 f9                     	movl	%r15d, %ecx
+   1d95d: 48 03 0d 4c d7 00 00         	addq	0xd74c(%rip), %rcx      # 0x2b0b0 <tiles::observed>
+   1d964: 44 8b 7c 24 44               	movl	0x44(%rsp), %r15d
+   1d969: 4c 8b 4c 24 68               	movq	0x68(%rsp), %r9
+   1d96e: 48 8d 3d c1 a9 00 00         	leaq	0xa9c1(%rip), %rdi      # 0x28336 <strlen@GLIBC_2.2.5+0x28336>
+   1d975: 45 31 c0                     	xorl	%r8d, %r8d
+   1d978: 48 01 d6                     	addq	%rdx, %rsi
+   1d97b: 8b 54 24 1c                  	movl	0x1c(%rsp), %edx
+   1d97f: c4 e1 83 2a c0               	vcvtsi2sd	%rax, %xmm15, %xmm0
+   1d984: 62 f1 07 08 7b 0d 0a d7 00 00	vcvtusi2sdl	0xd70a(%rip), %xmm15, %xmm1 # 0x2b098 <tiles::iterations>
+   1d98e: b0 01                        	movb	$0x1, %al
+   1d990: 44 89 3c 24                  	movl	%r15d, (%rsp)
+   1d994: c5 f3 59 8c 24 80 00 00 00   	vmulsd	0x80(%rsp), %xmm1, %xmm1
+   1d99d: 48 01 f2                     	addq	%rsi, %rdx
+   1d9a0: 8b 74 24 20                  	movl	0x20(%rsp), %esi
+   1d9a4: 48 01 d6                     	addq	%rdx, %rsi
+   1d9a7: 8b 54 24 24                  	movl	0x24(%rsp), %edx
+   1d9ab: c5 fb 5e c1                  	vdivsd	%xmm1, %xmm0, %xmm0
+   1d9af: 48 01 f2                     	addq	%rsi, %rdx
+   1d9b2: 8b 74 24 28                  	movl	0x28(%rsp), %esi
+   1d9b6: 48 01 d6                     	addq	%rdx, %rsi
+   1d9b9: 8b 54 24 2c                  	movl	0x2c(%rsp), %edx
+   1d9bd: 48 01 f2                     	addq	%rsi, %rdx
+   1d9c0: be 1e 00 00 00               	movl	$0x1e, %esi
+   1d9c5: 48 01 ca                     	addq	%rcx, %rdx
+   1d9c8: b9 ff ff 00 00               	movl	$0xffff, %ecx           # imm = 0xFFFF
+   1d9cd: 48 89 15 dc d6 00 00         	movq	%rdx, 0xd6dc(%rip)      # 0x2b0b0 <tiles::observed>
+   1d9d4: ba 10 00 00 00               	movl	$0x10, %edx
+   1d9d9: e8 62 36 fe ff               	callq	0x1040 <printf@plt>
+   1d9de: c5 fd 6f 2d ba a7 00 00      	vmovdqa	0xa7ba(%rip), %ymm5     # 0x281a0 <strlen@GLIBC_2.2.5+0x281a0>
+   1d9e6: c5 f9 6f 35 42 a6 00 00      	vmovdqa	0xa642(%rip), %xmm6     # 0x28030 <strlen@GLIBC_2.2.5+0x28030>
+   1d9ee: c4 e2 79 59 3d 09 a6 00 00   	vpbroadcastq	0xa609(%rip), %xmm7 # 0x28000 <strlen@GLIBC_2.2.5+0x28000>
+   1d9f7: 8b 05 9f d6 00 00            	movl	0xd69f(%rip), %eax      # 0x2b09c <tiles::repeats>
+   1d9fd: 41 ff c7                     	incl	%r15d
+   1da00: 44 89 f9                     	movl	%r15d, %ecx
+   1da03: 41 39 c7                     	cmpl	%eax, %r15d
+   1da06: 41 bf ff ff ff 00            	movl	$0xffffff, %r15d        # imm = 0xFFFFFF
+   1da0c: 0f 83 be fe ff ff            	jae	0x1d8d0 <void x86_entropy::measure<30u, 16u, 0u>(index_probe::Data<30u, 16u> const&)+0x270>
+   1da12: c5 fe 6f 05 a6 a7 00 00      	vmovdqu	0xa7a6(%rip), %ymm0     # 0x281c0 <strlen@GLIBC_2.2.5+0x281c0>
+   1da1a: 48 8b 44 24 48               	movq	0x48(%rsp), %rax
+   1da1f: 89 4c 24 44                  	movl	%ecx, 0x44(%rsp)
+   1da23: 31 c9                        	xorl	%ecx, %ecx
+   1da25: 31 d2                        	xorl	%edx, %edx
+   1da27: c5 d9 ef e4                  	vpxor	%xmm4, %xmm4, %xmm4
+   1da2b: c5 fe 7f 44 24 10            	vmovdqu	%ymm0, 0x10(%rsp)
+   1da31: 8b 80 00 22 01 00            	movl	0x12200(%rax), %eax
+   1da37: eb 1a                        	jmp	0x1da53 <void x86_entropy::measure<30u, 16u, 0u>(index_probe::Data<30u, 16u> const&)+0x3f3>
+   1da39: 0f 1f 80 00 00 00 00         	nopl	(%rax)
+   1da40: 48 ff c2                     	incq	%rdx
+   1da43: 48 01 d9                     	addq	%rbx, %rcx
+   1da46: 48 81 fa 00 01 00 00         	cmpq	$0x100, %rdx            # imm = 0x100
+   1da4d: 0f 84 1d 01 00 00            	je	0x1db70 <void x86_entropy::measure<30u, 16u, 0u>(index_probe::Data<30u, 16u> const&)+0x510>
+   1da53: 48 89 ce                     	movq	%rcx, %rsi
+   1da56: 31 ff                        	xorl	%edi, %edi
+   1da58: e9 d8 00 00 00               	jmp	0x1db35 <void x86_entropy::measure<30u, 16u, 0u>(index_probe::Data<30u, 16u> const&)+0x4d5>
+   1da5d: 0f 1f 00                     	nopl	(%rax)
+   1da60: 44 0f af c8                  	imull	%eax, %r9d
+   1da64: c4 c1 7b 92 cf               	kmovd	%r15d, %k1
+   1da69: 46 8b 5c 0d 38               	movl	0x38(%rbp,%r9), %r11d
+   1da6e: 46 8b 54 0d 36               	movl	0x36(%rbp,%r9), %r10d
+   1da73: 62 b1 7f a9 6f 44 0d 00      	vmovdqu8	(%rbp,%r9), %ymm0 {%k1} {z}
+   1da7b: 62 b1 7f a9 6f 8c 0d 1e 00 00 00     	vmovdqu8	0x1e(%rbp,%r9), %ymm1 {%k1} {z}
+   1da86: 49 c1 e3 10                  	shlq	$0x10, %r11
+   1da8a: 4d 09 d3                     	orq	%r10, %r11
+   1da8d: 46 8b 54 0d 18               	movl	0x18(%rbp,%r9), %r10d
+   1da92: 46 8b 4c 0d 1a               	movl	0x1a(%rbp,%r9), %r9d
+   1da97: c4 c1 f9 6e d3               	vmovq	%r11, %xmm2
+   1da9c: 62 f2 55 28 7d c4            	vpermt2b	%ymm4, %ymm5, %ymm0
+   1daa2: 62 f2 55 28 7d cc            	vpermt2b	%ymm4, %ymm5, %ymm1
+   1daa8: 49 c1 e1 10                  	shlq	$0x10, %r9
+   1daac: 4d 09 d1                     	orq	%r10, %r9
+   1daaf: c5 fd 72 f0 06               	vpslld	$0x6, %ymm0, %ymm0
+   1dab4: c5 f5 72 f1 06               	vpslld	$0x6, %ymm1, %ymm1
+   1dab9: c4 c1 f9 6e d9               	vmovq	%r9, %xmm3
+   1dabe: c5 e1 6c d2                  	vpunpcklqdq	%xmm2, %xmm3, %xmm2 # xmm2 = xmm3[0],xmm2[0]
+   1dac2: c4 e2 69 00 d6               	vpshufb	%xmm6, %xmm2, %xmm2
+   1dac7: c4 e3 c1 ce d2 00            	vgf2p8affineqb	$0x0, %xmm2, %xmm7, %xmm2
+   1dacd: c4 e2 7d 31 da               	vpmovzxbd	%xmm2, %ymm3    # ymm3 = xmm2[0],zero,zero,zero,xmm2[1],zero,zero,zero,xmm2[2],zero,zero,zero,xmm2[3],zero,zero,zero,xmm2[4],zero,zero,zero,xmm2[5],zero,zero,zero,xmm2[6],zero,zero,zero,xmm2[7],zero,zero,zero
+   1dad2: c5 f9 70 d2 ee               	vpshufd	$0xee, %xmm2, %xmm2     # xmm2 = xmm2[2,3,2,3]
+   1dad7: c4 e2 7d 31 d2               	vpmovzxbd	%xmm2, %ymm2    # ymm2 = xmm2[0],zero,zero,zero,xmm2[1],zero,zero,zero,xmm2[2],zero,zero,zero,xmm2[3],zero,zero,zero,xmm2[4],zero,zero,zero,xmm2[5],zero,zero,zero,xmm2[6],zero,zero,zero,xmm2[7],zero,zero,zero
+   1dadc: c5 fd eb c3                  	vpor	%ymm3, %ymm0, %ymm0
+   1dae0: 62 d2 7d 28 7c d8            	vpbroadcastd	%r8d, %ymm3
+   1dae6: c5 f5 eb ca                  	vpor	%ymm2, %ymm1, %ymm1
+   1daea: 62 f1 7d 28 76 c3            	vpcmpeqd	%ymm3, %ymm0, %k0
+   1daf0: 62 f1 75 28 76 cb            	vpcmpeqd	%ymm3, %ymm1, %k1
+   1daf6: c5 f5 4b c0                  	kunpckbw	%k0, %k1, %k0
+   1dafa: c5 78 93 c0                  	kmovw	%k0, %r8d
+   1dafe: f3 4d 0f bc c0               	tzcntq	%r8, %r8
+   1db03: 49 b9 03 6f ff 9d e9 e4 33 21	movabsq	$0x2133e4e99dff6f03, %r9 # imm = 0x2133E4E99DFF6F03
+   1db0d: 41 83 f8 10                  	cmpl	$0x10, %r8d
+   1db11: 45 0f 43 c4                  	cmovael	%r12d, %r8d
+   1db15: 49 31 f0                     	xorq	%rsi, %r8
+   1db18: 4c 01 ce                     	addq	%r9, %rsi
+   1db1b: 4d 0f af c6                  	imulq	%r14, %r8
+   1db1f: 49 c1 e8 36                  	shrq	$0x36, %r8
+   1db23: 44 89 44 bc 10               	movl	%r8d, 0x10(%rsp,%rdi,4)
+   1db28: 48 ff c7                     	incq	%rdi
+   1db2b: 48 83 ff 08                  	cmpq	$0x8, %rdi
+   1db2f: 0f 84 0b ff ff ff            	je	0x1da40 <void x86_entropy::measure<30u, 16u, 0u>(index_probe::Data<30u, 16u> const&)+0x3e0>
+   1db35: 44 8b 44 bc 10               	movl	0x10(%rsp,%rdi,4), %r8d
+   1db3a: 45 89 c1                     	movl	%r8d, %r9d
+   1db3d: 41 c1 e9 04                  	shrl	$0x4, %r9d
+   1db41: 41 83 e0 0f                  	andl	$0xf, %r8d
+   1db45: 4d 89 ca                     	movq	%r9, %r10
+   1db48: 49 c1 e2 07                  	shlq	$0x7, %r10
+   1db4c: 4d 01 ea                     	addq	%r13, %r10
+   1db4f: 4f 8b 04 c2                  	movq	(%r10,%r8,8), %r8
+   1db53: 49 81 f8 ff ff ff 3f         	cmpq	$0x3fffffff, %r8        # imm = 0x3FFFFFFF
+   1db5a: 0f 86 00 ff ff ff            	jbe	0x1da60 <void x86_entropy::measure<30u, 16u, 0u>(index_probe::Data<30u, 16u> const&)+0x400>
+   1db60: 45 31 c0                     	xorl	%r8d, %r8d
+   1db63: eb 99                        	jmp	0x1dafe <void x86_entropy::measure<30u, 16u, 0u>(index_probe::Data<30u, 16u> const&)+0x49e>
+   1db65: 66 66 2e 0f 1f 84 00 00 00 00 00     	nopw	%cs:(%rax,%rax)
+   1db70: c5 f8 77                     	vzeroupper
+   1db73: e8 88 35 fe ff               	callq	0x1100 <_ZNSt6chrono3_V212steady_clock3nowEv@plt>
+   1db78: 44 8b 05 19 d5 00 00         	movl	0xd519(%rip), %r8d      # 0x2b098 <tiles::iterations>
+   1db7f: 48 89 44 24 70               	movq	%rax, 0x70(%rsp)
+   1db84: 4d 85 c0                     	testq	%r8, %r8
+   1db87: 0f 84 b3 fd ff ff            	je	0x1d940 <void x86_entropy::measure<30u, 16u, 0u>(index_probe::Data<30u, 16u> const&)+0x2e0>
+   1db8d: 48 8b 44 24 48               	movq	0x48(%rsp), %rax
+   1db92: c5 fd 6f 25 06 a6 00 00      	vmovdqa	0xa606(%rip), %ymm4     # 0x281a0 <strlen@GLIBC_2.2.5+0x281a0>
+   1db9a: c5 f9 6f 2d 8e a4 00 00      	vmovdqa	0xa48e(%rip), %xmm5     # 0x28030 <strlen@GLIBC_2.2.5+0x28030>
+   1dba2: c4 e2 79 59 35 55 a4 00 00   	vpbroadcastq	0xa455(%rip), %xmm6 # 0x28000 <strlen@GLIBC_2.2.5+0x28000>
+   1dbab: 80 7c 24 40 00               	cmpb	$0x0, 0x40(%rsp)
+   1dbb0: c5 c1 ef ff                  	vpxor	%xmm7, %xmm7, %xmm7
+   1dbb4: 8b 80 00 22 01 00            	movl	0x12200(%rax), %eax
+   1dbba: 89 44 24 08                  	movl	%eax, 0x8(%rsp)
+   1dbbe: 0f 84 fc 00 00 00            	je	0x1dcc0 <void x86_entropy::measure<30u, 16u, 0u>(index_probe::Data<30u, 16u> const&)+0x660>
+   1dbc4: 44 8b 7c 24 10               	movl	0x10(%rsp), %r15d
+   1dbc9: 31 c0                        	xorl	%eax, %eax
+   1dbcb: e9 c3 00 00 00               	jmp	0x1dc93 <void x86_entropy::measure<30u, 16u, 0u>(index_probe::Data<30u, 16u> const&)+0x633>
+   1dbd0: 0f af 54 24 08               	imull	0x8(%rsp), %edx
+   1dbd5: be ff ff ff 00               	movl	$0xffffff, %esi         # imm = 0xFFFFFF
+   1dbda: c5 fb 92 ce                  	kmovd	%esi, %k1
+   1dbde: 8b 7c 15 38                  	movl	0x38(%rbp,%rdx), %edi
+   1dbe2: 8b 74 15 36                  	movl	0x36(%rbp,%rdx), %esi
+   1dbe6: 62 f1 7f a9 6f 44 15 00      	vmovdqu8	(%rbp,%rdx), %ymm0 {%k1} {z}
+   1dbee: 62 f1 7f a9 6f 8c 15 1e 00 00 00     	vmovdqu8	0x1e(%rbp,%rdx), %ymm1 {%k1} {z}
+   1dbf9: 48 c1 e7 10                  	shlq	$0x10, %rdi
+   1dbfd: 48 09 f7                     	orq	%rsi, %rdi
+   1dc00: 8b 74 15 18                  	movl	0x18(%rbp,%rdx), %esi
+   1dc04: 8b 54 15 1a                  	movl	0x1a(%rbp,%rdx), %edx
+   1dc08: c4 e1 f9 6e d7               	vmovq	%rdi, %xmm2
+   1dc0d: 62 f2 5d 28 7d c7            	vpermt2b	%ymm7, %ymm4, %ymm0
+   1dc13: 62 f2 5d 28 7d cf            	vpermt2b	%ymm7, %ymm4, %ymm1
+   1dc19: 48 c1 e2 10                  	shlq	$0x10, %rdx
+   1dc1d: 48 09 f2                     	orq	%rsi, %rdx
+   1dc20: c5 fd 72 f0 06               	vpslld	$0x6, %ymm0, %ymm0
+   1dc25: c5 f5 72 f1 06               	vpslld	$0x6, %ymm1, %ymm1
+   1dc2a: c4 e1 f9 6e da               	vmovq	%rdx, %xmm3
+   1dc2f: c5 e1 6c d2                  	vpunpcklqdq	%xmm2, %xmm3, %xmm2 # xmm2 = xmm3[0],xmm2[0]
+   1dc33: c4 e2 69 00 d5               	vpshufb	%xmm5, %xmm2, %xmm2
+   1dc38: c4 e3 c9 ce d2 00            	vgf2p8affineqb	$0x0, %xmm2, %xmm6, %xmm2
+   1dc3e: c4 e2 7d 31 da               	vpmovzxbd	%xmm2, %ymm3    # ymm3 = xmm2[0],zero,zero,zero,xmm2[1],zero,zero,zero,xmm2[2],zero,zero,zero,xmm2[3],zero,zero,zero,xmm2[4],zero,zero,zero,xmm2[5],zero,zero,zero,xmm2[6],zero,zero,zero,xmm2[7],zero,zero,zero
+   1dc43: c5 f9 70 d2 ee               	vpshufd	$0xee, %xmm2, %xmm2     # xmm2 = xmm2[2,3,2,3]
+   1dc48: c4 e2 7d 31 d2               	vpmovzxbd	%xmm2, %ymm2    # ymm2 = xmm2[0],zero,zero,zero,xmm2[1],zero,zero,zero,xmm2[2],zero,zero,zero,xmm2[3],zero,zero,zero,xmm2[4],zero,zero,zero,xmm2[5],zero,zero,zero,xmm2[6],zero,zero,zero,xmm2[7],zero,zero,zero
+   1dc4d: c5 fd eb c3                  	vpor	%ymm3, %ymm0, %ymm0
+   1dc51: 62 f2 7d 28 7c d9            	vpbroadcastd	%ecx, %ymm3
+   1dc57: c5 f5 eb ca                  	vpor	%ymm2, %ymm1, %ymm1
+   1dc5b: 62 f1 7d 28 76 c3            	vpcmpeqd	%ymm3, %ymm0, %k0
+   1dc61: 62 f1 75 28 76 cb            	vpcmpeqd	%ymm3, %ymm1, %k1
+   1dc67: c5 f5 4b c0                  	kunpckbw	%k0, %k1, %k0
+   1dc6b: c5 f8 93 c8                  	kmovw	%k0, %ecx
+   1dc6f: f3 4c 0f bc f9               	tzcntq	%rcx, %r15
+   1dc74: 41 83 ff 10                  	cmpl	$0x10, %r15d
+   1dc78: 45 0f 43 fc                  	cmovael	%r12d, %r15d
+   1dc7c: 49 31 c7                     	xorq	%rax, %r15
+   1dc7f: 48 01 d8                     	addq	%rbx, %rax
+   1dc82: 4d 0f af fe                  	imulq	%r14, %r15
+   1dc86: 49 c1 ef 36                  	shrq	$0x36, %r15
+   1dc8a: 49 ff c8                     	decq	%r8
+   1dc8d: 0f 84 7d 08 00 00            	je	0x1e510 <void x86_entropy::measure<30u, 16u, 0u>(index_probe::Data<30u, 16u> const&)+0xeb0>
+   1dc93: 44 89 fa                     	movl	%r15d, %edx
+   1dc96: c1 ea 04                     	shrl	$0x4, %edx
+   1dc99: 41 83 e7 0f                  	andl	$0xf, %r15d
+   1dc9d: 48 89 d1                     	movq	%rdx, %rcx
+   1dca0: 48 c1 e1 07                  	shlq	$0x7, %rcx
+   1dca4: 4c 01 e9                     	addq	%r13, %rcx
+   1dca7: 4a 8b 0c f9                  	movq	(%rcx,%r15,8), %rcx
+   1dcab: 48 81 f9 ff ff ff 3f         	cmpq	$0x3fffffff, %rcx       # imm = 0x3FFFFFFF
+   1dcb2: 0f 86 18 ff ff ff            	jbe	0x1dbd0 <void x86_entropy::measure<30u, 16u, 0u>(index_probe::Data<30u, 16u> const&)+0x570>
+   1dcb8: 31 c9                        	xorl	%ecx, %ecx
+   1dcba: eb b3                        	jmp	0x1dc6f <void x86_entropy::measure<30u, 16u, 0u>(index_probe::Data<30u, 16u> const&)+0x60f>
+   1dcbc: 0f 1f 40 00                  	nopl	(%rax)
+   1dcc0: 8b 44 24 28                  	movl	0x28(%rsp), %eax
+   1dcc4: 4c 89 c2                     	movq	%r8, %rdx
+   1dcc7: 44 8b 7c 24 10               	movl	0x10(%rsp), %r15d
+   1dccc: 8b 7c 24 14                  	movl	0x14(%rsp), %edi
+   1dcd0: 44 8b 44 24 18               	movl	0x18(%rsp), %r8d
+   1dcd5: 44 8b 4c 24 1c               	movl	0x1c(%rsp), %r9d
+   1dcda: 44 8b 54 24 20               	movl	0x20(%rsp), %r10d
+   1dcdf: 44 8b 5c 24 24               	movl	0x24(%rsp), %r11d
+   1dce4: 48 f7 da                     	negq	%rdx
+   1dce7: b9 dc 78 02 00               	movl	$0x278dc, %ecx          # imm = 0x278DC
+   1dcec: 48 89 54 24 78               	movq	%rdx, 0x78(%rsp)
+   1dcf1: 31 d2                        	xorl	%edx, %edx
+   1dcf3: 48 89 44 24 30               	movq	%rax, 0x30(%rsp)
+   1dcf8: 8b 44 24 2c                  	movl	0x2c(%rsp), %eax
+   1dcfc: e9 a1 01 00 00               	jmp	0x1dea2 <void x86_entropy::measure<30u, 16u, 0u>(index_probe::Data<30u, 16u> const&)+0x842>
+   1dd01: 66 66 66 66 66 66 2e 0f 1f 84 00 00 00 00 00 	nopw	%cs:(%rax,%rax)
+   1dd10: 0f af 5c 24 08               	imull	0x8(%rsp), %ebx
+   1dd15: be ff ff ff 00               	movl	$0xffffff, %esi         # imm = 0xFFFFFF
+   1dd1a: c5 fb 92 ce                  	kmovd	%esi, %k1
+   1dd1e: 44 8b 74 1d 38               	movl	0x38(%rbp,%rbx), %r14d
+   1dd23: 8b 74 1d 36                  	movl	0x36(%rbp,%rbx), %esi
+   1dd27: 62 f1 7f a9 6f 44 1d 00      	vmovdqu8	(%rbp,%rbx), %ymm0 {%k1} {z}
+   1dd2f: 62 f1 7f a9 6f 8c 1d 1e 00 00 00     	vmovdqu8	0x1e(%rbp,%rbx), %ymm1 {%k1} {z}
+   1dd3a: 49 c1 e6 10                  	shlq	$0x10, %r14
+   1dd3e: 49 09 f6                     	orq	%rsi, %r14
+   1dd41: 8b 74 1d 18                  	movl	0x18(%rbp,%rbx), %esi
+   1dd45: 8b 5c 1d 1a                  	movl	0x1a(%rbp,%rbx), %ebx
+   1dd49: c4 c1 f9 6e d6               	vmovq	%r14, %xmm2
+   1dd4e: 62 f2 5d 28 7d c7            	vpermt2b	%ymm7, %ymm4, %ymm0
+   1dd54: 62 f2 5d 28 7d cf            	vpermt2b	%ymm7, %ymm4, %ymm1
+   1dd5a: 48 c1 e3 10                  	shlq	$0x10, %rbx
+   1dd5e: 48 09 f3                     	orq	%rsi, %rbx
+   1dd61: c5 fd 72 f0 06               	vpslld	$0x6, %ymm0, %ymm0
+   1dd66: c5 f5 72 f1 06               	vpslld	$0x6, %ymm1, %ymm1
+   1dd6b: c4 e1 f9 6e db               	vmovq	%rbx, %xmm3
+   1dd70: c5 e1 6c d2                  	vpunpcklqdq	%xmm2, %xmm3, %xmm2 # xmm2 = xmm3[0],xmm2[0]
+   1dd74: c4 e2 69 00 d5               	vpshufb	%xmm5, %xmm2, %xmm2
+   1dd79: c4 e3 c9 ce d2 00            	vgf2p8affineqb	$0x0, %xmm2, %xmm6, %xmm2
+   1dd7f: c4 e2 7d 31 da               	vpmovzxbd	%xmm2, %ymm3    # ymm3 = xmm2[0],zero,zero,zero,xmm2[1],zero,zero,zero,xmm2[2],zero,zero,zero,xmm2[3],zero,zero,zero,xmm2[4],zero,zero,zero,xmm2[5],zero,zero,zero,xmm2[6],zero,zero,zero,xmm2[7],zero,zero,zero
+   1dd84: c5 f9 70 d2 ee               	vpshufd	$0xee, %xmm2, %xmm2     # xmm2 = xmm2[2,3,2,3]
+   1dd89: c4 e2 7d 31 d2               	vpmovzxbd	%xmm2, %ymm2    # ymm2 = xmm2[0],zero,zero,zero,xmm2[1],zero,zero,zero,xmm2[2],zero,zero,zero,xmm2[3],zero,zero,zero,xmm2[4],zero,zero,zero,xmm2[5],zero,zero,zero,xmm2[6],zero,zero,zero,xmm2[7],zero,zero,zero
+   1dd8e: c5 fd eb c3                  	vpor	%ymm3, %ymm0, %ymm0
+   1dd92: 62 f2 7d 28 7c d8            	vpbroadcastd	%eax, %ymm3
+   1dd98: c5 f5 eb ca                  	vpor	%ymm2, %ymm1, %ymm1
+   1dd9c: 62 f1 7d 28 76 c3            	vpcmpeqd	%ymm3, %ymm0, %k0
+   1dda2: 62 f1 75 28 76 cb            	vpcmpeqd	%ymm3, %ymm1, %k1
+   1dda8: c5 f5 4b c0                  	kunpckbw	%k0, %k1, %k0
+   1ddac: c5 f8 93 c0                  	kmovw	%k0, %eax
+   1ddb0: 48 89 44 24 50               	movq	%rax, 0x50(%rsp)
+   1ddb5: 48 8b 4c 24 58               	movq	0x58(%rsp), %rcx
+   1ddba: 48 bb 95 ef 82 de 43 25 34 d1	movabsq	$-0x2ecbdabc217d106b, %rbx # imm = 0xD1342543DE82EF95
+   1ddc4: 48 8b 44 24 30               	movq	0x30(%rsp), %rax
+   1ddc9: 49 be 15 7c 4a 7f b9 79 37 9e	movabsq	$-0x61c8864680b583eb, %r14 # imm = 0x9E3779B97F4A7C15
+   1ddd3: 48 8b 54 24 60               	movq	0x60(%rsp), %rdx
+   1ddd8: 8d b1 5b 25 fe ff            	leal	-0x1daa5(%rcx), %esi
+   1ddde: 49 31 d7                     	xorq	%rdx, %r15
+   1dde1: 48 0f af f3                  	imulq	%rbx, %rsi
+   1dde5: 4d 0f af fe                  	imulq	%r14, %r15
+   1dde9: 48 31 f7                     	xorq	%rsi, %rdi
+   1ddec: 8d b1 92 c3 fe ff            	leal	-0x13c6e(%rcx), %esi
+   1ddf2: 49 c1 ef 36                  	shrq	$0x36, %r15
+   1ddf6: 48 0f af f3                  	imulq	%rbx, %rsi
+   1ddfa: 49 0f af fe                  	imulq	%r14, %rdi
+   1ddfe: 49 31 f0                     	xorq	%rsi, %r8
+   1de01: 8d b1 c9 61 ff ff            	leal	-0x9e37(%rcx), %esi
+   1de07: 48 c1 ef 36                  	shrq	$0x36, %rdi
+   1de0b: 48 0f af f3                  	imulq	%rbx, %rsi
+   1de0f: 4d 0f af c6                  	imulq	%r14, %r8
+   1de13: 49 31 f1                     	xorq	%rsi, %r9
+   1de16: 89 ce                        	movl	%ecx, %esi
+   1de18: 48 0f af f3                  	imulq	%rbx, %rsi
+   1de1c: 49 c1 e8 36                  	shrq	$0x36, %r8
+   1de20: 4d 0f af ce                  	imulq	%r14, %r9
+   1de24: 49 31 f2                     	xorq	%rsi, %r10
+   1de27: 8d b1 37 9e 00 00            	leal	0x9e37(%rcx), %esi
+   1de2d: 48 0f af f3                  	imulq	%rbx, %rsi
+   1de31: 4d 0f af d6                  	imulq	%r14, %r10
+   1de35: 49 c1 e9 36                  	shrq	$0x36, %r9
+   1de39: 49 31 f3                     	xorq	%rsi, %r11
+   1de3c: 8d b1 6e 3c 01 00            	leal	0x13c6e(%rcx), %esi
+   1de42: 49 c1 ea 36                  	shrq	$0x36, %r10
+   1de46: 48 0f af f3                  	imulq	%rbx, %rsi
+   1de4a: 4d 0f af de                  	imulq	%r14, %r11
+   1de4e: 48 31 f0                     	xorq	%rsi, %rax
+   1de51: 49 c1 eb 36                  	shrq	$0x36, %r11
+   1de55: 8d b1 a5 da 01 00            	leal	0x1daa5(%rcx), %esi
+   1de5b: 49 0f af c6                  	imulq	%r14, %rax
+   1de5f: 48 c1 e8 36                  	shrq	$0x36, %rax
+   1de63: 48 89 44 24 30               	movq	%rax, 0x30(%rsp)
+   1de68: f3 48 0f bc 44 24 50         	tzcntq	0x50(%rsp), %rax
+   1de6f: 83 f8 10                     	cmpl	$0x10, %eax
+   1de72: 41 0f 43 c4                  	cmovael	%r12d, %eax
+   1de76: 48 0f af f3                  	imulq	%rbx, %rsi
+   1de7a: 48 01 da                     	addq	%rbx, %rdx
+   1de7d: 48 31 f0                     	xorq	%rsi, %rax
+   1de80: 48 8b 74 24 78               	movq	0x78(%rsp), %rsi
+   1de85: 49 0f af c6                  	imulq	%r14, %rax
+   1de89: 48 c1 e8 36                  	shrq	$0x36, %rax
+   1de8d: 48 8d 74 0e 01               	leaq	0x1(%rsi,%rcx), %rsi
+   1de92: 48 ff c1                     	incq	%rcx
+   1de95: 48 81 fe dc 78 02 00         	cmpq	$0x278dc, %rsi          # imm = 0x278DC
+   1de9c: 0f 84 7e 06 00 00            	je	0x1e520 <void x86_entropy::measure<30u, 16u, 0u>(index_probe::Data<30u, 16u> const&)+0xec0>
+   1dea2: 45 89 fe                     	movl	%r15d, %r14d
+   1dea5: 41 c1 ee 04                  	shrl	$0x4, %r14d
+   1dea9: 41 83 e7 0f                  	andl	$0xf, %r15d
+   1dead: 48 89 4c 24 58               	movq	%rcx, 0x58(%rsp)
+   1deb2: 48 89 54 24 60               	movq	%rdx, 0x60(%rsp)
+   1deb7: 4c 89 f3                     	movq	%r14, %rbx
+   1deba: 48 c1 e3 07                  	shlq	$0x7, %rbx
+   1debe: 4c 01 eb                     	addq	%r13, %rbx
+   1dec1: 4a 8b 1c fb                  	movq	(%rbx,%r15,8), %rbx
+   1dec5: 48 81 fb ff ff ff 3f         	cmpq	$0x3fffffff, %rbx       # imm = 0x3FFFFFFF
+   1decc: 0f 87 ae 00 00 00            	ja	0x1df80 <void x86_entropy::measure<30u, 16u, 0u>(index_probe::Data<30u, 16u> const&)+0x920>
+   1ded2: 44 0f af 74 24 08            	imull	0x8(%rsp), %r14d
+   1ded8: be ff ff ff 00               	movl	$0xffffff, %esi         # imm = 0xFFFFFF
+   1dedd: c5 fb 92 ce                  	kmovd	%esi, %k1
+   1dee1: 42 8b 74 35 38               	movl	0x38(%rbp,%r14), %esi
+   1dee6: 46 8b 7c 35 36               	movl	0x36(%rbp,%r14), %r15d
+   1deeb: 62 b1 7f a9 6f 44 35 00      	vmovdqu8	(%rbp,%r14), %ymm0 {%k1} {z}
+   1def3: 62 b1 7f a9 6f 8c 35 1e 00 00 00     	vmovdqu8	0x1e(%rbp,%r14), %ymm1 {%k1} {z}
+   1defe: 48 c1 e6 10                  	shlq	$0x10, %rsi
+   1df02: 4c 09 fe                     	orq	%r15, %rsi
+   1df05: 46 8b 7c 35 18               	movl	0x18(%rbp,%r14), %r15d
+   1df0a: 46 8b 74 35 1a               	movl	0x1a(%rbp,%r14), %r14d
+   1df0f: c4 e1 f9 6e d6               	vmovq	%rsi, %xmm2
+   1df14: 62 f2 5d 28 7d c7            	vpermt2b	%ymm7, %ymm4, %ymm0
+   1df1a: 62 f2 5d 28 7d cf            	vpermt2b	%ymm7, %ymm4, %ymm1
+   1df20: 49 c1 e6 10                  	shlq	$0x10, %r14
+   1df24: 4d 09 fe                     	orq	%r15, %r14
+   1df27: c5 fd 72 f0 06               	vpslld	$0x6, %ymm0, %ymm0
+   1df2c: c5 f5 72 f1 06               	vpslld	$0x6, %ymm1, %ymm1
+   1df31: c4 c1 f9 6e de               	vmovq	%r14, %xmm3
+   1df36: c5 e1 6c d2                  	vpunpcklqdq	%xmm2, %xmm3, %xmm2 # xmm2 = xmm3[0],xmm2[0]
+   1df3a: c4 e2 69 00 d5               	vpshufb	%xmm5, %xmm2, %xmm2
+   1df3f: c4 e3 c9 ce d2 00            	vgf2p8affineqb	$0x0, %xmm2, %xmm6, %xmm2
+   1df45: c4 e2 7d 31 da               	vpmovzxbd	%xmm2, %ymm3    # ymm3 = xmm2[0],zero,zero,zero,xmm2[1],zero,zero,zero,xmm2[2],zero,zero,zero,xmm2[3],zero,zero,zero,xmm2[4],zero,zero,zero,xmm2[5],zero,zero,zero,xmm2[6],zero,zero,zero,xmm2[7],zero,zero,zero
+   1df4a: c5 f9 70 d2 ee               	vpshufd	$0xee, %xmm2, %xmm2     # xmm2 = xmm2[2,3,2,3]
+   1df4f: c4 e2 7d 31 d2               	vpmovzxbd	%xmm2, %ymm2    # ymm2 = xmm2[0],zero,zero,zero,xmm2[1],zero,zero,zero,xmm2[2],zero,zero,zero,xmm2[3],zero,zero,zero,xmm2[4],zero,zero,zero,xmm2[5],zero,zero,zero,xmm2[6],zero,zero,zero,xmm2[7],zero,zero,zero
+   1df54: c5 fd eb c3                  	vpor	%ymm3, %ymm0, %ymm0
+   1df58: 62 f2 7d 28 7c db            	vpbroadcastd	%ebx, %ymm3
+   1df5e: c5 f5 eb ca                  	vpor	%ymm2, %ymm1, %ymm1
+   1df62: 62 f1 7d 28 76 c3            	vpcmpeqd	%ymm3, %ymm0, %k0
+   1df68: 62 f1 75 28 76 cb            	vpcmpeqd	%ymm3, %ymm1, %k1
+   1df6e: c5 f5 4b c0                  	kunpckbw	%k0, %k1, %k0
+   1df72: c5 f8 93 d8                  	kmovw	%k0, %ebx
+   1df76: eb 0a                        	jmp	0x1df82 <void x86_entropy::measure<30u, 16u, 0u>(index_probe::Data<30u, 16u> const&)+0x922>
+   1df78: 0f 1f 84 00 00 00 00 00      	nopl	(%rax,%rax)
+   1df80: 31 db                        	xorl	%ebx, %ebx
+   1df82: f3 4c 0f bc fb               	tzcntq	%rbx, %r15
+   1df87: 41 83 ff 10                  	cmpl	$0x10, %r15d
+   1df8b: 45 0f 43 fc                  	cmovael	%r12d, %r15d
+   1df8f: 89 fb                        	movl	%edi, %ebx
+   1df91: c1 eb 04                     	shrl	$0x4, %ebx
+   1df94: 83 e7 0f                     	andl	$0xf, %edi
+   1df97: 48 89 de                     	movq	%rbx, %rsi
+   1df9a: 48 c1 e6 07                  	shlq	$0x7, %rsi
+   1df9e: 4c 01 ee                     	addq	%r13, %rsi
+   1dfa1: 48 8b 3c fe                  	movq	(%rsi,%rdi,8), %rdi
+   1dfa5: 48 81 ff ff ff ff 3f         	cmpq	$0x3fffffff, %rdi       # imm = 0x3FFFFFFF
+   1dfac: 0f 87 ae 00 00 00            	ja	0x1e060 <void x86_entropy::measure<30u, 16u, 0u>(index_probe::Data<30u, 16u> const&)+0xa00>
+   1dfb2: 0f af 5c 24 08               	imull	0x8(%rsp), %ebx
+   1dfb7: be ff ff ff 00               	movl	$0xffffff, %esi         # imm = 0xFFFFFF
+   1dfbc: c5 fb 92 ce                  	kmovd	%esi, %k1
+   1dfc0: 44 8b 74 1d 38               	movl	0x38(%rbp,%rbx), %r14d
+   1dfc5: 8b 74 1d 36                  	movl	0x36(%rbp,%rbx), %esi
+   1dfc9: 62 f1 7f a9 6f 44 1d 00      	vmovdqu8	(%rbp,%rbx), %ymm0 {%k1} {z}
+   1dfd1: 62 f1 7f a9 6f 8c 1d 1e 00 00 00     	vmovdqu8	0x1e(%rbp,%rbx), %ymm1 {%k1} {z}
+   1dfdc: 49 c1 e6 10                  	shlq	$0x10, %r14
+   1dfe0: 49 09 f6                     	orq	%rsi, %r14
+   1dfe3: 8b 74 1d 18                  	movl	0x18(%rbp,%rbx), %esi
+   1dfe7: 8b 5c 1d 1a                  	movl	0x1a(%rbp,%rbx), %ebx
+   1dfeb: c4 c1 f9 6e d6               	vmovq	%r14, %xmm2
+   1dff0: 62 f2 5d 28 7d c7            	vpermt2b	%ymm7, %ymm4, %ymm0
+   1dff6: 62 f2 5d 28 7d cf            	vpermt2b	%ymm7, %ymm4, %ymm1
+   1dffc: 48 c1 e3 10                  	shlq	$0x10, %rbx
+   1e000: 48 09 f3                     	orq	%rsi, %rbx
+   1e003: c5 fd 72 f0 06               	vpslld	$0x6, %ymm0, %ymm0
+   1e008: c5 f5 72 f1 06               	vpslld	$0x6, %ymm1, %ymm1
+   1e00d: c4 e1 f9 6e db               	vmovq	%rbx, %xmm3
+   1e012: c5 e1 6c d2                  	vpunpcklqdq	%xmm2, %xmm3, %xmm2 # xmm2 = xmm3[0],xmm2[0]
+   1e016: c4 e2 69 00 d5               	vpshufb	%xmm5, %xmm2, %xmm2
+   1e01b: c4 e3 c9 ce d2 00            	vgf2p8affineqb	$0x0, %xmm2, %xmm6, %xmm2
+   1e021: c4 e2 7d 31 da               	vpmovzxbd	%xmm2, %ymm3    # ymm3 = xmm2[0],zero,zero,zero,xmm2[1],zero,zero,zero,xmm2[2],zero,zero,zero,xmm2[3],zero,zero,zero,xmm2[4],zero,zero,zero,xmm2[5],zero,zero,zero,xmm2[6],zero,zero,zero,xmm2[7],zero,zero,zero
+   1e026: c5 f9 70 d2 ee               	vpshufd	$0xee, %xmm2, %xmm2     # xmm2 = xmm2[2,3,2,3]
+   1e02b: c4 e2 7d 31 d2               	vpmovzxbd	%xmm2, %ymm2    # ymm2 = xmm2[0],zero,zero,zero,xmm2[1],zero,zero,zero,xmm2[2],zero,zero,zero,xmm2[3],zero,zero,zero,xmm2[4],zero,zero,zero,xmm2[5],zero,zero,zero,xmm2[6],zero,zero,zero,xmm2[7],zero,zero,zero
+   1e030: c5 fd eb c3                  	vpor	%ymm3, %ymm0, %ymm0
+   1e034: 62 f2 7d 28 7c df            	vpbroadcastd	%edi, %ymm3
+   1e03a: c5 f5 eb ca                  	vpor	%ymm2, %ymm1, %ymm1
+   1e03e: 62 f1 7d 28 76 c3            	vpcmpeqd	%ymm3, %ymm0, %k0
+   1e044: 62 f1 75 28 76 cb            	vpcmpeqd	%ymm3, %ymm1, %k1
+   1e04a: c5 f5 4b c0                  	kunpckbw	%k0, %k1, %k0
+   1e04e: c5 f8 93 f8                  	kmovw	%k0, %edi
+   1e052: eb 0e                        	jmp	0x1e062 <void x86_entropy::measure<30u, 16u, 0u>(index_probe::Data<30u, 16u> const&)+0xa02>
+   1e054: 66 66 66 2e 0f 1f 84 00 00 00 00 00  	nopw	%cs:(%rax,%rax)
+   1e060: 31 ff                        	xorl	%edi, %edi
+   1e062: f3 48 0f bc ff               	tzcntq	%rdi, %rdi
+   1e067: 83 ff 10                     	cmpl	$0x10, %edi
+   1e06a: 41 0f 43 fc                  	cmovael	%r12d, %edi
+   1e06e: 44 89 c3                     	movl	%r8d, %ebx
+   1e071: c1 eb 04                     	shrl	$0x4, %ebx
+   1e074: 41 83 e0 0f                  	andl	$0xf, %r8d
+   1e078: 48 89 de                     	movq	%rbx, %rsi
+   1e07b: 48 c1 e6 07                  	shlq	$0x7, %rsi
+   1e07f: 4c 01 ee                     	addq	%r13, %rsi
+   1e082: 4e 8b 04 c6                  	movq	(%rsi,%r8,8), %r8
+   1e086: 49 81 f8 ff ff ff 3f         	cmpq	$0x3fffffff, %r8        # imm = 0x3FFFFFFF
+   1e08d: 0f 87 ad 00 00 00            	ja	0x1e140 <void x86_entropy::measure<30u, 16u, 0u>(index_probe::Data<30u, 16u> const&)+0xae0>
+   1e093: 0f af 5c 24 08               	imull	0x8(%rsp), %ebx
+   1e098: be ff ff ff 00               	movl	$0xffffff, %esi         # imm = 0xFFFFFF
+   1e09d: c5 fb 92 ce                  	kmovd	%esi, %k1
+   1e0a1: 44 8b 74 1d 38               	movl	0x38(%rbp,%rbx), %r14d
+   1e0a6: 8b 74 1d 36                  	movl	0x36(%rbp,%rbx), %esi
+   1e0aa: 62 f1 7f a9 6f 44 1d 00      	vmovdqu8	(%rbp,%rbx), %ymm0 {%k1} {z}
+   1e0b2: 62 f1 7f a9 6f 8c 1d 1e 00 00 00     	vmovdqu8	0x1e(%rbp,%rbx), %ymm1 {%k1} {z}
+   1e0bd: 49 c1 e6 10                  	shlq	$0x10, %r14
+   1e0c1: 49 09 f6                     	orq	%rsi, %r14
+   1e0c4: 8b 74 1d 18                  	movl	0x18(%rbp,%rbx), %esi
+   1e0c8: 8b 5c 1d 1a                  	movl	0x1a(%rbp,%rbx), %ebx
+   1e0cc: c4 c1 f9 6e d6               	vmovq	%r14, %xmm2
+   1e0d1: 62 f2 5d 28 7d c7            	vpermt2b	%ymm7, %ymm4, %ymm0
+   1e0d7: 62 f2 5d 28 7d cf            	vpermt2b	%ymm7, %ymm4, %ymm1
+   1e0dd: 48 c1 e3 10                  	shlq	$0x10, %rbx
+   1e0e1: 48 09 f3                     	orq	%rsi, %rbx
+   1e0e4: c5 fd 72 f0 06               	vpslld	$0x6, %ymm0, %ymm0
+   1e0e9: c5 f5 72 f1 06               	vpslld	$0x6, %ymm1, %ymm1
+   1e0ee: c4 e1 f9 6e db               	vmovq	%rbx, %xmm3
+   1e0f3: c5 e1 6c d2                  	vpunpcklqdq	%xmm2, %xmm3, %xmm2 # xmm2 = xmm3[0],xmm2[0]
+   1e0f7: c4 e2 69 00 d5               	vpshufb	%xmm5, %xmm2, %xmm2
+   1e0fc: c4 e3 c9 ce d2 00            	vgf2p8affineqb	$0x0, %xmm2, %xmm6, %xmm2
+   1e102: c4 e2 7d 31 da               	vpmovzxbd	%xmm2, %ymm3    # ymm3 = xmm2[0],zero,zero,zero,xmm2[1],zero,zero,zero,xmm2[2],zero,zero,zero,xmm2[3],zero,zero,zero,xmm2[4],zero,zero,zero,xmm2[5],zero,zero,zero,xmm2[6],zero,zero,zero,xmm2[7],zero,zero,zero
+   1e107: c5 f9 70 d2 ee               	vpshufd	$0xee, %xmm2, %xmm2     # xmm2 = xmm2[2,3,2,3]
+   1e10c: c4 e2 7d 31 d2               	vpmovzxbd	%xmm2, %ymm2    # ymm2 = xmm2[0],zero,zero,zero,xmm2[1],zero,zero,zero,xmm2[2],zero,zero,zero,xmm2[3],zero,zero,zero,xmm2[4],zero,zero,zero,xmm2[5],zero,zero,zero,xmm2[6],zero,zero,zero,xmm2[7],zero,zero,zero
+   1e111: c5 fd eb c3                  	vpor	%ymm3, %ymm0, %ymm0
+   1e115: 62 d2 7d 28 7c d8            	vpbroadcastd	%r8d, %ymm3
+   1e11b: c5 f5 eb ca                  	vpor	%ymm2, %ymm1, %ymm1
+   1e11f: 62 f1 7d 28 76 c3            	vpcmpeqd	%ymm3, %ymm0, %k0
+   1e125: 62 f1 75 28 76 cb            	vpcmpeqd	%ymm3, %ymm1, %k1
+   1e12b: c5 f5 4b c0                  	kunpckbw	%k0, %k1, %k0
+   1e12f: c5 78 93 c0                  	kmovw	%k0, %r8d
+   1e133: eb 0e                        	jmp	0x1e143 <void x86_entropy::measure<30u, 16u, 0u>(index_probe::Data<30u, 16u> const&)+0xae3>
+   1e135: 66 66 2e 0f 1f 84 00 00 00 00 00     	nopw	%cs:(%rax,%rax)
+   1e140: 45 31 c0                     	xorl	%r8d, %r8d
+   1e143: f3 4d 0f bc c0               	tzcntq	%r8, %r8
+   1e148: 41 83 f8 10                  	cmpl	$0x10, %r8d
+   1e14c: 45 0f 43 c4                  	cmovael	%r12d, %r8d
+   1e150: 44 89 cb                     	movl	%r9d, %ebx
+   1e153: c1 eb 04                     	shrl	$0x4, %ebx
+   1e156: 41 83 e1 0f                  	andl	$0xf, %r9d
+   1e15a: 48 89 de                     	movq	%rbx, %rsi
+   1e15d: 48 c1 e6 07                  	shlq	$0x7, %rsi
+   1e161: 4c 01 ee                     	addq	%r13, %rsi
+   1e164: 4e 8b 0c ce                  	movq	(%rsi,%r9,8), %r9
+   1e168: 49 81 f9 ff ff ff 3f         	cmpq	$0x3fffffff, %r9        # imm = 0x3FFFFFFF
+   1e16f: 0f 87 ab 00 00 00            	ja	0x1e220 <void x86_entropy::measure<30u, 16u, 0u>(index_probe::Data<30u, 16u> const&)+0xbc0>
+   1e175: 0f af 5c 24 08               	imull	0x8(%rsp), %ebx
+   1e17a: be ff ff ff 00               	movl	$0xffffff, %esi         # imm = 0xFFFFFF
+   1e17f: c5 fb 92 ce                  	kmovd	%esi, %k1
+   1e183: 44 8b 74 1d 38               	movl	0x38(%rbp,%rbx), %r14d
+   1e188: 8b 74 1d 36                  	movl	0x36(%rbp,%rbx), %esi
+   1e18c: 62 f1 7f a9 6f 44 1d 00      	vmovdqu8	(%rbp,%rbx), %ymm0 {%k1} {z}
+   1e194: 62 f1 7f a9 6f 8c 1d 1e 00 00 00     	vmovdqu8	0x1e(%rbp,%rbx), %ymm1 {%k1} {z}
+   1e19f: 49 c1 e6 10                  	shlq	$0x10, %r14
+   1e1a3: 49 09 f6                     	orq	%rsi, %r14
+   1e1a6: 8b 74 1d 18                  	movl	0x18(%rbp,%rbx), %esi
+   1e1aa: 8b 5c 1d 1a                  	movl	0x1a(%rbp,%rbx), %ebx
+   1e1ae: c4 c1 f9 6e d6               	vmovq	%r14, %xmm2
+   1e1b3: 62 f2 5d 28 7d c7            	vpermt2b	%ymm7, %ymm4, %ymm0
+   1e1b9: 62 f2 5d 28 7d cf            	vpermt2b	%ymm7, %ymm4, %ymm1
+   1e1bf: 48 c1 e3 10                  	shlq	$0x10, %rbx
+   1e1c3: 48 09 f3                     	orq	%rsi, %rbx
+   1e1c6: c5 fd 72 f0 06               	vpslld	$0x6, %ymm0, %ymm0
+   1e1cb: c5 f5 72 f1 06               	vpslld	$0x6, %ymm1, %ymm1
+   1e1d0: c4 e1 f9 6e db               	vmovq	%rbx, %xmm3
+   1e1d5: c5 e1 6c d2                  	vpunpcklqdq	%xmm2, %xmm3, %xmm2 # xmm2 = xmm3[0],xmm2[0]
+   1e1d9: c4 e2 69 00 d5               	vpshufb	%xmm5, %xmm2, %xmm2
+   1e1de: c4 e3 c9 ce d2 00            	vgf2p8affineqb	$0x0, %xmm2, %xmm6, %xmm2
+   1e1e4: c4 e2 7d 31 da               	vpmovzxbd	%xmm2, %ymm3    # ymm3 = xmm2[0],zero,zero,zero,xmm2[1],zero,zero,zero,xmm2[2],zero,zero,zero,xmm2[3],zero,zero,zero,xmm2[4],zero,zero,zero,xmm2[5],zero,zero,zero,xmm2[6],zero,zero,zero,xmm2[7],zero,zero,zero
+   1e1e9: c5 f9 70 d2 ee               	vpshufd	$0xee, %xmm2, %xmm2     # xmm2 = xmm2[2,3,2,3]
+   1e1ee: c4 e2 7d 31 d2               	vpmovzxbd	%xmm2, %ymm2    # ymm2 = xmm2[0],zero,zero,zero,xmm2[1],zero,zero,zero,xmm2[2],zero,zero,zero,xmm2[3],zero,zero,zero,xmm2[4],zero,zero,zero,xmm2[5],zero,zero,zero,xmm2[6],zero,zero,zero,xmm2[7],zero,zero,zero
+   1e1f3: c5 fd eb c3                  	vpor	%ymm3, %ymm0, %ymm0
+   1e1f7: 62 d2 7d 28 7c d9            	vpbroadcastd	%r9d, %ymm3
+   1e1fd: c5 f5 eb ca                  	vpor	%ymm2, %ymm1, %ymm1
+   1e201: 62 f1 7d 28 76 c3            	vpcmpeqd	%ymm3, %ymm0, %k0
+   1e207: 62 f1 75 28 76 cb            	vpcmpeqd	%ymm3, %ymm1, %k1
+   1e20d: c5 f5 4b c0                  	kunpckbw	%k0, %k1, %k0
+   1e211: c5 78 93 c8                  	kmovw	%k0, %r9d
+   1e215: eb 0c                        	jmp	0x1e223 <void x86_entropy::measure<30u, 16u, 0u>(index_probe::Data<30u, 16u> const&)+0xbc3>
+   1e217: 66 0f 1f 84 00 00 00 00 00   	nopw	(%rax,%rax)
+   1e220: 45 31 c9                     	xorl	%r9d, %r9d
+   1e223: f3 4d 0f bc c9               	tzcntq	%r9, %r9
+   1e228: 41 83 f9 10                  	cmpl	$0x10, %r9d
+   1e22c: 45 0f 43 cc                  	cmovael	%r12d, %r9d
+   1e230: 44 89 d3                     	movl	%r10d, %ebx
+   1e233: c1 eb 04                     	shrl	$0x4, %ebx
+   1e236: 41 83 e2 0f                  	andl	$0xf, %r10d
+   1e23a: 48 89 de                     	movq	%rbx, %rsi
+   1e23d: 48 c1 e6 07                  	shlq	$0x7, %rsi
+   1e241: 4c 01 ee                     	addq	%r13, %rsi
+   1e244: 4e 8b 14 d6                  	movq	(%rsi,%r10,8), %r10
+   1e248: 49 81 fa ff ff ff 3f         	cmpq	$0x3fffffff, %r10       # imm = 0x3FFFFFFF
+   1e24f: 0f 87 ab 00 00 00            	ja	0x1e300 <void x86_entropy::measure<30u, 16u, 0u>(index_probe::Data<30u, 16u> const&)+0xca0>
+   1e255: 0f af 5c 24 08               	imull	0x8(%rsp), %ebx
+   1e25a: be ff ff ff 00               	movl	$0xffffff, %esi         # imm = 0xFFFFFF
+   1e25f: c5 fb 92 ce                  	kmovd	%esi, %k1
+   1e263: 44 8b 74 1d 38               	movl	0x38(%rbp,%rbx), %r14d
+   1e268: 8b 74 1d 36                  	movl	0x36(%rbp,%rbx), %esi
+   1e26c: 62 f1 7f a9 6f 44 1d 00      	vmovdqu8	(%rbp,%rbx), %ymm0 {%k1} {z}
+   1e274: 62 f1 7f a9 6f 8c 1d 1e 00 00 00     	vmovdqu8	0x1e(%rbp,%rbx), %ymm1 {%k1} {z}
+   1e27f: 49 c1 e6 10                  	shlq	$0x10, %r14
+   1e283: 49 09 f6                     	orq	%rsi, %r14
+   1e286: 8b 74 1d 18                  	movl	0x18(%rbp,%rbx), %esi
+   1e28a: 8b 5c 1d 1a                  	movl	0x1a(%rbp,%rbx), %ebx
+   1e28e: c4 c1 f9 6e d6               	vmovq	%r14, %xmm2
+   1e293: 62 f2 5d 28 7d c7            	vpermt2b	%ymm7, %ymm4, %ymm0
+   1e299: 62 f2 5d 28 7d cf            	vpermt2b	%ymm7, %ymm4, %ymm1
+   1e29f: 48 c1 e3 10                  	shlq	$0x10, %rbx
+   1e2a3: 48 09 f3                     	orq	%rsi, %rbx
+   1e2a6: c5 fd 72 f0 06               	vpslld	$0x6, %ymm0, %ymm0
+   1e2ab: c5 f5 72 f1 06               	vpslld	$0x6, %ymm1, %ymm1
+   1e2b0: c4 e1 f9 6e db               	vmovq	%rbx, %xmm3
+   1e2b5: c5 e1 6c d2                  	vpunpcklqdq	%xmm2, %xmm3, %xmm2 # xmm2 = xmm3[0],xmm2[0]
+   1e2b9: c4 e2 69 00 d5               	vpshufb	%xmm5, %xmm2, %xmm2
+   1e2be: c4 e3 c9 ce d2 00            	vgf2p8affineqb	$0x0, %xmm2, %xmm6, %xmm2
+   1e2c4: c4 e2 7d 31 da               	vpmovzxbd	%xmm2, %ymm3    # ymm3 = xmm2[0],zero,zero,zero,xmm2[1],zero,zero,zero,xmm2[2],zero,zero,zero,xmm2[3],zero,zero,zero,xmm2[4],zero,zero,zero,xmm2[5],zero,zero,zero,xmm2[6],zero,zero,zero,xmm2[7],zero,zero,zero
+   1e2c9: c5 f9 70 d2 ee               	vpshufd	$0xee, %xmm2, %xmm2     # xmm2 = xmm2[2,3,2,3]
+   1e2ce: c4 e2 7d 31 d2               	vpmovzxbd	%xmm2, %ymm2    # ymm2 = xmm2[0],zero,zero,zero,xmm2[1],zero,zero,zero,xmm2[2],zero,zero,zero,xmm2[3],zero,zero,zero,xmm2[4],zero,zero,zero,xmm2[5],zero,zero,zero,xmm2[6],zero,zero,zero,xmm2[7],zero,zero,zero
+   1e2d3: c5 fd eb c3                  	vpor	%ymm3, %ymm0, %ymm0
+   1e2d7: 62 d2 7d 28 7c da            	vpbroadcastd	%r10d, %ymm3
+   1e2dd: c5 f5 eb ca                  	vpor	%ymm2, %ymm1, %ymm1
+   1e2e1: 62 f1 7d 28 76 c3            	vpcmpeqd	%ymm3, %ymm0, %k0
+   1e2e7: 62 f1 75 28 76 cb            	vpcmpeqd	%ymm3, %ymm1, %k1
+   1e2ed: c5 f5 4b c0                  	kunpckbw	%k0, %k1, %k0
+   1e2f1: c5 78 93 d0                  	kmovw	%k0, %r10d
+   1e2f5: eb 0c                        	jmp	0x1e303 <void x86_entropy::measure<30u, 16u, 0u>(index_probe::Data<30u, 16u> const&)+0xca3>
+   1e2f7: 66 0f 1f 84 00 00 00 00 00   	nopw	(%rax,%rax)
+   1e300: 45 31 d2                     	xorl	%r10d, %r10d
+   1e303: f3 4d 0f bc d2               	tzcntq	%r10, %r10
+   1e308: 41 83 fa 10                  	cmpl	$0x10, %r10d
+   1e30c: 45 0f 43 d4                  	cmovael	%r12d, %r10d
+   1e310: 44 89 db                     	movl	%r11d, %ebx
+   1e313: c1 eb 04                     	shrl	$0x4, %ebx
+   1e316: 41 83 e3 0f                  	andl	$0xf, %r11d
+   1e31a: 48 89 de                     	movq	%rbx, %rsi
+   1e31d: 48 c1 e6 07                  	shlq	$0x7, %rsi
+   1e321: 4c 01 ee                     	addq	%r13, %rsi
+   1e324: 4e 8b 1c de                  	movq	(%rsi,%r11,8), %r11
+   1e328: 49 81 fb ff ff ff 3f         	cmpq	$0x3fffffff, %r11       # imm = 0x3FFFFFFF
+   1e32f: 0f 87 ab 00 00 00            	ja	0x1e3e0 <void x86_entropy::measure<30u, 16u, 0u>(index_probe::Data<30u, 16u> const&)+0xd80>
+   1e335: 0f af 5c 24 08               	imull	0x8(%rsp), %ebx
+   1e33a: be ff ff ff 00               	movl	$0xffffff, %esi         # imm = 0xFFFFFF
+   1e33f: c5 fb 92 ce                  	kmovd	%esi, %k1
+   1e343: 44 8b 74 1d 38               	movl	0x38(%rbp,%rbx), %r14d
+   1e348: 8b 74 1d 36                  	movl	0x36(%rbp,%rbx), %esi
+   1e34c: 62 f1 7f a9 6f 44 1d 00      	vmovdqu8	(%rbp,%rbx), %ymm0 {%k1} {z}
+   1e354: 62 f1 7f a9 6f 8c 1d 1e 00 00 00     	vmovdqu8	0x1e(%rbp,%rbx), %ymm1 {%k1} {z}
+   1e35f: 49 c1 e6 10                  	shlq	$0x10, %r14
+   1e363: 49 09 f6                     	orq	%rsi, %r14
+   1e366: 8b 74 1d 18                  	movl	0x18(%rbp,%rbx), %esi
+   1e36a: 8b 5c 1d 1a                  	movl	0x1a(%rbp,%rbx), %ebx
+   1e36e: c4 c1 f9 6e d6               	vmovq	%r14, %xmm2
+   1e373: 62 f2 5d 28 7d c7            	vpermt2b	%ymm7, %ymm4, %ymm0
+   1e379: 62 f2 5d 28 7d cf            	vpermt2b	%ymm7, %ymm4, %ymm1
+   1e37f: 48 c1 e3 10                  	shlq	$0x10, %rbx
+   1e383: 48 09 f3                     	orq	%rsi, %rbx
+   1e386: c5 fd 72 f0 06               	vpslld	$0x6, %ymm0, %ymm0
+   1e38b: c5 f5 72 f1 06               	vpslld	$0x6, %ymm1, %ymm1
+   1e390: c4 e1 f9 6e db               	vmovq	%rbx, %xmm3
+   1e395: c5 e1 6c d2                  	vpunpcklqdq	%xmm2, %xmm3, %xmm2 # xmm2 = xmm3[0],xmm2[0]
+   1e399: c4 e2 69 00 d5               	vpshufb	%xmm5, %xmm2, %xmm2
+   1e39e: c4 e3 c9 ce d2 00            	vgf2p8affineqb	$0x0, %xmm2, %xmm6, %xmm2
+   1e3a4: c4 e2 7d 31 da               	vpmovzxbd	%xmm2, %ymm3    # ymm3 = xmm2[0],zero,zero,zero,xmm2[1],zero,zero,zero,xmm2[2],zero,zero,zero,xmm2[3],zero,zero,zero,xmm2[4],zero,zero,zero,xmm2[5],zero,zero,zero,xmm2[6],zero,zero,zero,xmm2[7],zero,zero,zero
+   1e3a9: c5 f9 70 d2 ee               	vpshufd	$0xee, %xmm2, %xmm2     # xmm2 = xmm2[2,3,2,3]
+   1e3ae: c4 e2 7d 31 d2               	vpmovzxbd	%xmm2, %ymm2    # ymm2 = xmm2[0],zero,zero,zero,xmm2[1],zero,zero,zero,xmm2[2],zero,zero,zero,xmm2[3],zero,zero,zero,xmm2[4],zero,zero,zero,xmm2[5],zero,zero,zero,xmm2[6],zero,zero,zero,xmm2[7],zero,zero,zero
+   1e3b3: c5 fd eb c3                  	vpor	%ymm3, %ymm0, %ymm0
+   1e3b7: 62 d2 7d 28 7c db            	vpbroadcastd	%r11d, %ymm3
+   1e3bd: c5 f5 eb ca                  	vpor	%ymm2, %ymm1, %ymm1
+   1e3c1: 62 f1 7d 28 76 c3            	vpcmpeqd	%ymm3, %ymm0, %k0
+   1e3c7: 62 f1 75 28 76 cb            	vpcmpeqd	%ymm3, %ymm1, %k1
+   1e3cd: c5 f5 4b c0                  	kunpckbw	%k0, %k1, %k0
+   1e3d1: c5 78 93 d8                  	kmovw	%k0, %r11d
+   1e3d5: eb 0c                        	jmp	0x1e3e3 <void x86_entropy::measure<30u, 16u, 0u>(index_probe::Data<30u, 16u> const&)+0xd83>
+   1e3d7: 66 0f 1f 84 00 00 00 00 00   	nopw	(%rax,%rax)
+   1e3e0: 45 31 db                     	xorl	%r11d, %r11d
+   1e3e3: f3 4d 0f bc db               	tzcntq	%r11, %r11
+   1e3e8: 48 8b 4c 24 30               	movq	0x30(%rsp), %rcx
+   1e3ed: 41 83 fb 10                  	cmpl	$0x10, %r11d
+   1e3f1: 45 0f 43 dc                  	cmovael	%r12d, %r11d
+   1e3f5: 89 cb                        	movl	%ecx, %ebx
+   1e3f7: c1 eb 04                     	shrl	$0x4, %ebx
+   1e3fa: 83 e1 0f                     	andl	$0xf, %ecx
+   1e3fd: 48 89 de                     	movq	%rbx, %rsi
+   1e400: 48 c1 e6 07                  	shlq	$0x7, %rsi
+   1e404: 4c 01 ee                     	addq	%r13, %rsi
+   1e407: 48 8b 0c ce                  	movq	(%rsi,%rcx,8), %rcx
+   1e40b: 48 81 f9 ff ff ff 3f         	cmpq	$0x3fffffff, %rcx       # imm = 0x3FFFFFFF
+   1e412: 0f 87 a8 00 00 00            	ja	0x1e4c0 <void x86_entropy::measure<30u, 16u, 0u>(index_probe::Data<30u, 16u> const&)+0xe60>
+   1e418: 0f af 5c 24 08               	imull	0x8(%rsp), %ebx
+   1e41d: be ff ff ff 00               	movl	$0xffffff, %esi         # imm = 0xFFFFFF
+   1e422: c5 fb 92 ce                  	kmovd	%esi, %k1
+   1e426: 44 8b 74 1d 38               	movl	0x38(%rbp,%rbx), %r14d
+   1e42b: 8b 74 1d 36                  	movl	0x36(%rbp,%rbx), %esi
+   1e42f: 62 f1 7f a9 6f 44 1d 00      	vmovdqu8	(%rbp,%rbx), %ymm0 {%k1} {z}
+   1e437: 62 f1 7f a9 6f 8c 1d 1e 00 00 00     	vmovdqu8	0x1e(%rbp,%rbx), %ymm1 {%k1} {z}
+   1e442: 49 c1 e6 10                  	shlq	$0x10, %r14
+   1e446: 49 09 f6                     	orq	%rsi, %r14
+   1e449: 8b 74 1d 18                  	movl	0x18(%rbp,%rbx), %esi
+   1e44d: 8b 5c 1d 1a                  	movl	0x1a(%rbp,%rbx), %ebx
+   1e451: c4 c1 f9 6e d6               	vmovq	%r14, %xmm2
+   1e456: 62 f2 5d 28 7d c7            	vpermt2b	%ymm7, %ymm4, %ymm0
+   1e45c: 62 f2 5d 28 7d cf            	vpermt2b	%ymm7, %ymm4, %ymm1
+   1e462: 48 c1 e3 10                  	shlq	$0x10, %rbx
+   1e466: 48 09 f3                     	orq	%rsi, %rbx
+   1e469: c5 fd 72 f0 06               	vpslld	$0x6, %ymm0, %ymm0
+   1e46e: c5 f5 72 f1 06               	vpslld	$0x6, %ymm1, %ymm1
+   1e473: c4 e1 f9 6e db               	vmovq	%rbx, %xmm3
+   1e478: c5 e1 6c d2                  	vpunpcklqdq	%xmm2, %xmm3, %xmm2 # xmm2 = xmm3[0],xmm2[0]
+   1e47c: c4 e2 69 00 d5               	vpshufb	%xmm5, %xmm2, %xmm2
+   1e481: c4 e3 c9 ce d2 00            	vgf2p8affineqb	$0x0, %xmm2, %xmm6, %xmm2
+   1e487: c4 e2 7d 31 da               	vpmovzxbd	%xmm2, %ymm3    # ymm3 = xmm2[0],zero,zero,zero,xmm2[1],zero,zero,zero,xmm2[2],zero,zero,zero,xmm2[3],zero,zero,zero,xmm2[4],zero,zero,zero,xmm2[5],zero,zero,zero,xmm2[6],zero,zero,zero,xmm2[7],zero,zero,zero
+   1e48c: c5 f9 70 d2 ee               	vpshufd	$0xee, %xmm2, %xmm2     # xmm2 = xmm2[2,3,2,3]
+   1e491: c4 e2 7d 31 d2               	vpmovzxbd	%xmm2, %ymm2    # ymm2 = xmm2[0],zero,zero,zero,xmm2[1],zero,zero,zero,xmm2[2],zero,zero,zero,xmm2[3],zero,zero,zero,xmm2[4],zero,zero,zero,xmm2[5],zero,zero,zero,xmm2[6],zero,zero,zero,xmm2[7],zero,zero,zero
+   1e496: c5 fd eb c3                  	vpor	%ymm3, %ymm0, %ymm0
+   1e49a: 62 f2 7d 28 7c d9            	vpbroadcastd	%ecx, %ymm3
+   1e4a0: c5 f5 eb ca                  	vpor	%ymm2, %ymm1, %ymm1
+   1e4a4: 62 f1 7d 28 76 c3            	vpcmpeqd	%ymm3, %ymm0, %k0
+   1e4aa: 62 f1 75 28 76 cb            	vpcmpeqd	%ymm3, %ymm1, %k1
+   1e4b0: c5 f5 4b c0                  	kunpckbw	%k0, %k1, %k0
+   1e4b4: c5 f8 93 c8                  	kmovw	%k0, %ecx
+   1e4b8: eb 08                        	jmp	0x1e4c2 <void x86_entropy::measure<30u, 16u, 0u>(index_probe::Data<30u, 16u> const&)+0xe62>
+   1e4ba: 66 0f 1f 44 00 00            	nopw	(%rax,%rax)
+   1e4c0: 31 c9                        	xorl	%ecx, %ecx
+   1e4c2: f3 48 0f bc c9               	tzcntq	%rcx, %rcx
+   1e4c7: 83 f9 10                     	cmpl	$0x10, %ecx
+   1e4ca: 41 0f 43 cc                  	cmovael	%r12d, %ecx
+   1e4ce: 89 c3                        	movl	%eax, %ebx
+   1e4d0: c1 eb 04                     	shrl	$0x4, %ebx
+   1e4d3: 83 e0 0f                     	andl	$0xf, %eax
+   1e4d6: 48 89 de                     	movq	%rbx, %rsi
+   1e4d9: 48 c1 e6 07                  	shlq	$0x7, %rsi
+   1e4dd: 48 89 4c 24 30               	movq	%rcx, 0x30(%rsp)
+   1e4e2: 4c 01 ee                     	addq	%r13, %rsi
+   1e4e5: 48 8b 04 c6                  	movq	(%rsi,%rax,8), %rax
+   1e4e9: 48 3d ff ff ff 3f            	cmpq	$0x3fffffff, %rax       # imm = 0x3FFFFFFF
+   1e4ef: 0f 86 1b f8 ff ff            	jbe	0x1dd10 <void x86_entropy::measure<30u, 16u, 0u>(index_probe::Data<30u, 16u> const&)+0x6b0>
+   1e4f5: 48 c7 44 24 50 00 00 00 00   	movq	$0x0, 0x50(%rsp)
+   1e4fe: e9 b2 f8 ff ff               	jmp	0x1ddb5 <void x86_entropy::measure<30u, 16u, 0u>(index_probe::Data<30u, 16u> const&)+0x755>
+   1e503: 66 66 66 66 2e 0f 1f 84 00 00 00 00 00       	nopw	%cs:(%rax,%rax)
+   1e510: 44 89 7c 24 10               	movl	%r15d, 0x10(%rsp)
+   1e515: e9 2b f4 ff ff               	jmp	0x1d945 <void x86_entropy::measure<30u, 16u, 0u>(index_probe::Data<30u, 16u> const&)+0x2e5>
+   1e51a: 66 0f 1f 44 00 00            	nopw	(%rax,%rax)
+   1e520: 48 8b 4c 24 30               	movq	0x30(%rsp), %rcx
+   1e525: 44 89 7c 24 10               	movl	%r15d, 0x10(%rsp)
+   1e52a: 89 7c 24 14                  	movl	%edi, 0x14(%rsp)
+   1e52e: 44 89 44 24 18               	movl	%r8d, 0x18(%rsp)
+   1e533: 44 89 4c 24 1c               	movl	%r9d, 0x1c(%rsp)
+   1e538: 44 89 54 24 20               	movl	%r10d, 0x20(%rsp)
+   1e53d: 44 89 5c 24 24               	movl	%r11d, 0x24(%rsp)
+   1e542: 89 4c 24 28                  	movl	%ecx, 0x28(%rsp)
+   1e546: 89 44 24 2c                  	movl	%eax, 0x2c(%rsp)
+   1e54a: e9 f6 f3 ff ff               	jmp	0x1d945 <void x86_entropy::measure<30u, 16u, 0u>(index_probe::Data<30u, 16u> const&)+0x2e5>
+   1e54f: 48 81 c4 98 00 00 00         	addq	$0x98, %rsp
+   1e556: 5b                           	popq	%rbx
+   1e557: 41 5c                        	popq	%r12
+   1e559: 41 5d                        	popq	%r13
+   1e55b: 41 5e                        	popq	%r14
+   1e55d: 41 5f                        	popq	%r15
+   1e55f: 5d                           	popq	%rbp
+   1e560: c5 f8 77                     	vzeroupper
+   1e563: c3                           	retq
+   1e564: 48 8d 3d 2a 9d 00 00         	leaq	0x9d2a(%rip), %rdi      # 0x28295 <strlen@GLIBC_2.2.5+0x28295>
+   1e56b: 48 8d 35 37 9d 00 00         	leaq	0x9d37(%rip), %rsi      # 0x282a9 <strlen@GLIBC_2.2.5+0x282a9>
+   1e572: 48 8d 0d 7c a4 00 00         	leaq	0xa47c(%rip), %rcx      # 0x289f5 <strlen@GLIBC_2.2.5+0x289f5>
+   1e579: ba 17 00 00 00               	movl	$0x17, %edx
+   1e57e: c5 f8 77                     	vzeroupper
+   1e581: e8 1a 2b fe ff               	callq	0x10a0 <__assert_fail@plt>
+   1e586: 66 2e 0f 1f 84 00 00 00 00 00	nopw	%cs:(%rax,%rax)
+
+0000000000026160 <void x86_entropy::measure<38u, 16u, 0u>(index_probe::Data<38u, 16u> const&)>:
+   26160: 55                           	pushq	%rbp
+   26161: 41 57                        	pushq	%r15
+   26163: 41 56                        	pushq	%r14
+   26165: 41 55                        	pushq	%r13
+   26167: 41 54                        	pushq	%r12
+   26169: 53                           	pushq	%rbx
+   2616a: 48 81 ec a8 00 00 00         	subq	$0xa8, %rsp
+   26171: c4 e2 79 59 1d 86 1e 00 00   	vpbroadcastq	0x1e86(%rip), %xmm3 # 0x28000 <strlen@GLIBC_2.2.5+0x28000>
+   2617a: c4 e2 79 78 25 bd 1f 00 00   	vpbroadcastb	0x1fbd(%rip), %xmm4 # 0x28140 <strlen@GLIBC_2.2.5+0x28140>
+   26183: 8b 87 00 22 01 00            	movl	0x12200(%rdi), %eax
+   26189: 49 bb 00 00 00 00 40 00 00 00	movabsq	$0x4000000000, %r11     # imm = 0x4000000000
+   26193: 48 8d af 00 00 01 00         	leaq	0x10000(%rdi), %rbp
+   2619a: 4c 8d 77 01                  	leaq	0x1(%rdi), %r14
+   2619e: ba 10 00 00 00               	movl	$0x10, %edx
+   261a3: 31 c9                        	xorl	%ecx, %ecx
+   261a5: 48 89 7c 24 48               	movq	%rdi, 0x48(%rsp)
+   261aa: 66 0f 1f 44 00 00            	nopw	(%rax,%rax)
+   261b0: 41 89 c9                     	movl	%ecx, %r9d
+   261b3: 41 c1 e9 04                  	shrl	$0x4, %r9d
+   261b7: 89 ce                        	movl	%ecx, %esi
+   261b9: 83 e6 0f                     	andl	$0xf, %esi
+   261bc: 49 c1 e1 07                  	shlq	$0x7, %r9
+   261c0: 4a 8d 7c 0d 00               	leaq	(%rbp,%r9), %rdi
+   261c5: 4c 8b 04 f7                  	movq	(%rdi,%rsi,8), %r8
+   261c9: be 00 00 00 00               	movl	$0x0, %esi
+   261ce: 4e 39 44 0d 00               	cmpq	%r8, (%rbp,%r9)
+   261d3: 0f 84 b7 00 00 00            	je	0x26290 <void x86_entropy::measure<38u, 16u, 0u>(index_probe::Data<38u, 16u> const&)+0x130>
+   261d9: be 01 00 00 00               	movl	$0x1, %esi
+   261de: 4c 39 47 08                  	cmpq	%r8, 0x8(%rdi)
+   261e2: 0f 84 a8 00 00 00            	je	0x26290 <void x86_entropy::measure<38u, 16u, 0u>(index_probe::Data<38u, 16u> const&)+0x130>
+   261e8: be 02 00 00 00               	movl	$0x2, %esi
+   261ed: 4c 39 47 10                  	cmpq	%r8, 0x10(%rdi)
+   261f1: 0f 84 99 00 00 00            	je	0x26290 <void x86_entropy::measure<38u, 16u, 0u>(index_probe::Data<38u, 16u> const&)+0x130>
+   261f7: be 03 00 00 00               	movl	$0x3, %esi
+   261fc: 4c 39 47 18                  	cmpq	%r8, 0x18(%rdi)
+   26200: 0f 84 8a 00 00 00            	je	0x26290 <void x86_entropy::measure<38u, 16u, 0u>(index_probe::Data<38u, 16u> const&)+0x130>
+   26206: be 04 00 00 00               	movl	$0x4, %esi
+   2620b: 4c 39 47 20                  	cmpq	%r8, 0x20(%rdi)
+   2620f: 74 7f                        	je	0x26290 <void x86_entropy::measure<38u, 16u, 0u>(index_probe::Data<38u, 16u> const&)+0x130>
+   26211: be 05 00 00 00               	movl	$0x5, %esi
+   26216: 4c 39 47 28                  	cmpq	%r8, 0x28(%rdi)
+   2621a: 74 74                        	je	0x26290 <void x86_entropy::measure<38u, 16u, 0u>(index_probe::Data<38u, 16u> const&)+0x130>
+   2621c: be 06 00 00 00               	movl	$0x6, %esi
+   26221: 4c 39 47 30                  	cmpq	%r8, 0x30(%rdi)
+   26225: 74 69                        	je	0x26290 <void x86_entropy::measure<38u, 16u, 0u>(index_probe::Data<38u, 16u> const&)+0x130>
+   26227: be 07 00 00 00               	movl	$0x7, %esi
+   2622c: 4c 39 47 38                  	cmpq	%r8, 0x38(%rdi)
+   26230: 74 5e                        	je	0x26290 <void x86_entropy::measure<38u, 16u, 0u>(index_probe::Data<38u, 16u> const&)+0x130>
+   26232: be 08 00 00 00               	movl	$0x8, %esi
+   26237: 4c 39 47 40                  	cmpq	%r8, 0x40(%rdi)
+   2623b: 74 53                        	je	0x26290 <void x86_entropy::measure<38u, 16u, 0u>(index_probe::Data<38u, 16u> const&)+0x130>
+   2623d: be 09 00 00 00               	movl	$0x9, %esi
+   26242: 4c 39 47 48                  	cmpq	%r8, 0x48(%rdi)
+   26246: 74 48                        	je	0x26290 <void x86_entropy::measure<38u, 16u, 0u>(index_probe::Data<38u, 16u> const&)+0x130>
+   26248: be 0a 00 00 00               	movl	$0xa, %esi
+   2624d: 4c 39 47 50                  	cmpq	%r8, 0x50(%rdi)
+   26251: 74 3d                        	je	0x26290 <void x86_entropy::measure<38u, 16u, 0u>(index_probe::Data<38u, 16u> const&)+0x130>
+   26253: be 0b 00 00 00               	movl	$0xb, %esi
+   26258: 4c 39 47 58                  	cmpq	%r8, 0x58(%rdi)
+   2625c: 74 32                        	je	0x26290 <void x86_entropy::measure<38u, 16u, 0u>(index_probe::Data<38u, 16u> const&)+0x130>
+   2625e: be 0c 00 00 00               	movl	$0xc, %esi
+   26263: 4c 39 47 60                  	cmpq	%r8, 0x60(%rdi)
+   26267: 74 27                        	je	0x26290 <void x86_entropy::measure<38u, 16u, 0u>(index_probe::Data<38u, 16u> const&)+0x130>
+   26269: be 0d 00 00 00               	movl	$0xd, %esi
+   2626e: 4c 39 47 68                  	cmpq	%r8, 0x68(%rdi)
+   26272: 74 1c                        	je	0x26290 <void x86_entropy::measure<38u, 16u, 0u>(index_probe::Data<38u, 16u> const&)+0x130>
+   26274: be 0e 00 00 00               	movl	$0xe, %esi
+   26279: 4c 39 47 70                  	cmpq	%r8, 0x70(%rdi)
+   2627d: 74 11                        	je	0x26290 <void x86_entropy::measure<38u, 16u, 0u>(index_probe::Data<38u, 16u> const&)+0x130>
+   2627f: 31 f6                        	xorl	%esi, %esi
+   26281: 4c 39 47 78                  	cmpq	%r8, 0x78(%rdi)
+   26285: 40 0f 95 c6                  	setne	%sil
+   26289: 83 c6 0f                     	addl	$0xf, %esi
+   2628c: 0f 1f 40 00                  	nopl	(%rax)
+   26290: 41 89 c8                     	movl	%ecx, %r8d
+   26293: 44 89 c7                     	movl	%r8d, %edi
+   26296: c1 ef 04                     	shrl	$0x4, %edi
+   26299: 41 83 e0 0f                  	andl	$0xf, %r8d
+   2629d: 49 89 f9                     	movq	%rdi, %r9
+   262a0: 49 c1 e1 07                  	shlq	$0x7, %r9
+   262a4: 49 01 e9                     	addq	%rbp, %r9
+   262a7: 4f 8b 04 c1                  	movq	(%r9,%r8,8), %r8
+   262ab: 41 b9 10 00 00 00            	movl	$0x10, %r9d
+   262b1: 4d 39 d8                     	cmpq	%r11, %r8
+   262b4: 0f 83 9d 00 00 00            	jae	0x26357 <void x86_entropy::measure<38u, 16u, 0u>(index_probe::Data<38u, 16u> const&)+0x1f7>
+   262ba: 0f af f8                     	imull	%eax, %edi
+   262bd: 45 89 c1                     	movl	%r8d, %r9d
+   262c0: 49 c1 e8 06                  	shrq	$0x6, %r8
+   262c4: 41 80 e1 3f                  	andb	$0x3f, %r9b
+   262c8: 62 d2 7d 28 7c c8            	vpbroadcastd	%r8d, %ymm1
+   262ce: 62 d2 7d 08 7a c1            	vpbroadcastb	%r9d, %xmm0
+   262d4: 45 8b 4c 3e 22               	movl	0x22(%r14,%rdi), %r9d
+   262d9: 45 8b 44 3e 20               	movl	0x20(%r14,%rdi), %r8d
+   262de: 45 8b 54 3e 48               	movl	0x48(%r14,%rdi), %r10d
+   262e3: c4 e3 f9 ce c3 00            	vgf2p8affineqb	$0x0, %xmm3, %xmm0, %xmm0
+   262e9: 49 c1 e1 10                  	shlq	$0x10, %r9
+   262ed: 49 c1 e2 10                  	shlq	$0x10, %r10
+   262f1: 4d 09 c1                     	orq	%r8, %r9
+   262f4: 62 d2 fd 08 7c d1            	vpbroadcastq	%r9, %xmm2
+   262fa: 45 8b 4c 3e 46               	movl	0x46(%r14,%rdi), %r9d
+   262ff: c4 e3 e1 ce d2 00            	vgf2p8affineqb	$0x0, %xmm2, %xmm3, %xmm2
+   26305: c5 e9 ef d0                  	vpxor	%xmm0, %xmm2, %xmm2
+   26309: 4d 09 ca                     	orq	%r9, %r10
+   2630c: 62 f3 6d 08 3e cc 01         	vpcmpltub	%xmm4, %xmm2, %k1
+   26313: 62 d1 75 29 76 04 3e         	vpcmpeqd	(%r14,%rdi), %ymm1, %k0 {%k1}
+   2631a: 62 d2 fd 08 7c d2            	vpbroadcastq	%r10, %xmm2
+   26320: c4 e3 e1 ce d2 00            	vgf2p8affineqb	$0x0, %xmm2, %xmm3, %xmm2
+   26326: c5 e9 ef c0                  	vpxor	%xmm0, %xmm2, %xmm0
+   2632a: 62 f3 7d 08 3e cc 01         	vpcmpltub	%xmm4, %xmm0, %k1
+   26331: 62 d1 75 29 76 8c 3e 26 00 00 00     	vpcmpeqd	0x26(%r14,%rdi), %ymm1, %k1 {%k1}
+   2633c: c5 79 93 c0                  	kmovb	%k0, %r8d
+   26340: c5 f9 93 f9                  	kmovb	%k1, %edi
+   26344: c1 e7 08                     	shll	$0x8, %edi
+   26347: 4c 09 c7                     	orq	%r8, %rdi
+   2634a: f3 4c 0f bc cf               	tzcntq	%rdi, %r9
+   2634f: 41 83 f9 10                  	cmpl	$0x10, %r9d
+   26353: 44 0f 43 ca                  	cmovael	%edx, %r9d
+   26357: 41 39 f1                     	cmpl	%esi, %r9d
+   2635a: 0f 85 6b 0c 00 00            	jne	0x26fcb <void x86_entropy::measure<38u, 16u, 0u>(index_probe::Data<38u, 16u> const&)+0xe6b>
+   26360: ff c1                        	incl	%ecx
+   26362: 81 f9 00 04 00 00            	cmpl	$0x400, %ecx            # imm = 0x400
+   26368: 0f 85 42 fe ff ff            	jne	0x261b0 <void x86_entropy::measure<38u, 16u, 0u>(index_probe::Data<38u, 16u> const&)+0x50>
+   2636e: 83 3d 27 4d 00 00 00         	cmpl	$0x0, 0x4d27(%rip)      # 0x2b09c <tiles::repeats>
+   26375: 66 c7 44 24 0e 01 00         	movw	$0x1, 0xe(%rsp)
+   2637c: 0f 84 34 0c 00 00            	je	0x26fb6 <void x86_entropy::measure<38u, 16u, 0u>(index_probe::Data<38u, 16u> const&)+0xe56>
+   26382: 49 bd 95 ef 82 de 43 25 34 d1	movabsq	$-0x2ecbdabc217d106b, %r13 # imm = 0xD1342543DE82EF95
+   2638c: b8 01 00 00 00               	movl	$0x1, %eax
+   26391: 48 bb 15 7c 4a 7f b9 79 37 9e	movabsq	$-0x61c8864680b583eb, %rbx # imm = 0x9E3779B97F4A7C15
+   2639b: 49 bf 03 6f ff 9d e9 e4 33 21	movabsq	$0x2133e4e99dff6f03, %r15 # imm = 0x2133E4E99DFF6F03
+   263a5: 48 c7 44 24 20 00 00 00 00   	movq	$0x0, 0x20(%rsp)
+   263ae: eb 17                        	jmp	0x263c7 <void x86_entropy::measure<38u, 16u, 0u>(index_probe::Data<38u, 16u> const&)+0x267>
+   263b0: 48 8b 54 24 20               	movq	0x20(%rsp), %rdx
+   263b5: 48 ff c2                     	incq	%rdx
+   263b8: 48 89 54 24 20               	movq	%rdx, 0x20(%rsp)
+   263bd: 48 83 fa 02                  	cmpq	$0x2, %rdx
+   263c1: 0f 84 ef 0b 00 00            	je	0x26fb6 <void x86_entropy::measure<38u, 16u, 0u>(index_probe::Data<38u, 16u> const&)+0xe56>
+   263c7: 85 c0                        	testl	%eax, %eax
+   263c9: b8 00 00 00 00               	movl	$0x0, %eax
+   263ce: 74 e0                        	je	0x263b0 <void x86_entropy::measure<38u, 16u, 0u>(index_probe::Data<38u, 16u> const&)+0x250>
+   263d0: 48 8b 44 24 20               	movq	0x20(%rsp), %rax
+   263d5: c5 fb 10 05 2b 1c 00 00      	vmovsd	0x1c2b(%rip), %xmm0     # 0x28008 <strlen@GLIBC_2.2.5+0x28008>
+   263dd: 48 8d 0d 76 1f 00 00         	leaq	0x1f76(%rip), %rcx      # 0x2835a <strlen@GLIBC_2.2.5+0x2835a>
+   263e4: 0f b6 44 04 0e               	movzbl	0xe(%rsp,%rax), %eax
+   263e9: c5 fb 92 c8                  	kmovd	%eax, %k1
+   263ed: 89 44 24 40                  	movl	%eax, 0x40(%rsp)
+   263f1: 84 c0                        	testb	%al, %al
+   263f3: 48 8d 05 59 1f 00 00         	leaq	0x1f59(%rip), %rax      # 0x28353 <strlen@GLIBC_2.2.5+0x28353>
+   263fa: 62 f1 ff 09 10 05 0c 1c 00 00	vmovsd	0x1c0c(%rip), %xmm0 {%k1} # 0x28010 <strlen@GLIBC_2.2.5+0x28010>
+   26404: 48 0f 45 c8                  	cmovneq	%rax, %rcx
+   26408: 45 31 e4                     	xorl	%r12d, %r12d
+   2640b: 48 89 4c 24 78               	movq	%rcx, 0x78(%rsp)
+   26410: c5 f9 29 84 24 90 00 00 00   	vmovapd	%xmm0, 0x90(%rsp)
+   26419: e9 d0 00 00 00               	jmp	0x264ee <void x86_entropy::measure<38u, 16u, 0u>(index_probe::Data<38u, 16u> const&)+0x38e>
+   2641e: 66 90                        	nop
+   26420: 41 89 fd                     	movl	%edi, %r13d
+   26423: 45 89 c7                     	movl	%r8d, %r15d
+   26426: 44 89 c8                     	movl	%r9d, %eax
+   26429: 48 89 44 24 18               	movq	%rax, 0x18(%rsp)
+   2642e: c5 f8 77                     	vzeroupper
+   26431: e8 ca ac fd ff               	callq	0x1100 <_ZNSt6chrono3_V212steady_clock3nowEv@plt>
+   26436: 48 2b 84 24 80 00 00 00      	subq	0x80(%rsp), %rax
+   2643e: 8b 54 24 18                  	movl	0x18(%rsp), %edx
+   26442: 8b 74 24 10                  	movl	0x10(%rsp), %esi
+   26446: 44 89 e1                     	movl	%r12d, %ecx
+   26449: 48 03 0d 60 4c 00 00         	addq	0x4c60(%rip), %rcx      # 0x2b0b0 <tiles::observed>
+   26450: 44 8b 64 24 44               	movl	0x44(%rsp), %r12d
+   26455: 4c 8b 4c 24 78               	movq	0x78(%rsp), %r9
+   2645a: 48 8d 3d d5 1e 00 00         	leaq	0x1ed5(%rip), %rdi      # 0x28336 <strlen@GLIBC_2.2.5+0x28336>
+   26461: 45 31 c0                     	xorl	%r8d, %r8d
+   26464: c4 e1 83 2a c0               	vcvtsi2sd	%rax, %xmm15, %xmm0
+   26469: 62 f1 07 08 7b 0d 25 4c 00 00	vcvtusi2sdl	0x4c25(%rip), %xmm15, %xmm1 # 0x2b098 <tiles::iterations>
+   26473: 48 01 d6                     	addq	%rdx, %rsi
+   26476: 44 89 fa                     	movl	%r15d, %edx
+   26479: b0 01                        	movb	$0x1, %al
+   2647b: 44 89 24 24                  	movl	%r12d, (%rsp)
+   2647f: 48 01 f2                     	addq	%rsi, %rdx
+   26482: 8b 74 24 30                  	movl	0x30(%rsp), %esi
+   26486: c5 f3 59 8c 24 90 00 00 00   	vmulsd	0x90(%rsp), %xmm1, %xmm1
+   2648f: 48 01 d6                     	addq	%rdx, %rsi
+   26492: 44 89 ea                     	movl	%r13d, %edx
+   26495: 48 01 f2                     	addq	%rsi, %rdx
+   26498: 8b 74 24 38                  	movl	0x38(%rsp), %esi
+   2649c: 48 01 d6                     	addq	%rdx, %rsi
+   2649f: 8b 54 24 28                  	movl	0x28(%rsp), %edx
+   264a3: c5 fb 5e c1                  	vdivsd	%xmm1, %xmm0, %xmm0
+   264a7: 48 01 f2                     	addq	%rsi, %rdx
+   264aa: be 26 00 00 00               	movl	$0x26, %esi
+   264af: 48 01 ca                     	addq	%rcx, %rdx
+   264b2: b9 ff ff 00 00               	movl	$0xffff, %ecx           # imm = 0xFFFF
+   264b7: 48 89 15 f2 4b 00 00         	movq	%rdx, 0x4bf2(%rip)      # 0x2b0b0 <tiles::observed>
+   264be: ba 10 00 00 00               	movl	$0x10, %edx
+   264c3: e8 78 ab fd ff               	callq	0x1040 <printf@plt>
+   264c8: 8b 05 ce 4b 00 00            	movl	0x4bce(%rip), %eax      # 0x2b09c <tiles::repeats>
+   264ce: 41 ff c4                     	incl	%r12d
+   264d1: 49 bd 95 ef 82 de 43 25 34 d1	movabsq	$-0x2ecbdabc217d106b, %r13 # imm = 0xD1342543DE82EF95
+   264db: 49 bf 03 6f ff 9d e9 e4 33 21	movabsq	$0x2133e4e99dff6f03, %r15 # imm = 0x2133E4E99DFF6F03
+   264e5: 41 39 c4                     	cmpl	%eax, %r12d
+   264e8: 0f 83 c2 fe ff ff            	jae	0x263b0 <void x86_entropy::measure<38u, 16u, 0u>(index_probe::Data<38u, 16u> const&)+0x250>
+   264ee: c5 fe 6f 05 ca 1c 00 00      	vmovdqu	0x1cca(%rip), %ymm0     # 0x281c0 <strlen@GLIBC_2.2.5+0x281c0>
+   264f6: 48 8b 44 24 48               	movq	0x48(%rsp), %rax
+   264fb: c4 e2 79 59 1d fc 1a 00 00   	vpbroadcastq	0x1afc(%rip), %xmm3 # 0x28000 <strlen@GLIBC_2.2.5+0x28000>
+   26504: c4 e2 79 78 25 33 1c 00 00   	vpbroadcastb	0x1c33(%rip), %xmm4 # 0x28140 <strlen@GLIBC_2.2.5+0x28140>
+   2650d: 44 89 64 24 44               	movl	%r12d, 0x44(%rsp)
+   26512: 49 bc 00 00 00 00 40 00 00 00	movabsq	$0x4000000000, %r12     # imm = 0x4000000000
+   2651c: 31 c9                        	xorl	%ecx, %ecx
+   2651e: 31 d2                        	xorl	%edx, %edx
+   26520: c5 fe 7f 44 24 50            	vmovdqu	%ymm0, 0x50(%rsp)
+   26526: 8b 80 00 22 01 00            	movl	0x12200(%rax), %eax
+   2652c: eb 15                        	jmp	0x26543 <void x86_entropy::measure<38u, 16u, 0u>(index_probe::Data<38u, 16u> const&)+0x3e3>
+   2652e: 66 90                        	nop
+   26530: 48 ff c2                     	incq	%rdx
+   26533: 4c 01 e9                     	addq	%r13, %rcx
+   26536: 48 81 fa 00 01 00 00         	cmpq	$0x100, %rdx            # imm = 0x100
+   2653d: 0f 84 fd 00 00 00            	je	0x26640 <void x86_entropy::measure<38u, 16u, 0u>(index_probe::Data<38u, 16u> const&)+0x4e0>
+   26543: 48 89 ce                     	movq	%rcx, %rsi
+   26546: 31 ff                        	xorl	%edi, %edi
+   26548: eb 22                        	jmp	0x2656c <void x86_entropy::measure<38u, 16u, 0u>(index_probe::Data<38u, 16u> const&)+0x40c>
+   2654a: 66 0f 1f 44 00 00            	nopw	(%rax,%rax)
+   26550: 49 31 f1                     	xorq	%rsi, %r9
+   26553: 4c 01 fe                     	addq	%r15, %rsi
+   26556: 4c 0f af cb                  	imulq	%rbx, %r9
+   2655a: 49 c1 e9 36                  	shrq	$0x36, %r9
+   2655e: 44 89 4c bc 50               	movl	%r9d, 0x50(%rsp,%rdi,4)
+   26563: 48 ff c7                     	incq	%rdi
+   26566: 48 83 ff 08                  	cmpq	$0x8, %rdi
+   2656a: 74 c4                        	je	0x26530 <void x86_entropy::measure<38u, 16u, 0u>(index_probe::Data<38u, 16u> const&)+0x3d0>
+   2656c: 44 8b 4c bc 50               	movl	0x50(%rsp,%rdi,4), %r9d
+   26571: 45 89 c8                     	movl	%r9d, %r8d
+   26574: 41 c1 e8 04                  	shrl	$0x4, %r8d
+   26578: 41 83 e1 0f                  	andl	$0xf, %r9d
+   2657c: 4d 89 c2                     	movq	%r8, %r10
+   2657f: 49 c1 e2 07                  	shlq	$0x7, %r10
+   26583: 49 01 ea                     	addq	%rbp, %r10
+   26586: 4f 8b 14 ca                  	movq	(%r10,%r9,8), %r10
+   2658a: 41 b9 10 00 00 00            	movl	$0x10, %r9d
+   26590: 4d 39 e2                     	cmpq	%r12, %r10
+   26593: 73 bb                        	jae	0x26550 <void x86_entropy::measure<38u, 16u, 0u>(index_probe::Data<38u, 16u> const&)+0x3f0>
+   26595: 44 0f af c0                  	imull	%eax, %r8d
+   26599: 45 89 d1                     	movl	%r10d, %r9d
+   2659c: 49 c1 ea 06                  	shrq	$0x6, %r10
+   265a0: 41 80 e1 3f                  	andb	$0x3f, %r9b
+   265a4: 62 d2 7d 28 7c ca            	vpbroadcastd	%r10d, %ymm1
+   265aa: 62 d2 7d 08 7a c1            	vpbroadcastb	%r9d, %xmm0
+   265b0: 47 8b 54 06 22               	movl	0x22(%r14,%r8), %r10d
+   265b5: 47 8b 4c 06 20               	movl	0x20(%r14,%r8), %r9d
+   265ba: 47 8b 5c 06 48               	movl	0x48(%r14,%r8), %r11d
+   265bf: c4 e3 f9 ce c3 00            	vgf2p8affineqb	$0x0, %xmm3, %xmm0, %xmm0
+   265c5: 49 c1 e2 10                  	shlq	$0x10, %r10
+   265c9: 49 c1 e3 10                  	shlq	$0x10, %r11
+   265cd: 4d 09 ca                     	orq	%r9, %r10
+   265d0: 62 d2 fd 08 7c d2            	vpbroadcastq	%r10, %xmm2
+   265d6: 47 8b 54 06 46               	movl	0x46(%r14,%r8), %r10d
+   265db: c4 e3 e1 ce d2 00            	vgf2p8affineqb	$0x0, %xmm2, %xmm3, %xmm2
+   265e1: c5 e9 ef d0                  	vpxor	%xmm0, %xmm2, %xmm2
+   265e5: 4d 09 d3                     	orq	%r10, %r11
+   265e8: 62 f3 6d 08 3e cc 01         	vpcmpltub	%xmm4, %xmm2, %k1
+   265ef: 62 91 75 29 76 04 06         	vpcmpeqd	(%r14,%r8), %ymm1, %k0 {%k1}
+   265f6: 62 d2 fd 08 7c d3            	vpbroadcastq	%r11, %xmm2
+   265fc: c4 e3 e1 ce d2 00            	vgf2p8affineqb	$0x0, %xmm2, %xmm3, %xmm2
+   26602: c5 e9 ef c0                  	vpxor	%xmm0, %xmm2, %xmm0
+   26606: 62 f3 7d 08 3e cc 01         	vpcmpltub	%xmm4, %xmm0, %k1
+   2660d: 62 91 75 29 76 8c 06 26 00 00 00     	vpcmpeqd	0x26(%r14,%r8), %ymm1, %k1 {%k1}
+   26618: c5 79 93 c8                  	kmovb	%k0, %r9d
+   2661c: c5 79 93 c1                  	kmovb	%k1, %r8d
+   26620: 41 c1 e0 08                  	shll	$0x8, %r8d
+   26624: 4d 09 c8                     	orq	%r9, %r8
+   26627: f3 4d 0f bc c8               	tzcntq	%r8, %r9
+   2662c: 41 b8 10 00 00 00            	movl	$0x10, %r8d
+   26632: 41 83 f9 10                  	cmpl	$0x10, %r9d
+   26636: 45 0f 43 c8                  	cmovael	%r8d, %r9d
+   2663a: e9 11 ff ff ff               	jmp	0x26550 <void x86_entropy::measure<38u, 16u, 0u>(index_probe::Data<38u, 16u> const&)+0x3f0>
+   2663f: 90                           	nop
+   26640: c5 f8 77                     	vzeroupper
+   26643: e8 b8 aa fd ff               	callq	0x1100 <_ZNSt6chrono3_V212steady_clock3nowEv@plt>
+   26648: 8b 4c 24 58                  	movl	0x58(%rsp), %ecx
+   2664c: 48 89 84 24 80 00 00 00      	movq	%rax, 0x80(%rsp)
+   26654: 8b 05 3e 4a 00 00            	movl	0x4a3e(%rip), %eax      # 0x2b098 <tiles::iterations>
+   2665a: 44 8b 64 24 50               	movl	0x50(%rsp), %r12d
+   2665f: 44 8b 4c 24 54               	movl	0x54(%rsp), %r9d
+   26664: 44 8b 44 24 5c               	movl	0x5c(%rsp), %r8d
+   26669: 8b 7c 24 64                  	movl	0x64(%rsp), %edi
+   2666d: 48 89 4c 24 10               	movq	%rcx, 0x10(%rsp)
+   26672: 8b 4c 24 60                  	movl	0x60(%rsp), %ecx
+   26676: 48 89 4c 24 30               	movq	%rcx, 0x30(%rsp)
+   2667b: 8b 4c 24 68                  	movl	0x68(%rsp), %ecx
+   2667f: 48 89 4c 24 38               	movq	%rcx, 0x38(%rsp)
+   26684: 8b 4c 24 6c                  	movl	0x6c(%rsp), %ecx
+   26688: 48 89 4c 24 28               	movq	%rcx, 0x28(%rsp)
+   2668d: 48 85 c0                     	testq	%rax, %rax
+   26690: 0f 84 8a fd ff ff            	je	0x26420 <void x86_entropy::measure<38u, 16u, 0u>(index_probe::Data<38u, 16u> const&)+0x2c0>
+   26696: 48 8b 4c 24 48               	movq	0x48(%rsp), %rcx
+   2669b: c4 e2 79 59 1d 5c 19 00 00   	vpbroadcastq	0x195c(%rip), %xmm3 # 0x28000 <strlen@GLIBC_2.2.5+0x28000>
+   266a4: c4 e2 79 78 25 93 1a 00 00   	vpbroadcastb	0x1a93(%rip), %xmm4 # 0x28140 <strlen@GLIBC_2.2.5+0x28140>
+   266ad: 80 7c 24 40 00               	cmpb	$0x0, 0x40(%rsp)
+   266b2: 8b 89 00 22 01 00            	movl	0x12200(%rcx), %ecx
+   266b8: 89 4c 24 08                  	movl	%ecx, 0x8(%rsp)
+   266bc: 0f 84 fe 00 00 00            	je	0x267c0 <void x86_entropy::measure<38u, 16u, 0u>(index_probe::Data<38u, 16u> const&)+0x660>
+   266c2: 49 bd 00 00 00 00 40 00 00 00	movabsq	$0x4000000000, %r13     # imm = 0x4000000000
+   266cc: 31 d2                        	xorl	%edx, %edx
+   266ce: eb 21                        	jmp	0x266f1 <void x86_entropy::measure<38u, 16u, 0u>(index_probe::Data<38u, 16u> const&)+0x591>
+   266d0: 49 31 d4                     	xorq	%rdx, %r12
+   266d3: 48 be 95 ef 82 de 43 25 34 d1	movabsq	$-0x2ecbdabc217d106b, %rsi # imm = 0xD1342543DE82EF95
+   266dd: 4c 0f af e3                  	imulq	%rbx, %r12
+   266e1: 48 01 f2                     	addq	%rsi, %rdx
+   266e4: 49 c1 ec 36                  	shrq	$0x36, %r12
+   266e8: 48 ff c8                     	decq	%rax
+   266eb: 0f 84 2f fd ff ff            	je	0x26420 <void x86_entropy::measure<38u, 16u, 0u>(index_probe::Data<38u, 16u> const&)+0x2c0>
+   266f1: 44 89 e6                     	movl	%r12d, %esi
+   266f4: c1 ee 04                     	shrl	$0x4, %esi
+   266f7: 41 83 e4 0f                  	andl	$0xf, %r12d
+   266fb: 49 89 f2                     	movq	%rsi, %r10
+   266fe: 49 c1 e2 07                  	shlq	$0x7, %r10
+   26702: 49 01 ea                     	addq	%rbp, %r10
+   26705: 4f 8b 14 e2                  	movq	(%r10,%r12,8), %r10
+   26709: 41 bc 10 00 00 00            	movl	$0x10, %r12d
+   2670f: 4d 39 ea                     	cmpq	%r13, %r10
+   26712: 73 bc                        	jae	0x266d0 <void x86_entropy::measure<38u, 16u, 0u>(index_probe::Data<38u, 16u> const&)+0x570>
+   26714: 0f af 74 24 08               	imull	0x8(%rsp), %esi
+   26719: 45 89 d3                     	movl	%r10d, %r11d
+   2671c: 49 c1 ea 06                  	shrq	$0x6, %r10
+   26720: 41 80 e3 3f                  	andb	$0x3f, %r11b
+   26724: 62 d2 7d 28 7c ca            	vpbroadcastd	%r10d, %ymm1
+   2672a: 62 d2 7d 08 7a c3            	vpbroadcastb	%r11d, %xmm0
+   26730: c4 e3 f9 ce c3 00            	vgf2p8affineqb	$0x0, %xmm3, %xmm0, %xmm0
+   26736: 45 8b 5c 36 22               	movl	0x22(%r14,%rsi), %r11d
+   2673b: 45 8b 54 36 20               	movl	0x20(%r14,%rsi), %r10d
+   26740: 45 8b 64 36 48               	movl	0x48(%r14,%rsi), %r12d
+   26745: 49 c1 e3 10                  	shlq	$0x10, %r11
+   26749: 49 c1 e4 10                  	shlq	$0x10, %r12
+   2674d: 4d 09 d3                     	orq	%r10, %r11
+   26750: 62 d2 fd 08 7c d3            	vpbroadcastq	%r11, %xmm2
+   26756: 45 8b 5c 36 46               	movl	0x46(%r14,%rsi), %r11d
+   2675b: c4 e3 e1 ce d2 00            	vgf2p8affineqb	$0x0, %xmm2, %xmm3, %xmm2
+   26761: c5 e9 ef d0                  	vpxor	%xmm0, %xmm2, %xmm2
+   26765: 4d 09 dc                     	orq	%r11, %r12
+   26768: 62 f3 6d 08 3e cc 01         	vpcmpltub	%xmm4, %xmm2, %k1
+   2676f: 62 d1 75 29 76 04 36         	vpcmpeqd	(%r14,%rsi), %ymm1, %k0 {%k1}
+   26776: 62 d2 fd 08 7c d4            	vpbroadcastq	%r12, %xmm2
+   2677c: c4 e3 e1 ce d2 00            	vgf2p8affineqb	$0x0, %xmm2, %xmm3, %xmm2
+   26782: c5 e9 ef c0                  	vpxor	%xmm0, %xmm2, %xmm0
+   26786: 62 f3 7d 08 3e cc 01         	vpcmpltub	%xmm4, %xmm0, %k1
+   2678d: 62 d1 75 29 76 8c 36 26 00 00 00     	vpcmpeqd	0x26(%r14,%rsi), %ymm1, %k1 {%k1}
+   26798: c5 79 93 d0                  	kmovb	%k0, %r10d
+   2679c: c5 f9 93 f1                  	kmovb	%k1, %esi
+   267a0: c1 e6 08                     	shll	$0x8, %esi
+   267a3: 4c 09 d6                     	orq	%r10, %rsi
+   267a6: f3 4c 0f bc e6               	tzcntq	%rsi, %r12
+   267ab: be 10 00 00 00               	movl	$0x10, %esi
+   267b0: 41 83 fc 10                  	cmpl	$0x10, %r12d
+   267b4: 44 0f 43 e6                  	cmovael	%esi, %r12d
+   267b8: e9 13 ff ff ff               	jmp	0x266d0 <void x86_entropy::measure<38u, 16u, 0u>(index_probe::Data<38u, 16u> const&)+0x570>
+   267bd: 0f 1f 00                     	nopl	(%rax)
+   267c0: 48 f7 d8                     	negq	%rax
+   267c3: ba dc 78 02 00               	movl	$0x278dc, %edx          # imm = 0x278DC
+   267c8: 31 f6                        	xorl	%esi, %esi
+   267ca: 48 89 84 24 88 00 00 00      	movq	%rax, 0x88(%rsp)
+   267d2: e9 fa 00 00 00               	jmp	0x268d1 <void x86_entropy::measure<38u, 16u, 0u>(index_probe::Data<38u, 16u> const&)+0x771>
+   267d7: 66 0f 1f 84 00 00 00 00 00   	nopw	(%rax,%rax)
+   267e0: 48 8b 44 24 18               	movq	0x18(%rsp), %rax
+   267e5: 44 8d 82 5b 25 fe ff         	leal	-0x1daa5(%rdx), %r8d
+   267ec: 49 b9 95 ef 82 de 43 25 34 d1	movabsq	$-0x2ecbdabc217d106b, %r9 # imm = 0xD1342543DE82EF95
+   267f6: 4c 8b 54 24 10               	movq	0x10(%rsp), %r10
+   267fb: 49 31 f4                     	xorq	%rsi, %r12
+   267fe: 4d 0f af c1                  	imulq	%r9, %r8
+   26802: 4c 0f af e3                  	imulq	%rbx, %r12
+   26806: 4c 01 ce                     	addq	%r9, %rsi
+   26809: 49 c1 ec 36                  	shrq	$0x36, %r12
+   2680d: 4c 31 c0                     	xorq	%r8, %rax
+   26810: 44 8d 82 92 c3 fe ff         	leal	-0x13c6e(%rdx), %r8d
+   26817: 4d 0f af c1                  	imulq	%r9, %r8
+   2681b: 48 0f af c3                  	imulq	%rbx, %rax
+   2681f: 4d 31 c2                     	xorq	%r8, %r10
+   26822: 44 8d 82 c9 61 ff ff         	leal	-0x9e37(%rdx), %r8d
+   26829: 48 c1 e8 36                  	shrq	$0x36, %rax
+   2682d: 4d 0f af c1                  	imulq	%r9, %r8
+   26831: 4c 0f af d3                  	imulq	%rbx, %r10
+   26835: 4d 31 c7                     	xorq	%r8, %r15
+   26838: 41 89 d0                     	movl	%edx, %r8d
+   2683b: 4d 0f af c1                  	imulq	%r9, %r8
+   2683f: 49 c1 ea 36                  	shrq	$0x36, %r10
+   26843: 4c 0f af fb                  	imulq	%rbx, %r15
+   26847: 4c 89 54 24 10               	movq	%r10, 0x10(%rsp)
+   2684c: 4c 31 c1                     	xorq	%r8, %rcx
+   2684f: 44 8d 82 37 9e 00 00         	leal	0x9e37(%rdx), %r8d
+   26856: 48 0f af cb                  	imulq	%rbx, %rcx
+   2685a: 4d 0f af c1                  	imulq	%r9, %r8
+   2685e: 49 c1 ef 36                  	shrq	$0x36, %r15
+   26862: 48 c1 e9 36                  	shrq	$0x36, %rcx
+   26866: 4d 31 c5                     	xorq	%r8, %r13
+   26869: 44 8d 82 6e 3c 01 00         	leal	0x13c6e(%rdx), %r8d
+   26870: 48 89 4c 24 30               	movq	%rcx, 0x30(%rsp)
+   26875: 8d 8a a5 da 01 00            	leal	0x1daa5(%rdx), %ecx
+   2687b: 4d 0f af c1                  	imulq	%r9, %r8
+   2687f: 4c 0f af eb                  	imulq	%rbx, %r13
+   26883: 49 0f af c9                  	imulq	%r9, %rcx
+   26887: 41 89 c1                     	movl	%eax, %r9d
+   2688a: 4d 31 c3                     	xorq	%r8, %r11
+   2688d: 49 c1 ed 36                  	shrq	$0x36, %r13
+   26891: 45 89 f8                     	movl	%r15d, %r8d
+   26894: 48 31 f9                     	xorq	%rdi, %rcx
+   26897: 48 8b bc 24 88 00 00 00      	movq	0x88(%rsp), %rdi
+   2689f: 4c 0f af db                  	imulq	%rbx, %r11
+   268a3: 48 0f af cb                  	imulq	%rbx, %rcx
+   268a7: 49 c1 eb 36                  	shrq	$0x36, %r11
+   268ab: 48 c1 e9 36                  	shrq	$0x36, %rcx
+   268af: 4c 89 5c 24 38               	movq	%r11, 0x38(%rsp)
+   268b4: 4c 8d 54 17 01               	leaq	0x1(%rdi,%rdx), %r10
+   268b9: 48 ff c2                     	incq	%rdx
+   268bc: 48 89 4c 24 28               	movq	%rcx, 0x28(%rsp)
+   268c1: 44 89 ef                     	movl	%r13d, %edi
+   268c4: 49 81 fa dc 78 02 00         	cmpq	$0x278dc, %r10          # imm = 0x278DC
+   268cb: 0f 84 58 fb ff ff            	je	0x26429 <void x86_entropy::measure<38u, 16u, 0u>(index_probe::Data<38u, 16u> const&)+0x2c9>
+   268d1: 45 89 e2                     	movl	%r12d, %r10d
+   268d4: 41 c1 ea 04                  	shrl	$0x4, %r10d
+   268d8: 41 83 e4 0f                  	andl	$0xf, %r12d
+   268dc: b8 10 00 00 00               	movl	$0x10, %eax
+   268e1: 49 bd 00 00 00 00 40 00 00 00	movabsq	$0x4000000000, %r13     # imm = 0x4000000000
+   268eb: 4d 89 d3                     	movq	%r10, %r11
+   268ee: 49 c1 e3 07                  	shlq	$0x7, %r11
+   268f2: 48 89 44 24 18               	movq	%rax, 0x18(%rsp)
+   268f7: 49 01 eb                     	addq	%rbp, %r11
+   268fa: 4f 8b 1c e3                  	movq	(%r11,%r12,8), %r11
+   268fe: 41 bc 10 00 00 00            	movl	$0x10, %r12d
+   26904: 4d 39 eb                     	cmpq	%r13, %r11
+   26907: 0f 83 b1 00 00 00            	jae	0x269be <void x86_entropy::measure<38u, 16u, 0u>(index_probe::Data<38u, 16u> const&)+0x85e>
+   2690d: 44 0f af 54 24 08            	imull	0x8(%rsp), %r10d
+   26913: 45 89 dc                     	movl	%r11d, %r12d
+   26916: 49 c1 eb 06                  	shrq	$0x6, %r11
+   2691a: 41 80 e4 3f                  	andb	$0x3f, %r12b
+   2691e: 62 d2 7d 28 7c cb            	vpbroadcastd	%r11d, %ymm1
+   26924: 62 d2 7d 08 7a c4            	vpbroadcastb	%r12d, %xmm0
+   2692a: c4 e3 f9 ce c3 00            	vgf2p8affineqb	$0x0, %xmm3, %xmm0, %xmm0
+   26930: 47 8b 64 16 22               	movl	0x22(%r14,%r10), %r12d
+   26935: 47 8b 5c 16 20               	movl	0x20(%r14,%r10), %r11d
+   2693a: 47 8b 6c 16 48               	movl	0x48(%r14,%r10), %r13d
+   2693f: 49 c1 e4 10                  	shlq	$0x10, %r12
+   26943: 49 c1 e5 10                  	shlq	$0x10, %r13
+   26947: 4d 09 dc                     	orq	%r11, %r12
+   2694a: 62 d2 fd 08 7c d4            	vpbroadcastq	%r12, %xmm2
+   26950: 47 8b 64 16 46               	movl	0x46(%r14,%r10), %r12d
+   26955: c4 e3 e1 ce d2 00            	vgf2p8affineqb	$0x0, %xmm2, %xmm3, %xmm2
+   2695b: c5 e9 ef d0                  	vpxor	%xmm0, %xmm2, %xmm2
+   2695f: 4d 09 e5                     	orq	%r12, %r13
+   26962: 62 f3 6d 08 3e cc 01         	vpcmpltub	%xmm4, %xmm2, %k1
+   26969: 62 91 75 29 76 04 16         	vpcmpeqd	(%r14,%r10), %ymm1, %k0 {%k1}
+   26970: 62 d2 fd 08 7c d5            	vpbroadcastq	%r13, %xmm2
+   26976: 49 bd 00 00 00 00 40 00 00 00	movabsq	$0x4000000000, %r13     # imm = 0x4000000000
+   26980: c4 e3 e1 ce d2 00            	vgf2p8affineqb	$0x0, %xmm2, %xmm3, %xmm2
+   26986: c5 e9 ef c0                  	vpxor	%xmm0, %xmm2, %xmm0
+   2698a: 62 f3 7d 08 3e cc 01         	vpcmpltub	%xmm4, %xmm0, %k1
+   26991: 62 91 75 29 76 8c 16 26 00 00 00     	vpcmpeqd	0x26(%r14,%r10), %ymm1, %k1 {%k1}
+   2699c: c5 79 93 d8                  	kmovb	%k0, %r11d
+   269a0: c5 79 93 d1                  	kmovb	%k1, %r10d
+   269a4: 41 c1 e2 08                  	shll	$0x8, %r10d
+   269a8: 4d 09 da                     	orq	%r11, %r10
+   269ab: f3 4d 0f bc e2               	tzcntq	%r10, %r12
+   269b0: 41 ba 10 00 00 00            	movl	$0x10, %r10d
+   269b6: 41 83 fc 10                  	cmpl	$0x10, %r12d
+   269ba: 45 0f 43 e2                  	cmovael	%r10d, %r12d
+   269be: 45 89 ca                     	movl	%r9d, %r10d
+   269c1: 41 c1 ea 04                  	shrl	$0x4, %r10d
+   269c5: 41 83 e1 0f                  	andl	$0xf, %r9d
+   269c9: 48 8b 4c 24 10               	movq	0x10(%rsp), %rcx
+   269ce: 4d 89 d3                     	movq	%r10, %r11
+   269d1: 49 c1 e3 07                  	shlq	$0x7, %r11
+   269d5: 49 01 eb                     	addq	%rbp, %r11
+   269d8: 4f 8b 0c cb                  	movq	(%r11,%r9,8), %r9
+   269dc: 4d 39 e9                     	cmpq	%r13, %r9
+   269df: 0f 83 b5 00 00 00            	jae	0x26a9a <void x86_entropy::measure<38u, 16u, 0u>(index_probe::Data<38u, 16u> const&)+0x93a>
+   269e5: 44 0f af 54 24 08            	imull	0x8(%rsp), %r10d
+   269eb: 45 89 cb                     	movl	%r9d, %r11d
+   269ee: 49 c1 e9 06                  	shrq	$0x6, %r9
+   269f2: 41 80 e3 3f                  	andb	$0x3f, %r11b
+   269f6: 62 d2 7d 28 7c c9            	vpbroadcastd	%r9d, %ymm1
+   269fc: 62 d2 7d 08 7a c3            	vpbroadcastb	%r11d, %xmm0
+   26a02: c4 e3 f9 ce c3 00            	vgf2p8affineqb	$0x0, %xmm3, %xmm0, %xmm0
+   26a08: 47 8b 5c 16 22               	movl	0x22(%r14,%r10), %r11d
+   26a0d: 47 8b 4c 16 20               	movl	0x20(%r14,%r10), %r9d
+   26a12: 47 8b 6c 16 48               	movl	0x48(%r14,%r10), %r13d
+   26a17: 49 c1 e3 10                  	shlq	$0x10, %r11
+   26a1b: 49 c1 e5 10                  	shlq	$0x10, %r13
+   26a1f: 4d 09 cb                     	orq	%r9, %r11
+   26a22: 62 d2 fd 08 7c d3            	vpbroadcastq	%r11, %xmm2
+   26a28: 47 8b 5c 16 46               	movl	0x46(%r14,%r10), %r11d
+   26a2d: c4 e3 e1 ce d2 00            	vgf2p8affineqb	$0x0, %xmm2, %xmm3, %xmm2
+   26a33: c5 e9 ef d0                  	vpxor	%xmm0, %xmm2, %xmm2
+   26a37: 4d 09 dd                     	orq	%r11, %r13
+   26a3a: 62 f3 6d 08 3e cc 01         	vpcmpltub	%xmm4, %xmm2, %k1
+   26a41: 62 91 75 29 76 04 16         	vpcmpeqd	(%r14,%r10), %ymm1, %k0 {%k1}
+   26a48: 62 d2 fd 08 7c d5            	vpbroadcastq	%r13, %xmm2
+   26a4e: 49 bd 00 00 00 00 40 00 00 00	movabsq	$0x4000000000, %r13     # imm = 0x4000000000
+   26a58: c4 e3 e1 ce d2 00            	vgf2p8affineqb	$0x0, %xmm2, %xmm3, %xmm2
+   26a5e: c5 e9 ef c0                  	vpxor	%xmm0, %xmm2, %xmm0
+   26a62: 62 f3 7d 08 3e cc 01         	vpcmpltub	%xmm4, %xmm0, %k1
+   26a69: 62 91 75 29 76 8c 16 26 00 00 00     	vpcmpeqd	0x26(%r14,%r10), %ymm1, %k1 {%k1}
+   26a74: c5 79 93 c8                  	kmovb	%k0, %r9d
+   26a78: c5 79 93 d1                  	kmovb	%k1, %r10d
+   26a7c: 41 c1 e2 08                  	shll	$0x8, %r10d
+   26a80: 4d 09 ca                     	orq	%r9, %r10
+   26a83: 41 b9 10 00 00 00            	movl	$0x10, %r9d
+   26a89: f3 49 0f bc c2               	tzcntq	%r10, %rax
+   26a8e: 83 f8 10                     	cmpl	$0x10, %eax
+   26a91: 41 0f 43 c1                  	cmovael	%r9d, %eax
+   26a95: 48 89 44 24 18               	movq	%rax, 0x18(%rsp)
+   26a9a: 41 89 c9                     	movl	%ecx, %r9d
+   26a9d: 41 c1 e9 04                  	shrl	$0x4, %r9d
+   26aa1: 83 e1 0f                     	andl	$0xf, %ecx
+   26aa4: 41 bf 10 00 00 00            	movl	$0x10, %r15d
+   26aaa: 4d 89 ca                     	movq	%r9, %r10
+   26aad: 49 c1 e2 07                  	shlq	$0x7, %r10
+   26ab1: 49 01 ea                     	addq	%rbp, %r10
+   26ab4: 4d 8b 14 ca                  	movq	(%r10,%rcx,8), %r10
+   26ab8: b9 10 00 00 00               	movl	$0x10, %ecx
+   26abd: 4d 39 ea                     	cmpq	%r13, %r10
+   26ac0: 0f 83 b0 00 00 00            	jae	0x26b76 <void x86_entropy::measure<38u, 16u, 0u>(index_probe::Data<38u, 16u> const&)+0xa16>
+   26ac6: 44 0f af 4c 24 08            	imull	0x8(%rsp), %r9d
+   26acc: 45 89 d3                     	movl	%r10d, %r11d
+   26acf: 49 c1 ea 06                  	shrq	$0x6, %r10
+   26ad3: 41 80 e3 3f                  	andb	$0x3f, %r11b
+   26ad7: 62 d2 7d 28 7c ca            	vpbroadcastd	%r10d, %ymm1
+   26add: 62 d2 7d 08 7a c3            	vpbroadcastb	%r11d, %xmm0
+   26ae3: c4 e3 f9 ce c3 00            	vgf2p8affineqb	$0x0, %xmm3, %xmm0, %xmm0
+   26ae9: 47 8b 5c 0e 22               	movl	0x22(%r14,%r9), %r11d
+   26aee: 47 8b 54 0e 20               	movl	0x20(%r14,%r9), %r10d
+   26af3: 47 8b 6c 0e 48               	movl	0x48(%r14,%r9), %r13d
+   26af8: 49 c1 e3 10                  	shlq	$0x10, %r11
+   26afc: 49 c1 e5 10                  	shlq	$0x10, %r13
+   26b00: 4d 09 d3                     	orq	%r10, %r11
+   26b03: 62 d2 fd 08 7c d3            	vpbroadcastq	%r11, %xmm2
+   26b09: 47 8b 5c 0e 46               	movl	0x46(%r14,%r9), %r11d
+   26b0e: c4 e3 e1 ce d2 00            	vgf2p8affineqb	$0x0, %xmm2, %xmm3, %xmm2
+   26b14: c5 e9 ef d0                  	vpxor	%xmm0, %xmm2, %xmm2
+   26b18: 4d 09 dd                     	orq	%r11, %r13
+   26b1b: 62 f3 6d 08 3e cc 01         	vpcmpltub	%xmm4, %xmm2, %k1
+   26b22: 62 91 75 29 76 04 0e         	vpcmpeqd	(%r14,%r9), %ymm1, %k0 {%k1}
+   26b29: 62 d2 fd 08 7c d5            	vpbroadcastq	%r13, %xmm2
+   26b2f: 49 bd 00 00 00 00 40 00 00 00	movabsq	$0x4000000000, %r13     # imm = 0x4000000000
+   26b39: c4 e3 e1 ce d2 00            	vgf2p8affineqb	$0x0, %xmm2, %xmm3, %xmm2
+   26b3f: c5 e9 ef c0                  	vpxor	%xmm0, %xmm2, %xmm0
+   26b43: 62 f3 7d 08 3e cc 01         	vpcmpltub	%xmm4, %xmm0, %k1
+   26b4a: 62 91 75 29 76 8c 0e 26 00 00 00     	vpcmpeqd	0x26(%r14,%r9), %ymm1, %k1 {%k1}
+   26b55: c5 79 93 d0                  	kmovb	%k0, %r10d
+   26b59: c5 79 93 c9                  	kmovb	%k1, %r9d
+   26b5d: 41 c1 e1 08                  	shll	$0x8, %r9d
+   26b61: 4d 09 d1                     	orq	%r10, %r9
+   26b64: f3 49 0f bc c9               	tzcntq	%r9, %rcx
+   26b69: 41 b9 10 00 00 00            	movl	$0x10, %r9d
+   26b6f: 83 f9 10                     	cmpl	$0x10, %ecx
+   26b72: 41 0f 43 c9                  	cmovael	%r9d, %ecx
+   26b76: 45 89 c1                     	movl	%r8d, %r9d
+   26b79: 41 c1 e9 04                  	shrl	$0x4, %r9d
+   26b7d: 41 83 e0 0f                  	andl	$0xf, %r8d
+   26b81: 48 89 4c 24 10               	movq	%rcx, 0x10(%rsp)
+   26b86: 4d 89 ca                     	movq	%r9, %r10
+   26b89: 49 c1 e2 07                  	shlq	$0x7, %r10
+   26b8d: 49 01 ea                     	addq	%rbp, %r10
+   26b90: 4f 8b 04 c2                  	movq	(%r10,%r8,8), %r8
+   26b94: 4d 39 e8                     	cmpq	%r13, %r8
+   26b97: 0f 83 a7 00 00 00            	jae	0x26c44 <void x86_entropy::measure<38u, 16u, 0u>(index_probe::Data<38u, 16u> const&)+0xae4>
+   26b9d: 44 0f af 4c 24 08            	imull	0x8(%rsp), %r9d
+   26ba3: 45 89 c2                     	movl	%r8d, %r10d
+   26ba6: 49 c1 e8 06                  	shrq	$0x6, %r8
+   26baa: 41 80 e2 3f                  	andb	$0x3f, %r10b
+   26bae: 62 d2 7d 28 7c c8            	vpbroadcastd	%r8d, %ymm1
+   26bb4: 62 d2 7d 08 7a c2            	vpbroadcastb	%r10d, %xmm0
+   26bba: c4 e3 f9 ce c3 00            	vgf2p8affineqb	$0x0, %xmm3, %xmm0, %xmm0
+   26bc0: 47 8b 54 0e 22               	movl	0x22(%r14,%r9), %r10d
+   26bc5: 47 8b 44 0e 20               	movl	0x20(%r14,%r9), %r8d
+   26bca: 47 8b 5c 0e 48               	movl	0x48(%r14,%r9), %r11d
+   26bcf: 49 c1 e2 10                  	shlq	$0x10, %r10
+   26bd3: 49 c1 e3 10                  	shlq	$0x10, %r11
+   26bd7: 4d 09 c2                     	orq	%r8, %r10
+   26bda: 62 d2 fd 08 7c d2            	vpbroadcastq	%r10, %xmm2
+   26be0: 47 8b 54 0e 46               	movl	0x46(%r14,%r9), %r10d
+   26be5: c4 e3 e1 ce d2 00            	vgf2p8affineqb	$0x0, %xmm2, %xmm3, %xmm2
+   26beb: c5 e9 ef d0                  	vpxor	%xmm0, %xmm2, %xmm2
+   26bef: 4d 09 d3                     	orq	%r10, %r11
+   26bf2: 62 f3 6d 08 3e cc 01         	vpcmpltub	%xmm4, %xmm2, %k1
+   26bf9: 62 91 75 29 76 04 0e         	vpcmpeqd	(%r14,%r9), %ymm1, %k0 {%k1}
+   26c00: 62 d2 fd 08 7c d3            	vpbroadcastq	%r11, %xmm2
+   26c06: c4 e3 e1 ce d2 00            	vgf2p8affineqb	$0x0, %xmm2, %xmm3, %xmm2
+   26c0c: c5 e9 ef c0                  	vpxor	%xmm0, %xmm2, %xmm0
+   26c10: 62 f3 7d 08 3e cc 01         	vpcmpltub	%xmm4, %xmm0, %k1
+   26c17: 62 91 75 29 76 8c 0e 26 00 00 00     	vpcmpeqd	0x26(%r14,%r9), %ymm1, %k1 {%k1}
+   26c22: c5 79 93 c0                  	kmovb	%k0, %r8d
+   26c26: c5 79 93 c9                  	kmovb	%k1, %r9d
+   26c2a: 41 c1 e1 08                  	shll	$0x8, %r9d
+   26c2e: 4d 09 c1                     	orq	%r8, %r9
+   26c31: 41 b8 10 00 00 00            	movl	$0x10, %r8d
+   26c37: f3 4d 0f bc f9               	tzcntq	%r9, %r15
+   26c3c: 41 83 ff 10                  	cmpl	$0x10, %r15d
+   26c40: 45 0f 43 f8                  	cmovael	%r8d, %r15d
+   26c44: 4c 8b 54 24 30               	movq	0x30(%rsp), %r10
+   26c49: 45 89 d0                     	movl	%r10d, %r8d
+   26c4c: 41 c1 e8 04                  	shrl	$0x4, %r8d
+   26c50: 41 83 e2 0f                  	andl	$0xf, %r10d
+   26c54: 41 bd 10 00 00 00            	movl	$0x10, %r13d
+   26c5a: b9 10 00 00 00               	movl	$0x10, %ecx
+   26c5f: 4d 89 c1                     	movq	%r8, %r9
+   26c62: 49 c1 e1 07                  	shlq	$0x7, %r9
+   26c66: 49 01 e9                     	addq	%rbp, %r9
+   26c69: 4f 8b 0c d1                  	movq	(%r9,%r10,8), %r9
+   26c6d: 49 ba 00 00 00 00 40 00 00 00	movabsq	$0x4000000000, %r10     # imm = 0x4000000000
+   26c77: 4d 39 d1                     	cmpq	%r10, %r9
+   26c7a: 0f 83 a6 00 00 00            	jae	0x26d26 <void x86_entropy::measure<38u, 16u, 0u>(index_probe::Data<38u, 16u> const&)+0xbc6>
+   26c80: 44 0f af 44 24 08            	imull	0x8(%rsp), %r8d
+   26c86: 45 89 ca                     	movl	%r9d, %r10d
+   26c89: 49 c1 e9 06                  	shrq	$0x6, %r9
+   26c8d: 41 80 e2 3f                  	andb	$0x3f, %r10b
+   26c91: 62 d2 7d 28 7c c9            	vpbroadcastd	%r9d, %ymm1
+   26c97: 62 d2 7d 08 7a c2            	vpbroadcastb	%r10d, %xmm0
+   26c9d: c4 e3 f9 ce c3 00            	vgf2p8affineqb	$0x0, %xmm3, %xmm0, %xmm0
+   26ca3: 47 8b 54 06 22               	movl	0x22(%r14,%r8), %r10d
+   26ca8: 47 8b 4c 06 20               	movl	0x20(%r14,%r8), %r9d
+   26cad: 47 8b 5c 06 48               	movl	0x48(%r14,%r8), %r11d
+   26cb2: 49 c1 e2 10                  	shlq	$0x10, %r10
+   26cb6: 49 c1 e3 10                  	shlq	$0x10, %r11
+   26cba: 4d 09 ca                     	orq	%r9, %r10
+   26cbd: 62 d2 fd 08 7c d2            	vpbroadcastq	%r10, %xmm2
+   26cc3: 47 8b 54 06 46               	movl	0x46(%r14,%r8), %r10d
+   26cc8: c4 e3 e1 ce d2 00            	vgf2p8affineqb	$0x0, %xmm2, %xmm3, %xmm2
+   26cce: c5 e9 ef d0                  	vpxor	%xmm0, %xmm2, %xmm2
+   26cd2: 4d 09 d3                     	orq	%r10, %r11
+   26cd5: 62 f3 6d 08 3e cc 01         	vpcmpltub	%xmm4, %xmm2, %k1
+   26cdc: 62 91 75 29 76 04 06         	vpcmpeqd	(%r14,%r8), %ymm1, %k0 {%k1}
+   26ce3: 62 d2 fd 08 7c d3            	vpbroadcastq	%r11, %xmm2
+   26ce9: c4 e3 e1 ce d2 00            	vgf2p8affineqb	$0x0, %xmm2, %xmm3, %xmm2
+   26cef: c5 e9 ef c0                  	vpxor	%xmm0, %xmm2, %xmm0
+   26cf3: 62 f3 7d 08 3e cc 01         	vpcmpltub	%xmm4, %xmm0, %k1
+   26cfa: 62 91 75 29 76 8c 06 26 00 00 00     	vpcmpeqd	0x26(%r14,%r8), %ymm1, %k1 {%k1}
+   26d05: c5 79 93 c8                  	kmovb	%k0, %r9d
+   26d09: c5 79 93 c1                  	kmovb	%k1, %r8d
+   26d0d: 41 c1 e0 08                  	shll	$0x8, %r8d
+   26d11: 4d 09 c8                     	orq	%r9, %r8
+   26d14: f3 49 0f bc c8               	tzcntq	%r8, %rcx
+   26d19: 41 b8 10 00 00 00            	movl	$0x10, %r8d
+   26d1f: 83 f9 10                     	cmpl	$0x10, %ecx
+   26d22: 41 0f 43 c8                  	cmovael	%r8d, %ecx
+   26d26: 41 89 f8                     	movl	%edi, %r8d
+   26d29: 41 c1 e8 04                  	shrl	$0x4, %r8d
+   26d2d: 83 e7 0f                     	andl	$0xf, %edi
+   26d30: 4d 89 c1                     	movq	%r8, %r9
+   26d33: 49 c1 e1 07                  	shlq	$0x7, %r9
+   26d37: 49 01 e9                     	addq	%rbp, %r9
+   26d3a: 49 8b 3c f9                  	movq	(%r9,%rdi,8), %rdi
+   26d3e: 49 b9 00 00 00 00 40 00 00 00	movabsq	$0x4000000000, %r9      # imm = 0x4000000000
+   26d48: 4c 39 cf                     	cmpq	%r9, %rdi
+   26d4b: 0f 83 a6 00 00 00            	jae	0x26df7 <void x86_entropy::measure<38u, 16u, 0u>(index_probe::Data<38u, 16u> const&)+0xc97>
+   26d51: 44 0f af 44 24 08            	imull	0x8(%rsp), %r8d
+   26d57: 41 89 f9                     	movl	%edi, %r9d
+   26d5a: 48 c1 ef 06                  	shrq	$0x6, %rdi
+   26d5e: 41 80 e1 3f                  	andb	$0x3f, %r9b
+   26d62: 62 f2 7d 28 7c cf            	vpbroadcastd	%edi, %ymm1
+   26d68: 62 d2 7d 08 7a c1            	vpbroadcastb	%r9d, %xmm0
+   26d6e: c4 e3 f9 ce c3 00            	vgf2p8affineqb	$0x0, %xmm3, %xmm0, %xmm0
+   26d74: 47 8b 4c 06 22               	movl	0x22(%r14,%r8), %r9d
+   26d79: 43 8b 7c 06 20               	movl	0x20(%r14,%r8), %edi
+   26d7e: 47 8b 54 06 48               	movl	0x48(%r14,%r8), %r10d
+   26d83: 49 c1 e1 10                  	shlq	$0x10, %r9
+   26d87: 49 c1 e2 10                  	shlq	$0x10, %r10
+   26d8b: 49 09 f9                     	orq	%rdi, %r9
+   26d8e: 62 d2 fd 08 7c d1            	vpbroadcastq	%r9, %xmm2
+   26d94: 47 8b 4c 06 46               	movl	0x46(%r14,%r8), %r9d
+   26d99: c4 e3 e1 ce d2 00            	vgf2p8affineqb	$0x0, %xmm2, %xmm3, %xmm2
+   26d9f: c5 e9 ef d0                  	vpxor	%xmm0, %xmm2, %xmm2
+   26da3: 4d 09 ca                     	orq	%r9, %r10
+   26da6: 62 f3 6d 08 3e cc 01         	vpcmpltub	%xmm4, %xmm2, %k1
+   26dad: 62 91 75 29 76 04 06         	vpcmpeqd	(%r14,%r8), %ymm1, %k0 {%k1}
+   26db4: 62 d2 fd 08 7c d2            	vpbroadcastq	%r10, %xmm2
+   26dba: c4 e3 e1 ce d2 00            	vgf2p8affineqb	$0x0, %xmm2, %xmm3, %xmm2
+   26dc0: c5 e9 ef c0                  	vpxor	%xmm0, %xmm2, %xmm0
+   26dc4: 62 f3 7d 08 3e cc 01         	vpcmpltub	%xmm4, %xmm0, %k1
+   26dcb: 62 91 75 29 76 8c 06 26 00 00 00     	vpcmpeqd	0x26(%r14,%r8), %ymm1, %k1 {%k1}
+   26dd6: c5 f9 93 f8                  	kmovb	%k0, %edi
+   26dda: c5 79 93 c1                  	kmovb	%k1, %r8d
+   26dde: 41 c1 e0 08                  	shll	$0x8, %r8d
+   26de2: 49 09 f8                     	orq	%rdi, %r8
+   26de5: bf 10 00 00 00               	movl	$0x10, %edi
+   26dea: f3 4d 0f bc e8               	tzcntq	%r8, %r13
+   26def: 41 83 fd 10                  	cmpl	$0x10, %r13d
+   26df3: 44 0f 43 ef                  	cmovael	%edi, %r13d
+   26df7: 4c 8b 4c 24 38               	movq	0x38(%rsp), %r9
+   26dfc: 45 89 c8                     	movl	%r9d, %r8d
+   26dff: 41 c1 e8 04                  	shrl	$0x4, %r8d
+   26e03: 41 83 e1 0f                  	andl	$0xf, %r9d
+   26e07: 41 bb 10 00 00 00            	movl	$0x10, %r11d
+   26e0d: 49 ba 00 00 00 00 40 00 00 00	movabsq	$0x4000000000, %r10     # imm = 0x4000000000
+   26e17: 4c 89 c7                     	movq	%r8, %rdi
+   26e1a: 48 c1 e7 07                  	shlq	$0x7, %rdi
+   26e1e: 48 01 ef                     	addq	%rbp, %rdi
+   26e21: 4e 8b 0c cf                  	movq	(%rdi,%r9,8), %r9
+   26e25: bf 10 00 00 00               	movl	$0x10, %edi
+   26e2a: 4d 39 d1                     	cmpq	%r10, %r9
+   26e2d: 0f 83 a7 00 00 00            	jae	0x26eda <void x86_entropy::measure<38u, 16u, 0u>(index_probe::Data<38u, 16u> const&)+0xd7a>
+   26e33: 44 0f af 44 24 08            	imull	0x8(%rsp), %r8d
+   26e39: 45 89 ca                     	movl	%r9d, %r10d
+   26e3c: 49 c1 e9 06                  	shrq	$0x6, %r9
+   26e40: 41 80 e2 3f                  	andb	$0x3f, %r10b
+   26e44: 62 d2 7d 28 7c c9            	vpbroadcastd	%r9d, %ymm1
+   26e4a: 62 d2 7d 08 7a c2            	vpbroadcastb	%r10d, %xmm0
+   26e50: c4 e3 f9 ce c3 00            	vgf2p8affineqb	$0x0, %xmm3, %xmm0, %xmm0
+   26e56: 47 8b 54 06 22               	movl	0x22(%r14,%r8), %r10d
+   26e5b: 47 8b 4c 06 20               	movl	0x20(%r14,%r8), %r9d
+   26e60: 47 8b 5c 06 48               	movl	0x48(%r14,%r8), %r11d
+   26e65: 49 c1 e2 10                  	shlq	$0x10, %r10
+   26e69: 49 c1 e3 10                  	shlq	$0x10, %r11
+   26e6d: 4d 09 ca                     	orq	%r9, %r10
+   26e70: 62 d2 fd 08 7c d2            	vpbroadcastq	%r10, %xmm2
+   26e76: 47 8b 54 06 46               	movl	0x46(%r14,%r8), %r10d
+   26e7b: c4 e3 e1 ce d2 00            	vgf2p8affineqb	$0x0, %xmm2, %xmm3, %xmm2
+   26e81: c5 e9 ef d0                  	vpxor	%xmm0, %xmm2, %xmm2
+   26e85: 4d 09 d3                     	orq	%r10, %r11
+   26e88: 62 f3 6d 08 3e cc 01         	vpcmpltub	%xmm4, %xmm2, %k1
+   26e8f: 62 91 75 29 76 04 06         	vpcmpeqd	(%r14,%r8), %ymm1, %k0 {%k1}
+   26e96: 62 d2 fd 08 7c d3            	vpbroadcastq	%r11, %xmm2
+   26e9c: c4 e3 e1 ce d2 00            	vgf2p8affineqb	$0x0, %xmm2, %xmm3, %xmm2
+   26ea2: c5 e9 ef c0                  	vpxor	%xmm0, %xmm2, %xmm0
+   26ea6: 62 f3 7d 08 3e cc 01         	vpcmpltub	%xmm4, %xmm0, %k1
+   26ead: 62 91 75 29 76 8c 06 26 00 00 00     	vpcmpeqd	0x26(%r14,%r8), %ymm1, %k1 {%k1}
+   26eb8: c5 79 93 c8                  	kmovb	%k0, %r9d
+   26ebc: c5 79 93 c1                  	kmovb	%k1, %r8d
+   26ec0: 41 c1 e0 08                  	shll	$0x8, %r8d
+   26ec4: 4d 09 c8                     	orq	%r9, %r8
+   26ec7: f3 4d 0f bc d8               	tzcntq	%r8, %r11
+   26ecc: 41 b8 10 00 00 00            	movl	$0x10, %r8d
+   26ed2: 41 83 fb 10                  	cmpl	$0x10, %r11d
+   26ed6: 45 0f 43 d8                  	cmovael	%r8d, %r11d
+   26eda: 4c 8b 54 24 28               	movq	0x28(%rsp), %r10
+   26edf: 45 89 d0                     	movl	%r10d, %r8d
+   26ee2: 41 c1 e8 04                  	shrl	$0x4, %r8d
+   26ee6: 41 83 e2 0f                  	andl	$0xf, %r10d
+   26eea: 4d 89 c1                     	movq	%r8, %r9
+   26eed: 49 c1 e1 07                  	shlq	$0x7, %r9
+   26ef1: 49 01 e9                     	addq	%rbp, %r9
+   26ef4: 4f 8b 0c d1                  	movq	(%r9,%r10,8), %r9
+   26ef8: 49 ba 00 00 00 00 40 00 00 00	movabsq	$0x4000000000, %r10     # imm = 0x4000000000
+   26f02: 4d 39 d1                     	cmpq	%r10, %r9
+   26f05: 0f 83 d5 f8 ff ff            	jae	0x267e0 <void x86_entropy::measure<38u, 16u, 0u>(index_probe::Data<38u, 16u> const&)+0x680>
+   26f0b: 44 0f af 44 24 08            	imull	0x8(%rsp), %r8d
+   26f11: 44 89 cf                     	movl	%r9d, %edi
+   26f14: 49 c1 e9 06                  	shrq	$0x6, %r9
+   26f18: 40 80 e7 3f                  	andb	$0x3f, %dil
+   26f1c: 62 d2 7d 28 7c c9            	vpbroadcastd	%r9d, %ymm1
+   26f22: 62 f2 7d 08 7a c7            	vpbroadcastb	%edi, %xmm0
+   26f28: c4 e3 f9 ce c3 00            	vgf2p8affineqb	$0x0, %xmm3, %xmm0, %xmm0
+   26f2e: 47 8b 4c 06 22               	movl	0x22(%r14,%r8), %r9d
+   26f33: 43 8b 7c 06 20               	movl	0x20(%r14,%r8), %edi
+   26f38: 47 8b 54 06 48               	movl	0x48(%r14,%r8), %r10d
+   26f3d: 49 c1 e1 10                  	shlq	$0x10, %r9
+   26f41: 49 c1 e2 10                  	shlq	$0x10, %r10
+   26f45: 49 09 f9                     	orq	%rdi, %r9
+   26f48: 62 d2 fd 08 7c d1            	vpbroadcastq	%r9, %xmm2
+   26f4e: 47 8b 4c 06 46               	movl	0x46(%r14,%r8), %r9d
+   26f53: c4 e3 e1 ce d2 00            	vgf2p8affineqb	$0x0, %xmm2, %xmm3, %xmm2
+   26f59: c5 e9 ef d0                  	vpxor	%xmm0, %xmm2, %xmm2
+   26f5d: 4d 09 ca                     	orq	%r9, %r10
+   26f60: 62 f3 6d 08 3e cc 01         	vpcmpltub	%xmm4, %xmm2, %k1
+   26f67: 62 91 75 29 76 04 06         	vpcmpeqd	(%r14,%r8), %ymm1, %k0 {%k1}
+   26f6e: 62 d2 fd 08 7c d2            	vpbroadcastq	%r10, %xmm2
+   26f74: c4 e3 e1 ce d2 00            	vgf2p8affineqb	$0x0, %xmm2, %xmm3, %xmm2
+   26f7a: c5 e9 ef c0                  	vpxor	%xmm0, %xmm2, %xmm0
+   26f7e: 62 f3 7d 08 3e cc 01         	vpcmpltub	%xmm4, %xmm0, %k1
+   26f85: 62 91 75 29 76 8c 06 26 00 00 00     	vpcmpeqd	0x26(%r14,%r8), %ymm1, %k1 {%k1}
+   26f90: c5 f9 93 f8                  	kmovb	%k0, %edi
+   26f94: c5 79 93 c1                  	kmovb	%k1, %r8d
+   26f98: 41 c1 e0 08                  	shll	$0x8, %r8d
+   26f9c: 49 09 f8                     	orq	%rdi, %r8
+   26f9f: f3 49 0f bc f8               	tzcntq	%r8, %rdi
+   26fa4: 41 b8 10 00 00 00            	movl	$0x10, %r8d
+   26faa: 83 ff 10                     	cmpl	$0x10, %edi
+   26fad: 41 0f 43 f8                  	cmovael	%r8d, %edi
+   26fb1: e9 2a f8 ff ff               	jmp	0x267e0 <void x86_entropy::measure<38u, 16u, 0u>(index_probe::Data<38u, 16u> const&)+0x680>
+   26fb6: 48 81 c4 a8 00 00 00         	addq	$0xa8, %rsp
+   26fbd: 5b                           	popq	%rbx
+   26fbe: 41 5c                        	popq	%r12
+   26fc0: 41 5d                        	popq	%r13
+   26fc2: 41 5e                        	popq	%r14
+   26fc4: 41 5f                        	popq	%r15
+   26fc6: 5d                           	popq	%rbp
+   26fc7: c5 f8 77                     	vzeroupper
+   26fca: c3                           	retq
+   26fcb: 48 8d 3d c3 12 00 00         	leaq	0x12c3(%rip), %rdi      # 0x28295 <strlen@GLIBC_2.2.5+0x28295>
+   26fd2: 48 8d 35 d0 12 00 00         	leaq	0x12d0(%rip), %rsi      # 0x282a9 <strlen@GLIBC_2.2.5+0x282a9>
+   26fd9: 48 8d 0d 80 1c 00 00         	leaq	0x1c80(%rip), %rcx      # 0x28c60 <strlen@GLIBC_2.2.5+0x28c60>
+   26fe0: ba 17 00 00 00               	movl	$0x17, %edx
+   26fe5: c5 f8 77                     	vzeroupper
+   26fe8: e8 b3 a0 fd ff               	callq	0x10a0 <__assert_fail@plt>
+   26fed: 0f 1f 00                     	nopl	(%rax)
+

@@ -1,0 +1,239 @@
+{
+  "neon-codegen": {
+    "asm_sha256": "301ffbee38b596ca563092c3eb8de00ccfe7cc475c41b119a43dcb1eaa164ae1",
+    "kernel_count": 104,
+    "helper_calls": 0,
+    "selected": {
+      "tile_16_8_0_0": {
+        "instructions": 17,
+        "opcodes": {
+          "lsr": 1,
+          "mov": 2,
+          "cbnz": 1,
+          "and": 3,
+          "cbz": 1,
+          "ldr": 2,
+          "dup": 1,
+          "adrp": 1,
+          "cmeq": 1,
+          "xtn": 1,
+          "addv": 1,
+          "fmov": 1,
+          "ret": 1
+        },
+        "calls": [],
+        "stack": []
+      },
+      "tile_16_8_0_2": {
+        "instructions": 19,
+        "opcodes": {
+          "ands": 1,
+          "b.eq": 1,
+          "lsr": 1,
+          "cbnz": 1,
+          "ldr": 2,
+          "dup": 1,
+          "adrp": 1,
+          "cmeq": 1,
+          "xtn": 1,
+          "and": 3,
+          "addv": 1,
+          "fmov": 1,
+          "ret": 3,
+          "mov": 1
+        },
+        "calls": [],
+        "stack": []
+      },
+      "tile_30_8_0_0": {
+        "instructions": 60,
+        "opcodes": {
+          "lsr": 2,
+          "mov": 2,
+          "cbnz": 1,
+          "and": 12,
+          "cbz": 1,
+          "adrp": 3,
+          "ldr": 4,
+          "ubfx": 5,
+          "sub": 3,
+          "add": 3,
+          "tbl": 2,
+          "dup": 1,
+          "cmeq": 2,
+          "addv": 2,
+          "fmov": 2,
+          "ldur": 1,
+          "orr": 1,
+          "ldrb": 6,
+          "eor": 6,
+          "ret": 1
+        },
+        "calls": [],
+        "stack": []
+      },
+      "tile_30_8_0_2": {
+        "instructions": 86,
+        "opcodes": {
+          "ands": 1,
+          "b.eq": 1,
+          "lsr": 4,
+          "cbnz": 1,
+          "adrp": 7,
+          "ldr": 9,
+          "tst": 6,
+          "mov": 2,
+          "csel": 6,
+          "tbl": 6,
+          "orr": 3,
+          "dup": 3,
+          "cmeq": 3,
+          "and": 13,
+          "addv": 3,
+          "fmov": 3,
+          "ldrb": 6,
+          "eor": 6,
+          "ret": 3
+        },
+        "calls": [],
+        "stack": []
+      },
+      "tile_16_24_0_0": {
+        "instructions": 30,
+        "opcodes": {
+          "lsr": 1,
+          "mov": 2,
+          "cbnz": 1,
+          "and": 5,
+          "cbz": 1,
+          "ldp": 1,
+          "dup": 1,
+          "adrp": 1,
+          "ldr": 2,
+          "cmeq": 3,
+          "xtn": 3,
+          "addv": 3,
+          "fmov": 3,
+          "bfi": 1,
+          "orr": 1,
+          "ret": 1
+        },
+        "calls": [],
+        "stack": []
+      },
+      "tile_16_24_0_2": {
+        "instructions": 32,
+        "opcodes": {
+          "ands": 1,
+          "b.eq": 1,
+          "lsr": 1,
+          "cbnz": 1,
+          "ldp": 1,
+          "dup": 1,
+          "adrp": 1,
+          "ldr": 2,
+          "cmeq": 3,
+          "xtn": 3,
+          "and": 5,
+          "addv": 3,
+          "fmov": 3,
+          "bfi": 1,
+          "orr": 1,
+          "ret": 3,
+          "mov": 1
+        },
+        "calls": [],
+        "stack": []
+      },
+      "tile_30_16_0_0": {
+        "instructions": 92,
+        "opcodes": {
+          "lsr": 2,
+          "mov": 2,
+          "cbnz": 1,
+          "and": 20,
+          "cbz": 1,
+          "adrp": 3,
+          "ldr": 4,
+          "ldrb": 12,
+          "dup": 1,
+          "ubfx": 5,
+          "sub": 1,
+          "add": 5,
+          "eor": 12,
+          "tbl": 4,
+          "cmeq": 4,
+          "addv": 4,
+          "fmov": 4,
+          "ldur": 3,
+          "orr": 2,
+          "bfi": 1,
+          "ret": 1
+        },
+        "calls": [],
+        "stack": []
+      },
+      "tile_30_16_0_2": {
+        "instructions": 130,
+        "opcodes": {
+          "ands": 1,
+          "b.eq": 1,
+          "lsr": 4,
+          "cbnz": 1,
+          "adrp": 7,
+          "ldr": 9,
+          "ldrb": 12,
+          "dup": 3,
+          "tst": 6,
+          "mov": 2,
+          "csel": 6,
+          "eor": 12,
+          "tbl": 12,
+          "orr": 7,
+          "cmeq": 6,
+          "and": 24,
+          "addv": 6,
+          "fmov": 6,
+          "ldur": 2,
+          "ret": 3
+        },
+        "calls": [],
+        "stack": []
+      }
+    },
+    "llvm_mca": {
+      "tile_16_8_0_0": {
+        "returncode": 0,
+        "summary": "Iterations:        100\nInstructions:      1700\nTotal Cycles:      2004\nTotal uOps:        1900\n\nDispatch Width:    6\nuOps Per Cycle:    0.95\nIPC:               0.85\nBlock RThroughput: 3.2"
+      },
+      "tile_16_8_0_2": {
+        "returncode": 0,
+        "summary": "Iterations:        100\nInstructions:      1900\nTotal Cycles:      370\nTotal uOps:        2100\n\nDispatch Width:    6\nuOps Per Cycle:    5.68\nIPC:               5.14\nBlock RThroughput: 3.5"
+      },
+      "tile_30_8_0_0": {
+        "returncode": 0,
+        "summary": "Iterations:        100\nInstructions:      6000\nTotal Cycles:      2008\nTotal uOps:        6200\n\nDispatch Width:    6\nuOps Per Cycle:    3.09\nIPC:               2.99\nBlock RThroughput: 10.3"
+      },
+      "tile_30_8_0_2": {
+        "returncode": 0,
+        "summary": "Iterations:        100\nInstructions:      8600\nTotal Cycles:      1553\nTotal uOps:        9200\n\nDispatch Width:    6\nuOps Per Cycle:    5.92\nIPC:               5.54\nBlock RThroughput: 15.3"
+      },
+      "tile_16_24_0_0": {
+        "returncode": 0,
+        "summary": "Iterations:        100\nInstructions:      3000\nTotal Cycles:      2305\nTotal uOps:        3800\n\nDispatch Width:    6\nuOps Per Cycle:    1.65\nIPC:               1.30\nBlock RThroughput: 6.3"
+      },
+      "tile_16_24_0_2": {
+        "returncode": 0,
+        "summary": "Iterations:        100\nInstructions:      3200\nTotal Cycles:      721\nTotal uOps:        4000\n\nDispatch Width:    6\nuOps Per Cycle:    5.55\nIPC:               4.44\nBlock RThroughput: 6.7"
+      },
+      "tile_30_16_0_0": {
+        "returncode": 0,
+        "summary": "Iterations:        100\nInstructions:      9200\nTotal Cycles:      2610\nTotal uOps:        9600\n\nDispatch Width:    6\nuOps Per Cycle:    3.68\nIPC:               3.52\nBlock RThroughput: 16.0"
+      },
+      "tile_30_16_0_2": {
+        "returncode": 0,
+        "summary": "Iterations:        100\nInstructions:      13000\nTotal Cycles:      2418\nTotal uOps:        14200\n\nDispatch Width:    6\nuOps Per Cycle:    5.87\nIPC:               5.38\nBlock RThroughput: 23.7"
+      }
+    }
+  }
+}

@@ -1,0 +1,528 @@
+{
+  "avx2-codegen": {
+    "asm_sha256": "cad40a190ef30d231038328c545043ce3637e48e7463555690673151b1a3cb43",
+    "kernel_count": 104,
+    "helper_calls": 0,
+    "selected": {
+      "tile_16_8_0_0": {
+        "instructions": 16,
+        "opcodes": {
+          "testb": 1,
+          "sete": 1,
+          "cmpq": 1,
+          "setae": 1,
+          "orb": 1,
+          "jne": 1,
+          "vmovd": 1,
+          "vpbroadcastw": 1,
+          "vpcmpeqw": 1,
+          "vpacksswb": 1,
+          "vpmovmskb": 1,
+          "andl": 1,
+          "movzbl": 1,
+          "retq": 2,
+          "xorl": 1
+        },
+        "calls": [],
+        "stack": []
+      },
+      "tile_16_8_0_2": {
+        "instructions": 16,
+        "opcodes": {
+          "andq": 1,
+          "je": 1,
+          "cmpq": 1,
+          "ja": 1,
+          "vmovd": 1,
+          "vpbroadcastw": 1,
+          "vpcmpeqw": 1,
+          "vpacksswb": 1,
+          "vpmovmskb": 1,
+          "andl": 2,
+          "retq": 3,
+          "xorl": 2
+        },
+        "calls": [],
+        "stack": []
+      },
+      "tile_30_8_0_0": {
+        "instructions": 55,
+        "opcodes": {
+          "testb": 1,
+          "sete": 1,
+          "cmpq": 1,
+          "setae": 1,
+          "xorl": 6,
+          "orb": 1,
+          "jne": 1,
+          "movl": 5,
+          "movzbl": 6,
+          "movq": 2,
+          "shrq": 1,
+          "vmovdqu": 1,
+          "andb": 1,
+          "vinserti128": 1,
+          "vmovd": 1,
+          "decb": 1,
+          "xorb": 1,
+          "btl": 5,
+          "vpshufb": 1,
+          "vpbroadcastd": 1,
+          "adcl": 5,
+          "vpcmpeqd": 1,
+          "vmovmskps": 1,
+          "andl": 7,
+          "vzeroupper": 1,
+          "retq": 1
+        },
+        "calls": [],
+        "stack": []
+      },
+      "tile_30_8_0_2": {
+        "instructions": 79,
+        "opcodes": {
+          "xorl": 7,
+          "andq": 1,
+          "je": 1,
+          "cmpq": 1,
+          "ja": 1,
+          "pushq": 3,
+          "vmovq": 1,
+          "vmovdqu": 1,
+          "movl": 9,
+          "shrl": 3,
+          "movzbl": 6,
+          "vpshufb": 6,
+          "vpor": 3,
+          "vmovd": 3,
+          "vpbroadcastb": 3,
+          "vpcmpeqb": 3,
+          "testb": 6,
+          "cmovel": 6,
+          "vpand": 2,
+          "vpmovmskb": 1,
+          "andl": 7,
+          "movq": 1,
+          "popq": 3,
+          "retq": 1
+        },
+        "calls": [],
+        "stack": []
+      },
+      "tile_16_24_0_0": {
+        "instructions": 23,
+        "opcodes": {
+          "movq": 1,
+          "andq": 1,
+          "sete": 1,
+          "cmpq": 1,
+          "setae": 1,
+          "orb": 1,
+          "jne": 1,
+          "vmovd": 1,
+          "vpbroadcastw": 1,
+          "vpcmpeqw": 2,
+          "vextracti128": 1,
+          "vpacksswb": 2,
+          "vpmovmskb": 2,
+          "shll": 1,
+          "orl": 1,
+          "andl": 1,
+          "vzeroupper": 1,
+          "retq": 2,
+          "xorl": 1
+        },
+        "calls": [],
+        "stack": []
+      },
+      "tile_16_24_0_2": {
+        "instructions": 24,
+        "opcodes": {
+          "andq": 1,
+          "je": 1,
+          "cmpq": 1,
+          "ja": 1,
+          "vmovd": 1,
+          "vpbroadcastw": 1,
+          "vpcmpeqw": 2,
+          "vextracti128": 1,
+          "vpacksswb": 2,
+          "vpmovmskb": 2,
+          "movzbl": 1,
+          "shll": 1,
+          "orl": 1,
+          "andl": 2,
+          "vzeroupper": 1,
+          "retq": 3,
+          "xorl": 2
+        },
+        "calls": [],
+        "stack": []
+      },
+      "tile_30_16_0_0": {
+        "instructions": 90,
+        "opcodes": {
+          "andq": 1,
+          "sete": 1,
+          "cmpq": 1,
+          "setae": 1,
+          "xorl": 11,
+          "orb": 1,
+          "jne": 1,
+          "pushq": 4,
+          "vmovdqu": 2,
+          "vmovdqa": 1,
+          "movzbl": 13,
+          "movq": 2,
+          "shrq": 1,
+          "movl": 5,
+          "vinserti128": 2,
+          "vpshufb": 2,
+          "vmovd": 1,
+          "andb": 1,
+          "vpbroadcastd": 1,
+          "decb": 1,
+          "vpcmpeqd": 2,
+          "xorb": 2,
+          "btl": 5,
+          "vmovmskps": 2,
+          "adcl": 5,
+          "andl": 13,
+          "shll": 1,
+          "orl": 1,
+          "popq": 4,
+          "vzeroupper": 1,
+          "retq": 1
+        },
+        "calls": [],
+        "stack": []
+      },
+      "tile_30_16_0_2": {
+        "instructions": 131,
+        "opcodes": {
+          "pushq": 6,
+          "movq": 2,
+          "xorl": 13,
+          "andq": 1,
+          "je": 1,
+          "cmpq": 1,
+          "ja": 1,
+          "vmovdqu": 2,
+          "vmovdqa": 6,
+          "vmovq": 2,
+          "movl": 11,
+          "shrl": 3,
+          "movzbl": 12,
+          "vmovd": 3,
+          "testb": 6,
+          "vpbroadcastb": 3,
+          "cmovel": 6,
+          "vpshufb": 12,
+          "vpor": 6,
+          "vpcmpeqb": 6,
+          "andl": 13,
+          "vpand": 4,
+          "vpmovmskb": 2,
+          "shll": 1,
+          "orl": 1,
+          "popq": 6,
+          "retq": 1
+        },
+        "calls": [],
+        "stack": [
+          [
+            "movl",
+            "%ecx, -0x4(%rsp)"
+          ],
+          [
+            "xorl",
+            "-0x4(%rsp), %r14d"
+          ]
+        ]
+      }
+    },
+    "llvm_mca": {
+      "tile_16_8_0_0": {
+        "returncode": 0,
+        "summary": "Iterations:        100\nInstructions:      1600\nTotal Cycles:      285\nTotal uOps:        1600\n\nDispatch Width:    6\nuOps Per Cycle:    5.61\nIPC:               5.61\nBlock RThroughput: 2.7"
+      },
+      "tile_16_8_0_2": {
+        "returncode": 0,
+        "summary": "Iterations:        100\nInstructions:      1600\nTotal Cycles:      282\nTotal uOps:        1600\n\nDispatch Width:    6\nuOps Per Cycle:    5.67\nIPC:               5.67\nBlock RThroughput: 2.7"
+      },
+      "tile_30_8_0_0": {
+        "returncode": 0,
+        "summary": "Iterations:        100\nInstructions:      5500\nTotal Cycles:      1434\nTotal uOps:        5500\n\nDispatch Width:    6\nuOps Per Cycle:    3.84\nIPC:               3.84\nBlock RThroughput: 11.8"
+      },
+      "tile_30_8_0_2": {
+        "returncode": 0,
+        "summary": "Iterations:        100\nInstructions:      7900\nTotal Cycles:      1812\nTotal uOps:        7900\n\nDispatch Width:    6\nuOps Per Cycle:    4.36\nIPC:               4.36\nBlock RThroughput: 13.2"
+      },
+      "tile_16_24_0_0": {
+        "returncode": 0,
+        "summary": "Iterations:        100\nInstructions:      2300\nTotal Cycles:      445\nTotal uOps:        2300\n\nDispatch Width:    6\nuOps Per Cycle:    5.17\nIPC:               5.17\nBlock RThroughput: 3.8"
+      },
+      "tile_16_24_0_2": {
+        "returncode": 0,
+        "summary": "Iterations:        100\nInstructions:      2400\nTotal Cycles:      447\nTotal uOps:        2400\n\nDispatch Width:    6\nuOps Per Cycle:    5.37\nIPC:               5.37\nBlock RThroughput: 4.0"
+      },
+      "tile_30_16_0_0": {
+        "returncode": 0,
+        "summary": "Iterations:        100\nInstructions:      9000\nTotal Cycles:      2413\nTotal uOps:        9000\n\nDispatch Width:    6\nuOps Per Cycle:    3.73\nIPC:               3.73\nBlock RThroughput: 15.3"
+      },
+      "tile_30_16_0_2": {
+        "returncode": 0,
+        "summary": "Iterations:        100\nInstructions:      13100\nTotal Cycles:      3716\nTotal uOps:        13100\n\nDispatch Width:    6\nuOps Per Cycle:    3.53\nIPC:               3.53\nBlock RThroughput: 21.8"
+      }
+    }
+  },
+  "avx512-codegen": {
+    "asm_sha256": "d203a8fa2b56ca3755d318a372f395fb4803dea175c221a72e01be623e9382d9",
+    "kernel_count": 104,
+    "helper_calls": 0,
+    "selected": {
+      "tile_16_8_0_0": {
+        "instructions": 14,
+        "opcodes": {
+          "movq": 1,
+          "testb": 1,
+          "sete": 1,
+          "cmpq": 1,
+          "setae": 1,
+          "orb": 1,
+          "jne": 1,
+          "vpbroadcastw": 1,
+          "vpcmpeqw": 1,
+          "kmovb": 1,
+          "andl": 1,
+          "retq": 2,
+          "xorl": 1
+        },
+        "calls": [],
+        "stack": []
+      },
+      "tile_16_8_0_2": {
+        "instructions": 14,
+        "opcodes": {
+          "andq": 1,
+          "je": 1,
+          "cmpq": 1,
+          "ja": 1,
+          "vpbroadcastw": 1,
+          "vpcmpeqw": 1,
+          "kmovb": 1,
+          "andl": 2,
+          "retq": 3,
+          "xorl": 2
+        },
+        "calls": [],
+        "stack": []
+      },
+      "tile_30_8_0_0": {
+        "instructions": 55,
+        "opcodes": {
+          "testb": 1,
+          "sete": 1,
+          "cmpq": 1,
+          "setae": 1,
+          "xorl": 6,
+          "orb": 1,
+          "jne": 1,
+          "movl": 5,
+          "movzbl": 7,
+          "movq": 2,
+          "shrq": 1,
+          "vmovdqu": 1,
+          "andb": 2,
+          "vinserti128": 1,
+          "vpbroadcastd": 1,
+          "decb": 1,
+          "xorb": 1,
+          "btl": 5,
+          "vpshufb": 1,
+          "adcl": 5,
+          "vpcmpeqd": 1,
+          "kmovd": 1,
+          "andl": 6,
+          "vzeroupper": 1,
+          "retq": 1
+        },
+        "calls": [],
+        "stack": []
+      },
+      "tile_30_8_0_2": {
+        "instructions": 71,
+        "opcodes": {
+          "xorl": 7,
+          "andq": 1,
+          "je": 1,
+          "cmpq": 1,
+          "ja": 1,
+          "pushq": 2,
+          "vmovdqu": 1,
+          "vmovq": 1,
+          "movl": 9,
+          "shrl": 3,
+          "movzbl": 6,
+          "vpshufb": 6,
+          "vpor": 3,
+          "vpbroadcastb": 3,
+          "testb": 6,
+          "vpcmpeqb": 3,
+          "cmovel": 6,
+          "andl": 7,
+          "kmovw": 1,
+          "popq": 2,
+          "retq": 1
+        },
+        "calls": [],
+        "stack": []
+      },
+      "tile_16_24_0_0": {
+        "instructions": 20,
+        "opcodes": {
+          "movq": 2,
+          "shlq": 1,
+          "sete": 1,
+          "cmpq": 1,
+          "setae": 1,
+          "orb": 1,
+          "jne": 1,
+          "movl": 1,
+          "vpbroadcastw": 1,
+          "kmovd": 2,
+          "vmovdqu16": 1,
+          "vpcmpeqw": 1,
+          "andl": 2,
+          "vzeroupper": 1,
+          "retq": 2,
+          "xorl": 1
+        },
+        "calls": [],
+        "stack": []
+      },
+      "tile_16_24_0_2": {
+        "instructions": 18,
+        "opcodes": {
+          "andq": 1,
+          "je": 1,
+          "cmpq": 1,
+          "ja": 1,
+          "movl": 1,
+          "vpbroadcastw": 1,
+          "kmovd": 2,
+          "vmovdqu16": 1,
+          "vpcmpeqw": 1,
+          "andl": 2,
+          "vzeroupper": 1,
+          "retq": 3,
+          "xorl": 2
+        },
+        "calls": [],
+        "stack": []
+      },
+      "tile_30_16_0_0": {
+        "instructions": 91,
+        "opcodes": {
+          "andq": 1,
+          "sete": 1,
+          "cmpq": 1,
+          "setae": 1,
+          "xorl": 11,
+          "orb": 1,
+          "jne": 1,
+          "pushq": 4,
+          "movzbl": 15,
+          "movq": 2,
+          "shrq": 1,
+          "movl": 5,
+          "vmovdqu": 2,
+          "vmovdqa": 1,
+          "vpbroadcastd": 1,
+          "vinserti128": 2,
+          "andb": 3,
+          "decb": 1,
+          "xorb": 2,
+          "btl": 5,
+          "adcl": 5,
+          "vpshufb": 2,
+          "andl": 11,
+          "vpcmpeqd": 2,
+          "kmovd": 2,
+          "shll": 1,
+          "orl": 1,
+          "popq": 4,
+          "vzeroupper": 1,
+          "retq": 1
+        },
+        "calls": [],
+        "stack": []
+      },
+      "tile_30_16_0_2": {
+        "instructions": 120,
+        "opcodes": {
+          "xorl": 13,
+          "andq": 1,
+          "je": 1,
+          "cmpq": 1,
+          "ja": 1,
+          "pushq": 6,
+          "movl": 9,
+          "shrl": 3,
+          "movzbl": 12,
+          "vmovdqu": 2,
+          "vmovdqa": 6,
+          "vmovq": 2,
+          "vpbroadcastb": 3,
+          "testb": 6,
+          "cmovel": 6,
+          "vpshufb": 12,
+          "vpor": 6,
+          "vpcmpeqb": 6,
+          "andl": 13,
+          "kmovw": 2,
+          "shll": 1,
+          "orl": 1,
+          "popq": 6,
+          "retq": 1
+        },
+        "calls": [],
+        "stack": []
+      }
+    },
+    "llvm_mca": {
+      "tile_16_8_0_0": {
+        "returncode": 0,
+        "summary": "Iterations:        100\nInstructions:      1400\nTotal Cycles:      310\nTotal uOps:        1400\n\nDispatch Width:    6\nuOps Per Cycle:    4.52\nIPC:               4.52\nBlock RThroughput: 2.3"
+      },
+      "tile_16_8_0_2": {
+        "returncode": 0,
+        "summary": "Iterations:        100\nInstructions:      1400\nTotal Cycles:      258\nTotal uOps:        1400\n\nDispatch Width:    6\nuOps Per Cycle:    5.43\nIPC:               5.43\nBlock RThroughput: 2.5"
+      },
+      "tile_30_8_0_0": {
+        "returncode": 0,
+        "summary": "Iterations:        100\nInstructions:      5500\nTotal Cycles:      1510\nTotal uOps:        5500\n\nDispatch Width:    6\nuOps Per Cycle:    3.64\nIPC:               3.64\nBlock RThroughput: 12.0"
+      },
+      "tile_30_8_0_2": {
+        "returncode": 0,
+        "summary": "Iterations:        100\nInstructions:      7100\nTotal Cycles:      1212\nTotal uOps:        7100\n\nDispatch Width:    6\nuOps Per Cycle:    5.86\nIPC:               5.86\nBlock RThroughput: 11.8"
+      },
+      "tile_16_24_0_0": {
+        "returncode": 0,
+        "summary": "Iterations:        100\nInstructions:      2000\nTotal Cycles:      421\nTotal uOps:        2000\n\nDispatch Width:    6\nuOps Per Cycle:    4.75\nIPC:               4.75\nBlock RThroughput: 3.3"
+      },
+      "tile_16_24_0_2": {
+        "returncode": 0,
+        "summary": "Iterations:        100\nInstructions:      1800\nTotal Cycles:      314\nTotal uOps:        1800\n\nDispatch Width:    6\nuOps Per Cycle:    5.73\nIPC:               5.73\nBlock RThroughput: 3.0"
+      },
+      "tile_30_16_0_0": {
+        "returncode": 0,
+        "summary": "Iterations:        100\nInstructions:      9100\nTotal Cycles:      2413\nTotal uOps:        9100\n\nDispatch Width:    6\nuOps Per Cycle:    3.77\nIPC:               3.77\nBlock RThroughput: 15.8"
+      },
+      "tile_30_16_0_2": {
+        "returncode": 0,
+        "summary": "Iterations:        100\nInstructions:      12000\nTotal Cycles:      3615\nTotal uOps:        12000\n\nDispatch Width:    6\nuOps Per Cycle:    3.32\nIPC:               3.32\nBlock RThroughput: 20.0"
+      }
+    }
+  }
+}

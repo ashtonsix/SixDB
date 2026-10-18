@@ -1,0 +1,227 @@
+{
+  "job": "20261015T234416Z-77cbc24a",
+  "owner": "Iceberg\u2013Swiss",
+  "parameters": {
+    "W": 40,
+    "b": 10,
+    "K": 30,
+    "E": 30,
+    "load": 0.85,
+    "n": 13926
+  },
+  "rows": [
+    {
+      "arm": "f0",
+      "implementation": "abseil",
+      "value_bytes": 0,
+      "metric": "independent",
+      "samples": 15,
+      "median_ns": 3.15027
+    },
+    {
+      "arm": "f0",
+      "implementation": "abseil",
+      "value_bytes": 0,
+      "metric": "serial",
+      "samples": 15,
+      "median_ns": 5.19581
+    },
+    {
+      "arm": "f0",
+      "implementation": "abseil",
+      "value_bytes": 8,
+      "metric": "independent",
+      "samples": 15,
+      "median_ns": 3.7771
+    },
+    {
+      "arm": "f0",
+      "implementation": "abseil",
+      "value_bytes": 8,
+      "metric": "serial",
+      "samples": 15,
+      "median_ns": 11.0035
+    },
+    {
+      "arm": "f0",
+      "implementation": "iceberg",
+      "value_bytes": 0,
+      "metric": "independent",
+      "samples": 15,
+      "median_ns": 5.26778
+    },
+    {
+      "arm": "f0",
+      "implementation": "iceberg",
+      "value_bytes": 0,
+      "metric": "serial",
+      "samples": 15,
+      "median_ns": 6.99519
+    },
+    {
+      "arm": "f0",
+      "implementation": "iceberg",
+      "value_bytes": 8,
+      "metric": "independent",
+      "samples": 15,
+      "median_ns": 6.66249
+    },
+    {
+      "arm": "f0",
+      "implementation": "iceberg",
+      "value_bytes": 8,
+      "metric": "serial",
+      "samples": 15,
+      "median_ns": 18.2855
+    },
+    {
+      "arm": "f10",
+      "implementation": "abseil",
+      "value_bytes": 0,
+      "metric": "independent",
+      "samples": 15,
+      "median_ns": 3.14741
+    },
+    {
+      "arm": "f10",
+      "implementation": "abseil",
+      "value_bytes": 0,
+      "metric": "serial",
+      "samples": 15,
+      "median_ns": 5.13604
+    },
+    {
+      "arm": "f10",
+      "implementation": "abseil",
+      "value_bytes": 8,
+      "metric": "independent",
+      "samples": 15,
+      "median_ns": 3.73128
+    },
+    {
+      "arm": "f10",
+      "implementation": "abseil",
+      "value_bytes": 8,
+      "metric": "serial",
+      "samples": 15,
+      "median_ns": 10.8464
+    },
+    {
+      "arm": "f10",
+      "implementation": "iceberg",
+      "value_bytes": 0,
+      "metric": "independent",
+      "samples": 15,
+      "median_ns": 6.39479
+    },
+    {
+      "arm": "f10",
+      "implementation": "iceberg",
+      "value_bytes": 0,
+      "metric": "serial",
+      "samples": 15,
+      "median_ns": 8.31665
+    },
+    {
+      "arm": "f10",
+      "implementation": "iceberg",
+      "value_bytes": 8,
+      "metric": "independent",
+      "samples": 15,
+      "median_ns": 7.77718
+    },
+    {
+      "arm": "f10",
+      "implementation": "iceberg",
+      "value_bytes": 8,
+      "metric": "serial",
+      "samples": 15,
+      "median_ns": 19.9332
+    },
+    {
+      "arm": "f4",
+      "implementation": "abseil",
+      "value_bytes": 0,
+      "metric": "independent",
+      "samples": 15,
+      "median_ns": 3.02905
+    },
+    {
+      "arm": "f4",
+      "implementation": "abseil",
+      "value_bytes": 0,
+      "metric": "serial",
+      "samples": 15,
+      "median_ns": 5.15354
+    },
+    {
+      "arm": "f4",
+      "implementation": "abseil",
+      "value_bytes": 8,
+      "metric": "independent",
+      "samples": 15,
+      "median_ns": 3.63869
+    },
+    {
+      "arm": "f4",
+      "implementation": "abseil",
+      "value_bytes": 8,
+      "metric": "serial",
+      "samples": 15,
+      "median_ns": 10.911
+    },
+    {
+      "arm": "f4",
+      "implementation": "iceberg",
+      "value_bytes": 0,
+      "metric": "independent",
+      "samples": 15,
+      "median_ns": 6.32362
+    },
+    {
+      "arm": "f4",
+      "implementation": "iceberg",
+      "value_bytes": 0,
+      "metric": "serial",
+      "samples": 15,
+      "median_ns": 8.61868
+    },
+    {
+      "arm": "f4",
+      "implementation": "iceberg",
+      "value_bytes": 8,
+      "metric": "independent",
+      "samples": 15,
+      "median_ns": 7.8074
+    },
+    {
+      "arm": "f4",
+      "implementation": "iceberg",
+      "value_bytes": 8,
+      "metric": "serial",
+      "samples": 15,
+      "median_ns": 19.4966
+    }
+  ],
+  "input_sha256": {
+    "iceberg_swiss_40_10_0_30_f0-3191-0-0.csv": "bf67146dec4b1dced30ec23609020d09a169ad375f65288a958f760e680df3c9",
+    "iceberg_swiss_40_10_0_30_f0-713-0-0.csv": "fc74a5b4907f4cc41bd8e71df67e1702a5b2993e89007d2b2a9c1bccc7d69289",
+    "iceberg_swiss_40_10_0_30_f0-76543-0-0.csv": "df6b7329ae533296b848dd5b8fe7a27ed973f2bbe87f36a0d729015126e6ca35",
+    "iceberg_swiss_40_10_8_30_f0-3191-0-0.csv": "05d1f850ed6e4c878deaa1c990228504998b48da8bf11a36a5b30c5af4050c0c",
+    "iceberg_swiss_40_10_8_30_f0-713-0-0.csv": "1bba9e259a6f617cad3476e6ec1adfdf174a93907a01194ce8847c73c18809a6",
+    "iceberg_swiss_40_10_8_30_f0-76543-0-0.csv": "41600b943412c6b7fb600ac7de8205b75345c0dffb557d53304ee87184c0225f",
+    "iceberg_swiss_40_10_0_30_f4-3191-0-0.csv": "4714d428b519a60b45f0d88d1e28bf6cdb960d356d9a853d040ba2d831cdbf06",
+    "iceberg_swiss_40_10_0_30_f4-713-0-0.csv": "6941c646ad7cc1fc6ba49908900039ec867f3dd2bbedf65292207a47231e1899",
+    "iceberg_swiss_40_10_0_30_f4-76543-0-0.csv": "a64dda32306644abd6615b6640fc715a67c336e98daca6f2c26d63df1a4ec2fa",
+    "iceberg_swiss_40_10_8_30_f4-3191-0-0.csv": "4828f53e9c74439fc19fde1434f5931304a95a898b4688d449fc2c8c6f8611ef",
+    "iceberg_swiss_40_10_8_30_f4-713-0-0.csv": "e26f626bf27f9cf37b3dc38d0050e7212c5839ab86ef4b9785c77d9b7346603f",
+    "iceberg_swiss_40_10_8_30_f4-76543-0-0.csv": "f56e4e39e2079252a75dc697ce6fb03313345fe54306cbcb10713f56ccf14e48",
+    "iceberg_swiss_40_10_0_30_f10-3191-0-0.csv": "ec6aedc023c7a4c1bf29c2dc791bd93e3c87266bda28c89545affcccc9fadbaf",
+    "iceberg_swiss_40_10_0_30_f10-713-0-0.csv": "2dbc5c33581b1ab6042b815b49d1ae479224026894e6fe6b832f96ed5ff7b6c6",
+    "iceberg_swiss_40_10_0_30_f10-76543-0-0.csv": "01ed1421d873699b8041442705764c7659bc19edd73c04b52652ae412a340b4d",
+    "iceberg_swiss_40_10_8_30_f10-3191-0-0.csv": "f9f2bc96bda09d397256a11b3fff4e5d4cc84b5d0fe7ec58dd6995f3eb5515e7",
+    "iceberg_swiss_40_10_8_30_f10-713-0-0.csv": "fea6cc97474d24de33ebc2ef7c29e6cb64509b25287e1b139ad3b1fc6e29dcb6",
+    "iceberg_swiss_40_10_8_30_f10-76543-0-0.csv": "a703e0102ed7f6b6387b06bb145f08e0de6fa77a7c65b9c31c4ec14df0cfd29a"
+  },
+  "interpretation": "f10 combines LD3 whole-bucket body loading with the graduated query helper; f4 uses LD3 plus table-prepared query and scalar reduction; f0 uses the graduated current SeriesPack filter. This comparison rejects the combined whole-bucket lowering, not the isolated helper. Production filter8/local_equal header hashes match our final qualification."
+}
