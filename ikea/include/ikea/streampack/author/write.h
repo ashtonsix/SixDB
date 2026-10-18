@@ -75,6 +75,64 @@ void append_unchecked(Access a, bytes input, unsigned reservation, Effects& effe
         detail::store(dst.windows().control.data() + 2, std::uint32_t(begin + reservation));
 }
 template <class Access, class Effects>
+void append_fixed_run_unchecked(Access a, bytes input, unsigned count, Effects& effects) {
+    // Admitted fixed() && !has_used() ranks in one real view: count is nonzero, the entire
+    // run fits, and input.size() == count * fixed_width(). All source/effect
+    // aliases are admitted before entry. The cursor/recipe may be snapshots;
+    // effects still identify the original named view through a.source().
+    const auto& dst = a.source();
+    const auto& l = a.format();
+    const auto n = dst.size(), begin = dst.extent();
+    emit(dst, effects, plane::payload, begin, input.size());
+    if (!input.empty())
+        std::memmove(dst.windows().payload.data() + begin, input.data(), input.size());
+    if (l.has_tombstones()) {
+        const auto first = n / 8, last = (n + count - 1) / 8;
+        const auto low = unsigned(255u << (n % 8)) & 255u;
+        const auto high = 255u >> (7 - ((n + count - 1) % 8));
+        emit(dst, effects, plane::directory, first, last - first + 1);
+        if (first == last) {
+            dst.windows().directory[first] &= byte(~(low & high) & 255u);
+        } else {
+            dst.windows().directory[first] &= byte(~low & 255u);
+            if (count > 8 && last > first + 1)
+                std::memset(dst.windows().directory.data() + first + 1, 0, last - first - 1);
+            dst.windows().directory[last] &= byte(~high & 255u);
+        }
+    }
+    emit(dst, effects, plane::control, 0, l.control_bytes());
+    detail::store(dst.windows().control.data(), std::uint16_t(n + count));
+    if (l.has_extent())
+        detail::store(dst.windows().control.data() + 2, std::uint32_t(begin + input.size()));
+}
+template <class Access, class Effects>
+void replace_fixed_run_unchecked(Access a, unsigned rank, bytes input, Effects& effects) {
+    // Admitted nonempty contiguous live fixed() && !has_used() ranks. Input contains whole
+    // values and fits this run; replacement does not alter its rank count.
+    const auto& dst = a.source();
+    const auto begin = a.start(rank);
+    emit(dst, effects, plane::payload, begin, input.size());
+    if (!input.empty())
+        std::memmove(dst.windows().payload.data() + begin, input.data(), input.size());
+}
+template <class Access, class Effects>
+void extend_unchecked(Access a, unsigned rank, bytes suffix, Effects& effects) {
+    // An admitted live rank with has_used(), U <= R, and suffix.size() <= R-U.
+    // U+suffix fits the schema maximum and width carrier. Source/effect alias
+    // admission and both write ranges precede entry; hooks cannot invalidate
+    // borrowed input. The rank's reservation, geometry and liveness stay fixed.
+    if (suffix.empty())
+        return;
+    const auto& dst = a.source();
+    const auto used = a.length(rank), begin = a.start(rank);
+    const auto offset = a.format().used_offset() + a.width_offset(rank);
+    using W = typename Access::width_type;
+    emit(dst, effects, plane::payload, begin + used, suffix.size());
+    std::memmove(dst.windows().payload.data() + begin + used, suffix.data(), suffix.size());
+    emit(dst, effects, plane::lengths, offset, sizeof(W));
+    detail::store(dst.windows().lengths.data() + offset, W(used + suffix.size()));
+}
+template <class Access, class Effects>
 void replace_unchecked(Access a, unsigned rank, bytes input, Effects& effects) {
     const auto& dst = a.source();
     const auto begin = a.start(rank);
