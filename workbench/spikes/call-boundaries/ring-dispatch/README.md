@@ -230,7 +230,7 @@ The ordinary timing trace contains 4,190,897 primary and 3,407 secondary keys,
 with no overflow: only 0.0812% downstream. It mainly tests ready-path costs.
 Separate forced controls exercise 32 real secondary and 80 overflow keys,
 ragged masks, exact budgets, promotion and cancellation. The captured Ikea
-[complete hierarchy comparison](../../hashtable/evidence/table-ring-neon/artifact.json)
+[complete hierarchy comparison](../../../notebook/retired-spikes.md#hashtable-promotion-and-curation--october-17-2026)
 contains the genuine aged-chain workload. Its independently checked Zen5 AVX2
 large-table Ring/manual gaps are 0.32 ns for fresh hits and 0.74 ns after eight
 turnovers; its ready callback is call-free and stack-free. That source/value
