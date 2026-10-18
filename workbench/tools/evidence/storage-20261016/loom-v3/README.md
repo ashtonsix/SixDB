@@ -25,4 +25,4 @@ corresponding reference under `references/`, then copy the recovered member to
 the original relative path if needed. Local `.artifact-eviction-SHA.json` files
 remain beside each affected root. The original compact analysis evidence and
 its portable replay instructions are in
-[`context-sequence-analysis-v3`](../../../../spikes/loom-independent/evidence/context-sequence-analysis-v3/README.md).
+[`context-sequence-analysis-v3`](../../../../notebook/retired-spikes.md#hashtable-promotion-and-curation--october-17-2026).

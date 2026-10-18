@@ -1,0 +1,229 @@
+{
+  "checks": [
+    {
+      "profile": "arm",
+      "header": "author/table.h",
+      "pass": true
+    },
+    {
+      "profile": "arm",
+      "header": "bits.h",
+      "pass": true
+    },
+    {
+      "profile": "arm",
+      "header": "bucket-filter.h",
+      "pass": true
+    },
+    {
+      "profile": "arm",
+      "header": "encoding-profiles.h",
+      "pass": true
+    },
+    {
+      "profile": "arm",
+      "header": "encoding-selection.h",
+      "pass": true
+    },
+    {
+      "profile": "arm",
+      "header": "geometry.h",
+      "pass": true
+    },
+    {
+      "profile": "arm",
+      "header": "kernel.h",
+      "pass": true
+    },
+    {
+      "profile": "arm",
+      "header": "mutation.h",
+      "pass": true
+    },
+    {
+      "profile": "arm",
+      "header": "packed30.h",
+      "pass": true
+    },
+    {
+      "profile": "arm",
+      "header": "storage.h",
+      "pass": true
+    },
+    {
+      "profile": "arm",
+      "header": "table.h",
+      "pass": true
+    },
+    {
+      "profile": "arm",
+      "include_order": [
+        "packed30.h",
+        "table.h"
+      ],
+      "pass": true
+    },
+    {
+      "profile": "arm",
+      "include_order": [
+        "bucket-filter.h",
+        "table.h"
+      ],
+      "pass": true
+    },
+    {
+      "profile": "avx2",
+      "header": "author/table.h",
+      "pass": true
+    },
+    {
+      "profile": "avx2",
+      "header": "bits.h",
+      "pass": true
+    },
+    {
+      "profile": "avx2",
+      "header": "bucket-filter.h",
+      "pass": true
+    },
+    {
+      "profile": "avx2",
+      "header": "encoding-profiles.h",
+      "pass": true
+    },
+    {
+      "profile": "avx2",
+      "header": "encoding-selection.h",
+      "pass": true
+    },
+    {
+      "profile": "avx2",
+      "header": "geometry.h",
+      "pass": true
+    },
+    {
+      "profile": "avx2",
+      "header": "kernel.h",
+      "pass": true
+    },
+    {
+      "profile": "avx2",
+      "header": "mutation.h",
+      "pass": true
+    },
+    {
+      "profile": "avx2",
+      "header": "packed30.h",
+      "pass": true
+    },
+    {
+      "profile": "avx2",
+      "header": "storage.h",
+      "pass": true
+    },
+    {
+      "profile": "avx2",
+      "header": "table.h",
+      "pass": true
+    },
+    {
+      "profile": "avx2",
+      "include_order": [
+        "packed30.h",
+        "table.h"
+      ],
+      "pass": true
+    },
+    {
+      "profile": "avx2",
+      "include_order": [
+        "bucket-filter.h",
+        "table.h"
+      ],
+      "pass": true
+    },
+    {
+      "profile": "avx512",
+      "header": "author/table.h",
+      "pass": true
+    },
+    {
+      "profile": "avx512",
+      "header": "bits.h",
+      "pass": true
+    },
+    {
+      "profile": "avx512",
+      "header": "bucket-filter.h",
+      "pass": true
+    },
+    {
+      "profile": "avx512",
+      "header": "encoding-profiles.h",
+      "pass": true
+    },
+    {
+      "profile": "avx512",
+      "header": "encoding-selection.h",
+      "pass": true
+    },
+    {
+      "profile": "avx512",
+      "header": "geometry.h",
+      "pass": true
+    },
+    {
+      "profile": "avx512",
+      "header": "kernel.h",
+      "pass": true
+    },
+    {
+      "profile": "avx512",
+      "header": "mutation.h",
+      "pass": true
+    },
+    {
+      "profile": "avx512",
+      "header": "packed30.h",
+      "pass": true
+    },
+    {
+      "profile": "avx512",
+      "header": "storage.h",
+      "pass": true
+    },
+    {
+      "profile": "avx512",
+      "header": "table.h",
+      "pass": true
+    },
+    {
+      "profile": "avx512",
+      "include_order": [
+        "packed30.h",
+        "table.h"
+      ],
+      "pass": true
+    },
+    {
+      "profile": "avx512",
+      "include_order": [
+        "bucket-filter.h",
+        "table.h"
+      ],
+      "pass": true
+    }
+  ],
+  "codegen_identical": [
+    "arm",
+    "avx2",
+    "avx512"
+  ],
+  "assembly_sha256": {
+    "arm": "8739b41ce340533ab8d9a023bf31e266af7732d64f9ea91d2e3e7b24247a9dc6",
+    "avx2": "aab57d78301f3ba758f6d84e145f865a53e76dde435027978afeb3f96c561a6b",
+    "avx512": "b916f5d9fad66d10b364038269d56dcb2d4bd3b6b233b83b95960b7ccd88df3d"
+  },
+  "owner": "Tooling thread 01a10b93-ff68-7490-bf37-d2874cb04328",
+  "scope": "Frozen reference header self-containment, exact declaration moves; no algorithm change."
+}

@@ -22,4 +22,4 @@ Each root's `.artifact-eviction-SHA.json` maps local names under `files` to an
 `references/`, then copy it to the original relative path if needed. Maps also
 remain locally beside the affected roots. The retained analysis and portable
 replay instructions are in
-[`maintained-composition-analysis-v1`](../../../../spikes/loom-independent/evidence/maintained-composition-analysis-v1/README.md).
+[`maintained-composition-analysis-v1`](../../../../notebook/retired-spikes.md#hashtable-promotion-and-curation--october-17-2026).

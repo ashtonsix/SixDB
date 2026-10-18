@@ -1,0 +1,53 @@
+{
+  "source_digest": "badd1c0e41b05c3392e380fd37def042ee97173a529cfa764b4f05bc8abc1ee9",
+  "kernel_tokens_preserved": true,
+  "benchmark_change": "Unused parameter name omitted; type/ABI/body unchanged.",
+  "local_release_check": {
+    "histories": 26,
+    "passed": true,
+    "sha256": "248fdfcaa61fc57b137bd30ad56626e1c91a878fe64928471ddc39dc77f3ddd0"
+  },
+  "local_smoke": {
+    "rows": 16,
+    "complete_payload_oracle": true,
+    "sha256": "1f48c59f8b8f87f6ea902abfc8d34f5bd0995b1c460e79c21d5e4b013991463a"
+  },
+  "native_prefetch_qualification": [
+    {
+      "cpu": "zen5",
+      "job": "20261017T212106Z-641923db",
+      "cells": 48,
+      "rows": 2304,
+      "native_check": true,
+      "asan_ubsan": true
+    },
+    {
+      "cpu": "granite-rapids",
+      "job": "20261017T212106Z-884a99a3",
+      "cells": 48,
+      "rows": 2304,
+      "native_check": true,
+      "asan_ubsan": true
+    }
+  ],
+  "hot_instruction_bodies_preserved": {
+    "zen5": 18,
+    "granite-rapids": 18
+  },
+  "active_experiments": [],
+  "deferred": [
+    "Wide-hot and ARM gaps",
+    "Ordinary x86 copy/add and wide map64/partial-value throughput qualification",
+    "Public mutable accumulation integration; K-way/multimap remain research"
+  ],
+  "frozen_header_self_containment": {
+    "checks": 39,
+    "profiles": [
+      "arm",
+      "avx2",
+      "avx512"
+    ],
+    "probe_assembly_identical": true,
+    "owner": "Tooling"
+  }
+}

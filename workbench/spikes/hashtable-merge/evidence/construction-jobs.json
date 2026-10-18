@@ -1,0 +1,1100 @@
+[
+  {
+    "job": "20261017T171142Z-ee69b770",
+    "cpu": "zen5",
+    "script": "workbench/spikes/hashtable-merge/pipeline-native.sh",
+    "source": {
+      "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+      "digest": "72708bd0256482729e7eff0fe6494a6819ec2e30dfcd56f0db8df40588943da4",
+      "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+      "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c",
+      "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+      "sha256": "b8f113446285b171a3c5d8fcead1b4b95d0d4d1fbc2ce2f75d6a404ec35409ee"
+    },
+    "artifact": {
+      "bucket": "calico-fleet-artifacts",
+      "bytes": 13854392,
+      "files": 90,
+      "format": 1,
+      "key": "sixdb/artifacts/sha256/34166b1c75453c0a207e3c30f2cb713cd99e250126a2a6fc34b98cf5a0fdb939.tar.gz",
+      "kind": "files",
+      "region": "us-east-1",
+      "sha256": "34166b1c75453c0a207e3c30f2cb713cd99e250126a2a6fc34b98cf5a0fdb939",
+      "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/34166b1c75453c0a207e3c30f2cb713cd99e250126a2a6fc34b98cf5a0fdb939.tar.gz"
+    }
+  },
+  {
+    "job": "20261017T171811Z-193a07e7",
+    "cpu": "zen5",
+    "script": "workbench/spikes/hashtable-merge/bucket-native.sh",
+    "source": {
+      "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+      "digest": "72e713cd024cf90d0e5d6fccda4babf343b7936c1fd7da92323108f3a6f50f76",
+      "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+      "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c",
+      "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+      "sha256": "366e00353ef0f18b98ee7bade1588ec8271bb40e73e67161180db3f1c6aef354"
+    },
+    "artifact": {
+      "bucket": "calico-fleet-artifacts",
+      "bytes": 18050081,
+      "files": 292,
+      "format": 1,
+      "key": "sixdb/artifacts/sha256/c2e8630038673b9d77d26080dd36cd42e83cc7d50580f0ee4bdc0e61965a48e1.tar.gz",
+      "kind": "files",
+      "region": "us-east-1",
+      "sha256": "c2e8630038673b9d77d26080dd36cd42e83cc7d50580f0ee4bdc0e61965a48e1",
+      "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/c2e8630038673b9d77d26080dd36cd42e83cc7d50580f0ee4bdc0e61965a48e1.tar.gz"
+    }
+  },
+  {
+    "job": "20261017T172724Z-bf0631c5",
+    "cpu": "granite-rapids",
+    "script": "workbench/spikes/hashtable-merge/group-native.sh",
+    "source": {
+      "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+      "digest": "b06fbbcfcf8e8d754049cf52614c45fbd8d7a2820274cc42b3e49a4e9f4e3e76",
+      "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+      "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c",
+      "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+      "sha256": "90fbf40e223f626ce1f7e58ff0cb3cd6b0c7c61ca04c19a40679352101191b99"
+    },
+    "artifact": {
+      "bucket": "calico-fleet-artifacts",
+      "bytes": 14129604,
+      "files": 75,
+      "format": 1,
+      "key": "sixdb/artifacts/sha256/0a87a75f9307a0673d12d63bded9d4c7f6442300f602ed4e57c12e216baaac86.tar.gz",
+      "kind": "files",
+      "region": "us-east-1",
+      "sha256": "0a87a75f9307a0673d12d63bded9d4c7f6442300f602ed4e57c12e216baaac86",
+      "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/0a87a75f9307a0673d12d63bded9d4c7f6442300f602ed4e57c12e216baaac86.tar.gz"
+    }
+  },
+  {
+    "job": "20261017T172724Z-4edb7867",
+    "cpu": "neoverse-v2",
+    "script": "workbench/spikes/hashtable-merge/group-native.sh",
+    "source": {
+      "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+      "digest": "b06fbbcfcf8e8d754049cf52614c45fbd8d7a2820274cc42b3e49a4e9f4e3e76",
+      "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+      "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c",
+      "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+      "sha256": "90fbf40e223f626ce1f7e58ff0cb3cd6b0c7c61ca04c19a40679352101191b99"
+    },
+    "artifact": {
+      "bucket": "calico-fleet-artifacts",
+      "bytes": 13925959,
+      "files": 75,
+      "format": 1,
+      "key": "sixdb/artifacts/sha256/3d97ee317da81feb383a5fa825a30431dd7e781dbb4f9d084aa16f88291995e1.tar.gz",
+      "kind": "files",
+      "region": "us-east-1",
+      "sha256": "3d97ee317da81feb383a5fa825a30431dd7e781dbb4f9d084aa16f88291995e1",
+      "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/3d97ee317da81feb383a5fa825a30431dd7e781dbb4f9d084aa16f88291995e1.tar.gz"
+    }
+  },
+  {
+    "job": "20261017T173019Z-07bbfc9e",
+    "cpu": "zen5",
+    "script": "workbench/spikes/hashtable-merge/group-native.sh",
+    "source": {
+      "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+      "digest": "b06fbbcfcf8e8d754049cf52614c45fbd8d7a2820274cc42b3e49a4e9f4e3e76",
+      "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+      "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c",
+      "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+      "sha256": "90fbf40e223f626ce1f7e58ff0cb3cd6b0c7c61ca04c19a40679352101191b99"
+    },
+    "artifact": {
+      "bucket": "calico-fleet-artifacts",
+      "bytes": 14257290,
+      "files": 74,
+      "format": 1,
+      "key": "sixdb/artifacts/sha256/ad02909f3e27a0f7075927cf1757328b547d9a8a0da70f107cc061349c68beaa.tar.gz",
+      "kind": "files",
+      "region": "us-east-1",
+      "sha256": "ad02909f3e27a0f7075927cf1757328b547d9a8a0da70f107cc061349c68beaa",
+      "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/ad02909f3e27a0f7075927cf1757328b547d9a8a0da70f107cc061349c68beaa.tar.gz"
+    }
+  },
+  {
+    "job": "20261017T173400Z-94d1fd3f",
+    "cpu": "granite-rapids",
+    "script": "workbench/spikes/hashtable-merge/register-native.sh",
+    "source": {
+      "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+      "digest": "a99aec48a798857c18e43a58a6a051b2d9cdca23a81e44486937ed43a3ce1b22",
+      "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+      "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c",
+      "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+      "sha256": "4a2b1f9b12d4e519dd0d4ab579ae3e9c7767f018d2b8c80a7a9fb7ee814a7523"
+    },
+    "artifact": {
+      "bucket": "calico-fleet-artifacts",
+      "bytes": 14117759,
+      "files": 74,
+      "format": 1,
+      "key": "sixdb/artifacts/sha256/48048fab9836938e3abc9bb3a609f2407ec119ed7d639999d847ff1a01a8df1b.tar.gz",
+      "kind": "files",
+      "region": "us-east-1",
+      "sha256": "48048fab9836938e3abc9bb3a609f2407ec119ed7d639999d847ff1a01a8df1b",
+      "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/48048fab9836938e3abc9bb3a609f2407ec119ed7d639999d847ff1a01a8df1b.tar.gz"
+    }
+  },
+  {
+    "job": "20261017T173656Z-9c71d0ae",
+    "cpu": "zen5",
+    "script": "workbench/spikes/hashtable-merge/register-native.sh",
+    "source": {
+      "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+      "digest": "c765a1d3cdadd4cfa90341f60463cfd0486e1073a32f12900d6486a93e3637f4",
+      "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+      "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c",
+      "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+      "sha256": "5f557f469292c8ca6c4bc0050bd8e2c0726b08c1a9365a2833e87927e7993a10"
+    },
+    "artifact": {
+      "bucket": "calico-fleet-artifacts",
+      "bytes": 14247502,
+      "files": 74,
+      "format": 1,
+      "key": "sixdb/artifacts/sha256/318d777b12f571f0fa76282feceace78243b619d697fdfcd7d9aece6c76533d2.tar.gz",
+      "kind": "files",
+      "region": "us-east-1",
+      "sha256": "318d777b12f571f0fa76282feceace78243b619d697fdfcd7d9aece6c76533d2",
+      "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/318d777b12f571f0fa76282feceace78243b619d697fdfcd7d9aece6c76533d2.tar.gz"
+    }
+  },
+  {
+    "job": "20261017T174357Z-a27905fa",
+    "cpu": "zen5",
+    "script": "workbench/spikes/hashtable-merge/cache-native.sh",
+    "source": {
+      "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+      "digest": "14dce50aeb9125ebe6646b3461285fc9a89213c4ec747effc808b499335b5816",
+      "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+      "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c",
+      "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+      "sha256": "a1bcf7178f458508789caf27a903d33283645a501774bbcfdd2185ec9e812608"
+    },
+    "artifact": {
+      "bucket": "calico-fleet-artifacts",
+      "bytes": 14362650,
+      "files": 74,
+      "format": 1,
+      "key": "sixdb/artifacts/sha256/9f164877ccc4796ac26088d045015653c0c0ec4f12846212697a23336486ea60.tar.gz",
+      "kind": "files",
+      "region": "us-east-1",
+      "sha256": "9f164877ccc4796ac26088d045015653c0c0ec4f12846212697a23336486ea60",
+      "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/9f164877ccc4796ac26088d045015653c0c0ec4f12846212697a23336486ea60.tar.gz"
+    }
+  },
+  {
+    "job": "20261017T175054Z-49d7b915",
+    "cpu": "neoverse-v2",
+    "script": "workbench/spikes/hashtable-merge/register-native.sh",
+    "source": {
+      "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+      "digest": "5f384316c044c89665055f5caa43215a91d4e20b92582ee90f352c2cb3d63f74",
+      "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+      "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c",
+      "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+      "sha256": "deab04ad113d2c048f96f9b029d2497246657c33e3ba871436d54b6cf06d3191"
+    },
+    "artifact": {
+      "bucket": "calico-fleet-artifacts",
+      "bytes": 14101644,
+      "files": 75,
+      "format": 1,
+      "key": "sixdb/artifacts/sha256/3f550d10d52d55c054b75e1baa982fbdb599695498bc730d3fb10dc450ee7730.tar.gz",
+      "kind": "files",
+      "region": "us-east-1",
+      "sha256": "3f550d10d52d55c054b75e1baa982fbdb599695498bc730d3fb10dc450ee7730",
+      "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/3f550d10d52d55c054b75e1baa982fbdb599695498bc730d3fb10dc450ee7730.tar.gz"
+    }
+  },
+  {
+    "job": "20261017T175704Z-6ab8d53f",
+    "cpu": "zen5",
+    "script": "workbench/spikes/hashtable-merge/wide-native.sh",
+    "source": {
+      "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+      "digest": "e9a03732fc6007ecd21988d70413dbfcd979c744deddb729d4c0c20f96db5979",
+      "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+      "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c",
+      "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+      "sha256": "e8351fc5abc5bddcdecb971041bf554c284dfba9e2bcf55dd358a4f4161ea425"
+    },
+    "artifact": {
+      "bucket": "calico-fleet-artifacts",
+      "bytes": 18335242,
+      "files": 130,
+      "format": 1,
+      "key": "sixdb/artifacts/sha256/f1d155cbe07d92d976be999d7362485ac288f61e1d9cbd9e5c788d094db277bc.tar.gz",
+      "kind": "files",
+      "region": "us-east-1",
+      "sha256": "f1d155cbe07d92d976be999d7362485ac288f61e1d9cbd9e5c788d094db277bc",
+      "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/f1d155cbe07d92d976be999d7362485ac288f61e1d9cbd9e5c788d094db277bc.tar.gz"
+    }
+  },
+  {
+    "job": "20261017T181633Z-8e21b2e2",
+    "cpu": "zen5",
+    "script": "workbench/spikes/hashtable-merge/counter-native.sh",
+    "source": {
+      "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+      "digest": "2df857ee9df246b94a8314e1fb45ad75dac05a643407eda6e82f6dfdee4facf6",
+      "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+      "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c",
+      "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+      "sha256": "765703b66caf7d402c653f47afa2cb74f1148363cb95962bcb9939305a3bf078"
+    },
+    "artifact": {
+      "bucket": "calico-fleet-artifacts",
+      "bytes": 18344682,
+      "files": 76,
+      "format": 1,
+      "key": "sixdb/artifacts/sha256/646348396389a1ccb6ffce2242ff619b7ddf5e066ad14cb2ee09abbcb7ec9302.tar.gz",
+      "kind": "files",
+      "region": "us-east-1",
+      "sha256": "646348396389a1ccb6ffce2242ff619b7ddf5e066ad14cb2ee09abbcb7ec9302",
+      "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/646348396389a1ccb6ffce2242ff619b7ddf5e066ad14cb2ee09abbcb7ec9302.tar.gz"
+    },
+    "evidence": "counter-zen5.json"
+  },
+  {
+    "job": "20261017T182719Z-8e528ba4",
+    "cpu": "zen5",
+    "script": "workbench/spikes/hashtable-merge/defer-native.sh",
+    "source": {
+      "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+      "digest": "7c3ccd75dd0c2c58837a729d983e63651165a619b0fedea162bd256f3993eabf",
+      "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+      "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c",
+      "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+      "sha256": "af1d625a51a5ce9bc10a563a958ef07bbbb7a02219d4290ce21fcff521aad956"
+    },
+    "artifact": {
+      "bucket": "calico-fleet-artifacts",
+      "bytes": 13381234,
+      "files": 38,
+      "format": 1,
+      "key": "sixdb/artifacts/sha256/f86edf10863317427af17db5183486def06a31c015ee1e8e6856353af69f792c.tar.gz",
+      "kind": "files",
+      "region": "us-east-1",
+      "sha256": "f86edf10863317427af17db5183486def06a31c015ee1e8e6856353af69f792c",
+      "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/f86edf10863317427af17db5183486def06a31c015ee1e8e6856353af69f792c.tar.gz"
+    },
+    "evidence": "defer-zen5.json"
+  },
+  {
+    "job": "20261017T182719Z-671c878f",
+    "cpu": "granite-rapids",
+    "script": "workbench/spikes/hashtable-merge/defer-native.sh",
+    "source": {
+      "sha256": "af1d625a51a5ce9bc10a563a958ef07bbbb7a02219d4290ce21fcff521aad956",
+      "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+      "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+      "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+      "digest": "7c3ccd75dd0c2c58837a729d983e63651165a619b0fedea162bd256f3993eabf",
+      "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c"
+    },
+    "artifact": {
+      "bucket": "calico-fleet-artifacts",
+      "bytes": 14596701,
+      "files": 58,
+      "format": 1,
+      "key": "sixdb/artifacts/sha256/4248c13fa6ab9a4e1e86337f89849339b90b0310758ad68fbc7f1512736e5efb.tar.gz",
+      "kind": "files",
+      "region": "us-east-1",
+      "sha256": "4248c13fa6ab9a4e1e86337f89849339b90b0310758ad68fbc7f1512736e5efb",
+      "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/4248c13fa6ab9a4e1e86337f89849339b90b0310758ad68fbc7f1512736e5efb.tar.gz"
+    },
+    "evidence": "defer-granite.json"
+  },
+  {
+    "job": "20261017T183800Z-19801d0f",
+    "cpu": "zen5",
+    "script": "workbench/spikes/hashtable-merge/general-native.sh",
+    "source": {
+      "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+      "digest": "f735d37ee940e49412cb24719adca6a25d474f889ee757736b5eb12e25ef1aa8",
+      "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+      "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c",
+      "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+      "sha256": "fd075751623f17790e2d393d844dc528b7cc733abbff47bc488c0de83587fa42"
+    },
+    "artifact": {
+      "bucket": "calico-fleet-artifacts",
+      "bytes": 13428672,
+      "files": 74,
+      "format": 1,
+      "key": "sixdb/artifacts/sha256/45466659fc3106053ee7434ef05eca0db86b3078494e39f18897759a6829821e.tar.gz",
+      "kind": "files",
+      "region": "us-east-1",
+      "sha256": "45466659fc3106053ee7434ef05eca0db86b3078494e39f18897759a6829821e",
+      "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/45466659fc3106053ee7434ef05eca0db86b3078494e39f18897759a6829821e.tar.gz"
+    },
+    "evidence": "general-zen5.json"
+  },
+  {
+    "job": "20261017T184423Z-f14a1405",
+    "cpu": "neoverse-v2",
+    "script": "workbench/spikes/hashtable-merge/point-native.sh",
+    "source": {
+      "sha256": "3e019699d8a399cc848a2f404bb8e9291881440633195557ee0ed9e45915b045",
+      "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+      "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+      "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+      "digest": "a4b821be31379235d584c72b9381c439b50260820bcfa9c5090e56b76aeac7d6",
+      "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c"
+    },
+    "artifact": {
+      "bucket": "calico-fleet-artifacts",
+      "bytes": 13204008,
+      "files": 75,
+      "format": 1,
+      "key": "sixdb/artifacts/sha256/ecf672cd4b4f4c65d1cc29973fce41b5a55fa0444cb9715741bfcc89a93bcaf2.tar.gz",
+      "kind": "files",
+      "region": "us-east-1",
+      "sha256": "ecf672cd4b4f4c65d1cc29973fce41b5a55fa0444cb9715741bfcc89a93bcaf2",
+      "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/ecf672cd4b4f4c65d1cc29973fce41b5a55fa0444cb9715741bfcc89a93bcaf2.tar.gz"
+    },
+    "evidence": "points-neoverse.json"
+  },
+  {
+    "job": "20261017T185611Z-68ed10b5",
+    "cpu": "zen5",
+    "script": "workbench/spikes/hashtable-merge/size-native.sh",
+    "source": {
+      "sha256": "4e78c4f1714c7c499a4fce19c12d020da55ad7eaf76179601087e0322cab54a8",
+      "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+      "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+      "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+      "digest": "22ab5d2e3270c2d74b7d958bfc74696120a62ed4710be7800d133c4c28a7048f",
+      "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c"
+    },
+    "artifact": {
+      "bucket": "calico-fleet-artifacts",
+      "bytes": 14693488,
+      "files": 93,
+      "format": 1,
+      "key": "sixdb/artifacts/sha256/9d4b183d935419fd43dabfc3595cdb3ee9f36e06c58b77a2eaa1874bc7dc1ee4.tar.gz",
+      "kind": "files",
+      "region": "us-east-1",
+      "sha256": "9d4b183d935419fd43dabfc3595cdb3ee9f36e06c58b77a2eaa1874bc7dc1ee4",
+      "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/9d4b183d935419fd43dabfc3595cdb3ee9f36e06c58b77a2eaa1874bc7dc1ee4.tar.gz"
+    },
+    "evidence": "size-zen5.json"
+  },
+  {
+    "job": "20261017T185611Z-c58018a4",
+    "cpu": "granite-rapids",
+    "script": "workbench/spikes/hashtable-merge/size-native.sh",
+    "source": {
+      "sha256": "4e78c4f1714c7c499a4fce19c12d020da55ad7eaf76179601087e0322cab54a8",
+      "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+      "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+      "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+      "digest": "22ab5d2e3270c2d74b7d958bfc74696120a62ed4710be7800d133c4c28a7048f",
+      "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c"
+    },
+    "artifact": {
+      "bucket": "calico-fleet-artifacts",
+      "bytes": 14741219,
+      "files": 93,
+      "format": 1,
+      "key": "sixdb/artifacts/sha256/91c9cf9fb5f4f93ee44ca24846a70544729512c075ef0dd71be4798667603970.tar.gz",
+      "kind": "files",
+      "region": "us-east-1",
+      "sha256": "91c9cf9fb5f4f93ee44ca24846a70544729512c075ef0dd71be4798667603970",
+      "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/91c9cf9fb5f4f93ee44ca24846a70544729512c075ef0dd71be4798667603970.tar.gz"
+    },
+    "evidence": "size-granite.json"
+  },
+  {
+    "job": "20261017T185919Z-2ba0b542",
+    "cpu": "neoverse-v2",
+    "script": "workbench/spikes/hashtable-merge/qualify-native.sh",
+    "source": {
+      "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+      "digest": "129c0be72dc22d17ed7c444b9dfa8d1f6e7a6cefb7b6abcacef25c710a67599e",
+      "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+      "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c",
+      "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+      "sha256": "6afa44cd1264d776f83f96ffa95b724bb194e6589d2743c03643d4b535848f78"
+    },
+    "artifact": {
+      "bucket": "calico-fleet-artifacts",
+      "bytes": 13159537,
+      "files": 75,
+      "format": 1,
+      "key": "sixdb/artifacts/sha256/ab3a3d92411d013b545dc17cd2ff9b5e2902f047cf533242373b6d57820168bb.tar.gz",
+      "kind": "files",
+      "region": "us-east-1",
+      "sha256": "ab3a3d92411d013b545dc17cd2ff9b5e2902f047cf533242373b6d57820168bb",
+      "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/ab3a3d92411d013b545dc17cd2ff9b5e2902f047cf533242373b6d57820168bb.tar.gz"
+    },
+    "evidence": "wordadd-neoverse.json"
+  },
+  {
+    "job": "20261017T191119Z-ae0caca8",
+    "cpu": "zen5",
+    "script": "workbench/spikes/hashtable-merge/qualify-native.sh",
+    "source": {
+      "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+      "digest": "56cf0d5961f7e6739f20f5de82ffa6db5dc276772ea07e7b1c88d32ecd889ffa",
+      "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+      "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c",
+      "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+      "sha256": "68ede56d0fa27c5c31ef72b0b89ca552229cbb7d0d5ca90e47d8d83a1db9078a"
+    },
+    "artifact": {
+      "bucket": "calico-fleet-artifacts",
+      "bytes": 15781144,
+      "files": 185,
+      "format": 1,
+      "key": "sixdb/artifacts/sha256/4aa7944997eb6c036bcf4e03093038f11f62c1365cabb604c7a6a470e3e64863.tar.gz",
+      "kind": "files",
+      "region": "us-east-1",
+      "sha256": "4aa7944997eb6c036bcf4e03093038f11f62c1365cabb604c7a6a470e3e64863",
+      "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/4aa7944997eb6c036bcf4e03093038f11f62c1365cabb604c7a6a470e3e64863.tar.gz"
+    },
+    "evidence": "candidate-zen5.json"
+  },
+  {
+    "job": "20261017T190725Z-4e324f52",
+    "cpu": "granite-rapids",
+    "script": "workbench/spikes/hashtable-merge/qualify-native.sh",
+    "source": {
+      "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+      "digest": "9238e73190a24735a5a40f350028e727c1afe4a0ec11d8787f099998a832c8e3",
+      "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+      "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c",
+      "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+      "sha256": "899e36aa253b842ed1c43a6614881e2a34c63ab58398e2ab55cdc57f90ea9fba"
+    },
+    "artifact": {
+      "bucket": "calico-fleet-artifacts",
+      "bytes": 15751872,
+      "files": 185,
+      "format": 1,
+      "key": "sixdb/artifacts/sha256/2511e205d72b5d95908367d79225cd4e685ef69a6971ded0d3e5f0ea727cd447.tar.gz",
+      "kind": "files",
+      "region": "us-east-1",
+      "sha256": "2511e205d72b5d95908367d79225cd4e685ef69a6971ded0d3e5f0ea727cd447",
+      "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/2511e205d72b5d95908367d79225cd4e685ef69a6971ded0d3e5f0ea727cd447.tar.gz"
+    },
+    "evidence": "candidate-granite.json"
+  },
+  {
+    "job": "20261017T191800Z-fa662332",
+    "cpu": "neoverse-v2",
+    "script": "workbench/spikes/hashtable-merge/qualify-native.sh",
+    "source": {
+      "sha256": "d191922a943cb8ec59c5685ff15760f8c0832acb73e4cb8927e8f9edacf8d550",
+      "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+      "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+      "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+      "digest": "ec3c142938d754c8b338a60b4b1a216afcdcb0fed1dd51096765658bda0e6dc3",
+      "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c"
+    },
+    "artifact": {
+      "bucket": "calico-fleet-artifacts",
+      "bytes": 15200116,
+      "files": 186,
+      "format": 1,
+      "key": "sixdb/artifacts/sha256/fd0f9d2650a5cbbb9e40548ddecf5b0dccb4e4fbb6f566dde88f5a2360b5c0b3.tar.gz",
+      "kind": "files",
+      "region": "us-east-1",
+      "sha256": "fd0f9d2650a5cbbb9e40548ddecf5b0dccb4e4fbb6f566dde88f5a2360b5c0b3",
+      "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/fd0f9d2650a5cbbb9e40548ddecf5b0dccb4e4fbb6f566dde88f5a2360b5c0b3.tar.gz"
+    },
+    "evidence": "candidate-neoverse.json"
+  },
+  {
+    "job": "20261017T190529Z-8a529cb9",
+    "cpu": "zen5",
+    "script": "workbench/spikes/hashtable-merge/qualify-native.sh",
+    "source": {
+      "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+      "digest": "f05e8253acfc2896b7ab9194e8ef4a1c8507544b10def30cf5fbd4ac48a26ff7",
+      "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+      "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c",
+      "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+      "sha256": "5abc77f20620db8248e878cdedf7b1dcad25269136b2062d4f57293a47f03cbc"
+    },
+    "artifact": {
+      "bucket": "calico-fleet-artifacts",
+      "bytes": 13548665,
+      "files": 93,
+      "format": 1,
+      "key": "sixdb/artifacts/sha256/82c31d458cbb56ca64ae5b044b535365df8a45b8449be0ac841361152334c8d0.tar.gz",
+      "kind": "files",
+      "region": "us-east-1",
+      "sha256": "82c31d458cbb56ca64ae5b044b535365df8a45b8449be0ac841361152334c8d0",
+      "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/82c31d458cbb56ca64ae5b044b535365df8a45b8449be0ac841361152334c8d0.tar.gz"
+    },
+    "evidence": "wide-key-zen5.json"
+  },
+  {
+    "job": "20261017T191800Z-159f8aea",
+    "cpu": "granite-rapids",
+    "script": "workbench/spikes/hashtable-merge/qualify-native.sh",
+    "source": {
+      "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+      "digest": "ec3c142938d754c8b338a60b4b1a216afcdcb0fed1dd51096765658bda0e6dc3",
+      "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+      "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c",
+      "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+      "sha256": "d191922a943cb8ec59c5685ff15760f8c0832acb73e4cb8927e8f9edacf8d550"
+    },
+    "artifact": {
+      "bucket": "calico-fleet-artifacts",
+      "bytes": 13607668,
+      "files": 93,
+      "format": 1,
+      "key": "sixdb/artifacts/sha256/4b5d5d705dbdeab2b279e82077c52d855a459302134b5420d3e4d5b17832077a.tar.gz",
+      "kind": "files",
+      "region": "us-east-1",
+      "sha256": "4b5d5d705dbdeab2b279e82077c52d855a459302134b5420d3e4d5b17832077a",
+      "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/4b5d5d705dbdeab2b279e82077c52d855a459302134b5420d3e4d5b17832077a.tar.gz"
+    },
+    "evidence": "wide-image-granite.json"
+  },
+  {
+    "job": "20261017T193103Z-13397a33",
+    "cpu": "neoverse-v2",
+    "script": "workbench/spikes/hashtable-merge/qualify-native.sh",
+    "source": {
+      "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+      "digest": "c326a4254107a2e7edbef341054a3997d812abdc352e06a7567ef24624a2ff0f",
+      "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+      "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c",
+      "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+      "sha256": "8c0cc2cba50db32a06476fecb925b994a339ca1abb962acff21292d884e4f48f"
+    },
+    "artifact": {
+      "bucket": "calico-fleet-artifacts",
+      "bytes": 20406144,
+      "files": 188,
+      "format": 1,
+      "key": "sixdb/artifacts/sha256/e076e067edb493b83145dbcde009aa791bea36df45351e6afe40099ab3dc06fa.tar.gz",
+      "kind": "files",
+      "region": "us-east-1",
+      "sha256": "e076e067edb493b83145dbcde009aa791bea36df45351e6afe40099ab3dc06fa",
+      "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/e076e067edb493b83145dbcde009aa791bea36df45351e6afe40099ab3dc06fa.tar.gz"
+    },
+    "evidence": "refactor-neoverse.json"
+  },
+  {
+    "job": "20261017T193538Z-ff3a0170",
+    "cpu": "zen5",
+    "script": "workbench/spikes/hashtable-merge/qualify-native.sh",
+    "source": {
+      "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+      "digest": "c326a4254107a2e7edbef341054a3997d812abdc352e06a7567ef24624a2ff0f",
+      "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+      "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c",
+      "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+      "sha256": "8c0cc2cba50db32a06476fecb925b994a339ca1abb962acff21292d884e4f48f"
+    },
+    "artifact": {
+      "bucket": "calico-fleet-artifacts",
+      "bytes": 21383763,
+      "files": 188,
+      "format": 1,
+      "key": "sixdb/artifacts/sha256/4cd71b1f64f41a444c61f14e1c6b90fdb610e10ffb1af8c6e1cebdac9daf1696.tar.gz",
+      "kind": "files",
+      "region": "us-east-1",
+      "sha256": "4cd71b1f64f41a444c61f14e1c6b90fdb610e10ffb1af8c6e1cebdac9daf1696",
+      "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/4cd71b1f64f41a444c61f14e1c6b90fdb610e10ffb1af8c6e1cebdac9daf1696.tar.gz"
+    }
+  },
+  {
+    "job": "20261017T193538Z-5416bcf0",
+    "cpu": "granite-rapids",
+    "script": "workbench/spikes/hashtable-merge/qualify-native.sh",
+    "source": {
+      "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+      "digest": "c326a4254107a2e7edbef341054a3997d812abdc352e06a7567ef24624a2ff0f",
+      "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+      "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c",
+      "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+      "sha256": "8c0cc2cba50db32a06476fecb925b994a339ca1abb962acff21292d884e4f48f"
+    },
+    "artifact": {
+      "bucket": "calico-fleet-artifacts",
+      "bytes": 15674283,
+      "files": 94,
+      "format": 1,
+      "key": "sixdb/artifacts/sha256/5f160d30dc917b44e3028f84c6f3e0a12017dcd6aed2e59d1de671223cc07ba7.tar.gz",
+      "kind": "files",
+      "region": "us-east-1",
+      "sha256": "5f160d30dc917b44e3028f84c6f3e0a12017dcd6aed2e59d1de671223cc07ba7",
+      "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/5f160d30dc917b44e3028f84c6f3e0a12017dcd6aed2e59d1de671223cc07ba7.tar.gz"
+    }
+  },
+  {
+    "job": "20261017T195719Z-2e82b5b1",
+    "cpu": "zen5",
+    "script": "workbench/spikes/hashtable-merge/qualify-native.sh",
+    "source": {
+      "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+      "digest": "27606163925e52affa42a047247ebfcd0bb0446f062e75cab3bbea32ad64131f",
+      "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+      "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c",
+      "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+      "sha256": "5e545c238284bca33da6549e076f97e5b37e63b63ecbc83ef2af56ef93ff0984"
+    },
+    "artifact": {
+      "bucket": "calico-fleet-artifacts",
+      "bytes": 21380967,
+      "files": 189,
+      "format": 1,
+      "key": "sixdb/artifacts/sha256/f8662dbe6061d17ca0172a71323f96ab6e201192bb0a9405b2bf5006827795d0.tar.gz",
+      "kind": "files",
+      "region": "us-east-1",
+      "sha256": "f8662dbe6061d17ca0172a71323f96ab6e201192bb0a9405b2bf5006827795d0",
+      "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/f8662dbe6061d17ca0172a71323f96ab6e201192bb0a9405b2bf5006827795d0.tar.gz"
+    }
+  },
+  {
+    "job": "20261017T195719Z-6d0fd869",
+    "cpu": "granite-rapids",
+    "script": "workbench/spikes/hashtable-merge/qualify-native.sh",
+    "source": {
+      "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+      "digest": "27606163925e52affa42a047247ebfcd0bb0446f062e75cab3bbea32ad64131f",
+      "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+      "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c",
+      "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+      "sha256": "5e545c238284bca33da6549e076f97e5b37e63b63ecbc83ef2af56ef93ff0984"
+    },
+    "artifact": {
+      "bucket": "calico-fleet-artifacts",
+      "bytes": 15667983,
+      "files": 95,
+      "format": 1,
+      "key": "sixdb/artifacts/sha256/12682495da5f11cd3f71b4e3ab331edcfdad150d2ee40a2d203b1e2be5c57460.tar.gz",
+      "kind": "files",
+      "region": "us-east-1",
+      "sha256": "12682495da5f11cd3f71b4e3ab331edcfdad150d2ee40a2d203b1e2be5c57460",
+      "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/12682495da5f11cd3f71b4e3ab331edcfdad150d2ee40a2d203b1e2be5c57460.tar.gz"
+    }
+  },
+  {
+    "job": "20261017T200618Z-901d7d42",
+    "cpu": "zen5",
+    "script": "workbench/spikes/hashtable-merge/qualify-native.sh",
+    "source": {
+      "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+      "digest": "c6987bc5053ce47ef3571882f61a2eb4f62ea7bb8f8546371d5dc71e2f9b9356",
+      "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+      "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c",
+      "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+      "sha256": "0d722b10d042f0e8f48d734ded6af2a151e841032800caecff9d152b98d1e180"
+    },
+    "artifact": {
+      "bucket": "calico-fleet-artifacts",
+      "bytes": 21385027,
+      "files": 188,
+      "format": 1,
+      "key": "sixdb/artifacts/sha256/45958d07f381e54c40e96b158991192c85b96a1008fa33e64b0a4634a77d3fd2.tar.gz",
+      "kind": "files",
+      "region": "us-east-1",
+      "sha256": "45958d07f381e54c40e96b158991192c85b96a1008fa33e64b0a4634a77d3fd2",
+      "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/45958d07f381e54c40e96b158991192c85b96a1008fa33e64b0a4634a77d3fd2.tar.gz"
+    }
+  },
+  {
+    "job": "20261017T200618Z-9d5bd455",
+    "cpu": "granite-rapids",
+    "script": "workbench/spikes/hashtable-merge/qualify-native.sh",
+    "source": {
+      "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+      "digest": "c6987bc5053ce47ef3571882f61a2eb4f62ea7bb8f8546371d5dc71e2f9b9356",
+      "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+      "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c",
+      "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+      "sha256": "0d722b10d042f0e8f48d734ded6af2a151e841032800caecff9d152b98d1e180"
+    },
+    "artifact": {
+      "bucket": "calico-fleet-artifacts",
+      "bytes": 15665124,
+      "files": 94,
+      "format": 1,
+      "key": "sixdb/artifacts/sha256/89fd198772399f0ad32a61cfb8c6f985b8aafcc10b4e378cc0e585168809926d.tar.gz",
+      "kind": "files",
+      "region": "us-east-1",
+      "sha256": "89fd198772399f0ad32a61cfb8c6f985b8aafcc10b4e378cc0e585168809926d",
+      "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/89fd198772399f0ad32a61cfb8c6f985b8aafcc10b4e378cc0e585168809926d.tar.gz"
+    }
+  },
+  {
+    "job": "20261017T201107Z-7dada496",
+    "cpu": "zen5",
+    "script": "workbench/spikes/hashtable-merge/qualify-native.sh",
+    "source": {
+      "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+      "digest": "a2c9fab87107b017e91ba3fb0012d4ea6ab31a3176cc6d1eed8eedf6226b9e5a",
+      "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+      "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c",
+      "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+      "sha256": "e09f67231e77428b57e438672a07733afce1458478ee6041a285e240e7528a5a"
+    },
+    "artifact": {
+      "bucket": "calico-fleet-artifacts",
+      "bytes": 15715142,
+      "files": 94,
+      "format": 1,
+      "key": "sixdb/artifacts/sha256/4ad1214cf26dc254e48671a440bd2ebe3da83322763939d4b8da165ae46ad6f5.tar.gz",
+      "kind": "files",
+      "region": "us-east-1",
+      "sha256": "4ad1214cf26dc254e48671a440bd2ebe3da83322763939d4b8da165ae46ad6f5",
+      "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/4ad1214cf26dc254e48671a440bd2ebe3da83322763939d4b8da165ae46ad6f5.tar.gz"
+    }
+  },
+  {
+    "job": "20261017T201107Z-3a68e4d1",
+    "cpu": "granite-rapids",
+    "script": "workbench/spikes/hashtable-merge/qualify-native.sh",
+    "source": {
+      "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+      "digest": "a2c9fab87107b017e91ba3fb0012d4ea6ab31a3176cc6d1eed8eedf6226b9e5a",
+      "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+      "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c",
+      "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+      "sha256": "e09f67231e77428b57e438672a07733afce1458478ee6041a285e240e7528a5a"
+    },
+    "artifact": {
+      "bucket": "calico-fleet-artifacts",
+      "bytes": 21360670,
+      "files": 188,
+      "format": 1,
+      "key": "sixdb/artifacts/sha256/bb4607c80c2d3f493fe94a4f0c31925aadb8773d728a01da943b5af8b1f3eb94.tar.gz",
+      "kind": "files",
+      "region": "us-east-1",
+      "sha256": "bb4607c80c2d3f493fe94a4f0c31925aadb8773d728a01da943b5af8b1f3eb94",
+      "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/bb4607c80c2d3f493fe94a4f0c31925aadb8773d728a01da943b5af8b1f3eb94.tar.gz"
+    }
+  },
+  {
+    "job": "20261017T201554Z-0196d218",
+    "cpu": "zen5",
+    "script": "workbench/spikes/hashtable-merge/qualify-native.sh",
+    "source": {
+      "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+      "digest": "e0d83a2249999ca8bb17ce58e43923def69172f6121736a4c206bb75f5dd1b42",
+      "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+      "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c",
+      "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+      "sha256": "2017507e4d47191a20ee1437ab7d605c08849425307f208d98d0d320239ce85d"
+    },
+    "artifact": {
+      "bucket": "calico-fleet-artifacts",
+      "bytes": 21389925,
+      "files": 188,
+      "format": 1,
+      "key": "sixdb/artifacts/sha256/c319b5bca1492fd575ff2a10ad50874dfe4720ea631df689222a727cc3cc51f4.tar.gz",
+      "kind": "files",
+      "region": "us-east-1",
+      "sha256": "c319b5bca1492fd575ff2a10ad50874dfe4720ea631df689222a727cc3cc51f4",
+      "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/c319b5bca1492fd575ff2a10ad50874dfe4720ea631df689222a727cc3cc51f4.tar.gz"
+    }
+  },
+  {
+    "job": "20261017T201712Z-7ca97f9a",
+    "cpu": "granite-rapids",
+    "script": "workbench/spikes/hashtable-merge/qualify-native.sh",
+    "source": {
+      "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+      "digest": "e0d83a2249999ca8bb17ce58e43923def69172f6121736a4c206bb75f5dd1b42",
+      "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+      "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c",
+      "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+      "sha256": "2017507e4d47191a20ee1437ab7d605c08849425307f208d98d0d320239ce85d"
+    },
+    "artifact": {
+      "bucket": "calico-fleet-artifacts",
+      "bytes": 15666712,
+      "files": 94,
+      "format": 1,
+      "key": "sixdb/artifacts/sha256/d1b04d083eaeeade2f38b11840f0bfe73e62889fa3e876d87548948acf233328.tar.gz",
+      "kind": "files",
+      "region": "us-east-1",
+      "sha256": "d1b04d083eaeeade2f38b11840f0bfe73e62889fa3e876d87548948acf233328",
+      "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/d1b04d083eaeeade2f38b11840f0bfe73e62889fa3e876d87548948acf233328.tar.gz"
+    }
+  },
+  {
+    "job": "20261017T202144Z-4da38e46",
+    "cpu": "zen5",
+    "script": "workbench/spikes/hashtable-merge/qualify-native.sh",
+    "source": {
+      "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+      "digest": "f800427b782f524482a4f64fcd3b706636dfa9821aca4e165f3c5fc754ae179a",
+      "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+      "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c",
+      "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+      "sha256": "16d1f44c6d2287bcfc4f8e780fcbf49b13fe6163347d79618ddaec541a8cb95c"
+    },
+    "artifact": {
+      "bucket": "calico-fleet-artifacts",
+      "bytes": 21399584,
+      "files": 188,
+      "format": 1,
+      "key": "sixdb/artifacts/sha256/6cc6f5fa46c44469daf6c0f6b6b43d1826f324706223eec56ea754faea8d1716.tar.gz",
+      "kind": "files",
+      "region": "us-east-1",
+      "sha256": "6cc6f5fa46c44469daf6c0f6b6b43d1826f324706223eec56ea754faea8d1716",
+      "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/6cc6f5fa46c44469daf6c0f6b6b43d1826f324706223eec56ea754faea8d1716.tar.gz"
+    }
+  },
+  {
+    "job": "20261017T202144Z-84415686",
+    "cpu": "granite-rapids",
+    "script": "workbench/spikes/hashtable-merge/qualify-native.sh",
+    "source": {
+      "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+      "digest": "f800427b782f524482a4f64fcd3b706636dfa9821aca4e165f3c5fc754ae179a",
+      "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+      "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c",
+      "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+      "sha256": "16d1f44c6d2287bcfc4f8e780fcbf49b13fe6163347d79618ddaec541a8cb95c"
+    },
+    "artifact": {
+      "bucket": "calico-fleet-artifacts",
+      "bytes": 15669536,
+      "files": 94,
+      "format": 1,
+      "key": "sixdb/artifacts/sha256/c936fd7e61c6355c5e84689b27d975aab622eae32bd524e7500089605f708e43.tar.gz",
+      "kind": "files",
+      "region": "us-east-1",
+      "sha256": "c936fd7e61c6355c5e84689b27d975aab622eae32bd524e7500089605f708e43",
+      "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/c936fd7e61c6355c5e84689b27d975aab622eae32bd524e7500089605f708e43.tar.gz"
+    }
+  },
+  {
+    "job": "20261017T202600Z-7c3481fd",
+    "cpu": "zen5",
+    "script": "workbench/spikes/hashtable-merge/qualify-native.sh",
+    "source": {
+      "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+      "digest": "e4f98779aa92b0df58e50374dc357fda8a26b12f7841034179723b3433717ed8",
+      "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+      "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c",
+      "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+      "sha256": "f2400fbcc04f70c54ac97043e39abcb67e9e880e84de9ea7e167b9da7203fc58"
+    },
+    "artifact": {
+      "bucket": "calico-fleet-artifacts",
+      "bytes": 21543302,
+      "files": 188,
+      "format": 1,
+      "key": "sixdb/artifacts/sha256/41fbe2b514f5e6b75a4c7628df1eb783c2d048c4dc238f65dcc4c333b46e9dad.tar.gz",
+      "kind": "files",
+      "region": "us-east-1",
+      "sha256": "41fbe2b514f5e6b75a4c7628df1eb783c2d048c4dc238f65dcc4c333b46e9dad",
+      "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/41fbe2b514f5e6b75a4c7628df1eb783c2d048c4dc238f65dcc4c333b46e9dad.tar.gz"
+    }
+  },
+  {
+    "job": "20261017T202600Z-8911fe09",
+    "cpu": "granite-rapids",
+    "script": "workbench/spikes/hashtable-merge/qualify-native.sh",
+    "source": {
+      "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+      "digest": "e4f98779aa92b0df58e50374dc357fda8a26b12f7841034179723b3433717ed8",
+      "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+      "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c",
+      "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+      "sha256": "f2400fbcc04f70c54ac97043e39abcb67e9e880e84de9ea7e167b9da7203fc58"
+    },
+    "artifact": {
+      "bucket": "calico-fleet-artifacts",
+      "bytes": 15720733,
+      "files": 94,
+      "format": 1,
+      "key": "sixdb/artifacts/sha256/32cb1b5dba5ad8e0817a8f52c87de08b5a3a967c60738abe0dad175c393e3ea3.tar.gz",
+      "kind": "files",
+      "region": "us-east-1",
+      "sha256": "32cb1b5dba5ad8e0817a8f52c87de08b5a3a967c60738abe0dad175c393e3ea3",
+      "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/32cb1b5dba5ad8e0817a8f52c87de08b5a3a967c60738abe0dad175c393e3ea3.tar.gz"
+    }
+  },
+  {
+    "job": "20261017T203202Z-f998cb25",
+    "cpu": "granite-rapids",
+    "script": "workbench/spikes/hashtable-merge/qualify-native.sh",
+    "source": {
+      "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+      "digest": "a6e1c6f8b98eed9bd0f7ee189c8e1ac5f1454b264d0cc98b1d91ebef3be09e88",
+      "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+      "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c",
+      "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+      "sha256": "796af43e26483f08b9c282336c204b55f7a9b44c24be439139a11ac149b7122f"
+    },
+    "artifact": {
+      "bucket": "calico-fleet-artifacts",
+      "bytes": 15717635,
+      "files": 94,
+      "format": 1,
+      "key": "sixdb/artifacts/sha256/91bbaaf109ea2b69c960f60e032281555dc374e890b968b797deb31f05e9ce19.tar.gz",
+      "kind": "files",
+      "region": "us-east-1",
+      "sha256": "91bbaaf109ea2b69c960f60e032281555dc374e890b968b797deb31f05e9ce19",
+      "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/91bbaaf109ea2b69c960f60e032281555dc374e890b968b797deb31f05e9ce19.tar.gz"
+    }
+  },
+  {
+    "job": "20261017T203311Z-f58c7848",
+    "cpu": "zen5",
+    "script": "workbench/spikes/hashtable-merge/qualify-native.sh",
+    "source": {
+      "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+      "digest": "a6e1c6f8b98eed9bd0f7ee189c8e1ac5f1454b264d0cc98b1d91ebef3be09e88",
+      "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+      "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c",
+      "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+      "sha256": "796af43e26483f08b9c282336c204b55f7a9b44c24be439139a11ac149b7122f"
+    },
+    "artifact": {
+      "bucket": "calico-fleet-artifacts",
+      "bytes": 15759425,
+      "files": 94,
+      "format": 1,
+      "key": "sixdb/artifacts/sha256/5f6e23bd467e20728a88d409f9f8db0aae59eecaa0e92a36a106c5de720c7d2d.tar.gz",
+      "kind": "files",
+      "region": "us-east-1",
+      "sha256": "5f6e23bd467e20728a88d409f9f8db0aae59eecaa0e92a36a106c5de720c7d2d",
+      "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/5f6e23bd467e20728a88d409f9f8db0aae59eecaa0e92a36a106c5de720c7d2d.tar.gz"
+    }
+  },
+  {
+    "job": "20261017T203807Z-735533c0",
+    "cpu": "granite-rapids",
+    "script": "workbench/spikes/hashtable-merge/qualify-native.sh",
+    "source": {
+      "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+      "digest": "df5c50055f1402921522bb7ab4dd16bf72842c7756e5299316c88ed97dc7fef1",
+      "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+      "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c",
+      "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+      "sha256": "e14a541257ca21e9ca01556f383f70e7d6f855f0ad5d0ba14a173b8d3258a749"
+    },
+    "artifact": {
+      "bucket": "calico-fleet-artifacts",
+      "bytes": 21480706,
+      "files": 188,
+      "format": 1,
+      "key": "sixdb/artifacts/sha256/764edb18d910607e8ef68d140280f241c60de20d66941bf1829a69e04bde168c.tar.gz",
+      "kind": "files",
+      "region": "us-east-1",
+      "sha256": "764edb18d910607e8ef68d140280f241c60de20d66941bf1829a69e04bde168c",
+      "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/764edb18d910607e8ef68d140280f241c60de20d66941bf1829a69e04bde168c.tar.gz"
+    }
+  },
+  {
+    "job": "20261017T210828Z-c5f71bfa",
+    "cpu": "zen5",
+    "script": "workbench/spikes/hashtable-merge/qualify-native.sh",
+    "source": {
+      "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+      "digest": "4858208186e00d934350f53528c12f4c408f15a4582c2b4fca3b56552747cfea",
+      "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+      "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c",
+      "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+      "sha256": "8cab21d6a29538299f1497da2fd179c59ad40ce86a34d0b593632285876e21d5"
+    },
+    "artifact": {
+      "bucket": "calico-fleet-artifacts",
+      "bytes": 18957052,
+      "files": 169,
+      "format": 1,
+      "key": "sixdb/artifacts/sha256/87331d75be99619fcee3eee705a066f53902cd4669eadce9b58bb97e35635a5b.tar.gz",
+      "kind": "files",
+      "region": "us-east-1",
+      "sha256": "87331d75be99619fcee3eee705a066f53902cd4669eadce9b58bb97e35635a5b",
+      "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/87331d75be99619fcee3eee705a066f53902cd4669eadce9b58bb97e35635a5b.tar.gz"
+    },
+    "evidence": "prefetch-span-zen5.json"
+  },
+  {
+    "job": "20261017T210828Z-ad3d1eff",
+    "cpu": "granite-rapids",
+    "script": "workbench/spikes/hashtable-merge/qualify-native.sh",
+    "source": {
+      "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+      "digest": "4858208186e00d934350f53528c12f4c408f15a4582c2b4fca3b56552747cfea",
+      "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+      "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c",
+      "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+      "sha256": "8cab21d6a29538299f1497da2fd179c59ad40ce86a34d0b593632285876e21d5"
+    },
+    "artifact": {
+      "bucket": "calico-fleet-artifacts",
+      "bytes": 18835851,
+      "files": 169,
+      "format": 1,
+      "key": "sixdb/artifacts/sha256/beafcddb6482f3e9161da58ea3bdec214812cdb008c330296a33dc2c4686f1c0.tar.gz",
+      "kind": "files",
+      "region": "us-east-1",
+      "sha256": "beafcddb6482f3e9161da58ea3bdec214812cdb008c330296a33dc2c4686f1c0",
+      "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/beafcddb6482f3e9161da58ea3bdec214812cdb008c330296a33dc2c4686f1c0.tar.gz"
+    },
+    "evidence": "prefetch-span-granite.json"
+  },
+  {
+    "job": "20261017T212106Z-641923db",
+    "cpu": "zen5",
+    "script": "workbench/spikes/hashtable-merge/qualify-native.sh",
+    "source": {
+      "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+      "digest": "1a948b95aa49f09079f25d23a4bb8b4ccfaf37129cd4b9a636a230413795ebe5",
+      "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+      "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c",
+      "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+      "sha256": "c736cdaac4b2df53f3fdce2928c12877298d3c2862fd5d1a25253500a324d745"
+    },
+    "artifact": {
+      "bucket": "calico-fleet-artifacts",
+      "bytes": 18924841,
+      "files": 168,
+      "format": 1,
+      "key": "sixdb/artifacts/sha256/b4e78d2d0b9bc91fa64f889ffc0b5bcc005a25e0a186ef8c0cd91e758117b6f7.tar.gz",
+      "kind": "files",
+      "region": "us-east-1",
+      "sha256": "b4e78d2d0b9bc91fa64f889ffc0b5bcc005a25e0a186ef8c0cd91e758117b6f7",
+      "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/b4e78d2d0b9bc91fa64f889ffc0b5bcc005a25e0a186ef8c0cd91e758117b6f7.tar.gz"
+    },
+    "evidence": "prefetch-policy-zen5.json"
+  },
+  {
+    "job": "20261017T212106Z-884a99a3",
+    "cpu": "granite-rapids",
+    "script": "workbench/spikes/hashtable-merge/qualify-native.sh",
+    "source": {
+      "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+      "digest": "1a948b95aa49f09079f25d23a4bb8b4ccfaf37129cd4b9a636a230413795ebe5",
+      "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+      "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c",
+      "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+      "sha256": "c736cdaac4b2df53f3fdce2928c12877298d3c2862fd5d1a25253500a324d745"
+    },
+    "artifact": {
+      "bucket": "calico-fleet-artifacts",
+      "bytes": 18809649,
+      "files": 168,
+      "format": 1,
+      "key": "sixdb/artifacts/sha256/f330ea2c6198aabced8ace2315a8f44aca659168d18ca46abbb452749f226b1e.tar.gz",
+      "kind": "files",
+      "region": "us-east-1",
+      "sha256": "f330ea2c6198aabced8ace2315a8f44aca659168d18ca46abbb452749f226b1e",
+      "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/f330ea2c6198aabced8ace2315a8f44aca659168d18ca46abbb452749f226b1e.tar.gz"
+    },
+    "evidence": "prefetch-policy-granite.json"
+  }
+]

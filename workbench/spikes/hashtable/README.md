@@ -1,42 +1,81 @@
-# Packed hash tables
+# Hashtable research frontier
 
-Research for SixDB sets, maps and multimaps composed from SeriesPack, TuplePack
-and StreamPack, with Orbital ownership and Loom execution. Keys span
-8/16/24/32/40/48/56/64 bits; values are opaque fixed-width records of 1–64 bytes.
-The selected architecture is the bucket hierarchy. This is the single top-level
-hashtable spike. The [separated-layout experiment](SEPARATED-EXPERIMENT.md) is
-archived; older benchmark controls live in [reference/](reference/README.md).
+This directory retains owning-multimap research. The graduated set/map core lives
+in Ikea: [usage](../../../ikea/docs/hashtable/usage.md),
+[rationale](../../../ikea/docs/hashtable/rationale.md) and
+[maintained comparisons](../../benchmarks/hashtable/README.md).
+[Bucket-wise K-way traversal](../hashtable-merge/README.md) is a separate research
+frontier. Neither multimap nor K-way is a promoted Ikea API.
 
-**Research is consolidated. No new experiment campaign is queued.**
-The evidence supports useful cold-throughput and narrow-memory advantages, but
-not broad superiority over Abseil. Wide multimaps, compact lookup and some merge
-histories remain material weaknesses. A few hot-latency nanoseconds may be an
-acceptable trade for throughput and memory; larger losses remain explicit.
+## What remains open
 
-Read these in order:
+- The pool releases a block when its last live reservation goes away. Repeated
+  drain/refill can therefore allocate and release blocks in the same capacity
+  families on every cycle. Bounded empty-block retention remains unimplemented.
+  Fitting scalar appends also retain substantial metadata/addressing cost beyond
+  the index lookup.
+- Wide multimaps retain a 72-byte index cell after values move out of line.
+  Payload addressing, initialized slack and destination construction remain real
+  costs. Earlier cache-only, external-only and borrowed-view variants did not
+  establish a broadly competitive replacement. Those attempts are archived.
+- Cold interleaving has retained wins; staging warm points still costs too much,
+  especially on ARM. The panels below compare complete callers, including plain
+  prefetch and useful companion work.
+- Owning-multimap growth and merge still need to reconcile source ownership,
+  retained capacity and payload construction. The consuming-merge panel below
+  preserves both its speed and memory costs.
 
-1. [Design and implementation direction](DESIGN.md): the structure, operation and ownership boundaries, and choices made.
-2. [Current absolute scorecard](RESULTS.md): latency, reciprocal throughput and memory, with each measured configuration identified.
-3. [Reflection and decisions](RECALIBRATION.md): lessons from the separated experiment and the resumed work.
-4. [Graduation assessment](GRADUATION.md): what is established and what still needs resolving.
-5. [Working account](STATUS.md): completed runs, recovery references and current scope.
+## Retained observations
 
-| Detail | Owning research |
+These historical panels keep all competitors and losses. Their results describe
+the recorded source captures and native jobs, not a new timing of the curated
+checkout:
+
+| Question | Evidence and limits |
 | --- | --- |
-| Measurement correction | [Validation and lifetime](BENCHMARK-VALIDATION.md) |
-| Cold reads, caller heat and protection | [Read windows](READ-WINDOWS.md), [staged consumers](STAGED.md), [Loom execution](../../../loom/docs/execution.md) |
-| Slot geometry and growth | [Capacity families](CAPACITY-FAMILIES.md), [growth cycles](GROWTH-CYCLE.md), [Worker formats](worker-epochs.md#solver-sized-formats-in-the-complete-worker-caller) |
-| Small owners and batch operations | [Small-owner lifetime](small-growth.md), [hierarchy batches](hierarchy-batches.md) |
-| Values and external bags | [Value widths](value-widths.md), [bag policies](bag-policies.md), [vectors/buffers](multimap-vectors.md) |
-| Multiple writers and consolidation | [Worker epochs](worker-epochs.md), [actual Worker folding](worker-fold.md), [earlier consolidation](CONSOLIDATION.md) |
-| Primitive composition | [Value consumers](value-consumers.md), [code inspection](codegen.md), [lookup consumption](lookup-consumption.md) |
-| Older attribution and scorecards | [Historical results](RESULTS-HISTORICAL.md); superseded lifetime claims are marked |
+| Full cold reads, chain heads and interleaved useful work | [Complete cold panel](evidence/loom-cold-complete-v15.json). Full ordered values and physical drain; actual Abseil and plain-prefetch controls. |
+| Explicit cold reader refinements on warm work | [Corrected warm panel](evidence/warmed-readers-v43.json). Zen MM64 direct consumption 7.93 ns versus best measured Abseil 8.16 ns; ARM warmed stages still lose substantially. The invalid earlier capture is recoverable in the archive. |
+| Selected observed existing-key writes | [Complete observed-write panel](evidence/observed-write-loom-v44.json). MM8 cold growth beats best measured Abseil on all three CPUs, including companion work. Fitting appends still lose; ARM MM64 growth loses. Fresh-key and public retained-reader composition remain unqualified. |
+| Consuming multimap merge | [Capacity/right-reuse panel](evidence/merge-right-v30.json). Shared-domain speed can retain substantially more capacity; speed and a hypothetical compact-output footprint are not one measured implementation. |
 
-The `evidence/` receipts retain selected data and recovery recipes. Full source
-captures, binaries, assembly and raw repetitions are in their verified archives.
-Do not combine one configuration's timing with another's memory or treat an
-OrbStack diagnostic as a native result. Follow the [build guide](../../../BUILDING.md)
-and [measurement conventions](../../benchmarks/README.md); use pinned Linux
-Clang 21 through `orb -m ubuntu`. Select `-DSIXDB_SPIKES=hashtable`; existing
-`hashtable_design_*` target names are retained for continuity with the measurements.
-Consolidation does not promote the prototype into production.
+Older scalar-append/lifecycle comparisons and rejected attempts are indexed by
+[archive member hashes](evidence/archived-comparisons.json). Their findings survive;
+the superseded implementations and numbered launchers do not remain live.
+
+## Current executable candidate
+
+`multimap/` contains the retained candidate and its ordinary, guarded, Loom,
+growth and merge checks. `reference/iceberg/` supplies the scalar comparator's
+earlier control. Both use the [pinned Abseil provider](../../benchmarks/hashtable/abseil.cmake).
+Include-path curation and compatibility repairs carry no new timing claim.
+
+```sh
+orb -m ubuntu cmake -S . -B build/hashtable-frontier -G Ninja \
+  -DCMAKE_BUILD_TYPE=Release -DSIXDB_SPIKES=hashtable \
+  -DSIXDB_MARCH=armv8-a+simd -DSIXDB_TUNE=neoverse-v2
+orb -m ubuntu cmake --build build/hashtable-frontier \
+  --target hashtable_frontier_validate -j2
+```
+
+Comparison targets are `hashtable_mm_scalar_{8,64}`,
+`hashtable_mm_loom_write_{8,64}` and `hashtable_mm_loom_read_{8,64}`.
+The validation target runs six checks: ordinary, observed writes, Ring writes,
+growth, merge and Loom reads. The curation capture passed all six under ASan/UBSan
+and built all six comparison targets.
+After the maintained accumulation extraction, ordinary multimap and Loom read
+histories were rechecked against the current core, as recorded in the
+[promotion receipt](../../benchmarks/hashtable/evidence/accumulation-promotion.json).
+The other four sanitizer results remain scoped to the earlier curation capture.
+Scalar eight- and 64-byte controls also passed complete-history smoke runs.
+These checks establish correctness/buildability at their recorded source cuts;
+timing reproduction uses each panel's captured source and host.
+
+## Recovery
+
+Linux `~/sixdb-archive/hashtable-20261017/` contains the earlier hierarchy,
+Iceberg–Swiss and mutable-write studies, their evidence and superseded Loom/grant
+probes. The [receipt](archive.json) identifies two archives: the original research
+paths and a full runnable project snapshot from that promotion. Both are
+historical; the current Ikea core has evolved since then. The
+[retired-study recovery section](../../notebook/retired-spikes.md#hashtable-promotion-and-curation--october-17-2026)
+explains which to recover. Original paths and negative results are preserved.

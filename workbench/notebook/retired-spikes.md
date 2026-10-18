@@ -65,13 +65,49 @@ These two retired narratives are history, not additional current specifications.
 ## Hashtable consolidation — October 15, 2026
 
 The separated-control/transposed-payload experiment is closed and archived.
-[Findings and verified recovery references](../spikes/hashtable/SEPARATED-EXPERIMENT.md)
-preserve its hot, cold and allocation comparisons. Its remaining requirements
-carry into the selected hierarchy; the negative result does not waive them.
-There is now one top-level [hashtable spike](../spikes/hashtable/README.md).
-Earlier benchmark controls remain live in its `reference/` directory. All three
-pre-move trees have verified archive references; those archives, rather than the
-September checkpoint below, recover this consolidation's original paths.
+[Findings and verified recovery references](retired-spikes.md#hashtable-promotion-and-curation--october-17-2026)
+preserve its hot, cold and allocation comparisons. That consolidation retained
+one top-level hashtable spike; the October 17 curation below supersedes that tree.
+Its archives, rather than the September checkpoint below, recover the original
+studies and paths.
+
+## Hashtable promotion and curation — October 17, 2026
+
+The old hierarchy (`workbench/spikes/hashtable` before this curation), the
+Iceberg–Swiss design, and the mutable-write architecture are archived together
+at Linux `~/sixdb-archive/hashtable-20261017/`. The archive also retains superseded
+hashtable-specific grant and Loom heat/independence probes. Every one of 10,575
+members was checked against its live SHA-256 before removal: 521,483,877 original
+bytes, compressed to 65,787,987 bytes. Research archive SHA-256:
+`4fe72a76551d0146fbed30c61200f5f5d376819c79d416f71410aea53e8bd66f`.
+The directory contains the complete file/hash receipt and these verified archives:
+
+| Archive | Recovery scope |
+| --- | --- |
+| `old-and-promoted-designs.tar.gz` | Retired studies, source and evidence at their original paths. |
+| `promoted-runnable-source.tar.gz` | Full project snapshot from that promotion, including sibling modules and tools. It predates the later mutable-accumulation promotion. |
+
+The maintained [set/map usage](../../ikea/docs/hashtable/usage.md) and
+[rationale](../../ikea/docs/hashtable/rationale.md) own the design and contracts.
+The [benchmark suite](../benchmarks/hashtable/README.md) owns recurring Abseil
+comparisons and promotion evidence; superseded controls are recovered from its
+archive rather than kept as live implementations.
+The [multimap frontier](../spikes/hashtable/README.md) retains its candidate,
+executable dependencies and four captured comparison panels;
+[K-way traversal](../spikes/hashtable-merge/README.md) remains separate research.
+The [compact receipt](../spikes/hashtable/archive.json) and archived-comparison
+hashes locate the earlier findings, including negative results. Historical paths
+in immutable evidence resolve in the recovered snapshot, not necessarily in the
+current checkout.
+
+Recover the exact original tree into a fresh directory rather than extracting
+over current sources:
+
+```sh
+mkdir -p ~/sixdb-archive/recovered-hashtable
+tar -xzf ~/sixdb-archive/hashtable-20261017/old-and-promoted-designs.tar.gz \
+  -C ~/sixdb-archive/recovered-hashtable
+```
 
 ## Recovery
 

@@ -1,0 +1,3401 @@
+{
+  "reducer_kind": 0,
+  "manifest": {
+    "modes": [
+      10,
+      12
+    ],
+    "values": [
+      64
+    ],
+    "cases": [
+      [
+        30,
+        10,
+        8
+      ],
+      [
+        30,
+        11,
+        8
+      ],
+      [
+        30,
+        12,
+        8
+      ],
+      [
+        30,
+        13,
+        8
+      ],
+      [
+        30,
+        14,
+        8
+      ],
+      [
+        30,
+        15,
+        8
+      ]
+    ],
+    "overlaps": [
+      0,
+      50
+    ]
+  },
+  "cpu": "zen5",
+  "job": "20261017T185611Z-68ed10b5",
+  "source": {
+    "sha256": "4e78c4f1714c7c499a4fce19c12d020da55ad7eaf76179601087e0322cab54a8",
+    "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+    "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+    "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+    "digest": "22ab5d2e3270c2d74b7d958bfc74696120a62ed4710be7800d133c4c28a7048f",
+    "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c"
+  },
+  "rows": 864,
+  "modes": [
+    10,
+    12
+  ],
+  "values": [
+    64
+  ],
+  "hardware": {
+    "lscpu": [
+      {
+        "field": "Architecture:",
+        "data": "x86_64"
+      },
+      {
+        "field": "CPU op-mode(s):",
+        "data": "32-bit, 64-bit"
+      },
+      {
+        "field": "Address sizes:",
+        "data": "48 bits physical, 48 bits virtual"
+      },
+      {
+        "field": "Byte Order:",
+        "data": "Little Endian"
+      },
+      {
+        "field": "CPU(s):",
+        "data": "8"
+      },
+      {
+        "field": "On-line CPU(s) list:",
+        "data": "0-7"
+      },
+      {
+        "field": "Vendor ID:",
+        "data": "AuthenticAMD"
+      },
+      {
+        "field": "BIOS Vendor ID:",
+        "data": "Advanced Micro Devices, Inc."
+      },
+      {
+        "field": "Model name:",
+        "data": "AMD EPYC 9R45"
+      },
+      {
+        "field": "BIOS Model name:",
+        "data": "AMD EPYC 9R45  CPU @ 2.6GHz"
+      },
+      {
+        "field": "BIOS CPU family:",
+        "data": "107"
+      },
+      {
+        "field": "CPU family:",
+        "data": "26"
+      },
+      {
+        "field": "Model:",
+        "data": "2"
+      },
+      {
+        "field": "Thread(s) per core:",
+        "data": "1"
+      },
+      {
+        "field": "Core(s) per socket:",
+        "data": "8"
+      },
+      {
+        "field": "Socket(s):",
+        "data": "1"
+      },
+      {
+        "field": "Stepping:",
+        "data": "1"
+      },
+      {
+        "field": "BogoMIPS:",
+        "data": "5200.00"
+      },
+      {
+        "field": "Flags:",
+        "data": "fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ht syscall nx mmxext fxsr_opt pdpe1gb rdtscp lm constant_tsc rep_good nopl xtopology nonstop_tsc cpuid extd_apicid aperfmperf tsc_known_freq pni pclmulqdq monitor ssse3 fma cx16 pcid sse4_1 sse4_2 x2apic movbe popcnt aes xsave avx f16c rdrand hypervisor lahf_lm cmp_legacy cr8_legacy abm sse4a misalignsse 3dnowprefetch topoext perfctr_core ssbd perfmon_v2 ibrs ibpb stibp ibrs_enhanced vmmcall fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid avx512f avx512dq rdseed adx smap avx512ifma clflushopt clwb avx512cd sha_ni avx512bw avx512vl xsaveopt xsavec xgetbv1 xsaves avx_vnni avx512_bf16 clzero xsaveerptr rdpru wbnoinvd arat avx512vbmi pku ospke avx512_vbmi2 gfni vaes vpclmulqdq avx512_vnni avx512_bitalg avx512_vpopcntdq rdpid movdiri movdir64b fsrm avx512_vp2intersect flush_l1d"
+      },
+      {
+        "field": "Hypervisor vendor:",
+        "data": "KVM"
+      },
+      {
+        "field": "Virtualization type:",
+        "data": "full"
+      },
+      {
+        "field": "L1d cache:",
+        "data": "384 KiB (8 instances)"
+      },
+      {
+        "field": "L1i cache:",
+        "data": "256 KiB (8 instances)"
+      },
+      {
+        "field": "L2 cache:",
+        "data": "8 MiB (8 instances)"
+      },
+      {
+        "field": "L3 cache:",
+        "data": "32 MiB (1 instance)"
+      },
+      {
+        "field": "NUMA node(s):",
+        "data": "1"
+      },
+      {
+        "field": "NUMA node0 CPU(s):",
+        "data": "0-7"
+      },
+      {
+        "field": "Vulnerability Gather data sampling:",
+        "data": "Not affected"
+      },
+      {
+        "field": "Vulnerability Ghostwrite:",
+        "data": "Not affected"
+      },
+      {
+        "field": "Vulnerability Indirect target selection:",
+        "data": "Not affected"
+      },
+      {
+        "field": "Vulnerability Itlb multihit:",
+        "data": "Not affected"
+      },
+      {
+        "field": "Vulnerability L1tf:",
+        "data": "Not affected"
+      },
+      {
+        "field": "Vulnerability Mds:",
+        "data": "Not affected"
+      },
+      {
+        "field": "Vulnerability Meltdown:",
+        "data": "Not affected"
+      },
+      {
+        "field": "Vulnerability Mmio stale data:",
+        "data": "Not affected"
+      },
+      {
+        "field": "Vulnerability Old microcode:",
+        "data": "Not affected"
+      },
+      {
+        "field": "Vulnerability Reg file data sampling:",
+        "data": "Not affected"
+      },
+      {
+        "field": "Vulnerability Retbleed:",
+        "data": "Not affected"
+      },
+      {
+        "field": "Vulnerability Spec rstack overflow:",
+        "data": "Mitigation; IBPB on VMEXIT only"
+      },
+      {
+        "field": "Vulnerability Spec store bypass:",
+        "data": "Mitigation; Speculative Store Bypass disabled via prctl"
+      },
+      {
+        "field": "Vulnerability Spectre v1:",
+        "data": "Mitigation; usercopy/swapgs barriers and __user pointer sanitization"
+      },
+      {
+        "field": "Vulnerability Spectre v2:",
+        "data": "Mitigation; Enhanced / Automatic IBRS; IBPB conditional; STIBP disabled; PBRSB-eIBRS Not affected; BHI Not affected"
+      },
+      {
+        "field": "Vulnerability Srbds:",
+        "data": "Not affected"
+      },
+      {
+        "field": "Vulnerability Tsa:",
+        "data": "Not affected"
+      },
+      {
+        "field": "Vulnerability Tsx async abort:",
+        "data": "Not affected"
+      },
+      {
+        "field": "Vulnerability Vmscape:",
+        "data": "Not affected"
+      }
+    ]
+  },
+  "sanitizers": true,
+  "summary": [
+    {
+      "K": 30,
+      "V": 64,
+      "b": 10,
+      "inputs": 8,
+      "overlap": 0,
+      "mode": 10,
+      "samples": 9,
+      "measurements": {
+        "kway": {
+          "merge_ns": {
+            "median": 9.973923,
+            "mad": 0.4423479999999991
+          },
+          "prepare_ns": {
+            "median": 2.265875,
+            "mad": 0.02020899999999992
+          },
+          "total_ns": {
+            "median": 12.219589,
+            "mad": 0.46336699999999986
+          },
+          "primary_bytes": {
+            "median": 8912896.0,
+            "mad": 0.0
+          },
+          "overflow_bytes": {
+            "median": 573440.0,
+            "mad": 0.0
+          },
+          "spills": {
+            "median": 4970.0,
+            "mad": 28.0
+          },
+          "workspace_bytes": {
+            "median": 243336.0,
+            "mad": 728.0
+          }
+        },
+        "routed_before": {
+          "merge_ns": {
+            "median": 11.150971,
+            "mad": 0.044931000000000054
+          },
+          "prepare_ns": {
+            "median": 2.270378,
+            "mad": 0.012515000000000054
+          },
+          "total_ns": {
+            "median": 13.397766,
+            "mad": 0.06903900000000007
+          },
+          "primary_bytes": {
+            "median": 8912896.0,
+            "mad": 0.0
+          },
+          "overflow_bytes": {
+            "median": 573440.0,
+            "mad": 0.0
+          },
+          "spills": {
+            "median": 4970.0,
+            "mad": 28.0
+          },
+          "workspace_bytes": {
+            "median": 0.0,
+            "mad": 0.0
+          }
+        },
+        "abseil": {
+          "merge_ns": {
+            "median": 7.894955,
+            "mad": 0.3269220000000006
+          },
+          "prepare_ns": {
+            "median": 3.634035,
+            "mad": 1.653649
+          },
+          "total_ns": {
+            "median": 11.706469,
+            "mad": 2.0383460000000007
+          },
+          "primary_bytes": {
+            "median": 9568208.0,
+            "mad": 0.0
+          },
+          "overflow_bytes": {
+            "median": 0.0,
+            "mad": 0.0
+          },
+          "spills": {
+            "median": 0.0,
+            "mad": 0.0
+          },
+          "workspace_bytes": {
+            "median": 0.0,
+            "mad": 0.0
+          }
+        },
+        "accumulate": {
+          "merge_ns": {
+            "median": 6.285417,
+            "mad": 0.3503210000000001
+          },
+          "prepare_ns": {
+            "median": 2.316448,
+            "mad": 0.049752999999999936
+          },
+          "total_ns": {
+            "median": 8.576732,
+            "mad": 0.3556550000000005
+          },
+          "primary_bytes": {
+            "median": 8912896.0,
+            "mad": 0.0
+          },
+          "overflow_bytes": {
+            "median": 573440.0,
+            "mad": 0.0
+          },
+          "spills": {
+            "median": 4970.0,
+            "mad": 28.0
+          },
+          "workspace_bytes": {
+            "median": 0.0,
+            "mad": 0.0
+          }
+        }
+      }
+    },
+    {
+      "K": 30,
+      "V": 64,
+      "b": 10,
+      "inputs": 8,
+      "overlap": 0,
+      "mode": 12,
+      "samples": 9,
+      "measurements": {
+        "kway": {
+          "merge_ns": {
+            "median": 10.076404,
+            "mad": 0.5113769999999995
+          },
+          "prepare_ns": {
+            "median": 2.274492,
+            "mad": 0.04503400000000024
+          },
+          "total_ns": {
+            "median": 12.351203,
+            "mad": 0.5633859999999995
+          },
+          "primary_bytes": {
+            "median": 8912896.0,
+            "mad": 0.0
+          },
+          "overflow_bytes": {
+            "median": 573440.0,
+            "mad": 0.0
+          },
+          "spills": {
+            "median": 4970.0,
+            "mad": 28.0
+          },
+          "workspace_bytes": {
+            "median": 243336.0,
+            "mad": 728.0
+          }
+        },
+        "routed_before": {
+          "merge_ns": {
+            "median": 11.211906,
+            "mad": 0.16290200000000077
+          },
+          "prepare_ns": {
+            "median": 2.263618,
+            "mad": 0.03569900000000015
+          },
+          "total_ns": {
+            "median": 13.497989,
+            "mad": 0.22752900000000054
+          },
+          "primary_bytes": {
+            "median": 8912896.0,
+            "mad": 0.0
+          },
+          "overflow_bytes": {
+            "median": 573440.0,
+            "mad": 0.0
+          },
+          "spills": {
+            "median": 4970.0,
+            "mad": 28.0
+          },
+          "workspace_bytes": {
+            "median": 0.0,
+            "mad": 0.0
+          }
+        },
+        "abseil": {
+          "merge_ns": {
+            "median": 7.940502,
+            "mad": 0.31072400000000044
+          },
+          "prepare_ns": {
+            "median": 3.639164,
+            "mad": 1.632311
+          },
+          "total_ns": {
+            "median": 11.474108,
+            "mad": 1.837477999999999
+          },
+          "primary_bytes": {
+            "median": 9568208.0,
+            "mad": 0.0
+          },
+          "overflow_bytes": {
+            "median": 0.0,
+            "mad": 0.0
+          },
+          "spills": {
+            "median": 0.0,
+            "mad": 0.0
+          },
+          "workspace_bytes": {
+            "median": 0.0,
+            "mad": 0.0
+          }
+        },
+        "accumulate": {
+          "merge_ns": {
+            "median": 8.054482,
+            "mad": 0.5948890000000002
+          },
+          "prepare_ns": {
+            "median": 2.283519,
+            "mad": 0.03292900000000021
+          },
+          "total_ns": {
+            "median": 10.319331,
+            "mad": 1.0595909999999993
+          },
+          "primary_bytes": {
+            "median": 8912896.0,
+            "mad": 0.0
+          },
+          "overflow_bytes": {
+            "median": 573440.0,
+            "mad": 0.0
+          },
+          "spills": {
+            "median": 4970.0,
+            "mad": 28.0
+          },
+          "workspace_bytes": {
+            "median": 0.0,
+            "mad": 0.0
+          }
+        }
+      }
+    },
+    {
+      "K": 30,
+      "V": 64,
+      "b": 10,
+      "inputs": 8,
+      "overlap": 50,
+      "mode": 10,
+      "samples": 9,
+      "measurements": {
+        "kway": {
+          "merge_ns": {
+            "median": 13.493681,
+            "mad": 0.2671260000000011
+          },
+          "prepare_ns": {
+            "median": 2.162871,
+            "mad": 0.06268900000000022
+          },
+          "total_ns": {
+            "median": 15.71924,
+            "mad": 0.37310399999999966
+          },
+          "primary_bytes": {
+            "median": 8912896.0,
+            "mad": 0.0
+          },
+          "overflow_bytes": {
+            "median": 4480.0,
+            "mad": 0.0
+          },
+          "spills": {
+            "median": 29.0,
+            "mad": 0.0
+          },
+          "workspace_bytes": {
+            "median": 250616.0,
+            "mad": 7000.0
+          }
+        },
+        "routed_before": {
+          "merge_ns": {
+            "median": 14.089186,
+            "mad": 0.06647399999999948
+          },
+          "prepare_ns": {
+            "median": 2.174986,
+            "mad": 0.06770500000000013
+          },
+          "total_ns": {
+            "median": 16.264172,
+            "mad": 0.1341789999999996
+          },
+          "primary_bytes": {
+            "median": 8912896.0,
+            "mad": 0.0
+          },
+          "overflow_bytes": {
+            "median": 4480.0,
+            "mad": 0.0
+          },
+          "spills": {
+            "median": 29.0,
+            "mad": 0.0
+          },
+          "workspace_bytes": {
+            "median": 0.0,
+            "mad": 0.0
+          }
+        },
+        "abseil": {
+          "merge_ns": {
+            "median": 11.415431,
+            "mad": 0.322419
+          },
+          "prepare_ns": {
+            "median": 4.299594,
+            "mad": 2.2103669999999997
+          },
+          "total_ns": {
+            "median": 15.643729,
+            "mad": 2.500482
+          },
+          "primary_bytes": {
+            "median": 9568208.0,
+            "mad": 0.0
+          },
+          "overflow_bytes": {
+            "median": 0.0,
+            "mad": 0.0
+          },
+          "spills": {
+            "median": 0.0,
+            "mad": 0.0
+          },
+          "workspace_bytes": {
+            "median": 0.0,
+            "mad": 0.0
+          }
+        },
+        "accumulate": {
+          "merge_ns": {
+            "median": 9.554769,
+            "mad": 0.15613100000000024
+          },
+          "prepare_ns": {
+            "median": 2.216122,
+            "mad": 0.07457799999999981
+          },
+          "total_ns": {
+            "median": 11.779098,
+            "mad": 0.18557299999999977
+          },
+          "primary_bytes": {
+            "median": 8912896.0,
+            "mad": 0.0
+          },
+          "overflow_bytes": {
+            "median": 4480.0,
+            "mad": 0.0
+          },
+          "spills": {
+            "median": 29.0,
+            "mad": 0.0
+          },
+          "workspace_bytes": {
+            "median": 0.0,
+            "mad": 0.0
+          }
+        }
+      }
+    },
+    {
+      "K": 30,
+      "V": 64,
+      "b": 10,
+      "inputs": 8,
+      "overlap": 50,
+      "mode": 12,
+      "samples": 9,
+      "measurements": {
+        "kway": {
+          "merge_ns": {
+            "median": 13.633091,
+            "mad": 0.4129070000000006
+          },
+          "prepare_ns": {
+            "median": 2.15529,
+            "mad": 0.036221999999999976
+          },
+          "total_ns": {
+            "median": 15.788381,
+            "mad": 0.41321399999999997
+          },
+          "primary_bytes": {
+            "median": 8912896.0,
+            "mad": 0.0
+          },
+          "overflow_bytes": {
+            "median": 4480.0,
+            "mad": 0.0
+          },
+          "spills": {
+            "median": 29.0,
+            "mad": 0.0
+          },
+          "workspace_bytes": {
+            "median": 250616.0,
+            "mad": 7000.0
+          }
+        },
+        "routed_before": {
+          "merge_ns": {
+            "median": 14.183665,
+            "mad": 0.03776099999999971
+          },
+          "prepare_ns": {
+            "median": 2.181439,
+            "mad": 0.062257999999999925
+          },
+          "total_ns": {
+            "median": 16.410045,
+            "mad": 0.11077900000000085
+          },
+          "primary_bytes": {
+            "median": 8912896.0,
+            "mad": 0.0
+          },
+          "overflow_bytes": {
+            "median": 4480.0,
+            "mad": 0.0
+          },
+          "spills": {
+            "median": 29.0,
+            "mad": 0.0
+          },
+          "workspace_bytes": {
+            "median": 0.0,
+            "mad": 0.0
+          }
+        },
+        "abseil": {
+          "merge_ns": {
+            "median": 11.839109,
+            "mad": 0.6112000000000002
+          },
+          "prepare_ns": {
+            "median": 4.192702,
+            "mad": 2.0284869999999997
+          },
+          "total_ns": {
+            "median": 16.498872,
+            "mad": 2.7991019999999995
+          },
+          "primary_bytes": {
+            "median": 9568208.0,
+            "mad": 0.0
+          },
+          "overflow_bytes": {
+            "median": 0.0,
+            "mad": 0.0
+          },
+          "spills": {
+            "median": 0.0,
+            "mad": 0.0
+          },
+          "workspace_bytes": {
+            "median": 0.0,
+            "mad": 0.0
+          }
+        },
+        "accumulate": {
+          "merge_ns": {
+            "median": 12.972764,
+            "mad": 0.30940099999999937
+          },
+          "prepare_ns": {
+            "median": 2.205453,
+            "mad": 0.048111000000000015
+          },
+          "total_ns": {
+            "median": 15.195349,
+            "mad": 0.3934160000000002
+          },
+          "primary_bytes": {
+            "median": 8912896.0,
+            "mad": 0.0
+          },
+          "overflow_bytes": {
+            "median": 4480.0,
+            "mad": 0.0
+          },
+          "spills": {
+            "median": 29.0,
+            "mad": 0.0
+          },
+          "workspace_bytes": {
+            "median": 0.0,
+            "mad": 0.0
+          }
+        }
+      }
+    },
+    {
+      "K": 30,
+      "V": 64,
+      "b": 11,
+      "inputs": 8,
+      "overlap": 0,
+      "mode": 10,
+      "samples": 9,
+      "measurements": {
+        "kway": {
+          "merge_ns": {
+            "median": 14.651136,
+            "mad": 0.3064669999999996
+          },
+          "prepare_ns": {
+            "median": 2.592089,
+            "mad": 0.037493999999999694
+          },
+          "total_ns": {
+            "median": 17.252513,
+            "mad": 0.3701760000000007
+          },
+          "primary_bytes": {
+            "median": 17825792.0,
+            "mad": 0.0
+          },
+          "overflow_bytes": {
+            "median": 1163264.0,
+            "mad": 0.0
+          },
+          "spills": {
+            "median": 9828.0,
+            "mad": 42.0
+          },
+          "workspace_bytes": {
+            "median": 495072.0,
+            "mad": 2128.0
+          }
+        },
+        "routed_before": {
+          "merge_ns": {
+            "median": 13.705315,
+            "mad": 0.21188499999999877
+          },
+          "prepare_ns": {
+            "median": 2.535412,
+            "mad": 0.010002000000000066
+          },
+          "total_ns": {
+            "median": 16.223493,
+            "mad": 0.23912099999999725
+          },
+          "primary_bytes": {
+            "median": 17825792.0,
+            "mad": 0.0
+          },
+          "overflow_bytes": {
+            "median": 1163264.0,
+            "mad": 0.0
+          },
+          "spills": {
+            "median": 9828.0,
+            "mad": 42.0
+          },
+          "workspace_bytes": {
+            "median": 0.0,
+            "mad": 0.0
+          }
+        },
+        "abseil": {
+          "merge_ns": {
+            "median": 10.957243,
+            "mad": 0.37556099999999937
+          },
+          "prepare_ns": {
+            "median": 4.475785,
+            "mad": 1.6462630000000003
+          },
+          "total_ns": {
+            "median": 15.342504,
+            "mad": 1.9878739999999997
+          },
+          "primary_bytes": {
+            "median": 19136464.0,
+            "mad": 0.0
+          },
+          "overflow_bytes": {
+            "median": 0.0,
+            "mad": 0.0
+          },
+          "spills": {
+            "median": 0.0,
+            "mad": 0.0
+          },
+          "workspace_bytes": {
+            "median": 0.0,
+            "mad": 0.0
+          }
+        },
+        "accumulate": {
+          "merge_ns": {
+            "median": 9.465824,
+            "mad": 0.5545629999999999
+          },
+          "prepare_ns": {
+            "median": 2.585734,
+            "mad": 0.048875000000000224
+          },
+          "total_ns": {
+            "median": 12.051558,
+            "mad": 0.8685290000000006
+          },
+          "primary_bytes": {
+            "median": 17825792.0,
+            "mad": 0.0
+          },
+          "overflow_bytes": {
+            "median": 1163264.0,
+            "mad": 0.0
+          },
+          "spills": {
+            "median": 9828.0,
+            "mad": 42.0
+          },
+          "workspace_bytes": {
+            "median": 0.0,
+            "mad": 0.0
+          }
+        }
+      }
+    },
+    {
+      "K": 30,
+      "V": 64,
+      "b": 11,
+      "inputs": 8,
+      "overlap": 0,
+      "mode": 12,
+      "samples": 9,
+      "measurements": {
+        "kway": {
+          "merge_ns": {
+            "median": 14.567018,
+            "mad": 0.6702829999999995
+          },
+          "prepare_ns": {
+            "median": 2.584964,
+            "mad": 0.056624999999999925
+          },
+          "total_ns": {
+            "median": 17.175776,
+            "mad": 0.7720959999999977
+          },
+          "primary_bytes": {
+            "median": 17825792.0,
+            "mad": 0.0
+          },
+          "overflow_bytes": {
+            "median": 1163264.0,
+            "mad": 0.0
+          },
+          "spills": {
+            "median": 9828.0,
+            "mad": 42.0
+          },
+          "workspace_bytes": {
+            "median": 495072.0,
+            "mad": 2128.0
+          }
+        },
+        "routed_before": {
+          "merge_ns": {
+            "median": 13.397355,
+            "mad": 0.2692350000000001
+          },
+          "prepare_ns": {
+            "median": 2.521153,
+            "mad": 0.009949999999999903
+          },
+          "total_ns": {
+            "median": 15.918508,
+            "mad": 0.27769699999999986
+          },
+          "primary_bytes": {
+            "median": 17825792.0,
+            "mad": 0.0
+          },
+          "overflow_bytes": {
+            "median": 1163264.0,
+            "mad": 0.0
+          },
+          "spills": {
+            "median": 9828.0,
+            "mad": 42.0
+          },
+          "workspace_bytes": {
+            "median": 0.0,
+            "mad": 0.0
+          }
+        },
+        "abseil": {
+          "merge_ns": {
+            "median": 11.008022,
+            "mad": 0.5346630000000001
+          },
+          "prepare_ns": {
+            "median": 4.600378,
+            "mad": 1.740701
+          },
+          "total_ns": {
+            "median": 15.465958,
+            "mad": 2.1329220000000007
+          },
+          "primary_bytes": {
+            "median": 19136464.0,
+            "mad": 0.0
+          },
+          "overflow_bytes": {
+            "median": 0.0,
+            "mad": 0.0
+          },
+          "spills": {
+            "median": 0.0,
+            "mad": 0.0
+          },
+          "workspace_bytes": {
+            "median": 0.0,
+            "mad": 0.0
+          }
+        },
+        "accumulate": {
+          "merge_ns": {
+            "median": 12.370699,
+            "mad": 0.5596519999999998
+          },
+          "prepare_ns": {
+            "median": 2.591422,
+            "mad": 0.05185100000000009
+          },
+          "total_ns": {
+            "median": 15.317674,
+            "mad": 0.9670550000000002
+          },
+          "primary_bytes": {
+            "median": 17825792.0,
+            "mad": 0.0
+          },
+          "overflow_bytes": {
+            "median": 1163264.0,
+            "mad": 0.0
+          },
+          "spills": {
+            "median": 9828.0,
+            "mad": 42.0
+          },
+          "workspace_bytes": {
+            "median": 0.0,
+            "mad": 0.0
+          }
+        }
+      }
+    },
+    {
+      "K": 30,
+      "V": 64,
+      "b": 11,
+      "inputs": 8,
+      "overlap": 50,
+      "mode": 10,
+      "samples": 9,
+      "measurements": {
+        "kway": {
+          "merge_ns": {
+            "median": 16.795752,
+            "mad": 0.49604499999999874
+          },
+          "prepare_ns": {
+            "median": 2.502483,
+            "mad": 0.06472999999999995
+          },
+          "total_ns": {
+            "median": 19.298235,
+            "mad": 0.556472000000003
+          },
+          "primary_bytes": {
+            "median": 17825792.0,
+            "mad": 0.0
+          },
+          "overflow_bytes": {
+            "median": 9088.0,
+            "mad": 0.0
+          },
+          "spills": {
+            "median": 70.0,
+            "mad": 2.0
+          },
+          "workspace_bytes": {
+            "median": 498264.0,
+            "mad": 3808.0
+          }
+        },
+        "routed_before": {
+          "merge_ns": {
+            "median": 14.893493,
+            "mad": 0.1582340000000002
+          },
+          "prepare_ns": {
+            "median": 2.453961,
+            "mad": 0.031698000000000004
+          },
+          "total_ns": {
+            "median": 17.30678,
+            "mad": 0.21455800000000025
+          },
+          "primary_bytes": {
+            "median": 17825792.0,
+            "mad": 0.0
+          },
+          "overflow_bytes": {
+            "median": 9088.0,
+            "mad": 0.0
+          },
+          "spills": {
+            "median": 70.0,
+            "mad": 2.0
+          },
+          "workspace_bytes": {
+            "median": 0.0,
+            "mad": 0.0
+          }
+        },
+        "abseil": {
+          "merge_ns": {
+            "median": 12.876228,
+            "mad": 0.40438699999999983
+          },
+          "prepare_ns": {
+            "median": 5.713003,
+            "mad": 2.6369739999999995
+          },
+          "total_ns": {
+            "median": 18.589232,
+            "mad": 2.982529999999999
+          },
+          "primary_bytes": {
+            "median": 19136464.0,
+            "mad": 0.0
+          },
+          "overflow_bytes": {
+            "median": 0.0,
+            "mad": 0.0
+          },
+          "spills": {
+            "median": 0.0,
+            "mad": 0.0
+          },
+          "workspace_bytes": {
+            "median": 0.0,
+            "mad": 0.0
+          }
+        },
+        "accumulate": {
+          "merge_ns": {
+            "median": 10.553425,
+            "mad": 0.18778300000000137
+          },
+          "prepare_ns": {
+            "median": 2.532026,
+            "mad": 0.04559800000000003
+          },
+          "total_ns": {
+            "median": 13.060216,
+            "mad": 0.18183300000000102
+          },
+          "primary_bytes": {
+            "median": 17825792.0,
+            "mad": 0.0
+          },
+          "overflow_bytes": {
+            "median": 9088.0,
+            "mad": 0.0
+          },
+          "spills": {
+            "median": 70.0,
+            "mad": 2.0
+          },
+          "workspace_bytes": {
+            "median": 0.0,
+            "mad": 0.0
+          }
+        }
+      }
+    },
+    {
+      "K": 30,
+      "V": 64,
+      "b": 11,
+      "inputs": 8,
+      "overlap": 50,
+      "mode": 12,
+      "samples": 9,
+      "measurements": {
+        "kway": {
+          "merge_ns": {
+            "median": 16.771907,
+            "mad": 0.2783649999999973
+          },
+          "prepare_ns": {
+            "median": 2.487198,
+            "mad": 0.0485730000000002
+          },
+          "total_ns": {
+            "median": 19.259104,
+            "mad": 0.22558000000000078
+          },
+          "primary_bytes": {
+            "median": 17825792.0,
+            "mad": 0.0
+          },
+          "overflow_bytes": {
+            "median": 9088.0,
+            "mad": 0.0
+          },
+          "spills": {
+            "median": 70.0,
+            "mad": 2.0
+          },
+          "workspace_bytes": {
+            "median": 498264.0,
+            "mad": 3808.0
+          }
+        },
+        "routed_before": {
+          "merge_ns": {
+            "median": 14.833585,
+            "mad": 0.117560000000001
+          },
+          "prepare_ns": {
+            "median": 2.469964,
+            "mad": 0.03610900000000017
+          },
+          "total_ns": {
+            "median": 17.287289,
+            "mad": 0.13382000000000005
+          },
+          "primary_bytes": {
+            "median": 17825792.0,
+            "mad": 0.0
+          },
+          "overflow_bytes": {
+            "median": 9088.0,
+            "mad": 0.0
+          },
+          "spills": {
+            "median": 70.0,
+            "mad": 2.0
+          },
+          "workspace_bytes": {
+            "median": 0.0,
+            "mad": 0.0
+          }
+        },
+        "abseil": {
+          "merge_ns": {
+            "median": 12.821449,
+            "mad": 0.40366399999999913
+          },
+          "prepare_ns": {
+            "median": 5.731412,
+            "mad": 2.6115799999999996
+          },
+          "total_ns": {
+            "median": 18.552861,
+            "mad": 2.791767
+          },
+          "primary_bytes": {
+            "median": 19136464.0,
+            "mad": 0.0
+          },
+          "overflow_bytes": {
+            "median": 0.0,
+            "mad": 0.0
+          },
+          "spills": {
+            "median": 0.0,
+            "mad": 0.0
+          },
+          "workspace_bytes": {
+            "median": 0.0,
+            "mad": 0.0
+          }
+        },
+        "accumulate": {
+          "merge_ns": {
+            "median": 14.637338,
+            "mad": 0.5528709999999997
+          },
+          "prepare_ns": {
+            "median": 2.551522,
+            "mad": 0.09473999999999982
+          },
+          "total_ns": {
+            "median": 17.218353,
+            "mad": 0.6765450000000008
+          },
+          "primary_bytes": {
+            "median": 17825792.0,
+            "mad": 0.0
+          },
+          "overflow_bytes": {
+            "median": 9088.0,
+            "mad": 0.0
+          },
+          "spills": {
+            "median": 70.0,
+            "mad": 2.0
+          },
+          "workspace_bytes": {
+            "median": 0.0,
+            "mad": 0.0
+          }
+        }
+      }
+    },
+    {
+      "K": 30,
+      "V": 64,
+      "b": 12,
+      "inputs": 8,
+      "overlap": 0,
+      "mode": 10,
+      "samples": 9,
+      "measurements": {
+        "kway": {
+          "merge_ns": {
+            "median": 22.509993,
+            "mad": 0.4218989999999998
+          },
+          "prepare_ns": {
+            "median": 19.306584,
+            "mad": 0.04675600000000202
+          },
+          "total_ns": {
+            "median": 42.131545,
+            "mad": 0.31496800000000036
+          },
+          "primary_bytes": {
+            "median": 35651584.0,
+            "mad": 0.0
+          },
+          "overflow_bytes": {
+            "median": 2326528.0,
+            "mad": 0.0
+          },
+          "spills": {
+            "median": 19709.0,
+            "mad": 2.0
+          },
+          "workspace_bytes": {
+            "median": 1000392.0,
+            "mad": 7952.0
+          }
+        },
+        "routed_before": {
+          "merge_ns": {
+            "median": 25.62523,
+            "mad": 0.3253389999999996
+          },
+          "prepare_ns": {
+            "median": 19.488412,
+            "mad": 0.24296599999999913
+          },
+          "total_ns": {
+            "median": 45.113642,
+            "mad": 0.5683049999999952
+          },
+          "primary_bytes": {
+            "median": 35651584.0,
+            "mad": 0.0
+          },
+          "overflow_bytes": {
+            "median": 2326528.0,
+            "mad": 0.0
+          },
+          "spills": {
+            "median": 19709.0,
+            "mad": 2.0
+          },
+          "workspace_bytes": {
+            "median": 0.0,
+            "mad": 0.0
+          }
+        },
+        "abseil": {
+          "merge_ns": {
+            "median": 14.884658,
+            "mad": 0.06094799999999978
+          },
+          "prepare_ns": {
+            "median": 17.813889,
+            "mad": 0.4486689999999989
+          },
+          "total_ns": {
+            "median": 32.779509,
+            "mad": 0.7411819999999949
+          },
+          "primary_bytes": {
+            "median": 38272976.0,
+            "mad": 0.0
+          },
+          "overflow_bytes": {
+            "median": 0.0,
+            "mad": 0.0
+          },
+          "spills": {
+            "median": 0.0,
+            "mad": 0.0
+          },
+          "workspace_bytes": {
+            "median": 0.0,
+            "mad": 0.0
+          }
+        },
+        "accumulate": {
+          "merge_ns": {
+            "median": 13.867737,
+            "mad": 0.17726299999999995
+          },
+          "prepare_ns": {
+            "median": 19.601123,
+            "mad": 0.37179000000000073
+          },
+          "total_ns": {
+            "median": 33.526588,
+            "mad": 0.6571170000000066
+          },
+          "primary_bytes": {
+            "median": 35651584.0,
+            "mad": 0.0
+          },
+          "overflow_bytes": {
+            "median": 2326528.0,
+            "mad": 0.0
+          },
+          "spills": {
+            "median": 19709.0,
+            "mad": 2.0
+          },
+          "workspace_bytes": {
+            "median": 0.0,
+            "mad": 0.0
+          }
+        }
+      }
+    },
+    {
+      "K": 30,
+      "V": 64,
+      "b": 12,
+      "inputs": 8,
+      "overlap": 0,
+      "mode": 12,
+      "samples": 9,
+      "measurements": {
+        "kway": {
+          "merge_ns": {
+            "median": 22.6008,
+            "mad": 0.4624670000000002
+          },
+          "prepare_ns": {
+            "median": 19.680703,
+            "mad": 0.07814099999999868
+          },
+          "total_ns": {
+            "median": 42.312606,
+            "mad": 0.4732529999999997
+          },
+          "primary_bytes": {
+            "median": 35651584.0,
+            "mad": 0.0
+          },
+          "overflow_bytes": {
+            "median": 2326528.0,
+            "mad": 0.0
+          },
+          "spills": {
+            "median": 19709.0,
+            "mad": 2.0
+          },
+          "workspace_bytes": {
+            "median": 1000392.0,
+            "mad": 7952.0
+          }
+        },
+        "routed_before": {
+          "merge_ns": {
+            "median": 25.54037,
+            "mad": 0.7635170000000002
+          },
+          "prepare_ns": {
+            "median": 19.35451,
+            "mad": 0.09993200000000257
+          },
+          "total_ns": {
+            "median": 44.843135,
+            "mad": 1.0802140000000051
+          },
+          "primary_bytes": {
+            "median": 35651584.0,
+            "mad": 0.0
+          },
+          "overflow_bytes": {
+            "median": 2326528.0,
+            "mad": 0.0
+          },
+          "spills": {
+            "median": 19709.0,
+            "mad": 2.0
+          },
+          "workspace_bytes": {
+            "median": 0.0,
+            "mad": 0.0
+          }
+        },
+        "abseil": {
+          "merge_ns": {
+            "median": 14.829825,
+            "mad": 0.15839499999999873
+          },
+          "prepare_ns": {
+            "median": 17.826371,
+            "mad": 0.4050009999999986
+          },
+          "total_ns": {
+            "median": 32.767687,
+            "mad": 0.6195440000000048
+          },
+          "primary_bytes": {
+            "median": 38272976.0,
+            "mad": 0.0
+          },
+          "overflow_bytes": {
+            "median": 0.0,
+            "mad": 0.0
+          },
+          "spills": {
+            "median": 0.0,
+            "mad": 0.0
+          },
+          "workspace_bytes": {
+            "median": 0.0,
+            "mad": 0.0
+          }
+        },
+        "accumulate": {
+          "merge_ns": {
+            "median": 14.300504,
+            "mad": 0.1655149999999992
+          },
+          "prepare_ns": {
+            "median": 19.708451,
+            "mad": 0.24112399999999923
+          },
+          "total_ns": {
+            "median": 34.122546,
+            "mad": 0.5938810000000032
+          },
+          "primary_bytes": {
+            "median": 35651584.0,
+            "mad": 0.0
+          },
+          "overflow_bytes": {
+            "median": 2326528.0,
+            "mad": 0.0
+          },
+          "spills": {
+            "median": 19709.0,
+            "mad": 2.0
+          },
+          "workspace_bytes": {
+            "median": 0.0,
+            "mad": 0.0
+          }
+        }
+      }
+    },
+    {
+      "K": 30,
+      "V": 64,
+      "b": 12,
+      "inputs": 8,
+      "overlap": 50,
+      "mode": 10,
+      "samples": 9,
+      "measurements": {
+        "kway": {
+          "merge_ns": {
+            "median": 21.409235,
+            "mad": 0.4067879999999988
+          },
+          "prepare_ns": {
+            "median": 19.100088,
+            "mad": 0.12048500000000217
+          },
+          "total_ns": {
+            "median": 40.343652,
+            "mad": 0.2928439999999952
+          },
+          "primary_bytes": {
+            "median": 35651584.0,
+            "mad": 0.0
+          },
+          "overflow_bytes": {
+            "median": 18176.0,
+            "mad": 0.0
+          },
+          "spills": {
+            "median": 140.0,
+            "mad": 0.0
+          },
+          "workspace_bytes": {
+            "median": 1001960.0,
+            "mad": 4256.0
+          }
+        },
+        "routed_before": {
+          "merge_ns": {
+            "median": 20.182892,
+            "mad": 0.18730800000000158
+          },
+          "prepare_ns": {
+            "median": 18.970911,
+            "mad": 0.12048000000000059
+          },
+          "total_ns": {
+            "median": 39.18031,
+            "mad": 0.17531100000000066
+          },
+          "primary_bytes": {
+            "median": 35651584.0,
+            "mad": 0.0
+          },
+          "overflow_bytes": {
+            "median": 18176.0,
+            "mad": 0.0
+          },
+          "spills": {
+            "median": 140.0,
+            "mad": 0.0
+          },
+          "workspace_bytes": {
+            "median": 0.0,
+            "mad": 0.0
+          }
+        },
+        "abseil": {
+          "merge_ns": {
+            "median": 14.95716,
+            "mad": 0.24337899999999912
+          },
+          "prepare_ns": {
+            "median": 18.582997,
+            "mad": 0.9494449999999972
+          },
+          "total_ns": {
+            "median": 34.491246,
+            "mad": 1.698278000000002
+          },
+          "primary_bytes": {
+            "median": 38272976.0,
+            "mad": 0.0
+          },
+          "overflow_bytes": {
+            "median": 0.0,
+            "mad": 0.0
+          },
+          "spills": {
+            "median": 0.0,
+            "mad": 0.0
+          },
+          "workspace_bytes": {
+            "median": 0.0,
+            "mad": 0.0
+          }
+        },
+        "accumulate": {
+          "merge_ns": {
+            "median": 11.967774,
+            "mad": 0.1730830000000001
+          },
+          "prepare_ns": {
+            "median": 19.635567,
+            "mad": 0.3893759999999986
+          },
+          "total_ns": {
+            "median": 31.165969,
+            "mad": 0.46271600000000035
+          },
+          "primary_bytes": {
+            "median": 35651584.0,
+            "mad": 0.0
+          },
+          "overflow_bytes": {
+            "median": 18176.0,
+            "mad": 0.0
+          },
+          "spills": {
+            "median": 140.0,
+            "mad": 0.0
+          },
+          "workspace_bytes": {
+            "median": 0.0,
+            "mad": 0.0
+          }
+        }
+      }
+    },
+    {
+      "K": 30,
+      "V": 64,
+      "b": 12,
+      "inputs": 8,
+      "overlap": 50,
+      "mode": 12,
+      "samples": 9,
+      "measurements": {
+        "kway": {
+          "merge_ns": {
+            "median": 21.0323,
+            "mad": 0.327491000000002
+          },
+          "prepare_ns": {
+            "median": 19.201098,
+            "mad": 0.23731400000000136
+          },
+          "total_ns": {
+            "median": 40.181817,
+            "mad": 0.4076340000000016
+          },
+          "primary_bytes": {
+            "median": 35651584.0,
+            "mad": 0.0
+          },
+          "overflow_bytes": {
+            "median": 18176.0,
+            "mad": 0.0
+          },
+          "spills": {
+            "median": 140.0,
+            "mad": 0.0
+          },
+          "workspace_bytes": {
+            "median": 1001960.0,
+            "mad": 4256.0
+          }
+        },
+        "routed_before": {
+          "merge_ns": {
+            "median": 18.726657,
+            "mad": 0.6153440000000003
+          },
+          "prepare_ns": {
+            "median": 19.062126,
+            "mad": 0.13042700000000096
+          },
+          "total_ns": {
+            "median": 37.7214,
+            "mad": 0.6417299999999955
+          },
+          "primary_bytes": {
+            "median": 35651584.0,
+            "mad": 0.0
+          },
+          "overflow_bytes": {
+            "median": 18176.0,
+            "mad": 0.0
+          },
+          "spills": {
+            "median": 140.0,
+            "mad": 0.0
+          },
+          "workspace_bytes": {
+            "median": 0.0,
+            "mad": 0.0
+          }
+        },
+        "abseil": {
+          "merge_ns": {
+            "median": 14.866167,
+            "mad": 0.23687500000000128
+          },
+          "prepare_ns": {
+            "median": 18.626774,
+            "mad": 0.8535599999999981
+          },
+          "total_ns": {
+            "median": 34.566487,
+            "mad": 1.8347550000000012
+          },
+          "primary_bytes": {
+            "median": 38272976.0,
+            "mad": 0.0
+          },
+          "overflow_bytes": {
+            "median": 0.0,
+            "mad": 0.0
+          },
+          "spills": {
+            "median": 0.0,
+            "mad": 0.0
+          },
+          "workspace_bytes": {
+            "median": 0.0,
+            "mad": 0.0
+          }
+        },
+        "accumulate": {
+          "merge_ns": {
+            "median": 15.16245,
+            "mad": 0.05726800000000054
+          },
+          "prepare_ns": {
+            "median": 19.502391,
+            "mad": 0.17379999999999995
+          },
+          "total_ns": {
+            "median": 34.671558,
+            "mad": 0.3734320000000011
+          },
+          "primary_bytes": {
+            "median": 35651584.0,
+            "mad": 0.0
+          },
+          "overflow_bytes": {
+            "median": 18176.0,
+            "mad": 0.0
+          },
+          "spills": {
+            "median": 140.0,
+            "mad": 0.0
+          },
+          "workspace_bytes": {
+            "median": 0.0,
+            "mad": 0.0
+          }
+        }
+      }
+    },
+    {
+      "K": 30,
+      "V": 64,
+      "b": 13,
+      "inputs": 8,
+      "overlap": 0,
+      "mode": 10,
+      "samples": 9,
+      "measurements": {
+        "kway": {
+          "merge_ns": {
+            "median": 27.074332,
+            "mad": 0.301717
+          },
+          "prepare_ns": {
+            "median": 21.972356,
+            "mad": 0.11649900000000102
+          },
+          "total_ns": {
+            "median": 48.956732,
+            "mad": 0.35462899999999564
+          },
+          "primary_bytes": {
+            "median": 71303168.0,
+            "mad": 0.0
+          },
+          "overflow_bytes": {
+            "median": 4653056.0,
+            "mad": 0.0
+          },
+          "spills": {
+            "median": 39257.0,
+            "mad": 95.0
+          },
+          "workspace_bytes": {
+            "median": 1986672.0,
+            "mad": 4592.0
+          }
+        },
+        "routed_before": {
+          "merge_ns": {
+            "median": 33.478627,
+            "mad": 0.8920389999999969
+          },
+          "prepare_ns": {
+            "median": 21.902442,
+            "mad": 0.059536000000001366
+          },
+          "total_ns": {
+            "median": 54.858833,
+            "mad": 1.2593909999999937
+          },
+          "primary_bytes": {
+            "median": 71303168.0,
+            "mad": 0.0
+          },
+          "overflow_bytes": {
+            "median": 4653056.0,
+            "mad": 0.0
+          },
+          "spills": {
+            "median": 39257.0,
+            "mad": 95.0
+          },
+          "workspace_bytes": {
+            "median": 0.0,
+            "mad": 0.0
+          }
+        },
+        "abseil": {
+          "merge_ns": {
+            "median": 17.136309,
+            "mad": 0.06375099999999989
+          },
+          "prepare_ns": {
+            "median": 19.21209,
+            "mad": 0.7906179999999985
+          },
+          "total_ns": {
+            "median": 36.409844,
+            "mad": 0.9008409999999998
+          },
+          "primary_bytes": {
+            "median": 76546000.0,
+            "mad": 0.0
+          },
+          "overflow_bytes": {
+            "median": 0.0,
+            "mad": 0.0
+          },
+          "spills": {
+            "median": 0.0,
+            "mad": 0.0
+          },
+          "workspace_bytes": {
+            "median": 0.0,
+            "mad": 0.0
+          }
+        },
+        "accumulate": {
+          "merge_ns": {
+            "median": 15.225479,
+            "mad": 0.09409300000000087
+          },
+          "prepare_ns": {
+            "median": 22.181249,
+            "mad": 0.36736000000000146
+          },
+          "total_ns": {
+            "median": 37.486715,
+            "mad": 0.42745400000000444
+          },
+          "primary_bytes": {
+            "median": 71303168.0,
+            "mad": 0.0
+          },
+          "overflow_bytes": {
+            "median": 4653056.0,
+            "mad": 0.0
+          },
+          "spills": {
+            "median": 39257.0,
+            "mad": 95.0
+          },
+          "workspace_bytes": {
+            "median": 0.0,
+            "mad": 0.0
+          }
+        }
+      }
+    },
+    {
+      "K": 30,
+      "V": 64,
+      "b": 13,
+      "inputs": 8,
+      "overlap": 0,
+      "mode": 12,
+      "samples": 9,
+      "measurements": {
+        "kway": {
+          "merge_ns": {
+            "median": 27.398848,
+            "mad": 0.3739740000000005
+          },
+          "prepare_ns": {
+            "median": 22.118649,
+            "mad": 0.1346500000000006
+          },
+          "total_ns": {
+            "median": 49.421711,
+            "mad": 0.4330630000000042
+          },
+          "primary_bytes": {
+            "median": 71303168.0,
+            "mad": 0.0
+          },
+          "overflow_bytes": {
+            "median": 4653056.0,
+            "mad": 0.0
+          },
+          "spills": {
+            "median": 39257.0,
+            "mad": 95.0
+          },
+          "workspace_bytes": {
+            "median": 1986672.0,
+            "mad": 4592.0
+          }
+        },
+        "routed_before": {
+          "merge_ns": {
+            "median": 33.768021,
+            "mad": 1.2499249999999975
+          },
+          "prepare_ns": {
+            "median": 21.921718,
+            "mad": 0.43705099999999675
+          },
+          "total_ns": {
+            "median": 56.13016,
+            "mad": 0.7737810000000067
+          },
+          "primary_bytes": {
+            "median": 71303168.0,
+            "mad": 0.0
+          },
+          "overflow_bytes": {
+            "median": 4653056.0,
+            "mad": 0.0
+          },
+          "spills": {
+            "median": 39257.0,
+            "mad": 95.0
+          },
+          "workspace_bytes": {
+            "median": 0.0,
+            "mad": 0.0
+          }
+        },
+        "abseil": {
+          "merge_ns": {
+            "median": 17.0629,
+            "mad": 0.10829000000000022
+          },
+          "prepare_ns": {
+            "median": 18.938339,
+            "mad": 0.3948049999999981
+          },
+          "total_ns": {
+            "median": 35.943622,
+            "mad": 0.2723840000000024
+          },
+          "primary_bytes": {
+            "median": 76546000.0,
+            "mad": 0.0
+          },
+          "overflow_bytes": {
+            "median": 0.0,
+            "mad": 0.0
+          },
+          "spills": {
+            "median": 0.0,
+            "mad": 0.0
+          },
+          "workspace_bytes": {
+            "median": 0.0,
+            "mad": 0.0
+          }
+        },
+        "accumulate": {
+          "merge_ns": {
+            "median": 15.185781,
+            "mad": 0.08917999999999893
+          },
+          "prepare_ns": {
+            "median": 22.15165,
+            "mad": 0.32302299999999917
+          },
+          "total_ns": {
+            "median": 37.34927,
+            "mad": 0.3460189999999983
+          },
+          "primary_bytes": {
+            "median": 71303168.0,
+            "mad": 0.0
+          },
+          "overflow_bytes": {
+            "median": 4653056.0,
+            "mad": 0.0
+          },
+          "spills": {
+            "median": 39257.0,
+            "mad": 95.0
+          },
+          "workspace_bytes": {
+            "median": 0.0,
+            "mad": 0.0
+          }
+        }
+      }
+    },
+    {
+      "K": 30,
+      "V": 64,
+      "b": 13,
+      "inputs": 8,
+      "overlap": 50,
+      "mode": 10,
+      "samples": 9,
+      "measurements": {
+        "kway": {
+          "merge_ns": {
+            "median": 24.470719,
+            "mad": 0.5324480000000023
+          },
+          "prepare_ns": {
+            "median": 21.749587,
+            "mad": 0.313797000000001
+          },
+          "total_ns": {
+            "median": 45.918463,
+            "mad": 0.8785239999999988
+          },
+          "primary_bytes": {
+            "median": 71303168.0,
+            "mad": 0.0
+          },
+          "overflow_bytes": {
+            "median": 36352.0,
+            "mad": 0.0
+          },
+          "spills": {
+            "median": 229.0,
+            "mad": 6.0
+          },
+          "workspace_bytes": {
+            "median": 2012264.0,
+            "mad": 6944.0
+          }
+        },
+        "routed_before": {
+          "merge_ns": {
+            "median": 27.997087,
+            "mad": 1.7643869999999993
+          },
+          "prepare_ns": {
+            "median": 21.106776,
+            "mad": 0.21339400000000097
+          },
+          "total_ns": {
+            "median": 49.26575,
+            "mad": 1.6834339999999983
+          },
+          "primary_bytes": {
+            "median": 71303168.0,
+            "mad": 0.0
+          },
+          "overflow_bytes": {
+            "median": 36352.0,
+            "mad": 0.0
+          },
+          "spills": {
+            "median": 229.0,
+            "mad": 6.0
+          },
+          "workspace_bytes": {
+            "median": 0.0,
+            "mad": 0.0
+          }
+        },
+        "abseil": {
+          "merge_ns": {
+            "median": 19.302598,
+            "mad": 0.9226470000000013
+          },
+          "prepare_ns": {
+            "median": 20.371621,
+            "mad": 0.8892760000000024
+          },
+          "total_ns": {
+            "median": 39.674219,
+            "mad": 1.873465000000003
+          },
+          "primary_bytes": {
+            "median": 76546000.0,
+            "mad": 0.0
+          },
+          "overflow_bytes": {
+            "median": 0.0,
+            "mad": 0.0
+          },
+          "spills": {
+            "median": 0.0,
+            "mad": 0.0
+          },
+          "workspace_bytes": {
+            "median": 0.0,
+            "mad": 0.0
+          }
+        },
+        "accumulate": {
+          "merge_ns": {
+            "median": 14.733398,
+            "mad": 0.6950000000000003
+          },
+          "prepare_ns": {
+            "median": 21.62217,
+            "mad": 0.36516900000000163
+          },
+          "total_ns": {
+            "median": 35.796667,
+            "mad": 0.9925059999999988
+          },
+          "primary_bytes": {
+            "median": 71303168.0,
+            "mad": 0.0
+          },
+          "overflow_bytes": {
+            "median": 36352.0,
+            "mad": 0.0
+          },
+          "spills": {
+            "median": 229.0,
+            "mad": 6.0
+          },
+          "workspace_bytes": {
+            "median": 0.0,
+            "mad": 0.0
+          }
+        }
+      }
+    },
+    {
+      "K": 30,
+      "V": 64,
+      "b": 13,
+      "inputs": 8,
+      "overlap": 50,
+      "mode": 12,
+      "samples": 9,
+      "measurements": {
+        "kway": {
+          "merge_ns": {
+            "median": 24.225602,
+            "mad": 0.4876329999999989
+          },
+          "prepare_ns": {
+            "median": 21.591664,
+            "mad": 0.15851400000000027
+          },
+          "total_ns": {
+            "median": 45.817266,
+            "mad": 0.8088649999999973
+          },
+          "primary_bytes": {
+            "median": 71303168.0,
+            "mad": 0.0
+          },
+          "overflow_bytes": {
+            "median": 36352.0,
+            "mad": 0.0
+          },
+          "spills": {
+            "median": 229.0,
+            "mad": 6.0
+          },
+          "workspace_bytes": {
+            "median": 2012264.0,
+            "mad": 6944.0
+          }
+        },
+        "routed_before": {
+          "merge_ns": {
+            "median": 27.167898,
+            "mad": 2.2653630000000007
+          },
+          "prepare_ns": {
+            "median": 21.292152,
+            "mad": 0.2054050000000025
+          },
+          "total_ns": {
+            "median": 48.66655,
+            "mad": 2.338751000000002
+          },
+          "primary_bytes": {
+            "median": 71303168.0,
+            "mad": 0.0
+          },
+          "overflow_bytes": {
+            "median": 36352.0,
+            "mad": 0.0
+          },
+          "spills": {
+            "median": 229.0,
+            "mad": 6.0
+          },
+          "workspace_bytes": {
+            "median": 0.0,
+            "mad": 0.0
+          }
+        },
+        "abseil": {
+          "merge_ns": {
+            "median": 19.932966,
+            "mad": 1.0582269999999987
+          },
+          "prepare_ns": {
+            "median": 19.852619,
+            "mad": 1.6230119999999992
+          },
+          "total_ns": {
+            "median": 40.021393,
+            "mad": 1.2910340000000033
+          },
+          "primary_bytes": {
+            "median": 76546000.0,
+            "mad": 0.0
+          },
+          "overflow_bytes": {
+            "median": 0.0,
+            "mad": 0.0
+          },
+          "spills": {
+            "median": 0.0,
+            "mad": 0.0
+          },
+          "workspace_bytes": {
+            "median": 0.0,
+            "mad": 0.0
+          }
+        },
+        "accumulate": {
+          "merge_ns": {
+            "median": 15.670925,
+            "mad": 0.1466150000000006
+          },
+          "prepare_ns": {
+            "median": 21.328004,
+            "mad": 0.45723100000000017
+          },
+          "total_ns": {
+            "median": 37.256935,
+            "mad": 0.5207260000000034
+          },
+          "primary_bytes": {
+            "median": 71303168.0,
+            "mad": 0.0
+          },
+          "overflow_bytes": {
+            "median": 36352.0,
+            "mad": 0.0
+          },
+          "spills": {
+            "median": 229.0,
+            "mad": 6.0
+          },
+          "workspace_bytes": {
+            "median": 0.0,
+            "mad": 0.0
+          }
+        }
+      }
+    },
+    {
+      "K": 30,
+      "V": 64,
+      "b": 14,
+      "inputs": 8,
+      "overlap": 0,
+      "mode": 10,
+      "samples": 9,
+      "measurements": {
+        "kway": {
+          "merge_ns": {
+            "median": 29.682985,
+            "mad": 0.2780159999999974
+          },
+          "prepare_ns": {
+            "median": 22.250466,
+            "mad": 0.25749099999999814
+          },
+          "total_ns": {
+            "median": 51.987074,
+            "mad": 0.3777630000000016
+          },
+          "primary_bytes": {
+            "median": 142606336.0,
+            "mad": 0.0
+          },
+          "overflow_bytes": {
+            "median": 9306112.0,
+            "mad": 0.0
+          },
+          "spills": {
+            "median": 78443.0,
+            "mad": 85.0
+          },
+          "workspace_bytes": {
+            "median": 3984264.0,
+            "mad": 16576.0
+          }
+        },
+        "routed_before": {
+          "merge_ns": {
+            "median": 38.672773,
+            "mad": 0.837652999999996
+          },
+          "prepare_ns": {
+            "median": 22.493604,
+            "mad": 0.15361000000000047
+          },
+          "total_ns": {
+            "median": 60.821664,
+            "mad": 0.976341000000005
+          },
+          "primary_bytes": {
+            "median": 142606336.0,
+            "mad": 0.0
+          },
+          "overflow_bytes": {
+            "median": 9306112.0,
+            "mad": 0.0
+          },
+          "spills": {
+            "median": 78443.0,
+            "mad": 85.0
+          },
+          "workspace_bytes": {
+            "median": 0.0,
+            "mad": 0.0
+          }
+        },
+        "abseil": {
+          "merge_ns": {
+            "median": 18.257578,
+            "mad": 0.11453200000000052
+          },
+          "prepare_ns": {
+            "median": 19.878515,
+            "mad": 0.828875
+          },
+          "total_ns": {
+            "median": 38.000167,
+            "mad": 0.8502690000000044
+          },
+          "primary_bytes": {
+            "median": 153092048.0,
+            "mad": 0.0
+          },
+          "overflow_bytes": {
+            "median": 0.0,
+            "mad": 0.0
+          },
+          "spills": {
+            "median": 0.0,
+            "mad": 0.0
+          },
+          "workspace_bytes": {
+            "median": 0.0,
+            "mad": 0.0
+          }
+        },
+        "accumulate": {
+          "merge_ns": {
+            "median": 15.628122,
+            "mad": 0.08616199999999985
+          },
+          "prepare_ns": {
+            "median": 22.394099,
+            "mad": 0.5370249999999999
+          },
+          "total_ns": {
+            "median": 38.003488,
+            "mad": 0.5247290000000007
+          },
+          "primary_bytes": {
+            "median": 142606336.0,
+            "mad": 0.0
+          },
+          "overflow_bytes": {
+            "median": 9306112.0,
+            "mad": 0.0
+          },
+          "spills": {
+            "median": 78443.0,
+            "mad": 85.0
+          },
+          "workspace_bytes": {
+            "median": 0.0,
+            "mad": 0.0
+          }
+        }
+      }
+    },
+    {
+      "K": 30,
+      "V": 64,
+      "b": 14,
+      "inputs": 8,
+      "overlap": 0,
+      "mode": 12,
+      "samples": 9,
+      "measurements": {
+        "kway": {
+          "merge_ns": {
+            "median": 29.742462,
+            "mad": 0.1781959999999998
+          },
+          "prepare_ns": {
+            "median": 22.206313,
+            "mad": 0.16688100000000006
+          },
+          "total_ns": {
+            "median": 52.066214,
+            "mad": 0.4120279999999994
+          },
+          "primary_bytes": {
+            "median": 142606336.0,
+            "mad": 0.0
+          },
+          "overflow_bytes": {
+            "median": 9306112.0,
+            "mad": 0.0
+          },
+          "spills": {
+            "median": 78443.0,
+            "mad": 85.0
+          },
+          "workspace_bytes": {
+            "median": 3984264.0,
+            "mad": 16576.0
+          }
+        },
+        "routed_before": {
+          "merge_ns": {
+            "median": 39.405388,
+            "mad": 2.1074139999999986
+          },
+          "prepare_ns": {
+            "median": 22.541875,
+            "mad": 0.3725939999999994
+          },
+          "total_ns": {
+            "median": 61.574668,
+            "mad": 2.4800089999999955
+          },
+          "primary_bytes": {
+            "median": 142606336.0,
+            "mad": 0.0
+          },
+          "overflow_bytes": {
+            "median": 9306112.0,
+            "mad": 0.0
+          },
+          "spills": {
+            "median": 78443.0,
+            "mad": 85.0
+          },
+          "workspace_bytes": {
+            "median": 0.0,
+            "mad": 0.0
+          }
+        },
+        "abseil": {
+          "merge_ns": {
+            "median": 18.260066,
+            "mad": 0.07954499999999953
+          },
+          "prepare_ns": {
+            "median": 20.086851,
+            "mad": 1.0402950000000004
+          },
+          "total_ns": {
+            "median": 38.424443,
+            "mad": 1.001564000000002
+          },
+          "primary_bytes": {
+            "median": 153092048.0,
+            "mad": 0.0
+          },
+          "overflow_bytes": {
+            "median": 0.0,
+            "mad": 0.0
+          },
+          "spills": {
+            "median": 0.0,
+            "mad": 0.0
+          },
+          "workspace_bytes": {
+            "median": 0.0,
+            "mad": 0.0
+          }
+        },
+        "accumulate": {
+          "merge_ns": {
+            "median": 15.65715,
+            "mad": 0.07479099999999939
+          },
+          "prepare_ns": {
+            "median": 22.564647,
+            "mad": 0.2930090000000014
+          },
+          "total_ns": {
+            "median": 38.147006,
+            "mad": 0.4170310000000015
+          },
+          "primary_bytes": {
+            "median": 142606336.0,
+            "mad": 0.0
+          },
+          "overflow_bytes": {
+            "median": 9306112.0,
+            "mad": 0.0
+          },
+          "spills": {
+            "median": 78443.0,
+            "mad": 85.0
+          },
+          "workspace_bytes": {
+            "median": 0.0,
+            "mad": 0.0
+          }
+        }
+      }
+    },
+    {
+      "K": 30,
+      "V": 64,
+      "b": 14,
+      "inputs": 8,
+      "overlap": 50,
+      "mode": 10,
+      "samples": 9,
+      "measurements": {
+        "kway": {
+          "merge_ns": {
+            "median": 26.417107,
+            "mad": 0.14829200000000142
+          },
+          "prepare_ns": {
+            "median": 22.524701,
+            "mad": 0.26996799999999865
+          },
+          "total_ns": {
+            "median": 48.536077,
+            "mad": 0.3638469999999998
+          },
+          "primary_bytes": {
+            "median": 142606336.0,
+            "mad": 0.0
+          },
+          "overflow_bytes": {
+            "median": 72704.0,
+            "mad": 0.0
+          },
+          "spills": {
+            "median": 540.0,
+            "mad": 2.0
+          },
+          "workspace_bytes": {
+            "median": 3971832.0,
+            "mad": 25760.0
+          }
+        },
+        "routed_before": {
+          "merge_ns": {
+            "median": 40.378378,
+            "mad": 2.138918000000004
+          },
+          "prepare_ns": {
+            "median": 22.20938,
+            "mad": 0.2525429999999993
+          },
+          "total_ns": {
+            "median": 62.503105,
+            "mad": 1.7439620000000033
+          },
+          "primary_bytes": {
+            "median": 142606336.0,
+            "mad": 0.0
+          },
+          "overflow_bytes": {
+            "median": 72704.0,
+            "mad": 0.0
+          },
+          "spills": {
+            "median": 540.0,
+            "mad": 2.0
+          },
+          "workspace_bytes": {
+            "median": 0.0,
+            "mad": 0.0
+          }
+        },
+        "abseil": {
+          "merge_ns": {
+            "median": 25.462822,
+            "mad": 0.32738200000000006
+          },
+          "prepare_ns": {
+            "median": 20.765089,
+            "mad": 0.3860549999999989
+          },
+          "total_ns": {
+            "median": 45.847312,
+            "mad": 0.45715300000000525
+          },
+          "primary_bytes": {
+            "median": 153092048.0,
+            "mad": 0.0
+          },
+          "overflow_bytes": {
+            "median": 0.0,
+            "mad": 0.0
+          },
+          "spills": {
+            "median": 0.0,
+            "mad": 0.0
+          },
+          "workspace_bytes": {
+            "median": 0.0,
+            "mad": 0.0
+          }
+        },
+        "accumulate": {
+          "merge_ns": {
+            "median": 17.48507,
+            "mad": 0.17736700000000027
+          },
+          "prepare_ns": {
+            "median": 22.310009,
+            "mad": 0.10066699999999784
+          },
+          "total_ns": {
+            "median": 39.856386,
+            "mad": 0.09055899999999895
+          },
+          "primary_bytes": {
+            "median": 142606336.0,
+            "mad": 0.0
+          },
+          "overflow_bytes": {
+            "median": 72704.0,
+            "mad": 0.0
+          },
+          "spills": {
+            "median": 540.0,
+            "mad": 2.0
+          },
+          "workspace_bytes": {
+            "median": 0.0,
+            "mad": 0.0
+          }
+        }
+      }
+    },
+    {
+      "K": 30,
+      "V": 64,
+      "b": 14,
+      "inputs": 8,
+      "overlap": 50,
+      "mode": 12,
+      "samples": 9,
+      "measurements": {
+        "kway": {
+          "merge_ns": {
+            "median": 26.561042,
+            "mad": 0.4940610000000021
+          },
+          "prepare_ns": {
+            "median": 22.578374,
+            "mad": 0.22706600000000066
+          },
+          "total_ns": {
+            "median": 48.882258,
+            "mad": 0.1927960000000013
+          },
+          "primary_bytes": {
+            "median": 142606336.0,
+            "mad": 0.0
+          },
+          "overflow_bytes": {
+            "median": 72704.0,
+            "mad": 0.0
+          },
+          "spills": {
+            "median": 540.0,
+            "mad": 2.0
+          },
+          "workspace_bytes": {
+            "median": 3971832.0,
+            "mad": 25760.0
+          }
+        },
+        "routed_before": {
+          "merge_ns": {
+            "median": 40.026896,
+            "mad": 2.7617410000000007
+          },
+          "prepare_ns": {
+            "median": 22.319299,
+            "mad": 0.16010400000000047
+          },
+          "total_ns": {
+            "median": 62.626895,
+            "mad": 2.074036999999997
+          },
+          "primary_bytes": {
+            "median": 142606336.0,
+            "mad": 0.0
+          },
+          "overflow_bytes": {
+            "median": 72704.0,
+            "mad": 0.0
+          },
+          "spills": {
+            "median": 540.0,
+            "mad": 2.0
+          },
+          "workspace_bytes": {
+            "median": 0.0,
+            "mad": 0.0
+          }
+        },
+        "abseil": {
+          "merge_ns": {
+            "median": 25.195822,
+            "mad": 0.38641099999999895
+          },
+          "prepare_ns": {
+            "median": 20.745929,
+            "mad": 0.3286319999999989
+          },
+          "total_ns": {
+            "median": 46.159928,
+            "mad": 0.6117349999999959
+          },
+          "primary_bytes": {
+            "median": 153092048.0,
+            "mad": 0.0
+          },
+          "overflow_bytes": {
+            "median": 0.0,
+            "mad": 0.0
+          },
+          "spills": {
+            "median": 0.0,
+            "mad": 0.0
+          },
+          "workspace_bytes": {
+            "median": 0.0,
+            "mad": 0.0
+          }
+        },
+        "accumulate": {
+          "merge_ns": {
+            "median": 16.740535,
+            "mad": 0.23220199999999735
+          },
+          "prepare_ns": {
+            "median": 22.174243,
+            "mad": 0.17157299999999864
+          },
+          "total_ns": {
+            "median": 39.031736,
+            "mad": 0.31743000000000166
+          },
+          "primary_bytes": {
+            "median": 142606336.0,
+            "mad": 0.0
+          },
+          "overflow_bytes": {
+            "median": 72704.0,
+            "mad": 0.0
+          },
+          "spills": {
+            "median": 540.0,
+            "mad": 2.0
+          },
+          "workspace_bytes": {
+            "median": 0.0,
+            "mad": 0.0
+          }
+        }
+      }
+    },
+    {
+      "K": 30,
+      "V": 64,
+      "b": 15,
+      "inputs": 8,
+      "overlap": 0,
+      "mode": 10,
+      "samples": 9,
+      "measurements": {
+        "kway": {
+          "merge_ns": {
+            "median": 30.286356,
+            "mad": 0.3019890000000025
+          },
+          "prepare_ns": {
+            "median": 23.904687,
+            "mad": 0.6961639999999996
+          },
+          "total_ns": {
+            "median": 54.029442,
+            "mad": 0.5860919999999936
+          },
+          "primary_bytes": {
+            "median": 285212672.0,
+            "mad": 0.0
+          },
+          "overflow_bytes": {
+            "median": 18612224.0,
+            "mad": 0.0
+          },
+          "spills": {
+            "median": 157129.0,
+            "mad": 146.0
+          },
+          "workspace_bytes": {
+            "median": 7957608.0,
+            "mad": 20104.0
+          }
+        },
+        "routed_before": {
+          "merge_ns": {
+            "median": 41.150805,
+            "mad": 2.376238999999998
+          },
+          "prepare_ns": {
+            "median": 23.57878,
+            "mad": 0.5790539999999993
+          },
+          "total_ns": {
+            "median": 64.116021,
+            "mad": 0.48300100000000157
+          },
+          "primary_bytes": {
+            "median": 285212672.0,
+            "mad": 0.0
+          },
+          "overflow_bytes": {
+            "median": 18612224.0,
+            "mad": 0.0
+          },
+          "spills": {
+            "median": 157129.0,
+            "mad": 146.0
+          },
+          "workspace_bytes": {
+            "median": 0.0,
+            "mad": 0.0
+          }
+        },
+        "abseil": {
+          "merge_ns": {
+            "median": 19.280836,
+            "mad": 0.11762900000000087
+          },
+          "prepare_ns": {
+            "median": 22.614168,
+            "mad": 0.5171300000000016
+          },
+          "total_ns": {
+            "median": 41.842565,
+            "mad": 0.39919499999999886
+          },
+          "primary_bytes": {
+            "median": 306184144.0,
+            "mad": 0.0
+          },
+          "overflow_bytes": {
+            "median": 0.0,
+            "mad": 0.0
+          },
+          "spills": {
+            "median": 0.0,
+            "mad": 0.0
+          },
+          "workspace_bytes": {
+            "median": 0.0,
+            "mad": 0.0
+          }
+        },
+        "accumulate": {
+          "merge_ns": {
+            "median": 16.052366,
+            "mad": 0.04104799999999997
+          },
+          "prepare_ns": {
+            "median": 23.105342,
+            "mad": 0.5388909999999996
+          },
+          "total_ns": {
+            "median": 39.291023,
+            "mad": 0.43904799999999966
+          },
+          "primary_bytes": {
+            "median": 285212672.0,
+            "mad": 0.0
+          },
+          "overflow_bytes": {
+            "median": 18612224.0,
+            "mad": 0.0
+          },
+          "spills": {
+            "median": 157129.0,
+            "mad": 146.0
+          },
+          "workspace_bytes": {
+            "median": 0.0,
+            "mad": 0.0
+          }
+        }
+      }
+    },
+    {
+      "K": 30,
+      "V": 64,
+      "b": 15,
+      "inputs": 8,
+      "overlap": 0,
+      "mode": 12,
+      "samples": 9,
+      "measurements": {
+        "kway": {
+          "merge_ns": {
+            "median": 30.280567,
+            "mad": 0.2306120000000007
+          },
+          "prepare_ns": {
+            "median": 23.789241,
+            "mad": 0.6596569999999993
+          },
+          "total_ns": {
+            "median": 54.017058,
+            "mad": 0.5943129999999996
+          },
+          "primary_bytes": {
+            "median": 285212672.0,
+            "mad": 0.0
+          },
+          "overflow_bytes": {
+            "median": 18612224.0,
+            "mad": 0.0
+          },
+          "spills": {
+            "median": 157129.0,
+            "mad": 146.0
+          },
+          "workspace_bytes": {
+            "median": 7957608.0,
+            "mad": 20104.0
+          }
+        },
+        "routed_before": {
+          "merge_ns": {
+            "median": 40.096857,
+            "mad": 3.698703000000002
+          },
+          "prepare_ns": {
+            "median": 23.003168,
+            "mad": 0.34801900000000074
+          },
+          "total_ns": {
+            "median": 62.536377,
+            "mad": 3.8388240000000025
+          },
+          "primary_bytes": {
+            "median": 285212672.0,
+            "mad": 0.0
+          },
+          "overflow_bytes": {
+            "median": 18612224.0,
+            "mad": 0.0
+          },
+          "spills": {
+            "median": 157129.0,
+            "mad": 146.0
+          },
+          "workspace_bytes": {
+            "median": 0.0,
+            "mad": 0.0
+          }
+        },
+        "abseil": {
+          "merge_ns": {
+            "median": 19.461881,
+            "mad": 0.20190200000000047
+          },
+          "prepare_ns": {
+            "median": 22.475513,
+            "mad": 0.4013910000000003
+          },
+          "total_ns": {
+            "median": 42.083682,
+            "mad": 0.3800380000000061
+          },
+          "primary_bytes": {
+            "median": 306184144.0,
+            "mad": 0.0
+          },
+          "overflow_bytes": {
+            "median": 0.0,
+            "mad": 0.0
+          },
+          "spills": {
+            "median": 0.0,
+            "mad": 0.0
+          },
+          "workspace_bytes": {
+            "median": 0.0,
+            "mad": 0.0
+          }
+        },
+        "accumulate": {
+          "merge_ns": {
+            "median": 15.145683,
+            "mad": 0.054679000000000144
+          },
+          "prepare_ns": {
+            "median": 24.246967,
+            "mad": 0.2915760000000027
+          },
+          "total_ns": {
+            "median": 39.471757,
+            "mad": 0.310931999999994
+          },
+          "primary_bytes": {
+            "median": 285212672.0,
+            "mad": 0.0
+          },
+          "overflow_bytes": {
+            "median": 18612224.0,
+            "mad": 0.0
+          },
+          "spills": {
+            "median": 157129.0,
+            "mad": 146.0
+          },
+          "workspace_bytes": {
+            "median": 0.0,
+            "mad": 0.0
+          }
+        }
+      }
+    },
+    {
+      "K": 30,
+      "V": 64,
+      "b": 15,
+      "inputs": 8,
+      "overlap": 50,
+      "mode": 10,
+      "samples": 9,
+      "measurements": {
+        "kway": {
+          "merge_ns": {
+            "median": 27.554232,
+            "mad": 0.2156349999999989
+          },
+          "prepare_ns": {
+            "median": 22.838557,
+            "mad": 0.1372850000000021
+          },
+          "total_ns": {
+            "median": 50.445885,
+            "mad": 0.24124199999999973
+          },
+          "primary_bytes": {
+            "median": 285212672.0,
+            "mad": 0.0
+          },
+          "overflow_bytes": {
+            "median": 145408.0,
+            "mad": 0.0
+          },
+          "spills": {
+            "median": 1009.0,
+            "mad": 11.0
+          },
+          "workspace_bytes": {
+            "median": 7981968.0,
+            "mad": 24248.0
+          }
+        },
+        "routed_before": {
+          "merge_ns": {
+            "median": 46.713121,
+            "mad": 1.268334000000003
+          },
+          "prepare_ns": {
+            "median": 22.901613,
+            "mad": 0.39294399999999996
+          },
+          "total_ns": {
+            "median": 69.703794,
+            "mad": 1.0408400000000029
+          },
+          "primary_bytes": {
+            "median": 285212672.0,
+            "mad": 0.0
+          },
+          "overflow_bytes": {
+            "median": 145408.0,
+            "mad": 0.0
+          },
+          "spills": {
+            "median": 1009.0,
+            "mad": 11.0
+          },
+          "workspace_bytes": {
+            "median": 0.0,
+            "mad": 0.0
+          }
+        },
+        "abseil": {
+          "merge_ns": {
+            "median": 30.249843,
+            "mad": 0.14040499999999767
+          },
+          "prepare_ns": {
+            "median": 22.393162,
+            "mad": 0.48506499999999875
+          },
+          "total_ns": {
+            "median": 52.632117,
+            "mad": 0.595245999999996
+          },
+          "primary_bytes": {
+            "median": 306184144.0,
+            "mad": 0.0
+          },
+          "overflow_bytes": {
+            "median": 0.0,
+            "mad": 0.0
+          },
+          "spills": {
+            "median": 0.0,
+            "mad": 0.0
+          },
+          "workspace_bytes": {
+            "median": 0.0,
+            "mad": 0.0
+          }
+        },
+        "accumulate": {
+          "merge_ns": {
+            "median": 18.667377,
+            "mad": 0.2532250000000005
+          },
+          "prepare_ns": {
+            "median": 22.820651,
+            "mad": 0.15165400000000062
+          },
+          "total_ns": {
+            "median": 41.726175,
+            "mad": 0.5110390000000038
+          },
+          "primary_bytes": {
+            "median": 285212672.0,
+            "mad": 0.0
+          },
+          "overflow_bytes": {
+            "median": 145408.0,
+            "mad": 0.0
+          },
+          "spills": {
+            "median": 1009.0,
+            "mad": 11.0
+          },
+          "workspace_bytes": {
+            "median": 0.0,
+            "mad": 0.0
+          }
+        }
+      }
+    },
+    {
+      "K": 30,
+      "V": 64,
+      "b": 15,
+      "inputs": 8,
+      "overlap": 50,
+      "mode": 12,
+      "samples": 9,
+      "measurements": {
+        "kway": {
+          "merge_ns": {
+            "median": 27.199751,
+            "mad": 0.38504999999999967
+          },
+          "prepare_ns": {
+            "median": 22.825804,
+            "mad": 0.10405200000000292
+          },
+          "total_ns": {
+            "median": 50.275178,
+            "mad": 0.31954999999999956
+          },
+          "primary_bytes": {
+            "median": 285212672.0,
+            "mad": 0.0
+          },
+          "overflow_bytes": {
+            "median": 145408.0,
+            "mad": 0.0
+          },
+          "spills": {
+            "median": 1009.0,
+            "mad": 11.0
+          },
+          "workspace_bytes": {
+            "median": 7981968.0,
+            "mad": 24248.0
+          }
+        },
+        "routed_before": {
+          "merge_ns": {
+            "median": 46.277382,
+            "mad": 1.3681270000000012
+          },
+          "prepare_ns": {
+            "median": 23.01273,
+            "mad": 0.3432100000000027
+          },
+          "total_ns": {
+            "median": 68.875651,
+            "mad": 0.9369650000000007
+          },
+          "primary_bytes": {
+            "median": 285212672.0,
+            "mad": 0.0
+          },
+          "overflow_bytes": {
+            "median": 145408.0,
+            "mad": 0.0
+          },
+          "spills": {
+            "median": 1009.0,
+            "mad": 11.0
+          },
+          "workspace_bytes": {
+            "median": 0.0,
+            "mad": 0.0
+          }
+        },
+        "abseil": {
+          "merge_ns": {
+            "median": 30.435506,
+            "mad": 0.10742700000000127
+          },
+          "prepare_ns": {
+            "median": 22.760836,
+            "mad": 0.27181400000000266
+          },
+          "total_ns": {
+            "median": 52.924528,
+            "mad": 0.42363799999999685
+          },
+          "primary_bytes": {
+            "median": 306184144.0,
+            "mad": 0.0
+          },
+          "overflow_bytes": {
+            "median": 0.0,
+            "mad": 0.0
+          },
+          "spills": {
+            "median": 0.0,
+            "mad": 0.0
+          },
+          "workspace_bytes": {
+            "median": 0.0,
+            "mad": 0.0
+          }
+        },
+        "accumulate": {
+          "merge_ns": {
+            "median": 16.816259,
+            "mad": 0.12649899999999903
+          },
+          "prepare_ns": {
+            "median": 22.709811,
+            "mad": 0.0874180000000031
+          },
+          "total_ns": {
+            "median": 39.641579,
+            "mad": 0.21062200000000075
+          },
+          "primary_bytes": {
+            "median": 285212672.0,
+            "mad": 0.0
+          },
+          "overflow_bytes": {
+            "median": 145408.0,
+            "mad": 0.0
+          },
+          "spills": {
+            "median": 1009.0,
+            "mad": 11.0
+          },
+          "workspace_bytes": {
+            "median": 0.0,
+            "mad": 0.0
+          }
+        }
+      }
+    }
+  ]
+}

@@ -4,7 +4,7 @@ This completed October 14, 2026 compiler probe explains why an ordinary 40-bit
 mask can introduce a partial-register count definition before BZHI. It preserves
 the reduced case and rejected workarounds; it selects no production helper,
 compiler flag or toolchain change. Related complete-container measurements stay
-with the [hashtable hash-mask study](../../../spikes/hashtable/hash-masks.md).
+with the [hashtable hash-mask study](../../../notebook/retired-spikes.md#hashtable-promotion-and-curation--october-17-2026).
 
 In the pinned LLVM source, the four normal/EVEX register/memory AND-to-BZHI
 patterns explicitly use `MOV8ri` and `INSERT_SUBREG(IMPLICIT_DEF)`. The adjacent

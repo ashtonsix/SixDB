@@ -1,0 +1,61 @@
+{
+  "date": "2026-10-17",
+  "archive": "pre-refactor.tar.gz",
+  "archive_sha256": "71c1b551e470071602715174ddd441c28912d1b41f10ccf47d92caa4b746aa6b",
+  "verified_files": 27,
+  "source_capture": "e0d83a2249999ca8bb17ce58e43923def69172f6121736a4c206bb75f5dd1b42",
+  "recovery": "Paired native captures retain complete sources: evidence/construction-jobs.json. Use worker.py fetch JOB --file source.tar.gz in a fresh directory.",
+  "location": "Linux ~/sixdb-archive/hashtable-merge-20261017/",
+  "intermediate_screens": {
+    "archive": "intermediate-refactor-screens.tar.gz",
+    "archive_sha256": "4a50d9802e1d59ad67ce34402a5cac11d1028c1f91ee8466607507a0c0e8fc60",
+    "verified_files": 26
+  },
+  "spring_cleaning": {
+    "archive": "spring-cleaning-superseded-evidence.tar.gz",
+    "archive_sha256": "787f1a60198e56c2477ae0ff825ccf8da340e65059274cc30f22aeccb7d972ef",
+    "verified_files": 51,
+    "archive_bytes": 246071,
+    "purpose": "Superseded construction summaries and chronological report; current refactor, prefetch policy, negative prefetch controls and payload policy evidence stay active."
+  },
+  "refactor_source": {
+    "archive": "final-runnable-source.tar.gz",
+    "archive_sha256": "836951a2edf7726822a7433e2bcf129d3c424fab0a9d17380d78fba1bf5a314d",
+    "verified_files": 3619,
+    "archive_bytes": 12128678,
+    "source_digest": "19d314873117292e41a137968b6fc9be0845223d76c02133ed70c7ba1920a98c"
+  },
+  "refactor_evidence": {
+    "archive": "selected-evidence.tar.gz",
+    "archive_sha256": "ceb311a1ee5056edf7bc3581da50d949f2d5a17f9edcbbb57b0624815fb44dee",
+    "verified_files": 69,
+    "archive_bytes": 348124
+  },
+  "consolidated_source": {
+    "archive": "consolidated-source-with-header-fix.tar.gz",
+    "archive_sha256": "f3d85962775d669480fd7fde3eff2bab3bd56252b9d610918fb1cfe31b198b1c",
+    "verified_files": 3621,
+    "archive_bytes": 12129665,
+    "source_digest": "badd1c0e41b05c3392e380fd37def042ee97173a529cfa764b4f05bc8abc1ee9"
+  },
+  "consolidated_evidence": {
+    "archive": "consolidated-evidence-with-header-fix.tar.gz",
+    "archive_sha256": "3d1278a96b18041bcc573ebc025b0e2412eae79c34d795820025ffe7a06b7495",
+    "verified_files": 36,
+    "archive_bytes": 179989
+  },
+  "status": "Current optimisation pass closed; full current source and selected evidence verified. Deferred gaps are in RESULTS.md.",
+  "pre_header_fix_source": {
+    "archive": "consolidated-runnable-source.tar.gz",
+    "archive_sha256": "a2ad8238ebd77c54bdf911db5d4aa9e28097d718fba783a9198346ea7c4128d8",
+    "verified_files": 3620,
+    "archive_bytes": 12129312,
+    "source_digest": "fe79fac9bb596b2c93a1c2d3cbde42e9e8e95f33bc21e826a676451baf96f8e4"
+  },
+  "pre_header_fix_evidence": {
+    "archive": "consolidated-evidence.tar.gz",
+    "archive_sha256": "c10aeba8110c3e93e89df1144a5984ea481b4991164d17b85fdd37c95fbb15d3",
+    "verified_files": 35,
+    "archive_bytes": 179179
+  }
+}
