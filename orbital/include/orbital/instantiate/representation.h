@@ -29,27 +29,67 @@
 // A selected copy does not also receive retain()/release().
 namespace orbital {
 namespace object_detail {
+inline std::size_t body_stride(PartOwners owners) {
+  return shared(owners) ? sizeof(SharedBody) : mixed(owners) ? sizeof(MixedBody) : sizeof(AllocatedBody);
+}
 template<class Control> std::size_t representation_bytes(Control control, PartOwners owners) {
   if (grouped(owners)) return sizeof(Representation<Control>) + control.part_count() * sizeof(const std::byte*) +
       (control.part_count() ? (shared(owners) ? sizeof(std::shared_ptr<const void>) : sizeof(void*)) : 0);
-  return sizeof(Representation<Control>) + control.part_count() * (shared(owners) ? sizeof(SharedBody) : sizeof(AllocatedBody));
+  return sizeof(Representation<Control>) + control.part_count() * body_stride(owners);
+}
+template<class Control> bool part_shared(Representation<Control>* value, std::size_t index) {
+  return mixed(value->owners) ? mixed_bodies(value)[index].shared : shared(value->owners);
 }
 template<class Control> std::shared_ptr<const void>& shared_owner(Representation<Control>* value, std::size_t index) {
   if (grouped(value->owners)) return *static_cast<std::shared_ptr<const void>*>(group_owner(value));
+  if (mixed(value->owners)) return mixed_bodies(value)[index].owner.shared;
   return shared_bodies(value)[index].owner;
 }
-template<class Control> orbital::allocation::Storage* allocation_owner(Representation<Control>* value, std::size_t index) {
-  if (grouped(value->owners)) return *static_cast<orbital::allocation::Storage**>(group_owner(value));
+template<class Control> allocation::Storage* allocation_owner(Representation<Control>* value, std::size_t index) {
+  if (grouped(value->owners)) return *static_cast<allocation::Storage**>(group_owner(value));
+  if (mixed(value->owners)) return mixed_bodies(value)[index].owner.allocation;
   return allocated_bodies(value)[index].owner;
 }
+template<class Control> Result<PartSource> source_of(Control control, std::size_t index,
+    const std::byte* address, allocation::Storage* native, const std::shared_ptr<const void>* backing) {
+  auto extent = control.extent(index);
+  if (!extent) return std::unexpected(extent.error());
+  PartSource result{control.id(index), {address, *extent}};
+  if (!valid(result.body, control.padding(index))) return std::unexpected(Error::invalid_argument);
+  result.retained = backing ? SourceAccess::certificate(result.body, control.padding(index), *backing) :
+      SourceAccess::certificate(result.body, control.padding(index), native);
+  return result;
+}
 } // namespace object_detail
+
+template<class Control> Result<PartSource> source(const Part<Control>* part) noexcept {
+  if (!part) return std::unexpected(Error::absent);
+  const auto shared = object_detail::shared(part->owners);
+  return object_detail::source_of(part->control, part->index, part->address,
+      shared ? nullptr : part->owner.allocation, shared ? &part->owner.shared : nullptr);
+}
+
+template<class Control> Result<PartSource> source(RepresentationSelection<Control> selection, std::size_t index) noexcept {
+  using namespace object_detail;
+  if (!selection || index >= selection.part_count()) return std::unexpected(Error::absent);
+  auto* value = selection.realization;
+  const auto shared = part_shared(value, index);
+  return source_of(value->control, index, *address_slot(value, index),
+      shared ? nullptr : allocation_owner(value, index), shared ? &shared_owner(value, index) : nullptr);
+}
+
 template<class Control> Result<Representation<Control>*> capture_representation(
     std::pmr::memory_resource& memory, Control control, PartOwners owners, std::span<const PartSource> bodies) noexcept {
   using namespace object_detail;
   using Realization = Representation<Control>;
-  if (!control.valid(memory) || bodies.size() != control.part_count() || static_cast<unsigned>(owners) > 3)
+  if (!control.valid(memory) || bodies.size() != control.part_count() || static_cast<unsigned>(owners) > 4)
     return std::unexpected(Error::invalid_argument);
+  const auto is_shared = [&](const PartSource& body) { return SourceAccess::shared(body, owners); };
+  std::size_t supplier = bodies.size();
+  bool retained_native = false;
   const auto validate = [&]() -> std::optional<Error> {
+    supplier = bodies.size();
+    retained_native = false;
     for (std::size_t i = 0; i < bodies.size(); ++i) {
       const auto& body = bodies[i];
       const auto extent = control.extent(i);
@@ -59,45 +99,60 @@ template<class Control> Result<Representation<Control>*> capture_representation(
           !valid(body.body, padding) || ((!body.body.empty() || padding) &&
            (!alignment || std::uintptr_t(body.body.data()) % alignment)))
         return Error::invalid_argument;
-      if (shared(owners)) {
-        if ((body.body.size() || padding) && !body.backing.use_count()) return Error::invalid_argument;
-        if (grouped(owners) && i &&
-            (body.backing.owner_before(bodies[0].backing) || bodies[0].backing.owner_before(body.backing)))
+      if (SourceAccess::retained(body)) {
+        if (body.allocation || body.backing.use_count() || !SourceAccess::within(body, padding))
           return Error::invalid_argument;
+        if (!mixed(owners) && is_shared(body) != shared(owners)) return Error::invalid_argument;
+      } else if (mixed(owners) && body.allocation && body.backing.use_count()) return Error::invalid_argument;
+      if (is_shared(body)) {
+        const auto& backing = SourceAccess::backing(body);
+        if ((body.body.size() || padding) && !backing.use_count()) return Error::invalid_argument;
+        if (grouped(owners) && i) {
+          const auto& first = SourceAccess::backing(bodies[0]);
+          if (backing.owner_before(first) || first.owner_before(backing)) return Error::invalid_argument;
+        }
       } else {
-        if ((body.body.size() || padding) &&
-            (!body.allocation || !within(*body.allocation, body.body, padding)))
+        retained_native |= SourceAccess::retained(body);
+        if (!SourceAccess::retained(body)) {
+          if ((body.body.size() || padding) &&
+              (!body.allocation || !within(*body.allocation, body.body, padding)))
+            return Error::invalid_argument;
+          if (body.allocation && *body.allocation) {
+            if (grouped(owners) && supplier != bodies.size() && body.allocation != bodies[supplier].allocation)
+              return Error::invalid_argument;
+            if (supplier == bodies.size()) supplier = i;
+          }
+        }
+        if (grouped(owners) && i && SourceAccess::storage(body) != SourceAccess::storage(bodies[0]))
           return Error::invalid_argument;
-        if (grouped(owners) && i && body.allocation != bodies[0].allocation) return Error::invalid_argument;
       }
     }
     return {};
   };
-  const auto stride = grouped(owners) ? sizeof(const std::byte*) :
-      (shared(owners) ? sizeof(SharedBody) : sizeof(AllocatedBody));
+  const auto stride = grouped(owners) ? sizeof(const std::byte*) : body_stride(owners);
   const auto group_bytes = grouped(owners) && !bodies.empty() ?
       (shared(owners) ? sizeof(std::shared_ptr<const void>) : sizeof(void*)) : 0;
   if (bodies.size() > (SIZE_MAX - sizeof(Realization) - group_bytes) / stride)
     return std::unexpected(Error::capacity);
   const auto size = sizeof(Realization) + group_bytes + bodies.size() * stride;
   try {
-    std::pmr::vector<orbital::allocation::Storage*> scratch(&memory);
-    if (!shared(owners) && !grouped(owners) && bodies.size() > 8)
-      scratch.resize(bodies.size());
+    std::pmr::vector<allocation::Storage*> scratch(&memory);
+    if (!shared(owners) && !grouped(owners) && bodies.size() > 8) scratch.resize(bodies.size());
     auto* value = std::construct_at(static_cast<Realization*>(memory.allocate(size, alignof(Realization))),
-        Realization{control, 1, owners});
+        Realization{control, 1, owners, static_cast<std::uint8_t>(stride)});
     control.retain();
-    // Empty slots make every later refusal safe to dispose. No source ownership
-    // or address is copied before the final validation after all callbacks.
+    // Initialize every owner slot before callbacks can refuse. Fresh Allocation
+    // authority is transferred only after all validation and retained pins succeed.
     if (grouped(owners)) {
       for (std::size_t i = 0; i < bodies.size(); ++i) std::construct_at(addresses(value) + i, nullptr);
       if (!bodies.empty()) {
         if (shared(owners)) std::construct_at(static_cast<std::shared_ptr<const void>*>(group_owner(value)));
-        else std::construct_at(static_cast<orbital::allocation::Storage**>(group_owner(value)), nullptr);
+        else std::construct_at(static_cast<allocation::Storage**>(group_owner(value)), nullptr);
       }
     } else {
       for (std::size_t i = 0; i < bodies.size(); ++i) {
         if (shared(owners)) std::construct_at(shared_bodies(value) + i, SharedBody{nullptr, {}});
+        else if (mixed(owners)) std::construct_at(mixed_bodies(value) + i);
         else std::construct_at(allocated_bodies(value) + i, AllocatedBody{nullptr, nullptr});
       }
     }
@@ -106,28 +161,52 @@ template<class Control> Result<Representation<Control>*> capture_representation(
       if (!grouped(owners) && !unique_allocations(bodies, scratch)) {
         release(value); return std::unexpected(Error::invalid_argument);
       }
-      const auto originals = grouped(owners) ? std::min<std::size_t>(1, bodies.size()) : bodies.size();
-      for (std::size_t i = 0; i < originals; ++i) {
-        auto ready = capture_ready(bodies[i].allocation);
+      for (const auto& body : bodies) {
+        if (is_shared(body) || SourceAccess::retained(body)) continue;
+        auto ready = capture_ready(body.allocation);
         if (!ready) { release(value); return std::unexpected(ready.error()); }
       }
     }
-    // No failure or callback remains. Geometry queries only observed immutable
-    // admitted proof; source changes made by earlier callbacks were validated.
+    if (grouped(owners)) {
+      if (!bodies.empty()) {
+        if (shared(owners)) *static_cast<std::shared_ptr<const void>*>(group_owner(value)) = SourceAccess::backing(bodies[0]);
+        else if (supplier == bodies.size()) {
+          auto held = pin(SourceAccess::storage(bodies[0]));
+          if (!held) { release(value); return std::unexpected(held.error()); }
+          *static_cast<allocation::Storage**>(group_owner(value)) = *held;
+        }
+      }
+    } else if (retained_native) {
+      for (std::size_t i = 0; i < bodies.size(); ++i) {
+        const auto& body = bodies[i];
+        if (!is_shared(body) && SourceAccess::retained(body)) {
+          auto held = pin(SourceAccess::storage(body));
+          if (!held) { release(value); return std::unexpected(held.error()); }
+          if (mixed(owners)) mixed_bodies(value)[i].owner.allocation = *held;
+          else allocated_bodies(value)[i].owner = *held;
+        }
+      }
+    }
+    // No fallible work or callback remains. Commit fresh uses and addresses.
     if (grouped(owners)) {
       for (std::size_t i = 0; i < bodies.size(); ++i) addresses(value)[i] = bodies[i].body.data();
-      if (!bodies.empty()) {
-        if (shared(owners)) *static_cast<std::shared_ptr<const void>*>(group_owner(value)) = bodies[0].backing;
-        else *static_cast<orbital::allocation::Storage**>(group_owner(value)) = take_source(bodies[0].allocation);
-      }
+      if (!shared(owners) && supplier != bodies.size())
+        *static_cast<allocation::Storage**>(group_owner(value)) = take_source(bodies[supplier].allocation);
     } else {
       for (std::size_t i = 0; i < bodies.size(); ++i) {
-        if (shared(owners)) {
-          shared_bodies(value)[i].address = bodies[i].body.data();
-          shared_bodies(value)[i].owner = bodies[i].backing;
-        } else {
-          allocated_bodies(value)[i].address = bodies[i].body.data();
-          allocated_bodies(value)[i].owner = take_source(bodies[i].allocation);
+        const auto& body = bodies[i];
+        if (mixed(owners)) mixed_bodies(value)[i].address = body.body.data();
+        else if (shared(owners)) shared_bodies(value)[i].address = body.body.data();
+        else allocated_bodies(value)[i].address = body.body.data();
+        if (is_shared(body)) {
+          if (mixed(owners)) {
+            auto& slot = mixed_bodies(value)[i];
+            slot.shared = true;
+            std::construct_at(&slot.owner.shared, SourceAccess::backing(body));
+          } else shared_bodies(value)[i].owner = SourceAccess::backing(body);
+        } else if (!SourceAccess::retained(body)) {
+          if (mixed(owners)) mixed_bodies(value)[i].owner.allocation = take_source(body.allocation);
+          else allocated_bodies(value)[i].owner = take_source(body.allocation);
         }
       }
     }
@@ -150,6 +229,12 @@ template<class Control> void release(Representation<Control>* value) noexcept {
   } else {
     for (std::size_t i = 0; i < control.part_count(); ++i) {
       if (shared(value->owners)) std::destroy_at(shared_bodies(value) + i);
+      else if (mixed(value->owners)) {
+        auto& slot = mixed_bodies(value)[i];
+        if (slot.shared) std::destroy_at(&slot.owner.shared);
+        else drop(slot.owner.allocation);
+        std::destroy_at(&slot);
+      }
       else drop(allocated_bodies(value)[i].owner);
     }
   }
@@ -188,7 +273,9 @@ template<class Control> Result<Part<Control>*> object_detail::retain_part(
     std::construct_at(value);
     value->control = source;
     value->address = *address_slot(realization, index); value->binding = binding;
-    value->index = index; value->owners = realization->owners; value->retention = interpretation;
+    value->index = index;
+    value->owners = part_shared(realization, index) ? PartOwners::independent_shared : PartOwners::independent_allocation;
+    value->retention = interpretation;
     if (shared(value->owners)) std::construct_at(&value->owner.shared, shared_owner(realization, index));
     else {
       auto held = pin(allocation_owner(realization, index));

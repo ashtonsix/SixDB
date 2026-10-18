@@ -206,8 +206,10 @@ algorithms remain with the caller.
 
 Capture reserves metadata and validates sources before consuming any fresh
 Allocation; refusal preserves those Allocations. Metadata exhaustion can precede
-an invalid-source error. The [material guide](docs/material.md) explains the
-concrete integration and compilation boundary.
+an invalid-source error. Capture can also retain backing supplied by certified
+sources from Parts or protected Selections, alongside fresh Allocations. The
+[material guide](docs/material.md#compose-retained-and-new-bytes) owns the address,
+interpretation and write-authority obligations.
 
 The implementation keeps these compilation seams:
 

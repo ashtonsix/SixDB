@@ -15,13 +15,29 @@ namespace orbital {
 /// Physical-owner disposal callbacks may reenter the catalog during cleanup.
 template<class Control> struct Representation;
 template<class Control> struct Part;
-enum class PartOwners { independent_shared, grouped_shared, independent_allocation, grouped_allocation };
+template<class Control> struct RepresentationSelection;
+struct PartSource;
+namespace object_detail {
+struct SourceAccess;
+class RetainedSource {
+  enum class Kind { none, shared, allocation };
+  Bytes footprint_;
+  Kind kind_{Kind::none};
+  union {
+    const std::shared_ptr<const void>* shared_{};
+    allocation::Storage* allocation_;
+  };
+  friend struct SourceAccess;
+};
+}
+enum class PartOwners : std::uint8_t { independent_shared, grouped_shared, independent_allocation, grouped_allocation, independent_mixed };
 enum class PartRetention { shared_control, selected_copy };
 struct PartSource {
   PartId id{};
   Bytes body;
-  std::shared_ptr<const void> backing;
+  std::shared_ptr<const void> backing{};
   allocation::Allocation* allocation{};
+  object_detail::RetainedSource retained{};
 };
 
 /// Pointer-only native Part borrow. Its live Selection/Control supplies extent
@@ -40,8 +56,17 @@ template<class Control> struct RepresentationSelection {
   [[nodiscard]] Result<View> part(PartId) const noexcept;
 };
 
-/// Reserve metadata and validate all sources before transferring Allocation uses.
-/// A refusal leaves original Allocations intact. Metadata reservation can fail
+/// Borrow a certified physical source through capture, without allocating or
+/// retaining. Keep its Part or selected Representation and proof alive and fixed
+/// through capture, including callbacks. The returned body/id may be changed;
+/// new body+padding must fit the old footprint. New Control owns interpretation.
+template<class Control> [[nodiscard]] Result<PartSource> source(const Part<Control>*) noexcept;
+template<class Control> [[nodiscard]] Result<PartSource> source(RepresentationSelection<Control>, std::size_t) noexcept;
+
+/// Reserve metadata and validate sources, then pin retained backing before
+/// transferring fresh Allocation uses. A refusal leaves Allocations intact.
+/// New Control independently preserves interpretation/disposal dependencies.
+/// Metadata reservation can fail
 /// before sources are checked. Capture seals the initialized body and readable
 /// padding for its owners and derived access. The caller controls write authority
 /// over physically disjoint storage. A shared backing owner must cover the full

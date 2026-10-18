@@ -8,6 +8,15 @@ bool valid(Bytes input, std::size_t padding) {
   return !extent || (input.data() && extent <= UINTPTR_MAX - std::uintptr_t(input.data()));
 }
 
+bool SourceAccess::within(const PartSource& source, std::size_t padding) {
+  const auto& old = source.retained;
+  if (!valid(source.body, padding) || !valid(old.footprint_)) return false;
+  const auto begin = std::uintptr_t(old.footprint_.data());
+  const auto part = std::uintptr_t(source.body.data());
+  const auto extent = old.footprint_.size();
+  return part >= begin && part - begin <= extent && source.body.size() + padding <= extent - (part - begin);
+}
+
 void drop(orbital::allocation::Storage* owner) {
   orbital::allocation::Hold use;
   use.storage = owner;
@@ -24,7 +33,7 @@ Result<orbital::allocation::Storage*> pin(orbital::allocation::Storage* owner) {
   return std::exchange(retained->storage, nullptr);
 }
 
-bool within(const orbital::allocation::Allocation& allocation, Bytes body, std::uint32_t padding) {
+bool within(const orbital::allocation::Allocation& allocation, Bytes body, std::size_t padding) {
   if (!allocation || !valid(body, padding) || !valid(orbital::allocation::bytes(allocation), allocation.readable_padding)) return false;
   const auto begin = std::uintptr_t(allocation.address);
   const auto part = std::uintptr_t(body.data());

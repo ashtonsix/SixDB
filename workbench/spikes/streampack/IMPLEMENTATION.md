@@ -228,6 +228,11 @@ and leak detection. This is a lifetime/integration result; the
 [Iceberg–Swiss study](../../notebook/retired-spikes.md#hashtable-promotion-and-curation--october-17-2026) owns complete-consumer memory and
 throughput measurements for its migrated allocation policy.
 
+The [retained-Part comparison](IMPLEMENTATION-REUSE.md) now isolates holder-only
+updates: exact full copying, reuse through a protected selection, and reuse
+through escaping Parts. It exercises the public Orbital composition seam
+without putting StreamPack policy inside Orbital.
+
 ## Scheduled dependent reads
 
 The real [Loom consumer](implementation_loom.h) shares typed read bodies between

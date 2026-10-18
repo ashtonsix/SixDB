@@ -228,3 +228,5 @@ template void orbital::retain(orbital::Part<streampack_implementation::orbital_m
 template void orbital::release(orbital::Part<streampack_implementation::orbital_material::Control>*) noexcept;
 template orbital::View orbital::view(const orbital::Part<streampack_implementation::orbital_material::Control>*) noexcept;
 template orbital::ObjectBinding orbital::binding(const orbital::Part<streampack_implementation::orbital_material::Control>*) noexcept;
+template orbital::Result<orbital::PartSource> orbital::source(const orbital::Part<streampack_implementation::orbital_material::Control>*) noexcept;
+template orbital::Result<orbital::PartSource> orbital::source(orbital::RepresentationSelection<streampack_implementation::orbital_material::Control>, std::size_t) noexcept;

@@ -1,0 +1,57 @@
+{
+  "status": "complete",
+  "date": "2026-10-17",
+  "scope": "Public-only cold instantiation and retained physical sources beside fresh Allocations; caller policy stays with caller.",
+  "git_head": "afbaf3994661237826dffab647cccb44db02cad7",
+  "source_state": "Dirty shared checkout; captured source files and compile commands in archive. All measured selected source hashes match; incremental build reports no pending work for qualified targets.",
+  "checks": {
+    "release": {
+      "passed": 7,
+      "failed": 0,
+      "log": "check-final.log"
+    },
+    "asan_ubsan": {
+      "passed": 7,
+      "failed": 0,
+      "log": "check-sanitize-final.log",
+      "ASAN_OPTIONS": "detect_leaks=1:detect_stack_use_after_return=1",
+      "UBSAN_OPTIONS": "halt_on_error=1:print_stacktrace=1"
+    }
+  },
+  "targets": [
+    "orbital_object_check",
+    "orbital_extension_check",
+    "orbital_representation_check",
+    "orbital_part_sources_check",
+    "orbital_live_tail_check",
+    "streampack_implementation_orbital_check",
+    "streampack_implementation_orbital_reuse"
+  ],
+  "compiler": "Ubuntu clang version 21.1.8 (++20251221033104+2078da43e25a-1~exp1~20251221153121.57)\nTarget: aarch64-unknown-linux-gnu\nThread model: posix\nInstalledDir: /usr/lib/llvm-21/bin\n",
+  "benchmark_binary_sha256": "656a52f981cb25f822a7ea5c1377614393bb43c9f3566f19c181a42c028277d0",
+  "consumer_cost": {
+    "raw": "consumer-cost/",
+    "summary": "consumer-cost/summary.csv",
+    "processes": 5,
+    "cpu": 4,
+    "rows": 193,
+    "publications_per_process": 256,
+    "queries": 65537,
+    "batch": 257,
+    "order": "fixed policy/case order",
+    "claims": "Local aarch64 Linux VM indication; all oracles passed; copied_bytes logical, pool charges not RSS; setup and two teardown phases separate; no database/native-hardware latency or throughput claim."
+  },
+  "lookup_control": {
+    "raw": "lookup-control/",
+    "claims": "Synthetic hot separately compiled binding, balanced alternatives, all raw samples retained; final public-header machine words equal selected cached-stride variant. No full query/capture measurement inferred."
+  },
+  "limits": [
+    "No journal or versioning protocol expansion.",
+    "Native retained pins require backing original adopted Lane; new Control retains its own interpretation/disposal dependencies.",
+    "Grouped backing can retain siblings despite choosing one plane.",
+    "Escaping Parts are not always cheaper than copying.",
+    "Public enum underlying type changed: rebuild consumers; no stable binary ABI claim."
+  ],
+  "captured_repo_source_files": 90,
+  "pending_build": "ninja: Entering directory `/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/live-tail-20261016/release'\nninja: no work to do.\n"
+}

@@ -28,6 +28,13 @@ foreach(target streampack_implementation_orbital_material streampack_implementat
   target_compile_options(${target} PRIVATE -fno-vectorize -fno-slp-vectorize)
 endforeach()
 
+add_executable(streampack_implementation_orbital_reuse implementation_orbital_reuse.cpp)
+sixdb_target(streampack_implementation_orbital_reuse)
+target_compile_options(streampack_implementation_orbital_reuse PRIVATE -fno-vectorize -fno-slp-vectorize)
+target_link_libraries(streampack_implementation_orbital_reuse PRIVATE streampack_implementation_orbital_material)
+add_test(NAME streampack_implementation_orbital_reuse_check COMMAND streampack_implementation_orbital_reuse --check)
+set_tests_properties(streampack_implementation_orbital_reuse_check PROPERTIES TIMEOUT 60)
+
 # Research controls retained from the comparative spike.
 add_executable(streampack_model_check check.cpp)
 sixdb_target(streampack_model_check)
