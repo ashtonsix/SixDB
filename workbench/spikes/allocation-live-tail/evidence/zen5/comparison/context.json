@@ -1,0 +1,215 @@
+{
+  "settings": {
+    "output": "/opt/sixdb/jobs/20261016T015250Z-c91e5178/results/comparison",
+    "cpu": 0,
+    "reclaimer_cpu": 1,
+    "trials": 6,
+    "loops": 1048576,
+    "batch": 128,
+    "march": "native",
+    "tune": "zen5",
+    "candidate_only": false
+  },
+  "host": {
+    "system": "Linux",
+    "node": "ip-172-31-21-78",
+    "release": "7.0.0-1012-aws",
+    "version": "#12~24.04.1-Ubuntu SMP PREEMPT Wed Aug 12 14:00:57 UTC 2026",
+    "machine": "x86_64",
+    "processor": "x86_64"
+  },
+  "executions": [
+    {
+      "trial": 0,
+      "variant": "baseline",
+      "mode": "ordinary",
+      "csv": "0-baseline-ordinary.csv"
+    },
+    {
+      "trial": 0,
+      "variant": "candidate",
+      "mode": "ordinary",
+      "csv": "0-candidate-ordinary.csv"
+    },
+    {
+      "trial": 0,
+      "variant": "candidate",
+      "mode": "reclaim",
+      "csv": "0-candidate-reclaim.csv"
+    },
+    {
+      "trial": 0,
+      "variant": "candidate",
+      "mode": "retain",
+      "csv": "0-candidate-retain.csv"
+    },
+    {
+      "trial": 0,
+      "variant": "candidate",
+      "mode": "continuous",
+      "csv": "0-candidate-continuous.csv"
+    },
+    {
+      "trial": 1,
+      "variant": "candidate",
+      "mode": "ordinary",
+      "csv": "1-candidate-ordinary.csv"
+    },
+    {
+      "trial": 1,
+      "variant": "baseline",
+      "mode": "ordinary",
+      "csv": "1-baseline-ordinary.csv"
+    },
+    {
+      "trial": 1,
+      "variant": "candidate",
+      "mode": "retain",
+      "csv": "1-candidate-retain.csv"
+    },
+    {
+      "trial": 1,
+      "variant": "candidate",
+      "mode": "reclaim",
+      "csv": "1-candidate-reclaim.csv"
+    },
+    {
+      "trial": 1,
+      "variant": "candidate",
+      "mode": "continuous",
+      "csv": "1-candidate-continuous.csv"
+    },
+    {
+      "trial": 2,
+      "variant": "baseline",
+      "mode": "ordinary",
+      "csv": "2-baseline-ordinary.csv"
+    },
+    {
+      "trial": 2,
+      "variant": "candidate",
+      "mode": "ordinary",
+      "csv": "2-candidate-ordinary.csv"
+    },
+    {
+      "trial": 2,
+      "variant": "candidate",
+      "mode": "reclaim",
+      "csv": "2-candidate-reclaim.csv"
+    },
+    {
+      "trial": 2,
+      "variant": "candidate",
+      "mode": "retain",
+      "csv": "2-candidate-retain.csv"
+    },
+    {
+      "trial": 2,
+      "variant": "candidate",
+      "mode": "continuous",
+      "csv": "2-candidate-continuous.csv"
+    },
+    {
+      "trial": 3,
+      "variant": "candidate",
+      "mode": "ordinary",
+      "csv": "3-candidate-ordinary.csv"
+    },
+    {
+      "trial": 3,
+      "variant": "baseline",
+      "mode": "ordinary",
+      "csv": "3-baseline-ordinary.csv"
+    },
+    {
+      "trial": 3,
+      "variant": "candidate",
+      "mode": "retain",
+      "csv": "3-candidate-retain.csv"
+    },
+    {
+      "trial": 3,
+      "variant": "candidate",
+      "mode": "reclaim",
+      "csv": "3-candidate-reclaim.csv"
+    },
+    {
+      "trial": 3,
+      "variant": "candidate",
+      "mode": "continuous",
+      "csv": "3-candidate-continuous.csv"
+    },
+    {
+      "trial": 4,
+      "variant": "baseline",
+      "mode": "ordinary",
+      "csv": "4-baseline-ordinary.csv"
+    },
+    {
+      "trial": 4,
+      "variant": "candidate",
+      "mode": "ordinary",
+      "csv": "4-candidate-ordinary.csv"
+    },
+    {
+      "trial": 4,
+      "variant": "candidate",
+      "mode": "reclaim",
+      "csv": "4-candidate-reclaim.csv"
+    },
+    {
+      "trial": 4,
+      "variant": "candidate",
+      "mode": "retain",
+      "csv": "4-candidate-retain.csv"
+    },
+    {
+      "trial": 4,
+      "variant": "candidate",
+      "mode": "continuous",
+      "csv": "4-candidate-continuous.csv"
+    },
+    {
+      "trial": 5,
+      "variant": "candidate",
+      "mode": "ordinary",
+      "csv": "5-candidate-ordinary.csv"
+    },
+    {
+      "trial": 5,
+      "variant": "baseline",
+      "mode": "ordinary",
+      "csv": "5-baseline-ordinary.csv"
+    },
+    {
+      "trial": 5,
+      "variant": "candidate",
+      "mode": "retain",
+      "csv": "5-candidate-retain.csv"
+    },
+    {
+      "trial": 5,
+      "variant": "candidate",
+      "mode": "reclaim",
+      "csv": "5-candidate-reclaim.csv"
+    },
+    {
+      "trial": 5,
+      "variant": "candidate",
+      "mode": "continuous",
+      "csv": "5-candidate-continuous.csv"
+    }
+  ],
+  "source_digests": {
+    "candidate": "862172b6536a24ad89e187b3373e54fa2efb065e82753002e5f6a9f133c2942a",
+    "baseline": "fdb0eb287848d752c867e0e594f004def6e95c9ca601a00a981ad026e5bd0d7b"
+  },
+  "binary_sha256": {
+    "candidate": "1de87ec966ada599597b0ba3f8b7cb274a63a2e395bc1853e2f23ac858138176",
+    "baseline": "0f72d4b0d7fd0a0588ec97dc0dc2517ebcf169a662e70dba64db450e0330607e"
+  },
+  "reverse_patch_sha256": "f710a88fbfdf02c5edb105c727193d78e321ffb741660afeb34b36966ca1f6a5",
+  "harness_sha256": "829e3ee5467f45c7305abfa3713a9021d2117fe5ffaf2de89a1648cccbab7e7e",
+  "scope": "Fresh processes, alternating ordinary baseline/candidate; whole-loop wall means, not individual percentiles. Feature cases use actual Orbital. Model rows count pages only; metadata census excludes general controller heap. Resident pages use mincore without reading data; charge/accessibility/VA are distinct.",
+  "qualification": "All timed processes checked retained prefix, stable regrowth address, tail writes and zero charge on close."
+}

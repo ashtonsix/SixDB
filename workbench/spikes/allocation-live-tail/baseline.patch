@@ -1,0 +1,328 @@
+diff --git a/orbital/include/orbital/allocation.h b/orbital/include/orbital/allocation.h
+index bc2dfc8f..5c294dc0 100644
+--- a/orbital/include/orbital/allocation.h
++++ b/orbital/include/orbital/allocation.h
+@@ -120,9 +120,17 @@ struct Statistics {
+ [[nodiscard]] Result<Allocation> allocate(Pool&, const AllocationRequest&);
+ /// Preserves existing readable bytes; never initializes new body or padding.
+ /// Failure preserves the original allocation. Relocation requires all Holds retired.
++/// Growth into a dispatched trim range conflicts until owner completion.
+ [[nodiscard]] Result<void> grow(Allocation&, const GrowthRequest&);
++/// Relinquish a suffix of the writer's body/padding without moving storage or
++/// changing retained Holds. No initialization or VM work; zero extent is allowed.
++/// trim_cold later reclaims eligible whole pages, preserving VA for future growth.
++/// End unretained borrows before changing extent; rebind against the new extent.
++[[nodiscard]] Result<void> relinquish_tail(Allocation&, std::size_t bytes,
++    std::size_t readable_padding = 0);
+ /// Capture on the storage's owner Lane; include every byte a native kernel may read.
+ /// Empty ranges and ranges beyond the Allocation plus readable padding fail.
++/// The first Window Hold admits budgeted reader-tracking metadata and can refuse.
+ [[nodiscard]] Result<Hold> hold(const Allocation&, ByteRange footprint);
+ /// Duplicate a live Hold on its owner Lane; saturation refuses without mutation.
+ [[nodiscard]] Result<Hold> retain(const Hold&);
+@@ -131,7 +139,8 @@ struct Statistics {
+ void release(Hold&, ReleaseHint = {}) noexcept;
+ void release(Allocation&, ReleaseHint = {}) noexcept;
+ /// Starts asynchronous reclamation with a Pool-wide idle-payload floor of keep_bytes.
+-/// Selects COLD first, then warmer inventory; poll the owner Lane through completion.
++/// Includes relinquished tails not covered by Holds; done concerns currently
++/// eligible work. Revisit after readers retire. Selects COLD first; poll completion.
+ [[nodiscard]] Progress trim_cold(Pool&, std::uint64_t keep_bytes);
+ /// Rejects new allocation/growth, then drains actual uses, Messages and reclamation.
+ [[nodiscard]] Progress close(Pool&);
+diff --git a/orbital/src/allocation/allocation.cpp b/orbital/src/allocation/allocation.cpp
+index 84c0ea39..9335eb12 100644
+--- a/orbital/src/allocation/allocation.cpp
++++ b/orbital/src/allocation/allocation.cpp
+@@ -326,6 +326,11 @@ Result<void> grow(Allocation& allocation, const GrowthRequest& request) {
+   const bool aligned = reinterpret_cast<std::uintptr_t>(allocation.address) % request.alignment == 0;
+   const auto previous_extent = allocation.size + allocation.readable_padding;
+   const auto needed = std::max({*size, request.reserved_bytes, previous_extent});
++  if (!route(use)->finite) {
++    const auto& window = *static_cast<Window*>(route(use)->context);
++    if (window.trim_pending && *size > window.prepared)
++      return std::unexpected(Error::conflict);
++  }
+   if (!aligned || needed > reserved_bytes(allocation)) {
+     if (held) return std::unexpected(Error::conflict);
+     if (route(use)->finite && needed <= 3072 && request.alignment <= 3072) {
+@@ -356,10 +361,34 @@ Result<void> grow(Allocation& allocation, const GrowthRequest& request) {
+     allocation.size = request.bytes;
+     allocation.readable_padding = request.readable_padding;
+   }
++  if (!route(*allocation.storage)->finite) {
++    auto& window = *static_cast<Window*>(route(*allocation.storage)->context);
++    if (window.tail_released)
++      window.tail_extent = std::max(window.tail_extent, allocation.size + allocation.readable_padding);
++  }
+   ++pool.internal->counts.growths;
+   return {};
+ }
+ 
++Result<void> relinquish_tail(Allocation& allocation, std::size_t bytes, std::size_t padding) {
++  if (!allocation) return std::unexpected(Error::invalid_argument);
++  auto& domain = *route(*allocation.storage);
++  auto& pool = *domain.pool;
++  if (!pool.lane || !worker::on_lane(*pool.lane)) return std::unexpected(Error::conflict);
++  if (pool.state != Pool::State::open || pool.internal->close_requested)
++    return std::unexpected(Error::unavailable);
++  if (bytes > allocation.size || padding > allocation.size + allocation.readable_padding - bytes)
++    return std::unexpected(Error::invalid_argument);
++  allocation.size = bytes;
++  allocation.readable_padding = padding;
++  if (!domain.finite) {
++    auto& window = *static_cast<Window*>(domain.context);
++    window.tail_extent = bytes + padding;
++    window.tail_released = true;
++  }
++  return {};
++}
++
+ namespace {
+ bool add_user(Storage& use, std::uint32_t state) noexcept {
+   for (;;) {
+@@ -381,7 +410,15 @@ Result<Hold> hold(const Allocation& allocation, ByteRange footprint) {
+   if (!footprint.size || footprint.offset > allocation.size + allocation.readable_padding ||
+       footprint.size > allocation.size + allocation.readable_padding - footprint.offset)
+     return std::unexpected(Error::invalid_argument);
+-  if (!add_user(use, state)) return std::unexpected(Error::capacity);
++  auto& domain = *route(use, state);
++  if (!domain.finite) {
++    auto retained = retain_window_range(*static_cast<Window*>(domain.context), footprint);
++    if (!retained) return std::unexpected(retained.error());
++  }
++  if (!add_user(use, state)) {
++    if (!domain.finite) release_window_range(*static_cast<Window*>(domain.context), footprint);
++    return std::unexpected(Error::capacity);
++  }
+   Hold result;
+   result.storage = &use;
+   result.address = allocation.address + footprint.offset;
+@@ -413,7 +450,15 @@ Result<Hold> retain(const Hold& original) {
+   auto state = use.users.state.load(std::memory_order_relaxed);
+   if (!worker::on_lane(*route(use, state)->pool->lane))
+     return std::unexpected(Error::conflict);
+-  if (!add_user(use, state)) return std::unexpected(Error::capacity);
++  auto& domain = *route(use, state);
++  if (!domain.finite) {
++    auto retained = retain_window_range(*static_cast<Window*>(domain.context), original.footprint);
++    if (!retained) return std::unexpected(retained.error());
++  }
++  if (!add_user(use, state)) {
++    if (!domain.finite) release_window_range(*static_cast<Window*>(domain.context), original.footprint);
++    return std::unexpected(Error::capacity);
++  }
+   Hold result;
+   result.storage = original.storage;
+   result.address = original.address;
+@@ -431,6 +476,8 @@ void release(Allocation& allocation, ReleaseHint value) noexcept {
+ void release(Hold& hold, ReleaseHint value) noexcept {
+   if (!hold.storage) return;
+   auto* storage = std::exchange(hold.storage, nullptr);
++  auto& domain = *route(*storage);
++  if (!domain.finite) release_window_range(*static_cast<Window*>(domain.context), hold.footprint);
+   hold.address = nullptr; hold.footprint = {};
+   drop(*storage, value);
+ }
+@@ -486,6 +533,10 @@ Progress trim_cold(Pool& pool, std::uint64_t keep_bytes) {
+     if (window->trim_pending || window->preparation) { pending = true; continue; }
+     if (window->address && !window->uses[0].users.load(std::memory_order_acquire) &&
+         !window->uses.domain.queued.load(std::memory_order_acquire)) idle += window->charged;
++    else if (window->tail_released) {
++      const auto floor = window_tail_floor(*window);
++      if (floor < window->charged) idle += window->charged - floor;
++    }
+   }
+   // One Pool-wide floor, shared by finite pages and virtual windows. Prefer
+   // cold groups, then permit warmer inventory when the requested trim needs it.
+@@ -533,10 +584,22 @@ Progress trim_cold(Pool& pool, std::uint64_t keep_bytes) {
+       }
+     }
+     for (auto& window : pool.internal->windows) {
+-      if (window->trim_pending || window->preparation || !window->address || window->uses[0].users.load(std::memory_order_acquire) ||
+-          window->uses.domain.queued.load(std::memory_order_acquire)) continue;
++      if (window->trim_pending || window->preparation || !window->address) continue;
+       const bool cold = window->hint.temperature.value_or(Temperature::cold) == Temperature::cold;
+-      if ((pass == 0) != cold || idle < window->charged || idle - window->charged < keep_bytes) continue;
++      if ((pass == 0) != cold) continue;
++      if (window->uses[0].users.load(std::memory_order_acquire) ||
++          window->uses.domain.queued.load(std::memory_order_acquire)) {
++        if (!window->tail_released || idle <= keep_bytes) continue;
++        const auto floor = window_tail_floor(*window);
++        if (floor >= window->charged) continue;
++        const auto allowance = (idle - keep_bytes) / page_size() * page_size();
++        const auto reclaim = std::min(window->charged - floor, allowance);
++        if (!reclaim) continue;
++        trim_window_tail(*window, window->charged - reclaim);
++        idle -= reclaim; pending = true;
++        continue;
++      }
++      if (idle < window->charged || idle - window->charged < keep_bytes) continue;
+       idle -= window->charged;
+       remove_idle(*window);
+       window->uses[0].users.store(returning, std::memory_order_release);
+@@ -640,6 +703,10 @@ Statistics statistics(const Pool& pool) noexcept {
+     }
+     result.metadata_bytes += window->metadata_charge;
+     if (!window->preparation && !window->uses[0].users.load(std::memory_order_acquire)) result.idle_bytes += window->charged;
++    else if (!window->preparation && window->tail_released) {
++      const auto floor = window_tail_floor(*window);
++      if (floor < window->charged) result.idle_bytes += window->charged - floor;
++    }
+   }
+   return result;
+ }
+diff --git a/orbital/src/allocation/internal.h b/orbital/src/allocation/internal.h
+index 59d21fc3..1325110a 100644
+--- a/orbital/src/allocation/internal.h
++++ b/orbital/src/allocation/internal.h
+@@ -129,12 +129,16 @@ struct Window {
+   // prepared is confirmed accessible; charged also covers uncertain pages
+   // after a failed preparation, until retry or actual unmapping.
+   std::size_t reserved{}, prepared{}, charged{};
++  // Created on the first real Hold. Counts protect native-page endpoint bins;
++  // no per-Hold list or change to the four-byte Storage identity.
++  std::unique_ptr<std::atomic<std::uint32_t>[]> readers;
++  std::size_t tail_extent{}, tail_limit{};
+   ReleaseHint hint, foreign_hint;
+   std::atomic<bool> foreign_hint_pending{};
+   Job job;
+   worker::Message trimmed;
+   Ref<Arena> trim_lifetime;
+-  bool trim_pending{}, discarded{};
++  bool trim_pending{}, discarded{}, tail_released{};
+   std::uint64_t metadata_charge{};
+   Preparation* preparation{}; // Cold pending record, null in ordinary ready inventory.
+ 
+@@ -210,6 +214,10 @@ Result<void> window_allocate(Pool&, const AllocationRequest&, std::size_t,
+ // False means local capacity was unavailable; common growth may try elsewhere.
+ Result<bool> relocate_finite(Allocation&, const GrowthRequest&, std::size_t);
+ Result<void> extend_window(Window&, std::size_t);
++Result<void> retain_window_range(Window&, ByteRange);
++void release_window_range(Window&, ByteRange) noexcept;
++std::size_t window_tail_floor(const Window&) noexcept;
++void trim_window_tail(Window&, std::size_t);
+ Result<void> prepare_finite(Pool&, Preparation&, const AllocationRequest&, worker::Lane&);
+ Result<void> prepare_window(Pool&, Preparation&, const AllocationRequest&, worker::Lane&);
+ 
+diff --git a/orbital/src/allocation/window.cpp b/orbital/src/allocation/window.cpp
+index e2d52242..fa9b1d85 100644
+--- a/orbital/src/allocation/window.cpp
++++ b/orbital/src/allocation/window.cpp
+@@ -73,6 +73,100 @@ void window_trim_release(worker::Message& message) noexcept {
+ 
+ const worker::MessageOps window_trim_ops{no_retain, window_trim_handle, window_trim_release};
+ 
++namespace {
++unsigned range_bin(ByteRange range) noexcept {
++  return std::bit_width((range.offset + range.size - 1) >> std::countr_zero(page_size()));
++}
++
++unsigned reader_bins(const Window& window) noexcept {
++  return std::bit_width((window.reserved - 1) >> std::countr_zero(page_size())) + 1;
++}
++
++void tail_run(Job& job) noexcept {
++  auto& window = *static_cast<Window*>(job.context);
++  auto* address = window.address + window.tail_limit;
++  const auto charge = window.charged - window.tail_limit;
++  window.discarded = ::madvise(address, charge, MADV_DONTNEED) == 0 &&
++      ::mprotect(address, charge, PROT_NONE) == 0;
++  worker::post(*window.uses.domain.pool->lane, window.trimmed);
++}
++
++void tail_handle(worker::Message& message, worker::Lane&) noexcept {
++  auto& window = *static_cast<Window*>(message.context);
++  auto& pool = *window.uses.domain.pool;
++  if (!window.discarded) { pool.internal->trim_failed = true; return; }
++  const auto charge = window.charged - window.tail_limit;
++  refund(pool, charge);
++  pool.internal->counts.trim_pages += charge / page_size();
++  window.charged = window.tail_limit;
++}
++
++void tail_release(worker::Message& message) noexcept {
++  auto& window = *static_cast<Window*>(message.context);
++  auto retained = std::move(window.trim_lifetime);
++  window.trim_pending = false;
++  window.job.run = window_trim_run;
++  window.trimmed.ops = &window_trim_ops;
++  add_idle(window);
++  pulse(window.uses.domain.pool->capacity_changed);
++}
++
++const worker::MessageOps tail_ops{no_retain, tail_handle, tail_release};
++}
++
++Result<void> retain_window_range(Window& window, ByteRange range) {
++  if (!range.size) return {}; // Opaque capture tokens retain the writer's extent.
++  const auto bins = reader_bins(window);
++  if (!window.readers) {
++    std::unique_ptr<std::atomic<std::uint32_t>[]> readers;
++    try { readers = std::make_unique<std::atomic<std::uint32_t>[]>(bins); }
++    catch (const std::bad_alloc&) { return std::unexpected(Error::capacity); }
++    const auto charge = bins * sizeof(std::atomic<std::uint32_t>);
++    if (!claim(*window.uses.domain.pool, charge)) return std::unexpected(Error::capacity);
++    window.metadata_charge += charge;
++    window.readers = std::move(readers);
++  }
++  window.readers[range_bin(range)].fetch_add(1, std::memory_order_relaxed);
++  return {};
++}
++
++void release_window_range(Window& window, ByteRange range) noexcept {
++  if (!range.size) return;
++  assert(window.readers);
++  const auto previous = window.readers[range_bin(range)].fetch_sub(1, std::memory_order_release);
++  assert(previous); (void)previous;
++}
++
++std::size_t window_tail_floor(const Window& window) noexcept {
++  auto end = window.tail_extent;
++  if (window.readers) {
++    const auto page = page_size();
++    for (unsigned bin = reader_bins(window); bin--;) {
++      if (!window.readers[bin].load(std::memory_order_acquire)) continue;
++      const auto pages = std::size_t{1} << bin;
++      end = std::max(end, pages > window.reserved / page ? window.reserved : pages * page);
++      break;
++    }
++  }
++  std::size_t rounded{};
++  const auto valid = round_up(end, page_size(), rounded);
++  assert(valid); (void)valid;
++  return rounded;
++}
++
++void trim_window_tail(Window& window, std::size_t keep) {
++  assert(!window.trim_pending && !window.preparation && keep < window.charged);
++  window.tail_limit = keep;
++  // Withdraw the whole dispatched range before publishing helper work. The
++  // charged bound includes it until confirmed discard/protection settles.
++  window.prepared = std::min(window.prepared, keep);
++  window.trim_pending = true;
++  window.trim_lifetime = Ref<Arena>::retain(*window.uses.domain.pool->arena);
++  window.job.run = tail_run;
++  window.trimmed.ops = &tail_ops;
++  schedule(*window.uses.domain.pool->arena, window.job);
++}
++
+ // Owner published/charged this private Window before the helper receives it.
+ void window_prepare_body(Window& window) noexcept {
+   const auto& request = window.preparation->request;
+@@ -137,6 +231,7 @@ void window_prepare_release(worker::Message& message) noexcept {
+     result.address = window.address;
+     result.size = preparation.request.bytes;
+     result.readable_padding = preparation.request.readable_padding;
++    window.tail_released = false;
+     ++pool.internal->counts.allocations;
+     if (preparation.reused) ++pool.internal->counts.reuses;
+     preparation.state = Preparation::State::ready;
+@@ -271,6 +366,7 @@ Result<void> window_allocate(Pool& pool, const AllocationRequest& request, std::
+     selected->prepared = prepared;
+   }
+   remove_idle(*selected);
++  selected->tail_released = false;
+   result.storage = &selected->uses[0];
+   result.address = selected->address; result.size = request.bytes;
+   result.readable_padding = request.readable_padding;

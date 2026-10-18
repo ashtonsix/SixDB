@@ -326,6 +326,11 @@ Result<void> grow(Allocation& allocation, const GrowthRequest& request) {
   const bool aligned = reinterpret_cast<std::uintptr_t>(allocation.address) % request.alignment == 0;
   const auto previous_extent = allocation.size + allocation.readable_padding;
   const auto needed = std::max({*size, request.reserved_bytes, previous_extent});
+  if (!route(use)->finite) {
+    const auto& window = *static_cast<Window*>(route(use)->context);
+    if (window.trim_pending && *size > window.prepared)
+      return std::unexpected(Error::conflict);
+  }
   if (!aligned || needed > reserved_bytes(allocation)) {
     if (held) return std::unexpected(Error::conflict);
     if (route(use)->finite && needed <= 3072 && request.alignment <= 3072) {
@@ -356,7 +361,31 @@ Result<void> grow(Allocation& allocation, const GrowthRequest& request) {
     allocation.size = request.bytes;
     allocation.readable_padding = request.readable_padding;
   }
+  if (!route(*allocation.storage)->finite) {
+    auto& window = *static_cast<Window*>(route(*allocation.storage)->context);
+    if (window.tail_released)
+      window.tail_extent = std::max(window.tail_extent, allocation.size + allocation.readable_padding);
+  }
   ++pool.internal->counts.growths;
+  return {};
+}
+
+Result<void> relinquish_tail(Allocation& allocation, std::size_t bytes, std::size_t padding) {
+  if (!allocation) return std::unexpected(Error::invalid_argument);
+  auto& domain = *route(*allocation.storage);
+  auto& pool = *domain.pool;
+  if (!pool.lane || !worker::on_lane(*pool.lane)) return std::unexpected(Error::conflict);
+  if (pool.state != Pool::State::open || pool.internal->close_requested)
+    return std::unexpected(Error::unavailable);
+  if (bytes > allocation.size || padding > allocation.size + allocation.readable_padding - bytes)
+    return std::unexpected(Error::invalid_argument);
+  allocation.size = bytes;
+  allocation.readable_padding = padding;
+  if (!domain.finite) {
+    auto& window = *static_cast<Window*>(domain.context);
+    window.tail_extent = bytes + padding;
+    window.tail_released = true;
+  }
   return {};
 }
 
@@ -381,7 +410,15 @@ Result<Hold> hold(const Allocation& allocation, ByteRange footprint) {
   if (!footprint.size || footprint.offset > allocation.size + allocation.readable_padding ||
       footprint.size > allocation.size + allocation.readable_padding - footprint.offset)
     return std::unexpected(Error::invalid_argument);
-  if (!add_user(use, state)) return std::unexpected(Error::capacity);
+  auto& domain = *route(use, state);
+  if (!domain.finite) {
+    auto retained = retain_window_range(*static_cast<Window*>(domain.context), footprint);
+    if (!retained) return std::unexpected(retained.error());
+  }
+  if (!add_user(use, state)) {
+    if (!domain.finite) release_window_range(*static_cast<Window*>(domain.context), footprint);
+    return std::unexpected(Error::capacity);
+  }
   Hold result;
   result.storage = &use;
   result.address = allocation.address + footprint.offset;
@@ -413,7 +450,15 @@ Result<Hold> retain(const Hold& original) {
   auto state = use.users.state.load(std::memory_order_relaxed);
   if (!worker::on_lane(*route(use, state)->pool->lane))
     return std::unexpected(Error::conflict);
-  if (!add_user(use, state)) return std::unexpected(Error::capacity);
+  auto& domain = *route(use, state);
+  if (!domain.finite) {
+    auto retained = retain_window_range(*static_cast<Window*>(domain.context), original.footprint);
+    if (!retained) return std::unexpected(retained.error());
+  }
+  if (!add_user(use, state)) {
+    if (!domain.finite) release_window_range(*static_cast<Window*>(domain.context), original.footprint);
+    return std::unexpected(Error::capacity);
+  }
   Hold result;
   result.storage = original.storage;
   result.address = original.address;
@@ -431,6 +476,8 @@ void release(Allocation& allocation, ReleaseHint value) noexcept {
 void release(Hold& hold, ReleaseHint value) noexcept {
   if (!hold.storage) return;
   auto* storage = std::exchange(hold.storage, nullptr);
+  auto& domain = *route(*storage);
+  if (!domain.finite) release_window_range(*static_cast<Window*>(domain.context), hold.footprint);
   hold.address = nullptr; hold.footprint = {};
   drop(*storage, value);
 }
@@ -486,6 +533,10 @@ Progress trim_cold(Pool& pool, std::uint64_t keep_bytes) {
     if (window->trim_pending || window->preparation) { pending = true; continue; }
     if (window->address && !window->uses[0].users.load(std::memory_order_acquire) &&
         !window->uses.domain.queued.load(std::memory_order_acquire)) idle += window->charged;
+    else if (window->tail_released) {
+      const auto floor = window_tail_floor(*window);
+      if (floor < window->charged) idle += window->charged - floor;
+    }
   }
   // One Pool-wide floor, shared by finite pages and virtual windows. Prefer
   // cold groups, then permit warmer inventory when the requested trim needs it.
@@ -533,10 +584,22 @@ Progress trim_cold(Pool& pool, std::uint64_t keep_bytes) {
       }
     }
     for (auto& window : pool.internal->windows) {
-      if (window->trim_pending || window->preparation || !window->address || window->uses[0].users.load(std::memory_order_acquire) ||
-          window->uses.domain.queued.load(std::memory_order_acquire)) continue;
+      if (window->trim_pending || window->preparation || !window->address) continue;
       const bool cold = window->hint.temperature.value_or(Temperature::cold) == Temperature::cold;
-      if ((pass == 0) != cold || idle < window->charged || idle - window->charged < keep_bytes) continue;
+      if ((pass == 0) != cold) continue;
+      if (window->uses[0].users.load(std::memory_order_acquire) ||
+          window->uses.domain.queued.load(std::memory_order_acquire)) {
+        if (!window->tail_released || idle <= keep_bytes) continue;
+        const auto floor = window_tail_floor(*window);
+        if (floor >= window->charged) continue;
+        const auto allowance = (idle - keep_bytes) / page_size() * page_size();
+        const auto reclaim = std::min(window->charged - floor, allowance);
+        if (!reclaim) continue;
+        trim_window_tail(*window, window->charged - reclaim);
+        idle -= reclaim; pending = true;
+        continue;
+      }
+      if (idle < window->charged || idle - window->charged < keep_bytes) continue;
       idle -= window->charged;
       remove_idle(*window);
       window->uses[0].users.store(returning, std::memory_order_release);
@@ -640,6 +703,10 @@ Statistics statistics(const Pool& pool) noexcept {
     }
     result.metadata_bytes += window->metadata_charge;
     if (!window->preparation && !window->uses[0].users.load(std::memory_order_acquire)) result.idle_bytes += window->charged;
+    else if (!window->preparation && window->tail_released) {
+      const auto floor = window_tail_floor(*window);
+      if (floor < window->charged) result.idle_bytes += window->charged - floor;
+    }
   }
   return result;
 }

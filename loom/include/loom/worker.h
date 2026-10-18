@@ -17,6 +17,7 @@ using orbital::allocation::bytes;
 using orbital::allocation::release;
 // Owner-lane operations select the Pool from captured storage.
 using orbital::allocation::grow;
+using orbital::allocation::relinquish_tail;
 using orbital::allocation::hold;
 using orbital::allocation::retain;
 

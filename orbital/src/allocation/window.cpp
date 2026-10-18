@@ -73,6 +73,100 @@ void window_trim_release(worker::Message& message) noexcept {
 
 const worker::MessageOps window_trim_ops{no_retain, window_trim_handle, window_trim_release};
 
+namespace {
+unsigned range_bin(ByteRange range) noexcept {
+  return std::bit_width((range.offset + range.size - 1) >> std::countr_zero(page_size()));
+}
+
+unsigned reader_bins(const Window& window) noexcept {
+  return std::bit_width((window.reserved - 1) >> std::countr_zero(page_size())) + 1;
+}
+
+void tail_run(Job& job) noexcept {
+  auto& window = *static_cast<Window*>(job.context);
+  auto* address = window.address + window.tail_limit;
+  const auto charge = window.charged - window.tail_limit;
+  window.discarded = ::madvise(address, charge, MADV_DONTNEED) == 0 &&
+      ::mprotect(address, charge, PROT_NONE) == 0;
+  worker::post(*window.uses.domain.pool->lane, window.trimmed);
+}
+
+void tail_handle(worker::Message& message, worker::Lane&) noexcept {
+  auto& window = *static_cast<Window*>(message.context);
+  auto& pool = *window.uses.domain.pool;
+  if (!window.discarded) { pool.internal->trim_failed = true; return; }
+  const auto charge = window.charged - window.tail_limit;
+  refund(pool, charge);
+  pool.internal->counts.trim_pages += charge / page_size();
+  window.charged = window.tail_limit;
+}
+
+void tail_release(worker::Message& message) noexcept {
+  auto& window = *static_cast<Window*>(message.context);
+  auto retained = std::move(window.trim_lifetime);
+  window.trim_pending = false;
+  window.job.run = window_trim_run;
+  window.trimmed.ops = &window_trim_ops;
+  add_idle(window);
+  pulse(window.uses.domain.pool->capacity_changed);
+}
+
+const worker::MessageOps tail_ops{no_retain, tail_handle, tail_release};
+}
+
+Result<void> retain_window_range(Window& window, ByteRange range) {
+  if (!range.size) return {}; // Opaque capture tokens retain the writer's extent.
+  const auto bins = reader_bins(window);
+  if (!window.readers) {
+    std::unique_ptr<std::atomic<std::uint32_t>[]> readers;
+    try { readers = std::make_unique<std::atomic<std::uint32_t>[]>(bins); }
+    catch (const std::bad_alloc&) { return std::unexpected(Error::capacity); }
+    const auto charge = bins * sizeof(std::atomic<std::uint32_t>);
+    if (!claim(*window.uses.domain.pool, charge)) return std::unexpected(Error::capacity);
+    window.metadata_charge += charge;
+    window.readers = std::move(readers);
+  }
+  window.readers[range_bin(range)].fetch_add(1, std::memory_order_relaxed);
+  return {};
+}
+
+void release_window_range(Window& window, ByteRange range) noexcept {
+  if (!range.size) return;
+  assert(window.readers);
+  const auto previous = window.readers[range_bin(range)].fetch_sub(1, std::memory_order_release);
+  assert(previous); (void)previous;
+}
+
+std::size_t window_tail_floor(const Window& window) noexcept {
+  auto end = window.tail_extent;
+  if (window.readers) {
+    const auto page = page_size();
+    for (unsigned bin = reader_bins(window); bin--;) {
+      if (!window.readers[bin].load(std::memory_order_acquire)) continue;
+      const auto pages = std::size_t{1} << bin;
+      end = std::max(end, pages > window.reserved / page ? window.reserved : pages * page);
+      break;
+    }
+  }
+  std::size_t rounded{};
+  const auto valid = round_up(end, page_size(), rounded);
+  assert(valid); (void)valid;
+  return rounded;
+}
+
+void trim_window_tail(Window& window, std::size_t keep) {
+  assert(!window.trim_pending && !window.preparation && keep < window.charged);
+  window.tail_limit = keep;
+  // Withdraw the whole dispatched range before publishing helper work. The
+  // charged bound includes it until confirmed discard/protection settles.
+  window.prepared = std::min(window.prepared, keep);
+  window.trim_pending = true;
+  window.trim_lifetime = Ref<Arena>::retain(*window.uses.domain.pool->arena);
+  window.job.run = tail_run;
+  window.trimmed.ops = &tail_ops;
+  schedule(*window.uses.domain.pool->arena, window.job);
+}
+
 // Owner published/charged this private Window before the helper receives it.
 void window_prepare_body(Window& window) noexcept {
   const auto& request = window.preparation->request;
@@ -137,6 +231,7 @@ void window_prepare_release(worker::Message& message) noexcept {
     result.address = window.address;
     result.size = preparation.request.bytes;
     result.readable_padding = preparation.request.readable_padding;
+    window.tail_released = false;
     ++pool.internal->counts.allocations;
     if (preparation.reused) ++pool.internal->counts.reuses;
     preparation.state = Preparation::State::ready;
@@ -271,6 +366,7 @@ Result<void> window_allocate(Pool& pool, const AllocationRequest& request, std::
     selected->prepared = prepared;
   }
   remove_idle(*selected);
+  selected->tail_released = false;
   result.storage = &selected->uses[0];
   result.address = selected->address; result.size = request.bytes;
   result.readable_padding = request.readable_padding;

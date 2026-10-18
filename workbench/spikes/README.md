@@ -32,6 +32,7 @@ experiments and checks under Object, Allocation, Journal, Port and Worker.
 - [Memory descriptors](memory-descriptors/README.md): arena-selected palettes, one-byte trampolines, placement and retained native access.
 - [Allocation palettes](allocation-palettes/README.md): native 4/16/64 KiB timing, independent spacing/count comparisons and selected Group profiles.
 - [Allocation temperature reuse](allocation-reuse-temperature/README.md): bounded HOT/WARM queues, reuse ordering and actual allocator costs.
+- [Live-tail reclamation](allocation-live-tail/README.md): explicit extent relinquishment, retained-reader protection and native costs of reclaiming and regrowing pages.
 - [CFT commit latency](cft-commit-latency/README.md): directional network measurement and host/flow selection; durable quorum latency, storage throughput cliffs and live log preparation.
 - [Local message handoff](orbital-local-handoff/README.md): native Zen 5 measurements of batching, payload readiness, polling CPU, queue admission and instrumentation sensitivity.
 - [Orbital reservation policies](orbital-reservation-policy/README.md): broad-waiter progress, WAN convoys and deterministic bypass, with formal and native comparisons.

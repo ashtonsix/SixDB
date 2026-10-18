@@ -95,6 +95,13 @@ but permit in-place growth. The writer initializes new body or padding after any
 overlapping reader finishes; a disjoint prefix reader can remain live. Physical
 retention grants no permission to change contents.
 
+`relinquish_tail` contracts the writer's body/padding without moving bytes or
+running VM work; the same extent can mark inherited surplus reclaimable. Existing
+Holds retain their full captured footprints. Finite homes remain packed; a live
+Window can return whole tail pages while retaining VA. Growth into dispatched
+reclamation conflicts until owner completion; growth inside its retained prefix
+remains available.
+
 ## Preparation, reuse and settlement
 
 [Background preparation](include/orbital/preparation.h) uses the same Pool and
@@ -116,8 +123,14 @@ An exact reservation-size index skips undersized Windows while preserving their
 return order. Its nodes are admitted before a fresh mapping; returns allocate none.
 HOT/WARM/COLD advice guides reclamation; timestamps reject stale advice and
 omitted fields preserve earlier hints. Advice does not prove cache residency.
-Explicit trim reclaims idle ranges on one Arena helper and returns budget after
-owner completion. Dedicated page bitmaps keep admitted membership separate from
+Explicit trim reclaims unused Group pages, wholly idle Windows and relinquished
+tails on one Arena helper, returning budget after confirmed owner completion.
+The first real Window Hold admits a small charged array of reader endpoint
+counters. Native-page bins conservatively round endpoints up to powers of two;
+retiring a wide Hold permits later trim even while prefix Holds continue.
+Revisit maintenance after reader retirement; it does not trigger trim itself.
+The [live-tail study](../workbench/spikes/allocation-live-tail/README.md) owns the
+costs and comparisons. Dedicated page bitmaps keep admitted membership separate from
 owner scratch; whole-run success permits exact refunds without pressure-time
 container growth. The retained-byte floor and cold-first selection preserve
 useful inventory; fully idle groups and windows can retire their metadata too.

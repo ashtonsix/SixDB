@@ -120,9 +120,17 @@ struct Statistics {
 [[nodiscard]] Result<Allocation> allocate(Pool&, const AllocationRequest&);
 /// Preserves existing readable bytes; never initializes new body or padding.
 /// Failure preserves the original allocation. Relocation requires all Holds retired.
+/// Growth into a dispatched trim range conflicts until owner completion.
 [[nodiscard]] Result<void> grow(Allocation&, const GrowthRequest&);
+/// Relinquish a suffix of the writer's body/padding without moving storage or
+/// changing retained Holds. No initialization or VM work; zero extent is allowed.
+/// trim_cold later reclaims eligible whole pages, preserving VA for future growth.
+/// End unretained borrows before changing extent; rebind against the new extent.
+[[nodiscard]] Result<void> relinquish_tail(Allocation&, std::size_t bytes,
+    std::size_t readable_padding = 0);
 /// Capture on the storage's owner Lane; include every byte a native kernel may read.
 /// Empty ranges and ranges beyond the Allocation plus readable padding fail.
+/// The first Window Hold admits budgeted reader-tracking metadata and can refuse.
 [[nodiscard]] Result<Hold> hold(const Allocation&, ByteRange footprint);
 /// Duplicate a live Hold on its owner Lane; saturation refuses without mutation.
 [[nodiscard]] Result<Hold> retain(const Hold&);
@@ -131,7 +139,8 @@ struct Statistics {
 void release(Hold&, ReleaseHint = {}) noexcept;
 void release(Allocation&, ReleaseHint = {}) noexcept;
 /// Starts asynchronous reclamation with a Pool-wide idle-payload floor of keep_bytes.
-/// Selects COLD first, then warmer inventory; poll the owner Lane through completion.
+/// Includes relinquished tails not covered by Holds; done concerns currently
+/// eligible work. Revisit after readers retire. Selects COLD first; poll completion.
 [[nodiscard]] Progress trim_cold(Pool&, std::uint64_t keep_bytes);
 /// Rejects new allocation/growth, then drains actual uses, Messages and reclamation.
 [[nodiscard]] Progress close(Pool&);

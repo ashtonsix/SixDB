@@ -1,0 +1,23 @@
+{
+  "patch_sha256": "f710a88fbfdf02c5edb105c727193d78e321ffb741660afeb34b36966ca1f6a5",
+  "direction": "reverse",
+  "baseline_commit": "71600157eafc44fa9ac03233d80dcc025b1b9fa6",
+  "files": {
+    "orbital/include/orbital/allocation.h": {
+      "baseline": "304ab0176668cc1300ade2e640610a659d26df181adf624bc77a2763aa1d47ba",
+      "candidate": "5ad456e336cedab9e7a6bdca6614293251985a8612ec8e1812f1a19289119d62"
+    },
+    "orbital/src/allocation/internal.h": {
+      "baseline": "36cc8c371b8d6ca0458ac4e024b232940001a3f8efa017b354d3c88bdfdc03e4",
+      "candidate": "28d7f6cd42a63cdfdd938c56d62fba684018d2ba27827fb82512e8d3027bb7e3"
+    },
+    "orbital/src/allocation/allocation.cpp": {
+      "baseline": "a142813d6ea072ac483b878c55b7f5edbac8e51ef200ccb1c84ee6fc605d2caf",
+      "candidate": "e93faf775889a65ea2536b862b90e3b6659c53a788ec6a6e319bfdd15af89497"
+    },
+    "orbital/src/allocation/window.cpp": {
+      "baseline": "128c5c67474bd8ff39c2eb0e7650501197e45a7209d88689806dab418f28c1d4",
+      "candidate": "4d2613f8534fb0f8e0d05f006c078f183b9ca0337d7395dd7d4ea78e23f7e266"
+    }
+  }
+}

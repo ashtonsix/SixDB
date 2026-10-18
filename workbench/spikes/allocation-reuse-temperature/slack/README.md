@@ -3,7 +3,9 @@
 A 4 KiB request can reuse a previously prepared 64 KiB Window. This study
 separates the cost of choosing closer backing from the cost of releasing pages.
 Virtual address space is useful for stable growth; a large reservation alone is
-not a reason to reject reuse. No production selector or reclaim policy changed.
+not a reason to reject reuse. This study changed no production selector or
+reclaim policy; integrated reclamation followed in the
+[live-tail study](../../allocation-live-tail/README.md).
 
 A Window is private backing for one contiguous Allocation. A Group packs small
 allocations; neither is an Object, Part or public memory-management interface.
@@ -20,7 +22,7 @@ Views borrow bytes under their owning lifetime and interpretation.
 
 ## Selector comparison
 
-One current-source capture supplies common Orbital TUs. Only `window.cpp`'s
+One captured source tree supplies common Orbital TUs. Only `window.cpp`'s
 selector differs: first-ready control, first-ready preference within twice the
 rounded requested extent, and smallest prepared ready fit with an exact-size
 fast path. Both alternatives still reuse oversized backing when nothing closer
@@ -78,37 +80,28 @@ after a new owner has written. See the [Linux contract](https://man7.org/linux/m
 and prior [residency](../../orbital-views/residency/README.md) and
 [TLB](../../orbital-views/tlb/README.md) measurements.
 
-The coherent direction is cheap address reuse plus separate page maintenance
-inside allocation. Group owns packing and shared-page occupancy; Window owns
-one contiguous range and its writable prefix. Pool/Arena reserve and settle
-physical work and charge. Loom chooses placement and when to request maintenance;
-it does not reconstruct page safety. Allocation, Hold and View need no new
-fractional or sparse-memory interface.
+The architectural direction is cheap address reuse plus separate page maintenance
+inside allocation. Group owns packing and shared-page occupancy; Window owns one
+contiguous range. Pool/Arena settle physical work and charge. Loom chooses when
+to request maintenance; it does not reconstruct page safety.
 
-Start at idle or exclusive preparation boundaries. Preparation already withdraws
-an idle Window before physical work and issues its Allocation after owner
-settlement. Restoring only the useful prefix needs no new Hold tracking there:
-the existing reservation can exceed the writable prefix. This does not reclaim
-a long-lived small Allocation already issued from oversized backing.
+The subsequent [live-tail spike](../../allocation-live-tail/README.md) implements
+explicit writer-extent relinquishment and asynchronous reclamation through ordinary
+Pool maintenance. It replaces this study's tentative maximum-issued-prefix idea
+with bounded reader endpoint counters, so an old wide reader can retire without
+waiting for continuous prefix readers. Allocation, Hold and View need no public
+fractional or sparse-memory interface. This raw diagnostic remains separate from
+that integrated lifetime/accounting implementation.
 
-Only that live-tail case needs additional state. One conservative maximum issued
-prefix can protect all readers without a per-Hold registry. Include historical
-readable padding: growth can reduce padding while an older Hold still covers it.
-Reclaim only whole native base pages above that bound. Reset it only after every
-use and foreign return settles. Pending discard
-must exclude growth or reissue into its target until physical settlement.
-Unused pages inside live Groups already contribute to `idle_bytes`; a proven
-unused Window tail could use the same meaning. None of this is implemented.
+## Live-tail consumer requirement
 
-Physical settlement is separate from construction success. If a preparer discards
-an old tail and then its constructor fails or demand is cancelled, the owner must
-still settle the confirmed discard; failed or uncertain VM work remains charged.
-Raw `madvise` does not lower accessible capacity or Arena charge. Confirmed discard
-plus an inaccessible tail preserves the conservative model and permits refund;
-lazy-free advice alone does not. Retain the VA for later growth, which reacquires
-budget before restoring access. Arbitrary interior holes do not help this case.
-The 3 KiB Group cutoff is a separate palette/packing question, particularly on
-larger base pages.
+A StreamPack owner can exhaust its 256 ranks below its schema's byte limit.
+That encoding ceiling does not require touching the full payload span. The
+reported Iceberg–Swiss eager-zeroed arena and whole-stride copies were owner
+policy, not a format requirement. The live-tail work follows that real consumer:
+relinquish unused whole native pages while preserving useful bytes, VA, sidecars,
+readable padding and older physical footprints. Interior gaps between packed
+blocks remain a placement question; a tail operation does not reclaim holes.
 
 ## Reproduce
 

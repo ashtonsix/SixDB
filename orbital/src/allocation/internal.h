@@ -129,12 +129,16 @@ struct Window {
   // prepared is confirmed accessible; charged also covers uncertain pages
   // after a failed preparation, until retry or actual unmapping.
   std::size_t reserved{}, prepared{}, charged{};
+  // Created on the first real Hold. Counts protect native-page endpoint bins;
+  // no per-Hold list or change to the four-byte Storage identity.
+  std::unique_ptr<std::atomic<std::uint32_t>[]> readers;
+  std::size_t tail_extent{}, tail_limit{};
   ReleaseHint hint, foreign_hint;
   std::atomic<bool> foreign_hint_pending{};
   Job job;
   worker::Message trimmed;
   Ref<Arena> trim_lifetime;
-  bool trim_pending{}, discarded{};
+  bool trim_pending{}, discarded{}, tail_released{};
   std::uint64_t metadata_charge{};
   Preparation* preparation{}; // Cold pending record, null in ordinary ready inventory.
 
@@ -210,6 +214,10 @@ Result<void> window_allocate(Pool&, const AllocationRequest&, std::size_t,
 // False means local capacity was unavailable; common growth may try elsewhere.
 Result<bool> relocate_finite(Allocation&, const GrowthRequest&, std::size_t);
 Result<void> extend_window(Window&, std::size_t);
+Result<void> retain_window_range(Window&, ByteRange);
+void release_window_range(Window&, ByteRange) noexcept;
+std::size_t window_tail_floor(const Window&) noexcept;
+void trim_window_tail(Window&, std::size_t);
 Result<void> prepare_finite(Pool&, Preparation&, const AllocationRequest&, worker::Lane&);
 Result<void> prepare_window(Pool&, Preparation&, const AllocationRequest&, worker::Lane&);
 

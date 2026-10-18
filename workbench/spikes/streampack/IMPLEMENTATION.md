@@ -217,6 +217,17 @@ old SIMD-readable tails must still remain immutable. No new allocation protocol
 or hidden slot allocator was required in StreamPack.
 
 
+The live-tail extension in `implementation_orbital_check.cpp` covers Direct and
+Width with 256 short values, metadata before payload, and deliberately initialized
+surplus backing. An older published representation and escaped Part keep the
+wide footprint readable through trimming. After they retire, the surplus is
+reclaimed while a newer prefix-only representation remains live; values, sidecars,
+address reservation, budget refund and regrowth are checked. Both Part-retention
+modes pass local Linux ARM release and ASan/UBSan, including stack-use-after-return
+and leak detection. This is a lifetime/integration result; the
+[Iceberg–Swiss study](../../notebook/retired-spikes.md#hashtable-promotion-and-curation--october-17-2026) owns complete-consumer memory and
+throughput measurements for its migrated allocation policy.
+
 ## Scheduled dependent reads
 
 The real [Loom consumer](implementation_loom.h) shares typed read bodies between

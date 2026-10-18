@@ -10,6 +10,7 @@
 #include <source_location>
 #include <thread>
 #include <vector>
+#include <unistd.h>
 
 namespace om = streampack_implementation::orbital_material;
 namespace lc = streampack_implementation::loom_consumer;
@@ -408,6 +409,106 @@ void growth(Runtime& runtime) {
         "capture consumes mutable Draft and repeated operations refuse");
 }
 
+om::Store::Owner shared_capture(om::Draft& draft, std::size_t payload_bytes) {
+    auto extents = draft.extents;
+    extents[0] = payload_bytes;
+    auto& memory = *std::pmr::new_delete_resource();
+    const om::Control control{&memory, draft.format.get(), extents, om::Placement::grouped};
+    auto retained = std::make_shared<oa::Hold>(take(
+        oa::hold(draft.allocations[0], {0, draft.offsets[0] + payload_bytes}),
+        "retain exact shared five-plane footprint"));
+    std::array<orbital::PartSource, 5> sources;
+    for (unsigned p = 0; p < sources.size(); ++p)
+        sources[p] = {control.id(p), {draft.address(p), extents[p]}, retained, nullptr};
+    return om::Store::Owner::take(take(orbital::capture_representation(memory, control,
+        orbital::PartOwners::grouped_shared, sources), "capture shared physical Hold"));
+}
+
+void live_tail(Runtime& runtime, sp::geometry geometry, orbital::PartRetention retention) {
+    const auto f = take(om::prepare_format({.family = geometry, .maximum = 4095,
+        .byte_limit = 256 * 4095}), "prepare tail-reclaim schema");
+    const auto page = std::size_t(sysconf(_SC_PAGESIZE));
+    const auto old_payload = 8 * page;
+    auto draft = take(om::Draft::create(runtime.worker, f, *std::pmr::new_delete_resource(),
+        old_payload, om::Placement::grouped), "create deliberately touched speculative span");
+    const auto input = rows(256, 17);
+    fill(draft, input);
+    const auto used = draft.write().extent();
+    check(used < old_payload, "rank exhaustion precedes byte exhaustion");
+    // This sentinel is initialized readable storage of the old interpretation,
+    // not a new logical StreamPack value. It exposes premature physical discard.
+    std::fill(draft.address(0) + used, draft.address(0) + old_payload, sp::byte{0x6d});
+    auto& allocation = draft.allocations[0];
+    const auto original_address = allocation.address;
+    const auto original_capacity = oa::capacity(allocation);
+    const auto original_reservation = oa::reserved_bytes(allocation);
+    const auto wanted = draft.offsets[0] + used;
+    om::Store store(*std::pmr::new_delete_resource());
+    auto old_owner = shared_capture(draft, old_payload);
+    { om::Store::Scope basis(store);
+      check(bool(om::publish(store, basis, object, old_owner)), "publish old oversized footprint"); }
+    std::optional<om::Store::Scope> old_scope;
+    old_scope.emplace(store);
+    const auto bound = take(store.bound(*old_scope, object), "bind old physical interpretation");
+    auto* escaped = take(bound.export_part(0, retention),
+        "export payload with old full footprint");
+    auto prefix_owner = shared_capture(draft, used);
+    check(bool(om::publish(store, *old_scope, object, prefix_owner)), "publish useful-prefix interpretation");
+    prefix_owner = {};
+    old_owner = {};
+    check(bool(oa::relinquish_tail(allocation, wanted)), "relinquish unused writer tail");
+    check(allocation.size == wanted, "writer access contracts before backing maintenance");
+    auto narrowed = draft.write().windows();
+    narrowed.payload = narrowed.payload.first(used);
+    draft.source = take(sp::view::bind(f->layout, narrowed), "rebind contracted native windows");
+    draft.extents[0] = used;
+    const auto settle = [&](std::size_t bound, bool reduced) {
+        const auto deadline = Clock::now() + std::chrono::seconds(10);
+        for (;;) {
+            const auto progress = oa::trim_cold(*runtime.worker.memory, 0);
+            check(progress.kind() != orbital::Progress::Kind::failed, "tail maintenance failed");
+            if (progress.kind() == orbital::Progress::Kind::done) break;
+            check(Clock::now() < deadline, "tail maintenance did not settle");
+            loom::poll(runtime.worker, {256, 0});
+            std::this_thread::yield();
+        }
+        const auto capacity = oa::capacity(allocation);
+        if (!reduced) check(capacity >= bound, "old reader still protects its full footprint");
+        else {
+            const auto rounded = (bound + page - 1) / page * page;
+            check(capacity >= rounded && capacity <= 2 * rounded && capacity < original_capacity,
+                "old tail returns while prefix reader remains, within endpoint-bin bound");
+        }
+    };
+    check(allocation.address == original_address && oa::reserved_bytes(allocation) == original_reservation,
+        "logical relinquishment preserves address and VA");
+    expect(om::read(old_scope->bind(object)), input);
+    expect(om::read(store.borrow().bind(object)), input);
+    auto escaped_tail = [&] {
+        const auto* payload = orbital::view(escaped).address();
+        check(std::all_of(payload + used, payload + old_payload,
+            [](auto v) { return v == sp::byte{0x6d}; }), "escaped old tail remains readable and intact");
+    };
+    settle((draft.offsets[0] + old_payload + page - 1) / page * page, false);
+    escaped_tail();
+    old_scope.reset(); store.drain();
+    settle((draft.offsets[0] + old_payload + page - 1) / page * page, false);
+    escaped_tail();
+    orbital::release(escaped); escaped = nullptr;
+    const auto before_return = runtime.arena->charged_bytes.load();
+    settle(wanted, true);
+    check(runtime.arena->charged_bytes.load() < before_return, "confirmed tail return refunds backing charge");
+    expect(om::read(store.borrow().bind(object)), input);
+    check(allocation.address == original_address, "reclaim preserves useful native addresses");
+    store = {};
+    const auto wanted_old = draft.offsets[0] + old_payload;
+    check(bool(oa::grow(allocation, {.bytes = wanted_old, .alignment = 64})), "regrow within retained VA");
+    std::fill(allocation.address + wanted, allocation.address + wanted_old, sp::byte{0x42});
+    check(allocation.address == original_address && oa::reserved_bytes(allocation) == original_reservation,
+        "regrowth reuses the same retained address reservation");
+    expect(draft.write().as_const(), input);
+}
+
 lc::Outcome expected_chain(std::span<const Row> rows, lc::Request request) {
     lc::Outcome out{request.identity * 0x9e3779b97f4a7c15, request.rank, 0, 1, lc::Code::ok};
     for (unsigned step = 0; step < request.steps; ++step) {
@@ -483,5 +584,8 @@ int main() {
     transfer_and_repair(runtime);
     growth(runtime);
     loom_publication(runtime);
-    std::puts("StreamPack Orbital check: publication, escaping Parts, effects, remap, growth and Loom passed");
+    for (auto geometry : {sp::geometry::direct, sp::geometry::width})
+        for (auto retention : {orbital::PartRetention::shared_control, orbital::PartRetention::selected_copy})
+            live_tail(runtime, geometry, retention);
+    std::puts("StreamPack Orbital check: publication, escaping Parts, effects, remap, growth, live tail and Loom passed");
 }
