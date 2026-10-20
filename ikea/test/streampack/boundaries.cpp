@@ -13,20 +13,16 @@
 namespace sp = ikea::streampack;
 using sp::byte;
 struct guarded {
-    byte* allocation;
+    byte *allocation;
     std::size_t page, size;
     explicit guarded(unsigned n) : page(sysconf(_SC_PAGESIZE)), size(n) {
         assert(n <= page);
-        allocation = static_cast<byte*>(
+        allocation = static_cast<byte *>(
             mmap(nullptr, 2 * page, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0));
         assert(allocation != MAP_FAILED && !mprotect(allocation + page, page, PROT_NONE));
     }
-    ~guarded() {
-        munmap(allocation, 2 * page);
-    }
-    std::span<byte> bytes() {
-        return {allocation + page - size, size};
-    }
+    ~guarded() { munmap(allocation, 2 * page); }
+    std::span<byte> bytes() { return {allocation + page - size, size}; }
 };
 void tails(sp::geometry family) {
     auto l = *sp::layout::prepare(
@@ -109,7 +105,7 @@ void limits(unsigned maximum, unsigned limit, sp::geometry family) {
 }
 void zero_and_extent() {
     auto l =
-        *sp::layout::prepare({sp::geometry::width, sp::placement::grouped, 0, 0, {}, true, true});
+        *sp::layout::prepare({sp::geometry::sizes, sp::placement::grouped, 0, 0, {}, true, true});
     std::array<byte, 2> control{};
     auto v = *sp::view::bind(l, {{}, {}, {}, control});
     std::array<ikea::owner_write, 1> records;
@@ -121,7 +117,7 @@ void zero_and_extent() {
     assert(v.size() == 1 && v.extent() == 0 && sp::value(v, 0)->empty() && v.validate());
     assert(!sp::retire(v, 0, effects));
 
-    auto width = *sp::layout::prepare({sp::geometry::width,
+    auto width = *sp::layout::prepare({sp::geometry::sizes,
                                        sp::placement::grouped,
                                        255,
                                        sp::slot_capacity * 255,
@@ -152,7 +148,7 @@ void zero_and_extent() {
 }
 void transfer_effect_alias() {
     const auto l = *sp::layout::prepare(
-        {sp::geometry::direct, sp::placement::grouped, 255, 32640, {}, false, false});
+        {sp::geometry::absolute_ends, sp::placement::grouped, 255, 32640, {}, false, false});
     alignas(64) std::array<byte, 1024> body{}, dbody{};
     alignas(64) std::array<byte, 4096> directory{}, lengths{}, ddirectory{}, dlengths{};
     std::array<byte, 2> control{}, dcontrol{};
@@ -162,7 +158,7 @@ void transfer_effect_alias() {
     assert(sp::initialize(src, no_effects));
     const std::array value{byte{8}};
     assert(sp::append(src, value, 1, no_effects));
-    auto* record = std::construct_at(reinterpret_cast<ikea::owner_write*>(body.data() + 512));
+    auto *record = std::construct_at(reinterpret_cast<ikea::owner_write *>(body.data() + 512));
     ikea::source_write_journal effects{{record, 1}};
     const auto old_source = body, old_destination = dbody;
     const auto old_dir = ddirectory, old_len = dlengths;
@@ -188,15 +184,18 @@ void wire_fixture(sp::geometry family) {
                                       byte{0},
                                       byte{0},
                                       byte{0}};
-    assert(format.encode() == encoded && sp::layout::decode(encoded));
+    assert(sp::layout::decode(encoded)->encode() == encoded);
+    auto modern = encoded;
+    modern[0] = byte(0xc0 | unsigned(family));
+    assert(format.encode() == modern && sp::layout::decode(modern)->encode() == modern);
 
     std::array<byte, 9> body{byte{'a'}, byte{'b'}, byte{0},   byte{'c'}, byte{0},
                              byte{'d'}, byte{'e'}, byte{'f'}, byte{0}};
-    std::vector<byte> directory(family == sp::geometry::width ? 48 : 288);
+    std::vector<byte> directory(family == sp::geometry::sizes ? 48 : 288);
     alignas(64) std::array<byte, 64> lengths{};
     std::array<byte, 6> control{byte{17}, byte{0}, byte{9}};
     directory[0] = byte{4}; // Rank two is retired; its reservation remains.
-    if (family == sp::geometry::width) {
+    if (family == sp::geometry::sizes) {
         directory[33] = byte{5}; // Checkpoint for group one, after sixteen ranks.
         lengths[0] = byte{3};
         lengths[2] = byte{2};
@@ -213,8 +212,8 @@ void wire_fixture(sp::geometry family) {
         lengths[16] = byte{3};
     }
     auto v = *sp::view::bind(
-        format, {body, directory, std::span(lengths).first(family == sp::geometry::width ? 64 : 32),
-                 std::span(control).first(family == sp::geometry::width ? 6 : 2)});
+        format, {body, directory, std::span(lengths).first(family == sp::geometry::sizes ? 64 : 32),
+                 std::span(control).first(family == sp::geometry::sizes ? 6 : 2)});
     assert(v.validate() && v.size() == 17 && v.extent() == 9);
     assert(sp::value(v, 0)->size() == 2 && sp::value(v, 1)->empty());
     assert(!sp::value(v, 2) && sp::value(v, 16)->size() == 3);
@@ -244,7 +243,7 @@ void wire_fixture(sp::geometry family) {
     directory[33] = byte{2}; // Wrong group checkpoint / descending endpoint.
     assert(!v.validate());
     std::copy(golden_directory.begin(), golden_directory.end(), directory.begin());
-    lengths[family == sp::geometry::width ? 16 : 0] = byte{4};
+    lengths[family == sp::geometry::sizes ? 16 : 0] = byte{4};
     assert(!v.validate());
     lengths = golden_lengths;
     control[0] = byte{1};
@@ -269,8 +268,8 @@ void schema_encoding() {
             byte((flags & 16) ? 42 : 0), byte{0}};
         auto result = sp::layout::decode(golden);
         assert(result && result->encode() == golden);
-        const auto& d = result->schema();
-        assert(d.family == ((flags & 1) ? sp::geometry::width : sp::geometry::direct));
+        const auto &d = result->schema();
+        assert(d.family == ((flags & 1) ? sp::geometry::sizes : sp::geometry::absolute_ends));
         assert(d.lengths == ((flags & 2) ? sp::placement::separated : sp::placement::grouped));
         assert(d.full == bool(flags & 4) && d.immortal == bool(flags & 8));
         assert(d.maximum == 255 && d.byte_limit == 4660);
@@ -287,6 +286,8 @@ void schema_encoding() {
     for (unsigned header = 0; header < 256; ++header) {
         if (header >= 0x40 && header < 0x60)
             continue;
+        if ((header >> 6) == 3 && (header & 3) != 3)
+            continue; // New descriptors have a separate tag and carrier law.
         auto bad = maximal;
         bad[0] = byte(header);
         assert(!sp::layout::decode(bad));
@@ -306,7 +307,7 @@ void schema_encoding() {
     assert(!sp::layout::decode(bad));
     bad = {byte{0x51}, byte{1}, byte{0}, byte{1}, byte{0}, byte{0}, byte{2}, byte{0}};
     assert(!sp::layout::decode(bad)); // Fixed reservation exceeds maximum.
-    assert(!sp::layout::prepare({.family = sp::geometry(2)}));
+    assert(!sp::layout::prepare({.family = sp::geometry(3)}));
     assert(!sp::layout::prepare({.lengths = sp::placement(2)}));
 }
 
@@ -332,15 +333,15 @@ void maximal_block(sp::geometry family) {
 
 int main() {
     schema_encoding();
-    wire_fixture(sp::geometry::width);
-    wire_fixture(sp::geometry::direct);
+    wire_fixture(sp::geometry::sizes);
+    wire_fixture(sp::geometry::absolute_ends);
     // Omitted byte limit follows the reservation maximum at the fixed capacity.
     // Designated schema construction must not accidentally inherit a 16 MiB cap.
     const auto automatic = sp::layout::prepare({.maximum = 255});
     assert(automatic && automatic->schema().byte_limit == sp::slot_capacity * 255);
     const auto empty = sp::layout::prepare({.maximum = 0});
     assert(empty && !empty->schema().byte_limit && !empty->lengths_bytes());
-    for (auto family : {sp::geometry::direct, sp::geometry::width}) {
+    for (auto family : {sp::geometry::absolute_ends, sp::geometry::sizes}) {
         maximal_block(family);
         tails(family);
         for (auto bound : {255u, 256u, 4095u, 65535u, 65536u})

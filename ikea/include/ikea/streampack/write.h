@@ -4,23 +4,23 @@
 
 namespace ikea::streampack {
 namespace detail {
-inline bool accepts(const layout& l, unsigned length, unsigned reservation) {
+inline bool accepts(const layout &l, unsigned length, unsigned reservation) {
     return length <= reservation && boundlist::sidecar::detail::accepts(l, reservation) &&
            (l.has_used() || length == reservation);
 }
-inline unsigned append_effects(const layout& l, unsigned n) {
-    const bool r = !l.fixed() && l.schema().family == geometry::width;
+inline unsigned append_effects(const layout &l, unsigned n) {
+    const bool r = !l.fixed() && l.schema().family != geometry::absolute_ends;
     const unsigned fields =
         n % 16 ? unsigned(r) + l.has_used()
                : unsigned(r || l.has_used()) +
                      (r && l.has_used() && l.schema().lengths == placement::separated);
-    return (!l.fixed() && (l.schema().family == geometry::direct || !(n % 16))) + fields +
+    return (!l.fixed() && (l.schema().family == geometry::absolute_ends || !(n % 16))) + fields +
            l.has_tombstones() + 1;
 }
 using boundlist::sidecar::detail::room;
 /// Payload aliases are supported while the binding stays live. Metadata and
 /// effect-output aliases would let issued stores destroy remaining input.
-template <class Effects> bool input_alias(const view& dst, bytes input, const Effects& effects) {
+template <class Effects> bool input_alias(const view &dst, bytes input, const Effects &effects) {
     const auto planes = dst.windows().planes();
     for (unsigned i = 1; i < planes.size(); ++i)
         if (overlaps(input.data(), input.size(), planes[i].data(), planes[i].size()))
@@ -37,16 +37,16 @@ template <class Effects> bool input_alias(const view& dst, bytes input, const Ef
 /// have been admitted; effect storage and source/view/format controls are disjoint
 /// from outputs. The owner establishes exclusive authority before entry.
 template <class Effects>
-[[nodiscard]] std::expected<void, error> initialize(const view& dst, Effects& effects) {
+[[nodiscard]] std::expected<void, error> initialize(const view &dst, Effects &effects) {
     if (!detail::room(effects, 1 + (dst.format().directory_bytes() != 0)))
         return std::unexpected(error::effects);
     author::initialize_unchecked(dst, effects);
     return {};
 }
 template <class Effects>
-[[nodiscard]] std::expected<void, error> append(const view& dst, bytes input, unsigned reservation,
-                                                Effects& effects) {
-    const auto& l = dst.format();
+[[nodiscard]] std::expected<void, error> append(const view &dst, bytes input, unsigned reservation,
+                                                Effects &effects) {
+    const auto &l = dst.format();
     if (input.size() > l.schema().maximum || !detail::accepts(l, input.size(), reservation))
         return std::unexpected(error::value);
     const auto n = dst.size(), begin = dst.extent();
@@ -64,8 +64,8 @@ template <class Effects>
     return {};
 }
 template <class Effects>
-[[nodiscard]] std::expected<void, error> replace(const view& dst, unsigned rank, bytes input,
-                                                 Effects& effects) {
+[[nodiscard]] std::expected<void, error> replace(const view &dst, unsigned rank, bytes input,
+                                                 Effects &effects) {
     if (rank >= dst.size())
         return std::unexpected(error::rank);
     if (!dst.live_unchecked(rank))
@@ -84,7 +84,7 @@ template <class Effects>
     });
 }
 template <class Effects>
-[[nodiscard]] std::expected<void, error> retire(const view& dst, unsigned rank, Effects& effects) {
+[[nodiscard]] std::expected<void, error> retire(const view &dst, unsigned rank, Effects &effects) {
     if (rank >= dst.size())
         return std::unexpected(error::rank);
     if (!dst.format().has_tombstones())
@@ -98,7 +98,7 @@ template <class Effects>
 /// Optional shrinking discards live slack. Fixed nonzero geometry can only pack
 /// when that would leave every reservation unchanged.
 template <class Effects>
-[[nodiscard]] std::expected<void, error> soft_pack(const view& dst, bool shrink, Effects& effects) {
+[[nodiscard]] std::expected<void, error> soft_pack(const view &dst, bool shrink, Effects &effects) {
     return author::dispatch(dst, [&](auto a) -> std::expected<void, error> {
         if (a.format().fixed()) {
             for (unsigned r = 0; r < dst.size(); ++r)
@@ -114,9 +114,9 @@ template <class Effects>
     });
 }
 // Journal entries borrow the destination identity beyond this expression.
-template <class Effects> void initialize(const view&&, Effects&) = delete;
-template <class Effects> void append(const view&&, bytes, unsigned, Effects&) = delete;
-template <class Effects> void replace(const view&&, unsigned, bytes, Effects&) = delete;
-template <class Effects> void retire(const view&&, unsigned, Effects&) = delete;
-template <class Effects> void soft_pack(const view&&, bool, Effects&) = delete;
+template <class Effects> void initialize(const view &&, Effects &) = delete;
+template <class Effects> void append(const view &&, bytes, unsigned, Effects &) = delete;
+template <class Effects> void replace(const view &&, unsigned, bytes, Effects &) = delete;
+template <class Effects> void retire(const view &&, unsigned, Effects &) = delete;
+template <class Effects> void soft_pack(const view &&, bool, Effects &) = delete;
 } // namespace ikea::streampack

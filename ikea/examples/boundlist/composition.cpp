@@ -8,12 +8,8 @@ namespace bl = ikea::boundlist;
 template <class Decoder> struct packed_bounds {
     Decoder decoder;
     unsigned count;
-    unsigned size() const {
-        return count;
-    }
-    auto at(unsigned rank) const {
-        return decoder.get_unchecked(rank);
-    }
+    unsigned size() const { return count; }
+    auto at(unsigned rank) const { return decoder.get_unchecked(rank); }
 };
 int main() {
     // Compare an already-bound packed reader directly, without decoding a
@@ -40,11 +36,11 @@ int main() {
     alignas(64) std::array<std::uint8_t, 32> widths;
     widths.fill(7);
     const std::array<std::uint64_t, 2> checkpoints{1ull << 40, (1ull << 40) + 16 * 7};
-    const bl::width_source<std::uint8_t, std::uint64_t> bounds{widths.data(), checkpoints.data(),
+    const bl::delta_source<std::uint8_t, std::uint64_t> bounds{widths.data(), checkpoints.data(),
                                                                32, 16, checkpoints[0] + 32 * 7};
     const auto pending = bl::author::prepare_lower_bound(bounds, checkpoints[0] + 130);
     const auto window = pending.local_window();
-    assert(window.data() == reinterpret_cast<const std::byte*>(widths.data() + 16) &&
+    assert(window.data() == reinterpret_cast<const std::byte *>(widths.data() + 16) &&
            window.size() == 16);
     // An owner may hint this exact window and yield to Loom here. It retains
     // coherent backing and any borrowed bindings; hints do not grant reads.

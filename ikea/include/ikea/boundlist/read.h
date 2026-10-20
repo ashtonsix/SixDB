@@ -3,7 +3,7 @@
 
 namespace ikea::boundlist::sidecar {
 template <class Byte>
-[[nodiscard]] std::expected<location, error> locate(const basic_view<Byte>& source, unsigned rank) {
+[[nodiscard]] std::expected<location, error> locate(const basic_view<Byte> &source, unsigned rank) {
     if (rank >= source.size())
         return std::unexpected(error::rank);
     if (!source.live_unchecked(rank))
@@ -11,8 +11,8 @@ template <class Byte>
     return author::dispatch(source, [&](auto a) { return a.locate(rank); });
 }
 template <class Byte>
-[[nodiscard]] std::optional<byte_owner> reverse(const basic_view<Byte>& source,
-                                                std::uint32_t point) {
+[[nodiscard]] std::optional<position_owner> reverse(const basic_view<Byte> &source,
+                                                    std::uint32_t point) {
     if (point >= source.extent())
         return {};
     return author::dispatch(source, [&](auto a) { return a.reverse(point); });
@@ -33,12 +33,12 @@ template <class Access>
     auto limit = std::min(n, stop + 1);
     if (only_live) {
         first = a.next_eligible(first, limit);
-        while (first < limit && !a.reserved(first))
+        while (first < limit && !a.slot_size(first))
             first = a.next_eligible(first + 1, limit);
         if (first >= limit)
             return {n, n};
         auto last = a.previous_eligible(limit);
-        while (last != n && !a.reserved(last))
+        while (last != n && !a.slot_size(last))
             last = a.previous_eligible(last);
         if (last == n || last < first)
             return {n, n};
@@ -48,14 +48,14 @@ template <class Access>
 }
 } // namespace author
 template <class Byte>
-rank_window overlap(const basic_view<Byte>& source, std::uint32_t low, std::uint32_t high,
+rank_window overlap(const basic_view<Byte> &source, std::uint32_t low, std::uint32_t high,
                     bool only_live = false) {
     return author::dispatch(source,
                             [&](auto a) { return author::overlap(a, low, high, only_live); });
 }
 template <class Byte, class Sink>
-[[nodiscard]] std::expected<void, error> range(const basic_view<Byte>& source, unsigned first,
-                                               unsigned count, Sink&& sink) {
+[[nodiscard]] std::expected<void, error> range(const basic_view<Byte> &source, unsigned first,
+                                               unsigned count, Sink &&sink) {
     if (first > source.size() || count > source.size() - first)
         return std::unexpected(error::rank);
     author::dispatch(source, [&](auto a) { a.range(first, count, sink); });

@@ -4,7 +4,7 @@
 #include <limits>
 
 namespace ikea::streampack::detail {
-std::expected<void, error> admit_storage(const layout& l, storage<const byte> s) {
+std::expected<void, error> admit_storage(const layout &l, storage<const byte> s) {
     if (auto ok = boundlist::sidecar::detail::admit_metadata(l.directory_bytes(), l.control_bytes(),
                                                              l.lengths_alignment(), &l, sizeof(l),
                                                              {s.directory, s.lengths, s.control});
@@ -25,14 +25,17 @@ std::expected<void, error> admit_storage(const layout& l, storage<const byte> s)
 
 namespace ikea::streampack {
 template <class Byte> std::expected<void, error> basic_view<Byte>::validate() const {
-    const auto& s = windows();
+    const auto &s = windows();
     auto ok = boundlist::sidecar::detail::validate_geometry(
-        *this, [&](auto a, unsigned rank, unsigned reservation, bool assigned) {
+        *this, [&](auto, unsigned rank, unsigned reservation, bool assigned) {
             if (!format().has_used())
                 return true;
-            using W = typename decltype(a)::width_type;
-            const auto u = boundlist::detail::load<W>(s.lengths.data() +
-                                                      detail::used_position<W>(format(), rank));
+            const unsigned u =
+                format().used_bytes() == 1
+                    ? boundlist::detail::load<std::uint8_t>(
+                          s.lengths.data() + detail::used_position<std::uint8_t>(format(), rank))
+                    : boundlist::detail::load<std::uint16_t>(
+                          s.lengths.data() + detail::used_position<std::uint16_t>(format(), rank));
             return assigned ? u <= reservation : u == 0;
         });
     if (!ok)

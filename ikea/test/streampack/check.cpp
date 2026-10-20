@@ -33,15 +33,13 @@ struct slot {
 };
 struct recording {
     struct entry {
-        const void* source;
+        const void *source;
         ikea::byte_write write;
     };
     std::vector<entry> entries;
     unsigned limit = 8192;
-    unsigned remaining() const {
-        return limit - entries.size();
-    }
-    void before(const sp::view& v, ikea::byte_write w) {
+    unsigned remaining() const { return limit - entries.size(); }
+    void before(const sp::view &v, ikea::byte_write w) {
         assert(entries.size() < limit && w.size);
         const auto p = v.windows().planes()[w.plane];
         assert(w.offset <= p.size() && w.size <= p.size() - w.offset);
@@ -50,16 +48,16 @@ struct recording {
 };
 struct snapshot {
     std::array<std::vector<byte>, 4> planes;
-    explicit snapshot(const sp::view& v) {
+    explicit snapshot(const sp::view &v) {
         const auto p = v.windows().planes();
         for (unsigned i = 0; i < 4; ++i)
             planes[i] = {p[i].begin(), p[i].end()};
     }
-    void coverage(const sp::view& v, const recording& log, unsigned first) const {
+    void coverage(const sp::view &v, const recording &log, unsigned first) const {
         const auto p = v.windows().planes();
         auto replay = planes;
         for (unsigned i = first; i < log.entries.size(); ++i) {
-            const auto& e = log.entries[i];
+            const auto &e = log.entries[i];
             assert(e.source == &v);
             const auto w = e.write;
             std::copy_n(p[w.plane].data() + w.offset, w.size, replay[w.plane].data() + w.offset);
@@ -67,18 +65,18 @@ struct snapshot {
         for (unsigned i = 0; i < 4; ++i)
             assert(std::equal(p[i].begin(), p[i].end(), replay[i].begin(), replay[i].end()));
     }
-    void unchanged(const sp::view& v) const {
+    void unchanged(const sp::view &v) const {
         const auto p = v.windows().planes();
         for (unsigned i = 0; i < 4; ++i)
             assert(std::equal(p[i].begin(), p[i].end(), planes[i].begin(), planes[i].end()));
     }
 };
-void verify(const sp::view& v, const std::vector<slot>& model) {
+void verify(const sp::view &v, const std::vector<slot> &model) {
     assert(v.validate());
     assert(v.size() == model.size());
     unsigned offset = 0;
     for (unsigned r = 0; r < model.size(); ++r) {
-        const auto& s = model[r];
+        const auto &s = model[r];
         const auto value = sp::value(v, r);
         if (s.dead)
             assert(!value && value.error() == sp::error::retired);
@@ -107,7 +105,7 @@ void verify(const sp::view& v, const std::vector<slot>& model) {
             for (unsigned r = 0; r < g * 16; ++r)
                 expected += model[r].reserved;
             for (unsigned i = 0; i < std::min(16u, v.size() - g * 16); ++i) {
-                const auto& s = model[g * 16 + i];
+                const auto &s = model[g * 16 + i];
                 assert(starts[i] == expected && lengths[i] == s.value.size());
                 assert(bool(group.live & (1u << i)) == !s.dead);
                 expected += s.reserved;
@@ -123,13 +121,13 @@ void verify(const sp::view& v, const std::vector<slot>& model) {
                                             model[r].value.end()));
         ++visited;
     }));
-    assert(visited == std::count_if(model.begin(), model.end(), [](auto& s) { return !s.dead; }));
+    assert(visited == std::count_if(model.begin(), model.end(), [](auto &s) { return !s.dead; }));
     std::vector<std::uint16_t> ranks;
     for (unsigned i = 0; i < model.size(); ++i)
         ranks.push_back((i * 19) % model.size());
     std::array<std::uint32_t, sp::slot_capacity> scratch;
     std::vector<unsigned> sparse, dense;
-    auto consumer = [&](std::vector<unsigned>& out) {
+    auto consumer = [&](std::vector<unsigned> &out) {
         return [&](unsigned r, sp::bytes b) {
             assert(std::equal(b.begin(), b.end(), model[r].value.begin(), model[r].value.end()));
             out.push_back(r);
@@ -143,7 +141,7 @@ void history(sp::description d) {
     fixture f(d);
     const auto encoded = f.layout.encode();
     const auto decoded = sp::layout::decode(encoded);
-    assert(decoded && decoded->schema() == d);
+    assert(decoded && decoded->schema() == f.layout.schema());
     recording log;
     snapshot old(f.view);
     assert(sp::initialize(f.view, log));
@@ -190,7 +188,7 @@ void history(sp::description d) {
         const auto n = log.entries.size();
         assert(sp::soft_pack(f.view, true, log));
         before.coverage(f.view, log, n);
-        for (auto& s : model) {
+        for (auto &s : model) {
             s.reserved = s.dead ? 0 : s.value.size();
             if (s.dead)
                 s.value.clear();
@@ -225,7 +223,8 @@ void history(sp::description d) {
     assert(none.entries.empty());
 }
 int main() {
-    for (auto family : {sp::geometry::direct, sp::geometry::width})
+    for (auto family :
+         {sp::geometry::absolute_ends, sp::geometry::sizes, sp::geometry::relative_ends})
         for (auto placement : {sp::placement::grouped, sp::placement::separated})
             for (auto maximum : {0u, 1u, 255u, 256u, 4095u, 65535u}) {
                 sp::description d{family,
@@ -240,7 +239,8 @@ int main() {
                 d.immortal = true;
                 history(d);
             }
-    for (auto family : {sp::geometry::direct, sp::geometry::width}) {
+    for (auto family :
+         {sp::geometry::absolute_ends, sp::geometry::sizes, sp::geometry::relative_ends}) {
         history({family, sp::placement::grouped, 255, sp::slot_capacity * 255, {}, true, false});
         history({family, sp::placement::grouped, 255, sp::slot_capacity * 255, {}, false, true});
         history({family, sp::placement::grouped, 255, sp::slot_capacity * 255, 0, false, false});

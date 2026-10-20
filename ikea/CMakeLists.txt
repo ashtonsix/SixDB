@@ -12,6 +12,10 @@ add_executable(ikea_boundlist_check EXCLUDE_FROM_ALL test/boundlist/search.cpp t
 sixdb_target(ikea_boundlist_check)
 target_compile_options(ikea_boundlist_check PRIVATE -fno-vectorize -fno-slp-vectorize)
 target_link_libraries(ikea_boundlist_check PRIVATE ikea::boundlist)
+add_executable(ikea_boundlist_edits_check EXCLUDE_FROM_ALL test/boundlist/edits.cpp)
+sixdb_target(ikea_boundlist_edits_check)
+target_compile_options(ikea_boundlist_edits_check PRIVATE -fno-vectorize -fno-slp-vectorize)
+target_link_libraries(ikea_boundlist_edits_check PRIVATE ikea::boundlist)
 
 add_library(ikea_streampack STATIC src/streampack/description.cpp src/streampack/view.cpp)
 add_library(ikea::streampack ALIAS ikea_streampack)
@@ -27,6 +31,10 @@ add_executable(ikea_streampack_boundaries_check EXCLUDE_FROM_ALL test/streampack
 sixdb_target(ikea_streampack_boundaries_check)
 target_compile_options(ikea_streampack_boundaries_check PRIVATE -fno-vectorize -fno-slp-vectorize)
 target_link_libraries(ikea_streampack_boundaries_check PRIVATE ikea::streampack)
+add_executable(ikea_streampack_encodings_check EXCLUDE_FROM_ALL test/streampack/encodings.cpp)
+sixdb_target(ikea_streampack_encodings_check)
+target_compile_options(ikea_streampack_encodings_check PRIVATE -fno-vectorize -fno-slp-vectorize)
+target_link_libraries(ikea_streampack_encodings_check PRIVATE ikea::streampack)
 foreach(example ordinary composition)
   add_executable(ikea_example_streampack_${example} EXCLUDE_FROM_ALL examples/streampack/${example}.cpp)
   sixdb_target(ikea_example_streampack_${example})
@@ -189,8 +197,8 @@ set(ikea_example_targets
   ikea_example_tuplepack_words ikea_example_tuplepack_groups
   ikea_example_bec256_ordinary ikea_example_bec256_native ikea_example_bec256_integration)
 set(ikea_check_targets
-  ikea_boundlist_check
-  ikea_streampack_check ikea_streampack_boundaries_check
+  ikea_boundlist_check ikea_boundlist_edits_check
+  ikea_streampack_check ikea_streampack_boundaries_check ikea_streampack_encodings_check
   ikea_seriespack_check ikea_seriespack_descriptor_check ikea_seriespack_ownership_check
   ikea_seriespack_admission_check ikea_filters_check
   ikea_tuplepack_wire_check ikea_tuplepack_transfer_check

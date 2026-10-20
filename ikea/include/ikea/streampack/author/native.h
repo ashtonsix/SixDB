@@ -12,12 +12,8 @@ struct packet {
     using vector = native::vector;
     static constexpr unsigned parts = 2 * chunks;
     std::array<vector, parts> v;
-    vector offsets(unsigned chunk) const {
-        return v[chunk];
-    }
-    vector lengths(unsigned chunk) const {
-        return v[chunks + chunk];
-    }
+    vector offsets(unsigned chunk) const { return v[chunk]; }
+    vector lengths(unsigned chunk) const { return v[chunks + chunk]; }
 };
 struct group {
     packet values;
@@ -28,8 +24,8 @@ using boundlist::sidecar::native::each_chunk;
 /// whole groups, never the payload or a terminal checkpoint. Native results feed
 /// a fused consumer directly; no mandatory decoded stack array.
 template <class Access> [[gnu::always_inline]] inline group read16(Access a, unsigned group_index) {
-    using W = typename Access::width_type;
-    const auto& l = a.format();
+    using W = typename Access::used_type;
+    const auto &l = a.format();
     const auto first = group_index * 16;
     group out;
     out.live = boundlist::sidecar::native::decode16(

@@ -11,7 +11,7 @@
 #include <unistd.h>
 
 namespace bl = ikea::boundlist;
-template <class Source, class Q> void check(const Source& s, const Q& q) {
+template <class Source, class Q> void check(const Source &s, const Q &q) {
     unsigned lo = s.size(), hi = s.size();
     for (unsigned r = 0; r < s.size(); ++r) {
         const bool live = [&] {
@@ -89,7 +89,7 @@ template <class W, class Point> void widths() {
             position += width;
             ends.push_back(position);
         }
-        const bl::width_source<W, Point> s{w.data(), checkpoints.data(), n, 32, position};
+        const bl::delta_source<W, Point> s{w.data(), checkpoints.data(), n, 32, position};
         for (unsigned r = 0; r < n; r += 7) {
             check(s, ends[r]);
             check(s, ends[r] - 1);
@@ -101,7 +101,7 @@ template <class W, class Point> void widths() {
         check(s, std::numeric_limits<std::uint64_t>::max());
     }
     // Count arithmetic is not restricted by the size of this tiny fixture.
-    bl::width_source<W, Point> high{nullptr, nullptr, bl::maximum_count, 16, 0};
+    bl::delta_source<W, Point> high{nullptr, nullptr, bl::maximum_count, 16, 0};
     assert(high.groups() == bl::maximum_count / 16 + 1);
 }
 void batches() {
@@ -124,7 +124,7 @@ void batches() {
             check(source, q);
     }
     static_assert(
-        sizeof(decltype(bl::width_source<std::uint8_t, std::uint64_t>{}.prepare<bl::edge::after>(
+        sizeof(decltype(bl::delta_source<std::uint8_t, std::uint64_t>{}.prepare<bl::edge::after>(
             0))) == 16);
 }
 void ranges() {
@@ -157,7 +157,7 @@ void ranges() {
         check(s, std::string_view(q));
     struct wide {
         std::uint64_t high, low;
-        auto operator<=>(const wide&) const = default;
+        auto operator<=>(const wide &) const = default;
     };
     const std::array<wide, 4> keys{{{0, UINT64_MAX}, {1, 0}, {1, 1}, {UINT64_MAX, UINT64_MAX}}};
     const bl::direct_source w{keys.data(), 4u};
@@ -167,49 +167,51 @@ void ranges() {
     struct projected {
         std::uint64_t value;
         bool top;
-        auto operator<=>(const projected& b) const {
+        auto operator<=>(const projected &b) const {
             if (top != b.top)
                 return top <=> b.top;
             return value <=> b.value;
         }
     };
     struct source {
-        unsigned size() const {
-            return 2;
-        }
-        projected at(unsigned r) const {
-            return {r ? 0u : UINT64_MAX, bool(r)};
-        }
+        unsigned size() const { return 2; }
+        projected at(unsigned r) const { return {r ? 0u : UINT64_MAX, bool(r)}; }
     };
     assert(bl::lower_bound(source{}, projected{UINT64_MAX, false}) == 0);
     assert(bl::lower_bound(source{}, projected{0, true}) == 1);
 }
 template <class T> void tails() {
     const auto page = std::size_t(sysconf(_SC_PAGESIZE));
-    auto* raw = static_cast<std::byte*>(
+    auto *raw = static_cast<std::byte *>(
         mmap(nullptr, page * 2, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0));
     assert(raw != MAP_FAILED && !mprotect(raw + page, page, PROT_NONE));
     for (unsigned n = 0; n < 100; ++n) {
-        auto* p = reinterpret_cast<T*>(raw + page - n * sizeof(T));
+        auto *p = reinterpret_cast<T *>(raw + page - n * sizeof(T));
         for (unsigned r = 0; r < n; ++r) {
             const T v = T(r / 2);
             std::memcpy(p + r, &v, sizeof(v));
         }
         const bl::direct_source s{p, n};
-        for (unsigned q = 0; q < 55; ++q)
+        const bl::author::scan_source<T> scan{p, n};
+        for (unsigned q = 0; q < 55; ++q) {
             check(s, q);
+            check(scan, q);
+        }
         // The unsigned adapter also admits unaligned native payloads.
         if (n) {
             std::memmove(raw + page - n * sizeof(T) - 1, p, n * sizeof(T));
-            const bl::direct_source u{reinterpret_cast<const T*>(raw + page - n * sizeof(T) - 1),
+            const bl::direct_source u{reinterpret_cast<const T *>(raw + page - n * sizeof(T) - 1),
                                       n};
-            for (unsigned q = 0; q < 55; ++q)
+            const bl::author::scan_source<T> unaligned{u.data, n};
+            for (unsigned q = 0; q < 55; ++q) {
                 check(u, q);
+                check(unaligned, q);
+            }
         }
     }
     for (unsigned n = 1; n < 90; ++n) {
         const auto bytes = (n + 7) / 8;
-        auto* p = raw + page - bytes;
+        auto *p = raw + page - bytes;
         std::memset(p, 0, bytes);
         p[(n - 1) / 8] |= std::byte(1u << ((n - 1) % 8));
         bl::population pop{{p, bytes}};
@@ -269,9 +271,9 @@ template <class T> void prepared_sources() {
             assert(detached.finish() == lower[2]);
             if (pending.has_local_read()) {
                 const auto window = pending.local_window();
-                assert(window.data() >= reinterpret_cast<const std::byte*>(values.data()));
+                assert(window.data() >= reinterpret_cast<const std::byte *>(values.data()));
                 assert(window.data() + window.size() <=
-                       reinterpret_cast<const std::byte*>(values.data() + n));
+                       reinterpret_cast<const std::byte *>(values.data() + n));
             }
         }
     constexpr unsigned n = 4103;
@@ -300,17 +302,17 @@ template <class T> void prepared_sources() {
     // Exact tails and unaligned native values use the same prepared binding.
     const auto page = unsigned(sysconf(_SC_PAGESIZE));
     const auto bytes = ((n * sizeof(T) + page - 1) / page + 1) * page;
-    auto* area = static_cast<std::byte*>(
+    auto *area = static_cast<std::byte *>(
         mmap(nullptr, bytes + page, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0));
     assert(area != MAP_FAILED && !mprotect(area + bytes, page, PROT_NONE));
     for (unsigned shift : {0u, 1u}) {
-        auto* data = area + bytes - n * sizeof(T) - shift;
+        auto *data = area + bytes - n * sizeof(T) - shift;
         for (unsigned r = 0; r < n; ++r) {
             const T v = T(r * 3);
             std::memcpy(data + r * sizeof(T), &v, sizeof(v));
         }
         const auto source =
-            bl::author::bind_search(bl::direct_source{reinterpret_cast<const T*>(data), n});
+            bl::author::bind_search(bl::direct_source{reinterpret_cast<const T *>(data), n});
         for (unsigned r : {0u, 1u, 2047u, 4095u, 4102u})
             assert(bl::lower_bound(source, T(r * 3)) == r);
         assert(bl::lower_bound(source, std::uint64_t(n) * 3) == n);
@@ -318,9 +320,21 @@ template <class T> void prepared_sources() {
     assert(!munmap(area, bytes + page));
 }
 void sidecar_checks();
+void byte_scans() {
+    for (unsigned n :
+         {0u, 1u, 7u, 8u, 15u, 16u, 17u, 31u, 32u, 33u, 63u, 64u, 65u, 128u, 256u, 4096u, 65535u}) {
+        std::vector<std::uint8_t> values(n);
+        for (unsigned i = 0; i < n; ++i)
+            values[i] = std::uint64_t(i) * 255 / std::max(1u, n - 1);
+        const bl::author::scan_source<std::uint8_t> source(values.data(), n);
+        for (int q : {-1, 0, 1, 127, 128, 254, 255, 256})
+            check(source, q);
+    }
+}
 int main() {
     sidecar_checks();
     native<std::uint8_t>();
+    byte_scans();
     native<std::uint16_t>();
     native<std::uint32_t>();
     native<std::uint64_t>();
@@ -333,6 +347,7 @@ int main() {
     prepared_sources<std::uint64_t>();
     batches();
     ranges();
+    tails<std::uint8_t>();
     tails<std::uint16_t>();
     tails<std::uint32_t>();
     tails<std::uint64_t>();

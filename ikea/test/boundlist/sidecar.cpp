@@ -28,21 +28,17 @@ template <class T>
 concept carries_used = requires(T value) { value.length; };
 static_assert(!carries_used<sc::location>);
 struct audit {
-    const sc::view* source;
+    const sc::view *source;
     std::array<std::vector<std::byte>, 3> replay;
     unsigned writes = 0, limit = 4096;
-    unsigned remaining() const {
-        return limit - writes;
-    }
-    explicit audit(const sc::view& s) : source(&s) {
-        reset();
-    }
+    unsigned remaining() const { return limit - writes; }
+    explicit audit(const sc::view &s) : source(&s) { reset(); }
     void reset() {
         const auto p = source->windows().planes();
         for (unsigned i = 0; i < 3; ++i)
             replay[i] = {p[i].begin(), p[i].end()};
     }
-    void before(const sc::view& s, ikea::byte_write w) {
+    void before(const sc::view &s, ikea::byte_write w) {
         assert(&s == source && writes < limit && w.size);
         const auto p = s.windows().planes();
         assert(w.plane < 3 && w.offset <= p[w.plane].size() &&
@@ -65,16 +61,16 @@ struct audit {
         reset();
     }
 };
-void verify(fixture& f, const std::vector<model>& values) {
+void verify(fixture &f, const std::vector<model> &values) {
     assert(f.view.validate() && f.view.size() == values.size());
     unsigned offset = 0;
     for (unsigned r = 0; r < values.size(); ++r) {
-        const auto& v = values[r];
+        const auto &v = values[r];
         const auto loc = sc::locate(f.view, r);
         if (v.dead)
             assert(!loc && loc.error() == sc::error::retired);
         else
-            assert(loc && loc->offset == offset && loc->reservation == v.reserved);
+            assert(loc && loc->offset == offset && loc->size == v.reserved);
         for (unsigned x = 0; x < v.reserved; ++x) {
             const auto owner = sc::reverse(f.view, offset + x);
             assert(owner && owner->rank == r && owner->tombstone == v.dead);
@@ -90,7 +86,7 @@ void verify(fixture& f, const std::vector<model>& values) {
             sc::native::each_chunk([&](auto i) {
                 sc::native::store(starts.data() + i * sc::native::lanes, packet.values.offsets(i));
                 sc::native::store(reservations.data() + i * sc::native::lanes,
-                                  packet.values.reservations(i));
+                                  packet.values.sizes(i));
             });
             unsigned position = 0;
             for (unsigned r = 0; r < std::min<unsigned>(values.size(), g * 16); ++r)
@@ -103,7 +99,7 @@ void verify(fixture& f, const std::vector<model>& values) {
         }
     });
 #endif
-    sc::author::dispatch(f.view, [&](const auto& access) {
+    sc::author::dispatch(f.view, [&](const auto &access) {
         // A carried traversal includes zero and retired reservations. Exercise
         // a partial window crossing both sides of a G16 boundary as well.
         for (unsigned first : {0u, std::min(15u, unsigned(values.size()))}) {
@@ -159,7 +155,7 @@ void history(sc::description d) {
     log.verify();
     std::vector<model> m;
     for (unsigned r = 0; r < 65; ++r) {
-        const auto reserve = d.fixed_reservation.value_or(std::uint16_t(r % 7 ? r % 31 : 0));
+        const auto reserve = d.fixed_size.value_or(std::uint16_t(r % 7 ? r % 31 : 0));
         assert(sc::append(f.view, reserve, log));
         log.verify();
         m.push_back({reserve});
@@ -179,11 +175,12 @@ void history(sc::description d) {
         // Width checkpoints have already changed underneath the traversal.
         unsigned original = 0, destination = 0;
         sc::author::dispatch(f.view, [&](auto a) {
+            sc::author::encoder encoder(a, 0, 0);
             a.slots(0, m.size(), 0, [&](unsigned rank, unsigned from, unsigned reservation) {
                 assert(from == original && reservation == m[rank].reserved);
                 original += m[rank].reserved;
                 const auto chosen = m[rank].dead ? 0u : m[rank].reserved / 2;
-                sc::author::write_slot_unchecked(a, rank, destination, chosen, log);
+                encoder.append(chosen, log);
                 destination += chosen;
                 m[rank].reserved = chosen;
             });
@@ -195,7 +192,7 @@ void history(sc::description d) {
     // Refused commands preserve metadata and journal output.
     const auto count = log.writes;
     log.limit = count;
-    assert(!sc::append(f.view, d.fixed_reservation.value_or(0), log));
+    assert(!sc::append(f.view, d.fixed_size.value_or(0), log));
     assert(log.writes == count);
     log.verify();
     log.limit = 4096;
@@ -216,17 +213,20 @@ void history(sc::description d) {
     verify(dst, ordered);
 }
 void sidecar_checks() {
-    for (auto g : {sc::geometry::direct, sc::geometry::width})
+    for (auto g : {sc::geometry::absolute_ends, sc::geometry::sizes, sc::geometry::relative_ends})
         for (bool immortal : {false, true})
             for (auto fixed : {std::optional<std::uint16_t>{}, std::optional<std::uint16_t>{0},
                                std::optional<std::uint16_t>{8}})
                 history({g, 255, 65280, fixed, immortal});
     // Frozen schema bytes and a hand-authored Direct interpretation.
-    fixture f({sc::geometry::direct, 255, 65280, {}, false});
+    fixture f({sc::geometry::absolute_ends, 255, 65280, {}, false});
     const std::array<std::byte, 8> wire{std::byte{0x60}, std::byte{0xff}, std::byte{0},
                                         std::byte{0},    std::byte{0xff}, std::byte{0},
                                         std::byte{0},    std::byte{0}};
-    assert(f.format.encode() == wire && sc::layout::decode(wire)->encode() == wire);
+    assert(sc::layout::decode(wire)->encode() == wire);
+    auto modern = wire;
+    modern[0] = std::byte{0x80};
+    assert(f.format.encode() == modern && sc::layout::decode(modern)->encode() == modern);
     const auto at = f.format.geometry_offset();
     f.directory[at] = std::byte{3};
     f.directory[at + 2] = std::byte{3};
@@ -240,7 +240,7 @@ void sidecar_checks() {
     assert(!sc::layout::decode(invalid));
     invalid[0] = std::byte{0x62}; // Reserved former U-placement bit.
     assert(!sc::layout::decode(invalid));
-    fixture w({sc::geometry::width, 255, 65280, {}, false});
+    fixture w({sc::geometry::sizes, 255, 65280, {}, false});
     ikea::no_coverage none;
     assert(sc::initialize(w.view, none) && sc::append(w.view, 3, none));
     w.lengths[15] = std::byte{1};

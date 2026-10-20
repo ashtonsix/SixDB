@@ -22,17 +22,23 @@ enum class error {
     effects,
     range
 };
-enum class geometry : std::uint8_t { direct, width };
+enum class geometry : std::uint8_t {
+    absolute_ends,
+    sizes,
+    relative_ends,
+    direct = absolute_ends,
+    width = sizes // Source-compatible names for the same two encodings.
+};
 
 /// Schema facts, independent of execution ISA. The extent limit can seal a source
 /// before its rank capacity. Omitted facts cannot subsequently be mutated.
 struct description {
-    geometry family = geometry::width;
+    geometry family = geometry::sizes;
     std::uint16_t maximum = 65535;
     std::uint32_t extent_limit = slot_capacity * maximum;
-    std::optional<std::uint16_t> fixed_reservation = std::nullopt;
+    std::optional<std::uint16_t> fixed_size = std::nullopt;
     bool immortal = false;
-    bool operator==(const description&) const = default;
+    bool operator==(const description &) const = default;
 };
 
 namespace detail {
@@ -42,8 +48,9 @@ struct geometry_sizes {
     std::uint32_t directory;
     std::uint16_t tombstones;
     std::uint8_t width_bytes, offset_bytes, control_bytes, stride;
-    bool fixed;
-    [[nodiscard]] static std::expected<geometry_sizes, error> prepare(description);
+    bool fixed, legacy;
+    [[nodiscard]] static std::expected<geometry_sizes, error> prepare(description,
+                                                                      bool legacy = false);
 };
 } // namespace detail
 
@@ -53,63 +60,31 @@ class layout {
     description description_;
     detail::geometry_sizes geometry_;
     layout() = default;
+    [[nodiscard]] static std::expected<layout, error> prepare_impl(description, bool legacy);
 
   public:
     [[nodiscard]] static std::expected<layout, error> prepare(description);
-    const description& schema() const noexcept {
-        return description_;
-    }
-    static constexpr unsigned capacity() noexcept {
-        return slot_capacity;
-    }
-    unsigned extent_limit() const noexcept {
-        return description_.extent_limit;
-    }
-    bool fixed() const noexcept {
-        return geometry_.fixed;
-    }
-    unsigned fixed_width() const noexcept {
-        return description_.fixed_reservation.value_or(0);
-    }
-    bool has_tombstones() const noexcept {
-        return geometry_.tombstones != 0;
-    }
-    bool has_extent() const noexcept {
-        return geometry_.control_bytes > 2;
-    }
-    unsigned width_bytes() const noexcept {
-        return geometry_.width_bytes;
-    }
-    unsigned offset_bytes() const noexcept {
-        return geometry_.offset_bytes;
-    }
-    unsigned control_bytes() const noexcept {
-        return geometry_.control_bytes;
-    }
-    unsigned directory_bytes() const noexcept {
-        return geometry_.directory;
-    }
-    unsigned tombstone_bytes() const noexcept {
-        return geometry_.tombstones;
-    }
-    unsigned geometry_offset() const noexcept {
-        return geometry_.tombstones;
-    }
-    unsigned group_stride() const noexcept {
-        return geometry_.stride;
-    }
-    unsigned lengths_alignment() const noexcept {
-        return geometry_.width_bytes;
-    }
+    const description &schema() const noexcept { return description_; }
+    static constexpr unsigned capacity() noexcept { return slot_capacity; }
+    unsigned extent_limit() const noexcept { return description_.extent_limit; }
+    bool fixed() const noexcept { return geometry_.fixed; }
+    unsigned fixed_width() const noexcept { return description_.fixed_size.value_or(0); }
+    bool has_tombstones() const noexcept { return geometry_.tombstones != 0; }
+    bool has_extent() const noexcept { return geometry_.control_bytes > 2; }
+    unsigned width_bytes() const noexcept { return geometry_.width_bytes; }
+    unsigned offset_bytes() const noexcept { return geometry_.offset_bytes; }
+    unsigned control_bytes() const noexcept { return geometry_.control_bytes; }
+    unsigned directory_bytes() const noexcept { return geometry_.directory; }
+    unsigned tombstone_bytes() const noexcept { return geometry_.tombstones; }
+    unsigned geometry_offset() const noexcept { return geometry_.tombstones; }
+    unsigned group_stride() const noexcept { return geometry_.stride; }
+    unsigned lengths_alignment() const noexcept { return geometry_.width_bytes; }
+    unsigned geometry_lengths_offset() const noexcept { return 0; }
     /// Initialized/readable reservation widths include complete G16 groups.
     unsigned lengths_bytes(unsigned assigned) const noexcept;
-    unsigned lengths_bytes() const noexcept {
-        return lengths_bytes(slot_capacity);
-    }
+    unsigned lengths_bytes() const noexcept { return lengths_bytes(slot_capacity); }
     /// Conservative journal slots; admission can accept a smaller exact bound.
-    unsigned append_effect_capacity() const noexcept {
-        return 8;
-    }
+    unsigned append_effect_capacity() const noexcept { return 8; }
     std::array<byte, 8> encode() const noexcept;
     [[nodiscard]] static std::expected<layout, error> decode(bytes);
 };
