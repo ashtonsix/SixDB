@@ -2,7 +2,7 @@
 
 This report preserves the original RMW experiment and its source receipts.
 The [maintained scorecard](ACCUMULATION.md) contains later measurements with the
-corrected payload-mixer harness; use that scorecard for current core results.
+corrected payload-mixer harness; use that scorecard for the corrected core comparison.
 The native-batch column below belongs to this experiment, not that later run.
 
 Maps support existing-only `modify` and upserting `modify_or_insert`, with inlinable

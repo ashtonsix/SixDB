@@ -180,11 +180,26 @@ alignment from the actual stride.
 
 A full primary bucket sends additional keys to one table-wide Swiss store.
 The store has separate control bytes and full-key/value tuples. A control group
-contains 16 one-byte tags; SIMD equality selects candidates for full-key checks.
-An empty control terminates an unsuccessful group search, while a tombstone
-does not. Triangular stepping visits groups in a power-of-two table. Ordinary
+contains 16 one-byte controls on every ISA, including AVX2 and AVX-512. Codes
+`00` and `01` mean empty and tombstone; `02`–`FF` are occupied tags. SIMD equality
+selects candidates, which must be verified against their full keys. A hit ends
+the search immediately. If no candidate matches, any empty control in that
+group ends the search with a miss; tombstones do not terminate it. The rule
+applies to the whole group, rather than stopping at the first empty lane.
+Triangular stepping visits groups in a power-of-two table. Ordinary
 insertion grows the store when live entries plus tombstones would exceed its
 seven-eighths threshold.
+
+![A sixteen-byte control group has two matching tags. The first full-key check rejects a collision, and the second finds the key despite an earlier empty lane. Only after candidates fail can an empty terminate the search.](images/overflow.svg)
+
+Larger vector registers do not make larger logical groups free. A wider group
+can skip several probing steps in a dense table, but it also presents more tags
+that might trigger unnecessary full-key reads. Those reads matter more when
+tuples are cold. The [Zen 5 width comparison](../../../workbench/spikes/hashtable-swiss-probes/RESULTS.md)
+retains 16-byte groups: dense hot-miss gains from 32/64-byte groups did not
+outweigh cold-read losses. Eight-bit tags were promoted; filtered continuation
+and a higher occupancy ceiling were not. This is a measured default, not a
+claim that 16 is best for every CPU or workload.
 
 The primary bucket's overflow byte avoids consulting this store unnecessarily:
 

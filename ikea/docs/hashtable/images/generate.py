@@ -1,13 +1,17 @@
 #!/usr/bin/env python3
-"""Check worked examples and render the four hashtable teaching figures.
+"""Check worked examples and render the hashtable teaching figures.
 
 Build ikea_example_hashtable_accumulation with the pinned Linux toolchain, then:
   orb -m ubuntu python3 ikea/docs/hashtable/images/generate.py --build-dir build/clang/dev
 
 Before drawing SVGs, the visual approach was explored and refined with imagegen,
 using Bec256's structure/singleton figures as style references. Each figure
-teaches one mechanism: address-carried bits, physical layout, stable split rows,
-or caller-scheduled memory dependencies. Temporary readers/previews stay in
+teaches one mechanism: address-carried bits, physical layout, group-wide tag
+checks, stable split rows, or caller-scheduled memory dependencies. The overflow
+layout was also oriented with imagegen before drawing SVG: one 16-byte control
+row, arrows to a rejected full-key candidate and a later hit, then termination
+rules. The generated bitmap is a sketch, not the diagram's source of truth.
+Temporary readers/previews stay in
 ignored build/diagrams/hashtable/. Shared Figure supplies accessible descriptions.
 """
 import argparse
@@ -45,6 +49,21 @@ int main() {
     const auto h = route(key);
     assert(h.bucket==0xa && h.quotient==0x35a);
     std::cout << "route " << key << ' ' << h.bucket << ' ' << h.quotient << '\n';
+    static_assert(ht::detail::control_empty==0 && ht::detail::control_tombstone==1);
+    // Illustrative group: an early empty must not suppress a later candidate.
+    const ht::byte controls[16] = {0x38,0xa6,0x01,0x00,0x27,0x5c,0x9d,0x22,
+                                  0x31,0xa6,0x40,0x61,0x73,0x8b,0x4d,0x00};
+    assert(ht::equal_controls(controls,0xa6)==0x0202);
+    assert(ht::equal_controls(controls,ht::detail::control_empty)==0x8008);
+    for(auto code : controls)
+        assert(ht::detail::occupied_control(code)==(code!=0 && code!=1));
+    using Hash = ht::permutation<16,12>::result;
+    assert((Hash{0,0,0}.fingerprint()==8));
+    assert((Hash{0,0,ht::word{1}<<56}.fingerprint()==9));
+    assert((Hash{0,0,ht::word{0xa6}<<56}.fingerprint()==0xa6));
+    std::cout << "controls";
+    for(auto code : controls) std::cout << ' ' << unsigned(code);
+    std::cout << '\n';
     geometry<9>(); geometry<12>(); geometry<14>(); geometry<30>(); geometry<31>(); geometry<47>();
     using Layout = ht::table<40,10,8,30>;
     static_assert(Layout::B==64 && Layout::N==16 && Layout::T==2);
@@ -113,7 +132,8 @@ int main() {
         raise RuntimeError("Illustrated geometry changed; update figures and rationale together")
     route = list(map(int,next(row[1:] for row in data if row[0]=="route")))
     rows = [list(map(int,row[1:])) for row in data if row[0]=="row"]
-    return route, rows
+    controls = list(map(int,next(row[1:] for row in data if row[0]=="controls")))
+    return route, rows, controls
 
 
 def routing(route):
@@ -187,6 +207,38 @@ def layout():
     f.save(OUT/"layout.svg")
 
 
+def overflow(controls):
+    f = Figure(568, "Check a Swiss group's candidates before empty termination",
+               "An illustrative sixteen-byte control group has matching tags A6 at lanes one "
+               "and nine, empty controls at lanes three and fifteen, and a tombstone at lane two. "
+               "Lane one's full key differs and is rejected; lane nine's full key matches. "
+               "The earlier empty does not suppress the later candidate. Only after all candidate "
+               "keys fail can any empty terminate the group search with a miss.")
+    f.heading(32,42,"Check matching tags before an empty ends the group")
+    f.text(32,80,"Query tag A6 · one 16-byte control group · byte codes are hexadecimal",22,color=MUTED)
+    for lane,code in enumerate(controls):
+        x=32+lane*76
+        color=AMBER if code==0xa6 else EMPTY if code<2 else BLUE
+        f.text(x+37,126,lane,20,anchor="middle",color=MUTED)
+        f.rect(x,144,74,64,color,"white",radius=3)
+        f.text(x+37,184,f"{code:02X}",24,"bold",anchor="middle",mono=True)
+    f.path("M145,208 V256 H282 V292",arrow=True)
+    f.path("M753,208 V256 H916 V292",arrow=True)
+    f.rect(32,300,500,116,EMPTY,"white",radius=3)
+    f.text(282,344,"Lane 1 · same tag, different full key",23,"bold",anchor="middle")
+    f.text(282,382,"Reject; check the next candidate",22,anchor="middle")
+    f.rect(584,300,664,116,GREEN,"white",radius=3)
+    f.text(916,344,"Lane 9 · same tag, matching full key",23,"bold",anchor="middle")
+    f.text(916,382,"Hit; return the stored value for a map",22,anchor="middle")
+    f.text(32,454,"00 = empty",22,color=MUTED)
+    f.text(256,454,"01 = tombstone",22,color=MUTED)
+    f.text(544,454,"02–FF = occupied tag",22,color=MUTED)
+    f.path("M32,474 H1248",color=RULE)
+    f.text(32,512,"The empty at lane 3 does not cancel the candidate at lane 9.",22)
+    f.text(32,548,"No full-key hit: any empty → miss; otherwise probe the next group.",22,color=MUTED)
+    f.save(OUT/"overflow.svg")
+
+
 def growth(rows):
     f = Figure(624, "Same-seed growth preserves row positions in compatible layouts",
                "The displayed parent tile has live rows zero, one, three, five and six. Their "
@@ -258,9 +310,10 @@ if __name__ == "__main__":
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--build-dir",type=Path,default=ROOT/"build/clang/dev")
     args=parser.parse_args()
-    route,rows=checked_examples(args.build_dir.resolve())
+    route,rows,controls=checked_examples(args.build_dir.resolve())
     routing(route)
     layout()
+    overflow(controls)
     growth(rows)
     staged()
-    print("Generated four figures; checked geometry, recovery, empty bytes, split rows and values.")
+    print("Generated five figures; checked geometry, recovery, controls, empty bytes, split rows and values.")

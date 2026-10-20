@@ -117,6 +117,12 @@ descriptor's `needs_growth(850)` is an optional 850-per-mille occupancy test,
 not an automatically enforced growth policy. Seed selection and coordination
 across worker tables also belong to the caller.
 
+Swiss storage separately keeps live entries plus tombstones within 87.5% of its
+slots, growing as necessary for ordinary insertion. That ceiling is independent
+of nominal primary occupancy and the caller's primary-growth threshold. Primary
+holes and nonuniform bucket populations mean one percentage cannot describe
+both stores. Swiss control groups contain 16 bytes on all supported ISAs.
+
 The generic encoding is a portable starting point. For a measured deployment,
 `descriptor<W,V>::measured<b>(seed, cpu, isa)` chooses an encoding and kernel
 at construction. Current profiles cover sets and values of 8 or 64 bytes:

@@ -1,7 +1,10 @@
 # Hashtable evidence and recovery
 
-[Maintained results](../ACCUMULATION.md) owns the current integration and
-maintenance comparison. Start with these files:
+[Broad results](../ACCUMULATION.md) owns the integration and maintenance
+comparison before the October 20 tag promotion. The later
+[overflow evidence](../../../spikes/hashtable-swiss-probes/README.md#evidence-and-recovery)
+owns the tag/width qualification and its recovery recipe. Start with these files
+for the broad panel:
 
 | Evidence | Contents |
 | --- | --- |
@@ -13,7 +16,7 @@ maintenance comparison. Start with these files:
 The core scorecard applies the receipt's RMW-only supplement after the payload
 mixer correction. Original raw rows remain in their job archive. Earlier reports
 below keep their own captured source and harness; do not substitute their numbers
-for the current scorecard. [Metric definitions](../README.md#what-a-number-means)
+for the broad scorecard. [Metric definitions](../README.md#what-a-number-means)
 distinguish throughput, preparation, byte counters and unmeasured latency.
 
 ## Original promotion

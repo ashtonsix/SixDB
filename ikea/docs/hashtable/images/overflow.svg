@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="568" viewBox="0 0 1280 568" role="img" aria-labelledby="title description">
+<title id="title">Check a Swiss group&#x27;s candidates before empty termination</title>
+<desc id="description">An illustrative sixteen-byte control group has matching tags A6 at lanes one and nine, empty controls at lanes three and fifteen, and a tombstone at lane two. Lane one&#x27;s full key differs and is rejected; lane nine&#x27;s full key matches. The earlier empty does not suppress the later candidate. Only after all candidate keys fail can any empty terminate the group search with a miss.</desc>
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L8,4 L0,8" fill="#586579"/></marker></defs>
+<rect width="1280" height="100%" fill="white"/>
+<g font-family="Arial, Helvetica, sans-serif" fill="#233047" font-size="21">
+<text x="32" y="42" font-size="26" font-weight="bold" fill="#233047" text-anchor="start">Check matching tags before an empty ends the group</text>
+<text x="32" y="80" font-size="22" font-weight="normal" fill="#586579" text-anchor="start">Query tag A6 · one 16-byte control group · byte codes are hexadecimal</text>
+<text x="69" y="126" font-size="20" font-weight="normal" fill="#586579" text-anchor="middle">0</text>
+<rect x="32" y="144" width="74" height="64" rx="3" fill="#98c9f3" stroke="white" stroke-width="1.5"/>
+<text x="69" y="184" font-size="24" font-weight="bold" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">38</text>
+<text x="145" y="126" font-size="20" font-weight="normal" fill="#586579" text-anchor="middle">1</text>
+<rect x="108" y="144" width="74" height="64" rx="3" fill="#ffdb79" stroke="white" stroke-width="1.5"/>
+<text x="145" y="184" font-size="24" font-weight="bold" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">A6</text>
+<text x="221" y="126" font-size="20" font-weight="normal" fill="#586579" text-anchor="middle">2</text>
+<rect x="184" y="144" width="74" height="64" rx="3" fill="#f0f3f7" stroke="white" stroke-width="1.5"/>
+<text x="221" y="184" font-size="24" font-weight="bold" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">01</text>
+<text x="297" y="126" font-size="20" font-weight="normal" fill="#586579" text-anchor="middle">3</text>
+<rect x="260" y="144" width="74" height="64" rx="3" fill="#f0f3f7" stroke="white" stroke-width="1.5"/>
+<text x="297" y="184" font-size="24" font-weight="bold" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">00</text>
+<text x="373" y="126" font-size="20" font-weight="normal" fill="#586579" text-anchor="middle">4</text>
+<rect x="336" y="144" width="74" height="64" rx="3" fill="#98c9f3" stroke="white" stroke-width="1.5"/>
+<text x="373" y="184" font-size="24" font-weight="bold" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">27</text>
+<text x="449" y="126" font-size="20" font-weight="normal" fill="#586579" text-anchor="middle">5</text>
+<rect x="412" y="144" width="74" height="64" rx="3" fill="#98c9f3" stroke="white" stroke-width="1.5"/>
+<text x="449" y="184" font-size="24" font-weight="bold" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">5C</text>
+<text x="525" y="126" font-size="20" font-weight="normal" fill="#586579" text-anchor="middle">6</text>
+<rect x="488" y="144" width="74" height="64" rx="3" fill="#98c9f3" stroke="white" stroke-width="1.5"/>
+<text x="525" y="184" font-size="24" font-weight="bold" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">9D</text>
+<text x="601" y="126" font-size="20" font-weight="normal" fill="#586579" text-anchor="middle">7</text>
+<rect x="564" y="144" width="74" height="64" rx="3" fill="#98c9f3" stroke="white" stroke-width="1.5"/>
+<text x="601" y="184" font-size="24" font-weight="bold" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">22</text>
+<text x="677" y="126" font-size="20" font-weight="normal" fill="#586579" text-anchor="middle">8</text>
+<rect x="640" y="144" width="74" height="64" rx="3" fill="#98c9f3" stroke="white" stroke-width="1.5"/>
+<text x="677" y="184" font-size="24" font-weight="bold" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">31</text>
+<text x="753" y="126" font-size="20" font-weight="normal" fill="#586579" text-anchor="middle">9</text>
+<rect x="716" y="144" width="74" height="64" rx="3" fill="#ffdb79" stroke="white" stroke-width="1.5"/>
+<text x="753" y="184" font-size="24" font-weight="bold" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">A6</text>
+<text x="829" y="126" font-size="20" font-weight="normal" fill="#586579" text-anchor="middle">10</text>
+<rect x="792" y="144" width="74" height="64" rx="3" fill="#98c9f3" stroke="white" stroke-width="1.5"/>
+<text x="829" y="184" font-size="24" font-weight="bold" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">40</text>
+<text x="905" y="126" font-size="20" font-weight="normal" fill="#586579" text-anchor="middle">11</text>
+<rect x="868" y="144" width="74" height="64" rx="3" fill="#98c9f3" stroke="white" stroke-width="1.5"/>
+<text x="905" y="184" font-size="24" font-weight="bold" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">61</text>
+<text x="981" y="126" font-size="20" font-weight="normal" fill="#586579" text-anchor="middle">12</text>
+<rect x="944" y="144" width="74" height="64" rx="3" fill="#98c9f3" stroke="white" stroke-width="1.5"/>
+<text x="981" y="184" font-size="24" font-weight="bold" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">73</text>
+<text x="1057" y="126" font-size="20" font-weight="normal" fill="#586579" text-anchor="middle">13</text>
+<rect x="1020" y="144" width="74" height="64" rx="3" fill="#98c9f3" stroke="white" stroke-width="1.5"/>
+<text x="1057" y="184" font-size="24" font-weight="bold" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">8B</text>
+<text x="1133" y="126" font-size="20" font-weight="normal" fill="#586579" text-anchor="middle">14</text>
+<rect x="1096" y="144" width="74" height="64" rx="3" fill="#98c9f3" stroke="white" stroke-width="1.5"/>
+<text x="1133" y="184" font-size="24" font-weight="bold" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">4D</text>
+<text x="1209" y="126" font-size="20" font-weight="normal" fill="#586579" text-anchor="middle">15</text>
+<rect x="1172" y="144" width="74" height="64" rx="3" fill="#f0f3f7" stroke="white" stroke-width="1.5"/>
+<text x="1209" y="184" font-size="24" font-weight="bold" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">00</text>
+<path d="M145,208 V256 H282 V292" fill="none" stroke="#586579" stroke-width="1.8" marker-end="url(#arrow)"/>
+<path d="M753,208 V256 H916 V292" fill="none" stroke="#586579" stroke-width="1.8" marker-end="url(#arrow)"/>
+<rect x="32" y="300" width="500" height="116" rx="3" fill="#f0f3f7" stroke="white" stroke-width="1.5"/>
+<text x="282" y="344" font-size="23" font-weight="bold" fill="#233047" text-anchor="middle">Lane 1 · same tag, different full key</text>
+<text x="282" y="382" font-size="22" font-weight="normal" fill="#233047" text-anchor="middle">Reject; check the next candidate</text>
+<rect x="584" y="300" width="664" height="116" rx="3" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="916" y="344" font-size="23" font-weight="bold" fill="#233047" text-anchor="middle">Lane 9 · same tag, matching full key</text>
+<text x="916" y="382" font-size="22" font-weight="normal" fill="#233047" text-anchor="middle">Hit; return the stored value for a map</text>
+<text x="32" y="454" font-size="22" font-weight="normal" fill="#586579" text-anchor="start">00 = empty</text>
+<text x="256" y="454" font-size="22" font-weight="normal" fill="#586579" text-anchor="start">01 = tombstone</text>
+<text x="544" y="454" font-size="22" font-weight="normal" fill="#586579" text-anchor="start">02–FF = occupied tag</text>
+<path d="M32,474 H1248" fill="none" stroke="#d9e0e9" stroke-width="1.8"/>
+<text x="32" y="512" font-size="22" font-weight="normal" fill="#233047" text-anchor="start">The empty at lane 3 does not cancel the candidate at lane 9.</text>
+<text x="32" y="548" font-size="22" font-weight="normal" fill="#586579" text-anchor="start">No full-key hit: any empty → miss; otherwise probe the next group.</text>
+</g></svg>

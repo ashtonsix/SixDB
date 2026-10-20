@@ -32,6 +32,26 @@ save as much as 20%. That trade does not justify a global width change. Plain
 direct cold reads are less sensitive, but establish no consistent wider win;
 the full grid retains them.
 
+### Why cold throughput can fall
+
+The leading explanation is additional false-tag tuple reads. The implementation
+checks matching tags across the entire logical group before an empty ends a
+miss. At the ordinary map8 population, Swiss occupancy is about 60% for every
+width. With well-distributed independent tags, the expected accidental matches
+in one group scale roughly as `width × occupancy / 256`: about 0.04, 0.08 and
+0.15 for 16/32/64. These are modeled candidate counts, not measured counters;
+the two reserved-code remappings make tag probabilities slightly nonuniform.
+
+An accidental tag match turns into a dependent full-key read from the tuple
+allocation. That is cheap with hot tuples and much more costly with cold ones.
+Wider groups can save control-group visits in dense tables, while forcing checks
+of candidates beyond where a smaller group could have established absence.
+This trade fits the hot/cold pattern. It does not establish how much of the
+observed loss comes from false matches, probe placement or instruction cost:
+the experiment did not collect that causal breakdown. Nor does four times the
+SIMD width imply four times the metadata cache-line traffic; aligned 16-byte
+and 64-byte groups can both fit within a single line.
+
 After churn, the dense-start map8 cold miss costs are 10.44 / 11.93 / 13.67 ns
 for 16/32/64 on AVX-512 and 12.51 / 13.29 / 15.87 ns on AVX2. Much of the dense
 hot-miss advantage disappears after maintenance/growth. Wider groups leave
