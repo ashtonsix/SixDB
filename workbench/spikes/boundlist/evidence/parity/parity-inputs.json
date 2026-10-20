@@ -1,0 +1,111 @@
+{
+  "reads": {
+    "dimensions": [
+      "layout",
+      "maximum",
+      "rows",
+      "used",
+      "tombstones",
+      "fixed",
+      "placement",
+      "implementation",
+      "metric"
+    ],
+    "extras": [
+      "metadata_bytes",
+      "payload_bytes",
+      "payload_capacity_bytes",
+      "binding_bytes"
+    ],
+    "patterns": [
+      "*-parity-read-*.csv"
+    ],
+    "filter": {
+      "implementation": [
+        "current_streampack",
+        "before_streampack",
+        "independent_fused"
+      ]
+    },
+    "jobs": {
+      "zen5": "20261020T023107Z-b1126edd",
+      "granite": "20261020T023112Z-7006107f",
+      "neon": "20261020T023118Z-35723f61"
+    }
+  },
+  "mutation": {
+    "dimensions": [
+      "layout",
+      "maximum",
+      "nodes",
+      "used",
+      "implementation",
+      "metric",
+      "chains"
+    ],
+    "extras": [
+      "metadata_bytes",
+      "payload_capacity_bytes",
+      "binding_bytes",
+      "scratch_bytes"
+    ],
+    "patterns": [
+      "*-parity-mutation-*.csv"
+    ],
+    "jobs": {
+      "zen5": "20261020T023107Z-b1126edd",
+      "granite": "20261020T023112Z-7006107f",
+      "neon": "20261020T023118Z-35723f61"
+    }
+  },
+  "packing": {
+    "dimensions": [
+      "layout",
+      "maximum",
+      "used",
+      "placement",
+      "shrink",
+      "implementation",
+      "blocks"
+    ],
+    "extras": [
+      "metadata_bytes",
+      "payload_bytes",
+      "journal_bytes"
+    ],
+    "patterns": [
+      "*-parity-packing.csv"
+    ],
+    "timing": "ns_per_block",
+    "jobs": {
+      "granite": "20261020T024354Z-fdb0f78e",
+      "neon": "20261020T024400Z-1bfb772f",
+      "zen5": "20261020T024349Z-00e68b1f"
+    }
+  },
+  "packing_initial": {
+    "dimensions": [
+      "layout",
+      "maximum",
+      "used",
+      "placement",
+      "shrink",
+      "implementation",
+      "blocks"
+    ],
+    "extras": [
+      "metadata_bytes",
+      "payload_bytes",
+      "journal_bytes"
+    ],
+    "patterns": [
+      "*-parity-packing.csv"
+    ],
+    "timing": "ns_per_block",
+    "jobs": {
+      "zen5": "20261020T023107Z-b1126edd",
+      "granite": "20261020T023112Z-7006107f",
+      "neon": "20261020T023118Z-35723f61"
+    }
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "script": "workbench/spikes/boundlist/parity-native.sh",
+  "config": {
+    "deadline_seconds": 2400,
+    "idle_seconds": 600
+  },
+  "members": {
+    "zen5": {
+      "config": {
+        "machine": "zen5",
+        "instance_type": "c8a.large",
+        "capacity": "spot-or-on-demand",
+        "env": {
+          "BOUNDLIST_TUNE": "zen5"
+        }
+      }
+    },
+    "granite": {
+      "config": {
+        "machine": "granite-rapids",
+        "capacity": "on-demand",
+        "env": {
+          "BOUNDLIST_TUNE": "granite-rapids"
+        }
+      }
+    },
+    "neon": {
+      "config": {
+        "machine": "neoverse-v2"
+      }
+    }
+  }
+}

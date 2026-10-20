@@ -151,10 +151,10 @@ void run(population& p, unsigned rep) {
             const auto slot = (r / 16) * stride + (r % 16) * sizeof(W);
             unsigned start;
             if constexpr (Access::family == sp::geometry::width)
-                start = sp::detail::load<O>(w.directory.data() + geometry_offset + (r / 16) * sizeof(O)) +
+                start = ikea::boundlist::detail::load<O>(w.directory.data() + geometry_offset + (r / 16) * sizeof(O)) +
                     streampack_next::prefix16_native(reinterpret_cast<const W*>(w.lengths.data() + (r / 16) * stride), r % 16);
-            else start = r ? sp::detail::load<O>(w.directory.data() + geometry_offset + (r - 1) * sizeof(O)) : 0;
-            return sp::bytes(w.payload).subspan(start, sp::detail::load<W>(w.lengths.data() + used_offset + slot));
+            else start = r ? ikea::boundlist::detail::load<O>(w.directory.data() + geometry_offset + (r - 1) * sizeof(O)) : 0;
+            return sp::bytes(w.payload).subspan(start, ikea::boundlist::detail::load<W>(w.lengths.data() + used_offset + slot));
         };
         measurements(p, "spike-body", rep, lookup);
         measurements(p, "spike-checked", rep, [&](unsigned row) {

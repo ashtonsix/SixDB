@@ -1,0 +1,36 @@
+{
+  "files_sha256": {
+    "README.md": "b3d64669f1b483bbde04a6943001aa004d3cce8b1a1284a6979d2cca8253f133",
+    "calls.csv": "2771d9af3b02261fad9eca634ac2ca01a226680645f3df41936467ec1256c563",
+    "consolidate.py": "02348fb9f7acc6ad4011eca5bd9cc592ca2e1c4369b9726d93cd784ce3a8446c",
+    "context.json": "8c5675876d00321dc5b75da6ada0f4fe1eaa97e395856c1684188baa60700c07",
+    "control-audit.json": "41a534fbc8ffa89f19ed4b9e8388be83bfed8aa827a8123069e9c85638f56201",
+    "control-audit.py": "e2ebf155c20d1cbfa1d1e384b826fba234f85e775674cb4ee7fd777109449356",
+    "granite-avx2-reader-sequences.json": "d0fe5c5823d58c284dc0748d55ad967399ed81205d515bdf4f08e22d6db47bed",
+    "granite-avx512-reader-sequences.json": "597fcc95f9d555ee9a67cf40c1cac61276b97b7f6f22e22e0696da25d16353d4",
+    "header-cleanup.json": "fbfb19d6ecffcbf82003232b90f6d59fb5a543b6396b1503568e1fe9a8d20092",
+    "mutation-inputs.json": "d069f3894a5efb6d670b8d3758d6774c8d69e9d474e454342a6e71f80d6650bd",
+    "mutation.csv": "3f59d1bb58756e43ecb44caa6de5e404f6ea3ac1c1d3fa506f3147559fb60c41",
+    "neon-reader-sequences.json": "fc7650f67a7887864adba5b510a6771f9a9bd6430925d86d5cb20d2c521a42a3",
+    "packing-inputs.json": "ba62cbc33b063bde2528b7d83f7bb5577a1103132ba78cf71d77f3ec5f8e74a2",
+    "packing.csv": "234c6aa39ee557d0d96ea15f466f7252b80f2a86c546d2e9924dafb4466c4845",
+    "packing_initial-inputs.json": "942553bfb5806c5bed3198d09f96924daabf8a2962eb18a0f260ecc76d7142f8",
+    "packing_initial.csv": "da076249d6ef63e171741ebaab4bb4c1489635d5689a26cc917f69f736d1b7a2",
+    "parity-assembly.py": "2ae5f09dc5926695342cc5fb80a330d3206832e4093e7d035d162a37324c98cc",
+    "parity-inputs.json": "e9c3cc677d9d59f5ba922ab9c19a6fbf2df166cd74d21fd5b0fe4731553e2bd6",
+    "parity-report.py": "3e3078cf44bd16eed77ca565f5b14cc0d15d268a5ef85eab797a2de1d2c71712",
+    "reads-inputs.json": "7652dd2dbdd31a041e52d9f1c06f0572f9d3be72d0d9ad0b8364f55d2c25f919",
+    "reads.csv": "415fd6f4ae93b50a984f5253ae5898450d38cabb4ebfcdf9d7309b6aca26148c",
+    "scorecard.md": "baef0f2ecadf9132b8802ee30d663e523db4776109e1478d82b7bae0f3238a1f",
+    "zen5-avx2-reader-sequences.json": "c7aa98bbffa8176e3afd3f3f712259dedb607626a358c0ca1312e3de09ba0c01",
+    "zen5-avx512-reader-sequences.json": "e31a4de30a2f04fe36b8d3ca7a7cfbff26c97796a6e75cd8d7fc24393b51c857"
+  },
+  "format": 2,
+  "full_bundle": "artifact.json",
+  "kind": "files",
+  "regenerate": [
+    "python3",
+    "{evidence}/parity-report.py",
+    "{evidence}"
+  ]
+}

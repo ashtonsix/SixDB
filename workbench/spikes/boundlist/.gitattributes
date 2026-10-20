@@ -1,0 +1,4 @@
+# Preserve hashed CSV exports with their original CRLF endings.
+evidence/**/*.csv whitespace=cr-at-eol
+# llvm-mca pads the columns in its resource-pressure tables.
+evidence/native/diagnostics/count-neon-mca.txt whitespace=-blank-at-eol

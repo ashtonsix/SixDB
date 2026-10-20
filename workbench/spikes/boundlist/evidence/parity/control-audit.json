@@ -1,0 +1,48 @@
+{
+  "commit": "4fb8fcea0ae309f2cf19d69ee1f6159e3fa57dae",
+  "normalization": "comments, includes, namespace and byte aliases only",
+  "controls": [
+    {
+      "before": "ikea/include/ikea/streampack/detail/prefix.h",
+      "after": "ikea/include/ikea/boundlist/detail/prefix.h",
+      "before_sha256": "fe2731a3a39e294c09b64fe702f5868021f7f8926cfc3b0119332e6167d4a7b1",
+      "after_sha256": "42fc19ffebc50d5dfb8e0a6d1123ca65c957499f830b525b7107ced52c94ee36",
+      "token_equivalent": true
+    },
+    {
+      "before": "ikea/include/ikea/streampack/detail/simd.h",
+      "after": "ikea/include/ikea/boundlist/detail/simd.h",
+      "before_sha256": "57573d3110b81722615ca259ba1580213637a07d2e52278ac862fc09f5c83252",
+      "after_sha256": "8afd7ef9f7341986a6b475df494fba04e34e99f00a5345297148cc6cb29f14f5",
+      "token_equivalent": true
+    },
+    {
+      "before": "ikea/include/ikea/streampack/author/native.h",
+      "after": "ikea/include/ikea/boundlist/author/native.h",
+      "before_sha256": "88d56da8934e1dcc1f2674b195b97b5761f30db487c6c4b27f9a8fd47c890403",
+      "after_sha256": "c8787689f3d45a53323c6566442c9a2e40cf45103862cf02ed8894219cd5a451",
+      "token_equivalent": true
+    },
+    {
+      "before": "ikea/include/ikea/streampack/author/chain.h",
+      "after": "ikea/include/ikea/boundlist/author/chain.h",
+      "before_sha256": "82bcfa7fa4c48b58875d4ca00838aa908bdcede363112d79b8d22c94bbb679f1",
+      "after_sha256": "18362a7e50b14650c96ddd747af1a6bb3b92871e0dfcdab175682d82902875e1",
+      "token_equivalent": true
+    },
+    {
+      "before": "ikea/include/ikea/streampack/author/read.h",
+      "after": "workbench/spikes/boundlist/legacy-read.h",
+      "before_sha256": "43a77b6277a87b9f6919bd28e6183a07d994cabe1bc5d6234cec3b3ec172f858",
+      "after_sha256": "34b2e35842a9b7d32f57724cdd812c078c0660fb82fd8a02e0a79330a0f46580",
+      "access_body_token_equivalent": true
+    },
+    {
+      "before": "ikea/include/ikea/streampack/author/write.h",
+      "after": "workbench/spikes/boundlist/legacy-write.h",
+      "before_sha256": "e5b3382188f3c9f5d4ea7928b975bc3bffbfb26f79be200ecb5f058de4ea9c82",
+      "after_sha256": "40444213b5eac33dd3000e0eb67387dccf7ebdc5fc1d2fc27949ff7ef42bc936",
+      "mutation_body_token_equivalent": true
+    }
+  ]
+}

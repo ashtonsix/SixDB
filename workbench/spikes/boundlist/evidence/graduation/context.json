@@ -1,0 +1,1888 @@
+{
+  "scope": "Median/min/max ns per request or value, as named by each metric. Dependent and independent consumers remain separate. Storage counts are explicit logical/allocated operand bytes, not cache-residency evidence. Raw repetitions, exact sources, binaries, codegen, hardware and memory receipts remain in each verified worker archive.",
+  "selection": {
+    "mutation": {
+      "dimensions": [
+        "layout",
+        "maximum",
+        "nodes",
+        "used",
+        "implementation",
+        "metric",
+        "chains"
+      ],
+      "extras": [
+        "metadata_bytes",
+        "payload_capacity_bytes",
+        "binding_bytes",
+        "scratch_bytes"
+      ],
+      "patterns": [
+        "*-mutation-*.csv"
+      ],
+      "jobs": {
+        "zen5": "20261020T000651Z-7a34d110",
+        "granite": "20261020T000657Z-c8846113",
+        "neon": "20261020T000703Z-3a834c59"
+      }
+    },
+    "reads": {
+      "dimensions": [
+        "layout",
+        "maximum",
+        "rows",
+        "used",
+        "tombstones",
+        "fixed",
+        "placement",
+        "implementation",
+        "metric"
+      ],
+      "extras": [
+        "metadata_bytes",
+        "payload_bytes",
+        "payload_capacity_bytes",
+        "binding_bytes"
+      ],
+      "patterns": [
+        "*-reads-*.csv"
+      ],
+      "jobs": {
+        "zen5": "20261020T000651Z-7a34d110",
+        "granite": "20261020T000657Z-c8846113",
+        "neon": "20261020T000703Z-3a834c59"
+      }
+    },
+    "cold": {
+      "dimensions": [
+        "nodes",
+        "mixed",
+        "span",
+        "implementation",
+        "execution",
+        "width",
+        "metric"
+      ],
+      "extras": [
+        "end_bytes",
+        "width_bytes",
+        "header_bytes",
+        "child_bytes",
+        "frame_bytes",
+        "scheduler_bytes",
+        "ring_visits",
+        "setup_ns",
+        "close_ns"
+      ],
+      "patterns": [
+        "*-cold-*.csv"
+      ],
+      "jobs": {
+        "zen5": "20261020T000651Z-7a34d110",
+        "granite": "20261020T000657Z-c8846113",
+        "neon": "20261020T000703Z-3a834c59"
+      },
+      "filter": {
+        "implementation": [
+          "current_streampack_max_adapter",
+          "select_window",
+          "fused_count_scan",
+          "fused_shortcircuit_scan",
+          "paid_inline_guide",
+          "width_checkpoint_window",
+          "current_streampack_width_adapter"
+        ]
+      }
+    },
+    "checkpoint_candidates": {
+      "dimensions": [
+        "layout",
+        "maximum",
+        "count",
+        "nodes",
+        "range_span",
+        "implementation",
+        "metric"
+      ],
+      "extras": [
+        "metadata_bytes",
+        "child_bytes",
+        "shared_payload_bytes"
+      ],
+      "patterns": [
+        "*-final-promotion-*.csv"
+      ],
+      "jobs": {
+        "zen5": "20261020T013300Z-8a694881",
+        "granite": "20261020T013306Z-4b127ecb",
+        "neon": "20261020T013312Z-ccbf0b0a"
+      },
+      "filter": {
+        "layout": [
+          "width"
+        ]
+      }
+    },
+    "frames_regular": {
+      "dimensions": [
+        "nodes",
+        "mixed",
+        "span",
+        "implementation",
+        "execution",
+        "width",
+        "metric"
+      ],
+      "extras": [
+        "end_bytes",
+        "width_bytes",
+        "header_bytes",
+        "child_bytes",
+        "frame_bytes",
+        "scheduler_bytes",
+        "ring_visits",
+        "setup_ns",
+        "close_ns"
+      ],
+      "patterns": [
+        "*-final-cold-p*.csv"
+      ],
+      "jobs": {
+        "zen5": "20261020T013300Z-8a694881",
+        "granite": "20261020T013306Z-4b127ecb",
+        "neon": "20261020T013312Z-ccbf0b0a"
+      },
+      "filter": {
+        "implementation": [
+          "width_checkpoint_window",
+          "production_width_phase",
+          "exact_scan_phase",
+          "padded_scan_phase"
+        ]
+      }
+    },
+    "frames_compact": {
+      "dimensions": [
+        "nodes",
+        "mixed",
+        "span",
+        "implementation",
+        "execution",
+        "width",
+        "metric"
+      ],
+      "extras": [
+        "end_bytes",
+        "width_bytes",
+        "header_bytes",
+        "child_bytes",
+        "frame_bytes",
+        "scheduler_bytes",
+        "ring_visits",
+        "setup_ns",
+        "close_ns"
+      ],
+      "patterns": [
+        "*-final-cold_compact-p*.csv"
+      ],
+      "jobs": {
+        "zen5": "20261020T013300Z-8a694881",
+        "granite": "20261020T013306Z-4b127ecb",
+        "neon": "20261020T013312Z-ccbf0b0a"
+      },
+      "filter": {
+        "implementation": [
+          "width_checkpoint_window",
+          "production_width_phase",
+          "exact_scan_phase",
+          "padded_scan_phase"
+        ]
+      }
+    },
+    "ordered128": {
+      "dimensions": [
+        "bits",
+        "count",
+        "nodes",
+        "repeat",
+        "gap",
+        "span",
+        "sparse",
+        "implementation",
+        "metric"
+      ],
+      "extras": [
+        "metadata_bytes",
+        "child_bytes"
+      ],
+      "patterns": [
+        "*-ordered-*.csv"
+      ],
+      "filter": {
+        "bits": [
+          "128"
+        ],
+        "implementation": [
+          "production_boundlist",
+          "independent_fused_binary",
+          "independent_fused_scan",
+          "std_lower_bound",
+          "select_convergence"
+        ]
+      },
+      "jobs": {
+        "zen5": "20261020T002913Z-90747b37",
+        "granite": "20261020T002919Z-6df262a2",
+        "neon": "20261020T002003Z-0a0f7779"
+      }
+    },
+    "model_alias": {
+      "dimensions": [
+        "bits",
+        "count",
+        "distribution",
+        "implementation",
+        "metric",
+        "chains"
+      ],
+      "extras": [
+        "direct_bytes",
+        "width_bytes",
+        "direct_guide_bytes",
+        "child_bytes"
+      ],
+      "patterns": [
+        "*-adaptive-*.csv"
+      ],
+      "filter": {
+        "bits": [
+          "32"
+        ],
+        "count": [
+          "4096"
+        ],
+        "distribution": [
+          "1"
+        ],
+        "implementation": [
+          "production_select_window",
+          "production_batch",
+          "adaptive_bracket",
+          "shotgun_adaptive_bracket"
+        ]
+      },
+      "jobs": {
+        "zen5": "20261020T005209Z-02a7c239",
+        "granite": "20261020T005215Z-e0164d48",
+        "neon": "20261020T005044Z-ba6fb4a2"
+      }
+    },
+    "promotion": {
+      "dimensions": [
+        "layout",
+        "maximum",
+        "count",
+        "nodes",
+        "range_span",
+        "implementation",
+        "metric"
+      ],
+      "extras": [
+        "metadata_bytes",
+        "child_bytes",
+        "shared_payload_bytes"
+      ],
+      "patterns": [
+        "*-adoption-promotion-*.csv"
+      ],
+      "jobs": {
+        "zen5": "20261020T015436Z-c910ad4f",
+        "granite": "20261020T015441Z-eed9cc16",
+        "neon": "20261020T015447Z-9f6d9688"
+      }
+    },
+    "search": {
+      "dimensions": [
+        "bits",
+        "count",
+        "distribution",
+        "implementation",
+        "metric",
+        "chains"
+      ],
+      "extras": [
+        "direct_bytes",
+        "width_bytes",
+        "direct_guide_bytes",
+        "child_bytes"
+      ],
+      "patterns": [
+        "*-adoption-k*.csv"
+      ],
+      "jobs": {
+        "zen5": "20261020T015436Z-c910ad4f",
+        "granite": "20261020T015441Z-eed9cc16",
+        "neon": "20261020T015447Z-9f6d9688"
+      }
+    },
+    "upper": {
+      "dimensions": [
+        "bits",
+        "count",
+        "run",
+        "chains",
+        "implementation"
+      ],
+      "extras": [
+        "endpoint_bytes",
+        "child_bytes",
+        "binding_bytes"
+      ],
+      "patterns": [
+        "*-upper.csv"
+      ],
+      "jobs": {
+        "zen5": "20261020T015436Z-c910ad4f",
+        "granite": "20261020T015441Z-eed9cc16",
+        "neon": "20261020T015447Z-9f6d9688"
+      }
+    },
+    "ordered": {
+      "dimensions": [
+        "bits",
+        "count",
+        "nodes",
+        "repeat",
+        "gap",
+        "span",
+        "sparse",
+        "implementation",
+        "metric"
+      ],
+      "extras": [
+        "metadata_bytes",
+        "child_bytes",
+        "binding_bytes"
+      ],
+      "patterns": [
+        "*-adoption-range-*.csv"
+      ],
+      "jobs": {
+        "zen5": "20261020T015436Z-c910ad4f",
+        "granite": "20261020T015441Z-eed9cc16",
+        "neon": "20261020T015447Z-9f6d9688"
+      },
+      "filter": {
+        "implementation": [
+          "production_boundlist",
+          "production_bound_search",
+          "independent_fused_binary",
+          "independent_fused_scan",
+          "std_lower_bound",
+          "select_convergence"
+        ]
+      }
+    },
+    "cold_adoption": {
+      "dimensions": [
+        "nodes",
+        "mixed",
+        "span",
+        "implementation",
+        "execution",
+        "width",
+        "metric"
+      ],
+      "extras": [
+        "end_bytes",
+        "width_bytes",
+        "header_bytes",
+        "child_bytes",
+        "frame_bytes",
+        "scheduler_bytes",
+        "ring_visits",
+        "setup_ns",
+        "close_ns"
+      ],
+      "patterns": [
+        "*-adoption-cold-*.csv"
+      ],
+      "jobs": {
+        "zen5": "20261020T015436Z-c910ad4f",
+        "granite": "20261020T015441Z-eed9cc16",
+        "neon": "20261020T015447Z-9f6d9688"
+      }
+    }
+  },
+  "jobs": [
+    {
+      "study": "mutation",
+      "host": "zen5",
+      "job": "20261020T000651Z-7a34d110",
+      "source": {
+        "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+        "digest": "3c70440965a2d272609f2d32252b945864cb5d8da709b22604b714631fc3f14d",
+        "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+        "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c",
+        "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+        "sha256": "613251a51cc124bf4bc4056b9a6354ce47bf5d2188d1096d8d15bd4c11ef2d7b"
+      },
+      "source_commit": "4fb8fcea0ae309f2cf19d69ee1f6159e3fa57dae",
+      "script": "workbench/spikes/boundlist/graduation-native.sh",
+      "machine": {
+        "machine": "zen5",
+        "architecture": "x86_64",
+        "instance_type": "c8a.large",
+        "capacity": "spot-or-on-demand",
+        "env": {
+          "BOUNDLIST_TUNE": "zen5",
+          "SIXDB_GROUP_MEMBER": "zen5",
+          "SIXDB_GROUP_URI": "s3://calico-fleet-artifacts/sixdb/worker-groups/20261020T000644Z-9842b41f"
+        }
+      },
+      "raw_artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 22346616,
+        "files": 125,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/97d8fcde66cffe996910bf69ee1f01d3c89f3ffa3c016b84582b154acedf1529.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "97d8fcde66cffe996910bf69ee1f01d3c89f3ffa3c016b84582b154acedf1529",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/97d8fcde66cffe996910bf69ee1f01d3c89f3ffa3c016b84582b154acedf1529.tar.gz"
+      },
+      "host_receipt": "s3://calico-fleet-artifacts/sixdb/workers/20261020T000651Z-7a34d110/host.json"
+    },
+    {
+      "study": "mutation",
+      "host": "granite",
+      "job": "20261020T000657Z-c8846113",
+      "source": {
+        "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+        "digest": "3c70440965a2d272609f2d32252b945864cb5d8da709b22604b714631fc3f14d",
+        "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+        "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c",
+        "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+        "sha256": "613251a51cc124bf4bc4056b9a6354ce47bf5d2188d1096d8d15bd4c11ef2d7b"
+      },
+      "source_commit": "4fb8fcea0ae309f2cf19d69ee1f6159e3fa57dae",
+      "script": "workbench/spikes/boundlist/graduation-native.sh",
+      "machine": {
+        "machine": "granite-rapids",
+        "architecture": "x86_64",
+        "instance_type": "c8i.large",
+        "capacity": "on-demand",
+        "env": {
+          "BOUNDLIST_TUNE": "granite-rapids",
+          "SIXDB_GROUP_MEMBER": "granite",
+          "SIXDB_GROUP_URI": "s3://calico-fleet-artifacts/sixdb/worker-groups/20261020T000644Z-9842b41f"
+        }
+      },
+      "raw_artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 21884690,
+        "files": 125,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/414c203863430837bebc0f73d78e5d327a41ad9b7e54602da5257a2b9ef70d91.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "414c203863430837bebc0f73d78e5d327a41ad9b7e54602da5257a2b9ef70d91",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/414c203863430837bebc0f73d78e5d327a41ad9b7e54602da5257a2b9ef70d91.tar.gz"
+      },
+      "host_receipt": "s3://calico-fleet-artifacts/sixdb/workers/20261020T000657Z-c8846113/host.json"
+    },
+    {
+      "study": "mutation",
+      "host": "neon",
+      "job": "20261020T000703Z-3a834c59",
+      "source": {
+        "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+        "digest": "3c70440965a2d272609f2d32252b945864cb5d8da709b22604b714631fc3f14d",
+        "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+        "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c",
+        "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+        "sha256": "613251a51cc124bf4bc4056b9a6354ce47bf5d2188d1096d8d15bd4c11ef2d7b"
+      },
+      "source_commit": "4fb8fcea0ae309f2cf19d69ee1f6159e3fa57dae",
+      "script": "workbench/spikes/boundlist/graduation-native.sh",
+      "machine": {
+        "machine": "neoverse-v2",
+        "architecture": "arm64",
+        "instance_type": "c8g.medium",
+        "capacity": "spot",
+        "env": {
+          "SIXDB_GROUP_MEMBER": "neon",
+          "SIXDB_GROUP_URI": "s3://calico-fleet-artifacts/sixdb/worker-groups/20261020T000644Z-9842b41f"
+        }
+      },
+      "raw_artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 16298546,
+        "files": 68,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/a036d0f8f0d96e796f473f473a401f1cccfc016d4b96bd837f45fec55d81b419.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "a036d0f8f0d96e796f473f473a401f1cccfc016d4b96bd837f45fec55d81b419",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/a036d0f8f0d96e796f473f473a401f1cccfc016d4b96bd837f45fec55d81b419.tar.gz"
+      },
+      "host_receipt": "s3://calico-fleet-artifacts/sixdb/workers/20261020T000703Z-3a834c59/host.json"
+    },
+    {
+      "study": "reads",
+      "host": "zen5",
+      "job": "20261020T000651Z-7a34d110",
+      "source": {
+        "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+        "digest": "3c70440965a2d272609f2d32252b945864cb5d8da709b22604b714631fc3f14d",
+        "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+        "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c",
+        "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+        "sha256": "613251a51cc124bf4bc4056b9a6354ce47bf5d2188d1096d8d15bd4c11ef2d7b"
+      },
+      "source_commit": "4fb8fcea0ae309f2cf19d69ee1f6159e3fa57dae",
+      "script": "workbench/spikes/boundlist/graduation-native.sh",
+      "machine": {
+        "machine": "zen5",
+        "architecture": "x86_64",
+        "instance_type": "c8a.large",
+        "capacity": "spot-or-on-demand",
+        "env": {
+          "BOUNDLIST_TUNE": "zen5",
+          "SIXDB_GROUP_MEMBER": "zen5",
+          "SIXDB_GROUP_URI": "s3://calico-fleet-artifacts/sixdb/worker-groups/20261020T000644Z-9842b41f"
+        }
+      },
+      "raw_artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 22346616,
+        "files": 125,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/97d8fcde66cffe996910bf69ee1f01d3c89f3ffa3c016b84582b154acedf1529.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "97d8fcde66cffe996910bf69ee1f01d3c89f3ffa3c016b84582b154acedf1529",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/97d8fcde66cffe996910bf69ee1f01d3c89f3ffa3c016b84582b154acedf1529.tar.gz"
+      },
+      "host_receipt": "s3://calico-fleet-artifacts/sixdb/workers/20261020T000651Z-7a34d110/host.json"
+    },
+    {
+      "study": "reads",
+      "host": "granite",
+      "job": "20261020T000657Z-c8846113",
+      "source": {
+        "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+        "digest": "3c70440965a2d272609f2d32252b945864cb5d8da709b22604b714631fc3f14d",
+        "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+        "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c",
+        "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+        "sha256": "613251a51cc124bf4bc4056b9a6354ce47bf5d2188d1096d8d15bd4c11ef2d7b"
+      },
+      "source_commit": "4fb8fcea0ae309f2cf19d69ee1f6159e3fa57dae",
+      "script": "workbench/spikes/boundlist/graduation-native.sh",
+      "machine": {
+        "machine": "granite-rapids",
+        "architecture": "x86_64",
+        "instance_type": "c8i.large",
+        "capacity": "on-demand",
+        "env": {
+          "BOUNDLIST_TUNE": "granite-rapids",
+          "SIXDB_GROUP_MEMBER": "granite",
+          "SIXDB_GROUP_URI": "s3://calico-fleet-artifacts/sixdb/worker-groups/20261020T000644Z-9842b41f"
+        }
+      },
+      "raw_artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 21884690,
+        "files": 125,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/414c203863430837bebc0f73d78e5d327a41ad9b7e54602da5257a2b9ef70d91.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "414c203863430837bebc0f73d78e5d327a41ad9b7e54602da5257a2b9ef70d91",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/414c203863430837bebc0f73d78e5d327a41ad9b7e54602da5257a2b9ef70d91.tar.gz"
+      },
+      "host_receipt": "s3://calico-fleet-artifacts/sixdb/workers/20261020T000657Z-c8846113/host.json"
+    },
+    {
+      "study": "reads",
+      "host": "neon",
+      "job": "20261020T000703Z-3a834c59",
+      "source": {
+        "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+        "digest": "3c70440965a2d272609f2d32252b945864cb5d8da709b22604b714631fc3f14d",
+        "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+        "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c",
+        "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+        "sha256": "613251a51cc124bf4bc4056b9a6354ce47bf5d2188d1096d8d15bd4c11ef2d7b"
+      },
+      "source_commit": "4fb8fcea0ae309f2cf19d69ee1f6159e3fa57dae",
+      "script": "workbench/spikes/boundlist/graduation-native.sh",
+      "machine": {
+        "machine": "neoverse-v2",
+        "architecture": "arm64",
+        "instance_type": "c8g.medium",
+        "capacity": "spot",
+        "env": {
+          "SIXDB_GROUP_MEMBER": "neon",
+          "SIXDB_GROUP_URI": "s3://calico-fleet-artifacts/sixdb/worker-groups/20261020T000644Z-9842b41f"
+        }
+      },
+      "raw_artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 16298546,
+        "files": 68,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/a036d0f8f0d96e796f473f473a401f1cccfc016d4b96bd837f45fec55d81b419.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "a036d0f8f0d96e796f473f473a401f1cccfc016d4b96bd837f45fec55d81b419",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/a036d0f8f0d96e796f473f473a401f1cccfc016d4b96bd837f45fec55d81b419.tar.gz"
+      },
+      "host_receipt": "s3://calico-fleet-artifacts/sixdb/workers/20261020T000703Z-3a834c59/host.json"
+    },
+    {
+      "study": "cold",
+      "host": "zen5",
+      "job": "20261020T000651Z-7a34d110",
+      "source": {
+        "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+        "digest": "3c70440965a2d272609f2d32252b945864cb5d8da709b22604b714631fc3f14d",
+        "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+        "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c",
+        "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+        "sha256": "613251a51cc124bf4bc4056b9a6354ce47bf5d2188d1096d8d15bd4c11ef2d7b"
+      },
+      "source_commit": "4fb8fcea0ae309f2cf19d69ee1f6159e3fa57dae",
+      "script": "workbench/spikes/boundlist/graduation-native.sh",
+      "machine": {
+        "machine": "zen5",
+        "architecture": "x86_64",
+        "instance_type": "c8a.large",
+        "capacity": "spot-or-on-demand",
+        "env": {
+          "BOUNDLIST_TUNE": "zen5",
+          "SIXDB_GROUP_MEMBER": "zen5",
+          "SIXDB_GROUP_URI": "s3://calico-fleet-artifacts/sixdb/worker-groups/20261020T000644Z-9842b41f"
+        }
+      },
+      "raw_artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 22346616,
+        "files": 125,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/97d8fcde66cffe996910bf69ee1f01d3c89f3ffa3c016b84582b154acedf1529.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "97d8fcde66cffe996910bf69ee1f01d3c89f3ffa3c016b84582b154acedf1529",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/97d8fcde66cffe996910bf69ee1f01d3c89f3ffa3c016b84582b154acedf1529.tar.gz"
+      },
+      "host_receipt": "s3://calico-fleet-artifacts/sixdb/workers/20261020T000651Z-7a34d110/host.json"
+    },
+    {
+      "study": "cold",
+      "host": "granite",
+      "job": "20261020T000657Z-c8846113",
+      "source": {
+        "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+        "digest": "3c70440965a2d272609f2d32252b945864cb5d8da709b22604b714631fc3f14d",
+        "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+        "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c",
+        "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+        "sha256": "613251a51cc124bf4bc4056b9a6354ce47bf5d2188d1096d8d15bd4c11ef2d7b"
+      },
+      "source_commit": "4fb8fcea0ae309f2cf19d69ee1f6159e3fa57dae",
+      "script": "workbench/spikes/boundlist/graduation-native.sh",
+      "machine": {
+        "machine": "granite-rapids",
+        "architecture": "x86_64",
+        "instance_type": "c8i.large",
+        "capacity": "on-demand",
+        "env": {
+          "BOUNDLIST_TUNE": "granite-rapids",
+          "SIXDB_GROUP_MEMBER": "granite",
+          "SIXDB_GROUP_URI": "s3://calico-fleet-artifacts/sixdb/worker-groups/20261020T000644Z-9842b41f"
+        }
+      },
+      "raw_artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 21884690,
+        "files": 125,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/414c203863430837bebc0f73d78e5d327a41ad9b7e54602da5257a2b9ef70d91.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "414c203863430837bebc0f73d78e5d327a41ad9b7e54602da5257a2b9ef70d91",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/414c203863430837bebc0f73d78e5d327a41ad9b7e54602da5257a2b9ef70d91.tar.gz"
+      },
+      "host_receipt": "s3://calico-fleet-artifacts/sixdb/workers/20261020T000657Z-c8846113/host.json"
+    },
+    {
+      "study": "cold",
+      "host": "neon",
+      "job": "20261020T000703Z-3a834c59",
+      "source": {
+        "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+        "digest": "3c70440965a2d272609f2d32252b945864cb5d8da709b22604b714631fc3f14d",
+        "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+        "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c",
+        "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+        "sha256": "613251a51cc124bf4bc4056b9a6354ce47bf5d2188d1096d8d15bd4c11ef2d7b"
+      },
+      "source_commit": "4fb8fcea0ae309f2cf19d69ee1f6159e3fa57dae",
+      "script": "workbench/spikes/boundlist/graduation-native.sh",
+      "machine": {
+        "machine": "neoverse-v2",
+        "architecture": "arm64",
+        "instance_type": "c8g.medium",
+        "capacity": "spot",
+        "env": {
+          "SIXDB_GROUP_MEMBER": "neon",
+          "SIXDB_GROUP_URI": "s3://calico-fleet-artifacts/sixdb/worker-groups/20261020T000644Z-9842b41f"
+        }
+      },
+      "raw_artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 16298546,
+        "files": 68,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/a036d0f8f0d96e796f473f473a401f1cccfc016d4b96bd837f45fec55d81b419.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "a036d0f8f0d96e796f473f473a401f1cccfc016d4b96bd837f45fec55d81b419",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/a036d0f8f0d96e796f473f473a401f1cccfc016d4b96bd837f45fec55d81b419.tar.gz"
+      },
+      "host_receipt": "s3://calico-fleet-artifacts/sixdb/workers/20261020T000703Z-3a834c59/host.json"
+    },
+    {
+      "study": "checkpoint_candidates",
+      "host": "zen5",
+      "job": "20261020T013300Z-8a694881",
+      "source": {
+        "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+        "digest": "f355331f42c94639afc941078a7b1586e99d32bb50efa50bd3ecc2c8ed6ba0f7",
+        "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+        "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c",
+        "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+        "sha256": "397f23d1bd2d3d1bc35c9f0a67ac3e1e3b83219de2c0dae04930c2bc41ec733a"
+      },
+      "source_commit": "c8f9081104ef61ee897fbbaf954223ae0a3d7656",
+      "script": "workbench/spikes/boundlist/final-native.sh",
+      "machine": {
+        "machine": "zen5",
+        "architecture": "x86_64",
+        "instance_type": "c8a.large",
+        "capacity": "spot-or-on-demand",
+        "env": {
+          "BOUNDLIST_TUNE": "zen5",
+          "SIXDB_GROUP_MEMBER": "zen5",
+          "SIXDB_GROUP_URI": "s3://calico-fleet-artifacts/sixdb/worker-groups/20261020T013254Z-6b5c57fd"
+        }
+      },
+      "raw_artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 36085891,
+        "files": 441,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/9bfcdc69a263059757217eb2a33f671424ba6f784c09b21c90d31f0ff270a95f.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "9bfcdc69a263059757217eb2a33f671424ba6f784c09b21c90d31f0ff270a95f",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/9bfcdc69a263059757217eb2a33f671424ba6f784c09b21c90d31f0ff270a95f.tar.gz"
+      },
+      "host_receipt": "s3://calico-fleet-artifacts/sixdb/workers/20261020T013300Z-8a694881/host.json"
+    },
+    {
+      "study": "checkpoint_candidates",
+      "host": "granite",
+      "job": "20261020T013306Z-4b127ecb",
+      "source": {
+        "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+        "digest": "f355331f42c94639afc941078a7b1586e99d32bb50efa50bd3ecc2c8ed6ba0f7",
+        "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+        "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c",
+        "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+        "sha256": "397f23d1bd2d3d1bc35c9f0a67ac3e1e3b83219de2c0dae04930c2bc41ec733a"
+      },
+      "source_commit": "c8f9081104ef61ee897fbbaf954223ae0a3d7656",
+      "script": "workbench/spikes/boundlist/final-native.sh",
+      "machine": {
+        "machine": "granite-rapids",
+        "architecture": "x86_64",
+        "instance_type": "c8i.large",
+        "capacity": "on-demand",
+        "env": {
+          "BOUNDLIST_TUNE": "granite-rapids",
+          "SIXDB_GROUP_MEMBER": "granite",
+          "SIXDB_GROUP_URI": "s3://calico-fleet-artifacts/sixdb/worker-groups/20261020T013254Z-6b5c57fd"
+        }
+      },
+      "raw_artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 35566236,
+        "files": 441,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/3e6ba4b74b53b3933a2c8511f395bebb9ed3e9a87c3e63862052d86d68720012.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "3e6ba4b74b53b3933a2c8511f395bebb9ed3e9a87c3e63862052d86d68720012",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/3e6ba4b74b53b3933a2c8511f395bebb9ed3e9a87c3e63862052d86d68720012.tar.gz"
+      },
+      "host_receipt": "s3://calico-fleet-artifacts/sixdb/workers/20261020T013306Z-4b127ecb/host.json"
+    },
+    {
+      "study": "checkpoint_candidates",
+      "host": "neon",
+      "job": "20261020T013312Z-ccbf0b0a",
+      "source": {
+        "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+        "digest": "f355331f42c94639afc941078a7b1586e99d32bb50efa50bd3ecc2c8ed6ba0f7",
+        "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+        "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c",
+        "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+        "sha256": "397f23d1bd2d3d1bc35c9f0a67ac3e1e3b83219de2c0dae04930c2bc41ec733a"
+      },
+      "source_commit": "c8f9081104ef61ee897fbbaf954223ae0a3d7656",
+      "script": "workbench/spikes/boundlist/final-native.sh",
+      "machine": {
+        "machine": "neoverse-v2",
+        "architecture": "arm64",
+        "instance_type": "c8g.medium",
+        "capacity": "spot",
+        "env": {
+          "SIXDB_GROUP_MEMBER": "neon",
+          "SIXDB_GROUP_URI": "s3://calico-fleet-artifacts/sixdb/worker-groups/20261020T013254Z-6b5c57fd"
+        }
+      },
+      "raw_artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 19889526,
+        "files": 226,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/030a03e235e2fe22d545d57d417c887d00d5a284cc7cfd1b3cc34c42f56fa20e.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "030a03e235e2fe22d545d57d417c887d00d5a284cc7cfd1b3cc34c42f56fa20e",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/030a03e235e2fe22d545d57d417c887d00d5a284cc7cfd1b3cc34c42f56fa20e.tar.gz"
+      },
+      "host_receipt": "s3://calico-fleet-artifacts/sixdb/workers/20261020T013312Z-ccbf0b0a/host.json"
+    },
+    {
+      "study": "frames_regular",
+      "host": "zen5",
+      "job": "20261020T013300Z-8a694881",
+      "source": {
+        "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+        "digest": "f355331f42c94639afc941078a7b1586e99d32bb50efa50bd3ecc2c8ed6ba0f7",
+        "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+        "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c",
+        "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+        "sha256": "397f23d1bd2d3d1bc35c9f0a67ac3e1e3b83219de2c0dae04930c2bc41ec733a"
+      },
+      "source_commit": "c8f9081104ef61ee897fbbaf954223ae0a3d7656",
+      "script": "workbench/spikes/boundlist/final-native.sh",
+      "machine": {
+        "machine": "zen5",
+        "architecture": "x86_64",
+        "instance_type": "c8a.large",
+        "capacity": "spot-or-on-demand",
+        "env": {
+          "BOUNDLIST_TUNE": "zen5",
+          "SIXDB_GROUP_MEMBER": "zen5",
+          "SIXDB_GROUP_URI": "s3://calico-fleet-artifacts/sixdb/worker-groups/20261020T013254Z-6b5c57fd"
+        }
+      },
+      "raw_artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 36085891,
+        "files": 441,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/9bfcdc69a263059757217eb2a33f671424ba6f784c09b21c90d31f0ff270a95f.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "9bfcdc69a263059757217eb2a33f671424ba6f784c09b21c90d31f0ff270a95f",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/9bfcdc69a263059757217eb2a33f671424ba6f784c09b21c90d31f0ff270a95f.tar.gz"
+      },
+      "host_receipt": "s3://calico-fleet-artifacts/sixdb/workers/20261020T013300Z-8a694881/host.json"
+    },
+    {
+      "study": "frames_regular",
+      "host": "granite",
+      "job": "20261020T013306Z-4b127ecb",
+      "source": {
+        "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+        "digest": "f355331f42c94639afc941078a7b1586e99d32bb50efa50bd3ecc2c8ed6ba0f7",
+        "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+        "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c",
+        "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+        "sha256": "397f23d1bd2d3d1bc35c9f0a67ac3e1e3b83219de2c0dae04930c2bc41ec733a"
+      },
+      "source_commit": "c8f9081104ef61ee897fbbaf954223ae0a3d7656",
+      "script": "workbench/spikes/boundlist/final-native.sh",
+      "machine": {
+        "machine": "granite-rapids",
+        "architecture": "x86_64",
+        "instance_type": "c8i.large",
+        "capacity": "on-demand",
+        "env": {
+          "BOUNDLIST_TUNE": "granite-rapids",
+          "SIXDB_GROUP_MEMBER": "granite",
+          "SIXDB_GROUP_URI": "s3://calico-fleet-artifacts/sixdb/worker-groups/20261020T013254Z-6b5c57fd"
+        }
+      },
+      "raw_artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 35566236,
+        "files": 441,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/3e6ba4b74b53b3933a2c8511f395bebb9ed3e9a87c3e63862052d86d68720012.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "3e6ba4b74b53b3933a2c8511f395bebb9ed3e9a87c3e63862052d86d68720012",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/3e6ba4b74b53b3933a2c8511f395bebb9ed3e9a87c3e63862052d86d68720012.tar.gz"
+      },
+      "host_receipt": "s3://calico-fleet-artifacts/sixdb/workers/20261020T013306Z-4b127ecb/host.json"
+    },
+    {
+      "study": "frames_regular",
+      "host": "neon",
+      "job": "20261020T013312Z-ccbf0b0a",
+      "source": {
+        "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+        "digest": "f355331f42c94639afc941078a7b1586e99d32bb50efa50bd3ecc2c8ed6ba0f7",
+        "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+        "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c",
+        "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+        "sha256": "397f23d1bd2d3d1bc35c9f0a67ac3e1e3b83219de2c0dae04930c2bc41ec733a"
+      },
+      "source_commit": "c8f9081104ef61ee897fbbaf954223ae0a3d7656",
+      "script": "workbench/spikes/boundlist/final-native.sh",
+      "machine": {
+        "machine": "neoverse-v2",
+        "architecture": "arm64",
+        "instance_type": "c8g.medium",
+        "capacity": "spot",
+        "env": {
+          "SIXDB_GROUP_MEMBER": "neon",
+          "SIXDB_GROUP_URI": "s3://calico-fleet-artifacts/sixdb/worker-groups/20261020T013254Z-6b5c57fd"
+        }
+      },
+      "raw_artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 19889526,
+        "files": 226,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/030a03e235e2fe22d545d57d417c887d00d5a284cc7cfd1b3cc34c42f56fa20e.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "030a03e235e2fe22d545d57d417c887d00d5a284cc7cfd1b3cc34c42f56fa20e",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/030a03e235e2fe22d545d57d417c887d00d5a284cc7cfd1b3cc34c42f56fa20e.tar.gz"
+      },
+      "host_receipt": "s3://calico-fleet-artifacts/sixdb/workers/20261020T013312Z-ccbf0b0a/host.json"
+    },
+    {
+      "study": "frames_compact",
+      "host": "zen5",
+      "job": "20261020T013300Z-8a694881",
+      "source": {
+        "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+        "digest": "f355331f42c94639afc941078a7b1586e99d32bb50efa50bd3ecc2c8ed6ba0f7",
+        "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+        "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c",
+        "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+        "sha256": "397f23d1bd2d3d1bc35c9f0a67ac3e1e3b83219de2c0dae04930c2bc41ec733a"
+      },
+      "source_commit": "c8f9081104ef61ee897fbbaf954223ae0a3d7656",
+      "script": "workbench/spikes/boundlist/final-native.sh",
+      "machine": {
+        "machine": "zen5",
+        "architecture": "x86_64",
+        "instance_type": "c8a.large",
+        "capacity": "spot-or-on-demand",
+        "env": {
+          "BOUNDLIST_TUNE": "zen5",
+          "SIXDB_GROUP_MEMBER": "zen5",
+          "SIXDB_GROUP_URI": "s3://calico-fleet-artifacts/sixdb/worker-groups/20261020T013254Z-6b5c57fd"
+        }
+      },
+      "raw_artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 36085891,
+        "files": 441,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/9bfcdc69a263059757217eb2a33f671424ba6f784c09b21c90d31f0ff270a95f.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "9bfcdc69a263059757217eb2a33f671424ba6f784c09b21c90d31f0ff270a95f",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/9bfcdc69a263059757217eb2a33f671424ba6f784c09b21c90d31f0ff270a95f.tar.gz"
+      },
+      "host_receipt": "s3://calico-fleet-artifacts/sixdb/workers/20261020T013300Z-8a694881/host.json"
+    },
+    {
+      "study": "frames_compact",
+      "host": "granite",
+      "job": "20261020T013306Z-4b127ecb",
+      "source": {
+        "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+        "digest": "f355331f42c94639afc941078a7b1586e99d32bb50efa50bd3ecc2c8ed6ba0f7",
+        "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+        "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c",
+        "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+        "sha256": "397f23d1bd2d3d1bc35c9f0a67ac3e1e3b83219de2c0dae04930c2bc41ec733a"
+      },
+      "source_commit": "c8f9081104ef61ee897fbbaf954223ae0a3d7656",
+      "script": "workbench/spikes/boundlist/final-native.sh",
+      "machine": {
+        "machine": "granite-rapids",
+        "architecture": "x86_64",
+        "instance_type": "c8i.large",
+        "capacity": "on-demand",
+        "env": {
+          "BOUNDLIST_TUNE": "granite-rapids",
+          "SIXDB_GROUP_MEMBER": "granite",
+          "SIXDB_GROUP_URI": "s3://calico-fleet-artifacts/sixdb/worker-groups/20261020T013254Z-6b5c57fd"
+        }
+      },
+      "raw_artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 35566236,
+        "files": 441,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/3e6ba4b74b53b3933a2c8511f395bebb9ed3e9a87c3e63862052d86d68720012.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "3e6ba4b74b53b3933a2c8511f395bebb9ed3e9a87c3e63862052d86d68720012",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/3e6ba4b74b53b3933a2c8511f395bebb9ed3e9a87c3e63862052d86d68720012.tar.gz"
+      },
+      "host_receipt": "s3://calico-fleet-artifacts/sixdb/workers/20261020T013306Z-4b127ecb/host.json"
+    },
+    {
+      "study": "frames_compact",
+      "host": "neon",
+      "job": "20261020T013312Z-ccbf0b0a",
+      "source": {
+        "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+        "digest": "f355331f42c94639afc941078a7b1586e99d32bb50efa50bd3ecc2c8ed6ba0f7",
+        "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+        "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c",
+        "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+        "sha256": "397f23d1bd2d3d1bc35c9f0a67ac3e1e3b83219de2c0dae04930c2bc41ec733a"
+      },
+      "source_commit": "c8f9081104ef61ee897fbbaf954223ae0a3d7656",
+      "script": "workbench/spikes/boundlist/final-native.sh",
+      "machine": {
+        "machine": "neoverse-v2",
+        "architecture": "arm64",
+        "instance_type": "c8g.medium",
+        "capacity": "spot",
+        "env": {
+          "SIXDB_GROUP_MEMBER": "neon",
+          "SIXDB_GROUP_URI": "s3://calico-fleet-artifacts/sixdb/worker-groups/20261020T013254Z-6b5c57fd"
+        }
+      },
+      "raw_artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 19889526,
+        "files": 226,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/030a03e235e2fe22d545d57d417c887d00d5a284cc7cfd1b3cc34c42f56fa20e.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "030a03e235e2fe22d545d57d417c887d00d5a284cc7cfd1b3cc34c42f56fa20e",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/030a03e235e2fe22d545d57d417c887d00d5a284cc7cfd1b3cc34c42f56fa20e.tar.gz"
+      },
+      "host_receipt": "s3://calico-fleet-artifacts/sixdb/workers/20261020T013312Z-ccbf0b0a/host.json"
+    },
+    {
+      "study": "ordered128",
+      "host": "zen5",
+      "job": "20261020T002913Z-90747b37",
+      "source": {
+        "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+        "digest": "57329743d45a1e63d70639b40fb9181cae613db51bd18cce7c89ae89de0acf41",
+        "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+        "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c",
+        "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+        "sha256": "09082aa534171a448eff329f5500d1d26b3d4cfeaaaea852ab324550416f3f83"
+      },
+      "source_commit": "fc721b2b25bb4da5ee1831bd8753ae4913654005",
+      "script": "workbench/spikes/boundlist/internals-native.sh",
+      "machine": {
+        "machine": "zen5",
+        "architecture": "x86_64",
+        "instance_type": "c8a.large",
+        "capacity": "spot-or-on-demand",
+        "env": {
+          "BOUNDLIST_TUNE": "zen5",
+          "SIXDB_GROUP_MEMBER": "zen5",
+          "SIXDB_GROUP_URI": "s3://calico-fleet-artifacts/sixdb/worker-groups/20261020T002907Z-9fd6cd52"
+        }
+      },
+      "raw_artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 27789470,
+        "files": 506,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/c61d2e2844e11ff99d1ab0e7ebe5a4312688547f6cfd029bcbd4aa4b34d4073a.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "c61d2e2844e11ff99d1ab0e7ebe5a4312688547f6cfd029bcbd4aa4b34d4073a",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/c61d2e2844e11ff99d1ab0e7ebe5a4312688547f6cfd029bcbd4aa4b34d4073a.tar.gz"
+      },
+      "host_receipt": "s3://calico-fleet-artifacts/sixdb/workers/20261020T002913Z-90747b37/host.json"
+    },
+    {
+      "study": "ordered128",
+      "host": "granite",
+      "job": "20261020T002919Z-6df262a2",
+      "source": {
+        "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+        "digest": "57329743d45a1e63d70639b40fb9181cae613db51bd18cce7c89ae89de0acf41",
+        "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+        "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c",
+        "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+        "sha256": "09082aa534171a448eff329f5500d1d26b3d4cfeaaaea852ab324550416f3f83"
+      },
+      "source_commit": "fc721b2b25bb4da5ee1831bd8753ae4913654005",
+      "script": "workbench/spikes/boundlist/internals-native.sh",
+      "machine": {
+        "machine": "granite-rapids",
+        "architecture": "x86_64",
+        "instance_type": "c8i.large",
+        "capacity": "on-demand",
+        "env": {
+          "BOUNDLIST_TUNE": "granite-rapids",
+          "SIXDB_GROUP_MEMBER": "granite",
+          "SIXDB_GROUP_URI": "s3://calico-fleet-artifacts/sixdb/worker-groups/20261020T002907Z-9fd6cd52"
+        }
+      },
+      "raw_artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 27374521,
+        "files": 506,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/e62b7e68c0551fcd90b8eaa81617f74ca7b4803cbb53d078f0ba9007bb690500.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "e62b7e68c0551fcd90b8eaa81617f74ca7b4803cbb53d078f0ba9007bb690500",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/e62b7e68c0551fcd90b8eaa81617f74ca7b4803cbb53d078f0ba9007bb690500.tar.gz"
+      },
+      "host_receipt": "s3://calico-fleet-artifacts/sixdb/workers/20261020T002919Z-6df262a2/host.json"
+    },
+    {
+      "study": "ordered128",
+      "host": "neon",
+      "job": "20261020T002003Z-0a0f7779",
+      "source": {
+        "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+        "digest": "50005467669f1d3379cd2a43b31a03b976b285a387d7fabf984df0d6af3279e5",
+        "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+        "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c",
+        "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+        "sha256": "58e8ecf82e39c4dd904ae539549d090c487697c43ac68f7a9623fa9178c3ac76"
+      },
+      "source_commit": "fc721b2b25bb4da5ee1831bd8753ae4913654005",
+      "script": "workbench/spikes/boundlist/ordered-native.sh",
+      "machine": {
+        "machine": "neoverse-v2",
+        "architecture": "arm64",
+        "instance_type": "c8g.medium",
+        "capacity": "spot",
+        "env": {
+          "SIXDB_GROUP_MEMBER": "neon",
+          "SIXDB_GROUP_URI": "s3://calico-fleet-artifacts/sixdb/worker-groups/20261020T001957Z-3c11e7f5"
+        }
+      },
+      "raw_artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 15328216,
+        "files": 145,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/99f10a06661325dc68eed9bc6493de2e3c9469f0a35e0e5a70cad28722925ed0.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "99f10a06661325dc68eed9bc6493de2e3c9469f0a35e0e5a70cad28722925ed0",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/99f10a06661325dc68eed9bc6493de2e3c9469f0a35e0e5a70cad28722925ed0.tar.gz"
+      },
+      "host_receipt": "s3://calico-fleet-artifacts/sixdb/workers/20261020T002003Z-0a0f7779/host.json"
+    },
+    {
+      "study": "model_alias",
+      "host": "zen5",
+      "job": "20261020T005209Z-02a7c239",
+      "source": {
+        "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+        "digest": "8ffd4d60f5ed83f89c96b64f686e04e7068ae59c078f6048e1241887ef32234f",
+        "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+        "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c",
+        "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+        "sha256": "698bfbfe6da54cdb972a994edc5719243ffb9a995a7aa7ca6bf60421c77dd80f"
+      },
+      "source_commit": "c8f9081104ef61ee897fbbaf954223ae0a3d7656",
+      "script": "workbench/spikes/boundlist/adaptive-native.sh",
+      "machine": {
+        "machine": "zen5",
+        "architecture": "x86_64",
+        "instance_type": "c8a.large",
+        "capacity": "spot-or-on-demand",
+        "env": {
+          "BOUNDLIST_TUNE": "zen5",
+          "SIXDB_GROUP_MEMBER": "zen5",
+          "SIXDB_GROUP_URI": "s3://calico-fleet-artifacts/sixdb/worker-groups/20261020T005202Z-37c10bc4"
+        }
+      },
+      "raw_artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 15550623,
+        "files": 200,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/0563c9a9f62616e75ed51224a655fea534b471c15d68caab53a04c9bf0d1c8c3.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "0563c9a9f62616e75ed51224a655fea534b471c15d68caab53a04c9bf0d1c8c3",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/0563c9a9f62616e75ed51224a655fea534b471c15d68caab53a04c9bf0d1c8c3.tar.gz"
+      },
+      "host_receipt": "s3://calico-fleet-artifacts/sixdb/workers/20261020T005209Z-02a7c239/host.json"
+    },
+    {
+      "study": "model_alias",
+      "host": "granite",
+      "job": "20261020T005215Z-e0164d48",
+      "source": {
+        "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+        "digest": "8ffd4d60f5ed83f89c96b64f686e04e7068ae59c078f6048e1241887ef32234f",
+        "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+        "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c",
+        "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+        "sha256": "698bfbfe6da54cdb972a994edc5719243ffb9a995a7aa7ca6bf60421c77dd80f"
+      },
+      "source_commit": "c8f9081104ef61ee897fbbaf954223ae0a3d7656",
+      "script": "workbench/spikes/boundlist/adaptive-native.sh",
+      "machine": {
+        "machine": "granite-rapids",
+        "architecture": "x86_64",
+        "instance_type": "c8i.large",
+        "capacity": "on-demand",
+        "env": {
+          "BOUNDLIST_TUNE": "granite-rapids",
+          "SIXDB_GROUP_MEMBER": "granite",
+          "SIXDB_GROUP_URI": "s3://calico-fleet-artifacts/sixdb/worker-groups/20261020T005202Z-37c10bc4"
+        }
+      },
+      "raw_artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 15434231,
+        "files": 200,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/2a92f0d52a802f71ac74e982a6b6a4262ee90a1372c4b0702f18aba0d351fa20.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "2a92f0d52a802f71ac74e982a6b6a4262ee90a1372c4b0702f18aba0d351fa20",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/2a92f0d52a802f71ac74e982a6b6a4262ee90a1372c4b0702f18aba0d351fa20.tar.gz"
+      },
+      "host_receipt": "s3://calico-fleet-artifacts/sixdb/workers/20261020T005215Z-e0164d48/host.json"
+    },
+    {
+      "study": "model_alias",
+      "host": "neon",
+      "job": "20261020T005044Z-ba6fb4a2",
+      "source": {
+        "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+        "digest": "8ffd4d60f5ed83f89c96b64f686e04e7068ae59c078f6048e1241887ef32234f",
+        "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+        "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c",
+        "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+        "sha256": "698bfbfe6da54cdb972a994edc5719243ffb9a995a7aa7ca6bf60421c77dd80f"
+      },
+      "source_commit": "c8f9081104ef61ee897fbbaf954223ae0a3d7656",
+      "script": "workbench/spikes/boundlist/adaptive-native.sh",
+      "machine": {
+        "machine": "neoverse-v2",
+        "architecture": "arm64",
+        "instance_type": "c8g.medium",
+        "capacity": "spot",
+        "env": {
+          "SIXDB_GROUP_MEMBER": "neon",
+          "SIXDB_GROUP_URI": "s3://calico-fleet-artifacts/sixdb/worker-groups/20261020T005038Z-39aacc7a"
+        }
+      },
+      "raw_artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 12253914,
+        "files": 105,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/04dd337243244cf90dff28cdaf9822c7c05ce4cb51622beca1a6fd7e957d9a89.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "04dd337243244cf90dff28cdaf9822c7c05ce4cb51622beca1a6fd7e957d9a89",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/04dd337243244cf90dff28cdaf9822c7c05ce4cb51622beca1a6fd7e957d9a89.tar.gz"
+      },
+      "host_receipt": "s3://calico-fleet-artifacts/sixdb/workers/20261020T005044Z-ba6fb4a2/host.json"
+    },
+    {
+      "study": "promotion",
+      "host": "zen5",
+      "job": "20261020T015436Z-c910ad4f",
+      "source": {
+        "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+        "digest": "09a932196f63ebecf352680863751e1568ea6c0cf4823f1d1bb53d1066a169fc",
+        "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+        "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c",
+        "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+        "sha256": "6b272c87ccb3b6e0703590354e79ed41342121a2c178c1e93b1989f754da25f3"
+      },
+      "source_commit": "c8f9081104ef61ee897fbbaf954223ae0a3d7656",
+      "script": "workbench/spikes/boundlist/adoption-native.sh",
+      "machine": {
+        "machine": "zen5",
+        "architecture": "x86_64",
+        "instance_type": "c8a.large",
+        "capacity": "spot-or-on-demand",
+        "env": {
+          "BOUNDLIST_TUNE": "zen5",
+          "SIXDB_GROUP_MEMBER": "zen5",
+          "SIXDB_GROUP_URI": "s3://calico-fleet-artifacts/sixdb/worker-groups/20261020T015430Z-2f3fdbdd"
+        }
+      },
+      "raw_artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 33799543,
+        "files": 398,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/6d4fc5b0c638bca452635af4bcc4baab856951c79160f68016e698d9ff7514e7.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "6d4fc5b0c638bca452635af4bcc4baab856951c79160f68016e698d9ff7514e7",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/6d4fc5b0c638bca452635af4bcc4baab856951c79160f68016e698d9ff7514e7.tar.gz"
+      },
+      "host_receipt": "s3://calico-fleet-artifacts/sixdb/workers/20261020T015436Z-c910ad4f/host.json"
+    },
+    {
+      "study": "promotion",
+      "host": "granite",
+      "job": "20261020T015441Z-eed9cc16",
+      "source": {
+        "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+        "digest": "09a932196f63ebecf352680863751e1568ea6c0cf4823f1d1bb53d1066a169fc",
+        "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+        "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c",
+        "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+        "sha256": "6b272c87ccb3b6e0703590354e79ed41342121a2c178c1e93b1989f754da25f3"
+      },
+      "source_commit": "c8f9081104ef61ee897fbbaf954223ae0a3d7656",
+      "script": "workbench/spikes/boundlist/adoption-native.sh",
+      "machine": {
+        "machine": "granite-rapids",
+        "architecture": "x86_64",
+        "instance_type": "c8i.large",
+        "capacity": "on-demand",
+        "env": {
+          "BOUNDLIST_TUNE": "granite-rapids",
+          "SIXDB_GROUP_MEMBER": "granite",
+          "SIXDB_GROUP_URI": "s3://calico-fleet-artifacts/sixdb/worker-groups/20261020T015430Z-2f3fdbdd"
+        }
+      },
+      "raw_artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 33301924,
+        "files": 398,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/8f1e47a32f804195061d9a2ae0e9fb1ca34d71f3fd4dbc9e6bb0318cdde62164.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "8f1e47a32f804195061d9a2ae0e9fb1ca34d71f3fd4dbc9e6bb0318cdde62164",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/8f1e47a32f804195061d9a2ae0e9fb1ca34d71f3fd4dbc9e6bb0318cdde62164.tar.gz"
+      },
+      "host_receipt": "s3://calico-fleet-artifacts/sixdb/workers/20261020T015441Z-eed9cc16/host.json"
+    },
+    {
+      "study": "promotion",
+      "host": "neon",
+      "job": "20261020T015447Z-9f6d9688",
+      "source": {
+        "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+        "digest": "09a932196f63ebecf352680863751e1568ea6c0cf4823f1d1bb53d1066a169fc",
+        "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+        "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c",
+        "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+        "sha256": "6b272c87ccb3b6e0703590354e79ed41342121a2c178c1e93b1989f754da25f3"
+      },
+      "source_commit": "c8f9081104ef61ee897fbbaf954223ae0a3d7656",
+      "script": "workbench/spikes/boundlist/adoption-native.sh",
+      "machine": {
+        "machine": "neoverse-v2",
+        "architecture": "arm64",
+        "instance_type": "c8g.medium",
+        "capacity": "spot",
+        "env": {
+          "SIXDB_GROUP_MEMBER": "neon",
+          "SIXDB_GROUP_URI": "s3://calico-fleet-artifacts/sixdb/worker-groups/20261020T015430Z-2f3fdbdd"
+        }
+      },
+      "raw_artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 18758975,
+        "files": 204,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/fdca8a71aecf6705e119748f62bb3f51aedf3542f674c158a9dc22f8e26fff09.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "fdca8a71aecf6705e119748f62bb3f51aedf3542f674c158a9dc22f8e26fff09",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/fdca8a71aecf6705e119748f62bb3f51aedf3542f674c158a9dc22f8e26fff09.tar.gz"
+      },
+      "host_receipt": "s3://calico-fleet-artifacts/sixdb/workers/20261020T015447Z-9f6d9688/host.json"
+    },
+    {
+      "study": "search",
+      "host": "zen5",
+      "job": "20261020T015436Z-c910ad4f",
+      "source": {
+        "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+        "digest": "09a932196f63ebecf352680863751e1568ea6c0cf4823f1d1bb53d1066a169fc",
+        "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+        "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c",
+        "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+        "sha256": "6b272c87ccb3b6e0703590354e79ed41342121a2c178c1e93b1989f754da25f3"
+      },
+      "source_commit": "c8f9081104ef61ee897fbbaf954223ae0a3d7656",
+      "script": "workbench/spikes/boundlist/adoption-native.sh",
+      "machine": {
+        "machine": "zen5",
+        "architecture": "x86_64",
+        "instance_type": "c8a.large",
+        "capacity": "spot-or-on-demand",
+        "env": {
+          "BOUNDLIST_TUNE": "zen5",
+          "SIXDB_GROUP_MEMBER": "zen5",
+          "SIXDB_GROUP_URI": "s3://calico-fleet-artifacts/sixdb/worker-groups/20261020T015430Z-2f3fdbdd"
+        }
+      },
+      "raw_artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 33799543,
+        "files": 398,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/6d4fc5b0c638bca452635af4bcc4baab856951c79160f68016e698d9ff7514e7.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "6d4fc5b0c638bca452635af4bcc4baab856951c79160f68016e698d9ff7514e7",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/6d4fc5b0c638bca452635af4bcc4baab856951c79160f68016e698d9ff7514e7.tar.gz"
+      },
+      "host_receipt": "s3://calico-fleet-artifacts/sixdb/workers/20261020T015436Z-c910ad4f/host.json"
+    },
+    {
+      "study": "search",
+      "host": "granite",
+      "job": "20261020T015441Z-eed9cc16",
+      "source": {
+        "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+        "digest": "09a932196f63ebecf352680863751e1568ea6c0cf4823f1d1bb53d1066a169fc",
+        "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+        "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c",
+        "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+        "sha256": "6b272c87ccb3b6e0703590354e79ed41342121a2c178c1e93b1989f754da25f3"
+      },
+      "source_commit": "c8f9081104ef61ee897fbbaf954223ae0a3d7656",
+      "script": "workbench/spikes/boundlist/adoption-native.sh",
+      "machine": {
+        "machine": "granite-rapids",
+        "architecture": "x86_64",
+        "instance_type": "c8i.large",
+        "capacity": "on-demand",
+        "env": {
+          "BOUNDLIST_TUNE": "granite-rapids",
+          "SIXDB_GROUP_MEMBER": "granite",
+          "SIXDB_GROUP_URI": "s3://calico-fleet-artifacts/sixdb/worker-groups/20261020T015430Z-2f3fdbdd"
+        }
+      },
+      "raw_artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 33301924,
+        "files": 398,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/8f1e47a32f804195061d9a2ae0e9fb1ca34d71f3fd4dbc9e6bb0318cdde62164.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "8f1e47a32f804195061d9a2ae0e9fb1ca34d71f3fd4dbc9e6bb0318cdde62164",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/8f1e47a32f804195061d9a2ae0e9fb1ca34d71f3fd4dbc9e6bb0318cdde62164.tar.gz"
+      },
+      "host_receipt": "s3://calico-fleet-artifacts/sixdb/workers/20261020T015441Z-eed9cc16/host.json"
+    },
+    {
+      "study": "search",
+      "host": "neon",
+      "job": "20261020T015447Z-9f6d9688",
+      "source": {
+        "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+        "digest": "09a932196f63ebecf352680863751e1568ea6c0cf4823f1d1bb53d1066a169fc",
+        "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+        "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c",
+        "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+        "sha256": "6b272c87ccb3b6e0703590354e79ed41342121a2c178c1e93b1989f754da25f3"
+      },
+      "source_commit": "c8f9081104ef61ee897fbbaf954223ae0a3d7656",
+      "script": "workbench/spikes/boundlist/adoption-native.sh",
+      "machine": {
+        "machine": "neoverse-v2",
+        "architecture": "arm64",
+        "instance_type": "c8g.medium",
+        "capacity": "spot",
+        "env": {
+          "SIXDB_GROUP_MEMBER": "neon",
+          "SIXDB_GROUP_URI": "s3://calico-fleet-artifacts/sixdb/worker-groups/20261020T015430Z-2f3fdbdd"
+        }
+      },
+      "raw_artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 18758975,
+        "files": 204,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/fdca8a71aecf6705e119748f62bb3f51aedf3542f674c158a9dc22f8e26fff09.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "fdca8a71aecf6705e119748f62bb3f51aedf3542f674c158a9dc22f8e26fff09",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/fdca8a71aecf6705e119748f62bb3f51aedf3542f674c158a9dc22f8e26fff09.tar.gz"
+      },
+      "host_receipt": "s3://calico-fleet-artifacts/sixdb/workers/20261020T015447Z-9f6d9688/host.json"
+    },
+    {
+      "study": "upper",
+      "host": "zen5",
+      "job": "20261020T015436Z-c910ad4f",
+      "source": {
+        "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+        "digest": "09a932196f63ebecf352680863751e1568ea6c0cf4823f1d1bb53d1066a169fc",
+        "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+        "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c",
+        "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+        "sha256": "6b272c87ccb3b6e0703590354e79ed41342121a2c178c1e93b1989f754da25f3"
+      },
+      "source_commit": "c8f9081104ef61ee897fbbaf954223ae0a3d7656",
+      "script": "workbench/spikes/boundlist/adoption-native.sh",
+      "machine": {
+        "machine": "zen5",
+        "architecture": "x86_64",
+        "instance_type": "c8a.large",
+        "capacity": "spot-or-on-demand",
+        "env": {
+          "BOUNDLIST_TUNE": "zen5",
+          "SIXDB_GROUP_MEMBER": "zen5",
+          "SIXDB_GROUP_URI": "s3://calico-fleet-artifacts/sixdb/worker-groups/20261020T015430Z-2f3fdbdd"
+        }
+      },
+      "raw_artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 33799543,
+        "files": 398,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/6d4fc5b0c638bca452635af4bcc4baab856951c79160f68016e698d9ff7514e7.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "6d4fc5b0c638bca452635af4bcc4baab856951c79160f68016e698d9ff7514e7",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/6d4fc5b0c638bca452635af4bcc4baab856951c79160f68016e698d9ff7514e7.tar.gz"
+      },
+      "host_receipt": "s3://calico-fleet-artifacts/sixdb/workers/20261020T015436Z-c910ad4f/host.json"
+    },
+    {
+      "study": "upper",
+      "host": "granite",
+      "job": "20261020T015441Z-eed9cc16",
+      "source": {
+        "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+        "digest": "09a932196f63ebecf352680863751e1568ea6c0cf4823f1d1bb53d1066a169fc",
+        "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+        "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c",
+        "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+        "sha256": "6b272c87ccb3b6e0703590354e79ed41342121a2c178c1e93b1989f754da25f3"
+      },
+      "source_commit": "c8f9081104ef61ee897fbbaf954223ae0a3d7656",
+      "script": "workbench/spikes/boundlist/adoption-native.sh",
+      "machine": {
+        "machine": "granite-rapids",
+        "architecture": "x86_64",
+        "instance_type": "c8i.large",
+        "capacity": "on-demand",
+        "env": {
+          "BOUNDLIST_TUNE": "granite-rapids",
+          "SIXDB_GROUP_MEMBER": "granite",
+          "SIXDB_GROUP_URI": "s3://calico-fleet-artifacts/sixdb/worker-groups/20261020T015430Z-2f3fdbdd"
+        }
+      },
+      "raw_artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 33301924,
+        "files": 398,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/8f1e47a32f804195061d9a2ae0e9fb1ca34d71f3fd4dbc9e6bb0318cdde62164.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "8f1e47a32f804195061d9a2ae0e9fb1ca34d71f3fd4dbc9e6bb0318cdde62164",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/8f1e47a32f804195061d9a2ae0e9fb1ca34d71f3fd4dbc9e6bb0318cdde62164.tar.gz"
+      },
+      "host_receipt": "s3://calico-fleet-artifacts/sixdb/workers/20261020T015441Z-eed9cc16/host.json"
+    },
+    {
+      "study": "upper",
+      "host": "neon",
+      "job": "20261020T015447Z-9f6d9688",
+      "source": {
+        "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+        "digest": "09a932196f63ebecf352680863751e1568ea6c0cf4823f1d1bb53d1066a169fc",
+        "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+        "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c",
+        "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+        "sha256": "6b272c87ccb3b6e0703590354e79ed41342121a2c178c1e93b1989f754da25f3"
+      },
+      "source_commit": "c8f9081104ef61ee897fbbaf954223ae0a3d7656",
+      "script": "workbench/spikes/boundlist/adoption-native.sh",
+      "machine": {
+        "machine": "neoverse-v2",
+        "architecture": "arm64",
+        "instance_type": "c8g.medium",
+        "capacity": "spot",
+        "env": {
+          "SIXDB_GROUP_MEMBER": "neon",
+          "SIXDB_GROUP_URI": "s3://calico-fleet-artifacts/sixdb/worker-groups/20261020T015430Z-2f3fdbdd"
+        }
+      },
+      "raw_artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 18758975,
+        "files": 204,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/fdca8a71aecf6705e119748f62bb3f51aedf3542f674c158a9dc22f8e26fff09.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "fdca8a71aecf6705e119748f62bb3f51aedf3542f674c158a9dc22f8e26fff09",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/fdca8a71aecf6705e119748f62bb3f51aedf3542f674c158a9dc22f8e26fff09.tar.gz"
+      },
+      "host_receipt": "s3://calico-fleet-artifacts/sixdb/workers/20261020T015447Z-9f6d9688/host.json"
+    },
+    {
+      "study": "ordered",
+      "host": "zen5",
+      "job": "20261020T015436Z-c910ad4f",
+      "source": {
+        "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+        "digest": "09a932196f63ebecf352680863751e1568ea6c0cf4823f1d1bb53d1066a169fc",
+        "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+        "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c",
+        "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+        "sha256": "6b272c87ccb3b6e0703590354e79ed41342121a2c178c1e93b1989f754da25f3"
+      },
+      "source_commit": "c8f9081104ef61ee897fbbaf954223ae0a3d7656",
+      "script": "workbench/spikes/boundlist/adoption-native.sh",
+      "machine": {
+        "machine": "zen5",
+        "architecture": "x86_64",
+        "instance_type": "c8a.large",
+        "capacity": "spot-or-on-demand",
+        "env": {
+          "BOUNDLIST_TUNE": "zen5",
+          "SIXDB_GROUP_MEMBER": "zen5",
+          "SIXDB_GROUP_URI": "s3://calico-fleet-artifacts/sixdb/worker-groups/20261020T015430Z-2f3fdbdd"
+        }
+      },
+      "raw_artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 33799543,
+        "files": 398,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/6d4fc5b0c638bca452635af4bcc4baab856951c79160f68016e698d9ff7514e7.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "6d4fc5b0c638bca452635af4bcc4baab856951c79160f68016e698d9ff7514e7",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/6d4fc5b0c638bca452635af4bcc4baab856951c79160f68016e698d9ff7514e7.tar.gz"
+      },
+      "host_receipt": "s3://calico-fleet-artifacts/sixdb/workers/20261020T015436Z-c910ad4f/host.json"
+    },
+    {
+      "study": "ordered",
+      "host": "granite",
+      "job": "20261020T015441Z-eed9cc16",
+      "source": {
+        "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+        "digest": "09a932196f63ebecf352680863751e1568ea6c0cf4823f1d1bb53d1066a169fc",
+        "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+        "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c",
+        "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+        "sha256": "6b272c87ccb3b6e0703590354e79ed41342121a2c178c1e93b1989f754da25f3"
+      },
+      "source_commit": "c8f9081104ef61ee897fbbaf954223ae0a3d7656",
+      "script": "workbench/spikes/boundlist/adoption-native.sh",
+      "machine": {
+        "machine": "granite-rapids",
+        "architecture": "x86_64",
+        "instance_type": "c8i.large",
+        "capacity": "on-demand",
+        "env": {
+          "BOUNDLIST_TUNE": "granite-rapids",
+          "SIXDB_GROUP_MEMBER": "granite",
+          "SIXDB_GROUP_URI": "s3://calico-fleet-artifacts/sixdb/worker-groups/20261020T015430Z-2f3fdbdd"
+        }
+      },
+      "raw_artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 33301924,
+        "files": 398,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/8f1e47a32f804195061d9a2ae0e9fb1ca34d71f3fd4dbc9e6bb0318cdde62164.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "8f1e47a32f804195061d9a2ae0e9fb1ca34d71f3fd4dbc9e6bb0318cdde62164",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/8f1e47a32f804195061d9a2ae0e9fb1ca34d71f3fd4dbc9e6bb0318cdde62164.tar.gz"
+      },
+      "host_receipt": "s3://calico-fleet-artifacts/sixdb/workers/20261020T015441Z-eed9cc16/host.json"
+    },
+    {
+      "study": "ordered",
+      "host": "neon",
+      "job": "20261020T015447Z-9f6d9688",
+      "source": {
+        "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+        "digest": "09a932196f63ebecf352680863751e1568ea6c0cf4823f1d1bb53d1066a169fc",
+        "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+        "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c",
+        "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+        "sha256": "6b272c87ccb3b6e0703590354e79ed41342121a2c178c1e93b1989f754da25f3"
+      },
+      "source_commit": "c8f9081104ef61ee897fbbaf954223ae0a3d7656",
+      "script": "workbench/spikes/boundlist/adoption-native.sh",
+      "machine": {
+        "machine": "neoverse-v2",
+        "architecture": "arm64",
+        "instance_type": "c8g.medium",
+        "capacity": "spot",
+        "env": {
+          "SIXDB_GROUP_MEMBER": "neon",
+          "SIXDB_GROUP_URI": "s3://calico-fleet-artifacts/sixdb/worker-groups/20261020T015430Z-2f3fdbdd"
+        }
+      },
+      "raw_artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 18758975,
+        "files": 204,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/fdca8a71aecf6705e119748f62bb3f51aedf3542f674c158a9dc22f8e26fff09.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "fdca8a71aecf6705e119748f62bb3f51aedf3542f674c158a9dc22f8e26fff09",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/fdca8a71aecf6705e119748f62bb3f51aedf3542f674c158a9dc22f8e26fff09.tar.gz"
+      },
+      "host_receipt": "s3://calico-fleet-artifacts/sixdb/workers/20261020T015447Z-9f6d9688/host.json"
+    },
+    {
+      "study": "cold_adoption",
+      "host": "zen5",
+      "job": "20261020T015436Z-c910ad4f",
+      "source": {
+        "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+        "digest": "09a932196f63ebecf352680863751e1568ea6c0cf4823f1d1bb53d1066a169fc",
+        "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+        "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c",
+        "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+        "sha256": "6b272c87ccb3b6e0703590354e79ed41342121a2c178c1e93b1989f754da25f3"
+      },
+      "source_commit": "c8f9081104ef61ee897fbbaf954223ae0a3d7656",
+      "script": "workbench/spikes/boundlist/adoption-native.sh",
+      "machine": {
+        "machine": "zen5",
+        "architecture": "x86_64",
+        "instance_type": "c8a.large",
+        "capacity": "spot-or-on-demand",
+        "env": {
+          "BOUNDLIST_TUNE": "zen5",
+          "SIXDB_GROUP_MEMBER": "zen5",
+          "SIXDB_GROUP_URI": "s3://calico-fleet-artifacts/sixdb/worker-groups/20261020T015430Z-2f3fdbdd"
+        }
+      },
+      "raw_artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 33799543,
+        "files": 398,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/6d4fc5b0c638bca452635af4bcc4baab856951c79160f68016e698d9ff7514e7.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "6d4fc5b0c638bca452635af4bcc4baab856951c79160f68016e698d9ff7514e7",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/6d4fc5b0c638bca452635af4bcc4baab856951c79160f68016e698d9ff7514e7.tar.gz"
+      },
+      "host_receipt": "s3://calico-fleet-artifacts/sixdb/workers/20261020T015436Z-c910ad4f/host.json"
+    },
+    {
+      "study": "cold_adoption",
+      "host": "granite",
+      "job": "20261020T015441Z-eed9cc16",
+      "source": {
+        "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+        "digest": "09a932196f63ebecf352680863751e1568ea6c0cf4823f1d1bb53d1066a169fc",
+        "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+        "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c",
+        "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+        "sha256": "6b272c87ccb3b6e0703590354e79ed41342121a2c178c1e93b1989f754da25f3"
+      },
+      "source_commit": "c8f9081104ef61ee897fbbaf954223ae0a3d7656",
+      "script": "workbench/spikes/boundlist/adoption-native.sh",
+      "machine": {
+        "machine": "granite-rapids",
+        "architecture": "x86_64",
+        "instance_type": "c8i.large",
+        "capacity": "on-demand",
+        "env": {
+          "BOUNDLIST_TUNE": "granite-rapids",
+          "SIXDB_GROUP_MEMBER": "granite",
+          "SIXDB_GROUP_URI": "s3://calico-fleet-artifacts/sixdb/worker-groups/20261020T015430Z-2f3fdbdd"
+        }
+      },
+      "raw_artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 33301924,
+        "files": 398,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/8f1e47a32f804195061d9a2ae0e9fb1ca34d71f3fd4dbc9e6bb0318cdde62164.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "8f1e47a32f804195061d9a2ae0e9fb1ca34d71f3fd4dbc9e6bb0318cdde62164",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/8f1e47a32f804195061d9a2ae0e9fb1ca34d71f3fd4dbc9e6bb0318cdde62164.tar.gz"
+      },
+      "host_receipt": "s3://calico-fleet-artifacts/sixdb/workers/20261020T015441Z-eed9cc16/host.json"
+    },
+    {
+      "study": "cold_adoption",
+      "host": "neon",
+      "job": "20261020T015447Z-9f6d9688",
+      "source": {
+        "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+        "digest": "09a932196f63ebecf352680863751e1568ea6c0cf4823f1d1bb53d1066a169fc",
+        "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+        "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c",
+        "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+        "sha256": "6b272c87ccb3b6e0703590354e79ed41342121a2c178c1e93b1989f754da25f3"
+      },
+      "source_commit": "c8f9081104ef61ee897fbbaf954223ae0a3d7656",
+      "script": "workbench/spikes/boundlist/adoption-native.sh",
+      "machine": {
+        "machine": "neoverse-v2",
+        "architecture": "arm64",
+        "instance_type": "c8g.medium",
+        "capacity": "spot",
+        "env": {
+          "SIXDB_GROUP_MEMBER": "neon",
+          "SIXDB_GROUP_URI": "s3://calico-fleet-artifacts/sixdb/worker-groups/20261020T015430Z-2f3fdbdd"
+        }
+      },
+      "raw_artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 18758975,
+        "files": 204,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/fdca8a71aecf6705e119748f62bb3f51aedf3542f674c158a9dc22f8e26fff09.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "fdca8a71aecf6705e119748f62bb3f51aedf3542f674c158a9dc22f8e26fff09",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/fdca8a71aecf6705e119748f62bb3f51aedf3542f674c158a9dc22f8e26fff09.tar.gz"
+      },
+      "host_receipt": "s3://calico-fleet-artifacts/sixdb/workers/20261020T015447Z-9f6d9688/host.json"
+    }
+  ]
+}

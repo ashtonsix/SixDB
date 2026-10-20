@@ -1,0 +1,221 @@
+{
+  "scope": "Compare matched old/current reader instruction text, excluding relocation targets/padding.\n\nThis is a codegen diagnostic, not semantic proof or a performance model. Source\ncontrols and native measurements independently establish correctness and cost.\n",
+  "consumers": [
+    {
+      "function": "unsigned long chase<1u, reader<X, ikea::streampack::author::access<(ikea::boundlist::sidecar::geometry)0, unsigned char, unsigned char, std::byte>>>(unsigned int, reader<X, ikea::streampack::author::access<(ikea::boundlist::sidecar::geometry)0, unsigned char, unsigned char, std::byte>>)>:",
+      "same_sequence": true,
+      "current_instructions": 132,
+      "before_instructions": 132
+    },
+    {
+      "function": "unsigned long chase<8u, reader<X, ikea::streampack::author::access<(ikea::boundlist::sidecar::geometry)0, unsigned char, unsigned char, std::byte>>>(unsigned int, reader<X, ikea::streampack::author::access<(ikea::boundlist::sidecar::geometry)0, unsigned char, unsigned char, std::byte>>)>:",
+      "same_sequence": true,
+      "current_instructions": 572,
+      "before_instructions": 572
+    },
+    {
+      "function": "unsigned long projection<reader<X, ikea::streampack::author::access<(ikea::boundlist::sidecar::geometry)0, unsigned char, unsigned char, std::byte>>>(fixture const&, unsigned int, bool, reader<X, ikea::streampack::author::access<(ikea::boundlist::sidecar::geometry)0, unsigned char, unsigned char, std::byte>>)>:",
+      "same_sequence": true,
+      "current_instructions": 294,
+      "before_instructions": 294
+    },
+    {
+      "function": "unsigned long chase<1u, reader<X, ikea::streampack::author::access<(ikea::boundlist::sidecar::geometry)0, unsigned char, unsigned short, std::byte>>>(unsigned int, reader<X, ikea::streampack::author::access<(ikea::boundlist::sidecar::geometry)0, unsigned char, unsigned short, std::byte>>)>:",
+      "same_sequence": true,
+      "current_instructions": 130,
+      "before_instructions": 130
+    },
+    {
+      "function": "unsigned long chase<8u, reader<X, ikea::streampack::author::access<(ikea::boundlist::sidecar::geometry)0, unsigned char, unsigned short, std::byte>>>(unsigned int, reader<X, ikea::streampack::author::access<(ikea::boundlist::sidecar::geometry)0, unsigned char, unsigned short, std::byte>>)>:",
+      "same_sequence": true,
+      "current_instructions": 549,
+      "before_instructions": 549
+    },
+    {
+      "function": "unsigned long projection<reader<X, ikea::streampack::author::access<(ikea::boundlist::sidecar::geometry)0, unsigned char, unsigned short, std::byte>>>(fixture const&, unsigned int, bool, reader<X, ikea::streampack::author::access<(ikea::boundlist::sidecar::geometry)0, unsigned char, unsigned short, std::byte>>)>:",
+      "same_sequence": true,
+      "current_instructions": 292,
+      "before_instructions": 292
+    },
+    {
+      "function": "unsigned long chase<1u, reader<X, ikea::streampack::author::access<(ikea::boundlist::sidecar::geometry)0, unsigned char, unsigned int, std::byte>>>(unsigned int, reader<X, ikea::streampack::author::access<(ikea::boundlist::sidecar::geometry)0, unsigned char, unsigned int, std::byte>>)>:",
+      "same_sequence": true,
+      "current_instructions": 131,
+      "before_instructions": 131
+    },
+    {
+      "function": "unsigned long chase<8u, reader<X, ikea::streampack::author::access<(ikea::boundlist::sidecar::geometry)0, unsigned char, unsigned int, std::byte>>>(unsigned int, reader<X, ikea::streampack::author::access<(ikea::boundlist::sidecar::geometry)0, unsigned char, unsigned int, std::byte>>)>:",
+      "same_sequence": true,
+      "current_instructions": 561,
+      "before_instructions": 561
+    },
+    {
+      "function": "unsigned long projection<reader<X, ikea::streampack::author::access<(ikea::boundlist::sidecar::geometry)0, unsigned char, unsigned int, std::byte>>>(fixture const&, unsigned int, bool, reader<X, ikea::streampack::author::access<(ikea::boundlist::sidecar::geometry)0, unsigned char, unsigned int, std::byte>>)>:",
+      "same_sequence": true,
+      "current_instructions": 293,
+      "before_instructions": 293
+    },
+    {
+      "function": "unsigned long chase<1u, reader<X, ikea::streampack::author::access<(ikea::boundlist::sidecar::geometry)0, unsigned short, unsigned char, std::byte>>>(unsigned int, reader<X, ikea::streampack::author::access<(ikea::boundlist::sidecar::geometry)0, unsigned short, unsigned char, std::byte>>)>:",
+      "same_sequence": true,
+      "current_instructions": 132,
+      "before_instructions": 132
+    },
+    {
+      "function": "unsigned long chase<8u, reader<X, ikea::streampack::author::access<(ikea::boundlist::sidecar::geometry)0, unsigned short, unsigned char, std::byte>>>(unsigned int, reader<X, ikea::streampack::author::access<(ikea::boundlist::sidecar::geometry)0, unsigned short, unsigned char, std::byte>>)>:",
+      "same_sequence": true,
+      "current_instructions": 561,
+      "before_instructions": 561
+    },
+    {
+      "function": "unsigned long projection<reader<X, ikea::streampack::author::access<(ikea::boundlist::sidecar::geometry)0, unsigned short, unsigned char, std::byte>>>(fixture const&, unsigned int, bool, reader<X, ikea::streampack::author::access<(ikea::boundlist::sidecar::geometry)0, unsigned short, unsigned char, std::byte>>)>:",
+      "same_sequence": true,
+      "current_instructions": 294,
+      "before_instructions": 294
+    },
+    {
+      "function": "unsigned long chase<1u, reader<X, ikea::streampack::author::access<(ikea::boundlist::sidecar::geometry)0, unsigned short, unsigned short, std::byte>>>(unsigned int, reader<X, ikea::streampack::author::access<(ikea::boundlist::sidecar::geometry)0, unsigned short, unsigned short, std::byte>>)>:",
+      "same_sequence": true,
+      "current_instructions": 130,
+      "before_instructions": 130
+    },
+    {
+      "function": "unsigned long chase<8u, reader<X, ikea::streampack::author::access<(ikea::boundlist::sidecar::geometry)0, unsigned short, unsigned short, std::byte>>>(unsigned int, reader<X, ikea::streampack::author::access<(ikea::boundlist::sidecar::geometry)0, unsigned short, unsigned short, std::byte>>)>:",
+      "same_sequence": true,
+      "current_instructions": 543,
+      "before_instructions": 543
+    },
+    {
+      "function": "unsigned long projection<reader<X, ikea::streampack::author::access<(ikea::boundlist::sidecar::geometry)0, unsigned short, unsigned short, std::byte>>>(fixture const&, unsigned int, bool, reader<X, ikea::streampack::author::access<(ikea::boundlist::sidecar::geometry)0, unsigned short, unsigned short, std::byte>>)>:",
+      "same_sequence": true,
+      "current_instructions": 292,
+      "before_instructions": 292
+    },
+    {
+      "function": "unsigned long chase<1u, reader<X, ikea::streampack::author::access<(ikea::boundlist::sidecar::geometry)0, unsigned short, unsigned int, std::byte>>>(unsigned int, reader<X, ikea::streampack::author::access<(ikea::boundlist::sidecar::geometry)0, unsigned short, unsigned int, std::byte>>)>:",
+      "same_sequence": true,
+      "current_instructions": 131,
+      "before_instructions": 131
+    },
+    {
+      "function": "unsigned long chase<8u, reader<X, ikea::streampack::author::access<(ikea::boundlist::sidecar::geometry)0, unsigned short, unsigned int, std::byte>>>(unsigned int, reader<X, ikea::streampack::author::access<(ikea::boundlist::sidecar::geometry)0, unsigned short, unsigned int, std::byte>>)>:",
+      "same_sequence": true,
+      "current_instructions": 536,
+      "before_instructions": 536
+    },
+    {
+      "function": "unsigned long projection<reader<X, ikea::streampack::author::access<(ikea::boundlist::sidecar::geometry)0, unsigned short, unsigned int, std::byte>>>(fixture const&, unsigned int, bool, reader<X, ikea::streampack::author::access<(ikea::boundlist::sidecar::geometry)0, unsigned short, unsigned int, std::byte>>)>:",
+      "same_sequence": true,
+      "current_instructions": 293,
+      "before_instructions": 293
+    },
+    {
+      "function": "unsigned long chase<1u, reader<X, ikea::streampack::author::access<(ikea::boundlist::sidecar::geometry)1, unsigned char, unsigned char, std::byte>>>(unsigned int, reader<X, ikea::streampack::author::access<(ikea::boundlist::sidecar::geometry)1, unsigned char, unsigned char, std::byte>>)>:",
+      "same_sequence": true,
+      "current_instructions": 146,
+      "before_instructions": 146
+    },
+    {
+      "function": "unsigned long chase<8u, reader<X, ikea::streampack::author::access<(ikea::boundlist::sidecar::geometry)1, unsigned char, unsigned char, std::byte>>>(unsigned int, reader<X, ikea::streampack::author::access<(ikea::boundlist::sidecar::geometry)1, unsigned char, unsigned char, std::byte>>)>:",
+      "same_sequence": true,
+      "current_instructions": 640,
+      "before_instructions": 640
+    },
+    {
+      "function": "unsigned long projection<reader<X, ikea::streampack::author::access<(ikea::boundlist::sidecar::geometry)1, unsigned char, unsigned char, std::byte>>>(fixture const&, unsigned int, bool, reader<X, ikea::streampack::author::access<(ikea::boundlist::sidecar::geometry)1, unsigned char, unsigned char, std::byte>>)>:",
+      "same_sequence": true,
+      "current_instructions": 306,
+      "before_instructions": 306
+    },
+    {
+      "function": "unsigned long chase<1u, reader<X, ikea::streampack::author::access<(ikea::boundlist::sidecar::geometry)1, unsigned char, unsigned short, std::byte>>>(unsigned int, reader<X, ikea::streampack::author::access<(ikea::boundlist::sidecar::geometry)1, unsigned char, unsigned short, std::byte>>)>:",
+      "same_sequence": true,
+      "current_instructions": 144,
+      "before_instructions": 144
+    },
+    {
+      "function": "unsigned long chase<8u, reader<X, ikea::streampack::author::access<(ikea::boundlist::sidecar::geometry)1, unsigned char, unsigned short, std::byte>>>(unsigned int, reader<X, ikea::streampack::author::access<(ikea::boundlist::sidecar::geometry)1, unsigned char, unsigned short, std::byte>>)>:",
+      "same_sequence": true,
+      "current_instructions": 637,
+      "before_instructions": 637
+    },
+    {
+      "function": "unsigned long projection<reader<X, ikea::streampack::author::access<(ikea::boundlist::sidecar::geometry)1, unsigned char, unsigned short, std::byte>>>(fixture const&, unsigned int, bool, reader<X, ikea::streampack::author::access<(ikea::boundlist::sidecar::geometry)1, unsigned char, unsigned short, std::byte>>)>:",
+      "same_sequence": true,
+      "current_instructions": 306,
+      "before_instructions": 306
+    },
+    {
+      "function": "unsigned long chase<1u, reader<X, ikea::streampack::author::access<(ikea::boundlist::sidecar::geometry)1, unsigned char, unsigned int, std::byte>>>(unsigned int, reader<X, ikea::streampack::author::access<(ikea::boundlist::sidecar::geometry)1, unsigned char, unsigned int, std::byte>>)>:",
+      "same_sequence": true,
+      "current_instructions": 144,
+      "before_instructions": 144
+    },
+    {
+      "function": "unsigned long chase<8u, reader<X, ikea::streampack::author::access<(ikea::boundlist::sidecar::geometry)1, unsigned char, unsigned int, std::byte>>>(unsigned int, reader<X, ikea::streampack::author::access<(ikea::boundlist::sidecar::geometry)1, unsigned char, unsigned int, std::byte>>)>:",
+      "same_sequence": true,
+      "current_instructions": 637,
+      "before_instructions": 637
+    },
+    {
+      "function": "unsigned long projection<reader<X, ikea::streampack::author::access<(ikea::boundlist::sidecar::geometry)1, unsigned char, unsigned int, std::byte>>>(fixture const&, unsigned int, bool, reader<X, ikea::streampack::author::access<(ikea::boundlist::sidecar::geometry)1, unsigned char, unsigned int, std::byte>>)>:",
+      "same_sequence": true,
+      "current_instructions": 306,
+      "before_instructions": 306
+    },
+    {
+      "function": "unsigned long chase<1u, reader<X, ikea::streampack::author::access<(ikea::boundlist::sidecar::geometry)1, unsigned short, unsigned char, std::byte>>>(unsigned int, reader<X, ikea::streampack::author::access<(ikea::boundlist::sidecar::geometry)1, unsigned short, unsigned char, std::byte>>)>:",
+      "same_sequence": true,
+      "current_instructions": 165,
+      "before_instructions": 165
+    },
+    {
+      "function": "unsigned long chase<8u, reader<X, ikea::streampack::author::access<(ikea::boundlist::sidecar::geometry)1, unsigned short, unsigned char, std::byte>>>(unsigned int, reader<X, ikea::streampack::author::access<(ikea::boundlist::sidecar::geometry)1, unsigned short, unsigned char, std::byte>>)>:",
+      "same_sequence": true,
+      "current_instructions": 764,
+      "before_instructions": 764
+    },
+    {
+      "function": "unsigned long projection<reader<X, ikea::streampack::author::access<(ikea::boundlist::sidecar::geometry)1, unsigned short, unsigned char, std::byte>>>(fixture const&, unsigned int, bool, reader<X, ikea::streampack::author::access<(ikea::boundlist::sidecar::geometry)1, unsigned short, unsigned char, std::byte>>)>:",
+      "same_sequence": true,
+      "current_instructions": 327,
+      "before_instructions": 327
+    },
+    {
+      "function": "unsigned long chase<1u, reader<X, ikea::streampack::author::access<(ikea::boundlist::sidecar::geometry)1, unsigned short, unsigned short, std::byte>>>(unsigned int, reader<X, ikea::streampack::author::access<(ikea::boundlist::sidecar::geometry)1, unsigned short, unsigned short, std::byte>>)>:",
+      "same_sequence": true,
+      "current_instructions": 163,
+      "before_instructions": 163
+    },
+    {
+      "function": "unsigned long chase<8u, reader<X, ikea::streampack::author::access<(ikea::boundlist::sidecar::geometry)1, unsigned short, unsigned short, std::byte>>>(unsigned int, reader<X, ikea::streampack::author::access<(ikea::boundlist::sidecar::geometry)1, unsigned short, unsigned short, std::byte>>)>:",
+      "same_sequence": true,
+      "current_instructions": 767,
+      "before_instructions": 767
+    },
+    {
+      "function": "unsigned long projection<reader<X, ikea::streampack::author::access<(ikea::boundlist::sidecar::geometry)1, unsigned short, unsigned short, std::byte>>>(fixture const&, unsigned int, bool, reader<X, ikea::streampack::author::access<(ikea::boundlist::sidecar::geometry)1, unsigned short, unsigned short, std::byte>>)>:",
+      "same_sequence": true,
+      "current_instructions": 325,
+      "before_instructions": 325
+    },
+    {
+      "function": "unsigned long chase<1u, reader<X, ikea::streampack::author::access<(ikea::boundlist::sidecar::geometry)1, unsigned short, unsigned int, std::byte>>>(unsigned int, reader<X, ikea::streampack::author::access<(ikea::boundlist::sidecar::geometry)1, unsigned short, unsigned int, std::byte>>)>:",
+      "same_sequence": true,
+      "current_instructions": 163,
+      "before_instructions": 163
+    },
+    {
+      "function": "unsigned long chase<8u, reader<X, ikea::streampack::author::access<(ikea::boundlist::sidecar::geometry)1, unsigned short, unsigned int, std::byte>>>(unsigned int, reader<X, ikea::streampack::author::access<(ikea::boundlist::sidecar::geometry)1, unsigned short, unsigned int, std::byte>>)>:",
+      "same_sequence": true,
+      "current_instructions": 767,
+      "before_instructions": 767
+    },
+    {
+      "function": "unsigned long projection<reader<X, ikea::streampack::author::access<(ikea::boundlist::sidecar::geometry)1, unsigned short, unsigned int, std::byte>>>(fixture const&, unsigned int, bool, reader<X, ikea::streampack::author::access<(ikea::boundlist::sidecar::geometry)1, unsigned short, unsigned int, std::byte>>)>:",
+      "same_sequence": true,
+      "current_instructions": 325,
+      "before_instructions": 325
+    }
+  ]
+}

@@ -20,6 +20,7 @@ experiments and checks under Object, Allocation, Journal, Port and Worker.
 - [Layout analyser](layout-analyser/README.md): workload objectives, plane splitting, hardware fitting and reusable layout selection.
 - [Tuple layout](tuple-layout/README.md): physical layout, bound operations and native batching.
 - [StreamPack](streampack/README.md): variable-byte packing and sidecar comparisons, with production qualification through Ikea, Loom and Orbital.
+- [Boundlist](boundlist/README.md): Ikea extraction and ordered point/range search, with adopted AVX2/AVX-512/NEON kernels, complete-consumer scorecards, Loom staging and retained-reader qualification.
 - [Hashtable multimap](hashtable/README.md): unpromoted owning multimap, captured read/write comparisons and payload/lifetime questions. The set/map core is maintained in [Ikea](../../ikea/docs/hashtable/usage.md); superseded studies are archived.
 - [Hashtable K-way merge](hashtable-merge/README.md): bucket-wise traversal, external workspace and retained accumulation comparisons. Single-source mutable accumulation is maintained in Ikea.
 - [Bec256 with current Ikea](bec256-composition/README.md): exact codec operations, native pairs and larger-bitset population/length directories built with SeriesPack and TuplePack.

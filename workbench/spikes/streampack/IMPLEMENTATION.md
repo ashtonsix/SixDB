@@ -1,7 +1,11 @@
 # StreamPack implementation qualification
 
 StreamPack is implemented in [Ikea](../../../ikea/docs/streampack/usage.md), with
-caller-owned payload, directory, length and control windows. This note separates
+caller-owned payload, directory, length and control windows. Reservation metadata
+now belongs to [Boundlist](../../../ikea/docs/boundlist/usage.md); its
+[extraction qualification](../boundlist/GRADUATION.md) covers shared kernels and
+the later reverse/search changes. This note preserves the original qualification
+against its captured sources. It separates
 evidence for that module from the earlier comparative spike. Native comparisons
 and real owner qualification are recorded separately below.
 

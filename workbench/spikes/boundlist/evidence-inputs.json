@@ -1,0 +1,218 @@
+{
+  "search": {
+    "jobs": {
+      "zen5": "20261019T221410Z-caa1688a",
+      "granite": "20261019T221417Z-ccd8027e",
+      "neon": "20261019T221423Z-77cd5762"
+    },
+    "patterns": [
+      "*-search-k*.csv"
+    ],
+    "dimensions": [
+      "bits",
+      "count",
+      "distribution",
+      "implementation",
+      "metric",
+      "chains"
+    ],
+    "extras": [
+      "direct_bytes",
+      "width_bytes",
+      "direct_guide_bytes",
+      "child_bytes"
+    ],
+    "filter": {
+      "metric": [
+        "prepared_search",
+        "complete_query_child_hash"
+      ]
+    }
+  },
+  "ranges": {
+    "jobs": {
+      "zen5": "20261019T223416Z-45132cf6",
+      "granite": "20261019T223422Z-52242638",
+      "neon": "20261019T223429Z-40a41c4f"
+    },
+    "patterns": [
+      "*-ranges-*.csv"
+    ],
+    "dimensions": [
+      "bits",
+      "count",
+      "nodes",
+      "repeat",
+      "gap",
+      "span",
+      "sparse",
+      "implementation",
+      "metric"
+    ],
+    "extras": [
+      "metadata_bytes",
+      "child_bytes"
+    ]
+  },
+  "reads": {
+    "jobs": {
+      "zen5": "20261019T223416Z-45132cf6",
+      "granite": "20261019T223422Z-52242638",
+      "neon": "20261019T223429Z-40a41c4f"
+    },
+    "patterns": [
+      "*-reads-p1.csv",
+      "*-reads-p64.csv"
+    ],
+    "dimensions": [
+      "layout",
+      "maximum",
+      "rows",
+      "used",
+      "tombstones",
+      "fixed",
+      "placement",
+      "implementation",
+      "metric"
+    ],
+    "extras": [
+      "metadata_bytes",
+      "payload_bytes",
+      "payload_capacity_bytes",
+      "binding_bytes"
+    ]
+  },
+  "reads-complete-cycle": {
+    "jobs": {
+      "zen5": "20261019T225059Z-6445f87f",
+      "granite": "20261019T225105Z-2bc3b476",
+      "neon": "20261019T225111Z-c91deaad"
+    },
+    "patterns": [
+      "*-reads-complete-cycle.csv"
+    ],
+    "dimensions": [
+      "layout",
+      "maximum",
+      "rows",
+      "used",
+      "tombstones",
+      "fixed",
+      "placement",
+      "implementation",
+      "metric"
+    ],
+    "extras": [
+      "metadata_bytes",
+      "payload_bytes",
+      "payload_capacity_bytes",
+      "binding_bytes"
+    ]
+  },
+  "geometry": {
+    "jobs": {
+      "zen5": "20261019T225059Z-6445f87f",
+      "granite": "20261019T225105Z-2bc3b476",
+      "neon": "20261019T225111Z-c91deaad"
+    },
+    "patterns": [
+      "*-geometry-m*.csv"
+    ],
+    "dimensions": [
+      "layout",
+      "maximum",
+      "count",
+      "nodes",
+      "range_span",
+      "implementation",
+      "metric"
+    ],
+    "extras": [
+      "metadata_bytes",
+      "child_bytes",
+      "shared_payload_bytes"
+    ]
+  },
+  "cold-small": {
+    "jobs": {
+      "zen5": "20261019T225059Z-6445f87f",
+      "granite": "20261019T225105Z-2bc3b476",
+      "neon": "20261019T225111Z-c91deaad"
+    },
+    "patterns": [
+      "*-covered-cold-p1-*.csv",
+      "*-covered-cold-p4096-*.csv"
+    ],
+    "dimensions": [
+      "nodes",
+      "mixed",
+      "span",
+      "implementation",
+      "execution",
+      "width",
+      "metric"
+    ],
+    "extras": [
+      "setup_ns",
+      "close_ns",
+      "end_bytes",
+      "width_bytes",
+      "header_bytes",
+      "child_bytes",
+      "frame_bytes",
+      "scheduler_bytes",
+      "ring_visits"
+    ]
+  },
+  "packed": {
+    "jobs": {
+      "zen5": "20261019T212417Z-4314c4e3",
+      "granite": "20261019T212423Z-c7549654",
+      "neon": "20261019T212429Z-afe3dc7b"
+    },
+    "patterns": [
+      "*-packed-p*.csv"
+    ],
+    "dimensions": [
+      "bits",
+      "nodes",
+      "layout",
+      "implementation",
+      "metric"
+    ],
+    "extras": [
+      "metadata_bytes",
+      "child_bytes"
+    ]
+  },
+  "cold-large": {
+    "jobs": {
+      "zen5": "20261019T230513Z-802a9c26",
+      "granite": "20261019T230519Z-9b6211cf",
+      "neon": "20261019T230525Z-d392afea"
+    },
+    "patterns": [
+      "*-long-cold-*.csv"
+    ],
+    "dimensions": [
+      "nodes",
+      "mixed",
+      "span",
+      "implementation",
+      "execution",
+      "width",
+      "metric"
+    ],
+    "extras": [
+      "setup_ns",
+      "close_ns",
+      "end_bytes",
+      "width_bytes",
+      "header_bytes",
+      "child_bytes",
+      "frame_bytes",
+      "scheduler_bytes",
+      "ring_visits"
+    ]
+  }
+}

@@ -1,0 +1,88 @@
+add_executable(boundlist_check check.cpp)
+sixdb_target(boundlist_check)
+target_compile_options(boundlist_check PRIVATE -fno-vectorize -fno-slp-vectorize)
+target_link_libraries(boundlist_check PRIVATE ikea::streampack)
+
+add_executable(boundlist_bench bench.cpp)
+sixdb_target(boundlist_bench)
+target_compile_options(boundlist_bench PRIVATE -fno-vectorize -fno-slp-vectorize)
+target_link_libraries(boundlist_bench PRIVATE ikea::streampack)
+
+add_test(NAME boundlist_check COMMAND boundlist_check)
+
+add_library(boundlist_codegen OBJECT codegen.cpp)
+sixdb_target(boundlist_codegen)
+target_compile_options(boundlist_codegen PRIVATE -fno-vectorize -fno-slp-vectorize)
+target_link_libraries(boundlist_codegen PRIVATE ikea::streampack)
+
+add_executable(boundlist_packed packed.cpp)
+sixdb_target(boundlist_packed)
+target_compile_options(boundlist_packed PRIVATE -fno-vectorize -fno-slp-vectorize)
+target_link_libraries(boundlist_packed PRIVATE ikea::streampack)
+
+add_executable(boundlist_ranges ranges.cpp)
+sixdb_target(boundlist_ranges)
+target_compile_options(boundlist_ranges PRIVATE -fno-vectorize -fno-slp-vectorize)
+target_link_libraries(boundlist_ranges PRIVATE ikea::streampack)
+
+add_executable(boundlist_search search.cpp)
+sixdb_target(boundlist_search)
+target_compile_options(boundlist_search PRIVATE -fno-vectorize -fno-slp-vectorize)
+target_link_libraries(boundlist_search PRIVATE ikea::streampack workbench::pmu)
+
+add_library(boundlist_existing_material STATIC ../streampack/implementation_orbital.cpp)
+sixdb_target(boundlist_existing_material)
+target_compile_options(boundlist_existing_material PRIVATE -fno-vectorize -fno-slp-vectorize)
+target_link_libraries(boundlist_existing_material PUBLIC ikea::streampack loom::loom)
+add_executable(boundlist_material material.cpp)
+sixdb_target(boundlist_material)
+target_compile_options(boundlist_material PRIVATE -fno-vectorize -fno-slp-vectorize)
+target_link_libraries(boundlist_material PRIVATE boundlist_existing_material)
+add_test(NAME boundlist_material COMMAND boundlist_material)
+
+add_executable(boundlist_edges edges.cpp)
+sixdb_target(boundlist_edges)
+target_compile_options(boundlist_edges PRIVATE -fno-vectorize -fno-slp-vectorize)
+target_link_libraries(boundlist_edges PRIVATE ikea::boundlist)
+
+add_executable(boundlist_cold cold.cpp)
+sixdb_target(boundlist_cold)
+target_compile_options(boundlist_cold PRIVATE -fno-vectorize -fno-slp-vectorize)
+target_link_libraries(boundlist_cold PRIVATE ikea::streampack loom::loom)
+
+add_executable(boundlist_reads reads.cpp)
+sixdb_target(boundlist_reads)
+target_compile_options(boundlist_reads PRIVATE -fno-vectorize -fno-slp-vectorize)
+target_link_libraries(boundlist_reads PRIVATE ikea::streampack)
+
+add_executable(boundlist_promotion promotion.cpp)
+sixdb_target(boundlist_promotion)
+target_compile_options(boundlist_promotion PRIVATE -fno-vectorize -fno-slp-vectorize)
+target_link_libraries(boundlist_promotion PRIVATE ikea::streampack)
+
+add_executable(boundlist_mutation mutation.cpp)
+sixdb_target(boundlist_mutation)
+target_compile_options(boundlist_mutation PRIVATE -fno-vectorize -fno-slp-vectorize)
+target_link_libraries(boundlist_mutation PRIVATE ikea::streampack)
+
+add_executable(boundlist_interpolation interpolation.cpp)
+sixdb_target(boundlist_interpolation)
+target_compile_options(boundlist_interpolation PRIVATE -fno-vectorize -fno-slp-vectorize)
+target_link_libraries(boundlist_interpolation PRIVATE ikea::boundlist ikea::streampack workbench::pmu)
+
+add_executable(boundlist_prediction_check prediction-check.cpp)
+sixdb_target(boundlist_prediction_check)
+target_compile_options(boundlist_prediction_check PRIVATE -fno-vectorize -fno-slp-vectorize)
+target_link_libraries(boundlist_prediction_check PRIVATE ikea::boundlist)
+add_test(NAME boundlist_prediction_check COMMAND boundlist_prediction_check)
+
+add_executable(boundlist_cold_compact cold.cpp)
+sixdb_target(boundlist_cold_compact)
+target_compile_options(boundlist_cold_compact PRIVATE -fno-vectorize -fno-slp-vectorize)
+target_compile_definitions(boundlist_cold_compact PRIVATE BOUNDLIST_COMPACT_FRAME=1)
+target_link_libraries(boundlist_cold_compact PRIVATE ikea::streampack loom::loom)
+
+add_executable(boundlist_packing packing.cpp)
+sixdb_target(boundlist_packing)
+target_compile_options(boundlist_packing PRIVATE -fno-vectorize -fno-slp-vectorize)
+target_link_libraries(boundlist_packing PRIVATE ikea::streampack)
