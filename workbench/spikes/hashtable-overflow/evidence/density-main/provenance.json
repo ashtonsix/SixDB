@@ -1,0 +1,35 @@
+{
+  "files_sha256": {
+    "check-baseline.txt": "ae78a215234344a66e12fe3be0b9c11534eaddd7e0bc8d925deefa685b06122a",
+    "check-filter15.txt": "ae78a215234344a66e12fe3be0b9c11534eaddd7e0bc8d925deefa685b06122a",
+    "check-tag8.txt": "ae78a215234344a66e12fe3be0b9c11534eaddd7e0bc8d925deefa685b06122a",
+    "codegen/comparison.json": "6d0c85d7bc4710256ff06a69aba64ee1abad263c66d54558bac2b834df65019e",
+    "compiler.txt": "5b17cd9bfa01ae4b276d020d757aeed82b232d4dacef417a833e5ba69a5307da",
+    "delta-baseline.json": "4cde0d24cc35d51e3bd59b273f4842e7d3269df8cd02df11ac5ba5d36aacd7db",
+    "delta-filter15.json": "9af609be4416b89a3c28cbf749006a6b162a6cc9fc794ba945ffe2e147480463",
+    "delta-tag8.json": "77c5b6673aca4cef82a106cc85e02297374fa47bcb1142986cfe21889590d1c5",
+    "lscpu.json": "a09e21b97b59351c5c24ddd7a795699c4e215212b98847a3d7461ceaf8ca3257",
+    "summary/cases.csv": "e8e64187b1cbe2b09d15a60ee6048b37745bfb2737e789b1c166c2fe5ff2ca91",
+    "worker-result.json": "5f21aa3b2617f60f321e4039ab7f47f22d774b5bafea4266ab9b60e22b8bc3f1"
+  },
+  "format": 2,
+  "full_bundle": "artifact.json",
+  "kind": "files",
+  "regenerate": [
+    [
+      "python3",
+      "workbench/spikes/hashtable-overflow/audit.py",
+      "{evidence}",
+      "--levels",
+      "925,980"
+    ],
+    [
+      "python3",
+      "workbench/spikes/hashtable-overflow/summarize.py",
+      "{evidence}",
+      "--output",
+      "{evidence}/summary"
+    ]
+  ],
+  "regenerate_from": "archive"
+}
