@@ -167,10 +167,17 @@ template<class Control> Result<Representation<Control>*> capture_representation(
       if (!grouped(owners) && !unique_allocations(bodies, scratch)) {
         release(value); return std::unexpected(Error::invalid_argument);
       }
-      for (const auto& body : bodies) {
-        if (is_shared(body) || SourceAccess::retained(body)) continue;
-        auto ready = capture_ready(body.allocation);
-        if (!ready) { release(value); return std::unexpected(ready.error()); }
+      if (grouped(owners)) {
+        if (supplier != bodies.size()) {
+          auto ready = capture_ready(bodies[supplier].allocation);
+          if (!ready) { release(value); return std::unexpected(ready.error()); }
+        }
+      } else {
+        for (const auto& body : bodies) {
+          if (is_shared(body) || SourceAccess::retained(body)) continue;
+          auto ready = capture_ready(body.allocation);
+          if (!ready) { release(value); return std::unexpected(ready.error()); }
+        }
       }
     }
     if (grouped(owners)) {

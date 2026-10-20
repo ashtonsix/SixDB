@@ -219,18 +219,74 @@ void grouped_aliases_and_empty_parts() {
   check(users(storage) == 1 && existing.address[0] == std::byte{0}, "grouped release damaged existing Hold");
   alloc::release(existing);
 
-  geometry.count = 1; geometry.sizes[0] = 0;
-  const std::array null_body{source(control, 0, nullptr, {})};
-  orbital::release(take(capture_representation(memory, control, PartOwners::independent_allocation, null_body)));
-  auto live = fixture.create();
-  storage = live.storage;
-  const std::array empty_body{source(control, 0, &live, {})};
-  auto* empty = take(capture_representation(memory, control, PartOwners::independent_allocation, empty_body));
-  check(!live && users(storage) == 1, "empty Part did not transfer supplied live Allocation");
-  const auto empty_view = take(RepresentationSelection<Control>{empty}.part(std::size_t{0}));
-  check(bool(empty_view) && !empty_view.address(), "empty Part lost its valid address slot");
-  orbital::release(empty);
+  for (auto policy : {PartOwners::independent_allocation, PartOwners::grouped_allocation}) {
+    geometry.count = 0;
+    orbital::release(take(capture_representation(memory, control, policy, {})));
+    geometry.count = 1; geometry.sizes[0] = 0;
+    const std::array null_body{source(control, 0, nullptr, {})};
+    orbital::release(take(capture_representation(memory, control, policy, null_body)));
+    auto live = fixture.create();
+    storage = live.storage;
+    const std::array empty_body{source(control, 0, &live, {})};
+    auto* empty = take(capture_representation(memory, control, policy, empty_body));
+    check(!live && users(storage) == 1, "empty Part did not transfer supplied live Allocation");
+    const auto empty_view = take(RepresentationSelection<Control>{empty}.part(std::size_t{0}));
+    check(bool(empty_view) && !empty_view.address(), "empty Part lost its valid address slot");
+    orbital::release(empty);
+  }
   check(!memory.live && !geometry.uses, "empty-Part capture leaked metadata or interpretation");
+}
+
+void grouped_retained_prefix_and_fresh_suffix() {
+  Fixture fixture;
+  Memory memory;
+  auto allocation = fixture.create();
+  auto* storage = allocation.storage;
+  auto* address = allocation.address;
+  const auto size = allocation.size;
+  address[0] = std::byte{0x35}; address[8] = std::byte{0x79};
+  Geometry old_geometry{&memory, {8}}, geometry{&memory, {8, 8}, 2};
+  const Control old_control{&old_geometry}, control{&geometry};
+  const std::array initial{source(old_control, 0, &allocation, {address, 8})};
+  auto* old = take(capture_representation(memory, old_control, PartOwners::independent_allocation, initial));
+  // Test-only custody setup: a second native use supplies the disjoint suffix.
+  // This does not grant permission to rewrite the old captured prefix.
+  alloc::Allocation fresh;
+  fresh.storage = take(object_detail::pin(storage)); fresh.address = address; fresh.size = size;
+  std::array bodies{take(orbital::source(RepresentationSelection<Control>{old}, 0)),
+      source(control, 1, &fresh, {address + 8, 8})};
+  const auto old_metadata = memory.live;
+  const auto intact = [&] {
+    check(fresh && fresh.storage == storage && users(storage) == 2,
+          "grouped refusal consumed or pinned the fresh supplier");
+    check(memory.live == old_metadata && old_geometry.uses == 1 && !geometry.uses,
+          "grouped refusal changed proof or metadata lifetime");
+  };
+  bodies[1].body = {address + 8, 7};
+  refusal(capture_representation(memory, control, PartOwners::grouped_allocation, bodies),
+          Error::invalid_argument, "grouped capture skipped later Part geometry");
+  intact(); bodies[1].body = {address + 8, 8};
+  auto other = fixture.create();
+  bodies[1] = source(control, 1, &other, {other.address, 8});
+  refusal(capture_representation(memory, control, PartOwners::grouped_allocation, bodies),
+          Error::invalid_argument, "grouped capture accepted distinct physical suppliers");
+  intact(); check(other && users(other.storage) == 1, "grouped refusal consumed distinct supplier");
+  bodies[1] = source(control, 1, &fresh, {address + 8, 8});
+  geometry.retain_hook = +[](void* input) noexcept { worker::relinquish(*static_cast<worker::Lane*>(input)); };
+  geometry.hook_context = &fixture.lane;
+  refusal(capture_representation(memory, control, PartOwners::grouped_allocation, bodies),
+          Error::conflict, "grouped fresh supplier missed final owner-Lane preflight");
+  intact(); check(bool(worker::adopt(fixture.lane)), "readopt grouped supplier's Lane");
+  auto* value = take(capture_representation(memory, control, PartOwners::grouped_allocation, bodies));
+  check(!fresh && users(storage) == 2, "grouped capture did not transfer exactly one fresh use");
+  orbital::release(old);
+  const RepresentationSelection<Control> selected{value};
+  check(users(storage) == 1 && take(selected.part(std::size_t{0})).address()[0] == std::byte{0x35} &&
+        take(selected.part(std::size_t{1})).address()[0] == std::byte{0x79},
+        "grouped destination lost retained prefix or fresh suffix after source disposal");
+  orbital::release(value);
+  check(!users(storage) && !memory.live && !old_geometry.uses && !geometry.uses,
+        "grouped fresh/retained custody did not settle exactly once");
 }
 
 void late_refusal_and_metadata_failure() {
@@ -558,6 +614,7 @@ int main() {
   existing_hold_and_foreign_return(true);
   readiness_refusals_and_transfer();
   grouped_aliases_and_empty_parts();
+  grouped_retained_prefix_and_fresh_suffix();
   late_refusal_and_metadata_failure();
   closing_pool_capture();
   final_preflight_after_callbacks();
