@@ -177,8 +177,9 @@ below. Compare hot and dispersed updates, query pressure and the complete
 partial/full compaction cycle; neither format is assumed to win.
 
 The ordinary attempt reuses a bounded PRIVATE publication vector reserved once
-by the producer; it clears every Owner on success or refusal. This is scratch,
-never lookup authority or logical pending state. Small row arrays are read only
+by the producer. Success clears its Owners; capacity refusal can retain the
+finished candidate for retry against its original basis. This is scratch,
+never lookup authority or logical visibility state. Small row arrays are read only
 for touched rows, and changed-row bit walks replace full64-row scans onB1.
 Cache a selected row's actual advice while admitting that row, avoiding a second
 directory lookup just to mark it. The finite producer's four current summary
@@ -291,7 +292,8 @@ OPEN_READY_BORROW(index):
 OPEN_SCOPED_READ(index, requested_snapshot, stationary_frame):
     reuse an actual live Scope for this Core, or construct it IN PLACE at NOW cut
     # Numeric old cuts cannot reopen history; enrolled Scope is never moved.
-    bind/admit schema once; retain selections through every use/cursor/wait
+    bind/admit schema once; keep borrowed selections under this SAME live token
+    # No physical retain/capture per row or cursor step; escape owns separately.
     return reference to stationary frame's Read (not a moved Scope)
 
 Cursor:
@@ -314,7 +316,7 @@ GROUP_SLOT(group,suffix):
     # Ordered suffix is NOT a packed slot; suffix14->slot2,15->slot0 is valid.
 
 SET_POSITION(read, container, physical_position):
-    retain selected container; set mode/layer/current physical prefix
+    keep selected container under the SAME token; set mode/layer/current physical prefix
     record original suffix or leaf routing rank SEPARATELY from payload slot
     record all existing ancestor frames and the leaf itself (also singleton root)
     save lazy exclusive group/region successor identity if outer cursor unbound
@@ -328,6 +330,8 @@ ENTRY_AT_POSITION(read):
     else use selected TOP/GROUP representation's admitted slot
     return EntryRef, not a mandatory materialized64 B copy
     # Enumeration may consume all 64 B; a Part query reads its needed fields.
+    # Reuse the selected array/table and lazy correction image across this cohort;
+    # requalify after a token, basis or admitted physical-treatment change.
 
 FIND_EXACT_PREFIX(read,L,p):
     reset traversal frames; set layer L, probe kind NONE and no high-edge filter
@@ -937,13 +941,24 @@ ledger is introduced to pretend otherwise.
 
 ```
 FREEZE_AND_PUBLISH(edit, mode):
+    use a stationary EMPTY Prepared for this attempt
+    # Today's packet is single-use after acceptance, install or abort. Only a
+    # refused still-empty packet is retryable; RESET_PREPARED below is proposed.
     finish ALL mutable destination writes, including holder/bounds repairs
     for each changed directory draft, once:
         make admitted immutable Control from the shared format proof and counts
         sources = certified source(old_selection,p) for unchanged Parts
                   + finished new bounded sources for changed Parts
-        capture through Orbital; retain returned finished Owner
-        # Capture seals body+padding NOW, before prepare/install.
+        result = capture through Orbital
+        if capture failed:
+            keep before-source lifetimes through all cleanup callbacks
+            release finished candidate Owners and unconsumed Allocations/drafts
+            # Refused capture did not consume that capture's fresh Allocations.
+            # Earlier captures may already own theirs; settle each use once.
+            charge synchronous proof disposal and remaining physical debt
+            keep attempted append highwater sealed; return actual error with logical input
+            # Retry reselects/revalidates; it never rewrites the failed suffix.
+        retain returned finished Owner; its body+padding is sealed before prepare
     all_changes = offered segment changes + changed directory/schema/extra Objects
                   + real deletion/tombstone changes
     omit wholly unchanged Objects; include no duplicate publication for one name
@@ -956,17 +971,26 @@ FREEZE_AND_PUBLISH(edit, mode):
         # Pending physical uses remain charged and prevent premature storage reuse.
         return stale with original inputs; recompute against a new actual basis
         # Opening a fresh Scope alone never validates these older afterimages.
-    if capacity/refused:
-        release candidates or retain finished Owners with their true dependencies
-        refill/wait only outside acceptance; revalidate/recompute before retry
+    if capacity refused:
+        # Failed prepare leaves the packet empty and input Owners unchanged.
+        retain finished candidates, original basis and interpretation dependencies
+        refill/wait only with an actual resource-progress contract, outside acceptance
+        retry the SAME candidates if that basis is still current
+        if basis became stale: abandon/recompute as above
+        # Do not rotate/copy a sealed append prefix merely to retry prepare.
+        # A synchronous caller may instead return refusal and settle its candidates.
+    if another error: settle candidates and return that error, not a refill loop
     if accepted:
         Orbital.install(prepared_workspace) once
         # One cut; no allocating Engine cache update or undo commit afterwards.
-    release source certificates/drafts; bounded Orbital retirement at boundary
+    release source certificates/drafts; schedule bounded Orbital history traversal
+    # A traversal step can trigger last-owner graph disposal; that cost is NOT
+    # bounded by the traversal limit. Include it or arrange owner-side disposal.
     charge retirement, failed attempts and retained capacities to full history
 
 ABORT(edit):
-    Orbital abort settles any accepted packet under its existing exclusion rules
+    if packet was accepted: Orbital abort settles it under existing exclusion rules
+    # A failed prepare has no accepted reservation to abort.
     release all caller-held candidate Owners and physical sources as well
     discard private drafts and the scratch Hashtable
     published directory/segments are unchanged; there is no reverse replay
@@ -988,10 +1012,33 @@ COUNTED_SHARED_BATCH_SLAB:
     no Engine reader ledger permits hole reuse or relocation
 ```
 
+These are custody mechanisms, not a prescription to pool Segment bodies.
+Segments keep independent Allocations. Directory storage can use bounded top
+tables, actual Hashtable-owned inline Dirents and partitioned arrays below.
+Several Parts may name one admitted directory backing; they still incur their
+descriptor slots, validation and physical retention. Narrowing a certified Part
+does not independently reclaim its surrounding native backing.
+
 ## Proposed Orbital work
 
 This section is coordinated with Orbital LEAD. It changes physical retention
 and publication cost inside Orbital, not Engine's visibility semantics.
+The following ready-path changes belong inside Orbital; Engine should not add
+private allocation inventories, reader lists or version maps to avoid them:
+
+```
+ORBITAL_OWNED_COSTS:
+    choose eligible finite geometry before growing inventory
+    find a pending preparation without rescanning every owned Group
+    validate every captured Part, but preflight one grouped fresh supplier ONCE
+    drain selected history by cut intervals, not every reader cut per Object
+    keep last-owner disposal distinct from bounded history traversal
+```
+
+These are implementation changes, not a new caller API. The range-source,
+prepared-stock and staged-resolution mechanisms below remain proposals.
+Today's prepare may allocate metadata and resolves identities in several
+passes; its cost is still charged until the proposed path is implemented.
 
 ```
 PROPOSED_BOUNDED_NATIVE_SOURCE(writer_allocation, body_range):
@@ -1050,6 +1097,11 @@ These mechanisms still charge range enrollment/drop, capture descriptor work,
 all admitted Parts, Owner admission and reclamation. A native batch source is
 rotated/released at exhaustion; no caller can recycle an old hole just because
 its logical entry was replaced. Actual reuse belongs to Orbital allocation.
+For a permanently closed append backing, the current writer can already
+relinquish an unused tail after the highest attempted sealed footprint, including
+readable padding, then request cold trimming. The latest published extent alone
+is insufficient after a longer failed capture. This does not reclaim interior
+holes or make native Part pins range-aware.
 
 Range enrollment and release must describe exactly the same destination body
 and padding, including narrowed sources and selected-copy exports. Deriving
