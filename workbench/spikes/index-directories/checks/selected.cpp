@@ -44,7 +44,7 @@ Store::Owner capture(Store& store,std::pmr::memory_resource& memory,
   std::size_t total=0; for (const auto& b:bodies) total+=b.size();
   auto backing=take(loom::allocate(worker,{.bytes=total,.alignment=64}));
   const Control c{&memory,&format,id,0,format.count,
-      orbital::PartOwners::grouped_allocation,0};
+      orbital::PartOwners::grouped_allocation,ExtentMode::parts};
   std::vector<orbital::PartSource> sources;
   std::size_t offset=0;
   for (std::size_t i=0;i<bodies.size();++i) {

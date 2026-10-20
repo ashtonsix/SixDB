@@ -49,6 +49,18 @@ extern "C" const std::byte* idx_asm_exact(const index_spike::NativeRead*,
 // original suffix mask in its header ranks sorted64B payloads beginning at64.
 extern "C" const std::byte* idx_asm_group16(const index_spike::NativeRead*,
     std::uint32_t prefix,index_spike::Lookup* optional_provenance) noexcept;
+extern "C" const std::byte* idx_asm_group16_read(const index_spike::NativeRead*,
+    std::uint32_t prefix) noexcept;
+// One selected root owns immutable F32 radix nodes, then original-mask groups.
+// Each576B node has shift:u8@2,min/max groupIndex:u32@8/12 and32 entries
+// {child bytes:pointer@0, original group mask:u16@8} starting64,stride16.
+// Root shift is a multiple of5 in0..25; every internal child decrements it by5.
+extern "C" const std::byte* idx_asm_graph32(const index_spike::NativeRead*,
+    std::uint32_t prefix) noexcept;
+// Actual root Part bytes selected under the SAME still-live Scope/Borrowed.
+// This is qualified byte reuse, not a numeric-cut cache or an owning handle.
+extern "C" const std::byte* idx_asm_graph32_bound(const std::byte* selected_root,
+    std::uint32_t prefix) noexcept;
 extern "C" std::uint64_t idx_asm_digest64(const std::byte*) noexcept;
 extern "C" void idx_asm_copy64(std::byte* private_destination,const std::byte*) noexcept;
 // Disjoint private destination, blocks>0, exact initialized64-byte blocks;

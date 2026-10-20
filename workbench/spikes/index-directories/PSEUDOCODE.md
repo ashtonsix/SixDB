@@ -84,9 +84,126 @@ Current captures do not authorize overwriting sealed bytes. Stable append,
 versioned resource binding, private material and finer physical update seams
 must be qualified with Orbital, not implemented as Engine rollback/history.
 
-The following is the cheapest concrete append/delta composition retained for
+The bounded native DRIVER now carries two append controls and a small-object
+eager counterpart. These are finite producer codecs, not selected Engine formats.
+The plain control has an eight-byte zero header followed by24-byte absolute
+afterimages. It performs NO footer/index/SUM update on an ordinary publication.
+Dirty points scan backward to the latest matching row; dirty SUM/extrema and a
+full fold load current bases and apply the visible event stream ONCE into64
+private values. Pristine advice bypasses this work for unchanged fields/rows.
+
+```
+APPEND_PLAIN_AFTERIMAGES(basis, commands):
+    use the same selected-prefix/custody/refusal rules as indexed append below
+    admit each distinct touched row once; retain its actual advice in private work
+    process commands in order; remove final no-ops; walk only changed-row bits
+    append one24-byte absolute afterimage per final changed row
+    no latest-offset table, eagerly maintained SUM or newly allocated header
+    capture exact expanded prefix with immutable Control; one atomic publication
+
+DIRTY_PLAIN_READ(scope, row):
+    resolve directory and base at the SAME selected Scope
+    if matching base advice is clean: return base
+    select its own immutable collection extent; scan backward within that prefix
+    return first matching ABSOLUTE afterimage, or selected base when absent
+
+PLAIN_FOLD_OR_DIRTY_AGGREGATE(scope):
+    load64 selected base field3 values into private scratch
+    apply every selected afterimage in forward order ONCE, overwriting its row
+    compute actual requested SUM128/extrema from the resulting values
+    a fold builds actual fresh bases/summaries/advice and an EMPTY new collection
+    publish all real moved-Part directory changes and collection in ONE packet
+```
+
+The indexed control can avoid a fresh header Allocation while maintaining an
+exact correction index. One shared prefix ends with an immutable160-byte
+lookup footer. It holds exact field3 SUM128 at0..15, event count u64 at16..23,
+64 u16 latest-event offsets at24..151 (eight-byte units,0 means absent), and
+eight zero reserved bytes. Each24-byte afterimage holds prefix:u32, zero:u32,
+sequence:u64 and field3 aftervalue:u64. Other seven u64 fields stay in the base.
+Footer and records are data-format choices in the DRIVER, not directory fields.
+
+```
+APPEND_INDEXED_AFTERIMAGES(basis, commands):
+    select current prefix and its exact byte extent through the SAME Core/Scope
+    old_footer = selected_prefix.end -160
+    process commands IN ORDER in private scratch, reading each touched row once
+       # RepeatedP9,P6 sees private9 before6; finalP6 implies SUM17 from7/11.
+    coalesce final afterimages by touched row; discard actual no-ops
+    if no final changes: return success without directory or collection mutation
+    if current committed prefix +24*changed_rows +160 exceeds backing capacity:
+        privately fold visible state INCLUDING these commands into actual bases
+           and ALL summaries, applying the old event stream only once
+        construct fresh advice generations; never clear an old generation
+        start a new fixed-address backing with an empty160-byte indexed footer
+        include actual resulting material/directory changes in THIS packet
+        do not append these already-incorporated afterimages again
+        capture empty rebased collection; prepare/install the complete packet
+        return
+    else if cached backing differs or sealed highwater != selected extent:
+        acquire fresh backing; copy ONLY the selected committed byte prefix
+        # Rotation alone changes no logical baseline or sequence meaning.
+    admit the disjoint suffix, including actual native store widths
+    append final afterimages; copy old footer to a NEW suffix position
+    patch latest-offset entries, event count and exact absolute SUM128
+    conservatively seal attempted physical highwater; never rewind failed space
+    capture ONE independent_shared Part spanning the finished initialized prefix
+       # Immutable Control owns its exact extent; no separate native header.
+    prepare/install collection plus actual compaction/port changes in ONE packet
+    charge private scratch, copies, capture, packet and amortized full settlement
+
+INDEXED_AFTERIMAGE_POINT(scope, row, field3):
+    directory lookup yields base bytes and generation-owned monotone dirty advice
+    if proved clean: return base field3
+    select authoritative collection under scope; use its OWN qualified extent
+    footer = prefix.end -160
+    if footer.latest[row] ==0: return base field3
+    return absolute aftervalue at prefix +8*footer.latest[row] +16
+    # Absolute replacement does not reapply a folded P contribution.
+
+INDEXED_AFTERIMAGE_SUM(scope):
+    use pristine selected summary when its generation is proved clean
+    otherwise return the selected footer's exact absolute SUM128
+    # Dirty MIN/MAX descend/recompute; no stale extrema pruning.
+```
+
+Footer copies are unreachable physical garbage in the newest prefix, bounded by
+backing capacity. They are not a linked history or an Engine visibility service:
+Orbital alone selects the old/new material and its extent. One indexed lookup
+does not scan earlier footers. The first counterpart used competent private
+coalescing and small exact afterimage/SUM objects, with ONE publication perB1/B64
+request. Its measured dispersed capture fanout motivates the packed eager control
+below. Compare hot and dispersed updates, query pressure and the complete
+partial/full compaction cycle; neither format is assumed to win.
+
+The ordinary attempt reuses a bounded PRIVATE publication vector reserved once
+by the producer; it clears every Owner on success or refusal. This is scratch,
+never lookup authority or logical pending state. Small row arrays are read only
+for touched rows, and changed-row bit walks replace full64-row scans onB1.
+Cache a selected row's actual advice while admitting that row, avoiding a second
+directory lookup just to mark it. The finite producer's four current summary
+Backings share one real advice object; one selected L0 mark invalidates them all.
+A general representation must prove its own advice coverage rather than assume
+this sharing. Eager full compaction keeps existing absolute afterimages that
+already equal the new bases; it does not manufacture64 unchanged replacements.
+
+```
+EAGER_PACKED_AFTERIMAGES(basis, commands):
+    admit/coalesce final changed rows with the SAME before/after semantics
+    select one576-byte correction image through basis
+       header: absolute SUM128,valid-row bits,zero padding;64 absolute values
+    allocate actual private576-byte native backing
+    clone the selected image ONCE using exact64-byte blocks
+    patch final changed row values, valid bits and actual SUM128
+    mark selected base/summary advice before visibility
+    capture ONE native Part and publish ONE actual Object in oneB1/B64 packet
+    full fold retains unchanged correction image; it already equals new bases
+    no per-row capture and no64-publication atomic-batch substitution
+```
+
+The following is the general append/delta composition retained for
 the producer comparison. It specifies the directory boundary and snapshot
-obligations; this spike does not implement another summary or delta codec.
+obligations; the finite native codec above is not a general summary law.
 
 ```
 APPEND_MATERIAL_CANDIDATE(basis, actual_commands):

@@ -196,6 +196,32 @@ Charge those calls/allocations, retained slabs and root-release cascades. Orbita
 drain's metadata-step limit does not bound arbitrary last-owner destruction.
 This alternative is motivated; its write/tail budget fit is unproved.
 
+The first exact-prefix graph probe is deliberately narrow: fixed F32 radix
+navigation to the same original-suffix groups, with no membership or ordered
+seek changes. Every node is576 initialized bytes:64-byte header plus32 16-byte
+slots. Header count:u16 at0 records live children; shift:u8 at2 selects five
+group-index bits; min/max group index:u32 at8/12 reject root aliases; remaining
+header bytes are zero. Each slot has child-byte pointer8, original group mask2
+(used at shift0), then6 zero bytes. Carrying the mask avoids the group's separate
+header load. Unused slots are all zero. Group payloads remain64-byte header plus
+ranked64-byte dirents; material allocations and outputs match the stable-name arm.
+
+Its actual native proof is368 bytes: resource pointer8, refcount8, physical name8,
+immutable Format88 and32 child Owners of8 bytes. Format contains seventeen u32
+extents68, Part count2, alignment padding2, namespace8 and proof pointer8.
+The Control remains32 bytes; one-Part native descriptors remain56 bytes.
+Proof allocation, retained child calls, native rounding and catalog/history
+metadata are additional costs, not included in the576-byte body. Static formats
+have a null dependency; selected-copy export explicitly retains/releases a graph
+proof. Root lifetime preserves DIRECTORY bytes, not independently versioned data.
+
+For262,144 dense prefixes,16,384 groups give three radix nodes per hit and529
+initial node proofs. A moving update copies1088 group bytes,64 material bytes
+and3*576 node bytes, captures five one-Part Representations, allocates three
+proofs and retains the actual unchanged children, before publishing two changes.
+Those extra child retentions make a write regression plausible. The comparison
+must retain that result; a read win cannot establish an accepted update design.
+
 Native-width, relative and prefix-stripped endpoint recipes are part of the
 initial paper comparison. K=1/2/4 does not intrinsically require eight-byte
 lanes. The following wide native layout is a conservative control, not a chosen
@@ -318,6 +344,86 @@ admits BOTH Parts. Membership copies/edits the mapping image once. Compare this
 with a three-Part mapped-image treatment if the actual Storage seam requires it;
 it must include all three capture slots. Neither treatment counts the 18-byte
 hash geometry as its complete ownership footprint.
+
+## Finite producer bytes and custody
+
+`buffered_producer` belongs to the end-to-end DRIVER, not the directory. Its
+closed profile has1..64 rows, each eight unsigned non-null u64 fields, one row
+at slot0 of each L4 physical-prefix segment, J=K=4. Only field3 changes. Other
+optional summary structures, NULL policy, insertion/deletion, arbitraryK/J and
+general segment codecs remain outside this profile.
+
+| Material | Initialized bytes and fields |
+| --- | --- |
+| Logical base row |64: eight u64 fields at0,8,...56; no advice stored in these captured bytes |
+| Dirent |64: actual base/summary Part pointer at0; five unused locators at8..47 zero; rep:u32 at48; zero flags:u16 at52; advice-bit:u16 at54; advice pointer:u64 at56 |
+| L4 group |64-byte original-suffix-mask header plusN ranked64-byte dirents; bytes outside mask at0..1 are zero |
+| L0/L1 directory |one64-byte dirent per actual prefix0 segment in this finite profile |
+| L2/L3 directory |128:64-byte mask header plus prefix0's64-byte dirent |
+| Summary |64-byte header(count:u16 at0,layer:u8 at2,zero elsewhere); sorted u16 positions at64; zero align-to64 gap; one384-byte eight-field cell per position |
+| Each field summary |48: count,min,max,sum_low,sum_high,not_null, each u64; SUM is exact128-bit unsigned |
+| Plain collection |eight zero header bytes followed by24-byte events; no per-publication footer/index/SUM |
+| Event |24: row/prefix:u32 at0,zero:u32 at4,collection-local sequence:u64 at8,absolute field3 aftervalue:u64 at16 |
+| Indexed collection footer |160: absolute field3 SUM128 at0..15; latest sequence:u64 at16;64 u16 latest-event offsets at24..151, in8-byte units,zero=absent;8 zero reserved bytes |
+| Packed eager correction |576:64-byte header with absolute field3 SUM128 at0..15,valid-row bits:u64 at16,zero at24..63;64 u64 absolute aftervalues at64..575 |
+
+Initial plain extent is8; indexed extent160. Plain publication adds24C bytes;
+indexed adds24C+160, forC distinct finally changed rows after command-order
+coalescing. Indexed earlier footers are unreachable garbage in the newer
+prefix, not links or a second history. At default256KiB backing, plainB1 fits
+10,922 events before full fold, indexedB1 fits1,423. Quantify the different
+fold cadence rather than comparing the append store alone. The constructor
+also supports smaller capacities for boundary checks. Events begin8-aligned;
+an indexed footer after one event is only8-aligned, so SUM128 uses two u64 loads
+or memcpy, never an aligned128-bit pointer cast.
+
+Control remains32 bytes: resource8, immutable Format pointer8, physical name8,
+first4, count2, owner-kind1, extent-mode1. `parts=0` retains the old ordinal
+law; `prefix8=1` makes first the exact initialized-prefix length in8-byte units,
+count1, stable PartId(name,0). Format remains88 bytes. In prefix mode its first
+two extent words are capacity and minimum bytes, count1; other extent words
+are zero, with the actual namespace and null graph dependency. Selected-copy
+preserves this coordinate and actual proof retention. No native header Part or
+second ObjectStore is added to encode the selected extent.
+
+Each shared Backing has56 bytes of authored fields: actual Allocation32,
+shared advice owner16 and sealed highwater8. Advice is8 bytes of monotone dirty
+bits OUTSIDE every captured body/padding. `make_shared` control blocks and
+allocator rounding are additional measured memory, not included in56/8.
+The Backing never grows or relocates its Allocation. Shared capture adds the
+actual24-byte ownership slot to the40-byte native Representation header,64
+requested metadata bytes here. Ordinary native one-Part captures request56.
+Pool mapping/granularity, catalog/history/PMR inventory and pending physical
+returns are separate. Requested bytes are not RSS.
+
+The earlier frozen small-object eager control stores8-byte per-row afterimages
+and a16-byte SUM in separate Objects. Its dispersed atomic batches exposed the
+cost of dozens of captures. The current stronger eager control copies ONE576B
+image into a real fresh native Allocation, patches final changed rows/SUM and
+captures/publishes one Object. Full compaction leaves this already-equal image
+unchanged. Keep the measured small-object loss; do not treat it as an eager
+lower bound or assume append wins before this packed comparison. Native LMDB
+SUM now uses an ordinary renewed cursor walk, not64 independent point gets.
+
+Base and summary Backings own their actual advice; a dirent's raw advice pointer
+requires the SAME live Scope as its material pointer. Initial/full-fold row
+Backings share one advice owner, and all four summary Backings share another.
+Partial row compaction gets a fresh advice object; old generations are never
+cleared. Advice chooses a safe path, while the selected collection/afterimages
+remain authoritative. All source bodies/padding seal at capture, including a
+failed candidate. Failed append suffixes are never reused: rotation copies only
+the actual Scope-selected prefix into fresh fixed backing. Full fold instead
+starts an empty rebased collection; it must not copy the old footer's offsets.
+
+The producer's144-slot vector is bounded private publication workspace, reserved
+once, empty at every returned boundary. Its3,456B capacity(24B/Change) and touched
+row scratch are real costs; it is not a segment roster or reader ledger.
+`log_copy_bytes` counts footer/rotation copies only; base/directory construction
+and port copies are separate work. PMR live/peak excludes shared control blocks,
+advice, vector and input/output allocations. Whole-history timing starts before
+backend setup and stops after fixture/catalog destruction and actual shutdown;
+it includes setup and final oracle overhead explicitly rather than hiding them
+outside the claimed lifecycle total.
 
 ## Tiny Boundlist candidates
 

@@ -4,6 +4,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#include <optional>
 #include <source_location>
 #include <vector>
 
@@ -60,12 +61,18 @@ Record record(std::uint32_t prefix) {
   return r;
 }
 void expect(GroupFixture& fixture,const Store::Scope& scope,const Record& oracle) {
-  ReadContext context{GroupFixture::directory_space,&scope,{}};
+  ReadContext context{fixture.directory_namespace(),&scope,{}};
   const auto view=fixture.view(context);
   Lookup lookup;
-  const auto* descriptor=idx_asm_group16(&view,oracle.prefix,&lookup);
+  const bool graph=fixture.directory_namespace()==GroupFixture::graph_space;
+  const auto* descriptor=graph?fixture.read(view,oracle.prefix):
+      idx_asm_group16(&view,oracle.prefix,&lookup);
   check(descriptor,"existing original suffix missing");
-  check(idx_asm_group16(&view,oracle.prefix,nullptr)==descriptor,"optional mutation provenance differs");
+  check(fixture.read(view,oracle.prefix)==descriptor,"read-only assembly changed selected bytes");
+  if (graph) {
+    const auto root=idx_module_bind(&view,view.root);
+    check(idx_asm_graph32_bound(root.bytes,oracle.prefix)==descriptor,"qualified bound-root traversal differs");
+  }
   check(!std::memcmp(descriptor+8,oracle.descriptor.data()+8,56),"metadata outside locator changed");
   const std::byte* pointer;
   std::memcpy(&pointer,descriptor,8);
@@ -73,24 +80,26 @@ void expect(GroupFixture& fixture,const Store::Scope& scope,const Record& oracle
   const auto bound=scope.bind(GroupFixture::material_id(oracle.prefix));
   check(bool(bound),"coupled segment Object absent");
   check(take(bound.part(0)).address()==pointer,"directory locator and selected material disagree");
-  const auto leaf=scope.bind({GroupFixture::directory_space,lookup.leaf_name});
-  check(bool(leaf) && lookup.payload_selection==leaf.realization && lookup.part==0,
-      "group provenance not the actual physical selection");
+  if (!graph) {
+    const auto leaf=scope.bind({GroupFixture::directory_space,lookup.leaf_name});
+    check(bool(leaf) && lookup.payload_selection==leaf.realization && lookup.part==0,
+        "group provenance not the actual physical selection");
+  }
 }
-void run(loom::Worker& worker) {
+void run(loom::Worker& worker,bool graph) {
   std::vector<Record> input;
   for (unsigned i=32;i<48;++i) input.push_back(record(i));
   input.push_back(record(128)); input.push_back(record(143));
   input.push_back(record(UINT32_MAX));
-  GroupFixture fixture(worker,input);
+  GroupFixture fixture(worker,input,nullptr,graph);
   Store::Scope old(fixture.store()),late(fixture.store());
   for (const auto& r:input) expect(fixture,old,r);
-  ReadContext c{GroupFixture::directory_space,&old,{}};
+  ReadContext c{fixture.directory_namespace(),&old,{}};
   const auto view=fixture.view(c);
   for (unsigned miss:{0u,31u,48u,129u,142u,144u,UINT32_MAX-1})
-    check(!idx_asm_group16(&view,miss,nullptr),"hole/absent group was a hit");
+    check(!fixture.read(view,miss),"hole/absent group was a hit");
   c.scope=nullptr; c.borrowed=fixture.store().borrow();
-  check(idx_asm_group16(&view,UINT32_MAX,nullptr),"max prefix Borrowed failed");
+  check(fixture.read(view,UINT32_MAX),"max prefix Borrowed failed");
   // Stop using Borrowed before publication. Old/late Scopes remain stationary.
   check(bool(fixture.replace(128,3,UINT64_C(0x0123456789abcdef))),"real locator replacement refused");
   fixture.store().drain(); // late discovery must survive actual reclamation
@@ -127,21 +136,21 @@ struct FaultResource final:std::pmr::memory_resource {
   }
   bool do_is_equal(const std::pmr::memory_resource& r) const noexcept override { return this==&r; }
 };
-void partial_refusal(loom::Worker& worker) {
+void partial_refusal(loom::Worker& worker,bool graph,unsigned fail_at) {
   FaultResource memory;
   const std::array input{record(17)};
   {
-    GroupFixture fixture(worker,input,&memory);
+    GroupFixture fixture(worker,input,&memory,graph);
     Store::Scope late(fixture.store());
     const auto before=memory.live;
     // Native capture allocates one descriptor. Refuse the second descriptor:
     // the new data Owner has already consumed its real Allocation, while the
     // directory Allocation is still private. Neither may leak or publish.
-    memory.fail_at=2;
+    memory.fail_at=fail_at;
     const auto result=fixture.replace(17,0,123);
     memory.fail_at=0;
     check(!result && result.error()==orbital::Error::capacity,"late capture refusal not surfaced");
-    check(memory.calls==2 && memory.succeeded==1,"refusal did not follow acquired candidate metadata");
+    check(memory.calls==fail_at && memory.succeeded==fail_at-1,"refusal did not follow acquired candidate metadata");
     check(memory.live==before,"partial candidate metadata not released");
     fixture.store().drain();
     expect(fixture,late,input[0]);
@@ -150,6 +159,64 @@ void partial_refusal(loom::Worker& worker) {
   }
   check(!memory.live,"fixture left metadata after partial refusal/shutdown");
 }
+void exported_directory_graph(loom::Worker& worker) {
+  const std::array input{record(17)};
+  GroupFixture fixture(worker,input,nullptr,true);
+  orbital::Part<Control>* escaped;
+  std::array<std::byte,64> expected_descriptor;
+  {
+    Store::Scope issuing(fixture.store());
+    ReadContext context{fixture.directory_namespace(),&issuing,{}};
+    const auto view=fixture.view(context);
+    idx_asm_copy64(expected_descriptor.data(),fixture.read(view,17));
+    auto bound=take(fixture.store().bound(issuing,{GroupFixture::graph_space,1}));
+    escaped=take(bound.export_part(0,orbital::PartRetention::selected_copy));
+  }
+  for (unsigned i=0;i<64;++i) {
+    check(bool(fixture.replace(17,0,1000+i)),"graph churn refused");
+    fixture.store().drain();
+  }
+  // Escaped root Part owns its physical DIRECTORY graph independently. It does
+  // not preserve separately versioned segment data after the issuing Scope.
+  // Read opaque dirent bytes only; never dereference its old material pointer.
+  auto* node=orbital::view(escaped).address();
+  const unsigned group=17>>4;
+  while (true) {
+    const auto shift=std::to_integer<unsigned>(node[2]);
+    const auto slot=(group>>shift)&31;
+    const std::byte* child;
+    std::memcpy(&child,node+64+slot*16,8);
+    check(child,"escaped directory child lost");
+    if (shift) { node=child; continue; }
+    std::uint16_t mask; std::memcpy(&mask,node+64+slot*16+8,2);
+    unsigned rank=0;
+    for (unsigned suffix=0;suffix<(17&15);++suffix) rank+=(mask>>suffix)&1;
+    check(!std::memcmp(child+64+rank*64,expected_descriptor.data(),64),
+        "escaped root failed to preserve child physical bytes/interpretation");
+    break;
+  }
+  orbital::release(escaped);
+}
+void late_distinct_cuts(loom::Worker& worker,bool graph) {
+  std::array<Record,64> input;
+  for (unsigned i=0;i<input.size();++i) input[i]=record(i*16);
+  GroupFixture fixture(worker,input,nullptr,graph);
+  std::array<std::optional<Store::Scope>,65> readers;
+  readers[0].emplace(fixture.store());
+  for (unsigned i=0;i<input.size();++i) {
+    check(bool(fixture.replace(input[i].prefix,0,1000+i)),"distinct-cut change refused");
+    readers[i+1].emplace(fixture.store());
+  }
+  fixture.store().drain();
+  for (unsigned cut=0;cut<readers.size();++cut) for (unsigned row=0;row<input.size();++row) {
+    auto oracle=input[row];
+    if (row<cut) {
+      const std::uint64_t value=1000+row;
+      std::memcpy(oracle.material.data(),&value,8);
+    }
+    expect(fixture,*readers[cut],oracle);
+  }
+}
 }
 int main() {
   clone_boundaries();
@@ -157,7 +224,12 @@ int main() {
   check(bool(loom::adopt(worker)),"Worker adoption failed");
   auto arena=take(orbital::allocation::open_arena(16u<<20));
   check(bool(loom::configure(worker,std::move(arena),0)),"Worker configuration failed");
-  run(worker); partial_refusal(worker);
+  run(worker,false); run(worker,true);
+  partial_refusal(worker,false,2);
+  partial_refusal(worker,true,3); // after both data/group Owners, before proof
+  partial_refusal(worker,true,4); // after retained children/proof, root capture
+  exported_directory_graph(worker);
+  late_distinct_cuts(worker,false); late_distinct_cuts(worker,true);
   while (true) {
     const auto progress=loom::shutdown(worker);
     check(progress.kind()!=orbital::Progress::Kind::failed,"physical shutdown failed");

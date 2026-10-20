@@ -5,6 +5,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <limits>
+#include <memory>
 #include <vector>
 
 namespace index_spike {
@@ -26,11 +27,12 @@ orbital::Result<Store::Owner> GroupFixture::finish(std::uint64_t name,
   return store_.capture(control,sources);
 }
 GroupFixture::GroupFixture(loom::Worker& worker,std::span<const Record> input,
-    std::pmr::memory_resource* metadata)
-    : worker_(worker),metadata_(metadata?metadata:&memory_),store_(*metadata_) {
+    std::pmr::memory_resource* metadata,bool graph)
+    : worker_(worker),metadata_(metadata?metadata:&memory_),store_(*metadata_),graph_(graph) {
   static_assert(root_base<=std::numeric_limits<std::uint64_t>::max()-(UINT32_MAX>>4));
   for (unsigned n=1;n<=16;++n) groups_[n]={{64+n*64},1,directory_space};
   std::vector<Store::Change> changes;
+  std::vector<GraphGroup> graph_groups;
   changes.reserve(input.size()*2);
   for (std::size_t first=0;first<input.size();) {
     std::size_t last=first;
@@ -58,8 +60,15 @@ GroupFixture::GroupFixture(loom::Worker& worker,std::span<const Record> input,
     std::memcpy(directory.address,&mask,2);
     admit(std::popcount(mask)==int(count),"rank/body extent differs from original mask");
     const auto name=root_base+(input[first].prefix>>4);
-    changes.push_back({{directory_space,name},setup(finish(name,format,directory))});
+    auto group=setup(finish(name,format,directory));
+    if (graph_) graph_groups.push_back({input[first].prefix>>4,mask,std::move(group)});
+    else changes.push_back({{directory_space,name},std::move(group)});
     first=last;
+  }
+  if (!graph_groups.empty()) {
+    const unsigned bits=std::bit_width(graph_groups.front().index^graph_groups.back().index);
+    const unsigned shift=bits?((bits-1)/5)*5:0;
+    changes.push_back({{graph_space,root_base},build_graph(graph_groups,shift,root_base)});
   }
   if (!changes.empty()) {
     // This fresh Store has not escaped its constructor; no reader can observe
@@ -75,15 +84,105 @@ GroupFixture::GroupFixture(loom::Worker& worker,std::span<const Record> input,
     }
   }
 }
+Store::Owner GroupFixture::build_graph(std::span<GraphGroup> groups,unsigned shift,
+    std::uint64_t name) {
+  auto drop=[](DirectoryDependencies* p) { p->release(); };
+  std::unique_ptr<DirectoryDependencies,decltype(drop)> proof(
+      DirectoryDependencies::make(*metadata_,graph_space,name),drop);
+  ++initial_graph_nodes_;
+  auto body=setup(loom::allocate(worker_,{.bytes=576,.alignment=64}));
+  std::memset(body.address,0,576);
+  const auto stored_shift=std::uint8_t(shift);
+  std::memcpy(body.address+2,&stored_shift,1);
+  std::memcpy(body.address+8,&groups.front().index,4);
+  std::memcpy(body.address+12,&groups.back().index,4);
+  std::uint16_t count=0;
+  for (std::size_t first=0;first<groups.size();) {
+    const auto slot=(groups[first].index>>shift)&31;
+    std::size_t last=first+1;
+    while (last<groups.size() && ((groups[last].index>>shift)&31)==slot) ++last;
+    Store::Owner child;
+    if (shift) child=build_graph(groups.subspan(first,last-first),shift-5,next_graph_name_++);
+    else {
+      admit(last==first+1,"two groups alias one admitted radix slot");
+      child=std::move(groups[first].owner);
+      std::memcpy(body.address+64+slot*16+8,&groups[first].mask,2);
+    }
+    const auto pointer=setup(child.selection().part(0)).address();
+    std::memcpy(body.address+64+slot*16,&pointer,8);
+    proof->children[slot]=std::move(child);
+    ++count; first=last;
+  }
+  std::memcpy(body.address,&count,2);
+  return setup(finish(name,proof->format,body));
+}
+bool GroupFixture::graph_lookup(const Store::Scope& basis,std::uint32_t prefix,
+    Lookup& found,GraphPath& path) const {
+  auto selected=basis.bind({graph_space,root_base});
+  if (!selected) return false;
+  auto bytes=setup(selected.part(0)).address();
+  std::uint32_t lo,hi;
+  std::memcpy(&lo,bytes+8,4); std::memcpy(&hi,bytes+12,4);
+  const auto group=prefix>>4;
+  if (group<lo || group>hi) return false;
+  while (true) {
+    const auto control=selected.control();
+    auto* proof=control.format->dependencies;
+    admit(proof && path.count<path.nodes.size(),"unowned/too-deep physical graph");
+    const auto shift=std::to_integer<unsigned>(bytes[2]);
+    const auto slot=(group>>shift)&31;
+    path.nodes[path.count]=selected; path.slots[path.count++]=slot;
+    const auto child=proof->children[slot].selection();
+    if (!child) return false;
+    const auto* child_bytes=setup(child.part(0)).address();
+    if (shift) { selected=child; bytes=child_bytes; continue; }
+    std::uint16_t mask; std::memcpy(&mask,bytes+64+slot*16+8,2);
+    if (!(mask&(1u<<(prefix&15)))) return false;
+    const unsigned rank=std::popcount(mask&((1u<<(prefix&15))-1));
+    found={child_bytes+64+rank*64,child.realization,child.realization,
+        root_base+group,rank,rank,0,0};
+    return true;
+  }
+}
+orbital::Result<Store::Owner> GroupFixture::copy_graph(const GraphPath& path,Store::Owner child) {
+  try {
+    for (unsigned i=path.count;i--;) {
+      const auto before=path.nodes[i];
+      const auto old_control=before.control();
+      const auto* old=old_control.format->dependencies;
+      auto drop=[](DirectoryDependencies* p) { p->release(); };
+      std::unique_ptr<DirectoryDependencies,decltype(drop)> proof(
+          DirectoryDependencies::make(*metadata_,graph_space,old->name),drop);
+      for (unsigned slot=0;slot<32;++slot) {
+        if (slot==path.slots[i]) proof->children[slot]=std::move(child);
+        else proof->children[slot]=old->children[slot];
+      }
+      auto body=loom::allocate(worker_,{.bytes=576,.alignment=64});
+      if (!body) return std::unexpected(body.error());
+      const auto source=before.part(0);
+      if (!source) return std::unexpected(source.error());
+      const auto pointer=proof->children[path.slots[i]].selection().part(0);
+      if (!pointer) return std::unexpected(pointer.error());
+      idx_asm_clone_patch64(body->address,source->address(),9,64+path.slots[i]*16,
+          std::uintptr_t(pointer->address()));
+      auto captured=finish(old->name,proof->format,*body);
+      if (!captured) return std::unexpected(captured.error());
+      child=std::move(*captured);
+    }
+    return child;
+  } catch (const std::bad_alloc&) { return std::unexpected(orbital::Error::capacity); }
+}
 orbital::Result<void> GroupFixture::replace(std::uint32_t prefix,unsigned word,
     std::uint64_t replacement) {
   using orbital::Error;
   if (word>=8) return std::unexpected(Error::invalid_argument);
   Store::Scope basis(store_);
-  ReadContext context{directory_space,&basis,{}};
+  ReadContext context{directory_namespace(),&basis,{}};
   const auto read=view(context);
   Lookup found;
-  const auto* descriptor=idx_asm_group16(&read,prefix,&found);
+  GraphPath path;
+  const auto* descriptor=graph_?(graph_lookup(basis,prefix,found,path)?found.descriptor:nullptr):
+      idx_asm_group16(&read,prefix,&found);
   if (!descriptor) return std::unexpected(Error::invalid_argument);
   const auto before=basis.bind(material_id(prefix));
   if (!before) return std::unexpected(Error::invalid_argument);
@@ -111,9 +210,14 @@ orbital::Result<void> GroupFixture::replace(std::uint32_t prefix,unsigned word,
       64+found.rank*64,std::uintptr_t(part->address()));
   auto changed=finish(found.leaf_name,*control.format,*directory);
   if (!changed) return std::unexpected(changed.error());
+  if (graph_) {
+    auto root=copy_graph(path,std::move(*changed));
+    if (!root) return std::unexpected(root.error());
+    changed=std::move(root);
+  }
   const std::array changes{
       Store::Change{material_id(prefix),std::move(*finished)},
-      Store::Change{{directory_space,found.leaf_name},std::move(*changed)}};
+      Store::Change{{directory_namespace(),graph_?root_base:found.leaf_name},std::move(*changed)}};
   Store::Prepared packet(store_);
   if (auto prepared=store_.prepare(basis,changes,packet);!prepared) return prepared;
   return store_.install(packet);

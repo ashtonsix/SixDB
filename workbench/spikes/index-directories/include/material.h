@@ -5,13 +5,16 @@
 #include <array>
 
 namespace index_spike {
+struct DirectoryDependencies;
 // First fixed-capacity native experiment. Format objects outlive all derived
 // material/Scopes. They are not a proposed production schema or private MVCC.
 struct Format {
   std::array<std::uint32_t,17> bytes{};
   std::uint16_t count{};
   std::uint64_t object_namespace{};
+  DirectoryDependencies* dependencies{};
 };
+enum class ExtentMode : std::uint8_t { parts, prefix8 };
 struct Control {
   std::pmr::memory_resource* memory{};
   const Format* format{};
@@ -19,28 +22,35 @@ struct Control {
   std::uint32_t first{};
   std::uint16_t count{};
   orbital::PartOwners owners{orbital::PartOwners::independent_allocation};
-  std::uint8_t reserved{};
+  ExtentMode extent_mode{};
   bool valid(std::pmr::memory_resource& r) const noexcept {
-    return memory==&r && format && count && format->count<=format->bytes.size()
-        && first<=format->count && count<=format->count-first;
+    if (memory!=&r || !format || !count || format->count>format->bytes.size()) return false;
+    if (extent_mode==ExtentMode::prefix8)
+      return count==1 && format->count==1 && std::size_t(first)*8>=format->bytes[1]
+          && std::size_t(first)*8<=format->bytes[0];
+    return extent_mode==ExtentMode::parts && first<=format->count && count<=format->count-first;
   }
   auto* resource() const noexcept { return memory; }
   std::size_t part_count() const noexcept { return count; }
-  orbital::PartId id(std::size_t i) const noexcept { return {name,first+i}; }
+  orbital::PartId id(std::size_t i) const noexcept {
+    return {name,extent_mode==ExtentMode::prefix8?i:first+i};
+  }
   orbital::Result<std::size_t> extent(std::size_t i) const noexcept {
     if (i>=count) return std::unexpected(orbital::Error::invalid_argument);
-    return format->bytes[first+i];
+    return extent_mode==ExtentMode::prefix8?std::size_t(first)*8:format->bytes[first+i];
   }
   std::uint32_t padding(std::size_t) const noexcept { return 0; }
   std::size_t alignment(std::size_t) const noexcept { return 64; }
-  void retain() const noexcept {}
-  void release() const noexcept {}
+  void retain() const noexcept;
+  void release() const noexcept;
   std::size_t selected_bytes(std::size_t) const noexcept { return 0; }
   Control copy_selected(void*,std::size_t i) const noexcept {
-    auto c=*this; c.first+=i; c.count=1; return c;
+    auto c=*this;
+    if (extent_mode==ExtentMode::parts) c.first+=i;
+    c.count=1; c.retain(); return c;
   }
   std::size_t metadata_bytes() const noexcept { return 0; }
-  void destroy_selected() const noexcept {}
+  void destroy_selected() const noexcept { release(); }
 };
 static_assert(sizeof(Control)==32);
 using Selection=orbital::RepresentationSelection<Control>;
@@ -67,6 +77,19 @@ struct Physical {
       orbital::ObjectBinding,ExportPolicy) noexcept;
 };
 using Store=orbital::ObjectStore<Physical>;
+// Physical interpretation proof for the CURRENT directory topology. It owns
+// actual children directly, never a prior root or logical version ledger.
+struct DirectoryDependencies {
+  std::pmr::memory_resource* memory;
+  std::size_t references{1};
+  std::uint64_t name;
+  Format format{{576},1,0,this};
+  std::array<Store::Owner,32> children;
+  DirectoryDependencies(std::pmr::memory_resource& r,std::uint64_t ns,std::uint64_t id)
+      : memory(&r),name(id) { format.object_namespace=ns; }
+  static DirectoryDependencies* make(std::pmr::memory_resource&,std::uint64_t,std::uint64_t);
+  void release() noexcept;
+};
 struct ReadContext {
   std::uint64_t directory_namespace{};
   const Store::Scope* scope{};

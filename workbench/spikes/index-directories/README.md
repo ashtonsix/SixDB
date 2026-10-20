@@ -1,8 +1,9 @@
 # Index directory implementation spike plan
 
 Assembly-first implementation is in progress. The rejected implementation
-remains deleted. Current sources under `asm/` and `include/` start the real-module
-prototype; the material/ABI fixture and complete-operation checks are being built.
+remains deleted. Current sources exercise actual module composition; the
+[measured checkpoint](FINDINGS.md) records throughput, excessive footprint,
+producer trade-offs and the remaining scope. Memory waste is the current priority.
 
 2026-10-20: fresh Ikea, Orbital, Loom, Workbench and Architecture review of
 `15426260` led to this planning revision. It is an experiment plan, not a closed
@@ -15,6 +16,13 @@ The objective is a directory cheap enough for the complete Engine to beat both
 Calico and competent native LMDB with substantial headroom. A fast container
 kernel alone does not establish that result. The operation budget includes the
 composition that makes its result usable.
+
+The later throughput steer takes precedence over scalar-latency selection:
+compare useful completions and total CPU at matched ready work and visibility,
+retaining latency and memory as explicit trade-offs. Strong read-only root-graph
+signal is a reason to continue, not evidence for write/compaction or complete
+Engine headroom. Isolated footprint must include catalog/ownership and retained
+capacity; Pool mapped bytes alone are not resident memory.
 
 - [Budget](BUDGET.md): comparator evidence, aggressive operation ceilings,
   composition costs and the conditions under which a candidate is rejected.
@@ -33,9 +41,17 @@ actual producer against direct LMDB, with fresh and64-operation cohorts.
 `index_directory_composed_check` adds a two-record, five-layer P/Q/P producer:
 zero-directory ordinary updates, fixed-pointer authoritative corrections,
 pristine bypass/dirty-extrema descent, and P-only compaction with late snapshots.
-It is a bounded composition check, not the finished Engine driver. Ordered
-mutation, balancing, extras/schema, buffered-delta performance and full
-Engine/Calico comparison remain implementation and measurement work.
+It is a bounded composition check, not the finished Engine driver.
+`index_directory_buffered_check` and `index_directory_buffered_driver` add actual
+plain24-byte append, indexed-footer append and a packed eager producer,
+eight-field rows, all five layers, partial/full compaction and refusal recovery.
+The driver matches native64-byte LMDB get/put and cursor-CURRENT atomicB1/B64
+policies, repeated-row coalescing and useful full-field/aggregate output. Its
+whole-history clock includes setup, fixture destruction and actual shutdown;
+the foreground clock is labeled separately. Functional checks passed; performance
+fit remains open. Ordered mutation, balancing, extras/schema, broader producer
+workloads and complete Engine/Calico comparison remain implementation and
+measurement work.
 
 ## Supplied model
 

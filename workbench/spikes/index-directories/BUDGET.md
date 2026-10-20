@@ -3,6 +3,16 @@
 These are aggressive proposed ceilings, not measurements of a new directory.
 The relative headroom requirement overrides a looser absolute number.
 
+Ashton's subsequent steer makes useful steady-state THROUGHPUT the primary
+decision metric. Compare completed useful operations/s at matched ready window,
+output and snapshot/publication semantics, alongside owner/helper/process CPU,
+footprint and bounded maintenance debt. The scalar dependent timings below are
+diagnostics and trade-offs, not mandatory rejection gates against a throughput
+win. A synchronous independent-key loop is reciprocal-throughput evidence, but
+does not establish software-exposed overlap. CPU time includes stalls; less
+CPU-ns/op alone does not prove fewer instructions or bytes. Keep one physical
+peer policy through each mixed trace rather than splicing standalone minima.
+
 ## Complete Engine headroom
 
 For each competent, matched complete-request comparison, let P be the faster
@@ -249,8 +259,10 @@ directory_metric(actual_complete_request_distribution) <= 0.25 * matched_P_metri
 complete_Engine_metric                               <= 0.50 * matched_P_metric
 ```
 
-For a standalone comparable scalar operation, the effective goal is the tighter
-of its absolute goal and relative allocation. A structural-event latency must
+For standalone comparable scalar diagnostics, the effective goal is the tighter
+of its absolute goal and relative allocation. Throughput remains the primary
+selection criterion under the later steer; retain and explain scalar misses.
+A structural-event latency must
 instead be compared with the corresponding structural event or actual complete
 request tail, not with an unrelated loop mean. Charge its frequency and all
 cleanup in workload means as well. An isolated 1.5 us repair goal is not permission
@@ -290,14 +302,14 @@ For large random memory, first aim for <=150 ns known-prefix serial lookup and
 <=250 ns ordered lookup with resident upper routing and one cold leaf, and
 <=30/45 ns reciprocal throughput for independent Ring32 lookups. These are
 ambitious hypotheses. Fully cold catalogs, long histories, page faults and
-remote I/O have separate observations. Ring throughput never substitutes for
-serial latency, and actual cold-catalog dependency waves may reject the design.
+remote I/O have separate observations. Ring throughput does not establish
+serial latency; cold-catalog dependency waves can change the throughput trade-off.
 The [memory evidence](../memory-characterisation/FINDINGS.md) includes a roughly
 140 ns Zen5 cold-line control and 260–280 ns cross-LLC peer cases. A single cold
 dependency can consume much of the envelope. A 250 ns directory does not
-automatically fit the 177/185 ns large-read allocation: show the actual remaining
-Engine work before proposing a reallocation. Ring throughput does not replace
-cold serial latency.
+automatically fit the 177/185 ns serial-read diagnostic allocation: show the
+actual remaining Engine work and the primary throughput/CPU result before
+proposing a reallocation. Retain cold serial latency as a separate trade-off.
 
 ## Charge the actual composition
 
