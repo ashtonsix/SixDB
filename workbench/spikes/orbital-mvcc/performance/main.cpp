@@ -1,6 +1,6 @@
 #include "run.h"
 #include "oracle.h"
-#include "pmu.h"
+#include <pmu/pmu.h>
 #include "candidate_runtime.h"
 #include "composed_runtime.h"
 #include <algorithm>
@@ -21,8 +21,8 @@ struct Options {
   std::string backend{"orbital"}, workload{"point-hit"}, mode{"throughput"}, from{"rows"}, db;
   std::string codec{"legacy"},conditioning{"none"},samples;
   std::string sample_storage{"equal"};
-  orbital_bench::pmu::Mode pmu{orbital_bench::pmu::Mode::off};
-  std::vector<orbital_bench::pmu::EventSpec> pmu_events;
+  workbench::pmu::Mode pmu{workbench::pmu::Mode::off};
+  std::vector<workbench::pmu::EventSpec> pmu_events;
   std::size_t rows{4096}, objects{1}, batch{1}, ops{}, bytes{256*1024*1024},metadata_bytes{},retention_age{};
   std::uint64_t seed{8132};
 };
@@ -53,11 +53,11 @@ Options options(int argc,char** argv) {
     else if (key=="--conditioning") result.conditioning=value;
     else if (key=="--latency-samples") result.samples=value;
     else if (key=="--sample-storage") result.sample_storage=value;
-    else if (key=="--pmu-event") result.pmu_events.push_back(orbital_bench::pmu::parse_event_spec(value));
+    else if (key=="--pmu-event") result.pmu_events.push_back(workbench::pmu::parse_event_spec(value));
     else if (key=="--pmu") {
-      if (value=="off") result.pmu=orbital_bench::pmu::Mode::off;
-      else if (value=="basic") result.pmu=orbital_bench::pmu::Mode::basic;
-      else if (value=="stalls") result.pmu=orbital_bench::pmu::Mode::stalls;
+      if (value=="off") result.pmu=workbench::pmu::Mode::off;
+      else if (value=="basic") result.pmu=workbench::pmu::Mode::basic;
+      else if (value=="stalls") result.pmu=workbench::pmu::Mode::stalls;
       else throw std::invalid_argument("unknown PMU mode");
     }
     else if (key=="--rows") result.rows=number(value);
@@ -83,9 +83,9 @@ Options options(int argc,char** argv) {
   if (result.codec!="legacy" && result.codec!="direct16" && result.codec!="consume16" && result.codec!="shape") throw std::invalid_argument("unknown codec treatment");
   if (result.codec=="shape" && !composed && !mapped_composed) throw std::invalid_argument("Shape codec requires a composed backend");
   if (result.conditioning!="none" && result.conditioning!="warm-trace") throw std::invalid_argument("unknown conditioning");
-  if (result.pmu!=orbital_bench::pmu::Mode::off && result.mode!="throughput")
+  if (result.pmu!=workbench::pmu::Mode::off && result.mode!="throughput")
     throw std::invalid_argument("PMU requires a separate throughput replay");
-  if (!result.pmu_events.empty() && result.pmu==orbital_bench::pmu::Mode::off)
+  if (!result.pmu_events.empty() && result.pmu==workbench::pmu::Mode::off)
     throw std::invalid_argument("PMU events require basic or stalls mode");
   if (!result.samples.empty() && (result.mode!="latency" || std::filesystem::exists(result.samples)))
     throw std::invalid_argument("latency samples require latency mode and a new file");
@@ -257,10 +257,10 @@ void print_footprint(const Lmdb::Footprint& f) {
 }
 struct Faults {std::uint64_t minor{},major{};};
 template<class Publish>
-Interval writes(const Options& o,orbital_bench::pmu::Session& hardware,std::optional<Faults>& faults,Publish&& publish,std::span<const Operation> input,std::span<Outcome> output) {
+Interval writes(const Options& o,workbench::pmu::Session& hardware,std::optional<Faults>& faults,Publish&& publish,std::span<const Operation> input,std::span<Outcome> output) {
   rusage before{},after{};
   if (getrusage(RUSAGE_SELF,&before)) throw std::runtime_error("pre-write resource sample failed");
-  active_hardware=o.pmu==orbital_bench::pmu::Mode::off?nullptr:&hardware;
+  active_hardware=o.pmu==workbench::pmu::Mode::off?nullptr:&hardware;
   auto result=o.mode=="latency"?write_trial<true>(publish,input,output,o.batch):write_trial<false>(publish,input,output,o.batch);
   active_hardware=nullptr;
   if (getrusage(RUSAGE_SELF,&after)) throw std::runtime_error("post-write resource sample failed");
@@ -273,8 +273,8 @@ int main(int argc,char** argv) try {
   const auto o=options(argc,argv);
   equal_sample_preparation=o.sample_storage=="equal";
   std::optional<Faults> write_faults;
-  orbital_bench::pmu::Session hardware(o.pmu,o.pmu_events);
-  orbital_bench::pmu::Session release_hardware(o.pmu,o.pmu_events);
+  workbench::pmu::Session hardware(o.pmu,o.pmu_events);
+  workbench::pmu::Session release_hardware(o.pmu,o.pmu_events);
   const bool conversion=o.workload=="convert", updating=o.workload=="point-update", latency=o.mode=="latency";
   Corpus corpus(o.rows,o.objects,o.seed);
   std::vector<Golden> original(o.objects);
@@ -382,7 +382,7 @@ int main(int argc,char** argv) try {
         std::uint64_t ignored{};conditioning=read(false,ignored);
         require(output==expected_output,"warm trace differs from independent oracle");
       }
-      active_hardware=o.pmu==orbital_bench::pmu::Mode::off?nullptr:&hardware;
+      active_hardware=o.pmu==workbench::pmu::Mode::off?nullptr:&hardware;
       interval=read(latency,bindings);active_hardware=nullptr;
       orbital_held=orbital_released=footprint(store);
     }
@@ -438,7 +438,7 @@ int main(int argc,char** argv) try {
         std::uint64_t ignored{};conditioning=read(false,ignored);
         require(output==expected_output,"warm trace differs from independent oracle");
       }
-      active_hardware=o.pmu==orbital_bench::pmu::Mode::off?nullptr:&hardware;
+      active_hardware=o.pmu==workbench::pmu::Mode::off?nullptr:&hardware;
       interval=read(latency,bindings);active_hardware=nullptr;
       lmdb_held=lmdb_released=store.footprint();
     }
@@ -503,7 +503,7 @@ int main(int argc,char** argv) try {
         std::uint64_t ignored{};conditioning=read(false,ignored);
         require(output==expected_output,"composed warm trace differs from independent oracle");
       }
-      active_hardware=o.pmu==orbital_bench::pmu::Mode::off?nullptr:&hardware;
+      active_hardware=o.pmu==workbench::pmu::Mode::off?nullptr:&hardware;
       interval=read(latency,bindings);active_hardware=nullptr;
       orbital_held=orbital_released=footprint(store);costs=store.costs;
     };
@@ -546,7 +546,7 @@ int main(int argc,char** argv) try {
         std::uint64_t ignored{};conditioning=read(false,ignored);
         require(output==expected_output,"candidate warm trace differs from independent oracle");
       }
-      active_hardware=o.pmu==orbital_bench::pmu::Mode::off?nullptr:&hardware;
+      active_hardware=o.pmu==workbench::pmu::Mode::off?nullptr:&hardware;
       interval=read(latency,bindings);active_hardware=nullptr;
       orbital_held=orbital_released=footprint(store);costs=store.costs;
     };
@@ -554,7 +554,7 @@ int main(int argc,char** argv) try {
     else if (o.backend=="candidate16") run.template operator()<compact_history::Store16>();
     else run.template operator()<compact_history::Store32>();
   } else {
-    active_hardware=o.pmu==orbital_bench::pmu::Mode::off?nullptr:&hardware;
+    active_hardware=o.pmu==workbench::pmu::Mode::off?nullptr:&hardware;
     interval=run_direct_reads(corpus,latency,trace.operations,objects,output,o.batch);active_hardware=nullptr;
     interval.snapshot_scopes=0; // Qualified bytes control acquires no snapshot.
   }

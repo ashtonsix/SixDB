@@ -1,5 +1,5 @@
 #include "workload.h"
-#include "pmu.h"
+#include <pmu/pmu.h>
 
 #include <algorithm>
 #include <array>
@@ -14,6 +14,7 @@
 #include <time.h>
 
 namespace b = orbital_bench;
+namespace pmu = workbench::pmu;
 namespace {
 using Clock = std::chrono::steady_clock;
 std::uint64_t cpu_ns(clockid_t clock = CLOCK_THREAD_CPUTIME_ID) {
@@ -30,14 +31,14 @@ struct Options {
   std::size_t prepared_pages{};
   int preparer_cpu{-1};
   bool prepared_prefill{true};
-  b::pmu::Mode pmu{b::pmu::Mode::off};
-  std::vector<b::pmu::EventSpec> pmu_events;
+  pmu::Mode pmu{pmu::Mode::off};
+  std::vector<pmu::EventSpec> pmu_events;
 };
-const char* pmu_name(b::pmu::Mode mode) {
+const char* pmu_name(pmu::Mode mode) {
   switch (mode) {
-    case b::pmu::Mode::off: return "off";
-    case b::pmu::Mode::basic: return "basic";
-    case b::pmu::Mode::stalls: return "stalls";
+    case pmu::Mode::off: return "off";
+    case pmu::Mode::basic: return "basic";
+    case pmu::Mode::stalls: return "stalls";
   }
   throw std::invalid_argument("unknown PMU mode");
 }
@@ -66,12 +67,12 @@ Options options(int argc, char** argv) {
     else if (key == "--memory-receipt") o.memory_receipt = value;
     else if (key == "--warmup-passes") o.warmup_passes = std::stoull(value);
     else if (key == "--pmu") {
-      if (value == "off") o.pmu = b::pmu::Mode::off;
-      else if (value == "basic") o.pmu = b::pmu::Mode::basic;
-      else if (value == "stalls") o.pmu = b::pmu::Mode::stalls;
+      if (value == "off") o.pmu = pmu::Mode::off;
+      else if (value == "basic") o.pmu = pmu::Mode::basic;
+      else if (value == "stalls") o.pmu = pmu::Mode::stalls;
       else throw std::invalid_argument("PMU mode must be off, basic or stalls");
     }
-    else if (key == "--pmu-event") o.pmu_events.push_back(b::pmu::parse_event_spec(value));
+    else if (key == "--pmu-event") o.pmu_events.push_back(pmu::parse_event_spec(value));
     else throw std::runtime_error("unknown option: " + key);
   }
   if (o.output.empty() || (o.mode != "latency" && o.mode != "throughput" && o.mode != "validate" && o.mode != "events") ||
@@ -84,11 +85,11 @@ Options options(int argc, char** argv) {
        o.read_execution != "manual" && o.read_execution != "ring")) throw std::runtime_error("invalid options");
   if (o.read_execution != "serial" && o.backend != "packed-owner" && !o.backend.starts_with("lmdb"))
     throw std::runtime_error("staged read batch requires synchronous owner access");
-  if (o.pmu != b::pmu::Mode::off && o.mode != "throughput")
+  if (o.pmu != pmu::Mode::off && o.mode != "throughput")
     throw std::invalid_argument("PMU collection requires a separate throughput run");
   if (o.memory_receipt == "on" && o.mode != "throughput")
     throw std::invalid_argument("memory receipts require a separate throughput run");
-  if (o.pmu == b::pmu::Mode::off && !o.pmu_events.empty())
+  if (o.pmu == pmu::Mode::off && !o.pmu_events.empty())
     throw std::invalid_argument("PMU events require basic or stalls mode");
   if (o.mode == "events" && (o.batch_width != 1 || o.read_execution != "serial" ||
       o.cache_setup != "loaded" || o.backend.starts_with("lmdb")))
@@ -317,7 +318,7 @@ int main(int argc, char** argv) try {
     std::sort(timer.begin(), timer.end()); timer_p50 = timer[timer.size() / 2];
     // Count only this caller thread over the request loop and physical drain.
     // Opening/reading events and writing receipts stay outside request timing.
-    b::pmu::Session pmu(o.pmu, o.pmu_events);
+    pmu::Session pmu(o.pmu, o.pmu_events);
     if (o.cache_setup == "warm-trace") {
       const auto warm_start = Clock::now();
       for (std::size_t pass = 0; pass < o.warmup_passes; ++pass) {
@@ -395,7 +396,7 @@ int main(int argc, char** argv) try {
         ordered_hash(*store) != final_hash)
       throw std::runtime_error("timed execution differs from validated trace");
     store->audit();
-    if (o.pmu != b::pmu::Mode::off) {
+    if (o.pmu != pmu::Mode::off) {
       std::ofstream hardware(output / "pmu.json");
       hardware << "{\n  \"schema\": 1,\n"
                << "  \"scope\": \"caller thread; request loop, result aggregation, final drain and boundary clocks; setup and validation excluded\",\n"
@@ -484,7 +485,7 @@ int main(int argc, char** argv) try {
          << "  \"schema\": 1,\n  \"backend\": \"" << o.backend << "\",\n"
          << "  \"workload\": \"" << o.workload << "\",\n  \"mode\": \"" << o.mode << "\",\n"
          << "  \"pmu_mode\": \"" << pmu_name(o.pmu) << "\",\n"
-         << "  \"pmu_file\": " << (o.pmu == b::pmu::Mode::off ? "null" : "\"pmu.json\"") << ",\n"
+         << "  \"pmu_file\": " << (o.pmu == pmu::Mode::off ? "null" : "\"pmu.json\"") << ",\n"
          << "  \"memory_receipt\": \"" << o.memory_receipt << "\",\n"
          << "  \"records\": " << o.records << ",\n  \"requests\": " << requests << ",\n"
          << "  \"batch_width\": " << o.batch_width << ",\n  \"batches\": " << batches << ",\n"

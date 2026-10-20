@@ -10,7 +10,7 @@ loads L1-, LLC- or DRAM-served from allocated bytes alone.
 | Dependent loads, working-set and independent-chain sweeps | [Memory-characterisation runner](../spikes/memory-characterisation/README.md), with validated shuffled cycles and retained repetitions |
 | Controlled hot/cold/trained lines, prefetch history and peer-cache handoff | [Memory probe method](../spikes/memory-characterisation/METHOD.md#spatial-fetch-learning-lookahead-and-retention); cache maintenance is capability-tested |
 | Actual THP and NUMA placement | The same probe's per-mapping `smaps` / `numa_maps` receipts; requested advice is recorded separately |
-| Guest PMU availability and permissions | [Counter availability runner](../benchmarks/orbital/pmu_probe.py), retaining sysfs types, formats, aliases, status/errno and group coverage |
+| Guest PMU availability and permissions | [Counter availability tool](pmu/README.md), retaining sysfs types, formats, aliases, status/errno and group coverage |
 | Counter sensitivity over real memory accesses | [Memory MLP diagnostics](../spikes/memory-characterisation/pmu.sh), with a fresh group over each calibrated dependent chase and below-/above-cache footprint controls |
 | Counters over an exact composed request interval | [Orbital consumer](../benchmarks/orbital/measurement.md#counter-diagnostics), in separate throughput diagnostics |
 | Composed representation and actual page mappings | The same consumer's opt-in `--memory-receipt on`, collected after measurement; overlapping post-state extents are not an accessed-line set |
@@ -54,11 +54,10 @@ Run the cold availability probe on a worker before choosing a PMU campaign:
 
 ```sh
 orb -m ubuntu python3 workbench/tools/worker.py run \
-  workbench/benchmarks/orbital/pmu.sh --machine zen5 --deadline 900
+  workbench/tools/pmu/run.sh --machine zen5 --deadline 900
 ```
 
-For the configured Graviton 4 worker, use `--machine neoverse-v2` and pass
-`--env ORBITAL_MARCH=armv9-a --env ORBITAL_TUNE=neoverse-v2`. The runner compares
+For the configured Graviton 4 worker, use `--machine neoverse-v2`. The runner compares
 ordinary user and `sudo -n` access on the disposable guest without changing
 global perf policy. Successful probe counts establish counter availability,
 not the composed workload's IPC or residency.

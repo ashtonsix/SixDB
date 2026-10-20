@@ -7,7 +7,7 @@
 #include <string>
 #include <string_view>
 
-namespace orbital_bench::pmu {
+namespace workbench::pmu {
 enum class Mode { off, basic, stalls };
 struct EventSpec {
   std::string name;

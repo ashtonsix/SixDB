@@ -31,11 +31,12 @@ endforeach()
 # geometry identifies the retained experiment rather than a new tuning search.
 foreach(v IN ITEMS 8 64)
   hashtable_frontier_target(hashtable_mm_loom_read_${v} multimap/loom-composition/compare.cpp)
-  target_sources(hashtable_mm_loom_read_${v} PRIVATE "${PROJECT_SOURCE_DIR}/workbench/benchmarks/orbital/pmu.cpp")
+  target_link_libraries(hashtable_mm_loom_read_${v} PRIVATE workbench::pmu)
   target_compile_definitions(hashtable_mm_loom_read_${v} PRIVATE NDEBUG
     IBS_W=40 IBS_B=10 IBS_V=${v} IBS_E=30 IBS_MULTI=1 IBS_BAGS=1)
 endforeach()
 hashtable_frontier_target(hashtable_mm_loom_read_check multimap/loom-composition/check.cpp)
+target_link_libraries(hashtable_mm_loom_read_check PRIVATE workbench::pmu)
 target_compile_definitions(hashtable_mm_loom_read_check PRIVATE
   IBS_W=40 IBS_B=10 IBS_V=8 IBS_E=30 IBS_MULTI=1 IBS_BAGS=1)
 add_test(NAME hashtable_mm_loom_read_check COMMAND hashtable_mm_loom_read_check)

@@ -11,10 +11,9 @@ target_link_libraries(orbital_versioned_performance_fixture PUBLIC orbital_versi
 add_executable(orbital_versioned_body_check body_check.cpp)
 sixdb_target(orbital_versioned_body_check)
 target_link_libraries(orbital_versioned_body_check PRIVATE orbital_versioned_performance_fixture)
-add_library(orbital_versioned_performance_runtime STATIC runtime.cpp bodies.cpp run.cpp ranges.cpp
-  "${CMAKE_CURRENT_SOURCE_DIR}/../../../benchmarks/orbital/pmu.cpp")
+add_library(orbital_versioned_performance_runtime STATIC runtime.cpp bodies.cpp run.cpp ranges.cpp)
 sixdb_target(orbital_versioned_performance_runtime)
-target_link_libraries(orbital_versioned_performance_runtime PUBLIC orbital_versioned_performance_fixture orbital_versioned_consumer
+target_link_libraries(orbital_versioned_performance_runtime PUBLIC workbench::pmu orbital_versioned_performance_fixture orbital_versioned_consumer
   orbital_mvcc_descriptor)
 target_include_directories(orbital_versioned_performance_runtime PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/..")
 add_executable(orbital_versioned_performance_check check.cpp)
@@ -30,7 +29,7 @@ target_link_libraries(orbital_versioned_performance_bench PRIVATE orbital_versio
 
 add_executable(loom_object_ring_performance object_ring_bench.cpp)
 sixdb_target(loom_object_ring_performance)
-target_link_libraries(loom_object_ring_performance PRIVATE orbital_versioned_performance_fixture loom_object_ring)
+target_link_libraries(loom_object_ring_performance PRIVATE orbital_versioned_performance_fixture loom_object_ring workbench::pmu)
 
 add_executable(orbital_append_performance append_bench.cpp)
 sixdb_target(orbital_append_performance)
@@ -49,4 +48,4 @@ set_tests_properties(orbital_prefix_growth_check PROPERTIES TIMEOUT 30)
 # Disposable ready-Message service control; no worker or scheduling policy added.
 add_executable(loom_object_polling_control controls/cooperative-polling/main.cpp)
 sixdb_target(loom_object_polling_control)
-target_link_libraries(loom_object_polling_control PRIVATE orbital_versioned_performance_fixture loom_object_ring)
+target_link_libraries(loom_object_polling_control PRIVATE orbital_versioned_performance_fixture loom_object_ring workbench::pmu)

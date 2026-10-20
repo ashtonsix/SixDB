@@ -2,7 +2,7 @@
 // maintained-probe/caller.cpp; only the reader binding and relative PMU include
 // change. Every owner remains immobile and unchanged through physical drain.
 #include "runtime.h"
-#include "../../../../benchmarks/orbital/pmu.h"
+#include <pmu/pmu.h>
 #include <cstdlib>
 #include <string>
 #include <utility>
@@ -18,7 +18,7 @@ using MaintainedRead = study::borrowed_reader<study::MaintainedHeap>;
 static_assert(sizeof(PackedRead)==sizeof(const void*));
 static_assert(sizeof(WholeRead)==sizeof(const void*));
 static_assert(sizeof(MaintainedRead)==sizeof(const void*));
-namespace pmu = orbital_bench::pmu;
+namespace pmu = workbench::pmu;
 constexpr unsigned lanes = 32;
 
 std::uint64_t now_ns() noexcept {

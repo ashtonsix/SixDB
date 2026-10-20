@@ -1,8 +1,7 @@
 find_package(Threads REQUIRED)
-add_executable(memory_characterisation_probe probe.cpp ../../benchmarks/orbital/pmu.cpp)
+add_executable(memory_characterisation_probe probe.cpp)
 sixdb_target(memory_characterisation_probe)
-target_include_directories(memory_characterisation_probe PRIVATE ../../benchmarks/orbital)
-target_link_libraries(memory_characterisation_probe PRIVATE Threads::Threads)
+target_link_libraries(memory_characterisation_probe PRIVATE Threads::Threads workbench::pmu)
 
 add_executable(memory_adjacent_probe adjacent.cpp)
 sixdb_target(memory_adjacent_probe)

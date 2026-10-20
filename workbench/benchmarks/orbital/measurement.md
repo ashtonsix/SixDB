@@ -221,7 +221,7 @@ execution and cannot be inferred from another replay.
 ## Counter diagnostics
 
 Primary throughput and latency runs leave PMU collection off. Use
-`orbital_pmu_probe` or the [guest availability runner](pmu.sh) first: it records
+the independent [guest availability tool](../../tools/pmu/README.md) first: it records
 actual event types, sysfs formats/aliases, user/root permissions and unsupported
 or unscheduled groups without changing global policy. Its short dependency loop
 establishes availability only.

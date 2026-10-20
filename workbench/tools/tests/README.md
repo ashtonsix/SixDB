@@ -20,6 +20,8 @@ disposable fixtures. `build` also uses LLVM objcopy/strip and `readelf`;
 inputs and fake cloud clients. `--list` derives descriptions from the scripts themselves.
 `results` also needs Node for the viewer's data-handling checks; it can run on
 macOS directly as well as Linux, and does not launch a browser.
+`pmu` uses offline permission/error fixtures; it needs no hardware-counter access.
+The independent [PMU tool](../pmu/README.md) exercises actual guest availability.
 
 The opt-in `tlc` check uses `TLC_TEST_JAR` for real checkpoint/kill/restore checks;
 see the [TLC guide](../tlc/README.md#exercised-recovery). Without that variable it

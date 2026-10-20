@@ -1,6 +1,6 @@
 #pragma once
 #include "read.h"
-#include "pmu.h"
+#include <pmu/pmu.h>
 #include <chrono>
 #include <ctime>
 #include <vector>
@@ -8,7 +8,7 @@
 namespace orbital_versioned_performance {
 // Set only for a separately requested diagnostic replay. Normal and warm-up
 // runs keep it null; counter setup happens in main before any timed operation.
-inline thread_local orbital_bench::pmu::Session* active_hardware{};
+inline thread_local workbench::pmu::Session* active_hardware{};
 inline thread_local bool equal_sample_preparation{true};
 inline void hardware_start() {if (active_hardware) active_hardware->start();}
 inline void hardware_stop() {if (active_hardware) active_hardware->stop();}

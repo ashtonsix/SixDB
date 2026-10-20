@@ -18,7 +18,7 @@
 #include <utility>
 #include <vector>
 
-namespace orbital_bench::pmu {
+namespace workbench::pmu {
 namespace {
 bool valid_name(std::string_view value) {
   auto letter = [](char c) { return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'); };

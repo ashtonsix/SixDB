@@ -1,4 +1,4 @@
-#include "pmu.h"
+#include <pmu/pmu.h>
 #include <algorithm>
 #include <array>
 #include <atomic>
@@ -37,7 +37,7 @@ U sink;
 double tick_ns = 1;
 int memory_node = -1;
 int first_touch_cpu = -1;
-namespace pmu = orbital_bench::pmu;
+namespace pmu = workbench::pmu;
 pmu::Mode pmu_mode = pmu::Mode::off;
 std::vector<pmu::EventSpec> pmu_events;
 std::filesystem::path pmu_output;

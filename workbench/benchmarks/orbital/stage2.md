@@ -5,15 +5,11 @@ drivers are now historical; these commands are reproduction aids, not a launch
 menu for the next Engine driver. Reusable probes are linked from the
 [residency guide](../../tools/residency.md).
 
-`stage2.py` prints one command using the existing worker and workload runners.
-Add `--run` to dispatch it. Nothing is automatically queued. Supply the source
-capture for the composition being tested; the retained allocation-stage panels
-provide a baseline, with their original source and binary identities.
-
-```sh
-orb -m ubuntu python3 workbench/benchmarks/orbital/stage2.py lookup-widths \
-  --source build/captures/SELECTED-STAGE2-CUT
-```
+The retired dispatcher is recoverable as
+`git show fc721b2b:workbench/benchmarks/orbital/stage2.py`.
+It hardcoded an on-demand xlarge worker and immediate shutdown; those choices
+are not defaults for future studies. For historical reproduction, use the
+original captured runner and its recorded arguments/source/binary identities.
 
 | Selection | Useful comparison |
 | --- | --- |
@@ -25,12 +21,10 @@ orb -m ubuntu python3 workbench/benchmarks/orbital/stage2.py lookup-widths \
 | `memory-sensitivity` | Real dependent-load and independent-chain footprint controls; ARM additionally attempts architectural refill events |
 | `composed-counters` | Separate throughput diagnostic with stalls and post-interval mapping receipts |
 
-Each job settles its worker by default. `--idle-seconds 900` permits compatible
-reuse for a paired experiment; check actual instance and binary identities after
-collection. `--machine neoverse-v2` selects the ARM build, and `--instance-type`
-allows an explicitly chosen PMU-capable size. Availability and sensitivity
-controls precede selecting raw events; [residency tools](../../tools/residency.md)
-own the method. These recipes do not select a new research priority.
+For new diagnostics, use the independent [PMU tool](../../tools/pmu/README.md)
+and [memory sensitivity runner](../../spikes/memory-characterisation/pmu.sh)
+through the ordinary [worker helper](../../tools/workers.md). These are useful
+without an Orbital driver. The table records the old panels, not a new workload menu.
 
 Use `worker.py wait JOB` for verified collection, then `run.py --summarize-only`
 for scalar/staged panels. The lifecycle runner writes its verified `cases.csv`

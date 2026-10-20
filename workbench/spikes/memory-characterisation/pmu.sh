@@ -6,7 +6,7 @@ python3 -B - "$SIXDB_RESULTS" "$SIXDB_CPU" <<'PY'
 import json
 from pathlib import Path
 import sys
-from workbench.benchmarks.orbital.pmu_probe import catalog
+from workbench.tools.pmu.probe import catalog
 
 root, cpu = Path(sys.argv[1]), int(sys.argv[2])
 root.mkdir(parents=True, exist_ok=True)

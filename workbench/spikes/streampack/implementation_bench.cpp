@@ -1,7 +1,7 @@
 #include <ikea/streampack.h>
 #include <ikea/streampack/author/native.h>
 #include "prefix.h"
-#include "../../benchmarks/orbital/pmu.h"
+#include <pmu/pmu.h>
 #include <fstream>
 #include <linux/perf_event.h>
 #include <array>
@@ -94,10 +94,10 @@ template <class Run> void time(const population& p, const char* mode, const char
     if (warm != expected) std::abort();
     observed = warm;
     const auto* pmu_path = std::getenv("STREAMPACK_PMU");
-    const std::array<orbital_bench::pmu::EventSpec, 2> extras{{
+    const std::array<workbench::pmu::EventSpec, 2> extras{{
         {"branch_misses", PERF_TYPE_HARDWARE, PERF_COUNT_HW_BRANCH_MISSES},
         {"cache_misses", PERF_TYPE_HARDWARE, PERF_COUNT_HW_CACHE_MISSES}}};
-    orbital_bench::pmu::Session counters(pmu_path ? orbital_bench::pmu::Mode::basic : orbital_bench::pmu::Mode::off, extras);
+    workbench::pmu::Session counters(pmu_path ? workbench::pmu::Mode::basic : workbench::pmu::Mode::off, extras);
     counters.start();
     const auto begin = Clock::now();
     auto sum = run();

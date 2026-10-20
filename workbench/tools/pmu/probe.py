@@ -48,7 +48,7 @@ def main():
         parser.error('choose an allowed CPU with --cpu or SIXDB_CPU')
     args.binary = args.binary.resolve(strict=True)
     args.output.mkdir(parents=True, exist_ok=False)
-    measured = args.output.resolve() / 'orbital_pmu_probe'
+    measured = args.output.resolve() / 'sixdb_pmu_probe'
     shutil.copy2(args.binary, measured)
     manifest = {'schema': 1, 'scope': 'availability only; not workload IPC or data residency',
                 'binary_sha256': hashlib.sha256(measured.read_bytes()).hexdigest(),

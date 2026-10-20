@@ -1,3 +1,5 @@
+add_subdirectory(tools/pmu EXCLUDE_FROM_ALL)
+
 # Configure only requested suites/studies; build only requested targets.
 add_subdirectory(benchmarks)
 add_subdirectory(spikes)

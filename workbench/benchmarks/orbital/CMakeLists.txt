@@ -9,11 +9,9 @@ add_library(orbital_bench_packed STATIC packed.cpp packed-page.cpp lookup.cpp pa
 sixdb_target(orbital_bench_packed)
 target_link_libraries(orbital_bench_packed PUBLIC orbital_bench_workload loom::loom ikea::seriespack ikea::tuplepack)
 
-add_executable(orbital_allocation_bench main.cpp pmu.cpp)
+add_executable(orbital_allocation_bench main.cpp)
 sixdb_target(orbital_allocation_bench)
-target_link_libraries(orbital_allocation_bench PRIVATE orbital_bench_packed)
-add_executable(orbital_pmu_probe pmu_probe.cpp pmu.cpp)
-sixdb_target(orbital_pmu_probe)
+target_link_libraries(orbital_allocation_bench PRIVATE orbital_bench_packed workbench::pmu)
 add_executable(orbital_workload_check check.cpp)
 sixdb_target(orbital_workload_check)
 target_link_libraries(orbital_workload_check PRIVATE orbital_bench_packed)

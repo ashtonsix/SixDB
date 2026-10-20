@@ -1,8 +1,8 @@
 #include "population_fixture.h"
-#include "../../benchmarks/orbital/pmu.h"
+#include <pmu/pmu.h>
 #include <linux/perf_event.h>
 using namespace streampack_population;
-namespace pmu = orbital_bench::pmu;
+namespace pmu = workbench::pmu;
 
 void snapshot(const std::string& prefix, const char* phase, oa::Pool& pool,
     const std::array<const oa::Allocation*, 3>& allocations) {

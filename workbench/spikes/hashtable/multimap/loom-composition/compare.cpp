@@ -17,7 +17,7 @@ using independent::word;
 using independent::lanes;
 using independent::now_ns;
 using study::result;
-namespace pmu=orbital_bench::pmu;
+namespace pmu=workbench::pmu;
 static_assert(study::V==0 || study::V==8 || study::V==64);
 inline constexpr bool extra_policy=study::V==8&&!study::Multi;
 std::vector<const char*> implementations() {

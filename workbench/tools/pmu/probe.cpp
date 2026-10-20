@@ -6,7 +6,7 @@
 #include <string_view>
 #include <vector>
 
-namespace p = orbital_bench::pmu;
+namespace p = workbench::pmu;
 int main(int argc, char** argv) try {
   auto mode = p::Mode::basic;
   std::vector<p::EventSpec> extras;
