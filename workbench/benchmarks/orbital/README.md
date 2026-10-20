@@ -1,6 +1,12 @@
-# Orbital allocation consumer
+# Historical Orbital allocation consumer
 
-The maintained driver pushes an ordered packed container through Loom's actual
+This allocation-stage driver has served its purpose. It remains for retained
+comparisons, reusable input/oracle and LMDB code, focused checks and recovery.
+The later [versioned consumer](../../spikes/orbital-mvcc/README.md) is also a
+completed experiment. Neither supplies the new Engine comparison's workload or
+interface. Commands below describe the historical driver.
+
+The driver pushes an ordered packed container through Loom's actual
 Worker/Pool/Allocation/Hold path. It compares identical deterministic logical
 requests to actual LMDB, with an independent ordered-map oracle. This is the
 allocation implementation stage: this mutable fixture does not implement or price

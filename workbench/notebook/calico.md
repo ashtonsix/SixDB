@@ -41,6 +41,11 @@ they do not establish SixDB contracts or reproduce its benchmark claims.
 Our [initial build survey](build-iteration.md) records what these sources suggested
 for SixDB.
 
+The [comparative benchmarking guide](../benchmarks/comparisons.md) records checked
+Calico adapter/workload failures and their corrective commits, alongside SixDB
+examples. Use those cases when reusing a harness; historical result stamps do not
+establish common measured work.
+
 ## Operating tools
 
 - [Build](../../../calico/BUILDING.md),

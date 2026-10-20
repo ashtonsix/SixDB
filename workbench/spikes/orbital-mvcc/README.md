@@ -1,12 +1,18 @@
 # Orbital MVCC
 
+This is a completed Stage 2 investigation. Its disposable versioned driver and
+the earlier [allocation driver](../../benchmarks/orbital/README.md) have served
+their purpose. Retain their measured cuts, comparisons and consequence tests;
+future Engine callers determine their own workloads and interfaces. The embedded
+module remains separate from these historical fixtures.
+
 Coherent versioned access, representation changes and short native calls across
 different working sets, access patterns and retention lifetimes. Performance,
 metadata ownership and interfaces develop together, while preserving actual
 lifetime and publication behavior. Engine and Ikea's future multi-block
 containers remain outside this investigation.
 
-Stage 2 is in audit and consolidation. The embedded implementation and its
+The embedded implementation and its
 disposable callers exercise coherent reads/writes, physical conversion and
 retained lifetimes. Completed comparisons cover larger working sets, append-style
 growth, conversion, history/churn and interleaved work through Loom. LMDB remains

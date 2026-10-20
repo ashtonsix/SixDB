@@ -8,12 +8,14 @@ The [Hashtable suite](hashtable/README.md) compares maintained packed owners wit
 actual Abseil for sets and maps, including reads, mutations and growth.
 The [Bec256 suite](bec256/README.md) measures headless bitset reads, exact writes,
 analysis and native pair consumers.
-The [Orbital allocation consumer](orbital/README.md) replays ordered packed
-operations through Loom/Orbital against actual LMDB, with per-workload throughput
-and latency headroom.
-The withdrawn Objects candidate, row/column consumer and LMDB controls now live
-in the opt-in [Orbital MVCC spike](../spikes/orbital-mvcc/README.md), where
-performance measurements must steer the design from the first candidate.
+The [comparison guide](comparisons.md) covers fair peer use, real inputs,
+measurement boundaries and eventual external submissions, with concrete failures
+from Calico and SixDB.
+
+The [Orbital allocation consumer](orbital/README.md) and later disposable
+[versioned consumer](../spikes/orbital-mvcc/README.md) have served their purpose.
+They retain historical comparisons, reusable oracles and recovery references;
+neither is the next Engine driver or evidence for the current complete system.
 Individual candidate experiments and their findings
 stay with the [investigation](../spikes/README.md) that asks the question.
 
@@ -29,11 +31,11 @@ Only selected suites are configured; build the target needed for the comparison.
 Google Benchmark provides component microbenchmark machinery. Composed traces
 use a workload-owned driver when exact request/batch boundaries, independent
 state validation or allocation lifecycle matter; capture, affinity, recovery
-and evidence helpers remain shared. The usual convention
-is to pin CPUs and run cases/repetitions sequentially, without interleaving,
-so experiments can isolate performance across cache-residence and resident-set
-size tiers. The workload controls footprint and access pattern; those tiers
-need to be established on the measured machine. [Residency tools](../tools/residency.md)
+and evidence helpers remain shared. Run one measured treatment at a time on
+the selected CPU resources. For comparisons, alternate or counterbalance arm
+order across independent trials while preserving each case's declared starting
+state; case ordering within a conditioning experiment can remain fixed.
+The workload controls footprint and access pattern. [Residency tools](../tools/residency.md)
 cover setup controls, existing probes and observation limits.
 
 The [worker guide](../tools/workers.md) covers machine selection and background

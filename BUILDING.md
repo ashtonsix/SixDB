@@ -51,8 +51,9 @@ hidden by default; future shared-library APIs will need explicit exports.
 The [Orbital runtime](orbital/README.md) and [Loom](loom/README.md) implement
 Stage 1 allocation, preparation, worker and execution support.
 `orbital_validate` and `loom_validate` build and run their checks.
-Select `-DSIXDB_BENCHMARKS=orbital` for the
-[allocation comparison](workbench/benchmarks/orbital/README.md).
+Select `-DSIXDB_BENCHMARKS=orbital` to reproduce the historical
+[allocation comparison](workbench/benchmarks/orbital/README.md); it is not the
+next Engine performance driver.
 
 Concrete Orbital materials instantiate cold operations once through public
 opt-in headers; see [supplying material](orbital/docs/material.md#compile-once).

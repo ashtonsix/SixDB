@@ -1,4 +1,9 @@
-# Carried-forward measurement recipes
+# Historical measurement recipes
+
+These recipes served the allocation/Stage 2 investigations. Both disposable
+drivers are now historical; these commands are reproduction aids, not a launch
+menu for the next Engine driver. Reusable probes are linked from the
+[residency guide](../../tools/residency.md).
 
 `stage2.py` prints one command using the existing worker and workload runners.
 Add `--run` to dispatch it. Nothing is automatically queued. Supply the source
