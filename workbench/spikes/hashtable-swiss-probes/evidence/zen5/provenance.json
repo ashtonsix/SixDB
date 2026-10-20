@@ -1,0 +1,63 @@
+{
+  "files_sha256": {
+    "avx2/audit.txt": "dd9d377c23305f806d2d1daf6f5c6c46b2c82414c9faa4d792e5083d067527ea",
+    "avx2/check-group16.txt": "7578fc6c8473355aa7483a71925e0c3905b055d3c5f0b69c5a290f7527ada68e",
+    "avx2/check-group32.txt": "7578fc6c8473355aa7483a71925e0c3905b055d3c5f0b69c5a290f7527ada68e",
+    "avx2/check-group64.txt": "7578fc6c8473355aa7483a71925e0c3905b055d3c5f0b69c5a290f7527ada68e",
+    "avx2/check-legacy7.txt": "7578fc6c8473355aa7483a71925e0c3905b055d3c5f0b69c5a290f7527ada68e",
+    "avx2/codegen/commands.json": "65bdec60cdf0f78122b7639cd63ce6a7d0f29bbc5b58bd27cd51e38b3d0cf3d5",
+    "avx2/codegen/comparison.json": "69b0732ebfbf840dca64ee144a30d2ebb63c8d52473ff06c2502e73423838a7a",
+    "avx2/codegen/diff.txt": "93faf7019b7d4906a40543c7025c9be339dda372809e89beb0f33a8a8c2b3f9f",
+    "avx2/delta-group16.json": "0554f5fc58ec7704edc1beeaae710d5edf21323d777cfcc2919b1f3f4f412072",
+    "avx2/delta-group32.json": "e7586f561ab431aa2d0a38a3f001b704cf940be393d6e1312f950438d9c46a4a",
+    "avx2/delta-group64.json": "e4171a9270b108204c135803962dd49709ccde78d60b8b4ab2f8c411574e6d8b",
+    "avx2/summary/cases.csv": "5743f191b447db60f0b29184b307e6b6fc385179e2fd3f6db45976504202f38d",
+    "avx2/summary/churn.csv": "fe1f7e3022e00d87b3b1767f44f84442ca50a35d5475394b37a649fa4f7bb725",
+    "avx512/audit.txt": "dd9d377c23305f806d2d1daf6f5c6c46b2c82414c9faa4d792e5083d067527ea",
+    "avx512/check-group16.txt": "7578fc6c8473355aa7483a71925e0c3905b055d3c5f0b69c5a290f7527ada68e",
+    "avx512/check-group32.txt": "7578fc6c8473355aa7483a71925e0c3905b055d3c5f0b69c5a290f7527ada68e",
+    "avx512/check-group64.txt": "7578fc6c8473355aa7483a71925e0c3905b055d3c5f0b69c5a290f7527ada68e",
+    "avx512/check-legacy7.txt": "7578fc6c8473355aa7483a71925e0c3905b055d3c5f0b69c5a290f7527ada68e",
+    "avx512/codegen/commands.json": "c726da8fcd3623312095d2148a0548159395e75853569f1dc4f9f2d1159909b6",
+    "avx512/codegen/comparison.json": "3aca89f7275bd2d682a899a2c83ae16c85512c700b16ea73e32d94daacbea26f",
+    "avx512/codegen/diff.txt": "d390a25bb384b7f3f071ab9d7a87e7c12b222e81fb9631871a1635057bbc393d",
+    "avx512/delta-group16.json": "0554f5fc58ec7704edc1beeaae710d5edf21323d777cfcc2919b1f3f4f412072",
+    "avx512/delta-group32.json": "e7586f561ab431aa2d0a38a3f001b704cf940be393d6e1312f950438d9c46a4a",
+    "avx512/delta-group64.json": "e4171a9270b108204c135803962dd49709ccde78d60b8b4ab2f8c411574e6d8b",
+    "avx512/summary/cases.csv": "feb6dda2f2429497b0633e14c72825a54afe4802a2363c35fef8b49198a41638",
+    "avx512/summary/churn.csv": "823009865ee1e1a6825930699d2ed56ad23a02757b448ac46cfbbfdb4aab69bd",
+    "compiler.txt": "5b17cd9bfa01ae4b276d020d757aeed82b232d4dacef417a833e5ba69a5307da",
+    "lscpu.json": "ea87d071a39a7d3417757717aabc0719c8c1cb0c29e6904d83d810c04b104507",
+    "worker-result.json": "a130362b10b38da83ae5f5d6cf638d32d833cfe523293f461da03bc6d862290c"
+  },
+  "format": 2,
+  "full_bundle": "artifact.json",
+  "kind": "files",
+  "regenerate": [
+    [
+      "python3",
+      "workbench/spikes/hashtable-swiss-probes/audit.py",
+      "{evidence}/avx512"
+    ],
+    [
+      "python3",
+      "workbench/spikes/hashtable-swiss-probes/summarize.py",
+      "{evidence}/avx512",
+      "--output",
+      "{evidence}/avx512/summary"
+    ],
+    [
+      "python3",
+      "workbench/spikes/hashtable-swiss-probes/audit.py",
+      "{evidence}/avx2"
+    ],
+    [
+      "python3",
+      "workbench/spikes/hashtable-swiss-probes/summarize.py",
+      "{evidence}/avx2",
+      "--output",
+      "{evidence}/avx2/summary"
+    ]
+  ],
+  "regenerate_from": "archive"
+}

@@ -1,0 +1,1060 @@
+--- group16/overflow_write_mixed_k14_v0
++++ legacy7/overflow_write_mixed_k14_v0
+@@ -5,7 +5,7 @@
+ pushq	%r13
+ pushq	%r12
+ pushq	%rbx
+-subq	$40, %rsp
++subq	$56, %rsp
+ xorl	%eax, %eax
+ testq	%rcx, %rcx
+ je	.LBB_10
+@@ -14,7 +14,7 @@
+ vmovdqa64	.LCPI_0(%rip), %zmm6
+ vbroadcasti32x4	.LCPI_2(%rip), %zmm7
+ xorl	%ebx, %ebx
+-movq	%rdx, 8(%rsp)
++movq	%rdx, 16(%rsp)
+ .LBB_2:
+ movq	(%rsi,%rbx,8), %r9
+ cmpq	$16777216, %r9
+@@ -26,14 +26,17 @@
+ xorq	%r9, %rdx
+ mulxq	%r8, %r8, %rdx
+ bextrl	%r10d, %r8d, %r10d
+-movq	%r8, %r11
++movq	%r8, %r12
+ movl	%r8d, %ebp
+-movq	%r10, 16(%rsp)
+ xorq	%r8, %rdx
++movq	%r10, 24(%rsp)
+ shll	$6, %r10d
+-andq	$16383, %r11
+-movq	%r11, 24(%rsp)
+-movq	%rdx, 32(%rsp)
++movq	%rdx, %r11
++shrq	$57, %r11
++andq	$16383, %r12
++movq	%r12, 32(%rsp)
++movq	%rdx, 40(%rsp)
++movb	%r11b, 48(%rsp)
+ movl	$-1, %r11d
+ movq	16(%rdi), %rdx
+ vmovdqu64	(%rdx,%r10), %zmm1
+@@ -104,15 +107,15 @@
+ jne	.LBB_2
+ jmp	.LBB_10
+ .LBB_7:
+-movq	8(%rsp), %rdx
+-movq	%rdi, (%rsp)
++movq	16(%rsp), %rdx
++movq	%rdi, 8(%rsp)
+ movq	%rcx, %rbp
+-leaq	16(%rsp), %rcx
++leaq	24(%rsp), %rcx
+ movl	%r12d, %r8d
+ movq	%rsi, %r12
+ movq	%r9, %rsi
+ movq	%rax, %r13
+-movq	(%rsp), %rdi
++movq	8(%rsp), %rdi
+ addq	%rbx, %rdx
+ vzeroupper
+ callq	_ZN4ikea9hashtable5tableILj24ELj10ELj0ELj14ELNS0_13search_kernelE7ENS0_19heap_storage_policyEE11insert_slowEmRKSt5arrayIhLm0EERKNS0_11permutationILj24ELj14EE6resultEm
+@@ -120,7 +123,7 @@
+ vmovdqa64	.LCPI_0(%rip), %zmm6
+ vmovdqa64	_ZZN4ikea9hashtable6detail18exact_small_bucketILj14ELj4EEEmPKhmE6planes(%rip), %zmm5
+ vmovdqa64	_ZZN4ikea9hashtable6detail18exact_small_bucketILj14ELj4EEEmPKhmE6bodies(%rip), %zmm4
+-movq	(%rsp), %rdi
++movq	8(%rsp), %rdi
+ movl	%eax, %edx
+ movq	%r12, %rsi
+ movq	%rbp, %rcx
+@@ -131,7 +134,7 @@
+ cmpq	%rbx, %rcx
+ jne	.LBB_2
+ .LBB_10:
+-addq	$40, %rsp
++addq	$56, %rsp
+ popq	%rbx
+ popq	%r12
+ popq	%r13
+--- group16/overflow_write_existing_k14_v0
++++ legacy7/overflow_write_existing_k14_v0
+@@ -6,7 +6,7 @@
+ pushq	%r12
+ pushq	%rbx
+ subq	$40, %rsp
+-movq	%rdx, 8(%rsp)
++movq	%rdx, (%rsp)
+ testq	%rcx, %rcx
+ je	.LBB_1
+ vmovdqa64	_ZZN4ikea9hashtable6detail18exact_small_bucketILj14ELj4EEEmPKhmE6bodies(%rip), %zmm4
+@@ -38,15 +38,18 @@
+ xorq	%rsi, %rdx
+ mulxq	%r11, %rdi, %rax
+ bextrl	%r10d, %edi, %ecx
+-movq	%rdi, %rdx
++movq	%rdi, %r8
+ movl	%edi, %r9d
++xorq	%rdi, %rax
++movq	%rcx, 8(%rsp)
++shll	$6, %ecx
++movq	%rax, %rdx
++shrq	$57, %rdx
++andq	$16383, %r8
++movq	%r8, 16(%rsp)
++movq	%rax, 24(%rsp)
++movb	%dl, 32(%rsp)
+ movl	%edi, %r8d
+-movq	%rcx, 16(%rsp)
+-xorq	%rdi, %rax
+-shll	$6, %ecx
+-andq	$16383, %rdx
+-movq	%rdx, 24(%rsp)
+-movq	%rax, 32(%rsp)
+ movq	16(%r12), %rax
+ vmovdqu64	(%rax,%rcx), %zmm1
+ vmovdqu	48(%rax,%rcx), %xmm0
+@@ -66,7 +69,7 @@
+ kmovq	%k0, %r8
+ testl	%r8d, %edx
+ jne	.LBB_8
+-movq	8(%rsp), %rdx
++movq	(%rsp), %rdx
+ vextracti32x4	$3, %zmm1, %xmm1
+ vpextrd	$2, %xmm1, %r8d
+ addq	%rbp, %rdx
+@@ -75,12 +78,12 @@
+ vpextrb	$15, %xmm0, %r10d
+ testb	%r10b, %r10b
+ je	.LBB_14
+-leaq	16(%rsp), %rcx
++leaq	8(%rsp), %rcx
+ movq	%r12, %rdi
+ jmp	.LBB_13
+ .LBB_10:
+ movq	%r12, %rdi
+-leaq	16(%rsp), %rcx
++leaq	8(%rsp), %rcx
+ xorl	%r8d, %r8d
+ .LBB_13:
+ vzeroupper
+--- group16/overflow_write_mixed_k14_v8
++++ legacy7/overflow_write_mixed_k14_v8
+@@ -25,29 +25,32 @@
+ xorq	%r9, %rdx
+ mulxq	%r8, %r8, %rdx
+ bextrl	%r10d, %r8d, %r10d
++movq	%r8, %r12
+ movl	%r8d, %ebp
+-leaq	(%r10,%r10,4), %r11
+-movq	%r10, 16(%rsp)
++movq	%r10, 8(%rsp)
++leaq	(%r10,%r10,4), %r10
+ xorq	%r8, %rdx
+-movq	%r8, %r10
+-shll	$6, %r11d
+-andq	$16383, %r10
+-movq	%r10, 24(%rsp)
+-movq	%rdx, 32(%rsp)
+-movl	$-1, %r10d
++movq	%rdx, %r11
++shrq	$57, %r11
++shll	$6, %r10d
++andq	$16383, %r12
++movq	%r12, 16(%rsp)
++movq	%rdx, 24(%rsp)
++movb	%r11b, 32(%rsp)
++movl	$-1, %r11d
+ movq	16(%rdi), %rdx
+-vmovdqu64	(%rdx,%r11), %zmm1
+-vmovdqu	48(%rdx,%r11), %xmm0
++vmovdqu64	(%rdx,%r10), %zmm1
++vmovdqu	48(%rdx,%r10), %xmm0
+ vpermb	%zmm1, %zmm4, %zmm2
+ vpermb	%zmm1, %zmm5, %zmm1
+ vpextrd	$2, %xmm0, %r12d
+ movl	%r12d, %r13d
+ notl	%r13d
+-cmovnel	%r10d, %r13d
+-movl	%r8d, %r10d
+-shrl	$6, %r10d
++cmovnel	%r11d, %r13d
++movl	%r8d, %r11d
++shrl	$6, %r11d
+ andb	$63, %bpl
+-vpbroadcastb	%r10d, %zmm3
++vpbroadcastb	%r11d, %zmm3
+ vpandq	%zmm6, %zmm1, %zmm1
+ vpcmpeqb	%zmm3, %zmm2, %k1
+ vpbroadcastb	%ebp, %zmm2
+@@ -64,16 +67,16 @@
+ cmovnel	%r15d, %r13d
+ testl	%r13d, %r13d
+ je	.LBB_7
+-addq	%r11, %rdx
++addq	%r10, %rdx
+ xorl	%r9d, %r9d
+ testq	%rbp, %rbp
+ movabsq	$1103823438081, %rbp
+ sete	%r9b
+-tzcntl	%r13d, %r11d
++tzcntl	%r13d, %r10d
+ pdepq	%rbp, %r8, %r8
+-movl	%r11d, %r12d
++movl	%r10d, %r12d
+ shrl	$3, %r12d
+-movl	%r11d, %r14d
++movl	%r10d, %r14d
+ andl	$7, %r14d
+ movl	%r12d, %r13d
+ shll	$4, %r13d
+@@ -81,22 +84,22 @@
+ subq	%r12, %r13
+ subq	%r12, %r13
+ leaq	(%rdx,%r13), %r15
+-movb	%r10b, (%r14,%r15)
++movb	%r11b, (%r14,%r15)
+ movzwl	12(%rdx,%r13), %r15d
+-movl	8(%rdx,%r13), %r10d
++movl	8(%rdx,%r13), %r11d
+ shlq	$32, %r15
+-orq	%r10, %r15
+-shlxq	%r14, %rbp, %r10
+-andnq	%r15, %r10, %r10
+-orq	%r8, %r10
+-movl	%r10d, 8(%rdx,%r13)
+-shrq	$32, %r10
+-movw	%r10w, 12(%rdx,%r13)
++orq	%r11, %r15
++shlxq	%r14, %rbp, %r11
++andnq	%r15, %r11, %r11
++orq	%r8, %r11
++movl	%r11d, 8(%rdx,%r13)
++shrq	$32, %r11
++movw	%r11w, 12(%rdx,%r13)
+ movq	(%rbx), %r8
+-movq	%r8, 64(%rdx,%r11,8)
+-andb	$7, %r11b
++movq	%r8, 64(%rdx,%r10,8)
++andb	$7, %r10b
+ movl	$1, %r8d
+-shlxl	%r11d, %r8d, %r8d
++shlxl	%r10d, %r8d, %r8d
+ notb	%r8b
+ andb	%r8b, 56(%rdx,%r12)
+ addq	%r9, 104(%rdi)
+@@ -108,22 +111,22 @@
+ jne	.LBB_2
+ jmp	.LBB_10
+ .LBB_7:
+-movq	%rdi, 8(%rsp)
++movq	%rdi, (%rsp)
+ movq	%rcx, %rbp
+-leaq	16(%rsp), %rcx
++leaq	8(%rsp), %rcx
+ movl	%r12d, %r8d
+ movq	%rsi, %r12
+ movq	%r9, %rsi
+ movq	%rbx, %rdx
+ movq	%rax, %r13
+-movq	8(%rsp), %rdi
++movq	(%rsp), %rdi
+ vzeroupper
+ callq	_ZN4ikea9hashtable5tableILj24ELj10ELj8ELj14ELNS0_13search_kernelE7ENS0_19heap_storage_policyEE11insert_slowEmRKSt5arrayIhLm8EERKNS0_11permutationILj24ELj14EE6resultEm
+ vbroadcasti32x4	.LCPI_2(%rip), %zmm7
+ vmovdqa64	.LCPI_0(%rip), %zmm6
+ vmovdqa64	_ZZN4ikea9hashtable6detail18exact_small_bucketILj14ELj4EEEmPKhmE6planes(%rip), %zmm5
+ vmovdqa64	_ZZN4ikea9hashtable6detail18exact_small_bucketILj14ELj4EEEmPKhmE6bodies(%rip), %zmm4
+-movq	8(%rsp), %rdi
++movq	(%rsp), %rdi
+ movl	%eax, %edx
+ movq	%r12, %rsi
+ movq	%rbp, %rcx
+--- group16/overflow_write_existing_k14_v8
++++ legacy7/overflow_write_existing_k14_v8
+@@ -5,7 +5,7 @@
+ pushq	%r13
+ pushq	%r12
+ pushq	%rbx
+-subq	$24, %rsp
++subq	$40, %rsp
+ testq	%rcx, %rcx
+ je	.LBB_1
+ vmovdqa64	_ZZN4ikea9hashtable6detail18exact_small_bucketILj14ELj4EEEmPKhmE6bodies(%rip), %zmm4
+@@ -40,14 +40,17 @@
+ xorq	%rsi, %rdx
+ mulxq	%r11, %rdx, %rax
+ bextrl	%r10d, %edx, %ecx
+-movq	%rdx, %rdi
+-movq	%rcx, (%rsp)
++movq	%rdx, %r8
++movq	%rcx, 8(%rsp)
+ leaq	(%rcx,%rcx,4), %rcx
+ xorq	%rdx, %rax
++movq	%rax, %rdi
++shrq	$57, %rdi
+ shll	$6, %ecx
+-andq	$16383, %rdi
+-movq	%rdi, 8(%rsp)
+-movq	%rax, 16(%rsp)
++andq	$16383, %r8
++movq	%r8, 16(%rsp)
++movq	%rax, 24(%rsp)
++movb	%dil, 32(%rsp)
+ movq	16(%r12), %rdi
+ vmovdqu64	(%rdi,%rcx), %zmm1
+ vmovdqu	48(%rdi,%rcx), %xmm0
+@@ -83,9 +86,9 @@
+ vpextrb	$15, %xmm0, %ecx
+ testb	%cl, %cl
+ je	.LBB_13
++leaq	8(%rsp), %rcx
+ movq	%r12, %rdi
+ movq	%r14, %rdx
+-movq	%rsp, %rcx
+ vzeroupper
+ callq	_ZN4ikea9hashtable5tableILj24ELj10ELj8ELj14ELNS0_13search_kernelE7ENS0_19heap_storage_policyEE11insert_slowEmRKSt5arrayIhLm8EERKNS0_11permutationILj24ELj14EE6resultEm
+ vbroadcasti32x4	.LCPI_2(%rip), %zmm7
+@@ -95,9 +98,9 @@
+ movabsq	$-7046029288634856825, %r11
+ jmp	.LBB_14
+ .LBB_10:
++leaq	8(%rsp), %rcx
+ movq	%r12, %rdi
+ movq	%r14, %rdx
+-movq	%rsp, %rcx
+ xorl	%r8d, %r8d
+ vzeroupper
+ callq	_ZN4ikea9hashtable5tableILj24ELj10ELj8ELj14ELNS0_13search_kernelE7ENS0_19heap_storage_policyEE11insert_slowEmRKSt5arrayIhLm8EERKNS0_11permutationILj24ELj14EE6resultEm
+@@ -148,7 +151,7 @@
+ xorl	%r13d, %r13d
+ .LBB_16:
+ movq	%r13, %rax
+-addq	$24, %rsp
++addq	$40, %rsp
+ popq	%rbx
+ popq	%r12
+ popq	%r13
+--- group16/overflow_write_mixed_k14_v64
++++ legacy7/overflow_write_mixed_k14_v64
+@@ -5,7 +5,7 @@
+ pushq	%r13
+ pushq	%r12
+ pushq	%rbx
+-subq	$40, %rsp
++subq	$56, %rsp
+ xorl	%eax, %eax
+ testq	%rcx, %rcx
+ je	.LBB_10
+@@ -17,35 +17,38 @@
+ xorl	%edx, %edx
+ .LBB_2:
+ movq	(%rsi,%rdx,8), %r9
+-movq	%rdx, 8(%rsp)
++movq	%rdx, 16(%rsp)
+ cmpq	$16777216, %r9
+ jae	.LBB_3
+ movq	112(%rdi), %rdx
+ movabsq	$-7046029288634856825, %r8
++movl	$2574, %r10d
+ movl	$-1, %ebp
+ movl	$0, %r12d
+ xorq	%r9, %rdx
+-mulxq	%r8, %r10, %rdx
+-movl	$2574, %r8d
+-bextrl	%r8d, %r10d, %r8d
+-movq	%r10, %r11
+-movl	%r10d, %r13d
+-movq	%r8, 16(%rsp)
+-xorq	%r10, %rdx
+-imulq	$2112, %r8, %r8
+-andq	$16383, %r11
+-movq	%r11, 24(%rsp)
+-movq	%rdx, 32(%rsp)
++mulxq	%r8, %r8, %rdx
++bextrl	%r10d, %r8d, %r10d
++movq	%r8, %r14
++movl	%r8d, %r13d
++xorq	%r8, %rdx
++movq	%r10, 24(%rsp)
++imulq	$2112, %r10, %r10
++movq	%rdx, %r11
++shrq	$57, %r11
++andq	$16383, %r14
++movq	%r14, 32(%rsp)
++movq	%rdx, 40(%rsp)
++movb	%r11b, 48(%rsp)
+ movq	16(%rdi), %rdx
+-vmovdqu64	(%rdx,%r8), %zmm1
+-vmovdqu	48(%rdx,%r8), %xmm0
++vmovdqu64	(%rdx,%r10), %zmm1
++vmovdqu	48(%rdx,%r10), %xmm0
+ vpermb	%zmm1, %zmm4, %zmm2
+ vpermb	%zmm1, %zmm5, %zmm1
+ vpextrd	$2, %xmm0, %r11d
+ movl	%r11d, %r14d
+ notl	%r14d
+ cmovnel	%ebp, %r14d
+-movl	%r10d, %ebp
++movl	%r8d, %ebp
+ shrl	$6, %ebp
+ andb	$63, %r13b
+ vpbroadcastb	%ebp, %zmm3
+@@ -65,91 +68,91 @@
+ cmovnel	%r12d, %r14d
+ testl	%r14d, %r14d
+ je	.LBB_7
+-addq	%r8, %rdx
+-xorl	%r8d, %r8d
++addq	%r10, %rdx
++xorl	%r9d, %r9d
+ testq	%r13, %r13
+-sete	%r8b
++sete	%r9b
+ tzcntl	%r14d, %r11d
+-movl	%r11d, %r9d
+-shrl	$3, %r9d
++movl	%r11d, %r10d
++shrl	$3, %r10d
+ movl	%r11d, %r14d
+ andl	$7, %r14d
+-movl	%r9d, %r12d
++movl	%r10d, %r12d
+ shll	$4, %r12d
+-subq	%r9, %r12
+-subq	%r9, %r12
++subq	%r10, %r12
++subq	%r10, %r12
+ leaq	(%rdx,%r12), %r15
+ movb	%bpl, (%r14,%r15)
+ movabsq	$1103823438081, %rbp
+ movzwl	12(%rdx,%r12), %r13d
+ movl	8(%rdx,%r12), %r15d
+-pdepq	%rbp, %r10, %r10
+-shlxq	%r14, %r10, %r10
++pdepq	%rbp, %r8, %r8
++shlxq	%r14, %r8, %r8
+ shlxq	%r14, %rbp, %r14
+ shlq	$32, %r13
+ orq	%r15, %r13
+ andnq	%r13, %r14, %r14
+-orq	%r10, %r14
+-movl	%r11d, %r10d
+-shll	$6, %r10d
++orq	%r8, %r14
++movl	%r11d, %r8d
++shll	$6, %r8d
+ andb	$7, %r11b
+ movl	%r14d, 8(%rdx,%r12)
+ shrq	$32, %r14
+ movw	%r14w, 12(%rdx,%r12)
+ movq	(%rbx), %r14
+-movq	%r14, 64(%rdx,%r10)
++movq	%r14, 64(%rdx,%r8)
+ movq	8(%rbx), %r14
+-movq	%r14, 72(%rdx,%r10)
++movq	%r14, 72(%rdx,%r8)
+ movq	16(%rbx), %r14
+-movq	%r14, 80(%rdx,%r10)
++movq	%r14, 80(%rdx,%r8)
+ movq	24(%rbx), %r14
+-movq	%r14, 88(%rdx,%r10)
++movq	%r14, 88(%rdx,%r8)
+ movq	32(%rbx), %r14
+-movq	%r14, 96(%rdx,%r10)
++movq	%r14, 96(%rdx,%r8)
+ movq	40(%rbx), %r14
+-movq	%r14, 104(%rdx,%r10)
++movq	%r14, 104(%rdx,%r8)
+ movq	48(%rbx), %r14
+-movq	%r14, 112(%rdx,%r10)
++movq	%r14, 112(%rdx,%r8)
+ movq	56(%rbx), %r14
+-movq	%r14, 120(%rdx,%r10)
+-movl	$1, %r10d
+-shlxl	%r11d, %r10d, %r10d
+-notb	%r10b
+-andb	%r10b, 56(%rdx,%r9)
+-addq	%r8, 104(%rdi)
++movq	%r14, 120(%rdx,%r8)
++movl	$1, %r8d
++shlxl	%r11d, %r8d, %r8d
++notb	%r8b
++andb	%r8b, 56(%rdx,%r10)
++addq	%r9, 104(%rdi)
+ .LBB_9:
+-movq	8(%rsp), %rdx
+-addq	%r8, %rax
++movq	16(%rsp), %rdx
++addq	%r9, %rax
+ addq	$64, %rbx
+ incq	%rdx
+ cmpq	%rdx, %rcx
+ jne	.LBB_2
+ jmp	.LBB_10
+ .LBB_7:
+-movq	%rdi, (%rsp)
++movq	%rdi, 8(%rsp)
+ movq	%rcx, %rbp
+-leaq	16(%rsp), %rcx
++leaq	24(%rsp), %rcx
+ movq	%rsi, %r14
+ movl	%r11d, %r8d
+ movq	%r9, %rsi
+ movq	%rbx, %rdx
+ movq	%rax, %r13
+-movq	(%rsp), %rdi
++movq	8(%rsp), %rdi
+ vzeroupper
+ callq	_ZN4ikea9hashtable5tableILj24ELj10ELj64ELj14ELNS0_13search_kernelE7ENS0_19heap_storage_policyEE11insert_slowEmRKSt5arrayIhLm64EERKNS0_11permutationILj24ELj14EE6resultEm
+ vbroadcasti32x4	.LCPI_2(%rip), %zmm7
+ vmovdqa64	.LCPI_0(%rip), %zmm6
+ vmovdqa64	_ZZN4ikea9hashtable6detail18exact_small_bucketILj14ELj4EEEmPKhmE6planes(%rip), %zmm5
+ vmovdqa64	_ZZN4ikea9hashtable6detail18exact_small_bucketILj14ELj4EEEmPKhmE6bodies(%rip), %zmm4
+-movq	(%rsp), %rdi
++movq	8(%rsp), %rdi
+ movl	%eax, %edx
+ movq	%r14, %rsi
+ movq	%rbp, %rcx
+ movq	%r13, %rax
+-movzbl	%dl, %r8d
++movzbl	%dl, %r9d
+ jmp	.LBB_9
+ .LBB_10:
+-addq	$40, %rsp
++addq	$56, %rsp
+ popq	%rbx
+ popq	%r12
+ popq	%r13
+--- group16/overflow_write_existing_k14_v64
++++ legacy7/overflow_write_existing_k14_v64
+@@ -5,7 +5,7 @@
+ pushq	%r13
+ pushq	%r12
+ pushq	%rbx
+-subq	$24, %rsp
++subq	$40, %rsp
+ testq	%rcx, %rcx
+ je	.LBB_1
+ vmovdqa64	_ZZN4ikea9hashtable6detail18exact_small_bucketILj14ELj4EEEmPKhmE6bodies(%rip), %zmm4
+@@ -55,13 +55,16 @@
+ xorq	%rsi, %rdx
+ mulxq	%r10, %rdx, %rax
+ bextrl	%r11d, %edx, %ecx
+-movq	%rdx, %rdi
+-movq	%rcx, (%rsp)
++movq	%rdx, %r8
+ xorq	%rdx, %rax
++movq	%rcx, 8(%rsp)
+ imulq	$2112, %rcx, %rcx
+-andq	$16383, %rdi
+-movq	%rdi, 8(%rsp)
+-movq	%rax, 16(%rsp)
++movq	%rax, %rdi
++shrq	$57, %rdi
++andq	$16383, %r8
++movq	%r8, 16(%rsp)
++movq	%rax, 24(%rsp)
++movb	%dil, 32(%rsp)
+ movl	$-1, %eax
+ movq	16(%r12), %rdi
+ vmovdqu64	(%rdi,%rcx), %zmm1
+@@ -98,9 +101,9 @@
+ vpextrb	$15, %xmm0, %ecx
+ testb	%cl, %cl
+ je	.LBB_13
++leaq	8(%rsp), %rcx
+ movq	%r12, %rdi
+ movq	%r14, %rdx
+-movq	%rsp, %rcx
+ vzeroupper
+ callq	_ZN4ikea9hashtable5tableILj24ELj10ELj64ELj14ELNS0_13search_kernelE7ENS0_19heap_storage_policyEE11insert_slowEmRKSt5arrayIhLm64EERKNS0_11permutationILj24ELj14EE6resultEm
+ vbroadcasti32x4	.LCPI_2(%rip), %zmm7
+@@ -109,9 +112,9 @@
+ vmovdqa64	_ZZN4ikea9hashtable6detail18exact_small_bucketILj14ELj4EEEmPKhmE6bodies(%rip), %zmm4
+ jmp	.LBB_14
+ .LBB_10:
++leaq	8(%rsp), %rcx
+ movq	%r12, %rdi
+ movq	%r14, %rdx
+-movq	%rsp, %rcx
+ xorl	%r8d, %r8d
+ vzeroupper
+ callq	_ZN4ikea9hashtable5tableILj24ELj10ELj64ELj14ELNS0_13search_kernelE7ENS0_19heap_storage_policyEE11insert_slowEmRKSt5arrayIhLm64EERKNS0_11permutationILj24ELj14EE6resultEm
+@@ -178,7 +181,7 @@
+ xorl	%r13d, %r13d
+ .LBB_16:
+ movq	%r13, %rax
+-addq	$24, %rsp
++addq	$40, %rsp
+ popq	%rbx
+ popq	%r12
+ popq	%r13
+--- group16/overflow_write_mixed_k30_v0
++++ legacy7/overflow_write_mixed_k30_v0
+@@ -5,7 +5,7 @@
+ pushq	%r13
+ pushq	%r12
+ pushq	%rbx
+-subq	$40, %rsp
++subq	$56, %rsp
+ xorl	%eax, %eax
+ testq	%rcx, %rcx
+ je	.LBB_12
+@@ -15,7 +15,7 @@
+ vpbroadcastq	.LCPI_4(%rip), %xmm6
+ vpbroadcastb	.LCPI_5(%rip), %xmm7
+ xorl	%ebx, %ebx
+-movq	%rdx, 8(%rsp)
++movq	%rdx, 16(%rsp)
+ .LBB_2:
+ movq	(%rsi,%rbx,8), %r9
+ movabsq	$1099511627776, %rdx
+@@ -31,13 +31,15 @@
+ andl	$1073741823, %r11d
+ movl	%r10d, %r8d
+ xorq	%r10, %rdx
+-movq	%r12, 16(%rsp)
+-movq	%r11, 24(%rsp)
++movq	%r12, 24(%rsp)
++movq	%r11, 32(%rsp)
+ shll	$6, %r12d
+ vpbroadcastd	%r11d, %zmm2
+ andb	$63, %r8b
+-movq	%rdx, 32(%rsp)
++movq	%rdx, 40(%rsp)
++shrq	$57, %rdx
+ vpsrld	$6, %zmm2, %zmm2
++movb	%dl, 48(%rsp)
+ movq	16(%rdi), %rdx
+ vmovdqu64	(%rdx,%r12), %zmm0
+ vpermb	%zmm0, %zmm3, %zmm1
+@@ -114,14 +116,14 @@
+ jne	.LBB_2
+ jmp	.LBB_12
+ .LBB_9:
+-movq	8(%rsp), %rdx
+-movq	%rdi, (%rsp)
++movq	16(%rsp), %rdx
++movq	%rdi, 8(%rsp)
+ movq	%rcx, %rbp
+-leaq	16(%rsp), %rcx
++leaq	24(%rsp), %rcx
+ movq	%rsi, %r12
+ movq	%r9, %rsi
+ movq	%rax, %r13
+-movq	(%rsp), %rdi
++movq	8(%rsp), %rdi
+ addq	%rbx, %rdx
+ vzeroupper
+ callq	_ZN4ikea9hashtable5tableILj40ELj10ELj0ELj30ELNS0_13search_kernelE3ENS0_19heap_storage_policyEE11insert_slowEmRKSt5arrayIhLm0EERKNS0_11permutationILj40ELj30EE6resultEm
+@@ -130,7 +132,7 @@
+ vbroadcasti32x4	.LCPI_3(%rip), %zmm5
+ vmovdqa64	_ZZN4ikea9hashtable6detail10residual30ILb0EEEjDv8_xmE5order(%rip), %zmm4
+ vmovdqa64	_ZZN4ikea9hashtable6detail9prepare30ILb0EEENS1_7parts30EPKhmE5order(%rip), %zmm3
+-movq	(%rsp), %rdi
++movq	8(%rsp), %rdi
+ movl	%eax, %edx
+ movq	%r12, %rsi
+ movq	%rbp, %rcx
+@@ -141,7 +143,7 @@
+ cmpq	%rbx, %rcx
+ jne	.LBB_2
+ .LBB_12:
+-addq	$40, %rsp
++addq	$56, %rsp
+ popq	%rbx
+ popq	%r12
+ popq	%r13
+--- group16/overflow_write_existing_k30_v0
++++ legacy7/overflow_write_existing_k30_v0
+@@ -6,7 +6,7 @@
+ pushq	%r12
+ pushq	%rbx
+ subq	$40, %rsp
+-movq	%rdx, 8(%rsp)
++movq	%rdx, (%rsp)
+ testq	%rcx, %rcx
+ je	.LBB_16
+ vmovdqa64	_ZZN4ikea9hashtable6detail9prepare30ILb0EEENS1_7parts30EPKhmE5order(%rip), %zmm3
+@@ -14,14 +14,14 @@
+ vbroadcasti32x4	.LCPI_3(%rip), %zmm5
+ vpbroadcastq	.LCPI_4(%rip), %xmm6
+ vpbroadcastb	.LCPI_5(%rip), %xmm7
+-movabsq	$1099511627776, %rbp
+-movabsq	$-7046029288634856825, %r15
+-movl	$2590, %ebx
+-movq	%rsi, %r10
++movabsq	$1099511627776, %r10
++movabsq	$-7046029288634856825, %r11
++movl	$2590, %ebp
++movq	%rcx, %rbx
++movq	%rsi, %r15
+ movq	%rdi, %r12
+ xorl	%r14d, %r14d
+ xorl	%r13d, %r13d
+-movq	%rcx, (%rsp)
+ jmp	.LBB_4
+ .LBB_7:
+ vextracti32x4	$3, %zmm0, %xmm0
+@@ -35,29 +35,31 @@
+ movzbl	%al, %eax
+ incq	%r14
+ addq	%rax, %r13
+-cmpq	%r14, %rcx
++cmpq	%r14, %rbx
+ je	.LBB_17
+ .LBB_4:
+-movq	(%r10,%r14,8), %rsi
+-cmpq	%rbp, %rsi
++movq	(%r15,%r14,8), %rsi
++cmpq	%r10, %rsi
+ jae	.LBB_18
+ movq	112(%r12), %rdx
+ xorq	%rsi, %rdx
+-mulxq	%r15, %rdi, %rax
++mulxq	%r11, %rdi, %rax
+ movl	%edi, %r9d
+-bextrq	%rbx, %rdi, %r11
++bextrq	%rbp, %rdi, %rcx
+ andl	$1073741823, %r9d
+ movl	%edi, %edx
+ xorq	%rdi, %rax
+-movq	%r11, 16(%rsp)
+-movq	%r9, 24(%rsp)
+-shll	$6, %r11d
++movq	%rcx, 8(%rsp)
++movq	%r9, 16(%rsp)
++shll	$6, %ecx
+ vpbroadcastd	%r9d, %zmm2
+ andb	$63, %dl
+-movq	%rax, 32(%rsp)
++movq	%rax, 24(%rsp)
++shrq	$57, %rax
+ vpsrld	$6, %zmm2, %zmm2
++movb	%al, 32(%rsp)
+ movq	16(%r12), %rax
+-vmovdqu64	(%rax,%r11), %zmm0
++vmovdqu64	(%rax,%rcx), %zmm0
+ vpermb	%zmm0, %zmm3, %zmm1
+ vpandq	%zmm5, %zmm1, %zmm1
+ vpcmpeqd	%zmm1, %zmm2, %k1
+@@ -72,9 +74,9 @@
+ testq	%rdx, %rdx
+ jne	.LBB_2
+ .LBB_8:
+-vmovdqu	48(%rax,%r11), %xmm0
+-movq	8(%rsp), %rdx
+-movq	%r10, %rbx
++vmovdqu	48(%rax,%rcx), %xmm0
++movq	(%rsp), %rdx
++movq	%r10, %rbp
+ addq	%r14, %rdx
+ vpextrw	$6, %xmm0, %r8d
+ testw	%r8w, %r8w
+@@ -83,7 +85,7 @@
+ movzwl	%r8w, %r8d
+ testb	%r10b, %r10b
+ je	.LBB_12
+-leaq	16(%rsp), %rcx
++leaq	8(%rsp), %rcx
+ movq	%r12, %rdi
+ vzeroupper
+ callq	_ZN4ikea9hashtable5tableILj40ELj10ELj0ELj30ELNS0_13search_kernelE3ENS0_19heap_storage_policyEE11insert_slowEmRKSt5arrayIhLm0EERKNS0_11permutationILj40ELj30EE6resultEm
+@@ -94,7 +96,7 @@
+ vmovdqa64	_ZZN4ikea9hashtable6detail9prepare30ILb0EEENS1_7parts30EPKhmE5order(%rip), %zmm3
+ jmp	.LBB_13
+ .LBB_11:
+-leaq	16(%rsp), %rcx
++leaq	8(%rsp), %rcx
+ movq	%r12, %rdi
+ xorl	%r8d, %r8d
+ vzeroupper
+@@ -104,11 +106,11 @@
+ vbroadcasti32x4	.LCPI_3(%rip), %zmm5
+ vmovdqa64	_ZZN4ikea9hashtable6detail10residual30ILb0EEEjDv8_xmE5order(%rip), %zmm4
+ vmovdqa64	_ZZN4ikea9hashtable6detail9prepare30ILb0EEENS1_7parts30EPKhmE5order(%rip), %zmm3
+-movq	(%rsp), %rcx
++movabsq	$-7046029288634856825, %r11
+ jmp	.LBB_14
+ .LBB_12:
++addq	%rcx, %rax
+ tzcntq	%r8, %rcx
+-addq	%r11, %rax
+ shrl	$6, %r9d
+ movl	%ecx, %edx
+ shrl	$3, %edx
+@@ -143,10 +145,10 @@
+ incq	104(%r12)
+ movb	$1, %al
+ .LBB_13:
+-movq	(%rsp), %rcx
++movabsq	$-7046029288634856825, %r11
+ .LBB_14:
+-movq	%rbx, %r10
+-movl	$2590, %ebx
++movq	%rbp, %r10
++movl	$2590, %ebp
+ jmp	.LBB_3
+ .LBB_16:
+ xorl	%r13d, %r13d
+--- group16/overflow_write_mixed_k30_v8
++++ legacy7/overflow_write_mixed_k30_v8
+@@ -29,16 +29,18 @@
+ bextrq	%r8, %r10, %r8
+ andl	$1073741823, %r11d
+ xorq	%r10, %rdx
+-movq	%r8, 16(%rsp)
+-movq	%r11, 24(%rsp)
++movq	%r8, 8(%rsp)
++movq	%r11, 16(%rsp)
+ leaq	(%r8,%r8,2), %r12
+ vpbroadcastd	%r11d, %zmm2
+ movl	%r10d, %r8d
+-movq	%rdx, 32(%rsp)
++movq	%rdx, 24(%rsp)
++shrq	$57, %rdx
+ vpsrld	$6, %zmm2, %zmm2
+ andb	$63, %r8b
++movb	%dl, 32(%rsp)
++shll	$6, %r12d
+ movq	16(%rdi), %rdx
+-shll	$6, %r12d
+ vmovdqu64	(%rdx,%r12), %zmm0
+ vpermb	%zmm0, %zmm3, %zmm1
+ vpandq	%zmm5, %zmm1, %zmm1
+@@ -118,14 +120,14 @@
+ jne	.LBB_2
+ jmp	.LBB_12
+ .LBB_9:
+-movq	%rdi, 8(%rsp)
++movq	%rdi, (%rsp)
+ movq	%rcx, %rbp
+-leaq	16(%rsp), %rcx
++leaq	8(%rsp), %rcx
+ movq	%rsi, %r12
+ movq	%r9, %rsi
+ movq	%rbx, %rdx
+ movq	%rax, %r13
+-movq	8(%rsp), %rdi
++movq	(%rsp), %rdi
+ vzeroupper
+ callq	_ZN4ikea9hashtable5tableILj40ELj10ELj8ELj30ELNS0_13search_kernelE1ENS0_19heap_storage_policyEE11insert_slowEmRKSt5arrayIhLm8EERKNS0_11permutationILj40ELj30EE6resultEm
+ vpbroadcastb	.LCPI_5(%rip), %xmm7
+@@ -133,7 +135,7 @@
+ vbroadcasti32x4	.LCPI_3(%rip), %zmm5
+ vmovdqa64	_ZZN4ikea9hashtable6detail10residual30ILb0EEEjDv8_xmE5order(%rip), %zmm4
+ vmovdqa64	_ZZN4ikea9hashtable6detail9prepare30ILb0EEENS1_7parts30EPKhmE5order(%rip), %zmm3
+-movq	8(%rsp), %rdi
++movq	(%rsp), %rdi
+ movl	%eax, %edx
+ movq	%r12, %rsi
+ movq	%rbp, %rcx
+--- group16/overflow_write_existing_k30_v8
++++ legacy7/overflow_write_existing_k30_v8
+@@ -5,7 +5,7 @@
+ pushq	%r13
+ pushq	%r12
+ pushq	%rbx
+-subq	$24, %rsp
++subq	$40, %rsp
+ testq	%rcx, %rcx
+ je	.LBB_1
+ vmovdqa64	_ZZN4ikea9hashtable6detail9prepare30ILb0EEENS1_7parts30EPKhmE5order(%rip), %zmm3
+@@ -45,16 +45,18 @@
+ bextrq	%rbp, %rax, %rdi
+ andl	$1073741823, %edx
+ xorq	%rax, %rcx
+-movq	%rdi, (%rsp)
+-movq	%rdx, 8(%rsp)
++movq	%rdi, 8(%rsp)
++movq	%rdx, 16(%rsp)
+ leaq	(%rdi,%rdi,2), %r8
+ vpbroadcastd	%edx, %zmm2
+ movl	%eax, %edi
+-movq	%rcx, 16(%rsp)
++movq	%rcx, 24(%rsp)
++shrq	$57, %rcx
+ vpsrld	$6, %zmm2, %zmm2
+ andb	$63, %dil
++movb	%cl, 32(%rsp)
++shll	$6, %r8d
+ movq	16(%r12), %rcx
+-shll	$6, %r8d
+ vmovdqu64	(%rcx,%r8), %zmm0
+ vpermb	%zmm0, %zmm3, %zmm1
+ vpandq	%zmm5, %zmm1, %zmm1
+@@ -87,9 +89,9 @@
+ movzwl	%cx, %r8d
+ testb	%r9b, %r9b
+ je	.LBB_15
++leaq	8(%rsp), %rcx
+ movq	%r12, %rdi
+ movq	%r14, %rdx
+-movq	%rsp, %rcx
+ vzeroupper
+ callq	_ZN4ikea9hashtable5tableILj40ELj10ELj8ELj30ELNS0_13search_kernelE1ENS0_19heap_storage_policyEE11insert_slowEmRKSt5arrayIhLm8EERKNS0_11permutationILj40ELj30EE6resultEm
+ vpbroadcastb	.LCPI_5(%rip), %xmm7
+@@ -99,9 +101,9 @@
+ vmovdqa64	_ZZN4ikea9hashtable6detail9prepare30ILb0EEENS1_7parts30EPKhmE5order(%rip), %zmm3
+ jmp	.LBB_16
+ .LBB_12:
++leaq	8(%rsp), %rcx
+ movq	%r12, %rdi
+ movq	%r14, %rdx
+-movq	%rsp, %rcx
+ xorl	%r8d, %r8d
+ vzeroupper
+ callq	_ZN4ikea9hashtable5tableILj40ELj10ELj8ELj30ELNS0_13search_kernelE1ENS0_19heap_storage_policyEE11insert_slowEmRKSt5arrayIhLm8EERKNS0_11permutationILj40ELj30EE6resultEm
+@@ -158,7 +160,7 @@
+ xorl	%r13d, %r13d
+ .LBB_18:
+ movq	%r13, %rax
+-addq	$24, %rsp
++addq	$40, %rsp
+ popq	%rbx
+ popq	%r12
+ popq	%r13
+--- group16/overflow_write_mixed_k30_v64
++++ legacy7/overflow_write_mixed_k30_v64
+@@ -5,7 +5,7 @@
+ pushq	%r13
+ pushq	%r12
+ pushq	%rbx
+-subq	$40, %rsp
++subq	$56, %rsp
+ xorl	%eax, %eax
+ testq	%rcx, %rcx
+ je	.LBB_12
+@@ -23,7 +23,7 @@
+ jae	.LBB_3
+ movq	112(%rdi), %rdx
+ movabsq	$-7046029288634856825, %r8
+-movq	%r15, 8(%rsp)
++movq	%r15, 16(%rsp)
+ xorq	%r9, %rdx
+ mulxq	%r8, %r10, %rdx
+ movl	$2590, %r8d
+@@ -31,14 +31,16 @@
+ bextrq	%r8, %r10, %r8
+ andl	$1073741823, %r11d
+ xorq	%r10, %rdx
+-movq	%r8, 16(%rsp)
+-movq	%r11, 24(%rsp)
++movq	%r8, 24(%rsp)
++movq	%r11, 32(%rsp)
+ imulq	$1088, %r8, %r13
+ vpbroadcastd	%r11d, %zmm2
+ movl	%r10d, %r8d
+-movq	%rdx, 32(%rsp)
++movq	%rdx, 40(%rsp)
++shrq	$57, %rdx
+ vpsrld	$6, %zmm2, %zmm2
+ andb	$63, %r8b
++movb	%dl, 48(%rsp)
+ movq	16(%rdi), %rdx
+ vmovdqu64	(%rdx,%r13), %zmm0
+ vpermb	%zmm0, %zmm3, %zmm1
+@@ -128,7 +130,7 @@
+ andb	%r10b, 60(%rdx,%r9)
+ addq	%r8, 104(%rdi)
+ .LBB_11:
+-movq	8(%rsp), %r15
++movq	16(%rsp), %r15
+ addq	%r8, %rax
+ addq	$64, %rbx
+ incq	%r15
+@@ -136,14 +138,14 @@
+ jne	.LBB_2
+ jmp	.LBB_12
+ .LBB_9:
+-movq	%rdi, (%rsp)
++movq	%rdi, 8(%rsp)
+ movq	%rcx, %rbp
+-leaq	16(%rsp), %rcx
++leaq	24(%rsp), %rcx
+ movq	%rsi, %r14
+ movq	%r9, %rsi
+ movq	%rbx, %rdx
+ movq	%rax, %r13
+-movq	(%rsp), %rdi
++movq	8(%rsp), %rdi
+ vzeroupper
+ callq	_ZN4ikea9hashtable5tableILj40ELj10ELj64ELj30ELNS0_13search_kernelE1ENS0_19heap_storage_policyEE11insert_slowEmRKSt5arrayIhLm64EERKNS0_11permutationILj40ELj30EE6resultEm
+ vpbroadcastb	.LCPI_5(%rip), %xmm7
+@@ -151,7 +153,7 @@
+ vbroadcasti32x4	.LCPI_3(%rip), %zmm5
+ vmovdqa64	_ZZN4ikea9hashtable6detail10residual30ILb0EEEjDv8_xmE5order(%rip), %zmm4
+ vmovdqa64	_ZZN4ikea9hashtable6detail9prepare30ILb0EEENS1_7parts30EPKhmE5order(%rip), %zmm3
+-movq	(%rsp), %rdi
++movq	8(%rsp), %rdi
+ movl	%eax, %edx
+ movq	%r14, %rsi
+ movq	%rbp, %rcx
+@@ -159,7 +161,7 @@
+ movzbl	%dl, %r8d
+ jmp	.LBB_11
+ .LBB_12:
+-addq	$40, %rsp
++addq	$56, %rsp
+ popq	%rbx
+ popq	%r12
+ popq	%r13
+--- group16/overflow_write_existing_k30_v64
++++ legacy7/overflow_write_existing_k30_v64
+@@ -61,12 +61,14 @@
+ bextrq	%rcx, %rdx, %r8
+ andl	$1073741823, %edi
+ xorq	%rdx, %rax
+-movq	%r8, 16(%rsp)
+-movq	%rdi, 24(%rsp)
++movq	%r8, 8(%rsp)
++movq	%rdi, 16(%rsp)
+ imulq	$1088, %r8, %r8
+ vpbroadcastd	%edi, %zmm2
+-movq	%rax, 32(%rsp)
++movq	%rax, 24(%rsp)
++shrq	$57, %rax
+ vpsrld	$6, %zmm2, %zmm2
++movb	%al, 32(%rsp)
+ movl	%edx, %eax
+ movq	16(%r12), %rcx
+ andb	$63, %al
+@@ -102,7 +104,7 @@
+ movzwl	%cx, %r8d
+ testb	%r9b, %r9b
+ je	.LBB_15
+-leaq	16(%rsp), %rcx
++leaq	8(%rsp), %rcx
+ movq	%r12, %rdi
+ movq	%r14, %rdx
+ vzeroupper
+@@ -114,7 +116,7 @@
+ vmovdqa64	_ZZN4ikea9hashtable6detail9prepare30ILb0EEENS1_7parts30EPKhmE5order(%rip), %zmm3
+ jmp	.LBB_16
+ .LBB_12:
+-leaq	16(%rsp), %rcx
++leaq	8(%rsp), %rcx
+ movq	%r12, %rdi
+ movq	%r14, %rdx
+ xorl	%r8d, %r8d
+@@ -136,7 +138,7 @@
+ shrl	$3, %r8d
+ movl	%ecx, %esi
+ andl	$7, %esi
+-movq	%rcx, 8(%rsp)
++movq	%rcx, (%rsp)
+ movq	%rbx, %rcx
+ movq	%r15, %rbx
+ shll	$6, %r9d
+@@ -158,7 +160,7 @@
+ pdepq	%rcx, %rdx, %rdx
+ shlxq	%rsi, %rdx, %rdx
+ shlxq	%rsi, %rcx, %rsi
+-movq	8(%rsp), %rcx
++movq	(%rsp), %rcx
+ shlq	$32, %r10
+ orq	%rdi, %r10
+ andnq	%r10, %rsi, %rsi

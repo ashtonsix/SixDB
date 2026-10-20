@@ -1,12 +1,13 @@
 # Overflow tags and continuation
 
-Can eight-bit fingerprints and filtered continuation improve Ikea's Swiss
-overflow without changing its primary path? Ashton requested actual Boost and
-Abseil controls, independent hot/cold Zen 5 throughput, whole-table reads/writes,
-and then higher Swiss occupancy. This is isolated research, not a promotion.
+Completed comparison of eight-bit tags, filtered continuation and Swiss density.
+Eight-bit tags are now promoted into Ikea at the unchanged 87.5% ceiling;
+filtered continuation and higher ceilings were not promoted. The completed
+[32/64-byte comparison](../hashtable-swiss-probes/README.md) retains 16-byte probes.
 
-See [results and decision](RESULTS.md). The production headers are unchanged.
-Multimaps, K-way merge and Loom scheduling are outside this experiment.
+See [results and decision](RESULTS.md). Those measurements describe the captured
+pre-promotion implementations. Multimaps, K-way merge and Loom scheduling were
+outside that comparison.
 
 ## Treatments
 
@@ -21,8 +22,8 @@ builds.** Wider vector code serves the primary bucket. Comparing 32/64 bytes is
 a separate experiment; combining logical groups must respect earlier groups'
 termination conditions.
 
-`overlay.py` derives checked private deltas from captured production headers;
-generated copies remain in the build directory. Eight-bit tags are calculated
+The captured generator derived private deltas from production headers; there
+was no maintained owner copy. Eight-bit tags were calculated
 only after routing to Swiss, preserving primary read/upsert instructions. The
 filtered candidate uses an independent hash byte for continuation classes and
 explicitly bounds a probe to one traversal of the table, including when stale
@@ -30,21 +31,14 @@ continuation bits all remain set. Its guarded publication APIs are removed:
 this spike qualifies concrete exclusive owners, Swiss growth, clone, RMW and
 staged reads, not descriptor primary growth/merge or MVCC publication.
 
-## Run and recover
+## Recovery
 
 Use the pinned Linux toolchain; prefix commands with `orb -m ubuntu` from macOS.
 
-```sh
-python3 workbench/tools/worker.py run workbench/spikes/hashtable-overflow/density.sh \
-  --machine zen5 --instance-type c8a.2xlarge --capacity on-demand \
-  --deadline 3600 --env SIXDB_BUILD_JOBS=1 --detach
-```
-
-The runner builds incrementally, checks primary codegen and behavior, then runs
-405 sequential callers with rotated treatment order. `run.py` can also run a
-primary-occupancy panel without `--density`. The density panel targets three
+The archived runners checked primary codegen and behavior, then ran
+405 sequential callers with rotated treatment order. The density panel targeted three
 Swiss populations to cross the different owners' capacity boundaries. Its raw
-`load=85` is an unused command default: use actual `n`, primary capacity,
+`load=85` was an unused command default: use actual `n`, primary capacity,
 `swiss_slots` and `swiss_load`, not that label.
 
 Retained evidence includes all competitors and negative cases. Full raw
@@ -61,6 +55,12 @@ python3 workbench/spikes/hashtable-overflow/summarize.py build/overflow-recovere
 
 `cases.csv` contains per-cell medians/MAD and physical capacities; regenerated
 `churn.csv` includes every erase/refill maintenance pulse.
+
+Source and runner bytes remain in commit `786d7589`, the worker bundles'
+`source.tar.gz`, and Linux `~/sixdb-archive/hashtable-overflow-20261020/`
+([local receipt](archive.json)). Replaying a measured program uses its captured
+source or binary; the old generator intentionally is not maintained against the
+promoted format. Only the offline audit and summarizer remain here.
 
 References: [Boost layout](https://www.boost.org/doc/libs/latest/libs/unordered/doc/html/unordered/structures.html),
 [implementation analysis](https://bannalia.blogspot.com/2022/11/inside-boostunorderedflatmap.html),

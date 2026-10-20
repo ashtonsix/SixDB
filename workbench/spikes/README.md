@@ -24,7 +24,8 @@ experiments and checks under Object, Allocation, Journal, Port and Worker.
 - [Index directories](index-directories/README.md): planning-only operation budgets against Calico/LMDB, composition review, layouts, prior art and full pseudocode; no directory implementation yet.
 - [Hashtable multimap](hashtable/README.md): unpromoted owning multimap, captured read/write comparisons and payload/lifetime questions. The set/map core is maintained in [Ikea](../../ikea/docs/hashtable/usage.md); superseded studies are archived.
 - [Hashtable K-way merge](hashtable-merge/README.md): bucket-wise traversal, external workspace and retained accumulation comparisons. Single-source mutable accumulation is maintained in Ikea.
-- [Hashtable overflow](hashtable-overflow/README.md): eight-bit tags, filtered continuation and higher Swiss occupancy, with actual Boost/Abseil controls and preserved primary loops.
+- [Hashtable overflow](hashtable-overflow/README.md): completed tag/continuation and occupancy comparison; eight-bit tags are maintained in Ikea.
+- [Hashtable Swiss probes](hashtable-swiss-probes/README.md): completed 32/64-byte comparison with actual Boost/Abseil controls; eight-bit tags and 16-byte groups retained, rejected variants archived.
 - [Bec256 with current Ikea](bec256-composition/README.md): exact codec operations, native pairs and larger-bitset population/length directories built with SeriesPack and TuplePack.
 - [Ikea on Neoverse V3](ikea-neoverse-v3/README.md): C8g/C9g comparisons, compiler scheduling, lookup and exact-span experiments.
 - [Ikea CPU comparison](ikea-cpu-comparison/README.md): October 2026 snapshot across six processors, matched case evidence and a frozen cloud-price model.
