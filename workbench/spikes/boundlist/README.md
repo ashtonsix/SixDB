@@ -16,14 +16,16 @@ the current API.
 The prototype algorithm menu and flattened adapter remain research controls.
 The [geometry/value ownership follow-up](OWNERSHIP.md) supersedes the original
 U-bearing sidecar boundary; generic ordered search is unchanged.
-The [improved design plan](DESIGN.md) reopens encoding curation and defines the
-next Boundlist/StreamPack work. Its Relative Ends format and proposed descriptor
-revisions are targets, not implemented production features. The public guide
-rewrite is paused while those decisions are investigated.
+The [retained design](DESIGN.md) records the three-codec portfolio and the final
+geometry/value seams. [Portfolio qualification](PORTFOLIO.md) supersedes earlier
+encoding recommendations and reports complete consumers, losing cases and real
+retained-reader tests. Public [usage](../../../ikea/docs/boundlist/usage.md) and
+[reference](../../../ikea/docs/boundlist/reference.md) describe the implementation.
 
 | Read next | Purpose |
 | --- | --- |
-| [Improved design plan](DESIGN.md) | Target encoding portfolio, composition, mutation laws and the comparisons still owed |
+| [Retained design](DESIGN.md) | Curated formats, measured layout decisions and ownership seams |
+| [Portfolio qualification](PORTFOLIO.md) | Final before/current/fused comparisons, absolute metrics and recovery |
 | [Ownership follow-up](OWNERSHIP.md) | Current geometry/value boundary and codec comparison |
 | [Implementation](GRADUATION.md) | Production seams, qualification and selected defaults |
 | [Recommendation](RECOMMENDATION.md) | Historical prototype selection before implementation |
@@ -93,6 +95,14 @@ ownership split against recovered old public headers/TUs, using `u-control.py`.
 checkpoints, explicit SIMD maintenance and stronger inverse controls. The current
 [ownership assessment](OWNERSHIP.md) records decisions, absolute results and recovery.
 
-`orb -m ubuntu python3 workbench/spikes/boundlist/design-check.py` checks the next
-plan's arithmetic and independent mutation model against the retained footprint
-rows. It does not implement or benchmark the proposed codecs.
+`portfolio-final.sh` is the final three-codec reader/write/packet/Loom runner.
+`portfolio-search.cpp` retains generic search diagnostics; `portfolio-edits.cpp`
+compares distinct boundary and resize laws with independently fused SIMD updates.
+`portfolio-native.sh` and `portfolio-followup.sh` belong to earlier diagnostic
+captures, not an alternative final recipe. Recover those captures to reproduce
+them: intermediate descriptor order and prepared footprints differ.
+
+`orb -m ubuntu python3 workbench/spikes/boundlist/design-check.py` checks schema
+arithmetic and the independent mutation model against retained footprint rows.
+It is a model check; production literal fixtures and native consumers separately
+qualify the implemented bytes and kernels.

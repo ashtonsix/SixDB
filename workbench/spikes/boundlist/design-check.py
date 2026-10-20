@@ -19,7 +19,7 @@ def carrier(bound):
 
 
 def geometry_bytes(kind, maximum, limit, count, checkpoints=False, retained_floor=False):
-    # Current/proposed curated capacity, full-capacity directory and G16 padding;
+    # Curated capacity, full-capacity directory and G16 padding;
     # the format bound is independent of count. No U, allocator padding or payload.
     assert 0 <= count <= CAPACITY and 0 <= limit <= CAPACITY * maximum
     if maximum == 0 or limit == 0:
@@ -186,7 +186,7 @@ def check_retained_bytes():
 
 
 def check_headers():
-    # Proposed headers, not an implemented serialization test. Legacy bytes use
+    # Tag arithmetic only; the native literal fixtures test serialization. Legacy bytes use
     # their original derivation rules; a descriptor never silently changes meaning.
     bl3 = {0x60 | k | (imm << 3) | (fixed << 4) for k, imm, fixed in product(range(2), range(2), range(2))}
     bl4 = {0x80 | k | (imm << 3) | (fixed << 4) for k, imm, fixed in product(range(3), range(2), range(2))}
@@ -213,11 +213,15 @@ def check_placement():
         e = u if kind == "sizes" else carrier(min(G * maximum, limit))
         assert e >= u
         assigned = ((n + G - 1) // G) * G
-        old_prefix = CAPACITY * e + assigned * u if n else 0
-        proposed_prefix = CAPACITY * u + assigned * e if n else 0
-        assert proposed_prefix <= old_prefix
+        geometry_first = CAPACITY * e + assigned * u if n else 0
+        used_first = CAPACITY * u + assigned * e if n else 0
+        # The smaller partial-prefix alternative was measured, then rejected:
+        # its dynamic geometry base taxed the common read/write path.
+        assert used_first <= geometry_first
         if n == CAPACITY:
-            assert proposed_prefix == old_prefix
+            assert used_first == geometry_first
+        if maximum == 255 and limit == 65535 and n == 17:
+            assert (geometry_first, used_first) == (544, 288)
         # Each field start satisfies its natural carrier alignment; no 48/96
         # alignment requirement follows merely from the grouped byte stride.
         group_bytes = G * (e + u)
@@ -232,7 +236,7 @@ def main():
     rows, cases = check_retained_bytes(), check_mutations()
     check_headers()
     placement = check_placement()
-    print(f"Verified {rows} retained footprint rows; {cases} append/boundary/resize/rewrite model cases; {placement} placement cases; proposed descriptor tag separation.")
+    print(f"Verified {rows} retained footprint rows; {cases} append/boundary/resize/rewrite model cases; {placement} placement cases; descriptor tag separation.")
     print("Rmax,Limit,Absolute B,Sizes B,Relative B,Size carrier,Relative carrier,Coordinate carrier")
     for maximum, limit in ((255, 65280), (4095, 1048320), (4096, 1048576), (65535, 65535)):
         print(maximum, limit, *(geometry_bytes(k, maximum, limit, CAPACITY) for k in KINDS),

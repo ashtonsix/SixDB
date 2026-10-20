@@ -14,7 +14,7 @@ namespace streampack_implementation::orbital_material {
 namespace sp = ikea::streampack;
 namespace oa = orbital::allocation;
 constexpr std::uint32_t absent = UINT32_MAX;
-enum class Placement { grouped, separate };
+enum class Placement { grouped, separate, shared_payload };
 
 struct Format {
     sp::layout layout;

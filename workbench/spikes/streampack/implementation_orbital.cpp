@@ -24,7 +24,7 @@ std::expected<FormatOwner, sp::error> prepare_format(sp::description d) {
 
 bool Control::valid(std::pmr::memory_resource& r) const noexcept {
     return memory == &r && format && selected <= 5 &&
-        (placement == Placement::grouped || placement == Placement::separate) &&
+        (placement == Placement::grouped || placement == Placement::separate || placement == Placement::shared_payload) &&
         extents[0] <= format->layout.schema().byte_limit &&
         extents[1] == format->layout.directory_bytes() &&
         extents[2] <= format->layout.lengths_bytes() &&
@@ -52,7 +52,8 @@ Control Control::copy_selected(void*, std::size_t i) const noexcept {
 orbital::Result<Physical::Value*> Physical::capture(std::pmr::memory_resource& r,
     const Control& c, std::span<const PartSource> parts) noexcept {
     return orbital::capture_representation(r, c, c.placement == Placement::grouped ?
-        orbital::PartOwners::grouped_allocation : orbital::PartOwners::independent_allocation, parts);
+        orbital::PartOwners::grouped_allocation : c.placement == Placement::shared_payload ?
+        orbital::PartOwners::independent_mixed : orbital::PartOwners::independent_allocation, parts);
 }
 
 bool Physical::accepts_resource(Value* v, std::pmr::memory_resource& r) noexcept {

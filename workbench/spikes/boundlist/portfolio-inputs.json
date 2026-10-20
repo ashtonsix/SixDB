@@ -1,0 +1,32 @@
+{
+  "baseline_revision": "b6e4ebd5671173653cac0b0f78ae20338ebe92fe",
+  "source_capture": "eedc36b096a879e49234c85eaf0cedda12f8185b32d1b5ab106888d7f78ef234",
+  "runner": "workbench/spikes/boundlist/portfolio-final.sh",
+  "jobs": {
+    "zen5": "20261020T214318Z-213994e1",
+    "granite": "20261020T214318Z-9058d763",
+    "neon": "20261020T214318Z-81af8578"
+  },
+  "panels": {
+    "reads": "*-*-p*-t*.csv",
+    "tiny": "*-*-tiny-t*.csv",
+    "mutation": "*-*-mutation-t*.csv",
+    "edits": "*-edits-t*.csv",
+    "packets": "*-*-packets-t*.csv",
+    "cold": "*-*-cold-p*-point*.csv",
+    "cursor-diagnostic": "*-*-mutation-t*.csv"
+  },
+  "mutation_capture": "a7188ec13dbee83c2951394f673609b019a611e571dc4e759f81e9a8ca5002d9",
+  "mutation_jobs": {
+    "zen5": "20261020T220325Z-19cfb442",
+    "granite": "20261020T220325Z-e718f567",
+    "neon": "20261020T220325Z-5c660c41"
+  },
+  "edit_jobs": {
+    "zen5": "20261020T220325Z-19cfb442",
+    "granite": "20261020T220325Z-e718f567",
+    "neon": "20261020T220325Z-5c660c41"
+  },
+  "edit_capture": "a7188ec13dbee83c2951394f673609b019a611e571dc4e759f81e9a8ca5002d9",
+  "mutation_runner": "workbench/spikes/boundlist/portfolio-writes.sh"
+}

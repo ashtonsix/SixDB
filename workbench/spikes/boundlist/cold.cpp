@@ -1,3 +1,10 @@
+#ifndef BOUNDLIST_COLD_PORTFOLIO
+#define BOUNDLIST_COLD_PORTFOLIO 0
+#endif
+#include <ikea/boundlist/search.h>
+#ifdef BOUNDLIST_PORTFOLIO_LEGACY
+namespace ikea::boundlist { template<class W,class P> using delta_source = width_source<W,P>; }
+#endif
 #include "checkpoint-phase.h"
 #include "boundlist.h"
 #include "geometry.h"
@@ -66,7 +73,7 @@ struct fixture {
     fixture(runtime& r, unsigned n, bool variable, unsigned range_span)
         : rt(r), nodes(n), children(std::min(1u << 21, std::bit_ceil(n * 257))), span(range_span), mixed(variable) {
         headers_storage = take(loom::allocate(rt.worker, {.bytes = std::size_t(nodes) * sizeof(node), .alignment = 64}));
-        ends_storage = take(loom::allocate(rt.worker, {.bytes = std::size_t(nodes) * 512, .alignment = 64}));
+        ends_storage = take(loom::allocate(rt.worker, {.bytes = std::size_t(nodes) * (BOUNDLIST_COLD_PORTFOLIO ? 1024 : 512), .alignment = 64}));
         widths_storage = take(loom::allocate(rt.worker, {.bytes = std::size_t(nodes) * 256, .alignment = 64}));
         child_storage = take(loom::allocate(rt.worker, {.bytes = std::size_t(children) * sizeof(child), .alignment = 64}));
         headers = reinterpret_cast<node*>(headers_storage.address);
@@ -81,6 +88,10 @@ struct fixture {
             for (unsigned j = 0; j < 16; ++j) h.checkpoints[j] = j ? j * 512 - 1 : 0;
             for (unsigned j = 0; j < 256; ++j) std::construct_at(endpoints + std::size_t(i) * 256 + j, (j + 1) * 32 - 1);
             for (unsigned j = 0; j < 256; ++j) std::construct_at(widths + std::size_t(i) * 256 + j, j >= h.count ? 0 : j ? 32 : 31);
+#if BOUNDLIST_COLD_PORTFOLIO
+            for(unsigned j=0;j<256;++j) std::construct_at(endpoints+std::size_t(nodes)*256+std::size_t(i)*256+j,
+                std::uint16_t(j<h.count?(j+1)*32-1-h.checkpoints[j/16]:0));
+#endif
             if (!(i % 1024)) { assert(stream(h).validate()); assert(stream(h, true).validate()); }
         }
         for (unsigned i = 0; i < children; ++i) std::construct_at(values + i, child{mix(i + 0x3917), {}});
@@ -130,7 +141,13 @@ template <unsigned Method> [[gnu::always_inline]] unsigned locate(const fixture&
     const auto next = mask ? std::countr_zero(mask) : 16;
     return std::min(unsigned(next ? next - 1 : 0), (unsigned(h.count) - 1) / 16);
 }
-using width_lookup = decltype(std::declval<ikea::boundlist::width_source<std::uint8_t,std::uint16_t>>().template prepare<ikea::boundlist::edge::at_or_after>(0u));
+using width_lookup = decltype(std::declval<ikea::boundlist::delta_source<std::uint8_t,std::uint16_t>>().template prepare<ikea::boundlist::edge::at_or_after>(0u));
+#if BOUNDLIST_COLD_PORTFOLIO && !defined(BOUNDLIST_PORTFOLIO_LEGACY)
+using relative_lookup=decltype(std::declval<ikea::boundlist::relative_end_source<std::uint16_t,std::uint16_t>>().template prepare<ikea::boundlist::edge::at_or_after>(0u));
+#else
+using relative_lookup=width_lookup;
+#endif
+template<unsigned Method> using lookup=std::conditional_t<Method==11,relative_lookup,width_lookup>;
 struct no_routing {};
 #ifndef BOUNDLIST_COMPACT_FRAME
 #define BOUNDLIST_COMPACT_FRAME 0
@@ -143,7 +160,7 @@ template<unsigned Method> struct alignas(BOUNDLIST_COMPACT_FRAME?64:8) frame {
     [[no_unique_address]] std::conditional_t<Method==4 || Method==5,std::array<unsigned,2>,no_routing> groups;
     union handoff {
         const node* source;
-        std::conditional_t<Method>=7,std::array<width_lookup,2>,no_routing> phases;
+        std::conditional_t<Method>=7,std::array<lookup<Method>,2>,no_routing> phases;
         frame_result result;
         handoff():source{} {}
     } state;
@@ -153,22 +170,22 @@ template<unsigned Method> struct alignas(BOUNDLIST_COMPACT_FRAME?64:8) frame {
         if constexpr(Method>=7) return state.phases;
         else return groups;
     }
-    template<bool Point> void set_phases(width_lookup low,width_lookup high) {
-        ::new (static_cast<void*>(&state.phases)) std::array<width_lookup,2>;
+    template<bool Point> void set_phases(lookup<Method> low,lookup<Method> high) {
+        ::new (static_cast<void*>(&state.phases)) std::array<lookup<Method>,2>;
         state.phases[0]=low;
         if constexpr(!Point) state.phases[1]=high;
     }
     void set_result(frame_result result) { ::new (static_cast<void*>(&state.result)) frame_result(result); }
     const auto& result() const { return state.result; }
 #else
-    [[no_unique_address]] std::conditional_t<Method>=7,std::array<width_lookup,2>,
+    [[no_unique_address]] std::conditional_t<Method>=7,std::array<lookup<Method>,2>,
         std::conditional_t<Method==4 || Method==5,std::array<unsigned,2>,no_routing>> routing_;
     const node* source_{};
     frame_result result_{};
     void set_source(const node* source) { source_=source; }
     const node* source() const { return source_; }
     auto& routing() { return routing_; }
-    template<bool Point> void set_phases(width_lookup low,width_lookup high) {
+    template<bool Point> void set_phases(lookup<Method> low,lookup<Method> high) {
         routing_[0]=low;
         if constexpr(!Point) routing_[1]=high;
     }
@@ -192,9 +209,17 @@ template <unsigned Method, bool Point> [[gnu::always_inline]] void bind(const fi
         if constexpr (!Point) x.routing()[1] = guide(*x.source(), x.high);
     } else if constexpr(Method>=7) {
         unsigned extent; std::memcpy(&extent,x.source()->extent_slot.data(),4);
-        const ikea::boundlist::width_source<std::uint8_t,std::uint16_t> bounds{
+        const ikea::boundlist::delta_source<std::uint8_t,std::uint16_t> bounds{
             x.source()->widths,x.source()->checkpoints,x.count,16,std::uint16_t(extent)};
         auto select=[&](unsigned q) __attribute__((always_inline)) {
+#if BOUNDLIST_COLD_PORTFOLIO && !defined(BOUNDLIST_PORTFOLIO_LEGACY)
+            if constexpr(Method==11) {
+                const ikea::boundlist::relative_end_source<std::uint16_t,std::uint16_t> relative{
+                    f.endpoints+std::size_t(f.nodes)*256+std::size_t(x.node_id)*256,
+                    x.source()->checkpoints,x.count,16,std::uint16_t(extent)};
+                return relative.template prepare<ikea::boundlist::edge::at_or_after>(q);
+            } else
+#endif
             if constexpr(Method==7) return bounds.prepare<ikea::boundlist::edge::at_or_after>(q);
             else if constexpr(Method==10) {
                 const auto view=f.stream(*x.source(),true);
@@ -203,7 +228,7 @@ template <unsigned Method, bool Point> [[gnu::always_inline]] void bind(const fi
             } else return checkpoint_spike::prepare<Method==9,ikea::boundlist::edge::at_or_after>(bounds,q);
         };
         const auto low=select(x.low);
-        const auto high=[&]() __attribute__((always_inline)) { if constexpr(Point) return width_lookup{}; else return select(x.high); }();
+        const auto high=[&]() __attribute__((always_inline)) { if constexpr(Point) return lookup<Method>{}; else return select(x.high); }();
         x.template set_phases<Point>(low,high);
     }
 }
@@ -299,6 +324,14 @@ template <unsigned Method, bool Point, bool Hints> struct native {
     using Ring = typename loom::Ring<Frame*>::template WithShared<const fixture*, const demands*>;
     static LOOM_NATIVE_CC void header(typename Ring::Cursor ring, typename Ring::Slot* slot, const fixture* f, const demands* d, Frame* x) {
         bind<Method, Point>(*f,*x);
+#if BOUNDLIST_COLD_PORTFOLIO
+        if constexpr(Method>=7) {
+            if(!x->routing()[0].has_local_read() &&
+                (Point || !x->routing()[1].has_local_read())) {
+                [[clang::musttail]] return metadata(ring,slot,f,d,x);
+            }
+        }
+#endif
         if constexpr (Hints) {
             if constexpr (Method == 4 || Method == 5) {
                 const void* a = Method == 5 ? static_cast<const void*>(x->source()->widths + x->routing()[0] * 16)
@@ -326,6 +359,9 @@ template <unsigned Method, bool Point, bool Hints> struct native {
     }
     static LOOM_NATIVE_CC void metadata(typename Ring::Cursor ring, typename Ring::Slot* slot, const fixture* f, const demands* d, Frame* x) {
         resolve<Method, Point>(*f, *x);
+#if BOUNDLIST_COLD_PORTFOLIO
+        if(x->result().absent) { [[clang::musttail]] return payload(ring,slot,f,d,x); }
+#endif
         if constexpr (Hints) if (!x->result().absent) {
             ring->prefetch(d->one, x->result().first);
             if constexpr (!Point) if (x->result().last != x->result().first) ring->prefetch(d->one, x->result().last);
@@ -390,20 +426,24 @@ void trial(fixture& f, unsigned ops, unsigned rep) {
     const auto close_begin = std::chrono::steady_clock::now();
     if constexpr (RingPath) assert(ring.close());
     const auto close_end = std::chrono::steady_clock::now();
-    constexpr const char* names[] = {"current_streampack_max_adapter", "select_window", "fused_count_scan", "fused_shortcircuit_scan", "paid_inline_guide", "width_checkpoint_window", "current_streampack_width_adapter", "production_width_phase", "exact_scan_phase", "padded_scan_phase", "production_sidecar_phase"};
+    constexpr const char* names[] = {"current_streampack_max_adapter", "select_window", "fused_count_scan", "fused_shortcircuit_scan", "paid_inline_guide", "width_checkpoint_window", "current_streampack_width_adapter", "production_width_phase", "exact_scan_phase", "padded_scan_phase", "production_sidecar_phase", "relative_end_phase"};
     auto ns = [](auto a, auto b) { return std::chrono::duration_cast<std::chrono::nanoseconds>(b - a).count(); };
-    std::printf("%u,%u,%u,%s,%s,%u,%s,%u,%.6f,%lld,%lld,%zu,%zu,%zu,%zu,%zu,%zu,%llu,%llu\n", f.nodes, unsigned(f.mixed), f.span,
+    std::printf("%u,%u,%u,%s,%s,%u,%s,%u,%.6f,%lld,%lld,%zu,%zu,%zu,%zu,%zu,%zu,%zu,%llu,%llu\n", f.nodes, unsigned(f.mixed), f.span,
         names[Method], Manual ? "manual_hints" : RingPath ? (Hints ? "loom_hints" : "loom_no_hints") : "direct", Width,
         Point ? "point_child" : "range_children", rep, double(ns(begin, end)) / (rounds * Width),
         (long long)ns(setup_begin, setup_end), (long long)ns(close_begin, close_end),
-        std::size_t(f.nodes) * 512, std::size_t(f.nodes) * 256, std::size_t(f.nodes) * sizeof(node), std::size_t(f.children) * sizeof(child),
+        std::size_t(f.nodes) * 512, std::size_t(f.nodes) * 256, std::size_t(f.nodes) * sizeof(node), std::size_t(BOUNDLIST_COLD_PORTFOLIO?f.nodes:0u)*512, std::size_t(f.children) * sizeof(child),
         sizeof(frames), scheduler_bytes,
         (unsigned long long)counters.visits, (unsigned long long)result);
 }
 template <bool Point> void panel(fixture& f, unsigned ops, unsigned reps) {
-    for (unsigned rep = 0; rep < reps; ++rep) for (unsigned i = 0; i < 11; ++i) {
+    for (unsigned rep = 0; rep < reps; ++rep) for (unsigned i = 0; i < (BOUNDLIST_COLD_PORTFOLIO?12u:11u); ++i) {
         auto run = [&]<unsigned Method>() {
             trial<1, Method, Point, false>(f, ops, rep); trial<8, Method, Point, false>(f, ops, rep);
+#if BOUNDLIST_COLD_PORTFOLIO
+            trial<16,Method,Point,false>(f,ops,rep);trial<32,Method,Point,false>(f,ops,rep);
+            trial<32,Method,Point,true>(f,ops,rep);
+#endif
             if(std::getenv("BOUNDLIST_COLD_SHORT_PANEL")) {
                 trial<16,Method,Point,true,true>(f,ops,rep);
                 return;
@@ -414,17 +454,33 @@ template <bool Point> void panel(fixture& f, unsigned ops, unsigned reps) {
             trial<16, Method, Point, false, true, true>(f, ops, rep);
             trial<32, Method, Point, false, true, true>(f, ops, rep);
         };
-        const auto selected=rep%2?10-i:i;
+        const auto selected=rep%2?(BOUNDLIST_COLD_PORTFOLIO?11:10)-i:i;
+#if BOUNDLIST_COLD_PORTFOLIO
+        if(selected!=7 && selected!=10 && selected!=11)continue;
+#endif
         if(std::getenv("BOUNDLIST_COLD_PRODUCTION_ONLY") && selected<5)continue;
         if(std::getenv("BOUNDLIST_COLD_FINAL_ONLY") && selected!=5 && selected!=7 && selected!=9 && selected!=10)continue;
+#if BOUNDLIST_COLD_PORTFOLIO
+        switch(selected) {
+        case 7:run.template operator()<7>();break;
+        case 10:run.template operator()<10>();break;
+#ifndef BOUNDLIST_PORTFOLIO_LEGACY
+        case 11:run.template operator()<11>();break;
+#endif
+        }
+#else
         switch (selected) {
         case 0: run.template operator()<0>(); break; case 1: run.template operator()<1>(); break;
         case 2: run.template operator()<2>(); break; case 3: run.template operator()<3>(); break;
         case 4: run.template operator()<4>(); break;
         case 5: run.template operator()<5>(); break; case 6: run.template operator()<6>(); break;
         case 7: run.template operator()<7>(); break;
+#if BOUNDLIST_COLD_PORTFOLIO && !defined(BOUNDLIST_PORTFOLIO_LEGACY)
+        case 11: run.template operator()<11>(); break;
+#endif
         case 8: run.template operator()<8>(); break;case 9: run.template operator()<9>(); break;case 10: run.template operator()<10>();break;
         }
+#endif
     }
 }
 int main(int argc, char** argv) {
@@ -433,6 +489,6 @@ int main(int argc, char** argv) {
     const bool point = std::stoul(argv[4]); const unsigned ops = std::stoul(argv[5]), reps = std::stoul(argv[6]);
     if (!std::has_single_bit(nodes) || nodes > 524288 || mixed > 1 || !span || span > fixture::domain || !ops || !reps) return 2;
     runtime rt; fixture f(rt, nodes, mixed, span);
-    std::puts("nodes,mixed,span,implementation,execution,width,metric,rep,ns,setup_ns,close_ns,end_bytes,width_bytes,header_bytes,child_bytes,frame_bytes,scheduler_bytes,ring_visits,checksum");
+    std::puts("nodes,mixed,span,implementation,execution,width,metric,rep,ns,setup_ns,close_ns,end_bytes,width_bytes,header_bytes,relative_bytes,child_bytes,frame_bytes,scheduler_bytes,ring_visits,checksum");
     if (point) panel<true>(f, ops, reps); else panel<false>(f, ops, reps);
 }

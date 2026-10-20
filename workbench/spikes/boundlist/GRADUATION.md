@@ -2,7 +2,8 @@
 
 This records search qualification and the original extraction boundary. The
 [ownership follow-up](OWNERSHIP.md) supersedes its U-bearing sidecar schema,
-value-packet and compaction ownership. Generic ordered search is unchanged.
+value-packet and compaction ownership. The [portfolio qualification](PORTFOLIO.md)
+subsequently adds Relative Ends, independent carriers and the final shared write bodies.
 
 Boundlist extracts reservation metadata from StreamPack and adds reusable ordered
 point/range search. The implementation lives in Ikea.

@@ -2,7 +2,7 @@
 #include <ikea/boundlist/search.h>
 namespace checkpoint_spike {
 template<bool Padded,ikea::boundlist::edge E,class W,class O,class Q>
-[[gnu::always_inline]] auto prepare(const ikea::boundlist::width_source<W,O>& source,Q point) {
+[[gnu::always_inline]] auto prepare(const ikea::boundlist::delta_source<W,O>& source,Q point) {
     namespace b=ikea::boundlist;
     using result=b::detail::width_search<W,E>;
     const b::detail::prepared_query<O,Q> query(point);

@@ -8,6 +8,7 @@
 #include <source_location>
 #include <thread>
 #include <vector>
+#include <unistd.h>
 
 namespace om = streampack_implementation::orbital_material;
 namespace sp = ikea::streampack;
@@ -78,7 +79,7 @@ void verify(const sp::const_view& view, const std::vector<row>& facts) {
         for (unsigned r = 0; r < facts.size(); ++r) {
             const auto& expected = facts[r];
             const auto actual = m.locate(r);
-            assert(actual.offset == extent && actual.reservation == expected.reservation);
+            assert(actual.offset == extent && actual.size == expected.reservation);
             assert(m.live(r) == expected.live);
             if (expected.live) {
                 assert(std::ranges::equal(view.windows().payload.subspan(actual.offset,expected.bytes.size()), expected.bytes));
@@ -217,13 +218,106 @@ void history(runtime& rt, sp::description description, om::Placement allocation_
     verify(om::read(retained.bind(sibling)), original); // First discovery after replacement and Store destruction.
 }
 
+// Actual supported selective-sharing control: one private append writer, one
+// real range Hold per exposed immutable payload prefix, private native metadata.
+// No duplicate Allocation handle or mutable "current table" acts as authority.
+void shared_prefix_history(runtime& rt,sp::geometry family) {
+    auto format=take(om::prepare_format({family,sp::placement::grouped,255,65280,{},false,false}));
+    auto* memory=std::pmr::new_delete_resource();
+    om::Store store(*memory);
+    const orbital::ObjectId object{0x424e45,1};
+    auto writer=take(loom::allocate(rt.worker,{.bytes=1,.reserved_bytes=65536,.alignment=64}));
+    auto* const stable=writer.address;
+    std::optional<om::Store::Scope> early,late;
+    std::vector<row> facts,first;
+    image first_image;
+    std::uint64_t copied_metadata=0,shared_prefix_bytes=0;
+    for(unsigned target:{15u,16u,17u,33u,256u}) {
+        auto metadata=take(om::Draft::create(rt.worker,format,*memory,0,om::Placement::separate,target));
+        if(target!=15) {
+            const auto old=om::read(store.borrow().bind(object));
+            for(unsigned p=1;p<4;++p) {
+                const auto in=old.windows().planes()[p];
+                std::memcpy(metadata.write().windows().planes()[p].data(),in.data(),in.size());
+                copied_metadata+=in.size();
+            }
+            const auto holders=om::holders(store.borrow().bind(object));
+            std::copy(holders.begin(),holders.end(),metadata.holders().begin());copied_metadata+=holders.size_bytes();
+        } else {ikea::no_coverage none;assert(sp::initialize(metadata.write(),none));}
+        const unsigned previous=target==15?0:facts.size();
+        unsigned extent=metadata.write().extent();
+        for(unsigned r=previous;r<target;++r) extent+=fact(r,format->layout).reservation;
+        if(extent>writer.size) assert(oa::grow(writer,{.bytes=extent,.reserved_bytes=65536,.alignment=64}));
+        assert(writer.address==stable);
+        auto windows=metadata.write().windows();windows.payload={writer.address,writer.size};
+        const auto source=take(sp::view::bind(format->layout,windows));
+        const auto sealed=target==15?std::vector<std::byte>{}:
+            std::vector<std::byte>(writer.address,writer.address+om::read(store.borrow().bind(object)).extent());
+        std::array<ikea::owner_write,4096> records{};ikea::source_write_journal effects{records};
+        for(unsigned r=previous;r<target;++r) {
+            auto f=fact(r,format->layout);
+            assert(sp::append(source,f.bytes,f.reservation,effects));facts.push_back(std::move(f));
+            metadata.holders()[r]=r;
+        }
+        for(const auto e:effects.entries()) {
+            assert(e.source==&source);
+            if(e.bytes.plane==0) assert(e.bytes.offset>=sealed.size()); // preserving overlap is forbidden too
+        }
+        assert(std::equal(sealed.begin(),sealed.end(),writer.address));
+        verify(source.as_const(),facts);
+        auto held=take(oa::hold(writer,{0,source.extent()}));
+        auto backing=std::make_shared<oa::Hold>(std::move(held));
+        auto extents=metadata.extents;extents[0]=source.extent();extents[2]=format->layout.lengths_bytes(target);
+        const om::Control control{memory,format.get(),extents,om::Placement::shared_payload};
+        std::array<orbital::PartSource,5> parts;
+        parts[0]={control.id(0),{writer.address,source.extent()},backing,nullptr};
+        for(unsigned p=1;p<5;++p)parts[p]={control.id(p),{metadata.address(p),extents[p]}, {},&metadata.allocations[p]};
+        auto owner=take(store.capture(control,parts));
+        assert(writer && !metadata.allocations[1] && !metadata.allocations[2] &&
+            !metadata.allocations[3] && !metadata.allocations[4]);
+        shared_prefix_bytes+=source.extent();
+        om::Store::Scope basis(store);assert(om::publish(store,basis,object,owner));
+        if(target==15) {early.emplace(store);first=facts;first_image=snapshot(om::read(early->bind(object)));}
+        if(early) {verify(om::read(early->bind(object)),first);assert(snapshot(om::read(early->bind(object)))==first_image);}
+    }
+    late.emplace(store);verify(om::read(late->bind(object)),facts);
+    const auto old_address=writer.address; const auto old_size=writer.size;
+    const auto refused=oa::grow(writer,{.bytes=131072,.reserved_bytes=131072,.alignment=64});
+    assert(!refused && refused.error()==orbital::Error::conflict && writer.address==old_address && writer.size==old_size);
+    const auto current_extent=om::read(late->bind(object)).extent();
+    assert(oa::relinquish_tail(writer,0));oa::release(writer);
+    auto empty=take(om::Draft::create(rt.worker,format,*memory,0,om::Placement::separate,1));
+    {om::Store::Scope basis(store);assert(om::publish(store,basis,object,take(empty.capture(store))));}
+    auto trim=[&] {
+        const auto deadline=std::chrono::steady_clock::now()+std::chrono::seconds(10);
+        for(;;) {
+            const auto p=oa::trim_cold(*rt.worker.memory,0);
+            assert(p.kind()!=orbital::Progress::Kind::failed);
+            if(p.kind()==orbital::Progress::Kind::done)break;
+            assert(std::chrono::steady_clock::now()<deadline);loom::poll(rt.worker,{256,0});std::this_thread::yield();
+        }
+        return oa::statistics(*rt.worker.memory).mapped_bytes;
+    };
+    store.drain();const auto with_late=trim();
+    verify(om::read(late->bind(object)),facts);verify(om::read(early->bind(object)),first);
+    late.reset();store.drain();const auto with_early=trim();verify(om::read(early->bind(object)),first);
+    assert(snapshot(om::read(early->bind(object)))==first_image);
+    if(::sysconf(_SC_PAGESIZE)==4096)assert(with_late>=with_early+4096);
+    early.reset();store.drain();store={};trim();
+    std::printf("retained-reader tail encoding%u: mapped with late%llu, early only%llu\n",unsigned(family),
+        (unsigned long long)with_late,(unsigned long long)with_early);
+    std::printf("shared payload encoding%u: 5 captures, initialized extent%u, copied metadata%llu, sum of exposed prefixes%llu (shared bytes, not copied payload)\n",
+        unsigned(family),current_extent,(unsigned long long)copied_metadata,(unsigned long long)shared_prefix_bytes);
+}
+
 int main() {
+    {runtime shared;for(auto family:{sp::geometry::direct,sp::geometry::width,sp::geometry::relative_ends}) shared_prefix_history(shared,family);}
     runtime rt;
     unsigned cases = 0;
-    for (const auto family : {sp::geometry::direct, sp::geometry::width})
+    for (const auto family : {sp::geometry::direct, sp::geometry::width, sp::geometry::relative_ends})
         for (const auto placement : {sp::placement::grouped, sp::placement::separated})
             for (const auto allocation : {om::Placement::grouped, om::Placement::separate})
-                for (unsigned maximum : {255, 4095}) for (bool full : {false, true}) for (bool immortal : {false, true})
+                for (unsigned maximum : {255, 4095, 4096}) for (bool full : {false, true}) for (bool immortal : {false, true})
                     for (const auto fixed : {std::optional<std::uint16_t>{}, std::optional<std::uint16_t>{0}, std::optional<std::uint16_t>{8}}) {
                         history(rt, {family, placement, std::uint16_t(maximum), maximum * 256, fixed, full, immortal}, allocation);
                         ++cases;

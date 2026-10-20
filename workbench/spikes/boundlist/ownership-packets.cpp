@@ -98,7 +98,7 @@ void trial(fixture &f, A a, unsigned operations, unsigned rep, word expected) {
   assert(result == expected);
   std::printf(
       "%s,%u,%u,%u,%u,%s,%u,%u,%.6f,%zu,%zu,%zu,%llu\n",
-      A::family == sp::geometry::direct ? "direct" : "width",
+      A::family == sp::geometry::direct ? "absolute_ends" : unsigned(A::family)==1 ? "sizes" : "relative_ends",
       f.format.schema().maximum, f.nodes, unsigned(f.format.has_used()),
       unsigned(f.format.schema().lengths),
       Mode == 0 ? "direct_native" : "native_chain", Chains, rep,
@@ -116,7 +116,11 @@ int main(int argc, char **argv) {
     return 2;
   std::puts("layout,maximum,nodes,used,placement,consumer,chains,rep,ns,"
             "metadata_bytes,payload_bytes,layout_bytes,checksum");
-  for (auto family : {sp::geometry::direct, sp::geometry::width})
+  std::vector<sp::geometry> formats{sp::geometry::direct,sp::geometry::width};
+#ifndef BOUNDLIST_PORTFOLIO_LEGACY
+  formats.push_back(sp::geometry::relative_ends);
+#endif
+  for (auto family : formats)
     for (unsigned max : {255u, 4095u})
       for (bool full : {false, true})
         for (auto placement :

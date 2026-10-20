@@ -21,7 +21,60 @@ inline unsigned first_live(const std::uint64_t* live, unsigned first, unsigned n
 template <bool Inclusive, class T> [[gnu::always_inline]] unsigned flat(const T* end, unsigned n, T point,
                                                 const std::uint64_t* live = nullptr) {
     unsigned i = 0;
-    if constexpr (std::is_unsigned_v<T> && sizeof(T) == 2) {
+    if constexpr (std::is_unsigned_v<T> && sizeof(T) == 1) {
+#if defined(__AVX512BW__) && defined(__AVX512F__)
+        for (; i + 64 <= n; i += 64) {
+            auto mask=std::uint64_t(_mm512_cmp_epu8_mask(_mm512_loadu_si512(end+i),
+                _mm512_set1_epi8(point),Inclusive?_MM_CMPINT_NLT:_MM_CMPINT_NLE));
+            if(live) mask&=live[i/64];
+            if(mask) return i+std::countr_zero(mask);
+        }
+#endif
+#if defined(__AVX2__)
+        for (; i + 32 <= n; i += 32) {
+            const auto v=_mm256_loadu_si256(reinterpret_cast<const __m256i*>(end+i));
+            const auto bias=_mm256_set1_epi8(INT8_MIN),q=_mm256_set1_epi8(point);
+            auto predicate=_mm256_cmpgt_epi8(_mm256_xor_si256(v,bias),_mm256_xor_si256(q,bias));
+            if constexpr(Inclusive) predicate=_mm256_or_si256(predicate,_mm256_cmpeq_epi8(v,q));
+            auto mask=unsigned(_mm256_movemask_epi8(predicate));
+            if(live) mask&=unsigned(live[i/64]>>(i%64));
+            if(mask) return i+std::countr_zero(mask);
+        }
+        for (; i + 16 <= n; i += 16) {
+            const auto v=_mm_loadu_si128(reinterpret_cast<const __m128i*>(end+i));
+            const auto bias=_mm_set1_epi8(INT8_MIN),q=_mm_set1_epi8(point);
+            auto predicate=_mm_cmpgt_epi8(_mm_xor_si128(v,bias),_mm_xor_si128(q,bias));
+            if constexpr(Inclusive) predicate=_mm_or_si128(predicate,_mm_cmpeq_epi8(v,q));
+            auto mask=unsigned(_mm_movemask_epi8(predicate));
+            if(live) mask&=unsigned(live[i/64]>>(i%64));
+            if(mask) return i+std::countr_zero(mask);
+        }
+#elif defined(__aarch64__)
+        for (; i + 16 <= n; i += 16) {
+            const auto v=vld1q_u8(end+i),q=vdupq_n_u8(point);
+            const auto predicate=Inclusive?vcgeq_u8(v,q):vcgtq_u8(v,q);
+            if(!live) {
+                const uint8x16_t indices{0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15};
+                const auto row=vminvq_u8(vorrq_u8(indices,vmvnq_u8(predicate)));
+                if(row!=255) return i+row;
+            } else {
+                const uint16x8_t weights{1,2,4,8,16,32,64,128};
+                const auto lo=vaddvq_u16(vandq_u16(vmovl_u8(vget_low_u8(predicate)),weights));
+                const auto hi=vaddvq_u16(vandq_u16(vmovl_u8(vget_high_u8(predicate)),weights));
+                const auto mask=(unsigned(lo)|(unsigned(hi)<<8))&unsigned(live[i/64]>>(i%64));
+                if(mask) return i+std::countr_zero(mask);
+            }
+        }
+#endif
+    } else if constexpr (std::is_unsigned_v<T> && sizeof(T) == 2) {
+#if defined(__AVX512BW__) && defined(__AVX512F__)
+        for (; i + 32 <= n; i += 32) {
+            auto mask=unsigned(_mm512_cmp_epu16_mask(_mm512_loadu_si512(end+i),
+                _mm512_set1_epi16(point),Inclusive?_MM_CMPINT_NLT:_MM_CMPINT_NLE));
+            if(live) mask&=unsigned(live[i/64]>>(i%64));
+            if(mask) return i+std::countr_zero(mask);
+        }
+#endif
 #if defined(__AVX2__)
         for (; i + 16 <= n; i += 16) {
             const auto v = _mm256_loadu_si256(reinterpret_cast<const __m256i*>(end + i));
@@ -38,6 +91,15 @@ template <bool Inclusive, class T> [[gnu::always_inline]] unsigned flat(const T*
 #endif
             if (live) mask &= unsigned(live[i / 64] >> (i % 64));
             if (mask) return i + std::countr_zero(mask);
+        }
+        for (; i + 8 <= n; i += 8) {
+            const auto v=_mm_loadu_si128(reinterpret_cast<const __m128i*>(end+i));
+            const auto bias=_mm_set1_epi16(INT16_MIN),q=_mm_set1_epi16(point);
+            auto predicate=_mm_cmpgt_epi16(_mm_xor_si128(v,bias),_mm_xor_si128(q,bias));
+            if constexpr(Inclusive) predicate=_mm_or_si128(predicate,_mm_cmpeq_epi16(v,q));
+            auto mask=unsigned(_mm_movemask_epi8(_mm_packs_epi16(predicate,_mm_setzero_si128())));
+            if(live) mask&=unsigned(live[i/64]>>(i%64));
+            if(mask) return i+std::countr_zero(mask);
         }
 #elif defined(__aarch64__)
         for (; i + 8 <= n; i += 8) {
