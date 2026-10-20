@@ -182,9 +182,11 @@ private:
     ObjectHandle debt_entry{};
     Handle anchor{};
     std::size_t remaining_entries{}, remaining_cuts{};
+    // Next leftward probe, then the binary search's lower bound.
+    std::size_t cut_begin{};
     std::size_t entry_visits{}, version_visits{}, cut_visits{}, debt_visits{}, plan_work{}, maintenance_restarts{};
     std::size_t reclaimed_versions{}, completed_sweeps{}, head_refreshes{};
-    enum class Step { idle, cuts, entry, older, consume, finish, seek };
+    enum class Step { idle, cuts, entry, older, consume, skip_cuts, find_cut, finish, seek };
     Step step{Step::idle};
     Step resume_step{Step::idle};
     bool crossed_floor{};
@@ -212,7 +214,7 @@ private:
       // progress of other objects even when this particular chain must restart.
       if (debt_entry) { assert(entries.front_debt() == debt_entry); entries.rotate_debt(); }
       if (step == Step::cuts) plan_generation = UINT64_MAX;
-      debt_entry = {}; anchor = {}; next_cut = nullptr; step = Step::idle;
+      debt_entry = {}; anchor = {}; next_cut = nullptr; cut_begin = 0; step = Step::idle;
       callback_restart = false; dirty = true; ++maintenance_restarts;
     }
     std::size_t drain(std::size_t limit) noexcept;

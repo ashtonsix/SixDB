@@ -87,6 +87,7 @@ std::size_t ObjectStore<Physical>::Core::drain(std::size_t limit) noexcept {
     switch (step) {
     case Step::idle: {
       ++work; ++plan_work; building_cut = cut; pass_generation = maintenance_changes;
+      cut_begin = 0;
       planned_floor = cut;
       if (plan_generation != reader_changes) {
         reader_cuts.clear(); next_cut = nullptr;
@@ -132,7 +133,7 @@ std::size_t ObjectStore<Physical>::Core::drain(std::size_t limit) noexcept {
       debt_entry = entries.front_debt(); anchor = head(debt_entry);
       anchor_cut = anchor ? version_cut(anchor) : 0;
       crossed_floor = !anchor || version_cut(anchor) <= planned_floor;
-      remaining_cuts = reader_cuts.size();
+      remaining_cuts = reader_cuts.size(); cut_begin = 0;
       step = !anchor ? Step::finish : Step::consume;
       break;
     case Step::older: {
@@ -145,7 +146,7 @@ std::size_t ObjectStore<Physical>::Core::drain(std::size_t limit) noexcept {
       const bool newer = !crossed_floor;
       if (newer) crossed_floor = old_cut <= planned_floor;
       const bool keep = newer || (remaining_cuts && reader_cuts[remaining_cuts - 1] >= old_cut);
-      if (keep) { anchor = old; anchor_cut = old_cut; step = Step::consume; }
+      if (keep) { anchor = old; anchor_cut = old_cut; cut_begin = 0; step = Step::consume; }
       else {
         link_older(anchor, older(old)); --versions; ++reclaimed_versions;
         const auto before_callback = maintenance_changes;
@@ -157,13 +158,41 @@ std::size_t ObjectStore<Physical>::Core::drain(std::size_t limit) noexcept {
     case Step::consume:
       if (!remaining_cuts) { step = Step::older; break; }
       ++work; ++cut_visits;
-      if (reader_cuts[remaining_cuts - 1] >= version_cut(anchor)) --remaining_cuts;
+      if (reader_cuts[remaining_cuts - 1] >= version_cut(anchor)) {
+        --remaining_cuts;
+        cut_begin = remaining_cuts ? remaining_cuts - 1 : 0;
+        step = remaining_cuts ? Step::skip_cuts : Step::older;
+      }
       else step = Step::older;
       break;
+    case Step::skip_cuts: {
+      ++work; ++cut_visits;
+      // Many cuts can select one unchanged tip. Gallop through that interval;
+      // a single selected cut still takes the ordinary two end comparisons.
+      if (reader_cuts[cut_begin] >= version_cut(anchor)) {
+        const auto skipped = remaining_cuts - cut_begin;
+        remaining_cuts = cut_begin;
+        if (!remaining_cuts) { cut_begin = 0; step = Step::older; }
+        else cut_begin = skipped <= remaining_cuts / 2 ? remaining_cuts - skipped * 2 : 0;
+      } else {
+        ++cut_begin;
+        if (cut_begin == remaining_cuts) { cut_begin = 0; step = Step::older; }
+        else step = Step::find_cut;
+      }
+      break;
+    }
+    case Step::find_cut: {
+      ++work; ++cut_visits;
+      const auto middle = cut_begin + (remaining_cuts - cut_begin) / 2;
+      if (reader_cuts[middle] >= version_cut(anchor)) remaining_cuts = middle;
+      else cut_begin = middle + 1;
+      if (cut_begin == remaining_cuts) { cut_begin = 0; step = Step::older; }
+      break;
+    }
     case Step::finish: {
       ++work; ++debt_visits;
       const auto entry = std::exchange(debt_entry, ObjectHandle{});
-      anchor = {}; --remaining_entries; step = Step::entry;
+      anchor = {}; cut_begin = 0; --remaining_entries; step = Step::entry;
       const auto current = head(entry);
       // Pins preserve the reserved debt slot across accepted work. Install
       // transfers the tip without allocating or disposing any user owner.
@@ -178,6 +207,8 @@ std::size_t ObjectStore<Physical>::Core::drain(std::size_t limit) noexcept {
     case Step::seek:
       ++work; ++version_visits;
       assert(anchor);
+      // The sampled cut is unchanged, so interval-search bounds survive a tip
+      // moving into history while this drain was suspended.
       if (version_cut(anchor) == anchor_cut) step = resume_step;
       else { assert(version_cut(anchor) > anchor_cut); anchor = older(anchor); }
       break;

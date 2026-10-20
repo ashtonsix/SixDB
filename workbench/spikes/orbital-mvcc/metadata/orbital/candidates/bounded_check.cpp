@@ -5,12 +5,16 @@
 #endif
 
 #include <array>
+#include <bit>
+#include <bit>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
 #include <functional>
+#include <memory>
 #include <optional>
 #include <source_location>
+#include <vector>
 
 #if SIXDB_OBJECT_MODULE_TEST
 using namespace object_module_test;
@@ -340,6 +344,113 @@ template<class Store> void interleaved_readers() {
   check(!memory.live);
 }
 
+#if SIXDB_OBJECT_MODULE_TEST
+template<class Store> void redundant_cut_intervals() {
+  constexpr std::size_t objects = 32;
+  for (const std::size_t readers : {128u, 512u}) {
+    Memory memory;
+    {
+      Store store(memory);
+      constexpr ObjectId marker{73, 0};
+      std::array<std::weak_ptr<const std::uint64_t>, objects> obsolete;
+      std::vector<Change> changes;
+      for (std::size_t i = 0; i < objects; ++i) {
+        auto body = std::make_shared<const std::uint64_t>(10 + i); obsolete[i] = body;
+        changes.push_back({{72, i}, encode(store, {72, i}, 1, 10 + i, body)});
+      }
+      publish(store, changes); changes.clear();
+      for (std::size_t i = 0; i < objects; ++i)
+        changes.push_back({{72, i}, encode(store, {72, i}, 2, 1000 + i)});
+      publish(store, changes); changes.clear();
+      std::vector<std::unique_ptr<typename Store::Scope>> scopes;
+      std::vector<std::weak_ptr<const std::uint64_t>> observed_markers;
+      for (std::size_t i = 0; i < readers; ++i) {
+        auto body = std::make_shared<const std::uint64_t>(2000 + i);
+        observed_markers.push_back(body);
+        const std::array<Change, 1> changed{{{marker,
+            encode(store, marker, store.borrow().cut + 1, 2000 + i, body)}}};
+        publish(store, changed);
+        scopes.push_back(std::make_unique<typename Store::Scope>(store));
+      }
+      update(store, marker, 9000); // Every retained reader is now historical.
+      const auto before = store.statistics();
+      finish(store); // Every probe must fit a drain(1) call.
+      const auto after = store.statistics();
+      const auto visits = after.cut_visits - before.cut_visits;
+      const auto work = after.reclamation_work - before.reclamation_work;
+      // These Scopes all select the SAME current value of each test Object.
+      // The budget allows reader planning, marker history and logarithmic
+      // interval searches, rather than a reader scan for each test Object.
+      const auto cut_budget = 4 * readers + 2 * objects * std::bit_width(readers);
+      check(visits <= cut_budget);
+      check(work <= cut_budget + 4 * (objects + readers) + 8);
+      check(after.versions == objects + readers + 1);
+      for (std::size_t i = 0; i < objects; ++i) check(obsolete[i].expired());
+      for (std::size_t r = 0; r < readers; ++r) {
+        for (std::size_t i = 0; i < objects; ++i)
+          check(word(scopes[r]->bind({72, i})) == 1000 + i);
+        check(word(scopes[r]->bind(marker)) == 2000 + r && !observed_markers[r].expired());
+      }
+      scopes.clear(); finish(store);
+      check(store.statistics().versions == objects + 1);
+      for (const auto& marker_body : observed_markers) check(marker_body.expired());
+      std::printf("object-module redundant cuts: objects=%zu readers=%zu cut_visits=%zu work=%zu\n",
+          objects, readers, visits, work);
+    }
+    check(!memory.live);
+  }
+}
+
+template<class Store> void interrupted_cut_interval() {
+  Memory memory;
+  {
+    Store store(memory);
+    std::array<std::weak_ptr<const std::uint64_t>, 3> old;
+    auto set_a = [&](std::uint64_t value, std::size_t index) {
+      auto body = std::make_shared<const std::uint64_t>(value); old[index] = body;
+      const std::array<Change, 1> changed{{{A,
+          encode(store, A, store.borrow().cut + 1, value, body)}}};
+      publish(store, changed);
+    };
+    set_a(10, 0); set_a(20, 1); // A enters the debt queue before the marker.
+    struct Saved {
+      typename Store::Scope scope;
+      std::uint64_t a, marker;
+      Saved(const Store& store, std::uint64_t value, std::uint64_t other)
+          : scope(store), a(value), marker(other) {}
+    };
+    std::vector<std::unique_ptr<Saved>> scopes;
+    for (unsigned i = 0; i < 128; ++i) {
+      if (i == 32) set_a(30, 2);
+      update(store, B, 1000 + i);
+      scopes.push_back(std::make_unique<Saved>(store, i < 32 ? 20 : 30, 1000 + i));
+    }
+    update(store, B, 9000);
+    while (!store.statistics().entry_visits) check(store.drain(1) == 1);
+    const auto before = store.statistics().cut_visits;
+    // Leave a nontrivial interval search unfinished, with cuts on both sides
+    // of A's tip. Publication then moves that exact anchor into older history.
+    for (unsigned i = 0; i < 10; ++i) check(store.drain(1) == 1);
+    check(store.statistics().cut_visits == before + 10);
+    update(store, A, 40);
+    scopes.push_back(std::make_unique<Saved>(store, 40, 9000));
+    scopes.erase(scopes.begin()); // The saved cut plan is conservative until rebuilt.
+    update(store, B, 10000);
+    finish(store);
+    check(old[0].expired() && !old[1].expired() && !old[2].expired());
+    for (const auto& saved : scopes) {
+      check(word(saved->scope.bind(A)) == saved->a);
+      check(word(saved->scope.bind(B)) == saved->marker);
+    }
+    check(word(store.borrow().bind(A)) == 40 && word(store.borrow().bind(B)) == 10000);
+    check(store.statistics().head_refreshes > 0);
+    scopes.clear(); finish(store);
+    check(store.statistics().versions == 2 && old[1].expired() && old[2].expired());
+  }
+  check(!memory.live);
+}
+#endif
+
 template<class Store> void run(const char* name) {
   limits_and_cuts<Store>(); sparse_predecessors<Store>(); interrupted_plan<Store>();
   refusal_and_reuse<Store>(); accepted_and_recycled<Store>(); callbacks_and_fairness<Store>(); long_chain<Store>();
@@ -350,6 +461,7 @@ template<class Store> void run(const char* name) {
 int main() {
 #if SIXDB_OBJECT_MODULE_TEST
   run<Selected>("object-module");
+  redundant_cut_intervals<Selected>(); interrupted_cut_interval<Selected>();
 #else
   run<Store32>("v32-floor"); run<Store16>("v16-floor"); run<Store8>("v8-floor");
   run<Store<Slab<Version32>, compact_retention::DistinctRetention, DescriptorPhysical>>("v32-distinct");
