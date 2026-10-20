@@ -1,1541 +1,606 @@
-# Joint directory pseudocode
+# Directory implementation pseudocode
 
-Algorithm pseudocode, not C++ or an implemented API. `Scope.bind`,
-`source(selection,p)`, consuming/shared capture, `prepare`, `install`, `abort`
-and bounded `drain` name current Orbital operations. Hashtable/Boundlist/
-StreamPack operations name their actual families. Helpers defined below are
-Engine algorithms. The section headed “Proposed Orbital work” is explicitly
-module-owned work to investigate; it must not be silently emulated in Engine.
+This is the paper candidate for the current review, not a description of a
+finished implementation. It uses existing Ikea, Orbital and Loom mechanisms.
+The cost limits in [Budget](BUDGET.md) constrain the complete operations below;
+an unmeasured helper is not free. Earlier measured controls and producer codecs
+remain in [Findings](FINDINGS.md) and their captured sources.
 
 ## Inputs and retained state
 
-```
-SegmentName = (index, layer, physical_prefix)
-Dirent      = six u64 Part locators + the 16 metadata bytes in DESIGN.md
-Bounds      = selected monotone logical routing endpoints and their admitted recipe
-              (exact occupied bounds OR enclosing fences; not summary values)
-Entry       = (physical_prefix, Bounds, Dirent)
+The supplied five index layers and prefix-defined Segments are unchanged.
+Directory storage nodes are a different tree. Its fanout, occupancy, Part size
+and balancing policy do not assign record keys or split Segments.
+
+~~~
+Config:
+    distinct admitted directory, Segment and schema namespaces: u64
+    logical key width K; shared physical/logical prefix width J
+    require J <= min(6,K)
+    native directory format/locator recipe; actual external metadata resource
+
+SegmentID(layer,prefix):
+    full ObjectId(Segment_namespace, (u64(layer)<<32) | prefix)
+    require layer in 0..4 and prefix in [0,256^layer)
+    # L4's UINT32_MAX is valid; end is a separate state.
+
+Directory names within directory_namespace:
+    root(layer)               = (1<<60) | layer
+    native_hash(layer,group)  = (2<<60) | (u64(layer)<<32) | group
+    extras(layer,group)       = (3<<60) | (u64(layer)<<32) | group
+    dynamic_node(sequence)    = (4<<60) | sequence
+    namespace_counter         = 0
+    require sequence < 2^60; never reuse names, including after empty/recreation
+
+Schema names within schema_namespace:
+    index_header = 0
+    definition(rep_id:u32) = u64(rep_id)+1
+    # Externally supplied IDs; no hidden population-sized roster or next-ID claim.
 
 SegmentDelta:
-    name
-    expected_before_binding or expected_absence
-    finished_after_primary Owner when actually replaced, or deletion/unchanged
-       association qualified by the producer's real update/publication protocol
-    after_bounds, representation, inline Part BYTE addresses/resources
-    touched extra ordinals/new list, OR qualified complete extra-association
-       unchanged evidence tied to the before binding and finished after material
-    independently retained format/geometry proof
-    # Emitted ONLY for a possible DIRECTORY fact change, not every record write.
-    # This describes supplied segment state, not record rows or an undo action.
-
-Read:
-    read token: uninterrupted current-cut Borrowed, OR SAME stationary Scope
-    never promote Borrowed or move an enrolled Scope across a wait
-    index schema selection and reusable admitted definitions/read laws
-    optional already-qualified authoritative material state, including deltas
-    layer, query endpoints and endpoint policies
-    mode-specific cursor position defined below, separate from payload slots
-    optional selected payload/extra block for repeated consumption
-    admitted layout: fanout F, payload chunk slots C, co-located or independent
+    layer, physical prefix
+    expected BEFORE Object/version/realization, or expected absence at original basis
+    finished AFTER Segment Owner, or deletion
+    full K-byte AFTER logical minimum and maximum
+    # These are Segment facts. Record writes and summary corrections are producer work.
 
 Edit:
-    original Scope/basis and offered SegmentDeltas
-    scratch keyed by FULL 128-bit ObjectId, private to this attempt
-       small attempt: inline full-ID array
-       larger attempt: Ikea u64 high-half -> per-namespace Ikea u64 low-half map
-       # Ikea's current key width is<=64; never truncate identity or invent W128.
-    owned mutable drafts and new byte ranges; no published state is mutated
-    offered finished segment Owners and eventual directory Owners
-    current scoped root/namespace-counter drafts when topology changes
-    candidate allocation/effect storage and publication workspace
-```
+    caller's original stationary Scope and SAME Store/Core
+    offered Segment Owners and independent immutable interpretation dependencies
+    request-local final intents, selected paths, affected Part/group plans
+    inline full-ID scratch for small attempts; actual Ikea map for larger attempts
+    private mutable buffers; finished candidate Owners; actual output changes
 
-An edit's draft table only deduplicates work. It is not an authoritative segment
-roster, version table, reader registry or transaction log. Its scratch capacity,
-initialization and touched-key cleanup are charged. A few deltas may use a fixed
-array instead if that complete caller is faster; no `std::map` is on this path.
-Both identity halves participate in lookup/equality. Nested map allocation,
-lookups and cleanup are charged; the small inline case compares full IDs too.
+Read:
+    caller's stationary Scope, or expressly uninterrupted Borrowed operation
+    selected index/representation definitions and admitted operation/read laws
+    layer, endpoint policies, optional original-prefix-coordinate mask
+    saved traversal frames, current leaf/rank and selected hash/extra block
+~~~
 
-## Producer boundary, before any directory work
+The short name is unique only inside its admitted namespace. Scratch comparing
+arbitrary Objects compares both identity halves; an index-local map may omit a
+constant high half only after admitting that namespace. Numeric cut equality
+between different Cores is insufficient. No map here is lookup authority,
+history, a reader registry or an undo log.
 
-```
-ON_PRODUCER_CHANGE(change):
-    producer already owns the base/data, pending deltas and validity semantics
-    if its actual protocol proves membership/routing/representation/ALL locators
-       and directory-owned interpretation unchanged:
-        emit NO SegmentDelta; perform NO directory route/edit/capture/publication
-        complete the actual data/summary publication through Orbital, if required
-        # Initial directory lookup to locate the data is still charged normally.
-    else:
-        emit the actual changed SegmentDelta(s), not one for every index layer
-        preserve required coherence with any actual data/summary/schema changes
-
-READ_DIRTY_SUMMARY(selected_data, selected_validity, selected_pending):
-    # Producer's semantic obligation, not a new directory summary implementation.
-    consume exact summary when pristine at this snapshot
-    otherwise use an admitted exact correction, descend/bypass, or coherent flush
-    never use stale extrema as an exact answer or an unsafe pruning predicate
-    min/max deletion, NULL and noninvertible summaries require their actual laws
-```
-
-The append/pristine producer and the eager producer are distinct test inputs.
-Current captures do not authorize overwriting sealed bytes. Stable append,
-versioned resource binding, private material and finer physical update seams
-must be qualified with Orbital, not implemented as Engine rollback/history.
-
-The bounded native DRIVER now carries two append controls and a small-object
-eager counterpart. These are finite producer codecs, not selected Engine formats.
-The plain control has an eight-byte zero header followed by24-byte absolute
-afterimages. It performs NO footer/index/SUM update on an ordinary publication.
-Dirty points scan backward to the latest matching row; dirty SUM/extrema and a
-full fold load current bases and apply the visible event stream ONCE into64
-private values. Pristine advice bypasses this work for unchanged fields/rows.
-
-```
-APPEND_PLAIN_AFTERIMAGES(basis, commands):
-    use the same selected-prefix/custody/refusal rules as indexed append below
-    admit each distinct touched row once; retain its actual advice in private work
-    process commands in order; remove final no-ops; walk only changed-row bits
-    append one24-byte absolute afterimage per final changed row
-    no latest-offset table, eagerly maintained SUM or newly allocated header
-    capture exact expanded prefix with immutable Control; one atomic publication
-
-DIRTY_PLAIN_READ(scope, row):
-    resolve directory and base at the SAME selected Scope
-    if matching base advice is clean: return base
-    select its own immutable collection extent; scan backward within that prefix
-    return first matching ABSOLUTE afterimage, or selected base when absent
-
-PLAIN_FOLD_OR_DIRTY_AGGREGATE(scope):
-    load64 selected base field3 values into private scratch
-    apply every selected afterimage in forward order ONCE, overwriting its row
-    compute actual requested SUM128/extrema from the resulting values
-    a fold builds actual fresh bases/summaries/advice and an EMPTY new collection
-    publish all real moved-Part directory changes and collection in ONE packet
-```
-
-The indexed control can avoid a fresh header Allocation while maintaining an
-exact correction index. One shared prefix ends with an immutable160-byte
-lookup footer. It holds exact field3 SUM128 at0..15, event count u64 at16..23,
-64 u16 latest-event offsets at24..151 (eight-byte units,0 means absent), and
-eight zero reserved bytes. Each24-byte afterimage holds prefix:u32, zero:u32,
-sequence:u64 and field3 aftervalue:u64. Other seven u64 fields stay in the base.
-Footer and records are data-format choices in the DRIVER, not directory fields.
-
-```
-APPEND_INDEXED_AFTERIMAGES(basis, commands):
-    select current prefix and its exact byte extent through the SAME Core/Scope
-    old_footer = selected_prefix.end -160
-    process commands IN ORDER in private scratch, reading each touched row once
-       # RepeatedP9,P6 sees private9 before6; finalP6 implies SUM17 from7/11.
-    coalesce final afterimages by touched row; discard actual no-ops
-    if no final changes: return success without directory or collection mutation
-    if current committed prefix +24*changed_rows +160 exceeds backing capacity:
-        privately fold visible state INCLUDING these commands into actual bases
-           and ALL summaries, applying the old event stream only once
-        construct fresh advice generations; never clear an old generation
-        start a new fixed-address backing with an empty160-byte indexed footer
-        include actual resulting material/directory changes in THIS packet
-        do not append these already-incorporated afterimages again
-        capture empty rebased collection; prepare/install the complete packet
-        return
-    else if cached backing differs or sealed highwater != selected extent:
-        acquire fresh backing; copy ONLY the selected committed byte prefix
-        # Rotation alone changes no logical baseline or sequence meaning.
-    admit the disjoint suffix, including actual native store widths
-    append final afterimages; copy old footer to a NEW suffix position
-    patch latest-offset entries, event count and exact absolute SUM128
-    conservatively seal attempted physical highwater; never rewind failed space
-    capture ONE independent_shared Part spanning the finished initialized prefix
-       # Immutable Control owns its exact extent; no separate native header.
-    prepare/install collection plus actual compaction/port changes in ONE packet
-    charge private scratch, copies, capture, packet and amortized full settlement
-
-INDEXED_AFTERIMAGE_POINT(scope, row, field3):
-    directory lookup yields base bytes and generation-owned monotone dirty advice
-    if proved clean: return base field3
-    select authoritative collection under scope; use its OWN qualified extent
-    footer = prefix.end -160
-    if footer.latest[row] ==0: return base field3
-    return absolute aftervalue at prefix +8*footer.latest[row] +16
-    # Absolute replacement does not reapply a folded P contribution.
-
-INDEXED_AFTERIMAGE_SUM(scope):
-    use pristine selected summary when its generation is proved clean
-    otherwise return the selected footer's exact absolute SUM128
-    # Dirty MIN/MAX descend/recompute; no stale extrema pruning.
-```
-
-Footer copies are unreachable physical garbage in the newest prefix, bounded by
-backing capacity. They are not a linked history or an Engine visibility service:
-Orbital alone selects the old/new material and its extent. One indexed lookup
-does not scan earlier footers. The first counterpart used competent private
-coalescing and small exact afterimage/SUM objects, with ONE publication perB1/B64
-request. Its measured dispersed capture fanout motivates the packed eager control
-below. Compare hot and dispersed updates, query pressure and the complete
-partial/full compaction cycle; neither format is assumed to win.
-
-The ordinary attempt reuses a bounded PRIVATE publication vector reserved once
-by the producer. Success clears its Owners; capacity refusal can retain the
-finished candidate for retry against its original basis. This is scratch,
-never lookup authority or logical visibility state. Small row arrays are read only
-for touched rows, and changed-row bit walks replace full64-row scans onB1.
-Cache a selected row's actual advice while admitting that row, avoiding a second
-directory lookup just to mark it. The finite producer's four current summary
-Backings share one real advice object; one selected L0 mark invalidates them all.
-A general representation must prove its own advice coverage rather than assume
-this sharing. Eager full compaction keeps existing absolute afterimages that
-already equal the new bases; it does not manufacture64 unchanged replacements.
-
-```
-EAGER_PACKED_AFTERIMAGES(basis, commands):
-    admit/coalesce final changed rows with the SAME before/after semantics
-    select one576-byte correction image through basis
-       header: absolute SUM128,valid-row bits,zero padding;64 absolute values
-    allocate actual private576-byte native backing
-    clone the selected image ONCE using exact64-byte blocks
-    patch final changed row values, valid bits and actual SUM128
-    mark selected base/summary advice before visibility
-    capture ONE native Part and publish ONE actual Object in oneB1/B64 packet
-    full fold retains unchanged correction image; it already equals new bases
-    no per-row capture and no64-publication atomic-batch substitution
-```
-
-The following is the general append/delta composition retained for
-the producer comparison. It specifies the directory boundary and snapshot
-obligations; the finite native codec above is not a general summary law.
-
-```
-APPEND_MATERIAL_CANDIDATE(basis, actual_commands):
-    select existing base/applied boundary/committed delta extent under basis
-    acquire a PRIVATE suffix disjoint from every sealed body AND readable padding
-       in counted fixed-address backing, or acquire fresh backing on rollover
-    execute actual Ikea writes only after their complete coverage is admitted
-       # Existing packed append may instead require private/versioned sidecars.
-    finish actual data/corrections and immutable per-chunk interpretation
-    construct next material Control with directly retained base/chunk sources,
-       base-applied offsets and a complete hole-free committed extent
-    derive pristine/bypass from THAT selected base and visible corrections
-       or include actual versioned validity metadata with matching coverage
-    capture finished material Owner(s); no chain of predecessor Representations
-    offer only ACTUAL directory fact changes (usually none until rollover/ports)
-    publish material plus other actual required changes in ONE Orbital packet
-    # No separate image per index layer is manufactured by this algorithm.
-    # Commands are not made visible by merely reserving or writing append bytes.
-
-READ_MATERIAL_CANDIDATE(read, selected_material, query):
-    use its selected base, applied boundary and committed chunks as ONE version
-    consider visible pending additions BEFORE a stale summary can prune them
-    if summary exact under its admitted law: consume it
-    else correct from visible deltas, descend/bypass, or request coherent flush
-    include actual point-delta lookup/merge and extra selections in Engine cost
-    do not treat count/sum subtraction as general min/max/NULL repair
-
-COMPACT_MATERIAL_CANDIDATE(basis, unit):
-    select coherent base + visible committed deltas for a DECLARED frontier domain
-    choose partition-local runs, or actual per-unit applied frontiers in collection
-       material; a global offset is valid only when ALL its covered units are folded
-    compute actual new base and summaries with the producer's laws
-    construct new material excluding EXACTLY the incorporated domain-qualified deltas
-    retain corrections for every unincorporated unit; P/Q/P compacting only P
-       must preserve Q, not advance a global frontier past its record
-    offer real directory changes for moved Parts, changed range/representation,
-       segment birth/death; retain stable facts without directory work
-    publish new base/material/applied boundary/required directory edits together
-    old Scopes retain old base plus old delta range without gaps/double counting
-    release old uses through Orbital; no private Engine reader/reuse ledger
-    charge construction, captures, corrected holders and retirement to the history
-
-CONSERVATIVE_ADVICE_CANDIDATE(selected_base_generation):
-    base Control retains generation-local advice OUTSIDE all captured footprints
-    initialize dirty for any relevant pending deltas already visible with this base
-    before publishing a new mutation, invalidate every prefix that could otherwise
-       trust an affected old summary; finish invalidation before visibility
-    on read, use clean only with matching base/completeness generation proof
-       dirty forces correction/descent against the SAME selected material
-    advice may become conservatively dirty for an old Scope; that changes cost,
-       never the old Scope's answer or selected committed extent
-    compact into NEW advice for the new base; never clear old-generation advice
-       while old material can select it; retain through actual Control dependencies
-    retire old advice through Orbital-owned material lifetime, no reader ledger
-    # Current embedded single-owner execution permits an uninterrupted mark/install.
-    # Concurrent/stalled marking and reset require a separately proved protocol.
-```
-
-The fixed-base/delta and disjoint-append candidates can use the current shared
-capture contract. Their exact codec, lookup/indexing and publication grain remain
-material proposals. Ready preparation/ranged-native improvements below are
-separate Orbital proposals, not prerequisites for expressing the semantics.
-Compare conservative advice with fully versioned validity. A dirty advisory
-table chooses a safe read path; it is not a second visibility protocol or one
-versioned Object per ancestor flag. Its marking, retained capacity and false
-positives remain measured work.
+Borrowed state cannot cross publication, polling, reentry, suspension or return.
+A Scope, its Worker/Lane and external resource remain alive through every use.
+Escaping Parts use Orbital's real export/retention contract. Owning a directory
+root alone does not retain independently versioned Segment material.
 
 ## Query binding, candidate traversal and continuation
 
-Parent routing extrema are derived from their children's ROUTING endpoints,
-not from children's occupied record extrema when enclosing fences are used.
-A coarse/quantised parent must refine against the same-read child endpoints.
-Every permitted enclosure contains its actual keys and has monotone endpoints.
-Choosing a candidate does not establish an exact point hit. Exact misses advance
-WITHIN the current region before considering the next region.
+~~~
+OPEN_READ(store,scope,config):
+    validate that store.bound(scope,schema.index_header) belongs to THIS Core
+       distinguish absent from wrong-Core/conflict; reject absent for a read
+    admit selected header's K,J,namespaces and native format
+    retain/reuse only definition proofs qualified for this selected schema
+    return Read borrowing the SAME stationary scope
 
-```
-OPEN_READY_BORROW(index):
-    token = ObjectStore.borrow() at current completed cut
-    bind schema/material as required through this token
-    finish the ENTIRE call and all borrowed uses before publication, alternative
-       replacement, suspension or final Store reset; no reentry that invalidates it
-    return synchronous Read; Scope enrollment is not charged to this control
+DEFINITION(read,rep_id,layer):
+    reuse a definition already qualified within THIS read
+    otherwise select schema.definition(rep_id) through read's token
+    reject absence, unsupported descriptor/locator law, or disallowed layer
+    admit immutable descriptor and its real dependencies once; cache for this read
+    # An owning newer cache entry does not prove old-snapshot visibility or allows.
 
-OPEN_SCOPED_READ(index, requested_snapshot, stationary_frame):
-    reuse an actual live Scope for this Core, or construct it IN PLACE at NOW cut
-    # Numeric old cuts cannot reopen history; enrolled Scope is never moved.
-    bind/admit schema once; keep borrowed selections under this SAME live token
-    # No physical retain/capture per row or cursor step; escape owns separately.
-    return reference to stationary frame's Read (not a moved Scope)
-
-Cursor:
-    token/Core/layer; logical query edges when present; end is an explicit state
-    probe kind NONE, LOGICAL, or PHYSICAL_PREFIX; high-edge law matches that kind
-    mode TOP: selected ordinary table, current physical prefix / occupied rank
-    mode GROUP_ARRAY: group name/key, selected array, ORIGINAL suffix, packed slot
-    mode HASH: natural region/key, selected immutable actual Ikea V64 owner,
-               original-prefix occupancy, current original key; no stable value pointer
-    mode TREE: region identity, ancestor frames(name,selection,child rank),
-               selected leaf(name,selection), local ROUTING rank, payload slot
-    outer group/region presence position OR lazy exclusive-successor key
-    # Every successful seek, including singleton/exact fast paths, sets this state.
-    # An outer presence lookup may be deferred; its identity cannot be forgotten.
-
-GROUP_SLOT(group,suffix):
-    require original_suffix_mask contains suffix
-    mask=group.original_suffix_mask
-    require admitted sorted mask/rank ARRAY control
-    return popcount(mask & bits_strictly_below(suffix))
-    # Preserve the original mask even when an external selection mask is sparse.
-
-SET_POSITION(read, container, physical_position):
-    keep selected container under the SAME token; set mode/layer/current physical prefix
-    record original suffix or leaf routing rank SEPARATELY from payload slot
-    record all existing ancestor frames and the leaf itself (also singleton root)
-    save lazy exclusive group/region successor identity if outer cursor unbound
-
-ENTRY_AT_POSITION(read):
-    obtain physical prefix, routing endpoints and a borrowed descriptor reference
-    if HASH:
-        return HashEntry(selected_actual_owner, original_key, geometric_bounds)
-        # This is a scoped key/owner handle, NOT a pointer to find's temporary.
-    else if co-located leaf:
-        payload = leaf.selection.part(1+slot/C); row = slot%C
-    else if independent leaf:
-        payload = token.bind(leaf.chunk_names[slot/C]); row = slot%C
-    else use selected TOP/GROUP representation's admitted slot
-    return EntryRef, not a mandatory materialized64 B copy
-    # Enumeration may consume all 64 B; a Part query reads its needed fields.
-    # Reuse the selected array/table and lazy correction image across this cohort;
-    # requalify after a token, basis or admitted physical-treatment change.
-
-CONSUME_ENTRY(read,entry,consumer):
-    if HashEntry:
-        selected const actual Ikea V64 table.find(entry.original_key, value ->
-            invoke consumer with value's requested fields INSIDE this callback)
-        # Reuse concrete owner binding across this read/cohort; never escape value.
-    else invoke consumer with selected array/leaf row reference
-
-FIND_EXACT_PREFIX(read,L,p):
-    reset traversal frames; set layer L, probe kind NONE and no high-edge filter
-    if L<2:
-        bind actual ordinary table; test original population
-        if absent: return absent
-        SET_POSITION(read,table,p); return ENTRY_AT_POSITION(read)
-    if L<=J:
-        region,key = split_prefix(p, admitted_hash_region_bits)  # first4/6/8-bit controls
-        image = token.bind(hash_region_name(index,L,region))
-        if absent: return absent
-        borrow selected image's ACTUAL immutable Ikea V64 table
-        use actual find; on hit SET_POSITION(HASH,image,key)
-        return scoped HashEntry or absent, not a copied authoritative twin
-    region = high J bytes of p  # zero for J=0
-    bind deterministic region root
-    descend physical-prefix child intervals, saving every ancestor
-    find exact leaf prefix; if unequal: return absent
-    SET_POSITION(read,leaf,routing_rank); return ENTRY_AT_POSITION(read)
-
-TREE_SEEK_CANDIDATE(read,root,q,closed):
-    while internal:
-        choose first child whose routing maximum >=q (closed) or >q (open),
-           using real exact/refined Boundlist; save frame and bind that child
-        if none in this node: ADVANCE_TREE_SIBLING and keep searching SAME region
-    r = corresponding boundary in leaf routing maxima
-    if r==leaf.count:
-        ADVANCE_TREE_SIBLING; continue same-region search, or report region exhausted
-    SET_POSITION(read,leaf,r); return ENTRY_AT_POSITION(read)
-
-SEEK_CANDIDATE(read,L,q,closed,high=+infinity,high_closed=true):
-    reset traversal; set layer and LOGICAL low/high edges and policies
-    if L<2:
-        use bounded table ordered occupancy/bounds; SET_POSITION on success
-    else if L<=J:
-        p=first L bytes of q
-        region,key=split_prefix(p,admitted_hash_region_bits)
-        try natural region and original key; on success SET_POSITION(HASH)
-        otherwise seek next occupied ORIGINAL key, then later regions
-        test routing bounds; never treat a hash miss as end-of-layer
+EXACT_PREFIX(read,layer,prefix,consume):
+    validate full layer/prefix domain
+    if layer <= 1:
+        select ordinary root once
+        if absent or original-prefix population bit clear: return miss
+        obtain payload slot by original prefix; bounds rank by population rank
+        consume qualified entry, not a row
+    else if layer <= J:
+        group=prefix>>4; suffix=prefix&15
+        select actual native_hash(layer,group) once
+        if absent: return miss
+        borrow its actual immutable Ikea table<4,0,64> owner
+        table.find(suffix, temporary64 -> consume entry INSIDE this callback)
     else:
-        region=first J bytes of q
-        try natural region with TREE_SEEK_CANDIDATE
-        only after that region's candidate stream is exhausted seek next region
-    save outer cursor or lazy exclusive successor identity on EVERY success
-    return first qualifying candidate, or explicit end-of-layer
+        descend this layer's ordered tree by physical-prefix columns
+        at leaf require exact prefix match; gaps are misses
+        consume its dirent using the leaf's slot map
+    # No ordering or successor search crosses index layers.
 
-SEEK_PHYSICAL_PREFIX(read,L,p,high_prefix):
-    reset traversal; set layer and PHYSICAL_PREFIX inclusive high edge
-    TOP: next set population bit at prefix>=p
-    HASH: first original key>=p's local key, then later nonempty natural regions
-    GROUP_ARRAY control: first original suffix>=p's suffix, then later groups
-    TREE: descend first physical child interval not entirely<p; at leaf take
-       lower_bound(prefix_column,p), advancing same-region siblings if needed
-    missing/exhausted natural group/region uses same-layer ordered presence
-    on every success SET_POSITION, including lazy group/region successor identity
-    return ENTRY_AT_POSITION when prefix<=high_prefix, else end
+SEEK_LOGICAL(read,layer,low,high,low_closed,high_closed,mask):
+    validate K-byte endpoints, mask extent and arithmetic before reading mask words
+    if range is empty/reversed: return ended
+    if mask selects no eligible original prefixes: return ended
+    ordered_start = lower_bound(maxima,low) if low_closed
+                    upper_bound(maxima,low) otherwise
+    if no low: ordered_start=first
+    for K>8:
+        search the ordered first-eight-byte abbreviation
+        refine its equal-abbreviation bracket against FULL remaining key bytes
+        # Open edges cannot discard equal abbreviations with larger full keys.
+    descend same-layer bounds using that rule, saving frames and next child ranks
+    top ordinary tables use their compact ordered bounds directly
+    hash layers use a metadata-only ordered presence tree:
+        its leaf rows refer to original prefixes, then actual V64 hash values
+        the hash's physical visit order is never used for ordered continuation
+    stop at the first candidate leaf/rank; defer payload/hash selection until needed
 
-ADVANCE_TREE_SIBLING(read):
-    ascend saved frames to first unvisited right child
-    bind it under SAME token; descend its first possible children
-    save the new leaf/local rank; exhaust region only when no saved sibling remains
+SEEK_PHYSICAL_PREFIX(read,layer,low,high,mask):
+    validate endpoints in a widened type and intersect with [0,256^layer)
+    reversed range is empty; high is inclusive, including UINT32_MAX at L4
+    descend prefix columns; save the SAME kind of continuation frames
+    never compute last_prefix+1 in u32
 
-NEXT_CANDIDATE(read):
-    if TOP: next original occupied prefix in selected table / next table chunk
-       SET_POSITION on the resulting physical prefix
-    if HASH:
-        choose next original key using selected original-prefix occupancy
-        if none: advance SAME-layer ordered natural-region presence
-        SET_POSITION; return scoped HashEntry for actual V64 callback consumption
-    if GROUP_ARRAY:
-        suffix=ctz(original_mask with all suffixes<=current cleared)
-        if found: slot=GROUP_SLOT(group,suffix); SET_POSITION
-        else advance ordered group-presence cursor, lazily seeking >group if needed
-    if TREE:
-        increment ROUTING rank in selected leaf; resolve payload slot separately
-        if exhausted: ADVANCE_TREE_SIBLING
-        only after whole region exhaustion advance region presence, lazily >region
-        SET_POSITION on the final selected leaf/rank
-    retain same token/layer; never reseek by a supposedly unique logical key
-    if end: return end
-    if LOGICAL and next routing minimum fails logical high edge: return end
-    if PHYSICAL_PREFIX and next prefix>high_prefix: return end
-    reuse selected payload/extra blocks; return ENTRY_AT_POSITION(read)
-    # No u32(last_prefix+1) sentinel at maximum prefix.
+NEXT_CANDIDATE(cursor,consume):
+    while a candidate remains:
+        r=next ORIGINAL routing rank; advance continuation state
+        p=original physical prefix at r
+        if physical endpoint exceeded: end
+        if logical upper edge exceeded by candidate minimum: end
+        if mask excludes p: continue
+        if logical lower/upper overlap fails exactly: continue
+        select its payload Part/hash group once if not already selected
+        consume full identity, bounds and borrowed dirent within this token
+        return found
+    climb saved frames until a next sibling exists; descend its first possible child
+    end when no frame has a successor; do not seek again from the layer root
 
-READ_POINT(read,L,q,requested_operation):
-    e=SEEK_CANDIDATE(read,L,q,closed=true,high=q,high_closed=true)
-    while e exists and e.routing_minimum<=q:
-        result=PROJECT_MANY(read,e,requested_operation.required_ordinals,query=q)
-        if exact result(s): emit per declared duplicate/output contract
-        e=NEXT_CANDIDATE(read)  # even after exact miss; stay in SAME region first
-    return outputs/miss; no candidate is silently promoted to an exact row hit
+VISIT(cursor,maximum,consume):
+    one bounded native traversal loop calling the same continuation body
+    count returned Segment entries, not records
+    reuse current leaf/hash/extra selections across returned entries
+    ready scalar next is the maximum=1 convenience, not the inner scan loop
 
-START_RANGE(read,L,low,high,low_closed,high_closed):
-    if query empty: return end
-    e=SEEK_CANDIDATE(read,L,low,low_closed,high,high_closed)
-    return e only if routing minimum passes high edge
-    # Caller PROJECTs exact results then NEXT_CANDIDATE, including false candidates.
+DESCEND_INDEX_LAYER(read,target_layer,physical_prefix):
+    explicitly invoke EXACT_PREFIX at target_layer with its proper prefix width
+    price its actual lookup and material work; no implicit cross-layer successor
+~~~
 
-DESCEND(read,source_L,parent_prefix,parent_position,destination_L):
-    require destination_L-source_L in {1,2} and destination_L<=4
-    if one layer:
-        p=(parent_prefix<<8)|(parent_position>>8)
-        slots=[(parent_position&255)<<8,((parent_position&255)+1)<<8)
-    else: p=(parent_prefix<<16)|parent_position; slots=[0,65536)
-    return FIND_EXACT_PREFIX(read,destination_L,p),slots
-    # Explicit new-layer lookup; never cross-layer NEXT.
-```
+Minima and maxima are each nondecreasing. Adjacent occupied bounds may meet at
+equality: preceding maximum <= following minimum, not strict inequality.
+A logical equality can therefore return many Segments. Stable enclosing fences
+are a separate admitted routing recipe: they must be containing and monotone;
+exact misses continue within the candidate run. Bounds change costs and extra
+candidate visits are charged to whichever recipe is tested.
 
-## Ordered range and externally masked scan
-
-The first scan control uses a physical-prefix interval in one layer. Logical
-range scans reuse START_RANGE and exact per-segment refinement; they do not
-change that layer's order. One selected snapshot spans the whole scan, including
-all later leaf visits and genuine waits. No new Scope is opened per chunk.
-
-```
-SCAN_PHYSICAL_RANGE(read,L,low,high,optional_ready_mask,consume):
-    admit full mask/input/output lifetime; define bit coordinate as ORIGINAL prefix
-    if low>high: return {visited=0,selected=0,material_bytes=0,empty_output}
-    cursor=SEEK_PHYSICAL_PREFIX(read,L,low,high)       # ONE seek
-    while cursor not end:
-        selected_container = current selected array/table/leaf under SAME token
-        enumerate its original physical prefixes monotonically up to high
-        visited += number of present directory entries in admitted range
-        selected = original_population intersect range intersect optional_mask
-        # Mask0 skips material, not the real seek/traversal/close cost.
-        for original_prefix in selected, in ascending order:
-            if ranked ARRAY:
-                slot=popcount(ORIGINAL population & bits_below(original_prefix))
-                entry=payload +64*slot
-                # NOT popcount(selected_mask), and not physical-prefix dense rank.
-            else if HASH:
-                entry=HashEntry(actual selected owner,original_key,geometric_bounds)
-            else entry=selected ordered leaf's actual payload mapping
-            CONSUME_ENTRY(read,entry,fields ->
-                qualify actual material/correction under SAME token, reused per container
-                consume all requested bytes into caller's useful output)
-            selected_count +=1; material_bytes += actual requested bytes
-        advance cursor to NEXT CONTAINER using saved ancestor frames/presence
-           do not call FIND_EXACT_PREFIX/SEEK for every entry
-    return counts/output; close token only when all byte uses finish
-
-READY_SCAN_CONTROL:
-    prepare the SAME trace/ranges/optional external bitset outside both peer clocks
-    start clock before Scope/transaction enrollment and initial seek
-    run quarter/full-layer physical-prefix ranges; no mask and first1/8 mask
-    use count + SUM_MOD64(XOR(all8 actual material words per selected row))
-       # matches existing material64 checksum; functional tests ALSO verify order
-    record whole-scan wall/owner/helper/process CPU, visited/selected/bytes
-    close Scope/transaction inside interval; include iterator setup/cleanup
-    separately report ns/visited and ns/selected ONLY when their counts are nonzero
-    do not call mask0 an infinite-throughput material scan
-    native LMDB: one SET_RANGE then NEXT cursor walk, key/mask before value consume
-    Calico: actual prepared range iterator; label any postprojection mask accurately
-    # Predicate evaluation is OUTSIDE this external-ready-mask control.
-    # A later predicate-evaluation case charges its real bytes/work in every arm.
-
-QUALIFY_SPARSE_NATIVE_CONTROL:
-    compare full-span external masks0 and1/64, quarter/full ranges, same inputs
-    Engine: open Scope, test actual query/mask intersection INSIDE clock
-       if no selected candidate: return empty with zero traversal/material counts
-       otherwise bind root and execute strongest qualified direct scan
-    native full walk: renew txn, same actual mask guard INSIDE clock
-       if nonempty: renew cursor, SET_RANGE once then NEXT, mask before consume
-    native mask runs: renew same single txn, same guard INSIDE clock
-       if nonempty: renew cursor; run helper already selects, no redundant mask test
-       derive maximal consecutive runs from ORIGINAL mask, merging across words
-       SET_RANGE at run start only when no carried successor satisfies it
-       NEXT within run; carry first beyond-run key into following runs
-       stop at real NOTFOUND; never restart or seek backwards through a gap
-    close/reset inside interval in every arm, including empty result
-    repeat enough WHOLE scans; zero guard must read offered bitset, not mask advice
-    report common OFFERED directory candidates, actual traversal/positioned/seek/
-       NEXT counts, selected material and whole-query wall/owner/process time
-    normalize common work by offered input, keep ns/actual_visit only when nonzero
-       and ns/selected undefined for zero; fewer visits do not shrink offered work
-    the initial full-walk screen is retained, not retrospectively relabelled
-    untimed logical-counter probes use instrumented native specialization
-    timed/warm native specialization compiles counter tracking OUT of traversal
-       rather than merely omitting final counter stores; inspect the linked code
-```
-
-The current F32 raw graph can save `{node bytes, group base, shift, next child
-rank}` for each admitted height. Its root can omit common high prefix bits:
-derive `base=min_group & ~((1u64<<(shift+5))-1)` and clamp the query's group
-interval to the root's min/max before choosing the initial slot. Do not derive
-an output prefix from a zero root base or a lower query's residual bits.
-Seek follows the target radix path and original occupancy;
-advance climbs to the first unvisited child and descends leftmost live children.
-Its min/max group guards and explicit end state handle missing groups and max
-prefix without wrapping. Each directory node is visited as traversal requires,
-not once for every returned segment. Group/suffix/slot remain distinct.
-
-Checks include empty/exact-end ranges, sparse occupied prefixes, masks0/all and
-1/64,1/8,1/2, group/physical-allocation/radix boundaries, dense and sparse masks
-over sparse directory occupancy, and a late first lookup into an unvisited leaf
-after intervening publication+drain/trim. Old and fresh scans use separate
-expected states. A mask pointer or output buffer retained through Loom work
-needs its real enclosing lifetime; it does not acquire that from the Scope.
-Writable result/counter storage is disjoint from the request, mask and all
-borrowed directory/material bytes. The mask grants complete u64 words including
-its final partial word. These are admission preconditions, not per-row checks.
-
-The finite buffered-producer check uses the same Scope and actual four selected
-groups, with its original row-prefix mask. It loads only selected bases, applies
-plain absolute afterimages once if any selected row is dirty, or reuses the
-selected indexed/eager correction image, then consumes corrected full8 values.
-It never substitutes a raw-base graph scan for a dirty producer scan. This check
-is a finite composition witness; arbitrary segment codecs and predicate planning
-remain separate work.
-
-For example, Aactual[1,2]/fence[0,10] and Bactual[5,6]/fence[4,20] admit A
-first for q5. Exact A processing misses; NEXT_CANDIDATE must then visit B before
-leaving their region. Duplicate equal keys can cross any leaf/group boundary;
-continuation uses physical prefix/routing position, not uniqueness of q.
-Long-key abbreviation ties compare full bytes. Enclosing fences, guides and
-byte-padding grants remain distinct facts.
-
-## Tiny exact sources and quantised guide alternatives
-
-```
-PREPARE_ENDPOINT_SOURCE(exact E[0:n], domain, placement):
-    consider exact native u8/u16/u32/u64 at the ACTUAL domain width
-    strip a common logical prefix/origin where it is a proven order transform
-    exact relative recipe is legal only when every offset fits the selected lane
-    exact quantum recipe also requires every endpoint aligned to 2^s
-    consider prefix-stripped SeriesPack endpoints with a reused native boundary
-    keep ordinary exact source for tiny/degenerate or very ambiguous nodes
-    # Do not allocate or analyze this descriptor anew in every query.
-
-PREPARE_GUIDE(exact E, stable_origin, shift):
-    G[i] = floor((E[i]-stable_origin)/2^shift), admitted to selected code width
-    for byte keys, use an equivalent ordered prefix code and exact prefix checks
-    keep count/population independent of equal or zero guide codes
-    save exact endpoint source and first-greater fallback semantics
-    if packed widths are chosen:
-        D[i] = G[i]-G[i-1]; store G16 checkpoints
-        admit u4 only if every D<=15 and the checkpoint/group domains fit
-        # Rounding original widths independently is NOT equivalent.
-
-GUIDED_BOUNDARY(source, q, edge):
-    edge is GE for lower_bound or GT for upper_bound
-    if n==0: return n
-    if admission proves EXACT constant endpoint x (including K=0):
-        return next_eligible(0,n) when x satisfies edge, otherwise n
-    compare q with admitted origin/domain BEFORE unsigned subtraction/shift
-    if q precedes the whole domain: return source.next_eligible(0,n)
-    if q exceeds the whole domain: return n
-    code = quantise q under the SAME stable guide law
-    first_equal,first_greater = geometric UNFILTERED bracket on G
-    # Optimised Ikea proposal: ONE loaded guide/query preparation gives both ranks.
-    # Packed widths feed a shared register-level prefix/bracket directly from
-    # their decoder, not decode -> scalar scratch -> generic owner selection.
-    # Two ordinary geometric boundary calls are its independently measured control.
-    if first_equal == first_greater:
-        global_rank = first_greater
-    else:
-        exact_window = UNFILTERED E[first_equal:first_greater]
-        r = exact lower_bound(window,q) if edge==GE, else exact upper_bound(window,q)
-        global_rank = first_equal+r       # first_greater is valid fallback
-    return source.next_eligible(global_rank,n) ONCE on the COMPLETE source
-    # Eligibility is identity when admission proves every rank populated.
-    # Refine an equal CODE run, including duplicate exact keys. Never accept
-    # an approximate rank or infer absence/population from a zero guide width.
-
-GUIDE_ONLY_PARENT_BOUNDARY(parent, read, q, edge):
-    bracket = owner-stage guide candidate interval and first-greater fallback
-    resolve exact child ROUTING extrema under read.token when correction is required
-    finish exact boundary against those coherent child sources
-    retain the candidate/Scope if this needs a genuine wait
-    # Exact Boundlist API still returns an exact answer; no suspension inside it.
-
-UPDATE_GUIDE(edit, child_before, child_after):
-    compute old/new endpoint codes with stable origin/scale
-    check endpoint/quantiser domain BEFORE narrowing or testing unchanged
-    if escaped: privately recode or disable guide and repair affected metadata
-    else if guide_only AND codes_unchanged AND NOT exact_parent_extreme_changed
-            AND NOT membership_changed:
-        omit only the guide-induced parent write
-        still publish any other changed parent reference/proof/metadata
-    else repair changed guide/exact extrema on the real path
-    publish descriptor, guide and exact sources coherently; invalidate old binding
-```
-
-The guide-only variant must scan/refine coherently, not mix approximate parent
-codes with a newer child's extrema. All-equal guides can lose; a rightmost append
-can still change the exact aggregate maximum at every ancestor. Fanout and
-child-name access, exact correction, captured Parts and update invalidation
-are charged before selecting this variant.
+A mask uses original prefix coordinates, never filtered ranks or payload slots.
+Validate its readable complete word tail, base, bit count and widened end.
+Preserve those coordinates on every seek and crossing. Query and mask bytes
+outlive the cursor; cursor movement must not retain pointers into its former
+inline frame.
 
 ## Directory to Part handoff
 
-The fast raw-pointer path has a concrete cross-Object invariant: this selected
-directory's byte pointer was obtained from the primary segment published in
-the same coherent graph; any still-equal pointer is retained with the complete
-required footprint by the newer selected primary. The same live Core/Scope
-protects late discovery even if the segment was not separately bound.
+~~~
+MATERIAL_CONTEXT(read,entry,operation):
+    def=DEFINITION(read,entry.rep_id,entry.layer)
+    if def's already-admitted direct law proves:
+         directory BYTE pointers were derived from the actual coherent primary,
+         all required geometry/read interpretation is independently available,
+         unchanged pointers remain backed by the selected coherent primary,
+         and THIS operation needs no authoritative correction/frontier selection:
+        return qualified direct context borrowing SAME live Core/token
+    otherwise:
+        select authoritative Segment/collection through SAME token ONCE
+        qualify its geometry, committed/applied extent, correction/read law
+        compare actual required locator association under selected schema
+        return context reused across all requested ordinals
+    # Geometry, pointer equality and an unchanged dirent do not prove pristine data.
 
-That rule protects BYTE addresses, not an old Representation header, Control,
-View address slot or invented locator cell. The directory material must retain
-its own interpretation/geometry dependency. A directory Part exported alone,
-a fresh Scope, or an unsealed alternative does not preserve that graph.
-Borrowed may protect the uninterrupted current-call variant by excluding every
-invalidating boundary; it supplies no retained old-cut or post-return lifetime.
+PROJECT_MANY(read,entry,ordinals,operation):
+    execute inside the entry callback when hash bytes are temporary
+    context=MATERIAL_CONTEXT(read,entry,operation)
+    validate ordinals against that selected/admitted geometry
+    if any ordinal>=6:
+        select extras(layer,prefix>>4) once; bind actual StreamPack once
+        value=StreamPack.value(original suffix rank=prefix&15)
+        validate list length/interpretation once; reuse across ordinals
+    for ordinal:
+        take inline locator or native-u64 list locator at ordinal-6
+        obtain full admitted body+padding/format from qualified context
+        invoke actual bounded native/Ikea consumer
+    return requested material/output before token ends
 
-```
-QUALIFY_MATERIAL(read,entry,operation):
-    reuse already-qualified material ONLY when its identity, token/cut, schema,
-       geometry and committed/applied frontier cover this operation
-    else if admitted representation law proves delta-free for THIS operation/read
-            AND all required runtime interpretation is already available:
-        use that qualified direct context; no extra segment bind
-    else:
-        bind authoritative segment/partition/collection material via read.token
-        admit its base, applied frontier, committed delta extent and read law
-    # Fixed pointers/geometry alone do NOT prove a fixed committed delta extent.
-    return selected context; reuse one selection across all requested Parts
+EXPORT_PART(read,entry,ordinal):
+    obtain actual Orbital BoundSelection from SAME Core/scope
+    export via Orbital's supported selected/whole retention policy
+    do not return an unprotected pointer merely because a dirent copy is owned
+~~~
 
-PROJECT(read,entry,part_ordinal,requested_operation):
-    return PROJECT_MANY(read,entry,[part_ordinal],requested_operation)
-
-PROJECT_MANY(read,entry,ordinals,requested_operation):
-    execute below through CONSUME_ENTRY so hash callback bytes never escape
-    def = reuse admitted definition(entry.dirent.representation,read.layer)
-    material = QUALIFY_MATERIAL(read,entry,requested_operation)
-    obtain needed geometry from material/directory proof/admitted byte header
-       bind shape once only if it remains unavailable; charge actual selection
-    if any requested ordinal>=6: extra=SELECT_EXTRA_LIST_ONCE(read,entry)
-    for each ordinal:
-        locator = inline field or EXTRA_LOCATOR(extra,ordinal-6)
-        resolve actual resource binding/readiness when recipe requires it
-        admit complete byte footprint and interpretation for needed native binding
-    if material proves direct/delta-free:
-        invoke real bounded native/Ikea consumer for requested output
-    else:
-        READ_MATERIAL_CANDIDATE(read,material,requested_operation)
-           using the qualified native bindings above
-        # Includes visible corrections/bypass, not just base-byte consumption.
-    return useful output within token lifetime, not an escaping unprotected pointer
-
-SELECT_EXTRA_LIST_ONCE(read,e):
-    if StreamPack recipe:
-        block = reuse current block or read.token.bind(e.overflow_block)
-        view = already-admitted StreamPack view of this selected block
-        value = StreamPack.value(view,e.overflow_rank)
-        return protected locator span and selected length
-    if paged vector recipe:
-        return selected root, length and reusable path/block cache
-
-EXTRA_LOCATOR(extra,ordinal):
-    check ordinal against selected list length
-    if direct StreamPack span: return its eight-byte locator at ordinal
-    otherwise descend ordinal's fixed-fanout path under the SAME token
-       reusing selected path/block for subsequent ordinals
-    return selected block's locator at local ordinal
-```
-
-The fixture must exercise qualified direct byte handoff, selected material
-with fixed geometry but changed delta extent, and any additional geometry bind. It may not price the former then silently implement the latter. If a
-resource locator intentionally names an Orbital segment/Part instead of a raw
-body, its extra selection and eliminated address repairs are a separate proposal;
-the supplied memory-pointer interpretation is not silently replaced.
+The direct path names byte addresses, not an old Control, View address slot or
+Representation header. A recipe with changed geometry or visible corrections
+uses its authoritative context. No per-Part Hold is acquired in an ordinary
+already-protected native loop. Unsupported remote/resource locator recipes
+are explicit admission refusals in the first native implementation, not invented
+synchronous pointer resolvers.
 
 ## Private editing
 
-```
-BEGIN_EDIT(basis, deltas, optional_after_schema_Owners):
-    keep the real basis and offered finished Owners alive in the SAME Core
-    select before schema from basis
-    select offered AFTER schema with existing select_private over FINISHED Owners
-       or reuse before schema when no schema change is offered
-    # Uncaptured drafts are not passed to select_private.
-    validate before bindings/absence under before schema and actual finished
-       replacement or retained unchanged material under AFTER schema
-    equal numeric cuts across Cores are invalid
-    coalesce changes to each SegmentName using actual Ikea scratch
-    reserve/grow private scratch while no accepted publication exists
-    mark all leaves/groups with final membership/bounds changes BEFORE copying
-       native payloads; structural batches materialize after normalization
-    return Edit
+~~~
+ON_PRODUCER_CHANGE(change):
+    if its actual protocol proves membership, routing, representation,
+       ALL locators and directory-owned interpretation unchanged:
+        emit NO directory delta; do not route/clone/publish merely to confirm it
+        complete actual data/summary/correction work through Orbital as required
+    otherwise emit only actual possible Segment-fact changes
 
-PRIVATE_OBJECT(edit, object_name):
-    find full ObjectId in inline full-ID array or high64/low64 nested Ikea maps
-    if a mutable draft already exists for THAT full identity: return it
-    old = edit.basis.bind(object_name)
-    make an uncaptured draft with retained-source references to old Parts
-    put it under BOTH identity halves in private scratch; return it
+BUILD_DIRECTORY_CHANGES(store,basis,deltas,definition_appends):
+    admit SAME Core, original index header and configuration
+    privately validate/plan supplied definition appends/extensions
+    for EVERY offered delta, including one cancelled by a later delta:
+        validate layer/prefix/K-byte bounds and full identity
+        reselect actual before binding at original basis, once per distinct Segment
+        require supplied before object/version/realization or absence to match
+        admit before definition under BEFORE schema
+        if after exists:
+            require a FINISHED native Segment Owner with correct resource/identity
+            admit its definition under AFTER schema, including new private definitions
+            derive actual inline pointers, full extra list and interpretation
+            require minimum<=maximum and compatible shared physical/logical prefix
+        save last final intent for this Segment
+    coalesce final intents; sort by layer/physical prefix
+    route each affected OLD leaf/group once; retain the request-local route
+    compare actual before entry and ALL before extras against selected primary
+    # Old inline equality alone is not a complete association check.
 
-WRITABLE_PART(draft, p):
-    called during final materialization, or the proven nonstructural fast path
-    if already privately writable: return it
-    acquire a NEW destination range disjoint from all sealed bodies/padding
-    copy the complete old admitted Part body to it, if any
-    retain its exact initialized extent, alignment and readable padding
-    replace only draft's Part p source; no old storage is modified
-    return private bytes
+    plan final extras BEFORE deciding descriptor no-ops
+    classify each affected leaf/group as:
+        descriptor-only, bounds-only, or membership/structural
+    if final facts all equal:
+        omit its directory work; do not clone to confirm equality
+    apply all final ordinary/hash/ordered intents privately
+    normalize only actual structural violations, bottom-up
+    propagate only changed child routing extrema/topology
+    construct each final changed Object once
+    return finished directory/schema/extra changes + original read basis
+    # No prepare/install, fresh snapshot, Segment-row editing or Engine MVCC here.
 
-APPLY_DELTAS(edit):
-    for each coalesced SegmentDelta d:
-        select expected old Entry and qualify its before-primary association
-        derive after fields/bounds from FINISHED replacement or qualified retained
-           material under AFTER schema, using the actual selected locator recipe
-        save the resulting private Entry intent, or deletion intent
-    PLAN_EXTRAS_FOR_BATCH(edit)                 # before the descriptor no-op test
-    for each offered intent and additional holder-coordinate repair:
-        after = intent plus FINAL overflow block/rank/recipe from extra plan
-        if deletion: DELETE_ENTRY(edit,name)
-        else if old absent: INSERT_ENTRY(edit,after)
-        else if descriptor, bounds and DIRECTORY-OWNED interpretation are unchanged:
-            omit the dirent/bounds write
-            # Extra-only replacement may ALREADY be a changed block draft.
-            # Unchanged64 B dirent NEVER proves the seventh pointer unchanged.
-        else: UPDATE_ENTRY(edit,old,after)
-    seed normalization ONLY with actual final occupancy violations or explicitly
-       requested/priced compaction; bounds-only dirty nodes keep legal boundaries
-    normalize those runs bottom-up, including neighbouring nodes needed
-       to make EVERY final non-root node legal
-    FINALIZE_EXTRA_BLOCK once for each affected final local plan
-    materialize final metadata/payload Parts once per changed object
-    verify all new pointers name after-primary bytes in the SAME packet,
-       or exact retained footprints/proofs still selected by its basis
-    freeze only after all holder/bounds/topology work is complete
-
-PLAN_EXTRAS_FOR_BATCH(edit):
-    below is the default local StreamPack path; paged-vector recipes dispatch
-       to their admitted ordinal/block edit law, not to StreamPack sidecar writes
-    omit only no-old/no-final association, or qualified COMPLETE unchanged
-       association for a nondeleted holder with a nonempty final list
-    coalesce all other after-lists/deletions per physical-prefix group/block
-    for each affected block:
-        enumerate current holders by physical-prefix cursor over its16-prefix group
-           merge with coalesced offered Entry intents to obtain FINAL live holders
-        # No global reverse map. Charge routing/cursor work, at most 16 holders.
-        call PLAN_EXTRA_REMOVAL FIRST, then PLAN_EXTRA_NONEMPTY for remaining lists
-        if final plan exceeds assigned/dead-byte/capacity policy:
-            build packed final block directly ONCE, not append-then-pack repeatedly
-        else plan only actual legal replace/append/retire operations
-        derive final block/rank/recipe overrides for every affected holder
-        add metadata-only holder intents, including holders without a segment Owner
-    # Record source certificate and private-copy requirements for every touched plane.
-    # Actual writes happen only after complete plan/capacity/effect admission.
-
-ENUMERATE_LOCAL_HOLDERS(edit,block):
-    derive index/layer/group from admitted block identity
-    high=min((group<<4)|15,maximum_prefix_for_layer), computed without u32 overflow
-    start SEEK_PHYSICAL_PREFIX at group<<4 through high under edit.basis
-    visit NEXT_CANDIDATE in that SAME layer with the PHYSICAL_PREFIX edge law
-    keep entries actually naming this block; merge offered births/deaths/replacements
-    verify <=16 live holders and unique assigned rank per holder in default recipe
-    retain every source through final transfer; no logical-key uniqueness assumed
-
-UPDATE_ENTRY(edit, before, after):
-    route by exact physical prefix, not a record-row search
-    if HASH:
-        record final64B inline-value intent in that region; clone/edit it once
-        when final intents are known; return after real presence repair if needed
-    choose small-group payload, co-located leaf Part1+slot/C, or independent chunk
-    if descriptor differs: record its64 B replacement in the chunk draft
-    materialize that Part once after final placement; a proven locator-only batch
-       can immediately take WRITABLE_PART without a balancing phase
-    if bounds/geometry differ:
-        record edits to the leaf's routing/tail draft
-        compare the leaf's old/new routing extrema
-        propagate ONLY changed routing extrema toward the root
-    apply the already-final extra-plan metadata, without rerunning list packing
-    if only representation changes: replace the real representation field/proof
-    # No forced revision change, rank repair, page balancing or map rebuild.
-
-LOCATOR_BATCH_WITHOUT_MEMBERSHIP(edit,coalesced_deltas):
-    # Directory inputs already contain FINISHED independently allocated Segment Owners.
-    # Their construction is charged in the separate complete moving-Part producer.
-    select each affected old group/leaf once under edit.basis, retaining its
-       selected Part/path in the request-local plan for validation and construction
-    # The complete producer reuses that plan; do not route twice for its deltas.
-    # Directory-only measurement includes navigation/planning from finished inputs.
-    classify by actual selected realization/Part identity, not one entry per command
-       and not backing Allocation: distinct logical slices can share one backing
-    reserve output packet for actual distinct changed Objects, separately from
-       <=64 command/material slots: graph may publish65 changes, named arrays128
-    # Today's Orbital prepare uses PMR uniqueness storage above64 changes.
-    # Charge its allocation/check/refusal; never split this atomic packet.
-    for each changed Part:
-        obtain one private destination, copy its admitted bytes once
-        apply every final dirent replacement to its actual local slot
-        capture final Part/Object once, retaining all required other sources
-    if stable-name children:
-        unchanged bounds/topology require NO ancestor image or publication
-        changes=actual Segment Owners + affected named directory Objects
-    if raw-child graph:
-        union selected paths by FULL node identity; process deepest first
-        for each distinct changed node ONCE:
-            construct final32-child proof directly from unchanged children and
-               finished child replacements; never clone a previous root chain
-            copy576B node and patch ALL changed child pointers once; capture once
-        changes=actual Segment Owners + one finished directory root
-    prepare/install changes atomically; include refusal, disposal and old-root debt
-    # A small packet does not make construction/capture of its graph nodes free.
-    # Current named group copies1088B (64B header+16dirents); graph group1024B.
-    # Compare those actual layouts, rather than silently equalizing their bytes.
-
-MOVING_PART_DRIVER_BATCH(basis,commands):
-    private bounded workspace deduplicates SegmentName, preserving command order
-    validate EVERY command's identity/field/preconditions, including commands
-       later cancelled by another command; no-op elimination is not admission
-    read each distinct selected64B Segment material ONCE; validate locator binding
-       reuse one selected group/path plan for all commands in that group
-    apply commands to its private value; compare final state with selected before
-    omit a repeated-key sequence whose FINAL bytes equal before
-    if caller already supplies selected material and COMPLETE unchanged binding
-       proof, a final no-op need not perform another directory route
-    if ALL no-op: return unchanged at this READ basis, without prepare/install
-       # No publication stale check occurred; do not claim a new write cut.
-    for each actually changed Segment:
-        construct/capture one new independently allocated64B material
-        derive its actual Part pointer and emit one finished SegmentDelta
-    on producer-phase failure: unwind earlier finished Owners and remaining
-       Allocations while the basis/source proofs still live, even before Edit exists
-    LOCATOR_BATCH_WITHOUT_MEMBERSHIP with all finished deltas and SAME basis
-    clear caller-held finished/change Owners after install, inside the interval
-       # prepare retains from const change slots; it does not consume these uses.
-    # B64 is one publication, never64 scalar replace() calls or prefinished data
-    # outside the claimed moving-Part interval. Directory never edits record rows.
-
-PRIVATE_HASH_REGION(edit,region):
-    reuse draft under FULL hash-region identity if already present
-    select exact actual old owner under edit.basis, not a mutable latest cache
-    clone that actual Ikea V64 owner ONCE into private Storage
-       # ALL assigned primary/control/tuple bytes, including initialized padding
-    retain original-prefix occupancy and concrete geometry/seed in private proof
-    return draft; no separate dirent payload or inverse map
-
-EDIT_HASH_REGION(edit,final_region_intents):
-    draft=PRIVATE_HASH_REGION(edit,region)
-    for each final original key:
-        deletion: actual table.erase(key); clear original-prefix occupancy
-        addition/replacement: actual table.insert/modify(key,final64B_dirent)
-            update original occupancy only if membership actually changes
-    if geometry/growth changes: finish admitted private rebuild before rebinding
-    enumerate actual final buffers via table.allocations
-    freeze actual owner/header in immutable interpretation proof
-    capture primary + any nonempty Swiss controls/tuples with actual fixed backing
-    include changed occupancy/presence and Segment Owners in ONE publication
-    # No bucket-COW/read-only-image API is invented; bounded whole-owner clone
-    # cost can reject this geometry. Old selected owner is never mutated.
-```
-
-Ordinary private-image Hashtable calls are valid when the enclosing operation
-publishes the whole independent replacement. Guarded calls are used when there
-is an actual grant/issued-effect consumer: `enter` admits stable access,
-`prepare` reserves every reported damage range, then infallible `before` hooks
-precede stores. None may retarget already-computed addresses. Growth/COW ends
-the old admission and obtains a fresh one. Ikea issued spans are resolved while
-their named source lives; they are not an Engine rollback journal.
-
-```
-INSERT_ENTRY(edit,e):
-    if shared-prefix HASH:
-        append final inline-V64 insertion to this region's private intent set
-        first member also changes SAME-layer ordered region presence; return
-    if top table or ARRAY control:
-        make group/table draft, allocate its bounded payload slot, write Entry
-        update its population/mapping and exact bounds
-        if first member: insert that group in SAME-layer ordered presence
-        return
-    find its region and ordered leaf by physical prefix intervals
-    if absent region: create its singleton root and insert region presence
-    else:
-        record an unplaced Entry intent and insert its logical routing row
-        assign ALLOCATE_PAYLOAD_SLOT only after final output count fits capacity
-        # Slot mask is selected/published state, never an unversioned freelist.
-        check neighbouring exact bounds, including across a leaf boundary
-        queue this leaf/path for final batch balancing
-
-ALLOCATE_PAYLOAD_SLOT(edit, leaf):
-    slot = first zero bit in leaf's PRIVATE payload-slot mask (admitted capacity)
-    require a final legal-sized output leaf with a free slot; overfull input
-       remains an unplaced intent until normalization, never an invalid slot write
-    chunk_index = slot/C; row = slot%C
-    if co-located recipe:
-        clone/edit leaf Part1+chunk_index; set private slot bit
-        return leaf name, Part1+chunk_index, row
-        # New leaf initializes ceil(F/C) admitted64*C-byte payload Parts once.
-    if leaf.chunk_names[chunk_index] is empty:
-        allocate a fresh scoped name via ALLOCATE_NAMES(edit,1)
-        create a 64*C-byte chunk with all admitted bytes initialized ONCE
-        leaf.chunk_names[chunk_index] = that name
-    clone/edit that chunk Part; set leaf's private slot bit
-    return chunk name and row
+PRIVATE_PART(draft,ordinal):
+    reuse already-private destination for that actual Part
+    otherwise acquire disjoint writable Loom backing with admitted alignment/padding
+    copy needed old bytes once; initialize every other admitted readable byte
+    record fresh source; unchanged Parts remain certified source(old_selection,p)
+    never write sealed bytes, including same-value/preserving stores
 
 ALLOCATE_NAMES(edit,n):
-    counter = PRIVATE_OBJECT(index_layer_namespace_counter)
-    checked reserve n low64 names; exhaustion refuses without wrapping
-    combine with index/layer's admitted unique dynamic namespace high64
-    increment private counter once; include its finished one-Part Owner in packet
-    # Counter survives empty regions; no aliasing on region recreation.
+    select/private-draft namespace_counter once
+    reserve checked monotone sequence range, no wrap/reuse
+    capture its final 64-byte image once if actually advanced
+    counter survives empty directory roots
+~~~
 
-DELETE_ENTRY(edit,name):
-    find existing Entry; respect the offered absence/update semantics
-    if HASH: plan actual inline-value erase + occupancy/presence repair; return
-    remove its routing/mapping row and clear its private payload slot/mask bit
-    if an INDEPENDENT payload chunk becomes empty: retire its Object in packet
-    co-located fixed Parts retain their admitted capacity; unused slots are unread
-    if group/region becomes empty: remove its ordered presence entry and root
-    otherwise repair changed routing extrema and queue underflow handling
-    retire the supplied segment only through the coupled Orbital change
-    # No segment identity is retained merely to avoid handling empty membership.
-```
+Before qualification is tied to the original batch basis. Input validation is
+not sequentially repeated publication, and cancellation does not excuse invalid
+intermediate commands. Full row ordering and truthful Segment extrema are
+producer obligations checked by the independent row oracle; the directory
+cannot establish them by rescanning all records.
+
+~~~
+EDIT_ORDINARY(layer,final_intents):
+    select old root once; derive final population
+    if empty: emit real root deletion if previously present; return
+    descriptor-only:
+        clone only touched admitted payload Part once
+        retain unchanged bounds Part
+    membership/bounds:
+        form final bitmap/count, original-prefix payload slots
+        merge final compact prefix/bounds columns once
+        clone actual payload Part only when its bytes change
+    capture one finished ordinary Object with its exact sources
+    # L1 whole-Part control copies 16,448 bytes, not 64.
+    # Smaller Part partitioning is a separately priced layout if that fails.
+
+EDIT_HASH_GROUP(layer,group,final_intents):
+    compute final size BEFORE cloning; empty -> delete old hash Object
+    if values/membership change:
+        clone actual Ikea V64 table owner ONCE with real native Storage
+        apply final erase/upsert/modify calls to that private owner
+        enumerate actual table.allocations; freeze its stable owner/header proof
+    otherwise retain the selected actual table/physical primary
+    build/retain original-suffix bounds plane as its actual changes require
+    capture actual buffers/proof once; no second payload map or suffix-to-slot map
+    bounds/membership changes also edit metadata-only ordered presence leaf
+    descriptor-only replacements do not change that tree
+
+EDIT_ORDERED_LEAF(final_intents):
+    if every intent is descriptor-only:
+        for each touched C-slot payload Part:
+            copy 64*C bytes ONCE; patch all final 64-byte values at old slots
+        retain metadata and other payload sources; capture one final leaf
+        return                    # no node-row decoding or ancestor drafts needed
+    otherwise:
+        merge old ordered rows with final intents once
+        retain endpoint references/dirent bytes through original Scope or inputs
+        validate neighbours, including across old leaf boundaries
+        save final row stream; do not capture or allocate overfull payload slots
+        preserve slots and clone only dirty chunks when count/topology stays legal
+        seed balancing only for actual overflow/underflow, not mere bounds dirtiness
+~~~
 
 ## Ordered balancing and payload compaction
 
-```
-NORMALIZE_LEVEL(edit, final_nodes, capacity, minimum, merge_limit):
-    target_low = 13 when (capacity,merge_limit)==(32,26)
-                 53 when (128,106), 48 when (128,96)
-    separate ordinary descriptor/bounds edits from structural violations
-    seed runs with overfull/underfull non-root nodes or explicit paid compaction
-    preserve boundaries of other legal nodes, even when their metadata is dirty
-    form maximal adjacent runs of the seeded nodes at this storage depth
-    read their FINAL row/child streams after offered edits and lower-level repair
-    if a nonempty run has no output count r with
-       ceil(total/merge_limit)<=r<=floor(total/target_low):
-        extend with an adjacent node, even across a parent boundary
-        coalesce any pending run it touches BEFORE materializing output
-        repeat until legal, or until this is the whole region tree
-    empty runs retire their node names and remove their parent rows
-    for each final nonempty run:
-        if it covers whole region and total<=capacity:
-            plan a root-sized leaf/output and contract the obsolete ancestor chain
-        else if one pair can merge with target_low<=total<=merge_limit:
-            produce one output using the left name
+Two concrete paper candidates share the algorithm:
+
+| Candidate | Capacity F | Non-root minimum | Normalized fill | C | Locator Part |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Narrow | 32 | 8 | 13..26 | 16 | 1,024 B |
+| Wide | 128 | 32 | 53..106 | 32 | 2,048 B |
+
+Children use stable full Object names, so moving a child without changing its
+routing endpoints/topology does not rewrite parents. All leaves have the same
+storage height. The index's five layers do not bound directory-tree height.
+
+~~~
+NORMALIZE_LEVEL(edit,height):
+    lazy old ordered frontier at this height plus private final row/child streams
+       saved paths locate adjacent nodes; do not enumerate the whole layer
+    seed runs with nodes whose FINAL count violates [minimum,F]
+    join overlapping/adjacent seeded runs before materializing anything
+    for each run:
+        total=sum(final counts)
+        if total==0:
+            remove all run nodes and their parent rows; continue
+        if this is the WHOLE frontier and total<=F:
+            plan these rows directly in fixed root name at this node height
+            retire obsolete frontier/ancestor names; preserve lower legal children
+            stop higher-level normalization on those retired ancestors
+        choose output_count r satisfying:
+            ceil(total/target_high) <= r <= floor(total/target_low)
+        if no r:
+            extend run with an actual adjacent node, even across a parent boundary
+            obtain its final stream; union any run touched; repeat
         else:
-            choose r in [ceil(total/merge_limit), floor(total/target_low)]
-            prefer the existing legal count unless an over/underflow requires change
-            distribute total near evenly into r outputs in [target_low,merge_limit]
-        reuse legal node names, allocate extra names, retire surplus names
-        BUILD_BALANCED_OUTPUTS for this final run ONCE
-        replace child rows/bounds in every affected parent, not just one parent
-    apply resulting parent rows/bounds; propagate ordinary bound changes in place
-    repeat only actual parent occupancy violations at the next depth
-    root with one child contracts; empty root/region/presence entry retires
-    if final root overflows, allocate child names and publish a higher root
-       at the SAME deterministic region-root name; never make it its own child
-    contraction copies/adopts the sole child's legal contents into that root
-       name and retires the obsolete child; carry namespace allocation state
-    do not freeze until every final non-root node satisfies occupancy
+            distribute near evenly into r nodes within [target_low,target_high]
+            record partitions/counts only, without names, buffers or capture
+    if a run extension touches an earlier planned run:
+        union their original spans, invalidate those partitions and replan
+    repeat until all runs at this height have final disjoint feasible partitions
+    for each FINAL run:
+        reuse old non-root names left-to-right; allocate extra names once
+        retire surplus old names
+        replace child rows in EVERY affected parent, not only one parent
+        record final outputs, without capture yet
+    merge resulting parent-row intents once
+    propagate changed routing extrema in otherwise legal parents
+    repeat at next height only for its actual structural violations
+    root internal with one child: copy/adopt contents into fixed root name
+       retire old child; repeat contraction
+    empty root: delete it
+    root overflow: form legal non-root outputs and a higher root at SAME root name
+       allocate distinct child names; root never becomes its own child
+    require every final non-root node legal before freezing
 
-SCALAR_FAST_BALANCE(path, leaf):
-    if overfull: split near half; update parent and recurse upward if required
-    if underfull: use legal adjacent sibling; merge when union<=merge_limit
-       else redistribute; repair parent and handle its underflow
-    if a whole batch underfills BOTH siblings, use NORMALIZE_LEVEL instead
-    otherwise propagate only changed ROUTING extrema under its admitted recipe
-    # The scalar pair rule is NOT a proof for arbitrary final-batch deletion.
+BUILD_FINAL_LEAF(node,rows):
+    if no structural change:
+        preserve original slot map; update metadata only if bounds/membership changed
+        copy each actually dirty C-slot payload Part once
+    otherwise:
+        assign live rows to slots 0..count-1; build slot mask and ordered slot map
+        copy each live 64-byte dirent once into final bounded Parts
+        initialize unused admitted bytes; retain a whole old Part only when its
+           complete byte/slot interpretation remains valid
+    form ordered physical prefixes, endpoint abbreviations and exact tails
+    record final sources and immutable geometry; capture later
 
-BUILD_BALANCED_OUTPUTS(outputs,old_nodes):
-    if this storage depth is INTERNAL:
-        BUILD_INTERNAL_OUTPUTS(outputs,final_child_rows); return
-    BUILD_LEAF_OUTPUTS(outputs,final_Entry_rows,old_nodes)
+BUILD_FINAL_INTERNAL(node,children):
+    one metadata Part containing exact prefixes, monotone endpoint columns,
+       child names, count, height and admitted reserved bytes
+    derive endpoints from CHILD ROUTING endpoints, not a different extrema law
+    no leaf payload Parts or record summaries
+~~~
 
-BUILD_INTERNAL_OUTPUTS(outputs,child_rows):
-    for each final output:
-        form one routing-metadata Part:48-byte header + child prefix/bound/name columns
-        use stable child names under admitted namespace, correct height/count
-        derive parent bounds from CHILD ROUTING endpoints, not record extrema
-        no dirent payload Parts, slot copying or subtree-segment-count field
-    record new/replaced/retired internal names and root changes as drafts
-    # FREEZE_AND_PUBLISH captures each final Object once, not here.
+Do not redistribute two healthy nodes merely because both are dirty. A batch
+leaving two one-entry nodes cannot stop with an illegal two-entry non-root
+merge: extend the run or contract the whole applicable root. Repairs crossing
+parents must update all affected parent rows before the next height.
 
-BUILD_LEAF_OUTPUTS(outputs,Entry_rows,old_leaves):
-    if co-located recipe:
-        for each output form routing Part plus ceil(F/C) payload Parts of 64*C bytes
-        copy live rows once; initialize unused admitted bytes/padding
-        retain entire old Part only if its byte/slot interpretation remains valid
-        record actual 1+ceil(F/C) sources per output; no payload-Object tombstones
-    else:
-        retain whole payload chunks only when all live rows stay in one output
-        compact remaining rows into exclusive output chunks of 64*C bytes
-        form each chunk-name vector of ceil(F/C) names and local slot mask/map
-        retire emptied old chunks; record all new/replaced/retired chunk drafts
-    form final prefix/bounds/slot columns, preserving 64-byte dirent stride
-    record output leaves, changed parents/counter and retired names
-    # Publication is deferred until all batch repairs are complete.
-    # Worst work includes every copied row, source, tombstone and retained backing.
-```
-
-F and C come from the admitted recipe on every path. C8 uses 512-byte Parts;
-C16 uses 1,024-byte Parts, slot/C and slot%C, and half as many payload coordinates.
-F32/C8 co-location captures five Parts of one leaf after copying one 512-byte
-Part; F32/C16 captures three after copying 1,024 bytes. An independent payload
-Object captures one Part but adds a selected Object on reads. Full source fanout
-is charged even when only one Part changes.
-
-For a NEW compound leaf, current grouped native capture is a control: one fresh
-Allocation covers all admitted Parts, is consumed once, and each Part's geometry
-and readable padding is validated. Partial COW can then capture independent
-native sources, one fresh plus the retained Parts from that grouped owner;
-retained Parts may keep the WHOLE original Allocation alive. Split outputs each
-have their own valid physical owner. One Allocation is never consumed by two
-captures. Ranged native capture remains a separate proposed Orbital optimization.
+Scalar potential for F32 is high occupancy above 26 plus non-root deficiency
+below 13. A 33->16/17 split releases 7; underflow at 7 releases at least 6.
+Each parent membership event can add one credit. Conservatively,
+5*repairs <= initial_potential + original_membership_events - final_potential.
+F128 with thresholds 53/106 gives denominator 21. Initial fill potential,
+internal events, root conversion, batch repair size and final disposal count.
+375/5=75 ns and 1500/21=71.4 ns are target arithmetic, not measurements.
+The scalar argument is not a bound on arbitrary bulk deletion latency or
+historical retained bytes.
 
 ## Extra Parts and schema
 
-```
-PLAN_EXTRA_REMOVAL(before,after):
-    if deletion or final extra-count==0:
-        if old list exists:
-            require admitted tombstone D, or plan copy/convert to a D-enabled block
-            record private D coverage required if StreamPack.retire is executed
-            mark old rank retired in FINAL local plan; old Scopes keep old D
-        clear after overflow recipe/block/rank; return handled
-    return not_handled
+The first extra-list candidate assigns exactly sixteen StreamPack ranks to the
+original suffixes in a stable sixteen-prefix group. An absent holder is an empty
+list at its rank, not an empty Segment. This is a replacement-image algorithm;
+it does not pretend an immortal rank supports retirement.
 
-PLAN_EXTRA_NONEMPTY(before,after):
-    if PLAN_EXTRA_REMOVAL handled: return
-    if qualified unchanged: return retained
-    Unew=8*final_extra_count; Rold=selected reservation when old list exists
-    replace_legal = old live rank AND Unew<=Rold AND schema/maximum accepts Unew
-                    AND (has_U OR Unew==Rold)
-    # Full/no-U R64->U56 is ILLEGAL despite fitting; use a legal new reservation.
-    if replace_legal:
-        record required private payload and every issued U/control plane
-        plan actual StreamPack.replace, OR qualified fixed-length TuplePack locator
-           replacement when length/reservation/sidecar facts really stay unchanged
-    else:
-        choose legal reservation Rnew, respecting fixed/max/full/no-U law
-        if none exists, plan format conversion or paged vector, not illegal append
-        plan append to private payload/control/directory/lengths, and retire old D
-        # Append can write count,extent,checkpoints,R,U,whole G16 groups,D,padding.
-        # Logical suffix-only growth does not grant writes to sealed sidecars.
-    defer assigned/dead-byte/capacity decision until ALL holder plans coalesced
+~~~
+PLAN_EXTRAS(edit,final_intents):
+    for each touched original sixteen-prefix group:
+        select old extras Object once, if any; bind actual StreamPack once
+        take its sixteen protected list views
+        override only final changed/deleted/born holders at rank=prefix&15
+        compare actual complete lists; unchanged -> no extra Object change
+        if all sixteen final lists empty:
+            delete old extra Object if present; continue
+        M=max(final_list_bytes); B=sum(final_list_bytes) or explicit reserved bound
+        require every length multiple of 8 and admitted by real StreamPack layout
+        choose actual Sizes/full-U=R/immortal layout with independent M and B
+        obtain actual payload/directory/length/control extents from that layout
+        admit all four windows, padding and effect capacity before construction
+        initialize private destination and encode the sixteen FINAL lists once
+        resolve issued coverage while the named view exists
+        capture final four-Part extras Object once with its actual format proof
+        # block coordinate=prefix>>4; rank=prefix&15; neither changes on packing.
+    include Segment/extra changes in the SAME final packet
+    no holder discovery, global rank repair, append-then-pack or tombstone emulation
 
-FINALIZE_EXTRA_BLOCK(edit,final_plan):
-    if no final holders: retire the unused block Object in packet; return
-    choose final destination/source plan; materialize required private Parts ONCE
-    admit actual payload/control/directory/R/U/group-length footprints BEFORE calls
-       including preserving neighbours, zeroed reservations and readable padding
-    if packing/growth needed:
-        native transfer initializes private destination sidecars including D and
-           includes only FINAL live lists; derive local rank remap
-        omit removed ranks, never mutate old source D or any captured destination
-    else execute admitted replace/append/retire on private affected Parts
-    initialized destination sidecars are private even when payload growth is disjoint
-    list beyond StreamPack limits uses paged locator-vector recipe, never truncates
-    finish every holder coordinate repair before FREEZE_AND_PUBLISH
-    # One packing decision/block/batch; no independent intermediate publication.
+DEFINITION_APPEND_OR_EXTEND(edit,offers):
+    validate every offered id, immutable interpretation, locator law and layer set
+    merge repeated offers for same id only when immutable meanings agree
+    existing definition may extend allowed layers; it is never reinterpreted
+    select existing record through original basis; reject a conflicting meaning
+    capture ONE final direct-named record for each actual addition/extension
+    preserve all historical definitions for retained readers
+    index header changes only for actual index-context initialization/change
+    # No D+1 header publication is hidden if IDs are externally supplied.
 
-SCHEMA_DEFINITION(read,rep_id,layer):
-    header=read.selected_definition_header  # definition_namespace high64,next_id u64
-    if uint64(rep_id)>=header.next_id: reject outside THIS selected schema domain
-    # A newer escaping cache record can outlive an older Scope/header; ownership
-    # does not make that definition visible to the old schema.
-    name=ObjectId(header.definition_namespace,uint64(rep_id))
-    record=read.cached_qualified_definition(name) or read.token.bind(name)
-    reject absence or layer not admitted by selected record
-    admit/reuse descriptor/Part/read laws; retain actual immutable dependencies
-    cache escaping the read must OWN those dependencies, not a closed-Scope borrow
-    # No population-sized schema roster, no truncation of full ObjectId.
+MIGRATE_OR_PORT(edit,Segment,target_rep):
+    producer constructs equivalent FINISHED material using actual target codec
+    admit target through AFTER schema, source through BEFORE schema
+    derive all actual pointer/bounds/extra changes; use ordinary batch algorithm
+    caller publishes material+directory+schema atomically
+    # Separate single-Object alternative adoption cannot silently repair other Objects.
+~~~
 
-APPEND_SCHEMA_DEFINITIONS(edit,offered_definitions):
-    # Concrete direct-name experiment control; not a selected universal schema format.
-    schema_header=PRIVATE_OBJECT(index_schema_header_name)
-    checked reserve fresh32-bit rep_ids via u64 next_id; exhaustion refuses, no reuse
-    for each offered definition:
-        validate actual descriptor/Part laws and per-layer admission mask
-        construct immutable definition record with namespace-derived ObjectId
-        capture that record's actual descriptor material into a FINISHED Owner
-    increment private header.next_id; capture changed16-byte schema header
-    edit.after_schema=select_private(basis,FINISHED definition/header changes,names)
-    publish definitions/header/actual segment+directory changes in ONE Core packet
-    # D new definitions cost D record captures/catalog changes plus one header.
-    # No existing definition or 100k-sized roster is copied/captured.
-    # Cache is namespace/Core/definition-qualified; rep_id alone is insufficient.
-
-MIGRATE_SEGMENT(edit, name, target_definition):
-    select source primary/definition under edit.basis and before-schema
-    admit target definition from edit.after_schema, including offered new definitions
-    construct exact equivalent target privately with the producer/real codecs
-    offer its FINISHED Owner plus new locator/interpretation/bounds to APPLY_DELTAS
-    publish directory and primary together at one completed cut
-```
-
-That migration uses current atomic logical publication. Same-logical-version
-alternative adoption is a distinct Orbital question: individual `adopt` calls
-cannot be assumed to atomically repair a separately stored raw-pointer
-directory. No primary/alternative substitution or Engine conversion-version
-ledger is introduced to pretend otherwise.
+For the chosen native candidate, a u16 StreamPack value limit permits at most
+8,191 extra u64 locators (8,197 Parts total). This is an explicit admission limit,
+not a general index constraint. A larger recipe needs its own ordinal lookup,
+copy/capture and publication algorithm before admission; no truncation.
+Small-list budgets apply to the stated bytes/holders, not to the largest legal
+one-MiB group rewrite. Direct fixed-length replacement and incremental mutable
+packing remain research alternatives in [Design](DESIGN.md#extra-locators).
 
 ## Capture, publication and failure
 
-```
-FREEZE_AND_PUBLISH(edit, mode):
-    use a stationary EMPTY Prepared for this attempt
-    # Today's packet is single-use after acceptance, install or abort. Only a
-    # refused still-empty packet is retryable; RESET_PREPARED below is proposed.
-    finish ALL mutable destination writes, including holder/bounds repairs
-    for each changed directory draft, once:
-        make admitted immutable Control from the shared format proof and counts
-        sources = certified source(old_selection,p) for unchanged Parts
-                  + finished new bounded sources for changed Parts
-        result = capture through Orbital
-        if capture failed:
-            keep before-source lifetimes through all cleanup callbacks
-            release finished candidate Owners and unconsumed Allocations/drafts
-            # Refused capture did not consume that capture's fresh Allocations.
-            # Earlier captures may already own theirs; settle each use once.
-            charge synchronous proof disposal and remaining physical debt
-            keep attempted append highwater sealed; return actual error with logical input
-            # Retry reselects/revalidates; it never rewrites the failed suffix.
-        retain returned finished Owner; its body+padding is sealed before prepare
-    all_changes = offered segment changes + changed directory/schema/extra Objects
-                  + real deletion/tombstone changes
-    omit wholly unchanged Objects; include no duplicate publication for one name
-    if all_changes empty: release scratch; return unchanged
-    result = Orbital.prepare(edit.basis, all_changes, prepared_workspace)
+~~~
+FREEZE(edit):
+    all final topology, bounds, extras and definition work is complete
+    for each actual changed Object once:
+        retained Parts = source(old_selection,p), with proofs alive through capture
+        new Parts = actual admitted private native Allocations/slices
+        initialize full readable body/padding and finish all effects
+        capture through Orbital using matching physical ownership mode
+        on refusal:
+            fresh Allocations of THAT failed capture remain unconsumed
+            release earlier finished Owners and remaining private buffers once
+            preserve basis/proofs through disposal callbacks; return actual refusal
+        retain finished Owner; its footprint is now sealed
+    produce actual additions/replacements/tombstones; no duplicate full ObjectId
+    do not publish uncaptured drafts or retain predecessor Representations as proof
+
+CALLER_PUBLISH(basis,Segment_changes,directory_changes):
+    keep actual Segment custody and SAME original basis alive
+    join all actual material/directory/schema changes into one preflighted vector
+    if vector empty:
+        return empty proposal at READ basis, not a new write/current-state receipt
+    stationary Prepared uses SAME Core; capacity follows ACTUAL number of changes
+    Orbital.prepare(basis,changes,packet)
     if stale:
-        abort/release caller-held candidate uses; Orbital settles physical returns
-        # Do not force a full drain or background-reclamation wait here.
-        # Actual synchronous owner/proof disposal can still run and is charged.
-        # Pending physical uses remain charged and prevent premature storage reuse.
-        return stale with original inputs; recompute against a new actual basis
-        # Opening a fresh Scope alone never validates these older afterimages.
-    if capacity refused:
-        # Failed prepare leaves the packet empty and input Owners unchanged.
-        retain finished candidates, original basis and interpretation dependencies
-        refill/wait only with an actual resource-progress contract, outside acceptance
-        retry the SAME candidates if that basis is still current
-        if basis became stale: abandon/recompute as above
-        # Do not rotate/copy a sealed append prefix merely to retry prepare.
-        # A synchronous caller may instead return refusal and settle its candidates.
-    if another error: settle candidates and return that error, not a refill loop
+        release candidates or retain them only for explicit dependency revalidation
+        opening a new Scope alone does not validate old afterimages
+        return stale/recompute; no reverse replay
+    if capacity/unavailable and packet still empty:
+        keep original basis/proofs/finished Owners for an admitted retry
+        otherwise release and return refusal; no busy progress-free retry loop
     if accepted:
-        Orbital.install(prepared_workspace) once
-        # One cut; no allocating Engine cache update or undo commit afterwards.
-    release source certificates/drafts; schedule bounded Orbital history traversal
-    # A traversal step can trigger last-owner graph disposal; that cost is NOT
-    # bounded by the traversal limit. Include it or arrange owner-side disposal.
-    charge retirement, failed attempts and retained capacities to full history
+        immediately install ONCE, or abort under Orbital's existing exclusion law
+        no allocation, Engine visibility update or second commit follows install
+    clear caller-held change Owners/scratch inside the measured interval
+    run/pay bounded maintenance and account eventual complete physical settlement
 
-ABORT(edit):
-    if packet was accepted: Orbital abort settles it under existing exclusion rules
-    # A failed prepare has no accepted reservation to abort.
-    release all caller-held candidate Owners and physical sources as well
-    discard private drafts and the scratch Hashtable
-    published directory/segments are unchanged; there is no reverse replay
-```
+ABORT(edit,packet):
+    abort an accepted packet through Orbital; empty refused packet needs no abort
+    release caller-held finished Owners and private buffers
+    discard scratch; published bytes are unchanged
+    charge actual recursive disposal/physical returns, not an invented fixed undo cost
+~~~
 
-Current physical controls precede any proposed native optimization:
+Only one accepted Orbital packet exists at a time. A stationary packet pins its
+Core; prepare requires the current global cut and charges real history/capacity
+work. Up to 64 changes use pairwise full-ID duplicate checks; larger packets use
+the actual uniqueness scratch. A 64-command directory batch can exceed 64
+publication changes. There is no 64/128 cap on general balancing/schema output,
+and an atomic batch is never silently split to fit that crossover.
 
-```
-CONSUMING_NATIVE:
-    each fresh Allocation transferred once to its capturing Representation
-    distinct captures do NOT consume the same Allocation again
-
-COUNTED_SHARED_BATCH_SLAB:
-    one counted owner holds a real Loom Allocation, stable address and capacity
-    partition PRIVATE, nonoverlapping body/padding ranges
-    finish writes; submit bounded slices as shared/mixed PartSources
-    each capture/escape retains actual backing through Orbital's physical contract
-    rotate at exhaustion; retained old slices can retain whole slab capacity
-    no Engine reader ledger permits hole reuse or relocation
-
-RANGE_HELD_DIRECTORY_CONTROL:                 # Existing APIs; optional comparison
-    finish the immutable directory array, including every readable padding byte
-    for each logical leaf:
-        acquire a real Hold for that leaf's complete body+padding
-        put the Hold in its OWN counted shared owner; capture independent_shared
-    after ALL required Holds/captures succeed:
-        relinquish_tail(array,0); release the creator Allocation
-    retire leaves through ordinary Orbital lifetime; request actual cold trimming
-    # Release alone leaves tail trim disabled. A last leaf/escaped Part can keep
-    # the entire prefix; this is tail reclamation, not page-hole reclamation.
-    # Charge Hold/shared blocks, tracking and24 B shared versus16 B native slots.
-```
-
-These are custody mechanisms, not a prescription to pool Segment bodies.
-Segments keep independent Allocations. Directory storage can use bounded top
-tables, actual Hashtable-owned inline Dirents and partitioned arrays below.
-Several Parts may name one admitted directory backing; they still incur their
-descriptor slots, validation and physical retention. Narrowing a certified Part
-does not independently reclaim its surrounding native backing.
-The range-held control uses [existing physical APIs](../../../orbital/docs/material.md#compose-retained-and-new-bytes).
-Compare its real capture/metadata/retention costs with the compact native proposal
-below; a new native range API is not required just to express this lifetime.
-
-## Proposed Orbital work
-
-This section is coordinated with Orbital LEAD. It changes physical retention
-and publication cost inside Orbital, not Engine's visibility semantics.
-The following ready-path changes belong inside Orbital; Engine should not add
-private allocation inventories, reader lists or version maps to avoid them:
-
-```
-ORBITAL_OWNED_COSTS:
-    choose eligible finite geometry before growing inventory
-    find a pending preparation without rescanning every owned Group
-    validate every captured Part, but preflight one grouped fresh supplier ONCE
-    drain selected history by cut intervals, not every reader cut per Object
-    keep last-owner disposal distinct from bounded history traversal
-```
-
-These are implementation changes, not a new caller API. The range-source,
-prepared-stock and staged-resolution mechanisms below remain proposals.
-Today's prepare may allocate metadata and resolves identities in several
-passes; its cost is still charged until the proposed path is implemented.
-
-```
-PROPOSED_BOUNDED_NATIVE_SOURCE(writer_allocation, body_range):
-    borrow identity/address/extent until capture; factory itself adds no pin
-    capture revalidates after metadata/proof callbacks
-    admit destination body+padding; enroll its REAL native range use
-    seal exactly that admitted footprint; writer Allocation survives
-    writer can only write other physically disjoint, unsealed bytes
-    preserve range through retained recapture, grouping, export and final return
-    on refusal undo acquired physical uses without consuming writer authority
-    # Keep current cheap consuming mode. No free arbitrary-update heap is implied.
-
-PROPOSED_PREPARE_STOCK:
-    prepare physical inventory, descriptor/proof storage, mutation workspace
-       and actual catalog/history/registry/debt capacity before final ready visit
-    use the SAME stable Core memory-resource identity for descriptor pooling
-    wait with no accepted packet and no borrowed catalog cell/head
-    stock/capacity warming grants no exclusive slots or later acceptance
-
-PROPOSED_READY_PREPARE(basis, ALL_changes, workspace):
-    use existing prepared capacity; no heap/VM work, wait or catalog reentry
-    validate Core/incarnation, exact current basis, packet/pending state, cut bound
-    validate finished Owner admission and DISTINCT full Object IDs in Orbital
-    resolve each Object ID ONCE into workspace
-    classify required old tips, entries, registry slots and debt/history records
-    claim actual free capacity, including tombstone/load/rehash headroom
-    if insufficient:
-        release all temporary claims, retain input Owners, return capacity
-    build predecessor records, retain replacements, pin entries
-    mark accepted/pending only after complete success
-    # Preserve old tips even if no reader is enrolled now: one can enroll before install.
-
-INSTALL:
-    same uninterrupted Orbital loop over ALL changes and one cut advance
-    no allocation or owner-disposal callback
-
-RESET_PREPARED:
-    legal only after installation or FULL abort/disposal callback settlement
-    preserve original Core/resource identity; retain reusable workspace capacity
-    never reclaim descriptor/proof memory still owned by a Representation or Part
-
-PROPOSED_COLD_BIND:
-    optional advisory Scope-prefetch(ObjectId), without retaining raw catalog cells
-    if full staging is needed, Orbital owns the staged resolver:
-        retain Scope + full ObjectId
-        queue those identities/state with EMPTY initial MemoryDependency
-        # push/promotion may hint before callback: no mutable bucket address here
-        derive/validate a dependency when the Ring actually activates the frame
-        discover bucket/entry/history/Representation dependencies
-        revalidate/restart across rehash, entry reuse and history-slot reuse
-        revalidate before dereference after returned-boundary mutation
-    cut equality alone is insufficient structural validation
-```
-
-These mechanisms still charge range enrollment/drop, capture descriptor work,
-all admitted Parts, Owner admission and reclamation. A native batch source is
-rotated/released at exhaustion; no caller can recycle an old hole just because
-its logical entry was replaced. Actual reuse belongs to Orbital allocation.
-For a permanently closed append backing, the current writer can already
-relinquish an unused tail after the highest attempted sealed footprint, including
-readable padding, then request cold trimming. The latest published extent alone
-is insufficient after a longer failed capture. This does not reclaim interior
-holes or make native Part pins range-aware.
-
-Range enrollment and release must describe exactly the same destination body
-and padding, including narrowed sources and selected-copy exports. Deriving
-that range cold from immutable Control geometry may preserve compact native
-records; its mixed/grouped ownership representation and cost remain unqualified.
-
-The paper histories that distinguish these changes are:
-
-- Keep an old Scope, replace a referenced primary, then discover it late through
-  the old directory. Body bytes remain valid; old metadata slots are not implied.
-- Enroll a reader after prepare but before install. It still selects the
-  predecessor, even if prepare initially observed no enrolled readers.
-- Capture a native range, relinquish its writer tail, then trim. Body and padding
-  survive until every relevant recapture/export retires with matching coverage.
-- Refuse or abort with disposal callbacks and caller-held candidate Owners.
-  Visible heads stay unchanged; packet reset waits for callback settlement,
-  and storage reuse waits for its actual uses rather than only packet abort.
+Native fresh Allocations transfer once per capture owner law. Retained sources
+certify their real body+padding and acquire physical uses without retaining
+ancestor Control/Representation chains. Shared slabs are explicit counted
+owners, not repeated consuming transfers. Pool capacity, retained backing and
+RSS are separately reported. A bounded history drain can trigger unbounded
+last-owner graph disposal; price that actual work.
 
 ## Loom execution, admission and genuine waits
 
-```
-SYNCHRONOUS_READY_CALL:
-    use Borrowed for a complete nonreentrant current-cut READ when permitted
-    use actual Scope basis for edits/prepare, even when execution is ready
-    call admitted native consumers directly; no Task/Ring per lookup
-    if unexpected would-wait with no accepted stationary operation:
-        finish/discard private work and end all stack borrows/Scope uses
-        return explicit unavailable/refusal with retained LOGICAL retry input
-        # No moving Scope or implicit Borrowed->old-cut promotion.
-        # A later attempt constructs a new Scope and revalidates/recomputes.
+~~~
+EXECUTE_READY(prepared_operation,inputs):
+    borrow one coherent context for this complete bounded native operation
+    inline ready decode/search/filter/output; no per-row Task or Hold
+    use direct iteration first
+    use reused Ring only for actual independent qualified memory dependencies
+       with setup, refill, result association and final drain charged
 
-ADMIT_POTENTIALLY_WAITING_OPERATION(worker,caller_owned_stationary_frame):
-    retain input/result storage and construct Scope IN PLACE in the stable frame
-    initialize fresh Task(context=frame,step=operation_step)
-    if !loom.start(worker,Task):
-        settle private ownership; return refused with frame/Worker unchanged by start
-        caller retains or destroys frame only after its actual uses end
-    else:
-        return accepted pending operation; caller contract keeps frame/Task/Scope,
-           Signal and result alive through terminal/detach AND native/physical cleanup
-    # start queues, it does not run inline. Admission itself is not readiness.
-    # No hidden unbounded pending queue or unadmitted frame wait is introduced.
+ON_REAL_WOULD_WAIT(retained_operation):
+    end Borrowed use before returning
+    retain stationary Scope, physical/interpretation sources, query/mask bytes,
+       output capacity and complete continuation in a stable admitted Task frame
+    request actual Loom/Orbital service with real completion resources
+    on resume validate mapping/generation; rebind after any relocation
+    if no admitted retained path: return explicit refusal/retry
+~~~
 
-KNOWN_INDEPENDENT_KEYS:
-    use prefetch_for_each / IndependentStream ONLY for synchronous, nonthrowing,
-       nonrecursive consumers that finish each indexed operation before returning
-    qualify all input/native binding/hint footprints for the complete visit
-    keep reductions local; publish before native tail transfer
-    do not wait/throw/park mid-quantum: cursor updates only after the full visit
-    if a request can need I/O/admission/producer wait, use separately retained
-       operation state in an admitted Task instead, not partial-visit replay
-    prefetch is a cheap qualified hint, never a full duplicated bind/tree walk
-
-DEPENDENT_INDEPENDENT_REQUESTS:
-    configure reused Ring storage outside hot loop; charge footprint/admission
-    stable frame owns actual Scope/selection/input/output/continuation state
-    use concrete hint stages below; fuse adjacent ready work first
-    yield_unchanged at actual independent memory dependency, finish/retire on result
-    charge bootstrap, refill, output, final drain and physical cleanup
-    # Today's opaque Scope.bind remains one synchronous Orbital call.
-
-ACTUAL_WAIT(frame,resource):
-    require ALREADY accepted stationary Task with the retained-frame contract above
-    observed=resource's REAL owner-Lane Signal FULL generation
-    status=test actual resource predicate; if ready continue, if failed settle/error
-    save status/dependencies/observed in stable frame
-    retire/remove native continuations at returned boundary before ending borrows
-       active AND overflow frames count; Task detach alone removes no Ring slot
-    hold no accepted Prepared across wait; keep Scope/frame/Signal through enrollment
-    return Progress.wait(actual_Signal,observed)
-    # Cleanup may pulse Signal; never refresh observed without retesting predicate.
-    on wake: recheck/repark; generation change grants no mapping/storage rights
-    revalidate dependencies/basis after actual readiness, recompute stale work
-    foreign completion retains physical-record Message, never a destroyable Signal
-    cancellation ends interest; physical work retires independently on its owner Lane
-
-ON_CAPACITY_REFUSAL(kind):
-    distinguish native Arena/Pool inventory from descriptor/catalog/proof PMR,
-       Task slots, mapping/I/O readiness and caller effect/scratch capacity
-    refill or wait on the ACTUAL owner's supplied predicate/Signal contract
-    absent such a contract, report refusal; do not invent a PMR Signal
-    waking a native Pool does not establish PMR/catalog/Task capacity
-```
-
-Concrete Boundlist/hint choices use current source/phase contracts:
-
-| Stage | Qualified read/hint and returned boundary |
-| --- | --- |
-| Core lookup | `Borrowed.bind`/`Scope.bind` is synchronous today. ObjectId alone supplies no qualified bucket/history address. Do not hint a raw mutable catalog cell or claim a yield inside this call. Separate Orbital staging remains proposed. |
-| Raw direct endpoint source | `prepare_lower_bound` may COMPLETE the search. Hint qualified endpoint-column spans BEFORE this search if using a Ring visit; do not call raw prepare and then describe its empty local window as hidden search latency. |
-| Prepared numeric binding | Binding/sample setup is retained and charged. Current phase defers endpoint reads; hint its `local_window` (bracket/full array), retain phase and eligibility, yield, then `finish`. Correction can read outside the bracket; full-source permission remains required. |
-| Width source | Available checkpoints route to the 16-width local window. Hint that window, retain exact version/source/eligibility, yield, finish. Checkpoint reads already happened during prepare and count. |
-| Selected routing rank | Derive/hint actual child-name word and any needed minimum/high-edge or long-key-tail bytes from this selected node. Separate planes/gaps require distinct qualification. |
-| Child Object | Resolve its stable ObjectId, then hint selected child's required endpoint columns. No former native child address is reused across versions. |
-| Selected payload slot | Derive Part ordinal or resolve independent chunk; hint the required descriptor line(s). After qualifying actual material, derive/hint requested native Part spans, not an unconditional whole64 B enumeration result. |
-| Extra list | Hint actual selected directory/checkpoint/length spans, then locator-list bytes after list location is known; retain admission once per list, not per ordinal. |
-
-Use current `bind_demand`/`bind_dependency` and retained policy with actual
-contiguous grants. Current irregular classes select a first-line hint even for
-large declared sizes; they do not cover all search columns. Compare qualified
-linear demands or bounded explicit fixed-line controls when needing several
-lines, charging each actual hint. Never enlarge one span across gaps, assert
-residency from prefetch, or allocate one job per native stage. Record source
-kind, exact spans/lines hinted, searches done before yield and remaining
-child/payload dependencies. Direct fused work remains the control. These
-choices require consumer composition, not a new Loom API.
-
-Scope cohorts deliberately retain snapshots. Borrowed current calls and fresh
-Scopes have distinct lifetimes even when both satisfy a current-read request.
-Compare matching request semantics and report actual enrollment costs. Serial
-latency, independent throughput and true waits remain separate observations.
-
-## Consequential paper counterexamples
-
-- Cache a newer definition while an old schema/header stays live: reject its ID
-  outside old next_id BEFORE using owned cache bytes; lifetime is not visibility.
-- Two Objects share low64 but have different high64: their drafts remain distinct.
-- An INTERNAL underflow builds routing/child-name Parts only, never leaf payloads.
-- Ranked-array occupancy {1,14,15} filtered by {14,15}: suffix14 uses slot1,
-  suffix15 uses slot2; rank never uses the filtered mask. Hash V64 consumes its
-  temporary inside the actual callback, never returns a pointer to it.
-- Aactual[1,2]/fence[0,10], Bactual[5,6]/fence[4,20], q5: an exact miss in A
-  continues to B in the same region, including singleton and fast-seek paths.
-- Fixed geometry/pointers with base7 and newly committed correction9 must use
-  selected material, not return7 from the base-only native path.
-- Collection corrections P/Q/P: compacting P preserves Q's pending contribution.
-- Full/no-U R64->U56 takes a legal new reservation; removal edits private D first.
-- C16 slots15/16 select chunk0/1 and rows15/0 with 1,024-byte extents; C8 differs.
-- Append one definition at 100k historic records: capture one new record and one
-  header, retain previous records, preserve both before/after schema views.
-- Ready would-wait with no admitted Task returns a defined refusal/retry outcome;
-  no stack Scope moves, Borrowed promotion or half-quantum stream replay occurs.
-- Change only the seventh Part pointer, keeping all 64 dirent bytes, representation,
-  bounds and block/rank equal. A fresh Scope sees the new extra pointer; old and
-  late-discovering Scopes see the old one. The segment+extra block publish together.
-- From three 64-row leaves, delete the first two down to one row each. A two-row
-  non-root merge is illegal while the third leaf stays64. Normalization must extend
-  the final run or contract the whole resulting root correctly, at internal depths too.
-- Edit only descriptors/bounds in two legal leaves of 40 and 80 rows. Neither
-  seeds normalization or incurs payload redistribution; their boundaries remain.
-- Empty a region while retaining an old Scope, then recreate it. Allocate fresh
-  child names from the surviving namespace counter; old traversal still selects
-  the old graph, and the counter/tombstones/new edges publish coherently.
-- Invalidate advice, then refuse/abort: extra dirtiness remains safe. Compact
-  while an old Scope lives: never clear its generation's advice. A stalled writer
-  must revalidate its basis/generation before a later install.
-- Append a definition, convert a segment to it and change its seventh Part together.
-  Before-schema constructs the source; AFTER-schema constructs the finished target.
-  One Core packet publishes the complete after graph. Read both discovery orders,
-  retain a pre-install reader, and refuse/stale the attempt without leaking the mix.
-- Guide endpoints [10,30,40], q20, quantum4, with rank1 ineligible and rank2 live:
-  the no-tie bracket's geometric rank1 must become global eligible rank2. Do not
-  confuse a filtered window-local sentinel with the whole source's end.
+No new Engine enrollment, Task/Ring or publication protocol is assumed. The
+directory may return a defined not-ready outcome when a future locator recipe
+needs I/O. Remote transport/durability are not imputed to resident native tests.
 
 ## Bulk construction and auxiliary storage
 
-```
-BULK_DIRECTORY(sorted SegmentDeltas):
-    consume supplied finished segments in layer/physical-prefix order
-    form groups/leaf streams once; build legal occupied nodes near target fill
-    pack payload chunks and exact bounds; build routing bottom-up with real Ikea
-    capture finished Objects and publish through the same Orbital protocol
-    bounded publication chunks may be used only with explicit visibility semantics
-    # No giant duplicate-check packet is assumed cheap, or silently split atomically.
+~~~
+BULK_DIRECTORY(sorted_finished_Segments):
+    validate/coalesce actual final Segment facts and definitions
+    form ordinary/hash groups and sorted leaf streams once
+    partition non-root levels into legal near-target nodes; root gets exception
+    build levels bottom-up using the SAME format and capture law
+    caller publishes at the declared visibility boundary
+    if that boundary is atomic: price the complete real packet, not hidden chunks
 
-AUXILIARY_GET/PUT/ERASE(kind, opaque_key, opaque_value):
-    select/construct the actual auxiliary store representation under its Scope
-    use its real Ikea operation and Orbital publication, charging actual bytes
-    do not place query-plan construction or unbounded telemetry work in directory lookup
-```
+AUXILIARY_GET_PUT_ERASE(kind,key,value):
+    choose actual admitted store representation and native Ikea operation
+    select/build/capture through same read/publication mechanisms
+    charge actual key/value bytes; no query compilation or unbounded telemetry
+       computation is hidden in a small metadata operation
+~~~
 
-A live same-Scope cursor is defined above. Persisting a cursor or resuming it
-under a different snapshot additionally requires the caller's declared bookmark,
-duplicate/relabel and durability semantics. Opaque cursor bytes are not proof
-that local cuts survive reopen. Query-plan meaning, telemetry policy and record
-placement remain with their owners; this spike can price their explicit storage
-operations without inventing those semantics.
+Persistent cursor bookmarks, plans and telemetry have their own semantic owners.
+A live same-Scope cursor above is not automatically a durable bookmark or a
+promise that an Orbital local cut survives reopen.
 
-## Required cost ledger beside each prototype operation
+## Consequential paper counterexamples
 
-The motivated immutable-graph control changes physical directory ownership,
-not per-layer segment identity, query order or Orbital visibility:
+- Equality runs crossing leaves and hash groups: return all candidate Segments,
+  then actual rows; no unique fence or internal duplicate order.
+- Equal first-eight-byte abbreviations with unequal long tails, both endpoint
+  policies: refine before skipping or stopping.
+- Original suffixes 1,14,15 with only 14,15 selected: rank/slot still derives from
+  the original representation, not the filtered mask.
+- Seventh Part pointer changes with all 64 dirent bytes unchanged: publish and
+  select the changed extra Object, preserving late old-reader association.
+- Before binding from a different Core with the same numeric cut: reject.
+- Invalid command followed by cancellation: still reject; no-op is not admission.
+- Two namespaces share low64; maximum L4 prefix; name exhaustion; empty/recreate.
+- A fixed pointer/geometry with a changed committed correction extent: select
+  authoritative material, not stale base bytes.
+- Descriptor/bounds-only edits in healthy neighbours: no structural redistribution.
+- Bulk deletion leaves several deficient siblings across parent boundaries:
+  extend the final run/update all parents; no illegal non-root leftover.
+- Capture/prepare refusal, accepted abort, stale original basis, workspace reuse,
+  exported Part after Store reset, and old reader's first discovery after trim.
+- A historical definition is cached before a newer layer-admission extension:
+  old read still uses the old selected admission, not newer cache visibility.
+- Root contraction/growth changes native Kind/Part geometry: finish actual new
+  sources at the fixed root name; never publish a self-child or recycle an old name.
 
-```
-GRAPH_READ(scope, query):
-    selected_root = scope.bind(actual_directory_root_id)
-    node_bytes = selected_root.part(routing_part).address
-    # Its Control owns the complete current directory child graph.
-    while internal(node_bytes):
-        rank = actual_Ikea_bound_search(admitted_columns(node_bytes), query)
-        node_bytes = admitted_raw_child_pointer(node_bytes, rank)
-    consume exact chosen payload / continue candidates within this layer
-    bind authoritative segment/correction state as required under SAME scope
-    finish all raw byte uses before that scope/borrow ends
+## Required cost ledger beside each future measurement
 
-GRAPH_EDIT(basis, actual_deltas):
-    select root and affected paths under basis; deduplicate paths by full identity
-    build private changed leaves with real native/Ikea constructors
-    capture each finished leaf using actual new/retained sources
-    bottom-up, for each changed parent ONCE:
-        construct immutable proof owning actual finished/unchanged child Owners
-        clone/edit admitted routing columns and raw child byte pointers
-        capture new parent with that proof as an interpretation dependency
-        # Never retain predecessor root; unchanged children are direct owners.
-    prepare/install new logical root plus actual required segment/schema changes
-       in one Orbital packet
-    release all private temporaries and account amortized old-root reclamation
-    refusal releases only candidate graph; basis and visible graph remain intact
-```
+For every public operation record:
 
-```
-record:
-    request/batch snapshot boundary and effective peer-derived ceiling
-    selected directory nodes / payload chunks / extra blocks / segment shapes
-    actual bytes read/copied/initialized and full-key comparison bytes
-    changed directory Objects, supplied segment Objects, tombstones
-    admitted Parts per capture, retained sources, physical owner/range operations
-    backing acquisitions, descriptor/proof allocations, packet/refill work
-    full coupled prepare/install and amortized retirement/failed work
-    current, private, retained, reusable and mapped/resident byte inventories
-```
+~~~
+matched peer, snapshot/transaction boundary, output, effective complete ceiling
+directory nodes/Parts/hash owners/extra blocks/definition/material selections
+full-key/tail comparisons and false candidates
+bytes copied/initialized/read; admitted Parts and retained physical source uses
+backing acquisitions, proof/descriptor/PMR allocations and history changes
+actual material/directory/schema/tombstone packet size and uniqueness crossover
+one complete prepare/install; retries/refusals/aborts and local cleanup
+current/private/retained/reusable byte inventory, mapped/RSS and final settlement
+owner/helper/process CPU; completed useful throughput; separately sampled tails
+~~~
 
-The mechanism enumeration consumer uses all 64 dirent bytes. A projected
-consumer uses only its requested descriptor fields and actual selected material
-bytes; both have independently matched output and binding costs. Direct byte-pointer handoff needs the graph negative checks above.
-Dropping required binding, old-reader retention or publication work is not an
-assembly optimization.
+No source inspection or instruction model can price all of those runtime costs.
+The prototype decision remains conditional on the explicit feasibility review
+in [Budget](BUDGET.md#paper-feasibility-and-remaining-uncertainty).

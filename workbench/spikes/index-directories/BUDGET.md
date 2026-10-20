@@ -3,6 +3,11 @@
 These are aggressive proposed ceilings, not measurements of a new directory.
 The relative headroom requirement overrides a looser absolute number.
 
+The current instruction is paper review before more implementation. Existing
+read/producer results qualify their exact captured operations; they do not price
+the unfinished mutable directory. The current complete algorithm is in
+[Pseudocode](PSEUDOCODE.md), with its [byte ledger](DESIGN.md#compact-candidate-byte-and-ownership-ledger).
+
 Ashton's subsequent steer makes useful steady-state THROUGHPUT the primary
 decision metric. Compare completed useful operations/s at matched ready window,
 output and snapshot/publication semantics, alongside owner/helper/process CPU,
@@ -306,7 +311,7 @@ budget includes Scope enrollment when used, at its declared request/batch bounda
 | Range startup, including both endpoint policies | 60 ns |
 | Same-page cursor continuation, full dirent consumed | 3 ns/segment |
 | Cursor crossing into the next selected page | 20 ns + returned dirents |
-| Resident unmasked/masked range scan | <=60ns startup +3ns/visited dirent +3ns/selected full64B material +20ns per actual directory-page crossing; also obey the matched directory/complete-scan fractions |
+| Resident range scan | <=60ns startup +3ns/visited dirent +3ns/selected full64B material +20ns per actual directory-page crossing, PLUS actual mask-word processing when supplied; also obey matched directory/complete-scan fractions |
 | Already-selected inline Part projection | 3 ns/Part |
 | Extra Part projection through a selected StreamPack block | 15 ns/Part |
 | Bind an additional required block/version for projection | 15 ns |
@@ -320,14 +325,14 @@ budget includes Scope enrollment when used, at its declared request/batch bounda
 | Segment insert/delete without a storage split/merge | 400 / 350 ns |
 | First/last member of a hash group, including its ordered presence entry | 435 ns |
 | Leaf split, merge or redistribution, including publication | 1.5 us |
-| F32 co-located leaf structural-repair candidate | 400 ns including publication; capture all output Parts |
-| Each cascading internal split/merge level | 400 ns |
+| F32 co-located leaf structural-repair candidate | 375 ns including publication/charged retirement; capture all output Parts |
+| Each cascading internal split/merge level | 375 ns F32;400 ns F128 |
 | Structural work amortized over adversarial threshold histories | 75 ns/membership change |
 | Offered five-directory-replacement pressure case, one coupled publication, no balancing/packing | 350 ns TOTAL |
-| Clustered batch64 locator edits, shared copied chunks | 35 ns/changed dirent |
-| Dispersed batch64 locator edits | 75 ns/changed dirent |
+| Clustered batch of64 distinct locator edits, shared copied chunks | 35 ns/changed dirent |
+| Dispersed batch of64 distinct locator edits | 75 ns/changed dirent |
 | Local extra-block packing, <=16 live lists / <=128 extra locators | 1 us + required dirent repairs |
-| Append schema definitions, direct-name control | 300 ns for one; batch goal +50 ns/additional definition, plus actual descriptor bytes; price D record Owners + one header |
+| Append/extend schema definitions, direct-name candidate | 300 ns for one; batch goal +50 ns/additional definition, plus actual descriptor bytes; D actual changed records, header only for actual index-context change |
 | Bind an already-admitted representation definition | 5 ns |
 | Cold historical-definition cache fill | 100 ns + actual descriptor parsing |
 | Refusal before mutation | 50 ns beyond the reached admission work |
@@ -360,6 +365,11 @@ work; those remain in the complete Engine request. Unchanged directory facts
 must not cause an unnecessary directory lookup, clone or publication merely
 because a record or summary changed. A summary min/max change is not itself a
 directory-range change.
+
+The scan formula is a component target, not permission to omit mask input work
+or claim a flat60ns all-zero query. Count actual words read, masked-off candidates,
+seeks and lifecycle cost. An all-zero query has no returned-entry throughput;
+retain its whole-query result as a control, including the existing2x miss.
 
 The five-replacement stress row includes ALL offered directory changes, not
 five times 350 ns. IF a producer supplies five segment replacements AND each
@@ -450,7 +460,8 @@ separately, then included in the single complete publication interval.
 | Inline projection | none if authoritative material AND geometry are already qualified; else actual material/shape selection | none; committed extent/validity can change with identical pointers/geometry; real resource binding is additional |
 | Extra projection | one selected StreamPack block/list, reused for its ordinals; paged vector costs actual depth | none; no repeated admission/length lookup per ordinal |
 | Ordered C8 locator replacement | route to one payload chunk | copy512 B, capture one one-Part chunk; no routing/ancestor edit |
-| F32 co-located locator replacement | H routing nodes, no separate payload Object | copy512 B, capture one FIVE-Part leaf, retain four sources; no ancestor edit |
+| F32/C16 compact candidate locator replacement | H routing nodes, no separate payload Object | copy1,024 B, capture one THREE-Part leaf, retain two sources; no ancestor edit |
+| F128/C32 compact candidate locator replacement | its actual H routing nodes | copy2,048 B, capture one FIVE-Part leaf, retain four sources; no ancestor edit; compare saved routing depth |
 | Embedded small/table locator replacement | one selected group/chunk | actual whole small payload/format; retained sources and all P(x), not merely changed fields |
 | Hash locator replacement | one group | payload<=1,024 B; retain bounds/map; capture actual group Parts and retain the real mapping owner |
 | Representation change | route + needed segment/definition admission | actual changed dirent/proof, optional extra list; no map/bounds repair unless those facts change |
@@ -458,8 +469,8 @@ separately, then included in the single complete publication interval.
 | Insert/delete without balance | route plus real presence path if needed | membership/bounds/mapping + affected payload; empty chunks/Objects retire; changed name counter is included |
 | Split/merge/redistribute | final affected run and required neighbours/parents | materialize final row streams once; copy rows that cannot retain whole chunks; capture every output, changed parent and counter, and publish real tombstones |
 | Extra-only pointer replacement | selected local block | changed StreamPack Parts/Control; no dirent write when block/rank stays equal; include actual producer change |
-| Extra growth/packing | block and <=16 local live holders | actual StreamPack transfer plus every changed holder coordinate; one pack/block/batch, no global rank repair |
-| Schema append/cache fill, direct-name control | one selected schema header + actual definition record when not cached | D immutable record Owners + one 16 B header; no100k-sized roster; existing definitions/segments untouched unless actually changed |
+| Extra rewrite, fixed-rank candidate | one block, sixteen original-suffix lists | actual final StreamPack construction once; fixed block/rank means no holder discovery or rank repair; count all real bytes |
+| Schema append/extension, direct-name candidate | selected index header + actual definition record when not already qualified in this read | D actual changed64B record Owners plus retained descriptor material; no roster, header changes only for actual index-context change |
 | Migration/port | source shape, target definition, touched directory path | actual changed locations/representation/extra associations, plus finished target and any schema changes in one coherent publication |
 | Same-value/qualified no-op | no extra route if complete supplied evidence suffices | no capture/publication; comparing an unqualified K/E-sized value costs its actual bytes |
 | Refusal/stale/abort | whatever was actually reached | abandoned drafts, physical uses and synchronous cleanup; no forced full drain or fictitious undo replay |
@@ -587,29 +598,102 @@ those costs. A failure stays visible in the same table as successful reads.
 
 ## Paper feasibility and remaining uncertainty
 
-The revised locator-replacement path has no tree rebalance, bound search through a
-whole layer, overflow repack, hash reconstruction from all entries, revision
-rewrite, or ancestor publication. The separate-chunk candidate changes one
-512 B payload Part (1 KiB control), admits ONE Part, captures one directory Object and submits
-one coupled packet. The multi-Part-leaf control copies its selected bounded Part while processing
-all admitted Parts. The F32 comparison instead captures five Parts of ONE
-leaf, retaining four sources, saves one dependent payload selection and avoids
-per-chunk structural publication. The private copy/store work is plausibly a small fraction
-of the 250 ns ceiling; source inspection cannot establish the remaining
-allocation/capture/publication total.
+The current paper candidates are F32/C16 and F128/C32 with the compact endpoint
+layout in [Design](DESIGN.md#compact-candidate-byte-and-ownership-ledger). The
+older separate-chunk/F32-C8/graph cells above are labeled comparisons, not costs
+that can be silently combined with this candidate.
 
-The 20 ns hash and 35 ns ordered-read goals are comparable in scale with
-existing fused selection and Ikea consumer results, but those observations
-cannot be added to prove either ceiling, particularly from independent hash
-throughput. The assembly slice must eliminate
-redundant admission, owner capture, helper boundaries and descriptor traffic
-within the real public lifetime rules, then measure the complete result.
+For one F32 locator replacement with unchanged bounds, membership and extra
+list, the full directory work is:
 
-The ordinary stable-fact data-write path has zero directory mutation work;
-its complete producer composition still needs qualification. I am not yet
-convinced that the conditional five-replacement publication or dispersed cold
-paths fit the complete Engine headroom requirement. The existing evidence does
-not establish that conclusion. Their exact cheapest supported composition is
-being reviewed with Orbital and Loom. A failed composition budget belongs
-back in this design and, where needed, the owning module; it is not permission
-for another Engine versioning or rollback system.
+1. Use the caller's original Scope/Core; qualify schema/before binding and the
+   finished after material. Route the actual physical prefix once. Charge Scope
+   enrollment at its declared request/cohort boundary and actual definition
+   selections when not already qualified.
+2. Compare the complete relevant descriptor/interpretation association. If equal,
+   return an empty directory proposal; no allocation/capture is needed.
+3. Acquire one disjoint 1,024 B native destination, copy that payload Part once and
+   patch 64 B at its existing slot. Metadata and the other payload Part stay sealed.
+4. Form three actual sources: fresh payload plus two retained native sources.
+   Cached immutable geometry avoids a new Layout/Geometry vector per edit.
+   Capture one three-Part directory Owner:32+3*16=80B descriptor, before PMR
+   rounding. Retained sources acquire physical uses; they are not free borrows
+   after capture. No ancestors, counter, bounds or extra block change.
+5. Return one directory change. The caller joins its actual replacement Segment
+   Owner, giving two changes in this witness, and performs one real prepare and
+   install. The small-packet duplicate check performs one full-ID comparison;
+   real catalog/reservation/history work remains.
+6. Clear caller-held Owners, release scratch, and pay local/whole-history
+   maintenance and retirement. The selected old Scope still protects late reads.
+
+The following is an allocation of the 250 ns engineering ceiling, not a timing
+prediction. Each line is a separate unresolved sub-budget. The tighter matched
+relative allocation can reduce the whole ceiling further; this table never
+overrides it.
+
+| Complete directory replacement phase | Target allocation |
+| --- | ---: |
+| Scope/schema/before qualification and one route | 35 ns |
+| Derive/compare actual after association | 20 ns |
+| Actual backing acquisition | 60 ns |
+| 1 KiB copy and final stores | 20 ns |
+| Source retention and three-Part capture | 40 ns |
+| Whole two-change prepare/install | 60 ns |
+| Local cleanup and amortized maintenance | 15 ns |
+| Total | 250 ns |
+
+The same trace for F128/C32 copies 2 KiB and captures five Parts (112B descriptor,
+four old sources); it must repay that extra work by lower read depth or better
+structural amortization. It does not receive a larger ordinary-update ceiling.
+An L1 whole-Part replacement, hash clone, seventh-pointer change or bounds edit
+takes its own actual path; the trace above cannot price it.
+
+Five unrelated locator replacements do not inherit five 250 ns allowances. The
+350ns coupled pressure target needs actual batch reuse/backing/capture savings.
+Five scalar copies/captures/installations cannot meet that target by construction.
+Likewise, measured graph reads do not demonstrate stable-name read throughput,
+and the old stable-name loss remains relevant until a complete matched witness
+shows what changed.
+
+The paper revisions remove identifiable unnecessary work:
+
+| Rejected cost | Current candidate | Residual cost that remains |
+| --- | --- | --- |
+| Clone a layer/roster for one entry | Bounded leaf/hash group | actual bounded clone, capture and publication |
+| Physical child pointer repair on every payload move | Stable child names | each read's real catalog selections |
+| Decode/build all node rows for locator-only edits | Patch the selected payload Part directly | copied Part plus ALL admitted capture sources |
+| F32/C8's five capture Parts | F32/C16's three Parts | twice the changed bytes; actual old backing retention |
+| Full keys plus exact short abbreviations | Abbreviations plus only missing tails | full-tail refinement for K>8; format conversion/qualification |
+| Scalar replay of structural batch intermediates | Final sorted streams and bottom-up normalization | all final outputs/neighbours/parents/counter/tombstones |
+| Dynamic extra ranks and holder repair | Sixteen original-suffix StreamPack ranks | local final-image rewrite, potentially large bytes |
+| Append-time schema roster/header churn | Direct named caller-supplied definition IDs | actual record Owners, scoped admission and descriptor lifetime |
+
+The occupancy arithmetic was checked over every legal scalar sibling count for
+F32 and F128. Minimum underflow potential release is 6/22 and split release 7/23;
+the conservative global denominators are 5/21. Therefore the former 400 ns F32
+repair goal did not justify 75 ns amortized work. 375 ns is the corrected F32 goal.
+F128 at 1.5 us gives 71.4 ns before any work omitted from its boundary. A complete
+capture/publication/retirement result must earn those numbers; a potential
+argument alone establishes no CPU bound.
+
+The measured full 64 B point consumer has substantial conditional room in some
+cells. Dense whole-layer scan has almost none: G16's strongest retained direct
+case leaves 0.413 ns/item below half its paired native peer, and the unmeasured
+competent DUPFIXED peer may tighten it. A multi-row Segment can amortize directory
+work over its actual records; the one-row stress case remains in the results.
+It cannot be reclassified as acceptance or removed to manufacture headroom.
+
+Latest whole-table Hashtable evidence in
+[the memory-matched study](../hashtable-boost-adoption/MEMORY.md) strengthens the
+reason to test complete caller execution: future-key prefetch can substantially
+improve eligible independent cold work, while some hot mixed cases still favor
+peers. That is not a composed directory result, a scalar point constant or a
+reason to insert a Ring where dependencies/visibility do not permit overlap.
+
+I cannot yet conclude that every mutable operation fits. The unclosed costs are
+stable-name selection throughput, actual three/five-Part capture plus coupled
+publication, five-replacement pressure, whole structural repair/retirement, and
+large-list/schema/cold-history behavior. Current APIs can express the algorithms;
+expressibility does not prove their cost. The present decision is to retain this
+explicit paper candidate and its misses, not resume a broad implementation or
+claim that another prototype is already certain to pass.

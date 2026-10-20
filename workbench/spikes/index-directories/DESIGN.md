@@ -3,27 +3,26 @@
 The choices here are implementation candidates. Segment identities, physical-key
 order, layer geometry and query semantics remain the supplied model.
 
-## First module implementation
+## Current paper comparison
 
-The [current graduation proposal](README.md#proposed-graduation-cut) selects a
-useful mutable directory API and one recipe per routing path: ordinary top
-tables, actual inline-V64 Ikea hash regions, and a stable-name ordered tree
-using Boundlist. The remaining alternatives below are research comparisons,
-not prerequisites to implementing every public operation. G16 physical packing
-does not select logical leaf/Part capacity or establish a durable format.
+The [current instruction](README.md#spike-plan-and-present-decision) is to review
+the full algorithm and performance case before more implementation. Ordinary
+top tables, actual Ikea-owned inline-V64 hash regions and a stable-name Boundlist
+tree remain the proposed composition. Unfinished Engine sources do not establish
+its cost or correctness. G16 physical packing is a measured control, not a
+logical leaf capacity, persistent ABI or universal optimum.
 
-The real consumer shares the caller's ObjectStore/Core and Scope, supplies
-finished Segment/schema inputs, and joins returned directory changes into one
-Orbital packet. Segment birth/death, duplicate-aware logical seek, bounds repair,
-legal storage balancing and admitted extra/schema association remain actual
-implementation work. The scalar fixture and paper batch algorithm do not
-satisfy those promises. No missing public module protocol prevents starting.
+The active paper comparison is F32/C16 against F128/C32, including complete
+source retention/capture/publication costs. The current-root graph remains a
+read control with separately charged write paths. The compact candidate ledger
+below supersedes the older wide/full-key controls for this comparison;
+historical formats and measurements retain their original source identities.
 
-Extraction must replace fixture-only format/resource lifetimes with explicit
-ownership that survives selected/exported uses. It must also implement the
-before/after binding checks and failure cleanup described in the pseudocode.
-Those are concrete correctness seams. Exact cache attribution, every alternative
-geometry and a universal performance ratio are separate research questions.
+The caller shares its ObjectStore/Core and original Scope, supplies finished
+Segment material and combines all actual changes into one Orbital packet.
+Engine introduces no MVCC, undo or second commit. The [pseudocode](PSEUDOCODE.md)
+covers the complete read/edit/balance path, including failure and cleanup.
+Performance fit remains conditional in [Budget](BUDGET.md#paper-feasibility-and-remaining-uncertainty).
 
 ## Keep three independent choices open
 
@@ -207,17 +206,102 @@ yet a portable wire contract.
 | --- | ---: | --- | --- |
 | 0..47 | 48 | `parts[6]` | Six memory pointers or resource locators for the segment's inline Parts. |
 | 48..51 | 4 | `representation` | Stable representation identifier, resolved through the selected index schema. |
-| 52..53 | 2 | `flags` | Proposed bits0..5 mapped-inline mask; bits6..7 extra recipe (none/StreamPack/paged/reserved); bits8..9 admitted locator-recipe class; bits10..15 zero/reserved. Schema defines each Part's actual interpretation. |
-| 54..55 | 2 | `overflow_rank` | Assigned StreamPack rank, 0..255 for that recipe. Ignored for no-overflow/paged-extra recipes. |
-| 56..63 | 8 | `overflow_block` | Scoped block name/resource coordinate; physical replacement of that block does not change the name. |
+| 52..53 | 2 | `locator_kinds` | Six two-bit inline locator classes; first candidate admits memory/mapped values. High four bits and unused classes are zero. Unsupported resource recipes reject at admission. |
+| 54..55 | 2 | `overflow_rank` | Original physical suffix,0..15, for the fixed-rank StreamPack recipe; zero without extras. |
+| 56..59 | 4 | `overflow_block` | Physical prefix >>4. Layer and namespace reconstruct the full stable extra-Object name without collision; zero without extras. |
+| 60..63 | 4 | `reserved` | Zero; no Engine version or hidden control. |
 
-No prefix, logical bound, record summary, raw pointer owner, MVCC cut or
+No full prefix, logical bound, record summary, raw pointer owner, MVCC cut or
 artificial revision counter is hidden in those sixteen bytes. Orbital owns the
 cut and history. A changed representation identifier is a real directory edit;
 a new logical cut alone is not a reason to rewrite an otherwise equal dirent.
 Unused inline slots and unused metadata are zero; actual Part count and permitted
 locator recipes come from the admitted representation, not guessed null-pointer
 semantics. Reserved encodings reject rather than silently selecting a format.
+
+## Compact candidate byte and ownership ledger
+
+This is a proposed native layout, not a reinterpretation of the measured graph
+or unfinished implementation. The unfinished node code duplicates full K-byte
+endpoints alongside abbreviations. The revision below stores only missing tails
+and requires independent qualification before use.
+
+Header bytes0..63 contain magic:u32 at0, layer:u8 at4, storage-height:u8 at5,
+count:u16 at6, first/last physical-prefix:u32 at8/12, sixteen payload-slot-mask
+bytes at16..31, and32 zero reserved bytes at32..63. Internal nodes zero the slot
+mask. F32 uses its first four bytes; F128 uses all sixteen. This is a directory
+payload-slot mask, not a record-position mask.
+
+After the header are physical-prefix u32[F], slot u8[F], zero alignment bytes
+to a64B boundary, minimum abbreviation u64[F], maximum abbreviation u64[F],
+and each endpoint's remaining max(0,K-8) bytes per row. Abbreviations encode
+the first eight key bytes in order, padding short keys with trailing zeroes.
+For fixed K<=8 they are exact; reconstruct byte form only when requested.
+K>8 equal abbreviations always refine against tails. All arrays retain original
+routing ranks. There is no duplicate full-key array.
+
+Define M=align64(align64(64+5F)+16F+2F*max(0,K-8)). A leaf has metadata Part M
+and ceil(F/C) payload Parts of64*C bytes; an internal node has one Part of
+M+8F bytes containing stable child names. Unused admitted bytes are initialized
+and charged. The simple internal control retains the unused slot-map plane.
+
+| K<=8 candidate | F32/C8 control | F32/C16 | F128/C16 control | F128/C32 |
+| --- | ---: | ---: | ---: | ---: |
+| Leaf metadata M | 768 B | 768 B | 2,752 B | 2,752 B |
+| Internal body | 1,024 B | 1,024 B | 3,776 B | 3,776 B |
+| Total leaf body | 2,816 B | 2,816 B | 10,944 B | 10,944 B |
+| Admitted leaf Parts P | 5 | 3 | 9 | 5 |
+| Locator-only copied Part | 512 B | 1,024 B | 1,024 B | 2,048 B |
+| Retained old sources per locator edit | 4 | 2 | 8 | 4 |
+| Independent-native descriptor,32+16P | 112 B | 80 B | 176 B | 112 B |
+| Fresh grouped-native descriptor,32+8P+8 | 80 B | 64 B | 112 B | 80 B |
+
+Grouped construction transfers one actual Allocation once. Partial updates may
+then retain independent sources from that backing; they pay the independent
+descriptor/source-use costs and can pin older whole backing. An F32 leaf body
+fits the present3KiB finite cutoff; the old K8 full-key control's3,328B did not.
+This is geometry, not an allocation or latency guarantee. Actual palette capacity,
+page fill and retained readers still determine cost.
+
+The common material Control is24B: Layout pointer8, name8, first ordinal4,
+projection flag1, owner-mode1, reserved2. Immutable Layout retains namespace,
+representation/Kind, external resource and actual interpretation proof, plus
+16B Geometry{extent8,alignment4,padding4} per Part. Count sizeof(Layout), vector
+capacity and interpretation/control allocations as metadata; they are not in
+the body table. Cache truly invariant directory geometry once. Each capture or
+export retains its needed interpretation without an ancestor-Control chain.
+
+L0 has one64B payload plus actual endpoint bytes. L1's whole-Part control has
+16,448B payload/header plus its population-ranked endpoint plane. The current
+conservative K8 bounds plane is8,448B, including native abbreviations and
+duplicated full endpoints. A compact successor must remove that duplication
+explicitly; do not price its future saving into the current layout.
+
+W4/b0/V64 hash primary storage is1,026 logical/1,088 assigned bytes under the
+current native policy. Actual table/header, native Storage, immutable proof and
+original-suffix bounds plane are additional. A shared-primary/native-bounds
+capture uses the real mixed descriptor32+32P=96B for P2. Count sizeof(actual
+owner), its shared control and enumerated allocations; opaque proof is not free.
+
+The first fixed-rank extras Object has four actual StreamPack windows: payload,
+directory, lengths and control. Their extents come from the current layout for
+maximum list length M, independent extent B and sixteen assigned ranks. Lists
+contain native u64 locators. Format proof, four-Part descriptor, initialized
+padding and backing are additional. Reserve by final extent where admitted,
+rather than automatically16*M. A one-MiB legal rewrite receives a size-dependent
+budget, not the small-list1us target.
+
+Native schema header64B: magic4,K4,J1,seven reserved bytes, three u64 namespaces
+at16/24/32, then24 reserved zero bytes. Definition record64B: magic4,rep_id4,
+layer-mask1,locator-kind1,54 reserved bytes; its immutable descriptor/meaning is
+retained in the physical interpretation proof. IDs are caller-supplied. D actual
+definition additions/extensions change D records; no roster/header rewrite is
+required unless index context is initialized. This replaces the older16B
+next-ID-header control below for the current paper candidate.
+
+Current/private/retained/reusable physical inventory, catalog/hash/history
+storage, prepared changes, PMR rounding and helper state are additional ledger
+entries. Dividing this body table alone yields no complete per-record or RSS cost.
 
 ## Routing and payload bytes
 
@@ -544,9 +628,10 @@ Membership, changed guide codes and explicit recoding also still repair parents.
 Stable origin/scale is essential; deriving a new origin from every changed
 minimum would erase the proposed write saving.
 
-Ikea owns any native kernel change. Its current AVX-512 direct-byte convergence
-mask is capped at 32 ranks, and the opt-in scan source excludes u8; a full
-64-byte-lane guide is therefore a proposed Ikea improvement, not a current API.
+Ikea owns any native kernel change. Current AVX-512 direct-byte convergence uses
+a u64 mask and64/sizeof(T) lanes, and the opt-in scan source supports u8 through
+its explicit byte scanner. Ordinary direct_source calls receive those shared
+kernels; a64-byte guide does not require a new Ikea API.
 A specialised four-bit width prefix may avoid generic widening, but must earn
 that change in the complete-node caller. Exact lower/upper_bound APIs never
 return an approximate rank; the owner can retain a guide candidate window and
@@ -598,8 +683,9 @@ The analogous potential is high above 26 at all nodes plus low below 13 at
 non-root nodes. Underflow 7 merges to 15..26 or redistributes 27..39 to 13..20,
 releasing at least 6 credits; split releases 7. Newly normalized batch outputs
 target 13..26. This has fewer credits than F128 but much smaller repair and
-publication grain. A 400 ns structural goal gives about 67 ns/credit before
-cascades. It must be earned by complete capture/publication measurements.
+publication grain. The corrected375ns structural goal gives62.5ns per local
+credit,75ns under the conservative whole-tree denominator below. It must be
+earned by complete capture/publication/retirement measurements.
 
 The wide control has leaf/internal capacities 128 and minimum non-root
 occupancy 32. Compare merge limits 96 and 106; split 129 near the middle. The
@@ -675,7 +761,12 @@ acceptable way to make balancing look cheap.
 
 ## Extra locators
 
-The default candidate groups at most sixteen active extra lists in one
+The current paper candidate is the fixed-original-rank replacement image in
+[Pseudocode](PSEUDOCODE.md#extra-parts-and-schema). The dynamic-rank algorithm
+below is a retained alternative, with its actual retirement/holder-repair costs;
+it is not mixed into that first candidate's budget.
+
+That alternative groups at most sixteen active extra lists in one
 StreamPack block keyed by a stable physical-prefix group. Every list contains
 eight-byte locators. A dirent records that block and assigned rank. Ranks are
 not global occupied-directory ordinals.
@@ -725,7 +816,11 @@ the default grouping/large-list transition policy is not yet selected.
 
 ## Bounded schema control
 
-A concrete direct-name control avoids the unspecified population-sized schema
+The current paper candidate uses caller-supplied IDs and direct64B records as
+described in the compact ledger. The older next-ID-header control below remains
+a comparison; it does not add a header publication to that candidate.
+
+This older direct-name control avoids the unspecified population-sized schema
 roster. A selected 16-byte schema header stores definition-namespace high64 at 0
 and next-representation-ID u64 at 8; reject exhaustion beyond 32-bit dirent IDs.
 This is the definition-domain header only. Index J/K, format/namespace proofs
@@ -783,7 +878,7 @@ Related SixDB research used in this plan:
   fixups on relocation; QHash and ordered traversal have distinct jobs. Its
   resident empty segments, rope limitations, rank-packed movement and older
   storage contracts are not inherited by SixDB.
-- [LMDB source](https://github.com/LMDB/lmdb/blob/mdb.master/libraries/liblmdb/mdb.c):
+- [LMDB 0.9.31 source](https://github.com/LMDB/lmdb/blob/LMDB_0.9.31/libraries/liblmdb/mdb.c):
   inspect page touch, split/rebalance and cursor repair alongside competent
   transactions/cursors, not an invented generic Store adapter. Its copying and
   snapshot work belong in the comparator's measured operation.

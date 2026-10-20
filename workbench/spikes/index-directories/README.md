@@ -1,14 +1,85 @@
 # Index directories
 
-The current priority is a useful mutable Engine directory. The fixed-population
-fixture is not that module. Point and sparse read results support moving on to
-its API, mutations and lifetimes; they do not establish complete Engine
-performance. Further point/scan tuning is stopped.
+The current instruction is to finish the composition review, performance budget
+and full algorithm on paper before more implementation. Existing fixtures and
+unfinished `engine/` sources do not establish a useful mutable directory or a
+complete Engine performance result. This review changes the implementation
+strategy, not the supplied index model.
 
 - [Budget](BUDGET.md): matched peers, operation ceilings and limits.
 - [Pseudocode](PSEUDOCODE.md): reads, batches, balancing, extras, schema and failure.
 - [Design](DESIGN.md): byte/ownership ledgers, implementation choices and prior art.
 - [Findings](FINDINGS.md): measurements, source identities and recovery.
+
+## Spike plan and present decision
+
+The proposed objective is complete Engine at least twice as fast as the faster
+valid Calico/LMDB comparator. Initially allocate at most one quarter of that
+peer's time to all directory, binding and coupled publication work. The sum
+across a request matters; five layers do not receive five budgets. These are
+aggressive planning allocations, not measured achievements or inherited APIs.
+
+The actual composition reviewed for this plan is:
+
+- Ikea's [owner integration](../../../ikea/docs/integration.md), actual
+  [effects](../../../ikea/include/ikea/effects.h), Hashtable owner/clone/native
+  interfaces and current Boundlist/StreamPack portfolio. Coverage precedes
+  issued stores; it supplies neither isolation nor beforeimages.
+- Orbital's [material/source contract](../../../orbital/docs/material.md),
+  [capture implementation](../../../orbital/include/orbital/instantiate/representation.h)
+  and [prepare/install](../../../orbital/include/orbital/instantiate/object.h).
+  Capture retains physical sources without retaining ancestor Representations.
+  One existing Core publishes finished changes at one cut.
+- Loom's [ordinary/retained operation rules](../../../loom/docs/usage.md) and
+  actual allocation caller. Ready work is ordinary native work. A per-Part Hold,
+  Task, Ring visit or scheduler entry is not required for each lookup.
+- Calico's [actual trie design](../../../../calico/design/TRIE.md),
+  [QHash results](../../../../calico/qhash/REPORT.md) and prepared runtime caller;
+  the [prior-art survey](DESIGN.md#prior-art-carried-into-the-experiment) relates
+  each source to a specific implementation question.
+
+The paper work now has four concrete comparisons, rather than a growing matrix:
+
+1. Trace one locator replacement from original Scope through final cleanup.
+   Price the actual 1 KiB/three-Part F32/C16 leaf against 2 KiB/five-Part
+   F128/C32. Both preserve stable child names, so a payload-only change causes
+   no ancestor publication. F128 can save a routing level but retains more
+   sources per edit. Keep the measured raw-child graph as a read control and
+   count its path captures/child retentions in write comparisons.
+2. Check logical seek, prefix lookup, continuation and selected material against
+   the same peer-derived envelope. Distinguish a qualified direct byte recipe
+   from a recipe requiring authoritative runtime geometry/corrections. The
+   extra material/schema selections in the latter cannot be priced as the former.
+3. Normalize final membership batches, not scalar intermediate trees. Prove
+   occupancy, duplicate-boundary behavior, cross-parent repairs and name lifetime.
+   F32 needs repair at most 375 ns to support the conservative 75 ns amortized
+   structural allocation; F128's 1.5 us goal gives about 71.4 ns. These include
+   their actual repair work and charged publication/retirement, not just copying.
+4. Use fixed original-suffix ranks for the first extra-list recipe. This removes
+   holder enumeration and rank-repair work from that candidate, at the price of
+   rebuilding one bounded local StreamPack image. Compare its whole byte cost;
+   sixteen holders alone does not bound the payload size.
+
+No performance fit is established for the complete mutable composition. The
+existing stable-name probe lost, and graph read timings cannot certify a different
+stable-name implementation. Dense scans also have very little complete-request
+headroom in the one-record-per-Segment stress case. Keep these as unresolved
+costs; do not fill them with sums of unrelated kernel timings.
+
+Once the paper path has no unsupported calls or unpriced work, the first future
+implementation experiment should be the smallest complete read/update/balance
+witness with actual Ikea/Loom/Orbital calls and native peers. Take measurements
+from that first witness, including failure and cleanup. If it misses, revise the
+algorithm before adding features. No broad tuning campaign is needed now.
+
+The eventual canonical driver must separate record population, Segment population
+and material bytes: multiple ordered rows per independently allocated Segment,
+duplicates crossing Segment boundaries, projected/full reads, actual ranges,
+one-field updates and atomic multi-Segment batches. Include sparse/empty/tail
+cases and a one-row stress control. Its row and summary work belongs to the
+driver/producer; directory inputs are Segment facts. The retired allocation and
+Stage 2 drivers remain [historical controls](../../benchmarks/retired-drivers.md).
+Shore frontend work remains planning only.
 
 ## Proposed graduation cut
 
