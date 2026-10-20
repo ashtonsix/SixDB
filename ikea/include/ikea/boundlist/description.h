@@ -23,29 +23,35 @@ enum class error {
     range
 };
 enum class geometry : std::uint8_t { direct, width };
-enum class placement : std::uint8_t { grouped, separated };
 
-/// Schema facts, independent of execution ISA. The byte limit can seal a block
+/// Schema facts, independent of execution ISA. The extent limit can seal a source
 /// before its rank capacity. Omitted facts cannot subsequently be mutated.
 struct description {
     geometry family = geometry::width;
-    placement lengths = placement::grouped;
     std::uint16_t maximum = 65535;
-    std::uint32_t byte_limit = slot_capacity * maximum;
+    std::uint32_t extent_limit = slot_capacity * maximum;
     std::optional<std::uint16_t> fixed_reservation = std::nullopt;
-    bool full = false;
     bool immortal = false;
     bool operator==(const description&) const = default;
 };
+
+namespace detail {
+/// Prepared geometry shared by standalone and enclosing value recipes. No
+/// duplicated schema, U placement, source pointers or consumer policy.
+struct geometry_sizes {
+    std::uint32_t directory;
+    std::uint16_t tombstones;
+    std::uint8_t width_bytes, offset_bytes, control_bytes, stride;
+    bool fixed;
+    [[nodiscard]] static std::expected<geometry_sizes, error> prepare(description);
+};
+} // namespace detail
 
 /// Immutable schema preparation, shared by blocks. Persist encode()'s portable
 /// description, never this object's native representation or borrowed pointers.
 class layout {
     description description_;
-    std::uint32_t directory_, lengths_, geometry_offset_, used_offset_, stride_;
-    std::uint16_t tombstones_;
-    std::uint8_t width_bytes_, offset_bytes_, control_bytes_, alignment_;
-    bool fixed_, used_;
+    detail::geometry_sizes geometry_;
     layout() = default;
 
   public:
@@ -56,60 +62,53 @@ class layout {
     static constexpr unsigned capacity() noexcept {
         return slot_capacity;
     }
+    unsigned extent_limit() const noexcept {
+        return description_.extent_limit;
+    }
     bool fixed() const noexcept {
-        return fixed_;
+        return geometry_.fixed;
     }
     unsigned fixed_width() const noexcept {
         return description_.fixed_reservation.value_or(0);
     }
-    bool has_used() const noexcept {
-        return used_;
-    }
     bool has_tombstones() const noexcept {
-        return tombstones_ != 0;
+        return geometry_.tombstones != 0;
     }
     bool has_extent() const noexcept {
-        return control_bytes_ > 2;
+        return geometry_.control_bytes > 2;
     }
     unsigned width_bytes() const noexcept {
-        return width_bytes_;
+        return geometry_.width_bytes;
     }
     unsigned offset_bytes() const noexcept {
-        return offset_bytes_;
+        return geometry_.offset_bytes;
     }
     unsigned control_bytes() const noexcept {
-        return control_bytes_;
+        return geometry_.control_bytes;
     }
     unsigned directory_bytes() const noexcept {
-        return directory_;
+        return geometry_.directory;
     }
     unsigned tombstone_bytes() const noexcept {
-        return tombstones_;
+        return geometry_.tombstones;
     }
     unsigned geometry_offset() const noexcept {
-        return geometry_offset_;
-    }
-    unsigned used_offset() const noexcept {
-        return used_offset_;
+        return geometry_.tombstones;
     }
     unsigned group_stride() const noexcept {
-        return stride_;
+        return geometry_.stride;
     }
     unsigned lengths_alignment() const noexcept {
-        return alignment_;
+        return geometry_.width_bytes;
     }
-    /// Initialized/readable lengths include complete groups of sixteen. In the
-    /// separated Width recipe the U origin follows full-capacity R storage.
+    /// Initialized/readable reservation widths include complete G16 groups.
     unsigned lengths_bytes(unsigned assigned) const noexcept;
     unsigned lengths_bytes() const noexcept {
-        return lengths_;
+        return lengths_bytes(slot_capacity);
     }
     /// Conservative journal slots; admission can accept a smaller exact bound.
     unsigned append_effect_capacity() const noexcept {
         return 8;
-    }
-    unsigned pack_effect_capacity(unsigned count) const noexcept {
-        return count * 4 + 1;
     }
     std::array<byte, 8> encode() const noexcept;
     [[nodiscard]] static std::expected<layout, error> decode(bytes);

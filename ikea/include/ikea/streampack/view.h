@@ -14,7 +14,9 @@ template <class Byte> struct storage {
     }
 };
 namespace detail {
+using boundlist::detail::load;
 using boundlist::detail::overlaps;
+using boundlist::detail::store;
 [[nodiscard]] std::expected<void, error> admit_storage(const layout&, storage<const byte>);
 } // namespace detail
 

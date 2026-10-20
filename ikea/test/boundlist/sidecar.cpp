@@ -21,9 +21,12 @@ struct fixture {
                                         std::span(control).first(format.control_bytes())})) {}
 };
 struct model {
-    unsigned reserved, used;
+    unsigned reserved;
     bool dead = false;
 };
+template <class T>
+concept carries_used = requires(T value) { value.length; };
+static_assert(!carries_used<sc::location>);
 struct audit {
     const sc::view* source;
     std::array<std::vector<std::byte>, 3> replay;
@@ -71,8 +74,7 @@ void verify(fixture& f, const std::vector<model>& values) {
         if (v.dead)
             assert(!loc && loc.error() == sc::error::retired);
         else
-            assert(loc && loc->offset == offset && loc->length == v.used &&
-                   loc->reservation == v.reserved);
+            assert(loc && loc->offset == offset && loc->reservation == v.reserved);
         for (unsigned x = 0; x < v.reserved; ++x) {
             const auto owner = sc::reverse(f.view, offset + x);
             assert(owner && owner->rank == r && owner->tombstone == v.dead);
@@ -80,7 +82,42 @@ void verify(fixture& f, const std::vector<model>& values) {
         offset += v.reserved;
     }
     assert(f.view.extent() == offset && !sc::reverse(f.view, offset));
+#if defined(__aarch64__) || defined(__AVX2__)
+    sc::author::dispatch(f.view, [&](auto a) {
+        for (unsigned g = 0; g < (values.size() + 15) / 16; ++g) {
+            const auto packet = sc::native::read16(a, g);
+            std::array<unsigned, 16> starts, reservations;
+            sc::native::each_chunk([&](auto i) {
+                sc::native::store(starts.data() + i * sc::native::lanes, packet.values.offsets(i));
+                sc::native::store(reservations.data() + i * sc::native::lanes,
+                                  packet.values.reservations(i));
+            });
+            unsigned position = 0;
+            for (unsigned r = 0; r < std::min<unsigned>(values.size(), g * 16); ++r)
+                position += values[r].reserved;
+            for (unsigned r = g * 16; r < std::min<unsigned>(values.size(), g * 16 + 16); ++r) {
+                assert(starts[r % 16] == position && reservations[r % 16] == values[r].reserved);
+                assert(bool(packet.live & (1u << (r % 16))) == !values[r].dead);
+                position += values[r].reserved;
+            }
+        }
+    });
+#endif
     sc::author::dispatch(f.view, [&](const auto& access) {
+        // A carried traversal includes zero and retired reservations. Exercise
+        // a partial window crossing both sides of a G16 boundary as well.
+        for (unsigned first : {0u, std::min(15u, unsigned(values.size()))}) {
+            const auto count = unsigned(values.size()) - first;
+            unsigned begin = 0;
+            for (unsigned r = 0; r < first; ++r)
+                begin += values[r].reserved;
+            unsigned expected_rank = first;
+            access.slots(first, count, begin, [&](unsigned rank, unsigned from, unsigned width) {
+                assert(rank == expected_rank++ && from == begin && width == values[rank].reserved);
+                begin += values[rank].reserved;
+            });
+            assert(expected_rank == values.size());
+        }
         for (unsigned q = 0; q < offset + 3; q += 13) {
             unsigned lower = values.size(), upper = values.size(), end = 0;
             for (unsigned r = 0; r < values.size(); ++r) {
@@ -123,10 +160,9 @@ void history(sc::description d) {
     std::vector<model> m;
     for (unsigned r = 0; r < 65; ++r) {
         const auto reserve = d.fixed_reservation.value_or(std::uint16_t(r % 7 ? r % 31 : 0));
-        const unsigned used = d.full ? reserve : reserve / 2;
-        assert(sc::append(f.view, used, reserve, log));
+        assert(sc::append(f.view, reserve, log));
         log.verify();
-        m.push_back({reserve, used});
+        m.push_back({reserve});
         if (r == 14 || r == 15 || r == 16 || r == 64)
             verify(f, m);
     }
@@ -136,31 +172,33 @@ void history(sc::description d) {
             m[r].dead = true;
             log.verify();
         }
-    for (unsigned r = 1; r < 65; r += 7)
-        if (!m[r].dead) {
-            const auto used = d.full ? m[r].reserved : 0;
-            assert(sc::replace(f.view, r, used, log));
-            m[r].used = used;
-            log.verify();
-        }
     verify(f, m);
+    if (!f.format.fixed()) {
+        // An enclosing owner may rewrite the already-read slot. Verify original
+        // offsets against an independent model while earlier Direct ends and
+        // Width checkpoints have already changed underneath the traversal.
+        unsigned original = 0, destination = 0;
+        sc::author::dispatch(f.view, [&](auto a) {
+            a.slots(0, m.size(), 0, [&](unsigned rank, unsigned from, unsigned reservation) {
+                assert(from == original && reservation == m[rank].reserved);
+                original += m[rank].reserved;
+                const auto chosen = m[rank].dead ? 0u : m[rank].reserved / 2;
+                sc::author::write_slot_unchecked(a, rank, destination, chosen, log);
+                destination += chosen;
+                m[rank].reserved = chosen;
+            });
+            sc::author::finish_rewrite_unchecked(a, destination, log);
+        });
+        log.verify();
+        verify(f, m);
+    }
     // Refused commands preserve metadata and journal output.
     const auto count = log.writes;
     log.limit = count;
-    assert(!sc::append(f.view, 0, d.fixed_reservation.value_or(0), log));
+    assert(!sc::append(f.view, d.fixed_reservation.value_or(0), log));
     assert(log.writes == count);
     log.verify();
     log.limit = 4096;
-    if (!d.fixed_reservation || !*d.fixed_reservation) {
-        assert(sc::soft_pack(f.view, true, log));
-        log.verify();
-        for (auto& v : m) {
-            v.reserved = v.dead ? 0 : v.used;
-            if (v.dead)
-                v.used = 0;
-        }
-        verify(f, m);
-    }
     fixture dst(d);
     audit output(dst.view);
     std::vector<std::uint16_t> selected;
@@ -170,22 +208,22 @@ void history(sc::description d) {
             selected.push_back(r);
             ordered.push_back(m[r]);
         }
-    assert(sc::transfer(f.view, selected, dst.view, false, output));
+    // Selection/remapping is consumer policy, not a Boundlist compactor.
+    assert(sc::initialize(dst.view, output));
+    for (auto r : selected)
+        assert(sc::append(dst.view, m[r].reserved, output));
     output.verify();
     verify(dst, ordered);
 }
 void sidecar_checks() {
     for (auto g : {sc::geometry::direct, sc::geometry::width})
-        for (auto p : {sc::placement::grouped, sc::placement::separated})
-            for (bool full : {false, true})
-                for (bool immortal : {false, true})
-                    for (auto fixed :
-                         {std::optional<std::uint16_t>{}, std::optional<std::uint16_t>{0},
-                          std::optional<std::uint16_t>{8}})
-                        history({g, p, 255, 65280, fixed, full, immortal});
+        for (bool immortal : {false, true})
+            for (auto fixed : {std::optional<std::uint16_t>{}, std::optional<std::uint16_t>{0},
+                               std::optional<std::uint16_t>{8}})
+                history({g, 255, 65280, fixed, immortal});
     // Frozen schema bytes and a hand-authored Direct interpretation.
-    fixture f({sc::geometry::direct, sc::placement::grouped, 255, 65280, {}, false, false});
-    const std::array<std::byte, 8> wire{std::byte{0x40}, std::byte{0xff}, std::byte{0},
+    fixture f({sc::geometry::direct, 255, 65280, {}, false});
+    const std::array<std::byte, 8> wire{std::byte{0x60}, std::byte{0xff}, std::byte{0},
                                         std::byte{0},    std::byte{0xff}, std::byte{0},
                                         std::byte{0},    std::byte{0}};
     assert(f.format.encode() == wire && sc::layout::decode(wire)->encode() == wire);
@@ -194,11 +232,17 @@ void sidecar_checks() {
     f.directory[at + 2] = std::byte{3};
     f.directory[at + 4] = std::byte{9};
     f.control[0] = std::byte{3};
-    f.lengths[0] = std::byte{2};
-    f.lengths[2] = std::byte{4};
     assert(f.view.validate());
     assert(sc::reverse(f.view, 3)->rank == 2 && bl::lower_bound(f.view, 3u) == 0 &&
            bl::upper_bound(f.view, 3u) == 2);
-    f.lengths[15] = std::byte{1};
-    assert(!f.view.validate());
+    auto invalid = wire;
+    invalid[0] = std::byte{0x40}; // StreamPack v2 is not a geometry-only schema.
+    assert(!sc::layout::decode(invalid));
+    invalid[0] = std::byte{0x62}; // Reserved former U-placement bit.
+    assert(!sc::layout::decode(invalid));
+    fixture w({sc::geometry::width, 255, 65280, {}, false});
+    ikea::no_coverage none;
+    assert(sc::initialize(w.view, none) && sc::append(w.view, 3, none));
+    w.lengths[15] = std::byte{1};
+    assert(!w.view.validate());
 }

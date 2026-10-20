@@ -13,7 +13,7 @@ sixdb_target(ikea_boundlist_check)
 target_compile_options(ikea_boundlist_check PRIVATE -fno-vectorize -fno-slp-vectorize)
 target_link_libraries(ikea_boundlist_check PRIVATE ikea::boundlist)
 
-add_library(ikea_streampack STATIC src/streampack/view.cpp)
+add_library(ikea_streampack STATIC src/streampack/description.cpp src/streampack/view.cpp)
 add_library(ikea::streampack ALIAS ikea_streampack)
 sixdb_target(ikea_streampack)
 target_include_directories(ikea_streampack PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")

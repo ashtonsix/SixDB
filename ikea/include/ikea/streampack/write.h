@@ -4,7 +4,19 @@
 
 namespace ikea::streampack {
 namespace detail {
-using boundlist::sidecar::detail::accepts;
+inline bool accepts(const layout& l, unsigned length, unsigned reservation) {
+    return length <= reservation && boundlist::sidecar::detail::accepts(l, reservation) &&
+           (l.has_used() || length == reservation);
+}
+inline unsigned append_effects(const layout& l, unsigned n) {
+    const bool r = !l.fixed() && l.schema().family == geometry::width;
+    const unsigned fields =
+        n % 16 ? unsigned(r) + l.has_used()
+               : unsigned(r || l.has_used()) +
+                     (r && l.has_used() && l.schema().lengths == placement::separated);
+    return (!l.fixed() && (l.schema().family == geometry::direct || !(n % 16))) + fields +
+           l.has_tombstones() + 1;
+}
 using boundlist::sidecar::detail::room;
 /// Payload aliases are supported while the binding stays live. Metadata and
 /// effect-output aliases would let issued stores destroy remaining input.
@@ -44,7 +56,7 @@ template <class Effects>
         return std::unexpected(error::capacity);
     if (detail::input_alias(dst, input, effects))
         return std::unexpected(error::alias);
-    const unsigned count = (reservation != 0) + boundlist::sidecar::detail::append_effects(l, n);
+    const unsigned count = (reservation != 0) + detail::append_effects(l, n);
     if (!detail::room(effects, count))
         return std::unexpected(error::effects);
     author::dispatch(dst,

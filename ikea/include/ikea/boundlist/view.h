@@ -18,6 +18,9 @@ namespace detail {
 using boundlist::detail::load;
 using boundlist::detail::overlaps;
 using boundlist::detail::store;
+[[nodiscard]] std::expected<void, error>
+admit_metadata(unsigned directory_bytes, unsigned control_bytes, unsigned lengths_alignment,
+               const void* format, std::size_t format_bytes, storage<const byte>);
 [[nodiscard]] std::expected<void, error> admit_storage(const layout&, storage<const byte>);
 } // namespace detail
 

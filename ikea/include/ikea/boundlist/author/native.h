@@ -5,7 +5,7 @@ namespace ikea::boundlist::sidecar::native {
 using namespace ikea::boundlist::native;
 #if defined(__aarch64__) || defined(__AVX2__)
 inline constexpr unsigned chunks = 16 / lanes;
-/// Sixteen offsets and lengths, flattened into native registers at chain hops.
+/// Sixteen offsets and reservations, flattened into native registers at chain hops.
 /// Slots outside the accompanying live mask have no logical value.
 struct packet {
     using vector = native::vector;
@@ -14,7 +14,7 @@ struct packet {
     vector offsets(unsigned chunk) const {
         return v[chunk];
     }
-    vector lengths(unsigned chunk) const {
+    vector reservations(unsigned chunk) const {
         return v[chunks + chunk];
     }
 };
@@ -39,12 +39,12 @@ template <class Body> [[gnu::always_inline]] inline void each_chunk(Body&& body)
 /// One admitted group; can be a partial final group. Loads access initialized
 /// whole groups, never the payload or a terminal checkpoint. Native results feed
 /// a fused consumer directly; no mandatory decoded stack array.
-template <class Access> [[gnu::always_inline]] inline group read16(Access a, unsigned group_index) {
+template <class Access, class Sink>
+[[gnu::always_inline]] inline std::uint16_t decode16(Access a, unsigned group_index, Sink&& sink) {
     const auto& l = a.format();
     const auto first = group_index * 16;
     using W = typename Access::width_type;
     using O = typename Access::offset_type;
-    group out;
     unsigned carry = a.start(first);
     each_chunk([&](auto i) {
         constexpr unsigned lane = i * lanes;
@@ -63,19 +63,24 @@ template <class Access> [[gnu::always_inline]] inline group read16(Access a, uns
             reserved = sub(ends, starts);
             carry = last(ends);
         }
-        out.values.v[i] = starts;
-        out.values.v[chunks + i] = l.has_used()
-                                       ? load<W>(a.source().windows().lengths.data() +
-                                                 l.used_offset() + a.width_offset(first + lane))
-                                       : reserved;
+        [[clang::always_inline]] sink(i, starts, reserved);
     });
     const unsigned count = std::min(16u, a.size() - first);
     unsigned live = (1u << count) - 1;
     if (l.has_tombstones())
         live &= ~sidecar::detail::load<std::uint16_t>(a.source().windows().directory.data() +
                                                       first / 8);
-    out.live = std::uint16_t(live);
+    return std::uint16_t(live);
+}
+template <class Access> [[gnu::always_inline]] inline group read16(Access a, unsigned group_index) {
+    group out;
+    out.live = decode16(a, group_index,
+                        [&](auto i, vector starts, vector reserved) __attribute__((always_inline)) {
+                            out.values.v[i] = starts;
+                            out.values.v[chunks + i] = reserved;
+                        });
     return out;
 }
+
 #endif
 } // namespace ikea::boundlist::sidecar::native

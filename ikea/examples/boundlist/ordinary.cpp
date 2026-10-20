@@ -16,7 +16,7 @@ int main() {
 
     // A curated reservation format. It does not require any payload allocation.
     namespace sc = bl::sidecar;
-    const auto format = sc::layout::prepare({.maximum = 255, .byte_limit = 4096});
+    const auto format = sc::layout::prepare({.maximum = 255, .extent_limit = 4096});
     assert(format);
     std::array<std::byte, 64> directory{};
     alignas(64) std::array<std::byte, 512> lengths{};
@@ -26,9 +26,9 @@ int main() {
     std::array<ikea::owner_write, 32> records;
     ikea::source_write_journal damage{records};
     assert(sc::initialize(*source, damage));
-    assert(sc::append(*source, 2, 5, damage));
-    assert(sc::append(*source, 0, 0, damage));
-    assert(sc::append(*source, 4, 8, damage));
+    assert(sc::append(*source, 5, damage));
+    assert(sc::append(*source, 0, damage));
+    assert(sc::append(*source, 8, damage));
     assert(sc::retire(*source, 0, damage));
     assert(source->validate());
     assert(sc::reverse(*source, 4)->rank == 0 && sc::reverse(*source, 4)->tombstone);

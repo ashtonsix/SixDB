@@ -4,12 +4,13 @@
 #include <array>
 #include <ikea/boundlist/detail/prefix.h>
 #include <ikea/boundlist/view.h>
+#include <type_traits>
 #include <utility>
 
 namespace ikea::boundlist::sidecar {
 struct location {
     std::uint32_t offset;
-    std::uint16_t length, reservation;
+    std::uint16_t reservation;
 };
 struct byte_owner {
     std::uint16_t rank;
@@ -21,10 +22,11 @@ namespace author {
 /// storage. Keep it visible inside a useful consumer; dispatch outside its loop.
 template <geometry Family, class Width, class Offset, class Source> class access {
     const Source* source_;
-    const layout* format_;
+    using format_type = std::remove_cvref_t<decltype(std::declval<const Source&>().format())>;
+    const format_type* format_;
 
   protected:
-    access(const Source& source, const layout& format) : source_(&source), format_(&format) {}
+    access(const Source& source, const format_type& format) : source_(&source), format_(&format) {}
 
   public:
     static constexpr geometry family = Family;
@@ -75,54 +77,45 @@ template <geometry Family, class Width, class Offset, class Source> class access
         else
             return detail::load<Width>(source_->windows().lengths.data() + width_offset(rank));
     }
-    unsigned length(unsigned rank) const noexcept {
-        if (!format().has_used())
-            return reserved(rank);
-        return detail::load<Width>(source_->windows().lengths.data() + format().used_offset() +
-                                   width_offset(rank));
-    }
-    location locate(unsigned rank) const noexcept {
+    [[gnu::always_inline]] location locate(unsigned rank) const noexcept {
         const auto begin = start(rank);
-        unsigned reservation;
-        if (format().fixed())
-            reservation = format().fixed_width();
-        else if constexpr (Family == geometry::direct)
-            reservation = detail::load<Offset>(geometry_data() + rank * sizeof(Offset)) - begin;
-        else
-            reservation =
-                detail::load<Width>(source_->windows().lengths.data() + width_offset(rank));
-        const auto used = format().has_used()
-                              ? detail::load<Width>(source_->windows().lengths.data() +
-                                                    format().used_offset() + width_offset(rank))
-                              : reservation;
-        return {begin, std::uint16_t(used), std::uint16_t(reservation)};
+        const auto width = [&] {
+            if (format().fixed())
+                return format().fixed_width();
+            if constexpr (Family == geometry::direct)
+                return unsigned(detail::load<Offset>(geometry_data() + rank * sizeof(Offset))) -
+                       begin;
+            else
+                return unsigned(
+                    detail::load<Width>(source_->windows().lengths.data() + width_offset(rank)));
+        }();
+        return {begin, std::uint16_t(width)};
     }
     bool live(unsigned rank) const noexcept {
         return !format().has_tombstones() ||
                !(std::to_integer<unsigned>(source_->windows().directory[rank / 8]) &
                  (1u << (rank % 8)));
     }
-    /// Exact metadata read windows for a trusted value lookup and liveness. This
-    /// exposes addresses to an owner prefetch policy without issuing hints or
-    /// retaining another binding. Rank/count have already been admitted.
-    template <class Visit> void visit_value_metadata(unsigned rank, Visit&& visit) const {
-        const auto& l = format();
-        if (!l.fixed()) {
-            if constexpr (Family == geometry::width) {
-                visit(bytes(geometry_data() + (rank / 16) * sizeof(Offset), sizeof(Offset)));
-                visit(bytes(reinterpret_cast<const byte*>(widths(rank / 16)), 16 * sizeof(Width)));
-            } else {
-                if (rank)
-                    visit(bytes(geometry_data() + (rank - 1) * sizeof(Offset), sizeof(Offset)));
-                if (!l.has_used())
-                    visit(bytes(geometry_data() + rank * sizeof(Offset), sizeof(Offset)));
-            }
-        }
-        if (l.has_used())
-            visit(bytes(source_->windows().lengths.data() + l.used_offset() + width_offset(rank),
-                        sizeof(Width)));
-        if (l.has_tombstones())
+    /// Start-only geometry reads. A value with separate U need not load R.
+    template <class Visit> void visit_start_metadata(unsigned rank, Visit&& visit) const {
+        if (format().fixed())
+            return;
+        if constexpr (Family == geometry::width) {
+            visit(bytes(geometry_data() + (rank / 16) * sizeof(Offset), sizeof(Offset)));
+            visit(bytes(reinterpret_cast<const byte*>(widths(rank / 16)), 16 * sizeof(Width)));
+        } else if (rank)
+            visit(bytes(geometry_data() + (rank - 1) * sizeof(Offset), sizeof(Offset)));
+    }
+    template <class Visit> void visit_liveness_metadata(unsigned rank, Visit&& visit) const {
+        if (format().has_tombstones())
             visit(bytes(source_->windows().directory.data() + rank / 8, 1));
+    }
+    /// Issued read windows for reservation location/liveness, not value length.
+    template <class Visit> void visit_metadata(unsigned rank, Visit&& visit) const {
+        visit_start_metadata(rank, visit);
+        if (!format().fixed() && Family == geometry::direct)
+            visit(bytes(geometry_data() + rank * sizeof(Offset), sizeof(Offset)));
+        visit_liveness_metadata(rank, visit);
     }
     /// Variable-layout geometric projection, without population. Fixed layouts
     /// use boundary() directly; they have no stored endpoint/width windows.
@@ -242,28 +235,47 @@ template <geometry Family, class Width, class Offset, class Source> class access
 #endif
         }
     }
-    /// Ordered traversal carries the previous endpoint/prefix. It never pays a
-    /// point prefix for each slot. Sink receives live ranks in original order.
+    /// Traverse original geometry, including retired/zero reservations. The
+    /// caller admits begin == original start(first) and the complete rank range.
+    /// A sink may rewrite already-read geometry, but cannot change the format,
+    /// count, or unread fields. Native scalar fields stay fused at the sink.
+    template <class Sink>
+    [[gnu::always_inline]] void slots(unsigned first, unsigned count, unsigned begin,
+                                      Sink&& sink) const {
+        auto walk = [&](auto get) __attribute__((always_inline)) {
+            for (unsigned rank = first; rank < first + count; ++rank) {
+                const auto reservation = get(rank, begin);
+                [[clang::always_inline]] sink(rank, begin, reservation);
+                begin += reservation;
+            }
+        };
+        if (format().fixed()) {
+            const auto width = format().fixed_width();
+            walk([&](unsigned, unsigned) __attribute__((always_inline)) { return width; });
+        } else if constexpr (Family == geometry::direct) {
+            walk([&](unsigned rank, unsigned from) __attribute__((always_inline)) {
+                return unsigned(detail::load<Offset>(geometry_data() + rank * sizeof(Offset))) -
+                       from;
+            });
+        } else {
+            walk([&](unsigned rank, unsigned) __attribute__((always_inline)) {
+                return unsigned(
+                    detail::load<Width>(source_->windows().lengths.data() + width_offset(rank)));
+            });
+        }
+    }
+    /// Live-range projection over the same carried geometry, without repeated
+    /// point prefixes. Sinks cannot invalidate the traversal's admitted state.
     template <class Sink>
     [[gnu::always_inline]] void range(unsigned first, unsigned count, Sink&& sink) const {
         if (!count)
             return;
-        auto begin = start(first);
-        for (unsigned rank = first; rank < first + count; ++rank) {
-            unsigned reservation;
-            if (format().fixed())
-                reservation = format().fixed_width();
-            else if constexpr (Family == geometry::direct)
-                reservation = detail::load<Offset>(geometry_data() + rank * sizeof(Offset)) - begin;
-            else
-                reservation =
-                    detail::load<Width>(source_->windows().lengths.data() + width_offset(rank));
-            if (live(rank)) {
-                const auto used = format().has_used() ? length(rank) : reservation;
-                sink(rank, location{begin, std::uint16_t(used), std::uint16_t(reservation)});
-            }
-            begin += reservation;
-        }
+        slots(first, count, start(first),
+              [&](unsigned rank, unsigned begin, unsigned reservation)
+                  __attribute__((always_inline)) {
+                      if (live(rank))
+                          sink(rank, location{begin, std::uint16_t(reservation)});
+                  });
     }
 };
 
@@ -271,7 +283,7 @@ template <geometry Family, class Width, class Offset, class Source> class access
 namespace detail {
 /// One schema switch for metadata and payload compositions. The factory creates
 /// the concrete access at the consumer; no projected source or erased callback.
-template <class Make> decltype(auto) dispatch(const layout& format, Make&& make) {
+template <class Format, class Make> decltype(auto) dispatch(const Format& format, Make&& make) {
     auto offsets = [&]<geometry G, class W>() -> decltype(auto) {
         switch (format.offset_bytes()) {
         case 1:

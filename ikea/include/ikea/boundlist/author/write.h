@@ -4,9 +4,6 @@
 #include <cstring>
 
 namespace ikea::boundlist::sidecar::author {
-/// Admitted writable source, exclusive authority and infallible effects. Hooks
-/// cannot allocate, suspend or invalidate borrowed state. Source identity is
-/// preserved even when these bodies are composed through StreamPack.
 template <class Source, class Effects>
 inline void emit(const Source& dst, Effects& effects, plane stream, unsigned offset,
                  unsigned size) {
@@ -23,106 +20,28 @@ void initialize_unchecked(const Source& dst, Effects& effects) {
     std::memset(dst.windows().control.data(), 0, l.control_bytes());
 }
 template <class Source, class Effects> void initialize_unchecked(const Source&&, Effects&) = delete;
-template <class Access, class Effects, class Place>
-[[gnu::always_inline]] void append_unchecked(Access a, unsigned length, unsigned reservation,
-                                             Effects& effects, Place&& place) {
-    const auto& dst = a.source();
-    const auto& l = a.format();
-    const auto n = dst.size(), begin = dst.extent();
-    using W = typename Access::width_type;
-    using O = typename Access::offset_type;
-    // Capture count/extent before additional stores: payload aliases cannot
-    // force another dependent control load across this composition seam.
-    [[clang::always_inline]] place(begin);
-    if (!l.fixed()) {
-        if constexpr (Access::family == geometry::direct) {
-            const auto offset = l.geometry_offset() + n * sizeof(O);
-            emit(dst, effects, plane::directory, offset, sizeof(O));
-            detail::store(dst.windows().directory.data() + offset, O(begin + reservation));
-        } else if (!(n % 16)) {
-            const auto offset = l.geometry_offset() + (n / 16) * sizeof(O);
-            emit(dst, effects, plane::directory, offset, sizeof(O));
-            detail::store(dst.windows().directory.data() + offset, O(begin));
-        }
+/// Admitted nonempty in-capacity run and present D bitmap. Only population bits
+/// are changed; the enclosing owner supplies any payload and count work.
+template <class Source, class Effects>
+[[gnu::always_inline]] void make_live_unchecked(const Source& dst, unsigned first, unsigned count,
+                                                Effects& effects) {
+    if (count == 1) {
+        emit(dst, effects, plane::directory, first / 8, 1);
+        dst.windows().directory[first / 8] &= byte(~(1u << (first % 8)) & 255u);
+        return;
     }
-    const bool r = !l.fixed() && Access::family == geometry::width;
-    const auto slot = a.width_offset(n);
-    if (!(n % 16) && (r || l.has_used())) {
-        const auto group = (n / 16) * l.group_stride();
-        emit(dst, effects, plane::lengths, group, l.group_stride());
-        std::memset(dst.windows().lengths.data() + group, 0, l.group_stride());
-        if (r && l.has_used() && l.schema().lengths == placement::separated) {
-            emit(dst, effects, plane::lengths, group + l.used_offset(), 16 * sizeof(W));
-            std::memset(dst.windows().lengths.data() + group + l.used_offset(), 0, 16 * sizeof(W));
-        }
-    } else {
-        if (r)
-            emit(dst, effects, plane::lengths, slot, sizeof(W));
-        if (l.has_used())
-            emit(dst, effects, plane::lengths, slot + l.used_offset(), sizeof(W));
+    const auto lo = first / 8, hi = (first + count - 1) / 8;
+    const auto low = unsigned(255u << (first % 8)) & 255u;
+    const auto high = 255u >> (7 - ((first + count - 1) % 8));
+    emit(dst, effects, plane::directory, lo, hi - lo + 1);
+    if (lo == hi)
+        dst.windows().directory[lo] &= byte(~(low & high) & 255u);
+    else {
+        dst.windows().directory[lo] &= byte(~low & 255u);
+        if (hi > lo + 1)
+            std::memset(dst.windows().directory.data() + lo + 1, 0, hi - lo - 1);
+        dst.windows().directory[hi] &= byte(~high & 255u);
     }
-    if (r)
-        detail::store(dst.windows().lengths.data() + slot, W(reservation));
-    if (l.has_used())
-        detail::store(dst.windows().lengths.data() + slot + l.used_offset(), W(length));
-    if (l.has_tombstones()) {
-        emit(dst, effects, plane::directory, n / 8, 1);
-        dst.windows().directory[n / 8] &= byte(~(1u << (n % 8)) & 255);
-    }
-    emit(dst, effects, plane::control, 0, l.control_bytes());
-    detail::store(dst.windows().control.data(), std::uint16_t(n + 1));
-    if (l.has_extent())
-        detail::store(dst.windows().control.data() + 2, std::uint32_t(begin + reservation));
-}
-template <class Access, class Effects>
-[[gnu::always_inline]] void append_unchecked(Access a, unsigned length, unsigned reservation,
-                                             Effects& effects) {
-    append_unchecked(a, length, reservation, effects, [](unsigned) {});
-}
-template <class Access, class Effects, class Place>
-[[gnu::always_inline]] void append_fixed_run_unchecked(Access a, unsigned count, Effects& effects,
-                                                       Place&& place) {
-    const auto& dst = a.source();
-    const auto& l = a.format();
-    const auto n = dst.size(), begin = dst.extent();
-    [[clang::always_inline]] place(begin);
-    if (l.has_tombstones()) {
-        const auto first = n / 8, last = (n + count - 1) / 8;
-        const auto low = unsigned(255u << (n % 8)) & 255u;
-        const auto high = 255u >> (7 - ((n + count - 1) % 8));
-        emit(dst, effects, plane::directory, first, last - first + 1);
-        if (first == last) {
-            dst.windows().directory[first] &= byte(~(low & high) & 255u);
-        } else {
-            dst.windows().directory[first] &= byte(~low & 255u);
-            if (count > 8 && last > first + 1)
-                std::memset(dst.windows().directory.data() + first + 1, 0, last - first - 1);
-            dst.windows().directory[last] &= byte(~high & 255u);
-        }
-    }
-    emit(dst, effects, plane::control, 0, l.control_bytes());
-    detail::store(dst.windows().control.data(), std::uint16_t(n + count));
-    if (l.has_extent())
-        detail::store(dst.windows().control.data() + 2,
-                      std::uint32_t(begin + count * l.fixed_width()));
-}
-template <class Access, class Effects>
-[[gnu::always_inline]] void append_fixed_run_unchecked(Access a, unsigned count, Effects& effects) {
-    append_fixed_run_unchecked(a, count, effects, [](unsigned) {});
-}
-template <class Access, class Effects>
-[[gnu::always_inline]] void set_used_unchecked(Access a, unsigned rank, unsigned length,
-                                               Effects& effects) {
-    using W = typename Access::width_type;
-    const auto offset = a.format().used_offset() + a.width_offset(rank);
-    emit(a.source(), effects, plane::lengths, offset, sizeof(W));
-    detail::store(a.source().windows().lengths.data() + offset, W(length));
-}
-template <class Access, class Effects>
-[[gnu::always_inline]] void replace_used_unchecked(Access a, unsigned rank, unsigned length,
-                                                   Effects& effects) {
-    if (a.format().has_used())
-        set_used_unchecked(a, rank, length, effects);
 }
 template <class Source, class Effects>
 void retire_unchecked(const Source& dst, unsigned rank, Effects& effects) {
@@ -131,12 +50,14 @@ void retire_unchecked(const Source& dst, unsigned rank, Effects& effects) {
 }
 template <class Source, class Effects>
 void retire_unchecked(const Source&&, unsigned, Effects&) = delete;
+/// Encode a chosen interval during a caller-coordinated geometry rewrite.
+/// Variable geometry is admitted by the caller, which has captured any old
+/// boundaries still needed. No movement, shrinking or rank policy lives here.
 template <class Access, class Effects>
-[[gnu::always_inline]] void pack_slot_unchecked(Access a, unsigned rank, unsigned to,
-                                                unsigned width, Effects& effects) {
+[[gnu::always_inline]] void write_origin_unchecked(Access a, unsigned rank, unsigned to,
+                                                   unsigned width, Effects& effects) {
     const auto& dst = a.source();
     const auto& l = a.format();
-    using W = typename Access::width_type;
     using O = typename Access::offset_type;
     if constexpr (Access::family == geometry::width) {
         if (!(rank % 16)) {
@@ -144,8 +65,6 @@ template <class Access, class Effects>
             emit(dst, effects, plane::directory, offset, sizeof(O));
             detail::store(dst.windows().directory.data() + offset, O(to));
         }
-        emit(dst, effects, plane::lengths, a.width_offset(rank), sizeof(W));
-        detail::store(dst.windows().lengths.data() + a.width_offset(rank), W(width));
     }
     to += width;
     if constexpr (Access::family == geometry::direct) {
@@ -153,47 +72,56 @@ template <class Access, class Effects>
         emit(dst, effects, plane::directory, offset, sizeof(O));
         detail::store(dst.windows().directory.data() + offset, O(to));
     }
-    if (l.has_used() && !a.live(rank)) {
-        const auto offset = l.used_offset() + a.width_offset(rank);
-        emit(dst, effects, plane::lengths, offset, sizeof(W));
-        detail::store(dst.windows().lengths.data() + offset, W(0));
+}
+/// covered means the complete R store already has an issued write range in
+/// this same operation. The caller admits variable geometry.
+template <class Access, class Effects>
+[[gnu::always_inline]] void write_width_unchecked(Access a, unsigned rank, unsigned width,
+                                                  Effects& effects, bool covered = false) {
+    if constexpr (Access::family == geometry::width) {
+        using W = typename Access::width_type;
+        if (!covered)
+            emit(a.source(), effects, plane::lengths, a.width_offset(rank), sizeof(W));
+        detail::store(a.source().windows().lengths.data() + a.width_offset(rank), W(width));
     }
 }
 template <class Access, class Effects>
-[[gnu::always_inline]] void finish_pack_unchecked(Access a, unsigned extent, Effects& effects) {
+[[gnu::always_inline]] void write_slot_unchecked(Access a, unsigned rank, unsigned to,
+                                                 unsigned width, Effects& effects,
+                                                 bool covered = false) {
+    write_origin_unchecked(a, rank, to, width, effects);
+    write_width_unchecked(a, rank, width, effects, covered);
+}
+template <class Access, class Effects>
+[[gnu::always_inline]] void finish_rewrite_unchecked(Access a, unsigned extent, Effects& effects) {
     if (a.format().has_extent()) {
         emit(a.source(), effects, plane::control, 2, 4);
         detail::store(a.source().windows().control.data() + 2, std::uint32_t(extent));
     }
 }
-/// One packing law for metadata-only and payload compositions. Move performs
-/// only the caller's extra work; metadata/effects use this same traversal.
-template <class Access, class Effects, class Move>
-[[gnu::always_inline]] void soft_pack_unchecked(Access a, bool shrink, Effects& effects,
-                                                Move&& move) {
-    if (a.format().fixed())
-        return;
-    using O = typename Access::offset_type;
-    // The admitted move/effects hooks cannot change the assigned count. Keep
-    // that invariant explicit across payload stores and journal writes.
-    const auto n = a.size();
-    unsigned from = 0, to = 0;
-    for (unsigned rank = 0; rank < n; ++rank) {
-        const auto reservation = [&] {
-            if constexpr (Access::family == geometry::direct)
-                return unsigned(detail::load<O>(a.geometry_data() + rank * sizeof(O))) - from;
-            else
-                return a.reserved(rank);
-        }();
-        const auto used = a.format().has_used() ? a.length(rank) : reservation;
-        const auto width = a.live(rank) ? (shrink ? used : reservation) : 0;
-        if (width && from != to) {
-            [[clang::always_inline]] move(from, to, width);
-        }
-        pack_slot_unchecked(a, rank, to, width, effects);
-        from += reservation;
-        to += width;
+template <class Access, class Effects>
+[[gnu::always_inline]] void publish_size_unchecked(Access a, unsigned count, unsigned extent,
+                                                   Effects& effects) {
+    const auto& dst = a.source();
+    emit(dst, effects, plane::control, 0, a.format().control_bytes());
+    detail::store(dst.windows().control.data(), std::uint16_t(count));
+    if (a.format().has_extent())
+        detail::store(dst.windows().control.data() + 2, std::uint32_t(extent));
+}
+template <class Access, class Effects>
+[[gnu::always_inline]] void append_unchecked(Access a, unsigned reservation, Effects& effects) {
+    const auto n = a.size(), begin = a.source().extent();
+    const bool group = !a.format().fixed() && Access::family == geometry::width && !(n % 16);
+    if (group) {
+        const auto offset = a.width_offset(n);
+        constexpr unsigned size = 16 * sizeof(typename Access::width_type);
+        emit(a.source(), effects, plane::lengths, offset, size);
+        std::memset(a.source().windows().lengths.data() + offset, 0, size);
     }
-    finish_pack_unchecked(a, to, effects);
+    if (!a.format().fixed())
+        write_slot_unchecked(a, n, begin, reservation, effects, group);
+    if (a.format().has_tombstones())
+        make_live_unchecked(a.source(), n, 1, effects);
+    publish_size_unchecked(a, n + 1, begin + reservation, effects);
 }
 } // namespace ikea::boundlist::sidecar::author

@@ -69,10 +69,8 @@ void verify(const sp::const_view& view, const std::vector<row>& facts) {
     sp::author::dispatch(view, [&](auto a) {
         using A = decltype(a);
         namespace sc=ikea::boundlist::sidecar;
-        const auto& windows=view.windows();
-        const auto metadata=sc::const_view::assume_valid(view.format(),{windows.directory,windows.lengths,windows.control});
-        assert(metadata.validate());
-        const sc::author::access<A::family,typename A::width_type,typename A::offset_type,sc::const_view> m(metadata);
+        const sc::author::access<A::family, typename A::width_type, typename A::offset_type,
+            sp::const_view> m(view);
         static_assert(sizeof(m)==2*sizeof(void*) && sizeof(a)==2*sizeof(void*));
         unsigned extent = 0;
         std::vector<unsigned> owner;
@@ -80,29 +78,28 @@ void verify(const sp::const_view& view, const std::vector<row>& facts) {
         for (unsigned r = 0; r < facts.size(); ++r) {
             const auto& expected = facts[r];
             const auto actual = m.locate(r);
-            assert(actual.offset == extent && actual.reservation == expected.reservation && actual.length == expected.bytes.size());
+            assert(actual.offset == extent && actual.reservation == expected.reservation);
             assert(m.live(r) == expected.live);
             if (expected.live) {
-                assert(std::ranges::equal(view.windows().payload.subspan(actual.offset,actual.length), expected.bytes));
-                std::vector<sp::bytes> current, extracted;
+                assert(std::ranges::equal(view.windows().payload.subspan(actual.offset,expected.bytes.size()), expected.bytes));
+                // Value read windows live above geometry; geometry windows
+                // include R even when Direct values can use just start + U.
+                std::vector<sp::bytes> current;
                 a.visit_value_metadata(r, [&](auto p) { current.push_back(p); });
-                m.visit_value_metadata(r, [&](auto p) { extracted.push_back(p); });
-                assert(current.size() == extracted.size());
-                for (unsigned i = 0; i < current.size(); ++i)
-                    assert(current[i].data() == extracted[i].data() && current[i].size() == extracted[i].size());
+                assert(!current.empty() || (view.format().fixed() && !view.format().has_used() && !view.format().has_tombstones()));
             }
             owner.insert(owner.end(), expected.reservation, r);
             extent += expected.reservation;
         }
-        assert(metadata.extent() == extent);
+        assert(view.extent() == extent);
         for (unsigned q = 0; q < extent; ++q) {
             const auto r = m.reverse(q).rank;
             assert(r == owner[q]);
             assert(m.live(r) == facts[r].live); // Physical reverse keeps retirement and slack.
         }
-        assert(!sc::reverse(metadata,extent));
+        assert(!sp::reverse(view,extent));
         m.range(0, facts.size(), [&](unsigned r, sc::location p) {
-            const auto value=view.windows().payload.subspan(p.offset,p.length);
+            const auto value=view.windows().payload.subspan(p.offset, facts[r].bytes.size());
             assert(facts[r].live && std::ranges::equal(value, facts[r].bytes)); visited.push_back(r);
         });
         std::vector<unsigned> expected;
