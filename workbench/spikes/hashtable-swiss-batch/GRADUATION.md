@@ -18,6 +18,8 @@ Independent ns/lookup, lower is better. Each cell is **hit / 50% miss / all miss
 Hot uses direct lookup; cold uses software prefetch distance 32 for Ikea/Abseil.
 Boost uses its native lookup. Literal is the earlier read-only packet, 64 bytes
 on AVX-512 and 32 bytes on AVX2. All Ikea arms retain identical physical state.
+“Maintained” is the promoted production Ikea implementation; Scalar16 and
+Literal are earlier Ikea reader controls, not external containers.
 “85%” is primary-capacity occupancy (about 60–62% Swiss); “dense” fixes Swiss at
 86.9141%, below the unchanged 87.5% ceiling.
 
@@ -182,7 +184,11 @@ hashing warms the executable file cache before exec; this measures construction
 with a resident executable, not cold executable paging. The original sweep's
 rows remain above and in the raw evidence.
 
-Ns/initial entry including allocation and insertion at 85% primary occupancy:
+Timings are ns/initial entry at 85% primary occupancy. The timer includes
+peer `reserve(n)`, Ikea primary initialization and on-demand
+Swiss growth, followed by ordinary insertion for every input. It does not use
+a bulk builder or write-prefetch pipeline. Here hot/cold distinguishes table
+size; the read-conditioning pass is not part of construction.
 
 | ISA | Working set | Value bytes | Scalar16 | Initial batch | Maintained | Boost | Abseil |
 | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -192,7 +198,12 @@ Ns/initial entry including allocation and insertion at 85% primary occupancy:
 | AVX2 | hot | 8 | 10.86 | 10.63 | 10.66 | 6.89 | 6.62 |
 | AVX-512 | cold | 0 | 46.96 | 46.78 | 46.94 | 25.09 | 22.81 |
 
-The initial small construction gap was not a persistent insertion regression.
+The apparent small-table construction regression **between Ikea reader arms**
+did not persist. The construction deficit against peers remains: AVX-512 map8
+takes 9.68 ns/entry versus Boost's 6.88 and Abseil's 6.65, while the large set
+takes 46.94 versus 25.09 and 22.81. This replay preserves existing construction
+performance; it does not establish competitive construction or attribute the
+gap to individual initialization, packed-write or overflow-growth costs.
 [Retained replay evidence](evidence/construction/provenance.json) includes the
 345-execution audit and medians/MADs. Its archive recovers every sample, command,
 binary hash and source; the report recipe regenerates the summary/audit.
