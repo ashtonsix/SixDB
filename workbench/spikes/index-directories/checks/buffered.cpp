@@ -38,6 +38,21 @@ void oracle(BufferedProducer& p,const Store::Scope& scope,const Rows& rows) {
     check(p.field3(scope,r)==rows[r][3],"projected field3 differs from full row"); sum+=rows[r][3];
   }
   check(p.sum(scope)==sum,"absolute SUM128 or lazy sum lost a contribution");
+  auto reader=p.reader(scope);
+  const std::array<std::array<unsigned,2>,6> ranges{{{0,UINT32_MAX},{0,15},
+      {14,32},{63,63},{64,65},{1,0}}};
+  for (const auto& range:ranges) for (const auto mask:{UINT64_C(0),UINT64_MAX,
+      UINT64_C(0x9249249249249249),UINT64_C(0x8000000000004002)}) {
+    std::uint64_t wanted=0,selected=0;
+    for (unsigned r=0;r<p.size();++r)
+      if (r>=range[0] && r<=range[1] && ((mask>>r)&1)) {
+        std::uint64_t digest=0; for (auto word:rows[r]) digest^=word;
+        wanted+=digest; ++selected;
+      }
+    const auto actual=reader.range(range[0],range[1],mask);
+    check(actual.sum==wanted && actual.selected==selected,
+        "same-Scope masked range lost base/pending/fold/old-cut coherence");
+  }
   for (unsigned f=0;f<8;++f) for (unsigned l=0;l<4;++l) {
     if (l<2) check(p.layer_summary(scope,l,0,f)==expected(rows,p.size(),f),"upper summary count/min/max/SUM128/nn");
     else for (unsigned r=0;r<p.size();++r) {

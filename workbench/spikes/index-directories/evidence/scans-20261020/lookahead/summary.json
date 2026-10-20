@@ -1,0 +1,274 @@
+[
+  {
+    "population": "262144",
+    "range": "full",
+    "mask_kept_per64": "-1",
+    "grain": "16",
+    "arm": "engine_dense_rank",
+    "samples": 8,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 1179177.125,
+      "min": 1079541.75,
+      "max": 1248666.75
+    },
+    "owner_ns_scan": {
+      "median": 1179489.625,
+      "min": 1079729.0,
+      "max": 1248854.25
+    },
+    "process_ns_scan": {
+      "median": 1179713.625,
+      "min": 1079875.0,
+      "max": 1249083.5
+    },
+    "wall_ns_visited": {
+      "median": 4.498203754425049,
+      "min": 4.118124961853027,
+      "max": 4.7632856369018555
+    },
+    "wall_ns_selected": {
+      "median": 4.498203754425049,
+      "min": 4.118124961853027,
+      "max": 4.7632856369018555
+    }
+  },
+  {
+    "population": "262144",
+    "range": "full",
+    "mask_kept_per64": "-1",
+    "grain": "16",
+    "arm": "lmdb_native_cursor",
+    "samples": 8,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 2401317.75,
+      "min": 2304427.25,
+      "max": 2467197.75
+    },
+    "owner_ns_scan": {
+      "median": 2401536.375,
+      "min": 2305458.5,
+      "max": 2467677.25
+    },
+    "process_ns_scan": {
+      "median": 2401531.125,
+      "min": 2306708.25,
+      "max": 2467656.25
+    },
+    "wall_ns_visited": {
+      "median": 9.160300254821777,
+      "min": 8.790692329406738,
+      "max": 9.411612510681152
+    },
+    "wall_ns_selected": {
+      "median": 9.160300254821777,
+      "min": 8.790692329406738,
+      "max": 9.411612510681152
+    }
+  },
+  {
+    "population": "262144",
+    "range": "full",
+    "mask_kept_per64": "-1",
+    "grain": "16",
+    "arm": "engine_pointerbank_hint",
+    "samples": 8,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 1474114.625,
+      "min": 1346010.5,
+      "max": 2201354.25
+    },
+    "owner_ns_scan": {
+      "median": 1448776.0,
+      "min": 1346573.0,
+      "max": 1575468.75
+    },
+    "process_ns_scan": {
+      "median": 1448947.875,
+      "min": 1346750.0,
+      "max": 1575218.75
+    },
+    "wall_ns_visited": {
+      "median": 5.623301029205322,
+      "min": 5.134622573852539,
+      "max": 8.397500038146973
+    },
+    "wall_ns_selected": {
+      "median": 5.623301029205322,
+      "min": 5.134622573852539,
+      "max": 8.397500038146973
+    }
+  },
+  {
+    "population": "262144",
+    "range": "full",
+    "mask_kept_per64": "-1",
+    "grain": "16",
+    "arm": "engine_pointerbank_none",
+    "samples": 8,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 1225026.0,
+      "min": 1075739.5,
+      "max": 2034114.5
+    },
+    "owner_ns_scan": {
+      "median": 1225531.25,
+      "min": 1075791.75,
+      "max": 1286635.5
+    },
+    "process_ns_scan": {
+      "median": 1225723.875,
+      "min": 1075895.75,
+      "max": 1286792.0
+    },
+    "wall_ns_visited": {
+      "median": 4.673103332519531,
+      "min": 4.103620529174805,
+      "max": 7.759531021118164
+    },
+    "wall_ns_selected": {
+      "median": 4.673103332519531,
+      "min": 4.103620529174805,
+      "max": 7.759531021118164
+    }
+  },
+  {
+    "population": "262144",
+    "range": "full",
+    "mask_kept_per64": "-1",
+    "grain": "64",
+    "arm": "engine_dense_rank",
+    "samples": 8,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 1776000.125,
+      "min": 1701385.5,
+      "max": 3466885.5
+    },
+    "owner_ns_scan": {
+      "median": 1776156.125,
+      "min": 1701718.75,
+      "max": 2162760.5
+    },
+    "process_ns_scan": {
+      "median": 1776234.375,
+      "min": 1701989.5,
+      "max": 2162771.0
+    },
+    "wall_ns_visited": {
+      "median": 6.774902820587158,
+      "min": 6.490270614624023,
+      "max": 13.225118637084961
+    },
+    "wall_ns_selected": {
+      "median": 6.774902820587158,
+      "min": 6.490270614624023,
+      "max": 13.225118637084961
+    }
+  },
+  {
+    "population": "262144",
+    "range": "full",
+    "mask_kept_per64": "-1",
+    "grain": "64",
+    "arm": "lmdb_native_cursor",
+    "samples": 8,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 2622385.5,
+      "min": 2271583.5,
+      "max": 3420520.75
+    },
+    "owner_ns_scan": {
+      "median": 2487640.5,
+      "min": 2271770.75,
+      "max": 2843604.25
+    },
+    "process_ns_scan": {
+      "median": 2487786.25,
+      "min": 2271958.25,
+      "max": 2843687.5
+    },
+    "wall_ns_visited": {
+      "median": 10.003606796264648,
+      "min": 8.665403366088867,
+      "max": 13.048251152038574
+    },
+    "wall_ns_selected": {
+      "median": 10.003606796264648,
+      "min": 8.665403366088867,
+      "max": 13.048251152038574
+    }
+  },
+  {
+    "population": "262144",
+    "range": "full",
+    "mask_kept_per64": "-1",
+    "grain": "64",
+    "arm": "engine_pointerbank_hint",
+    "samples": 8,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 2090578.125,
+      "min": 1738604.25,
+      "max": 2599333.5
+    },
+    "owner_ns_scan": {
+      "median": 2090484.25,
+      "min": 1738979.0,
+      "max": 2599281.25
+    },
+    "process_ns_scan": {
+      "median": 2090468.75,
+      "min": 1739125.0,
+      "max": 2599375.0
+    },
+    "wall_ns_visited": {
+      "median": 7.9749226570129395,
+      "min": 6.632248878479004,
+      "max": 9.915670394897461
+    },
+    "wall_ns_selected": {
+      "median": 7.9749226570129395,
+      "min": 6.632248878479004,
+      "max": 9.915670394897461
+    }
+  },
+  {
+    "population": "262144",
+    "range": "full",
+    "mask_kept_per64": "-1",
+    "grain": "64",
+    "arm": "engine_pointerbank_none",
+    "samples": 8,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 2187343.75,
+      "min": 1796135.5,
+      "max": 4097541.5
+    },
+    "owner_ns_scan": {
+      "median": 2166416.75,
+      "min": 1796343.5,
+      "max": 4097864.5
+    },
+    "process_ns_scan": {
+      "median": 2166177.125,
+      "min": 1796406.0,
+      "max": 4098177.0
+    },
+    "wall_ns_visited": {
+      "median": 8.344054222106934,
+      "min": 6.851713180541992,
+      "max": 15.630880355834961
+    },
+    "wall_ns_selected": {
+      "median": 8.344054222106934,
+      "min": 6.851713180541992,
+      "max": 15.630880355834961
+    }
+  }
+]

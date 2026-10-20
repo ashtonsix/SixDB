@@ -1,0 +1,4802 @@
+[
+  {
+    "population": "8192",
+    "range": "quarter",
+    "mask_kept_per64": "-1",
+    "grain": "16",
+    "arm": "engine_native_scan",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 4456.94921875,
+      "min": 4382.32421875,
+      "max": 4560.220703125
+    },
+    "owner_ns_scan": {
+      "median": 4449.9921875,
+      "min": 4380.77734375,
+      "max": 4561.115234375
+    },
+    "process_ns_scan": {
+      "median": 4450.3994140625,
+      "min": 4379.71875,
+      "max": 4562.09375
+    },
+    "wall_ns_visited": {
+      "median": 2.1762447357177734,
+      "min": 2.1398067474365234,
+      "max": 2.226670265197754
+    },
+    "wall_ns_selected": {
+      "median": 2.1762447357177734,
+      "min": 2.1398067474365234,
+      "max": 2.226670265197754
+    }
+  },
+  {
+    "population": "8192",
+    "range": "quarter",
+    "mask_kept_per64": "-1",
+    "grain": "16",
+    "arm": "lmdb_native_cursor",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 16741.251953125,
+      "min": 16394.125,
+      "max": 16998.779296875
+    },
+    "owner_ns_scan": {
+      "median": 16744.0595703125,
+      "min": 16394.287109375,
+      "max": 17003.662109375
+    },
+    "process_ns_scan": {
+      "median": 16745.1162109375,
+      "min": 16394.287109375,
+      "max": 17006.18359375
+    },
+    "wall_ns_visited": {
+      "median": 8.174439430236816,
+      "min": 8.00494384765625,
+      "max": 8.300185203552246
+    },
+    "wall_ns_selected": {
+      "median": 8.174439430236816,
+      "min": 8.00494384765625,
+      "max": 8.300185203552246
+    }
+  },
+  {
+    "population": "8192",
+    "range": "quarter",
+    "mask_kept_per64": "0",
+    "grain": "16",
+    "arm": "engine_native_scan",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 380.126953125,
+      "min": 374.91796875,
+      "max": 396.56640625
+    },
+    "owner_ns_scan": {
+      "median": 380.0859375,
+      "min": 374.919921875,
+      "max": 396.484375
+    },
+    "process_ns_scan": {
+      "median": 380.0458984375,
+      "min": 374.755859375,
+      "max": 396.484375
+    },
+    "wall_ns_visited": {
+      "median": 0.1856088638305664,
+      "min": 0.18306541442871094,
+      "max": 0.1936359405517578
+    },
+    "wall_ns_selected": null
+  },
+  {
+    "population": "8192",
+    "range": "quarter",
+    "mask_kept_per64": "0",
+    "grain": "16",
+    "arm": "lmdb_native_cursor",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 16433.1875,
+      "min": 15792.724609375,
+      "max": 16712.076171875
+    },
+    "owner_ns_scan": {
+      "median": 16435.2216796875,
+      "min": 15796.630859375,
+      "max": 16715.16796875
+    },
+    "process_ns_scan": {
+      "median": 16436.03515625,
+      "min": 15798.6640625,
+      "max": 16717.771484375
+    },
+    "wall_ns_visited": {
+      "median": 8.024017333984375,
+      "min": 7.711291313171387,
+      "max": 8.16019344329834
+    },
+    "wall_ns_selected": null
+  },
+  {
+    "population": "8192",
+    "range": "quarter",
+    "mask_kept_per64": "1",
+    "grain": "16",
+    "arm": "engine_native_scan",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 388.01953125,
+      "min": 381.673828125,
+      "max": 394.85546875
+    },
+    "owner_ns_scan": {
+      "median": 387.939453125,
+      "min": 381.51171875,
+      "max": 395.751953125
+    },
+    "process_ns_scan": {
+      "median": 387.939453125,
+      "min": 381.509765625,
+      "max": 396.078125
+    },
+    "wall_ns_visited": {
+      "median": 0.18946266174316406,
+      "min": 0.18636417388916016,
+      "max": 0.19280052185058594
+    },
+    "wall_ns_selected": {
+      "median": 12.1256103515625,
+      "min": 11.92730712890625,
+      "max": 12.3392333984375
+    }
+  },
+  {
+    "population": "8192",
+    "range": "quarter",
+    "mask_kept_per64": "1",
+    "grain": "16",
+    "arm": "lmdb_native_cursor",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 16502.7265625,
+      "min": 16228.109375,
+      "max": 17502.279296875
+    },
+    "owner_ns_scan": {
+      "median": 16506.4287109375,
+      "min": 16228.271484375,
+      "max": 17503.5
+    },
+    "process_ns_scan": {
+      "median": 16508.7080078125,
+      "min": 16228.26953125,
+      "max": 17504.3125
+    },
+    "wall_ns_visited": {
+      "median": 8.057971954345703,
+      "min": 7.923881530761719,
+      "max": 8.546034812927246
+    },
+    "wall_ns_selected": {
+      "median": 515.710205078125,
+      "min": 507.12841796875,
+      "max": 546.9462280273438
+    }
+  },
+  {
+    "population": "8192",
+    "range": "quarter",
+    "mask_kept_per64": "8",
+    "grain": "16",
+    "arm": "engine_native_scan",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 693.1962890625,
+      "min": 679.931640625,
+      "max": 713.947265625
+    },
+    "owner_ns_scan": {
+      "median": 693.15625,
+      "min": 679.8515625,
+      "max": 713.94921875
+    },
+    "process_ns_scan": {
+      "median": 693.2373046875,
+      "min": 679.849609375,
+      "max": 713.947265625
+    },
+    "wall_ns_visited": {
+      "median": 0.33847475051879883,
+      "min": 0.3319978713989258,
+      "max": 0.34860706329345703
+    },
+    "wall_ns_selected": {
+      "median": 2.7077980041503906,
+      "min": 2.6559829711914062,
+      "max": 2.7888565063476562
+    }
+  },
+  {
+    "population": "8192",
+    "range": "quarter",
+    "mask_kept_per64": "8",
+    "grain": "16",
+    "arm": "lmdb_native_cursor",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 20824.380859375,
+      "min": 20420.818359375,
+      "max": 21322.998046875
+    },
+    "owner_ns_scan": {
+      "median": 20825.154296875,
+      "min": 20420.8984375,
+      "max": 21328.451171875
+    },
+    "process_ns_scan": {
+      "median": 20826.048828125,
+      "min": 20420.8984375,
+      "max": 21330.810546875
+    },
+    "wall_ns_visited": {
+      "median": 10.1681547164917,
+      "min": 9.971102714538574,
+      "max": 10.411620140075684
+    },
+    "wall_ns_selected": {
+      "median": 81.3452377319336,
+      "min": 79.7688217163086,
+      "max": 83.29296112060547
+    }
+  },
+  {
+    "population": "8192",
+    "range": "quarter",
+    "mask_kept_per64": "32",
+    "grain": "16",
+    "arm": "engine_native_scan",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 2718.5869140625,
+      "min": 2626.62890625,
+      "max": 2813.638671875
+    },
+    "owner_ns_scan": {
+      "median": 2718.708984375,
+      "min": 2626.546875,
+      "max": 2814.53515625
+    },
+    "process_ns_scan": {
+      "median": 2718.75,
+      "min": 2626.626953125,
+      "max": 2815.103515625
+    },
+    "wall_ns_visited": {
+      "median": 1.32743501663208,
+      "min": 1.2825336456298828,
+      "max": 1.3738470077514648
+    },
+    "wall_ns_selected": {
+      "median": 2.65487003326416,
+      "min": 2.5650672912597656,
+      "max": 2.7476940155029297
+    }
+  },
+  {
+    "population": "8192",
+    "range": "quarter",
+    "mask_kept_per64": "32",
+    "grain": "16",
+    "arm": "lmdb_native_cursor",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 31846.1103515625,
+      "min": 31406.005859375,
+      "max": 31950.845703125
+    },
+    "owner_ns_scan": {
+      "median": 31852.62109375,
+      "min": 31407.14453125,
+      "max": 31951.82421875
+    },
+    "process_ns_scan": {
+      "median": 31854.736328125,
+      "min": 31407.390625,
+      "max": 31952.06640625
+    },
+    "wall_ns_visited": {
+      "median": 15.549858570098877,
+      "min": 15.33496379852295,
+      "max": 15.600998878479004
+    },
+    "wall_ns_selected": {
+      "median": 31.099717140197754,
+      "min": 30.6699275970459,
+      "max": 31.201997756958008
+    }
+  },
+  {
+    "population": "8192",
+    "range": "quarter",
+    "mask_kept_per64": "64",
+    "grain": "16",
+    "arm": "engine_native_scan",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 4720.9873046875,
+      "min": 4656.330078125,
+      "max": 4734.86328125
+    },
+    "owner_ns_scan": {
+      "median": 4721.0283203125,
+      "min": 4656.330078125,
+      "max": 4734.9453125
+    },
+    "process_ns_scan": {
+      "median": 4721.029296875,
+      "min": 4656.25,
+      "max": 4734.943359375
+    },
+    "wall_ns_visited": {
+      "median": 2.3051695823669434,
+      "min": 2.2735986709594727,
+      "max": 2.3119449615478516
+    },
+    "wall_ns_selected": {
+      "median": 2.3051695823669434,
+      "min": 2.2735986709594727,
+      "max": 2.3119449615478516
+    }
+  },
+  {
+    "population": "8192",
+    "range": "quarter",
+    "mask_kept_per64": "64",
+    "grain": "16",
+    "arm": "lmdb_native_cursor",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 17588.6630859375,
+      "min": 17445.3125,
+      "max": 17805.419921875
+    },
+    "owner_ns_scan": {
+      "median": 17592.650390625,
+      "min": 17446.126953125,
+      "max": 17806.884765625
+    },
+    "process_ns_scan": {
+      "median": 17595.1328125,
+      "min": 17447.021484375,
+      "max": 17808.837890625
+    },
+    "wall_ns_visited": {
+      "median": 8.58821439743042,
+      "min": 8.518218994140625,
+      "max": 8.694052696228027
+    },
+    "wall_ns_selected": {
+      "median": 8.58821439743042,
+      "min": 8.518218994140625,
+      "max": 8.694052696228027
+    }
+  },
+  {
+    "population": "8192",
+    "range": "full",
+    "mask_kept_per64": "-1",
+    "grain": "16",
+    "arm": "engine_native_scan",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 16245.60546875,
+      "min": 15859.375,
+      "max": 16609.0546875
+    },
+    "owner_ns_scan": {
+      "median": 16243.1640625,
+      "min": 15860.671875,
+      "max": 16622.0703125
+    },
+    "process_ns_scan": {
+      "median": 16240.55859375,
+      "min": 15860.6796875,
+      "max": 16631.5078125
+    },
+    "wall_ns_visited": {
+      "median": 1.9831061363220215,
+      "min": 1.9359588623046875,
+      "max": 2.027472496032715
+    },
+    "wall_ns_selected": {
+      "median": 1.9831061363220215,
+      "min": 1.9359588623046875,
+      "max": 2.027472496032715
+    }
+  },
+  {
+    "population": "8192",
+    "range": "full",
+    "mask_kept_per64": "-1",
+    "grain": "16",
+    "arm": "lmdb_native_cursor",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 68049.31640625,
+      "min": 67643.5546875,
+      "max": 68155.9296875
+    },
+    "owner_ns_scan": {
+      "median": 68061.19921875,
+      "min": 67667.6484375,
+      "max": 68179.0390625
+    },
+    "process_ns_scan": {
+      "median": 68068.51953125,
+      "min": 67680.6640625,
+      "max": 68190.1015625
+    },
+    "wall_ns_visited": {
+      "median": 8.306801319122314,
+      "min": 8.257269859313965,
+      "max": 8.319815635681152
+    },
+    "wall_ns_selected": {
+      "median": 8.306801319122314,
+      "min": 8.257269859313965,
+      "max": 8.319815635681152
+    }
+  },
+  {
+    "population": "8192",
+    "range": "full",
+    "mask_kept_per64": "0",
+    "grain": "16",
+    "arm": "engine_native_scan",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 1445.63671875,
+      "min": 1395.5078125,
+      "max": 1626.6328125
+    },
+    "owner_ns_scan": {
+      "median": 1445.3125,
+      "min": 1395.8359375,
+      "max": 1626.296875
+    },
+    "process_ns_scan": {
+      "median": 1445.3125,
+      "min": 1395.5078125,
+      "max": 1625.9765625
+    },
+    "wall_ns_visited": {
+      "median": 0.1764693260192871,
+      "min": 0.1703500747680664,
+      "max": 0.1985635757446289
+    },
+    "wall_ns_selected": null
+  },
+  {
+    "population": "8192",
+    "range": "full",
+    "mask_kept_per64": "0",
+    "grain": "16",
+    "arm": "lmdb_native_cursor",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 66457.51953125,
+      "min": 63477.5390625,
+      "max": 70083.0078125
+    },
+    "owner_ns_scan": {
+      "median": 66476.56640625,
+      "min": 63478.1953125,
+      "max": 70084.6328125
+    },
+    "process_ns_scan": {
+      "median": 66487.79296875,
+      "min": 63478.1875,
+      "max": 70085.9375
+    },
+    "wall_ns_visited": {
+      "median": 8.112490177154541,
+      "min": 7.748723030090332,
+      "max": 8.555054664611816
+    },
+    "wall_ns_selected": null
+  },
+  {
+    "population": "8192",
+    "range": "full",
+    "mask_kept_per64": "1",
+    "grain": "16",
+    "arm": "engine_native_scan",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 1683.265625,
+      "min": 1556.9609375,
+      "max": 1739.9140625
+    },
+    "owner_ns_scan": {
+      "median": 1683.265625,
+      "min": 1556.640625,
+      "max": 1739.90625
+    },
+    "process_ns_scan": {
+      "median": 1682.45703125,
+      "min": 1556.3125,
+      "max": 1740.234375
+    },
+    "wall_ns_visited": {
+      "median": 0.2054767608642578,
+      "min": 0.19005870819091797,
+      "max": 0.21239185333251953
+    },
+    "wall_ns_selected": {
+      "median": 13.1505126953125,
+      "min": 12.16375732421875,
+      "max": 13.59307861328125
+    }
+  },
+  {
+    "population": "8192",
+    "range": "full",
+    "mask_kept_per64": "1",
+    "grain": "16",
+    "arm": "lmdb_native_cursor",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 67562.98828125,
+      "min": 67482.421875,
+      "max": 68304.03125
+    },
+    "owner_ns_scan": {
+      "median": 67580.2421875,
+      "min": 67487.3046875,
+      "max": 68326.171875
+    },
+    "process_ns_scan": {
+      "median": 67588.37890625,
+      "min": 67489.2578125,
+      "max": 68338.8671875
+    },
+    "wall_ns_visited": {
+      "median": 8.247435092926025,
+      "min": 8.237600326538086,
+      "max": 8.337894439697266
+    },
+    "wall_ns_selected": {
+      "median": 527.8358459472656,
+      "min": 527.2064208984375,
+      "max": 533.625244140625
+    }
+  },
+  {
+    "population": "8192",
+    "range": "full",
+    "mask_kept_per64": "8",
+    "grain": "16",
+    "arm": "engine_native_scan",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 3540.85546875,
+      "min": 3452.796875,
+      "max": 3622.71875
+    },
+    "owner_ns_scan": {
+      "median": 3541.015625,
+      "min": 3453.125,
+      "max": 3622.7265625
+    },
+    "process_ns_scan": {
+      "median": 3540.8515625,
+      "min": 3453.453125,
+      "max": 3622.0703125
+    },
+    "wall_ns_visited": {
+      "median": 0.4322333335876465,
+      "min": 0.42148399353027344,
+      "max": 0.4422264099121094
+    },
+    "wall_ns_selected": {
+      "median": 3.457866668701172,
+      "min": 3.3718719482421875,
+      "max": 3.537811279296875
+    }
+  },
+  {
+    "population": "8192",
+    "range": "full",
+    "mask_kept_per64": "8",
+    "grain": "16",
+    "arm": "lmdb_native_cursor",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 84486.328125,
+      "min": 82465.4921875,
+      "max": 86489.578125
+    },
+    "owner_ns_scan": {
+      "median": 84494.46484375,
+      "min": 82471.3515625,
+      "max": 86506.1796875
+    },
+    "process_ns_scan": {
+      "median": 84499.34375,
+      "min": 82475.578125,
+      "max": 86517.2578125
+    },
+    "wall_ns_visited": {
+      "median": 10.313272476196289,
+      "min": 10.066588401794434,
+      "max": 10.557809829711914
+    },
+    "wall_ns_selected": {
+      "median": 82.50617980957031,
+      "min": 80.53270721435547,
+      "max": 84.46247863769531
+    }
+  },
+  {
+    "population": "8192",
+    "range": "full",
+    "mask_kept_per64": "32",
+    "grain": "16",
+    "arm": "engine_native_scan",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 11447.59375,
+      "min": 11284.5078125,
+      "max": 12222.328125
+    },
+    "owner_ns_scan": {
+      "median": 11448.89453125,
+      "min": 11283.5234375,
+      "max": 11781.5703125
+    },
+    "process_ns_scan": {
+      "median": 11449.37890625,
+      "min": 11283.859375,
+      "max": 11739.2578125
+    },
+    "wall_ns_visited": {
+      "median": 1.3974113464355469,
+      "min": 1.3775033950805664,
+      "max": 1.491983413696289
+    },
+    "wall_ns_selected": {
+      "median": 2.7948226928710938,
+      "min": 2.755006790161133,
+      "max": 2.983966827392578
+    }
+  },
+  {
+    "population": "8192",
+    "range": "full",
+    "mask_kept_per64": "32",
+    "grain": "16",
+    "arm": "lmdb_native_cursor",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 135939.9375,
+      "min": 133962.5703125,
+      "max": 136905.6015625
+    },
+    "owner_ns_scan": {
+      "median": 135949.87109375,
+      "min": 133965.1640625,
+      "max": 136936.5234375
+    },
+    "process_ns_scan": {
+      "median": 135958.0078125,
+      "min": 133966.4765625,
+      "max": 136939.78125
+    },
+    "wall_ns_visited": {
+      "median": 16.59423065185547,
+      "min": 16.352852821350098,
+      "max": 16.712109565734863
+    },
+    "wall_ns_selected": {
+      "median": 33.18846130371094,
+      "min": 32.705705642700195,
+      "max": 33.42421913146973
+    }
+  },
+  {
+    "population": "8192",
+    "range": "full",
+    "mask_kept_per64": "64",
+    "grain": "16",
+    "arm": "engine_native_scan",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 17333.16796875,
+      "min": 16724.609375,
+      "max": 17645.5078125
+    },
+    "owner_ns_scan": {
+      "median": 17334.30859375,
+      "min": 16724.2890625,
+      "max": 17655.2734375
+    },
+    "process_ns_scan": {
+      "median": 17334.796875,
+      "min": 16724.609375,
+      "max": 17663.0859375
+    },
+    "wall_ns_visited": {
+      "median": 2.1158652305603027,
+      "min": 2.0415782928466797,
+      "max": 2.1539926528930664
+    },
+    "wall_ns_selected": {
+      "median": 2.1158652305603027,
+      "min": 2.0415782928466797,
+      "max": 2.1539926528930664
+    }
+  },
+  {
+    "population": "8192",
+    "range": "full",
+    "mask_kept_per64": "64",
+    "grain": "16",
+    "arm": "lmdb_native_cursor",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 71835.44921875,
+      "min": 70560.21875,
+      "max": 73019.859375
+    },
+    "owner_ns_scan": {
+      "median": 71840.33203125,
+      "min": 70561.203125,
+      "max": 73051.4375
+    },
+    "process_ns_scan": {
+      "median": 71842.44921875,
+      "min": 70561.8515625,
+      "max": 73063.8046875
+    },
+    "wall_ns_visited": {
+      "median": 8.768975734710693,
+      "min": 8.61330795288086,
+      "max": 8.913557052612305
+    },
+    "wall_ns_selected": {
+      "median": 8.768975734710693,
+      "min": 8.61330795288086,
+      "max": 8.913557052612305
+    }
+  },
+  {
+    "population": "8192",
+    "range": "quarter",
+    "mask_kept_per64": "-1",
+    "grain": "64",
+    "arm": "engine_native_scan",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 4473.470703125,
+      "min": 4330.404296875,
+      "max": 4640.13671875
+    },
+    "owner_ns_scan": {
+      "median": 4473.591796875,
+      "min": 4330.078125,
+      "max": 4637.939453125
+    },
+    "process_ns_scan": {
+      "median": 4473.673828125,
+      "min": 4329.75390625,
+      "max": 4636.068359375
+    },
+    "wall_ns_visited": {
+      "median": 2.184311866760254,
+      "min": 2.114455223083496,
+      "max": 2.2656917572021484
+    },
+    "wall_ns_selected": {
+      "median": 2.184311866760254,
+      "min": 2.114455223083496,
+      "max": 2.2656917572021484
+    }
+  },
+  {
+    "population": "8192",
+    "range": "quarter",
+    "mask_kept_per64": "-1",
+    "grain": "64",
+    "arm": "lmdb_native_cursor",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 16803.0185546875,
+      "min": 16501.953125,
+      "max": 16901.205078125
+    },
+    "owner_ns_scan": {
+      "median": 16805.6240234375,
+      "min": 16502.5234375,
+      "max": 16903.484375
+    },
+    "process_ns_scan": {
+      "median": 16807.169921875,
+      "min": 16502.84765625,
+      "max": 16904.623046875
+    },
+    "wall_ns_visited": {
+      "median": 8.204598903656006,
+      "min": 8.057594299316406,
+      "max": 8.252541542053223
+    },
+    "wall_ns_selected": {
+      "median": 8.204598903656006,
+      "min": 8.057594299316406,
+      "max": 8.252541542053223
+    }
+  },
+  {
+    "population": "8192",
+    "range": "quarter",
+    "mask_kept_per64": "0",
+    "grain": "64",
+    "arm": "engine_native_scan",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 386.5146484375,
+      "min": 375.48828125,
+      "max": 397.78515625
+    },
+    "owner_ns_scan": {
+      "median": 386.5556640625,
+      "min": 375.40625,
+      "max": 397.705078125
+    },
+    "process_ns_scan": {
+      "median": 386.5556640625,
+      "min": 375.326171875,
+      "max": 397.623046875
+    },
+    "wall_ns_visited": {
+      "median": 0.18872785568237305,
+      "min": 0.18334388732910156,
+      "max": 0.1942310333251953
+    },
+    "wall_ns_selected": null
+  },
+  {
+    "population": "8192",
+    "range": "quarter",
+    "mask_kept_per64": "0",
+    "grain": "64",
+    "arm": "lmdb_native_cursor",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 16170.2880859375,
+      "min": 15931.31640625,
+      "max": 16343.505859375
+    },
+    "owner_ns_scan": {
+      "median": 16172.36328125,
+      "min": 15937.419921875,
+      "max": 16346.923828125
+    },
+    "process_ns_scan": {
+      "median": 16174.1943359375,
+      "min": 15940.673828125,
+      "max": 16349.365234375
+    },
+    "wall_ns_visited": {
+      "median": 7.89564847946167,
+      "min": 7.778963088989258,
+      "max": 7.980227470397949
+    },
+    "wall_ns_selected": null
+  },
+  {
+    "population": "8192",
+    "range": "quarter",
+    "mask_kept_per64": "1",
+    "grain": "64",
+    "arm": "engine_native_scan",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 384.765625,
+      "min": 364.17578125,
+      "max": 412.923828125
+    },
+    "owner_ns_scan": {
+      "median": 384.603515625,
+      "min": 364.09375,
+      "max": 412.923828125
+    },
+    "process_ns_scan": {
+      "median": 384.5205078125,
+      "min": 364.17578125,
+      "max": 412.921875
+    },
+    "wall_ns_visited": {
+      "median": 0.18787384033203125,
+      "min": 0.17782020568847656,
+      "max": 0.20162296295166016
+    },
+    "wall_ns_selected": {
+      "median": 12.02392578125,
+      "min": 11.3804931640625,
+      "max": 12.90386962890625
+    }
+  },
+  {
+    "population": "8192",
+    "range": "quarter",
+    "mask_kept_per64": "1",
+    "grain": "64",
+    "arm": "lmdb_native_cursor",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 16455.3623046875,
+      "min": 16149.576171875,
+      "max": 16932.537109375
+    },
+    "owner_ns_scan": {
+      "median": 16456.6240234375,
+      "min": 16149.658203125,
+      "max": 16934.40625
+    },
+    "process_ns_scan": {
+      "median": 16457.6015625,
+      "min": 16149.740234375,
+      "max": 16936.279296875
+    },
+    "wall_ns_visited": {
+      "median": 8.034844875335693,
+      "min": 7.88553524017334,
+      "max": 8.267840385437012
+    },
+    "wall_ns_selected": {
+      "median": 514.2300720214844,
+      "min": 504.67425537109375,
+      "max": 529.1417846679688
+    }
+  },
+  {
+    "population": "8192",
+    "range": "quarter",
+    "mask_kept_per64": "8",
+    "grain": "64",
+    "arm": "engine_native_scan",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 667.4814453125,
+      "min": 647.134765625,
+      "max": 673.419921875
+    },
+    "owner_ns_scan": {
+      "median": 667.560546875,
+      "min": 647.0546875,
+      "max": 674.154296875
+    },
+    "process_ns_scan": {
+      "median": 667.6435546875,
+      "min": 647.0546875,
+      "max": 674.396484375
+    },
+    "wall_ns_visited": {
+      "median": 0.32591867446899414,
+      "min": 0.31598377227783203,
+      "max": 0.32881832122802734
+    },
+    "wall_ns_selected": {
+      "median": 2.607349395751953,
+      "min": 2.5278701782226562,
+      "max": 2.6305465698242188
+    }
+  },
+  {
+    "population": "8192",
+    "range": "quarter",
+    "mask_kept_per64": "8",
+    "grain": "64",
+    "arm": "lmdb_native_cursor",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 20680.4599609375,
+      "min": 20231.52734375,
+      "max": 21156.16796875
+    },
+    "owner_ns_scan": {
+      "median": 20681.802734375,
+      "min": 20231.607421875,
+      "max": 21156.73828125
+    },
+    "process_ns_scan": {
+      "median": 20682.984375,
+      "min": 20231.6875,
+      "max": 21157.388671875
+    },
+    "wall_ns_visited": {
+      "median": 10.097880840301514,
+      "min": 9.87867546081543,
+      "max": 10.330160140991211
+    },
+    "wall_ns_selected": {
+      "median": 80.78304672241211,
+      "min": 79.02940368652344,
+      "max": 82.64128112792969
+    }
+  },
+  {
+    "population": "8192",
+    "range": "quarter",
+    "mask_kept_per64": "32",
+    "grain": "64",
+    "arm": "engine_native_scan",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 2838.9072265625,
+      "min": 2793.5390625,
+      "max": 3012.369140625
+    },
+    "owner_ns_scan": {
+      "median": 2839.0302734375,
+      "min": 2793.5390625,
+      "max": 3014.97265625
+    },
+    "process_ns_scan": {
+      "median": 2839.1923828125,
+      "min": 2793.375,
+      "max": 3015.787109375
+    },
+    "wall_ns_visited": {
+      "median": 1.3861851692199707,
+      "min": 1.3640327453613281,
+      "max": 1.4708833694458008
+    },
+    "wall_ns_selected": {
+      "median": 2.7723703384399414,
+      "min": 2.7280654907226562,
+      "max": 2.9417667388916016
+    }
+  },
+  {
+    "population": "8192",
+    "range": "quarter",
+    "mask_kept_per64": "32",
+    "grain": "64",
+    "arm": "lmdb_native_cursor",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 32098.6337890625,
+      "min": 31042.318359375,
+      "max": 32206.705078125
+    },
+    "owner_ns_scan": {
+      "median": 32100.30078125,
+      "min": 31042.48046875,
+      "max": 32209.71484375
+    },
+    "process_ns_scan": {
+      "median": 32101.1552734375,
+      "min": 31042.642578125,
+      "max": 32212.158203125
+    },
+    "wall_ns_visited": {
+      "median": 15.673161029815674,
+      "min": 15.157382011413574,
+      "max": 15.725930213928223
+    },
+    "wall_ns_selected": {
+      "median": 31.346322059631348,
+      "min": 30.31476402282715,
+      "max": 31.451860427856445
+    }
+  },
+  {
+    "population": "8192",
+    "range": "quarter",
+    "mask_kept_per64": "64",
+    "grain": "64",
+    "arm": "engine_native_scan",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 4720.8671875,
+      "min": 4628.986328125,
+      "max": 4822.34765625
+    },
+    "owner_ns_scan": {
+      "median": 4721.1904296875,
+      "min": 4629.068359375,
+      "max": 4824.7890625
+    },
+    "process_ns_scan": {
+      "median": 4721.6396484375,
+      "min": 4628.98828125,
+      "max": 4825.68359375
+    },
+    "wall_ns_visited": {
+      "median": 2.3051109313964844,
+      "min": 2.260247230529785,
+      "max": 2.3546619415283203
+    },
+    "wall_ns_selected": {
+      "median": 2.3051109313964844,
+      "min": 2.260247230529785,
+      "max": 2.3546619415283203
+    }
+  },
+  {
+    "population": "8192",
+    "range": "quarter",
+    "mask_kept_per64": "64",
+    "grain": "64",
+    "arm": "lmdb_native_cursor",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 17738.76953125,
+      "min": 17391.68359375,
+      "max": 18142.333984375
+    },
+    "owner_ns_scan": {
+      "median": 17741.08984375,
+      "min": 17401.9375,
+      "max": 18144.693359375
+    },
+    "process_ns_scan": {
+      "median": 17742.3095703125,
+      "min": 17404.62109375,
+      "max": 18146.484375
+    },
+    "wall_ns_visited": {
+      "median": 8.661508560180664,
+      "min": 8.492033004760742,
+      "max": 8.858561515808105
+    },
+    "wall_ns_selected": {
+      "median": 8.661508560180664,
+      "min": 8.492033004760742,
+      "max": 8.858561515808105
+    }
+  },
+  {
+    "population": "8192",
+    "range": "full",
+    "mask_kept_per64": "-1",
+    "grain": "64",
+    "arm": "engine_native_scan",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 17281.73828125,
+      "min": 16572.59375,
+      "max": 17606.1171875
+    },
+    "owner_ns_scan": {
+      "median": 17282.0625,
+      "min": 16572.265625,
+      "max": 17634.4453125
+    },
+    "process_ns_scan": {
+      "median": 17282.38671875,
+      "min": 16572.265625,
+      "max": 17644.53125
+    },
+    "wall_ns_visited": {
+      "median": 2.1095871925354004,
+      "min": 2.023021697998047,
+      "max": 2.149184226989746
+    },
+    "wall_ns_selected": {
+      "median": 2.1095871925354004,
+      "min": 2.023021697998047,
+      "max": 2.149184226989746
+    }
+  },
+  {
+    "population": "8192",
+    "range": "full",
+    "mask_kept_per64": "-1",
+    "grain": "64",
+    "arm": "lmdb_native_cursor",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 68465.33203125,
+      "min": 66347.3359375,
+      "max": 69289.390625
+    },
+    "owner_ns_scan": {
+      "median": 68476.88671875,
+      "min": 66347.3359375,
+      "max": 69317.3828125
+    },
+    "process_ns_scan": {
+      "median": 68484.53515625,
+      "min": 66347.65625,
+      "max": 69328.78125
+    },
+    "wall_ns_visited": {
+      "median": 8.357584476470947,
+      "min": 8.099040031433105,
+      "max": 8.45817756652832
+    },
+    "wall_ns_selected": {
+      "median": 8.357584476470947,
+      "min": 8.099040031433105,
+      "max": 8.45817756652832
+    }
+  },
+  {
+    "population": "8192",
+    "range": "full",
+    "mask_kept_per64": "0",
+    "grain": "64",
+    "arm": "engine_native_scan",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 1417.80078125,
+      "min": 1395.1796875,
+      "max": 1454.75
+    },
+    "owner_ns_scan": {
+      "median": 1417.640625,
+      "min": 1394.8515625,
+      "max": 1454.7578125
+    },
+    "process_ns_scan": {
+      "median": 1417.48046875,
+      "min": 1394.53125,
+      "max": 1454.75
+    },
+    "wall_ns_visited": {
+      "median": 0.17307138442993164,
+      "min": 0.17031002044677734,
+      "max": 0.177581787109375
+    },
+    "wall_ns_selected": null
+  },
+  {
+    "population": "8192",
+    "range": "full",
+    "mask_kept_per64": "0",
+    "grain": "64",
+    "arm": "lmdb_native_cursor",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 65060.05859375,
+      "min": 63859.375,
+      "max": 66301.7578125
+    },
+    "owner_ns_scan": {
+      "median": 65073.2421875,
+      "min": 63860.3515625,
+      "max": 66306.3125
+    },
+    "process_ns_scan": {
+      "median": 65085.7734375,
+      "min": 63860.6796875,
+      "max": 66313.8046875
+    },
+    "wall_ns_visited": {
+      "median": 7.941901683807373,
+      "min": 7.7953338623046875,
+      "max": 8.093476295471191
+    },
+    "wall_ns_selected": null
+  },
+  {
+    "population": "8192",
+    "range": "full",
+    "mask_kept_per64": "1",
+    "grain": "64",
+    "arm": "engine_native_scan",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 1575.84765625,
+      "min": 1504.8828125,
+      "max": 1758.7890625
+    },
+    "owner_ns_scan": {
+      "median": 1575.84375,
+      "min": 1504.2265625,
+      "max": 1758.7890625
+    },
+    "process_ns_scan": {
+      "median": 1575.6875,
+      "min": 1503.90625,
+      "max": 1758.7890625
+    },
+    "wall_ns_visited": {
+      "median": 0.19236421585083008,
+      "min": 0.1837015151977539,
+      "max": 0.21469593048095703
+    },
+    "wall_ns_selected": {
+      "median": 12.311309814453125,
+      "min": 11.75689697265625,
+      "max": 13.74053955078125
+    }
+  },
+  {
+    "population": "8192",
+    "range": "full",
+    "mask_kept_per64": "1",
+    "grain": "64",
+    "arm": "lmdb_native_cursor",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 67736.328125,
+      "min": 65873.703125,
+      "max": 71297.53125
+    },
+    "owner_ns_scan": {
+      "median": 67749.51171875,
+      "min": 65874.0234375,
+      "max": 71307.6171875
+    },
+    "process_ns_scan": {
+      "median": 67811.84765625,
+      "min": 65874.3515625,
+      "max": 71317.375
+    },
+    "wall_ns_visited": {
+      "median": 8.268594741821289,
+      "min": 8.041223526000977,
+      "max": 8.703311920166016
+    },
+    "wall_ns_selected": {
+      "median": 529.1900634765625,
+      "min": 514.6383056640625,
+      "max": 557.011962890625
+    }
+  },
+  {
+    "population": "8192",
+    "range": "full",
+    "mask_kept_per64": "8",
+    "grain": "64",
+    "arm": "engine_native_scan",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 3576.66015625,
+      "min": 3395.5078125,
+      "max": 3623.6953125
+    },
+    "owner_ns_scan": {
+      "median": 3576.8203125,
+      "min": 3395.5078125,
+      "max": 3624.0234375
+    },
+    "process_ns_scan": {
+      "median": 3576.49609375,
+      "min": 3395.1796875,
+      "max": 3624.3515625
+    },
+    "wall_ns_visited": {
+      "median": 0.43660402297973633,
+      "min": 0.4144906997680664,
+      "max": 0.44234561920166016
+    },
+    "wall_ns_selected": {
+      "median": 3.4928321838378906,
+      "min": 3.3159255981445312,
+      "max": 3.5387649536132812
+    }
+  },
+  {
+    "population": "8192",
+    "range": "full",
+    "mask_kept_per64": "8",
+    "grain": "64",
+    "arm": "lmdb_native_cursor",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 85299.48046875,
+      "min": 84129.8828125,
+      "max": 87412.109375
+    },
+    "owner_ns_scan": {
+      "median": 85304.36328125,
+      "min": 84150.390625,
+      "max": 87418.9453125
+    },
+    "process_ns_scan": {
+      "median": 85309.41015625,
+      "min": 84161.78125,
+      "max": 87445.6328125
+    },
+    "wall_ns_visited": {
+      "median": 10.412534236907959,
+      "min": 10.269761085510254,
+      "max": 10.67042350769043
+    },
+    "wall_ns_selected": {
+      "median": 83.30027389526367,
+      "min": 82.15808868408203,
+      "max": 85.36338806152344
+    }
+  },
+  {
+    "population": "8192",
+    "range": "full",
+    "mask_kept_per64": "32",
+    "grain": "64",
+    "arm": "engine_native_scan",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 12348.30859375,
+      "min": 11680.015625,
+      "max": 13104.8125
+    },
+    "owner_ns_scan": {
+      "median": 12223.30859375,
+      "min": 11680.34375,
+      "max": 12949.21875
+    },
+    "process_ns_scan": {
+      "median": 12207.1953125,
+      "min": 11680.6640625,
+      "max": 12954.7578125
+    },
+    "wall_ns_visited": {
+      "median": 1.507361888885498,
+      "min": 1.4257831573486328,
+      "max": 1.5997085571289062
+    },
+    "wall_ns_selected": {
+      "median": 3.014723777770996,
+      "min": 2.8515663146972656,
+      "max": 3.1994171142578125
+    }
+  },
+  {
+    "population": "8192",
+    "range": "full",
+    "mask_kept_per64": "32",
+    "grain": "64",
+    "arm": "lmdb_native_cursor",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 136138.83203125,
+      "min": 132790.6875,
+      "max": 140432.9453125
+    },
+    "owner_ns_scan": {
+      "median": 136144.53125,
+      "min": 132791.34375,
+      "max": 140449.5390625
+    },
+    "process_ns_scan": {
+      "median": 136149.25,
+      "min": 132791.9921875,
+      "max": 140460.6171875
+    },
+    "wall_ns_visited": {
+      "median": 16.618509769439697,
+      "min": 16.209800720214844,
+      "max": 17.142693519592285
+    },
+    "wall_ns_selected": {
+      "median": 33.237019538879395,
+      "min": 32.41960144042969,
+      "max": 34.28538703918457
+    }
+  },
+  {
+    "population": "8192",
+    "range": "full",
+    "mask_kept_per64": "64",
+    "grain": "64",
+    "arm": "engine_native_scan",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 18341.30859375,
+      "min": 18175.453125,
+      "max": 19304.6875
+    },
+    "owner_ns_scan": {
+      "median": 18342.28125,
+      "min": 18175.1328125,
+      "max": 19311.203125
+    },
+    "process_ns_scan": {
+      "median": 18342.609375,
+      "min": 18175.1328125,
+      "max": 19316.734375
+    },
+    "wall_ns_visited": {
+      "median": 2.238929271697998,
+      "min": 2.2186832427978516,
+      "max": 2.3565292358398438
+    },
+    "wall_ns_selected": {
+      "median": 2.238929271697998,
+      "min": 2.2186832427978516,
+      "max": 2.3565292358398438
+    }
+  },
+  {
+    "population": "8192",
+    "range": "full",
+    "mask_kept_per64": "64",
+    "grain": "64",
+    "arm": "lmdb_native_cursor",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 72205.56640625,
+      "min": 70619.140625,
+      "max": 73449.546875
+    },
+    "owner_ns_scan": {
+      "median": 72220.37890625,
+      "min": 70619.4609375,
+      "max": 73463.2109375
+    },
+    "process_ns_scan": {
+      "median": 72228.18359375,
+      "min": 70619.796875,
+      "max": 73473.9609375
+    },
+    "wall_ns_visited": {
+      "median": 8.81415605545044,
+      "min": 8.620500564575195,
+      "max": 8.966009140014648
+    },
+    "wall_ns_selected": {
+      "median": 8.81415605545044,
+      "min": 8.620500564575195,
+      "max": 8.966009140014648
+    }
+  },
+  {
+    "population": "8192",
+    "range": "quarter",
+    "mask_kept_per64": "-1",
+    "grain": "256",
+    "arm": "engine_native_scan",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 4336.6708984375,
+      "min": 4269.61328125,
+      "max": 4414.306640625
+    },
+    "owner_ns_scan": {
+      "median": 4335.85546875,
+      "min": 4267.171875,
+      "max": 4414.388671875
+    },
+    "process_ns_scan": {
+      "median": 4335.5302734375,
+      "min": 4265.705078125,
+      "max": 4414.46875
+    },
+    "wall_ns_visited": {
+      "median": 2.1175150871276855,
+      "min": 2.0847721099853516,
+      "max": 2.155423164367676
+    },
+    "wall_ns_selected": {
+      "median": 2.1175150871276855,
+      "min": 2.0847721099853516,
+      "max": 2.155423164367676
+    }
+  },
+  {
+    "population": "8192",
+    "range": "quarter",
+    "mask_kept_per64": "-1",
+    "grain": "256",
+    "arm": "lmdb_native_cursor",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 16977.5390625,
+      "min": 16493.48828125,
+      "max": 17375.5703125
+    },
+    "owner_ns_scan": {
+      "median": 16980.75390625,
+      "min": 16497.4765625,
+      "max": 17378.5
+    },
+    "process_ns_scan": {
+      "median": 16982.2587890625,
+      "min": 16499.59375,
+      "max": 17380.94140625
+    },
+    "wall_ns_visited": {
+      "median": 8.289813995361328,
+      "min": 8.053461074829102,
+      "max": 8.48416519165039
+    },
+    "wall_ns_selected": {
+      "median": 8.289813995361328,
+      "min": 8.053461074829102,
+      "max": 8.48416519165039
+    }
+  },
+  {
+    "population": "8192",
+    "range": "quarter",
+    "mask_kept_per64": "0",
+    "grain": "256",
+    "arm": "engine_native_scan",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 388.6318359375,
+      "min": 374.591796875,
+      "max": 404.62109375
+    },
+    "owner_ns_scan": {
+      "median": 388.7529296875,
+      "min": 374.4296875,
+      "max": 404.62109375
+    },
+    "process_ns_scan": {
+      "median": 388.7529296875,
+      "min": 374.4296875,
+      "max": 404.623046875
+    },
+    "wall_ns_visited": {
+      "median": 0.18976163864135742,
+      "min": 0.1829061508178711,
+      "max": 0.1975688934326172
+    },
+    "wall_ns_selected": null
+  },
+  {
+    "population": "8192",
+    "range": "quarter",
+    "mask_kept_per64": "0",
+    "grain": "256",
+    "arm": "lmdb_native_cursor",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 15884.724609375,
+      "min": 15648.11328125,
+      "max": 16425.373046875
+    },
+    "owner_ns_scan": {
+      "median": 15887.166015625,
+      "min": 15648.84375,
+      "max": 16429.76953125
+    },
+    "process_ns_scan": {
+      "median": 15888.5498046875,
+      "min": 15649.4140625,
+      "max": 16432.046875
+    },
+    "wall_ns_visited": {
+      "median": 7.756213188171387,
+      "min": 7.640680313110352,
+      "max": 8.020201683044434
+    },
+    "wall_ns_selected": null
+  },
+  {
+    "population": "8192",
+    "range": "quarter",
+    "mask_kept_per64": "1",
+    "grain": "256",
+    "arm": "engine_native_scan",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 424.5595703125,
+      "min": 377.9296875,
+      "max": 463.705078125
+    },
+    "owner_ns_scan": {
+      "median": 425.537109375,
+      "min": 378.009765625,
+      "max": 463.705078125
+    },
+    "process_ns_scan": {
+      "median": 426.0263671875,
+      "min": 378.01171875,
+      "max": 463.703125
+    },
+    "wall_ns_visited": {
+      "median": 0.2073044776916504,
+      "min": 0.18453598022460938,
+      "max": 0.22641849517822266
+    },
+    "wall_ns_selected": {
+      "median": 13.267486572265625,
+      "min": 11.810302734375,
+      "max": 14.49078369140625
+    }
+  },
+  {
+    "population": "8192",
+    "range": "quarter",
+    "mask_kept_per64": "1",
+    "grain": "256",
+    "arm": "lmdb_native_cursor",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 16983.927734375,
+      "min": 16451.904296875,
+      "max": 18155.59765625
+    },
+    "owner_ns_scan": {
+      "median": 16990.3154296875,
+      "min": 16454.427734375,
+      "max": 18161.62109375
+    },
+    "process_ns_scan": {
+      "median": 16991.9443359375,
+      "min": 16455.728515625,
+      "max": 18164.876953125
+    },
+    "wall_ns_visited": {
+      "median": 8.292933464050293,
+      "min": 8.033156394958496,
+      "max": 8.86503791809082
+    },
+    "wall_ns_selected": {
+      "median": 530.7477416992188,
+      "min": 514.1220092773438,
+      "max": 567.3624267578125
+    }
+  },
+  {
+    "population": "8192",
+    "range": "quarter",
+    "mask_kept_per64": "8",
+    "grain": "256",
+    "arm": "engine_native_scan",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 734.6591796875,
+      "min": 662.59765625,
+      "max": 817.708984375
+    },
+    "owner_ns_scan": {
+      "median": 734.66015625,
+      "min": 662.59765625,
+      "max": 822.427734375
+    },
+    "process_ns_scan": {
+      "median": 734.66015625,
+      "min": 662.435546875,
+      "max": 824.21875
+    },
+    "wall_ns_visited": {
+      "median": 0.3587203025817871,
+      "min": 0.3235340118408203,
+      "max": 0.39927196502685547
+    },
+    "wall_ns_selected": {
+      "median": 2.869762420654297,
+      "min": 2.5882720947265625,
+      "max": 3.1941757202148438
+    }
+  },
+  {
+    "population": "8192",
+    "range": "quarter",
+    "mask_kept_per64": "8",
+    "grain": "256",
+    "arm": "lmdb_native_cursor",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 21213.9072265625,
+      "min": 20717.44921875,
+      "max": 21803.3046875
+    },
+    "owner_ns_scan": {
+      "median": 21219.7265625,
+      "min": 20719.482421875,
+      "max": 21806.0703125
+    },
+    "process_ns_scan": {
+      "median": 21221.8828125,
+      "min": 20720.78515625,
+      "max": 21808.0234375
+    },
+    "wall_ns_visited": {
+      "median": 10.35835313796997,
+      "min": 10.115942001342773,
+      "max": 10.64614486694336
+    },
+    "wall_ns_selected": {
+      "median": 82.86682510375977,
+      "min": 80.92753601074219,
+      "max": 85.16915893554688
+    }
+  },
+  {
+    "population": "8192",
+    "range": "quarter",
+    "mask_kept_per64": "32",
+    "grain": "256",
+    "arm": "engine_native_scan",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 2876.7509765625,
+      "min": 2716.71484375,
+      "max": 2911.5390625
+    },
+    "owner_ns_scan": {
+      "median": 2876.8720703125,
+      "min": 2716.796875,
+      "max": 2921.060546875
+    },
+    "process_ns_scan": {
+      "median": 2876.994140625,
+      "min": 2732.015625,
+      "max": 2922.8515625
+    },
+    "wall_ns_visited": {
+      "median": 1.4046635627746582,
+      "min": 1.3265209197998047,
+      "max": 1.4216499328613281
+    },
+    "wall_ns_selected": {
+      "median": 2.8093271255493164,
+      "min": 2.6530418395996094,
+      "max": 2.8432998657226562
+    }
+  },
+  {
+    "population": "8192",
+    "range": "quarter",
+    "mask_kept_per64": "32",
+    "grain": "256",
+    "arm": "lmdb_native_cursor",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 32020.060546875,
+      "min": 31693.84765625,
+      "max": 32712.40234375
+    },
+    "owner_ns_scan": {
+      "median": 32025.7978515625,
+      "min": 31697.4296875,
+      "max": 32718.66796875
+    },
+    "process_ns_scan": {
+      "median": 32028.5244140625,
+      "min": 31699.787109375,
+      "max": 32721.517578125
+    },
+    "wall_ns_visited": {
+      "median": 15.634795188903809,
+      "min": 15.47551155090332,
+      "max": 15.97285270690918
+    },
+    "wall_ns_selected": {
+      "median": 31.269590377807617,
+      "min": 30.95102310180664,
+      "max": 31.94570541381836
+    }
+  },
+  {
+    "population": "8192",
+    "range": "quarter",
+    "mask_kept_per64": "64",
+    "grain": "256",
+    "arm": "engine_native_scan",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 4641.0732421875,
+      "min": 4530.517578125,
+      "max": 4806.314453125
+    },
+    "owner_ns_scan": {
+      "median": 4641.1533203125,
+      "min": 4530.517578125,
+      "max": 4807.12890625
+    },
+    "process_ns_scan": {
+      "median": 4641.234375,
+      "min": 4530.599609375,
+      "max": 4807.53515625
+    },
+    "wall_ns_visited": {
+      "median": 2.2661490440368652,
+      "min": 2.2121667861938477,
+      "max": 2.3468332290649414
+    },
+    "wall_ns_selected": {
+      "median": 2.2661490440368652,
+      "min": 2.2121667861938477,
+      "max": 2.3468332290649414
+    }
+  },
+  {
+    "population": "8192",
+    "range": "quarter",
+    "mask_kept_per64": "64",
+    "grain": "256",
+    "arm": "lmdb_native_cursor",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 17706.5830078125,
+      "min": 17198.2421875,
+      "max": 17906.658203125
+    },
+    "owner_ns_scan": {
+      "median": 17680.9892578125,
+      "min": 17198.2421875,
+      "max": 17913.982421875
+    },
+    "process_ns_scan": {
+      "median": 17684.4892578125,
+      "min": 17198.322265625,
+      "max": 17916.830078125
+    },
+    "wall_ns_visited": {
+      "median": 8.645792484283447,
+      "min": 8.397579193115234,
+      "max": 8.743485450744629
+    },
+    "wall_ns_selected": {
+      "median": 8.645792484283447,
+      "min": 8.397579193115234,
+      "max": 8.743485450744629
+    }
+  },
+  {
+    "population": "8192",
+    "range": "full",
+    "mask_kept_per64": "-1",
+    "grain": "256",
+    "arm": "engine_native_scan",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 16393.06640625,
+      "min": 15910.8046875,
+      "max": 16803.0625
+    },
+    "owner_ns_scan": {
+      "median": 16393.5546875,
+      "min": 15910.8046875,
+      "max": 16819.0078125
+    },
+    "process_ns_scan": {
+      "median": 16393.71875,
+      "min": 15911.4609375,
+      "max": 16827.796875
+    },
+    "wall_ns_visited": {
+      "median": 2.0011067390441895,
+      "min": 1.9422369003295898,
+      "max": 2.0511550903320312
+    },
+    "wall_ns_selected": {
+      "median": 2.0011067390441895,
+      "min": 1.9422369003295898,
+      "max": 2.0511550903320312
+    }
+  },
+  {
+    "population": "8192",
+    "range": "full",
+    "mask_kept_per64": "-1",
+    "grain": "256",
+    "arm": "lmdb_native_cursor",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 68697.42578125,
+      "min": 66565.109375,
+      "max": 69834.3125
+    },
+    "owner_ns_scan": {
+      "median": 68706.54296875,
+      "min": 66578.4453125,
+      "max": 69840.4921875
+    },
+    "process_ns_scan": {
+      "median": 68713.3828125,
+      "min": 66590.4921875,
+      "max": 69844.0703125
+    },
+    "wall_ns_visited": {
+      "median": 8.385916233062744,
+      "min": 8.12562370300293,
+      "max": 8.524696350097656
+    },
+    "wall_ns_selected": {
+      "median": 8.385916233062744,
+      "min": 8.12562370300293,
+      "max": 8.524696350097656
+    }
+  },
+  {
+    "population": "8192",
+    "range": "full",
+    "mask_kept_per64": "0",
+    "grain": "256",
+    "arm": "engine_native_scan",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 1415.3671875,
+      "min": 1389.0,
+      "max": 1438.1484375
+    },
+    "owner_ns_scan": {
+      "median": 1415.36328125,
+      "min": 1388.671875,
+      "max": 1437.828125
+    },
+    "process_ns_scan": {
+      "median": 1415.36328125,
+      "min": 1388.671875,
+      "max": 1437.5
+    },
+    "wall_ns_visited": {
+      "median": 0.1727743148803711,
+      "min": 0.1695556640625,
+      "max": 0.17555522918701172
+    },
+    "wall_ns_selected": null
+  },
+  {
+    "population": "8192",
+    "range": "full",
+    "mask_kept_per64": "0",
+    "grain": "256",
+    "arm": "lmdb_native_cursor",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 65253.90625,
+      "min": 64038.0859375,
+      "max": 65803.7109375
+    },
+    "owner_ns_scan": {
+      "median": 65276.04296875,
+      "min": 64040.3671875,
+      "max": 65828.453125
+    },
+    "process_ns_scan": {
+      "median": 65286.45703125,
+      "min": 64041.9921875,
+      "max": 65840.171875
+    },
+    "wall_ns_visited": {
+      "median": 7.965564727783203,
+      "min": 7.8171491622924805,
+      "max": 8.032679557800293
+    },
+    "wall_ns_selected": null
+  },
+  {
+    "population": "8192",
+    "range": "full",
+    "mask_kept_per64": "1",
+    "grain": "256",
+    "arm": "engine_native_scan",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 1639.15625,
+      "min": 1530.921875,
+      "max": 1762.3671875
+    },
+    "owner_ns_scan": {
+      "median": 1639.1640625,
+      "min": 1530.921875,
+      "max": 1762.3671875
+    },
+    "process_ns_scan": {
+      "median": 1638.83203125,
+      "min": 1530.2734375,
+      "max": 1762.6953125
+    },
+    "wall_ns_visited": {
+      "median": 0.20009231567382812,
+      "min": 0.18688011169433594,
+      "max": 0.2151327133178711
+    },
+    "wall_ns_selected": {
+      "median": 12.805908203125,
+      "min": 11.9603271484375,
+      "max": 13.76849365234375
+    }
+  },
+  {
+    "population": "8192",
+    "range": "full",
+    "mask_kept_per64": "1",
+    "grain": "256",
+    "arm": "lmdb_native_cursor",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 67185.7109375,
+      "min": 66092.7734375,
+      "max": 68230.140625
+    },
+    "owner_ns_scan": {
+      "median": 67194.49609375,
+      "min": 66095.0546875,
+      "max": 68244.46875
+    },
+    "process_ns_scan": {
+      "median": 67198.7265625,
+      "min": 66097.328125,
+      "max": 68253.2578125
+    },
+    "wall_ns_visited": {
+      "median": 8.201380729675293,
+      "min": 8.067965507507324,
+      "max": 8.328874588012695
+    },
+    "wall_ns_selected": {
+      "median": 524.8883666992188,
+      "min": 516.3497924804688,
+      "max": 533.0479736328125
+    }
+  },
+  {
+    "population": "8192",
+    "range": "full",
+    "mask_kept_per64": "8",
+    "grain": "256",
+    "arm": "engine_native_scan",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 3863.44140625,
+      "min": 3387.0390625,
+      "max": 4604.1640625
+    },
+    "owner_ns_scan": {
+      "median": 3869.953125,
+      "min": 3386.390625,
+      "max": 4613.28125
+    },
+    "process_ns_scan": {
+      "median": 3874.5078125,
+      "min": 3385.09375,
+      "max": 4618.1640625
+    },
+    "wall_ns_visited": {
+      "median": 0.47161149978637695,
+      "min": 0.41345691680908203,
+      "max": 0.5620317459106445
+    },
+    "wall_ns_selected": {
+      "median": 3.7728919982910156,
+      "min": 3.3076553344726562,
+      "max": 4.496253967285156
+    }
+  },
+  {
+    "population": "8192",
+    "range": "full",
+    "mask_kept_per64": "8",
+    "grain": "256",
+    "arm": "lmdb_native_cursor",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 85649.90234375,
+      "min": 84229.1640625,
+      "max": 88351.2421875
+    },
+    "owner_ns_scan": {
+      "median": 85660.4765625,
+      "min": 84249.0234375,
+      "max": 88354.171875
+    },
+    "process_ns_scan": {
+      "median": 85667.48046875,
+      "min": 84260.0859375,
+      "max": 88358.3984375
+    },
+    "wall_ns_visited": {
+      "median": 10.455310344696045,
+      "min": 10.281880378723145,
+      "max": 10.785063743591309
+    },
+    "wall_ns_selected": {
+      "median": 83.64248275756836,
+      "min": 82.25504302978516,
+      "max": 86.28050994873047
+    }
+  },
+  {
+    "population": "8192",
+    "range": "full",
+    "mask_kept_per64": "32",
+    "grain": "256",
+    "arm": "engine_native_scan",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 12559.89453125,
+      "min": 11738.9296875,
+      "max": 12813.4765625
+    },
+    "owner_ns_scan": {
+      "median": 12327.63671875,
+      "min": 11739.2578125,
+      "max": 12473.3046875
+    },
+    "process_ns_scan": {
+      "median": 12287.921875,
+      "min": 11739.2578125,
+      "max": 12474.28125
+    },
+    "wall_ns_visited": {
+      "median": 1.5331902503967285,
+      "min": 1.4329748153686523,
+      "max": 1.5641450881958008
+    },
+    "wall_ns_selected": {
+      "median": 3.066380500793457,
+      "min": 2.8659496307373047,
+      "max": 3.1282901763916016
+    }
+  },
+  {
+    "population": "8192",
+    "range": "full",
+    "mask_kept_per64": "32",
+    "grain": "256",
+    "arm": "lmdb_native_cursor",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 135445.4765625,
+      "min": 132481.125,
+      "max": 136958.984375
+    },
+    "owner_ns_scan": {
+      "median": 135457.84765625,
+      "min": 132495.1171875,
+      "max": 136961.265625
+    },
+    "process_ns_scan": {
+      "median": 135465.66015625,
+      "min": 132509.765625,
+      "max": 136963.21875
+    },
+    "wall_ns_visited": {
+      "median": 16.5338716506958,
+      "min": 16.172012329101562,
+      "max": 16.718626022338867
+    },
+    "wall_ns_selected": {
+      "median": 33.0677433013916,
+      "min": 32.344024658203125,
+      "max": 33.437252044677734
+    }
+  },
+  {
+    "population": "8192",
+    "range": "full",
+    "mask_kept_per64": "64",
+    "grain": "256",
+    "arm": "engine_native_scan",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 17189.61328125,
+      "min": 17139.6484375,
+      "max": 18281.8984375
+    },
+    "owner_ns_scan": {
+      "median": 17189.77734375,
+      "min": 17139.9765625,
+      "max": 18308.59375
+    },
+    "process_ns_scan": {
+      "median": 17189.77734375,
+      "min": 17140.3046875,
+      "max": 18319.6640625
+    },
+    "wall_ns_visited": {
+      "median": 2.098341464996338,
+      "min": 2.0922422409057617,
+      "max": 2.2316770553588867
+    },
+    "wall_ns_selected": {
+      "median": 2.098341464996338,
+      "min": 2.0922422409057617,
+      "max": 2.2316770553588867
+    }
+  },
+  {
+    "population": "8192",
+    "range": "full",
+    "mask_kept_per64": "64",
+    "grain": "256",
+    "arm": "lmdb_native_cursor",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 71111.81640625,
+      "min": 69884.1171875,
+      "max": 71823.890625
+    },
+    "owner_ns_scan": {
+      "median": 71121.2578125,
+      "min": 69884.4375,
+      "max": 71826.171875
+    },
+    "process_ns_scan": {
+      "median": 71133.140625,
+      "min": 69884.4375,
+      "max": 71827.8046875
+    },
+    "wall_ns_visited": {
+      "median": 8.680641651153564,
+      "min": 8.530776023864746,
+      "max": 8.76756477355957
+    },
+    "wall_ns_selected": {
+      "median": 8.680641651153564,
+      "min": 8.530776023864746,
+      "max": 8.76756477355957
+    }
+  },
+  {
+    "population": "262144",
+    "range": "quarter",
+    "mask_kept_per64": "-1",
+    "grain": "16",
+    "arm": "engine_native_scan",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 153513.03125,
+      "min": 144234.375,
+      "max": 169476.5625
+    },
+    "owner_ns_scan": {
+      "median": 153513.03125,
+      "min": 144135.4375,
+      "max": 169583.375
+    },
+    "process_ns_scan": {
+      "median": 153500.0,
+      "min": 144057.3125,
+      "max": 169632.8125
+    },
+    "wall_ns_visited": {
+      "median": 2.3424229621887207,
+      "min": 2.2008419036865234,
+      "max": 2.5860071182250977
+    },
+    "wall_ns_selected": {
+      "median": 2.3424229621887207,
+      "min": 2.2008419036865234,
+      "max": 2.5860071182250977
+    }
+  },
+  {
+    "population": "262144",
+    "range": "quarter",
+    "mask_kept_per64": "-1",
+    "grain": "16",
+    "arm": "lmdb_native_cursor",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 545970.0625,
+      "min": 529057.3125,
+      "max": 561377.5625
+    },
+    "owner_ns_scan": {
+      "median": 546027.34375,
+      "min": 529054.6875,
+      "max": 561596.3125
+    },
+    "process_ns_scan": {
+      "median": 546052.09375,
+      "min": 529057.3125,
+      "max": 561679.6875
+    },
+    "wall_ns_visited": {
+      "median": 8.330842018127441,
+      "min": 8.072773933410645,
+      "max": 8.56594181060791
+    },
+    "wall_ns_selected": {
+      "median": 8.330842018127441,
+      "min": 8.072773933410645,
+      "max": 8.56594181060791
+    }
+  },
+  {
+    "population": "262144",
+    "range": "quarter",
+    "mask_kept_per64": "0",
+    "grain": "16",
+    "arm": "engine_native_scan",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 11307.3125,
+      "min": 11216.125,
+      "max": 11375.0
+    },
+    "owner_ns_scan": {
+      "median": 11266.9375,
+      "min": 11078.125,
+      "max": 11377.5625
+    },
+    "process_ns_scan": {
+      "median": 11259.09375,
+      "min": 11013.0,
+      "max": 11375.0
+    },
+    "wall_ns_visited": {
+      "median": 0.17253589630126953,
+      "min": 0.1711444854736328,
+      "max": 0.1735687255859375
+    },
+    "wall_ns_selected": null
+  },
+  {
+    "population": "262144",
+    "range": "quarter",
+    "mask_kept_per64": "0",
+    "grain": "16",
+    "arm": "lmdb_native_cursor",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 537079.4375,
+      "min": 524854.1875,
+      "max": 550588.5
+    },
+    "owner_ns_scan": {
+      "median": 537151.03125,
+      "min": 525005.1875,
+      "max": 550648.375
+    },
+    "process_ns_scan": {
+      "median": 537183.5625,
+      "min": 525101.5625,
+      "max": 550684.875
+    },
+    "wall_ns_visited": {
+      "median": 8.195181846618652,
+      "min": 8.008639335632324,
+      "max": 8.401313781738281
+    },
+    "wall_ns_selected": null
+  },
+  {
+    "population": "262144",
+    "range": "quarter",
+    "mask_kept_per64": "1",
+    "grain": "16",
+    "arm": "engine_native_scan",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 27763.03125,
+      "min": 23044.25,
+      "max": 36132.8125
+    },
+    "owner_ns_scan": {
+      "median": 27773.4375,
+      "min": 22994.75,
+      "max": 36192.6875
+    },
+    "process_ns_scan": {
+      "median": 27783.875,
+      "min": 22984.375,
+      "max": 36260.4375
+    },
+    "wall_ns_visited": {
+      "median": 0.4236302375793457,
+      "min": 0.3516273498535156,
+      "max": 0.5513429641723633
+    },
+    "wall_ns_selected": {
+      "median": 27.112335205078125,
+      "min": 22.504150390625,
+      "max": 35.28594970703125
+    }
+  },
+  {
+    "population": "262144",
+    "range": "quarter",
+    "mask_kept_per64": "1",
+    "grain": "16",
+    "arm": "lmdb_native_cursor",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 552627.59375,
+      "min": 537062.5,
+      "max": 565052.125
+    },
+    "owner_ns_scan": {
+      "median": 552700.53125,
+      "min": 537143.25,
+      "max": 565169.25
+    },
+    "process_ns_scan": {
+      "median": 552746.125,
+      "min": 537213.5,
+      "max": 565247.375
+    },
+    "wall_ns_visited": {
+      "median": 8.432427883148193,
+      "min": 8.194923400878906,
+      "max": 8.622011184692383
+    },
+    "wall_ns_selected": {
+      "median": 539.6753845214844,
+      "min": 524.47509765625,
+      "max": 551.8087158203125
+    }
+  },
+  {
+    "population": "262144",
+    "range": "quarter",
+    "mask_kept_per64": "8",
+    "grain": "16",
+    "arm": "engine_native_scan",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 56089.875,
+      "min": 48721.3125,
+      "max": 60018.25
+    },
+    "owner_ns_scan": {
+      "median": 56041.65625,
+      "min": 48677.0625,
+      "max": 60033.875
+    },
+    "process_ns_scan": {
+      "median": 56005.21875,
+      "min": 48671.875,
+      "max": 60041.6875
+    },
+    "wall_ns_visited": {
+      "median": 0.8558635711669922,
+      "min": 0.7434282302856445,
+      "max": 0.9158058166503906
+    },
+    "wall_ns_selected": {
+      "median": 6.8469085693359375,
+      "min": 5.947425842285156,
+      "max": 7.326446533203125
+    }
+  },
+  {
+    "population": "262144",
+    "range": "quarter",
+    "mask_kept_per64": "8",
+    "grain": "16",
+    "arm": "lmdb_native_cursor",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 698815.09375,
+      "min": 667721.375,
+      "max": 844731.8125
+    },
+    "owner_ns_scan": {
+      "median": 698915.34375,
+      "min": 667763.0,
+      "max": 844851.5625
+    },
+    "process_ns_scan": {
+      "median": 698950.53125,
+      "min": 667776.0625,
+      "max": 844916.625
+    },
+    "wall_ns_visited": {
+      "median": 10.663072109222412,
+      "min": 10.188619613647461,
+      "max": 12.8895845413208
+    },
+    "wall_ns_selected": {
+      "median": 85.3045768737793,
+      "min": 81.50895690917969,
+      "max": 103.1166763305664
+    }
+  },
+  {
+    "population": "262144",
+    "range": "quarter",
+    "mask_kept_per64": "32",
+    "grain": "16",
+    "arm": "engine_native_scan",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 118488.25,
+      "min": 109724.0,
+      "max": 128434.875
+    },
+    "owner_ns_scan": {
+      "median": 118476.5625,
+      "min": 109619.75,
+      "max": 128497.4375
+    },
+    "process_ns_scan": {
+      "median": 118450.53125,
+      "min": 109539.0625,
+      "max": 128528.625
+    },
+    "wall_ns_visited": {
+      "median": 1.8079872131347656,
+      "min": 1.67425537109375,
+      "max": 1.9597606658935547
+    },
+    "wall_ns_selected": {
+      "median": 3.6159744262695312,
+      "min": 3.3485107421875,
+      "max": 3.9195213317871094
+    }
+  },
+  {
+    "population": "262144",
+    "range": "quarter",
+    "mask_kept_per64": "32",
+    "grain": "16",
+    "arm": "lmdb_native_cursor",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 1118312.5,
+      "min": 1108682.3125,
+      "max": 1157671.875
+    },
+    "owner_ns_scan": {
+      "median": 1118368.5,
+      "min": 1108872.375,
+      "max": 1157760.4375
+    },
+    "process_ns_scan": {
+      "median": 1118403.6875,
+      "min": 1108979.125,
+      "max": 1157817.6875
+    },
+    "wall_ns_visited": {
+      "median": 17.06409454345703,
+      "min": 16.917149543762207,
+      "max": 17.664670944213867
+    },
+    "wall_ns_selected": {
+      "median": 34.12818908691406,
+      "min": 33.834299087524414,
+      "max": 35.329341888427734
+    }
+  },
+  {
+    "population": "262144",
+    "range": "quarter",
+    "mask_kept_per64": "64",
+    "grain": "16",
+    "arm": "engine_native_scan",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 158454.40625,
+      "min": 153528.625,
+      "max": 162380.1875
+    },
+    "owner_ns_scan": {
+      "median": 158428.40625,
+      "min": 153424.5,
+      "max": 162408.875
+    },
+    "process_ns_scan": {
+      "median": 158425.78125,
+      "min": 153351.5625,
+      "max": 163161.4375
+    },
+    "wall_ns_visited": {
+      "median": 2.4178223609924316,
+      "min": 2.342660903930664,
+      "max": 2.477725028991699
+    },
+    "wall_ns_selected": {
+      "median": 2.4178223609924316,
+      "min": 2.342660903930664,
+      "max": 2.477725028991699
+    }
+  },
+  {
+    "population": "262144",
+    "range": "quarter",
+    "mask_kept_per64": "64",
+    "grain": "16",
+    "arm": "lmdb_native_cursor",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 577899.75,
+      "min": 569401.0625,
+      "max": 581833.3125
+    },
+    "owner_ns_scan": {
+      "median": 577927.125,
+      "min": 569424.5,
+      "max": 581929.6875
+    },
+    "process_ns_scan": {
+      "median": 577938.8125,
+      "min": 569429.6875,
+      "max": 581994.8125
+    },
+    "wall_ns_visited": {
+      "median": 8.818050384521484,
+      "min": 8.688370704650879,
+      "max": 8.878071784973145
+    },
+    "wall_ns_selected": {
+      "median": 8.818050384521484,
+      "min": 8.688370704650879,
+      "max": 8.878071784973145
+    }
+  },
+  {
+    "population": "262144",
+    "range": "full",
+    "mask_kept_per64": "-1",
+    "grain": "16",
+    "arm": "engine_native_scan",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 1264510.375,
+      "min": 1090322.75,
+      "max": 1377781.25
+    },
+    "owner_ns_scan": {
+      "median": 1265114.625,
+      "min": 1090937.5,
+      "max": 1377427.0
+    },
+    "process_ns_scan": {
+      "median": 1265145.875,
+      "min": 1091302.0,
+      "max": 1377354.25
+    },
+    "wall_ns_visited": {
+      "median": 4.823724269866943,
+      "min": 4.1592512130737305,
+      "max": 5.2558183670043945
+    },
+    "wall_ns_selected": {
+      "median": 4.823724269866943,
+      "min": 4.1592512130737305,
+      "max": 5.2558183670043945
+    }
+  },
+  {
+    "population": "262144",
+    "range": "full",
+    "mask_kept_per64": "-1",
+    "grain": "16",
+    "arm": "lmdb_native_cursor",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 2317005.25,
+      "min": 2241531.25,
+      "max": 2409333.25
+    },
+    "owner_ns_scan": {
+      "median": 2317484.25,
+      "min": 2241718.75,
+      "max": 2409875.0
+    },
+    "process_ns_scan": {
+      "median": 2317698.0,
+      "min": 2241729.0,
+      "max": 2410104.25
+    },
+    "wall_ns_visited": {
+      "median": 8.83867359161377,
+      "min": 8.550763130187988,
+      "max": 9.190876960754395
+    },
+    "wall_ns_selected": {
+      "median": 8.83867359161377,
+      "min": 8.550763130187988,
+      "max": 9.190876960754395
+    }
+  },
+  {
+    "population": "262144",
+    "range": "full",
+    "mask_kept_per64": "0",
+    "grain": "16",
+    "arm": "engine_native_scan",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 47614.625,
+      "min": 45364.75,
+      "max": 50146.0
+    },
+    "owner_ns_scan": {
+      "median": 47442.75,
+      "min": 45375.0,
+      "max": 49937.5
+    },
+    "process_ns_scan": {
+      "median": 47593.625,
+      "min": 45385.5,
+      "max": 49875.0
+    },
+    "wall_ns_visited": {
+      "median": 0.18163537979125977,
+      "min": 0.17305278778076172,
+      "max": 0.19129180908203125
+    },
+    "wall_ns_selected": null
+  },
+  {
+    "population": "262144",
+    "range": "full",
+    "mask_kept_per64": "0",
+    "grain": "16",
+    "arm": "lmdb_native_cursor",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 2257635.5,
+      "min": 2153687.5,
+      "max": 2391593.75
+    },
+    "owner_ns_scan": {
+      "median": 2258890.75,
+      "min": 2153906.25,
+      "max": 2392448.0
+    },
+    "process_ns_scan": {
+      "median": 2259463.625,
+      "min": 2153937.5,
+      "max": 2392875.0
+    },
+    "wall_ns_visited": {
+      "median": 8.61219596862793,
+      "min": 8.215665817260742,
+      "max": 9.12320613861084
+    },
+    "wall_ns_selected": null
+  },
+  {
+    "population": "262144",
+    "range": "full",
+    "mask_kept_per64": "1",
+    "grain": "16",
+    "arm": "engine_native_scan",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 249687.5,
+      "min": 196604.25,
+      "max": 359385.5
+    },
+    "owner_ns_scan": {
+      "median": 249609.375,
+      "min": 196125.0,
+      "max": 359948.0
+    },
+    "process_ns_scan": {
+      "median": 249645.875,
+      "min": 195843.75,
+      "max": 360312.5
+    },
+    "wall_ns_visited": {
+      "median": 0.9524822235107422,
+      "min": 0.7499856948852539,
+      "max": 1.3709468841552734
+    },
+    "wall_ns_selected": {
+      "median": 60.9588623046875,
+      "min": 47.99908447265625,
+      "max": 87.7406005859375
+    }
+  },
+  {
+    "population": "262144",
+    "range": "full",
+    "mask_kept_per64": "1",
+    "grain": "16",
+    "arm": "lmdb_native_cursor",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 2334291.625,
+      "min": 2189666.5,
+      "max": 2506645.75
+    },
+    "owner_ns_scan": {
+      "median": 2337807.25,
+      "min": 2190187.5,
+      "max": 2507302.25
+    },
+    "process_ns_scan": {
+      "median": 2341703.0,
+      "min": 2190458.25,
+      "max": 2509198.0
+    },
+    "wall_ns_visited": {
+      "median": 8.904615879058838,
+      "min": 8.352914810180664,
+      "max": 9.562094688415527
+    },
+    "wall_ns_selected": {
+      "median": 569.8954162597656,
+      "min": 534.5865478515625,
+      "max": 611.9740600585938
+    }
+  },
+  {
+    "population": "262144",
+    "range": "full",
+    "mask_kept_per64": "8",
+    "grain": "16",
+    "arm": "engine_native_scan",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 578364.5,
+      "min": 500552.0,
+      "max": 651614.5
+    },
+    "owner_ns_scan": {
+      "median": 556666.625,
+      "min": 499833.25,
+      "max": 651489.5
+    },
+    "process_ns_scan": {
+      "median": 555906.25,
+      "min": 499375.0,
+      "max": 651395.75
+    },
+    "wall_ns_visited": {
+      "median": 2.2062854766845703,
+      "min": 1.909454345703125,
+      "max": 2.4857120513916016
+    },
+    "wall_ns_selected": {
+      "median": 17.650283813476562,
+      "min": 15.275634765625,
+      "max": 19.885696411132812
+    }
+  },
+  {
+    "population": "262144",
+    "range": "full",
+    "mask_kept_per64": "8",
+    "grain": "16",
+    "arm": "lmdb_native_cursor",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 2931036.5,
+      "min": 2701260.25,
+      "max": 3094531.25
+    },
+    "owner_ns_scan": {
+      "median": 2931609.375,
+      "min": 2701510.25,
+      "max": 3095531.25
+    },
+    "process_ns_scan": {
+      "median": 2931984.25,
+      "min": 2701562.5,
+      "max": 3096031.25
+    },
+    "wall_ns_visited": {
+      "median": 11.18101692199707,
+      "min": 10.304490089416504,
+      "max": 11.804699897766113
+    },
+    "wall_ns_selected": {
+      "median": 89.44813537597656,
+      "min": 82.43592071533203,
+      "max": 94.4375991821289
+    }
+  },
+  {
+    "population": "262144",
+    "range": "full",
+    "mask_kept_per64": "32",
+    "grain": "16",
+    "arm": "engine_native_scan",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 1262369.75,
+      "min": 1040062.5,
+      "max": 1275354.25
+    },
+    "owner_ns_scan": {
+      "median": 1263078.125,
+      "min": 1040333.25,
+      "max": 1276343.75
+    },
+    "process_ns_scan": {
+      "median": 1263432.375,
+      "min": 1040302.0,
+      "max": 1276802.25
+    },
+    "wall_ns_visited": {
+      "median": 4.815558433532715,
+      "min": 3.9675235748291016,
+      "max": 4.865090370178223
+    },
+    "wall_ns_selected": {
+      "median": 9.63111686706543,
+      "min": 7.935047149658203,
+      "max": 9.730180740356445
+    }
+  },
+  {
+    "population": "262144",
+    "range": "full",
+    "mask_kept_per64": "32",
+    "grain": "16",
+    "arm": "lmdb_native_cursor",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 4633989.625,
+      "min": 4529614.5,
+      "max": 4796864.5
+    },
+    "owner_ns_scan": {
+      "median": 4636150.875,
+      "min": 4530406.25,
+      "max": 4797698.0
+    },
+    "process_ns_scan": {
+      "median": 4637734.375,
+      "min": 4530916.75,
+      "max": 4798083.25
+    },
+    "wall_ns_visited": {
+      "median": 17.67726755142212,
+      "min": 17.27910804748535,
+      "max": 18.298585891723633
+    },
+    "wall_ns_selected": {
+      "median": 35.35453510284424,
+      "min": 34.5582160949707,
+      "max": 36.597171783447266
+    }
+  },
+  {
+    "population": "262144",
+    "range": "full",
+    "mask_kept_per64": "64",
+    "grain": "16",
+    "arm": "engine_native_scan",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 1340895.875,
+      "min": 1180354.25,
+      "max": 1371833.25
+    },
+    "owner_ns_scan": {
+      "median": 1341479.125,
+      "min": 1180427.0,
+      "max": 1372437.5
+    },
+    "process_ns_scan": {
+      "median": 1341734.375,
+      "min": 1180489.5,
+      "max": 1372760.25
+    },
+    "wall_ns_visited": {
+      "median": 5.115111827850342,
+      "min": 4.502694129943848,
+      "max": 5.233128547668457
+    },
+    "wall_ns_selected": {
+      "median": 5.115111827850342,
+      "min": 4.502694129943848,
+      "max": 5.233128547668457
+    }
+  },
+  {
+    "population": "262144",
+    "range": "full",
+    "mask_kept_per64": "64",
+    "grain": "16",
+    "arm": "lmdb_native_cursor",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 2472442.75,
+      "min": 2383343.75,
+      "max": 2632312.5
+    },
+    "owner_ns_scan": {
+      "median": 2473614.5,
+      "min": 2383718.75,
+      "max": 2633166.5
+    },
+    "process_ns_scan": {
+      "median": 2474067.625,
+      "min": 2383791.75,
+      "max": 2633458.25
+    },
+    "wall_ns_visited": {
+      "median": 9.431620597839355,
+      "min": 9.091734886169434,
+      "max": 10.041475296020508
+    },
+    "wall_ns_selected": {
+      "median": 9.431620597839355,
+      "min": 9.091734886169434,
+      "max": 10.041475296020508
+    }
+  },
+  {
+    "population": "262144",
+    "range": "quarter",
+    "mask_kept_per64": "-1",
+    "grain": "64",
+    "arm": "engine_native_scan",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 217330.75,
+      "min": 186606.75,
+      "max": 226437.5
+    },
+    "owner_ns_scan": {
+      "median": 217273.4375,
+      "min": 186622.375,
+      "max": 226442.6875
+    },
+    "process_ns_scan": {
+      "median": 217225.28125,
+      "min": 186625.0,
+      "max": 226447.9375
+    },
+    "wall_ns_visited": {
+      "median": 3.316204071044922,
+      "min": 2.847393035888672,
+      "max": 3.4551620483398438
+    },
+    "wall_ns_selected": {
+      "median": 3.316204071044922,
+      "min": 2.847393035888672,
+      "max": 3.4551620483398438
+    }
+  },
+  {
+    "population": "262144",
+    "range": "quarter",
+    "mask_kept_per64": "-1",
+    "grain": "64",
+    "arm": "lmdb_native_cursor",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 544933.5625,
+      "min": 533794.25,
+      "max": 557583.375
+    },
+    "owner_ns_scan": {
+      "median": 545074.1875,
+      "min": 533825.5,
+      "max": 557776.0
+    },
+    "process_ns_scan": {
+      "median": 545147.125,
+      "min": 533848.9375,
+      "max": 557877.5625
+    },
+    "wall_ns_visited": {
+      "median": 8.31502628326416,
+      "min": 8.14505386352539,
+      "max": 8.508047103881836
+    },
+    "wall_ns_selected": {
+      "median": 8.31502628326416,
+      "min": 8.14505386352539,
+      "max": 8.508047103881836
+    }
+  },
+  {
+    "population": "262144",
+    "range": "quarter",
+    "mask_kept_per64": "0",
+    "grain": "64",
+    "arm": "engine_native_scan",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 11718.78125,
+      "min": 11020.8125,
+      "max": 12773.4375
+    },
+    "owner_ns_scan": {
+      "median": 11654.96875,
+      "min": 10973.9375,
+      "max": 12835.9375
+    },
+    "process_ns_scan": {
+      "median": 11636.71875,
+      "min": 10968.75,
+      "max": 12867.1875
+    },
+    "wall_ns_visited": {
+      "median": 0.17881441116333008,
+      "min": 0.16816425323486328,
+      "max": 0.19490718841552734
+    },
+    "wall_ns_selected": null
+  },
+  {
+    "population": "262144",
+    "range": "quarter",
+    "mask_kept_per64": "0",
+    "grain": "64",
+    "arm": "lmdb_native_cursor",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 528446.625,
+      "min": 511643.25,
+      "max": 536518.1875
+    },
+    "owner_ns_scan": {
+      "median": 528579.40625,
+      "min": 511656.25,
+      "max": 536570.3125
+    },
+    "process_ns_scan": {
+      "median": 528666.625,
+      "min": 511671.875,
+      "max": 536585.9375
+    },
+    "wall_ns_visited": {
+      "median": 8.063455581665039,
+      "min": 7.807056427001953,
+      "max": 8.186617851257324
+    },
+    "wall_ns_selected": null
+  },
+  {
+    "population": "262144",
+    "range": "quarter",
+    "mask_kept_per64": "1",
+    "grain": "64",
+    "arm": "engine_native_scan",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 35483.0625,
+      "min": 33093.75,
+      "max": 39786.5
+    },
+    "owner_ns_scan": {
+      "median": 35428.40625,
+      "min": 33013.0625,
+      "max": 39789.0625
+    },
+    "process_ns_scan": {
+      "median": 35417.96875,
+      "min": 32958.3125,
+      "max": 39791.6875
+    },
+    "wall_ns_visited": {
+      "median": 0.5414285659790039,
+      "min": 0.5049705505371094,
+      "max": 0.6070938110351562
+    },
+    "wall_ns_selected": {
+      "median": 34.65142822265625,
+      "min": 32.318115234375,
+      "max": 38.85400390625
+    }
+  },
+  {
+    "population": "262144",
+    "range": "quarter",
+    "mask_kept_per64": "1",
+    "grain": "64",
+    "arm": "lmdb_native_cursor",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 542154.9375,
+      "min": 539765.625,
+      "max": 556880.1875
+    },
+    "owner_ns_scan": {
+      "median": 542238.28125,
+      "min": 539937.5,
+      "max": 557067.6875
+    },
+    "process_ns_scan": {
+      "median": 542287.75,
+      "min": 540036.5,
+      "max": 557257.8125
+    },
+    "wall_ns_visited": {
+      "median": 8.272627830505371,
+      "min": 8.236169815063477,
+      "max": 8.49731731414795
+    },
+    "wall_ns_selected": {
+      "median": 529.4481811523438,
+      "min": 527.1148681640625,
+      "max": 543.8283081054688
+    }
+  },
+  {
+    "population": "262144",
+    "range": "quarter",
+    "mask_kept_per64": "8",
+    "grain": "64",
+    "arm": "engine_native_scan",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 63342.46875,
+      "min": 62250.0,
+      "max": 78976.5625
+    },
+    "owner_ns_scan": {
+      "median": 63308.59375,
+      "min": 62026.0,
+      "max": 78992.1875
+    },
+    "process_ns_scan": {
+      "median": 63399.71875,
+      "min": 61898.4375,
+      "max": 79000.0
+    },
+    "wall_ns_visited": {
+      "median": 0.966529369354248,
+      "min": 0.949859619140625,
+      "max": 1.2050867080688477
+    },
+    "wall_ns_selected": {
+      "median": 7.732234954833984,
+      "min": 7.598876953125,
+      "max": 9.640693664550781
+    }
+  },
+  {
+    "population": "262144",
+    "range": "quarter",
+    "mask_kept_per64": "8",
+    "grain": "64",
+    "arm": "lmdb_native_cursor",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 695675.75,
+      "min": 682020.8125,
+      "max": 712122.4375
+    },
+    "owner_ns_scan": {
+      "median": 695882.8125,
+      "min": 682205.6875,
+      "max": 712466.125
+    },
+    "process_ns_scan": {
+      "median": 695940.09375,
+      "min": 682312.5,
+      "max": 712559.9375
+    },
+    "wall_ns_visited": {
+      "median": 10.615169525146484,
+      "min": 10.406811714172363,
+      "max": 10.86612606048584
+    },
+    "wall_ns_selected": {
+      "median": 84.92135620117188,
+      "min": 83.2544937133789,
+      "max": 86.92900848388672
+    }
+  },
+  {
+    "population": "262144",
+    "range": "quarter",
+    "mask_kept_per64": "32",
+    "grain": "64",
+    "arm": "engine_native_scan",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 146710.9375,
+      "min": 134372.375,
+      "max": 167476.5625
+    },
+    "owner_ns_scan": {
+      "median": 146709.625,
+      "min": 134247.375,
+      "max": 167484.375
+    },
+    "process_ns_scan": {
+      "median": 146714.84375,
+      "min": 134171.875,
+      "max": 167486.9375
+    },
+    "wall_ns_visited": {
+      "median": 2.238631248474121,
+      "min": 2.0503597259521484,
+      "max": 2.5554895401000977
+    },
+    "wall_ns_selected": {
+      "median": 4.477262496948242,
+      "min": 4.100719451904297,
+      "max": 5.110979080200195
+    }
+  },
+  {
+    "population": "262144",
+    "range": "quarter",
+    "mask_kept_per64": "32",
+    "grain": "64",
+    "arm": "lmdb_native_cursor",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 1112615.875,
+      "min": 1102299.4375,
+      "max": 1128835.9375
+    },
+    "owner_ns_scan": {
+      "median": 1112751.28125,
+      "min": 1102463.5,
+      "max": 1128986.9375
+    },
+    "process_ns_scan": {
+      "median": 1112838.53125,
+      "min": 1102536.5,
+      "max": 1129083.375
+    },
+    "wall_ns_visited": {
+      "median": 16.977170944213867,
+      "min": 16.819754600524902,
+      "max": 17.224669456481934
+    },
+    "wall_ns_selected": {
+      "median": 33.954341888427734,
+      "min": 33.639509201049805,
+      "max": 34.44933891296387
+    }
+  },
+  {
+    "population": "262144",
+    "range": "quarter",
+    "mask_kept_per64": "64",
+    "grain": "64",
+    "arm": "engine_native_scan",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 235048.1875,
+      "min": 209710.9375,
+      "max": 283192.6875
+    },
+    "owner_ns_scan": {
+      "median": 235042.96875,
+      "min": 209695.3125,
+      "max": 283307.3125
+    },
+    "process_ns_scan": {
+      "median": 235056.0,
+      "min": 209658.8125,
+      "max": 283380.25
+    },
+    "wall_ns_visited": {
+      "median": 3.586550712585449,
+      "min": 3.199934959411621,
+      "max": 4.3211774826049805
+    },
+    "wall_ns_selected": {
+      "median": 3.586550712585449,
+      "min": 3.199934959411621,
+      "max": 4.3211774826049805
+    }
+  },
+  {
+    "population": "262144",
+    "range": "quarter",
+    "mask_kept_per64": "64",
+    "grain": "64",
+    "arm": "lmdb_native_cursor",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 578893.21875,
+      "min": 567872.375,
+      "max": 582518.25
+    },
+    "owner_ns_scan": {
+      "median": 579048.15625,
+      "min": 567916.625,
+      "max": 582708.375
+    },
+    "process_ns_scan": {
+      "median": 579126.28125,
+      "min": 567934.9375,
+      "max": 582786.4375
+    },
+    "wall_ns_visited": {
+      "median": 8.83320951461792,
+      "min": 8.665044784545898,
+      "max": 8.88852310180664
+    },
+    "wall_ns_selected": {
+      "median": 8.83320951461792,
+      "min": 8.665044784545898,
+      "max": 8.88852310180664
+    }
+  },
+  {
+    "population": "262144",
+    "range": "full",
+    "mask_kept_per64": "-1",
+    "grain": "64",
+    "arm": "engine_native_scan",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 1842817.75,
+      "min": 1478583.5,
+      "max": 2294375.0
+    },
+    "owner_ns_scan": {
+      "median": 1843197.75,
+      "min": 1478833.25,
+      "max": 2295239.75
+    },
+    "process_ns_scan": {
+      "median": 1843401.125,
+      "min": 1478573.0,
+      "max": 2295635.5
+    },
+    "wall_ns_visited": {
+      "median": 7.029791831970215,
+      "min": 5.640348434448242,
+      "max": 8.75234603881836
+    },
+    "wall_ns_selected": {
+      "median": 7.029791831970215,
+      "min": 5.640348434448242,
+      "max": 8.75234603881836
+    }
+  },
+  {
+    "population": "262144",
+    "range": "full",
+    "mask_kept_per64": "-1",
+    "grain": "64",
+    "arm": "lmdb_native_cursor",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 2292875.0,
+      "min": 2247052.25,
+      "max": 2326270.75
+    },
+    "owner_ns_scan": {
+      "median": 2293651.0,
+      "min": 2247937.5,
+      "max": 2327062.5
+    },
+    "process_ns_scan": {
+      "median": 2294072.875,
+      "min": 2248041.75,
+      "max": 2327395.75
+    },
+    "wall_ns_visited": {
+      "median": 8.746623992919922,
+      "min": 8.571824073791504,
+      "max": 8.874018669128418
+    },
+    "wall_ns_selected": {
+      "median": 8.746623992919922,
+      "min": 8.571824073791504,
+      "max": 8.874018669128418
+    }
+  },
+  {
+    "population": "262144",
+    "range": "full",
+    "mask_kept_per64": "0",
+    "grain": "64",
+    "arm": "engine_native_scan",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 46640.625,
+      "min": 44854.25,
+      "max": 49291.75
+    },
+    "owner_ns_scan": {
+      "median": 44974.125,
+      "min": 44864.5,
+      "max": 49447.75
+    },
+    "process_ns_scan": {
+      "median": 44781.25,
+      "min": 44468.75,
+      "max": 49521.0
+    },
+    "wall_ns_visited": {
+      "median": 0.17791986465454102,
+      "min": 0.17110538482666016,
+      "max": 0.1880331039428711
+    },
+    "wall_ns_selected": null
+  },
+  {
+    "population": "262144",
+    "range": "full",
+    "mask_kept_per64": "0",
+    "grain": "64",
+    "arm": "lmdb_native_cursor",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 2161625.125,
+      "min": 2116520.75,
+      "max": 2194896.0
+    },
+    "owner_ns_scan": {
+      "median": 2162192.625,
+      "min": 2116927.0,
+      "max": 2195666.5
+    },
+    "process_ns_scan": {
+      "median": 2162479.125,
+      "min": 2117166.75,
+      "max": 2196135.25
+    },
+    "wall_ns_visited": {
+      "median": 8.245945453643799,
+      "min": 8.073885917663574,
+      "max": 8.37286376953125
+    },
+    "wall_ns_selected": null
+  },
+  {
+    "population": "262144",
+    "range": "full",
+    "mask_kept_per64": "1",
+    "grain": "64",
+    "arm": "engine_native_scan",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 238390.625,
+      "min": 232239.75,
+      "max": 272437.5
+    },
+    "owner_ns_scan": {
+      "median": 237552.125,
+      "min": 232260.25,
+      "max": 272552.25
+    },
+    "process_ns_scan": {
+      "median": 237151.0,
+      "min": 232271.0,
+      "max": 272656.25
+    },
+    "wall_ns_visited": {
+      "median": 0.9093880653381348,
+      "min": 0.8859243392944336,
+      "max": 1.039266586303711
+    },
+    "wall_ns_selected": {
+      "median": 58.200836181640625,
+      "min": 56.69915771484375,
+      "max": 66.5130615234375
+    }
+  },
+  {
+    "population": "262144",
+    "range": "full",
+    "mask_kept_per64": "1",
+    "grain": "64",
+    "arm": "lmdb_native_cursor",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 2266541.625,
+      "min": 2219677.0,
+      "max": 2325645.75
+    },
+    "owner_ns_scan": {
+      "median": 2267250.0,
+      "min": 2220177.0,
+      "max": 2325875.0
+    },
+    "process_ns_scan": {
+      "median": 2267651.0,
+      "min": 2220427.0,
+      "max": 2325948.0
+    },
+    "wall_ns_visited": {
+      "median": 8.646170139312744,
+      "min": 8.467395782470703,
+      "max": 8.871634483337402
+    },
+    "wall_ns_selected": {
+      "median": 553.3548889160156,
+      "min": 541.913330078125,
+      "max": 567.7846069335938
+    }
+  },
+  {
+    "population": "262144",
+    "range": "full",
+    "mask_kept_per64": "8",
+    "grain": "64",
+    "arm": "engine_native_scan",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 558489.5,
+      "min": 412666.5,
+      "max": 645968.75
+    },
+    "owner_ns_scan": {
+      "median": 550801.875,
+      "min": 412052.25,
+      "max": 630812.25
+    },
+    "process_ns_scan": {
+      "median": 550338.625,
+      "min": 411791.5,
+      "max": 630000.0
+    },
+    "wall_ns_visited": {
+      "median": 2.1304683685302734,
+      "min": 1.574197769165039,
+      "max": 2.464175224304199
+    },
+    "wall_ns_selected": {
+      "median": 17.043746948242188,
+      "min": 12.593582153320312,
+      "max": 19.713401794433594
+    }
+  },
+  {
+    "population": "262144",
+    "range": "full",
+    "mask_kept_per64": "8",
+    "grain": "64",
+    "arm": "lmdb_native_cursor",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 2818109.375,
+      "min": 2752198.0,
+      "max": 2864781.25
+    },
+    "owner_ns_scan": {
+      "median": 2818791.625,
+      "min": 2752791.75,
+      "max": 2865583.25
+    },
+    "process_ns_scan": {
+      "median": 2819198.0,
+      "min": 2753906.25,
+      "max": 2866000.0
+    },
+    "wall_ns_visited": {
+      "median": 10.750234127044678,
+      "min": 10.498802185058594,
+      "max": 10.92827320098877
+    },
+    "wall_ns_selected": {
+      "median": 86.00187301635742,
+      "min": 83.99041748046875,
+      "max": 87.42618560791016
+    }
+  },
+  {
+    "population": "262144",
+    "range": "full",
+    "mask_kept_per64": "32",
+    "grain": "64",
+    "arm": "engine_native_scan",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 1455197.875,
+      "min": 1219875.0,
+      "max": 1622291.75
+    },
+    "owner_ns_scan": {
+      "median": 1455213.5,
+      "min": 1219604.25,
+      "max": 1623093.75
+    },
+    "process_ns_scan": {
+      "median": 1455151.0,
+      "min": 1219614.5,
+      "max": 1623479.0
+    },
+    "wall_ns_visited": {
+      "median": 5.5511393547058105,
+      "min": 4.653453826904297,
+      "max": 6.188551902770996
+    },
+    "wall_ns_selected": {
+      "median": 11.102278709411621,
+      "min": 9.306907653808594,
+      "max": 12.377103805541992
+    }
+  },
+  {
+    "population": "262144",
+    "range": "full",
+    "mask_kept_per64": "32",
+    "grain": "64",
+    "arm": "lmdb_native_cursor",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 4558322.875,
+      "min": 4501458.25,
+      "max": 4588083.25
+    },
+    "owner_ns_scan": {
+      "median": 4559151.0,
+      "min": 4502010.25,
+      "max": 4588697.75
+    },
+    "process_ns_scan": {
+      "median": 4559562.5,
+      "min": 4502385.25,
+      "max": 4589156.25
+    },
+    "wall_ns_visited": {
+      "median": 17.38862180709839,
+      "min": 17.171700477600098,
+      "max": 17.502148628234863
+    },
+    "wall_ns_selected": {
+      "median": 34.77724361419678,
+      "min": 34.343400955200195,
+      "max": 35.00429725646973
+    }
+  },
+  {
+    "population": "262144",
+    "range": "full",
+    "mask_kept_per64": "64",
+    "grain": "64",
+    "arm": "engine_native_scan",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 2011484.5,
+      "min": 1576895.75,
+      "max": 2162312.5
+    },
+    "owner_ns_scan": {
+      "median": 2012088.625,
+      "min": 1576864.75,
+      "max": 2163416.75
+    },
+    "process_ns_scan": {
+      "median": 2012453.125,
+      "min": 1576822.75,
+      "max": 2163791.75
+    },
+    "wall_ns_visited": {
+      "median": 7.67320442199707,
+      "min": 6.015379905700684,
+      "max": 8.248567581176758
+    },
+    "wall_ns_selected": {
+      "median": 7.67320442199707,
+      "min": 6.015379905700684,
+      "max": 8.248567581176758
+    }
+  },
+  {
+    "population": "262144",
+    "range": "full",
+    "mask_kept_per64": "64",
+    "grain": "64",
+    "arm": "lmdb_native_cursor",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 2434260.375,
+      "min": 2417885.5,
+      "max": 2506687.5
+    },
+    "owner_ns_scan": {
+      "median": 2435119.625,
+      "min": 2418645.75,
+      "max": 2507271.0
+    },
+    "process_ns_scan": {
+      "median": 2435557.25,
+      "min": 2419052.0,
+      "max": 2507802.0
+    },
+    "wall_ns_visited": {
+      "median": 9.285966396331787,
+      "min": 9.223501205444336,
+      "max": 9.562253952026367
+    },
+    "wall_ns_selected": {
+      "median": 9.285966396331787,
+      "min": 9.223501205444336,
+      "max": 9.562253952026367
+    }
+  },
+  {
+    "population": "262144",
+    "range": "quarter",
+    "mask_kept_per64": "-1",
+    "grain": "256",
+    "arm": "engine_native_scan",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 182058.59375,
+      "min": 167723.9375,
+      "max": 196380.1875
+    },
+    "owner_ns_scan": {
+      "median": 182036.4375,
+      "min": 167617.1875,
+      "max": 196424.5
+    },
+    "process_ns_scan": {
+      "median": 181902.34375,
+      "min": 167528.625,
+      "max": 196434.9375
+    },
+    "wall_ns_visited": {
+      "median": 2.777993679046631,
+      "min": 2.5592641830444336,
+      "max": 2.996523857116699
+    },
+    "wall_ns_selected": {
+      "median": 2.777993679046631,
+      "min": 2.5592641830444336,
+      "max": 2.996523857116699
+    }
+  },
+  {
+    "population": "262144",
+    "range": "quarter",
+    "mask_kept_per64": "-1",
+    "grain": "256",
+    "arm": "lmdb_native_cursor",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 563367.21875,
+      "min": 553494.75,
+      "max": 574841.1875
+    },
+    "owner_ns_scan": {
+      "median": 563436.1875,
+      "min": 553671.875,
+      "max": 574940.125
+    },
+    "process_ns_scan": {
+      "median": 563460.90625,
+      "min": 553757.8125,
+      "max": 574981.75
+    },
+    "wall_ns_visited": {
+      "median": 8.596301555633545,
+      "min": 8.445659637451172,
+      "max": 8.771380424499512
+    },
+    "wall_ns_selected": {
+      "median": 8.596301555633545,
+      "min": 8.445659637451172,
+      "max": 8.771380424499512
+    }
+  },
+  {
+    "population": "262144",
+    "range": "quarter",
+    "mask_kept_per64": "0",
+    "grain": "256",
+    "arm": "engine_native_scan",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 12531.25,
+      "min": 11546.875,
+      "max": 13515.625
+    },
+    "owner_ns_scan": {
+      "median": 12533.875,
+      "min": 11458.3125,
+      "max": 13229.125
+    },
+    "process_ns_scan": {
+      "median": 12535.15625,
+      "min": 11450.5625,
+      "max": 13127.625
+    },
+    "wall_ns_visited": {
+      "median": 0.19121170043945312,
+      "min": 0.1761913299560547,
+      "max": 0.20623207092285156
+    },
+    "wall_ns_selected": null
+  },
+  {
+    "population": "262144",
+    "range": "quarter",
+    "mask_kept_per64": "0",
+    "grain": "256",
+    "arm": "lmdb_native_cursor",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 526793.0,
+      "min": 516234.375,
+      "max": 536596.375
+    },
+    "owner_ns_scan": {
+      "median": 526916.65625,
+      "min": 516578.125,
+      "max": 536752.625
+    },
+    "process_ns_scan": {
+      "median": 526976.5625,
+      "min": 516737.0,
+      "max": 536843.75
+    },
+    "wall_ns_visited": {
+      "median": 8.038223266601562,
+      "min": 7.877111434936523,
+      "max": 8.187810897827148
+    },
+    "wall_ns_selected": null
+  },
+  {
+    "population": "262144",
+    "range": "quarter",
+    "mask_kept_per64": "1",
+    "grain": "256",
+    "arm": "engine_native_scan",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 38035.15625,
+      "min": 31794.25,
+      "max": 41578.125
+    },
+    "owner_ns_scan": {
+      "median": 38115.875,
+      "min": 31640.625,
+      "max": 41578.125
+    },
+    "process_ns_scan": {
+      "median": 38182.3125,
+      "min": 31570.3125,
+      "max": 41580.75
+    },
+    "wall_ns_visited": {
+      "median": 0.5803704261779785,
+      "min": 0.4851417541503906,
+      "max": 0.6344318389892578
+    },
+    "wall_ns_selected": {
+      "median": 37.143707275390625,
+      "min": 31.049072265625,
+      "max": 40.6036376953125
+    }
+  },
+  {
+    "population": "262144",
+    "range": "quarter",
+    "mask_kept_per64": "1",
+    "grain": "256",
+    "arm": "lmdb_native_cursor",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 567893.21875,
+      "min": 551674.4375,
+      "max": 577273.4375
+    },
+    "owner_ns_scan": {
+      "median": 568105.46875,
+      "min": 552041.625,
+      "max": 577322.9375
+    },
+    "process_ns_scan": {
+      "median": 568217.4375,
+      "min": 552184.9375,
+      "max": 577346.3125
+    },
+    "wall_ns_visited": {
+      "median": 8.66536283493042,
+      "min": 8.41788387298584,
+      "max": 8.808493614196777
+    },
+    "wall_ns_selected": {
+      "median": 554.5832214355469,
+      "min": 538.7445678710938,
+      "max": 563.7435913085938
+    }
+  },
+  {
+    "population": "262144",
+    "range": "quarter",
+    "mask_kept_per64": "8",
+    "grain": "256",
+    "arm": "engine_native_scan",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 60097.65625,
+      "min": 55252.5625,
+      "max": 71000.0
+    },
+    "owner_ns_scan": {
+      "median": 60063.78125,
+      "min": 55075.5,
+      "max": 71013.0
+    },
+    "process_ns_scan": {
+      "median": 60059.90625,
+      "min": 54986.9375,
+      "max": 71015.625
+    },
+    "wall_ns_visited": {
+      "median": 0.9170174598693848,
+      "min": 0.8430871963500977,
+      "max": 1.0833740234375
+    },
+    "wall_ns_selected": {
+      "median": 7.336139678955078,
+      "min": 6.744697570800781,
+      "max": 8.6669921875
+    }
+  },
+  {
+    "population": "262144",
+    "range": "quarter",
+    "mask_kept_per64": "8",
+    "grain": "256",
+    "arm": "lmdb_native_cursor",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 684059.90625,
+      "min": 672286.4375,
+      "max": 695385.4375
+    },
+    "owner_ns_scan": {
+      "median": 684100.25,
+      "min": 672309.875,
+      "max": 695440.125
+    },
+    "process_ns_scan": {
+      "median": 684154.9375,
+      "min": 672320.3125,
+      "max": 695455.6875
+    },
+    "wall_ns_visited": {
+      "median": 10.437925815582275,
+      "min": 10.25827693939209,
+      "max": 10.610739707946777
+    },
+    "wall_ns_selected": {
+      "median": 83.5034065246582,
+      "min": 82.06621551513672,
+      "max": 84.88591766357422
+    }
+  },
+  {
+    "population": "262144",
+    "range": "quarter",
+    "mask_kept_per64": "32",
+    "grain": "256",
+    "arm": "engine_native_scan",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 152644.53125,
+      "min": 139403.625,
+      "max": 166002.5625
+    },
+    "owner_ns_scan": {
+      "median": 152625.0,
+      "min": 139304.6875,
+      "max": 166325.5
+    },
+    "process_ns_scan": {
+      "median": 152643.25,
+      "min": 139250.0,
+      "max": 166424.5
+    },
+    "wall_ns_visited": {
+      "median": 2.3291707038879395,
+      "min": 2.1271305084228516,
+      "max": 2.5329980850219727
+    },
+    "wall_ns_selected": {
+      "median": 4.658341407775879,
+      "min": 4.254261016845703,
+      "max": 5.065996170043945
+    }
+  },
+  {
+    "population": "262144",
+    "range": "quarter",
+    "mask_kept_per64": "32",
+    "grain": "256",
+    "arm": "lmdb_native_cursor",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 1146118.53125,
+      "min": 1105546.875,
+      "max": 1168630.1875
+    },
+    "owner_ns_scan": {
+      "median": 1146303.375,
+      "min": 1105697.875,
+      "max": 1168885.4375
+    },
+    "process_ns_scan": {
+      "median": 1146406.28125,
+      "min": 1105760.4375,
+      "max": 1169028.625
+    },
+    "wall_ns_visited": {
+      "median": 17.488380908966064,
+      "min": 16.869306564331055,
+      "max": 17.831881523132324
+    },
+    "wall_ns_selected": {
+      "median": 34.97676181793213,
+      "min": 33.73861312866211,
+      "max": 35.66376304626465
+    }
+  },
+  {
+    "population": "262144",
+    "range": "quarter",
+    "mask_kept_per64": "64",
+    "grain": "256",
+    "arm": "engine_native_scan",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 194606.75,
+      "min": 178674.5,
+      "max": 209302.125
+    },
+    "owner_ns_scan": {
+      "median": 194631.5,
+      "min": 178531.25,
+      "max": 209218.75
+    },
+    "process_ns_scan": {
+      "median": 194638.0,
+      "min": 178414.0625,
+      "max": 209197.9375
+    },
+    "wall_ns_visited": {
+      "median": 2.969463348388672,
+      "min": 2.7263565063476562,
+      "max": 3.193696975708008
+    },
+    "wall_ns_selected": {
+      "median": 2.969463348388672,
+      "min": 2.7263565063476562,
+      "max": 3.193696975708008
+    }
+  },
+  {
+    "population": "262144",
+    "range": "quarter",
+    "mask_kept_per64": "64",
+    "grain": "256",
+    "arm": "lmdb_native_cursor",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 582295.5625,
+      "min": 571583.375,
+      "max": 601635.4375
+    },
+    "owner_ns_scan": {
+      "median": 582410.1875,
+      "min": 571940.125,
+      "max": 601835.9375
+    },
+    "process_ns_scan": {
+      "median": 582467.4375,
+      "min": 572023.4375,
+      "max": 601947.9375
+    },
+    "wall_ns_visited": {
+      "median": 8.885125160217285,
+      "min": 8.721670150756836,
+      "max": 9.180228233337402
+    },
+    "wall_ns_selected": {
+      "median": 8.885125160217285,
+      "min": 8.721670150756836,
+      "max": 9.180228233337402
+    }
+  },
+  {
+    "population": "262144",
+    "range": "full",
+    "mask_kept_per64": "-1",
+    "grain": "256",
+    "arm": "engine_native_scan",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 1426140.625,
+      "min": 1366437.5,
+      "max": 1571885.5
+    },
+    "owner_ns_scan": {
+      "median": 1426500.0,
+      "min": 1366625.0,
+      "max": 1572031.25
+    },
+    "process_ns_scan": {
+      "median": 1426609.375,
+      "min": 1366802.0,
+      "max": 1572062.5
+    },
+    "wall_ns_visited": {
+      "median": 5.4402947425842285,
+      "min": 5.212545394897461,
+      "max": 5.996267318725586
+    },
+    "wall_ns_selected": {
+      "median": 5.4402947425842285,
+      "min": 5.212545394897461,
+      "max": 5.996267318725586
+    }
+  },
+  {
+    "population": "262144",
+    "range": "full",
+    "mask_kept_per64": "-1",
+    "grain": "256",
+    "arm": "lmdb_native_cursor",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 2431729.125,
+      "min": 2180791.75,
+      "max": 2697885.25
+    },
+    "owner_ns_scan": {
+      "median": 2432333.25,
+      "min": 2181010.25,
+      "max": 2698572.75
+    },
+    "process_ns_scan": {
+      "median": 2432682.125,
+      "min": 2181062.5,
+      "max": 2698916.75
+    },
+    "wall_ns_visited": {
+      "median": 9.276310443878174,
+      "min": 8.319060325622559,
+      "max": 10.29161548614502
+    },
+    "wall_ns_selected": {
+      "median": 9.276310443878174,
+      "min": 8.319060325622559,
+      "max": 10.29161548614502
+    }
+  },
+  {
+    "population": "262144",
+    "range": "full",
+    "mask_kept_per64": "0",
+    "grain": "256",
+    "arm": "engine_native_scan",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 47161.5,
+      "min": 44791.75,
+      "max": 53895.75
+    },
+    "owner_ns_scan": {
+      "median": 46807.25,
+      "min": 44510.25,
+      "max": 54354.25
+    },
+    "process_ns_scan": {
+      "median": 46599.0,
+      "min": 44406.25,
+      "max": 54823.0
+    },
+    "wall_ns_visited": {
+      "median": 0.17990684509277344,
+      "min": 0.1708669662475586,
+      "max": 0.2055959701538086
+    },
+    "wall_ns_selected": null
+  },
+  {
+    "population": "262144",
+    "range": "full",
+    "mask_kept_per64": "0",
+    "grain": "256",
+    "arm": "lmdb_native_cursor",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 2235453.125,
+      "min": 2141427.0,
+      "max": 2269875.0
+    },
+    "owner_ns_scan": {
+      "median": 2236265.625,
+      "min": 2142104.0,
+      "max": 2270510.5
+    },
+    "process_ns_scan": {
+      "median": 2236697.75,
+      "min": 2142437.5,
+      "max": 2270916.75
+    },
+    "wall_ns_visited": {
+      "median": 8.527576923370361,
+      "min": 8.168895721435547,
+      "max": 8.658885955810547
+    },
+    "wall_ns_selected": null
+  },
+  {
+    "population": "262144",
+    "range": "full",
+    "mask_kept_per64": "1",
+    "grain": "256",
+    "arm": "engine_native_scan",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 225010.375,
+      "min": 200156.25,
+      "max": 250583.25
+    },
+    "owner_ns_scan": {
+      "median": 224822.875,
+      "min": 198927.0,
+      "max": 250604.25
+    },
+    "process_ns_scan": {
+      "median": 224729.25,
+      "min": 198406.25,
+      "max": 250625.0
+    },
+    "wall_ns_visited": {
+      "median": 0.8583464622497559,
+      "min": 0.7635354995727539,
+      "max": 0.9558992385864258
+    },
+    "wall_ns_selected": {
+      "median": 54.934173583984375,
+      "min": 48.86627197265625,
+      "max": 61.17755126953125
+    }
+  },
+  {
+    "population": "262144",
+    "range": "full",
+    "mask_kept_per64": "1",
+    "grain": "256",
+    "arm": "lmdb_native_cursor",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 2264994.75,
+      "min": 2226218.75,
+      "max": 2277250.0
+    },
+    "owner_ns_scan": {
+      "median": 2265651.125,
+      "min": 2226593.75,
+      "max": 2278114.5
+    },
+    "process_ns_scan": {
+      "median": 2265979.125,
+      "min": 2226833.25,
+      "max": 2278614.75
+    },
+    "wall_ns_visited": {
+      "median": 8.64026927947998,
+      "min": 8.492350578308105,
+      "max": 8.687019348144531
+    },
+    "wall_ns_selected": {
+      "median": 552.9772338867188,
+      "min": 543.5104370117188,
+      "max": 555.96923828125
+    }
+  },
+  {
+    "population": "262144",
+    "range": "full",
+    "mask_kept_per64": "8",
+    "grain": "256",
+    "arm": "engine_native_scan",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 539979.125,
+      "min": 525656.25,
+      "max": 559948.0
+    },
+    "owner_ns_scan": {
+      "median": 539744.75,
+      "min": 525229.25,
+      "max": 560364.5
+    },
+    "process_ns_scan": {
+      "median": 539599.0,
+      "min": 524916.75,
+      "max": 560635.5
+    },
+    "wall_ns_visited": {
+      "median": 2.05985689163208,
+      "min": 2.0052194595336914,
+      "max": 2.1360321044921875
+    },
+    "wall_ns_selected": {
+      "median": 16.47885513305664,
+      "min": 16.04175567626953,
+      "max": 17.0882568359375
+    }
+  },
+  {
+    "population": "262144",
+    "range": "full",
+    "mask_kept_per64": "8",
+    "grain": "256",
+    "arm": "lmdb_native_cursor",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 2814921.875,
+      "min": 2772031.25,
+      "max": 2902625.0
+    },
+    "owner_ns_scan": {
+      "median": 2796974.125,
+      "min": 2762302.25,
+      "max": 2903520.75
+    },
+    "process_ns_scan": {
+      "median": 2796729.125,
+      "min": 2761604.0,
+      "max": 2903989.5
+    },
+    "wall_ns_visited": {
+      "median": 10.738074779510498,
+      "min": 10.57446002960205,
+      "max": 11.072635650634766
+    },
+    "wall_ns_selected": {
+      "median": 85.90459823608398,
+      "min": 84.5956802368164,
+      "max": 88.58108520507812
+    }
+  },
+  {
+    "population": "262144",
+    "range": "full",
+    "mask_kept_per64": "32",
+    "grain": "256",
+    "arm": "engine_native_scan",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 1281062.5,
+      "min": 1213031.25,
+      "max": 1464823.0
+    },
+    "owner_ns_scan": {
+      "median": 1281062.5,
+      "min": 1213093.75,
+      "max": 1465531.25
+    },
+    "process_ns_scan": {
+      "median": 1280968.875,
+      "min": 1213135.5,
+      "max": 1465885.25
+    },
+    "wall_ns_visited": {
+      "median": 4.886865615844727,
+      "min": 4.627346992492676,
+      "max": 5.587856292724609
+    },
+    "wall_ns_selected": {
+      "median": 9.773731231689453,
+      "min": 9.254693984985352,
+      "max": 11.175712585449219
+    }
+  },
+  {
+    "population": "262144",
+    "range": "full",
+    "mask_kept_per64": "32",
+    "grain": "256",
+    "arm": "lmdb_native_cursor",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 4441291.625,
+      "min": 4385468.75,
+      "max": 4487625.0
+    },
+    "owner_ns_scan": {
+      "median": 4441573.0,
+      "min": 4385843.75,
+      "max": 4488375.0
+    },
+    "process_ns_scan": {
+      "median": 4441671.75,
+      "min": 4385937.5,
+      "max": 4488739.5
+    },
+    "wall_ns_visited": {
+      "median": 16.942183017730713,
+      "min": 16.729235649108887,
+      "max": 17.11893081665039
+    },
+    "wall_ns_selected": {
+      "median": 33.884366035461426,
+      "min": 33.45847129821777,
+      "max": 34.23786163330078
+    }
+  },
+  {
+    "population": "262144",
+    "range": "full",
+    "mask_kept_per64": "64",
+    "grain": "256",
+    "arm": "engine_native_scan",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 1350234.25,
+      "min": 1279927.0,
+      "max": 1571197.75
+    },
+    "owner_ns_scan": {
+      "median": 1350291.625,
+      "min": 1280323.0,
+      "max": 1571322.75
+    },
+    "process_ns_scan": {
+      "median": 1350270.75,
+      "min": 1280531.25,
+      "max": 1571437.5
+    },
+    "wall_ns_visited": {
+      "median": 5.150734901428223,
+      "min": 4.882534027099609,
+      "max": 5.993643760681152
+    },
+    "wall_ns_selected": {
+      "median": 5.150734901428223,
+      "min": 4.882534027099609,
+      "max": 5.993643760681152
+    }
+  },
+  {
+    "population": "262144",
+    "range": "full",
+    "mask_kept_per64": "64",
+    "grain": "256",
+    "arm": "lmdb_native_cursor",
+    "samples": 4,
+    "processes": 2,
+    "wall_ns_scan": {
+      "median": 2468270.875,
+      "min": 2353395.75,
+      "max": 2568968.75
+    },
+    "owner_ns_scan": {
+      "median": 2468963.5,
+      "min": 2353687.5,
+      "max": 2569573.0
+    },
+    "process_ns_scan": {
+      "median": 2469994.875,
+      "min": 2353771.0,
+      "max": 2569791.75
+    },
+    "wall_ns_visited": {
+      "median": 9.415706157684326,
+      "min": 8.977492332458496,
+      "max": 9.799838066101074
+    },
+    "wall_ns_selected": {
+      "median": 9.415706157684326,
+      "min": 8.977492332458496,
+      "max": 9.799838066101074
+    }
+  }
+]

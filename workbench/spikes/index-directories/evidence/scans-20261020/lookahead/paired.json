@@ -1,0 +1,82 @@
+{
+  "16": {
+    "medians_ns_segment": {
+      "engine_dense_rank": {
+        "wall": 4.498203754425049,
+        "owner": 4.499395847320557,
+        "process": 4.500250339508057
+      },
+      "engine_pointerbank_hint": {
+        "wall": 5.623301029205322,
+        "owner": 5.526641845703125,
+        "process": 5.527297496795654
+      },
+      "engine_pointerbank_none": {
+        "wall": 4.673103332519531,
+        "owner": 4.675030708312988,
+        "process": 4.675765514373779
+      },
+      "lmdb_native_cursor": {
+        "wall": 9.160300254821777,
+        "owner": 9.161134243011475,
+        "process": 9.16111421585083
+      }
+    },
+    "pairs_against_dense": {
+      "engine_pointerbank_none": {
+        "paired_median_wall_overhead_pct": 5.422799947054258,
+        "paired_wall_wins": 1,
+        "paired_median_owner_overhead_pct": 2.7256741661461525,
+        "paired_owner_wins": 1,
+        "pairs": 8
+      },
+      "engine_pointerbank_hint": {
+        "paired_median_wall_overhead_pct": 28.285445145376364,
+        "paired_wall_wins": 0,
+        "paired_median_owner_overhead_pct": 24.378954798669163,
+        "paired_owner_wins": 0,
+        "pairs": 8
+      }
+    }
+  },
+  "64": {
+    "medians_ns_segment": {
+      "engine_dense_rank": {
+        "wall": 6.774902820587158,
+        "owner": 6.775497913360596,
+        "process": 6.775796413421631
+      },
+      "engine_pointerbank_hint": {
+        "wall": 7.9749226570129395,
+        "owner": 7.974564552307129,
+        "process": 7.974505424499512
+      },
+      "engine_pointerbank_none": {
+        "wall": 8.344054222106934,
+        "owner": 8.2642240524292,
+        "process": 8.263309955596924
+      },
+      "lmdb_native_cursor": {
+        "wall": 10.003606796264648,
+        "owner": 9.489595413208008,
+        "process": 9.490151405334473
+      }
+    },
+    "pairs_against_dense": {
+      "engine_pointerbank_none": {
+        "paired_median_wall_overhead_pct": 17.46941122069203,
+        "paired_wall_wins": 0,
+        "paired_median_owner_overhead_pct": 18.835204945782237,
+        "paired_owner_wins": 0,
+        "pairs": 8
+      },
+      "engine_pointerbank_hint": {
+        "paired_median_wall_overhead_pct": 8.766771103327587,
+        "paired_wall_wins": 2,
+        "paired_median_owner_overhead_pct": 13.05598576368121,
+        "paired_owner_wins": 1,
+        "pairs": 8
+      }
+    }
+  }
+}

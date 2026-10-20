@@ -299,8 +299,10 @@ OPEN_SCOPED_READ(index, requested_snapshot, stationary_frame):
 Cursor:
     token/Core/layer; logical query edges when present; end is an explicit state
     probe kind NONE, LOGICAL, or PHYSICAL_PREFIX; high-edge law matches that kind
-    mode TOP: selected table, current physical prefix / occupied rank
-    mode GROUP: group name/key, selected group, ORIGINAL suffix, packed slot
+    mode TOP: selected ordinary table, current physical prefix / occupied rank
+    mode GROUP_ARRAY: group name/key, selected array, ORIGINAL suffix, packed slot
+    mode HASH: natural region/key, selected immutable actual Ikea V64 owner,
+               original-prefix occupancy, current original key; no stable value pointer
     mode TREE: region identity, ancestor frames(name,selection,child rank),
                selected leaf(name,selection), local ROUTING rank, payload slot
     outer group/region presence position OR lazy exclusive-successor key
@@ -310,10 +312,9 @@ Cursor:
 GROUP_SLOT(group,suffix):
     require original_suffix_mask contains suffix
     mask=group.original_suffix_mask
-    if admitted sorted mask/rank recipe:
-        return popcount(mask & ((1u<<suffix)-1))
-    else return admitted concrete Ikea reader.find(suffix)
-    # Ordered suffix is NOT a packed slot; suffix14->slot2,15->slot0 is valid.
+    require admitted sorted mask/rank ARRAY control
+    return popcount(mask & bits_strictly_below(suffix))
+    # Preserve the original mask even when an external selection mask is sparse.
 
 SET_POSITION(read, container, physical_position):
     keep selected container under the SAME token; set mode/layer/current physical prefix
@@ -323,7 +324,10 @@ SET_POSITION(read, container, physical_position):
 
 ENTRY_AT_POSITION(read):
     obtain physical prefix, routing endpoints and a borrowed descriptor reference
-    if co-located leaf:
+    if HASH:
+        return HashEntry(selected_actual_owner, original_key, geometric_bounds)
+        # This is a scoped key/owner handle, NOT a pointer to find's temporary.
+    else if co-located leaf:
         payload = leaf.selection.part(1+slot/C); row = slot%C
     else if independent leaf:
         payload = token.bind(leaf.chunk_names[slot/C]); row = slot%C
@@ -333,17 +337,26 @@ ENTRY_AT_POSITION(read):
     # Reuse the selected array/table and lazy correction image across this cohort;
     # requalify after a token, basis or admitted physical-treatment change.
 
+CONSUME_ENTRY(read,entry,consumer):
+    if HashEntry:
+        selected const actual Ikea V64 table.find(entry.original_key, value ->
+            invoke consumer with value's requested fields INSIDE this callback)
+        # Reuse concrete owner binding across this read/cohort; never escape value.
+    else invoke consumer with selected array/leaf row reference
+
 FIND_EXACT_PREFIX(read,L,p):
     reset traversal frames; set layer L, probe kind NONE and no high-edge filter
     if L<2:
-        bind ordinary table chunk; test original population
+        bind actual ordinary table; test original population
         if absent: return absent
         SET_POSITION(read,table,p); return ENTRY_AT_POSITION(read)
     if L<=J:
-        group = token.bind(hash_group_name(index,L,p>>4)); suffix=p&15
-        if absent or original suffix absent: return absent
-        slot = GROUP_SLOT(group,suffix)
-        SET_POSITION(read,group,suffix); return ENTRY_AT_POSITION(read)
+        region,key = split_prefix(p, admitted_hash_region_bits)  # first4/6/8-bit controls
+        image = token.bind(hash_region_name(index,L,region))
+        if absent: return absent
+        borrow selected image's ACTUAL immutable Ikea V64 table
+        use actual find; on hit SET_POSITION(HASH,image,key)
+        return scoped HashEntry or absent, not a copied authoritative twin
     region = high J bytes of p  # zero for J=0
     bind deterministic region root
     descend physical-prefix child intervals, saving every ancestor
@@ -366,8 +379,9 @@ SEEK_CANDIDATE(read,L,q,closed,high=+infinity,high_closed=true):
         use bounded table ordered occupancy/bounds; SET_POSITION on success
     else if L<=J:
         p=first L bytes of q
-        try natural group and suffix p&15; on success SET_POSITION
-        otherwise seek subsequent occupied ORIGINAL suffix, then later groups
+        region,key=split_prefix(p,admitted_hash_region_bits)
+        try natural region and original key; on success SET_POSITION(HASH)
+        otherwise seek next occupied ORIGINAL key, then later regions
         test routing bounds; never treat a hash miss as end-of-layer
     else:
         region=first J bytes of q
@@ -379,7 +393,8 @@ SEEK_CANDIDATE(read,L,q,closed,high=+infinity,high_closed=true):
 SEEK_PHYSICAL_PREFIX(read,L,p,high_prefix):
     reset traversal; set layer and PHYSICAL_PREFIX inclusive high edge
     TOP: next set population bit at prefix>=p
-    GROUP: first original suffix>=p's suffix, then later nonempty groups
+    HASH: first original key>=p's local key, then later nonempty natural regions
+    GROUP_ARRAY control: first original suffix>=p's suffix, then later groups
     TREE: descend first physical child interval not entirely<p; at leaf take
        lower_bound(prefix_column,p), advancing same-region siblings if needed
     missing/exhausted natural group/region uses same-layer ordered presence
@@ -394,7 +409,11 @@ ADVANCE_TREE_SIBLING(read):
 NEXT_CANDIDATE(read):
     if TOP: next original occupied prefix in selected table / next table chunk
        SET_POSITION on the resulting physical prefix
-    if GROUP:
+    if HASH:
+        choose next original key using selected original-prefix occupancy
+        if none: advance SAME-layer ordered natural-region presence
+        SET_POSITION; return scoped HashEntry for actual V64 callback consumption
+    if GROUP_ARRAY:
         suffix=ctz(original_mask with all suffixes<=current cleared)
         if found: slot=GROUP_SLOT(group,suffix); SET_POSITION
         else advance ordered group-presence cursor, lazily seeking >group if needed
@@ -433,6 +452,85 @@ DESCEND(read,source_L,parent_prefix,parent_position,destination_L):
     return FIND_EXACT_PREFIX(read,destination_L,p),slots
     # Explicit new-layer lookup; never cross-layer NEXT.
 ```
+
+## Ordered range and externally masked scan
+
+The first scan control uses a physical-prefix interval in one layer. Logical
+range scans reuse START_RANGE and exact per-segment refinement; they do not
+change that layer's order. One selected snapshot spans the whole scan, including
+all later leaf visits and genuine waits. No new Scope is opened per chunk.
+
+```
+SCAN_PHYSICAL_RANGE(read,L,low,high,optional_ready_mask,consume):
+    admit full mask/input/output lifetime; define bit coordinate as ORIGINAL prefix
+    if low>high: return {visited=0,selected=0,material_bytes=0,empty_output}
+    cursor=SEEK_PHYSICAL_PREFIX(read,L,low,high)       # ONE seek
+    while cursor not end:
+        selected_container = current selected array/table/leaf under SAME token
+        enumerate its original physical prefixes monotonically up to high
+        visited += number of present directory entries in admitted range
+        selected = original_population intersect range intersect optional_mask
+        # Mask0 skips material, not the real seek/traversal/close cost.
+        for original_prefix in selected, in ascending order:
+            if ranked ARRAY:
+                slot=popcount(ORIGINAL population & bits_below(original_prefix))
+                entry=payload +64*slot
+                # NOT popcount(selected_mask), and not physical-prefix dense rank.
+            else if HASH:
+                entry=HashEntry(actual selected owner,original_key,geometric_bounds)
+            else entry=selected ordered leaf's actual payload mapping
+            CONSUME_ENTRY(read,entry,fields ->
+                qualify actual material/correction under SAME token, reused per container
+                consume all requested bytes into caller's useful output)
+            selected_count +=1; material_bytes += actual requested bytes
+        advance cursor to NEXT CONTAINER using saved ancestor frames/presence
+           do not call FIND_EXACT_PREFIX/SEEK for every entry
+    return counts/output; close token only when all byte uses finish
+
+READY_SCAN_CONTROL:
+    prepare the SAME trace/ranges/optional external bitset outside both peer clocks
+    start clock before Scope/transaction enrollment and initial seek
+    run quarter/full-layer physical-prefix ranges; no mask and first1/8 mask
+    use count + SUM_MOD64(XOR(all8 actual material words per selected row))
+       # matches existing material64 checksum; functional tests ALSO verify order
+    record whole-scan wall/owner/helper/process CPU, visited/selected/bytes
+    close Scope/transaction inside interval; include iterator setup/cleanup
+    separately report ns/visited and ns/selected ONLY when their counts are nonzero
+    do not call mask0 an infinite-throughput material scan
+    native LMDB: one SET_RANGE then NEXT cursor walk, key/mask before value consume
+    Calico: actual prepared range iterator; label any postprojection mask accurately
+    # Predicate evaluation is OUTSIDE this external-ready-mask control.
+    # A later predicate-evaluation case charges its real bytes/work in every arm.
+```
+
+The current F32 raw graph can save `{node bytes, group base, shift, next child
+rank}` for each admitted height. Its root can omit common high prefix bits:
+derive `base=min_group & ~((1u64<<(shift+5))-1)` and clamp the query's group
+interval to the root's min/max before choosing the initial slot. Do not derive
+an output prefix from a zero root base or a lower query's residual bits.
+Seek follows the target radix path and original occupancy;
+advance climbs to the first unvisited child and descends leftmost live children.
+Its min/max group guards and explicit end state handle missing groups and max
+prefix without wrapping. Each directory node is visited as traversal requires,
+not once for every returned segment. Group/suffix/slot remain distinct.
+
+Checks include empty/exact-end ranges, sparse occupied prefixes, masks0/all and
+1/64,1/8,1/2, group/physical-allocation/radix boundaries, dense and sparse masks
+over sparse directory occupancy, and a late first lookup into an unvisited leaf
+after intervening publication+drain/trim. Old and fresh scans use separate
+expected states. A mask pointer or output buffer retained through Loom work
+needs its real enclosing lifetime; it does not acquire that from the Scope.
+Writable result/counter storage is disjoint from the request, mask and all
+borrowed directory/material bytes. The mask grants complete u64 words including
+its final partial word. These are admission preconditions, not per-row checks.
+
+The finite buffered-producer check uses the same Scope and actual four selected
+groups, with its original row-prefix mask. It loads only selected bases, applies
+plain absolute afterimages once if any selected row is dirty, or reuses the
+selected indexed/eager correction image, then consumes corrected full8 values.
+It never substitutes a raw-base graph scan for a dirty producer scan. This check
+is a finite composition witness; arbitrary segment codecs and predicate planning
+remain separate work.
 
 For example, Aactual[1,2]/fence[0,10] and Bactual[5,6]/fence[4,20] admit A
 first for q5. Exact A processing misses; NEXT_CANDIDATE must then visit B before
@@ -545,6 +643,7 @@ PROJECT(read,entry,part_ordinal,requested_operation):
     return PROJECT_MANY(read,entry,[part_ordinal],requested_operation)
 
 PROJECT_MANY(read,entry,ordinals,requested_operation):
+    execute below through CONSUME_ENTRY so hash callback bytes never escape
     def = reuse admitted definition(entry.dirent.representation,read.layer)
     material = QUALIFY_MATERIAL(read,entry,requested_operation)
     obtain needed geometry from material/directory proof/admitted byte header
@@ -675,6 +774,9 @@ ENUMERATE_LOCAL_HOLDERS(edit,block):
 
 UPDATE_ENTRY(edit, before, after):
     route by exact physical prefix, not a record-row search
+    if HASH:
+        record final64B inline-value intent in that region; clone/edit it once
+        when final intents are known; return after real presence repair if needed
     choose small-group payload, co-located leaf Part1+slot/C, or independent chunk
     if descriptor differs: record its64 B replacement in the chunk draft
     materialize that Part once after final placement; a proven locator-only batch
@@ -687,17 +789,68 @@ UPDATE_ENTRY(edit, before, after):
     if only representation changes: replace the real representation field/proof
     # No forced revision change, rank repair, page balancing or map rebuild.
 
-EDIT_HASH_MAPPING(group, membership_or_slot_change):
-    if mapping unchanged: retain the exact admitted old Ikea mapping owner
-    else:
-        clone that actual <=16-key Ikea owner once, before any guarded admission
-        use ordinary private-owner insert/modify/erase for the changed suffixes
-        # Slot meaning and payload/bounds move together. Deletion can fill the
-        # removed payload slot with the last row and repair that one mapping.
-        # slot_to_suffix[last] identifies that moved suffix; update its inverse.
-        # Maintain ORIGINAL-suffix mask separately from the permuted hash bitmap.
-        # table<4,0,1> has bitmap capacity 16 and no Swiss/growth path.
-        retain this new mapping and matched payload in the finished group proof
+LOCATOR_BATCH_WITHOUT_MEMBERSHIP(edit,coalesced_deltas):
+    # Directory inputs already contain FINISHED independently allocated Segment Owners.
+    # Their construction is charged in the separate complete moving-Part producer.
+    select each affected old group/leaf once under edit.basis
+    classify by actual selected realization/Part identity, not one entry per command
+       and not backing Allocation: distinct logical slices can share one backing
+    reserve output packet for actual distinct changed Objects, separately from
+       <=64 command/material slots: graph may publish65 changes, named arrays128
+    # Today's Orbital prepare uses PMR uniqueness storage above64 changes.
+    # Charge its allocation/check/refusal; never split this atomic packet.
+    for each changed Part:
+        obtain one private destination, copy its admitted bytes once
+        apply every final dirent replacement to its actual local slot
+        capture final Part/Object once, retaining all required other sources
+    if stable-name children:
+        unchanged bounds/topology require NO ancestor image or publication
+        changes=actual Segment Owners + affected named directory Objects
+    if raw-child graph:
+        union selected paths by FULL node identity; process deepest first
+        for each distinct changed node ONCE:
+            construct final32-child proof directly from unchanged children and
+               finished child replacements; never clone a previous root chain
+            copy576B node and patch ALL changed child pointers once; capture once
+        changes=actual Segment Owners + one finished directory root
+    prepare/install changes atomically; include refusal, disposal and old-root debt
+    # A small packet does not make construction/capture of its graph nodes free.
+    # Current named group copies1088B (64B header+16dirents); graph group1024B.
+    # Compare those actual layouts, rather than silently equalizing their bytes.
+
+MOVING_PART_DRIVER_BATCH(basis,commands):
+    private bounded workspace deduplicates SegmentName, preserving command order
+    read each distinct selected64B Segment material ONCE; validate locator binding
+    apply commands to its private value; compare final state with selected before
+    omit a repeated-key sequence whose FINAL bytes equal before
+    for each actually changed Segment:
+        construct/capture one new independently allocated64B material
+        derive its actual Part pointer and emit one finished SegmentDelta
+    LOCATOR_BATCH_WITHOUT_MEMBERSHIP with all finished deltas and SAME basis
+    # B64 is one publication, never64 scalar replace() calls or prefinished data
+    # outside the claimed moving-Part interval. Directory never edits record rows.
+
+PRIVATE_HASH_REGION(edit,region):
+    reuse draft under FULL hash-region identity if already present
+    select exact actual old owner under edit.basis, not a mutable latest cache
+    clone that actual Ikea V64 owner ONCE into private Storage
+       # ALL assigned primary/control/tuple bytes, including initialized padding
+    retain original-prefix occupancy and concrete geometry/seed in private proof
+    return draft; no separate dirent payload or inverse map
+
+EDIT_HASH_REGION(edit,final_region_intents):
+    draft=PRIVATE_HASH_REGION(edit,region)
+    for each final original key:
+        deletion: actual table.erase(key); clear original-prefix occupancy
+        addition/replacement: actual table.insert/modify(key,final64B_dirent)
+            update original occupancy only if membership actually changes
+    if geometry/growth changes: finish admitted private rebuild before rebinding
+    enumerate actual final buffers via table.allocations
+    freeze actual owner/header in immutable interpretation proof
+    capture primary + any nonempty Swiss controls/tuples with actual fixed backing
+    include changed occupancy/presence and Segment Owners in ONE publication
+    # No bucket-COW/read-only-image API is invented; bounded whole-owner clone
+    # cost can reject this geometry. Old selected owner is never mutated.
 ```
 
 Ordinary private-image Hashtable calls are valid when the enclosing operation
@@ -710,7 +863,10 @@ their named source lives; they are not an Engine rollback journal.
 
 ```
 INSERT_ENTRY(edit,e):
-    if top table or shared-prefix microhash group:
+    if shared-prefix HASH:
+        append final inline-V64 insertion to this region's private intent set
+        first member also changes SAME-layer ordered region presence; return
+    if top table or ARRAY control:
         make group/table draft, allocate its bounded payload slot, write Entry
         update its population/mapping and exact bounds
         if first member: insert that group in SAME-layer ordered presence
@@ -749,6 +905,7 @@ ALLOCATE_NAMES(edit,n):
 
 DELETE_ENTRY(edit,name):
     find existing Entry; respect the offered absence/update semantics
+    if HASH: plan actual inline-value erase + occupancy/presence repair; return
     remove its routing/mapping row and clear its private payload slot/mask bit
     if an INDEPENDENT payload chunk becomes empty: retire its Object in packet
     co-located fixed Parts retain their admitted capacity; unused slots are unread
@@ -1235,7 +1392,9 @@ latency, independent throughput and true waits remain separate observations.
   outside old next_id BEFORE using owned cache bytes; lifetime is not visibility.
 - Two Objects share low64 but have different high64: their drafts remain distinct.
 - An INTERNAL underflow builds routing/child-name Parts only, never leaf payloads.
-- suffix14->slot2 and suffix15->slot0: SEEK14 then NEXT returns15/slot0.
+- Ranked-array occupancy {1,14,15} filtered by {14,15}: suffix14 uses slot1,
+  suffix15 uses slot2; rank never uses the filtered mask. Hash V64 consumes its
+  temporary inside the actual callback, never returns a pointer to it.
 - Aactual[1,2]/fence[0,10], Bactual[5,6]/fence[4,20], q5: an exact miss in A
   continues to B in the same region, including singleton and fast-seek paths.
 - Fixed geometry/pointers with base7 and newly committed correction9 must use

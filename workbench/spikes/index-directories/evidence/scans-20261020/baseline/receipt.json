@@ -1,0 +1,215 @@
+{
+  "kind": "complete same-Scope/native-txn scan throughput",
+  "source_digest": "e96f14ad818c72d88e81d60c79d18d62ae69789756e8ceba2ab0811094525511",
+  "capture": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/index-directory-scan-driver1-20261020",
+  "binary": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/clang/index-directory-scan-driver1-neon/workbench/spikes/index-directories/index_directory_scan_driver",
+  "binary_before": "b87ba01263b61a901f3a43d8fdc536c31a55236ca601de74aede72983b87abe3",
+  "host": {
+    "system": "Linux",
+    "node": "ubuntu",
+    "release": "7.0.14-orbstack-00380-ga7e0a2dc9535",
+    "version": "#1 SMP PREEMPT Fri Aug  7 03:48:40 UTC 2026",
+    "machine": "aarch64",
+    "processor": ""
+  },
+  "cpu": 8,
+  "helper_cpu": 0,
+  "runs": [
+    {
+      "id": "o0-n8192-g16",
+      "argv": [
+        "taskset",
+        "-c",
+        "8",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/clang/index-directory-scan-driver1-neon/workbench/spikes/index-directories/index_directory_scan_driver",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/index-directory-scans-20261020/o0-n8192-g16",
+        "8192",
+        "2",
+        "16",
+        "0",
+        "densities"
+      ],
+      "returncode": 0
+    },
+    {
+      "id": "o0-n8192-g64",
+      "argv": [
+        "taskset",
+        "-c",
+        "8",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/clang/index-directory-scan-driver1-neon/workbench/spikes/index-directories/index_directory_scan_driver",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/index-directory-scans-20261020/o0-n8192-g64",
+        "8192",
+        "2",
+        "64",
+        "0",
+        "densities"
+      ],
+      "returncode": 0
+    },
+    {
+      "id": "o0-n8192-g256",
+      "argv": [
+        "taskset",
+        "-c",
+        "8",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/clang/index-directory-scan-driver1-neon/workbench/spikes/index-directories/index_directory_scan_driver",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/index-directory-scans-20261020/o0-n8192-g256",
+        "8192",
+        "2",
+        "256",
+        "0",
+        "densities"
+      ],
+      "returncode": 0
+    },
+    {
+      "id": "o0-n262144-g16",
+      "argv": [
+        "taskset",
+        "-c",
+        "8",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/clang/index-directory-scan-driver1-neon/workbench/spikes/index-directories/index_directory_scan_driver",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/index-directory-scans-20261020/o0-n262144-g16",
+        "262144",
+        "2",
+        "16",
+        "0",
+        "densities"
+      ],
+      "returncode": 0
+    },
+    {
+      "id": "o0-n262144-g64",
+      "argv": [
+        "taskset",
+        "-c",
+        "8",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/clang/index-directory-scan-driver1-neon/workbench/spikes/index-directories/index_directory_scan_driver",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/index-directory-scans-20261020/o0-n262144-g64",
+        "262144",
+        "2",
+        "64",
+        "0",
+        "densities"
+      ],
+      "returncode": 0
+    },
+    {
+      "id": "o0-n262144-g256",
+      "argv": [
+        "taskset",
+        "-c",
+        "8",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/clang/index-directory-scan-driver1-neon/workbench/spikes/index-directories/index_directory_scan_driver",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/index-directory-scans-20261020/o0-n262144-g256",
+        "262144",
+        "2",
+        "256",
+        "0",
+        "densities"
+      ],
+      "returncode": 0
+    },
+    {
+      "id": "o1-n262144-g256",
+      "argv": [
+        "taskset",
+        "-c",
+        "8",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/clang/index-directory-scan-driver1-neon/workbench/spikes/index-directories/index_directory_scan_driver",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/index-directory-scans-20261020/o1-n262144-g256",
+        "262144",
+        "2",
+        "256",
+        "0",
+        "densities"
+      ],
+      "returncode": 0
+    },
+    {
+      "id": "o1-n262144-g64",
+      "argv": [
+        "taskset",
+        "-c",
+        "8",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/clang/index-directory-scan-driver1-neon/workbench/spikes/index-directories/index_directory_scan_driver",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/index-directory-scans-20261020/o1-n262144-g64",
+        "262144",
+        "2",
+        "64",
+        "0",
+        "densities"
+      ],
+      "returncode": 0
+    },
+    {
+      "id": "o1-n262144-g16",
+      "argv": [
+        "taskset",
+        "-c",
+        "8",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/clang/index-directory-scan-driver1-neon/workbench/spikes/index-directories/index_directory_scan_driver",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/index-directory-scans-20261020/o1-n262144-g16",
+        "262144",
+        "2",
+        "16",
+        "0",
+        "densities"
+      ],
+      "returncode": 0
+    },
+    {
+      "id": "o1-n8192-g256",
+      "argv": [
+        "taskset",
+        "-c",
+        "8",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/clang/index-directory-scan-driver1-neon/workbench/spikes/index-directories/index_directory_scan_driver",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/index-directory-scans-20261020/o1-n8192-g256",
+        "8192",
+        "2",
+        "256",
+        "0",
+        "densities"
+      ],
+      "returncode": 0
+    },
+    {
+      "id": "o1-n8192-g64",
+      "argv": [
+        "taskset",
+        "-c",
+        "8",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/clang/index-directory-scan-driver1-neon/workbench/spikes/index-directories/index_directory_scan_driver",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/index-directory-scans-20261020/o1-n8192-g64",
+        "8192",
+        "2",
+        "64",
+        "0",
+        "densities"
+      ],
+      "returncode": 0
+    },
+    {
+      "id": "o1-n8192-g16",
+      "argv": [
+        "taskset",
+        "-c",
+        "8",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/clang/index-directory-scan-driver1-neon/workbench/spikes/index-directories/index_directory_scan_driver",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/index-directory-scans-20261020/o1-n8192-g16",
+        "8192",
+        "2",
+        "16",
+        "0",
+        "densities"
+      ],
+      "returncode": 0
+    }
+  ],
+  "limits": "Dense one64B-row-per-Segment L4 physical-prefix component. Logical16/F32 and Part grain fixed; physical allocation16/64/256. Prepared external masks; predicate generation excluded. Scope/root/seek/traversal/close or native renew/cursor/seek/reset inside EACH scan; >=1M candidate prefixes per sample. Setup/teardown outside foreground; no request-p99, coldness, durability, complete Engine or Calico masked-pushdown claim. Consumer bytes and logical visits are not physical traffic.",
+  "status": "complete",
+  "runner_sha256": "33a180829016130a7b0f7acf04bee9a1ca9d9fe840251de6aa92a88a8ab9d6ca",
+  "binary_after": "b87ba01263b61a901f3a43d8fdc536c31a55236ca601de74aede72983b87abe3"
+}

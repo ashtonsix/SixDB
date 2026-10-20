@@ -46,7 +46,7 @@ allocations are21.495/35.976ns. Actual directory attribution must still separate
 the material consumer, and the complete composed request must be measured.
 No p99, cold/history, durable, range, write or native Zen5 win follows here.
 
-## Actual memory is the principal defect
+## Original memory defect and the measured correction
 
 Primary warmed backend-only UNTRIMMED RSS/PSS, MiB, with external live input and
 trace buffers released. Released allocator capacity remains counted:
@@ -76,11 +76,73 @@ capacity. Pool mapping, backing, live requests and RSS are different ledgers.
 The one-record-per-segment fixture preserves actual segment cardinality;
 reductions must not silently merge segment Objects or remove their association.
 
-Orbital owns eligible-palette/page-placement correction. Engine owns caller
-metadata retention and redundant Control fields. The next measured comparison
-keeps64-byte alignment, full Object identities, all output bytes and actual
-physical lifetime/publication rules. It must report both real footprint and
-read/update/refusal/reclamation consequences, rather than moving accounting.
+Orbital's eligible-palette/page-placement fix (`57a80647`) reduces the SAME
+caller's262K native mapping from132.324 to36.324MiB and RSS to79.906MiB, with
+64-byte alignment and all independent Segment Allocations preserved. Removing
+the resource pointer from each Control (32->24B) and placing it in shared Format
+(88->96B), then bounding the metadata pool's chunk size, reduces live requested
+metadata to25.091MiB and its backing to25.425MiB. Removing the duplicate64B group
+header avoids a native size-class cliff. These are different source changes;
+the12.63MiB PMR backing reduction is not a12.63MiB RSS reduction.
+
+The next frozen grain1 source is
+`acad3cc8534a3c004aa3f2d139f56ff37342c6ea20464f3a690e0a8535b2c046`.
+The physical directory grain comparison keeps logical16/F32, one Part per group,
+independent Segment Allocations and the useful full64B consumer fixed:
+
+| Physical dirents/allocation | Initial directory Allocations | Fresh262K RSS MiB | Aged/released/trimmed RSS MiB | Aged mapped MiB | Staged point ns/item |
+| ---: | ---: | ---: | ---: | ---: | ---: |
+|16|16,384|69.738|77.184|38.863|21.687|
+|64|4,096|70.996|78.410|38.863|25.000|
+|256|1,024|69.871|89.270|50.863|27.260|
+
+Fresh native mapping is32.324MiB in all three:16MiB Segment bytes,16MiB directory
+bytes and0.324MiB routing. PMR request/backing is25.091/25.425MiB in all three.
+Aging performs15,360 actual moving-Part updates: one in15 of every16 logical
+groups, retaining an old Scope whose first discovery follows publication and
+drain. After closing it and actual trimming, unchanged slices still pin the
+G256 native backings, producing the exact12MiB excess in this witness. No native
+Part slicing implies independent reclamation of the surrounding Allocation.
+
+The read screen has12 isolated processes,192 rows and8 samples/arm/cell, with
+opposite grain orders. At262K scalar G16/G64/G256 is36.510/31.686/32.644ns/item;
+staged G16 leads in both outer orders. Paired BE4 LMDB get/cursor controls range
+from338.2..373.0/346.5..372.1ns/item across grains. No fresh Calico arm was run.
+The [bounded counterfactual](evidence/memory-grains-20261020/cause/handoff.json)
+uses the exact SAME262,144 Segment byte addresses in three actual directory
+graphs/stores, with opposite child-construction orders and the unchanged staged
+reader. All pointers, full64 material bytes,56 metadata bytes and actual selected
+Part associations pass. SharedD16/D256 measure24.911/22.771ns in one order and
+25.386/22.428 in the other: the ranking reverses. A larger directory allocation
+is not intrinsically slower in this reader. This diagnostic keeps three graphs
+and their control stocks live, so it does not uniquely identify Segment placement
+as the previous cause or select a production layout. Setup/placement/state
+interactions affect the ordering; the cache/TLB mechanism is UNKNOWN. Guest PMU
+events are unavailable, and virtual line/page censuses are not hardware counters.
+
+The subsequent address census and controlled spacing experiment establish a
+narrower cause. In the original G64/G256 construction, almost every adjacent
+256-Segment material group is separated by exactly 640 pages. With G256 fixed,
+four serial ABBA children compare 640 with 641 pages while retaining exactly
+the same absolute directory, routing, Core, root, trace and selected-realization
+addresses. Every material Allocation remains independent and 64 bytes; mapped
+bytes, capacity and reservation bytes are equal. The Scope64 consumer measures
+25.289 versus 23.327 ns/item, and the stationary consumer 24.029 versus 22.221,
+with 12 samples per spacing and caller. Both child orders favour 641 pages.
+Material address spacing therefore affects this reader by about 8% in this
+control. It does not explain the complete historical grain gap or distinguish
+cache sets, TLBs, banks, physical-page history or page walks. No allocator policy
+is selected. The complete census, exact-address audits, runnable binary/shim and
+48 timing rows are in the
+[Architecture causal evidence](evidence/memory-grains-20261020/address-census-artifact.json).
+
+These are physical coallocation results, not a universal optimum for16-entry
+logical leaves or Parts. Logical64/256 whole-Part alternatives, scalar/batch
+write cost and the optional actual-Hold custody treatment remain to be priced.
+The current memory/source/raw receipts are recoverable through
+[the Architecture evidence reference](evidence/memory-grains-20261020/artifact.json).
+The existing implementation's four checks pass in grain1; later live reader,
+L1-table and scan-reference edits are separate sources and carry no timing claim.
 
 ## Full-cycle producer and the stronger eager control
 
@@ -138,11 +200,126 @@ unmeasured here. Matching Calico mixed updates/SUM128 or atomicB64 is still open
 the earlier8K scalar Calico assignment658ns is not substituted for a matched64-row
 trace. These are meaningful producer controls, not full Engine acceptance.
 
+## Actual ordered and masked range scan
+
+The scan uses one saved-frame seek and ordered traversal of the real graph,
+under one Scope for the complete scan. It consumes selected64B material into
+`sum_mod64(xor8(row))`. Ready external masks use ORIGINAL physical-prefix
+coordinates and seeded permuted bits at0/1/8/32/64 bits per64; predicate generation
+is outside this control. Rank uses original occupancy. A sample repeats complete
+scans over at least1M candidate prefixes, including Scope/root/traversal/close
+or native LMDB transaction/cursor renewal, SET_RANGE/NEXT and reset EACH time.
+
+Frozen scan-driver1 is
+`e96f14ad818c72d88e81d60c79d18d62ae69789756e8ceba2ab0811094525511`.
+Twelve isolated processes and opposite population/grain orders give576 samples,
+four per arm/cell. Counts and checksums agree across peers/grains/processes;
+the driver hash is unchanged. The native peer uses actual u32 INTEGERKEY64B
+values. Logical16/F32 and Part grain are fixed across allocation grains.
+
+Unmasked medians, ns/visited segment with all64B consumed:
+
+| Segments/range | Engine G16 | G64 | G256 | Paired native LMDB G16 | Best tested Calico prepared scan |
+| --- | ---: | ---: | ---: | ---: | ---: |
+|8K quarter|2.176|2.184|2.118|8.174|32.752|
+|8K whole|1.983|2.110|2.001|8.307|32.054|
+|262K quarter|2.342|3.316|2.778|8.331|31.547|
+|262K whole|4.824|7.030|5.440|8.839|31.696|
+
+LMDB is the strongest tested eligible scan peer. The262K whole G16 result is
+1.83x faster; it misses the provisional2x complete-Engine objective before the
+remaining Engine work. G64/G256 whole-layer results miss too. The smaller
+working-set result cannot establish headroom for this case. No cache/TLB cause
+is established by that change. Retain the miss while testing one bounded
+selected-material lookahead control against the SAME graph/Segment bytes.
+
+The masked native baseline walks the complete cursor range and tests the mask
+before consuming64B. It is not proven best for sparse/empty masks. The0% case
+uses a full-span zero bitset. Do not use its large ratio as masked acceptance:
+price an inside-clock zero-bitset guard in both arms and an actual native
+mask-run seek control. Report complete query time and actual visited/selected
+counts; ns/selected is undefined at zero. Consumer bytes are not physical traffic
+or proof that a returned native value's page was untouched.
+
+Calico uses real prepared eight-field numeric visitors and complete execute/
+status lifetimes, with at least1M rows/sample. Recordwise ZERO beats Fieldwise
+exact_min in all four eligible unmasked cells; both policies remain in the raw
+evidence. Its public external-mask preprojection is unavailable; a postdecoded
+filter is not substituted. Retained-old-cut parity is not inferred.
+
+The five native checks pass, including5040 native/reference graph scan cases,
+40005 selected items, independent ordered association/counter oracles, exact-end
+guards, compressed roots, sparse/max prefixes and never-read old Scopes first
+used after successful publication+drain+trim. Native ARM and AVX2 under existing
+QEMU each pass10083 ABI-guard calls. AVX-512 is assembled/linked/static only.
+The finite producer checks corrected masked ranges through plain/indexed/eager
+policies, faults, folds and old cuts. Those are not raw-base timing claims.
+
+The first refinement uses a separate ARM entry: full original membership means
+rank equals suffix, removing eight rank instructions while keeping a generic
+sparse fallback. The actual unchanged fixture, material and complete Scope
+caller compare baseline/dense/native in all six arm permutations, with a checked
+self-warm complete scan before each sample. Four processes give72 rows and12
+samples/arm/cell. Before timing, actual large-fixture counters agree too.
+
+|262K whole-layer control, ns/row|G16|G64|
+|---|---:|---:|
+|Baseline, same new caller|4.241|6.557|
+|Dense original-rank shortcut|4.023|6.225|
+|Paired native cursor|8.873|9.098|
+
+The ratio of pooled medians improves by about5%; paired median gains are
+3.29%/4.24%, with dense winning9/12 pairs at each grain. One G64 process
+essentially ties. Do not attribute the larger difference from
+the first screen to these eight instructions: warmup/order, executable and
+placement histories also changed. G16's conditional half-peer margin is0.413ns
+per row; G64 still exceeds it by1.677ns. Neither establishes complete Engine fit.
+The one bounded next control stages selected material pointers, with hint and
+no-hint variants; its additional bank traffic and instructions must earn their
+cost. A possible grouped DUPFIXED bulk LMDB policy is source-reviewed only;
+its behavior/performance are not substituted into these measured comparisons.
+
+That bounded lookahead control is now complete and loses. Its 64-pointer bank
+adds an 8-byte store and load per selected segment and a 1,040-byte stack frame;
+hint/no-hint entries differ only in their two PRFM sites.
+Both bank variants retain generic original-mask rank work; comparison with
+dense therefore includes reinstated rank instructions as well as staging.
+Hint versus no-hint is the closer matched intervention. Four rotations of
+`{0,1,3,2}` balance all positions and all twelve directed adjacent-arm pairs,
+with a complete checked self-warm scan before every sample. Four processes
+produce64 rows, eight per arm/grain cell, on the same fixture and Segment bytes:
+
+|262K whole-layer control, ns/segment|G16|G64|
+|---|---:|---:|
+|Strongest direct dense entry|4.498|6.775|
+|Pointer bank, no hint|4.673|8.344|
+|Pointer bank, hint|5.623|7.975|
+|Paired native cursor|9.160|10.004|
+
+Paired median owner-CPU overheads versus direct are +2.73%/+18.84% for no-hint
+and +24.38%/+13.06% for hint. Wall outliers do not reverse the negative result;
+all samples remain retained. A peer disclosed a brief source capture after its
+idle acknowledgment; its completion timestamp is20.8 seconds before Engine's
+pre-run process snapshot and runner start, so the reported activity did not
+overlap these children. This screen still supplies no acceptance or precision
+percentage claim. There is no further tile-width or hint
+sweep. Keep the strongest direct entry and address the unresolved layout,
+stronger native peer and complete mutation costs.
+
+The integrated source passes six primary checks. The expanded scan check has
+9,600 ranges/masks/snapshot cases and105,540 ordered selected items against the
+independent full64-byte oracle, exercising all four ARM entries, strict11/16
+membership, tile boundaries63/64/65/127/128/129 and first old reads after
+publication+drain+trim. Loom's separate tile rollover and ABI checks remain
+additional evidence, not a replacement for these actual composition checks.
+
 ## Verification and remaining scope
 
-Four current native checks pass: directory bytes/slot versus rank, physical
+Six current native checks pass: directory bytes/slot versus rank, physical
 graph/late history/export/faults, the earlier P/Q/P composition, and current
-plain/indexed/packed-eager all-field/all-layer producers. Tests cover repeated
+plain/indexed/packed-eager all-field/all-layer producers, and ordered/masked
+graph ranges, and actual native mask-run cursors against independent per-bit
+and ordered full64-byte oracles. Tests cover repeated
 atomic batches, no-op omission, partial/full folds, actual capture/prepare/global
 stale-basis refusal, prefix rotation, SUM overflow, late first old reads after
 drain, exact-end0/8..512-byte copies and physical shutdown. Broader concurrency,

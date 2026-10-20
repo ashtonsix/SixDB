@@ -43,7 +43,7 @@ Store::Owner BufferedProducer::finish(orbital::ObjectId id,const Format& format,
     const std::shared_ptr<Backing>& backing,std::size_t bytes,bool prefix) {
   if (!bytes) bytes=format.bytes[0];
   require(bytes<=backing->allocation.size && !(bytes&7));
-  const Control control{&memory_,&format,id.low,prefix?std::uint32_t(bytes/8):0,1,
+  const Control control{&format,id.low,prefix?std::uint32_t(bytes/8):0,1,
       orbital::PartOwners::independent_shared,prefix?ExtentMode::prefix8:ExtentMode::parts};
   const std::array sources{orbital::PartSource{control.id(0),
       {backing->allocation.address,bytes},backing,{}}};
@@ -61,7 +61,7 @@ Store::Owner BufferedProducer::native(orbital::ObjectId id,const Format& format,
 }
 Store::Owner BufferedProducer::capture_native(orbital::ObjectId id,const Format& format,
     orbital::allocation::Allocation& body) {
-  const Control c{&memory_,&format,id.low,0,1};
+  const Control c{&format,id.low,0,1};
   const std::array sources{orbital::PartSource{c.id(0),loom::bytes(body),{},&body}};
   auto result=take(store_.capture(c,sources)); ++counters_.captures; return result;
 }
@@ -79,73 +79,115 @@ std::pair<const std::byte*,std::size_t> BufferedProducer::log(const Store::Scope
   const auto extent=take(selected.control().extent(0));
   return {part(selected),extent};
 }
-std::uint64_t BufferedProducer::field3(const Store::Scope& scope,unsigned r) const {
-  return selected_field3(scope,r,descriptor(scope,r));
+const std::byte* BufferedProducer::Reader::descriptor(unsigned r) {
+  require(r<producer_.rows_);
+  auto& group=groups_[r/16];
+  if (!group) group=part(scope_.bind(lower(r/16)));
+  // This closed producer has dense original positions0..rows-1. Admission and
+  // membership remain explicit; a cached group is not a cross-publication map.
+  const auto mask=load<std::uint16_t>(group);
+  require(mask&(1u<<(r&15)));
+  const unsigned rank=std::popcount(mask&((1u<<(r&15))-1));
+  return group+64+rank*64;
 }
-std::uint64_t BufferedProducer::selected_field3(const Store::Scope& scope,unsigned r,const std::byte* d) const {
-  const auto* base=load<const std::byte*>(d);
-  const auto value=load<std::uint64_t>(base,24);
+void BufferedProducer::Reader::pending() {
+  if (pending_) return;
+  if (producer_.policy_==BufferPolicy::eager) pending_=part(scope_.bind(eager_sum()));
+  else std::tie(pending_,extent_)=producer_.log(scope_);
+}
+std::uint64_t BufferedProducer::Reader::corrected(unsigned r,const std::byte* d,std::uint64_t base) {
   const auto* advice=load<const Advice*>(d,56);
-  if (!(advice->dirty&(std::uint64_t(1)<<load<std::uint16_t>(d,54)))) return value;
-  if (policy_==BufferPolicy::eager) {
-    const auto* after=part(scope.bind(eager_sum()));
-    return (load<std::uint64_t>(after,16)&(std::uint64_t(1)<<r))?
-        load<std::uint64_t>(after,64+r*8):value;
+  if (!(advice->dirty&(std::uint64_t(1)<<load<std::uint16_t>(d,54)))) return base;
+  pending();
+  if (producer_.policy_==BufferPolicy::eager)
+    return (load<std::uint64_t>(pending_,16)&(std::uint64_t(1)<<r))?
+        load<std::uint64_t>(pending_,64+r*8):base;
+  return producer_.policy_==BufferPolicy::plain?idx_log_find(pending_,extent_,r,base):
+      idx_log_index_find(pending_,extent_,r,base);
+}
+std::uint64_t BufferedProducer::Reader::field3(unsigned r) {
+  const auto* d=descriptor(r); return corrected(r,d,load<std::uint64_t>(load<const std::byte*>(d),24));
+}
+Row BufferedProducer::Reader::row(unsigned r) {
+  const auto* d=descriptor(r); Row out;
+  std::memcpy(out.data(),load<const std::byte*>(d),64);
+  out[3]=corrected(r,d,out[3]); return out;
+}
+std::uint64_t BufferedProducer::Reader::digest(unsigned r) {
+  const auto* d=descriptor(r); const auto* bytes=load<const std::byte*>(d);
+  std::uint64_t digest=0;
+  for (unsigned f=0;f<8;++f) digest^=load<std::uint64_t>(bytes,f*8);
+  const auto before=load<std::uint64_t>(bytes,24);
+  return digest^before^corrected(r,d,before);
+}
+RangeResult BufferedProducer::Reader::range(unsigned low,unsigned high,std::uint64_t mask) {
+  RangeResult out;
+  if (low>high || low>=producer_.rows_) return out;
+  high=std::min(high,producer_.rows_-1);
+  mask&=UINT64_MAX<<low;
+  if (high<63) mask&=(UINT64_C(1)<<(high+1))-1;
+  // Only selected slots are read. idx_log_apply performs full8B afterimage
+  // stores, without reading unselected slots; their initial values are unused.
+  std::array<std::uint64_t,64> base,digests,values;
+  bool plain_dirty=false;
+  for (auto bits=mask;bits;bits&=bits-1) {
+    const unsigned r=std::countr_zero(bits);
+    const auto* d=descriptor(r); // at most one bind per actual selected group
+    const auto* bytes=load<const std::byte*>(d);
+    base[r]=values[r]=load<std::uint64_t>(bytes,24);
+    std::uint64_t digest=0;
+    for (unsigned f=0;f<8;++f) digest^=load<std::uint64_t>(bytes,f*8);
+    digests[r]=digest;
+    if (producer_.policy_==BufferPolicy::plain) {
+      const auto* advice=load<const Advice*>(d,56);
+      plain_dirty|=bool(advice->dirty&(UINT64_C(1)<<load<std::uint16_t>(d,54)));
+    } else values[r]=corrected(r,d,base[r]);
   }
-  const auto [p,n]=log(scope);
-  return policy_==BufferPolicy::plain?idx_log_find(p,n,r,value):idx_log_index_find(p,n,r,value);
-}
-Row BufferedProducer::read(const Store::Scope& scope,unsigned r) const {
-  const auto* d=descriptor(scope,r);
-  Row result; std::memcpy(&result,load<const std::byte*>(d),64);
-  // Read the full row once; point field3 preserves exactly the same correction.
-  const auto* advice=load<const Advice*>(d,56);
-  if (advice->dirty&(std::uint64_t(1)<<load<std::uint16_t>(d,54))) {
-    if (policy_==BufferPolicy::eager) {
-      const auto* after=part(scope.bind(eager_sum()));
-      if (load<std::uint64_t>(after,16)&(std::uint64_t(1)<<r)) result[3]=load<std::uint64_t>(after,64+r*8);
-    } else {
-      const auto [p,n]=log(scope);
-      result[3]=policy_==BufferPolicy::plain?idx_log_find(p,n,r,result[3]):idx_log_index_find(p,n,r,result[3]);
-    }
+  if (plain_dirty) { pending(); idx_log_apply(pending_,extent_,values.data()); }
+  for (auto bits=mask;bits;bits&=bits-1) {
+    const unsigned r=std::countr_zero(bits);
+    out.sum+=digests[r]^base[r]^values[r]; ++out.selected;
   }
-  return result;
+  return out;
 }
-std::array<std::uint64_t,64> BufferedProducer::values(const Store::Scope& scope) const {
-  std::array<std::uint64_t,64> result{};
-  if (policy_==BufferPolicy::plain || policy_==BufferPolicy::eager) {
-    for (unsigned r=0;r<rows_;++r)
-      result[r]=load<std::uint64_t>(load<const std::byte*>(descriptor(scope,r)),24);
-    if (policy_==BufferPolicy::plain) {
-      const auto [p,n]=log(scope); idx_log_apply(p,n,result.data());
-    } else {
-      const auto* p=part(scope.bind(eager_sum()));
-      for (auto bits=load<std::uint64_t>(p,16);bits;bits&=bits-1) {
-        const unsigned r=std::countr_zero(bits); result[r]=load<std::uint64_t>(p,64+r*8);
-      }
-    }
-  } else for (unsigned r=0;r<rows_;++r) result[r]=field3(scope,r);
-  return result;
+std::array<std::uint64_t,64> BufferedProducer::Reader::values() {
+  std::array<std::uint64_t,64> out{};
+  for (unsigned r=0;r<producer_.rows_;++r) {
+    const auto* d=descriptor(r);
+    const auto base=load<std::uint64_t>(load<const std::byte*>(d),24);
+    out[r]=producer_.policy_==BufferPolicy::plain?base:corrected(r,d,base);
+  }
+  if (producer_.policy_==BufferPolicy::plain) { pending(); idx_log_apply(pending_,extent_,out.data()); }
+  return out;
 }
-Sum BufferedProducer::sum(const Store::Scope& scope) const {
-  const auto* directory=part(scope.bind(upper(0)));
-  const auto* advice=load<const Advice*>(directory,56);
-  const auto* p=load<const std::byte*>(directory);
-  if (!(advice->dirty&8)) {
-    const auto s=load<FieldSummary>(p,cells_at(1)+3*sizeof(FieldSummary));
+Sum BufferedProducer::Reader::sum() {
+  const auto* d=part(scope_.bind(upper(0)));
+  if (!(load<const Advice*>(d,56)->dirty&8)) {
+    const auto s=load<FieldSummary>(load<const std::byte*>(d),cells_at(1)+3*sizeof(FieldSummary));
     return Sum(s.sum_low)|(Sum(s.sum_high)<<64);
   }
-  if (policy_==BufferPolicy::eager) return unpack(part(scope.bind(eager_sum())));
-  if (policy_==BufferPolicy::indexed) {
-    const auto [p,n]=log(scope); return unpack(p+n-160);
+  if (producer_.policy_!=BufferPolicy::plain) {
+    pending(); return unpack(pending_+(producer_.policy_==BufferPolicy::indexed?extent_-160:0));
   }
-  const auto current=values(scope);
-  Sum result=0; for (unsigned r=0;r<rows_;++r) result+=current[r]; return result;
+  const auto x=values(); Sum total=0;
+  for (unsigned r=0;r<producer_.rows_;++r) total+=x[r]; return total;
+}
+std::uint64_t BufferedProducer::field3(const Store::Scope& scope,unsigned r) const {
+  auto view=reader(scope); return view.field3(r);
+}
+Row BufferedProducer::read(const Store::Scope& scope,unsigned r) const {
+  auto view=reader(scope); return view.row(r);
+}
+std::array<std::uint64_t,64> BufferedProducer::values(const Store::Scope& scope) const {
+  auto view=reader(scope); return view.values();
+}
+Sum BufferedProducer::sum(const Store::Scope& scope) const {
+  auto view=reader(scope); return view.sum();
 }
 FieldSummary BufferedProducer::layer_summary(const Store::Scope& scope,unsigned layer,
     std::uint16_t position,unsigned field) const {
   require(layer<4 && field<8);
-  const auto* directory=part(scope.bind(upper(layer)))+(layer<2?0:64);
+  const auto* directory=part(scope.bind(upper(layer)))+(layer==0?0:64);
   const auto* p=load<const std::byte*>(directory);
   const unsigned count=load<std::uint16_t>(p);
   unsigned rank=0;
@@ -211,13 +253,16 @@ void BufferedProducer::fold_drafts(const Store::Scope&,const std::array<Row,64>&
   auto summary_advice=std::make_shared<Advice>();
   for (unsigned layer=0;layer<4;++layer) {
     auto s=make_summary(layer,rows,summary_advice);
-    std::array<std::byte,128> d{}; const unsigned at=layer<2?0:64;
-    if (at) put(d.data(),0,std::uint16_t{1});
-    put(d.data(),at,part(s.selection())); put(d.data(),at+48,std::uint32_t(layer+2));
-    put(d.data(),at+54,std::uint16_t{3}); put(d.data(),at+56,summary_advice.get());
+    const auto& format=layer==0?top_format:layer==1?l1_format:middle_format;
+    auto directory=take(loom::allocate(worker_,{.bytes=format.bytes[0],.alignment=64}));
+    // L0 has one slot; L1 is one ordinary256-slot table allocation. Reserved
+    // zero slots do not create Segments. This profile populates only prefix0.
+    std::memset(directory.address,0,format.bytes[0]); const unsigned at=layer==0?0:64;
+    if (at) put(directory.address,0,std::uint16_t{1});
+    put(directory.address,at,part(s.selection())); put(directory.address,at+48,std::uint32_t(layer+2));
+    put(directory.address,at+54,std::uint16_t{3}); put(directory.address,at+56,summary_advice.get());
     append_change(changes,n,summary(layer),std::move(s));
-    const auto& format=layer<2?top_format:middle_format;
-    append_change(changes,n,upper(layer),native(upper(layer),format,d.data()));
+    append_change(changes,n,upper(layer),capture_native(upper(layer),format,directory));
     ++counters_.directory_changes;
   }
 }
@@ -250,10 +295,12 @@ BufferedProducer::BufferedProducer(loom::Worker& worker,BufferPolicy policy,
       summary_large_{{std::uint32_t(cells_at(rows_)+rows_*384)},1,summary_ns},
       log_format_{{std::uint32_t(capacity),std::uint32_t(policy==BufferPolicy::plain?8:160)},1,log_ns},
       store_(memory_) {
-  static_assert(sizeof(Backing)==56 && sizeof(Advice)==8 && sizeof(Store::Change)==24 && sizeof(Format)==88);
+  static_assert(sizeof(Backing)==56 && sizeof(Advice)==8 && sizeof(Store::Change)==24 && sizeof(Format)==96);
   require(rows_ && rows_<=64 && capacity<=256u<<10 && !(capacity&7)
       && capacity>=(policy==BufferPolicy::plain?8:160)+64*24+160);
-  for (unsigned i=1;i<=16;++i) groups_[i]={{64+i*64},1,dir_ns};
+  for (auto* f:{&summary_small_,&summary_large_,&log_format_,&data_format,&top_format,&l1_format,&middle_format,&eager_format,&marker_format})
+    f->memory=&memory_;
+  for (unsigned i=1;i<=16;++i) groups_[i]={{64+i*64},1,dir_ns,nullptr,&memory_};
   std::array<Row,64> rows{}; std::copy(input.begin(),input.end(),rows.begin());
   work_.reserve(144); auto& changes=work_; unsigned n=0;
   Store::Scope basis(store_); fold_drafts(basis,rows,changes,n);
@@ -273,13 +320,15 @@ BufferedProducer::BufferedProducer(loom::Worker& worker,BufferPolicy policy,
 void BufferedProducer::update_impl(std::span<const Command> commands,bool force_fold,Fault fault) {
   require(commands.size()<=64);
   Store::Scope basis(store_);
+  auto selected=reader(basis);
   std::array<std::uint64_t,64> before,after;
   std::array<Advice*,64> advice; std::uint64_t touched=0;
   for (const auto& command:commands) {
     require(command.row<rows_); const auto bit=std::uint64_t(1)<<command.row;
     if (!(touched&bit)) {
-      const auto* d=descriptor(basis,command.row);
-      before[command.row]=selected_field3(basis,command.row,d);
+      const auto* d=selected.descriptor(command.row);
+      before[command.row]=selected.corrected(command.row,d,
+          load<std::uint64_t>(load<const std::byte*>(d),24));
       advice[command.row]=load<Advice*>(d,56);
     }
     // Commands have ordinary assignment semantics. Repeats see the private
@@ -293,20 +342,26 @@ void BufferedProducer::update_impl(std::span<const Command> commands,bool force_
   if (!touched && !force_fold) return;
   const auto count=std::popcount(touched);
   std::size_t old_extent=0; const std::byte* old=nullptr;
-  if (policy_!=BufferPolicy::eager) std::tie(old,old_extent)=log(basis);
+  if (policy_!=BufferPolicy::eager) {
+    selected.pending(); old=selected.pending_; old_extent=selected.extent_;
+  }
   const auto suffix=std::size_t(count)*24+(policy_==BufferPolicy::indexed?160:0);
   const bool fold=force_fold || (policy_!=BufferPolicy::eager && old_extent+suffix>capacity_);
   auto& changes=work_; require(changes.empty()); unsigned n=0;
   struct Clear { std::vector<Store::Change>& x; ~Clear() { x.clear(); } } clear{changes};
   if (fold) {
-    std::array<Row,64> rows{};
-    // Plain append folds the event stream ONCE into private values, rather
-    // than performing64 backwards point scans over the same pending bytes.
-    const auto current=values(basis);
+    std::array<Row,64> rows;
+    std::array<std::uint64_t,64> current;
     for (unsigned r=0;r<rows_;++r) {
-      std::memcpy(rows[r].data(),load<const std::byte*>(descriptor(basis,r)),64);
-      rows[r][3]=(touched&(std::uint64_t(1)<<r))?after[r]:current[r];
+      const auto* d=selected.descriptor(r);
+      std::memcpy(rows[r].data(),load<const std::byte*>(d),64);
+      current[r]=policy_==BufferPolicy::plain?rows[r][3]:selected.corrected(r,d,rows[r][3]);
     }
+    // One selected stream application, not64 backward scans or a second
+    // directory-binding pass. All four group views and pending bytes reuse basis.
+    if (policy_==BufferPolicy::plain) { selected.pending(); idx_log_apply(selected.pending_,selected.extent_,current.data()); }
+    for (unsigned r=0;r<rows_;++r)
+      rows[r][3]=(touched&(std::uint64_t(1)<<r))?after[r]:current[r];
     fold_drafts(basis,rows,changes,n,fault==Fault::capture?std::min(2u,rows_-1):64);
     Sum total=0; for (unsigned r=0;r<rows_;++r) total+=rows[r][3];
     if (policy_==BufferPolicy::eager) {
@@ -323,7 +378,7 @@ void BufferedProducer::update_impl(std::span<const Command> commands,bool force_
     }
     ++counters_.folds;
   } else if (policy_==BufferPolicy::eager) {
-    const auto* old=part(basis.bind(eager_sum()));
+    selected.pending(); const auto* old=selected.pending_;
     Sum total=unpack(old);
     auto body=take(loom::allocate(worker_,{.bytes=576,.alignment=64}));
     idx_asm_clone_patch64(body.address,old,9,16,load<std::uint64_t>(old,16)|touched);
@@ -392,13 +447,13 @@ orbital::Result<void> BufferedProducer::compact_row(unsigned r) noexcept {
     idx_asm_clone_patch64(directory.address,old,count+1,64+(r%16)*64,
         std::uintptr_t(part(material.selection())));
     put(directory.address,64+(r%16)*64+56,advice.get());
-    const Control c{&memory_,&groups_[count],lower(r/16).low,0,1};
+    const Control c{&groups_[count],lower(r/16).low,0,1};
     const std::array sources{orbital::PartSource{c.id(0),loom::bytes(directory),{},&directory}};
     auto d=take(store_.capture(c,sources)); ++counters_.captures; ++counters_.directory_changes;
     const std::array changes{Store::Change{data(r),std::move(material)},Store::Change{lower(r/16),std::move(d)}};
     publish(basis,changes,Fault::none); return {};
-  } catch (const Failure& x) { return std::unexpected(x.error); }
-  catch (const std::bad_alloc&) { return std::unexpected(orbital::Error::capacity); }
+  } catch (const Failure& x) { ++counters_.refusals; return std::unexpected(x.error); }
+  catch (const std::bad_alloc&) { ++counters_.refusals; return std::unexpected(orbital::Error::capacity); }
 }
 std::array<const void*,5> BufferedProducer::directories(const Store::Scope& scope,unsigned row) const {
   std::array<const void*,5> d{};

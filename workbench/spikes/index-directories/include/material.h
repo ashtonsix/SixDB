@@ -13,10 +13,12 @@ struct Format {
   std::uint16_t count{};
   std::uint64_t object_namespace{};
   DirectoryDependencies* dependencies{};
+  std::pmr::memory_resource* memory{};
 };
+// First bounded pool hypothesis; actual backing/RSS and complete callers decide.
+inline constexpr std::pmr::pool_options metadata_pool_options{1024,128};
 enum class ExtentMode : std::uint8_t { parts, prefix8 };
 struct Control {
-  std::pmr::memory_resource* memory{};
   const Format* format{};
   std::uint64_t name{};
   std::uint32_t first{};
@@ -24,13 +26,13 @@ struct Control {
   orbital::PartOwners owners{orbital::PartOwners::independent_allocation};
   ExtentMode extent_mode{};
   bool valid(std::pmr::memory_resource& r) const noexcept {
-    if (memory!=&r || !format || !count || format->count>format->bytes.size()) return false;
+    if (!format || format->memory!=&r || !count || format->count>format->bytes.size()) return false;
     if (extent_mode==ExtentMode::prefix8)
       return count==1 && format->count==1 && std::size_t(first)*8>=format->bytes[1]
           && std::size_t(first)*8<=format->bytes[0];
     return extent_mode==ExtentMode::parts && first<=format->count && count<=format->count-first;
   }
-  auto* resource() const noexcept { return memory; }
+  auto* resource() const noexcept { return format?format->memory:nullptr; }
   std::size_t part_count() const noexcept { return count; }
   orbital::PartId id(std::size_t i) const noexcept {
     return {name,extent_mode==ExtentMode::prefix8?i:first+i};
@@ -52,7 +54,7 @@ struct Control {
   std::size_t metadata_bytes() const noexcept { return 0; }
   void destroy_selected() const noexcept { release(); }
 };
-static_assert(sizeof(Control)==32);
+static_assert(sizeof(Control)==24 && sizeof(Format)==96);
 using Selection=orbital::RepresentationSelection<Control>;
 struct Physical {
   using Value=orbital::Representation<Control>;
@@ -86,7 +88,7 @@ struct DirectoryDependencies {
   Format format{{576},1,0,this};
   std::array<Store::Owner,32> children;
   DirectoryDependencies(std::pmr::memory_resource& r,std::uint64_t ns,std::uint64_t id)
-      : memory(&r),name(id) { format.object_namespace=ns; }
+      : memory(&r),name(id) { format.object_namespace=ns; format.memory=&r; }
   static DirectoryDependencies* make(std::pmr::memory_resource&,std::uint64_t,std::uint64_t);
   void release() noexcept;
 };

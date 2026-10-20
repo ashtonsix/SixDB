@@ -21,26 +21,86 @@ template<class T> T setup(orbital::Result<T> result) {
 }
 orbital::Result<Store::Owner> GroupFixture::finish(std::uint64_t name,
     const Format& format,orbital::allocation::Allocation& allocation) {
-  const Control control{metadata_,&format,name,0,1};
+  const Control control{&format,name,0,1};
   const std::array sources{orbital::PartSource{control.id(0),
       loom::bytes(allocation),{},&allocation}};
   return store_.capture(control,sources);
 }
 GroupFixture::GroupFixture(loom::Worker& worker,std::span<const Record> input,
-    std::pmr::memory_resource* metadata,bool graph)
-    : worker_(worker),metadata_(metadata?metadata:&memory_),store_(*metadata_),graph_(graph) {
+    std::pmr::memory_resource* metadata,bool graph,unsigned directory_grain)
+    : worker_(worker),metadata_(metadata?metadata:&memory_),store_(*metadata_),graph_(graph),
+      directory_grain_(directory_grain) {
   static_assert(root_base<=std::numeric_limits<std::uint64_t>::max()-(UINT32_MAX>>4));
-  for (unsigned n=1;n<=16;++n) groups_[n]={{64+n*64},1,directory_space};
+  admit(directory_grain==16 || directory_grain==64 || directory_grain==256,"directory allocation grain must be16/64/256");
+  admit(graph || directory_grain==16,"stable-name control has only16-dirent allocation grain");
+  data_.memory=metadata_;
+  for (unsigned n=1;n<=16;++n) groups_[n]={{(graph?0u:64u)+n*64},1,directory_space,nullptr,metadata_};
   std::vector<Store::Change> changes;
   std::vector<GraphGroup> graph_groups;
-  changes.reserve(input.size()*2);
-  for (std::size_t first=0;first<input.size();) {
+  changes.reserve(graph_?input.size()+1:input.size()*2);
+  if (graph_) for (std::size_t first=0;first<input.size();) {
+    struct Group { std::size_t first,last; std::uint16_t mask; };
+    std::array<Group,256> groups;
+    unsigned group_count=0; std::size_t end=first;
+    // Allocation grain,16-position logical group, F32 routing, one-Part
+    // publication component and Scope64 cohort are independent choices.
+    while (end<input.size()) {
+      std::size_t last=end+1;
+      while (last<input.size() && (input[last].prefix>>4)==(input[end].prefix>>4)) ++last;
+      if (group_count && last-first>directory_grain_) break;
+      admit(last-first<=directory_grain_ && last-end<=16,"oversized/duplicate directory group");
+      std::uint16_t mask=0;
+      for (auto i=end;i<last;++i) {
+        admit(!i || input[i-1].prefix<input[i].prefix,"input prefixes not unique and sorted");
+        mask|=std::uint16_t(1u<<(input[i].prefix&15));
+      }
+      admit(std::popcount(mask)==int(last-end),"original directory positions alias");
+      groups[group_count++]={end,last,mask}; end=last;
+    }
+    const auto bytes=(end-first)*64;
+    auto directory=setup(loom::allocate(worker_,{.bytes=bytes,.alignment=64}));
+    ++initial_directory_allocations_; initial_directory_bytes_+=bytes;
+    for (auto i=first;i<end;++i) {
+      // Segments retain independent allocations and logical identities.
+      auto material=setup(loom::allocate(worker_,{.bytes=64,.alignment=64}));
+      idx_asm_copy64(material.address,input[i].material.data());
+      auto finished=setup(finish(material_id(input[i].prefix).low,data_,material));
+      const auto pointer=setup(finished.selection().part(0)).address();
+      auto* d=directory.address+(i-first)*64;
+      idx_asm_copy64(d,input[i].descriptor.data()); std::memcpy(d,&pointer,8);
+      changes.push_back({material_id(input[i].prefix),std::move(finished)});
+    }
+    if (group_count==1) {
+      const auto& group=groups[0];
+      auto owner=setup(finish(root_base+(input[first].prefix>>4),groups_[end-first],directory));
+      graph_groups.push_back({input[first].prefix>>4,group.mask,std::move(owner)});
+      first=end; continue;
+    }
+    // Consume the actual array Allocation ONCE. Native subranges keep backing
+    // directly; no child retains this temporary Control or Representation.
+    const Format array{{std::uint32_t(bytes)},1,directory_space,nullptr,metadata_};
+    auto array_owner=setup(finish(0,array,directory));
+    const auto source=setup(orbital::source(array_owner.selection(),0));
+    for (unsigned g=0;g<group_count;++g) {
+      const auto& group=groups[g];
+      const auto name=root_base+(input[group.first].prefix>>4);
+      const Control control{&groups_[group.last-group.first],name,0,1};
+      auto slice=source; slice.id=control.id(0);
+      slice.body=source.body.subspan((group.first-first)*64,(group.last-group.first)*64);
+      const std::array sources{slice};
+      auto owner=setup(store_.capture(control,sources));
+      graph_groups.push_back({input[group.first].prefix>>4,group.mask,std::move(owner)});
+    }
+    first=end;
+  }
+  else for (std::size_t first=0;first<input.size();) {
     std::size_t last=first;
     while (last<input.size() && (input[last].prefix>>4)==(input[first].prefix>>4)) ++last;
     const auto count=last-first;
     admit(count<=16,"more than16 unique suffix positions");
     const auto& format=groups_[count];
     auto directory=setup(loom::allocate(worker_,{.bytes=format.bytes[0],.alignment=64}));
+    ++initial_directory_allocations_; initial_directory_bytes_+=format.bytes[0];
     std::memset(directory.address,0,64);
     std::uint16_t mask=0;
     for (auto i=first;i<last;++i) {
@@ -61,8 +121,7 @@ GroupFixture::GroupFixture(loom::Worker& worker,std::span<const Record> input,
     admit(std::popcount(mask)==int(count),"rank/body extent differs from original mask");
     const auto name=root_base+(input[first].prefix>>4);
     auto group=setup(finish(name,format,directory));
-    if (graph_) graph_groups.push_back({input[first].prefix>>4,mask,std::move(group)});
-    else changes.push_back({{directory_space,name},std::move(group)});
+    changes.push_back({{directory_space,name},std::move(group)});
     first=last;
   }
   if (!graph_groups.empty()) {
@@ -139,7 +198,7 @@ bool GroupFixture::graph_lookup(const Store::Scope& basis,std::uint32_t prefix,
     std::uint16_t mask; std::memcpy(&mask,bytes+64+slot*16+8,2);
     if (!(mask&(1u<<(prefix&15)))) return false;
     const unsigned rank=std::popcount(mask&((1u<<(prefix&15))-1));
-    found={child_bytes+64+rank*64,child.realization,child.realization,
+    found={child_bytes+rank*64,child.realization,child.realization,
         root_base+group,rank,rank,0,0};
     return true;
   }
@@ -207,7 +266,7 @@ orbital::Result<void> GroupFixture::replace(std::uint32_t prefix,unsigned word,
   auto directory=loom::allocate(worker_,{.bytes=*extent,.alignment=64});
   if (!directory) return std::unexpected(directory.error());
   idx_asm_clone_patch64(directory->address,source->address(),*extent/64,
-      64+found.rank*64,std::uintptr_t(part->address()));
+      (graph_?0:64)+found.rank*64,std::uintptr_t(part->address()));
   auto changed=finish(found.leaf_name,*control.format,*directory);
   if (!changed) return std::unexpected(changed.error());
   if (graph_) {

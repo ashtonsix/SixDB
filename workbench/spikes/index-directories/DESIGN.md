@@ -102,31 +102,55 @@ that particular packet has ten changes. It is not an ordinary-write minimum.
 
 ## Layer and region dispatch
 
-L0/L1 use ordinary bounded tables. L0 has one possible prefix; L1 has 256.
-Store their dirents in small independently selected chunks, plus an ordered
-occupied-prefix/bounds view for logical seek. A direct table hit does not search
-that ordered view. A membership change can move at most the bounded top-layer
-metadata, never a layer-sized dirent payload.
+L0/L1 use ordinary tables in one or two Allocations. L0 has one64B slot;
+L1 has256 slots,16,384B, plus a32B original-prefix population bitmap and any
+separately required bounds. A64B aligned population/header makes the simple L1
+body16,448B. Vacant initialized slots do not create empty Segment Objects.
+An L1 edit may copy the admitted16KiB table under whole-Part COW; explicitly
+compare smaller Parts within the same Allocation if that cost misses budget.
+Neither table placement nor Segment allocation is changed to conceal it.
 
 For L>=2 with L<=J, the query supplies the complete physical segment prefix.
-Partition that prefix into `group=p>>4` and `suffix=p&15`. A group has at most
-sixteen segment dirents. Its Object name is derived directly from index, layer
-and group. The singleton representation compares its one suffix. The compact
-multi-entry representation uses actual `ikea::hashtable::table<4,0,1>` to map
-suffix to payload slot 0..15. Its bitmap geometry cannot spill to Swiss.
-Only a membership/slot-map change clones the map owner; an ordinary locator
-change retains it and replaces the bounded payload.
+Use actual `ikea::hashtable::table<W,b,64>`: its values ARE the64-byte dirents.
+The table owns their buffers. There is no one-byte suffix-to-slot map, separate
+dirent payload, inverse map or per-dirent Allocation on this path. The previous
+V1 mapping proposal is removed because it added this unnecessary indirection.
 
-A required cheap control stores only an original-order u16 suffix mask with
-payload/bounds sorted by suffix. Slot is `popcount(mask & ((1u<<suffix)-1))`.
-It needs no owning microhash, slot values or inverse map. Membership can shift
-up to 16 dirents/bounds, while locator-only edits do not. Compare whole read,
-membership and retained-copy operations; the owning microhash remains a control,
-not a requirement for every 16-position group.
+The first bounded comparison partitions the prefix into a natural region and
+remaining4/6/8 bits, using actual V64 owners for16/64/256 possible keys. Bitmap
+geometry reserves every value slot, even absent ones. On the current heap
+policy, W4/b0 has1,026 logical primary bytes rounded to1,088 assigned bytes;
+check actual sizes/alignment for every geometry. Larger non-bitmap/Swiss owners
+are separate controls with real overflow/growth costs. Bounded regions avoid
+cloning an entire large layer on every locator edit; their size must earn its
+cost, not become an arbitrary16-entry rule.
 
-The group still needs its selected routing bounds. An exact prefix miss is not a
-logical seek result: an ordered presence tree finds the next group, then its
-next eligible suffix. No optimistic miss is returned as end-of-layer.
+One selected immutable hash image owns the actual table/header and every
+buffer enumerated by `table.allocations`. A native Storage adapter uses real
+Loom Allocations; the existing heap policy is a separately charged control.
+Freeze the finished owner; retain it through Orbital material interpretation
+and actual captured buffer backing. A reader borrows its concrete const table
+once under the same Scope. A private edit clones the WHOLE assigned owner once
+per affected region, performs all changes, then captures/publishes its final
+buffers. No read-only selected-image constructor or bucket-COW API is assumed;
+those are not shipped seams. All shared/header/Control ownership is counted.
+
+`find` gives a temporary64B callback value, not an address-stable dirent. Consume
+the requested fields in that callback, or copy them into bounded cursor state.
+Never return an EntryRef to that temporary or treat a hash position as a stable
+entry handle. Typed complete consumers may eliminate unused loads; inspect the
+finished caller before claiming that saving.
+
+For L<=J, the prefix supplies the exact geometric logical interval; no K-byte
+occupied bounds need duplicating just for direct routing. Maintain original
+prefix occupancy for ordered continuation; Ikea hash visit order is not logical
+order. Empty natural regions use the same-layer ordered presence index. A hash
+miss alone never means end-of-layer.
+
+The sorted suffix-mask/ranked-dirent array remains a separately labeled cheap
+control. Its physical16/64/256 coallocation experiment holds logical16/F32
+and Part grain fixed. It neither exercises Ikea hash values nor chooses the
+capacity of the ordered leaves below.
 
 For L>J, use the first J logical bytes to select the matching per-layer region;
 the same bytes are a physical prefix. J=0 has one region. A region root has a
@@ -203,13 +227,17 @@ slots. Header count:u16 at0 records live children; shift:u8 at2 selects five
 group-index bits; min/max group index:u32 at8/12 reject root aliases; remaining
 header bytes are zero. Each slot has child-byte pointer8, original group mask2
 (used at shift0), then6 zero bytes. Carrying the mask avoids the group's separate
-header load. Unused slots are all zero. Group payloads remain64-byte header plus
-ranked64-byte dirents; material allocations and outputs match the stable-name arm.
+header load. Unused slots are all zero. Original graph7 payloads have a64-byte
+header plus ranked64-byte dirents. Grain1 removes that duplicate header: the
+parent's mask already supplies it, and the payload begins at byte0. Independent
+Segment Allocations and useful outputs remain present.
 
-Its actual native proof is368 bytes: resource pointer8, refcount8, physical name8,
-immutable Format88 and32 child Owners of8 bytes. Format contains seventeen u32
-extents68, Part count2, alignment padding2, namespace8 and proof pointer8.
-The Control remains32 bytes; one-Part native descriptors remain56 bytes.
+The current native graph proof is376 bytes: resource pointer8, refcount8,
+physical name8, immutable Format96 and32 child Owners of8 bytes. Format contains
+seventeen u32 extents68, Part count2, alignment padding2, namespace8, dependency
+pointer8 and resource pointer8. Control is24 bytes; one-Part native descriptors
+request48 bytes. Original graph7 used proof368/Format88/Control32 and56-byte
+descriptors. Keep these source revisions distinct in timing and memory.
 Proof allocation, retained child calls, native rounding and catalog/history
 metadata are additional costs, not included in the576-byte body. Static formats
 have a null dependency; selected-copy export explicitly retains/releases a graph
@@ -219,6 +247,8 @@ For262,144 dense prefixes,16,384 groups give three radix nodes per hit and529
 initial node proofs. A moving update copies1088 group bytes,64 material bytes
 and3*576 node bytes, captures five one-Part Representations, allocates three
 proofs and retains the actual unchanged children, before publishing two changes.
+Grain1 copies1,024 rather than1,088 group bytes with the same64B material and
+3*576 node bytes. Physical coallocation does not reduce its capture/retain count.
 Those extra child retentions make a write regression plausible. The comparison
 must retain that result; a read win cannot establish an accepted update design.
 
@@ -237,8 +267,8 @@ and a larger descriptor per edit; this is not a one-Part capture claim.
 
 Its wide metadata is 720 B (48 header +32*21 B rows); internal metadata is 944 B.
 Payload capacity is 2,048 B. Chunk coordinates are derived fixed Part ordinals
-in this recipe, with no stored coordinate vector or extra Object names. Common32 B
-Control gives a 40 B Representation header plus five 16 B native slots =120 B
+in this recipe, with no stored coordinate vector or extra Object names. Common24 B
+Control gives a32B Representation header plus five16B native slots =112B
 descriptor before resource/proof/allocation overhead. Compare exact narrow
 metadata as well. Unused capacity is initialized/sealed and fully charged.
 
@@ -262,8 +292,8 @@ pins and publication remain unchanged. This source/allocation result is not an
 Engine timing result and does not choose fanout around a threshold accident.
 
 New compound leaves also compare CURRENT grouped-allocation capture. One fresh
-Allocation supplies all Parts and transfers once. With the proposed 40 B header,
-F32/C8 P5 is 88 B grouped versus 120 B independent; F128/C8 P17 is 184 versus 312 B.
+Allocation supplies all Parts and transfers once. With the current32B header,
+F32/C8 P5 is80B grouped versus112B independent; F128/C8 P17 is176 versus304B.
 Partial COW can later use independent native capture of one fresh Part plus
 retained sources from the grouped owner. Each retained Part still owns its real
 pin and can retain the whole original Allocation. Each split output has its own
@@ -279,9 +309,9 @@ owner; one fresh Allocation is never transferred into multiple captures.
 | Full internal node, wide128 control | 3,632 B: 48-byte header +128*28 B rows; smaller counts can add4 B alignment padding |
 | Payload chunk, independent C8 control | eight 64 B dirents =512 B, one admitted Part; leaf owns its payload-slot population |
 | Payload chunk, C16 control | sixteen64 B dirents =1,024 B; compare saved capture/catalog metadata with doubled copy bytes |
-| Compact hash map | sixteen four-bit-domain keys, one-byte slot values; assigned primary geometry 18 B, heap policy rounds its buffer to 64 B |
+| Inline-V64 hash | actual primary/Swiss/header/storage bytes, including absent reserved bitmap values; W4/b0 primary1,026 logical/1,088 heap-assigned bytes, with two-byte-offset value rows |
 | Compact group payload | `64*n`, n<=16 |
-| Compact group bounds | `2*K*n`; original-suffix population u16 plus slot-to-suffix u8[n] are additional |
+| Array-control bounds | `2*K*n` where needed; original-suffix population u16 is additional; no inverse map in the sorted-array control |
 | Ordinary L1 inverse/occupancy data | at most 512 B for u16 ranks and 32 B population, if that representation uses both |
 | Shared-Prefix region entry | region prefix plus scoped root name; no copied segment payload |
 
@@ -300,13 +330,13 @@ ancestor writes. Local node counts are exact; an insertion with stable enclosing
 fences may stop ancestor repair when routing extrema stay equal. An eventual
 global count consumer would need an explicitly priced maintenance mechanism.
 
-For the common one-Part payload, compare a 32-byte native Control containing
-resource pointer8, immutable format-proof pointer8, local Object name8, assigned
-count4 and geometry/state selector4. Then the stock Representation header is
-40 B on an 8-aligned ABI, and one native/shared slot makes 56/64 B. This is a paper
-layout to confirm with Clang, not a measurement. The format proof owns its real
+For the common payload, current24B Control is: Format pointer8 at0, physical
+name8 at8, first4 at16, count2 at20, owner-kind1 at22 and extent-mode1 at23.
+Resource moved into the shared96B Format; it did not disappear. The native
+Representation header is32B and one native/shared slot makes48/56B. Clang's
+size assertions and captured source fix this ABI. The format proof owns its real
 interpretation dependencies; a hash group's proof must also retain its actual
-Ikea owner/header and its matched payload-slot meanings. Those bytes/retains
+Ikea V64 owner/header and coherent interpretation. Those bytes/retains
 are additional, not hidden inside a claim of one cheap Control.
 
 For K<8, use an order-preserving native-width source where it fits; the wide
@@ -336,14 +366,40 @@ Namespace assignment belongs to index construction and is counted there.
 Exhaustion returns capacity; no wraparound or pointer-derived identity is
 permitted. Empty-region recreation cannot silently restart an old counter.
 
-For compact hash groups, use a concrete two-Part control: payload and bounds.
-The immutable Control/proof additionally retains a fixed-address mapping image
-owning the actual Ikea table/header/buffer, original-suffix mask and inverse.
-Locator-only replacement retains that image and bounds source; capture still
-admits BOTH Parts. Membership copies/edits the mapping image once. Compare this
-with a three-Part mapped-image treatment if the actual Storage seam requires it;
-it must include all three capture slots. Neither treatment counts the 18-byte
-hash geometry as its complete ownership footprint.
+For V64 hash regions, capture the actual primary and any nonempty Swiss controls
+and tuple buffers, using their enumerated assigned extents. The immutable proof
+retains the actual fixed owner/header and its format; no latest-only twin serves
+reads. Public `clone` copies all assigned buffers, not only live rows. Geometry
+changes rebuild a whole bounded region; copied bytes and old/new coexistence
+are charged. Prefix occupancy/presence changes publish with that owner. The
+native Storage adapter and generalized hash proof are not yet qualified by the
+current graph-only prototype.
+
+## Independent allocation and logical grains
+
+Keep four independent quantities in every receipt: physical directory allocation
+grain G, logical leaf capacity F, changed Part size C and read-cohort width.
+Segment Allocations remain independent throughout. The measured grain1 control
+holds logical16/F32 and one Part per logical group fixed while G is16/64/256.
+An initial array contains complete logical groups, with no per-group body header.
+One fresh array is transferred once; certified retained slices capture the group
+bodies without retaining an ancestor Representation. A scalar edit COWs only
+its logical group. Unchanged slices can retain the old whole native array.
+
+Changing logical capacity to64/256 is a DIFFERENT experiment. It reduces leaf
+count and can save graph/proof work, but a whole-Part locator update copies4/16KiB
+rather than1KiB, and mask geometry changes from2 to8/32 bytes. A32-byte mask
+cannot be hidden in the existing16-byte graph slot. Price a selected sidecar or
+new parent format, its read dependency, copies and captured lifetime. Batch
+coalescing copies each such Part once, not once per command. No result from
+physical coallocation decides this trade-off.
+
+The optional real-Hold treatment can retain logical slices independently of the
+writer's whole protected extent. It adds Hold tracking and shared-owner metadata;
+finite Holds retain their Home, Window can trim eligible suffixes but not holes,
+and current endpoint bins are conservative. The creator must relinquish its
+tail AFTER all slice Holds exist. It is an existing-API control whose Engine
+capture/read/write throughput remains unmeasured, not a chosen memory solution.
 
 ## Finite producer bytes and custody
 
@@ -358,7 +414,7 @@ general segment codecs remain outside this profile.
 | Logical base row |64: eight u64 fields at0,8,...56; no advice stored in these captured bytes |
 | Dirent |64: actual base/summary Part pointer at0; five unused locators at8..47 zero; rep:u32 at48; zero flags:u16 at52; advice-bit:u16 at54; advice pointer:u64 at56 |
 | L4 group |64-byte original-suffix-mask header plusN ranked64-byte dirents; bytes outside mask at0..1 are zero |
-| L0/L1 directory |one64-byte dirent per actual prefix0 segment in this finite profile |
+| L0/L1 directory |frozen buffered1/2/3 use one64-byte dirent per actual prefix0 segment; next live source has L0 one64B slot and L1 a16,448B ordinary table, not yet part of those timing results |
 | L2/L3 directory |128:64-byte mask header plus prefix0's64-byte dirent |
 | Summary |64-byte header(count:u16 at0,layer:u8 at2,zero elsewhere); sorted u16 positions at64; zero align-to64 gap; one384-byte eight-field cell per position |
 | Each field summary |48: count,min,max,sum_low,sum_high,not_null, each u64; SUM is exact128-bit unsigned |
@@ -377,10 +433,11 @@ also supports smaller capacities for boundary checks. Events begin8-aligned;
 an indexed footer after one event is only8-aligned, so SUM128 uses two u64 loads
 or memcpy, never an aligned128-bit pointer cast.
 
-Control remains32 bytes: resource8, immutable Format pointer8, physical name8,
-first4, count2, owner-kind1, extent-mode1. `parts=0` retains the old ordinal
+Current Control is24 bytes: immutable Format pointer8, physical name8, first4,
+count2, owner-kind1, extent-mode1. Resource belongs to shared Format96.
+`parts=0` retains the old ordinal
 law; `prefix8=1` makes first the exact initialized-prefix length in8-byte units,
-count1, stable PartId(name,0). Format remains88 bytes. In prefix mode its first
+count1, stable PartId(name,0). In prefix mode Format's first
 two extent words are capacity and minimum bytes, count1; other extent words
 are zero, with the actual namespace and null graph dependency. Selected-copy
 preserves this coordinate and actual proof retention. No native header Part or
@@ -391,8 +448,10 @@ shared advice owner16 and sealed highwater8. Advice is8 bytes of monotone dirty
 bits OUTSIDE every captured body/padding. `make_shared` control blocks and
 allocator rounding are additional measured memory, not included in56/8.
 The Backing never grows or relocates its Allocation. Shared capture adds the
-actual24-byte ownership slot to the40-byte native Representation header,64
-requested metadata bytes here. Ordinary native one-Part captures request56.
+actual24-byte ownership slot to the32-byte Representation header,56
+requested metadata bytes here. Ordinary native one-Part captures request48.
+Frozen buffered1/2/3 used Control32/Format88 and64/56B shared/native descriptors;
+their timing numbers do not price the later ABI or live L1/cache changes.
 Pool mapping/granularity, catalog/history/PMR inventory and pending physical
 returns are separate. Requested bytes are not RSS.
 
@@ -551,6 +610,11 @@ a conservative aggregate bound is
 For F32 the analogous conservative denominator is 5 rather than 6. Do not turn
 the depth-local target division into a whole-tree per-original-write promise;
 actual internal and batch work still needs its measured sum.
+In particular400ns/5=80ns exceeds the75ns amortized structural goal. F32 needs
+a complete repair at most375ns under that conservative bound, or measured
+histories with a better event rate and bounded debt;400ns alone is insufficient.
+For F128,1500ns/21 is71.4ns before any costs excluded from that repair boundary.
+Keep both arithmetic constraints visible when choosing the write representation.
 
 Batch normalization uses the same target interval 53..106 for newly materialized
 non-root outputs. Extend a deficient final run until such outputs are possible,

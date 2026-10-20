@@ -1,0 +1,95 @@
+{
+  "kind": "Bounded point-grain causal diagnostic",
+  "source_digest": "acad3cc8534a3c004aa3f2d139f56ff37342c6ea20464f3a690e0a8535b2c046",
+  "source_facts": [
+    "Logical16/F32, native Part/control stride and timed staged reader are unchanged across physical grain.",
+    "Original constructor interleaves a directory allocation before each batch of independently allocated Segments. G16 uses packed finite1024B Homes, G64/G256 use4096B/16384B Windows.",
+    "An independent Segment Allocation policy does not establish identical Segment placement across fixtures."
+  ],
+  "control": "One originalG16 fixture supplies actual native selected sources to two complete destinationStores/graphs withD16/D256 directory backing. Capture retains same material addresses and local destination Formats. The source Scope closes after both captures. Timed Scope64 staged body, common flat trace, outputs and six balanced permutations remain unchanged.",
+  "qualification": "All262144 per-input material pointers identical across threegraphs, full64 material+56 metadata bytes and actual selectedPart locator associations pass; per-input batch/output oracle and shutdown pass in both construction orders.",
+  "results": {
+    "kind": "Same actual Segment addresses; endpoint-only causal diagnostic",
+    "phase": "time",
+    "source_digest": "acad3cc8534a3c004aa3f2d139f56ff37342c6ea20464f3a690e0a8535b2c046",
+    "binary_before": "482e0c42f466d006d1f97acc71aef627852256e3061b12ad711f56814423c91e",
+    "started_unix": 1792527498.8751063,
+    "runs": [
+      {
+        "argv": [
+          "taskset",
+          "-c",
+          "8",
+          "/home/ashtonsix/sixdb/build/reviews/loom-grain-cause-20261020/cause",
+          "262144",
+          "16",
+          "0",
+          "1048576",
+          "time"
+        ],
+        "returncode": 0,
+        "stdout": "time-o0.stdout",
+        "stderr": "time-o0.stderr",
+        "median_wall_ns": {
+          "original": 24.025,
+          "shared_D16": 24.911,
+          "shared_D256": 22.7705
+        }
+      },
+      {
+        "argv": [
+          "taskset",
+          "-c",
+          "8",
+          "/home/ashtonsix/sixdb/build/reviews/loom-grain-cause-20261020/cause",
+          "262144",
+          "16",
+          "1",
+          "1048576",
+          "time"
+        ],
+        "returncode": 0,
+        "stdout": "time-o1.stdout",
+        "stderr": "time-o1.stderr",
+        "median_wall_ns": {
+          "original": 23.092,
+          "shared_D16": 25.3855,
+          "shared_D256": 22.427500000000002
+        }
+      }
+    ],
+    "limit": "Three full graphs/control stocks simultaneously live; diagnostic, not an isolated complete caller or peer comparison. No hardware PMU counters.",
+    "binary_after": "482e0c42f466d006d1f97acc71aef627852256e3061b12ad711f56814423c91e",
+    "finished_unix": 1792527501.5582857,
+    "runner_sha256": "731f2e0117067c304c49d010e14cb4b1245646f54fe24e37fb02d307e444ded3",
+    "runner_provenance": "Added after execution; runner bytes independently audited, no rerun or source edit."
+  },
+  "conclusion": "The prior stagedG16 advantage reverses in both construction orders when directory variants share actual Segment addresses. Larger physical directory grain is not intrinsically slower in this read body. Setup/placement/state interactions affect the observed ordering.",
+  "limits": [
+    "This does not uniquely identify Segment placement as the prior cause; three complete graphs/control stocks remain live, sharedD16 directory placement differs from original, and census/oracles warm inputs.",
+    "No actual IPC, stalls, cache misses or TLB misses are available: hardware PMU events are unavailable in the guest. Virtual lines/pages are not physical cache sets or measured traffic.",
+    "Conditional on masterG16 Segment placement; no new complete-operation/peer/aged-read or layout-optimum claim. No additional causal matrix was run."
+  ],
+  "independent_audit": "Loom:266 input hashes, ownership/association/sourceScope and position review pass. Architecture:all266 hashes, stableELF, raw36 rows, recomputed full64 trace signature7755292558270058147, six balancedpositions and wall/owner/process medians pass; raw outliers retained.",
+  "resources": "All causal processes completed; CPU8/helper0 and compilation hold released.",
+  "sha256": {
+    "fixture.cpp": "c59a3d6f99ca1849c7d6e6ad5f6a3e68dc40cd81c38cafe44ce3ee8dec1ba4cc",
+    "cause.cpp": "9cc89c8b989255a0ad3d6559ec5a3fd126a47d1d20542ff690f4209ed3c600e1",
+    "build.py": "2ac0202ef4f0c8fdf22e12623249bb86c5c1c3ebba6556f215e236285e62aeba",
+    "run.py": "731f2e0117067c304c49d010e14cb4b1245646f54fe24e37fb02d307e444ded3",
+    "inputs.json": "0a93f7dcab0b782d99ccc62b29fbc56efa6743e897513cfc5eeaa03c5343c3a2",
+    "commands.json": "c02da642c3f60a3cee6d63db322cc0b943deed37625a6eadb504a53ca58accc9",
+    "cause": "482e0c42f466d006d1f97acc71aef627852256e3061b12ad711f56814423c91e",
+    "qualify-receipt.json": "e978ae0b769e3a0f09cba2a9eab7279fc2bf5e3825bbf8c6e36f213f2d6e5595",
+    "qualify-o0.stdout": "1d731faf64ad0f62efc5ed1f2beb791030ae89364e0df4c97a7a840b9c686418",
+    "qualify-o0.stderr": "efa5c806575ecfafae6fc947c71eefabbddc4000d5c91383839b0cff894c05ed",
+    "qualify-o1.stdout": "60d792f98c24a5eb5908ef2f99449f38e471ed46c3454c971bc8f49b1ce42521",
+    "qualify-o1.stderr": "efa5c806575ecfafae6fc947c71eefabbddc4000d5c91383839b0cff894c05ed",
+    "time-receipt.json": "88651512fc2161729c632b04ba69112c79085a8a071516649cb04f689fca7d8b",
+    "time-o0.stdout": "cd56ace5e37d820d097fab52a5208f5d9ac303a80629583dffc8068abc9bc8fc",
+    "time-o0.stderr": "efa5c806575ecfafae6fc947c71eefabbddc4000d5c91383839b0cff894c05ed",
+    "time-o1.stdout": "f4c6709e965340f3d6c7a636ef5f9716eb0a8d8040bd28c408813ae5393daa35",
+    "time-o1.stderr": "efa5c806575ecfafae6fc947c71eefabbddc4000d5c91383839b0cff894c05ed",
+    "pmu-capability.json": "6eb8aca12b40d3afddada6f61def9c0b0e5dba84cadec9aba0834ac508ce9973"
+  }
+}

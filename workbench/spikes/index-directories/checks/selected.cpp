@@ -18,9 +18,6 @@ template<class T> T take(orbital::Result<T> r) {
   check(bool(r),"actual module refused fixture work"); return std::move(*r);
 }
 constexpr std::uint64_t space=0x49445841534d;
-constexpr Format root_format{{704},1};
-constexpr Format packed_format{{512,512,512,512,512},5};
-constexpr Format single_format{{512},1};
 using Bytes=std::vector<std::byte>;
 template<class T> void put(Bytes& b,std::size_t at,T value) {
   std::memcpy(b.data()+at,&value,sizeof(value));
@@ -43,7 +40,8 @@ Store::Owner capture(Store& store,std::pmr::memory_resource& memory,
   check(format.count==bodies.size(),"fixture format/source mismatch");
   std::size_t total=0; for (const auto& b:bodies) total+=b.size();
   auto backing=take(loom::allocate(worker,{.bytes=total,.alignment=64}));
-  const Control c{&memory,&format,id,0,format.count,
+  check(format.memory==&memory,"capture format resource mismatch");
+  const Control c{&format,id,0,format.count,
       orbital::PartOwners::grouped_allocation,ExtentMode::parts};
   std::vector<orbital::PartSource> sources;
   std::size_t offset=0;
@@ -62,12 +60,25 @@ void publish(Store& s,const std::vector<Store::Change>& changes) {
 }
 void run(loom::Worker& worker,bool colocated) {
   std::pmr::unsynchronized_pool_resource memory;
+  const Format root_format{{704},1,0,nullptr,&memory};
+  const Format packed_format{{512,512,512,512,512},5,0,nullptr,&memory};
+  const Format single_format{{512},1,0,nullptr,&memory};
+  const Format meta_format{{576},1,0,nullptr,&memory};
   Store store(memory);
-  Control overflow{&memory,&single_format,99,UINT32_MAX,1};
+  std::pmr::unsynchronized_pool_resource wrong_memory;
+  auto wrong_format=single_format; wrong_format.memory=&wrong_memory;
+  auto rejected_backing=take(loom::allocate(worker,{.bytes=512,.alignment=64}));
+  std::memset(rejected_backing.address,0,512);
+  const Control wrong_resource{&wrong_format,99,0,1};
+  const std::array wrong_sources{orbital::PartSource{wrong_resource.id(0),
+      loom::bytes(rejected_backing),{},&rejected_backing}};
+  check(!store.capture(wrong_resource,wrong_sources),"format resource mismatch admitted actual valid Part");
+  check(bool(rejected_backing),"resource refusal consumed fresh backing");
+  Control overflow{&single_format,99,UINT32_MAX,1};
   check(!overflow.valid(memory),"wrapping Control admitted invalid geometry");
   check(!store.capture(overflow,{}),"wrapping Control reached geometry reads");
   Format too_many=single_format; too_many.count=18;
-  Control beyond_array{&memory,&too_many,99,0,1};
+  Control beyond_array{&too_many,99,0,1};
   check(!beyond_array.valid(memory),"oversized Format admitted invalid geometry");
   check(!store.capture(beyond_array,{}),"oversized Format reached geometry reads");
   std::vector<Store::Change> initial;
@@ -95,7 +106,6 @@ void run(loom::Worker& worker,bool colocated) {
       for (auto& d:data) bodies.push_back(std::move(d));
       initial.push_back({{space,2+leaf},capture(store,memory,worker,2+leaf,packed_format,bodies)});
     } else {
-      static constexpr Format meta_format{{576},1};
       for (unsigned c=0;c<4;++c) {
         const auto id=100+leaf*4+c;
         put(meta,48+c*8,std::uint64_t(id));

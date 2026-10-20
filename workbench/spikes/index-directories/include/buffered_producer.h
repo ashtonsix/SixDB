@@ -26,6 +26,7 @@ static_assert(sizeof(FieldSummary)==48);
 enum class BufferPolicy { plain, indexed, eager };
 enum class Fault { none, capture, prepare, stale };
 struct Command { std::uint32_t row; std::uint64_t after; };
+struct RangeResult { std::uint64_t sum{},selected{}; };
 struct ProducerCounters {
   std::uint64_t publications{},captures{},directory_changes{},events{},log_copy_bytes{},
       rotations{},folds{},refusals{};
@@ -41,7 +42,7 @@ class BufferedProducer {
     // physical custody, not a version/reader ledger or write permission.
   };
   class Memory final : public std::pmr::memory_resource {
-    std::pmr::unsynchronized_pool_resource pool_;
+    std::pmr::unsynchronized_pool_resource pool_{metadata_pool_options};
     void* do_allocate(std::size_t,std::size_t) override;
     void do_deallocate(void*,std::size_t,std::size_t) override;
     bool do_is_equal(const std::pmr::memory_resource& r) const noexcept override { return this==&r; }
@@ -56,18 +57,20 @@ class BufferedProducer {
   Memory memory_;
   std::array<Format,17> groups_{};
   Format summary_small_,summary_large_,log_format_;
+  static constexpr std::uint64_t data_ns=0x425546444154,dir_ns=0x425546444952,
+      summary_ns=0x42554653554d,upper_ns=0x425546555050,
+      log_ns=0x4255464c4f47,eager_ns=0x425546454147;
+  Format data_format{{64},1,data_ns};
+  Format top_format{{64},1,upper_ns};
+  Format l1_format{{64+256*64},1,upper_ns};
+  Format middle_format{{128},1,upper_ns};
+  Format eager_format{{576},1,eager_ns};
+  Format marker_format{{64},1,log_ns};
+  // Store/Owners must die before every Format referenced by their Controls.
   Store store_;
   std::shared_ptr<Backing> writer_;
   std::vector<Store::Change> work_; // Private bounded attempt workspace, never read authority.
   ProducerCounters counters_;
-  static constexpr std::uint64_t data_ns=0x425546444154,dir_ns=0x425546444952,
-      summary_ns=0x42554653554d,upper_ns=0x425546555050,
-      log_ns=0x4255464c4f47,eager_ns=0x425546454147;
-  static constexpr Format data_format{{64},1,data_ns};
-  static constexpr Format top_format{{64},1,upper_ns};
-  static constexpr Format middle_format{{128},1,upper_ns};
-  static constexpr Format eager_format{{576},1,eager_ns};
-  static constexpr Format marker_format{{64},1,log_ns};
   static orbital::ObjectId data(unsigned r) { return {data_ns,r+1}; }
   static orbital::ObjectId lower(unsigned group) { return {dir_ns,group+1}; }
   static orbital::ObjectId upper(unsigned layer) { return {upper_ns,layer+1}; }
@@ -83,7 +86,6 @@ class BufferedProducer {
   static const std::byte* part(Selection);
   std::pair<const std::byte*,std::size_t> log(const Store::Scope&) const;
   Row read(const Store::Scope&,unsigned) const;
-  std::uint64_t selected_field3(const Store::Scope&,unsigned,const std::byte*) const;
   std::array<std::uint64_t,64> values(const Store::Scope&) const;
   Store::Owner make_summary(unsigned,const std::array<Row,64>&,std::shared_ptr<Advice>);
   void append_change(std::vector<Store::Change>&,unsigned&,orbital::ObjectId,Store::Owner);
@@ -93,6 +95,30 @@ class BufferedProducer {
   void publish(const Store::Scope&,std::span<const Store::Change>,Fault);
   void update_impl(std::span<const Command>,bool,Fault);
 public:
+  // All cached bytes are borrowed under this SAME still-live Scope. This view
+  // owns no logical state and must not outlive either producer or Scope.
+  class Reader {
+    friend class BufferedProducer;
+    const BufferedProducer& producer_;
+    const Store::Scope& scope_;
+    std::array<const std::byte*,4> groups_{};
+    const std::byte* pending_{};
+    std::size_t extent_{};
+    Reader(const BufferedProducer& p,const Store::Scope& s):producer_(p),scope_(s) {}
+    const std::byte* descriptor(unsigned);
+    void pending();
+    std::uint64_t corrected(unsigned,const std::byte*,std::uint64_t);
+    std::array<std::uint64_t,64> values();
+  public:
+    Row row(unsigned);
+    std::uint64_t field3(unsigned);
+    std::uint64_t digest(unsigned);
+    // Finite driver's L4 row-prefix interval and external ORIGINAL-row mask.
+    // Includes this Scope's pending correction, not a raw-base graph scan.
+    RangeResult range(unsigned low,unsigned high,std::uint64_t mask=UINT64_MAX);
+    Sum sum();
+  };
+  Reader reader(const Store::Scope& scope) const { return Reader(*this,scope); }
   BufferedProducer(loom::Worker&,BufferPolicy,std::span<const Row>,std::size_t capacity=256u<<10);
   BufferedProducer(const BufferedProducer&)=delete;
   Store& store() noexcept { return store_; }

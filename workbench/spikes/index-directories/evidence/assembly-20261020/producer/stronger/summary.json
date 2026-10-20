@@ -1,0 +1,1094 @@
+[
+  {
+    "case": "b1-hot2-append",
+    "phase": "foreground_and_declared_maintenance",
+    "arm": "plain",
+    "repetitions": 6,
+    "wall_ns_request": {
+      "median": 243.3865,
+      "min": 241.029,
+      "max": 250.911
+    },
+    "wall_ns_command": {
+      "median": 243.3865,
+      "min": 241.029,
+      "max": 250.911
+    },
+    "owner_ns_command": {
+      "median": 243.3865,
+      "min": 241.029,
+      "max": 250.921
+    },
+    "process_ns_command": {
+      "median": 243.3865,
+      "min": 241.028,
+      "max": 250.925
+    }
+  },
+  {
+    "case": "b1-hot2-append",
+    "phase": "whole_history_setup_oracle_teardown_settlement",
+    "arm": "plain",
+    "repetitions": 6,
+    "wall_ns_request": {
+      "median": 245.2945,
+      "min": 242.768,
+      "max": 253.896
+    },
+    "wall_ns_command": {
+      "median": 245.2945,
+      "min": 242.768,
+      "max": 253.896
+    },
+    "owner_ns_command": {
+      "median": 245.0075,
+      "min": 242.577,
+      "max": 253.122
+    },
+    "process_ns_command": {
+      "median": 245.511,
+      "min": 242.987,
+      "max": 253.79
+    }
+  },
+  {
+    "case": "b1-hot2-append",
+    "phase": "foreground_and_declared_maintenance",
+    "arm": "indexed",
+    "repetitions": 6,
+    "wall_ns_request": {
+      "median": 253.88549999999998,
+      "min": 252.146,
+      "max": 264.449
+    },
+    "wall_ns_command": {
+      "median": 253.88549999999998,
+      "min": 252.146,
+      "max": 264.449
+    },
+    "owner_ns_command": {
+      "median": 253.89100000000002,
+      "min": 252.155,
+      "max": 264.455
+    },
+    "process_ns_command": {
+      "median": 253.892,
+      "min": 252.16,
+      "max": 264.457
+    }
+  },
+  {
+    "case": "b1-hot2-append",
+    "phase": "whole_history_setup_oracle_teardown_settlement",
+    "arm": "indexed",
+    "repetitions": 6,
+    "wall_ns_request": {
+      "median": 255.94850000000002,
+      "min": 253.984,
+      "max": 266.564
+    },
+    "wall_ns_command": {
+      "median": 255.94850000000002,
+      "min": 253.984,
+      "max": 266.564
+    },
+    "owner_ns_command": {
+      "median": 255.712,
+      "min": 253.777,
+      "max": 266.353
+    },
+    "process_ns_command": {
+      "median": 256.2615,
+      "min": 254.189,
+      "max": 267.1
+    }
+  },
+  {
+    "case": "b1-hot2-append",
+    "phase": "foreground_and_declared_maintenance",
+    "arm": "eager",
+    "repetitions": 6,
+    "wall_ns_request": {
+      "median": 318.918,
+      "min": 316.548,
+      "max": 325.306
+    },
+    "wall_ns_command": {
+      "median": 318.918,
+      "min": 316.548,
+      "max": 325.306
+    },
+    "owner_ns_command": {
+      "median": 318.9275,
+      "min": 316.549,
+      "max": 325.313
+    },
+    "process_ns_command": {
+      "median": 318.93,
+      "min": 316.55,
+      "max": 325.316
+    }
+  },
+  {
+    "case": "b1-hot2-append",
+    "phase": "whole_history_setup_oracle_teardown_settlement",
+    "arm": "eager",
+    "repetitions": 6,
+    "wall_ns_request": {
+      "median": 321.254,
+      "min": 318.318,
+      "max": 328.018
+    },
+    "wall_ns_command": {
+      "median": 321.254,
+      "min": 318.318,
+      "max": 328.018
+    },
+    "owner_ns_command": {
+      "median": 321.05600000000004,
+      "min": 318.07,
+      "max": 327.643
+    },
+    "process_ns_command": {
+      "median": 321.421,
+      "min": 318.41,
+      "max": 328.225
+    }
+  },
+  {
+    "case": "b1-hot2-append",
+    "phase": "foreground_and_declared_maintenance",
+    "arm": "lmdb-get",
+    "repetitions": 6,
+    "wall_ns_request": {
+      "median": 3070.7625,
+      "min": 3007.25,
+      "max": 3260.376
+    },
+    "wall_ns_command": {
+      "median": 3070.7625,
+      "min": 3007.25,
+      "max": 3260.376
+    },
+    "owner_ns_command": {
+      "median": 3070.7695000000003,
+      "min": 3007.271,
+      "max": 3260.394
+    },
+    "process_ns_command": {
+      "median": 3070.7725,
+      "min": 3007.278,
+      "max": 3260.403
+    }
+  },
+  {
+    "case": "b1-hot2-append",
+    "phase": "whole_history_setup_oracle_teardown_settlement",
+    "arm": "lmdb-get",
+    "repetitions": 6,
+    "wall_ns_request": {
+      "median": 3073.7664999999997,
+      "min": 3013.05,
+      "max": 3265.564
+    },
+    "wall_ns_command": {
+      "median": 3073.7664999999997,
+      "min": 3013.05,
+      "max": 3265.564
+    },
+    "owner_ns_command": {
+      "median": 3073.7659999999996,
+      "min": 3013.048,
+      "max": 3265.562
+    },
+    "process_ns_command": {
+      "median": 3073.7655,
+      "min": 3013.046,
+      "max": 3265.559
+    }
+  },
+  {
+    "case": "b1-hot2-append",
+    "phase": "foreground_and_declared_maintenance",
+    "arm": "lmdb-cursor",
+    "repetitions": 6,
+    "wall_ns_request": {
+      "median": 3015.01,
+      "min": 2974.611,
+      "max": 3023.924
+    },
+    "wall_ns_command": {
+      "median": 3015.01,
+      "min": 2974.611,
+      "max": 3023.924
+    },
+    "owner_ns_command": {
+      "median": 3015.0275,
+      "min": 2974.62,
+      "max": 3023.917
+    },
+    "process_ns_command": {
+      "median": 3015.0344999999998,
+      "min": 2974.622,
+      "max": 3023.919
+    }
+  },
+  {
+    "case": "b1-hot2-append",
+    "phase": "whole_history_setup_oracle_teardown_settlement",
+    "arm": "lmdb-cursor",
+    "repetitions": 6,
+    "wall_ns_request": {
+      "median": 3018.23,
+      "min": 2977.609,
+      "max": 3025.397
+    },
+    "wall_ns_command": {
+      "median": 3018.23,
+      "min": 2977.609,
+      "max": 3025.397
+    },
+    "owner_ns_command": {
+      "median": 3018.2285,
+      "min": 2977.607,
+      "max": 3025.385
+    },
+    "process_ns_command": {
+      "median": 3018.227,
+      "min": 2977.605,
+      "max": 3025.383
+    }
+  },
+  {
+    "case": "b1-hot2-append",
+    "phase": "foreground_and_declared_maintenance",
+    "arm": "baseline-plain",
+    "repetitions": 6,
+    "wall_ns_request": {
+      "median": 243.31650000000002,
+      "min": 240.543,
+      "max": 246.921
+    },
+    "wall_ns_command": {
+      "median": 243.31650000000002,
+      "min": 240.543,
+      "max": 246.921
+    },
+    "owner_ns_command": {
+      "median": 243.323,
+      "min": 240.543,
+      "max": 246.921
+    },
+    "process_ns_command": {
+      "median": 243.325,
+      "min": 240.543,
+      "max": 246.92
+    }
+  },
+  {
+    "case": "b1-hot2-append",
+    "phase": "whole_history_setup_oracle_teardown_settlement",
+    "arm": "baseline-plain",
+    "repetitions": 6,
+    "wall_ns_request": {
+      "median": 245.363,
+      "min": 243.169,
+      "max": 249.19
+    },
+    "wall_ns_command": {
+      "median": 245.363,
+      "min": 243.169,
+      "max": 249.19
+    },
+    "owner_ns_command": {
+      "median": 245.124,
+      "min": 242.844,
+      "max": 248.935
+    },
+    "process_ns_command": {
+      "median": 245.6325,
+      "min": 243.272,
+      "max": 249.479
+    }
+  },
+  {
+    "case": "b1-hot64-queries-fold-refusal",
+    "phase": "foreground_and_declared_maintenance",
+    "arm": "plain",
+    "repetitions": 5,
+    "wall_ns_request": {
+      "median": 851.331,
+      "min": 845.24,
+      "max": 875.388
+    },
+    "wall_ns_command": {
+      "median": 851.331,
+      "min": 845.24,
+      "max": 875.388
+    },
+    "owner_ns_command": {
+      "median": 851.282,
+      "min": 845.254,
+      "max": 875.376
+    },
+    "process_ns_command": {
+      "median": 851.29,
+      "min": 845.258,
+      "max": 875.38
+    }
+  },
+  {
+    "case": "b1-hot64-queries-fold-refusal",
+    "phase": "whole_history_setup_oracle_teardown_settlement",
+    "arm": "plain",
+    "repetitions": 5,
+    "wall_ns_request": {
+      "median": 854.225,
+      "min": 847.995,
+      "max": 877.718
+    },
+    "wall_ns_command": {
+      "median": 854.225,
+      "min": 847.995,
+      "max": 877.718
+    },
+    "owner_ns_command": {
+      "median": 853.837,
+      "min": 847.584,
+      "max": 877.447
+    },
+    "process_ns_command": {
+      "median": 854.627,
+      "min": 848.413,
+      "max": 878.073
+    }
+  },
+  {
+    "case": "b1-hot64-queries-fold-refusal",
+    "phase": "foreground_and_declared_maintenance",
+    "arm": "indexed",
+    "repetitions": 5,
+    "wall_ns_request": {
+      "median": 536.444,
+      "min": 506.251,
+      "max": 557.099
+    },
+    "wall_ns_command": {
+      "median": 536.444,
+      "min": 506.251,
+      "max": 557.099
+    },
+    "owner_ns_command": {
+      "median": 506.54,
+      "min": 506.256,
+      "max": 557.105
+    },
+    "process_ns_command": {
+      "median": 506.543,
+      "min": 506.258,
+      "max": 557.106
+    }
+  },
+  {
+    "case": "b1-hot64-queries-fold-refusal",
+    "phase": "whole_history_setup_oracle_teardown_settlement",
+    "arm": "indexed",
+    "repetitions": 5,
+    "wall_ns_request": {
+      "median": 539.115,
+      "min": 508.298,
+      "max": 559.991
+    },
+    "wall_ns_command": {
+      "median": 539.115,
+      "min": 508.298,
+      "max": 559.991
+    },
+    "owner_ns_command": {
+      "median": 508.419,
+      "min": 508.079,
+      "max": 559.626
+    },
+    "process_ns_command": {
+      "median": 509.013,
+      "min": 508.603,
+      "max": 560.335
+    }
+  },
+  {
+    "case": "b1-hot64-queries-fold-refusal",
+    "phase": "foreground_and_declared_maintenance",
+    "arm": "eager",
+    "repetitions": 5,
+    "wall_ns_request": {
+      "median": 561.204,
+      "min": 555.406,
+      "max": 593.284
+    },
+    "wall_ns_command": {
+      "median": 561.204,
+      "min": 555.406,
+      "max": 593.284
+    },
+    "owner_ns_command": {
+      "median": 561.178,
+      "min": 555.41,
+      "max": 593.293
+    },
+    "process_ns_command": {
+      "median": 561.18,
+      "min": 555.413,
+      "max": 593.297
+    }
+  },
+  {
+    "case": "b1-hot64-queries-fold-refusal",
+    "phase": "whole_history_setup_oracle_teardown_settlement",
+    "arm": "eager",
+    "repetitions": 5,
+    "wall_ns_request": {
+      "median": 563.37,
+      "min": 557.48,
+      "max": 595.564
+    },
+    "wall_ns_command": {
+      "median": 563.37,
+      "min": 557.48,
+      "max": 595.564
+    },
+    "owner_ns_command": {
+      "median": 563.032,
+      "min": 557.207,
+      "max": 595.146
+    },
+    "process_ns_command": {
+      "median": 563.652,
+      "min": 557.736,
+      "max": 595.965
+    }
+  },
+  {
+    "case": "b1-hot64-queries-fold-refusal",
+    "phase": "foreground_and_declared_maintenance",
+    "arm": "lmdb-get",
+    "repetitions": 5,
+    "wall_ns_request": {
+      "median": 3990.228,
+      "min": 3885.737,
+      "max": 4125.486
+    },
+    "wall_ns_command": {
+      "median": 3990.228,
+      "min": 3885.737,
+      "max": 4125.486
+    },
+    "owner_ns_command": {
+      "median": 3989.947,
+      "min": 3885.73,
+      "max": 4125.469
+    },
+    "process_ns_command": {
+      "median": 3989.95,
+      "min": 3885.731,
+      "max": 4125.47
+    }
+  },
+  {
+    "case": "b1-hot64-queries-fold-refusal",
+    "phase": "whole_history_setup_oracle_teardown_settlement",
+    "arm": "lmdb-get",
+    "repetitions": 5,
+    "wall_ns_request": {
+      "median": 3993.85,
+      "min": 3889.943,
+      "max": 4131.776
+    },
+    "wall_ns_command": {
+      "median": 3993.85,
+      "min": 3889.943,
+      "max": 4131.776
+    },
+    "owner_ns_command": {
+      "median": 3993.557,
+      "min": 3889.93,
+      "max": 4131.772
+    },
+    "process_ns_command": {
+      "median": 3993.556,
+      "min": 3889.928,
+      "max": 4131.754
+    }
+  },
+  {
+    "case": "b1-hot64-queries-fold-refusal",
+    "phase": "foreground_and_declared_maintenance",
+    "arm": "lmdb-cursor",
+    "repetitions": 5,
+    "wall_ns_request": {
+      "median": 3830.299,
+      "min": 3749.735,
+      "max": 3874.01
+    },
+    "wall_ns_command": {
+      "median": 3830.299,
+      "min": 3749.735,
+      "max": 3874.01
+    },
+    "owner_ns_command": {
+      "median": 3830.159,
+      "min": 3749.429,
+      "max": 3874.017
+    },
+    "process_ns_command": {
+      "median": 3830.16,
+      "min": 3749.433,
+      "max": 3874.018
+    }
+  },
+  {
+    "case": "b1-hot64-queries-fold-refusal",
+    "phase": "whole_history_setup_oracle_teardown_settlement",
+    "arm": "lmdb-cursor",
+    "repetitions": 5,
+    "wall_ns_request": {
+      "median": 3832.19,
+      "min": 3751.145,
+      "max": 3875.494
+    },
+    "wall_ns_command": {
+      "median": 3832.19,
+      "min": 3751.145,
+      "max": 3875.494
+    },
+    "owner_ns_command": {
+      "median": 3832.04,
+      "min": 3750.83,
+      "max": 3875.492
+    },
+    "process_ns_command": {
+      "median": 3832.035,
+      "min": 3750.828,
+      "max": 3875.491
+    }
+  },
+  {
+    "case": "b64-hot2-coalesced",
+    "phase": "foreground_and_declared_maintenance",
+    "arm": "plain",
+    "repetitions": 5,
+    "wall_ns_request": {
+      "median": 310.354,
+      "min": 305.969,
+      "max": 325.541
+    },
+    "wall_ns_command": {
+      "median": 4.849,
+      "min": 4.781,
+      "max": 5.087
+    },
+    "owner_ns_command": {
+      "median": 4.849,
+      "min": 4.78,
+      "max": 5.086
+    },
+    "process_ns_command": {
+      "median": 4.848,
+      "min": 4.779,
+      "max": 5.085
+    }
+  },
+  {
+    "case": "b64-hot2-coalesced",
+    "phase": "whole_history_setup_oracle_teardown_settlement",
+    "arm": "plain",
+    "repetitions": 5,
+    "wall_ns_request": {
+      "median": 413.31,
+      "min": 397.807,
+      "max": 417.46
+    },
+    "wall_ns_command": {
+      "median": 6.458,
+      "min": 6.216,
+      "max": 6.523
+    },
+    "owner_ns_command": {
+      "median": 6.286,
+      "min": 6.055,
+      "max": 6.409
+    },
+    "process_ns_command": {
+      "median": 6.605,
+      "min": 6.343,
+      "max": 6.705
+    }
+  },
+  {
+    "case": "b64-hot2-coalesced",
+    "phase": "foreground_and_declared_maintenance",
+    "arm": "indexed",
+    "repetitions": 5,
+    "wall_ns_request": {
+      "median": 380.595,
+      "min": 354.299,
+      "max": 420.908
+    },
+    "wall_ns_command": {
+      "median": 5.947,
+      "min": 5.536,
+      "max": 6.577
+    },
+    "owner_ns_command": {
+      "median": 5.947,
+      "min": 5.536,
+      "max": 6.576
+    },
+    "process_ns_command": {
+      "median": 5.946,
+      "min": 5.536,
+      "max": 6.576
+    }
+  },
+  {
+    "case": "b64-hot2-coalesced",
+    "phase": "whole_history_setup_oracle_teardown_settlement",
+    "arm": "indexed",
+    "repetitions": 5,
+    "wall_ns_request": {
+      "median": 468.832,
+      "min": 433.97,
+      "max": 516.795
+    },
+    "wall_ns_command": {
+      "median": 7.325,
+      "min": 6.781,
+      "max": 8.075
+    },
+    "owner_ns_command": {
+      "median": 7.123,
+      "min": 6.654,
+      "max": 7.86
+    },
+    "process_ns_command": {
+      "median": 7.439,
+      "min": 6.946,
+      "max": 8.135
+    }
+  },
+  {
+    "case": "b64-hot2-coalesced",
+    "phase": "foreground_and_declared_maintenance",
+    "arm": "eager",
+    "repetitions": 5,
+    "wall_ns_request": {
+      "median": 385.549,
+      "min": 376.729,
+      "max": 403.91
+    },
+    "wall_ns_command": {
+      "median": 6.024,
+      "min": 5.886,
+      "max": 6.311
+    },
+    "owner_ns_command": {
+      "median": 6.023,
+      "min": 5.886,
+      "max": 6.312
+    },
+    "process_ns_command": {
+      "median": 6.022,
+      "min": 5.885,
+      "max": 6.312
+    }
+  },
+  {
+    "case": "b64-hot2-coalesced",
+    "phase": "whole_history_setup_oracle_teardown_settlement",
+    "arm": "eager",
+    "repetitions": 5,
+    "wall_ns_request": {
+      "median": 469.615,
+      "min": 459.778,
+      "max": 492.31
+    },
+    "wall_ns_command": {
+      "median": 7.338,
+      "min": 7.184,
+      "max": 7.692
+    },
+    "owner_ns_command": {
+      "median": 7.126,
+      "min": 7.066,
+      "max": 7.534
+    },
+    "process_ns_command": {
+      "median": 7.424,
+      "min": 7.298,
+      "max": 7.804
+    }
+  },
+  {
+    "case": "b64-hot2-coalesced",
+    "phase": "foreground_and_declared_maintenance",
+    "arm": "lmdb-get",
+    "repetitions": 5,
+    "wall_ns_request": {
+      "median": 3263.336,
+      "min": 3224.02,
+      "max": 3300.71
+    },
+    "wall_ns_command": {
+      "median": 50.99,
+      "min": 50.375,
+      "max": 51.574
+    },
+    "owner_ns_command": {
+      "median": 50.988,
+      "min": 50.346,
+      "max": 51.573
+    },
+    "process_ns_command": {
+      "median": 50.988,
+      "min": 50.345,
+      "max": 51.572
+    }
+  },
+  {
+    "case": "b64-hot2-coalesced",
+    "phase": "whole_history_setup_oracle_teardown_settlement",
+    "arm": "lmdb-get",
+    "repetitions": 5,
+    "wall_ns_request": {
+      "median": 3344.106,
+      "min": 3282.827,
+      "max": 3499.481
+    },
+    "wall_ns_command": {
+      "median": 52.252,
+      "min": 51.294,
+      "max": 54.679
+    },
+    "owner_ns_command": {
+      "median": 52.25,
+      "min": 51.264,
+      "max": 54.678
+    },
+    "process_ns_command": {
+      "median": 52.249,
+      "min": 51.263,
+      "max": 54.677
+    }
+  },
+  {
+    "case": "b64-hot2-coalesced",
+    "phase": "foreground_and_declared_maintenance",
+    "arm": "lmdb-cursor",
+    "repetitions": 5,
+    "wall_ns_request": {
+      "median": 3120.371,
+      "min": 3053.223,
+      "max": 3330.027
+    },
+    "wall_ns_command": {
+      "median": 48.756,
+      "min": 47.707,
+      "max": 52.032
+    },
+    "owner_ns_command": {
+      "median": 48.755,
+      "min": 47.706,
+      "max": 52.031
+    },
+    "process_ns_command": {
+      "median": 48.755,
+      "min": 47.706,
+      "max": 52.029
+    }
+  },
+  {
+    "case": "b64-hot2-coalesced",
+    "phase": "whole_history_setup_oracle_teardown_settlement",
+    "arm": "lmdb-cursor",
+    "repetitions": 5,
+    "wall_ns_request": {
+      "median": 3283.691,
+      "min": 3100.24,
+      "max": 3643.982
+    },
+    "wall_ns_command": {
+      "median": 51.308,
+      "min": 48.441,
+      "max": 56.937
+    },
+    "owner_ns_command": {
+      "median": 51.307,
+      "min": 48.44,
+      "max": 56.936
+    },
+    "process_ns_command": {
+      "median": 51.305,
+      "min": 48.439,
+      "max": 56.934
+    }
+  },
+  {
+    "case": "b64-hot64-queries-fold-refusal",
+    "phase": "foreground_and_declared_maintenance",
+    "arm": "plain",
+    "repetitions": 5,
+    "wall_ns_request": {
+      "median": 3888.377,
+      "min": 3849.67,
+      "max": 3903.524
+    },
+    "wall_ns_command": {
+      "median": 60.756,
+      "min": 60.151,
+      "max": 60.993
+    },
+    "owner_ns_command": {
+      "median": 60.756,
+      "min": 60.151,
+      "max": 60.992
+    },
+    "process_ns_command": {
+      "median": 60.765,
+      "min": 60.151,
+      "max": 61.0
+    }
+  },
+  {
+    "case": "b64-hot64-queries-fold-refusal",
+    "phase": "whole_history_setup_oracle_teardown_settlement",
+    "arm": "plain",
+    "repetitions": 5,
+    "wall_ns_request": {
+      "median": 3991.537,
+      "min": 3961.487,
+      "max": 4017.751
+    },
+    "wall_ns_command": {
+      "median": 62.368,
+      "min": 61.898,
+      "max": 62.777
+    },
+    "owner_ns_command": {
+      "median": 62.124,
+      "min": 61.666,
+      "max": 62.53
+    },
+    "process_ns_command": {
+      "median": 62.533,
+      "min": 62.019,
+      "max": 62.874
+    }
+  },
+  {
+    "case": "b64-hot64-queries-fold-refusal",
+    "phase": "foreground_and_declared_maintenance",
+    "arm": "indexed",
+    "repetitions": 5,
+    "wall_ns_request": {
+      "median": 2183.278,
+      "min": 2169.189,
+      "max": 2213.003
+    },
+    "wall_ns_command": {
+      "median": 34.114,
+      "min": 33.894,
+      "max": 34.578
+    },
+    "owner_ns_command": {
+      "median": 34.114,
+      "min": 33.894,
+      "max": 34.55
+    },
+    "process_ns_command": {
+      "median": 34.113,
+      "min": 33.894,
+      "max": 34.551
+    }
+  },
+  {
+    "case": "b64-hot64-queries-fold-refusal",
+    "phase": "whole_history_setup_oracle_teardown_settlement",
+    "arm": "indexed",
+    "repetitions": 5,
+    "wall_ns_request": {
+      "median": 2291.26,
+      "min": 2267.588,
+      "max": 2326.904
+    },
+    "wall_ns_command": {
+      "median": 35.801,
+      "min": 35.431,
+      "max": 36.358
+    },
+    "owner_ns_command": {
+      "median": 35.577,
+      "min": 35.213,
+      "max": 36.152
+    },
+    "process_ns_command": {
+      "median": 35.953,
+      "min": 35.479,
+      "max": 36.485
+    }
+  },
+  {
+    "case": "b64-hot64-queries-fold-refusal",
+    "phase": "foreground_and_declared_maintenance",
+    "arm": "eager",
+    "repetitions": 5,
+    "wall_ns_request": {
+      "median": 2033.02,
+      "min": 2029.653,
+      "max": 2077.25
+    },
+    "wall_ns_command": {
+      "median": 31.766,
+      "min": 31.713,
+      "max": 32.457
+    },
+    "owner_ns_command": {
+      "median": 31.767,
+      "min": 31.713,
+      "max": 32.465
+    },
+    "process_ns_command": {
+      "median": 31.767,
+      "min": 31.713,
+      "max": 32.464
+    }
+  },
+  {
+    "case": "b64-hot64-queries-fold-refusal",
+    "phase": "whole_history_setup_oracle_teardown_settlement",
+    "arm": "eager",
+    "repetitions": 5,
+    "wall_ns_request": {
+      "median": 2126.892,
+      "min": 2125.387,
+      "max": 2216.675
+    },
+    "wall_ns_command": {
+      "median": 33.233,
+      "min": 33.209,
+      "max": 34.636
+    },
+    "owner_ns_command": {
+      "median": 33.031,
+      "min": 32.94,
+      "max": 34.241
+    },
+    "process_ns_command": {
+      "median": 33.304,
+      "min": 33.233,
+      "max": 34.632
+    }
+  },
+  {
+    "case": "b64-hot64-queries-fold-refusal",
+    "phase": "foreground_and_declared_maintenance",
+    "arm": "lmdb-get",
+    "repetitions": 5,
+    "wall_ns_request": {
+      "median": 11521.769,
+      "min": 11397.827,
+      "max": 12439.89
+    },
+    "wall_ns_command": {
+      "median": 180.028,
+      "min": 178.091,
+      "max": 194.373
+    },
+    "owner_ns_command": {
+      "median": 180.027,
+      "min": 178.059,
+      "max": 194.373
+    },
+    "process_ns_command": {
+      "median": 180.026,
+      "min": 178.058,
+      "max": 194.374
+    }
+  },
+  {
+    "case": "b64-hot64-queries-fold-refusal",
+    "phase": "whole_history_setup_oracle_teardown_settlement",
+    "arm": "lmdb-get",
+    "repetitions": 5,
+    "wall_ns_request": {
+      "median": 11576.884,
+      "min": 11563.578,
+      "max": 12491.404
+    },
+    "wall_ns_command": {
+      "median": 180.889,
+      "min": 180.681,
+      "max": 195.178
+    },
+    "owner_ns_command": {
+      "median": 180.888,
+      "min": 180.647,
+      "max": 195.177
+    },
+    "process_ns_command": {
+      "median": 180.865,
+      "min": 180.645,
+      "max": 195.176
+    }
+  },
+  {
+    "case": "b64-hot64-queries-fold-refusal",
+    "phase": "foreground_and_declared_maintenance",
+    "arm": "lmdb-cursor",
+    "repetitions": 5,
+    "wall_ns_request": {
+      "median": 7617.869,
+      "min": 7538.94,
+      "max": 7686.34
+    },
+    "wall_ns_command": {
+      "median": 119.029,
+      "min": 117.796,
+      "max": 120.099
+    },
+    "owner_ns_command": {
+      "median": 119.029,
+      "min": 117.795,
+      "max": 120.108
+    },
+    "process_ns_command": {
+      "median": 119.029,
+      "min": 117.795,
+      "max": 120.108
+    }
+  },
+  {
+    "case": "b64-hot64-queries-fold-refusal",
+    "phase": "whole_history_setup_oracle_teardown_settlement",
+    "arm": "lmdb-cursor",
+    "repetitions": 5,
+    "wall_ns_request": {
+      "median": 7755.096,
+      "min": 7669.128,
+      "max": 7903.961
+    },
+    "wall_ns_command": {
+      "median": 121.173,
+      "min": 119.83,
+      "max": 123.499
+    },
+    "owner_ns_command": {
+      "median": 121.173,
+      "min": 119.829,
+      "max": 123.49
+    },
+    "process_ns_command": {
+      "median": 121.172,
+      "min": 119.828,
+      "max": 123.489
+    }
+  }
+]

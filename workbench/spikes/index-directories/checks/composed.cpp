@@ -37,13 +37,13 @@ class Producer {
   static constexpr std::uint64_t correction_space=0x434f5252;
   static constexpr std::uint64_t summary_space=0x53554d53;
   static constexpr std::uint64_t upper_directory_space=0x55504449;
-  static constexpr Format correction_format{{64},1,correction_space};
-  static constexpr Format data_format{{64},1,GroupFixture::material_space};
-  static constexpr Format directory_format{{192},1,GroupFixture::directory_space};
-  static constexpr Format top_format{{64},1,upper_directory_space};
-  static constexpr Format group_format{{128},1,upper_directory_space};
-  static constexpr Format summary_one{{64},1,summary_space};
-  static constexpr Format summary_two{{128},1,summary_space};
+  Format correction_format{{64},1,correction_space};
+  Format data_format{{64},1,GroupFixture::material_space};
+  Format directory_format{{192},1,GroupFixture::directory_space};
+  Format top_format{{64},1,upper_directory_space};
+  Format group_format{{128},1,upper_directory_space};
+  Format summary_one{{64},1,summary_space};
+  Format summary_two{{128},1,summary_space};
   loom::Worker& worker_;
   // Monotone advice is outside sealed body/padding. These stable members
   // outlive every physical Control/Scope in this finite check; generations are
@@ -74,7 +74,7 @@ class Producer {
     auto allocation=take(loom::allocate(worker_,{.bytes=source.size(),.alignment=64}));
     // All native bytes and padding initialized privately before capture.
     std::memcpy(allocation.address,source.data(),source.size());
-    const Control control{&fixture_.metadata(),&format,id.low,0,1};
+    const Control control{&format,id.low,0,1};
     const std::array parts{orbital::PartSource{control.id(0),loom::bytes(allocation),{},&allocation}};
     return take(store().capture(control,parts));
   }
@@ -100,6 +100,8 @@ class Producer {
 public:
   explicit Producer(loom::Worker& worker)
       : worker_(worker),input_(initial(advice_)),fixture_(worker,input_) {
+    for (auto* f:{&correction_format,&data_format,&directory_format,&top_format,&group_format,&summary_one,&summary_two})
+      f->memory=&fixture_.metadata();
     std::array<Store::Change,11> changes;
     unsigned n=0;
     for (unsigned row=0;row<2;++row)

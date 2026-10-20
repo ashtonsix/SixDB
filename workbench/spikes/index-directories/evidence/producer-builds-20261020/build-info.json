@@ -1,0 +1,19 @@
+{
+  "1": {
+    "source_digest": "802458b9642b8a057d85f99c1e5a99ee2cb2de77931bce4f220ab53655fa2dee",
+    "binary_sha256": "753bdfcfe5c10d7425856097605e5c932b26051d0990aed3dd6482ec29e01a91",
+    "ldd": "\tlinux-vdso.so.1 (0x0000ffffb46ef000)\n\tliblmdb.so.0 => /lib/aarch64-linux-gnu/liblmdb.so.0 (0x0000ffffb4600000)\n\tlibstdc++.so.6 => /lib/aarch64-linux-gnu/libstdc++.so.6 (0x0000ffffb4360000)\n\tlibm.so.6 => /lib/aarch64-linux-gnu/libm.so.6 (0x0000ffffb4290000)\n\tlibgcc_s.so.1 => /lib/aarch64-linux-gnu/libgcc_s.so.1 (0x0000ffffb4250000)\n\tlibc.so.6 => /lib/aarch64-linux-gnu/libc.so.6 (0x0000ffffb4050000)\n\t/lib/ld-linux-aarch64.so.1 (0x0000ffffb46a0000)\n"
+  },
+  "2": {
+    "source_digest": "f98e104ec2d73fa62e1db481428ff889d8d898f05a25aa9ad8ba463dd59b55f7",
+    "binary_sha256": "89714e666f9e54116c4d027b9714a531ec3c958edffdf96d50eb9ee99ac27ab2",
+    "ldd": "\tlinux-vdso.so.1 (0x0000ffff9bfab000)\n\tliblmdb.so.0 => /lib/aarch64-linux-gnu/liblmdb.so.0 (0x0000ffff9bec0000)\n\tlibstdc++.so.6 => /lib/aarch64-linux-gnu/libstdc++.so.6 (0x0000ffff9bc20000)\n\tlibm.so.6 => /lib/aarch64-linux-gnu/libm.so.6 (0x0000ffff9bb50000)\n\tlibgcc_s.so.1 => /lib/aarch64-linux-gnu/libgcc_s.so.1 (0x0000ffff9bb10000)\n\tlibc.so.6 => /lib/aarch64-linux-gnu/libc.so.6 (0x0000ffff9b910000)\n\t/lib/ld-linux-aarch64.so.1 (0x0000ffff9bf60000)\n"
+  },
+  "3": {
+    "source_digest": "366034b28724e7cc6114b9ab694bdd879cad0197edd4b2dfde111dc1f8a3825d",
+    "binary_sha256": "7178e5d33d466f733a8c0827280c815e6513148ca64b64ca0cd235d11947c9cf",
+    "ldd": "\tlinux-vdso.so.1 (0x0000ffffa7027000)\n\tliblmdb.so.0 => /lib/aarch64-linux-gnu/liblmdb.so.0 (0x0000ffffa6f40000)\n\tlibstdc++.so.6 => /lib/aarch64-linux-gnu/libstdc++.so.6 (0x0000ffffa6ca0000)\n\tlibm.so.6 => /lib/aarch64-linux-gnu/libm.so.6 (0x0000ffffa6bd0000)\n\tlibgcc_s.so.1 => /lib/aarch64-linux-gnu/libgcc_s.so.1 (0x0000ffffa6b90000)\n\tlibc.so.6 => /lib/aarch64-linux-gnu/libc.so.6 (0x0000ffffa6990000)\n\t/lib/ld-linux-aarch64.so.1 (0x0000ffffa6fe0000)\n"
+  },
+  "compiler": "Ubuntu clang version 21.1.8 (++20251221033104+2078da43e25a-1~exp1~20251221153121.57)\nTarget: aarch64-unknown-linux-gnu\nThread model: posix\nInstalledDir: /usr/lib/llvm-21/bin\n",
+  "packages": "libc6:arm64\t2.42-0ubuntu3.1\nliblmdb0:arm64\t0.9.31-1build1\nlibstdc++6:arm64\t15.2.0-4ubuntu4\n"
+}

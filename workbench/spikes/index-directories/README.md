@@ -3,7 +3,8 @@
 Assembly-first implementation is in progress. The rejected implementation
 remains deleted. Current sources exercise actual module composition; the
 [measured checkpoint](FINDINGS.md) records throughput, excessive footprint,
-producer trade-offs and the remaining scope. Memory waste is the current priority.
+producer trade-offs and the remaining scope. Memory, complete writes and actual
+range scans remain open; the latest point-read result does not close them.
 
 2026-10-20: fresh Ikea, Orbital, Loom, Workbench and Architecture review of
 `15426260` led to this planning revision. It is an experiment plan, not a closed
@@ -95,7 +96,7 @@ write permission, beforeimages or automatic ObjectStore preservation.
 
 The relevant reading is [Ikea integration](../../../ikea/docs/integration.md),
 [Hashtable ownership](../../../ikea/docs/hashtable/usage.md),
-[Boundlist](../../../ikea/docs/boundlist/usage.md),
+[Boundlist](../../../ikea/include/ikea/boundlist/search.h),
 [Orbital material](../../../orbital/docs/material.md),
 [ObjectStore](../../../orbital/include/orbital/object.h), its
 [publication implementation](../../../orbital/include/orbital/instantiate/object.h),
@@ -120,9 +121,12 @@ its false candidates and exact segment refinement are real read costs. Neither
 choice changes prefix-defined segment identity or permits unordered placement.
 The directory does not choose a record-key allocator or summary policy.
 
-Keep the first two layers as bounded ordinary tables. For shared-prefix layers
-below them, compare small actual Ikea Hashtable owners with a sorted u16
-suffix-mask/rank control, partitioned by a fixed physical-prefix range.
+Keep the first two layers as ordinary tables: one L0 slot and 256 L1 slots,
+in one or two Allocations. For shared-prefix layers below them, use actual Ikea
+Hashtable owners with 64-byte dirents AS VALUES. The table manages their
+allocation; there is no second payload map or allocation per dirent. Bounded
+hash regions and a sorted suffix-mask/array control are implementation
+comparisons, not new segment identities.
 For remaining layers, compare balanced trees using actual Boundlist searches.
 
 Cross F32/F128 with co-located/independent payload ownership at C8, then C16.
@@ -130,10 +134,17 @@ A 32-entry C8 co-located leaf has five Parts; a C16 leaf has three.
 Co-location retains/captures more sources per edit but avoids a payload catalog
 lookup and many structural publication changes. Independent chunks minimize
 scalar capture fanout. New compound leaves include current grouped native capture.
-Count both, including real source and catalog costs. Child references are stable
-Object names selected through the same read token. A changed Part address does not rewrite every
-ancestor. A locator-only edit changes a bounded payload Part, not the routing
-tree. An extrema change repairs only affected bounds along its path.
+Count both, including real source and catalog costs. Stable Object-name children
+avoid ancestor repair on a payload move but add selections. Immutable raw-child
+graphs remove those read selections but copy changed paths and retain children
+on writes. Keep their costs separate; the current graph is a successful read
+control, not a demonstrated cheap-update design. An extrema change repairs only
+affected bounds along its path.
+
+Segments keep independent Allocations. Directory array allocation grain,
+logical leaf capacity, Part/publication grain and read-cohort width are separate
+choices. The measured 16/64/256 coallocation comparison holds logical16/F32 and
+Part grain fixed. It does not select16 as an optimal logical leaf capacity.
 
 Extra locators use separately versioned local StreamPack blocks with a priced
 16-prefix holder cursor, complete sidecar writes and one final packing decision.
@@ -147,47 +158,53 @@ No mutable shadow roster is authoritative. The current Scope supplies the old
 directory. A small Ikea Hashtable deduplicates private drafts within an edit;
 it is discarded at the end and never serves readers.
 
-## Work sequence
+## Next experiments and completion evidence
 
-1. Finish the paper design against the complete budgets. Count dependent
-   selections, copied bytes, Part-owner work, allocation calls, publication
-   changes and worst local repair for every operation. The pseudocode below is
-   the candidate after those revisions, with unresolved costs identified.
-2. Establish the concrete M1/M2 directory-record get/replace and M3 projected
-   material controls defined in [Budget](BUDGET.md#first-operations-and-matched-boundaries).
-   Match read lifetimes, atomic write transactions and output/duplicates. Later
-   complete requests use real prepared Calico and competent row-key LMDB; an
-   opaque metadata mechanism is never called a row-index result.
-3. Write the smallest assembly-first vertical slice: one ready directory lookup,
-   an unchanged-directory data-update handoff, and one single-segment locator
-   replacement through the real material, allocator, capture and publication
-   paths. Keep setup, ownership and independent
-   oracles in C++. Use [Workbench's actual module-call recipe](../assembly-calls/README.md).
-   Cross ownership/fanout with the same operations and an EARLY large/dispersed
-   cold sentinel. Include Borrowed versus Scope reads, grouped fresh leaves and
-   sorted-mask versus microhash groups, with real projected as well as 64-byte consumers.
-   Link real Ikea/Loom/Orbital operations; do not replace them with stand-ins.
-4. Attribute the complete slice before extending it. Exercise a retained reader,
-   refusal and actual cleanup immediately. If it misses the headroom budget,
-   revise the pseudocode or raise the specific Orbital/Ikea/Loom seam with its
-   owner. Do not grow the prototype around an already losing path.
-5. Compare producer event mixes before assuming their publication sizes:
-   stable locators, buffered summaries, eager summaries, representation changes,
-   and compaction/port bursts. The directory consumes their actual events, not
-   a miniature row/summary engine. Add operations in dependency order:
-   multi-change batch, seek/continuation,
-   bounds repair, insertion/deletion, split/merge, extra Parts and representation
-   changes. Keep a direct LMDB control and the earlier successful slice in each
-   comparison. A failing operation remains a visible result.
-6. Extend beyond the early cold sentinel: long equal-key runs, arbitrary key
-   bytes, rich Part sets, concentrated structural churn, long readers, resource
-   refusal and waits.
-7. Translate successful assembly into maintainable C++ composition. Compare the
-   same complete operations, linked module bodies and memory ownership before
-   accepting the translation. Assembly is a design/performance probe, not an
-   excuse to omit ownership or publication work.
+The [budget](BUDGET.md#current-matched-anchors-and-headroom) uses the faster
+competent matched peer, targets complete Engine at <=0.50P and directory plus
+binding at <=0.25P, and lists every operation's engineering ceiling. The
+[pseudocode](PSEUDOCODE.md) covers all paths before implementation; unsupported
+module seams and unmeasured costs remain explicit. The next bounded work is:
 
-This sequence is an investigation order, not an additional approval gate.
+1. Qualify the existing memory/sanity edits as one identified source capture.
+   Rebuild every Control-dependent caller; check actual old/fresh bytes, locator
+   association, refusal and shutdown. Report live requested metadata, pool
+   backing, native mapped bytes, RSS and aged retained capacity separately.
+2. Complete scalar and atomicB64 locator replacement. Coalesce repeated commands,
+   copy each affected directory Part once and each changed graph ancestor once,
+   publish all actual Segment and directory changes in one packet. Compare
+   stable-name and graph custody with the same material/inputs. Count captures,
+   child retentions and disposal, not just memcpy. The 250ns scalar and350ns
+   five-replacement goals are unresolved; preserve misses.
+3. Exercise the actual L0/L1 tables and Ikea V64 hash owner, including its real
+   clone/growth buffers, native binding and selected-owner lifetime. Then add
+   logical ordered mutation, bound repair and balanced final-batch construction.
+   Compare logical16/64/256 array/Part alternatives separately from physical
+   coallocation, and F32/F128 routing only where the operation costs warrant it.
+4. The actual saved-frame range iterator, quarter/full ranges and requested mask
+   screen are complete as bounded controls. The dense-rank refinement gains
+   modestly; the one pointer-bank trial loses and stops. Complete the inside-clock
+   zero guard and actual native mask-run peer, then qualify the stronger grouped
+   native policy. Predicate generation stays outside this control; mask access,
+   selected full64B consumption and whole-scan Scope/transaction lifetime stay
+   inside. Keep actual visits, offered candidates and selected bytes distinct.
+5. Diagnose the point-read grain effect with identical instructions and frozen
+   inputs: first examine Segment placement and allocation order, directory
+   addresses, page/TLB/cache-line geometry and available counters. Hold Segment
+   order fixed in a bounded control. The completed fixed-directory/graph control
+   demonstrates material address-spacing sensitivity; cache/TLB/bank attribution
+   and portable allocator policy remain open. Do not infer them from VmPTE or
+   call counts, or select G16 as intrinsically fastest.
+6. Complete extras/schema, structural and retained-reader pressure, then the
+   broader Engine driver: independently vary segment/record populations,
+   duplicates, insertion/relabel events, scan/selectivity and producer policies.
+   Price setup, maintenance, failed work and final cleanup against complete
+   competent peers. Stable-fact data edits still emit zero directory mutations.
+
+These are the remaining experiments, not permission to grow a failed path.
+At each step, update the operation's pseudocode and full cost ledger before
+expanding it. Complete fit is not established by a component cycle estimate or
+by adding timings from different trials.
 
 ## Workloads and checks
 

@@ -76,11 +76,11 @@ Result engine(loom::Worker& worker,BufferPolicy policy,std::span<const Command> 
     check(bool(p.update(request)),"valid actual producer update refused");
     if (points || (sum_period && (i/batch+1)%sum_period==0)) {
       Store::Scope scope(p.store());
+      auto read=p.reader(scope);
       for (unsigned q=0;q<points;++q) {
-        const auto row=p.row(scope,unsigned(mix(i+q+101)&63));
-        std::uint64_t digest=0; for (auto v:row) digest^=v; checksum+=digest;
+        checksum+=read.digest(unsigned(mix(i+q+101)&63));
       }
-      if (sum_period && (i/batch+1)%sum_period==0) checksum+=fold(p.sum(scope));
+      if (sum_period && (i/batch+1)%sum_period==0) checksum+=fold(read.sum());
     }
     if (fold_period && (i/batch+1)%fold_period==0) {
       check(bool(p.compact_row(unsigned((i/batch)&63))),"partial port refused");

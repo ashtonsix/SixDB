@@ -172,7 +172,83 @@ LMDB mean, but D mixes inserts and reads; it supplies no scalar insert ceiling.
 Do not transplant those ARM numbers to Zen5 or infer update costs by subtracting
 different workload cells. Same-host native controls must replace these anchors.
 
-## Stronger native navigation anchor
+## Current matched anchors and headroom
+
+The ARM full64B material consumer now has a stronger matched Calico anchor than
+the historical row-key LMDB numbers below. The ready point comparison has one
+snapshot per64 queries and consumes all eight words; it does not include an
+arbitrary future Engine request or prove retained-read parity with Calico.
+Use its faster peer to constrain this SAME operation:
+
+| Segment population | Calico best tested ns/item | Native LMDB get/cursor ns/item | Complete Engine <=0.50P | Directory/binding <=0.25P |
+| ---: | ---: | ---: | ---: | ---: |
+|8,192|85.978|147.965 /150.764|42.989|21.495|
+|262,144|143.905|391.095 /374.649|71.952|35.976|
+
+The frozen graph7 full material consumer measured4.741/29.338ns/item. After the
+allocation/header/metadata changes, grain1 G16 staged measured4.393/21.687;
+G64 measured4.384/25.000 and G2564.499/27.260. The new runs have paired native
+BE4 controls, not a fresh Calico arm. Historical Calico arithmetic would leave
+50.265ns/item at262K after the G16 full consumer. This is conditional arithmetic,
+not measured remaining Engine work. These values neither select a universal
+allocation/leaf grain nor establish the cause of the staged throughput change.
+See [the measurements and source boundaries](FINDINGS.md).
+
+The finite64-row producer has four different matched LMDB trace anchors. Calico
+mixed/SUM128/atomicB64 equivalence is still unavailable, so do not use a different
+Calico workload to tighten or relax these cells:
+
+| Atomic request/trace | Faster native LMDB ns/request | Complete Engine <=0.50P | Directory/binding <=0.25P | Best tested finite producer ns/request |
+| --- | ---: | ---: | ---: | ---: |
+|B1 hot2, no query|3015.01|1507.505|753.753|243.387 plain|
+|B1 hot64, query/fold/refusal|3830.30|1915.150|957.575|536.444 indexed|
+|B64 hot2, repeated keys|3120.37|1560.185|780.093|310.354 plain|
+|B64 hot64, query/fold/refusal|7617.87|3808.935|1904.468|2033.020 packed eager|
+
+The right column already includes producer work; it is not directory-only time.
+Each is a whole fixed-policy trace, not a license to combine policy minima.
+One request can include queries, folds and a retry; do not divide these B64
+figures into64 scalar-update latency samples. No directory relocation budget
+fit follows from ordinary writes that change zero directory facts.
+
+The new unmasked scan has actual same-host eligible peers. LMDB is faster than
+the tested prepared Calico scan; do not reuse the point-read P for it. G16's
+first complete material consumer gives this conditional arithmetic:
+
+| Segments/range | Paired native P ns/row | Complete <=0.50P | Directory/binding <=0.25P | Current full material consumer |
+| --- | ---: | ---: | ---: | ---: |
+|8K quarter|8.174|4.087|2.044|2.176|
+|8K whole|8.307|4.154|2.077|1.983|
+|262K quarter|8.331|4.166|2.083|2.342|
+|262K whole|8.839|4.420|2.210|4.824|
+
+The last cell misses even the whole-request allocation; G64/G256 whole-layer
+consumers do too. Directory-only attribution is still separate from this useful
+material consumer. The initial masked full-cursor peer needs sparse/zero-policy
+qualification before it supplies an acceptance anchor. See [Findings](FINDINGS.md).
+
+The paired dense-rank refinement measures 4.023/6.225 ns per full-material row
+at G16/G64 against 8.873/9.098 for native LMDB. Below half that paired peer time,
+the conditional remainder is +0.413/-1.677 ns per row. This is already a useful
+material consumer, not a directory-only measurement. The roughly 5% ratio of
+pooled medians includes variability: paired median gains are 3.29%/4.24%, and
+one G64 process ties. The four-arm lookahead control must beat this strongest
+direct procedure; its bank stores/loads and setup count. Even a faster kernel
+does not establish complete Engine fit. A source-reviewed DUPFIXED bulk native
+peer remains unqualified and could tighten P further.
+
+The bounded 64-pointer lookahead trial did not improve the strongest direct
+path: owner-CPU paired medians lose at both G16 and G64 with and without hints.
+Do not include a speculative lookahead gain in the budget. Keep the negative
+control and its source-capture timing disclosure in
+[Findings](FINDINGS.md); it supplies no new acceptance P.
+
+For membership/balance, hash growth, extra-list packing and schema operations,
+matched P is not measured yet. The absolute ceilings below
+are engineering targets; measure the competent peer at the same boundary before
+claiming complete headroom. A blank peer cell is not an automatic win.
+
+## Historical native navigation anchor
 
 The [retained native row-key LMDB cells](../../benchmarks/orbital/evidence/selected-allocation-20261007/comparison/cells.csv)
 give these initial ceilings, rounded down. A faster MATCHED Calico result
@@ -220,6 +296,7 @@ budget includes Scope enrollment when used, at its declared request/batch bounda
 | Range startup, including both endpoint policies | 60 ns |
 | Same-page cursor continuation, full dirent consumed | 3 ns/segment |
 | Cursor crossing into the next selected page | 20 ns + returned dirents |
+| Resident unmasked/masked range scan | <=60ns startup +3ns/visited dirent +3ns/selected full64B material +20ns per actual directory-page crossing; also obey the matched directory/complete-scan fractions |
 | Already-selected inline Part projection | 3 ns/Part |
 | Extra Part projection through a selected StreamPack block | 15 ns/Part |
 | Bind an additional required block/version for projection | 15 ns |
@@ -334,9 +411,9 @@ Stock capture's metadata work scales with all admitted Parts. Orbital
 `a5c0a0bb` sizes larger native/mixed uniqueness scratch by advisory fresh suppliers
 and preserves final post-callback checking.16 retained+1 fresh now avoids the
 former136B request;17 fresh still requires scratch. Source/ABI/pin/publication
-costs remain real; this is not a measured Engine speedup. Stock prepare checks duplicate Object IDs pairwise and performs
-catalog/reservation work. Model packet sizes 1/2/5/10/64/256 and retain any
-quadratic crossover. Do not invent Engine publication to bypass it.
+costs remain real; this is not a measured Engine speedup. Current prepare checks duplicate Object IDs pairwise for packets <=64 and uses
+full-ID uniqueness scratch above64, then performs catalog/reservation work.
+Model packet sizes1/2/5/10/64/65/128/256 and charge scratch/refusal at that crossover. Do not invent Engine publication to bypass it.
 
 A shared physical slab can reduce backing acquisitions for a batch. It must
 have a counted owner holding the actual Loom Allocation, with all destination
@@ -422,17 +499,17 @@ Birth, deletion, tombstones and retained history can require more capacity.
 
 The F32 co-located variant has the SAME one/five directory Object counts for
 ordinary locator replacements, but captures 5/25 admitted Parts and retains 4/20
-old sources. Its native descriptor is 120 B per leaf under the proposed Control,
-versus 56 B for a one-Part chunk. It copies the same 512/2,560 B, saves the extra
+old sources. Its native descriptor is112B per leaf under current24B Control,
+versus48B for a one-Part chunk. It copies the same 512/2,560 B, saves the extra
 payload catalog selection, and changes structural packet size substantially.
 That trade must be tested in complete operations, not resolved by looking at
 capture fanout alone.
 
 NEW compound leaves also compare grouped native capture: F32/C8 P5 requests
-88 B rather than 120 B with the proposed 40 B header. A later partial update can
+80B rather than112B with the current32B header. A later partial update can
 use independent native sources, retaining four actual Part uses and possibly
-the entire original grouped Allocation. F32/C16 is P3 (88 B independent/72 B
-grouped); F128/C8 is P17 (312/184 B). These are descriptor formulas, not total
+the entire original grouped Allocation. F32/C16 is P3 (80B independent/64B
+grouped); F128/C8 is P17 (304/176B). These are descriptor formulas, not total
 memory or timing. Alignment/padding, physical granularity, real pins and source
 work remain in the ledger. Cross placement/fanout at the same C before choosing.
 
@@ -457,6 +534,46 @@ Selection, private drafting, 2.5/5 KiB copying/editing, five captures, ten-chang
 prepare/install and amortized cleanup must ALL fit. Warm payload does not imply
 warm catalogue entries, history or descriptor storage. Cold and pressure cases
 cannot inherit this ready-case hypothesis.
+
+## Complete graph write counts before choosing custody
+
+For dense262,144 prefixes, logical16/F32 has512 low routing nodes,16 middle
+nodes and one root. A locator edit changes the group payload even when bounds
+stay equal. Its raw-child address changes, so the graph must rebuild its path.
+This differs from the stable-name array treatment, which changes no ancestor.
+These counts assume commands were coalesced BEFORE materialization:
+
+| Offered changed segments | Changed group Parts | Changed routing nodes | Directory captures | Published changes, including Segments |
+| --- | ---: | ---: | ---: | ---: |
+|One|1|3|4|2|
+|Five in distinct low/middle branches|5|11|16|6|
+|64 consecutive prefixes, aligned|4|3|7|65|
+|64 dispersed prefixes, worst distinct branches at this population|64|81|145|65|
+
+The aligned B64 graph copies5,824 directory bytes plus4,096 Segment bytes.
+The dispersed bound copies112,192 directory bytes plus4,096 Segment bytes;
+its81 proofs establish up to2,576 child associations, including2,432 unchanged
+children. Capturing the64 supplied Segments adds another64 captures in the
+complete producer. They remain independently allocated. A packet with65
+changes crosses current Orbital's small-packet uniqueness path. No scalar replay
+or omitted construction is hidden behind the single root publication.
+
+At350ns for the five-replacement stress,16 directory captures alone would need
+an average below21.9ns, before routing, backing, proof retention, supplied
+material and publication. Current measurements do not support that composition.
+Keep it as the read-optimized control, not a claimed fit for that write target.
+The next write comparison uses bounded stable-name payload arrays and full-ID
+batch deduplication, and prices the extra read selections against graph path
+construction. Ordinary stable-fact producer edits still have zero directory
+captures in either design. This is a reason to change custody or batching, not
+raise the target or substitute a different locator meaning.
+
+A per-operation paper ledger records required calls/bytes and the maximum total
+remaining budget. Assigning guessed nanoseconds to those calls cannot establish
+a favorable sum. llvm-mca bounds the instruction loop; it does not price catalog,
+allocation, history, cache/TLB misses or proof destruction. Measure the smallest
+complete real-module operation before extending a candidate that depends on
+those costs. A failure stays visible in the same table as successful reads.
 
 ## Paper feasibility and remaining uncertainty
 

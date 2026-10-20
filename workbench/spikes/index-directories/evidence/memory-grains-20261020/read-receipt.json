@@ -1,0 +1,100 @@
+{
+  "started_unix": 1792525731.9661767,
+  "kind": "bounded read throughput, not latency",
+  "binary_sha256": "cc62f97078ebf2b3bc9fb472e32af92ce17563b57fd8d2b199f91ff2772fe3f0",
+  "runs": [
+    {
+      "order": 0,
+      "grain": 16,
+      "argv": [
+        "/usr/bin/python3",
+        "/home/ashtonsix/sixdb/build/architecture-index-memory-fix-20261020/allocator_probe.py",
+        "read",
+        "--output",
+        "/home/ashtonsix/sixdb/build/architecture-index-memory-fix-20261020/grains/read-o0-g16"
+      ],
+      "environment": {
+        "INDEX_DIRECTORY_GRAIN": "16"
+      },
+      "returncode": 0
+    },
+    {
+      "order": 0,
+      "grain": 64,
+      "argv": [
+        "/usr/bin/python3",
+        "/home/ashtonsix/sixdb/build/architecture-index-memory-fix-20261020/allocator_probe.py",
+        "read",
+        "--output",
+        "/home/ashtonsix/sixdb/build/architecture-index-memory-fix-20261020/grains/read-o0-g64"
+      ],
+      "environment": {
+        "INDEX_DIRECTORY_GRAIN": "64"
+      },
+      "returncode": 0
+    },
+    {
+      "order": 0,
+      "grain": 256,
+      "argv": [
+        "/usr/bin/python3",
+        "/home/ashtonsix/sixdb/build/architecture-index-memory-fix-20261020/allocator_probe.py",
+        "read",
+        "--output",
+        "/home/ashtonsix/sixdb/build/architecture-index-memory-fix-20261020/grains/read-o0-g256"
+      ],
+      "environment": {
+        "INDEX_DIRECTORY_GRAIN": "256"
+      },
+      "returncode": 0
+    },
+    {
+      "order": 1,
+      "grain": 256,
+      "argv": [
+        "/usr/bin/python3",
+        "/home/ashtonsix/sixdb/build/architecture-index-memory-fix-20261020/allocator_probe.py",
+        "read",
+        "--output",
+        "/home/ashtonsix/sixdb/build/architecture-index-memory-fix-20261020/grains/read-o1-g256"
+      ],
+      "environment": {
+        "INDEX_DIRECTORY_GRAIN": "256"
+      },
+      "returncode": 0
+    },
+    {
+      "order": 1,
+      "grain": 64,
+      "argv": [
+        "/usr/bin/python3",
+        "/home/ashtonsix/sixdb/build/architecture-index-memory-fix-20261020/allocator_probe.py",
+        "read",
+        "--output",
+        "/home/ashtonsix/sixdb/build/architecture-index-memory-fix-20261020/grains/read-o1-g64"
+      ],
+      "environment": {
+        "INDEX_DIRECTORY_GRAIN": "64"
+      },
+      "returncode": 0
+    },
+    {
+      "order": 1,
+      "grain": 16,
+      "argv": [
+        "/usr/bin/python3",
+        "/home/ashtonsix/sixdb/build/architecture-index-memory-fix-20261020/allocator_probe.py",
+        "read",
+        "--output",
+        "/home/ashtonsix/sixdb/build/architecture-index-memory-fix-20261020/grains/read-o1-g16"
+      ],
+      "environment": {
+        "INDEX_DIRECTORY_GRAIN": "16"
+      },
+      "returncode": 0
+    }
+  ],
+  "condition": "Same ready independent flat u32 trace, full64 XOR output, Scope/txn64; logical16/F32 fixed, physical16/64/256. Native controls BE4 get/cursor, not MDB_INTEGERKEY. Two opposite outer grain orders; four arm positions per population/process.",
+  "finished_unix": 1792525763.2132804,
+  "binary_sha256_after": "cc62f97078ebf2b3bc9fb472e32af92ce17563b57fd8d2b199f91ff2772fe3f0"
+}

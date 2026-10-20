@@ -27,7 +27,7 @@ private:
     unsigned count{};
   };
   loom::Worker& worker_;
-  std::pmr::unsynchronized_pool_resource memory_;
+  std::pmr::unsynchronized_pool_resource memory_{metadata_pool_options};
   std::pmr::memory_resource* metadata_;
   std::array<Format,17> groups_{};
   Format data_{{64},1,material_space};
@@ -35,6 +35,8 @@ private:
   bool graph_{};
   std::uint64_t next_graph_name_{2};
   std::size_t initial_graph_nodes_{};
+  unsigned directory_grain_;
+  std::size_t initial_directory_allocations_{},initial_directory_bytes_{};
   orbital::Result<Store::Owner> finish(std::uint64_t,const Format&,
       orbital::allocation::Allocation&);
   Store::Owner build_graph(std::span<GraphGroup>,unsigned shift,std::uint64_t name);
@@ -42,13 +44,16 @@ private:
   orbital::Result<Store::Owner> copy_graph(const GraphPath&,Store::Owner);
 public:
   explicit GroupFixture(loom::Worker&,std::span<const Record>,
-      std::pmr::memory_resource* metadata=nullptr,bool graph=false);
+      std::pmr::memory_resource* metadata=nullptr,bool graph=false,unsigned directory_grain=16);
   GroupFixture(const GroupFixture&)=delete;
   GroupFixture& operator=(const GroupFixture&)=delete;
   Store& store() noexcept { return store_; }
   std::pmr::memory_resource& metadata() noexcept { return *metadata_; }
   std::uint64_t directory_namespace() const noexcept { return graph_?graph_space:directory_space; }
   std::size_t initial_graph_nodes() const noexcept { return initial_graph_nodes_; }
+  unsigned directory_grain() const noexcept { return directory_grain_; }
+  std::size_t initial_directory_allocations() const noexcept { return initial_directory_allocations_; }
+  std::size_t initial_directory_bytes() const noexcept { return initial_directory_bytes_; }
   const std::byte* read(const NativeRead& view,std::uint32_t prefix) const noexcept {
     return graph_?idx_asm_graph32(&view,prefix):idx_asm_group16_read(&view,prefix);
   }

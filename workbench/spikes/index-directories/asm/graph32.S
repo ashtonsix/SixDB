@@ -60,7 +60,6 @@ idx_asm_graph32_bound:
     cnt v0.8b,v0.8b
     addv b0,v0.8b
     umov w2,v0.b[0]
-    add x0,x0,#64
     add x0,x0,x2,lsl #6
     b .Lgraph_arm_done
 .Lgraph_arm_miss:
@@ -130,7 +129,7 @@ idx_asm_graph32_bound:
     andl %edx,%r9d
     popcntl %r9d,%r9d
     shlq $6,%r9
-    leaq 64(%rax,%r9),%rax
+    leaq (%rax,%r9),%rax
     jmp .Lgraph_x_done
 .Lgraph_x_miss:
     xorl %eax,%eax

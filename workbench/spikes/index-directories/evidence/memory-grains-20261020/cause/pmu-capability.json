@@ -1,0 +1,247 @@
+{
+  "schema": 1,
+  "kind": "local_guest_pmu_capability",
+  "provenance": "Transcribed from preceding tool observations in this task; retention performed no rerun.",
+  "scope": "Initial capability discovery only. No event was enabled, reset or read; no workload, timing, compiler, worker or acquisition was run.",
+  "commands": [
+    {
+      "command": "orb -m ubuntu uname -a",
+      "exit_code": 0,
+      "stdout": "Linux ubuntu 7.0.14-orbstack-00380-ga7e0a2dc9535 #1 SMP PREEMPT Fri Aug  7 03:48:40 UTC 2026 aarch64 GNU/Linux\n"
+    },
+    {
+      "command": "orb -m ubuntu sh -c 'command -v perf; id; cat /proc/sys/kernel/perf_event_paranoid; cat /proc/sys/kernel/kptr_restrict; cat /proc/sys/kernel/perf_event_mlock_kb'",
+      "exit_code": 0,
+      "stdout": "/usr/bin/perf\nuid=501(ashtonsix) gid=501(ashtonsix) groups=501(ashtonsix),4(adm),10(uucp),20(dialout),27(sudo),29(audio),44(video),46(plugdev),50(staff),987(docker),995(input),67278(orbstack)\n2\n1\n516\n"
+    },
+    {
+      "command": "orb -m ubuntu perf --version",
+      "exit_code": 0,
+      "stdout": "perf version 6.17.13\n"
+    },
+    {
+      "command": "orb -m ubuntu perf list --details",
+      "exit_code": 0,
+      "stdout_summary": "Software/tool/tracing and breakpoint entries; no advertised CPU hardware counter or hardware-cache event. Generic raw-event syntax is present and does not establish a PMU."
+    },
+    {
+      "command": "orb -m ubuntu python3 -B - <<'PY'\nfrom pathlib import Path\nimport json\nr={}\nfor name in ['/sys/bus/event_source/devices','/dev']:\n p=Path(name)\n r[name]=sorted(x.name for x in p.iterdir() if name.endswith('devices') or any(y in x.name.lower() for y in ['perf','pmu','kvm']))\nr['event_sources']={}\nfor p in sorted(Path('/sys/bus/event_source/devices').iterdir()):\n d={}\n for rel in ['type','cpumask','cpus','caps/pmu_name','caps/nr_addr_filters']:\n  q=p/rel\n  if q.is_file():d[rel]=q.read_text().strip()\n for rel in ['events','format']:\n  q=p/rel\n  if q.is_dir():d[rel]={f.name:f.read_text().strip() for f in sorted(q.iterdir()) if f.is_file()}\n r['event_sources'][p.name]=d\nfor rel in ['/proc/sys/kernel/perf_event_paranoid','/proc/sys/kernel/perf_event_max_sample_rate','/proc/sys/kernel/perf_event_max_stack','/proc/sys/kernel/nmi_watchdog','/sys/devices/system/cpu/online','/sys/devices/system/cpu/cpu0/regs/identification/midr_el1','/proc/self/status']:\n p=Path(rel)\n if p.exists():\n  value=p.read_text().strip()\n  if rel.endswith('/status'):value='\\n'.join(x for x in value.splitlines() if x.startswith(('Cap','Seccomp','NoNewPrivs')))\n  r[rel]=value\nprint(json.dumps(r,indent=2))\nPY",
+      "exit_code": 0,
+      "observation": "sysfs_inventory"
+    },
+    {
+      "command": "orb -m ubuntu python3 -B - <<'PY'\nimport ctypes,errno,json,os,platform\nfrom pathlib import Path\nif platform.machine()!='aarch64':raise SystemExit('unexpected architecture; syscall number not selected')\nclass Attr(ctypes.Structure):\n _fields_=[('type',ctypes.c_uint32),('size',ctypes.c_uint32),('config',ctypes.c_uint64),('sample_period',ctypes.c_uint64),('sample_type',ctypes.c_uint64),('read_format',ctypes.c_uint64),('flags',ctypes.c_uint64),('wakeup_events',ctypes.c_uint32),('bp_type',ctypes.c_uint32),('config1',ctypes.c_uint64)]\nassert ctypes.sizeof(Attr)==64\nlibc=ctypes.CDLL(None,use_errno=True);libc.syscall.restype=ctypes.c_long\nrequests=[('cycles',0,0),('instructions',0,1),('cache-references',0,2),('cache-misses',0,3),('stalled-cycles-frontend',0,7),('stalled-cycles-backend',0,8),('L1-dcache-read-misses',3,0x10000),('dTLB-read-misses',3,0x10003),('iTLB-read-misses',3,0x10004),('task-clock-software-control',1,1),('page-faults-software-control',1,2)]\nresult=[]\nfor name,kind,config in requests:\n a=Attr();a.type=kind;a.size=ctypes.sizeof(a);a.config=config;a.flags=1|(1<<5)|(1<<6)\n ctypes.set_errno(0)\n fd=libc.syscall(ctypes.c_long(241),ctypes.byref(a),ctypes.c_long(0),ctypes.c_long(-1),ctypes.c_long(-1),ctypes.c_ulong(0))\n error=ctypes.get_errno() if fd<0 else 0\n item={'event':name,'type':kind,'config':hex(config),'status':'openable_disabled' if fd>=0 else 'open_failed','errno':error,'error_name':errno.errorcode.get(error),'error':os.strerror(error) if error else None}\n if fd>=0:os.close(fd)\n result.append(item)\nprint(json.dumps({'scope':'disabled FD open/close only; no enable/reset/read/measurement/workload','arch':platform.machine(),'syscall':241,'pid':0,'cpu':-1,'group_fd':-1,'attr_size':ctypes.sizeof(Attr),'flags':'disabled|exclude_kernel|exclude_hv','allowed_cpus':sorted(os.sched_getaffinity(0)),'results':result,'known_probe_binary_exists':Path('build/tools/pmu/workbench/tools/pmu/sixdb_pmu_probe').is_file()},indent=2))\nPY",
+      "exit_code": 0,
+      "observation": "disabled_open_check"
+    }
+  ],
+  "sysfs_inventory": {
+    "/sys/bus/event_source/devices": [
+      "breakpoint",
+      "kprobe",
+      "software",
+      "tracepoint",
+      "uprobe"
+    ],
+    "/dev_filtered_perf_pmu_kvm": [
+      "ptp_kvm"
+    ],
+    "event_sources": {
+      "breakpoint": {
+        "type": "5"
+      },
+      "kprobe": {
+        "type": "8",
+        "format": {
+          "retprobe": "config:0"
+        }
+      },
+      "software": {
+        "type": "1"
+      },
+      "tracepoint": {
+        "type": "2"
+      },
+      "uprobe": {
+        "type": "9",
+        "format": {
+          "ref_ctr_offset": "config:32-63",
+          "retprobe": "config:0"
+        }
+      }
+    },
+    "/proc/sys/kernel/perf_event_paranoid": "2",
+    "/proc/sys/kernel/perf_event_max_sample_rate": "100000",
+    "/proc/sys/kernel/perf_event_max_stack": "127",
+    "/sys/devices/system/cpu/online": "0-9",
+    "/sys/devices/system/cpu/cpu0/regs/identification/midr_el1": "0x00000000610f0000",
+    "/proc/self/status_selected": {
+      "CapInh": "0000000000000000",
+      "CapPrm": "0000000000000000",
+      "CapEff": "0000000000000000",
+      "CapBnd": "000001ffffffffff",
+      "CapAmb": "0000000000000000",
+      "NoNewPrivs": "0",
+      "Seccomp": "0",
+      "Seccomp_filters": "0"
+    }
+  },
+  "disabled_open_check": {
+    "architecture": "aarch64",
+    "syscall_name": "perf_event_open",
+    "syscall_number": 241,
+    "pid": 0,
+    "cpu": -1,
+    "group_fd": -1,
+    "syscall_flags": 0,
+    "attr": {
+      "size": 64,
+      "flags": 97,
+      "flag_names": [
+        "disabled",
+        "exclude_kernel",
+        "exclude_hv"
+      ],
+      "sample_period": 0,
+      "sample_type": 0,
+      "read_format": 0,
+      "wakeup_events": 0,
+      "bp_type": 0,
+      "config1": 0
+    },
+    "remaining_attr_bytes": "zero-initialized; per-event type/config shown below",
+    "lifecycle": "Open one disabled event at a time; immediately close successful descriptors. No enable/reset/read ioctl or counter read.",
+    "allowed_cpus": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "events": [
+      {
+        "event": "cycles",
+        "type": 0,
+        "config": "0x0",
+        "status": "open_failed",
+        "errno": 2,
+        "error_name": "ENOENT",
+        "error": "No such file or directory"
+      },
+      {
+        "event": "instructions",
+        "type": 0,
+        "config": "0x1",
+        "status": "open_failed",
+        "errno": 2,
+        "error_name": "ENOENT",
+        "error": "No such file or directory"
+      },
+      {
+        "event": "cache-references",
+        "type": 0,
+        "config": "0x2",
+        "status": "open_failed",
+        "errno": 2,
+        "error_name": "ENOENT",
+        "error": "No such file or directory"
+      },
+      {
+        "event": "cache-misses",
+        "type": 0,
+        "config": "0x3",
+        "status": "open_failed",
+        "errno": 2,
+        "error_name": "ENOENT",
+        "error": "No such file or directory"
+      },
+      {
+        "event": "stalled-cycles-frontend",
+        "type": 0,
+        "config": "0x7",
+        "status": "open_failed",
+        "errno": 2,
+        "error_name": "ENOENT",
+        "error": "No such file or directory"
+      },
+      {
+        "event": "stalled-cycles-backend",
+        "type": 0,
+        "config": "0x8",
+        "status": "open_failed",
+        "errno": 2,
+        "error_name": "ENOENT",
+        "error": "No such file or directory"
+      },
+      {
+        "event": "L1-dcache-read-misses",
+        "type": 3,
+        "config": "0x10000",
+        "status": "open_failed",
+        "errno": 2,
+        "error_name": "ENOENT",
+        "error": "No such file or directory"
+      },
+      {
+        "event": "dTLB-read-misses",
+        "type": 3,
+        "config": "0x10003",
+        "status": "open_failed",
+        "errno": 2,
+        "error_name": "ENOENT",
+        "error": "No such file or directory"
+      },
+      {
+        "event": "iTLB-read-misses",
+        "type": 3,
+        "config": "0x10004",
+        "status": "open_failed",
+        "errno": 2,
+        "error_name": "ENOENT",
+        "error": "No such file or directory"
+      },
+      {
+        "event": "task-clock-software-control",
+        "type": 1,
+        "config": "0x1",
+        "status": "openable_disabled",
+        "errno": 0,
+        "error_name": null,
+        "error": null
+      },
+      {
+        "event": "page-faults-software-control",
+        "type": 1,
+        "config": "0x2",
+        "status": "openable_disabled",
+        "errno": 0,
+        "error_name": null,
+        "error": null
+      }
+    ]
+  },
+  "conclusion": {
+    "hardware_cycles_instructions_stalls_cache_tlb": "unavailable through tested current-user generic perf interfaces; all nine attempts ENOENT",
+    "software_task_clock_page_faults": "disabled descriptors openable; actual counting not tested",
+    "ipc": "unavailable; no counters measured"
+  },
+  "existing_helper": {
+    "guide": "workbench/tools/pmu/README.md",
+    "collector": "workbench/tools/pmu/probe.py",
+    "binary": "build/tools/pmu/workbench/tools/pmu/sixdb_pmu_probe",
+    "binary_exists": true,
+    "executed": false,
+    "notes": "probe.py runs off/basic/stalls availability dependency chains at1000000 iterations, records null/unavailable and coverage; run.sh configures/builds. Neither invoked."
+  },
+  "limits": [
+    "No root/sudo or raw CPU-specific event attempt.",
+    "No assertion about host PMU capability or future hypervisor configuration.",
+    "No cycles, instructions, IPC, stalls, cache/TLB misses, counter sensitivity or data residency measured.",
+    "Software task-clock/page faults and VmPTE cannot substitute for hardware IPC, cache or TLB counters.",
+    "No retained complete perf-list text; classification above is from the observed command output."
+  ]
+}

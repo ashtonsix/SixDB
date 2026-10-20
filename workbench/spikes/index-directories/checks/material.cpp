@@ -86,12 +86,12 @@ void expect(GroupFixture& fixture,const Store::Scope& scope,const Record& oracle
         "group provenance not the actual physical selection");
   }
 }
-void run(loom::Worker& worker,bool graph) {
+void run(loom::Worker& worker,bool graph,unsigned grain=16) {
   std::vector<Record> input;
   for (unsigned i=32;i<48;++i) input.push_back(record(i));
   input.push_back(record(128)); input.push_back(record(143));
   input.push_back(record(UINT32_MAX));
-  GroupFixture fixture(worker,input,nullptr,graph);
+  GroupFixture fixture(worker,input,nullptr,graph,grain);
   Store::Scope old(fixture.store()),late(fixture.store());
   for (const auto& r:input) expect(fixture,old,r);
   ReadContext c{fixture.directory_namespace(),&old,{}};
@@ -191,16 +191,16 @@ void exported_directory_graph(loom::Worker& worker) {
     std::uint16_t mask; std::memcpy(&mask,node+64+slot*16+8,2);
     unsigned rank=0;
     for (unsigned suffix=0;suffix<(17&15);++suffix) rank+=(mask>>suffix)&1;
-    check(!std::memcmp(child+64+rank*64,expected_descriptor.data(),64),
+    check(!std::memcmp(child+rank*64,expected_descriptor.data(),64),
         "escaped root failed to preserve child physical bytes/interpretation");
     break;
   }
   orbital::release(escaped);
 }
-void late_distinct_cuts(loom::Worker& worker,bool graph) {
+void late_distinct_cuts(loom::Worker& worker,bool graph,unsigned grain=16) {
   std::array<Record,64> input;
   for (unsigned i=0;i<input.size();++i) input[i]=record(i*16);
-  GroupFixture fixture(worker,input,nullptr,graph);
+  GroupFixture fixture(worker,input,nullptr,graph,grain);
   std::array<std::optional<Store::Scope>,65> readers;
   readers[0].emplace(fixture.store());
   for (unsigned i=0;i<input.size();++i) {
@@ -217,6 +217,33 @@ void late_distinct_cuts(loom::Worker& worker,bool graph) {
     expect(fixture,*readers[cut],oracle);
   }
 }
+void directory_arrays(loom::Worker& worker,unsigned grain) {
+  std::array<Record,257> input;
+  for (unsigned i=0;i<input.size();++i) input[i]=record(i);
+  const auto before=orbital::allocation::statistics(*worker.memory);
+  GroupFixture fixture(worker,input,nullptr,true,grain);
+  const auto after=orbital::allocation::statistics(*worker.memory);
+  const auto arrays=(input.size()+grain-1)/grain;
+  check(fixture.initial_directory_allocations()==arrays,"physical directory allocation census");
+  check(fixture.initial_directory_bytes()==input.size()*64,"header-free directory byte census");
+  check(after.allocations-before.allocations==input.size()+arrays+fixture.initial_graph_nodes(),
+      "Segment/directory/node allocation cardinalities differ");
+  Store::Scope old(fixture.store());
+  for (unsigned i:{0u,15u,16u,63u,64u,255u,256u}) {
+    expect(fixture,old,input[i]);
+    check(bool(fixture.replace(i,7,UINT64_MAX-i)),"array boundary replacement refused");
+  }
+  fixture.store().drain();
+  for (const auto& r:input) expect(fixture,old,r);
+  Store::Scope fresh(fixture.store());
+  for (unsigned i=0;i<input.size();++i) {
+    auto wanted=input[i];
+    for (unsigned changed:{0u,15u,16u,63u,64u,255u,256u}) if (i==changed) {
+      const auto v=UINT64_MAX-i; std::memcpy(wanted.material.data()+56,&v,8);
+    }
+    expect(fixture,fresh,wanted);
+  }
+}
 }
 int main() {
   clone_boundaries();
@@ -225,6 +252,10 @@ int main() {
   auto arena=take(orbital::allocation::open_arena(16u<<20));
   check(bool(loom::configure(worker,std::move(arena),0)),"Worker configuration failed");
   run(worker,false); run(worker,true);
+  for (unsigned grain:{16u,64u,256u}) {
+    directory_arrays(worker,grain);
+    if (grain!=16) { run(worker,true,grain); late_distinct_cuts(worker,true,grain); }
+  }
   partial_refusal(worker,false,2);
   partial_refusal(worker,true,3); // after both data/group Owners, before proof
   partial_refusal(worker,true,4); // after retained children/proof, root capture

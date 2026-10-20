@@ -55,6 +55,8 @@ extern "C" const std::byte* idx_asm_group16_read(const index_spike::NativeRead*,
 // Each576B node has shift:u8@2,min/max groupIndex:u32@8/12 and32 entries
 // {child bytes:pointer@0, original group mask:u16@8} starting64,stride16.
 // Root shift is a multiple of5 in0..25; every internal child decrements it by5.
+// Graph leaves are HEADER-FREE ranked64B dirent arrays. Their original suffix
+// mask is in the parent entry; the stable-name group16 control still has64B header.
 extern "C" const std::byte* idx_asm_graph32(const index_spike::NativeRead*,
     std::uint32_t prefix) noexcept;
 // Actual root Part bytes selected under the SAME still-live Scope/Borrowed.

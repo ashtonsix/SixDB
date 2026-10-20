@@ -245,12 +245,12 @@ Result lmdb_write(peer::Environment& env,std::span<const std::uint32_t> keys,
   return lmdb_write_value<peer::Packed128>(env,keys,indices,material_offset(layout));
 }
 template<bool Graph> void run(loom::Worker& worker,const char* path,std::size_t population,
-    std::size_t requests,std::size_t updates,bool sparse,PeerLayout layout,bool peer_first) {
+    std::size_t requests,std::size_t updates,bool sparse,PeerLayout layout,bool peer_first,unsigned directory_grain) {
   auto rows=records(population,sparse);
   std::vector<std::uint32_t> keys;
   keys.reserve(rows.size());
   for (const auto& row:rows) keys.push_back(row.prefix);
-  GroupFixture fixture(worker,rows,nullptr,Graph);
+  GroupFixture fixture(worker,rows,nullptr,Graph,directory_grain);
   peer::Environment env;
   // Embedded ObjectStore publication is not durable: use explicit CPU-only peer.
   native(peer::open(env,path,1u<<30,MDB_NOTLS|MDB_NOSYNC|MDB_NOMETASYNC));
@@ -263,6 +263,9 @@ template<bool Graph> void run(loom::Worker& worker,const char* path,std::size_t 
   std::fprintf(stderr,"directory=%s graph_nodes=%zu graph_node_body=576 graph_proof_bytes=%zu "
       "control_bytes=%zu arm_order=%s\n",Graph?"owned-graph32":"stable-group16",fixture.initial_graph_nodes(),
       sizeof(DirectoryDependencies),sizeof(Control),peer_first?"lmdb-first":"engine-first");
+  std::fprintf(stderr,"directory_allocation_cap=%u logical_group=16 part_group=16 read_cohort=per-cell "
+      "initial_directory_allocations=%zu initial_directory_body_bytes=%zu segment_allocations=%zu\n",
+      fixture.directory_grain(),fixture.initial_directory_allocations(),fixture.initial_directory_bytes(),population);
   stock(worker,"after_setup");
   std::vector<unsigned> indices(requests);
   for (std::size_t i=0;i<requests;++i) indices[i]=unsigned(mix(i+17)&(population-1));
@@ -308,7 +311,7 @@ template<bool Graph> void run(loom::Worker& worker,const char* path,std::size_t 
 }
 }
 int main(int argc,char** argv) {
-  check(argc>=7 && argc<=9,"usage: driver EXISTING_EMPTY_LMDB_DIRECTORY POPULATION READS UPDATES dense|sparse metadata-first|material-first|material-only [HELPER_CPU [stable|graph]]");
+  check(argc>=7 && argc<=10,"usage: driver EXISTING_EMPTY_LMDB_DIRECTORY POPULATION READS UPDATES dense|sparse metadata-first|material-first|material-only [HELPER_CPU [stable|graph [DIRECTORY_GRAIN]]]");
   const auto population=std::strtoull(argv[2],nullptr,10);
   const auto reads=std::strtoull(argv[3],nullptr,10);
   const auto updates=std::strtoull(argv[4],nullptr,10);
@@ -323,6 +326,7 @@ int main(int argc,char** argv) {
   check(bool(loom::adopt(worker)),"Worker adoption");
   check(argc<9 || !std::strcmp(argv[8],"stable") || !std::strcmp(argv[8],"graph"),"stable|graph");
   const int helper_cpu=argc>=8?std::atoi(argv[7]):-1;
+  const unsigned directory_grain=argc==10?unsigned(std::strtoul(argv[9],nullptr,10)):16;
   std::fprintf(stderr,"helper_cpu=%d (-1 inherits caller affinity)\n",helper_cpu);
   auto arena=orbital::allocation::open_arena(512u<<20,helper_cpu);
   check(bool(arena),"Arena open");
@@ -331,11 +335,11 @@ int main(int argc,char** argv) {
   // outside intervals; the runner records the chosen environment per trial.
   const char* order=std::getenv("INDEX_DIRECTORY_PEER_FIRST");
   const bool peer_first=order && !std::strcmp(order,"1");
-  if (argc==9 && !std::strcmp(argv[8],"graph"))
+  if (argc>=9 && !std::strcmp(argv[8],"graph"))
     run<true>(worker,argv[1],population,reads,updates,!std::strcmp(argv[5],"sparse"),
-        layout,peer_first);
+        layout,peer_first,directory_grain);
   else run<false>(worker,argv[1],population,reads,updates,!std::strcmp(argv[5],"sparse"),
-        layout,peer_first);
+        layout,peer_first,directory_grain);
   const Clock settlement;
   while (true) {
     const auto p=loom::shutdown(worker);

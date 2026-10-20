@@ -1,0 +1,174 @@
+{
+  "8192": {
+    "scalar_graph": {
+      "wall_ns_op": {
+        "median": 4.75,
+        "min": 4.589,
+        "max": 5.139
+      },
+      "owner_ns_op": {
+        "median": 4.746,
+        "min": 4.59,
+        "max": 5.14
+      },
+      "process_ns_op": {
+        "median": 4.7455,
+        "min": 4.59,
+        "max": 5.141
+      },
+      "Mops_s": 210.52631578947367,
+      "checksums": [
+        "7213914273762396471"
+      ]
+    },
+    "batch32_graph": {
+      "wall_ns_op": {
+        "median": 4.740500000000001,
+        "min": 4.568,
+        "max": 4.891
+      },
+      "owner_ns_op": {
+        "median": 4.7425,
+        "min": 4.568,
+        "max": 4.892
+      },
+      "process_ns_op": {
+        "median": 4.7425,
+        "min": 4.568,
+        "max": 4.892
+      },
+      "Mops_s": 210.94821221390146,
+      "checksums": [
+        "7213914273762396471"
+      ]
+    },
+    "lmdb_get": {
+      "wall_ns_op": {
+        "median": 165.6945,
+        "min": 164.118,
+        "max": 168.223
+      },
+      "owner_ns_op": {
+        "median": 165.696,
+        "min": 164.12,
+        "max": 168.226
+      },
+      "process_ns_op": {
+        "median": 165.697,
+        "min": 164.12,
+        "max": 168.226
+      },
+      "Mops_s": 6.035203341088569,
+      "checksums": [
+        "7213914273762396471"
+      ]
+    },
+    "lmdb_cursor": {
+      "wall_ns_op": {
+        "median": 175.0865,
+        "min": 172.002,
+        "max": 176.363
+      },
+      "owner_ns_op": {
+        "median": 175.089,
+        "min": 172.005,
+        "max": 176.365
+      },
+      "process_ns_op": {
+        "median": 175.08999999999997,
+        "min": 172.006,
+        "max": 176.366
+      },
+      "Mops_s": 5.711462619905018,
+      "checksums": [
+        "7213914273762396471"
+      ]
+    }
+  },
+  "262144": {
+    "scalar_graph": {
+      "wall_ns_op": {
+        "median": 38.042500000000004,
+        "min": 36.954,
+        "max": 38.746
+      },
+      "owner_ns_op": {
+        "median": 38.043,
+        "min": 36.957,
+        "max": 38.748
+      },
+      "process_ns_op": {
+        "median": 38.043,
+        "min": 36.958,
+        "max": 38.749
+      },
+      "Mops_s": 26.286390221462835,
+      "checksums": [
+        "7755292558270058147"
+      ]
+    },
+    "batch32_graph": {
+      "wall_ns_op": {
+        "median": 29.3375,
+        "min": 28.943,
+        "max": 29.779
+      },
+      "owner_ns_op": {
+        "median": 29.3395,
+        "min": 28.946,
+        "max": 29.781
+      },
+      "process_ns_op": {
+        "median": 29.3405,
+        "min": 28.947,
+        "max": 29.782
+      },
+      "Mops_s": 34.08606731998296,
+      "checksums": [
+        "7755292558270058147"
+      ]
+    },
+    "lmdb_get": {
+      "wall_ns_op": {
+        "median": 342.3005,
+        "min": 332.279,
+        "max": 366.176
+      },
+      "owner_ns_op": {
+        "median": 342.3025,
+        "min": 332.282,
+        "max": 366.178
+      },
+      "process_ns_op": {
+        "median": 342.304,
+        "min": 332.283,
+        "max": 366.18
+      },
+      "Mops_s": 2.9214096970352075,
+      "checksums": [
+        "7755292558270058147"
+      ]
+    },
+    "lmdb_cursor": {
+      "wall_ns_op": {
+        "median": 351.5675,
+        "min": 350.175,
+        "max": 378.945
+      },
+      "owner_ns_op": {
+        "median": 351.57,
+        "min": 350.178,
+        "max": 378.947
+      },
+      "process_ns_op": {
+        "median": 351.571,
+        "min": 350.179,
+        "max": 378.949
+      },
+      "Mops_s": 2.844403990698799,
+      "checksums": [
+        "7755292558270058147"
+      ]
+    }
+  }
+}

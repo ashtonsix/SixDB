@@ -1,0 +1,46 @@
+{
+  "status": "PASS",
+  "rows": 64,
+  "processes": 4,
+  "cells": 8,
+  "samples_per_cell": 8,
+  "all12predecessor_pairs_balanced": true,
+  "all_positions_balanced": true,
+  "full_useful_signature_and_denominators": true,
+  "summary_medians": true,
+  "ELF_stable": true,
+  "paired": [
+    {
+      "grain": "16",
+      "arm": "engine_pointerbank_none",
+      "median_throughput_ratio": 0.9493466978944518,
+      "wins": 1,
+      "samples": 8,
+      "median_owner_ratio": 0.9734747560687289
+    },
+    {
+      "grain": "16",
+      "arm": "engine_pointerbank_hint",
+      "median_throughput_ratio": 0.7796216173844106,
+      "wins": 0,
+      "samples": 8,
+      "median_owner_ratio": 0.8042907673749102
+    },
+    {
+      "grain": "64",
+      "arm": "engine_pointerbank_none",
+      "median_throughput_ratio": 0.8513175551591112,
+      "wins": 0,
+      "samples": 8,
+      "median_owner_ratio": 0.8427247288339628
+    },
+    {
+      "grain": "64",
+      "arm": "engine_pointerbank_hint",
+      "median_throughput_ratio": 0.9234955937908773,
+      "wins": 2,
+      "samples": 8,
+      "median_owner_ratio": 0.8851259671915747
+    }
+  ]
+}
