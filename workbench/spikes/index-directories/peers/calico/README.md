@@ -46,8 +46,9 @@ its trace, rather than combining minima from incompatible configurations.
 
 Untimed native wire/COPY setup, preparation and exact field oracles surround the
 intervals. Timed reads include one complete current prepared execute and direct
-numeric consumption, with the same independent/dependent streams and checksums
-as `src/driver.cpp`. Both caller-owned numeric buffer and scoped visitor are
+numeric consumption, with the same compact request-key array,
+independent/dependent streams and checksums as `src/driver.cpp`. Both
+caller-owned numeric buffer and scoped visitor are
 available. Timed B1 assignment changes only `v3` through one prepared UPDATE,
 including its native result destruction; it needs no separate SELECT or forced
 material clone. All eight fields are checked afterward, including key association

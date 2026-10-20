@@ -139,7 +139,7 @@ std::uint64_t expected(const std::vector<Words>& rows,std::span<const unsigned> 
   return sum;
 }
 template<bool Visitor> Result read(calico::runtime& rt,const calico::runtime_statement& stmt,
-    std::size_t population,std::span<const unsigned> indices,bool sparse,bool dependent,bool full) {
+    std::span<const std::uint32_t> keys,std::span<const unsigned> indices,bool dependent,bool full) {
   calico::runtime_row_buffer buffer;
   calico::runtime_row_view view;
   if constexpr (Visitor) view.reserve(8);
@@ -147,26 +147,26 @@ template<bool Visitor> Result read(calico::runtime& rt,const calico::runtime_sta
   std::uint64_t sum=0,state=0;
   const Clock start;
   for (std::size_t i=0;i<indices.size();++i) {
-    const auto index=dependent?state&(population-1):indices[i];
+    const auto index=dependent?state&(keys.size()-1):indices[i];
     std::uint64_t value;
     if constexpr (Visitor) {
       Visit out{false,0,full};
-      checked(rt.execute(stmt,view,visit,&out,{key(index,sparse)}));
+      checked(rt.execute(stmt,view,visit,&out,{keys[index]}));
       check(out.called,"timed visitor not called"); value=out.value;
     } else {
-      checked(rt.execute(stmt,buffer,{key(index,sparse)})); value=consume(buffer,full);
+      checked(rt.execute(stmt,buffer,{keys[index]})); value=consume(buffer,full);
     }
     sum+=value; state=mix(value+i);
   }
   return stop(start,sum);
 }
 Result update(calico::runtime& rt,const calico::runtime_statement& stmt,
-    std::span<const unsigned> indices,bool sparse) {
+    std::span<const std::uint32_t> keys,std::span<const unsigned> indices) {
   std::uint64_t sum=0;
   const Clock start;
   for (std::size_t i=0;i<indices.size();++i) {
     const auto value=mix(i+UINT64_C(0x123456789));
-    const auto result=rt.execute(stmt,{key(indices[i],sparse),value});
+    const auto result=rt.execute(stmt,{keys[indices[i]],value});
     checked(result); check(result.affected==1,"point assignment affected count"); sum+=value;
   }
   return stop(start,sum);
@@ -195,6 +195,8 @@ int main(int argc,char** argv) {
       "v1 BIGINT NOT NULL, v2 BIGINT NOT NULL, v3 BIGINT NOT NULL, v4 BIGINT NOT NULL, "
       "v5 BIGINT NOT NULL, v6 BIGINT NOT NULL, v7 BIGINT NOT NULL)"));
   auto rows=records(population); load(rt,rows,sparse);
+  std::vector<std::uint32_t> keys(population);
+  for (std::size_t i=0;i<population;++i) keys[i]=key(i,sparse);
   auto scalar=rt.prepare("SELECT v0 FROM m3 WHERE k=$1");
   auto full=rt.prepare("SELECT v0,v1,v2,v3,v4,v5,v6,v7 FROM m3 WHERE k=$1");
   auto assignment=rt.prepare("UPDATE m3 SET v3=$2 WHERE k=$1");
@@ -241,9 +243,9 @@ int main(int argc,char** argv) {
   for (bool all:{false,true}) for (bool dependent:{false,true}) {
     const auto& stmt=(all || scalar_full8)?full:scalar;
     Result buffer,visitor;
-    if (visitor_first) visitor=read<true>(rt,stmt,population,indices,sparse,dependent,all);
-    buffer=read<false>(rt,stmt,population,indices,sparse,dependent,all);
-    if (!visitor_first) visitor=read<true>(rt,stmt,population,indices,sparse,dependent,all);
+    if (visitor_first) visitor=read<true>(rt,stmt,keys,indices,dependent,all);
+    buffer=read<false>(rt,stmt,keys,indices,dependent,all);
+    if (!visitor_first) visitor=read<true>(rt,stmt,keys,indices,dependent,all);
     const auto sum=expected(rows,indices,dependent,all);
     check(buffer.sum==sum && visitor.sum==sum,"complete read checksum");
     report(all?"material64":"project_u64","calico-buffer",dependent?"dependent":"independent",population,reads,buffer);
@@ -251,7 +253,7 @@ int main(int argc,char** argv) {
   }
   indices.resize(updates);
   for (std::size_t i=0;i<updates;++i) indices[i]=unsigned(mix(i+37)&(population-1));
-  const auto result=update(rt,assignment,indices,sparse);
+  const auto result=update(rt,assignment,keys,indices);
   std::uint64_t sum=0;
   for (std::size_t i=0;i<updates;++i) {
     const auto value=mix(i+UINT64_C(0x123456789));
