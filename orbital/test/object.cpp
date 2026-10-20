@@ -5,6 +5,7 @@
 #include <limits>
 #include <optional>
 #include <source_location>
+#include <vector>
 
 namespace {
 using namespace object_test;
@@ -129,6 +130,96 @@ void publication_refusal() {
   }
   CHECK(false); // The bounded fault sweep must reach a successful preparation.
 }
+
+void duplicate_packets() {
+  for (std::size_t count : {64, 65}) for (unsigned kind : {0, 1, 2}) {
+    Memory memory;
+    Store store(memory);
+    Store::Scope basis(store);
+    Store::Prepared packet(store);
+    std::vector<Store::Change> changes;
+    for (std::size_t i = 0; i < count; ++i)
+      changes.push_back({{5, count - i}, capture(store, i)});
+    changes.back().object = changes.front().object;
+    if (kind) changes.back().representation = {};
+    if (kind == 2) changes.front().representation = {};
+    const auto live = memory.live;
+    refused(store.prepare(basis, changes, packet), Error::conflict);
+    CHECK(packet.disposition() == PublicationState::empty && memory.live == live);
+    CHECK(store.borrow().cut == basis.cut() && !basis.bind(changes.front().object));
+    for (const auto& change : changes)
+      if (change.representation) CHECK(change.representation.get()->references == 1);
+    changes.back().object = {5, 1};
+    CHECK(store.prepare(basis, changes, packet)); CHECK(store.install(packet));
+  }
+}
+
+void large_packet_identity_and_refusal() {
+  Memory memory;
+  Store store(memory);
+  std::array<orbital::ObjectId, 65> ids;
+  const auto max = std::numeric_limits<std::uint64_t>::max();
+  ids[0] = {0, 0}; ids[1] = {0, max}; ids[2] = {max, 0}; ids[3] = {max, max};
+  for (std::size_t i = 4; i < ids.size(); ++i) ids[i] = {1 + (i - 4) / 2, i % 2 ? max : 0};
+  std::vector<Store::Change> changes;
+  for (std::size_t i = 0; i < ids.size(); ++i) {
+    const auto j = i * 17 % ids.size();
+    changes.push_back({ids[j], capture(store, 1000 + j)});
+  }
+  {
+    Store::Scope basis(store);
+    Store::Prepared packet(store);
+    const auto live = memory.live;
+    memory.fail_at = memory.calls;
+    refused(store.prepare(basis, changes, packet), Error::capacity);
+    memory.fail_at = SIZE_MAX;
+    CHECK(memory.live == live && packet.disposition() == PublicationState::empty);
+    CHECK(store.borrow().cut == 0);
+    for (std::size_t i = 0; i < changes.size(); ++i) {
+      CHECK(changes[i].object == ids[i * 17 % ids.size()]);
+      CHECK(changes[i].representation.get()->references == 1 && !basis.bind(changes[i].object));
+    }
+    CHECK(store.prepare(basis, changes, packet)); CHECK(store.install(packet));
+  }
+  Store::Scope old(store), late(store);
+  changes.clear();
+  for (std::size_t i = 0; i < ids.size(); ++i) {
+    expect(old.bind(ids[i]), 1000 + i);
+    changes.push_back({ids[i], i % 7 ? capture(store, 2000 + i) : Store::Owner{}});
+  }
+  publish(store, changes); store.drain();
+  Store::Scope fresh(store);
+  for (std::size_t i = 0; i < ids.size(); ++i) {
+    expect(late.bind(ids[i]), 1000 + i);
+    if (i % 7) expect(fresh.bind(ids[i]), 2000 + i); else CHECK(!fresh.bind(ids[i]));
+  }
+}
+
+void large_packet_abort_order() {
+  Memory memory;
+  Store store(memory);
+  std::vector<unsigned> disposed;
+  disposed.reserve(65);
+  struct Item { std::vector<unsigned>* disposed; unsigned ordinal; };
+  std::array<Item, 65> items;
+  std::vector<Store::Change> changes;
+  for (unsigned i = 0; i < items.size(); ++i) {
+    items[i] = {&disposed, i};
+    const auto callback = +[](void* context) noexcept {
+      const auto& item = *static_cast<Item*>(context);
+      item.disposed->push_back(item.ordinal);
+    };
+    changes.push_back({{7, items.size() - i}, take(store.capture({i, false, callback, &items[i]}, {}))});
+  }
+  Store::Scope basis(store);
+  Store::Prepared packet(store);
+  CHECK(store.prepare(basis, changes, packet));
+  changes.clear(); CHECK(disposed.empty());
+  packet.abort();
+  CHECK(disposed.size() == items.size() && store.borrow().cut == 0);
+  for (unsigned i = 0; i < disposed.size(); ++i) CHECK(disposed[i] == i);
+}
+
 void conversion_authority() {
   Memory memory;
   std::optional<Export> escaped;
@@ -233,6 +324,7 @@ void disposal_reentry() {
 }
 } // namespace
 int main() {
-  coherent_lifetimes(); publication_refusal(); conversion_authority(); packet_lifetimes(); disposal_reentry();
+  coherent_lifetimes(); publication_refusal(); duplicate_packets(); large_packet_identity_and_refusal();
+  large_packet_abort_order(); conversion_authority(); packet_lifetimes(); disposal_reentry();
   std::puts("Object catalog: coherent histories, publication refusal, conversion and lifetime checks passed");
 }

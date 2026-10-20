@@ -1,6 +1,12 @@
 #include <orbital/detail/object/directory.h>
 #include <orbital/detail/object/versions.h>
+#include <algorithm>
 namespace orbital::object_detail {
+bool unique_object_ids(std::span<ObjectId> ids) {
+  std::sort(ids.begin(), ids.end());
+  return std::adjacent_find(ids.begin(), ids.end()) == ids.end();
+}
+
 std::uint32_t Registry::add(void* value) {
   std::uint32_t id;
   if (free_) { id = free_; free_ = slots_[id - 1].next; }

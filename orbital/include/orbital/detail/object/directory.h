@@ -21,6 +21,9 @@ namespace orbital::object_detail {
 using Handle = std::uint32_t;
 using orbital::ObjectId;
 
+// Sort private preflight scratch, never the caller's publication sequence.
+bool unique_object_ids(std::span<ObjectId>);
+
 struct Entry {
   ObjectId object{};
   std::uint64_t cut{};

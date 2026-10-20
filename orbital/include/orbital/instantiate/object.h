@@ -210,6 +210,7 @@ Result<void> ObjectStore<Physical>::prepare(const Scope& basis, std::span<const 
   if (c.pending || changes.empty() || prepared.disposition_ != PublicationState::empty)
     return std::unexpected(Error::unavailable);
   if (c.cut == std::numeric_limits<std::uint64_t>::max()) return std::unexpected(Error::capacity);
+  const bool small = changes.size() <= 64;
   for (std::size_t i = 0; i < changes.size(); ++i) {
     const auto& change = changes[i];
     auto* rep = change.representation.get();
@@ -218,10 +219,19 @@ Result<void> ObjectStore<Physical>::prepare(const Scope& basis, std::span<const 
     if constexpr (requires { Physical::accepts_resource(rep, c.memory); }) {
       if (rep && !Physical::accepts_resource(rep, c.memory)) return std::unexpected(Error::conflict);
     }
-    for (std::size_t j = 0; j < i; ++j) if (changes[j].object == change.object) return std::unexpected(Error::conflict);
+    if (small)
+      for (std::size_t j = 0; j < i; ++j) if (changes[j].object == change.object) return std::unexpected(Error::conflict);
   }
   assert(prepared.changes_.empty());
   try {
+    if (!small) {
+      // A scratch refusal can precede duplicate detection; no catalog or Owner
+      // state changes until preflight succeeds. Ordinary packets need no scratch.
+      std::pmr::vector<ObjectId> ids(&c.memory);
+      ids.reserve(changes.size());
+      for (const auto& change : changes) ids.push_back(change.object);
+      if (!object_detail::unique_object_ids(ids)) return std::unexpected(Error::conflict);
+    }
     c.reserve(changes);
     c.Layout::prepare(changes, prepared.changes_);
   } catch (const std::bad_alloc&) {
