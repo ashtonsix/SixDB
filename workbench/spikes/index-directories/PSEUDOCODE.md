@@ -1111,6 +1111,36 @@ operations without inventing those semantics.
 
 ## Required cost ledger beside each prototype operation
 
+The motivated immutable-graph control changes physical directory ownership,
+not per-layer segment identity, query order or Orbital visibility:
+
+```
+GRAPH_READ(scope, query):
+    selected_root = scope.bind(actual_directory_root_id)
+    node_bytes = selected_root.part(routing_part).address
+    # Its Control owns the complete current directory child graph.
+    while internal(node_bytes):
+        rank = actual_Ikea_bound_search(admitted_columns(node_bytes), query)
+        node_bytes = admitted_raw_child_pointer(node_bytes, rank)
+    consume exact chosen payload / continue candidates within this layer
+    bind authoritative segment/correction state as required under SAME scope
+    finish all raw byte uses before that scope/borrow ends
+
+GRAPH_EDIT(basis, actual_deltas):
+    select root and affected paths under basis; deduplicate paths by full identity
+    build private changed leaves with real native/Ikea constructors
+    capture each finished leaf using actual new/retained sources
+    bottom-up, for each changed parent ONCE:
+        construct immutable proof owning actual finished/unchanged child Owners
+        clone/edit admitted routing columns and raw child byte pointers
+        capture new parent with that proof as an interpretation dependency
+        # Never retain predecessor root; unchanged children are direct owners.
+    prepare/install new logical root plus actual required segment/schema changes
+       in one Orbital packet
+    release all private temporaries and account amortized old-root reclamation
+    refusal releases only candidate graph; basis and visible graph remain intact
+```
+
 ```
 record:
     request/batch snapshot boundary and effective peer-derived ceiling

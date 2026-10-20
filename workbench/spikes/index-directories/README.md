@@ -1,13 +1,15 @@
 # Index directory implementation spike plan
 
-Plan and pseudocode only. The rejected implementation remains deleted. No new
-directory implementation, benchmark executable or CMake target is present.
+Assembly-first implementation is in progress. The rejected implementation
+remains deleted. Current sources under `asm/` and `include/` start the real-module
+prototype; the material/ABI fixture and complete-operation checks are being built.
 
 2026-10-20: fresh Ikea, Orbital, Loom, Workbench and Architecture review of
 `15426260` led to this planning revision. It is an experiment plan, not a closed
 implementation recipe or demonstrated budget fit. Current supported controls,
 module-owned proposals and still-unqualified algorithms/costs remain distinct.
-No new timing is claimed; code and benchmark work remain unstarted.
+Ashton subsequently authorized assembly, modeling, live experiments and C++
+translation as the evidence supports them. Complete budget fit remains open.
 
 The objective is a directory cheap enough for the complete Engine to beat both
 Calico and competent native LMDB with substantial headroom. A fast container
@@ -20,6 +22,20 @@ composition that makes its result usable.
   publication, failure, schema changes and suspension.
 - [Layout and design review](DESIGN.md): bytes, ownership, paper revisions,
   prior art and the remaining costs that need direct measurement.
+
+The first native prototype has selected-read assembly, a direct suffix-mask
+control and a real64-byte moving-Part producer with coupled Orbital publication.
+`index_directory_check` and `index_directory_material_check` cover exact bytes,
+original-rank/slot distinction, gaps/max prefixes, guarded private cloning,
+late old/fresh readers under reclamation and partial-candidate refusal.
+`index_directory_driver` compares useful projected/material outputs and that
+actual producer against direct LMDB, with fresh and64-operation cohorts.
+`index_directory_composed_check` adds a two-record, five-layer P/Q/P producer:
+zero-directory ordinary updates, fixed-pointer authoritative corrections,
+pristine bypass/dirty-extrema descent, and P-only compaction with late snapshots.
+It is a bounded composition check, not the finished Engine driver. Ordered
+mutation, balancing, extras/schema, buffered-delta performance and full
+Engine/Calico comparison remain implementation and measurement work.
 
 ## Supplied model
 
@@ -155,7 +171,7 @@ it is discarded at the end and never serves readers.
    accepting the translation. Assembly is a design/performance probe, not an
    excuse to omit ownership or publication work.
 
-This sequence is a proposed experiment, not authorization to implement now.
+This sequence is an investigation order, not an additional approval gate.
 
 ## Workloads and checks
 

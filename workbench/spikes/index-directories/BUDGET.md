@@ -318,10 +318,11 @@ directory comparison as well as showing it separately; never claim an isolated
 directory publication cost by subtracting unlike trials. A complete Engine
 result counts it once.
 
-Stock capture's metadata work scales with all admitted Parts. Current
-independent native/mixed capture allocates uniqueness scratch when TOTAL Parts>8,
-even for one fresh supplier among many retained sources. Orbital owns that
-inefficiency; do not choose fanout around it or assume its correction exists. Stock prepare checks duplicate Object IDs pairwise and performs
+Stock capture's metadata work scales with all admitted Parts. Orbital
+`a5c0a0bb` sizes larger native/mixed uniqueness scratch by advisory fresh suppliers
+and preserves final post-callback checking.16 retained+1 fresh now avoids the
+former136B request;17 fresh still requires scratch. Source/ABI/pin/publication
+costs remain real; this is not a measured Engine speedup. Stock prepare checks duplicate Object IDs pairwise and performs
 catalog/reservation work. Model packet sizes 1/2/5/10/64/256 and retain any
 quadratic crossover. Do not invent Engine publication to bypass it.
 

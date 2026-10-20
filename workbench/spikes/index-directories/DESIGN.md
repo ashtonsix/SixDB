@@ -175,6 +175,27 @@ semantics. Reserved encodings reject rather than silently selecting a format.
 
 ## Routing and payload bytes
 
+The first live stable-name control exposed enough repeated catalog/Part work
+to motivate a second ownership control: select one versioned directory root,
+then follow immutable raw child byte pointers. Orbital supports this today.
+Each internal node's immutable interpretation proof directly owns its actual
+child physical Owners and their full bodies/padding/interpretation; new paths
+share unchanged children. No node retains a prior root as a catch-all dependency.
+The graph follows current directory topology, with no Engine history protocol.
+
+Reads retain no child Owner per hop. A single live Scope still protects any
+separately versioned segment bytes reached through dirents. Holding the root
+alone cannot substitute for that Scope or preserve unrelated segment versions
+after it ends. Mutable data/corrections retain their authoritative selection.
+
+Compare against stable Object-name children using the same fanout, payload
+layout, useful outputs and event stream. Actual directory edits copy changed
+paths, construct child-owner proofs and retain every shared child; batch paths
+coalesce. For F128, a parent alone can retain128 child Owners before capture.
+Charge those calls/allocations, retained slabs and root-release cascades. Orbital
+drain's metadata-step limit does not bound arbitrary last-owner destruction.
+This alternative is motivated; its write/tail budget fit is unproved.
+
 Native-width, relative and prefix-stripped endpoint recipes are part of the
 initial paper comparison. K=1/2/4 does not intrinsically require eight-byte
 lanes. The following wide native layout is a conservative control, not a chosen
@@ -206,12 +227,13 @@ physical retained uses; neither read depth nor source fanout is free.
 Cross fanout and ownership instead of attributing their combined effect to one
 change: F32/C8 co-located and independent, plus F128/C8 co-located and independent.
 Retain C16 controls with actual `ceil(F/C)` Parts/names and `64*C` extents.
-Fanout is chosen from complete read/update/cold/retention behavior. Current
-Orbital's independent native/mixed capture sizes uniqueness scratch by TOTAL
-Parts>8, although it tracks only fresh Allocation suppliers. A 17-Part capture
-with 16 retained and 1 fresh therefore reserves 136 B unnecessarily. Orbital owns
-that source-confirmed inefficiency and callback-safe correction; it must not
-freeze Engine's fanout around 8. No fix is assumed shipped by this plan.
+Fanout is chosen from complete read/update/cold/retention behavior. Orbital
+`a5c0a0bb` corrected uniqueness scratch to follow advisory FRESH Allocation
+suppliers, retaining final post-callback validation/allocation-free fallback.
+A17-Part capture with16 retained and1 fresh no longer reserves the old136B
+scratch request; fresh17 still needs scratch. Descriptor/ABI, actual retained
+pins and publication remain unchanged. This source/allocation result is not an
+Engine timing result and does not choose fanout around a threshold accident.
 
 New compound leaves also compare CURRENT grouped-allocation capture. One fresh
 Allocation supplies all Parts and transfers once. With the proposed 40 B header,
