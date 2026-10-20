@@ -11,6 +11,7 @@ Design develops here first. Successor to Calico's `workbench`.
 | Executable reference models and fault experiments | [Simulator](simulator/README.md): native library, Orbital cases and experiment clients |
 | Recurring workloads and measurement conventions | [Benchmarks](benchmarks/README.md) |
 | Reusable input data | [Datasets](datasets/README.md) |
+| Native comparison libraries | [Peers](peers/README.md): direct dependencies and checked usage examples |
 | Commands for running, capturing or recovering experiments | [Tools](tools/README.md) |
 | Browsable performance evidence | [Results explorer](results/README.md) |
 | Cross-cutting design and conventions | [Design](design/README.md) |
