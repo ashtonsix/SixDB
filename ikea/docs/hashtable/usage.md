@@ -11,7 +11,8 @@ SeriesPack and TuplePack. The [rationale](rationale.md) explains the packed
 buckets and overflow table; this guide focuses on building a correct, fast
 consumer. Runnable starting points are
 [ordinary operations](../../examples/hashtable/ordinary.cpp),
-[native composition](../../examples/hashtable/composition.cpp) and
+[native composition](../../examples/hashtable/composition.cpp),
+[independent read/write batches](../../examples/hashtable/batch.cpp) and
 [accumulation](../../examples/hashtable/accumulation.cpp).
 
 For an existing consumer, jump to [native hot loops](#bind-once-around-a-complete-hot-loop),
@@ -19,6 +20,38 @@ For an existing consumer, jump to [native hot loops](#bind-once-around-a-complet
 [RMW](#update-without-a-second-lookup), [growth](#grow-by-replacing-the-owner),
 [worker accumulation](#mutable-accumulation) or
 [retained versions and byte effects](#integrate-retained-versions-and-byte-effects).
+
+## Choose the recipe for the work
+
+Geometry, encoding and execution all affect performance. The portable defaults
+are not an automatically sized or tuned general-purpose map. Start here:
+
+| Work | Use | Cost to avoid |
+| --- | --- | --- |
+| Tiny, bounded key domain | `K <= 9` bitmap geometry; account for all reserved map values | Applying large Swiss-table tuning to a table that never overflows |
+| Population grows beyond a small inline map | Size the promoted primary for expected distinct entries; choose an admitted bucket/encoding specialization | `table<64,0,V>` after eight inline entries: the primary still has only eight slots |
+| Repeated hot lookups | Compatible measured encoding and one concrete/native binding around the complete loop | Assuming `generic` matches measured results, or capturing an erased reader per key |
+| Independent cold reads or writes | Hint future primary homes in the caller loop; see the runnable batch example | Expecting synchronous point calls to hide memory latency automatically |
+| Existing value computation | `modify`; `modify_or_insert` when absence supplies an initial value | Separate lookup and insertion for one update |
+| Precomputed replacements | Compare `existing` with the default `mixed` writer for the actual traffic | Treating the read-selected encoding or one writer as an all-operation optimum |
+| Primary occupancy approaches the chosen limit | Rebuild/grow at the caller's boundary | Calling `reserve_overflow` and expecting primary capacity to grow |
+
+For example, the [equal-budget Zen 5 comparison](../../../workbench/spikes/hashtable-boost-adoption/MEMORY.md)
+finds strong narrow-key hot hits and scheduled cold throughput, but material hot
+mixed-read and wider-key gaps. Future-home prefetch changes W40/map8 cold
+construction from 11.5 to 44.1 million inserts/s in its paired loop. That gain
+requires independent future keys; most dependent scratch planning cannot use
+that recipe. More primary memory can also make a complete operation slower.
+Use the retained capacity frontier rather than assuming the largest owner wins.
+
+Hit rate alone is insufficient to predict hot lookup cost. The controlled Zen 5
+mixed-hit investigation keeps the same keys and hit count but finds a large
+random-order penalty that largely disappears with predictable ordering. It
+persists for membership-only consumers and tracks branch misses at the primary
+match decision. This is an internal mixed-path limitation, not a missing caller
+prefetch or a reason to predict which requests will hit. Measure the consumer's
+actual query order and consume its useful result; all-hit/all-miss averages do
+not estimate random 50/50 traffic.
 
 ## Start with a concrete owner
 
@@ -115,7 +148,53 @@ Start with enough buckets for the expected population and monitor both `size()`
 and `spill_size()`. `capacity()` stays fixed. Growth is a caller decision; the
 descriptor's `needs_growth(850)` is an optional 850-per-mille occupancy test,
 not an automatically enforced growth policy. Seed selection and coordination
-across worker tables also belong to the caller.
+across worker tables also belong to the caller. Apply a primary-growth policy
+only for `K > 9`: a bitmap already covers the complete key domain, so raising
+`b` cannot add capacity even if its occupancy crosses that threshold.
+
+For population sizing, `geometry::for_population(W, expected_distinct, 850)`
+returns the first bucket exponent meeting an **85% nominal primary-load ceiling**.
+The ceiling uses per mille, like `needs_growth(850)`. It uses exact integer math
+and can run at compile time, so a known bound directly supplies a specialization:
+
+```cpp
+constexpr auto scratch = ht::geometry::for_population(64, 64, 850);
+static_assert(scratch.b == 4 && scratch.capacity == 128);
+using Scratch = ht::table<64, scratch.b, 8>;
+Scratch index(713); // Example caller-supplied seed.
+```
+
+This plans geometry; it does not reserve Swiss storage or make the table grow.
+The nominal ceiling does not prevent bucket-imbalance spills. Bitmap geometries
+cover the whole key domain and need no overflow headroom, so they ignore the
+load ceiling. Value bytes, addressability/allocation, storage context and
+retention still need admission. For a runtime population, dispatch once over
+the consumer's supported bucket palette, checking its actual capacity, then
+bind the encoding/kernel. The helper does not instantiate an unbounded palette.
+An underestimated bound still needs caller growth or refusal.
+This is a capacity plan, not a fastest-layout or byte-budget selector: changing
+`b` also changes K, tile/slot count and reserved value bytes. Check the chosen
+owner's footprint and complete operation for the intended residence.
+
+`geometry::at(W,b)` exposes a specific geometry before allocation. The older
+`choose_geometry(W, expected_distinct, P)` retains its different research policy:
+a **percentage band `[P,2P]`**, preferring load closest to P, or nearest load
+when the band is unattainable. Passing 85 to it does not enforce an 85% maximum.
+
+For short-lived scratch maps, retain a small inline representation while the
+number of distinct keys stays small. On promotion, derive expected distinct work
+from that map's role: offered definitions, distinct intents or affected nodes,
+not automatically the number of commands or all historical records. Dispatch
+the selected `b` over the consumer's supported palette once, then use
+`descriptor<W,V>::measured<b>` or `bind_measured_encoding<W-b>` for encoding and
+kernel admission. Keep the complete native batch inside that binding when
+possible. Account for constructing/replaying inline entries, allocation,
+refusal, fallback and cleanup; no fixed bucket count guarantees no spill.
+Use the narrowest proven key domain, without truncating generic object names.
+The [batch example](../../examples/hashtable/batch.cpp) uses a 64-distinct plan
+for duplicate-heavy coalescing, then checks ordinary and hinted read/write
+consumers with independent expected values. Its deliberately colliding fixture
+also exercises overflow despite the nominal capacity headroom.
 
 Swiss storage separately keeps live entries plus tombstones within 87.5% of its
 slots, growing as necessary for ordinary insertion. That ceiling is independent
@@ -191,13 +270,33 @@ concrete-owner benchmark timings.
 
 ### Overlap independent requests
 
+The simplest cold batch is often a future-home hint followed by the ordinary
+operation. Prime the first few homes, then prefetch request `i + distance` before
+operating on request `i`. The [batch example](../../examples/hashtable/batch.cpp)
+does this for reads, construction and replacements, with both distance zero and
+32. Setup, key validation and input preparation stay outside the repeated work.
+Distance 32 is an evidenced starting point, not an automatic policy for every
+working set. Hot or dependent work can use distance zero.
+The example accepts optional `CPU ISA` arguments to bind one measured recipe
+around the complete consumer; with no arguments it checks the portable generic
+path. For example, use `neoverse-v2 neon` only with a compatible build/machine.
+It is a correctness/usage example, not a timing harness.
+
+For writes, issue only a hint with `owner.prefetch(owner.prepare(future_key))`,
+then perform the ordinary insert/modify/erase when that key reaches the head.
+Do not retain a prepared lookup result, slot or staged state across intervening
+mutations. An ordinary write can rehash Swiss backing. A hint gives no mutation
+admission and does not replace the caller's allocation/publication rules.
+
 For one independent prefetch stage, prepare several concrete-owner probes,
 prefetch them, perform other useful work, then call `finish(probe, same_key,
 consume)`. A probe belongs to that owner, key and coherent backing. Keep all
 three stable through completion. `prefetch` only issues a hint; it does not wait.
 
-For dependent accesses, use a native view or concrete owner with
-`prepare_staged(state, key, emit)` and `advance(state, found, consume, emit)`:
+For multiple dependent memory hops within a lookup, use a native view or concrete
+owner with `prepare_staged(state, key, emit)` and
+`advance(state, found, consume, emit)`. Throughput gains require other independent
+work between hops; staging one serial chain does not hide its latency by itself:
 
 1. `prepare_staged` resets the state and emits the primary key region.
 2. The caller prefetches emitted extents and can run other probes.

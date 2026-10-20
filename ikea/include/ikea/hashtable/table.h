@@ -10,6 +10,8 @@ struct table_access;
 }
 // Exact packed primary buckets with a Swiss overflow owner.
 // W, b, E specialize a caller descriptor's operation; B/T never change with E.
+// Primary capacity stays fixed: ordinary insertion grows only Swiss overflow.
+// The defaults are portable; measured_encoding selects a deployment recipe.
 template <unsigned W, unsigned b, unsigned V, unsigned E = (W - b),
           search_kernel Kernel = search_kernel::generic, class Storage = heap_storage_policy>
 class table : private detail::bucket_ops<W, b, V, E, Kernel> {
