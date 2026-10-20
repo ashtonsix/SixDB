@@ -128,7 +128,7 @@ def main():
              '-DSIXDB_SPIKES=allocation-reuse-temperature', '-DSIXDB_MARCH=' + args.march,
              '-DSIXDB_TUNE=' + args.tune], out / (policy + '-configure.log'))
         run(['cmake', '--build', build, '--target', 'allocation_reuse_temperature_allocator',
-             'orbital_validate', 'loom_validate', '-j', os.environ.get('SIXDB_BUILD_JOBS', '4')],
+             'orbital_validate', 'loom_validate', '-j', os.environ.get('SIXDB_BUILD_JOBS', '1')],
             out / (policy + '-build.log'))
         binary = build / STUDY / 'allocation_reuse_temperature_allocator'
         binaries[policy] = binary

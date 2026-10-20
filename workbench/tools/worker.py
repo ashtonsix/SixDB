@@ -278,7 +278,11 @@ def ensure_infrastructure(config, aws):
 
 def snapshot(directory, root=None):
     root = ROOT if root is None else root
-    sources = source_files(root)
+    # Replaying a frozen capture preserves its recorded source set, including
+    # evidence included by an older capture policy. Fresh checkouts omit outputs.
+    receipt = root.with_name(root.name + '.capture.json')
+    recorded = json.loads(receipt.read_text()).get('source_files_sha256', {}) if receipt.is_file() else ()
+    sources = source_files(root, recorded=recorded)
     # Allow for incompressible input and tar/gzip overhead before allocating compute.
     storage.require_space(directory, int(sum(len(data) * 1.01 + 1024 for data in sources.values())) + 10240)
     hashes = {name: hashlib.sha256(data).hexdigest() for name, data in sources.items()}

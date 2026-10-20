@@ -7,7 +7,7 @@ from pathlib import Path, PurePosixPath
 import shutil
 import subprocess
 
-from experiment import sha256, source_files, write_snapshot
+from experiment import sha256, source_files, source_output, write_snapshot
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -41,8 +41,7 @@ def source_name(value):
     if not path.parts or path.is_absolute() or any(p in ('.git', '..') for p in path.parts):
         raise ValueError(f'expected a repository-relative source path: {value}')
     name = path.as_posix()
-    if python_cache(name) or name.startswith('build/') or name == 'build' or (
-            name.startswith('workbench/spikes/') and 'evidence' in path.parts):
+    if source_output(name):
         raise ValueError(f'{value} is an output path; map the input to a source path in the capture')
     return name
 
@@ -173,7 +172,9 @@ def capture(base, destination, *, replacements=(), removed=(), expected=None, in
 def verify(destination):
     destination = checkout_path(destination)
     metadata = json.loads(receipt_path(destination).read_text())
-    hashes, digest = identity(source_files(destination))
+    # Older receipts may include outputs that new captures deliberately omit.
+    # Verify those original bytes too, rather than silently changing identity.
+    hashes, digest = identity(source_files(destination, recorded=metadata['source_files_sha256']))
     changed = sorted(name for name in hashes.keys() | metadata['source_files_sha256'].keys()
                      if hashes.get(name) != metadata['source_files_sha256'].get(name))
     changed += [name for name in hashes if name not in changed and

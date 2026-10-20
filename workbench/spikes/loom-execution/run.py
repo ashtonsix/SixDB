@@ -284,8 +284,7 @@ def main():
         targets = sorted({case['target'] for case in cases})
         if not targets:
             raise ValueError('selected panel has no runnable cases')
-        run.step('build', ['cmake', '--build', str(run.build_dir), '--target', *targets,
-                           '-j', os.environ.get('SIXDB_BUILD_JOBS', '2')])
+        run.step('build', ['cmake', '--build', str(run.build_dir), '--target', *targets])
         binary_root = run.build_dir / 'workbench/spikes/loom-execution'
         assemblies = []
         for target in targets:

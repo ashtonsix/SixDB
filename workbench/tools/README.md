@@ -13,7 +13,7 @@ from the Mac. Use the helpers independently or start from an existing runner.
 | Browse or share results | [Results explorer](../results/README.md): `results.py --serve` |
 | Retain, revise or regenerate evidence | [Artifacts](artifacts.md): `artifacts.py`; [local storage](storage.md): `worker.py cache` |
 | Diagnose compilation or editor issues | [Compile probes](compilation.md), [editor setup](editors.md) |
-| Set up and qualify cache-sensitive workloads | [Memory residency tools](residency.md) |
+| Set up and qualify cache-sensitive workloads | [Memory residency tools](residency.md), independent [PMU probe and counter helper](pmu/README.md) |
 
 ## Captured experiment runs
 
@@ -31,7 +31,9 @@ python3 workbench/tools/worker.py run workbench/benchmarks/seriespack/run.sh \
 `--replace PATH` takes that live file or directory; `PATH=INPUT` maps a different
 input into the capture. `capture.py create --help` covers deletion and hash checks.
 The adjacent `.capture.json` identifies the result; `capture.py verify PATH`
-checks it later. Builds, spike evidence and Python caches are excluded.
+checks it later. Builds, Workbench evidence and Python caches are excluded.
+Older captures still verify and replay through the worker with their original
+recorded bytes and source identity.
 On reflink-capable Linux filesystems, unchanged source data is shared through
 copy-on-write clones with independent inodes; later edits remain private.
 Other filesystems use ordinary copies. Captures populate only selected sources,
@@ -48,10 +50,17 @@ alone does not establish that the treatment landed.
 
 For a local runner, `experiment.Run(..., workspace=...)` captures sources and
 preserves incremental builds. Build from `run.source_root` into `run.build_dir`;
-runs sharing a workspace serialize. `run.input()` records a prepared dataset;
+runs sharing a workspace serialize. Child preparation scripts share the owning
+checkout's `build/datasets/` cache, or the explicit `SIXDB_DATA_CACHE` path.
+`run.input()` records a prepared dataset;
 `run.compact()` names [selected evidence](artifacts.md#make-selection-repeatable).
 The [aggregate runner](../spikes/aggregate-maintenance/run.py) measures timings;
 the [regexp runner](../spikes/regexp-lowering/run.py) studies counts.
+
+`Run.step()` supplies CMake's standard `CMAKE_BUILD_PARALLEL_LEVEL`: one compiler
+job by default, the explicit CMake setting locally, or `SIXDB_BUILD_JOBS` when
+provided by the worker/user. Runners need no hardcoded `-j` override. This bounds
+one build's parallelism; coordinate independent concurrent builds separately.
 
 ## Changing a helper
 

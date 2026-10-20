@@ -29,6 +29,9 @@ class CaptureCheck(unittest.TestCase):
             '.gitignore': '/build/\ngenerated/\n',
             'src/keep.cpp': 'unchanged', 'src/change.cpp': 'committed', 'src/deleted.cpp': 'removed later',
             'include/old.h': 'old header', 'workbench/spikes/test/evidence/summary.csv': 'excluded output',
+            'workbench/benchmarks/test/evidence/summary.csv': 'excluded benchmark output',
+            'workbench/tools/evidence/test/archive.json': 'excluded tool output',
+            'workbench/datasets/test/dataset.json': 'retained input descriptor',
             'workbench/tools/worker_runtime.py': 'runtime', 'workbench/tools/worker_pool.py': 'pool',
             'workbench/tools/worker-setup.sh': '#!/bin/sh\n',
         }.items():
@@ -56,6 +59,9 @@ class CaptureCheck(unittest.TestCase):
         self.assertEqual(source_files(destination), source_files(self.root))
         self.assertEqual(before, self.git('status', '--porcelain'))
         self.assertFalse((destination / 'workbench/spikes/test/evidence/summary.csv').exists())
+        self.assertFalse((destination / 'workbench/benchmarks/test/evidence').exists())
+        self.assertFalse((destination / 'workbench/tools/evidence').exists())
+        self.assertTrue((destination / 'workbench/datasets/test/dataset.json').is_file())
         self.assertEqual(metadata, capture.verify(destination))
         self.assertEqual(subprocess.check_output(['git', 'diff', '--', 'src/keep.cpp'],
             cwd=destination, text=True), '')
@@ -186,10 +192,34 @@ class CaptureCheck(unittest.TestCase):
 
     def test_replacement_paths_do_not_escape_or_include_outputs(self):
         for name in ['../escape', '/absolute', '.git/config', 'build/probe.cpp',
-                     'workbench/spikes/test/evidence/raw.json', 'tools/__pycache__/helper.pyc']:
+                     'workbench/spikes/test/evidence/raw.json', 'tools/__pycache__/helper.pyc',
+                     'workbench/benchmarks/test/evidence/raw.csv', 'workbench/tools/evidence/old.json']:
             with self.subTest(name=name), self.assertRaises(ValueError):
                 capture.capture(self.root, self.output('bad'), replacements=[name + '=src/keep.cpp'])
             self.assertFalse(self.output('bad').exists())
+
+    def test_old_receipts_still_verify_their_original_evidence(self):
+        destination = self.output('old-policy')
+        result = capture.capture(self.root, destination)
+        name = 'workbench/benchmarks/test/evidence/summary.csv'
+        path = destination / name
+        path.parent.mkdir(parents=True)
+        path.write_text('historically captured output')
+        hashes = result['source_files_sha256'] | {name: sha256(path.read_bytes())}
+        result.update(source_files_sha256=hashes,
+                      source_digest=sha256(json.dumps(hashes, sort_keys=True).encode()))
+        result['source_modes'][name] = 0o644
+        capture.receipt_path(destination).write_text(json.dumps(result))
+        self.assertEqual(capture.verify(destination), result)
+        packed = self.root / 'build/old-policy-worker'
+        packed.mkdir()
+        actual = worker.snapshot(packed, destination)
+        self.assertEqual(actual['digest'], result['source_digest'])
+        with tarfile.open(packed / 'source.tar.gz') as archive:
+            self.assertEqual(archive.extractfile(name).read(), path.read_bytes())
+        path.write_text('changed old evidence')
+        with self.assertRaisesRegex(ValueError, 'capture changed'):
+            capture.verify(destination)
 
     def test_directory_replacements_and_inherited_captures_skip_python_caches(self):
         (self.root / 'build').mkdir()

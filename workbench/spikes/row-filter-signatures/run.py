@@ -26,8 +26,6 @@ def main():
     parser.add_argument('--text', action='store_true')
     parser.add_argument('--sanitize', action='store_true')
     args = parser.parse_args()
-    # Captured sources must share the checkout's dataset cache, not create a disposable one.
-    os.environ.setdefault('SIXDB_DATA_CACHE', str(ROOT / 'build/datasets'))
     if not hasattr(os, 'sched_getaffinity'):
         parser.error('Run on Linux, e.g. orb -m ubuntu python3 ...')
     if args.rows < 1 or args.repetitions < 1 or args.min_time <= 0 or args.cpu not in os.sched_getaffinity(0):
@@ -50,7 +48,7 @@ def main():
             text_path = run.input('text-input', text_input) / 'strings.bin'
         config = ['cmake', '-S', str(run.source_root), '-B', str(build), '-G', 'Ninja', '-DCMAKE_BUILD_TYPE=Release', '-DSIXDB_SPIKES=row-filter-signatures', '-DSIXDB_TUNE=generic', f'-DSIXDB_MARCH={args.march}']
         run.step('configure', config)
-        run.step('build', ['cmake', '--build', str(build), '--target', 'row_signatures_check', 'row_signatures_bench', '-j', '4'])
+        run.step('build', ['cmake', '--build', str(build), '--target', 'row_signatures_check', 'row_signatures_bench'])
         for name in ('CMakeCache.txt', 'compile_commands.json'):
             shutil.copy2(build / name, output / name)
         for name in ('row_signatures_check', 'row_signatures_bench'):
@@ -60,7 +58,7 @@ def main():
         if args.sanitize:
             sanitized = build.parent / 'sanitize'
             run.step('configure-sanitize', config[:config.index('-B')+1] + [str(sanitized)] + config[config.index('-B')+2:] + ['-DCMAKE_CXX_FLAGS=-fsanitize=address,undefined -fno-omit-frame-pointer', '-DCMAKE_CXX_FLAGS_RELEASE=-O1 -g'])
-            run.step('build-sanitize', ['cmake', '--build', str(sanitized), '--target', 'row_signatures_check', '-j', '4'])
+            run.step('build-sanitize', ['cmake', '--build', str(sanitized), '--target', 'row_signatures_check'])
             shutil.copy2(sanitized / 'workbench/spikes/row-filter-signatures/row_signatures_check', output / 'check_sanitized')
             run.step('check-sanitize', [str(output / 'check_sanitized'), *check_args])
         binary = str(output / 'row_signatures_bench')

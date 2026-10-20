@@ -69,6 +69,10 @@ the build function writes files into the supplied directory. It needs no
 catalog registration. The [regexp adapter](../spikes/regexp-lowering/prepare.py)
 is an example and reproduces its original six prepared files byte-for-byte.
 
+Preparation invoked through `Run.step()` inherits the owning checkout's dataset
+cache, even when the script lives in a captured workspace. An explicit
+`SIXDB_DATA_CACHE` still selects a shared cache or another volume.
+
 `run.input('inputs', prepared_directory)` records the dependency and returns
 its local path. Normal runs need no S3 access when the input is cached. On
 retention, the input is published once and the run bundle stores its reference.

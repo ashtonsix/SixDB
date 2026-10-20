@@ -58,7 +58,7 @@ def main() -> int:
             "-DCMAKE_BUILD_TYPE=Release", "-DSIXDB_SPIKES=aggregate-maintenance",
             "-DSIXDB_TUNE=generic", "-DSIXDB_MARCH="])
         run.step("build", ["cmake", "--build", str(build), "--target",
-            "aggregate_deltas_check", "aggregate_deltas_bench", "-j", "4"])
+            "aggregate_deltas_check", "aggregate_deltas_bench"])
         for filename in ["CMakeCache.txt", "compile_commands.json"]:
             shutil.copyfile(build / filename, output / filename)
         binary_dir = build / "workbench/spikes/aggregate-maintenance"

@@ -82,7 +82,15 @@ def deduplicate_snapshot(source: Path, destination: Path):
         return shared
 
 
-def source_files(root: Path) -> dict[str, bytes]:
+def source_output(name: str) -> bool:
+    """Outputs do not become inputs to the next source capture."""
+    path = Path(name)
+    return (path.parts[:1] == ('build',) or '__pycache__' in path.parts or
+            path.suffix in ('.pyc', '.pyo') or
+            (path.parts[:1] == ('workbench',) and 'evidence' in path.parts))
+
+
+def source_files(root: Path, *, recorded=()) -> dict[str, bytes]:
     result = subprocess.run(
         ["git", "ls-files", "--cached", "--others", "--exclude-standard", "-z"],
         cwd=root, check=True, stdout=subprocess.PIPE,
@@ -91,9 +99,7 @@ def source_files(root: Path) -> dict[str, bytes]:
     for name in sorted(set(result.stdout.decode().split("\0")) - {""}):
         # Evidence is an output, even when its compact selection is tracked.
         # Do not recursively snapshot old measurements and source archives.
-        if name.startswith("build/") or (
-            name.startswith("workbench/spikes/") and "evidence" in Path(name).parts
-        ):
+        if source_output(name) and name not in recorded:
             continue
         path = root / name
         if path.is_symlink():
@@ -196,8 +202,13 @@ class Run:
         self.save()
         with (self.output / (stdout_name or f"{name}.stdout")).open("wb") as out:
             with (self.output / f"{name}.stderr").open("wb") as err:
-                process = subprocess.run(argv, cwd=self.root, stdout=out, stderr=err,
-                                         env=os.environ | {'PYTHONDONTWRITEBYTECODE': '1'})
+                env = os.environ | {'PYTHONDONTWRITEBYTECODE': '1'}
+                # Captured preparation scripts share the owning checkout's cache.
+                # An explicit cross-checkout/volume cache remains authoritative.
+                env.setdefault('SIXDB_DATA_CACHE', str(self.root / 'build/datasets'))
+                env['CMAKE_BUILD_PARALLEL_LEVEL'] = env.get(
+                    'SIXDB_BUILD_JOBS', env.get('CMAKE_BUILD_PARALLEL_LEVEL', '1'))
+                process = subprocess.run(argv, cwd=self.root, stdout=out, stderr=err, env=env)
         record.update(returncode=process.returncode, seconds=time.monotonic() - started)
         self.save()
         if process.returncode:

@@ -106,7 +106,7 @@ def main():
         run.step('lscpu', ['lscpu', '-e'])
         run.step('configure', ['cmake', '-S', str(run.source_root), '-B', str(run.build_dir), '-G', 'Ninja',
             '-DCMAKE_BUILD_TYPE=Release', '-DSIXDB_SPIKES=orbital-local-handoff', '-DSIXDB_TUNE=generic', '-DSIXDB_MARCH='])
-        run.step('build', ['cmake', '--build', str(run.build_dir), '--target', 'orbital_local_handoff', '-j', '2'])
+        run.step('build', ['cmake', '--build', str(run.build_dir), '--target', 'orbital_local_handoff'])
         binary = run.build_dir / 'workbench/spikes/orbital-local-handoff/orbital_local_handoff'
         shutil.copy2(binary, output / 'probe')
         for name in ['compile_commands.json', 'CMakeCache.txt']:

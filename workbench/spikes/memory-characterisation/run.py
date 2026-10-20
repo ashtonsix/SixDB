@@ -70,7 +70,7 @@ def main():
             run.step(name, cmd)
         run.step('configure', ['cmake', '-S', str(run.source_root), '-B', str(run.build_dir), '-G', 'Ninja',
             '-DCMAKE_BUILD_TYPE=Release', '-DSIXDB_SPIKES=memory-characterisation', '-DSIXDB_TUNE=generic', '-DSIXDB_MARCH='])
-        run.step('build', ['cmake', '--build', str(run.build_dir), '--target', 'memory_characterisation_probe', '-j', '2'])
+        run.step('build', ['cmake', '--build', str(run.build_dir), '--target', 'memory_characterisation_probe'])
         binary = run.build_dir / 'workbench/spikes/memory-characterisation/memory_characterisation_probe'
         (output / 'bin').mkdir()
         shutil.copy2(binary, output / 'bin' / binary.name)

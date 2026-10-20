@@ -87,7 +87,7 @@ def main():
         run(['cmake', '-S', source, '-B', build, '-G', 'Ninja', '-DCMAKE_BUILD_TYPE=Release',
              '-DSIXDB_MARCH=' + args.march, '-DSIXDB_TUNE=' + args.tune], out / (name + '-configure.log'))
         targets = ['orbital', 'orbital_live_tail_check'] if name == 'candidate' else ['orbital']
-        run(['cmake', '--build', build, '--target', *targets, '-j', os.environ.get('SIXDB_BUILD_JOBS', '2')],
+        run(['cmake', '--build', build, '--target', *targets, '-j', os.environ.get('SIXDB_BUILD_JOBS', '1')],
             out / (name + '-build.log'))
         if name == 'candidate':
             run(['taskset', '-c', args.cpu, build / 'orbital/orbital_live_tail_check'], out / 'candidate-check.log')

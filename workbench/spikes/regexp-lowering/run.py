@@ -36,7 +36,6 @@ def main():
         with (args.inputs/name).open('rb') as f:
             if hashlib.file_digest(f, 'sha256').hexdigest() != digest: raise ValueError(f'Changed prepared input: {name}')
     output = ROOT/'build/experiments/regexp-lowering'/datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%S.%fZ')
-    build = ROOT/'build/clang/regexp-lowering'
     run = Run(ROOT, output, {'input_manifest': meta, 'sanitize': args.sanitize, 'branch_budget': args.branch_budget, 'study': args.study, 'scope': 'raw-string efficacy, no timing comparison'}, workspace=ROOT / 'build/workspaces/regexp-lowering')
     build = run.build_dir
     drivers = ['check', 'factor_check', 'factor_probe'] if factored else ['check', 'probe']
@@ -56,7 +55,7 @@ def main():
         run.step('compiler', ['clang++-21', '--version'])
         run.step('hardware', ['lscpu'])
         run.step('configure', ['cmake', '-S', str(run.source_root), '-B', str(build), '-G', 'Ninja', '-DCMAKE_BUILD_TYPE=Release', '-DSIXDB_SPIKES=regexp-lowering', '-DSIXDB_TUNE=generic'])
-        run.step('build', ['cmake', '--build', str(build), '--target', *executables, '-j', '4'])
+        run.step('build', ['cmake', '--build', str(build), '--target', *executables])
         for name in ('CMakeCache.txt', 'compile_commands.json'): shutil.copy2(build/name, output/name)
         for name in executables:
             shutil.copy2(build/'workbench/spikes/regexp-lowering'/name, output/name)
@@ -64,7 +63,7 @@ def main():
         if args.sanitize:
             sb = run.build_dir.parent/'sanitize'
             run.step('configure-sanitize', ['cmake', '-S', str(run.source_root), '-B', str(sb), '-G', 'Ninja', '-DCMAKE_BUILD_TYPE=Release', '-DSIXDB_SPIKES=regexp-lowering', '-DCMAKE_CXX_FLAGS=-fsanitize=address,undefined -fno-omit-frame-pointer', '-DCMAKE_CXX_FLAGS_RELEASE=-O1 -g'])
-            run.step('build-sanitize', ['cmake', '--build', str(sb), '--target', *['regexp_lowering_'+name for name in checks], '-j', '4'])
+            run.step('build-sanitize', ['cmake', '--build', str(sb), '--target', *['regexp_lowering_'+name for name in checks]])
             for name in checks: run.step(name+'-sanitize', [str(sb/'workbench/spikes/regexp-lowering'/('regexp_lowering_'+name))])
         for dataset in ('accidents', 'uap'):
             driver = 'factor_probe' if factored else 'probe'

@@ -27,7 +27,6 @@ def main():
     if args.repetitions < 1 or args.min_time <= 0 or args.cpu not in os.sched_getaffinity(0):
         parser.error('Invalid repetitions, minimum time, or CPU')
     output = ROOT / 'build/experiments/trie-remapping' / datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%S.%fZ')
-    build = ROOT / 'build/clang/trie-remapping'
     run = Run(ROOT, output, vars(args) | {'allowed_cpus': sorted(os.sched_getaffinity(0))}, workspace=ROOT / 'build/workspaces/trie-remapping')
     build = run.build_dir
     print(f'Run: {output}', flush=True)
@@ -38,7 +37,7 @@ def main():
         run.step('compiler', ['clang++-21', '--version'])
         run.step('hardware', ['lscpu'])
         run.step('configure', ['cmake', '-S', str(run.source_root), '-B', str(build), '-G', 'Ninja', '-DCMAKE_BUILD_TYPE=Release', '-DSIXDB_SPIKES=trie-remapping', '-DSIXDB_TUNE=generic'])
-        run.step('build', ['cmake', '--build', str(build), '--target', 'trie_remapping_check', 'trie_remapping_bench', '-j', '4'])
+        run.step('build', ['cmake', '--build', str(build), '--target', 'trie_remapping_check', 'trie_remapping_bench'])
         for name in ('CMakeCache.txt', 'compile_commands.json'):
             shutil.copy2(build / name, output / name)
         for name in ('trie_remapping_check', 'trie_remapping_bench'):
@@ -47,7 +46,7 @@ def main():
         if args.sanitize:
             sanitized = run.build_dir.parent / 'sanitize'
             run.step('configure-sanitize', ['cmake', '-S', str(run.source_root), '-B', str(sanitized), '-G', 'Ninja', '-DCMAKE_BUILD_TYPE=Release', '-DSIXDB_SPIKES=trie-remapping', '-DSIXDB_TUNE=generic', '-DCMAKE_CXX_FLAGS=-fsanitize=address,undefined -fno-omit-frame-pointer', '-DCMAKE_CXX_FLAGS_RELEASE=-O1 -g'])
-            run.step('build-sanitize', ['cmake', '--build', str(sanitized), '--target', 'trie_remapping_check', '-j', '4'])
+            run.step('build-sanitize', ['cmake', '--build', str(sanitized), '--target', 'trie_remapping_check'])
             shutil.copy2(sanitized / 'workbench/spikes/trie-remapping/trie_remapping_check', output / 'trie_remapping_check_sanitized')
             run.step('check-sanitize', [str(output / 'trie_remapping_check_sanitized')])
         binary = str(output / 'trie_remapping_bench')

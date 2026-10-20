@@ -34,7 +34,8 @@ run scripts on EC2.
 [Local storage maintenance](workbench/tools/storage.md#local-builds-captures-and-other-ignored-output)
 budgets ordinary `build/` output as well as worker results. Old idle CMake objects
 can be rebuilt after expiry; use `.keep-local` for incremental work that must stay.
-Pinned and unique output remains visible in accounting and Tooling handles growth.
+Pinned and unique output remains visible in accounting. Scheduled maintenance
+is disabled on this device; the storage guide covers explicit pruning and recovery.
 
 Floating-point settings disable fast-math and implicit contraction.
 `SIXDB_MARCH` selects the ISA; `SIXDB_TUNE` independently selects `generic`,
