@@ -7,6 +7,12 @@ The executable spike now uses real Ikea containers and Orbital/Loom allocation,
 Objects and publication. Storage controls, five-layer edits, ordered placement,
 directory pressure, staged reads, full byte-key search, memory locators and
 schema migration and editor failure/retry have separate drivers.
+The directory tracks segment identities, logical bounds, representations and
+Part locators. `Row`/`EntryState` are fixture producers and independent oracle
+inputs; they are not an Engine record store or a selected aggregate-maintenance
+implementation. Directory measurements report segments per layer and separate
+directory work from fixture record edits and segment-body construction. The
+future Engine-versus-LMDB driver remains a separate proposal.
 The [findings](FINDINGS.md) track measurements, rejected cases and remaining work;
 this document retains the implementation questions. The [prior-art survey](PRIOR-ART.md)
 supplies implementation mechanisms and a source-based assessment of Calico.
@@ -17,6 +23,8 @@ The [schema comparison](SCHEMA.md) owns definition lookup, explicit selected
 segment migration and native-source versus model-image conversion.
 The [failure panel](FAILURES.md) owns undo logging, construction/refusal/abort
 histories and retry cost, including allocation-state sensitivity in comparisons.
+The [maintenance panel](MAINTENANCE.md) owns stable directory-page fences,
+split/merge histories and page-local StreamPack overflow coordinates.
 
 The current update implementations remain far behind the historical Calico/LMDB
 scale. Findings include broad-copy failures, an Orbital ObjectId hash defect
@@ -186,23 +194,26 @@ and consolidation. Each fixed J-prefix has 2^(48-8J) positions; test exhaustion
 in small equivalent domains without borrowing across its boundary.
 
 Separate physical-label slack from payload slack. Relabeling can leave packed
-payload ranks unchanged; middle insertion can still shift columns. Compare one
-packed and one chunked/gapped payload control while holding directory code fixed.
+payload ranks unchanged; middle insertion can still shift columns. Vary the
+fixture's supplied segment versions and Part changes while holding directory
+code fixed. The actual record/aggregate storage implementation belongs to Engine
+work and the later end-to-end comparison, rather than this directory experiment.
 Record moved labels, shifted payload bytes, changed dirents and bound repairs.
 A last-byte-only relabel leaves all four ancestor entry prefixes unchanged;
 wider moves transfer the affected summary contributions. Maintain count and
 nullable integer-field summaries in the fixture, checking deletion of extrema
-and empty/nonempty transitions. A value replacement leaves row count and
-logical-key membership unchanged; use its before/after contributions directly.
+and empty/nonempty transitions in the fixture oracle. A value replacement leaves
+row count and logical-key membership unchanged; the fixture can derive its
+before/after contributions directly.
 The [aggregate-maintenance conclusions](../aggregate-maintenance/CONCLUSIONS.md)
 separate additive corrections from last-witness extrema repair. Their eager,
 bounded-append and location-addressed controls are relevant when summary writes
 dominate. Price construction, corrected reads and full draining together;
 fewer ancestor adjustments did not reliably mean less CPU in that study.
 Its count/sum probes did not implement retained snapshots, nullable fields or
-extrema repair. A composed buffer experiment must establish compatible base
-and correction visibility under Orbital, including relabeling and old readers,
-before claiming those write savings here.
+extrema repair. Aggregate-policy selection remains outside the directory's
+ownership. Directory workloads should include different segment-update fanouts
+and Part recipes, without treating fixture aggregate costs as directory latency.
 
 ### MVCC, execution and external references
 

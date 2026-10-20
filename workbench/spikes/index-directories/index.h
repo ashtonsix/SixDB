@@ -34,6 +34,8 @@ enum class Search { ordinary,boundlist };
 struct EditStats : CopyStats {
     u64 summary_entries{},new_segments{},removed_segments{},bound_repairs{};
     u64 model_ns{},segment_image_ns{},segment_capture_ns{},directory_ns{},prepare_ns{},install_ns{};
+    u64 page_splits{},page_merges{},page_redistributions{},page_balance_rows{},directory_rows{},overflow_rows{};
+    u64 dirent_ns{},directory_copied{},directory_allocated{},directory_objects{},directory_journal_bytes{},dirent_changes{},segment_changes{};
 };
 class Index {
     Runtime& rt_;
@@ -46,7 +48,7 @@ class Index {
     std::map<SegmentKey,std::set<std::uint16_t>> dirty_positions_;
     std::map<unsigned,Definition> definition_overrides_;
     unsigned j_{},key_bytes_{},generation_{},page_bits_{},aux_parts_{},definitions_{},summary_chunk_{};
-    bool compact_tables_{},directory_branches_{},packed_pages_{},compact_hashes_{},indirect_parts_{};
+    bool compact_tables_{},directory_branches_{},packed_pages_{},compact_hashes_{},indirect_parts_{},stable_pages_{};
     unsigned table_row_chunk_{},root_row_chunk_{},locator_mode_{};
     UndoJournal* undo_{};
     template<class F>auto transaction(F f,EditFaults* faults)->orbital::Result<decltype(f())> {
@@ -75,7 +77,7 @@ class Index {
     Outcome auxiliary(Store::Scope&,unsigned,const Dirent&,Outcome,unsigned) const;
 public:
     Store store;
-    Index(Runtime&,std::pmr::memory_resource&,unsigned j,unsigned key_bytes=8,unsigned page_bits=0,unsigned auxiliary_parts=0,unsigned definitions=3,unsigned summary_chunk=0,bool compact_tables=false,bool directory_branches=false,unsigned table_row_chunk=0,bool packed_pages=false,bool compact_hashes=false,unsigned root_row_chunk=0,unsigned locator_mode=0);
+    Index(Runtime&,std::pmr::memory_resource&,unsigned j,unsigned key_bytes=8,unsigned page_bits=0,unsigned auxiliary_parts=0,unsigned definitions=3,unsigned summary_chunk=0,bool compact_tables=false,bool directory_branches=false,unsigned table_row_chunk=0,bool packed_pages=false,bool compact_hashes=false,unsigned root_row_chunk=0,unsigned locator_mode=0,bool stable_pages=false);
     CopyStats extend_schema(unsigned definitions,std::span<const Definition> additions={});
     orbital::Result<CopyStats> try_extend_schema(unsigned definitions,std::span<const Definition> additions={},EditFaults* faults=nullptr);
     EditStats edit(std::span<const Row> additions,std::span<const u64> removals={},bool selective=true);
@@ -91,6 +93,7 @@ public:
     u64 logical_bytes() const;
     u64 cache_bytes(Store::Scope&)const;
     u64 locator_bytes(Store::Scope&)const;
+    std::array<u64,5> directory_population()const {std::array<u64,5> n;for(unsigned l=0;l<5;++l)n[l]=directory_entries_[l].size();return n;}
     unsigned segments() const {return segments_.size();}
 };
 std::vector<Row> dataset(unsigned count,unsigned j,unsigned duplicate=1,u64 spacing=257);

@@ -4,8 +4,15 @@ Measured prototype, 20 October 2026. This is an implementation experiment for
 Ashton's supplied index. No Engine interface, physical format or placement
 policy has been promoted. The [plan](README.md) and [prior art](PRIOR-ART.md)
 give the conceptual context and mechanisms under investigation.
+The directory owns segment dirents and Part locators. Record/aggregate models
+in these drivers generate input versions and provide correctness oracles.
+Earlier tables labelled `rows` count fixture records; their complete edit
+timings include producer and segment-body work. They must not be read as
+isolated directory latency or as the proposed Engine end-to-end driver. The
+[maintenance panel](MAINTENANCE.md) reports actual segment populations and
+isolates directory/overflow maintenance from those producer costs.
 
-## The first update results fail the performance goal
+## The first fixture update results fail the performance goal
 
 Hundreds of microseconds for a small value update are far behind the historical
 Calico and LMDB scale. They expose prototype work to remove, rather than a
@@ -30,7 +37,7 @@ record-absence verdict. These numbers do not establish complete Engine cost.
 
 ## What the prototype actually does
 
-Nine drivers use one implementation where practical:
+Ten research drivers use one implementation where practical:
 
 | Driver | Boundary |
 | --- | --- |
@@ -43,6 +50,7 @@ Nine drivers use one implementation where practical:
 | `locators` | Raw addresses versus stable memory-reference cells, through actual Part consumption and value publication, with retained readers and escaping Parts. |
 | `schema` | Definition lookup across a historical tail; selected segment migration with codec, chunk and auxiliary-Part changes; native-source conversion versus model reconstruction. |
 | `failure` | Reversible author edits through construction, refusal, abort and retry; normal/retry costs and shared versus fresh Pool state. |
+| `maintenance` | Directory-only descriptor/page/overflow costs through supplied segment rewrites, birth/death and Part-recipe changes; stable split/merge versus complete repartition. |
 
 Build with `-DSIXDB_SPIKES=index-directories`. On Linux, for a captured checked
 run with CPU affinity and median/min/max summaries:
@@ -213,6 +221,8 @@ cost remains in tens of microseconds, with broad structural edits still much
 slower. [The owned report](FAILURES.md#measured-result) keeps normal/retry timing,
 memory exclusions and overlapping timing ranges. Exact extrema still rely on
 full frequency maps; buffering has not been qualified with Orbital snapshots.
+These are fixture observations. Aggregate-policy implementation remains outside
+the directory spike; directory-native timing is reported separately below.
 
 The failure comparison also finds allocation-state pressure beyond logical
 fixture size. Fresh Index instances sharing one Pool show two capture-cost
@@ -370,10 +380,11 @@ the finite/Window request threshold is sufficient to choose this layout. Keep
 the losing case. Checks additionally retain a 4,097-prefix root across edits
 in three row chunks and a shrink that changes its Part count.
 
-The next production work needs bounded populated-page maintenance and bounded
-payload edits, with native allocation, staging and helper costs separately
-attributed. A flat outer roster or scanning an ever-growing Representation Part
-directory is not a general solution for the possible 2^32 segments. No arbitrary
+The directory needs bounded populated-page maintenance, with native allocation,
+staging and helper costs separately attributed. The maintained-page experiment
+below supplies a leaf control. A flat outer roster or scanning an ever-growing
+Representation Part directory is not a general solution for the possible 2^32
+segments. Segment-payload implementation is separate Engine work. No arbitrary
 48-bit population has been materialized, no production format is selected, and
 the local-publication fixture still has the failure/recovery limits above.
 
@@ -392,6 +403,29 @@ Intel and ARM show the same direction. Full-cell and compact controls, both
 summary grains, phase attribution and retained metadata are in the owned report.
 This removes a measured directory-repair cost; the remaining publisher still
 falls well short of the historical peer scale above.
+
+## Maintained directory pages
+
+The [maintenance experiment](MAINTENANCE.md) keeps page fences stable through
+segment birth/death and repairs StreamPack ranks locally. Both controls receive
+the same supplied segment-version histories. Populations are segments per
+layer; primary time and bytes cover directory/overflow work. Fixture record
+editing, segment-body generation and coupled publication are separately named.
+
+At 4,096 layer-4 segments on Zen 5, directory mutation for five-segment rewrites
+falls from 552 to 25.2 microseconds at J=0 and from 2,961 to 72.7 at J=2. Native
+copied directory bytes are unchanged in that case; traversals, hash-owner
+rebuilds and captures fall instead. A single-segment representation/Part-count
+change improves more modestly, from 24.1 to 15.4 microseconds at J=0. The owned
+report retains all three targets, both populations, five event types and normal
+as well as broad-repartition cases. It also reports increased page count, the
+remaining flat outer roster and unpriced ownership costs.
+
+All three native targets pass split/merge/redistribution, retained-reader and
+failure/retry histories. All ten local research checks pass ASan/UBSan.
+This removes a demonstrated broad-repair failure. Directory-only costs are
+still tens to hundreds of microseconds; neither correctness nor improvement
+over the earlier control establishes an acceptable Engine directory.
 
 The [Engine-versus-LMDB driver](ENGINE-VS-LMDB.md) remains a proposal. These
 component measurements describe local fixture execution; direct peer

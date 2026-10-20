@@ -2,12 +2,14 @@
 
 The selection keeps matched controls, all repetitions and counters for the
 executable storage, composed, placement, directory-pressure, Ring, byte-key and
-memory-locator, schema-migration and editor-failure families. It supports the negative
+memory-locator, schema-migration, editor-failure and maintained-directory families.
+It supports the negative
 update-cost finding and cross-platform read/write tradeoffs in
 [FINDINGS.md](../FINDINGS.md) and
 [LOCATORS.md](../LOCATORS.md), plus the historical-tail/conversion comparison in
 [SCHEMA.md](../SCHEMA.md) and the rollback/normal-write comparison in
-[FAILURES.md](../FAILURES.md). Source snapshots, build
+[FAILURES.md](../FAILURES.md), plus directory-only structural costs in
+[MAINTENANCE.md](../MAINTENANCE.md). Source snapshots, build
 receipts, binaries and omitted logs are recovered through each `artifact.json`.
 This is selected experimental evidence, not a production qualification record.
 Earlier layout/capture cuts retain the pressure and, where cited, Ring panels;
@@ -45,6 +47,9 @@ retain the complete varied matrix. Root cuts retain only the new pressure panel.
 | [failure-direct-zen5](failure-direct-zen5/) | `20261020T105505Z-f268248b` | Direct replacement versus generic model with undo, plus no-undo/retry controls and unchanged structural work. |
 | [failure-direct-intel](failure-direct-intel/) | `20261020T105512Z-2078fbbc` | Same direct-replacement comparison on Granite Rapids. |
 | [failure-direct-neon](failure-direct-neon/) | `20261020T105518Z-4edffb56` | Same direct-replacement comparison on Neoverse V2. |
+| [maintenance-zen5](maintenance-zen5/) | `20261020T111937Z-e71a40f7` | Directory-only phase, stable fences/local overflow versus global repartition, with mixed histories and single-segment Part-recipe changes. |
+| [maintenance-intel](maintenance-intel/) | `20261020T111943Z-fe8b4c68` | Same maintained-directory source on Granite Rapids. |
+| [maintenance-neon](maintenance-neon/) | `20261020T111948Z-466a9c3a` | Same maintained-directory source on Neoverse V2. |
 
 The capture trio uses the code frozen by worker group
 `20261020T074653Z-102689a1`. Intel was rerun from that group's exact captured
@@ -84,6 +89,15 @@ Each has five rotated trials; the first two have three arms, the final has four.
 The source snapshots distinguish them. They do not establish an end-to-end
 performance winner; [FAILURES.md](../FAILURES.md) reports limits and remaining
 structural cost. The final driver always performs 32 successful writes per burst.
+
+The maintenance trio uses group `20261020T111931Z-465c14b8`. It retains the full
+256/4,096-layer-4-segment, J=0/2, five-event, two-arm matrix with five trials:
+200 raw samples per target. Per-layer segment counts remain in every row. Each
+burst has 96 edits. Primary time/native counters cover directory/overflow work;
+producer/body costs and coupled publication are separate diagnostics, as defined
+in [MAINTENANCE.md](../MAINTENANCE.md). All three archives include successful
+structural and failure checks. Earlier fixture-wide local sweeps remain
+diagnostics in ignored experiment storage.
 
 The resolution pair uses the same reused Zen 5 host. Public `capture.py` derived
 `index-directory-prefix-repaired` from `index-directory-prefix-old` by replacing

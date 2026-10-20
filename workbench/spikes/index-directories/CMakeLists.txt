@@ -45,3 +45,8 @@ add_executable(index_directory_failure failure.cpp)
 sixdb_target(index_directory_failure)
 target_link_libraries(index_directory_failure PRIVATE index_directory_core)
 add_test(NAME index_directory_failure_check COMMAND index_directory_failure --check)
+
+add_executable(index_directory_maintenance maintenance.cpp)
+sixdb_target(index_directory_maintenance)
+target_link_libraries(index_directory_maintenance PRIVATE index_directory_core)
+add_test(NAME index_directory_maintenance_check COMMAND index_directory_maintenance --check)

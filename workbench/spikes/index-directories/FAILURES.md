@@ -2,6 +2,9 @@
 
 The `failure` driver extends the composed directory through construction
 failure, preparation refusal, accepted-packet abort and stale-basis retry.
+Its `rows` dimension is the fixture record population and its editor timing
+includes the record/summary producer. Directory-only structural timing and
+per-layer segment populations are reported by [maintenance](MAINTENANCE.md).
 It measures the normal writer cost of retaining an undo log, alongside an
 unprotected no-fault control. The supplied segment identities, layers, ordering
 and query semantics are unchanged.

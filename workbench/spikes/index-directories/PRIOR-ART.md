@@ -51,6 +51,10 @@ ordered field frequencies for exact extrema; it has not demonstrated a compact
 extrema-maintenance representation. Buffered alternatives must pay for reads
 and draining and preserve compatible base/correction versions through relabels
 and retained readers. The earlier study did not implement that Orbital path.
+These are requirements on aggregate producers, rather than algorithms for this
+directory to implement. The fixture improvements do not select an Engine
+aggregate representation; the directory's work is interpreting and maintaining
+the resulting segment metadata and Part locators.
 
 | Primary source | Mechanism | Experiment in this spike |
 | --- | --- | --- |
@@ -87,6 +91,12 @@ against an actual retained historical-definition tail. Native-source conversion
 avoids rebuilding unaffected columns, while flat schema extension exposes its
 full-copy cost. These are current composition results; the Calico metadata
 mechanism supplies motivation without imposing its class/version encoding.
+
+The [maintenance experiment](MAINTENANCE.md) now tests stable storage-page fences
+and split/merge hysteresis within each supplied layer, including page-local
+overflow repair. It preserves duplicate bounds and old readers through those
+changes. These are measured directory mechanisms; the flat outer roster and
+memory tradeoffs still prevent treating the experiment as a selected tree.
 
 The first comparisons follow directly: plain per-layer arrays, the proposed
 composition, coarse versus local directory edits, compact ordering metadata,

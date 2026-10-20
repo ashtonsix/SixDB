@@ -47,6 +47,39 @@ void field_delta(std::map<i64,unsigned>& values,i64 value,bool add,UndoJournal* 
     if(undo)undo->save(it->second);
     if(add)++it->second;else --it->second;
 }
+// Storage pages retain lower fences through interior edits. Only a split,
+// merge or redistribution changes a fence. These are directory pages within
+// one supplied layer, independent of the prefix-defined segment identities.
+template<class Entries,class Pages>std::set<unsigned> maintain_pages(UndoJournal* undo,const Entries& entries,Pages& pages,const std::set<unsigned>& dirty,unsigned capacity,EditStats& stats) {
+    std::set<unsigned> changed,pending;
+    if(entries.empty()) {
+        for(auto it=pages.begin();it!=pages.end();){changed.insert(it->first);it=edit_erase(undo,pages,it);}return changed;
+    }
+    if(pages.empty())edit_get(undo,pages,0u);
+    require(pages.begin()->first==0);
+    for(auto key:dirty)pending.insert(std::prev(pages.upper_bound(key))->first);
+    auto extent=[&](auto page) {
+        const auto next=std::next(page);return std::pair{entries.lower_bound(page->first),next==pages.end()?entries.end():entries.lower_bound(next->first)};
+    };
+    auto population=[&](auto first,auto last){auto n=std::distance(first,last);stats.page_balance_rows+=n;return unsigned(n);};
+    while(!pending.empty()) {
+        const auto anchor=*pending.begin();pending.erase(pending.begin());auto page=pages.find(anchor);if(page==pages.end())continue;
+        changed.insert(anchor);auto [first,last]=extent(page);const unsigned n=population(first,last);
+        if(n>capacity) {
+            auto middle=std::next(first,n/2);edit_get(undo,pages,middle->first);changed.insert(middle->first);
+            pending.insert(anchor);pending.insert(middle->first);++stats.page_splits;
+        } else if(n<capacity/4 && pages.size()>1) {
+            auto left=page,right=std::next(page);if(right==pages.end()){right=page;left=std::prev(page);}
+            auto begin=extent(left).first,end=extent(right).second;const unsigned total=population(begin,end);const auto kept=left->first,retired=right->first;
+            changed.insert(kept);changed.insert(retired);edit_erase(undo,pages,right);
+            if(total>capacity) {
+                auto middle=std::next(begin,total/2);edit_get(undo,pages,middle->first);changed.insert(middle->first);pending.insert(middle->first);++stats.page_redistributions;
+            } else ++stats.page_merges;
+            pending.insert(kept);
+        }
+    }
+    return changed;
+}
 unsigned prefix(u64 physical,unsigned layer) {return layer ? physical>>(48-8*layer):0;}
 std::uint16_t position(u64 physical,unsigned layer) {return physical>>(32-8*layer);}
 unsigned boundary(std::span<const u64> maxima,u64 key,Search method,bool strict=false) {
@@ -133,8 +166,8 @@ void EntryState::replace(const Row& before,const Row& after,UndoJournal* undo) {
     if(after.valid && (!before.valid || before.value!=after.value))field_delta(field,after.value,true,undo);
 }
 Summary EntryState::summary() const {return {count,not_null,field.empty()?0:field.begin()->first,field.empty()?0:field.rbegin()->first,sum};}
-Index::Index(Runtime& rt,std::pmr::memory_resource& memory,unsigned j,unsigned key_bytes,unsigned page_bits,unsigned auxiliary_parts,unsigned definitions,unsigned summary_chunk,bool compact_tables,bool directory_branches,unsigned table_row_chunk,bool packed_pages,bool compact_hashes,unsigned root_row_chunk,unsigned locator_mode)
-    :rt_(rt),memory_(memory),j_(j),key_bytes_(key_bytes),page_bits_(page_bits),aux_parts_(auxiliary_parts),definitions_(definitions),summary_chunk_(summary_chunk),compact_tables_(compact_tables),directory_branches_(directory_branches),packed_pages_(packed_pages),compact_hashes_(compact_hashes),indirect_parts_(locator_mode!=0),table_row_chunk_(table_row_chunk),root_row_chunk_(root_row_chunk),locator_mode_(locator_mode),store(memory) {require(locator_mode<=2 && j<=6 && key_bytes>=8 && page_bits<=8 && auxiliary_parts<=4 && definitions>=3 && (!summary_chunk || summary_chunk>=64) && (!directory_branches || page_bits) && (!packed_pages || (page_bits && !directory_branches)) && (!table_row_chunk || table_row_chunk<=256) && root_row_chunk<=256 && (!root_row_chunk || !directory_branches));}
+Index::Index(Runtime& rt,std::pmr::memory_resource& memory,unsigned j,unsigned key_bytes,unsigned page_bits,unsigned auxiliary_parts,unsigned definitions,unsigned summary_chunk,bool compact_tables,bool directory_branches,unsigned table_row_chunk,bool packed_pages,bool compact_hashes,unsigned root_row_chunk,unsigned locator_mode,bool stable_pages)
+    :rt_(rt),memory_(memory),j_(j),key_bytes_(key_bytes),page_bits_(page_bits),aux_parts_(auxiliary_parts),definitions_(definitions),summary_chunk_(summary_chunk),compact_tables_(compact_tables),directory_branches_(directory_branches),packed_pages_(packed_pages),compact_hashes_(compact_hashes),indirect_parts_(locator_mode!=0),stable_pages_(stable_pages),table_row_chunk_(table_row_chunk),root_row_chunk_(root_row_chunk),locator_mode_(locator_mode),store(memory) {require(locator_mode<=2 && j<=6 && key_bytes>=8 && page_bits<=8 && auxiliary_parts<=4 && definitions>=3 && (!summary_chunk || summary_chunk>=64) && (!directory_branches || page_bits) && (!packed_pages || (page_bits && !directory_branches)) && (!stable_pages || (packed_pages && page_bits>=2)) && (!table_row_chunk || table_row_chunk<=256) && root_row_chunk<=256 && (!root_row_chunk || !directory_branches));}
 void Index::edit_model(const Row& row,bool add,std::set<SegmentKey>& affected) {
     require(row.physical<(u64(1)<<48));
     if(j_)require((row.physical>>(48-8*j_))==(row.logical>>(64-8*j_)));
@@ -221,7 +254,7 @@ EditStats Index::apply(std::span<const Row> additions,std::span<const u64> remov
     std::array<std::set<unsigned>,5> dirty_overflow;
     for(const auto key:affected) {
         const auto id=segment_id(key.first,key.second);auto old=basis.bind(id);
-        if(!segments_.contains(key)) {changes.push_back({id,{}});edit_erase(undo_,directory_entries_[key.first],key.second);directory_changes.insert(key);++stats.removed_segments;continue;}
+        if(!segments_.contains(key)) {const auto start=Clock::now();const auto journal_before=undo_?undo_->record_bytes():0;changes.push_back({id,{}});edit_erase(undo_,directory_entries_[key.first],key.second);directory_changes.insert(key);++stats.removed_segments;stats.dirent_ns+=elapsed(start);if(undo_)stats.directory_journal_bytes+=undo_->record_bytes()-journal_before;continue;}
         unsigned rep=1+(u64(key.second)*991+generation_+key.first)%definitions_;
         while(!(representation_definition(rep).allowed_layers&(1u<<key.first)))rep=rep%definitions_+1;
         if(old && same_positions)rep=old.control().representation;
@@ -270,6 +303,7 @@ EditStats Index::apply(std::span<const Row> additions,std::span<const u64> remov
         stats.summary_entries+=c.count;
         const auto capture_start=Clock::now();
         auto owner=attempt(try_capture(rt_,store,c,image,old,selective,stats,patch));stats.segment_capture_ns+=elapsed(capture_start);
+        const auto descriptor_start=Clock::now();const auto descriptor_journal=undo_?undo_->record_bytes():0;
         private_segments[key]=Physical::selection(owner.get());
         auto selected=Physical::selection(owner.get());auto d=describe(selected);
         auto& entries=directory_entries_[key.first];
@@ -283,16 +317,38 @@ EditStats Index::apply(std::span<const Row> additions,std::span<const u64> remov
         if(old && old.part_count()!=selected.part_count())dirty_overflow[key.first].insert(key.second);
         for(unsigned p=6;p<selected.part_count();++p)if(!old || p>=old.part_count() || part_locator(selected,p)!=part_locator(old,p))dirty_overflow[key.first].insert(key.second);
         changes.push_back({id,std::move(owner)});if(!old)++stats.new_segments;
+        stats.dirent_ns+=elapsed(descriptor_start);if(undo_)stats.directory_journal_bytes+=undo_->record_bytes()-descriptor_journal;
     }
     {const auto start=Clock::now();dirty_positions_.clear();stats.model_ns+=elapsed(start);}
     const auto directory_start=Clock::now();
+    const auto directory_copied=stats.copied,directory_allocated=stats.allocated,directory_objects=stats.objects,directory_journal=undo_?undo_->record_bytes():0;
     for(unsigned layer=0;layer<5;++layer) {
         if(std::ranges::none_of(directory_changes,[&](auto k){return k.first==layer;}) && dirty_overflow[layer].empty())continue;
         auto& entries=directory_entries_[layer];
         const auto root=basis.bind(directory_id(layer));
         std::set<unsigned> changed_pages;
         if(page_bits_ && layer>=2)for(auto k:affected)if(k.first==layer)changed_pages.insert(k.second>>page_bits_);
-        if(aux_parts_ || summary_chunk_ || !overflow_prefixes_[layer].empty() || !dirty_overflow[layer].empty()) {
+        if(stable_pages_ && layer>=2) {
+            std::set<unsigned> dirty=dirty_overflow[layer];for(auto key:directory_changes)if(key.first==layer)dirty.insert(key.second);
+            changed_pages=maintain_pages(undo_,entries,page_entries_[layer],dirty,1u<<page_bits_,stats);
+            for(auto page:changed_pages) {
+                const auto anchor=page_entries_[layer].find(page);const auto id=overflow_id(layer,page);const auto old=basis.bind(id);
+                if(anchor==page_entries_[layer].end()){if(old)changes.push_back({id,{}});if(basis.bind(page_id(layer,page)))changes.push_back({page_id(layer,page),{}});continue;}
+                const auto next=std::next(anchor);auto first=entries.lower_bound(page),last=next==page_entries_[layer].end()?entries.end():entries.lower_bound(next->first);
+                bool rebuild=stats.new_segments || stats.removed_segments || !old;unsigned rank=0;
+                for(auto it=first;it!=last;++it,++rank) {
+                    auto& d=it->second.descriptor;
+                    if(d.overflow_block!=page || d.overflow_rank!=rank){if(undo_)undo_->save(d);d.overflow_block=page;d.overflow_rank=rank;directory_changes.insert({layer,it->first});rebuild=true;}
+                    rebuild|=dirty_overflow[layer].contains(it->first);
+                }
+                if(!rebuild)continue;
+                std::vector<Selection> selected;for(auto it=first;it!=last;++it){const SegmentKey key{layer,it->first};selected.push_back(private_segments.contains(key)?private_segments.at(key):basis.bind(segment_id(layer,key.second)));}
+                stats.overflow_rows+=selected.size();require(selected.size()<=256);
+                if(std::ranges::none_of(selected,[](auto s){return s.part_count()>6;})){if(old)changes.push_back({id,{}});continue;}
+                const auto image=pack_overflow(selected);Control c{&memory_,Kind::overflow,layer,page,unsigned(selected.size()),1,generation_,0,4,key_bytes_};
+                changes.push_back({id,attempt(try_capture(rt_,store,c,image,old,selective,stats))});
+            }
+        } else if(aux_parts_ || summary_chunk_ || !overflow_prefixes_[layer].empty() || !dirty_overflow[layer].empty()) {
             auto& prefixes=overflow_prefixes_[layer];std::set<unsigned> dirty_blocks;
             if(!value_only || prefixes.size()!=entries.size()) {
                 const auto old_segments=prefixes.size();
@@ -301,6 +357,7 @@ EditStats Index::apply(std::span<const Row> additions,std::span<const u64> remov
                 for(auto& [p,e]:entries) {
                     if(e.descriptor.overflow_block!=rank/256 || e.descriptor.overflow_rank!=rank%256) {
                         if(undo_)undo_->save(e.descriptor);e.descriptor.overflow_block=rank/256;e.descriptor.overflow_rank=rank%256;
+                        directory_changes.insert({layer,p});
                     }
                     prefixes.push_back(p);dirty_blocks.insert(rank/256);++rank;
                     if(page_bits_ && layer>=2)changed_pages.insert(p>>page_bits_);
@@ -313,6 +370,7 @@ EditStats Index::apply(std::span<const Row> additions,std::span<const u64> remov
                 for(unsigned r=block*256;r<std::min<unsigned>(prefixes.size(),(block+1)*256);++r) {
                     const SegmentKey key{layer,prefixes[r]};selected.push_back(private_segments.contains(key)?private_segments.at(key):basis.bind(segment_id(layer,key.second)));
                 }
+                stats.overflow_rows+=selected.size();
                 const auto old=basis.bind(overflow_id(layer,block));
                 if(std::ranges::none_of(selected,[](auto s){return s.part_count()>6;})) {
                     if(old)changes.push_back({overflow_id(layer,block),{}});continue;
@@ -340,6 +398,7 @@ EditStats Index::apply(std::span<const Row> additions,std::span<const u64> remov
             if(hashed){hash_keys.reserve(count);hash_rows.reserve(count);}
             unsigned rank=0;
             for(auto it=first;it!=last;++it,++rank) {
+                ++stats.directory_rows;
                 const auto p=it->first;const auto& e=it->second;
                 const unsigned slot=table && !compact?p:rank,chunk=row_grain?slot/row_grain:0,part=summary_part(chunk);
                 const bool dirty_row=!delta_rows || (table?affected.contains({layer,p}):changed_pages.contains(p));
@@ -362,7 +421,7 @@ EditStats Index::apply(std::span<const Row> additions,std::span<const u64> remov
             return owner;
         };
         if(page_bits_ && layer>=2) {
-            if(packed_pages_) {
+            if(packed_pages_ && !stable_pages_) {
                 // Occupied-rank partition control. Value edits touch one page;
                 // structural edits repartition the roster and retire old page
                 // IDs. This is not a stable split/merge implementation.
@@ -386,7 +445,10 @@ EditStats Index::apply(std::span<const Row> additions,std::span<const u64> remov
             for(auto page:changed_pages) {
                 const auto low=u64(page)<<page_bits_,high=low+(u64(1)<<page_bits_);
                 auto first=entries.lower_bound(unsigned(low));auto last=high>(u64(1)<<32)-1?entries.end():entries.lower_bound(unsigned(high));
-                if(packed_pages_) {
+                if(stable_pages_) {
+                    const auto anchor=page_entries_[layer].find(page);if(anchor==page_entries_[layer].end())continue;
+                    const auto next=std::next(anchor);first=entries.lower_bound(page);last=next==page_entries_[layer].end()?entries.end():entries.lower_bound(next->first);
+                } else if(packed_pages_) {
                     first=entries.lower_bound(page);last=first;
                     for(unsigned n=0;n<(1u<<page_bits_) && last!=entries.end();++n)++last;
                 }
@@ -428,6 +490,9 @@ EditStats Index::apply(std::span<const Row> additions,std::span<const u64> remov
         changes.push_back({schema_id(),attempt(try_capture(rt_,store,c,schema_image(),{},false,stats))});
     }
     stats.directory_ns=elapsed(directory_start);
+    stats.dirent_changes=directory_changes.size();
+    stats.directory_copied=stats.copied-directory_copied;stats.directory_allocated=stats.allocated-directory_allocated;stats.directory_objects=stats.objects-directory_objects;if(undo_)stats.directory_journal_bytes+=undo_->record_bytes()-directory_journal;
+    stats.segment_changes=stats.objects-stats.directory_objects+stats.removed_segments;
     if(!changes.empty()) {
         install_changes(basis,changes,&stats);
     }

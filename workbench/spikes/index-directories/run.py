@@ -19,7 +19,7 @@ def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--operations', type=int, default=131072)
     p.add_argument('--repetitions', type=int, default=3)
-    p.add_argument('--stage',choices=['baseline','composed','placement','pressure','staged','keys','locators','schema','failure','all'],default='all')
+    p.add_argument('--stage',choices=['baseline','composed','placement','pressure','staged','keys','locators','schema','failure','maintenance','all'],default='all')
     p.add_argument('--writes',type=int,default=64)
     p.add_argument('--cpu', type=int)
     p.add_argument('--march', default='')
@@ -43,7 +43,7 @@ def main():
         run.step('configure',['cmake','-S',str(run.source_root),'-B',str(run.build_dir),'-G','Ninja',
             '-DCMAKE_BUILD_TYPE=Release','-DCMAKE_CXX_FLAGS_RELEASE=-O3 -g1',
             '-DSIXDB_SPIKES=index-directories',f'-DSIXDB_MARCH={args.march}',f'-DSIXDB_TUNE={args.tune}'])
-        targets=['index_directory_'+s for s in (['baseline','composed','placement','pressure','staged','keys','locators','schema','failure'] if args.stage=='all' else [args.stage])]
+        targets=['index_directory_'+s for s in (['baseline','composed','placement','pressure','staged','keys','locators','schema','failure','maintenance'] if args.stage=='all' else [args.stage])]
         run.step('build',['cmake','--build',str(run.build_dir),'--target',*targets])
         for name in ['CMakeCache.txt','compile_commands.json']:
             shutil.copy2(run.build_dir/name,output/name)
@@ -56,7 +56,7 @@ def main():
             run.step(stage,[str(exe),str(args.writes if stage=='placement' else args.operations),str(args.repetitions)],stage+'.csv')
             with (output/(stage+'.csv')).open() as h: rows=list(csv.DictReader(h))
             groups={}
-            dimensions=['phase','entries','rows','J','key_bytes','schema_definitions','auxiliary_parts','summary_grain','duplicates','spacing','trace','layer','projection','dependent','arm']
+            dimensions=['phase','entries','rows','segments_L0','segments_L1','segments_L2','segments_L3','segments_L4','J','key_bytes','schema_definitions','auxiliary_parts','summary_grain','duplicates','spacing','trace','layer','projection','dependent','arm']
             columns=[c for c in dimensions if c in rows[0]]
             for row in rows:
                 key=tuple(row[k] for k in columns)
