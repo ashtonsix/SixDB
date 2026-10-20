@@ -207,13 +207,18 @@ native allocations remain useful choices, not failed candidates to discard.
 
 ## Strategic review
 
-Workbench and Architecture both recommend making pinned upstream libraries
-ordinary foundations while retaining custom components where representation,
-execution or a necessary contract provides a concrete benefit. Both support
-doing this comparison before selecting a container. Keep upstream utilities and
-tests initially, centralize the dependency pin, and keep any patch set small and
-visible. Ikea should own integrated container adapters; logical identity,
-isolation, retained versions and publication remain with the enclosing caller.
+Workbench supports pinned upstream libraries as foundations where they fit,
+retaining custom components for concrete representation, execution or contract
+benefits. Architecture's narrower advice keeps upstream adoption as an option
+for a demonstrated consumer gap, screened against existing Calico/spike evidence
+and the applicable strict determinism requirements. It establishes no default
+library preference or migration. Both supported doing this comparison before
+selecting a container.
+
+If adopting upstream, keep its utilities and tests initially, centralize the
+dependency pin, and keep any patch set small and visible. Ikea should own
+integrated container adapters; logical identity, isolation, retained versions
+and publication remain with the enclosing caller.
 
 They agree that allocator hooks alone cannot provide complete structural byte
 preservation, and lifetime retention alone does not freeze contents. Ordinary
