@@ -54,6 +54,15 @@ including its native result destruction; it needs no separate SELECT or forced
 material clone. All eight fields are checked afterward, including key association
 and unchanged fields. Qualification also checks unsigned zero/max and absent keys.
 
+In the qualified ARM build, scalar assignment uses the native 992-byte
+`runtime_result`. The 48-byte `runtime_status` overload with a row buffer accepts
+point reads and numeric fetch-add with an old-row result; its visitor counterpart
+also accepts range reads. Both refuse an ordinary assignment UPDATE
+(`calico/src/runtime.cpp:2891–3080`). Preparing `RETURNING OLD.*` requires
+`column = column + $delta` (`runtime.cpp:2403–2433`), which is a different operation
+from assigning the requested absolute value. The control keeps the real mutation
+API and its result lifetime; these object sizes do not measure stack traffic.
+
 The cohort column is **1**, one current call. Calico's public Runtime does not
 expose retained old-cut snapshots across publication, late first old reads,
 atomic 64-key prepared updates, or persistent prepared mutation. Those cells are
