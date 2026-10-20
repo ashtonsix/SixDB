@@ -19,10 +19,27 @@ namespace orbital::allocation::detail {
 
 enum class Palette : std::uint8_t { a, b };
 
+inline constexpr std::array<std::size_t, 15> palette_a{
+    16, 32, 48, 64, 96, 128, 192, 256, 384, 512, 768, 1024, 1536, 2048, 3072};
+inline constexpr auto small_a_capacities = [] {
+  std::array<std::uint8_t, 12> result{};
+  unsigned cls = 0;
+  for (unsigned i = 0; i < result.size(); ++i) {
+    while (16 * (i + 1) > palette_a[cls]) ++cls;
+    result[i] = static_cast<std::uint8_t>(palette_a[cls]);
+  }
+  return result;
+}();
+
 [[nodiscard]] constexpr Palette preferred_palette(std::size_t page, std::size_t bytes,
                                                  std::size_t alignment) noexcept {
   // 256 identities × 256 B fill one 64 KiB page, including mixed tiny sizes.
-  return page >= 65536 || alignment >= 64 || bytes > 192 ? Palette::b : Palette::a;
+  if (page >= 65536 || !bytes || bytes > 192 || !alignment) return Palette::b;
+  if (alignment < 64) return Palette::a;
+  const auto capacity = small_a_capacities[(bytes - 1) >> 4];
+  // Choose A when its smallest home meets alignment at every slot. Stronger
+  // alignment can still use B's sparse aligned slots; growth keeps its Group.
+  return (capacity & (alignment - 1)) == 0 ? Palette::a : Palette::b;
 }
 
 struct FiniteConfig {

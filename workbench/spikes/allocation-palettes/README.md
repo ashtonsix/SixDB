@@ -11,9 +11,34 @@ favoured **15 classes / 16 homes**, with different fresh-allocation policies for
 
 | Native page | Fresh Group and capacities |
 | --- | --- |
-| 4 KiB | Existing A/B tables and selector. |
-| 16 KiB | Keep A for requests ≤192 bytes with alignment <64; otherwise B with the two changed capacities below. |
+| 4 KiB | Original A/B tables; alignment-aware small-request selection below. |
+| 16 KiB | Same small-request selection; B changes the two capacities below. |
 | 64 KiB | B for all fresh finite Groups, including tiny requests. |
+
+The 2026-10-20 placement revision keeps A for requests ≤192 bytes with alignment
+below64, and admits stronger alignment when A's smallest class meets it at every
+Home. New pages prefer that palette; already-mapped reuse and budget-pressure
+fallback remain available. The native measurements below qualify the class
+tables, not this later selection change; current placement is exercised by the
+[palette](../../../orbital/test/palettes.cpp) and
+[preparation](../../../orbital/test/preparation.cpp) checks.
+
+The matched frozen `index-directories` graph7 caller confirmed the placement
+effect on a local AArch64 Linux guest. It retained 64-byte alignment, one native
+64-byte material per entry, 32-byte Control and the same default PMR policy;
+only Orbital's five allocation objects changed.
+
+| Live entries | Mapped payload before | After |
+| ---: | ---: | ---: |
+| 8,192 | 4.137 MiB | 1.137 MiB |
+| 262,144 | 132.324 MiB | 36.324 MiB |
+
+At 262K, the result is 16 MiB material, 20 MiB directory homes and 339,968 bytes
+of graph backing. PMR requests/backing stayed at 27.216/42.993 MiB. Every actual
+Part, address and useful byte was checked, with zero final PMR/backing; this is
+an allocation-footprint comparison, not a complete database or timing claim.
+Raw inputs and receipts remain in ignored
+`build/architecture-index-memory-fix-20261020/allocator-only/`.
 
 The large-page B table is:
 

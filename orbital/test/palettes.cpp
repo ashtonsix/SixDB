@@ -8,10 +8,12 @@
 #include <cstdlib>
 #include <cstring>
 #include <new>
+#include <set>
 #include <source_location>
 #include <sys/mman.h>
 #include <thread>
 #include <unistd.h>
+#include <vector>
 
 using namespace orbital;
 using namespace orbital::allocation::detail;
@@ -115,11 +117,20 @@ void close_pool(orbital::allocation::Pool& pool) {
 
 void profiles(std::size_t host) {
   struct Selection { std::size_t page, bytes, alignment; Palette expected; };
-  const std::array<Selection,11> selections{{
+  const Selection selections[]{
+      {4096,16,16,Palette::a}, {4096,16,32,Palette::a},
       {4096,128,16,Palette::a}, {4096,192,16,Palette::a}, {4096,193,16,Palette::b},
-      {4096,128,64,Palette::b}, {16384,128,16,Palette::a}, {16384,192,16,Palette::a},
-      {16384,193,16,Palette::b}, {16384,128,64,Palette::b}, {65536,16,16,Palette::b},
-      {65536,128,16,Palette::b}, {65536,192,16,Palette::b}}};
+      {4096,48,16,Palette::a}, {4096,48,32,Palette::a}, {4096,63,64,Palette::a},
+      {4096,64,64,Palette::a}, {4096,65,64,Palette::b}, {4096,96,64,Palette::b},
+      {4096,97,64,Palette::a}, {4096,128,64,Palette::a}, {4096,192,64,Palette::a},
+      {4096,64,128,Palette::b}, {4096,97,128,Palette::a}, {4096,128,128,Palette::a},
+      {4096,129,128,Palette::b}, {4096,192,128,Palette::b},
+      {16384,16,32,Palette::a}, {16384,48,32,Palette::a},
+      {16384,128,16,Palette::a}, {16384,192,16,Palette::a}, {16384,193,16,Palette::b},
+      {16384,64,64,Palette::a}, {16384,96,64,Palette::b}, {16384,128,64,Palette::a},
+      {16384,128,128,Palette::a}, {16384,192,128,Palette::b},
+      {65536,16,16,Palette::b}, {65536,48,32,Palette::b}, {65536,64,64,Palette::b},
+      {65536,128,16,Palette::b}, {65536,128,128,Palette::b}, {65536,192,16,Palette::b}};
   for (const auto& example : selections)
     check(preferred_palette(example.page, example.bytes, example.alignment) == example.expected,
         "fresh Group selector does not implement the chosen page profile");
@@ -164,6 +175,9 @@ void profiles(std::size_t host) {
   struct Request { std::size_t bytes, alignment, expected_capacity; };
   const std::array requests{
       Request{128,16,host == 65536 ? 256u : 128u},
+      Request{48,32,host == 65536 ? 256u : 48u},
+      Request{64,64,host == 65536 ? 256u : 64u},
+      Request{128,128,host == 65536 ? 256u : 128u},
       Request{2050,16,host >= 16384 ? 2176u : 2560u},
       Request{1025,64,host >= 16384 ? 1088u : 1280u}};
   for (const auto& request : requests) {
@@ -182,6 +196,87 @@ void profiles(std::size_t host) {
     alloc::release(value);
     close_pool(*pool);
   }
+}
+
+void mixed_placement(std::size_t page, bool directory_first) {
+  namespace alloc = orbital::allocation;
+  auto arena = take(alloc::open_arena(64 * 1024 * 1024), "open mixed placement Arena");
+  worker::Lane lane;
+  done(worker::adopt(lane), "adopt mixed placement owner");
+  auto* pool = take(alloc::add_pool(*arena, lane), "add mixed placement Pool");
+  constexpr std::size_t groups = 512, materials_per_group = 16;
+  std::vector<alloc::Allocation> values;
+  values.reserve(groups * (materials_per_group + 1) + 1);
+  std::set<std::uintptr_t> covered_pages;
+  const auto material_capacity = page == 65536 ? 256u : 64u;
+  const auto directory_capacity = page >= 16384 ? 1088u : 1280u;
+  const auto append = [&](std::size_t bytes) {
+    auto value = take(alloc::allocate(*pool, {.bytes = bytes, .alignment = 64}),
+        "allocate mixed material/directory");
+    const auto capacity = alloc::capacity(value);
+    check_count(capacity, bytes == 64 ? material_capacity : directory_capacity, page,
+        "ready reuse changed the selected material/directory capacity");
+    const auto address = reinterpret_cast<std::uintptr_t>(value.address);
+    check(address % 64 == 0, "mixed placement lost explicit alignment");
+    for (auto first = address / page, last = (address + capacity - 1) / page;
+         first <= last; ++first)
+      covered_pages.insert(first);
+    std::memset(value.address, values.size() % 251, bytes);
+    values.push_back(std::move(value));
+  };
+  // Start with a B Group too: a cached larger home must not absorb later tiny
+  // requests merely because its Group happens to precede an A Group.
+  if (directory_first) append(1088);
+  for (std::size_t group = 0; group < groups; ++group) {
+    for (std::size_t row = 0; row < materials_per_group; ++row) append(64);
+    append(1088);
+  }
+  const auto inventory = alloc::statistics(*pool);
+  check_count(inventory.mapped_bytes, covered_pages.size() * page, page,
+      "mapped accounting disagrees with actual capacity-page union");
+  if (page < 65536) {
+    // Complete 256-identity material Groups use 256*64 bytes. Directory Groups
+    // use 256*1280 (4 KiB) or 256*1088 (16 KiB), both whole page multiples.
+    const auto material_bytes = groups * materials_per_group * material_capacity;
+    const auto directory_bytes = (groups + directory_first) * directory_capacity;
+    const auto packed = material_bytes + (directory_bytes + page - 1) / page * page;
+    check_count(inventory.mapped_bytes, packed, page,
+        "mixed cadence stranded live pages instead of packing compatible homes");
+  }
+  check_count(arena->charged_bytes.load(), inventory.metadata_bytes + inventory.mapped_bytes,
+      page, "mixed placement lost native charge");
+  for (std::size_t index = 0; index < values.size(); ++index) {
+    const auto& value = values[index];
+    check(std::all_of(value.address, value.address + value.size,
+        [index](auto byte) { return byte == std::byte(index % 251); }),
+        "later mixed placement overwrote live material/directory bytes");
+  }
+  values.clear();
+  close_pool(*pool);
+}
+
+void ready_other_palette(std::size_t page) {
+  namespace alloc = orbital::allocation;
+  auto arena = take(alloc::open_arena(1024 * 1024), "open prepared reuse Arena");
+  worker::Lane lane;
+  done(worker::adopt(lane), "adopt prepared reuse owner");
+  auto* pool = take(alloc::add_pool(*arena, lane), "add prepared reuse Pool");
+  auto larger = take(alloc::allocate(*pool, {.bytes = 256, .alignment = 64}),
+      "map B home before tiny request");
+  auto* address = larger.address;
+  alloc::release(larger);
+  const auto before = alloc::statistics(*pool);
+  const auto charged = arena->charged_bytes.load();
+  auto tiny = take(alloc::allocate(*pool, {.bytes = 64, .alignment = 64}),
+      "reuse mapped B home for tiny request");
+  const auto after = alloc::statistics(*pool);
+  check(tiny.address == address && alloc::capacity(tiny) == 256 &&
+      before.mapped_bytes == after.mapped_bytes && before.metadata_bytes == after.metadata_bytes,
+      "preferred palette discarded a compatible already-mapped home");
+  check_count(arena->charged_bytes.load(), charged, page,
+      "cross-palette ready reuse admitted new physical charge");
+  alloc::release(tiny);
+  close_pool(*pool);
 }
 
 std::uint64_t native_budget(std::uint64_t limit, bool pressure) {
@@ -239,6 +334,9 @@ int main() {
   const auto host = std::size_t(::sysconf(_SC_PAGESIZE));
   invalid(host);
   profiles(host);
+  mixed_placement(host, false);
+  mixed_placement(host, true);
+  ready_other_palette(host);
   const auto charged = native_budget(128 * 1024 * 1024, false);
   check(native_budget(charged + host - 1, true) == charged, "native charge changed between identical fixtures");
   std::printf("palettes: native %zu-byte profile, class boundaries, alignment and exact budget checks passed\n", host);

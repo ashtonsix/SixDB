@@ -12,8 +12,6 @@
 
 namespace orbital::allocation::detail {
 namespace {
-constexpr std::array<std::size_t, 15> palette_a{
-    16, 32, 48, 64, 96, 128, 192, 256, 384, 512, 768, 1024, 1536, 2048, 3072};
 constexpr std::array<std::size_t, 15> palette_b{
     256, 320, 384, 448, 512, 640, 768, 896, 1024, 1280, 1536, 1792, 2048, 2560, 3072};
 constexpr std::array<std::size_t, 15> palette_b_large{

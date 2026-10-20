@@ -567,7 +567,8 @@ void finite_fresh_bounded_start_cancel_close(){
   const auto ownervm=owner_maps+owner_protects;
   arm_gate(); done(alloc::prepare(*f.pool,first,small_request(),f.preparer.lane));wait_inside();
   const auto charge=f.arena->charged_bytes.load(); const auto inventory=alloc::statistics(*f.pool);
-  const auto planned=take(alloc::detail::FiniteGroup::create({alloc::detail::Palette::b,256}));
+  const auto palette=alloc::detail::preferred_palette(base_page(),64,64);
+  const auto planned=take(alloc::detail::FiniteGroup::create({palette,256}));
   check(inventory.mapped_bytes==0 && inventory.preparing_reserved_bytes==
         planned->payload_pages()*planned->native_page() && inventory.metadata_bytes==charge,
         "fresh control preparation includes only payload VA and separate metadata charge");
@@ -585,17 +586,17 @@ void finite_fresh_bounded_start_cancel_close(){
 }
 
 void finite_control_failures_own_partial_backing(){
-  for(std::size_t alignment:{16,64}){
+  for(const auto wanted:{small_request(64,16),small_request(64,64),small_request(256,64)}){
   for(bool partial:{false,true}){
     Fixture f;alloc::Preparation failed;
     const auto references=f.arena->references.load();
     const auto expected=partial?Error::capacity:Error::io;
     // Metadata heap ENOMEM happens after the real sparse payload reservation.
-    const auto palette=alignment==64 || base_page()==65536 ? alloc::detail::Palette::b : alloc::detail::Palette::a;
+    const auto palette=alloc::detail::preferred_palette(base_page(),wanted.bytes,wanted.alignment);
     auto planned=take(alloc::detail::FiniteGroup::create({palette,256}));
     metadata_size=planned->control_bytes();metadata_reservation_seen=false;
     if(partial)fail_metadata=true;else fail_map=true;
-    done(alloc::prepare(*f.pool,failed,small_request(64,alignment),f.preparer.lane));f.settle(failed);
+    done(alloc::prepare(*f.pool,failed,wanted,f.preparer.lane));f.settle(failed);
     const auto inventory=alloc::statistics(*f.pool);const auto charged=f.arena->charged_bytes.load();
     check(failed.state==alloc::Preparation::State::failed && failed.error==expected && !failed.backend &&
           !failed.owner && inventory.mapped_bytes==0 && inventory.preparing_bytes==0 &&
@@ -605,7 +606,7 @@ void finite_control_failures_own_partial_backing(){
     check((inventory.reserved_bytes>0)==partial,"failed finite control reported nonexistent/lost sparse mapping");
     check(!fail_metadata && (metadata_reservation_seen.load()==partial),"heap failure did not follow real payload reservation");
     check(f.arena->references.load()==references,"failed helper retained its preparation pin");
-    auto healthy=take(alloc::allocate(*f.pool,small_request(64,alignment)));alloc::release(healthy);
+    auto healthy=take(alloc::allocate(*f.pool,wanted));alloc::release(healthy);
     if(partial){fail_unmap=true;f.close_all(true);}else f.close_all();
     f.pool=take(alloc::add_pool(*f.arena,f.lane));alloc::cancel(failed);
     const auto result=alloc::take(failed);check(!result && result.error()==expected,
@@ -624,9 +625,18 @@ void finite_delivered_owner_operations(){
   check(ownervm==owner_maps+owner_protects,"finite VM used consumer");
   for(auto byte:alloc::bytes(allocation))check(byte==std::byte{0x42},"finite constructor bytes");
   auto held=take(alloc::hold(allocation,{0,64}));
-  done(alloc::grow(allocation,{96,96,64,0}));
+  auto* original=allocation.address;
+  const bool fits=alloc::reserved_bytes(allocation)>=96;
+  const auto grown=alloc::grow(allocation,{96,96,64,0});
+  if(fits)done(grown);
+  else check(!grown && grown.error()==Error::conflict && allocation.address==original && allocation.size==64,
+      "prepared finite growth relocated live captured bytes");
+  for(auto byte:alloc::bytes(held))check(byte==std::byte{0x42},"held finite prefix changed during growth");
   std::thread foreign([&]{check(!alloc::hold(allocation,{0,1}),"foreign finite hold accepted");});foreign.join();
-  alloc::release(held);alloc::release(allocation);
+  alloc::release(held);
+  if(!fits)done(alloc::grow(allocation,{96,96,64,0}));
+  for(std::size_t i=0;i<64;++i)check(allocation.address[i]==std::byte{0x42},"quiescent finite growth lost prefix");
+  alloc::release(allocation);
   std::puts("{\"case\":\"finite-full-vm-constructor-owner-hold-grow\",\"passed\":true}");
 }
 
@@ -659,7 +669,7 @@ void finite_mapped_neighbour_cancel_paused_constructor(){
 }
 
 void finite_uncertain_cleanup_responsive_and_bounded(){
-  Fixture f;auto neighbour=take(alloc::allocate(*f.pool,small_request()));std::memset(neighbour.address,0x5a,64);
+  Fixture f;auto neighbour=take(alloc::allocate(*f.pool,small_request(256)));std::memset(neighbour.address,0x5a,neighbour.size);
   const auto baseline=f.arena->charged_bytes.load();const auto mapped=alloc::statistics(*f.pool).mapped_bytes;
   alloc::Preparation request;SmallConstructor constructor;request.construct=SmallConstructor::run;request.context=&constructor;
   fail_protect=true;cleanup_failures=1000;
@@ -669,7 +679,7 @@ void finite_uncertain_cleanup_responsive_and_bounded(){
   const auto debt=f.arena->charged_bytes.load();const auto paused_calls=helper_protects.load();
   for(unsigned i=0;i<1000;++i){worker::poll(f.lane,32);std::this_thread::yield();}
   check(helper_protects==paused_calls && f.arena->charged_bytes==debt,"persistent cleanup failure busy-looped or refunded");
-  auto healthy=take(alloc::allocate(*f.pool,small_request()));alloc::release(healthy);
+  auto healthy=take(alloc::allocate(*f.pool,small_request(256)));alloc::release(healthy);
   check(alloc::close(*f.pool).kind()==Progress::Kind::failed,"close hid physical cleanup debt");
   alloc::cancel(request);cleanup_failures=0;done(alloc::retry_cleanup(request));f.settle(request);
   check(request.state==alloc::Preparation::State::cancelled && !request.backend,"explicit retry did not retire debt");
@@ -683,7 +693,7 @@ void finite_uncertain_cleanup_responsive_and_bounded(){
 void finite_partial_cleanup_page_reused_before_original_settlement(){
   Fixture f;PreparerService independent;
   std::vector<alloc::Allocation> neighbours;
-  neighbours.push_back(take(alloc::allocate(*f.pool,small_request(16,16))));
+  neighbours.push_back(take(alloc::allocate(*f.pool,small_request(256,64))));
   auto* domain=alloc::detail::route(*neighbours.front().storage);
   check(domain->finite,"partial-cleanup fixture needs finite storage");
   auto& group=*static_cast<alloc::detail::Group*>(domain->context);
@@ -719,7 +729,7 @@ void finite_partial_cleanup_page_reused_before_original_settlement(){
   // Fill earlier identity grids with real live bytes. Reserve alternate Homes
   // without backing: filling their pages would hide partial failure on 64KiB.
   while(neighbours.size()<std::size_t(straddler.grid)*slots)
-    neighbours.push_back(take(alloc::allocate(*f.pool,small_request(16,16))));
+    neighbours.push_back(take(alloc::allocate(*f.pool,small_request(256,64))));
   for(auto& neighbour:neighbours){
     check(alloc::detail::route(*neighbour.storage)->context==&group,"identity cohort escaped its Group");
     std::memset(neighbour.address,0x5a,neighbour.size);
@@ -808,14 +818,166 @@ void finite_aligned_home_grid_retry_tight_budget(){
 void finite_prepared_before_fresh_group(){
   Fixture f;std::array<alloc::Allocation,255> occupied;
   auto prepared=take(alloc::allocate(*f.pool,small_request(320)));auto* address=prepared.address;
-  for(auto& value:occupied)value=take(alloc::allocate(*f.pool,small_request()));
-  auto newgroup=take(alloc::allocate(*f.pool,small_request()));alloc::release(prepared);
+  for(auto& value:occupied)value=take(alloc::allocate(*f.pool,small_request(256)));
+  auto newgroup=take(alloc::allocate(*f.pool,small_request(256)));alloc::release(prepared);
   const auto before=alloc::statistics(*f.pool).mapped_bytes;alloc::Preparation request;
   done(alloc::prepare(*f.pool,request,small_request(320),f.preparer.lane));f.settle(request);auto result=take(alloc::take(request));
   check(result.address==address && request.reused && alloc::statistics(*f.pool).mapped_bytes==before,
         "fresh-head Group hid ready older candidate");
   alloc::release(result);alloc::release(newgroup);for(auto& value:occupied)alloc::release(value);
   std::puts("{\"case\":\"finite-prepared-before-fresh-advisory-order\",\"passed\":true}");
+}
+
+void finite_mixed_preferred_cadence(){
+  for(bool directory_first:{false,true}){
+    Fixture f;
+    std::vector<alloc::Allocation> values;
+    values.reserve(20*17);
+    const auto ownervm=owner_maps+owner_protects;
+    auto append=[&](std::size_t bytes){
+      alloc::Preparation request;
+      done(alloc::prepare(*f.pool,request,small_request(bytes),f.preparer.lane));
+      f.settle(request);
+      auto value=take(alloc::take(request));
+      const auto expected=bytes==64 ? (base_page()==65536?256u:64u) : (base_page()>=16384?1088u:1280u);
+      check(alloc::capacity(value)==expected && reinterpret_cast<std::uintptr_t>(value.address)%64==0,
+          "mixed preparation inflated a preferred class or lost alignment");
+      for(auto byte:alloc::bytes(value))check(byte==std::byte{0},"mixed preparation omitted initialization");
+      std::memset(value.address,1+values.size()%251,value.size);
+      values.push_back(std::move(value));
+    };
+    for(unsigned batch=0;batch<20;++batch){
+      if(directory_first)append(1088);
+      for(unsigned i=0;i<16;++i)append(64);
+      if(!directory_first)append(1088);
+    }
+    // 320 small allocations exceed one Group's 256 identity slots. Keep the
+    // complete mixed population live to expose class/page pressure on retry.
+    for(std::size_t i=0;i<values.size();++i)
+      for(auto byte:alloc::bytes(values[i]))
+        check(byte==std::byte(1+i%251),"later mixed preparation overwrote live neighbours");
+    const auto inventory=alloc::statistics(*f.pool);
+    check(inventory.preparing_bytes==0 && inventory.uncertain_bytes==0 &&
+          inventory.preparing_reserved_bytes==0 &&
+          f.arena->charged_bytes==inventory.mapped_bytes+inventory.metadata_bytes,
+        "settled mixed preparation lost exact physical/metadata charge");
+    check(ownervm==owner_maps+owner_protects,"mixed preparation ran VM work on the owner");
+    for(auto& value:values)alloc::release(value);
+    f.close_all();
+  }
+  std::puts("{\"case\":\"finite-preferred-mixed-cadence-both-orders\",\"passed\":true}");
+}
+
+void finite_other_palette_ready_at_limit(){
+  const auto history=[](std::size_t limit){
+    Fixture f(limit);
+    auto seed=take(alloc::allocate(*f.pool,small_request(256)));
+    auto neighbour=take(alloc::allocate(*f.pool,small_request(256)));
+    std::memset(neighbour.address,0x73,neighbour.size);
+    auto* prior=seed.address;
+    alloc::release(seed);
+    const auto before=alloc::statistics(*f.pool);
+    const auto baseline=f.arena->charged_bytes.load();
+    const auto vm=helper_maps+helper_protects+owner_maps+owner_protects;
+    alloc::Preparation request;
+    done(alloc::prepare(*f.pool,request,small_request(),f.preparer.lane));
+    // The accepted request owns real transient metadata until its owner reply.
+    // The repeat budget permits exactly that peak, not a second Group/page.
+    const auto peak=f.arena->charged_bytes.load();
+    check(peak>baseline && peak<=limit,"pending ready preparation lost its charged record");
+    f.settle(request);
+    auto value=take(alloc::take(request));
+    const auto after=alloc::statistics(*f.pool);
+    check(request.reused && value.address==prior && alloc::capacity(value)==256 &&
+          f.arena->charged_bytes==baseline && after.mapped_bytes==before.mapped_bytes &&
+          after.metadata_bytes==before.metadata_bytes && after.reserved_bytes==before.reserved_bytes,
+        "preferred policy stranded already charged other-palette backing");
+    check(vm==helper_maps+helper_protects+owner_maps+owner_protects,
+        "ready other-palette preparation performed new VM work");
+    for(auto byte:alloc::bytes(value))check(byte==std::byte{0},"ready reuse omitted initialization");
+    for(auto byte:alloc::bytes(neighbour))check(byte==std::byte{0x73},"ready reuse damaged live neighbour");
+    alloc::release(value);alloc::release(neighbour);f.close_all();
+    return peak;
+  };
+  const auto exact_peak=history(32*1024*1024);
+  check(history(exact_peak)==exact_peak,"identical ready preparation changed its required peak");
+  std::puts("{\"case\":\"finite-ready-other-palette-exact-pending-budget\",\"passed\":true}");
+}
+
+void finite_other_palette_unprepared_under_pressure(){
+  const auto page=base_page();
+  if(page==65536){
+    std::puts("{\"case\":\"finite-unprepared-other-palette-pressure\",\"applicable\":false,\"reason\":\"native-B-only-profile\"}");
+    return;
+  }
+  // Measure the real public charges, including the transient preparation record.
+  // These observations size repeat budgets; they do not assert private layouts.
+  const auto costs=[](){
+    Fixture f;
+    auto seed=take(alloc::allocate(*f.pool,small_request(64,16)));
+    const auto baseline=f.arena->charged_bytes.load();
+    alloc::Preparation request;
+    done(alloc::prepare(*f.pool,request,small_request(64,16),f.preparer.lane));
+    const auto extra=f.arena->charged_bytes.load()-baseline;
+    f.settle(request);auto prepared=take(alloc::take(request));
+    check(extra>0 && f.arena->charged_bytes==baseline,"ready calibration changed backing or lost request charge");
+    alloc::release(prepared);alloc::release(seed);f.close_all();
+    return std::array<std::size_t,2>{baseline,extra};
+  }();
+  const auto b_metadata=[](){
+    Fixture f;
+    auto seed=take(alloc::allocate(*f.pool,small_request(256)));
+    const auto inventory=alloc::statistics(*f.pool);
+    check(inventory.mapped_bytes==base_page() &&
+          f.arena->charged_bytes==inventory.metadata_bytes+inventory.mapped_bytes,
+        "fresh B calibration did not isolate metadata plus one page");
+    alloc::release(seed);f.close_all();
+    return std::size_t(inventory.metadata_bytes);
+  }();
+  for(bool asynchronous:{false,true}){
+    for(const auto available:{page-1,page,std::max(page,b_metadata)}){
+      const auto limit=costs[0]+(asynchronous?costs[1]:0)+available;
+      Fixture f(limit);
+      auto seed=take(alloc::allocate(*f.pool,small_request(64,16)));
+      std::memset(seed.address,0x6d,seed.size);
+      const auto before=alloc::statistics(*f.pool);
+      check(f.arena->charged_bytes==costs[0],"identical A seed changed its physical charge");
+      alloc::Allocation value;
+      const bool fits=available>=page;
+      if(asynchronous){
+        alloc::Preparation request;
+        const auto accepted=alloc::prepare(*f.pool,request,small_request(256),f.preparer.lane);
+        if(fits){
+          done(accepted);
+          check(f.arena->charged_bytes==costs[0]+costs[1]+page,
+              "fallback charged fresh metadata instead of one existing-Group page");
+          f.settle(request);value=take(alloc::take(request));
+        }else check(!accepted && accepted.error()==Error::capacity &&
+                   request.state==alloc::Preparation::State::idle && !request.backend && !request.value,
+            "one-page-short preparation admitted work or changed physical custody");
+      }else{
+        auto accepted=alloc::allocate(*f.pool,small_request(256));
+        if(fits)value=take(std::move(accepted));
+        else check(!accepted && accepted.error()==Error::capacity,
+            "one-page-short direct allocation unexpectedly succeeded");
+      }
+      const auto after=alloc::statistics(*f.pool);
+      check(after.metadata_bytes==before.metadata_bytes && after.reserved_bytes==before.reserved_bytes &&
+            after.mapped_bytes==before.mapped_bytes+(fits?page:0) &&
+            after.preparing_bytes==0 && after.uncertain_bytes==0 && after.preparing_reserved_bytes==0 &&
+            f.arena->charged_bytes==costs[0]+(fits?page:0),
+          "pressure fallback stranded metadata, refunded live bytes or lost exact backing charge");
+      for(auto byte:alloc::bytes(seed))check(byte==std::byte{0x6d},"pressure fallback changed existing live bytes");
+      if(fits){
+        check(value.size==256 && alloc::capacity(value)==256 &&
+              reinterpret_cast<std::uintptr_t>(value.address)%64==0,
+            "fallback lost requested extent, capacity or alignment");
+        for(auto byte:alloc::bytes(value))check(byte==std::byte{0},"fallback omitted body initialization");
+      }
+      alloc::release(value);alloc::release(seed);f.close_all();
+    }
+  }
+  std::puts("{\"case\":\"finite-unprepared-other-palette-pressure\",\"passed\":true}");
 }
 
 }
@@ -879,6 +1041,8 @@ int main(){
   finite_uncertain_cleanup_responsive_and_bounded(); finite_partial_cleanup_page_reused_before_original_settlement();
   finite_constructor_failure_keeps_confirmed_pages();
   finite_aligned_home_grid_retry_tight_budget();finite_prepared_before_fresh_group();
+  finite_mixed_preferred_cadence();finite_other_palette_ready_at_limit();
+  finite_other_palette_unprepared_under_pressure();
   std::printf("{\"summary\":\"passed\",\"helper_mmap\":%u,\"owner_mmap\":%u,\"helper_mprotect\":%u,\"owner_mprotect\":%u,\"helper_real_ikea_constructions\":%u,\"finite_async_implemented\":true,\"preparation_frame_bytes\":%zu}\n",
     helper_maps.load(),owner_maps.load(),helper_protects.load(),owner_protects.load(),helper_constructions.load(),sizeof(alloc::Preparation));
 }

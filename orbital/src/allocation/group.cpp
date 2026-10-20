@@ -95,6 +95,16 @@ Result<Group*> make_group(Pool& pool, Palette palette, bool deferred = false) {
     // Account concrete prepared bookkeeping, separately from sparse VA/RSS.
     group->metadata_charge = group->geometry->control_bytes() + sizeof(FiniteGroup) + sizeof(Group) +
         group->live.capacity() * sizeof(std::uint64_t);
+    // A fresh Group needs at least one payload page. Under pressure, do not
+    // strand the remaining budget in metadata when an existing Group can map
+    // that page. This is an admission probe, not a reservation across helper
+    // work; actual page claims still arbitrate concurrent Arena users.
+    const auto minimum = group->metadata_charge + group->geometry->native_page();
+    const auto charged = pool.arena->charged_bytes.load(std::memory_order_relaxed);
+    if (minimum > pool.arena->byte_limit || charged > pool.arena->byte_limit - minimum) {
+      if (!claim(pool, minimum)) return std::unexpected(Error::capacity);
+      refund(pool, minimum);
+    }
     if (!claim(pool, group->metadata_charge)) return std::unexpected(Error::capacity);
     initialize(group->uses.domain, pool, group.get(), true);
     group->job = {nullptr, group.get(), group_trim_run};
@@ -180,10 +190,10 @@ struct FiniteCandidate {
 // Positive selection hints only. Authority remains in the Group's identities,
 // occupied Homes and physical page state; a stale hint cannot hide a fallback.
 Result<std::optional<FiniteCandidate>> claim_ready_candidate(Pool& pool,
-    std::size_t size, std::size_t alignment) noexcept {
+    std::size_t size, std::size_t alignment, Palette palette) noexcept {
   for (auto& cached : pool.internal->ready_candidates) {
     if (!cached.group || size < cached.minimum || size > cached.maximum ||
-        alignment != cached.alignment) continue;
+        alignment != cached.alignment || cached.group->palette != palette) continue;
     auto& group = *cached.group;
     if (group.retiring || group.control_preparing || !group.previous_available) {
       cached.group = nullptr; continue;
@@ -450,7 +460,8 @@ Result<void> prepare_finite(Pool& pool, Preparation& request,
   request.request = allocation;
   Error refusal = Error::capacity;
   const auto size = std::max(allocation.bytes + allocation.readable_padding, allocation.reserved_bytes);
-  auto cached = claim_ready_candidate(pool, size, allocation.alignment);
+  const auto palette = preferred_palette(page_size(), size, allocation.alignment);
+  auto cached = claim_ready_candidate(pool, size, allocation.alignment, palette);
   if (!cached) refusal = cached.error();
   else if (*cached) {
     const auto& choice = **cached;
@@ -463,28 +474,29 @@ Result<void> prepare_finite(Pool& pool, Preparation& request,
       record.group = nullptr; refusal = reserved.error();
     }
   }
-  // Try prepared backing before paying for new pages.
-  for (unsigned pass = 0; pass < 2 && !record.group && refusal == Error::capacity; ++pass) {
+  // Prefer dense geometry; reuse other ready backing before mapping pages.
+  // Only a refused fresh Group permits new pages in the other palette.
+  for (unsigned pass = 0; pass < 4 && !record.group && refusal == Error::capacity; ++pass) {
+    if (pass == 3) {
+      // One fresh control preparation per palette. Pending helper work is not
+      // budget pressure and must not scatter requests into another geometry.
+      const bool waiting = std::any_of(pool.internal->groups.begin(), pool.internal->groups.end(),
+          [palette](const auto& group) { return group->control_preparing && group->palette == palette; });
+      if (waiting) { refund(pool, sizeof(FinitePreparation)); return std::unexpected(Error::unavailable); }
+      auto made = make_group(pool, palette, true);
+      if (made) { record.group = *made; record.phase = FinitePreparation::Phase::control; break; }
+      refusal = made.error();
+      if (refusal != Error::capacity) break;
+    }
     for (auto* group = pool.internal->available_groups; group; group = group->next_available) {
+      if ((group->palette == palette) != (pass == 0 || pass == 2)) continue;
       record.group = group;
-      auto selected = select_preparation_home(record, pass == 0);
+      auto selected = select_preparation_home(record, pass < 2);
       if (selected) break;
       record.group = nullptr;
       refusal = selected.error();
       if (refusal != Error::capacity) break;
     }
-  }
-  if (!record.group && refusal == Error::capacity) {
-    const auto reserve = std::max(allocation.bytes + allocation.readable_padding, allocation.reserved_bytes);
-    const auto palette = preferred_palette(page_size(), reserve, allocation.alignment);
-    // One fresh control preparation per compatible palette. Capacity wakes the
-    // caller after publication; prediction policy need not queue N empty Groups.
-    const bool waiting = std::any_of(pool.internal->groups.begin(), pool.internal->groups.end(),
-        [palette](const auto& group) { return group->control_preparing && group->palette == palette; });
-    if (waiting) { refund(pool, sizeof(FinitePreparation)); return std::unexpected(Error::unavailable); }
-    auto made = make_group(pool, palette, true);
-    if (made) { record.group = *made; record.phase = FinitePreparation::Phase::control; }
-    else refusal = made.error();
   }
   if (!record.group) { refund(pool, sizeof(FinitePreparation)); return std::unexpected(refusal); }
   ++record.group->preparations; ++pool.internal->preparations;
@@ -523,20 +535,41 @@ Result<void> map_home(Group& group, const Home& home) noexcept {
 Result<void> finite_allocate(Pool& pool, const AllocationRequest& request, std::size_t size,
     Allocation& result) {
   const auto alignment = request.alignment;
+  const auto palette = preferred_palette(page_size(), size, alignment);
   Group* selected = nullptr;
   Identity identity;
   Home home;
   bool prepared = false;
-  auto cached = claim_ready_candidate(pool, size, alignment);
+  auto cached = claim_ready_candidate(pool, size, alignment, palette);
   if (!cached) return std::unexpected(cached.error());
   if (*cached) {
     const auto& choice = **cached;
     selected = choice.group; identity = choice.identity; home = choice.home;
     prepared = true;
   }
-  // Reuse prepared backing before paying for new pages.
-  for (unsigned pass = 0; pass < 2 && !selected; ++pass) {
+  // Same order as preparation: preferred ready, other ready, preferred new
+  // pages, fresh preferred Group. Fall back to other new pages only on refusal.
+  for (unsigned pass = 0; pass < 4 && !selected; ++pass) {
+    if (pass == 3) {
+      auto made = make_group(pool, palette);
+      if (made) {
+        auto* group = *made;
+        auto id = group->geometry->claim_identity();
+        assert(id);
+        auto candidate = group->geometry->claim_home(*id, size, alignment);
+        if (!candidate) {
+          verify(group->geometry->release_identity(*id));
+          return std::unexpected(candidate.error());
+        }
+        auto mapped = map_home(*group, *candidate);
+        if (mapped) { selected = group; identity = *id; home = *candidate; break; }
+        verify(group->geometry->release_home(*candidate));
+        verify(group->geometry->release_identity(*id));
+        if (mapped.error() != Error::capacity) return std::unexpected(mapped.error());
+      } else if (made.error() != Error::capacity) return std::unexpected(made.error());
+    }
     for (auto* group = pool.internal->available_groups; group; group = group->next_available) {
+      if ((group->palette == palette) != (pass == 0 || pass == 2)) continue;
       std::uint64_t excluded = 0;
       for (;;) {
         auto candidate = claim_finite_candidate(*group, size, alignment, excluded);
@@ -545,7 +578,7 @@ Result<void> finite_allocate(Pool& pool, const AllocationRequest& request, std::
           break;
         }
         const bool ready = missing_pages(*group, candidate->second) == 0;
-        if (ready != (pass == 0)) { release_finite_candidate(*group, *candidate, excluded); continue; }
+        if (ready != (pass < 2)) { release_finite_candidate(*group, *candidate, excluded); continue; }
         auto mapped = map_home(*group, candidate->second);
         if (!mapped) {
           release_finite_candidate(*group, *candidate, excluded);
@@ -558,21 +591,7 @@ Result<void> finite_allocate(Pool& pool, const AllocationRequest& request, std::
       if (selected) break;
     }
   }
-  if (!selected) {
-    auto made = make_group(pool, preferred_palette(page_size(), size, alignment));
-    if (!made) return std::unexpected(made.error());
-    selected = *made;
-    auto id = selected->geometry->claim_identity();
-    assert(id); identity = *id;
-    auto candidate = selected->geometry->claim_home(identity, size, alignment);
-    if (!candidate) { verify(selected->geometry->release_identity(identity)); return std::unexpected(candidate.error()); }
-    home = *candidate;
-    if (auto mapped = map_home(*selected, home); !mapped) {
-      verify(selected->geometry->release_home(home));
-      verify(selected->geometry->release_identity(identity));
-      return std::unexpected(mapped.error());
-    }
-  }
+  if (!selected) return std::unexpected(Error::capacity);
   if (prepared) ++pool.internal->counts.reuses;
   verify(selected->geometry->bind(identity, home));
   if (!selected->geometry->has_identity()) remove_available(*selected);

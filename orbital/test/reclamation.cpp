@@ -201,15 +201,14 @@ void finite_payload_preparation_and_cleanup_failure() {
   release(value); close_fixture(fixture);
 }
 
-void finite_heap_preparation_and_cleanup_failure(std::size_t alignment) {
+void finite_heap_preparation_and_cleanup_failure(std::size_t request_bytes, std::size_t alignment) {
   Fixture fixture;
   const auto references = fixture.arena->references.load();
-  const auto palette = alignment >= 64 || ::sysconf(_SC_PAGESIZE) == 65536
-      ? detail::Palette::b : detail::Palette::a;
+  const auto palette = detail::preferred_palette(std::size_t(::sysconf(_SC_PAGESIZE)), request_bytes, alignment);
   auto planned = take(detail::FiniteGroup::create({palette, 256}));
   metadata_size = planned->control_bytes();
   metadata_reservation_seen = false; fail_metadata = true;
-  auto refused = allocate(*fixture.pool, {64, 0, alignment, 0, Initialization::zero});
+  auto refused = allocate(*fixture.pool, {request_bytes, 0, alignment, 0, Initialization::zero});
   check(!refused && refused.error() == Error::capacity && !fail_metadata && metadata_reservation_seen,
         "metadata ENOMEM after payload reservation was lost");
   const auto before = statistics(*fixture.pool);
@@ -570,8 +569,9 @@ extern "C" int __wrap_munmap(void* address, std::size_t size) noexcept {
 int main() {
   budget_refusal_before_vm();
   finite_payload_preparation_and_cleanup_failure();
-  finite_heap_preparation_and_cleanup_failure(16);
-  finite_heap_preparation_and_cleanup_failure(64);
+  finite_heap_preparation_and_cleanup_failure(64, 16);
+  finite_heap_preparation_and_cleanup_failure(64, 64);
+  finite_heap_preparation_and_cleanup_failure(256, 64);
   finite_discard_failure(Call::discard);
   finite_discard_failure(Call::protect);
   pool_wide_retention_floor();

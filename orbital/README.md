@@ -60,10 +60,11 @@ Both backends expose an ordinary pointer; native access needs no repeated
 trampoline resolution or scheduler entry. Owner-local selection caches suggest candidates; geometry and actual page
 state authorize each claim. Owning records stay at stable addresses.
 Each Group embeds 256 four-byte identity records and shares release advice.
-The finite cutoff is 3 KiB. Native 4 KiB pages retain the original A/B palettes;
-16 KiB pages adjust two upper B classes, and 64 KiB pages use B's 256-byte minimum
-for fresh Groups. The [palette study](../workbench/spikes/allocation-palettes/README.md)
-owns the measured trade-offs. Reuse may select another Group's palette, so equal
+The finite cutoff is 3 KiB. Native 4/16 KiB pages use A for small requests,
+including cache-line alignment when the smallest class supports it at every Home.
+16 KiB pages adjust two upper B classes; 64 KiB pages retain B's 256-byte minimum.
+The [palette study](../workbench/spikes/allocation-palettes/README.md) owns the
+class trade-offs. Reuse and pressure can select another palette, so equal
 requests need not have equal capacities. Natural alignment follows reserved capacity
 (`gcd(capacity, 64)`); explicit alignment is checked separately.
 Bindings, placement grids, page state and trim bitmaps share one stable heap
@@ -117,8 +118,11 @@ Failed finite cleanup keeps the request and charge in `repair_wait`;
 return to charged Pool inventory for trim or close. Cancellation ends demand
 without refunding unfinished physical work.
 
-Reuse takes the first compatible prepared Window; finite Groups keep their
-ready-candidate cache and search prepared homes before unprepared homes.
+Reuse takes the first compatible prepared Window. Finite claims prefer their
+selected palette, reusing other mapped Homes before mapping preferred pages.
+If a fresh preferred Group cannot be admitted, existing other-palette Homes can
+map pages instead. Direct and prepared claims use the same order; growth keeps
+the existing Group's geometry.
 An exact reservation-size index skips undersized Windows while preserving their
 return order. Its nodes are admitted before a fresh mapping; returns allocate none.
 HOT/WARM/COLD advice guides reclamation; timestamps reject stale advice and
