@@ -59,9 +59,12 @@ In the qualified ARM build, scalar assignment uses the native 992-byte
 point reads and numeric fetch-add with an old-row result; its visitor counterpart
 also accepts range reads. Both refuse an ordinary assignment UPDATE
 (`calico/src/runtime.cpp:2891–3080`). Preparing `RETURNING OLD.*` requires
-`column = column + $delta` (`runtime.cpp:2403–2433`), which is a different operation
-from assigning the requested absolute value. The control keeps the real mutation
-API and its result lifetime; these object sizes do not measure stack traffic.
+`column = column + $delta` (`runtime.cpp:2403–2433`). Delta is unsigned, and both
+fetch-add sinks reject `delta > UINT64_MAX - old`
+(`foyer/src/session_impl.h:760,825`). Reading the old value and using wrapping
+`after - before` therefore refuses decreasing assignments; it cannot replace this
+arbitrary assignment trace. The control keeps the real mutation API and its
+result lifetime; these object sizes do not measure stack traffic.
 
 The cohort column is **1**, one current call. Calico's public Runtime does not
 expose retained old-cut snapshots across publication, late first old reads,
