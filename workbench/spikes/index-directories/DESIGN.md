@@ -303,6 +303,16 @@ Current/private/retained/reusable physical inventory, catalog/hash/history
 storage, prepared changes, PMR rounding and helper state are additional ledger
 entries. Dividing this body table alone yields no complete per-record or RSS cost.
 
+The unfinished Editor also constructs five Map64 scratch owners, each with eight
+inline u64/index pairs:640B of inline payload before counts, handles and alignment.
+Those arrays are currently zero-initialized each attempt. Beyond eight entries,
+each owner uses default heap-backed table<64,0,8>; primary capacity is only eight,
+and its heap/Swiss inventory is outside the Editor PMR vectors. These costs are
+not covered by reporting PMR alone. The [scratch plan](PSEUDOCODE.md#request-local-scratch-geometry)
+requires population-sized promotion and explicitly charged allocation/refusal
+and cleanup. The persisted table<4,0,64> bitmap shard is a distinct, full-domain
+sixteen-key geometry; this criticism does not apply to that specialization.
+
 ## Routing and payload bytes
 
 The first live stable-name control exposed enough repeated catalog/Part work

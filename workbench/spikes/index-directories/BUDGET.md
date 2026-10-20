@@ -435,6 +435,15 @@ costs remain real; this is not a measured Engine speedup. Current prepare checks
 full-ID uniqueness scratch above64, then performs catalog/reservation work.
 Model packet sizes1/2/5/10/64/65/128/256 and charge scratch/refusal at that crossover. Do not invent Engine publication to bypass it.
 
+Engine's own coalescing/leaf/extra/definition scratch is an additional cost.
+The unfinished eight-inline-then-table<64,0,8> fallback has only eight primary
+rows and forces56/64 distinct keys into Swiss. It is not a qualified B64 strategy.
+Use the [explicit population/sizing plan](PSEUDOCODE.md#request-local-scratch-geometry),
+including promotion at9, clustered/repeated versus64 distinct and larger actual
+repair/definition sets. Count default-heap storage as well as PMR. Geometry,
+encoding, construction and migration cost come out of existing operation
+budgets; this correction receives no extra allowance or assumed prefetch gain.
+
 A shared physical slab can reduce backing acquisitions for a batch. It must
 have a counted owner holding the actual Loom Allocation, with all destination
 slices disjoint from sealed bodies/padding. Fresh native Allocation transfer

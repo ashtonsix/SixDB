@@ -64,6 +64,46 @@ constant high half only after admitting that namespace. Numeric cut equality
 between different Cores is insufficient. No map here is lookup authority,
 history, a reader registry or an undo log.
 
+### Request-local scratch geometry
+
+The unfinished Map64 fallback is not the intended implementation: after eight
+inline entries it constructs table<64,0,8>, whose single primary bucket has only
+eight rows. A 64-distinct-key batch puts56 entries in Swiss even with ideal input.
+It has no sizing, primary growth, reservation or selected execution policy.
+
+~~~
+SCRATCH_FOR_ATTEMPT(expected_distinct,admitted_key_domain,resource):
+    retain small inline lookup while actual distinct count<=8
+    lazily choose actual Ikea bucket/encoding geometry when promotion is needed
+    use this map's expected DISTINCT work, not all historical directory/schema size
+    declare target primary occupancy; inspect actual capacity/spill/assigned bytes
+    reserve overflow separately when the admitted workload needs it
+    migrate inline values once into the selected private owner
+    reuse concrete native dispatch through this bounded attempt
+    avoid repeated get+set searches when one admitted modify_or_insert can
+       produce the actual new vector index without unsafe updater side effects
+    if actual work outgrows geometry: explicitly grow/rebuild and rebind
+    charge construction, migration, allocation/refusal and final cleanup
+~~~
+
+Plan keys require35 bits for layer plus prefix; definition IDs require32.
+Node-name maps retain full admitted u64 identity unless a collision-free shorter
+encoding is explicitly established. Do not use a universal bucket count or
+truncate a name to make a measured profile applicable.
+
+Let N be offered commands, D their distinct Segment names and A offered
+definitions. Before balancing, plan/leaf/extra maps have at most D entries;
+definition appends have at most A. Historical-definition scratch covers all
+definitions encountered while validating EVERY offer, including cancelled
+commands and existing definitions extended by A; it is not bounded by final D
+alone. Structural sibling/ancestor scratch needs its actual repair bound.
+There is no general64-entry cap. Repeated-key B64 can remain entirely inline.
+
+No future-key prefetch or Ring is assumed for dependent plan construction.
+Independent requests can use such mechanisms only with qualified keys, stable
+owner/probe lifetimes and measured complete construction/cleanup. A mostly-Swiss
+fallback remains a possible labeled control, not the accidental default.
+
 Borrowed state cannot cross publication, polling, reentry, suspension or return.
 A Scope, its Worker/Lane and external resource remain alive through every use.
 Escaping Parts use Orbital's real export/retention contract. Owning a directory
