@@ -1,0 +1,632 @@
+[
+  {
+    "variant": "batch32",
+    "function": "overflow_read_k14_v0",
+    "identical": true,
+    "baseline_lines": 101,
+    "candidate_lines": 101
+  },
+  {
+    "variant": "batch32",
+    "function": "overflow_read_k14_v8",
+    "identical": true,
+    "baseline_lines": 113,
+    "candidate_lines": 113
+  },
+  {
+    "variant": "batch32",
+    "function": "overflow_read_k14_v64",
+    "identical": true,
+    "baseline_lines": 118,
+    "candidate_lines": 118
+  },
+  {
+    "variant": "batch32",
+    "function": "overflow_read_k30_v0",
+    "identical": true,
+    "baseline_lines": 99,
+    "candidate_lines": 99
+  },
+  {
+    "variant": "batch32",
+    "function": "overflow_read_k30_v8",
+    "identical": true,
+    "baseline_lines": 117,
+    "candidate_lines": 117
+  },
+  {
+    "variant": "batch32",
+    "function": "overflow_read_k30_v64",
+    "identical": true,
+    "baseline_lines": 122,
+    "candidate_lines": 122
+  },
+  {
+    "variant": "batch32",
+    "function": "overflow_write_mixed_k14_v0",
+    "identical": true,
+    "baseline_lines": 163,
+    "candidate_lines": 163
+  },
+  {
+    "variant": "batch32",
+    "function": "overflow_write_existing_k14_v0",
+    "identical": true,
+    "baseline_lines": 162,
+    "candidate_lines": 162
+  },
+  {
+    "variant": "batch32",
+    "function": "overflow_write_mixed_k14_v8",
+    "identical": true,
+    "baseline_lines": 163,
+    "candidate_lines": 163
+  },
+  {
+    "variant": "batch32",
+    "function": "overflow_write_existing_k14_v8",
+    "identical": true,
+    "baseline_lines": 180,
+    "candidate_lines": 180
+  },
+  {
+    "variant": "batch32",
+    "function": "overflow_write_mixed_k14_v64",
+    "identical": true,
+    "baseline_lines": 181,
+    "candidate_lines": 181
+  },
+  {
+    "variant": "batch32",
+    "function": "overflow_write_existing_k14_v64",
+    "identical": true,
+    "baseline_lines": 210,
+    "candidate_lines": 210
+  },
+  {
+    "variant": "batch32",
+    "function": "overflow_write_mixed_k30_v0",
+    "identical": true,
+    "baseline_lines": 173,
+    "candidate_lines": 173
+  },
+  {
+    "variant": "batch32",
+    "function": "overflow_write_existing_k30_v0",
+    "identical": true,
+    "baseline_lines": 184,
+    "candidate_lines": 184
+  },
+  {
+    "variant": "batch32",
+    "function": "overflow_write_mixed_k30_v8",
+    "identical": true,
+    "baseline_lines": 173,
+    "candidate_lines": 173
+  },
+  {
+    "variant": "batch32",
+    "function": "overflow_write_existing_k30_v8",
+    "identical": true,
+    "baseline_lines": 190,
+    "candidate_lines": 190
+  },
+  {
+    "variant": "batch32",
+    "function": "overflow_write_mixed_k30_v64",
+    "identical": true,
+    "baseline_lines": 191,
+    "candidate_lines": 191
+  },
+  {
+    "variant": "batch32",
+    "function": "overflow_write_existing_k30_v64",
+    "identical": true,
+    "baseline_lines": 227,
+    "candidate_lines": 227
+  },
+  {
+    "variant": "batch64",
+    "function": "overflow_read_k14_v0",
+    "identical": true,
+    "baseline_lines": 101,
+    "candidate_lines": 101
+  },
+  {
+    "variant": "batch64",
+    "function": "overflow_read_k14_v8",
+    "identical": true,
+    "baseline_lines": 113,
+    "candidate_lines": 113
+  },
+  {
+    "variant": "batch64",
+    "function": "overflow_read_k14_v64",
+    "identical": true,
+    "baseline_lines": 118,
+    "candidate_lines": 118
+  },
+  {
+    "variant": "batch64",
+    "function": "overflow_read_k30_v0",
+    "identical": true,
+    "baseline_lines": 99,
+    "candidate_lines": 99
+  },
+  {
+    "variant": "batch64",
+    "function": "overflow_read_k30_v8",
+    "identical": true,
+    "baseline_lines": 117,
+    "candidate_lines": 117
+  },
+  {
+    "variant": "batch64",
+    "function": "overflow_read_k30_v64",
+    "identical": true,
+    "baseline_lines": 122,
+    "candidate_lines": 122
+  },
+  {
+    "variant": "batch64",
+    "function": "overflow_write_mixed_k14_v0",
+    "identical": true,
+    "baseline_lines": 163,
+    "candidate_lines": 163
+  },
+  {
+    "variant": "batch64",
+    "function": "overflow_write_existing_k14_v0",
+    "identical": true,
+    "baseline_lines": 162,
+    "candidate_lines": 162
+  },
+  {
+    "variant": "batch64",
+    "function": "overflow_write_mixed_k14_v8",
+    "identical": true,
+    "baseline_lines": 163,
+    "candidate_lines": 163
+  },
+  {
+    "variant": "batch64",
+    "function": "overflow_write_existing_k14_v8",
+    "identical": true,
+    "baseline_lines": 180,
+    "candidate_lines": 180
+  },
+  {
+    "variant": "batch64",
+    "function": "overflow_write_mixed_k14_v64",
+    "identical": true,
+    "baseline_lines": 181,
+    "candidate_lines": 181
+  },
+  {
+    "variant": "batch64",
+    "function": "overflow_write_existing_k14_v64",
+    "identical": true,
+    "baseline_lines": 210,
+    "candidate_lines": 210
+  },
+  {
+    "variant": "batch64",
+    "function": "overflow_write_mixed_k30_v0",
+    "identical": true,
+    "baseline_lines": 173,
+    "candidate_lines": 173
+  },
+  {
+    "variant": "batch64",
+    "function": "overflow_write_existing_k30_v0",
+    "identical": true,
+    "baseline_lines": 184,
+    "candidate_lines": 184
+  },
+  {
+    "variant": "batch64",
+    "function": "overflow_write_mixed_k30_v8",
+    "identical": true,
+    "baseline_lines": 173,
+    "candidate_lines": 173
+  },
+  {
+    "variant": "batch64",
+    "function": "overflow_write_existing_k30_v8",
+    "identical": true,
+    "baseline_lines": 190,
+    "candidate_lines": 190
+  },
+  {
+    "variant": "batch64",
+    "function": "overflow_write_mixed_k30_v64",
+    "identical": true,
+    "baseline_lines": 191,
+    "candidate_lines": 191
+  },
+  {
+    "variant": "batch64",
+    "function": "overflow_write_existing_k30_v64",
+    "identical": true,
+    "baseline_lines": 227,
+    "candidate_lines": 227
+  },
+  {
+    "variant": "line32",
+    "function": "overflow_read_k14_v0",
+    "identical": true,
+    "baseline_lines": 101,
+    "candidate_lines": 101
+  },
+  {
+    "variant": "line32",
+    "function": "overflow_read_k14_v8",
+    "identical": true,
+    "baseline_lines": 113,
+    "candidate_lines": 113
+  },
+  {
+    "variant": "line32",
+    "function": "overflow_read_k14_v64",
+    "identical": true,
+    "baseline_lines": 118,
+    "candidate_lines": 118
+  },
+  {
+    "variant": "line32",
+    "function": "overflow_read_k30_v0",
+    "identical": true,
+    "baseline_lines": 99,
+    "candidate_lines": 99
+  },
+  {
+    "variant": "line32",
+    "function": "overflow_read_k30_v8",
+    "identical": true,
+    "baseline_lines": 117,
+    "candidate_lines": 117
+  },
+  {
+    "variant": "line32",
+    "function": "overflow_read_k30_v64",
+    "identical": true,
+    "baseline_lines": 122,
+    "candidate_lines": 122
+  },
+  {
+    "variant": "line32",
+    "function": "overflow_write_mixed_k14_v0",
+    "identical": true,
+    "baseline_lines": 163,
+    "candidate_lines": 163
+  },
+  {
+    "variant": "line32",
+    "function": "overflow_write_existing_k14_v0",
+    "identical": true,
+    "baseline_lines": 162,
+    "candidate_lines": 162
+  },
+  {
+    "variant": "line32",
+    "function": "overflow_write_mixed_k14_v8",
+    "identical": true,
+    "baseline_lines": 163,
+    "candidate_lines": 163
+  },
+  {
+    "variant": "line32",
+    "function": "overflow_write_existing_k14_v8",
+    "identical": true,
+    "baseline_lines": 180,
+    "candidate_lines": 180
+  },
+  {
+    "variant": "line32",
+    "function": "overflow_write_mixed_k14_v64",
+    "identical": true,
+    "baseline_lines": 181,
+    "candidate_lines": 181
+  },
+  {
+    "variant": "line32",
+    "function": "overflow_write_existing_k14_v64",
+    "identical": true,
+    "baseline_lines": 210,
+    "candidate_lines": 210
+  },
+  {
+    "variant": "line32",
+    "function": "overflow_write_mixed_k30_v0",
+    "identical": true,
+    "baseline_lines": 173,
+    "candidate_lines": 173
+  },
+  {
+    "variant": "line32",
+    "function": "overflow_write_existing_k30_v0",
+    "identical": true,
+    "baseline_lines": 184,
+    "candidate_lines": 184
+  },
+  {
+    "variant": "line32",
+    "function": "overflow_write_mixed_k30_v8",
+    "identical": true,
+    "baseline_lines": 173,
+    "candidate_lines": 173
+  },
+  {
+    "variant": "line32",
+    "function": "overflow_write_existing_k30_v8",
+    "identical": true,
+    "baseline_lines": 190,
+    "candidate_lines": 190
+  },
+  {
+    "variant": "line32",
+    "function": "overflow_write_mixed_k30_v64",
+    "identical": true,
+    "baseline_lines": 191,
+    "candidate_lines": 191
+  },
+  {
+    "variant": "line32",
+    "function": "overflow_write_existing_k30_v64",
+    "identical": true,
+    "baseline_lines": 227,
+    "candidate_lines": 227
+  },
+  {
+    "variant": "line64",
+    "function": "overflow_read_k14_v0",
+    "identical": true,
+    "baseline_lines": 101,
+    "candidate_lines": 101
+  },
+  {
+    "variant": "line64",
+    "function": "overflow_read_k14_v8",
+    "identical": true,
+    "baseline_lines": 113,
+    "candidate_lines": 113
+  },
+  {
+    "variant": "line64",
+    "function": "overflow_read_k14_v64",
+    "identical": true,
+    "baseline_lines": 118,
+    "candidate_lines": 118
+  },
+  {
+    "variant": "line64",
+    "function": "overflow_read_k30_v0",
+    "identical": true,
+    "baseline_lines": 99,
+    "candidate_lines": 99
+  },
+  {
+    "variant": "line64",
+    "function": "overflow_read_k30_v8",
+    "identical": true,
+    "baseline_lines": 117,
+    "candidate_lines": 117
+  },
+  {
+    "variant": "line64",
+    "function": "overflow_read_k30_v64",
+    "identical": true,
+    "baseline_lines": 122,
+    "candidate_lines": 122
+  },
+  {
+    "variant": "line64",
+    "function": "overflow_write_mixed_k14_v0",
+    "identical": true,
+    "baseline_lines": 163,
+    "candidate_lines": 163
+  },
+  {
+    "variant": "line64",
+    "function": "overflow_write_existing_k14_v0",
+    "identical": true,
+    "baseline_lines": 162,
+    "candidate_lines": 162
+  },
+  {
+    "variant": "line64",
+    "function": "overflow_write_mixed_k14_v8",
+    "identical": true,
+    "baseline_lines": 163,
+    "candidate_lines": 163
+  },
+  {
+    "variant": "line64",
+    "function": "overflow_write_existing_k14_v8",
+    "identical": true,
+    "baseline_lines": 180,
+    "candidate_lines": 180
+  },
+  {
+    "variant": "line64",
+    "function": "overflow_write_mixed_k14_v64",
+    "identical": true,
+    "baseline_lines": 181,
+    "candidate_lines": 181
+  },
+  {
+    "variant": "line64",
+    "function": "overflow_write_existing_k14_v64",
+    "identical": true,
+    "baseline_lines": 210,
+    "candidate_lines": 210
+  },
+  {
+    "variant": "line64",
+    "function": "overflow_write_mixed_k30_v0",
+    "identical": true,
+    "baseline_lines": 173,
+    "candidate_lines": 173
+  },
+  {
+    "variant": "line64",
+    "function": "overflow_write_existing_k30_v0",
+    "identical": true,
+    "baseline_lines": 184,
+    "candidate_lines": 184
+  },
+  {
+    "variant": "line64",
+    "function": "overflow_write_mixed_k30_v8",
+    "identical": true,
+    "baseline_lines": 173,
+    "candidate_lines": 173
+  },
+  {
+    "variant": "line64",
+    "function": "overflow_write_existing_k30_v8",
+    "identical": true,
+    "baseline_lines": 190,
+    "candidate_lines": 190
+  },
+  {
+    "variant": "line64",
+    "function": "overflow_write_mixed_k30_v64",
+    "identical": true,
+    "baseline_lines": 191,
+    "candidate_lines": 191
+  },
+  {
+    "variant": "line64",
+    "function": "overflow_write_existing_k30_v64",
+    "identical": true,
+    "baseline_lines": 227,
+    "candidate_lines": 227
+  },
+  {
+    "variant": "tail64",
+    "function": "overflow_read_k14_v0",
+    "identical": true,
+    "baseline_lines": 101,
+    "candidate_lines": 101
+  },
+  {
+    "variant": "tail64",
+    "function": "overflow_read_k14_v8",
+    "identical": true,
+    "baseline_lines": 113,
+    "candidate_lines": 113
+  },
+  {
+    "variant": "tail64",
+    "function": "overflow_read_k14_v64",
+    "identical": true,
+    "baseline_lines": 118,
+    "candidate_lines": 118
+  },
+  {
+    "variant": "tail64",
+    "function": "overflow_read_k30_v0",
+    "identical": true,
+    "baseline_lines": 99,
+    "candidate_lines": 99
+  },
+  {
+    "variant": "tail64",
+    "function": "overflow_read_k30_v8",
+    "identical": true,
+    "baseline_lines": 117,
+    "candidate_lines": 117
+  },
+  {
+    "variant": "tail64",
+    "function": "overflow_read_k30_v64",
+    "identical": true,
+    "baseline_lines": 122,
+    "candidate_lines": 122
+  },
+  {
+    "variant": "tail64",
+    "function": "overflow_write_mixed_k14_v0",
+    "identical": true,
+    "baseline_lines": 163,
+    "candidate_lines": 163
+  },
+  {
+    "variant": "tail64",
+    "function": "overflow_write_existing_k14_v0",
+    "identical": true,
+    "baseline_lines": 162,
+    "candidate_lines": 162
+  },
+  {
+    "variant": "tail64",
+    "function": "overflow_write_mixed_k14_v8",
+    "identical": true,
+    "baseline_lines": 163,
+    "candidate_lines": 163
+  },
+  {
+    "variant": "tail64",
+    "function": "overflow_write_existing_k14_v8",
+    "identical": true,
+    "baseline_lines": 180,
+    "candidate_lines": 180
+  },
+  {
+    "variant": "tail64",
+    "function": "overflow_write_mixed_k14_v64",
+    "identical": true,
+    "baseline_lines": 181,
+    "candidate_lines": 181
+  },
+  {
+    "variant": "tail64",
+    "function": "overflow_write_existing_k14_v64",
+    "identical": true,
+    "baseline_lines": 210,
+    "candidate_lines": 210
+  },
+  {
+    "variant": "tail64",
+    "function": "overflow_write_mixed_k30_v0",
+    "identical": true,
+    "baseline_lines": 173,
+    "candidate_lines": 173
+  },
+  {
+    "variant": "tail64",
+    "function": "overflow_write_existing_k30_v0",
+    "identical": true,
+    "baseline_lines": 184,
+    "candidate_lines": 184
+  },
+  {
+    "variant": "tail64",
+    "function": "overflow_write_mixed_k30_v8",
+    "identical": true,
+    "baseline_lines": 173,
+    "candidate_lines": 173
+  },
+  {
+    "variant": "tail64",
+    "function": "overflow_write_existing_k30_v8",
+    "identical": true,
+    "baseline_lines": 190,
+    "candidate_lines": 190
+  },
+  {
+    "variant": "tail64",
+    "function": "overflow_write_mixed_k30_v64",
+    "identical": true,
+    "baseline_lines": 191,
+    "candidate_lines": 191
+  },
+  {
+    "variant": "tail64",
+    "function": "overflow_write_existing_k30_v64",
+    "identical": true,
+    "baseline_lines": 227,
+    "candidate_lines": 227
+  }
+]

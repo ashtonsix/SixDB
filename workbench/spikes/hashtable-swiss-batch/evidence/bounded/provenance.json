@@ -1,0 +1,69 @@
+{
+  "files_sha256": {
+    "avx2/audit.txt": "a3032717c6b0d773b007d7a25ec9b3c8fe52c03c837b782c426c5b588ce68bfa",
+    "avx2/check-group16.txt": "7b90de388c64a9360a622c03a4a67d0bb9360cc2119d3dc4d2487651c80aba1d",
+    "avx2/check-line32.txt": "7b90de388c64a9360a622c03a4a67d0bb9360cc2119d3dc4d2487651c80aba1d",
+    "avx2/check-line64.txt": "7b90de388c64a9360a622c03a4a67d0bb9360cc2119d3dc4d2487651c80aba1d",
+    "avx2/codegen/commands.json": "eba038a1d62d135739eabe8402bf5baeb9d57390a609a00985229be9a04163cf",
+    "avx2/codegen/comparison.json": "10e184f3f82eb638ad180f37fc5e71238d5060d8e92f5ddbf3706945bb373934",
+    "avx2/delta-group16.json": "4d5842f2061033f0dfa3d9c8fa01e979995b1b53447f901d051bea368d77d256",
+    "avx2/delta-line32.json": "36df54addb31df79b3fe84e8a6e79769fa75d9f9cfd8dbf3ee316953afd82e93",
+    "avx2/delta-line64.json": "582924685f59ce9c1ae8af59b50db4e6f3ac178797e4ed82d073af2718523e88",
+    "avx2/mask-check.txt": "eceb1a7ee0baab06f91563401398d8d6fdea5b29238e5ffc0a7962029fbcae57",
+    "avx2/summary/cases.csv": "5073f8c51f88d63da5276a427a85fdfc6dc33743fa39997c3e97d2aea8b3ba44",
+    "avx2/summary/churn.csv": "cc8f351ef7accef6eedcdc394dd685a2b80f34fcc21a1b7953efc7671c8832cd",
+    "avx2/trace-group16.txt": "27c7a922d201a270d61748a4f19e172b7feec545462d87399eb605343f3d5bd6",
+    "avx2/trace-line32.txt": "27c7a922d201a270d61748a4f19e172b7feec545462d87399eb605343f3d5bd6",
+    "avx2/trace-line64.txt": "27c7a922d201a270d61748a4f19e172b7feec545462d87399eb605343f3d5bd6",
+    "avx2/treatments.json": "9e6dc09d790a18df089b14e3699103cc1d8fb891366fd05c55c148f586ce4dc0",
+    "avx512/audit.txt": "a3032717c6b0d773b007d7a25ec9b3c8fe52c03c837b782c426c5b588ce68bfa",
+    "avx512/check-group16.txt": "7b90de388c64a9360a622c03a4a67d0bb9360cc2119d3dc4d2487651c80aba1d",
+    "avx512/check-line32.txt": "7b90de388c64a9360a622c03a4a67d0bb9360cc2119d3dc4d2487651c80aba1d",
+    "avx512/check-line64.txt": "7b90de388c64a9360a622c03a4a67d0bb9360cc2119d3dc4d2487651c80aba1d",
+    "avx512/codegen/commands.json": "12f7f524bc38adcb8be2af106c41e51cdc8322465ac691d91604525eb48496eb",
+    "avx512/codegen/comparison.json": "beb62b9fb18028082d3e00379d08d76386749639fa49250c2ad92affbcd27547",
+    "avx512/delta-group16.json": "4d5842f2061033f0dfa3d9c8fa01e979995b1b53447f901d051bea368d77d256",
+    "avx512/delta-line32.json": "36df54addb31df79b3fe84e8a6e79769fa75d9f9cfd8dbf3ee316953afd82e93",
+    "avx512/delta-line64.json": "582924685f59ce9c1ae8af59b50db4e6f3ac178797e4ed82d073af2718523e88",
+    "avx512/mask-check.txt": "eceb1a7ee0baab06f91563401398d8d6fdea5b29238e5ffc0a7962029fbcae57",
+    "avx512/summary/cases.csv": "514f9693724349f0bd75abf80ff44bc72621ed47b1a7edc0e196bd98bf13d53e",
+    "avx512/summary/churn.csv": "eea0b4b6f983b7ab02d5bc13cb725a435cd4fcb8c20336fad594d330b0495af3",
+    "avx512/trace-group16.txt": "27c7a922d201a270d61748a4f19e172b7feec545462d87399eb605343f3d5bd6",
+    "avx512/trace-line32.txt": "27c7a922d201a270d61748a4f19e172b7feec545462d87399eb605343f3d5bd6",
+    "avx512/trace-line64.txt": "27c7a922d201a270d61748a4f19e172b7feec545462d87399eb605343f3d5bd6",
+    "avx512/treatments.json": "9e6dc09d790a18df089b14e3699103cc1d8fb891366fd05c55c148f586ce4dc0",
+    "compiler.txt": "5b17cd9bfa01ae4b276d020d757aeed82b232d4dacef417a833e5ba69a5307da",
+    "lscpu.json": "ea87d071a39a7d3417757717aabc0719c8c1cb0c29e6904d83d810c04b104507",
+    "worker-result.json": "e5d9a473972b27bc76bf8f785458c194f3955999c05622ed60723a0f03260a99"
+  },
+  "format": 2,
+  "full_bundle": "artifact.json",
+  "kind": "files",
+  "regenerate": [
+    [
+      "python3",
+      "workbench/spikes/hashtable-swiss-batch/audit.py",
+      "{evidence}/avx512"
+    ],
+    [
+      "python3",
+      "workbench/spikes/hashtable-swiss-batch/summarize.py",
+      "{evidence}/avx512",
+      "--output",
+      "{evidence}/avx512/summary"
+    ],
+    [
+      "python3",
+      "workbench/spikes/hashtable-swiss-batch/audit.py",
+      "{evidence}/avx2"
+    ],
+    [
+      "python3",
+      "workbench/spikes/hashtable-swiss-batch/summarize.py",
+      "{evidence}/avx2",
+      "--output",
+      "{evidence}/avx2/summary"
+    ]
+  ],
+  "regenerate_from": "archive"
+}

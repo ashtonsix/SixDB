@@ -1,0 +1,20 @@
+Literal backend sequence estimates. No branch probabilities/PC traversal, cache hierarchy, store forwarding or callee execution.
+Recognized x86/AArch64 control-flow sites follow. Branches can be tail calls; inspect linked targets.
+Calls retain LLVM placeholders, NOT complete module costs. Unsupported instructions are never skipped.
+CPU selector: znver5; noalias=False
+Reported resources: ["Zn4AGU0", "Zn4AGU1", "Zn4AGU2", "Zn4ALU0", "Zn4ALU1", "Zn4ALU2", "Zn4ALU3", "Zn4BRU1", "Zn4FP0", "Zn4FP1", "Zn4FP2", "Zn4FP3", "Zn4FP45.\u0000", "Zn4FP45.\u0001", "Zn4FPSt", "Zn4LSU.\u0000", "Zn4LSU.\u0001", "Zn4LSU.\u0002", "Zn4Load.\u0000", "Zn4Load.\u0001", "Zn4Load.\u0002", "Zn4Store.\u0000", "Zn4Store.\u0001"]
+
+Region: scalar16                               # @scalar16
+Model block reciprocal throughput: 2 cycles; total 1203 synthetic cycles / 100 repetitions
+9: return: retq
+LLVM hasUnmodeledSideEffects instruction indices: [9]
+
+Region: batch32                                # @batch32
+Model block reciprocal throughput: 3.3333333333333335 cycles; total 1473 synthetic cycles / 100 repetitions
+19: return: retq
+LLVM hasUnmodeledSideEffects instruction indices: [18, 19]
+
+Region: batch64                                # @batch64
+Model block reciprocal throughput: 6.166666666666667 cycles; total 2404 synthetic cycles / 100 repetitions
+35: return: retq
+LLVM hasUnmodeledSideEffects instruction indices: [34, 35]
