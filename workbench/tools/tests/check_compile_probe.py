@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Check isolated Clang compiles, serial accounting and failure receipts on tiny fixtures."""
+"""Check isolated Clang objects/assembly, serial accounting and failure receipts on tiny fixtures."""
 
 import importlib.util
 import json
@@ -71,6 +71,42 @@ class CompileProbeChecks(unittest.TestCase):
                          max(r['max_process_rss_kib'] for r in report['compiles']))
         self.assertEqual((self.build / '.ninja_log').read_text(), '# untouched\n')
         self.cli(output, '--source', 'first.cpp', success=False)
+
+    def test_assembly_can_be_edited_reassembled_and_linked(self):
+        source = Path(self.entries[0]['file'])
+        source.write_text('extern "C" unsigned peer(unsigned) noexcept;\n'
+                          'extern "C" unsigned candidate(unsigned x) noexcept { return peer(x) + 7; }\n')
+        output = self.root / 'assembly'
+        self.cli(output, '--source', 'first.cpp', '--assembly')
+        report = json.loads((output / 'summary.json').read_text())
+        row, = report['compiles']
+        assembly = output / row['output'] / 'source.s'
+        self.assertEqual(report['status'], 'complete')
+        self.assertIn('assembly', row)
+        self.assertNotIn('object', row)
+        self.assertNotIn('-c', row['argv'])
+        self.assertIn('peer', assembly.read_text())
+        self.assertEqual(Path(row['original_object']).read_text(), 'original object')
+        self.assertEqual(Path(row['original_object']).with_suffix('.d').read_text(),
+                         'original dependencies')
+        self.assertEqual((self.build / '.ninja_log').read_text(), '# untouched\n')
+        # A real separately linked callee supplies an independent result.
+        peer = self.root / 'peer.cpp'
+        peer.write_text('extern "C" unsigned peer(unsigned x) noexcept { return x * 3; }\n'
+                        'extern "C" unsigned candidate(unsigned) noexcept;\n'
+                        'int main() { return candidate(11) != 40; }\n')
+        binary = self.root / 'checked'
+        subprocess.run([self.compiler, assembly, peer, '-o', binary], check=True,
+                       capture_output=True)
+        subprocess.run([binary], check=True)
+        # Edit the symbolic call target, rather than copying an address from objdump.
+        assembly.write_text(assembly.read_text().replace('peer', 'edited_peer'))
+        peer.write_text('extern "C" unsigned edited_peer(unsigned x) noexcept { return x * 5; }\n'
+                        'extern "C" unsigned candidate(unsigned) noexcept;\n'
+                        'int main() { return candidate(11) != 62; }\n')
+        subprocess.run([self.compiler, assembly, peer, '-o', binary], check=True,
+                       capture_output=True)
+        subprocess.run([binary], check=True)
 
     def test_plan_and_object_disambiguation(self):
         another = dict(self.entries[0], output=str(self.build / 'other.o'))
@@ -153,6 +189,9 @@ class CompileProbeChecks(unittest.TestCase):
         self.assertIn('-MJ' + str(output / 'compilation.json'), argv)
         self.assertIn('-ftime-trace=' + str(output / 'trace.json'), argv)
         self.assertIn('--serialize-diagnostics=' + str(output / 'diagnostics.dia'), argv)
+        for flag in ('-emit-llvm', '-flto=thin'):
+            with self.subTest(flag=flag), self.assertRaisesRegex(ValueError, 'native code generation'):
+                probe.probe_command(dict(entry, argv=entry['argv'] + [flag]), output, assembly=True)
         for flag in ('@flags.rsp', '-save-temps', '-fmodules'):
             with self.subTest(flag=flag), self.assertRaises(ValueError):
                 probe.probe_command(dict(entry, argv=entry['argv'] + [flag]), output)

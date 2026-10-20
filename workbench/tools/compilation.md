@@ -1,16 +1,21 @@
-# Investigating compilation cost
+# Compilation probes and editable assembly
 
-Start with one costly translation unit. `compile_probe.py` selects its existing
-Clang command from `compile_commands.json` and runs it serially into a new output
-directory. Optimization, debug and ISA flags stay as configured; original build
+For editable compiler output, add `--assembly`: each selected TU produces
+`source.s` instead of `object.o`, retaining its configured flags and C++ ABI.
+The [assembly-call example](../spikes/assembly-calls/README.md) shows how to edit,
+assemble and link that output against real modules, including inline templates.
+
+For compilation-resource diagnosis, start with one costly translation unit.
+`compile_probe.py` selects its existing Clang command from
+`compile_commands.json` and runs it serially into a new output directory. Optimization, debug and ISA flags stay as configured; original build
 objects, dependencies and Ninja logs remain available to other work.
 
 From a configured checkout on Linux:
 
 ```sh
 python3 workbench/tools/compile_probe.py build/clang/dev \
-  --source ikea/src/seriespack/view.cpp \
-  --source ikea/src/seriespack/operations.cpp \
+  --source ikea/src/seriespack/readers.cpp \
+  --source ikea/src/seriespack/admission.cpp \
   --output build/compile-probes/readers
 ```
 

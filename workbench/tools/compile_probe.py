@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Measure selected Clang object compilations serially without replacing build outputs."""
+"""Compile selected Clang TUs serially to objects or editable assembly without replacing build outputs."""
 
 import argparse
 from collections import Counter
@@ -59,7 +59,7 @@ def select(database, sources, objects):
     return chosen
 
 
-def probe_command(entry, output, trace=False):
+def probe_command(entry, output, trace=False, assembly=False):
     """Redirect known compiler outputs; keep compile flags and working directory."""
     argv = entry['argv']
     if not argv or 'clang' not in Path(argv[0]).name or argv.count('-c') != 1 or argv.count('-o') != 1:
@@ -68,11 +68,14 @@ def probe_command(entry, output, trace=False):
     unsupported = ('@', '-save-temps', '-fmodules', '-fmodule-', '-emit-pch',
                    '-fprofile-instr-generate', '-fprofile-generate', '-ftest-coverage',
                    '--coverage', '-foptimization-record-file', '-save-stats')
+    if assembly and any(a == '-emit-llvm' or a.startswith('-flto') for a in argv):
+        raise ValueError('Editable assembly requires native code generation without LLVM IR/LTO output')
     if any(a.startswith(unsupported) or a in {'&&', ';', '|', '>', '<'} for a in argv):
         raise ValueError('Probe ordinary object commands without response files, shell operators, '
                          'modules, profiling or extra side-output modes')
-    replacements = {'-o': output / 'object.o', '-MF': output / 'dependencies.d',
-                    '-MT': output / 'object.o', '-MQ': output / 'object.o',
+    artifact = output / ('source.s' if assembly else 'object.o')
+    replacements = {'-o': artifact, '-MF': output / 'dependencies.d',
+                    '-MT': artifact, '-MQ': artifact,
                     '-MJ': output / 'compilation.json',
                     '--serialize-diagnostics': output / 'diagnostics.dia'}
     result, i = [], 0
@@ -91,6 +94,8 @@ def probe_command(entry, output, trace=False):
             result.append('-ftime-trace=' + str(output / 'trace.json'))
         elif arg.startswith('--serialize-diagnostics='):
             result.append('--serialize-diagnostics=' + str(output / 'diagnostics.dia'))
+        elif arg == '-c' and assembly:
+            result.append('-S')
         else:
             result.append(arg)
         i += 1
@@ -195,11 +200,12 @@ def compile_one(entry, output, argv):
         record['source_sha256_after'] = None
         record['source_read_error'] = str(error)
     record['source_unchanged'] = record['source_sha256_before'] == record['source_sha256_after']
-    if process.returncode == 0 and (output / 'object.o').is_file():
-        record['object'] = {'bytes': (output / 'object.o').stat().st_size,
-                            'sha256': digest(output / 'object.o')}
+    kind = 'assembly' if '-S' in argv else 'object'
+    artifact = output / ('source.s' if kind == 'assembly' else 'object.o')
+    if process.returncode == 0 and artifact.is_file():
+        record[kind] = {'bytes': artifact.stat().st_size, 'sha256': digest(artifact)}
     record['status'] = ('complete' if process.returncode == 0 and record['source_unchanged']
-                        and 'object' in record else 'failed')
+                        and kind in record else 'failed')
     save(output / 'compile.json', record)
     return record
 
@@ -209,7 +215,8 @@ def main():
     parser.add_argument('build', type=Path, help='build directory or compile_commands.json')
     parser.add_argument('--source', action='append', default=[], help='exact source path or unique path suffix; repeat for serial compiles')
     parser.add_argument('--object', action='append', default=[], help='select by original object path/suffix when a source has several commands')
-    parser.add_argument('--output', type=Path, required=True, help='new directory for receipts, logs and isolated objects')
+    parser.add_argument('--output', type=Path, required=True, help='new directory for receipts, logs and isolated output')
+    parser.add_argument('--assembly', action='store_true', help='emit editable source.s with the selected C++ ABI and flags instead of object.o')
     parser.add_argument('--time-trace', action='store_true', help='add Clang time tracing; records this change to the command')
     parser.add_argument('--plan', action='store_true', help='print selected commands without creating files or compiling')
     args = parser.parse_args()
@@ -221,7 +228,7 @@ def main():
     output = args.output.resolve()
     try:
         entries = select(database, args.source, args.object)
-        commands = [probe_command(e, output / f'{i:02d}-{Path(e["source"]).stem}', args.time_trace)
+        commands = [probe_command(e, output / f'{i:02d}-{Path(e["source"]).stem}', args.time_trace, args.assembly)
                     for i, e in enumerate(entries)]
         if output.exists():
             raise ValueError(f'Output already exists: {output}; choose a new directory')

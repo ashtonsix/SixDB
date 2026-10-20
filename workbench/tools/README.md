@@ -12,6 +12,7 @@ from the Mac. Use the helpers independently or start from an existing runner.
 | Replay binaries or summarize measurements | [Benchmark tools](../benchmarks/README.md#replay-and-summarize): `replay.py`, `evidence.py` |
 | Browse or share results | [Results explorer](../results/README.md): `results.py --serve` |
 | Retain, revise or regenerate evidence | [Artifacts](artifacts.md): `artifacts.py`; [local storage](storage.md): `worker.py cache` |
+| Prototype in assembly with real module calls | [Assembly calls](../spikes/assembly-calls/README.md), `compile_probe.py --assembly` |
 | Diagnose compilation or editor issues | [Compile probes](compilation.md), [editor setup](editors.md) |
 | Set up and qualify cache-sensitive workloads | [Memory residency tools](residency.md), independent [PMU probe and counter helper](pmu/README.md) |
 
