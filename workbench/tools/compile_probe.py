@@ -73,6 +73,7 @@ def probe_command(entry, output, trace=False, assembly=False):
     if any(a.startswith(unsupported) or a in {'&&', ';', '|', '>', '<'} for a in argv):
         raise ValueError('Probe ordinary object commands without response files, shell operators, '
                          'modules, profiling or extra side-output modes')
+    preprocess_asm = assembly and Path(entry['source']).suffix == '.S'
     artifact = output / ('source.s' if assembly else 'object.o')
     replacements = {'-o': artifact, '-MF': output / 'dependencies.d',
                     '-MT': artifact, '-MQ': artifact,
@@ -95,7 +96,8 @@ def probe_command(entry, output, trace=False, assembly=False):
         elif arg.startswith('--serialize-diagnostics='):
             result.append('--serialize-diagnostics=' + str(output / 'diagnostics.dia'))
         elif arg == '-c' and assembly:
-            result.append('-S')
+            # Preserve MCA region comments while selecting this TU's real macros.
+            result.extend(['-E', '-P', '-CC'] if preprocess_asm else ['-S'])
         else:
             result.append(arg)
         i += 1
@@ -200,7 +202,7 @@ def compile_one(entry, output, argv):
         record['source_sha256_after'] = None
         record['source_read_error'] = str(error)
     record['source_unchanged'] = record['source_sha256_before'] == record['source_sha256_after']
-    kind = 'assembly' if '-S' in argv else 'object'
+    kind = 'assembly' if '-S' in argv or '-E' in argv else 'object'
     artifact = output / ('source.s' if kind == 'assembly' else 'object.o')
     if process.returncode == 0 and artifact.is_file():
         record[kind] = {'bytes': artifact.stat().st_size, 'sha256': digest(artifact)}
@@ -216,7 +218,7 @@ def main():
     parser.add_argument('--source', action='append', default=[], help='exact source path or unique path suffix; repeat for serial compiles')
     parser.add_argument('--object', action='append', default=[], help='select by original object path/suffix when a source has several commands')
     parser.add_argument('--output', type=Path, required=True, help='new directory for receipts, logs and isolated output')
-    parser.add_argument('--assembly', action='store_true', help='emit editable source.s with the selected C++ ABI and flags instead of object.o')
+    parser.add_argument('--assembly', action='store_true', help='emit editable source.s with configured flags; C++ compiles to assembler, .S preprocesses with comments')
     parser.add_argument('--time-trace', action='store_true', help='add Clang time tracing; records this change to the command')
     parser.add_argument('--plan', action='store_true', help='print selected commands without creating files or compiling')
     args = parser.parse_args()

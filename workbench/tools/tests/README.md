@@ -20,6 +20,8 @@ disposable fixtures. `build` also uses LLVM objcopy/strip and `readelf`;
 inputs and fake cloud clients. `--list` derives descriptions from the scripts themselves.
 `results` also needs Node for the viewer's data-handling checks; it can run on
 macOS directly as well as Linux, and does not launch a browser.
+`mca` assembles/models tiny x86/ARM fixtures with pinned LLVM tools; it executes
+no target code and preserves call/unsupported diagnostics.
 `pmu` uses offline permission/error fixtures; it needs no hardware-counter access.
 The independent [PMU tool](../pmu/README.md) exercises actual guest availability.
 `lmdb` compiles a tiny native peer check with Clang 21 and installed `liblmdb-dev`;

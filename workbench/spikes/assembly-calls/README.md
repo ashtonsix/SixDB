@@ -108,6 +108,9 @@ the same compiler/target as C++. A new spike can copy those few declarations,
 include its `.S`/`.s` among normal target sources, and link `ikea::hashtable`, `ikea::seriespack`,
 `ikea::tuplepack`, `loom::loom` or `orbital::orbital` as its actual operation needs.
 
+For instruction scheduling, the [MCA helper and model notes](../../tools/mca.md)
+reuse literal assembler and preserve control-flow/callee limitations.
+
 ## Owning returns and complete-operation review
 
 [ownership.cpp](ownership.cpp) is a small real-Loom lifetime check and ABI sketch:

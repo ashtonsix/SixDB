@@ -2,6 +2,8 @@
 
 For editable compiler output, add `--assembly`: each selected TU produces
 `source.s` instead of `object.o`, retaining its configured flags and C++ ABI.
+For a `.S` input this preprocesses the selected macros with comments preserved;
+use [MCA](mca.md) on the resulting literal assembly for scheduling diagnostics.
 The [assembly-call example](../spikes/assembly-calls/README.md) shows how to edit,
 assemble and link that output against real modules, including inline templates.
 

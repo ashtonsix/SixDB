@@ -108,6 +108,28 @@ class CompileProbeChecks(unittest.TestCase):
                        capture_output=True)
         subprocess.run([binary], check=True)
 
+    def test_assembly_preprocessing_selects_one_isa_and_preserves_markers(self):
+        source = self.root / 'variant.S'
+        source.write_text('#if SELECT_ARM\n'
+                          '// LLVM-MCA-BEGIN chosen\nadd x0, x0, #1\n'
+                          '// LLVM-MCA-END\n#else\nthis_is_not_assembly\n#endif\n')
+        obj = self.build / 'original-asm.o'
+        obj.write_text('original assembly object')
+        self.database.write_text(json.dumps([{'directory': str(self.build),
+            'file': str(source), 'arguments': [self.compiler, '--target=aarch64-linux-gnu',
+                '-DSELECT_ARM=1', '-c', str(source), '-o', str(obj)]}]))
+        output = self.root / 'preprocessed'
+        self.cli(output, '--source', 'variant.S', '--assembly')
+        row, = json.loads((output / 'summary.json').read_text())['compiles']
+        assembly = output / row['output'] / 'source.s'
+        self.assertIn('LLVM-MCA-BEGIN chosen', assembly.read_text())
+        self.assertIn('add x0, x0, #1', assembly.read_text())
+        self.assertNotIn('this_is_not_assembly', assembly.read_text())
+        self.assertEqual(obj.read_text(), 'original assembly object')
+        self.assertIn('assembly', row)
+        subprocess.run([self.compiler, '--target=aarch64-linux-gnu', '-c', assembly,
+                        '-o', self.root / 'assembled.o'], check=True, capture_output=True)
+
     def test_plan_and_object_disambiguation(self):
         another = dict(self.entries[0], output=str(self.build / 'other.o'))
         self.database.write_text(json.dumps([*self.entries, another]))
