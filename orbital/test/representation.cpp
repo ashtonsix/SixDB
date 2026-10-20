@@ -227,6 +227,8 @@ void grouped_aliases_and_empty_parts() {
   const std::array empty_body{source(control, 0, &live, {})};
   auto* empty = take(capture_representation(memory, control, PartOwners::independent_allocation, empty_body));
   check(!live && users(storage) == 1, "empty Part did not transfer supplied live Allocation");
+  const auto empty_view = take(RepresentationSelection<Control>{empty}.part(std::size_t{0}));
+  check(bool(empty_view) && !empty_view.address(), "empty Part lost its valid address slot");
   orbital::release(empty);
   check(!memory.live && !geometry.uses, "empty-Part capture leaked metadata or interpretation");
 }

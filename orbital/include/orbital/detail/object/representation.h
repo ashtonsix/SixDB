@@ -77,4 +77,9 @@ namespace object_detail {
 template<class Control> [[nodiscard]] Result<Part<Control>*> retain_part(
     RepresentationSelection<Control>, std::size_t, ObjectBinding, PartRetention) noexcept;
 } // namespace object_detail
+
+template<class Control> inline Result<View> RepresentationSelection<Control>::part(std::size_t index) const noexcept {
+  if (!realization || index >= realization->control.part_count()) return std::unexpected(Error::absent);
+  return View{object_detail::address_slot(realization, index)};
+}
 } // namespace orbital

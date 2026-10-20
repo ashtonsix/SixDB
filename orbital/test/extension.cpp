@@ -75,6 +75,8 @@ void expect(Selection selected, std::uint64_t first, std::uint64_t second) {
 } // namespace
 
 int main() {
+  const auto absent = Selection{}.part(std::size_t{0});
+  check(!absent && absent.error() == orbital::Error::absent, "null selection exposed a Part");
   Memory memory;
   Witnesses original, replacement;
   orbital::Part<Control>* escaped{};

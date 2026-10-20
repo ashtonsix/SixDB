@@ -250,10 +250,6 @@ template<class Control> void release(Representation<Control>* value) noexcept {
 }
 template<class Control> Control RepresentationSelection<Control>::control() const noexcept { return realization->control; }
 template<class Control> std::size_t RepresentationSelection<Control>::part_count() const noexcept { return realization ? realization->control.part_count() : 0; }
-template<class Control> Result<View> RepresentationSelection<Control>::part(std::size_t index) const noexcept {
-  if (!realization || index >= realization->control.part_count()) return std::unexpected(Error::absent);
-  return View{object_detail::address_slot(realization, index)};
-}
 template<class Control> Result<View> RepresentationSelection<Control>::part(PartId id) const noexcept {
   if (!realization) return std::unexpected(Error::absent);
   for (std::size_t i = 0; i < realization->control.part_count(); ++i)

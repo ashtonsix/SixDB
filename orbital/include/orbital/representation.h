@@ -82,3 +82,6 @@ template<class Control> View view(const Part<Control>*) noexcept;
 template<class Control> ObjectBinding binding(const Part<Control>*) noexcept;
 static_assert(sizeof(View) == 8 && sizeof(Result<View>) == 16);
 } // namespace orbital
+
+// Ordinal projection is hot; capture, export and PartId search stay opt-in.
+#include <orbital/detail/object/representation.h>

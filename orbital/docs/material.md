@@ -20,7 +20,8 @@ opt-ins:
 It supplies `Physical` / `Control` and explicitly instantiates their cold
 operations. Link `orbital::orbital`; no source-tree include path is needed.
 The opt-ins compile against the same Orbital headers/library as the caller.
-Ordinary read TUs do not include these definitions. The exact Control operations
+Ordinal `selection.part(index)` is inline through the ordinary header; read TUs
+do not include the cold definitions. The exact Control operations
 and selected-proof obligations are beside the
 [Representation definitions](../include/orbital/instantiate/representation.h).
 
