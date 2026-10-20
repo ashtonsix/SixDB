@@ -996,7 +996,7 @@ ABORT(edit):
     published directory/segments are unchanged; there is no reverse replay
 ```
 
-Two supported physical controls precede any proposed native optimization:
+Current physical controls precede any proposed native optimization:
 
 ```
 CONSUMING_NATIVE:
@@ -1010,6 +1010,18 @@ COUNTED_SHARED_BATCH_SLAB:
     each capture/escape retains actual backing through Orbital's physical contract
     rotate at exhaustion; retained old slices can retain whole slab capacity
     no Engine reader ledger permits hole reuse or relocation
+
+RANGE_HELD_DIRECTORY_CONTROL:                 # Existing APIs; optional comparison
+    finish the immutable directory array, including every readable padding byte
+    for each logical leaf:
+        acquire a real Hold for that leaf's complete body+padding
+        put the Hold in its OWN counted shared owner; capture independent_shared
+    after ALL required Holds/captures succeed:
+        relinquish_tail(array,0); release the creator Allocation
+    retire leaves through ordinary Orbital lifetime; request actual cold trimming
+    # Release alone leaves tail trim disabled. A last leaf/escaped Part can keep
+    # the entire prefix; this is tail reclamation, not page-hole reclamation.
+    # Charge Hold/shared blocks, tracking and24 B shared versus16 B native slots.
 ```
 
 These are custody mechanisms, not a prescription to pool Segment bodies.
@@ -1018,6 +1030,9 @@ tables, actual Hashtable-owned inline Dirents and partitioned arrays below.
 Several Parts may name one admitted directory backing; they still incur their
 descriptor slots, validation and physical retention. Narrowing a certified Part
 does not independently reclaim its surrounding native backing.
+The range-held control uses [existing physical APIs](../../../orbital/docs/material.md#compose-retained-and-new-bytes).
+Compare its real capture/metadata/retention costs with the compact native proposal
+below; a new native range API is not required just to express this lifetime.
 
 ## Proposed Orbital work
 

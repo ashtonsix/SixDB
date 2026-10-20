@@ -68,6 +68,14 @@ body and readable padding; physical retention grants no permission to write them
 The caller may authorize writes to physically disjoint storage. Unpublished
 captured owners and prepared packets also protect their footprints.
 
+An owner can contain a real `allocation::Hold` for a slice instead of the whole
+Allocation. Acquire all body-plus-padding Holds before calling
+`relinquish_tail(allocation, 0)` and releasing the writer; release alone does not
+enable live-tail trimming. Captures and escaping Parts keep that counted owner.
+Current Window trimming can reclaim an eligible suffix, not interior holes;
+finite Holds still retain their bound Home. This control adds Hold and
+shared-owner storage per slice, so compare the complete cost with native capture.
+
 ## Ownership and costs
 
 `independent_allocation` accepts fresh Allocations and retained native backing.
