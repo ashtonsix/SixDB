@@ -350,6 +350,97 @@ void scratch_branch_final_alias_check() {
   check(!memory.live && !geometry.uses, "large-Part retry leaked scratch, metadata or proof");
 }
 
+void retained_parts_fit_descriptor_budget() {
+  Fixture fixture;
+  Memory memory;
+  Geometry geometry{&memory, {}, 17};
+  geometry.sizes.fill(1);
+  const Control control{&geometry};
+  auto original = fixture.create();
+  auto* old_storage = original.storage;
+  std::array<PartSource, 17> bodies;
+  for (std::size_t i = 0; i < bodies.size(); ++i) {
+    original.address[i] = std::byte(i);
+    bodies[i] = source(control, i, &original, {original.address + i, 1});
+  }
+  auto* old = take(capture_representation(memory, control, PartOwners::grouped_allocation, bodies));
+  const RepresentationSelection<Control> selected{old};
+  for (std::size_t i = 0; i + 1 < bodies.size(); ++i) bodies[i] = take(orbital::source(selected, i));
+  auto fresh = fixture.create();
+  auto* new_storage = fresh.storage;
+  fresh.address[0] = std::byte{0x79};
+  bodies.back() = source(control, bodies.size() - 1, &fresh, {fresh.address, 1});
+  // Old bytes plus the final independent descriptor fit; a temporary alias
+  // array for retained Parts would make this otherwise valid capture refuse.
+  memory.limit = memory.live + sizeof(Representation<Control>) + bodies.size() * sizeof(object_detail::AllocatedBody);
+  auto* next = take(capture_representation(memory, control, PartOwners::independent_allocation, bodies));
+  check(!fresh && users(old_storage) == 17 && users(new_storage) == 1,
+        "partial copy did not retain sixteen sources and transfer one fresh use");
+  orbital::release(old);
+  const RepresentationSelection<Control> result{next};
+  for (std::size_t i = 0; i < bodies.size(); ++i)
+    check(take(result.part(i)).address()[0] == (i + 1 == bodies.size() ? std::byte{0x79} : std::byte(i)),
+          "partial copy lost retained or replacement bytes after old descriptor release");
+  orbital::release(next);
+  check(!users(old_storage) && !users(new_storage) && !memory.live && !geometry.uses,
+        "partial copy leaked backing, metadata or interpretation");
+}
+
+void callback_expands_fresh_suppliers() {
+  for (const std::size_t initial : {1, 9}) {
+    Fixture fixture;
+    Memory memory;
+    Geometry geometry{&memory, {}, 17};
+    const Control control{&geometry};
+    std::array<alloc::Allocation, 17> allocations;
+    std::array<alloc::Storage*, 17> storages;
+    std::array<PartSource, 17> bodies;
+    for (std::size_t i = 0; i < allocations.size(); ++i) {
+      allocations[i] = fixture.create();
+      storages[i] = allocations[i].storage;
+    }
+    const auto reset = [&] {
+      for (std::size_t i = 0; i < bodies.size(); ++i)
+        bodies[i] = source(control, i, i < initial ? &allocations[i] : nullptr, {});
+    };
+    // Deliberately duplicate authority in a DIFFERENT wrapper: alias detection
+    // must compare Storage identities. Clear this injected wrapper after refusal.
+    alloc::Allocation alias;
+    alias.storage = allocations[0].storage; alias.address = allocations[0].address;
+    alias.size = allocations[0].size; alias.readable_padding = allocations[0].readable_padding;
+    struct Expansion {
+      std::span<PartSource> bodies;
+      std::span<alloc::Allocation> allocations;
+      alloc::Allocation* duplicate;
+    } expansion{bodies, allocations, &alias};
+    const auto expand = +[](void* input) noexcept {
+      auto& e = *static_cast<Expansion*>(input);
+      for (std::size_t i = 0; i < e.bodies.size(); ++i) e.bodies[i].allocation = &e.allocations[i];
+      if (e.duplicate) e.bodies.back().allocation = e.duplicate;
+    };
+    reset();
+    const auto calls = initial > 8 ? 2 : 1;
+    memory.arm(expand, &expansion, calls);
+    refusal(capture_representation(memory, control, PartOwners::independent_allocation, bodies),
+            Error::invalid_argument, "callback expansion missed a late duplicate Storage");
+    check(memory.calls == std::size_t(calls), "expanded alias check performed another metadata allocation");
+    for (std::size_t i = 0; i < allocations.size(); ++i)
+      check(allocations[i] && users(storages[i]) == 1, "expanded alias refusal consumed or retained a source");
+    check(!memory.live && !geometry.uses, "expanded alias refusal leaked scratch, metadata or proof");
+    alias.storage = nullptr;
+
+    reset(); expansion.duplicate = nullptr;
+    memory.arm(expand, &expansion, calls);
+    auto* value = take(capture_representation(memory, control, PartOwners::independent_allocation, bodies));
+    check(memory.calls == 2 * std::size_t(calls), "valid expansion allocated beyond its advisory reservation");
+    for (std::size_t i = 0; i < allocations.size(); ++i)
+      check(!allocations[i] && users(storages[i]) == 1, "valid expansion did not transfer every source once");
+    orbital::release(value);
+    for (auto* storage : storages) check(!users(storage), "expanded capture did not return a source");
+    check(!memory.live && !geometry.uses, "valid expansion leaked scratch, metadata or proof");
+  }
+}
+
 void shared_backing_prefix_growth() {
   Fixture fixture;
   Memory memory;
@@ -469,6 +560,8 @@ int main() {
   closing_pool_capture();
   final_preflight_after_callbacks();
   scratch_branch_final_alias_check();
+  retained_parts_fit_descriptor_budget();
+  callback_expands_fresh_suppliers();
   shared_body_ownership();
   shared_backing_prefix_growth();
   std::puts("Representation capture: lifetime, refusal and callback checks passed");

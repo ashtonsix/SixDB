@@ -43,16 +43,29 @@ bool within(const orbital::allocation::Allocation& allocation, Bytes body, std::
 
 bool unique_allocations(std::span<const PartSource> bodies, std::span<orbital::allocation::Storage*> scratch) {
   const auto storage = [](const PartSource& body) { return body.allocation ? body.allocation->storage : nullptr; };
-  if (bodies.size() <= 8) {
+  const auto pairwise = [&] {
     for (std::size_t i = 0; i < bodies.size(); ++i)
       for (std::size_t j = 0; storage(bodies[i]) && j < i; ++j)
         if (storage(bodies[i]) == storage(bodies[j])) return false;
     return true;
-  }
-  assert(scratch.size() >= bodies.size());
+  };
+  if (bodies.size() <= 8) return pairwise();
+  orbital::allocation::Storage* local[8];
+  if (scratch.empty()) scratch = local;
   std::size_t used{};
-  for (const auto& body : bodies) if (auto* owner = storage(body)) scratch[used++] = owner;
+  for (const auto& body : bodies) if (auto* owner = storage(body)) {
+    // A callback can increase fresh suppliers beyond the advisory reservation.
+    // Check the final inputs without another allocation or artificial refusal.
+    if (used == scratch.size()) return pairwise();
+    scratch[used++] = owner;
+  }
   auto owners = scratch.first(used);
+  if (used <= 8) {
+    for (std::size_t i = 0; i < used; ++i)
+      for (std::size_t j = 0; j < i; ++j)
+        if (owners[i] == owners[j]) return false;
+    return true;
+  }
   std::sort(owners.begin(), owners.end(), std::less<orbital::allocation::Storage*>{});
   return std::adjacent_find(owners.begin(), owners.end()) == owners.end();
 }

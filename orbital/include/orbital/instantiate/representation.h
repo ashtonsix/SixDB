@@ -137,7 +137,13 @@ template<class Control> Result<Representation<Control>*> capture_representation(
   const auto size = sizeof(Realization) + group_bytes + bodies.size() * stride;
   try {
     std::pmr::vector<allocation::Storage*> scratch(&memory);
-    if (!shared(owners) && !grouped(owners) && bodies.size() > 8) scratch.resize(bodies.size());
+    if (!shared(owners) && !grouped(owners) && bodies.size() > 8) {
+      const auto fresh = std::count_if(bodies.begin(), bodies.end(), [&](const PartSource& body) {
+        return !SourceAccess::retained(body) && !is_shared(body) && body.allocation && body.allocation->storage;
+      });
+      // Advisory capacity only: allocation/proof callbacks can still change sources.
+      if (fresh > 8) scratch.resize(fresh);
+    }
     auto* value = std::construct_at(static_cast<Realization*>(memory.allocate(size, alignof(Realization))),
         Realization{control, 1, owners, static_cast<std::uint8_t>(stride)});
     control.retain();
