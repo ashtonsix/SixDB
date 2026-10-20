@@ -3,9 +3,10 @@
 This suite compares the maintained Ikea integer set/map with actual Abseil
 `flat_hash_set` and `flat_hash_map`. Start with the
 [broad maintenance scorecard](ACCUMULATION.md) for absolute timings, memory
-counts, wins and losses. It predates the October 20 eight-bit tag promotion;
-the [overflow follow-up](../../spikes/hashtable-swiss-probes/RESULTS.md) measures
-that change and the rejected wider groups on Zen 5. [Usage](../../../ikea/docs/hashtable/usage.md) and
+counts, wins and losses. It predates the October 20 overflow changes;
+the [tag/logical-width comparison](../../spikes/hashtable-swiss-probes/RESULTS.md)
+and [ISA read-batch qualification](../../spikes/hashtable-swiss-batch/GRADUATION.md)
+cover those changes and their tradeoffs on Zen 5. [Usage](../../../ikea/docs/hashtable/usage.md) and
 [rationale](../../../ikea/docs/hashtable/rationale.md) describe the container.
 Owning multimaps and K-way folding remain [research](../../spikes/hashtable/README.md).
 
@@ -18,7 +19,7 @@ experiments; [where to find them](#latency-loom-and-cache-residence).
 
 | Question | Read |
 | --- | --- |
-| How does the maintained implementation compare with Abseil? | [Broad core and accumulation results](ACCUMULATION.md), with complete CSV scorecards; the October 20 tag follow-up is separate below |
+| How does the maintained implementation compare with Abseil? | [Broad core and accumulation results](ACCUMULATION.md), with complete CSV scorecards; the October 20 overflow qualifications are separate below |
 | Did the original extraction preserve the selected candidate? | [Original promotion](QUALIFICATION.md), a dated paired comparison |
 | What does one RMW/native mutable batch cost? | [RMW experiment](RMW.md), including binding and initial-value preparation |
 | Does the Zen 5 recipe transfer to Zen 4? | [Generation comparison](ZEN-GENERATIONS.md); it does not establish a new Zen 4 profile |
