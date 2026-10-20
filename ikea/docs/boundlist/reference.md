@@ -29,9 +29,7 @@ query type can also express either endpoint as open or closed. The result is
 arrays must describe the same ranks and eligibility. Their extrema can still enclose
 gaps inside children, so the consumer checks actual records.
 
-![Occupied child ranges, a populated singleton and an ineligible internal rank. Query
-[9,36) returns candidate ranks [1,5); eligibility still applies inside the
-window.](images/ranges.svg)
+![Occupied child ranges, a populated singleton and an ineligible internal rank. The query from 9 inclusive to 36 exclusive returns candidate ranks 1 through 4; eligibility still applies inside the window.](images/ranges.svg)
 
 Eligibility is independent of endpoint equality. A populated child with occupied bounds
 `[10,10]` contains a key. An empty physical interval `[37,37)` owns no positions.
@@ -58,8 +56,7 @@ For group width 16, `C[g]` is that group's absolute origin.
 | **Sizes** | Size `R[r]`, plus one checkpoint per 16 ranks. | Narrow fields and cheap resizing; random positions need a local prefix sum. |
 | **Relative Ends** | Local cumulative end `L[r]`, plus one checkpoint per 16 ranks. | Direct local lookup and endpoint comparisons; local ends can be wider than sizes. |
 
-![The same five-rank excerpt encoded as absolute ends, sizes and relative ends, with the
-group origin and arithmetic needed to locate rank 18.](images/encodings.svg)
+![The same five-rank excerpt encoded as absolute ends, sizes and relative ends, with the group origin and arithmetic needed to locate rank 18.](images/encodings.svg)
 
 There are `(assigned+15)/16` meaningful checkpoints, including the first origin; there
 is **no terminal checkpoint**. The directory reserves capacity for all 16 checkpoints.
@@ -164,9 +161,7 @@ effect record borrows them. `rebind` requires that same layout identity. Read ca
 cannot mutate or rebind the source. Native packets and CPS stages stay bounded and
 inline where useful; neither performs an implicit scheduler wait.
 
-![Checkpointed and prepared numeric searches expose unresolved local work while one
-retained version covers boundaries, eligibility, backing and derived search
-state.](images/phases.svg)
+![Checkpointed and prepared numeric searches expose unresolved local work while one retained version covers boundaries, eligibility, backing and derived search state.](images/phases.svg)
 
 `prepare_lower_bound`/`prepare_upper_bound` can expose one unresolved local read,
 followed by `finish`. The window is a **hint**, not the complete read/protection
