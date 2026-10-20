@@ -53,7 +53,7 @@ The current [description](../../../ikea/include/ikea/streampack/description.h)
 combines geometry, grouped/separated R/U placement, optional used lengths,
 tombstones, fixed reservations and a byte budget. Its native R/U fields are
 8/16 bits, endpoints/checkpoints are 8/16/32 bits, and count has 256 capacity.
-The [version-2 wire description](../../../ikea/docs/streampack/reference.md#schema-and-representation)
+The version-2 wire description (see [current descriptor compatibility](../../../ikea/docs/streampack/reference.md#portable-descriptor-and-further-reading))
 occupies eight bytes. Width has sixteen group-start checkpoints, with one
 checkpoint per sixteen ranks; Direct stores exclusive ends.
 

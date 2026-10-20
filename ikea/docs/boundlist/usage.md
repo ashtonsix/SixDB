@@ -3,9 +3,8 @@
 Boundlist finds ranks in ordered boundaries. A **rank** is a zero-based position:
 it can identify a child in an index, or a slot in contiguous storage. A source with `n`
 entries has ranks 0 through `n-1`. Start with existing endpoint arrays for query routing.
-Use the curated sidecar when you want Boundlist to
-encode and maintain subdivision geometry. StreamPack builds byte values on that
-sidecar; it is not required for either use.
+Use the curated sidecar when you want Boundlist to encode and maintain subdivision
+geometry. The consuming structure supplies any associated data, movement and allocation.
 
 Link `ikea::boundlist` and include `<ikea/boundlist.h>`. The
 [reference](reference.md) explains the model, stored formats and exact contracts.
@@ -215,8 +214,7 @@ first boundary to 6 yields `[6,9,12]`; increasing the first size to 6 yields
 Neither operation moves data or children. The owner performs any corresponding movement
 and publishes the geometry and data together. Checked refusal preserves bytes and
 effects. Inserting/removing middle ranks or sorting builds a replacement with explicit
-rank repair. Use [StreamPack](../streampack/usage.md) for byte-value replacement,
-packing and selected transfer.
+rank repair. Value admission, movement and packing belong to the consuming structure.
 
 ## Keep hot geometry work with its consumer
 
@@ -235,7 +233,7 @@ sc::author::dispatch(*source, [&](auto a) {
 The typed access is for admitted contents and ranks; ordinary `sc::range` checks the
 interval first. Callbacks visit live ranks and cannot mutate or rebind the source.
 For point consumers needing only a start, use `start` rather than reading size too.
-StreamPack's start-plus-used-length path does this.
+A consumer with its own value-length field can pair that field with the start directly.
 
 For native consumers, `sidecar::native::read16(a,group)` returns offsets, sizes and a
 live mask. Keep those vectors with the fused sink or scoped chain rather than
@@ -246,7 +244,7 @@ inactive lanes; they are not extra ranks.
 It carries the new position and local end, and emits sizes/checkpoints. It chooses no
 sorting, movement, count or retirement policy. An in-place consumer must capture
 original boundaries before overwriting them; the shared original-geometry walker does
-this. StreamPack composes these bodies for value packing and transfer.
+this. The consuming structure coordinates that geometry rewrite with data movement.
 
 ## Choose search execution for the workload
 
@@ -317,6 +315,5 @@ backing, packed adapter, reusable bindings and independent queries.
 Writes separately report source-qualified issued bytes, including preserving vector
 stores. Reserve effect capacity before execution; hooks cannot fail or suspend.
 Effects do not protect retained readers. Follow the [owner integration
-guide](../integration.md) for visibility and retention, and
-[StreamPack usage](../streampack/usage.md) for payload growth and packing. Old readers
+guide](../integration.md) for allocation, visibility and retention. Old readers
 need old coherent geometry and data; copying an allocation handle does not retain them.

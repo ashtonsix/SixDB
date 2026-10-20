@@ -1,199 +1,333 @@
 # Using StreamPack
 
-StreamPack stores variable-length values in caller-owned byte storage. A block assigns
-up to **256** stable ranks; each reservation contains 0–65535 bytes, subject to a
-smaller schema maximum and an independent block byte limit. Live empty values have
-ranks. Retired values keep their reservations until packing.
+StreamPack stores byte values in up to 256 stable, zero-based **ranks**. Each rank has
+a reservation of **R** bytes and a value occupying its first **U** bytes, with
+`0 <= U <= R <= 65535`. The rest is slack. Reservations concatenate from offset zero;
+their total size is the block's **extent**. A live empty value has a rank even when R
+is zero. A tombstone (**D**) marks retirement without moving later reservations.
 
-The payload has no headers. [Boundlist](../boundlist/usage.md) supplies geometry reads,
-search and small geometry-write kernels. StreamPack owns value length, its optional
-curated U companion, native value packets and the traversal that packs or transfers
-values. Schema preparation composes those laws once; hot operations bind one coherent
-source and dispatch once. Grouped R/U may still share a lengths window: module ownership
-does not require another allocation, Part or per-value lookup. Ikea allocates nothing,
-selects no version and does not publish a transaction; the collection supplies [those
-services](../integration.md).
+Link `ikea::streampack` and include `<ikea/streampack.h>`. The
+[reference](reference.md) specifies storage and exact command contracts.
 
-The [original qualification](../../../workbench/spikes/streampack/IMPLEMENTATION.md) and
-[Boundlist extraction results](../../../workbench/spikes/boundlist/GRADUATION.md) record
-native correctness, codegen, performance and real owner/scheduler evidence. The
-[portfolio qualification](../../../workbench/spikes/boundlist/PORTFOLIO.md) records the
-current codecs, geometry/value split and complete consumers. Experimental packed/padded
-recipes remain in Workbench. The [reference](reference.md) specifies stored bytes,
-checked commands and borrowing. Link `ikea::streampack` and include
-`<ikea/streampack.h>`.
+## Understand the composition boundary
 
-If U lives in a consumer's own record/tuple plane, compose that U with Boundlist
-geometry and the payload in the consumer. The curated StreamPack companion is an option
-for schemas that want StreamPack to manage U. Omitting it from the stock StreamPack
-recipe means U=R; it does not reinterpret an external length plane.
+[Boundlist](../boundlist/usage.md) supplies reservation geometry: sizes, starts, ends,
+checkpoints and retirement selection. StreamPack adds U, byte-value reads and edits,
+native value packets, and the traversal that packs or transfers values. The collection
+supplies allocation, retained versions, logical holders and publication.
 
-## Prepare a schema, bind storage
+Use one StreamPack layout and one named view for a block. They compose geometry and
+values once; there is no second Boundlist attachment, allocation or lookup per rank.
+Geometry/U fields can share a lengths window while their implementation responsibilities
+remain separate. Call value operations through StreamPack so payload, U and geometry
+stay consistent.
 
-Prepare `layout` once for all blocks with that schema. Slot capacity is fixed at 256;
-the schema supplies the reservation maximum and optional tighter byte limit.
-`view::bind` accepts four windows: payload, directory, lengths and control. The layout
-reports directory, control and lengths extents plus lengths alignment. The windows may
-live in one allocation; the supplied spans must be disjoint. Alignment gaps need not
-belong to StreamPack.
+If U already belongs in a consumer's own record/tuple plane, compose that plane with
+Boundlist and the payload in the consumer. Stock StreamPack either stores U or derives
+`U=R` with `full`; omitting its companion does not read an external U plane.
 
-- **Absolute Ends** stores exclusive reservation ends in the directory. Point
-  access reads the preceding end; traversal carries it.
-- **Sizes** stores narrow sizes and one checkpoint per 16 ranks. Point access
-  reconstructs a local prefix; scans carry positions.
-- **Relative Ends** stores local cumulative ends and the same checkpoints. It
-  avoids a prefix reconstruction but may need a wider local carrier.
+## Construct a small block
 
-Choose the facts the schema can promise before choosing field placement. `full` derives
-U from R and stores no used lengths; it is useful for exactly reserved dictionary
-values. `immortal` omits tombstones. `fixed_reservation` derives all geometry;
-zero-width schemas need only count and optional tombstones. Mutation cannot introduce a
-fact the schema omitted. Native lane sizes are implementation choices derived from
-schema bounds, not additional public geometry names.
+Prepare the schema once and share its immutable layout. `maximum` limits one reservation;
+`byte_limit` independently limits total extent. Here the defaults select Sizes geometry
+and grouped reservation/used fields. The schema allows 255-byte reservations and a
+4096-byte total.
 
-For checkpointed geometry with both geometry and U, use the default grouped layout for
-complete value lookups. Select `placement::separated` for a workload dominated by U-only
-scans. Planar storage is geometry-first; no separate plane-order choice exists. With
-`full`, placement is normalized away because U is absent. Absolute Ends and fixed
-geometry likewise have no geometry/U pair to interleave. New alignment follows actual
-carriers; a 48 B or 96 B group does not require that alignment.
+The owner supplies four disjoint byte windows:
 
-Keep reservation maximum and block byte limit distinct. For example, an object with
-common-short and long-tail dictionaries can use these schema bounds:
+| Window | Purpose in this example | Capacity |
+| --- | --- | --- |
+| Payload | Reservations and their value bytes | 4096 B |
+| Directory | 32 B tombstones, then sixteen u16 checkpoints | 64 B |
+| Lengths | Sixteen u8 R, then sixteen u8 U per initialized group | 512 B at full capacity |
+| Control | Assigned count and extent | 6 B |
+
+Use the layout's extent/alignment methods for general owner code. Lengths can grow by
+16-rank groups; the example provides full metadata capacity to keep setup short.
+The windows may share an allocation, but their supplied spans must not overlap.
+
+`view::bind` checks placement without inspecting contents. New storage needs
+`initialize`; external content needs `validate`. Mutation calls take an effects sink:
+the journal below records source-qualified byte writes for the owner to resolve.
+It does not commit a transaction or protect retained readers. Keep the layout and named
+view stable while accesses or effects borrow them.
+
+```cpp
+#include <ikea/streampack.h>
+#include <ikea/effects.h>
+#include <array>
+#include <cassert>
+
+namespace sp = ikea::streampack;
+const auto format = sp::layout::prepare({.maximum = 255, .byte_limit = 4096});
+assert(format);
+std::array<std::byte, 4096> payload;
+std::array<std::byte, 64> directory;
+std::array<std::byte, 512> lengths; // u8 fields need no extra alignment
+std::array<std::byte, 6> control;
+auto source = sp::view::bind(*format, {payload, directory, lengths, control});
+assert(source);
+auto& block = *source;
+std::array<ikea::owner_write, 64> writes;
+ikea::source_write_journal effects{writes};
+assert(sp::initialize(block, effects));
+```
+
+Binding does not require all payload capacity to be touched. Append initializes only
+the new reservation and newly used metadata groups, including their readable padding.
+Do not repeatedly validate unchanged, already-admitted contents in the hot path.
+
+Append assigns the next rank. Pass the value bytes and the desired reservation:
+
+```cpp
+const std::array greeting{std::byte{'h'}, std::byte{'i'}};
+const std::array cat{std::byte{'c'}, std::byte{'a'}, std::byte{'t'}};
+assert(sp::append(block, greeting, 4, effects)); // rank 0: U=2, R=4
+assert(sp::append(block, {}, 0, effects));       // rank 1: live empty value
+assert(sp::append(block, cat, 5, effects));      // rank 2: U=3, R=5
+assert(block.size() == 3 && block.extent() == 9);
+```
+
+The starts are 0, 4 and 4. Append zeroes new slack; it stores no header in the payload.
+Rank capacity and byte capacity are separate: the block can exhaust either first.
+
+## Read values or find byte owners
+
+`value` and `length` check rank and liveness. Returned value spans contain U bytes,
+so they exclude slack. `reverse` instead answers physical ownership: offsets in slack
+or retired reservations still have an owner. Zero-size reservations own no bytes.
+
+```cpp
+const auto first_value = sp::value(block, 0);
+assert(first_value && first_value->size() == 2);
+assert(sp::value(block, 1)->empty());
+assert(*sp::length(block, 2) == 3);
+const auto owner = sp::reverse(block, 8);
+assert(owner && owner->rank == 2 && !owner->tombstone);
+assert(!sp::reverse(block, 9)); // extent itself is excluded
+```
+
+`overlap(block,low,high,only_live)` bounds physical reservations overlapping the byte
+interval `[low,high)`. It returns `{first,limit}`, including `first` and excluding
+`limit`, or `{n,n}` when empty, where `n=block.size()`. Retired storage participates by
+default. Internal zero-size slots, and retired holes in the live-only form, can remain
+inside that window.
+This is reservation lookup; filtering strings or other encoded values belongs to a
+consumer.
+
+### Read at the useful grain
+
+Use a carried traversal for consecutive ranks. Use selection for caller-specified
+order; it preserves duplicates and skips retired ranks. Both validate all requested
+coordinates before calling the sink.
+
+```cpp
+#include <cstdint>
+
+assert(sp::range(block, 0, block.size(), [&](unsigned rank, sp::bytes value) {
+    consume(rank, value);
+}));
+const std::array<std::uint16_t, 4> requested{2, 0, 2, 1};
+assert(sp::select(block, requested, [&](unsigned rank, sp::bytes value) {
+    consume(rank, value);
+}));
+```
+
+The range emits ranks 0, 1, 2, including the live empty value. Selection emits 2, 0, 2, 1.
+Callbacks cannot mutate/rebind the source, and borrowed bytes must remain valid for
+their use.
+
+The scratch-backed `select` overload decodes all starts once for that call. It needs
+`ceil(block.size()/16)*16` writable u32 entries, disjoint from storage, rank selection,
+borrowed controls and callback state. In this three-slot example, 16 entries suffice:
+
+```cpp
+std::array<std::uint32_t, 16> starts;
+assert(sp::select(block, requested, starts, [&](unsigned rank, sp::bytes value) {
+    consume(rank, value);
+}));
+```
+
+Paying for all starts can help many shuffled requests; direct selection avoids that
+setup for sparse requests. There is no universal crossover count. Charge scratch
+preparation to its operation. The call retains no decoded state; if an authored consumer
+keeps starts longer, any geometry change invalidates them.
+
+## Replace, retire and pack
+
+`replace` keeps the reservation, start and rank. With U present, a replacement may
+be shorter or longer within R; old slack is not automatically cleared. A logical edit
+needing a different R appends elsewhere and lets the owner retarget its holder.
+Retirement sets D and leaves geometry unchanged.
+
+```cpp
+const std::array replacement{std::byte{'b'}, std::byte{'y'}, std::byte{'e'}};
+assert(sp::replace(block, 0, replacement, effects)); // U=3, still R=4
+assert(block.extent() == 9);
+assert(sp::retire(block, 0, effects));
+assert(sp::reverse(block, 1)->tombstone);
+```
+
+`soft_pack` removes retired reservations while preserving every assigned rank and
+tombstone. Its boolean controls whether live reservations also shrink to U:
+
+```cpp
+assert(sp::soft_pack(block, false, effects)); // keep live slack
+assert(block.size() == 3 && block.extent() == 5);
+assert(sp::reverse(block, 0)->rank == 2);
+assert(sp::soft_pack(block, true, effects));  // discard live slack too
+assert(block.size() == 3 && block.extent() == 3);
+assert(sp::value(block, 1)->empty());         // live empty rank survived
+assert(block.validate());
+```
+
+Decoded starts and physical descriptors must be refreshed after packing. Fixed nonzero
+geometry refuses packing that would change its reservations. Packing does not itself
+return pages to an allocator or wipe every old payload byte beyond the new extent.
+
+### Build a replacement with selected transfer
+
+`transfer` constructs a disjoint destination in the requested order. It preflights
+every selection and destination bound before initialization. Unlike `select`, it refuses
+a retired requested rank. Duplicates are retained.
+
+Given an owner-supplied, bound destination `destination` and its separate
+`rewrite_effects` journal, this creates three new ranks from the current example:
+
+```cpp
+const std::array<std::uint16_t, 3> order{2, 1, 2};
+assert(sp::transfer(block, order, destination, true, rewrite_effects));
+assert(destination.size() == 3 && destination.extent() == 6);
+```
+
+The destination contains `cat`, empty, `cat`, with R reduced to U. Its schema may choose
+another supported geometry encoding or omit U when all selected reservations are full.
+The owner records the old-to-new rank mapping, repairs holders and publishes the
+replacement. Sorting, deduplication and repartitioning are owner policy; transfer
+supplies the byte/value mechanics.
+
+## Choose schema facts and encoding for the workload
+
+Choose omissions before field placement:
+
+| Promise | Schema choice | Consequence |
+| --- | --- | --- |
+| Every reservation is exactly filled | `full=true` | No U storage; append/replace must have value length equal to R. |
+| Every reservation has one fixed size | `fixed_reservation` | No per-rank geometry; U can still vary unless full. |
+| Ranks never retire | `immortal=true` | No tombstones; retire is unavailable. |
+| All reservations are zero-size | Zero maximum/fixed size | Count and optional tombstones remain; geometry/U fields disappear. |
+
+The Sizes default stores narrow R and a checkpoint per 16 ranks. Absolute Ends stores
+exclusive ends in the directory and favors a short point path. Relative Ends stores
+local cumulative ends, avoiding a local prefix sum when finding starts. The
+[geometry tour](../boundlist/reference.md#three-geometry-encodings) shows the arithmetic;
+the [StreamPack schema reference](reference.md#prepare-a-schema) describes their value
+composition.
+
+Maximum reservation and total byte limit can change which fields need widening.
+For example, common-short and long-tail dictionaries can use:
 
 ```cpp
 sp::description common{.maximum = 255, .byte_limit = 16384, .full = true};
 sp::description tail{.maximum = 65535, .byte_limit = 65535, .full = true};
 ```
 
-Both omit U. Absolute coordinates fit u16; individual sizes use u8 in the common
-dictionary and u16 in the tail. Relative ends use their own group bound. The long-tail
-bound permits an individual 65,535-byte value without requiring four-byte checkpoints
-for the theoretical 256 × 65,535 extent. An allocated payload span alone cannot
-establish that persistent encoding bound. The owner can grow within the schema bound or
-seal and start another block; schema bounds do not change with allocation size.
+Both omit U. Global coordinates fit u16; Sizes uses u8 R in the common dictionary and
+u16 R in the tail. The tail admits a single 65,535-byte value without paying for u32
+coordinates sized to the theoretical 256 × 65,535 extent. Allocation size alone cannot
+establish that persistent schema bound.
 
-For a growing block, request only the payload extent needed now and reserve address
-space separately. In a shared allocation, putting metadata before the payload leaves an
-allocation tail that can later be reclaimed; independent planes also work. On sealing,
-`view::extent()` includes all reservations still owned by the block, including retired
-values and slack. A sum of used/live lengths is not a safe replacement for that extent.
+Absolute Ends pays its whole directory up front. Sizes/Relative Ends grow their local
+groups with occupancy. For the tail schema above, full Absolute Ends needs 546 metadata
+bytes versus Sizes' 582 at 256 assigned ranks; Sizes needs only 102 at 1–16 ranks.
+These are layout totals including directory/lengths/control, excluding allocator gaps,
+not measured timings.
 
-A private Orbital writer can relinquish unused suffix access with
-`allocation::relinquish_tail`, then request backing maintenance with `trim_cold`.
-Retained readers need actual retained backing. Native capture consumes its Allocation; a
-still-private append writer instead needs real range Holds for shared immutable payload
-prefixes. A copied Allocation handle or `shared_ptr` to a writer is not capture
-retention. Hold-backed shared Parts and separately versioned metadata can express append
-sharing; their capture/holder costs must be counted. Include every sidecar and readable
-padding byte in the retained prefix, and rebind views to the contracted windows. The
-[allocation contract](../../../orbital/README.md#allocation) owns settlement, growth
-conflicts and accounting. Neither exhausting ranks nor compacting packed bytes
-automatically returns physical pages.
+For checkpointed geometry with U, grouped placement keeps each 16-rank geometry/U pair
+together for complete value work. `placement::separated` is geometry-first planar storage
+for demonstrated U-only workloads; it reserves the full geometry prefix even when few
+ranks are assigned. There is no second plane-order choice. Placement is normalized away
+when no pair exists. Alignment follows actual field widths, so a 48 B or 96 B group
+does not require that alignment. A wider Relative Ends field does not widen U with it.
 
-Sizes is useful when byte limits leave blocks partly occupied because its length groups
-grow with occupancy. Absolute Ends pays its endpoint directory upfront and favors cheap
-point lookup. For the long-tail schema above, full Absolute Ends needs 546 metadata
-bytes versus Sizes’ 582 at 256 assigned slots, but Sizes needs only 102 at 1–16 slots.
-These totals include directory, lengths and control, omit allocator padding, and are
-layout arithmetic, not measured timing. Full reservations and occupancy can therefore
-change the geometry decision too.
+## Keep complete hot consumers together
 
-The [ordinary example](../../examples/streampack/ordinary.cpp) constructs a Sizes block,
-appends a value and an empty value, retires a rank and packs it. It also shows
-source-qualified effects. New storage must be `initialize`d. External bytes must pass
-`validate`; ordinary rebinding after growth need not rescan previously admitted
-contents. Newly appended groups initialize all readable vector padding.
-
-## Read at the useful grain
-
-| Needed result | Starting path |
-| --- | --- |
-| One rank | Checked `value` or `length`; a retained typed reader for repeated points |
-| Consecutive live values | `range`, carrying geometry across ranks |
-| A few ranks in caller order | `select` without scratch |
-| Many shuffled ranks from one block | Scratch-backed `select`, paying one starts decode for that operation |
-| Offsets/lengths feeding a native predicate or reduction | `native::read16` inside the complete typed consumer |
-| Rank containing a known byte offset | `reverse`, rather than testing every slot |
-
-The [implementation
-measurements](../../../workbench/spikes/streampack/IMPLEMENTATION.md#native-primitive-findings)
-show why repeated ordinary point calls are a poor substitute for carried ranges or dense
-selection. The crossover for paid decoding depends on occupancy and reuse; there is no
-universal selection-count threshold.
-
-`value` and `length` check rank and liveness. `reverse` maps an occupied byte offset to
-its rank and tombstone state, including reservation slack. No zero-width slot owns
-bytes. Offsets beyond the current occupied extent have no owner.
-
-`range` visits live values in original rank order while carrying geometry. `select`
-preserves requested order and duplicates, skipping retired ranks. Sparse selection uses
-direct point decoding; the scratch overload pays once to decode all starts for dense
-reuse. Scratch and encoded inputs must be disjoint. Neither operation retains callbacks
-or decoded state beyond its return. Charge scratch setup to the selection that uses it.
-If an authored consumer retains decoded starts, geometry changes invalidate them;
-storage lifetime alone is not enough.
-
-For repeated point work, dispatch once around the complete consumer. Here `ranks` is a
-sparse request list; use `range` for a sequential traversal:
+For repeated point work, resolve schema dispatch once around the complete consumer.
+Use checked `reader.get` when ranks/liveness vary; admitted callers can use
+`reader.value` or `reader.locate` directly. Here `ranks` is a sparse request list:
 
 ```cpp
 sp::author::dispatch(block, [&](auto reader) {
     for (unsigned rank : ranks) {
-        const auto value = reader.get(rank); // Checked rank/liveness.
-        if (value) consume(*value);
+        const auto value = reader.get(rank);
+        if (value) consume(rank, *value);
     }
 });
 ```
 
-An admitted caller can use `reader.value(rank)` or `reader.locate(rank)` directly. For a
-population with one shared layout, `reader.rebind(other_named_view)` retains that schema
-preparation while changing windows. The owner proves exact shared layout identity and
-content admission. This keeps schema loads independent of the lookup's block/rank.
-Reconstructing preparation at every point loses that benefit.
+For a sequential run, keep using `range`: it carries geometry rather than recomputing
+a prefix per rank. For many blocks sharing one exact immutable layout object,
+`reader.rebind(other_named_view)` reuses preparation with different windows. The owner
+proves the new block's content admission and exact shared layout identity. Recreating
+preparation at every lookup loses that benefit.
 
-`author/native.h` exposes `native::read16`: sixteen offsets and lengths in native
-registers plus an original-rank live mask. It shares prefix bodies with ordinary reads
-and paid decoding. Consumers can fuse filters/reductions without an obligatory
-intermediate array. NEON, AVX2 and AVX-512 have explicit implementations.
+`<ikea/streampack/author/native.h>` exposes `native::read16`: sixteen offsets and U
+lengths in registers plus an original-rank live mask. Keep decoding and its
+predicate/reduction in one typed body so the packet need not spill across an aggregate
+return. It shares geometry decoding with Boundlist and adds the value-length projection.
+The [composition example](../../examples/streampack/composition.cpp) shows scalar and
+native carriers in Ikea chains.
 
-The [composition example](../../examples/streampack/composition.cpp) exercises the
-existing Ikea chain machinery with both scalar location and native group carriers.
-Resolve schema dispatch before constructing the typed stage. Keep `read16` and its
-consumer together so a native packet need not cross an aggregate-return boundary through
-memory. Use a CPS boundary for useful work around an unresolved dependency; keep ready
-arithmetic inline. For cold independent requests, the owner can choose Loom's Ring using
-complete-consumer evidence, as described in [Building fast consumers](../consumers.md).
-Adding stages to one dependent lookup does not create memory-level parallelism.
-`visit_value_metadata` gives exact admitted hint windows to the owner's policy. It
-neither issues prefetches nor establishes readiness or authority to read.
+Use CPS around a useful unresolved dependency and keep ready arithmetic inline. Ikea
+chains do not suspend into Loom. The owner chooses Ring versus direct execution from
+complete-consumer measurements; extra stages do not create independence in one serial
+lookup. `visit_value_metadata` reports point-value metadata dependencies for that policy.
+It does not issue prefetches, grant readable backing or describe every search footprint.
+[Building fast consumers](../consumers.md) covers these choices across Ikea.
 
-## Mutate and publish
+## Grow storage and retain coherent readers
 
-Append reserves a new rank and initializes its entire reservation. Replacement keeps its
-reservation and writes the new used bytes; it leaves old slack initialized. A
-reservation-changing logical edit appends elsewhere and the owner retargets its holder.
-Retirement changes only the tombstone. No operation silently renumbers ranks.
+Grow payload and metadata under one fixed schema. The owner can seal and start another
+block when either ranks or the byte limit run out. Request backing for the initialized
+extent needed now; reserve address space separately. In a shared allocation, metadata
+before payload leaves a tail that can later be reclaimed. Independent windows also work.
 
-`soft_pack` preserves all ranks and tombstones, removes retired reservations and
-optionally shrinks live reservations to used length. Fixed nonzero geometry refuses
-packing that would change reservation widths. `transfer` constructs a disjoint
-replacement from selected live ranks in caller-chosen order, retaining duplicates. It
-supplies hard-rewrite mechanics; deduplication, repartitioning, remaps, shared holder
-detach/retire rules and actual holder repair remain owner decisions.
+On sealing, use `block.extent()`, including retired reservations and slack, to retain
+the whole interpreted payload. Include all metadata and readable padding too. A sum of
+live U lengths is not an equivalent retention bound.
 
-Checked refusal preserves bytes and effects. Successful mutation reports actual issued
-spans, including preserving metadata stores and count/extent writes. Effects borrow the
-stable named destination view. Reserve effect capacity before execution; hooks cannot
-fail or suspend. A zero-byte append may publish only count. Absolute Ends needs no
-duplicate stored extent; checkpointed formats publish their separate extent coherently.
+Growth can preserve addresses or relocate. End borrowed access and resolve aliased
+inputs before relocation, then rebind the changed windows. Old readers need the old
+payload and geometry/U/tombstone/control interpretation together. A copied allocation
+handle or a `shared_ptr` to the writer does not establish retained backing or permission
+to change visible bytes.
 
-Growth through Orbital may preserve or move the allocation. End borrowed access before
-relocating it, resolve aliased inputs first, then rebind changed windows. Old readers
-must retain the payload and every interpretation sidecar together. An allocation hold by
-itself does not grant permission to change their contents.
+For Orbital, native capture consumes its Allocation. A still-private append writer can
+share immutable payload prefixes using actual range Holds and separately versioned
+metadata; capture/holder costs count. To release unused private suffix access, use
+`allocation::relinquish_tail`, then request backing maintenance with `trim_cold` and
+rebind to the contracted windows. Retained readers still need their actual backing.
+The [allocation contract](../../../orbital/README.md#allocation) owns growth conflicts,
+settlement and accounting. Neither exhausting ranks nor packing automatically frees
+physical pages.
 
-Build `ikea_streampack_check`, `ikea_streampack_boundaries_check`,
-`ikea_streampack_encodings_check` and the two examples,
-or run `ikea_validate`. [Behavior checks](../../test/streampack/README.md) identify
-independent oracles, boundary coverage and native execution checks.
+Successful mutation reports issued byte spans, including preserved metadata stores and
+count/extent updates. Reserve effects capacity before execution; hooks cannot fail or
+suspend. Checked refusal preserves bytes and effects. The owner resolves source identities,
+protects readers and publishes logical holder/summary changes separately from physical
+damage. [Owner integration](../integration.md) explains that publication boundary.
+
+## Examples and evidence
+
+The [ordinary example](../../examples/streampack/ordinary.cpp) covers construction,
+empty values, retirement, packing and effects. Build `ikea_streampack_check`,
+`ikea_streampack_boundaries_check`, `ikea_streampack_encodings_check` and the two
+examples, or run `ikea_validate`. [Behavior checks](../../test/streampack/README.md)
+describe the independent oracles and boundary coverage.
+
+The [current portfolio](../../../workbench/spikes/boundlist/PORTFOLIO.md) records memory
+and complete-consumer measurements across the geometry/value split. The
+[original implementation study](../../../workbench/spikes/streampack/IMPLEMENTATION.md)
+and [extraction results](../../../workbench/spikes/boundlist/GRADUATION.md) retain older
+controls. Keep dependent latency, independent reciprocal throughput and memory separate;
+those histories guide choices but do not establish a universal fastest encoding.

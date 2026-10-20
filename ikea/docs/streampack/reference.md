@@ -1,129 +1,280 @@
 # StreamPack reference
 
-StreamPack composes [Boundlist geometry](../boundlist/reference.md) with byte values and
-an optional used-length companion. It owns value admission, native value packets,
-mutation, packing and selected transfer. Geometry does not imply used length; one
-StreamPack view binds the complete coherent interpretation.
+StreamPack stores variable-length byte values in caller-owned storage. It combines
+[Boundlist](../boundlist/reference.md) subdivision geometry with value lengths, payload
+access and coordinated value edits. A block has up to 256 assigned ranks. StreamPack
+borrows its storage; the collection owns allocation, retained versions and publication.
 
-Execution is available for little-endian NEON, AVX2 and AVX-512 targets; the physical
-byte law is independent of those ISAs. SVE2 and arbitrary-bit field codecs are not
-selected production recipes.
+This reference starts with the value model, then explains the module boundary, schema,
+storage and operations. The [usage guide](usage.md) gives a worked block and consumer
+patterns.
 
-## Schema and representation
+## Values, reservations and ranks
 
-A block assigns up to 256 ranks. StreamPack's `description` adds `placement`,
-`byte_limit`, optional `fixed_reservation`, `full` and `immortal` to a chosen Boundlist
-geometry family. The canonical families are **Absolute Ends**, **Sizes** and **Relative
-Ends**; the [geometry tour](../boundlist/reference.md#three-geometry-encodings) explains
-their costs and arithmetic. The default remains Sizes with grouped U.
+A **rank** is a stable zero-based slot number. A block with `n` assigned slots has
+ranks 0 through `n-1`. Each slot has a contiguous byte **reservation** of size **R**,
+containing a value of **used length U**, with `0 <= U <= R <= 65535`, subject to the
+schema's smaller reservation maximum. The value is the reservation's first U bytes;
+the remaining `R-U` bytes are slack. Payload bytes
+contain no per-value headers.
 
-R is reservation size and U is used length. `full` omits U and requires value length==R;
-it does not accept shorter values without recording their lengths. `immortal` omits
-retirement D; fixed reservations derive geometry. Zero geometry needs neither stored
-geometry nor U. Schema maximum M and total byte limit B are independent of allocation
-size. All multibyte fields are little endian.
+Reservations concatenate from offset zero. A slot's start is the sum of preceding
+reservation sizes; its exclusive end is `start+R`. The final end is the block's
+**extent**. For example:
 
-Geometry carriers follow Boundlist: global coordinates use carrier(B), sizes use
-carrier(min(M,B)), and relative ends use carrier(min(16M,B)). U independently uses
-carrier(min(M,B)), tightened by fixed R when present. Each carrier is the smallest
-u8/u16/u32 proving its bound; U needs at most u16. A Relative Ends u32 field therefore
-does **not** force U to u32. These widths remain fixed as the block grows.
+| Rank | Value | R | U | Reservation |
+| --- | --- | --- | --- | --- |
+| 0 | `hi` | 4 | 2 | `[0,4)` |
+| 1 | empty | 0 | 0 | `[4,4)` — owns no bytes |
+| 2 | `cat` | 5 | 3 | `[4,9)` |
+
+The extent is 9, although only 5 bytes are used by values. Offset 8 belongs to rank 2's
+slack; offset 9 has no owner. A live empty value still has a rank. Empty values can
+also have nonzero reservations.
+
+A **tombstone D** marks a retired rank. Retirement leaves its reservation in place,
+so later starts and the extent remain unchanged. Retirement and a zero-size reservation
+are independent. Packing can reclaim retired reservations; it does not remove their
+ranks.
+
+## What Boundlist, StreamPack and the owner do
+
+| Layer | Responsibility |
+| --- | --- |
+| **Boundlist** | Reservation geometry: sizes, ends, checkpoints, retirement selection, location/search kernels and bounded geometry writes. It has no knowledge of used lengths or value bytes. |
+| **StreamPack** | Values: optional U storage, value admission and reads, native offset/length packets, append/replace/retire, and coordinated payload/geometry packing and selected transfer. |
+| **Collection / owner** | Storage and schema identity, coherent retained versions, read/write authority, allocation growth, logical holders and remaps, sorting/deduplication policy and transaction publication. |
+
+A StreamPack layout prepares the geometry and value rules together. One named view
+binds the payload and metadata; callers do not attach a second standalone Boundlist view.
+The implementation reuses geometry bodies inside complete value operations. Sharing
+those bodies does not require another allocation or per-value indirect call.
+
+Logical ownership also does not dictate physical separation. Geometry fields and U
+can share a grouped lengths window even though different modules define their meaning.
+StreamPack reports its complete writes, including the geometry/control stores it
+performs, under the StreamPack source identity.
+
+If a consumer stores U in its own record or tuple plane, it can compose Boundlist,
+that plane and a payload itself. The stock StreamPack recipe instead either manages U
+or derives `U=R`. Omitting U does not select an external length provider.
+
+## Prepare a schema
+
+Prepare one immutable `layout` from a `description` and share it among blocks with
+that schema:
+
+| Schema fact | Meaning |
+| --- | --- |
+| `maximum`, M | Maximum reservation size, 0–65535 bytes. |
+| `byte_limit`, B | Maximum total extent, at most `256*M`; independent of the currently allocated payload span. |
+| `family` | Geometry encoding: Sizes by default, Absolute Ends or Relative Ends. |
+| `fixed_reservation` | Derive every R from this size; store no per-rank geometry. |
+| `full` | Derive `U=R` and omit U. Every value write must exactly fill its reservation. |
+| `immortal` | Omit tombstones; retirement is unavailable. |
+| `lengths` | Grouped geometry/U by default; `placement::separated` selects planar storage where both are present. |
+
+A schema omission is a promise, not a temporary compression decision. A `full` block
+cannot accept a shorter value while silently forgetting its length. Fixed nonzero
+reservations cannot be packed into variable sizes. Zero-size geometry needs neither
+stored boundaries nor U. These omissions leave assigned count and any tombstones.
+
+### Choose reservation geometry
+
+All three encodings describe the same starts and reservation sizes:
+
+| Encoding | Stored geometry | Main cost |
+| --- | --- | --- |
+| **Absolute Ends** | Absolute exclusive end per rank. | Cheap point access; the full endpoint directory is reserved up front. |
+| **Sizes** | R per rank and one group-origin checkpoint per 16 ranks. | Narrow fields and local size changes; random starts need a local prefix sum. |
+| **Relative Ends** | Group-local cumulative end per rank and the same checkpoints. | Direct local lookup; local ends can need wider fields than R. |
+
+There are `ceil(n/16)` meaningful checkpoints, including the first origin, and no
+terminal checkpoint. The final extent is stored separately for variable checkpointed
+geometry. [Boundlist's encoding tour](../boundlist/reference.md#three-geometry-encodings)
+explains the shared arithmetic.
+
+Preparation chooses the smallest u8/u16/u32 geometry field that can hold its bound.
+Global ends/checkpoints use B, Sizes uses `min(M,B)`, and Relative Ends uses
+`min(16M,B)`. U is chosen independently from `min(M,B)`, further tightened by fixed R
+when present; it needs at most u16. A u32 relative end therefore does not force U to u32.
+These field widths remain fixed as allocation or occupancy changes.
+
+### Place geometry and used lengths
+
+For checkpointed geometry with U, grouped placement stores 16 geometry fields followed
+by 16 U fields for each group. Planar placement stores a full-capacity geometry prefix
+followed by U groups. Geometry is always first; there is no second plane-order option.
+
+Grouped is the default for complete value access. Planar can help U-only scans but pays
+for all 256 geometry fields even at partial occupancy. With Absolute Ends or fixed
+geometry, only U uses the lengths window. Without a geometry/U pair, new schemas
+normalize placement to grouped. Legacy layouts retain their original placement laws.
+
+## Bind storage and admit contents
+
+A view borrows four disjoint byte windows, which may be spans of one owner allocation.
+The **effect plane** number names each window in reported writes:
 
 | Window / effect plane | Stored fields |
 | --- | --- |
-| Payload /0 | Initialized concatenated reservations. |
-| Directory /1 | Optional 32 B D first, then 256 absolute ends or 16 origin checkpoints. Fixed/zero geometry omits the geometry array. |
-| Lengths /2 | Grouped: 16 geometry fields followed by 16 U fields per group. Planar: full-capacity geometry prefix followed by assigned U groups. Absolute Ends/fixed use U only; absent U has no bytes. |
-| Control /3 | u16 count; variable checkpointed geometry adds u32 extent at byte 2. |
+| Payload /0 | Concatenated initialized reservations. |
+| Directory /1 | Optional 32 B tombstone bitmap, then 256 absolute ends or 16 origin checkpoints. Fixed/zero geometry omits the geometry array. |
+| Lengths /2 | Grouped: 16 geometry fields then 16 U fields per group. Planar: all geometry capacity then assigned U groups. Absolute Ends/fixed use U only; omitted fields occupy no bytes. |
+| Control /3 | u16 assigned count; variable checkpointed geometry adds u32 extent at byte 2. |
 
-The directory reserves its full capacity. Lengths grow in initialized G16 groups;
-inactive fields in the last assigned group are zero. With U present, grouped mixed
-carriers naturally form 48 B / 96 B groups as well as 32 B / 64 B groups. Alignment
-follows the widest actual local carrier, not the group's byte size. There is no padding
-or tombstone/checkpoint-interleaving schema switch.
+The directory reserves its full capacity. Lengths grow in initialized 16-rank groups;
+unassigned lanes in the last group are zero and readable, but are not ranks. Mixed
+geometry/U field widths can form 48 B or 96 B groups as well as 32 B or 64 B groups.
+Lengths alignment follows the widest local field, not the group byte size. Use
+`directory_bytes()`, `lengths_bytes(assigned)`, `control_bytes()` and
+`lengths_alignment()` rather than copying layout formulas into an owner.
 
-`placement::separated` chooses planar U for U-only scans. Planar storage is
-**geometry-first**, with no second ordering flag. All geometry starts at byte zero of
-lengths, keeping the common addressing path direct. The full-capacity prefix costs space
-at partial occupancy, especially for wider Relative Ends; choose planar for a
-demonstrated U-only workload. Placement is normalized to grouped when there is no
-geometry/U pair to interleave. Use `layout`'s extent/alignment methods rather than
-duplicating formulas in an owner. Legacy descriptors retain their original carrier and
-group-alignment laws.
+All multibyte fields are little endian. The schema has no padding or
+tombstone/checkpoint-interleaving option. Payload extent includes live reservations,
+retired reservations and slack. A sum of live used lengths cannot replace it.
 
-The portable eight-byte **version 3** value descriptor uses byte 0 bits 6–7=`3`, bits
-0–1=encoding 0/1/2, bit 2=planar, bit 3=full, bit 4=immortal and bit 5=fixed-present.
-Bytes 1–2 hold maximum u16, bytes 3–5 total limit u24 and bytes 6–7 fixed R u16 (zero
-when absent). Decode rejects noncanonical new flags. Version 2 still decodes, preserving
-its original carriers, placement, alignment and exact descriptor re-encoding.
-Boundlist's standalone descriptor is distinct. Construct/transfer into a newly prepared
-layout to convert; do not retag bytes.
+The setup sequence separates placement from contents:
 
-All four supplied windows are disjoint spans, even when they share one allocation.
-Metadata placement follows this value recipe. The schema's `byte_limit` and the payload
-span are independent bounds: writes must fit both. A smaller allocation cannot
-implicitly narrow a shared schema's endpoint/checkpoint fields. Occupied extent includes
-live reservations, retired reservations and slack. The owner persists schema identity
-and all four windows as one coherent interpretation.
+1. Prepare the immutable layout.
+2. `view::bind` checks directory/control minimum sizes, lengths alignment, pointer
+   ranges and window disjointness, including nonoverlap with the layout object.
+   It does not inspect encoded values.
+3. `initialize` constructs an empty block, resetting directory and control. It does
+   not initialize unassigned payload or lengths capacity.
+4. For external contents, use `view::validate()` instead. It checks geometry, count,
+   extent, initialized metadata tails and `U <= R`, then checks extent against payload
+   span size. Validation checks metadata/bounds, not the contents of value or slack bytes.
 
-## Admission, lifetime and commands
+Successful checked mutations preserve content admission. The owner establishes that
+every reservation is readable/initialized and that the chosen contents belong to its
+selected version. B and the supplied payload span are independent bounds; writes must
+fit both. A small span cannot narrow the schema's stored fields.
 
-`bind` checks physical extents, alignment, overflow and window disjointness without
-examining encoded values. Keep its immutable layout and named view alive at stable
-addresses. `initialize` resets directory and control for an empty block; it does not
-initialize unassigned payload/length capacity. `validate` checks complete assigned
-contents, checkpoint/end laws, used bounds, tail padding and coherent count/extent
-against the bound windows. Validating content does not grant ownership or select a
-version. Checked mutation preserves content admission.
+## Read values and physical ownership
 
-The owner keeps mutable outputs disjoint from views, layout objects, selection,
-command/control inputs and effect storage. It holds exclusive authority over every
-issued byte, including bytes whose sibling bits are preserved. Payload input may alias
-the current payload for append/replace. Both use memmove; append clears new reservation
-slack after copying. Metadata/input overlap is rejected. Such aliases must be resolved
-before any relocating owner growth. Stock journal overlap with transfer source/selection
-is rejected before initialization.
-
-Read callbacks may consume values but cannot mutate/rebind the source during a
-traversal. Scratch is writable, sufficiently large, and disjoint from source, selection,
-borrowed controls and other callback state. Typed `author::access` requires admitted
-ranks/contents except its `get` wrapper; `rebind` requires the exact same shared layout
-object. Trusted author mutations additionally require pre-admitted command/alias/effect
-capacity. No hook can invalidate these proofs, fail or suspend between preflight and
-stores.
-
-| Command | Success and refusal semantics |
+| Operation | Result |
 | --- | --- |
-| value / length | Invalid rank or retired value is an error; a live empty value succeeds. |
-| reverse | An offset below extent maps to one reservation owner, including slack and retired storage. Otherwise no result. |
-| overlap | Physical reservations overlapping `[low,high)`, including retired storage unless `only_live` is requested; internal zero/dead holes can remain. |
-| range / select | Validate coordinates before any callback; deliver only live values with original ranks. Selection preserves order and duplicates. |
-| append | Assign the next rank, initialize reservation including slack, record U and geometry, clear D, publish new count/extent in caller storage through effects. Refuse insufficient rank/length/body capacity or incompatible value/reservation. |
-| replace | Live rank and unchanged reservation; full schemas require exact fill. Stores input and optional U; no automatic slack clearing. |
-| retire | Requires tombstones. Idempotently issues the containing bitmap byte. |
-| soft_pack | Rank preserving; clears retired reservation/used widths; optionally shrinks live slack. Fixed geometry refuses a change it cannot express. |
-| transfer | Preflight all selected live values and disjoint destination; initialize and encode in requested order, carrying position/local ends and publishing controls once. Owner handles remapping/publication. |
+| `value(source,rank)` | Borrowed span of U bytes. Invalid or retired rank is an error; a live empty value succeeds. |
+| `length(source,rank)` | U with the same rank/liveness checks. |
+| `reverse(source,offset)` | Optional `byte_owner{rank,tombstone}` below extent, including slack and retired storage; otherwise no result. Zero-size slots own no bytes. |
+| `overlap(source,low,high,only_live)` | Physical reservations overlapping `[low,high)`; retired storage participates unless `only_live=true`. |
+| `range(source,first,count,sink)` | Live values in original rank order, carrying geometry across the requested rank interval. |
+| `select(source,ranks,sink)` | Live values in requested order, preserving duplicate ranks. |
+| `select(source,ranks,scratch,sink)` | The same result, paying once to decode all starts into caller scratch for that operation. |
 
-All checked mutation refusals leave supplied bytes and effect state unchanged. Effects
-describe issued writes, not byte differences or a logical redo log. `initialize` needs
-at most two entries, append at most `append_effect_capacity()`, replace at most two and
-retire one. `pack_effect_capacity(count)` and `2 + selected_count *
-append_effect_capacity()` conservatively bound packing and transfer. Exact
-append/replace admission can accept smaller capacity. Coalescing is optional and never
-assumed to make an insufficient grant safe.
+`overlap` returns `boundlist::rank_window{first,limit}`, including `first` and excluding
+`limit`. The limit is one past the last candidate, and an empty answer is `{n,n}`.
+Internal zero-size slots can remain; the live-only form can also contain internal
+retired holes. This operation concerns reservations, not comparisons against stored
+strings or keys.
 
-Appending refreshes coherent count/extent in caller storage. Retiring leaves geometry
-unchanged. Packing invalidates decoded starts and physical descriptors; selected
-transfer changes representation/rank identity. Growth invalidates pointers if storage
-moves. The owner retains the old coherent interpretation for old readers and publishes
-logical holder changes and summaries separately from physical damage.
+`range` and `select` validate all requested coordinates before the first callback.
+They skip retired ranks, whereas transfer below refuses a retired selection. Scratch
+selection requires `ceil(n/16)*16` writable u32 starts, disjoint from encoded inputs,
+rank selection, borrowed controls and callback state. No decoded state or callback is
+retained after return. Value spans remain subject to the source's lifetime and mutation
+rules.
 
+## Mutate values and pack reservations
 
-The admitted `author::value_encoder` is a temporary cursor for a complete preflighted
-append run. It carries geometry across slots and finishes count/extent once; it neither
-owns memory nor supplies partial-failure recovery. It must not escape, copy or move, and
-its in-progress source must not be observed before `finish`. Ordinary append and
-selected transfer share this body. Transfer retains bounded 2 KiB coordinate scratch so
-source/destination dispatch remains additive rather than instantiating every pair of
-codecs. Packing instead composes the original-geometry walker and sequential geometry
-encoder in place, capturing original coordinates before overwriting them.
+Checked mutations take an effects sink for issued writes. Before entry, the owner
+supplies exclusive authority, admitted contents and enough effect capacity. Every
+checked refusal preserves supplied bytes and effect state.
+
+| Command | Success semantics |
+| --- | --- |
+| `append(source,input,R,effects)` | Assign the next rank, copy input, zero new slack, write U/geometry, clear D and update count/extent. Refuse incompatible size or insufficient ranks, lengths, payload or schema extent. |
+| `replace(source,rank,input,effects)` | Keep R, rank and start. Write the new U-byte value and optional U field. Full schemas require exact fill. Remaining slack is not automatically cleared. |
+| `retire(source,rank,effects)` | Require tombstones and idempotently issue the containing bitmap byte. Leave R, payload and extent unchanged. |
+| `soft_pack(source,shrink,effects)` | Preserve ranks and tombstones, move values together, and set retired R/U to zero. With `shrink=true`, reduce each live R to U; otherwise keep its reservation. |
+| `transfer(source,ranks,destination,shrink,effects)` | Preflight a disjoint destination and every selected live rank, then construct the destination in the requested order, retaining duplicates. Optionally shrink R to U. |
+
+Fixed geometry refuses packing that would change its reservation sizes. Soft packing
+the example above after retiring rank 0 leaves three assigned ranks: rank 2 moves to
+offset zero, with extent 5 when keeping live slack, or 3 when shrinking it. Rank 0 remains
+retired and rank 1 remains a live empty value.
+
+A reservation-changing logical replacement appends elsewhere; the owner retargets its
+holder and retires the old rank as appropriate. StreamPack does not expose Boundlist
+boundary/resize commands as uncoordinated value edits. It must coordinate geometry with
+payload movement and U.
+
+Transfer supplies the mechanics for hard rewrites, format conversion and reordering.
+Destination ranks are positions in the requested sequence. The owner chooses sorting,
+deduplication and repartitioning, builds the remap, repairs logical holders and publishes
+the replacement. Soft packing and transfer do not free allocation pages or erase all
+bytes beyond the new extent.
+
+## Effects, aliases and retained readers
+
+Effects report actual issued byte stores, including preserved neighboring lanes and
+count/extent writes. They are not read protection, byte differences or a logical redo
+log. Records borrow the stable named destination view; an enclosing owner resolves
+their source identity before it expires.
+
+Conservative journal capacities are:
+
+| Operation | Entries |
+| --- | --- |
+| Initialize | At most 2 |
+| Append | `layout::append_effect_capacity()` |
+| Replace / retire | At most 2 / 1 |
+| Soft pack | `layout::pack_effect_capacity(count)` |
+| Transfer | `2 + selected_count * destination.format().append_effect_capacity()` |
+
+Exact append/replace admission can accept a smaller grant. Never assume optional
+coalescing makes an insufficient grant safe. Hooks cannot allocate, fail, suspend or
+invalidate admitted inputs between preflight and stores.
+
+Mutable outputs must be disjoint from views/layout objects, selection, command/control
+inputs and effect storage. Append/replace payload input may alias current payload;
+both use memmove. Input overlap with metadata is rejected. Resolve such payload aliases
+before relocating allocation growth. Transfer requires disjoint source/destination
+windows and rejects stock journal overlap with source or rank selection before
+initialization. Writable scratch also obeys its disjointness contract.
+
+Keep the immutable layout and named view at stable addresses while accesses, phases or
+effects borrow them. Read callbacks cannot mutate or rebind the source. Packing
+invalidates decoded starts and physical descriptors; transfer creates new rank identity;
+relocation invalidates pointers. The owner retains the old payload and all interpretation
+metadata together for old readers. Owning backing alone does not authorize changing it.
+
+## Compose complete consumers
+
+`author::dispatch` resolves the schema once around a useful operation. Typed
+`author::access` assumes admitted contents and ranks, except `get` checks rank/liveness.
+`rebind` requires the exact same shared layout object. Trusted mutations additionally
+require command, alias and effects-capacity proofs before entry.
+
+`native::read16` returns sixteen offsets and used lengths in native registers plus
+an original-rank live mask. It reuses geometry decoding and adds U where present.
+Keep it with the consuming predicate/reduction to avoid an obligatory intermediate array.
+`visit_value_metadata` reports the point value's geometry, U and liveness dependencies;
+it does not cover every reverse/search read, protect backing or issue prefetches.
+
+The temporary `author::value_encoder` carries geometry through a completely preflighted
+append run and writes count/extent once at `finish`. It owns no memory or partial-failure
+recovery, cannot copy/move/escape, and its in-progress source must not be observed.
+Ordinary append and transfer share this body. Transfer uses bounded 2 KiB coordinate
+scratch so source/destination dispatch stays additive across codecs. In-place packing
+instead captures original geometry before rewriting it.
+
+Explicit native execution is available for little-endian NEON, AVX2 and AVX-512.
+The stored byte law is ISA-independent. SVE2 and arbitrary-bit field codecs are not
+selected production recipes. CPS stages stay bounded; the owner decides any Loom wait.
+
+## Portable descriptor and further reading
+
+The portable eight-byte **version 3** descriptor uses byte 0 bits 6–7=`3`, bits
+0–1=encoding 0/1/2, bit 2=planar, bit 3=full, bit 4=immortal and bit 5=fixed-present.
+Bytes 1–2 hold M as u16, bytes 3–5 B as u24 and bytes 6–7 fixed R as u16, zero when
+absent. New noncanonical flags are rejected. Version 2 still decodes with its original
+carriers, placement, alignment and exact descriptor re-encoding. This descriptor is
+distinct from standalone Boundlist's descriptor. Convert by constructing/transferring
+into a newly prepared layout; retagging bytes does not convert them.
+
+[Owner integration](../integration.md) explains Loom/Orbital visibility, retention and
+publication. The [current portfolio qualification](../../../workbench/spikes/boundlist/PORTFOLIO.md)
+records codecs, memory and complete-consumer timings; the [original implementation
+study](../../../workbench/spikes/streampack/IMPLEMENTATION.md) retains earlier controls.

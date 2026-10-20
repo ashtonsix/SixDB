@@ -141,7 +141,7 @@ following owners and purposes:
 There is no production padding or checkpoint-interval knob. Padded Direct units,
 generic SeriesPack/TuplePack geometry adapters and SVE2 are not production recipes.
 Native lane sizes and ISA are already derived implementation choices. No further
-capability removal is justified by this audit. The [usage guide](../../../ikea/docs/streampack/usage.md#prepare-a-schema-bind-storage)
+capability removal is justified by this audit. The [usage guide](../../../ikea/docs/streampack/usage.md#choose-schema-facts-and-encoding-for-the-workload)
 makes the selection order concrete, including omitted-U dictionaries and partial
 occupancy; it does not turn those examples into additional format families.
 

@@ -1,10 +1,10 @@
 # Boundlist
 
 Boundlist searches ordered boundaries and describes contiguous subdivisions. An index
-uses boundary searches to find candidate children for a point or range query.
-StreamPack uses subdivision geometry to locate variable-length byte reservations.
-Boundlist owns neither the children nor the bytes: it borrows caller-supplied metadata
-and performs no allocation, transaction or scheduling.
+uses boundary searches to find candidate children for a point or range query. A storage
+consumer uses subdivision geometry to locate variable-length reservations. Boundlist
+owns neither the children nor the bytes: it borrows caller-supplied metadata and performs
+no allocation, transaction or scheduling.
 
 A **rank** is a zero-based position in a source. A source with `n` assigned ranks has
 valid ranks `0` through `n-1`. Boundlist supports two forms of source:
@@ -14,9 +14,9 @@ valid ranks `0` through `n-1`. Boundlist supports two forms of source:
 | Ordered source | Existing endpoints, or an ordered projection over a decoder. Counts and comparison domains are caller-chosen. | Route queries through an index. |
 | Curated sidecar | Storage for Boundlist's compact encoding of up to 256 contiguous subdivisions. | Maintain mutable subdivision geometry, with optional retirement bits. |
 
-Both can be used without StreamPack. The [usage guide](usage.md) walks through ordinary
-calls, storage setup and fast consumer patterns. This reference first explains search
-results, then subdivision geometry, then the storage and composition contracts.
+The [usage guide](usage.md) walks through ordinary calls, storage setup and fast consumer
+patterns. This reference first explains search results, then subdivision geometry,
+then the storage and composition contracts.
 
 ## Points, ranges and eligibility
 
@@ -106,8 +106,8 @@ contain a key.
 
 Assigned ranks remain stable. A **tombstone** marks a retired rank without changing its
 size or later starts. Live and retired slots can both have size zero; setting a size to
-zero does not retire its rank. StreamPack supplies byte-value packing and transfer
-when the owner wants to reclaim or reorder the corresponding payload.
+zero does not retire its rank. Moving, packing or reordering the corresponding payload
+belongs to the consuming structure.
 
 There are three encodings of the same geometry. Checkpointed encodings use groups of
 16 ranks; a checkpoint `C[g]` is the absolute start of group `g`.
@@ -217,11 +217,9 @@ For example, starting with ends `[5,9,12]`, setting rank 0's boundary to 6 produ
 size/order/extent bounds and effect capacity before storing. Fixed geometry rejects
 incompatible changes. All checked mutation refusals preserve bytes and effect state.
 
-Geometry edits move no payload or children. The owner coordinates the corresponding
-data change and publication. StreamPack does not expose them as uncoordinated value
-edits. Inserting, removing or reordering middle ranks instead constructs a new
-representation with an explicit rank remap; StreamPack owns its byte-value packing and
-selected transfer.
+Geometry edits move no payload or children. The consuming structure coordinates the
+corresponding data change and publication. Inserting, removing or reordering middle
+ranks constructs a new representation with an explicit rank remap.
 
 ## Composition and retained versions
 
@@ -235,14 +233,14 @@ Read callbacks cannot mutate or rebind the source.
 
 The admitted sequential encoder carries new geometry while a consumer chooses movement
 and ordering. An in-place rewrite must capture original boundaries before overwriting
-them. StreamPack composes the shared original-geometry walker and encoder for packing.
+them; the shared original-geometry walker and encoder support that coordinated rewrite.
 
 ### Retain read dependencies and report writes separately
 
 Read-projection visitors describe an operation's metadata dependencies:
-`visit_start_metadata` reports the start path, `visit_metadata` adds size/liveness,
-and StreamPack's `visit_value_metadata` adds its independent used-length field.
-These are point-read projections, not complete reverse/search footprints. A typed
+`visit_start_metadata` reports the start path and `visit_metadata` adds size/liveness.
+Consumers account for their own additional metadata and payload dependencies. These
+are point-read projections, not complete reverse/search footprints. A typed
 checkpoint search can read all 16 initialized checkpoints even at partial occupancy.
 The owner retains the relevant control, planes and readable padding; a point visitor
 is not a universal search grant.
@@ -283,8 +281,6 @@ The portable descriptor is eight bytes. New standalone **version 4** uses byte 0
 and re-encodes that version. Prepared objects and pointers are not portable descriptors.
 Conversion constructs a new representation; changing a tag does not convert its bytes.
 
-For byte values, [StreamPack](../streampack/reference.md) adds optional used lengths,
-value validation, replacement, packing and transfer without another geometry binding or
-per-rank indirect call. [Owner integration](../integration.md) covers Loom/Orbital
-visibility, retention and effects. Performance evidence and algorithm selection live
+[Owner integration](../integration.md) covers Loom/Orbital visibility, retention and
+effects. Performance evidence and algorithm selection live
 with the [Boundlist study](../../../workbench/spikes/boundlist/README.md).
