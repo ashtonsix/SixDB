@@ -117,7 +117,13 @@ Result<Group*> make_group(Pool& pool, Palette palette, bool deferred = false) {
     result->owner_index = pool.internal->groups.size();
     try { pool.internal->groups.push_back(std::move(group)); }
     catch (...) { refund(pool, result->metadata_charge); throw; }
-    if (deferred) { result->control_preparing = true; return result; }
+    if (deferred) {
+      auto& preparing = pool.internal->preparing_groups[static_cast<std::size_t>(palette)];
+      assert(!preparing);
+      preparing = result;
+      result->control_preparing = true;
+      return result;
+    }
     if (auto prepared = result->geometry->prepare(); !prepared) {
       // The published Group owns every partially prepared mapping. No live
       // identity exists; the ordinary asynchronous retirement path retries it.
@@ -354,6 +360,9 @@ void finite_prepare_reply_release(worker::Message& message) noexcept {
   auto& request = *record.request;
   const bool cancelled = request.discard || pool.internal->close_requested;
   if (record.phase == FinitePreparation::Phase::control) {
+    auto& preparing = pool.internal->preparing_groups[static_cast<std::size_t>(group.palette)];
+    assert(preparing == &group);
+    preparing = nullptr;
     group.control_preparing = false;
     if (!record.control_ok || cancelled) {
       group.retiring = true;
@@ -480,9 +489,10 @@ Result<void> prepare_finite(Pool& pool, Preparation& request,
     if (pass == 3) {
       // One fresh control preparation per palette. Pending helper work is not
       // budget pressure and must not scatter requests into another geometry.
-      const bool waiting = std::any_of(pool.internal->groups.begin(), pool.internal->groups.end(),
-          [palette](const auto& group) { return group->control_preparing && group->palette == palette; });
-      if (waiting) { refund(pool, sizeof(FinitePreparation)); return std::unexpected(Error::unavailable); }
+      if (pool.internal->preparing_groups[static_cast<std::size_t>(palette)]) {
+        refund(pool, sizeof(FinitePreparation));
+        return std::unexpected(Error::unavailable);
+      }
       auto made = make_group(pool, palette, true);
       if (made) { record.group = *made; record.phase = FinitePreparation::Phase::control; break; }
       refusal = made.error();

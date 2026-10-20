@@ -157,6 +157,8 @@ struct PoolState {
   Pool* next_interested{};
   Pool* previous_interested{};
   std::vector<std::unique_ptr<Group>> groups;
+  // Owner-only index of the one permitted control preparation per palette.
+  std::array<Group*, 2> preparing_groups{};
   Group* available_groups{};
   // Register sizes before VM publication; returns/reuse never allocate index nodes.
   // Index and intrusive heads outlive Window destruction, including final-pin teardown.

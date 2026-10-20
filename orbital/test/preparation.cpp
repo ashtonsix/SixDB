@@ -585,6 +585,33 @@ void finite_fresh_bounded_start_cancel_close(){
   std::printf("{\"case\":\"finite-fresh-control-bounded-burst-cancel-close\",\"passed\":true,\"one_pending_group_charge\":%llu}\n",(unsigned long long)charge);
 }
 
+void finite_control_cancel_reopens_palette(){
+  Fixture f; alloc::Preparation first, other, next;
+  const auto wanted=small_request(64,16), distinct=small_request(3072,64);
+  const bool two_palettes=alloc::detail::preferred_palette(base_page(),wanted.bytes,wanted.alignment)!=
+      alloc::detail::preferred_palette(base_page(),distinct.bytes,distinct.alignment);
+  arm_gate();done(alloc::prepare(*f.pool,first,wanted,f.preparer.lane));wait_inside();
+  // One palette's accepted control work must not block the other palette.
+  if(two_palettes)done(alloc::prepare(*f.pool,other,distinct,f.preparer.lane));
+  const auto charge=f.arena->charged_bytes.load();
+  auto refused=alloc::prepare(*f.pool,next,wanted,f.preparer.lane);
+  check(!refused && refused.error()==Error::unavailable && next.state==alloc::Preparation::State::idle &&
+        f.arena->charged_bytes==charge,"same-palette refusal changed accepted control inventory");
+  alloc::cancel(first);
+  refused=alloc::prepare(*f.pool,next,wanted,f.preparer.lane);
+  check(!refused && refused.error()==Error::unavailable,
+        "cancellation released control admission before physical settlement");
+  proceed=true;f.settle(first);
+  check(first.state==alloc::Preparation::State::cancelled,"cancelled control delivered an Allocation");
+  alloc::Allocation independent;
+  if(two_palettes){f.settle(other);independent=take(alloc::take(other));}
+  done(alloc::prepare(*f.pool,next,wanted,f.preparer.lane));f.settle(next);
+  auto value=take(alloc::take(next));
+  for(auto byte:alloc::bytes(value))check(byte==std::byte{0},"replacement control omitted initialized bytes");
+  alloc::release(value);alloc::release(independent);f.close_all();
+  std::puts("{\"case\":\"finite-control-palette-cancel-settle-retry\",\"passed\":true}");
+}
+
 void finite_control_failures_own_partial_backing(){
   for(const auto wanted:{small_request(64,16),small_request(64,64),small_request(256,64)}){
   for(bool partial:{false,true}){
@@ -606,7 +633,8 @@ void finite_control_failures_own_partial_backing(){
     check((inventory.reserved_bytes>0)==partial,"failed finite control reported nonexistent/lost sparse mapping");
     check(!fail_metadata && (metadata_reservation_seen.load()==partial),"heap failure did not follow real payload reservation");
     check(f.arena->references.load()==references,"failed helper retained its preparation pin");
-    auto healthy=take(alloc::allocate(*f.pool,wanted));alloc::release(healthy);
+    alloc::Preparation recovery;done(alloc::prepare(*f.pool,recovery,wanted,f.preparer.lane));f.settle(recovery);
+    auto healthy=take(alloc::take(recovery));alloc::release(healthy);
     if(partial){fail_unmap=true;f.close_all(true);}else f.close_all();
     f.pool=take(alloc::add_pool(*f.arena,f.lane));alloc::cancel(failed);
     const auto result=alloc::take(failed);check(!result && result.error()==expected,
@@ -1035,7 +1063,8 @@ int main(){
   cancelled_constructor_and_same_fallback(); explicit_preparer_reclaim_cancel_close();
   explicit_preparer_real_format_and_owner_operations(); idle_reuse_exclusive_without_vm();
   reused_window_partial_growth_and_retry(); repeated_idle_prepare_cancel_cycles(); constructed_delivery_and_unread_ready();
-  finite_fresh_bounded_start_cancel_close(); finite_control_failures_own_partial_backing();
+  finite_fresh_bounded_start_cancel_close(); finite_control_cancel_reopens_palette();
+  finite_control_failures_own_partial_backing();
   finite_delivered_owner_operations();
   finite_reuse_uninitialized_prefault(); finite_mapped_neighbour_cancel_paused_constructor();
   finite_uncertain_cleanup_responsive_and_bounded(); finite_partial_cleanup_page_reused_before_original_settlement();
