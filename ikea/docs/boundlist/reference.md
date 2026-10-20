@@ -1,208 +1,183 @@
-# Boundlist reference
+# Boundlist
 
-`<ikea/boundlist/search.h>` provides ordered searches without linking a storage
-implementation. `<ikea/boundlist.h>` adds the reservation sidecar. The
-[usage guide](usage.md) explains operation and execution choices.
+Boundlist maps ordered points and ranges to ranks. An index can use it to find which
+children might overlap a query; StreamPack uses the same geometry to locate
+variable-length byte reservations. Boundlist holds no payload, allocation, transaction
+or scheduler state.
 
-## Ordered sources
+There are two ways to supply boundaries. **Ordered sources** borrow existing arrays or a
+consumer's decoder, with caller-chosen counts and domains. The **curated sidecar**
+stores up to 256 numeric subdivisions with compact geometry and optional retirement
+bits. Neither requires StreamPack. StreamPack adds byte values, optional used lengths
+and packing to that geometry.
 
-An admitted projection has `unsigned size()` and ordered endpoint values. The
-fallback reads `at(unsigned rank)` for ranks below size. Ordering, initialized
-bytes/objects and coherent lifetime belong to the owner. `maximum_count` is
-`UINT_MAX`; count is also the absence sentinel. Wider outer directory indices
-compose local sources rather than being silently narrowed into one source.
+Start with [usage and composition](usage.md) for calls and fast consumer patterns. This
+document explains the model, stored formats and exact obligations.
 
-`lower_bound(source, q)` finds the first eligible rank whose endpoint is `>= q`;
-`upper_bound` uses `> q`. They return count on absence. Optional
-`next_eligible(first, limit)` and `previous_eligible(limit)` select population;
-the latter returns size on absence. Endpoints remain ordered even in ineligible
-ranks. No population is inferred from endpoint equality.
+## Points, ranges and eligibility
 
-A custom source can provide `boundary<edge>(q)` as an already-fused geometric
-search, or `prepare<edge>(q)` returning a phase with `finish()`. Those entries
-return the same geometric boundary before population selection. Ordinary calls
-prefer an available fused `boundary`; author preparation prefers `prepare`.
-Share their classification and kernel laws while allowing immediate results to
-return directly, rather than forcing ready phases through a local-read path.
-The fallback needs only ordered
-comparison and does not impose an integer encoding or metric. Native unsigned
-integral queries use signedness-safe classification before conversion; custom
-comparators must themselves preserve their domain's ordering.
+A source exposes `size()` and ordered `at(rank)` endpoints. `lower_bound(source,q)`
+returns the first eligible endpoint **>= q**; `upper_bound` uses **> q**. Both return
+`size()` when absent. Duplicate endpoints are supported. For unique keys and exact
+occupied child maxima, one lower-bound search routes to the first possible child;
+duplicate handling adds no second search to that operation.
 
-`direct_source<T>{data, count}` borrows endpoints. Native unsigned integer loads
-are unaligned-safe and stay inside the assigned array, including partial SIMD
-tails. Other T require actual readable objects and their ordinary comparisons.
+For range queries, supply matching ordered occupied minima and maxima:
+`overlap(maxima,minima,query_range{low,high})`. The default query is `[low,high)`; the
+query type can also express either endpoint as open or closed. The result is
+`rank_window{first,limit}`, with a one-past-last limit. Empty answers are `{n,n}`. Both
+arrays must describe the same ranks and eligibility. Their extrema can still enclose
+gaps inside children, so the consumer checks actual records.
 
-`width_source<W, Point>{widths, checkpoints, count, stride, extent}` admits:
+![Occupied child ranges, a populated singleton and an ineligible internal rank. Query
+[9,36) returns candidate ranks [1,5); eligibility still applies inside the
+window.](images/ranges.svg)
 
-- W is u8 or u16; Point is unsigned integral. `stride` is in W elements and
-  addresses each G16 group, so interleaved sibling fields are possible.
-- `ceil(count/16)` checkpoints include the origin and omit a terminal checkpoint.
-  Each is the start position before that group's widths. Sums and extent fit
-  Point; all checkpoints, widths and extent describe one coherent version.
-- Each active group has sixteen initialized/readable W elements. Widths after
-  assigned count in the last group are zero. Endpoint `r` is its checkpoint plus
-  the inclusive width prefix. Extent is the final assigned endpoint, or origin
-  for an empty source.
+Eligibility is independent of endpoint equality. A populated child with occupied bounds
+`[10,10]` contains a key. An empty physical interval `[37,37)` owns no positions.
+`population` supplies `ceil(n/8)` readable bytes: set bits mean eligible, or ineligible
+when inverted. It is a bitset, not a child cardinality. A `populated_source` adds that
+selection to any geometry source. Internal holes remain holes inside an overlap result.
 
-`population{bytes, inverted}` reads `ceil(count/8)` bytes. Bits outside count are
-ignored. `populated_source` decorates an ordered source without changing its
-endpoint encoding. `overlap(maxima, minima, query_range)` requires matching
-counts and population, ordered occupied extrema and `min[r] <= max[r]` for each
-eligible rank. Query closure controls the two boundary comparisons. It returns
-`[first, limit)` after trimming eligibility at the edges, or `{size, size}`.
-Internal holes and record-level gaps require owner checks.
+Native unsigned sources accept wider or signed integer queries without narrowing away
+their order. Generic ordered domains can instead use their own comparisons, including
+byte strings, wider keys and virtual top fences. Local ranks and counts are `unsigned`,
+bounded by `maximum_count`; a larger structure composes these with its own outer
+identity. No universal 64-bit keyspace or arithmetic distance is required by the search
+contract.
 
-## Authored search composition
+## Three geometry encodings
 
-`<ikea/boundlist/author/search.h>` supplies prepared searches, opt-in scan sources,
-reusable numeric search bindings and interleaved native batches. These do not
-allocate or schedule. Link `ikea::boundlist` for numeric source preparation.
+The curated sidecar assigns stable ranks to nonnegative slot sizes. An assigned rank may
+be live, retired or zero-size. Starting at zero, sizes concatenate into exclusive ends.
+For group width 16, `C[g]` is that group's absolute origin.
 
-`bind_search(direct_source<T>)` borrows one coherent source snapshot. For native
-u16/u32/u64 it derives source-level search state; other ordered domains retain
-their ordinary source. It preserves the source's size, endpoint and boundary
-meaning. Derived state becomes stale after any endpoint, count or placement
-change, even if the old pointer remains valid. The owner must rebuild it for a
-new version. It neither validates ordering nor owns backing bytes.
+| Encoding | Stored information | Main tradeoff |
+| --- | --- | --- |
+| **Absolute Ends** | Absolute exclusive end `E[r]` per rank. | Cheap direct access and endpoint comparisons; fields follow the whole extent bound. |
+| **Sizes** | Size `R[r]`, plus one checkpoint per 16 ranks. | Narrow fields and cheap resizing; random positions need a local prefix sum. |
+| **Relative Ends** | Local cumulative end `L[r]`, plus one checkpoint per 16 ranks. | Direct local lookup and endpoint comparisons; local ends can be wider than sizes. |
 
-Private applicability and bracket-size heuristics select checked interpolation
-or ordinary native search. Every predicted interval is verified before narrowing;
-neither sampled regularity nor a prediction is a correctness premise. Setup
-reads a small sample of endpoints; per-query preparation is included in search.
-The binding is 40 bytes for u16/u32 and 48 for u64 on supported 64-bit platforms.
+![The same five-rank excerpt encoded as absolute ends, sizes and relative ends, with the
+group origin and arithmetic needed to locate rank 18.](images/encodings.svg)
 
-`prepare_lower_bound(named_source, q)` and `prepare_upper_bound` return an object
-with `has_local_read()`, `local_window()` and `finish()`. All borrowed completion
-dependencies must remain stable and describe one retained version. A built-in Width phase
-snapshots only its selected width pointer and scalar state; its size is 16 bytes
-on supported 64-bit platforms. Built-in geometric phases do not borrow the source
-object or query. Population composition additionally retains a named-source
-pointer, requiring that source and its format to remain stable through finish.
-A custom phase defines its own additional borrowing obligations. The author
-factory conservatively rejects temporary sources.
+There are `(assigned+15)/16` meaningful checkpoints, including the first origin; there
+is **no terminal checkpoint**. The directory reserves capacity for all 16 checkpoints.
+The final extent supplies the last global end. Relative ends reset at each group, so
+their complete raw field array is not globally ordered.
 
-For Width, the exposed window covers the selected sixteen widths, or is empty
-for an already resolved result. A numeric binding's phase instead snapshots its
-array pointer, query and local search interval (32 bytes on supported 64-bit
-platforms). Its window is the proposed bracket or full array; bracket correction can
-read elsewhere in the assigned array. An out-of-domain or extrema-resolved query
-has an empty window. Neither kind of window describes all possible reads or
-confers read permission. Preparation does not wait for residency. The owner must retain eligibility and any
-other completion dependencies independently. A new coherent version requires
-new preparation, even when old storage addresses survive.
+Prepare an immutable `sidecar::layout` from `description`: `family`, per-slot `maximum`,
+independent `extent_limit`, optional `fixed_size` and `immortal`. The families are
+`geometry::absolute_ends`, `sizes` and `relative_ends`. The old `direct`/`width` names
+identify the same first two values; they do not select additional formats. The default
+remains Sizes.
 
-`scan_source<T>` supports u16/u32/u64, requires count <=65535 at construction and
-otherwise follows direct-source admission. `lower_bounds`/`upper_bounds` accept
-matching fixed arrays of native unsigned `direct_source<T>` or the numeric
-bindings returned by `bind_search`, and integral queries.
-Each result has its own source's count sentinel. They interleave bisection and
-SIMD convergence; they do not acquire or validate storage per probe.
+Let M be the schema size maximum and B its extent limit. The smallest native carrier
+among u8/u16/u32 is chosen for each proven bound:
 
-## Reservation sidecar
-
-Namespace `boundlist::sidecar` owns a curated reservation-geometry schema,
-views and typed kernels. It has no U, blob-value packet or storage-compaction
-policy. StreamPack composes this geometry with its own optional used-length law.
-Generic ordered sources retain their wider coordinate/count domains.
-
-### Stored representation
-
-`description` contains `family`, `maximum`, `extent_limit`, optional
-`fixed_reservation`, and `immortal`. Capacity is **256**; group width is **16**.
-The total limit is at most 256 × maximum and defaults to that product. Fixed
-reservation cannot exceed maximum. A retired zero-width slot retains its rank.
-
-Fields are little endian. W is one byte for a reservation upper bound <=255,
-otherwise two; a fixed reservation supplies the tighter bound. O is one/two/four
-bytes for total limit <=255/<=65535/larger. The optional D bitmap occupies 32 B:
-bit r%8 of byte r/8 is one for retirement.
-
-| Window / effect plane | Stored fields |
+| Field | Bound |
 | --- | --- |
-| Directory / 0 | D first, then 256 exclusive endpoints (Direct) or sixteen group-start checkpoints (Width), each O bytes. Fixed/zero geometry omits these fields. |
-| Lengths / 1 | G16 reservation widths for variable Width; no fields for Direct/fixed geometry. |
-| Control / 2 | Assigned count u16; variable Width also stores u32 extent at byte 2. Direct/fixed derive extent. |
+| Absolute end or checkpoint | B |
+| Individual size | min(M,B) |
+| Relative end | min(16M,B) |
 
-Directory storage is full capacity. `lengths_bytes(assigned)` includes complete
-initialized G16 groups. Inactive widths in the last assigned group are zero;
-inactive endpoints/checkpoints are initialized but have no semantic value.
-Lengths require W-byte alignment; directory/control use bounded byte loads.
-Supplied windows are disjoint but may share an allocation or owner Part.
+The curated M is at most 65535 and B at most 256M. Carriers are immutable schema facts,
+independent of current occupancy or allocation extent. Fixed size derives all geometry;
+a zero-size domain needs no stored boundaries. `immortal` omits retirement bits.
+Changing a stored size to zero does not retire its rank.
 
-A checkpoint is the sum of reservations preceding its group, including the
-origin and omitting a terminal sentinel. Extent is the sum of all assigned R,
-retired or live. The total limit is a schema encoding bound independent of the
-current allocation's size. The schema has no placement switch.
+The three disjoint windows may share one owner allocation:
 
-`layout::encode()` produces an eight-byte **version-3** geometry description:
-
-| Bytes | Meaning |
+| Window / effect plane | Physical law |
 | --- | --- |
-| 0 | Version 3 in bits 5–7; Width bit 0, immortal bit 3, fixed reservation present bit 4. Bits 1–2 are zero. |
-| 1–2 | Maximum reservation, u16. |
-| 3–5 | Total limit, u24; at most 16,776,960. |
-| 6–7 | Fixed reservation, u16; zero when absent. Presence distinguishes fixed zero. |
+| Directory /0 | Optional 32 B tombstone bitmap, then 256 absolute ends or 16 checkpoints. Fixed/zero geometry omits both end and checkpoint arrays. |
+| Lengths /1 | Sizes or Relative Ends fields, in initialized G16 groups; absent for Absolute Ends/fixed/zero geometry. |
+| Control /2 | u16 assigned count. Variable checkpointed geometry also stores u32 extent at byte 2. |
 
-Version-2 StreamPack descriptions are not accepted as geometry-only schemas.
-StreamPack retains its separate version-2 encoding and existing physical recipes.
-Persist portable schema bytes and corresponding windows coherently, never the
-native prepared layout or its borrowed pointers.
+All multibyte fields are little endian. Unassigned tails in the last initialized length
+group are zero and readable, but are not ranks. Directory storage remains full capacity;
+lengths grow with assigned groups. Required lengths alignment is the stored carrier's
+natural alignment. There is no tombstone/checkpoint interleaving, padding or alignment
+selection in the schema.
 
-### Admission, mutation and composition
+The portable descriptor is eight bytes. New standalone **version 4** uses byte 0: bits
+5–7=`4`, bits 0–1=encoding 0/1/2, bit 2=reserved zero, bit 3=immortal, bit
+4=fixed-size-present. Bytes 1–2 hold M, bytes 3–5 hold B and bytes 6–7 hold fixed size
+(zero when absent). Version 3 decoding preserves its original two-encoding carrier laws
+and re-encodes that version. Prepared objects and pointers are never portable
+descriptors. Conversion constructs a new representation; changing a tag on existing
+storage does not convert bytes.
 
-`view::bind` checks sizes, alignment, overflow and window disjointness. Initialize
-new storage or call `validate` for recovered bytes. Validation checks count,
-end/checkpoint laws, reservation bounds, extent and zero Width tails. It grants
-neither ownership nor a selected version. Checked commands preserve admitted
-contents; they do not recover malformed input.
+## Physical ownership and mutation
 
-| Operation | Meaning |
+`sidecar::reverse(source,point)` answers physical ownership:
+`position_owner{rank,tombstone}` for a point below extent, otherwise no result. It finds
+the first exclusive end **> point**, includes retired storage, and never assigns a point
+to a zero-size slot. This differs from eligible endpoint search. An arbitrary
+occupied-maxima array alone does not prove containing intervals.
+
+`locate` returns `{offset,size}` for a live rank; invalid or retired ranks are errors.
+`range` checks its rank interval before callbacks and visits live ranks. The typed
+access exposes `start`, `slot_size`, physical `reverse`, carried traversal and native
+group decoding for admitted consumers.
+
+| Checked command | Meaning |
 | --- | --- |
-| `locate(source, rank)` | Live rank's offset and reservation; rejects invalid/retired rank. |
-| `range(source, first, count, sink)` | Carries geometry through live ranks; sink receives rank and geometry location. |
-| `reverse(source, offset)` | Physical owner and tombstone below extent; includes retired reservations. |
-| `overlap(source, low, high, only_live)` | Half-open positive reservation overlap; internal zero/dead holes can remain. |
-| `initialize(dst, effects)` | Empty count/control and full initialized directory. |
-| `append(dst, reservation, effects)` | Adds the next rank, initializes a new R group when needed and refreshes count/extent. |
-| `retire(dst, rank, effects)` | Sets a tombstone without moving boundaries. Requires D. |
+| initialize | Reset directory and control to an empty assignment. |
+| append | Assign one more slot; initialize a new readable G16 group as needed. |
+| retire | Set the containing tombstone bit; leave geometry unchanged. |
+| set_boundary | Move one exclusive end while preserving later ends. |
+| resize | Change one size and translate every subsequent endpoint. |
 
-There is no U-only `replace`, `soft_pack` or selected `transfer` operation in
-Boundlist. Owners choose destination geometry and coordinate their data.
-StreamPack supplies value-aware packing/transfer and complete acceptance checks.
+`set_boundary` and `resize` are different operations. Both check size/order/extent
+bounds and effect capacity before storing; fixed geometry rejects incompatible changes.
+They move no payload or children. The owner coordinates any corresponding data change.
+StreamPack deliberately does not expose these as uncoordinated value edits. Reordering
+or inserting middle ranks is an owner-selected rebuild, with rank repair, rather than a
+disguised resize. Value compaction and selected transfer belong to StreamPack.
 
-Author `write_origin_unchecked`, `write_width_unchecked`, `write_slot_unchecked`,
-encode admitted caller choices for variable geometry. The caller proves it is
-not fixed before entering these field-store kernels. `publish_size_unchecked`
-and `finish_rewrite_unchecked` refresh the applicable count/extent controls.
-A slot rewrite receives the chosen start and reservation; the caller
-maintains coherent successor boundaries and total bounds. The `covered`
-argument means the R store is already covered by an issued byte range
-in this same operation. It never grants access to sibling consumer fields.
+`bind` admits window extents, alignment, disjointness and descriptor placement; it does
+not inspect content. Initialize new storage or validate external content before reading.
+`validate` checks count, monotonicity/sizes, checkpoints, extent and initialized tails.
+Successful checked commands preserve that admission. All checked mutation refusals
+preserve bytes and effect state.
 
-Typed geometry access can compose with an enclosing source whose immutable
-format supplies strided R. It contains no used-length dependency. Native packets
-carry offsets/R; StreamPack owns its U-bearing value packet and scalar handoff.
-`slots(first, count, begin, sink)` traverses all admitted assigned ranks,
-including retired/zero reservations. The caller proves `begin` equals the
-original start of `first`. The sink receives rank, original offset and R and may
-rewrite already-read geometry; it must preserve format, count and unread fields.
-Fixed/Direct/Width traversal is selected outside the loop. `range` adds live
-selection; StreamPack composes its value projection and packing in that same walk.
+## Composition and retained versions
 
-`visit_start_metadata` and `visit_liveness_metadata` expose separate read
-projections. `visit_metadata` combines geometric location and liveness reads.
-StreamPack's `visit_value_metadata` omits the current Direct end when start+U
-suffice. Each describes actual possible reads, not ownership or readiness.
+Read-projection visitors keep protection with the operation: `visit_start_metadata`
+reports the start path, `visit_metadata` adds size/liveness dependencies, and
+StreamPack's `visit_value_metadata` adds its independent U field. They describe point
+reads, not all possible reverse/search reads. A typed checkpoint search can read all 16
+initialized checkpoints even at partial occupancy. The owner retains the relevant
+control/planes and readable padding; a point visitor is not a universal search grant.
 
-Width typed search/reverse may read all sixteen initialized checkpoints,
-including inactive ones; results mask inactive ranks. Protect that window plus
-selected R and population reads. Generic `width_source` promises only assigned
-checkpoints. A prepared local window is a prefetch target, not a complete grant.
+`before(source,byte_write)` names the original source and actual issued stores,
+including preserving vector lanes. It is neither read protection, a beforeimage nor a
+transaction. A policy may coarsen damage or erase it for authorized scratch work. The
+owner admits effect capacity and exclusive authority over **every issued byte** before
+execution. Inputs, effect storage, source/view/layout objects and writable outputs must
+satisfy their alias and lifetime contracts. Hooks cannot fail, allocate, suspend or
+invalidate admitted inputs between preflight and stores.
 
-Mutations require exclusive authority over actual issued stores, including
-preserved neighbours and complete-group initialization. Effects use the original
-named source with plane 0 directory, 1 lengths, 2 control. They describe writes,
-not read protection or publication. Temporary writable destinations are rejected;
-format/view/effect controls must not alias outputs. Hooks are infallible and cannot
-allocate, suspend or invalidate inputs. Checked refusal preserves bytes/effects.
+A named view and its immutable layout stay at stable addresses while an access, phase or
+effect record borrows them. `rebind` requires that same layout identity. Read callbacks
+cannot mutate or rebind the source. Native packets and CPS stages stay bounded and
+inline where useful; neither performs an implicit scheduler wait.
+
+![Checkpointed and prepared numeric searches expose unresolved local work while one
+retained version covers boundaries, eligibility, backing and derived search
+state.](images/phases.svg)
+
+`prepare_lower_bound`/`prepare_upper_bound` can expose one unresolved local read,
+followed by `finish`. The window is a **hint**, not the complete read/protection
+footprint. Selection can still read eligibility; numeric prediction can correct outside
+its suggested bracket. The owner retains one coherent version of boundaries, count,
+eligibility, backing and derived search state across any wait. Population-aware
+completion also borrows the original named source; keeping a short-lived typed dispatch
+object alive is not a substitute for that source.
+
+For byte values, [StreamPack](../streampack/reference.md) adds optional U, U/payload
+validation, replacement, packing and transfer without another geometry binding or
+per-rank indirect call. [Owner integration](../integration.md) covers Loom/Orbital
+visibility, retention and effects. Performance evidence and algorithm selection live
+with the [Boundlist study](../../../workbench/spikes/boundlist/README.md).

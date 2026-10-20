@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="650" viewBox="0 0 1280 650" role="img" aria-labelledby="title description">
+<title id="title">A range query bounds the children worth visiting</title>
+<desc id="description">Closed occupied ranges at ranks0..5 are3..7,10..10,18..24,26..31,35..40,46..52. Rank2 is ineligible. Query9 inclusive to36 exclusive returns candidate ranks1..5 exclusive. The singleton at rank1 qualifies; the internal ineligible rank is skipped by the consumer.</desc>
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L8,4 L0,8" fill="#586579"/></marker></defs>
+<rect width="1280" height="100%" fill="white"/>
+<g font-family="Arial, Helvetica, sans-serif" fill="#233047" font-size="21">
+<text x="32" y="42" font-size="26" font-weight="bold" fill="#233047" text-anchor="start">A range query bounds the children worth visiting</text>
+<rect x="323" y="110" width="459" height="440" rx="0" fill="#edf8ef" stroke="none" stroke-width="1.5"/>
+<path d="M323,110 V550" fill="none" stroke="#15834b" stroke-width="1.8" stroke-dasharray="6 5"/>
+<path d="M782,110 V550" fill="none" stroke="#15834b" stroke-width="1.8" stroke-dasharray="6 5"/>
+<text x="544" y="95" font-size="22" font-weight="bold" fill="#15834b" text-anchor="middle">query [9, 36)</text>
+<text x="50" y="165" font-size="21" font-weight="bold" fill="#233047" text-anchor="start">rank 0</text>
+<path d="M170,160 H1150" fill="none" stroke="#d9e0e9" stroke-width="1.8"/>
+<path d="M221,160 H289" fill="none" stroke="#175ca7" stroke-width="1.8"/>
+<circle cx="221" cy="160" r="6" fill="#175ca7"/>
+<circle cx="289" cy="160" r="6" fill="#175ca7"/>
+<text x="221" y="148" font-size="18" font-weight="bold" fill="#175ca7" text-anchor="start">[3, 7]</text>
+<rect x="32" y="200" width="1184" height="54" rx="4" fill="#fff4d9" stroke="none" stroke-width="1.5"/>
+<text x="50" y="233" font-size="21" font-weight="bold" fill="#233047" text-anchor="start">rank 1</text>
+<path d="M170,228 H1150" fill="none" stroke="#d9e0e9" stroke-width="1.8"/>
+<path d="M340,228 H340" fill="none" stroke="#175ca7" stroke-width="1.8"/>
+<circle cx="340" cy="228" r="6" fill="#175ca7"/>
+<text x="340" y="216" font-size="18" font-weight="bold" fill="#175ca7" text-anchor="start">[10, 10]</text>
+<text x="368" y="249" font-size="17" font-weight="normal" fill="#586579" text-anchor="start">populated singleton</text>
+<rect x="32" y="268" width="1184" height="54" rx="4" fill="#fff4d9" stroke="none" stroke-width="1.5"/>
+<text x="50" y="301" font-size="21" font-weight="bold" fill="#233047" text-anchor="start">rank 2</text>
+<path d="M170,296 H1150" fill="none" stroke="#d9e0e9" stroke-width="1.8"/>
+<path d="M476,296 H578" fill="none" stroke="#8d99a8" stroke-width="1.8" stroke-dasharray="6 5"/>
+<circle cx="578" cy="296" r="6" fill="#8d99a8"/>
+<circle cx="476" cy="296" r="6" fill="#8d99a8"/>
+<text x="476" y="284" font-size="18" font-weight="bold" fill="#8d99a8" text-anchor="start">[18, 24]</text>
+<text x="476" y="320" font-size="17" font-weight="normal" fill="#586579" text-anchor="start">ineligible</text>
+<rect x="32" y="336" width="1184" height="54" rx="4" fill="#fff4d9" stroke="none" stroke-width="1.5"/>
+<text x="50" y="369" font-size="21" font-weight="bold" fill="#233047" text-anchor="start">rank 3</text>
+<path d="M170,364 H1150" fill="none" stroke="#d9e0e9" stroke-width="1.8"/>
+<path d="M612,364 H697" fill="none" stroke="#175ca7" stroke-width="1.8"/>
+<circle cx="612" cy="364" r="6" fill="#175ca7"/>
+<circle cx="697" cy="364" r="6" fill="#175ca7"/>
+<text x="612" y="352" font-size="18" font-weight="bold" fill="#175ca7" text-anchor="start">[26, 31]</text>
+<rect x="32" y="404" width="1184" height="54" rx="4" fill="#fff4d9" stroke="none" stroke-width="1.5"/>
+<text x="50" y="437" font-size="21" font-weight="bold" fill="#233047" text-anchor="start">rank 4</text>
+<path d="M170,432 H1150" fill="none" stroke="#d9e0e9" stroke-width="1.8"/>
+<path d="M765,432 H850" fill="none" stroke="#175ca7" stroke-width="1.8"/>
+<circle cx="850" cy="432" r="6" fill="#175ca7"/>
+<circle cx="765" cy="432" r="6" fill="#175ca7"/>
+<text x="765" y="420" font-size="18" font-weight="bold" fill="#175ca7" text-anchor="start">[35, 40]</text>
+<text x="50" y="505" font-size="21" font-weight="bold" fill="#233047" text-anchor="start">rank 5</text>
+<path d="M170,500 H1150" fill="none" stroke="#d9e0e9" stroke-width="1.8"/>
+<path d="M952,500 H1054" fill="none" stroke="#175ca7" stroke-width="1.8"/>
+<circle cx="1054" cy="500" r="6" fill="#175ca7"/>
+<circle cx="952" cy="500" r="6" fill="#175ca7"/>
+<text x="952" y="488" font-size="18" font-weight="bold" fill="#175ca7" text-anchor="start">[46, 52]</text>
+<text x="32" y="590" font-size="20" font-weight="bold" fill="#233047" text-anchor="start">Eligibility</text>
+<rect x="180" y="564" width="78" height="42" rx="0" fill="#f0f3f7" stroke="#d9e0e9" stroke-width="1.5"/>
+<text x="219" y="593" font-size="21" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">1</text>
+<rect x="265" y="564" width="78" height="42" rx="0" fill="#f0f3f7" stroke="#d9e0e9" stroke-width="1.5"/>
+<text x="304" y="593" font-size="21" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">1</text>
+<rect x="350" y="564" width="78" height="42" rx="0" fill="#f0f3f7" stroke="#d9e0e9" stroke-width="1.5"/>
+<text x="389" y="593" font-size="21" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">0</text>
+<rect x="435" y="564" width="78" height="42" rx="0" fill="#f0f3f7" stroke="#d9e0e9" stroke-width="1.5"/>
+<text x="474" y="593" font-size="21" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">1</text>
+<rect x="520" y="564" width="78" height="42" rx="0" fill="#f0f3f7" stroke="#d9e0e9" stroke-width="1.5"/>
+<text x="559" y="593" font-size="21" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">1</text>
+<rect x="605" y="564" width="78" height="42" rx="0" fill="#f0f3f7" stroke="#d9e0e9" stroke-width="1.5"/>
+<text x="644" y="593" font-size="21" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">1</text>
+<text x="735" y="588" font-size="23" font-weight="bold" fill="#233047" text-anchor="start">Candidate ranks [1, 5)</text>
+<text x="735" y="618" font-size="19" font-weight="normal" fill="#586579" text-anchor="start">Test eligibility inside the window.</text>
+</g></svg>

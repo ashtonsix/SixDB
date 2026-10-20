@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="510" viewBox="0 0 1280 510" role="img" aria-labelledby="title description">
+<title id="title">Expose a dependency while retaining one version</title>
+<desc id="description">Checkpoint search identifies a sixteen-field local group, which the owner may prefetch before finishing. Numeric binding proposes an endpoint bracket and verifies or repairs it. Metadata, eligibility and backing are one retained version; a hint is not a read grant.</desc>
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L8,4 L0,8" fill="#586579"/></marker></defs>
+<rect width="1280" height="100%" fill="white"/>
+<g font-family="Arial, Helvetica, sans-serif" fill="#233047" font-size="21">
+<text x="32" y="42" font-size="26" font-weight="bold" fill="#233047" text-anchor="start">Expose the next dependency; retain one data version</text>
+<text x="32" y="82" font-size="20" font-weight="normal" fill="#586579" text-anchor="start">Ready arithmetic stays inline. The caller decides whether an unresolved read warrants a Loom wait.</text>
+<text x="32" y="164" font-size="20" font-weight="bold" fill="#233047" text-anchor="start">Checkpointed source</text>
+<rect x="275" y="126" width="230" height="88" rx="6" fill="#98c9f3" stroke="#d9e0e9" stroke-width="1.5"/>
+<text x="390.0" y="158" font-size="20" font-weight="bold" fill="#233047" text-anchor="middle">prepare</text>
+<text x="390.0" y="187" font-size="16" font-weight="normal" fill="#233047" text-anchor="middle">search checkpoints</text>
+<rect x="540" y="126" width="190" height="88" rx="6" fill="#f0f3f7" stroke="#d9e0e9" stroke-width="1.5"/>
+<text x="635.0" y="158" font-size="20" font-weight="bold" fill="#233047" text-anchor="middle">local_window</text>
+<text x="635.0" y="187" font-size="16" font-weight="normal" fill="#233047" text-anchor="middle">16 local fields</text>
+<rect x="765" y="126" width="190" height="88" rx="6" fill="#ffdb79" stroke="#d9e0e9" stroke-width="1.5"/>
+<text x="860.0" y="158" font-size="20" font-weight="bold" fill="#233047" text-anchor="middle">caller policy</text>
+<text x="860.0" y="187" font-size="16" font-weight="normal" fill="#233047" text-anchor="middle">prefetch / optional wait</text>
+<rect x="990" y="126" width="258" height="88" rx="6" fill="#a9e8a2" stroke="#d9e0e9" stroke-width="1.5"/>
+<text x="1119.0" y="158" font-size="20" font-weight="bold" fill="#233047" text-anchor="middle">finish</text>
+<text x="1119.0" y="187" font-size="16" font-weight="normal" fill="#233047" text-anchor="middle">compare / prefix + select</text>
+<path d="M508,170 H535" fill="none" stroke="#586579" stroke-width="1.8" marker-end="url(#arrow)"/>
+<path d="M733,170 H760" fill="none" stroke="#586579" stroke-width="1.8" marker-end="url(#arrow)"/>
+<path d="M958,170 H985" fill="none" stroke="#586579" stroke-width="1.8" marker-end="url(#arrow)"/>
+<text x="32" y="300" font-size="20" font-weight="bold" fill="#233047" text-anchor="start">Bound numeric source</text>
+<rect x="275" y="262" width="230" height="88" rx="6" fill="#98c9f3" stroke="#d9e0e9" stroke-width="1.5"/>
+<text x="390.0" y="294" font-size="20" font-weight="bold" fill="#233047" text-anchor="middle">prepare</text>
+<text x="390.0" y="323" font-size="16" font-weight="normal" fill="#233047" text-anchor="middle">propose bracket</text>
+<rect x="540" y="262" width="190" height="88" rx="6" fill="#f0f3f7" stroke="#d9e0e9" stroke-width="1.5"/>
+<text x="635.0" y="294" font-size="20" font-weight="bold" fill="#233047" text-anchor="middle">local_window</text>
+<text x="635.0" y="323" font-size="16" font-weight="normal" fill="#233047" text-anchor="middle">endpoint bracket</text>
+<rect x="765" y="262" width="190" height="88" rx="6" fill="#ffdb79" stroke="#d9e0e9" stroke-width="1.5"/>
+<text x="860.0" y="294" font-size="20" font-weight="bold" fill="#233047" text-anchor="middle">caller policy</text>
+<text x="860.0" y="323" font-size="16" font-weight="normal" fill="#233047" text-anchor="middle">prefetch / optional wait</text>
+<rect x="990" y="262" width="258" height="88" rx="6" fill="#a9e8a2" stroke="#d9e0e9" stroke-width="1.5"/>
+<text x="1119.0" y="294" font-size="20" font-weight="bold" fill="#233047" text-anchor="middle">finish</text>
+<text x="1119.0" y="323" font-size="16" font-weight="normal" fill="#233047" text-anchor="middle">verify; correct if needed</text>
+<path d="M508,306 H535" fill="none" stroke="#586579" stroke-width="1.8" marker-end="url(#arrow)"/>
+<path d="M733,306 H760" fill="none" stroke="#586579" stroke-width="1.8" marker-end="url(#arrow)"/>
+<path d="M958,306 H985" fill="none" stroke="#586579" stroke-width="1.8" marker-end="url(#arrow)"/>
+<rect x="32" y="385" width="1216" height="58" rx="6" fill="#f0f3f7" stroke="#d9e0e9" stroke-width="1.5"/>
+<text x="640" y="421" font-size="21" font-weight="bold" fill="#233047" text-anchor="middle">One retained version: boundaries + eligibility + backing + derived search state</text>
+<text x="32" y="469" font-size="18" font-weight="normal" fill="#586579" text-anchor="start">The hint window is not the complete protection footprint. Finishing may need selection or bracket repair.</text>
+</g></svg>

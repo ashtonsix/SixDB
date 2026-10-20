@@ -1,201 +1,181 @@
 # Using Boundlist
 
-Boundlist searches ordered boundaries and manages reservation metadata without
-owning the corresponding payload. A directory can use it to route a key or find
-the first and last children whose occupied ranges overlap a query. StreamPack
-uses its reservation format to locate variable-length byte values.
+Use Boundlist to route a point or bound the ranks that overlap a range. Supply existing
+ordered boundaries for an index, or bind the curated sidecar when you want compact,
+mutable subdivision metadata. Use StreamPack when those subdivisions contain
+variable-length byte values. Link `ikea::boundlist` and include `<ikea/boundlist.h>`;
+the [reference](reference.md) owns exact storage and lifetime rules.
 
-Link `ikea::boundlist` and include `<ikea/boundlist.h>`. Start with the
-[ordinary example](../../examples/boundlist/ordinary.cpp) and
-[composition example](../../examples/boundlist/composition.cpp).
-The [reference](reference.md) defines ordering, population and lifetime precisely.
-The [search qualification](../../../workbench/spikes/boundlist/GRADUATION.md)
-and [geometry/value ownership assessment](../../../workbench/spikes/boundlist/OWNERSHIP.md)
-keep performance evidence and the reasons for the chosen seams.
+## Route existing boundaries
 
-## Route a point or range
-
-A source borrows ordered endpoints and supplies its assigned count. Searches
-return a rank, with `source.size()` meaning no answer. The count includes empty
-and retired ranks; eligibility is a separate fact.
+For unique keys with exact occupied child maxima, start with one lower-bound search.
+Equal maxima and duplicate keys remain valid; use a range query when the answer can span
+several children.
 
 ```cpp
 namespace bl = ikea::boundlist;
-const bl::direct_source maxima{maximum_keys.data(), unsigned(maximum_keys.size())};
-const auto child = bl::lower_bound(maxima, key); // first maximum >= key
+const bl::direct_source maxima{max_values.data(), unsigned(max_values.size())};
+const auto rank = bl::lower_bound(maxima, key); // first maximum >= key
+if (rank != maxima.size()) consume_child(rank);
 ```
 
-For unique keys and exact child maxima, this single boundary search is the
-usual routing operation. An absent key can still route to a child: the owner
-checks the records there. Do not search both minima and maxima for this case.
-`upper_bound(source, key)` instead finds the first endpoint strictly greater
-than the key. Duplicates do not add work to the unique-key path.
+`size()` is the absent sentinel. `upper_bound` selects the first endpoint strictly
+greater than the query. Native arrays can be unaligned when their declared bytes are
+readable. Wider or signed queries are classified before narrowing. A source can instead
+borrow an already-bound SeriesPack/TuplePack decoder: implement `size()` and ordered
+`at(rank)`, keeping decoding and schema preparation outside the probe loop. Do not
+decode a temporary endpoint array merely to use the search interface. Custom comparison
+domains need no integer conversion.
 
-For range overlap, supply independently ordered **occupied minima and maxima**
-with matching count and population:
+To find the first and last children potentially overlapping `[low,high)`, supply
+matching ordered occupied minima and maxima:
 
 ```cpp
-const bl::direct_source minima{minimum_keys.data(), unsigned(minimum_keys.size())};
-const auto children = bl::overlap(maxima, minima, bl::query_range{low, high});
-for (unsigned r = children.first; r != children.limit; ++r) {
-    // Check eligibility if there are holes, then filter records in this child.
-}
+const bl::direct_source minima{min_values.data(), unsigned(min_values.size())};
+const auto window = bl::overlap(maxima, minima, bl::query_range{low, high});
+for (unsigned r = window.first; r < window.limit; ++r)
+    if (eligible(r)) scan_child(r, low, high);
 ```
 
-The default query is `[low, high)`. Set `low_closed` and `high_closed` for other
-endpoint policies. The result is `[first, limit)`, or `{count, count}` when empty.
-Internal holes remain holes; occupied extrema can enclose local gaps. Equal
-minima/maxima describe a populated singleton, not an empty child.
+Attach the same `population` through `populated_source` when Boundlist should trim
+ineligible ranks at the edges. It does not remove internal holes from the result.
+Singleton bounds can contain keys; equal adjacent physical ends instead describe a
+zero-size interval. The [range diagram](reference.md#points-ranges-and-eligibility)
+shows that distinction.
 
-Use `populated_source{source, population{bytes}}` when a bitset identifies
-eligible ranks. A set bit normally means eligible; `inverted = true` accepts a
-tombstone bitmap. Boundary calls skip ineligible ranks; overlap trims the result's
-edges. The bitmap needs exactly `ceil(count/8)` readable bytes, without word padding.
+## Pick a fast search path
 
-## Choose storage without changing the search
-
-| Source | Useful when | Placement and execution |
+| Consumer | Starting choice | What to measure |
 | --- | --- | --- |
-| `direct_source<T>` | Endpoints are already native, or the domain has an order but no useful delta encoding | Borrowed pointer/count. Unsigned native lanes use conditional-select bisection and an explicit SIMD convergence window. Other ordered types use ordinary bisection. |
-| `width_source<W, Point>` | Ordered positions have narrow nonnegative deltas | W is u8/u16; one group-start checkpoint per 16 widths, including the origin. Point can be u8/u16/u32/u64. Each width group is fully initialized/readable. |
-| A custom source | Endpoints are packed, derived, or have another ordered domain | Supply `unsigned size()` and `at(rank)`. Bind a packed decoder once; compare directly without making a decoded array. Optional native boundary/phase entries can preserve a specialized kernel. |
-| `sidecar::view` or its typed access | Mutable reservations need R, optional U and optional tombstones | The curated 256-rank Direct/Width format described below. The same ordinary boundary calls work on it. |
+| A few point/range queries | Ordinary lower/upper/overlap calls | Complete child/value consumption, not only the returned rank. |
+| Small hot native endpoint arrays | Compare default against `author::scan_source<T>` | Dependent latency and independent throughput; scans can lose as lists grow or queries qualify early. |
+| Repeated queries over a large immutable numeric source | Cache `author::bind_search(direct_source)` | Binding cost and reuse count, including skew/duplicates. |
+| Several independent native queries | `author::lower_bounds` / `upper_bounds` over arrays | Full query preparation and selected children; these interleave unresolved probes. |
+| Checkpoints available, local group cold | Prepared local phase, optionally scheduled through Loom | Frame/refill/drain cost and actual unresolved reads. |
+| Consecutive ranks | Carried range walk or native `read16` | Avoid reconstructing each local prefix separately. |
 
-Admit `size() <= maximum_count` before converting a wider container count to
-unsigned at binding. Queries outside an unsigned source's lane domain are classified before narrowing.
-A u16 source can therefore accept a u64 query without wrapping it into the list.
-The generic ordered-source contract has no 64-bit key ceiling. Each source has
-unsigned local ranks; partition a directory that needs wider outer indices.
-
-Include `<ikea/boundlist/author/search.h>` for measured execution alternatives.
-`author::scan_source<T>` substitutes a four-accumulator SIMD scan for a small hot
-native list. It supports u16/u32/u64 and admits at most 65535 ranks. Use ordinary
-`lower_bound`/`upper_bound` on it; choose at binding rather than inside each query.
-A full scan's predictable work can help a hot list but reads the whole list.
-It is not the default for cold or larger directories.
-
-For repeated searches of an unchanged native numeric list, prepare a search
-binding once:
+The default combines conditional-select narrowing with explicit SIMD convergence. Opt-in
+scans keep the ordinary result semantics. Numeric bindings can retain prediction state
+where their checks find it useful; exact repair handles skew and duplicates. The
+algorithm has no caller-selected lerp/shotgun/bisection enum. Do not recreate a private
+algorithm menu around every call.
 
 ```cpp
-const auto searched_maxima = bl::author::bind_search(maxima);
-const auto child = bl::lower_bound(searched_maxima, key);
+#include <ikea/boundlist/author/search.h>
+const auto searched = bl::author::bind_search(maxima); // once per coherent version
+const auto rank = bl::lower_bound(searched, key);
+const auto ranks = bl::author::lower_bounds(
+    std::array{searched, searched}, std::array{key_a, key_b});
 ```
 
-The binding privately chooses ordinary search or a checked interpolation bracket
-from count and sampled geometry. It caches a reciprocal, so a selected query
-does not divide. Both bracket edges are checked; an inaccurate prediction falls
-back to bisection, preserving exact lower/upper-bound answers with duplicates.
-Small or strongly irregular lists retain ordinary search. The same binding works
-in `overlap` and population composition; it adds no stored-byte encoding.
-Rebuild it after **any endpoint, count or placement change**. It is derived state
-for one coherent version, not a live view of later mutations. Keep source setup
-outside the repeated query loop and account for its cost when versions are short
-lived. A binding uses 40 bytes for u16/u32 and 48 for u64 on supported platforms.
+Rebuild derived bindings after endpoint/count/placement changes. Keeping the pointer
+unchanged does not keep a prediction model valid. Bind small/one-shot sources directly
+when setup cannot be amortized. Measure the actual source shape; a short SIMD scan can
+beat even a good interpolation estimate.
 
-Use that preparation primarily for repeated point queries on larger regular
-lists. Keep ordinary sources for small lists and long duplicate runs. Complete
-two-extrema consumers have a different crossover: the qualified N4096 u32 range
-consumer improves on NEON but loses several ns on AVX-512. A prepared binding is
-not a blanket replacement for every endpoint source. The
-[scorecard](../../../workbench/spikes/boundlist/evidence/graduation/scorecard.md)
-keeps those cases beside the wins, including setup cost and descriptor bytes.
+## Store compact subdivision geometry
 
-`author::lower_bounds(sources, queries)` and `upper_bounds` interleave native
-probes for a fixed-size array of direct sources or prepared search bindings. They preserve query
-order and include domain preparation. This requires independent queries; it
-does not accelerate a single dependent traversal. The production comparison
-keeps the complete eight-query consumer beside eight independently fused calls.
+Choose semantic omissions first, then a codec. A fixed size stores no ends or sizes.
+`immortal` removes tombstones. Otherwise choose:
 
-## Split a cold read at a real dependency
+- **Absolute Ends** for a short point path or direct endpoint comparisons,
+  especially when the whole extent already fits a narrow carrier.
+- **Sizes** when individual sizes are narrower than local ends, size-only work
+  matters, or sizes change frequently.
+- **Relative Ends** when local ends fit the same carrier as sizes but global ends
+  are wider, and point/inverse reads matter.
 
-A Width source can route through available checkpoints before fetching its local
-width group. Ordinary calls inline both steps. For a caller that already owns a
-Loom operation, prepare the same search and retain the result across a wait:
+These are workload choices, not a universal ranking. Absolute Ends reserves its whole
+end directory up front; checkpointed formats grow their local-field groups with
+occupancy. Relative Ends can widen at a carrier boundary: M=4095 permits u16 local ends,
+while M=4096 can require u32. Check the schema's independent extent bound before paying
+that widening. Keep the existing Sizes default unless your consumer earns a different
+choice in complete measurements.
 
 ```cpp
+namespace sc = bl::sidecar;
+const auto format = sc::layout::prepare({
+    .family = sc::geometry::relative_ends,
+    .maximum = 4095, .extent_limit = 1'048'320});
+assert(format);
+// Owner supplies disjoint, sufficiently sized and aligned windows.
+auto source = sc::view::bind(*format, {directory, lengths, control});
+assert(source);
+ikea::source_write_journal effects{records};
+assert(sc::initialize(*source, effects));
+assert(sc::append(*source, 5, effects));
+assert(sc::append(*source, 0, effects));
+assert(sc::append(*source, 8, effects));
+assert(sc::reverse(*source, 5)->rank == 2); // rank 1 owns no positions
+```
+
+Keep `format` and the named `source` stable while accesses/effects borrow them. Use
+`directory_bytes()`, `lengths_bytes(assigned)`, `control_bytes()` and
+`lengths_alignment()` for physical admission. Grow initialized groups under one fixed
+schema; changing allocation size does not change carriers. Bind admits placement,
+`validate` admits external contents, and `initialize` constructs new empty content. Do
+not repeatedly validate an unchanged admitted block in a hot loop. The [ordinary
+example](../../examples/boundlist/ordinary.cpp) is executable and includes retirement,
+overlap and source-qualified effects.
+
+## Fuse geometry with the consumer
+
+Dispatch around a useful operation, not each slot:
+
+```cpp
+sc::author::dispatch(*source, [&](auto a) {
+    // Ordinary admission already proved this rank run.
+    a.range(first, count, [&](unsigned rank, sc::location p) {
+        consume_child(rank, p.offset, p.size);
+    });
+});
+```
+
+A range carries the preceding end or position. For native consumers,
+`sidecar::native::read16(a,group)` returns offsets/sizes plus a live mask; keep its
+vectors in the fused sink or scoped chain instead of materializing a stack array. One
+group may be a partial final G16; its inactive lanes are masked. Point consumers that
+only need a start should use `start`, avoiding an unnecessary current-end/size read.
+StreamPack's start+U path follows that rule.
+
+`author::encoder` is temporary computation for an admitted sequential rewrite. It
+carries the new position and local end, emits caller-chosen sizes/checkpoints, and
+chooses no sorting, movement, count or retirement policy. A consumer that rewrites the
+same storage must capture original boundaries before overwriting them; the shared
+original-geometry walker does this. StreamPack composes these bodies for its value
+packing and transfer. Do not build a second reservation manager or allocator around
+them.
+
+For numeric edits, choose the intended law: `set_boundary` preserves later ends;
+`resize` translates them. The owner moves or repairs corresponding data/children at the
+same publication cut. Inserting/deleting middle ranks or sorting produces a new stream
+and explicit remap. Source-qualified effects describe issued bytes, including preserving
+vector stores; they are not MVCC protection by themselves.
+
+## Stage only a useful dependency
+
+Checkpointed deltas and relative ends expose a local group through a prepared phase.
+This example uses deltas with a nonzero 64-bit origin:
+
+```cpp
+const bl::delta_source<std::uint8_t, std::uint64_t> bounds{
+    sizes.data(), checkpoints.data(), count, 16, extent};
 const auto pending = bl::author::prepare_lower_bound(bounds, key);
-const auto next_bytes = pending.local_window();
-// Owner may hint these bytes and yield. Retain coherent source and backing.
+if (pending.has_local_read()) {
+    hint(pending.local_window());
+    // Caller may yield through Loom, retaining the coherent version.
+}
 const auto rank = pending.finish();
 ```
 
-The raw Width phase is 16 bytes: a selected width pointer, first rank and local
-threshold. The global point/checkpoint width no longer participates in finishing.
-A population wrapper additionally borrows the named source for final selection.
-Keep that source and its format stable until `finish()`. Raw geometric phases
-snapshot their routing; they borrow backing bytes, not the source object or
-query. All completion dependencies must describe the same retained version.
-The author factory conservatively requires a named source because population or
-custom phases can borrow it.
+Ready work stays inline; an Ikea phase does not enqueue itself. Hints neither make bytes
+readable nor pin their version. Retain boundaries, eligibility, backing and any derived
+binding through completion. Population selection borrows the original named source. The
+[composition example](../../examples/boundlist/composition.cpp) also shows packed
+endpoints, reusable numeric bindings and independent queries. Use actual Loom Ring
+comparisons before introducing a wait on a hot group.
 
-`local_window()` is a useful next hint target, **not** a read grant or a promise
-that finishing will not miss. Eligibility may also be read on completion.
-Raw direct-source preparation completes its search immediately and has no local
-window. A prepared numeric binding defers endpoint reads: its phase points to
-the proposed bracket, or the full array when ordinary search was selected.
-Correction may read outside the proposed bracket. The owner chooses whether splitting pays, supplies actual read
-coverage, and enters Loom outside Boundlist.
-
-The typed reservation-sidecar access also exposes the Width phase, so a composed
-StreamPack consumer can prepare from its existing typed access. Dispatch the
-whole operation once. Its admitted directory proves all sixteen checkpoints
-readable, allowing a fixed SIMD selector with inactive results masked. A generic
-`width_source` instead promises only its assigned checkpoints; it does not inherit
-that padded-read requirement.
-When using the free preparation factory on a typed access, keep that access
-alive through population selection. Returning its borrowed phase from a dispatch
-callback would outlive the access. The access's member `prepare<edge>` returns
-only geometric routing; its snapshot does not perform eligibility selection.
-
-## Manage reservation metadata
-
-`boundlist::sidecar` stores reservation geometry and population for up to 256
-ranks, with reservations of 0–65535 units, a schema maximum and an independent
-total limit. It has no value length or payload interpretation. This is a curated
-physical recipe, not a ceiling on generic Boundlist coordinates.
-
-Prepare `sidecar::layout` once, then bind a **named** `sidecar::view` to three
-disjoint windows: directory, lengths and control. Binding proves placement;
-initialize fresh bytes or validate recovered contents before using them.
-
-- **Direct** stores exclusive reservation ends. Random location uses the current
-  and preceding ends; ordered traversal carries the preceding end.
-- **Width** stores one group-start checkpoint per sixteen reservation widths.
-  There is no terminal checkpoint. The length region grows in complete G16 groups.
-- `immortal` omits tombstones; `fixed_reservation` derives geometry. Zero geometry
-  stores neither widths nor endpoints. Keep facts the schema can guarantee.
-
-`append(dst, reservation, effects)` assigns the next rank. `retire` marks a rank
-without changing its boundaries. `locate` returns its offset and reservation,
-while `range` carries the preceding boundary through live ranks. `reverse` maps
-a physical position to its reservation owner **including tombstones**; zero
-reservations own no positions. `sidecar::overlap(low, high)` finds the first/last
-positive reservations overlapping `[low, high)`, optionally excluding retirement.
-Logical occupied-extrema overlap is the root `boundlist::overlap` operation.
-
-Boundlist does not compact storage, choose replacement reservations, move
-children/values or repair rank holders. StreamPack owns value packing and
-selected value transfer. Other owners choose their own geometry-rebuild policy;
-use initialized destination geometry and append chosen reservations. Do not
-apply storage compaction semantics to a keyspace merely because both have bounds.
-
-For fused consumers, dispatch once around the complete operation and retain the
-typed `sidecar::author::access`. It names the source and shared immutable format;
-`rebind` requires that exact layout identity. Native `read16` yields offsets,
-reservations and a live mask. Its scalar chain carrier likewise carries R.
-StreamPack owns its separate value packet, whose second field is U.
-
-Author geometry writes expose small origin/width/slot and count/extent kernels
-for an admitted enclosing rewrite. These do not choose new widths or establish
-coherent publication. The typed `slots(first, count, original_start, sink)`
-traversal includes retired and zero-width ranks, passing rank, original offset
-and R. It captures each original reservation before calling the sink, so a
-consumer can move data and rewrite the already-read slot in the same pass.
-Keep unread geometry, count and format stable throughout that traversal.
-
-Effects identify the actual named source and issued byte ranges. They do not
-select a version or grant read protection. A StreamPack composition retains one
-coherent source and maps geometric effects into its own planes; it does not
-publish on a temporary metadata projection. See the [reference](reference.md)
-for exact storage, tail and lifetime requirements.
+For payload growth, compaction and retained readers, follow [StreamPack
+usage](../streampack/usage.md) and the [owner integration guide](../integration.md). Old
+scopes need the old coherent geometry and data; aliases of an allocation handle do not
+create that retention.

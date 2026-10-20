@@ -169,44 +169,46 @@ dependency on the curated reservation schema.
 | Prepared local phases, numeric search bindings, opt-in scans and interleaved native queries | `boundlist/author/search.h` |
 | Explicit native comparison, prefix and SIMD bodies | `boundlist/detail/{search,prefix,simd}.h` |
 | Derived numeric prediction state and cold preparation | `boundlist/detail/prediction.h`; `src/boundlist/search.cpp` |
-| Curated reservation schema and portable encoding | `boundlist/description.h`; `src/boundlist/description.cpp` |
-| Payload-free metadata admission and validation | `boundlist/view.h`; `src/boundlist/view.cpp` |
-| Typed metadata geometry, physical reverse, carried traversal and issued stores | `boundlist/author/{read,write}.h` |
-| Checked metadata commands and selected transfer | `boundlist/{read,write,transfer}.h` |
-| Metadata native packets and CPS carriers | `boundlist/author/{native,chain}.h` |
-| StreamPack payload windows and admission | `streampack/view.h`; `src/streampack/view.cpp` |
-| StreamPack payload reads, writes and coordinated transfer | `streampack/{read,write,transfer}.h`; `streampack/author/{read,write}.h` |
+| Curated geometry schema and portable encoding | `boundlist/description.h`; `src/boundlist/description.cpp` |
+| Payload-free metadata admission and validation | `boundlist/view.h`; `src/boundlist/view.cpp`; `boundlist/detail/validation.h` |
+| Typed geometry, physical reverse, original-coordinate traversal and encoding | `boundlist/author/{read,write}.h` |
+| Checked numeric geometry commands | `boundlist/{read,write}.h` |
+| Geometry native packets and CPS carriers | `boundlist/author/{native,chain}.h` |
+| StreamPack schema and U placement | `streampack/description.h`; `src/streampack/description.cpp` |
+| StreamPack payload admission and complete value validation | `streampack/view.h`; `src/streampack/view.cpp` |
+| Value reads, mutation, packing and selected transfer | `streampack/{read,write,transfer}.h`; `streampack/author/{read,write}.h` |
 
-StreamPack keeps its original include paths and schema names as aliases. Its typed
-access inherits the shared metadata access without another stored descriptor;
-both retain two pointers: actual named source and shared immutable layout.
-`rebind` changes the source under the same layout identity. Metadata effects map
-through one StreamPack hook to planes 1–3; payload remains plane 0. Effects name
-the original source, never a temporary flattened sidecar projection.
+Boundlist owns geometry and eligibility; StreamPack owns U and byte-value
+semantics. Their typed accesses retain only the original named source and shared
+immutable layout. StreamPack inherits geometry without another binding, allocation
+or stored descriptor. `rebind` borrows a new source under that same layout identity.
+Metadata effects map through one value hook to planes 1–3; payload stays plane 0.
+Effects never name a temporary projected sidecar.
 
-StreamPack has one compiled TU, for payload placement admission and validation.
-Schema preparation and metadata validation compile once in Boundlist. Private
-prefix, SIMD and byte helpers live only under Boundlist; public StreamPack native
-and chain entry points remain thin aliases. A shared schema switch constructs the
-appropriate typed access without projecting or copying its named source.
+Geometry preparation shares compact size facts with the value layout. Cold
+schema/placement/content validation stays in independent compiled TUs. Private
+prefix and search instructions live under Boundlist; StreamPack projects native
+U/R directly into the same group sink. A manually chosen typed value access must
+match its independent `used_type` as well as its geometry carriers; ordinary
+`dispatch` selects all of them once around the useful operation.
 
-One law owns metadata append, pack traversal and content validation. StreamPack
-adds payload movement at that law's admitted callback, capturing count/extent
-before payload stores so alias uncertainty cannot insert dependent reloads.
-This boundary is bounded and infallible; the owner still coordinates versioning
-and visibility. Standalone metadata packing requires the same owner coordination
-with associated children/data.
+One original-geometry walker captures coordinates before a sink rewrites them.
+One sequential geometry encoder carries new global/local positions without
+per-slot checkpoint reloads or count stores. StreamPack's temporary value encoder
+adds payload/U/retirement stores and finishes count/extent once per admitted run.
+Packing and transfer are value operations, with owner-selected movement and rank
+policy; there is no parallel Boundlist compaction/transfer implementation.
 
-Dispatch a useful whole operation before its inner loop. Range traversal carries
-geometry; native group decoding feeds the consumer inline, without a compulsory
-stack packet. A Width search's prepared phase removes global coordinate width
-from the local finishing kernel. Its window is a hint target, not a complete read
-or retention grant. Tests and complete-consumer assembly must catch outlined
-shared helpers as well as native instruction regressions.
+Dispatch before the inner loop. Native decoding feeds its sink inline rather
+than handing off an obligatory stack packet. Checkpointed prepared searches drop
+global coordinate width from local completion; u8/u16/u32 Relative Ends handoffs
+fit 16 B. Their windows are hints, not complete protection grants. Keep the source,
+eligibility and backing coherent through completion and inspect complete consumers
+for aggregate spills, outlined helpers and repeated binding.
 The [Boundlist checks](../test/boundlist/README.md),
 [StreamPack checks](../test/streampack/README.md) and
-[implementation report](../../workbench/spikes/boundlist/GRADUATION.md) cover these
-boundaries. Allocation, publication and scheduling stay with callers.
+[qualification evidence](../../workbench/spikes/boundlist/README.md) cover these
+boundaries. Allocation, publication and scheduling remain caller responsibilities.
 
 ## Hashtable source boundaries
 

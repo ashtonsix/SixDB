@@ -3,7 +3,7 @@
 `ikea_streampack_check` compares actual value histories with independent vectors,
 checks each reserved byte's reverse owner, replays damage into old byte snapshots,
 and verifies sparse/dense/range/native reads plus transfer and packing. The fixed
-256-slot capacity, grouped/separated lengths, Direct/Width, empty/fixed values and independent
+256-slot capacity, grouped/separated lengths, Absolute Ends/Sizes/Relative Ends, empty/fixed values and independent
 omitted-fact combinations are covered.
 
 `ikea_streampack_boundaries_check` places directory, partial-group lengths and
@@ -21,12 +21,19 @@ maximal bounds, noncanonical/legacy rejection and a protected-page boundary. A f
 last tombstone and refusal of the next append; oversized transfer also preserves
 bytes and effects.
 
-Both targets and executable guides disable both compiler vectorizers. The
+`ikea_streampack_encodings_check` adds 1,056 cross-encoding histories with
+independent R/U/end models, plus fixed/full/immortal omissions, tight extent
+bounds, mixed carrier widths, wide-origin relative sources and live phase-state
+checks. It exercises literal version 2 values converted to version 3 without
+altering the original bytes, along with exact descriptor round trips.
+
+All three targets and executable guides disable both compiler vectorizers. The
 composition guide instantiates the scalar and native register carriers through
 Ikea's real `preserve_none`/`musttail` chain. Run `ikea_validate`, or build these
-four targets and use `ctest --test-dir BUILD -R '^ikea_.*streampack'`.
+targets and use `ctest --test-dir BUILD -R '^ikea_.*streampack'`.
 Native worker checks, sanitizer runs, consumer assembly/performance comparisons
 and owner integration evidence belong to the [original implementation study](../../../workbench/spikes/streampack/README.md)
 and the [Boundlist extraction qualification](../../../workbench/spikes/boundlist/GRADUATION.md).
-The [geometry/value ownership follow-up](../../../workbench/spikes/boundlist/OWNERSHIP.md)
-qualifies the current optional U companion and StreamPack-owned packing boundary.
+The [portfolio qualification](../../../workbench/spikes/boundlist/PORTFOLIO.md)
+records the current codecs, independent U carriers, StreamPack-owned packing and
+actual shared-prefix/tail-reclamation tests.
