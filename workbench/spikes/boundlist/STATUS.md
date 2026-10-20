@@ -1,8 +1,9 @@
 # Boundlist close-out
 
 This records the closed prototype study. Subsequent authorized production work
-and qualification are tracked in [IMPLEMENTATION.md](IMPLEMENTATION.md) and
-[GRADUATION.md](GRADUATION.md).
+and qualification are tracked in [IMPLEMENTATION.md](IMPLEMENTATION.md),
+[GRADUATION.md](GRADUATION.md) and the current
+[geometry/value ownership assessment](OWNERSHIP.md).
 
 Authorized outcome: run the spike in main without commits and make a simple
 recommendation on what should promote to Ikea. At this prototype close, the recommendation and selected native evidence were

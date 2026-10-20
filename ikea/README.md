@@ -16,7 +16,7 @@ provide the concrete calls and maintained examples.
 | TuplePack | Fixed-layout units containing byte-contained unsigned codes; ordered projections with caller-chosen packet grouping | [Use](docs/tuplepack/usage.md) · [Compose](docs/tuplepack/extending.md) · [Reference](docs/tuplepack/reference.md) |
 | Bec256 | Headless 256-position bitsets; caller retains population, exact body length and location | [Use and compose](docs/bec256/usage.md) · [Representation](docs/bec256/representation.md) |
 | Boundlist | Ordered-boundary search and payload-free reservation metadata | [Use and compose](docs/boundlist/usage.md) · [Reference](docs/boundlist/reference.md) |
-| StreamPack | Variable-length byte values; Boundlist reservation metadata and coherent count/extent | [Use and compose](docs/streampack/usage.md) · [Reference](docs/streampack/reference.md) |
+| StreamPack | Variable-length byte values; optional used lengths and coordinated packing over Boundlist geometry | [Use and compose](docs/streampack/usage.md) · [Reference](docs/streampack/reference.md) |
 | Hashtable | Compact integer-key sets/maps, Swiss overflow, same-seed growth and mutable accumulation | [Usage](docs/hashtable/usage.md) · [Rationale](docs/hashtable/rationale.md) · [Performance and qualification](../workbench/benchmarks/hashtable/README.md) |
 
 [Unsigned filters](docs/filters.md) return position masks directly from SeriesPack

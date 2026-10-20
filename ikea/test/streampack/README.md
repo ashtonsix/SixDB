@@ -28,3 +28,5 @@ four targets and use `ctest --test-dir BUILD -R '^ikea_.*streampack'`.
 Native worker checks, sanitizer runs, consumer assembly/performance comparisons
 and owner integration evidence belong to the [original implementation study](../../../workbench/spikes/streampack/README.md)
 and the [Boundlist extraction qualification](../../../workbench/spikes/boundlist/GRADUATION.md).
+The [geometry/value ownership follow-up](../../../workbench/spikes/boundlist/OWNERSHIP.md)
+qualifies the current optional U companion and StreamPack-owned packing boundary.

@@ -76,6 +76,37 @@ target_compile_options(boundlist_prediction_check PRIVATE -fno-vectorize -fno-sl
 target_link_libraries(boundlist_prediction_check PRIVATE ikea::boundlist)
 add_test(NAME boundlist_prediction_check COMMAND boundlist_prediction_check)
 
+add_executable(boundlist_encoding encoding.cpp)
+sixdb_target(boundlist_encoding)
+target_compile_options(boundlist_encoding PRIVATE -fno-vectorize -fno-slp-vectorize)
+target_link_libraries(boundlist_encoding PRIVATE ikea::boundlist)
+
+add_executable(boundlist_ownership_packets ownership-packets.cpp)
+sixdb_target(boundlist_ownership_packets)
+target_compile_options(boundlist_ownership_packets PRIVATE -fno-vectorize -fno-slp-vectorize)
+target_link_libraries(boundlist_ownership_packets PRIVATE ikea::streampack)
+
+# Injected by capture.py from u-control.py; frozen bytes are recovered from Git,
+# not maintained as another implementation in the source tree.
+if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/u-control/revision.txt")
+  add_library(boundlist_u_control STATIC
+    u-control/src/boundlist/description.cpp u-control/src/boundlist/view.cpp
+    u-control/src/boundlist/search.cpp u-control/src/streampack/view.cpp)
+  sixdb_target(boundlist_u_control)
+  target_include_directories(boundlist_u_control BEFORE PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/u-control/include")
+  target_link_libraries(boundlist_u_control PUBLIC ikea_core)
+  foreach(consumer reads mutation packing)
+    add_executable(boundlist_u_before_${consumer} ${consumer}.cpp)
+    sixdb_target(boundlist_u_before_${consumer})
+    target_compile_options(boundlist_u_before_${consumer} PRIVATE -fno-vectorize -fno-slp-vectorize)
+    target_link_libraries(boundlist_u_before_${consumer} PRIVATE boundlist_u_control)
+  endforeach()
+  add_executable(boundlist_u_before_packets ownership-packets.cpp)
+  sixdb_target(boundlist_u_before_packets)
+  target_compile_options(boundlist_u_before_packets PRIVATE -fno-vectorize -fno-slp-vectorize)
+  target_link_libraries(boundlist_u_before_packets PRIVATE boundlist_u_control)
+endif()
+
 add_executable(boundlist_cold_compact cold.cpp)
 sixdb_target(boundlist_cold_compact)
 target_compile_options(boundlist_cold_compact PRIVATE -fno-vectorize -fno-slp-vectorize)

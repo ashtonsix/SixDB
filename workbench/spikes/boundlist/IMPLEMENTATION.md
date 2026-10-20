@@ -1,6 +1,10 @@
-# Boundlist implementation completion record
+# Original Boundlist extraction completion record
 
-The Boundlist graduation and StreamPack cleanup are complete. [Usage](../../../ikea/docs/boundlist/usage.md),
+This records the original extraction. The [ownership follow-up](OWNERSHIP.md)
+supersedes its U-bearing schema/packet and compaction boundary; the original
+qualification below remains historical evidence.
+
+The Boundlist graduation and StreamPack cleanup were completed. [Usage](../../../ikea/docs/boundlist/usage.md),
 [reference](../../../ikea/docs/boundlist/reference.md),
 [implementation report](GRADUATION.md) and the retained
 [search](evidence/graduation/scorecard.md) / [parity](evidence/parity/scorecard.md)

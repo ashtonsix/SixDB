@@ -1,10 +1,9 @@
 # StreamPack reference
 
-[Boundlist](../boundlist/reference.md) owns the reservation metadata types and
-kernels below StreamPack. StreamPack aliases those schema types and adds the
-payload plane, its admission and coordinated operations. The stored representation
-is shared. Use Boundlist directly for payload-free metadata or ordered-key routing;
-use StreamPack for byte values.
+StreamPack composes [Boundlist geometry](../boundlist/reference.md) with byte
+values and an optional used-length companion. It owns value admission, native
+value packets, mutation, packing and selected transfer. Geometry does not imply
+used length; one StreamPack view binds the complete coherent interpretation.
 
 This reference describes the native Direct/Width implementation. Execution
 is available for little-endian NEON, AVX2 and AVX-512 targets; the physical byte law
@@ -13,21 +12,40 @@ production recipes.
 
 ## Schema and representation
 
-`description`, `layout`, `geometry`, `placement` and `slot_capacity` alias
-[Boundlist's reservation recipe](../boundlist/reference.md#stored-representation).
-That specification owns Direct/Width, the 256-rank capacity, G16 widths, optional
-U/D, alignment, initialized padding and the eight-byte version-2 schema. There is
-one encoding; StreamPack adds a payload window to those same metadata bytes.
+`geometry` and `slot_capacity` use Boundlist's geometry families and 256-rank
+capacity. StreamPack owns `description`, `layout` and `placement`.
+`description` contains family, R/U placement, maximum,
+block byte limit, optional fixed reservation, full and immortal facts.
 
-| Window / effect plane | Meaning |
+R is reservation, U is used length. `full` omits U and requires value length == R;
+it does not mean an arbitrary shorter value is accepted without recording its
+length. `immortal` omits D, fixed reservations derive geometry, and zero geometry
+needs no R/U. W is one byte for upper bound <=255, otherwise two; fixed R provides
+a tighter bound. O is one/two/four bytes for total limit <=255/<=65535/larger.
+All multibyte fields are little endian.
+
+| Window / effect plane | Stored fields |
 | --- | --- |
-| Payload / 0 | Concatenated, initialized reservations; only the occupied extent is logically assigned. |
-| Directory / 1 | Boundlist directory (standalone plane 0): tombstones and geometry. |
-| Lengths / 2 | Boundlist lengths (standalone plane 1): optional R/U groups. |
-| Control / 3 | Boundlist control (standalone plane 2): count and any stored extent. |
+| Payload / 0 | Initialized concatenated reservations. |
+| Directory / 1 | Optional 32 B tombstones first, then Direct's 256 exclusive ends or Width's sixteen origin checkpoints, O bytes each. Fixed/zero geometry omits boundaries. |
+| Lengths / 2 | Width grouped: 16 R then optional 16 U per group; separated: full-capacity R then U. Direct/fixed: U only. Absent U has no bytes. |
+| Control / 3 | Count u16; variable Width adds u32 extent at byte 2. Direct/fixed derive extent. |
+
+The directory remains full capacity. Lengths grow by initialized complete G16
+groups; inactive R/U tails are zero. Grouped Width requires group-size alignment
+(16/32/64 B), other recipes W-byte alignment. The placement choice has no physical
+R/U interleaving effect when U is absent, and is ignored by Direct/fixed geometry.
+There is no tombstone/checkpoint interleaving or padding switch.
+
+`layout::encode()` preserves the existing eight-byte **version-2** value schema:
+byte 0 has version 2 in bits 5–7, Width bit 0, separated bit 1, full bit 2,
+immortal bit 3 and fixed-present bit 4. Bytes 1–2 hold maximum u16, 3–5 total
+limit u24, 6–7 fixed R u16 (zero when absent). Omission/maximum/limit laws are
+checked at preparation/decode. StreamPack bytes are unchanged by the ownership
+split; Boundlist's standalone geometry-only schema is version 3.
 
 All four supplied windows are disjoint spans, even when they share one allocation.
-Metadata placement follows the linked recipe. The schema's `byte_limit` and the
+Metadata placement follows this value recipe. The schema's `byte_limit` and the
 payload span are independent bounds: writes must fit both. A smaller allocation
 cannot implicitly narrow a shared schema's endpoint/checkpoint fields. Occupied
 extent includes live reservations, retired reservations and slack. The owner

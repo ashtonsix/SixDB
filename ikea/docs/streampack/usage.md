@@ -5,18 +5,21 @@ assigns up to **256** stable ranks; each reservation contains 0–65535 bytes,
 subject to a smaller schema maximum and an independent block byte limit. Live
 empty values have ranks. Retired values keep their reservations until packing.
 
-The payload has no headers. [Boundlist](../boundlist/usage.md) supplies the curated
-reservation metadata: geometry, optional used lengths and optional tombstones.
-StreamPack adds payload admission, reads and coordinated writes on those same
-metadata kernels. Schema preparation belongs to Boundlist; StreamPack retains
-its public schema/view names and stored representation. Ikea allocates nothing,
-acquires no version and does not publish a transaction. The enclosing collection supplies those services through
-[its owner protocol](../integration.md).
+The payload has no headers. [Boundlist](../boundlist/usage.md) supplies geometry
+reads, search and small geometry-write kernels. StreamPack owns value length,
+its optional curated U companion, native value packets and the traversal that
+packs or transfers values. Schema preparation composes those laws once; hot
+operations bind one coherent source and dispatch once. Grouped R/U may still
+share a lengths window: module ownership does not require another allocation,
+Part or per-value lookup. Ikea allocates nothing, selects no version and does
+not publish a transaction; the collection supplies [those services](../integration.md).
 
 The [original qualification](../../../workbench/spikes/streampack/IMPLEMENTATION.md)
 and [Boundlist extraction results](../../../workbench/spikes/boundlist/GRADUATION.md)
 record native correctness, codegen, performance and real owner/scheduler evidence.
-Experimental packed/padded recipes remain in Workbench. The [reference](reference.md) specifies stored bytes, checked
+The [ownership assessment](../../../workbench/spikes/boundlist/OWNERSHIP.md)
+qualifies the current geometry/value split. Experimental packed/padded recipes
+remain in Workbench. The [reference](reference.md) specifies stored bytes, checked
 commands and borrowing. Link `ikea::streampack` and include `<ikea/streampack.h>`.
 
 ## Prepare a schema, bind storage

@@ -1,19 +1,23 @@
 # Boundlist
 
 Boundlist describes ordered subdivisions and maps points or ranges to ranks.
-It separates the metadata currently used by StreamPack from the byte payload,
-so the same search machinery can also route through ordered keyspace partitions.
+It shares reservation geometry with StreamPack, so the same search machinery
+can also route through ordered keyspace partitions. StreamPack owns its used
+lengths and value compaction.
 An equal pair of bounds need not mean an empty keyspace segment: population is
 an independent fact.
 
 Boundlist is implemented in Ikea. The study and graduation ran on
-19–20 October2026. The
+19–20 October 2026. The
 [implementation report](GRADUATION.md) records the source/phase seams and measured
 algorithm choices; [usage](../../../ikea/docs/boundlist/usage.md) teaches the API.
 The prototype algorithm menu and flattened adapter remain research controls.
+The [geometry/value ownership follow-up](OWNERSHIP.md) supersedes the original
+U-bearing sidecar boundary; generic ordered search is unchanged.
 
 | Read next | Purpose |
 | --- | --- |
+| [Ownership follow-up](OWNERSHIP.md) | Current geometry/value boundary and codec comparison |
 | [Implementation](GRADUATION.md) | Production seams, qualification and selected defaults |
 | [Recommendation](RECOMMENDATION.md) | Historical prototype selection before implementation |
 | [Findings](FINDINGS.md) | Absolute latency, reciprocal throughput and memory; correctness and measurement limits |
@@ -75,3 +79,9 @@ writers beside the earlier search and Loom evidence.
 immutable count capture and seven repetitions. The first packing result remains
 in the [parity export](evidence/parity/README.md), together with the reader codegen
 comparison and all individual losing cells.
+
+`ownership-native.sh` and `ownership-workers.json` qualify the geometry/value
+ownership split against recovered old public headers/TUs, using `u-control.py`.
+`encoding.cpp` compares sizes, group-relative ends and Direct, including redundant
+checkpoints, explicit SIMD maintenance and stronger inverse controls. The current
+[ownership assessment](OWNERSHIP.md) records decisions, absolute results and recovery.

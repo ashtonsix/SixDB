@@ -9,8 +9,9 @@ Link `ikea::boundlist` and include `<ikea/boundlist.h>`. Start with the
 [ordinary example](../../examples/boundlist/ordinary.cpp) and
 [composition example](../../examples/boundlist/composition.cpp).
 The [reference](reference.md) defines ordering, population and lifetime precisely.
-The [implementation report](../../../workbench/spikes/boundlist/GRADUATION.md)
-keeps performance evidence and the reasons for the chosen seams.
+The [search qualification](../../../workbench/spikes/boundlist/GRADUATION.md)
+and [geometry/value ownership assessment](../../../workbench/spikes/boundlist/OWNERSHIP.md)
+keep performance evidence and the reasons for the chosen seams.
 
 ## Route a point or range
 
@@ -149,42 +150,52 @@ only geometric routing; its snapshot does not perform eligibility selection.
 
 ## Manage reservation metadata
 
-`boundlist::sidecar` owns the metadata format also used by StreamPack. It stores
-up to 256 ranks and reservations of 0–65535 units, with a schema maximum and an
-independent total byte limit. It requires no payload allocation. This is a
-curated physical recipe, not a ceiling on generic Boundlist coordinates.
+`boundlist::sidecar` stores reservation geometry and population for up to 256
+ranks, with reservations of 0–65535 units, a schema maximum and an independent
+total limit. It has no value length or payload interpretation. This is a curated
+physical recipe, not a ceiling on generic Boundlist coordinates.
 
 Prepare `sidecar::layout` once, then bind a **named** `sidecar::view` to three
-disjoint windows: directory, lengths and control. The layout reports exact sizes
-and lengths alignment. Binding proves placement; initialize fresh bytes or
-validate recovered contents before searching or mutating them.
+disjoint windows: directory, lengths and control. Binding proves placement;
+initialize fresh bytes or validate recovered contents before using them.
 
-- **Direct** stores reservation ends in the directory. Traversal carries the
-  previous end; random access reads it.
-- **Width** stores group-start checkpoints and G16 reservation widths. With U,
-  the default group contains 16 R followed by 16 U; separated placement supports
-  U-only traversal. There is no terminal checkpoint.
-- `full` derives U from R, `immortal` omits tombstones, and `fixed_reservation`
-  derives geometry. Preserve facts the owner can guarantee; do not store fields
-  merely to use a uniform interface.
+- **Direct** stores exclusive reservation ends. Random location uses the current
+  and preceding ends; ordered traversal carries the preceding end.
+- **Width** stores one group-start checkpoint per sixteen reservation widths.
+  There is no terminal checkpoint. The length region grows in complete G16 groups.
+- `immortal` omits tombstones; `fixed_reservation` derives geometry. Zero geometry
+  stores neither widths nor endpoints. Keep facts the schema can guarantee.
 
-`locate` returns offset, used length and reservation for a live rank. `reverse`
-maps a physical offset to its reservation owner **including slack and tombstones**;
-an offset at or beyond extent has no owner. Physical `sidecar::overlap(low, high)`
-finds positive reservations overlapping `[low, high)`, including retired storage
-unless `only_live` is requested. Logical occupied-extrema overlap is the root
-`boundlist::overlap` operation; the two questions have different answers.
+`append(dst, reservation, effects)` assigns the next rank. `retire` marks a rank
+without changing its boundaries. `locate` returns its offset and reservation,
+while `range` carries the preceding boundary through live ranks. `reverse` maps
+a physical position to its reservation owner **including tombstones**; zero
+reservations own no positions. `sidecar::overlap(low, high)` finds the first/last
+positive reservations overlapping `[low, high)`, optionally excluding retirement.
+Logical occupied-extrema overlap is the root `boundlist::overlap` operation.
 
-Checked `initialize`, `append`, `replace`, `retire`, `soft_pack` and selected
-`transfer` mutate metadata and publish source-qualified issued-byte ranges to
-the supplied effects hook. The owner coordinates corresponding payload/children,
-count, placement, retention and publication. In particular, sidecar packing alone
-does not move values. A metadata rewrite becomes visible only with the owner's
-coherent payload/child rewrite. Scratch owners can substitute an infallible hook.
+Boundlist does not compact storage, choose replacement reservations, move
+children/values or repair rank holders. StreamPack owns value packing and
+selected value transfer. Other owners choose their own geometry-rebuild policy;
+use initialized destination geometry and append chosen reservations. Do not
+apply storage compaction semantics to a keyspace merely because both have bounds.
 
-For fused consumers, dispatch once around the useful operation and retain the
-typed `sidecar::author::access`. Its two-pointer state names the actual source
-and shared immutable layout; `rebind` changes the source under the same layout
-identity. Carry geometry through ranges rather than repeating point lookups.
-StreamPack layers payload work on these same metadata kernels and maps effects
-back to its original four-plane source; no temporary sidecar identity is exposed.
+For fused consumers, dispatch once around the complete operation and retain the
+typed `sidecar::author::access`. It names the source and shared immutable format;
+`rebind` requires that exact layout identity. Native `read16` yields offsets,
+reservations and a live mask. Its scalar chain carrier likewise carries R.
+StreamPack owns its separate value packet, whose second field is U.
+
+Author geometry writes expose small origin/width/slot and count/extent kernels
+for an admitted enclosing rewrite. These do not choose new widths or establish
+coherent publication. The typed `slots(first, count, original_start, sink)`
+traversal includes retired and zero-width ranks, passing rank, original offset
+and R. It captures each original reservation before calling the sink, so a
+consumer can move data and rewrite the already-read slot in the same pass.
+Keep unread geometry, count and format stable throughout that traversal.
+
+Effects identify the actual named source and issued byte ranges. They do not
+select a version or grant read protection. A StreamPack composition retains one
+coherent source and maps geometric effects into its own planes; it does not
+publish on a temporary metadata projection. See the [reference](reference.md)
+for exact storage, tail and lifetime requirements.

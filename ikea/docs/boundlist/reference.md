@@ -101,120 +101,108 @@ SIMD convergence; they do not acquire or validate storage per probe.
 
 ## Reservation sidecar
 
-Namespace `boundlist::sidecar` owns the reservation schema, views and typed
-metadata access. StreamPack aliases the schema types; its own view adds payload,
-and its typed access extends the same metadata body. The
-[stored representation](#stored-representation) below defines the version-2
-eight-byte schema, Direct/Width, G16, optional R/U/D and padding. The recipe has
-bounded reservation coordinates; generic ordered sources do not inherit those
-encoding bounds.
+Namespace `boundlist::sidecar` owns a curated reservation-geometry schema,
+views and typed kernels. It has no U, blob-value packet or storage-compaction
+policy. StreamPack composes this geometry with its own optional used-length law.
+Generic ordered sources retain their wider coordinate/count domains.
 
 ### Stored representation
 
-`description` contains family, length placement, maximum reservation, block byte
-limit, optional fixed reservation, full-reservation flag and immortal flag. Every
-sidecar has capacity **256** (`slot_capacity`); capacity is not a schema choice. The
-byte limit is at most 256 × maximum and can be zero. When omitted in aggregate
-construction, it defaults to 256 × maximum. A fixed reservation cannot exceed
-maximum. Values and reservations can both be zero; a retired zero-width slot still
-has a rank and tombstone.
+`description` contains `family`, `maximum`, `extent_limit`, optional
+`fixed_reservation`, and `immortal`. Capacity is **256**; group width is **16**.
+The total limit is at most 256 × maximum and defaults to that product. Fixed
+reservation cannot exceed maximum. A retired zero-width slot retains its rank.
 
-All multibyte fields are little endian. N = 256 and G = 16; let
-W be one byte when the reservation upper bound is ≤255, otherwise two, and O be
-one/two/four bytes for a block byte limit ≤255/≤65535/larger. Fixed reservations
-supply the tighter bound for W. D occupies N/8 bytes when tombstones are present.
-Within D, rank r is bit r%8 of byte r/8; one means retired. Ranks are 0–255;
-count remains u16 to represent both empty and fully assigned blocks without a
-sentinel. Checked rank arguments remain wide enough to reject out-of-range input.
+Fields are little endian. W is one byte for a reservation upper bound <=255,
+otherwise two; a fixed reservation supplies the tighter bound. O is one/two/four
+bytes for total limit <=255/<=65535/larger. The optional D bitmap occupies 32 B:
+bit r%8 of byte r/8 is one for retirement.
 
 | Window / effect plane | Stored fields |
 | --- | --- |
-| Directory / 0 | D first, followed by N exclusive endpoints (Direct) or ceil(N/G) group-start checkpoints (Width), each O bytes. No leading or terminal sentinel. Fixed/zero geometry omits these fields. |
-| Lengths / 1 | Direct: U groups only. Width grouped: 16 R then optional 16 U, repeated. Width separated: full-capacity R plane then a U plane. Fixed geometry: U groups only. Omitted U has no storage. |
-| Control / 2 | Assigned count as u16. Variable Width adds u32 occupied extent immediately at byte 2; Direct and fixed geometry derive extent. |
+| Directory / 0 | D first, then 256 exclusive endpoints (Direct) or sixteen group-start checkpoints (Width), each O bytes. Fixed/zero geometry omits these fields. |
+| Lengths / 1 | G16 reservation widths for variable Width; no fields for Direct/fixed geometry. |
+| Control / 2 | Assigned count u16; variable Width also stores u32 extent at byte 2. Direct/fixed derive extent. |
 
-The directory is reserved at full capacity. `lengths_bytes(assigned)` includes
-whole initialized groups, so prefix/native reads never overread a partial final
-group. `lengths_bytes()` gives full capacity. Grouped Width requires its group-size
-alignment (16/32/64 bytes); other recipes require W-byte alignment. Directory and
-control use bounded byte loads and need no additional alignment. The API does not
-require windows to be separately allocated or separately published Parts.
-Reservations are positions in the owner's unit; StreamPack uses bytes.
+Directory storage is full capacity. `lengths_bytes(assigned)` includes complete
+initialized G16 groups. Inactive widths in the last assigned group are zero;
+inactive endpoints/checkpoints are initialized but have no semantic value.
+Lengths require W-byte alignment; directory/control use bounded byte loads.
+Supplied windows are disjoint but may share an allocation or owner Part.
 
-When U is omitted, both Width placements store a single R stream, with no gap for
-an absent U plane; the alignment rule above still applies. Placement does not
-change Direct or fixed geometry. `byte_limit` is an encoding bound independent of
-the supplied spans. It determines endpoint/checkpoint encoding and must not be
-inferred from an allocation's current size.
+A checkpoint is the sum of reservations preceding its group, including the
+origin and omitting a terminal sentinel. Extent is the sum of all assigned R,
+retired or live. The total limit is a schema encoding bound independent of the
+current allocation's size. The schema has no placement switch.
 
-Unassigned tail R/U fields in the last assigned group are zero. Unassigned
-Direct endpoints and future checkpoints are initialized by construction but have
-no semantic value. A checkpoint is the sum of reservations before its group.
-Positive reservations are disjoint. Used lengths never exceed reservations.
-Occupied extent is the sum of all assigned reservations, retired or live.
+`layout::encode()` produces an eight-byte **version-3** geometry description:
 
-`layout::encode()` produces an eight-byte version-2 description:
-
-| Byte offset | Encoding |
+| Bytes | Meaning |
 | --- | --- |
-| 0 | Version 2 in bits 5–7; Width bit 0, separated lengths bit 1, full bit 2, immortal bit 3, fixed reservation present bit 4. |
+| 0 | Version 3 in bits 5–7; Width bit 0, immortal bit 3, fixed reservation present bit 4. Bits 1–2 are zero. |
 | 1–2 | Maximum reservation, u16. |
-| 3–5 | Block byte limit, u24. The largest legal value is 16,776,960 (256 × 65,535). |
-| 6–7 | Fixed reservation, u16; must be zero when absent. Presence distinguishes fixed zero from variable geometry. |
+| 3–5 | Total limit, u24; at most 16,776,960. |
+| 6–7 | Fixed reservation, u16; zero when absent. Presence distinguishes fixed zero. |
 
-There is no encoded capacity, reserved padding or fixed-width sentinel. Unknown
-versions, invalid sizes, noncanonical absent-fixed bytes and invalid bounds are
-rejected. The experimental 16-byte version-1 description is not accepted. The u24
-field is cold schema storage; hot endpoint/checkpoint lanes still use native
-one/two/four-byte loads. Native layout objects and pointers are never the wire
-format. The owner persists schema identity and the three metadata windows coherently
-with any corresponding data.
+Version-2 StreamPack descriptions are not accepted as geometry-only schemas.
+StreamPack retains its separate version-2 encoding and existing physical recipes.
+Persist portable schema bytes and corresponding windows coherently, never the
+native prepared layout or its borrowed pointers.
 
-### Admission and operations
+### Admission, mutation and composition
 
-`storage<Byte>{directory, lengths, control}` contains three disjoint borrowed
-spans. They may come from one owner allocation. `view::bind` checks placement;
-`validate` checks complete assigned contents, checkpoint/end laws, lengths,
-zero SIMD tails and count/extent. `assume_valid` requires the corresponding
-owner proof. Source, immutable layout and control/effects objects cannot alias
-writable storage. Live access/effects cannot outlive or move the named view.
+`view::bind` checks sizes, alignment, overflow and window disjointness. Initialize
+new storage or call `validate` for recovered bytes. Validation checks count,
+end/checkpoint laws, reservation bounds, extent and zero Width tails. It grants
+neither ownership nor a selected version. Checked commands preserve admitted
+contents; they do not recover malformed input.
 
-Width checkpoint search/reverse through the typed sidecar can read the complete
-sixteen-checkpoint geometry window, including inactive initialized storage. Its
-read protection must cover that window, plus any selected width/population reads.
-Inactive checkpoint comparisons are masked; their values do not select ranks.
-Generic `width_source` reads only its assigned checkpoints and has no such extra
-grant. `visit_value_metadata(rank, ...)` describes a value lookup, not the read
-footprint of a search or reverse operation. Effects describe issued writes,
-separately from either kind of read coverage.
-
-| Command | Meaning |
+| Operation | Meaning |
 | --- | --- |
-| `locate(source, rank)` | Live rank's offset, U and R; errors for out-of-range/retired ranks. |
-| `range(source, first, count, sink)` | Checked consecutive metadata traversal; the sink receives rank and location for live ranks. |
-| `reverse(source, offset)` | Physical reservation owner and tombstone, including slack; absent at/beyond extent. Zero reservations own no bytes. |
-| `overlap(source, low, high, only_live)` | Half-open physical reservation overlap, clipping at extent; excludes zero reservations at the edges. Internal zero/dead holes can remain. |
-| `initialize(dst, effects)` | Initializes count/control and directory, with no assigned length groups. |
-| `append(dst, U, R, effects)` | Adds a rank at extent, initializes its full G16 tail when needed, then publishes metadata effects. |
-| `replace(dst, rank, U, effects)` | Changes U inside existing R; requires a live rank and the schema's full/fixed laws. |
-| `retire(dst, rank, effects)` | Sets its tombstone; does not reclaim R or infer U. |
-| `soft_pack(dst, shrink, effects)` | Preserves ranks, sets dead R to zero and optionally live R to U; owner separately moves corresponding data. |
-| `transfer(src, selection, dst, shrink, effects)` | Preflights selected live metadata and rebuilds a destination in selected order; owner coordinates corresponding data. |
+| `locate(source, rank)` | Live rank's offset and reservation; rejects invalid/retired rank. |
+| `range(source, first, count, sink)` | Carries geometry through live ranks; sink receives rank and geometry location. |
+| `reverse(source, offset)` | Physical owner and tombstone below extent; includes retired reservations. |
+| `overlap(source, low, high, only_live)` | Half-open positive reservation overlap; internal zero/dead holes can remain. |
+| `initialize(dst, effects)` | Empty count/control and full initialized directory. |
+| `append(dst, reservation, effects)` | Adds the next rank, initializes a new R group when needed and refreshes count/extent. |
+| `retire(dst, rank, effects)` | Sets a tombstone without moving boundaries. Requires D. |
 
-Checked refusal preserves bytes and effects. Admitted reads require validated
-contents; checked mutations preserve those laws but do not recover malformed
-input. Hooks/sinks are infallible and cannot suspend inside a bounded operation.
-Ordinary mutation entries reject temporary destinations. Capacity/error rules and
-metadata transfer selection use the same laws as StreamPack, without requiring
-its payload window.
+There is no U-only `replace`, `soft_pack` or selected `transfer` operation in
+Boundlist. Owners choose destination geometry and coordinate their data.
+StreamPack supplies value-aware packing/transfer and complete acceptance checks.
 
-Effects are `byte_write{plane, offset, size}` qualified by the actual named source:
-plane 0 directory, 1 lengths, 2 control. They cover issued stores, including
-preserving neighbors and initialized padding, not only changed bits. They are
-not publication or read protection. StreamPack maps these ordinals to its
-planes 1, 2, 3 and retains plane 0 for payload. The original StreamPack source
-identity survives; adapters do not publish effects on a transient projection.
+Author `write_origin_unchecked`, `write_width_unchecked`, `write_slot_unchecked`,
+encode admitted caller choices for variable geometry. The caller proves it is
+not fixed before entering these field-store kernels. `publish_size_unchecked`
+and `finish_rewrite_unchecked` refresh the applicable count/extent controls.
+A slot rewrite receives the chosen start and reservation; the caller
+maintains coherent successor boundaries and total bounds. The `covered`
+argument means the R store is already covered by an issued byte range
+in this same operation. It never grants access to sibling consumer fields.
 
-Standalone metadata packing/transfer is useful only when the owner coordinates
-its payload/child meaning. Allocation, retained-reader protection, version
-selection, occupancy/heat and atomic publication remain owner responsibilities.
+Typed geometry access can compose with an enclosing source whose immutable
+format supplies strided R. It contains no used-length dependency. Native packets
+carry offsets/R; StreamPack owns its U-bearing value packet and scalar handoff.
+`slots(first, count, begin, sink)` traverses all admitted assigned ranks,
+including retired/zero reservations. The caller proves `begin` equals the
+original start of `first`. The sink receives rank, original offset and R and may
+rewrite already-read geometry; it must preserve format, count and unread fields.
+Fixed/Direct/Width traversal is selected outside the loop. `range` adds live
+selection; StreamPack composes its value projection and packing in that same walk.
+
+`visit_start_metadata` and `visit_liveness_metadata` expose separate read
+projections. `visit_metadata` combines geometric location and liveness reads.
+StreamPack's `visit_value_metadata` omits the current Direct end when start+U
+suffice. Each describes actual possible reads, not ownership or readiness.
+
+Width typed search/reverse may read all sixteen initialized checkpoints,
+including inactive ones; results mask inactive ranks. Protect that window plus
+selected R and population reads. Generic `width_source` promises only assigned
+checkpoints. A prepared local window is a prefetch target, not a complete grant.
+
+Mutations require exclusive authority over actual issued stores, including
+preserved neighbours and complete-group initialization. Effects use the original
+named source with plane 0 directory, 1 lengths, 2 control. They describe writes,
+not read protection or publication. Temporary writable destinations are rejected;
+format/view/effect controls must not alias outputs. Hooks are infallible and cannot
+allocate, suspend or invalidate inputs. Checked refusal preserves bytes/effects.
