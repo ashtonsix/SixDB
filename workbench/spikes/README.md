@@ -31,6 +31,7 @@ experiments and checks under Object, Allocation, Journal, Port and Worker.
 - [Loom execution](loom-execution/README.md): memory microtask rings, fixed hint classes, worker channels/groups, synchronization and affinity-crossing operations.
 - [Loom hardware policy](loom-hardware-policy/README.md): startup lookup, background calibration and abstract demand codes mapped to inline native hints.
 - [Loom locality and execution](loom-locality-execution/README.md): direct/Ring selection and contiguous-demand hints, with retained native comparisons and the handover to caller-qualified execution policy.
+- [Assembly module calls](assembly-calls/README.md): assembly-first prototypes linked to real Ikea/Loom operations, ABI sketches and caller-owned result frames.
 - [Call boundaries](call-boundaries/README.md): Loom/Orbital caller and callee assembly, fat returns, native carrier limits and frequency-sensitive ABI alternatives.
 - [Memory descriptors](memory-descriptors/README.md): arena-selected palettes, one-byte trampolines, placement and retained native access.
 - [Allocation palettes](allocation-palettes/README.md): native 4/16/64 KiB timing, independent spacing/count comparisons and selected Group profiles.

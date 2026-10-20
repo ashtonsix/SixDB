@@ -108,6 +108,48 @@ the same compiler/target as C++. A new spike can copy those few declarations,
 include its `.S`/`.s` among normal target sources, and link `ikea::hashtable`, `ikea::seriespack`,
 `ikea::tuplepack`, `loom::loom` or `orbital::orbital` as its actual operation needs.
 
+## Owning returns and complete-operation review
+
+[ownership.cpp](ownership.cpp) is a small real-Loom lifetime check and ABI sketch:
+
+```sh
+cmake --build build/clang/assembly-calls --target assembly_ownership_check -j1
+build/clang/assembly-calls/workbench/spikes/assembly-calls/assembly_ownership_check
+python3 workbench/tools/compile_probe.py build/clang/assembly-calls \
+  --source workbench/spikes/assembly-calls/ownership.cpp --assembly \
+  --output build/assembly-calls/ownership
+```
+
+Inspect `forward_allocate`, `acquire_into`, `initialize_frame`, `destroy_frame`
+and `borrow_bytes`. The assign adapter creates a temporary owning result,
+moves it into the destination, and destroys the moved-from result. Direct member
+initialization lets the actual allocator construct its result in the caller's
+stationary operation frame. It removes that extra move/temporary cleanup; the
+frame still owns the result and must be destroyed after its final use. Replacing
+an already-occupied owner still needs its real retirement work.
+
+With the current Clang 21.1.8/libstdc++15 cut, `Result<Allocation>` is 40 B and
+`Result<PartSource>` is 96 B. The emitted AArch64 assign adapter reserves 96 B of
+stack; direct frame initialization reserves 48 B, with the 40 B owning result in
+caller storage. That is a local-frame/transfer difference, not a memory saving
+or a measured speedup. Inspect actual return handling: `sizeof`, `extern "C"`
+and the presence of `std::expected` alone do not determine register passing.
+
+For the directory retry, inspect the **linked complete caller and its callees**:
+separate callee-save preservation from payload spills; look for hidden result
+buffers, duplicate entry/source materialization, repeated admission/selection,
+owner transfers and per-point dispatch. Preserve the same useful output and real
+lifetime rules when comparing alternatives. Scope-protected native reads need
+no extra per-point physical ownership merely to cross an assembly boundary.
+
+Measure reads from the declared snapshot/request boundary through consumption
+of the required dirent/Part output. Measure writes from validation/basis selection
+through real Ikea edits, Loom allocation/dispatch as used, capture, the complete
+coupled prepare/install packet and request-local destruction. Keep service latency
+and whole-history maintenance/settlement visible separately, with bounded memory;
+deferred cleanup is still charged to the history. Time complete operations before
+accepting the C++ translation. Inner-kernel timings only help explain that result.
+
 Inspect unresolved **relocations** before linking, then resolved targets after:
 
 ```sh
