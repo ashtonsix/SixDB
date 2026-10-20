@@ -132,11 +132,21 @@ the split is not described as instruction-identical.
 
 ## Geometry encoding decision
 
-Keep **Direct absolute ends** and **Width checkpoint + sizes** as the stored
-recipes. Do not require redundant checkpoints for Direct, or add a third stored
-recipe in this ownership change. Direct remains the cheap rank-access choice;
-sizes retain the smallest small-slot representation and the cheaper width-change
-path. This is not a claim that relative ends have no useful region.
+The [improved design plan](DESIGN.md) gives the target portfolio, operation laws
+and next complete-consumer assessment. This section records the measured basis.
+
+**Reopened after Ashton's review.** The ownership change left Direct absolute
+ends and checkpoint + sizes implemented, but that is not a settled encoding
+portfolio. The earlier recommendation over-weighted preserving the existing
+recipes. Equal-storage Relative Ends has substantial point/inverse advantages;
+missing full-StreamPack qualification is work still needed, not evidence against
+it. The geometry/value ownership split remains implemented and qualified.
+
+The candidates are **Absolute ends**, **Sizes + checkpoints**, and
+**Relative ends + checkpoints**. Fixed size is a schema omission, not another
+stored family. End-coordinate and used-length carrier widths must be derived
+independently from their actual bounds. Redundant checkpoints for Absolute ends
+are a search-acceleration candidate, not a fourth base geometry encoding.
 
 The geometry experiment compares current Direct, current sizes, checkpoint +
 group-relative ends, Direct with redundant checkpoints, an independent fused
@@ -153,6 +163,10 @@ Nine assigned counts (1, 15, 16, 17, 31, 32, 64, 128, 256), four maxima
 occupancy, rank access, upper bounds, overlap extrema, physical inverse,
 rebuild and changed reservation widths. Each row's extent bound is assigned
 count × maximum; the sweep does not independently vary tighter extent limits.
+Its template instantiations also use only u16/u32 coordinates and relative
+ends, not the u8 forms tight bounds may permit. The original results are not a
+complete native-carrier sweep; `design-check.py` accounts for that floor when
+checking their footprints.
 Six samples per cell use both format orders. A 4 KiB request table is held
 constant; its calibration is reported and
 not subtracted. Reported geometry backing is touched backing storage, **not**
@@ -184,13 +198,19 @@ For example, on NEON at maximum 4095, sizes / relative ends / Direct cost
 11.02 / 6.59 / 5.73 ns for hot dependent geometry points and
 35.84 / 26.31 / 31.18 ns for checked reverse. Independent reverse costs
 25.37 / 7.74 / 14.34 ns; changing R costs 14.21 / 18.48 / 44.12 ns.
-Thus relative ends offer a genuine middle tradeoff. They remain measured research
-rather than an automatically selected value format: full value/native/packing
-consumers for that new format have not been qualified, and the smallest schemas
-and widest unbounded-extent schemas favor sizes for storage. No generic-source
-API prevents a
-future consumer from testing that specialization without changing the two
-curated stored recipes.
+Thus relative ends offer a genuine middle tradeoff, especially where group ends
+fit the same carrier as sizes. They remain measured research rather than an
+implemented value format. Qualification must include append and complete packing,
+optional U, partial occupancy and independent tighter extent bounds, rather than
+letting arbitrary in-place R changes determine a typically append-oriented
+StreamPack choice.
+
+Sizes also needs its strongest same-byte control in that comparison: the
+full-prefix inverse records **8.28 ns** independent NEON reverse at maximum4095,
+versus current Sizes25.37 and Relative Ends7.74. That is an internal kernel
+choice, not another encoding. The point advantage for Relative Ends remains
+11.02 →6.59 ns. The retained scorecard includes this stronger control and
+Absolute-ends checkpoint acceleration; subsequent curation must use both.
 
 ## Reproduce or recover
 

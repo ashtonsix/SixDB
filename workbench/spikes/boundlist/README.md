@@ -10,13 +10,20 @@ an independent fact.
 Boundlist is implemented in Ikea. The study and graduation ran on
 19–20 October 2026. The
 [implementation report](GRADUATION.md) records the source/phase seams and measured
-algorithm choices; [usage](../../../ikea/docs/boundlist/usage.md) teaches the API.
+algorithm choices; the [ordinary example](../../../ikea/examples/boundlist/ordinary.cpp)
+and [composition example](../../../ikea/examples/boundlist/composition.cpp) exercise
+the current API.
 The prototype algorithm menu and flattened adapter remain research controls.
 The [geometry/value ownership follow-up](OWNERSHIP.md) supersedes the original
 U-bearing sidecar boundary; generic ordered search is unchanged.
+The [improved design plan](DESIGN.md) reopens encoding curation and defines the
+next Boundlist/StreamPack work. Its Relative Ends format and proposed descriptor
+revisions are targets, not implemented production features. The public guide
+rewrite is paused while those decisions are investigated.
 
 | Read next | Purpose |
 | --- | --- |
+| [Improved design plan](DESIGN.md) | Target encoding portfolio, composition, mutation laws and the comparisons still owed |
 | [Ownership follow-up](OWNERSHIP.md) | Current geometry/value boundary and codec comparison |
 | [Implementation](GRADUATION.md) | Production seams, qualification and selected defaults |
 | [Recommendation](RECOMMENDATION.md) | Historical prototype selection before implementation |
@@ -85,3 +92,7 @@ ownership split against recovered old public headers/TUs, using `u-control.py`.
 `encoding.cpp` compares sizes, group-relative ends and Direct, including redundant
 checkpoints, explicit SIMD maintenance and stronger inverse controls. The current
 [ownership assessment](OWNERSHIP.md) records decisions, absolute results and recovery.
+
+`orb -m ubuntu python3 workbench/spikes/boundlist/design-check.py` checks the next
+plan's arithmetic and independent mutation model against the retained footprint
+rows. It does not implement or benchmark the proposed codecs.
