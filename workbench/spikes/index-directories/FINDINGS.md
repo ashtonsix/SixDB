@@ -313,6 +313,45 @@ membership, tile boundaries63/64/65/127/128/129 and first old reads after
 publication+drain+trim. Loom's separate tile rollover and ABI checks remain
 additional evidence, not a replacement for these actual composition checks.
 
+## Stronger zero and sparse native control
+
+Frozen source is `32723c77a870f80c0cc1fa8a855e9f892449803d72c672f60a98394173b35691`.
+Both sides enroll the query snapshot before testing the actual bitset; native
+cursor renewal happens only when traversal is needed. Native mask runs use
+SET_RANGE/NEXT in one transaction and consume selected64B directly, without a
+second mask test. Timed native specializations compile diagnostic tracking out;
+separate untimed probes produce logical counters. Linked-code review and
+zero/nonzero reuse of the same cursor handle qualify those boundaries.
+
+Four processes, opposite population orders and all six arm permutations produce
+288 rows, twelve per cell. One checked self-warm scan precedes each sample.
+Empty masks repeat8192 complete queries; nonempty cases repeat at least16 and
+offer at least1M original candidates. Every complete eight-word checksum,
+offered/selected count, actual visit/seek/NEXT count and binary hash agrees.
+
+|1 selected bit/64, whole query us|Engine|Native full walk|Native mask runs|
+|---|---:|---:|---:|
+|8K quarter|0.392|16.164|2.255|
+|8K whole|1.609|66.315|10.550|
+|262K quarter|21.563|535.668|157.728|
+|262K whole|133.879|2199.813|944.335|
+
+The run peer is stronger in every cell. Engine leads it by5.75–7.31x in this
+bounded component workload, with every matched pair favouring Engine. At262K
+whole, Engine visits262,144 logical candidates and consumes4096 materials;
+native runs visit those4096 entries using4096 seeks and zero NEXT calls. The
+full walk uses one seek and262,144 NEXT calls. Offered work remains262,144 for
+all three; visit-normalized values are different workloads, not the common ratio.
+
+For all-zero masks, Engine/native-best whole-query medians are34.815/43.274ns
+(8K quarter),115.626/134.700ns (8K whole),789.874/925.059ns (262K quarter), and
+3220.146/3622.108ns (262K whole). All visit/selected/material/cursor-get counts
+are zero; neither ns/visit nor ns/selected is defined. This is a modest
+bitset/lifecycle difference, not entry throughput or2x complete Engine fit.
+The older full-walk masked ratios remain historical controls. The grouped
+DUPFIXED policy is behavior-qualified but still unmeasured; no stronger-peer
+performance is assumed. [Raw evidence and recovery](evidence/sparse-20261020/README.md).
+
 ## Verification and remaining scope
 
 Six current native checks pass: directory bytes/slot versus rank, physical

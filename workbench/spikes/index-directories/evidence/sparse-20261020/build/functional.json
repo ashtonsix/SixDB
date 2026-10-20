@@ -1,0 +1,79 @@
+[
+  {
+    "kind": "independent_native_mask_consequences",
+    "status": "PASS",
+    "output": "PASS: selected-mask native run cursors, direct per-bit/ordered full64 oracle, cross-word/partial/zero/max/gaps and late-old/fresh real txns; no timing\n"
+  },
+  {
+    "mode": "basic",
+    "argv": [
+      "taskset",
+      "-c",
+      "1",
+      "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/index-directory-scan-sparse4-build-20261020/driver",
+      "/tmp/index-directory-sparse4-functional-402uao0o/basic",
+      "256",
+      "6",
+      "16",
+      "0",
+      "basic"
+    ],
+    "status": "PASS",
+    "rows": 48,
+    "semantics": "Guarded native reused handles exercise zero->nonzero->zero->nonzero for quarter/full; instrumented probes, uninstrumented warm/timed results match independent formula."
+  },
+  {
+    "mode": "dense",
+    "argv": [
+      "taskset",
+      "-c",
+      "1",
+      "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/index-directory-scan-sparse4-build-20261020/driver",
+      "/tmp/index-directory-sparse4-functional-402uao0o/dense",
+      "256",
+      "6",
+      "16",
+      "0",
+      "dense"
+    ],
+    "status": "PASS",
+    "rows": 18,
+    "semantics": "Guarded native reused handles exercise zero->nonzero->zero->nonzero for quarter/full; instrumented probes, uninstrumented warm/timed results match independent formula."
+  },
+  {
+    "mode": "lookahead",
+    "argv": [
+      "taskset",
+      "-c",
+      "1",
+      "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/index-directory-scan-sparse4-build-20261020/driver",
+      "/tmp/index-directory-sparse4-functional-402uao0o/lookahead",
+      "256",
+      "6",
+      "16",
+      "0",
+      "lookahead"
+    ],
+    "status": "PASS",
+    "rows": 24,
+    "semantics": "Guarded native reused handles exercise zero->nonzero->zero->nonzero for quarter/full; instrumented probes, uninstrumented warm/timed results match independent formula."
+  },
+  {
+    "mode": "sparse-peer",
+    "argv": [
+      "taskset",
+      "-c",
+      "1",
+      "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/index-directory-scan-sparse4-build-20261020/driver",
+      "/tmp/index-directory-sparse4-functional-402uao0o/sparse-peer",
+      "256",
+      "6",
+      "16",
+      "0",
+      "sparse-peer"
+    ],
+    "status": "PASS",
+    "rows": 72,
+    "semantics": "Guarded native reused handles exercise zero->nonzero->zero->nonzero for quarter/full; instrumented probes, uninstrumented warm/timed results match independent formula."
+  }
+]

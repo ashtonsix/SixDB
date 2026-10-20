@@ -1,0 +1,33 @@
+{
+  "status": "SOURCE-ONLY review complete; no architectural blocker; implementation not yet supplied",
+  "scope": "Proposed <=64-command moving-Part and directory-only batches, existing logical16/F32 and independent Segments; scalar replace/copy_graph remain scalar reference only.",
+  "owning_commit": "a89b9f4e",
+  "observations": {
+    "packet_capacity": "Final Change count differs from command count. 64 changed Segments require65 graph changes or64+affected_named_groups, up to128, in stable-name control. Orbital prepare uses PMR ID scratch above64.",
+    "physical_identity": "G64/G256 distinct logical16 source slices share an Allocation. Their selected Part/realization/publication identities remain distinct.",
+    "payload_bytes": "Current dense stable-name group1088B includes64B header; graph group1024B. Retain actual layout/capture/select costs; do not attribute entire difference solely to custody.",
+    "graph_counts_262K": "Aligned64 changes:4groupParts+3nodes. Dispersed64 bound:64groupParts+81nodes. 2576 nonnull child associations include2432 unchanged; one576B image per distinct node.",
+    "ownership": "Allocation is RAII. prepare reads const caller Change owners and retains its own uses; caller owner slots persist until explicitly cleared."
+  },
+  "implementation_risks_and_choices": [
+    "Coalesce final state first. Reuse one selected group/path plan under the same basis for locator validation and final Part materialization; avoid a second proof walk.",
+    "Standalone directory-only input is finished SegmentDelta/Owners, but its planning/navigation remains inside its own clock. Complete moving interval includes all coalescing/material selection/construction/capture/cleanup.",
+    "Validate expected before binding against basis-selected actual Segment and leaf locator; validate replacement resource/format/Part association. Do not freshen basis around older candidates.",
+    "Unwind accumulated Segment Owners if a later producer allocation/capture fails before Edit exists; keep basis/proof/resource lifetimes through callbacks.",
+    "Clear caller-held finished Segment/root/change-vector Owners on success and abandonment, so reusable workspace does not pin old versions or hide destruction costs.",
+    "Validate every command before final-noop omission. If all final bytes match, allocate/capture/publish nothing; define returned read-basis semantics because empty prepare does not validate staleness.",
+    "Keep one atomic packet; never split it to remain below the65-change scratch crossover. Bound output Change/proof workspace separately from command workspace.",
+    "Old-reader late first reads and graph-release cascades remain part of later implementation/whole-history qualification; no mandatory drain or invented API is required."
+  ],
+  "execution": "No source edits, builds, timings, new tests or runtime APIs. Engine owns implementation and will provide exact capture when ready.",
+  "source_hashes": {
+    "workbench/spikes/index-directories/PSEUDOCODE.md": "3e387c1653c2f0a02c2b682b2cc9ac6a989a5cb31b9335a8377013542b9994c0",
+    "workbench/spikes/index-directories/DESIGN.md": "3e7141da6784aedf4df8c4a81d4b09f9af207596908fb69da053747e56672935",
+    "workbench/spikes/index-directories/BUDGET.md": "cdee03c14f70a79cb360a2ab3498a421437d5d7a6c4fec23e8e866345c57c3bf",
+    "workbench/spikes/index-directories/include/group_fixture.h": "d89b01bd5e34692b346e467cb17d44ba9c57c5f066eaab2bf7e11eafe8ededbc",
+    "workbench/spikes/index-directories/src/group_fixture.cpp": "3f24ef4ea27126be70cf3d0b4685352d7eb6509a7bb9e4969171b3f7e7c8131b",
+    "workbench/spikes/index-directories/include/material.h": "97d74265d1e1e3fba832fd545a536b5c1d20801c7912dc44a48c6e432d380fbf",
+    "orbital/include/orbital/instantiate/object.h": "a62370ebe95e9014624047cf3b21499c7e7bd0cd2062c7d2fed35b57a0bfda54",
+    "orbital/include/orbital/allocation.h": "53b393b41a82af980264595f9d57162612d95df0e491282e6aaa4119ce3eadc9"
+  }
+}

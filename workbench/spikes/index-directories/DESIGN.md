@@ -3,6 +3,28 @@
 The choices here are implementation candidates. Segment identities, physical-key
 order, layer geometry and query semantics remain the supplied model.
 
+## First module implementation
+
+The [current graduation proposal](README.md#proposed-graduation-cut) selects a
+useful mutable directory API and one recipe per routing path: ordinary top
+tables, actual inline-V64 Ikea hash regions, and a stable-name ordered tree
+using Boundlist. The remaining alternatives below are research comparisons,
+not prerequisites to implementing every public operation. G16 physical packing
+does not select logical leaf/Part capacity or establish a durable format.
+
+The real consumer shares the caller's ObjectStore/Core and Scope, supplies
+finished Segment/schema inputs, and joins returned directory changes into one
+Orbital packet. Segment birth/death, duplicate-aware logical seek, bounds repair,
+legal storage balancing and admitted extra/schema association remain actual
+implementation work. The scalar fixture and paper batch algorithm do not
+satisfy those promises. No missing public module protocol prevents starting.
+
+Extraction must replace fixture-only format/resource lifetimes with explicit
+ownership that survives selected/exported uses. It must also implement the
+before/after binding checks and failure cleanup described in the pseudocode.
+Those are concrete correctness seams. Exact cache attribution, every alternative
+geometry and a universal performance ratio are separate research questions.
+
 ## Keep three independent choices open
 
 Directory facts are segment existence, routing range, representation and Part

@@ -1,254 +1,162 @@
-# Index directory implementation spike plan
+# Index directories
 
-Assembly-first implementation is in progress. The rejected implementation
-remains deleted. Current sources exercise actual module composition; the
-[measured checkpoint](FINDINGS.md) records throughput, excessive footprint,
-producer trade-offs and the remaining scope. Memory, complete writes and actual
-range scans remain open; the latest point-read result does not close them.
+The current priority is a useful mutable Engine directory. The fixed-population
+fixture is not that module. Point and sparse read results support moving on to
+its API, mutations and lifetimes; they do not establish complete Engine
+performance. Further point/scan tuning is stopped.
 
-2026-10-20: fresh Ikea, Orbital, Loom, Workbench and Architecture review of
-`15426260` led to this planning revision. It is an experiment plan, not a closed
-implementation recipe or demonstrated budget fit. Current supported controls,
-module-owned proposals and still-unqualified algorithms/costs remain distinct.
-Ashton subsequently authorized assembly, modeling, live experiments and C++
-translation as the evidence supports them. Complete budget fit remains open.
+- [Budget](BUDGET.md): matched peers, operation ceilings and limits.
+- [Pseudocode](PSEUDOCODE.md): reads, batches, balancing, extras, schema and failure.
+- [Design](DESIGN.md): byte/ownership ledgers, implementation choices and prior art.
+- [Findings](FINDINGS.md): measurements, source identities and recovery.
 
-The objective is a directory cheap enough for the complete Engine to beat both
-Calico and competent native LMDB with substantial headroom. A fast container
-kernel alone does not establish that result. The operation budget includes the
-composition that makes its result usable.
+## Proposed graduation cut
 
-The later throughput steer takes precedence over scalar-latency selection:
-compare useful completions and total CPU at matched ready work and visibility,
-retaining latency and memory as explicit trade-offs. Strong read-only root-graph
-signal is a reason to continue, not evidence for write/compaction or complete
-Engine headroom. Isolated footprint must include catalog/ownership and retained
-capacity; Pool mapped bytes alone are not resident memory.
+Graduate one complete mutable directory implementation, with a real Segment
+producer using its public API. Do not promote `GroupFixture` as a general
+directory or narrow the supplied semantics to make its present code sufficient.
+This is a proposed implementation cut, not an established public contract.
 
-- [Budget](BUDGET.md): comparator evidence, aggressive operation ceilings,
-  composition costs and the conditions under which a candidate is rejected.
-- [Pseudocode](PSEUDOCODE.md): reads, cursors, edits, overflow, balancing,
-  publication, failure, schema changes and suspension.
-- [Layout and design review](DESIGN.md): bytes, ownership, paper revisions,
-  prior art and the remaining costs that need direct measurement.
+The first consumer is a Segment producer/query caller: it supplies finished
+Segment representations and their directory facts, reads them through the
+directory, and publishes actual Segment and directory changes together. A data
+update whose directory facts remain unchanged emits no directory change. Record
+placement, compression and summary maintenance belong to that producer.
 
-The first native prototype has selected-read assembly, a direct suffix-mask
-control and a real64-byte moving-Part producer with coupled Orbital publication.
-`index_directory_check` and `index_directory_material_check` cover exact bytes,
-original-rank/slot distinction, gaps/max prefixes, guarded private cloning,
-late old/fresh readers under reclamation and partial-candidate refusal.
-`index_directory_driver` compares useful projected/material outputs and that
-actual producer against direct LMDB, with fresh and64-operation cohorts.
-`index_directory_composed_check` adds a two-record, five-layer P/Q/P producer:
-zero-directory ordinary updates, fixed-pointer authoritative corrections,
-pristine bypass/dirty-extrema descent, and P-only compaction with late snapshots.
-It is a bounded composition check, not the finished Engine driver.
-`index_directory_buffered_check` and `index_directory_buffered_driver` add actual
-plain24-byte append, indexed-footer append and a packed eager producer,
-eight-field rows, all five layers, partial/full compaction and refusal recovery.
-The driver matches native64-byte LMDB get/put and cursor-CURRENT atomicB1/B64
-policies, repeated-row coalescing and useful full-field/aggregate output. Its
-whole-history clock includes setup, fixture destruction and actual shutdown;
-the foreground clock is labeled separately. Functional checks passed; performance
-fit remains open. Ordered mutation, balancing, extras/schema, broader producer
-workloads and complete Engine/Calico comparison remain implementation and
-measurement work.
-
-## Supplied model
-
-Segments exist independently at each of five layers, identified by index,
-layer and physical prefix. Their overlapping 16-bit windows are 0:16, 8:24,
-16:32, 24:40 and 32:48. A segment has at most 65,536 positions and exists only
-while populated. The last layer contains records; earlier layers contain the
-specified summaries, potentially with other data structures as well.
-
-The physical key is six bytes and unique. Its first J bytes coincide with the
-K-byte logical key. Physical placement preserves full logical order, including
-slots inside a segment. Equal logical keys need no internal order.
-
-Every segment has one representation. The index schema can retain many
-representations, including historic ones, with different allowed sets at each
-layer. The directory tracks segment bounds, representation and Part locators.
-Its dirent is 64 bytes: six eight-byte locators and sixteen metadata bytes.
-
-Queries begin in the directory at a caller-selected layer. Seek and continuation
-stay within that layer. Explicit descent changes the layer. Directory storage
-pages and their balancing never split a prefix-defined segment, assign record
-keys, or establish an order between layers.
-
-## Composition used by this plan
-
-Read the production interfaces, their real examples and source, rather than
-treating the older disposable drivers as Engine:
-
-| Responsibility | Implemented seam |
+| Public operation | Meaning |
 | --- | --- |
-| Ikea edits and searches | Concrete Hashtable owner/native reader; Boundlist source and overlap; StreamPack mutation/transfer; source-qualified issued writes |
-| Orbital versioning | Uninterrupted current-cut `Borrowed`, retained `ObjectStore::Scope`, finished `Owner`, `Prepared`, `prepare`/`install`, history and bounded `drain` |
-| Orbital physical ownership | Representation capture, retained `source(selection,p)`, fresh Allocations, shared/mixed PartSources and escaping Parts |
-| Loom execution | Ready ordinary calls; actual Ring for independent dependencies; stationary Task and Scope for a genuine wait |
-| Engine | Segment-change inputs, directory format/navigation, private construction, and coherent inclusion of the required changes in Orbital publication |
+| Read view | Borrow the caller's existing Scope and shared Store/Core, with admitted index/schema interpretation, through every byte use. |
+| Exact prefix lookup | Find the Segment at the requested index, layer and physical prefix; gaps are misses. |
+| Logical seek and continuation | First possible overlap and continuation within that layer, including duplicates, open/closed edges and full-key refinement. |
+| Physical-prefix range | One seek and ordered continuation in that layer, with optional original-coordinate selection. |
+| Part projection | Interpret inline or admitted extra locators under the selected definition and actual Segment association; return qualified material or an explicit readiness outcome. |
+| Batch edit | Coalesce final deltas under the caller's basis and produce finished directory Owners/changes, including birth/death, bounds and representation/locator changes. |
 
-Engine introduces no version ledger, reader registry, undo journal or second
-commit protocol. A private candidate can be discarded. Captured bodies and
-readable padding are sealed even before publication. Ikea effects do not supply
-write permission, beforeimages or automatic ObjectStore preservation.
+The caller combines these finished changes with actual Segment/schema changes
+in one existing Orbital prepare/install packet. The directory uses that shared
+Core and basis. It introduces no private Store, version ledger or second commit.
+A 64-command fixed-membership locator witness can produce 65 graph changes or
+up to 128 named-array changes. These are not general caps for membership,
+balance, schema or extras. Derive packet capacity from actual finished changes
+and admitted workspace; above-64 uniqueness work is a separate cost.
 
-The relevant reading is [Ikea integration](../../../ikea/docs/integration.md),
-[Hashtable ownership](../../../ikea/docs/hashtable/usage.md),
-[Boundlist](../../../ikea/include/ikea/boundlist/search.h),
-[Orbital material](../../../orbital/docs/material.md),
-[ObjectStore](../../../orbital/include/orbital/object.h), its
-[publication implementation](../../../orbital/include/orbital/instantiate/object.h),
-[Loom usage](../../../loom/docs/usage.md), and the actual
-[Object/Task](../orbital-mvcc/callers/object_module.cpp) and
-[Object/Ring](../orbital-mvcc/callers/object_ring_check.cpp) callers.
+Use one concrete recipe at each supplied route: ordinary L0/L1 tables, actual
+Ikea Hashtable-owned inline 64B values for eligible shared-prefix routing, and
+one stable-name ordered tree using actual Boundlist elsewhere. There is no
+second payload map. Keep the raw-child graph as a measured read control; its
+ancestor captures/child retentions need not be the first shipped write strategy.
+G16 physical directory packing is provisional, not an optimal logical-leaf size
+or a persistent ABI. Choose one bounded ordered leaf/Part geometry; completing
+every alternative is unnecessary before implementing this consumer.
 
-## Proposed storage strategy
+The mutable ordered path needs Segment birth/death, duplicate-aware bounds,
+changed-extrema propagation and legal leaf/internal split, merge or
+redistribution. Storage balancing never splits a prefix-defined Segment or
+assigns record keys.
 
-Ordinary data writes do not imply directory writes. After the request has
-located its segment, unchanged segment membership, routing range,
-representation and complete Part-locator association require no directory
-mutation, capture or publication. The segment producer owns data changes,
-summary deltas, pristine flags and compaction. A replacement/port that moves a
-referenced Part is a directory event; five-layer eager replacement is one
-possible producer, not the assumed producer.
+Schema support means retained definitions, per-layer allowed representation IDs,
+and validation of supplied before/after interpretation; no migration manager is
+required. Implement one qualified extra-locator recipe for representations
+admitted with more than six Parts. Refuse unsupported recipes at admission.
+Packing policies and alternative extra stores can follow. An unchanged inline
+dirent never proves its extra list unchanged. Plans, telemetry and persistent
+cursor stores are separate consumers.
 
-Keep directory routing bounds separate from summary values. Compare exact
-occupied logical bounds with stable enclosing fences supplied by the placement
-policy. A stable fence can avoid edits while new keys use existing keyspace padding;
-its false candidates and exact segment refinement are real read costs. Neither
-choice changes prefix-defined segment identity or permits unordered placement.
-The directory does not choose a record-key allocator or summary policy.
+## Remaining implementation and checks
 
-Keep the first two layers as ordinary tables: one L0 slot and 256 L1 slots,
-in one or two Allocations. For shared-prefix layers below them, use actual Ikea
-Hashtable owners with 64-byte dirents AS VALUES. The table manages their
-allocation; there is no second payload map or allocation per dirent. Bounded
-hash regions and a sorted suffix-mask/array control are implementation
-comparisons, not new segment identities.
-For remaining layers, compare balanced trees using actual Boundlist searches.
+Extract Engine-owned headers, material adapters and implementation from fixture
+constants. Formats, proofs and resources must survive Scopes, escaping Parts and
+candidate cleanup. The fixture's member destruction order is not a production
+ownership solution. Preserve supported Lane affinity; do not advertise
+unqualified cross-Lane exports.
 
-Cross F32/F128 with co-located/independent payload ownership at C8, then C16.
-A 32-entry C8 co-located leaf has five Parts; a C16 leaf has three.
-Co-location retains/captures more sources per edit but avoids a payload catalog
-lookup and many structural publication changes. Independent chunks minimize
-scalar capture fanout. New compound leaves include current grouped native capture.
-Count both, including real source and catalog costs. Stable Object-name children
-avoid ancestor repair on a payload move but add selections. Immutable raw-child
-graphs remove those read selections but copy changed paths and retain children
-on writes. Keep their costs separate; the current graph is a successful read
-control, not a demonstrated cheap-update design. An extrema change repairs only
-affected bounds along its path.
+Implement actual batch coalescing. Select each affected group/Part once, validate
+expected before binding and the finished replacement's actual locator association,
+and materialize each changed Part once. Reuse the request-local plan. Validate
+commands even if later commands cancel them. A final no-op allocates, captures
+and publishes nothing: it returns an empty directory-change proposal qualified
+by its read basis, not a current-state transaction receipt. The caller still
+validates/publishes any Segment/schema effects through Orbital. Unwind accumulated
+Owners on failure and clear caller-owned change
+slots after success. One atomic batch is never repeated scalar installations.
 
-Segments keep independent Allocations. Directory array allocation grain,
-logical leaf capacity, Part/publication grain and read-cohort width are separate
-choices. The measured 16/64/256 coallocation comparison holds logical16/F32 and
-Part grain fixed. It does not select16 as an optimal logical leaf capacity.
+Complete ordinary/hash/ordered paths, membership/bounds repair, legal balancing,
+schema admission and the chosen extras recipe. Current public Ikea, Orbital and
+Loom APIs can express this. No new Engine MVCC, undo queue, reader registry,
+Task/Ring protocol, range-source or prepared-packet protocol is a prerequisite.
 
-Extra locators use separately versioned local StreamPack blocks with a priced
-16-prefix holder cursor, complete sidecar writes and one final packing decision.
-Schema has a concrete direct-definition-name control that avoids a large roster.
-These are experiment controls, not selected permanent formats. Extra blocks
-retain their actual namespace/rank association. Their coordinates do not change
-merely because the block's physical bytes
-change. Reservation growth and packing repair only the affected local holders.
+Use one canonical driver through the library API with real independent Segment
+Allocations. Its independent oracle checks membership, full key/bounds, every
+defined dirent byte and actual Part/definition association. Cover repeated,
+cancelled and invalid commands; clustered/dispersed batches; first/last and
+empty transitions; duplicate fences; structural boundaries and maximum prefixes.
+Old readers first discover later leaves after publication/drain/trim; fresh
+readers see the new state. Capture/prepare/stale refusals, reused workspaces,
+exported uses and final disposal must preserve that distinction. A drain limit
+does not bound recursive last-owner graph disposal.
 
-No mutable shadow roster is authoritative. The current Scope supplies the old
-directory. A small Ikea Hashtable deduplicates private drafts within an edit;
-it is discarded at the end and never serves readers.
+Retain matched native comparisons plus actual footprint and cleanup accounting.
+The stronger grouped DUPFIXED peer is behavior-qualified and available, but
+still unmeasured. Resident results imply no durability, remote I/O or complete
+Engine performance. A general Engine driver remains a separate, owed expansion.
 
-## Next experiments and completion evidence
+## Evidence and follow-on work
 
-The [budget](BUDGET.md#current-matched-anchors-and-headroom) uses the faster
-competent matched peer, targets complete Engine at <=0.50P and directory plus
-binding at <=0.25P, and lists every operation's engineering ceiling. The
-[pseudocode](PSEUDOCODE.md) covers all paths before implementation; unsupported
-module seams and unmeasured costs remain explicit. The next bounded work is:
+Checkpoint `a89b9f4e` has real module composition, six native checks, full
+eight-word consumers and saved-frame range traversal. The expanded scan check
+covers 9,600 cases and 105,540 ordered selected items. The newer guarded driver
+also qualifies actual native run seeks, zero/nonzero reused handles and
+uninstrumented timed native code.
 
-1. Qualify the existing memory/sanity edits as one identified source capture.
-   Rebuild every Control-dependent caller; check actual old/fresh bytes, locator
-   association, refusal and shutdown. Report live requested metadata, pool
-   backing, native mapped bytes, RSS and aged retained capacity separately.
-2. Complete scalar and atomicB64 locator replacement. Coalesce repeated commands,
-   copy each affected directory Part once and each changed graph ancestor once,
-   publish all actual Segment and directory changes in one packet. Compare
-   stable-name and graph custody with the same material/inputs. Count captures,
-   child retentions and disposal, not just memcpy. The 250ns scalar and350ns
-   five-replacement goals are unresolved; preserve misses.
-3. Exercise the actual L0/L1 tables and Ikea V64 hash owner, including its real
-   clone/growth buffers, native binding and selected-owner lifetime. Then add
-   logical ordered mutation, bound repair and balanced final-batch construction.
-   Compare logical16/64/256 array/Part alternatives separately from physical
-   coallocation, and F32/F128 routing only where the operation costs warrant it.
-4. The actual saved-frame range iterator, quarter/full ranges and requested mask
-   screen are complete as bounded controls. The dense-rank refinement gains
-   modestly; the one pointer-bank trial loses and stops. Complete the inside-clock
-   zero guard and actual native mask-run peer, then qualify the stronger grouped
-   native policy. Predicate generation stays outside this control; mask access,
-   selected full64B consumption and whole-scan Scope/transaction lifetime stay
-   inside. Keep actual visits, offered candidates and selected bytes distinct.
-5. Diagnose the point-read grain effect with identical instructions and frozen
-   inputs: first examine Segment placement and allocation order, directory
-   addresses, page/TLB/cache-line geometry and available counters. Hold Segment
-   order fixed in a bounded control. The completed fixed-directory/graph control
-   demonstrates material address-spacing sensitivity; cache/TLB/bank attribution
-   and portable allocator policy remain open. Do not infer them from VmPTE or
-   call counts, or select G16 as intrinsically fastest.
-6. Complete extras/schema, structural and retained-reader pressure, then the
-   broader Engine driver: independently vary segment/record populations,
-   duplicates, insertion/relabel events, scan/selectivity and producer policies.
-   Price setup, maintenance, failed work and final cleanup against complete
-   competent peers. Stable-fact data edits still emit zero directory mutations.
+Fresh 262K native mapping is 32.324 MiB: 16 MiB independent Segment material,
+16 MiB dirents and 0.324 MiB routing. Metadata request/backing is
+25.091/25.425 MiB; old spare-pool waste is gone. G16 fresh RSS is 69.738 MiB.
+Those are per-Segment costs in a one-row-per-Segment stress fixture, not low
+complete Engine memory per record. G256 retains 12 MiB more in the aged survivor
+witness. Controlled material spacing changes point throughput by about 8%,
+without identifying a cache/TLB/bank cause or universal G16 superiority.
 
-These are the remaining experiments, not permission to grow a failed path.
-At each step, update the operation's pseudocode and full cost ledger before
-expanding it. Complete fit is not established by a component cycle estimate or
-by adding timings from different trials.
+Large unmasked scans retain tight headroom; the pointer-bank trial loses and
+stops. At one selected bit/64, the stronger native run peer narrows the comparison
+but Engine still leads 5.75–7.31x. Zero-mask results are modest bitset/lifecycle
+differences with no entries. These component findings are not complete Engine
+acceptance or new graduation gates.
 
-## Workloads and checks
+Earlier requested comparisons remain accounted for: stable-name versus graph
+write cost, logical 64/256 leaf/Part alternatives, fanout/custody variants,
+overflow packing, broader representations/schema and the general Engine driver.
+They remain research/follow-on work unless the concrete first implementation
+needs them. Exact hardware attribution, universal grain selection and another
+prefetch campaign need not precede the functional module. Physical-key
+assignment/rebalancing, record/summary codecs and the broader end-to-end
+Calico/LMDB target stay with their actual Engine producers.
 
-Drive directory changes directly with `SegmentDelta` inputs. Record rows,
-summary maintenance, compression and physical-key assignment belong to a
-separate producer or later Engine driver. They are not added to the directory's
-mutation algorithm or hidden inside its performance result.
+## Supplied model and composition
 
-Vary J=0..6; every layer; K=0/1/6/8/16/32/64/256 and long equal prefixes;
-dense, clustered, sparse and scattered physical prefixes; and directory
-populations from one segment through memory-sized millions. Include point hits,
-exact-prefix misses, logical seeks through gaps, open/closed ranges, equal keys
-spanning many segments, first/last prefixes and empty/nonempty transitions.
-Generate valid combinations: J<=min(6,K), shared bytes agree and physical keys
-remain unique and fully ordered. J6 consequently cannot have equal logical keys
-on distinct records; duplicate-run cases use admissible smaller J.
+Each of five layers has prefix-defined Segments. The overlapping 16-bit windows
+are 0:16, 8:24, 16:32, 24:40 and 32:48. A Segment has at most 65,536 positions
+and exists only while nonempty. The last layer contains records; earlier layers
+contain the specified summaries and may contain other structures. There is no
+order across layers. Seek/continuation stays in one layer; explicit descent
+changes the layer.
 
-Mutations cover same-value requests, inline and extra locator changes, extrema
-changes, segment birth/death, increasing and decreasing prefixes, insertions
-between neighbours, duplicate-run growth, representation/Part-count changes,
-and the supplied changes produced by physical relabeling. Concentrate inserts
-at one fence, alternate insert/delete near occupancy thresholds, and migrate
-the hotspot. No record-placement algorithm is smuggled into this scope.
+Physical keys are unique six-byte keys. Logical keys have K bytes and may repeat;
+the first J bytes coincide. Physical placement preserves full logical order,
+including slots within a Segment. Equal logical keys have no internal order.
+Admit J<=min(6,K) and valid populations: a shared prefix has only 2^(48-8J)
+physical positions. J6 allows at most one record per shared six-byte prefix,
+including distinct longer logical keys with that prefix.
 
-Measure both one-operation publication and batches of 16/64, with clustered and
-dispersed changed segments. Include one change and five-layer change sets;
-report the actual changed directory Objects and supplied segment Objects.
-Include the important zero-directory-change cell. Five directory plus five
-segment replacements is a conditional relocation/producer stress cell only.
-Retain fresh, old and deliberately late-discovering readers. Vary fresh,
-recycled and aged Pool inventory and bound retained history by actual memory
-pressure. Run one measured treatment at a time; alternate comparator order.
+A Segment has one representation. Schema may retain many historical
+representations, with different allowed sets by layer. A dirent is 64 bytes:
+six eight-byte locators plus sixteen metadata bytes. Directory facts are
+existence, routing bounds, representation and complete Part association.
+Summary validity/corrections remain data facts. Stable directory locators do not
+waive the selected Segment geometry or correction law.
 
-Independent checks derive expected directory membership, bounds and locator
-identity from offered deltas, not tree caches. This cannot prove a producer
-correctly omitted an event or chose a representative event mix. Producer no-event,
-base/delta/validity and whole-request claims require an independent semantic
-producer oracle in their owning material/Engine experiment. Old/fresh
-Scopes must agree with their respective expected states after every failure,
-structural repair, conversion and retry. Include duplicate fences at every
-storage-page boundary, all-null summaries supplied by the producer, maximum
-physical prefix/position and old schema interpretation. Sanitizer and failure
-checks support correctness; they cannot certify performance.
-
-Mapped/remote resources use explicit readiness outcomes and real lifetime rules.
-Resident measurements will not be presented as I/O, durability, recovery,
-distributed-writer or complete Engine-versus-LMDB results.
+Ikea operates on admitted borrowed/private bytes and reports coverage before
+local writes; it supplies no beforeimages or isolation. Orbital seals captured
+bodies/padding, retains sources and owns snapshot selection and atomic publication.
+Loom supplies physical access and execution: ordinary calls for ready work,
+retained Tasks for real waits. A root Part protects directory children, not
+independently versioned Segment data; that data still needs the same live Scope.

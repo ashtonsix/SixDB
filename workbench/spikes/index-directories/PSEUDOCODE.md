@@ -501,6 +501,30 @@ READY_SCAN_CONTROL:
     Calico: actual prepared range iterator; label any postprojection mask accurately
     # Predicate evaluation is OUTSIDE this external-ready-mask control.
     # A later predicate-evaluation case charges its real bytes/work in every arm.
+
+QUALIFY_SPARSE_NATIVE_CONTROL:
+    compare full-span external masks0 and1/64, quarter/full ranges, same inputs
+    Engine: open Scope, test actual query/mask intersection INSIDE clock
+       if no selected candidate: return empty with zero traversal/material counts
+       otherwise bind root and execute strongest qualified direct scan
+    native full walk: renew txn, same actual mask guard INSIDE clock
+       if nonempty: renew cursor, SET_RANGE once then NEXT, mask before consume
+    native mask runs: renew same single txn, same guard INSIDE clock
+       if nonempty: renew cursor; run helper already selects, no redundant mask test
+       derive maximal consecutive runs from ORIGINAL mask, merging across words
+       SET_RANGE at run start only when no carried successor satisfies it
+       NEXT within run; carry first beyond-run key into following runs
+       stop at real NOTFOUND; never restart or seek backwards through a gap
+    close/reset inside interval in every arm, including empty result
+    repeat enough WHOLE scans; zero guard must read offered bitset, not mask advice
+    report common OFFERED directory candidates, actual traversal/positioned/seek/
+       NEXT counts, selected material and whole-query wall/owner/process time
+    normalize common work by offered input, keep ns/actual_visit only when nonzero
+       and ns/selected undefined for zero; fewer visits do not shrink offered work
+    the initial full-walk screen is retained, not retrospectively relabelled
+    untimed logical-counter probes use instrumented native specialization
+    timed/warm native specialization compiles counter tracking OUT of traversal
+       rather than merely omitting final counter stores; inspect the linked code
 ```
 
 The current F32 raw graph can save `{node bytes, group base, shift, next child
@@ -792,7 +816,10 @@ UPDATE_ENTRY(edit, before, after):
 LOCATOR_BATCH_WITHOUT_MEMBERSHIP(edit,coalesced_deltas):
     # Directory inputs already contain FINISHED independently allocated Segment Owners.
     # Their construction is charged in the separate complete moving-Part producer.
-    select each affected old group/leaf once under edit.basis
+    select each affected old group/leaf once under edit.basis, retaining its
+       selected Part/path in the request-local plan for validation and construction
+    # The complete producer reuses that plan; do not route twice for its deltas.
+    # Directory-only measurement includes navigation/planning from finished inputs.
     classify by actual selected realization/Part identity, not one entry per command
        and not backing Allocation: distinct logical slices can share one backing
     reserve output packet for actual distinct changed Objects, separately from
@@ -820,13 +847,24 @@ LOCATOR_BATCH_WITHOUT_MEMBERSHIP(edit,coalesced_deltas):
 
 MOVING_PART_DRIVER_BATCH(basis,commands):
     private bounded workspace deduplicates SegmentName, preserving command order
+    validate EVERY command's identity/field/preconditions, including commands
+       later cancelled by another command; no-op elimination is not admission
     read each distinct selected64B Segment material ONCE; validate locator binding
+       reuse one selected group/path plan for all commands in that group
     apply commands to its private value; compare final state with selected before
     omit a repeated-key sequence whose FINAL bytes equal before
+    if caller already supplies selected material and COMPLETE unchanged binding
+       proof, a final no-op need not perform another directory route
+    if ALL no-op: return unchanged at this READ basis, without prepare/install
+       # No publication stale check occurred; do not claim a new write cut.
     for each actually changed Segment:
         construct/capture one new independently allocated64B material
         derive its actual Part pointer and emit one finished SegmentDelta
+    on producer-phase failure: unwind earlier finished Owners and remaining
+       Allocations while the basis/source proofs still live, even before Edit exists
     LOCATOR_BATCH_WITHOUT_MEMBERSHIP with all finished deltas and SAME basis
+    clear caller-held finished/change Owners after install, inside the interval
+       # prepare retains from const change slots; it does not consume these uses.
     # B64 is one publication, never64 scalar replace() calls or prefinished data
     # outside the claimed moving-Part interval. Directory never edits record rows.
 

@@ -234,14 +234,24 @@ material consumer, not a directory-only measurement. The roughly 5% ratio of
 pooled medians includes variability: paired median gains are 3.29%/4.24%, and
 one G64 process ties. The four-arm lookahead control must beat this strongest
 direct procedure; its bank stores/loads and setup count. Even a faster kernel
-does not establish complete Engine fit. A source-reviewed DUPFIXED bulk native
-peer remains unqualified and could tighten P further.
+does not establish complete Engine fit. The grouped DUPFIXED native peer has
+since passed behavior qualification, but remains unmeasured and could tighten P.
 
 The bounded 64-pointer lookahead trial did not improve the strongest direct
 path: owner-CPU paired medians lose at both G16 and G64 with and without hints.
 Do not include a speculative lookahead gain in the budget. Keep the negative
 control and its source-capture timing disclosure in
 [Findings](FINDINGS.md); it supplies no new acceptance P.
+
+The subsequent competent sparse control measures one ready bit per64 candidates
+with actual native run seeks and diagnostic tracking removed from its timed
+specialization. Whole-query Engine/native-best times are0.392/2.255us (8K
+quarter),1.609/10.550us (8K whole),21.563/157.728us (262K quarter) and
+133.879/944.335us (262K whole). These component cells have substantial conditional
+room. All-zero masks instead measure the common bitset/lifecycle work:
+3.220/3.622us at262K whole, with no entries visited or consumed. That misses2x;
+do not use an entry-throughput ratio or the historical full-walk zero result.
+Neither cell closes the complete Engine budget. See [Findings](FINDINGS.md).
 
 For membership/balance, hash growth, extra-list packing and schema operations,
 matched P is not measured yet. The absolute ceilings below

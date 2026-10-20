@@ -65,6 +65,9 @@ void scan(MDB_txn* txn,MDB_dbi db,const std::vector<Row>& rows,const GraphScanRe
   std::vector<Row> wanted;
   for (const auto& value:rows) if (bit(request,value.key)) wanted.push_back(value);
   check(actual.size()==wanted.size() && work.visited==wanted.size(),"native selected/run visit count");
+  check(work.calls==work.seeks+work.nexts,"native cursor call accounting");
+  if (wanted.empty() && !mask_has_candidate(request))
+    check(!work.calls && !work.visited,"zero guard performed native traversal");
   for (unsigned i=0;i<actual.size();++i) check(actual[i].key==wanted[i].key &&
       actual[i].values==wanted[i].values,"native ordered complete row/key association");
   mdb_cursor_close(cursor);

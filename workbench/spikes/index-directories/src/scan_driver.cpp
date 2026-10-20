@@ -93,23 +93,37 @@ struct Native {
     check(flags==MDB_INTEGERKEY,"native database key policy differs");
     mdb_txn_reset(reader);
   }
-  ScanResult scan(const GraphScanRequest& request,lmdb_range::Work* counters=nullptr) {
-    native(mdb_txn_renew(reader)); native(mdb_cursor_renew(reader,cursor));
+  // Policy0 preserves the original full-walk control;1 guards that walk;
+  //2 guards then seeks actual maximal selected mask runs in this SAME txn.
+  template<bool Instrumented=false>
+  ScanResult scan(const GraphScanRequest& request,lmdb_range::Work* counters=nullptr,
+      unsigned policy=0) {
+    native(mdb_txn_renew(reader));
     ScanResult result{};
     lmdb_range::Work work;
-    if (!request.mask || request.mask_bits)
-      native(lmdb_range::scan(cursor,request.low,request.high,work,
-          [&](std::uint32_t prefix,const MDB_val& value) {
-            if (!selected(request,prefix)) return;
-            result.sum+=digest(static_cast<const std::byte*>(value.mv_data)); ++result.selected;
-          }));
-    if (counters) *counters=work;
+    if ((!policy && (!request.mask || request.mask_bits)) ||
+        (policy && mask_has_candidate(request))) {
+      native(mdb_cursor_renew(reader,cursor));
+      const auto consume=[&](std::uint32_t,const MDB_val& value) {
+        result.sum+=digest(static_cast<const std::byte*>(value.mv_data)); ++result.selected;
+      };
+      native(policy==2?lmdb_range::masked_runs<Instrumented>(cursor,request,work,consume):
+          lmdb_range::scan<Instrumented>(cursor,request.low,request.high,work,
+              [&](std::uint32_t prefix,const MDB_val& value) {
+                if (selected(request,prefix)) consume(prefix,value);
+              }));
+    }
+    if constexpr (Instrumented) { if (counters) *counters=work; }
     mdb_txn_reset(reader); return result;
   }
 };
 ScanResult engine(GroupFixture& fixture,GraphScanRequest request,ScanCounters* counters=nullptr,
-    unsigned kernel=0) {
+    unsigned kernel=0,bool guard=false) {
   Store::Scope scope(fixture.store());
+  if (guard && !mask_has_candidate(request)) {
+    if (counters) *counters={};
+    return {};
+  }
   const auto root=scope.bind({GroupFixture::graph_space,GroupFixture::root_base});
   check(bool(root),"selected root absent");
   const auto part=root.part(0); check(bool(part),"selected root Part absent");
@@ -136,88 +150,125 @@ void run(loom::Worker& worker,const char* path,std::size_t count,unsigned repeat
   const auto rows=records(count);
   GroupFixture fixture(worker,rows,nullptr,true,grain);
   Native peer; peer.load(path,rows);
-  std::printf("trial,position,arm,population,grain,range,mask_kept_per64,scans_per_sample,visited_per_scan,selected_per_scan,material_bytes_per_scan,wall_ns,owner_ns,process_ns,checksum\n");
+  std::printf("trial,position,arm,population,grain,range,mask_kept_per64,scans_per_sample,visited_per_scan,selected_per_scan,material_bytes_per_scan,wall_ns,owner_ns,process_ns,checksum,offered_per_scan,native_cursor_gets_per_scan,native_seeks_per_scan,native_nexts_per_scan,positioned_per_scan,boundary_per_scan,visited_groups_per_scan,visited_nodes_per_scan,mask_guard\n");
   const bool dense=!std::strcmp(mode,"dense"),densities=!std::strcmp(mode,"densities"),
-      lookahead=!std::strcmp(mode,"lookahead");
+      lookahead=!std::strcmp(mode,"lookahead"),sparse_peer=!std::strcmp(mode,"sparse-peer");
+  struct Arm {
+    const char* label;
+    bool is_engine;
+    unsigned kernel{},native_policy{};
+    bool guard{};
+  };
+  std::array<Arm,4> configurations{{{"engine_native_scan",true},
+      {"lmdb_native_cursor",false}}};
+  const unsigned arms=lookahead?4:dense||sparse_peer?3:2;
+  if (dense) configurations[2]={"engine_dense_rank",true,1};
+  if (lookahead) {
+    configurations[0]={"engine_dense_rank",true,1};
+    configurations[2]={"engine_pointerbank_none",true,2};
+    configurations[3]={"engine_pointerbank_hint",true,3};
+  }
+  if (sparse_peer) {
+#if defined(__aarch64__)
+    constexpr unsigned strongest=1;
+#else
+    constexpr unsigned strongest=0;
+#endif
+    configurations[0]={"engine_guarded_scan",true,strongest,0,true};
+    configurations[1]={"lmdb_guarded_cursor",false,0,1,true};
+    configurations[2]={"lmdb_guarded_mask_runs",false,0,2,true};
+  }
   const auto ranges=dense||lookahead?std::vector<const char*>{"full"}:
       std::vector<const char*>{"quarter","full"};
   for (const char* range:ranges) {
     const auto low=std::strcmp(range,"full")?count/4:0;
     const auto high=std::strcmp(range,"full")?count/2-1:count-1;
-    const auto choices=dense||lookahead?std::vector<int>{-1}:densities?std::vector<int>{-1,0,1,8,32,64}:
-        std::vector<int>{-1,8};
+    const auto choices=sparse_peer?std::vector<int>{0,1}:dense||lookahead?
+        std::vector<int>{-1}:densities?std::vector<int>{-1,0,1,8,32,64}:std::vector<int>{-1,8};
     for (const auto kept:choices) {
       const auto bits=mask(count,kept<0?64:unsigned(kept));
       const GraphScanRequest request{nullptr,kept<0?nullptr:bits.data(),0,count,
           std::uint32_t(low),std::uint32_t(high),nullptr,0};
       const auto want=expected(rows,request);
-      ScanCounters visited; lmdb_range::Work native_visited;
-      const auto e=engine(fixture,request,&visited),n=peer.scan(request,&native_visited);
-      check(e.sum==want.sum && e.selected==want.selected && n.sum==want.sum &&
-          n.selected==want.selected,"untimed complete scan output differs");
-      if (dense) {
-        ScanCounters dense_visited;
-        const auto d=engine(fixture,request,&dense_visited,true);
-        check(d.sum==want.sum && d.selected==want.selected &&
-            !std::memcmp(&visited,&dense_visited,sizeof(visited)),"untimed dense-rank output/counters differ");
+      // This fixture's admitted directory has exactly one entry per original
+      // prefix0..count-1. Offered work is shared even when an arm visits none.
+      const auto offered=std::uint64_t(high-low+1);
+      std::array<ScanCounters,4> engine_counts{};
+      std::array<lmdb_range::Work,4> native_counts{};
+      std::array<std::uint64_t,4> visits{};
+      for (unsigned arm=0;arm<arms;++arm) {
+        const auto& c=configurations[arm];
+        const auto actual=c.is_engine?engine(fixture,request,&engine_counts[arm],c.kernel,c.guard):
+            peer.scan<true>(request,&native_counts[arm],c.native_policy);
+        check(actual.sum==want.sum && actual.selected==want.selected,"untimed complete scan output differs");
+        visits[arm]=c.is_engine?engine_counts[arm].visited_dirents:native_counts[arm].visited;
+        const auto wanted_visits=c.guard && !want.selected?0:
+            c.native_policy==2?want.selected:offered;
+        check(visits[arm]==wanted_visits,"actual traversal count differs from admitted dense range/policy");
+        if (c.is_engine) check(engine_counts[arm].material_bytes==want.selected*64,
+            "actual selected material count differs");
+        else check(native_counts[arm].calls==native_counts[arm].seeks+native_counts[arm].nexts,
+            "native cursor call accounting differs");
       }
-      if (lookahead) for (unsigned kernel:{1u,2u,3u}) {
-        ScanCounters actual;
-        const auto d=engine(fixture,request,&actual,kernel);
-        check(d.sum==want.sum && d.selected==want.selected &&
-            !std::memcmp(&visited,&actual,sizeof(visited)),"untimed pointer-bank output/counters differ");
-      }
-      check(visited.visited_dirents==native_visited.visited,"range visit boundary differs");
-      const auto scans=std::max<std::uint64_t>(1,((1u<<20)+visited.visited_dirents-1)/visited.visited_dirents);
-      const unsigned arms=lookahead?4:dense?3:2;
+      if (dense || lookahead) for (unsigned arm=2;arm<arms;++arm)
+        check(!std::memcmp(&engine_counts[0],&engine_counts[arm],sizeof(ScanCounters)),
+            "candidate traversal counters differ");
+      auto scans=std::max<std::uint64_t>(1,((1u<<20)+offered-1)/offered);
+      if (sparse_peer) scans=std::max<std::uint64_t>(scans,kept?16:8192);
       static constexpr unsigned permutations[6][3]={{0,1,2},{0,2,1},{1,0,2},
           {1,2,0},{2,0,1},{2,1,0}};
       // Four rows balance every position and all twelve directed adjacent-arm
       // pairs. Per-arm self-warm remains necessary for the timed scan itself.
       static constexpr unsigned lookahead_order[4]={0,1,3,2};
       for (unsigned trial=0;trial<repeats;++trial) for (unsigned position=0;position<arms;++position) {
-        const auto arm=dense?permutations[trial%6][position]:lookahead?
+        const auto arm=dense||sparse_peer?permutations[trial%6][position]:lookahead?
             (lookahead_order[position]+trial)%4:(trial+position)%arms;
-        const bool is_engine=arm!=1;
-        const unsigned kernel=lookahead?(arm==0?1:arm):dense&&arm==2?1:0;
-        const char* label=is_engine?(kernel==1?"engine_dense_rank":kernel==2?
-            "engine_pointerbank_none":kernel==3?"engine_pointerbank_hint":"engine_native_scan"):
-            "lmdb_native_cursor";
+        const auto& c=configurations[arm];
+        const auto invoke=[&] {
+          return c.is_engine?engine(fixture,request,nullptr,c.kernel,c.guard):
+              peer.scan(request,nullptr,c.native_policy);
+        };
         // Dense comparison: one complete, checked self-warm scan per arm avoids
         // confounding the first timed scan with a different predecessor's data.
-        if (dense||lookahead) {
-          const auto warm=is_engine?engine(fixture,request,nullptr,kernel):peer.scan(request);
+        if (dense||lookahead||sparse_peer) {
+          const auto warm=invoke();
           check(warm.sum==want.sum && warm.selected==want.selected,"dense arm warmup differs");
         }
         const Clock start;
         ScanResult result{};
         for (std::uint64_t scan=0;scan<scans;++scan) {
-          const auto one=is_engine?engine(fixture,request,nullptr,kernel):peer.scan(request);
+          const auto one=invoke();
           result.sum+=one.sum; result.selected+=one.selected;
         }
         const auto wall=now(CLOCK_MONOTONIC_RAW)-start.wall;
         const auto owner=now(CLOCK_THREAD_CPUTIME_ID)-start.owner;
         const auto process=now(CLOCK_PROCESS_CPUTIME_ID)-start.process;
         check(result.sum==want.sum*scans && result.selected==want.selected*scans,"timed useful output differs");
-        std::printf("%u,%u,%s,%zu,%u,%s,%d,%llu,%llu,%llu,%llu,%llu,%llu,%llu,%llu\n",
-            trial,position,label,
+        const auto& nw=native_counts[arm]; const auto& ec=engine_counts[arm];
+        std::printf("%u,%u,%s,%zu,%u,%s,%d,%llu,%llu,%llu,%llu,%llu,%llu,%llu,%llu,%llu,%llu,%llu,%llu,%llu,%llu,%llu,%llu,%u\n",
+            trial,position,c.label,
             count,grain,range,kept,
-            (unsigned long long)scans,(unsigned long long)visited.visited_dirents,
+            (unsigned long long)scans,(unsigned long long)visits[arm],
             (unsigned long long)want.selected,(unsigned long long)(want.selected*64),(unsigned long long)wall,
-            (unsigned long long)owner,(unsigned long long)process,(unsigned long long)result.sum);
+            (unsigned long long)owner,(unsigned long long)process,(unsigned long long)result.sum,
+            (unsigned long long)offered,(unsigned long long)nw.calls,
+            (unsigned long long)nw.seeks,(unsigned long long)nw.nexts,
+            (unsigned long long)nw.positioned,(unsigned long long)nw.boundary,
+            (unsigned long long)ec.visited_groups,(unsigned long long)ec.visited_nodes,unsigned(c.guard));
       }
     }
   }
 }
 }
 int main(int argc,char** argv) {
-  check(argc==7,"usage: scan_driver NEW_DB_DIR POPULATION REPEATS GRAIN HELPER_CPU basic|densities|dense|lookahead");
+  check(argc==7,"usage: scan_driver NEW_DB_DIR POPULATION REPEATS GRAIN HELPER_CPU basic|densities|dense|lookahead|sparse-peer");
   const auto count=std::strtoull(argv[2],nullptr,10);
   const unsigned repeats=std::strtoul(argv[3],nullptr,10),grain=std::strtoul(argv[4],nullptr,10);
   check(count>=4 && count<=1u<<24 && repeats>=2 && !(count%4),"bounded count/repeats");
   check(grain==16 || grain==64 || grain==256,"physical grain16/64/256");
   check(!std::strcmp(argv[6],"basic") || !std::strcmp(argv[6],"densities") ||
-      !std::strcmp(argv[6],"dense") || !std::strcmp(argv[6],"lookahead"),"basic|densities|dense|lookahead");
+      !std::strcmp(argv[6],"dense") || !std::strcmp(argv[6],"lookahead") ||
+      !std::strcmp(argv[6],"sparse-peer"),"basic|densities|dense|lookahead|sparse-peer");
   loom::Worker worker; check(bool(loom::adopt(worker)),"Worker adoption");
   auto arena=orbital::allocation::open_arena(512u<<20,std::atoi(argv[5]));
   check(bool(arena) && bool(loom::configure(worker,std::move(*arena),0)),"Worker configuration");
