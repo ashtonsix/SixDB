@@ -102,7 +102,14 @@ public:
 namespace orbital::object_detail {
 
 inline std::uint64_t TipDirectory::hash(ObjectId id) noexcept {
-  return id.high ^ (id.low * 0x9e3779b97f4a7c15ULL);
+  // Structured IDs can vary only above a long zero suffix. Mix those bits down
+  // before the power-of-two bucket mask, rather than preserving that suffix.
+  auto value = id.high ^ (id.low * 0x9e3779b97f4a7c15ULL);
+  value ^= value >> 30;
+  value *= 0xbf58476d1ce4e5b9ULL;
+  value ^= value >> 27;
+  value *= 0x94d049bb133111ebULL;
+  return value ^ (value >> 31);
 }
 
 inline std::size_t TipDirectory::position(ObjectId id) const noexcept {
