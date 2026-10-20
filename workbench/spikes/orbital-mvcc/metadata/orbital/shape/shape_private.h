@@ -33,7 +33,6 @@ inline const Geometry* geometries(const Shape* shape) { return geometries(const_
 inline ReadLaw* law(Shape* shape) {
   return static_cast<ReadLaw*>(static_cast<void*>(bytes(shape) + sizeof(Shape) + shape->parts * sizeof(Geometry)));
 }
-inline std::size_t Control::part_count() const noexcept { return shape->parts; }
 inline std::pmr::memory_resource* Control::resource() const noexcept { return shape->resource; }
 inline PartId Control::id(std::size_t index) const noexcept { return geometries(shape)[index].id; }
 inline Result<std::uint64_t> Control::extent(std::size_t index) const noexcept { return geometries(shape)[index].extent(records); }

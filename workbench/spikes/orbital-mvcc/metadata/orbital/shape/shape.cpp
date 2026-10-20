@@ -154,6 +154,7 @@ Bytes tuple_interpretation(const Shape* shape) noexcept { return wire(shape); }
 bool Control::valid(std::pmr::memory_resource& memory) const noexcept {
   return shape && shape->resource == &memory && (shape->parts || !records);
 }
+std::size_t Control::part_count() const noexcept { return shape->parts; }
 void Control::retain() const noexcept { compact_shape::retain(shape); }
 void Control::release() const noexcept { compact_shape::release(shape); }
 std::size_t Control::metadata_bytes() const noexcept { return shape->allocated_bytes; }
