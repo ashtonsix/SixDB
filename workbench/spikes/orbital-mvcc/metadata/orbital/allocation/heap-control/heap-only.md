@@ -37,8 +37,8 @@ qualification is one native smoke and census; the failure-history matrix belongs
 to the separate bounded16-plus-heap cut and was not rerun here.
 
 The frozen runtime remains under `build/orbital-mvcc-metadata/heap-only/`.
-The small [smoke](probes/smoke.cpp), [census](probes/census.cpp) and
-[CMake recipe](CMakeLists.txt) are retained here; they use the existing tracked
+The small [smoke](https://github.com/ashtonsix/SixDB/blob/c8f9081104ef61ee897fbbaf954223ae0a3d7656/workbench/spikes/orbital-mvcc/metadata/orbital/allocation/heap-control/probes/smoke.cpp), [census](https://github.com/ashtonsix/SixDB/blob/c8f9081104ef61ee897fbbaf954223ae0a3d7656/workbench/spikes/orbital-mvcc/metadata/orbital/allocation/heap-control/probes/census.cpp) and
+[CMake recipe](https://github.com/ashtonsix/SixDB/blob/c8f9081104ef61ee897fbbaf954223ae0a3d7656/workbench/spikes/orbital-mvcc/metadata/orbital/allocation/heap-control/CMakeLists.txt) are retained here; they use the existing tracked
 NativeFixture. Rebuild the two checks from the repository:
 
 ```sh

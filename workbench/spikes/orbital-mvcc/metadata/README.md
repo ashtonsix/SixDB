@@ -1,5 +1,9 @@
 # Metadata and call boundaries
 
+The prototype/ABI comparisons below are historical. Current selected consequence
+checks and recovery for the retired controls are listed in the
+[retirement guide](../../../benchmarks/retired-drivers.md).
+
 The question is how much state each operation actually needs, where that state
 lives, and what crosses its calls. Smaller handles alone do not answer it.
 The baseline is the withdrawn Stage 2 cut `7f73c81`; probes retain their compiler,
@@ -105,13 +109,13 @@ budget: cold allocator capacity, initial catalog/physical records and resident
 consumer construction plans still matter. The measured cuts and their limits
 remain with the [complete-operation feedback](../performance/FEEDBACK.md).
 
-- [Orbital records and closures](orbital/FINDINGS.md), [Allocation and Worker](orbital/allocation-worker.md), and [probe runner](orbital/run.py).
-- [Consumer and Ikea field/call census](consumer/ikea-census.md), [actual type probes](consumer/census.cpp), [probe runner](consumer/probe.py), and [qualification/native candidates](consumer/candidates.h).
+- [Orbital records and closures](orbital/FINDINGS.md), [Allocation and Worker](orbital/allocation-worker.md), and [probe runner](https://github.com/ashtonsix/SixDB/blob/c8f9081104ef61ee897fbbaf954223ae0a3d7656/workbench/spikes/orbital-mvcc/metadata/orbital/run.py).
+- [Consumer and Ikea field/call census](consumer/ikea-census.md), [actual type probes](https://github.com/ashtonsix/SixDB/blob/c8f9081104ef61ee897fbbaf954223ae0a3d7656/workbench/spikes/orbital-mvcc/metadata/consumer/census.cpp), [probe runner](https://github.com/ashtonsix/SixDB/blob/c8f9081104ef61ee897fbbaf954223ae0a3d7656/workbench/spikes/orbital-mvcc/metadata/consumer/probe.py), and [qualification/native candidates](https://github.com/ashtonsix/SixDB/blob/c8f9081104ef61ee897fbbaf954223ae0a3d7656/workbench/spikes/orbital-mvcc/metadata/consumer/candidates.h).
 - [Admitted private write batches](consumer/write-batch.md) compare one batch admission with repeated field-writer binding, including actual effects, private backing and unchanged-error controls.
 - [Shared Shape writer laws](consumer/shape-write.md) remove repeated descriptor admission. The composed driver now uses the narrower [value/tag command](consumer/point-write.md), which also removes a source lookup and preserves untouched fields; the full-record writer remains a comparison control.
 - [Shared-Shape native reads](consumer/shape-read.md) compare checked runtime-law access with proven selected/mapped endpoints that specialize the admitted canonical transfers while preserving the same chain semantics.
 - [Composed Shape adapter](composed/README.md) joins shared Shapes, actual Allocation owners, retained histories, native reads/writes and one-Part/four-Part conversion. [Actual compact adapter checks](performance_adapter/README.md) independently exercise the descriptor-based performance controls.
-- [Loom findings and selected evidence](loom/README.md), [actual frame/type probes](loom/facts.cpp), [ordinary call producers](loom/boundaries.cpp), [consumers](loom/callers.cpp), and [code-generation runner](loom/codegen.py).
+- [Loom findings and selected evidence](loom/README.md), [actual frame/type probes](https://github.com/ashtonsix/SixDB/blob/c8f9081104ef61ee897fbbaf954223ae0a3d7656/workbench/spikes/orbital-mvcc/metadata/loom/facts.cpp), [ordinary call producers](https://github.com/ashtonsix/SixDB/blob/c8f9081104ef61ee897fbbaf954223ae0a3d7656/workbench/spikes/orbital-mvcc/metadata/loom/boundaries.cpp), [consumers](https://github.com/ashtonsix/SixDB/blob/c8f9081104ef61ee897fbbaf954223ae0a3d7656/workbench/spikes/orbital-mvcc/metadata/loom/callers.cpp), and [code-generation runner](https://github.com/ashtonsix/SixDB/blob/c8f9081104ef61ee897fbbaf954223ae0a3d7656/workbench/spikes/orbital-mvcc/metadata/loom/codegen.py).
 
 The [performance study](../performance/README.md) owns the measured comparisons.
 Apply shared codec improvements to the mapped-LMDB arm too. Compare the old

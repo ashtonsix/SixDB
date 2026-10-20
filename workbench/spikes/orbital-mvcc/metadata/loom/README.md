@@ -4,7 +4,7 @@ This census uses frozen `7f73c81`, before Stage2 moved into this spike. It
 separates stable resident ownership from values actually crossing functions.
 Pinned Clang 21.1.8 compiled 84 size/alignment/trait facts for AArch64 Neoverse V2
 and x86-64 Zen5, independent producer/caller TUs, LLVM return signatures and the
-actual [Loom caller](../../callers/loom.cpp). All layout facts agree across these
+actual [Loom caller](https://github.com/ashtonsix/SixDB/blob/c8f9081104ef61ee897fbbaf954223ae0a3d7656/workbench/spikes/orbital-mvcc/callers/loom.cpp). All layout facts agree across these
 two installed sysroots. [Selected evidence](evidence.json) retains the facts,
 signatures, object identities and whole-caller observations.
 

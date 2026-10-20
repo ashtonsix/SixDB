@@ -149,7 +149,7 @@ The ignored private captures and replica receipt live under
 `build/orbital-mvcc-metadata/loom/chain-codegen/`. The exact first disassembly was
 recovered through its owning artifact and matches SHA256 `32be28cd…` in the run.
 Both jobs' artifacts own exact executable recovery and their immutable sources.
-[chain_codegen.py](chain_codegen.py) compiles the actual captured
+[chain_codegen.py](https://github.com/ashtonsix/SixDB/blob/c8f9081104ef61ee897fbbaf954223ae0a3d7656/workbench/spikes/orbital-mvcc/metadata/loom/chain_codegen.py) compiles the actual captured
 `performance/run.cpp`, reusing the existing relocation-aware analyzer:
 
 ```sh

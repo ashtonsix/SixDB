@@ -399,11 +399,8 @@ template<class Backend> void unsupported(const char* name) {
 
 int main() {
   run<c::Inline>("inline16", 9, 7);
-  run<c::Directory>("directory16", 9, 7);
   run<c::Inline>("inline16", 7, 2);
-  run<c::Directory>("directory16", 7, 2);
   unsupported<c::Inline>("inline16");
-  unsupported<c::Directory>("directory16");
   std::printf("{\"passed\":true,\"timings\":false,\"actual_teardown_checked\":true,"
       "\"bodies\":%llu,\"logical_rows\":%llu,\"wire_bytes\":%llu,\"outcomes\":%llu,"
       "\"field_values\":%llu,\"refusals\":%llu,\"publications\":%llu,\"conversions\":%llu,\"point_updates\":%llu}\n",

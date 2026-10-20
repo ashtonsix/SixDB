@@ -104,7 +104,7 @@ and Part directory, plus the complete backing-owner directory. Its one/four-Part
 closures are 224/464 requested bytes, versus 600/1,272. `Selection` and `View`
 are ordinary eight-byte borrows. Rich inspection remains cold; native callers
 borrow a noncopyable description header or return spans. The
-[history adapter](candidates/candidate_store.h) removes per-Version ownership
+[history adapter](https://github.com/ashtonsix/SixDB/blob/c8f9081104ef61ee897fbbaf954223ae0a3d7656/workbench/spikes/orbital-mvcc/metadata/orbital/candidates/candidate_store.h) removes per-Version ownership
 headers and uses a nonmovable 32-byte caller-resident Scope. Actual AArch64 IR
 returns bind8, alternative result16, borrow16 and status8 in registers. Cold
 owning Prepared results still use a hidden result pointer.

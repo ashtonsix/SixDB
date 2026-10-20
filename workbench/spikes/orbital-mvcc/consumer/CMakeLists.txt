@@ -1,21 +1,8 @@
+add_library(orbital_object_trace STATIC trace.cpp)
+sixdb_target(orbital_object_trace)
+target_include_directories(orbital_object_trace PUBLIC .)
+
 add_library(orbital_versioned_data STATIC data.cpp)
 sixdb_target(orbital_versioned_data)
-target_link_libraries(orbital_versioned_data PUBLIC orbital::orbital ikea::seriespack ikea::tuplepack)
-target_include_directories(orbital_versioned_data PUBLIC .
-  "${PROJECT_SOURCE_DIR}/workbench/benchmarks/orbital")
-
-add_library(orbital_versioned_consumer STATIC consumer.cpp)
-sixdb_target(orbital_versioned_consumer)
-target_link_libraries(orbital_versioned_consumer PUBLIC orbital_versioned_data orbital_mvcc_baseline)
-
-add_executable(orbital_versioned_data_check check_data.cpp)
-sixdb_target(orbital_versioned_data_check)
-target_link_libraries(orbital_versioned_data_check PRIVATE orbital_versioned_data orbital_bench_workload)
-add_test(NAME orbital_versioned_data_check COMMAND orbital_versioned_data_check)
-set_tests_properties(orbital_versioned_data_check PROPERTIES TIMEOUT 60 LABELS orbital-mvcc)
-
-add_executable(orbital_versioned_check check.cpp)
-sixdb_target(orbital_versioned_check)
-target_link_libraries(orbital_versioned_check PRIVATE orbital_versioned_consumer)
-add_test(NAME orbital_versioned_check COMMAND orbital_versioned_check)
-set_tests_properties(orbital_versioned_check PROPERTIES TIMEOUT 60 LABELS orbital-mvcc)
+target_link_libraries(orbital_versioned_data PUBLIC orbital_object_trace orbital::orbital ikea::seriespack ikea::tuplepack)
+target_include_directories(orbital_versioned_data PUBLIC . "${CMAKE_CURRENT_SOURCE_DIR}/..")

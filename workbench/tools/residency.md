@@ -12,7 +12,7 @@ loads L1-, LLC- or DRAM-served from allocated bytes alone.
 | Actual THP and NUMA placement | The same probe's per-mapping `smaps` / `numa_maps` receipts; requested advice is recorded separately |
 | Guest PMU availability and permissions | [Counter availability tool](pmu/README.md), retaining sysfs types, formats, aliases, status/errno and group coverage |
 | Counter sensitivity over real memory accesses | [Memory MLP diagnostics](../spikes/memory-characterisation/pmu.sh), with a fresh group over each calibrated dependent chase and below-/above-cache footprint controls |
-| Counters over an exact composed request interval | [Orbital consumer](../benchmarks/orbital/measurement.md#counter-diagnostics), in separate throughput diagnostics |
+| Counters over an exact composed request interval | [Historical Orbital example](../benchmarks/orbital/measurement.md#counter-diagnostics); a new caller supplies its own interval using the shared PMU helper |
 | Composed representation and actual page mappings | The same consumer's opt-in `--memory-receipt on`, collected after measurement; overlapping post-state extents are not an accessed-line set |
 
 For cache-sensitive workload comparisons, retain both the setup history and

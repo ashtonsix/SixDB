@@ -33,7 +33,7 @@ as an experimental control. Allocation and Hold remain 32 B; the fallible
 
 [`checked-owner.patch`](checked-owner.patch) carries that refusal through
 Shape's already-fallible export operation. An unexposed Export is destroyed and
-deallocated when its physical pin fails. [`export_failure.cpp`](export_failure.cpp)
+deallocated when its physical pin fails. [`export_failure.cpp`](https://github.com/ashtonsix/SixDB/blob/c8f9081104ef61ee897fbbaf954223ae0a3d7656/workbench/spikes/orbital-mvcc/metadata/orbital/allocation/routes/export_failure.cpp)
 checks both export policies and a successful retry with actual SeriesPack bytes.
 [`accounting.patch`](accounting.patch) adapts the composed Material's cold
 diagnostic to the actual slot array, identity and Window layout. It compiles
@@ -59,7 +59,7 @@ first Group-vector pointer capacity (8 B), Arena/Pool/thread/libc setup and all
 Object/Shape metadata. These are requested capacities, not allocator usable
 sizes or RSS. Window is 328 B in both treatments. The existing control mapping
 has occupied bytes 1,968 / 2,488; its slack suggests a separate placement
-question, not an implemented saving here. [`census.cpp`](census.cpp) checks the
+question, not an implemented saving here. [`census.cpp`](https://github.com/ashtonsix/SixDB/blob/c8f9081104ef61ee897fbbaf954223ae0a3d7656/workbench/spikes/orbital-mvcc/metadata/orbital/allocation/routes/census.cpp) checks the
 component sum against actual public charges.
 
 ## Directional performance and checks
@@ -73,7 +73,7 @@ Two ordered sweeps on the local AArch64 OrbStack guest, Clang 21.1.8, `-O3
 | Two foreign releasers, separate counter lines | 7.6–7.7 | 17.7–18.4 | 26.1–29.8 |
 | Two foreign releasers, counters in one 64 B region | 45.8–46.7 | 44.1–46.6 | 44.3–57.0 |
 
-[`timing.cpp`](timing.cpp) pins workers and verifies the counter placement.
+[`timing.cpp`](https://github.com/ashtonsix/SixDB/blob/c8f9081104ef61ee897fbbaf954223ae0a3d7656/workbench/spikes/orbital-mvcc/metadata/orbital/allocation/routes/timing.cpp) pins workers and verifies the counter placement.
 Its foreign uses are captured before timing; the Allocation stays live, so
 these are non-final returns without advice or queue work. Storage16 retains its
 old infallible copy API; compare Checked8 with Packed4 for matched refusal and
@@ -87,7 +87,7 @@ the storage saving. The composed target-worker screen should decide this trade-o
 
 Eight existing lifecycle/failure tests passed for each checked layout in Release
 and fully instrumented ASan/UBSan/LSan; the packed refinement passed the same
-sixteen runs. [`check.cpp`](check.cpp) adds NDEBUG-active saturation before mutation,
+sixteen runs. [`check.cpp`](https://github.com/ashtonsix/SixDB/blob/c8f9081104ef61ee897fbbaf954223ae0a3d7656/workbench/spikes/orbital-mvcc/metadata/orbital/allocation/routes/check.cpp) adds NDEBUG-active saturation before mutation,
 identity 255, reuse, mixed Group/Window, eight foreign publishers, last-pin queue
 custody and held-byte growth histories. Ready copies also compile and run these
 checks in Debug. Captured recipes, sources, logs and receipts are under ignored

@@ -1,10 +1,10 @@
 # Experimental Loom callers
 
 The [MVCC study](../README.md) owns these candidate Object-facing contracts.
-[loom.cpp](loom.cpp) retains real lifetime and cancellation histories from the
+[loom.cpp](https://github.com/ashtonsix/SixDB/blob/c8f9081104ef61ee897fbbaf954223ae0a3d7656/workbench/spikes/orbital-mvcc/callers/loom.cpp) retains real lifetime and cancellation histories from the
 rejected implementation; the production Loom API remains Stage 1.
 
-[Orbital Objects](../baseline/include/orbital/mvcc_baseline.h) supply selected versions,
+[Orbital Objects](https://github.com/ashtonsix/SixDB/blob/c8f9081104ef61ee897fbbaf954223ae0a3d7656/workbench/spikes/orbital-mvcc/baseline/include/orbital/mvcc_baseline.h) supply selected versions,
 physical descriptions and retained Views. A named `BorrowedContext` serves
 uninterrupted ready calls; end its borrowed access before publication, suspension
 or Store destruction, and before replacing a borrowed alternative. For discovery
@@ -29,7 +29,7 @@ discard cancelled work or freeze and prepare the original Draft. Publication
 still requires its exact basis; late filled bytes grant no authority to replace
 a newer result.
 
-The [Object caller check](loom.cpp) exercises direct ready reads,
+The [Object caller check](https://github.com/ashtonsix/SixDB/blob/c8f9081104ef61ee897fbbaf954223ae0a3d7656/workbench/spikes/orbital-mvcc/callers/loom.cpp) exercises direct ready reads,
 Signal retries with publication and adoption of an authored equivalent
 Representation during a wait, narrow retention, foreign native use after detach,
 delayed private fills with current/cancelled/stale completion, and selective Ring

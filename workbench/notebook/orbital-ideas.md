@@ -5,7 +5,7 @@ the [Orbital runtime](../../orbital/README.md).
 The [cross-module design](../design/orbital/DESIGN.md) keeps future protocol direction
 separate from the selected embedded implementation and withdrawn baseline in the
 [MVCC investigation](../spikes/orbital-mvcc/README.md). Stage 2 is in audit and
-consolidation; its [remaining workload leads](../spikes/orbital-mvcc/performance/README.md#wider-operating-conditions)
+consolidation; its [remaining workload leads](../spikes/orbital-mvcc/OUTCOMES.md#what-carries-into-later-composition)
 are not a queued campaign. [Stage 2 outcomes](../spikes/orbital-mvcc/OUTCOMES.md)
 carry the findings into Ikea/Engine work. Stage 3 is dropped from the plan;
 future Orbital work will follow those real composition needs. The

@@ -1,8 +1,7 @@
 #pragma once
 #include "material.h"
 #include "read_fusion.h"
-#include "../orbital/candidates/shape_policy.h"
-#include "../../performance/request_cache.h"
+#include "request_cache.h"
 #include <algorithm>
 
 namespace orbital_mvcc::composed {
@@ -224,5 +223,4 @@ public:
   static constexpr std::size_t write_caller_arrays = sizeof(std::array<Change, 64>) + sizeof(std::array<pw::Command, 64>);
 };
 using Inline = Backend<Catalog>;
-using Directory = Backend<compact_history::CompactShapeStore16>;
 } // namespace orbital_mvcc::composed

@@ -22,6 +22,9 @@ inputs and fake cloud clients. `--list` derives descriptions from the scripts th
 macOS directly as well as Linux, and does not launch a browser.
 `pmu` uses offline permission/error fixtures; it needs no hardware-counter access.
 The independent [PMU tool](../pmu/README.md) exercises actual guest availability.
+`lmdb` compiles a tiny native peer check with Clang 21 and installed `liblmdb-dev`;
+it verifies snapshots, abort, reserve and cursor consequences without a harness.
+`retired_benchmarks` checks retained offline reports and refusal of old run commands.
 
 The opt-in `tlc` check uses `TLC_TEST_JAR` for real checkpoint/kill/restore checks;
 see the [TLC guide](../tlc/README.md#exercised-recovery). Without that variable it

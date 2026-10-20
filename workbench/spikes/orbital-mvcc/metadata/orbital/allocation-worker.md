@@ -1,7 +1,7 @@
 # Allocation and Worker metadata census
 
 Measured from **7f73c818548c9c52b53818f2eb5af3c1d2451124**, not the moving
-Stage2 source. The probe is [allocation_worker.cpp](allocation_worker.cpp).
+Stage2 source. The probe is [allocation_worker.cpp](https://github.com/ashtonsix/SixDB/blob/c8f9081104ef61ee897fbbaf954223ae0a3d7656/workbench/spikes/orbital-mvcc/metadata/orbital/allocation_worker.cpp).
 Linux AArch64 under OrbStack, Clang **21.1.8**, C++23, `-O3`, no LTO,
 libstdc++ **15**, glibc **2.42**, 4 KiB native pages. These are layouts and call
 boundaries, not timings or a claim about Zen5. The standard library is not pinned.

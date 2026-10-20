@@ -1,6 +1,6 @@
 # Stage1 ownership behind shared-shape collections
 
-[allocation_profiles.cpp](allocation_profiles.cpp) measures the real Stage1
+[allocation_profiles.cpp](https://github.com/ashtonsix/SixDB/blob/c8f9081104ef61ee897fbbaf954223ae0a3d7656/workbench/spikes/orbital-mvcc/metadata/orbital/allocation_profiles.cpp) measures the real Stage1
 allocator behind 64 encoded Objects. It uses frozen `7f73c81` Orbital allocation
 and current shared-shape ownership. Linux AArch64, Clang 21.1.8, libstdc++ 15,
 glibc 2.42, 4 KiB pages. This is state accounting, not a timing comparison.

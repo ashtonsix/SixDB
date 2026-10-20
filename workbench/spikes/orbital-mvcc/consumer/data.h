@@ -1,6 +1,6 @@
 #pragma once
 
-#include "workload.h"
+#include "trace.h"
 #include <ikea/seriespack.h>
 #include <ikea/tuplepack.h>
 #include <orbital/types.h>

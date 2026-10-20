@@ -19,7 +19,7 @@ contains actual target sizes, alignments, traits and ordinary return classificat
 The [write/conversion call audit](codegen-write-control.md) identifies checks,
 result copies and binding work that actually survive compilation, with their
 stationary view and owner-closure requirements.
-[probe.py](probe.py) produces real `sizeof` executables, LLVM signatures and
+[probe.py](https://github.com/ashtonsix/SixDB/blob/c8f9081104ef61ee897fbbaf954223ae0a3d7656/workbench/spikes/orbital-mvcc/metadata/consumer/probe.py) produces real `sizeof` executables, LLVM signatures and
 assembly from independent TUs using pinned Clang 21.1.8 and libstdc++15. The x86
 size executable runs under QEMU; that execution supplies no timing evidence.
 The ARM target is `armv8-a+simd/neoverse-v2`; x86 is `x86-64-v3/znver5`.
@@ -58,7 +58,7 @@ The compact law is shared across matching Parts, not separately allocated per Pa
 Its one-cursor retained law/control/cursor total is 88 bytes; law plus Part is 80.
 The canonical cursor and count total 16 bytes; materializing its empty tag would
 add `sizeof(Law)==1`. Fixed comparison constants and generated code remain real
-program costs, measured separately by [candidate_probe.py](candidate_probe.py).
+program costs, measured separately by [candidate_probe.py](https://github.com/ashtonsix/SixDB/blob/c8f9081104ef61ee897fbbaf954223ae0a3d7656/workbench/spikes/orbital-mvcc/metadata/consumer/candidate_probe.py).
 No source type size is asserted to be an optimized frame size.
 
 The separately compiled hot-only point/chain probe charges generated code too:
@@ -97,14 +97,14 @@ these are emitted function frames, not total application-stack bounds.
 
 ## Parent proof and lifetime
 
-[descriptor_adapter.h](descriptor_adapter.h) retains rich `Description88` admission
+[descriptor_adapter.h](https://github.com/ashtonsix/SixDB/blob/c8f9081104ef61ee897fbbaf954223ae0a3d7656/workbench/spikes/orbital-mvcc/metadata/consumer/descriptor_adapter.h) retains rich `Description88` admission
 as a control and adds immutable borrowed parent inspection. Both preserve actual
 Object/version, ProgramId, logical count, canonical 24-byte parent, actual one-Part
 directory and requested PartId checks before the direct Part validator.
-[compact](compact_descriptor_adapter.h) and [canonical](canonical_descriptor_adapter.h)
+[compact](https://github.com/ashtonsix/SixDB/blob/c8f9081104ef61ee897fbbaf954223ae0a3d7656/workbench/spikes/orbital-mvcc/metadata/consumer/compact_descriptor_adapter.h) and [canonical](https://github.com/ashtonsix/SixDB/blob/c8f9081104ef61ee897fbbaf954223ae0a3d7656/workbench/spikes/orbital-mvcc/metadata/consumer/canonical_descriptor_adapter.h)
 selected adapters preserve the same facts without retaining a Schema.
 
-The [generic addressed-Part adapters](adapters.h) support explicit requested IDs
+The [generic addressed-Part adapters](https://github.com/ashtonsix/SixDB/blob/c8f9081104ef61ee897fbbaf954223ae0a3d7656/workbench/spikes/orbital-mvcc/metadata/consumer/adapters.h) support explicit requested IDs
 under a many-Part selection, but prove only that Part's descriptor and placement.
 Their enclosing parent/shape proof is a separate obligation. A legacy resolved
 View cannot reveal actual sibling count: its richer legacy overload explicitly

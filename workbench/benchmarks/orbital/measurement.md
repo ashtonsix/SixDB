@@ -1,5 +1,8 @@
 # Orbital measurement controls
 
+This reference describes the retired driver. The [retirement guide](../retired-drivers.md)
+keeps historical source recovery and the current integration checks separate.
+
 Start with the [consumer guide](README.md) for the ordinary comparison and its
 implementation boundary. This reference covers staged reads, timing and effect
 accounting, preparation, PMU/residency controls, and the separate lifecycle cohort.
@@ -191,7 +194,7 @@ discarded construction and startup-produced pages need separate completed-work
 totals at startup/request/drain boundaries. Adoption is not the time the writes
 were issued. Whole-process CPU does not replace that accounting.
 
-[request_events.py](request_events.py) runs that replay and joins it to a
+[request_events.py](https://github.com/ashtonsix/SixDB/blob/c8f9081104ef61ee897fbbaf954223ae0a3d7656/workbench/benchmarks/orbital/request_events.py) runs that replay and joins it to a
 validated scalar `latencies.csv`. It refuses changed composed implementation
 inputs, mismatched trace/final-state/logical split totals and missing or reordered
 request indices, and checks collected case bytes against an adjacent worker
@@ -312,7 +315,7 @@ bounded lifecycle with explicit trim, not a capacity-exhaustion benchmark. The
 cover additional page preparation; this cohort does not price that treatment.
 These lifecycle-cycle quantiles are separate from database
 request quantiles. The worker adapter runs this cohort after ready comparisons.
-For a lifecycle-only rerun, submit [pressure.sh](pressure.sh) through the same
+For a lifecycle-only rerun, submit [pressure.sh](https://github.com/ashtonsix/SixDB/blob/c8f9081104ef61ee897fbbaf954223ae0a3d7656/workbench/benchmarks/orbital/pressure.sh) through the same
 worker helper; it builds only the lifecycle executable and accepts the same
 pressure-runner arguments. This avoids repeating the scalar campaign when only
 allocator internals have changed.

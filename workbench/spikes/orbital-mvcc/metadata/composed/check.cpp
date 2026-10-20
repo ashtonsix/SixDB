@@ -1,5 +1,5 @@
 #include "backend.h"
-#include "../../performance/oracle.h"
+#include "oracle.h"
 #include <cstdio>
 #include <cstdlib>
 #include <source_location>
@@ -204,9 +204,7 @@ template<class Backend> void check_window_extent(const char* name) {
 int main() {
   for (auto format : {v::Format::rows, v::Format::columns}) {
     run<c::Inline>("inline16", format);
-    run<c::Directory>("directory16", format);
   }
   check_window_extent<c::Inline>("inline16");
-  check_window_extent<c::Directory>("directory16");
   std::puts("{\"passed\":true,\"teardown_checked\":true,\"timings\":false}");
 }

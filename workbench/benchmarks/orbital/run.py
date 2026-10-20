@@ -1,16 +1,11 @@
 #!/usr/bin/env python3
-"""Replay paired exact traces; throughput and latency use separate fresh stores."""
+"""Offline summaries for the retired allocation driver; no build or replay dispatch."""
 import argparse
 import csv
 import hashlib
 import json
-import os
 from pathlib import Path
-import platform
-import shutil
 import statistics
-import subprocess
-import time
 
 
 PREPARATION_FIELDS = [
@@ -258,137 +253,10 @@ def summarize(root):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('binary', type=Path, nargs='?')
-    parser.add_argument('--output', type=Path, required=True)
-    parser.add_argument('--summarize-only', action='store_true')
-    parser.add_argument('--cpu', type=int, default=int(os.environ.get('SIXDB_CPU', -1)))
-    parser.add_argument('--records', default='8192,262144,4194304')
-    parser.add_argument('--workloads', default='point-hit,point-miss,point-update,point-rmw,insert-random,delete,scan-16,append,dependent-16,ycsb-a,ycsb-b,ycsb-c,ycsb-d,ycsb-e,ycsb-f,order-entry,order-status,stock-range,insert-scan')
-    parser.add_argument('--backends', default='packed-owner,lmdb,packed,packed-retained,lmdb-read-batch64')
-    parser.add_argument('--operations', type=int, default=100000)
-    parser.add_argument('--repetitions', type=int, default=3)
-    parser.add_argument('--seed', type=int, default=20261007)
-    parser.add_argument('--batch-width', type=int, default=1)
-    parser.add_argument('--read-execution', choices=['serial', 'native', 'manual', 'ring'], default='serial')
-    parser.add_argument('--modes', default='throughput,latency')
-    parser.add_argument('--pmu', choices=['off', 'basic', 'stalls'], default='off')
-    parser.add_argument('--pmu-event', action='append', default=[])
-    parser.add_argument('--memory-receipt', choices=['off', 'on'], default='off')
-    parser.add_argument('--read-active', type=int, default=16)
-    parser.add_argument('--cache-setup', choices=['loaded', 'warm-trace'], default='loaded')
-    parser.add_argument('--warmup-passes', type=int, default=1)
-    parser.add_argument('--prepared-pages', type=int, default=0)
-    parser.add_argument('--preparer-cpu', type=int, default=-1)
-    parser.add_argument('--prepared-prefill', choices=['on', 'off'], default='on')
+    parser.add_argument('--output', type=Path, required=True, help='Existing collected campaign')
+    parser.add_argument('--summarize-only', action='store_true', help='Accepted historical report spelling')
     args = parser.parse_args()
-    if args.summarize_only:
-        summarize(args.output); return
-    if not args.binary or args.cpu not in os.sched_getaffinity(0) or args.repetitions < 1:
-        parser.error('binary, allowed --cpu and positive repetitions required')
-    modes = args.modes.split(',')
-    if not modes or len(set(modes)) != len(modes) or not set(modes) <= {'latency', 'throughput'}:
-        parser.error('choose distinct latency/throughput modes')
-    if args.pmu != 'off' and modes != ['throughput']:
-        parser.error('PMU collection requires a separate --modes throughput diagnostic')
-    if args.memory_receipt == 'on' and modes != ['throughput']:
-        parser.error('Memory receipts require a separate --modes throughput diagnostic')
-    if args.pmu_event and args.pmu == 'off':
-        parser.error('--pmu-event requires --pmu basic or stalls')
-    if not 1 <= args.batch_width <= 64:
-        parser.error('read batch width must be in [1,64]')
-    if not 1 <= args.read_active <= 64 or not 1 <= args.warmup_passes <= 16:
-        parser.error('active read width must be in [1,64]; warmup passes in [1,16]')
-    if args.cache_setup == 'warm-trace' and not set(args.workloads.split(',')) <= {'point-hit','point-miss','scan-16','dependent-16','ycsb-c','order-status','stock-range'}:
-        parser.error('warm-trace conditioning supports read-only workloads')
-    if (args.batch_width > 1 or args.read_execution != 'serial') and not set(args.workloads.split(',')) <= {'point-hit','point-miss','dependent-16','ycsb-c'}:
-        parser.error('read batches support point hit/miss, YCSB-C and dependent reads')
-    if args.read_execution != 'serial' and not set(args.backends.split(',')) <= {'packed-owner','lmdb','lmdb-read-batch64'}:
-        parser.error('staged candidate requires packed-owner with genuine LMDB references')
-    if not 0 <= args.prepared_pages <= 4096 or args.preparer_cpu < -1:
-        parser.error('prepared pages must be in [0,4096], preparer CPU >= -1')
-    if args.preparer_cpu != -1 and args.preparer_cpu not in os.sched_getaffinity(0):
-        parser.error('explicit preparer CPU must be in runner allowed affinity')
-    backend_names = args.backends.split(',')
-    if ('lmdb' not in backend_names or len(set(backend_names)) != len(backend_names) or
-            not set(backend_names) <= {'lmdb', 'packed-owner', 'packed', 'packed-retained', 'lmdb-read-batch64'}):
-        parser.error('include lmdb and distinct supported candidate backends')
-    args.binary = args.binary.resolve()
-    args.output.mkdir(parents=True, exist_ok=False)
-    # Measure a retained immutable copy, so a concurrent incremental rebuild
-    # cannot silently change binaries halfway through the paired campaign.
-    measured_binary = args.output.resolve() / 'orbital_allocation_bench'
-    shutil.copy2(args.binary, measured_binary)
-    binary_hash = hashlib.sha256(measured_binary.read_bytes()).hexdigest()
-    run = {'format': 1, 'status': 'running', 'binary_sha256': binary_hash,
-           'binary': 'orbital_allocation_bench', 'platform': platform.platform(), 'cpu': args.cpu,
-           'allowed_cpus': sorted(os.sched_getaffinity(0)), 'config': vars(args) | {'binary': str(args.binary), 'output': str(args.output)},
-           'lmdb_reference': {'common': 'NOSYNC/NOMETASYNC; ordinary locking/COW',
-                              'lmdb': 'one transaction per logical request',
-                              'lmdb-read-batch64': 'up to64 adjacent read requests per real snapshot; write request interrupts/commits separately'},
-           'candidate_omits': ['Engine', 'Shore', 'versioning', 'isolation', 'durability'], 'runs': []}
-    run['host_lscpu'] = json.loads(subprocess.check_output(['lscpu', '-J']))
-    cache_root = Path(f'/sys/devices/system/cpu/cpu{args.cpu}/cache')
-    run['cpu_cache'] = [{field: (index / field).read_text().strip()
-                        for field in ['level', 'type', 'size', 'shared_cpu_list', 'id']
-                        if (index / field).exists()} for index in sorted(cache_root.glob('index*'))]
-    run['packages'] = subprocess.run(['dpkg-query', '-W', 'liblmdb0', 'liblmdb-dev'], text=True, capture_output=True).stdout
-    run['residency'] = {'input_preparation': 'fresh store loaded and execution bank prepared before timing',
-                        'cache_conditioning': args.cache_setup,
-                        'warmup_passes': args.warmup_passes if args.cache_setup == 'warm-trace' else 0,
-                        'scope': 'exact validated trace replayed after setup; no explicit flush or eviction',
-                        'observed_load_service_tier': None,
-                        'interpretation': 'allocated/mapped footprint and cache geometry do not establish timed load residency'}
-    run['preparation'] = {'pages': args.prepared_pages, 'requested_cpu': args.preparer_cpu,
-                          'prefill': args.prepared_prefill,
-                          'startup': 'explicitly after load/bank/sample/timer/conditioning; cost reported separately',
-                          'resource_scope': 'default helper inherits caller pin; explicit distinct CPU is extra resource',
-                          'reference': 'LMDB receives prepared-pages=0; no added producer'}
-    def save():
-        (args.output / 'run.json').write_text(json.dumps(run, indent=2, default=str) + '\n')
-    save()
-    try:
-        for records in map(int, args.records.split(',')):
-            for workload in args.workloads.split(','):
-                for trial in range(args.repetitions):
-                    # Reverse paired backend order between trials; no competing
-                    # timing processes and no independent source/build changes.
-                    order = backend_names if trial % 2 == 0 else list(reversed(backend_names))
-                    for mode in modes:
-                        for backend in order:
-                            name = f'{records}-{workload}-{trial}-{mode}-{backend}'
-                            destination = args.output / name
-                            command = ['taskset', '-c', str(args.cpu), str(measured_binary),
-                                       '--backend', backend, '--workload', workload,
-                                       '--records', str(records), '--operations', str(args.operations),
-                                       '--seed', str(args.seed), '--mode', mode, '--output', str(destination)]
-                            command += ['--batch-width', str(args.batch_width), '--read-execution', args.read_execution]
-                            if backend.startswith('packed') and args.prepared_pages:
-                                command += ['--prepared-pages', str(args.prepared_pages),
-                                            '--preparer-cpu', str(args.preparer_cpu),
-                                            '--prepared-prefill', args.prepared_prefill]
-                            if args.read_active != 16:
-                                command += ['--read-active', str(args.read_active)]
-                            if args.cache_setup != 'loaded':
-                                command += ['--cache-setup', args.cache_setup,
-                                            '--warmup-passes', str(args.warmup_passes)]
-                            if args.pmu != 'off':
-                                command += ['--pmu', args.pmu]
-                                for event in args.pmu_event:
-                                    command += ['--pmu-event', event]
-                            if args.memory_receipt == 'on':
-                                command += ['--memory-receipt', 'on']
-                            started = time.monotonic()
-                            with (args.output / (name + '.log')).open('w') as log:
-                                subprocess.run(command, stdout=log, stderr=subprocess.STDOUT, check=True)
-                            run['runs'].append({'directory': name, 'trial': trial, 'command': command,
-                                                'seconds': time.monotonic() - started})
-                            save(); print(f'{name}: complete', flush=True)
-        summarize(args.output)
-        if hashlib.sha256(measured_binary.read_bytes()).hexdigest() != binary_hash:
-            raise ValueError('Measured binary changed during campaign')
-        run['status'] = 'complete'; save()
-    except BaseException as error:
-        run['status'] = 'failed'; run['error'] = str(error); save(); raise
+    summarize(args.output)
 
 
 if __name__ == '__main__':

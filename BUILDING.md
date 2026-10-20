@@ -52,20 +52,18 @@ hidden by default; future shared-library APIs will need explicit exports.
 The [Orbital runtime](orbital/README.md) and [Loom](loom/README.md) implement
 Stage 1 allocation, preparation, worker and execution support.
 `orbital_validate` and `loom_validate` build and run their checks.
-Select `-DSIXDB_BENCHMARKS=orbital` to reproduce the historical
-[allocation comparison](workbench/benchmarks/orbital/README.md); it is not the
-next Engine performance driver.
+The [old Orbital drivers](workbench/benchmarks/retired-drivers.md) are retired.
+Use their original captured sources for historical reproduction.
 
 Concrete Orbital materials instantiate cold operations once through public
 opt-in headers; see [supplying material](orbital/docs/material.md#compile-once).
 Ordinary read TUs omit those cold definitions.
-The [Orbital MVCC study](workbench/spikes/orbital-mvcc/README.md) retains the rejected
-baseline and experimental controls. Select `-DSIXDB_SPIKES=orbital-mvcc` independently
-of benchmark selection, then build `orbital_mvcc_composed_check` and
-`orbital_mvcc_composed_read_fusion_check` to exercise the selected module through
-the real TuplePack/SeriesPack driver. `orbital_mvcc_validate` also checks baseline
-histories, actual Loom callers, consumers and LMDB. The retained baseline header
-is `orbital/mvcc_baseline.h`; it cannot shadow the production `orbital/object.h`.
+The [Object integration checks](workbench/spikes/orbital-mvcc/README.md) are
+selected with `-DSIXDB_SPIKES=orbital-mvcc`. Build
+`orbital_mvcc_metadata_validate` for the retained production consequence,
+codec/publication, Loom and pack-growth checks. They do not need LMDB or the
+rejected baseline. For new peer comparisons,
+[native LMDB discovery](workbench/peers/README.md) is independent of those fixtures.
 
 Build the `ikea_validate` target to build and run Ikea's behavior checks and
 examples. They are registered with CTest: `ctest --test-dir BUILD -N` lists them;

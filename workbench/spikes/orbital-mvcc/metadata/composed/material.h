@@ -1,6 +1,6 @@
 #pragma once
-#include "../../performance/runtime.h"
-#include "../../performance/read.h"
+#include "fixture.h"
+#include "read.h"
 #include "../consumer/shape_read.h"
 #include "../consumer/write_batch.h"
 #include "../consumer/shape_write.h"

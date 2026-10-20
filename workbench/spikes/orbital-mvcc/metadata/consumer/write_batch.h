@@ -1,9 +1,5 @@
 #pragma once
-#if defined(CONSUMER_METADATA_FROZEN) && CONSUMER_METADATA_FROZEN
-#include "workbench/benchmarks/orbital/versioned/consumer.h"
-#else
-#include "consumer/consumer.h"
-#endif
+#include "consumer/effects.h"
 
 namespace orbital_mvcc::metadata_consumer::write_batch {
 namespace v = orbital_bench::versioned;

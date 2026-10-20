@@ -197,6 +197,14 @@ def main():
         shutil.rmtree(renamed)
         dev('--sync')
         assert not any('renamed' in row['file'] for row in json.loads(database.read_text()))
+        # Retiring an active benchmark must not leave an invalid cached suite
+        # blocking refresh of the remaining spikes and their IntelliSense.
+        dev('--add-benchmark', 'recurring')
+        (root / 'workbench/benchmarks/recurring/CMakeLists.txt').unlink()
+        dev('--sync')
+        assert 'benchmark:recurring' not in dev('--list').splitlines()
+        assert not any('/benchmarks/recurring/' in row['file'] for row in json.loads(database.read_text()))
+        assert any(row['file'] == str(later / 'probe.cpp') for row in json.loads(database.read_text()))
         globbed = root / 'workbench/spikes/globbed'
         globbed.mkdir()
         (globbed / 'CMakeLists.txt').write_text(

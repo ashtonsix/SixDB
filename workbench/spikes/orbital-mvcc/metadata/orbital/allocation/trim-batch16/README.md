@@ -56,10 +56,10 @@ established timing advantage. Retain batching as a separately measured control;
 its metadata saving does not establish that its repeated scans are acceptable
 for the composed workload. Heap placement is separately attributable.
 
-[`trim_probe.cpp`](trim_probe.cpp) seeds real mapped/charged idle pages outside
+[`trim_probe.cpp`](https://github.com/ashtonsix/SixDB/blob/c8f9081104ef61ee897fbbaf954223ae0a3d7656/workbench/spikes/orbital-mvcc/metadata/orbital/allocation/trim-batch16/trim_probe.cpp) seeds real mapped/charged idle pages outside
 the measured interval. Mixed inventory fills A's identities to force a B Group,
 then releases the blockers; it is not exactly alternating after that setup.
-[`run.py`](run.py) builds matched plain and instrumented cuts, checks source
+[`run.py`](https://github.com/ashtonsix/SixDB/blob/c8f9081104ef61ee897fbbaf954223ae0a3d7656/workbench/spikes/orbital-mvcc/metadata/orbital/allocation/trim-batch16/run.py) builds matched plain and instrumented cuts, checks source
 hashes before/after, runs the consequence histories and records timing:
 
 ```sh

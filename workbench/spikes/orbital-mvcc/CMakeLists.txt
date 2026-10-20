@@ -1,46 +1,14 @@
-# Opt-in rejected baseline, separate from the runtime module's selected Objects.
-add_library(orbital_mvcc_baseline STATIC
-  baseline/src/catalog.cpp baseline/src/metadata.cpp baseline/src/representation.cpp)
-sixdb_target(orbital_mvcc_baseline)
-target_include_directories(orbital_mvcc_baseline PUBLIC baseline/include)
-target_link_libraries(orbital_mvcc_baseline PUBLIC orbital::orbital)
-
-add_executable(orbital_mvcc_baseline_check baseline/test/object.cpp)
-sixdb_target(orbital_mvcc_baseline_check)
-target_link_libraries(orbital_mvcc_baseline_check PRIVATE orbital_mvcc_baseline)
-add_test(NAME orbital_mvcc_baseline_check COMMAND orbital_mvcc_baseline_check)
-
-add_executable(loom_object_access_check callers/loom.cpp)
-sixdb_target(loom_object_access_check)
-target_link_libraries(loom_object_access_check
-  PRIVATE orbital_mvcc_baseline loom::loom ikea::tuplepack)
-add_test(NAME loom_object_access_check COMMAND loom_object_access_check)
-
-add_library(orbital_mvcc_interfaces OBJECT baseline/interfaces.cpp)
-sixdb_target(orbital_mvcc_interfaces)
-target_include_directories(orbital_mvcc_interfaces PRIVATE
-  "${PROJECT_SOURCE_DIR}/workbench/design/orbital/include")
-target_link_libraries(orbital_mvcc_interfaces PRIVATE orbital_mvcc_baseline)
-
-include("${PROJECT_SOURCE_DIR}/workbench/benchmarks/orbital/workload.cmake")
+# Current production consequence/integration checks. Historical benchmark builds
+# and rejected prototype matrices are recoverable from the retirement source cut.
 add_subdirectory(consumer)
-add_subdirectory(performance)
 add_subdirectory(metadata)
 
-foreach(check IN ITEMS orbital_versioned_lmdb_check orbital_versioned_body_check
-    orbital_versioned_performance_check)
-  add_test(NAME ${check} COMMAND python3 "${CMAKE_CURRENT_SOURCE_DIR}/check_database.py"
-    $<TARGET_FILE:${check}>)
-endforeach()
-set_tests_properties(orbital_mvcc_baseline_check loom_object_access_check
-  orbital_versioned_lmdb_check orbital_versioned_body_check
-  orbital_versioned_performance_check
-  PROPERTIES LABELS orbital-mvcc TIMEOUT 60)
-add_custom_target(orbital_mvcc_validate
-  COMMAND "${CMAKE_CTEST_COMMAND}" --test-dir "${PROJECT_BINARY_DIR}"
-    --output-on-failure --no-tests=error -L "^orbital-mvcc$"
-  DEPENDS orbital_mvcc_baseline_check loom_object_access_check orbital_mvcc_interfaces
-    orbital_versioned_data_check orbital_versioned_check
-    orbital_versioned_lmdb_check orbital_versioned_body_check
-    orbital_versioned_performance_check
-  USES_TERMINAL VERBATIM)
+add_executable(orbital_pack_growth_check ../../benchmarks/orbital/growth.cpp)
+sixdb_target(orbital_pack_growth_check)
+target_compile_options(orbital_pack_growth_check PRIVATE -UNDEBUG)
+target_link_libraries(orbital_pack_growth_check PRIVATE loom::loom ikea::seriespack ikea::tuplepack)
+add_test(NAME orbital_pack_growth_check COMMAND orbital_pack_growth_check)
+set_tests_properties(orbital_pack_growth_check PROPERTIES LABELS orbital-mvcc-metadata TIMEOUT 60)
+add_dependencies(orbital_mvcc_metadata_validate orbital_pack_growth_check)
+
+add_custom_target(orbital_mvcc_validate DEPENDS orbital_mvcc_metadata_validate)

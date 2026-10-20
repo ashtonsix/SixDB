@@ -1,6 +1,6 @@
 # Embedded Objects
 
-[mvcc_baseline.h](include/orbital/mvcc_baseline.h) is the rejected Stage 2 baseline, retained for comparison in this spike.
+[mvcc_baseline.h](https://github.com/ashtonsix/SixDB/blob/c8f9081104ef61ee897fbbaf954223ae0a3d7656/workbench/spikes/orbital-mvcc/baseline/include/orbital/mvcc_baseline.h) is the rejected Stage 2 baseline, retained for comparison in this spike.
 It experiments with completed, single-owner state; its layouts and interfaces
 are open to redesign together with measured complete-operation performance.
 One Store belongs to an adopted Lane. All API calls, reference copies and releases

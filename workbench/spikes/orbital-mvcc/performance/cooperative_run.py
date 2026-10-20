@@ -1,36 +1,11 @@
 #!/usr/bin/env python3
-"""Bounded large-body Message-service panel; throughput and delay clocks stay separate."""
+"""Offline tables from the completed discovery panel; no new campaign dispatch."""
 import argparse
 import csv
 import hashlib
 import json
-import os
-from pathlib import Path
 import statistics
-import sys
-import shutil
-
-STUDY = Path(__file__).resolve().parent
-ROOT = STUDY.parents[3]
-sys.path.insert(0, str(ROOT / 'workbench/tools'))
-from experiment import Run
-
-ARMS = [('unloaded', 'ring', 128), ('empty', 'ring', 128),
-        ('loaded', 'ring', 128), ('deferred', 'ring', 128),
-        ('loaded', 'ring', 32), ('loaded', 'manual', 128)]
-
-
-def cases():
-    for repetition in range(2):
-        modes = ['throughput', 'delay'] if repetition == 0 else ['delay', 'throughput']
-        for mode in modes:
-            arms = [arm for arm in ARMS if mode == 'throughput' or arm[0] not in ('unloaded', 'empty')]
-            if repetition:
-                arms = list(reversed(arms))
-                arms = arms[1:] + arms[:1]
-            for treatment, execution, quantum in arms:
-                yield dict(repetition=repetition, mode=mode, treatment=treatment,
-                           execution=execution, quantum=quantum)
+from pathlib import Path
 
 
 def distribution(values):
@@ -38,7 +13,6 @@ def distribution(values):
     return {'count': len(values), 'sum': sum(values),
             **{label: values[(len(values) * rank + 999) // 1000 - 1] if values else None
                for label, rank in [('p50', 500), ('p99', 990), ('max', 1000)]}}
-
 
 def audit_ordered(path, data):
     rows = list(csv.DictReader(path.open()))
@@ -76,7 +50,6 @@ def audit_ordered(path, data):
             'final_group': {k: int(v) for k, v in rows[-1].items()},
             'ordered_csv_sha256': hashlib.sha256(path.read_bytes()).hexdigest()}
 
-
 def report(samples, output):
     keys = ['repetition', 'mode', 'treatment', 'execution', 'quantum']
     costs = ['read_ns_per_request', 'all_work_ns_per_request', 'caller_cpu_ns_per_request', 'process_cpu_ns_per_request']
@@ -112,88 +85,13 @@ def report(samples, output):
             writer.writerow(row)
 
 
-def qualify(run, binary, check):
-    results = []
-    for mode in ['throughput', 'delay']:
-        for treatment, execution, quantum in ARMS:
-            if mode == 'delay' and treatment in ('unloaded', 'empty'):
-                continue
-            name = f'qualification-{len(results):02d}'
-            command = [binary, '--rows', '128', '--objects', '4', '--ops', '35', '--group', '32', '--verify-only', '1',
-                       '--mode', mode, '--treatment', treatment, '--execution', execution, '--quantum', str(quantum)]
-            if treatment == 'loaded' and quantum == 128:
-                command += ['--refusal-check', '1']
-            run.step(name, command, stdout_name=name + '.json')
-            data = json.loads((run.output / (name + '.json')).read_text())
-            assert data['passed'] and data['final_group_requests'] == 3 and data['groups'] == 2
-            assert data['read_complete_ns'] == data['all_work_complete_ns'] == data['caller_cpu_ns'] == 0
-            assert data['messages'] == (16 if treatment in ('loaded', 'deferred') else 0)
-            assert data['completion_delay_samples'] == (16 if mode == 'delay' else 0)
-            results.append(data)
-    assert len({r['digest'] for r in results}) == 1
-    run.step('original-ring-check', [check], stdout_name='original-ring-check.json')
-    original = json.loads((run.output / 'original-ring-check.json').read_text())
-    (run.output / 'native-qualification.json').write_text(json.dumps({'passed': True, 'control_cases': results, 'original_ring_check': original, 'sanitizer_claim': False}, indent=2) + '\n')
-
-
 def main():
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--report-only', type=Path, required=True, metavar='COLLECTED_RUN')
     parser.add_argument('--output', type=Path, required=True)
-    parser.add_argument('--report-only', type=Path)
-    parser.add_argument('--cpu', type=int, default=int(os.environ.get('SIXDB_CPU', '0')))
-    parser.add_argument('--jobs', type=int, default=1)
     args = parser.parse_args()
-    if args.report_only:
-        report(json.loads((args.report_only / 'samples.json').read_text()), args.output)
-        return
-    config = dict(cpu=args.cpu, jobs=args.jobs, rows=8388608, objects=256, ops=524291, group=1024, width=32, hints=True, steps=16,
-                  repetitions=2, march='x86-64-v3', tune='zen5', pmu='off', arrival_model='eight owner-posted ready Messages per group',
-                  clock_modes_separate=True, ordering='first forward; second reversed then rotated; reverse mode blocks')
-    workspace = Path(os.environ.get('SIXDB_DATA_CACHE', ROOT / 'build')) / 'orbital-cooperative-feedback'
-    run = Run(ROOT, args.output, config, workspace=workspace)
-    error = None
-    try:
-        source, build = run.source_root, run.build_dir
-        run.step('configure', ['cmake', '-S', source, '-B', build, '-G', 'Ninja', '-DCMAKE_BUILD_TYPE=Release',
-                              '-DCMAKE_CXX_COMPILER=clang++-21', '-DSIXDB_SPIKES=orbital-mvcc', '-DSIXDB_MARCH=x86-64-v3', '-DSIXDB_TUNE=zen5'])
-        run.step('build', ['cmake', '--build', build, '--target', 'loom_object_polling_control', 'loom_object_ring_check', '-j', str(args.jobs)])
-        binary = build / 'workbench/spikes/orbital-mvcc/performance/loom_object_polling_control'
-        check = build / 'workbench/spikes/orbital-mvcc/metadata/loom_object_ring_check'
-        (args.output / 'binary-identity.json').write_text(json.dumps({name: hashlib.sha256(path.read_bytes()).hexdigest() for name, path in [('control', binary), ('ring_check', check)]}, indent=2) + '\n')
-        qualify(run, binary, check)
-        samples = []
-        for i, case in enumerate(cases()):
-            name = f'trial-{i:02d}'
-            ordered = args.output / (name + '-ordered.csv')
-            opts = ['--rows', '8388608', '--objects', '256', '--ops', '524291', '--group', '1024', '--samples', str(ordered)]
-            for key in ['mode', 'treatment', 'execution', 'quantum']:
-                opts += ['--' + key, str(case[key])]
-            run.step(name, ['taskset', '-c', str(args.cpu), str(binary), *opts], stdout_name=name + '.json')
-            data = json.loads((args.output / (name + '.json')).read_text())
-            assert data['passed'] and data['logical_rows'] == 16 * data['operations']
-            samples.append((case, data, audit_ordered(ordered, data)))
-            (args.output / 'samples.json').write_text(json.dumps(samples, indent=2) + '\n')
-        assert len(samples) == 20 and len({d['digest'] for c, d, a in samples}) == 1
-        for c, d, a in samples:
-            if c['quantum'] != 128:
-                continue
-            assert len({other['returned_quanta'] for _, other, _ in samples if other['quantum'] == 128}) == 1
-        report(samples, args.output)
-        (args.output / 'qualification.json').write_text(json.dumps({'passed': True, 'timing_trials': len(samples), 'same_read_digest': True,
-            'ordered_samples_audited': True, 'matching_q128_quantum_counts': True, 'sanitizer_claim': False, 'pmu': 'off',
-            'limits': 'Ready owner-posted bursts only; group read/all-work makespans and post-to-handler Message delay are separate distributions; no per-request latency or external arrival/fairness claim.'}, indent=2) + '\n')
-        (args.output / 'build-cost.json').write_text(json.dumps([c for c in run.receipt['commands'] if c['name'] in ('configure', 'build')], indent=2) + '\n')
-        # Preserve executable bytes in the full archive, outside all work clocks.
-        binaries = args.output / 'binaries'
-        binaries.mkdir()
-        for path in [binary, check]:
-            shutil.copy2(path, binaries / path.name)
-        run.compact(['samples.json', 'measurements.csv', 'summary.csv', 'qualification.json', 'native-qualification.json', 'binary-identity.json', 'build-cost.json'], [])
-    except Exception as exc:
-        error = exc
-    error = run.finish(error)
-    if error:
-        raise error
+    args.output.mkdir(parents=True, exist_ok=True)
+    report(json.loads((args.report_only / 'samples.json').read_text()), args.output)
 
 
 if __name__ == '__main__':

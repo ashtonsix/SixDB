@@ -103,7 +103,7 @@ selection. The private release records native and full ASan/UBSan with
 always-use-after-return/leak qualification and pinned V2/Zen5 compile-only
 inspection separately. These checks establish correctness and machine-code
 properties, not throughput, IPC, stalls, DRAM residency or a policy ranking.
-The completed [wider operating comparisons](../performance/README.md#wider-operating-conditions)
+The completed [wider operating comparisons](../performance/FEEDBACK.md#wider-request-interleaving-and-append-growth)
 measure direct, manual and Ring reads, including cooperative Message service.
 Those findings retain the workload, source and timing limits separately from
 these correctness and code-generation checks.

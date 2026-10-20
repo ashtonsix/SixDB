@@ -73,7 +73,10 @@ def sync(snapshot=None):
         state = json.loads(STATE.read_text()) if STATE.exists() else {'known': sorted(initial_known(spikes))}
         pending = (set(state.get('pending', [])) | (spikes - set(state['known']))) & spikes
         selected = active_selection('SIXDB_SPIKES') & spikes
-        benchmarks = active_selection('SIXDB_BENCHMARKS')
+        benchmark_dirs = {Path(name).parent.name for name in snapshot
+                          if name.startswith('workbench/benchmarks/') and len(Path(name).parts) == 4
+                          and name.endswith('/CMakeLists.txt')}
+        benchmarks = active_selection('SIXDB_BENCHMARKS') & benchmark_dirs
         changed = snapshot != state.get('inputs')
         failed = bool(state.get('refresh_failed'))
         if changed or failed:

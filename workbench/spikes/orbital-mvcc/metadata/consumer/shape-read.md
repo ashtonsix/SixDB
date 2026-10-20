@@ -64,7 +64,7 @@ ownership added 24 bytes per Part. Allocator rounding/control blocks,
 dependencies, history, catalog Scope and owner closure remained additional.
 No read created another retained Schema, law, descriptor or payload scratch.
 
-[shape_read_sizes.cpp](shape_read_sizes.cpp) measures the actual records on
+[shape_read_sizes.cpp](https://github.com/ashtonsix/SixDB/blob/c8f9081104ef61ee897fbbaf954223ae0a3d7656/workbench/spikes/orbital-mvcc/metadata/consumer/shape_read_sizes.cpp) measures the actual records on
 both targets: proof/Selection/View/Cursor8, checked proof/View result16,
 read controls/Part16, ReadLaw64, Outcome24 and status result8. The transient
 Schema remains 10,176 bytes on ARM and 15,296 on x86; it is absent from reads.
@@ -111,7 +111,7 @@ gain or the incremental cost of one selected path.
 
 ## Original captured independent qualification
 
-[shape_read_check.cpp](shape_read_check.cpp) builds and publishes through
+[shape_read_check.cpp](https://github.com/ashtonsix/SixDB/blob/c8f9081104ef61ee897fbbaf954223ae0a3d7656/workbench/spikes/orbital-mvcc/metadata/consumer/shape_read_check.cpp) builds and publishes through
 actual `ShapeStore16`, with actual charged payload and shared-owner control
 blocks. All construction Schemas and temporary descriptor buffers end before
 reads. One admitted Tuple Shape is reused across 16 captures with counts
@@ -159,7 +159,7 @@ identify their own older consumer experiments; they do not recover this Shape
 capture, its native/sanitizer executions or its codegen outputs. Exact replay of
 this section still requires the original local capture and dependencies.
 
-[shape_read_probe.py](shape_read_probe.py) records ordinary signatures,
+[shape_read_probe.py](https://github.com/ashtonsix/SixDB/blob/c8f9081104ef61ee897fbbaf954223ae0a3d7656/workbench/spikes/orbital-mvcc/metadata/consumer/shape_read_probe.py) records ordinary signatures,
 actual compiler dependencies, separate LLVM/assembly/objects, section sizes,
 copied probe inputs and source/output hashes in
 `shape-read-1-codegen/receipt.json`. Only sizeof executables run for this

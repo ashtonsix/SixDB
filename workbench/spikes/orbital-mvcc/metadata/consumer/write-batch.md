@@ -60,7 +60,7 @@ three Tuple writer plans occupy 1,008 bytes within Schema; they are not an
 additional per-call copy. This loop reduces repeated admission/binding work,
 not retained write-law size.
 
-The [size probe](write_batch_sizes.cpp) includes the actual implementation to
+The [size probe](https://github.com/ashtonsix/SixDB/blob/c8f9081104ef61ee897fbbaf954223ae0a3d7656/workbench/spikes/orbital-mvcc/metadata/consumer/write_batch_sizes.cpp) includes the actual implementation to
 observe private records instead of mirroring them. Both targets report:
 
 | Actual record | Bytes | Residence |
@@ -115,7 +115,7 @@ conventions are separate from that public ABI.
 
 ## Independent qualification and provenance
 
-[write_batch_check.cpp](write_batch_check.cpp) builds real encoded sources and
+[write_batch_check.cpp](https://github.com/ashtonsix/SixDB/blob/c8f9081104ef61ee897fbbaf954223ae0a3d7656/workbench/spikes/orbital-mvcc/metadata/consumer/write_batch_check.cpp) builds real encoded sources and
 real private clones. Independent linear lookup selects expected rows; an
 independent per-bit map produces the expected entire final image. It compares
 the candidate, complete generic control and a third unchanged per-row control.
@@ -160,7 +160,7 @@ environment, reused/new object hashes, binary hashes and outputs. This proves
 the captured candidate against the captured comparator; it does not freeze
 the allocation layer or qualify a later integration automatically.
 
-[write_batch_probe.py](write_batch_probe.py) records both-target sizes, actual
+[write_batch_probe.py](https://github.com/ashtonsix/SixDB/blob/c8f9081104ef61ee897fbbaf954223ae0a3d7656/workbench/spikes/orbital-mvcc/metadata/consumer/write_batch_probe.py) records both-target sizes, actual
 LLVM endpoint signatures, assembly and object sections with pinned Clang
 21.1.8 and libstdc++15. AArch64 is Armv8 SIMD tuned for Neoverse V2; x86 is
 x86-64-v3 tuned for Zen5. QEMU executes the x86 size-only binary, never timing.

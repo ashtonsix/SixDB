@@ -50,7 +50,7 @@ not a composed database or a target-machine performance claim.
 
 ## Spatial fallback
 
-[`heat.h`](heat.h) / [`heat.cpp`](heat.cpp) compare the bounded Group aggregate,
+[`heat.h`](https://github.com/ashtonsix/SixDB/blob/c8f9081104ef61ee897fbbaf954223ae0a3d7656/workbench/spikes/orbital-mvcc/metadata/orbital/heat/heat.h) / [`heat.cpp`](https://github.com/ashtonsix/SixDB/blob/c8f9081104ef61ee897fbbaf954223ae0a3d7656/workbench/spikes/orbital-mvcc/metadata/orbital/heat/heat.cpp) compare the bounded Group aggregate,
 a whole-Group epoch bit, and physical recency. Two banks hold one presence bit
 for the current epoch and one for the previous epoch. They do not encode exact
 HOT/WARM/COLD plus timestamp order. Small Homes mark every crossed 128 B cell;
@@ -84,7 +84,7 @@ routing pointers and 24 B counters; the runtime patch reuses those facilities.
 Reserved body VA (A 2,605,056 / B 4,489,216 B) is reported separately from mapped
 body pages. Sparse traces still pay the fixed bank capacity.
 
-[`trace.cpp`](trace.cpp) uses real allocations at 48/64/1,536 B, 8 and 256 users.
+[`trace.cpp`](https://github.com/ashtonsix/SixDB/blob/c8f9081104ef61ee897fbbaf954223ae0a3d7656/workbench/spikes/orbital-mvcc/metadata/orbital/heat/trace.cpp) uses real allocations at 48/64/1,536 B, 8 and 256 users.
 Single-page sparse small bodies offer no page choice. With 3/4/96 mapped pages,
 or sparse 1,536 B bodies over 3 pages, spatial marks select a cold page while coarse
 recency ties all pages. Current production trim also uses coarse Group advice;
@@ -104,7 +104,7 @@ establish that fine advice wins overall.
 
 ## Checks and reproduction
 
-[`runtime.cpp`](runtime.cpp) checks actual partial/stale advice, non-final foreign
+[`runtime.cpp`](https://github.com/ashtonsix/SixDB/blob/c8f9081104ef61ee897fbbaf954223ae0a3d7656/workbench/spikes/orbital-mvcc/metadata/orbital/heat/runtime.cpp) checks actual partial/stale advice, non-final foreign
 publication, owner-final release before drain, a stalled publisher, advice between
 handle/release, and zero observed C++ allocations inside releases.
 `trace.cpp` also checks a 48 B Home crossing two cells, different identities
@@ -121,6 +121,6 @@ To build against the patched capture, set
 `runtime.cpp`, `$src/src/{types,worker}.cpp` and `$src/src/allocation/*.cpp` with
 C++23, its include/source-allocation directories, `-pthread` and
 `-Wl,--wrap=pthread_mutex_lock,--wrap=pthread_mutex_trylock`. The spatial trace
-also compiles `heat.cpp`; [`timing.cpp`](timing.cpp) gives the small local screen.
+also compiles `heat.cpp`; [`timing.cpp`](https://github.com/ashtonsix/SixDB/blob/c8f9081104ef61ee897fbbaf954223ae0a3d7656/workbench/spikes/orbital-mvcc/metadata/orbital/heat/timing.cpp) gives the small local screen.
 Use one matched source/header tree; older library and current private-record
 headers are not interchangeable. No production heat change is promoted here.

@@ -3,4 +3,3 @@ sixdb_target(call_boundary_probe)
 target_link_libraries(call_boundary_probe PRIVATE loom ikea::tuplepack)
 
 add_subdirectory(access-interleaving)
-add_subdirectory(critical-paths)

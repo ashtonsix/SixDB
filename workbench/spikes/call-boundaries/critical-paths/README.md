@@ -1,5 +1,9 @@
 # Single-operation critical paths
 
+This Page-layout ABI control is retired with the disposable allocation driver.
+Its original sources and commands are recoverable through the
+[retirement guide](../../../benchmarks/retired-drivers.md); findings below remain historical.
+
 October 9, 2026 bounded Stage 2 composition spike. Keeping ready read bodies
 visible avoids introducing expensive class/TU seams. Specializing an admitted
 fixed representation then removes dependent metadata loads and register

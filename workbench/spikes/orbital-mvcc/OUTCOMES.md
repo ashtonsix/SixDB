@@ -185,7 +185,7 @@ maintenance interrupted by readers/publication. Rebuild their setup around the
 real containers. Preserve measured source captures for comparisons; their APIs
 and the temporary harness do not need to survive as production interfaces.
 
-## Navigation, curation and the remaining spring clean
+## Navigation and retirement
 
 | To understand or change… | Start here |
 | --- | --- |
@@ -194,7 +194,7 @@ and the temporary harness do not need to survive as production interfaces.
 | Physical capture and escape | [representation.h](../../../orbital/include/orbital/representation.h), [Representation instantiation](../../../orbital/include/orbital/instantiate/representation.h), [normal consequence tests](../../../orbital/test/representation.cpp) |
 | Actual format/caller composition | [Material and Backend guide](metadata/composed/README.md), [Shape](metadata/orbital/shape/README.md), [caller-owned fusion](metadata/composed/read_fusion.cpp), [Loom caller](callers/object_module.md), [Ring caller](callers/object_ring.md) |
 | A measured decision or rejected alternative | This report → [performance entry](performance/README.md) → the relevant [feedback section](performance/FEEDBACK.md) → source recipe, compact tables and artifact reference beside that run |
-| Unselected follow-ups | [Parked controls](performance/controls/parked-followups/README.md), [prepare-pass lead](metadata/orbital/candidates/controls/prepare-pass/README.md) and the performance entry's workload questions; none is queued |
+| Unselected follow-ups | [Parked controls](performance/controls/parked-followups/README.md), [prepare-pass lead](metadata/orbital/candidates/controls/prepare-pass/README.md) and this report's carry-forward questions; none is queued |
 | Earlier designs and their limitations | [Study entry](README.md), [earlier composition](../orbital-stage2-composition/README.md), [selected-access prototype](../orbital-selected-access/README.md); these are not current module interfaces |
 
 The selected code is organized around a few ideas with clear owners. Cold
@@ -204,19 +204,18 @@ are deliberate maintenance costs. The concrete catalog TU is shared by the
 composed and Loom callers. No new dead production source or runtime redesign
 blocker was found in the final navigation review.
 
-The study is harder to navigate: it contains over a thousand tracked files,
-mostly compact evidence/receipts, and a long chronological feedback log. This
-handover supplies the missing decision-oriented route. Selected, rejected,
-historical and untimed work are distinguished; older sources remain because
-current comparison and consequence checks still depend on parts of that machinery.
-Bulk deletion now would be a separate dependency migration, not a spring clean.
+The completed harness retirement separated the nine production consequence
+checks from the old timing machinery. Their private trace, codec, oracle and
+Pool/Lane fixture no longer pull in LMDB, the virtual Page Store, or rejected
+MVCC runtime. Unused candidate/ABI implementations and campaign launchers are
+recoverable from the pre-retirement Git cut; selected findings and original
+artifact references remain. The [retirement guide](../../benchmarks/retired-drivers.md)
+records the current checks, native peer reuse and historical recovery.
 
-The bounded cleanup for this handover fixes stale current-state/capture prose,
-Body-borrow terminology, repeated compilation, the final initial census, downstream
-links and private-only follow-up recovery. Existing runs retain their original
-bytes and limits; notably, the cooperative-service run retained executable hashes
-but did not export its ELFs. Its source and samples are recoverable, and the runner
-now exports executables after clocks. No reproduction claim repairs that old gap.
+Offline reports still read the original observations. In particular, the
+cooperative-service run retained executable hashes but did not export its ELFs;
+its source and samples are recoverable, but later runner fixes do not repair
+that gap in the older measurement.
 Two [early consumer codegen captures](metadata/consumer/evidence/early-codegen-20261009/README.md)
 also retain their analyses and compiler receipts, but not a shared archive of all
 candidate overlays and full outputs. Their exact replay still depends on local
@@ -230,6 +229,6 @@ records these concrete costs and the refusal/rollback tradeoffs in changing them
 
 After this pass, further preparation lookup/duplicate-scan work, retention-policy
 changes, conversion selection and caller memory reductions belong with an actual
-workload. No broad experimental-tree rewrite or new benchmark campaign is needed
-to leave Orbital for Ikea/Engine. On return, use the real caller to decide which
-remaining controls are worth reviving and which fixture machinery can retire.
+workload. The historical harnesses have retired; no new benchmark campaign is queued.
+On return, use the real caller to decide which historical controls are worth
+reviving and how to rebuild their setup around the actual containers.

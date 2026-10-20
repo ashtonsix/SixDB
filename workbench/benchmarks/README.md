@@ -14,8 +14,9 @@ from Calico and SixDB.
 
 The [Orbital allocation consumer](orbital/README.md) and later disposable
 [versioned consumer](../spikes/orbital-mvcc/README.md) have served their purpose.
-They retain historical comparisons, reusable oracles and recovery references;
-neither is the next Engine driver or evidence for the current complete system.
+Their [retirement guide](retired-drivers.md) separates the preserved production
+integration checks from historical source, offline reports and recovery.
+New callers can use [native peers](../peers/README.md) without inheriting their schema.
 Individual candidate experiments and their findings
 stay with the [investigation](../spikes/README.md) that asks the question.
 
