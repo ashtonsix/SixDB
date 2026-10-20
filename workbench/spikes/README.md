@@ -19,6 +19,7 @@ experiments and checks under Object, Allocation, Journal, Port and Worker.
 - [Packed filters](packed-filters/README.md): SeriesPack/TuplePack predicate masks, direct packed comparisons and independent native latency/throughput controls.
 - [Layout analyser](layout-analyser/README.md): workload objectives, plane splitting, hardware fitting and reusable layout selection.
 - [Tuple layout](tuple-layout/README.md): physical layout, bound operations and native batching.
+- [Index directories](index-directories/README.md): executable five-layer directory composition, placement/rebalance and Orbital publication, with Calico/prior art and update-cost attribution across storage layouts.
 - [StreamPack](streampack/README.md): variable-byte packing and sidecar comparisons, with production qualification through Ikea, Loom and Orbital.
 - [Hashtable multimap](hashtable/README.md): unpromoted owning multimap, captured read/write comparisons and payload/lifetime questions. The set/map core is maintained in [Ikea](../../ikea/docs/hashtable/usage.md); superseded studies are archived.
 - [Hashtable K-way merge](hashtable-merge/README.md): bucket-wise traversal, external workspace and retained accumulation comparisons. Single-source mutable accumulation is maintained in Ikea.

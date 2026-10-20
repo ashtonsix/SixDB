@@ -1,0 +1,32 @@
+add_executable(index_directory_baseline baseline.cpp)
+sixdb_target(index_directory_baseline)
+target_link_libraries(index_directory_baseline PRIVATE ikea::boundlist ikea::hashtable)
+add_test(NAME index_directory_baseline_check COMMAND index_directory_baseline --check)
+
+add_library(index_directory_core STATIC material.cpp index.cpp hash.cpp placement.cpp)
+sixdb_target(index_directory_core)
+target_link_libraries(index_directory_core PUBLIC ikea::streampack ikea::hashtable loom::loom)
+add_executable(index_directory_composed composed.cpp)
+sixdb_target(index_directory_composed)
+target_link_libraries(index_directory_composed PRIVATE index_directory_core)
+add_test(NAME index_directory_composed_check COMMAND index_directory_composed --check)
+
+add_executable(index_directory_placement placement_driver.cpp)
+sixdb_target(index_directory_placement)
+target_link_libraries(index_directory_placement PRIVATE index_directory_core)
+add_test(NAME index_directory_placement_check COMMAND index_directory_placement --check)
+
+add_executable(index_directory_pressure pressure.cpp)
+sixdb_target(index_directory_pressure)
+target_link_libraries(index_directory_pressure PRIVATE index_directory_core)
+add_test(NAME index_directory_pressure_check COMMAND index_directory_pressure --check)
+
+add_executable(index_directory_staged staged.cpp)
+sixdb_target(index_directory_staged)
+target_link_libraries(index_directory_staged PRIVATE index_directory_core)
+add_test(NAME index_directory_staged_check COMMAND index_directory_staged --check)
+
+add_executable(index_directory_keys keys.cpp)
+sixdb_target(index_directory_keys)
+target_link_libraries(index_directory_keys PRIVATE ikea::boundlist)
+add_test(NAME index_directory_keys_check COMMAND index_directory_keys --check)
