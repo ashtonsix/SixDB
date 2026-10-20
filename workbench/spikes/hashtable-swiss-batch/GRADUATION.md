@@ -11,10 +11,20 @@ The default prioritises misses after routing through a primary miss and a
 nonzero overflow indicator. It accepts the measured hit/mixed-read tradeoffs;
 it does not introduce a set of workload-specific reader choices.
 
+The timings below measure complete tables, including primary lookup and value
+consumption. This is a K30/E30 overflow-change qualification, not a broad claim
+of superiority over peers. It omits the K14 cases with the earlier strongest
+hot-read leads, and adds dense Swiss populations and actual Boost controls.
+The [broad scorecard](../../benchmarks/hashtable/ACCUMULATION.md) retains the
+earlier K14/K30, growth and accumulation measurements. Its cold fixture uses
+b18; this report uses b20, four times the bucket count, so their cold timings
+are not a before/after comparison.
+
 
 ## Native whole-table results
 
 Independent ns/lookup, lower is better. Each cell is **hit / 50% miss / all miss**.
+The first table is map8 (eight-byte values), K30/E30: hot W40/b10 and cold W50/b20.
 Hot uses direct lookup; cold uses software prefetch distance 32 for Ikea/Abseil.
 Boost uses its native lookup. Literal is the earlier read-only packet, 64 bytes
 on AVX-512 and 32 bytes on AVX2. All Ikea arms retain identical physical state.
@@ -89,6 +99,14 @@ container capacity rounding is part of these whole-table results: Abseil doubles
 its allocation between the ordinary/dense populations, and Boost uses a larger
 allocation throughout. These are neither memory-matched fixtures nor a claim
 that probe instructions alone explain the peer ranking.
+
+The competitiveness conclusion is workload-specific. At ordinary occupancy,
+AVX-512 hot map8 hits are approximately tied with Abseil, and Boost wins the
+hot-read cells. Ordinary AVX-512 cold sets remain a strong case: maintained
+hit/mixed/miss times are 10.03/13.85/7.60 ns versus Boost's 22.70/23.26/14.31
+and Abseil's 16.39/23.03/20.39. Cold map8 wins miss-heavy reads but loses all-hit
+reads to Abseil. Bare AVX2, dense hot reads and construction retain substantial
+losses. Improving the reader against Scalar16 does not establish a peer win.
 
 Steady replacements, mixed upserts and erase/refill preserve the existing write
 performance. The actual benchmark keeps erase inlined in all AVX-512 owners,
