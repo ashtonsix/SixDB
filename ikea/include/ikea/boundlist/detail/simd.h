@@ -1,12 +1,14 @@
 #pragma once
-#include <ikea/streampack/description.h>
+#include <cstddef>
+#include <cstdint>
 #if defined(__AVX2__)
 #include <immintrin.h>
 #elif defined(__aarch64__)
 #include <arm_neon.h>
 #endif
 
-namespace ikea::streampack::native {
+namespace ikea::boundlist::native {
+using byte = std::byte;
 #if defined(__AVX512F__) && defined(__AVX512BW__)
 using vector = __m512i;
 inline constexpr unsigned lanes = 16;
@@ -156,4 +158,4 @@ inline unsigned greater(vector x, unsigned bound) {
 }
 #endif
 
-} // namespace ikea::streampack::native
+} // namespace ikea::boundlist::native

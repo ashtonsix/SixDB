@@ -1,20 +1,11 @@
 #pragma once
 #include <ikea/streampack/author/write.h>
+#include <ikea/boundlist/write.h>
 
 namespace ikea::streampack {
 namespace detail {
-template <class Effects> bool room(const Effects& effects, unsigned n) {
-    if constexpr (requires {
-                      effects.used;
-                      effects.storage;
-                  })
-        if (effects.used > effects.storage.size())
-            return false;
-    if constexpr (requires { effects.remaining(); })
-        return effects.remaining() >= n;
-    else
-        return true;
-}
+using boundlist::sidecar::detail::accepts;
+using boundlist::sidecar::detail::room;
 /// Payload aliases are supported while the binding stays live. Metadata and
 /// effect-output aliases would let issued stores destroy remaining input.
 template <class Effects> bool input_alias(const view& dst, bytes input, const Effects& effects) {
@@ -28,11 +19,6 @@ template <class Effects> bool input_alias(const view& dst, bytes input, const Ef
             return true;
     return overlaps(input.data(), input.size(), &dst, sizeof(dst)) ||
            overlaps(input.data(), input.size(), &dst.format(), sizeof(layout));
-}
-inline bool accepts(const layout& l, unsigned length, unsigned reservation) {
-    return length <= reservation && reservation <= l.schema().maximum &&
-           (!l.fixed() || reservation == l.fixed_width()) &&
-           (l.has_used() || length == reservation);
 }
 } // namespace detail
 /// Checked commands preserve supplied bytes and effects on refusal. Contents
@@ -58,14 +44,7 @@ template <class Effects>
         return std::unexpected(error::capacity);
     if (detail::input_alias(dst, input, effects))
         return std::unexpected(error::alias);
-    const bool r = !l.fixed() && l.schema().family == geometry::width;
-    const unsigned fields =
-        n % 16 ? unsigned(r) + l.has_used()
-               : unsigned(r || l.has_used()) +
-                     (r && l.has_used() && l.schema().lengths == placement::separated);
-    const unsigned count = (reservation != 0) +
-                           (!l.fixed() && (l.schema().family == geometry::direct || !(n % 16))) +
-                           fields + l.has_tombstones() + 1;
+    const unsigned count = (reservation != 0) + boundlist::sidecar::detail::append_effects(l, n);
     if (!detail::room(effects, count))
         return std::unexpected(error::effects);
     author::dispatch(dst,

@@ -1,0 +1,273 @@
+#pragma once
+#include <ikea/boundlist/detail/search.h>
+#include <ikea/boundlist/detail/prefix.h>
+#include <ikea/boundlist/detail/bytes.h>
+#include <cassert>
+#include <span>
+
+namespace ikea::boundlist {
+/// Borrowed, ordered endpoints. The owner admits ordering, initialized elements
+/// and lifetime. Native unsigned loads may be unaligned; other T are real objects.
+template <class T> struct direct_source {
+    const T* data;
+    unsigned count;
+    unsigned size() const noexcept {
+        return count;
+    }
+    decltype(auto) at(unsigned rank) const {
+        return detail::read_element(data, rank);
+    }
+    template <edge E, class Q> [[gnu::always_inline]] unsigned boundary(const Q& point) const {
+        if constexpr (std::unsigned_integral<T> && std::integral<Q>) {
+            const detail::prepared_query<T, Q> q(point);
+            if (q.relation)
+                return q.relation < 0 ? 0 : count;
+            return detail::hybrid_array<E, true>(data, count, q.value);
+        } else {
+            unsigned lo = 0, hi = count;
+            while (lo < hi) {
+                const auto mid = lo + (hi - lo) / 2;
+                if (detail::meets<E>(at(mid), point))
+                    hi = mid;
+                else
+                    lo = mid + 1;
+            }
+            return lo;
+        }
+    }
+};
+
+template <class Width, std::unsigned_integral Point> struct width_source;
+namespace detail {
+struct ready_search {
+    unsigned rank;
+    bool has_local_read() const noexcept {
+        return false;
+    }
+    std::span<const std::byte> local_window() const noexcept {
+        return {};
+    }
+    unsigned finish() const noexcept {
+        return rank;
+    }
+};
+// Canonical local handoff: checkpoint width/global Point no longer participates
+// after routing. Keep the local threshold in uint32 (16*u16 fits), not Point.
+template <class Width, edge E> struct width_search {
+    const Width* widths;
+    unsigned first, relative;
+    bool has_local_read() const noexcept {
+        return widths != nullptr;
+    }
+    std::span<const std::byte> local_window() const noexcept {
+        return widths ? std::span<const std::byte>(reinterpret_cast<const std::byte*>(widths),
+                                                   16 * sizeof(Width))
+                      : std::span<const std::byte>{};
+    }
+    [[gnu::always_inline]] unsigned finish() const noexcept {
+        if (!widths)
+            return first;
+        return first + owner16_native(widths, relative - unsigned(E == edge::at_or_after));
+    }
+};
+template <edge E, unsigned Capacity = 0, class W, std::unsigned_integral P, std::integral Q>
+[[gnu::always_inline]] width_search<W, E> prepare_width(const width_source<W, P>&, Q);
+} // namespace detail
+
+/// Narrow deltas with one checkpoint per 16 ranks, including the origin, and no
+/// terminal checkpoint. Each width group has 16 initialized/readable elements;
+/// stride is in Width elements, allowing interleaved siblings. Sums must fit Point.
+template <class Width, std::unsigned_integral Point = std::uint32_t> struct width_source {
+    static_assert(std::same_as<Width, std::uint8_t> || std::same_as<Width, std::uint16_t>);
+    const Width* widths;
+    const Point* checkpoints;
+    unsigned count, stride;
+    Point extent;
+    unsigned size() const noexcept {
+        return count;
+    }
+    unsigned groups() const noexcept {
+        return count / 16 + unsigned(count % 16 != 0);
+    }
+    const Width* group(unsigned g) const {
+        return widths + std::size_t(g) * stride;
+    }
+    Point at(unsigned rank) const {
+        return detail::read_element(checkpoints, rank / 16) +
+               detail::prefix16_native(group(rank / 16), rank % 16 + 1);
+    }
+    /// Resolves the available checkpoints, leaving at most one qualified width
+    /// window. The owner retains its coherent backing across a wait.
+    template <edge E, std::integral Q>
+    [[gnu::always_inline]] detail::width_search<Width, E> prepare(Q point) const {
+        return detail::prepare_width<E>(*this, point);
+    }
+    template <edge E, class Q> [[gnu::always_inline]] unsigned boundary(const Q& point) const {
+        if constexpr (std::integral<Q>)
+            return prepare<E>(point).finish();
+        else {
+            unsigned lo = 0, hi = count;
+            while (lo < hi) {
+                const auto mid = lo + (hi - lo) / 2;
+                if (detail::meets<E>(at(mid), point))
+                    hi = mid;
+                else
+                    lo = mid + 1;
+            }
+            return lo;
+        }
+    }
+};
+
+namespace detail {
+template <edge E, unsigned Capacity, class W, std::unsigned_integral P, std::integral Q>
+[[gnu::always_inline]] width_search<W, E> prepare_width(const width_source<W, P>& source, Q point) {
+    const prepared_query<P, Q> q(point);
+    if (q.relation)
+        return {nullptr, q.relation < 0 ? 0u : source.count, 0};
+    const auto n = source.groups();
+    if (!n || !meets<E>(source.extent, q.value))
+        return {nullptr, source.count, 0};
+    const auto next = checkpoint_boundary<E, Capacity>(source.checkpoints, n, q.value);
+    const auto g = next ? next - 1 : 0, first = g * 16;
+    const auto base = read_element(source.checkpoints, g);
+    if (q.value < base || (E == edge::at_or_after && q.value == base))
+        return {nullptr, first, 0};
+    const P relative = q.value - base;
+    if (relative > 16u * std::numeric_limits<W>::max())
+        return {nullptr, source.count, 0};
+    return {source.group(g), first, unsigned(relative)};
+}
+} // namespace detail
+
+/// Exact byte-readable population window. Unlike word-padded bitmaps, the final
+/// partial byte/word needs no extra readable grant. Set bits mean eligible unless
+/// inverted (a tombstone plane). The owner supplies ceil(count/8) bytes.
+struct population {
+    std::span<const std::byte> bytes;
+    bool inverted = false;
+    std::uint64_t mask(unsigned first, unsigned count) const {
+        assert(count <= 64 && first % 8 == 0);
+        const auto take = (count + 7) / 8;
+        assert(first / 8 + take <= bytes.size());
+        std::uint64_t word = 0;
+        const auto* p = bytes.data() + first / 8;
+        if (take == 8)
+            word = detail::load<std::uint64_t>(p);
+        else {
+            unsigned i = 0;
+            if (take >= 4) {
+                word = detail::load<std::uint32_t>(p);
+                i = 4;
+            }
+            if (take - i >= 2) {
+                word |= std::uint64_t(detail::load<std::uint16_t>(p + i)) << (i * 8);
+                i += 2;
+            }
+            if (take - i)
+                word |= std::uint64_t(std::to_integer<unsigned>(p[i])) << (i * 8);
+        }
+        return (inverted ? ~word : word) & detail::low_bits(count);
+    }
+    unsigned next(unsigned first, unsigned n) const {
+        while (first < n) {
+            const auto base = first / 64 * 64, take = std::min(64u, n - base);
+            const auto bits = mask(base, take) & ~detail::low_bits(first - base);
+            if (bits)
+                return base + std::countr_zero(bits);
+            first = base + take;
+        }
+        return n;
+    }
+    unsigned previous(unsigned limit, unsigned n) const {
+        while (limit) {
+            const auto base = (limit - 1) / 64 * 64;
+            const auto bits = mask(base, limit - base);
+            if (bits)
+                return base + 63 - std::countl_zero(bits);
+            limit = base;
+        }
+        return n;
+    }
+};
+template <class Source> struct populated_source : Source {
+    population eligible;
+    unsigned next_eligible(unsigned first, unsigned n) const {
+        return eligible.next(first, n);
+    }
+    unsigned previous_eligible(unsigned limit) const {
+        return eligible.previous(limit, this->size());
+    }
+};
+namespace detail {
+template <class Source> unsigned next(const Source& source, unsigned first, unsigned n) {
+    if constexpr (requires { source.next_eligible(first, n); })
+        return source.next_eligible(first, n);
+    else
+        return first;
+}
+template <class Source> unsigned previous(const Source& source, unsigned limit) {
+    if constexpr (requires { source.previous_eligible(limit); })
+        return source.previous_eligible(limit);
+    else
+        return limit ? limit - 1 : source.size();
+}
+template <edge E, class Source, class Q>
+[[gnu::always_inline]] auto prepare(const Source& source, const Q& point) {
+    static_assert(std::same_as<std::remove_cvref_t<decltype(source.size())>, unsigned>,
+                  "Boundlist projections use unsigned local counts/ranks; bind wider directory "
+                  "indices outside the source");
+    if constexpr (requires { source.template prepare<E>(point); })
+        return source.template prepare<E>(point);
+    else if constexpr (requires { source.template boundary<E>(point); })
+        return ready_search{source.template boundary<E>(point)};
+    else {
+        unsigned lo = 0, hi = source.size();
+        while (lo < hi) {
+            const auto mid = lo + (hi - lo) / 2;
+            if (meets<E>(source.at(mid), point))
+                hi = mid;
+            else
+                lo = mid + 1;
+        }
+        return ready_search{lo};
+    }
+}
+template <edge E, class Source, class Q>
+[[gnu::always_inline]] unsigned boundary(const Source& source, const Q& point) {
+    static_assert(std::same_as<std::remove_cvref_t<decltype(source.size())>, unsigned>,
+                  "Boundlist projections use unsigned local counts/ranks; bind wider directory "
+                  "indices outside the source");
+    if constexpr (requires { source.template boundary<E>(point); })
+        return source.template boundary<E>(point);
+    else
+        return prepare<E>(source, point).finish();
+}
+} // namespace detail
+template <class Source, class Q>
+[[gnu::always_inline]] unsigned lower_bound(const Source& source, const Q& point) {
+    return detail::next(source, detail::boundary<edge::at_or_after>(source, point), source.size());
+}
+template <class Source, class Q>
+[[gnu::always_inline]] unsigned upper_bound(const Source& source, const Q& point) {
+    return detail::next(source, detail::boundary<edge::after>(source, point), source.size());
+}
+/// Ordered occupied minima/maxima with matching population. Returns the first
+/// and one-past-last eligible overlapping rank; internal holes remain holes.
+/// Extrema may still enclose gaps inside a child, so local record checks remain.
+template <class Maxima, class Minima, class Q>
+[[gnu::always_inline]] rank_window overlap(const Maxima& maxima, const Minima& minima,
+                                           const query_range<Q>& query) {
+    const auto n = maxima.size();
+    assert(n == minima.size());
+    if (query.empty())
+        return {n, n};
+    const auto first =
+        query.low_closed ? lower_bound(maxima, query.low) : upper_bound(maxima, query.low);
+    const auto stop = query.high_closed ? detail::boundary<edge::after>(minima, query.high)
+                                        : detail::boundary<edge::at_or_after>(minima, query.high);
+    if (first >= stop)
+        return {n, n};
+    return {first, detail::previous(maxima, stop) + 1};
+}
+} // namespace ikea::boundlist

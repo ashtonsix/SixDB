@@ -26,4 +26,5 @@ composition guide instantiates the scalar and native register carriers through
 Ikea's real `preserve_none`/`musttail` chain. Run `ikea_validate`, or build these
 four targets and use `ctest --test-dir BUILD -R '^ikea_.*streampack'`.
 Native worker checks, sanitizer runs, consumer assembly/performance comparisons
-and owner integration evidence belong to the [implementation study](../../../workbench/spikes/streampack/README.md).
+and owner integration evidence belong to the [original implementation study](../../../workbench/spikes/streampack/README.md)
+and the [Boundlist extraction qualification](../../../workbench/spikes/boundlist/GRADUATION.md).

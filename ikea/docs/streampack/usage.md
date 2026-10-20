@@ -5,13 +5,17 @@ assigns up to **256** stable ranks; each reservation contains 0–65535 bytes,
 subject to a smaller schema maximum and an independent block byte limit. Live
 empty values have ranks. Retired values keep their reservations until packing.
 
-The payload has no headers. Curated sidecars supply geometry, optional used lengths
-and optional tombstones. Ikea allocates nothing, acquires no version and does not
-publish a transaction. The enclosing collection supplies those services through
+The payload has no headers. [Boundlist](../boundlist/usage.md) supplies the curated
+reservation metadata: geometry, optional used lengths and optional tombstones.
+StreamPack adds payload admission, reads and coordinated writes on those same
+metadata kernels. Schema preparation belongs to Boundlist; StreamPack retains
+its public schema/view names and stored representation. Ikea allocates nothing,
+acquires no version and does not publish a transaction. The enclosing collection supplies those services through
 [its owner protocol](../integration.md).
 
-The [implementation qualification](../../../workbench/spikes/streampack/IMPLEMENTATION.md)
-records native correctness, codegen, performance and real owner/scheduler evidence.
+The [original qualification](../../../workbench/spikes/streampack/IMPLEMENTATION.md)
+and [Boundlist extraction results](../../../workbench/spikes/boundlist/GRADUATION.md)
+record native correctness, codegen, performance and real owner/scheduler evidence.
 Experimental packed/padded recipes remain in Workbench. The [reference](reference.md) specifies stored bytes, checked
 commands and borrowing. Link `ikea::streampack` and include `<ikea/streampack.h>`.
 

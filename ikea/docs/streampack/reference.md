@@ -1,69 +1,37 @@
 # StreamPack reference
 
-This reference describes the initial native Direct/Width implementation. Execution
+[Boundlist](../boundlist/reference.md) owns the reservation metadata types and
+kernels below StreamPack. StreamPack aliases those schema types and adds the
+payload plane, its admission and coordinated operations. The stored representation
+is shared. Use Boundlist directly for payload-free metadata or ordered-key routing;
+use StreamPack for byte values.
+
+This reference describes the native Direct/Width implementation. Execution
 is available for little-endian NEON, AVX2 and AVX-512 targets; the physical byte law
 is independent of those ISAs. SVE2 and arbitrary-bit field codecs are not selected
 production recipes.
 
 ## Schema and representation
 
-`description` contains family, length placement, maximum reservation, block byte
-limit, optional fixed reservation, full-reservation flag and immortal flag. Every
-block has capacity **256** (`slot_capacity`); capacity is not a schema choice. The
-byte limit is at most 256 × maximum and can be zero. When omitted in aggregate
-construction, it defaults to 256 × maximum. A fixed reservation cannot exceed
-maximum. Values and reservations can both be zero; a retired zero-width slot still
-has a rank and tombstone.
+`description`, `layout`, `geometry`, `placement` and `slot_capacity` alias
+[Boundlist's reservation recipe](../boundlist/reference.md#stored-representation).
+That specification owns Direct/Width, the 256-rank capacity, G16 widths, optional
+U/D, alignment, initialized padding and the eight-byte version-2 schema. There is
+one encoding; StreamPack adds a payload window to those same metadata bytes.
 
-All multibyte fields are little endian. N = 256 and G = 16; let
-W be one byte when the reservation upper bound is ≤255, otherwise two, and O be
-one/two/four bytes for a block byte limit ≤255/≤65535/larger. Fixed reservations
-supply the tighter bound for W. D occupies N/8 bytes when tombstones are present.
-Within D, rank r is bit r%8 of byte r/8; one means retired. Ranks are 0–255;
-count remains u16 to represent both empty and fully assigned blocks without a
-sentinel. Checked rank arguments remain wide enough to reject out-of-range input.
-
-| Window / effect plane | Stored fields |
+| Window / effect plane | Meaning |
 | --- | --- |
 | Payload / 0 | Concatenated, initialized reservations; only the occupied extent is logically assigned. |
-| Directory / 1 | D first, followed by N exclusive endpoints (Direct) or G group-start checkpoints (Width), each O bytes. No leading or terminal sentinel. Fixed/zero geometry omits these fields. |
-| Lengths / 2 | Direct: U groups only. Width grouped: 16 R then optional 16 U, repeated. Width separated: full-capacity R plane then a U plane. Fixed geometry: U groups only. Omitted U has no storage. |
-| Control / 3 | Assigned count as u16. Variable Width adds u32 occupied extent immediately at byte 2; Direct and fixed geometry derive extent. |
+| Directory / 1 | Boundlist directory (standalone plane 0): tombstones and geometry. |
+| Lengths / 2 | Boundlist lengths (standalone plane 1): optional R/U groups. |
+| Control / 3 | Boundlist control (standalone plane 2): count and any stored extent. |
 
-The directory is reserved at full capacity. `lengths_bytes(assigned)` includes
-whole initialized groups, so prefix/native reads never overread a partial final
-group. `lengths_bytes()` gives full capacity. Grouped Width requires its group-size
-alignment (16/32/64 bytes); other recipes require W-byte alignment. Directory and
-control use bounded byte loads and need no additional alignment. The API does not
-require windows to be separately allocated or separately published Parts.
-
-When U is omitted, both Width placements store a single R stream, with no gap for
-an absent U plane; the alignment rule above still applies. Placement does not
-change Direct or fixed geometry. `byte_limit` is an encoding bound independent of
-the supplied payload span: writes must fit both. A smaller span cannot implicitly
-narrow a shared schema's endpoint/checkpoint fields.
-
-Unassigned tail R/U fields in the last assigned group are zero. Unassigned
-Direct endpoints and future checkpoints are initialized by construction but have
-no semantic value. A checkpoint is the sum of reservations before its group.
-Positive reservations are disjoint. Used lengths never exceed reservations.
-Occupied extent is the sum of all assigned reservations, retired or live.
-
-`layout::encode()` produces an eight-byte version-2 description:
-
-| Byte offset | Encoding |
-| --- | --- |
-| 0 | Version 2 in bits 5–7; Width bit 0, separated lengths bit 1, full bit 2, immortal bit 3, fixed reservation present bit 4. |
-| 1–2 | Maximum reservation, u16. |
-| 3–5 | Block byte limit, u24. The largest legal value is 16,776,960 (256 × 65,535). |
-| 6–7 | Fixed reservation, u16; must be zero when absent. Presence distinguishes fixed zero from variable geometry. |
-
-There is no encoded capacity, reserved padding or fixed-width sentinel. Unknown
-versions, invalid sizes, noncanonical absent-fixed bytes and invalid bounds are
-rejected. The experimental 16-byte version-1 description is not accepted. The u24
-field is cold schema storage; hot endpoint/checkpoint lanes still use native
-one/two/four-byte loads. Native layout objects and pointers are never the wire
-format. The owner persists block schema identity and the four windows coherently.
+All four supplied windows are disjoint spans, even when they share one allocation.
+Metadata placement follows the linked recipe. The schema's `byte_limit` and the
+payload span are independent bounds: writes must fit both. A smaller allocation
+cannot implicitly narrow a shared schema's endpoint/checkpoint fields. Occupied
+extent includes live reservations, retired reservations and slack. The owner
+persists schema identity and all four windows as one coherent interpretation.
 
 ## Admission, lifetime and commands
 
@@ -78,8 +46,8 @@ or select a version. Checked mutation preserves content admission.
 The owner keeps mutable outputs disjoint from views, layout objects, selection,
 command/control inputs and effect storage. It holds exclusive authority over every
 issued byte, including bytes whose sibling bits are preserved. Payload input may
-alias the current payload for append/replace; these use memmove before clearing
-new reservation slack. Metadata/input overlap is rejected. Such aliases must be
+alias the current payload for append/replace. Both use memmove; append clears new
+reservation slack after copying. Metadata/input overlap is rejected. Such aliases must be
 resolved before any relocating owner growth. Stock journal overlap with transfer
 source/selection is rejected before initialization.
 
@@ -95,6 +63,7 @@ fail or suspend between preflight and stores.
 | --- | --- |
 | value / length | Invalid rank or retired value is an error; a live empty value succeeds. |
 | reverse | An offset below extent maps to one reservation owner, including slack and retired storage. Otherwise no result. |
+| overlap | Physical reservations overlapping `[low,high)`, including retired storage unless `only_live` is requested; internal zero/dead holes can remain. |
 | range / select | Validate coordinates before any callback; deliver only live values with original ranks. Selection preserves order and duplicates. |
 | append | Assign the next rank, initialize reservation including slack, record U and geometry, clear D, publish new count/extent through effects. Refuse insufficient rank/length/body capacity or incompatible value/reservation. |
 | replace | Live rank and unchanged reservation; full schemas require exact fill. Stores input and optional U; no automatic slack clearing. |

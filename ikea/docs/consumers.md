@@ -23,6 +23,7 @@ choices below are supported by the linked complete-consumer measurements.
 | Bec256 Boolean work and count | Decode independent blocks as a native pair, consume and reduce in registers | A materialized bitset when only a count or encoded result is needed |
 | Runtime choice among formats | Select a useful whole operation outside its inner traversal | An indirect call or format dispatch for every small child step |
 | Many formats feeding a substantial common computation | Normalize once into a shared native consumer at an existing composition boundary | Sharing that removes a packed fast path or creates a stage per comparison |
+| Ordered directory points/ranges | [Boundlist](boundlist/usage.md): one exact-max search for unique-key routing; occupied min/max for range edges | Two searches for a unique point, or interpreting equal endpoints as empty |
 | Cold independent lookups | The owner's [Loom direct/Ring choice](../../loom/docs/execution.md) | Scheduler boundaries between ready arithmetic steps, or treating prefetch as readiness |
 
 The module guides turn these starting points into concrete calls:

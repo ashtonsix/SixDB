@@ -4,7 +4,7 @@
 #include <cstdint>
 #include <cstring>
 
-namespace ikea::streampack::detail {
+namespace ikea::boundlist::detail {
 template <class T> inline T load(const std::byte* p) noexcept {
     T value;
     std::memcpy(&value, p, sizeof(T));
@@ -23,4 +23,4 @@ inline bool overlaps(const void* a, std::size_t an, const void* b, std::size_t b
     const auto x = reinterpret_cast<std::uintptr_t>(a), y = reinterpret_cast<std::uintptr_t>(b);
     return x <= y ? y - x < an : x - y < bn;
 }
-} // namespace ikea::streampack::detail
+} // namespace ikea::boundlist::detail

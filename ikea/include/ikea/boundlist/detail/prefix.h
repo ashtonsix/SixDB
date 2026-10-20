@@ -1,7 +1,7 @@
 #pragma once
 #include <bit>
 #include <cstdint>
-#include <ikea/streampack/detail/simd.h>
+#include <ikea/boundlist/detail/simd.h>
 #include <type_traits>
 #if defined(__AVX2__)
 #include <immintrin.h>
@@ -9,14 +9,14 @@
 #include <arm_neon.h>
 #endif
 
-namespace ikea::streampack::detail {
+namespace ikea::boundlist::detail {
 // Same widened prefix body as native::read16, with an explicit memory sink for
 // paid dense selections. The fused author path keeps these vectors in registers.
 template <class Width>
 inline unsigned starts16_native(const Width* widths, unsigned* starts, unsigned carry) {
 #if defined(__aarch64__) || defined(__AVX2__)
     for (unsigned i = 0; i < 16; i += native::lanes) {
-        const auto values = native::load<Width>(reinterpret_cast<const byte*>(widths + i));
+        const auto values = native::load<Width>(reinterpret_cast<const std::byte*>(widths + i));
         const auto sums = native::prefix(values);
         native::store(starts + i, native::add(native::sub(sums, values), native::splat(carry)));
         carry += native::last(sums);
@@ -34,8 +34,8 @@ inline unsigned owner16_native(const std::uint16_t* widths, unsigned offset) {
 #if defined(__aarch64__) || defined(__AVX2__)
     unsigned carry = 0;
     for (unsigned i = 0; i < 16; i += native::lanes) {
-        const auto sums =
-            native::prefix(native::load<std::uint16_t>(reinterpret_cast<const byte*>(widths + i)));
+        const auto sums = native::prefix(
+            native::load<std::uint16_t>(reinterpret_cast<const std::byte*>(widths + i)));
         const auto mask = native::greater(native::add(sums, native::splat(carry)), offset);
         if (mask)
             return i + std::countr_zero(mask);
@@ -136,4 +136,4 @@ inline unsigned owner16_native(const std::uint8_t* widths, unsigned offset) {
     return 16;
 #endif
 }
-} // namespace ikea::streampack::detail
+} // namespace ikea::boundlist::detail

@@ -1,6 +1,6 @@
 #pragma once
 #include <ikea/streampack/description.h>
-#include <ikea/streampack/detail/bytes.h>
+#include <ikea/boundlist/detail/extent.h>
 #include <type_traits>
 
 namespace ikea::streampack {
@@ -14,8 +14,9 @@ template <class Byte> struct storage {
     }
 };
 namespace detail {
+using boundlist::detail::overlaps;
 [[nodiscard]] std::expected<void, error> admit_storage(const layout&, storage<const byte>);
-}
+} // namespace detail
 
 /// Named borrowed source identity. Keep this view, its layout and bytes stable
 /// while operations/effects refer to it. Binding admits placement only; initialize
@@ -50,13 +51,15 @@ template <class Byte> class basic_view {
     }
     static auto assume_valid(const layout&&, storage<Byte>) = delete;
     unsigned size() const noexcept {
-        return detail::load<std::uint16_t>(storage_.control.data());
+        return boundlist::detail::load<std::uint16_t>(storage_.control.data());
     }
     bool live_unchecked(unsigned rank) const noexcept {
         return !layout_->has_tombstones() ||
                !(std::to_integer<unsigned>(storage_.directory[rank / 8]) & (1u << (rank % 8)));
     }
-    std::uint32_t extent() const noexcept;
+    std::uint32_t extent() const noexcept {
+        return boundlist::sidecar::detail::extent(*this);
+    }
     /// Cold recovery/admission: checks the complete assigned interpretation and
     /// zeroed SIMD tail. Successful checked writes preserve this proof.
     [[nodiscard]] std::expected<void, error> validate() const;

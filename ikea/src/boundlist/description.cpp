@@ -1,8 +1,8 @@
 #include <algorithm>
-#include <ikea/streampack/description.h>
-#include <ikea/streampack/detail/bytes.h>
+#include <ikea/boundlist/description.h>
+#include <ikea/boundlist/detail/bytes.h>
 
-namespace ikea::streampack {
+namespace ikea::boundlist::sidecar {
 std::expected<layout, error> layout::prepare(description d) {
     if ((d.family != geometry::direct && d.family != geometry::width) ||
         (d.lengths != placement::grouped && d.lengths != placement::separated) ||
@@ -72,4 +72,4 @@ std::expected<layout, error> layout::decode(bytes in) {
                   (flags & 8) != 0};
     return prepare(d);
 }
-} // namespace ikea::streampack
+} // namespace ikea::boundlist::sidecar

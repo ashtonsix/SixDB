@@ -15,7 +15,8 @@ provide the concrete calls and maintained examples.
 | SeriesPack | Packed unsigned arrays, 1–64 bits per value; tiled payload and optional head planes | [Use](docs/seriespack/usage.md) · [Physical tour](docs/seriespack/representation.md) · [Compose](docs/seriespack/extending.md) · [Reference](docs/seriespack/reference.md) |
 | TuplePack | Fixed-layout units containing byte-contained unsigned codes; ordered projections with caller-chosen packet grouping | [Use](docs/tuplepack/usage.md) · [Compose](docs/tuplepack/extending.md) · [Reference](docs/tuplepack/reference.md) |
 | Bec256 | Headless 256-position bitsets; caller retains population, exact body length and location | [Use and compose](docs/bec256/usage.md) · [Representation](docs/bec256/representation.md) |
-| StreamPack | Variable-length byte values; caller-owned Direct/Width sidecars and coherent count/extent | [Use and compose](docs/streampack/usage.md) · [Reference](docs/streampack/reference.md) |
+| Boundlist | Ordered-boundary search and payload-free reservation metadata | [Use and compose](docs/boundlist/usage.md) · [Reference](docs/boundlist/reference.md) |
+| StreamPack | Variable-length byte values; Boundlist reservation metadata and coherent count/extent | [Use and compose](docs/streampack/usage.md) · [Reference](docs/streampack/reference.md) |
 | Hashtable | Compact integer-key sets/maps, Swiss overflow, same-seed growth and mutable accumulation | [Usage](docs/hashtable/usage.md) · [Rationale](docs/hashtable/rationale.md) · [Performance and qualification](../workbench/benchmarks/hashtable/README.md) |
 
 [Unsigned filters](docs/filters.md) return position masks directly from SeriesPack
@@ -58,9 +59,9 @@ and [TuplePack](docs/tuplepack/reference.md#routes-and-native-execution) referen
 the [Bec256 guide](docs/bec256/usage.md#compose-native-values), and the
 [StreamPack reference](docs/streampack/reference.md).
 
-Link `ikea::seriespack`, `ikea::tuplepack`, `ikea::bec256` or `ikea::streampack` and
+Link `ikea::seriespack`, `ikea::tuplepack`, `ikea::bec256`, `ikea::boundlist` or `ikea::streampack` and
 include the corresponding `<ikea/seriespack.h>`, `<ikea/tuplepack.h>`,
-`<ikea/bec256.h>` or `<ikea/streampack.h>`.
+`<ikea/bec256.h>`, `<ikea/boundlist.h>` or `<ikea/streampack.h>`.
 `ikea_validate` runs the modules' correctness checks, independent wire checks
 and examples. For sets and maps, link `ikea::hashtable` and include
 `<ikea/hashtable.h>`; [usage](docs/hashtable/usage.md) covers concrete owners and
