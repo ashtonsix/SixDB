@@ -1,8 +1,12 @@
 # Taking Boost's flat table into SixDB
 
-Assessment, October 20, 2026. This inspects the same **Boost 1.92.0** used by
-the actual peer controls. No maintained Ikea or Boost implementation is changed.
-The new executable probe measures dependency and binary footprint, not throughput.
+Source/footprint assessment, October 20, 2026; memory comparison, October 21.
+This inspects the same **Boost 1.92.0** used by the actual peer controls. No
+maintained Ikea or Boost implementation is changed. The source probe below
+measures dependency and binary footprint. The subsequent
+[memory-matched comparison](MEMORY.md) is the current throughput evidence:
+Boost's native-memory lead does not imply a general read lead at comparable
+budgets; Ikea retains significant ordinary-write and some read gaps.
 
 **Boost is a credible ordinary set/map foundation.** Using it unchanged for
 private or exclusively owned tables is inexpensive. A pinned fork with storage,
@@ -218,9 +222,11 @@ but is not uniformly cheaper when the table is hot.
 ## What the existing performance evidence buys
 
 Our [latest whole-table comparison](../hashtable-swiss-batch/GRADUATION.md)
-already establishes stronger Boost hot reads and ordinary construction/churn in
-many K30 cases. Ikea retains strong cold-set and miss-heavy advantages and
-specialized same-seed growth/accumulation. There is no new timing in this audit.
+establishes stronger Boost hot reads and ordinary construction/churn in many
+K30 native-capacity cases. The subsequent [equal-budget study](MEMORY.md)
+changes the read ranking materially and retains those native controls. Ikea
+retains strong cold-set and miss-heavy advantages and specialized same-seed
+growth/accumulation. The source/footprint probe itself adds no timing evidence.
 Patching storage/hooks or changing hash/layout still needs a preservation check;
 plain Boost measurements do not predict the complete MVCC or Loom composition.
 

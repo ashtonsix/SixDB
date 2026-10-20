@@ -1,0 +1,25 @@
+{
+  "main_job": "20261020T224905Z-52f4e5b7",
+  "write_job": "20261020T231027Z-c24a999b",
+  "same_machine": true,
+  "production_headers_and_sources_identical": true,
+  "main_driver_sha256": "60eca57bb665f55a0194edb91efeba2d784ebb8304b14d4a98c95097eed3fe69",
+  "paired_driver_sha256": "1b1f9084c71665140a6d1c71f25b856409e3cb18f229605b0f963ece95cee90c",
+  "current_driver_sha256": "1b1f9084c71665140a6d1c71f25b856409e3cb18f229605b0f963ece95cee90c",
+  "native_qualification_processes": 24,
+  "paired_local_sanitizer_processes": 18,
+  "first_source_root": "sweep/source.tar.gz",
+  "paired_source_root": "write-prefetch/source.tar.gz",
+  "recipe": "Regenerate summaries from both native/ directories, then memory-report.py with --writes.",
+  "limits": [
+    "Native Zen5 AVX512 only",
+    "W24/32/40 hot and W40/50 cold; sets/map8 only",
+    "Common useful budget; capacity quantization leaves up to25%less Ikea memory than Boost",
+    "Both direct and home-prefetched results; Boost lacks public home-prefetch",
+    "Paired cohort disables initial reads and uses a different common write-rank shuffle from first sweep",
+    "No production change or integrated MVCC performance claim"
+  ],
+  "main_verified_binaries": 33,
+  "paired_verified_binaries": 8,
+  "qualification_stderr_empty": true
+}

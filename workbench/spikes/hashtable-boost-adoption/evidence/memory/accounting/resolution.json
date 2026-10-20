@@ -1,0 +1,15 @@
+{
+  "scope": "W40/b10/map8 znver5 representative point read/write",
+  "read_loop_instructions": [
+    129,
+    129
+  ],
+  "read_identical": true,
+  "put_instructions": [
+    128,
+    128
+  ],
+  "put_body_identical": true,
+  "put_last_relocation": "R_X86_64_PLT32 _Unwind_Resume-0x4 at function+0x228 on both",
+  "limit": "Outlined reallocation helpers are not asserted identical; allocation counting necessarily adds bookkeeping there."
+}

@@ -1,0 +1,39 @@
+{
+  "files_sha256": {
+    "accounting/resolution.json": "7be8c79db522ff68c826b0193b7da9ea584e9ff5d7bf7e091a6e9c478df9700e",
+    "identity.json": "b6218b8772b3c60643accc171a659ab7395c6129d515443cf6605575a192ce99",
+    "scorecard.md": "2a0b16ef0edc4fcd61cf19f9fbb4064817d90e24db92891369dfecd4f3aca25b",
+    "sweep-worker-artifact.json": "1b97312420254f59d3bed0af384eec27062f503bbbe26385af257e1b2377eb16",
+    "sweep/native/audit.json": "2e983671f22f73b1c07effaf65dcba79868d828d0374bc0f82336bfffebb7e87",
+    "sweep/native/memory.csv": "41f3f135562ca2683f5720a32e56fadf68fd4c27268c6ee54863b9243aca764b",
+    "sweep/native/summary.csv": "01f610e0bb3c86770a0c71781d98f02be8a1ac892dbd18b7134809bb674823cc",
+    "write-prefetch-worker-artifact.json": "5260f04ed86c4623690b8b1825e1bf1a50171e44c0865c3c3b21cbe0f3f0d3e2",
+    "write-prefetch/native/audit.json": "ba4cf21ae430ddc3f1af872b5ccaa8f1f4aa6819bce0ce179488170f1219094d",
+    "write-prefetch/native/summary.csv": "1809b8c246d4d3d5617e86d8be88415473d726037a575743e68038dcad9096b7"
+  },
+  "format": 2,
+  "full_bundle": "artifact.json",
+  "kind": "files",
+  "regenerate": [
+    [
+      "python3",
+      "workbench/spikes/hashtable-boost-adoption/memory-summary.py",
+      "{evidence}/sweep/native"
+    ],
+    [
+      "python3",
+      "workbench/spikes/hashtable-boost-adoption/write-prefetch-summary.py",
+      "{evidence}/write-prefetch/native"
+    ],
+    [
+      "python3",
+      "workbench/spikes/hashtable-boost-adoption/memory-report.py",
+      "{evidence}/sweep/native",
+      "--writes",
+      "{evidence}/write-prefetch/native",
+      "--output",
+      "{evidence}/scorecard.md"
+    ]
+  ],
+  "regenerate_from": "archive"
+}
