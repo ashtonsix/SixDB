@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
-"""Render the Boundlist teaching figures after imagegen composition studies.
+"""Render Boundlist teaching figures from the imagegen composition studies.
 
-The raster concepts explored ordered ranges, staged dependencies and three
-encodings; the final mathematical labels are checked here, independently of
-raster text. Shared Figure keeps the Ikea palette and accessible SVG descriptions.
+Keep the original concept's query overlay, interval axis, rank bracket and
+local-window illustrations. Mathematical labels and eligibility semantics are
+checked here rather than copied from raster text. Shared Figure supplies the
+Ikea palette, typography and accessible SVG descriptions.
 Run: orb -m ubuntu python3 ikea/docs/boundlist/images/generate.py
 Previews belong in ignored build/diagrams/boundlist/.
 """
@@ -14,107 +15,197 @@ ROOT = Path(__file__).resolve().parents[4]
 OUT = Path(__file__).parent
 STYLE = runpy.run_path(str(ROOT / 'ikea/docs/images/generate.py'))
 Figure = STYLE['Figure']
-BLUE, GREEN, AMBER, MUTED, RULE = (STYLE[k] for k in ('BLUE','GREEN','AMBER','MUTED','RULE'))
+INK, MUTED, RULE = (STYLE[k] for k in ('INK', 'MUTED', 'RULE'))
+BLUE = '#175ca7'
+GREEN = '#168348'
+AMBER = '#a96a12'
+BLUE_FILL = '#e1effc'
+GREEN_FILL = '#e5f3df'
+AMBER_FILL = '#fff5df'
+
+
+def circle(f, x, y, radius, fill, stroke='none', width=2):
+    f.items.append(f'<circle cx="{x}" cy="{y}" r="{radius}" fill="{fill}" '
+                   f'stroke="{stroke}" stroke-width="{width}"/>')
+
+
+def line(f, x1, y1, x2, y2, color, width=2, dash=False):
+    extra = ' stroke-dasharray="6 5"' if dash else ''
+    f.items.append(f'<path d="M{x1},{y1} L{x2},{y2}" fill="none" '
+                   f'stroke="{color}" stroke-width="{width}"{extra}/>')
 
 
 def encodings():
-    sizes = [2]*15 + [4,3,0,5]
-    ends=[]
-    for size in sizes: ends.append((ends[-1] if ends else 0)+size)
-    assert ends[13:]==[28,30,34,37,37,42]
-    relative=[end-(ends[r//16*16-1] if r>=16 else 0) for r,end in enumerate(ends)]
-    assert relative[14:]==[30,34,3,3,8]
-    f=Figure(590,'Three ways to store the same boundaries',
-        'Excerpt at ranks14 through18. The G16 boundary lies between15 and16. '
-        'Absolute ends30,34,37,37,42; sizes2,4,3,0,5; relative ends30,34,3,3,8. '
-        'The second group origin is34. All three locate rank18 at37 with size5.')
-    f.heading(32,42,'Three ways to store the same boundaries')
-    f.text(32,77,'An excerpt across a 16-rank group boundary. All numbers are decimal.',20,color=MUTED)
-    for i,r in enumerate(range(14,19)):
-        x=350+i*88
-        f.text(x,125,f'rank {r}',18,anchor='middle')
-        f.text(x,151,f'size {sizes[r]}',17,color=MUTED,anchor='middle')
-    for y,title,sub,values in (
-        (175,'Absolute Ends','Global end per rank',ends[14:]),
-        (290,'Sizes','Size per rank + group origin',sizes[14:]),
-        (405,'Relative Ends','Local end + group origin',relative[14:])):
-        f.rect(32,y,730,92,'#f7f9fc',radius=6)
-        f.text(50,y+34,title,23,'bold');f.text(50,y+65,sub,17,color=MUTED)
-        for i,value in enumerate(values):
-            f.rect(312+i*88,y+22,76,48,GREEN,radius=3)
-            f.text(350+i*88,y+54,value,24,anchor='middle',mono=True)
-        if y!=175:
-            f.rect(784,y+22,70,48,BLUE,radius=3)
-            f.text(819,y+54,34,24,anchor='middle',mono=True)
-            f.text(819,y+89,'origin',16,color=MUTED,anchor='middle')
-    f.path('M482,105 V506',dash=True)
-    f.rect(883,175,365,322,'#fff8e6',radius=8)
-    f.heading(905,214,'Locate rank 18')
-    for y,title,lines in (
-        (250,'Absolute Ends',('start = previous end = 37','end = current end = 42')),
-        (335,'Sizes',('start = 34 + 3 + 0 = 37','end = 37 + 5 = 42')),
-        (420,'Relative Ends',('start = 34 + 3 = 37','end = 34 + 8 = 42'))):
-        f.text(905,y,title,21,'bold');f.lines(905,y+27,lines,18,25)
-    f.path('M32,530 H1248',color=RULE)
-    f.text(32,565,'Stored widths follow schema bounds. Zero-size ranks remain assigned.',21,color=MUTED)
-    f.save(OUT/'encodings.svg')
+    sizes = [2] * 15 + [4, 3, 0, 5]
+    ends = []
+    for size in sizes:
+        ends.append((ends[-1] if ends else 0) + size)
+    assert ends[13:] == [28, 30, 34, 37, 37, 42]
+    relative = [end - (ends[r // 16 * 16 - 1] if r >= 16 else 0)
+                for r, end in enumerate(ends)]
+    assert relative[14:] == [30, 34, 3, 3, 8]
+    f = Figure(640, 'Three ways to store the same boundaries',
+               'Excerpt at ranks 14 through 18. The G16 boundary lies between 15 and 16. '
+               'Absolute ends 30,34,37,37,42; sizes 2,4,3,0,5; relative ends 30,34,3,3,8. '
+               'Group 1 starts at 34. All three locate rank 18 at 37 with size 5.')
+    f.heading(32, 42, 'Three ways to store the same boundaries')
+    f.text(32, 77, 'One excerpt across a 16-rank group boundary. All numbers are decimal.',
+           20, color=MUTED)
+    f.text(394, 109, 'group 0', 17, color=MUTED, anchor='middle')
+    f.text(614, 109, 'group 1', 17, color=MUTED, anchor='middle')
+    line(f, 312, 119, 476, 119, RULE)
+    line(f, 488, 119, 740, 119, RULE)
+    for i, rank in enumerate(range(14, 19)):
+        x = 350 + i * 88
+        f.text(x, 146, f'rank {rank}', 18, 'bold' if rank == 18 else 'normal',
+               color=GREEN if rank == 18 else INK, anchor='middle')
+        f.text(x, 171, f'size {sizes[rank]}', 17, color=MUTED, anchor='middle')
+    f.lines(819, 141, ['group 1', 'checkpoint'], 17, 23, color=MUTED, anchor='middle')
+    for y, title, subtitle, values in (
+        (190, 'Absolute Ends', 'Global end per rank', ends[14:]),
+        (318, 'Sizes', 'Size per rank + group origin', sizes[14:]),
+        (446, 'Relative Ends', 'Local end + group origin', relative[14:])):
+        f.rect(32, y, 730, 100, '#f7f9fc', radius=6)
+        f.text(50, y + 37, title, 23, 'bold')
+        f.text(50, y + 70, subtitle, 17, color=MUTED)
+        for i, value in enumerate(values):
+            f.rect(312 + i * 88, y + 24, 76, 52, GREEN_FILL,
+                   stroke=GREEN if i == 4 else '#a5cd9c', radius=4)
+            f.text(350 + i * 88, y + 59, value, 25, anchor='middle', mono=True)
+        if y != 190:
+            f.rect(784, y + 24, 70, 52, BLUE_FILL, stroke='#8dbce7', radius=4)
+            f.text(819, y + 59, 34, 25, anchor='middle', mono=True)
+    line(f, 482, 125, 482, 558, MUTED, dash=True)
+    f.rect(883, 190, 365, 356, '#fff8e9', stroke='#ead5a4', radius=8)
+    f.heading(905, 228, 'Locate rank 18')
+    for y, title, equations in (
+        (245, 'Absolute Ends', ['start = previous end = 37', 'end = current end = 42']),
+        (341, 'Sizes', ['start = 34 + 3 + 0 = 37', 'end = 37 + 5 = 42']),
+        (437, 'Relative Ends', ['start = 34 + 3 = 37', 'end = 34 + 8 = 42'])):
+        f.rect(897, y, 337, 82, 'white', stroke='#f0e4c9', radius=5)
+        f.text(911, y + 25, title, 20, 'bold')
+        f.lines(911, y + 49, equations, 17, 24)
+    line(f, 32, 576, 1248, 576, RULE)
+    f.text(32, 611, 'Stored widths follow schema bounds. Zero-size ranks remain assigned.',
+           20, color=MUTED)
+    f.save(OUT / 'encodings.svg')
 
 
 def ranges():
-    f=Figure(650,'A range query bounds the children worth visiting',
-        'Closed occupied ranges at ranks0..5 are3..7,10..10,18..24,26..31,35..40,46..52. '
-        'Rank2 is ineligible. Query9 inclusive to36 exclusive returns candidate ranks1..5 exclusive. '
-        'The singleton at rank1 qualifies; the internal ineligible rank is skipped by the consumer.')
-    f.heading(32,42,'A range query bounds the children worth visiting')
-    x=lambda k:170+k*17
-    f.rect(x(9),110,x(36)-x(9),440,'#edf8ef',stroke='none')
-    f.path(f'M{x(9)},110 V550',dash=True,color='#15834b')
-    f.path(f'M{x(36)},110 V550',dash=True,color='#15834b')
-    f.text(x(22),95,'query [9, 36)',22,'bold',color='#15834b',anchor='middle')
-    bounds=[(3,7),(10,10),(18,24),(26,31),(35,40),(46,52)]
-    for r,(lo,hi) in enumerate(bounds):
-        y=160+r*68
-        if 1<=r<5:f.rect(32,y-28,1184,54,'#fff4d9',stroke='none',radius=4)
-        f.text(50,y+5,f'rank {r}',21,'bold')
-        f.path(f'M170,{y} H1150',color=RULE)
-        color='#8d99a8' if r==2 else '#175ca7'
-        f.path(f'M{x(lo)},{y} H{x(hi)}',dash=r==2,color=color)
-        for point in set((lo,hi)):
-            f.items.append(f'<circle cx="{x(point)}" cy="{y}" r="6" fill="{color}"/>')
-        f.text(x(lo),y-12,f'[{lo}, {hi}]',18,'bold',color=color)
-        if r==1:f.text(x(lo)+28,y+21,'populated singleton',17,color=MUTED)
-        if r==2:f.text(x(lo),y+24,'ineligible',17,color=MUTED)
-    f.text(32,590,'Eligibility',20,'bold')
-    for r,bit in enumerate([1,1,0,1,1,1]):
-        f.rect(180+r*85,564,78,42,'#f0f3f7');f.text(219+r*85,593,bit,21,anchor='middle',mono=True)
-    f.text(735,588,'Candidate ranks [1, 5)',23,'bold')
-    f.text(735,618,'Test eligibility inside the window.',19,color=MUTED)
-    f.save(OUT/'ranges.svg')
+    bounds = [(3, 7), (10, 10), (18, 24), (26, 31), (35, 40), (46, 52)]
+    eligible = [1, 1, 0, 1, 1, 1]
+    low, high = 9, 36
+    overlapping = [r for r, (lo, hi) in enumerate(bounds)
+                   if eligible[r] and hi >= low and lo < high]
+    assert overlapping == [1, 3, 4]
+    assert (overlapping[0], overlapping[-1] + 1) == (1, 5)
+    f = Figure(744, 'A range query bounds the children worth visiting',
+               'Closed occupied ranges at ranks 0 through 5 are 3..7,10..10,18..24,26..31,'
+               '35..40,46..52. Rank 2 is ineligible. Query 9 inclusive to 36 exclusive returns '
+               'candidate ranks 1 through 4. Translucent green query points cross amber candidate '
+               'rows; the consumer skips the internal ineligible rank. Rank 1 is a populated singleton.')
+    f.heading(32, 42, 'A range query bounds the children worth visiting')
+    f.text(32, 78, 'Ordered occupied bounds. The query includes its low point and excludes its high point.',
+           20, color=MUTED)
+    x = lambda key: 176 + key * 14
+    f.text(50, 126, 'Key', 20, 'bold')
+    f.path('M176,121 H976', arrow=True, color=INK)
+    for key in range(0, 56, 5):
+        line(f, x(key), 115, x(key), 127, MUTED, width=1.3)
+        f.text(x(key), 108, key, 16, color=MUTED, anchor='middle')
+    # Candidate rows first. The query overlay must cross them, not be hidden
+    # behind their opaque fill: its x axis and their rank axis are independent.
+    for rank in range(1, 5):
+        f.rect(32, 222 + rank * 62 - 26, 960, 52, AMBER_FILL, stroke='none', radius=4)
+    f.items.append(f'<rect x="{x(low)}" y="138" width="{x(high)-x(low)}" '
+                   'height="428" fill="#69bd80" fill-opacity="0.13"/>')
+    line(f, x(low), 138, x(low), 568, GREEN, dash=True)
+    line(f, x(high), 138, x(high), 568, GREEN, dash=True)
+    f.text((x(low) + x(high)) / 2, 155, 'query [9, 36)', 21, 'bold', GREEN, anchor='middle')
+    line(f, x(low), 174, x(high), 174, GREEN, width=2.4)
+    circle(f, x(low), 174, 5, GREEN)
+    circle(f, x(high), 174, 5, 'white', GREEN)
+    for rank, (lo, hi) in enumerate(bounds):
+        y = 222 + rank * 62
+        f.text(50, y + 6, f'rank {rank}', 21, 'bold')
+        line(f, 176, y, 976, y, RULE, width=1.4)
+        color = '#8d99a8' if not eligible[rank] else BLUE
+        line(f, x(lo), y, x(hi), y, color, width=4, dash=not eligible[rank])
+        for point in sorted(set((lo, hi))):
+            circle(f, x(point), y, 6, color)
+        f.text(x(lo), y - 15, f'[{lo}, {hi}]', 18, 'bold', color)
+        if rank == 1:
+            f.text(x(lo) + 26, y + 22, 'populated singleton', 17, color=MUTED)
+        elif not eligible[rank]:
+            f.text(x(lo), y + 22, 'ineligible', 17, color=MUTED)
+    f.path('M1002,258 H1012 Q1020,258 1020,266 V369 Q1020,377 1028,377 '
+           'Q1020,377 1020,385 V488 Q1020,496 1012,496 H1002', color=AMBER)
+    f.text(1044, 337, 'Candidate ranks', 22, 'bold', AMBER)
+    f.text(1044, 374, '[1, 5)', 27, 'bold', AMBER)
+    f.lines(1044, 411, ['ranks 1–4', 'rank 2 is a hole'], 18, 27, color=MUTED)
+    for key in (low, high):
+        f.text(x(key), 592, key, 17, 'bold', GREEN, anchor='middle')
+    f.text(32, 650, 'Eligibility', 20, 'bold')
+    for rank, bit in enumerate(eligible):
+        left = 200 + rank * 94
+        f.text(left + 42, 617, f'rank {rank}', 16, color=MUTED, anchor='middle')
+        f.rect(left, 628, 84, 38, '#f1f4f8' if bit else '#e8edf2', radius=3)
+        f.text(left + 42, 654, bit, 21, color=INK if bit else MUTED, anchor='middle', mono=True)
+    line(f, 32, 689, 1248, 689, RULE)
+    f.text(32, 724, 'Equal bounds can contain a key. Candidate windows can contain ineligible ranks.',
+           20, color=MUTED)
+    f.save(OUT / 'ranges.svg')
 
 
 def phases():
-    f=Figure(510,'Expose a dependency while retaining one version',
-        'Checkpoint search identifies a sixteen-field local group, which the owner may prefetch '
-        'before finishing. Numeric binding proposes an endpoint bracket and verifies or repairs it. '
-        'Metadata, eligibility and backing are one retained version; a hint is not a read grant.')
-    f.heading(32,42,'Expose the next dependency; retain one data version')
-    f.text(32,82,'Ready arithmetic stays inline. The caller decides whether an unresolved read warrants a Loom wait.',20,color=MUTED)
-    rows=[(126,'Checkpointed source','search checkpoints','16 local fields','compare / prefix + select'),
-          (262,'Bound numeric source','propose bracket','endpoint bracket','verify; correct if needed')]
-    for y,label,prepare,window,finish in rows:
-        f.text(32,y+38,label,20,'bold')
-        for x,w,title,body,fill in [(275,230,'prepare',prepare,BLUE),(540,190,'local_window',window,'#f0f3f7'),
-                                   (765,190,'caller policy','prefetch / optional wait',AMBER),
-                                   (990,258,'finish',finish,GREEN)]:
-            f.rect(x,y,w,88,fill,radius=6)
-            f.text(x+w/2,y+32,title,20,'bold',anchor='middle')
-            f.text(x+w/2,y+61,body,16,anchor='middle')
-        for a,b in [(505,540),(730,765),(955,990)]:f.path(f'M{a+3},{y+44} H{b-5}',arrow=True)
-    f.rect(32,385,1216,58,'#f0f3f7',radius=6)
-    f.text(640,421,'One retained version: boundaries + eligibility + backing + derived search state',21,'bold',anchor='middle')
-    f.text(32,469,'The hint window is not the complete protection footprint. Finishing may need selection or bracket repair.',18,color=MUTED)
-    f.save(OUT/'phases.svg')
+    f = Figure(650, 'Expose a dependency while retaining one version',
+               'Checkpoint search identifies sixteen local fields; a bound numeric source proposes '
+               'an endpoint bracket using once-per-version derived state. The owner may prefetch '
+               'or wait before finishing. Metadata, eligibility, backing and derived state remain '
+               'one version. Local windows are hints, not complete read grants.')
+    f.heading(32, 42, 'Expose the next dependency; retain one data version')
+    f.text(32, 82, 'Ready arithmetic stays inline. The caller decides whether an unresolved read warrants a Loom wait.',
+           20, color=MUTED)
+    for y, labels, prepare, finish in (
+        (146, ['Checkpointed', 'source'], 'search checkpoints', ['compare or prefix', 'then select']),
+        (346, ['Bound numeric', 'source'], 'propose bracket', ['verify bracket', 'repair if needed'])):
+        f.lines(32, y + 49, labels, 21, 27, weight='bold')
+        f.rect(236, y, 202, 124, BLUE_FILL, stroke='#8dbce7', radius=6)
+        f.text(337, y + 34, 'prepare', 22, 'bold', anchor='middle')
+        f.text(337, y + 76, prepare, 17, anchor='middle')
+        f.rect(488, y, 285, 124, '#f1f4f8', radius=6)
+        f.text(630.5, y + 30, 'local_window', 19, 'bold', anchor='middle', mono=True)
+        if y == 146:
+            for lane in range(16):
+                f.rect(527 + lane * 13, y + 49, 12, 28, BLUE_FILL, stroke='#8dbce7')
+            for at in (511, 750):
+                f.text(at, y + 70, '…', 20, color=MUTED, anchor='middle')
+            f.text(630.5, y + 107, '16 local fields', 17, color=MUTED, anchor='middle')
+        else:
+            for lane, label in enumerate(['…', 'E₀', 'E₁', 'E₂', 'Eₙ', '…']):
+                f.rect(511 + lane * 40, y + 49, 38, 28, BLUE_FILL, stroke='#8dbce7')
+                f.text(530 + lane * 40, y + 69, label, 17, anchor='middle')
+            f.text(630.5, y + 107, 'endpoint bracket', 17, color=MUTED, anchor='middle')
+        f.rect(820, y, 180, 124, AMBER_FILL, stroke='#c49b49', radius=6, dash=True)
+        f.text(910, y + 34, 'caller policy', 20, 'bold', anchor='middle')
+        f.lines(910, y + 73, ['prefetch', 'optional Loom wait'], 17, 25, anchor='middle')
+        f.rect(1048, y, 200, 124, GREEN_FILL, stroke='#a5cd9c', radius=6)
+        f.text(1148, y + 34, 'finish', 22, 'bold', anchor='middle')
+        f.lines(1148, y + 73, finish, 17, 25, anchor='middle')
+        for start, stop in ((438, 488), (773, 820), (1000, 1048)):
+            f.path(f'M{start+5},{y+62} H{stop-7}', arrow=True)
+    f.rect(236, 292, 202, 36, BLUE_FILL, stroke='#8dbce7', radius=5)
+    f.text(337, 316, 'bind once per version', 16, anchor='middle')
+    f.path('M337,330 V342', arrow=True, dash=True, color=BLUE)
+    f.rect(32, 530, 1216, 60, '#f1f4f8', radius=6)
+    f.text(56, 567, 'One retained version', 21, 'bold')
+    f.text(320, 567, 'boundaries + eligibility + backing + derived search state', 20)
+    f.text(32, 625, 'Hint windows are not read grants; selection and bracket repair can read elsewhere.',
+           20, color=MUTED)
+    f.save(OUT / 'phases.svg')
 
 
-if __name__=='__main__':
-    encodings();ranges();phases()
+if __name__ == '__main__':
+    encodings()
+    ranges()
+    phases()

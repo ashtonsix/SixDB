@@ -1,68 +1,111 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="650" viewBox="0 0 1280 650" role="img" aria-labelledby="title description">
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="744" viewBox="0 0 1280 744" role="img" aria-labelledby="title description">
 <title id="title">A range query bounds the children worth visiting</title>
-<desc id="description">Closed occupied ranges at ranks0..5 are3..7,10..10,18..24,26..31,35..40,46..52. Rank2 is ineligible. Query9 inclusive to36 exclusive returns candidate ranks1..5 exclusive. The singleton at rank1 qualifies; the internal ineligible rank is skipped by the consumer.</desc>
+<desc id="description">Closed occupied ranges at ranks 0 through 5 are 3..7,10..10,18..24,26..31,35..40,46..52. Rank 2 is ineligible. Query 9 inclusive to 36 exclusive returns candidate ranks 1 through 4. Translucent green query points cross amber candidate rows; the consumer skips the internal ineligible rank. Rank 1 is a populated singleton.</desc>
 <defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L8,4 L0,8" fill="#586579"/></marker></defs>
 <rect width="1280" height="100%" fill="white"/>
 <g font-family="Arial, Helvetica, sans-serif" fill="#233047" font-size="21">
 <text x="32" y="42" font-size="26" font-weight="bold" fill="#233047" text-anchor="start">A range query bounds the children worth visiting</text>
-<rect x="323" y="110" width="459" height="440" rx="0" fill="#edf8ef" stroke="none" stroke-width="1.5"/>
-<path d="M323,110 V550" fill="none" stroke="#15834b" stroke-width="1.8" stroke-dasharray="6 5"/>
-<path d="M782,110 V550" fill="none" stroke="#15834b" stroke-width="1.8" stroke-dasharray="6 5"/>
-<text x="544" y="95" font-size="22" font-weight="bold" fill="#15834b" text-anchor="middle">query [9, 36)</text>
-<text x="50" y="165" font-size="21" font-weight="bold" fill="#233047" text-anchor="start">rank 0</text>
-<path d="M170,160 H1150" fill="none" stroke="#d9e0e9" stroke-width="1.8"/>
-<path d="M221,160 H289" fill="none" stroke="#175ca7" stroke-width="1.8"/>
-<circle cx="221" cy="160" r="6" fill="#175ca7"/>
-<circle cx="289" cy="160" r="6" fill="#175ca7"/>
-<text x="221" y="148" font-size="18" font-weight="bold" fill="#175ca7" text-anchor="start">[3, 7]</text>
-<rect x="32" y="200" width="1184" height="54" rx="4" fill="#fff4d9" stroke="none" stroke-width="1.5"/>
-<text x="50" y="233" font-size="21" font-weight="bold" fill="#233047" text-anchor="start">rank 1</text>
-<path d="M170,228 H1150" fill="none" stroke="#d9e0e9" stroke-width="1.8"/>
-<path d="M340,228 H340" fill="none" stroke="#175ca7" stroke-width="1.8"/>
-<circle cx="340" cy="228" r="6" fill="#175ca7"/>
-<text x="340" y="216" font-size="18" font-weight="bold" fill="#175ca7" text-anchor="start">[10, 10]</text>
-<text x="368" y="249" font-size="17" font-weight="normal" fill="#586579" text-anchor="start">populated singleton</text>
-<rect x="32" y="268" width="1184" height="54" rx="4" fill="#fff4d9" stroke="none" stroke-width="1.5"/>
-<text x="50" y="301" font-size="21" font-weight="bold" fill="#233047" text-anchor="start">rank 2</text>
-<path d="M170,296 H1150" fill="none" stroke="#d9e0e9" stroke-width="1.8"/>
-<path d="M476,296 H578" fill="none" stroke="#8d99a8" stroke-width="1.8" stroke-dasharray="6 5"/>
-<circle cx="578" cy="296" r="6" fill="#8d99a8"/>
-<circle cx="476" cy="296" r="6" fill="#8d99a8"/>
-<text x="476" y="284" font-size="18" font-weight="bold" fill="#8d99a8" text-anchor="start">[18, 24]</text>
-<text x="476" y="320" font-size="17" font-weight="normal" fill="#586579" text-anchor="start">ineligible</text>
-<rect x="32" y="336" width="1184" height="54" rx="4" fill="#fff4d9" stroke="none" stroke-width="1.5"/>
-<text x="50" y="369" font-size="21" font-weight="bold" fill="#233047" text-anchor="start">rank 3</text>
-<path d="M170,364 H1150" fill="none" stroke="#d9e0e9" stroke-width="1.8"/>
-<path d="M612,364 H697" fill="none" stroke="#175ca7" stroke-width="1.8"/>
-<circle cx="612" cy="364" r="6" fill="#175ca7"/>
-<circle cx="697" cy="364" r="6" fill="#175ca7"/>
-<text x="612" y="352" font-size="18" font-weight="bold" fill="#175ca7" text-anchor="start">[26, 31]</text>
-<rect x="32" y="404" width="1184" height="54" rx="4" fill="#fff4d9" stroke="none" stroke-width="1.5"/>
-<text x="50" y="437" font-size="21" font-weight="bold" fill="#233047" text-anchor="start">rank 4</text>
-<path d="M170,432 H1150" fill="none" stroke="#d9e0e9" stroke-width="1.8"/>
-<path d="M765,432 H850" fill="none" stroke="#175ca7" stroke-width="1.8"/>
-<circle cx="850" cy="432" r="6" fill="#175ca7"/>
-<circle cx="765" cy="432" r="6" fill="#175ca7"/>
-<text x="765" y="420" font-size="18" font-weight="bold" fill="#175ca7" text-anchor="start">[35, 40]</text>
-<text x="50" y="505" font-size="21" font-weight="bold" fill="#233047" text-anchor="start">rank 5</text>
-<path d="M170,500 H1150" fill="none" stroke="#d9e0e9" stroke-width="1.8"/>
-<path d="M952,500 H1054" fill="none" stroke="#175ca7" stroke-width="1.8"/>
-<circle cx="1054" cy="500" r="6" fill="#175ca7"/>
-<circle cx="952" cy="500" r="6" fill="#175ca7"/>
-<text x="952" y="488" font-size="18" font-weight="bold" fill="#175ca7" text-anchor="start">[46, 52]</text>
-<text x="32" y="590" font-size="20" font-weight="bold" fill="#233047" text-anchor="start">Eligibility</text>
-<rect x="180" y="564" width="78" height="42" rx="0" fill="#f0f3f7" stroke="#d9e0e9" stroke-width="1.5"/>
-<text x="219" y="593" font-size="21" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">1</text>
-<rect x="265" y="564" width="78" height="42" rx="0" fill="#f0f3f7" stroke="#d9e0e9" stroke-width="1.5"/>
-<text x="304" y="593" font-size="21" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">1</text>
-<rect x="350" y="564" width="78" height="42" rx="0" fill="#f0f3f7" stroke="#d9e0e9" stroke-width="1.5"/>
-<text x="389" y="593" font-size="21" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">0</text>
-<rect x="435" y="564" width="78" height="42" rx="0" fill="#f0f3f7" stroke="#d9e0e9" stroke-width="1.5"/>
-<text x="474" y="593" font-size="21" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">1</text>
-<rect x="520" y="564" width="78" height="42" rx="0" fill="#f0f3f7" stroke="#d9e0e9" stroke-width="1.5"/>
-<text x="559" y="593" font-size="21" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">1</text>
-<rect x="605" y="564" width="78" height="42" rx="0" fill="#f0f3f7" stroke="#d9e0e9" stroke-width="1.5"/>
-<text x="644" y="593" font-size="21" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">1</text>
-<text x="735" y="588" font-size="23" font-weight="bold" fill="#233047" text-anchor="start">Candidate ranks [1, 5)</text>
-<text x="735" y="618" font-size="19" font-weight="normal" fill="#586579" text-anchor="start">Test eligibility inside the window.</text>
+<text x="32" y="78" font-size="20" font-weight="normal" fill="#586579" text-anchor="start">Ordered occupied bounds. The query includes its low point and excludes its high point.</text>
+<text x="50" y="126" font-size="20" font-weight="bold" fill="#233047" text-anchor="start">Key</text>
+<path d="M176,121 H976" fill="none" stroke="#233047" stroke-width="1.8" marker-end="url(#arrow)"/>
+<path d="M176,115 L176,127" fill="none" stroke="#586579" stroke-width="1.3"/>
+<text x="176" y="108" font-size="16" font-weight="normal" fill="#586579" text-anchor="middle">0</text>
+<path d="M246,115 L246,127" fill="none" stroke="#586579" stroke-width="1.3"/>
+<text x="246" y="108" font-size="16" font-weight="normal" fill="#586579" text-anchor="middle">5</text>
+<path d="M316,115 L316,127" fill="none" stroke="#586579" stroke-width="1.3"/>
+<text x="316" y="108" font-size="16" font-weight="normal" fill="#586579" text-anchor="middle">10</text>
+<path d="M386,115 L386,127" fill="none" stroke="#586579" stroke-width="1.3"/>
+<text x="386" y="108" font-size="16" font-weight="normal" fill="#586579" text-anchor="middle">15</text>
+<path d="M456,115 L456,127" fill="none" stroke="#586579" stroke-width="1.3"/>
+<text x="456" y="108" font-size="16" font-weight="normal" fill="#586579" text-anchor="middle">20</text>
+<path d="M526,115 L526,127" fill="none" stroke="#586579" stroke-width="1.3"/>
+<text x="526" y="108" font-size="16" font-weight="normal" fill="#586579" text-anchor="middle">25</text>
+<path d="M596,115 L596,127" fill="none" stroke="#586579" stroke-width="1.3"/>
+<text x="596" y="108" font-size="16" font-weight="normal" fill="#586579" text-anchor="middle">30</text>
+<path d="M666,115 L666,127" fill="none" stroke="#586579" stroke-width="1.3"/>
+<text x="666" y="108" font-size="16" font-weight="normal" fill="#586579" text-anchor="middle">35</text>
+<path d="M736,115 L736,127" fill="none" stroke="#586579" stroke-width="1.3"/>
+<text x="736" y="108" font-size="16" font-weight="normal" fill="#586579" text-anchor="middle">40</text>
+<path d="M806,115 L806,127" fill="none" stroke="#586579" stroke-width="1.3"/>
+<text x="806" y="108" font-size="16" font-weight="normal" fill="#586579" text-anchor="middle">45</text>
+<path d="M876,115 L876,127" fill="none" stroke="#586579" stroke-width="1.3"/>
+<text x="876" y="108" font-size="16" font-weight="normal" fill="#586579" text-anchor="middle">50</text>
+<path d="M946,115 L946,127" fill="none" stroke="#586579" stroke-width="1.3"/>
+<text x="946" y="108" font-size="16" font-weight="normal" fill="#586579" text-anchor="middle">55</text>
+<rect x="32" y="258" width="960" height="52" rx="4" fill="#fff5df" stroke="none" stroke-width="1.5"/>
+<rect x="32" y="320" width="960" height="52" rx="4" fill="#fff5df" stroke="none" stroke-width="1.5"/>
+<rect x="32" y="382" width="960" height="52" rx="4" fill="#fff5df" stroke="none" stroke-width="1.5"/>
+<rect x="32" y="444" width="960" height="52" rx="4" fill="#fff5df" stroke="none" stroke-width="1.5"/>
+<rect x="302" y="138" width="378" height="428" fill="#69bd80" fill-opacity="0.13"/>
+<path d="M302,138 L302,568" fill="none" stroke="#168348" stroke-width="2" stroke-dasharray="6 5"/>
+<path d="M680,138 L680,568" fill="none" stroke="#168348" stroke-width="2" stroke-dasharray="6 5"/>
+<text x="491.0" y="155" font-size="21" font-weight="bold" fill="#168348" text-anchor="middle">query [9, 36)</text>
+<path d="M302,174 L680,174" fill="none" stroke="#168348" stroke-width="2.4"/>
+<circle cx="302" cy="174" r="5" fill="#168348" stroke="none" stroke-width="2"/>
+<circle cx="680" cy="174" r="5" fill="white" stroke="#168348" stroke-width="2"/>
+<text x="50" y="228" font-size="21" font-weight="bold" fill="#233047" text-anchor="start">rank 0</text>
+<path d="M176,222 L976,222" fill="none" stroke="#d9e0e9" stroke-width="1.4"/>
+<path d="M218,222 L274,222" fill="none" stroke="#175ca7" stroke-width="4"/>
+<circle cx="218" cy="222" r="6" fill="#175ca7" stroke="none" stroke-width="2"/>
+<circle cx="274" cy="222" r="6" fill="#175ca7" stroke="none" stroke-width="2"/>
+<text x="218" y="207" font-size="18" font-weight="bold" fill="#175ca7" text-anchor="start">[3, 7]</text>
+<text x="50" y="290" font-size="21" font-weight="bold" fill="#233047" text-anchor="start">rank 1</text>
+<path d="M176,284 L976,284" fill="none" stroke="#d9e0e9" stroke-width="1.4"/>
+<path d="M316,284 L316,284" fill="none" stroke="#175ca7" stroke-width="4"/>
+<circle cx="316" cy="284" r="6" fill="#175ca7" stroke="none" stroke-width="2"/>
+<text x="316" y="269" font-size="18" font-weight="bold" fill="#175ca7" text-anchor="start">[10, 10]</text>
+<text x="342" y="306" font-size="17" font-weight="normal" fill="#586579" text-anchor="start">populated singleton</text>
+<text x="50" y="352" font-size="21" font-weight="bold" fill="#233047" text-anchor="start">rank 2</text>
+<path d="M176,346 L976,346" fill="none" stroke="#d9e0e9" stroke-width="1.4"/>
+<path d="M428,346 L512,346" fill="none" stroke="#8d99a8" stroke-width="4" stroke-dasharray="6 5"/>
+<circle cx="428" cy="346" r="6" fill="#8d99a8" stroke="none" stroke-width="2"/>
+<circle cx="512" cy="346" r="6" fill="#8d99a8" stroke="none" stroke-width="2"/>
+<text x="428" y="331" font-size="18" font-weight="bold" fill="#8d99a8" text-anchor="start">[18, 24]</text>
+<text x="428" y="368" font-size="17" font-weight="normal" fill="#586579" text-anchor="start">ineligible</text>
+<text x="50" y="414" font-size="21" font-weight="bold" fill="#233047" text-anchor="start">rank 3</text>
+<path d="M176,408 L976,408" fill="none" stroke="#d9e0e9" stroke-width="1.4"/>
+<path d="M540,408 L610,408" fill="none" stroke="#175ca7" stroke-width="4"/>
+<circle cx="540" cy="408" r="6" fill="#175ca7" stroke="none" stroke-width="2"/>
+<circle cx="610" cy="408" r="6" fill="#175ca7" stroke="none" stroke-width="2"/>
+<text x="540" y="393" font-size="18" font-weight="bold" fill="#175ca7" text-anchor="start">[26, 31]</text>
+<text x="50" y="476" font-size="21" font-weight="bold" fill="#233047" text-anchor="start">rank 4</text>
+<path d="M176,470 L976,470" fill="none" stroke="#d9e0e9" stroke-width="1.4"/>
+<path d="M666,470 L736,470" fill="none" stroke="#175ca7" stroke-width="4"/>
+<circle cx="666" cy="470" r="6" fill="#175ca7" stroke="none" stroke-width="2"/>
+<circle cx="736" cy="470" r="6" fill="#175ca7" stroke="none" stroke-width="2"/>
+<text x="666" y="455" font-size="18" font-weight="bold" fill="#175ca7" text-anchor="start">[35, 40]</text>
+<text x="50" y="538" font-size="21" font-weight="bold" fill="#233047" text-anchor="start">rank 5</text>
+<path d="M176,532 L976,532" fill="none" stroke="#d9e0e9" stroke-width="1.4"/>
+<path d="M820,532 L904,532" fill="none" stroke="#175ca7" stroke-width="4"/>
+<circle cx="820" cy="532" r="6" fill="#175ca7" stroke="none" stroke-width="2"/>
+<circle cx="904" cy="532" r="6" fill="#175ca7" stroke="none" stroke-width="2"/>
+<text x="820" y="517" font-size="18" font-weight="bold" fill="#175ca7" text-anchor="start">[46, 52]</text>
+<path d="M1002,258 H1012 Q1020,258 1020,266 V369 Q1020,377 1028,377 Q1020,377 1020,385 V488 Q1020,496 1012,496 H1002" fill="none" stroke="#a96a12" stroke-width="1.8"/>
+<text x="1044" y="337" font-size="22" font-weight="bold" fill="#a96a12" text-anchor="start">Candidate ranks</text>
+<text x="1044" y="374" font-size="27" font-weight="bold" fill="#a96a12" text-anchor="start">[1, 5)</text>
+<text x="1044" y="411" font-size="18" font-weight="normal" fill="#586579" text-anchor="start">ranks 1–4</text>
+<text x="1044" y="438" font-size="18" font-weight="normal" fill="#586579" text-anchor="start">rank 2 is a hole</text>
+<text x="302" y="592" font-size="17" font-weight="bold" fill="#168348" text-anchor="middle">9</text>
+<text x="680" y="592" font-size="17" font-weight="bold" fill="#168348" text-anchor="middle">36</text>
+<text x="32" y="650" font-size="20" font-weight="bold" fill="#233047" text-anchor="start">Eligibility</text>
+<text x="242" y="617" font-size="16" font-weight="normal" fill="#586579" text-anchor="middle">rank 0</text>
+<rect x="200" y="628" width="84" height="38" rx="3" fill="#f1f4f8" stroke="#d9e0e9" stroke-width="1.5"/>
+<text x="242" y="654" font-size="21" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">1</text>
+<text x="336" y="617" font-size="16" font-weight="normal" fill="#586579" text-anchor="middle">rank 1</text>
+<rect x="294" y="628" width="84" height="38" rx="3" fill="#f1f4f8" stroke="#d9e0e9" stroke-width="1.5"/>
+<text x="336" y="654" font-size="21" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">1</text>
+<text x="430" y="617" font-size="16" font-weight="normal" fill="#586579" text-anchor="middle">rank 2</text>
+<rect x="388" y="628" width="84" height="38" rx="3" fill="#e8edf2" stroke="#d9e0e9" stroke-width="1.5"/>
+<text x="430" y="654" font-size="21" font-weight="normal" fill="#586579" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">0</text>
+<text x="524" y="617" font-size="16" font-weight="normal" fill="#586579" text-anchor="middle">rank 3</text>
+<rect x="482" y="628" width="84" height="38" rx="3" fill="#f1f4f8" stroke="#d9e0e9" stroke-width="1.5"/>
+<text x="524" y="654" font-size="21" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">1</text>
+<text x="618" y="617" font-size="16" font-weight="normal" fill="#586579" text-anchor="middle">rank 4</text>
+<rect x="576" y="628" width="84" height="38" rx="3" fill="#f1f4f8" stroke="#d9e0e9" stroke-width="1.5"/>
+<text x="618" y="654" font-size="21" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">1</text>
+<text x="712" y="617" font-size="16" font-weight="normal" fill="#586579" text-anchor="middle">rank 5</text>
+<rect x="670" y="628" width="84" height="38" rx="3" fill="#f1f4f8" stroke="#d9e0e9" stroke-width="1.5"/>
+<text x="712" y="654" font-size="21" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">1</text>
+<path d="M32,689 L1248,689" fill="none" stroke="#d9e0e9" stroke-width="2"/>
+<text x="32" y="724" font-size="20" font-weight="normal" fill="#586579" text-anchor="start">Equal bounds can contain a key. Candidate windows can contain ineligible ranks.</text>
 </g></svg>
