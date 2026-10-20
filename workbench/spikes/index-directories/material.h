@@ -15,6 +15,20 @@ namespace directory_spike {
 using u64 = std::uint64_t;
 using i64 = std::int64_t;
 namespace oa = orbital::allocation;
+struct EditFailure {orbital::Error error;};
+template<class T>T attempt(orbital::Result<T> r){if(!r)throw EditFailure{r.error()};return std::move(*r);}
+inline void attempt(orbital::Result<void> r){if(!r)throw EditFailure{r.error()};}
+enum class FaultPoint : unsigned { native_allocation, geometry, locator, capture, prepare, prepared, count };
+struct EditFaults {
+    std::size_t fail_at=SIZE_MAX,visits{};
+    std::array<std::size_t,unsigned(FaultPoint::count)> points{};
+    orbital::Error error=orbital::Error::capacity;
+    void(*before_prepare)(void*){};void* context{};
+    std::size_t journal_records{},journal_record_bytes{},journal_heap_bytes{};
+    u64 private_copied_bytes{},private_allocated_bytes{};
+    std::pmr::memory_resource* journal_memory{};std::size_t journal_local_bytes=8192;
+    void check(FaultPoint p){++points[unsigned(p)];if(visits++==fail_at)throw EditFailure{error};}
+};
 inline void require(bool value, std::source_location at=std::source_location::current()) {
     if (!value) { std::fprintf(stderr,"%s:%u: directory check failed\n",at.file_name(),at.line()); std::abort(); }
 }
@@ -138,6 +152,7 @@ struct Runtime {
     std::vector<oa::Allocation> allocations;
     std::vector<orbital::PartSource> sources;
     std::vector<std::size_t> extents;
+    EditFaults* faults{};
     Runtime(); ~Runtime();
 };
 std::span<const std::byte> bytes(Selection,unsigned);
@@ -163,8 +178,9 @@ public:
     }
     bool supplied(std::size_t p)const{return p<supplied_.size() && supplied_[p];}
 };
-struct CopyStats {u64 allocated{},copied{},shared{},objects{},dirent_bytes{},hash_created_bytes{},small_requests{},large_requests{},realization_ns{},locator_created_bytes{};};
+struct CopyStats {u64 allocated{},copied{},shared{},objects{},dirent_bytes{},hash_created_bytes{},small_requests{},large_requests{},realization_ns{},locator_created_bytes{},journal_records{},journal_record_bytes{},journal_heap_bytes{};};
 Store::Owner capture(Runtime&,Store&,Control,const Image&,Selection old,bool selective,CopyStats&,bool same_geometry=false);
+orbital::Result<Store::Owner> try_capture(Runtime&,Store&,Control,const Image&,Selection old,bool selective,CopyStats&,bool same_geometry=false);
 void publish(Store&,const Store::Scope&,std::span<const Store::Change>);
 } // namespace directory_spike
 extern template class orbital::ObjectStore<directory_spike::Physical>;

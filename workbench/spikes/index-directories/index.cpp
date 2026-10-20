@@ -33,8 +33,19 @@ Image pack_overflow(std::span<const Selection> segments) {
 template<class T> void append(std::vector<std::byte>& b,const T& value) {
     const auto n=b.size();b.resize(n+sizeof(T));std::memcpy(b.data()+n,&value,sizeof(T));
 }
-template<class T> void repeated(std::map<T,unsigned>& values,T value,bool add) {
-    if(add)++values[value];else {auto it=values.find(value);require(it!=values.end());if(!--it->second)values.erase(it);}
+template<class T> void repeated(std::map<T,unsigned>& values,T value,bool add,UndoJournal* undo) {
+    if(add){auto& count=edit_get(undo,values,value);if(undo)undo->save(count);++count;}
+    else {auto it=values.find(value);require(it!=values.end());if(undo)undo->save(it->second);if(!--it->second)edit_erase(undo,values,it);}
+}
+// Direct replacement control: retain the last witness node with its original
+// count, and do not snapshot a fresh counter that rollback will erase anyway.
+void field_delta(std::map<i64,unsigned>& values,i64 value,bool add,UndoJournal* undo) {
+    auto it=values.find(value);
+    if(add && it==values.end()){edit_get(undo,values,value)=1;return;}
+    require(it!=values.end() && it->second);
+    if(!add && it->second==1){edit_erase(undo,values,it);return;}
+    if(undo)undo->save(it->second);
+    if(add)++it->second;else --it->second;
 }
 unsigned prefix(u64 physical,unsigned layer) {return layer ? physical>>(48-8*layer):0;}
 std::uint16_t position(u64 physical,unsigned layer) {return physical>>(32-8*layer);}
@@ -107,10 +118,19 @@ Outcome finish_read(PendingRead p) {
     const auto s=interpret_summary(*p.body,p.recipe);
     return {true,p.logical,s.count,s.not_null,s.sum,p.prefix,p.position};
 }
-void EntryState::edit(const Row& row,bool add) {
+void EntryState::edit(const Row& row,bool add,UndoJournal* undo) {
+    if(undo){undo->save(count);undo->save(not_null);undo->save(sum);}
     if(add)++count;else {require(count);--count;}
-    repeated(logical,row.logical,add);
-    if(row.valid) {if(add)++not_null;else --not_null;sum+=add?row.value:-row.value;repeated(field,row.value,add);}
+    repeated(logical,row.logical,add,undo);
+    if(row.valid) {if(add)++not_null;else --not_null;sum+=add?row.value:-row.value;repeated(field,row.value,add,undo);}
+}
+void EntryState::replace(const Row& before,const Row& after,UndoJournal* undo) {
+    require(before.physical==after.physical && before.logical==after.logical);
+    if(before.valid!=after.valid){if(undo)undo->save(not_null);if(after.valid)++not_null;else --not_null;}
+    const i64 old_value=before.valid?before.value:0,new_value=after.valid?after.value:0;
+    if(old_value!=new_value){if(undo)undo->save(sum);sum+=new_value-old_value;}
+    if(before.valid && (!after.valid || before.value!=after.value))field_delta(field,before.value,false,undo);
+    if(after.valid && (!before.valid || before.value!=after.value))field_delta(field,after.value,true,undo);
 }
 Summary EntryState::summary() const {return {count,not_null,field.empty()?0:field.begin()->first,field.empty()?0:field.rbegin()->first,sum};}
 Index::Index(Runtime& rt,std::pmr::memory_resource& memory,unsigned j,unsigned key_bytes,unsigned page_bits,unsigned auxiliary_parts,unsigned definitions,unsigned summary_chunk,bool compact_tables,bool directory_branches,unsigned table_row_chunk,bool packed_pages,bool compact_hashes,unsigned root_row_chunk,unsigned locator_mode)
@@ -120,11 +140,18 @@ void Index::edit_model(const Row& row,bool add,std::set<SegmentKey>& affected) {
     if(j_)require((row.physical>>(48-8*j_))==(row.logical>>(64-8*j_)));
     for(unsigned layer=0;layer<5;++layer) {
         const SegmentKey key{layer,prefix(row.physical,layer)};affected.insert(key);
-        auto& segment=segments_[key];const auto pos=position(row.physical,layer);
+        auto& segment=edit_get(undo_,segments_,key);const auto pos=position(row.physical,layer);
         dirty_positions_[key].insert(pos);
-        auto& entry=segment[pos];entry.edit(row,add);
-        if(!entry.count)segment.erase(pos);
-        if(segment.empty())segments_.erase(key);
+        auto& entry=edit_get(undo_,segment,pos);entry.edit(row,add,undo_);
+        if(!entry.count)edit_erase(undo_,segment,pos);
+        if(segment.empty())edit_erase(undo_,segments_,key);
+    }
+}
+void Index::replace_value_model(const Row& before,const Row& after,std::set<SegmentKey>& affected) {
+    for(unsigned layer=0;layer<5;++layer) {
+        const SegmentKey key{layer,prefix(before.physical,layer)};affected.insert(key);
+        const auto pos=position(before.physical,layer);dirty_positions_[key].insert(pos);
+        segments_.at(key).at(pos).replace(before,after,undo_);
     }
 }
 Image Index::segment_image(SegmentKey key,unsigned representation) const {
@@ -144,19 +171,28 @@ Image Index::segment_image(SegmentKey key,unsigned representation) const {
     return image;
 }
 EditStats Index::edit(std::span<const Row> additions,std::span<const u64> removals,bool selective) {
-    return apply(additions,removals,selective,{});
+    return take(try_edit(additions,removals,selective));
 }
-orbital::Result<EditStats> Index::migrate(std::span<const Migration> migrations,bool source_transcode) {
+orbital::Result<EditStats> Index::try_edit(std::span<const Row> additions,std::span<const u64> removals,bool selective,EditFaults* faults,bool value_patch) {
+    return transaction([&]{return apply(additions,removals,selective,{},true,value_patch);},faults);
+}
+EditStats Index::edit_unprotected(std::span<const Row> additions,std::span<const u64> removals,bool selective,bool value_patch) {
+    require(!undo_ && !rt_.faults);
+    return apply(additions,removals,selective,{},true,value_patch);
+}
+orbital::Result<EditStats> Index::migrate(std::span<const Migration> migrations,bool source_transcode,EditFaults* faults) {
+    return transaction([&]{
     std::set<SegmentKey> unique;
     for(const auto& m:migrations) {
         if(m.segment.first>=5 || !segments_.contains(m.segment) || !m.representation || m.representation>definitions_ || !unique.insert(m.segment).second)
-            return std::unexpected(orbital::Error::invalid_argument);
+            throw EditFailure{orbital::Error::invalid_argument};
         const auto def=representation_definition(m.representation);
-        if(!(def.allowed_layers&(1u<<m.segment.first)))return std::unexpected(orbital::Error::invalid_argument);
+        if(!(def.allowed_layers&(1u<<m.segment.first)))throw EditFailure{orbital::Error::invalid_argument};
     }
     return apply({},{},true,migrations,source_transcode);
+    },faults);
 }
-EditStats Index::apply(std::span<const Row> additions,std::span<const u64> removals,bool selective,std::span<const Migration> migrations,bool source_transcode) {
+EditStats Index::apply(std::span<const Row> additions,std::span<const u64> removals,bool selective,std::span<const Migration> migrations,bool source_transcode,bool value_patch) {
     using Clock=std::chrono::steady_clock;
     auto elapsed=[](auto start){return u64(std::chrono::duration_cast<std::chrono::nanoseconds>(Clock::now()-start).count());};
     const auto model_start=Clock::now();
@@ -166,17 +202,18 @@ EditStats Index::apply(std::span<const Row> additions,std::span<const u64> remov
         const auto old=rows_.find(row.id);return old!=rows_.end() && old->second.physical==row.physical && old->second.logical==row.logical;
     });
     const bool value_only=selective && same_positions;
-    for(auto id:removals) {const auto old=rows_.at(id);edit_model(old,false,affected);rows_.erase(id);}
+    for(auto id:removals) {const auto old=rows_.at(id);edit_model(old,false,affected);edit_erase(undo_,rows_,id);}
     for(const auto& row:additions) {
+        if(value_patch && same_positions){replace_value_model(rows_.at(row.id),row,affected);edit_set(undo_,rows_,row.id,row);continue;}
         if(auto old=rows_.find(row.id);old!=rows_.end())edit_model(old->second,false,affected);
-        rows_[row.id]=row;edit_model(row,true,affected);
+        edit_set(undo_,rows_,row.id,row);edit_model(row,true,affected);
     }
     std::map<SegmentKey,unsigned> targets;
     for(const auto& m:migrations) {
         const auto old=basis.bind(segment_id(m.segment.first,m.segment.second));require(bool(old));
         if(old.control().representation!=m.representation){affected.insert(m.segment);targets[m.segment]=m.representation;}
     }
-    ++generation_;
+    if(undo_)undo_->save(generation_);++generation_;
     stats.model_ns=elapsed(model_start);
     std::vector<Store::Change> changes;changes.reserve(affected.size()+6);
     std::map<SegmentKey,Selection> private_segments;
@@ -184,7 +221,7 @@ EditStats Index::apply(std::span<const Row> additions,std::span<const u64> remov
     std::array<std::set<unsigned>,5> dirty_overflow;
     for(const auto key:affected) {
         const auto id=segment_id(key.first,key.second);auto old=basis.bind(id);
-        if(!segments_.contains(key)) {changes.push_back({id,{}});directory_entries_[key.first].erase(key.second);directory_changes.insert(key);++stats.removed_segments;continue;}
+        if(!segments_.contains(key)) {changes.push_back({id,{}});edit_erase(undo_,directory_entries_[key.first],key.second);directory_changes.insert(key);++stats.removed_segments;continue;}
         unsigned rep=1+(u64(key.second)*991+generation_+key.first)%definitions_;
         while(!(representation_definition(rep).allowed_layers&(1u<<key.first)))rep=rep%definitions_+1;
         if(old && same_positions)rep=old.control().representation;
@@ -232,16 +269,17 @@ EditStats Index::apply(std::span<const Row> additions,std::span<const u64> remov
         if(indirect_parts_ && old && same_positions && !targets.contains(key))c.revision=old.control().revision;
         stats.summary_entries+=c.count;
         const auto capture_start=Clock::now();
-        auto owner=capture(rt_,store,c,image,old,selective,stats,patch);stats.segment_capture_ns+=elapsed(capture_start);
+        auto owner=attempt(try_capture(rt_,store,c,image,old,selective,stats,patch));stats.segment_capture_ns+=elapsed(capture_start);
         private_segments[key]=Physical::selection(owner.get());
         auto selected=Physical::selection(owner.get());auto d=describe(selected);
         auto& entries=directory_entries_[key.first];
         if(auto it=entries.find(key.second);it!=entries.end()){d.overflow_block=it->second.descriptor.overflow_block;d.overflow_rank=it->second.descriptor.overflow_rank;}
         const DirectoryEntry next{d,values<u64>(selected,1).front(),values<u64>(selected,2).back()};
         const auto prior=entries.find(key.second);
-        if(prior==entries.end() || std::memcmp(&prior->second.descriptor,&d,sizeof(d)) || prior->second.minimum!=next.minimum || prior->second.maximum!=next.maximum)
+        if(prior==entries.end() || std::memcmp(&prior->second.descriptor,&d,sizeof(d)) || prior->second.minimum!=next.minimum || prior->second.maximum!=next.maximum) {
             directory_changes.insert(key);
-        entries[key.second]=next;
+            edit_set(undo_,entries,key.second,next);
+        }
         if(old && old.part_count()!=selected.part_count())dirty_overflow[key.first].insert(key.second);
         for(unsigned p=6;p<selected.part_count();++p)if(!old || p>=old.part_count() || part_locator(selected,p)!=part_locator(old,p))dirty_overflow[key.first].insert(key.second);
         changes.push_back({id,std::move(owner)});if(!old)++stats.new_segments;
@@ -258,9 +296,12 @@ EditStats Index::apply(std::span<const Row> additions,std::span<const u64> remov
             auto& prefixes=overflow_prefixes_[layer];std::set<unsigned> dirty_blocks;
             if(!value_only || prefixes.size()!=entries.size()) {
                 const auto old_segments=prefixes.size();
+                if(undo_)undo_->replace(prefixes);
                 prefixes.clear();prefixes.reserve(entries.size());unsigned rank=0;
                 for(auto& [p,e]:entries) {
-                    e.descriptor.overflow_block=rank/256;e.descriptor.overflow_rank=rank%256;
+                    if(e.descriptor.overflow_block!=rank/256 || e.descriptor.overflow_rank!=rank%256) {
+                        if(undo_)undo_->save(e.descriptor);e.descriptor.overflow_block=rank/256;e.descriptor.overflow_rank=rank%256;
+                    }
                     prefixes.push_back(p);dirty_blocks.insert(rank/256);++rank;
                     if(page_bits_ && layer>=2)changed_pages.insert(p>>page_bits_);
                 }
@@ -277,7 +318,7 @@ EditStats Index::apply(std::span<const Row> additions,std::span<const u64> remov
                     if(old)changes.push_back({overflow_id(layer,block),{}});continue;
                 }
                 const auto image=pack_overflow(selected);Control c{&memory_,Kind::overflow,layer,block,unsigned(selected.size()),1,generation_,0,4,key_bytes_};
-                changes.push_back({overflow_id(layer,block),capture(rt_,store,c,image,old,selective,stats,value_only && old && migrations.empty())});
+                changes.push_back({overflow_id(layer,block),attempt(try_capture(rt_,store,c,image,old,selective,stats,value_only && old && migrations.empty()))});
             }
         }
         auto build_directory=[&](Kind kind,unsigned prefix,auto first,auto last,unsigned count,Selection old) {
@@ -315,7 +356,8 @@ EditStats Index::apply(std::span<const Row> additions,std::span<const u64> remov
             c.compact_table=compact;
             c.table_row_chunk=row_grain;
             if(hashed){c.hash=make_hash(hash_keys,hash_rows,compact_hashes_);stats.hash_created_bytes+=hash_bytes(c.hash);}
-            auto owner=capture(rt_,store,c,image,old,selective,stats,value_only && old);release_hash(c.hash);
+            std::unique_ptr<PrefixHash,decltype(&release_hash)> hash(c.hash,release_hash);
+            auto owner=attempt(try_capture(rt_,store,c,image,old,selective,stats,value_only && old));
             if(bounds_changed)++stats.bound_repairs;
             return owner;
         };
@@ -336,7 +378,7 @@ EditStats Index::apply(std::span<const Row> additions,std::span<const u64> remov
                         current.insert(it->first);for(unsigned n=0;n<(1u<<page_bits_) && it!=entries.end();++n)++it;
                     }
                     for(auto it=page_entries_[layer].begin();it!=page_entries_[layer].end();) {
-                        if(!current.contains(it->first)){changes.push_back({page_id(layer,it->first),{}});it=page_entries_[layer].erase(it);}else ++it;
+                        if(!current.contains(it->first)){changes.push_back({page_id(layer,it->first),{}});it=edit_erase(undo_,page_entries_[layer],it);}else ++it;
                     }
                     changed_pages=std::move(current);
                 }
@@ -349,12 +391,12 @@ EditStats Index::apply(std::span<const Row> additions,std::span<const u64> remov
                     for(unsigned n=0;n<(1u<<page_bits_) && last!=entries.end();++n)++last;
                 }
                 if(first==last) {
-                    if(page_entries_[layer].erase(page))changes.push_back({page_id(layer,page),{}});
+                    if(edit_erase(undo_,page_entries_[layer],page))changes.push_back({page_id(layer,page),{}});
                     continue;
                 }
                 const auto count=unsigned(std::distance(first,last));
                 auto owner=build_directory(Kind::directory_page,page,first,last,count,basis.bind(page_id(layer,page)));
-                const auto s=Physical::selection(owner.get());page_entries_[layer][page]={describe(s),first->second.minimum,std::prev(last)->second.maximum};
+                const auto s=Physical::selection(owner.get());edit_set(undo_,page_entries_[layer],page,DirectoryEntry{describe(s),first->second.minimum,std::prev(last)->second.maximum});
                 changes.push_back({page_id(layer,page),std::move(owner)});
             }
             auto& pages=page_entries_[layer];
@@ -363,9 +405,9 @@ EditStats Index::apply(std::span<const Row> additions,std::span<const u64> remov
                 auto& branches=branch_entries_[layer];
                 for(auto b:dirty) {
                     auto first=pages.lower_bound(b<<page_bits_),last=pages.lower_bound((b+1)<<page_bits_);
-                    if(first==last){if(branches.erase(b))changes.push_back({branch_id(layer,b),{}});continue;}
+                    if(first==last){if(edit_erase(undo_,branches,b))changes.push_back({branch_id(layer,b),{}});continue;}
                     auto owner=build_directory(Kind::directory_branch,b,first,last,std::distance(first,last),basis.bind(branch_id(layer,b)));
-                    branches[b]={describe(Physical::selection(owner.get())),first->second.minimum,std::prev(last)->second.maximum};
+                    edit_set(undo_,branches,b,DirectoryEntry{describe(Physical::selection(owner.get())),first->second.minimum,std::prev(last)->second.maximum});
                     changes.push_back({branch_id(layer,b),std::move(owner)});
                 }
                 if(branches.empty()){if(root)changes.push_back({directory_id(layer),{}});}
@@ -383,13 +425,11 @@ EditStats Index::apply(std::span<const Row> additions,std::span<const u64> remov
     // admission. Readers bind it under the same Scope as directory and segments.
     if(!basis.bind(schema_id())) {
         Control c{&memory_,Kind::schema,0,0,definitions_,1,1,0,6,key_bytes_};
-        changes.push_back({schema_id(),capture(rt_,store,c,schema_image(),{},false,stats)});
+        changes.push_back({schema_id(),attempt(try_capture(rt_,store,c,schema_image(),{},false,stats))});
     }
     stats.directory_ns=elapsed(directory_start);
     if(!changes.empty()) {
-        Store::Prepared packet(store);auto start=Clock::now();
-        take(store.prepare(basis,changes,packet));stats.prepare_ns=elapsed(start);
-        start=Clock::now();take(store.install(packet));stats.install_ns=elapsed(start);
+        install_changes(basis,changes,&stats);
     }
     return stats;
 }
@@ -402,17 +442,32 @@ Definition Index::representation_definition(unsigned id)const {
     return definition(id,key_bytes_,summary_chunk_,aux_parts_);
 }
 CopyStats Index::extend_schema(unsigned definitions,std::span<const Definition> additions) {
+    return take(try_extend_schema(definitions,additions));
+}
+orbital::Result<CopyStats> Index::try_extend_schema(unsigned definitions,std::span<const Definition> additions,EditFaults* faults) {
+    return transaction([&]{return extend_schema_impl(definitions,additions);},faults);
+}
+CopyStats Index::extend_schema_impl(unsigned definitions,std::span<const Definition> additions) {
     require(definitions>=definitions_);
     for(auto def:additions) {
         require(def.id>definitions_ && def.id<=definitions && def.key_bytes==key_bytes_ && def.allowed_layers && def.allowed_layers<=31 && def.recipe<=1 &&
             (!def.summary_chunk || def.summary_chunk>=64) && def.auxiliary_parts<=4 && !definition_overrides_.contains(def.id));
-        definition_overrides_.emplace(def.id,def);
+        edit_set(undo_,definition_overrides_,def.id,def);
     }
-    Store::Scope basis(store);definitions_=definitions;
+    Store::Scope basis(store);if(undo_){undo_->save(definitions_);undo_->save(generation_);}definitions_=definitions;
     Control c{&memory_,Kind::schema,0,0,definitions_,1,++generation_,0,6,key_bytes_};CopyStats stats;
-    const std::array<Store::Change,1> changes{{{schema_id(),capture(rt_,store,c,schema_image(),basis.bind(schema_id()),true,stats)}}};
-    publish(store,basis,changes);
+    const std::array<Store::Change,1> changes{{{schema_id(),attempt(try_capture(rt_,store,c,schema_image(),basis.bind(schema_id()),true,stats))}}};
+    install_changes(basis,changes);
     return stats;
+}
+void Index::install_changes(const Store::Scope& basis,std::span<const Store::Change> changes,EditStats* stats) {
+    using Clock=std::chrono::steady_clock;Store::Prepared packet(store);
+    if(rt_.faults){rt_.faults->check(FaultPoint::prepare);if(rt_.faults->before_prepare)rt_.faults->before_prepare(rt_.faults->context);}
+    auto start=Clock::now();attempt(store.prepare(basis,changes,packet));
+    if(stats)stats->prepare_ns=std::chrono::duration_cast<std::chrono::nanoseconds>(Clock::now()-start).count();
+    if(rt_.faults)rt_.faults->check(FaultPoint::prepared);
+    start=Clock::now();attempt(store.install(packet));
+    if(stats)stats->install_ns=std::chrono::duration_cast<std::chrono::nanoseconds>(Clock::now()-start).count();
 }
 Selection Index::selected_directory(Store::Scope& scope,unsigned layer,u64 key,Search search) const {
     const auto root=scope.bind(directory_id(layer));

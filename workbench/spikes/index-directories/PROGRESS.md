@@ -12,11 +12,11 @@ implemented experiments; open rows remain work, not waived requirements.
 | Hash geometry, occupancy and overflow | Typed whole/page controls; actual spill counts and rebuild costs | Growth through maintained directory histories, rather than rebuilding every owner. |
 | Search binding, long keys and capacity endpoints | `baseline`, `keys`; numeric binding, arbitrary byte comparisons, UINT_MAX sentinel and virtual 2^32 outer coordinates | Binding amortization across real directory versions; long keys in the complete Object-backed path; above-cache qualification. |
 | 64-byte dirent and locator/interpretation coherence | Six 8-byte locators and explicit 16-byte metadata layout; actual Orbital MVCC outside it; raw/full-cell/compact-cell comparison on three native targets | Mapped/resource-ID recipes and portable reconstruction. |
-| Schema diversity and migration | `schema`: selected segments at every layer migrate across two codecs and differing chunk/auxiliary-Part counts; old/unmigrated interpretations remain valid; definition lookup and conversion measured from 32 to 100,000 definitions on three native targets | The fixture's codec/tag recipes are not a general converter; portable schema reconstruction and construction rollback remain with those open rows. |
+| Schema diversity and migration | `schema`: selected segments at every layer migrate across two codecs and differing chunk/auxiliary-Part counts; old/unmigrated interpretations remain valid; definition lookup and conversion measured from 32 to 100,000 definitions on three native targets; native construction rollback covered by `failure` | Portable schema reconstruction and mapped/durable conversion failure remain with the persistence row. |
 | Parts, overflow and relocation | Actual Allocation/Representation/Part ownership; StreamPack blocks/ranks; retained remaps; selected Part bytes and complete cell/geometry proof survive Index teardown | Colocated ownership controls and escape-retention economics; failure-safe relocation/reopen. |
 | Ordered physical placement, duplicates and padding | Shift, hierarchical redistribution and midpoint controls; boundary duplicate move; small-domain exhaustion; actual five-layer publication | Read/scan effects through sustained churn, prepend/consolidation and a chunked/gapped payload control. |
-| Aggregate damage and empty/nonempty transitions | Exact integer/null/count oracle at every layer; deletion/recreation histories | More varied value damage and payload movement must accompany structural maintenance, not just short value-only bursts. |
-| Atomic edit failure, refusal, abort and retry | Store preparation refusal/stale/abort checks | Editor construction failure and rollback/retry; current editor is fail-fast and mutates private author state before publication. |
+| Aggregate damage and empty/nonempty transitions | Exact integer/null/count oracle at every layer; deletion/recreation histories; direct replacement deltas and repeated/last-extremum-witness, all-null and unchanged-value histories with rollback | More varied value damage and payload movement must accompany structural maintenance. Reuse the aggregate-maintenance conclusions when pricing eager versus buffered work with corrected reads, full draining and retained snapshots. |
+| Atomic edit failure, refusal, abort and retry | `failure`: reversible author edits; injected construction/accepted-abort checkpoints; actual metadata/journal allocation refusal; actual stale-basis publication; identical-request retries with retained readers | The tested synchronous writer does not establish concurrent author rebasing or mapped/durable failure recovery; resource-wait and persistence rows remain open. |
 | Execution, waits and source lifetime | Actual Loom Ring, stationary Scopes through publication, active/overflow completion/discard | A resource wait using actual Tasks/Signals; bound-batch preparation/drain and escaped-Part histories on that path. |
 | Cached locations, plans and cursors | Snapshot reads and moved-key correctness | Explicit cache/cursor invalidation histories across relabel, page rank and schema changes. |
 | Persistence and external resolution | Changed-address semantic rebuild; source/provenance archives | Portable byte reopen, mapped/opaque locators and explicit durable-update dependencies; a rebuild is not a reopen or recovery proof. |
@@ -35,7 +35,20 @@ lookup costs. Native-source conversion shares unchanged columns and outperforms
 full author-model reconstruction; the latter remains in the measured panel.
 Full-copy schema extension is still linear in definition population and its
 cost is reported. This completes the bounded schema experiment, while the
-cross-cutting rollback, persistence and general-key work above remains active.
+cross-cutting persistence, resource suspension and general-key work above remains active.
+
+The [failure panel](FAILURES.md) adds fallible editor paths with allocation-free
+reverse replay. Its histories include first population, insertion/removal,
+complete removal, schema extension and migration. The initial shared-Pool
+measurement panel exposed capture-cost regimes despite matching logical work;
+the follow-up isolates the Worker/Pool/Arena per fixture. Retained shared-state
+measurements remain pressure evidence, not an undo-speedup claim. Persistence,
+resource suspension, general keys and bounded directory maintenance remain open.
+The final direct-replacement control cuts inverse records to roughly 0.5 KB
+without changing native bytes or five-layer publication. All three native
+targets pass the expanded failure histories; all nine local drivers pass
+ASan/UBSan. This removes unnecessary author work, while the larger copied-chunk,
+structural and maintenance-policy questions remain in scope.
 
 Earlier committed measurements are in [FINDINGS.md](FINDINGS.md) and
 [evidence](evidence/README.md). Current source and native runs must be checked

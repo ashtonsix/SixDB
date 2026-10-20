@@ -1,5 +1,6 @@
 #pragma once
 #include "material.h"
+#include "undo.h"
 #include <map>
 #include <set>
 
@@ -14,7 +15,8 @@ struct EntryState {
     u64 count{},not_null{};i64 sum{};
     std::map<u64,unsigned> logical;
     std::map<i64,unsigned> field;
-    void edit(const Row&,bool add);
+    void edit(const Row&,bool add,UndoJournal* undo=nullptr);
+    void replace(const Row& before,const Row& after,UndoJournal* undo=nullptr);
     Summary summary() const;
 };
 using SegmentKey=std::pair<unsigned,unsigned>;
@@ -46,13 +48,27 @@ class Index {
     unsigned j_{},key_bytes_{},generation_{},page_bits_{},aux_parts_{},definitions_{},summary_chunk_{};
     bool compact_tables_{},directory_branches_{},packed_pages_{},compact_hashes_{},indirect_parts_{};
     unsigned table_row_chunk_{},root_row_chunk_{},locator_mode_{};
+    UndoJournal* undo_{};
+    template<class F>auto transaction(F f,EditFaults* faults)->orbital::Result<decltype(f())> {
+        require(!undo_ && !rt_.faults);UndoJournal undo(faults && faults->journal_memory?faults->journal_memory:std::pmr::new_delete_resource(),faults?faults->journal_local_bytes:8192);undo_=&undo;rt_.faults=faults;
+        struct Reset {Index& index;UndoJournal& undo;EditFaults* faults;~Reset(){
+            if(faults){faults->journal_records=undo.records();faults->journal_record_bytes=undo.record_bytes();faults->journal_heap_bytes=undo.heap_bytes();}
+            index.undo_=nullptr;index.rt_.faults=nullptr;index.dirty_positions_.clear();
+        }} reset{*this,undo,faults};
+        try{auto stats=f();stats.journal_records=undo.records();stats.journal_record_bytes=undo.record_bytes();stats.journal_heap_bytes=undo.heap_bytes();undo.commit();return stats;}
+        catch(const EditFailure& e){return std::unexpected(e.error);}
+        catch(const std::bad_alloc&){return std::unexpected(orbital::Error::capacity);}
+    }
     void edit_model(const Row&,bool,std::set<SegmentKey>&);
+    void replace_value_model(const Row&,const Row&,std::set<SegmentKey>&);
     Image segment_image(SegmentKey,unsigned representation) const;
     u64 extra_locator(Store::Scope&,unsigned,const Dirent&,unsigned)const;
     const Summary* summary_address(Store::Scope&,unsigned,const Dirent&,Selection,unsigned)const;
     Image schema_image()const;
+    CopyStats extend_schema_impl(unsigned,std::span<const Definition>);
+    void install_changes(const Store::Scope&,std::span<const Store::Change>,EditStats* stats=nullptr);
     Definition representation_definition(unsigned)const;
-    EditStats apply(std::span<const Row>,std::span<const u64>,bool,std::span<const Migration>,bool=true);
+    EditStats apply(std::span<const Row>,std::span<const u64>,bool,std::span<const Migration>,bool=true,bool=true);
     Selection selected_directory(Store::Scope&,unsigned,u64,Search) const;
     Selection physical_directory(Store::Scope&,unsigned,unsigned) const;
     std::vector<Selection> directory_pages(Store::Scope&,unsigned,u64,u64,Search,bool=true,bool=true)const;
@@ -61,8 +77,11 @@ public:
     Store store;
     Index(Runtime&,std::pmr::memory_resource&,unsigned j,unsigned key_bytes=8,unsigned page_bits=0,unsigned auxiliary_parts=0,unsigned definitions=3,unsigned summary_chunk=0,bool compact_tables=false,bool directory_branches=false,unsigned table_row_chunk=0,bool packed_pages=false,bool compact_hashes=false,unsigned root_row_chunk=0,unsigned locator_mode=0);
     CopyStats extend_schema(unsigned definitions,std::span<const Definition> additions={});
+    orbital::Result<CopyStats> try_extend_schema(unsigned definitions,std::span<const Definition> additions={},EditFaults* faults=nullptr);
     EditStats edit(std::span<const Row> additions,std::span<const u64> removals={},bool selective=true);
-    orbital::Result<EditStats> migrate(std::span<const Migration>,bool source_transcode=true);
+    orbital::Result<EditStats> try_edit(std::span<const Row> additions,std::span<const u64> removals={},bool selective=true,EditFaults* faults=nullptr,bool value_patch=true);
+    EditStats edit_unprotected(std::span<const Row>,std::span<const u64> removals={},bool selective=true,bool value_patch=true);
+    orbital::Result<EditStats> migrate(std::span<const Migration>,bool source_transcode=true,EditFaults* faults=nullptr);
     Outcome seek(Store::Scope&,unsigned layer,u64 logical,Search=Search::boundlist,unsigned auxiliary_parts=0) const;
     PendingRead prepare(Store::Scope&,unsigned layer,u64 logical,Search=Search::boundlist)const;
     std::vector<Outcome> range(Store::Scope&,unsigned layer,u64 low,u64 high,Search=Search::boundlist,bool lower_closed=true,bool upper_closed=true) const;

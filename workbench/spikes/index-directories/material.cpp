@@ -76,8 +76,25 @@ orbital::Result<const std::byte*> resolve_locator(Selection s,u64 locator,unsign
 }
 Control part_control(const orbital::Part<Control>* p){require(p);return p->control;}
 Store::Owner capture(Runtime& rt,Store& store,Control c,const Image& image,Selection old,bool selective,CopyStats& stats,bool same_geometry) {
+    return take(try_capture(rt,store,c,image,old,selective,stats,same_geometry));
+}
+namespace {
+template<class T,class... Args>T* proof(std::pmr::memory_resource& memory,Args&&... args) {
+    auto* slot=memory.allocate(sizeof(T),alignof(T));
+    try{return std::construct_at(static_cast<T*>(slot),std::forward<Args>(args)...);}
+    catch(...){memory.deallocate(slot,sizeof(T),alignof(T));throw;}
+}
+}
+orbital::Result<Store::Owner> try_capture(Runtime& rt,Store& store,Control c,const Image& image,Selection old,bool selective,CopyStats& stats,bool same_geometry) {
     require(c.first==0); // Complete images; selected-copy proofs use source(part).
     auto& allocation=rt.allocations;auto& sources=rt.sources;auto& extents=rt.extents;
+    struct Clear {Runtime& rt;CopyStats& stats;~Clear(){
+        if(rt.faults){rt.faults->private_copied_bytes=stats.copied;rt.faults->private_allocated_bytes=stats.allocated;}
+        rt.sources.clear();rt.allocations.clear();rt.extents.clear();
+    }} clear{rt,stats};
+    std::unique_ptr<Geometry,decltype(&release_geometry)> geometry(nullptr,release_geometry);
+    std::unique_ptr<LocatorCells,decltype(&release_locators)> locators(nullptr,release_locators);
+    try {
     allocation.resize(c.parts);sources.resize(c.parts);
     if(same_geometry)require(old && old.part_count()==c.parts);
     else extents.resize(c.parts);
@@ -93,7 +110,8 @@ Store::Owner capture(Runtime& rt,Store& store,Control c,const Image& image,Selec
         } else {
             // The supplied image initializes the entire admitted body. There is
             // no readable padding, so clearing before memcpy adds no evidence.
-            allocation[p]=take(loom::allocate(rt.worker,{std::max<std::size_t>(64,extent),0,64,0,oa::Initialization::uninitialized}));
+            if(rt.faults)rt.faults->check(FaultPoint::native_allocation);
+            allocation[p]=attempt(loom::allocate(rt.worker,{std::max<std::size_t>(64,extent),0,64,0,oa::Initialization::uninitialized}));
             // Request-size diagnostic for this caller's zero-padding, 64-aligned
             // Parts. Orbital currently routes <=3072 bytes to finite storage.
             if(image[p].size()<=3072)++stats.small_requests;else ++stats.large_requests;
@@ -104,15 +122,18 @@ Store::Owner capture(Runtime& rt,Store& store,Control c,const Image& image,Selec
     }
     const bool reused=same_geometry || (old && std::ranges::equal(old.control().geometry->extents,extents));
     if(reused)c.geometry=old.control().geometry; // The source Scope protects it.
-    else c.geometry=std::construct_at(static_cast<Geometry*>(c.memory->allocate(sizeof(Geometry),alignof(Geometry))),*c.memory,extents);
+    else {
+        if(rt.faults)rt.faults->check(FaultPoint::geometry);
+        geometry.reset(proof<Geometry>(*c.memory,*c.memory,extents));c.geometry=geometry.get();
+    }
     const bool reused_locators=c.indirect_parts && old && old.control().indirect_parts && old.part_count()==c.parts &&
         old.control().first==c.first && old.control().compact_locators==c.compact_locators &&
         old.control().kind==c.kind && old.control().locators->object==segment_id(c.layer,c.prefix);
     if(c.indirect_parts) {
         if(reused_locators)c.locators=old.control().locators;
         else {
-            c.locators=std::construct_at(static_cast<LocatorCells*>(c.memory->allocate(sizeof(LocatorCells),alignof(LocatorCells))),
-                *c.memory,segment_id(c.layer,c.prefix),c.parts,c.compact_locators);
+            if(rt.faults)rt.faults->check(FaultPoint::locator);
+            locators.reset(proof<LocatorCells>(*c.memory,*c.memory,segment_id(c.layer,c.prefix),c.parts,c.compact_locators));c.locators=locators.get();
             stats.locator_created_bytes+=c.locators->bytes();
         }
     }
@@ -121,11 +142,12 @@ Store::Owner capture(Runtime& rt,Store& store,Control c,const Image& image,Selec
         stats.dirent_bytes+=image[3].size();
         if(c.table_row_chunk)for(unsigned p=6;p<c.parts;++p)stats.dirent_bytes+=image[p].size();
     }
-    const auto start=std::chrono::steady_clock::now();auto owner=take(store.capture(c,sources));
+    if(rt.faults)rt.faults->check(FaultPoint::capture);
+    const auto start=std::chrono::steady_clock::now();auto owner=attempt(store.capture(c,sources));
     stats.realization_ns+=std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now()-start).count();
-    if(!reused)release_geometry(c.geometry);
-    if(c.indirect_parts && !reused_locators)release_locators(c.locators);
-    sources.clear();allocation.clear();extents.clear();return owner;
+    return owner;
+    }catch(const EditFailure& e){return std::unexpected(e.error);}
+    catch(const std::bad_alloc&){return std::unexpected(orbital::Error::capacity);}
 }
 void publish(Store& store,const Store::Scope& basis,std::span<const Store::Change> changes) {
     Store::Prepared packet(store);take(store.prepare(basis,changes,packet));take(store.install(packet));

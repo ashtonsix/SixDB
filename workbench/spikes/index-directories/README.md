@@ -6,7 +6,7 @@ to maintain it through physical-key assignment, rebalance and Orbital publicatio
 The executable spike now uses real Ikea containers and Orbital/Loom allocation,
 Objects and publication. Storage controls, five-layer edits, ordered placement,
 directory pressure, staged reads, full byte-key search, memory locators and
-schema migration have separate drivers.
+schema migration and editor failure/retry have separate drivers.
 The [findings](FINDINGS.md) track measurements, rejected cases and remaining work;
 this document retains the implementation questions. The [prior-art survey](PRIOR-ART.md)
 supplies implementation mechanisms and a source-based assessment of Calico.
@@ -15,6 +15,8 @@ still required by this plan; [memory locators](LOCATORS.md) owns that experiment
 encoding, lifetime argument and measurements.
 The [schema comparison](SCHEMA.md) owns definition lookup, explicit selected
 segment migration and native-source versus model-image conversion.
+The [failure panel](FAILURES.md) owns undo logging, construction/refusal/abort
+histories and retry cost, including allocation-state sensitivity in comparisons.
 
 The current update implementations remain far behind the historical Calico/LMDB
 scale. Findings include broad-copy failures, an Orbital ObjectId hash defect
@@ -190,9 +192,17 @@ Record moved labels, shifted payload bytes, changed dirents and bound repairs.
 A last-byte-only relabel leaves all four ancestor entry prefixes unchanged;
 wider moves transfer the affected summary contributions. Maintain count and
 nullable integer-field summaries in the fixture, checking deletion of extrema
-and empty/nonempty transitions. Reuse the
-[aggregate-maintenance study](../aggregate-maintenance/README.md) for broader
-maintenance algorithms.
+and empty/nonempty transitions. A value replacement leaves row count and
+logical-key membership unchanged; use its before/after contributions directly.
+The [aggregate-maintenance conclusions](../aggregate-maintenance/CONCLUSIONS.md)
+separate additive corrections from last-witness extrema repair. Their eager,
+bounded-append and location-addressed controls are relevant when summary writes
+dominate. Price construction, corrected reads and full draining together;
+fewer ancestor adjustments did not reliably mean less CPU in that study.
+Its count/sum probes did not implement retained snapshots, nullable fields or
+extrema repair. A composed buffer experiment must establish compatible base
+and correction visibility under Orbital, including relabeling and old readers,
+before claiming those write savings here.
 
 ### MVCC, execution and external references
 

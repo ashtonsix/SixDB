@@ -12,13 +12,13 @@ struct PrefixHash {
     template<class F> decltype(auto) visit(F&& f)const {if(small)return f(*small);return f(*large);}
 };
 PrefixHash* make_hash(std::span<const unsigned> prefixes,std::span<const Dirent> descriptors,bool compact) {
-    require(prefixes.size()==descriptors.size());auto* h=new PrefixHash;
+    require(prefixes.size()==descriptors.size());auto h=std::make_unique<PrefixHash>();
     if(compact && prefixes.size()<=64)h->small=std::make_unique<PrefixHash::Small>(713);
     else h->large=std::make_unique<PrefixHash::Large>(713);
     for(unsigned i=0;i<prefixes.size();++i) {
         ikea::hashtable::bytes<64> b{};std::memcpy(b.data(),&descriptors[i],64);h->visit([&](auto& table){table.insert(prefixes[i],b);});
     }
-    return h;
+    return h.release();
 }
 void retain_hash(PrefixHash* h) noexcept {if(h)++h->references;}
 void release_hash(PrefixHash* h) noexcept {if(h && !--h->references)delete h;}

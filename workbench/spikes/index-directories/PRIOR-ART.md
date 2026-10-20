@@ -34,6 +34,24 @@ behavior.
 
 ## Other implementation mechanisms
 
+The earlier SixDB [aggregate-maintenance study](../aggregate-maintenance/CONCLUSIONS.md)
+is directly relevant to the writer cost. Its count/sum probes distinguish
+less logical ancestor work from less CPU: constructing location-addressed runs
+lost to resident eager arrays, while a bounded append buffer had a favorable
+contended-hot region. A no-filter buffer was cheaper in that region, and the
+buffered controls lost on dispersed workloads. These were ARM-VM observations,
+with full replay charged, rather than a selected maintenance policy.
+
+Its [semantic analysis](../aggregate-maintenance/design.md#separate-the-aggregate-semantics)
+also identifies work the original directory editor needlessly repeated:
+value replacements do not change row count or logical-key membership. Direct
+sum/presence deltas and affected field witnesses now have an explicit control
+in [the failure experiment](FAILURES.md). The fixture still keeps complete
+ordered field frequencies for exact extrema; it has not demonstrated a compact
+extrema-maintenance representation. Buffered alternatives must pay for reads
+and draining and preserve compatible base/correction versions through relabels
+and retained readers. The earlier study did not implement that Orbital path.
+
 | Primary source | Mechanism | Experiment in this spike |
 | --- | --- | --- |
 | Leis, Kemper, Neumann, **ART**, ICDE 2013, section III: [paper](https://www.db.in.tum.de/~leis/papers/ART.pdf) | Adaptive dense/sparse layouts, including byte-index-to-packed-child indirection. | Compare presence metadata and packed addressing where directory pages are sparse. Charge the extra decode and transitions. Keep the supplied segments and layer selection fixed. |

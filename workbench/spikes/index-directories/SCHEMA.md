@@ -44,8 +44,10 @@ an arbitrary representation converter or an arbitrary logical-key codec.
 targets before doing work. It captures selected segments and the affected
 directory/overflow Objects, then publishes them together through the existing
 Orbital Store. Unchanged logical bounds share their original Parts. An identical
-target ID is a no-op. The fixture's broader allocation/capture failure handling
-remains fail-fast; invalid-request refusal does not establish editor rollback.
+target ID is a no-op. The subsequent [failure experiment](FAILURES.md) wraps
+editor changes in an undo log and checks construction/refusal/abort retry. The
+measurements below precede that writer change; invalid-request refusal alone
+does not prove it.
 
 ## Two migration controls
 
@@ -111,7 +113,7 @@ Worker group `20261020T101048Z-c39fc7e0` captures the common source for
 [Neoverse V2](evidence/schema-neon/). Each passes the schema history check before
 measuring. The retained panel includes all four definition populations, both J
 values, every conversion/locator arm, five trials and counters. The C++ and
-runner bytes match the committed implementation. Native settings are Clang
+runner bytes match the implementation in `1407e479`. Native settings are Clang
 21.1.8, Release `-O3 -g1`, both vectorizers enabled and one pinned CPU, with
 `znver5`/`zen5`, `graniterapids`/`granite-rapids` and
 `armv8-a+simd`/`neoverse-v2` respectively.
@@ -172,5 +174,7 @@ always wins.
 All eight Release drivers passed captured run `20261020T101048.972299Z`.
 All eight also passed ASan/UBSan in 28.46 seconds; the schema histories account
 for 4.11 seconds. This establishes the tested synchronous publication and
-retained-reader histories. Construction rollback, cross-worker concurrency,
-arbitrary conversion recipes and portable schema reopen remain unqualified.
+retained-reader histories. Construction rollback was unqualified at that source
+cut; the subsequent [failure study](FAILURES.md) supplies its editor histories.
+Cross-worker concurrency, arbitrary conversion recipes and portable schema
+reopen remain unqualified.

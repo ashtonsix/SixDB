@@ -30,7 +30,7 @@ record-absence verdict. These numbers do not establish complete Engine cost.
 
 ## What the prototype actually does
 
-Eight drivers use one implementation where practical:
+Nine drivers use one implementation where practical:
 
 | Driver | Boundary |
 | --- | --- |
@@ -42,6 +42,7 @@ Eight drivers use one implementation where practical:
 | `keys` | Generic full-byte Boundlist versus ordinary search, including long common prefixes, binary zeros, duplicates and virtual large directories. |
 | `locators` | Raw addresses versus stable memory-reference cells, through actual Part consumption and value publication, with retained readers and escaping Parts. |
 | `schema` | Definition lookup across a historical tail; selected segment migration with codec, chunk and auxiliary-Part changes; native-source conversion versus model reconstruction. |
+| `failure` | Reversible author edits through construction, refusal, abort and retry; normal/retry costs and shared versus fresh Pool state. |
 
 Build with `-DSIXDB_SPIKES=index-directories`. On Linux, for a captured checked
 run with CPU affinity and median/min/max summaries:
@@ -190,14 +191,36 @@ spin and schema publication while frames retain old reads. Performance uses
 one fixed cache hint in comparable arms. There is no resource Task wait or
 remote I/O in this fixture, and no claim that a Ring always wins.
 
-Preparation refusal, stale basis and explicit abort are exercised at the Store
-boundary. The editor itself fails fast on allocation/capture failure and has no
-scratch rollback/retry protocol. A production writer needs that protocol. The
-process-local address format is deliberately a prototype: a changed-address
+Initial preparation/refusal/abort checks exercised the Store boundary only.
+The [failure experiment](FAILURES.md) now adds fallible editor paths and an
+allocation-free undo log for author state, including first population, edits,
+removal, schema extension and migration. It tests actual metadata/journal
+allocation failures, accepted-packet abort, actual stale-basis refusal and
+successful retries with retained readers. The process-local address format
+remains a prototype: a changed-address
 semantic rebuild tests relocation but does not reopen portable bytes. Durable
 installation/recovery and mapped/remote locator resolution remain Orbital
 integration dependencies. A held selected Part currently retains the geometry
 proof; its minimal escape metadata is another measurable caller choice.
+
+The earlier [aggregate-maintenance conclusions](../aggregate-maintenance/CONCLUSIONS.md)
+also apply to author work. Direct old/new field contributions now leave count
+and logical membership alone. Together with skipping identical descriptor-cache
+saves, this reduces value-replacement inverse records from about 2.8–2.9 KB to
+494–508 bytes in the 4,096-row cases. The matched generic/direct controls retain
+the same five published segment versions and native copied bytes. Total update
+cost remains in tens of microseconds, with broad structural edits still much
+slower. [The owned report](FAILURES.md#measured-result) keeps normal/retry timing,
+memory exclusions and overlapping timing ranges. Exact extrema still rely on
+full frequency maps; buffering has not been qualified with Orbital snapshots.
+
+The failure comparison also finds allocation-state pressure beyond logical
+fixture size. Fresh Index instances sharing one Pool show two capture-cost
+regimes despite identical native bytes and Object counts. The shared-Pool panel
+is retained; the follow-up uses a fresh Worker/Pool/Arena per fixture outside
+timing. Earlier panels' allocation histories remain part of their context.
+This sensitivity needs aged/churned backend histories in a future end-to-end
+comparison, alongside matched-state component controls.
 
 The [schema comparison](SCHEMA.md) adds explicit selected-segment migration
 between codecs, summary chunks and optional-Part counts. It checks unchanged

@@ -98,7 +98,7 @@ implementation questions in the [coverage audit](PROGRESS.md).
 
 The final source capture is worker group `20261020T095307Z-57e5ea74`.
 All three targets passed the complete locator check before measurement. The
-measured C++ and runner bytes match the checked-in implementation; the archive
+measured C++ and runner bytes match the implementation in `8b368c4e`; the archive
 retains the exact capture and compiler receipt. The selected
 [Zen 5](evidence/locators-zen5/), [Granite Rapids](evidence/locators-intel/) and
 [Neoverse V2](evidence/locators-neon/) exports retain every trial and counter for

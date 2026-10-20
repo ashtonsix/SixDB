@@ -153,6 +153,16 @@ including queues. Batch makespans are batch results, not individual request tail
 Sustained throughput needs stable backlog and memory, not merely a short burst
 that postpones work.
 
+Establish backend state as well as logical fixture state. The directory
+[failure panel](FAILURES.md) found two capture-cost regimes when fresh Index
+instances shared an aged Loom Pool across arms. Mechanism comparisons need a
+matched reset or preparation history, with native allocation state recorded.
+The end-to-end driver should also exercise sustained fill/churn and reuse of a
+shared allocation backend: fresh private Pools alone do not establish steady
+service. Give LMDB its corresponding transaction/map/freelist history rather
+than forcing identical physical allocation behavior. Keep reset/setup outside
+request timing while charging required maintenance and settlement to total cost.
+
 Reuse the current capture, dataset and reporting tools and the production
 consequence checks identified in the
 [driver retirement map](../../benchmarks/retired-drivers.md). The

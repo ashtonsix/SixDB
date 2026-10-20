@@ -2,11 +2,12 @@
 
 The selection keeps matched controls, all repetitions and counters for the
 executable storage, composed, placement, directory-pressure, Ring, byte-key and
-memory-locator and schema-migration families. It supports the negative
+memory-locator, schema-migration and editor-failure families. It supports the negative
 update-cost finding and cross-platform read/write tradeoffs in
 [FINDINGS.md](../FINDINGS.md) and
 [LOCATORS.md](../LOCATORS.md), plus the historical-tail/conversion comparison in
-[SCHEMA.md](../SCHEMA.md). Source snapshots, build
+[SCHEMA.md](../SCHEMA.md) and the rollback/normal-write comparison in
+[FAILURES.md](../FAILURES.md). Source snapshots, build
 receipts, binaries and omitted logs are recovered through each `artifact.json`.
 This is selected experimental evidence, not a production qualification record.
 Earlier layout/capture cuts retain the pressure and, where cited, Ring panels;
@@ -35,6 +36,15 @@ retain the complete varied matrix. Root cuts retain only the new pressure panel.
 | [schema-zen5](schema-zen5/) | `20261020T101055Z-d7e5904a` | Definition lookup, full-copy extension and explicit selected-segment conversion with matched model/native-source controls. |
 | [schema-intel](schema-intel/) | `20261020T101101Z-7b049510` | Same schema/migration source on Granite Rapids. |
 | [schema-neon](schema-neon/) | `20261020T101107Z-4cf0a670` | Same schema/migration source on Neoverse V2. |
+| [failure-zen5](failure-zen5/) | `20261020T103503Z-5f5c5f6b` | Initial undo comparison sharing one Runtime across fixtures; retained as a backend-state diagnostic. |
+| [failure-intel](failure-intel/) | `20261020T103509Z-7868be79` | Same shared-Pool source on Granite Rapids. |
+| [failure-neon](failure-neon/) | `20261020T103514Z-435019b0` | Same shared-Pool source on Neoverse V2. |
+| [failure-isolated-zen5](failure-isolated-zen5/) | `20261020T104302Z-db742ef4` | Fresh Runtime per fixture; exposes the generic editor's bookkeeping without carrying Pool history between arms. |
+| [failure-isolated-intel](failure-isolated-intel/) | `20261020T104308Z-23a3662a` | Same fresh-Pool control on Granite Rapids. |
+| [failure-isolated-neon](failure-isolated-neon/) | `20261020T104314Z-e3e23084` | Same fresh-Pool control on Neoverse V2. |
+| [failure-direct-zen5](failure-direct-zen5/) | `20261020T105505Z-f268248b` | Direct replacement versus generic model with undo, plus no-undo/retry controls and unchanged structural work. |
+| [failure-direct-intel](failure-direct-intel/) | `20261020T105512Z-2078fbbc` | Same direct-replacement comparison on Granite Rapids. |
+| [failure-direct-neon](failure-direct-neon/) | `20261020T105518Z-4edffb56` | Same direct-replacement comparison on Neoverse V2. |
 
 The capture trio uses the code frozen by worker group
 `20261020T074653Z-102689a1`. Intel was rerun from that group's exact captured
@@ -63,6 +73,17 @@ raw/compact locators and model-image/native-source conversion. Five trials use
 retain every phase and case, including unchanged native-copy counts and the
 losing full-image/large-schema costs. Local runs before native-source conversion
 are superseded diagnostics in ignored experiment storage.
+
+The failure groups are `20261020T103456Z-e4f62465` (shared Runtime),
+`20261020T104256Z-259f9f5b` (fresh Runtime per fixture) and
+`20261020T105458Z-a6f4fb38` (direct replacement). Keep all three targets and
+the full 256/4,096-row, J=0/2, value/relabel matrices: the shared-state group
+exposes a confound, the isolation group establishes the original undo footprint,
+and the final group holds native work fixed while comparing author strategies.
+Each has five rotated trials; the first two have three arms, the final has four.
+The source snapshots distinguish them. They do not establish an end-to-end
+performance winner; [FAILURES.md](../FAILURES.md) reports limits and remaining
+structural cost. The final driver always performs 32 successful writes per burst.
 
 The resolution pair uses the same reused Zen 5 host. Public `capture.py` derived
 `index-directory-prefix-repaired` from `index-directory-prefix-old` by replacing
