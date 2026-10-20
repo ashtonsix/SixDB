@@ -63,13 +63,15 @@ resource must outlive its derived uses. A physical owner can cover several
 planes, so selecting one plane does not imply reclaiming its siblings' pages.
 
 A shared owner alone does not prevent a growable Allocation from relocating.
-Keep the captured address and full readable footprint stable. Capture seals the
-body and readable padding; physical retention grants no permission to write them.
+A real `allocation::Hold` preserves its range; growth that would relocate refuses
+while Holds live. A caller-held writer can expose longer initialized prefixes
+through new shared owners of Holds covering each new extent. An old certified
+source cannot be enlarged. Capture seals body and readable padding; physical
+retention grants no permission to write them, including preserving stores.
 The caller may authorize writes to physically disjoint storage. Unpublished
 captured owners and prepared packets also protect their footprints.
 
-An owner can contain a real `allocation::Hold` for a slice instead of the whole
-Allocation. Acquire all body-plus-padding Holds before calling
+When retiring the writer, acquire all required body-plus-padding Holds before calling
 `relinquish_tail(allocation, 0)` and releasing the writer; release alone does not
 enable live-tail trimming. Captures and escaping Parts keep that counted owner.
 Current Window trimming can reclaim an eligible suffix, not interior holes;
