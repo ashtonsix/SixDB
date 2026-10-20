@@ -26,7 +26,7 @@ void reserve_overflow(D& dst, std::size_t bound,
         slots(groups * 16 * D::tuple_bytes, memory);
     std::memset(controls.data, detail::control_empty, groups * 16);
     for (std::size_t i = 0; i < to.groups * 16; ++i)
-        if (to.controls.data[i] < 128) {
+        if (detail::occupied_control(to.controls.data[i])) {
             const auto* tuple = to.slots.data + i * D::tuple_bytes;
             const auto h = to.mix(load<D::key_bytes>(tuple));
             auto g = h.swiss & (groups - 1);
@@ -36,7 +36,7 @@ void reserve_overflow(D& dst, std::size_t bound,
                 if (free) {
                     const auto row = g * 16 + std::countr_zero(free);
                     std::memcpy(slots.data + row * D::tuple_bytes, tuple, D::tuple_bytes);
-                    controls.data[row] = h.fingerprint;
+                    controls.data[row] = h.fingerprint();
                     break;
                 }
                 g = (g + (++step)) & (groups - 1);

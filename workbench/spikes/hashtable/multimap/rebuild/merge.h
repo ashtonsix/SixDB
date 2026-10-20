@@ -32,9 +32,9 @@ void merge_into(Destination& output,const SourceOwner& input,Reduce&& reduce,Tra
     ht::require(to.mix.seed==from.mix.seed,"same-seed merge");
     ht::require(to.primary.data!=from.primary.data,"distinct merge backing");
     auto hashed=[&](word key,const typename Target::value_type& value){
-        typename Target::value_type previous{};const auto place=destination.prepare_write(key,previous);
+        typename Target::value_type previous{};const auto place=ht::author::table_access::prepare_write(destination,key,previous);
         const auto next=place.present?reduce(previous,value):value;
-        destination.insert_prepared_unchecked(key,place,next);
+        ht::author::table_access::insert_prepared(destination,key,place,next);
     };
     for(std::size_t bucket=0;bucket<Source::bucket_count;++bucket){
         const auto* source=from.primary.data+bucket*Source::stride;
@@ -73,7 +73,7 @@ void merge_into(Destination& output,const SourceOwner& input,Reduce&& reduce,Tra
             }
         }
     }
-    for(std::size_t slot=0;slot<from.groups*16;++slot)if(from.controls.data[slot]<128){
+    for(std::size_t slot=0;slot<from.groups*16;++slot)if(ht::detail::occupied_control(from.controls.data[slot])){
         const auto* tuple=from.slots.data+slot*Source::tuple_bytes;
         if constexpr(requires{typename Transfer::borrowed_type;})
             hashed(ht::load<Source::key_bytes>(tuple),Transfer::template materialize<Target>(transform(Transfer::read_cell(tuple+Source::key_bytes))));

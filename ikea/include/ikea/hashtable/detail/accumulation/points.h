@@ -85,7 +85,7 @@ template <class D, class S, class Reduce>
             }
     }
     for (std::size_t i = 0; i < from.groups * 16; ++i)
-        if (from.controls.data[i] < 128) {
+        if (ht::detail::occupied_control(from.controls.data[i])) {
             const auto* tuple = from.slots.data + i * S::tuple_bytes;
             const auto key = ht::load<S::key_bytes>(tuple);
             const auto h = target_mix(key);

@@ -73,7 +73,7 @@ template <class Store, class D, class Lazy, class Reduce>
         for (std::size_t visited = 0; visited < to.groups; ++visited) {
             const auto* controls = to.controls.data + group * 16;
             if (search) {
-                auto matches = ht::equal_controls(controls, key.hash.fingerprint);
+                auto matches = ht::equal_controls(controls, key.hash.fingerprint());
                 while (matches) {
                     const auto i = std::countr_zero(matches);
                     matches &= matches - 1;
@@ -126,7 +126,7 @@ template <class Store, class D, class Lazy, class Reduce>
         if constexpr (value.size())
             std::memcpy(tuple + D::key_bytes, value.data(), value.size());
         to.deleted -= to.controls.data[available] == control_tombstone;
-        to.controls.data[available] = key.hash.fingerprint;
+        to.controls.data[available] = key.hash.fingerprint();
         ++to.spill;
         ++count;
         if (p[D::overflow_offset] != 255)

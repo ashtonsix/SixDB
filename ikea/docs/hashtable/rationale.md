@@ -73,10 +73,13 @@ therefore return original keys even though primary storage omits their bucket
 bits.
 
 The same product also supplies the overflow route: `h` selects a Swiss group,
-and its top seven bits form the control fingerprint. This avoids another
-multiplication; it does not establish independent or cryptographic hash
-functions. The caller supplies the seed, masked to the key domain. Same-seed
-growth deliberately preserves the permutation. This multiply/XOR construction
+and its top byte supplies an eight-bit control tag. Codes zero and one mean
+empty and tombstone; those two hash-byte values map to tags eight and nine.
+The remapping runs only on the overflow path. Primary reads and writes retain
+their direct route. This avoids another multiplication; it does not establish
+independent or cryptographic hash functions. The caller supplies the seed,
+masked to the key domain. Same-seed growth deliberately preserves the permutation.
+This multiply/XOR construction
 is not a cryptographic defense against chosen-key flooding.
 
 ## Fit capacity first, then choose an encoding

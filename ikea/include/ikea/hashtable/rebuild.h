@@ -212,7 +212,7 @@ std::unique_ptr<Destination> grow_image(const Owner& owner,
     }
     to.size = from.size - from.spill;
     for (std::size_t slot = 0; slot < from.groups * 16; ++slot)
-        if (from.controls.data[slot] < 128) {
+        if (ht::detail::occupied_control(from.controls.data[slot])) {
             const auto* tuple = from.slots.data + slot * Source::tuple_bytes;
             const auto key = ht::load<Source::key_bytes>(tuple);
             typename Source::value_type value{};

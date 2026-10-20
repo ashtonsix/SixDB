@@ -114,7 +114,7 @@ struct guarded_index_access {
         // Only these two hash fields belong to a primary selection. Keep the
         // unused Swiss fields initialized, allowing the high product to move
         // into the existing overflow resolver. Prepared commits never re-route.
-        result.hash={h.bucket,h.quotient,0,0};
+        result.hash={h.bucket,h.quotient,0};
         if constexpr(Base::bitmap){
             result.row=unsigned(h.quotient);result.present=Index::locate(bucket,h.quotient)!=Index::N;
             result.cell=bucket+Index::B+result.row*sizeof(typename Index::value_type);
@@ -186,7 +186,7 @@ struct guarded_index_access {
         }else {
             const auto state=index.state();state.deleted-=state.controls.data[plan.swiss.slot]==Index::tombstone;
             ht::store<Index::key_bytes>(state.slots.data+plan.swiss.slot*Index::tuple_bytes,plan.key);
-            state.controls.data[plan.swiss.slot]=plan.hash.fingerprint;++state.spill;
+            state.controls.data[plan.swiss.slot]=plan.hash.fingerprint();++state.spill;
             if(bucket[Index::B-1]!=255)++bucket[Index::B-1];
         }
         ++index.state().size;

@@ -25,6 +25,7 @@ template<class Width,class Offset> struct append_access {
     const cursor& source()const{return *state;}
     const sp::layout& format()const{return *recipe;}
     unsigned width_offset(unsigned rank)const{return (rank/16)*recipe->group_stride()+(rank%16)*sizeof(Width);}
+    unsigned used_offset(unsigned rank)const{return (rank/16)*recipe->group_stride()+recipe->used_offset()+(rank%16)*sizeof(Width);}
 };
 // The arena constructor proves this exact Direct/fixed-or-U16 recipe and full
 // metadata capacity. The caller admits the whole command, input and effects
@@ -59,6 +60,7 @@ template<class Width> struct replacement_access {
     const sp::layout& format()const{return *recipe;}
     unsigned start(unsigned)const{return begin;}
     unsigned width_offset(unsigned rank)const{return (rank/16)*recipe->group_stride()+(rank%16)*sizeof(Width);}
+    unsigned used_offset(unsigned rank)const{return (rank/16)*recipe->group_stride()+recipe->used_offset()+(rank%16)*sizeof(Width);}
 };
 // The owner has admitted the live rank, input and existing reservation. The
 // start is read before any effects; the original named view remains the source.

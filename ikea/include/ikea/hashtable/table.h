@@ -132,7 +132,7 @@ class table : private detail::bucket_ops<W, b, V, E, Kernel> {
         std::size_t g = h.swiss & (groups_ - 1), step = 0;
         for (;;) {
             const byte* controls = control_.data + g * 16;
-            auto candidates = equal_controls(controls, h.fingerprint);
+            auto candidates = equal_controls(controls, h.fingerprint());
             while (candidates) {
                 const auto i = std::countr_zero(candidates);
                 candidates &= candidates - 1;
@@ -158,7 +158,7 @@ class table : private detail::bucket_ops<W, b, V, E, Kernel> {
     // primary loop's live register set. Return the value, so the caller can
     // still consume its primary value directly in the success branch.
     [[gnu::noinline, gnu::pure]] overflow_result read_overflow(word key, word swiss) const {
-        const typename mix_type::result h{0, 0, swiss, byte(swiss >> 57)};
+        const typename mix_type::result h{0, 0, swiss};
         const auto found = find_swiss(key, h);
         {
             overflow_result result;
@@ -182,7 +182,7 @@ class table : private detail::bucket_ops<W, b, V, E, Kernel> {
                 store<key_bytes>(slots_.data + index * tuple_bytes, key);
                 if constexpr (V)
                     std::memcpy(slots_.data + index * tuple_bytes + key_bytes, v.data(), V);
-                controls[i] = h.fingerprint;
+                controls[i] = h.fingerprint();
                 ++spill_size_;
                 return;
             }
@@ -201,7 +201,7 @@ class table : private detail::bucket_ops<W, b, V, E, Kernel> {
         groups_ = groups;
         spill_size_ = deleted_ = 0;
         for (std::size_t i = 0; i < old_groups * 16; ++i)
-            if (old_control.data[i] < 128) {
+            if (detail::occupied_control(old_control.data[i])) {
                 const auto key = load<key_bytes>(old_slots.data + i * tuple_bytes);
                 value_type v{};
                 if constexpr (V)
@@ -222,7 +222,7 @@ class table : private detail::bucket_ops<W, b, V, E, Kernel> {
         std::size_t step = 0, available = absent;
         for (;;) {
             const auto* control = control_.data + group * 16;
-            auto candidates = equal_controls(control, h.fingerprint);
+            auto candidates = equal_controls(control, h.fingerprint());
             while (candidates) {
                 const auto lane = std::countr_zero(candidates);
                 candidates &= candidates - 1;
@@ -247,7 +247,7 @@ class table : private detail::bucket_ops<W, b, V, E, Kernel> {
         store<key_bytes>(slots_.data + slot * tuple_bytes, key);
         if constexpr (V)
             std::memcpy(slots_.data + slot * tuple_bytes + key_bytes, v.data(), V);
-        control_.data[slot] = h.fingerprint;
+        control_.data[slot] = h.fingerprint();
         ++spill_size_;
     }
     [[gnu::noinline]] bool insert_slow(word key, const bytes<V>& v,
@@ -402,7 +402,7 @@ class table : private detail::bucket_ops<W, b, V, E, Kernel> {
             if (!position.present) {
                 store<key_bytes>(slots_.data + slot * tuple_bytes, key);
                 deleted_ -= control_.data[slot] == tombstone;
-                control_.data[slot] = position.hash.fingerprint;
+                control_.data[slot] = position.hash.fingerprint();
                 ++spill_size_;
                 if (p[overflow_offset] != detail::unknown_overflow)
                     ++p[overflow_offset];
@@ -592,7 +592,7 @@ class table : private detail::bucket_ops<W, b, V, E, Kernel> {
         }
         if (s.phase == staged_phase::controls) {
             const auto* controls = control_.data + s.group * 16;
-            s.candidates = equal_controls(controls, s.first.hash.fingerprint);
+            s.candidates = equal_controls(controls, s.first.hash.fingerprint());
             s.empty_group = equal_controls(controls, empty) != 0;
         } else {
             const auto slot = s.group * 16 + std::countr_zero(s.candidates);
@@ -1042,7 +1042,7 @@ class table : private detail::bucket_ops<W, b, V, E, Kernel> {
             }
         }
         for (std::size_t i = 0; i < groups_ * 16; ++i)
-            if (control_.data[i] < 128) {
+            if (detail::occupied_control(control_.data[i])) {
                 value_type v{};
                 if constexpr (V)
                     std::memcpy(v.data(), slots_.data + i * tuple_bytes + key_bytes, V);
@@ -1053,7 +1053,7 @@ class table : private detail::bucket_ops<W, b, V, E, Kernel> {
         std::size_t count = 0;
         std::vector<std::size_t> spills(bucket_count);
         for (std::size_t i = 0; i < groups_ * 16; ++i)
-            if (control_.data[i] < 128)
+            if (detail::occupied_control(control_.data[i]))
                 ++spills[mix_(load<key_bytes>(slots_.data + i * tuple_bytes)).bucket];
         if constexpr (!bitmap)
             for (std::size_t i = 0; i < bucket_count; ++i)

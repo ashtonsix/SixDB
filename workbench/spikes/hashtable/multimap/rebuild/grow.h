@@ -180,7 +180,7 @@ std::unique_ptr<Destination> grow(const Owner& owner) {
         to.controls=ht::duplicate_buffer<ht::heap_storage_policy>(from.controls,nullptr);
         to.slots=ht::duplicate_buffer<ht::heap_storage_policy>(from.slots,nullptr);
         to.groups=from.groups;to.spill=from.spill;to.deleted=from.deleted;to.size=from.size;
-        for(std::size_t slot=0;slot<from.groups*16;++slot)if(from.controls.data[slot]<128){
+        for(std::size_t slot=0;slot<from.groups*16;++slot)if(ht::detail::occupied_control(from.controls.data[slot])){
             const auto key=ht::load<Source::key_bytes>(from.slots.data+slot*Source::tuple_bytes);
             const word lo=(key^from.mix.seed)*Source::mix_type::multiplier;
             const auto bucket=(lo>>Target::K)&(Target::bucket_count-1);
@@ -188,7 +188,7 @@ std::unique_ptr<Destination> grow(const Owner& owner) {
             if(count!=255)++count;
         }
     }else {
-        for(std::size_t slot=0;slot<from.groups*16;++slot)if(from.controls.data[slot]<128){
+        for(std::size_t slot=0;slot<from.groups*16;++slot)if(ht::detail::occupied_control(from.controls.data[slot])){
             const auto* tuple=from.slots.data+slot*Source::tuple_bytes;
             const auto key=ht::load<Source::key_bytes>(tuple);
             typename Source::value_type value{};

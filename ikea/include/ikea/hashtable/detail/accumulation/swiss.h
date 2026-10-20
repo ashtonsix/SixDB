@@ -50,7 +50,7 @@ template <class D, class S, class Reduce>
         unsigned used = 0;
         while (scan < from.groups * 16 && used < spill.size()) {
             const auto i = scan++;
-            if (from.controls.data[i] >= 128)
+            if (!ht::detail::occupied_control(from.controls.data[i]))
                 continue;
             const auto* tuple = from.slots.data + i * S::tuple_bytes;
             const auto key = ht::load<S::key_bytes>(tuple);

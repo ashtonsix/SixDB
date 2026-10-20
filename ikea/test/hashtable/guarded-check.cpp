@@ -150,7 +150,7 @@ void check() {
                 const auto target = key(primary + 1);
                 const ht::byte* tuple = nullptr;
                 for (std::size_t slot = 0; slot < state.groups * 16; ++slot)
-                    if (state.controls.data[slot] < 128 &&
+                    if (ht::detail::occupied_control(state.controls.data[slot]) &&
                         ht::load<Base::key_bytes>(state.slots.data + slot * Base::tuple_bytes) ==
                             target)
                         tuple = state.slots.data + slot * Base::tuple_bytes;

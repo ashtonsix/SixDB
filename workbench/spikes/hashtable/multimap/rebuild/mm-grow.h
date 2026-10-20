@@ -370,8 +370,8 @@ struct multimap_rebuild {
             auto& target=rebuild::reader_owner(*index);
             right.index_.visit([&](word key,const auto& cell){
                 const auto value=remap(cell);typename Next::index_type::value_type previous{};
-                const auto place=target.prepare_write(key,previous);
-                target.insert_prepared_unchecked(key,place,place.present?join(previous,value):value);
+                const auto place=ht::author::table_access::prepare_write(target,key,previous);
+                ht::author::table_access::insert_prepared(target,key,place,place.present?join(previous,value):value);
             });
         }
         auto result=std::unique_ptr<Next>(new Next(typename Next::rebuilt_index_tag{},std::move(*index)));

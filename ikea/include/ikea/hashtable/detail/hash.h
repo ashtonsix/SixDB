@@ -14,7 +14,12 @@ template <unsigned W, unsigned K> struct permutation {
     word seed;
     struct result {
         word bucket, quotient, swiss;
-        byte fingerprint;
+        // Derived only after routing to overflow; primary reads/writes do not
+        // pay the reserved-code remapping cost.
+        byte fingerprint() const {
+            const byte x = byte(swiss >> 56);
+            return byte(x + (x < 2 ? 8 : 0));
+        }
     };
     [[gnu::always_inline]] result operator()(word key) const {
         // Trusted W-bit inputs and the construction-masked seed. Avoid a
@@ -30,7 +35,7 @@ template <unsigned W, unsigned K> struct permutation {
             else
                 return (lo >> K) & mask<W - K>;
         }();
-        return {bucket, low_bits<K>(lo), h, byte(h >> 57)};
+        return {bucket, low_bits<K>(lo), h};
     }
     word recover(word bucket, word quotient) const {
         const word y = K == 64 ? quotient : (bucket << K) | quotient;

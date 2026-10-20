@@ -83,7 +83,7 @@ template <class D, class S, class Reduce>
             return s;
     const auto from = access::get(src);
     for (std::size_t i = 0; i < from.groups * 16; ++i)
-        if (from.controls.data[i] < 128) {
+        if (ht::detail::occupied_control(from.controls.data[i])) {
             const auto* tuple = from.slots.data + i * S::tuple_bytes;
             const auto key = ht::load<S::key_bytes>(tuple);
             const auto h = access::get(dst).mix(key);
@@ -102,7 +102,6 @@ struct kway_workspace {
         std::size_t source, next;
         const byte* tuple;
         word bucket, q, hash;
-        byte tag;
     };
     std::unique_ptr<std::size_t[]> heads;
     std::unique_ptr<spill_ref[]> spills;
@@ -147,12 +146,11 @@ template <class D, class S, class Reduce>
     for (std::size_t n = sources.size(); n-- > 0;) {
         const auto from = access::get(*sources[n]);
         for (std::size_t i = 0; i < from.groups * 16; ++i)
-            if (from.controls.data[i] < 128) {
+            if (ht::detail::occupied_control(from.controls.data[i])) {
                 const auto* tuple = from.slots.data + i * S::tuple_bytes;
                 const auto h = access::get(dst).mix(ht::load<S::key_bytes>(tuple));
                 const auto group = h.bucket / (D::bucket_count / groups);
-                work.spills[used] = {n,          work.heads[group], tuple,        h.bucket,
-                                     h.quotient, h.swiss,           h.fingerprint};
+                work.spills[used] = {n, work.heads[group], tuple, h.bucket, h.quotient, h.swiss};
                 work.heads[group] = used++;
             }
     }
@@ -173,7 +171,7 @@ template <class D, class S, class Reduce>
                         dst, ref.bucket, ref.q, value,
                         [&] {
                             return swiss_key<D>{ht::load<S::key_bytes>(ref.tuple),
-                                                {ref.bucket, ref.q, ref.hash, ref.tag}};
+                                                {ref.bucket, ref.q, ref.hash}};
                         },
                         reduce);
                     s != merge_status::complete)

@@ -38,7 +38,7 @@ class reused_table : public Reader {
     using Base::prepare_absent;
     using Base::vacancy_for_absent;
     static constexpr std::size_t absent=~std::size_t{0};
-    static constexpr byte empty=128,tombstone=254;
+    static constexpr byte empty=ht::detail::control_empty,tombstone=ht::detail::control_tombstone;
     using buffer=ht::heap_storage_policy::buffer;
     using hash_type=ht::permutation<W,K>;
     using hash_result=typename hash_type::result;
@@ -162,7 +162,7 @@ class reused_table : public Reader {
         if(!state().groups)return absent;
         auto group=swiss&(state().groups-1);std::size_t step=0;
         for(;;){const auto* control=state().controls.data+group*16;
-            auto candidates=ht::equal_controls(control,byte(swiss>>57));
+            auto candidates=ht::equal_controls(control,hash_result{0,0,swiss}.fingerprint());
             while(candidates){const auto lane=std::countr_zero(candidates);candidates&=candidates-1;
                 const auto slot=group*16+lane;
                 if(ht::tuple_field<key_bytes>::read(state().slots.data+slot*tuple_bytes)==key)return slot;
@@ -177,7 +177,7 @@ class reused_table : public Reader {
         if(!state().groups)return {absent,false};
         auto group=h.swiss&(state().groups-1);std::size_t step=0,available=absent;
         for(;;){const auto* control=state().controls.data+group*16;
-            auto candidates=ht::equal_controls(control,h.fingerprint);
+            auto candidates=ht::equal_controls(control,h.fingerprint());
             while(candidates){const auto lane=std::countr_zero(candidates);candidates&=candidates-1;
                 const auto slot=group*16+lane;
                 if(ht::tuple_field<key_bytes>::read(state().slots.data+slot*tuple_bytes)==key)return {slot,true};
@@ -193,7 +193,7 @@ class reused_table : public Reader {
         state().deleted-=state().controls.data[slot]==tombstone;
         ht::store<key_bytes>(state().slots.data+slot*tuple_bytes,key);
         if constexpr(V)std::memcpy(state().slots.data+slot*tuple_bytes+key_bytes,v.data(),V);
-        state().controls.data[slot]=h.fingerprint;++state().spill;
+        state().controls.data[slot]=h.fingerprint();++state().spill;
     }
     [[gnu::noinline]] void grow_swiss() {
         const auto next=state().groups?state().groups*2:1;
@@ -201,7 +201,7 @@ class reused_table : public Reader {
         std::memset(controls.data,empty,next*16);
         auto old_controls=std::move(state().controls);auto old_slots=std::move(state().slots);const auto old_groups=state().groups;
         state().controls=std::move(controls);state().slots=std::move(slots);state().groups=next;state().spill=state().deleted=0;
-        for(std::size_t i=0;i<old_groups*16;++i)if(old_controls.data[i]<128){
+        for(std::size_t i=0;i<old_groups*16;++i)if(ht::detail::occupied_control(old_controls.data[i])){
             const auto key=ht::load<key_bytes>(old_slots.data+i*tuple_bytes);const auto h=state().mix(key);
             ht::bytes<V> v{};if constexpr(V)std::memcpy(v.data(),old_slots.data+i*tuple_bytes+key_bytes,V);
             store_swiss(resolve_swiss(key,h).slot,key,v,h);
@@ -234,7 +234,7 @@ class reused_table : public Reader {
             edit(state().slots.data+found.slot*tuple_bytes+key_bytes,false);
             state().deleted-=state().controls.data[found.slot]==tombstone;
             ht::store<key_bytes>(state().slots.data+found.slot*tuple_bytes,key);
-            state().controls.data[found.slot]=h.fingerprint;++state().spill;if(p[B-1]!=255)++p[B-1];
+            state().controls.data[found.slot]=h.fingerprint();++state().spill;if(p[B-1]!=255)++p[B-1];
         }
         ++state().size;return true;
     }
@@ -486,7 +486,7 @@ class reused_table : public Reader {
         }
         if(s.phase==staged_phase::value){if constexpr(V)consume(const_cell<true>{primary+B,s.slot});found=true;return true;}
         if(s.phase==staged_phase::controls){const auto* control=state().controls.data+s.group*16;
-            s.candidates=ht::equal_controls(control,s.first.hash.fingerprint);s.empty_group=ht::equal_controls(control,empty)!=0;
+            s.candidates=ht::equal_controls(control,s.first.hash.fingerprint());s.empty_group=ht::equal_controls(control,empty)!=0;
         }else {
             const auto slot=s.group*16+std::countr_zero(s.candidates);s.candidates&=s.candidates-1;
             const auto* tuple=state().slots.data+slot*tuple_bytes;
@@ -511,7 +511,7 @@ class reused_table : public Reader {
                 visit(state().mix.recover(id,q),p+B+row*V);++count;
             }
         }
-        for(std::size_t slot=0;slot<state().groups*16;++slot)if(state().controls.data[slot]<128){
+        for(std::size_t slot=0;slot<state().groups*16;++slot)if(ht::detail::occupied_control(state().controls.data[slot])){
             const auto* p=state().slots.data+slot*tuple_bytes;visit(ht::load<key_bytes>(p),p+key_bytes);++count;
         }
         ht::require(count==state().size,"mutable cell census");
