@@ -6,6 +6,7 @@ import os
 from pathlib import Path
 import shutil
 import subprocess
+import sys
 import tarfile
 import tempfile
 import unittest
@@ -88,8 +89,53 @@ class CaptureCheck(unittest.TestCase):
         self.assertFalse((candidate / 'include/old.h').exists())
         self.assertEqual((candidate / 'include/new.h').read_text(), 'new header')
         self.assertIn('generated/extra.cpp', result['source_files_sha256'])
+        self.assertEqual(set(result['source_changes']), {
+            'src/change.cpp', 'src/deleted.cpp', 'include/old.h', 'include/new.h', 'generated/extra.cpp'})
+        self.assertEqual(result['source_changes']['src/change.cpp'], {
+            'before': sha256(b'committed'), 'after': sha256(b'candidate'),
+            'mode_before': 0o644, 'mode_after': 0o644})
+        self.assertIsNone(result['source_changes']['src/deleted.cpp']['after'])
+        self.assertIsNone(result['source_changes']['generated/extra.cpp']['before'])
         self.assertEqual(metadata, capture.verify(base))
         capture.verify(candidate)
+
+    def test_noop_replacement_and_executable_change_are_visible(self):
+        base = self.output('base')
+        capture.capture(self.root, base)
+        same = self.output('same')
+        result = capture.capture(base, same, inputs=self.root, replacements=['src/change.cpp'])
+        self.assertEqual(result['source_changes'], {})
+        # A skipped treatment is still a valid capture, but an expected postimage
+        # must refuse it before a worktree is created.
+        wrong = self.output('skipped-treatment')
+        with self.assertRaisesRegex(ValueError, 'source hash mismatch: src/change.cpp'):
+            capture.capture(base, wrong, expected={'src/change.cpp': sha256(b'candidate')})
+        self.assertFalse(wrong.exists())
+        self.assertFalse(capture.receipt_path(wrong).exists())
+        (self.root / 'src/change.cpp').chmod(0o755)
+        executable = self.output('executable')
+        result = capture.capture(base, executable, inputs=self.root, replacements=['src/change.cpp'])
+        self.assertEqual(result['source_changes'], {'src/change.cpp': {
+            'before': sha256(b'committed'), 'after': sha256(b'committed'),
+            'mode_before': 0o644, 'mode_after': 0o755}})
+
+    def test_cli_reports_actual_source_changes_and_accepts_old_receipts(self):
+        prototype = self.root / 'build/prototype.cpp'
+        prototype.parent.mkdir()
+        prototype.write_text('candidate')
+        output = self.output('candidate')
+        command = [sys.executable, str(Path(capture.__file__)), 'create', str(output),
+                   '--base', str(self.root), '--replace', f'src/change.cpp={prototype}']
+        result = subprocess.run(command, capture_output=True, text=True, check=True)
+        self.assertIn('Source changes from base: 0 added, 1 modified, 0 removed', result.stdout)
+        self.assertIn('M src/change.cpp', result.stdout)
+        receipt = capture.receipt_path(output)
+        metadata = json.loads(receipt.read_text())
+        del metadata['source_changes']
+        receipt.write_text(json.dumps(metadata))
+        result = subprocess.run([sys.executable, str(Path(capture.__file__)), 'verify', str(output)],
+                                capture_output=True, text=True, check=True)
+        self.assertNotIn('Source changes from base:', result.stdout)
 
     def test_existing_destination_and_bad_hash_leave_sources_untouched(self):
         destination = self.output('base')

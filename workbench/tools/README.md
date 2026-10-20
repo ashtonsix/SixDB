@@ -37,6 +37,15 @@ copy-on-write clones with independent inodes; later edits remain private.
 Other filesystems use ordinary copies. Captures populate only selected sources,
 without first checking out and deleting retained evidence.
 
+Capture output lists the actual added, modified and removed source files,
+including executable-bit changes; the adjacent receipt keeps every before/after
+hash. A replacement that leaves the source unchanged reports zero changes.
+When a treatment has a known postimage, add
+`--expect PATH=SHA256` to `capture.py create` to check the reviewed candidate's
+hash before creating the capture. Obtain that expectation from the intended
+candidate, rather than from an unchecked patch result. A successful patch command
+alone does not establish that the treatment landed.
+
 For a local runner, `experiment.Run(..., workspace=...)` captures sources and
 preserves incremental builds. Build from `run.source_root` into `run.build_dir`;
 runs sharing a workspace serialize. `run.input()` records a prepared dataset;

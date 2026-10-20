@@ -68,9 +68,10 @@ def capture(base, destination, *, replacements=(), removed=(), expected=None, in
     if destination.exists() or receipt.exists():
         raise ValueError('choose a new capture destination; the existing capture is untouched')
     files = source_files(base)
-    _, base_digest = identity(files)
+    base_hashes, base_digest = identity(files)
+    base_modes = {name: 0o755 if (base / name).stat().st_mode & 0o111 else 0o644 for name in files}
     files = {name: data for name, data in files.items() if not python_cache(name)}
-    modes = {name: 0o755 if (base / name).stat().st_mode & 0o111 else 0o644 for name in files}
+    modes = {name: base_modes[name] for name in files}
     changes = []
 
     def discard(name):
@@ -115,6 +116,12 @@ def capture(base, destination, *, replacements=(), removed=(), expected=None, in
         name = source_name(name)
         if hashes.get(name) != wanted:
             raise ValueError(f'source hash mismatch: {name}; expected {wanted}, captured {hashes.get(name, "missing")}')
+    source_changes = {
+        name: {'before': base_hashes.get(name), 'after': hashes.get(name),
+               'mode_before': base_modes.get(name), 'mode_after': modes.get(name)}
+        for name in sorted(base_hashes.keys() | hashes.keys())
+        if base_hashes.get(name) != hashes.get(name) or base_modes.get(name) != modes.get(name)
+    }
     commit = subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=base, text=True).strip()
     common = subprocess.check_output(['git', 'rev-parse', '--path-format=absolute', '--git-common-dir'],
                                      cwd=base, text=True).strip()
@@ -150,7 +157,7 @@ def capture(base, destination, *, replacements=(), removed=(), expected=None, in
             raise ValueError('captured source selection differs from the requested inputs')
         metadata = {'format': 1, 'source_commit': commit, 'base': str(base), 'base_digest': base_digest,
                     'changes': changes, 'source_digest': digest, 'source_files_sha256': hashes,
-                    'source_modes': modes}
+                    'source_modes': modes, 'source_changes': source_changes}
         with receipt.open('x') as out:
             receipt_created = True
             out.write(json.dumps(metadata, indent=2, sort_keys=True) + '\n')
@@ -206,6 +213,16 @@ def main():
         parser.exit(1, f'{error}\n')
     output = checkout_path(args.output)
     print(f"{output}: {len(metadata['source_files_sha256'])} files; {metadata['source_digest']}")
+    if 'source_changes' in metadata:
+        changes = metadata['source_changes']
+        added = sum(row['before'] is None for row in changes.values())
+        removed = sum(row['after'] is None for row in changes.values())
+        print(f'Source changes from base: {added} added, {len(changes) - added - removed} modified, {removed} removed')
+        for name, row in list(changes.items())[:12]:
+            kind = 'A' if row['before'] is None else 'D' if row['after'] is None else 'M'
+            print(f'  {kind} {name}')
+        if len(changes) > 12:
+            print(f'  {len(changes) - 12} more; see receipt')
     print(f'Receipt: {receipt_path(output)}')
 
 
