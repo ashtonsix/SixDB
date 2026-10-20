@@ -12,7 +12,7 @@ implemented experiments; open rows remain work, not waived requirements.
 | Hash geometry, occupancy and overflow | Typed whole/page controls; actual spill counts and rebuild costs | Growth through maintained directory histories, rather than rebuilding every owner. |
 | Search binding, long keys and capacity endpoints | `baseline`, `keys`; numeric binding, arbitrary byte comparisons, UINT_MAX sentinel and virtual 2^32 outer coordinates | Binding amortization across real directory versions; long keys in the complete Object-backed path; above-cache qualification. |
 | 64-byte dirent and locator/interpretation coherence | Six 8-byte locators and explicit 16-byte metadata layout; actual Orbital MVCC outside it; raw/full-cell/compact-cell comparison on three native targets | Mapped/resource-ID recipes and portable reconstruction. |
-| Schema diversity and migration | Two actual summary encodings, per-layer admission and 100,000-definition retained history | Explicit migration workload and schema-binding cost as historical definitions grow. |
+| Schema diversity and migration | `schema`: selected segments at every layer migrate across two codecs and differing chunk/auxiliary-Part counts; old/unmigrated interpretations remain valid; definition lookup and conversion measured from 32 to 100,000 definitions on three native targets | The fixture's codec/tag recipes are not a general converter; portable schema reconstruction and construction rollback remain with those open rows. |
 | Parts, overflow and relocation | Actual Allocation/Representation/Part ownership; StreamPack blocks/ranks; retained remaps; selected Part bytes and complete cell/geometry proof survive Index teardown | Colocated ownership controls and escape-retention economics; failure-safe relocation/reopen. |
 | Ordered physical placement, duplicates and padding | Shift, hierarchical redistribution and midpoint controls; boundary duplicate move; small-domain exhaustion; actual five-layer publication | Read/scan effects through sustained churn, prepend/consolidation and a chunked/gapped payload control. |
 | Aggregate damage and empty/nonempty transitions | Exact integer/null/count oracle at every layer; deletion/recreation histories | More varied value damage and payload movement must accompany structural maintenance, not just short value-only bursts. |
@@ -29,6 +29,13 @@ cell metadata, removal/recreation and escaping-Part histories. Value updates
 still publish actual Orbital versions while leaving the directory unchanged.
 This completes that native-memory experiment, not the mapped/resource locator
 or persistence questions, and changes neither segment identity nor layer ordering.
+
+The [schema panel](SCHEMA.md) now covers explicit migration and historical-tail
+lookup costs. Native-source conversion shares unchanged columns and outperforms
+full author-model reconstruction; the latter remains in the measured panel.
+Full-copy schema extension is still linear in definition population and its
+cost is reported. This completes the bounded schema experiment, while the
+cross-cutting rollback, persistence and general-key work above remains active.
 
 Earlier committed measurements are in [FINDINGS.md](FINDINGS.md) and
 [evidence](evidence/README.md). Current source and native runs must be checked

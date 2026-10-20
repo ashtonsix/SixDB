@@ -51,15 +51,14 @@ const std::byte* located_address(Selection s,const Dirent& d,u64 locator,unsigne
 template<class T> std::span<const T> located(Selection s,const Dirent& d,unsigned p,unsigned count) {
     return {reinterpret_cast<const T*>(located_address(s,d,d.parts[p],p)),count};
 }
-Definition definition(unsigned id,unsigned width,unsigned chunk=0) {return {id,width,id<=3?31u:((1u<<(id%5))|(1u<<((id+1)%5))),unsigned(id%2==0),chunk};}
+Definition definition(unsigned id,unsigned width,unsigned chunk=0,unsigned extras=0) {return {id,width,id<=3?31u:((1u<<(id%5))|(1u<<((id+1)%5))),unsigned(id%2==0),chunk,extras};}
 unsigned chunks(unsigned n,unsigned grain){return grain ? (n+grain-1)/grain:1;}
 unsigned summary_part(unsigned chunk){return chunk?5+chunk:3;}
 unsigned interpretation(Selection s,const Dirent& d,Selection schema,unsigned layer,unsigned key_bytes) {
     const auto c=s.control();require(c.representation==d.representation && c.revision==d.revision && (d.flags&1));
     require(bool(d.flags&4)==c.indirect_parts);
-    const auto definitions=values<Definition>(schema,0);require(d.representation && d.representation<=definitions.size());
-    const auto def=definitions[d.representation-1];
-    require(def.id==d.representation && def.key_bytes==key_bytes && (def.allowed_layers&(1u<<layer)) && def.summary_chunk==c.summary_chunk);
+    const auto def=take(schema_definition(schema,d.representation,layer));
+    require(def.key_bytes==key_bytes && def.summary_chunk==c.summary_chunk && c.parts==5+chunks(c.count,c.summary_chunk)+def.auxiliary_parts);
     return def.recipe;
 }
 Dirent describe(Selection s) {
@@ -89,6 +88,15 @@ template<class Resolve> PendingRead local_prepare(Selection s,const Dirent& d,u6
     return {resolve(rank),located<u64>(s,d,1,n)[rank],s.control().prefix,located<std::uint16_t>(s,d,0,n)[rank],recipe,d.overflow_block,d.overflow_rank,d.flags};
 }
 } // namespace
+orbital::Result<Definition> schema_definition(Selection schema,unsigned id,unsigned layer) {
+    if(!schema || schema.control().kind!=Kind::schema || layer>=5 || !id)
+        return std::unexpected(orbital::Error::invalid_argument);
+    const auto definitions=values<Definition>(schema,0);
+    if(id>definitions.size())return std::unexpected(orbital::Error::invalid_argument);
+    const auto def=definitions[id-1];
+    if(def.id!=id || !(def.allowed_layers&(1u<<layer)))return std::unexpected(orbital::Error::invalid_argument);
+    return def;
+}
 Summary interpret_summary(Summary s,unsigned recipe) {
     require(recipe<=1);
     if(recipe){s.minimum=std::bit_cast<i64>(~std::bit_cast<u64>(s.minimum));s.maximum=std::bit_cast<i64>(~std::bit_cast<u64>(s.maximum));s.sum=std::bit_cast<i64>(~std::bit_cast<u64>(s.sum));}
@@ -121,20 +129,34 @@ void Index::edit_model(const Row& row,bool add,std::set<SegmentKey>& affected) {
 }
 Image Index::segment_image(SegmentKey key,unsigned representation) const {
     Image image;const auto& entries=segments_.at(key);unsigned rank=0;
+    const auto def=representation_definition(representation);const auto grain=def.summary_chunk;
     for(const auto& [pos,state]:entries) {
         append(image[0],pos);append(image[1],state.logical.begin()->first);append(image[2],state.logical.rbegin()->first);
-        append(image[summary_part(summary_chunk_?rank/summary_chunk_:0)],interpret_summary(state.summary(),definition(representation,key_bytes_).recipe));
+        append(image[summary_part(grain?rank/grain:0)],interpret_summary(state.summary(),def.recipe));
         // Long-key fixture: big-endian logical value followed by a common suffix.
         // All bytes are stored/read; bounds on the first eight are exact in THIS
         // fixture only. It is not a generic logical-key abbreviation policy.
         for(unsigned k=0;k<key_bytes_;++k)image[4].push_back(std::byte(k<8 ? (state.logical.begin()->first>>(56-k*8))&255:0x61));
         append(image[5],u64(state.count*17));++rank;
     }
-    const auto first=5+chunks(entries.size(),summary_chunk_);
-    for(unsigned p=first;p<first+aux_parts_;++p)append(image[p],u64(key.second)*71+p+entries.size());
+    const auto first=5+chunks(entries.size(),grain);
+    for(unsigned p=first;p<first+def.auxiliary_parts;++p)append(image[p],u64(key.second)*71+p+entries.size());
     return image;
 }
 EditStats Index::edit(std::span<const Row> additions,std::span<const u64> removals,bool selective) {
+    return apply(additions,removals,selective,{});
+}
+orbital::Result<EditStats> Index::migrate(std::span<const Migration> migrations,bool source_transcode) {
+    std::set<SegmentKey> unique;
+    for(const auto& m:migrations) {
+        if(m.segment.first>=5 || !segments_.contains(m.segment) || !m.representation || m.representation>definitions_ || !unique.insert(m.segment).second)
+            return std::unexpected(orbital::Error::invalid_argument);
+        const auto def=representation_definition(m.representation);
+        if(!(def.allowed_layers&(1u<<m.segment.first)))return std::unexpected(orbital::Error::invalid_argument);
+    }
+    return apply({},{},true,migrations,source_transcode);
+}
+EditStats Index::apply(std::span<const Row> additions,std::span<const u64> removals,bool selective,std::span<const Migration> migrations,bool source_transcode) {
     using Clock=std::chrono::steady_clock;
     auto elapsed=[](auto start){return u64(std::chrono::duration_cast<std::chrono::nanoseconds>(Clock::now()-start).count());};
     const auto model_start=Clock::now();
@@ -149,6 +171,11 @@ EditStats Index::edit(std::span<const Row> additions,std::span<const u64> remova
         if(auto old=rows_.find(row.id);old!=rows_.end())edit_model(old->second,false,affected);
         rows_[row.id]=row;edit_model(row,true,affected);
     }
+    std::map<SegmentKey,unsigned> targets;
+    for(const auto& m:migrations) {
+        const auto old=basis.bind(segment_id(m.segment.first,m.segment.second));require(bool(old));
+        if(old.control().representation!=m.representation){affected.insert(m.segment);targets[m.segment]=m.representation;}
+    }
     ++generation_;
     stats.model_ns=elapsed(model_start);
     std::vector<Store::Change> changes;changes.reserve(affected.size()+6);
@@ -159,32 +186,53 @@ EditStats Index::edit(std::span<const Row> additions,std::span<const u64> remova
         const auto id=segment_id(key.first,key.second);auto old=basis.bind(id);
         if(!segments_.contains(key)) {changes.push_back({id,{}});directory_entries_[key.first].erase(key.second);directory_changes.insert(key);++stats.removed_segments;continue;}
         unsigned rep=1+(u64(key.second)*991+generation_+key.first)%definitions_;
-        while(!(definition(rep,key_bytes_).allowed_layers&(1u<<key.first)))rep=rep%definitions_+1;
+        while(!(representation_definition(rep).allowed_layers&(1u<<key.first)))rep=rep%definitions_+1;
         if(old && same_positions)rep=old.control().representation;
+        if(targets.contains(key))rep=targets.at(key);
+        const auto def=representation_definition(rep);const auto grain=def.summary_chunk;
+        const bool patch=value_only && !targets.contains(key);
         const auto image_start=Clock::now();
         Image image;
-        if(value_only) {
-            const auto new_recipe=definition(rep,key_bytes_).recipe;
+        if(targets.contains(key) && source_transcode) {
+            const auto prior=old.control();const auto previous=take(schema_definition(basis.bind(schema_id()),prior.representation,key.first));
+            const unsigned old_grain=prior.summary_chunk?prior.summary_chunk:prior.count,new_grain=grain?grain:prior.count;
+            if(previous.recipe!=def.recipe || old_grain!=new_grain) {
+                for(unsigned chunk=0;chunk<chunks(prior.count,grain);++chunk)
+                    image[summary_part(chunk)].resize(std::min(new_grain,prior.count-chunk*new_grain)*sizeof(Summary));
+                std::span<const Summary> input;
+                for(unsigned rank=0;rank<prior.count;++rank) {
+                    if(rank%old_grain==0)input=values<Summary>(old,summary_part(rank/old_grain));
+                    const auto recoded=interpret_summary(interpret_summary(input[rank%old_grain],previous.recipe),def.recipe);
+                    std::memcpy(image[summary_part(rank/new_grain)].data()+(rank%new_grain)*sizeof(Summary),&recoded,sizeof(recoded));
+                }
+            }
+            // Fixture auxiliary recipes are canonical tags. All newly placed
+            // trailing Parts are supplied; stable positions/bounds/keys/tags
+            // borrow their original native Parts without model reconstruction.
+            const unsigned first=5+chunks(prior.count,grain);
+            for(unsigned p=first;p<first+def.auxiliary_parts;++p)append(image[p],u64(key.second)*71+p+prior.count);
+        } else if(patch) {
+            const auto new_recipe=def.recipe;
             const auto positions=values<std::uint16_t>(old,0);
             for(auto pos:dirty_positions_.at(key)) {
                 const unsigned rank=std::lower_bound(positions.begin(),positions.end(),pos)-positions.begin();
-                const auto chunk=summary_chunk_ ? rank/summary_chunk_:0,part=summary_part(chunk);
+                const auto chunk=grain ? rank/grain:0,part=summary_part(chunk);
                 if(!image.supplied(part)){const auto old_body=bytes(old,part);image[part].assign(old_body.begin(),old_body.end());}
                 const auto s=interpret_summary(segments_.at(key).at(pos).summary(),new_recipe);
-                std::memcpy(image[part].data()+(summary_chunk_?rank%summary_chunk_:rank)*sizeof(Summary),&s,sizeof(s));
+                std::memcpy(image[part].data()+(grain?rank%grain:rank)*sizeof(Summary),&s,sizeof(s));
             }
         } else image=segment_image(key,rep);
         stats.segment_image_ns+=elapsed(image_start);
         Control c{&memory_,Kind::segment,key.first,key.second,unsigned(segments_.at(key).size()),
-            rep,generation_,0,5+chunks(segments_.at(key).size(),summary_chunk_)+aux_parts_,key_bytes_};
-        c.summary_chunk=summary_chunk_;
+            rep,generation_,0,5+chunks(segments_.at(key).size(),grain)+def.auxiliary_parts,key_bytes_};
+        c.summary_chunk=grain;
         c.indirect_parts=indirect_parts_;c.compact_locators=locator_mode_==2;
         // This fixture field checks locator/interpretation compatibility, not
         // the Object's MVCC cut. A value-only version can reuse indirect cells.
-        if(indirect_parts_ && old && same_positions)c.revision=old.control().revision;
+        if(indirect_parts_ && old && same_positions && !targets.contains(key))c.revision=old.control().revision;
         stats.summary_entries+=c.count;
         const auto capture_start=Clock::now();
-        auto owner=capture(rt_,store,c,image,old,selective,stats,value_only);stats.segment_capture_ns+=elapsed(capture_start);
+        auto owner=capture(rt_,store,c,image,old,selective,stats,patch);stats.segment_capture_ns+=elapsed(capture_start);
         private_segments[key]=Physical::selection(owner.get());
         auto selected=Physical::selection(owner.get());auto d=describe(selected);
         auto& entries=directory_entries_[key.first];
@@ -194,6 +242,7 @@ EditStats Index::edit(std::span<const Row> additions,std::span<const u64> remova
         if(prior==entries.end() || std::memcmp(&prior->second.descriptor,&d,sizeof(d)) || prior->second.minimum!=next.minimum || prior->second.maximum!=next.maximum)
             directory_changes.insert(key);
         entries[key.second]=next;
+        if(old && old.part_count()!=selected.part_count())dirty_overflow[key.first].insert(key.second);
         for(unsigned p=6;p<selected.part_count();++p)if(!old || p>=old.part_count() || part_locator(selected,p)!=part_locator(old,p))dirty_overflow[key.first].insert(key.second);
         changes.push_back({id,std::move(owner)});if(!old)++stats.new_segments;
     }
@@ -205,9 +254,9 @@ EditStats Index::edit(std::span<const Row> additions,std::span<const u64> remova
         const auto root=basis.bind(directory_id(layer));
         std::set<unsigned> changed_pages;
         if(page_bits_ && layer>=2)for(auto k:affected)if(k.first==layer)changed_pages.insert(k.second>>page_bits_);
-        if(aux_parts_ || summary_chunk_) {
+        if(aux_parts_ || summary_chunk_ || !overflow_prefixes_[layer].empty() || !dirty_overflow[layer].empty()) {
             auto& prefixes=overflow_prefixes_[layer];std::set<unsigned> dirty_blocks;
-            if(!value_only) {
+            if(!value_only || prefixes.size()!=entries.size()) {
                 const auto old_segments=prefixes.size();
                 prefixes.clear();prefixes.reserve(entries.size());unsigned rank=0;
                 for(auto& [p,e]:entries) {
@@ -228,7 +277,7 @@ EditStats Index::edit(std::span<const Row> additions,std::span<const u64> remova
                     if(old)changes.push_back({overflow_id(layer,block),{}});continue;
                 }
                 const auto image=pack_overflow(selected);Control c{&memory_,Kind::overflow,layer,block,unsigned(selected.size()),1,generation_,0,4,key_bytes_};
-                changes.push_back({overflow_id(layer,block),capture(rt_,store,c,image,old,selective,stats,value_only && old)});
+                changes.push_back({overflow_id(layer,block),capture(rt_,store,c,image,old,selective,stats,value_only && old && migrations.empty())});
             }
         }
         auto build_directory=[&](Kind kind,unsigned prefix,auto first,auto last,unsigned count,Selection old) {
@@ -345,14 +394,25 @@ EditStats Index::edit(std::span<const Row> additions,std::span<const u64> remova
     return stats;
 }
 Image Index::schema_image()const {
-    Image image;for(unsigned rep=1;rep<=definitions_;++rep)append(image[0],definition(rep,key_bytes_,summary_chunk_));
+    Image image;for(unsigned rep=1;rep<=definitions_;++rep)append(image[0],representation_definition(rep));
     const auto wire=overflow_format().encode();image[1].assign(wire.begin(),wire.end());return image;
 }
-void Index::extend_schema(unsigned definitions) {
-    require(definitions>=definitions_);Store::Scope basis(store);definitions_=definitions;
+Definition Index::representation_definition(unsigned id)const {
+    if(const auto it=definition_overrides_.find(id);it!=definition_overrides_.end())return it->second;
+    return definition(id,key_bytes_,summary_chunk_,aux_parts_);
+}
+CopyStats Index::extend_schema(unsigned definitions,std::span<const Definition> additions) {
+    require(definitions>=definitions_);
+    for(auto def:additions) {
+        require(def.id>definitions_ && def.id<=definitions && def.key_bytes==key_bytes_ && def.allowed_layers && def.allowed_layers<=31 && def.recipe<=1 &&
+            (!def.summary_chunk || def.summary_chunk>=64) && def.auxiliary_parts<=4 && !definition_overrides_.contains(def.id));
+        definition_overrides_.emplace(def.id,def);
+    }
+    Store::Scope basis(store);definitions_=definitions;
     Control c{&memory_,Kind::schema,0,0,definitions_,1,++generation_,0,6,key_bytes_};CopyStats stats;
     const std::array<Store::Change,1> changes{{{schema_id(),capture(rt_,store,c,schema_image(),basis.bind(schema_id()),true,stats)}}};
     publish(store,basis,changes);
+    return stats;
 }
 Selection Index::selected_directory(Store::Scope& scope,unsigned layer,u64 key,Search search) const {
     const auto root=scope.bind(directory_id(layer));
@@ -391,9 +451,9 @@ std::vector<Selection> Index::directory_pages(Store::Scope& scope,unsigned layer
     return result;
 }
 Outcome Index::auxiliary(Store::Scope& scope,unsigned layer,const Dirent& d,Outcome outcome,unsigned parts) const {
-    require(parts<=aux_parts_);
     if(!parts || !outcome.present)return outcome;
     const auto s=scope.bind(segment_id(layer,outcome.prefix));const auto c=s.control();
+    require(parts<=c.parts-5-chunks(c.count,c.summary_chunk));
     const unsigned first=chunks(c.count,c.summary_chunk)-1;
     for(unsigned p=0;p<parts;++p)outcome.auxiliary+=*reinterpret_cast<const u64*>(located_address(s,d,extra_locator(scope,layer,d,first+p),6+first+p));
     return outcome;
@@ -542,8 +602,9 @@ void Index::verify(Store::Scope& scope,std::span<const Row> rows,bool exhaustive
                 require(locator==part_locator(s,part));
                 require(take(resolve_locator(s,locator,part))==take(s.part(part)).address());
             }
-            if(aux_parts_) {
-                const auto o=auxiliary(scope,layer,d,Outcome{.present=true,.prefix=where.first},aux_parts_);u64 expected=0;
+            const auto extras=s.part_count()-5-chunks(s.control().count,s.control().summary_chunk);
+            if(extras) {
+                const auto o=auxiliary(scope,layer,d,Outcome{.present=true,.prefix=where.first},extras);u64 expected=0;
                 for(unsigned p=5+chunks(s.control().count,s.control().summary_chunk);p<s.part_count();++p)expected+=values<u64>(s,p).front();
                 require(o.auxiliary==expected);
             }

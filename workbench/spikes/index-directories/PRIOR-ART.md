@@ -64,6 +64,12 @@ indirection from the prior-art description alone. Same-Scope selection and
 proof retention come from the current composition; Calico and Bw-tree do not
 establish those obligations for SixDB.
 
+The [schema experiment](SCHEMA.md) measures decision-site representation IDs
+against an actual retained historical-definition tail. Native-source conversion
+avoids rebuilding unaffected columns, while flat schema extension exposes its
+full-copy cost. These are current composition results; the Calico metadata
+mechanism supplies motivation without imposing its class/version encoding.
+
 The first comparisons follow directly: plain per-layer arrays, the proposed
 composition, coarse versus local directory edits, compact ordering metadata,
 and simple versus hierarchical placement. Add a borrowed mechanism when one

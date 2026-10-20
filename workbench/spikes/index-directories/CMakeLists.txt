@@ -35,3 +35,8 @@ add_executable(index_directory_locators locators.cpp)
 sixdb_target(index_directory_locators)
 target_link_libraries(index_directory_locators PRIVATE index_directory_core)
 add_test(NAME index_directory_locators_check COMMAND index_directory_locators --check)
+
+add_executable(index_directory_schema schema.cpp)
+sixdb_target(index_directory_schema)
+target_link_libraries(index_directory_schema PRIVATE index_directory_core)
+add_test(NAME index_directory_schema_check COMMAND index_directory_schema --check)

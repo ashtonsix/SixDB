@@ -30,7 +30,7 @@ record-absence verdict. These numbers do not establish complete Engine cost.
 
 ## What the prototype actually does
 
-Seven drivers use one implementation where practical:
+Eight drivers use one implementation where practical:
 
 | Driver | Boundary |
 | --- | --- |
@@ -41,6 +41,7 @@ Seven drivers use one implementation where practical:
 | `staged` | Serial, manual lookahead and actual Loom Ring around deferred summary consumption, including active/overflow retained readers. |
 | `keys` | Generic full-byte Boundlist versus ordinary search, including long common prefixes, binary zeros, duplicates and virtual large directories. |
 | `locators` | Raw addresses versus stable memory-reference cells, through actual Part consumption and value publication, with retained readers and escaping Parts. |
+| `schema` | Definition lookup across a historical tail; selected segment migration with codec, chunk and auxiliary-Part changes; native-source conversion versus model reconstruction. |
 
 Build with `-DSIXDB_SPIKES=index-directories`. On Linux, for a captured checked
 run with CPU affinity and median/min/max summaries:
@@ -198,8 +199,19 @@ installation/recovery and mapped/remote locator resolution remain Orbital
 integration dependencies. A held selected Part currently retains the geometry
 proof; its minimal escape metadata is another measurable caller choice.
 
-All six correctness drivers pass on native Zen 5, Granite Rapids and Neoverse V2,
-and under local ASan/UBSan. The staged uniform-read case at 32,768 records
+The [schema comparison](SCHEMA.md) adds explicit selected-segment migration
+between codecs, summary chunks and optional-Part counts. It checks unchanged
+unrelated segments and retained historical interpretations. On Zen 5 a compact
+codec migration falls from 18.28 to 5.66 µs by transcoding selected native
+summaries and borrowing unchanged columns; native copied bytes are identical.
+At 100,000 definitions, protected hot-ID lookup is 3.62 ns, but bulk full-copy
+schema extension costs 875 µs and stores 2.4 MB of native definition bytes.
+The owned report retains all targets and losing controls. These are segment
+conversion costs, not record-update or end-to-end peer measurements.
+
+At the packed-layout source cut, all six then-existing drivers passed native
+Zen 5, Granite Rapids and Neoverse V2, and local ASan/UBSan. The staged
+uniform-read case at 32,768 records
 illustrates why to retain platform differences: the Ring was slightly slower
 than serial on Zen 5 and Neoverse V2, but about 8% faster on Granite Rapids.
 It is a small in-memory hint/control experiment, not evidence of I/O overlap.

@@ -2,9 +2,11 @@
 
 The selection keeps matched controls, all repetitions and counters for the
 executable storage, composed, placement, directory-pressure, Ring, byte-key and
-memory-locator families. It supports the negative update-cost finding and the
-cross-platform read/write tradeoffs in [FINDINGS.md](../FINDINGS.md) and
-[LOCATORS.md](../LOCATORS.md). Source snapshots, build
+memory-locator and schema-migration families. It supports the negative
+update-cost finding and cross-platform read/write tradeoffs in
+[FINDINGS.md](../FINDINGS.md) and
+[LOCATORS.md](../LOCATORS.md), plus the historical-tail/conversion comparison in
+[SCHEMA.md](../SCHEMA.md). Source snapshots, build
 receipts, binaries and omitted logs are recovered through each `artifact.json`.
 This is selected experimental evidence, not a production qualification record.
 Earlier layout/capture cuts retain the pressure and, where cited, Ring panels;
@@ -30,6 +32,9 @@ retain the complete varied matrix. Root cuts retain only the new pressure panel.
 | [locators-zen5](locators-zen5/) | `20261020T095313Z-9f1f8a5c` | Raw/full-cell/compact-cell read and update comparison, with metadata and phase counters. |
 | [locators-intel](locators-intel/) | `20261020T095319Z-6a86bb77` | Same final locator source on Granite Rapids. |
 | [locators-neon](locators-neon/) | `20261020T095325Z-5433b7ca` | Same final locator source on Neoverse V2. |
+| [schema-zen5](schema-zen5/) | `20261020T101055Z-d7e5904a` | Definition lookup, full-copy extension and explicit selected-segment conversion with matched model/native-source controls. |
+| [schema-intel](schema-intel/) | `20261020T101101Z-7b049510` | Same schema/migration source on Granite Rapids. |
+| [schema-neon](schema-neon/) | `20261020T101107Z-4cf0a670` | Same schema/migration source on Neoverse V2. |
 
 The capture trio uses the code frozen by worker group
 `20261020T074653Z-102689a1`. Intel was rerun from that group's exact captured
@@ -50,6 +55,14 @@ matched locator panel, including larger cells and losing read costs. Earlier
 locator sweeps are superseded diagnostics. Each selected archive includes its
 successful `locators-check` receipt and output; routine check logs are not
 duplicated in Git.
+
+The schema trio uses group `20261020T101048Z-c39fc7e0`. It checks and measures
+the schema driver with 4,096 records, J=0/2, 32/256/4,096/100,000 definitions,
+raw/compact locators and model-image/native-source conversion. Five trials use
+16,384 requested lookups and 32 conversions per migration burst. The exports
+retain every phase and case, including unchanged native-copy counts and the
+losing full-image/large-schema costs. Local runs before native-source conversion
+are superseded diagnostics in ignored experiment storage.
 
 The resolution pair uses the same reused Zen 5 host. Public `capture.py` derived
 `index-directory-prefix-repaired` from `index-directory-prefix-old` by replacing
@@ -84,6 +97,9 @@ The final locator source also passed all seven Release checks in captured run
 `20261020T094921.401815Z`. All seven ASan/UBSan checks then passed in 25.84
 seconds; locator checks account for 13.45 seconds. These are checks of current
 fixture behavior, not a concurrency or recovery qualification.
+After schema migration was added, captured Release run
+`20261020T101048.972299Z` passed all eight drivers. All eight then passed
+ASan/UBSan in 28.46 seconds, including 4.11 seconds for the schema histories.
 
 Use `workbench/tools/artifacts.py fetch PATH NEW_DIRECTORY` on any selected
 directory to recover its complete verified archive. Raw `measurements/*.csv`
