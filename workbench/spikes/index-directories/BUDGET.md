@@ -35,6 +35,114 @@ the complete Engine budget. If a tiny existing-transaction LMDB write makes
 that ratio unattainable, retain the loss: batching/publication and the complete
 Engine comparison must still be reported honestly.
 
+## First operations and matched boundaries
+
+The first directory-record controls are concrete and separate from a row engine:
+
+| Control | Engine-side work and native peer |
+| --- | --- |
+| M1 exact directory-record get | One index, L4, J0, initially 8,192 segment entries; unique big-endian u32 physical-prefix keys and 64-byte descriptor values. Exact hit/miss consumes all eight words into the same digest/output. LMDB uses ordinary `mdb_get` in the matching read transaction; no custom Store adapter. |
+| M2 directory-record replacement | Replace one inline locator word, stable routing bounds/representation/count. Input is preconstructed directory metadata; execute actual private directory edit/capture/prepare/install and request-local cleanup. LMDB replaces that same 64-byte value in one write transaction per Engine publication. This opaque metadata fixture does not establish real segment-locator association or producer correctness. |
+| M3 genuine projected consumer | Actual selected material and native/Ikea binding; request one u64 field and consume that value, including visible delta correction. Read only required descriptor fields, not an artificial 64-byte materialization. Peer returns the same field/output through a competent native layout. Include fixed geometry/pointers with changed committed extent. This is composed directory/material access, still not a complete row-update engine. |
+
+Alongside opaque M2, retain the FIRST actual locator-replacement treatment:
+validate the before binding, construct/capture finished material using real
+native/Ikea writes and Loom backing, derive its actual Part BYTE locator, then
+edit the directory and publish all required material/directory Owners in ONE
+packet. Time from before material construction through install/local cleanup;
+expose directory-only attribution separately. Old/fresh readers dereference
+the corresponding material through the directory and check useful bytes.
+Numeric fixture locators or prefinished material outside this interval cannot
+replace or underprice this treatment. LMDB matches its semantic metadata/data
+change in one transaction and may pack them into one value when appropriate;
+it is not forced to mirror Engine's Object count. This is a chosen moving-Part
+producer, not a requirement for ordinary stable-locator data writes.
+
+M1/M2 use no duplicate physical keys. Their logical-bound fixtures include
+runs of eight equal keys, shifted across storage-page boundaries, plus misses
+and gaps. Logical SEEK/range controls return all matching segment prefixes in
+physical order; a point request that expects one result may not silently select
+one duplicate. Comparator cursors must return the same multiplicity/output.
+For these SEPARATE logical-seek cases, load the actual routing bounds too.
+LMDB compares a native ordered `(routing_max_K,physical_prefix)` index, either
+covering `(routing_min_K,Dirent64)` or a bounds index plus physical-key primary.
+Price the chosen layout's real lookups, updates and footprint; a physical-prefix
+`mdb_get` alone is not the logical-seek comparator. Closed/open edges preserve
+all equal maxima as required, with no invented unique logical fence.
+M2 repeats with batches 1/16/64: one complete atomic LMDB write transaction per
+Engine packet, identical before/after visibility. Read-cohort anchors below are
+NOT batch-write anchors, and scalar write timings are not divided by batch size.
+
+Each first comparison has uninterrupted current-cut and declared retained-read
+variants where applicable. Engine Borrowed is a complete uninterrupted call;
+retained Engine Scope and LMDB read transactions deliberately preserve their
+selected cuts. For publication checks, open old readers BEFORE the write, defer
+some first lookups until AFTER install/commit, then open fresh readers. Verify
+old/fresh states and final cleanup in both arms. A borrowed call cannot become
+a retained cursor or wait by changing its label.
+
+The first F32/independent comparison includes an early dispersed sentinel:
+uniform random probes over a directory sized beyond the measured LLC, with
+resident upper levels, randomized leaf/payload placement and aged history/
+allocator inventory. Record actual footprint/residency controls; if coldness
+cannot be established, say so. Cross F32/F128 with co-located/independent
+ownership at C8, then C16 copy/source tradeoffs. Do not postpone this until a
+warm-only architecture has grown around its result.
+
+The later COMPLETE Engine request starts before request admission/current-snapshot
+selection and ends after directory navigation, exact data/delta/summary work,
+actual material publication where required, requested output and local cleanup.
+Begin with a projected u64 point/range and one-field update, then full-record
+output. For duplicate logical keys return all matching `(physical6 B,field)`
+results under the same declared order; include physical-key identity in the
+peer's composite-key or native duplicate representation. Compare competent
+LMDB composite-key and, where appropriate, DUPSORT/cursor layouts rather than
+forcing extra peer lookups by adapter design. Atomic update batches have the
+same visibility boundary and output in each engine.
+
+Calico's complete-request entry is `calico::runtime::prepare` followed by its
+prepared `execute`/row-buffer or visitor path as used in
+[rig_ycsb.cpp](../../../../calico/workbench/benchmarks/ycsb/src/rig_ycsb.cpp).
+Adapt the declared projection/duplicates/batch semantics through that real
+entry; if it cannot express a matched atomic batch or retained-read case, mark
+that cell unavailable. QHash's native prefix-to-offset path is a separate
+access-method reference, not Calico end-to-end. None of M1/M2/M3 is relabeled a
+complete Engine-versus-Calico/LMDB win.
+
+## First collectors and denominators
+
+- Dependent serial loop: next request depends on the consumed result; report
+  elapsed ns/completed logical operation for the full declared boundary. This
+  is neither CPU time nor sampled request p99.
+- Independent loop/Ring: report completed requests divided by elapsed time at
+  stated active concurrency, with bootstrap, admission, refill, output and drain.
+  Report reciprocal throughput separately from request latency.
+- Atomic batch: report elapsed ns/BATCH and ns/completed item, packet size,
+  changed directory/material Objects and transaction size. Failed/retried items
+  do not inflate the successful denominator.
+- Sampled request latency: choose input indices independently of key/outcome;
+  sample from first attempt/admission to terminal result, including waits/retries.
+  Include a no-sampling control, sample count/rate, p50/p95/p99 and maximum;
+  compare the same sampling rule on peers. Never derive tails from loop means.
+- Refusal/retry: count offered, committed, refused, aborted and stale attempts.
+  Wall/CPU totals include failed work; report terminal refusal latency separately
+  from successful-request latency and bounded backlog, not as fast successful work.
+- CPU/stock: collect owner-thread CPU, each helper's CPU and process total,
+  including native Pool replenishment, catalog/descriptor PMR, maintenance and
+  final settlement. Charge benchmark intervals separately from setup/warmup;
+  show warm stock versus depleted/aged stock and whole-history replenishment.
+  Do not move helper CPU or unbounded stock consumption outside the comparison.
+
+Use existing [comparison](../../benchmarks/comparisons.md),
+[capture](../../tools/README.md#captured-experiment-runs) and
+[replay](../../benchmarks/README.md#replay-and-summarize) helpers as useful.
+These are the first workload-owned collectors, not a proposed generic framework.
+A directory oracle checks offered metadata transitions only. It cannot prove
+that a producer correctly omitted an event, chose a representative event mix,
+or maintained base/delta/validity. Those need an independent semantic producer
+oracle in a material/complete-request experiment; M3 exercises binding, not the
+entire producer protocol.
+
 ## Existing reference points
 
 | Evidence | Observation | What it can constrain |
@@ -86,15 +194,17 @@ separate dimensions; do not assume one segment per record or one segment per
 
 ## Resident operation ceilings
 
-Baseline: prepared index/schema, K<=8, resident directory working set, required
-64-byte dirent consumed, correct fresh or explicitly retained Scope, and a
-two-level ordered directory. Times are per completed operation. The complete
-budget includes the Scope cost once at its declared request/batch boundary.
+Baseline: prepared index/schema, K<=8, resident working set and a two-level
+ordered directory. State the consumer: full 64-byte directory enumeration for
+M1, or actual requested fields/material for projected work. State Borrowed or
+fresh/retained Scope explicitly; their lifetime boundaries are not interchangeable. Times are per completed operation. The complete
+budget includes Scope enrollment when used, at its declared request/batch boundary.
 
 | Operation | Proposed ceiling |
 | --- | ---: |
 | Ordinary-table exact prefix hit/miss | 10 ns |
 | Ikea hash exact prefix hit/miss | 20 ns |
+| Sorted u16 suffix-mask/rank group hit/miss | 15 ns |
 | Ordered seek to first relevant segment | 35 ns |
 | Additional resident ordered-node visit beyond two levels | 10 ns |
 | Range startup, including both endpoint policies | 60 ns |
@@ -120,7 +230,7 @@ budget includes the Scope cost once at its declared request/batch boundary.
 | Clustered batch64 locator edits, shared copied chunks | 35 ns/changed dirent |
 | Dispersed batch64 locator edits | 75 ns/changed dirent |
 | Local extra-block packing, <=16 live lists / <=128 extra locators | 1 us + required dirent repairs |
-| Append schema definitions | 300 ns + 5 ns/definition + actual descriptor bytes |
+| Append schema definitions, direct-name control | 300 ns for one; batch goal +50 ns/additional definition, plus actual descriptor bytes; price D record Owners + one header |
 | Bind an already-admitted representation definition | 5 ns |
 | Cold historical-definition cache fill | 100 ns + actual descriptor parsing |
 | Refusal before mutation | 50 ns beyond the reached admission work |
@@ -162,10 +272,11 @@ a 700/900 ns result would fail the small-write allocation if this event were
 actually required on each request. Rare compactions/ports instead need both
 their own latency distribution and their measured amortized contribution.
 
-Ready reads consume the full dirent. A small group is one directory selection;
+Full-enumeration reads consume the full dirent; projected reads consume their
+actual descriptor fields and requested material. A small group is one directory selection;
 a large ordered path is H routing selections, plus a payload-chunk selection
 only for the independent-chunk recipe.
-Initial schema selection and Scope enrollment belong in the interval; amortize
+Initial schema/material qualification and actual Scope enrollment belong in the interval; amortize
 only the declared cohort. Runtime segment-geometry and extra-block selections
 are additional to the already-selected projection row.
 
@@ -207,9 +318,10 @@ directory comparison as well as showing it separately; never claim an isolated
 directory publication cost by subtracting unlike trials. A complete Engine
 result counts it once.
 
-Stock capture's metadata work scales with all admitted Parts, not just the
-changed Part. For native independent capture, >8 Parts also obtains scratch
-storage. Stock prepare checks duplicate Object IDs pairwise and performs
+Stock capture's metadata work scales with all admitted Parts. Current
+independent native/mixed capture allocates uniqueness scratch when TOTAL Parts>8,
+even for one fresh supplier among many retained sources. Orbital owns that
+inefficiency; do not choose fanout around it or assume its correction exists. Stock prepare checks duplicate Object IDs pairwise and performs
 catalog/reservation work. Model packet sizes 1/2/5/10/64/256 and retain any
 quadratic crossover. Do not invent Engine publication to bypass it.
 
@@ -224,19 +336,18 @@ imaginary batch amortization.
 
 `H` is the actual ordered routing depth; `A` the number of ancestors whose
 routing metadata changes; `P(x)` all admitted Parts of captured Object x;
-`B(x)` its real initialized/copied bytes. These counts exclude no work: fresh
-Scope enrollment and one prepared-schema selection are charged once at the
+`B(x)` its real initialized/copied bytes. These counts exclude no work: actual Borrowed/Scope boundary and one prepared-schema selection are charged once at the
 declared request/cohort boundary. Supplied producer changes are counted
 separately, then included in the single complete publication interval.
 
 | Operation | Directory selections after prepared schema | Directory writes/captures/publication |
 | --- | --- | --- |
 | Stable-fact data edit after locating segment | none added | zero; actual producer data/delta/validity work remains in Engine |
-| Exact top-table or compact-hash lookup | one selected chunk/group | none; hash owner/header/proof and full64 B output are used |
+| Exact top-table or compact-hash lookup | one selected chunk/group | none; owner/proof and requested output are consumed; full 64 B only for enumeration |
 | Natural singleton/small region lookup | one root | none |
 | Large ordered seek/exact-prefix lookup | H routing nodes; +one payload chunk only for the independent-chunk recipe | none; absent natural region/successor can additionally visit its presence tree |
 | Range/continuation | startup path, then each newly entered node/chunk once | none; count every false candidate admitted by enclosing fences |
-| Inline projection | none if byte geometry is already admitted | none; otherwise one selected segment shape; real resource binding is additional |
+| Inline projection | none if authoritative material AND geometry are already qualified; else actual material/shape selection | none; committed extent/validity can change with identical pointers/geometry; real resource binding is additional |
 | Extra projection | one selected StreamPack block/list, reused for its ordinals; paged vector costs actual depth | none; no repeated admission/length lookup per ordinal |
 | Ordered C8 locator replacement | route to one payload chunk | copy512 B, capture one one-Part chunk; no routing/ancestor edit |
 | F32 co-located locator replacement | H routing nodes, no separate payload Object | copy512 B, capture one FIVE-Part leaf, retain four sources; no ancestor edit |
@@ -248,7 +359,7 @@ separately, then included in the single complete publication interval.
 | Split/merge/redistribute | final affected run and required neighbours/parents | materialize final row streams once; copy rows that cannot retain whole chunks; capture every output, changed parent and counter, and publish real tombstones |
 | Extra-only pointer replacement | selected local block | changed StreamPack Parts/Control; no dirent write when block/rank stays equal; include actual producer change |
 | Extra growth/packing | block and <=16 local live holders | actual StreamPack transfer plus every changed holder coordinate; one pack/block/batch, no global rank repair |
-| Schema append/cache fill | actual selected schema directory/chunks | append definitions + bounded schema metadata; existing segments/dirents are untouched unless actually migrated |
+| Schema append/cache fill, direct-name control | one selected schema header + actual definition record when not cached | D immutable record Owners + one 16 B header; no100k-sized roster; existing definitions/segments untouched unless actually changed |
 | Migration/port | source shape, target definition, touched directory path | actual changed locations/representation/extra associations, plus finished target and any schema changes in one coherent publication |
 | Same-value/qualified no-op | no extra route if complete supplied evidence suffices | no capture/publication; comparing an unqualified K/E-sized value costs its actual bytes |
 | Refusal/stale/abort | whatever was actually reached | abandoned drafts, physical uses and synchronous cleanup; no forced full drain or fictitious undo replay |
@@ -299,10 +410,18 @@ Birth, deletion, tombstones and retained history can require more capacity.
 The F32 co-located variant has the SAME one/five directory Object counts for
 ordinary locator replacements, but captures 5/25 admitted Parts and retains 4/20
 old sources. Its native descriptor is 120 B per leaf under the proposed Control,
-versus 56 B for a one-Part chunk. It copies the same512/2,560 B, saves the extra
+versus 56 B for a one-Part chunk. It copies the same 512/2,560 B, saves the extra
 payload catalog selection, and changes structural packet size substantially.
 That trade must be tested in complete operations, not resolved by looking at
 capture fanout alone.
+
+NEW compound leaves also compare grouped native capture: F32/C8 P5 requests
+88 B rather than 120 B with the proposed 40 B header. A later partial update can
+use independent native sources, retaining four actual Part uses and possibly
+the entire original grouped Allocation. F32/C16 is P3 (88 B independent/72 B
+grouped); F128/C8 is P17 (312/184 B). These are descriptor formulas, not total
+memory or timing. Alignment/padding, physical granularity, real pins and source
+work remain in the ledger. Cross placement/fanout at the same C before choosing.
 
 Directory capture additionally owns one physical use and one interpretation
 proof retain per Object. Its requested native descriptor bytes are

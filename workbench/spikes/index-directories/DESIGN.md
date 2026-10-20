@@ -117,6 +117,13 @@ suffix to payload slot 0..15. Its bitmap geometry cannot spill to Swiss.
 Only a membership/slot-map change clones the map owner; an ordinary locator
 change retains it and replaces the bounded payload.
 
+A required cheap control stores only an original-order u16 suffix mask with
+payload/bounds sorted by suffix. Slot is `popcount(mask & ((1u<<suffix)-1))`.
+It needs no owning microhash, slot values or inverse map. Membership can shift
+up to 16 dirents/bounds, while locator-only edits do not. Compare whole read,
+membership and retained-copy operations; the owning microhash remains a control,
+not a requirement for every 16-position group.
+
 The group still needs its selected routing bounds. An exact prefix miss is not a
 logical seek result: an ordered presence tree finds the next group, then its
 next eligible suffix. No optimistic miss is returned as end-of-layer.
@@ -137,6 +144,12 @@ boundary. No unique logical fence or order among duplicate records is assumed.
 Enclosing fences return candidate segments; exact segment processing filters
 them. Open/closed flags apply to exact values, and conservative fence tests must
 never discard a possible equality. Broad fences are charged as read amplification.
+Exact candidate misses continue in the SAME region before crossing regions.
+Parent routing endpoints aggregate child ROUTING endpoints consistently; they
+cannot switch to occupied-record extrema while leaves use wider fences. Cursor
+state records the original suffix/routing rank separately from payload slot,
+including every fast seek and singleton path. Presence lookup may be lazy, but
+the exclusive successor identity must survive until crossing.
 
 ## Dirent bytes
 
@@ -168,15 +181,14 @@ lanes. The following wide native layout is a conservative control, not a chosen
 128-by-28-byte architecture. Fanouts 16/32/64/128 must be costed with their
 actual tree heights, selection waves, child-name bytes and update work.
 
-The leading small-tree comparison is F32/C8 with ONE leaf Object and five
-Parts: routing metadata plus four fixed512 B payload Parts. A locator edit copies
+One small-tree comparison is F32/C8 with ONE leaf Object and five
+Parts: routing metadata plus four fixed 512 B payload Parts. A locator edit copies
 one 512 B Part, retains the other four sources, captures all five Parts and makes
 one directory publication change. Reads use that selected leaf's Part slots,
-avoiding the independent payload Object lookup. Five Parts stay below stock
-capture's >8-source scratch threshold. The cost is four retained-source uses
+avoiding the independent payload Object lookup. The cost is four retained-source uses
 and a larger descriptor per edit; this is not a one-Part capture claim.
 
-Its wide metadata is 728 B (56 header +32*21 B rows); internal metadata is 952 B.
+Its wide metadata is 720 B (48 header +32*21 B rows); internal metadata is 944 B.
 Payload capacity is 2,048 B. Chunk coordinates are derived fixed Part ordinals
 in this recipe, with no stored coordinate vector or extra Object names. Common32 B
 Control gives a 40 B Representation header plus five 16 B native slots =120 B
@@ -191,14 +203,32 @@ the namespace counter, with no per-payload-Object tombstones. It still captures
 every admitted Part. Compare one versus several actual prepare changes and
 physical retained uses; neither read depth nor source fanout is free.
 
+Cross fanout and ownership instead of attributing their combined effect to one
+change: F32/C8 co-located and independent, plus F128/C8 co-located and independent.
+Retain C16 controls with actual `ceil(F/C)` Parts/names and `64*C` extents.
+Fanout is chosen from complete read/update/cold/retention behavior. Current
+Orbital's independent native/mixed capture sizes uniqueness scratch by TOTAL
+Parts>8, although it tracks only fresh Allocation suppliers. A 17-Part capture
+with 16 retained and 1 fresh therefore reserves 136 B unnecessarily. Orbital owns
+that source-confirmed inefficiency and callback-safe correction; it must not
+freeze Engine's fanout around 8. No fix is assumed shipped by this plan.
+
+New compound leaves also compare CURRENT grouped-allocation capture. One fresh
+Allocation supplies all Parts and transfers once. With the proposed 40 B header,
+F32/C8 P5 is 88 B grouped versus 120 B independent; F128/C8 P17 is 184 versus 312 B.
+Partial COW can later use independent native capture of one fresh Part plus
+retained sources from the grouped owner. Each retained Part still owns its real
+pin and can retain the whole original Allocation. Each split output has its own
+owner; one fresh Allocation is never transferred into multiple captures.
+
 | Structure | Logical bytes |
 | --- | --- |
 | Segment dirent | 64 |
 | Logical routing endpoints | `2*K` per segment for fixed-width exact/enclosing recipes; sentinel/inclusion recipe data is additional, separate from its dirent |
 | Ordered leaf row, wide K<=8 control | prefix u32 (4), two normalized endpoint u64s (16), local payload slot u8 (1): 21 |
 | Internal routing row, K<=8 | physical lower prefix u32 (4), two occupied endpoint u64s (16), child name u64 (8): 28 |
-| Full leaf, wide128 control | 2,872 B: 56-byte header + sixteen8 B chunk names +128*21 B rows; columns separately aligned |
-| Full internal node, wide128 control | 3,640 B: 56-byte header +128*28 B rows; smaller counts can add4 B alignment padding |
+| Full leaf, wide128 independent control | 2,864 B: 48-byte header + sixteen8 B C8 chunk names +128*21 B rows; columns separately aligned |
+| Full internal node, wide128 control | 3,632 B: 48-byte header +128*28 B rows; smaller counts can add4 B alignment padding |
 | Payload chunk, independent C8 control | eight 64 B dirents =512 B, one admitted Part; leaf owns its payload-slot population |
 | Payload chunk, C16 control | sixteen64 B dirents =1,024 B; compare saved capture/catalog metadata with doubled copy bytes |
 | Compact hash map | sixteen four-bit-domain keys, one-byte slot values; assigned primary geometry 18 B, heap policy rounds its buffer to 64 B |
@@ -213,12 +243,14 @@ separately aligned as their admitted reader requires. Empty physical Parts have
 no invented initialized capacity; spare readable bytes/padding are charged and
 sealed if granted.
 
-The wide node-header proposal is 56 bytes: assigned count u16 at 0; height u8
+The wide node-header proposal is 48 bytes: assigned count u16 at 0; height u8
 at 2; kind u8 at 3; flags u32 at 4; root-only dynamic-namespace high u64 at 8; region
 prefix u32 at 16; chunk count u16 at 20; reserved u16 at 22; leaf payload-slot
-mask 128 bits at 24; exact-key tail-root name u64 at 40; subtree segment count u64
-at 48. Internal nodes zero unused leaf fields. The subtree count is u64 because
-L4 can contain 2^32 segments. These fields are immutable selected data.
+mask 128 bits at 24; exact-key tail-root name u64 at 40. Internal nodes zero unused
+leaf fields. There is no subtree-segment-count field: no consumer justified its
+ancestor writes. Local node counts are exact; an insertion with stable enclosing
+fences may stop ancestor repair when routing extrema stay equal. An eventual
+global count consumer would need an explicitly priced maintenance mechanism.
 
 For the common one-Part payload, compare a 32-byte native Control containing
 resource pointer8, immutable format-proof pointer8, local Object name8, assigned
@@ -238,8 +270,8 @@ are additional metadata; compare/copy their actual bytes, including the
 all-shared-prefix worst case. A numeric predecessor trick cannot stand in for
 an exact byte-key comparison.
 
-An ordered leaf retains up to sixteen chunk names and a 128-bit payload-slot
-mask. Its row selects a local slot0..127: chunk=`slot/8`, row=`slot%8`. The
+An independent leaf retains ceil(F/C) chunk names and a 128-bit payload-slot
+mask; co-located leaves derive Part ordinals and store no chunk-name vector. Its row selects a local slot0..F-1: chunk=`slot/C`, row=`slot%C`. The
 chunk-name vector provides the scoped Object name; this is independent of
 ordered rank and of record physical-key slots. Child/block names select Orbital Objects
 under the same Scope; they are not mutable memory pointers. Allocated child
@@ -250,7 +282,7 @@ uses a versioned index/layer namespace allocator, retained even while all its
 regions are empty. Its one-Part eight-byte counter changes once per structural
 batch, and that additional Object/capture/publication is charged. Compact child
 names are low64 bits under an admitted, unique namespace high64; deterministic
-root/group names use disjoint assigned namespaces. This preserves full128-bit
+root/group names use disjoint assigned namespaces. This preserves full 128-bit
 Object identity without a per-entry128-bit name or accidental collisions.
 Namespace assignment belongs to index construction and is counted there.
 Exhaustion returns capacity; no wraparound or pointer-derived identity is
@@ -434,13 +466,30 @@ StreamPack block keyed by a stable physical-prefix group. Every list contains
 eight-byte locators. A dirent records that block and assigned rank. Ranks are
 not global occupied-directory ordinals.
 
-Replace in reservation when the list fits. Growth appends a new reservation,
-retargets that ONE dirent and retires the old rank. Empty lists do not make an
-existing assigned rank disappear. Packing transfers only the local live ranks
-and repairs only their holders in the same Orbital publication. Start with a
-packing trigger at 32 assigned ranks or >50% dead reservation bytes, then price
-alternating shrink/grow and the actual amortized work. Repacking every update
-is rejected.
+Removal is planned first: clear the holder's association and privately edit the
+old rank's tombstone D. Default mutable blocks require D; a no-D legacy/control
+format must copy/convert rather than pretend retirement exists. A nonempty list
+can replace in reservation only when the actual schema accepts used size Unew
+and reservation Rold. With U omitted/full reservation, Unew must equal Rold;
+shrinking64 to 56 bytes is not legal merely because it fits. Growth/new legal
+reservation retargets that holder and retires old D.
+
+Admit ALL issued writes: payload, count/extent control, D, directory checkpoints,
+R/U and initialized G16 length groups, including preserving neighbours and
+padding. StreamPack append is not automatically an unsealed-suffix operation.
+For fixed-length locator replacement, compare a qualified TuplePack body inside
+the selected StreamPack value with whole-list replacement, preserving actual
+sidecar laws and source identities.
+
+For the bounded default holder algorithm, enumerate occupied physical prefixes
+in that block's16-prefix group under the basis; merge offered births/deaths/
+changes to obtain final holders, keeping only entries naming that block. This
+costs a real physical-prefix cursor walk, at most 16 live holders, rather than a
+free reverse map. Packing decides ONCE after final batch plans, initially at 32
+assigned ranks or >50% dead reservation bytes (or needed capacity). Transfer final
+lists directly to a disjoint block, repair only local holder coordinates and
+publish together. Do not repeatedly append/pack during scalar replay. Price
+both trigger policy and holder discovery under alternating shrink/grow.
 
 Direct and Width are genuine alternatives: Direct makes projection simpler;
 Width can reduce the capacity sidecar. Include full reserved directory/control,
@@ -454,6 +503,41 @@ scoped child names, with fixed-size u64 locator blocks. An ordinal selects one
 block; one locator edit replaces that block, and only extent/topology changes
 repair ancestors. This representation and its O(height) projections receive
 separate E=64/256/large cases.
+Mixed-size blocks are an early pressure case: a small locator edit can copy the
+whole admitted payload Part shared with a large list. Compare size grouping,
+separate payload Parts and paged locator blocks, including retained capacity
+and all capture sources. The sixteen-holder bound does not bound payload bytes;
+the default grouping/large-list transition policy is not yet selected.
+
+## Bounded schema control
+
+A concrete direct-name control avoids the unspecified population-sized schema
+roster. A selected 16-byte schema header stores definition-namespace high64 at 0
+and next-representation-ID u64 at 8; reject exhaustion beyond 32-bit dirent IDs.
+This is the definition-domain header only. Index J/K, format/namespace proofs
+and their owned dependencies are additional index context, not hidden in 16 bytes.
+Definition ObjectId is `(definition_namespace,uint64(rep_id))`. Each immutable
+record holds a 16-byte logical header: id u32 at 0, admitted-layer mask u8 at 4,
+format version u8 at 5, reserved u16 at 6, descriptor-byte length u64 at 8; then its
+actual descriptor material/Parts. Each layer's admission is resolved from the
+selected record; IDs are not reused and old definitions remain readable.
+Before consulting even an owning cache, reject rep_id>=the SELECTED header.next_id;
+a newer cached definition in the same namespace is not visible through an old
+schema header. Cache lifetime and layer/definition qualification remain separate.
+
+Appending D definitions captures D actual new record Owners plus one changed
+schema-header Owner. Lookup binds one named record (or reuses its genuinely
+qualified cache); there is no append-time100k-definition roster copy. At 100k
+historic definitions, count actual catalog entries, descriptors, backing,
+parsing/cache footprint and dependency loads. Per-record Object overhead can
+lose to a paged definition store; that remains a measured format comparison,
+not grounds to pretend a hidden bounded directory is free. A different schema
+organization or mutable admission policy needs its own concrete coherent
+lookup/update/capture path; this control establishes neither as a contract.
+
+Before/after schema views still use the same Core and finished private Owners.
+Publishing a new definition with its segment/directory update is one packet;
+an equal numeric cut in another store supplies no such coherence.
 
 ## Prior art carried into the experiment
 
@@ -522,6 +606,12 @@ Related SixDB research used in this plan:
 The joint pseudocode must settle selection count versus capture granularity,
 the exact small-group hash/proof ownership, the native/shared batch allocator
 choice, coherent physical conversion, stock versus proposed Orbital preparation,
-cold catalog dependency staging, and chunk fragmentation. These are measured
-implementation questions. They are not reasons to change the supplied index
+cold catalog dependency staging, chunk fragmentation and material/producer
+frontier/read laws. The direct-name schema and 16-prefix holder walk are concrete
+controls, not proof that their overhead is competitive. These are measured
+implementation questions. Exact HashImage/Storage ownership, long-key tails,
+singleton/compound transitions and the mixed-list payload grain still need
+concrete qualification before those paths are called implementation-ready.
+Same-version physical adoption and a concurrent advice/reset protocol remain
+open composition questions, not merely missing timings. These are not reasons to change the supplied index
 concept or to claim that a paper design already beats LMDB.

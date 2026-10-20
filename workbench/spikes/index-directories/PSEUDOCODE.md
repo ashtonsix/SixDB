@@ -29,16 +29,21 @@ SegmentDelta:
     # This describes supplied segment state, not record rows or an undo action.
 
 Read:
-    SAME stationary Orbital Scope for the declared snapshot operation
+    read token: uninterrupted current-cut Borrowed, OR SAME stationary Scope
+    never promote Borrowed or move an enrolled Scope across a wait
     index schema selection and reusable admitted definitions/read laws
+    optional already-qualified authoritative material state, including deltas
     layer, query endpoints and endpoint policies
-    cursor stack of selected node names/selections and local ranks
+    mode-specific cursor position defined below, separate from payload slots
     optional selected payload/extra block for repeated consumption
-    admitted layout: F32/C8 co-located five-Part leaf or independent-chunk control
+    admitted layout: fanout F, payload chunk slots C, co-located or independent
 
 Edit:
     original Scope/basis and offered SegmentDeltas
-    actual Ikea u64->draft-pointer Hashtable, private to this attempt
+    scratch keyed by FULL 128-bit ObjectId, private to this attempt
+       small attempt: inline full-ID array
+       larger attempt: Ikea u64 high-half -> per-namespace Ikea u64 low-half map
+       # Ikea's current key width is<=64; never truncate identity or invent W128.
     owned mutable drafts and new byte ranges; no published state is mutated
     offered finished segment Owners and eventual directory Owners
     current scoped root/namespace-counter drafts when topology changes
@@ -49,6 +54,8 @@ An edit's draft table only deduplicates work. It is not an authoritative segment
 roster, version table, reader registry or transaction log. Its scratch capacity,
 initialization and touched-key cleanup are charged. A few deltas may use a fixed
 array instead if that complete caller is faster; no `std::map` is on this path.
+Both identity halves participate in lookup/equality. Nested map allocation,
+lookups and cleanup are charged; the small inline case compares full IDs too.
 
 ## Producer boundary, before any directory work
 
@@ -107,10 +114,14 @@ READ_MATERIAL_CANDIDATE(read, selected_material, query):
     include actual point-delta lookup/merge and extra selections in Engine cost
     do not treat count/sum subtraction as general min/max/NULL repair
 
-COMPACT_MATERIAL_CANDIDATE(basis, partition):
-    select one coherent base + visible committed deltas
+COMPACT_MATERIAL_CANDIDATE(basis, unit):
+    select coherent base + visible committed deltas for a DECLARED frontier domain
+    choose partition-local runs, or actual per-unit applied frontiers in collection
+       material; a global offset is valid only when ALL its covered units are folded
     compute actual new base and summaries with the producer's laws
-    construct new material excluding EXACTLY the incorporated delta prefix
+    construct new material excluding EXACTLY the incorporated domain-qualified deltas
+    retain corrections for every unincorporated unit; P/Q/P compacting only P
+       must preserve Q, not advance a global frontier past its record
     offer real directory changes for moved Parts, changed range/representation,
        segment birth/death; retain stable facts without directory work
     publish new base/material/applied boundary/required directory edits together
@@ -143,120 +154,171 @@ table chooses a safe read path; it is not a second visibility protocol or one
 versioned Object per ancestor flag. Its marking, retained capacity and false
 positives remain measured work.
 
-## Query binding and routing
+## Query binding, candidate traversal and continuation
+
+Parent routing extrema are derived from their children's ROUTING endpoints,
+not from children's occupied record extrema when enclosing fences are used.
+A coarse/quantised parent must refine against the same-read child endpoints.
+Every permitted enclosure contains its actual keys and has monotone endpoints.
+Choosing a candidate does not establish an exact point hit. Exact misses advance
+WITHIN the current region before considering the next region.
 
 ```
-OPEN_READ(index, requested_snapshot):
-    reuse an actual live Scope for this Core, or enroll a new Scope at its NOW cut
-    # A numeric old cut does not let the current API reopen a historical snapshot.
-    select/admit the index schema once for this operation
-    retain those selections through every pointer use and returned work frontier
-    return Read
+OPEN_READY_BORROW(index):
+    token = ObjectStore.borrow() at current completed cut
+    bind schema/material as required through this token
+    finish the ENTIRE call and all borrowed uses before publication, alternative
+       replacement, suspension or final Store reset; no reentry that invalidates it
+    return synchronous Read; Scope enrollment is not charged to this control
 
-FIND_EXACT_PREFIX(read, L, p):
-    if L < 2:
-        select the ordinary-table chunk derived from p
-        test its population; return its row or absent
-    if L <= J:
-        g = p >> 4; suffix = p & 15
-        group = read.Scope.bind(hash_group_name(index,L,g))
-        if absent: return absent
-        if singleton: compare its suffix and return its row
-        native = the group's already-admitted concrete Ikea reader
-        slot = native.find(suffix)              # one byte value, not a new owner
-        if absent: return absent
-        return matched group payload/bounds[slot]
-    region = high J bytes of p                 # zero when J=0
-    root = read.Scope.bind(region_root_name(index,L,region))
-    return TREE_FIND(root, PHYSICAL_PREFIX(p))
+OPEN_SCOPED_READ(index, requested_snapshot, stationary_frame):
+    reuse an actual live Scope for this Core, or construct it IN PLACE at NOW cut
+    # Numeric old cuts cannot reopen history; enrolled Scope is never moved.
+    bind/admit schema once; retain selections through every use/cursor/wait
+    return reference to stationary frame's Read (not a moved Scope)
 
-TREE_FIND(node, probe):
-    while node is internal:
-        if probe is logical:
-            r = Boundlist.lower/upper_bound(node.routing_maxima, probe)
-            # lower for closed edge; upper for open edge
-        else:
-            r = physical-prefix child interval containing probe.prefix
-        if no child: return absent
-        save (node name, selection, r) in read.cursor stack
-        node = read.Scope.bind(node.child_name[r])
-        # Stable Object name, NOT the child's former native Part address.
-    if singleton/small embedded node: search its admitted local source
+Cursor:
+    token/Core/layer; logical query edges when present; end is an explicit state
+    probe kind NONE, LOGICAL, or PHYSICAL_PREFIX; high-edge law matches that kind
+    mode TOP: selected table, current physical prefix / occupied rank
+    mode GROUP: group name/key, selected group, ORIGINAL suffix, packed slot
+    mode TREE: region identity, ancestor frames(name,selection,child rank),
+               selected leaf(name,selection), local ROUTING rank, payload slot
+    outer group/region presence position OR lazy exclusive-successor key
+    # Every successful seek, including singleton/exact fast paths, sets this state.
+    # An outer presence lookup may be deferred; its identity cannot be forgotten.
+
+GROUP_SLOT(group,suffix):
+    require original_suffix_mask contains suffix
+    mask=group.original_suffix_mask
+    if admitted sorted mask/rank recipe:
+        return popcount(mask & ((1u<<suffix)-1))
+    else return admitted concrete Ikea reader.find(suffix)
+    # Ordered suffix is NOT a packed slot; suffix14->slot2,15->slot0 is valid.
+
+SET_POSITION(read, container, physical_position):
+    retain selected container; set mode/layer/current physical prefix
+    record original suffix or leaf routing rank SEPARATELY from payload slot
+    record all existing ancestor frames and the leaf itself (also singleton root)
+    save lazy exclusive group/region successor identity if outer cursor unbound
+
+ENTRY_AT_POSITION(read):
+    obtain physical prefix, routing endpoints and a borrowed descriptor reference
+    if co-located leaf:
+        payload = leaf.selection.part(1+slot/C); row = slot%C
+    else if independent leaf:
+        payload = token.bind(leaf.chunk_names[slot/C]); row = slot%C
+    else use selected TOP/GROUP representation's admitted slot
+    return EntryRef, not a mandatory materialized64 B copy
+    # Enumeration may consume all 64 B; a Part query reads its needed fields.
+
+FIND_EXACT_PREFIX(read,L,p):
+    reset traversal frames; set layer L, probe kind NONE and no high-edge filter
+    if L<2:
+        bind ordinary table chunk; test original population
+        if absent: return absent
+        SET_POSITION(read,table,p); return ENTRY_AT_POSITION(read)
+    if L<=J:
+        group = token.bind(hash_group_name(index,L,p>>4)); suffix=p&15
+        if absent or original suffix absent: return absent
+        slot = GROUP_SLOT(group,suffix)
+        SET_POSITION(read,group,suffix); return ENTRY_AT_POSITION(read)
+    region = high J bytes of p  # zero for J=0
+    bind deterministic region root
+    descend physical-prefix child intervals, saving every ancestor
+    find exact leaf prefix; if unequal: return absent
+    SET_POSITION(read,leaf,routing_rank); return ENTRY_AT_POSITION(read)
+
+TREE_SEEK_CANDIDATE(read,root,q,closed):
+    while internal:
+        choose first child whose routing maximum >=q (closed) or >q (open),
+           using real exact/refined Boundlist; save frame and bind that child
+        if none in this node: ADVANCE_TREE_SIBLING and keep searching SAME region
+    r = corresponding boundary in leaf routing maxima
+    if r==leaf.count:
+        ADVANCE_TREE_SIBLING; continue same-region search, or report region exhausted
+    SET_POSITION(read,leaf,r); return ENTRY_AT_POSITION(read)
+
+SEEK_CANDIDATE(read,L,q,closed,high=+infinity,high_closed=true):
+    reset traversal; set layer and LOGICAL low/high edges and policies
+    if L<2:
+        use bounded table ordered occupancy/bounds; SET_POSITION on success
+    else if L<=J:
+        p=first L bytes of q
+        try natural group and suffix p&15; on success SET_POSITION
+        otherwise seek subsequent occupied ORIGINAL suffix, then later groups
+        test routing bounds; never treat a hash miss as end-of-layer
     else:
-        r = the corresponding Boundlist boundary in its exact leaf source
-        check physical equality when the probe requests an exact prefix
-        if absent: return absent
-        slot = node.payload_slot[r]
-        if co-located F32 recipe:
-            payload = node.selection.part(1+slot/8)   # no additional Scope.bind
-        else:
-            chunk = read.Scope.bind(node.chunk_names[slot/8])
-            payload = chunk.selection.part(0)
-        return payload.dirent[slot%8], node.prefix[r], node.routing_bounds[r]
+        region=first J bytes of q
+        try natural region with TREE_SEEK_CANDIDATE
+        only after that region's candidate stream is exhausted seek next region
+    save outer cursor or lazy exclusive successor identity on EVERY success
+    return first qualifying candidate, or explicit end-of-layer
 
-SEEK(read, L, q, closed):
-    read.layer = L
-    if L < 2:
-        return bounded top-table logical seek using its occupied ordered view
-    if L <= J:
-        p = first L bytes of q
-        e = FIND_EXACT_PREFIX(read,L,p)
-        if e exists and e.maximum satisfies the requested lower edge:
-            return e
-        # A hash miss or an exhausted present prefix still owes a successor.
-        position a same-layer group-presence cursor at p>>4
-        mask = group.original_suffix_mask with all earlier suffixes cleared
-        repeatedly choose next suffix by ctz(mask), then Ikea.find(suffix)->slot
-        advance the presence cursor when mask is empty; check exact bounds
-        return first qualifying Entry or end-of-layer
-    region = first J bytes of q
-    root = select that layer's region root directly, if present
-    e = TREE_FIND(root, LOGICAL_LOWER_EDGE(q,closed))
-    if e exists: return e
-    position this layer's region-presence cursor strictly after region
-    return first qualifying Entry in the next nonempty region, or end
-```
+SEEK_PHYSICAL_PREFIX(read,L,p,high_prefix):
+    reset traversal; set layer and PHYSICAL_PREFIX inclusive high edge
+    TOP: next set population bit at prefix>=p
+    GROUP: first original suffix>=p's suffix, then later nonempty groups
+    TREE: descend first physical child interval not entirely<p; at leaf take
+       lower_bound(prefix_column,p), advancing same-region siblings if needed
+    missing/exhausted natural group/region uses same-layer ordered presence
+    on every success SET_POSITION, including lazy group/region successor identity
+    return ENTRY_AT_POSITION when prefix<=high_prefix, else end
 
-For a generic K-byte key, a node source compares a numeric abbreviation first
-and full bytes whenever abbreviations tie. No conversion of a logical key into
-a supposedly unique fence is permitted. An absent natural region may require a
-presence-tree walk; that work is part of seek, not an O(1) miss result. For a
-conservative enclosing recipe, the returned Entry is a candidate; the real
-segment consumer performs exact query refinement. No summary value is silently
-substituted for a routing endpoint. Endpoint sentinels/inclusion obey the
-selected recipe, with no invented unique key at a duplicate boundary.
+ADVANCE_TREE_SIBLING(read):
+    ascend saved frames to first unvisited right child
+    bind it under SAME token; descend its first possible children
+    save the new leaf/local rank; exhaust region only when no saved sibling remains
 
-```
-START_RANGE(read, L, low, high, low_closed, high_closed):
-    if query is empty: return end
-    e = SEEK(read,L,low,low_closed)
-    retain current-layer cursor and the exact high edge
-    if e absent or e.minimum fails high edge: return end
-    return e
+NEXT_CANDIDATE(read):
+    if TOP: next original occupied prefix in selected table / next table chunk
+       SET_POSITION on the resulting physical prefix
+    if GROUP:
+        suffix=ctz(original_mask with all suffixes<=current cleared)
+        if found: slot=GROUP_SLOT(group,suffix); SET_POSITION
+        else advance ordered group-presence cursor, lazily seeking >group if needed
+    if TREE:
+        increment ROUTING rank in selected leaf; resolve payload slot separately
+        if exhausted: ADVANCE_TREE_SIBLING
+        only after whole region exhaustion advance region presence, lazily >region
+        SET_POSITION on the final selected leaf/rank
+    retain same token/layer; never reseek by a supposedly unique logical key
+    if end: return end
+    if LOGICAL and next routing minimum fails logical high edge: return end
+    if PHYSICAL_PREFIX and next prefix>high_prefix: return end
+    reuse selected payload/extra blocks; return ENTRY_AT_POSITION(read)
+    # No u32(last_prefix+1) sentinel at maximum prefix.
 
-NEXT(read):
-    advance local occupied rank in the SAME layer
-    if exhausted:
-        ascend saved cursor frames to the first unvisited right child
-        select that child under the SAME Scope
-        descend its first occupied children
-        if region/group exhausted, advance same-layer presence cursor
-    if no entry, or entry.minimum fails high edge: return end
-    reuse selected payload chunk while its chunk name is unchanged
-    return full Entry
+READ_POINT(read,L,q,requested_operation):
+    e=SEEK_CANDIDATE(read,L,q,closed=true,high=q,high_closed=true)
+    while e exists and e.routing_minimum<=q:
+        result=PROJECT_MANY(read,e,requested_operation.required_ordinals,query=q)
+        if exact result(s): emit per declared duplicate/output contract
+        e=NEXT_CANDIDATE(read)  # even after exact miss; stay in SAME region first
+    return outputs/miss; no candidate is silently promoted to an exact row hit
 
-DESCEND(read, source_L, parent_prefix, parent_position, destination_L):
-    require destination_L-source_L is 1 or 2, and destination_L<=4
+START_RANGE(read,L,low,high,low_closed,high_closed):
+    if query empty: return end
+    e=SEEK_CANDIDATE(read,L,low,low_closed,high,high_closed)
+    return e only if routing minimum passes high edge
+    # Caller PROJECTs exact results then NEXT_CANDIDATE, including false candidates.
+
+DESCEND(read,source_L,parent_prefix,parent_position,destination_L):
+    require destination_L-source_L in {1,2} and destination_L<=4
     if one layer:
-        p = (parent_prefix<<8) | (parent_position>>8)
-        slots = [(parent_position&255)<<8, ((parent_position&255)+1)<<8)
-    else:
-        p = (parent_prefix<<16) | parent_position
-        slots = [0,65536)
-    e = FIND_EXACT_PREFIX(read,destination_L,p)
-    return e and slots, or absent
-    # A different layer is an explicit new lookup. There is no cross-layer NEXT.
+        p=(parent_prefix<<8)|(parent_position>>8)
+        slots=[(parent_position&255)<<8,((parent_position&255)+1)<<8)
+    else: p=(parent_prefix<<16)|parent_position; slots=[0,65536)
+    return FIND_EXACT_PREFIX(read,destination_L,p),slots
+    # Explicit new-layer lookup; never cross-layer NEXT.
 ```
+
+For example, Aactual[1,2]/fence[0,10] and Bactual[5,6]/fence[4,20] admit A
+first for q5. Exact A processing misses; NEXT_CANDIDATE must then visit B before
+leaving their region. Duplicate equal keys can cross any leaf/group boundary;
+continuation uses physical prefix/routing position, not uniqueness of q.
+Long-key abbreviation ties compare full bytes. Enclosing fences, guides and
+byte-padding grants remain distinct facts.
 
 ## Tiny exact sources and quantised guide alternatives
 
@@ -307,7 +369,7 @@ GUIDED_BOUNDARY(source, q, edge):
 
 GUIDE_ONLY_PARENT_BOUNDARY(parent, read, q, edge):
     bracket = owner-stage guide candidate interval and first-greater fallback
-    resolve exact child extrema under read.Scope when correction is required
+    resolve exact child ROUTING extrema under read.token when correction is required
     finish exact boundary against those coherent child sources
     retain the candidate/Scope if this needs a genuine wait
     # Exact Boundlist API still returns an exact answer; no suspension inside it.
@@ -342,32 +404,46 @@ That rule protects BYTE addresses, not an old Representation header, Control,
 View address slot or invented locator cell. The directory material must retain
 its own interpretation/geometry dependency. A directory Part exported alone,
 a fresh Scope, or an unsealed alternative does not preserve that graph.
+Borrowed may protect the uninterrupted current-call variant by excluding every
+invalidating boundary; it supplies no retained old-cut or post-return lifetime.
 
 ```
-PROJECT(read, entry, part_ordinal, requested_operation):
+QUALIFY_MATERIAL(read,entry,operation):
+    reuse already-qualified material ONLY when its identity, token/cut, schema,
+       geometry and committed/applied frontier cover this operation
+    else if admitted representation law proves delta-free for THIS operation/read
+            AND all required runtime interpretation is already available:
+        use that qualified direct context; no extra segment bind
+    else:
+        bind authoritative segment/partition/collection material via read.token
+        admit its base, applied frontier, committed delta extent and read law
+    # Fixed pointers/geometry alone do NOT prove a fixed committed delta extent.
+    return selected context; reuse one selection across all requested Parts
+
+PROJECT(read,entry,part_ordinal,requested_operation):
     return PROJECT_MANY(read,entry,[part_ordinal],requested_operation)
 
-PROJECT_MANY(read, entry, ordinals, requested_operation):
-    def = reuse admitted definition(entry.dirent.representation, read.layer)
-    if the operation's runtime geometry is not available in the directory proof
-       or the actual representation's admitted byte header:
-        segment = read.Scope.bind(segment_name(index,read.layer,entry.prefix))
-        derive/admit the needed shape ONCE; charge this selection
-    if any requested ordinal>=6:
-        extra = SELECT_EXTRA_LIST_ONCE(read,entry)
-    for each requested part_ordinal:
-        locator = entry.dirent.parts[part_ordinal] when part_ordinal<6
-                  else EXTRA_LOCATOR(extra,part_ordinal-6)
-        if resident raw BYTE locator:
-            prove requested body+padding footprint under the selected format law
-            invoke the real bounded Ikea/native consumer directly
-        if mapped/remote resource:
-            use actual resource-binding/readiness; retain read state on wait
-    return consumed result, not an unprotected pointer escaping the Scope
+PROJECT_MANY(read,entry,ordinals,requested_operation):
+    def = reuse admitted definition(entry.dirent.representation,read.layer)
+    material = QUALIFY_MATERIAL(read,entry,requested_operation)
+    obtain needed geometry from material/directory proof/admitted byte header
+       bind shape once only if it remains unavailable; charge actual selection
+    if any requested ordinal>=6: extra=SELECT_EXTRA_LIST_ONCE(read,entry)
+    for each ordinal:
+        locator = inline field or EXTRA_LOCATOR(extra,ordinal-6)
+        resolve actual resource binding/readiness when recipe requires it
+        admit complete byte footprint and interpretation for needed native binding
+    if material proves direct/delta-free:
+        invoke real bounded native/Ikea consumer for requested output
+    else:
+        READ_MATERIAL_CANDIDATE(read,material,requested_operation)
+           using the qualified native bindings above
+        # Includes visible corrections/bypass, not just base-byte consumption.
+    return useful output within token lifetime, not an escaping unprotected pointer
 
 SELECT_EXTRA_LIST_ONCE(read,e):
     if StreamPack recipe:
-        block = reuse current block or Scope.bind(e.overflow_block)
+        block = reuse current block or read.token.bind(e.overflow_block)
         view = already-admitted StreamPack view of this selected block
         value = StreamPack.value(view,e.overflow_rank)
         return protected locator span and selected length
@@ -377,13 +453,13 @@ SELECT_EXTRA_LIST_ONCE(read,e):
 EXTRA_LOCATOR(extra,ordinal):
     check ordinal against selected list length
     if direct StreamPack span: return its eight-byte locator at ordinal
-    otherwise descend ordinal's fixed-fanout path under the SAME Scope
+    otherwise descend ordinal's fixed-fanout path under the SAME token
        reusing selected path/block for subsequent ordinals
     return selected block's locator at local ordinal
 ```
 
-The fixture must exercise both direct byte handoff and the additional geometry
-bind. It may not price the former then silently implement the latter. If a
+The fixture must exercise qualified direct byte handoff, selected material
+with fixed geometry but changed delta extent, and any additional geometry bind. It may not price the former then silently implement the latter. If a
 resource locator intentionally names an Orbital segment/Part instead of a raw
 body, its extra selection and eliminated address repairs are a separate proposal;
 the supplied memory-pointer interpretation is not silently replaced.
@@ -407,10 +483,11 @@ BEGIN_EDIT(basis, deltas, optional_after_schema_Owners):
     return Edit
 
 PRIVATE_OBJECT(edit, object_name):
-    if a mutable draft already exists: return it
+    find full ObjectId in inline full-ID array or high64/low64 nested Ikea maps
+    if a mutable draft already exists for THAT full identity: return it
     old = edit.basis.bind(object_name)
     make an uncaptured draft with retained-source references to old Parts
-    put it in the private draft Hashtable; return it
+    put it under BOTH identity halves in private scratch; return it
 
 WRITABLE_PART(draft, p):
     called during final materialization, or the proven nonstructural fast path
@@ -441,28 +518,43 @@ APPLY_DELTAS(edit):
        requested/priced compaction; bounds-only dirty nodes keep legal boundaries
     normalize those runs bottom-up, including neighbouring nodes needed
        to make EVERY final non-root node legal
+    FINALIZE_EXTRA_BLOCK once for each affected final local plan
     materialize final metadata/payload Parts once per changed object
     verify all new pointers name after-primary bytes in the SAME packet,
        or exact retained footprints/proofs still selected by its basis
     freeze only after all holder/bounds/topology work is complete
 
 PLAN_EXTRAS_FOR_BATCH(edit):
-    for each intent:
-        if qualified COMPLETE extra association is unchanged and no deletion:
-            skip extra-list reads; keep its current scoped association
-        else:
-            apply only offered touched ordinals / real count-layout change
-            plan UPDATE_EXTRAS against the selected/local block or paged vector
-    after ALL offered extra edits for a block:
-        decide growth/packing once, including insertions/deletions in this batch
-        derive final block/rank overrides for every affected local holder
-        add metadata-only holder intents even when no segment Owner changed
-    # Mapping/rank coordinates can change, but are never global directory ranks.
-    # Ordinary inline updates need no unbounded extra-list comparison.
+    below is the default local StreamPack path; paged-vector recipes dispatch
+       to their admitted ordinal/block edit law, not to StreamPack sidecar writes
+    omit only no-old/no-final association, or qualified COMPLETE unchanged
+       association for a nondeleted holder with a nonempty final list
+    coalesce all other after-lists/deletions per physical-prefix group/block
+    for each affected block:
+        enumerate current holders by physical-prefix cursor over its16-prefix group
+           merge with coalesced offered Entry intents to obtain FINAL live holders
+        # No global reverse map. Charge routing/cursor work, at most 16 holders.
+        call PLAN_EXTRA_REMOVAL FIRST, then PLAN_EXTRA_NONEMPTY for remaining lists
+        if final plan exceeds assigned/dead-byte/capacity policy:
+            build packed final block directly ONCE, not append-then-pack repeatedly
+        else plan only actual legal replace/append/retire operations
+        derive final block/rank/recipe overrides for every affected holder
+        add metadata-only holder intents, including holders without a segment Owner
+    # Record source certificate and private-copy requirements for every touched plane.
+    # Actual writes happen only after complete plan/capacity/effect admission.
+
+ENUMERATE_LOCAL_HOLDERS(edit,block):
+    derive index/layer/group from admitted block identity
+    high=min((group<<4)|15,maximum_prefix_for_layer), computed without u32 overflow
+    start SEEK_PHYSICAL_PREFIX at group<<4 through high under edit.basis
+    visit NEXT_CANDIDATE in that SAME layer with the PHYSICAL_PREFIX edge law
+    keep entries actually naming this block; merge offered births/deaths/replacements
+    verify <=16 live holders and unique assigned rank per holder in default recipe
+    retain every source through final transfer; no logical-key uniqueness assumed
 
 UPDATE_ENTRY(edit, before, after):
     route by exact physical prefix, not a record-row search
-    choose small-group payload, co-located leaf Part1+slot/8, or independent chunk
+    choose small-group payload, co-located leaf Part1+slot/C, or independent chunk
     if descriptor differs: record its64 B replacement in the chunk draft
     materialize that Part once after final placement; a proven locator-only batch
        can immediately take WRITABLE_PART without a balancing phase
@@ -515,14 +607,14 @@ ALLOCATE_PAYLOAD_SLOT(edit, leaf):
     slot = first zero bit in leaf's PRIVATE payload-slot mask (admitted capacity)
     require a final legal-sized output leaf with a free slot; overfull input
        remains an unplaced intent until normalization, never an invalid slot write
-    chunk_index = slot/8; row = slot%8
-    if co-located F32 recipe:
+    chunk_index = slot/C; row = slot%C
+    if co-located recipe:
         clone/edit leaf Part1+chunk_index; set private slot bit
         return leaf name, Part1+chunk_index, row
-        # New leaf initializes all four fixed512 B payload Parts once.
+        # New leaf initializes ceil(F/C) admitted64*C-byte payload Parts once.
     if leaf.chunk_names[chunk_index] is empty:
         allocate a fresh scoped name via ALLOCATE_NAMES(edit,1)
-        create a 512 B chunk with all admitted bytes initialized ONCE
+        create a 64*C-byte chunk with all admitted bytes initialized ONCE
         leaf.chunk_names[chunk_index] = that name
     clone/edit that chunk Part; set leaf's private slot bit
     return chunk name and row
@@ -591,66 +683,124 @@ SCALAR_FAST_BALANCE(path, leaf):
     otherwise propagate only changed ROUTING extrema under its admitted recipe
     # The scalar pair rule is NOT a proof for arbitrary final-batch deletion.
 
-BUILD_BALANCED_OUTPUTS(outputs, old_leaves):
-    if co-located F32 recipe:
-        form final routing/meta Part plus four payload Parts for each output
+BUILD_BALANCED_OUTPUTS(outputs,old_nodes):
+    if this storage depth is INTERNAL:
+        BUILD_INTERNAL_OUTPUTS(outputs,final_child_rows); return
+    BUILD_LEAF_OUTPUTS(outputs,final_Entry_rows,old_nodes)
+
+BUILD_INTERNAL_OUTPUTS(outputs,child_rows):
+    for each final output:
+        form one routing-metadata Part:48-byte header + child prefix/bound/name columns
+        use stable child names under admitted namespace, correct height/count
+        derive parent bounds from CHILD ROUTING endpoints, not record extrema
+        no dirent payload Parts, slot copying or subtree-segment-count field
+    record new/replaced/retired internal names and root changes as drafts
+    # FREEZE_AND_PUBLISH captures each final Object once, not here.
+
+BUILD_LEAF_OUTPUTS(outputs,Entry_rows,old_leaves):
+    if co-located recipe:
+        for each output form routing Part plus ceil(F/C) payload Parts of 64*C bytes
         copy live rows once; initialize unused admitted bytes/padding
-        retain an entire old Part only when its byte/slot interpretation stays valid
-        capture the actual FIVE Parts per output; no payload-chunk Object tombstones
-        publish output leaves, changed parents/counter and retired leaf names together
-        return
-    retain whole payload chunks only when their live rows all stay in one output
-    distribute remaining live Entry rows into exclusive output chunks
-    use real private copy/transfer; form each output chunk-name vector and local
-       payload-slot mask/map; update every affected routing slot reference
-    preserve 64-byte dirent stride and exact full-key bounds
-    retire emptied old chunks; include all new/replaced/retired chunks in packet
-    publish chunk ownership, leaf rows and parent changes together
-    # Worst-case work includes every row in the affected pair, all captures,
-    # tombstones and live old/new backing. No global payload-owner reverse map.
+        retain entire old Part only if its byte/slot interpretation remains valid
+        record actual 1+ceil(F/C) sources per output; no payload-Object tombstones
+    else:
+        retain whole payload chunks only when all live rows stay in one output
+        compact remaining rows into exclusive output chunks of 64*C bytes
+        form each chunk-name vector of ceil(F/C) names and local slot mask/map
+        retire emptied old chunks; record all new/replaced/retired chunk drafts
+    form final prefix/bounds/slot columns, preserving 64-byte dirent stride
+    record output leaves, changed parents/counter and retired names
+    # Publication is deferred until all batch repairs are complete.
+    # Worst work includes every copied row, source, tombstone and retained backing.
 ```
 
-The F32 candidate captures one five-Part leaf for a locator replacement, copying
-one 512 B payload Part and retaining the other four sources. The independent
-large-leaf control captures one one-Part payload Object, with C8 copying512 B
-or C16 copying1 KiB. Its read pays one extra catalog selection unless already selected.
-The embedded small-node control avoids that selection but captures its actual
-whole small format. The alternative multi-Part leaf must charge all of its
-admitted source slots even when it copies only one bounded Part.
+F and C come from the admitted recipe on every path. C8 uses 512-byte Parts;
+C16 uses 1,024-byte Parts, slot/C and slot%C, and half as many payload coordinates.
+F32/C8 co-location captures five Parts of one leaf after copying one 512-byte
+Part; F32/C16 captures three after copying 1,024 bytes. An independent payload
+Object captures one Part but adds a selected Object on reads. Full source fanout
+is charged even when only one Part changes.
+
+For a NEW compound leaf, current grouped native capture is a control: one fresh
+Allocation covers all admitted Parts, is consumed once, and each Part's geometry
+and readable padding is validated. Partial COW can then capture independent
+native sources, one fresh plus the retained Parts from that grouped owner;
+retained Parts may keep the WHOLE original Allocation alive. Split outputs each
+have their own valid physical owner. One Allocation is never consumed by two
+captures. Ranged native capture remains a separate proposed Orbital optimization.
 
 ## Extra Parts and schema
 
 ```
-UPDATE_EXTRAS(edit,before,after):
-    if list unchanged: retain it; return
-    if default local StreamPack recipe and list fits its current reservation:
-        draft = PRIVATE_OBJECT(extra block)
-        copy only Parts the real StreamPack replace can write
-        bind a named view to these PRIVATE bytes
-        pre-admit combined effects; replace; resolve actual issued spans
-        # Block name and rank unchanged: other dirents need no write.
-    else if default recipe and legal new reservation fits block policy:
-        append new private reservation; retarget this Entry's block/rank
-        retire old rank, if any
-    else if local block exceeds assigned/dead-byte threshold:
-        gather <=16 LIVE holder ranks; transfer to a disjoint finished block
-        build complete local rank remap; edit just those holder dirents
-        retire old block and publish all holder repairs together
-    else:
-        create/update paged extra-locator representation
-        copy one fixed-size locator block; change ancestors only for topology
-    if after has no extra list:
-        clear the real overflow flag/reference; retire its old rank locally
+PLAN_EXTRA_REMOVAL(before,after):
+    if deletion or final extra-count==0:
+        if old list exists:
+            require admitted tombstone D, or plan copy/convert to a D-enabled block
+            record private D coverage required if StreamPack.retire is executed
+            mark old rank retired in FINAL local plan; old Scopes keep old D
+        clear after overflow recipe/block/rank; return handled
+    return not_handled
 
-APPEND_SCHEMA_DEFINITIONS(edit, offered_definitions):
-    validate identifiers, layer admission and full format/Part laws
-    append immutable definition chunks; retain existing historic chunks
-    update schema's bounded directory/count, not every segment or dirent
-    capture finished schema Owners but DO NOT install a separate schema packet
-    edit.after_schema = select_private(basis, FINISHED schema changes, schema names)
-    construct/validate new-representation segments against that after-schema view
-    publish schema, segments, directory and extras in the ONE final Core packet
-    old readers retain selected before-schema; cached laws are version-qualified
+PLAN_EXTRA_NONEMPTY(before,after):
+    if PLAN_EXTRA_REMOVAL handled: return
+    if qualified unchanged: return retained
+    Unew=8*final_extra_count; Rold=selected reservation when old list exists
+    replace_legal = old live rank AND Unew<=Rold AND schema/maximum accepts Unew
+                    AND (has_U OR Unew==Rold)
+    # Full/no-U R64->U56 is ILLEGAL despite fitting; use a legal new reservation.
+    if replace_legal:
+        record required private payload and every issued U/control plane
+        plan actual StreamPack.replace, OR qualified fixed-length TuplePack locator
+           replacement when length/reservation/sidecar facts really stay unchanged
+    else:
+        choose legal reservation Rnew, respecting fixed/max/full/no-U law
+        if none exists, plan format conversion or paged vector, not illegal append
+        plan append to private payload/control/directory/lengths, and retire old D
+        # Append can write count,extent,checkpoints,R,U,whole G16 groups,D,padding.
+        # Logical suffix-only growth does not grant writes to sealed sidecars.
+    defer assigned/dead-byte/capacity decision until ALL holder plans coalesced
+
+FINALIZE_EXTRA_BLOCK(edit,final_plan):
+    if no final holders: retire the unused block Object in packet; return
+    choose final destination/source plan; materialize required private Parts ONCE
+    admit actual payload/control/directory/R/U/group-length footprints BEFORE calls
+       including preserving neighbours, zeroed reservations and readable padding
+    if packing/growth needed:
+        native transfer initializes private destination sidecars including D and
+           includes only FINAL live lists; derive local rank remap
+        omit removed ranks, never mutate old source D or any captured destination
+    else execute admitted replace/append/retire on private affected Parts
+    initialized destination sidecars are private even when payload growth is disjoint
+    list beyond StreamPack limits uses paged locator-vector recipe, never truncates
+    finish every holder coordinate repair before FREEZE_AND_PUBLISH
+    # One packing decision/block/batch; no independent intermediate publication.
+
+SCHEMA_DEFINITION(read,rep_id,layer):
+    header=read.selected_definition_header  # definition_namespace high64,next_id u64
+    if uint64(rep_id)>=header.next_id: reject outside THIS selected schema domain
+    # A newer escaping cache record can outlive an older Scope/header; ownership
+    # does not make that definition visible to the old schema.
+    name=ObjectId(header.definition_namespace,uint64(rep_id))
+    record=read.cached_qualified_definition(name) or read.token.bind(name)
+    reject absence or layer not admitted by selected record
+    admit/reuse descriptor/Part/read laws; retain actual immutable dependencies
+    cache escaping the read must OWN those dependencies, not a closed-Scope borrow
+    # No population-sized schema roster, no truncation of full ObjectId.
+
+APPEND_SCHEMA_DEFINITIONS(edit,offered_definitions):
+    # Concrete direct-name experiment control; not a selected universal schema format.
+    schema_header=PRIVATE_OBJECT(index_schema_header_name)
+    checked reserve fresh32-bit rep_ids via u64 next_id; exhaustion refuses, no reuse
+    for each offered definition:
+        validate actual descriptor/Part laws and per-layer admission mask
+        construct immutable definition record with namespace-derived ObjectId
+        capture that record's actual descriptor material into a FINISHED Owner
+    increment private header.next_id; capture changed16-byte schema header
+    edit.after_schema=select_private(basis,FINISHED definition/header changes,names)
+    publish definitions/header/actual segment+directory changes in ONE Core packet
+    # D new definitions cost D record captures/catalog changes plus one header.
+    # No existing definition or 100k-sized roster is copied/captured.
+    # Cache is namespace/Core/definition-qualified; rep_id alone is insufficient.
 
 MIGRATE_SEGMENT(edit, name, target_definition):
     select source primary/definition under edit.basis and before-schema
@@ -801,57 +951,118 @@ The paper histories that distinguish these changes are:
   Visible heads stay unchanged; packet reset waits for callback settlement,
   and storage reuse waits for its actual uses rather than only packet abort.
 
-## Loom execution and genuine waits
+## Loom execution, admission and genuine waits
 
 ```
-READY:
-    call the admitted directory/Ikea consumer directly
-    no Task, Ring, execution Policy or callback dispatcher per lookup
+SYNCHRONOUS_READY_CALL:
+    use Borrowed for a complete nonreentrant current-cut READ when permitted
+    use actual Scope basis for edits/prepare, even when execution is ready
+    call admitted native consumers directly; no Task/Ring per lookup
+    if unexpected would-wait with no accepted stationary operation:
+        finish/discard private work and end all stack borrows/Scope uses
+        return explicit unavailable/refusal with retained LOGICAL retry input
+        # No moving Scope or implicit Borrowed->old-cut promotion.
+        # A later attempt constructs a new Scope and revalidates/recomputes.
+
+ADMIT_POTENTIALLY_WAITING_OPERATION(worker,caller_owned_stationary_frame):
+    retain input/result storage and construct Scope IN PLACE in the stable frame
+    initialize fresh Task(context=frame,step=operation_step)
+    if !loom.start(worker,Task):
+        settle private ownership; return refused with frame/Worker unchanged by start
+        caller retains or destroys frame only after its actual uses end
+    else:
+        return accepted pending operation; caller contract keeps frame/Task/Scope,
+           Signal and result alive through terminal/detach AND native/physical cleanup
+    # start queues, it does not run inline. Admission itself is not readiness.
+    # No hidden unbounded pending queue or unadmitted frame wait is introduced.
 
 KNOWN_INDEPENDENT_KEYS:
-    reuse the canonical always-inline body in a bounded prefetch_for_each loop
-    require a cheap qualified probe/hint body; known keys do not reveal addresses
-    never perform a full bind/tree walk in prefetch and repeat it in consume
-    use IndependentStream only where useful work/service needs its quantum
-    no allocation/admission of one job per key
+    use prefetch_for_each / IndependentStream ONLY for synchronous, nonthrowing,
+       nonrecursive consumers that finish each indexed operation before returning
+    qualify all input/native binding/hint footprints for the complete visit
+    keep reductions local; publish before native tail transfer
+    do not wait/throw/park mid-quantum: cursor updates only after the full visit
+    if a request can need I/O/admission/producer wait, use separately retained
+       operation state in an admitted Task instead, not partial-visit replay
+    prefetch is a cheap qualified hint, never a full duplicated bind/tree walk
 
 DEPENDENT_INDEPENDENT_REQUESTS:
-    configure reused Ring storage outside the hot loop; charge its footprint
-    stable frame owns real Scope/selection/input/output and continuation state
-    discover a qualified next address; inline its admitted hint
-    musttail yield_unchanged with frame pointer; fuse ready adjacent work first
-    finish/retire directly when a result completes
-    charge actual admission, refill, bootstrap, output and final drain
-    # Ring does not expose/hide the internals of today's opaque Scope.bind.
+    configure reused Ring storage outside hot loop; charge footprint/admission
+    stable frame owns actual Scope/selection/input/output/continuation state
+    use concrete hint stages below; fuse adjacent ready work first
+    yield_unchanged at actual independent memory dependency, finish/retire on result
+    charge bootstrap, refill, output, final drain and physical cleanup
+    # Today's opaque Scope.bind remains one synchronous Orbital call.
 
-ACTUAL_WAIT(frame, resource):
-    observed = resource.owner_Lane_Signal.FULL_generation
-    status = test the ACTUAL resource/readiness predicate
-    if ready: continue; if failed: report real error and settle ownership
-    record pending wait and observed generation in the stable frame
-    retire/remove the native continuation at a returned owner boundary BEFORE
-       ending or rebinding anything it borrows; detach alone removes no Ring slot
-    keep Scope/frame/input/output through active AND overflow retirement
-    end any Borrowed-only access before returning
-    retain the real Scope and original dependencies in stationary Task
-    hold no accepted Prepared across wait
-    return Progress.wait(owner_Lane_Signal, observed)
-    # Cleanup may pulse Signal: never refresh observed without rechecking predicate.
-    on wake: recheck/repark; a generation change grants no storage/mapping rights
-    keep Signal/WaitLink through unenrollment; foreign completion uses retained
-       physical-record Message, never a pointer to a destroyable caller Signal
-    after real readiness validate mapping/dependencies; finish or recompute stale work
-    cancellation releases logical interest, not unretired physical work
-    return catalog/destruction work to its assigned owner Lane
+ACTUAL_WAIT(frame,resource):
+    require ALREADY accepted stationary Task with the retained-frame contract above
+    observed=resource's REAL owner-Lane Signal FULL generation
+    status=test actual resource predicate; if ready continue, if failed settle/error
+    save status/dependencies/observed in stable frame
+    retire/remove native continuations at returned boundary before ending borrows
+       active AND overflow frames count; Task detach alone removes no Ring slot
+    hold no accepted Prepared across wait; keep Scope/frame/Signal through enrollment
+    return Progress.wait(actual_Signal,observed)
+    # Cleanup may pulse Signal; never refresh observed without retesting predicate.
+    on wake: recheck/repark; generation change grants no mapping/storage rights
+    revalidate dependencies/basis after actual readiness, recompute stale work
+    foreign completion retains physical-record Message, never a destroyable Signal
+    cancellation ends interest; physical work retires independently on its owner Lane
+
+ON_CAPACITY_REFUSAL(kind):
+    distinguish native Arena/Pool inventory from descriptor/catalog/proof PMR,
+       Task slots, mapping/I/O readiness and caller effect/scratch capacity
+    refill or wait on the ACTUAL owner's supplied predicate/Signal contract
+    absent such a contract, report refusal; do not invent a PMR Signal
+    waking a native Pool does not establish PMR/catalog/Task capacity
 ```
 
-Scope reuse across separate requests means deliberately retained snapshots. A
-fresh-read workload gets fresh Scope/transaction semantics on both sides.
-Independent reciprocal throughput and a single dependent latency path remain
-separate results.
+Concrete Boundlist/hint choices use current source/phase contracts:
+
+| Stage | Qualified read/hint and returned boundary |
+| --- | --- |
+| Core lookup | `Borrowed.bind`/`Scope.bind` is synchronous today. ObjectId alone supplies no qualified bucket/history address. Do not hint a raw mutable catalog cell or claim a yield inside this call. Separate Orbital staging remains proposed. |
+| Raw direct endpoint source | `prepare_lower_bound` may COMPLETE the search. Hint qualified endpoint-column spans BEFORE this search if using a Ring visit; do not call raw prepare and then describe its empty local window as hidden search latency. |
+| Prepared numeric binding | Binding/sample setup is retained and charged. Current phase defers endpoint reads; hint its `local_window` (bracket/full array), retain phase and eligibility, yield, then `finish`. Correction can read outside the bracket; full-source permission remains required. |
+| Width source | Available checkpoints route to the 16-width local window. Hint that window, retain exact version/source/eligibility, yield, finish. Checkpoint reads already happened during prepare and count. |
+| Selected routing rank | Derive/hint actual child-name word and any needed minimum/high-edge or long-key-tail bytes from this selected node. Separate planes/gaps require distinct qualification. |
+| Child Object | Resolve its stable ObjectId, then hint selected child's required endpoint columns. No former native child address is reused across versions. |
+| Selected payload slot | Derive Part ordinal or resolve independent chunk; hint the required descriptor line(s). After qualifying actual material, derive/hint requested native Part spans, not an unconditional whole64 B enumeration result. |
+| Extra list | Hint actual selected directory/checkpoint/length spans, then locator-list bytes after list location is known; retain admission once per list, not per ordinal. |
+
+Use current `bind_demand`/`bind_dependency` and retained policy with actual
+contiguous grants. Current irregular classes select a first-line hint even for
+large declared sizes; they do not cover all search columns. Compare qualified
+linear demands or bounded explicit fixed-line controls when needing several
+lines, charging each actual hint. Never enlarge one span across gaps, assert
+residency from prefetch, or allocate one job per native stage. Record source
+kind, exact spans/lines hinted, searches done before yield and remaining
+child/payload dependencies. Direct fused work remains the control. These
+choices require consumer composition, not a new Loom API.
+
+Scope cohorts deliberately retain snapshots. Borrowed current calls and fresh
+Scopes have distinct lifetimes even when both satisfy a current-read request.
+Compare matching request semantics and report actual enrollment costs. Serial
+latency, independent throughput and true waits remain separate observations.
 
 ## Consequential paper counterexamples
 
+- Cache a newer definition while an old schema/header stays live: reject its ID
+  outside old next_id BEFORE using owned cache bytes; lifetime is not visibility.
+- Two Objects share low64 but have different high64: their drafts remain distinct.
+- An INTERNAL underflow builds routing/child-name Parts only, never leaf payloads.
+- suffix14->slot2 and suffix15->slot0: SEEK14 then NEXT returns15/slot0.
+- Aactual[1,2]/fence[0,10], Bactual[5,6]/fence[4,20], q5: an exact miss in A
+  continues to B in the same region, including singleton and fast-seek paths.
+- Fixed geometry/pointers with base7 and newly committed correction9 must use
+  selected material, not return7 from the base-only native path.
+- Collection corrections P/Q/P: compacting P preserves Q's pending contribution.
+- Full/no-U R64->U56 takes a legal new reservation; removal edits private D first.
+- C16 slots15/16 select chunk0/1 and rows15/0 with 1,024-byte extents; C8 differs.
+- Append one definition at 100k historic records: capture one new record and one
+  header, retain previous records, preserve both before/after schema views.
+- Ready would-wait with no admitted Task returns a defined refusal/retry outcome;
+  no stack Scope moves, Borrowed promotion or half-quantum stream replay occurs.
 - Change only the seventh Part pointer, keeping all 64 dirent bytes, representation,
   bounds and block/rank equal. A fresh Scope sees the new extra pointer; old and
   late-discovering Scopes see the old one. The segment+extra block publish together.
@@ -912,7 +1123,8 @@ record:
     current, private, retained, reusable and mapped/resident byte inventories
 ```
 
-The measurement consumer must actually use the full dirent and requested Part
-bytes. Direct byte-pointer handoff needs the graph negative checks above.
+The mechanism enumeration consumer uses all 64 dirent bytes. A projected
+consumer uses only its requested descriptor fields and actual selected material
+bytes; both have independently matched output and binding costs. Direct byte-pointer handoff needs the graph negative checks above.
 Dropping required binding, old-reader retention or publication work is not an
 assembly optimization.
