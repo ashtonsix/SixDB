@@ -5,10 +5,14 @@ Ashton's index directory with tables, Ikea hashtables and boundlists, and how
 to maintain it through physical-key assignment, rebalance and Orbital publication.
 The executable spike now uses real Ikea containers and Orbital/Loom allocation,
 Objects and publication. Storage controls, five-layer edits, ordered placement,
-directory pressure, staged reads and full byte-key search have separate drivers.
+directory pressure, staged reads, full byte-key search and memory locators have
+separate drivers.
 The [findings](FINDINGS.md) track measurements, rejected cases and remaining work;
 this document retains the implementation questions. The [prior-art survey](PRIOR-ART.md)
 supplies implementation mechanisms and a source-based assessment of Calico.
+The [coverage audit](PROGRESS.md) distinguishes completed experiments from work
+still required by this plan; [memory locators](LOCATORS.md) owns that experiment's
+encoding, lifetime argument and measurements.
 
 The current update implementations remain far behind the historical Calico/LMDB
 scale. Findings include broad-copy failures, an Orbital ObjectId hash defect

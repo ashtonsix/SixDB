@@ -1,9 +1,10 @@
 # Selected index-directory evidence
 
 The selection keeps matched controls, all repetitions and counters for the
-executable storage, composed, placement, directory-pressure, Ring and byte-key
-families. It supports the negative update-cost finding and the cross-platform
-read/write tradeoffs in [FINDINGS.md](../FINDINGS.md). Source snapshots, build
+executable storage, composed, placement, directory-pressure, Ring, byte-key and
+memory-locator families. It supports the negative update-cost finding and the
+cross-platform read/write tradeoffs in [FINDINGS.md](../FINDINGS.md) and
+[LOCATORS.md](../LOCATORS.md). Source snapshots, build
 receipts, binaries and omitted logs are recovered through each `artifact.json`.
 This is selected experimental evidence, not a production qualification record.
 Earlier layout/capture cuts retain the pressure and, where cited, Ring panels;
@@ -26,6 +27,9 @@ retain the complete varied matrix. Root cuts retain only the new pressure panel.
 | [root-zen5](root-zen5/) | `20261020T082118Z-7dff8748` | Root-row chunking loss with matched unchanged-root controls. |
 | [root-intel](root-intel/) | `20261020T082123Z-b7613397` | Same root control on Granite Rapids. |
 | [root-neon](root-neon/) | `20261020T082129Z-75ce1480` | Same root control on Neoverse V2. |
+| [locators-zen5](locators-zen5/) | `20261020T095313Z-9f1f8a5c` | Raw/full-cell/compact-cell read and update comparison, with metadata and phase counters. |
+| [locators-intel](locators-intel/) | `20261020T095319Z-6a86bb77` | Same final locator source on Granite Rapids. |
+| [locators-neon](locators-neon/) | `20261020T095325Z-5433b7ca` | Same final locator source on Neoverse V2. |
 
 The capture trio uses the code frozen by worker group
 `20261020T074653Z-102689a1`. Intel was rerun from that group's exact captured
@@ -37,6 +41,15 @@ The packed trio uses worker group `20261020T081328Z-040469c9`; the root trio
 uses `20261020T082111Z-e45fea12`. All members of each group share its frozen
 source, and Intel's environment is inside its member configuration. Root jobs
 run pressure only; packed jobs check and measure all six drivers.
+
+The locator trio uses group `20261020T095307Z-57e5ea74`, after the foreign-cell
+admission and post-teardown proof checks were added. It checks and measures only
+the new locator driver: three populations, two summary grains, three locator
+arms, five trials, 16,384 reads and 64 updates per trial. This retains the full
+matched locator panel, including larger cells and losing read costs. Earlier
+locator sweeps are superseded diagnostics. Each selected archive includes its
+successful `locators-check` receipt and output; routine check logs are not
+duplicated in Git.
 
 The resolution pair uses the same reused Zen 5 host. Public `capture.py` derived
 `index-directory-prefix-repaired` from `index-directory-prefix-old` by replacing
@@ -67,6 +80,10 @@ in `build/clang/index-directories-sanitize` (9.7 seconds). Final pressure cut
 `20261020T082833.907864Z` adds the 4,097-prefix retained-root shrink check.
 That extended check also passed ASan/UBSan (8.8 seconds).
 Those checks are semantic/lifetime evidence, not timing measurements.
+The final locator source also passed all seven Release checks in captured run
+`20261020T094921.401815Z`. All seven ASan/UBSan checks then passed in 25.84
+seconds; locator checks account for 13.45 seconds. These are checks of current
+fixture behavior, not a concurrency or recovery qualification.
 
 Use `workbench/tools/artifacts.py fetch PATH NEW_DIRECTORY` on any selected
 directory to recover its complete verified archive. Raw `measurements/*.csv`

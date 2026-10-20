@@ -56,6 +56,14 @@ directory economics from leaf measurements. The
 [hashtable benchmarks](../../benchmarks/hashtable/README.md) provide an existing
 actual Abseil control if a loss needs resolver attribution.
 
+The [memory-locator comparison](LOCATORS.md) now exercises the indirection
+mechanism with actual Orbital-selected segment Parts. It removes address-only
+directory repair at the measured cost of dependent reads and cell ownership.
+Its compact and full-cell controls retain that tradeoff rather than selecting
+indirection from the prior-art description alone. Same-Scope selection and
+proof retention come from the current composition; Calico and Bw-tree do not
+establish those obligations for SixDB.
+
 The first comparisons follow directly: plain per-layer arrays, the proposed
 composition, coarse versus local directory edits, compact ordering metadata,
 and simple versus hierarchical placement. Add a borrowed mechanism when one

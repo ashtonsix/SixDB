@@ -41,12 +41,12 @@ class Index {
     std::array<std::vector<unsigned>,5> overflow_prefixes_;
     std::map<SegmentKey,std::set<std::uint16_t>> dirty_positions_;
     unsigned j_{},key_bytes_{},generation_{},page_bits_{},aux_parts_{},definitions_{},summary_chunk_{};
-    bool compact_tables_{},directory_branches_{},packed_pages_{},compact_hashes_{};
-    unsigned table_row_chunk_{},root_row_chunk_{};
+    bool compact_tables_{},directory_branches_{},packed_pages_{},compact_hashes_{},indirect_parts_{};
+    unsigned table_row_chunk_{},root_row_chunk_{},locator_mode_{};
     void edit_model(const Row&,bool,std::set<SegmentKey>&);
     Image segment_image(SegmentKey,unsigned representation) const;
     u64 extra_locator(Store::Scope&,unsigned,const Dirent&,unsigned)const;
-    const Summary* summary_address(Store::Scope&,unsigned,const Dirent&,Control,unsigned)const;
+    const Summary* summary_address(Store::Scope&,unsigned,const Dirent&,Selection,unsigned)const;
     Image schema_image()const;
     Selection selected_directory(Store::Scope&,unsigned,u64,Search) const;
     Selection physical_directory(Store::Scope&,unsigned,unsigned) const;
@@ -54,7 +54,7 @@ class Index {
     Outcome auxiliary(Store::Scope&,unsigned,const Dirent&,Outcome,unsigned) const;
 public:
     Store store;
-    Index(Runtime&,std::pmr::memory_resource&,unsigned j,unsigned key_bytes=8,unsigned page_bits=0,unsigned auxiliary_parts=0,unsigned definitions=3,unsigned summary_chunk=0,bool compact_tables=false,bool directory_branches=false,unsigned table_row_chunk=0,bool packed_pages=false,bool compact_hashes=false,unsigned root_row_chunk=0);
+    Index(Runtime&,std::pmr::memory_resource&,unsigned j,unsigned key_bytes=8,unsigned page_bits=0,unsigned auxiliary_parts=0,unsigned definitions=3,unsigned summary_chunk=0,bool compact_tables=false,bool directory_branches=false,unsigned table_row_chunk=0,bool packed_pages=false,bool compact_hashes=false,unsigned root_row_chunk=0,unsigned locator_mode=0);
     void extend_schema(unsigned definitions);
     EditStats edit(std::span<const Row> additions,std::span<const u64> removals={},bool selective=true);
     Outcome seek(Store::Scope&,unsigned layer,u64 logical,Search=Search::boundlist,unsigned auxiliary_parts=0) const;
@@ -65,6 +65,7 @@ public:
     std::vector<Row> rows() const;
     u64 logical_bytes() const;
     u64 cache_bytes(Store::Scope&)const;
+    u64 locator_bytes(Store::Scope&)const;
     unsigned segments() const {return segments_.size();}
 };
 std::vector<Row> dataset(unsigned count,unsigned j,unsigned duplicate=1,u64 spacing=257);

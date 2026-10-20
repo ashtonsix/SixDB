@@ -30,3 +30,8 @@ add_executable(index_directory_keys keys.cpp)
 sixdb_target(index_directory_keys)
 target_link_libraries(index_directory_keys PRIVATE ikea::boundlist)
 add_test(NAME index_directory_keys_check COMMAND index_directory_keys --check)
+
+add_executable(index_directory_locators locators.cpp)
+sixdb_target(index_directory_locators)
+target_link_libraries(index_directory_locators PRIVATE index_directory_core)
+add_test(NAME index_directory_locators_check COMMAND index_directory_locators --check)

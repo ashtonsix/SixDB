@@ -13,8 +13,13 @@ void release_geometry(Geometry* p) noexcept {
     if(!p || --p->references)return;auto* r=p->memory;
     std::destroy_at(p);r->deallocate(p,sizeof(Geometry),alignof(Geometry));
 }
-void Control::retain() const noexcept {retain_hash(hash);retain_geometry(geometry);}
-void Control::release() const noexcept {release_hash(hash);release_geometry(geometry);}
+void retain_locators(LocatorCells* p)noexcept{if(p)++p->references;}
+void release_locators(LocatorCells* p)noexcept {
+    if(!p || --p->references)return;auto* r=p->memory;
+    std::destroy_at(p);r->deallocate(p,sizeof(LocatorCells),alignof(LocatorCells));
+}
+void Control::retain() const noexcept {retain_hash(hash);retain_geometry(geometry);retain_locators(locators);}
+void Control::release() const noexcept {release_hash(hash);release_geometry(geometry);release_locators(locators);}
 void Physical::retain(Value* p) noexcept {orbital::retain(p);}
 void Physical::release(Value* p) noexcept {orbital::release(p);}
 orbital::Result<Physical::Value*> Physical::capture(std::pmr::memory_resource& m,const Control& c,std::span<const PartSource> parts) noexcept {
@@ -29,7 +34,8 @@ bool Physical::accepts(Value* v,orbital::ObjectId id,u64) noexcept {
 bool Physical::accepts_resource(Value* v,std::pmr::memory_resource& m) noexcept {return v && Selection{v}.control().memory==&m;}
 bool Physical::compatible(Value* a,Value* b) noexcept {
     const auto x=Selection{a}.control(),y=Selection{b}.control();
-    return x.kind==y.kind && x.layer==y.layer && x.prefix==y.prefix && x.count==y.count && x.key_bytes==y.key_bytes;
+    return x.kind==y.kind && x.layer==y.layer && x.prefix==y.prefix && x.count==y.count && x.key_bytes==y.key_bytes &&
+        x.representation==y.representation && x.indirect_parts==y.indirect_parts && x.locators==y.locators;
 }
 Physical::Footprint Physical::footprint(Value* p) noexcept {
     return {orbital::object_detail::representation_bytes(Selection{p}.control(),orbital::PartOwners::independent_allocation),0};
@@ -53,7 +59,24 @@ Runtime::~Runtime() {
 std::span<const std::byte> bytes(Selection s,unsigned p) {
     require(s && p<s.part_count());return {take(s.part(p)).address(),take(s.control().extent(p))};
 }
+u64 part_locator(Selection s,unsigned p) {
+    require(s && p<s.part_count());const auto c=s.control();
+    return c.indirect_parts?reinterpret_cast<u64>(c.locators->address(c.first+p)):reinterpret_cast<u64>(take(s.part(p)).address());
+}
+orbital::Result<const std::byte*> resolve_locator(Selection s,u64 locator,unsigned p) {
+    if(!s || p>=s.part_count())return std::unexpected(orbital::Error::invalid_argument);
+    const auto c=s.control();if(!c.indirect_parts)return reinterpret_cast<const std::byte*>(locator);
+    // Validate the pointer against the selected proof before dereferencing any
+    // supplied address. A cell never selects a different Object or snapshot.
+    if(locator!=reinterpret_cast<u64>(c.locators->address(c.first+p)))return std::unexpected(orbital::Error::invalid_argument);
+    const auto cell=c.locators->reference(c.first+p);
+    if(cell.object!=segment_id(c.layer,c.prefix) || cell.ordinal!=c.first+p)
+        return std::unexpected(orbital::Error::invalid_argument);
+    return take(s.part(p)).address();
+}
+Control part_control(const orbital::Part<Control>* p){require(p);return p->control;}
 Store::Owner capture(Runtime& rt,Store& store,Control c,const Image& image,Selection old,bool selective,CopyStats& stats,bool same_geometry) {
+    require(c.first==0); // Complete images; selected-copy proofs use source(part).
     auto& allocation=rt.allocations;auto& sources=rt.sources;auto& extents=rt.extents;
     allocation.resize(c.parts);sources.resize(c.parts);
     if(same_geometry)require(old && old.part_count()==c.parts);
@@ -82,6 +105,17 @@ Store::Owner capture(Runtime& rt,Store& store,Control c,const Image& image,Selec
     const bool reused=same_geometry || (old && std::ranges::equal(old.control().geometry->extents,extents));
     if(reused)c.geometry=old.control().geometry; // The source Scope protects it.
     else c.geometry=std::construct_at(static_cast<Geometry*>(c.memory->allocate(sizeof(Geometry),alignof(Geometry))),*c.memory,extents);
+    const bool reused_locators=c.indirect_parts && old && old.control().indirect_parts && old.part_count()==c.parts &&
+        old.control().first==c.first && old.control().compact_locators==c.compact_locators &&
+        old.control().kind==c.kind && old.control().locators->object==segment_id(c.layer,c.prefix);
+    if(c.indirect_parts) {
+        if(reused_locators)c.locators=old.control().locators;
+        else {
+            c.locators=std::construct_at(static_cast<LocatorCells*>(c.memory->allocate(sizeof(LocatorCells),alignof(LocatorCells))),
+                *c.memory,segment_id(c.layer,c.prefix),c.parts,c.compact_locators);
+            stats.locator_created_bytes+=c.locators->bytes();
+        }
+    }
     ++stats.objects;
     if(c.kind==Kind::directory || c.kind==Kind::directory_page || c.kind==Kind::directory_branch) {
         stats.dirent_bytes+=image[3].size();
@@ -90,6 +124,7 @@ Store::Owner capture(Runtime& rt,Store& store,Control c,const Image& image,Selec
     const auto start=std::chrono::steady_clock::now();auto owner=take(store.capture(c,sources));
     stats.realization_ns+=std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now()-start).count();
     if(!reused)release_geometry(c.geometry);
+    if(c.indirect_parts && !reused_locators)release_locators(c.locators);
     sources.clear();allocation.clear();extents.clear();return owner;
 }
 void publish(Store& store,const Store::Scope& basis,std::span<const Store::Change> changes) {

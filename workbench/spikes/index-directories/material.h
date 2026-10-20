@@ -5,7 +5,10 @@
 #include <array>
 #include <cstdio>
 #include <cstdlib>
+#include <memory>
+#include <memory_resource>
 #include <source_location>
+#include <span>
 #include <vector>
 
 namespace directory_spike {
@@ -31,11 +34,37 @@ struct alignas(64) Dirent {
 static_assert(sizeof(Dirent)==64);
 enum class Kind : unsigned { segment, directory, schema, directory_page, overflow, directory_branch };
 struct PrefixHash;
+inline orbital::ObjectId segment_id(unsigned,unsigned);
 struct Geometry {
     std::pmr::memory_resource* memory;
     unsigned references{1};
     std::pmr::vector<std::size_t> extents;
     Geometry(std::pmr::memory_resource& r,std::span<const std::size_t> e):memory(&r),extents(e.begin(),e.end(),&r){}
+};
+struct PartReference {orbital::ObjectId object;unsigned ordinal;};
+// An experimental memory locator points at one immutable cell. The cell names
+// the existing segment Object and Part; the selected snapshot supplies bytes.
+// Every segment realization using these addresses owns the cell set. Coupled
+// directory/segment publication and the same Core/Scope protect late discovery.
+struct LocatorCells {
+    std::pmr::memory_resource* memory;
+    unsigned references{1};
+    unsigned count;
+    orbital::ObjectId object;
+    void* data;
+    bool compact;
+    LocatorCells(std::pmr::memory_resource& r,orbital::ObjectId id,unsigned n,bool small):memory(&r),count(n),object(id),
+        data(r.allocate(n*(small?sizeof(unsigned):sizeof(PartReference)),small?alignof(unsigned):alignof(PartReference))),compact(small) {
+        for(unsigned p=0;p<count;++p) {
+            if(compact)std::construct_at(static_cast<unsigned*>(data)+p,p);
+            else std::construct_at(static_cast<PartReference*>(data)+p,PartReference{object,p});
+        }
+    }
+    ~LocatorCells(){memory->deallocate(data,count*stride(),compact?alignof(unsigned):alignof(PartReference));}
+    std::size_t stride()const{return compact?sizeof(unsigned):sizeof(PartReference);}
+    const void* address(unsigned p)const{return static_cast<const std::byte*>(data)+p*stride();}
+    PartReference reference(unsigned p)const{return compact?PartReference{object,static_cast<const unsigned*>(data)[p]}:static_cast<const PartReference*>(data)[p];}
+    std::size_t bytes()const{return sizeof(LocatorCells)+count*stride();}
 };
 // Prototype interpretation, not a wire format. Geometry has no fixed Part count.
 // Segment: positions, minima, maxima, summaries, keys, auxiliary payload.
@@ -50,8 +79,13 @@ struct Control {
     unsigned summary_chunk{};
     bool compact_table{};
     unsigned table_row_chunk{};
+    bool indirect_parts{};
+    bool compact_locators{};
+    LocatorCells* locators{};
     bool valid(std::pmr::memory_resource& r) const noexcept {
-        return memory==&r && geometry && geometry->memory==&r && parts && first<geometry->extents.size() && parts<=geometry->extents.size()-first && layer<5 && representation && key_bytes>=8;
+        return memory==&r && geometry && geometry->memory==&r && parts && first<geometry->extents.size() && parts<=geometry->extents.size()-first && layer<5 && representation && key_bytes>=8 &&
+            (indirect_parts ? (kind==Kind::segment && locators && locators->memory==&r && first<=locators->count && parts<=locators->count-first &&
+                locators->compact==compact_locators && locators->object==segment_id(layer,prefix)):!locators);
     }
     auto* resource() const noexcept { return memory; }
     std::size_t part_count() const noexcept { return parts; }
@@ -107,6 +141,10 @@ struct Runtime {
     Runtime(); ~Runtime();
 };
 std::span<const std::byte> bytes(Selection,unsigned);
+u64 part_locator(Selection,unsigned);
+orbital::Result<const std::byte*> resolve_locator(Selection,u64,unsigned);
+// Borrowed proof; the escaping Part, rather than a Scope, protects this copy.
+Control part_control(const orbital::Part<Control>*);
 template<class T> std::span<const T> values(Selection s,unsigned p) {
     const auto b=bytes(s,p); require(b.size()%sizeof(T)==0);
     return {reinterpret_cast<const T*>(b.data()),b.size()/sizeof(T)};
@@ -125,7 +163,7 @@ public:
     }
     bool supplied(std::size_t p)const{return p<supplied_.size() && supplied_[p];}
 };
-struct CopyStats {u64 allocated{},copied{},shared{},objects{},dirent_bytes{},hash_created_bytes{},small_requests{},large_requests{},realization_ns{};};
+struct CopyStats {u64 allocated{},copied{},shared{},objects{},dirent_bytes{},hash_created_bytes{},small_requests{},large_requests{},realization_ns{},locator_created_bytes{};};
 Store::Owner capture(Runtime&,Store&,Control,const Image&,Selection old,bool selective,CopyStats&,bool same_geometry=false);
 void publish(Store&,const Store::Scope&,std::span<const Store::Change>);
 } // namespace directory_spike

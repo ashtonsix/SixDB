@@ -30,7 +30,7 @@ record-absence verdict. These numbers do not establish complete Engine cost.
 
 ## What the prototype actually does
 
-Six drivers use one implementation where practical:
+Seven drivers use one implementation where practical:
 
 | Driver | Boundary |
 | --- | --- |
@@ -40,6 +40,7 @@ Six drivers use one implementation where practical:
 | `pressure` | Sparse directory growth, coarse/paged/branched layouts, summary and table copy units, overflow, representation history and update phase attribution. |
 | `staged` | Serial, manual lookahead and actual Loom Ring around deferred summary consumption, including active/overflow retained readers. |
 | `keys` | Generic full-byte Boundlist versus ordinary search, including long common prefixes, binary zeros, duplicates and virtual large directories. |
+| `locators` | Raw addresses versus stable memory-reference cells, through actual Part consumption and value publication, with retained readers and escaping Parts. |
 
 Build with `-DSIXDB_SPIKES=index-directories`. On Linux, for a captured checked
 run with CPU affinity and median/min/max summaries:
@@ -60,7 +61,7 @@ and do not change the prefix identifying a segment. Exact inclusive occupied
 maxima preserve repeated bounds and first-duplicate routing; partial summary
 overlap still requires evaluation/descent by a future query operator.
 
-The 64-byte prototype dirent contains six 64-bit addresses, representation ID
+The 64-byte prototype dirent contains six 64-bit locators, representation ID
 (32 bits), flags (16), overflow rank (16), overflow block (32), and a revision
 cross-check (32). This revision is not Orbital's snapshot cut. Actual MVCC,
 Control and geometry metadata live outside those bytes and must be charged.
@@ -341,16 +342,21 @@ directory is not a general solution for the possible 2^32 segments. No arbitrary
 48-bit population has been materialized, no production format is selected, and
 the local-publication fixture still has the failure/recovery limits above.
 
-One remaining locator experiment is especially relevant: separate changes in
-logical routing/representation from changes in raw addresses. A value-only
-update keeps its logical bounds, but this prototype repairs dirents whenever
-their stored byte addresses change. An indirect memory-locator control could
-trade that repair for dependent resolution under the already selected Orbital
-snapshot. It would keep segment identity at layer plus prefix and must prove
-locator lifetime through disappearance, recreation and escaped Parts. The
-current direct-address fixture does not establish that encoding, its eight-byte
-fit, read cost or retention economics. Calico and Bw-tree supply prior art for
-the implementation question; their publication semantics do not carry over.
+The [memory-locator experiment](LOCATORS.md) separates changes in logical
+routing/representation from changes in raw addresses. It compares direct byte
+addresses with immutable reference cells resolved under the already selected
+Orbital segment. Value-only publication can then leave the directory, hash and
+overflow Objects unchanged. The experiment retains segment identity at layer
+plus prefix, charges the cell metadata and checks disappearance, recreation,
+actual Object-version advancement and escaping Part proofs. Calico and Bw-tree
+supply prior art for this implementation question; their publication semantics
+do not carry over. Mapped/resource locators and portable reopen remain open.
+On the final Zen 5 many-prefix panel, compact cells reduce updates from 68.18
+to 25.23 µs, with reads rising from 540 to 567 ns and 1.08 MB of locator storage.
+Intel and ARM show the same direction. Full-cell and compact controls, both
+summary grains, phase attribution and retained metadata are in the owned report.
+This removes a measured directory-repair cost; the remaining publisher still
+falls well short of the historical peer scale above.
 
 The [Engine-versus-LMDB driver](ENGINE-VS-LMDB.md) remains a proposal. These
 component measurements describe local fixture execution; direct peer

@@ -24,7 +24,7 @@ Image pack_overflow(std::span<const Selection> segments) {
     ikea::no_coverage effects;require(bool(sp::initialize(*bound,effects)));
     for(auto s:segments) {
         const auto extras=s.part_count()-6;std::vector<u64> pointers(extras);
-        for(unsigned i=0;i<extras;++i)pointers[i]=reinterpret_cast<u64>(take(s.part(6+i)).address());
+        for(unsigned i=0;i<extras;++i)pointers[i]=part_locator(s,6+i);
         const auto payload=std::as_bytes(std::span(pointers));
         require(bool(sp::append(*bound,payload,payload.size(),effects)));
     }
@@ -43,14 +43,20 @@ unsigned boundary(std::span<const u64> maxima,u64 key,Search method,bool strict=
     const auto source=ikea::boundlist::direct_source<u64>{maxima.data(),unsigned(maxima.size())};
     return strict?ikea::boundlist::upper_bound(source,key):ikea::boundlist::lower_bound(source,key);
 }
-template<class T> std::span<const T> located(const Dirent& d,unsigned p,unsigned count) {
-    return {reinterpret_cast<const T*>(d.parts[p]),count};
+const std::byte* located_address(Selection s,const Dirent& d,u64 locator,unsigned p) {
+    // Keep the raw-address control's original pointer-load path. Only the
+    // indirect kind performs cell validation and selected-Part resolution.
+    return d.flags&4?take(resolve_locator(s,locator,p)):reinterpret_cast<const std::byte*>(locator);
+}
+template<class T> std::span<const T> located(Selection s,const Dirent& d,unsigned p,unsigned count) {
+    return {reinterpret_cast<const T*>(located_address(s,d,d.parts[p],p)),count};
 }
 Definition definition(unsigned id,unsigned width,unsigned chunk=0) {return {id,width,id<=3?31u:((1u<<(id%5))|(1u<<((id+1)%5))),unsigned(id%2==0),chunk};}
 unsigned chunks(unsigned n,unsigned grain){return grain ? (n+grain-1)/grain:1;}
 unsigned summary_part(unsigned chunk){return chunk?5+chunk:3;}
 unsigned interpretation(Selection s,const Dirent& d,Selection schema,unsigned layer,unsigned key_bytes) {
     const auto c=s.control();require(c.representation==d.representation && c.revision==d.revision && (d.flags&1));
+    require(bool(d.flags&4)==c.indirect_parts);
     const auto definitions=values<Definition>(schema,0);require(d.representation && d.representation<=definitions.size());
     const auto def=definitions[d.representation-1];
     require(def.id==d.representation && def.key_bytes==key_bytes && (def.allowed_layers&(1u<<layer)) && def.summary_chunk==c.summary_chunk);
@@ -58,8 +64,8 @@ unsigned interpretation(Selection s,const Dirent& d,Selection schema,unsigned la
 }
 Dirent describe(Selection s) {
     require(bool(s));Dirent d;
-    for(unsigned p=0;p<6;++p)d.parts[p]=reinterpret_cast<u64>(take(s.part(p)).address());
-    const auto c=s.control();d.representation=c.representation;d.revision=c.revision;d.flags=1|(c.parts>6?2:0);return d;
+    for(unsigned p=0;p<6;++p)d.parts[p]=part_locator(s,p);
+    const auto c=s.control();d.representation=c.representation;d.revision=c.revision;d.flags=1|(c.parts>6?2:0)|(c.indirect_parts?4:0);return d;
 }
 Dirent dirent_at(Selection directory,unsigned prefix,unsigned rank) {
     const auto c=directory.control();
@@ -78,9 +84,9 @@ Dirent known_dirent(Selection directory,unsigned prefix) {
 }
 template<class Resolve> PendingRead local_prepare(Selection s,const Dirent& d,u64 key,Search search,unsigned recipe,Resolve resolve) {
     const auto n=s.control().count;
-    const auto maxima=located<u64>(d,2,n);const auto rank=boundary(maxima,key,search);
+    const auto maxima=located<u64>(s,d,2,n);const auto rank=boundary(maxima,key,search);
     if(rank==maxima.size())return {};
-    return {resolve(rank),located<u64>(d,1,n)[rank],s.control().prefix,located<std::uint16_t>(d,0,n)[rank],recipe,d.overflow_block,d.overflow_rank,d.flags};
+    return {resolve(rank),located<u64>(s,d,1,n)[rank],s.control().prefix,located<std::uint16_t>(s,d,0,n)[rank],recipe,d.overflow_block,d.overflow_rank,d.flags};
 }
 } // namespace
 Summary interpret_summary(Summary s,unsigned recipe) {
@@ -99,8 +105,8 @@ void EntryState::edit(const Row& row,bool add) {
     if(row.valid) {if(add)++not_null;else --not_null;sum+=add?row.value:-row.value;repeated(field,row.value,add);}
 }
 Summary EntryState::summary() const {return {count,not_null,field.empty()?0:field.begin()->first,field.empty()?0:field.rbegin()->first,sum};}
-Index::Index(Runtime& rt,std::pmr::memory_resource& memory,unsigned j,unsigned key_bytes,unsigned page_bits,unsigned auxiliary_parts,unsigned definitions,unsigned summary_chunk,bool compact_tables,bool directory_branches,unsigned table_row_chunk,bool packed_pages,bool compact_hashes,unsigned root_row_chunk)
-    :rt_(rt),memory_(memory),j_(j),key_bytes_(key_bytes),page_bits_(page_bits),aux_parts_(auxiliary_parts),definitions_(definitions),summary_chunk_(summary_chunk),compact_tables_(compact_tables),directory_branches_(directory_branches),packed_pages_(packed_pages),compact_hashes_(compact_hashes),table_row_chunk_(table_row_chunk),root_row_chunk_(root_row_chunk),store(memory) {require(j<=6 && key_bytes>=8 && page_bits<=8 && auxiliary_parts<=4 && definitions>=3 && (!summary_chunk || summary_chunk>=64) && (!directory_branches || page_bits) && (!packed_pages || (page_bits && !directory_branches)) && (!table_row_chunk || table_row_chunk<=256) && root_row_chunk<=256 && (!root_row_chunk || !directory_branches));}
+Index::Index(Runtime& rt,std::pmr::memory_resource& memory,unsigned j,unsigned key_bytes,unsigned page_bits,unsigned auxiliary_parts,unsigned definitions,unsigned summary_chunk,bool compact_tables,bool directory_branches,unsigned table_row_chunk,bool packed_pages,bool compact_hashes,unsigned root_row_chunk,unsigned locator_mode)
+    :rt_(rt),memory_(memory),j_(j),key_bytes_(key_bytes),page_bits_(page_bits),aux_parts_(auxiliary_parts),definitions_(definitions),summary_chunk_(summary_chunk),compact_tables_(compact_tables),directory_branches_(directory_branches),packed_pages_(packed_pages),compact_hashes_(compact_hashes),indirect_parts_(locator_mode!=0),table_row_chunk_(table_row_chunk),root_row_chunk_(root_row_chunk),locator_mode_(locator_mode),store(memory) {require(locator_mode<=2 && j<=6 && key_bytes>=8 && page_bits<=8 && auxiliary_parts<=4 && definitions>=3 && (!summary_chunk || summary_chunk>=64) && (!directory_branches || page_bits) && (!packed_pages || (page_bits && !directory_branches)) && (!table_row_chunk || table_row_chunk<=256) && root_row_chunk<=256 && (!root_row_chunk || !directory_branches));}
 void Index::edit_model(const Row& row,bool add,std::set<SegmentKey>& affected) {
     require(row.physical<(u64(1)<<48));
     if(j_)require((row.physical>>(48-8*j_))==(row.logical>>(64-8*j_)));
@@ -147,10 +153,11 @@ EditStats Index::edit(std::span<const Row> additions,std::span<const u64> remova
     stats.model_ns=elapsed(model_start);
     std::vector<Store::Change> changes;changes.reserve(affected.size()+6);
     std::map<SegmentKey,Selection> private_segments;
+    std::set<SegmentKey> directory_changes;
     std::array<std::set<unsigned>,5> dirty_overflow;
     for(const auto key:affected) {
         const auto id=segment_id(key.first,key.second);auto old=basis.bind(id);
-        if(!segments_.contains(key)) {changes.push_back({id,{}});directory_entries_[key.first].erase(key.second);++stats.removed_segments;continue;}
+        if(!segments_.contains(key)) {changes.push_back({id,{}});directory_entries_[key.first].erase(key.second);directory_changes.insert(key);++stats.removed_segments;continue;}
         unsigned rep=1+(u64(key.second)*991+generation_+key.first)%definitions_;
         while(!(definition(rep,key_bytes_).allowed_layers&(1u<<key.first)))rep=rep%definitions_+1;
         if(old && same_positions)rep=old.control().representation;
@@ -171,6 +178,10 @@ EditStats Index::edit(std::span<const Row> additions,std::span<const u64> remova
         Control c{&memory_,Kind::segment,key.first,key.second,unsigned(segments_.at(key).size()),
             rep,generation_,0,5+chunks(segments_.at(key).size(),summary_chunk_)+aux_parts_,key_bytes_};
         c.summary_chunk=summary_chunk_;
+        c.indirect_parts=indirect_parts_;c.compact_locators=locator_mode_==2;
+        // This fixture field checks locator/interpretation compatibility, not
+        // the Object's MVCC cut. A value-only version can reuse indirect cells.
+        if(indirect_parts_ && old && same_positions)c.revision=old.control().revision;
         stats.summary_entries+=c.count;
         const auto capture_start=Clock::now();
         auto owner=capture(rt_,store,c,image,old,selective,stats,value_only);stats.segment_capture_ns+=elapsed(capture_start);
@@ -178,14 +189,18 @@ EditStats Index::edit(std::span<const Row> additions,std::span<const u64> remova
         auto selected=Physical::selection(owner.get());auto d=describe(selected);
         auto& entries=directory_entries_[key.first];
         if(auto it=entries.find(key.second);it!=entries.end()){d.overflow_block=it->second.descriptor.overflow_block;d.overflow_rank=it->second.descriptor.overflow_rank;}
-        entries[key.second]={d,values<u64>(selected,1).front(),values<u64>(selected,2).back()};
-        for(unsigned p=6;p<selected.part_count();++p)if(!old || p>=old.part_count() || take(selected.part(p)).address()!=take(old.part(p)).address())dirty_overflow[key.first].insert(key.second);
+        const DirectoryEntry next{d,values<u64>(selected,1).front(),values<u64>(selected,2).back()};
+        const auto prior=entries.find(key.second);
+        if(prior==entries.end() || std::memcmp(&prior->second.descriptor,&d,sizeof(d)) || prior->second.minimum!=next.minimum || prior->second.maximum!=next.maximum)
+            directory_changes.insert(key);
+        entries[key.second]=next;
+        for(unsigned p=6;p<selected.part_count();++p)if(!old || p>=old.part_count() || part_locator(selected,p)!=part_locator(old,p))dirty_overflow[key.first].insert(key.second);
         changes.push_back({id,std::move(owner)});if(!old)++stats.new_segments;
     }
     {const auto start=Clock::now();dirty_positions_.clear();stats.model_ns+=elapsed(start);}
     const auto directory_start=Clock::now();
     for(unsigned layer=0;layer<5;++layer) {
-        if(!std::ranges::any_of(affected,[&](auto k){return k.first==layer;}))continue;
+        if(std::ranges::none_of(directory_changes,[&](auto k){return k.first==layer;}) && dirty_overflow[layer].empty())continue;
         auto& entries=directory_entries_[layer];
         const auto root=basis.bind(directory_id(layer));
         std::set<unsigned> changed_pages;
@@ -349,7 +364,7 @@ Selection Index::selected_directory(Store::Scope& scope,unsigned layer,u64 key,S
         const auto selected=scope.bind(step+1<depth?branch_id(layer,prefixes[rank]):page_id(layer,prefixes[rank]));require(bool(selected));
         const auto c=selected.control();const auto d=step?rows[rank]:dirent_at(root,prefixes[rank],rank);require(c.revision==d.revision);
         if(step+1==depth)return selected;
-        maxima=located<u64>(d,2,c.count);prefixes=located<unsigned>(d,0,c.count);rows=located<Dirent>(d,3,c.count);
+        maxima=located<u64>(selected,d,2,c.count);prefixes=located<unsigned>(selected,d,0,c.count);rows=located<Dirent>(selected,d,3,c.count);
     }
     return {};
 }
@@ -378,9 +393,9 @@ std::vector<Selection> Index::directory_pages(Store::Scope& scope,unsigned layer
 Outcome Index::auxiliary(Store::Scope& scope,unsigned layer,const Dirent& d,Outcome outcome,unsigned parts) const {
     require(parts<=aux_parts_);
     if(!parts || !outcome.present)return outcome;
-    const auto c=scope.bind(segment_id(layer,outcome.prefix)).control();
+    const auto s=scope.bind(segment_id(layer,outcome.prefix));const auto c=s.control();
     const unsigned first=chunks(c.count,c.summary_chunk)-1;
-    for(unsigned p=0;p<parts;++p)outcome.auxiliary+=*reinterpret_cast<const u64*>(extra_locator(scope,layer,d,first+p));
+    for(unsigned p=0;p<parts;++p)outcome.auxiliary+=*reinterpret_cast<const u64*>(located_address(s,d,extra_locator(scope,layer,d,first+p),6+first+p));
     return outcome;
 }
 u64 Index::extra_locator(Store::Scope& scope,unsigned layer,const Dirent& d,unsigned ordinal)const {
@@ -389,10 +404,11 @@ u64 Index::extra_locator(Store::Scope& scope,unsigned layer,const Dirent& d,unsi
     auto value=sp::value(f,d.overflow_rank);require(bool(value) && value->size()>=(ordinal+1)*8);
     u64 address;std::memcpy(&address,value->data()+ordinal*8,8);return address;
 }
-const Summary* Index::summary_address(Store::Scope& scope,unsigned layer,const Dirent& d,Control c,unsigned rank)const {
+const Summary* Index::summary_address(Store::Scope& scope,unsigned layer,const Dirent& d,Selection s,unsigned rank)const {
+    const auto c=s.control();
     require(rank<c.count);const auto grain=c.summary_chunk?c.summary_chunk:c.count,chunk=rank/grain;
     const auto address=chunk?extra_locator(scope,layer,d,chunk-1):d.parts[3];
-    return reinterpret_cast<const Summary*>(address)+rank%grain;
+    return reinterpret_cast<const Summary*>(located_address(s,d,address,summary_part(chunk)))+rank%grain;
 }
 PendingRead Index::prepare(Store::Scope& scope,unsigned layer,u64 key,Search search) const {
     require(layer<5);
@@ -408,7 +424,7 @@ PendingRead Index::prepare(Store::Scope& scope,unsigned layer,u64 key,Search sea
         if(found) {
             const auto segment=scope.bind(segment_id(layer,p));require(bool(segment));
             const auto recipe=interpretation(segment,d,schema,layer,key_bytes_);
-            auto answer=local_prepare(segment,d,key,search,recipe,[&](unsigned r){return summary_address(scope,layer,d,segment.control(),r);});if(answer.body)return answer;
+            auto answer=local_prepare(segment,d,key,search,recipe,[&](unsigned r){return summary_address(scope,layer,d,segment,r);});if(answer.body)return answer;
         }
     }
     const auto rank=boundary(maxima,key,search);if(rank==maxima.size())return {};
@@ -416,7 +432,7 @@ PendingRead Index::prepare(Store::Scope& scope,unsigned layer,u64 key,Search sea
     const auto d=dirent_at(directory,p,rank);require(d.flags&1);
     const auto segment=scope.bind(segment_id(layer,p));require(bool(segment));
     const auto recipe=interpretation(segment,d,schema,layer,key_bytes_);
-    return local_prepare(segment,d,key,search,recipe,[&](unsigned r){return summary_address(scope,layer,d,segment.control(),r);});
+    return local_prepare(segment,d,key,search,recipe,[&](unsigned r){return summary_address(scope,layer,d,segment,r);});
 }
 Outcome Index::seek(Store::Scope& scope,unsigned layer,u64 key,Search search,unsigned auxiliary_parts)const {
     const auto p=prepare(scope,layer,key,search);Dirent d;
@@ -435,10 +451,10 @@ std::vector<Outcome> Index::range(Store::Scope& scope,unsigned layer,u64 low,u64
         auto segment=scope.bind(segment_id(layer,prefixes[r]));require(bool(segment));
         const auto d=dirent_at(directory,prefixes[r],r);const auto recipe=interpretation(segment,d,schema,layer,key_bytes_);
         const auto count=segment.control().count;
-        const auto mins=located<u64>(d,1,count),maxs=located<u64>(d,2,count);
-        const auto positions=located<std::uint16_t>(d,0,count);
+        const auto mins=located<u64>(segment,d,1,count),maxs=located<u64>(segment,d,2,count);
+        const auto positions=located<std::uint16_t>(segment,d,0,count);
         for(unsigned e=boundary(maxs,low,search,!lower_closed);e<mins.size() && (upper_closed?mins[e]<=high:mins[e]<high);++e) {
-            const auto summary=interpret_summary(*summary_address(scope,layer,d,segment.control(),e),recipe);
+            const auto summary=interpret_summary(*summary_address(scope,layer,d,segment,e),recipe);
             result.push_back({true,mins[e],summary.count,summary.not_null,summary.sum,prefixes[r],positions[e]});
         }
     }
@@ -456,11 +472,11 @@ std::vector<Outcome> Index::descend(Store::Scope& scope,unsigned source_layer,co
     if(!(d.flags&1))return {};
     auto segment=scope.bind(segment_id(layer,prefix));require(bool(segment));
     const auto recipe=interpretation(segment,d,scope.bind(schema_id()),layer,key_bytes_);
-    const auto n=segment.control().count;const auto positions=located<std::uint16_t>(d,0,n);
+    const auto n=segment.control().count;const auto positions=located<std::uint16_t>(segment,d,0,n);
     std::vector<Outcome> result;
     for(auto it=std::lower_bound(positions.begin(),positions.end(),low);it!=positions.end() && *it<high;++it) {
-        const auto r=it-positions.begin();const auto s=interpret_summary(*summary_address(scope,layer,d,segment.control(),r),recipe);
-        result.push_back({true,located<u64>(d,1,n)[r],s.count,s.not_null,s.sum,prefix,*it});
+        const auto r=it-positions.begin();const auto s=interpret_summary(*summary_address(scope,layer,d,segment,r),recipe);
+        result.push_back({true,located<u64>(segment,d,1,n)[r],s.count,s.not_null,s.sum,prefix,*it});
     }
     return result;
 }
@@ -478,6 +494,13 @@ u64 Index::cache_bytes(Store::Scope& scope)const {
         if(page_bits_ && l>=2)for(auto page:directory_pages(scope,l,0,UINT64_MAX,Search::ordinary))bytes+=hash_bytes(page.control().hash);
     }
     return bytes;
+}
+u64 Index::locator_bytes(Store::Scope& scope)const {
+    // Current segment cell sets, counted once per Object. Historical sets and
+    // exported proofs remain charged to their actual memory resource.
+    u64 total=0;for(const auto& [key,segment]:segments_)if(auto s=scope.bind(segment_id(key.first,key.second)))
+        if(auto* cells=s.control().locators)total+=cells->bytes();
+    return total;
 }
 void Index::verify(Store::Scope& scope,std::span<const Row> rows,bool exhaustive) const {
     // Oracle derives each layer by shifting the ORIGINAL records, independently
@@ -514,16 +537,19 @@ void Index::verify(Store::Scope& scope,std::span<const Row> rows,bool exhaustive
             const auto prefixes=values<unsigned>(directory,0);
             const auto directory_rank=std::size_t(std::ranges::find(prefixes,where.first)-prefixes.begin());
             require(directory_rank<prefixes.size());const auto d=dirent_at(directory,where.first,directory_rank);
-            for(unsigned part=0;part<6;++part)require(d.parts[part]==reinterpret_cast<u64>(take(s.part(part)).address()));
-            for(unsigned part=6;part<s.part_count();++part)require(extra_locator(scope,layer,d,part-6)==reinterpret_cast<u64>(take(s.part(part)).address()));
+            for(unsigned part=0;part<s.part_count();++part) {
+                const auto locator=part<6?d.parts[part]:extra_locator(scope,layer,d,part-6);
+                require(locator==part_locator(s,part));
+                require(take(resolve_locator(s,locator,part))==take(s.part(part)).address());
+            }
             if(aux_parts_) {
-                const auto o=auxiliary(scope,layer,d,Outcome{true},aux_parts_);u64 expected=0;
+                const auto o=auxiliary(scope,layer,d,Outcome{.present=true,.prefix=where.first},aux_parts_);u64 expected=0;
                 for(unsigned p=5+chunks(s.control().count,s.control().summary_chunk);p<s.part_count();++p)expected+=values<u64>(s,p).front();
                 require(o.auxiliary==expected);
             }
             const auto positions=values<std::uint16_t>(s,0);const auto found=std::lower_bound(positions.begin(),positions.end(),where.second);require(found!=positions.end() && *found==where.second);
             const auto r=found-positions.begin();const auto defs=values<Definition>(scope.bind(schema_id()),0);
-            const auto actual=interpret_summary(*summary_address(scope,layer,d,s.control(),r),defs[s.control().representation-1].recipe);
+            const auto actual=interpret_summary(*summary_address(scope,layer,d,s,r),defs[s.control().representation-1].recipe);
             Summary expected;u64 lo=UINT64_MAX,hi=0;expected.minimum=INT64_MAX;expected.maximum=INT64_MIN;
             for(const auto& row:records) {++expected.count;lo=std::min(lo,row.logical);hi=std::max(hi,row.logical);if(row.valid){++expected.not_null;expected.sum+=row.value;expected.minimum=std::min(expected.minimum,row.value);expected.maximum=std::max(expected.maximum,row.value);}}
             if(!expected.not_null)expected.minimum=expected.maximum=0;
