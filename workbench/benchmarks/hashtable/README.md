@@ -22,7 +22,7 @@ experiments; [where to find them](#latency-loom-and-cache-residence).
 | Did the original extraction preserve the selected candidate? | [Original promotion](QUALIFICATION.md), a dated paired comparison |
 | What does one RMW/native mutable batch cost? | [RMW experiment](RMW.md), including binding and initial-value preparation |
 | Does the Zen 5 recipe transfer to Zen 4? | [Generation comparison](ZEN-GENERATIONS.md); it does not establish a new Zen 4 profile |
-| What changed with eight-bit overflow tags, and should probes be wider? | [October 20 overflow qualification](../../spikes/hashtable-swiss-probes/RESULTS.md), with actual Boost/Abseil controls; 16-byte groups and 87.5% retained |
+| What changed in Swiss overflow? | [Tag/logical-width qualification](../../spikes/hashtable-swiss-probes/RESULTS.md) and [ISA read batches](../../spikes/hashtable-swiss-batch/GRADUATION.md): eight-bit tags, 16-byte logical groups, 64/32-byte x86 comparisons and the 87.5% ceiling |
 | Where are raw runs, sources, compiler flags and losing cells? | [Evidence and recovery](evidence/README.md) |
 
 Historical reports retain their own measurements and source identities. Their

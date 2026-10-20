@@ -1,5 +1,9 @@
 # Wider SIMD, unchanged logical groups
 
+This is the initial screen at `acf2fcbd`. Its default recommendation was
+superseded by [ISA-selected graduation](GRADUATION.md); the measurements remain
+useful comparisons of the original packet implementations.
+
 **The masking works and recovers useful dense-overflow gains without extra
 full-key checks. Keep the current default.** Four-group batching reduces dense
 map8 all-miss time by 23% hot and 14% cold on Zen 5 AVX-512, but adds about 5%
@@ -205,8 +209,8 @@ query/phase grid, independent answers, cardinality, allocation/Swiss/debt state
 in every phase, every churn round and assembly preservation. Report recipes for
 all three native cohorts have been regenerated from their verified S3 archives.
 
-The 100 captured hashtable/SeriesPack/TuplePack headers still match the maintained
-sources. Production headers are untouched. Captured source and binaries in each
-archive reproduce that cohort; the current runner defaults to the final read-only
-mode and its stronger assembly checks. Historical coupled panels should use
-their captured sources rather than the final runner's preservation requirements.
+These pre-promotion panels used 100 unchanged maintained hashtable/SeriesPack/
+TuplePack headers. Captured source and binaries in each archive reproduce that
+cohort, including its runner and preservation checks. Historical coupled panels
+use their captured sources rather than the stronger checks added for read-only
+batching. The following graduation changes the maintained ordinary reader.

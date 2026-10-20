@@ -5,7 +5,7 @@ target_link_libraries(ikea_hashtable INTERFACE
   ikea::seriespack ikea::tuplepack)
 
 set(ikea_hashtable_checks)
-foreach(check accumulate mutation guarded modify word-tail value storage clone descriptor rebuild rebuild-storage control)
+foreach(check accumulate mutation guarded modify word-tail value storage clone descriptor rebuild rebuild-storage control read)
   string(REPLACE "-" "_" name "${check}")
   set(target ikea_hashtable_${name}_check)
   add_executable(${target} EXCLUDE_FROM_ALL test/hashtable/${check}-check.cpp)

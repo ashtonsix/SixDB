@@ -121,7 +121,10 @@ Swiss storage separately keeps live entries plus tombstones within 87.5% of its
 slots, growing as necessary for ordinary insertion. That ceiling is independent
 of nominal primary occupancy and the caller's primary-growth threshold. Primary
 holes and nonuniform bucket populations mean one percentage cannot describe
-both stores. Swiss control groups contain 16 bytes on all supported ISAs.
+both stores. Swiss logical control groups contain 16 bytes on all supported ISAs.
+Ordinary reads compare four logical groups at a time with AVX-512BW, two with
+AVX2, and one otherwise. This is selected by the compiled ISA and adds no caller
+setting. Writes and staged reads retain one-group steps.
 
 The generic encoding is a portable starting point. For a measured deployment,
 `descriptor<W,V>::measured<b>(seed, cpu, isa)` chooses an encoding and kernel

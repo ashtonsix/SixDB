@@ -1,0 +1,30 @@
+[
+  {
+    "isa": "avx512",
+    "variant": "batch64",
+    "caller": "read_overflow W40/b10/V8/E30",
+    "stack_address_accesses": 5,
+    "instruction_lines": 138
+  },
+  {
+    "isa": "avx512",
+    "variant": "native",
+    "caller": "read_overflow W40/b10/V8/E30",
+    "stack_address_accesses": 0,
+    "instruction_lines": 149
+  },
+  {
+    "isa": "avx2",
+    "variant": "batch32",
+    "caller": "read_overflow W40/b10/V8/E30",
+    "stack_address_accesses": 5,
+    "instruction_lines": 151
+  },
+  {
+    "isa": "avx2",
+    "variant": "native",
+    "caller": "read_overflow W40/b10/V8/E30",
+    "stack_address_accesses": 0,
+    "instruction_lines": 150
+  }
+]

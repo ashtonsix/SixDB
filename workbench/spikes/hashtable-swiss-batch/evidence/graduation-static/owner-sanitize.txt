@@ -1,0 +1,69 @@
+[1/15] Building CXX object ikea/CMakeFiles/ikea_hashtable_mutation_check.dir/test/hashtable/mutation-check.cpp.o
+[2/15] Building CXX object ikea/CMakeFiles/ikea_hashtable_guarded_check.dir/test/hashtable/guarded-check.cpp.o
+[3/15] Building CXX object ikea/CMakeFiles/ikea_hashtable_modify_check.dir/test/hashtable/modify-check.cpp.o
+[4/15] Building CXX object ikea/CMakeFiles/ikea_hashtable_word_tail_check.dir/test/hashtable/word-tail-check.cpp.o
+[5/15] Building CXX object ikea/CMakeFiles/ikea_hashtable_accumulate_check.dir/test/hashtable/accumulate-check.cpp.o
+[6/15] Building CXX object ikea/CMakeFiles/ikea_hashtable_storage_check.dir/test/hashtable/storage-check.cpp.o
+[7/15] Linking CXX executable ikea/ikea_hashtable_accumulate_check
+[8/15] Linking CXX executable ikea/ikea_hashtable_mutation_check
+[9/15] Linking CXX executable ikea/ikea_hashtable_guarded_check
+[10/15] Linking CXX executable ikea/ikea_hashtable_modify_check
+[11/15] Linking CXX executable ikea/ikea_hashtable_word_tail_check
+[12/15] Linking CXX executable ikea/ikea_hashtable_storage_check
+[13/15] Building CXX object ikea/CMakeFiles/ikea_hashtable_value_check.dir/test/hashtable/value-check.cpp.o
+[14/15] Linking CXX executable ikea/ikea_hashtable_value_check
+[14/15] cd /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/hashtable-swiss-batch/local/ikea && /usr/bin/ctest --test-dir /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/hashtable-swiss-batch/local --output-on-failure --no-tests=error -R "^ikea_(hashtable_|example_hashtable_)"
+Internal ctest changing into directory: /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/hashtable-swiss-batch/local
+Test project /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/hashtable-swiss-batch/local
+      Start 41: ikea_hashtable_accumulate_check
+ 1/24 Test #41: ikea_hashtable_accumulate_check ........   Passed    4.46 sec
+      Start 42: ikea_hashtable_mutation_check
+ 2/24 Test #42: ikea_hashtable_mutation_check ..........   Passed    1.61 sec
+      Start 43: ikea_hashtable_guarded_check
+ 3/24 Test #43: ikea_hashtable_guarded_check ...........   Passed    0.14 sec
+      Start 44: ikea_hashtable_modify_check
+ 4/24 Test #44: ikea_hashtable_modify_check ............   Passed    0.01 sec
+      Start 45: ikea_hashtable_word_tail_check
+ 5/24 Test #45: ikea_hashtable_word_tail_check .........   Passed    0.01 sec
+      Start 46: ikea_hashtable_value_check
+ 6/24 Test #46: ikea_hashtable_value_check .............   Passed    0.04 sec
+      Start 47: ikea_hashtable_storage_check
+ 7/24 Test #47: ikea_hashtable_storage_check ...........   Passed    0.01 sec
+      Start 48: ikea_hashtable_clone_check
+ 8/24 Test #48: ikea_hashtable_clone_check .............   Passed    0.03 sec
+      Start 49: ikea_hashtable_descriptor_check
+ 9/24 Test #49: ikea_hashtable_descriptor_check ........   Passed    0.01 sec
+      Start 50: ikea_hashtable_rebuild_check
+10/24 Test #50: ikea_hashtable_rebuild_check ...........   Passed    0.04 sec
+      Start 51: ikea_hashtable_rebuild_storage_check
+11/24 Test #51: ikea_hashtable_rebuild_storage_check ...   Passed    0.04 sec
+      Start 52: ikea_hashtable_control_check
+12/24 Test #52: ikea_hashtable_control_check ...........   Passed    0.01 sec
+      Start 53: ikea_hashtable_read_check
+13/24 Test #53: ikea_hashtable_read_check ..............   Passed    0.09 sec
+      Start 54: ikea_hashtable_widths_1
+14/24 Test #54: ikea_hashtable_widths_1 ................   Passed    0.02 sec
+      Start 55: ikea_hashtable_widths_9
+15/24 Test #55: ikea_hashtable_widths_9 ................   Passed    0.11 sec
+      Start 56: ikea_hashtable_widths_17
+16/24 Test #56: ikea_hashtable_widths_17 ...............   Passed    0.12 sec
+      Start 57: ikea_hashtable_widths_25
+17/24 Test #57: ikea_hashtable_widths_25 ...............   Passed    0.12 sec
+      Start 58: ikea_hashtable_widths_33
+18/24 Test #58: ikea_hashtable_widths_33 ...............   Passed    0.13 sec
+      Start 59: ikea_hashtable_widths_41
+19/24 Test #59: ikea_hashtable_widths_41 ...............   Passed    0.13 sec
+      Start 60: ikea_hashtable_widths_49
+20/24 Test #60: ikea_hashtable_widths_49 ...............   Passed    0.14 sec
+      Start 61: ikea_hashtable_widths_57
+21/24 Test #61: ikea_hashtable_widths_57 ...............   Passed    0.14 sec
+      Start 62: ikea_example_hashtable_ordinary
+22/24 Test #62: ikea_example_hashtable_ordinary ........   Passed    0.01 sec
+      Start 63: ikea_example_hashtable_composition
+23/24 Test #63: ikea_example_hashtable_composition .....   Passed    0.01 sec
+      Start 64: ikea_example_hashtable_accumulation
+24/24 Test #64: ikea_example_hashtable_accumulation ....   Passed    0.01 sec
+
+100% tests passed, 0 tests failed out of 24
+
+Total Test time (real) =   7.45 sec

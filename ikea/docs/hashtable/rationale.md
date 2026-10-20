@@ -198,8 +198,25 @@ that might trigger unnecessary full-key reads. Those reads matter more when
 tuples are cold. The [Zen 5 width comparison](../../../workbench/spikes/hashtable-swiss-probes/RESULTS.md)
 retains 16-byte groups: dense hot-miss gains from 32/64-byte groups did not
 outweigh cold-read losses. Eight-bit tags were promoted; filtered continuation
-and a higher occupancy ceiling were not. This is a measured default, not a
-claim that 16 is best for every CPU or workload.
+and a higher occupancy ceiling were not.
+
+Vector comparison width is separate from logical group width. Ordinary reads
+batch four logical groups with AVX-512BW, two with AVX2, and one otherwise.
+The reader masks candidates beyond the first group containing an empty before
+checking any tuples, while keeping every candidate within that group. This
+preserves the original full-key check order and avoids the extra tuple reads of
+wider logical groups. Groups follow triangular order, so the next four may need
+separate loads even though their comparisons share one vector.
+
+The implementation computes their addresses independently. It reconstructs a
+physical slot only for a surviving tag candidate and computes continuation only
+when needed, avoiding an array of group addresses spilled on every lookup.
+This policy stays inside the out-of-line ordinary read helper. Mutation and
+staged cursors retain one-group steps, and small stores use the scalar reader.
+Metadata lookahead can still fetch control regions that a scalar probe would
+not reach; masking candidates does not make all lookahead traffic free. The
+[batch qualification](../../../workbench/spikes/hashtable-swiss-batch/GRADUATION.md)
+records whole-table reads/writes and the accepted tradeoffs of this ISA default.
 
 The primary bucket's overflow byte avoids consulting this store unnecessarily:
 

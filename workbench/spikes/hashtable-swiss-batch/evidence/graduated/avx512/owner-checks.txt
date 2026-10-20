@@ -1,0 +1,103 @@
+[1/49] Building CXX object ikea/CMakeFiles/ikea_hashtable_mutation_check.dir/test/hashtable/mutation-check.cpp.o
+[2/49] Linking CXX executable ikea/ikea_hashtable_mutation_check
+[3/49] Building CXX object ikea/CMakeFiles/ikea_hashtable_guarded_check.dir/test/hashtable/guarded-check.cpp.o
+[4/49] Linking CXX executable ikea/ikea_hashtable_guarded_check
+[5/49] Building CXX object ikea/CMakeFiles/ikea_hashtable_modify_check.dir/test/hashtable/modify-check.cpp.o
+[6/49] Linking CXX executable ikea/ikea_hashtable_modify_check
+[7/49] Building CXX object ikea/CMakeFiles/ikea_hashtable_word_tail_check.dir/test/hashtable/word-tail-check.cpp.o
+[8/49] Linking CXX executable ikea/ikea_hashtable_word_tail_check
+[9/49] Building CXX object ikea/CMakeFiles/ikea_hashtable_value_check.dir/test/hashtable/value-check.cpp.o
+[10/49] Linking CXX executable ikea/ikea_hashtable_value_check
+[11/49] Building CXX object ikea/CMakeFiles/ikea_hashtable_storage_check.dir/test/hashtable/storage-check.cpp.o
+[12/49] Linking CXX executable ikea/ikea_hashtable_storage_check
+[13/49] Building CXX object ikea/CMakeFiles/ikea_hashtable_accumulate_check.dir/test/hashtable/accumulate-check.cpp.o
+[14/49] Linking CXX executable ikea/ikea_hashtable_accumulate_check
+[15/49] Building CXX object ikea/CMakeFiles/ikea_hashtable_clone_check.dir/test/hashtable/clone-check.cpp.o
+[16/49] Linking CXX executable ikea/ikea_hashtable_clone_check
+[17/49] Building CXX object ikea/CMakeFiles/ikea_hashtable_descriptor_check.dir/test/hashtable/descriptor-check.cpp.o
+[18/49] Linking CXX executable ikea/ikea_hashtable_descriptor_check
+[19/49] Building CXX object ikea/CMakeFiles/ikea_hashtable_rebuild_check.dir/test/hashtable/rebuild-check.cpp.o
+[20/49] Linking CXX executable ikea/ikea_hashtable_rebuild_check
+[21/49] Building CXX object ikea/CMakeFiles/ikea_hashtable_control_check.dir/test/hashtable/control-check.cpp.o
+[22/49] Linking CXX executable ikea/ikea_hashtable_control_check
+[23/49] Building CXX object ikea/CMakeFiles/ikea_hashtable_read_check.dir/test/hashtable/read-check.cpp.o
+[24/49] Linking CXX executable ikea/ikea_hashtable_read_check
+[25/49] Building CXX object ikea/CMakeFiles/ikea_hashtable_rebuild_storage_check.dir/test/hashtable/rebuild-storage-check.cpp.o
+[26/49] Linking CXX executable ikea/ikea_hashtable_rebuild_storage_check
+[27/49] Building CXX object ikea/CMakeFiles/ikea_hashtable_widths_1.dir/test/hashtable/widths.cpp.o
+[28/49] Linking CXX executable ikea/ikea_hashtable_widths_1
+[29/49] Building CXX object ikea/CMakeFiles/ikea_hashtable_widths_9.dir/test/hashtable/widths.cpp.o
+[30/49] Linking CXX executable ikea/ikea_hashtable_widths_9
+[31/49] Building CXX object ikea/CMakeFiles/ikea_hashtable_widths_17.dir/test/hashtable/widths.cpp.o
+[32/49] Linking CXX executable ikea/ikea_hashtable_widths_17
+[33/49] Building CXX object ikea/CMakeFiles/ikea_hashtable_widths_25.dir/test/hashtable/widths.cpp.o
+[34/49] Linking CXX executable ikea/ikea_hashtable_widths_25
+[35/49] Building CXX object ikea/CMakeFiles/ikea_hashtable_widths_33.dir/test/hashtable/widths.cpp.o
+[36/49] Linking CXX executable ikea/ikea_hashtable_widths_33
+[37/49] Building CXX object ikea/CMakeFiles/ikea_hashtable_widths_41.dir/test/hashtable/widths.cpp.o
+[38/49] Linking CXX executable ikea/ikea_hashtable_widths_41
+[39/49] Building CXX object ikea/CMakeFiles/ikea_hashtable_widths_49.dir/test/hashtable/widths.cpp.o
+[40/49] Linking CXX executable ikea/ikea_hashtable_widths_49
+[41/49] Building CXX object ikea/CMakeFiles/ikea_example_hashtable_ordinary.dir/examples/hashtable/ordinary.cpp.o
+[42/49] Linking CXX executable ikea/ikea_example_hashtable_ordinary
+[43/49] Building CXX object ikea/CMakeFiles/ikea_example_hashtable_composition.dir/examples/hashtable/composition.cpp.o
+[44/49] Linking CXX executable ikea/ikea_example_hashtable_composition
+[45/49] Building CXX object ikea/CMakeFiles/ikea_example_hashtable_accumulation.dir/examples/hashtable/accumulation.cpp.o
+[46/49] Linking CXX executable ikea/ikea_example_hashtable_accumulation
+[47/49] Building CXX object ikea/CMakeFiles/ikea_hashtable_widths_57.dir/test/hashtable/widths.cpp.o
+[48/49] Linking CXX executable ikea/ikea_hashtable_widths_57
+[48/49] cd /opt/sixdb/source/build/hashtable-swiss-batch-avx512/ikea && /usr/bin/ctest --test-dir /opt/sixdb/source/build/hashtable-swiss-batch-avx512 --output-on-failure --no-tests=error -R "^ikea_(hashtable_|example_hashtable_)"
+Internal ctest changing into directory: /opt/sixdb/source/build/hashtable-swiss-batch-avx512
+Test project /opt/sixdb/source/build/hashtable-swiss-batch-avx512
+      Start 41: ikea_hashtable_accumulate_check
+ 1/24 Test #41: ikea_hashtable_accumulate_check ........   Passed    1.31 sec
+      Start 42: ikea_hashtable_mutation_check
+ 2/24 Test #42: ikea_hashtable_mutation_check ..........   Passed    0.13 sec
+      Start 43: ikea_hashtable_guarded_check
+ 3/24 Test #43: ikea_hashtable_guarded_check ...........   Passed    0.01 sec
+      Start 44: ikea_hashtable_modify_check
+ 4/24 Test #44: ikea_hashtable_modify_check ............   Passed    0.00 sec
+      Start 45: ikea_hashtable_word_tail_check
+ 5/24 Test #45: ikea_hashtable_word_tail_check .........   Passed    0.00 sec
+      Start 46: ikea_hashtable_value_check
+ 6/24 Test #46: ikea_hashtable_value_check .............   Passed    0.00 sec
+      Start 47: ikea_hashtable_storage_check
+ 7/24 Test #47: ikea_hashtable_storage_check ...........   Passed    0.00 sec
+      Start 48: ikea_hashtable_clone_check
+ 8/24 Test #48: ikea_hashtable_clone_check .............   Passed    0.00 sec
+      Start 49: ikea_hashtable_descriptor_check
+ 9/24 Test #49: ikea_hashtable_descriptor_check ........   Passed    0.00 sec
+      Start 50: ikea_hashtable_rebuild_check
+10/24 Test #50: ikea_hashtable_rebuild_check ...........   Passed    0.01 sec
+      Start 51: ikea_hashtable_rebuild_storage_check
+11/24 Test #51: ikea_hashtable_rebuild_storage_check ...   Passed    0.01 sec
+      Start 52: ikea_hashtable_control_check
+12/24 Test #52: ikea_hashtable_control_check ...........   Passed    0.00 sec
+      Start 53: ikea_hashtable_read_check
+13/24 Test #53: ikea_hashtable_read_check ..............   Passed    0.02 sec
+      Start 54: ikea_hashtable_widths_1
+14/24 Test #54: ikea_hashtable_widths_1 ................   Passed    0.00 sec
+      Start 55: ikea_hashtable_widths_9
+15/24 Test #55: ikea_hashtable_widths_9 ................   Passed    0.01 sec
+      Start 56: ikea_hashtable_widths_17
+16/24 Test #56: ikea_hashtable_widths_17 ...............   Passed    0.01 sec
+      Start 57: ikea_hashtable_widths_25
+17/24 Test #57: ikea_hashtable_widths_25 ...............   Passed    0.01 sec
+      Start 58: ikea_hashtable_widths_33
+18/24 Test #58: ikea_hashtable_widths_33 ...............   Passed    0.01 sec
+      Start 59: ikea_hashtable_widths_41
+19/24 Test #59: ikea_hashtable_widths_41 ...............   Passed    0.01 sec
+      Start 60: ikea_hashtable_widths_49
+20/24 Test #60: ikea_hashtable_widths_49 ...............   Passed    0.01 sec
+      Start 61: ikea_hashtable_widths_57
+21/24 Test #61: ikea_hashtable_widths_57 ...............   Passed    0.01 sec
+      Start 62: ikea_example_hashtable_ordinary
+22/24 Test #62: ikea_example_hashtable_ordinary ........   Passed    0.00 sec
+      Start 63: ikea_example_hashtable_composition
+23/24 Test #63: ikea_example_hashtable_composition .....   Passed    0.00 sec
+      Start 64: ikea_example_hashtable_accumulation
+24/24 Test #64: ikea_example_hashtable_accumulation ....   Passed    0.00 sec
+
+100% tests passed, 0 tests failed out of 24
+
+Total Test time (real) =   1.60 sec

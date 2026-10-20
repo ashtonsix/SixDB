@@ -12,6 +12,10 @@ a = p.parse_args()
 root = a.results
 arms = json.loads((root / 'treatments.json').read_text()) if (root / 'treatments.json').exists() else ['group16', 'batch32', 'batch64', 'tail64', 'boost', 'abseil']
 owners = [v for v in arms if v not in ['boost', 'abseil']]
+if 'native' in owners:
+    owner_checks = (root / 'owner-checks.txt').read_text()
+    if '100% tests passed' not in owner_checks or '0 tests failed' not in owner_checks:
+        raise RuntimeError('maintained owner checks failed')
 if arms[0] != 'group16' or set(arms[-2:]) != {'boost','abseil'}:
     raise RuntimeError('require paired maintained and actual peer controls')
 expected, answers, populations, capacities = set(), {}, {}, {}

@@ -3,6 +3,7 @@
 #include "storage.h"
 #include "detail/bucket.h"
 #include "detail/control.h"
+#include "detail/read-batch.h"
 namespace ikea::hashtable {
 namespace author {
 struct table_access;
@@ -146,6 +147,39 @@ class table : private detail::bucket_ops<W, b, V, E, Kernel> {
             g = (g + (++step)) & (groups_ - 1);
         }
     }
+    [[gnu::always_inline]] std::size_t find_swiss_read(
+        word key, const typename mix_type::result& h) const {
+        constexpr auto width = detail::swiss_read_groups;
+        if constexpr (width == 1) {
+            return find_swiss(key, h);
+        } else {
+            if (groups_ < width)
+                return find_swiss(key, h);
+            const auto mask = groups_ - 1;
+            auto group = h.swiss & mask;
+            std::size_t step = 0;
+            for (;;) {
+                const auto packet = detail::compare_swiss_read<width>(
+                    control_.data, group, step, mask, h.fingerprint());
+                auto candidates = packet.candidates;
+                while (candidates) {
+                    const auto lane = std::countr_zero(candidates);
+                    candidates &= candidates - 1;
+                    // Reconstruct only an actual candidate's slot. Keeping an
+                    // array of all group addresses spills on every miss.
+                    const auto slot = detail::swiss_read_slot<width>(group, step, lane, mask);
+                    if (tuple_key(slots_.data + slot * tuple_bytes) == key)
+                        return slot;
+                }
+                if (packet.empties)
+                    return absent;
+                // Most probes terminate in this packet. Do continuation work
+                // only when needed; mutation/staged cursors stay unchanged.
+                group = detail::swiss_read_group(group, step, width, mask);
+                step += width;
+            }
+        }
+    }
     struct overflow_value {
         value_type value{};
         bool found = false;
@@ -159,7 +193,7 @@ class table : private detail::bucket_ops<W, b, V, E, Kernel> {
     // still consume its primary value directly in the success branch.
     [[gnu::noinline, gnu::pure]] overflow_result read_overflow(word key, word swiss) const {
         const typename mix_type::result h{0, 0, swiss};
-        const auto found = find_swiss(key, h);
+        const auto found = find_swiss_read(key, h);
         {
             overflow_result result;
             if (found != absent) {

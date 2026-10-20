@@ -1,0 +1,10 @@
+Literal backend sequence estimates. No branch probabilities/PC traversal, cache hierarchy, store forwarding or callee execution.
+Recognized x86/AArch64 control-flow sites follow. Branches can be tail calls; inspect linked targets.
+Calls retain LLVM placeholders, NOT complete module costs. Unsupported instructions are never skipped.
+CPU selector: znver5; noalias=False
+Reported resources: ["Zn4AGU0", "Zn4AGU1", "Zn4AGU2", "Zn4ALU0", "Zn4ALU1", "Zn4ALU2", "Zn4ALU3", "Zn4BRU1", "Zn4FP0", "Zn4FP1", "Zn4FP2", "Zn4FP3", "Zn4FP45.\u0000", "Zn4FP45.\u0001", "Zn4FPSt", "Zn4LSU.\u0000", "Zn4LSU.\u0001", "Zn4LSU.\u0002", "Zn4Load.\u0000", "Zn4Load.\u0001", "Zn4Load.\u0002", "Zn4Store.\u0000", "Zn4Store.\u0001"]
+
+Region: native_metadata
+Model block reciprocal throughput: 5.166666666666667 cycles; total 553 synthetic cycles / 100 repetitions
+No recognized call/return/branch in selected region.
+LLVM hasUnmodeledSideEffects instruction indices: []

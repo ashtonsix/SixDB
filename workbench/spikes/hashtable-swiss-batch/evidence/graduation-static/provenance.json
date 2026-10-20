@@ -1,0 +1,46 @@
+{
+  "files_sha256": {
+    "assembly-accounting.json": "784e3e42cd0bd703b2c52c4f0ff0ff2d3ab3282e7517f9c3c4e1d1cb02129383",
+    "check-group16.txt": "7b90de388c64a9360a622c03a4a67d0bb9360cc2119d3dc4d2487651c80aba1d",
+    "check-native.txt": "7b90de388c64a9360a622c03a4a67d0bb9360cc2119d3dc4d2487651c80aba1d",
+    "compiler.txt": "dfb0aa39f1baf9eb2391a5b89e349f1570faa009cb0d02cfe112778cd10328fb",
+    "context.json": "6a9e6b0dc8867205fd5908cca5d0acdebb35da880336e11216ce431eed2f7a91",
+    "mca-batch64/scope.txt": "b03ea853eca9d27dcac7b2f17e0afdec44cc1fbe6c6129109671cd4cdc6a573c",
+    "mca-native/scope.txt": "7657ef848dca1053a0abb22cdd08e177c879f32b0a68861f055f34ce5f371555",
+    "owner-sanitize.txt": "023e23a73b697bd0fb13679366e227e5a3b078cce05c4ce10afa8fbbe4b8969d",
+    "primary/avx2/commands.json": "620e3abc0e4764679e8096ea4e923ceff258697371fe307344d042a95866e1bb",
+    "primary/avx2/comparison.json": "16a183527e9d812c3a50533e8b7f7ebab807ca7426a89eb9ed482f8cc7a43294",
+    "primary/avx512/commands.json": "8980f5a07b75794f180c77e28ea074a5e68f980775a0734e1c0ac6d785e0a164",
+    "primary/avx512/comparison.json": "6bd63d5b5c0d2d8d7c6ca411f38363d0a48c97bb36c517786932f79152b6dbbe",
+    "production.json": "0060ceb649174e59ad8291ddd9433e372d0e6b671f924987954eee535a3467a1",
+    "scalar-preservation.json": "eb46e94afbb278c8b93ffc7f083660c8a62781950f7669d8f873ae31a441e526",
+    "trace-group16.txt": "27c7a922d201a270d61748a4f19e172b7feec545462d87399eb605343f3d5bd6",
+    "trace-native.txt": "27c7a922d201a270d61748a4f19e172b7feec545462d87399eb605343f3d5bd6"
+  },
+  "format": 2,
+  "full_bundle": "artifact.json",
+  "kind": "files",
+  "regenerate": [
+    [
+      "python3",
+      "workbench/tools/mca.py",
+      "{evidence}/raw/mca-batch64/input.s",
+      "--triple=x86_64-linux-gnu",
+      "--cpu=znver5",
+      "--mattr=+avx512f,+avx512bw,+avx512vl,+bmi2",
+      "--output",
+      "{evidence}/replay-mca-batch64"
+    ],
+    [
+      "python3",
+      "workbench/tools/mca.py",
+      "{evidence}/raw/mca-native/input.s",
+      "--triple=x86_64-linux-gnu",
+      "--cpu=znver5",
+      "--mattr=+avx512f,+avx512bw,+avx512vl,+bmi2",
+      "--output",
+      "{evidence}/replay-mca-native"
+    ]
+  ],
+  "regenerate_from": "archive"
+}

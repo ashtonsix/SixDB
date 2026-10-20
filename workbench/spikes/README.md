@@ -26,7 +26,7 @@ experiments and checks under Object, Allocation, Journal, Port and Worker.
 - [Hashtable K-way merge](hashtable-merge/README.md): bucket-wise traversal, external workspace and retained accumulation comparisons. Single-source mutable accumulation is maintained in Ikea.
 - [Hashtable overflow](hashtable-overflow/README.md): completed tag/continuation and occupancy comparison; eight-bit tags are maintained in Ikea.
 - [Hashtable Swiss probes](hashtable-swiss-probes/README.md): completed 32/64-byte comparison with actual Boost/Abseil controls; eight-bit tags and 16-byte groups retained, rejected variants archived.
-- [Hashtable Swiss batches](hashtable-swiss-batch/README.md): completed SIMD lookahead over 16-byte logical groups; dense miss gains without extra tuple checks, mixed cold losses retain the current default.
+- [Hashtable Swiss batches](hashtable-swiss-batch/README.md): graduated ISA-selected 64/32-byte read comparisons over 16-byte logical groups; whole-table qualification with actual Boost/Abseil controls, prototypes archived.
 - [Bec256 with current Ikea](bec256-composition/README.md): exact codec operations, native pairs and larger-bitset population/length directories built with SeriesPack and TuplePack.
 - [Ikea on Neoverse V3](ikea-neoverse-v3/README.md): C8g/C9g comparisons, compiler scheduling, lookup and exact-span experiments.
 - [Ikea CPU comparison](ikea-cpu-comparison/README.md): October 2026 snapshot across six processors, matched case evidence and a frozen cloud-price model.

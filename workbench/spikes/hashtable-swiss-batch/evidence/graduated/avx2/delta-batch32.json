@@ -1,0 +1,17 @@
+{
+  "variant": "batch32",
+  "read_only": true,
+  "changes": [
+    {
+      "path": "table.h",
+      "before": "b111bde742998a128ca9cd8fb38b60631eda5eb1b35b1b1b2fb5d25f24875d58",
+      "after": "0ff41122596c538d241f7b69e5f7c66b5ec69819bfc02864b978e6d305440678"
+    },
+    {
+      "path": "detail/batch.h",
+      "before": null,
+      "after": "53d59ff9a1e1fe2967e989a93731b62cfe771972fe40ffa81251a8dbbc298c11"
+    }
+  ],
+  "trace_annotations": "preprocessed away unless SIXDB_SWISS_TRACE is defined"
+}

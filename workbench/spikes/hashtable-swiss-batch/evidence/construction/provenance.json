@@ -1,0 +1,17 @@
+{
+  "files_sha256": {
+    "audit.txt": "0f435e18dfb27b5c1f3f94ca15d58a1f37ccd255aea1d8561bf509957a28b054",
+    "host.json": "2bfe59085d22a239c1f6fa382f9562738f3eb27ae26f674c219426d379bc40d8",
+    "summary.csv": "bae746fcf4620defa8bea3f019f3c04dc917ba28ba2f90a60d23590dd589533b",
+    "worker-result.json": "badb32a98a3afc13507ad93d67ae976e968a1f6642086b9a2101586d21969df4"
+  },
+  "format": 2,
+  "full_bundle": "artifact.json",
+  "kind": "files",
+  "regenerate": [
+    "python3",
+    "workbench/spikes/hashtable-swiss-batch/build-summary.py",
+    "{evidence}"
+  ],
+  "regenerate_from": "archive"
+}

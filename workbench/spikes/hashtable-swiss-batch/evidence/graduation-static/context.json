@@ -1,0 +1,9 @@
+{
+  "native_job": "20261020T210821Z-7755d271",
+  "scope": "Local functional checks/cross-compiled code generation only; native Zen5 timing retained separately. AVX512 metadata-only MCA uses Znver4Model proxy, no branch/cache/whole-reader claims. Exact selected literal region ends before tuple-key inspection. Delayed continuation outside new region is paid only if needed; old region computes it eagerly.",
+  "assembly_accounting": "Counts stack-relative explicit address references in complete W40/b10/V8 read_overflow bodies, not pushes/pops; instruction_lines are source instructions across all branches, not executed or decoded micro-ops.",
+  "local_compile": "Final incremental ASan/UBSan -O1 -g0 on local AArch64, pinned21.1.8;24/24 maintained checks pass includingW1..64 and read masks. Every compiled promoted source matches the native job capture; functional results are not ARM performance evidence.",
+  "full_sources": "../workbench worker job20261020T210821Z-7755d271 source.tar.gz; production source hashes in production.json. ExactMCA inputs/object/rawreports and crosscompiled completecallers in this static bundle.",
+  "production_source_bundle": "../graduated/artifact.json",
+  "production_source_member": "source.tar.gz"
+}

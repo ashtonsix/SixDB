@@ -1,0 +1,80 @@
+[
+  {
+    "variant": "batch64",
+    "directory": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb",
+    "command": [
+      "clang++-21",
+      "--target=x86_64-linux-gnu",
+      "--sysroot=/usr/x86_64-linux-gnu",
+      "--gcc-toolchain=/usr",
+      "-std=c++23",
+      "-O3",
+      "-g0",
+      "-DNDEBUG",
+      "-march=znver5",
+      "-mtune=znver5",
+      "-mllvm",
+      "-inline-threshold=1000",
+      "-falign-functions=64",
+      "-I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/hashtable-swiss-batch/graduate-cross/avx512/batch64/include",
+      "-I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/ikea/include",
+      "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/workbench/spikes/hashtable-swiss-batch/codegen.cpp",
+      "-DNDEBUG",
+      "-S",
+      "-o",
+      "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/hashtable-swiss-batch/graduate-cross/avx512/codegen/batch64.s"
+    ]
+  },
+  {
+    "variant": "group16",
+    "directory": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb",
+    "command": [
+      "clang++-21",
+      "--target=x86_64-linux-gnu",
+      "--sysroot=/usr/x86_64-linux-gnu",
+      "--gcc-toolchain=/usr",
+      "-std=c++23",
+      "-O3",
+      "-g0",
+      "-DNDEBUG",
+      "-march=znver5",
+      "-mtune=znver5",
+      "-mllvm",
+      "-inline-threshold=1000",
+      "-falign-functions=64",
+      "-I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/hashtable-swiss-batch/graduate-cross/avx512/group16/include",
+      "-I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/ikea/include",
+      "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/workbench/spikes/hashtable-swiss-batch/codegen.cpp",
+      "-DNDEBUG",
+      "-S",
+      "-o",
+      "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/hashtable-swiss-batch/graduate-cross/avx512/codegen/group16.s"
+    ]
+  },
+  {
+    "variant": "native",
+    "directory": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb",
+    "command": [
+      "clang++-21",
+      "--target=x86_64-linux-gnu",
+      "--sysroot=/usr/x86_64-linux-gnu",
+      "--gcc-toolchain=/usr",
+      "-std=c++23",
+      "-O3",
+      "-g0",
+      "-DNDEBUG",
+      "-march=znver5",
+      "-mtune=znver5",
+      "-mllvm",
+      "-inline-threshold=1000",
+      "-falign-functions=64",
+      "-I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/hashtable-swiss-batch/graduate-cross/avx512/native/include",
+      "-I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/ikea/include",
+      "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/workbench/spikes/hashtable-swiss-batch/codegen.cpp",
+      "-DNDEBUG",
+      "-S",
+      "-o",
+      "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/hashtable-swiss-batch/graduate-cross/avx512/codegen/native.s"
+    ]
+  }
+]
