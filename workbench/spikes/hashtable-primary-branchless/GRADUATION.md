@@ -85,8 +85,31 @@ C++ after curation.
 
 ## Engine consumer
 
-The actual current index directory uses native radix and Ikea Boundlist, not a
-Hashtable. Engine removed the earlier Hashtable-backed prototype. Engine LEAD
-owns adding automatic selection to its real hashed layer recipe and qualifying
-the complete locator/material consumer; that integration remains outstanding.
-No selector has been wrapped around unrelated scalar directory operations.
+Engine's actual [shared-prefix HashLayer](../../../engine/include/engine/directory_hash.h)
+now supplies Scope-borrowed native groups to its
+[complete equality consumer](../../../engine/examples/segment_driver.cpp).
+`Producer::equality_selector` persists across calls. Each Scope64 invocation
+selects a compiled loop including `HashGroup::get<Hint>`, summary narrowing,
+record refinement, afterimage selection and full-row consumption. The Scope
+protects every borrowed pointer through completion. The static unpredictable
+consumer uses a readable zero-count header on absence.
+
+The [independent hash checks](../../../engine/test/directory_hash.cpp) cover
+197 consecutive 64-request batches, both methods, full 64-byte values, zero hits,
+sparse misses, dense same-group cloning, old/fresh versions, late discovery,
+discard/abort and coupled Segment/locator publication. Normal and ASan/UBSan
+suites pass 5/5. Additional actual-consumer sanitizer runs cover two Segments
+with all 65,536 slots and 80×128 dispersed rows, afterimages and 25% refinement
+misses. Explicit wide absent-prefix IDs exercise true Hashtable misses through
+both consumers, including the zero-header/null-cell path.
+
+Engine qualification source capture:
+`14d45d74f761ab52b886ce73dcf3c97f2b2828972e80895cc5d1bb719bf39887`.
+The consumer, hash implementation, test and three promoted runtime headers
+match its consumed-source identities. Engine owns that source/checkpoint and
+its [implementation evidence](../index-directories/IMPLEMENTATION.md).
+
+The first Engine recipe is a bitmap with 64-byte values; both getters use the
+ordinary fallback there. The W32 map8 speedup above is a separate measured
+surface. Engine's broader directory acceptance and performance work remain
+with its owner.
