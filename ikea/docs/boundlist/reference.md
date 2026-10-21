@@ -16,24 +16,11 @@ include the left cut, exclude the right. An explicit list of `n+1` cuts defines 
 intervals. For example, cuts `[10,15,16]` define `[10,15)` and `[15,16)`.
 The first interval ends exactly where the next begins.
 
-Here is a larger example, used throughout this guide:
-
-| Rank | Interval | Size |
-| --- | --- | --- |
-| 0 | `[0,8)` | 8 |
-| 1 | `[8,18)` | 10 |
-| 2 | `[18,26)` | 8 |
-| 3 | `[26,35)` | 9 |
-| 4 | `[35,46)` | 11 |
-| 5 | `[46,56)` | 10 |
-
-Its cuts are `[0,8,18,26,35,46,56]`. There is no separate start/end pair per rank,
-and no gap between intervals. To exclude a span, it must still have a rank; skipping
-that rank does not move its cuts or extend a neighboring interval into it.
-
 A **tombstone** marks a retired interval without changing its boundaries or rank.
-In the diagram rank 2 is retired. Its span `[18,26)` still exists, and a physical point
-lookup still reports rank 2 with its tombstone. Operations selecting live ranks skip it.
+A point lookup still reports its rank with the tombstone; operations selecting live
+ranks skip it. Retirement does not extend a neighboring interval into the retired span.
+
+![Six contiguous intervals share consecutive cuts. The query from 9 inclusive to 36 exclusive overlaps ranks 1 through 4. Retired rank 2 retains its interval but is skipped by live traversal.](images/ranges.svg)
 
 ## Points, ranges and eligibility
 
@@ -50,15 +37,12 @@ For the diagram's query `[9,36)`, ranks 1 through 4 overlap: the window is `[1,5
 Live-only selection still returns that window because rank 2 is internal; traversal
 skips the retired rank. The geometry remains contiguous before and after selection.
 
-![Six contiguous intervals share consecutive cuts. The query from 9 inclusive to 36 exclusive overlaps ranks 1 through 4. Retired rank 2 retains its interval but is skipped by live traversal.](images/ranges.svg)
-
 ## Compact format and borrowed sources
 
 Boundlist's compact mutable format, named `sidecar` in the API, holds up to 256
 intervals starting at zero. It stores one exclusive end per rank, or sizes from which
 the ends are reconstructed, plus optional tombstones. Zero is the **implicit first cut**.
-The final end is the **extent**. The example therefore stores ends
-`[8,18,26,35,46,56]`, or equivalent sizes, rather than storing zero again.
+The final end is the **extent**.
 
 Search can also borrow a caller-owned endpoint source, including cuts at a nonzero
 origin or in a wider comparison domain. That route has no 256-entry or universal
