@@ -5,12 +5,15 @@ October 21. Current direction is to retain Ikea and improve its usability.
 This inspects the same **Boost 1.92.0** used by the actual peer controls. These
 studies change no maintained lookup kernel or representation. The source probe below
 measures dependency and binary footprint. The subsequent
-[memory-matched comparison](MEMORY.md) is the current throughput evidence:
+[memory-matched comparison](MEMORY.md) qualifies that captured lookup implementation:
 Boost's native-memory lead does not imply a general read lead at comparable
 budgets; Ikea retains significant ordinary-write and some read gaps.
 The [mixed-hit diagnosis](HIT-MIX.md) isolates the warm branch-prediction cliff
 and tests speculative Swiss traffic separately. This research does not propose
-a container migration.
+a container migration. Later [predictability specialization](../hashtable-primary-branchless/GRADUATION.md)
+and [borrowed-inline qualification](../hashtable-wide-values/GRADUATION.md) changed
+the maintained read paths; use the [benchmark question map](../../benchmarks/hashtable/README.md#find-the-result-that-answers-your-question)
+to find those results alongside memory and construction costs.
 
 **Boost is a credible ordinary set/map foundation.** Using it unchanged for
 private or exclusively owned tables is inexpensive. A pinned fork with storage,
@@ -225,7 +228,7 @@ but is not uniformly cheaper when the table is hot.
 
 ## What the existing performance evidence buys
 
-Our [latest whole-table comparison](../hashtable-swiss-batch/GRADUATION.md)
+The [whole-table comparison at that source epoch](../hashtable-swiss-batch/GRADUATION.md)
 establishes stronger Boost hot reads and ordinary construction/churn in many
 K30 native-capacity cases. The subsequent [equal-budget study](MEMORY.md)
 changes the read ranking materially and retains those native controls. Ikea

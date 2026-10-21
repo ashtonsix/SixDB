@@ -170,7 +170,7 @@ experiment, so it cannot silently account for a gain attributed to fusion.
 
 Keep the complete operation, cold preparation, code/control size and reuse count
 visible. AOT fixtures can establish achievable steady-state code, but their C++
-build times are not predictions of JIT latency. The [retained-plan idea](../../notebook/ideas.md#plans-that-keep-improving)
+build times are not predictions of JIT latency. The [retained-plan idea](../../notebook/representations-and-planning.md#plans-that-keep-improving)
 remains relevant; this evidence does not choose JIT, CPS granularity, a search
 algorithm or a sensing cadence.
 

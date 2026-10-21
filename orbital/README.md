@@ -245,17 +245,17 @@ orb -m ubuntu cmake --build build/orbital-stage1/clang --target orbital_validate
 physical Representation checks. The Object material instantiates cold catalog
 operations in a separate TU; its caller checks coherent discovery, publication
 refusal and abort, conversion authority, and retained lifetimes. These Object/Representation
-checks require no spike or Ikea format. The opt-in study also runs its interrupted
-maintenance histories against the selected catalog, alongside composed
-TuplePack/SeriesPack and Loom integration checks and performance comparisons.
-
-[The maintained consumer driver](../workbench/benchmarks/orbital/README.md) runs
-SeriesPack/TuplePack point operations, scans, appends and dependent reads against
-actual LMDB. It owns the allocation-only comparisons; the
-[MVCC comparison](../workbench/spikes/orbital-mvcc/performance/README.md) includes
-the selected Object path. The allocation driver's mutable page layout is
-comparison machinery; it supplies no Object identity or versioning.
+checks require no spike or Ikea format. The opt-in
+[Object integration study](../workbench/spikes/orbital-mvcc/README.md) retains nine
+production consequence checks, including interrupted reclamation, composed
+TuplePack/SeriesPack conversion, append, fused reads and actual Loom lifetimes.
+The [check inventory](../workbench/benchmarks/retired-drivers.md#current-integration-checks)
+names their targets. The allocation and MVCC timing drivers are
+[retired](../workbench/benchmarks/retired-drivers.md#historical-recovery);
+[historical performance findings](../workbench/spikes/orbital-mvcc/performance/README.md)
+remain readable and recoverable. Current complete index comparisons live with
+the [directory study](../workbench/spikes/directory/README.md).
 [Prior research](../workbench/notebook/orbital/reference/README.md)
 explains the allocation, access and execution choices without establishing runtime
-contracts from prototype behavior. The opt-in MVCC study retains Object and
-caller histories as checks for competing implementations.
+contracts from prototype behavior. The [memory/lifetime research route](../workbench/notebook/memory-and-lifetimes.md)
+connects earlier allocation choices to later complete consumers and negative results.

@@ -446,7 +446,7 @@ distance do not feed back into them.
 
 ### W32 — Retained plans can improve without changing semantics or bytes
 
-**Recorded:** [Plans notebook](../ideas.md#plans-that-keep-improving),
+**Recorded:** [Plans notebook](../representations-and-planning.md#plans-that-keep-improving),
 [first sketches](../../spikes/ikea-composition/sketches.md#clarification-analysis-and-execution-surfaces)
 and [second sketches](../../spikes/ikea-composition/sketches-2.md) keep equivalences,
 applicability and conditional costs separate.

@@ -111,5 +111,5 @@ unparsed sibling sources. Keep the bundle in ignored storage and use the existin
 and a verified S3 recovery reference. Full logs can be large; ordinary collection
 references existing runs without copying them. Collection itself uploads and deletes nothing.
 
-The earlier [formal spike](../../workbench/spikes/orbital-formal-first-pass/README.md)
+The earlier [formal spike](../../workbench/notebook/orbital/reference/formal-first-pass.md)
 retains its own narrower questions and historical evidence.

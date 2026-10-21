@@ -68,4 +68,5 @@ one build's parallelism; coordinate independent concurrent builds separately.
 A separate worktree keeps current tools available to other tasks. Discover the
 relevant [offline check](tests/README.md) with `python3 workbench/tools/check.py --list`;
 run it with `check.py NAME`. For documentation edits, `check_docs.py` offers link
-and catalog hints. Neither tool is a required experiment step.
+and catalog hints, including notebook pages unreachable from its research map.
+Neither tool is a required experiment step.

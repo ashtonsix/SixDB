@@ -1,6 +1,0 @@
-add_executable(orbital_stage2_composition_check caller.cpp check.cpp)
-sixdb_target(orbital_stage2_composition_check)
-target_link_libraries(orbital_stage2_composition_check PRIVATE
-  selected_access orbital_representation_conversion)
-add_test(NAME orbital_stage2_composition_check COMMAND orbital_stage2_composition_check)
-set_tests_properties(orbital_stage2_composition_check PROPERTIES TIMEOUT 30)

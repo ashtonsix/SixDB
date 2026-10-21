@@ -5,6 +5,11 @@ groups and the 87.5% ceiling**. Ikea commit `50937e71` contains the promotion.
 Neither 32 nor 64-byte groups earns adoption. See [results](RESULTS.md) for
 whole-table reads, writes, actual Boost/Abseil controls and the losing cases.
 
+The later [Swiss metadata-batch study](../hashtable-swiss-batch/README.md) widened
+ISA reads to 32/64 metadata bytes while retaining **16-slot logical groups**
+and their first-empty stopping rule. Those compatible decisions answer different
+questions; wider loads did not promote wider logical groups.
+
 The experiment used actual 16/32/64-slot logical probe groups, all with eight-bit
 tags and tombstones. It held primary geometry, seed and encoding constant, and
 matched total Swiss slots except for each width's minimum allocation. AVX2 used

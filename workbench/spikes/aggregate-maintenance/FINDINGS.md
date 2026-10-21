@@ -113,6 +113,6 @@ costs can subsequently be bracketed with explicit patch/container/page models,
 then measured against candidate representations. These are directions opened
 by the evidence, not new mandatory stages or a product milestone.
 
-The [notebook](../../notebook/ideas.md#when-less-logical-work-costs-more-cpu)
+The [notebook](../../notebook/indexes-and-maintenance.md#avoiding-per-write-ancestor-work)
 connects this result back to the broader question of when less logical work
 repays the cost of constructing a different representation.

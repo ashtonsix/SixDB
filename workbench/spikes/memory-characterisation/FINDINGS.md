@@ -16,8 +16,9 @@ The [fleet table](FLEET.md), [lookup](lookup.json), [method](METHOD.md) and
 The useful result is a set of conditional cost curves and scheduling candidates.
 A single global “MLP” or “stream count” loses information that materially changes
 placement and ring choices. Exact miss-slot counts, exact prefetch-table sizes
-and a proven direct L2-to-L2 route remain unresolved. No Loom or Engine module
-has been created or given a new contract.
+and a proven direct L2-to-L2 route were unresolved. At the September capture,
+neither Loom nor Engine had been created; the later Loom implementation is
+linked above. These historical measurements do not define its current contract.
 
 ![Selected measured curves](measurements.png)
 
@@ -49,6 +50,11 @@ firmware/prefetch controls hidden by a hypervisor, and different physical hosts
 need further validation before these profiles become deployment-wide defaults.
 
 ## Lines, pages, adjacency and learning
+
+The training/adjacency observations in this section used the original helpers
+without an entry speculation barrier. Use the [corrected study](ADJACENT.md)
+for the later native comparison; these numbers are historical, not production
+lookup-table inputs.
 
 All tested EC2 cores report **64-byte data lines**; the local VM reports **128
 bytes**. The independent two-writer offset sweep corroborated 64 bytes on Zen 5:

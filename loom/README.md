@@ -65,8 +65,8 @@ hint nor a width candidate establishes readiness or cache residence.
 The [selected ObjectStore caller](../workbench/spikes/orbital-mvcc/callers/object_module.md)
 exercises coherent reads across suspension, publication and escaping completion
 using an actual Worker. The [MVCC study](../workbench/spikes/orbital-mvcc/README.md)
-also retains rejected-baseline Ring and delayed-fill controls. These compositions
-remain experimental; the [Object module](../orbital/README.md#embedded-objects)
+also retains current production integration checks and historical findings.
+The caller's policy remains experimental; the [Object module](../orbital/README.md#embedded-objects)
 owns the current interpretation and physical-ownership seams.
 Placement, the version-aware read cache and I/O orchestration remain in the
 [joint design](../workbench/design/orbital/DESIGN.md). The historical
@@ -88,8 +88,13 @@ The examples include admission, useful work and complete cleanup:
 - [Execution](examples/execution.cpp): charged serial probes and legal direct/Ring selection.
 - [Hardware inspection](examples/hardware.cpp): reported facts and conditioned observations; experiments off by default.
 
-The [allocation comparison](../workbench/benchmarks/orbital/README.md) owns actual
-composed consumers and LMDB controls. Optional `loom_ring_probe` and
+The allocation/MVCC timing drivers are [retired](../workbench/benchmarks/retired-drivers.md).
+[Retained Object checks](../workbench/benchmarks/retired-drivers.md#current-integration-checks)
+exercise real formats and Loom lifetimes; current complete index comparisons
+belong to the [directory study](../workbench/spikes/directory/README.md).
+The [execution research route](../workbench/notebook/execution-and-codegen.md)
+connects those consumers to memory overlap, codegen and earlier experiments.
+Optional `loom_ring_probe` and
 `loom_hold_probe` are [dispatch](test/ring_probe.cpp) and
 [Hold acquisition](test/hold_probe.cpp) diagnostics; their timings alone establish
 neither database throughput nor request latency.

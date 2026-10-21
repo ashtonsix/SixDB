@@ -1,5 +1,21 @@
 # Metadata and call boundaries
 
+Start with the [cross-module outcomes](../OUTCOMES.md) for the selected result
+and its limits. For a specific question:
+
+| Question | Detailed evidence |
+| --- | --- |
+| What does the complete collection cost, including shared plans? | [Composed Shape and initial inventory](composed/README.md#initial-collection-inventory) |
+| What crosses actual read/write/conversion calls? | [Consumer codegen map](consumer/README.md), [Loom ABI](loom/README.md) and [dependent-chain diagnosis](loom/chain-codegen.md) |
+| How can ownership, interpretation and call packets be separated? | [Orbital findings](orbital/FINDINGS.md), [Shape controls](orbital/shape/README.md), [consumer qualification](consumer/README.md) |
+| Where did allocation metadata and retained capacity go? | [Allocation census](orbital/allocation-worker.md), [heap control](orbital/allocation/heap-control/README.md) and [routing controls](orbital/allocation/routes/README.md) |
+| When did smaller metadata hurt useful work? | [Rejected Schema reconstruction](../performance/FEEDBACK.md#transient-schema-construction-phase) and [maintenance tradeoff](../performance/FEEDBACK.md#masked-maintenance-retained-reader-gain-fresh-reader-regression) |
+
+These are captured comparisons. [Orbital](../../../../orbital/README.md) owns
+current contracts; [memory/lifetime research](../../../notebook/memory-and-lifetimes.md)
+connects them to later complete consumers instead of treating each reduction as
+an independent target.
+
 The prototype/ABI comparisons below are historical. Current selected consequence
 checks and recovery for the retired controls are listed in the
 [retirement guide](../../../benchmarks/retired-drivers.md).

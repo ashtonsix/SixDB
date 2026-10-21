@@ -56,7 +56,7 @@ the outer protocol rather than the embedded publication step. Finished Owners
 can wait before acceptance, but a fresh Scope cannot validate computation from
 older inputs; retain its original basis or establish dependency validity before
 publication. The embedded catalog conservatively rejects any stale global basis.
-The earlier [composition experiments](../../spikes/orbital-stage2-composition/FINDINGS.md)
+The earlier [composition experiments](../../spikes/orbital-mvcc/history/selection-composition.md)
 provide additional evidence and unresolved alternatives.
 
 Any embedded candidate must preserve the relevant correctness distinctions:

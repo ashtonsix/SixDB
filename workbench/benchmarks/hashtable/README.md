@@ -24,6 +24,9 @@ experiments; [where to find them](#latency-loom-and-cache-residence).
 | What does one RMW/native mutable batch cost? | [RMW experiment](RMW.md), including binding and initial-value preparation |
 | Does the Zen 5 recipe transfer to Zen 4? | [Generation comparison](ZEN-GENERATIONS.md); it does not establish a new Zen 4 profile |
 | What changed in Swiss overflow? | [Tag/logical-width qualification](../../spikes/hashtable-swiss-probes/RESULTS.md) and [ISA read batches](../../spikes/hashtable-swiss-batch/GRADUATION.md): eight-bit tags, 16-byte logical groups, 64/32-byte x86 comparisons and the 87.5% ceiling |
+| Does a native-reserve peer lead survive a comparable memory budget? | [Memory-matched comparison](../../spikes/hashtable-boost-adoption/MEMORY.md), with capacities and the original native-allocation controls |
+| What changed for unpredictable hit/miss patterns? | [Predictability promotion](../../spikes/hashtable-primary-branchless/GRADUATION.md), following the [captured mixed-hit diagnosis](../../spikes/hashtable-boost-adoption/HIT-MIX.md) |
+| Where is the whole-table construction deficit? | [Frozen-binary construction diagnosis](../../spikes/hashtable-swiss-batch/GRADUATION.md#construction-anomaly-closed-with-frozen-binaries): ns/initial entry includes init, reserve and insertion; it is not lookup latency |
 | How can wide inline values avoid eager copying and overlap cold payload reads? | [Borrowed-inline promotion](../../spikes/hashtable-wide-values/GRADUATION.md): maintained address-return API, paired small/wide-value qualification and actual Abseil/Boost/F14 controls |
 | Where are raw runs, sources, compiler flags and losing cells? | [Evidence and recovery](evidence/README.md) |
 

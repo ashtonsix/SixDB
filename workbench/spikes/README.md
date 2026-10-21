@@ -1,110 +1,115 @@
-# Spikes
+# Investigations
 
-A stable home for an investigation: its question, candidate designs, reading,
-code, measurements, and findings belong together. Name the directory after the
-question, so a different candidate answer does not require moving it.
+Start with the [research notebook](../notebook/README.md) to find related work
+by question. This catalog covers the surviving studies, grouped by what they
+help explain. Their findings and evidence remain useful after implementation
+moves to a module or an experiment concludes; the rows are not a list of active
+projects.
 
-A spike can begin with one README. Add files or subdirectories when they help;
-there is no required template. Several implementations or measurement campaigns
-can share the same home while the question remains useful. When another home
-takes over, carry the surviving findings there and retire the redundant machinery;
-the [September curation](../notebook/retired-spikes.md) is an example with recovery pointers.
-Loose thoughts can stay in the [notebook](../notebook/ideas.md) indefinitely.
+Current APIs belong in module guides. Read a study's findings before its old
+plan or launcher, and keep the measured operation, units, source epoch and
+operating conditions attached to its numbers. [Retired investigations](../notebook/retired-spikes.md)
+locates removed source trees and verified recovery.
 
-For Orbital, the [research map](../notebook/orbital/reference/README.md) groups briefs,
-experiments and checks under Object, Allocation, Journal, Port and Worker.
+## Indexes, routing and maintenance
 
-- [Ikea composition](ikea-composition/README.md): reusable stages, ergonomics and interface seams.
-- [Filter composition](filter-composition/README.md): compiler expansion and native AVX2/AVX-512/NEON consumer costs select fused hot filters and shared canonical CPS consumers; latency and throughput remain separate.
-- [Packed filters](packed-filters/README.md): SeriesPack/TuplePack predicate masks, direct packed comparisons and independent native latency/throughput controls.
-- [Layout analyser](layout-analyser/README.md): workload objectives, plane splitting, hardware fitting and reusable layout selection.
-- [Tuple layout](tuple-layout/README.md): physical layout, bound operations and native batching.
-- [StreamPack](streampack/README.md): variable-byte packing and sidecar comparisons, with production qualification through Ikea, Loom and Orbital.
-- [Boundlist](boundlist/README.md): Ikea extraction and ordered point/range search, with adopted AVX2/AVX-512/NEON kernels, complete-consumer scorecards, Loom staging and retained-reader qualification.
-- [Index directories](index-directories/README.md): planning-only operation budgets against Calico/LMDB, composition review, layouts, prior art and full pseudocode; no directory implementation yet.
-- [Hashtable multimap](hashtable/README.md): unpromoted owning multimap, captured read/write comparisons and payload/lifetime questions. The set/map core is maintained in [Ikea](../../ikea/docs/hashtable/usage.md); superseded studies are archived.
-- [Hashtable K-way merge](hashtable-merge/README.md): bucket-wise traversal, external workspace and retained accumulation comparisons. Single-source mutable accumulation is maintained in Ikea.
-- [Hashtable overflow](hashtable-overflow/README.md): completed tag/continuation and occupancy comparison; eight-bit tags are maintained in Ikea.
-- [Hashtable Swiss probes](hashtable-swiss-probes/README.md): completed 32/64-byte comparison with actual Boost/Abseil controls; eight-bit tags and 16-byte groups retained, rejected variants archived.
-- [Hashtable Swiss batches](hashtable-swiss-batch/README.md): graduated ISA-selected 64/32-byte read comparisons over 16-byte logical groups; whole-table qualification with actual Boost/Abseil controls, prototypes archived.
-- [Boost table adoption](hashtable-boost-adoption/README.md): pinned source/dependency and linked-footprint audit; ordinary ownership, Loom, ordered accumulation and byte-preserving MVCC seams, without a production migration.
-- [Hashtable primary branch](hashtable-primary-branchless/README.md): graduated predictable-first read hints and caller-owned automatic selection; native Boost/Abseil controls, workload shifts, cold preservation and short-batch costs.
-- [Hashtable wide values](hashtable-wide-values/README.md): borrowed inline values and external slot IDs; native Zen 5 payload-consuming reads, ID/payload staging with actual Loom, writes, growth and backing memory against actual Abseil/Boost/F14.
-- [Bec256 with current Ikea](bec256-composition/README.md): exact codec operations, native pairs and larger-bitset population/length directories built with SeriesPack and TuplePack.
-- [Ikea on Neoverse V3](ikea-neoverse-v3/README.md): C8g/C9g comparisons, compiler scheduling, lookup and exact-span experiments.
-- [Ikea CPU comparison](ikea-cpu-comparison/README.md): October 2026 snapshot across six processors, matched case evidence and a frozen cloud-price model.
-- [Executable placement](executable-placement/README.md): distinguishing changed code from placement effects.
-- [Memory characterisation](memory-characterisation/README.md): automatic MLP, prefetch, cache sharing and host diagnostics.
-- [Loom execution](loom-execution/README.md): memory microtask rings, fixed hint classes, worker channels/groups, synchronization and affinity-crossing operations.
-- [Loom hardware policy](loom-hardware-policy/README.md): startup lookup, background calibration and abstract demand codes mapped to inline native hints.
-- [Loom locality and execution](loom-locality-execution/README.md): direct/Ring selection and contiguous-demand hints, with retained native comparisons and the handover to caller-qualified execution policy.
-- [Assembly module calls](assembly-calls/README.md): assembly-first prototypes linked to real Ikea/Loom operations, ABI sketches and caller-owned result frames.
-- [Call boundaries](call-boundaries/README.md): Loom/Orbital caller and callee assembly, fat returns, native carrier limits and frequency-sensitive ABI alternatives.
-- [Memory descriptors](memory-descriptors/README.md): arena-selected palettes, one-byte trampolines, placement and retained native access.
-- [Allocation palettes](allocation-palettes/README.md): native 4/16/64 KiB timing, independent spacing/count comparisons and selected Group profiles.
-- [Allocation temperature reuse](allocation-reuse-temperature/README.md): bounded HOT/WARM queues, reuse ordering and actual allocator costs.
-- [Live-tail reclamation](allocation-live-tail/README.md): explicit extent relinquishment, retained-reader protection and native costs of reclaiming and regrowing pages.
-- [CFT commit latency](cft-commit-latency/README.md): directional network measurement and host/flow selection; durable quorum latency, storage throughput cliffs and live log preparation.
-- [Local message handoff](orbital-local-handoff/README.md): native Zen 5 measurements of batching, payload readiness, polling CPU, queue admission and instrumentation sensitivity.
-- [Orbital reservation policies](orbital-reservation-policy/README.md): broad-waiter progress, WAN convoys and deterministic bypass, with formal and native comparisons.
-- [Orbital prepared retention](orbital-root-fusion/README.md): deriving a prepared root from an existing same-owner record, with acquisition and recovery comparisons.
-- [Orbital views](orbital-views/README.md): embedded object histories, versioned parts, sparse views, copying/taking, worker masks and allocation reuse.
-- [Orbital MVCC](orbital-mvcc/README.md): selected embedded modules, disposable callers and retained controls; [outcomes and handover](orbital-mvcc/OUTCOMES.md) connect performance and ownership lessons to future Ikea/Engine work.
-- [Orbital Stage 2 composition](orbital-stage2-composition/README.md): historical selection/Representation/View seams and real SeriesPack–TuplePack conversion; its findings precede the selected modules.
-- [Selected access](orbital-selected-access/README.md): historical borrow, escape and delayed-completion lifetime falsifiers; current contracts live in Orbital.
-- [Representation conversion](orbital-representation-conversion/README.md): historical 1–8-column conversion fixture and independent encoding/interpretation oracles.
-- [Durable object composition](orbital-objects/README.md): earlier composition of state, native views and physical lifetimes; Linux protection, UFFD and COW probes.
-- [Row filter signatures](row-filter-signatures/README.md): per-row Boolean evidence and progressive refinement.
-- [Aggregate maintenance](aggregate-maintenance/README.md): descendant summaries without excessive mutation cost.
-- [Trie remapping](trie-remapping/README.md): natural-key tries with difficult suffixes remapped to physical positions.
-- [Regexp lowering](regexp-lowering/README.md): exact LIKE rewrites and necessary-condition prefilters.
+[Cross-study reading route](../notebook/indexes-and-maintenance.md) — logical versus
+physical order, duplicate keys, summary maintenance and complete index consumers.
 
-## Earlier investigations
+| Study | What remains useful |
+| --- | --- |
+| [Directory](directory/README.md) | Current complete index experiment: layer-specific routing, sparse/duplicate traversal, packed Segments, mutation/publication, native peers and memory/drain evidence. Start with its scorecard and coverage. |
+| [Trie remapping](trie-remapping/README.md) | Concluded comparison of natural regions, ordered gaps and block order; column movement and conversion remain consequential. |
+| [Aggregate maintenance](aggregate-maintenance/README.md) | Count/sum coalescing, construction costs, dirty buffers and no-filter controls. Connects directly to directory pending aggregates. |
+| [Row-filter signatures](row-filter-signatures/README.md) | Concluded resident scan and semantic models; useful regions for block summaries and expensive predicates, with direct-column negatives. |
+| [Regexp lowering](regexp-lowering/README.md) | Concluded exact/necessary lowering, survivor bounds and factored filters over real corpora. Logical counts are not timing gains. |
 
-- [Orbital first formal investigation](orbital-formal-first-pass/README.md): superseded bounded checks, counterexamples and sizing evidence; the maintained formal models are in [Orbital](../../orbital/spec/README.md).
+## Packed representations and planning
 
-## Building a study
+[Cross-study reading route](../notebook/representations-and-planning.md) — current
+author capabilities, mixed-workload layout choices, filtering, conversion and plans.
 
-Activate a study in the editor with `python3 workbench/tools/dev.py --add NAME`;
-[editor setup](../tools/editors.md) owns refresh and dependency instructions.
-For execution, use its runner or configure the target directly as below.
+| Study | What remains useful |
+| --- | --- |
+| [Tuple layout](tuple-layout/README.md) | Point access, scans, checked mutation and layout search behind current TuplePack; analyser work remains experimental. |
+| [Layout analyser](layout-analyser/README.md) | Connected objectives, metadata/plane/placement alternatives, shortlists and worked consumer investigations. |
+| [StreamPack](streampack/README.md) | Variable-byte geometry and sidecars; comparative evidence plus production Ikea/Loom/Orbital consumers. |
+| [Boundlist](boundlist/README.md) | Ordered-source geometry, ownership, ISA search and complete consumer portfolio; implemented primitive is in Ikea. |
+| [Bec256 composition](bec256-composition/README.md) | Complete analysis/encoding consumers, prepared windows and alternatives to isolated refill comparisons. |
+| [Packed filters](packed-filters/README.md) | Direct packed comparisons, native controls and early exits; production contracts in Ikea. |
+| [Filter composition](filter-composition/README.md) | Fused/shared/CPS alternatives, compiler expansion and runtime costs across AVX2, AVX-512 and NEON. |
+| [Ikea composition](ikea-composition/README.md) | Question map into integer/bitset/heterogeneous probes, ABI, grain, value reuse and SeriesPack history. |
 
-Create a directory such as `workbench/spikes/example/` and declare its
-sources and dependencies in a small `CMakeLists.txt`:
+## Hashtable choices and frontiers
 
-```cmake
-add_library(example_core STATIC kernel.cpp)
-sixdb_target(example_core)
+[Maintained benchmark question map](../benchmarks/hashtable/README.md#find-the-result-that-answers-your-question)
+connects actual peers, memory budgets, construction, reads/writes and Loom consumers.
+[Ikea usage](../../ikea/docs/hashtable/usage.md) owns the current contract.
 
-add_executable(example_bench bench.cpp)
-sixdb_target(example_bench)
-target_link_libraries(example_bench PRIVATE example_core)
-```
+| Study | What remains useful |
+| --- | --- |
+| [Owning multimap](hashtable/README.md) | Unpromoted frontier and four comparison panels; maintained set/map has moved to Ikea. |
+| [K-way traversal](hashtable-merge/README.md) | Ordered traversal across sources and its independent costs. |
+| [Wide values](hashtable-wide-values/README.md) | Promoted borrowed-inline reads plus the remaining slot-backed alternative; retain staged ID/payload follow-up as well as synchronous losses. |
+| [Boost adoption assessment](hashtable-boost-adoption/README.md) | Dependency/footprint and ownership seams; memory-matched and mixed-hit diagnosis. No migration selected. |
+| [Predictability specialization](hashtable-primary-branchless/README.md) | Promoted predictable/unpredictable getters and caller-owned Auto; uniform branchlessness was rejected. |
+| [Swiss metadata batching](hashtable-swiss-batch/README.md) | Promoted 32/64-byte ISA reads over 16-slot logical groups, corrected comparison and construction evidence. |
+| [Swiss logical-group widths](hashtable-swiss-probes/README.md) | Completed 16/32/64-slot comparison: retain 16 logical slots. This differs from wider metadata loads. |
+| [Overflow and tags](hashtable-overflow/README.md) | Completed continuation/tag comparison; eight-bit tags adopted, losing alternatives archived. |
 
-`example` is illustrative; no such study is supplied. Prefix target names with
-the study name because names are shared across the graph. Only selected studies
-are configured, and their executables are excluded from the default build:
+## Execution, code generation and hardware
 
-```sh
-cmake --preset dev -DSIXDB_SPIKES=example
-cmake --build --preset dev --target example_bench
-```
+[Cross-study reading route](../notebook/execution-and-codegen.md) — independent memory
+work, native versus scheduled execution, service quanta, call friction and compile cost.
 
-For several studies, pass `'-DSIXDB_SPIKES=example;another'`. Selection is
-cached per build directory; clear it with `-DSIXDB_SPIKES=`. List sources
-explicitly. Ninja tracks included headers and compiler options. Editing
-`bench.cpp` compiles that TU and relinks; the compiled `kernel.cpp` can be
-reused by every executable linked to `example_core`.
+| Study | What remains useful |
+| --- | --- |
+| [Loom execution](loom-execution/README.md) | Direct/manual/Ring, worker channels, service gaps, affinity-crossing joins and bounded pressure; broader than the graduated Ring interface. |
+| [Hardware hints](loom-hardware-policy/README.md) | Prototype evidence behind native partial-field learning and hint specialization. |
+| [Locality and execution](loom-locality-execution/README.md) | Direct/Ring selection, charged sampling and contiguous demand; captured identity-bearing API is historical. |
+| [Call boundaries](call-boundaries/README.md) | Real caller/callee ABI, owning returns, frames and later Ring-dispatch consumers. |
+| [Assembly calls](assembly-calls/README.md) | Runnable assembly-to-Ikea/Loom calls, ownership handling and complete-operation review. |
+| [Executable placement](executable-placement/README.md) | Unchanged instructions, relinking effects and byte-identical link recovery. |
+| [Memory characterisation](memory-characterisation/README.md) | Demand/concurrency/hint evidence and corrected adjacency results; links actual PMU limits. |
+| [Ikea CPU comparison](ikea-cpu-comparison/README.md) | October 2026 six-CPU snapshot and price model, rather than a current hardware recommendation. |
+| [Ikea on Neoverse V3](ikea-neoverse-v3/README.md) | Focused native platform comparison with its captured source/conditions. |
 
-For compile-only iteration, request the object target:
+## Allocation, Objects and local lifetimes
 
-```sh
-ninja -C build/clang/dev \
-  workbench/spikes/example/CMakeFiles/example_core.dir/kernel.cpp.o
-```
+[Cross-study reading route](../notebook/memory-and-lifetimes.md) — placement, physical
+slack, retained versions, shared interpretation and current complete consumers.
 
-Inspect names with `ninja -C build/clang/dev -t targets all`. Normal builds need
-no clean step. Use separate build directories for concurrent builds or different
-compiler/ISA/optimization settings.
+| Study | What remains useful |
+| --- | --- |
+| [Memory descriptors](memory-descriptors/README.md) | Address geometry, placement/packing models, grouping and virtual growth; distinct prototypes, not current allocator contracts. |
+| [Allocation palettes](allocation-palettes/README.md) | Palette/class geometry, slack and complete allocation choices behind production work. |
+| [Reuse and temperature](allocation-reuse-temperature/README.md) | Cheap reuse selection and temperature for cold-first trim; ranked queues and candidate caches lost. |
+| [Live-tail allocation](allocation-live-tail/README.md) | Group reclamation, live tails and complete physical drain. |
+| [Object integration and MVCC history](orbital-mvcc/README.md) | Current production consequence checks, cross-module outcomes, metadata/ABI and historical performance negatives. Timing drivers are retired. |
+| [Embedded views](orbital-views/README.md) | Earlier copy/COW/take, readiness, growth and intent comparisons; current interfaces live in Orbital. |
+| [Earlier object/view composition](orbital-objects/README.md) | Real mapping, storage/socket use and delayed-reader comparisons under its historical fixture. |
+| [Local handoff](orbital-local-handoff/README.md) | Same-host thread/worker handoff and hardware calibration. |
 
-[BUILDING.md](../../BUILDING.md) covers distribution packaging.
+## Durability and protocol models
+
+[Orbital questions](../notebook/orbital-ideas.md) and its
+[historical reference map](../notebook/orbital/reference/README.md) connect these
+studies to current runtime and formal-model owners.
+
+| Study | What remains useful |
+| --- | --- |
+| [CFT and durable commit](cft-commit-latency/README.md) | Independent network/persistence measurements, PLP and commit comparisons; simulator costs do not replace them. |
+| [Reservation policies](orbital-reservation-policy/README.md) | Completed queue-rule alternatives, counterexamples and continuing-workload progress under modeled assumptions. |
+| [Prepared-root fusion](orbital-root-fusion/README.md) | Eligible chosen-operation fusion, retained material and recovery checks; not generic root acquisition. |
+
+## Work on an investigation
+
+Keep one stable home named after the question. Code, literature, experiments and
+findings can develop together; one README is enough to begin. A loose idea can
+stay in the [notebook](../notebook/ideas.md). There is no required study template.
+
+[Building and editor setup](BUILDING.md) gives the small CMake example and selected
+target workflow. [Tools](../tools/README.md), [datasets](../datasets/README.md) and
+[peers](../peers/README.md) supply reusable operating pieces. When work supersedes
+an implementation, keep its useful findings and recovery with the successor
+rather than maintaining a second live API.

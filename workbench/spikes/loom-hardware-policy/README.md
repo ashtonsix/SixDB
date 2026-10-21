@@ -13,7 +13,7 @@ Loom also calibrates unresolved fields after partial table hits, preserving
 known values and publishing learned fields at a later revision. The original
 controller below calibrated only complete context misses.
 
-## Implemented path
+## Historical Python prototype
 
 [startup.py](startup.py) reuses the existing [memory-characterisation](../memory-characterisation/README.md)
 discovery, qualified lookup table, actual probes and inference.

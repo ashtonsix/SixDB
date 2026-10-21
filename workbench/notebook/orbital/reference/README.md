@@ -9,8 +9,11 @@ For implemented allocation, worker services and embedded Object/Representation
 interfaces, start with the
 [Orbital runtime](../../../../orbital/README.md). The
 [combined design](../../../design/orbital/DESIGN.md) keeps the wider candidate in view.
-The [MVCC investigation](../../../spikes/orbital-mvcc/README.md) owns rejected
-baselines, disposable callers and performance comparisons.
+The [Object integration investigation](../../../spikes/orbital-mvcc/README.md)
+retains current production consequence checks, earlier baselines and historical
+performance comparisons. Its [outcomes](../../../spikes/orbital-mvcc/OUTCOMES.md)
+connect them to the selected modules. The broader
+[research map](../../README.md) connects cross-module questions.
 
 **[Design workspace](../ASHTON-SCRATCH.md)** — Ashton's outline and open space for reasoning
 about the relationships. Agents contribute there only at his explicit request.
@@ -31,6 +34,10 @@ current runtime contracts. Formal models establish only their stated assumptions
   [earlier object/view composition](../../../spikes/orbital-objects/README.md),
   [lock/reservation policies](../../../spikes/orbital-reservation-policy/README.md),
   [prepared retention](../../../spikes/orbital-root-fusion/README.md).
+- **Current native composition:** [material/source guide](../../../../orbital/docs/material.md),
+  [actual Worker caller](../../../spikes/orbital-mvcc/callers/object_module.md)
+  and [production integration checks](../../../benchmarks/retired-drivers.md#current-integration-checks).
+  The older view prototypes explain alternatives rather than current interfaces.
 - **Formal checks:** [retained material and recovery](../../../../orbital/spec/MATERIAL.md),
   [views and physical lifetimes](../../../../orbital/spec/RUNTIME.md).
 
@@ -44,6 +51,10 @@ current runtime contracts. Formal models establish only their stated assumptions
   [reuse selection](../../../spikes/allocation-reuse-temperature/FINDINGS.md)
   — selection now omits temperature/CPU ranking; temperature still guides cold-first
   reclamation. Earlier cascades and candidate caches remain rejected.
+- **Later allocation work:** [palettes and geometry](../../../spikes/allocation-palettes/README.md),
+  [live-tail reclamation](../../../spikes/allocation-live-tail/README.md), and
+  [cross-module memory/lifetime route](../../memory-and-lifetimes.md) into complete
+  directory allocation and drain comparisons.
 
 ## Journal
 
@@ -98,6 +109,8 @@ the [transaction repertoire](../../transactions/README.md) and
   evidence boundaries and the state left by the two preceding roles.
 - [Verification assessment](../../../../orbital/spec/RESULTS.md) — what the retained formal checks establish and leave open.
   The [formal-model guide](../../../../orbital/spec/README.md) covers finding, running and recovering checks.
+- [First formal findings](formal-first-pass.md) — superseded leaf-suite counterexamples
+  and graph-growth measurements, with source recovery rather than another live runner.
 - [Simulator guide](../../../simulator/README.md) — executable models, authored costs and their narrower coverage.
 - [Research and prior-art notes](../../orbital-ideas.md),
   [retired studies and drafts](../../retired-spikes.md) — historical material and recovery pointers.

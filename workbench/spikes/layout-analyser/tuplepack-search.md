@@ -150,7 +150,7 @@ simply be summed: memory-level parallelism and instruction overlap can change.
 Port pressure, permutation counts, dependency depth and logical line coverage
 are explanatory features, not measured time or cache misses. Preserve machine,
 compiler, recipe and caller identity with cost evidence. The
-[retained-plan idea](../../notebook/ideas.md#plans-that-keep-improving) and
+[retained-plan idea](../../notebook/representations-and-planning.md#plans-that-keep-improving) and
 [executable-placement observation](../executable-placement/evidence/checked-point-layout-20260911/summary.md)
 make that evidence context consequential.
 
@@ -402,6 +402,6 @@ reasons to preserve those limits in subsequent summaries:
   register liveness, metadata or spills.
 
 This inquiry also revisits the notebook's
-[warning about preparation exceeding saved work](../../notebook/ideas.md#when-less-logical-work-costs-more-cpu):
+[warning about preparation exceeding saved work](../../notebook/indexes-and-maintenance.md#avoiding-per-write-ancestor-work):
 fewer masks, loads or logical writes are promising mechanisms only after their
 construction and complete consumption have been charged.

@@ -109,6 +109,31 @@ tar -xzf ~/sixdb-archive/hashtable-20261017/old-and-promoted-designs.tar.gz \
   -C ~/sixdb-archive/recovered-hashtable
 ```
 
+## Object prototypes and first formal suite — October 21, 2026
+
+Four superseded source trees were removed from the live spike catalog:
+`orbital-selected-access`, `orbital-representation-conversion`,
+`orbital-stage2-composition` and `orbital-formal-first-pass`.
+Every one of their 133 tracked files (470,720 bytes) matched Git commit
+`35e63b8416d377f216575d6f8d97668b9bce9ab3` byte for byte before removal.
+No unique untracked material was removed. The
+[compact recovery receipt](../spikes/orbital-mvcc/history/recovery.json)
+records the four original Git tree IDs; the full checkpoint recovers sources,
+run instructions, selected receipts and sibling modules together.
+
+The [Object history guide](../spikes/orbital-mvcc/history/README.md) keeps the
+three native studies' findings, lifetime falsifiers and diagnostic costs.
+Their retained consequences now run in the
+[production integration checks](../benchmarks/retired-drivers.md#current-integration-checks).
+The [first formal findings](orbital/reference/formal-first-pass.md) preserve
+counterexamples, graph growth and the original 80-case classification; current
+models and coverage belong in [Orbital specifications](../../orbital/spec/README.md).
+The old leaf suite is not a second verification plan.
+
+Links from retained findings to deleted source/evidence are pinned to that
+checkpoint. Original measured bundles still identify their own captured bytes.
+Recover into a separate directory, not over current modules.
+
 ## Recovery
 
 Browse the [complete checkpoint](https://github.com/ashtonsix/SixDB/tree/275698524c58dea08f19961dbc2940cae68b405b/workbench/spikes)

@@ -24,7 +24,7 @@ are available. [Research-experience notes](../../notebook/research-experience.md
 record what using this probe changed about the workbench.
 The separate [sketches, filters, and histograms note](../../notebook/secondary-summaries.md)
 keeps their different contracts open. A related
-[notebook thought](../../notebook/ideas.md#when-less-logical-work-costs-more-cpu)
+[notebook thought](../../notebook/indexes-and-maintenance.md#avoiding-per-write-ancestor-work)
 connects the first surprising result to broader construction-cost questions.
 
 ## Run and iterate

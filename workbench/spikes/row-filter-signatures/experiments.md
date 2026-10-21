@@ -177,7 +177,7 @@ working sets, access order, and warmup. Inspect generated scan kernels and
 use PMU evidence where available. Linux/Zen5 is a primary target; local ARM
 results apply to that machine, and emulation is for correctness only.
 
-Use [independent study targets](../README.md#building-a-study) and the
+Use [independent study targets](../BUILDING.md) and the
 [shared runner/retention tools](../../tools/README.md) when code is introduced.
 Validate before timing, pin CPUs, and run repetitions sequentially. Keep
 per-query/seed variation and paired comparisons; do not choose a universal

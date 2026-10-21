@@ -35,6 +35,9 @@ they do not establish SixDB contracts or reproduce its benchmark claims.
 
 - [CPS and reusable stages](../../../calico/workbench/prototypes/bytepack/evidence/cps.md):
   calling protocols, code growth, and compilation measurements.
+- [Loom AMAC report](../../../calico/loom/report/AMAC.md): independent chains,
+  stream shapes, underfilled rings and native hand-AMAC controls. The
+  [SixDB execution route](execution-and-codegen.md) connects later evidence and current APIs.
 - [Foyer build survey](../../../calico/workbench/science/systems/foyer-build-shape/BRIEF.md):
   parsing, template, optimization, and shared-compilation costs.
 

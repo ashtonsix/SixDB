@@ -8,6 +8,12 @@ interface or a new measurement campaign. Ashton's follow-up adds lookup by
 the prefix of a friendly box enclosing a remapped segment, and explicitly
 separates prefix addressing from the choice of hash-map implementation.
 
+For the current consumer, use the [directory study](../spikes/directory/README.md).
+[Indexes and maintenance](indexes-and-maintenance.md) connects this retrospective
+to remapping, buffered summaries and later complete-operation evidence.
+
+## Which parts of prefix addressing are independent?
+
 **Prefix addressing was a useful Calico idea. SixDB should retain derivable
 region names and separation from byte location, while making their scope
 explicit.** Natural-key prefixes can remain excellent routing coordinates;
@@ -34,7 +40,9 @@ It does not select a fixed logical interval, full-capacity allocation, rank
 alignment, or a segment at every byte depth. This retrospective preserves that
 decision. Navigation in 8/16-bit steps is another separable choice.
 
-**What prefix naming actually bought.** Its distinctive advantage over an
+## Derivable names and location resolution
+
+Prefix naming's distinctive advantage over an
 opaque page ID is that a query can construct useful names before loading
 parents: an expected leaf, an arithmetic LCA in a natural-key domain, demanded
 descendants, or corresponding column containers. This creates opportunities
@@ -80,7 +88,9 @@ fixture from unfinished production overflow/compaction and mutable recovery.
 Distributed ownership remained open. These are limits on the retrospective
 claim; they do not by themselves refute prefix addressing.
 
-**Remapping changes the meaning of an address.** For a logical key
+## Remapping changes the coordinate domain
+
+For a logical key
 `K = P || suffix`, a fully ordered local mapping can produce
 `T_v(K) = P || f_v(suffix)`. Above the boundary, `P` still describes a natural
 logical prefix. Below it, the bits describe placement under mapping edition
@@ -107,7 +117,9 @@ and compatible edition; equal numeric slots in independently remapped indexes
 do not establish equal records. Ordered scans within a disordered block need
 its ordering directory or permutation.
 
-**Payload placement is as consequential as routing.** At 5% occupancy in the
+## Payload placement and the measured limits
+
+At 5% occupancy in the
 probe's wide-column/dependency profile, gapped keys with rank-packed columns
 still moved 12,720,896 counted payload bytes over 512 mutation cycles. Gapping
 the columns too reduced that to 69,120, with mixed-cycle time falling from
@@ -130,7 +142,9 @@ discovery, Calico QHash navigation, full 16-bit containers, WAL, replication or
 online conversion. It informs placement choices, but cannot decide whether
 prefix addressing beats another complete access method.
 
-**A candidate SixDB adaptation.** Keep natural routing wherever it is useful,
+## Candidate discovery and enclosing boxes
+
+Keep natural routing wherever it is useful,
 with explicit authority at terminal or remap boundaries. A region descriptor
 could supply logical bounds, direct/remapped mode, mapping edition and access
 to its local representation. Queries must discover that authority before
@@ -196,6 +210,8 @@ Derive or maintain the enclosure from ownership fences rather than recomputing
 it from current occupied min/max on every deletion. A new key inside an owned
 range then does not change the name merely by becoming its new extreme.
 
+## Identity, secondary references and publication
+
 Inside a region, keep logical routing coordinates separate from container
 identity. A natural prefix can serve both roles when stable. When block labels
 are reassigned, a scoped stable block/container ID could avoid renaming all
@@ -234,6 +250,8 @@ the lifetime of resident addresses are distinct facts. This fits the provisional
 [Orbital](orbital/reference/README.md) division without selecting a wire format or
 replication policy. Portable persistent names do not require identical local
 physical mappings on all replicas; the replication contract must decide that.
+
+## The unresolved complete comparison
 
 The unresolved comparison is a mixed-region read/write path that charges
 discovery, resolution and payload maintenance together. Holding payload layouts

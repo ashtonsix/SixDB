@@ -114,7 +114,7 @@ The hot path should run an already bound operation. Representation analysis,
 sensing and plan improvement do not belong in each tuple access. Representation
 substitution must preserve the caller's semantic and coordinate contract while
 allowing the physical schema, placement and execution recipe to change together.
-The [retained-plan idea](../../notebook/ideas.md#plans-that-keep-improving) provides
+The [retained-plan idea](../../notebook/representations-and-planning.md#plans-that-keep-improving) provides
 context without requiring an equivalence-graph implementation for this probe.
 
 Partial writes need an inverse map with explicit preservation and conflict rules.

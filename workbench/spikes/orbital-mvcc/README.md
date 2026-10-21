@@ -1,5 +1,11 @@
 # Object integration and historical MVCC investigations
 
+[Outcomes and cross-module lessons](OUTCOMES.md) is the short starting point.
+Use the [performance map](performance/README.md) for particular measured
+operations and negative results, [metadata map](metadata/README.md) for state,
+ownership and ABI evidence, and [earlier prototypes](history/README.md) for
+the retained selection/conversion falsifiers and exact source recovery.
+
 Stage 2 implementation and comparative benchmarking are complete. The two
 disposable drivers and rejected prototype matrices are retired. Start with
 [outcomes and handover](OUTCOMES.md) for findings, consequences and remaining

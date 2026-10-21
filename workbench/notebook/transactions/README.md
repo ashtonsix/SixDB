@@ -13,9 +13,12 @@ not a coverage checklist or another specification of the transaction protocol.
   visibility and snapshot-plus-CDC activation.
 
 The detailed documents are dated research records. Their model names and claims
-refer to the captured scenario implementations; current protocol direction belongs
-to [Orbital's brief](../orbital/reference/BRIEF.md), and maintained experiments to the
-[native simulator](../../simulator/README.md). Archived source links preserve the
+refer to the captured scenario implementations. Current implemented behavior belongs
+to [Orbital](../../../orbital/README.md), formal obligations to its
+[specifications](../../../orbital/spec/README.md), and broader proposals to the
+[cross-module design](../../design/orbital/DESIGN.md). The old
+[brief](../orbital/reference/BRIEF.md) is historical. Maintained model experiments
+live in the [native simulator](../../simulator/README.md). Archived source links preserve the
 original context without keeping those old runtimes active.
 
 Three counterexamples remain especially useful. A narrow eventual write can

@@ -150,7 +150,7 @@ contract explicitly permits that choice. Predicted size is empirical evidence,
 not a capacity bound or a sound pruning proof. Model identity, target encoding,
 coverage and cost/accuracy evidence must survive analysis without becoming
 policy inside the feature body. This connects to
-[plans that keep improving](../../notebook/ideas.md#plans-that-keep-improving).
+[plans that keep improving](../../notebook/representations-and-planning.md#plans-that-keep-improving).
 
 **Can Engine change a deep part while the call stays simple?** A small schema
 and operation sketch can show an exposed child, a plan-only rewrite over the

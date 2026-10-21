@@ -13,8 +13,9 @@ Ikea/Boost/Abseil controls, orderings, sinks and endpoint baselines.
 
 The subsequent [branchless primary study](../hashtable-primary-branchless/README.md)
 rejects a uniform replacement, then tests predictable/unpredictable specializations
-and caller-owned selection that preserve predictable reads. Maintained Ikea
-remains unchanged; the implementation is still research.
+and caller-owned selection that preserve predictable reads. Those specializations
+are now [promoted](../hashtable-primary-branchless/GRADUATION.md). The diagnosis
+and tables below describe the earlier captured implementation.
 
 ## Measured result
 

@@ -69,7 +69,7 @@ def inspect(root):
                 sibling += 1  # Calico and other sibling checkouts are optional.
                 continue
             local += 1
-            destinations[path].add(target)
+            destinations[path].add(target / 'README.md' if target.is_dir() else target)
             location = f'{path.relative_to(root)}:{text.count(chr(10), 0, match.start()) + 1}'
             if not target.exists():
                 hints.append(f'{location}: missing target {match[1]}')
@@ -84,9 +84,24 @@ def inspect(root):
                               ('workbench/datasets', 'dataset.json')]:
         parent = root / directory
         catalog = parent / 'README.md'
-        for entry in sorted(p.parent for p in files if p.name == marker and p.parent.parent == parent):
+        for entry in sorted(p.parent for p in files
+                            if p.name == marker and p.parent.parent == parent and p.is_file()):
             if entry / 'README.md' not in destinations.get(catalog, set()):
                 hints.append(f'{directory}/README.md: catalog could link {entry.name}/README.md')
+
+    notebook = root / 'workbench/notebook'
+    front = notebook / 'README.md'
+    if front in docs:
+        reached, pending = set(), [front]
+        while pending:
+            page = pending.pop()
+            if page in reached:
+                continue
+            reached.add(page)
+            pending.extend(destinations.get(page, set()) - reached)
+        for path in docs:
+            if path.is_relative_to(notebook) and path not in reached:
+                hints.append(f'{path.relative_to(root)}: not reachable from workbench/notebook/README.md')
     return hints, len(docs), local, fragments, sibling
 
 

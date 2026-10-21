@@ -195,7 +195,7 @@ and the temporary harness do not need to survive as production interfaces.
 | Actual format/caller composition | [Material and Backend guide](metadata/composed/README.md), [Shape](metadata/orbital/shape/README.md), [caller-owned fusion](metadata/composed/read_fusion.cpp), [Loom caller](callers/object_module.md), [Ring caller](callers/object_ring.md) |
 | A measured decision or rejected alternative | This report → [performance entry](performance/README.md) → the relevant [feedback section](performance/FEEDBACK.md) → source recipe, compact tables and artifact reference beside that run |
 | Unselected follow-ups | [Parked controls](performance/controls/parked-followups/README.md), [prepare-pass lead](metadata/orbital/candidates/controls/prepare-pass/README.md) and this report's carry-forward questions; none is queued |
-| Earlier designs and their limitations | [Study entry](README.md), [earlier composition](../orbital-stage2-composition/README.md), [selected-access prototype](../orbital-selected-access/README.md); these are not current module interfaces |
+| Earlier designs and their limitations | [Study entry](README.md), [earlier composition](history/selection-composition.md), [selected-access prototype](history/selected-access.md); these are not current module interfaces |
 
 The selected code is organized around a few ideas with clear owners. Cold
 operations compile separately; reads expose only the structures needed for the
