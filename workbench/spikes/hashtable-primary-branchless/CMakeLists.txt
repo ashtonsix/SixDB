@@ -1,0 +1,6 @@
+add_executable(primary_branchless_check check.cpp)
+sixdb_target(primary_branchless_check)
+target_link_libraries(primary_branchless_check PRIVATE ikea::hashtable)
+if(MEMORY_INCLUDE_OVERRIDE)
+  target_include_directories(primary_branchless_check BEFORE PRIVATE "${MEMORY_INCLUDE_OVERRIDE}")
+endif()

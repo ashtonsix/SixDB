@@ -11,6 +11,10 @@ callers predict which keys will hit.
 [Complete tables and counters](evidence/hit-mix/tables.md) retain all actual
 Ikea/Boost/Abseil controls, orderings, sinks and endpoint baselines.
 
+The subsequent [branchless primary study](../hashtable-primary-branchless/README.md)
+removes the mixed-hit cliff but rejects a default replacement because predictable
+hot and some cold map reads regress. Maintained Ikea remains unchanged.
+
 ## Measured result
 
 Full consumer, native Zen 5 AVX-512. Each row uses the same keys and the same
