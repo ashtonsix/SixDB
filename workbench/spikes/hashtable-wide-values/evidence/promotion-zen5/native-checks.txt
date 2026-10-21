@@ -1,0 +1,176 @@
+[1/96] Building CXX object ikea/CMakeFiles/ikea_core.dir/src/overlap.cpp.o
+[2/96] Linking CXX static library ikea/libikea_core.a
+[3/96] Building CXX object ikea/CMakeFiles/ikea_seriespack.dir/src/seriespack/admission.cpp.o
+[4/96] Building CXX object ikea/CMakeFiles/ikea_seriespack.dir/src/seriespack/representation.cpp.o
+[5/96] Building CXX object ikea/CMakeFiles/ikea_tuplepack.dir/src/tuplepack/description.cpp.o
+[6/96] Building CXX object ikea/CMakeFiles/ikea_tuplepack.dir/src/tuplepack/construction.cpp.o
+[7/96] Building CXX object ikea/CMakeFiles/ikea_tuplepack.dir/src/tuplepack/prepare.cpp.o
+[8/96] Building CXX object ikea/CMakeFiles/ikea_tuplepack.dir/src/tuplepack/kernels.cpp.o
+[9/96] Building CXX object ikea/CMakeFiles/ikea_tuplepack.dir/src/tuplepack/gpr.cpp.o
+[10/96] Building CXX object ikea/CMakeFiles/ikea_tuplepack.dir/src/tuplepack/routes.cpp.o
+[11/96] Building CXX object ikea/CMakeFiles/ikea_tuplepack.dir/src/tuplepack/packet_layout.cpp.o
+[12/96] Building CXX object ikea/CMakeFiles/ikea_tuplepack.dir/src/tuplepack/packet_prepare.cpp.o
+[13/96] Building CXX object ikea/CMakeFiles/ikea_seriespack.dir/src/seriespack/readers.cpp.o
+[14/96] Linking CXX static library ikea/libikea_seriespack.a
+[15/96] Building CXX object ikea/CMakeFiles/ikea_tuplepack.dir/src/tuplepack/packet.cpp.o
+[16/96] Linking CXX static library ikea/libikea_tuplepack.a
+[17/96] Building CXX object ikea/CMakeFiles/ikea_hashtable_mutation_check.dir/test/hashtable/mutation-check.cpp.o
+[18/96] Linking CXX executable ikea/ikea_hashtable_mutation_check
+[19/96] Building CXX object ikea/CMakeFiles/ikea_hashtable_guarded_check.dir/test/hashtable/guarded-check.cpp.o
+[20/96] Linking CXX executable ikea/ikea_hashtable_guarded_check
+[21/96] Building CXX object ikea/CMakeFiles/ikea_hashtable_modify_check.dir/test/hashtable/modify-check.cpp.o
+[22/96] Linking CXX executable ikea/ikea_hashtable_modify_check
+[23/96] Building CXX object ikea/CMakeFiles/ikea_hashtable_word_tail_check.dir/test/hashtable/word-tail-check.cpp.o
+[24/96] Linking CXX executable ikea/ikea_hashtable_word_tail_check
+[25/96] Building CXX object ikea/CMakeFiles/ikea_hashtable_accumulate_check.dir/test/hashtable/accumulate-check.cpp.o
+[26/96] Linking CXX executable ikea/ikea_hashtable_accumulate_check
+[27/96] Building CXX object ikea/CMakeFiles/ikea_hashtable_storage_check.dir/test/hashtable/storage-check.cpp.o
+[28/96] Linking CXX executable ikea/ikea_hashtable_storage_check
+[29/96] Building CXX object ikea/CMakeFiles/ikea_hashtable_clone_check.dir/test/hashtable/clone-check.cpp.o
+[30/96] Linking CXX executable ikea/ikea_hashtable_clone_check
+[31/96] Building CXX object ikea/CMakeFiles/ikea_hashtable_value_check.dir/test/hashtable/value-check.cpp.o
+[32/96] Linking CXX executable ikea/ikea_hashtable_value_check
+[33/96] Building CXX object ikea/CMakeFiles/ikea_hashtable_descriptor_check.dir/test/hashtable/descriptor-check.cpp.o
+[34/96] Linking CXX executable ikea/ikea_hashtable_descriptor_check
+[35/96] Building CXX object ikea/CMakeFiles/ikea_hashtable_rebuild_storage_check.dir/test/hashtable/rebuild-storage-check.cpp.o
+[36/96] Linking CXX executable ikea/ikea_hashtable_rebuild_storage_check
+[37/96] Building CXX object ikea/CMakeFiles/ikea_hashtable_control_check.dir/test/hashtable/control-check.cpp.o
+[38/96] Linking CXX executable ikea/ikea_hashtable_control_check
+[39/96] Building CXX object ikea/CMakeFiles/ikea_hashtable_read_check.dir/test/hashtable/read-check.cpp.o
+[40/96] Linking CXX executable ikea/ikea_hashtable_read_check
+[41/96] Building CXX object ikea/CMakeFiles/ikea_hashtable_geometry_check.dir/test/hashtable/geometry-check.cpp.o
+/opt/sixdb/source/ikea/test/hashtable/geometry-check.cpp:29:32: warning: unused variable 'earlier' [-Wunused-variable]
+   29 |                     const auto earlier = ht::geometry::at(w, b);
+      |                                ^~~~~~~
+/opt/sixdb/source/ikea/test/hashtable/geometry-check.cpp:25:28: warning: unused variable 'demand' [-Wunused-variable]
+   25 |                 const auto demand = __uint128_t(n) * 1000;
+      |                            ^~~~~~
+/opt/sixdb/source/ikea/test/hashtable/geometry-check.cpp:58:14: warning: variable 'rejected' set but not used [-Wunused-but-set-variable]
+   58 |         bool rejected = false;
+      |              ^
+3 warnings generated.
+[42/96] Linking CXX executable ikea/ikea_hashtable_geometry_check
+[43/96] Building CXX object ikea/CMakeFiles/ikea_hashtable_rebuild_check.dir/test/hashtable/rebuild-check.cpp.o
+[44/96] Linking CXX executable ikea/ikea_hashtable_rebuild_check
+[45/96] Building CXX object ikea/CMakeFiles/ikea_hashtable_selector_check.dir/test/hashtable/selector-check.cpp.o
+[46/96] Linking CXX executable ikea/ikea_hashtable_selector_check
+[47/96] Building CXX object ikea/CMakeFiles/ikea_hashtable_widths_1.dir/test/hashtable/widths.cpp.o
+[48/96] Linking CXX executable ikea/ikea_hashtable_widths_1
+[49/96] Building CXX object ikea/CMakeFiles/ikea_hashtable_lookup_check.dir/test/hashtable/lookup-check.cpp.o
+[50/96] Linking CXX executable ikea/ikea_hashtable_lookup_check
+[51/96] Building CXX object ikea/CMakeFiles/ikea_hashtable_widths_9.dir/test/hashtable/widths.cpp.o
+[52/96] Linking CXX executable ikea/ikea_hashtable_widths_9
+[53/96] Building CXX object ikea/CMakeFiles/ikea_hashtable_widths_17.dir/test/hashtable/widths.cpp.o
+[54/96] Linking CXX executable ikea/ikea_hashtable_widths_17
+[55/96] Building CXX object ikea/CMakeFiles/ikea_hashtable_widths_25.dir/test/hashtable/widths.cpp.o
+[56/96] Linking CXX executable ikea/ikea_hashtable_widths_25
+[57/96] Building CXX object ikea/CMakeFiles/ikea_hashtable_widths_33.dir/test/hashtable/widths.cpp.o
+[58/96] Linking CXX executable ikea/ikea_hashtable_widths_33
+[59/96] Building CXX object ikea/CMakeFiles/ikea_hashtable_widths_41.dir/test/hashtable/widths.cpp.o
+[60/96] Linking CXX executable ikea/ikea_hashtable_widths_41
+[61/96] Building CXX object ikea/CMakeFiles/ikea_hashtable_widths_49.dir/test/hashtable/widths.cpp.o
+[62/96] Linking CXX executable ikea/ikea_hashtable_widths_49
+[63/96] Building CXX object ikea/CMakeFiles/ikea_example_hashtable_ordinary.dir/examples/hashtable/ordinary.cpp.o
+[64/96] Linking CXX executable ikea/ikea_example_hashtable_ordinary
+[65/96] Building CXX object ikea/CMakeFiles/ikea_example_hashtable_composition.dir/examples/hashtable/composition.cpp.o
+[66/96] Linking CXX executable ikea/ikea_example_hashtable_composition
+[67/96] Building CXX object ikea/CMakeFiles/ikea_example_hashtable_accumulation.dir/examples/hashtable/accumulation.cpp.o
+[68/96] Linking CXX executable ikea/ikea_example_hashtable_accumulation
+[69/96] Building CXX object ikea/CMakeFiles/ikea_example_hashtable_batch.dir/examples/hashtable/batch.cpp.o
+[70/96] Linking CXX executable ikea/ikea_example_hashtable_batch
+[71/96] Building CXX object ikea/CMakeFiles/ikea_example_hashtable_adaptive.dir/examples/hashtable/adaptive.cpp.o
+[72/96] Linking CXX executable ikea/ikea_example_hashtable_adaptive
+[73/96] Building CXX object ikea/CMakeFiles/ikea_example_hashtable_borrowed.dir/examples/hashtable/borrowed.cpp.o
+[74/96] Linking CXX executable ikea/ikea_example_hashtable_borrowed
+[75/96] Building CXX object orbital/CMakeFiles/orbital.dir/src/types.cpp.o
+[76/96] Building CXX object orbital/CMakeFiles/orbital.dir/src/worker.cpp.o
+[77/96] Building CXX object orbital/CMakeFiles/orbital.dir/src/platform.cpp.o
+[78/96] Building CXX object orbital/CMakeFiles/orbital.dir/src/object/storage.cpp.o
+[79/96] Building CXX object orbital/CMakeFiles/orbital.dir/src/object/representation.cpp.o
+[80/96] Building CXX object orbital/CMakeFiles/orbital.dir/src/allocation/allocation.cpp.o
+[81/96] Building CXX object orbital/CMakeFiles/orbital.dir/src/allocation/arena.cpp.o
+/opt/sixdb/source/orbital/src/allocation/arena.cpp:91:14: warning: unused variable 'old' [-Wunused-variable]
+   91 |   const auto old = pool.arena->charged_bytes.fetch_sub(amount, std::memory_order_seq_cst);
+      |              ^~~
+1 warning generated.
+[82/96] Building CXX object orbital/CMakeFiles/orbital.dir/src/allocation/group.cpp.o
+[83/96] Building CXX object ikea/CMakeFiles/ikea_hashtable_widths_57.dir/test/hashtable/widths.cpp.o
+[84/96] Linking CXX executable ikea/ikea_hashtable_widths_57
+[84/96] cd /opt/sixdb/source/build/wide-promoted-native-sanitize/ikea && /usr/bin/ctest --test-dir /opt/sixdb/source/build/wide-promoted-native-sanitize --output-on-failure --no-tests=error -R "^ikea_(hashtable_|example_hashtable_)"
+Internal ctest changing into directory: /opt/sixdb/source/build/wide-promoted-native-sanitize
+Test project /opt/sixdb/source/build/wide-promoted-native-sanitize
+      Start 41: ikea_hashtable_accumulate_check
+ 1/30 Test #41: ikea_hashtable_accumulate_check ........   Passed    1.89 sec
+      Start 42: ikea_hashtable_mutation_check
+ 2/30 Test #42: ikea_hashtable_mutation_check ..........   Passed    0.95 sec
+      Start 43: ikea_hashtable_guarded_check
+ 3/30 Test #43: ikea_hashtable_guarded_check ...........   Passed    0.09 sec
+      Start 44: ikea_hashtable_modify_check
+ 4/30 Test #44: ikea_hashtable_modify_check ............   Passed    0.01 sec
+      Start 45: ikea_hashtable_word_tail_check
+ 5/30 Test #45: ikea_hashtable_word_tail_check .........   Passed    0.01 sec
+      Start 46: ikea_hashtable_value_check
+ 6/30 Test #46: ikea_hashtable_value_check .............   Passed    0.06 sec
+      Start 47: ikea_hashtable_storage_check
+ 7/30 Test #47: ikea_hashtable_storage_check ...........   Passed    0.01 sec
+      Start 48: ikea_hashtable_clone_check
+ 8/30 Test #48: ikea_hashtable_clone_check .............   Passed    0.02 sec
+      Start 49: ikea_hashtable_descriptor_check
+ 9/30 Test #49: ikea_hashtable_descriptor_check ........   Passed    0.01 sec
+      Start 50: ikea_hashtable_rebuild_check
+10/30 Test #50: ikea_hashtable_rebuild_check ...........   Passed    0.03 sec
+      Start 51: ikea_hashtable_rebuild_storage_check
+11/30 Test #51: ikea_hashtable_rebuild_storage_check ...   Passed    0.04 sec
+      Start 52: ikea_hashtable_control_check
+12/30 Test #52: ikea_hashtable_control_check ...........   Passed    0.01 sec
+      Start 53: ikea_hashtable_read_check
+13/30 Test #53: ikea_hashtable_read_check ..............   Passed    0.06 sec
+      Start 54: ikea_hashtable_geometry_check
+14/30 Test #54: ikea_hashtable_geometry_check ..........   Passed    0.01 sec
+      Start 55: ikea_hashtable_lookup_check
+15/30 Test #55: ikea_hashtable_lookup_check ............   Passed    0.09 sec
+      Start 56: ikea_hashtable_selector_check
+16/30 Test #56: ikea_hashtable_selector_check ..........   Passed    0.00 sec
+      Start 57: ikea_hashtable_widths_1
+17/30 Test #57: ikea_hashtable_widths_1 ................   Passed    0.02 sec
+      Start 58: ikea_hashtable_widths_9
+18/30 Test #58: ikea_hashtable_widths_9 ................   Passed    0.11 sec
+      Start 59: ikea_hashtable_widths_17
+19/30 Test #59: ikea_hashtable_widths_17 ...............   Passed    0.13 sec
+      Start 60: ikea_hashtable_widths_25
+20/30 Test #60: ikea_hashtable_widths_25 ...............   Passed    0.13 sec
+      Start 61: ikea_hashtable_widths_33
+21/30 Test #61: ikea_hashtable_widths_33 ...............   Passed    0.13 sec
+      Start 62: ikea_hashtable_widths_41
+22/30 Test #62: ikea_hashtable_widths_41 ...............   Passed    0.13 sec
+      Start 63: ikea_hashtable_widths_49
+23/30 Test #63: ikea_hashtable_widths_49 ...............   Passed    0.13 sec
+      Start 64: ikea_hashtable_widths_57
+24/30 Test #64: ikea_hashtable_widths_57 ...............   Passed    0.12 sec
+      Start 65: ikea_example_hashtable_ordinary
+25/30 Test #65: ikea_example_hashtable_ordinary ........   Passed    0.00 sec
+      Start 66: ikea_example_hashtable_composition
+26/30 Test #66: ikea_example_hashtable_composition .....   Passed    0.00 sec
+      Start 67: ikea_example_hashtable_accumulation
+27/30 Test #67: ikea_example_hashtable_accumulation ....   Passed    0.00 sec
+      Start 68: ikea_example_hashtable_batch
+28/30 Test #68: ikea_example_hashtable_batch ...........   Passed    0.00 sec
+      Start 69: ikea_example_hashtable_adaptive
+29/30 Test #69: ikea_example_hashtable_adaptive ........   Passed    0.01 sec
+      Start 70: ikea_example_hashtable_borrowed
+30/30 Test #70: ikea_example_hashtable_borrowed ........   Passed    0.01 sec
+
+100% tests passed, 0 tests failed out of 30
+
+Total Test time (real) =   4.21 sec
+[86/96] Building CXX object orbital/CMakeFiles/orbital.dir/src/allocation/finite.cpp.o
+/opt/sixdb/source/orbital/src/allocation/finite.cpp:519:14: warning: unused variable 'counted' [-Wunused-variable]
+  519 |   const auto counted = live_pages(live);
+      |              ^~~~~~~
+1 warning generated.
+[90/96] Building CXX object loom/CMakeFiles/loom.dir/src/hints.cpp.o
+[92/96] Building CXX object loom/CMakeFiles/loom.dir/src/execution.cpp.o
+[93/96] Building CXX object loom/CMakeFiles/loom.dir/src/hardware.cpp.o
+[94/96] Linking CXX static library loom/libloom.a
+[95/96] Building CXX object workbench/spikes/hashtable-wide-values/CMakeFiles/wide_ikea_32_9_64.dir/bench.cpp.o
+[96/96] Linking CXX executable workbench/spikes/hashtable-wide-values/wide_ikea_32_9_64

@@ -1,0 +1,26 @@
+{
+  "source_capture": "5618f635292b61eaa78b571360e86330431e215f7df46e2d0659db864aa44d2d",
+  "source_dependencies_matched": 233,
+  "runtime_changed_files": "source-pair.json",
+  "native_archive": "native-artifact.json",
+  "paired_read_cells": 105,
+  "paired_read_ratio_min_median_max": [
+    0.9633810156158074,
+    1.0051452890959065,
+    1.0381686030947155
+  ],
+  "paired_mutation_growth_cells": 14,
+  "paired_mutation_growth_ratio_min_median_max": [
+    0.958856405116619,
+    1.0030368344980114,
+    1.0319946620266605
+  ],
+  "controls": [
+    "actual Abseil flat_hash_map",
+    "actual Boost unordered_flat_map",
+    "actual F14FastMap",
+    "actual F14ValueMap"
+  ],
+  "measurement": "Three seeds; three warm/two cold repetitions; sequential baseline/candidate pairs with reversed order in seed991; full64 and projected16 bytes; hot V8 full8; W32/b11 N13926, W32/b9 N6963, W32/b17 N2673868, W40/b17 N1782579; cold backing CLFLUSHOPT+SFENCE, query vectors unflushed; future-home PF32 for cold loops; native Loom16 and manual16; complete payload/membership/key oracles. Cold is interval conditioning, not every-load DRAM. Peer controls here use direct native consumers; original scorecard separately retains peer Loom/manual alternatives.",
+  "scope": "Ikea promotion only; no Engine changes or directory verification; slot-backed values remain research."
+}

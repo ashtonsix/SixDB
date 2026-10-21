@@ -4,6 +4,13 @@
 
 namespace {
 using namespace ikea::hashtable;
+template <unsigned V> concept borrowable = requires(const table<24, 10, V>& owner) {
+    owner.get_borrowed(0);
+};
+static_assert(borrowable<1> && borrowable<7> && borrowable<8> && borrowable<16> &&
+              borrowable<128>);
+static_assert(!borrowable<0> && !borrowable<9> && !borrowable<15> && !borrowable<17> &&
+              !borrowable<63>);
 template <unsigned W, unsigned b, unsigned V, unsigned E> void exercise() {
     using owner_type = table<W, b, V, E>;
     owner_type owner(713);
@@ -40,6 +47,27 @@ template <unsigned W, unsigned b, unsigned V, unsigned E> void exercise() {
                 };
                 get.template operator()<lookup_hint::predictable>();
                 get.template operator()<lookup_hint::unpredictable>();
+                if constexpr (requires { owner.get_borrowed(key); }) {
+                    auto borrowed = [&]<lookup_hint Hint>() {
+                        const auto match = owner.template get_borrowed<Hint>(key);
+                        const auto want = it == expected.end() ? bytes<V>{} : it->second;
+                        require(match.found == hit &&
+                                    std::memcmp(match.address, want.data(), V) == 0,
+                                "borrowed complete value and readable zero miss");
+                        if (hit) {
+                            bool contained = false;
+                            owner.allocations([&](auto, const byte* base, std::size_t size) {
+                                const auto at = std::uintptr_t(match.address);
+                                const auto begin = std::uintptr_t(base);
+                                contained |= at >= begin && at - begin <= size &&
+                                             V <= size - (at - begin);
+                            });
+                            require(contained, "borrowed hit belongs to owner backing");
+                        }
+                    };
+                    borrowed.template operator()<lookup_hint::predictable>();
+                    borrowed.template operator()<lookup_hint::unpredictable>();
+                }
                 typename owner_type::staged_probe probe;
                 owner.prepare_staged(probe, key, [](auto, auto) {});
                 bool staged = false;
@@ -83,6 +111,13 @@ template <unsigned V> void width() {
 } // namespace
 int main() {
     try {
+        width<1>();
+        width<2>();
+        width<3>();
+        width<4>();
+        width<5>();
+        width<6>();
+        width<7>();
         width<8>();
         width<16>();
         width<24>();
@@ -91,6 +126,7 @@ int main() {
         width<48>();
         width<56>();
         width<64>();
+        width<128>();
         width<9>();
         width<63>();
         std::cout

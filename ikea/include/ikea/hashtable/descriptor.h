@@ -101,6 +101,12 @@ template <unsigned W, unsigned V, class Storage = heap_storage_policy> class des
             [[gnu::always_inline]] auto get(word key) const {
                 return owner->template get<Hint>(key);
             }
+            template <lookup_hint Hint = lookup_hint::predictable>
+            [[gnu::always_inline]] auto get_borrowed(word key) const
+                requires requires { owner->template get_borrowed<Hint>(key); }
+            {
+                return owner->template get_borrowed<Hint>(key);
+            }
             void prefetch(word key) const {
                 owner->prefetch(owner->prepare(key));
             }

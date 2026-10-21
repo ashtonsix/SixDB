@@ -26,6 +26,7 @@ choices below are supported by the linked complete-consumer measurements.
 | Ordered directory points/ranges | [Boundlist](boundlist/usage.md): one exact-max search for unique-key routing; occupied min/max for range edges | Two searches for a unique point, or interpreting equal endpoints as empty |
 | Integer-key set/map | [Hashtable usage recipes](hashtable/usage.md#choose-the-recipe-for-the-work): choose primary geometry for distinct work and bind a compatible native recipe once | A one-bucket scratch map that silently becomes mostly Swiss, or erased ownership/dispatch per key |
 | Independent cold hash reads/writes | [Future-home hints](hashtable/usage.md#overlap-independent-requests) in the complete caller loop | Treating plain point timings as scheduled throughput, or retaining lookup state across writes |
+| Wide inline hash values | [Borrow the value bytes](hashtable/usage.md#borrow-wide-inline-values), prefetch useful fields and defer consumption while retaining an unmodified owner | Eagerly materializing a whole value before its dependent payload prefetch |
 | Cold independent lookups | The owner's [Loom direct/Ring choice](../../loom/docs/execution.md) | Scheduler boundaries between ready arithmetic steps, or treating prefetch as readiness |
 
 The module guides turn these starting points into concrete calls:

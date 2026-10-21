@@ -1,8 +1,9 @@
 # Borrowed and slot-backed wide values
 
-Research only. Compare the maintained complete-value getter with a borrowed
-inline address and four/eight-byte slot-ID maps backed by a contiguous reusable
-value store. Maintained Ikea headers, layouts and consumer bindings are unchanged.
+The borrowed-inline read API is [promoted into Ikea](GRADUATION.md); slot-ID-backed values
+remain research. Compare the complete-value getter with a borrowed inline address
+and four/eight-byte slot-ID maps backed by a contiguous reusable value store.
+The maintained layout and existing getter are unchanged.
 
 The [findings](RESULTS.md) distinguish the address-return benefit from deferred
 payload consumption, and test index capacity independently of payload capacity.
@@ -20,10 +21,10 @@ loops expose its choices and costs.
 ## Implementations
 
 - `materialized`: maintained Ikea `get` and `modify`.
-- `borrow`: read adapter over the existing author seam. Primary addresses derive
-  directly from the matched row. Overflow returns its actual tuple's value
-  address using the maintained logical-group comparison helpers. A miss supplies
-  readable initialized zeros. An exclusive increment changes one limb in place;
+- `borrow`: thin adapter over the maintained `get_borrowed` API; its original
+  implementation survives in the captured spike sources. A miss supplies
+  readable initialized zeros. The research-only exclusive increment casts away
+  constness and changes one limb in place;
   this does not claim the exception guarantee of the full-value `modify` API.
 - `slots` / `slots32`: an eight/four-byte Ikea map plus reusable integer IDs into aligned
   contiguous value storage. Slot zero is the readable miss row. Fresh insertion
@@ -103,8 +104,8 @@ table's occupancy policy.
 Values of 8, 16, 32, 64 and 128 bytes exercise the small-value control and wide
 payloads. Non-8/64 widths initially reuse the maintained 64-byte encoding profile;
 no newly measured encoding choice is claimed. This ordinary-table comparison
-does not establish the best backing for Engine's separate sixteen-entry frozen
-bitmap groups.
+does not establish the best backing for Engine's directory. Directory geometry
+and consumer verification belong to Engine and are outside this promotion.
 
 ## Run
 

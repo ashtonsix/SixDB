@@ -24,6 +24,7 @@ experiments; [where to find them](#latency-loom-and-cache-residence).
 | What does one RMW/native mutable batch cost? | [RMW experiment](RMW.md), including binding and initial-value preparation |
 | Does the Zen 5 recipe transfer to Zen 4? | [Generation comparison](ZEN-GENERATIONS.md); it does not establish a new Zen 4 profile |
 | What changed in Swiss overflow? | [Tag/logical-width qualification](../../spikes/hashtable-swiss-probes/RESULTS.md) and [ISA read batches](../../spikes/hashtable-swiss-batch/GRADUATION.md): eight-bit tags, 16-byte logical groups, 64/32-byte x86 comparisons and the 87.5% ceiling |
+| How can wide inline values avoid eager copying and overlap cold payload reads? | [Borrowed-inline promotion](../../spikes/hashtable-wide-values/GRADUATION.md): maintained address-return API, paired small/wide-value qualification and actual Abseil/Boost/F14 controls |
 | Where are raw runs, sources, compiler flags and losing cells? | [Evidence and recovery](evidence/README.md) |
 
 Historical reports retain their own measurements and source identities. Their

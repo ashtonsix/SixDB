@@ -13,7 +13,8 @@ consumer. Runnable starting points are
 [ordinary operations](../../examples/hashtable/ordinary.cpp),
 [native composition](../../examples/hashtable/composition.cpp),
 [independent read/write batches](../../examples/hashtable/batch.cpp) and
-[accumulation](../../examples/hashtable/accumulation.cpp).
+[accumulation](../../examples/hashtable/accumulation.cpp). For wide values, see
+[borrowed consumption](../../examples/hashtable/borrowed.cpp).
 
 For an existing consumer, jump to [native hot loops](#bind-once-around-a-complete-hot-loop),
 [prefetching and staged reads](#overlap-independent-requests),
@@ -119,6 +120,7 @@ an explicit byte order if values cross a representation or persistence boundary.
 | `insert(key, value)` | Upsert; returns true for a new key, false for replacement |
 | `find(key, consume)` | Returns membership; for maps invokes `consume(const bytes<V>&)` once on a hit and never on a miss |
 | `get<Hint>(key)` | Concrete/native read; copied `{value, found}`, exactly zero value on absence; defaults to predictable |
+| `get_borrowed<Hint>(key)` | Concrete/native read; `{address, found}` for contiguous map values, with `V` readable zero bytes on absence |
 | `modify(key, update)` | Maps only; returns membership, updating once on a hit |
 | `modify_or_insert(key, initial, update)` | Maps only; returns true for insertion; invokes `update(value, present)` once |
 | `erase(key)` | Returns true if an entry was removed |
@@ -133,7 +135,7 @@ inside the callback. Do not retain references to callback values or treat a
 reported location as a stable entry handle.
 
 Ordinary writes validate keys. Concrete/native reads, including `prepare`,
-`find`, `get` and staged reads, trust the `W`-bit domain; admitting untrusted keys is
+`find`, `get`, `get_borrowed` and staged reads, trust the `W`-bit domain; admitting untrusted keys is
 the caller's job. `descriptor::read().find` validates it, and guarded reads
 report invalid keys as `denied`.
 
@@ -269,6 +271,46 @@ Use `read()` when an erased point reader is sufficient. Avoid repeatedly
 capturing shared ownership or crossing an erased callback per key in a loop
 that can use one native binding. Descriptor overhead is not included in
 concrete-owner benchmark timings.
+
+### Borrow wide inline values
+
+For values larger than eight bytes, `get_borrowed<Hint>(key)` lets the consumer
+load selected fields or defer payload consumption after prefetching. It returns
+`{address, found}` directly into the owner's primary or Swiss storage. A miss
+returns a real initialized zero buffer of `V` bytes; zero-valued hits remain
+distinguishable through `found`. The default hint is `predictable`.
+
+The operation exists when `V > 0` and either `V <= 8` or `V` is divisible by
+eight. These value widths are physically contiguous. Other widths, such as
+9 or 17 bytes, have striped primary values and use copied `get` or `find`.
+Keep `get` for ordinary small-value consumption: borrowing adds no benefit when
+the complete value already fits in a register. The existing small-value getter
+and all layouts are unchanged.
+
+```cpp
+// view = held.borrow(), from a matching descriptor<W,64>::read_native<b,...>().
+const auto value = view.get_borrowed(key);
+std::uint64_t locator = 0;
+std::memcpy(&locator, value.address + 8, sizeof(locator)); // Also safe on a miss.
+```
+
+The bytes have no alignment or typed-object promise. Use byte operations or
+`memcpy`; casting to a struct or integer pointer does not establish a C++ object
+lifetime. Keep the concrete owner, or its retaining native capture, alive and
+**unmodified** until every borrowed address has been consumed. A capture can
+retain the old image across descriptor rebuild/replacement, but it does not
+freeze an owner that the caller mutates in place. Treat every owner mutation as
+invalidating outstanding borrows. Borrowing is read-only; use `modify` or guarded
+RMW for writes.
+
+For cold independent lookups, prefetch future key homes, resolve a borrowed
+address, prefetch each cache line in the consumed payload window, interleave
+other work, then consume the bytes. Retain the owner through the whole pipeline.
+The [runnable example](../../examples/hashtable/borrowed.cpp) combines sixteen
+pending values, first/last-field consumption, partial tails and automatic
+selection around complete lookup/consumer loops. It demonstrates a manual
+pipeline; the API itself neither yields nor schedules Loom work. Reset the
+selector when changing the consumer or working set.
 
 ### Select lookup and consumer together
 

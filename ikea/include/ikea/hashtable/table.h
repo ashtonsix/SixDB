@@ -23,6 +23,7 @@ class table : private detail::bucket_ops<W, b, V, E, Kernel> {
     static_assert(std::is_nothrow_move_constructible_v<allocation> &&
                       std::is_nothrow_move_assignable_v<allocation>,
                   "storage buffer moves must not throw after allocation preflight");
+    alignas(64) inline static constexpr typename bucket_base::value_type missing_value_{};
 
   public:
     using storage_policy = Storage;
@@ -50,6 +51,10 @@ class table : private detail::bucket_ops<W, b, V, E, Kernel> {
 
     struct lookup_value {
         value_type value{};
+        bool found = false;
+    };
+    struct borrowed_value {
+        const byte* address = missing_value_.data();
         bool found = false;
     };
     struct probe {
@@ -210,6 +215,13 @@ class table : private detail::bucket_ops<W, b, V, E, Kernel> {
             }
             return result;
         }
+    }
+    // Return an address so the caller can defer payload loads. Keep the same
+    // Swiss traversal as ordinary reads, outside the primary loop's registers.
+    [[gnu::noinline, gnu::pure]] const byte* borrow_overflow(word key, word swiss) const {
+        const typename mix_type::result h{0, 0, swiss};
+        const auto found = find_swiss_read(key, h);
+        return found == absent ? nullptr : slots_.data + found * tuple_bytes + key_bytes;
     }
     void insert_swiss_unchecked(word key, const value_type& v, const typename mix_type::result& h) {
         std::size_t g = h.swiss & (groups_ - 1), step = 0;
@@ -531,6 +543,46 @@ class table : private detail::bucket_ops<W, b, V, E, Kernel> {
         lookup_value out;
         out.found = find(key, [&](const auto& value) { out.value = value; });
         return out;
+    }
+    /// Read-only bytes, valid while this owner is retained and unmodified.
+    /// Absence supplies V readable zero bytes. No alignment or typed-object
+    /// lifetime is promised; use byte loads/memcpy. Striped values use get/find.
+    template <lookup_hint Hint = lookup_hint::predictable>
+    [[gnu::always_inline]] borrowed_value get_borrowed(word key) const
+        requires(V > 0 && (V <= 8 || V % 8 == 0))
+    {
+        const auto p = prepare(key);
+        if constexpr (bitmap) {
+            const auto row = primary_find(p.primary, p.hash.quotient);
+            return row == N ? borrowed_value{} :
+                              borrowed_value{p.primary + value_offset + row * V, true};
+        } else {
+            if constexpr (Hint == lookup_hint::unpredictable) {
+                unsigned overflow = p.primary[overflow_offset];
+                asm("" : "+r"(overflow));
+                if (!overflow) {
+                    const auto matches = primary_matches(p.primary, p.hash.quotient);
+                    const auto row = unsigned(std::countr_zero(matches));
+                    // An absent integer candidate is never dereferenced. Select
+                    // actual initialized zero storage before returning a pointer.
+                    std::uintptr_t address = std::uintptr_t(p.primary) + value_offset + row * V;
+#if defined(__x86_64__)
+                    asm("testq %1, %1; cmovzq %2, %0" : "+r"(address)
+                        : "r"(matches), "r"(missing_value_.data()) : "cc");
+#else
+                    address = matches ? address : std::uintptr_t(missing_value_.data());
+#endif
+                    return {reinterpret_cast<const byte*>(address), matches != 0};
+                }
+            }
+            const auto row = primary_find(p.primary, p.hash.quotient);
+            if (row != N)
+                return {p.primary + value_offset + row * V, true};
+            if (!p.primary[overflow_offset])
+                return {};
+            const auto* value = borrow_overflow(key, p.hash.swiss);
+            return value ? borrowed_value{value, true} : borrowed_value{};
+        }
     }
     template <bool Eager = false, class Consume>
     [[gnu::always_inline]] bool find(word key, Consume&& consume) const {

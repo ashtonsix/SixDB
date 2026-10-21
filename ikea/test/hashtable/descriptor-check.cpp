@@ -22,10 +22,19 @@ template <unsigned V> void staged_capture() {
     auto captured = owner.template read_native<2>();
     auto dependent = captured.borrow();
     auto lookahead = captured.template borrow<staged_values::lookahead8>();
+    const byte* held_value = nullptr;
+    if constexpr (V) {
+        const auto match = dependent.get_borrowed(mix.recover(0, 0));
+        require(match.found, "borrow before descriptor rebuild");
+        held_value = match.address;
+    }
     static_assert(sizeof(dependent) == sizeof(void*) && sizeof(lookahead) == sizeof(void*));
     owner.template rebuild_explicit<3>();
     for (unsigned i = 0; i < 97; ++i)
         owner.erase(mix.recover(0, i));
+    if constexpr (V)
+        require(std::memcmp(held_value, value<V>(0).data(), V) == 0,
+                "captured owner retains borrowed address across descriptor replacement");
     auto verify = [&](auto view) {
         for (unsigned i = 0; i < 200; ++i) {
             auto get = [&]<lookup_hint Hint>() {
@@ -33,6 +42,13 @@ template <unsigned V> void staged_capture() {
                 require(match.found == (i < 97) &&
                             match.value == (i < 97 ? value<V>(i) : bytes<V>{}),
                         "hinted capture keeps old backing after rebuild/erase");
+                if constexpr (V) {
+                    const auto borrowed = view.template get_borrowed<Hint>(mix.recover(0, i));
+                    require(borrowed.found == (i < 97) &&
+                                std::memcmp(borrowed.address,
+                                            (i < 97 ? value<V>(i) : bytes<V>{}).data(), V) == 0,
+                            "retained native borrowed bytes and readable miss");
+                }
             };
             get.template operator()<lookup_hint::predictable>();
             get.template operator()<lookup_hint::unpredictable>();

@@ -36,6 +36,13 @@ void check() {
                     ht::require(r.found == expected, "hint does not promise membership");
                     ht::require(r.value == (expected ? payload(key) : Value{}),
                                 "hinted getter payload / zero-on-absence");
+                    if constexpr (V) {
+                        const auto borrowed = table.template get_borrowed<Hint>(key);
+                        const auto want = expected ? payload(key) : Value{};
+                        ht::require(borrowed.found == expected &&
+                                        std::memcmp(borrowed.address, want.data(), V) == 0,
+                                    "borrowed zero-valued hits, primary/spill/sticky overflow");
+                    }
                 };
                 check_hint.template operator()<ht::lookup_hint::predictable>();
                 check_hint.template operator()<ht::lookup_hint::unpredictable>();

@@ -1,6 +1,9 @@
 # Borrowed inline values versus external slot IDs
 
-This is a research comparison, with no maintained Ikea layout or consumer change.
+These measurements describe the original research candidate. Its borrowed-inline
+read API is [promoted into Ikea](GRADUATION.md) without changing the layout or existing
+getter; slot-ID-backed values remain research. Promotion qualification is separate
+from these captured timings.
 The [scorecard](evidence/zen5/tables.md) retains every tested implementation and
 all hit/miss patterns for its selected panels; [individual repetitions](evidence/zen5/)
 and the linked original captures support the numbers.

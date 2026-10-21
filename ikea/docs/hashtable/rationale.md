@@ -168,6 +168,15 @@ SeriesPack operations; the caller never needs to know whether its bytes were
 contiguous. Overflow tuples use TuplePack projections to read a byte-contained
 full key and value limbs from adjacent tuple bytes.
 
+Contiguous map widths also expose a read-only borrowed address. Matching the
+key need not load or assemble the whole value before the caller can prefetch
+its useful fields. This matters for wide cold values: interleaving independent
+matches and payload consumption can hide that dependent load. The ordinary
+copied getter remains the small-value path. Borrowing changes neither packing
+nor capacity, and deliberately excludes striped widths rather than adding a
+second representation. [Usage](usage.md#borrow-wide-inline-values) owns the
+width and lifetime rules.
+
 This layout has two costs worth keeping visible. Value storage is reserved for
 every primary row, even when empty. Also, the combined stride determines bucket
 alignment. K30 sets have a 64-byte stride and eight-byte maps a 192-byte stride,
@@ -286,6 +295,15 @@ in its prefetch ring; a warm consumer can call the direct reader instead. The
 optional eight-byte value lookahead emits all primary value lines with the key
 region, trading extra traffic for one fewer dependent visit on a primary hit.
 Heat, prefetch distance and whether to yield belong to the enclosing consumer.
+
+Borrowed inline reads provide a shorter composition when the key lookup can run
+directly: resolve the value address, prefetch its consumed window, then return
+to other requests before consumption. The Swiss search uses the same maintained
+probe traversal as copied reads and returns a tuple address behind an out-of-line
+boundary. It does not duplicate the overflow algorithm or enlarge the primary
+loop's live probe state. A miss selects real zero storage, so a predicated
+consumer never dereferences an absent row. External slot IDs still require their
+own ID-before-payload dependency stage and remain research.
 
 ## Mutations expose their physical effects before writing
 

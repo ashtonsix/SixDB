@@ -42,6 +42,17 @@ template <unsigned W, unsigned V, write_strategy Strategy> void width() {
             };
             get.template operator()<lookup_hint::predictable>();
             get.template operator()<lookup_hint::unpredictable>();
+            if constexpr (V) {
+                auto borrowed = [&]<lookup_hint Hint>() {
+                    const auto match = owner.template get_borrowed<Hint>(query);
+                    const auto want = entry == expected.end() ? bytes<V>{} : entry->second.front();
+                    require(match.found == (entry != expected.end()) &&
+                                std::memcmp(match.address, want.data(), V) == 0,
+                            "all-W borrowed complete value / readable zero miss");
+                };
+                borrowed.template operator()<lookup_hint::predictable>();
+                borrowed.template operator()<lookup_hint::unpredictable>();
+            }
             auto staged = [&]<staged_values Values>() {
                 // Hints may be speculative, but their complete byte extents
                 // must still belong to one retained backing allocation.
