@@ -397,3 +397,72 @@ birth/death/range/masks, admitted representation schema/extras/historical
 formats, complete memory/RSS and real range/aggregate/mixed consumers against
 matched Calico/LMDB. Physical record assignment/padding is a separate Engine
 producer responsibility; directory storage nodes do not split index Segments.
+
+## Dispersed case: directory attribution
+
+The136.795ns result is a complete test-driver equality consumer. Ashton has
+asked to set its caller optimizations aside and treat that end-to-end result
+with caution; the directory remains the investigation's subject. No Engine or
+maintained-driver changes were made during this audit. The correction-page
+cache, summary-cell search and record consumer are caller work.
+
+The fixture has80 base Segments with128 rows each (10240 total), K8/J2 and
+logical IDs in runs of3. Its physical key is `(segment*17)<<16 | slot`, so base
+prefixes range0..1343 with gaps. All five layers exist: Segment counts1/1/1/6/80;
+upper summary-cell counts1/6/80/80. There are89 Segment Objects. Every measured
+request starts at the SAME L2 Segment, prefix0; its shared-prefix hash recipe
+has one occupied entry. Queries uniformly select a row ordinal, request its
+logical ID and consume every equal row's full64B XOR8 into the same sum. One
+Scope/native LMDB transaction covers64 queries. This is a small warm directory,
+not an established cache-cold directory stress case.
+
+The path does this:
+
+1. Once per64 queries, enroll a Scope, select/admit the native L4 directory root
+   and L2 hash header. First group discovery selects and validates the frozen Ikea Image
+   under that SAME Scope; later gets reuse the Scope-local group borrow.
+2. Per query, get L2 prefix0 from the actual W4/B0/V64 bitmap table. The emitted
+   caller loads the header/body locators it uses, not all64 dirent bytes.
+3. Search the L2 Segment's80 ordered summary maxima. These are data fields in
+  352B cells, not directory bounds. Matching minima/positions identify base
+   prefixes, including both sides of a duplicate run crossing a Segment edge.
+4. Resolve each base prefix through the native directory: root shift5, one of
+   three shift0 children, original suffix mask/rank, then its64B dirent.
+   `find` does not read Bounds/Proof metadata. The full L4 body footprint is
+   four576B Nodes plus80x64B packed singleton groups =7424B. L2 adds a64B header
+   and1088B native table body; immutable layouts, catalog and ownership metadata
+   are additional. L0/L1/L3 directories are not visited by this chosen plan.
+5. The caller reads that base Segment's row-count header, searches its128 u64
+   record keys, reads matching payloads, resolves correction-page Objects under
+   the Scope, applies field3 afterimages and consumes all eight fields. The timed
+   B16 update arm changes correction Objects; it never edits an index dirent.
+
+For131072 requests the separate logical-work census sees393188 rows,841976
+summary comparisons,133126 base directory probes and2054 cross-Segment queries.
+That is2.9998 rows,6.4238 summary comparisons and1.0157 base probes per request.
+The caller performs393188 correction-cache searches with2199083 tag comparisons
+and128807 actual correction Object resolutions: about3/16.78/0.983 per query.
+It would need only135288 page searches if a contiguous returned-slot run reused
+one page binding. These are logical counters, not physical cache-line misses.
+
+The [source/ELF-qualified CPU profiles](evidence/dispersed-audit-20261021/README.md)
+filter ONLY call stacks inside original Producer::read. Two software-sampling
+frequencies agree on directory work at4.52–4.60% (~6.2ns when normalized to the
+original137ns). Summary search is30.0–30.6% (~41ns), the caller's linear8 cache
+is27.5–29.1% (~38–40ns), correction Object selection is21.0–21.8% (~29–30ns),
+and key refinement/row consumption/control account for the remainder. These
+are approximate CPU shares, not independently timed additive wall-clock stages;
+hardware PMU counters are unavailable. The separate59.7ns directory diagnostic
+uses logical L4 J0 seeks and does not measure this hash/physical-find path.
+
+Exploratory caller controls grouped correction-page consumption, tried a tagged
+direct8 cache and added actual compact summary Parts through a joined
+Segment/hash-group publication. Independent full-row/P/U/miss and ASan checks
+passed for this fixture. Those changes recovered part of the caller cost but
+not enough general headroom; they remain ignored experimental source and are
+now set aside. They are not directory optimizations or a reason to build more
+Engine machinery around this caller. Directory qualification must use its own
+actual operations: exact and logical seek/continuation, membership/bound changes,
+locator/representation/Part changes, publication, retirement and memory across
+meaningful directory populations and workloads. The earlier directory
+relocation losses remain unresolved.
