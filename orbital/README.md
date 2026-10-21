@@ -176,6 +176,12 @@ exclusion until all private owners and entry pins settle. Local cuts are neither
 `SerialPosition` nor `Epoch`, and this embedded protocol does not imply durable
 admission or consensus completion.
 
+Bounded `drain` services changed history. Settled chains wait until publication
+changes them or a reader retires at a potentially relevant cut. Late discovery
+remains protected; retiring readers can still make substantial work eligible.
+The [history checks](test/reclamation_history.cpp) exercise these transitions.
+The work limit counts metadata steps, not backing-owner destructor time.
+
 Only one packet can be accepted at a time, and preparation requires the current
 global cut even when intervening publications changed other Objects. Finished
 material can wait in an `Owner` before acceptance without excluding publication.

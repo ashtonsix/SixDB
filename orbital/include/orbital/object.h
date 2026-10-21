@@ -177,6 +177,7 @@ private:
     // repairs its pointer before unlinking; unrelated writes cannot restart it.
     std::uint64_t reader_changes{}, plan_generation = UINT64_MAX;
     std::uint64_t pass_generation{}, planned_floor{}, building_cut{}, anchor_cut{};
+    std::uint64_t wake_cut = UINT64_MAX, released_cut = UINT64_MAX;
     std::pmr::vector<std::uint64_t> reader_cuts;
     Scope* next_cut{};
     ObjectHandle debt_entry{};
@@ -206,7 +207,7 @@ private:
     void close(Scope& scope) noexcept;
     void abort(Prepared& prepared) noexcept;
     void begin_entries() noexcept {
-      remaining_entries = entries.debt_count();
+      remaining_entries = entries.active_debt_count();
       step = Step::entry;
     }
     void restart() noexcept {

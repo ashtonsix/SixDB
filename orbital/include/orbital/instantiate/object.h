@@ -36,6 +36,12 @@ void ObjectStore<Physical>::Core::close(Scope& scope) noexcept {
       (!scope.previous_ || scope.previous_->cut_ != scope.cut_) &&
       (!scope.next_ || scope.next_->cut_ != scope.cut_);
   if (removed_distinct) ++reader_changes;
+  if (removed_distinct) {
+    // Waiting chains were settled no later than their parking cut. A newer
+    // reader cannot select their old history. Wake only the eligible suffix.
+    if (entries.waiting_after(scope.cut_)) wake_cut = std::min(wake_cut, scope.cut_);
+    if (step != Step::idle) released_cut = std::min(released_cut, scope.cut_);
+  }
   if (step == Step::cuts && next_cut == &scope) {
     auto* next = scope.next_;
     next_cut = next && next->cut_ < building_cut ? next : nullptr;
@@ -84,9 +90,15 @@ std::size_t ObjectStore<Physical>::Core::drain(std::size_t limit) noexcept {
         resume_step = step; anchor = older(current); step = Step::seek; ++head_refreshes;
       }
     }
+    if (wake_cut != UINT64_MAX) {
+      if (entries.wake_debt_after(wake_cut)) { ++work; ++debt_visits; continue; }
+      // Clear before servicing chains, which can then park at a later cut.
+      wake_cut = UINT64_MAX;
+    }
     switch (step) {
     case Step::idle: {
       ++work; ++plan_work; building_cut = cut; pass_generation = maintenance_changes;
+      released_cut = UINT64_MAX;
       cut_begin = 0;
       planned_floor = cut;
       if (plan_generation != reader_changes) {
@@ -201,6 +213,12 @@ std::size_t ObjectStore<Physical>::Core::drain(std::size_t limit) noexcept {
         else {
           remove_debt(entry); ++reclaimed_versions; erase_head(entry);
         }
+      } else if ((!current || version_cut(current) <= building_cut) &&
+          (!current || version_cut(current) <= released_cut)) {
+        // Keep the cold enrollment for allocation-free install/abort, but do
+        // not revisit settled history for unrelated publications. Parking at
+        // the current cut orders reader wakeups without a catalog census.
+        entries.park_debt(cut);
       } else entries.rotate_debt();
       break;
     }
@@ -215,7 +233,8 @@ std::size_t ObjectStore<Physical>::Core::drain(std::size_t limit) noexcept {
     }
   }
 finished:
-  if (step == Step::entry && !remaining_entries && maintenance_changes == pass_generation) {
+  if (step == Step::entry && !remaining_entries && wake_cut == UINT64_MAX &&
+      maintenance_changes == pass_generation) {
     ++completed_sweeps; step = Step::idle; dirty = false;
   }
   draining = false; reclamation_work += work; return work;

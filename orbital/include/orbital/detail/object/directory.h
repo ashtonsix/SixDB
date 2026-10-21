@@ -172,7 +172,9 @@ public:
 
   void reserve_debt(std::size_t additional) { debts_.reserve(additional); }
   void add_debt(Handle entry) noexcept {
-    if (entries_.indebted(entry)) return;
+    if (entries_.indebted(entry)) {
+      debts_.activate((entries_.get(entry).flags >> 3) - 1); return;
+    }
     encode_index(entry, debts_.add(entry)); entries_.set_indebted(entry, true);
   }
   void remove_debt(Handle entry) noexcept {
@@ -183,7 +185,11 @@ public:
   }
   Handle front_debt() const noexcept { return debts_.front(); }
   void rotate_debt() noexcept { debts_.rotate(); }
+  void park_debt(std::uint64_t cut) noexcept { debts_.park(cut); }
+  bool waiting_after(std::uint64_t cut) const noexcept { return debts_.waiting_after(cut); }
+  bool wake_debt_after(std::uint64_t cut) noexcept { return debts_.wake_after(cut); }
   std::size_t debt_count() const noexcept { return debts_.size(); }
+  std::size_t active_debt_count() const noexcept { return debts_.active_size(); }
   std::size_t debt_reservation_work() const noexcept { return debts_.reservation_work(); }
   template<class Visitor> void for_each_live(Visitor&& visit) { entries_.for_each_live(visit); }
   std::size_t size() const noexcept { return entries_.size(); }
