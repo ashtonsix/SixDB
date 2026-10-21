@@ -16,6 +16,8 @@ The [Engine guide](../../engine/README.md) owns what is actually implemented.
 | What ordering does a prefix name actually establish? | [Prefix addressing](prefix-addressing.md): routing name, stable identity, mapping domain and payload order |
 | How should bounds locate an ordered source? | [Maintained Boundlist usage](../../ikea/docs/boundlist/usage.md), [ownership study](../spikes/boundlist/OWNERSHIP.md) and [consumer portfolio](../spikes/boundlist/PORTFOLIO.md) |
 | What changes when equal logical keys cross storage boundaries? | [Directory query semantics](../spikes/directory/README.md#logical-requests-and-traversal), [owning multimap frontier](../spikes/hashtable/README.md) and [K-way merge](../spikes/hashtable-merge/README.md) |
+| Do wider natural partitions repay their copy-on-write edit cost? | [Native partition comparison](../spikes/directory/evidence/graduation-native/README.md#partition-geometry-must-pay-for-edits): natural24's measured compromise versus natural32's read gains and large edit cost |
+| What sparse-scan cost remains after preparing boundaries? | [Native scan follow-up](../spikes/directory/evidence/graduation-native/README.md#scanning-substantial-improvement-a-real-sparse-limit), including one-row-Segment losses and independently fused controls |
 
 The remapping probe kept both fully ordered gaps and order between blocks in
 play. Finding the remapped suffix is itself an index operation. Spare physical
@@ -74,6 +76,18 @@ The [selected directory evidence](../spikes/directory/PROGRESS.md#selected-evide
 separates complete ownership cohorts, point storage, sparse scans, duplicates,
 allocation and causal drain. Follow the relevant panel rather than promoting
 one fast point result into an index-wide conclusion.
+
+The [native follow-up](../spikes/directory/evidence/graduation-native/README.md)
+also compares prepared predicates and complete three-row placement cycles,
+retaining structural-edit losses beside qualified numeric updates. Earlier
+[Ring cohorts](../spikes/directory/evidence/complete/README.md) and
+[large point-storage/memory comparisons](../spikes/directory/evidence/segment-memory-native/README.md)
+retain their distinct scopes. The later
+[explicit-context API qualification](../spikes/directory/evidence/followup-qualification/README.md)
+checks numerical-state admission and paired complete pending reads on local
+NEON. The frozen native campaign qualifies its own source, rather than that
+subsequent API cleanup.
+
 [Object material](../../orbital/docs/material.md) owns current publication and
 physical-source composition. [Memory and lifetimes](memory-and-lifetimes.md)
 connects the consumer to retained-reader, allocation and reclamation findings;
