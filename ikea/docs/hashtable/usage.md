@@ -45,7 +45,8 @@ that recipe. More primary memory can also make a complete operation slower.
 Use the retained capacity frontier rather than assuming the largest owner wins.
 
 Hit rate alone is insufficient to predict hot lookup cost. The controlled Zen 5
-mixed-hit investigation keeps the same keys and hit count but finds a large
+[mixed-hit investigation](../../../workbench/spikes/hashtable-boost-adoption/HIT-MIX.md)
+keeps the same keys and hit count but finds a large
 random-order penalty that largely disappears with predictable ordering. It
 persists for membership-only consumers and tracks branch misses at the primary
 match decision. This is an internal mixed-path limitation, not a missing caller
