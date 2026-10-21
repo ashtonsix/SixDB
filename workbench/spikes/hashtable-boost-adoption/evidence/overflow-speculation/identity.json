@@ -1,0 +1,18 @@
+{
+  "worker": "20261021T000018Z-d2e3872c",
+  "processes": 324,
+  "read_intervals": 972,
+  "paired_variants": [
+    "base",
+    "lfence"
+  ],
+  "cpuid_scope": "W40/set only; every process zero real spills",
+  "actual_barriers_and_normalized_primary_loops_verified": true,
+  "unscaled_pmu_complete_coverage": 1,
+  "source_overlay_diff_and_hash_match": true,
+  "production_lookup_changes": false,
+  "main_order_summary": "workbench/spikes/hashtable-boost-adoption/evidence/hit-mix/native-run/native/summary.csv",
+  "main_order_summary_sha256": "0cc70d86fb89ea64f8c913292659e914d64a69f4dc4d0c62e4eff0f3f20b3dfa",
+  "limitation": "Helper-entry barrier blocks subsequent Swiss probe execution, not every speculative call/prologue/front-end operation; no overflow-heavy/cold claim.",
+  "excluded_compile_failure": "20261020T235451Z-88a73458"
+}

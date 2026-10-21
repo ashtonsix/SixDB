@@ -1,0 +1,10 @@
+--- maintained/table.h
++++ lfence/table.h
+@@ -194,6 +194,7 @@
+     // primary loop's live register set. Return the value, so the caller can
+     // still consume its primary value directly in the success branch.
+     [[gnu::noinline, gnu::pure]] overflow_result read_overflow(word key, word swiss) const {
++        asm volatile("lfence" : : : "memory");
+         const typename mix_type::result h{0, 0, swiss};
+         const auto found = find_swiss_read(key, h);
+         {

@@ -1,0 +1,27 @@
+{
+  "files_sha256": {
+    "identity.json": "50d1412ed9512551c98a71b2d748ddbcab964d5d3af8ed95e1c38f848cb711f2",
+    "native-run/native/audit.json": "0cc6eda111f46f87c062aa79ece1a5cba28d9e7bb4c4c0bc8ef443968fece11e",
+    "native-run/native/summary.csv": "0cc70d86fb89ea64f8c913292659e914d64a69f4dc4d0c62e4eff0f3f20b3dfa",
+    "tables.md": "a91e44b09d3d2a4b9a5b0609c65051428e3b3d6a5be244ee766577997d7aee1d",
+    "worker-artifact.json": "429325099e183bd1e12f265415f7260176b1784b34dc1549852b25aa859de74a"
+  },
+  "format": 2,
+  "full_bundle": "artifact.json",
+  "kind": "files",
+  "regenerate": [
+    [
+      "python3",
+      "workbench/spikes/hashtable-boost-adoption/hit-mix-summary.py",
+      "{evidence}/native-run/native"
+    ],
+    [
+      "python3",
+      "workbench/spikes/hashtable-boost-adoption/hit-mix-report.py",
+      "{evidence}/native-run/native",
+      "--output",
+      "{evidence}/tables.md"
+    ]
+  ],
+  "regenerate_from": "archive"
+}

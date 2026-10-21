@@ -1,12 +1,16 @@
 # Taking Boost's flat table into SixDB
 
-Source/footprint assessment, October 20, 2026; memory comparison, October 21.
-This inspects the same **Boost 1.92.0** used by the actual peer controls. No
-maintained Ikea or Boost implementation is changed. The source probe below
+Source/footprint assessment, October 20, 2026; memory and mixed-hit studies,
+October 21. Current direction is to retain Ikea and improve its usability.
+This inspects the same **Boost 1.92.0** used by the actual peer controls. These
+studies change no maintained lookup kernel or representation. The source probe below
 measures dependency and binary footprint. The subsequent
 [memory-matched comparison](MEMORY.md) is the current throughput evidence:
 Boost's native-memory lead does not imply a general read lead at comparable
 budgets; Ikea retains significant ordinary-write and some read gaps.
+The [mixed-hit diagnosis](HIT-MIX.md) isolates the warm branch-prediction cliff
+and tests speculative Swiss traffic separately. This research does not propose
+a container migration.
 
 **Boost is a credible ordinary set/map foundation.** Using it unchanged for
 private or exclusively owned tables is inexpensive. A pinned fork with storage,

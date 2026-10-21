@@ -1,0 +1,42 @@
+{
+  "files_sha256": {
+    "codegen/proof.json": "087a8c0683f8b6578f904631435728a702cf4fe7d50883204055b0f783f3006a",
+    "identity.json": "20336af1f790acf8741c9dc001396d1a36339b8080152521b0dc43682fb295ff",
+    "native-run/cpuid-overlay.json": "e188959f6c078c5cdabfbf688524023c718faf18ecba0f2d06f3cd9deef82a7d",
+    "native-run/cpuid-patch.diff": "16b52f90dfabdaef4ee10407a0ed7c4dec5498e7d014097b643fbdf7ec062258",
+    "native-run/lfence-overlay.json": "8ca0c69cd6d83ca5797b52b2dd9a580eb2386c88b8585041035e2d3bd8a3544b",
+    "native-run/lfence-patch.diff": "4dfd5c47151313e2090a4b17646de65d90e50ffabe85c65bc7be1fb4bbd86fc6",
+    "native-run/native/audit.json": "76fe22119788c70a38626550dfd1da0b39541ca28945c21bc11cee4b651c4881",
+    "native-run/native/summary.csv": "edcae1a339ca7d3bb94ad5f83afe48961ddfdf07e6a15c0f8b2c3981df6ee00c",
+    "tables.md": "446aa80c2901d442cffa3d2a1ee2ca49eb682c8ad954cdd20dbbe89e878dbaa9",
+    "worker-artifact.json": "4eae729260c3e2ab2d9a5c3f212362c558d97641ab76d0f14275ef1ccac09b56"
+  },
+  "format": 2,
+  "full_bundle": "artifact.json",
+  "kind": "files",
+  "regenerate": [
+    [
+      "python3",
+      "workbench/spikes/hashtable-boost-adoption/hit-mix-summary.py",
+      "{evidence}/native-run/native",
+      "--speculation"
+    ],
+    [
+      "python3",
+      "workbench/spikes/hashtable-boost-adoption/overflow-speculation-codegen.py",
+      "{evidence}/native-run",
+      "--output",
+      "{evidence}/codegen"
+    ],
+    [
+      "python3",
+      "workbench/spikes/hashtable-boost-adoption/hit-mix-report.py",
+      "workbench/spikes/hashtable-boost-adoption/evidence/hit-mix/native-run/native",
+      "--speculation",
+      "{evidence}/native-run/native",
+      "--output",
+      "{evidence}/tables.md"
+    ]
+  ],
+  "regenerate_from": "archive"
+}

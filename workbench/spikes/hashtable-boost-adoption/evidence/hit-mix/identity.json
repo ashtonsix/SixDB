@@ -1,0 +1,20 @@
+{
+  "worker": "20261020T234718Z-8430ef56",
+  "scope": "Order/sink experiment only; speculative-overflow ablation is separate",
+  "processes": 864,
+  "read_intervals": 2592,
+  "seeds": [
+    713,
+    991,
+    1729
+  ],
+  "fresh_processes_per_seed_and_arm": 2,
+  "repetitions_per_process": 3,
+  "requests_per_interval": 1000000,
+  "query_multiset_same_across_order": true,
+  "pmu_scope": "Loop only, calling thread user-space, no scaling or multiplexing, all groups complete coverage1",
+  "local_asan_ubsan_logic_processes": 216,
+  "local_counter_json_checks": 6,
+  "excluded_failed_worker": "20261020T234322Z-20443732",
+  "method": "Read-only controls use same cardinality and useful-memory geometries as MEMORY.md; fullqueryinputs and binary/source identity captured per run"
+}

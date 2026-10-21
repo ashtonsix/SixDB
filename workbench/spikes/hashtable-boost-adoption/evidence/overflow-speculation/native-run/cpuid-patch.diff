@@ -1,0 +1,11 @@
+--- maintained/table.h
++++ cpuid/table.h
+@@ -194,6 +194,8 @@
+     // primary loop's live register set. Return the value, so the caller can
+     // still consume its primary value directly in the success branch.
+     [[gnu::noinline, gnu::pure]] overflow_result read_overflow(word key, word swiss) const {
++        unsigned cpuid_ax = 0, cpuid_bx, cpuid_cx, cpuid_dx;
++        asm volatile("cpuid" : "+a"(cpuid_ax), "=b"(cpuid_bx), "=c"(cpuid_cx), "=d"(cpuid_dx) : : "memory");
+         const typename mix_type::result h{0, 0, swiss};
+         const auto found = find_swiss_read(key, h);
+         {

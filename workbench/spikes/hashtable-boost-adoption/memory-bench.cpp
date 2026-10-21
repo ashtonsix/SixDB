@@ -2,6 +2,7 @@
 #include <ikea/hashtable/table.h>
 #include <ikea/hashtable/author/table.h>
 #include <ikea/hashtable/encoding-selection.h>
+#include <pmu/pmu.h>
 #include "../../benchmarks/hashtable/common.h"
 #include <algorithm>
 #include <chrono>
@@ -151,7 +152,7 @@ template <unsigned Distance, bool Split = false, class T>
     }
     return changed;
 }
-template <bool Prefetch, class T>
+template <bool Prefetch, bool Full = true, class T>
 [[gnu::noinline]] Result read_loop(const T& t, const std::vector<word>& queries) {
     Result result;
     if constexpr (Prefetch)
@@ -161,12 +162,31 @@ template <bool Prefetch, class T>
             if (i + 32 < queries.size()) prefetch(t, queries[i + 32]);
         const auto key = queries[i];
         const bool hit = find(t, key, [&](const Value& value) {
-            for (unsigned j = 0; j < V; j += 8) result.values += ht::load<8>(value.data() + j);
+            if constexpr (Full)
+                for (unsigned j = 0; j < V; j += 8) result.values += ht::load<8>(value.data() + j);
         });
         result.hits += hit;
-        result.keys += hit ? key : 0;
+        if constexpr (Full) result.keys += hit ? key : 0;
     }
     return result;
+}
+template <class T>
+Result read_requests(const T& t, const std::vector<word>& q, unsigned distance, bool full) {
+    if (full) return distance ? read_loop<true>(t, q) : read_loop<false>(t, q);
+    return distance ? read_loop<true, false>(t, q) : read_loop<false, false>(t, q);
+}
+// Order controls retain exactly the same query multiset and within-class order.
+// 0=random, 1=alternating hit/miss, 2=64-hit/64-miss runs, 3=all hits then misses.
+void reorder_queries(std::vector<word>& queries, const std::vector<word>& hits,
+                     const std::vector<word>& misses, unsigned order) {
+    if (!order) return;
+    queries.clear();
+    const auto run = order == 3 ? std::max(hits.size(), misses.size()) : (order == 2 ? 64u : 1u);
+    std::size_t h = 0, m = 0;
+    while (h < hits.size() || m < misses.size()) {
+        for (std::size_t j = 0; j < run && h < hits.size(); ++j) queries.push_back(hits[h++]);
+        for (std::size_t j = 0; j < run && m < misses.size(); ++j) queries.push_back(misses[m++]);
+    }
 }
 [[gnu::noinline]] word condition(const std::vector<byte>& bytes) {
     word sum = 0;
@@ -184,6 +204,8 @@ struct Options {
     std::size_t population = 0, reservation = 0;
     bool census = false;
     unsigned write_prefetch = 0;
+    unsigned order = 0, miss_only = 101, read_prefetch = 33;
+    bool hits_only = false, pmu = false;
     bool reads = true, writes = true;
 };
 template <class T> void report(const T& t, const Options& o, std::string_view phase,
@@ -207,7 +229,7 @@ template <class T> void report(const T& t, const Options& o, std::string_view ph
               << result.values << ',' << bytes << ',' << spill << ',' << groups << ',' << slots << ','
               << OVERFLOW_SWISS_CEILING32 << ',' << o.reservation << ',' << swiss_slots << ',' << debt << ','
               << (swiss_slots ? 100.0 * spill / swiss_slots : 0) << ','
-              << peak_allocated + sizeof(T) << '\n';
+              << peak_allocated + sizeof(T) << ',' << o.order << ',' << o.hits_only << '\n';
     std::cout.flush();
     peak_allocated = allocated;
 }
@@ -243,7 +265,9 @@ template <class T> void run(const Options& o) {
     if (o.reads) {
         for (auto scope : {"all"}) {
             for (unsigned miss : {0u, 50u, 100u}) {
+                if (o.miss_only != 101 && miss != o.miss_only) continue;
                 std::vector<word> queries; queries.reserve(o.requests);
+                std::vector<word> hits, misses;
                 Result expected;
                 for (std::size_t i = 0; i < o.requests; ++i) {
                     const bool absent = rng() % 100 < miss;
@@ -257,20 +281,34 @@ template <class T> void run(const Options& o) {
                         k = key_at(n + rng() % n, o.seed);
                     }
                     queries.push_back(k);
+                    if (o.order) (absent ? misses : hits).push_back(k);
                 }
+                reorder_queries(queries, hits, misses, o.order);
+                if (o.hits_only) { expected.keys = 0; expected.values = 0; }
                 for (unsigned distance : {0u, 32u}) {
+                    if (o.read_prefetch != 33 && distance != o.read_prefetch) continue;
 #if OVERFLOW_PEERS
                     if constexpr (std::is_same_v<T, Boost>) if (distance) continue;
 #endif
-                    const auto warm = distance ? read_loop<true>(*t, queries) : read_loop<false>(*t, queries);
+                    const auto warm = read_requests(*t, queries, distance, !o.hits_only);
                     ht::require(warm == expected, "warm read oracle");
                     for (unsigned rep = 0; rep < o.repetitions; ++rep) {
+                        const std::array events{
+                            workbench::pmu::EventSpec{"branches", 0, 4},
+                            workbench::pmu::EventSpec{"branch_misses", 0, 5}};
+                        workbench::pmu::Session counters(o.pmu ? workbench::pmu::Mode::basic :
+                                                       workbench::pmu::Mode::off, events);
                         condition(conditioning);
+                        if (o.pmu) counters.start();
                         const auto begin = Clock::now();
-                        const auto result = distance ? read_loop<true>(*t, queries) : read_loop<false>(*t, queries);
+                        const auto result = read_requests(*t, queries, distance, !o.hits_only);
                         const auto ns = elapsed(begin);
+                        if (o.pmu) counters.stop();
                         ht::require(result == expected, "timed read oracle");
                         report(*t, o, "read", scope, miss, distance, rep, n, queries.size(), ns, result);
+                        // Session writes one complete JSON line. Match these to
+                        // read CSV rows in emission order; no per-query observer.
+                        if (o.pmu) counters.write_json(std::cerr);
                     }
                 }
             }
@@ -373,9 +411,16 @@ int main(int argc, char** argv) {
         else if (flag == "--write-prefetch") { ht::require(value == 0 || value == 32, "write prefetch distance"); o.write_prefetch = value; }
         else if (flag == "--reads") o.reads = value;
         else if (flag == "--writes") o.writes = value;
+        else if (flag == "--query-order") { ht::require(value <= 3, "query order"); o.order = value; }
+        else if (flag == "--hits-only") o.hits_only = value;
+        else if (flag == "--pmu") o.pmu = value;
+        else if (flag == "--miss-only") { ht::require(value == 0 || value == 50 || value == 100 || value == 101, "miss selector"); o.miss_only = value; }
+        else if (flag == "--read-prefetch") { ht::require(value == 0 || value == 32 || value == 33, "read prefetch selector"); o.read_prefetch = value; }
         else ht::require(false, "unknown option");
     }
-    std::cout << "impl,cpu,isa,k,b,v,e,seed,load,rep,phase,scope,miss,prefetch,conditioning,n,operations,ns,hits,keys,values,bytes,spill,groups,slots,ceiling32,reservation,swiss_slots,debt,swiss_load,peak_bytes\n";
+    ht::require(!o.writes || (!o.order && !o.hits_only && !o.pmu && o.miss_only == 101 &&
+                             o.read_prefetch == 33), "read diagnostics require --writes 0");
+    std::cout << "impl,cpu,isa,k,b,v,e,seed,load,rep,phase,scope,miss,prefetch,conditioning,n,operations,ns,hits,keys,values,bytes,spill,groups,slots,ceiling32,reservation,swiss_slots,debt,swiss_load,peak_bytes,query_order,hits_only\n";
 #if OVERFLOW_PEERS
     if (o.impl == "boost") run<Boost>(o);
     else if (o.impl == "abseil") run<Abseil>(o);
