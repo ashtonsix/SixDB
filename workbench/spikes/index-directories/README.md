@@ -1,19 +1,21 @@
 # Index directories
 
-The active instruction is performance-led implementation. Remove the backend
-produced without performance considered from the start and rebuild with
-correctness and performance considered together. The earlier paper-first
-pause is superseded. Passing functional checks does not retain the discarded
-implementation or establish its API as the replacement's contract. Shore
-frontend work remains planning only.
+The current replacement is a performance-led physical-prefix increment in
+`engine/`, with correctness and performance considered together. The earlier
+correctness-first backend was removed; its functional checks and API do not
+qualify or constrain the replacement. The paper-first pause is superseded.
+Logical routing and the full ordered directory remain unfinished. Shore frontend
+work remains planning only.
 
-Engine owns the replacement and deletion scope. Workbench supplies existing
+Engine owns the replacement. Workbench supplies existing
 spike evidence and independent expected-result reasoning. Preserve useful
 workloads and oracles without tying them to the abandoned API. Do not spend a
 measurement campaign qualifying the discarded backend. A structural performance
 problem is grounds to replace an approach while implementing it.
 
-- [Findings](FINDINGS.md): actual measurements, source identities and recovery.
+- [Current implementation](IMPLEMENTATION.md): byte/operation ledger, actual
+  multi-row caller, measured wins/losses and remaining scope.
+- [Findings](FINDINGS.md): historical measurements, source identities and recovery.
 - [Independent logical cases](evidence/logical-oracle-20261021/README.md): useful
   inputs and expected results, preserved without the discarded backend or API.
 - [Budget](BUDGET.md): peer comparisons and planning assumptions, with their limits.
