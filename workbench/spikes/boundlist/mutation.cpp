@@ -100,6 +100,12 @@ int main(int argc,char**argv) {
     std::puts("layout,maximum,nodes,used,implementation,metric,chains,rep,ns,checksum,metadata_bytes,payload_capacity_bytes,binding_bytes,scratch_bytes");
     for(auto g:{sp::geometry::direct,sp::geometry::width})for(unsigned max:{255u,4095u})for(bool used:{false,true}) {
         fixture f(nodes,{g,sp::placement::grouped,std::uint16_t(max),8192,{},!used,false});
-        sp::author::dispatch(f.views[0],[&](auto a){panel<false>(f,rounds,reps,a);panel<true>(f,rounds,reps,a);});
+        sp::author::dispatch(f.views[0],[&](auto a){
+            // Frozen controls predate Relative Ends; fixture selects only the
+            // original Absolute Ends/Sizes formats.
+            if constexpr(decltype(a)::family != sp::geometry::relative_ends) {
+                panel<false>(f,rounds,reps,a);panel<true>(f,rounds,reps,a);
+            }
+        });
     }
 }

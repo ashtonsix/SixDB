@@ -1,12 +1,11 @@
 #pragma once
 #include <ikea/boundlist/author/read.h>
 
-namespace ikea::boundlist::sidecar::native {
-using namespace ikea::boundlist::native;
+namespace ikea::boundlist::native {
 #if defined(__aarch64__) || defined(__AVX2__)
 inline constexpr unsigned chunks = 16 / lanes;
 /// Sixteen offsets and reservations, flattened into native registers at chain hops.
-/// Slots outside the accompanying live mask have no logical value.
+/// Ranks outside the accompanying active mask are unassigned or explicitly excluded.
 struct packet {
     using vector = native::vector;
     static constexpr unsigned parts = 2 * chunks;
@@ -16,7 +15,7 @@ struct packet {
 };
 struct group {
     packet values;
-    std::uint16_t live;
+    std::uint16_t active;
 };
 namespace detail {
 // Keep the unrolled callable boundary fused too: outlining it materializes all
@@ -57,7 +56,7 @@ template <class Access, class Sink>
             const auto ends =
                 load<W>(a.source().windows().lengths.data() + a.width_offset(first + lane));
             const auto previous_local = previous(ends, lane ? carry : 0);
-            const auto base = sidecar::detail::load<O>(a.geometry_data() + group_index * sizeof(O));
+            const auto base = boundlist::detail::load<O>(a.geometry_data() + group_index * sizeof(O));
             starts = add(previous_local, splat(base));
             reserved = sub(ends, previous_local);
             carry = last(ends);
@@ -70,15 +69,14 @@ template <class Access, class Sink>
         [[clang::always_inline]] sink(i, starts, reserved);
     });
     const unsigned count = std::min(16u, a.size() - first);
-    unsigned live = (1u << count) - 1;
-    if (l.has_tombstones())
-        live &= ~sidecar::detail::load<std::uint16_t>(a.source().windows().directory.data() +
-                                                      first / 8);
-    return std::uint16_t(live);
+    unsigned active = (1u << count) - 1;
+    if constexpr (requires { a.selection_mask(first, count); })
+        active &= a.selection_mask(first, count);
+    return std::uint16_t(active);
 }
 template <class Access> [[gnu::always_inline]] inline group read16(Access a, unsigned group_index) {
     group out;
-    out.live = decode16(a, group_index,
+    out.active = decode16(a, group_index,
                         [&](auto i, vector starts, vector reserved) __attribute__((always_inline)) {
                             out.values.v[i] = starts;
                             out.values.v[chunks + i] = reserved;
@@ -87,4 +85,4 @@ template <class Access> [[gnu::always_inline]] inline group read16(Access a, uns
 }
 
 #endif
-} // namespace ikea::boundlist::sidecar::native
+} // namespace ikea::boundlist::native

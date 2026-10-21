@@ -5,6 +5,15 @@
 
 namespace boundlist_spike {
 namespace sp = ikea::streampack;
+// This historical extraction comparison covers only its original two formats.
+// Shared production dispatch also instantiates Relative Ends; do not pretend
+// that the old frozen width-only controls support that later encoding.
+template<class Source,class Body> void two_format_dispatch(const Source& source,Body&& body) {
+    assert(source.format().schema().family != sp::geometry::relative_ends);
+    sp::author::dispatch(source,[&](auto access) {
+        if constexpr(decltype(access)::family != sp::geometry::relative_ends) body(access);
+    });
+}
 // Compatibility extraction experiment, deliberately using the existing format
 // rather than choosing a new Boundlist schema. Metadata alone has no payload
 // requirement. The caller supplies its admitted encoded/readable windows and

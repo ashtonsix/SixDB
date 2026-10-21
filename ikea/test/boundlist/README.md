@@ -4,8 +4,8 @@
 The search oracle walks ranks independently, using widened signed arithmetic for
 mixed integer queries. It covers every native count from 0 through 513,
 unaligned and exact protected-page tails, u8/u16/u32/u64 lanes, queries outside
-stored domains, sparse/inverted population, repeated endpoints, empty ranges,
-all four endpoint-closure policies and local holes. Custom sources exercise
+stored domains, sparse/inverted selection, repeated endpoints, empty ranges,
+explicit selection and local holes. Custom sources exercise
 strings, wider integers and a virtual top fence without a universal integer cap.
 Delta tests cover both lane widths, strided siblings, nonzero/high origins,
 zero/max deltas, partial groups and checkpoint count arithmetic at UINT_MAX.
@@ -16,6 +16,11 @@ geometry, constant arrays, duplicate runs and hidden jumps between preparation
 samples. Lower/upper queries include mixed signed domains, exact guarded tails,
 unaligned arrays, prepared finishing and interleaved mixed-source batches.
 
+Literal-cut oracles exercise raw/selected borrowed and encoded geometry with
+repeated cuts, signed/wider queries, clipping, empty/reversed ranges and rank
+preflight refusal. Nonzero u64 origins, custom ordered keys, strings and 1025
+intervals constrain the minimal source contract independently of compact limits.
+
 Geometry histories cover Absolute Ends, Sizes and Relative Ends, optional
 retirement, fixed/zero size domains, G16 initialization and source-qualified
 effects. Independent sizes/ends define physical reverse, overlap and a shared
@@ -25,7 +30,7 @@ where those behaviors live.
 
 `ikea_boundlist_edits_check` runs 41,472 independent one-boundary/suffix-resize
 cases, including G16 crossings, maximal carriers, effect-capacity refusal and
-actual issued store coverage. Population-aware prepared searches finish after
+actual issued store coverage. Selection-aware prepared searches finish after
 the temporary typed dispatch object has died, while retaining the original named
 source. Generic relative sources cover wide/nonzero origins and duplicate ends.
 

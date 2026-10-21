@@ -144,7 +144,7 @@ void panel(fixture& f, unsigned operations, unsigned reps) {
     const auto a = chase<1>(operations, oracle), b = chase<8>(operations / 8, oracle);
     const unsigned rounds = std::max(1u, operations / f.rows), count = rounds * f.rows;
     const auto sum = projection(f, rounds, false, oracle);
-    sp::author::dispatch(f.views[0], [&](auto prototype) {
+    bl::two_format_dispatch(f.views[0], [&](auto prototype) {
         using A = decltype(prototype);
         const auto meta = bl::metadata<A::family, typename A::width_type, typename A::offset_type>::from(f.views[0]);
         for (unsigned rep = 0; rep < reps; ++rep) {

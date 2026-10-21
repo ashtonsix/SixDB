@@ -3,7 +3,7 @@
 #include <cassert>
 #include <iostream>
 #include <vector>
-namespace sc = ikea::boundlist::sidecar;
+namespace sc = ikea::boundlist;
 namespace bl = ikea::boundlist;
 struct fixture {
     sc::layout format;
@@ -127,10 +127,13 @@ void phase_lifetime() {
             assert(sc::append(f.source, 3, effects));
         assert(sc::retire(f.source, 16, effects) && sc::retire(f.source, 17, effects));
         sc::author::dispatch(f.source, [&](auto a) {
-            const auto pending = [&] {
+            const auto raw = [&] {
                 auto temporary = a;
                 return bl::author::prepare_lower_bound(temporary, 51u);
             }();
+            assert(raw.finish() == 16);
+            const bl::selected_source selected{a, a.live_ranks()};
+            const auto pending = bl::author::prepare_lower_bound(selected, 51u);
             assert(pending.finish() == 18);
         });
     }

@@ -1,4 +1,5 @@
 #pragma once
+#include <ikea/boundlist/types.h>
 #include <array>
 #include <cstddef>
 #include <cstdint>
@@ -6,22 +7,11 @@
 #include <optional>
 #include <span>
 
-namespace ikea::boundlist::sidecar {
+namespace ikea::boundlist {
 using byte = std::byte;
 using bytes = std::span<const byte>;
-inline constexpr unsigned slot_capacity = 256;
-enum class error {
-    description,
-    capacity,
-    alignment,
-    alias,
-    contents,
-    rank,
-    retired,
-    value,
-    effects,
-    range
-};
+inline constexpr unsigned interval_capacity = 256;
+inline constexpr unsigned maximum_interval_size = 65535;
 enum class geometry : std::uint8_t {
     absolute_ends,
     sizes,
@@ -34,8 +24,8 @@ enum class geometry : std::uint8_t {
 /// before its rank capacity. Omitted facts cannot subsequently be mutated.
 struct description {
     geometry family = geometry::sizes;
-    std::uint16_t maximum = 65535;
-    std::uint32_t extent_limit = slot_capacity * maximum;
+    std::uint16_t maximum = maximum_interval_size;
+    std::uint32_t extent_limit = interval_capacity * maximum;
     std::optional<std::uint16_t> fixed_size = std::nullopt;
     bool immortal = false;
     bool operator==(const description &) const = default;
@@ -65,7 +55,7 @@ class layout {
   public:
     [[nodiscard]] static std::expected<layout, error> prepare(description);
     const description &schema() const noexcept { return description_; }
-    static constexpr unsigned capacity() noexcept { return slot_capacity; }
+    static constexpr unsigned capacity() noexcept { return interval_capacity; }
     unsigned extent_limit() const noexcept { return description_.extent_limit; }
     bool fixed() const noexcept { return geometry_.fixed; }
     unsigned fixed_width() const noexcept { return description_.fixed_size.value_or(0); }
@@ -82,10 +72,10 @@ class layout {
     unsigned geometry_lengths_offset() const noexcept { return 0; }
     /// Initialized/readable reservation widths include complete G16 groups.
     unsigned lengths_bytes(unsigned assigned) const noexcept;
-    unsigned lengths_bytes() const noexcept { return lengths_bytes(slot_capacity); }
+    unsigned lengths_bytes() const noexcept { return lengths_bytes(interval_capacity); }
     /// Conservative journal slots; admission can accept a smaller exact bound.
     unsigned append_effect_capacity() const noexcept { return 8; }
     std::array<byte, 8> encode() const noexcept;
     [[nodiscard]] static std::expected<layout, error> decode(bytes);
 };
-} // namespace ikea::boundlist::sidecar
+} // namespace ikea::boundlist

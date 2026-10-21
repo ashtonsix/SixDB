@@ -200,14 +200,21 @@ struct relative_end_source {
     }
 };
 
-/// Exact byte-readable population window. Unlike word-padded bitmaps, the final
+/// Exact byte-readable rank-selection window. Unlike word-padded bitmaps, the final
 /// partial byte/word needs no extra readable grant. Set bits mean eligible unless
 /// inverted (a tombstone plane). The owner supplies ceil(count/8) bytes.
-struct population {
+struct rank_selection {
+    static rank_selection all() noexcept { return {{}, true}; }
     std::span<const std::byte> bytes;
     bool inverted = false;
-    std::uint64_t mask(unsigned first, unsigned count) const {
+    [[gnu::always_inline]] bool contains(unsigned rank) const {
+        return bytes.empty()
+                   ? inverted
+                   : bool(std::to_integer<unsigned>(bytes[rank / 8]) & (1u << (rank % 8))) != inverted;
+    }
+    [[gnu::always_inline]] std::uint64_t mask(unsigned first, unsigned count) const {
         assert(count <= 64 && first % 8 == 0);
+        if (bytes.empty()) return inverted ? detail::low_bits(count) : 0;
         const auto take = (count + 7) / 8;
         assert(first / 8 + take <= bytes.size());
         std::uint64_t word = 0;
@@ -229,7 +236,8 @@ struct population {
         }
         return (inverted ? ~word : word) & detail::low_bits(count);
     }
-    unsigned next(unsigned first, unsigned n) const {
+    [[gnu::always_inline]] unsigned next(unsigned first, unsigned n) const {
+        if (bytes.empty()) return inverted ? std::min(first, n) : n;
         while (first < n) {
             const auto base = first / 64 * 64, take = std::min(64u, n - base);
             const auto bits = mask(base, take) & ~detail::low_bits(first - base);
@@ -239,7 +247,8 @@ struct population {
         }
         return n;
     }
-    unsigned previous(unsigned limit, unsigned n) const {
+    [[gnu::always_inline]] unsigned previous(unsigned limit, unsigned n) const {
+        if (bytes.empty()) return inverted && limit ? limit - 1 : n;
         while (limit) {
             const auto base = (limit - 1) / 64 * 64;
             const auto bits = mask(base, limit - base);
@@ -250,11 +259,51 @@ struct population {
         return n;
     }
 };
-template <class Source> struct populated_source : Source {
-    population eligible;
-    unsigned next_eligible(unsigned first, unsigned n) const { return eligible.next(first, n); }
-    unsigned previous_eligible(unsigned limit) const {
-        return eligible.previous(limit, this->size());
+template <class Source> struct selected_source : Source {
+    rank_selection eligible;
+    [[gnu::always_inline]] bool is_selected(unsigned rank) const {
+        if (!eligible.contains(rank)) return false;
+        if constexpr (requires { static_cast<const Source &>(*this).is_selected(rank); })
+            return static_cast<const Source &>(*this).is_selected(rank);
+        else
+            return true;
+    }
+    [[gnu::always_inline]] unsigned next_eligible(unsigned first, unsigned n) const {
+        auto rank = eligible.next(first, n);
+        if constexpr (requires { static_cast<const Source &>(*this).next_eligible(first, n); }) {
+            while (rank < n) {
+                const auto base = static_cast<const Source &>(*this).next_eligible(rank, n);
+                if (base == rank) break;
+                rank = eligible.next(base, n);
+            }
+        }
+        return rank;
+    }
+    [[gnu::always_inline]] unsigned previous_eligible(unsigned limit) const {
+        auto rank = eligible.previous(limit, this->size());
+        if constexpr (requires { static_cast<const Source &>(*this).previous_eligible(limit); }) {
+            while (rank != this->size()) {
+                const auto base = static_cast<const Source &>(*this).previous_eligible(rank + 1);
+                if (base == rank) break;
+                if (base == this->size()) return base;
+                rank = eligible.previous(base + 1, this->size());
+            }
+        }
+        return rank;
+    }
+    [[gnu::always_inline]] std::uint64_t selection_mask(unsigned first, unsigned count) const {
+        auto mask = eligible.mask(first, count);
+        if constexpr (requires { static_cast<const Source &>(*this).selection_mask(first, count); })
+            mask &= static_cast<const Source &>(*this).selection_mask(first, count);
+        return mask;
+    }
+    template <class Body> decltype(auto) with_geometry(Body &&body) const
+        requires requires { static_cast<const Source &>(*this).with_geometry(body); }
+    {
+        return static_cast<const Source &>(*this).with_geometry([&](auto access) {
+            const selected_source<decltype(access)> selected{access, eligible};
+            return body(selected);
+        });
     }
 };
 namespace detail {
@@ -309,23 +358,5 @@ template <class Source, class Q>
 template <class Source, class Q>
 [[gnu::always_inline]] unsigned upper_bound(const Source &source, const Q &point) {
     return detail::next(source, detail::boundary<edge::after>(source, point), source.size());
-}
-/// Ordered occupied minima/maxima with matching population. Returns the first
-/// and one-past-last eligible overlapping rank; internal holes remain holes.
-/// Extrema may still enclose gaps inside a child, so local record checks remain.
-template <class Maxima, class Minima, class Q>
-[[gnu::always_inline]] rank_window overlap(const Maxima &maxima, const Minima &minima,
-                                           const query_range<Q> &query) {
-    const auto n = maxima.size();
-    assert(n == minima.size());
-    if (query.empty())
-        return {n, n};
-    const auto first =
-        query.low_closed ? lower_bound(maxima, query.low) : upper_bound(maxima, query.low);
-    const auto stop = query.high_closed ? detail::boundary<edge::after>(minima, query.high)
-                                        : detail::boundary<edge::at_or_after>(minima, query.high);
-    if (first >= stop)
-        return {n, n};
-    return {first, detail::previous(maxima, stop) + 1};
 }
 } // namespace ikea::boundlist

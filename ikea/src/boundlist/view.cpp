@@ -3,7 +3,7 @@
 #include <ikea/boundlist/detail/validation.h>
 #include <limits>
 
-namespace ikea::boundlist::sidecar::detail {
+namespace ikea::boundlist::detail {
 std::expected<void, error> admit_metadata(unsigned directory_bytes, unsigned control_bytes,
                                           unsigned lengths_alignment, const void* format,
                                           std::size_t format_bytes, storage<const byte> s) {
@@ -29,12 +29,12 @@ std::expected<void, error> admit_storage(const layout& l, storage<const byte> s)
     return admit_metadata(l.directory_bytes(), l.control_bytes(), l.lengths_alignment(), &l,
                           sizeof(l), s);
 }
-} // namespace ikea::boundlist::sidecar::detail
+} // namespace ikea::boundlist::detail
 
-namespace ikea::boundlist::sidecar {
+namespace ikea::boundlist {
 template <class Byte> std::expected<void, error> basic_view<Byte>::validate() const {
     return detail::validate_geometry(*this, [](auto, unsigned, unsigned, bool) { return true; });
 }
 template class basic_view<byte>;
 template class basic_view<const byte>;
-} // namespace ikea::boundlist::sidecar
+} // namespace ikea::boundlist

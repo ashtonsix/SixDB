@@ -4,7 +4,7 @@
 #include <ikea/boundlist/detail/rewrite.h>
 #include <cstring>
 
-namespace ikea::boundlist::sidecar::author {
+namespace ikea::boundlist::author {
 template <class Source, class Effects>
 inline void emit(const Source &dst, Effects &effects, plane stream, unsigned offset,
                  unsigned size) {
@@ -219,4 +219,4 @@ template <class Access, class Effects>
         make_live_unchecked(a.source(), n, 1, effects);
     publish_size_unchecked(a, n + 1, begin + reservation, effects);
 }
-} // namespace ikea::boundlist::sidecar::author
+} // namespace ikea::boundlist::author

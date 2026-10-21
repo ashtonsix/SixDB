@@ -1,7 +1,6 @@
 #pragma once
 #include <ikea/streampack/description.h>
 #include <ikea/boundlist/detail/extent.h>
-#include <ikea/boundlist/search.h>
 #include <type_traits>
 
 namespace ikea::streampack {
@@ -54,14 +53,7 @@ template <class Byte> class basic_view {
         return !layout_->has_tombstones() ||
                !(std::to_integer<unsigned>(storage_.directory[rank / 8]) & (1u << (rank % 8)));
     }
-    unsigned next_eligible(unsigned first, unsigned n) const noexcept {
-        return layout_->has_tombstones()
-                   ? boundlist::population{storage_.directory.first(layout_->tombstone_bytes()),
-                                           true}
-                         .next(first, n)
-                   : first;
-    }
-    std::uint32_t extent() const noexcept { return boundlist::sidecar::detail::extent(*this); }
+    std::uint32_t extent() const noexcept { return boundlist::detail::extent(*this); }
     /// Cold recovery/admission: checks the complete assigned interpretation and
     /// zeroed SIMD tail. Successful checked writes preserve this proof.
     [[nodiscard]] std::expected<void, error> validate() const;

@@ -1,7 +1,7 @@
 #pragma once
 #include <ikea/boundlist/author/read.h>
 
-namespace ikea::boundlist::sidecar::detail {
+namespace ikea::boundlist::detail {
 /// One geometry admission walk. The enclosing recipe may check sibling fields
 /// in the same pass; the callback does not alter geometry or borrowed controls.
 template <class Source, class Check>
@@ -58,4 +58,4 @@ std::expected<void, error> validate_geometry(const Source &source, Check &&check
         return {};
     });
 }
-} // namespace ikea::boundlist::sidecar::detail
+} // namespace ikea::boundlist::detail

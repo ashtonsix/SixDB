@@ -1,58 +1,114 @@
 # Boundlist
 
 Boundlist describes **contiguous intervals using ordered cuts**. It locates an
-interval by rank, finds the interval containing a point, and finds the first and last
-ranks overlapped by a range. It stores geometry and optional retirement bits. The
-contents associated with an interval belong to its consumer.
+interval by rank, finds the interval containing a point, and bounds the ranks
+overlapping a range. The consumer owns anything associated with an interval.
 
-Positions are coordinates in the consumer's domain. An interval's size is the distance
-between its cuts; Boundlist does not track which positions contain data.
+Link `ikea::boundlist` and include `<ikea/boundlist.h>`. The
+[usage guide](usage.md) shows storage setup and complete consumer patterns.
 
-## Cuts, intervals and ranks
+## Cuts and ranks
 
-Consecutive cuts `cut[r]` and `cut[r+1]` define interval rank `r` as
-**`[cut[r],cut[r+1])`**:
-include the left cut, exclude the right. An explicit list of `n+1` cuts defines `n`
-intervals. For example, cuts `[10,15,16]` define `[10,15)` and `[15,16)`.
-The first interval ends exactly where the next begins.
+Consecutive cuts `cut[r]` and `cut[r+1]` define rank `r` as
+**`[cut[r],cut[r+1])`**: include the left cut, exclude the right.
+An ordered list of `n+1` cuts defines `n` intervals. For example,
+`[10,15,16]` defines `[10,15)` and `[15,16)`. Shared cuts make the
+geometry contiguous. Equal cuts define a zero-size interval, which owns no points.
 
-A **tombstone** marks a retired interval without changing its boundaries or rank.
-A point lookup still reports its rank with the tombstone; operations selecting live
-ranks skip it. Retirement does not extend a neighboring interval into the retired span.
+![Six contiguous intervals share consecutive cuts. The query from 9 inclusive to 36 exclusive overlaps ranks 1 through 4. Excluding rank 2 leaves its cuts unchanged.](images/ranges.svg)
 
-![Six contiguous intervals share consecutive cuts. The query from 9 inclusive to 36 exclusive overlaps ranks 1 through 4. Retired rank 2 retains its interval but is skipped by live traversal.](images/ranges.svg)
+A source supplies one **exclusive end per interval** plus its origin. Thus source
+indices are interval ranks, including when an adapter borrows a complete cut array.
+The last end is the extent. An empty source has extent equal to origin.
 
-## Points, ranges and eligibility
+## One geometry contract
 
-Point lookup uses the first exclusive end **greater than** the point. Thus point 8
-belongs to rank 1, point 18 to rank 2, and point 56 lies outside the extent. An interval
-with equal cuts has size zero and owns no points.
+All ordinary geometry operations accept the same small source contract:
 
-A range query `[low,high)` intersects each positive-size interval whose end is
-`> low` and whose start is `< high`. The result is `rank_window{first,limit}`:
-`first` is included, `limit` is one past the last matching rank. An empty answer is
-`{n,n}`, where `n` is the assigned interval count.
+| Member | Meaning |
+| --- | --- |
+| `size()` | Interval count, as `unsigned`, up to `maximum_count`. |
+| `origin()` | Initial cut. |
+| `at(rank)` | Exclusive end of that interval. |
 
-For the diagram's query `[9,36)`, ranks 1 through 4 overlap: the window is `[1,5)`.
-Live-only selection still returns that window because rank 2 is internal; traversal
-skips the retired rank. The geometry remains contiguous before and after selection.
+Ends must be nondecreasing and at least the origin. Ordering is sufficient;
+coordinates need no subtraction, universal integer width or payload metadata.
+The owner admits those laws and retains coherent backing throughout an operation.
+Optional `extent()` and typed dispatch hooks let implementations avoid repeated
+loads or format decisions; they add no required geometry state.
 
-## Compact format and borrowed sources
+There are several ways to supply that contract:
 
-Boundlist's compact mutable format, named `sidecar` in the API, holds up to 256
-intervals starting at zero. It stores one exclusive end per rank, or sizes from which
-the ends are reconstructed, plus optional tombstones. Zero is the **implicit first cut**.
-The final end is the **extent**.
+| Source | Limits and storage |
+| --- | --- |
+| `from_cuts(span)` | Accepts `n+1` cuts, copying the origin/count and borrowing the ends; at least one cut is required. |
+| `from_ends(ends,origin)` | Adds the initial cut to any ordered endpoint projection exposing `size()` and `at()`. |
+| Custom source | Projects the three members directly from existing storage. |
+| `view` / `const_view` | Compact mutable/read-only geometry: up to 256 intervals, origin zero, each size up to 65535. |
 
-Search can also borrow a caller-owned endpoint source, including cuts at a nonzero
-origin or in a wider comparison domain. That route has no 256-entry or universal
-integer-domain restriction. It searches the supplied values; it introduces no other
-contents or hierarchy. [Caller-supplied boundaries](#search-caller-supplied-boundaries)
-explains the source-index convention and lower/upper operations.
+Renew an adapter after changing its origin, count or backing placement.
 
-The [usage guide](usage.md) gives ordinary calls, storage setup and fast consumer
-patterns. The rest of this reference covers encodings, operations, borrowed sources
-and composition. Boundlist allocates no storage and performs no transaction or scheduling.
+Borrowed and custom sources can cover larger counts, nonzero origins, full-width
+integers, strings or other ordered keys. The compact format's limits describe that
+encoding, rather than restricting the common operations. Its three encodings and
+schema omissions are described below.
+
+## Geometry operations
+
+| Operation | Result |
+| --- | --- |
+| `locate(source,rank)` | Optional `interval<Point>{first,limit}`; absent for an invalid or explicitly excluded rank. A zero-size rank succeeds. |
+| `reverse(source,point)` | The containing rank, or `source.size()` when outside the extent or explicitly excluded. |
+| `overlap(source,low,high)` | `rank_window{first,limit}` bounding positive-size intervals intersecting `[low,high)`; empty is `{n,n}`. |
+| `range(source,first,count,sink)` | Calls `sink(rank,interval<Point>)` for assigned ranks in that rank interval, after preflighting the whole interval. Returns a rank error without callbacks on invalid input. |
+
+Point ownership uses the first end **strictly greater than** the point. In the
+diagram, point 18 belongs to rank 2; point 56 lies outside the extent. A range
+intersects an interval when its end is `> low` and its start is `< high`.
+Reversed or empty queries have empty results; queries may extend beyond the geometry.
+The diagram's `[9,36)` query returns ranks `[1,5)`.
+
+Raw geometry operations include retired ranks. Selection is a separate, explicit
+binding; it never changes the cuts or extends a neighbor into an excluded span.
+
+### Select ranks explicitly
+
+`selected_source{geometry,rank_selection{bits}}` attaches a rank bitset. Set bits
+mean eligible; `inverted=true` supports a tombstone bitmap. Nonempty bitsets need only
+`ceil(n/8)` readable bytes, with no word padding requirement. An empty
+`rank_selection{}` selects nothing; `rank_selection::all()` selects every rank.
+
+A compact view's `live_ranks()` returns the complement of its retirement bitmap,
+or all ranks when `immortal`. Reading that companion is opt-in:
+
+```cpp
+namespace bl = ikea::boundlist;
+const bl::selected_source live{source, source.live_ranks()};
+```
+
+`reverse(live,20)` returns `n` when rank 2 is excluded: the point does not become
+owned by rank 3. `locate` likewise rejects excluded ranks. A selected `range`
+visits only eligible ranks, including eligible zero-size ranks. Selected `overlap`
+trims excluded and zero-size edge ranks, but internal holes remain inside its
+candidate window. Traverse that window through the same selected source to skip them.
+
+### Endpoint searches are smaller building blocks
+
+`lower_bound(source,q)` returns the first eligible endpoint **>= q**;
+`upper_bound(source,q)` returns the first eligible endpoint **> q**.
+Both return `size()` when absent, and both find a **first** endpoint.
+For ends `[3,7,7,10]`, querying 7 returns lower bound 1 and upper bound 3.
+
+These searches require only `size()` and `at()`. `direct_source<T>` borrows an
+ordered array; it is also a useful input to `from_ends`. Native unsigned loads may
+be unaligned within the supplied readable bytes. Wider or signed integer queries
+are classified before narrowing. Other domains use their own ordering.
+
+A selected endpoint search may skip the containing rank to return a later eligible
+end. That is useful for searching boundaries, but differs from point ownership.
+Use `reverse` when asking which interval contains a point. Policies involving
+independent occupied minima/maxima belong to the consumer and can compose these
+endpoint searches there.
 
 ## Three geometry encodings
 
@@ -83,12 +139,12 @@ ends reset at each group, so their raw field array is not globally ordered.
 
 ### Prepare the schema and its field widths
 
-Prepare an immutable `sidecar::layout` from `description`. Its `family` chooses
+Prepare an immutable `layout` from `description`. Its `family` chooses
 `geometry::absolute_ends`, `sizes` or `relative_ends`; Sizes remains the default.
 The old names `direct` and `width` are aliases for the first two values, not extra
 formats.
 
-The schema specifies two independent bounds: per-slot size maximum **M** (`maximum`)
+The schema specifies two independent bounds: per-interval size maximum **M** (`maximum`)
 and total extent limit **B** (`extent_limit`). M is at most 65535 and B at most 256M.
 For each field, preparation chooses the smallest native carrier among u8/u16/u32 that
 can hold its proven bound:
@@ -111,7 +167,7 @@ cannot express retirement. These omissions do not remove assigned ranks or their
 
 ### Bind storage before reading or writing it
 
-A sidecar view borrows three disjoint byte windows. They may be spans of one owner
+A compact view borrows three disjoint byte windows. They may be spans of one owner
 allocation. The layout reports their required extents and alignment. Mutation calls
 also take an effects sink that reports source-qualified byte writes to the owner;
 the effect plane number identifies the window. Effects do not themselves publish a
@@ -143,22 +199,6 @@ Successful checked mutations preserve those content rules. Ordinary rebinding af
 growth need not rescan unchanged, already-admitted contents. The layout and named view
 must stay at stable addresses while an access, phase or effect record borrows them.
 
-### Locate intervals and search positions
-
-| Operation | Result |
-| --- | --- |
-| `locate(source,rank)` | `{offset,size}` for a live rank; invalid or retired ranks are errors. A live zero-size slot succeeds. |
-| `reverse(source,point)` | Optional `position_owner{rank,tombstone}` for a point below extent; otherwise no result. |
-| `sidecar::overlap(source,low,high,only_live)` | A half-open rank window covering positive-size intervals overlapping `[low,high)`. Retired intervals participate by default. |
-| `range(source,first,count,sink)` | Live ranks and their locations, after checking the complete rank interval before callbacks. |
-
-Reverse lookup finds the first exclusive end **> point**. It includes retired
-intervals and never assigns a point to a zero-size interval. It deliberately does not skip
-tombstones as eligible endpoint search does. An overlap window can contain internal
-zero-size slots. With `only_live=true`, it trims retired/zero-size edge ranks but can
-still contain those holes internally. These are skipped ranks within the same
-contiguous geometry, not gaps between its cuts.
-
 ### Choose the intended edit
 
 | Checked command | Meaning |
@@ -178,74 +218,6 @@ Geometry edits change only metadata. The consuming structure coordinates the
 corresponding data change and publication. Inserting, removing or reordering middle
 ranks constructs a new representation with an explicit rank remap.
 
-## Search caller-supplied boundaries
-
-The geometry above is Boundlist's compact mutable format, in `boundlist::sidecar`.
-The top-level search functions also work directly on caller-supplied ordered endpoints.
-They do not require that format, allocate metadata or infer what an endpoint represents.
-This permits a nonzero origin, wider comparison domains and existing packed boundaries.
-
-An endpoint source exposes `size()` and `at(index)`. Values must be nondecreasing,
-including values excluded from search results. Equal endpoints are allowed. A raw source
-indexes exactly the values supplied: an array containing every cut has one more entry
-than the intervals between them. The compact format instead supplies one exclusive end
-per interval, with zero implicit.
-
-| Operation | Result |
-| --- | --- |
-| `lower_bound(source,q)` | Index of the first eligible endpoint **>= q**. |
-| `upper_bound(source,q)` | Index of the first eligible endpoint **> q**. |
-
-Both return `source.size()` if there is no match. Both find a **first** endpoint;
-upper bound does not mean the last matching endpoint. For endpoints `[3,7,7,10]`,
-all eligible, querying 7 returns lower bound 1 and upper bound 3.
-
-When the source stores exclusive ends, upper bound finds the interval containing a
-point inside the covered extent. When the source contains the initial cut as well,
-the containing interval is the preceding index: for cuts `[10,15,16]`, upper bound
-of 15 is cut index 2, and the interval rank is 1. Check the first and final cuts before
-subtracting; points outside `[10,16)` have no interval. Do not apply eligibility to
-this cut-index calculation: selection is a separate operation on interval ranks.
-
-### Endpoint storage and eligibility
-
-`direct_source<T>` borrows an array. Native unsigned arrays permit unaligned loads
-within their declared readable bytes. Other element types must be real `T` objects.
-Native unsigned searches classify wider or signed integer queries before conversion,
-so an out-of-domain query cannot wrap into the stored domain.
-
-A custom source can project `size()` and ordered `at(index)` from an already-bound
-decoder. Comparisons require no arithmetic distance or universal integer domain:
-byte strings, wider keys and virtual top fences are possible. Source counts and result
-indices are `unsigned`, bounded by `maximum_count`.
-
-Every endpoint is initially eligible. `populated_source` attaches a `population`
-bitset to filter endpoint results, with `ceil(n/8)` readable bytes and set bits meaning
-eligible (`inverted=true` reverses this). It neither changes endpoint values nor joins
-adjacent intervals. Excluded values remain ordered and readable.
-
-On the compact format, lower/upper searches skip tombstoned interval ranks, whereas
-physical `sidecar::reverse` still reports their ownership. These answer different
-questions: the first eligible end after a point can belong to a later interval.
-
-### The two-source overlap helper
-
-`boundlist::overlap(maxima,minima,query_range{low,high})` is a separate search helper
-for **two caller-supplied sources**. It interprets each pair as an inclusive interval
-`[minima.at(r),maxima.at(r)]`; each source must be nondecreasing and both must have
-the same count and eligibility. Those pairs are not an encoding of a list of cuts.
-This helper does not change the compact format's contiguous, half-open intervals.
-
-For its default query `[low,high)`, a rank qualifies when `maximum >= low` and
-`minimum < high`. `low_closed` and `high_closed` choose query endpoint inclusion;
-the defaults are `true` and `false`. A pair with equal endpoints can intersect a closed
-point query. In contrast, equal consecutive cuts always enclose a zero-size interval.
-
-The helper returns `rank_window{first,limit}`, excluding `limit`, or `{n,n}` when
-empty. Ineligible edges are trimmed; internal ineligible ranks remain in the window.
-For contiguous geometry, use `sidecar::overlap(source,low,high,only_live)` instead;
-it already applies the half-open cut interpretation and needs no second source.
-
 ## Composition and retained versions
 
 ### Keep ready geometry work with its consumer
@@ -253,8 +225,10 @@ it already applies the half-open cut interpretation and needs no second source.
 A typed access exposes `start`, `slot_size`, physical `reverse`, carried traversal
 and native group decoding. Dispatch once around the complete consumer rather than once
 per rank. A sequential traversal carries its position; a native `read16` lets a fused
-consumer use offsets, sizes and a live mask without an obligatory intermediate array.
-Read callbacks cannot mutate or rebind the source.
+consumer use offsets, sizes and an active mask without an obligatory intermediate array.
+Raw decoding includes every assigned rank. Wrap the typed access in `selected_source`
+to intersect its native active mask with an explicit selection. Read callbacks cannot
+mutate or rebind the source.
 
 The admitted sequential encoder carries new geometry while a consumer chooses movement
 and ordering. An in-place rewrite must capture original boundaries before overwriting
@@ -294,7 +268,7 @@ native/CPS stages remain bounded and inline where useful.
 The local window is a hint, **not the complete read/protection footprint**. Selection
 can still read eligibility; numeric prediction can correct outside its proposed bracket.
 Across any wait, the owner retains one coherent version of boundaries, count,
-eligibility, backing and derived search state. Population-aware completion also borrows
+eligibility, backing and derived search state. Selection-aware completion also borrows
 the original named source; retaining a temporary typed dispatch object is insufficient.
 
 ## Portable descriptor

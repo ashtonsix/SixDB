@@ -7,7 +7,8 @@
 #include <type_traits>
 #include <utility>
 
-namespace ikea::boundlist::sidecar {
+namespace ikea::boundlist {
+namespace author {
 struct location {
     std::uint32_t offset;
     std::uint16_t size;
@@ -17,7 +18,6 @@ struct position_owner {
     bool tombstone;
 };
 
-namespace author {
 /// Trusted typed geometry body. The source has admitted contents, ranks and
 /// storage. Keep it visible inside a useful consumer; dispatch outside its loop.
 template <geometry Family, class Width, class Offset, class Source> class access {
@@ -35,11 +35,6 @@ template <geometry Family, class Width, class Offset, class Source> class access
     explicit access(const Source &source) : source_(&source), format_(&source.format()) {}
     access(const Source &&) = delete;
     const auto &source() const noexcept { return *source_; }
-    const Source &selection_source() const noexcept
-        requires requires { source_->next_eligible(0u, 0u); }
-    {
-        return *source_;
-    }
     const auto &format() const noexcept { return *format_; }
     /// Reuse shared schema preparation across a population. The owner proves
     /// the next binding has this exact shared layout identity; no schema loads
@@ -47,6 +42,13 @@ template <geometry Family, class Width, class Offset, class Source> class access
     access rebind(const Source &source) const { return {source, *format_}; }
     access rebind(const Source &&) const = delete;
     unsigned size() const noexcept { return source_->size(); }
+    std::uint32_t origin() const noexcept { return 0; }
+    std::uint32_t extent() const noexcept { return source_->extent(); }
+    rank_selection live_ranks() const noexcept {
+        return format().has_tombstones()
+                   ? rank_selection{source().windows().directory.first(format().tombstone_bytes()), true}
+                   : rank_selection::all();
+    }
     unsigned width_offset(unsigned rank) const noexcept {
         return format().geometry_lengths_offset() + (rank / 16) * format().group_stride() +
                (rank % 16) * sizeof(Width);
@@ -207,23 +209,9 @@ template <geometry Family, class Width, class Offset, class Source> class access
         } else
             return boundlist::detail::ready_search{boundary<E>(point)};
     }
-    unsigned next_eligible(unsigned first, unsigned n) const noexcept {
-        if (!format().has_tombstones())
-            return first;
-        return boundlist::population{source().windows().directory.first(format().tombstone_bytes()),
-                                     true}
-            .next(first, n);
-    }
-    unsigned previous_eligible(unsigned limit) const noexcept {
-        if (!format().has_tombstones())
-            return limit ? limit - 1 : size();
-        return boundlist::population{source().windows().directory.first(format().tombstone_bytes()),
-                                     true}
-            .previous(limit, size());
-    }
     /// offset is below the coherent extent. Retired reservations and slack still
     /// have a physical owner; zero reservations do not. No population search.
-    [[gnu::always_inline]] position_owner reverse(unsigned offset) const noexcept {
+    [[gnu::always_inline]] unsigned owner_rank(unsigned offset) const noexcept {
         unsigned rank;
         if (format().fixed())
             rank = offset / format().fixed_width();
@@ -251,7 +239,20 @@ template <geometry Family, class Width, class Offset, class Source> class access
             else
                 rank = group * 16 + boundlist::detail::owner16_native(widths(group), relative);
         }
+        return rank;
+    }
+    /// Value consumers may compose physical ownership with the retirement companion.
+    [[gnu::always_inline]] position_owner reverse(unsigned offset) const noexcept {
+        const auto rank = owner_rank(offset);
         return {std::uint16_t(rank), !live(rank)};
+    }
+    template <class Sink>
+    [[gnu::always_inline]] void visit_intervals(unsigned first, unsigned count, Sink &&sink) const {
+        if (!count) return;
+        slots(first, count, start(first), [&](unsigned rank, unsigned begin, unsigned width)
+              __attribute__((always_inline)) {
+            sink(rank, interval<std::uint32_t>{begin, begin + width});
+        });
     }
     /// One group decode, with bounded initialized padding, for dense selection.
     /// Partial tails are readable but are never presented to a value consumer.
@@ -344,19 +345,7 @@ template <geometry Family, class Width, class Offset, class Source> class access
             });
         }
     }
-    /// Live-range projection over the same carried geometry, without repeated
-    /// point prefixes. Sinks cannot invalidate the traversal's admitted state.
-    template <class Sink>
-    [[gnu::always_inline]] void range(unsigned first, unsigned count, Sink &&sink) const {
-        if (!count)
-            return;
-        slots(first, count, start(first),
-              [&](unsigned rank, unsigned begin, unsigned reservation)
-                  __attribute__((always_inline)) {
-                      if (live(rank))
-                          sink(rank, location{begin, std::uint16_t(reservation)});
-                  });
-    }
+
 };
 
 } // namespace author
@@ -419,4 +408,11 @@ unsigned basic_view<Byte>::boundary(const Point &point) const {
     return author::dispatch(*this, [&](auto a) { return a.template boundary<E>(point); });
 }
 
-} // namespace ikea::boundlist::sidecar
+template <class Byte> std::uint32_t basic_view<Byte>::at(unsigned rank) const {
+    return author::dispatch(*this, [&](auto a) { return a.at(rank); });
+}
+template <class Byte>
+template <class Body> decltype(auto) basic_view<Byte>::with_geometry(Body &&body) const {
+    return author::dispatch(*this, std::forward<Body>(body));
+}
+} // namespace ikea::boundlist

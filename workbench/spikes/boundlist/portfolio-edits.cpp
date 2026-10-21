@@ -6,7 +6,7 @@
 #include <cstdio>
 #include <cstring>
 #include <vector>
-namespace sc = ikea::boundlist::sidecar;
+namespace sc = ikea::boundlist;
 using word = std::uint64_t;
 template <class T> T get(const std::byte *p) {
     T x;

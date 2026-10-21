@@ -7,7 +7,7 @@ std::expected<layout, error> layout::prepare(description d) { return prepare_imp
 std::expected<layout, error> layout::prepare_impl(description d, bool legacy) {
     if (d.lengths != placement::grouped && d.lengths != placement::separated)
         return std::unexpected(error::description);
-    auto g = boundlist::sidecar::detail::geometry_sizes::prepare(
+    auto g = boundlist::detail::geometry_sizes::prepare(
         {d.family, d.maximum, d.byte_limit, d.fixed_reservation, d.immortal}, legacy);
     if (!g)
         return std::unexpected(g.error());

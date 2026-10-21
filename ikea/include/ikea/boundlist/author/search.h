@@ -247,10 +247,7 @@ template <class Phase, class Source> struct selected_search {
 template <edge E, class Source, class Q>
 [[gnu::always_inline]] auto prepare(const Source &source, const Q &point) {
     auto phase = boundlist::detail::prepare<E>(source, point);
-    if constexpr (requires { source.selection_source(); }) {
-        using Named = std::remove_cvref_t<decltype(source.selection_source())>;
-        return selected_search<decltype(phase), Named>{phase, &source.selection_source()};
-    } else if constexpr (requires { source.next_eligible(0u, source.size()); })
+    if constexpr (requires { source.next_eligible(0u, source.size()); })
         return selected_search<decltype(phase), Source>{phase, &source};
     else
         return phase;
@@ -259,7 +256,7 @@ template <edge E, class Source, class Q>
 /// Same answer as the ordinary call. The local window is a useful next prefetch
 /// target, not an ownership/read grant or a promise of readiness. Built-in
 /// geometric phases snapshot routing and borrow backing, not the source/query
-/// objects. Population selection also borrows the named source through finish.
+/// objects. Explicit selection also borrows the named source through finish.
 /// All completion dependencies must remain one coherent retained version.
 template <class Source, class Q>
 [[gnu::always_inline]] auto prepare_lower_bound(const Source &source, const Q &point) {
@@ -274,7 +271,7 @@ template <class Source, class Q> void prepare_upper_bound(const Source &&, const
 
 /// Opt-in small hot-list execution. Count is admitted once at construction;
 /// ordering, initialized elements and lifetime follow direct_source. Ordinary
-/// lower_bound/upper_bound calls and population composition are unchanged.
+/// lower_bound/upper_bound calls and selection composition are unchanged.
 template <class T> struct scan_source : direct_source<T> {
     scan_source(const T *data, unsigned count) : direct_source<T>{data, count} {
         assert(count <= 65535);

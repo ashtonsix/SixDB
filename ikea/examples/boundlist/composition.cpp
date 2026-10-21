@@ -47,9 +47,9 @@ int main() {
     assert(pending.finish() == 18);
     assert(bl::lower_bound(bounds, checkpoints[0] + 130) == pending.finish());
 
-    // Population stays independent of the endpoint encoding.
+    // Selection stays independent of the endpoint encoding.
     const std::array<std::byte, 4> live{std::byte{0}, std::byte{0}, std::byte{0}, std::byte{1}};
-    const bl::populated_source eligible{bounds, bl::population{live}};
+    const bl::selected_source eligible{bounds, bl::rank_selection{live}};
     const auto selected = bl::author::prepare_lower_bound(eligible, checkpoints[0] + 130);
     assert(selected.finish() == 24);
 

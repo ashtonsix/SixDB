@@ -32,7 +32,7 @@ template <class T> struct fact {
 };
 template <class T, bool Sparse> struct fixture {
     using binding = decltype(ikea::boundlist::author::bind_search(ikea::boundlist::direct_source<T>{}));
-    using prepared_source = std::conditional_t<Sparse, ikea::boundlist::populated_source<binding>, binding>;
+    using prepared_source = std::conditional_t<Sparse, ikea::boundlist::selected_source<binding>, binding>;
     unsigned nodes, count, repeat, gap, span, domain, words;
     std::vector<T> minima, maxima;
     std::vector<word> live;
@@ -60,7 +60,7 @@ template <class T, bool Sparse> struct fixture {
         for (unsigned node=0;node<nodes;++node) {
             auto add=[&](auto& target,const T* data) {
                 auto source=ikea::boundlist::author::bind_search(ikea::boundlist::direct_source<T>{data,count});
-                if constexpr(Sparse) target.emplace_back(source,ikea::boundlist::population{
+                if constexpr(Sparse) target.emplace_back(source,ikea::boundlist::rank_selection{
                     std::span(reinterpret_cast<const std::byte*>(activity(node)),(count+7)/8)});
                 else target.push_back(source);
             };
@@ -122,14 +122,24 @@ template <class T, bool Sparse, bool Point, unsigned Method>
                 const auto rank=prod::lower_bound(maxima,low);
                 return bl::rank_window{rank,rank==f.count?rank:rank+1};
             } else {
-                const auto ranks=prod::overlap(maxima,minima,prod::query_range{low,high});
-                return bl::rank_window{ranks.first,ranks.limit};
+                // Occupied-extrema policy belongs to this consumer. Both
+                // sources describe closed occupied bounds, not contiguous cuts.
+                if (!(low < high)) return bl::rank_window{f.count,f.count};
+                const auto first=prod::lower_bound(maxima,low);
+                const auto stop=prod::lower_bound(low_source,high);
+                if(first>=stop) return bl::rank_window{f.count,f.count};
+                const auto last=[&] {
+                    if constexpr(Sparse) return minima.previous_eligible(stop);
+                    else return stop?stop-1:f.count;
+                }();
+                return last==f.count || last<first ? bl::rank_window{f.count,f.count}
+                    : bl::rank_window{first,last+1};
             }
         };
         if constexpr(Method==9) return find(f.prepared_high[node],f.prepared_low[node]);
         else if constexpr(Sparse) {
             const auto bytes=std::span(reinterpret_cast<const std::byte*>(f.activity(node)),(f.count+7)/8);
-            const prod::populated_source maxima{high_source,prod::population{bytes}}, minima{low_source,prod::population{bytes}};
+            const prod::selected_source maxima{high_source,prod::rank_selection{bytes}}, minima{low_source,prod::rank_selection{bytes}};
             return find(maxima,minima);
         } else return find(high_source,low_source);
     }

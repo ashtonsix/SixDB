@@ -160,30 +160,31 @@ no heuristic branch; the statistical model is separate from exact write admissio
 
 [Boundlist usage](boundlist/usage.md) presents one ordered search contract across
 native endpoints, narrow deltas, reservation metadata and custom packed/ordered
-sources. Population is independent of endpoint encoding. Common kernels have no
+sources. Selection is independent of endpoint encoding. Common kernels have no
 dependency on the curated reservation schema.
 
 | Responsibility | Owning files under `include/ikea/` unless marked `src/` |
 | --- | --- |
-| Ordered lower/upper boundary and occupied-extrema overlap | `boundlist/{types,search}.h` |
+| Ordered lower/upper boundary and explicit rank selection | `boundlist/{types,search}.h` |
 | Prepared local phases, numeric search bindings, opt-in scans and interleaved native queries | `boundlist/author/search.h` |
 | Explicit native comparison, prefix and SIMD bodies | `boundlist/detail/{search,prefix,simd}.h` |
 | Derived numeric prediction state and cold preparation | `boundlist/detail/prediction.h`; `src/boundlist/search.cpp` |
 | Curated geometry schema and portable encoding | `boundlist/description.h`; `src/boundlist/description.cpp` |
 | Payload-free metadata admission and validation | `boundlist/view.h`; `src/boundlist/view.cpp`; `boundlist/detail/validation.h` |
 | Typed geometry, physical reverse, original-coordinate traversal and encoding | `boundlist/author/{read,write}.h` |
-| Checked numeric geometry commands | `boundlist/{read,write}.h` |
+| Minimal geometry adapters and common locate/reverse/overlap/range | `boundlist/geometry.h`; `boundlist/read.h` |
+| Checked compact geometry commands | `boundlist/write.h` |
 | Geometry native packets and CPS carriers | `boundlist/author/{native,chain}.h` |
 | StreamPack schema and U placement | `streampack/description.h`; `src/streampack/description.cpp` |
 | StreamPack payload admission and complete value validation | `streampack/view.h`; `src/streampack/view.cpp` |
 | Value reads, mutation, packing and selected transfer | `streampack/{read,write,transfer}.h`; `streampack/author/{read,write}.h` |
 
-Boundlist owns geometry and eligibility; StreamPack owns U and byte-value
+Boundlist owns geometry and optional explicit selection; StreamPack owns U and byte-value
 semantics. Their typed accesses retain only the original named source and shared
 immutable layout. StreamPack inherits geometry without another binding, allocation
 or stored descriptor. `rebind` borrows a new source under that same layout identity.
 Metadata effects map through one value hook to planes 1–3; payload stays plane 0.
-Effects never name a temporary projected sidecar.
+Effects never name a temporary geometry projection.
 
 Geometry preparation shares compact size facts with the value layout. Cold
 schema/placement/content validation stays in independent compiled TUs. Private

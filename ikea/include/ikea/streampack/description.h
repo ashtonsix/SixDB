@@ -2,11 +2,11 @@
 #include <ikea/boundlist/description.h>
 
 namespace ikea::streampack {
-using boundlist::sidecar::byte;
-using boundlist::sidecar::bytes;
-using boundlist::sidecar::error;
-using boundlist::sidecar::geometry;
-using boundlist::sidecar::slot_capacity;
+using boundlist::byte;
+using boundlist::bytes;
+using boundlist::error;
+using boundlist::geometry;
+inline constexpr unsigned slot_capacity = boundlist::interval_capacity;
 enum class placement : std::uint8_t { grouped, separated };
 
 /// Geometry plus an optional used-length companion. With full, U is derived
@@ -26,11 +26,11 @@ struct description {
 /// StreamPack owns U, its colocation and the complete value interpretation.
 class layout {
     description description_;
-    boundlist::sidecar::detail::geometry_sizes geometry_;
+    boundlist::detail::geometry_sizes geometry_;
     unsigned used_offset_, stride_;
     std::uint8_t alignment_, used_bytes_;
     bool used_;
-    layout(description d, boundlist::sidecar::detail::geometry_sizes g)
+    layout(description d, boundlist::detail::geometry_sizes g)
         : description_(d), geometry_(g) {}
     [[nodiscard]] static std::expected<layout, error> prepare_impl(description, bool legacy);
 

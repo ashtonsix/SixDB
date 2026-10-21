@@ -41,7 +41,7 @@ ranks.
 
 | Layer | Responsibility |
 | --- | --- |
-| **Boundlist** | Reservation geometry: sizes, ends, checkpoints, retirement selection, location/search kernels and bounded geometry writes. It has no knowledge of used lengths or value bytes. |
+| **Boundlist** | Reservation geometry: sizes, ends, checkpoints, an optional retirement companion, location/search kernels and bounded geometry writes. It has no knowledge of used lengths or value bytes. |
 | **StreamPack** | Values: optional U storage, value admission and reads, native offset/length packets, append/replace/retire, and coordinated payload/geometry packing and selected transfer. |
 | **Collection / owner** | Storage and schema identity, coherent retained versions, read/write authority, allocation growth, logical holders and remaps, sorting/deduplication policy and transaction publication. |
 

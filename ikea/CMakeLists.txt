@@ -8,7 +8,7 @@ sixdb_target(ikea_boundlist)
 target_include_directories(ikea_boundlist PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
 target_compile_features(ikea_boundlist PUBLIC cxx_std_23)
 
-add_executable(ikea_boundlist_check EXCLUDE_FROM_ALL test/boundlist/search.cpp test/boundlist/sidecar.cpp)
+add_executable(ikea_boundlist_check EXCLUDE_FROM_ALL test/boundlist/search.cpp test/boundlist/geometry.cpp test/boundlist/cuts.cpp)
 sixdb_target(ikea_boundlist_check)
 target_compile_options(ikea_boundlist_check PRIVATE -fno-vectorize -fno-slp-vectorize)
 target_link_libraries(ikea_boundlist_check PRIVATE ikea::boundlist)

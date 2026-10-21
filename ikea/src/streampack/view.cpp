@@ -5,7 +5,7 @@
 
 namespace ikea::streampack::detail {
 std::expected<void, error> admit_storage(const layout &l, storage<const byte> s) {
-    if (auto ok = boundlist::sidecar::detail::admit_metadata(l.directory_bytes(), l.control_bytes(),
+    if (auto ok = boundlist::detail::admit_metadata(l.directory_bytes(), l.control_bytes(),
                                                              l.lengths_alignment(), &l, sizeof(l),
                                                              {s.directory, s.lengths, s.control});
         !ok)
@@ -26,7 +26,7 @@ std::expected<void, error> admit_storage(const layout &l, storage<const byte> s)
 namespace ikea::streampack {
 template <class Byte> std::expected<void, error> basic_view<Byte>::validate() const {
     const auto &s = windows();
-    auto ok = boundlist::sidecar::detail::validate_geometry(
+    auto ok = boundlist::detail::validate_geometry(
         *this, [&](auto, unsigned rank, unsigned reservation, bool assigned) {
             if (!format().has_used())
                 return true;

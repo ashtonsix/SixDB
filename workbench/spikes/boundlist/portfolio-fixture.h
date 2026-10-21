@@ -16,7 +16,11 @@
 #include <vector>
 
 namespace sp = ikea::streampack;
+#if defined(BOUNDLIST_PORTFOLIO_LEGACY) || defined(BOUNDLIST_API_CONTROL)
 namespace sc = ikea::boundlist::sidecar;
+#else
+namespace sc = ikea::boundlist;
+#endif
 using word = std::uint64_t;
 template <class T> T raw(const std::byte *p) {
     T x;

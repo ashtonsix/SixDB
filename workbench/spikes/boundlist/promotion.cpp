@@ -51,7 +51,7 @@ template<bool Width,class W,class O,bool Point> struct bound_source {
             const auto r=a.template boundary<production::edge::at_or_after>(low);
             return r==f.count?bl::rank_window{r,r}:bl::rank_window{r,r+1};
         } else {
-            const auto r=production::sidecar::author::overlap(a,low,high);
+            const auto r=production::overlap(a,low,high);
             return {r.first,r.limit};
         }
     }

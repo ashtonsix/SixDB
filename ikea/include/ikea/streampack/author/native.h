@@ -5,7 +5,7 @@
 namespace ikea::streampack::native {
 using namespace ikea::boundlist::native;
 #if defined(__aarch64__) || defined(__AVX2__)
-using boundlist::sidecar::native::chunks;
+using boundlist::native::chunks;
 /// Sixteen offsets and lengths, flattened into native registers at chain hops.
 /// Slots outside the accompanying live mask have no logical value.
 struct packet {
@@ -19,7 +19,7 @@ struct group {
     packet values;
     std::uint16_t live;
 };
-using boundlist::sidecar::native::each_chunk;
+using boundlist::native::each_chunk;
 /// One admitted group; can be a partial final group. Loads access initialized
 /// whole groups, never the payload or a terminal checkpoint. Native results feed
 /// a fused consumer directly; no mandatory decoded stack array.
@@ -28,13 +28,16 @@ template <class Access> [[gnu::always_inline]] inline group read16(Access a, uns
     const auto &l = a.format();
     const auto first = group_index * 16;
     group out;
-    out.live = boundlist::sidecar::native::decode16(
+    out.live = boundlist::native::decode16(
         a, group_index, [&](auto i, vector starts, vector reserved) __attribute__((always_inline)) {
             out.values.v[i] = starts;
             out.values.v[chunks + i] = l.has_used() ? load<W>(a.source().windows().lengths.data() +
                                                               a.used_offset(first + i * lanes))
                                                     : reserved;
         });
+    if (l.has_tombstones())
+        out.live &= ~boundlist::detail::load<std::uint16_t>(
+            a.source().windows().directory.data() + first / 8);
     return out;
 }
 #endif

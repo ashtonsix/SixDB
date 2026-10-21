@@ -5,7 +5,7 @@
 namespace ikea::streampack {
 namespace detail {
 inline bool accepts(const layout &l, unsigned length, unsigned reservation) {
-    return length <= reservation && boundlist::sidecar::detail::accepts(l, reservation) &&
+    return length <= reservation && boundlist::detail::accepts(l, reservation) &&
            (l.has_used() || length == reservation);
 }
 inline unsigned append_effects(const layout &l, unsigned n) {
@@ -17,7 +17,7 @@ inline unsigned append_effects(const layout &l, unsigned n) {
     return (!l.fixed() && (l.schema().family == geometry::absolute_ends || !(n % 16))) + fields +
            l.has_tombstones() + 1;
 }
-using boundlist::sidecar::detail::room;
+using boundlist::detail::room;
 /// Payload aliases are supported while the binding stays live. Metadata and
 /// effect-output aliases would let issued stores destroy remaining input.
 template <class Effects> bool input_alias(const view &dst, bytes input, const Effects &effects) {

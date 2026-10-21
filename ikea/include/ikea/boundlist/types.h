@@ -18,13 +18,11 @@ struct rank_window {
     }
     auto operator<=>(const rank_window&) const = default;
 };
-template <class Point> struct query_range {
-    Point low, high;
-    bool low_closed = true, high_closed = false;
-    bool empty() const {
-        return high < low || (!(low_closed && high_closed) && !(low < high));
-    }
+/// Coordinates of one contiguous half-open interval.
+template <class Point> struct interval {
+    Point first, limit;
 };
+enum class error { description, capacity, alignment, alias, contents, rank, retired, value, effects, range };
 namespace detail {
 template <std::integral A, std::integral B> constexpr bool integer_less(A a, B b) {
     if constexpr (std::is_signed_v<A> == std::is_signed_v<B>)

@@ -2,12 +2,12 @@
 #include <ikea/boundlist/description.h>
 #include <ikea/boundlist/detail/bytes.h>
 
-namespace ikea::boundlist::sidecar {
+namespace ikea::boundlist {
 std::expected<detail::geometry_sizes, error> detail::geometry_sizes::prepare(description d,
                                                                              bool legacy) {
     if ((d.family != geometry::absolute_ends && d.family != geometry::sizes &&
          (d.family != geometry::relative_ends || legacy)) ||
-        d.extent_limit > slot_capacity * d.maximum || (d.fixed_size && *d.fixed_size > d.maximum))
+        d.extent_limit > interval_capacity * d.maximum || (d.fixed_size && *d.fixed_size > d.maximum))
         return std::unexpected(error::description);
     geometry_sizes g;
     g.legacy = legacy;
@@ -18,11 +18,11 @@ std::expected<detail::geometry_sizes, error> detail::geometry_sizes::prepare(des
     if (!g.fixed && d.family == geometry::relative_ends)
         g.width_bytes = carrier(std::min(16u * d.maximum, d.extent_limit));
     g.offset_bytes = d.extent_limit <= 255 ? 1 : d.extent_limit <= 65535 ? 2 : 4;
-    g.tombstones = d.immortal ? 0 : slot_capacity / 8;
+    g.tombstones = d.immortal ? 0 : interval_capacity / 8;
     g.directory =
         g.tombstones +
         (g.fixed ? 0
-                 : (d.family == geometry::absolute_ends ? slot_capacity : slot_capacity / 16) *
+                 : (d.family == geometry::absolute_ends ? interval_capacity : interval_capacity / 16) *
                        g.offset_bytes);
     g.control_bytes = !g.fixed && d.family != geometry::absolute_ends ? 6 : 2;
     g.stride = !g.fixed && d.family != geometry::absolute_ends ? 16 * g.width_bytes : 0;
@@ -72,4 +72,4 @@ std::expected<layout, error> layout::decode(bytes in) {
                   (flags & 16) ? std::optional(fixed) : std::nullopt, (flags & 8) != 0};
     return prepare_impl(d, legacy);
 }
-} // namespace ikea::boundlist::sidecar
+} // namespace ikea::boundlist

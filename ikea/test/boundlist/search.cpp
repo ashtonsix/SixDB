@@ -57,10 +57,10 @@ template <class T> void native() {
         for (unsigned r = 0; r < n; ++r)
             if (r % 11 == 3)
                 bits[r / 8] |= std::byte(1u << (r % 8));
-        const bl::populated_source sparse{source, bl::population{bits}};
+        const bl::selected_source sparse{source, bl::rank_selection{bits}};
         for (int q = -1; q < 260; q += 7)
             check(sparse, q);
-        const bl::populated_source inverted{source, bl::population{bits, true}};
+        const bl::selected_source inverted{source, bl::rank_selection{bits, true}};
         for (int q = -1; q < 260; q += 17)
             check(inverted, q);
     }
@@ -127,30 +127,7 @@ void batches() {
         sizeof(decltype(bl::delta_source<std::uint8_t, std::uint64_t>{}.prepare<bl::edge::after>(
             0))) == 16);
 }
-void ranges() {
-    const std::array<unsigned, 8> mins{1, 2, 2, 2, 8, 8, 12, 13}, maxs{2, 2, 2, 5, 8, 10, 12, 14};
-    const std::array<std::byte, 1> bitmap{std::byte{0xdb}};
-    const bl::populated_source maxima{bl::direct_source{maxs.data(), unsigned(maxs.size())},
-                                      bl::population{bitmap}};
-    const bl::direct_source minima{mins.data(), unsigned(mins.size())};
-    for (unsigned lo = 0; lo < 17; ++lo)
-        for (unsigned hi = 0; hi < 17; ++hi)
-            for (bool lc : {false, true})
-                for (bool hc : {false, true}) {
-                    bl::query_range<unsigned> q{lo, hi, lc, hc};
-                    unsigned first = 8, limit = 8;
-                    if (!q.empty())
-                        for (unsigned r = 0; r < 8; ++r) {
-                            const bool live = (std::to_integer<unsigned>(bitmap[0]) >> r) & 1;
-                            if (live && (lc ? maxs[r] >= lo : maxs[r] > lo) &&
-                                (hc ? mins[r] <= hi : mins[r] < hi)) {
-                                if (first == 8)
-                                    first = r;
-                                limit = r + 1;
-                            }
-                        }
-                    assert((bl::overlap(maxima, minima, q) == bl::rank_window{first, limit}));
-                }
+void ordered_domains() {
     const std::array<std::string_view, 4> strings{"a", "aa", "aa", "z"};
     const bl::direct_source s{strings.data(), 4u};
     for (auto q : {"", "a", "aa", "b", "zz"})
@@ -214,7 +191,7 @@ template <class T> void tails() {
         auto *p = raw + page - bytes;
         std::memset(p, 0, bytes);
         p[(n - 1) / 8] |= std::byte(1u << ((n - 1) % 8));
-        bl::population pop{{p, bytes}};
+        bl::rank_selection pop{{p, bytes}};
         assert(pop.next(0, n) == n - 1 && pop.previous(n, n) == n - 1);
     }
     assert(!munmap(raw, page * 2));
@@ -319,7 +296,8 @@ template <class T> void prepared_sources() {
     }
     assert(!munmap(area, bytes + page));
 }
-void sidecar_checks();
+void packed_geometry_checks();
+void cuts_checks();
 void byte_scans() {
     for (unsigned n :
          {0u, 1u, 7u, 8u, 15u, 16u, 17u, 31u, 32u, 33u, 63u, 64u, 65u, 128u, 256u, 4096u, 65535u}) {
@@ -332,7 +310,8 @@ void byte_scans() {
     }
 }
 int main() {
-    sidecar_checks();
+    packed_geometry_checks();
+    cuts_checks();
     native<std::uint8_t>();
     byte_scans();
     native<std::uint16_t>();
@@ -346,7 +325,7 @@ int main() {
     prepared_sources<std::uint32_t>();
     prepared_sources<std::uint64_t>();
     batches();
-    ranges();
+    ordered_domains();
     tails<std::uint8_t>();
     tails<std::uint16_t>();
     tails<std::uint32_t>();

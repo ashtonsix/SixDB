@@ -1,7 +1,7 @@
 #pragma once
 #include <ikea/boundlist/author/write.h>
 
-namespace ikea::boundlist::sidecar {
+namespace ikea::boundlist {
 namespace detail {
 template <class Effects> bool room(const Effects &effects, unsigned n) {
     if constexpr (requires {
@@ -126,4 +126,4 @@ template <class Effects>
 template <class Effects>
 void set_boundary(const view &&, unsigned, std::uint32_t, Effects &) = delete;
 template <class Effects> void resize(const view &&, unsigned, unsigned, Effects &) = delete;
-} // namespace ikea::boundlist::sidecar
+} // namespace ikea::boundlist

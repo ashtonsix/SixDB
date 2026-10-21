@@ -159,7 +159,7 @@ void current_stream() {
             if (i % 7 == 0) assert(sp::retire(view, i, effects));
         }
         assert(view.validate());
-        sp::author::dispatch(view, [&](auto a) {
+        bl::two_format_dispatch(view, [&](auto a) {
             using A = decltype(a);
             const auto m = bl::metadata<A::family, typename A::width_type, typename A::offset_type>::from(view);
             assert(m.size() == view.size() && m.extent() == total);

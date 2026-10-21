@@ -22,7 +22,7 @@ template <class Effects> struct metadata_effects {
 };
 template <class Effects> void initialize_unchecked(const view &dst, Effects &effects) {
     metadata_effects mapped{effects};
-    boundlist::sidecar::author::initialize_unchecked(dst, mapped);
+    boundlist::author::initialize_unchecked(dst, mapped);
 }
 template <class Effects> void initialize_unchecked(const view &&, Effects &) = delete;
 /// Temporary admitted append computation. Carries geometry/count across a
@@ -33,7 +33,7 @@ template <class Access, class Effects> class value_encoder {
     // Borrow the owner policy directly. A mapped policy stored inside this cursor
     // and borrowed by geometry creates an address-escaped reference cycle.
     Effects &effects_;
-    boundlist::sidecar::author::encoder<Access> geometry_;
+    boundlist::author::encoder<Access> geometry_;
 
   public:
     value_encoder(Access a, unsigned first, unsigned begin, Effects &effects)
@@ -85,11 +85,11 @@ template <class Access, class Effects> class value_encoder {
         if (l.has_used())
             detail::store(dst.windows().lengths.data() + a.used_offset(n), U(input.size()));
         if (l.has_tombstones())
-            boundlist::sidecar::author::make_live_unchecked(dst, n, 1, mapped);
+            boundlist::author::make_live_unchecked(dst, n, 1, mapped);
     }
     [[gnu::always_inline]] void finish() {
         metadata_effects mapped{effects_};
-        boundlist::sidecar::author::publish_size_unchecked(geometry_.access(), geometry_.rank(),
+        boundlist::author::publish_size_unchecked(geometry_.access(), geometry_.rank(),
                                                            geometry_.position(), mapped);
     }
 };
@@ -113,8 +113,8 @@ void append_fixed_run_unchecked(Access a, bytes input, unsigned count, Effects &
         std::memmove(dst.windows().payload.data() + begin, input.data(), input.size());
     metadata_effects mapped{effects};
     if (l.has_tombstones())
-        boundlist::sidecar::author::make_live_unchecked(dst, n, count, mapped);
-    boundlist::sidecar::author::publish_size_unchecked(a, n + count,
+        boundlist::author::make_live_unchecked(dst, n, count, mapped);
+    boundlist::author::publish_size_unchecked(a, n + count,
                                                        begin + count * l.fixed_width(), mapped);
 }
 template <class Access, class Effects>
@@ -166,7 +166,7 @@ void replace_unchecked(Access a, unsigned rank, bytes input, Effects &effects) {
 }
 template <class Effects> void retire_unchecked(const view &dst, unsigned rank, Effects &effects) {
     metadata_effects mapped{effects};
-    boundlist::sidecar::author::retire_unchecked(dst, rank, mapped);
+    boundlist::author::retire_unchecked(dst, rank, mapped);
 }
 template <class Effects> void retire_unchecked(const view &&, unsigned, Effects &) = delete;
 /// One fused value traversal. Capture original R before rewriting preceding
@@ -178,7 +178,7 @@ template <class Access, class Effects>
     if (a.format().fixed())
         return;
     const auto n = a.size();
-    boundlist::sidecar::author::encoder encoder(a, 0, 0);
+    boundlist::author::encoder encoder(a, 0, 0);
     a.slots(0, n, 0,
             [&](unsigned rank, unsigned from, unsigned reservation) __attribute__((always_inline)) {
                 const auto used = a.format().has_used() ? a.length(rank) : reservation;
@@ -193,6 +193,6 @@ template <class Access, class Effects>
                 if (a.format().has_used() && !a.live(rank))
                     set_used_unchecked(a, rank, 0, effects);
             });
-    boundlist::sidecar::author::finish_rewrite_unchecked(a, encoder.position(), mapped);
+    boundlist::author::finish_rewrite_unchecked(a, encoder.position(), mapped);
 }
 } // namespace ikea::streampack::author

@@ -8,7 +8,7 @@
 
 namespace sp = ikea::streampack;
 namespace bl = ikea::boundlist;
-namespace sc = ikea::boundlist::sidecar;
+namespace sc = ikea::boundlist;
 struct fixture {
     sp::layout format;
     alignas(64) std::array<std::byte, 4096> directory{}, lengths{};

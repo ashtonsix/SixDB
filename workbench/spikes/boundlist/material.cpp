@@ -69,7 +69,7 @@ void verify(const sp::const_view& view, const std::vector<row>& facts) {
     assert(view.validate() && view.size() == facts.size());
     sp::author::dispatch(view, [&](auto a) {
         using A = decltype(a);
-        namespace sc=ikea::boundlist::sidecar;
+        namespace sc=ikea::boundlist;
         const sc::author::access<A::family, typename A::width_type, typename A::offset_type,
             sp::const_view> m(view);
         static_assert(sizeof(m)==2*sizeof(void*) && sizeof(a)==2*sizeof(void*));
@@ -99,10 +99,11 @@ void verify(const sp::const_view& view, const std::vector<row>& facts) {
             assert(m.live(r) == facts[r].live); // Physical reverse keeps retirement and slack.
         }
         assert(!sp::reverse(view,extent));
-        m.range(0, facts.size(), [&](unsigned r, sc::location p) {
-            const auto value=view.windows().payload.subspan(p.offset, facts[r].bytes.size());
+        const sc::selected_source live{m, m.live_ranks()};
+        assert(sc::range(live, 0, facts.size(), [&](unsigned r, auto p) {
+            const auto value=view.windows().payload.subspan(p.first, facts[r].bytes.size());
             assert(facts[r].live && std::ranges::equal(value, facts[r].bytes)); visited.push_back(r);
-        });
+        }));
         std::vector<unsigned> expected;
         for (unsigned r = 0; r < facts.size(); ++r) if (facts[r].live) expected.push_back(r);
         assert(visited == expected);

@@ -17,30 +17,42 @@ int main() {
     // An exact-width source does not narrow an out-of-domain query.
     assert(bl::lower_bound(ends, UINT64_MAX) == 6);
 
+    // The same geometry contract accepts the complete cut array, with an
+    // explicit origin and no packed-format or retirement requirement.
+    const std::array cuts{0u, 8u, 18u, 26u, 35u, 46u, 56u};
+    const auto geometry = bl::from_cuts(std::span(cuts));
+    assert(geometry.size() == 6 && bl::reverse(geometry, 18u) == 2);
+    assert(bl::overlap(geometry, 9u, 36u) == ranks);
+
     // Encode the same cuts as mutable geometry. Only metadata storage is needed.
-    namespace sc = bl::sidecar;
-    const auto format = sc::layout::prepare({.maximum = 255, .extent_limit = 4096});
+    const auto format = bl::layout::prepare({.maximum = 255, .extent_limit = 4096});
     assert(format);
     std::array<std::byte, 64> directory{};
     alignas(64) std::array<std::byte, 512> lengths{};
     std::array<std::byte, 6> control{};
-    auto source = sc::view::bind(*format, {directory, lengths, control});
+    auto source = bl::view::bind(*format, {directory, lengths, control});
     assert(source);
     std::array<ikea::owner_write, 32> records;
     ikea::source_write_journal damage{records};
-    assert(sc::initialize(*source, damage));
+    assert(bl::initialize(*source, damage));
     for (unsigned size : std::array{8u, 10u, 8u, 9u, 11u, 10u})
-        assert(sc::append(*source, size, damage));
-    assert(sc::retire(*source, 2, damage));
+        assert(bl::append(*source, size, damage));
+    assert(bl::retire(*source, 2, damage));
     assert(source->validate());
-    assert(sc::reverse(*source, 20)->rank == 2 && sc::reverse(*source, 20)->tombstone);
-    assert(sc::reverse(*source, 26)->rank == 3);
-    assert(!sc::reverse(*source, 56));
-    assert((sc::overlap(*source, 9, 36, true) == ranks));
+    // Raw geometry preserves every interval, including a retired rank.
+    assert(bl::reverse(*source, 20) == 2);
+    assert(bl::reverse(*source, 26) == 3);
+    assert(bl::reverse(*source, 56) == source->size());
+    const bl::selected_source live{*source, source->live_ranks()};
+    assert(bl::reverse(live, 20) == source->size()); // no later-owner fallback
+    assert((bl::overlap(live, 9, 36) == ranks));
     std::array<unsigned, 3> visited{};
     unsigned count = 0;
-    assert(sc::range(*source, ranks.first, ranks.limit - ranks.first,
-                     [&](unsigned rank, sc::location) { visited[count++] = rank; }));
+    assert(bl::range(live, ranks.first, ranks.limit - ranks.first,
+                     [&](unsigned rank, bl::interval<std::uint32_t> bounds) {
+                         assert(bounds.first < bounds.limit);
+                         visited[count++] = rank;
+                     }));
     assert((visited == std::array{1u, 3u, 4u}) && count == visited.size());
     for (const auto& e : damage.entries())
         assert(e.source == &*source && e.bytes.plane < 3);

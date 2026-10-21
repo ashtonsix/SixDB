@@ -2,8 +2,7 @@
 #include <ikea/boundlist/description.h>
 #include <ikea/boundlist/detail/bytes.h>
 
-namespace ikea::boundlist::sidecar::detail {
-using boundlist::detail::load;
+namespace ikea::boundlist::detail {
 /// Shared coherent count/extent law; no search or native-reader dependency.
 template <class Source> [[gnu::always_inline]] std::uint32_t extent(const Source& source) noexcept {
     const auto n = source.size();
@@ -25,4 +24,4 @@ template <class Source> [[gnu::always_inline]] std::uint32_t extent(const Source
         return load<std::uint32_t>(p);
     }
 }
-} // namespace ikea::boundlist::sidecar::detail
+} // namespace ikea::boundlist::detail

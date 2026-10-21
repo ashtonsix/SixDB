@@ -12,7 +12,7 @@ Link `ikea::streampack` and include `<ikea/streampack.h>`. The
 ## Understand the composition boundary
 
 [Boundlist](../boundlist/usage.md) supplies reservation geometry: sizes, starts, ends,
-checkpoints and retirement selection. StreamPack adds U, byte-value reads and edits,
+checkpoints and an optional retirement companion. StreamPack selects live values and adds U, byte-value reads and edits,
 native value packets, and the traversal that packs or transfers values. The collection
 supplies allocation, retained versions, logical holders and publication.
 
@@ -21,6 +21,12 @@ values once; there is no second Boundlist attachment, allocation or lookup per r
 Geometry/U fields can share a lengths window while their implementation responsibilities
 remain separate. Call value operations through StreamPack so payload, U and geometry
 stay consistent.
+
+Standalone Boundlist reads raw geometry unless given an explicit `selected_source`.
+StreamPack's value API already applies its value/retirement policy: `locate` and
+`value` reject retired ranks, while `reverse` returns `{rank,tombstone}` for any
+physical reservation. These value results are deliberately different from Boundlist's
+`interval{first,limit}` and rank-or-count geometry results.
 
 If U already belongs in a consumer's own record/tuple plane, compose that plane with
 Boundlist and the payload in the consumer. Stock StreamPack either stores U or derives

@@ -4,7 +4,7 @@
 #include <type_traits>
 #include <ikea/boundlist/search.h>
 
-namespace ikea::boundlist::sidecar {
+namespace ikea::boundlist {
 /// Three independent logical windows; they may share one allocation, but their
 /// supplied byte spans must be disjoint. Effects use these plane ordinals.
 enum class plane : unsigned { directory, lengths, control };
@@ -15,9 +15,6 @@ template <class Byte> struct storage {
     }
 };
 namespace detail {
-using boundlist::detail::load;
-using boundlist::detail::overlaps;
-using boundlist::detail::store;
 [[nodiscard]] std::expected<void, error>
 admit_metadata(unsigned directory_bytes, unsigned control_bytes, unsigned lengths_alignment,
                const void* format, std::size_t format_bytes, storage<const byte>);
@@ -64,21 +61,15 @@ template <class Byte> class basic_view {
                !(std::to_integer<unsigned>(storage_.directory[rank / 8]) & (1u << (rank % 8)));
     }
     template <boundlist::edge E, class Point> unsigned boundary(const Point& point) const;
-    unsigned next_eligible(unsigned first, unsigned n) const {
+    std::uint32_t origin() const noexcept { return 0; }
+    std::uint32_t at(unsigned rank) const;
+    /// Optional retirement companion, selected only when the caller attaches it.
+    rank_selection live_ranks() const noexcept {
         return layout_->has_tombstones()
-                   ? boundlist::population{storage_.directory.first(layout_->tombstone_bytes()),
-                                           true}
-                         .next(first, n)
-                   : first;
+                   ? rank_selection{storage_.directory.first(layout_->tombstone_bytes()), true}
+                   : rank_selection::all();
     }
-    unsigned previous_eligible(unsigned limit) const {
-        return layout_->has_tombstones()
-                   ? boundlist::population{storage_.directory.first(layout_->tombstone_bytes()),
-                                           true}
-                         .previous(limit, size())
-               : limit ? limit - 1
-                       : size();
-    }
+    template <class Body> decltype(auto) with_geometry(Body &&body) const;
     std::uint32_t extent() const noexcept {
         return detail::extent(*this);
     }
@@ -88,4 +79,4 @@ template <class Byte> class basic_view {
 };
 using view = basic_view<byte>;
 using const_view = basic_view<const byte>;
-} // namespace ikea::boundlist::sidecar
+} // namespace ikea::boundlist

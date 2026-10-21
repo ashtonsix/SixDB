@@ -3,15 +3,15 @@
 #include <ikea/streampack/view.h>
 
 namespace ikea::streampack {
-using byte_owner = boundlist::sidecar::position_owner;
+using byte_owner = boundlist::author::position_owner;
 struct location {
     std::uint32_t offset;
     std::uint16_t length, reservation;
 };
 namespace author {
 template <geometry Family, class Width, class Offset, class Byte, class Used = Width>
-class access : public boundlist::sidecar::author::access<Family, Width, Offset, basic_view<Byte>> {
-    using base = boundlist::sidecar::author::access<Family, Width, Offset, basic_view<Byte>>;
+class access : public boundlist::author::access<Family, Width, Offset, basic_view<Byte>> {
+    using base = boundlist::author::access<Family, Width, Offset, basic_view<Byte>>;
     access(const basic_view<Byte> &source, const layout &format) : base(source, format) {}
 
   public:
@@ -108,7 +108,7 @@ class access : public boundlist::sidecar::author::access<Family, Width, Offset, 
 /// caller's body receives a concrete geometry; no erased per-rank callback.
 template <class Byte, class Body>
 decltype(auto) dispatch(const basic_view<Byte> &source, Body &&body) {
-    return boundlist::sidecar::detail::dispatch(
+    return boundlist::detail::dispatch(
         source.format(), [&]<geometry G, class W, class O>() -> decltype(auto) {
             if constexpr (G != geometry::relative_ends || sizeof(W) == 1)
                 return body(access<G, W, O, Byte, W>(source));

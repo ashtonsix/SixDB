@@ -32,7 +32,11 @@ template <class Byte>
 boundlist::rank_window overlap(const basic_view<Byte>& source, std::uint32_t low,
                                std::uint32_t high, bool only_live = false) {
     return author::dispatch(source, [&](auto a) {
-        return boundlist::sidecar::author::overlap(a, low, high, only_live);
+        if (only_live) {
+            const boundlist::selected_source selected{a, a.live_ranks()};
+            return boundlist::overlap(selected, low, high);
+        }
+        return boundlist::overlap(a, low, high);
     });
 }
 template <class Byte, class Sink>

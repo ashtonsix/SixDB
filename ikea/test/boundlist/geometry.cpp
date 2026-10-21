@@ -7,7 +7,7 @@
 #include <vector>
 #include <algorithm>
 
-namespace sc = ikea::boundlist::sidecar;
+namespace sc = ikea::boundlist;
 namespace bl = ikea::boundlist;
 struct fixture {
     sc::layout format;
@@ -26,7 +26,7 @@ struct model {
 };
 template <class T>
 concept carries_used = requires(T value) { value.length; };
-static_assert(!carries_used<sc::location>);
+static_assert(!carries_used<sc::author::location>);
 struct audit {
     const sc::view *source;
     std::array<std::vector<std::byte>, 3> replay;
@@ -63,25 +63,26 @@ struct audit {
 };
 void verify(fixture &f, const std::vector<model> &values) {
     assert(f.view.validate() && f.view.size() == values.size());
+    const bl::selected_source selected{f.view, f.view.live_ranks()};
     unsigned offset = 0;
     for (unsigned r = 0; r < values.size(); ++r) {
         const auto &v = values[r];
         const auto loc = sc::locate(f.view, r);
-        if (v.dead)
-            assert(!loc && loc.error() == sc::error::retired);
-        else
-            assert(loc && loc->offset == offset && loc->size == v.reserved);
+        assert(loc && loc->first == offset && loc->limit == offset + v.reserved);
+        assert(bool(sc::locate(selected, r)) == !v.dead);
         for (unsigned x = 0; x < v.reserved; ++x) {
-            const auto owner = sc::reverse(f.view, offset + x);
-            assert(owner && owner->rank == r && owner->tombstone == v.dead);
+            assert(sc::reverse(f.view, offset + x) == r);
+            assert(sc::reverse(selected, offset + x) == (v.dead ? f.view.size() : r));
         }
         offset += v.reserved;
     }
-    assert(f.view.extent() == offset && !sc::reverse(f.view, offset));
+    assert(f.view.extent() == offset && sc::reverse(f.view, offset) == f.view.size());
 #if defined(__aarch64__) || defined(__AVX2__)
     sc::author::dispatch(f.view, [&](auto a) {
         for (unsigned g = 0; g < (values.size() + 15) / 16; ++g) {
             const auto packet = sc::native::read16(a, g);
+            const bl::selected_source chosen{a, a.live_ranks()};
+            const auto live_packet = sc::native::read16(chosen, g);
             std::array<unsigned, 16> starts, reservations;
             sc::native::each_chunk([&](auto i) {
                 sc::native::store(starts.data() + i * sc::native::lanes, packet.values.offsets(i));
@@ -93,13 +94,15 @@ void verify(fixture &f, const std::vector<model> &values) {
                 position += values[r].reserved;
             for (unsigned r = g * 16; r < std::min<unsigned>(values.size(), g * 16 + 16); ++r) {
                 assert(starts[r % 16] == position && reservations[r % 16] == values[r].reserved);
-                assert(bool(packet.live & (1u << (r % 16))) == !values[r].dead);
+                assert(bool(packet.active & (1u << (r % 16))));
+                assert(bool(live_packet.active & (1u << (r % 16))) == !values[r].dead);
                 position += values[r].reserved;
             }
         }
     });
 #endif
     sc::author::dispatch(f.view, [&](const auto &access) {
+        const bl::selected_source chosen{access, access.live_ranks()};
         // A carried traversal includes zero and retired reservations. Exercise
         // a partial window crossing both sides of a G16 boundary as well.
         for (unsigned first : {0u, std::min(15u, unsigned(values.size()))}) {
@@ -125,9 +128,9 @@ void verify(fixture &f, const std::vector<model> &values) {
                         upper = r;
                 }
             }
-            assert(bl::lower_bound(access, q) == lower && bl::upper_bound(access, q) == upper);
-            const auto l = bl::author::prepare_lower_bound(access, q);
-            const auto u = bl::author::prepare_upper_bound(access, q);
+            assert(bl::lower_bound(chosen, q) == lower && bl::upper_bound(chosen, q) == upper);
+            const auto l = bl::author::prepare_lower_bound(chosen, q);
+            const auto u = bl::author::prepare_upper_bound(chosen, q);
             assert(l.finish() == lower && u.finish() == upper);
         }
     });
@@ -145,7 +148,7 @@ void verify(fixture &f, const std::vector<model> &values) {
                     }
                     start = end;
                 }
-                assert((sc::overlap(f.view, lo, lo + span, live) == bl::rank_window{first, limit}));
+                assert(((live ? sc::overlap(selected, lo, lo + span) : sc::overlap(f.view, lo, lo + span)) == bl::rank_window{first, limit}));
             }
 }
 void history(sc::description d) {
@@ -212,7 +215,7 @@ void history(sc::description d) {
     output.verify();
     verify(dst, ordered);
 }
-void sidecar_checks() {
+void packed_geometry_checks() {
     for (auto g : {sc::geometry::absolute_ends, sc::geometry::sizes, sc::geometry::relative_ends})
         for (bool immortal : {false, true})
             for (auto fixed : {std::optional<std::uint16_t>{}, std::optional<std::uint16_t>{0},
@@ -233,7 +236,7 @@ void sidecar_checks() {
     f.directory[at + 4] = std::byte{9};
     f.control[0] = std::byte{3};
     assert(f.view.validate());
-    assert(sc::reverse(f.view, 3)->rank == 2 && bl::lower_bound(f.view, 3u) == 0 &&
+    assert(sc::reverse(f.view, 3) == 2 && bl::lower_bound(f.view, 3u) == 0 &&
            bl::upper_bound(f.view, 3u) == 2);
     auto invalid = wire;
     invalid[0] = std::byte{0x40}; // StreamPack v2 is not a geometry-only schema.
