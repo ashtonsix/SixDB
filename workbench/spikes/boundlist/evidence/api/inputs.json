@@ -1,0 +1,70 @@
+{
+  "cohorts": [
+    {
+      "platform": "neoverse-v2",
+      "role": "existing values",
+      "path": "arm-values",
+      "patterns": [
+        "*-stream-*.csv"
+      ],
+      "operations": [
+        "value_chain",
+        "reverse_value_chain",
+        "ordinary_reverse_value_chain"
+      ]
+    },
+    {
+      "platform": "neoverse-v2",
+      "role": "geometry API",
+      "path": "arm-geometry",
+      "patterns": [
+        "*-stream-*.csv",
+        "*-geometry-*.csv"
+      ]
+    },
+    {
+      "platform": "granite-rapids",
+      "role": "existing values",
+      "path": "granite-values",
+      "patterns": [
+        "*-stream-*.csv"
+      ],
+      "operations": [
+        "value_chain",
+        "reverse_value_chain",
+        "ordinary_reverse_value_chain"
+      ]
+    },
+    {
+      "platform": "granite-rapids",
+      "role": "geometry API",
+      "path": "granite-geometry",
+      "patterns": [
+        "*-stream-*.csv",
+        "*-geometry-*.csv"
+      ]
+    },
+    {
+      "platform": "zen5",
+      "role": "existing values",
+      "path": "zen-values",
+      "patterns": [
+        "*-stream-*.csv"
+      ],
+      "operations": [
+        "value_chain",
+        "reverse_value_chain",
+        "ordinary_reverse_value_chain"
+      ]
+    },
+    {
+      "platform": "zen5",
+      "role": "geometry API",
+      "path": "zen-geometry",
+      "patterns": [
+        "*-stream-*.csv",
+        "*-geometry-*.csv"
+      ]
+    }
+  ]
+}

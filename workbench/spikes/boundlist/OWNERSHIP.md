@@ -12,7 +12,8 @@ reassesses complete operations rather than treating the schema edit as proof
 that the boundary is cheap.
 
 The later [portfolio qualification](PORTFOLIO.md) supersedes the encoding decision
-and names below. This report preserves the extraction comparison and the reason
+and names below. The [API cleanup](API.md) subsequently unifies geometry and makes
+selection explicit. This report preserves the extraction comparison and the reason
 the earlier geometry-only verdict was insufficient.
 
 ## Implemented boundary

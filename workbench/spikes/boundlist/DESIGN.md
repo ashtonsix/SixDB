@@ -1,10 +1,12 @@
 # Boundlist and StreamPack: retained design
 
-Boundlist owns ordered subdivision geometry and eligibility. StreamPack adds
+Boundlist owns ordered subdivision geometry and explicit optional rank selection. StreamPack adds
 byte values, optional used lengths, value validation, packing and selected
 transfer. The owner supplies allocation, coherent versions, read protection,
 publication, sorting policy and rank repair. This record supersedes the proposed
 portfolio at `b6e4ebd5`; [qualification](PORTFOLIO.md) owns measurements and recovery.
+The [API cleanup](API.md) unifies borrowed and compact geometry and removes the
+paired-extrema helper; this record retains the encoding/composition decisions.
 The public [reference](../../../ikea/docs/boundlist/reference.md) and
 [usage](../../../ikea/docs/boundlist/usage.md) explain the resulting interface.
 

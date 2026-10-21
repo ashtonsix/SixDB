@@ -39,32 +39,25 @@ Engine owns complete directory policy. This spike supplies
 leaf search, extraction, read-grant and source-effect findings; it does not
 choose Engine's tree layout or implement a new B+ tree.
 
-## API contract audit — 21 October 2026
+## Geometry API cleanup — 21 October 2026
 
-The compact geometry is contiguous in all three encodings: starts derive from
-preceding ends or prefix sums, and boundary/size edits preserve that law. An
-independent literal-cut oracle passed 4,698 geometry/retirement states, 157,668
-point queries and 1,967,184 range queries in normal and ASan/UBSan builds. Existing
-search, edit and composition checks also passed, including 41,472 edit cases.
+The contract audit found contiguous stored geometry but two competing public
+interpretations of overlap and implicit retirement filtering on compact endpoint
+searches. The cleanup removes the paired-min/max helper and `sidecar` namespace.
+Consumer-owned occupied-extrema policy now composes ordinary boundary searches.
 
-The API nevertheless mixes models. Top-level `overlap(maxima,minima,query_range)`
-searches independently paired **closed** extrema; `sidecar::overlap` searches
-contiguous **half-open** intervals. With cuts `[0,10,15,16]`, the latter gives ranks
-`[2,3)` for query `[15,16)`, whereas feeding the corresponding starts/ends to the
-former gives `[1,3)`. That is a contract mismatch, not evidence of gapped storage.
-Engine already owns its extrema/closure policy and uses lower/upper searches directly;
-it has no dependency on this convenience helper.
+Borrowed cuts, endpoint projections and compact geometry share interval-count,
+origin and exclusive-end operations: `locate`, `reverse`, `overlap` and `range`.
+`from_cuts` normalizes N+1 cuts to N interval ranks; `from_ends` adds an origin
+without requiring an encoding or other metadata. Selection is explicit through
+`selected_source`/`rank_selection`, including compact `live_ranks()`. A selected
+point owner is either the same rank or absent, never a later interval. Raw native
+packets have an assigned-rank mask; StreamPack supplies its own value/liveness policy.
+The 256-interval compact bytes, three codecs and schema omissions are unchanged.
 
-Also, lower/upper searches on the compact view implicitly skip retired endpoints.
-Their result is the next eligible endpoint, which need not identify the containing
-interval. `reverse` deliberately preserves physical ownership, including retirement.
-
-The recommended cleanup is one public geometry contract under `boundlist`, with
-bounded representations distinguished by count and size limits, explicit selection
-over ordered searches, and extrema policy kept with its consumer. The current packed
-format has 256 intervals (257 cuts including the implicit zero origin) and a per-interval
-size bound of at most 65535. This is an API recommendation, not an encoding or kernel
-change; public names and semantics remain unchanged in this audit.
+The [API cleanup report](API.md) records complete-consumer before/current/fused
+qualification and the retained source identity. The prior literal-cut audit remains
+useful diagnosis; maintained checks now test the unified contract directly.
 
 ## Code and reproduction
 

@@ -186,3 +186,26 @@ if(BOUNDLIST_PORTFOLIO_CONTROL)
   target_compile_options(boundlist_portfolio_packets_before PRIVATE -fno-vectorize -fno-slp-vectorize)
   target_link_libraries(boundlist_portfolio_packets_before PRIVATE boundlist_portfolio_control)
 endif()
+
+# Frozen immediately before the public API cleanup; supplied only in captures.
+add_executable(boundlist_api_geometry api-geometry.cpp)
+sixdb_target(boundlist_api_geometry)
+target_compile_options(boundlist_api_geometry PRIVATE -fno-vectorize -fno-slp-vectorize)
+target_link_libraries(boundlist_api_geometry PRIVATE ikea::boundlist)
+if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/api-control/include/ikea/boundlist.h")
+  add_library(boundlist_api_control STATIC
+    api-control/src/boundlist/description.cpp api-control/src/boundlist/view.cpp
+    api-control/src/boundlist/search.cpp api-control/src/streampack/description.cpp
+    api-control/src/streampack/view.cpp)
+  sixdb_target(boundlist_api_control)
+  target_include_directories(boundlist_api_control BEFORE PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/api-control/include")
+  target_link_libraries(boundlist_api_control PUBLIC ikea_core)
+  foreach(consumer portfolio api-geometry)
+    string(REPLACE "-" "_" target "${consumer}")
+    add_executable(boundlist_api_before_${target} ${consumer}.cpp)
+    sixdb_target(boundlist_api_before_${target})
+    target_compile_definitions(boundlist_api_before_${target} PRIVATE BOUNDLIST_API_CONTROL=1)
+    target_compile_options(boundlist_api_before_${target} PRIVATE -fno-vectorize -fno-slp-vectorize)
+    target_link_libraries(boundlist_api_before_${target} PRIVATE boundlist_api_control workbench::pmu)
+  endforeach()
+endif()

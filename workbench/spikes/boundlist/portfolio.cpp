@@ -70,6 +70,7 @@ template <bool Fused, unsigned Mode, class A>
     const auto view = f.block(row >> shift);
     const auto a = prototype.rebind(view);
     auto rank = row & rank_mask;
+    unsigned adjustment = 0;
     if constexpr (Mode) {
         const auto point = f.ends[rank] + 1;
         bool dead;
@@ -78,6 +79,39 @@ template <bool Fused, unsigned Mode, class A>
             dead = a.format().has_tombstones() &&
                    (std::to_integer<unsigned>(view.windows().directory[rank / 8]) &
                     (1u << (rank % 8)));
+        } else if constexpr (Mode >= 3) {
+            const auto n = a.size();
+            if constexpr (Mode == 3) {
+#ifdef BOUNDLIST_API_CONTROL
+                if (point >= a.source().extent()) { rank = n; dead = true; }
+                else {
+                    const auto owner = a.reverse(point);
+                    dead = owner.tombstone;
+                    rank = owner.rank;
+                }
+#else
+                const ikea::boundlist::selected_source selected{a, a.live_ranks()};
+                rank = ikea::boundlist::reverse(selected, point);
+                dead = rank == n;
+#endif
+            } else if constexpr (Mode == 4) {
+#ifdef BOUNDLIST_API_CONTROL
+                rank = point >= a.source().extent() ? n : unsigned(a.reverse(point).rank);
+#else
+                rank = ikea::boundlist::reverse(a, point);
+#endif
+                dead = rank == n;
+            } else {
+#ifdef BOUNDLIST_API_CONTROL
+                const auto window = sc::author::overlap(a, point, point + 1, true);
+#else
+                const ikea::boundlist::selected_source selected{a, a.live_ranks()};
+                const auto window = ikea::boundlist::overlap(selected, point, point + 1);
+#endif
+                rank = window.first;
+                dead = rank == n;
+                adjustment = window.limit - window.first - 1;
+            }
         } else {
             const auto owner = [&] {
                 if constexpr (Mode == 1)
@@ -97,7 +131,7 @@ template <bool Fused, unsigned Mode, class A>
         else
             return a.value(rank);
     }();
-    return raw<unsigned>(value.data() + value.size() - 4);
+    return raw<unsigned>(value.data() + value.size() - 4) + adjustment;
 }
 template <unsigned C, bool Fused, unsigned Mode, class A>
 [[gnu::noinline]] word chase(const fixture &f, A prototype, unsigned operations) {
@@ -185,10 +219,19 @@ void panel(fixture &f, unsigned operations, unsigned reps) {
                         timed(f, name, label, 8, rep, operations / 8 * 8, oracle<8>(f, operations),
                               [&] { return chase<8, Fused, Mode>(f, a, operations); });
                     };
-                    operation.template operator()<0>("value_chain");
-                    operation.template operator()<1>("reverse_value_chain");
-                    if constexpr (!Fused)
-                        operation.template operator()<2>("ordinary_reverse_value_chain");
+                    if (!std::getenv("BOUNDLIST_API_ONLY")) {
+                        operation.template operator()<0>("value_chain");
+                        operation.template operator()<1>("reverse_value_chain");
+                        if constexpr (!Fused)
+                            operation.template operator()<2>("ordinary_reverse_value_chain");
+                    }
+#ifndef BOUNDLIST_PORTFOLIO_LEGACY
+                    if constexpr (!Fused) {
+                        operation.template operator()<3>("selected_geometry_value_chain");
+                        operation.template operator()<4>("raw_geometry_value_chain");
+                        operation.template operator()<5>("selected_overlap_value_chain");
+                    }
+#endif
                 };
                 if (fused)
                     run.template operator()<true>();
