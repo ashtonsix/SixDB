@@ -14,6 +14,8 @@ measurement campaign qualifying the discarded backend. A structural performance
 problem is grounds to replace an approach while implementing it.
 
 - [Findings](FINDINGS.md): actual measurements, source identities and recovery.
+- [Independent logical cases](evidence/logical-oracle-20261021/README.md): useful
+  inputs and expected results, preserved without the discarded backend or API.
 - [Budget](BUDGET.md): peer comparisons and planning assumptions, with their limits.
 - [Design](DESIGN.md): composition costs and alternatives considered.
 - [Pseudocode](PSEUDOCODE.md): the earlier algorithm sketch; it is neither an
