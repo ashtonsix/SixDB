@@ -25,8 +25,9 @@ scope. This is a starting description, not an exhaustive list of constraints.
 | [workbench](workbench/README.md) | Science, design development, spikes, benchmarks, datasets, and tooling |
 
 Design develops through experiments; priorities and architecture follow the signal.
-The [Workbench guide](workbench/README.md) is the starting point for research,
-datasets, and experiment tools. [Calico](workbench/notebook/calico.md) is prior
+The [research map](workbench/notebook/README.md) connects questions to prior findings
+and current owners; the [Workbench guide](workbench/README.md) locates datasets
+and experiment tools. [Calico](workbench/notebook/calico.md) is prior
 work to recalibrate, not an inherited specification.
 
 See [Building](BUILDING.md) for the shared CMake/Ninja build and independent,

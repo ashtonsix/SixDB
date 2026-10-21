@@ -104,6 +104,10 @@ studies to current runtime and formal-model owners.
 
 ## Work on an investigation
 
+Before creating a study or substantially changing its approach, follow the
+[prior-work instructions](../../AGENTS.md#read-prior-work-before-starting-an-experiment).
+Apply the relevant findings to the starting point and make the new question explicit.
+
 Keep one stable home named after the question. Code, literature, experiments and
 findings can develop together; one README is enough to begin. A loose idea can
 stay in the [notebook](../notebook/ideas.md). There is no required study template.

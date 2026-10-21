@@ -2,7 +2,8 @@
 
 [Investigation catalog](README.md) · [Research map](../notebook/README.md)
 
-
+Before adding a study, follow the
+[prior-work instructions](../../AGENTS.md#read-prior-work-before-starting-an-experiment).
 Activate a study in the editor with `python3 workbench/tools/dev.py --add NAME`;
 [editor setup](../tools/editors.md) owns refresh and dependency instructions.
 For execution, use its runner or configure the target directly as below.
