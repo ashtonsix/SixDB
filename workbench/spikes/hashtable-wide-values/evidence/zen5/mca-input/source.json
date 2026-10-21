@@ -1,0 +1,29 @@
+{
+  "source": "build/workers/20261021T124335Z-674c945e/results/assembly/wide_ikea_32_9_64.asm",
+  "source_sha256": "71dff4614df099b2d372e52e9a2b0fc22ec894d57e294eca8d3f9c81f1c71e4d",
+  "regions": {
+    "materialized-p": [
+      [
+        65525,
+        65722
+      ]
+    ],
+    "borrow-p": [
+      [
+        199042,
+        199207
+      ]
+    ],
+    "borrow-u-no-overflow": [
+      [
+        199559,
+        199695
+      ],
+      [
+        199456,
+        199553
+      ]
+    ]
+  },
+  "limitation": "znver5 uses the Znver4 scheduling proxy in LLVM21.1.8; hot selected primary paths only, no branch prediction or cache/MLP inference"
+}

@@ -1,0 +1,127 @@
+   5e2c0:      	pushq	%rax
+   5e2c1:      	cmpb	$0x1, 0x1d(%rsi)
+   5e2c5:      	jne	0x5e31d
+   5e2c7:      	movq	0x20(%rsi), %rax
+   5e2cb:      	movq	0x8(%r15), %rcx
+   5e2cf:      	movq	(%rax), %rax
+   5e2d2:      	movq	(%rcx), %rcx
+   5e2d5:      	shlq	$0x6, %rax
+   5e2d9:      	leaq	(%rcx,%rax), %rdx
+   5e2dd:      	movq	%rdx, 0x20(%rsi)
+   5e2e1:      	prefetcht0	(%rcx,%rax)
+   5e2e5:      	prefetcht0	0x3f(%rcx,%rax)
+   5e2ea:      	movw	$0x1, 0x1c(%rsi)
+   5e2f0:      	testq	%r13, %r13
+   5e2f3:      	je	0x5e49f
+   5e2f9:      	movq	0xb0(%r12), %r14
+   5e301:      	decq	%r13
+   5e304:      	movq	0x8(%r14), %rax
+   5e308:      	movq	%rax, 0xb0(%r12)
+   5e310:      	movq	(%r14), %rax
+   5e313:      	movq	0x10(%r14), %rsi
+   5e317:      	popq	%rcx
+   5e318:      	vzeroupper
+   5e31b:      	jmpq	*%rax
+   5e31d:      	cmpb	$0x1, 0x1c(%rsi)
+   5e321:      	jne	0x5e363
+   5e323:      	movq	0x20(%rsi), %rax
+   5e327:      	movq	0x8(%rax), %rcx
+   5e32b:      	addq	(%rax), %rcx
+   5e32e:      	addq	0x10(%rax), %rcx
+   5e332:      	addq	0x18(%rax), %rcx
+   5e336:      	addq	0x20(%rax), %rcx
+   5e33a:      	addq	0x28(%rax), %rcx
+   5e33e:      	addq	0x30(%rax), %rcx
+   5e342:      	addq	0x38(%rax), %rcx
+   5e346:      	addq	%rcx, 0x78(%rsi)
+   5e34a:      	movzbl	0x1e(%rsi), %eax
+   5e34e:      	addq	%rax, 0x68(%rsi)
+   5e352:      	cmpq	$0x1, %rax
+   5e356:      	jne	0x5e35d
+   5e358:      	movl	0x18(%rsi), %eax
+   5e35b:      	jmp	0x5e35f
+   5e35d:      	xorl	%eax, %eax
+   5e35f:      	addq	%rax, 0x70(%rsi)
+   5e363:      	movq	(%rsi), %rcx
+   5e366:      	cmpq	0x8(%rsi), %rcx
+   5e36a:      	jae	0x5e3aa
+   5e36c:      	leaq	0x10(%rcx), %rax
+   5e370:      	leaq	0x20(%rcx), %rdx
+   5e374:      	movq	%rax, (%rsi)
+   5e377:      	movq	(%r15), %rax
+   5e37a:      	cmpq	0x10(%rsi), %rdx
+   5e37e:      	jae	0x5e3b0
+   5e380:      	movq	0x70(%rax), %rdx
+   5e384:      	movl	0x80(%rdi,%rcx,4), %ebx
+   5e38b:      	movq	0x10(%rax), %r8
+   5e38f:      	xorl	%edx, %ebx
+   5e391:      	imull	$0x85ebca87, %ebx, %r9d # imm = 0x85EBCA87
+   5e398:      	shrl	$0x7, %r9d
+   5e39c:      	andl	$0x1ffff00, %r9d        # imm = 0x1FFFF00
+   5e3a3:      	prefetcht0	(%r8,%r9)
+   5e3a8:      	jmp	0x5e3b8
+   5e3aa:      	popq	%rax
+   5e3ab:      	jmp	0x5e4c0
+   5e3b0:      	movq	0x10(%rax), %r8
+   5e3b4:      	movq	0x70(%rax), %rdx
+   5e3b8:      	movl	(%rdi,%rcx,4), %ecx
+   5e3bb:      	movabsq	$-0x61c8864e7a143579, %r9 # imm = 0x9E3779B185EBCA87
+   5e3c5:      	vmovdqa64	0x59d31(%rip), %zmm1 # 0xb8100
+   5e3cf:      	movl	%ecx, 0x18(%rsi)
+   5e3d2:      	movl	%ecx, %ecx
+   5e3d4:      	xorq	%rcx, %rdx
+   5e3d7:      	mulxq	%r9, %r9, %rdx
+   5e3dc:      	movl	%r9d, %r10d
+   5e3df:      	shrl	$0x7, %r10d
+   5e3e3:      	movl	%r9d, %ebx
+   5e3e6:      	andl	$0x7fff, %ebx           # imm = 0x7FFF
+   5e3ec:      	andl	$0x1ffff00, %r10d       # imm = 0x1FFFF00
+   5e3f3:      	vpbroadcastw	%ebx, %zmm2
+   5e3f9:      	vmovdqu64	(%r8,%r10), %zmm0
+   5e400:      	vpermb	%zmm0, %zmm1, %zmm1
+   5e406:      	vpcmpeqw	%zmm1, %zmm2, %k0
+   5e40c:      	kmovd	%k0, %r11d
+   5e410:      	andl	$0xffffff, %r11d        # imm = 0xFFFFFF
+   5e417:      	sete	%bl
+   5e41a:      	tzcntq	%r11, %r11
+   5e41f:      	cmpq	$0x18, %r11
+   5e423:      	sete	%r14b
+   5e427:      	orb	%bl, %r14b
+   5e42a:      	je	0x5e46d
+   5e42c:      	vextracti32x4	$0x3, %zmm0, %xmm0
+   5e433:      	vpextrb	$0xf, %xmm0, %ebx
+   5e439:      	testl	%ebx, %ebx
+   5e43b:      	je	0x5e479
+   5e43d:      	xorq	%r9, %rdx
+   5e440:      	movq	%rdi, %rbx
+   5e443:      	movq	%rsi, %r14
+   5e446:      	movq	%rax, %rdi
+   5e449:      	movq	%rcx, %rsi
+   5e44c:      	vzeroupper
+   5e44f:      	callq	0x5ea80
+   5e454:      	testq	%rax, %rax
+   5e457:      	leaq	0x59ea2(%rip), %rcx     # 0xb8300
+   5e45e:      	movq	%r14, %rsi
+   5e461:      	movq	%rbx, %rdi
+   5e464:      	setne	%dl
+   5e467:      	cmovneq	%rax, %rcx
+   5e46b:      	jmp	0x5e482
+   5e46d:      	addq	%r10, %r8
+   5e470:      	movb	$0x1, %dl
+   5e472:      	leaq	0x40(%r8,%r11,8), %rcx
+   5e477:      	jmp	0x5e482
+   5e479:      	leaq	0x59e80(%rip), %rcx     # 0xb8300
+   5e480:      	xorl	%edx, %edx
+   5e482:      	movq	%rcx, 0x20(%rsi)
+   5e486:      	movb	%dl, 0x1e(%rsi)
+   5e489:      	prefetcht0	(%rcx)
+   5e48c:      	prefetcht0	0x7(%rcx)
+   5e490:      	movw	$0x100, 0x1c(%rsi)      # imm = 0x100
+   5e496:      	testq	%r13, %r13
+   5e499:      	jne	0x5e2f9
+   5e49f:      	movq	$0x0, 0x118(%r12)
+   5e4ab:      	popq	%rax
+   5e4ac:      	vzeroupper
+   5e4af:      	retq
+   5e4b0:      	nopw	%cs:(%rax,%rax)
+   5e4ba:      	nopw	(%rax,%rax)

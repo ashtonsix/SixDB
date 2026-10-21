@@ -1,0 +1,269 @@
+
+[0] Code Region - borrow-p
+
+Iterations:        100
+Instructions:      3600
+Total Cycles:      844
+Total uOps:        3900
+
+Dispatch Width:    6
+uOps Per Cycle:    4.62
+IPC:               4.27
+Block RThroughput: 6.5
+
+
+Cycles with backend pressure increase [ 67.06% ]
+Throughput Bottlenecks: 
+  Resource Pressure       [ 30.45% ]
+  - Zn4ALU1  [ 2.01% ]
+  - Zn4FP0  [ 4.15% ]
+  - Zn4FP1  [ 24.88% ]
+  - Zn4FP2  [ 1.07% ]
+  - Zn4FP3  [ 1.07% ]
+  - Zn4FP45  [ 6.99% ]
+  Data Dependencies:      [ 67.06% ]
+  - Register Dependencies [ 67.06% ]
+  - Memory Dependencies   [ 0.00% ]
+
+Critical sequence based on the simulation:
+
+              Instruction                                 Dependency Information
+ +----< 0.    movl	(%r11,%r14,4), %r12d
+ |      1.    movq	%r10, %rdx
+ +----> 2.    xorq	%r12, %rdx                        ## REGISTER dependency:  %r12d
+ +----> 3.    mulxq	%rbx, %rax, %rdx                  ## REGISTER dependency:  %rdx
+ |      4.    movl	%eax, %ecx
+ +----> 5.    shrl	$23, %ecx                         ## REGISTER dependency:  %rax
+ |      6.    movl	%eax, %edi
+ |      7.    andl	$8388607, %edi
+ +----> 8.    imulq	$1088, %rcx, %rsi                 ## REGISTER dependency:  %ecx
+ |      9.    vpbroadcastd	%edi, %ymm2
+ |      10.   vmovdqu	(%r13,%rsi), %xmm0
+ |      11.   vmovdqu	24(%r13,%rsi), %xmm1
+ |      12.   leaq	(%r13,%rsi), %rcx
+ +----> 13.   vinserti128	$1, 8(%r13,%rsi), %ymm0, %ymm0 ## REGISTER dependency:  %rsi
+ +----> 14.   vpshufb	%ymm3, %ymm0, %ymm0               ## REGISTER dependency:  %ymm0
+ +----> 15.   vpcmpeqd	%ymm0, %ymm2, %k0                 ## REGISTER dependency:  %ymm0
+ |      16.   vinserti128	$1, 32(%r13,%rsi), %ymm1, %ymm0
+ |      17.   vpshufb	%ymm3, %ymm0, %ymm0
+ |      18.   vpcmpeqd	%ymm0, %ymm2, %k1
+ +----> 19.   kunpckbw	%k0, %k1, %k0                     ## REGISTER dependency:  %k0
+ |      20.   kortestw	%k0, %k0
+ |      21.   je	.Ltarget_30a30
+ +----> 22.   kmovd	%k0, %eax                         ## REGISTER dependency:  %k0
+ +----> 23.   tzcntl	%eax, %eax                        ## REGISTER dependency:  %eax
+ +----> 24.   shll	$6, %eax                          ## REGISTER dependency:  %eax
+ +----> 25.   leaq	64(%rcx,%rax), %rax               ## REGISTER dependency:  %eax
+ |      26.   vmovdqu	32(%rax), %ymm0
+ |      27.   incq	%r9
+ +----> 28.   vpaddq	(%rax), %zmm0, %zmm0              ## REGISTER dependency:  %rax
+ +----> 29.   vextracti128	$1, %ymm0, %xmm1          ## REGISTER dependency:  %zmm0
+ +----> 30.   vpaddq	%xmm1, %xmm0, %xmm0               ## REGISTER dependency:  %xmm1
+ +----> 31.   vpshufd	$238, %xmm0, %xmm1                ## REGISTER dependency:  %xmm0
+ +----> 32.   vpaddq	%xmm1, %xmm0, %xmm0               ## REGISTER dependency:  %xmm1
+ +----> 33.   vmovq	%xmm0, %rax                       ## REGISTER dependency:  %xmm0
+ +----> 34.   addq	%rax, %rbp                        ## REGISTER dependency:  %rax
+        35.   jmp	.Ltarget_30973
+
+
+Instruction Info:
+[1]: #uOps
+[2]: Latency
+[3]: RThroughput
+[4]: MayLoad
+[5]: MayStore
+[6]: HasSideEffects (U)
+
+[1]    [2]    [3]    [4]    [5]    [6]    Instructions:
+ 1      5     0.33    *                   movl	(%r11,%r14,4), %r12d
+ 1      0     0.17                        movq	%r10, %rdx
+ 1      1     0.25                        xorq	%r12, %rdx
+ 2      4     1.00                        mulxq	%rbx, %rax, %rdx
+ 1      0     0.17                        movl	%eax, %ecx
+ 1      1     0.50                        shrl	$23, %ecx
+ 1      0     0.17                        movl	%eax, %edi
+ 1      1     0.25                        andl	$8388607, %edi
+ 1      3     1.00                        imulq	$1088, %rcx, %rsi
+ 1      1     1.00                        vpbroadcastd	%edi, %ymm2
+ 1      8     0.50    *                   vmovdqu	(%r13,%rsi), %xmm0
+ 1      8     0.50    *                   vmovdqu	24(%r13,%rsi), %xmm1
+ 1      1     0.33                        leaq	(%r13,%rsi), %rcx
+ 1      8     1.00    *                   vinserti128	$1, 8(%r13,%rsi), %ymm0, %ymm0
+ 1      2     1.00                        vpshufb	%ymm3, %ymm0, %ymm0
+ 1      1     0.25                        vpcmpeqd	%ymm0, %ymm2, %k0
+ 1      8     1.00    *                   vinserti128	$1, 32(%r13,%rsi), %ymm1, %ymm0
+ 1      2     1.00                        vpshufb	%ymm3, %ymm0, %ymm0
+ 1      1     0.25                        vpcmpeqd	%ymm0, %ymm2, %k1
+ 1      1     0.50                        kunpckbw	%k0, %k1, %k0
+ 1      1     0.50                        kortestw	%k0, %k0
+ 1      1     0.50                        je	.Ltarget_30a30
+ 1      1     0.50                        kmovd	%k0, %eax
+ 2      2     0.50                        tzcntl	%eax, %eax
+ 1      1     0.50                        shll	$6, %eax
+ 2      2     0.25                        leaq	64(%rcx,%rax), %rax
+ 1      8     0.50    *                   vmovdqu	32(%rax), %ymm0
+ 1      1     0.25                        incq	%r9
+ 1      8     0.50    *                   vpaddq	(%rax), %zmm0, %zmm0
+ 1      4     1.00                        vextracti128	$1, %ymm0, %xmm1
+ 1      1     0.25                        vpaddq	%xmm1, %xmm0, %xmm0
+ 1      1     0.50                        vpshufd	$238, %xmm0, %xmm1
+ 1      1     0.25                        vpaddq	%xmm1, %xmm0, %xmm0
+ 1      1     1.00                        vmovq	%xmm0, %rax
+ 1      1     0.25                        addq	%rax, %rbp
+ 1      1     0.50                        jmp	.Ltarget_30973
+
+
+Dynamic Dispatch Stall Cycles:
+RAT     - Register unavailable:                      0
+RCU     - Retire tokens unavailable:                 0
+SCHEDQ  - Scheduler full:                            300  (35.5%)
+LQ      - Load queue full:                           0
+SQ      - Store queue full:                          0
+GROUP   - Static restrictions on the dispatch group: 0
+USH     - Uncategorised Structural Hazard:           0
+
+
+Dispatch Logic - number of cycles where we saw N micro opcodes dispatched:
+[# dispatched], [# cycles]
+ 0,              58  (6.9%)
+ 1,              25  (3.0%)
+ 2,              63  (7.5%)
+ 3,              83  (9.8%)
+ 4,              66  (7.8%)
+ 5,              58  (6.9%)
+ 6,              491  (58.2%)
+
+
+Schedulers - number of cycles where we saw N micro opcodes issued:
+[# issued], [# cycles]
+ 0,          17  (2.0%)
+ 1,          41  (4.9%)
+ 2,          90  (10.7%)
+ 3,          107  (12.7%)
+ 4,          155  (18.4%)
+ 5,          151  (17.9%)
+ 6,          126  (14.9%)
+ 7,          75  (8.9%)
+ 8,          45  (5.3%)
+ 9,          29  (3.4%)
+ 10,          7  (0.8%)
+ 11,          1  (0.1%)
+
+Scheduler's queue usage:
+[1] Resource name.
+[2] Average number of used buffer entries.
+[3] Maximum number of used buffer entries.
+[4] Total number of buffer entries.
+
+ [1]            [2]        [3]        [4]
+Zn4FP            59         64         64
+Zn4Int           24         30         96
+Zn4Load          20         25         72
+Zn4Store         0          0          64
+
+
+Retire Control Unit - number of cycles where we saw N instructions retired:
+[# retired], [# cycles]
+ 0,           96  (11.4%)
+ 1,           344  (40.8%)
+ 2,           7  (0.8%)
+ 3,           8  (0.9%)
+ 4,           41  (4.9%)
+ 5,           7  (0.8%)
+ 6,           11  (1.3%)
+ 7,           3  (0.4%)
+ 8,           11  (1.3%)
+ 9,           316  (37.4%)
+
+Total ROB Entries:                320
+Max Used ROB Entries:             254  ( 79.4% )
+Average Used ROB Entries per cy:  212  ( 66.3% )
+
+
+Register File statistics:
+Total number of mappings created:    4000
+Max number of mappings used:         261
+
+*  Register File #1 -- Zn4FpPRF:
+   Number of physical registers:     192
+   Total number of mappings created: 1300
+   Max number of mappings used:      85
+
+*  Register File #2 -- Zn4IntegerPRF:
+   Number of physical registers:     224
+   Total number of mappings created: 2400
+   Max number of mappings used:      159
+   Number of optimizable moves:      300
+   Number of moves eliminated:       300  (100.0%)
+   Number of zero moves:             0  (0.0%)
+   Max moves eliminated per cycle:   2
+
+
+Resources:
+[0]   - Zn4AGU0
+[1]   - Zn4AGU1
+[2]   - Zn4AGU2
+[3]   - Zn4ALU0
+[4]   - Zn4ALU1
+[5]   - Zn4ALU2
+[6]   - Zn4ALU3
+[7]   - Zn4BRU1
+[8]   - Zn4FP0
+[9]   - Zn4FP1
+[10]  - Zn4FP2
+[11]  - Zn4FP3
+[12.0] - Zn4FP45
+[12.1] - Zn4FP45
+[13]  - Zn4FPSt
+[14.0] - Zn4LSU
+[14.1] - Zn4LSU
+[14.2] - Zn4LSU
+[15.0] - Zn4Load
+[15.1] - Zn4Load
+[15.2] - Zn4Load
+[16.0] - Zn4Store
+[16.1] - Zn4Store
+
+
+Resource pressure per iteration:
+[0]    [1]    [2]    [3]    [4]    [5]    [6]    [7]    [8]    [9]    [10]   [11]   [12.0] [12.1] [13]   [14.0] [14.1] [14.2] [15.0] [15.1] [15.2] [16.0] [16.1] 
+0.66   0.67   0.67   2.39   2.85   2.68   2.34   1.74   4.75   5.76   3.72   3.77   4.00   4.00    -     2.33   2.33   2.34   2.33   2.33   2.34    -      -     
+
+Resource pressure by instruction:
+[0]    [1]    [2]    [3]    [4]    [5]    [6]    [7]    [8]    [9]    [10]   [11]   [12.0] [12.1] [13]   [14.0] [14.1] [14.2] [15.0] [15.1] [15.2] [16.0] [16.1] Instructions:
+0.33   0.33   0.34    -      -      -      -      -      -      -      -      -      -      -      -     0.36   0.31   0.33   0.36   0.31   0.33    -      -     movl	(%r11,%r14,4), %r12d
+ -      -      -      -      -      -      -      -      -      -      -      -      -      -      -      -      -      -      -      -      -      -      -     movq	%r10, %rdx
+ -      -      -     0.47    -     0.06   0.47    -      -      -      -      -      -      -      -      -      -      -      -      -      -      -      -     xorq	%r12, %rdx
+ -      -      -      -     1.00    -      -      -      -      -      -      -      -      -      -      -      -      -      -      -      -      -      -     mulxq	%rbx, %rax, %rdx
+ -      -      -      -      -      -      -      -      -      -      -      -      -      -      -      -      -      -      -      -      -      -      -     movl	%eax, %ecx
+ -      -      -      -     0.33   0.67    -      -      -      -      -      -      -      -      -      -      -      -      -      -      -      -      -     shrl	$23, %ecx
+ -      -      -      -      -      -      -      -      -      -      -      -      -      -      -      -      -      -      -      -      -      -      -     movl	%eax, %edi
+ -      -      -     0.45   0.01    -     0.54    -      -      -      -      -      -      -      -      -      -      -      -      -      -      -      -     andl	$8388607, %edi
+ -      -      -      -     1.00    -      -      -      -      -      -      -      -      -      -      -      -      -      -      -      -      -      -     imulq	$1088, %rcx, %rsi
+ -      -      -      -      -      -      -      -      -     1.00    -      -      -      -      -      -      -      -      -      -      -      -      -     vpbroadcastd	%edi, %ymm2
+ -      -      -      -      -      -      -      -      -      -      -      -     0.53   0.47    -     0.33   0.33   0.34   0.33   0.33   0.34    -      -     vmovdqu	(%r13,%rsi), %xmm0
+ -      -      -      -      -      -      -      -      -      -      -      -     0.56   0.44    -     0.32   0.33   0.35   0.32   0.33   0.35    -      -     vmovdqu	24(%r13,%rsi), %xmm1
+0.33   0.34   0.33    -      -      -      -      -      -      -      -      -      -      -      -      -      -      -      -      -      -      -      -     leaq	(%r13,%rsi), %rcx
+ -      -      -      -      -      -      -      -      -     1.00    -      -     0.49   0.51    -     0.28   0.38   0.34   0.28   0.38   0.34    -      -     vinserti128	$1, 8(%r13,%rsi), %ymm0, %ymm0
+ -      -      -      -      -      -      -      -     0.88   1.12    -      -      -      -      -      -      -      -      -      -      -      -      -     vpshufb	%ymm3, %ymm0, %ymm0
+ -      -      -      -      -      -      -      -     0.19   0.13   0.35   0.33    -      -      -      -      -      -      -      -      -      -      -     vpcmpeqd	%ymm0, %ymm2, %k0
+ -      -      -      -      -      -      -      -      -     1.00    -      -     0.50   0.50    -     0.35   0.35   0.30   0.35   0.35   0.30    -      -     vinserti128	$1, 32(%r13,%rsi), %ymm1, %ymm0
+ -      -      -      -      -      -      -      -     0.98   1.02    -      -      -      -      -      -      -      -      -      -      -      -      -     vpshufb	%ymm3, %ymm0, %ymm0
+ -      -      -      -      -      -      -      -     0.28   0.14   0.16   0.42    -      -      -      -      -      -      -      -      -      -      -     vpcmpeqd	%ymm0, %ymm2, %k1
+ -      -      -      -      -      -      -      -      -      -     0.45   0.55    -      -      -      -      -      -      -      -      -      -      -     kunpckbw	%k0, %k1, %k0
+ -      -      -      -      -      -      -      -      -      -     0.37   0.63    -      -      -      -      -      -      -      -      -      -      -     kortestw	%k0, %k0
+ -      -      -     0.05    -      -      -     0.95    -      -      -      -      -      -      -      -      -      -      -      -      -      -      -     je	.Ltarget_30a30
+ -      -      -      -      -      -      -      -      -      -     0.56   0.44    -      -      -      -      -      -      -      -      -      -      -     kmovd	%k0, %eax
+ -      -      -      -     0.14   0.86    -      -      -      -      -      -      -      -      -      -      -      -      -      -      -      -      -     tzcntl	%eax, %eax
+ -      -      -      -     0.28   0.72    -      -      -      -      -      -      -      -      -      -      -      -      -      -      -      -      -     shll	$6, %eax
+ -      -      -     0.59    -     0.02   0.39    -      -      -      -      -      -      -      -      -      -      -      -      -      -      -      -     leaq	64(%rcx,%rax), %rax
+ -      -      -      -      -      -      -      -      -      -      -      -     0.50   0.50    -     0.31   0.31   0.38   0.31   0.31   0.38    -      -     vmovdqu	32(%rax), %ymm0
+ -      -      -     0.29   0.05   0.26   0.40    -      -      -      -      -      -      -      -      -      -      -      -      -      -      -      -     incq	%r9
+ -      -      -      -      -      -      -      -     0.70   0.20   0.48   0.62   0.50   0.50    -     0.38   0.32   0.30   0.38   0.32   0.30    -      -     vpaddq	(%rax), %zmm0, %zmm0
+ -      -      -      -      -      -      -      -     1.00    -      -      -      -      -      -      -      -      -      -      -      -      -      -     vextracti128	$1, %ymm0, %xmm1
+ -      -      -      -      -      -      -      -     0.30   0.03   0.35   0.32    -      -      -      -      -      -      -      -      -      -      -     vpaddq	%xmm1, %xmm0, %xmm0
+ -      -      -      -      -      -      -      -      -     0.07   0.93    -      -      -      -      -      -      -      -      -      -      -      -     vpshufd	$238, %xmm0, %xmm1
+ -      -      -      -      -      -      -      -     0.42   0.05   0.07   0.46    -      -      -      -      -      -      -      -      -      -      -     vpaddq	%xmm1, %xmm0, %xmm0
+ -      -      -      -      -      -      -      -      -      -      -      -     0.92   1.08    -      -      -      -      -      -      -      -      -     vmovq	%xmm0, %rax
+ -      -      -     0.33   0.04   0.09   0.54    -      -      -      -      -      -      -      -      -      -      -      -      -      -      -      -     addq	%rax, %rbp
+ -      -      -     0.21    -      -      -     0.79    -      -      -      -      -      -      -      -      -      -      -      -      -      -      -     jmp	.Ltarget_30973

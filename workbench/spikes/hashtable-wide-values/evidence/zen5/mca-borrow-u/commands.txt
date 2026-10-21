@@ -1,0 +1,9 @@
+# input /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/hashtable-wide-values/mca-input/borrow-u-no-overflow.s
+# sha256 ec2f689b01a01c86953f633e69771b6815f00c1697d6d6dd1c30574eb09dbb62
+/usr/bin/llvm-mc-21 --version
+/usr/bin/llvm-mca-21 --version
+/usr/bin/llvm-objdump-21 --version
+/usr/bin/llvm-mc-21 -triple=x86_64-linux-gnu -mcpu=znver5 -mattr=+avx512f,+avx512bw,+avx512vl,+avx512dq,+avx2,+bmi,+bmi2 -filetype=obj /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/hashtable-wide-values/mca-borrow-u/input.s -o /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/hashtable-wide-values/mca-borrow-u/object.o
+/usr/bin/llvm-objdump-21 -dr /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/hashtable-wide-values/mca-borrow-u/object.o
+/usr/bin/llvm-mca-21 -mtriple=x86_64-linux-gnu -mcpu=znver5 -mattr=+avx512f,+avx512bw,+avx512vl,+avx512dq,+avx2,+bmi,+bmi2 --iterations=100 --noalias=false --skip-unsupported-instructions=none --bottleneck-analysis --all-stats /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/hashtable-wide-values/mca-borrow-u/input.s
+/usr/bin/llvm-mca-21 -mtriple=x86_64-linux-gnu -mcpu=znver5 -mattr=+avx512f,+avx512bw,+avx512vl,+avx512dq,+avx2,+bmi,+bmi2 --iterations=100 --noalias=false --skip-unsupported-instructions=none --bottleneck-analysis --all-stats --json /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/hashtable-wide-values/mca-borrow-u/input.s

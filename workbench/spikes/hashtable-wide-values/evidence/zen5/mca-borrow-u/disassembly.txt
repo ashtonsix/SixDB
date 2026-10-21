@@ -1,0 +1,58 @@
+
+/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/hashtable-wide-values/mca-borrow-u/object.o:	file format elf64-x86-64
+
+Disassembly of section .text:
+
+0000000000000000 <.text>:
+       0: 48 8b 44 24 20               	movq	0x20(%rsp), %rax
+       5: 4c 89 da                     	movq	%r11, %rdx
+       8: 44 8b 24 a8                  	movl	(%rax,%rbp,4), %r12d
+       c: 48 b8 87 ca eb 85 b1 79 37 9e	movabsq	$-0x61c8864e7a143579, %rax # imm = 0x9E3779B185EBCA87
+      16: 4c 31 e2                     	xorq	%r12, %rdx
+      19: c4 e2 f3 f6 d0               	mulxq	%rax, %rcx, %rdx
+      1e: 89 c8                        	movl	%ecx, %eax
+      20: c1 e8 17                     	shrl	$0x17, %eax
+      23: 41 89 c9                     	movl	%ecx, %r9d
+      26: 41 81 e1 ff ff 7f 00         	andl	$0x7fffff, %r9d         # imm = 0x7FFFFF
+      2d: 48 69 f8 40 04 00 00         	imulq	$0x440, %rax, %rdi      # imm = 0x440
+      34: 62 d2 7d 28 7c d1            	vpbroadcastd	%r9d, %ymm2
+      3a: c4 c1 7a 6f 44 3d 00         	vmovdqu	(%r13,%rdi), %xmm0
+      41: c4 c1 7a 6f 4c 3d 18         	vmovdqu	0x18(%r13,%rdi), %xmm1
+      48: 41 0f b6 74 3d 3f            	movzbl	0x3f(%r13,%rdi), %esi
+      4e: 49 8d 44 3d 00               	leaq	(%r13,%rdi), %rax
+      53: c4 c3 7d 38 44 3d 08 01      	vinserti128	$0x1, 0x8(%r13,%rdi), %ymm0, %ymm0
+      5b: 44 0f b6 d6                  	movzbl	%sil, %r10d
+      5f: c4 e2 7d 00 c3               	vpshufb	%ymm3, %ymm0, %ymm0
+      64: 62 f1 6d 28 76 c0            	vpcmpeqd	%ymm0, %ymm2, %k0
+      6a: c4 c3 75 38 44 3d 20 01      	vinserti128	$0x1, 0x20(%r13,%rdi), %ymm1, %ymm0
+      72: c4 e2 7d 00 c3               	vpshufb	%ymm3, %ymm0, %ymm0
+      77: 62 f1 6d 28 76 c8            	vpcmpeqd	%ymm0, %ymm2, %k1
+      7d: c5 f5 4b c0                  	kunpckbw	%k0, %k1, %k0
+      81: c5 f8 93 f8                  	kmovw	%k0, %edi
+      85: 45 85 d2                     	testl	%r10d, %r10d
+      88: 74 63                        	je	0xed <.text+0xed>
+      8a: f3 48 0f bc cf               	tzcntq	%rdi, %rcx
+      8f: c1 e1 06                     	shll	$0x6, %ecx
+      92: 48 8d 44 08 40               	leaq	0x40(%rax,%rcx), %rax
+      97: 48 8d 0d 4c 4e 01 00         	leaq	0x14e4c(%rip), %rcx     # 0x14eea <.text+0x14eea>
+      9e: 48 85 ff                     	testq	%rdi, %rdi
+      a1: 48 0f 44 c1                  	cmoveq	%rcx, %rax
+      a5: 48 85 ff                     	testq	%rdi, %rdi
+      a8: 0f 95 c1                     	setne	%cl
+      ab: c5 fe 6f 40 20               	vmovdqu	0x20(%rax), %ymm0
+      b0: 62 f1 fd 48 d4 00            	vpaddq	(%rax), %zmm0, %zmm0
+      b6: c4 e3 7d 39 c1 01            	vextracti128	$0x1, %ymm0, %xmm1
+      bc: c5 f9 d4 c1                  	vpaddq	%xmm1, %xmm0, %xmm0
+      c0: c5 f9 70 c8 ee               	vpshufd	$0xee, %xmm0, %xmm1     # xmm1 = xmm0[2,3,2,3]
+      c5: c5 f9 d4 c1                  	vpaddq	%xmm1, %xmm0, %xmm0
+      c9: c4 e1 f9 7e c0               	vmovq	%xmm0, %rax
+      ce: 49 01 c6                     	addq	%rax, %r14
+      d1: 0f b6 c1                     	movzbl	%cl, %eax
+      d4: 49 01 c7                     	addq	%rax, %r15
+      d7: 84 c0                        	testb	%al, %al
+      d9: b8 00 00 00 00               	movl	$0x0, %eax
+      de: 4c 0f 44 e0                  	cmoveq	%rax, %r12
+      e2: 48 ff c5                     	incq	%rbp
+      e5: 4c 01 e3                     	addq	%r12, %rbx
+      e8: 49 39 e8                     	cmpq	%rbp, %r8
+      eb: 74 00                        	je	0xed <.text+0xed>

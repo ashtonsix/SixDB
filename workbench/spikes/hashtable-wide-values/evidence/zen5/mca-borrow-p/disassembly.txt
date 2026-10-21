@@ -1,0 +1,42 @@
+
+/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/hashtable-wide-values/mca-borrow-p/object.o:	file format elf64-x86-64
+
+Disassembly of section .text:
+
+0000000000000000 <.text>:
+       0: 47 8b 24 b3                  	movl	(%r11,%r14,4), %r12d
+       4: 4c 89 d2                     	movq	%r10, %rdx
+       7: 4c 31 e2                     	xorq	%r12, %rdx
+       a: c4 e2 fb f6 d3               	mulxq	%rbx, %rax, %rdx
+       f: 89 c1                        	movl	%eax, %ecx
+      11: c1 e9 17                     	shrl	$0x17, %ecx
+      14: 89 c7                        	movl	%eax, %edi
+      16: 81 e7 ff ff 7f 00            	andl	$0x7fffff, %edi         # imm = 0x7FFFFF
+      1c: 48 69 f1 40 04 00 00         	imulq	$0x440, %rcx, %rsi      # imm = 0x440
+      23: 62 f2 7d 28 7c d7            	vpbroadcastd	%edi, %ymm2
+      29: c4 c1 7a 6f 44 35 00         	vmovdqu	(%r13,%rsi), %xmm0
+      30: c4 c1 7a 6f 4c 35 18         	vmovdqu	0x18(%r13,%rsi), %xmm1
+      37: 49 8d 4c 35 00               	leaq	(%r13,%rsi), %rcx
+      3c: c4 c3 7d 38 44 35 08 01      	vinserti128	$0x1, 0x8(%r13,%rsi), %ymm0, %ymm0
+      44: c4 e2 7d 00 c3               	vpshufb	%ymm3, %ymm0, %ymm0
+      49: 62 f1 6d 28 76 c0            	vpcmpeqd	%ymm0, %ymm2, %k0
+      4f: c4 c3 75 38 44 35 20 01      	vinserti128	$0x1, 0x20(%r13,%rsi), %ymm1, %ymm0
+      57: c4 e2 7d 00 c3               	vpshufb	%ymm3, %ymm0, %ymm0
+      5c: 62 f1 6d 28 76 c8            	vpcmpeqd	%ymm0, %ymm2, %k1
+      62: c5 f5 4b c0                  	kunpckbw	%k0, %k1, %k0
+      66: c5 f8 98 c0                  	kortestw	%k0, %k0
+      6a: 74 3b                        	je	0xa7 <.text+0xa7>
+      6c: c5 fb 93 c0                  	kmovd	%k0, %eax
+      70: f3 0f bc c0                  	tzcntl	%eax, %eax
+      74: c1 e0 06                     	shll	$0x6, %eax
+      77: 48 8d 44 01 40               	leaq	0x40(%rcx,%rax), %rax
+      7c: c5 fe 6f 40 20               	vmovdqu	0x20(%rax), %ymm0
+      81: 49 ff c1                     	incq	%r9
+      84: 62 f1 fd 48 d4 00            	vpaddq	(%rax), %zmm0, %zmm0
+      8a: c4 e3 7d 39 c1 01            	vextracti128	$0x1, %ymm0, %xmm1
+      90: c5 f9 d4 c1                  	vpaddq	%xmm1, %xmm0, %xmm0
+      94: c5 f9 70 c8 ee               	vpshufd	$0xee, %xmm0, %xmm1     # xmm1 = xmm0[2,3,2,3]
+      99: c5 f9 d4 c1                  	vpaddq	%xmm1, %xmm0, %xmm0
+      9d: c4 e1 f9 7e c0               	vmovq	%xmm0, %rax
+      a2: 48 01 c5                     	addq	%rax, %rbp
+      a5: eb 00                        	jmp	0xa7 <.text+0xa7>

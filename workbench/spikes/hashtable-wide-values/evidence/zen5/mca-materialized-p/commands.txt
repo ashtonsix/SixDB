@@ -1,0 +1,9 @@
+# input /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/hashtable-wide-values/mca-input/materialized-p.s
+# sha256 17f23fc127d94896367b1f6a50f716bf3041058a0c78254b1bba40737f04a4ad
+/usr/bin/llvm-mc-21 --version
+/usr/bin/llvm-mca-21 --version
+/usr/bin/llvm-objdump-21 --version
+/usr/bin/llvm-mc-21 -triple=x86_64-linux-gnu -mcpu=znver5 -mattr=+avx512f,+avx512bw,+avx512vl,+avx512dq,+avx2,+bmi,+bmi2 -filetype=obj /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/hashtable-wide-values/mca-materialized-p/input.s -o /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/hashtable-wide-values/mca-materialized-p/object.o
+/usr/bin/llvm-objdump-21 -dr /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/hashtable-wide-values/mca-materialized-p/object.o
+/usr/bin/llvm-mca-21 -mtriple=x86_64-linux-gnu -mcpu=znver5 -mattr=+avx512f,+avx512bw,+avx512vl,+avx512dq,+avx2,+bmi,+bmi2 --iterations=100 --noalias=false --skip-unsupported-instructions=none --bottleneck-analysis --all-stats /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/hashtable-wide-values/mca-materialized-p/input.s
+/usr/bin/llvm-mca-21 -mtriple=x86_64-linux-gnu -mcpu=znver5 -mattr=+avx512f,+avx512bw,+avx512vl,+avx512dq,+avx2,+bmi,+bmi2 --iterations=100 --noalias=false --skip-unsupported-instructions=none --bottleneck-analysis --all-stats --json /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/hashtable-wide-values/mca-materialized-p/input.s
