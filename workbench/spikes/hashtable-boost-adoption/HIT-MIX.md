@@ -12,8 +12,9 @@ callers predict which keys will hit.
 Ikea/Boost/Abseil controls, orderings, sinks and endpoint baselines.
 
 The subsequent [branchless primary study](../hashtable-primary-branchless/README.md)
-removes the mixed-hit cliff but rejects a default replacement because predictable
-hot and some cold map reads regress. Maintained Ikea remains unchanged.
+rejects a uniform replacement, then tests predictable/unpredictable specializations
+and caller-owned selection that preserve predictable reads. Maintained Ikea
+remains unchanged; the implementation is still research.
 
 ## Measured result
 

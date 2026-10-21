@@ -28,7 +28,7 @@ experiments and checks under Object, Allocation, Journal, Port and Worker.
 - [Hashtable Swiss probes](hashtable-swiss-probes/README.md): completed 32/64-byte comparison with actual Boost/Abseil controls; eight-bit tags and 16-byte groups retained, rejected variants archived.
 - [Hashtable Swiss batches](hashtable-swiss-batch/README.md): graduated ISA-selected 64/32-byte read comparisons over 16-byte logical groups; whole-table qualification with actual Boost/Abseil controls, prototypes archived.
 - [Boost table adoption](hashtable-boost-adoption/README.md): pinned source/dependency and linked-footprint audit; ordinary ownership, Loom, ordered accumulation and byte-preserving MVCC seams, without a production migration.
-- [Hashtable primary branch](hashtable-primary-branchless/README.md): branchless set/map reads with actual Boost/Abseil controls; mixed-hit cliff removed, predictable/cold preservation target not met, kernels remain research.
+- [Hashtable primary branch](hashtable-primary-branchless/README.md): predictable-first read hints and caller-owned selection; native Boost/Abseil controls, workload shifts, cold preservation and short-batch costs, with prototypes in research.
 - [Bec256 with current Ikea](bec256-composition/README.md): exact codec operations, native pairs and larger-bitset population/length directories built with SeriesPack and TuplePack.
 - [Ikea on Neoverse V3](ikea-neoverse-v3/README.md): C8g/C9g comparisons, compiler scheduling, lookup and exact-span experiments.
 - [Ikea CPU comparison](ikea-cpu-comparison/README.md): October 2026 snapshot across six processors, matched case evidence and a frozen cloud-price model.

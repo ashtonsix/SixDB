@@ -1,0 +1,95 @@
+{
+  "pilot": {
+    "processes": 648,
+    "intervals": 1944,
+    "answer_identities": 18,
+    "exact_sequence_identities": 54,
+    "binaries": 10,
+    "pmu_statuses": {
+      "complete": 1944
+    },
+    "coverage": 1,
+    "all_counters_unscaled": true,
+    "same_answers_and_query_sequences_across_all_arms": true,
+    "same_owned_bytes_across_ikea_arms": true
+  },
+  "full": {
+    "processes": 1440,
+    "intervals": 6264,
+    "answer_identities": 72,
+    "exact_sequence_identities": 144,
+    "binaries": 38,
+    "pmu_statuses": {
+      "complete": 6264
+    },
+    "coverage": 1,
+    "all_counters_unscaled": true,
+    "same_answers_and_query_sequences_across_all_arms": true,
+    "same_owned_bytes_across_ikea_arms": true
+  },
+  "streams": {
+    "fresh_processes": 6,
+    "intervals": 5040,
+    "answer_identities": 30,
+    "same_answers_across_methods_and_batch_sizes": true,
+    "requests_per_interval": 262144,
+    "pmu": false,
+    "scope": "hot Ikea-only seam tax; vendor controls are in the full cohort"
+  },
+  "targets_met": {
+    "predictable_w32_hit_under_1_6": true,
+    "selected_w32_hit_under_1_6": true,
+    "selected_w32_random_over_220_mqps": true
+  },
+  "w32_budget": {
+    "v0-predictable": {
+      "hit_ns": 0.953657,
+      "miss_ns": 1.02918,
+      "random_ns": 6.907085,
+      "random_mqps": 144.7788756038184
+    },
+    "v0-adaptive": {
+      "hit_ns": 1.000238,
+      "miss_ns": 1.07388,
+      "random_ns": 1.565445,
+      "random_mqps": 638.795997304281
+    },
+    "v8-predictable": {
+      "hit_ns": 1.365735,
+      "miss_ns": 1.08673,
+      "random_ns": 7.024345,
+      "random_mqps": 142.36202806097936
+    },
+    "v8-adaptive": {
+      "hit_ns": 1.419505,
+      "miss_ns": 1.1606049999999999,
+      "random_ns": 2.4926899999999996,
+      "random_mqps": 401.1730299395433
+    }
+  },
+  "worst_nonrandom_or_cold_ratio": {
+    "predictable": {
+      "case": "cold40",
+      "v": 0,
+      "miss": 50,
+      "order": 0,
+      "prefetch": 32,
+      "ns": 8.15868,
+      "original_ns": 8.06567,
+      "ratio": 1.011531590060094
+    },
+    "adaptive": {
+      "case": "hot32",
+      "v": 0,
+      "miss": 0,
+      "order": 0,
+      "prefetch": 0,
+      "ns": 1.000238,
+      "original_ns": 0.9644714999999999,
+      "ratio": 1.037084040326749
+    }
+  },
+  "selector_bytes": 64,
+  "branch_specialization": "compile-time; dispatcher/probes outside per-key loop",
+  "getter_contract": "copied value+found, zero value on absence; neither hint promises key presence"
+}

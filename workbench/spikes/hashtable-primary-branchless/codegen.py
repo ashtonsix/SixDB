@@ -6,7 +6,7 @@ unexecuted branch is costly or prove a data dependency from a mnemonic count.
 """
 import argparse,json,re
 from pathlib import Path
-p=argparse.ArgumentParser();p.add_argument('root',type=Path);p.add_argument('--output',type=Path,required=True);a=p.parse_args();a.output.mkdir(parents=True,exist_ok=True)
+p=argparse.ArgumentParser();p.add_argument('root',type=Path);p.add_argument('--output',type=Path,required=True);p.add_argument('--trim-separators',action='store_true');a=p.parse_args();a.output.mkdir(parents=True,exist_ok=True)
 def sections(path):
  rows=path.read_text().splitlines();out={};start=None;name=None
  for i,line in enumerate(rows):
@@ -18,7 +18,7 @@ def sections(path):
 proof=[]
 for path in sorted((a.root/'assembly').glob('*memory_ikea*.asm')):
  for name,body in sections(path).items():
-  if 'read_loop<' not in name:continue
+  if not any(x in name for x in ['read_loop<','hint_range<','hint_requests<']):continue
   branches=[];masked=[];selects=[]
   for line in body[1:]:
    m=re.match(r'\s*([0-9a-f]+):\s+(.*)',line)
@@ -28,7 +28,12 @@ for path in sorted((a.root/'assembly').glob('*memory_ikea*.asm')):
    if '{%k' in ins and ins.startswith('vmov'):masked.append(ins)
    if op.startswith('cmov'):selects.append(ins)
   key=path.stem+('-prefetch' if 'read_loop<true' in name else '-direct')+('-full' if ', true,' in name else '-hits')
-  (a.output/(key+'.asm')).write_text('\n'.join(body)+'\n')
+  if 'hint_range<' in name:
+   key += '-range-'+('unpredictable' if re.search(r'hint_range<(?:true|false), (?:true|false), true,',name) else 'predictable')
+  if 'hint_requests<' in name:key += '-caller'
+  text='\n'.join(body)
+  if a.trim_separators:text=text.rstrip()
+  (a.output/(key+'.asm')).write_text(text+'\n')
   proof.append(dict(binary=path.stem,function=name,loop=key,conditional_branches=branches,masked_value_loads=masked,conditional_moves=selects))
 assert proof
 (a.output/'branches.json').write_text(json.dumps(proof,indent=2)+'\n')

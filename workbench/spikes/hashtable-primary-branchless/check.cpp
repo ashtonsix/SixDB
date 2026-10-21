@@ -36,6 +36,16 @@ void check() {
                     ht::require(r.value == (expected ? payload(key) : Value{}),
                                 "result hit payload / zero-on-absence");
                 }
+#ifdef PRIMARY_HINT_CHECK
+                auto check_hint = [&]<ht::lookup_hint Hint>() {
+                    const auto r = table.template get<Hint>(key);
+                    ht::require(r.found == expected, "hint does not promise membership");
+                    ht::require(r.value == (expected ? payload(key) : Value{}),
+                                "hinted getter payload / zero-on-absence");
+                };
+                check_hint.template operator()<ht::lookup_hint::predictable>();
+                check_hint.template operator()<ht::lookup_hint::unpredictable>();
+#endif
                 ht::require(calls == (V && expected ? 1u : 0u),
                             "consumer called exactly once on map hit");
             };

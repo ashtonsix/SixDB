@@ -1,0 +1,65 @@
+--- maintained/table.h
++++ hint/table.h
+@@ -5,6 +5,8 @@
+ #include "detail/control.h"
+ #include "detail/read-batch.h"
+ namespace ikea::hashtable {
++// Performance hint only: neither enumerator promises presence or absence.
++enum class lookup_hint { predictable, unpredictable };
+ namespace author {
+ struct table_access;
+ }
+@@ -488,6 +490,53 @@
+         if constexpr (Hint)
+             __builtin_prefetch(p.primary, 0, 3);
+     }
++    struct lookup_value { value_type value{}; bool found = false; };
++    // Research value-returning read: absent values are exactly zero. This is
++    // a separate contract; arbitrary callbacks still run only on actual hits.
++    [[gnu::always_inline]] lookup_value lookup(word key) const {
++#if defined(__AVX512VL__) && defined(__AVX512F__)
++        if constexpr (!bitmap && (Kernel == search_kernel::generic ||
++                                  Kernel == search_kernel::exact_small512) && (V == 0 || V == 8)) {
++            const auto p = prepare(key);
++            // Buckets with any overflow retain the ordinary callback read.
++            // This branch depends only on bucket state, never query membership.
++            unsigned overflow = p.primary[overflow_offset];
++            asm("" : "+r"(overflow));
++            if (overflow) [[unlikely]] {
++                lookup_value out;
++                out.found = find(key, [&](const auto& value) { out.value = value; });
++                return out;
++            }
++            const word matches = primary_matches(p.primary, p.hash.quotient);
++            lookup_value out;
++            out.found = matches != 0;
++            if constexpr (V == 8) {
++                static constexpr word zero = 0;
++                word address;
++                // TZCNT's carry bit says whether the mask was zero. LEA and
++                // CMOV preserve it, so one flag also supplies result.found.
++                asm("tzcntq %2, %0; leaq (%3,%0,8), %0; cmovcq %4, %0"
++                    : "=&r"(address), "=@ccae"(out.found)
++                    : "r"(matches), "r"(p.primary + value_offset), "r"(&zero));
++                store<8>(out.value.data(), load<8>(reinterpret_cast<const byte*>(address)));
++            }
++            return out;
++        }
++#endif
++        lookup_value out;
++        out.found = find(key, [&](const auto& value) { out.value = value; });
++        return out;
++    }
++    template <lookup_hint Hint = lookup_hint::predictable>
++    [[gnu::always_inline]] lookup_value get(word key) const {
++        if constexpr (Hint == lookup_hint::unpredictable)
++            return lookup(key);
++        else {
++            lookup_value out;
++            out.found = find(key, [&](const auto& value) { out.value = value; });
++            return out;
++        }
++    }
+     template <bool Eager = false, class Consume>
+     [[gnu::always_inline]] bool find(word key, Consume&& consume) const {
+         const auto p = prepare(key);
