@@ -14,10 +14,11 @@ void check() {
             const ht::permutation<W, W - b> mix{seed & ht::mask<W>};
             constexpr unsigned count = T::bitmap ? std::min(300u, T::N) : 300;
             std::array<ht::word, count> keys{};
-            auto payload = [](ht::word key) {
+            auto payload = [&](ht::word key) {
                 Value v{};
                 if constexpr (V)
-                    ht::store<8>(v.data(), key ^ 0xd31a9e8367e2ab19ULL);
+                    if (key != mix.recover(bucket, 0))
+                        ht::store<8>(v.data(), key ^ 0xd31a9e8367e2ab19ULL);
                 return v;
             };
             auto find = [&](ht::word key, bool expected) {
@@ -30,13 +31,6 @@ void check() {
                     ht::require(!loc.primary || loc.slot < T::N, "primary location row");
                 });
                 ht::require(found == expected, "membership");
-                if constexpr (requires { table.lookup(key); }) {
-                    const auto r = table.lookup(key);
-                    ht::require(r.found == expected, "result membership");
-                    ht::require(r.value == (expected ? payload(key) : Value{}),
-                                "result hit payload / zero-on-absence");
-                }
-#ifdef PRIMARY_HINT_CHECK
                 auto check_hint = [&]<ht::lookup_hint Hint>() {
                     const auto r = table.template get<Hint>(key);
                     ht::require(r.found == expected, "hint does not promise membership");
@@ -45,7 +39,6 @@ void check() {
                 };
                 check_hint.template operator()<ht::lookup_hint::predictable>();
                 check_hint.template operator()<ht::lookup_hint::unpredictable>();
-#endif
                 ht::require(calls == (V && expected ? 1u : 0u),
                             "consumer called exactly once on map hit");
             };
@@ -53,11 +46,21 @@ void check() {
             // misses, first/last primary row, spills and the saturated overflow-byte
             // case.
             for (unsigned i = 0; i < count; ++i) {
-                keys[i] = mix.recover(bucket, i == count - 1 ? ht::mask<W - b> : i);
+                keys[i] = mix.recover(bucket, i == T::N - 1 ? ht::mask<W - b> :
+                                                  i == count - 1 ? ht::mask<W - b> - 1 : i);
                 find(keys[i], false);
             }
-            for (unsigned i = 0; i < count; ++i)
+            for (unsigned i = 0; i < count; ++i) {
                 ht::require(table.insert(keys[i], payload(keys[i])), "fresh insertion");
+                // Check live rows while overflow is still zero, before the
+                // ordinary overflow fallback can hide a primary-path defect.
+                if (i < T::N) {
+                    find(keys[i], true);
+                    find(mix.recover(bucket, ht::mask<W - b> - 2), false);
+                    if (i + 1 == T::N)
+                        for (unsigned j = 0; j <= i; ++j) find(keys[j], true);
+                }
+            }
             for (unsigned i = 0; i < count; ++i)
                 find(keys[i], true);
             for (unsigned i = 0; i < count; i += 3)
@@ -102,6 +105,6 @@ int main() {
     check<22, 2, 20, 8, ht::search_kernel::exact_small512>();
     check<21, 2, 19, 0, ht::search_kernel::exact_small512>();
     check<21, 2, 19, 8, ht::search_kernel::exact_small512>();
-    std::cout << "generic bitmap/packed, zero/max encoding, 0/8-byte value, "
+    std::cout << "maintained getters: generic bitmap/packed, zero/max encoding, 0/8-byte value, "
                  "primary/spill/tombstone checks passed\n";
 }

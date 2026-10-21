@@ -1,0 +1,76 @@
+{
+  "processes": 1440,
+  "intervals": 6264,
+  "answer_identities": 72,
+  "exact_sequence_identities": 144,
+  "binaries": 38,
+  "pmu_statuses": {
+    "complete": 6264
+  },
+  "coverage": 1,
+  "all_counters_unscaled": true,
+  "same_answers_and_query_sequences_across_all_arms": true,
+  "same_owned_bytes_across_ikea_arms": true,
+  "streams": {
+    "fresh_processes": 6,
+    "intervals": 5040,
+    "answer_identities": 30,
+    "same_answers_across_methods_and_batch_sizes": true,
+    "requests_per_interval": 262144,
+    "pmu": false,
+    "scope": "hot Ikea-only seam tax; vendor controls are in the full cohort"
+  },
+  "w32_budget": {
+    "v0-predictable": {
+      "hit_ns": 0.977868,
+      "miss_ns": 1.0671750000000002,
+      "random_ns": 7.17783,
+      "random_mqps": 139.31787183591697
+    },
+    "v0-adaptive": {
+      "hit_ns": 1.0436299999999998,
+      "miss_ns": 1.1198649999999999,
+      "random_ns": 1.627265,
+      "random_mqps": 614.5280578147997
+    },
+    "v8-predictable": {
+      "hit_ns": 1.388965,
+      "miss_ns": 1.15644,
+      "random_ns": 7.24604,
+      "random_mqps": 138.00641453814774
+    },
+    "v8-adaptive": {
+      "hit_ns": 1.453205,
+      "miss_ns": 1.22252,
+      "random_ns": 2.5831299999999997,
+      "random_mqps": 387.12724485411115
+    }
+  },
+  "worst_nonrandom_or_cold_ratio": {
+    "predictable": {
+      "case": "cold40",
+      "v": 0,
+      "miss": 50,
+      "order": 0,
+      "prefetch": 32,
+      "ns": 8.566525,
+      "original_ns": 8.44502,
+      "ratio": 1.0143877693599306
+    },
+    "adaptive": {
+      "case": "hot32",
+      "v": 8,
+      "miss": 50,
+      "order": 3,
+      "prefetch": 0,
+      "ns": 1.3633899999999999,
+      "original_ns": 1.311885,
+      "ratio": 1.0392603010172385
+    }
+  },
+  "selector_bytes": 64,
+  "targets_met": {
+    "selected_w32_hit_under_1_6": true,
+    "selected_w32_random_over_220_mqps": true
+  }
+}

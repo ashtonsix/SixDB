@@ -1,19 +1,19 @@
 #!/bin/bash
 set -euo pipefail
 study=workbench/spikes/hashtable-primary-branchless
-root="$SIXDB_SOURCE/build/hashtable-primary-hint-native"
+root="$SIXDB_SOURCE/build/hashtable-primary-graduation-native"
 build="$root/sanitize"
 cmake -S . -B "$build" -G Ninja -DCMAKE_BUILD_TYPE=Debug \
  -DCMAKE_CXX_FLAGS_DEBUG='-O1 -g -fsanitize=address,undefined -fno-omit-frame-pointer -DNDEBUG' \
  -DCMAKE_CXX_FLAGS=-DHINT_MODE=2 -DSIXDB_MARCH=znver5 -DSIXDB_TUNE=zen5 \
- '-DSIXDB_SPIKES=hashtable-primary-branchless;hashtable-boost-adoption' \
- -DMEMORY_CASES=32_11 -DMEMORY_WIDTHS=32 '-DMEMORY_VALUES=0;8' \
- -DMEMORY_INCLUDE_OVERRIDE="$root/include" -DMEMORY_BENCH_SOURCE="$root/hint-bench.cpp" \
- -DPRIMARY_HINT_CHECK=ON > "$SIXDB_RESULTS/configure.log" 2>&1
-cmake --build "$build" --target primary_branchless_check primary_hint_stream_check memory_ikea_32_11_0 memory_ikea_32_11_8 \
- -j "${SIXDB_BUILD_JOBS:-2}" > "$SIXDB_RESULTS/build.log" 2>&1
-"$build/$study/primary_branchless_check" > "$SIXDB_RESULTS/getters-check.txt" 2>&1
-"$build/$study/primary_hint_stream_check" > "$SIXDB_RESULTS/stream-check.txt" 2>&1
+ -DSIXDB_SPIKES=hashtable-boost-adoption -DMEMORY_CASES=32_11 \
+ -DMEMORY_WIDTHS=32 '-DMEMORY_VALUES=0;8' -DMEMORY_BENCH_SOURCE="$root/hint-bench.cpp" \
+ > "$SIXDB_RESULTS/sanitize-configure.log" 2>&1
+cmake --build "$build" --target ikea_hashtable_lookup_check ikea_hashtable_selector_check \
+ ikea_example_hashtable_adaptive memory_ikea_32_11_0 memory_ikea_32_11_8 \
+ -j "${SIXDB_BUILD_JOBS:-2}" > "$SIXDB_RESULTS/sanitize-build.log" 2>&1
+ctest --test-dir "$build" --output-on-failure -R '^ikea_(hashtable_(lookup|selector)_check|example_hashtable_adaptive)$' \
+ > "$SIXDB_RESULTS/sanitize-checks.txt" 2>&1
 python3 - "$build/workbench/spikes/hashtable-boost-adoption" "$SIXDB_RESULTS" <<'PY'
 import csv,subprocess,sys
 from pathlib import Path
@@ -28,5 +28,5 @@ for v in [0,8]:
     rows=[r for r in csv.DictReader((out/(name+'.csv')).open()) if r['phase']=='read'];assert len(rows)==6
     assert all(int(r['method_predictable'])+int(r['method_unpredictable'])==n for r in rows)
     runs+=1
-(out/'tails-check.txt').write_text(f'{runs} sanitizer processes; both prefetch paths, all seven orders, 1..4097 request tails passed\n')
+(out/'tails-check.txt').write_text(f'{runs} maintained-selector ASan/UBSan processes; both prefetch paths, all seven orders, 1..4097 request tails passed\n')
 PY

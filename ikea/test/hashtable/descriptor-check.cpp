@@ -28,6 +28,14 @@ template <unsigned V> void staged_capture() {
         owner.erase(mix.recover(0, i));
     auto verify = [&](auto view) {
         for (unsigned i = 0; i < 200; ++i) {
+            auto get = [&]<lookup_hint Hint>() {
+                const auto match = view.template get<Hint>(mix.recover(0, i));
+                require(match.found == (i < 97) &&
+                            match.value == (i < 97 ? value<V>(i) : bytes<V>{}),
+                        "hinted capture keeps old backing after rebuild/erase");
+            };
+            get.template operator()<lookup_hint::predictable>();
+            get.template operator()<lookup_hint::unpredictable>();
             typename decltype(view)::staged_probe probe;
             view.prepare_staged(probe, mix.recover(0, i), [](auto, auto) {});
             bool found = false;

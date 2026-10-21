@@ -34,6 +34,14 @@ template <unsigned W, unsigned V, write_strategy Strategy> void width() {
                         "all-W complete ordered values");
             else
                 require(got.empty(), "all-W set has no payload");
+            auto get = [&]<lookup_hint Hint>() {
+                const auto match = owner.template get<Hint>(query);
+                require(match.found == (entry != expected.end()), "all-W hinted membership");
+                require(match.value == (entry == expected.end() ? bytes<V>{} : entry->second.front()),
+                        "all-W hinted complete value / zero miss");
+            };
+            get.template operator()<lookup_hint::predictable>();
+            get.template operator()<lookup_hint::unpredictable>();
             auto staged = [&]<staged_values Values>() {
                 // Hints may be speculative, but their complete byte extents
                 // must still belong to one retained backing allocation.

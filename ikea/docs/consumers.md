@@ -123,6 +123,14 @@ with a subsequent TuplePack projection; [filter guidance](filters.md) owns the
 exact calls. The [measurements](../../workbench/spikes/packed-filters/EARLY-RESULTS.md)
 retain branch losses as well as gains.
 
+Hashtable's [predictability selection](hashtable/usage.md#select-lookup-and-consumer-together)
+chooses the whole lookup/consume specialization on useful batches. Keep the
+predictable default for point calls; use a caller-owned `lookup_selector` around
+larger operators with unknown or shifting costs. Predication must reach the
+consumer: an unconditional zero-on-miss reduction can avoid the hit branch,
+whereas an arbitrary hit-only effect still needs its condition. Retain prefetch
+lookahead across the selector's internal ranges.
+
 ## Include writes and ownership in the choice
 
 Prepare mutation bindings and budget effects for the complete useful operation.

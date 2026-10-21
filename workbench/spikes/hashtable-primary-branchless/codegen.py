@@ -6,7 +6,7 @@ unexecuted branch is costly or prove a data dependency from a mnemonic count.
 """
 import argparse,json,re
 from pathlib import Path
-p=argparse.ArgumentParser();p.add_argument('root',type=Path);p.add_argument('--output',type=Path,required=True);p.add_argument('--trim-separators',action='store_true');a=p.parse_args();a.output.mkdir(parents=True,exist_ok=True)
+p=argparse.ArgumentParser();p.add_argument('root',type=Path);p.add_argument('--output',type=Path,required=True);p.add_argument('--trim-separators',action='store_true');p.add_argument('--precise-names',action='store_true');a=p.parse_args();a.output.mkdir(parents=True,exist_ok=True)
 def sections(path):
  rows=path.read_text().splitlines();out={};start=None;name=None
  for i,line in enumerate(rows):
@@ -31,6 +31,16 @@ for path in sorted((a.root/'assembly').glob('*memory_ikea*.asm')):
   if 'hint_range<' in name:
    key += '-range-'+('unpredictable' if re.search(r'hint_range<(?:true|false), (?:true|false), true,',name) else 'predictable')
   if 'hint_requests<' in name:key += '-caller'
+  if a.precise_names:
+   args=re.search(r'(read_loop|hint_range|hint_requests)<(true|false), (true|false)',name)
+   assert args,name
+   key=path.stem+('-prefetch' if args[2]=='true' else '-direct')+('-full' if args[3]=='true' else '-hits')
+   if args[1]=='hint_range':
+    method=re.search(r'hint_range<(?:true|false), (?:true|false), (true|false)',name)
+    assert method,name
+    key+='-range-'+('unpredictable' if method[1]=='true' else 'predictable')
+   if args[1]=='hint_requests':key+='-caller'
+   assert key not in {entry['loop'] for entry in proof},(key,name)
   text='\n'.join(body)
   if a.trim_separators:text=text.rstrip()
   (a.output/(key+'.asm')).write_text(text+'\n')

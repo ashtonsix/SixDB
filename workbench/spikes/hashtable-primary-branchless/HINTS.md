@@ -4,11 +4,12 @@
 `lookup_hint::predictable` and `lookup_hint::unpredictable`, keeping predictable
 as the default. For unknown or shifting workloads, optional selection of the
 whole lookup/consume loop is cheap around larger operator batches. It should
-not run inside every point getter. These implementations are still in research;
-the maintained Hashtable and its consumers are unchanged.
+not run inside every point getter. The implementation has graduated;
+[the promotion record](GRADUATION.md) records maintained-source qualification.
+This page retains the research experiment and its original measurements.
 
 The execution hint never promises presence/absence and is safe to get wrong.
-It is separate from known-present/known-absent write strategies. This spike does
+It is separate from writer strategy and is never unchecked membership knowledge. This spike does
 not add a setter hint or change mutation/growth behavior.
 
 ## Measured tradeoff
@@ -42,7 +43,7 @@ mostly predictable.
 
 ## Getter and consumer contract
 
-The research `get<Hint>(key)` returns a copied `{value, found}` result, with
+The studied `get<Hint>(key)` returns a copied `{value, found}` result, with
 exactly zero value bytes on absence. Predictable uses ordinary lookup, retaining
 conditional value consumption and direct addressing. Unpredictable uses the
 prior carry/zero-word kernel for supported generic/small-exact set/map8 recipes;
@@ -58,11 +59,12 @@ do identical useful work; exact hit/key/full-value answers are checked.
 
 The getter hint is compile-time: no mode test, counter, timer, allocation or
 indirect dispatch is introduced per key. The `hint-overlay.py` prototype changes
-only a copied header. No public Ikea result API has been added by this study.
+only a copied header during the research. The maintained getter and controller
+now implement this boundary; use the [usage guide](../../../ikea/docs/hashtable/usage.md#select-lookup-and-consumer-together).
 
 ## Cheap switching without a hit-rate oracle
 
-`hint-kernel.inc` demonstrates a caller-owned 64-byte selector. It compares the
+The archived `hint-kernel.inc` demonstrates a caller-owned 64-byte selector. It compares the
 cost of the two complete loop specializations on useful, disjoint request
 blocks. It never repeats probes, inspects future membership, or samples kernel
 PMU counters. Sampling uses serialized TSC reads; all of that work is included
@@ -154,6 +156,6 @@ orb -m ubuntu python3 workbench/tools/artifacts.py report \
   build/reports/hashtable-primary-hints
 ```
 
-`native-hint.sh --arg full` through the worker helper runs actual controls;
-`HINT_QUALIFY=1` adds native sanitizers. `native-hint-stream.sh` measures the
-separate persistent microbatch seam. No native worker remains running.
+The archived `native-hint.sh` and `native-hint-stream.sh` reproduce this
+research from its captured sources. For maintained headers, use the
+[promotion runners](GRADUATION.md), not the archived overlay edits.

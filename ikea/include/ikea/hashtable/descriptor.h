@@ -97,6 +97,10 @@ template <unsigned W, unsigned V, class Storage = heap_storage_policy> class des
             [[gnu::always_inline]] bool find(word key, Consume&& consume) const {
                 return owner->find(key, std::forward<Consume>(consume));
             }
+            template <lookup_hint Hint = lookup_hint::predictable>
+            [[gnu::always_inline]] auto get(word key) const {
+                return owner->template get<Hint>(key);
+            }
             void prefetch(word key) const {
                 owner->prefetch(owner->prepare(key));
             }

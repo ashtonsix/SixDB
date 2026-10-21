@@ -118,6 +118,7 @@ an explicit byte order if values cross a representation or persistence boundary.
 | --- | --- |
 | `insert(key, value)` | Upsert; returns true for a new key, false for replacement |
 | `find(key, consume)` | Returns membership; for maps invokes `consume(const bytes<V>&)` once on a hit and never on a miss |
+| `get<Hint>(key)` | Concrete/native read; copied `{value, found}`, exactly zero value on absence; defaults to predictable |
 | `modify(key, update)` | Maps only; returns membership, updating once on a hit |
 | `modify_or_insert(key, initial, update)` | Maps only; returns true for insertion; invokes `update(value, present)` once |
 | `erase(key)` | Returns true if an entry was removed |
@@ -132,7 +133,7 @@ inside the callback. Do not retain references to callback values or treat a
 reported location as a stable entry handle.
 
 Ordinary writes validate keys. Concrete/native reads, including `prepare`,
-`find` and staged reads, trust the `W`-bit domain; admitting untrusted keys is
+`find`, `get` and staged reads, trust the `W`-bit domain; admitting untrusted keys is
 the caller's job. `descriptor::read().find` validates it, and guarded reads
 report invalid keys as `denied`.
 
@@ -268,6 +269,67 @@ Use `read()` when an erased point reader is sufficient. Avoid repeatedly
 capturing shared ownership or crossing an erased callback per key in a loop
 that can use one native binding. Descriptor overhead is not included in
 concrete-owner benchmark timings.
+
+### Select lookup and consumer together
+
+`get<lookup_hint::predictable>(key)` returns copied `{value, found}`; it defaults
+to `predictable`. Missing values are exactly zero. A zero-valued hit still has
+`found == true`. Neither hint promises presence or absence. The existing `find`
+retains its hit-only map callback contract.
+
+Use predictable for ordinary point calls and short batches. It preserves the
+fast primary-hit branch. For unpredictable membership, `unpredictable` removes
+that branch on supported AVX-512 generic/small-exact set/map8 paths without
+overflow. Other recipes and overflow-bearing buckets use ordinary lookup.
+Correctness is independent of the hint. ISA availability does not imply the
+unpredictable method is faster: cold maps often favor predictable.
+
+Automatic selection compares **complete compiled lookup/consumer loops** on
+useful, disjoint blocks. Keep one `lookup_selector` per comparable stream or
+operator; retain it across batches and reset it after changing the operation or
+working set. It is 64 bytes, caller-owned and unsynchronized. The table, its
+encoding and its storage do not acquire profiling state.
+
+```cpp
+ht::lookup_selector selector; // Outside the repeated batch calls.
+// held = descriptor.read_native<b,E,Kernel>(); view = held.borrow();
+selector.run(requests.size(), [&](auto hint, std::size_t first, std::size_t count) {
+    // Both compiled functions do the same useful work; choose once per range.
+    result.add(read_range<decltype(hint)::value>(view, requests, first, count));
+});
+```
+
+The [complete executable example](../../examples/hashtable/adaptive.cpp) defines
+`read_range`, binds the owner once and demonstrates direct and prefetch32 reads,
+stream state, spills and tails. Its predictable fold branches on `found`; its
+unpredictable fold unconditionally sums the zero-on-miss value and masks the
+key contribution with `-word(found)`. Arbitrary hit-only side effects still need
+their condition; merely selecting a getter cannot remove a branch in caller
+code. No callback is invoked twice and no request is replayed for timing.
+
+`run(count, operation)` passes `(hint_constant, first, size)` for consecutive
+ranges of at most 256 requests. It calls nothing for zero requests. Prime cold
+prefetch once, and keep lookahead relative to the **full input end** across these
+internal boundaries. Do not restart the prefetch pipeline for every range.
+If the operation throws, earlier caller effects remain and the unfinished range
+is not observed. It must not reenter or reset the selector.
+
+One predictable and one unpredictable range are timed every 64 ranges. The
+selector normalizes elapsed cost per request and favors predictable unless its
+cost exceeds 1.10 times unpredictable's. Full batches revisit the choice every
+16,384 requests; `statistics()` exposes useful-request counts, timed probes and
+switches, and `preferred_hint()` reports the current preference. Clocks and
+selection run outside the per-key loop. An optional unsigned monotonic clock
+can be passed as the third argument to `run`; the default uses serialized TSC
+on x86-64 and steady-clock ticks elsewhere.
+
+Prefer batches of at least 256 for a small predictable-path tax. In the native
+map8 seam check, automatic all-hit reads were 1.53 ns at batch256 versus 1.53 ns
+for the original loop; batch64 was 1.63 versus 1.54 ns. Per-point automatic
+selection was expensive. Use the static default for tiny operations. Native gains are
+qualified on Zen 5 AVX-512; other builds retain correct fallbacks, without a new
+AVX2/NEON performance claim. The [promotion measurements](../../../workbench/spikes/hashtable-primary-branchless/GRADUATION.md)
+retain hot/cold results and actual Boost/Abseil controls.
 
 ### Overlap independent requests
 
@@ -533,7 +595,8 @@ From this macOS/OrbStack workspace, prefix Linux commands with `orb -m ubuntu`:
 ```sh
 cmake --preset dev
 cmake --build --preset dev --target ikea_example_hashtable_ordinary \
-  ikea_example_hashtable_composition ikea_example_hashtable_accumulation -j2
+  ikea_example_hashtable_composition ikea_example_hashtable_accumulation \
+  ikea_example_hashtable_batch ikea_example_hashtable_adaptive -j2
 ctest --test-dir build/clang/dev --output-on-failure -R '^ikea_example_hashtable_'
 ```
 

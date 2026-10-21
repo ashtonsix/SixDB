@@ -1,18 +1,6 @@
-// Caller-owned per-stream selector. No state is added to the hash table.
-struct SelectionStats {
-    word predictable = 0, unpredictable = 0, probes = 0, switches = 0;
-};
+using SelectionStats = ht::lookup_statistics;
+using PredictabilitySelector = ht::lookup_selector;
 SelectionStats last_selection;
-[[gnu::always_inline]] word selector_clock() {
-#if defined(__x86_64__)
-    _mm_lfence();
-    const auto ticks = __rdtsc();
-    _mm_lfence();
-    return ticks;
-#else
-    return Clock::now().time_since_epoch().count();
-#endif
-}
 template <bool Prefetch, bool Full, bool Unpredictable, class T>
 [[gnu::noinline]] Result hint_range(const T& t, const word* first, const word* last,
                                   const word* hint_end) {
@@ -53,35 +41,6 @@ template <bool Prefetch, bool Full, bool Unpredictable, class T>
     }
     return result;
 }
-struct PredictabilitySelector {
-    // Probe each specialization on useful work once per 64 blocks (16K keys).
-    // Bias close/noisy measurements towards predictable; switch only at blocks.
-    static constexpr unsigned block = 256, period = 64;
-    bool unpredictable = false;
-    word predictable_ticks = 0, unpredictable_ticks = 0;
-    SelectionStats stats;
-    unsigned epoch = 0;
-
-    bool method() const {
-        const auto phase = epoch % period;
-        return phase < 2 ? bool(phase) : unpredictable;
-    }
-    bool sampling() const { return epoch % period < 2; }
-    void observed(bool method, word ticks, std::size_t count) {
-        (method ? stats.unpredictable : stats.predictable) += count;
-        if (sampling()) {
-            ++stats.probes;
-            (method ? unpredictable_ticks : predictable_ticks) = (ticks << 10) / count;
-            if (epoch % period == 1) {
-                const bool next = unpredictable_ticks * 110 < predictable_ticks * 100;
-                stats.switches += next != unpredictable;
-                unpredictable = next;
-            }
-        }
-        ++epoch;
-    }
-};
-static_assert(sizeof(PredictabilitySelector) == 64);
 template <bool Prefetch, bool Full, class T>
 [[gnu::noinline]] Result hint_requests(const T& t, const std::vector<word>& queries,
                                       PredictabilitySelector* stream = nullptr) {
@@ -98,25 +57,18 @@ template <bool Prefetch, bool Full, class T>
     } else {
         PredictabilitySelector local;
         auto& selector = stream ? *stream : local;
-        const auto before = selector.stats;
+        const auto before = selector.statistics();
         Result result;
-        while (first != last) {
-            const auto count = std::min(std::size_t(last - first),
-                                        std::size_t(PredictabilitySelector::block));
-            const bool method = selector.method();
-            const bool sampling = selector.sampling();
-            const auto start = sampling ? selector_clock() : 0;
-            const auto piece = method ? hint_range<Prefetch, Full, true>(t, first, first + count, last)
-                                      : hint_range<Prefetch, Full, false>(t, first, first + count, last);
-            const auto ticks = sampling ? selector_clock() - start : 0;
-            selector.observed(method, ticks, count);
+        selector.run(queries.size(), [&](auto hint, std::size_t at, std::size_t count) {
+            constexpr bool method = decltype(hint)::value == ht::lookup_hint::unpredictable;
+            const auto piece = hint_range<Prefetch, Full, method>(t, first + at, first + at + count, last);
             result.hits += piece.hits; result.keys += piece.keys; result.values += piece.values;
-            first += count;
-        }
-        last_selection = {selector.stats.predictable - before.predictable,
-                          selector.stats.unpredictable - before.unpredictable,
-                          selector.stats.probes - before.probes,
-                          selector.stats.switches - before.switches};
+        });
+        const auto after = selector.statistics();
+        last_selection = {after.predictable - before.predictable,
+                          after.unpredictable - before.unpredictable,
+                          after.probes - before.probes,
+                          after.switches - before.switches};
         return result;
     }
 }

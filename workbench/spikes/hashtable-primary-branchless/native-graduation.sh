@@ -3,16 +3,15 @@ set -euo pipefail
 study=workbench/spikes/hashtable-primary-branchless
 harness=workbench/spikes/hashtable-boost-adoption
 grid="${1:-pilot}"
-root="$SIXDB_SOURCE/build/hashtable-primary-hint-native"
+root="$SIXDB_SOURCE/build/hashtable-primary-graduation-native"
 mkdir -p "$SIXDB_RESULTS/binaries" "$SIXDB_RESULTS/assembly" "$SIXDB_RESULTS/qualification"
 clang++-21 --version > "$SIXDB_RESULTS/compiler.txt"
 lscpu --json > "$SIXDB_RESULTS/lscpu.json"
-python3 "$study/hint-overlay.py" "$root/include" --records "$SIXDB_RESULTS"
 python3 "$study/hint-bench.py" "$root/hint-bench.cpp"
 python3 "$study/hint-bench.py" "$root/original-bench.cpp" --original
 cp "$root"/hint-bench.* "$root"/original-bench.* "$SIXDB_RESULTS/"
 for variant in original predictable unpredictable adaptive; do
- build="$root/$variant/build";overlay="$root/include";bench="$root/hint-bench.cpp";mode=0
+ build="$root/$variant/build";overlay='';bench="$root/hint-bench.cpp";mode=0
  if [[ "$variant" == original ]]; then overlay='';bench="$root/original-bench.cpp";fi
  if [[ "$variant" == unpredictable ]]; then mode=1;fi
  if [[ "$variant" == adaptive ]]; then mode=2;fi
@@ -41,5 +40,6 @@ for variant in original predictable unpredictable adaptive; do
 done
 python3 workbench/tools/pmu/probe.py "$root/original/build/workbench/tools/pmu/sixdb_pmu_probe" \
  --cpu "$SIXDB_CPU" --output "$SIXDB_RESULTS/pmu-probe" --event branches:0:4 --event branch_misses:0:5
-if [[ "${HINT_QUALIFY:-0}" == 1 ]];then SIXDB_RESULTS="$SIXDB_RESULTS/qualification" bash "$study/hint-qualify.sh";fi
+cmake --build "$root/adaptive/build" --target ikea_hashtable_validate -j "${SIXDB_BUILD_JOBS:-2}" > "$SIXDB_RESULTS/qualification/release.txt" 2>&1
+SIXDB_RESULTS="$SIXDB_RESULTS/qualification" bash "$study/graduation-qualify.sh"
 python3 "$study/hint-run.py" --binaries "$SIXDB_RESULTS/binaries" --output "$SIXDB_RESULTS/native" --cpu "$SIXDB_CPU" --grid "$grid"

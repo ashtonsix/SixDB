@@ -3,8 +3,8 @@
 **The primary-match cliff is removable, but this scalar rewrite is not a default
 replacement.** The best tested value-returning kernel beats Boost and Abseil on
 all four random hot 50/50 fixtures. It loses predictable hot throughput and some
-cold map throughput. Keep it in research; no maintained Ikea kernel, default or
-consumer API changes in this study.
+cold map throughput. Its prototypes are archived; this uniform experiment
+changed no maintained Ikea kernel, default or consumer API.
 
 [Complete scorecard, counters and rejected variants](evidence/zen5/tables.md)
 retain every hit/miss endpoint and both cold access paths. This follows the
@@ -149,7 +149,8 @@ orb -m ubuntu python3 workbench/tools/artifacts.py report \
   build/reports/hashtable-primary-branchless
 ```
 
-Run the final candidate with actual controls and native sanitizers using
+In the archived source, run the candidate with actual controls and native sanitizers using
 `native.sh` through the worker helper. Its default cohort is `carry`; `--arg callback`, `--arg result` or `--arg lean` select the retained earlier protocols.
-The code stays in this research directory. No production throughput gain is
-claimed from an unpromoted candidate.
+The rejected generators and duplicate checks are archived; this report and
+its evidence remain. The [promotion](GRADUATION.md) uses a predictable default
+and selective complete operations instead of this uniform replacement.

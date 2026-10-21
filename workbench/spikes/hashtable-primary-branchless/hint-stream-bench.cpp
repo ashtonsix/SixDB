@@ -59,7 +59,11 @@ int main(int argc, char** argv) {
                 }
                 const auto ns = elapsed(start);
                 ht::require(result == expected, "batched-stream complete result oracle");
-                return std::tuple{ns / requests, result, stream.stats};
+                const auto stats = [](const auto& selector) {
+                    if constexpr (requires { selector.statistics(); }) return selector.statistics();
+                    else return selector.stats;
+                }(stream);
+                return std::tuple{ns / requests, result, stats};
             };
             for (unsigned method = 0; method < 4; ++method)
                 (void)evaluate(method);

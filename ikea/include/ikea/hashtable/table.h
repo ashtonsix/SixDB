@@ -1,6 +1,7 @@
 #pragma once
 #include "mutation.h"
 #include "storage.h"
+#include "lookup.h"
 #include "detail/bucket.h"
 #include "detail/control.h"
 #include "detail/read-batch.h"
@@ -47,6 +48,10 @@ class table : private detail::bucket_ops<W, b, V, E, Kernel> {
     using typename bucket_base::mix_type;
     using typename bucket_base::location;
 
+    struct lookup_value {
+        value_type value{};
+        bool found = false;
+    };
     struct probe {
         typename mix_type::result hash;
         const byte* primary;
@@ -487,6 +492,45 @@ class table : private detail::bucket_ops<W, b, V, E, Kernel> {
     template <bool Hint = true> [[gnu::always_inline]] void prefetch(const probe& p) const {
         if constexpr (Hint)
             __builtin_prefetch(p.primary, 0, 3);
+    }
+    /// Materialized result; missing values are zero. The default preserves the
+    /// predictable primary-hit branch. Select the hint around the whole consumer.
+    template <lookup_hint Hint = lookup_hint::predictable>
+    [[gnu::always_inline]] lookup_value get(word key) const {
+#if defined(__AVX512VL__) && defined(__AVX512F__) && defined(__BMI__) && defined(__x86_64__)
+        if constexpr (Hint == lookup_hint::unpredictable && !bitmap &&
+                      (Kernel == search_kernel::generic ||
+                       Kernel == search_kernel::exact_small512) && (V == 0 || V == 8)) {
+            const auto p = prepare(key);
+            // Decide from bucket state before exact matching, so membership
+            // does not speculate a Swiss traversal on the no-overflow path.
+            unsigned overflow = p.primary[overflow_offset];
+            asm("" : "+r"(overflow));
+            if (overflow) [[unlikely]] {
+                lookup_value out;
+                out.found = find(key, [&](const auto& value) { out.value = value; });
+                return out;
+            }
+            const word matches = primary_matches(p.primary, p.hash.quotient);
+            lookup_value out;
+            out.found = matches != 0;
+            if constexpr (V == 8) {
+                static constexpr word zero = 0;
+                word address;
+                // TZCNT CF means zero mask. LEA/CMOV preserve it. Choose an
+                // actual readable zero word on absence: masked-off cold loads
+                // were costly, and C++ pointer selection reintroduced a branch.
+                asm("tzcntq %2, %0; leaq (%3,%0,8), %0; cmovcq %4, %0"
+                    : "=&r"(address), "=@ccae"(out.found)
+                    : "r"(matches), "r"(p.primary + value_offset), "r"(&zero));
+                store<8>(out.value.data(), load<8>(reinterpret_cast<const byte*>(address)));
+            }
+            return out;
+        }
+#endif
+        lookup_value out;
+        out.found = find(key, [&](const auto& value) { out.value = value; });
+        return out;
     }
     template <bool Eager = false, class Consume>
     [[gnu::always_inline]] bool find(word key, Consume&& consume) const {

@@ -32,6 +32,14 @@ template <unsigned W, unsigned b, unsigned V, unsigned E> void exercise() {
                 const bool hit = owner.find(key, consume);
                 require(hit == (it != expected.end()) && visits == unsigned(hit),
                         "wide direct membership");
+                auto get = [&]<lookup_hint Hint>() {
+                    const auto match = owner.template get<Hint>(key);
+                    require(match.found == hit && match.value ==
+                                (it == expected.end() ? bytes<V>{} : it->second),
+                            "hinted wide result and zero miss");
+                };
+                get.template operator()<lookup_hint::predictable>();
+                get.template operator()<lookup_hint::unpredictable>();
                 typename owner_type::staged_probe probe;
                 owner.prepare_staged(probe, key, [](auto, auto) {});
                 bool staged = false;

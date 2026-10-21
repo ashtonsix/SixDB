@@ -255,6 +255,24 @@ allocation. A selected AVX-512 eight-row/eight-byte-value recipe loads keys and
 values together and selects the matching value in registers. Its barriers retain
 the intended scheduling in generated code; they are not synchronization fences.
 
+Membership predictability is a separate execution choice from encoding. The
+default `predictable` getter preserves conditional value consumption. The
+`unpredictable` specialization first checks bucket overflow state, then carries
+the exact primary match as a flag instead of a membership branch. Map8 selects
+a real value address or a readable shared zero word using TZCNT/LEA/CMOV; a
+masked-off cold load was much slower in the experiment. Overflow-bearing buckets
+and unsupported recipes retain ordinary lookup. No packing or hash rule changes.
+
+A branchless getter helps only when the consumer can use its result without
+another unpredictable branch. A caller-owned selector therefore times two
+complete compiled operations on disjoint useful ranges, including consumption.
+It favors predictable for small differences and can follow changing costs rather
+than guessing from hit rate. This also lets cold maps retain conditional value
+loads while random hot reductions select predication. The controller adds no
+per-key dispatch or owner state. [Usage](usage.md#select-lookup-and-consumer-together)
+owns the API and example; the [native evidence](../../../workbench/spikes/hashtable-primary-branchless/GRADUATION.md)
+keeps the measured limits and vendor controls.
+
 Independent requests can overlap memory accesses: issue a prefetch, do other
 work, then inspect the data. `prepare`/`prefetch`/`finish` expose the first primary
 access. The staged reader goes further by returning the next extent when its
