@@ -1,115 +1,104 @@
 # Using Boundlist
 
-Boundlist finds ranks in ordered boundaries. A **rank** is a zero-based position:
-it can identify a child in an index, or a slot in contiguous storage. A source with `n`
-entries has ranks 0 through `n-1`. Start with existing endpoint arrays for query routing.
-Use the curated sidecar when you want Boundlist to encode and maintain subdivision
-geometry. The consuming structure supplies any associated data, movement and allocation.
+Boundlist maintains contiguous intervals and searches their cuts. A rank is the
+zero-based index of one interval. Consecutive cuts define `[start,end)`: the end of one
+interval is the start of the next. Boundlist handles geometry and optional retirement;
+the consumer owns anything associated with those intervals.
 
 Link `ikea::boundlist` and include `<ikea/boundlist.h>`. The
 [reference](reference.md) explains the model, stored formats and exact contracts.
 
-## Route a point through existing boundaries
+## Search existing cuts
 
-For children ordered by key, keep their exact occupied maxima in a nondecreasing array.
-A lower-bound search returns the **first** maximum greater than or equal to the key.
-With unique keys, that is the only possible child; it still checks whether the key
-exists within its records. When no maximum qualifies, the result is `source.size()`,
-which is not a valid rank.
-
-`direct_source` borrows the array; it neither copies nor sorts it. Keep the array
-readable and unchanged for the operation. Every rank is initially eligible, meaning that
-a search may return it. This example searches six children:
+For cuts `[0,8,18,26,35,46,56]`, there are six intervals:
+`[0,8)`, `[8,18)`, `[18,26)`, `[26,35)`, `[35,46)` and `[46,56)`.
+They meet at shared cuts. Represent them as an implicit origin of zero plus one
+exclusive end per interval; an end's index then equals its interval rank.
 
 ```cpp
 #include <ikea/boundlist.h>
 #include <array>
+#include <cassert>
 
 namespace bl = ikea::boundlist;
-const std::array<unsigned, 6> max_values{7, 10, 24, 31, 40, 52};
-const bl::direct_source maxima{max_values.data(), unsigned(max_values.size())};
-const auto rank = bl::lower_bound(maxima, 10u); // rank 1: maximum 10
-if (rank != maxima.size()) consume_child(rank);
+const std::array<unsigned, 6> end_values{8, 18, 26, 35, 46, 56};
+const bl::direct_source ends{end_values.data(), unsigned(end_values.size())};
+const auto rank = bl::upper_bound(ends, 18u);
+assert(rank == 2); // interval [18,26)
+assert(bl::upper_bound(ends, 56u) == ends.size()); // outside the extent
 ```
 
-`upper_bound(maxima,10u)` instead returns rank 2: the **first** maximum strictly
-greater than 10. Both calls search for a first match, never a last match. Equal endpoints
-are supported. For all-eligible endpoints `[3,7,7,10]`, the equal-to-7 ranks form
-`[lower_bound(7),upper_bound(7)) = [1,3)`, containing ranks 1 and 2.
+`upper_bound` returns the **first** end strictly greater than the point. That is the
+containing interval for points inside this zero-origin extent. Check points against
+any nonzero origin separately. `direct_source` borrows the array without copying or
+sorting it; keep it ordered, readable and unchanged throughout the operation.
 
-## Find the children overlapping a range
+`lower_bound` instead returns the first end **greater than or equal to** the query:
+`lower_bound(ends,18u)` is 1, whereas `upper_bound(ends,18u)` is 2. The former finds
+the cut at 18; the latter finds the interval starting there. Both return `size()`
+when no endpoint qualifies, and neither searches backwards for a last match.
 
-For a range query, also supply each child's occupied minimum. Minima and maxima must
-each be nondecreasing and refer to the same ranks. They are inclusive occupied extrema:
-a child with minimum 10 and maximum 10 contains a key, rather than being empty.
+This example omits the first cut from storage. If your array includes **all** cuts,
+its entries index cuts rather than intervals. With cuts `[10,15,16]`, first reject
+points outside `[10,16)`, then subtract one from `upper_bound(cuts,point)` to get
+the interval rank. Do not mix the full-cut and end-only index conventions.
 
-These bounds describe keys present, rather than keyspace partition boundaries.
-Contiguous partitions can therefore have gaps between their occupied bounds: a child
-owning `[8,18)` but containing only key 10 has occupied bounds `[10,10]`.
+## Find the intervals overlapping a range
 
-The default query `[low,high)` includes `low` and excludes `high`. Its candidate
-children have `maximum >= low` and `minimum < high`. `overlap` returns
-`rank_window{first,limit}`, including `first` and excluding `limit`. An empty result is
-`{n,n}`. Thus a returned `{1,5}` covers ranks 1, 2, 3 and 4:
+The compact mutable format supplies `sidecar::overlap` directly; the next section
+sets one up. For an existing end-only source, the same window can be calculated
+using two boundary searches. This example assumes `0 <= low < high <= extent` and
+no retirement selection:
 
 ```cpp
-const std::array<unsigned, 6> min_values{3, 10, 18, 26, 35, 46};
-const bl::direct_source minima{min_values.data(), unsigned(min_values.size())};
-const auto window = bl::overlap(maxima, minima, bl::query_range{9u, 36u});
-for (unsigned r = window.first; r < window.limit; ++r)
-    scan_child(r, 9u, 36u);
+const auto first = bl::upper_bound(ends, 9u);       // rank 1: end > low
+const auto last = bl::lower_bound(ends, 36u);      // rank 4: end >= high
+const bl::rank_window window{first, last + 1};     // ranks [1,5)
+assert((window == bl::rank_window{1, 5}));
 ```
 
-Child extrema can enclose gaps, so the child still filters its actual records.
-`query_range` also has `low_closed` and `high_closed` flags, defaulting to `true` and
-`false`. For an inclusive query `[9,36]`, pass `query_range{9u,36u,true,true}`.
-The returned rank window always excludes its limit, regardless of the query flags.
-If duplicate keys can span children, use this range operation rather than assuming one
-lower-bound result identifies every match.
+A `rank_window` includes `first` and excludes `limit`. This query overlaps ranks
+1, 2, 3 and 4. The [diagram](reference.md#points-ranges-and-eligibility) shows their
+contiguous geometry and the effect of retiring an internal rank.
 
-### Exclude unpopulated or retired children
-
-So far every rank was eligible. To exclude some, attach a `population` bitset through
-`populated_source`. It has one bit per rank: set means eligible, unless `inverted` is
-true for a tombstone-style mask. Supply `ceil(n/8)` readable bytes. Excluded endpoints
-must still be ordered and readable because search can probe them.
-
-Apply the same eligibility to the matching minima and maxima. This example excludes
-rank 2 and uses `population::next` in the loop to skip internal holes:
+Retirement does not change cuts. A point in a retired interval still belongs to it;
+a lookup for the **next live** rank answers a different question. To filter end-search
+results, attach a `population` through `populated_source`:
 
 ```cpp
-const std::array<std::byte, 1> bits{std::byte{0x3b}}; // eligible: 0, 1, 3, 4, 5
+const std::array<std::byte, 1> bits{std::byte{0x3b}}; // live: 0, 1, 3, 4, 5
 const bl::population live{bits};
-const bl::populated_source live_maxima{maxima, live}, live_minima{minima, live};
-const auto selected = bl::overlap(live_maxima, live_minima, bl::query_range{9u, 36u});
-for (unsigned r = selected.first; r < selected.limit; r = live.next(r + 1, selected.limit))
-    scan_child(r, 9u, 36u);
+const bl::populated_source live_ends{ends, live};
+assert(bl::upper_bound(live_ends, 20u) == 3); // next live end; NOT owner of point 20
+for (unsigned r = live.next(window.first, window.limit); r < window.limit;
+     r = live.next(r + 1, window.limit))
+    consume_interval(r);
 ```
 
-The result remains `{1,5}`: Boundlist trims ineligible edge ranks but leaves internal
-holes. That loop visits ranks 1, 3 and 4. A bit is eligibility, not the number of records
-in a child. The [range diagram](reference.md#points-ranges-and-eligibility) shows this
-example, including the populated singleton at rank 1.
+The loop visits ranks 1, 3 and 4. Rank 2 still spans `[18,26)`; it is skipped, not
+removed or absorbed into rank 3. `population` supplies `ceil(n/8)` readable bytes,
+with set bits meaning eligible unless `inverted=true`. It changes which ranks may
+be returned, not endpoint ordering or readability requirements.
 
 ## Reuse an existing packed source
 
-An endpoint source only needs `size()` and ordered `at(rank)`. A consumer can project
+An endpoint source only needs `size()` and ordered `at(index)`. A consumer can project
 those from an already-bound SeriesPack/TuplePack decoder instead of building a temporary
 endpoint array. Keep decoding and schema preparation outside the probe loop; the
 [composition example](../../examples/boundlist/composition.cpp) shows such an adapter.
 
 Native unsigned arrays permit unaligned loads within their declared readable bytes.
-Wider or signed integer queries are classified before narrowing. Custom ordered domains
-can use their own comparisons without an integer conversion. These source choices keep
-the same first-match and rank-window semantics.
+Wider or signed integer queries are classified before narrowing. Other comparison
+domains use their own ordering without conversion to a universal integer. The source
+controls the represented endpoints; the search still returns an index into that source.
 
 ## Store compact subdivision geometry
 
-Use the curated sidecar for up to 256 contiguous slots starting at zero. A slot's size
-is its reserved extent; its exclusive end is the sum of sizes through that rank.
+Use the compact format (`sidecar` in the API) for up to 256 contiguous intervals starting
+at zero. An interval's size is the distance between its cuts; its exclusive end is the
+sum of sizes through that rank.
 For sizes `[5,0,8]`, rank 0 owns `[0,5)`, rank 1 owns no positions and rank 2 owns
-`[5,13)`. Those physical half-open intervals differ from the inclusive occupied
-minimum/maximum pairs used for index routing.
+`[5,13)`. Its explicit cuts are `[0,5,5,13]`; zero is implicit in the stored format.
 
 Assigned ranks remain stable. A tombstone marks retirement without changing a slot's
 geometry; it does not remove the rank or move later slots.
@@ -152,7 +141,7 @@ writes for the owner's publication policy; it does not commit a transaction or p
 readers. Supply its capacity before execution. Keep the immutable layout and named view
 at stable addresses while accesses or effect records borrow them.
 
-In this small Sizes example, directory capacity is 64 bytes, full lengths capacity is
+In this Sizes example, directory capacity is 64 bytes, full lengths capacity is
 256 bytes, and control is 6 bytes. An owner can instead grow lengths by initialized
 16-rank groups under the same schema.
 
@@ -172,9 +161,8 @@ assert(source);
 std::array<ikea::owner_write, 32> records;
 ikea::source_write_journal effects{records};
 assert(sc::initialize(*source, effects));
-assert(sc::append(*source, 5, effects));
-assert(sc::append(*source, 0, effects));
-assert(sc::append(*source, 8, effects));
+for (unsigned size : std::array{8u, 10u, 8u, 9u, 11u, 10u})
+    assert(sc::append(*source, size, effects)); // the six intervals above
 ```
 
 `bind` admits placement without inspecting contents. `initialize` constructs new empty
@@ -183,26 +171,27 @@ validate an unchanged admitted block in a hot loop. The layout and named view st
 at stable addresses while accesses or effects borrow them. Allocation growth does not
 change the schema's field widths.
 
-### Read a slot or find its physical owner
+### Locate an interval or find the rank containing a point
 
 `locate` checks rank and liveness, then returns the slot's offset and size.
-`reverse` maps a position below extent to `{rank,tombstone}`, including storage owned
-by a retired slot. It finds the first exclusive end **greater than** the position;
-zero-size slots never own positions.
+`reverse` maps a position below extent to `{rank,tombstone}`, including retired
+intervals. It finds the first exclusive end **greater than** the position;
+zero-size intervals never own positions.
 
 ```cpp
 const auto location = sc::locate(*source, 2);
-assert(location && location->offset == 5 && location->size == 8);
-assert(sc::reverse(*source, 5)->rank == 2);
-assert(!sc::reverse(*source, 13)); // extent itself is excluded
-assert(sc::retire(*source, 0, effects));
-const auto owner = sc::reverse(*source, 4);
-assert(owner && owner->rank == 0 && owner->tombstone);
+assert(location && location->offset == 18 && location->size == 8);
+assert(sc::reverse(*source, 18)->rank == 2);
+assert(!sc::reverse(*source, 56)); // extent itself is excluded
+assert(sc::retire(*source, 2, effects));
+const auto owner = sc::reverse(*source, 20);
+assert(owner && owner->rank == 2 && owner->tombstone);
+assert((sc::overlap(*source, 9, 36, true) == bl::rank_window{1, 5}));
 ```
 
-Retiring leaves geometry unchanged; it does not move later slots. Physical
-`sc::overlap(*source,low,high,only_live)` returns a rank window for reservations
-overlapping `[low,high)`. Retired storage participates unless `only_live=true`.
+Retiring leaves geometry unchanged; it does not move later intervals.
+`sc::overlap(*source,low,high,only_live)` returns a rank window for intervals
+overlapping `[low,high)`. Retired intervals participate unless `only_live=true`.
 Internal zero-size slots can remain; with `only_live=true`, retired holes can remain
 inside the window too. The [ordinary example](../../examples/boundlist/ordinary.cpp)
 includes these reads and source-qualified
@@ -215,7 +204,7 @@ one size and translates all subsequent ends. Starting from ends `[5,9,12]`, movi
 first boundary to 6 yields `[6,9,12]`; increasing the first size to 6 yields
 `[6,10,13]`.
 
-Neither operation moves data or children. The owner performs any corresponding movement
+Both operations change only geometry metadata. The owner performs any corresponding movement
 and publishes the geometry and data together. Checked refusal preserves bytes and
 effects. Inserting/removing middle ranks or sorting builds a replacement with explicit
 rank repair. Value admission, movement and packing belong to the consuming structure.
@@ -229,7 +218,7 @@ the schema once around the complete operation:
 sc::author::dispatch(*source, [&](auto a) {
     // Caller has admitted this rank interval and stable contents.
     a.range(first, count, [&](unsigned rank, sc::location p) {
-        consume_child(rank, p.offset, p.size);
+        consume_interval(rank, p.offset, p.size);
     });
 });
 ```
@@ -259,10 +248,10 @@ internal choices, not a caller-selected lerp/shotgun/bisection enum.
 
 | Consumer | Starting choice | What to measure |
 | --- | --- | --- |
-| A few point/range queries | Ordinary lower/upper/overlap calls | Complete child/value consumption, not only the returned rank. |
+| A few point/range queries | Ordinary lower/upper/overlap calls | Complete interval use, not only the returned rank. |
 | Small hot native endpoint arrays | Compare default against `author::scan_source<T>` | Dependent latency and independent throughput; scans can lose as lists grow or queries qualify early. |
 | Repeated queries over a large immutable numeric source | Cache `author::bind_search(direct_source)` | Binding cost and reuse count, including skew/duplicates. |
-| Several independent native queries | `author::lower_bounds` / `upper_bounds` over arrays | Full query preparation and selected children; these interleave unresolved probes. |
+| Several independent native queries | `author::lower_bounds` / `upper_bounds` over arrays | Full query preparation and use of selected intervals; these interleave unresolved probes. |
 | Checkpoints available, local group cold | Prepared local phase, optionally scheduled through Loom | Frame/refill/drain cost and actual unresolved reads. |
 | Consecutive ranks | Carried range walk or native `read16` | Avoid reconstructing each local prefix separately. |
 
@@ -270,10 +259,10 @@ For repeated queries on one coherent version, source-level preparation can be re
 
 ```cpp
 #include <ikea/boundlist/author/search.h>
-const auto searched = bl::author::bind_search(maxima);
-const auto found = bl::lower_bound(searched, 10u);
+const auto searched = bl::author::bind_search(ends);
+const auto found = bl::lower_bound(searched, 8u);
 const auto found_ranks = bl::author::lower_bounds(
-    std::array{searched, searched}, std::array{10u, 35u});
+    std::array{searched, searched}, std::array{8u, 35u});
 ```
 
 Rebuild derived bindings after endpoint, count or placement changes. An unchanged

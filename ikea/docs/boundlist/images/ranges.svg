@@ -1,11 +1,11 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1280" height="744" viewBox="0 0 1280 744" role="img" aria-labelledby="title description">
-<title id="title">Occupied key bounds can have gaps between children</title>
-<desc id="description">The spans show smallest and largest stored keys, not keyspace partition boundaries. Contiguous partitions can contain unused keys. Closed occupied bounds at ranks 0 through 5 are 3..7,10..10,18..24,26..31,35..40,46..52. Rank 2 is ineligible. Query 9 inclusive to 36 exclusive returns candidate ranks 1 through 4. Translucent green query points cross amber candidate rows; the consumer skips the internal ineligible rank. Rank 1 is a populated singleton.</desc>
+<title id="title">Consecutive cuts define contiguous intervals</title>
+<desc id="description">Cuts 0,8,18,26,35,46,56 define six adjacent half-open intervals. Each rank ends exactly where the next starts. Rank 2 is retired but retains its interval 18 inclusive to 26 exclusive. Query 9 inclusive to 36 exclusive overlaps ranks 1 through 4, giving rank window 1 inclusive to 5 exclusive. Live traversal skips rank 2. The green query overlay crosses amber result rows.</desc>
 <defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L8,4 L0,8" fill="#586579"/></marker></defs>
 <rect width="1280" height="100%" fill="white"/>
 <g font-family="Arial, Helvetica, sans-serif" fill="#233047" font-size="21">
-<text x="32" y="42" font-size="26" font-weight="bold" fill="#233047" text-anchor="start">Occupied key bounds can have gaps between children</text>
-<text x="32" y="78" font-size="20" font-weight="normal" fill="#586579" text-anchor="start">Blue spans show stored-key minima and maxima. Partition boundaries are not drawn.</text>
+<text x="32" y="42" font-size="26" font-weight="bold" fill="#233047" text-anchor="start">Consecutive cuts define contiguous intervals</text>
+<text x="32" y="78" font-size="20" font-weight="normal" fill="#586579" text-anchor="start">Cuts: 0, 8, 18, 26, 35, 46, 56. Each rank ends where the next starts.</text>
 <text x="50" y="126" font-size="20" font-weight="bold" fill="#233047" text-anchor="start">Key</text>
 <path d="M176,121 H976" fill="none" stroke="#233047" stroke-width="1.8" marker-end="url(#arrow)"/>
 <path d="M176,115 L176,127" fill="none" stroke="#586579" stroke-width="1.3"/>
@@ -36,6 +36,11 @@
 <rect x="32" y="320" width="960" height="52" rx="4" fill="#fff5df" stroke="none" stroke-width="1.5"/>
 <rect x="32" y="382" width="960" height="52" rx="4" fill="#fff5df" stroke="none" stroke-width="1.5"/>
 <rect x="32" y="444" width="960" height="52" rx="4" fill="#fff5df" stroke="none" stroke-width="1.5"/>
+<path d="M288,222 L288,284" fill="none" stroke="#b7c3d2" stroke-width="1.3" stroke-dasharray="6 5"/>
+<path d="M428,284 L428,346" fill="none" stroke="#b7c3d2" stroke-width="1.3" stroke-dasharray="6 5"/>
+<path d="M540,346 L540,408" fill="none" stroke="#b7c3d2" stroke-width="1.3" stroke-dasharray="6 5"/>
+<path d="M666,408 L666,470" fill="none" stroke="#b7c3d2" stroke-width="1.3" stroke-dasharray="6 5"/>
+<path d="M820,470 L820,532" fill="none" stroke="#b7c3d2" stroke-width="1.3" stroke-dasharray="6 5"/>
 <rect x="302" y="138" width="378" height="428" fill="#69bd80" fill-opacity="0.13"/>
 <path d="M302,138 L302,568" fill="none" stroke="#168348" stroke-width="2" stroke-dasharray="6 5"/>
 <path d="M680,138 L680,568" fill="none" stroke="#168348" stroke-width="2" stroke-dasharray="6 5"/>
@@ -45,46 +50,46 @@
 <circle cx="680" cy="174" r="5" fill="white" stroke="#168348" stroke-width="2"/>
 <text x="50" y="228" font-size="21" font-weight="bold" fill="#233047" text-anchor="start">rank 0</text>
 <path d="M176,222 L976,222" fill="none" stroke="#d9e0e9" stroke-width="1.4"/>
-<path d="M218,222 L274,222" fill="none" stroke="#175ca7" stroke-width="4"/>
-<circle cx="218" cy="222" r="6" fill="#175ca7" stroke="none" stroke-width="2"/>
-<circle cx="274" cy="222" r="6" fill="#175ca7" stroke="none" stroke-width="2"/>
-<text x="218" y="207" font-size="18" font-weight="bold" fill="#175ca7" text-anchor="start">[3, 7]</text>
+<path d="M176,222 L288,222" fill="none" stroke="#175ca7" stroke-width="4"/>
+<circle cx="176" cy="222" r="6" fill="#175ca7" stroke="none" stroke-width="2"/>
+<circle cx="288" cy="222" r="6" fill="white" stroke="#175ca7" stroke-width="2"/>
+<text x="176" y="207" font-size="18" font-weight="bold" fill="#175ca7" text-anchor="start">[0, 8)</text>
 <text x="50" y="290" font-size="21" font-weight="bold" fill="#233047" text-anchor="start">rank 1</text>
 <path d="M176,284 L976,284" fill="none" stroke="#d9e0e9" stroke-width="1.4"/>
-<path d="M316,284 L316,284" fill="none" stroke="#175ca7" stroke-width="4"/>
-<circle cx="316" cy="284" r="6" fill="#175ca7" stroke="none" stroke-width="2"/>
-<text x="316" y="269" font-size="18" font-weight="bold" fill="#175ca7" text-anchor="start">[10, 10]</text>
-<text x="342" y="306" font-size="17" font-weight="normal" fill="#586579" text-anchor="start">populated singleton</text>
+<path d="M288,284 L428,284" fill="none" stroke="#175ca7" stroke-width="4"/>
+<circle cx="288" cy="284" r="6" fill="#175ca7" stroke="none" stroke-width="2"/>
+<circle cx="428" cy="284" r="6" fill="white" stroke="#175ca7" stroke-width="2"/>
+<text x="288" y="269" font-size="18" font-weight="bold" fill="#175ca7" text-anchor="start">[8, 18)</text>
 <text x="50" y="352" font-size="21" font-weight="bold" fill="#233047" text-anchor="start">rank 2</text>
 <path d="M176,346 L976,346" fill="none" stroke="#d9e0e9" stroke-width="1.4"/>
-<path d="M428,346 L512,346" fill="none" stroke="#8d99a8" stroke-width="4" stroke-dasharray="6 5"/>
+<path d="M428,346 L540,346" fill="none" stroke="#8d99a8" stroke-width="4" stroke-dasharray="6 5"/>
 <circle cx="428" cy="346" r="6" fill="#8d99a8" stroke="none" stroke-width="2"/>
-<circle cx="512" cy="346" r="6" fill="#8d99a8" stroke="none" stroke-width="2"/>
-<text x="428" y="331" font-size="18" font-weight="bold" fill="#8d99a8" text-anchor="start">[18, 24]</text>
-<text x="428" y="368" font-size="17" font-weight="normal" fill="#586579" text-anchor="start">ineligible</text>
+<circle cx="540" cy="346" r="6" fill="white" stroke="#8d99a8" stroke-width="2"/>
+<text x="428" y="331" font-size="18" font-weight="bold" fill="#8d99a8" text-anchor="start">[18, 26)</text>
+<text x="428" y="368" font-size="17" font-weight="normal" fill="#586579" text-anchor="start">retired; cuts unchanged</text>
 <text x="50" y="414" font-size="21" font-weight="bold" fill="#233047" text-anchor="start">rank 3</text>
 <path d="M176,408 L976,408" fill="none" stroke="#d9e0e9" stroke-width="1.4"/>
-<path d="M540,408 L610,408" fill="none" stroke="#175ca7" stroke-width="4"/>
+<path d="M540,408 L666,408" fill="none" stroke="#175ca7" stroke-width="4"/>
 <circle cx="540" cy="408" r="6" fill="#175ca7" stroke="none" stroke-width="2"/>
-<circle cx="610" cy="408" r="6" fill="#175ca7" stroke="none" stroke-width="2"/>
-<text x="540" y="393" font-size="18" font-weight="bold" fill="#175ca7" text-anchor="start">[26, 31]</text>
+<circle cx="666" cy="408" r="6" fill="white" stroke="#175ca7" stroke-width="2"/>
+<text x="540" y="393" font-size="18" font-weight="bold" fill="#175ca7" text-anchor="start">[26, 35)</text>
 <text x="50" y="476" font-size="21" font-weight="bold" fill="#233047" text-anchor="start">rank 4</text>
 <path d="M176,470 L976,470" fill="none" stroke="#d9e0e9" stroke-width="1.4"/>
-<path d="M666,470 L736,470" fill="none" stroke="#175ca7" stroke-width="4"/>
+<path d="M666,470 L820,470" fill="none" stroke="#175ca7" stroke-width="4"/>
 <circle cx="666" cy="470" r="6" fill="#175ca7" stroke="none" stroke-width="2"/>
-<circle cx="736" cy="470" r="6" fill="#175ca7" stroke="none" stroke-width="2"/>
-<text x="666" y="455" font-size="18" font-weight="bold" fill="#175ca7" text-anchor="start">[35, 40]</text>
+<circle cx="820" cy="470" r="6" fill="white" stroke="#175ca7" stroke-width="2"/>
+<text x="666" y="455" font-size="18" font-weight="bold" fill="#175ca7" text-anchor="start">[35, 46)</text>
 <text x="50" y="538" font-size="21" font-weight="bold" fill="#233047" text-anchor="start">rank 5</text>
 <path d="M176,532 L976,532" fill="none" stroke="#d9e0e9" stroke-width="1.4"/>
-<path d="M820,532 L904,532" fill="none" stroke="#175ca7" stroke-width="4"/>
+<path d="M820,532 L960,532" fill="none" stroke="#175ca7" stroke-width="4"/>
 <circle cx="820" cy="532" r="6" fill="#175ca7" stroke="none" stroke-width="2"/>
-<circle cx="904" cy="532" r="6" fill="#175ca7" stroke="none" stroke-width="2"/>
-<text x="820" y="517" font-size="18" font-weight="bold" fill="#175ca7" text-anchor="start">[46, 52]</text>
+<circle cx="960" cy="532" r="6" fill="white" stroke="#175ca7" stroke-width="2"/>
+<text x="820" y="517" font-size="18" font-weight="bold" fill="#175ca7" text-anchor="start">[46, 56)</text>
 <path d="M1002,258 H1012 Q1020,258 1020,266 V369 Q1020,377 1028,377 Q1020,377 1020,385 V488 Q1020,496 1012,496 H1002" fill="none" stroke="#a96a12" stroke-width="1.8"/>
-<text x="1044" y="337" font-size="22" font-weight="bold" fill="#a96a12" text-anchor="start">Candidate ranks</text>
+<text x="1044" y="337" font-size="22" font-weight="bold" fill="#a96a12" text-anchor="start">Overlapping ranks</text>
 <text x="1044" y="374" font-size="27" font-weight="bold" fill="#a96a12" text-anchor="start">[1, 5)</text>
 <text x="1044" y="411" font-size="18" font-weight="normal" fill="#586579" text-anchor="start">ranks 1–4</text>
-<text x="1044" y="438" font-size="18" font-weight="normal" fill="#586579" text-anchor="start">rank 2 is a hole</text>
+<text x="1044" y="438" font-size="18" font-weight="normal" fill="#586579" text-anchor="start">rank 2 retired</text>
 <text x="302" y="592" font-size="17" font-weight="bold" fill="#168348" text-anchor="middle">9</text>
 <text x="680" y="592" font-size="17" font-weight="bold" fill="#168348" text-anchor="middle">36</text>
 <text x="32" y="650" font-size="20" font-weight="bold" fill="#233047" text-anchor="start">Eligibility</text>
@@ -107,5 +112,5 @@
 <rect x="670" y="628" width="84" height="38" rx="3" fill="#f1f4f8" stroke="#d9e0e9" stroke-width="1.5"/>
 <text x="712" y="654" font-size="21" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">1</text>
 <path d="M32,689 L1248,689" fill="none" stroke="#d9e0e9" stroke-width="2"/>
-<text x="32" y="724" font-size="20" font-weight="normal" fill="#586579" text-anchor="start">Contiguous partitions can contain unused keys. Candidate windows can contain ineligible ranks.</text>
+<text x="32" y="724" font-size="20" font-weight="normal" fill="#586579" text-anchor="start">Retirement skips a rank without moving its cuts.</text>
 </g></svg>

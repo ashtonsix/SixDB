@@ -92,22 +92,25 @@ def encodings():
 
 
 def ranges():
-    bounds = [(3, 7), (10, 10), (18, 24), (26, 31), (35, 40), (46, 52)]
+    cuts = [0, 8, 18, 26, 35, 46, 56]
+    bounds = list(zip(cuts, cuts[1:]))
+    assert [hi - lo for lo, hi in bounds] == [8, 10, 8, 9, 11, 10]
+    assert all(bounds[r][1] == bounds[r + 1][0] for r in range(len(bounds) - 1))
     eligible = [1, 1, 0, 1, 1, 1]
     low, high = 9, 36
     overlapping = [r for r, (lo, hi) in enumerate(bounds)
-                   if eligible[r] and hi >= low and lo < high]
+                   if eligible[r] and hi > low and lo < high]
     assert overlapping == [1, 3, 4]
     assert (overlapping[0], overlapping[-1] + 1) == (1, 5)
-    f = Figure(744, 'Occupied key bounds can have gaps between children',
-               'The spans show smallest and largest stored keys, not keyspace partition boundaries. '
-               'Contiguous partitions can contain unused keys. '
-               'Closed occupied bounds at ranks 0 through 5 are 3..7,10..10,18..24,26..31,'
-               '35..40,46..52. Rank 2 is ineligible. Query 9 inclusive to 36 exclusive returns '
-               'candidate ranks 1 through 4. Translucent green query points cross amber candidate '
-               'rows; the consumer skips the internal ineligible rank. Rank 1 is a populated singleton.')
-    f.heading(32, 42, 'Occupied key bounds can have gaps between children')
-    f.text(32, 78, 'Blue spans show stored-key minima and maxima. Partition boundaries are not drawn.',
+    assert [r for r, (lo, hi) in enumerate(bounds) if hi > low and lo < high] == [1, 2, 3, 4]
+    f = Figure(744, 'Consecutive cuts define contiguous intervals',
+               'Cuts 0,8,18,26,35,46,56 define six adjacent half-open intervals. '
+               'Each rank ends exactly where the next starts. Rank 2 is retired but retains '
+               'its interval 18 inclusive to 26 exclusive. Query 9 inclusive to 36 exclusive '
+               'overlaps ranks 1 through 4, giving rank window 1 inclusive to 5 exclusive. '
+               'Live traversal skips rank 2. The green query overlay crosses amber result rows.')
+    f.heading(32, 42, 'Consecutive cuts define contiguous intervals')
+    f.text(32, 78, 'Cuts: 0, 8, 18, 26, 35, 46, 56. Each rank ends where the next starts.',
            20, color=MUTED)
     x = lambda key: 176 + key * 14
     f.text(50, 126, 'Key', 20, 'bold')
@@ -119,6 +122,10 @@ def ranges():
     # behind their opaque fill: its x axis and their rank axis are independent.
     for rank in range(1, 5):
         f.rect(32, 222 + rank * 62 - 26, 960, 52, AMBER_FILL, stroke='none', radius=4)
+    # Shared-cut guides align each interval's open end with the next start.
+    for rank, cut in enumerate(cuts[1:-1]):
+        line(f, x(cut), 222 + rank * 62, x(cut), 222 + (rank + 1) * 62,
+             '#b7c3d2', width=1.3, dash=True)
     f.items.append(f'<rect x="{x(low)}" y="138" width="{x(high)-x(low)}" '
                    'height="428" fill="#69bd80" fill-opacity="0.13"/>')
     line(f, x(low), 138, x(low), 568, GREEN, dash=True)
@@ -133,18 +140,16 @@ def ranges():
         line(f, 176, y, 976, y, RULE, width=1.4)
         color = '#8d99a8' if not eligible[rank] else BLUE
         line(f, x(lo), y, x(hi), y, color, width=4, dash=not eligible[rank])
-        for point in sorted(set((lo, hi))):
-            circle(f, x(point), y, 6, color)
-        f.text(x(lo), y - 15, f'[{lo}, {hi}]', 18, 'bold', color)
-        if rank == 1:
-            f.text(x(lo) + 26, y + 22, 'populated singleton', 17, color=MUTED)
-        elif not eligible[rank]:
-            f.text(x(lo), y + 22, 'ineligible', 17, color=MUTED)
+        circle(f, x(lo), y, 6, color)
+        circle(f, x(hi), y, 6, 'white', color)
+        f.text(x(lo), y - 15, f'[{lo}, {hi})', 18, 'bold', color)
+        if not eligible[rank]:
+            f.text(x(lo), y + 22, 'retired; cuts unchanged', 17, color=MUTED)
     f.path('M1002,258 H1012 Q1020,258 1020,266 V369 Q1020,377 1028,377 '
            'Q1020,377 1020,385 V488 Q1020,496 1012,496 H1002', color=AMBER)
-    f.text(1044, 337, 'Candidate ranks', 22, 'bold', AMBER)
+    f.text(1044, 337, 'Overlapping ranks', 22, 'bold', AMBER)
     f.text(1044, 374, '[1, 5)', 27, 'bold', AMBER)
-    f.lines(1044, 411, ['ranks 1–4', 'rank 2 is a hole'], 18, 27, color=MUTED)
+    f.lines(1044, 411, ['ranks 1–4', 'rank 2 retired'], 18, 27, color=MUTED)
     for key in (low, high):
         f.text(x(key), 592, key, 17, 'bold', GREEN, anchor='middle')
     f.text(32, 650, 'Eligibility', 20, 'bold')
@@ -154,7 +159,7 @@ def ranges():
         f.rect(left, 628, 84, 38, '#f1f4f8' if bit else '#e8edf2', radius=3)
         f.text(left + 42, 654, bit, 21, color=INK if bit else MUTED, anchor='middle', mono=True)
     line(f, 32, 689, 1248, 689, RULE)
-    f.text(32, 724, 'Contiguous partitions can contain unused keys. Candidate windows can contain ineligible ranks.',
+    f.text(32, 724, 'Retirement skips a rank without moving its cuts.',
            20, color=MUTED)
     f.save(OUT / 'ranges.svg')
 
