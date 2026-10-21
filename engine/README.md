@@ -7,6 +7,34 @@ structures. Multi-shard transactions are in scope.
 Successor to Calico's `engine` and `foyer`, with database-structural concerns
 from `arbor`; see the [Calico reference map](../workbench/notebook/calico.md).
 
+## Native material support
+
+The [`material` adapter](include/engine/material.h) binds native material to
+Orbital using a 24-byte Control and retained immutable geometry and
+interpretation. Captures and exported Parts keep their selected layout alive;
+retained sources can be recaptured without retaining a chain of predecessor
+representations. The caller supplies the Store and metadata resource and follows
+the adapter's Scope, resource and owner-Lane lifetime requirements.
+
+Build `engine_material_check` with the [pinned toolchain](../BUILDING.md), then
+run its same-named CTest entry for material lifetime and recapture checks.
+
+## Directory and Segment experiments
+
+The native [`directory` increment](include/engine/directory.h) implements
+physical-prefix lookup and scalar/batched existing-member replacement, using
+direct child ownership and one root capture. The caller joins finished Segment
+and directory changes in one Orbital packet. Logical Boundlist routing,
+membership/balance, ordinary/hash recipes, extras and schema remain unfinished.
+
+The opt-in `SIXDB_ENGINE_DIRECTORY_DRIVER` builds a moving-Part relocation
+driver and a multi-row Segment caller with real five-layer material, snapshot
+correct afterimages and exact aggregate checks. Native LMDB is required only
+for those drivers. The [implementation and measurements](../workbench/spikes/index-directories/IMPLEMENTATION.md)
+describe their boundaries, byte ownership and unresolved performance costs.
+These experiments do not establish a complete Engine or persistent format.
+Source frontend work remains planning-only.
+
 ## Provisional scope and seams
 
 - Definition and semantics of the accepted high-level IR dialects, structured
@@ -51,5 +79,4 @@ reusable training separated from selection and local fitting.
 The [trie-remapping investigation](../workbench/spikes/trie-remapping/README.md),
 [aggregate maintenance](../workbench/spikes/aggregate-maintenance/README.md)
 and [Ikea composition](../workbench/spikes/ikea-composition/README.md) inform
-these choices without selecting a complete engine. No database implementation
-is present here yet.
+the wider Engine design; the broader database and frontend interfaces remain open.

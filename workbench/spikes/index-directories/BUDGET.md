@@ -3,10 +3,11 @@
 These are aggressive proposed ceilings, not measurements of a new directory.
 The relative headroom requirement overrides a looser absolute number.
 
-The current instruction is paper review before more implementation. Existing
-read/producer results qualify their exact captured operations; they do not price
-the unfinished mutable directory. The current complete algorithm is in
-[Pseudocode](PSEUDOCODE.md), with its [byte ledger](DESIGN.md#compact-candidate-byte-and-ownership-ledger).
+Implementation and measurement proceed together. Existing read/producer results
+qualify their exact captured operations; they do not price the mutable directory
+replacement. [Pseudocode](PSEUDOCODE.md) records the earlier algorithm exercise,
+not a pause or a contract for that replacement. The new native physical-prefix
+increment and its limits are recorded in [Implementation](IMPLEMENTATION.md).
 
 Ashton's subsequent steer makes useful steady-state THROUGHPUT the primary
 decision metric. Compare completed useful operations/s at matched ready window,

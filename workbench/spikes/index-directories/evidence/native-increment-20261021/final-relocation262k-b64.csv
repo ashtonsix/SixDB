@@ -1,0 +1,7 @@
+context,compiler=21.1.8 (++20251221033104+2078da43e25a-1~exp1~20251221153121.57),lmdb=LMDB 0.9.31: (July 10, 2023),peer=INTEGERKEY_u32_CURRENT_RESERVE,metadata_pool_max=1024,scope_or_transaction_queries=64,output=full64B_xor8_sum,write_batch=64,write_denominator=offered_commands,durability=memory_only_lmdb_NOSYNC_NOMETASYNC_NOTLS,phases_instrumented=0
+ledger,262144,1,dir_allocations=139,dir_body_bytes=108736,dir_copied_bytes=108736,dir_captures=1,node_proof_bytes=22536,unchanged_child_retains=2246
+sample,262144,1,0,engine_read_ns=43.812,lmdb_read_ns=418.583,engine_write_ns=4233.297,lmdb_write_ns=2082.041,digest=11532550732255568327
+sample,262144,1,1,engine_read_ns=35.981,lmdb_read_ns=329.125,engine_write_ns=3999.084,lmdb_write_ns=2168.956,digest=9119844833027966815
+sample,262144,1,2,engine_read_ns=45.786,lmdb_read_ns=423.696,engine_write_ns=4606.509,lmdb_write_ns=2061.940,digest=15567907977364129851
+sample,262144,1,3,engine_read_ns=39.271,lmdb_read_ns=317.723,engine_write_ns=4338.726,lmdb_write_ns=1842.619,digest=6966986481256498491
+settled_native_footprint,262144,1,mapped=34086912,reserved=2970959872,metadata=4319608,idle=4096,active_mapped=34082816
