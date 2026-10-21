@@ -43,6 +43,10 @@ For a range query, also supply each child's occupied minimum. Minima and maxima 
 each be nondecreasing and refer to the same ranks. They are inclusive occupied extrema:
 a child with minimum 10 and maximum 10 contains a key, rather than being empty.
 
+These bounds describe keys present, rather than keyspace partition boundaries.
+Contiguous partitions can therefore have gaps between their occupied bounds: a child
+owning `[8,18)` but containing only key 10 has occupied bounds `[10,10]`.
+
 The default query `[low,high)` includes `low` and excludes `high`. Its candidate
 children have `maximum >= low` and `minimum < high`. `overlap` returns
 `rank_window{first,limit}`, including `first` and excluding `limit`. An empty result is

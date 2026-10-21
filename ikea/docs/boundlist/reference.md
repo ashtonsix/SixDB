@@ -56,6 +56,11 @@ A child may contain many keys. Describe each child's occupied bounds using two s
 **inclusive**: a populated child with bounds `[10,10]` contains the key 10. Both
 sources must be nondecreasing and describe the same ranks and eligibility.
 
+Occupied bounds describe the **keys present**, rather than the child's keyspace
+partition. Adjacent partitions can be contiguous while their occupied bounds have
+gaps. For example, a child owning `[8,18)` but containing only key 10 has occupied
+bounds `[10,10]`. The diagram below draws occupied bounds; it omits partition boundaries.
+
 For a unique-key point query, `lower_bound(maxima,key)` selects the first possible child
 in one search. It still checks whether the key exists among its records. Duplicates do
 not add a second search to that call, but finding matches across children needs a range
@@ -71,7 +76,7 @@ The result is `rank_window{first,limit}`. It includes `first` and excludes `limi
 but internal holes remain; the consumer skips them. Occupied extrema can also enclose
 gaps inside a child, so candidate children still check their actual records.
 
-![Occupied child ranges, a populated singleton and an ineligible internal rank. The query from 9 inclusive to 36 exclusive returns candidate ranks 1 through 4; eligibility still applies inside the window.](images/ranges.svg)
+![Occupied key bounds, rather than partition boundaries, with gaps between children. The query from 9 inclusive to 36 exclusive returns candidate ranks 1 through 4; rank 2 is ineligible.](images/ranges.svg)
 
 The query's `low_closed` and `high_closed` flags independently choose whether each
 point endpoint is included. Their defaults are `true` and `false`. An equal-endpoint

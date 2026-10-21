@@ -99,13 +99,15 @@ def ranges():
                    if eligible[r] and hi >= low and lo < high]
     assert overlapping == [1, 3, 4]
     assert (overlapping[0], overlapping[-1] + 1) == (1, 5)
-    f = Figure(744, 'A range query bounds the children worth visiting',
-               'Closed occupied ranges at ranks 0 through 5 are 3..7,10..10,18..24,26..31,'
+    f = Figure(744, 'Occupied key bounds can have gaps between children',
+               'The spans show smallest and largest stored keys, not keyspace partition boundaries. '
+               'Contiguous partitions can contain unused keys. '
+               'Closed occupied bounds at ranks 0 through 5 are 3..7,10..10,18..24,26..31,'
                '35..40,46..52. Rank 2 is ineligible. Query 9 inclusive to 36 exclusive returns '
                'candidate ranks 1 through 4. Translucent green query points cross amber candidate '
                'rows; the consumer skips the internal ineligible rank. Rank 1 is a populated singleton.')
-    f.heading(32, 42, 'A range query bounds the children worth visiting')
-    f.text(32, 78, 'Ordered occupied bounds. The query includes its low point and excludes its high point.',
+    f.heading(32, 42, 'Occupied key bounds can have gaps between children')
+    f.text(32, 78, 'Blue spans show stored-key minima and maxima. Partition boundaries are not drawn.',
            20, color=MUTED)
     x = lambda key: 176 + key * 14
     f.text(50, 126, 'Key', 20, 'bold')
@@ -152,7 +154,7 @@ def ranges():
         f.rect(left, 628, 84, 38, '#f1f4f8' if bit else '#e8edf2', radius=3)
         f.text(left + 42, 654, bit, 21, color=INK if bit else MUTED, anchor='middle', mono=True)
     line(f, 32, 689, 1248, 689, RULE)
-    f.text(32, 724, 'Equal bounds can contain a key. Candidate windows can contain ineligible ranks.',
+    f.text(32, 724, 'Contiguous partitions can contain unused keys. Candidate windows can contain ineligible ranks.',
            20, color=MUTED)
     f.save(OUT / 'ranges.svg')
 
