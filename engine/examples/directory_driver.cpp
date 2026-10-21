@@ -156,11 +156,25 @@ struct Engine {
     store.drain(64*offered.size());
     if (phases) (*phases)[4]+=std::chrono::duration<double,std::nano>(Clock::now()-a).count();
   }
-  std::uint64_t read(std::span<const std::uint32_t> queries) {
+  std::uint64_t read(std::span<const std::uint32_t> queries,bool staged=false) {
     std::uint64_t digest=0;
     for (std::size_t first=0;first<queries.size();first+=64) {
       Store::Scope scope(store); const auto read=take(directory->read(scope,4));
-      for (auto key:queries.subspan(first,std::min<std::size_t>(64,queries.size()-first))) {
+      const auto cohort=queries.subspan(first,std::min<std::size_t>(64,queries.size()-first));
+      if (staged) {
+        for (unsigned tile=0;tile<cohort.size();tile+=32) {
+          const auto keys=cohort.subspan(tile,std::min<std::size_t>(32,cohort.size()-tile));
+          std::array<const Dirent*,32> entries;
+          std::array<const void*,32> material;
+          check(bool(read.find_many(keys,entries)),"many probe capacity");
+          for (unsigned i=0;i<keys.size();++i) {
+            check(entries[i],"staged missing key"); material[i]=reinterpret_cast<const void*>(std::uintptr_t(entries[i]->parts[0]));
+          }
+          for (unsigned i=0;i<keys.size();++i) digest+=consume(material[i]);
+        }
+        continue;
+      }
+      for (auto key:cohort) {
         const auto* d=read.find(key); check(bool(d),"read missing key");
         digest+=consume(reinterpret_cast<const void*>(std::uintptr_t(d->parts[0])));
       }
@@ -253,7 +267,7 @@ void validate_state(Engine& e,Peer& p,std::span<const Row> expected) {
   }
   mdb_txn_abort(txn);
 }
-void run(loom::Worker& worker,unsigned n,unsigned stride,unsigned writes,unsigned trials,bool phases_only,unsigned batch) {
+void run(loom::Worker& worker,unsigned n,unsigned stride,unsigned writes,unsigned trials,bool phases_only,unsigned batch,bool staged) {
   Engine engine(worker,n,stride); Peer peer(n,stride);
   validate_snapshots(engine,peer,(n/2)*stride);
   std::vector<std::uint32_t> queries(1u<<18);
@@ -261,7 +275,7 @@ void run(loom::Worker& worker,unsigned n,unsigned stride,unsigned writes,unsigne
   for (unsigned i=0;i<n;++i) model.push_back(row(i*stride));
   std::uint64_t expected=0;
   for (unsigned i=0;i<queries.size();++i) { queries[i]=(mix(i+1)%n)*stride; expected+=consume(row(queries[i]).data()); }
-  check(engine.read(queries)==expected && peer.read(queries)==expected,"independent input read oracle");
+  check(engine.read(queries)==expected && engine.read(queries,true)==expected && peer.read(queries)==expected,"independent input read oracle");
   const auto key=queries[23];
   engine::directory::Work work;
   std::array<double,5> phases{};
@@ -302,7 +316,7 @@ void run(loom::Worker& worker,unsigned n,unsigned stride,unsigned writes,unsigne
     std::array<double,2> read_ns{},write_ns{}; std::array<std::uint64_t,2> digests{};
     for (unsigned order=0;order<2;++order) {
       const unsigned arm=order^(trial&1);
-      auto read=[&] { return arm?peer.read(queries):engine.read(queries); };
+      auto read=[&] { return arm?peer.read(queries):engine.read(queries,staged); };
       (void)read(); const auto a=Clock::now(); digests[arm]=read();
       read_ns[arm]=std::chrono::duration<double,std::nano>(Clock::now()-a).count()/queries.size();
     }
@@ -348,11 +362,13 @@ int main(int argc,char** argv) {
   const unsigned trials=argc>4?std::strtoul(argv[4],nullptr,10):4;
   const bool phases=argc>5 && std::string(argv[5])=="phases";
   const unsigned batch=argc>6?std::strtoul(argv[6],nullptr,10):1;
+  const bool staged=argc>7 && std::string(argv[7])=="staged";
   check(n && n<=262144 && stride && std::uint64_t(n)*stride<=UINT32_MAX && writes && trials && batch && batch<=64,"arguments");
   std::printf("context,compiler=%s,lmdb=%s,peer=INTEGERKEY_u32_CURRENT_RESERVE,metadata_pool_max=1024,scope_or_transaction_queries=64,output=full64B_xor8_sum,write_batch=%u,write_denominator=offered_commands,durability=memory_only_lmdb_NOSYNC_NOMETASYNC_NOTLS,phases_instrumented=%u\n",__clang_version__,mdb_version(nullptr,nullptr,nullptr),batch,unsigned(phases));
   loom::Worker worker; check(bool(loom::adopt(worker)),"adopt");
   check(bool(loom::configure(worker,take(orbital::allocation::open_arena(512u<<20)),0)),"configure");
-  run(worker,n,stride,writes,trials,phases,batch);
+  std::printf("read_strategy,%s\n",staged?"staged32_public_find_many":"serial_public_find");
+  run(worker,n,stride,writes,trials,phases,batch,staged);
   for (;;) { auto p=loom::shutdown(worker); check(p.kind()!=orbital::Progress::Kind::failed,"shutdown");
     if (p.kind()==orbital::Progress::Kind::done) break; loom::poll(worker,{64,0}); }
   loom::relinquish(worker);

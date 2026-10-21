@@ -193,6 +193,38 @@ const Dirent* Read::find(std::uint32_t prefix) const noexcept {
     return reinterpret_cast<const Dirent*>(slot.bytes)+rank;
   }
 }
+orbital::Result<void> Read::find_many(std::span<const std::uint32_t> keys,
+    std::span<const Dirent*> output) const noexcept {
+  if (output.size()<keys.size()) return std::unexpected(orbital::Error::capacity);
+  if (!root_) { std::fill_n(output.begin(),keys.size(),nullptr); return {}; }
+  struct Lane { const detail::Node* node; std::uint32_t key; };
+  static_assert(sizeof(Lane)==16);
+  // Demand-load one whole independent bank per routing level, then compute
+  // original suffix rank. Caller owns the next locator/material stages under
+  // the same Scope. No prefetch, catalog re-selection or reader protocol here.
+  for (std::size_t first=0;first<keys.size();first+=32) {
+    std::array<Lane,32> bank;
+    const unsigned count=std::min<std::size_t>(32,keys.size()-first);
+    for (unsigned i=0;i<count;++i) {
+      const auto key=keys[first+i],group=key>>4;
+      bank[i]={group>=root_->low && group<=root_->high?root_:nullptr,key};
+    }
+    for (int shift=root_->shift;shift>0;shift-=5)
+      for (unsigned i=0;i<count;++i) if (auto* node=bank[i].node)
+        bank[i].node=reinterpret_cast<const detail::Node*>(node->slots[(bank[i].key>>(shift+4))&31].bytes);
+    for (unsigned i=0;i<count;++i) {
+      const Dirent* result=nullptr;
+      if (auto* node=bank[i].node) {
+        const auto& slot=node->slots[(bank[i].key>>4)&31];
+        const auto bit=1u<<(bank[i].key&15);
+        if (slot.bytes && (slot.mask&bit))
+          result=reinterpret_cast<const Dirent*>(slot.bytes)+std::popcount(slot.mask&(bit-1));
+      }
+      output[first+i]=result;
+    }
+  }
+  return {};
+}
 Directory::Directory(std::unique_ptr<detail::State> s):state_(std::move(s)) {}
 Directory::~Directory()=default;
 orbital::Result<std::unique_ptr<Directory>> Directory::open(material::Store& store,

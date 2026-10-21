@@ -33,6 +33,11 @@ class Read {
   explicit Read(const detail::Node* p):root_(p) {}
 public:
   const Dirent* find(std::uint32_t prefix) const noexcept;
+  /// Independent physical probes in input order, null for misses. The output
+  /// holds Scope-borrowed pointers; input/output storage must not overlap.
+  /// Capacity refusal occurs before writing output. No per-probe enrollment.
+  orbital::Result<void> find_many(std::span<const std::uint32_t>,
+      std::span<const Dirent*>) const noexcept;
 };
 /// First native physical-prefix path. Ordered logical-key routing, membership
 /// edits, ordinary/hash recipes, extras and schema are not implemented here yet.

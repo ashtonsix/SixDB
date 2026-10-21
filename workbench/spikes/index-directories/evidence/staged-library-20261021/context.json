@@ -1,0 +1,27 @@
+{
+  "source_parent_artifact": "940a56c681786a18acd65b2961927e853cf43423dffc19234509ea587d51823e",
+  "source_overlay_sha256": {
+    "engine/include/engine/directory.h": "74731928c2989dea3a99b7f15f85c0638a558663485769b97c171a8a405acf36",
+    "engine/src/directory.cpp": "a203be5d345df698779738ce31a7b90b55d0145d8bffcfa8f8742ac29fba8dd4",
+    "engine/examples/directory_driver.cpp": "453b6a95bc20cc6a420fee519d494eeace9335d02d1144b5e3f929f4ccc9e976",
+    "engine/test/directory.cpp": "194d9ea1be667ad420bcac18aa4385207a14984f63ffd7e41a76b24eb9e0d347"
+  },
+  "binary_sha256": {
+    "driver": "8687db4c552266204a9d4d5f2e76d61b269a3b2fd3805bac5df3298bdcb74631",
+    "check": "2dd6777c4db67af7e10406ab43fccea260c69a0e0e34ebe68fd399c7e9a3bbcd",
+    "driver-asan": "4e59915e6d4d1b427cc12fa7a7cbb2cad758e95eca16f9ae0448a5ce89301f06",
+    "check-asan": "c044e6696a416860ab8bf12fcb55761e51b7b768ec86d551f5357464f6222267"
+  },
+  "order": [
+    "serial-a",
+    "staged-a",
+    "staged-b",
+    "serial-b"
+  ],
+  "scope_queries": 64,
+  "lane_bank": 32,
+  "output": "sum(XOR8(full64B native material))",
+  "cpu": 1,
+  "flags": "same b18d17ba native Release/ASan CMake configurations",
+  "limits": "Short source-qualified read screen only; writes64 offered are present but are not write-throughput evidence. All samples retained. Generic output+caller banks differ from old integrated kernel. Root and allocation strategy unchanged."
+}

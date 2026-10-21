@@ -33,7 +33,11 @@ void run(loom::Worker& worker) {
   Store store(resource),foreign(resource);
   auto directory=take(directory::Directory::open(store,worker,resource,UINT64_C(0xfedcba9876543210)));
   { Store::Scope empty(store),other(foreign);
-    check(!take(directory->read(empty,4)).find(0),"absent root");
+    auto read=take(directory->read(empty,4));
+    check(!read.find(0),"absent root");
+    directory::Dirent dummy;
+    const std::array keys{0u,UINT32_MAX}; std::array<const directory::Dirent*,2> output{&dummy,&dummy};
+    check(bool(read.find_many(keys,output)) && !output[0] && !output[1],"empty many output");
     check(!directory->read(other,4) && !directory->read(empty,5),"foreign Scope/layer"); }
   std::vector<directory::Entry> entries;
   for (unsigned i=0;i<1300;++i) entries.push_back({i*17,value(i*17)});
@@ -71,6 +75,21 @@ void run(loom::Worker& worker) {
     }
     for (unsigned key=0;key<30000;++key)
       if (key%17 || key>1299*17) check(!before.find(key) && !after.find(key),"sparse exact misses");
+    for (unsigned count:{0u,1u,31u,32u,33u,63u,64u,65u}) {
+      std::array<std::uint32_t,65> probes;
+      std::array<const directory::Dirent*,66> results{};
+      for (unsigned i=0;i<count;++i) probes[i]=i%5==0?UINT32_MAX:i%5==1?16u:(i*17)%1000;
+      check(bool(before.find_many(std::span(probes).first(count),results)),"many old probes");
+      for (unsigned i=0;i<count;++i) check(results[i]==before.find(probes[i]),"old many input association");
+      check(!results[count],"many wrote past offered count");
+      check(bool(after.find_many(std::span(probes).first(count),results)),"many fresh probes");
+      for (unsigned i=0;i<count;++i) check(results[i]==after.find(probes[i]),"fresh many input association");
+      if (count) {
+        auto saved=results;
+        check(!after.find_many(std::span(probes).first(count),std::span(results).first(count-1)),"many capacity refusal");
+        check(results==saved,"many refusal changed output");
+      }
+    }
     check(!directory->replace(fresh,4,16,value(16)),"absent replacement admitted");
     auto discarded=take(directory->replace(fresh,4,17,value(0))); discarded={};
     check(*take(directory->read(fresh,4)).find(17)==*after.find(17),"discard published");
@@ -140,6 +159,25 @@ void run(loom::Worker& worker) {
   directory.reset(); store={};
   check(orbital::view(exported).address()!=nullptr,"exported graph lifetime");
   orbital::release(exported);
+  // Force every admitted radix height. Expectations come from flat input,
+  // independently of either scalar find or the staged traversal.
+  Store shapes(resource);
+  auto shaped=take(directory::Directory::open(shapes,worker,resource,9876));
+  for (unsigned shift=0;shift<=25;shift+=5) {
+    const auto high=std::uint32_t(1u<<(shift+4));
+    const std::array input{directory::Entry{0,value(0)},directory::Entry{high,value(high)}};
+    auto root=take(shaped->build(4,input));
+    { Store::Scope basis(shapes); const std::array c{Store::Change{shaped->root_id(4),std::move(root)}}; publish(shapes,basis,c); }
+    Store::Scope basis(shapes); auto read=take(shaped->read(basis,4));
+    std::array<std::uint32_t,97> keys; std::array<const directory::Dirent*,97> output;
+    for (unsigned i=0;i<97;++i) keys[i]=i%4==0?0:i%4==1?high:i%4==2?high+1:UINT32_MAX;
+    check(bool(read.find_many(keys,output)),"staged radix height");
+    for (unsigned i=0;i<keys.size();++i) {
+      const directory::Dirent* expected=nullptr;
+      for (const auto& e:input) if (e.prefix==keys[i]) expected=&e.value;
+      check(bool(output[i])==bool(expected) && (!expected || *output[i]==*expected),"staged independent flat oracle");
+    }
+  }
 }
 }
 int main() {

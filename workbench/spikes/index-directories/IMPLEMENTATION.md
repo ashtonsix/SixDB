@@ -242,3 +242,38 @@ durability results or comparison with the strongest possible LMDB layout.
 No current Calico run exists. Common-path headroom is promising; the uniform2048
 write envelope is tighter, the relocation loss remains, and a general ordered
 index and complete metadata/backing/RSS accounting remain owed.
+
+## Staged physical access in the real library
+
+`Read::find_many` now exposes independent physical probes in input order,
+returning borrowed Dirent pointers/null misses. Output capacity is checked before
+any mutation; source and destination storage must not alias. It keeps one
+32-lane512-byte `{Node*,key}` bank and completes a demand-load pass across all
+lanes at each internal radix level before final original-mask/rank selection.
+The caller then stages native locator and full64-byte consumption separately,
+under the SAME Scope. It makes no catalog call or ownership change per probe,
+and adds no prefetch, Task, Ring or new reader protocol.
+
+The earlier21.687ns result used this level-wavefront strategy; the first native
+library driver used serial `find` followed immediately by material consumption.
+Comparing36–46ns serial with21.687ns staged did not isolate a layout regression.
+The current library implementation restores the strategy through a generic
+public API. It does not call the retained fixture-specific kernel.
+
+The [source-qualified ABBA screen](evidence/staged-library-20261021/context.json)
+keeps all samples:262K scalar38.768–44.277ns versus staged21.333–36.306ns; the
+second staged process gave21.333/21.390ns. This is a short throughput screen,
+not precision or a p99 claim. Same root, data, Scope64, full64-byte output,
+material/locator association and allocation strategy; write counters and settled
+native mapping agree. The64-command write intervals in this read screen are
+not new write-throughput evidence. Existing relocation losses remain.
+
+Emitted-path review confirms per-level lane advancement, no scalar `find` or
+prefetch in the staged hit path, and no helper call there. Expected<void> returns
+in a register. The generic API has extra pointer-bank traffic compared with the
+old integrated leaf: actual peak caller+callee stack is1,328bytes (caller736,
+callee592), including banks, ABI saves and spills; the old integrated leaf used
+512bytes with caller-saved registers. This cost is measured rather than erased.
+Independent tests cover every radix shift0/5/10/15/20/25, tails through97 probes,
+empty roots, MAX prefixes, misses/repeats, old/fresh snapshots and unchanged output
+on capacity refusal, including ASan/UBSan/leak qualification.
