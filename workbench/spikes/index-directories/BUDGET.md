@@ -707,3 +707,22 @@ large-list/schema/cold-history behavior. Current APIs can express the algorithms
 expressibility does not prove their cost. The present decision is to retain this
 explicit paper candidate and its misses, not resume a broad implementation or
 claim that another prototype is already certain to pass.
+
+## Current logical/hashed implementation checkpoint
+
+The [qualified logical/hash screen](evidence/logical-hash-20261021/context.json)
+measures the actual all-duplicate64B row consumer against native covering
+DUPSORT/DUPFIXED62 LMDB, Scope/transaction64 and atomic batches. The J0 ordered
+route and J3/J2 shared-prefix+summary route are different valid index
+configurations. All samples and both arm orders are retained; this is a short
+memory-only reciprocal-throughput screen, not p99, durability or Calico evidence.
+
+The shared hot64/2x1024 median is42.819ns vs94.121ns, while J0 is73.536ns
+vs94.156ns. Uniform2048 shared116.413ns vs172.209ns, dispersed80x128
+136.795ns vs186.965ns, mixed25% refinement misses109.611ns vs158.829ns,
+and full65536 slots188.471ns vs296.276ns. Peer timings also vary; raw paired
+results matter. The latter four cases do not meet the2x complete-request
+objective. The hash/summary plan improves the hot route but establishes no
+general Engine headroom. Earlier moving-Part relocation losses still stand.
+Incremental membership/bounds/balance and the remaining operations have no new
+performance receipt from this checkpoint; the planning targets above remain.

@@ -110,7 +110,7 @@ void run(loom::Worker& worker) {
     Store::Scope before(store);
     auto expected=dense;
     for (unsigned stride:{1u,15u}) {
-      std::array<directory::Entry,64> batch;
+      std::array<directory::LocatorChange,64> batch;
       for (unsigned i=0;i<64;++i) {
         const auto key=i*stride; auto d=value(key); d.parts[2]^=stride;
         batch[i]={key,d}; expected[key].value=d;
@@ -125,7 +125,7 @@ void run(loom::Worker& worker) {
     auto a=take(directory->read(before,2)),b=take(directory->read(fresh,2));
     for (unsigned i=0;i<dense.size();++i)
       check(a.find(i) && *a.find(i)==dense[i].value && b.find(i) && *b.find(i)==expected[i].value,"batch old/fresh all bytes");
-    const std::array bad_batch{directory::Entry{1,value(1)},directory::Entry{1,value(2)}};
+    const std::array bad_batch{directory::LocatorChange{1,value(1)},directory::LocatorChange{1,value(2)}};
     check(!directory->replace_many(fresh,2,bad_batch),"duplicate final intent admitted");
   }
   // Layer domains, compressed roots, empty setup and sorted/unique admission.
@@ -146,7 +146,7 @@ void run(loom::Worker& worker) {
   check(!directory->build(4,bad) && !directory->build(4,{}) && !directory->build(5,entries),"build input admission");
   {
     Store::Scope basis(store); auto read=take(directory->read(basis,4)); const auto original=*read.find(0);
-    const std::array invalid{directory::Entry{0,value(0)},directory::Entry{16,value(16)},directory::Entry{17,value(17)}};
+    const std::array invalid{directory::LocatorChange{0,value(0)},directory::LocatorChange{16,value(16)},directory::LocatorChange{17,value(17)}};
     check(!directory->replace_many(basis,4,invalid),"partial private batch membership refusal");
     check(*take(directory->read(basis,4)).find(0)==original,"refused partial batch published");
   }

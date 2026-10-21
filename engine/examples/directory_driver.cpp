@@ -122,7 +122,7 @@ struct Engine {
     {
       Store::Scope basis(store); auto read=take(directory->read(basis,4));
       std::array<Store::Change,65> changes;
-      std::array<engine::directory::Entry,64> replacements;
+      std::array<engine::directory::LocatorChange,64> replacements;
       std::array<const std::byte*,64> old_bytes;
       for (unsigned i=0;i<final.count;++i) {
         const auto [key,value,sequence]=final.commands[i]; (void)sequence;

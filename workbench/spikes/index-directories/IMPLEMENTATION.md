@@ -3,9 +3,10 @@
 Actual C++ is in `engine/include/engine/directory.h` and
 `engine/src/directory.cpp`; `engine/examples/directory_driver.cpp` exercises
 independent actual Segment material and one joined Orbital publication.
-This is a performance-led physical-prefix increment, not the full ordered
-index directory. Logical Boundlist seek/continuation, ordinary/hash choices,
-representation schema/extras and membership insertion/deletion remain owed.
+This performance-led increment now implements physical and ordered logical
+reads, plus a shared-prefix Ikea Hashtable recipe. It remains an incomplete
+index directory: incremental membership/bound repair, balancing, ordinary layers,
+representation schema/extras and full range/mixed/aggregate qualification are owed.
 It neither assigns physical record keys nor changes the supplied five layers.
 
 The discarded stable-name implementation and API-bound row driver/test were
@@ -20,8 +21,9 @@ handle for a fresh native index. Reopening existing material and admitting
 historical routing formats are not implemented yet. It borrows the actual caller
 Store, Loom Worker and metadata resource;
 the resource and owner Lane outlive every descendant, Scope and exported Part.
-A layer's root ObjectId is `(directory_namespace, layer+1)`. No directory child
-is a logical Object; its ownership is physical interpretation of that root.
+A layer's root ObjectId is `(directory_namespace, layer+1)`. Native radix children
+are physical interpretation dependencies of that root. The hash recipe below
+instead uses independently versioned named group Objects.
 No Engine MVCC, enrollment, undo, journal or second publication mechanism exists.
 
 `build(layer, sorted unique entries)` checks every prefix against that layer's
@@ -76,6 +78,68 @@ maintenance is also inside the complete write-arm clock. This is a native
 64-byte moving-Part producer, not a row-update engine or an opaque numeric
 locator replacement.
 
+## Logical bounds and shared-prefix reads
+
+`build` admits exact K-byte occupied minima/maxima, min<=max and previous
+max<=next min, including equality. It checks the first min(layer,J) prefix bytes.
+A physical-only handle refuses nonempty logical bounds. Each immutable Bounds
+blob preserves original physical slot identity; payload-only COW shares it.
+`logical(scope,layer)` selects once. `seek` or `equal` initializes one stationary
+Cursor without allocation or another enrollment. Short keys use actual Ikea
+native u64 bounds. Long keys bracket equal eight-byte abbreviations and use
+Ikea's generic full-tail ordered source only inside that run. Initial descent
+uses maxima lower/upper bound according to closure; continuation tests minima
+against the upper endpoint. It never invents a unique fence for equal keys.
+The lower cut is discharged after the first emitted entry because admitted
+full order proves subsequent occupied minima cannot precede it. No across-layer
+ordering is introduced.
+
+`Directory::hashed(layer)` chooses the implemented recipe only for layers2..4
+inside J. A named group of16 original physical prefixes is one actual Ikea
+bitmap table with inline64-byte values. Full group ObjectId is
+`(namespace, 2^63 | layer<<32 | prefix>>4)`; this name does not redefine Segment
+identity. Fresh initialization returns all finished group owners plus a64-byte
+header. The caller joins their publication. Read admission selects the header
+under the actual Scope; late group discovery uses that SAME Scope and checks
+its native interpretation once before caching it in the Scope-local HashRead.
+A frozen Image owns the actual Ikea table/Worker context/Loom Allocation.
+Existing-member locator batches clone each affected actual table once, patch
+private values, capture those groups, and leave the header unchanged. There is
+no predecessor link, Engine version chain or substitute publication protocol.
+Group birth/death and ordered range/mask traversal of this recipe remain owed.
+Sparse singleton groups pay the full1088-byte body: this is a visible design
+cost, not a claim of compactness at every occupancy.
+
+The multirow `shared` mode declares valid J3 for<=16 fixture Segments, J2 above
+that; its ordered `logical` mode remains J0. The shared-prefix plan starts at
+that chosen layer, looks up its Segment through the hash recipe, then searches
+actual ordered summary field0 maxima/minima. The overlapping16-bit cell position
+identifies either an entire base Segment (L2) or a clipped256-slot slice (L3).
+Each candidate uses actual Ikea lower_bound on the native record-key column,
+walks equal keys, selects correction pages under the SAME Scope and consumes
+all eight row words. Clipping prevents duplicate output when an equal-key run
+crosses adjacent cells. These are different valid index configurations, not a
+universal replacement for the measured J0 loss.
+
+One caller/operator-owned Ikea lookup_selector survives across read calls.
+Every Scope64 call selects the complete get+summary+record+afterimage+full64
+consumer loop. It does not time or dispatch each key. Both compiled hints are
+qualified. U selects a real zero-count header for misses and reduces zero output
+without adding a found branch around the consumer. This bitmap/V64 getter uses
+Ikea's ordinary fallback for both hints; nonbitmap V0/V8 speedups do not transfer.
+No prefetch or fake selector around radix/Boundlist is present.
+
+Normal and ASan/UBSan checks cover26 independent logical snapshots/38,812 ranges,
+K8/K12 equal-abbreviation repair, all closure combinations, duplicates, K0,
+late old/fresh reads, and equality against the independent overlap oracle.
+Those full-snapshot rebuilds qualify READ semantics, not incremental membership.
+Hash checks independently cover full64/zero-valued hits/misses, dense and sparse
+occupancy, max prefixes, same-group single clone, refused/discarded/aborted
+candidates, coupled actual Segment+locator publication and Scope survival after
+handle reset. A197x64 actual consumer stream proves persistent P/U coverage
+and exact full64/hit totals. Full-slot and80-Segment caller sanitizer checks
+exercise the real shared-prefix plan and both getter consumers.
+
 ## Byte and field ledger
 
 These are native 64-bit ABI sizes, not a persistent wire format.
@@ -85,17 +149,24 @@ These are native 64-bit ABI sizes, not a persistent wire format.
 | Layout | 80: owner-Lane references8, resource pointer8, namespace8, representation4, private kind4, immutable PMR geometry vector32, immutable interpretation shared pointer16. Geometry payload and shared control blocks are extra. |
 | Geometry | 16: extent8, alignment4, padding4. One entry per Part. |
 | Control | 24: Layout pointer8, full Object name8, first ordinal4, projected flag1, owner recipe1, reserved2. Definition is one retained Layout pointer8. |
-| Directory handle/state | 8-byte unique state pointer; state40 (Store/Worker/resource references24, namespace8, Definition8). Entry72 (prefix4, ABI padding4, Dirent64); Work48 (six u64 counters). |
+| Directory handle/state | Handle8; State56: Store/Worker/resource references24, namespace8, Definition8, optional KeyShape12, alignment padding4. KeyShape8: K/J u32 each. Entry104: prefix4/padding4/Dirent64/minimum span16/maximum span16. LocatorChange72: prefix4/padding4/Dirent64. Work48: six u64 counters. |
 | Dirent | 64: six u64 Part locators at 0..47; representation u32 at48; mapped flags u16 at52; extra rank u16 at54; extra block u32 at56; reserved u32 at60. Current producer uses native locator0 and representation1; other words are preserved opaque metadata, not implemented schema/extras. |
 | Packed group | `64 * popcount(mask)`; original suffix rank selects the dirent. Its mask resides in the parent slot. No group header or hidden slot map. |
-| Routing body | 576: count u16 at0; shift u8 at2; reserved5 at3; group low/high u32 at8/12; write-side Proof pointer u64 at16; reserved40 at24; 32 slots at64. |
+| Routing body | 576: count u16 at0; shift u8 at2; reserved5 at3; group low/high u32 at8/12; write-side Proof pointer8 at16; borrowed Bounds pointer8 at24; present-slot bitmap u32 at32; reserved28 at36; 32 slots at64. |
 | Routing slot | 16: child byte pointer8, original suffix mask2 (only at shift0), reserved6. Null pointer means absent. |
-| Proof header | 24: Bundle pointer8, owner-Lane reference count8, outgoing slot count4, ABI padding4. A routing Proof has 32 following 8-byte child Proof pointers (280 total); a group Proof has no outgoing slots (24 total). |
+| Proof header | 32: Bundle pointer8, owner-Lane reference count8, outgoing slot count4/padding4, owned Bounds pointer8. Routing Proof adds32 child Proof pointers256 (288 total); group Proof has no outgoing slots. |
+| Bounds | Immutable PMR blob: resource8/reference count8/count4/K4/original slot map32 =56 header bytes, then count native u64 minima and maxima, then count full min/max tails of max(K-8,0) bytes each. Total56 + count*(16+2*tail). Group count<=16, routing count<=32. Parent extrema are copied, not child ownership links. |
 | Bundle header | 64: resource reference8, native Allocation32, live-node/guard count8, metadata allocation extent8, used metadata bytes8. It owns one real native Allocation. Dead Proofs release outgoing edges separately; the whole body/metadata allocation frees only after its last node. |
 | Root physical owner | One PMR `allocate_shared<Owner>` with an 8-byte root Proof handle; shared-control-block size is library-dependent and is not included in Work.proof_bytes. Orbital capture retains this backing. |
 | Root Representation | Control24 plus Orbital header8 plus independent shared Part slot24 =56 requested bytes. Layout and catalog/version/packet metadata are additional. |
 | Segment Representation | Control24 plus Orbital header8 plus native allocated Part slot16 =48 requested bytes for the one-Part producer. Segment body64 is an independent real Allocation. |
-| Read | 8-byte borrowed root pointer. |
+| Read / LogicalRead | Read8: borrowed native root pointer. LogicalRead16: root8 + copied KeyShape8. Range56: two optional byte spans24 each, two closure flags1 each, padding6. |
+| Cursor |168: six frames16 (node pointer8/remaining mask4/rank4), two endpoints16 (abbreviation8/tail pointer8), group pointer8/Bounds pointer8, six u32 (depth/rank/limit/group index/tail width/flags). Frames/caches are Scope borrows; endpoint tails borrow the fixed query bytes. |
+| HashLayer handle/state | Handle8; State56: Store/Worker/resource references24, namespace8, KeyShape8, layer4/padding4, Definition8. |
+| Hash root header |64: magic8/namespace8/entry count8/group count8, layer4/K4/J4, reserved20. Existing locator changes do not replace it. |
+| Hash native body |Ikea table W4/B0/V64/E4, one bitmap primary. Assigned extent1088: bitmap2, sixteen consecutive Dirents1024, initialized rounded padding62. Sparse singleton groups still pay this whole extent. No Swiss body/growth. |
+| Hash Image/table |Image216: Worker context8, actual Ikea table192, namespace8/layer4/group4. Table192: context pointer8, three Storage buffers48 each, groups/spill/deleted/size u64 each, permutation seed8. A buffer48: actual Allocation32/data pointer8/assigned size8. Empty Swiss buffers have no backing. Image allocate_shared control block is extra. |
+| Hash read/group |HashRead160: Scope pointer8/namespace8/layer4/replacement counter4/empty flag1/padding7, eight cached (group4/padding4/table pointer8) entries. HashGroup8 is a borrowed table pointer. lookup_selector64 is persistent caller/operator state; public lookup statistics are four u64 counters. |
 | Path scratch | Six Node pointers48, six unsigned slots24 and scalar counters. Replacement Dirent copies are full64. |
 | Batch caller scratch | At most64 final entries and65 finished changes, plus command ordering/before-material pointers. Stack/capture/catalog costs remain charged in actual timings. |
 
@@ -192,14 +263,15 @@ allocation. There is no new Loom facility or hidden per-Segment scheduling cost.
 The actual multi-row caller is `engine/examples/segment_driver.cpp`. It has
 multiple records per base Segment, unique48-bit physical keys (prefix*17,
 16-bit slot) and stored logical IDs in duplicate runs of3, preserving full
-logical order. Timed point requests address physical rows; logical equality and
-duplicate continuation remain owed with logical directory routing. All five
+logical order. Physical point and logical equality modes return the same requested full-row
+digest; equality includes every duplicate across cell/Segment boundaries. All five
 layers hold actual nonempty Orbital Segment Objects and directory roots.
 
-Each native Segment has independent64-byte header and body Allocations.
-Base body rows are64bytes: logical ID plus seven u64 payload fields. Base header
-stores row count u32, with60 zero reserved bytes. Upper header similarly stores
-cell count; upper body has352-byte cells: position u16/reserved6, records u64,
+Each native Segment has an independent64-byte header and body Allocations.
+Base format has three Parts: header64 (row count u32 plus60 zero bytes), payload
+56 bytes/row (seven u64 fields), and native u64 logical key column8 bytes/row.
+Logical ID is stored once. Upper format has header64 (cell count u32 plus60 zero
+bytes) and a body of352-byte cells: position u16/reserved6, records u64,
 first/end ordinal u64 each, then8 fields of40bytes (min/max/sum low/sum high/
 not-null, allu64). Cell-body allocation rounds to64bytes with zero padding.
 These are driver formats, not a settled representation schema.
@@ -277,3 +349,51 @@ callee592), including banks, ABI saves and spills; the old integrated leaf used
 Independent tests cover every radix shift0/5/10/15/20/25, tails through97 probes,
 empty roots, MAX prefixes, misses/repeats, old/fresh snapshots and unchanged output
 on capacity refusal, including ASan/UBSan/leak qualification.
+
+## Qualified logical/hash screen
+
+[Source, exact ELF hashes and limits](evidence/logical-hash-20261021/context.json)
+and [all80 trial samples](evidence/logical-hash-20261021/samples.csv) identify the
+current code. Pinned Clang21.1.8, local Linux AArch64 armv8-a+simd/neoverse-v2,
+CPU1,131072 queries, Scope/transaction64, full64B all-duplicate output. Each
+configuration has two processes with four alternating Engine/LMDB trials;
+configuration order reverses in the second pair. Updates offer1024 commands
+per trial, B64 except dispersed/mixed B16. Each process independently verifies
+every row/all summary fields/old and fresh reads after publication. LMDB uses
+u64 INTEGERKEY with DUPSORT/DUPFIXED62, datum physical6BE+payload56, native
+SET/NEXT_DUP, CURRENT updates and one transaction per atomic batch.
+
+| Actual request | J0 ordered Engine/LMDB median ns | Shared-prefix Engine/LMDB median ns |
+| --- | ---: | ---: |
+| Hot64,2x1024 |73.536 /94.156|42.819 /94.121|
+| Uniform2048,2x1024 |123.749 /144.096|116.413 /172.209|
+| Uniform10240,80x128 |159.142 /189.445|136.795 /186.965|
+| Same,25% deterministic refinement misses |129.716 /187.194|109.611 /158.829|
+| Uniform131072,2x65536 |208.308 /305.469|188.471 /296.276|
+
+These are short reciprocal-throughput screens, not request tails or a
+precision ranking. J0 and J3/J2 are different admitted index configurations;
+peer drift is visible and all raw pairs are retained. The shared hot case
+reaches2.2x for this full-row consumer, but the other cases miss2x and leave
+insufficient general headroom. There is no fresh Calico measurement. Current
+read/write row comparisons do not erase the earlier moving-Part relocation
+loss or qualify membership edits. Auto-selector statistics count real P/U
+consumer work across calls. Directory-only diagnostics execute separately and
+are not additive to complete operation time. ASan output timings are ignored.
+
+The caller now counts actual requested live/peak PMR bytes and actual pool
+backing live/peak, in addition to native Pool mapped/idle/metadata/reserved.
+The2x1024 shared hot settled witness reports10536/10604 PMR request bytes,
+68976 backing bytes,176128 native mapped bytes/zero idle,10040 native metadata
+and7225344 reserved. Retain the per-process counters for history variation.
+Constructor-only entries/min/max inputs are released after native capture.
+Global unique_ptr state/control blocks, caller/oracle/input heap allocations
+and process RSS are not all included. These counters and the explicit field
+ledger improve attribution; they are not complete process memory accounting.
+
+Next implementation work remains incremental membership and occupied-bound
+repair with real directory storage balancing, ordinary layer paths, hash group
+birth/death/range/masks, admitted representation schema/extras/historical
+formats, complete memory/RSS and real range/aggregate/mixed consumers against
+matched Calico/LMDB. Physical record assignment/padding is a separate Engine
+producer responsibility; directory storage nodes do not split index Segments.

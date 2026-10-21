@@ -1,10 +1,12 @@
 # Index directories
 
-The current replacement is a performance-led physical-prefix increment in
-`engine/`, with correctness and performance considered together. The earlier
+The current performance-led replacement in `engine/` implements physical and
+logical directory reads and a shared-prefix Ikea Hashtable recipe, with
+correctness and performance considered together. The earlier
 correctness-first backend was removed; its functional checks and API do not
 qualify or constrain the replacement. The paper-first pause is superseded.
-Logical routing and the full ordered directory remain unfinished. Shore frontend
+Incremental membership/bound repair, balancing, ordinary layers, schema/extras
+and full operation/performance qualification remain unfinished. Shore frontend
 work remains planning only.
 
 Engine owns the replacement. Workbench supplies existing
@@ -60,8 +62,9 @@ comparison but Engine's measured fixture still leads 5.75–7.31x. Zero-mask res
 are modest bitset/lifecycle differences with no entries. These remain results of
 the captured fixtures, not acceptance of a replacement implementation.
 
-The native grouped DUPFIXED peer is behavior-qualified and available, but remains
-unmeasured. Retained peer recipes and independent logical workloads can inform a
+The historical grouped directory-record DUPFIXED peer remains unmeasured;
+the current actual-row covering DUPFIXED62 peer is measured in
+[Implementation](IMPLEMENTATION.md). Retained peer recipes and independent logical workloads can inform a
 replacement without inheriting its storage layout. Resident measurements imply
 no durability, remote I/O or complete Engine performance.
 

@@ -22,14 +22,19 @@ run its same-named CTest entry for material lifetime and recapture checks.
 ## Directory and Segment experiments
 
 The native [`directory` increment](include/engine/directory.h) implements
-physical-prefix lookup and scalar/batched existing-member replacement, using
-direct child ownership and one root capture. The caller joins finished Segment
-and directory changes in one Orbital packet. Logical Boundlist routing,
-membership/balance, ordinary/hash recipes, extras and schema remain unfinished.
+physical-prefix lookup, staged independent probes, full logical Boundlist
+seek/continuation and scalar/batched existing-member replacement. The shared-prefix
+[`HashLayer`](include/engine/directory_hash.h) uses actual Ikea inline dirents in
+separately versioned groups. The caller joins finished Segment and directory
+changes in one Orbital packet. Incremental membership/bound repair and balance,
+ordinary layer recipes, extras and schema remain unfinished.
 
 The opt-in `SIXDB_ENGINE_DIRECTORY_DRIVER` builds a moving-Part relocation
 driver and a multi-row Segment caller with real five-layer material, snapshot
-correct afterimages and exact aggregate checks. Native LMDB is required only
+correct afterimages and exact aggregate checks. Logical equality returns all
+duplicates, through either ordered routing or a shared-prefix hash/summary plan;
+the latter retains Ikea's automatic selector around the complete useful consumer.
+Native LMDB is required only
 for those drivers. The [implementation and measurements](../workbench/spikes/index-directories/IMPLEMENTATION.md)
 describe their boundaries, byte ownership and unresolved performance costs.
 These experiments do not establish a complete Engine or persistent format.
