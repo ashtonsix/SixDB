@@ -95,7 +95,7 @@ protects every borrowed pointer through completion. The static unpredictable
 consumer uses a readable zero-count header on absence.
 
 The [independent hash checks](../../../engine/test/directory_hash.cpp) cover
-197 consecutive 64-request batches, both methods, full 64-byte values, zero hits,
+197 consecutive 64-request batches, both methods, full 64-byte values, zero-valued hits,
 sparse misses, dense same-group cloning, old/fresh versions, late discovery,
 discard/abort and coupled Segment/locator publication. Normal and ASan/UBSan
 suites pass 5/5. Additional actual-consumer sanitizer runs cover two Segments
@@ -106,8 +106,11 @@ both consumers, including the zero-header/null-cell path.
 Engine qualification source capture:
 `14d45d74f761ab52b886ce73dcf3c97f2b2828972e80895cc5d1bb719bf39887`.
 The consumer, hash implementation, test and three promoted runtime headers
-match its consumed-source identities. Engine owns that source/checkpoint and
-its [implementation evidence](../index-directories/IMPLEMENTATION.md).
+match its consumed-source identities. Engine committed the integration as
+`a5f6a1a8`; its [qualified evidence](../index-directories/evidence/logical-hash-20261021/README.md)
+retains source/ELF identities, checks, complete-consumer comparisons and verified
+archive recovery. The [implementation record](../index-directories/IMPLEMENTATION.md)
+owns the broader Engine scope.
 
 The first Engine recipe is a bitmap with 64-byte values; both getters use the
 ordinary fallback there. The W32 map8 speedup above is a separate measured
