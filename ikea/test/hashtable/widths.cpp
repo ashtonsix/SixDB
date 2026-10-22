@@ -1,8 +1,9 @@
 #include <ikea/hashtable.h>
+#include "../scope.h"
 #include <map>
 #include <iostream>
 using namespace ikea::hashtable;
-template <unsigned W, unsigned V, write_strategy Strategy> void width() {
+template <unsigned W, unsigned V, write_strategy Strategy> void width_case() {
     constexpr unsigned b = std::min(3u, W), K = W - b;
     constexpr bool Multi = false;
     using Owner = table<W, b, V>;
@@ -134,6 +135,10 @@ template <unsigned W, unsigned V, write_strategy Strategy> void width() {
             require(g.capacity == (__uint128_t{1} << W), "bitmap domain capacity");
     }
     std::cout << W << ',' << V << ',' << Multi << ',' << K << '\n';
+}
+template <unsigned W, unsigned V, write_strategy Strategy> void width() {
+    if constexpr (ikea::test::sampled_width(W))
+        width_case<W, V, Strategy>();
 }
 int main() {
     try {

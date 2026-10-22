@@ -73,7 +73,10 @@ rejected baseline. For new peer comparisons,
 Build the `ikea_validate` target to build and run Ikea's behavior checks and
 examples. They are registered with CTest: `ctest --test-dir BUILD -N` lists them;
 after building, `ctest --test-dir BUILD -R NAME --output-on-failure` reruns a
-selection. The default build does not build tests.
+selection. The default build does not build tests. Width-matrix checks default to
+`SIXDB_TEST_SCOPE=fast`, which compiles 33 of the 64 SeriesPack widths (every
+narrow and striped width and each side of every byte boundary). Configure with
+`-DSIXDB_TEST_SCOPE=full` before landing changes to width-specialized code.
 
 Run `python3 workbench/tools/check.py build` to check incremental compilation
 in a disposable fixture. `check.py --list` discovers other helper suites;

@@ -80,6 +80,15 @@ under both debug levels (hashtable width and two Loom example targets were not i
 `20261022T020354Z-1e87ee83` (first sizing), `20261022T021854Z-090e38c4` and
 `20261022T021934Z-ba3733a3`.
 
+`SIXDB_TEST_SCOPE=fast` (the default) instantiates the filter, SeriesPack and
+hashtable width matrices at 33 of 64 widths (`ikea/test/scope.h`): 1–10, the
+striped widths 12/14/20, and 8n−1, 8n, 8n+1. On the 32 GiB host a clean build
+is 56 s and 992 CPU-s versus 79 s and 1,391 CPU-s for `full` (−29% CPU), and a
+rebuild after touching `seriespack/view.h` is 46 s versus 70 s. Both scopes
+passed every built check. Worker jobs `20261022T024330Z-1218c100` and
+`20261022T024416Z-b14b723e`. The saving is below the share of width shards in
+CPU because each shard's fixtures, includes and non-matrix checks remain.
+
 ## Reproduce
 
 ```sh

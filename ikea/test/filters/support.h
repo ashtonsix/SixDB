@@ -2,6 +2,7 @@
 #include <ikea/seriespack.h>
 #include <ikea/seriespack/author/read.h>
 #include <ikea/tuplepack.h>
+#include "../scope.h"
 #include <cassert>
 #include <cstdio>
 #include <random>
@@ -122,6 +123,7 @@ template <class F, C Op> void series_case() {
             }
 }
 template <unsigned K> void width() {
+    if constexpr (ikea::test::sampled_width(K))
     [&]<C... Ops>(operations<Ops...>) {
         (series_case<sp::format<K>, Ops>(), ...);
         if constexpr (sp::striped_width(K))

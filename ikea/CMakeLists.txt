@@ -207,6 +207,7 @@ set(ikea_check_targets
   ikea_bec256_check ikea_bec256_composition_check)
 add_custom_target(ikea_examples DEPENDS ${ikea_example_targets})
 sixdb_heavy_compile(ikea_seriespack_check ikea_filters_check ikea_tuplepack_packets_check)
+sixdb_test_scope(ikea_seriespack_check ikea_filters_check)
 foreach(target IN LISTS ikea_check_targets ikea_example_targets)
   add_test(NAME ${target} COMMAND $<TARGET_FILE:${target}>)
 endforeach()

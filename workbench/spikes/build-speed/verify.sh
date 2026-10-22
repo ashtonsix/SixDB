@@ -1,13 +1,14 @@
 #!/bin/bash
 # Whole clean builds with Ninja's default -j under the adopted debug-info and
 # heavy-compile pool settings, sampling host memory. CASES is a space-separated
-# list of name=cmake-args (commas separate args).
+# list of name=cmake-args (commas separate args); TOUCH names a file to time an
+# incremental rebuild after.
 set -euo pipefail
 OUT=$SIXDB_RESULTS; here=workbench/spikes/build-speed
 CASES=${CASES:-lines= full=-DSIXDB_DEBUG_INFO=full}
 lscpu > "$OUT/lscpu.txt"; free -m > "$OUT/free.txt"
 targets() {
-  ninja -C "$1" -t targets all | sed -nE 's/^(((ikea|loom|orbital|engine)_[A-Za-z0-9_]*(check|validate_[A-Za-z0-9_]*))|ikea_example_[A-Za-z0-9_]+): phony$/\1/p' | grep -v "^orbital_design_check$" | sort -u
+  ninja -C "$1" -t targets all | sed -nE 's/^(((ikea|loom|orbital|engine)_[A-Za-z0-9_]*(check|validate_[A-Za-z0-9_]*))|ikea_example_[A-Za-z0-9_]+|ikea_hashtable_widths_[0-9]+): phony$/\1/p' | grep -v "^orbital_design_check$" | sort -u
 }
 sample() { # minimum MemAvailable (MiB) while the build runs
   local min=999999999 a
@@ -35,6 +36,11 @@ for c in $CASES; do
   if [[ $status == 0 && ${CTEST:-1} == 1 ]]; then
     ctest --test-dir "$dir" -j "$(nproc)" -R '^(ikea|loom|orbital|engine)_' -E design \
       > "$OUT/$name.ctest.log" 2>&1 && ctest=pass || ctest=fail
+  fi
+  if [[ $status == 0 && -n ${TOUCH:-} ]]; then # incremental rebuild after a header edit
+    touch "$TOUCH"; t2=$EPOCHREALTIME
+    ninja -C "$dir" all $(targets "$dir") > /dev/null
+    echo "$name,$TOUCH,$(awk "BEGIN{print $EPOCHREALTIME-$t2}")" >> "$OUT/incremental.csv"
   fi
   cpu=$(awk -F'\t' '!/^#/{s+=$2-$1} END{print s/1000}' "$dir/.ninja_log")
   echo "$name,$status,$(awk "BEGIN{print $t1-$t0}"),$cpu,$(cat "$OUT/$name.minavail"),$pool,$(du -sk "$dir" | cut -f1),$ctest" >> "$OUT/verify.csv"

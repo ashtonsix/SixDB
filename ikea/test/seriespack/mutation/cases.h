@@ -3,6 +3,7 @@
 #include "../fixture.h"
 #include <ikea/seriespack/detail/mutation/physical.h>
 #include "verify.h"
+#include "../../scope.h"
 
 #if defined(__aarch64__) || defined(__AVX2__)
 struct mutation_selection {
@@ -201,19 +202,21 @@ template <unsigned First> void check_mutation_widths() {
 #if defined(__aarch64__) || defined(__AVX2__)
     sp::detail::each<8>([](auto index) {
         constexpr unsigned k = First + index - 1;
-        check_mutation_format<sp::format<k + 1>>();
-        if constexpr (k + 1 <= 7)
-            check_mutation_format<sp::format<k + 1>, true>();
-        if constexpr (k + 1 >= 8)
-            check_mutation_format<sp::format<k + 1, sp::geometry::local, 8>>();
-        if constexpr (k + 1 >= 16)
-            check_mutation_format<sp::format<k + 1, sp::geometry::local, 16>>();
-        if constexpr (sp::striped_width(k + 1))
-            check_mutation_format<sp::format<k + 1, sp::geometry::striped>>();
-        if constexpr (k + 1 > 8 && sp::striped_width(k + 1 - 8))
-            check_mutation_format<sp::format<k + 1, sp::geometry::striped, 8>>();
-        if constexpr (k + 1 > 16 && sp::striped_width(k + 1 - 16))
-            check_mutation_format<sp::format<k + 1, sp::geometry::striped, 16>>();
+        if constexpr (ikea::test::sampled_width(k + 1)) {
+            check_mutation_format<sp::format<k + 1>>();
+            if constexpr (k + 1 <= 7)
+                check_mutation_format<sp::format<k + 1>, true>();
+            if constexpr (k + 1 >= 8)
+                check_mutation_format<sp::format<k + 1, sp::geometry::local, 8>>();
+            if constexpr (k + 1 >= 16)
+                check_mutation_format<sp::format<k + 1, sp::geometry::local, 16>>();
+            if constexpr (sp::striped_width(k + 1))
+                check_mutation_format<sp::format<k + 1, sp::geometry::striped>>();
+            if constexpr (k + 1 > 8 && sp::striped_width(k + 1 - 8))
+                check_mutation_format<sp::format<k + 1, sp::geometry::striped, 8>>();
+            if constexpr (k + 1 > 16 && sp::striped_width(k + 1 - 16))
+                check_mutation_format<sp::format<k + 1, sp::geometry::striped, 16>>();
+        }
     });
 #endif
 }

@@ -1,7 +1,7 @@
 #pragma once
 #include "support.h"
 
-template <unsigned K> void tile_boundary(std::uint8_t* end) {
+template <unsigned K> void tile_boundary_case(std::uint8_t* end) {
     using F = sp::format<K>;
     constexpr auto limit = ~std::uint64_t{0} >> (64 - K);
     for (unsigned n : {8u, 16u, 24u, 32u, 40u, 48u, 56u, 64u}) {
@@ -36,4 +36,8 @@ template <unsigned K> void tile_boundary(std::uint8_t* end) {
                 assert(sp::filter<C::less>(*dense, 0, n, rhs, active) == lt);
             }
     }
+}
+template <unsigned K> void tile_boundary(std::uint8_t* end) {
+    if constexpr (ikea::test::sampled_width(K))
+        tile_boundary_case<K>(end);
 }

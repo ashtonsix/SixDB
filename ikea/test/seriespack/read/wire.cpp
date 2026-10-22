@@ -3,6 +3,7 @@
 #include "../reference/physical.h"
 #include <array>
 #include "../support.h"
+#include "../../scope.h"
 #include <iostream>
 #include <random>
 #include <vector>
@@ -79,13 +80,18 @@ int main() {
     check_composed_mutation();
     check_chain();
     check_construction();
-    sp::detail::each<64>([](auto k) { check<k + 1>(); });
+    sp::detail::each<64>([](auto k) {
+        if constexpr (ikea::test::sampled_width(k + 1))
+            check<k + 1>();
+    });
     sp::detail::each<7>([](auto k) { check<k + 1, sp::geometry::striped>(); });
     check<10, sp::geometry::striped>();
     check<12, sp::geometry::striped>();
     check<14, sp::geometry::striped>();
     check<15, sp::geometry::striped>();
     check<20, sp::geometry::striped>();
+    if constexpr (!ikea::test::full_scope)
+        std::cout << "Fast test scope: width matrices cover sampled widths only\n";
 #if defined(__aarch64__) || defined(__AVX2__)
     std::cout << "Ikea: 76 headless reads; 206 placed read/composition/mutation formats; "
                  "substitution, coverage and rejection guards passed\n";

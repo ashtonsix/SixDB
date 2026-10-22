@@ -34,6 +34,21 @@ elseif(NOT SIXDB_DEBUG_INFO STREQUAL "full")
   message(FATAL_ERROR "SIXDB_DEBUG_INFO must be lines or full")
 endif()
 
+# Width-matrix checks compile every SeriesPack width under full scope; fast
+# samples boundary widths for quicker edit/test loops (ikea/test/scope.h).
+set(SIXDB_TEST_SCOPE "fast" CACHE STRING "Width-matrix test scope: fast or full")
+set_property(CACHE SIXDB_TEST_SCOPE PROPERTY STRINGS fast full)
+if(NOT SIXDB_TEST_SCOPE MATCHES "^(fast|full)$")
+  message(FATAL_ERROR "SIXDB_TEST_SCOPE must be fast or full")
+endif()
+function(sixdb_test_scope)
+  if(SIXDB_TEST_SCOPE STREQUAL "full")
+    foreach(target IN LISTS ARGN)
+      target_compile_definitions(${target} PRIVATE IKEA_TEST_SCOPE_FULL)
+    endforeach()
+  endif()
+endfunction()
+
 # Some test TUs peak near 1.5 GiB (lines) or 3 GiB (full). Ninja runs their
 # targets in a memory-sized pool, leaving headroom for the ordinary -j jobs, so
 # the default job count cannot swap or OOM the host.

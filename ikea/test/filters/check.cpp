@@ -118,5 +118,7 @@ int main() {
     }(operations<C::equal, C::less, C::less_equal, C::greater, C::greater_equal>{});
     guards();
     substitution();
+    if constexpr (!ikea::test::full_scope)
+        puts("Fast test scope: width matrices cover sampled widths only");
     puts("filters: unsigned boundaries, layouts, selections and projection checks passed");
 }

@@ -1,5 +1,6 @@
 #include "../support.h"
 #include "../fixture.h"
+#include "../../scope.h"
 
 template <class Expr, class Expected>
 void check_expression(const Expr& expr, const Expected& expected, std::size_t count) {
@@ -118,17 +119,19 @@ void check_substitution() {
 
 void check_composition() {
     sp::detail::each<64>([](auto k) {
-        check_placed<sp::format<k + 1>>();
-        if constexpr (k + 1 >= 8)
-            check_placed<sp::format<k + 1, sp::geometry::local, 8>>();
-        if constexpr (k + 1 >= 16)
-            check_placed<sp::format<k + 1, sp::geometry::local, 16>>();
-        if constexpr (sp::striped_width(k + 1))
-            check_placed<sp::format<k + 1, sp::geometry::striped>>();
-        if constexpr (k + 1 > 8 && sp::striped_width(k + 1 - 8))
-            check_placed<sp::format<k + 1, sp::geometry::striped, 8>>();
-        if constexpr (k + 1 > 16 && sp::striped_width(k + 1 - 16))
-            check_placed<sp::format<k + 1, sp::geometry::striped, 16>>();
+        if constexpr (ikea::test::sampled_width(k + 1)) {
+            check_placed<sp::format<k + 1>>();
+            if constexpr (k + 1 >= 8)
+                check_placed<sp::format<k + 1, sp::geometry::local, 8>>();
+            if constexpr (k + 1 >= 16)
+                check_placed<sp::format<k + 1, sp::geometry::local, 16>>();
+            if constexpr (sp::striped_width(k + 1))
+                check_placed<sp::format<k + 1, sp::geometry::striped>>();
+            if constexpr (k + 1 > 8 && sp::striped_width(k + 1 - 8))
+                check_placed<sp::format<k + 1, sp::geometry::striped, 8>>();
+            if constexpr (k + 1 > 16 && sp::striped_width(k + 1 - 16))
+                check_placed<sp::format<k + 1, sp::geometry::striped, 16>>();
+        }
     });
     check_substitution();
 }
