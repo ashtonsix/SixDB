@@ -47,11 +47,22 @@ These are working notes from the project chat (2026-10-22), not settled contract
 - **Wider responsibilities**: row-level access control and protections. Frame is
   where low-level kernels meet user requirements and the Engine interface.
 
+- **Representations** follow Orbital's data model: Frame formats are
+  representations of one Object, logically identical, convertible, with writes
+  applied deterministically. Byte identity across replicas is not required.
+- **Structure and scope**: SeriesPack/TuplePack, not FastLanes, are the
+  structuring idea. Strings (FSST included) are handled separately; Frame may
+  hold prefixes and lengths while StreamPack does most string work. Sets,
+  bespoke structures and string collections are Frame's peers.
+
 ## Contents
 
 - [Prior-art survey](SURVEY.md): what Calico exploited, what current Ikea
   already supplies, and the most relevant external work, organised as an
   encodings × operation-families capability matrix.
+- [Data encoding, rev 1](ENCODING.md): proposed pipeline, geometry, exceptions
+  versus overrides, write and read paths, and the Ikea primitives each stage
+  reuses. The current step; full Frame scope is set aside.
 
 Related routes: [representations and planning](../../notebook/representations-and-planning.md),
 [residual bounds](../../notebook/pfor-bounds.md), [Boundlist](../boundlist/README.md),
