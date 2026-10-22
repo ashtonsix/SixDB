@@ -123,6 +123,49 @@ value width) plus a quarter-bit descriptor.
    fewer bits in original order, 1.35× shuffled. Real SeriesPack bytes have to
    confirm this.
 
+### Modelled payload is exact SeriesPack payload at 256-row blocks
+
+SeriesPack tiles are bit-tight (`tile_bytes = tile_rows × payload / 8`,
+[format.h](../../../../ikea/include/ikea/seriespack/format.h)), and every
+tile height (8 Local; 32, 64, 128 or 256 Striped) divides 256. A 256-row block
+at width K therefore occupies exactly 32·K payload bytes in every preset: the
+ragged-tail slack in the [residual-bounds note](../../../notebook/pfor-bounds.md#what-sixdb-composition-changes)
+doesn't arise at this grain. The modelled-to-physical gap is entirely
+metadata: descriptors, exception lists, run geometry, dictionaries, slack.
+Pricing those components exactly is the remaining physical question.
+
+### First peer timings (local, indicative)
+
+[`peer_timings.py`](peer_timings.py): single thread on the Apple-silicon
+OrbStack VM (noisy; not fleet evidence), 3M rows, median of 15 warm runs.
+DuckDB queries a checkpointed compressed database; its fixed per-query cost
+(about 100–170 µs, measured on a one-row table) is subtracted and reported.
+Polars (`POLARS_MAX_THREADS=1`) works on uncompressed in-memory Series.
+
+| Column (native width) | DuckDB SUM | DuckDB COUNT(x ≥ median) | Polars SUM | Polars COUNT |
+| --- | ---: | ---: | ---: | ---: |
+| OS (16) | 1.73 | 2.23 | 0.068 | 0.050 |
+| ResolutionWidth (16) | 1.93 | 2.42 | 0.063 | 0.051 |
+| RegionID (32) | 1.36 | 1.95 | 0.105 | 0.114 |
+| EventTime (64) | 1.33 | 1.36 | 0.268 | 0.337 |
+| UserID (64) | 3.81 | 2.48 | 0.268 | 0.311 |
+| WatchID (64) | 2.69 | 1.14 | 0.297 | 0.368 |
+
+ns per value. What this means for Ashton's ≥2× bar:
+
+1. **Polars on plain arrays is the harder baseline for single-column scans**,
+   10–30× faster than DuckDB here, and roughly memory-speed: an int16 sum at
+   0.06 ns/value is about 30 GB/s. DuckDB's 64-bit SUMs also pay HUGEINT
+   widening, which Workbench flagged as a comparison hazard.
+2. **2× over Polars needs fewer bytes or less work, not faster decoding.** On
+   ClickBench, 79% of blocks are constant or runs, where SUM and COUNT are
+   per-block or per-run work. That is an algorithmic win the bar can count.
+3. **Incompressible columns can't clear the bar by scanning.** WatchID is ~62
+   bits/value under every encoding, so a sum over it moves the same bytes as
+   Polars. Only block statistics or precomputed aggregates beat it. Choosing
+   "three examined operations per family" has to be honest about columns like
+   this rather than avoiding them.
+
 ## Images to hand Engine's witness early
 
 Engine's witness is a selected grouped reduction over parts with different
