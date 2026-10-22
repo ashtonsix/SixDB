@@ -21,6 +21,18 @@ asked for a change yet, this proposal decides the question.
 reader needs. Otherwise it goes. Native bodies, carriers and traversal are not
 touched. All of this is names, types and contracts at the boundary.
 
+**Ashton's direction (2026-10-22).**
+- **Headless, always.** Data carries no per-block descriptor or metadata header.
+  The parent states a layout once, for example in a schema shared by about 100k
+  blocks, and each block group carries only a short schema id.
+- **Targets.** SixDB must eventually run on a very wide range of targets,
+  including PowerPC. For now, make simplifying assumptions, aggressively if
+  useful.
+- **Vocabulary.** Single nouns and a small vocabulary. Where differences exist,
+  they must not be accidental.
+
+§1, §4, §6 and §8 apply this.
+
 ## 1. One lifecycle, one word per step
 
 Every module moves through the same steps. Some modules skip steps, but no
@@ -31,10 +43,23 @@ module uses a step's word for a different step.
 | Describe | `layout` | `layout::make(...)` (runtime) or a layout type (compile time) | The byte law: how values map to bytes. Independent of addresses. |
 | Place | `view` / `const_view` | `view::attach(layout, storage...)` | That law at actual addresses and extents. Checks metadata, not contents. |
 | Admit contents | — | `view.validate()` | That recovered bytes obey the law. Only where contents can be invalid. |
-| Plan | `*_plan` | `*_plan::make(layout, ...)` | Storage-independent preparation: maps, groups, routes, chains. |
-| Bind | `reader`, `writer`, `filter`, `constructor`, `transfer` | `bind_reader(plan?, view)` etc. | A reusable operation over a view. It borrows both. |
+| Plan | `plan` (`read_plan`, `write_plan` where both exist) | `plan::make(layout, ...)` | Storage-independent preparation: maps, groups, routes, chains. |
+| Bind | `reader`, `writer`, `transfer` | `bind_reader(plan?, view)` etc. | A reusable operation over a view. It borrows both. |
 | Erase | `erased_reader<U>`, `erased_writer<U, Summary>` | `.erase<...>()` | A runtime-dispatched handle to a whole bound operation. |
-| Run | — | `get`, `read`, `filter`, `set`, `replace`, `initialize`, ... | One command. Checked by default; `_unchecked` skips command checks. |
+| Run | — | `get`, `read`, `filter`, `indexof`, `set`, `replace`, `initialize`, ... | One command. Checked by default; `_unchecked` skips command checks. |
+
+**Kept deliberately small.** There are three operation nouns: `reader`, `writer`
+and `transfer`. Each is optionally `erased_`.
+- **Filtering is a verb, not a noun.** `reader.filter<Op>(...)` in every module
+  replaces TuplePack's `field_filter` and `bind_filter`. A TuplePack reader
+  over a one-code plan keeps its direct encoded comparison. Any other plan
+  rejects the checked call with `error::map`.
+- **Construction is a writer command, not a noun.**
+  `writer.initialize(first, input)` replaces TuplePack's `constructor`,
+  `construction_operation` and `bind_constructor`. A write plan covering every
+  code selects the no-old-read body at plan time, as `constructor` does today,
+  including its two-packet form above 64 codes. SeriesPack's writer already has
+  `initialize`.
 
 Rules that follow from the table:
 
@@ -61,7 +86,7 @@ Rules that follow from the table:
 | Module | Today | Proposed |
 | --- | --- | --- |
 | SeriesPack | `format<K, geometry, H>`; `view<F, const uint8_t>::attach`; `bind_decoder<U>(view)` → `decoder<U>`; `composition::prepare(describe(view), n)` → `prepared<E>`; `bind_mutation(view)` → `prepared_mutation<E>`; `.erase<U,S>()` → `mutation_operation<U,S>` | `layout<K, geometry, H>`; `const_view<L>::attach` / `view<L>::attach`; `bind_reader(view)` → `reader<E>` (typed: get/read/filter/indexof/sum); `.erase<U>()` → `erased_reader<U>`; `bind_writer(view)` → `writer<E>`; `.erase<U,S>()` → `erased_writer<U,S>` |
-| TuplePack | `layout::make`; `view::bind`; `reader<N,R>::make` (plan); `bind_reader` → `read_operation`; `writer<N,R>::make`; `bind_writer` → `mutation_operation`; `constructor::make`; `bind_constructor` → `construction_operation`; `bind_transfer` → `unit_transfer`; `bind_filter` → `field_filter` | `layout::make`; `view::attach`; `read_plan<N,R>::make`; `bind_reader` → `reader`; `write_plan<N,R>::make`; `bind_writer` → `writer`; `construction_plan::make`; `bind_constructor` → `constructor`; `bind_transfer` → `transfer`; `bind_filter` → `filter` |
+| TuplePack | `layout::make`; `view::bind`; `reader<N,R>::make` (plan); `bind_reader` → `read_operation`; `writer<N,R>::make`; `bind_writer` → `mutation_operation`; `constructor::make`; `bind_constructor` → `construction_operation`; `bind_transfer` → `unit_transfer`; `bind_filter` → `field_filter` | `layout::make`; `view::attach`; `read_plan<N,R>::make`; `bind_reader` → `reader` (with `filter`); `write_plan<N,R>::make` (all codes when no map is given); `bind_writer` → `writer` (with `initialize`); `bind_transfer` → `transfer` |
 | StreamPack | `description` (options); `layout::prepare`; `view::bind`; `assume_valid`; `validate()`; free `value`/`append`/...; `author::*_unchecked`; `author::dispatch` | `layout::options`; `layout::make`; `view::attach`; `attach_unchecked`; `validate()`; free checked and `_unchecked` commands side by side; `author::visit(view, f)` for typed whole-consumer dispatch |
 | Bec256 | `source::admit`; `source::assume_valid`; `destination{span}`; `prepare(block, pop)` → `encoding` | `const_view::attach(storage, bytes, population)`; `attach_unchecked`; `view{span}`; `encoding::make(block, pop)`. Free `encode`/`decode` stay. |
 | Intervals | Source structs (`direct_source{data, count}`, `from_cuts`, `sparse_*`); free `locate`/`reverse`/`overlap`/`range` | Unchanged. Intervals sources are already a combined layout+view over borrowed arrays, and the free functions are the one-shot calls. Only names in §3 and §6 change. |
@@ -180,27 +205,40 @@ shapes and two errors.
 
 Proposed:
 
-1. **One hook concept**, in `ikea/effects.h`:
+1. **Three nouns: `effects`, `journal` and `journal::entry`.** These replace
+   `byte_write`, `owner_write`, `write_journal`, `source_write_journal`,
+   `no_coverage`, `mutation_damage` and the unnamed "Coverage" duck type.
+   Everything lives in `ikea/effects.h`:
 
    ```cpp
-   template <class C, class Source>
-   concept coverage = requires(C& c, const Source& s, byte_write w) {
-       { c.before(s, w) } noexcept;
+   namespace ikea {
+   template <class E, class Source>
+   concept effects = requires(E& e, const Source& s, unsigned plane, std::size_t offset,
+                              std::size_t size) {
+       { e.before(s, plane, offset, size) } noexcept;
    };
+   struct no_effects { /* before(...) does nothing */ };
+   struct journal {
+       struct entry { const void* source; unsigned plane; std::size_t offset, size; };
+       std::span<entry> storage;
+       std::size_t used = 0;
+       // before(...), remaining(), entries(): as source_write_journal today
+   };
+   }
    ```
 
-   Every `_unchecked` mutation is constrained on it. Checked mutations and
-   erased writers take `source_write_journal&`, the only stock journal.
-2. **One record.** Keep `owner_write {source, byte_write{plane, offset, size}}`,
-   where `plane` is the module's own plane enum ordinal. That's already true for
-   StreamPack's `plane`. Hashtable's `owner_part` becomes its plane enum.
-   `mutation_damage` becomes `owner_write`, with `base`/`extent` resolved through
-   the source the same way other modules resolve theirs. Hashtable's
-   `enter`/`prepare` context stays, because it is an owner protocol that no other
-   module has. Its `before` uses the shared concept.
-3. **Drop the plane-only `write_journal`.** A caller that knows its single
-   source can ignore the source field. Two journal types with the same entries
-   minus one field produced the alias confusion the audit fixed.
+   Every `_unchecked` mutation is constrained on `effects`. Checked mutations
+   and erased writers take `ikea::journal&`. Parameters are already named
+   `effects` almost everywhere, so the concept takes that name.
+2. **`plane` is the module's own plane-enum ordinal.** That's already true for
+   StreamPack's `plane`. Hashtable's `owner_part` becomes its plane enum, and
+   `mutation_damage` becomes `journal::entry`, with `base`/`extent` resolved
+   through the source like every other module. Hashtable's `enter`/`prepare`
+   context stays, because it is an owner protocol no other module has. Its
+   `before` satisfies `effects`.
+3. **No plane-only journal.** A caller that knows its single source ignores the
+   `source` field. Two journal types differing by one field caused the alias
+   confusion the audit fixed.
 4. **One capacity spelling.** Every bound operation answers
    `effect_capacity(command...) -> std::size_t` in *additional records* for that
    command, as a conservative bound:
@@ -245,9 +283,20 @@ outcomes, not failures. The `std::errc` return in its storage policy
 
 ## 6. Persisted descriptions
 
-**Contract.** A persisted description encodes the *byte law only*. Placement
-(origins, strides, offsets) and logical count belong to the parent's
-interpretation, which already persists plane identities and offsets. Today:
+**Contract: headless.** No Ikea data block carries a descriptor, tag or
+version.
+- A layout's encoded description is written once, by the parent, wherever the
+  parent chooses. That might be a schema covering about 100k blocks, with a
+  short schema id per block group.
+- The description encodes the *byte law only*.
+- Placement (origins, strides, offsets) and logical count belong to the parent's
+  interpretation, which already persists plane identities and offsets.
+- Bec256 bodies are already headless.
+- Per-block data that a block genuinely needs, such as StreamPack's assigned
+  count and extent in its control plane, is data rather than description. It
+  stays in caller-placed planes, never in a mandatory header.
+
+Today:
 
 - SeriesPack's 40-byte descriptor carries count and three strides, but not
   offsets. Placement is split across two homes.
@@ -255,7 +304,10 @@ interpretation, which already persists plane identities and offsets. Today:
 - StreamPack's 8-byte `layout::encode` has no tag or version, and has a
   `legacy` flag variant.
 
-**One envelope**, implemented once in `ikea/description.h`:
+**One envelope for the description itself**, implemented once in
+`ikea/description.h`. It frames the encoded layout inside the parent's schema,
+not any data block. At a few bytes per layout per schema, its cost is
+negligible:
 
 ```text
 bytes 0..1  module tag ('SP', 'TP', 'SK', ...)
@@ -309,10 +361,15 @@ Every public entry exists on every supported target. ISA selects bodies, not
 availability. Today `bind_mutation` and `prepared::sum` exist only under
 `__aarch64__ || __AVX2__`, so a baseline x86 build silently loses mutation.
 
-**Proposal:** state Ikea's minimum target once (x86-64-v3 or armv8-a+simd,
-matching [BUILDING.md](../../../BUILDING.md)). Enforce it with one `#error`
-in `ikea/config.h` and remove the per-entry `#if` guards. If a baseline-x86
-build matters, it needs scalar bodies instead.
+**Decision:** use simplifying assumptions now, and keep the design open to
+eventual wide targets, including PowerPC.
+- Ikea's minimum target is x86-64-v3 or armv8-a+simd, matching
+  [BUILDING.md](../../../BUILDING.md). One `#error` in `ikea/config.h` enforces
+  it, and the per-entry `#if` guards go.
+- The interface stays target-neutral: no ISA type, carrier width or intrinsic
+  appears in an ordinary signature. A later scalar or other-ISA body can then
+  slot in without an interface change.
+- Native carriers in `native::` are ISA-shaped by design, and stay so.
 
 ## 9. Deliberately unchanged
 
@@ -372,12 +429,12 @@ and Frame consumer timings instead.
 **Docs.** The interfaces guide, module guides and examples are rewritten in the
 same commits, so no doc describes the old names.
 
-## Questions for Ashton
+## Decisions
 
-1. **Minimum target (§8).** Should Ikea require x86-64-v3 / armv8-a+simd, or
-   must baseline x86 work?
-2. **Descriptor placement (§6).** Should SeriesPack's count and strides leave
-   the persisted description and move into parent placement, as TuplePack
-   already does?
-3. **`layout` as the single noun (§1).** This includes renaming SeriesPack's
-   `format`. Or is there a reason to keep "format" for compile-time layouts?
+All three were settled by Ashton's direction above:
+- **Minimum target:** x86-64-v3 / armv8-a+simd for now (§8).
+- **Descriptors:** headless. SeriesPack's count and strides leave its
+  description (§6).
+- **Vocabulary:** one noun per idea, so `layout` replaces `format`,
+  `representation`, `description` and `descriptor`, and operation and effect
+  nouns shrink (§1, §4).
