@@ -30,14 +30,16 @@ struct Control {
   std::uint64_t name{};
   std::uint32_t count{};       // rows in this node
   std::uint16_t height{};      // 0 = leaf
+  std::uint16_t parts{};       // full_part_count(), kept for inline Part access
+  std::uint16_t first{};
   std::uint8_t key_bytes{};
   std::uint8_t fenced{};
   std::uint8_t tile{};
-  std::uint8_t first{},projected{};
-  std::uint8_t reserved{};
+  std::uint8_t projected{};
+  std::uint16_t reserved{};
   bool valid(std::pmr::memory_resource&) const noexcept;
   auto* resource() const noexcept {return memory;}
-  std::size_t part_count() const noexcept;
+  std::size_t part_count() const noexcept {return projected?1:parts;}
   orbital::PartId id(std::size_t i) const noexcept {return {name,std::uint32_t(first+i)};}
   [[nodiscard]] orbital::Result<std::size_t> extent(std::size_t i) const noexcept;
   std::size_t alignment(std::size_t) const noexcept {return 64;}
@@ -46,14 +48,14 @@ struct Control {
   void release() const noexcept {}
   std::size_t selected_bytes(std::size_t) const noexcept {return 0;}
   Control copy_selected(void*,std::size_t i) const noexcept {
-    auto c=*this;c.first=std::uint8_t(first+i);c.projected=1;return c;
+    auto c=*this;c.first=std::uint16_t(first+i);c.projected=1;return c;
   }
   std::size_t metadata_bytes() const noexcept {return 0;}
   void destroy_selected() const noexcept {}
   std::size_t full_part_count() const noexcept;
   std::size_t full_extent(std::size_t i) const noexcept;
 };
-static_assert(std::is_trivially_copyable_v<Control>);
+static_assert(std::is_trivially_copyable_v<Control>&&sizeof(Control)==32);
 
 using Selection=orbital::RepresentationSelection<Control>;
 struct Physical {

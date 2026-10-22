@@ -26,7 +26,6 @@ std::size_t Control::full_extent(std::size_t i) const noexcept {
   return 64*std::min<std::size_t>(tile,n-t*tile);
 }
 
-std::size_t Control::part_count() const noexcept {return projected?1:full_part_count();}
 
 orbital::Result<std::size_t> Control::extent(std::size_t i) const noexcept {
   if(i>=part_count()) return std::unexpected(orbital::Error::invalid_argument);
@@ -39,7 +38,7 @@ std::uint32_t Control::padding(std::size_t i) const noexcept {
 }
 
 bool Control::valid(std::pmr::memory_resource& r) const noexcept {
-  return memory==&r&&count&&tile&&(!fenced||key_bytes)&&!reserved&&projected<=1&&
+  return memory==&r&&count&&tile&&(!fenced||key_bytes)&&!reserved&&projected<=1&&parts==full_part_count()&&
          (projected?first<full_part_count():first==0);
 }
 

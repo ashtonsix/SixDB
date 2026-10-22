@@ -60,6 +60,7 @@ Control Layer::control(std::uint64_t name,const Node& n) const {
   c.key_bytes=std::uint8_t(shape_.key_bytes);
   c.fenced=shape_.fenced();
   c.tile=std::uint8_t(shape_.tile);
+  c.parts=std::uint16_t(c.full_part_count());
   return c;
 }
 

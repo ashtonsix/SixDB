@@ -213,6 +213,29 @@ Graviton4, `c8g.4xlarge`, ns per operation
   Holding upper levels as direct references rather than names would recover
   most of it, if Orbital can offer that.
 
+## Graduated reads
+
+`engine::directory`'s own reads, timed with the same populations and loops
+([evidence](evidence/engine-reads-neoverse-v2-20261022/README.md)), against the
+`tree-inner512@orbital` rows above. ns per operation, Graviton4:
+
+| Case | point, dependent | point, independent | seek + read | logical seek + read | scan / entry |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| L4 J0 1M, spike reader | 508 | 484 | 490 | 712 | 8.2 |
+| L4 J0 1M, engine::directory | 473 | 436 | 444 | 608 | 8.8 |
+| L3 J4 1M, spike reader | 495 | 471 | 477 | – | 7.9 |
+| L3 J4 1M, engine::directory | 456 | 420 | 422 | – | 8.5 |
+| L4 J0 4M, spike reader | 806 | 767 | 783 | 1,003 | 9.5 |
+| L4 J0 4M, engine::directory | 840 | 798 | 810 | 915 | 10.1 |
+
+Points, seeks and logical seeks run within −15%..+7% of the spike reader;
+Boundlist's searches are no slower. The first graduated build scanned ~45%
+slower because `Control::part_count()` was out of line, so every Part access
+paid a call and a division. Storing the count in the Control fixed it.
+Scans remain 6–9% slower and 4M points 4–7% slower. The likely cause is
+that the graduated writer gives each Part its own allocation where the spike
+grouped an Object's Parts into one, but that is not yet tested.
+
 ## Edit grain beyond single edits
 
 From the `scenario-*` rows in `run.sh`. Each batch is one publication, charged
