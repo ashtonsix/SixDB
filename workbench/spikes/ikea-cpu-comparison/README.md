@@ -7,6 +7,12 @@ before the subsequent Bec256 pair scheduling and V3-only TuplePack dispatch
 changes in the [Neoverse investigation](../ikea-neoverse-v3/README.md).
 It is a historical comparison, not current production performance.
 
+**Later NEON results:** the [Local residual-transpose promotion, October 22](../neon-local-transpose/README.md#results)
+measures the newer V2/V3 read, short-window and write paths. It postdates this
+snapshot: the Zen 5 versus V3 indices and the 21.86× K7 case below describe the
+old kernels. The new consumer shapes and source epoch differ, so their speedups
+cannot be divided into those old ratios to produce a current comparison.
+
 ![Six-processor performance and allocated-price comparison](figures/comparison.png)
 
 The [SVG](figures/comparison.svg) and PNG are the single selected layout, with
