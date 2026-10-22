@@ -123,48 +123,60 @@ value width) plus a quarter-bit descriptor.
    fewer bits in original order, 1.35× shuffled. Real SeriesPack bytes have to
    confirm this.
 
-### Modelled payload is exact SeriesPack payload at 256-row blocks
+### Fixed-width 256-row planes are exact SeriesPack payload
 
 SeriesPack tiles are bit-tight (`tile_bytes = tile_rows × payload / 8`,
 [format.h](../../../../ikea/include/ikea/seriespack/format.h)), and every
 tile height (8 Local; 32, 64, 128 or 256 Striped) divides 256. A 256-row block
 at width K therefore occupies exactly 32·K payload bytes in every preset: the
 ragged-tail slack in the [residual-bounds note](../../../notebook/pfor-bounds.md#what-sixdb-composition-changes)
-doesn't arise at this grain. The modelled-to-physical gap is entirely
-metadata: descriptors, exception lists, run geometry, dictionaries, slack.
-Pricing those components exactly is the remaining physical question.
+doesn't arise for **full fixed-width 256-row planes**. Everything else has
+ragged populations: run values and lengths, exception streams, compacted
+present rows and variable-size dictionaries each round to their own tiles,
+plus heads, bases and placement. Those need counting in real encoded bodies,
+not finer model estimates (Codex's correction).
 
 ### First peer timings (local, indicative)
 
 [`peer_timings.py`](peer_timings.py): single thread on the Apple-silicon
-OrbStack VM (noisy; not fleet evidence), 3M rows, median of 15 warm runs.
-DuckDB queries a checkpointed compressed database; its fixed per-query cost
-(about 100–170 µs, measured on a one-row table) is subtracted and reported.
-Polars (`POLARS_MAX_THREADS=1`) works on uncompressed in-memory Series.
+OrbStack VM (noisy; not fleet evidence), 3M rows, median of 15 warm runs,
+full query times (the one-row-table time is recorded only as context). DuckDB
+queries a checkpointed compressed database; Polars (`POLARS_MAX_THREADS=1`)
+works on uncompressed in-memory Series. **Every answer is checked against an
+exact Python-integer reference.** All DuckDB answers match. Polars' native SUM
+matches only where it can't overflow: on UserID, RegionID, WatchID and URLHash
+it wraps (marked \*), so it answers a different question. Its exact-law
+alternative widens first (Int64 or Int128), which pays a materialising cast.
 
-| Column (native width) | DuckDB SUM | DuckDB COUNT(x ≥ median) | Polars SUM | Polars COUNT |
-| --- | ---: | ---: | ---: | ---: |
-| OS (16) | 1.73 | 2.23 | 0.068 | 0.050 |
-| ResolutionWidth (16) | 1.93 | 2.42 | 0.063 | 0.051 |
-| RegionID (32) | 1.36 | 1.95 | 0.105 | 0.114 |
-| EventTime (64) | 1.33 | 1.36 | 0.268 | 0.337 |
-| UserID (64) | 3.81 | 2.48 | 0.268 | 0.311 |
-| WatchID (64) | 2.69 | 1.14 | 0.297 | 0.368 |
+| Column (native bits) | DuckDB SUM (exact) | DuckDB COUNT(x ≥ median) | Polars SUM, native | Polars SUM, widened | Polars COUNT |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| OS (16) | 2.11 | 2.56 | 0.100 | 0.678 | 0.073 |
+| ResolutionWidth (16) | 2.19 | 2.95 | 0.065 | 0.461 | 0.061 |
+| RegionID (32) | 1.48 | 2.16 | 0.105\* | 0.581 | 0.150 |
+| EventTime (64) | 1.30 | 1.21 | 0.270 | 3.165 | 0.202 |
+| UserID (64) | 3.85 | 2.32 | 0.326\* | 3.304 | 0.328 |
+| WatchID (64) | 3.34 | 2.67 | 0.255\* | 3.271 | 0.351 |
 
-ns per value. What this means for Ashton's ≥2× bar:
+ns per value, from one local run; run-to-run noise on this VM is easily 20%.
+Hypotheses for the bar (to test, not established):
 
-1. **Polars on plain arrays is the harder baseline for single-column scans**,
-   10–30× faster than DuckDB here, and roughly memory-speed: an int16 sum at
-   0.06 ns/value is about 30 GB/s. DuckDB's 64-bit SUMs also pay HUGEINT
-   widening, which Workbench flagged as a comparison hazard.
-2. **2× over Polars needs fewer bytes or less work, not faster decoding.** On
-   ClickBench, 79% of blocks are constant or runs, where SUM and COUNT are
-   per-block or per-run work. That is an algorithmic win the bar can count.
-3. **Incompressible columns can't clear the bar by scanning.** WatchID is ~62
-   bits/value under every encoding, so a sum over it moves the same bytes as
-   Polars. Only block statistics or precomputed aggregates beat it. Choosing
-   "three examined operations per family" has to be honest about columns like
-   this rather than avoiding them.
+1. **For predicates and counts, Polars on plain arrays is the hard baseline**
+   (0.05–0.35 ns/value, lawful), and close to memory speed. 2× over it needs
+   fewer bytes or less work, not faster decoding.
+2. **For exact SUM there's no fast lawful peer here.** Polars is fast only
+   when its sum may wrap; widening costs a cast. DuckDB is exact at 1–4
+   ns/value. The bar for exact aggregates is DuckDB or a hand-written exact
+   native loop, which we should build as the control rather than quote
+   Polars' wrapping number.
+3. **Constant and run blocks (79% here) turn SUM and COUNT into per-block
+   work**, an algorithmic win the bar can count.
+4. **Incompressible columns probably can't clear 2× by scanning on this
+   machine.** WatchID stays at ~62 bits under every candidate, so a predicate
+   scan moves as many bytes as Polars. Block statistics and precomputed
+   aggregates are the plausible levers. That's an informed hypothesis, not a
+   lower bound; these columns stay in every report.
+5. The filtered MAX query is a query, not a decode-to-array-and-consume
+   equivalent; a real decode control is still owed.
 
 ## Images to hand Engine's witness early
 
