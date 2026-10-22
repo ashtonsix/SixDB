@@ -29,13 +29,17 @@ move into the owning note and leave this list.
 | Should a routed column keep one override store per group, or one per route? | Design | Overrides hold logical values, but routes encode separately. | [Encoding §2](ENCODING.md#2-routing) |
 | For write-heavy sorted columns, is rewriting one 16-value sub-block cheaper than sending every write to a predicted block into overrides? | Experiment | Every write to a predicted block currently becomes an override. | [Encoding, Writes](ENCODING.md#writes) |
 | Do cold parts keep the group layer, or only part and block? | Design | Groups exist for mutation; cold parts may not need them. | [README](README.md#starting-context-from-discussion-with-ashton) |
+| What Part grain should a group's planes have, so an epoch republishes only touched groups (as `engine::directory` shares unchanged leaves) without per-Part metadata dominating? | Experiment | Decides publication and COW proportionality. | [Writes §2](WRITES.md#what-this-means-for-frames-encoding) |
+| What physical envelope does each write outcome (in place, override, compaction) dirty, and how do logical row locks project onto it? Concurrent writers in one group share its override store. | Design | Ikea must honour locks and publish byte damage before native stores. | [Writes §3](WRITES.md#what-this-means-for-frames-encoding) |
+| For group re-encodes and overrides, is replaying admitted input cheaper than capturing changed material, across hot, warm and cold readers? | Experiment | Orbital's views work recovered correctly both ways; costs differ by unit. | [Writes §5](WRITES.md#what-this-means-for-frames-encoding), [publication](../orbital-views/publication/README.md) |
+| When does taking a hot group into a Draft beat copying it, given Frame's write locality and typical reader overlap? | Experiment | Take versus copy is Orbital/Loom's choice, but Frame's layout sets its cost. | [Writes, sources](WRITES.md#what-is-established-and-where) |
 
 ## Statistics and aggregates
 
 | Question | Kind | Why it matters | Source |
 | --- | --- | --- | --- |
 | Do block min/max live on the parent segment beside block sums, or in the part beside the descriptors? | Design | Block sums are already the parent's; pruning reads whichever holds extrema. | [Encoding, statistics](ENCODING.md#block-descriptor-and-statistics) |
-| Which float aggregate semantics does Engine require: exact (superaccumulator) or a defined order? | Design | Equivalent representations must give identical answers, so representation-dependent float sums are ruled out. | [Survey §5](SURVEY.md#5-lessons-to-carry-forward) |
+| How should floating-point arithmetic be made deterministic? Ashton's expectation: a defined operation order at group level (perhaps a blocked tree for ILP) with native arithmetic, then Kulisch superaccumulation between groups or parts so replicas can reorder by local state (for example what each has mapped). Also: a correctly rounded library such as CORE-MATH for bit-identical results across platforms. | Experiment | Equivalent representations and replicas must give identical answers; this sets aggregate kernels' shape and cost. | Ashton, 2026-10-22; [kmath superaccumulators](../../../../calico/kmath/SPEC.md) |
 
 ## Representations and Engine's view
 

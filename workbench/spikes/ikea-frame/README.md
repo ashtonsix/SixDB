@@ -55,6 +55,26 @@ These are working notes from the project chat (2026-10-22), not settled contract
   hold prefixes and lengths while StreamPack does most string work. Sets,
   bespoke structures and string collections are Frame's peers.
 
+## How this spike works
+
+Ashton's direction (2026-10-22):
+
+- **Expansive, not thin.** The spike identifies architectural seams through
+  prototyping across the design space. No vertical slice is chosen up front;
+  scope cuts are considered only when moving from prototype to graduation, or
+  under overwhelming friction during prototyping.
+- **The brief says what to disambiguate**, not what the answer is. Questions
+  that experiments can settle stay in [QUESTIONS.md](QUESTIONS.md).
+- **Find the metadata knee.** Prototyping looks for the point where most of
+  the performance gain across a wide range of operations is realised, before
+  metadata hits diminishing returns. Genuine trade-offs become curated presets
+  that Engine composes or chooses from.
+- **Performance bar.** At least 2× faster than a strong baseline such as Polars
+  or DuckDB for at least three examined operations per family, preferably with
+  less memory. The 2× is headroom for Engine; keep going until headroom is
+  exhausted rather than stopping at the target. At least parity with Calico.
+  Encoding, decoding and compression get the most attention at first.
+
 ## Contents
 
 - [Prior-art survey](SURVEY.md): what Calico exploited, what current Ikea
@@ -63,6 +83,9 @@ These are working notes from the project chat (2026-10-22), not settled contract
 - [Data encoding, rev 1](ENCODING.md): proposed pipeline, geometry, exceptions
   versus overrides, write and read paths, and the Ikea primitives each stage
   reuses. The current step; full Frame scope is set aside.
+- [Writes and Orbital](WRITES.md): what Orbital, Ikea and `engine::directory`
+  already establish about epochs, drafts, take versus copy, byte damage, locks
+  and coherent reads, and what that means for the encoding.
 - [Research questions](QUESTIONS.md): every open experiment and design
   question, with why it matters and where it came from.
 
