@@ -20,6 +20,7 @@ surrounding it.
 | Calico's old YCSB F was all RMW, databases carried state between workload cells, and peers did not replay one common event stream. | Check trace composition and starting state independently. A final-state oracle for each different trace cannot prove common work. The historical audit is `1825cfdc:workbench/benchmarks/COMPARAND_TRUST.md`. |
 | SixDB's breadth run passed 304 oracle trials, but its intended fusion patch had silently failed to land. | The actual captured source and emitted scalar symbol corrected the treatment label. See [the retained account](../spikes/orbital-mvcc/performance/FEEDBACK.md#broader-bodies-and-retained-readers). |
 | Hashtable benchmark consolidation introduced an outlined payload mixer inside timed RMW loops without changing the table. | Unexpected results prompted complete-caller disassembly; logical checks and the result-grid auditor did not detect the added calls. See [the correction](hashtable/ACCUMULATION.md#harness-correction-and-validation-scope). |
+| A later directory report could accept equal checksums despite contradictory backing, cohort, pruning or shared-prefix controls, or inconsistent packet/command timing denominators. | The study's [offline reporter](../spikes/directory/followup-report.py) now checks emitted effective controls against its existing executable plan and reconciles packet and command totals, allowing for printed rounding. These checks run during ordinary reporting. |
 | A generic L1D-miss event opened successfully but returned zero across 360 real-memory control intervals. | An independent sensitivity experiment exposed the unusable measurement. See [the memory controls](orbital/evidence/prefetch-control-20261007/README.md). |
 
 Calico also compared asymmetric warmups, storage lifecycles, memory limits and
@@ -111,6 +112,14 @@ retained state independently outside the interval; checksum consumption alone
 only prevents dead-code elimination. Operation-intent and spatial-coverage tests
 catch different bugs from final-state checks, as the [older LMDB/fragmentation
 corrections](orbital/measurement.md#bounded-staged-reads) show.
+
+Where arm options change the measured work, keep invocation labels and expected
+controls with the compact plan that runs them. Let the report check the program's
+emitted effective values against that plan. Derive timing units from their actual
+denominators: `ns/packet × packets` should agree with `ns/command × commands`
+over the same interval. Keep these checks in
+ordinary execution/reporting, using the values the program already emits. This
+removes a manual consistency check while leaving semantic fairness to the caller.
 
 Run measured arms exclusively and alternate or counterbalance their order across
 independent trials. Preserve declared per-case setup and conditioning. Retain raw
