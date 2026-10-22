@@ -9,10 +9,15 @@ cmake --preset dev
 cmake --build --preset dev
 ```
 
-`dev` uses C++23 and `-O2 -g`; `release` uses `-O3 -g`. Both keep assertions
-enabled. Builds live under `build/clang/<preset>/`. Clang is selected before
-configuration and its version is checked; `-DCMAKE_CXX_COMPILER=...` can select
-another installation of that version. Use a fresh directory when changing
+`dev` uses C++23 and `-O2 -gline-tables-only`; `release` uses `-O3 -g`. Both
+keep assertions enabled. Line tables keep stack traces and profiler attribution;
+configure with `-DSIXDB_DEBUG_INFO=full` when a debugger needs variables and
+types (full DWARF roughly doubles compile memory and takes 1.6x as long to
+build). The heaviest Ikea checks compile in a Ninja pool sized from host memory,
+so the default `-j` does not swap or OOM; `-DSIXDB_HEAVY_COMPILE_JOBS=N`
+overrides it. Builds live under `build/clang/<preset>/`. Clang is selected
+before configuration and its version is checked; `-DCMAKE_CXX_COMPILER=...` can
+select another installation of that version. Use a fresh directory when changing
 compiler versions or target platforms. The initial pin uses an installed
 compiler; standard-library and linker package versions remain unpinned.
 

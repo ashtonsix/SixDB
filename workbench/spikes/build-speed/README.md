@@ -53,6 +53,33 @@ Whole build with `-O2 -gline-tables-only`: 74 s wall (−37%), 1,097 CPU-s
 (−29%), build tree 359 MB vs 894 MB. `-O1 -g`: 106 s vs 117 s. Text sizes are
 unchanged by debug level. Check runtime is ~1.7 s in all three.
 
+## Adopted
+
+`RelWithDebInfo` now defaults to `-gline-tables-only` (`SIXDB_DEBUG_INFO=lines`;
+`full` restores `-g`). `sixdb_heavy_compile()` puts `ikea_filters_check`,
+`ikea_seriespack_check` and `ikea_tuplepack_packets_check` in a Ninja pool of
+host MiB ÷ 1792 (lines) or ÷ 3072 (full) jobs; `SIXDB_HEAVY_COMPILE_JOBS`
+overrides it. The pool is per target, so those targets' light TUs queue too.
+
+`verify.sh`, clean build of the same target set with Ninja's default `-j`:
+
+| Host | Case | Pool | Wall | CPU-s | Min available |
+| --- | --- | --- | --- | --- | --- |
+| 16 GiB, 8 vCPU | lines | 8 | 132 s | 1,280 | 6.1 GiB |
+| 16 GiB, 8 vCPU | full | 5 | 248 s | 1,607 | 3.1 GiB |
+| 16 GiB, 8 vCPU | full, unpooled | — | OOM-killed | — | 37 MiB |
+| 32 GiB, 16 vCPU | lines | 17 | 75 s | 1,157 | 16.4 GiB |
+| 32 GiB, 16 vCPU | lines, unpooled | — | 73 s | 1,183 | 15.5 GiB |
+| 32 GiB, 16 vCPU | full | 10 | 147 s | 1,619 | 12.1 GiB |
+
+The pool costs ~2 s with line tables on 32 GiB. With full debug info it is
+deliberately conservative: the unpooled `-j16` baseline above took 106 s on the
+same host, and the full-info pool could likely be widened toward ÷ 2.5 GiB. A
+first, stricter sizing (÷ 2.5/3.5 GiB) took 88/165 s on 32 GiB. Checks passed
+under both debug levels (hashtable width and two Loom example targets were not in the set). Worker jobs `20261022T020325Z-acc98bfe`,
+`20261022T020354Z-1e87ee83` (first sizing), `20261022T021854Z-090e38c4` and
+`20261022T021934Z-ba3733a3`.
+
 ## Reproduce
 
 ```sh
@@ -67,3 +94,4 @@ python3 workbench/tools/worker.py run workbench/spikes/build-speed/variants.sh \
 (`traces.py`). `variants.sh` recompiles costly TUs under flag variants
 (`variants.py`) and runs whole builds for three flag sets. Results: worker jobs
 `20261022T004816Z-724256f9` and `20261022T010120Z-be53bb78`. x86 was not measured.
+`verify.sh` takes `CASES` (`name=cmake,args ...`) and samples `MemAvailable`.
