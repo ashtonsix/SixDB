@@ -195,6 +195,64 @@ void exercise(loom::Worker& worker,Shape shape,bool dense,std::size_t target,std
   compare(layer,store,o,d,rng);
 }
 
+// Distinguishing bytes must survive beyond the first machine word. Duplicate
+// fences deliberately cross leaf and interior boundaries; the logical seek
+// must return the first qualifying row, including through an older Scope.
+void suffix_fences(loom::Worker& worker,unsigned width) {
+  struct FencedRow {
+    std::uint32_t prefix;
+    std::vector<std::uint8_t> bounds;
+    Dirent payload;
+  };
+  auto suffix_key=[&](unsigned suffix) {
+    std::vector<std::uint8_t> out(width,0x80);
+    for(unsigned i=0;i<4;++i) out[width-1-i]=std::uint8_t(suffix>>(8*i));
+    return out;
+  };
+  std::pmr::unsynchronized_pool_resource memory;
+  Store store(memory);
+  Shape shape{.layer=4,.key_bytes=width,.shared_prefix=0,.leaf_capacity=4,
+              .inner_capacity=4,.fill=0.75,.merge_below=0.5,.tile=3};
+  Layer layer(worker,store,memory,0xd2,shape);
+  std::vector<FencedRow> expected;
+  for(unsigned i=0;i<37;++i) {
+    const auto p=1000+3*i;
+    expected.push_back({p,suffix_key(10+2*(i/4)),dirent(p,i+1)});
+  }
+  std::vector<Entry> entries;
+  for(const auto& row:expected) entries.push_back({row.prefix,row.bounds,row.bounds,row.payload});
+  check(bool(layer.build(entries)),"suffix-fence build");
+  layer.validate();
+  auto verify=[&](const Store::Scope& scope,const std::vector<FencedRow>& rows) {
+    auto query=[&](const std::vector<std::uint8_t>& q) {
+      auto found=layer.seek(scope,std::span<const std::uint8_t>(q));
+      auto want=std::find_if(rows.begin(),rows.end(),[&](const auto& row) {
+        return std::memcmp(row.bounds.data(),q.data(),width)>=0;
+      });
+      check(bool(found)==(want!=rows.end()),"suffix-fence seek presence");
+      if(found) {
+        check(layer.prefix(found)==want->prefix,"suffix-fence first duplicate");
+        check(std::ranges::equal(layer.min(found),want->bounds)&&
+              std::ranges::equal(layer.max(found),want->bounds),"suffix-fence retained bytes");
+        check(!std::memcmp(&layer.dirent(found),&want->payload,64),"suffix-fence dirent");
+      }
+    };
+    for(unsigned q=0;q<34;++q) query(suffix_key(q));
+    auto below=suffix_key(10);below[0]=0x7f;query(below);
+    auto above=suffix_key(10);above[0]=0x81;query(above);
+  };
+  Store::Scope old(store);
+  const auto before=expected;
+  verify(old,before);
+  const Edit erase{Edit::erase,entries.front()};
+  check(bool(layer.apply(std::span<const Edit>(&erase,1))),"suffix-fence erase");
+  expected.erase(expected.begin());
+  layer.validate();
+  Store::Scope current(store);
+  verify(current,expected);
+  verify(old,before);
+}
+
 void run(loom::Worker& worker) {
   unsigned cases=0;
   for(unsigned l=0;l<=4;++l) for(unsigned j:{0u,4u}) for(bool dense:{false,true}) {
@@ -204,7 +262,8 @@ void run(loom::Worker& worker) {
     exercise(worker,wide,dense,600,1500,80);
     cases+=2;
   }
-  std::printf("PASS: %u directory layer cases against an ordered oracle, with late readers and no-op publication\n",cases);
+  for(unsigned width:{9u,12u,31u,255u}) suffix_fences(worker,width);
+  std::printf("PASS: %u directory layer cases against an ordered oracle, with late readers and no-op publication; suffix-only fences at four key widths\n",cases);
 }
 }
 
