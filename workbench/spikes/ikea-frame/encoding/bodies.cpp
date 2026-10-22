@@ -143,6 +143,10 @@ void run(const char *name, std::span<const u64> values, u64 lo, u64 threshold,
             std::exit(1);
         }
         const u64 ec = encoded_count_ge(c, s.mask, threshold), pc = plain_count_ge(p, s.mask, threshold);
+        if (catalogue_sum(c, s.mask) != ps || catalogue_count_ge(c, s.mask, threshold) != pc) {
+            std::fprintf(stderr, "%s %s: catalogue arm mismatch\n", name, s.name);
+            std::exit(1);
+        }
         if (es != ps || ec != pc) {
             std::fprintf(stderr, "%s %s: encoded/plain mismatch\n", name, s.name);
             std::exit(1);
@@ -151,7 +155,9 @@ void run(const char *name, std::span<const u64> values, u64 lo, u64 threshold,
             {"encoded_sum", [&] { consume(encoded_sum(c, s.mask)); }, {}},
             {"encoded_narrow_sum", [&] { consume(encoded_sum_narrow(c, s.mask)); }, {}},
             {"plain_sum", [&] { consume(plain_sum(p, s.mask)); }, {}},
+            {"catalogue_sum", [&] { consume(catalogue_sum(c, s.mask)); }, {}},
             {"encoded_count", [&] { sink = encoded_count_ge(c, s.mask, threshold); }, {}},
+            {"catalogue_count", [&] { sink = catalogue_count_ge(c, s.mask, threshold); }, {}},
             {"plain_count", [&] { sink = plain_count_ge(p, s.mask, threshold); }, {}}};
         time_arms(arms);
         std::printf(",\"%s\":{\"physical_rows\":%zu,\"selected_rows\":%zu,\"sum\":\"%s\","

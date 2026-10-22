@@ -496,6 +496,43 @@ only; Ikea LEAD owns the real [filter consumer](../filter/README.md).
    ClickBench columns, and lose 0.12 on the narrow ones (ResolutionWidth,
    RegionID).
 
+## Shared plane catalogue (first cut)
+
+[`kernels.h`](kernels.h) / [`kernels.cpp`](kernels.cpp) hold one entry per width
+1–64: point, range, a native packet SUM (SeriesPack composition read plus native
+sum, with no widened scratch) and COUNT(≥ rhs) through SeriesPack filters over
+64-row windows. An operation derives each plane from the column payload and the
+descriptor alone, which is what removes per-block decoder bindings (Ikea LEAD's
+point work found those bindings cost ~240 B per block). The owner operations
+still use bindings in this cut: Codex's access fixture places block bodies
+outside `column::payload`, so moving them waits on a coordinated layout change.
+`catalogue_sum` and `catalogue_count_ge` are measured as separate arms and are
+exact everywhere.
+
+Same image, local VM, medians in µs per 3M-row (ClickBench) or 65,536-row
+(Jena) full scan:
+
+| Column (packed share) | SUM: decoder / narrow / catalogue / plain | COUNT: decoder / catalogue / plain |
+| --- | --- | --- |
+| EventTime (80%) | 992 / 721 / 828 / 373 | 894 / 665 / 617 |
+| WatchID (100%) | 1,981 / 2,090 / 2,012 / 1,181 | 1,246 / 1,609 / 788 |
+| URLHash (75%) | 1,589 / 1,664 / 1,621 / 1,210 | 2,279 / 2,222 / 771 |
+| Jena wv (63%) | 18 / 12 / 13 / 4 | 19 / 14 / 9 |
+| Jena p (1%; 98% delta) | 32 / 32 / 33 / 4 | 52 / 52 / 9 |
+
+1. **Catalogue SUM matches narrow decoding but doesn't beat it.** Native packet
+   reduction isn't faster than decoding into narrow lanes and summing on this
+   VM. Its value is memory: no per-block binding objects.
+2. **Catalogue COUNT helps where packed blocks dominate** (EventTime 894 → 665,
+   close to plain's 617; Jena wv 19 → 14), and loses on WatchID (1,246 →
+   1,609). That suggests the 64-row filter windows cost more than decode +
+   compare at K ≈ 62.
+3. **The big remaining gap is prediction and runs, not packed blocks.** Jena
+   pressure is 98% delta and stays 7–8× slower than plain for both SUM and
+   COUNT. ClickBench's run-heavy columns stay 3× slower. The next speed arms
+   are a native weighted delta SUM and run-weighted COUNT (which Codex already
+   fused in filter/) inside the owner operations.
+
 ## Images to hand Engine's witness early
 
 Engine's witness is a selected grouped reduction over parts with different

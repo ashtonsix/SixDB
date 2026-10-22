@@ -10,6 +10,8 @@
 #include <ikea/effects.h>
 #include <ikea/seriespack.h>
 
+#include "kernels.h"
+
 #include <algorithm>
 #include <bit>
 #include <chrono>
@@ -432,21 +434,21 @@ inline u128 encoded_sum_narrow(const column &c, const block_mask &mask) {
 }
 
 // Exact COUNT(u >= threshold) over the selected blocks.
-inline u64 encoded_count_ge(const column &c, const block_mask &mask, u64 threshold) {
+// Exact COUNT(u >= threshold) within one block.
+inline u64 block_count_ge(const column &c, std::size_t b, u64 threshold) {
     u64 total = 0;
     alignas(64) u64 buffer[block_rows];
-    for_each_block(mask, [&](std::size_t b) {
+    {
         const auto &d = c.blocks[b];
         // Constant, runs and packed bases are block minima; a delta anchor isn't,
         // and patched or delta_patched exceptions can lie below the base.
         if (d.type != kind::delta && d.type != kind::patched && d.type != kind::delta_patched &&
             d.base >= threshold) {
-            total += block_rows;
-            return;
+            return block_rows;
         }
         switch (d.type) {
         case kind::constant:
-            return;
+            return 0;
         case kind::delta: {
             c.decoders[b].read_unchecked(0, block_rows, buffer);
             i64 rbase;
@@ -472,13 +474,11 @@ inline u64 encoded_count_ge(const column &c, const block_mask &mask, u64 thresho
             c.exceptions[b]->read_unchecked(0, p.n, exc);
             for (unsigned e = 0; e < p.n; ++e)
                 total += p.lo + exc[e] >= threshold;
-            if (d.base >= threshold) {
-                total += block_rows - p.n;
-                return;
-            }
+            if (d.base >= threshold)
+                return total + block_rows - p.n;
             const u64 rhs = threshold - d.base;
             if (d.width < 64 && rhs >> d.width)
-                return;
+                return total;
             c.decoders[b].read_unchecked(0, block_rows, buffer);
             u64 inliers = 0;
             for (std::size_t i = 0; i < block_rows; ++i)
@@ -490,7 +490,7 @@ inline u64 encoded_count_ge(const column &c, const block_mask &mask, u64 thresho
         case kind::packed: {
             const u64 rhs = threshold - d.base;
             if (d.width < 64 && rhs >> d.width)
-                return;  // the threshold exceeds every representable residual
+                return 0;  // the threshold exceeds every representable residual
             c.decoders[b].read_unchecked(0, block_rows, buffer);
             for (std::size_t i = 0; i < block_rows; ++i)
                 total += buffer[i] >= rhs;
@@ -506,6 +506,48 @@ inline u64 encoded_count_ge(const column &c, const block_mask &mask, u64 thresho
             break;
         }
         }
+    }
+    return total;
+}
+
+// Exact COUNT(u >= threshold) over the selected blocks.
+inline u64 encoded_count_ge(const column &c, const block_mask &mask, u64 threshold) {
+    u64 total = 0;
+    for_each_block(mask, [&](std::size_t b) { total += block_count_ge(c, b, threshold); });
+    return total;
+}
+
+// Catalogue arms: the same SUM and COUNT over packed blocks, deriving each
+// plane from the column payload and the descriptor alone (no per-block decoder
+// binding), with native packet reduction for SUM and SeriesPack filters for
+// COUNT. Other kinds use the owner operations above. These require the body to
+// live in c.payload, so they are measured separately until every consumer
+// places bodies that way.
+inline u128 catalogue_sum(const column &c, const block_mask &mask) {
+    u128 total = 0;
+    for_each_block(mask, [&](std::size_t b) {
+        const auto &d = c.blocks[b];
+        if (d.type == kind::packed && d.width <= 56)
+            total += static_cast<u128>(d.base) * block_rows +
+                     plane_kernels(d.width).sum(c.payload.data() + d.offset, block_rows);
+        else
+            total += block_sum(c, b);
+    });
+    return total;
+}
+
+inline u64 catalogue_count_ge(const column &c, const block_mask &mask, u64 threshold) {
+    u64 total = 0;
+    for_each_block(mask, [&](std::size_t b) {
+        const auto &d = c.blocks[b];
+        if (d.type != kind::packed || d.base >= threshold) {
+            total += block_count_ge(c, b, threshold);
+            return;
+        }
+        const u64 rhs = threshold - d.base;
+        if (d.width < 64 && rhs >> d.width)
+            return;
+        total += plane_kernels(d.width).count_ge(c.payload.data() + d.offset, block_rows, rhs);
     });
     return total;
 }
