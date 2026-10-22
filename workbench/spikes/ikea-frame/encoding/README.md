@@ -10,7 +10,7 @@ baseline and compression investigations. It defines no interface.
 | Need | Available now | Gap |
 | --- | --- | --- |
 | Real integer/time columns | ClickBench `hits` slice: 3,000,000 rows, 105 columns, 77 integer/time ([provenance](../../../../../corpora/clickbench-rows/PROVENANCE.json), local at `~/corpora/clickbench-rows/`) | Not yet a registered [dataset](../../../datasets/README.md); its row order is ClickBench's (sorted by CounterID, date, UserID, time), which favours runs |
-| Floats and decimals | None in SixDB | TPC-H via DuckDB's `tpch` extension (availability offline unchecked); Calico's N-CMAPSS/PMU corpora in S3; ALP paper's float datasets |
+| Floats and decimals | None in SixDB | TPC-H via DuckDB's `tpch` extension (not installed in the VM; installing fetches it from DuckDB's extension repository); IMDb ratings (Codex/Workbench locating a bounded slice); Calico's N-CMAPSS/PMU corpora in S3; ALP paper's float datasets. The VM volume has about 23 GiB free, so new corpora need explicit size bounds |
 | Time series | Calico's TSBS generator recipe | Not ported; needs the Go `tsbs` tool |
 | Strings | Out of scope (Ashton); lengths and prefixes only | — |
 | Baselines | DuckDB 1.5.4 and Polars 1.42.1 (Python, in the Ubuntu VM); Calico Frame sources | No DuckDB/Polars C++ peers in [native peers](../../../peers/README.md); Python timings include interpreter edges |
