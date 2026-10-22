@@ -71,6 +71,45 @@ std::uint64_t count_ge(const std::uint8_t *data, unsigned take, std::uint64_t rh
     return total;
 }
 
+// Selected rows of a full 256-row plane, by native 16-row packet: a packet
+// with no selected row is not read; others reduce under mask16 of their
+// selection bits.
+template <unsigned K> std::uint64_t masked_sum(const std::uint8_t *data, const std::uint64_t *selected) {
+    const sp::dense_source<sp::format<K>> source{data, 256};
+#if defined(__aarch64__) || defined(__AVX2__)
+    namespace cp = sp::composition;
+    const auto expression = cp::describe(source);
+    cp::native_ops ops;
+    sp::native::sum_state total;
+    for (unsigned done = 0; done < 256; done += 16) {
+        const auto active = static_cast<std::uint16_t>(selected[done / 64] >> (done % 64));
+        if (!active)
+            continue;
+        const auto values = cp::read(ops, expression, done, std::uint16_t{0xffff});
+        total.add(sp::native::sum(values, sp::native::mask16<K>(active)));
+    }
+    return total.finish();
+#else
+    const auto decoder = sp::bind_decoder<std::uint64_t>(source);
+    std::uint64_t total = 0;
+    for (unsigned i = 0; i < 256; ++i)
+        if (selected[i / 64] >> (i % 64) & 1)
+            total += decoder.get_unchecked(i);
+    return total;
+#endif
+}
+
+template <ikea::comparison Op, unsigned K>
+std::uint64_t masked_count(const std::uint8_t *data, const std::uint64_t *selected, std::uint64_t rhs) {
+    const sp::dense_source<sp::format<K>> source{data, 256};
+    std::uint64_t total = 0;
+    for (unsigned word = 0; word < 4; ++word)
+        if (selected[word])
+            total += std::popcount(sp::filter_unchecked<Op>(source, word * 64, 64, rhs, selected[word]) &
+                                   selected[word]);
+    return total;
+}
+
 template <std::size_t... K> constexpr plane_catalogue_t catalogue(std::index_sequence<K...>) {
     return {{nullptr, point<K + 1>...},
             {nullptr, range<K + 1>...},
@@ -78,7 +117,10 @@ template <std::size_t... K> constexpr plane_catalogue_t catalogue(std::index_seq
             {nullptr, count_ge<K + 1>...},
             {nullptr, lane<K + 1, std::uint8_t>()...},
             {nullptr, lane<K + 1, std::uint16_t>()...},
-            {nullptr, lane<K + 1, std::uint32_t>()...}};
+            {nullptr, lane<K + 1, std::uint32_t>()...},
+            {nullptr, masked_sum<K + 1>...},
+            {nullptr, masked_count<ikea::comparison::greater_equal, K + 1>...},
+            {nullptr, masked_count<ikea::comparison::equal, K + 1>...}};
 }
 }  // namespace
 

@@ -618,6 +618,44 @@ template <class F> void for_each_block(const block_mask &m, F &&visit) {
     }
 }
 
+// A row selection within one block: row i is bit i % 64 of word i / 64. For
+// the row-selected aggregates below it is the caller's selection AND
+// validity; validity and original coordinates stay the caller's (or a
+// nullable image's separate plane), never the body's.
+using row_selection = std::array<u64, 4>;
+inline unsigned selected_count(const row_selection &s) {
+    return static_cast<unsigned>(std::popcount(s[0]) + std::popcount(s[1]) + std::popcount(s[2]) +
+                                 std::popcount(s[3]));
+}
+inline bool selection_empty(const row_selection &s) { return !(s[0] | s[1] | s[2] | s[3]); }
+inline bool selection_full(const row_selection &s) { return (s[0] & s[1] & s[2] & s[3]) == ~u64{0}; }
+inline bool selected(const row_selection &s, unsigned row) { return s[row / 64] >> (row % 64) & 1; }
+// Selected rows in [first, limit).
+inline unsigned selected_in(const row_selection &s, unsigned first, unsigned limit) {
+    unsigned n = 0;
+    for (unsigned w = first / 64; w * 64 < limit; ++w) {
+        u64 m = s[w];
+        const unsigned lo = w * 64;
+        if (first > lo)
+            m &= ~u64{0} << (first - lo);
+        if (limit < lo + 64)
+            m &= (u64{1} << (limit - lo)) - 1;
+        n += static_cast<unsigned>(std::popcount(m));
+    }
+    return n;
+}
+// The last selected row of a non-empty selection.
+inline unsigned last_selected(const row_selection &s) {
+    for (unsigned w = 4; w-- > 0;)
+        if (s[w])
+            return w * 64 + 63 - static_cast<unsigned>(std::countl_zero(s[w]));
+    std::abort();
+}
+// Block b's selection from a column's row plane of four words per block.
+inline row_selection selection_at(std::span<const u64> rows, std::size_t b) {
+    return {rows[4 * b], rows[4 * b + 1], rows[4 * b + 2], rows[4 * b + 3]};
+}
+
 // A catalogue narrow-lane range (range8/16/32).
 template <class T>
 using lane_range = void (*)(const std::uint8_t *, std::size_t, std::size_t, T *);
@@ -978,6 +1016,9 @@ struct code_sum {
         }
         return coded_sum(k, [&](u64 code) { return values[code]; });
     }
+    // Row-selected SUM over a coded block (non-empty selection), on the same
+    // decoded entries.
+    u128 masked(const borrowed_block &k, const row_selection &s);
 };
 
 // Exact SUM over the blocks selected by mask (one bit per block).
@@ -1041,9 +1082,11 @@ inline u128 encoded_sum_narrow(const column &c, const block_mask &mask,
 // differences of real u64 values. extent_of and admits check geometry only, so
 // a forged plane whose running sum wraps mod 2^64 could break the
 // non-decreasing law this search assumes.
-inline u64 monotone_delta_count_ge(const borrowed_block &k, i64 rbase, u64 threshold) {
+// monotone_delta_first_ge returns that first row (256 when none reaches t),
+// so a row-selected COUNT is popcount(S AND rows >= first).
+inline unsigned monotone_delta_first_ge(const borrowed_block &k, i64 rbase, u64 threshold) {
     if (k.d.base >= threshold)
-        return block_rows;
+        return 0;
     const unsigned spacing = k.delta_checkpoints == checkpoints::every64 ? 64 : 16;
     // First checkpoint index j in [1, 256 / spacing) with x(j * spacing) >= t,
     // or 256 / spacing when none reaches it.
@@ -1062,9 +1105,12 @@ inline u64 monotone_delta_count_ge(const borrowed_block &k, i64 rbase, u64 thres
     for (unsigned i = first + 1; i < end; ++i) {
         x += static_cast<u64>(rbase) + s[i - first];
         if (x >= threshold)
-            return block_rows - i;
+            return i;
     }
-    return block_rows - end;
+    return end;
+}
+inline u64 monotone_delta_count_ge(const borrowed_block &k, i64 rbase, u64 threshold) {
+    return block_rows - monotone_delta_first_ge(k, rbase, threshold);
 }
 
 inline u64 stored_count_ge(const borrowed_block &k, u64 threshold) {
@@ -1285,6 +1331,8 @@ struct code_count {
         return total;
     }
     u64 count(std::size_t b) { return count(borrow(*c, b)); }
+    // Row-selected COUNT over a coded block (non-empty selection).
+    u64 masked(const borrowed_block &k, const row_selection &s);
 };
 
 // Exact COUNT(u >= threshold) within one block. A lone coded block translates
@@ -1381,6 +1429,7 @@ struct code_count_eq {
         prepare(k.dictionary);
         return present ? stored_count_eq(k, code) : 0;
     }
+    u64 masked(const borrowed_block &k, const row_selection &s);
 };
 
 // Exact COUNT(u == v) within one block, and over the selected blocks.
@@ -1465,3 +1514,5 @@ inline void consume(u128 v) {
     sink_high = static_cast<u64>(v >> 64);
 }
 }  // namespace frame_encoding
+
+#include "selected.h"  // row-selected aggregates over the operations above

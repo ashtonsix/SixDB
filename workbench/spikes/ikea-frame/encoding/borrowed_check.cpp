@@ -220,6 +220,116 @@ void check_block(const borrowed_block &k, const expected &e, std::size_t b, bool
     }
 }
 
+u64 mix(u64 x) {  // SplitMix64 finaliser
+    x += 0x9e3779b97f4a7c15u;
+    x = (x ^ (x >> 30)) * 0xbf58476d1ce4e5b9u;
+    x = (x ^ (x >> 27)) * 0x94d049bb133111ebu;
+    return x ^ (x >> 31);
+}
+// Random selection with about per_mille / 1000 of the rows.
+row_selection random_selection(u64 seed, unsigned per_mille) {
+    row_selection s{};
+    for (unsigned i = 0; i < block_rows; ++i)
+        if (mix(seed * 257 + i) % 1000 < per_mille)
+            s[i / 64] |= u64{1} << (i % 64);
+    return s;
+}
+row_selection rows_of(std::initializer_list<unsigned> rows) {
+    row_selection s{};
+    for (unsigned r : rows)
+        s[r / 64] |= u64{1} << (r % 64);
+    return s;
+}
+
+// Selections for a block: adversarial shapes (empty, full, single row 0 or
+// 255, every 16th row, rows either side of every checkpoint spacing,
+// alternating, prefix and suffix, only and all but the exception positions)
+// plus random selections at several densities. few: a short subset.
+std::vector<row_selection> selections_for(const borrowed_block &k, std::size_t b, bool few) {
+    std::vector<row_selection> out;
+    out.push_back({});
+    out.push_back({~u64{0}, ~u64{0}, ~u64{0}, ~u64{0}});
+    out.push_back(rows_of({0}));
+    out.push_back(rows_of({255}));
+    out.push_back(random_selection(b, 100));
+    if (k.d.type == kind::patched || k.d.type == kind::delta_patched) {
+        const auto e = exception_rows(patches(k));
+        out.push_back(e);
+        out.push_back(and_not({~u64{0}, ~u64{0}, ~u64{0}, ~u64{0}}, e));
+    }
+    if (few)
+        return out;
+    row_selection every16{};
+    for (unsigned i = 0; i < block_rows; i += 16)
+        every16[i / 64] |= u64{1} << (i % 64);
+    out.push_back(every16);
+    out.push_back(rows_of({15, 16, 17, 63, 64, 65, 127, 128, 129, 191, 192, 193, 239, 240, 241}));
+    out.push_back(rows_of({1, 254}));
+    out.push_back({0x5555555555555555u, 0x5555555555555555u, 0x5555555555555555u, 0x5555555555555555u});
+    out.push_back({0xaaaaaaaaaaaaaaaau, 0xaaaaaaaaaaaaaaaau, 0xaaaaaaaaaaaaaaaau, 0xaaaaaaaaaaaaaaaau});
+    out.push_back({~u64{0}, (u64{1} << 36) - 1, 0, 0});           // rows [0, 100)
+    out.push_back({0, 0, 0, ~u64{0} << 8});                         // rows [200, 256)
+    out.push_back({~u64{0}, ~u64{0}, ~u64{0}, ~u64{0} >> 1});        // all but 255
+    out.push_back({~u64{1}, ~u64{0}, ~u64{0}, ~u64{0}});            // all but 0
+    for (unsigned per_mille : {1u, 10u, 500u, 900u, 990u})
+        out.push_back(random_selection(b * 7 + per_mille, per_mille));
+    return out;
+}
+
+// Every row-selected operation against the input oracle restricted to S, and
+// the decode-then-mask control against the same answers.
+std::size_t check_masked(const borrowed_block &k, const expected &e, std::size_t b, bool few) {
+    std::vector<u64> thresholds = {e.thresholds[0], e.thresholds[1], e.thresholds[2], e.thresholds[4],
+                                   e.thresholds[5]};
+    for (std::size_t i = 6; i < e.thresholds.size(); i += few ? 4 : 1)
+        thresholds.push_back(e.thresholds[i]);
+    std::size_t checks = 0;
+    for (const auto &s : selections_for(k, b, few)) {
+        u128 sum = 0, stored_sum = 0;
+        for (unsigned i = 0; i < block_rows; ++i)
+            if (selected(s, i))
+                sum += e.values[i], stored_sum += e.stored[i];
+        if (masked_stored_sum(k, s) != stored_sum)
+            fail("masked stored SUM", b);
+        if (masked_block_sum(k, s) != sum || reference_block_sum(k, s) != sum)
+            fail("masked SUM", b);
+        auto count = [&](const u64 *v, auto keep) {
+            u64 n = 0;
+            for (unsigned i = 0; i < block_rows; ++i)
+                n += selected(s, i) && keep(v[i]);
+            return n;
+        };
+        for (u64 t : e.stored_thresholds)
+            if (masked_stored_count_ge(k, s, t) != count(e.stored, [&](u64 x) { return x >= t; }) ||
+                masked_stored_count_eq(k, s, t) != count(e.stored, [&](u64 x) { return x == t; }))
+                fail("masked stored COUNT", b);
+        for (unsigned row : {0u, 99u, 255u}) {
+            const u64 v = e.stored[row];
+            if (masked_stored_count_eq(k, s, v) != count(e.stored, [&](u64 x) { return x == v; }))
+                fail("masked stored equality COUNT", b);
+        }
+        for (u64 t : thresholds) {
+            const u64 ge = count(e.values, [&](u64 x) { return x >= t; });
+            const u64 eq = count(e.values, [&](u64 x) { return x == t; });
+            if (masked_block_count_ge(k, s, t) != ge || reference_block_count_ge(k, s, t) != ge)
+                fail("masked COUNT", b);
+            if (masked_block_count_eq(k, s, t) != eq || reference_block_count_eq(k, s, t) != eq)
+                fail("masked equality COUNT", b);
+        }
+        if (k.coded && !selection_empty(s)) {
+            code_sum sums;
+            code_count counts(e.thresholds[5]);
+            code_count_eq equal(e.values[99]);
+            if (sums.masked(k, s) != sum ||
+                counts.masked(k, s) != count(e.values, [&](u64 x) { return x >= e.thresholds[5]; }) ||
+                equal.masked(k, s) != count(e.values, [&](u64 x) { return x == e.values[99]; }))
+                fail("masked code aggregate", b);
+        }
+        ++checks;
+    }
+    return checks;
+}
+
 // Run read in a child; true when it was killed by SIGSEGV/SIGBUS.
 template <class F> bool faults(F &&read) {
     std::fflush(nullptr);
@@ -313,6 +423,34 @@ int main(int argc, char **argv) {
 
     const column c = encode(values, options);
     const std::vector<u64> stored = stored_oracle(c, values);
+    // A per-block row plane (selection AND validity) mixing empty, full,
+    // sparse, dense and adversarial blocks, for the column aggregates.
+    std::vector<u64> plane(4 * c.blocks.size());
+    for (std::size_t b = 0; b < c.blocks.size(); ++b) {
+        row_selection sel{};
+        switch (b % 6) {
+        case 0: break;
+        case 1: sel = {~u64{0}, ~u64{0}, ~u64{0}, ~u64{0}}; break;
+        case 2: sel = random_selection(b, 10); break;
+        case 3: sel = random_selection(b, 500); break;
+        case 4: sel = random_selection(b, 990); break;
+        default: sel = rows_of({0, 16, 17, 64, 255}); break;
+        }
+        std::copy(sel.begin(), sel.end(), plane.begin() + 4 * b);
+    }
+    // Input oracle under a coarse mask and the row plane.
+    auto masked_oracle = [&](const std::vector<u64> &v, const block_mask &mask, u64 t, u64 x) {
+        u128 sum = 0;
+        u64 ge = 0, eq = 0, n = 0;
+        for (std::size_t b = 0; b < c.blocks.size(); ++b)
+            if (mask.words[b / 64] >> (b % 64) & 1)
+                for (unsigned i = 0; i < block_rows; ++i)
+                    if (selected(selection_at(plane, b), i)) {
+                        const u64 y = v[b * block_rows + i];
+                        sum += y, ge += y >= t, eq += y == x, ++n;
+                    }
+        return std::tuple{sum, ge, eq, n};
+    };
     const std::size_t nblocks = c.blocks.size();
     const checkpoints mode = c.options.delta_checkpoints;
 
@@ -355,7 +493,7 @@ int main(int argc, char **argv) {
     const placement placements[] = {{"end", true, 0}, {"start", false, 0}, {"start+1", false, 1},
                                     {"start+3", false, 3}};
     std::size_t start_alignment[8] = {};
-    std::size_t checked = 0, scan_checked = 0;
+    std::size_t checked = 0, scan_checked = 0, masked_checked = 0, masked_scan_checked = 0;
     for (const auto &where : placements) {
         std::size_t placed_part = SIZE_MAX;
         dictionary_view dictionary{};
@@ -386,6 +524,7 @@ int main(int argc, char **argv) {
             }
             const auto e = expect(values.data() + b * block_rows, stored.data() + b * block_rows, median);
             check_block(k, e, b, !where.shift);
+            masked_checked += check_masked(k, e, b, where.shift != 0);
             // Column wrappers construct the same view and must agree.
             const borrowed_block in_place = borrow(c, b);
             alignas(64) u64 a[block_rows], w[block_rows];
@@ -411,6 +550,24 @@ int main(int argc, char **argv) {
                 if (std::memcmp(a, e.values, sizeof a) || block_sum(scan) != e.sum ||
                     narrow_stored_sum(scan) != e.stored_sum || catalogue_stored_sum(scan) != e.stored_sum)
                     fail("scan grant SUM/decode", b);
+                // Row-selected SUM over the scan prefix, and COUNT when
+                // rbase < 0 (the non-decreasing search reads checkpoints).
+                for (const auto &sel : selections_for(scan, b, false)) {
+                    u128 sum = 0;
+                    for (unsigned i = 0; i < block_rows; ++i)
+                        sum += selected(sel, i) ? e.values[i] : 0;
+                    if (masked_block_sum(scan, sel) != sum)
+                        fail("scan grant masked SUM", b);
+                    if (delta_rbase(scan) < 0 || c.options.delta_checkpoints == checkpoints::none)
+                        for (u64 t : e.thresholds) {
+                            u64 n = 0;
+                            for (unsigned i = 0; i < block_rows; ++i)
+                                n += selected(sel, i) && e.values[i] >= t;
+                            if (masked_block_count_ge(scan, sel, t) != n)
+                                fail("scan grant masked COUNT", b);
+                        }
+                    ++masked_scan_checked;
+                }
                 for (u64 t : e.thresholds) {
                     code_count codes(t);
                     if (delta_rbase(scan) < 0 &&
@@ -444,6 +601,16 @@ int main(int argc, char **argv) {
                 catalogue_sum(c, *mask) != sum || encoded_count_ge(c, *mask, median) != n ||
                 catalogue_count_ge(c, *mask, median) != n)
                 fail("mask aggregate differs from the input", 0);
+        // Row-selected column aggregates: coarse mask, then the row plane.
+        for (const block_mask *mask : {&all, &sparse}) {
+            const u64 probe = values[values.size() / 2];
+            const auto [sum, ge, eq, n] = masked_oracle(values, *mask, median, probe);
+            if (masked_encoded_sum(c, *mask, plane) != sum || reference_masked_sum(c, *mask, plane) != sum ||
+                masked_encoded_count_ge(c, *mask, plane, median) != ge ||
+                reference_masked_count_ge(c, *mask, plane, median) != ge ||
+                masked_encoded_count_eq(c, *mask, plane, probe) != eq || masked_selected_rows(*mask, plane) != n)
+                fail("masked column aggregate differs from the input", 0);
+        }
         // Equality over all blocks at present values from several parts and
         // at one absent value, against the input.
         for (std::size_t row : {std::size_t{0}, values.size() / 3, values.size() / 2, values.size() - 1}) {
@@ -463,7 +630,7 @@ int main(int argc, char **argv) {
     std::map<std::string, std::size_t> seen;
     std::map<std::string, std::map<std::string, std::pair<int, int>>> last_byte;  // class -> op -> (faulted, probed)
     std::map<std::string, std::pair<int, int>> end_short;  // class -> (faulted, probed)
-    int injected = 0, dictionary_injected = 0, dictionary_faulted = 0;
+    int injected = 0, dictionary_injected = 0, dictionary_faulted = 0, empty_guarded = 0;
     for (std::size_t b = 0; b < nblocks; ++b) {
         borrowed_block k = borrow(c, b);
         const auto grant = extent_of(k.d, mode, k.body, k.grant)->read_grant_bytes;
@@ -497,6 +664,28 @@ int main(int argc, char **argv) {
         if (!faults([&] { battery(k); }))
             fail("battery read within a grant one byte short at the start", b);
         injected += 2;
+        // An empty row selection returns before any body or dictionary access:
+        // body and dictionary placed entirely inside a PROT_NONE page.
+        {
+            borrowed_block none = k;
+            none.body = body_pages.base;
+            none.grant = 0;
+            if (none.coded)
+                none.dictionary.plane = dictionary_pages.base, none.dictionary.grant = 0;
+            const row_selection empty{};
+            if (faults([&] {
+                    code_sum sums;
+                    code_count counts(1);
+                    consume(masked_block_sum(none, empty) + masked_stored_sum(none, empty) +
+                            reference_block_sum(none, empty));
+                    sink = masked_block_count_ge(none, empty, 1) + masked_block_count_eq(none, empty, 1) +
+                           masked_stored_count_ge(none, empty, 1) + masked_stored_count_eq(none, empty, 1) +
+                           reference_block_count_ge(none, empty, 1) + reference_block_count_eq(none, empty, 1);
+                    (void)sums, (void)counts;
+                }))
+                fail("an empty row selection read the body or dictionary", b);
+            ++empty_guarded;
+        }
         if (k.coded) {
             k.body = place(body_pages, placements[0], src, grant);
             k.grant = grant;
@@ -630,6 +819,13 @@ int main(int argc, char **argv) {
                         catalogue_count_ge(*image, *mask, median, &shared) != ge ||
                         encoded_count_eq(*image, *mask, probe, &shared) != eq)
                         fail("cached mask aggregate differs from the input", 0);
+                    const auto [msum, mge, meq, mn] = masked_oracle(v, *mask, median, probe);
+                    if (masked_encoded_sum(*image, *mask, plane, &shared) != msum ||
+                        masked_encoded_count_ge(*image, *mask, plane, median, &shared) != mge ||
+                        masked_encoded_count_eq(*image, *mask, plane, probe, &shared) != meq ||
+                        masked_encoded_sum(*image, *mask, plane) != msum)
+                        fail("cached masked aggregate differs from the input", 0);
+                    (void)mn;
                     ++cached_checks;
                 }
             }
@@ -685,6 +881,8 @@ int main(int argc, char **argv) {
         std::printf("}");
     }
     std::printf("},\"identity_checks\":%zu,\"identity_alias_stale\":%d,\"cached_checks\":%zu,"
-                "\"cache_identities\":%zu,\"cache_bytes\":%zu,\"identity_alias_stale_cached\":%d}\n",
-                identity_checks, alias_stale, cached_checks, cache_identities, cache_bytes, alias_stale_cached);
+                "\"cache_identities\":%zu,\"cache_bytes\":%zu,\"identity_alias_stale_cached\":%d,"
+                "\"masked_checks\":%zu,\"masked_scan_checks\":%zu,\"empty_selection_guarded\":%d}\n",
+                identity_checks, alias_stale, cached_checks, cache_identities, cache_bytes, alias_stale_cached,
+                masked_checked, masked_scan_checked, empty_guarded);
 }

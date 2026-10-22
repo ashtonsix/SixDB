@@ -37,6 +37,15 @@ struct plane_operations {
     void (*range8)(const std::uint8_t *, std::size_t first, std::size_t take, std::uint8_t *out);
     void (*range16)(const std::uint8_t *, std::size_t first, std::size_t take, std::uint16_t *out);
     void (*range32)(const std::uint8_t *, std::size_t first, std::size_t take, std::uint32_t *out);
+    // Row-selected forms over one full 256-row plane; selected names rows by
+    // bit i % 64 of word i / 64. masked_sum is modulo 2^64 (exact for
+    // K <= 56) and reads only the native 16-row windows that hold a selected
+    // row (full window within them). masked_count_ge/eq count selected rows
+    // with value >= or == rhs through 64-row filters whose active mask is the
+    // selection word; a word with no selected row reads nothing.
+    std::uint64_t (*masked_sum)(const std::uint8_t *, const std::uint64_t *selected);
+    std::uint64_t (*masked_count_ge)(const std::uint8_t *, const std::uint64_t *selected, std::uint64_t rhs);
+    std::uint64_t (*masked_count_eq)(const std::uint8_t *, const std::uint64_t *selected, std::uint64_t rhs);
 };
 
 // One width-indexed array per operation (8-byte stride), so a hot reader that
@@ -51,13 +60,17 @@ struct plane_catalogue_t {
     std::array<decltype(plane_operations::range8), 65> range8;
     std::array<decltype(plane_operations::range16), 65> range16;
     std::array<decltype(plane_operations::range32), 65> range32;
+    std::array<decltype(plane_operations::masked_sum), 65> masked_sum;
+    std::array<decltype(plane_operations::masked_count_ge), 65> masked_count_ge;
+    std::array<decltype(plane_operations::masked_count_eq), 65> masked_count_eq;
 };
 extern const plane_catalogue_t plane_catalogue;
 
 inline plane_operations plane_kernels(unsigned width) {
     const auto &c = plane_catalogue;
     return {c.point[width], c.range[width],   c.sum[width],    c.count_ge[width],
-            c.range8[width], c.range16[width], c.range32[width]};
+            c.range8[width], c.range16[width], c.range32[width], c.masked_sum[width],
+            c.masked_count_ge[width], c.masked_count_eq[width]};
 }
 inline constexpr std::size_t plane_catalogue_bytes() {
     return sizeof(plane_catalogue);
