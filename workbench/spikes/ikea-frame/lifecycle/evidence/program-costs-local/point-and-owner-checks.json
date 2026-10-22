@@ -1,0 +1,14 @@
+{
+  "batch": "4830001 batch checks pass: ordered duplicates, masks/groups/blocks, immutable originals, exact removal, bounded base reads and protected none.",
+  "indexed": "indexed-sparse-repair: 328160 checks pass: four CP modes, raw/sorted/frequency, NULL-only reuse, original masks, repeated edits, retained neighbours/dictionaries and old readers.",
+  "owners": "batch-overrides-debt: 984480 native batch checks pass: all CP/dictionaries, ordered assignments, immutable-base reuse, masked/old/folded readers and genuine successor publication.",
+  "sparse-control": "sparse-repair-or-fold: 328160 checks pass: four CP modes, raw/sorted/frequency, NULL-only reuse, original masks, repeated edits, retained neighbours/dictionaries and old readers.",
+  "native-control": "Native coalescing passes: latest assignment, no-op publication, no transient widening, flags-only reuse and old reader.",
+  "inline": "inline-plan-sparse-repair: 328160 checks pass: four CP modes, raw/sorted/frequency, NULL-only reuse, original masks, repeated edits, retained neighbours/dictionaries and old readers.",
+  "nullable": "batch-overrides-predictor-fold: 984480 native batch checks pass: all CP/dictionaries, ordered assignments, immutable-base reuse, masked/old/folded readers and genuine successor publication.\nbatch-overrides-zero-fold: 984480 native batch checks pass: all CP/dictionaries, ordered assignments, immutable-base reuse, masked/old/folded readers and genuine successor publication.",
+  "material": "190028 phase material checks pass: native8/16/32/64, exact u128, separate presence/validity, original coarse masks, dictionary/RHS cache changes, overlay corrections and protected none.",
+  "repair": "22528 repair plans / 6082560 independent points+aggregates pass: heap/inline/spill, widths 1..64, all CP modes, anchors/interiors/last, descriptor shifts, refusals and unaligned guards.",
+  "timed_histories": 51200,
+  "verification_histories": 32000,
+  "original_point_comparisons": 159907840
+}

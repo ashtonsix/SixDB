@@ -252,3 +252,8 @@ comparisons.
 The [batch follow-up](BATCH.md) charges sorting/indexing and linear override
 merging. Dispersed override writes improve; repeated-hot edits and sparse block
 indexing do not justify a universal replacement. Fold debt remains explicit.
+
+[Current program costs](PROGRAM-COSTS.md) separate full Pool-census accounting
+from timing, integrate guarded/faster masked owner operations and charge NULL
+fill construction. The fill and inline-plan alternatives earn their place only
+for their demonstrated workloads; native/plain storage remains a serious choice.

@@ -146,3 +146,8 @@ The [changed-block follow-up](BLOCK-FOLD.md) prices narrower codec work. The
 stronger native controls, actual morphology coverage and a coherent masked-owner
 cut. Its conditional wins and remaining gaps supersede policy guesses from this
 first chronology; the cohorts are not pooled.
+
+The [current program-cost study](PROGRAM-COSTS.md) also removes the full Pool
+census from timed operations and records capacity separately. This first cohort
+includes that instrumentation cost; retain its source-qualified observations,
+but use the newer plain chronology for current write rankings.

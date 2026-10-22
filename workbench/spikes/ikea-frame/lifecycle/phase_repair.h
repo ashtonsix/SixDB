@@ -1,6 +1,7 @@
 #pragma once
 #include "phase_material.h"
 #include "phase_plane.h"
+#include <utility>
 #include <vector>
 #include <cstring>
 
@@ -8,15 +9,47 @@ namespace frame_lifecycle::phase {
 enum class RepairReason { success, no_value_change, coded, constant, runs, other_kind, packed_basis, delta_bound, geometry };
 // Preflight over a whole logical block. Stores happen only after all new
 // residuals and checkpoint updates are staged and the group has fresh backing.
-struct BlockRepair {
+// Common sparse plans have one or two stores. Keep four inline and preserve
+// heap fallback for dense/anchor repairs; this is not a general Ikea container.
+class SmallPlanEdits {
+    std::array<PlaneEdit,4> small_{};
+    std::vector<PlaneEdit> large_;
+    unsigned count_{};
+public:
+    SmallPlanEdits()=default;
+    SmallPlanEdits(const SmallPlanEdits&)=default;
+    SmallPlanEdits& operator=(const SmallPlanEdits&)=default;
+    SmallPlanEdits(SmallPlanEdits&& other) noexcept
+        :small_(other.small_),large_(std::move(other.large_)),count_(std::exchange(other.count_,0)) {other.large_.clear();}
+    SmallPlanEdits& operator=(SmallPlanEdits&& other) noexcept {
+        if (this!=&other) {small_=other.small_;large_=std::move(other.large_);count_=std::exchange(other.count_,0);other.large_.clear();}
+        return *this;
+    }
+    void push_back(PlaneEdit value) {
+        if (count_<small_.size()) small_[count_++]=value;
+        else {
+            if (count_==small_.size()) {large_.reserve(8);large_.insert(large_.end(),small_.begin(),small_.end());}
+            large_.push_back(value);++count_;
+        }
+    }
+    bool empty() const {return !count_;}
+    std::size_t size() const {return count_;}
+    bool uses_heap() const {return count_>small_.size();}
+    const PlaneEdit* data() const {return uses_heap()?large_.data():small_.data();}
+    const PlaneEdit* begin() const {return data();}
+    const PlaneEdit* end() const {return data()+count_;}
+};
+template<class Edits> struct RepairPlan {
     u64 anchor{};
-    std::vector<PlaneEdit> plane, checkpoints;
+    Edits plane, checkpoints;
     unsigned checkpoint_offset{}, checkpoint_rows{}, checkpoint_width{}, checkpoint_bytes{};
     RepairReason reason=RepairReason::success;
     unsigned examined_positions{};
 };
-inline bool reject_repair(BlockRepair& out,RepairReason reason) {out.reason=reason;return false;}
-inline bool repair_kind(const fe::borrowed_block& source,BlockRepair& out) {
+using BlockRepair=RepairPlan<std::vector<PlaneEdit>>;
+using InlineBlockRepair=RepairPlan<SmallPlanEdits>;
+inline bool reject_repair(auto& out,RepairReason reason) {out.reason=reason;return false;}
+inline bool repair_kind(const fe::borrowed_block& source,auto& out) {
     if (source.coded) return reject_repair(out,RepairReason::coded);
     if (source.d.type==fe::kind::constant) return reject_repair(out,RepairReason::constant);
     if (source.d.type==fe::kind::runs) return reject_repair(out,RepairReason::runs);
@@ -25,8 +58,8 @@ inline bool repair_kind(const fe::borrowed_block& source,BlockRepair& out) {
     if (source.rows!=256 || !source.d.width || source.d.width>64) return reject_repair(out,RepairReason::geometry);
     return true;
 }
-template<class Change>
-inline void stage_checkpoints(const fe::borrowed_block& source,Change change,BlockRepair& out) {
+template<class Change,class Plan>
+inline void stage_checkpoints(const fe::borrowed_block& source,Change change,Plan& out) {
     const unsigned width=source.d.width;
     if (source.delta_checkpoints==fe::checkpoints::none) return;
     const unsigned spacing=source.delta_checkpoints==fe::checkpoints::every64?64:16;
@@ -48,7 +81,7 @@ inline void stage_checkpoints(const fe::borrowed_block& source,Change change,Blo
     }
 }
 inline bool plan_repair(const fe::borrowed_block& source, std::span<const u64,256> before,
-                        std::span<const u64,256> after, BlockRepair& out) {
+                        std::span<const u64,256> after, auto& out) {
     if (!repair_kind(source,out)) return false;
     out.examined_positions=256;
     const auto width=source.d.width;
@@ -82,7 +115,7 @@ struct BlockAssignments {
     void set(unsigned row,u64 value) {values[row]=value;assigned[row/64]|=u64{1}<<(row%64);}
     void clear(unsigned row) {assigned[row/64]&=~(u64{1}<<(row%64));}
 };
-inline bool plan_sparse_repair(const fe::borrowed_block& source,const BlockAssignments& input,BlockRepair& out) {
+inline bool plan_sparse_repair(const fe::borrowed_block& source,const BlockAssignments& input,auto& out) {
     out.anchor=source.d.base;
     if (!(input.assigned[0]|input.assigned[1]|input.assigned[2]|input.assigned[3])) {out.reason=RepairReason::no_value_change;return true;}
     if (!repair_kind(source,out)) return false;
@@ -129,7 +162,7 @@ inline bool plan_sparse_repair(const fe::borrowed_block& source,const BlockAssig
     }
     stage_checkpoints(source,change,out);return true;
 }
-inline void apply_repair(const BlockRepair& plan,unsigned width,std::uint8_t* body) {
+inline void apply_repair(const auto& plan,unsigned width,std::uint8_t* body) {
     replace_private_plane(width,256,body,plan.plane);
     if (plan.checkpoint_width)
         replace_private_plane(plan.checkpoint_width,plan.checkpoint_rows,body+plan.checkpoint_offset,plan.checkpoints);

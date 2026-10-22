@@ -1,0 +1,42 @@
+{
+  "source": "71b7b93d8b6881c414b3f043c2844ece8eba5eac99222db63ae0422a9563de8f",
+  "elf_sha256": "02350ae36d8e0e758681e044027507c881fe0b3847cc1b9066a06f3cdde8b186",
+  "commands": [
+    [
+      "taskset",
+      "-c",
+      "7",
+      "/home/ashtonsix/sixdb/build/clang/frame-material-all-kinds/workbench/spikes/ikea-frame/lifecycle/frame_phase_measure",
+      "--accounting-probe",
+      "/home/ashtonsix/sixdb/build/frame-collab/batch-retention/inputs/p__mbar.u64",
+      "32"
+    ],
+    [
+      "taskset",
+      "-c",
+      "7",
+      "/home/ashtonsix/sixdb/build/clang/frame-material-all-kinds/workbench/spikes/ikea-frame/lifecycle/frame_phase_measure",
+      "--accounting-probe",
+      "/home/ashtonsix/sixdb/build/frame-collab/batch-retention/inputs/EventTime-mid.u64",
+      "32"
+    ],
+    [
+      "taskset",
+      "-c",
+      "7",
+      "/home/ashtonsix/sixdb/build/clang/frame-material-all-kinds/workbench/spikes/ikea-frame/lifecycle/frame_phase_measure",
+      "--accounting-probe",
+      "/home/ashtonsix/sixdb/build/frame-collab/batch-retention/inputs/UserID.u64",
+      "32"
+    ],
+    [
+      "taskset",
+      "-c",
+      "7",
+      "/home/ashtonsix/sixdb/build/clang/frame-material-all-kinds/workbench/spikes/ikea-frame/lifecycle/frame_phase_measure",
+      "--accounting-probe",
+      "/home/ashtonsix/sixdb/build/frame-collab/batch-retention/inputs/URLHash.u64",
+      "32"
+    ]
+  ]
+}

@@ -7,6 +7,7 @@
 #include <chrono>
 #include <random>
 #include <optional>
+#include <new>
 #include <source_location>
 #include <thread>
 #include <vector>
@@ -280,6 +281,30 @@ template<class C> void history() {
     for (auto* part : escaped) orbital::release(part);
     need(!memory.live, "escaped bundle left catalog/interpretation metadata live");
 }
+unsigned nullable_construction() {
+    unsigned checks=0;const auto source=data(64,true);
+    for (unsigned cp=0;cp<4;++cp) for (auto order:{p::fe::dictionary_order::none,p::fe::dictionary_order::sorted,
+            p::fe::dictionary_order::frequency}) for (auto fill:{p::fe::null_fill::predictor,p::fe::null_fill::zero}) {
+        p::EncodedConstruction built(source,{.delta_checkpoints=p::fe::checkpoints(cp),.dictionary=order,
+            .dictionary_every_part=order!=p::fe::dictionary_order::none},fill);
+        std::vector<std::byte> values(built.base.header.bytes),flags(p::flag_bytes*2);
+        built.copy_values(values);p::copy_flags(source,flags);checks+=verify(built.base,values,flags,source);
+    }
+    const auto page=std::size_t(sysconf(_SC_PAGESIZE));const auto bytes=(sizeof(p::GroupData)+page-1)/page*page;
+    void* memory=mmap(nullptr,bytes,PROT_READ|PROT_WRITE,MAP_PRIVATE|MAP_ANONYMOUS,-1,0);
+    need(memory!=MAP_FAILED,"nullable construction mmap failed");
+    auto* hidden=::new(memory) p::GroupData;hidden->valid.fill(0);
+    need(!(sizeof(hidden->value)%page) && mprotect(memory,sizeof(hidden->value),PROT_NONE)==0,"NULL input protection failed");
+    for (auto fill:{p::fe::null_fill::predictor,p::fe::null_fill::zero}) {
+        p::EncodedConstruction built(*hidden,{},fill);
+        std::vector<std::byte> values(built.base.header.bytes),flags(p::flag_bytes*2);
+        built.copy_values(values);p::copy_flags(*hidden,flags);p::QueryCache cache(0);
+        const auto answer=p::query(built.base,{values.data(),values.size()},{flags.data(),flags.size()},UINT16_MAX,0,cache);
+        need(answer==p::QueryResult{0,0,p::rows_per_group},"all-NULL owner construction lost presence");++checks;
+    }
+    need(mprotect(memory,sizeof(hidden->value),PROT_READ|PROT_WRITE)==0,"NULL input restore failed");
+    hidden->~GroupData();munmap(memory,bytes);return checks;
+}
 }
 int main() {
     unsigned checks = 0;
@@ -299,7 +324,7 @@ int main() {
             checks += encoded(source, {.delta_exceptions = true, .dictionary = order,
                                       .dictionary_every_part = order != frame_encoding::dictionary_order::none});
     }
-    protected_none();
+    checks+=nullable_construction();protected_none();
     history<p::EncodedLayout>(); history<p::OverlayLayout>(); history<p::NativeLayout>();
     std::printf("%u phase material checks pass: native8/16/32/64, exact u128, separate presence/validity,"
                 " original coarse masks, dictionary/RHS cache changes, overlay corrections and protected none.\n", checks);

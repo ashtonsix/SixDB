@@ -40,7 +40,7 @@ struct Costs {
     std::array<std::size_t,9> repair_reasons{};
 };
 enum class Policy { native_raw, native_for, reencode, overlay, overlay_fold, thaw, block_fold, repair_fold, sparse_repair, native_coalesced,
-    sparse_indexed, overlay_batch, overlay_batch_fold };
+    sparse_indexed, overlay_batch, overlay_batch_fold, sparse_inline, overlay_predictor_fold, overlay_zero_fold };
 const char* name(Policy policy) {
     switch (policy) {
     case Policy::native_raw:return "native-raw64"; case Policy::native_for:return "native-for";
@@ -53,9 +53,18 @@ const char* name(Policy policy) {
     case Policy::sparse_indexed:return "indexed-sparse-repair";
     case Policy::overlay_batch:return "batch-overrides-debt";
     case Policy::overlay_batch_fold:return "batch-overrides-fold";
+    case Policy::sparse_inline:return "inline-plan-sparse-repair";
+    case Policy::overlay_predictor_fold:return "batch-overrides-predictor-fold";
+    case Policy::overlay_zero_fold:return "batch-overrides-zero-fold";
     }
     std::abort();
 }
+// Exact duplicates: native FOR (1/10), old fold (4/11), batch overrides (13/15), inline repair (16/17).
+constexpr std::array policies{Policy::native_raw,Policy::native_for,Policy::reencode,Policy::overlay,
+    Policy::overlay_fold,Policy::thaw,Policy::block_fold,Policy::repair_fold,Policy::sparse_repair,
+    Policy::native_coalesced,Policy::native_for,Policy::overlay_fold,Policy::sparse_indexed,
+    Policy::overlay_batch,Policy::overlay_batch_fold,Policy::overlay_batch,Policy::sparse_inline,Policy::sparse_inline,
+    Policy::overlay_predictor_fold,Policy::overlay_zero_fold};
 
 template<class C> struct Machine {
     using Group = typename decltype(C{}.group)::value_type;
@@ -68,9 +77,11 @@ template<class C> struct Machine {
     p::fe::encode_options options;
     Policy policy;
     Costs costs;
+    bool record_capacity=true;
     explicit Machine(Policy mode, p::fe::encode_options opts) : options(opts), policy(mode) {}
     ~Machine() { store = {}; require(!memory.live, "phase stranded metadata"); }
     void observe() {
+        if (!record_capacity) return;
         const auto stats = a::statistics(*runtime.pool);
         require(stats.idle_bytes <= stats.mapped_bytes, "invalid Pool accounting");
         costs.peak_nonidle = std::max(costs.peak_nonidle, std::size_t(stats.mapped_bytes - stats.idle_bytes));
@@ -115,7 +126,12 @@ template<class C> struct Machine {
         };
         if constexpr (std::is_same_v<Group, p::NativeBase>) copy(p::NativeConstruction(data, policy == Policy::native_raw));
         else if (native) copy(p::NativeConstruction(data));
-        else { copy(p::EncodedConstruction(data, options)); costs.encoded_rows += p::rows_per_group; }
+        else {
+            std::optional<p::fe::null_fill> fill;
+            if (policy==Policy::overlay_predictor_fold) fill=p::fe::null_fill::predictor;
+            if (policy==Policy::overlay_zero_fold) fill=p::fe::null_fill::zero;
+            copy(p::EncodedConstruction(data, options,fill)); costs.encoded_rows += p::rows_per_group;
+        }
         auto flags = allocate(f, c, g * Group::parts + 1, p::flag_bytes * 2);
         p::copy_flags(data, flags); costs.copied_bytes += flags.size();
         if constexpr (Group::parts == 3) {
@@ -250,6 +266,7 @@ template<class C> struct Machine {
         }
         h.identity = p::fresh_identity();
     }
+    template<class Plan=p::BlockRepair>
     void fold_blocks(C& c, Fresh& f, Selection source, unsigned g, std::span<const Edit> edits,
                      p::BlockSelection mask,const p::IndexedBatch* batch=nullptr) {
         if constexpr (!std::is_same_v<Group, p::EncodedBase>) std::abort();
@@ -258,7 +275,7 @@ template<class C> struct Machine {
             const auto body = part(source, g * Group::parts), flags = part(source, g * Group::parts + 1);
             struct Replacement { p::fe::column image; };
             std::array<std::optional<Replacement>, p::blocks_per_group> replacement;
-            std::array<std::optional<p::BlockRepair>, p::blocks_per_group> repair;
+            std::array<std::optional<Plan>, p::blocks_per_group> repair;
             std::span<std::byte> changed_flags;
             bool changed_values = false;
             const auto commit_flags = [&](unsigned b,const auto& present,const auto& valid,
@@ -288,13 +305,13 @@ template<class C> struct Machine {
                     const auto row = e.row % 256, word = row / 64; const auto bit = p::u64{1} << (row % 64);
                     present[word] = (present[word] & ~bit) | (e.next.present ? bit : 0);
                     valid[word] = (valid[word] & ~bit) | (e.next.contributes() ? bit : 0);
-                    if (policy==Policy::sparse_repair || policy==Policy::sparse_indexed) {
+                    if (policy==Policy::sparse_repair || policy==Policy::sparse_indexed || policy==Policy::sparse_inline) {
                         if (e.next.contributes()) assignments.set(row,e.next.value);
                         else assignments.clear(row);
                     }
                 }
-                if (policy==Policy::sparse_repair || policy==Policy::sparse_indexed) {
-                    p::BlockRepair planned;
+                if (policy==Policy::sparse_repair || policy==Policy::sparse_indexed || policy==Policy::sparse_inline) {
+                    Plan planned;
                     const bool fits=p::plan_sparse_repair(p::borrow(old,body,b),assignments,planned);
                     ++costs.repair_reasons[unsigned(planned.reason)];costs.repair_examined_rows+=planned.examined_positions;
                     if (fits) {
@@ -327,7 +344,7 @@ template<class C> struct Machine {
                 commit_flags(b,present,valid,old_present,old_valid);
                 if (after == before) continue; // NULL-only changes retain the actual value Part.
                 if (policy==Policy::repair_fold) {
-                    p::BlockRepair planned;
+                    Plan planned;
                     const bool fits=p::plan_repair(p::borrow(old,body,b),before,after,planned);
                     ++costs.repair_reasons[unsigned(planned.reason)];costs.repair_examined_rows+=planned.examined_positions;
                     if (fits) {
@@ -375,7 +392,8 @@ template<class C> struct Machine {
         typename Store::Scope scope(store); const auto source = selected(scope);
         auto c = source.realization->control; Fresh f;
         std::optional<p::IndexedBatch> indexed;
-        if (policy==Policy::sparse_indexed || policy==Policy::overlay_batch || policy==Policy::overlay_batch_fold)
+        if (policy==Policy::sparse_indexed || policy==Policy::overlay_batch || policy==Policy::overlay_batch_fold ||
+            policy==Policy::overlay_predictor_fold || policy==Policy::overlay_zero_fold)
             indexed.emplace(edits,mask);
         std::vector<Edit> coalesced;
         if (policy==Policy::native_coalesced) {
@@ -430,6 +448,7 @@ template<class C> struct Machine {
                 p::copy_overlay(entries, bytes, group.changes.basis); costs.copied_bytes += bytes.size();
                 costs.overlay_entries = std::max(costs.overlay_entries, entries.size());
             } else if (p::base(c.group[g]).header.native_bytes) update_native(c, f, source, g, edits, mask);
+            else if (policy==Policy::sparse_inline) fold_blocks<p::InlineBlockRepair>(c,f,source,g,edits,mask);
             else if (policy == Policy::block_fold || policy==Policy::repair_fold || policy==Policy::sparse_repair || policy==Policy::sparse_indexed)
                 fold_blocks(c, f, source, g, edits, mask,indexed?&*indexed:nullptr);
             else {
@@ -533,7 +552,7 @@ void check_block_fold(Policy policy=Policy::block_fold) {
               require(machine.part(first,0).data==machine.part(next,0).data &&
                       machine.costs.copied_bytes-copied_before==p::flag_bytes*2,
                       "NULL-only block fold copied a value Part"); verify(now,current); }
-            if ((policy==Policy::repair_fold || policy==Policy::sparse_repair || policy==Policy::sparse_indexed) && dictionary==p::fe::dictionary_order::none) {
+            if ((policy==Policy::repair_fold || policy==Policy::sparse_repair || policy==Policy::sparse_indexed || policy==Policy::sparse_inline) && dictionary==p::fe::dictionary_order::none) {
                 const unsigned row=3*256;
                 require(first.realization->control.group[0].blocks[3].type==p::fe::kind::delta,
                         "fitting native fixture lost its delta block");
@@ -604,14 +623,14 @@ void check_native_coalesced() {
     std::puts("Native coalescing passes: latest assignment, no-op publication, no transient widening, flags-only reuse and old reader.");
 }
 
-void check_batch_overrides() {
+void check_batch_overrides(Policy policy=Policy::overlay_batch) {
     unsigned long long checks=0;
     Data initial;
     for (unsigned g=0;g<p::groups;++g) for (unsigned row=0;row<p::rows_per_group;++row)
         initial[g].value[row]=(row/19)*7+g*1000;
     for (unsigned cp=0;cp<4;++cp) for (auto dictionary:{p::fe::dictionary_order::none,
             p::fe::dictionary_order::sorted,p::fe::dictionary_order::frequency}) {
-        Machine<p::OverlayLayout> m(Policy::overlay_batch,{.delta_checkpoints=p::fe::checkpoints(cp),
+        Machine<p::OverlayLayout> m(policy,{.delta_checkpoints=p::fe::checkpoints(cp),
             .dictionary=dictionary,.dictionary_every_part=dictionary!=p::fe::dictionary_order::none});
         m.seed(initial);using Scope=Machine<p::OverlayLayout>::Store::Scope;
         Scope old(m.store);const auto original=m.selected(old);auto current=initial;
@@ -662,13 +681,15 @@ void check_batch_overrides() {
         {Scope now(m.store);require(now.cut()==5,"fold/successor changed logical publication count");verify(now,current);}
         verify(folded,before);verify(old,initial);
     }
-    std::printf("%llu native batch checks pass: all CP/dictionaries, ordered assignments, immutable-base reuse, masked/old/folded readers and genuine successor publication.\n",checks);
+    std::printf("%s: %llu native batch checks pass: all CP/dictionaries, ordered assignments, immutable-base reuse, masked/old/folded readers and genuine successor publication.\n",name(policy),checks);
 }
 
 template<class C> void run(Policy policy, const Data& initial, const Scenario& s, unsigned trial,
                            unsigned order, unsigned arm, bool keep_old, unsigned read_queries,
-                           unsigned final_queries, bool verify_points, bool reference_queries, p::fe::encode_options options) {
+                           unsigned final_queries, bool verify_points, bool reference_queries, p::fe::encode_options options,
+                           bool capacity=false) {
     Machine<C> m(policy, options);
+    m.record_capacity=capacity || verify_points;
     const auto setup = Clock::now(); m.seed(initial); const auto setup_ns = ns(setup);
     m.costs.prepare_ns = m.costs.publish_ns = m.costs.copied_bytes = m.costs.encoded_rows = 0;
     m.costs.publications=0;
@@ -716,15 +737,17 @@ template<class C> void run(Policy policy, const Data& initial, const Scenario& s
         const auto release = Clock::now(); m.store.drain(); const auto duration=ns(release);
         m.costs.release_ns += duration; m.costs.max_release_ns=std::max(m.costs.max_release_ns,duration);
     }
-    if (policy == Policy::overlay_fold || policy == Policy::overlay_batch_fold || policy == Policy::thaw) transition(false);
+    if (policy == Policy::overlay_fold || policy == Policy::overlay_batch_fold || policy == Policy::thaw ||
+        policy==Policy::overlay_predictor_fold || policy==Policy::overlay_zero_fold) transition(false);
     { Scope current(m.store); verify(current, answers.back(), final_queries);
       if (verify_points && !trial) all_points(current, s.snapshots.back()); }
     const auto release = Clock::now(); old.reset(); m.store.drain(); const auto duration=ns(release);
     m.costs.release_ns += duration; m.costs.max_release_ns=std::max(m.costs.max_release_ns,duration);
     const auto elapsed = ns(start); m.observe();
+    m.costs.peak_metadata=m.memory.peak; // Cheap PMR high water needs no Pool census.
     const auto stats = a::statistics(*m.runtime.pool);
     std::printf("{\"policy\":\"%s\",\"pattern\":\"%s\",\"mask\":%u,\"retain_old\":%u,\"trial\":%u,\"order_position\":%u,"
-        "\"reference_queries\":%u,\"arm\":%u,\"read_queries_per_batch\":%u,\"final_read_queries\":%u,\"verification_run\":%u,"
+        "\"reference_queries\":%u,\"capacity_accounting\":%u,\"arm\":%u,\"read_queries_per_batch\":%u,\"final_read_queries\":%u,\"verification_run\":%u,"
         "\"max_update_ns\":%llu,\"max_transition_ns\":%llu,\"max_release_ns\":%llu,"
         "\"total_ns\":%llu,\"setup_ns\":%llu,\"prepare_ns\":%llu,\"publish_ns\":%llu,\"query_ns\":%llu,\"conversion_ns\":%llu,\"release_ns\":%llu,"
         "\"copied_bytes\":%zu,\"encoded_rows\":%zu,\"repaired_blocks\":%zu,\"peak_nonidle_bytes\":%zu,\"peak_metadata_bytes\":%zu,\"overlay_entries\":%zu,"
@@ -733,7 +756,7 @@ template<class C> void run(Policy policy, const Data& initial, const Scenario& s
         "\"dirty_kinds\":[%zu,%zu,%zu,%zu,%zu,%zu,%zu],\"repair_reasons\":[%zu,%zu,%zu,%zu,%zu,%zu,%zu,%zu,%zu],"
         "\"final_nonidle_bytes\":%llu,\"pool_mapped_bytes\":%llu,\"pool_idle_bytes\":%llu,\"final_metadata_bytes\":%zu}\n",
         name(policy),s.pattern.c_str(),s.mask.bits,unsigned(keep_old),trial,order,
-        unsigned(reference_queries),arm,read_queries,final_queries,unsigned(verify_points),
+        unsigned(reference_queries),unsigned(m.record_capacity),arm,read_queries,final_queries,unsigned(verify_points),
         (unsigned long long)m.costs.max_update_ns,(unsigned long long)m.costs.max_transition_ns,(unsigned long long)m.costs.max_release_ns,
         (unsigned long long)elapsed,(unsigned long long)setup_ns,(unsigned long long)m.costs.prepare_ns,
         (unsigned long long)m.costs.publish_ns,(unsigned long long)m.costs.query_ns,(unsigned long long)m.costs.conversion_ns,
@@ -747,13 +770,62 @@ template<class C> void run(Policy policy, const Data& initial, const Scenario& s
 }
 } // namespace
 int main(int argc,char** argv) {
+    if (argc==4 && std::string_view(argv[1])=="--accounting-probe") {
+        Data initial;std::ifstream input(argv[2],std::ios::binary);
+        for (auto& g:initial) require(bool(input.read(reinterpret_cast<char*>(g.value.data()),sizeof(g.value))),"short accounting input");
+        const auto requested=std::stoul(argv[3]);require(requested && requested<=128,"invalid accounting trials");
+        const unsigned trials=(requested+7)/8*8;
+        const std::array modes{Policy::native_for,Policy::native_for,Policy::sparse_repair,Policy::sparse_repair,
+            Policy::sparse_inline,Policy::sparse_inline,Policy::native_for,Policy::sparse_inline};
+        std::mt19937 random(1729);
+        for (const auto pattern:{"repeated-hot","dispersed"}) {
+            const auto s=scenario(initial,pattern,{});std::vector<std::vector<unsigned>> order;
+            for (unsigned trial=0;trial<trials;++trial) {
+                if (trial%8==0) order=frame_measure::balanced_round(8,random);
+                for (unsigned pos=0;pos<8;++pos) {
+                    const auto arm=order[trial%8][pos];const bool capacity=arm==1 || arm==3 || arm==5;
+                    if (modes[arm]==Policy::native_for)
+                        run<p::NativeLayout>(modes[arm],initial,s,trial,pos,arm,false,1,0,false,false,{},capacity);
+                    else run<p::EncodedLayout>(modes[arm],initial,s,trial,pos,arm,false,1,0,false,false,{},capacity);
+                }
+            }
+        }
+        return 0;
+    }
     if (argc==2 && std::string_view(argv[1])=="--check-native-coalesced") {check_native_coalesced();return 0;}
     if (argc==2 && std::string_view(argv[1])=="--check-block-fold") { check_block_fold(); return 0; }
     if (argc==2 && std::string_view(argv[1])=="--check-sparse-repair") { check_block_fold(Policy::sparse_repair); return 0; }
     if (argc==2 && std::string_view(argv[1])=="--check-indexed-repair") { check_block_fold(Policy::sparse_indexed); return 0; }
+    if (argc==2 && std::string_view(argv[1])=="--check-inline-repair") { check_block_fold(Policy::sparse_inline); return 0; }
     if (argc==2 && std::string_view(argv[1])=="--check-batch-overrides") { check_batch_overrides(); return 0; }
+    if (argc==2 && std::string_view(argv[1])=="--check-nullable-fold") {
+        check_batch_overrides(Policy::overlay_predictor_fold);check_batch_overrides(Policy::overlay_zero_fold);return 0;
+    }
     if (argc==2 && std::string_view(argv[1])=="--check-repair-fold") { check_block_fold(Policy::repair_fold); return 0; }
-    require(argc >= 2 && argc <= 9, "usage: frame_phase_measure INPUT.u64 [trials=8] [queries_per_batch=8] [final_queries=64] [verify=0] [mixed|values-only] [bounded] [masked|reference]");
+    if (argc==6 && std::string_view(argv[1])=="--profile") {
+        // Diagnostic single-program repetitions for external perf/DHAT tools.
+        // Setup remains visible to those tools; use update call stacks to
+        // distinguish it. Instrumented elapsed times are not benchmark data.
+        Data initial;std::ifstream input(argv[2],std::ios::binary);
+        for (auto& g:initial) require(bool(input.read(reinterpret_cast<char*>(g.value.data()),sizeof(g.value))),
+            "need at least8192 original values");
+        const auto found=std::find_if(policies.begin(),policies.end(),[&](auto policy){return name(policy)==std::string_view(argv[3]);});
+        require(found!=policies.end(),"unknown profile policy");const auto policy=*found;
+        const std::string pattern=argv[4];
+        require(pattern=="repeated-hot" || pattern=="moving-hot" || pattern=="dispersed" || pattern=="novelty","unknown profile pattern");
+        const auto repeats=std::stoul(argv[5]);require(repeats && repeats<=65536,"invalid profile phase count");
+        const auto s=scenario(initial,pattern,{});
+        for (unsigned repeat=0;repeat<repeats;++repeat) {
+            if (policy==Policy::overlay || policy==Policy::overlay_fold || policy==Policy::overlay_batch || policy==Policy::overlay_batch_fold ||
+                policy==Policy::overlay_predictor_fold || policy==Policy::overlay_zero_fold)
+                run<p::OverlayLayout>(policy,initial,s,repeat,0,0,false,1,0,false,false,{});
+            else if (policy==Policy::native_raw || policy==Policy::native_for || policy==Policy::native_coalesced)
+                run<p::NativeLayout>(policy,initial,s,repeat,0,0,false,1,0,false,false,{});
+            else run<p::EncodedLayout>(policy,initial,s,repeat,0,0,false,1,0,false,false,{});
+        }
+        return 0;
+    }
+    require(argc >= 2 && argc <= 10, "usage: frame_phase_measure INPUT.u64 [trials=8] [queries_per_batch=8] [final_queries=64] [verify=0] [mixed|values-only] [bounded] [masked|reference] [capacity|plain]");
     Data initial;
     std::ifstream input(argv[1],std::ios::binary);
     for (auto& g : initial) require(bool(input.read(reinterpret_cast<char*>(g.value.data()),sizeof(g.value))),"need at least8192 original values");
@@ -764,16 +836,13 @@ int main(int argc,char** argv) {
     const bool mixed=argc<=6 || std::string_view(argv[6])=="mixed";
     const bool bounded=argc>7;
     const bool reference_queries=argc>8 && std::string_view(argv[8])=="reference";
+    const bool capacity=argc>9 && std::string_view(argv[9])=="capacity";
+    require(argc<=9 || capacity || std::string_view(argv[9])=="plain","invalid accounting mode");
     require(argc<=8 || reference_queries || std::string_view(argv[8])=="masked","invalid query program");
     require(argc<=6 || mixed || std::string_view(argv[6])=="values-only","invalid trace kind");
     require(!bounded || std::string_view(argv[7])=="bounded","invalid case restriction");
     require(requested && requested <= 120,"invalid trial count");
     require(read_queries && read_queries <= 4096 && final_queries <= 4096 && verification <= 1,"invalid query/verification count");
-    // Last two arms repeat the exact policy and native implementation.
-    const std::array policies{Policy::native_raw,Policy::native_for,Policy::reencode,Policy::overlay,
-        Policy::overlay_fold,Policy::thaw,Policy::block_fold,Policy::repair_fold,Policy::sparse_repair,
-        Policy::native_coalesced,Policy::native_for,Policy::overlay_fold,Policy::sparse_indexed,
-        Policy::overlay_batch,Policy::overlay_batch_fold,Policy::overlay_batch};
     std::mt19937 order_random(1729);
     const unsigned arms = policies.size(), round = arms * (arms % 2 ? 2 : 1);
     const unsigned trials = (requested + round - 1) / round * round;
@@ -789,11 +858,12 @@ int main(int argc,char** argv) {
                     for (unsigned pos = 0; pos < policies.size(); ++pos) {
                         const auto arm = orders[trial % round][pos]; const auto policy = policies[arm];
                         if (policy == Policy::overlay || policy == Policy::overlay_fold ||
-                            policy==Policy::overlay_batch || policy==Policy::overlay_batch_fold)
-                            run<p::OverlayLayout>(policy,initial,s,trial,pos,arm,old,read_queries,final_queries,verification,reference_queries,{});
+                            policy==Policy::overlay_batch || policy==Policy::overlay_batch_fold ||
+                            policy==Policy::overlay_predictor_fold || policy==Policy::overlay_zero_fold)
+                            run<p::OverlayLayout>(policy,initial,s,trial,pos,arm,old,read_queries,final_queries,verification,reference_queries,{},capacity);
                         else if (policy == Policy::native_raw || policy == Policy::native_for || policy==Policy::native_coalesced)
-                            run<p::NativeLayout>(policy,initial,s,trial,pos,arm,old,read_queries,final_queries,verification,reference_queries,{});
-                        else run<p::EncodedLayout>(policy,initial,s,trial,pos,arm,old,read_queries,final_queries,verification,reference_queries,{});
+                            run<p::NativeLayout>(policy,initial,s,trial,pos,arm,old,read_queries,final_queries,verification,reference_queries,{},capacity);
+                        else run<p::EncodedLayout>(policy,initial,s,trial,pos,arm,old,read_queries,final_queries,verification,reference_queries,{},capacity);
                     }
                 }
             }

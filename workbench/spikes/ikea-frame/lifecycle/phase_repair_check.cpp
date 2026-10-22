@@ -52,6 +52,15 @@ unsigned verify(const Image& image,p::fe::checkpoints cp,const std::array<p::u64
 }
 int main() {
     unsigned checks=0,plans=0;
+    p::SmallPlanEdits edges;
+    for (unsigned i=0;i<9;++i) {
+        edges.push_back({i,1729+i});
+        p::require(edges.size()==i+1 && edges.uses_heap()==(i>=4),"inline plan changed its spill boundary");
+    }
+    const auto copied=edges;auto moved=std::move(edges);
+    p::require(edges.empty() && copied.size()==9 && moved.size()==9,"inline plan move lost its value");
+    for (unsigned i=0;i<9;++i) p::require(copied.data()[i].value==1729+i && moved.data()[i].row==i,"inline plan copy/move differs");
+    edges.push_back({3,5});p::require(edges.size()==1 && !edges.uses_heap(),"moved plan cannot be reused");
     for (unsigned width=1;width<=64;++width) for (unsigned mode=0;mode<4;++mode) for (bool delta:{false,true}) {
         const auto cp=p::fe::checkpoints(mode);const auto original=make(width,cp,delta);checks+=verify(original,cp,original.values);
         for (unsigned row:{0u,1u,15u,16u,63u,64u,239u,240u,254u,255u,256u}) {
@@ -69,6 +78,14 @@ int main() {
             p::require(p::plan_sparse_repair(borrow(original,cp),assigned,sparse_plan),"fitting sparse repair refused");
             p::apply_repair(sparse_plan,width,sparse.bytes.data()+13);sparse.d.base=sparse_plan.anchor;
             checks+=verify(sparse,cp,after);++plans;
+            auto inline_dense=original,inline_sparse=original;
+            p::InlineBlockRepair dense_plan,inline_plan;
+            p::require(p::plan_repair(borrow(original,cp),original.values,after,dense_plan),"inline dense repair refused");
+            p::apply_repair(dense_plan,width,inline_dense.bytes.data()+13);inline_dense.d.base=dense_plan.anchor;
+            checks+=verify(inline_dense,cp,after);++plans;
+            p::require(p::plan_sparse_repair(borrow(original,cp),assigned,inline_plan),"inline sparse repair refused");
+            p::apply_repair(inline_plan,width,inline_sparse.bytes.data()+13);inline_sparse.d.base=inline_plan.anchor;
+            checks+=verify(inline_sparse,cp,after);++plans;
             p::require(original.bytes==make(width,cp,delta).bytes,"planning mutated the source");
         }
         auto impossible=original.values;
@@ -77,6 +94,8 @@ int main() {
         else continue;
         p::BlockRepair refused;
         p::require(!p::plan_repair(borrow(original,cp),original.values,impossible,refused),"nonfitting repair accepted");
+        p::InlineBlockRepair refused_inline;
+        p::require(!p::plan_repair(borrow(original,cp),original.values,impossible,refused_inline),"nonfitting inline repair accepted");
     }
-    std::printf("%u repair plans / %u independent points+aggregates pass: widths 1..64, all CP modes, anchors/interiors/last, descriptor shifts, refusals and unaligned guards.\n",plans,checks);
+    std::printf("%u repair plans / %u independent points+aggregates pass: heap/inline/spill, widths 1..64, all CP modes, anchors/interiors/last, descriptor shifts, refusals and unaligned guards.\n",plans,checks);
 }

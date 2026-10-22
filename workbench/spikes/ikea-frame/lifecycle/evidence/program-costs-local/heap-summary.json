@@ -1,0 +1,30 @@
+[
+  {
+    "case": "event-heap.heap",
+    "phases": 32,
+    "plan_heap_blocks": 9600,
+    "plan_requested_bytes": 254464,
+    "note": "Ordinary heap allocation stacks, not native time or Pool backing."
+  },
+  {
+    "case": "event-inline.heap",
+    "phases": 32,
+    "plan_heap_blocks": 64,
+    "plan_requested_bytes": 8192,
+    "note": "Ordinary heap allocation stacks, not native time or Pool backing."
+  },
+  {
+    "case": "pressure-heap.heap",
+    "phases": 32,
+    "plan_heap_blocks": 15552,
+    "plan_requested_bytes": 593920,
+    "note": "Ordinary heap allocation stacks, not native time or Pool backing."
+  },
+  {
+    "case": "pressure-inline.heap",
+    "phases": 32,
+    "plan_heap_blocks": 1024,
+    "plan_requested_bytes": 135168,
+    "note": "Ordinary heap allocation stacks, not native time or Pool backing."
+  }
+]

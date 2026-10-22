@@ -177,3 +177,9 @@ losing cases remain explicit controls.
 The [batch-program comparison](lifecycle/BATCH.md) preserves equal physical work
 while changing command organisation. Batch scans do not explain the principal
 sparse-writer gap here; linear override merging remains a conditional alternative.
+
+The [program-cost follow-up](lifecycle/PROGRAM-COSTS.md) integrates the qualified
+masked/NULL core, tests inline repair storage, separates Pool-census accounting
+from timing and prices final fills through actual owners. Its larger-but-faster
+pressure image is a concrete representation/program tradeoff; native and
+immutable-base alternatives remain consequential.

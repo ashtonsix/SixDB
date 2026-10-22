@@ -60,8 +60,17 @@ inline void copy_flags(const GroupData& data, std::span<std::byte> target) {
 struct EncodedConstruction {
     fm::EncodedRegion image;
     EncodedBase base;
-    EncodedConstruction(const GroupData& data, fe::encode_options options = {})
-        : image(data.value, options, 0, 0) {
+    static fm::EncodedRegion make_image(const GroupData& data,fe::encode_options options,std::optional<fe::null_fill> fill) {
+        if (fill && !std::all_of(data.valid.begin(),data.valid.end(),[](u64 word){return word==UINT64_MAX;})) {
+            // Validity already has its own native Part. Do not retain a second
+            // nullable-column plane; charge all candidate analysis and scratch.
+            const auto filled=fe::fill_nulls(data.value,data.valid,options,*fill);
+            return fm::EncodedRegion(filled,options,0,0);
+        }
+        return fm::EncodedRegion(data.value,options,0,0);
+    }
+    EncodedConstruction(const GroupData& data, fe::encode_options options = {},std::optional<fe::null_fill> fill={})
+        : image(make_image(data,options,fill)) {
         base.header = summarize(data); base.header.bytes = 8 + image.metadata.bytes();
         base.checkpoints = image.metadata.checkpoints;
         base.dictionary = image.metadata.dictionary;
