@@ -120,9 +120,9 @@ struct encode_options {
     // Boundlist view as a control.
     bool compact_runs = false;
     checkpoints delta_checkpoints = checkpoints::native;
-    // Whether the encoder may choose delta_patched blocks (consumers that
-    // don't read that kind yet can turn it off).
-    bool delta_exceptions = true;
+    // Off by default until point/, filter/ and execution/ consumers handle
+    // kind::delta_patched; the driver opts in with --delta-exceptions.
+    bool delta_exceptions = false;
 };
 
 inline const char *checkpoint_name(checkpoints mode) {

@@ -180,7 +180,7 @@ void run(const char *name, std::span<const u64> values, u64 lo, u64 threshold,
 int main(int argc, char **argv) {
     if (argc < 3) {
         std::fprintf(stderr, "usage: %s NAME FILE.u64 [--compact-runs] "
-                     "[--checkpoints=native|packed|every64|none]\n",
+                     "[--checkpoints=native|packed|every64|none] [--delta-exceptions]\n",
                      argv[0]);
         return 2;
     }
@@ -188,6 +188,8 @@ int main(int argc, char **argv) {
     for (int i = 3; i < argc; ++i) {
         if (std::strcmp(argv[i], "--compact-runs") == 0)
             options.compact_runs = true;
+        else if (std::strcmp(argv[i], "--delta-exceptions") == 0)
+            options.delta_exceptions = true;
         else if (std::strcmp(argv[i], "--checkpoints=native") == 0)
             options.delta_checkpoints = checkpoints::native;
         else if (std::strcmp(argv[i], "--checkpoints=packed") == 0)
