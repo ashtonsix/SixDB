@@ -1,0 +1,64 @@
+[
+  {
+    "symbol": "_ZN12_GLOBAL__N_15groupERKNS_4DataERKN15frame_execution5QueryERKSt6vectorINS_4PlanESaIS8_EERS7_INS_7ScratchESaISD_EEj",
+    "address": "000000000000db1c",
+    "file": "code-0.asm.txt",
+    "instructions": 1459,
+    "explicit_neon_ops": [
+      "addv"
+    ],
+    "frame_decode_calls": 2
+  },
+  {
+    "symbol": "_ZN12_GLOBAL__N_15x_sumERKNS_4DataERKN15frame_execution5QueryERKSt6vectorINS_4PlanESaIS8_EEjRS7_INS_10ProjectionESaISD_EESG_",
+    "address": "000000000000d118",
+    "file": "code-1.asm.txt",
+    "instructions": 605,
+    "explicit_neon_ops": [
+      "addv"
+    ],
+    "frame_decode_calls": 1
+  },
+  {
+    "symbol": "_ZN13frame_columns12native_groupERKNS_10NativeRowsESt4spanIKNS_4BitsELm18446744073709551615EES6_S3_IKhLm18446744073709551615EEmS3_INS_5TotalELm18446744073709551615EEb",
+    "address": "0000000000018368",
+    "file": "code-2.asm.txt",
+    "instructions": 451,
+    "explicit_neon_ops": [
+      "addv",
+      "cmeq",
+      "cmhs",
+      "uminv"
+    ],
+    "frame_decode_calls": 0
+  },
+  {
+    "symbol": "_ZN13frame_columns12native_x_sumERKNS_10NativeRowsESt4spanIKNS_4BitsELm18446744073709551615EEm",
+    "address": "0000000000018a74",
+    "file": "code-3.asm.txt",
+    "instructions": 48,
+    "explicit_neon_ops": [
+      "cmhs",
+      "uadalp"
+    ],
+    "frame_decode_calls": 0
+  },
+  {
+    "symbol": "_ZN13frame_columns16native_histogramERKNS_11NativeCodesESt4spanIKNS_4BitsELm18446744073709551615EES3_IjLm18446744073709551615EEb",
+    "address": "0000000000018b34",
+    "file": "code-4.asm.txt",
+    "instructions": 260,
+    "explicit_neon_ops": [
+      "addv"
+    ],
+    "frame_decode_calls": 0
+  },
+  {
+    "symbol": "_ZN13frame_columns20native_projected_sumERKNS_11NativeCodesESt4spanIKjLm18446744073709551615EES3_IKNS_4BitsELm18446744073709551615EEm",
+    "address": "0000000000018f44",
+    "file": "code-5.asm.txt",
+    "instructions": 138,
+    "explicit_neon_ops": [],
+    "frame_decode_calls": 0
+  }
+]

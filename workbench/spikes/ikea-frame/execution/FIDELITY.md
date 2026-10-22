@@ -166,4 +166,13 @@ the encoded body, so description and binding costs need actual accounting. And
 adding a patched codec exposed a parent shortcut that assumed every remaining
 kind was delta: correct child getters did not preserve that shortcut. Explicit
 applicability and a total fallback fixed it. Those observations should shape
-further experiments while the cross-column and lifecycle questions remain open.
+further experiments. The subsequent [cross-column case](CROSS-COLUMNS.md)
+compares independent encodings with a common code stream and two projected maps.
+Counting codes before applying those maps changes the complete program; lifted
+predicate weights also reuse an existing owner SUM without reconstructing rows.
+Decorrelation, isolated demand and prepared state preserve important losses.
+Forward operations remain valid on duplicate projected values while a one-code
+equality inverse does not. This gives a concrete reason to expose relations,
+operation applicability and interpretation identity independently of codec names.
+It does not establish a general optimiser, a universal shared layout or a
+completed lifecycle policy.

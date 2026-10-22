@@ -1,0 +1,9 @@
+# Recovery and rerun
+
+Fetch this artifact into a fresh ignored directory. source.tar.gz contains the exact captured source/ tree; source.capture.json owns its hashes and modes. columns.elf, identity.json, qualification.json and compile_commands.json name the measured binary, compiler/flags and source closure. The benchmark and all original logical oracles passed on those bytes.
+
+Real logical inputs reuse the existing Frame encoded-consumer artifact (base-input-artifact.json): recover each inputs/... member named in inputs.json into the repository's build/spikes/ikea-frame/ location, verifying its SHA-256. They are byte-identical to the prior retained input, not duplicated here. Authored original documents are under authored/; their exact C-sequence/X-marginal match is independently asserted. The frozen columns_run.py also regenerates them; verify transport hashes before timing.
+
+Configure captured source with pinned Clang21.1.8, Release, SIXDB_SPIKES=ikea-frame, MARCH=native/TUNE=generic, DEBUG_INFO=lines; build only frame_execution_columns with one job. Run the captured execution/columns_run.py with --binary PATH --output NEW --trials18 from the repository root. It runs five authored correctness documents, then the three existing real transports and two authored coupling cases. Native output controls disable auto-vectorization and use explicit NEON on this AArch64 run. This is not AVX/fleet qualification.
+
+Raw per-case JSON keeps every query/program/sample and the private repair traces. Run this archive's columns_report.py ARCHIVE NEW_REPORT to regenerate CSV selections and calibration. Earlier16/cyclic18 exploratory cohorts remain separate ignored diagnostics and are not mixed into the selected Williams comparison. No published timing is inferred from component clocks or body byte counts.

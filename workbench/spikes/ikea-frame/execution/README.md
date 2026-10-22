@@ -19,10 +19,16 @@ the same image, then compare representations and their lifetimes. The
 [schema-fidelity supplement](FIDELITY.md) revisits those studies for what Frame
 should let Engine understand, and what this first witness cannot yet decide.
 
+The [cross-column case](CROSS-COLUMNS.md) now compares independent encodings
+with shared pair codes, complete kind-aware operations and independent native
+controls. It includes X-only SUM, C-only repair construction, preparation/state
+and an exact-marginal decorrelation counterexample. Its measured wins and losses
+extend the earlier same-image preparation/dispatch comparison.
+
 The [physical-material study](MATERIAL.md) examines actual public Orbital
-composition and interpretation lifetimes, including a checked packed-FOR
-witness for Ikea's lifecycle work. It chooses no general Frame format or
-mutation policy and claims no lifecycle performance result.
+composition and interpretation lifetimes, including six encoded body kinds,
+dictionary dependencies and old/current/exported Parts. It chooses no general
+Frame format or mutation policy and claims no lifecycle performance result.
 
 The consumer groups selected rows by nullable category C and returns COUNT/SUM
 of a nullable unsigned integer X. Different parts can assign different local
@@ -46,10 +52,11 @@ independent-column, TuplePack-grouped, conditioned and routed images remain
 candidates; this logical input does not choose one.
 
 Change query parameters, selected topology, cardinality and reuse while keeping
-an encoded image unchanged. Later compare changed images separately. The current
-generated X values are independent uniform u32, an authored control, not evidence
-that residual encoding is worthwhile. Claude can derive correlated fixtures from
-the same logical vocabulary without inheriting this distribution.
+an encoded image unchanged. Later compare changed images separately. The
+original generated X values are independent uniform u32, an authored control,
+not evidence that residual encoding is worthwhile. The cross-column case adds
+real aligned fields and explicitly coupled/decorrelated controls without making
+that distribution a Frame assumption.
 
 ## Authored semantics
 

@@ -1,0 +1,88 @@
+{
+  "kind": "exploratory-prepared-complete-query-comparison",
+  "timing_units": "ns per warmed complete query, not dependent point latency or interleaved reciprocal throughput",
+  "source_capture": "frame-cross-columns-balanced-20261022",
+  "source_digest": "d4b3d52137cad1c2df596beac99e3522f3878fd112943fd8f7da0d0d83ed71b6",
+  "binary_sha256": "fc4a10d80087d66edb72b4abf26bcb77012b603be78b0deb749c0f8e48b4d7b8",
+  "encoding_core_commit": "3c3b58241a958e850488fce1f3e582fbf7f1b35c",
+  "owner_qualification_reference": "df8c262d reports417/417; verified diff from frozen3c contains README and cost-driver nulls.cpp only, no used library changes; not a rerun of that owner matrix here",
+  "compiler": "Ubuntu clang version 21.1.8 (++20251221033104+2078da43e25a-1~exp1~20251221153121.57)",
+  "uname": [
+    "Linux",
+    "ubuntu",
+    "7.0.14-orbstack-00380-ga7e0a2dc9535",
+    "#1 SMP PREEMPT Fri Aug  7 03:48:40 UTC 2026",
+    "aarch64",
+    ""
+  ],
+  "python": "3.13.7",
+  "cpu": 6,
+  "mode": "Release/O3 native ISA generic tune, assertions and line tables; consumer -fno-vectorize -fno-slp-vectorize; independent native TU uses explicit NEON; owner library ordinary flags",
+  "trials": 18,
+  "order": "Williams9 treatment IDs,9 shifts and reverses, every ordered within-row pair occurs twice; equal batching across arms per query/operation",
+  "timer": "group output create/consume/destruction included; row-mask preparation, dictionary/weight-map preparation and first-call cache cost separate; no fixed overhead subtraction",
+  "consumer_controls": {
+    "native_two_columns": "native u8/u16 local C index plus admitted u32 X, flat and4-row equal-value coalescing; no Frame read calls",
+    "native_shared": "native u8/u16 joint code array plus native projected maps, flat/coalesced histogram; field-SUM uses direct map lookup",
+    "independent": "actual owner codecs for C local codes and X, plain and sorted-dictionary X; const/run and selected-SUM operations, no per-block prepared decoders",
+    "shared": "actual owner common-code bodies plus native u32 C/X forward maps; histogram fold into real Ikea hash table",
+    "owner_X_sum": "per-query packed forward weights and owner code_sum.masked; duplicates permitted, no inverse-equality calls; coherent image+highbit/threshold identity; independent dictionary X gets same lift for nonzero threshold"
+  },
+  "correctness": {
+    "authored_main_reported_comparisons": 684,
+    "corpus_and_counterexample_reported_comparisons": 432,
+    "oracle": "every grouped key/count/sum and isolated X sum compared with original logical rows, not checksums; all live C/X positions checked around private repairs",
+    "authored_counterexample": "same C row sequence and exact X multiset per part, fixed X shuffle destroys functional dependence; asserted independently",
+    "private_mutation": "64dispersed valid-C edits perpart within existing C domain, preserves all logical X and validity; append-only new pair entries; original const images kept; real publication/MVCC not measured"
+  },
+  "footprint": "logical body/geometry, image vector/control capacity, common C keys/presence/validity, query state and extra owner projection state separate; container/resource requests, not RSS/libc rounding/stack/code/oracles",
+  "limits": [
+    "one local AArch64 OrbStack VM, warmed data, other owner work on vCPU7; no cache-level or DRAM/Loom qualification",
+    "native controls use logical u32 X; narrower native/global-FOR X controls not measured",
+    "native forward maps are one layout; compact/factorized projected maps and direct projected GROUP alternatives not settled",
+    "X-only demand is predicated SUM with unsigned zero identity, not full projection or point access",
+    "private repair is whole-part decode/re-encode/copy/retire control, not a mandatory repair grain or an MVCC/growth policy",
+    "single construction/preparation observations are diagnostics; no one-shot amortization or universal selector claimed"
+  ],
+  "critical_source_files_sha256": {
+    "workbench/spikes/ikea-frame/execution/columns.cpp": "9dc34eb5539fc5968ec4cb9ca2fb049f47b4c8ca1dc59753ed116e7549911527",
+    "workbench/spikes/ikea-frame/execution/columns_native.cpp": "95208b68a28760bc289d7c79ae0562507beff5fd0d2d055212a7c240a282e363",
+    "workbench/spikes/ikea-frame/execution/columns_native.h": "cdf428f829c64ceb7984696c064920648ddbec93c2a6e9a6960fcc41e61eafa6",
+    "workbench/spikes/ikea-frame/execution/columns_run.py": "f794ee63fdccaeea89def7347a457dfc151dc349fadc8a302e678744246329de",
+    "workbench/spikes/ikea-frame/execution/input.h": "c6e0e3b91bc5ac631115ba81babe79aa20b125bfe8c2643ab94de0f4f73ee19b",
+    "workbench/spikes/ikea-frame/execution/input.cpp": "86004aa18401aa39ed525a544ada86f58db54e33689f17ca787ec54b60eef7cb",
+    "workbench/spikes/ikea-frame/execution/CMakeLists.txt": "4b234dd056623e7412b3ab263b9ee59510836385bf2a390766c9d718bad98e09",
+    "workbench/spikes/ikea-frame/encoding/material.cpp": "30b85baf6b9ad2e9d2fbb517eae91c04cac38181962f5d6e48c815124fff1bd2",
+    "workbench/spikes/ikea-frame/encoding/material.h": "180a411fdaf5d00bafed9c5576647f1d954a440490e01f1c1050bd5e3b84b266",
+    "workbench/spikes/ikea-frame/encoding/selected.h": "9ddcc16989d747c7b68eef565dd88036b5858bdc4e34f16d640372f0e9238553",
+    "workbench/spikes/ikea-frame/encoding/packing.cpp": "f9b7fd850cd14c39baf3e9fb36c6e28f4c3d4507c54ffbd6a6288d5166df2562",
+    "workbench/spikes/ikea-frame/encoding/packing.h": "4edbb808bb3cfc09570db0d6677af3a05ad77201178a9fbda380225cccce9159",
+    "workbench/spikes/ikea-frame/encoding/kernels.cpp": "1496e54e5491712b2c4b5a32d795d885acd496e35f60fa77c234b77f416d40a5",
+    "workbench/spikes/ikea-frame/encoding/kernels.h": "975016dd222aa022fa7abbbb771603a01cc6e67aec390f33130926ad69a9053e"
+  },
+  "consumer_compile_commands": [
+    {
+      "directory": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/clang/frame-cross-columns",
+      "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=1 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN4=0 -DSIXDB_TUNE_ZEN5=0 -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-cross-columns/ikea/include -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-cross-columns/workbench/spikes/ikea-frame/encoding -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -fno-vectorize -fno-slp-vectorize -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-cross-columns=. -ffunction-sections -fdata-sections -march=native -mtune=generic -o workbench/spikes/ikea-frame/execution/CMakeFiles/frame_execution_columns.dir/columns.cpp.o -c /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-cross-columns/workbench/spikes/ikea-frame/execution/columns.cpp",
+      "file": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-cross-columns/workbench/spikes/ikea-frame/execution/columns.cpp",
+      "output": "workbench/spikes/ikea-frame/execution/CMakeFiles/frame_execution_columns.dir/columns.cpp.o"
+    },
+    {
+      "directory": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/clang/frame-cross-columns",
+      "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=1 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN4=0 -DSIXDB_TUNE_ZEN5=0 -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-cross-columns/ikea/include -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-cross-columns/workbench/spikes/ikea-frame/encoding -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -fno-vectorize -fno-slp-vectorize -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-cross-columns=. -ffunction-sections -fdata-sections -march=native -mtune=generic -o workbench/spikes/ikea-frame/execution/CMakeFiles/frame_execution_columns.dir/columns_native.cpp.o -c /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-cross-columns/workbench/spikes/ikea-frame/execution/columns_native.cpp",
+      "file": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-cross-columns/workbench/spikes/ikea-frame/execution/columns_native.cpp",
+      "output": "workbench/spikes/ikea-frame/execution/CMakeFiles/frame_execution_columns.dir/columns_native.cpp.o"
+    }
+  ],
+  "offline_report_sha256": "83f022fb71712ae5cfbb4209ec62fee9002b8f5ba47d63ad20e809242f6a4de6",
+  "codegen_review": "linked native X SUM has explicit cmhs/uadalp; native4-row coalescing has cmeq/uminv; all native controls have no Frame decode calls. Complete Frame group includes owner decoder calls and widened stack buffers. Source facts, not isolated causal attribution of the native gap.",
+  "controls": {
+    "reported_logical_comparisons": 432,
+    "query_rows": 432,
+    "raw_query_samples": 7776,
+    "private_repair_rows": 28,
+    "exact_duplicate_median_absolute_percent_difference": 0.4039892591118033,
+    "exact_duplicate_maximum_absolute_percent_difference": 2.4934656868202065,
+    "selection": "all five inputs, all queries and measured programs, both operations; all parts for repair controls; duplicate/order calibration; raw samples in recovery archive"
+  }
+}

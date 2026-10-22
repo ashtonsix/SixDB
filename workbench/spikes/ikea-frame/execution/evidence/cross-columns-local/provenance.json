@@ -1,0 +1,23 @@
+{
+  "files_sha256": {
+    "REPRODUCE.md": "4bbe7be007eab665d555aa430414e4b0a8513f03aa3157014572c904b2d0e4d1",
+    "calibration.csv": "b9f22b1e12fca9a0e198f26db33ccdca6f105312a977783e68fcee3287d1bba8",
+    "codegen.json": "ebd1b4ad5af1bf572ad2158ea8485222f80441ee2208eecfcb874d0c51495dd6",
+    "coverage.json": "45c18bbedb5d8390028f47d665363d55d1a241eb848b4b13980e0cffe12db673",
+    "inputs.json": "17074bee498275cacbda6354f95763553376383eea81078bf636ff729bee50fb",
+    "material.csv": "93f7492236683f582dd0073e0717e58f47b29f1c57c8733e3a6414e4bd3d4547",
+    "qualification.json": "308a1d554501f3ec52c35e7f63b3857d59e02c9775a7982efca5abeb28c670a3",
+    "queries.csv": "430ef1badaa968390bfc4cf7016d6c429ffd02911a920bfe6dfffba11e6ec530",
+    "repairs.csv": "37f0abae77c31917fa3e9d1d72f7c5853f07cd0305a4ebda0ed269ffbc1448bd"
+  },
+  "format": 2,
+  "full_bundle": "artifact.json",
+  "kind": "files",
+  "regenerate": [
+    "python3",
+    "workbench/spikes/ikea-frame/execution/columns_report.py",
+    "{evidence}",
+    "{evidence}/selected"
+  ],
+  "regenerate_from": "archive"
+}

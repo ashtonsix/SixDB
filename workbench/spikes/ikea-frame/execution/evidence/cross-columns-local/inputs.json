@@ -1,0 +1,146 @@
+[
+  {
+    "input": "OS-ResolutionWidth",
+    "source": {
+      "path": "build/spikes/ikea-frame/clickbench-os-resolution.json",
+      "sha256": "130d5b13c7f359b1a56a83123ccac857587f83d820b64b86ce11d81faa05d5c1",
+      "recovery_reference": "base-input-artifact.json",
+      "recovery_member": "inputs/clickbench-os-resolution.json"
+    },
+    "semantics": {
+      "corpus": "clickbench-rows (raw hits_0..2, original row order)",
+      "path": "clickbench_rows.parquet",
+      "category_column": "OS",
+      "x_column": "ResolutionWidth",
+      "parts": "rows [0, 196608)",
+      "category_encoding": "signed values mapped to u64 by two's complement",
+      "dictionary_order": "first occurrence within the part",
+      "injected_nulls": "none"
+    },
+    "transport_sha256": "837a35d04cfb53b946d5ce0597e9871628437395fee58bcb8b5ae22c87eddf68"
+  },
+  {
+    "input": "Region-ConnectTiming",
+    "source": {
+      "path": "build/spikes/ikea-frame/clickbench-region-connect.json",
+      "sha256": "d448af998eaa6e369446bab52e9551e989db7d5e1c7ad9a139ba148de0341580",
+      "recovery_reference": "base-input-artifact.json",
+      "recovery_member": "inputs/clickbench-region-connect.json"
+    },
+    "semantics": {
+      "corpus": "clickbench-rows (raw hits_0..2, original row order)",
+      "path": "clickbench_rows.parquet",
+      "category_column": "RegionID",
+      "x_column": "ConnectTiming",
+      "parts": "rows [0, 196608)",
+      "category_encoding": "signed values mapped to u64 by two's complement",
+      "dictionary_order": "first occurrence within the part",
+      "injected_nulls": "x is null where ConnectTiming == 0 (synthetic)"
+    },
+    "transport_sha256": "17a2e67c4efd88dedaef82bfffae3a6b6ec3a9fcaead306b488d5159f8ed78e4"
+  },
+  {
+    "input": "IMDb-year",
+    "source": {
+      "path": "build/spikes/ikea-frame/imdb-title-year.json",
+      "sha256": "d59892393ae4a643da6c9666b2eb23bb749ad002cccd9e8b1839b975986d3aa8",
+      "recovery_reference": "base-input-artifact.json",
+      "recovery_member": "inputs/imdb-title-year.json"
+    },
+    "semantics": {
+      "receipt": {
+        "source": "s3://calico-fleet-artifacts/corpora/job-full/",
+        "manifest_sha256": "9f7b7f3edc7985f4979c275876e547556acd2d8f064d0524dbac0732f69a87ff",
+        "row_offset": 0,
+        "row_count": 4096,
+        "order": "CSV row order (DuckDB insertion order, preserve_insertion_order=true); ids are NOT id-sorted in every table \u2014 see per-table id.sorted_ascending",
+        "files": [
+          {
+            "name": "title.ids.u32",
+            "element_bytes": 4,
+            "range": "bytes 0-16383/10113248",
+            "full_object_etag": "\"94f9f3ea624e22721f87d4ff65ca1a10-2\"",
+            "bytes": 16384,
+            "sha256": "65c0635e5e324501bbd63bddb4c253a6b6f800eb60fa3a42af681ebb53ca65c1"
+          },
+          {
+            "name": "title.kind_id.u32",
+            "element_bytes": 4,
+            "range": "bytes 0-16383/10113248",
+            "full_object_etag": "\"649316891bc46b9d5da79a7512259407-2\"",
+            "bytes": 16384,
+            "sha256": "b5fb79d26f571fb5f13327e9a2f3abc79592a2048b042a23b3493bcbb3c8666e"
+          },
+          {
+            "name": "title.production_year.u16",
+            "element_bytes": 2,
+            "range": "bytes 0-8191/5056624",
+            "full_object_etag": "\"6e0090410baa466b07937c10a281a6e8\"",
+            "bytes": 8192,
+            "sha256": "78cde060524e29ea3d8772858b65f833a5c91ddee0d376d822ac161985233260"
+          },
+          {
+            "name": "title.production_year.valid.u8",
+            "element_bytes": 1,
+            "range": "bytes 0-4095/2528312",
+            "full_object_etag": "\"6e94117a6096ada79349ec0525bfd0e9\"",
+            "bytes": 4096,
+            "sha256": "07b252c286a5b0056e748c4e8153491e81f0bde2d1ef3c182cda3a65b51b45a4"
+          }
+        ],
+        "downloaded_sample_bytes": 45056
+      },
+      "columns": {
+        "category": "title.kind_id.u32",
+        "x": "title.production_year.u16",
+        "x_validity": "title.production_year.valid.u8"
+      },
+      "original_rows": {
+        "title-0": [
+          0,
+          2048
+        ],
+        "title-2048": [
+          2048,
+          4096
+        ]
+      },
+      "dictionary_assignment": "first occurrence; second part reversed to exercise edition independence",
+      "changes": [
+        "split a contiguous source window into two parts; preserve original order and real nulls"
+      ],
+      "scope": "first4096 smoke fixture, not a representative sample"
+    },
+    "transport_sha256": "466e8d9decf1d57735c56f9166466900f7b395a4aa6f785711718d188e8295d6"
+  },
+  {
+    "input": "functional",
+    "source": {
+      "generator": "authored()",
+      "correlated": true,
+      "logical_sha256": "41a6eac718d4d262b77a7944fdba2f8e0acdad243123b10db7bda8ab6cbd9abb"
+    },
+    "semantics": {
+      "law": "X=20000+257*latent_category; decorrelation permutes X within each part, preserving both marginals",
+      "seed": 713,
+      "nulls": "none",
+      "correlated": true
+    },
+    "transport_sha256": "6efed85af96d76f0a443ee7a085ae935358316f6a80af2a720a1761393d5fb98"
+  },
+  {
+    "input": "decorrelated",
+    "source": {
+      "generator": "authored()",
+      "correlated": false,
+      "logical_sha256": "c83fb38f9b754ff736f53051f4c39443a5aba1b0db418b6cbd87cbe39cfce290"
+    },
+    "semantics": {
+      "law": "X=20000+257*latent_category; decorrelation permutes X within each part, preserving both marginals",
+      "seed": 713,
+      "nulls": "none",
+      "correlated": false
+    },
+    "transport_sha256": "85ef887c0bda67d12aea8e2721df0190d61bb3f7357db4bf9b6a901670d9c3ce"
+  }
+]
