@@ -4,7 +4,8 @@ include("${PROJECT_SOURCE_DIR}/cmake/GoogleBenchmark.cmake")
 # variant is a patch against it (`original` restores the XOR delta-swap
 # transpose and pair packets, `bit4` keeps only the BIT transpose, `intreg`
 # restores integer-register mixed residual reads, `bitsel` emits BIT for the
-# constant-mask selects and masked ORs of striped tails). `mixed4w.patch` is a
+# constant-mask selects and masked ORs of striped tails, `bitread` and `bitwrite`
+# only in the readers or writers). `mixed4w.patch` is a
 # rejected record against the pre-`intreg` source and is not built. The
 # patched copies form a build-private overlay searched before ikea/include, and
 # each variant compiles its own SeriesPack library objects: sharing one library
@@ -13,7 +14,7 @@ set(ikea_dir "${PROJECT_SOURCE_DIR}/ikea")
 set(neon_headers detail/native/neon/read.h detail/native/neon/groups.h
   detail/native/neon/write.h detail/dense_read.h detail/placed_read.h author/expression.h)
 find_program(NEON_LOCAL_TRANSPOSE_PATCH patch REQUIRED)
-set(variants current bit4 original intreg bitsel)
+set(variants current bit4 original intreg bitsel bitread bitwrite)
 foreach(variant IN LISTS variants)
   set(overlay "${CMAKE_CURRENT_BINARY_DIR}/overlay-${variant}")
   set(staging "${CMAKE_CURRENT_BINARY_DIR}/staging-${variant}")
@@ -75,6 +76,7 @@ foreach(variant IN LISTS variants)
   sixdb_target(neon_local_transpose_seriespack_check_${variant})
   target_link_libraries(neon_local_transpose_seriespack_check_${variant} PRIVATE
     neon_local_transpose_sp_full_${variant})
+  sixdb_test_scope(neon_local_transpose_seriespack_check_${variant})
 
   # Preset follow-up: Local versus striped (preset.sh on a worker, preset_summary.py
   # on its results); with run.py --binary also striped kernels across variants.

@@ -14,14 +14,14 @@ progress validate
 for tune in neoverse-v2 neoverse-v3; do
   build="build/neon-local-transpose/validate-$tune"
   cmake -S . -B "$build" -G Ninja -DCMAKE_BUILD_TYPE=Release -DSIXDB_MARCH=armv8-a+simd \
-    -DSIXDB_TUNE="$tune" > "$out/validate-$tune-configure.log"
+    -DSIXDB_TUNE="$tune" -DSIXDB_TEST_SCOPE=full > "$out/validate-$tune-configure.log"
   cmake --build "$build" --target ikea_validate -j "$jobs" > "$out/validate-$tune.log" 2>&1
 done
 
 progress sanitizers
 build=build/neon-local-transpose/asan
 cmake -S . -B "$build" -G Ninja -DCMAKE_BUILD_TYPE=Debug -DSIXDB_MARCH=armv8-a+simd \
-  -DSIXDB_TUNE=neoverse-v2 '-DCMAKE_CXX_FLAGS=-O1 -fsanitize=address,undefined -fno-omit-frame-pointer' \
+  -DSIXDB_TUNE=neoverse-v2 -DSIXDB_TEST_SCOPE=full '-DCMAKE_CXX_FLAGS=-O1 -fsanitize=address,undefined -fno-omit-frame-pointer' \
   > "$out/asan-configure.log"
 cmake --build "$build" --target ikea_seriespack_check ikea_seriespack_descriptor_check \
   -j "$jobs" > "$out/asan-build.log" 2>&1

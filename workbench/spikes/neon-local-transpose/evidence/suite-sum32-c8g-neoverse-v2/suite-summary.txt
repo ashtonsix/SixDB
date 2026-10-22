@@ -1,0 +1,22 @@
+cases 150; speedup candidate over current: geomean 0.976, median 1.000, min 0.668, max 1.091
+faster >3%: 1; slower >3%: 19
+  0.668       3122.5 ->      4673.7 ns  placed/k31h8/interleaved/partial/sum-native
+  0.668       3120.6 ->      4668.7 ns  placed/k31h8/interleaved/all/sum-native
+  0.672       3136.3 ->      4669.8 ns  placed/k31h8/separated/partial/sum-native
+  0.674       3137.9 ->      4656.1 ns  placed/k31h8/separated/all/sum-native
+  0.792       3078.8 ->      3887.4 ns  placed/k31h8/substituted/all/sum-native
+  0.794       3079.8 ->      3881.2 ns  placed/k31h8/substituted/partial/sum-native
+  0.819       8286.0 ->     10114.4 ns  placed/k63h16/separated/partial/sum-native
+  0.851       8140.5 ->      9567.6 ns  placed/k63h16/interleaved/partial/sum-native
+  0.862       8105.6 ->      9400.8 ns  placed/k63h16/interleaved/all/sum-native
+  0.866       8251.1 ->      9526.2 ns  placed/k63h16/separated/all/sum-native
+  0.868       2787.3 ->      3210.2 ns  placed/k20h8/interleaved/all/sum-native
+  0.869       2786.5 ->      3206.8 ns  placed/k20h8/separated/all/sum-native
+  0.869       2787.2 ->      3207.5 ns  placed/k20h8/interleaved/partial/sum-native
+  0.869       2787.2 ->      3206.9 ns  placed/k20h8/separated/partial/sum-native
+  0.877       2798.4 ->      3189.1 ns  placed/k20h8/substituted/partial/sum-native
+  0.880       2800.8 ->      3184.3 ns  placed/k20h8/substituted/all/sum-native
+  0.893       7135.2 ->      7992.4 ns  placed/k63h16/substituted/partial/sum-native
+  0.897       7141.1 ->      7961.3 ns  placed/k63h16/substituted/all/sum-native
+  0.970      13566.2 ->     13984.5 ns  placed/k31h8/substituted/partial/mutation-materialized
+  1.091       6855.9 ->      6284.9 ns  ordinary/k64/local/point/bound

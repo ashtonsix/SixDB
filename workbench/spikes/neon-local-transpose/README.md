@@ -161,6 +161,51 @@ OrbStack (k20 1.6×) but lost on Graviton: k20–k63 reads 0.59–0.95×, and th
 suite's headed placed sums k20h8/k31h8/k63h16 0.66–0.90×
 ([suite](evidence/suite-mixed4w-c8g-neoverse-v2/suite-summary.txt)).
 
+## Striped constant-mask selects
+
+Clang 21 lowers a constant-mask `vbslq` to AND/AND/ORR. An audit of the
+`bulk_arm` preset benchmark's disassembly (any ORR of two vector ANDs/BICs
+defined shortly before it) found this pattern in the striped tail readers and
+writers: the R = 5/7 read select, the R = 3/6 read joins, the partial striped
+writer's select and the complete-tile masked ORs. The Local `vtst` paths' BIC
+is a comparison inversion, not a select. [bitsel.patch](bitsel.patch) emits
+`BIT` at all six sites; [bitread.patch](bitread.patch) and
+[bitwrite.patch](bitwrite.patch) split readers from writers. All pass the
+maintained SeriesPack check. Striped preset cases, six alternating rounds
+([V2](evidence/bitsplit-c8g-neoverse-v2/summary.txt),
+[V3](evidence/bitsplit-c9g-neoverse-v3/summary.txt); full `bitsel` in
+[V2](evidence/bitsel-c8g-neoverse-v2/summary.txt) and
+[V3](evidence/bitsel-c9g-neoverse-v3/summary.txt)):
+
+- **Readers:** bulk reads k5 1.35–1.40×, k7 1.30–1.40×, k15 1.24× (V3) and
+  k14 1.05–1.14×, but every k5/k7/k14/k15 filter is 2–5% slower on both hosts,
+  and 16-row reads are mixed (k7 0.86× on V2, k14 0.92× on V3). The filter
+  loops themselves barely change; the asm boundary changes their register
+  allocation and repeats loads the compiler previously hoisted.
+- **Writers:** k7 maintained writes 0.90–0.91× on both hosts.
+
+**Not promoted:** neither split is a win on every metric. A select form the
+compiler can still schedule around (or a filter that does not share the
+reader) would be needed to keep the read gains.
+
+## Headed placed sums
+
+`placed/k20h8`, `k31h8` and `k63h16` sums trail Zen 5 by 4–5×. A probe of
+k20h8 `sum_regions` (16-row grain) runs about 85 instructions per 16 rows:
+two integer-register residual transposes, four u32 widenings and joins, four
+compares and the selection masks. It is near issue throughput (about one
+cycle per row on V2); 128-bit lanes hold four u32 values where AVX-512 holds
+sixteen. Two candidates, maintained 150-case suite on c8g:
+
+- [sumpair.patch](sumpair.patch) pairs u32 values before widening in grouped
+  sums over two accumulators: geomean 0.998, neutral (the suite's headed sums
+  run 16-row groups) ([suite](evidence/suite-sumpair-c8g-neoverse-v2/suite-summary.txt)).
+- [sum32.patch](sum32.patch) adds 32-row selected-sum groups above 16 bits so
+  headed residuals reach the four-tile gather: k20h8 0.87–0.88×, k31h8 0.67–0.79×,
+  k63h16 0.82–0.90× ([suite](evidence/suite-sum32-c8g-neoverse-v2/suite-summary.txt)).
+  The loss matches the rejected `mixed4w` dense reads, so the per-16-row
+  integer path is not this gap's bottleneck.
+
 ## Preset follow-up
 
 Does the faster Local transpose change `bulk_arm`? [preset.cpp](preset.cpp)

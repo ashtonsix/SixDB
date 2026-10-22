@@ -1,0 +1,39 @@
+--- a/ikea/seriespack/detail/native/neon/read.h
++++ r/ikea/seriespack/detail/native/neon/read.h
+@@ -94,25 +94,29 @@
+             const unsigned d = static_cast<unsigned>(descriptors >> (g * 8));
+             const auto a = stripe((d >> 5) & 3);
+             if (d & 8)
+-                return vorrq_u8(
+-                    vshrq_n_u8(a, 6),
+-                    vandq_u8(vshlq_u8(stripe(1), vdupq_n_s8(-int(4 + (g >> 2)))), vdupq_n_u8(4)));
++                return vreinterpretq_u8_u64(insert_bits(
++                    vreinterpretq_u64_u8(vshrq_n_u8(a, 6)),
++                    vreinterpretq_u64_u8(vshlq_u8(stripe(1), vdupq_n_s8(-int(4 + (g >> 2))))),
++                    vreinterpretq_u64_u8(vdupq_n_u8(4))));
+             return vandq_u8(vshlq_u8(a, vdupq_n_s8(-int(d & 7))), vdupq_n_u8(7));
+         } else if constexpr (R == 6) {
+             const unsigned edge = g & 2;
+             const auto a = stripe(edge);
+             if (((g + 1) & 2) == 0)
+                 return vandq_u8(a, vdupq_n_u8(63));
+-            return vorrq_u8(
+-                vandq_u8(vshrq_n_u8(a, 2), vdupq_n_u8(48)),
+-                vandq_u8(vshlq_u8(stripe(1), vdupq_n_s8(-int(edge * 2))), vdupq_n_u8(15)));
++            return vreinterpretq_u8_u64(
++                insert_bits(vreinterpretq_u64_u8(vshrq_n_u8(a, 2)),
++                            vreinterpretq_u64_u8(vshlq_u8(stripe(1), vdupq_n_s8(-int(edge * 2)))),
++                            vreinterpretq_u64_u8(vdupq_n_u8(15))));
+         } else {
+             const unsigned start = g * R, s = start / 8, shift = start % 8;
+             const auto a = stripe(s);
+             if (shift <= 8 - R)
+                 return vandq_u8(vshlq_u8(a, vdupq_n_s8(-int(shift))), vdupq_n_u8((1u << R) - 1));
+             const auto low = vdupq_n_u8((1u << (shift + R - 8)) - 1);
+-            return vbslq_u8(low, stripe(s + 1), vshrq_n_u8(a, 8 - R));
++            return vreinterpretq_u8_u64(insert_bits(vreinterpretq_u64_u8(vshrq_n_u8(a, 8 - R)),
++                                                    vreinterpretq_u64_u8(stripe(s + 1)),
++                                                    vreinterpretq_u64_u8(low)));
+         }
+     }
+ }

@@ -11,7 +11,7 @@ out="$build/workbench/spikes/neon-local-transpose"
 lscpu --json > "$SIXDB_RESULTS/lscpu.json"
 clang++-21 --version > "$SIXDB_RESULTS/compiler.txt"
 cmake -S . -B "$build" -G Ninja -DCMAKE_BUILD_TYPE=Release -DSIXDB_MARCH=armv8-a+simd \
-  -DSIXDB_TUNE="${TUNE:-neoverse-v2}" -DSIXDB_SPIKES=neon-local-transpose > "$SIXDB_RESULTS/configure.log"
+  -DSIXDB_TUNE="${TUNE:-neoverse-v2}" -DSIXDB_TEST_SCOPE=full -DSIXDB_SPIKES=neon-local-transpose > "$SIXDB_RESULTS/configure.log"
 targets=""
 variants="${VARIANTS:-original bit4 current}"
 binary="${BINARY:-bench}"

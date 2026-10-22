@@ -19,7 +19,7 @@ for variant in current candidate; do
   if [[ "$variant" == candidate ]]; then source="$candidate"; fi
   build="$SIXDB_SOURCE/build/neon-local-transpose/suite-$variant"
   cmake -S "$source" -B "$build" -G Ninja -DCMAKE_BUILD_TYPE=Release -DSIXDB_MARCH=armv8-a+simd \
-    -DSIXDB_TUNE="${TUNE:-neoverse-v2}" -DSIXDB_BENCHMARKS=seriespack > "$out/suite-$variant-configure.log"
+    -DSIXDB_TUNE="${TUNE:-neoverse-v2}" -DSIXDB_TEST_SCOPE=full -DSIXDB_BENCHMARKS=seriespack > "$out/suite-$variant-configure.log"
   cmake --build "$build" --target ikea_seriespack_bench -j "$jobs" > "$out/suite-$variant-build.log" 2>&1
 done
 build="$SIXDB_SOURCE/build/neon-local-transpose/suite-candidate"

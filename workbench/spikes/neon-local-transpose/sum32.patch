@@ -1,0 +1,34 @@
+--- a/ikea/seriespack/author/expression.h
++++ b/ikea/seriespack/author/expression.h
+@@ -273,7 +273,7 @@
+ #if defined(__aarch64__) ||                                                                        \
+     (defined(__AVX512BW__) && defined(__AVX512DQ__) && defined(__AVX512VL__))
+     if constexpr (Wide) {
+-        constexpr unsigned grain = Source::bit_width <= 8 ? 64 : Source::bit_width <= 16 ? 32 : 16;
++        constexpr unsigned grain = Source::bit_width <= 8 ? 64 : 32;
+         wide_ops<grain> wide;
+         native_group::sum_state partial;
+         for (; count >= grain; i += grain, count -= grain) {
+--- a/ikea/seriespack/detail/native/neon/groups.h
++++ b/ikea/seriespack/detail/native/neon/groups.h
+@@ -192,6 +192,20 @@
+         return neon::sum(x.block[0], mask.block[0]);
+     constexpr unsigned L = sizeof(uint_for<K>);
+     sum_state out;
++    if constexpr (L == 4 && K < 32) {
++        // Pair two admitted values per u32 lane, as for one packet, and spread
++        // the widening adds over two accumulators instead of one serial chain.
++        std::array<uint64x2_t, 2> acc{vdupq_n_u64(0), vdupq_n_u64(0)};
++        detail::each<N / 8>([&](auto j) {
++            constexpr unsigned a = 2 * j, b = a + 1;
++            const auto pair = vpaddq_u32(
++                vreinterpretq_u32_u8(vandq_u8(x.block[a / 4].v[a % 4], mask.block[a / 4].v[a % 4])),
++                vreinterpretq_u32_u8(vandq_u8(x.block[b / 4].v[b % 4], mask.block[b / 4].v[b % 4])));
++            acc[j % 2] = vpadalq_u32(acc[j % 2], pair);
++        });
++        out.value = vaddq_u64(acc[0], acc[1]);
++        return out;
++    }
+     // Bound intermediate lanes across this finite group, then widen before
+     // adding to the unbounded range accumulator. No per-packet scalar result.
+     auto small16 = vdupq_n_u16(0);
