@@ -214,6 +214,16 @@ an update/cleaning policy. Distinct owner entries, rounding, retained preparatio
 and dictionaries can overwhelm a small repair's saved copying. Grouped backing
 can remain preferable even though it retains obsolete siblings.
 
+These retirement observations follow a genuine logical update. Same-version
+`adopt` retains the version's primary and replaces only its physical alternative.
+The earlier [conversion census](../../orbital-mvcc/performance/controls/conversion-capacity/README.md)
+already observed both remaining after the original reader closed. A read-phase
+fold therefore carries the primary's distinct backing until version retirement;
+shared unchanged Parts can still reduce the additional physical capacity.
+Consumers must explicitly select the folded alternative to benefit from its
+reads. A later genuine update can use that image to construct its successor
+primary. Physical cleanup alone supplies no reason to advance logical time.
+
 Choosing that policy requires complete construction/publication, query and
 retirement measurements, including simultaneous old/new backing and failure.
 Ikea LEAD owns those lifecycle experiments and their performance claims. Engine
