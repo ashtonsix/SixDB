@@ -1,5 +1,9 @@
 # Curated run search improves real point consumers
 
+The [timing-order audit](../ORDER-AUDIT.md) supersedes close rankings from this
+historical cyclic-order cohort. Its calibrated rerun preserves the large gains
+and the important losing cases; use that paired cohort for current timing claims.
+
 Use the private `unpredictable_point_reader` or
 `unpredictable_compact_reader` for unpredictable point work over run-heavy
 images. Retain the ordinary aliases for predictable work. Both are instances

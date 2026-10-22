@@ -1,0 +1,1026 @@
+[
+  {
+    "input": "cols-ClientIP",
+    "domain": "whole_image",
+    "mask": 0,
+    "arm": "u8ends_native",
+    "ratio": 0.9709868781592889,
+    "base_ns": 22.887298583984375
+  },
+  {
+    "input": "cols-ClientIP",
+    "domain": "whole_image",
+    "mask": 0,
+    "arm": "unpredictable_prefix_shared_u8ends_native",
+    "ratio": 1.0314530091100778,
+    "base_ns": 13.590423583984375
+  },
+  {
+    "input": "cols-ClientIP",
+    "domain": "whole_image",
+    "mask": 1,
+    "arm": "u8ends_native",
+    "ratio": 0.9926140392342235,
+    "base_ns": 0.5164794921875
+  },
+  {
+    "input": "cols-ClientIP",
+    "domain": "whole_image",
+    "mask": 1,
+    "arm": "unpredictable_prefix_shared_u8ends_native",
+    "ratio": 0.9950611476952023,
+    "base_ns": 0.51904296875
+  },
+  {
+    "input": "cols-ClientIP",
+    "domain": "whole_image",
+    "mask": 2,
+    "arm": "u8ends_native",
+    "ratio": 0.9378602689681382,
+    "base_ns": 12.446746826171875
+  },
+  {
+    "input": "cols-ClientIP",
+    "domain": "whole_image",
+    "mask": 2,
+    "arm": "unpredictable_prefix_shared_u8ends_native",
+    "ratio": 0.9889771686347556,
+    "base_ns": 7.962432861328125
+  },
+  {
+    "input": "cols-ClientIP",
+    "domain": "whole_image",
+    "mask": 3,
+    "arm": "u8ends_native",
+    "ratio": 0.87816566769264,
+    "base_ns": 13.563720703125
+  },
+  {
+    "input": "cols-ClientIP",
+    "domain": "whole_image",
+    "mask": 3,
+    "arm": "unpredictable_prefix_shared_u8ends_native",
+    "ratio": 1.0723803578047877,
+    "base_ns": 7.821197509765625
+  },
+  {
+    "input": "cols-ConnectTiming",
+    "domain": "whole_image",
+    "mask": 0,
+    "arm": "u8ends_native",
+    "ratio": 0.9641512958720007,
+    "base_ns": 11.10845947265625
+  },
+  {
+    "input": "cols-ConnectTiming",
+    "domain": "whole_image",
+    "mask": 0,
+    "arm": "unpredictable_prefix_shared_u8ends_native",
+    "ratio": 1.030662942314517,
+    "base_ns": 10.6632080078125
+  },
+  {
+    "input": "cols-ConnectTiming",
+    "domain": "whole_image",
+    "mask": 1,
+    "arm": "u8ends_native",
+    "ratio": 0.9952372552478391,
+    "base_ns": 0.519012451171875
+  },
+  {
+    "input": "cols-ConnectTiming",
+    "domain": "whole_image",
+    "mask": 1,
+    "arm": "unpredictable_prefix_shared_u8ends_native",
+    "ratio": 0.9952957779607198,
+    "base_ns": 0.51898193359375
+  },
+  {
+    "input": "cols-ConnectTiming",
+    "domain": "whole_image",
+    "mask": 2,
+    "arm": "u8ends_native",
+    "ratio": 0.852266719342788,
+    "base_ns": 5.252716064453125
+  },
+  {
+    "input": "cols-ConnectTiming",
+    "domain": "whole_image",
+    "mask": 2,
+    "arm": "unpredictable_prefix_shared_u8ends_native",
+    "ratio": 0.9629366204180678,
+    "base_ns": 5.835357666015625
+  },
+  {
+    "input": "cols-ConnectTiming",
+    "domain": "whole_image",
+    "mask": 3,
+    "arm": "u8ends_native",
+    "ratio": 0.7850406982667859,
+    "base_ns": 5.39141845703125
+  },
+  {
+    "input": "cols-ConnectTiming",
+    "domain": "whole_image",
+    "mask": 3,
+    "arm": "unpredictable_prefix_shared_u8ends_native",
+    "ratio": 0.9510009061701953,
+    "base_ns": 5.556793212890625
+  },
+  {
+    "input": "cols-EventTime",
+    "domain": "common_delta",
+    "mask": 0,
+    "arm": "u8ends_native",
+    "ratio": 0.983754027408889,
+    "base_ns": 23.726959228515625
+  },
+  {
+    "input": "cols-EventTime",
+    "domain": "common_delta",
+    "mask": 0,
+    "arm": "unpredictable_prefix_shared_u8ends_native",
+    "ratio": 0.9981146727296016,
+    "base_ns": 15.248046875
+  },
+  {
+    "input": "cols-EventTime",
+    "domain": "common_delta",
+    "mask": 1,
+    "arm": "u8ends_native",
+    "ratio": 1.0,
+    "base_ns": 0.52386474609375
+  },
+  {
+    "input": "cols-EventTime",
+    "domain": "common_delta",
+    "mask": 1,
+    "arm": "unpredictable_prefix_shared_u8ends_native",
+    "ratio": 1.0002912734475125,
+    "base_ns": 0.52386474609375
+  },
+  {
+    "input": "cols-EventTime",
+    "domain": "common_delta",
+    "mask": 2,
+    "arm": "u8ends_native",
+    "ratio": 1.0121709452519778,
+    "base_ns": 11.498992919921875
+  },
+  {
+    "input": "cols-EventTime",
+    "domain": "common_delta",
+    "mask": 2,
+    "arm": "unpredictable_prefix_shared_u8ends_native",
+    "ratio": 0.9908140472918465,
+    "base_ns": 7.528106689453125
+  },
+  {
+    "input": "cols-EventTime",
+    "domain": "common_delta",
+    "mask": 3,
+    "arm": "u8ends_native",
+    "ratio": 1.0192277299399946,
+    "base_ns": 11.97198486328125
+  },
+  {
+    "input": "cols-EventTime",
+    "domain": "common_delta",
+    "mask": 3,
+    "arm": "unpredictable_prefix_shared_u8ends_native",
+    "ratio": 0.983717688547181,
+    "base_ns": 7.684539794921875
+  },
+  {
+    "input": "cols-EventTime",
+    "domain": "whole_image",
+    "mask": 0,
+    "arm": "u8ends_native",
+    "ratio": 1.0039800066851674,
+    "base_ns": 7.85174560546875
+  },
+  {
+    "input": "cols-EventTime",
+    "domain": "whole_image",
+    "mask": 0,
+    "arm": "unpredictable_prefix_shared_u8ends_native",
+    "ratio": 1.0059311098961181,
+    "base_ns": 6.977081298828125
+  },
+  {
+    "input": "cols-EventTime",
+    "domain": "whole_image",
+    "mask": 1,
+    "arm": "u8ends_native",
+    "ratio": 0.9950588235294118,
+    "base_ns": 0.518798828125
+  },
+  {
+    "input": "cols-EventTime",
+    "domain": "whole_image",
+    "mask": 1,
+    "arm": "unpredictable_prefix_shared_u8ends_native",
+    "ratio": 0.9977426636568849,
+    "base_ns": 0.51373291015625
+  },
+  {
+    "input": "cols-EventTime",
+    "domain": "whole_image",
+    "mask": 2,
+    "arm": "u8ends_native",
+    "ratio": 0.9702601466791753,
+    "base_ns": 4.456573486328125
+  },
+  {
+    "input": "cols-EventTime",
+    "domain": "whole_image",
+    "mask": 2,
+    "arm": "unpredictable_prefix_shared_u8ends_native",
+    "ratio": 0.9934098599120893,
+    "base_ns": 4.825286865234375
+  },
+  {
+    "input": "cols-EventTime",
+    "domain": "whole_image",
+    "mask": 3,
+    "arm": "u8ends_native",
+    "ratio": 0.9541048452532747,
+    "base_ns": 4.21240234375
+  },
+  {
+    "input": "cols-EventTime",
+    "domain": "whole_image",
+    "mask": 3,
+    "arm": "unpredictable_prefix_shared_u8ends_native",
+    "ratio": 0.9997396138473356,
+    "base_ns": 4.68804931640625
+  },
+  {
+    "input": "cols-OS",
+    "domain": "whole_image",
+    "mask": 0,
+    "arm": "u8ends_native",
+    "ratio": 0.9819188820722563,
+    "base_ns": 23.280029296875
+  },
+  {
+    "input": "cols-OS",
+    "domain": "whole_image",
+    "mask": 0,
+    "arm": "unpredictable_prefix_shared_u8ends_native",
+    "ratio": 1.0430943358387612,
+    "base_ns": 14.60858154296875
+  },
+  {
+    "input": "cols-OS",
+    "domain": "whole_image",
+    "mask": 1,
+    "arm": "u8ends_native",
+    "ratio": 1.0,
+    "base_ns": 0.5086669921875
+  },
+  {
+    "input": "cols-OS",
+    "domain": "whole_image",
+    "mask": 1,
+    "arm": "unpredictable_prefix_shared_u8ends_native",
+    "ratio": 1.0,
+    "base_ns": 0.50860595703125
+  },
+  {
+    "input": "cols-OS",
+    "domain": "whole_image",
+    "mask": 2,
+    "arm": "u8ends_native",
+    "ratio": 0.9787960010070916,
+    "base_ns": 11.63623046875
+  },
+  {
+    "input": "cols-OS",
+    "domain": "whole_image",
+    "mask": 2,
+    "arm": "unpredictable_prefix_shared_u8ends_native",
+    "ratio": 0.966915896252566,
+    "base_ns": 8.1468505859375
+  },
+  {
+    "input": "cols-OS",
+    "domain": "whole_image",
+    "mask": 3,
+    "arm": "u8ends_native",
+    "ratio": 0.9763907115918733,
+    "base_ns": 11.789886474609375
+  },
+  {
+    "input": "cols-OS",
+    "domain": "whole_image",
+    "mask": 3,
+    "arm": "unpredictable_prefix_shared_u8ends_native",
+    "ratio": 1.0965474502040087,
+    "base_ns": 7.337371826171875
+  },
+  {
+    "input": "cols-RegionID",
+    "domain": "whole_image",
+    "mask": 0,
+    "arm": "u8ends_native",
+    "ratio": 0.9597242861015816,
+    "base_ns": 29.94268798828125
+  },
+  {
+    "input": "cols-RegionID",
+    "domain": "whole_image",
+    "mask": 0,
+    "arm": "unpredictable_prefix_shared_u8ends_native",
+    "ratio": 0.9623064510368607,
+    "base_ns": 18.79864501953125
+  },
+  {
+    "input": "cols-RegionID",
+    "domain": "whole_image",
+    "mask": 1,
+    "arm": "u8ends_native",
+    "ratio": 1.004661209640746,
+    "base_ns": 0.536865234375
+  },
+  {
+    "input": "cols-RegionID",
+    "domain": "whole_image",
+    "mask": 1,
+    "arm": "unpredictable_prefix_shared_u8ends_native",
+    "ratio": 0.9953604164309154,
+    "base_ns": 0.53936767578125
+  },
+  {
+    "input": "cols-RegionID",
+    "domain": "whole_image",
+    "mask": 2,
+    "arm": "u8ends_native",
+    "ratio": 0.9872552208704704,
+    "base_ns": 14.07257080078125
+  },
+  {
+    "input": "cols-RegionID",
+    "domain": "whole_image",
+    "mask": 2,
+    "arm": "unpredictable_prefix_shared_u8ends_native",
+    "ratio": 0.9747710646808063,
+    "base_ns": 9.27783203125
+  },
+  {
+    "input": "cols-RegionID",
+    "domain": "whole_image",
+    "mask": 3,
+    "arm": "u8ends_native",
+    "ratio": 0.9178291524534836,
+    "base_ns": 13.500091552734375
+  },
+  {
+    "input": "cols-RegionID",
+    "domain": "whole_image",
+    "mask": 3,
+    "arm": "unpredictable_prefix_shared_u8ends_native",
+    "ratio": 0.9885970053817872,
+    "base_ns": 8.590850830078125
+  },
+  {
+    "input": "cols-ResolutionWidth",
+    "domain": "whole_image",
+    "mask": 0,
+    "arm": "u8ends_native",
+    "ratio": 0.9755388648708996,
+    "base_ns": 23.781646728515625
+  },
+  {
+    "input": "cols-ResolutionWidth",
+    "domain": "whole_image",
+    "mask": 0,
+    "arm": "unpredictable_prefix_shared_u8ends_native",
+    "ratio": 0.9896453820622124,
+    "base_ns": 15.13409423828125
+  },
+  {
+    "input": "cols-ResolutionWidth",
+    "domain": "whole_image",
+    "mask": 1,
+    "arm": "u8ends_native",
+    "ratio": 1.002175958597977,
+    "base_ns": 0.5189208984375
+  },
+  {
+    "input": "cols-ResolutionWidth",
+    "domain": "whole_image",
+    "mask": 1,
+    "arm": "unpredictable_prefix_shared_u8ends_native",
+    "ratio": 1.0000591121357214,
+    "base_ns": 0.516265869140625
+  },
+  {
+    "input": "cols-ResolutionWidth",
+    "domain": "whole_image",
+    "mask": 2,
+    "arm": "u8ends_native",
+    "ratio": 0.9190739759819238,
+    "base_ns": 11.925933837890625
+  },
+  {
+    "input": "cols-ResolutionWidth",
+    "domain": "whole_image",
+    "mask": 2,
+    "arm": "unpredictable_prefix_shared_u8ends_native",
+    "ratio": 1.0121702874345002,
+    "base_ns": 7.58282470703125
+  },
+  {
+    "input": "cols-ResolutionWidth",
+    "domain": "whole_image",
+    "mask": 3,
+    "arm": "u8ends_native",
+    "ratio": 0.8653882478763225,
+    "base_ns": 11.470977783203125
+  },
+  {
+    "input": "cols-ResolutionWidth",
+    "domain": "whole_image",
+    "mask": 3,
+    "arm": "unpredictable_prefix_shared_u8ends_native",
+    "ratio": 0.9899415431103779,
+    "base_ns": 7.251312255859375
+  },
+  {
+    "input": "cols-URLHash",
+    "domain": "whole_image",
+    "mask": 0,
+    "arm": "u8ends_native",
+    "ratio": 1.0160131470461213,
+    "base_ns": 10.88201904296875
+  },
+  {
+    "input": "cols-URLHash",
+    "domain": "whole_image",
+    "mask": 0,
+    "arm": "unpredictable_prefix_shared_u8ends_native",
+    "ratio": 0.9871841065732277,
+    "base_ns": 9.232025146484375
+  },
+  {
+    "input": "cols-URLHash",
+    "domain": "whole_image",
+    "mask": 1,
+    "arm": "u8ends_native",
+    "ratio": 1.0,
+    "base_ns": 0.51904296875
+  },
+  {
+    "input": "cols-URLHash",
+    "domain": "whole_image",
+    "mask": 1,
+    "arm": "unpredictable_prefix_shared_u8ends_native",
+    "ratio": 1.0047855370436016,
+    "base_ns": 0.51654052734375
+  },
+  {
+    "input": "cols-URLHash",
+    "domain": "whole_image",
+    "mask": 2,
+    "arm": "u8ends_native",
+    "ratio": 0.9239289804043279,
+    "base_ns": 5.70306396484375
+  },
+  {
+    "input": "cols-URLHash",
+    "domain": "whole_image",
+    "mask": 2,
+    "arm": "unpredictable_prefix_shared_u8ends_native",
+    "ratio": 0.974387308102135,
+    "base_ns": 5.412994384765625
+  },
+  {
+    "input": "cols-URLHash",
+    "domain": "whole_image",
+    "mask": 3,
+    "arm": "u8ends_native",
+    "ratio": 0.8847302248260946,
+    "base_ns": 5.672515869140625
+  },
+  {
+    "input": "cols-URLHash",
+    "domain": "whole_image",
+    "mask": 3,
+    "arm": "unpredictable_prefix_shared_u8ends_native",
+    "ratio": 0.9983291610206472,
+    "base_ns": 5.3150634765625
+  },
+  {
+    "input": "cols-UserID",
+    "domain": "common_delta",
+    "mask": 0,
+    "arm": "u8ends_native",
+    "ratio": 1.0012182749280627,
+    "base_ns": 22.770294189453125
+  },
+  {
+    "input": "cols-UserID",
+    "domain": "common_delta",
+    "mask": 0,
+    "arm": "unpredictable_prefix_shared_u8ends_native",
+    "ratio": 0.9897275246761715,
+    "base_ns": 16.47314453125
+  },
+  {
+    "input": "cols-UserID",
+    "domain": "common_delta",
+    "mask": 1,
+    "arm": "u8ends_native",
+    "ratio": 0.9879154078549849,
+    "base_ns": 0.5252685546875
+  },
+  {
+    "input": "cols-UserID",
+    "domain": "common_delta",
+    "mask": 1,
+    "arm": "unpredictable_prefix_shared_u8ends_native",
+    "ratio": 0.9882332583491954,
+    "base_ns": 0.529083251953125
+  },
+  {
+    "input": "cols-UserID",
+    "domain": "common_delta",
+    "mask": 2,
+    "arm": "u8ends_native",
+    "ratio": 1.0021032287403364,
+    "base_ns": 0.536865234375
+  },
+  {
+    "input": "cols-UserID",
+    "domain": "common_delta",
+    "mask": 2,
+    "arm": "unpredictable_prefix_shared_u8ends_native",
+    "ratio": 0.9971538104089219,
+    "base_ns": 0.525390625
+  },
+  {
+    "input": "cols-UserID",
+    "domain": "common_delta",
+    "mask": 3,
+    "arm": "u8ends_native",
+    "ratio": 1.0,
+    "base_ns": 0.53936767578125
+  },
+  {
+    "input": "cols-UserID",
+    "domain": "common_delta",
+    "mask": 3,
+    "arm": "unpredictable_prefix_shared_u8ends_native",
+    "ratio": 1.004263301500682,
+    "base_ns": 0.536865234375
+  },
+  {
+    "input": "cols-UserID",
+    "domain": "whole_image",
+    "mask": 0,
+    "arm": "u8ends_native",
+    "ratio": 1.0061458070046265,
+    "base_ns": 33.3240966796875
+  },
+  {
+    "input": "cols-UserID",
+    "domain": "whole_image",
+    "mask": 0,
+    "arm": "unpredictable_prefix_shared_u8ends_native",
+    "ratio": 1.006590344204263,
+    "base_ns": 20.25909423828125
+  },
+  {
+    "input": "cols-UserID",
+    "domain": "whole_image",
+    "mask": 1,
+    "arm": "u8ends_native",
+    "ratio": 0.9998868522290111,
+    "base_ns": 0.5394287109375
+  },
+  {
+    "input": "cols-UserID",
+    "domain": "whole_image",
+    "mask": 1,
+    "arm": "unpredictable_prefix_shared_u8ends_native",
+    "ratio": 0.9998868522290111,
+    "base_ns": 0.5394287109375
+  },
+  {
+    "input": "cols-UserID",
+    "domain": "whole_image",
+    "mask": 2,
+    "arm": "u8ends_native",
+    "ratio": 0.9323609752120026,
+    "base_ns": 14.970703125
+  },
+  {
+    "input": "cols-UserID",
+    "domain": "whole_image",
+    "mask": 2,
+    "arm": "unpredictable_prefix_shared_u8ends_native",
+    "ratio": 1.0348983980801247,
+    "base_ns": 9.550079345703125
+  },
+  {
+    "input": "cols-UserID",
+    "domain": "whole_image",
+    "mask": 3,
+    "arm": "u8ends_native",
+    "ratio": 0.9008854808986814,
+    "base_ns": 15.119537353515625
+  },
+  {
+    "input": "cols-UserID",
+    "domain": "whole_image",
+    "mask": 3,
+    "arm": "unpredictable_prefix_shared_u8ends_native",
+    "ratio": 0.9953677428764383,
+    "base_ns": 9.625152587890625
+  },
+  {
+    "input": "cols-WatchID",
+    "domain": "whole_image",
+    "mask": 0,
+    "arm": "u8ends_native",
+    "ratio": 0.9985790825799313,
+    "base_ns": 8.05401611328125
+  },
+  {
+    "input": "cols-WatchID",
+    "domain": "whole_image",
+    "mask": 0,
+    "arm": "unpredictable_prefix_shared_u8ends_native",
+    "ratio": 0.9946237714393766,
+    "base_ns": 7.101165771484375
+  },
+  {
+    "input": "cols-WatchID",
+    "domain": "whole_image",
+    "mask": 1,
+    "arm": "u8ends_native",
+    "ratio": 1.0,
+    "base_ns": 0.5216064453125
+  },
+  {
+    "input": "cols-WatchID",
+    "domain": "whole_image",
+    "mask": 1,
+    "arm": "unpredictable_prefix_shared_u8ends_native",
+    "ratio": 0.9951671130779085,
+    "base_ns": 0.52410888671875
+  },
+  {
+    "input": "cols-WatchID",
+    "domain": "whole_image",
+    "mask": 2,
+    "arm": "u8ends_native",
+    "ratio": 0.9858648329152611,
+    "base_ns": 4.2337646484375
+  },
+  {
+    "input": "cols-WatchID",
+    "domain": "whole_image",
+    "mask": 2,
+    "arm": "unpredictable_prefix_shared_u8ends_native",
+    "ratio": 1.0022139585446206,
+    "base_ns": 4.603912353515625
+  },
+  {
+    "input": "cols-WatchID",
+    "domain": "whole_image",
+    "mask": 3,
+    "arm": "u8ends_native",
+    "ratio": 0.9596249023183121,
+    "base_ns": 3.7490234375
+  },
+  {
+    "input": "cols-WatchID",
+    "domain": "whole_image",
+    "mask": 3,
+    "arm": "unpredictable_prefix_shared_u8ends_native",
+    "ratio": 0.9786860107690261,
+    "base_ns": 4.358428955078125
+  },
+  {
+    "input": "jena-0-T__degC",
+    "domain": "common_delta",
+    "mask": 0,
+    "arm": "u8ends_native",
+    "ratio": 1.0059628893117212,
+    "base_ns": 21.33148193359375
+  },
+  {
+    "input": "jena-0-T__degC",
+    "domain": "common_delta",
+    "mask": 0,
+    "arm": "unpredictable_prefix_shared_u8ends_native",
+    "ratio": 0.9943023506075748,
+    "base_ns": 10.49273681640625
+  },
+  {
+    "input": "jena-0-T__degC",
+    "domain": "common_delta",
+    "mask": 1,
+    "arm": "u8ends_native",
+    "ratio": 1.0,
+    "base_ns": 0.51904296875
+  },
+  {
+    "input": "jena-0-T__degC",
+    "domain": "common_delta",
+    "mask": 1,
+    "arm": "unpredictable_prefix_shared_u8ends_native",
+    "ratio": 0.9951787394167451,
+    "base_ns": 0.51904296875
+  },
+  {
+    "input": "jena-0-T__degC",
+    "domain": "common_delta",
+    "mask": 2,
+    "arm": "u8ends_native",
+    "ratio": 0.9974222931868999,
+    "base_ns": 10.359161376953125
+  },
+  {
+    "input": "jena-0-T__degC",
+    "domain": "common_delta",
+    "mask": 2,
+    "arm": "unpredictable_prefix_shared_u8ends_native",
+    "ratio": 1.0258838141333435,
+    "base_ns": 4.76678466796875
+  },
+  {
+    "input": "jena-0-T__degC",
+    "domain": "common_delta",
+    "mask": 3,
+    "arm": "u8ends_native",
+    "ratio": 1.0065069751753233,
+    "base_ns": 12.12359619140625
+  },
+  {
+    "input": "jena-0-T__degC",
+    "domain": "common_delta",
+    "mask": 3,
+    "arm": "unpredictable_prefix_shared_u8ends_native",
+    "ratio": 0.9892173516738482,
+    "base_ns": 5.892578125
+  },
+  {
+    "input": "jena-0-T__degC",
+    "domain": "whole_image",
+    "mask": 0,
+    "arm": "u8ends_native",
+    "ratio": 0.9807622826436835,
+    "base_ns": 18.5823974609375
+  },
+  {
+    "input": "jena-0-T__degC",
+    "domain": "whole_image",
+    "mask": 0,
+    "arm": "unpredictable_prefix_shared_u8ends_native",
+    "ratio": 0.9999974172152932,
+    "base_ns": 11.815765380859375
+  },
+  {
+    "input": "jena-0-T__degC",
+    "domain": "whole_image",
+    "mask": 1,
+    "arm": "u8ends_native",
+    "ratio": 1.0,
+    "base_ns": 0.52410888671875
+  },
+  {
+    "input": "jena-0-T__degC",
+    "domain": "whole_image",
+    "mask": 1,
+    "arm": "unpredictable_prefix_shared_u8ends_native",
+    "ratio": 1.0097712246211457,
+    "base_ns": 0.521575927734375
+  },
+  {
+    "input": "jena-0-T__degC",
+    "domain": "whole_image",
+    "mask": 2,
+    "arm": "u8ends_native",
+    "ratio": 0.9692648497928871,
+    "base_ns": 9.1060791015625
+  },
+  {
+    "input": "jena-0-T__degC",
+    "domain": "whole_image",
+    "mask": 2,
+    "arm": "unpredictable_prefix_shared_u8ends_native",
+    "ratio": 1.0064521982303152,
+    "base_ns": 5.71832275390625
+  },
+  {
+    "input": "jena-0-T__degC",
+    "domain": "whole_image",
+    "mask": 3,
+    "arm": "u8ends_native",
+    "ratio": 0.9421049733559294,
+    "base_ns": 9.97625732421875
+  },
+  {
+    "input": "jena-0-T__degC",
+    "domain": "whole_image",
+    "mask": 3,
+    "arm": "unpredictable_prefix_shared_u8ends_native",
+    "ratio": 0.9256944877059982,
+    "base_ns": 6.368377685546875
+  },
+  {
+    "input": "jena-0-p__mbar",
+    "domain": "common_delta",
+    "mask": 0,
+    "arm": "u8ends_native",
+    "ratio": 1.0013195120686378,
+    "base_ns": 21.1851806640625
+  },
+  {
+    "input": "jena-0-p__mbar",
+    "domain": "common_delta",
+    "mask": 0,
+    "arm": "unpredictable_prefix_shared_u8ends_native",
+    "ratio": 1.0007248385718082,
+    "base_ns": 10.5677490234375
+  },
+  {
+    "input": "jena-0-p__mbar",
+    "domain": "common_delta",
+    "mask": 1,
+    "arm": "u8ends_native",
+    "ratio": 1.0,
+    "base_ns": 0.51904296875
+  },
+  {
+    "input": "jena-0-p__mbar",
+    "domain": "common_delta",
+    "mask": 1,
+    "arm": "unpredictable_prefix_shared_u8ends_native",
+    "ratio": 1.0,
+    "base_ns": 0.51904296875
+  },
+  {
+    "input": "jena-0-p__mbar",
+    "domain": "common_delta",
+    "mask": 2,
+    "arm": "u8ends_native",
+    "ratio": 0.9944918961086866,
+    "base_ns": 12.244476318359375
+  },
+  {
+    "input": "jena-0-p__mbar",
+    "domain": "common_delta",
+    "mask": 2,
+    "arm": "unpredictable_prefix_shared_u8ends_native",
+    "ratio": 0.9870670716564464,
+    "base_ns": 6.3900146484375
+  },
+  {
+    "input": "jena-0-p__mbar",
+    "domain": "common_delta",
+    "mask": 3,
+    "arm": "u8ends_native",
+    "ratio": 1.0048407951957952,
+    "base_ns": 12.343719482421875
+  },
+  {
+    "input": "jena-0-p__mbar",
+    "domain": "common_delta",
+    "mask": 3,
+    "arm": "unpredictable_prefix_shared_u8ends_native",
+    "ratio": 0.9711996864205394,
+    "base_ns": 6.228485107421875
+  },
+  {
+    "input": "jena-0-p__mbar",
+    "domain": "whole_image",
+    "mask": 0,
+    "arm": "u8ends_native",
+    "ratio": 1.0007926937374265,
+    "base_ns": 20.827728271484375
+  },
+  {
+    "input": "jena-0-p__mbar",
+    "domain": "whole_image",
+    "mask": 0,
+    "arm": "unpredictable_prefix_shared_u8ends_native",
+    "ratio": 0.9985847143477065,
+    "base_ns": 10.759857177734375
+  },
+  {
+    "input": "jena-0-p__mbar",
+    "domain": "whole_image",
+    "mask": 1,
+    "arm": "u8ends_native",
+    "ratio": 1.0,
+    "base_ns": 0.520294189453125
+  },
+  {
+    "input": "jena-0-p__mbar",
+    "domain": "whole_image",
+    "mask": 1,
+    "arm": "unpredictable_prefix_shared_u8ends_native",
+    "ratio": 0.9975951668719573,
+    "base_ns": 0.520294189453125
+  },
+  {
+    "input": "jena-0-p__mbar",
+    "domain": "whole_image",
+    "mask": 2,
+    "arm": "u8ends_native",
+    "ratio": 1.0136352189501505,
+    "base_ns": 11.754730224609375
+  },
+  {
+    "input": "jena-0-p__mbar",
+    "domain": "whole_image",
+    "mask": 2,
+    "arm": "unpredictable_prefix_shared_u8ends_native",
+    "ratio": 0.9893518636793296,
+    "base_ns": 5.972747802734375
+  },
+  {
+    "input": "jena-0-p__mbar",
+    "domain": "whole_image",
+    "mask": 3,
+    "arm": "u8ends_native",
+    "ratio": 1.0064671489862875,
+    "base_ns": 11.6083984375
+  },
+  {
+    "input": "jena-0-p__mbar",
+    "domain": "whole_image",
+    "mask": 3,
+    "arm": "unpredictable_prefix_shared_u8ends_native",
+    "ratio": 1.00381204728766,
+    "base_ns": 6.012176513671875
+  },
+  {
+    "input": "jena-fault-wv__m_s",
+    "domain": "whole_image",
+    "mask": 0,
+    "arm": "u8ends_native",
+    "ratio": 0.9940495637086824,
+    "base_ns": 9.621307373046875
+  },
+  {
+    "input": "jena-fault-wv__m_s",
+    "domain": "whole_image",
+    "mask": 0,
+    "arm": "unpredictable_prefix_shared_u8ends_native",
+    "ratio": 1.004263635960529,
+    "base_ns": 8.947052001953125
+  },
+  {
+    "input": "jena-fault-wv__m_s",
+    "domain": "whole_image",
+    "mask": 1,
+    "arm": "u8ends_native",
+    "ratio": 1.0,
+    "base_ns": 0.5164794921875
+  },
+  {
+    "input": "jena-fault-wv__m_s",
+    "domain": "whole_image",
+    "mask": 1,
+    "arm": "unpredictable_prefix_shared_u8ends_native",
+    "ratio": 1.0,
+    "base_ns": 0.5164794921875
+  },
+  {
+    "input": "jena-fault-wv__m_s",
+    "domain": "whole_image",
+    "mask": 2,
+    "arm": "u8ends_native",
+    "ratio": 1.0001181753722523,
+    "base_ns": 0.5164794921875
+  },
+  {
+    "input": "jena-fault-wv__m_s",
+    "domain": "whole_image",
+    "mask": 2,
+    "arm": "unpredictable_prefix_shared_u8ends_native",
+    "ratio": 1.0,
+    "base_ns": 0.5164794921875
+  },
+  {
+    "input": "jena-fault-wv__m_s",
+    "domain": "whole_image",
+    "mask": 3,
+    "arm": "u8ends_native",
+    "ratio": 0.999940919295758,
+    "base_ns": 0.51654052734375
+  },
+  {
+    "input": "jena-fault-wv__m_s",
+    "domain": "whole_image",
+    "mask": 3,
+    "arm": "unpredictable_prefix_shared_u8ends_native",
+    "ratio": 1.0,
+    "base_ns": 0.5164794921875
+  }
+]

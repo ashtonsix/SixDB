@@ -155,3 +155,8 @@ Both real ClickBench inputs supplied by encoding research pass five queries
 through each actual hash-output program. Thirteen authored lifecycle snapshots
 also agree through both programs on all eight queries. These validate the result
 boundary and shared coordinates; they do not yet compare encoded Frame kernels.
+
+The [read timing-order audit](ORDER-AUDIT.md) qualifies the point/filter rankings
+with identical-work controls, balanced predecessor order and same-arm warmup.
+Its large gains and negative cases survive; close historical rankings do not
+select a policy. Physical lifecycle costs remain a separate active experiment.

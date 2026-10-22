@@ -1,6 +1,7 @@
 // Prepared independent point reads on complete real images and matched deltas.
 #include "point_read.h"
 #include "compact_read.h"
+#include "../measure_order.h"
 #include <array>
 #include <functional>
 #include <iostream>
@@ -124,7 +125,7 @@ void experiment(std::vector<u64> &values, unsigned trials, unsigned repeat, bool
     lean_readers.reserve(images.size());
     prefix_readers.reserve(images.size());
     std::vector<arm> arms;
-    arms.reserve(16);
+    arms.reserve(18);
     for (unsigned i = 0; i < images.size(); ++i) {
         const auto mode = static_cast<fe::checkpoints>(i % 4);
         const auto start = Clock::now();
@@ -228,7 +229,20 @@ void experiment(std::vector<u64> &values, unsigned trials, unsigned repeat, bool
         };
         arms.push_back(std::move(a));
     });
-    if (reverse) std::reverse(arms.begin(), arms.end());
+    // Copy the exact callback/context: this control changes only its label.
+    for (const auto name : {"u8ends_native", "unpredictable_prefix_shared_u8ends_native"}) {
+        const auto found = std::find_if(arms.begin(), arms.end(),
+            [&](const arm& a) { return a.name == name; });
+        need(found != arms.end(), "missing identical-work control");
+        auto duplicate = *found;
+        duplicate.name += "_duplicate";
+        arms.push_back(std::move(duplicate));
+    }
+    const unsigned order_seed = reverse ? 17291 : 1729;
+    std::mt19937 order_random(order_seed); // Independent of request generation.
+    std::vector<std::vector<unsigned>> orders;
+    const unsigned round_size = arms.size() * (arms.size() % 2 ? 2 : 1);
+    trials = (trials + round_size - 1) / round_size * round_size;
 
     std::vector<std::size_t> common;
     for (std::size_t b = 0; b < images[0].blocks.size(); ++b) {
@@ -272,8 +286,10 @@ void experiment(std::vector<u64> &values, unsigned trials, unsigned repeat, bool
             for (const auto &a : arms)
                 need(a.read(rows, mask, selection != 0) == expected, "point result differs from input");
             for (unsigned trial = 0; trial < trials; ++trial) {
+                if (trial % round_size == 0) orders = frame_measure::balanced_round(arms.size(), order_random);
+                const auto& order = orders[trial % round_size];
                 for (unsigned position = 0; position < arms.size(); ++position) {
-                    const auto &a = arms[(position + trial) % arms.size()];
+                    const auto &a = arms[order[position]];
                     fe::consume(a.read(rows, mask, selection != 0)); // warm the actual requested work
                     const auto start = Clock::now();
                     for (unsigned r = 0; r < repeat; ++r) {
@@ -282,6 +298,7 @@ void experiment(std::vector<u64> &values, unsigned trials, unsigned repeat, bool
                     }
                     const auto ns = elapsed(start);
                     std::printf("{\"arm\":\"%s\",\"domain\":\"%s\",\"mask\":%u,\"trial\":%u,"
+                        "\"order_seed\":%u,\"order_position\":%u,"
                         "\"rows\":%zu,\"common_delta_blocks\":%zu,\"elapsed_ns\":%llu,"
                         "\"requests\":%llu,\"selected_points\":%llu,\"image_bytes\":%zu,"
                         "\"image_capacity_bytes\":%zu,\"prepared_bytes\":%zu,\"owner_bytes\":%zu,"
@@ -289,6 +306,7 @@ void experiment(std::vector<u64> &values, unsigned trials, unsigned repeat, bool
                         "\"construct_observation_ns\":%llu,\"point_prepare_observation_ns\":%llu,"
                         "\"kinds\":[%zu,%zu,%zu,%zu,%zu,%zu],\"answer_lo\":\"%llu\",\"answer_hi\":\"%llu\"}\n",
                         a.name.c_str(), domain ? "common_delta" : "whole_image", selection, trial,
+                        order_seed, position,
                         values.size(), common.size(), static_cast<unsigned long long>(ns),
                         static_cast<unsigned long long>(u64(repeat) * query_count),
                         static_cast<unsigned long long>(u64(repeat) * selected_count),

@@ -1,9 +1,12 @@
 // Whole-image COUNT, actual result consumption; warm local exploration only.
 #include "evidence.h"
+#include "../measure_order.h"
 #include <array>
 #include <functional>
 #include <iostream>
 #include <limits>
+#include <numeric>
+#include <random>
 #include <stdexcept>
 
 namespace {
@@ -196,7 +199,20 @@ void run(const std::vector<u64> &values, unsigned trials, bool reverse) {
     arms.push_back({"part-head16", [&](const auto &m, u64 q) { return part16.count_ge(m, q); }});
     arms.push_back({"window-q8-bounds", [&](const auto &m, u64 q) { return bounds.count_ge(m, q); }});
     arms.push_back({"block-bounds", [&](const auto &m, u64 q) { return coarse_bounds.count_ge(m, q); }});
-    if (reverse) std::reverse(arms.begin(), arms.end());
+    // Same std::function target and context; only the reported label differs.
+    for (const auto name : {"decode-control", "native-global-for"}) {
+        const auto found = std::find_if(arms.begin(), arms.end(),
+            [&](const arm& a) { return a.name == name; });
+        need(found != arms.end(), "missing identical-work control");
+        auto duplicate = *found;
+        duplicate.name += "-duplicate";
+        arms.push_back(std::move(duplicate));
+    }
+    const unsigned order_seed = reverse ? 17291 : 1729;
+    std::mt19937 order_random(order_seed);
+    std::vector<std::vector<unsigned>> orders;
+    const unsigned round_size = arms.size() * (arms.size() % 2 ? 2 : 1);
+    trials = (trials + round_size - 1) / round_size * round_size;
     std::array<std::size_t, 5> kinds{};
     for (const auto &d : column.blocks) {
         need(unsigned(d.type) < kinds.size(), "unqualified material kind");
@@ -225,18 +241,23 @@ void run(const std::vector<u64> &values, unsigned trials, bool reverse) {
             for (auto stage : {ff::split_stage::after_for, ff::split_stage::working64})
                 for (unsigned heads : {8u,16u}) topology(column, mask, rhs, heads, stage);
             for (auto &a : arms) need(a.count(mask, rhs) == expected, "whole-image prewarm/oracle differs");
-            for (unsigned trial = 0; trial < trials; ++trial)
+            for (unsigned trial = 0; trial < trials; ++trial) {
+                if (trial % round_size == 0) orders = frame_measure::balanced_round(arms.size(), order_random);
+                const auto& order = orders[trial % round_size];
                 for (unsigned offset = 0; offset < arms.size(); ++offset) {
-                    auto &a = arms[(trial + offset) % arms.size()];
+                    auto &a = arms[order[offset]];
+                    fe::consume(a.count(mask, rhs)); // Condition the same complete work for every arm.
                     const auto start = Clock::now();
                     auto result = a.count(mask, rhs);
                     fe::consume(result);
                     const auto ns = std::chrono::duration_cast<std::chrono::nanoseconds>(Clock::now() - start).count();
                     need(result == expected, "timed consumer differs");
                     std::cout << "{\"type\":\"sample\",\"arm\":\"" << a.name << "\",\"trial\":" << trial
+                              << ",\"order_seed\":" << order_seed << ",\"order_position\":" << offset
                               << ",\"mask\":" << pattern << ",\"query\":" << q << ",\"ns\":" << ns
                               << ",\"selected_rows\":" << mask.popcount() * 256 << ",\"answer\":" << result << "}\n";
                 }
+            }
         }
     }
 }

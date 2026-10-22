@@ -1,5 +1,9 @@
 # Filter evidence must earn its bytes and refinement work
 
+The [timing-order audit](../ORDER-AUDIT.md) supersedes close rankings from this
+historical cyclic-order cohort. Its calibrated rerun preserves the large gains
+and the important losing cases; use that paired cohort for current timing claims.
+
 Logical H16 planes make the two examined Jena filters about 3.4–4.8× faster
 than the encoded owner operation. They reach the native FOR array's scan cost,
 but duplicate two bytes per original row. Exact block bounds are much smaller
