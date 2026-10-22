@@ -16,7 +16,7 @@ The [Engine guide](../../engine/README.md) owns what is actually implemented.
 | What ordering does a prefix name actually establish? | [Prefix addressing](prefix-addressing.md): routing name, stable identity, mapping domain and payload order |
 | How should bounds locate an ordered source? | [Maintained Boundlist usage](../../ikea/docs/boundlist/usage.md), [ownership study](../spikes/boundlist/OWNERSHIP.md) and [consumer portfolio](../spikes/boundlist/PORTFOLIO.md) |
 | What changes when equal logical keys cross storage boundaries? | [Directory query semantics](../spikes/directory/README.md#logical-requests-and-traversal), [owning multimap frontier](../spikes/hashtable/README.md) and [K-way merge](../spikes/hashtable-merge/README.md) |
-| Do wider natural partitions repay their copy-on-write edit cost? | [Native partition comparison](../spikes/directory/evidence/graduation-native/README.md#partition-geometry-must-pay-for-edits): natural24's measured compromise versus natural32's read gains and large edit cost |
+| Do wider natural partitions repay their copy-on-write edit cost? | [Native partition comparison](../spikes/directory/evidence/graduation-native/README.md#partition-geometry-must-pay-for-edits) and [population counterexamples](../spikes/directory/CONCENTRATION.md): natural24's small edit-copy result covers spread L4; spread L3 and concentrated L4 expose large copies (body counters, not timings) |
 | What sparse-scan cost remains after preparing boundaries? | [Native scan follow-up](../spikes/directory/evidence/graduation-native/README.md#scanning-substantial-improvement-a-real-sparse-limit), including one-row-Segment losses and independently fused controls |
 
 The remapping probe kept both fully ordered gaps and order between blocks in
