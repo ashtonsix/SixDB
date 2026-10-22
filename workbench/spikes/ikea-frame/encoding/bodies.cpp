@@ -96,6 +96,20 @@ const bl::layout &run_layout() {
     return *layout;
 }
 
+// Run ends stored as exclusive end minus one in u8 (0..255), projected into
+// Boundlist geometry as proper exclusive ends 1..256 (Codex's proposal). No
+// checkpoints, control or tombstones; Boundlist's ordinary algorithms apply.
+struct run_ends {
+    const std::uint8_t *end_minus_one;
+    unsigned n;
+    unsigned size() const { return n; }
+    unsigned at(unsigned rank) const { return unsigned{end_minus_one[rank]} + 1; }
+};
+
+// Which runs body to build: u8 run-end projection (default) or the compact
+// mutable Boundlist view as a control.
+bool compact_runs = false;
+
 struct runs_geometry {
     std::vector<bl::byte> directory, lengths, control;
     std::optional<bl::view> view;
@@ -148,10 +162,24 @@ column encode(std::span<const u64> values) {
             i = j;
         }
         const std::size_t packed_cost = plane_bytes(k, block_rows);
-        const std::size_t runs_cost = plane_bytes(k, run_values.size()) +
-                                      layout.directory_bytes() + layout.control_bytes() +
-                                      layout.lengths_bytes(static_cast<unsigned>(run_sizes.size()));
-        if (runs_cost < packed_cost) {
+        const std::size_t runs_cost =
+            plane_bytes(k, run_values.size()) +
+            (compact_runs ? layout.directory_bytes() + layout.control_bytes() +
+                                layout.lengths_bytes(static_cast<unsigned>(run_sizes.size()))
+                          : run_sizes.size());
+        if (runs_cost < packed_cost && !compact_runs) {
+            d.type = kind::runs;
+            d.count = static_cast<std::uint16_t>(run_values.size());
+            d.width = static_cast<std::uint8_t>(k);
+            const std::size_t values_bytes = plane_bytes(k, run_values.size());
+            c.payload.resize(c.payload.size() + values_bytes + run_sizes.size());
+            pack(k, run_values, c.payload.data() + d.offset);
+            unsigned end = 0;
+            for (std::size_t r = 0; r < run_sizes.size(); ++r) {
+                end += run_sizes[r];
+                c.payload[d.offset + values_bytes + r] = static_cast<std::uint8_t>(end - 1);
+            }
+        } else if (runs_cost < packed_cost) {
             auto g = std::make_unique<runs_geometry>();
             g->directory.resize(layout.directory_bytes());
             g->lengths.resize(layout.lengths_bytes(static_cast<unsigned>(run_sizes.size())));
@@ -212,6 +240,24 @@ column encode(std::span<const u64> values) {
             c.d32.back() = *sp::bind_decoder<std::uint32_t>(input);
     }
     return c;
+}
+
+// Visit each run's (rank, size) through Boundlist range over the chosen body.
+template <class F> void each_run(const column &c, std::size_t b, F &&visit) {
+    const auto &d = c.blocks[b];
+    auto body = [&](unsigned rank, auto interval) { visit(rank, interval.limit - interval.first); };
+    bool ok;
+    if (c.runs[b])
+        ok = bl::range(*c.runs[b]->view, 0, d.count, body).has_value();
+    else
+        ok = bl::range(bl::from_ends(run_ends{c.payload.data() + d.offset +
+                                                  plane_bytes(d.width, d.count),
+                                              d.count},
+                                     0u),
+                       0, d.count, body)
+                 .has_value();
+    if (!ok)
+        std::abort();
 }
 
 // One bit per block, little-endian within 64-bit words. Groups of 16 blocks
@@ -278,11 +324,9 @@ u128 block_sum(const column &c, std::size_t b) {
     }
     case kind::runs:
         c.decoders[b].read_unchecked(0, d.count, buffer);
-        if (!bl::range(*c.runs[b]->view, 0, d.count, [&](unsigned rank, auto interval) {
-                total += static_cast<u128>(buffer[rank] + d.base) *
-                         (interval.limit - interval.first);
-            }))
-            std::abort();
+        each_run(c, b, [&](unsigned rank, unsigned size) {
+            total += static_cast<u128>(buffer[rank] + d.base) * size;
+        });
         return total;
     }
     std::abort();
@@ -353,11 +397,10 @@ u64 encoded_count_ge(const column &c, const block_mask &mask, u64 threshold) {
         case kind::runs: {
             const u64 rhs = threshold - d.base;
             c.decoders[b].read_unchecked(0, d.count, buffer);
-            if (!bl::range(*c.runs[b]->view, 0, d.count, [&](unsigned rank, auto interval) {
-                    if (buffer[rank] >= rhs)
-                        total += interval.limit - interval.first;
-                }))
-                std::abort();
+            each_run(c, b, [&](unsigned rank, unsigned size) {
+                if (buffer[rank] >= rhs)
+                    total += size;
+            });
             break;
         }
         }
@@ -430,6 +473,12 @@ std::string u128_text(u128 v) {
 }
 
 volatile u64 sink;
+volatile u64 sink_high;
+// Consume both halves of a wide result so timed code keeps the carry work.
+void consume(u128 v) {
+    sink = static_cast<u64>(v);
+    sink_high = static_cast<u64>(v >> 64);
+}
 
 template <class T>
 void run(const char *name, std::span<const u64> values, u64 lo, u64 threshold) {
@@ -441,10 +490,10 @@ void run(const char *name, std::span<const u64> values, u64 lo, u64 threshold) {
     for (const auto &d : c.blocks)
         ++counts[static_cast<int>(d.type)];
     const std::size_t total_bytes = c.descriptor_bytes() + c.payload.size() + c.run_geometry_bytes();
-    std::printf("{\"column\":\"%s\",\"rows\":%zu,\"blocks\":%zu,\"constant\":%zu,\"runs\":%zu,"
+    std::printf("{\"column\":\"%s\",\"runs_body\":\"%s\",\"rows\":%zu,\"blocks\":%zu,\"constant\":%zu,\"runs\":%zu,"
                 "\"packed\":%zu,\"descriptor_bytes\":%zu,\"payload_bytes\":%zu,"
                 "\"run_geometry_bytes\":%zu,\"bits_per_value\":%.3f,\"plain_bytes_per_value\":%zu",
-                name, c.rows, c.blocks.size(), counts[0], counts[1], counts[2],
+                name, compact_runs ? "boundlist-compact" : "u8-end-projection", c.rows, c.blocks.size(), counts[0], counts[1], counts[2],
                 c.descriptor_bytes(), c.payload.size(), c.run_geometry_bytes(),
                 8.0 * total_bytes / c.rows, sizeof(T));
     const std::size_t n = c.blocks.size();
@@ -468,9 +517,9 @@ void run(const char *name, std::span<const u64> values, u64 lo, u64 threshold) {
             std::fprintf(stderr, "%s %s: encoded/plain mismatch\n", name, s.name);
             std::exit(1);
         }
-        const double t_es = median_ns([&] { sink = static_cast<u64>(encoded_sum(c, s.mask)); });
-        const double t_ps = median_ns([&] { sink = static_cast<u64>(plain_sum(p, s.mask)); });
-        const double t_en = median_ns([&] { sink = static_cast<u64>(encoded_sum_narrow(c, s.mask)); });
+        const double t_es = median_ns([&] { consume(encoded_sum(c, s.mask)); });
+        const double t_ps = median_ns([&] { consume(plain_sum(p, s.mask)); });
+        const double t_en = median_ns([&] { consume(encoded_sum_narrow(c, s.mask)); });
         const double t_ec = median_ns([&] { sink = encoded_count_ge(c, s.mask, threshold); });
         const double t_pc = median_ns([&] { sink = plain_count_ge(p, s.mask, threshold); });
         std::printf(",\"%s\":{\"sum\":\"%s\",\"count_ge\":%llu,"
@@ -486,8 +535,10 @@ void run(const char *name, std::span<const u64> values, u64 lo, u64 threshold) {
 }  // namespace
 
 int main(int argc, char **argv) {
-    if (argc != 3) {
-        std::fprintf(stderr, "usage: %s NAME FILE.u64\n", argv[0]);
+    if (argc == 4 && std::strcmp(argv[3], "--compact-runs") == 0)
+        compact_runs = true;
+    else if (argc != 3) {
+        std::fprintf(stderr, "usage: %s NAME FILE.u64 [--compact-runs]\n", argv[0]);
         return 2;
     }
     std::ifstream in(argv[2], std::ios::binary | std::ios::ate);

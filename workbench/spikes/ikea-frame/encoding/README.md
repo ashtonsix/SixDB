@@ -222,6 +222,25 @@ model's dictionary arms aren't built yet, which explains part of the URLHash
 and RegionID gaps. Clustered and sparse masks scale both encoded and plain
 time roughly with the selected fraction; no coarse-mask overhead showed up.
 
+**Run-end projection (Codex's proposal), second run.** Runs blocks now store
+exclusive end − 1 as u8 and project them into Boundlist geometry through
+`from_ends` (exclusive ends 1..256, no checkpoints, control or tombstones).
+The compact mutable view stays as a `--compact-runs` control. Timed u128 sums
+now consume both result halves.
+
+| Column | u8 run ends, bits/value | Boundlist compact | Model |
+| --- | ---: | ---: | ---: |
+| OS | 2.78 | 4.17 | 2.21 |
+| ResolutionWidth | 3.91 | 5.19 | 3.02 |
+| RegionID | 5.43 | 6.82 | 4.14 |
+| UserID | 14.60 | 16.01 | 11.81 |
+
+Bytes are now within about 0.6–1.3 bits of the model on run-heavy columns. The
+rest is mostly the missing dictionary arm and the 16-byte descriptor. Timings
+in this run were too noisy to compare the two runs bodies: the plain UserID
+control alone moved from 0.25 to 0.51 ns/row between runs. Repeated runs, or a
+quieter machine, are needed before any speed comparison.
+
 Findings:
 
 1. **Run geometry is the largest metadata cost**: 43–59% of bytes on the
