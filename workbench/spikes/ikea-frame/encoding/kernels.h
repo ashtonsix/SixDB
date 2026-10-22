@@ -39,10 +39,25 @@ struct plane_operations {
     void (*range32)(const std::uint8_t *, std::size_t first, std::size_t take, std::uint32_t *out);
 };
 
-extern const std::array<plane_operations, 65> plane_catalogue;
+// One width-indexed array per operation (8-byte stride), so a hot reader that
+// needs one operation indexes only that array (Ikea LEAD's code-shape point: a
+// bundled seven-pointer entry has a 56-byte stride). The bundle below is an
+// inline view; loads of operations a caller doesn't use are dead.
+struct plane_catalogue_t {
+    std::array<decltype(plane_operations::point), 65> point;
+    std::array<decltype(plane_operations::range), 65> range;
+    std::array<decltype(plane_operations::sum), 65> sum;
+    std::array<decltype(plane_operations::count_ge), 65> count_ge;
+    std::array<decltype(plane_operations::range8), 65> range8;
+    std::array<decltype(plane_operations::range16), 65> range16;
+    std::array<decltype(plane_operations::range32), 65> range32;
+};
+extern const plane_catalogue_t plane_catalogue;
 
-inline const plane_operations &plane_kernels(unsigned width) {
-    return plane_catalogue[width];
+inline plane_operations plane_kernels(unsigned width) {
+    const auto &c = plane_catalogue;
+    return {c.point[width], c.range[width],   c.sum[width],    c.count_ge[width],
+            c.range8[width], c.range16[width], c.range32[width]};
 }
 inline constexpr std::size_t plane_catalogue_bytes() {
     return sizeof(plane_catalogue);

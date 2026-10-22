@@ -71,13 +71,16 @@ std::uint64_t count_ge(const std::uint8_t *data, unsigned take, std::uint64_t rh
     return total;
 }
 
-template <std::size_t... K> constexpr auto catalogue(std::index_sequence<K...>) {
-    return std::array<plane_operations, 65>{
-        {{},
-         {point<K + 1>, range<K + 1>, sum<K + 1>, count_ge<K + 1>, lane<K + 1, std::uint8_t>(),
-          lane<K + 1, std::uint16_t>(), lane<K + 1, std::uint32_t>()}...}};
+template <std::size_t... K> constexpr plane_catalogue_t catalogue(std::index_sequence<K...>) {
+    return {{nullptr, point<K + 1>...},
+            {nullptr, range<K + 1>...},
+            {nullptr, sum<K + 1>...},
+            {nullptr, count_ge<K + 1>...},
+            {nullptr, lane<K + 1, std::uint8_t>()...},
+            {nullptr, lane<K + 1, std::uint16_t>()...},
+            {nullptr, lane<K + 1, std::uint32_t>()...}};
 }
 }  // namespace
 
-const std::array<plane_operations, 65> plane_catalogue = catalogue(std::make_index_sequence<64>{});
+const plane_catalogue_t plane_catalogue = catalogue(std::make_index_sequence<64>{});
 }  // namespace frame_encoding
