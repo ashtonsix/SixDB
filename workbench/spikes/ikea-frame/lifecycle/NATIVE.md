@@ -139,3 +139,10 @@ frozen source, binaries, native assembly and the original-value verification
 runs remain in recovery. Earlier zero-query and pilot runs are diagnostics;
 they are not pooled with this cohort. No public Frame API, default or graduation
 is selected.
+
+
+The [changed-block follow-up](BLOCK-FOLD.md) prices narrower codec work. The
+[subsequent sparse-write/masked-read study](REPAIR.md) adds fitting repair,
+stronger native controls, actual morphology coverage and a coherent masked-owner
+cut. Its conditional wins and remaining gaps supersede policy guesses from this
+first chronology; the cohorts are not pooled.

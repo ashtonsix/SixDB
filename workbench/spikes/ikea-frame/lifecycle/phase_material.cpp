@@ -168,8 +168,17 @@ QueryResult query(const EncodedBase& base, Bytes bytes, Bytes validity, std::uin
                 k.coded ? cache.count.count(k) : fe::stored_count_ge(k, threshold);
             continue;
         }
-        fe::decode_block(k, decoded.data());
         const auto flags = active(validity, b);
+        if (!cache.reference_selection) {
+            result.sum += k.coded ? cache.sum.masked(k,flags) : fe::masked_stored_sum(k,flags);
+            if (k.coded && !all_hit && !all_miss && cache.count.threshold != threshold) {
+                cache.count.threshold=threshold;cache.count.ready=false;
+            }
+            result.count += all_hit ? h.valid_count[b] : all_miss ? 0 :
+                k.coded ? cache.count.masked(k,flags) : fe::masked_stored_count_ge(k,flags,threshold);
+            continue;
+        }
+        fe::decode_block(k, decoded.data());
         for (unsigned i = 0; i < 256; ++i) if (flags[i / 64] >> (i % 64) & 1) {
             result.sum += decoded[i];
             result.count += all_hit || (!all_miss && decoded[i] >= threshold);

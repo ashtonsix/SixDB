@@ -1,6 +1,7 @@
 // Complete native publication phases. Private research controls, not a policy.
 #include "phase_construction.h"
 #include "phase_owner.h"
+#include "phase_repair.h"
 #include "../measure_order.h"
 #include <fstream>
 #include <functional>
@@ -30,14 +31,23 @@ p::QueryResult expected(const Data& d, p::BlockSelection mask, p::u64 threshold)
 }
 struct Costs {
     std::uint64_t prepare_ns{}, publish_ns{}, query_ns{}, conversion_ns{}, release_ns{};
-    std::size_t copied_bytes{}, encoded_rows{}, peak_nonidle{}, peak_metadata{}, overlay_entries{};
+    std::uint64_t max_update_ns{}, max_transition_ns{}, max_release_ns{};
+    std::size_t copied_bytes{}, encoded_rows{}, peak_nonidle{}, peak_metadata{}, overlay_entries{}, repaired_blocks{};
+    std::size_t write_materialized_rows{},repair_examined_rows{},eligible_dirty_blocks{};
+    std::size_t coalesced_away{},visible_noops{},publications{};
+    std::array<std::size_t,7> dirty_kinds{};
+    std::array<std::size_t,9> repair_reasons{};
 };
-enum class Policy { native_raw, native_for, reencode, overlay, overlay_fold, thaw };
+enum class Policy { native_raw, native_for, reencode, overlay, overlay_fold, thaw, block_fold, repair_fold, sparse_repair, native_coalesced };
 const char* name(Policy policy) {
     switch (policy) {
     case Policy::native_raw:return "native-raw64"; case Policy::native_for:return "native-for";
     case Policy::reencode:return "whole-group-reencode"; case Policy::overlay:return "base-overrides-debt";
     case Policy::overlay_fold:return "base-overrides-fold"; case Policy::thaw:return "thaw-reseal";
+    case Policy::block_fold:return "changed-block-fold";
+    case Policy::repair_fold:return "repair-or-block-fold";
+    case Policy::sparse_repair:return "sparse-repair-or-fold";
+    case Policy::native_coalesced:return "native-for-coalesced";
     }
     std::abort();
 }
@@ -73,6 +83,7 @@ template<class C> struct Machine {
         const std::array<typename Store::Change, 1> changes{{{p::object, owner}}};
         { typename Store::Scope basis(store); take(store.prepare(basis, changes, packet)); }
         take(store.install(packet));
+        ++costs.publications;
     }
     struct Fresh {
         std::array<a::Allocation, slots> owned;
@@ -148,6 +159,7 @@ template<class C> struct Machine {
         return p::point(p::base(group), part(source, g * Group::parts), part(source, g * Group::parts + 1), local);
     }
     p::GroupData materialize(Selection source, unsigned g) {
+        costs.write_materialized_rows+=p::rows_per_group;
         const auto& group = source.realization->control.group[g]; const auto& b = p::base(group);
         const auto v = part(source, g * Group::parts), f = part(source, g * Group::parts + 1);
         p::GroupData out;
@@ -199,6 +211,12 @@ template<class C> struct Machine {
             const auto pword = load<p::u64>(bits + i / 64 * 8), vword = load<p::u64>(bits + p::flag_bytes + i / 64 * 8);
             const bool old_present = pword >> (i % 64) & 1, old_valid = vword >> (i % 64) & 1;
             const bool new_valid = e.next.contributes();
+            if (policy==Policy::native_coalesced && old_present==e.next.present && old_valid==new_valid) {
+                if (!new_valid || p::point(p::base(c.group[g]),original_values,original_flags,i).value==e.next.value) {
+                    ++costs.visible_noops;
+                    continue;
+                }
+            }
             if (old_present != e.next.present || old_valid != new_valid) {
                 if (flags.empty()) {
                     flags = allocate(f, c, g * Group::parts + 1, original_flags.size);
@@ -227,11 +245,148 @@ template<class C> struct Machine {
         }
         h.identity = p::fresh_identity();
     }
+    void fold_blocks(C& c, Fresh& f, Selection source, unsigned g, std::span<const Edit> edits,
+                     p::BlockSelection mask) {
+        if constexpr (!std::is_same_v<Group, p::EncodedBase>) std::abort();
+        else {
+            const auto& old = source.realization->control.group[g]; auto& out = c.group[g];
+            const auto body = part(source, g * Group::parts), flags = part(source, g * Group::parts + 1);
+            struct Replacement { p::fe::column image; };
+            std::array<std::optional<Replacement>, p::blocks_per_group> replacement;
+            std::array<std::optional<p::BlockRepair>, p::blocks_per_group> repair;
+            std::span<std::byte> changed_flags;
+            bool changed_values = false;
+            const auto commit_flags = [&](unsigned b,const auto& present,const auto& valid,
+                                           const auto& old_present,const auto& old_valid) {
+                if (present == old_present && valid == old_valid) return;
+                if (changed_flags.empty()) {
+                    changed_flags = allocate(f, c, g * Group::parts + 1, flags.size);
+                    std::memcpy(changed_flags.data(), flags.data, flags.size); costs.copied_bytes += flags.size;
+                }
+                std::memcpy(changed_flags.data() + b * 32, present.data(), 32);
+                std::memcpy(changed_flags.data() + p::flag_bytes + b * 32, valid.data(), 32);
+            };
+            for (unsigned b = 0; b < p::blocks_per_group; ++b) {
+                bool dirty = false;
+                for (const auto& e : edits) dirty |= e.row / 256 == g * p::blocks_per_group + b && mask.row(e.row);
+                if (!dirty) continue;
+                ++costs.dirty_kinds[unsigned(old.blocks[b].type)];
+                costs.eligible_dirty_blocks+=!(old.coded>>b&1) &&
+                    (old.blocks[b].type==p::fe::kind::packed || old.blocks[b].type==p::fe::kind::delta);
+                std::array<p::u64, 4> present, valid;
+                std::memcpy(present.data(), flags.data + b * 32, 32);
+                std::memcpy(valid.data(), flags.data + p::flag_bytes + b * 32, 32);
+                const auto old_present = present, old_valid = valid;
+                p::BlockAssignments assignments;
+                for (const auto& e : edits) if (e.row / 256 == g * p::blocks_per_group + b && mask.row(e.row)) {
+                    const auto row = e.row % 256, word = row / 64; const auto bit = p::u64{1} << (row % 64);
+                    present[word] = (present[word] & ~bit) | (e.next.present ? bit : 0);
+                    valid[word] = (valid[word] & ~bit) | (e.next.contributes() ? bit : 0);
+                    if (policy==Policy::sparse_repair) {
+                        if (e.next.contributes()) assignments.set(row,e.next.value);
+                        else assignments.clear(row);
+                    }
+                }
+                if (policy==Policy::sparse_repair) {
+                    p::BlockRepair planned;
+                    const bool fits=p::plan_sparse_repair(p::borrow(old,body,b),assignments,planned);
+                    ++costs.repair_reasons[unsigned(planned.reason)];costs.repair_examined_rows+=planned.examined_positions;
+                    if (fits) {
+                        out.header.present_count[b]=out.header.valid_count[b]=0;
+                        for (unsigned word=0;word<4;++word) {
+                            out.header.present_count[b]+=std::popcount(present[word]);
+                            out.header.valid_count[b]+=std::popcount(valid[word]);
+                            auto bits=assignments.assigned[word];
+                            while (bits) {
+                                const auto row=word*64+std::countr_zero(bits);bits&=bits-1;
+                                const auto value=assignments.values[row];auto& bounds=out.header.bounds[b];
+                                bounds.minimum=std::min(bounds.minimum,value);bounds.maximum=std::max(bounds.maximum,value);
+                            }
+                        }
+                        commit_flags(b,present,valid,old_present,old_valid);
+                        const bool bytes_changed=!planned.plane.empty() || !planned.checkpoints.empty();
+                        const bool anchor_changed=planned.anchor!=out.blocks[b].base;
+                        out.blocks[b].base=planned.anchor;
+                        if (bytes_changed) {repair[b].emplace(std::move(planned));changed_values=true;}
+                        if (bytes_changed || anchor_changed) ++costs.repaired_blocks;
+                        continue;
+                    }
+                }
+                std::array<p::u64, 256> before, after;
+                costs.write_materialized_rows+=256;
+                p::fe::decode_block(p::borrow(old, body, b), before.data()); after = before;
+                for (const auto& e : edits) if (e.row / 256 == g * p::blocks_per_group + b && mask.row(e.row) && e.next.contributes())
+                    after[e.row%256]=e.next.value;
+                p::summarize_block(out.header, b, after, present, valid);
+                commit_flags(b,present,valid,old_present,old_valid);
+                if (after == before) continue; // NULL-only changes retain the actual value Part.
+                if (policy==Policy::repair_fold) {
+                    p::BlockRepair planned;
+                    const bool fits=p::plan_repair(p::borrow(old,body,b),before,after,planned);
+                    ++costs.repair_reasons[unsigned(planned.reason)];costs.repair_examined_rows+=planned.examined_positions;
+                    if (fits) {
+                        out.blocks[b].base=planned.anchor;
+                        repair[b].emplace(std::move(planned));
+                        ++costs.repaired_blocks; changed_values=true; continue;
+                    }
+                }
+                auto block_options = options; block_options.delta_checkpoints = old.checkpoints;
+                block_options.dictionary = p::fe::dictionary_order::none; block_options.dictionary_every_part = false;
+                p::fm::EncodedRegion encoded(after, block_options, 0, 0);
+                out.blocks[b] = encoded.metadata.blocks[0].descriptor;
+                out.grants[b] = encoded.metadata.blocks[0].grant_bytes;
+                replacement[b].emplace(Replacement{std::move(encoded.staging)});
+                out.coded &= ~(1u << b); costs.encoded_rows += 256; changed_values = true;
+            }
+            out.header.identity = p::fresh_identity();
+            if (!changed_values) return;
+            if (!out.coded) out.dictionary = {}; // No remaining block depends on the old codes.
+            unsigned size = 8 + out.dictionary.grant_bytes;
+            for (unsigned b = 0; b < p::blocks_per_group; ++b) {
+                out.blocks[b].offset = size; size += out.grants[b];
+            }
+            out.header.bytes = size;
+            auto values = allocate(f, c, g * Group::parts, size);
+            std::memcpy(values.data(), &p::object_tag, 8);
+            if (out.dictionary.count) {
+                out.dictionary.offset = 8;
+                std::memcpy(values.data() + 8, body.data + old.dictionary.offset, out.dictionary.grant_bytes);
+            }
+            for (unsigned b = 0; b < p::blocks_per_group; ++b) if (out.grants[b]) {
+                const auto* original = replacement[b]
+                    ? reinterpret_cast<const std::byte*>(p::fe::borrow(replacement[b]->image, 0).body)
+                    : body.data + old.blocks[b].offset;
+                std::memcpy(values.data() + out.blocks[b].offset, original, out.grants[b]);
+                if (repair[b]) p::apply_repair(*repair[b],out.blocks[b].width,
+                    reinterpret_cast<std::uint8_t*>(values.data())+out.blocks[b].offset);
+            }
+            costs.copied_bytes += values.size();
+        }
+    }
     void update(std::span<const Edit> edits, p::BlockSelection mask) {
         if (!mask.bits) return;
         const auto t = Clock::now();
         typename Store::Scope scope(store); const auto source = selected(scope);
         auto c = source.realization->control; Fresh f;
+        std::vector<Edit> coalesced;
+        if (policy==Policy::native_coalesced) {
+            // Sorting and allocation are charged. Original ordinal breaks ties
+            // so the last assignment wins; even a visible no-op still publishes.
+            std::vector<unsigned> order(edits.size());std::iota(order.begin(),order.end(),0);
+            std::sort(order.begin(),order.end(),[&](unsigned a,unsigned b) {
+                return edits[a].row!=edits[b].row?edits[a].row<edits[b].row:a<b;
+            });
+            coalesced.reserve(edits.size());
+            std::size_t selected_commands=0;
+            for (auto i:order) {
+                if (!mask.row(edits[i].row)) continue;
+                ++selected_commands;
+                if (!coalesced.empty() && coalesced.back().row==edits[i].row) coalesced.back()=edits[i];
+                else coalesced.push_back(edits[i]);
+            }
+            costs.coalesced_away+=selected_commands-coalesced.size();
+            edits=coalesced;
+        }
         for (unsigned i = 0; i < slots; ++i) f.source[i] = take(orbital::source(source, i));
         bool changed = false;
         for (unsigned g = 0; g < p::groups; ++g) {
@@ -260,6 +415,7 @@ template<class C> struct Machine {
                 p::copy_overlay(entries, bytes, group.changes.basis); costs.copied_bytes += bytes.size();
                 costs.overlay_entries = std::max(costs.overlay_entries, entries.size());
             } else if (p::base(c.group[g]).header.native_bytes) update_native(c, f, source, g, edits, mask);
+            else if (policy == Policy::block_fold || policy==Policy::repair_fold || policy==Policy::sparse_repair) fold_blocks(c, f, source, g, edits, mask);
             else {
                 auto data = materialize(source, g);
                 for (const auto& e : edits) if (e.row / p::rows_per_group == g && mask.row(e.row))
@@ -291,7 +447,7 @@ struct Scenario {
     p::BlockSelection mask;
     std::string pattern;
 };
-Scenario scenario(const Data& initial, std::string pattern, p::BlockSelection mask) {
+Scenario scenario(const Data& initial, std::string pattern, p::BlockSelection mask,bool mixed=true) {
     Scenario s; s.pattern = pattern; s.mask = mask; s.snapshots.push_back(initial);
     std::mt19937_64 random(713);
     for (unsigned b = 0; b < 8; ++b) {
@@ -302,7 +458,8 @@ Scenario scenario(const Data& initial, std::string pattern, p::BlockSelection ma
             auto next = initial[row / p::rows_per_group].row(row % p::rows_per_group);
             if (pattern == "novelty") next.value = random();
             else next.value += (i + b) % 3;
-            next.present = i % 31 != 0; next.valid = next.present && i % 17 != 0;
+            next.present = !mixed || i % 31 != 0;
+            next.valid = next.present && (!mixed || i % 17 != 0);
             edits.push_back({row, next});
             if (mask.row(row)) current[row / p::rows_per_group].set(row % p::rows_per_group, next);
         }
@@ -311,12 +468,133 @@ Scenario scenario(const Data& initial, std::string pattern, p::BlockSelection ma
     return s;
 }
 
+void check_block_fold(Policy policy=Policy::block_fold) {
+    Data original; std::mt19937_64 random(1729);
+    for (unsigned g = 0; g < p::groups; ++g) for (unsigned b = 0; b < p::blocks_per_group; ++b)
+        for (unsigned i = 0; i < 256; ++i) {
+            auto& value = original[g].value[b * 256 + i];
+            switch (b % 6) {
+            case 0:value = 77; break;
+            case 1:value = (i / 19) * 7; break;
+            case 2:value = random() & 8191; break;
+            case 3:value = 100000 + i * 7 + (i % 3); break;
+            case 4:value = 100000 - i * 7 - (i % 3); break;
+            default:value = random(); break;
+            }
+        }
+    unsigned long long checks = 0;
+    for (unsigned cp = 0; cp < 4; ++cp)
+        for (auto dictionary : {p::fe::dictionary_order::none, p::fe::dictionary_order::sorted,
+                                 p::fe::dictionary_order::frequency}) {
+            Machine<p::EncodedLayout> machine(policy, {.delta_checkpoints=p::fe::checkpoints(cp),
+                .delta_exceptions=true,.dictionary=dictionary,.dictionary_every_part=dictionary!=p::fe::dictionary_order::none});
+            machine.seed(original);
+            using Scope = Machine<p::EncodedLayout>::Store::Scope;
+            Scope old(machine.store); const auto first = machine.selected(old);
+            const auto verify = [&](const Scope& scope, const Data& wanted) {
+                const auto source = machine.selected(scope);
+                for (unsigned g = 0; g < p::groups; ++g)
+                    require(p::admit(source.realization->control.group[g], machine.part(source,g*2), machine.part(source,g*2+1)),
+                            "block-fold result lost native admission");
+                for (unsigned i = 0; i < p::rows; ++i) {
+                    const auto actual = machine.point(source,i), expected = wanted[i/p::rows_per_group].row(i%p::rows_per_group);
+                    require(actual.present==expected.present && actual.valid==expected.valid &&
+                        (!expected.contributes() || actual.value==expected.value),"block-fold original point differs");
+                    ++checks;
+                }
+                for (auto mask : {UINT32_MAX,UINT32_C(0xaaaaaaaa),UINT32_C(0x0000ffff),UINT32_C(0)})
+                    for (auto threshold : {p::u64{0},p::u64{500},UINT64_MAX}) {
+                        p::QueryCache cache(threshold);
+                        require(machine.query(source,{mask},threshold,cache)==expected(wanted,{mask},threshold),
+                                "block-fold aggregate differs"); ++checks;
+                    }
+            };
+            auto current = original;
+            const std::array null_edit{Edit{17,{0,true,false}}}; current[0].set(17,null_edit[0].next);
+            const auto copied_before = machine.costs.copied_bytes;
+            machine.update(null_edit,{});
+            { Scope now(machine.store); const auto next=machine.selected(now);
+              require(machine.part(first,0).data==machine.part(next,0).data &&
+                      machine.costs.copied_bytes-copied_before==p::flag_bytes*2,
+                      "NULL-only block fold copied a value Part"); verify(now,current); }
+            if ((policy==Policy::repair_fold || policy==Policy::sparse_repair) && dictionary==p::fe::dictionary_order::none) {
+                const unsigned row=3*256;
+                require(first.realization->control.group[0].blocks[3].type==p::fe::kind::delta,
+                        "fitting native fixture lost its delta block");
+                const std::array fitting{Edit{row,{current[0].value[row]+1,true,true}},
+                    Edit{row+15,{current[0].value[row+15]+1,true,true}}};
+                const auto encoded_before=machine.costs.encoded_rows, repaired_before=machine.costs.repaired_blocks;
+                for (const auto& e:fitting) current[0].set(e.row,e.next);
+                machine.update(fitting,{});
+                require(machine.costs.encoded_rows==encoded_before && machine.costs.repaired_blocks==repaired_before+1,
+                        "fitting native delta update fell back to encoding");
+                Scope now(machine.store);verify(now,current);
+            }
+            const auto& old_group=first.realization->control.group[1];
+            const unsigned changed = old_group.coded ? std::countr_zero(old_group.coded) : 3;
+            if (dictionary!=p::fe::dictionary_order::none)
+                require(std::popcount(old_group.coded)>=2,"dictionary fixture lost a retained coded block");
+            const unsigned row=p::rows_per_group+changed*256+31;
+            const std::array edits{Edit{row,{UINT64_MAX,true,true}},Edit{row+1,{0,false,false}},
+                Edit{row,{UINT64_MAX-1,true,true}},Edit{row+257,{12,true,true}}};
+            for (const auto& e:edits) if (p::BlockSelection{UINT32_C(0x00010000)<<changed}.row(e.row))
+                current[e.row/p::rows_per_group].set(e.row%p::rows_per_group,e.next);
+            const auto encoded_before=machine.costs.encoded_rows;
+            machine.update(edits,{UINT32_C(0x00010000)<<changed});
+            { Scope now(machine.store); const auto next=machine.selected(now);
+              const auto& group=next.realization->control.group[1];
+              require(machine.costs.encoded_rows-encoded_before==256,"block fold re-encoded an unselected neighbour");
+              require(!(group.coded>>changed&1),"changed block retained an obsolete dictionary code interpretation");
+              if (old_group.coded) require(group.dictionary.edition==old_group.dictionary.edition &&
+                  group.dictionary.grant_bytes==old_group.dictionary.grant_bytes &&
+                  !std::memcmp(machine.part(first,2).data+old_group.dictionary.offset,
+                               machine.part(next,2).data+group.dictionary.offset,group.dictionary.grant_bytes),
+                  "unchanged blocks lost their dictionary dependency");
+              for (unsigned b=0;b<p::blocks_per_group;++b) if (b!=changed)
+                  require(group.grants[b]==old_group.grants[b] && (!group.grants[b] ||
+                      !std::memcmp(machine.part(first,2).data+old_group.blocks[b].offset,
+                                   machine.part(next,2).data+group.blocks[b].offset,group.grants[b])),
+                      "block fold changed retained neighbour bytes");
+              verify(now,current); }
+            verify(old,original);
+        }
+    std::printf("%s: %llu checks pass: four CP modes, raw/sorted/frequency, NULL-only reuse,"
+                " original masks, repeated edits, retained neighbours/dictionaries and old readers.\n",name(policy),checks);
+}
+void check_native_coalesced() {
+    Data original;original[0].value.fill(1000);
+    Machine<p::NativeLayout> machine(Policy::native_coalesced,{});machine.seed(original);
+    using Scope=Machine<p::NativeLayout>::Store::Scope;
+    Scope old(machine.store);const auto first=machine.selected(old);
+    std::vector<Edit> edits;
+    for (unsigned i=0;i<64;++i) edits.push_back({i%2,{UINT64_MAX,true,i%2==0}});
+    edits[62]={0,{1000,true,true}};edits[63]={1,{1000,true,true}};
+    const auto copies=machine.costs.copied_bytes;
+    machine.update(edits,{});
+    { Scope now(machine.store);const auto next=machine.selected(now);
+      require(now.cut()==2 && machine.costs.coalesced_away==62 && machine.costs.visible_noops==2,
+              "native coalescing lost ordered/no-op publication semantics");
+      require(machine.costs.copied_bytes==copies && machine.part(first,0).data==machine.part(next,0).data &&
+              next.realization->control.group[0].header.native_bytes==1,
+              "discarded intermediate assignment widened or copied native values"); }
+    const std::array flags{Edit{0,{0,true,false}},Edit{1,{0,false,false}}};
+    auto current=original;for (const auto& e:flags) current[0].set(e.row,e.next);
+    machine.update(flags,{});
+    { Scope now(machine.store);const auto next=machine.selected(now);p::QueryCache cache(1000);
+      require(machine.costs.copied_bytes-copies==p::flag_bytes*2 &&
+              machine.part(first,0).data==machine.part(next,0).data,"native flags-only update copied value plane");
+      require(machine.query(next,{},1000,cache)==expected(current,{},1000) &&
+              machine.query(first,{},1000,cache)==expected(original,{},1000),"native coalesced retained query differs"); }
+    std::puts("Native coalescing passes: latest assignment, no-op publication, no transient widening, flags-only reuse and old reader.");
+}
+
 template<class C> void run(Policy policy, const Data& initial, const Scenario& s, unsigned trial,
                            unsigned order, unsigned arm, bool keep_old, unsigned read_queries,
-                           unsigned final_queries, bool verify_points, p::fe::encode_options options) {
+                           unsigned final_queries, bool verify_points, bool reference_queries, p::fe::encode_options options) {
     Machine<C> m(policy, options);
     const auto setup = Clock::now(); m.seed(initial); const auto setup_ns = ns(setup);
     m.costs.prepare_ns = m.costs.publish_ns = m.costs.copied_bytes = m.costs.encoded_rows = 0;
+    m.costs.publications=0;
     using Scope = typename Machine<C>::Store::Scope;
     std::unique_ptr<Scope> old;
     if (keep_old) old = std::make_unique<Scope>(m.store);
@@ -324,7 +602,7 @@ template<class C> void run(Policy policy, const Data& initial, const Scenario& s
     std::vector<p::QueryResult> answers;
     for (const auto& data : s.snapshots) answers.push_back(expected(data, s.mask, threshold));
     const auto verify = [&](const Scope& scope, p::QueryResult wanted, unsigned repetitions) {
-        const auto selected = m.selected(scope); p::QueryCache cache(threshold);
+        const auto selected = m.selected(scope); p::QueryCache cache(threshold,reference_queries);
         for (unsigned q = 0; q < repetitions; ++q) {
             const auto start = Clock::now(); const auto actual = m.query(selected, s.mask, threshold, cache);
             m.costs.query_ns += ns(start); p::fe::consume(actual.sum);
@@ -333,6 +611,12 @@ template<class C> void run(Policy policy, const Data& initial, const Scenario& s
     };
     const auto all_points = [&](const Scope& scope, const Data& wanted) {
         const auto source = m.selected(scope);
+        const auto& control = source.realization->control;
+        for (unsigned g = 0; g < p::groups; ++g) {
+            const auto i = g * Machine<C>::Group::parts;
+            require(p::admit(p::base(control.group[g]), m.part(source, i), m.part(source, i + 1)),
+                    "published phase image lost admission");
+        }
         for (unsigned i = 0; i < p::rows; ++i) {
             const auto actual = m.point(source, i), original = wanted[i / p::rows_per_group].row(i % p::rows_per_group);
             require(actual.present == original.present && actual.valid == original.valid &&
@@ -340,36 +624,57 @@ template<class C> void run(Policy policy, const Data& initial, const Scenario& s
         }
     };
     const auto start = Clock::now();
-    if (policy == Policy::thaw) m.convert(true, s.mask);
+    const auto transition = [&](bool native) {
+        const auto at=Clock::now(); m.convert(native,s.mask);
+        m.costs.max_transition_ns=std::max(m.costs.max_transition_ns,ns(at));
+    };
+    if (policy == Policy::thaw) transition(true);
     for (unsigned b = 0; b < s.batches.size(); ++b) {
+        const auto at=Clock::now();
         m.update(s.batches[b], s.mask);
+        m.costs.max_update_ns=std::max(m.costs.max_update_ns,ns(at));
         { Scope current(m.store); verify(current, answers[b + 1], read_queries);
           if (verify_points && !trial) all_points(current, s.snapshots[b + 1]); }
         if (old) { verify(*old, answers[0], 1); if (verify_points && !trial) all_points(*old, initial); }
-        const auto release = Clock::now(); m.store.drain(); m.costs.release_ns += ns(release);
+        const auto release = Clock::now(); m.store.drain(); const auto duration=ns(release);
+        m.costs.release_ns += duration; m.costs.max_release_ns=std::max(m.costs.max_release_ns,duration);
     }
-    if (policy == Policy::overlay_fold || policy == Policy::thaw) m.convert(false, s.mask);
+    if (policy == Policy::overlay_fold || policy == Policy::thaw) transition(false);
     { Scope current(m.store); verify(current, answers.back(), final_queries);
       if (verify_points && !trial) all_points(current, s.snapshots.back()); }
-    const auto release = Clock::now(); old.reset(); m.store.drain(); m.costs.release_ns += ns(release);
+    const auto release = Clock::now(); old.reset(); m.store.drain(); const auto duration=ns(release);
+    m.costs.release_ns += duration; m.costs.max_release_ns=std::max(m.costs.max_release_ns,duration);
     const auto elapsed = ns(start); m.observe();
     const auto stats = a::statistics(*m.runtime.pool);
     std::printf("{\"policy\":\"%s\",\"pattern\":\"%s\",\"mask\":%u,\"retain_old\":%u,\"trial\":%u,\"order_position\":%u,"
-        "\"arm\":%u,\"read_queries_per_batch\":%u,\"final_read_queries\":%u,\"verification_run\":%u,"
+        "\"reference_queries\":%u,\"arm\":%u,\"read_queries_per_batch\":%u,\"final_read_queries\":%u,\"verification_run\":%u,"
+        "\"max_update_ns\":%llu,\"max_transition_ns\":%llu,\"max_release_ns\":%llu,"
         "\"total_ns\":%llu,\"setup_ns\":%llu,\"prepare_ns\":%llu,\"publish_ns\":%llu,\"query_ns\":%llu,\"conversion_ns\":%llu,\"release_ns\":%llu,"
-        "\"copied_bytes\":%zu,\"encoded_rows\":%zu,\"peak_nonidle_bytes\":%zu,\"peak_metadata_bytes\":%zu,\"overlay_entries\":%zu,"
+        "\"copied_bytes\":%zu,\"encoded_rows\":%zu,\"repaired_blocks\":%zu,\"peak_nonidle_bytes\":%zu,\"peak_metadata_bytes\":%zu,\"overlay_entries\":%zu,"
+        "\"write_materialized_rows\":%zu,\"repair_examined_rows\":%zu,\"eligible_dirty_blocks\":%zu,"
+        "\"coalesced_away\":%zu,\"visible_noops\":%zu,\"publications\":%zu,"
+        "\"dirty_kinds\":[%zu,%zu,%zu,%zu,%zu,%zu,%zu],\"repair_reasons\":[%zu,%zu,%zu,%zu,%zu,%zu,%zu,%zu,%zu],"
         "\"final_nonidle_bytes\":%llu,\"pool_mapped_bytes\":%llu,\"pool_idle_bytes\":%llu,\"final_metadata_bytes\":%zu}\n",
         name(policy),s.pattern.c_str(),s.mask.bits,unsigned(keep_old),trial,order,
-        arm,read_queries,final_queries,unsigned(verify_points),
+        unsigned(reference_queries),arm,read_queries,final_queries,unsigned(verify_points),
+        (unsigned long long)m.costs.max_update_ns,(unsigned long long)m.costs.max_transition_ns,(unsigned long long)m.costs.max_release_ns,
         (unsigned long long)elapsed,(unsigned long long)setup_ns,(unsigned long long)m.costs.prepare_ns,
         (unsigned long long)m.costs.publish_ns,(unsigned long long)m.costs.query_ns,(unsigned long long)m.costs.conversion_ns,
-        (unsigned long long)m.costs.release_ns,m.costs.copied_bytes,m.costs.encoded_rows,m.costs.peak_nonidle,m.costs.peak_metadata,
-        m.costs.overlay_entries,(unsigned long long)(stats.mapped_bytes-stats.idle_bytes),(unsigned long long)stats.mapped_bytes,
+        (unsigned long long)m.costs.release_ns,m.costs.copied_bytes,m.costs.encoded_rows,m.costs.repaired_blocks,m.costs.peak_nonidle,m.costs.peak_metadata,
+        m.costs.overlay_entries,m.costs.write_materialized_rows,m.costs.repair_examined_rows,m.costs.eligible_dirty_blocks,
+        m.costs.coalesced_away,m.costs.visible_noops,m.costs.publications,
+        m.costs.dirty_kinds[0],m.costs.dirty_kinds[1],m.costs.dirty_kinds[2],m.costs.dirty_kinds[3],m.costs.dirty_kinds[4],m.costs.dirty_kinds[5],m.costs.dirty_kinds[6],
+        m.costs.repair_reasons[0],m.costs.repair_reasons[1],m.costs.repair_reasons[2],m.costs.repair_reasons[3],m.costs.repair_reasons[4],m.costs.repair_reasons[5],m.costs.repair_reasons[6],m.costs.repair_reasons[7],m.costs.repair_reasons[8],
+        (unsigned long long)(stats.mapped_bytes-stats.idle_bytes),(unsigned long long)stats.mapped_bytes,
         (unsigned long long)stats.idle_bytes,m.memory.live);
 }
 } // namespace
 int main(int argc,char** argv) {
-    require(argc >= 2 && argc <= 6, "usage: frame_phase_measure INPUT.u64 [trials=8] [queries_per_batch=8] [final_queries=64] [verify=0]");
+    if (argc==2 && std::string_view(argv[1])=="--check-native-coalesced") {check_native_coalesced();return 0;}
+    if (argc==2 && std::string_view(argv[1])=="--check-block-fold") { check_block_fold(); return 0; }
+    if (argc==2 && std::string_view(argv[1])=="--check-sparse-repair") { check_block_fold(Policy::sparse_repair); return 0; }
+    if (argc==2 && std::string_view(argv[1])=="--check-repair-fold") { check_block_fold(Policy::repair_fold); return 0; }
+    require(argc >= 2 && argc <= 9, "usage: frame_phase_measure INPUT.u64 [trials=8] [queries_per_batch=8] [final_queries=64] [verify=0] [mixed|values-only] [bounded] [masked|reference]");
     Data initial;
     std::ifstream input(argv[1],std::ios::binary);
     for (auto& g : initial) require(bool(input.read(reinterpret_cast<char*>(g.value.data()),sizeof(g.value))),"need at least8192 original values");
@@ -377,27 +682,37 @@ int main(int argc,char** argv) {
     const unsigned read_queries = argc > 3 ? std::stoul(argv[3]) : 8;
     const unsigned final_queries = argc > 4 ? std::stoul(argv[4]) : 64;
     const unsigned verification = argc > 5 ? std::stoul(argv[5]) : 0;
+    const bool mixed=argc<=6 || std::string_view(argv[6])=="mixed";
+    const bool bounded=argc>7;
+    const bool reference_queries=argc>8 && std::string_view(argv[8])=="reference";
+    require(argc<=8 || reference_queries || std::string_view(argv[8])=="masked","invalid query program");
+    require(argc<=6 || mixed || std::string_view(argv[6])=="values-only","invalid trace kind");
+    require(!bounded || std::string_view(argv[7])=="bounded","invalid case restriction");
     require(requested && requested <= 120,"invalid trial count");
     require(read_queries && read_queries <= 4096 && final_queries <= 4096 && verification <= 1,"invalid query/verification count");
     // Last two arms repeat the exact policy and native implementation.
     const std::array policies{Policy::native_raw,Policy::native_for,Policy::reencode,Policy::overlay,
-        Policy::overlay_fold,Policy::thaw,Policy::native_for,Policy::overlay_fold};
+        Policy::overlay_fold,Policy::thaw,Policy::block_fold,Policy::repair_fold,Policy::sparse_repair,
+        Policy::native_coalesced,Policy::native_for,Policy::overlay_fold};
     std::mt19937 order_random(1729);
-    const unsigned arms = policies.size(), trials = (requested + arms - 1) / arms * arms;
+    const unsigned arms = policies.size(), round = arms * (arms % 2 ? 2 : 1);
+    const unsigned trials = (requested + round - 1) / round * round;
     for (const auto pattern : {"repeated-hot","dispersed","moving-hot","novelty"})
         for (const auto mask : {UINT32_MAX,UINT32_C(0xaaaaaaaa),UINT32_C(0x0000ffff),UINT32_C(0)})
             for (bool old : {false,true}) {
-                const auto s = scenario(initial,pattern,{mask});
+                if (bounded && (mask!=UINT32_MAX || old ||
+                    (std::string_view(pattern)!="repeated-hot" && std::string_view(pattern)!="dispersed"))) continue;
+                const auto s = scenario(initial,pattern,{mask},mixed);
                 std::vector<std::vector<unsigned>> orders;
                 for (unsigned trial = 0; trial < trials; ++trial) {
-                    if (trial % arms == 0) orders = frame_measure::balanced_round(arms,order_random);
+                    if (trial % round == 0) orders = frame_measure::balanced_round(arms,order_random);
                     for (unsigned pos = 0; pos < policies.size(); ++pos) {
-                        const auto arm = orders[trial % arms][pos]; const auto policy = policies[arm];
+                        const auto arm = orders[trial % round][pos]; const auto policy = policies[arm];
                         if (policy == Policy::overlay || policy == Policy::overlay_fold)
-                            run<p::OverlayLayout>(policy,initial,s,trial,pos,arm,old,read_queries,final_queries,verification,{});
-                        else if (policy == Policy::native_raw || policy == Policy::native_for)
-                            run<p::NativeLayout>(policy,initial,s,trial,pos,arm,old,read_queries,final_queries,verification,{});
-                        else run<p::EncodedLayout>(policy,initial,s,trial,pos,arm,old,read_queries,final_queries,verification,{});
+                            run<p::OverlayLayout>(policy,initial,s,trial,pos,arm,old,read_queries,final_queries,verification,reference_queries,{});
+                        else if (policy == Policy::native_raw || policy == Policy::native_for || policy==Policy::native_coalesced)
+                            run<p::NativeLayout>(policy,initial,s,trial,pos,arm,old,read_queries,final_queries,verification,reference_queries,{});
+                        else run<p::EncodedLayout>(policy,initial,s,trial,pos,arm,old,read_queries,final_queries,verification,reference_queries,{});
                     }
                 }
             }

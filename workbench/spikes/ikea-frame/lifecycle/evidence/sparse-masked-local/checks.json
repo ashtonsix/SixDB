@@ -1,0 +1,31 @@
+{
+  "material": {
+    "result": "90762 phase material checks pass: native8/16/32/64, exact u128, separate presence/validity, original coarse masks, dictionary/RHS cache changes, overlay corrections and protected none.",
+    "elf_sha256": "eddca1cb64265325c8050f9810b3f3005b670bf8139af2425bf4125d7a97ecf1"
+  },
+  "plane": {
+    "result": "33856 private plane points pass: all 64 widths, partial/full tiles, unaligned guards, repeated edits, empty/active protection.",
+    "elf_sha256": "534e2baefe861886871211b9564359dac4d1730e7dcc12aab7e36ed0bf02dde5"
+  },
+  "repair": {
+    "result": "11264 repair plans / 3108864 independent points+aggregates pass: widths 1..64, all CP modes, anchors/interiors/last, descriptor shifts, refusals and unaligned guards.",
+    "elf_sha256": "147f0c7a9f406cac37e27d98bc279f1356cb88216c6bcec743369f18beafd87c"
+  },
+  "native_coalesced": {
+    "result": "Native coalescing passes: latest assignment, no-op publication, no transient widening, flags-only reuse and old reader.",
+    "elf_sha256": "673f8653e538115d7ad7d248e6670207555b89bcbe9ecbd65c219db33e8645c0"
+  },
+  "native_sparse": {
+    "result": "sparse-repair-or-fold: 328160 checks pass: four CP modes, raw/sorted/frequency, NULL-only reuse, original masks, repeated edits, retained neighbours/dictionaries and old readers.",
+    "elf_sha256": "673f8653e538115d7ad7d248e6670207555b89bcbe9ecbd65c219db33e8645c0"
+  },
+  "bounded_histories": 9216,
+  "bounded_original_point_comparisons": 14155776,
+  "default_encoder_profiles_same_as_d2": true,
+  "historical_dense_fit_cohort": {
+    "source": "64bdca9bbcb5ef13fb0f7398373db47b7d6c92bfc09ac8428f669c76eecdaacc",
+    "histories": 38400,
+    "original_points": 102236160,
+    "recovery": "full source+commands+raw+original ELF hash retained; original executable overwritten, no exact binary replay claim; not pooled with current timings"
+  }
+}

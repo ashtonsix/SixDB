@@ -159,7 +159,8 @@ struct QueryResult { u128 sum{}; u64 count{}, present{}; friend bool operator==(
 struct QueryCache {
     fe::code_sum sum;
     fe::code_count count;
-    explicit QueryCache(u64 threshold) : count(threshold) {}
+    bool reference_selection{};
+    explicit QueryCache(u64 threshold,bool reference=false) : count(threshold),reference_selection(reference) {}
 };
 inline const GroupHeader& header(const EncodedBase& b) { return b.header; }
 inline const GroupHeader& header(const NativeBase& b) { return b.header; }

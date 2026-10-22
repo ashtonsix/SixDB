@@ -28,22 +28,28 @@ inline u64 fresh_identity() {
     if (!next) throw std::overflow_error("phase base identity exhausted");
     return next;
 }
+inline void summarize_block(GroupHeader& h, unsigned b, std::span<const u64, 256> values,
+                            std::span<const u64, 4> present, std::span<const u64, 4> valid) {
+    h.present_count[b] = h.valid_count[b] = 0; h.bounds[b] = {};
+    for (unsigned w = 0; w < 4; ++w) {
+        const auto p = present[w], v = valid[w];
+        if (v & ~p) throw std::invalid_argument("validity is not a subset of presence");
+        h.present_count[b] += std::popcount(p); h.valid_count[b] += std::popcount(v);
+        auto bits = v;
+        while (bits) {
+            const auto i = w * 64 + std::countr_zero(bits); bits &= bits - 1;
+            h.bounds[b].minimum = std::min(h.bounds[b].minimum, values[i]);
+            h.bounds[b].maximum = std::max(h.bounds[b].maximum, values[i]);
+        }
+    }
+}
 inline GroupHeader summarize(const GroupData& data) {
     GroupHeader h;
     h.identity = fresh_identity();
-    for (unsigned b = 0; b < blocks_per_group; ++b) {
-        for (unsigned w = 0; w < 4; ++w) {
-            const auto p = data.present[b * 4 + w], v = data.valid[b * 4 + w];
-            if (v & ~p) throw std::invalid_argument("validity is not a subset of presence");
-            h.present_count[b] += std::popcount(p); h.valid_count[b] += std::popcount(v);
-            auto bits = v;
-            while (bits) {
-                const auto i = b * 256 + w * 64 + std::countr_zero(bits); bits &= bits - 1;
-                h.bounds[b].minimum = std::min(h.bounds[b].minimum, data.value[i]);
-                h.bounds[b].maximum = std::max(h.bounds[b].maximum, data.value[i]);
-            }
-        }
-    }
+    for (unsigned b = 0; b < blocks_per_group; ++b)
+        summarize_block(h, b, std::span(data.value).subspan(b * 256, 256).first<256>(),
+            std::span(data.present).subspan(b * 4, 4).first<4>(),
+            std::span(data.valid).subspan(b * 4, 4).first<4>());
     return h;
 }
 inline void copy_flags(const GroupData& data, std::span<std::byte> target) {

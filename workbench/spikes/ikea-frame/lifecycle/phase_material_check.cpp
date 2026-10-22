@@ -45,13 +45,16 @@ unsigned verify(const Base& base, const std::vector<std::byte>& values,
              (!row.contributes() || row.value == wanted.value), "point differs from original values/flags");
         ++checks;
     }
-    p::QueryCache cache(1729); // Deliberately different: query must rebind its RHS.
+    for (bool reference : {false,true}) {
+    if (reference && std::is_same_v<Base,p::NativeBase>) continue;
+    p::QueryCache cache(1729,reference); // Deliberately different: query must rebind its RHS.
     for (auto threshold : {p::u64{0}, original.value[1], original.value[77], UINT64_MAX})
         for (auto mask : {0u, 65535u, 0xaaaau, 0x00ffu, 0x8001u}) {
             const auto result = p::query(base, v, f, mask, threshold, cache);
             need(result == expected(original, mask, threshold), "complete masked SUM/COUNT/presence differs");
             ++checks;
         }
+    }
     auto broken_flags = flags;
     broken_flags[p::flag_bytes] = std::byte{255}; broken_flags[0] = std::byte{0};
     need(!p::admit(base, v, {broken_flags.data(), broken_flags.size()}), "invalid validity subset admitted");

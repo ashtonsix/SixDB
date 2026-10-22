@@ -82,8 +82,10 @@ material and the simple Intervals run source.
 The maintained primitive is now [Intervals](../../../ikea/docs/intervals/usage.md),
 with its separate [research](../intervals/README.md) owned by Ikea HELPER.
 Frame uses its simple borrowed run-end projection; it does not adopt StreamPack's
-compact format or reader retirement. HELPER is auditing native caller choices
-and completing documentation/retirement of the old public Boundlist surface.
+compact format or reader retirement. HELPER has completed native caller audits,
+documentation and retirement of the old public Boundlist surface. Frame already
+consumes the maintained Intervals implementation; graduation adds no dependency
+on an unfinished geometry primitive.
 
 Ashton also requires separated leading one/two-byte planes to be available through
 Frame. Split placement must provide useful entropy and enough independent
@@ -165,3 +167,9 @@ The [native lifecycle baselines](lifecycle/NATIVE.md) now compare actual
 publication, retained readers, immutable-base overrides, folding and thaw/reseal
 against native arrays. They expose both the read value of preserving a base's
 algebra and the dispersed-write/folding costs; they do not choose a policy.
+
+The [write-grain and NULL-aware follow-up](lifecycle/REPAIR.md) distinguishes
+fitting proof, rebuild work, physical NULL policy and source morphology. Sparse
+writes improve materially; row-selected reads win the mixed EventTime witness,
+while native remains ahead on its all-valid form. Stronger native coalescing and
+losing cases remain explicit controls.

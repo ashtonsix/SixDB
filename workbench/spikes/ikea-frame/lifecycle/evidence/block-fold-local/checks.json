@@ -1,0 +1,17 @@
+{
+  "block_fold": {
+    "output": "295344 block-fold checks pass: four CP modes, raw/sorted/frequency, NULL-only reuse, original masks, repeated edits, retained neighbours/dictionaries and old readers.",
+    "elf_sha256": "deea1ad7628a75f049acc05ba3694d528df7f25c78125e32664a83497f235106"
+  },
+  "material": {
+    "output": "90642 phase material checks pass: native8/16/32/64, exact u128, separate presence/validity, original coarse masks, dictionary/RHS cache changes, overlay corrections and protected none.",
+    "elf_sha256": "2ae626c38cfe3fecc1f11833abb0d9e8bf67d3ba1a3eb492581193f3da8cd5e2"
+  },
+  "plane": {
+    "output": "33856 private plane points pass: all 64 widths, partial/full tiles, unaligned guards, repeated edits, empty/active protection.",
+    "elf_sha256": "6926585fdda6cec6e6d821728e3daf6f00edd1554ab1b8d378d99a2c6fcd4547"
+  },
+  "point_original_comparisons": 61341696,
+  "measured_histories": 20736,
+  "private_plane_is_not_a_measured_fitting_frame_writer": true
+}

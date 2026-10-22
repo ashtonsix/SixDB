@@ -1,0 +1,460 @@
+{
+  "source": "7b30bb0abae22cd02e55fba0fb389a4134861fbc04c3ae236e7f51f459a6451c",
+  "binary_sha256": "673f8653e538115d7ad7d248e6670207555b89bcbe9ecbd65c219db33e8645c0",
+  "platform": "Linux-7.0.14-orbstack-00380-ga7e0a2dc9535-aarch64-with-glibc2.42",
+  "cpu": 7,
+  "inputs": {
+    "selection": "Pressure prefix retained; EventTime exact aligned population midpoint predeclared before timing, not selected for treatment result.",
+    "inputs": [
+      {
+        "input": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/spikes/ikea-frame/jena-0/p__mbar.u64",
+        "origin": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/spikes/ikea-frame/jena-0/p__mbar.u64",
+        "origin_sha256": "ede7bd5fd8833828049817f56703d4cfaa29ef620ff7c73b9bbf32ae92e9054e",
+        "first_row": 0,
+        "rows": 8192,
+        "slice_sha256": "ad8fcc650c1766ce21d03138959d7a345c2bae09fdf5545e1c9ac427a9cf7e42",
+        "threshold": 9223372036854875838,
+        "initial_ge_hits": 1016,
+        "initial_ge_fraction": 0.1240234375
+      },
+      {
+        "input": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/frame-collab/slices/EventTime-mid.u64",
+        "origin": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/spikes/ikea-frame/cols/EventTime.u64",
+        "origin_sha256": "8294fa21be93d959e1d8d612ac701f083187db033db98a647657f9309f39ce89",
+        "first_row": 1495040,
+        "rows": 8192,
+        "slice_sha256": "410842150e1d890c361b7f6c8cfb89614ec137bb5bed09e54684060ae48cbef8",
+        "threshold": 9223372038228675899,
+        "initial_ge_hits": 1756,
+        "initial_ge_fraction": 0.21435546875
+      }
+    ]
+  },
+  "arms": "raw64, nativeFOR, group-reencode, overrides-debt, overrides-fold, thaw, blockfold, dense-repair, sparse-repair, native-coalesced, identical nativeFOR and fold duplicates",
+  "cases": "Only repeated-hot/dispersed, all original blocks, no old reader. Full original surface retained in earlier cohort; this probe isolates value-proof vs NULL effects.",
+  "trials_requested": 16,
+  "trials_actual": 24,
+  "query_programs": [
+    "masked",
+    "reference"
+  ],
+  "commands": [
+    [
+      "taskset",
+      "-c",
+      "7",
+      "/home/ashtonsix/sixdb/build/clang/frame-material-all-kinds/workbench/spikes/ikea-frame/lifecycle/frame_phase_measure",
+      "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/spikes/ikea-frame/jena-0/p__mbar.u64",
+      "8",
+      "1",
+      "1",
+      "1",
+      "mixed",
+      "bounded",
+      "masked"
+    ],
+    [
+      "taskset",
+      "-c",
+      "7",
+      "/home/ashtonsix/sixdb/build/clang/frame-material-all-kinds/workbench/spikes/ikea-frame/lifecycle/frame_phase_measure",
+      "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/spikes/ikea-frame/jena-0/p__mbar.u64",
+      "8",
+      "1",
+      "1",
+      "1",
+      "mixed",
+      "bounded",
+      "reference"
+    ],
+    [
+      "taskset",
+      "-c",
+      "7",
+      "/home/ashtonsix/sixdb/build/clang/frame-material-all-kinds/workbench/spikes/ikea-frame/lifecycle/frame_phase_measure",
+      "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/spikes/ikea-frame/jena-0/p__mbar.u64",
+      "8",
+      "1",
+      "1",
+      "1",
+      "values-only",
+      "bounded",
+      "masked"
+    ],
+    [
+      "taskset",
+      "-c",
+      "7",
+      "/home/ashtonsix/sixdb/build/clang/frame-material-all-kinds/workbench/spikes/ikea-frame/lifecycle/frame_phase_measure",
+      "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/spikes/ikea-frame/jena-0/p__mbar.u64",
+      "8",
+      "1",
+      "1",
+      "1",
+      "values-only",
+      "bounded",
+      "reference"
+    ],
+    [
+      "taskset",
+      "-c",
+      "7",
+      "/home/ashtonsix/sixdb/build/clang/frame-material-all-kinds/workbench/spikes/ikea-frame/lifecycle/frame_phase_measure",
+      "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/frame-collab/slices/EventTime-mid.u64",
+      "8",
+      "1",
+      "1",
+      "1",
+      "mixed",
+      "bounded",
+      "masked"
+    ],
+    [
+      "taskset",
+      "-c",
+      "7",
+      "/home/ashtonsix/sixdb/build/clang/frame-material-all-kinds/workbench/spikes/ikea-frame/lifecycle/frame_phase_measure",
+      "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/frame-collab/slices/EventTime-mid.u64",
+      "8",
+      "1",
+      "1",
+      "1",
+      "mixed",
+      "bounded",
+      "reference"
+    ],
+    [
+      "taskset",
+      "-c",
+      "7",
+      "/home/ashtonsix/sixdb/build/clang/frame-material-all-kinds/workbench/spikes/ikea-frame/lifecycle/frame_phase_measure",
+      "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/frame-collab/slices/EventTime-mid.u64",
+      "8",
+      "1",
+      "1",
+      "1",
+      "values-only",
+      "bounded",
+      "masked"
+    ],
+    [
+      "taskset",
+      "-c",
+      "7",
+      "/home/ashtonsix/sixdb/build/clang/frame-material-all-kinds/workbench/spikes/ikea-frame/lifecycle/frame_phase_measure",
+      "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/frame-collab/slices/EventTime-mid.u64",
+      "8",
+      "1",
+      "1",
+      "1",
+      "values-only",
+      "bounded",
+      "reference"
+    ],
+    [
+      "taskset",
+      "-c",
+      "7",
+      "/home/ashtonsix/sixdb/build/clang/frame-material-all-kinds/workbench/spikes/ikea-frame/lifecycle/frame_phase_measure",
+      "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/spikes/ikea-frame/jena-0/p__mbar.u64",
+      "16",
+      "1",
+      "0",
+      "0",
+      "mixed",
+      "bounded",
+      "masked"
+    ],
+    [
+      "taskset",
+      "-c",
+      "7",
+      "/home/ashtonsix/sixdb/build/clang/frame-material-all-kinds/workbench/spikes/ikea-frame/lifecycle/frame_phase_measure",
+      "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/spikes/ikea-frame/jena-0/p__mbar.u64",
+      "16",
+      "1",
+      "0",
+      "0",
+      "mixed",
+      "bounded",
+      "reference"
+    ],
+    [
+      "taskset",
+      "-c",
+      "7",
+      "/home/ashtonsix/sixdb/build/clang/frame-material-all-kinds/workbench/spikes/ikea-frame/lifecycle/frame_phase_measure",
+      "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/spikes/ikea-frame/jena-0/p__mbar.u64",
+      "16",
+      "64",
+      "512",
+      "0",
+      "mixed",
+      "bounded",
+      "masked"
+    ],
+    [
+      "taskset",
+      "-c",
+      "7",
+      "/home/ashtonsix/sixdb/build/clang/frame-material-all-kinds/workbench/spikes/ikea-frame/lifecycle/frame_phase_measure",
+      "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/spikes/ikea-frame/jena-0/p__mbar.u64",
+      "16",
+      "64",
+      "512",
+      "0",
+      "mixed",
+      "bounded",
+      "reference"
+    ],
+    [
+      "taskset",
+      "-c",
+      "7",
+      "/home/ashtonsix/sixdb/build/clang/frame-material-all-kinds/workbench/spikes/ikea-frame/lifecycle/frame_phase_measure",
+      "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/spikes/ikea-frame/jena-0/p__mbar.u64",
+      "16",
+      "1",
+      "0",
+      "0",
+      "values-only",
+      "bounded",
+      "masked"
+    ],
+    [
+      "taskset",
+      "-c",
+      "7",
+      "/home/ashtonsix/sixdb/build/clang/frame-material-all-kinds/workbench/spikes/ikea-frame/lifecycle/frame_phase_measure",
+      "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/spikes/ikea-frame/jena-0/p__mbar.u64",
+      "16",
+      "1",
+      "0",
+      "0",
+      "values-only",
+      "bounded",
+      "reference"
+    ],
+    [
+      "taskset",
+      "-c",
+      "7",
+      "/home/ashtonsix/sixdb/build/clang/frame-material-all-kinds/workbench/spikes/ikea-frame/lifecycle/frame_phase_measure",
+      "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/spikes/ikea-frame/jena-0/p__mbar.u64",
+      "16",
+      "64",
+      "512",
+      "0",
+      "values-only",
+      "bounded",
+      "masked"
+    ],
+    [
+      "taskset",
+      "-c",
+      "7",
+      "/home/ashtonsix/sixdb/build/clang/frame-material-all-kinds/workbench/spikes/ikea-frame/lifecycle/frame_phase_measure",
+      "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/spikes/ikea-frame/jena-0/p__mbar.u64",
+      "16",
+      "64",
+      "512",
+      "0",
+      "values-only",
+      "bounded",
+      "reference"
+    ],
+    [
+      "taskset",
+      "-c",
+      "7",
+      "/home/ashtonsix/sixdb/build/clang/frame-material-all-kinds/workbench/spikes/ikea-frame/lifecycle/frame_phase_measure",
+      "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/frame-collab/slices/EventTime-mid.u64",
+      "16",
+      "1",
+      "0",
+      "0",
+      "mixed",
+      "bounded",
+      "masked"
+    ],
+    [
+      "taskset",
+      "-c",
+      "7",
+      "/home/ashtonsix/sixdb/build/clang/frame-material-all-kinds/workbench/spikes/ikea-frame/lifecycle/frame_phase_measure",
+      "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/frame-collab/slices/EventTime-mid.u64",
+      "16",
+      "1",
+      "0",
+      "0",
+      "mixed",
+      "bounded",
+      "reference"
+    ],
+    [
+      "taskset",
+      "-c",
+      "7",
+      "/home/ashtonsix/sixdb/build/clang/frame-material-all-kinds/workbench/spikes/ikea-frame/lifecycle/frame_phase_measure",
+      "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/frame-collab/slices/EventTime-mid.u64",
+      "16",
+      "64",
+      "512",
+      "0",
+      "mixed",
+      "bounded",
+      "masked"
+    ],
+    [
+      "taskset",
+      "-c",
+      "7",
+      "/home/ashtonsix/sixdb/build/clang/frame-material-all-kinds/workbench/spikes/ikea-frame/lifecycle/frame_phase_measure",
+      "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/frame-collab/slices/EventTime-mid.u64",
+      "16",
+      "64",
+      "512",
+      "0",
+      "mixed",
+      "bounded",
+      "reference"
+    ],
+    [
+      "taskset",
+      "-c",
+      "7",
+      "/home/ashtonsix/sixdb/build/clang/frame-material-all-kinds/workbench/spikes/ikea-frame/lifecycle/frame_phase_measure",
+      "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/frame-collab/slices/EventTime-mid.u64",
+      "16",
+      "1",
+      "0",
+      "0",
+      "values-only",
+      "bounded",
+      "masked"
+    ],
+    [
+      "taskset",
+      "-c",
+      "7",
+      "/home/ashtonsix/sixdb/build/clang/frame-material-all-kinds/workbench/spikes/ikea-frame/lifecycle/frame_phase_measure",
+      "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/frame-collab/slices/EventTime-mid.u64",
+      "16",
+      "1",
+      "0",
+      "0",
+      "values-only",
+      "bounded",
+      "reference"
+    ],
+    [
+      "taskset",
+      "-c",
+      "7",
+      "/home/ashtonsix/sixdb/build/clang/frame-material-all-kinds/workbench/spikes/ikea-frame/lifecycle/frame_phase_measure",
+      "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/frame-collab/slices/EventTime-mid.u64",
+      "16",
+      "64",
+      "512",
+      "0",
+      "values-only",
+      "bounded",
+      "masked"
+    ],
+    [
+      "taskset",
+      "-c",
+      "7",
+      "/home/ashtonsix/sixdb/build/clang/frame-material-all-kinds/workbench/spikes/ikea-frame/lifecycle/frame_phase_measure",
+      "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/frame-collab/slices/EventTime-mid.u64",
+      "16",
+      "64",
+      "512",
+      "0",
+      "values-only",
+      "bounded",
+      "reference"
+    ]
+  ],
+  "compile_commands": [
+    {
+      "directory": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/clang/frame-material-all-kinds",
+      "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=1 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN4=0 -DSIXDB_TUNE_ZEN5=0 -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-material-all-kinds/workbench/spikes/ikea-frame/encoding -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-material-all-kinds/ikea/include -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-material-all-kinds=. -ffunction-sections -fdata-sections -march=native -mtune=generic -o workbench/spikes/ikea-frame/encoding/CMakeFiles/frame_encoding_material.dir/material.cpp.o -c /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-material-all-kinds/workbench/spikes/ikea-frame/encoding/material.cpp",
+      "file": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-material-all-kinds/workbench/spikes/ikea-frame/encoding/material.cpp",
+      "output": "workbench/spikes/ikea-frame/encoding/CMakeFiles/frame_encoding_material.dir/material.cpp.o"
+    },
+    {
+      "directory": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/clang/frame-material-all-kinds",
+      "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=1 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN4=0 -DSIXDB_TUNE_ZEN5=0 -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-material-all-kinds/workbench/spikes/ikea-frame/encoding -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-material-all-kinds/ikea/include -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-material-all-kinds=. -ffunction-sections -fdata-sections -march=native -mtune=generic -o workbench/spikes/ikea-frame/encoding/CMakeFiles/frame_encoding_material.dir/kernels.cpp.o -c /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-material-all-kinds/workbench/spikes/ikea-frame/encoding/kernels.cpp",
+      "file": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-material-all-kinds/workbench/spikes/ikea-frame/encoding/kernels.cpp",
+      "output": "workbench/spikes/ikea-frame/encoding/CMakeFiles/frame_encoding_material.dir/kernels.cpp.o"
+    },
+    {
+      "directory": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/clang/frame-material-all-kinds",
+      "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=1 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN4=0 -DSIXDB_TUNE_ZEN5=0 -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-material-all-kinds/workbench/spikes/ikea-frame/encoding -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-material-all-kinds/ikea/include -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-material-all-kinds=. -ffunction-sections -fdata-sections -march=native -mtune=generic -o workbench/spikes/ikea-frame/encoding/CMakeFiles/frame_encoding_material.dir/packing.cpp.o -c /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-material-all-kinds/workbench/spikes/ikea-frame/encoding/packing.cpp",
+      "file": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-material-all-kinds/workbench/spikes/ikea-frame/encoding/packing.cpp",
+      "output": "workbench/spikes/ikea-frame/encoding/CMakeFiles/frame_encoding_material.dir/packing.cpp.o"
+    },
+    {
+      "directory": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/clang/frame-material-all-kinds",
+      "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=1 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN4=0 -DSIXDB_TUNE_ZEN5=0 -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-material-all-kinds/workbench/spikes/ikea-frame/encoding -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-material-all-kinds/ikea/include -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-material-all-kinds=. -ffunction-sections -fdata-sections -march=native -mtune=generic -o workbench/spikes/ikea-frame/encoding/CMakeFiles/frame_encoding_bodies.dir/bodies.cpp.o -c /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-material-all-kinds/workbench/spikes/ikea-frame/encoding/bodies.cpp",
+      "file": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-material-all-kinds/workbench/spikes/ikea-frame/encoding/bodies.cpp",
+      "output": "workbench/spikes/ikea-frame/encoding/CMakeFiles/frame_encoding_bodies.dir/bodies.cpp.o"
+    },
+    {
+      "directory": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/clang/frame-material-all-kinds",
+      "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=1 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN4=0 -DSIXDB_TUNE_ZEN5=0 -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-material-all-kinds/workbench/spikes/ikea-frame/encoding -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-material-all-kinds/ikea/include -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-material-all-kinds=. -ffunction-sections -fdata-sections -march=native -mtune=generic -o workbench/spikes/ikea-frame/encoding/CMakeFiles/frame_encoding_borrowed_check.dir/borrowed_check.cpp.o -c /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-material-all-kinds/workbench/spikes/ikea-frame/encoding/borrowed_check.cpp",
+      "file": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-material-all-kinds/workbench/spikes/ikea-frame/encoding/borrowed_check.cpp",
+      "output": "workbench/spikes/ikea-frame/encoding/CMakeFiles/frame_encoding_borrowed_check.dir/borrowed_check.cpp.o"
+    },
+    {
+      "directory": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/clang/frame-material-all-kinds",
+      "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=1 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN4=0 -DSIXDB_TUNE_ZEN5=0 -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-material-all-kinds/workbench/spikes/ikea-frame/encoding -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-material-all-kinds/ikea/include -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-material-all-kinds=. -ffunction-sections -fdata-sections -march=native -mtune=generic -o workbench/spikes/ikea-frame/encoding/CMakeFiles/frame_encoding_masked_access_check.dir/masked_access_check.cpp.o -c /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-material-all-kinds/workbench/spikes/ikea-frame/encoding/masked_access_check.cpp",
+      "file": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-material-all-kinds/workbench/spikes/ikea-frame/encoding/masked_access_check.cpp",
+      "output": "workbench/spikes/ikea-frame/encoding/CMakeFiles/frame_encoding_masked_access_check.dir/masked_access_check.cpp.o"
+    },
+    {
+      "directory": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/clang/frame-material-all-kinds",
+      "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=1 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN4=0 -DSIXDB_TUNE_ZEN5=0 -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-material-all-kinds/workbench/spikes/ikea-frame/encoding -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-material-all-kinds/ikea/include -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-material-all-kinds/orbital/include -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-material-all-kinds=. -ffunction-sections -fdata-sections -march=native -mtune=generic -o workbench/spikes/ikea-frame/lifecycle/CMakeFiles/frame_phase_material.dir/phase_material.cpp.o -c /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-material-all-kinds/workbench/spikes/ikea-frame/lifecycle/phase_material.cpp",
+      "file": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-material-all-kinds/workbench/spikes/ikea-frame/lifecycle/phase_material.cpp",
+      "output": "workbench/spikes/ikea-frame/lifecycle/CMakeFiles/frame_phase_material.dir/phase_material.cpp.o"
+    },
+    {
+      "directory": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/clang/frame-material-all-kinds",
+      "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=1 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN4=0 -DSIXDB_TUNE_ZEN5=0 -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-material-all-kinds/workbench/spikes/ikea-frame/encoding -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-material-all-kinds/ikea/include -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-material-all-kinds/orbital/include -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-material-all-kinds=. -ffunction-sections -fdata-sections -march=native -mtune=generic -o workbench/spikes/ikea-frame/lifecycle/CMakeFiles/frame_phase_material_check.dir/phase_material_check.cpp.o -c /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-material-all-kinds/workbench/spikes/ikea-frame/lifecycle/phase_material_check.cpp",
+      "file": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-material-all-kinds/workbench/spikes/ikea-frame/lifecycle/phase_material_check.cpp",
+      "output": "workbench/spikes/ikea-frame/lifecycle/CMakeFiles/frame_phase_material_check.dir/phase_material_check.cpp.o"
+    },
+    {
+      "directory": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/clang/frame-material-all-kinds",
+      "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=1 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN4=0 -DSIXDB_TUNE_ZEN5=0 -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-material-all-kinds/workbench/spikes/ikea-frame/encoding -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-material-all-kinds/ikea/include -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-material-all-kinds/orbital/include -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-material-all-kinds=. -ffunction-sections -fdata-sections -march=native -mtune=generic -o workbench/spikes/ikea-frame/lifecycle/CMakeFiles/frame_phase_measure.dir/phase_measure.cpp.o -c /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-material-all-kinds/workbench/spikes/ikea-frame/lifecycle/phase_measure.cpp",
+      "file": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-material-all-kinds/workbench/spikes/ikea-frame/lifecycle/phase_measure.cpp",
+      "output": "workbench/spikes/ikea-frame/lifecycle/CMakeFiles/frame_phase_measure.dir/phase_measure.cpp.o"
+    },
+    {
+      "directory": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/clang/frame-material-all-kinds",
+      "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=1 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN4=0 -DSIXDB_TUNE_ZEN5=0 -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-material-all-kinds/workbench/spikes/ikea-frame/encoding -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-material-all-kinds/ikea/include -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-material-all-kinds=. -ffunction-sections -fdata-sections -march=native -mtune=generic -o workbench/spikes/ikea-frame/lifecycle/CMakeFiles/frame_phase_plane.dir/phase_plane.cpp.o -c /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-material-all-kinds/workbench/spikes/ikea-frame/lifecycle/phase_plane.cpp",
+      "file": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-material-all-kinds/workbench/spikes/ikea-frame/lifecycle/phase_plane.cpp",
+      "output": "workbench/spikes/ikea-frame/lifecycle/CMakeFiles/frame_phase_plane.dir/phase_plane.cpp.o"
+    },
+    {
+      "directory": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/clang/frame-material-all-kinds",
+      "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=1 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN4=0 -DSIXDB_TUNE_ZEN5=0 -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-material-all-kinds/workbench/spikes/ikea-frame/encoding -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-material-all-kinds/ikea/include -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-material-all-kinds/orbital/include -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-material-all-kinds=. -ffunction-sections -fdata-sections -march=native -mtune=generic -o workbench/spikes/ikea-frame/lifecycle/CMakeFiles/frame_phase_plane_check.dir/phase_plane_check.cpp.o -c /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-material-all-kinds/workbench/spikes/ikea-frame/lifecycle/phase_plane_check.cpp",
+      "file": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-material-all-kinds/workbench/spikes/ikea-frame/lifecycle/phase_plane_check.cpp",
+      "output": "workbench/spikes/ikea-frame/lifecycle/CMakeFiles/frame_phase_plane_check.dir/phase_plane_check.cpp.o"
+    },
+    {
+      "directory": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/clang/frame-material-all-kinds",
+      "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=1 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN4=0 -DSIXDB_TUNE_ZEN5=0 -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-material-all-kinds/workbench/spikes/ikea-frame/encoding -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-material-all-kinds/ikea/include -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-material-all-kinds/orbital/include -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-material-all-kinds=. -ffunction-sections -fdata-sections -march=native -mtune=generic -o workbench/spikes/ikea-frame/lifecycle/CMakeFiles/frame_phase_repair_check.dir/phase_repair_check.cpp.o -c /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-material-all-kinds/workbench/spikes/ikea-frame/lifecycle/phase_repair_check.cpp",
+      "file": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-material-all-kinds/workbench/spikes/ikea-frame/lifecycle/phase_repair_check.cpp",
+      "output": "workbench/spikes/ikea-frame/lifecycle/CMakeFiles/frame_phase_repair_check.dir/phase_repair_check.cpp.o"
+    },
+    {
+      "directory": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/clang/frame-material-all-kinds",
+      "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=1 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN4=0 -DSIXDB_TUNE_ZEN5=0 -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-material-all-kinds/workbench/spikes/ikea-frame/encoding -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-material-all-kinds/ikea/include -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-material-all-kinds=. -ffunction-sections -fdata-sections -march=native -mtune=generic -o workbench/spikes/ikea-frame/lifecycle/CMakeFiles/frame_phase_profile.dir/phase_profile.cpp.o -c /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-material-all-kinds/workbench/spikes/ikea-frame/lifecycle/phase_profile.cpp",
+      "file": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-material-all-kinds/workbench/spikes/ikea-frame/lifecycle/phase_profile.cpp",
+      "output": "workbench/spikes/ikea-frame/lifecycle/CMakeFiles/frame_phase_profile.dir/phase_profile.cpp.o"
+    }
+  ],
+  "seconds": 28.259845234977547
+}

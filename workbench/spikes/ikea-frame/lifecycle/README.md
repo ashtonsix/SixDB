@@ -241,3 +241,10 @@ whole-group re-encode, base/overrides and thaw/reseal under identical traces.
 The [findings and limits](NATIVE.md) distinguish real phase timings from the
 older logical instrument and fixed-basis repair law. These controls are private
 research machinery, not a promoted Frame mutation API.
+
+
+Current findings: [sparse proof, native coalescing and NULL-aware reads](REPAIR.md).
+[Changed-block folding](BLOCK-FOLD.md) retains the cheaper fallback and its
+copy-grain limitations. Sources and hardware conditions differ across these
+cohorts; their paired controls, rather than cross-cohort subtraction, own the
+comparisons.
