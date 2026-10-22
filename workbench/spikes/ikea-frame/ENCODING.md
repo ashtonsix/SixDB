@@ -290,9 +290,14 @@ checkpoint origin) go in a parallel SeriesPack plane so descriptors stay small.
 
 Block statistics are separate planes so they scan contiguously: present count,
 min and max in the working domain (order-preserving, so comparisons are valid
-there), and optionally a sum. Statistics cover all rows including exceptions and
+there). Sums over 256-value blocks are not Frame's: they are stored on the
+parent segment as summaries (**decided**), which Frame feeds through
+`sum_change` on writes and through block encoding. Any finer aggregates, such
+as over 16-value sub-blocks, would stay local to the part; checkpoints are the
+only such aggregate this design needs so far.
+Statistics cover all rows including exceptions and
 overrides, unlike frame-of-reference bounds, which cover only inliers. Writes
-widen min/max immediately and adjust sums through `sum_change`; a write that
+widen min/max immediately; a write that
 could shrink an extreme marks the block's statistics dirty, and readers fall
 back to exact data until compaction refreshes them, as in Calico's fine
 summaries.
@@ -361,8 +366,9 @@ value series are the main Ikea changes this design implies.
    space, keep new values unmapped until a whole-part rebuild) should be
    settled by experiment on real streams rather than chosen up front.
 4. **Statistics in the working domain.** Min/max in offset-binary or float-map
-   order are cheap and order-correct; sums need the logical domain. Which sums
-   does Engine want maintained, and with what float semantics?
+   order are cheap and order-correct. Block sums belong to the parent
+   segment's summaries; whether block min/max also live there, or stay in the
+   part beside the descriptors, is open.
 5. **Predicted blocks and writes.** Every write to a predicted block becomes an
    override. For write-heavy sorted columns, is a cheaper path (rewriting one
    sub-block of 16) worth its complexity?
