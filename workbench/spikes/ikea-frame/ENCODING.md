@@ -350,14 +350,16 @@ value series are the main Ikea changes this design implies.
    Should a routed column keep one override store per group, or one per route?
 2. **How much may blocks differ?** Mixing kinds means a part's encoded-data
    capabilities are the weakest block's, unless kernels dispatch per block.
-   Per-block dispatch for 256 values is cheap for scans but not for point
-   reads. Should the part record which kinds actually occur, so Engine can plan
-   against the part's real mix? Streaming makes the common mix concrete: an
-   encoded prefix plus a plain tail, which a per-group kind summary would show.
-3. **Sorted dictionary growth.** Adding values to a sorted part-wide dictionary
-   at re-encode renumbers codes in groups already encoded. Options: re-encode
-   the whole part's codes, leave gaps in the code space, or let new values stay
-   unmapped (opted-out blocks) until a whole-part rebuild.
+   Ashton's direction: where real divergence matters, Engine records it, since
+   it owns the schema; Ikea supplies composable materials. An encoded/plain
+   bitset over blocks may be all Frame itself needs, and covers the streaming
+   mix (encoded prefix, plain tail).
+3. **Dictionaries under streaming and shifting data.** Adding values to a
+   sorted part-wide dictionary at re-encode renumbers codes in groups already
+   encoded; drifting value distributions make a part-wide dictionary age.
+   Candidate responses (re-encode the part's codes, leave gaps in the code
+   space, keep new values unmapped until a whole-part rebuild) should be
+   settled by experiment on real streams rather than chosen up front.
 4. **Statistics in the working domain.** Min/max in offset-binary or float-map
    order are cheap and order-correct; sums need the logical domain. Which sums
    does Engine want maintained, and with what float semantics?
