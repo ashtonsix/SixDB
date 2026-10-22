@@ -367,6 +367,36 @@ the whole block's width. Delta blocks have no exceptions yet, so a sentinel
 inside a smooth series still pushes that block from delta to patched FOR.
 Delta-with-exceptions is the next arm.
 
+## Dictionary bodies (byte model on the real layout rules)
+
+[`dictionary_model.py`](dictionary_model.py) prices a part-wide dictionary
+(sorted, or ranked by frequency) per 65,536-row part. The dictionary is charged
+as a bit-tight plane of values relative to the part minimum. Code blocks take
+the cheapest of constant, packed, u8-run-end runs and patched, with
+`material.cpp`'s byte rules and 16-byte descriptors. These aren't real
+bodies yet.
+
+| Column | Real bodies today | Sorted dictionary | Frequency dictionary | Dictionary share |
+| --- | ---: | ---: | ---: | ---: |
+| OS | 2.78 | 2.49 | **2.17** | 0.01 |
+| ResolutionWidth | 3.91 | 3.41 | **3.02** | 0.04 |
+| RegionID | 5.37 | 4.29 | **4.22** | 0.15 |
+| URLHash | 59.11 | **51.86** | 51.86 | 36.57 |
+| ConnectTiming | 2.55 | 2.54 | 2.53 | 0.09 |
+| EventTime | **16.88** | 27.57 | 27.67 | 11.78 |
+| UserID | **14.60** | 17.01 | 18.77 | 13.27 |
+| ClientIP | **9.99** | 12.42 | 12.42 | 6.67 |
+| WatchID | **62.50** | 78.50 | 78.50 | 62.00 |
+
+All in bits/value; the last column is the dictionary's own share. **Dictionaries pay on low-cardinality columns (14–23% smaller) and on
+URLHash (12%), and lose badly on high-cardinality ones**, where the
+dictionary alone costs 7–62 bits/value. That supports Ashton's per-block (and
+in practice per-part) opt-out: a part-wide dictionary must be optional. On OS
+and ResolutionWidth, frequency ranking beats sorted codes by about 0.4 bits,
+because frequent values' small codes narrow FOR widths and run values. Sorted
+codes keep order for range predicates, so the choice is again a curated
+option for Engine.
+
 ## Images to hand Engine's witness early
 
 Engine's witness is a selected grouped reduction over parts with different
