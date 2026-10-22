@@ -642,10 +642,11 @@ sum, with no widened scratch) and COUNT(≥ rhs) through SeriesPack filters over
 64-row windows. An operation derives each plane from the column payload and the
 descriptor alone, which is what removes per-block decoder bindings (Ikea LEAD's
 point work found those bindings cost ~240 B per block). The owner operations
-still use bindings in this cut: Codex's access fixture places block bodies
-outside `column::payload`, so moving them waits on a coordinated layout change.
-`catalogue_sum` and `catalogue_count_ge` are measured as separate arms and are
-exact everywhere.
+now read through it too (see
+[Owner operations on the shared catalogue](#owner-operations-on-the-shared-catalogue)).
+`catalogue_sum` and `catalogue_count_ge` remain separate arms: they differ only
+in taking native packet SUM and plane filters on packed blocks, and are exact
+everywhere.
 
 Same image, local VM, medians in µs per 3M-row (ClickBench) or 65,536-row
 (Jena) full scan:
@@ -680,6 +681,95 @@ scan), delta-heavy fields fell from 28–32 µs to 11–15 µs, a 2.2–2.7× ga
 Fields that are mostly FOR are unchanged at 17–20 µs. The plain int16
 control is about 4 µs, so prediction SUM is still about 3× behind plain.
 Exact on every field.
+
+## Owner operations on the shared catalogue
+
+Every owner operation now derives its planes from `c.payload.data() + offset`
+plus descriptor or body metadata through `plane_catalogue`. That covers block
+and mask SUM, narrow SUM, COUNT, `decode_block` and their dictionary variants
+over every kind and coded blocks. Algorithms and exactness are unchanged: only
+where each plane comes from moved. Codex's access fixture now places bodies
+inside `column::payload`, which made this possible. Code at 4fc19831.
+
+**Catalogue entries and read grants** (documented in [`kernels.h`](kernels.h)):
+
+| Entry | Lanes | Grant | Owner uses |
+| --- | --- | --- | --- |
+| `point` | u64 | exact tail | dictionary lookups (block SUM, sorted COUNT's lower_bound, decode) |
+| `range` | u64 | exact tail, arbitrary edges | full residual planes; runs' `d.count` values; exception values (n at the stored W); dictionary planes |
+| `range8/16/32` (new) | u8/u16/u32, null when K exceeds the lane | exact tail | packed narrow SUM; delta weighted SUM |
+| `sum` | native packets | full window: ceil(take/16)·16 occupied rows | `catalogue_sum` on packed blocks only |
+| `count_ge` | filters, 64-row windows | exact tail | `catalogue_count_ge` on packed blocks only |
+
+Exact tail reads only the occupied 8-row tiles of the requested rows (SeriesPack
+dense range: 16-row native windows only inside the requested count, then scalar
+points within a tile). So it is the path for short planes: run values,
+exception planes, dictionaries and packed checkpoints. No owner operation uses
+the full-window `sum` on a short plane. Owner code doesn't read checkpoints.
+
+**`encode_options::bind_decoders`** (default true; driver `--no-bindings`) keeps
+`column::decoders`, `d8`, `d16`, `d32`, `exceptions` and `dictionaries` for the
+point/, filter/ and execution/ consumers that still read them. When false,
+encode builds none of them. The protected-payload check passes, and every driver
+run passes with and without bindings. `sizeof(column)` is 256 B either way. The
+bindings take 232 B per block by sizeof (40 B decoder plus four 48 B optionals);
+encode grows four of the vectors without reserving, so the capacity is
+308 B per block on 11,718 blocks:
+
+| 3M-row column | Payload | Retained, bindings | Retained, `--no-bindings` | Binding share |
+| --- | ---: | ---: | ---: | ---: |
+| OS | 0.86 MB | 4.85 MB | 1.24 MB | 75% |
+| OS, sorted dictionary | 0.75 MB | 5.30 MB | 1.68 MB | 68% |
+| RegionID | 1.83 MB | 6.12 MB | 2.50 MB | 59% |
+| EventTime | 6.14 MB | 10.82 MB | 7.21 MB | 33% |
+| URLHash | 21.98 MB | 29.69 MB | 26.08 MB | 12% |
+| WatchID | 23.25 MB | 36.38 MB | 32.77 MB | 10% |
+
+Retained bytes are the column object plus every vector's capacity. Payload
+capacity also carries growth slack (WatchID 32.8 MB against 23.2 MB used),
+which is a separate trim. Image bytes and bits/value don't change.
+
+**Timings.** The binaries were built from f760ca39 (before) and 4fc19831
+(after). Every configuration ran before, after, then after with
+`--no-bindings`, back to back, all-blocks mask, local VM medians in µs:
+
+| Column, options | encoded SUM | narrow SUM | encoded COUNT |
+| --- | --- | --- | --- |
+| OS | 531 / 521 / 554 | 535 / 532 / 571 | 421 / 418 / 451 |
+| EventTime | 943 / 908 / 894 | 687 / 656 / 641 | 682 / 681 / 685 |
+| URLHash | 1,416 / 1,442 / 1,453 | 1,464 / 1,478 / 1,434 | 810 / 836 / 812 |
+| WatchID | 1,954 / 1,898 / 1,914 | 1,970 / 1,936 / 1,940 | 1,153 / 1,139 / 1,142 |
+| URLHash, sorted | 2,164 / 2,080 / 2,085 | 2,082 / 2,078 / 2,058 | 877 / 854 / 857 |
+| OS, frequency | 761 / 815 / 804 | 771 / 831 / 815 | 900 / 972 / 963 |
+| Jena window 0, 14 fields, packed + delta exceptions (sum of medians) | 330 / 329 / 332 | 304 / 301 / 304 | 621 / 617 / 623 |
+| Jena window 0, none | 182 / 186 / 187 | 170 / 173 / 174 | 679 / 675 / 673 |
+
+Across all 117 configurations (11 ClickBench columns × 3 dictionary modes,
+plus 14 Jena fields × 2 inputs × 3 option sets), the geometric-mean
+after/before ratio is 0.997–1.007 for every owner and catalogue arm. With
+`--no-bindings` it is 1.000–1.012. Single cells move up to ±10% both ways
+(OS frequency +7%, UserID COUNT −30% from one slow before-run). That is
+within this VM's noise, since local timings are noisy (see
+[Measurement and input hygiene](#measurement-and-input-hygiene-workbench-and-codex-review)).
+**Reading through the catalogue costs no measurable speed and drops the
+bindings.** A per-call function-pointer load from a shared table replaces the
+per-block decoder's.
+
+**Caveats.**
+
+- Owner operations now trust the body metadata as written: the exception value
+  width W in patch tails and each dictionary part's width and count. A
+  hand-built column whose payload and descriptors disagree used to be read
+  through whatever decoder it bound. Now it is read at the descriptor's width.
+- The fixtures in point/ still bind decoders and are unaffected. The defaults
+  keep the vectors, so no consumer changes behaviour.
+- To stop needing bindings, consumers replace `c.decoders[b]` with
+  `plane_kernels(d.width)` over `body_of(c, b)` (or `read_plane`). They replace
+  `c.exceptions[b]` with `read_exceptions(patches/delta_patches(c, b))` or a
+  `point` at `p.value_width`, and `c.dictionaries[part]` with
+  `dictionary_at`/`read_dictionary`. Point/'s `compact_image` already
+  releases the vectors. filter/image.cpp, filter/measure.cpp and
+  execution/encoded.cpp still read `decoders` directly.
 
 ## Row order in real bodies
 
