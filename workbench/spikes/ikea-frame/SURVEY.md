@@ -175,16 +175,6 @@ SeriesPack's tile geometry.
    has much less prior art; MorphStore and Vortex cover execution, not
    maintained writes.
 
-## 6. Open questions for the next step
+## 6. Open questions
 
-- What does a matrix cell need to carry for Engine: a yes/no capability, a
-  cost model, a measured cost per platform, or an executable kernel handle?
-- Conversion between Frame representations is now a first-class obligation
-  (Orbital `adopt` requires exact logical equivalence). Calico routed re-fits
-  through a canonical form (n encoders + n decoders, never n² converters);
-  MorphStore converts directly between compressed formats. Which pairs earn a
-  direct converter?
-- Should the patch sideband be keyed per block, per group or per part? Every
-  family pays for its lookup.
-- Is access control a predicate composed like any filter (policy mask ANDed
-  into every read), or a separate enforcement surface inside Frame?
+Collected with the spike's other questions in [QUESTIONS.md](QUESTIONS.md).

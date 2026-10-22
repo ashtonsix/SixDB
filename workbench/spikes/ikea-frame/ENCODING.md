@@ -351,27 +351,4 @@ value series are the main Ikea changes this design implies.
 
 ## Open questions
 
-1. **Override domain under routing and splits.** Overrides hold logical values.
-   Should a routed column keep one override store per group, or one per route?
-2. **How much may blocks differ?** Mixing kinds means a part's encoded-data
-   capabilities are the weakest block's, unless kernels dispatch per block.
-   Ashton's direction: where real divergence matters, Engine records it, since
-   it owns the schema; Ikea supplies composable materials. An encoded/plain
-   bitset over blocks may be all Frame itself needs, and covers the streaming
-   mix (encoded prefix, plain tail).
-3. **Dictionaries under streaming and shifting data.** Adding values to a
-   sorted part-wide dictionary at re-encode renumbers codes in groups already
-   encoded; drifting value distributions make a part-wide dictionary age.
-   Candidate responses (re-encode the part's codes, leave gaps in the code
-   space, keep new values unmapped until a whole-part rebuild) should be
-   settled by experiment on real streams rather than chosen up front.
-4. **Statistics in the working domain.** Min/max in offset-binary or float-map
-   order are cheap and order-correct. Block sums belong to the parent
-   segment's summaries; whether block min/max also live there, or stay in the
-   part beside the descriptors, is open.
-5. **Predicted blocks and writes.** Every write to a predicted block becomes an
-   override. For write-heavy sorted columns, is a cheaper path (rewriting one
-   sub-block of 16) worth its complexity?
-6. **First measurements.** Candidate experiments: override read overhead
-   versus density; exception application fused with SeriesPack reads; FOR versus
-   plain packing at real column widths under SeriesPack's tile geometry.
+Collected with the spike's other questions in [QUESTIONS.md](QUESTIONS.md).

@@ -63,6 +63,8 @@ These are working notes from the project chat (2026-10-22), not settled contract
 - [Data encoding, rev 1](ENCODING.md): proposed pipeline, geometry, exceptions
   versus overrides, write and read paths, and the Ikea primitives each stage
   reuses. The current step; full Frame scope is set aside.
+- [Research questions](QUESTIONS.md): every open experiment and design
+  question, with why it matters and where it came from.
 
 Related routes: [representations and planning](../../notebook/representations-and-planning.md),
 [residual bounds](../../notebook/pfor-bounds.md), [Boundlist](../boundlist/README.md),
