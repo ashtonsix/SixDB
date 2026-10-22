@@ -44,7 +44,7 @@ now uses the select form.
 
 Spike binaries differ only in the three patched NEON headers and compile their
 own SeriesPack objects. `current` is the promoted implementation; [original.patch](original.patch)
-restores the previous source and [bit4.patch](bit4.patch) keeps only change 1.
+restores the previous transpose source and [bit4.patch](bit4.patch) keeps only change 1.
 Both evidence directories predate promotion and label these `baseline`
 (original) and `quad` (current). Cases: 8,192 logical rows, `read` = concrete
 `dense_range`, `read16` = 8,192 random aligned 16-row ranges, `write` =
@@ -120,11 +120,66 @@ and run [run.py](run.py) on the built directory. OrbStack on Apple silicon
 pins a virtual CPU that can move between performance and efficiency cores;
 use its timings only for direction.
 
+## Mixed Local reads
+
+Mixed Local residuals (body bytes plus R residual bits) were transposed in
+integer registers per 16-row packet; the [Neoverse V3
+study](../ikea-neoverse-v3/README.md#seriespack-mixed-local-residual-transposes)
+lost 0.69–0.73× moving that packet to the six-operation vector transpose. The
+promoted change instead gathers **four tiles** for R ≥ 3 in 32-row groups
+(`neon_group::tail`): it loads the 32-bit word that *ends* at each tile's
+residual (or the 64-bit word when R > 4), which never leaves the tile, shifts
+the planes down and shares the quad transpose with dense pure tails. Dense
+reads of widths 9–16 already run in 32-row groups; wider widths use 16-row
+groups and keep the integer path. [intreg.patch](intreg.patch) restores it.
+
+Six alternating rounds, `read` = 8,192-row `dense_range`; speedup of the
+promoted gather over the integer path (median of round medians):
+
+| Case | V2 / c8g | V3 / c9g |
+| --- | ---: | ---: |
+| k11 read | 1.72 | 1.69 |
+| k12 read | 1.26 | 1.33 |
+| k13 read | 1.24 | 1.27 |
+| k15 read | 1.13 | 1.20 |
+
+Every other case (k1–k8, k20–k64 reads, all `read16` and writes) is within
+±1.6% on both hosts ([V2](evidence/mixed-c8g-neoverse-v2/summary.txt),
+[V3](evidence/mixed-c9g-neoverse-v3/summary.txt); label `mixed4`). Text bytes of
+the measured functions shrink 2–4% at k11–k15. The maintained 150-case suite
+([summary](evidence/suite-mixed4-c8g-neoverse-v2/suite-summary.txt)) has
+geomean 1.000 and contains no k9–16 Local bulk read; its one case beyond −3% is
+`ordinary/k64/local/point/bound`, which has no residual and alternates the same
+way in the earlier promotion run. Checks: transpose and maintained SeriesPack
+checks per variant, `ikea_validate` under both ARM tunes and ASan/UBSan
+SeriesPack checks on the patched source ([validation](evidence/validate-mixed4-c8g-neoverse-v2/)).
+
+**Rejected: 32-row groups above 16 bits** ([mixed4w.patch](mixed4w.patch),
+against the pre-promotion source). Moving dense, placed and selected-sum reads
+of widths above 16 to 32-row groups so they reach the gather looked faster on
+OrbStack (k20 1.6×) but lost on Graviton: k20–k63 reads 0.59–0.95×, and the
+suite's headed placed sums k20h8/k31h8/k63h16 0.66–0.90×
+([suite](evidence/suite-mixed4w-c8g-neoverse-v2/suite-summary.txt)).
+
+## Preset follow-up
+
+Does the faster Local transpose change `bulk_arm`? [preset.cpp](preset.cpp)
+times Local against striped, both maintained, for every width `bulk_arm`
+stripes (1–7, 10, 12, 14, 15, 20) on 8,192 dense rows: `read`, `read16` and
+`write` as above, `point` = 8,192 random `get_unchecked`, and `filter` = 128
+complete 64-row less-than windows. Seven randomly interleaved repetitions,
+pinned, on c8g (V2 tune) and c9g (V3 tune); see the
+[summary](evidence/preset-summary.txt) (striped/Local time) and the
+[V2](evidence/preset-c8g-neoverse-v2/) and [V3](evidence/preset-c9g-neoverse-v3/) runs.
+
+**Keep `bulk_arm`.** Stripes still win every bulk read on both hosts
+(0.21–0.57× Local time) and every maintained write (0.35–0.78×). Local keeps
+its advantage for points (striped 1.03–1.93× slower, except k2/k4 on V3) and for
+filters at most widths (1.07–2.25×; k6/k7 favor stripes). Short random 16-row
+reads are mixed by width and host. `compact` already covers point-oriented use.
+
 ## Open questions
 
-- `bulk_arm` selects stripes for pure widths 1–7 because Local needed the
-  transpose. Compare complete consumers again before keeping that preset.
-- Mixed Local *reads* still transpose residuals in integer registers. The
-  rejected vector rewrite used the six-operation form; the select form and a
-  four-tile 32/64-row grouping may change that balance.
+- Mixed Local writes still transpose each 16-row packet with `transpose128`;
+  a four-tile write would need 32-row grouping in the packet writer.
 - An x86 AVX2 `transpose128` remains a separate body.

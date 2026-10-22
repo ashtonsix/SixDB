@@ -17,9 +17,10 @@ parser.add_argument("--filter", default=".*")
 parser.add_argument("--cpu", default="2")
 parser.add_argument("--min-time", default="0.03s")
 parser.add_argument("--output", type=Path)
+parser.add_argument("--binary", default="bench", help="bench or preset_bench")
 args = parser.parse_args()
 variants = args.variants.split(",")
-binary = lambda v: args.build / f"neon_local_transpose_bench_{v}"
+binary = lambda v: args.build / f"neon_local_transpose_{args.binary}_{v}"
 cases = subprocess.run([binary(variants[0]), f"--benchmark_filter={args.filter}",
                         "--benchmark_list_tests=true"], capture_output=True, text=True,
                        check=True).stdout.split()

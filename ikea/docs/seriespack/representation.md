@@ -102,13 +102,16 @@ ISA dispatch and execution grain are independent of these choices.
 
 ARM favors stripes at more widths because Local residuals need a bit transpose
 to become byte values. NEON uses shift and bit-insert stages; dense 64-row
-pure-residual paths take one stage at nibble granularity across four tiles.
+pure-residual reads and writes, and 32-row groups of mixed Local reads, take one
+stage at nibble granularity across four tiles.
 GFNI-enabled x86 can use a vector affine instruction, and BMI2 supplies `PEXT`
 for Local point extraction. Stripes let NEON bulk paths use byte-lane shifts,
 masks and joins directly. The measured presets also account for body
 reconstruction, point updates and tile size; enclosing consumers can favor
-different choices. The presets predate the faster [NEON Local
-transpose](../../../workbench/spikes/neon-local-transpose/README.md).
+different choices. After the faster [NEON Local
+transpose](../../../workbench/spikes/neon-local-transpose/README.md#preset-follow-up),
+stripes still read 1.8–4.7× and write 1.3–2.9× faster at every `bulk_arm` stripe
+width on Neoverse V2/V3, while Local keeps point reads and most filters.
 
 Local's eight-row tiles keep small objects and accesses compact. Stripes amortize
 bit work across more rows, but a short array still occupies its full final tile.

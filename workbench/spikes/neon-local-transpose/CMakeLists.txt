@@ -2,22 +2,27 @@ include("${PROJECT_SOURCE_DIR}/cmake/GoogleBenchmark.cmake")
 
 # `current` is the maintained NEON SeriesPack implementation; every other
 # variant is a patch against it (`original` restores the XOR delta-swap
-# transpose and pair packets, `bit4` keeps only the BIT transpose). The
+# transpose and pair packets, `bit4` keeps only the BIT transpose, `intreg`
+# restores integer-register mixed residual reads, `bitsel` emits BIT for the
+# constant-mask selects and masked ORs of striped tails). `mixed4w.patch` is a
+# rejected record against the pre-`intreg` source and is not built. The
 # patched copies form a build-private overlay searched before ikea/include, and
 # each variant compiles its own SeriesPack library objects: sharing one library
 # would let the linker keep a single copy of each inline template instantiation.
 set(ikea_dir "${PROJECT_SOURCE_DIR}/ikea")
-set(neon_headers read.h groups.h write.h)
+set(neon_headers detail/native/neon/read.h detail/native/neon/groups.h
+  detail/native/neon/write.h detail/dense_read.h detail/placed_read.h author/expression.h)
 find_program(NEON_LOCAL_TRANSPOSE_PATCH patch REQUIRED)
-set(variants current bit4 original)
+set(variants current bit4 original intreg bitsel)
 foreach(variant IN LISTS variants)
   set(overlay "${CMAKE_CURRENT_BINARY_DIR}/overlay-${variant}")
   set(staging "${CMAKE_CURRENT_BINARY_DIR}/staging-${variant}")
   set(neon_dir "ikea/seriespack/detail/native/neon")
   file(REMOVE_RECURSE "${staging}")
-  file(MAKE_DIRECTORY "${staging}/${neon_dir}" "${overlay}/${neon_dir}")
+  file(MAKE_DIRECTORY "${staging}/${neon_dir}" "${overlay}/${neon_dir}"
+    "${staging}/ikea/seriespack/author" "${overlay}/ikea/seriespack/author")
   foreach(header IN LISTS neon_headers)
-    set(path "ikea/seriespack/detail/native/neon/${header}")
+    set(path "ikea/seriespack/${header}")
     file(COPY_FILE "${ikea_dir}/include/${path}" "${staging}/${path}")
     set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS "${ikea_dir}/include/${path}")
   endforeach()
@@ -32,7 +37,7 @@ foreach(variant IN LISTS variants)
   endif()
   # Copy only changed headers, so reconfiguring does not rebuild every variant.
   foreach(header IN LISTS neon_headers)
-    set(path "ikea/seriespack/detail/native/neon/${header}")
+    set(path "ikea/seriespack/${header}")
     file(COPY_FILE "${staging}/${path}" "${overlay}/${path}" ONLY_IF_DIFFERENT)
   endforeach()
 
@@ -71,6 +76,13 @@ foreach(variant IN LISTS variants)
   target_link_libraries(neon_local_transpose_seriespack_check_${variant} PRIVATE
     neon_local_transpose_sp_full_${variant})
 
+  # Preset follow-up: Local versus striped (preset.sh on a worker, preset_summary.py
+  # on its results); with run.py --binary also striped kernels across variants.
+  add_executable(neon_local_transpose_preset_bench_${variant} EXCLUDE_FROM_ALL preset.cpp)
+  sixdb_target(neon_local_transpose_preset_bench_${variant})
+  target_link_libraries(neon_local_transpose_preset_bench_${variant} PRIVATE
+    neon_local_transpose_sp_bench_${variant} benchmark::benchmark)
+
   add_executable(neon_local_transpose_check_${variant} EXCLUDE_FROM_ALL check.cpp)
   sixdb_target(neon_local_transpose_check_${variant})
   target_compile_definitions(neon_local_transpose_check_${variant} PRIVATE
@@ -78,3 +90,4 @@ foreach(variant IN LISTS variants)
   target_link_libraries(neon_local_transpose_check_${variant} PRIVATE
     neon_local_transpose_sp_bench_${variant})
 endforeach()
+

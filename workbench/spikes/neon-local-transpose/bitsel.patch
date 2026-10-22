@@ -1,0 +1,81 @@
+--- a/ikea/seriespack/detail/native/neon/read.h
++++ b/ikea/seriespack/detail/native/neon/read.h
+@@ -94,25 +94,29 @@
+             const unsigned d = static_cast<unsigned>(descriptors >> (g * 8));
+             const auto a = stripe((d >> 5) & 3);
+             if (d & 8)
+-                return vorrq_u8(
+-                    vshrq_n_u8(a, 6),
+-                    vandq_u8(vshlq_u8(stripe(1), vdupq_n_s8(-int(4 + (g >> 2)))), vdupq_n_u8(4)));
++                return vreinterpretq_u8_u64(insert_bits(
++                    vreinterpretq_u64_u8(vshrq_n_u8(a, 6)),
++                    vreinterpretq_u64_u8(vshlq_u8(stripe(1), vdupq_n_s8(-int(4 + (g >> 2))))),
++                    vreinterpretq_u64_u8(vdupq_n_u8(4))));
+             return vandq_u8(vshlq_u8(a, vdupq_n_s8(-int(d & 7))), vdupq_n_u8(7));
+         } else if constexpr (R == 6) {
+             const unsigned edge = g & 2;
+             const auto a = stripe(edge);
+             if (((g + 1) & 2) == 0)
+                 return vandq_u8(a, vdupq_n_u8(63));
+-            return vorrq_u8(
+-                vandq_u8(vshrq_n_u8(a, 2), vdupq_n_u8(48)),
+-                vandq_u8(vshlq_u8(stripe(1), vdupq_n_s8(-int(edge * 2))), vdupq_n_u8(15)));
++            return vreinterpretq_u8_u64(
++                insert_bits(vreinterpretq_u64_u8(vshrq_n_u8(a, 2)),
++                            vreinterpretq_u64_u8(vshlq_u8(stripe(1), vdupq_n_s8(-int(edge * 2)))),
++                            vreinterpretq_u64_u8(vdupq_n_u8(15))));
+         } else {
+             const unsigned start = g * R, s = start / 8, shift = start % 8;
+             const auto a = stripe(s);
+             if (shift <= 8 - R)
+                 return vandq_u8(vshlq_u8(a, vdupq_n_s8(-int(shift))), vdupq_n_u8((1u << R) - 1));
+             const auto low = vdupq_n_u8((1u << (shift + R - 8)) - 1);
+-            return vbslq_u8(low, stripe(s + 1), vshrq_n_u8(a, 8 - R));
++            return vreinterpretq_u8_u64(insert_bits(vreinterpretq_u64_u8(vshrq_n_u8(a, 8 - R)),
++                                                    vreinterpretq_u64_u8(stripe(s + 1)),
++                                                    vreinterpretq_u64_u8(low)));
+         }
+     }
+ }
+--- a/ikea/seriespack/detail/native/neon/write.h
++++ b/ikea/seriespack/detail/native/neon/write.h
+@@ -207,7 +207,9 @@
+             detail::tail_fragments<R>(lane / 32, [&](unsigned s, unsigned shift, unsigned mask) {
+                 auto* out = tile + detail::stripe_offset<F>(s) + lane % 32;
+                 const auto changed = vshlq_u8(low, vdupq_n_s8(shift));
+-                vst1q_u8(out, vbslq_u8(vdupq_n_u8(mask), changed, vld1q_u8(out)));
++                vst1q_u8(out, vreinterpretq_u8_u64(insert_bits(vreinterpretq_u64_u8(vld1q_u8(out)),
++                                                               vreinterpretq_u64_u8(changed),
++                                                               vreinterpretq_u64_u8(vdupq_n_u8(mask)))));
+             });
+     }
+     detail::each<F::heads / 8>([&](auto p) {
+@@ -303,8 +305,11 @@
+     }
+     template <unsigned Group> [[gnu::always_inline]] void add(values<F::tail> value) {
+         detail::tail_fragments<F::tail>(Group, [&](unsigned s, unsigned shift, unsigned mask) {
+-            packed[s] = vorrq_u8(
+-                packed[s], vandq_u8(vshlq_u8(value.v[0], vdupq_n_s8(shift)), vdupq_n_u8(mask)));
++            // Fields start clear, so inserting under the field mask is an OR.
++            packed[s] = vreinterpretq_u8_u64(
++                insert_bits(vreinterpretq_u64_u8(packed[s]),
++                            vreinterpretq_u64_u8(vshlq_u8(value.v[0], vdupq_n_s8(shift))),
++                            vreinterpretq_u64_u8(vdupq_n_u8(mask))));
+         });
+     }
+     [[gnu::always_inline]] void store(std::uint8_t* tile, unsigned half) const {
+@@ -345,9 +350,12 @@
+                 detail::each<groups>([&](auto g) {
+                     detail::tail_fragments<F::tail>(g, [&](unsigned field, unsigned shift,
+                                                            unsigned mask) {
++                        // Fields start clear: inserting under the mask is an OR.
+                         if (field == s)
+-                            packed = vorrq_u8(packed, vandq_u8(vshlq_u8(low[g], vdupq_n_s8(shift)),
+-                                                               vdupq_n_u8(mask)));
++                            packed = vreinterpretq_u8_u64(insert_bits(
++                                vreinterpretq_u64_u8(packed),
++                                vreinterpretq_u64_u8(vshlq_u8(low[g], vdupq_n_s8(shift))),
++                                vreinterpretq_u64_u8(vdupq_n_u8(mask))));
+                     });
+                 });
+                 vst1q_u8(tile + detail::stripe_offset<F>(s) + half * 16, packed);

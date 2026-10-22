@@ -81,15 +81,24 @@ template <unsigned K> void register_width() {
     benchmark::RegisterBenchmark((name + "/write").c_str(), transpose_case<K, 2>);
 }
 int main(int argc, char** argv) {
-    // 1..7: pure residual tails. 9..31 mixed: body plus vector-transposed
-    // residual on write, integer-register residual on read. 8/16/64: no residual.
+    // 1..7: pure residual tails. 9..63 mixed: body plus vector-transposed
+    // residual on write; the read residual path depends on the variant.
+    // 8/16/24/32/64: no residual.
     sp::detail::each<7>([](auto k) { register_width<k + 1>(); });
     register_width<8>();
     register_width<11>();
     register_width<12>();
+    register_width<13>();
+    register_width<15>();
     register_width<20>();
+    register_width<23>();
+    register_width<24>();
     register_width<28>();
     register_width<31>();
+    register_width<32>();
+    register_width<36>();
+    register_width<47>();
+    register_width<63>();
     register_width<64>();
     benchmark::Initialize(&argc, argv);
     benchmark::RunSpecifiedBenchmarks();

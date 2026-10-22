@@ -97,6 +97,52 @@ template <class F, bool Dense, unsigned N>
                 out.block[q * 2 + 1].v[0] = vreinterpretq_u8_u32(vzip2q_u32(a, b));
             });
         return out;
+    } else if constexpr (N % 32 == 0 && F::storage == geometry::local && F::body != 0 && R >= 3) {
+        // Mixed residuals sit after each tile's body, so gather four tiles by
+        // loading the word that ends at each residual (it never leaves the tile)
+        // into a 32-bit lane, or a 64-bit lane when R > 4, then share the
+        // quad transpose with dense pure tails.
+        __builtin_assume(i % 16 == 0);
+        const std::size_t step = Dense ? F::tile_bytes : stride;
+        values<R, N> out;
+        detail::each<N / 32>([&](auto quad) {
+            constexpr unsigned q = decltype(quad)::value;
+            const auto* p = base + (i / 8 + q * 4) * step + 8 * F::body;
+            uint8x16_t low, high;
+            if constexpr (R <= 4) {
+                auto x = vdupq_n_u32(0);
+                detail::each<4>([&](auto t) {
+                    x = vsetq_lane_u32(static_cast<std::uint32_t>(detail::load<4>(p + t * step + R - 4)),
+                                       x, t);
+                });
+                if constexpr (R < 4)
+                    x = vshrq_n_u32(x, 8 * (4 - R));
+                low = vreinterpretq_u8_u64(neon::transpose_quads(vreinterpretq_u64_u32(x)));
+            } else {
+                auto word = [&](unsigned t) { return detail::load<8>(p + t * step + R - 8); };
+                const auto a = vshrq_n_u64(vcombine_u64(vcreate_u64(word(0)), vcreate_u64(word(1))),
+                                           8 * (8 - R));
+                const auto b = vshrq_n_u64(vcombine_u64(vcreate_u64(word(2)), vcreate_u64(word(3))),
+                                           8 * (8 - R));
+                const auto x = vreinterpretq_u32_u64(a), y = vreinterpretq_u32_u64(b);
+                low = vreinterpretq_u8_u64(
+                    neon::transpose_quads(vreinterpretq_u64_u32(vuzp1q_u32(x, y))));
+                high = vreinterpretq_u8_u64(
+                    neon::transpose_quads(vreinterpretq_u64_u32(vuzp2q_u32(x, y))));
+            }
+            uint8x16_t rows03, rows47;
+            if constexpr (R > 4) {
+                rows03 = vsliq_n_u8(low, high, 4);
+                rows47 = vsriq_n_u8(high, low, 4);
+            } else {
+                rows03 = vandq_u8(low, vdupq_n_u8(15));
+                rows47 = vshrq_n_u8(low, 4);
+            }
+            const auto a = vreinterpretq_u32_u8(rows03), b = vreinterpretq_u32_u8(rows47);
+            out.block[q * 2].v[0] = vreinterpretq_u8_u32(vzip1q_u32(a, b));
+            out.block[q * 2 + 1].v[0] = vreinterpretq_u8_u32(vzip2q_u32(a, b));
+        });
+        return out;
     } else
         return packets<R, N>([&](unsigned offset) {
             return neon::values<R>{{neon::tail16<F, Dense>(base, stride, i + offset)}};

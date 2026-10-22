@@ -1,0 +1,6 @@
+cases 150; speedup candidate over current: geomean 1.000, median 1.000, min 0.915, max 1.034
+faster >3%: 3; slower >3%: 1
+  0.915       6289.1 ->      6872.6 ns  ordinary/k64/local/point/bound
+  1.031      22219.6 ->     21552.3 ns  placed/k63h16/separated/partial/mutation-materialized
+  1.034      17773.6 ->     17197.1 ns  placed/k31h8/interleaved/partial/mutation-materialized
+  1.034      16337.8 ->     15798.8 ns  placed/k31h8/separated/partial/mutation-materialized
