@@ -1,0 +1,54 @@
+{
+  "source_capture": "36ee12021a5732d6d1e2ba4d4b9e4e4c8a7d3fc2dc70ae5db27652e27330325d",
+  "binary_sha256": "e82a6338b5d78bfd8ff86daa8b3efbcdb65e9d2f953d7eb8cfe7438bfda8f379",
+  "command": [
+    "taskset",
+    "-c",
+    "7",
+    "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/clang/frame-consumers-stable/workbench/spikes/ikea-frame/lifecycle/frame_delta_repair_check"
+  ],
+  "result": "passed",
+  "fitting_replacements": 32640,
+  "widths": [
+    1,
+    8,
+    13,
+    24,
+    32,
+    56,
+    63,
+    64
+  ],
+  "checkpoint_modes": [
+    "native16",
+    "packed16",
+    "native64",
+    "none"
+  ],
+  "shapes": [
+    "monotone",
+    "zigzag"
+  ],
+  "logical_checks": [
+    "all points",
+    "exact SUM",
+    "COUNT at CP boundaries"
+  ],
+  "physical_checks": [
+    "unaligned body",
+    "poisoned neighbours",
+    "resolved native SeriesPack source effects",
+    "no byte/effect changes on refusal",
+    "none with protected column",
+    "selected positive fault"
+  ],
+  "limits": "mechanism/correctness only; no write timings, acquisition, publication, dictionary/exception/anchor/evidence maintenance; f760 COUNT scan not d54 monotone search",
+  "compile_commands": [
+    {
+      "directory": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/clang/frame-consumers-stable",
+      "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=1 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN4=0 -DSIXDB_TUNE_ZEN5=0 -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/workbench/spikes/ikea-frame/encoding -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/ikea/include -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals=. -ffunction-sections -fdata-sections -march=native -mtune=generic -gline-tables-only -o workbench/spikes/ikea-frame/lifecycle/CMakeFiles/frame_delta_repair_check.dir/delta_repair_check.cpp.o -c /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/workbench/spikes/ikea-frame/lifecycle/delta_repair_check.cpp",
+      "file": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/workbench/spikes/ikea-frame/lifecycle/delta_repair_check.cpp",
+      "output": "workbench/spikes/ikea-frame/lifecycle/CMakeFiles/frame_delta_repair_check.dir/delta_repair_check.cpp.o"
+    }
+  ]
+}

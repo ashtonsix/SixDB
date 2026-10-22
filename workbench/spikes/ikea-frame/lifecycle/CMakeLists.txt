@@ -1,0 +1,3 @@
+add_executable(frame_delta_repair_check delta_repair_check.cpp)
+sixdb_target(frame_delta_repair_check)
+target_link_libraries(frame_delta_repair_check PRIVATE frame_encoding_material)

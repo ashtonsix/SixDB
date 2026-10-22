@@ -178,6 +178,51 @@ These are semantic checks, not performance measurements or validation of a
 physical retained-reader implementation. The emitted snapshots can feed the
 same actual hash-output adapter as Engine's static witness.
 
+## Fitting delta replacement before folding
+
+The existing delta body stores `s_i = x_i - x_(i-1) - rbase` and checkpoints of
+the stored residual prefix. For a fixed anchor and `rbase`, changing an interior
+logical value by `d` repairs `s_j += d` and `s_(j+1) -= d`. The prefix correction
+cancels after row j; only a checkpoint exactly through j needs changing. The
+last row needs one residual and no checkpoint. This is a candidate cheap write
+case before paying for overrides, thawing or re-encoding.
+
+The prior [aggregate-maintenance closeout](../../aggregate-maintenance/CONCLUSIONS.md)
+warns that fewer adjustments do not establish cheaper complete work, and
+[StreamPack's lifecycle findings](../../streampack/RECOMMENDATION.md#what-the-whole-spike-taught-us)
+show that publication and cleaning can dominate isolated writers. This bounded
+experiment therefore checks the physical repair law first; it does not time a
+private setter and claim a transactional write win.
+
+`delta_repair.h` uses actual typed SeriesPack mutation and resolves its source
+journals before the borrowed views expire. Both new residuals must fit before
+any store. Logical and physical locality differ: packed setters can store
+preserved neighbours, so the caller must isolate the complete issued-store
+envelope rather than infer safety from the two logical rows. The original
+logical SUM change is `d`, even though the two residual adjustments cancel.
+
+`frame_delta_repair_check` exercises widths 1/8/13/24/32/56/63/64, all four
+checkpoint modes, monotone and zigzag inputs, every interior/last position and inverse edits. It compares
+all points, exact SUM and COUNT to originals; checks reported byte coverage,
+checkpoint locality and refusal without mutation; and protects a coarse-skipped
+column, with an active positive control that must fault. The packed-CP and wide
+wrapping-prefix cases use the existing material's exact geometry. All 32,640
+fitting edits pass on the frozen f760 owner; its COUNT uses the original scan.
+The newer monotone-COUNT implementation requires its own coherent source check.
+
+Anchor changes, exceptions, dictionaries and new residual widths are explicitly
+refused here. With exception gaps, multiple checkpoint positions can lie between
+ordinary neighbours, so the one-checkpoint result must not be generalised.
+Private writable-body acquisition, locks, retained-reader publication, actual
+write timing and the frequency of fitting repairs on real traces remain to be
+priced by the lifecycle experiment.
+Any mutable-base logical heads, bounds or summaries also need repair or valid
+invalidation. Two residual changes do not remove that separate evidence work.
+The [native check and identities](evidence/delta-repair-local/identity.json) and
+[verified recovery](evidence/delta-repair-local/artifact.json) retain this
+mechanism result. Its stack/result plumbing is a correctness instrument, not a
+selected hot writer interface or performance baseline.
+
 That adapter was also checked over all 13 initial snapshots: eight queries per
 snapshot agree with the logical oracle through each of the two hash programs
 (208 query/program comparisons). This checks the consumer handoff over changing

@@ -123,6 +123,12 @@ connects real encoded planes to current native Orbital ownership and retained
 readers. Extending that witness across borrowed body kinds/dictionaries and
 pricing physical lifecycle policies remain active work.
 
+The [first native delta repair](lifecycle/README.md#fitting-delta-replacement-before-folding)
+checks a narrower useful write law: a fitting interior change can repair two
+residuals and at most one checkpoint, with actual SeriesPack damage coverage.
+It does not yet price acquisition, evidence maintenance or publication; the
+physical phase comparison must include those costs.
+
 The [review](REVIEW.md) is source-based architectural judgement and arithmetic
 reasoning. New corpus observations, model checks and native timings belong to
 their respective instruments and must keep those labels. A logical oracle or
