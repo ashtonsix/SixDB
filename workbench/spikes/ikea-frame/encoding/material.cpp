@@ -50,12 +50,13 @@ column encode(std::span<const u64> values, encode_options options) {
     c.rows = values.size() / block_rows * block_rows;
     const auto &layout = run_layout();
     std::vector<u64> scratch(block_rows);
-    std::vector<std::pair<std::size_t, std::size_t>> planes;  // (offset, block)
+    std::vector<unsigned> full_widths;  // per block: width of max - min
     for (std::size_t b = 0; b * block_rows < c.rows; ++b) {
         const auto block = values.subspan(b * block_rows, block_rows);
         const auto [lo, hi] = std::minmax_element(block.begin(), block.end());
         descriptor d{*lo, static_cast<std::uint32_t>(c.payload.size()), 0, kind::constant, 0};
         c.runs.emplace_back();
+        full_widths.push_back(width_of(*hi - *lo));
         if (*lo == *hi) {
             c.blocks.push_back(d);
             continue;
@@ -86,12 +87,69 @@ column encode(std::span<const u64> values, encode_options options) {
         const unsigned dk = delta_ok ? std::max(1u, width_of(static_cast<u64>(dmax - dmin))) : 64;
         const std::size_t checkpoint_bytes = dk + 8 <= 32 ? 4 : 8;
         const std::size_t delta_cost = plane_bytes(dk, block_rows) + 8 + checkpoint_cost(delta_checkpoints, dk);
+        // Patched candidate: the narrowest window of 256 - e sorted values for
+        // e in {2, 8, 32}; values outside base + [0, 2^K) become exceptions.
+        std::vector<u64> sorted(block.begin(), block.end());
+        std::sort(sorted.begin(), sorted.end());
+        const unsigned full_width = k;
+        std::size_t patched_cost = SIZE_MAX;
+        u64 patched_base = 0;
+        unsigned patched_k = 0;
+        for (unsigned e : {2u, 8u, 32u}) {
+            const std::size_t keep = block_rows - e;
+            u64 best_span = UINT64_MAX, best_base = 0;
+            for (std::size_t s = 0; s + keep <= block_rows; ++s)
+                if (sorted[s + keep - 1] - sorted[s] < best_span) {
+                    best_span = sorted[s + keep - 1] - sorted[s];
+                    best_base = sorted[s];
+                }
+            const unsigned pk = std::max(1u, width_of(best_span));
+            if (pk > 56 || pk >= k)
+                continue;
+            const u64 limit = pk == 64 ? UINT64_MAX : (u64{1} << pk) - 1;
+            std::size_t n = 0;
+            for (u64 v : block)
+                n += v < best_base || v - best_base > limit;
+            const std::size_t cost = plane_bytes(pk, block_rows) + 8 + 1 + n +
+                                     plane_bytes(full_width, n);
+            if (n && cost < patched_cost) {
+                patched_cost = cost;
+                patched_base = best_base;
+                patched_k = pk;
+            }
+        }
         const std::size_t runs_cost =
             plane_bytes(k, run_values.size()) +
             (compact_runs ? layout.directory_bytes() + layout.control_bytes() +
                                 layout.lengths_bytes(static_cast<unsigned>(run_sizes.size()))
                           : run_sizes.size());
-        if (delta_ok && delta_cost < std::min(packed_cost, runs_cost)) {
+        if (patched_cost < std::min({packed_cost, runs_cost, delta_ok ? delta_cost : SIZE_MAX})) {
+            d.type = kind::patched;
+            d.base = patched_base;
+            d.count = block_rows;
+            d.width = static_cast<std::uint8_t>(patched_k);
+            const u64 limit = (u64{1} << patched_k) - 1;
+            std::vector<std::uint8_t> positions;
+            std::vector<u64> exceptional;
+            for (std::size_t i = 0; i < block_rows; ++i) {
+                const u64 v = block[i];
+                if (v < patched_base || v - patched_base > limit) {
+                    positions.push_back(static_cast<std::uint8_t>(i));
+                    exceptional.push_back(v - *lo);
+                    scratch[i] = 0;
+                } else {
+                    scratch[i] = v - patched_base;
+                }
+            }
+            const std::size_t plane = plane_bytes(patched_k, block_rows);
+            c.payload.resize(c.payload.size() + patched_cost);
+            std::uint8_t *at = c.payload.data() + d.offset;
+            pack(patched_k, scratch, at);
+            std::memcpy(at + plane, &*lo, 8);
+            at[plane + 8] = static_cast<std::uint8_t>(positions.size());
+            std::memcpy(at + plane + 9, positions.data(), positions.size());
+            pack(full_width, exceptional, at + plane + 9 + positions.size());
+        } else if (delta_ok && delta_cost < std::min(packed_cost, runs_cost)) {
             d.type = kind::delta;
             d.base = block[0];
             d.count = block_rows;
@@ -179,6 +237,7 @@ column encode(std::span<const u64> values, encode_options options) {
         c.d8.emplace_back();
         c.d16.emplace_back();
         c.d32.emplace_back();
+        c.exceptions.emplace_back();
         if (d.type == kind::constant) {
             c.decoders.emplace_back(nullptr, 0, nullptr, nullptr, nullptr);
             continue;
@@ -191,6 +250,20 @@ column encode(std::span<const u64> values, encode_options options) {
         if (!decoder)
             std::abort();
         c.decoders.push_back(*decoder);
+        if (d.type == kind::patched) {
+            // Exception values sit at the block's full width, after the
+            // positions; recover that width from the block's own extremes.
+            const std::size_t b = c.decoders.size() - 1;
+            const auto p = patches(c, b);
+            const unsigned ew = full_widths[b];
+            auto exc = sp::bind_decoder<u64>(sp::dense_input{
+                ew, sp::geometry::local,
+                std::span<const std::uint8_t>(p.values, plane_bytes(ew, p.n)), p.n});
+            if (!exc)
+                std::abort();
+            c.exceptions.back() = *exc;
+            continue;  // patched sums use the u64 decoder
+        }
         if (d.width <= 8)
             c.d8.back() = *sp::bind_decoder<std::uint8_t>(input);
         else if (d.width <= 16)
@@ -212,6 +285,17 @@ void decode_block(const column &c, std::size_t b, u64 *out) {
         for (std::size_t i = 0; i < block_rows; ++i)
             out[i] += d.base;
         return;
+    case kind::patched: {
+        c.decoders[b].read_unchecked(0, block_rows, out);
+        for (std::size_t i = 0; i < block_rows; ++i)
+            out[i] += d.base;
+        const auto p = patches(c, b);
+        alignas(64) u64 exc[block_rows];
+        c.exceptions[b]->read_unchecked(0, p.n, exc);
+        for (unsigned e = 0; e < p.n; ++e)
+            out[p.positions[e]] = p.lo + exc[e];
+        return;
+    }
     case kind::delta: {
         c.decoders[b].read_unchecked(0, block_rows, out);
         i64 rbase;

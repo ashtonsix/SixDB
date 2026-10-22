@@ -343,6 +343,29 @@ exception test).
   The exporter drops the partial tail explicitly and records
   `dropped_tail_rows` (192 for the 3M-row ClickBench slice).
 
+## Exceptions: patched frame-of-reference blocks
+
+A **patched** kind (separate from packed, so whole-block threshold shortcuts
+stay correct) keeps residuals over a base at width K, with 0 in exception
+slots. After the plane come the block minimum (u64), the exception count (u8),
+u8 positions and exception values relative to the minimum as a SeriesPack
+plane at the block's full width. The encoder tries the narrowest window of
+256 − e sorted values for e ∈ {2, 8, 32}. SUM, COUNT and `decode_block` are
+exact against the plain control on every column.
+
+| Input | Before (bits/row or bits/value) | With patched blocks | Patched block share |
+| --- | ---: | ---: | ---: |
+| Jena windows, 14 fields, packed checkpoints | 139.2 / 138.5 / 140.1 | 138.9 / 138.0 / 139.7 | ~10% |
+| Jena fault block, `wv` and `max.wv` (−9999.00 sentinels) | ~20.5 (sentinels set the width) | 12.3 and 13.3 | the block |
+| ClickBench, 11 columns | 179.3 | 179.1 | RegionID, ConnectTiming |
+
+**Exceptions are insurance, not a population win, on these inputs.** They
+take about 10% of Jena blocks but save only 0.3% of bytes. On the fault block
+they cut the sentinel fields by ~40%, because without them two sentinels set
+the whole block's width. Delta blocks have no exceptions yet, so a sentinel
+inside a smooth series still pushes that block from delta to patched FOR.
+Delta-with-exceptions is the next arm.
+
 ## Images to hand Engine's witness early
 
 Engine's witness is a selected grouped reduction over parts with different

@@ -39,7 +39,20 @@ constexpr std::size_t block_rows = 256;
 // (s_0 = 0) as a SeriesPack plane, then rbase (i64), then 15 checkpoints of the
 // cumulative stored residual at rows 16, 32, ..., 240 (u32 when K + 8 <= 32,
 // else u64). Checkpoints serve point reads; SUM and COUNT here don't need them.
-enum class kind : std::uint8_t { constant, runs, packed, delta };
+// patched: frame of reference with exceptions. The plane holds residuals over
+// d.base at width K with 0 in exception slots; after it come the block minimum
+// lo (u64), the exception count n (u8), n row positions (u8) and n exception
+// values relative to lo as a SeriesPack plane at the block's full width.
+enum class kind : std::uint8_t { constant, runs, packed, delta, patched };
+
+// Exception layout inside a patched block's payload.
+struct patch_view {
+    u64 lo;
+    unsigned n;
+    const std::uint8_t *positions;
+    unsigned value_width;
+    const std::uint8_t *values;
+};
 using i128 = __int128;
 
 // The per-block descriptor as stored; its size is charged to every block.
@@ -130,6 +143,7 @@ struct column {
     std::vector<std::optional<sp::decoder<std::uint8_t>>> d8;
     std::vector<std::optional<sp::decoder<std::uint16_t>>> d16;
     std::vector<std::optional<sp::decoder<std::uint32_t>>> d32;
+    std::vector<std::optional<sp::decoder<u64>>> exceptions;  // patched blocks only
     std::size_t rows = 0;
     std::size_t descriptor_bytes() const { return blocks.size() * sizeof(descriptor); }
     std::size_t run_geometry_bytes() const {
@@ -142,6 +156,18 @@ struct column {
 };
 
 column encode(std::span<const u64> values, encode_options options = {});
+
+inline patch_view patches(const column &c, std::size_t b) {
+    const auto &d = c.blocks[b];
+    const std::uint8_t *at = c.payload.data() + d.offset + plane_bytes(d.width, block_rows);
+    patch_view p;
+    std::memcpy(&p.lo, at, 8);
+    p.n = at[8];
+    p.positions = at + 9;
+    p.values = at + 9 + p.n;
+    p.value_width = 0;
+    return p;
+}
 
 // Visit each run's (rank, size) through Boundlist range over the chosen body.
 template <class F> void each_run(const column &c, std::size_t b, F &&visit) {
@@ -223,6 +249,19 @@ inline u128 block_sum(const column &c, std::size_t b) {
         }
         return total + static_cast<u128>(d.base) * block_rows;
     }
+    case kind::patched: {
+        c.decoders[b].read_unchecked(0, block_rows, buffer);
+        u64 residuals = 0;
+        for (std::size_t i = 0; i < block_rows; ++i)
+            residuals += buffer[i];  // K <= 56 for patched blocks
+        const auto p = patches(c, b);
+        alignas(64) u64 exc[block_rows];
+        c.exceptions[b]->read_unchecked(0, p.n, exc);
+        total = static_cast<u128>(d.base) * (block_rows - p.n) + residuals;
+        for (unsigned e = 0; e < p.n; ++e)
+            total += static_cast<u128>(p.lo) + exc[e];
+        return total;
+    }
     case kind::delta: {
         // sum x_i = 256 u0 + rbase * 32640 + sum_j (256 - j) s_j  (s_0 = 0):
         // a weighted reduction of the narrow residuals, no prefix decode.
@@ -298,7 +337,7 @@ inline u64 encoded_count_ge(const column &c, const block_mask &mask, u64 thresho
     for_each_block(mask, [&](std::size_t b) {
         const auto &d = c.blocks[b];
         // Constant, runs and packed bases are block minima; a delta anchor isn't.
-        if (d.type != kind::delta && d.base >= threshold) {
+        if (d.type != kind::delta && d.type != kind::patched && d.base >= threshold) {
             total += block_rows;
             return;
         }
@@ -315,6 +354,28 @@ inline u64 encoded_count_ge(const column &c, const block_mask &mask, u64 thresho
                 x += static_cast<u64>(rbase) + buffer[i];
                 total += x >= threshold;
             }
+            break;
+        }
+        case kind::patched: {
+            // Exceptions can lie below the base, so no whole-block shortcut.
+            const auto p = patches(c, b);
+            alignas(64) u64 exc[block_rows];
+            c.exceptions[b]->read_unchecked(0, p.n, exc);
+            for (unsigned e = 0; e < p.n; ++e)
+                total += p.lo + exc[e] >= threshold;
+            if (d.base >= threshold) {
+                total += block_rows - p.n;
+                return;
+            }
+            const u64 rhs = threshold - d.base;
+            if (d.width < 64 && rhs >> d.width)
+                return;
+            c.decoders[b].read_unchecked(0, block_rows, buffer);
+            u64 inliers = 0;
+            for (std::size_t i = 0; i < block_rows; ++i)
+                inliers += buffer[i] >= rhs;
+            // Exception slots hold residual 0, which counts only if rhs == 0.
+            total += inliers - (rhs == 0 ? p.n : 0);
             break;
         }
         case kind::packed: {

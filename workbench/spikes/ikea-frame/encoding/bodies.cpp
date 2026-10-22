@@ -115,15 +115,15 @@ void run(const char *name, std::span<const u64> values, u64 lo, u64 threshold,
             }
         }
     }
-    std::size_t counts[4] = {};
+    std::size_t counts[5] = {};
     for (const auto &d : c.blocks)
         ++counts[static_cast<int>(d.type)];
     const std::size_t total_bytes = c.descriptor_bytes() + c.payload.size() + c.run_geometry_bytes();
     std::printf("{\"column\":\"%s\",\"delta_checkpoints\":\"%s\",\"runs_body\":\"%s\",\"rows\":%zu,\"blocks\":%zu,\"constant\":%zu,\"runs\":%zu,"
-                "\"packed\":%zu,\"delta\":%zu,\"descriptor_bytes\":%zu,\"payload_bytes\":%zu,"
+                "\"packed\":%zu,\"delta\":%zu,\"patched\":%zu,\"descriptor_bytes\":%zu,\"payload_bytes\":%zu,"
                 "\"run_geometry_bytes\":%zu,\"bits_per_value\":%.3f,\"plain_bytes_per_value\":%zu",
                 name, checkpoint_name(c.options.delta_checkpoints),
-                c.options.compact_runs ? "boundlist-compact" : "u8-end-projection", c.rows, c.blocks.size(), counts[0], counts[1], counts[2], counts[3],
+                c.options.compact_runs ? "boundlist-compact" : "u8-end-projection", c.rows, c.blocks.size(), counts[0], counts[1], counts[2], counts[3], counts[4],
                 c.descriptor_bytes(), c.payload.size(), c.run_geometry_bytes(),
                 8.0 * total_bytes / c.rows, sizeof(T));
     const std::size_t n = c.blocks.size();
