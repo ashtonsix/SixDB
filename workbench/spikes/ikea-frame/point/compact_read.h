@@ -5,29 +5,20 @@
 
 namespace frame_points {
 // Construct before borrowing. Encoded bytes and geometry keep their placement;
-// erase only redundant read bindings. Sparse exception bindings preserve the
-// initial material cut's interpretation; the later explicit-W body permits
-// removing them during migration to the shared owner catalogue.
+// erase redundant read bindings. Exception planes carry their own width, so
+// the point consumer needs no sparse per-block decoder/index side tables.
 struct compact_image {
     fe::column body;
-    std::vector<std::uint32_t> exception_index;
-    std::vector<fe::sp::decoder<fe::u64>> exceptions;
 
     explicit compact_image(fe::column &&column) : body(std::move(column)) {
-        std::size_t patches = 0;
-        for (const auto &d : body.blocks) {
+        for (std::size_t b = 0; b < body.blocks.size(); ++b) {
+            const auto &d = body.blocks[b];
             if (d.type != fe::kind::constant && (!d.width || d.width > 64)) std::abort();
-            patches += d.type == fe::kind::patched;
-        }
-        if (patches) {
-            exception_index.resize(body.blocks.size());
-            exceptions.reserve(patches);
-            for (std::size_t b = 0; b < body.blocks.size(); ++b)
-                if (body.blocks[b].type == fe::kind::patched) {
-                    if (exceptions.size() >= UINT32_MAX) std::abort();
-                    exception_index[b] = static_cast<std::uint32_t>(exceptions.size());
-                    exceptions.push_back(*body.exceptions[b]);
-                }
+            if (d.type == fe::kind::patched || d.type == fe::kind::delta_patched) {
+                const auto p = d.type == fe::kind::patched ? fe::patches(body, b)
+                                                         : fe::delta_patches(body, b);
+                if (p.n && (!p.value_width || p.value_width > 64)) std::abort();
+            }
         }
         const auto release = []<class T>(std::vector<T> &v) { std::vector<T>{}.swap(v); };
         release(body.decoders);
@@ -48,8 +39,7 @@ struct compact_reader {
     explicit compact_reader(const compact_image &image, bool native = false)
         : source(&image), rows(image.body.rows), native_prefix(native) {}
     std::size_t prepared_bytes() const {
-        return sizeof(*this) + source->exception_index.capacity() * sizeof(std::uint32_t) +
-               source->exceptions.capacity() * sizeof(source->exceptions[0]);
+        return sizeof(*this);
     }
     fe::u64 get(std::size_t row) const {
         assert(row < rows);
@@ -66,8 +56,7 @@ struct compact_reader {
             const auto p = fe::patches(c, b);
             const auto *position = std::lower_bound(p.positions, p.positions + p.n, local);
             if (position != p.positions + p.n && *position == local)
-                return p.lo + source->exceptions[source->exception_index[b]]
-                    .get_unchecked(position - p.positions);
+                return p.lo + local_kernels(p.value_width).point(p.values, position - p.positions);
             return d.base + local_kernels(d.width).point(data, local);
         }
         case fe::kind::runs: {
@@ -77,8 +66,17 @@ struct compact_reader {
                     data + fe::plane_bytes(d.width, d.count), d.count}, local);
             return d.base + local_kernels(d.width).point(data, rank);
         }
-        case fe::kind::delta: {
-            if (!local) return d.base;
+        case fe::kind::delta:
+        case fe::kind::delta_patched: {
+            unsigned steps = local;
+            if (d.type == fe::kind::delta_patched) {
+                const auto p = fe::delta_patches(c, b);
+                const auto *at = std::lower_bound(p.positions, p.positions + p.n, local);
+                if (at != p.positions + p.n && *at == local)
+                    return p.lo + local_kernels(p.value_width).point(p.values, at - p.positions);
+                steps -= static_cast<unsigned>(at - p.positions);
+            }
+            if (!steps) return d.base;
             const auto mode = c.options.delta_checkpoints;
             const unsigned spacing = mode == fe::checkpoints::none ? 256 :
                                      mode == fe::checkpoints::every64 ? 64 : 16;
@@ -101,7 +99,7 @@ struct compact_reader {
             // One getter body for both programs. Only this delta leaf changes;
             // non-predicted reads do not get different prologues or branches.
             sum += local_kernels(d.width).prefixes[native_prefix](data, first, local - first + 1);
-            return d.base + static_cast<fe::u64>(rbase) * local + sum;
+            return d.base + static_cast<fe::u64>(rbase) * steps + sum;
         }
         }
         std::abort();

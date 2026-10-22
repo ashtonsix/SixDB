@@ -15,12 +15,14 @@ struct point_reader {
         : source(&c), rows(c.rows) {
         if (c.options.delta_checkpoints != fe::checkpoints::packed) return;
         if (std::none_of(c.blocks.begin(), c.blocks.end(), [](const auto &d) {
-                return d.type == fe::kind::delta && d.width + 8 <= 64;
+                return (d.type == fe::kind::delta || d.type == fe::kind::delta_patched) &&
+                       d.width + 8 <= 64;
             })) return;
         packed_checkpoints.resize(c.blocks.size());
         for (std::size_t b = 0; b < c.blocks.size(); ++b) {
             const auto &d = c.blocks[b];
-            if (d.type != fe::kind::delta || d.width + 8 > 64) continue;
+            if ((d.type != fe::kind::delta && d.type != fe::kind::delta_patched) ||
+                d.width + 8 > 64) continue;
             const auto *bytes = c.payload.data() + d.offset + fe::plane_bytes(d.width, 256) + 8;
             auto bound = fe::sp::bind_decoder<fe::u64>(fe::sp::dense_input{
                 unsigned(d.width) + 8, fe::sp::geometry::local,
@@ -56,8 +58,17 @@ struct point_reader {
                     c.payload.data() + d.offset + fe::plane_bytes(d.width, d.count), d.count}, local);
             return d.base + c.decoders[b].get_unchecked(rank);
         }
-        case fe::kind::delta: {
-            if (!local) return d.base;
+        case fe::kind::delta:
+        case fe::kind::delta_patched: {
+            unsigned steps = local;
+            if (d.type == fe::kind::delta_patched) {
+                const auto p = fe::delta_patches(c, b);
+                const auto *at = std::lower_bound(p.positions, p.positions + p.n, local);
+                if (at != p.positions + p.n && *at == local)
+                    return p.lo + c.exceptions[b]->get_unchecked(at - p.positions);
+                steps -= static_cast<unsigned>(at - p.positions);
+            }
+            if (!steps) return d.base; // First chain row, possibly after leading exceptions.
             const auto mode = c.options.delta_checkpoints;
             const unsigned spacing = mode == fe::checkpoints::none ? 256 :
                                      mode == fe::checkpoints::every64 ? 64 : 16;
@@ -82,7 +93,7 @@ struct point_reader {
             alignas(64) fe::u64 residuals[fe::block_rows];
             c.decoders[b].read_unchecked(first, local - first + 1, residuals);
             for (unsigned i = 0; i <= local - first; ++i) sum += residuals[i];
-            return d.base + static_cast<fe::u64>(rbase) * local + sum;
+            return d.base + static_cast<fe::u64>(rbase) * steps + sum;
         }
         }
         std::abort();

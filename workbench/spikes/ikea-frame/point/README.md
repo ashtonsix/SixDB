@@ -7,7 +7,7 @@ Ashton has separated the Boundlist/Intervals investigation and assigned it to
 Ikea HELPER; its geometry algorithms and checkpoint-spacing work are independent.
 
 The first reader reconstructs constants, packed FOR, runs, predicted deltas and
-patched FOR. Runs use either the compact mutable Boundlist control or the
+patched FOR, plus opt-in predicted deltas with exceptions. Runs use either the compact mutable Boundlist control or the
 immutable u8 end-minus-one projection. Predicted points use the nearest stored
 checkpoint and decode only the local residual prefix. Native every-16, packed
 every-16, every-64 and absent checkpoints are read from each image's own options.
@@ -23,6 +23,14 @@ now expose substantial point cost and avoidable prepared-state overhead.
 Engine chooses among curated material options; no default or
 public Frame API follows from this reader.
 
+Prediction with exceptions skips exception rows in the prediction chain. A point
+at an exception reads its explicit-width exception plane; an ordinary point uses
+the number of preceding ordinary steps, not its physical row number. Checkpoints
+still sum stored residuals at physical rows. Shared point preparation uses that
+explicit width and needs no sparse exception decoder/index table. This remains
+a point-consumer experiment, not a replacement for the shared column's other
+bindings or a selected checkpoint/codec policy.
+
 `frame_checkpoint_point_check` compares every point directly with original input
 values, independently of `decode_block`, across all four checkpoint modes and
 both run geometries. Its authored image exercises all five body kinds, signed
@@ -30,6 +38,16 @@ steps and high unsigned anchors. Coarse masks select original blocks without
 renumbering rows. A protected descriptor proves that a none mask touches no
 column material; deliberate selection in a child process faults as expected.
 This proves architectural accesses, not speculative cache traffic.
+
+`frame_delta_patched_check` adds 303,104 exact original-value comparisons covering
+every residual width1..64, all four checkpoint choices, leading/trailing/scattered
+and 255 exceptions, wrapped checkpoint sums, independent closed-form values,
+coarse original coordinates and owner exact SUM/COUNT. The real-column check
+also accepts `--delta-exceptions`: all59 retained columns pass 282,364,480 point
+comparisons through eager/shared/native-prefix readers, both run geometries and
+all per-image checkpoint choices. The corresponding default check passes
+282,327,616 comparisons. These are local correctness checks, not new timings;
+dictionary-coded blocks remain a separate opt-in consumer extension.
 
 The initial native check passed 70,057,984 point comparisons: the authored image,
 all 42 Jena default-window columns, the 14-column sentinel block, and the original

@@ -8,6 +8,7 @@
 #include <random>
 #include <set>
 #include <stdexcept>
+#include <string_view>
 #include <sys/mman.h>
 #include <sys/wait.h>
 #include <sys/resource.h>
@@ -37,7 +38,8 @@ std::vector<fe::u64> authored() {
     return data;
 }
 
-unsigned verify(const std::vector<fe::u64> &values, bool require_kinds) {
+unsigned verify(const std::vector<fe::u64> &values, bool require_kinds,
+                bool delta_exceptions = false) {
     unsigned checks = 0;
     std::vector<std::size_t> rows(values.size());
     std::iota(rows.begin(), rows.end(), 0);
@@ -46,7 +48,7 @@ unsigned verify(const std::vector<fe::u64> &values, bool require_kinds) {
         retained.reserve(4);
         for (auto mode : {fe::checkpoints::native, fe::checkpoints::packed,
                           fe::checkpoints::every64, fe::checkpoints::none})
-            retained.push_back(fe::encode(values, {compact, mode}));
+            retained.push_back(fe::encode(values, {compact, mode, delta_exceptions}));
         std::vector<std::unique_ptr<frame_points::compact_image>> lean;
         for (const auto &column : retained)
             lean.push_back(std::make_unique<frame_points::compact_image>(
@@ -247,9 +249,14 @@ void protected_none() {
 
 int main(int argc, char **argv) {
     try {
+        bool delta_exceptions = false;
+        for (int i = 1; i < argc; ++i)
+            if (std::string_view(argv[i]) == "--delta-exceptions") delta_exceptions = true;
         unsigned checks = verify(authored(), true) + shared_kernel_widths() + wide_checkpoints();
+        if (delta_exceptions) checks += verify(authored(), false, true);
         protected_none();
         for (int i = 1; i < argc; ++i) {
+            if (std::string_view(argv[i]) == "--delta-exceptions") continue;
             std::ifstream input(argv[i], std::ios::binary | std::ios::ate);
             need(bool(input), "cannot open input");
             const auto bytes = input.tellg();
@@ -258,10 +265,12 @@ int main(int argc, char **argv) {
             std::vector<fe::u64> values(static_cast<std::size_t>(bytes) / sizeof(fe::u64));
             input.seekg(0);
             need(bool(input.read(reinterpret_cast<char *>(values.data()), bytes)), "short input read");
-            checks += verify(values, false);
+            checks += verify(values, false, delta_exceptions);
         }
-        std::printf("%u exact point reads passed for eager/shared preparation; all five kinds, four per-image checkpoint modes, "
-                    "two run geometries, coarse masks; protected none and fault injection passed.\n", checks);
+        std::printf("%u exact point reads passed for eager/shared/native-prefix preparation; "
+                    "authored five kinds and %s, four per-image checkpoint modes, "
+                    "two run geometries, coarse masks; protected none and fault injection passed.\n", checks,
+                    delta_exceptions ? "opt-in delta exceptions" : "default encoding");
     } catch (const std::exception &error) {
         std::fprintf(stderr, "%s\n", error.what());
         return 1;

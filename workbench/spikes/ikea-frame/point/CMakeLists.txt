@@ -9,3 +9,7 @@ target_link_libraries(frame_checkpoint_point_check PRIVATE frame_encoding_materi
 add_executable(frame_point_measure measure.cpp)
 sixdb_target(frame_point_measure)
 target_link_libraries(frame_point_measure PRIVATE frame_encoding_material frame_point_kernels)
+
+add_executable(frame_delta_patched_check delta_patched_check.cpp)
+sixdb_target(frame_delta_patched_check)
+target_link_libraries(frame_delta_patched_check PRIVATE frame_encoding_material frame_point_kernels)
