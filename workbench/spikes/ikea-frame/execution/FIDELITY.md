@@ -85,6 +85,36 @@ meaning and dependencies of these alternatives without knowing their native
 mask-reduction instructions. Complete-consumer measurements determine whether
 the extra interpretation and preparation earn their cost.
 
+### Evidence and execution need not follow codec boundaries
+
+The subsequent [filter findings](../filter/FINDINGS.md) strengthen the case for
+independent query evidence. Late residual heads help some FOR predicates, but
+predicted residual heads need not describe logical value order. A diagnostic on
+two Jena columns finds that logical block bounds could settle about 60–63% of
+their median-query blocks at 0.5 bits/value. This counts potentially settled
+blocks; it does not measure a bound-assisted query or its maintenance cost.
+Investigate logical bounds or finer logical-head evidence alongside splitting
+logical values before prediction, with exact checkpoint-restarted work for
+unresolved regions. The schema should make the evidence's soundness, coordinates
+and repair dependencies visible without requiring it to share the body codec.
+
+The [point findings](../point/FINDINGS.md) also separate cheaper preparation from
+a cheaper operation. Sharing decoder kernels saves substantial capacity but
+leaves large point gaps against native global FOR. The filter study removes
+significant wrapper/dispatch work yet still loses several comparisons to strong
+narrow native controls. These local observations motivate comparing native/plain
+forms and larger homogeneous execution regions with locally byte-minimising
+blocks. Compression grain, evidence grain, kernel grain and binding reuse are
+different choices; exposing one block kind must not force one dispatch per block.
+
+Finally, fallback quality is operation-specific. The filter's patched decode
+fallback loses to the existing count path, suggesting reuse of an owner count
+operation rather than another patch decoder. An inspectable composition should
+retain useful child operations as well as their decompositions. A total getter
+establishes correctness, but does not establish a strong complete-operation
+fallback. These are research implications of the linked local experiments,
+not selected presets or cross-platform policy.
+
 ## How to investigate fidelity without deciding an interface first
 
 Compare several views of the same small, manually authored candidate universe:
