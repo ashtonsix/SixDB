@@ -1,4 +1,4 @@
-#include "material.h"
+#include "encoded_region.h"
 #include <algorithm>
 #include <cstdio>
 #include <cstdlib>
@@ -106,61 +106,66 @@ Values values(const Scenario& s, unsigned seed, unsigned version) {
     return out;
 }
 
-// Temporary encoding inputs are destroyed before any retained-reader checks.
-// Only copied pointer-free metadata and actual native bytes enter the Object.
-struct EncodedRegion {
-    fe::column staging;
-    fm::Region metadata;
-    EncodedRegion(const Values& original, const Scenario& s, unsigned first,
-                  bool successor = false) {
-        auto order = s.dictionary;
-        if (successor && order != fe::dictionary_order::none)
-            order = order == fe::dictionary_order::sorted ? fe::dictionary_order::frequency
-                                                         : fe::dictionary_order::sorted;
-        staging = fe::encode(original, {.delta_checkpoints = s.checkpoints, .delta_exceptions = true,
-            .dictionary = order, .dictionary_every_part = order != fe::dictionary_order::none,
-            .bind_decoders = false});
-        auto& r = metadata;
-        r.block_count = unsigned(staging.blocks.size());
-        r.first_position = first; r.readable_padding = 32; r.checkpoints = s.checkpoints;
-        need(r.block_count == fm::region_blocks, "unexpected encoded region population");
-        if (!staging.parts.empty() && staging.parts[0].count) {
-            const auto d = fe::dictionary_of(staging, 0);
-            r.dictionary = {d.min, d.edition, 0, d.count, unsigned(d.bytes()), d.width, d.order};
-            r.body_bytes = unsigned(d.bytes());
-        }
+// Fixture policy stays here; the shared builder only encodes, admits and copies.
+fm::EncodedRegion encode_fixture(const Values& original, const Scenario& s, unsigned first,
+                                bool successor = false) {
+    auto order = s.dictionary;
+    if (successor && order != fe::dictionary_order::none)
+        order = order == fe::dictionary_order::sorted ? fe::dictionary_order::frequency
+                                                     : fe::dictionary_order::sorted;
+    fm::EncodedRegion image(original, {.delta_checkpoints = s.checkpoints, .delta_exceptions = true,
+        .dictionary = order, .dictionary_every_part = order != fe::dictionary_order::none}, first);
+    const auto& r = image.metadata;
+    need(r.block_count == fm::region_blocks, "unexpected encoded region population");
+    if (order == fe::dictionary_order::none)
+        need(r.blocks[0].descriptor.type == s.special, "fixture did not exercise requested body kind");
+    else {
         unsigned coded = 0, raw = 0;
         for (unsigned i = 0; i < r.block_count; ++i) {
-            const auto k = fe::borrow(staging, i);
-            const auto extent = fe::extent_of(k.d, k.delta_checkpoints, k.body, k.grant);
-            need(extent.has_value() && extent->read_grant_bytes <= k.grant && fe::admits(k),
-                 "encoder produced an inadmissible block");
-            auto& b = r.blocks[i];
-            b.descriptor = k.d; b.descriptor.offset = 0;
-            b.offset = r.body_bytes; b.body_bytes = unsigned(extent->body_bytes);
-            b.grant_bytes = unsigned(extent->read_grant_bytes); b.rows = k.rows; b.coded = k.coded;
-            b.dictionary_edition = k.coded ? k.dictionary.edition : fe::dictionary_identity{};
-            r.body_bytes += b.grant_bytes;
-            coded += k.coded; raw += !k.coded;
+            coded += r.blocks[i].coded;
+            raw += !r.blocks[i].coded;
         }
-        if (order == fe::dictionary_order::none)
-            need(r.blocks[0].descriptor.type == s.special, "fixture did not exercise requested body kind");
-        else need(r.dictionary.count && coded && raw, "fixture lost mixed raw/coded part coverage");
-        need(r.valid(), "constructed metadata is invalid");
+        need(r.dictionary.count && coded && raw, "fixture lost mixed raw/coded part coverage");
     }
-    void copy_into(std::byte* destination) const {
-        const auto& r = metadata;
-        if (r.dictionary.count) {
-            const auto d = fe::dictionary_of(staging, 0);
-            std::memcpy(destination + r.dictionary.offset, d.plane, r.dictionary.grant_bytes);
-        }
-        for (unsigned i = 0; i < r.block_count; ++i) {
-            const auto& b = r.blocks[i];
-            if (b.grant_bytes) std::memcpy(destination + b.offset, fe::borrow(staging, i).body, b.grant_bytes);
-        }
-        need(fm::attach(r, {destination, r.bytes()}).has_value(), "copied native image refused admission");
-    }
-};
+    return image;
+}
+void builder_bounds() {
+    Values original(fe::block_rows);
+    for (unsigned i = 0; i < original.size(); ++i) original[i] = i * 17 + i % 3;
+    const fm::EncodedRegion image(original, {}, 37, 0);
+    need(image.metadata.block_count == 1 && image.metadata.first_position == 37 &&
+         image.metadata.readable_padding == 0 && !image.staging.options.bind_decoders,
+         "shared builder changed interpretation or prepared obsolete addresses");
+    const auto bytes = image.metadata.bytes();
+    need(bytes != 0, "short-destination control lost its body");
+    std::vector<std::byte> target(bytes + 16, std::byte{0x5a});
+    const auto before = target;
+    bool refused = false;
+    try { image.copy_into(std::span(target).first(bytes - 1)); }
+    catch (const std::invalid_argument&) { refused = true; }
+    need(refused && target == before, "short destination modified caller storage");
+    image.copy_into(target);
+    need(std::all_of(target.begin() + bytes, target.end(), [](auto b) { return b == std::byte{0x5a}; }),
+         "builder copied beyond the admitted body");
+    const auto ready = fm::attach(image.metadata, orbital::Bytes(target).first(bytes));
+    need(ready.has_value(), "single-block native-ready material lost admission");
+    Values decoded(original.size()); ready->range(0, decoded);
+    need(decoded == original, "single-block builder lost logical values");
+    for (unsigned i = 0; i < original.size(); ++i)
+        need(ready->point(i) == original[i], "single-block builder point differs");
+
+    const auto rejects = [](std::span<const fe::u64> input, unsigned first = 0) {
+        bool rejected = false;
+        try { (void)fm::EncodedRegion(input, {}, first); }
+        catch (const std::invalid_argument&) { rejected = true; }
+        need(rejected, "builder silently truncated or overflowed input geometry");
+    };
+    rejects({});
+    rejects(std::span(original).first(fe::block_rows - 1));
+    rejects(original, UINT32_MAX - fe::block_rows + 1);
+    const Values oversized((fm::region_blocks + 1) * fe::block_rows, 1);
+    rejects(oversized);
+}
 struct Query {
     fe::u64 threshold;
     fe::code_sum sum;
@@ -270,8 +275,8 @@ void exercise(const Scenario& scenario, bool grouped) {
     std::array<const std::byte*, 2> addresses{};
     std::size_t old_capacity{}, first_capacity{}, old_body{}, copied{};
     {
-        const std::array images{EncodedRegion(original[0], scenario, 0),
-            EncodedRegion(original[1], scenario, unsigned(original[0].size()))};
+        const std::array images{encode_fixture(original[0], scenario, 0),
+            encode_fixture(original[1], scenario, unsigned(original[0].size()))};
         for (unsigned i = 0; i < 2; ++i) old_control.regions[i] = images[i].metadata;
         if (scenario.dictionary != fe::dictionary_order::none) {
             const auto a = old_control.regions[0].dictionary.edition;
@@ -300,7 +305,7 @@ void exercise(const Scenario& scenario, bool grouped) {
         std::array<alloc::Hold, 2> grants;
         for (unsigned i = 0; i < 2; ++i) {
             auto& allocation = allocations[grouped ? 0 : i];
-            images[i].copy_into(const_cast<std::byte*>(addresses[i]));
+            images[i].copy_into({const_cast<std::byte*>(addresses[i]), images[i].metadata.bytes()});
             copied += images[i].metadata.bytes();
             grants[i] = take(alloc::hold(allocation,
                 {std::size_t(addresses[i] - allocation.address), old_control.regions[i].bytes() + old_control.padding(i)}));
@@ -317,14 +322,14 @@ void exercise(const Scenario& scenario, bool grouped) {
     next_control.owners = orbital::PartOwners::independent_allocation;
     std::size_t fresh_capacity{};
     {
-        const EncodedRegion image(changed[1], scenario, unsigned(changed[0].size()), true);
+        const auto image = encode_fixture(changed[1], scenario, unsigned(changed[0].size()), true);
         next_control.regions[1] = image.metadata;
         if (scenario.dictionary != fe::dictionary_order::none)
             need(image.metadata.dictionary.edition != old_control.regions[1].dictionary.edition,
                  "changed dictionary reused old interpretation identity");
         auto fresh = fixture.create(image.metadata.bytes(), image.metadata.readable_padding);
         fresh_capacity = alloc::capacity(fresh);
-        image.copy_into(fresh.address); copied += image.metadata.bytes();
+        image.copy_into({fresh.address, fresh.size}); copied += image.metadata.bytes();
         const auto unchanged_metadata = memory.live;
         attach_refusals(image.metadata, fresh);
         need(memory.live == unchanged_metadata, "non-owning attach allocated persistent metadata");
@@ -382,6 +387,7 @@ void exercise(const Scenario& scenario, bool grouped) {
 } // namespace
 
 int main() {
+    builder_bounds();
     std::vector<Scenario> cases{{"constant", fe::kind::constant}, {"packed", fe::kind::packed},
         {"runs", fe::kind::runs}, {"patched", fe::kind::patched},
         {"delta-descending", fe::kind::delta, fe::checkpoints::native, fe::dictionary_order::none, true}};

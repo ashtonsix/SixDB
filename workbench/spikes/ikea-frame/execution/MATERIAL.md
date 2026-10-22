@@ -68,6 +68,18 @@ pointer-free interpretation in an inline Control and destroys the columns before
 retained reads. These copies are real work and are counted. Encoder scratch,
 internal encoder copies and test oracles are outside that counter.
 
+Construction is shared through
+[`EncodedRegion`](material-witness/encoded_region.h). It accepts one to sixteen
+complete blocks, encoding options and original-position origin, and produces
+temporary encoder state plus pointer-free `Region` metadata. The caller chooses
+the codec/dictionary policy; fixture-specific kind assertions and the successor's
+dictionary-order switch stay in `check.cpp`. Address-bound decoder preparation
+is disabled because the destination bytes move. `copy_into(MutableBytes)` copies
+only the reported body/dictionary grants into distinct caller-owned storage,
+admits the result and leaves outer padding initialization with that owner. It
+refuses a short destination before copying. No allocation, capture or publication
+policy is added by this helper.
+
 The [private borrowed-block seam](../encoding/README.md#borrowed-blocks) supplies
 `extent_of`, `admits`, point/decode and logical/stored SUM/COUNT operations.
 The fixture resolves addresses within the selected Part and supplies that view.
@@ -139,6 +151,14 @@ owned 32,640-edit [delta-repair check](../lifecycle/delta_repair_check.cpp),
 qualifying fitted residual/checkpoint edits against the newer monotone COUNT
 search. Historical timings are unchanged.
 
+The subsequent shared-builder extraction is checked incrementally on the same
+`d2a81e80` core: all 120 phase records and the terminal outcome remain identical
+to that qualification. Additional checks cover one complete block at a nonzero
+origin, short-destination refusal without writes, untouched trailing storage,
+and rejection of empty, partial, oversized or coordinate-overflowing inputs.
+The original qualification remains the historical source/binary record; this
+refactor adds no timing result and rebuilds no codec matrix.
+
 Representative owner capacities still referenced, bytes:
 
 | Body case and ownership | Old reader held | Old reader released | Only exported region 0 |
@@ -199,6 +219,15 @@ retirement measurements, including simultaneous old/new backing and failure.
 Ikea LEAD owns those lifecycle experiments and their performance claims. Engine
 owns this material witness; the encoding owner owns the borrowed operations.
 No public Frame API follows from the fixture.
+
+A lifecycle experiment with encoded base Parts and small override Parts should
+use its own Specification through public Orbital composition. It can reuse
+`EncodedRegion`, `Region` and the borrowed read seam for its encoded Parts while
+describing override geometry and logical composition itself. The fixed two-region
+Control here remains the lifetime control. A successor must preserve all of its
+own interpretation, and a selected export cannot borrow overlay meaning from a
+discarded parent. Retaining an encoded base alone does not preserve a combined
+base-plus-override logical view.
 
 Build `frame_execution_material_check` through the ordinary Frame spike
 configuration and run it on Linux. From macOS prefix commands with `orb -m ubuntu`:
