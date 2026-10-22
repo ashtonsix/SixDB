@@ -14,7 +14,7 @@ An ordered list of n+1 cuts defines n intervals. `[10,15,16]` defines `[10,15)`
 and `[15,16)`. Equal cuts define a zero-size interval, which owns no points.
 Ranks remain stable when an external filter excludes them.
 
-![Six adjacent intervals share their cuts. Query [9,36) gives rank window [1,5). Rank 2 can be excluded without extending a neighbor into its coordinates.](images/ranges.svg)
+![Six adjacent intervals share their cuts. The query from 9 inclusive to 36 exclusive intersects ranks 1 through 4. Rank 2 can be excluded without extending a neighbor into its coordinates.](images/ranges.svg)
 
 The source representation uses one **exclusive end per interval**, plus an origin
 when geometry is needed. Source indices are interval ranks, including through
@@ -109,7 +109,7 @@ The same boundary arithmetic can be supplied by absolute ends, sizes plus region
 origins, or region-relative ends. These are source interpretations; Intervals does
 not assign a persistent tag or byte schema.
 
-![Absolute ends, sizes and relative ends encode the same excerpt. A checkpoint at rank 16 is 34. All three locate rank 18 at [37,42).](images/encodings.svg)
+![Absolute ends, sizes and relative ends encode the same excerpt. A checkpoint at rank 16 is 34. All three locate rank 18 at start 37 and end 42.](images/encodings.svg)
 
 Let G be checkpoint spacing and `C[g]` the absolute start of region g.
 Sizes store `W[r]`; an end is `C[r/G] + sum(W[r/G*G..r])`.

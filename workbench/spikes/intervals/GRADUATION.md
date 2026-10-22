@@ -16,7 +16,8 @@ physical upper/lower distinctions and coherent Scope lifetimes.
 StreamPack owns its compact image preparation, readable tails, count/extent,
 bitmap allocation, retirement, legacy/current decoding and value operations.
 Existing compact typed bodies now live under its internal geometry implementation;
-Intervals does not gain an owning layout, bitmap or retirement API. The initial move retained transitional Boundlist headers/target. The subsequent
+Intervals does not gain an owning layout, bitmap or retirement API. The initial
+move retained transitional Boundlist headers/target. The subsequent
 [audit](AUDIT.md) removes that public compatibility and retires the old runnable
 spike; useful tests and controls use their actual owners. Historical measured
 source remains recoverable.
@@ -72,8 +73,9 @@ claims; broader Frame body/lifecycle research continues independently.
 
 ## Production migration checks
 
-The 11 local optimized checks pass: maintained search/sparse/seams, historical
-compact behavior and edits, StreamPack histories/boundaries/encoding histories,
+For that migration cohort, 11 local optimized checks passed: maintained
+search/sparse/seams, historical compact behavior and edits, StreamPack
+histories/boundaries/encoding histories,
 and the Intervals/StreamPack ordinary/composition examples. The new Intervals
 example links only the maintained common library and exercises borrowed checked
 edits, external eligibility, stable empty ranks and the exclusive end 256.
@@ -94,8 +96,11 @@ The baseline source is captured before migration, digest
 with [verified full-source recovery](control/pre-graduation-source.json).
 The after source is
 `36256e31c1b78d05d9553408b7766d067c72a5970cc05ae8f93bd033759df4c2`.
-All 53 measured production/consumer input files still match that after snapshot;
-subsequent changes add documentation, reports and audit tools.
+The 53-file production/consumer identity receipt describes that exact qualification
+epoch. The subsequent [audit](AUDIT.md) changes harness bindings and build routes
+while removing compatibility; its 41-file receipt verifies the maintained
+Intervals/StreamPack implementation remains unchanged. Recover the original
+source archive when reproducing the migration timings.
 
 `graduation-native.sh` compiles both source trees on each same worker with
 Clang 21.1.8, explicit ISA/tuning, CPU pinning and before/after/after/before process
