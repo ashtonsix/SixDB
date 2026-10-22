@@ -291,6 +291,20 @@ template <class F> void for_each_block(const block_mask &m, F &&visit) {
     }
 }
 
+// sum_j (256 - j) * s_j over one decoded narrow residual plane.
+template <class T> u64 weighted_residuals(const sp::decoder<T> &decoder) {
+    alignas(64) T s[block_rows];
+    decoder.read_unchecked(0, block_rows, s);
+    u64 w = 0;
+    for (std::size_t j = 1; j < block_rows; ++j) {
+        if constexpr (sizeof(T) <= 2)
+            w += static_cast<std::uint32_t>(block_rows - j) * s[j];
+        else
+            w += static_cast<u64>(block_rows - j) * s[j];
+    }
+    return w;
+}
+
 // Exact SUM of one block, decoding packed values into u64.
 inline u128 block_sum(const column &c, std::size_t b) {
     const auto &d = c.blocks[b];
@@ -328,10 +342,18 @@ inline u128 block_sum(const column &c, std::size_t b) {
     case kind::delta: {
         // sum x_i = 256 u0 + rbase * 32640 + sum_j (256 - j) s_j  (s_0 = 0):
         // a weighted reduction of the narrow residuals, no prefix decode.
-        c.decoders[b].read_unchecked(0, block_rows, buffer);
         i64 rbase;
         std::memcpy(&rbase, c.payload.data() + d.offset + plane_bytes(d.width, block_rows), 8);
         i128 t = static_cast<i128>(d.base) * block_rows + static_cast<i128>(rbase) * 32640;
+        // Decode into the narrowest lane and weight there; products fit u32
+        // for K <= 16 and the sums fit u64 for K <= 47.
+        if (c.d8[b])
+            return static_cast<u128>(t + weighted_residuals<std::uint8_t>(*c.d8[b]));
+        if (c.d16[b])
+            return static_cast<u128>(t + weighted_residuals<std::uint16_t>(*c.d16[b]));
+        if (c.d32[b])
+            return static_cast<u128>(t + weighted_residuals<std::uint32_t>(*c.d32[b]));
+        c.decoders[b].read_unchecked(0, block_rows, buffer);
         if (d.width <= 47) {
             u64 w = 0;
             for (std::size_t j = 1; j < block_rows; ++j)

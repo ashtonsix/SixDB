@@ -538,6 +538,16 @@ Same image, local VM, medians in µs per 3M-row (ClickBench) or 65,536-row
    are a native weighted delta SUM and run-weighted COUNT (which Codex already
    fused in filter/) inside the owner operations.
 
+### Narrow weighted delta SUM
+
+The owner delta SUM now decodes residuals into their narrowest lane (u8, u16
+or u32) and weights them there (`weighted_residuals`), instead of decoding into
+u64. On Jena window 0 (packed checkpoints, local VM medians per 65,536-row
+scan), delta-heavy fields fell from 28–32 µs to 11–15 µs, a 2.2–2.7× gain.
+Fields that are mostly FOR are unchanged at 17–20 µs. The plain int16
+control is about 4 µs, so prediction SUM is still about 3× behind plain.
+Exact on every field.
+
 ## Images to hand Engine's witness early
 
 Engine's witness is a selected grouped reduction over parts with different
