@@ -927,6 +927,148 @@ EventTime, COUNT(x >= median), local VM, medians in µs over 3M rows. The
    COUNT geomeans within 1.006 of the old code. Those inputs have few
    non-decreasing delta blocks in original order, so the search rarely runs.
 
+## Arrival-order dictionaries
+
+`encode_options::dictionary = arrival` (driver `--dictionary=arrival`) makes the
+[recent-value byte model](#recent-value-references-byte-model) real, while
+keeping the part-wide dictionary plane. The option is off by default, and
+`bind_decoders` defaults are unchanged. Code at 012e2ffd.
+
+**Layout.** The part dictionary is the same min-relative SeriesPack plane, with
+the same record, edition and drop rules. Its entries are in order of first
+occurrence within the part, so a borrowed block still depends on nothing outside
+its body except its part's dictionary edition. The new `kind::arrival` exists
+only in blocks coded against such a dictionary. The descriptor's base is the
+block's frontier F, the number of entries introduced before the block, and its
+count is the number of reference rows. The body is a 256-bit flag plane, with
+1 marking a first occurrence, then one exact-tail plane of the references at the
+descriptor's width. With F_i the frontier at row i, a flagged row's code is F_i,
+and any other row stores F_i − 1 − code. The extent is 32 +
+`plane_bytes(K, count)`, from the descriptor alone, so no staged parse is
+needed. `admits` also requires an arrival-order coded view, popcount(flags) +
+count = 256, and F + popcount ≤ the dictionary count.
+
+**Choice and operations.** Each block's codes still take the cheapest existing
+kind, and the arrival body replaces it only when strictly smaller. Per-block and
+per-part opt-outs are unchanged.
+
+- A point read takes the rank over the flags, at most one reference point read,
+  then one dictionary point read.
+- Decode enumerates flag bits: literal rows take F, F + 1, …, and references are
+  visited in row order with a sequential counter. A per-row prefix loop through
+  the plane measured about 8 cycles per row on aarch64: a load through a
+  data-dependent pointer.
+- SUM reads literal rows' entries F … F + L − 1 in sequence and gathers only
+  references.
+- COUNT(x ≥ t) uses the frequency path's per-edition truth table: a popcount
+  over truth bits [F, F + L), plus one bit per reference. The table is now built
+  a word at a time. A per-entry read-modify-write of the vector had cost about
+  twice the table's decode, and one run's URLHash frequency COUNT fell from
+  2,697 to 1,902 µs.
+- New equality COUNT(x = v) arms (`stored_count_eq`, `block_count_eq`,
+  `code_count_eq`, `encoded_count_eq`) cover every kind and order. They find
+  v's code once per edition: binary search for sorted, a plane scan otherwise.
+  Constant, packed and runs reject out-of-range values without decoding. An
+  arrival block rejects any code at or past F + L.
+
+Bits/row on the 3M-row ClickBench slice. "Model" is `repeat_model.py`
+(lightweight kinds + references, best window per part). The ZSTD columns
+compress each part's raw u64 bytes (`build/spikes/ikea-frame/repeat/`):
+
+| Column | none | sorted | frequency | arrival | model | ZSTD-3 | ZSTD-19 | arrival blocks | parts with a dictionary |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| URLHash | 59.11 | 50.89 | 50.89 | **43.90** | 45.3 | 41.4 | 40.6 | 9,943 | 46 |
+| URLHash, shuffled | 64.50 | 64.51 | 64.51 | **56.43** | 57.5 | 56.9 | 56.0 | 11,718 | 46 |
+| UserID, shuffled | 64.50 | 64.51 | 64.51 | **54.43** | 55.5 | 58.7 | 54.6 | 11,718 | 46 |
+| UserID | 14.60 | 14.60 | 14.61 | 14.60 | 14.6 | 13.3 | 13.1 | 210 | 3 |
+| ClientIP | 9.99 | 10.00 | 10.00 | 9.99 | 9.95 | 9.8 | 9.1 | 79 | 7 |
+| RegionID | 5.37 | 4.30 | 4.22 | **4.20** | 5.2 | 3.4 | 2.7 | 5 | 46 |
+| OS | 2.78 | 2.50 | **2.17** | 2.24 | | | | 0 | 46 |
+| ResolutionWidth | 3.91 | 3.41 | **3.02** | 3.12 | | | | 0 | 44 |
+| WatchID | 62.50 | 62.51 | 62.51 | 62.51 | 62.5 | 64.0 | 64.0 | 0 | 0 |
+
+Jena window 0 with packed checkpoints (14 fields) goes from 138.90 (none) and
+137.49 (sorted) to 135.34. The gains are max.wv 10.57 → 8.58 and wd 15.97 →
+14.36; rh is 12.03, against 11.52 sorted.
+
+Paired timings use median µs over 3M rows on the local VM, 5 rounds of none /
+sorted / arrival back to back in rotated order. Within each run there are 21
+paired trials, and `--no-bindings` is set. "Points" is 65,536 random `value_at`
+reads. Plain native-array controls: points 173–183, SUM 1,056–1,083, COUNT
+567–662, equality 558–671.
+
+| Input | points | SUM | COUNT ≥ median | COUNT = v | sparse-10% SUM | sparse COUNT ≥ | sparse COUNT = |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| URLHash | 1,215 / 1,641 / 2,054 | 1,408 / 2,162 / 2,814 | 809 / 891 / 2,661 | 825 / 438 / 1,015 | 202 / 515 / 717 | 96 / 129 / 984 | 126 / 66 / 635 |
+| URLHash, shuffled | 877 / 897 / 1,971 | 1,354 / 1,338 / 2,765 | 767 / 769 / 2,387 | 779 / 781 / 1,180 | 202 / 196 / 781 | 82 / 86 / 1,149 | 126 / 128 / 885 |
+| UserID, shuffled | 874 / 894 / 2,107 | 1,351 / 1,368 / 2,776 | 764 / 771 / 2,448 | 784 / 786 / 1,152 | 203 / 199 / 812 | 85 / 82 / 1,139 | 127 / 124 / 817 |
+| UserID | 2,355 / 2,172 / 2,199 | 850 / 847 / 885 | 40 / 43 / 119 | 57 / 58 / 66 | 92 / 96 / 106 | 5 / 6 / 26 | 6 / 6 / 16 |
+
+1. **Real arrival bodies beat the byte model.** URLHash is 43.90 bits/row,
+   against 45.3 modelled and 50.89 for sorted. That is 26% below no dictionary
+   and 2.5 bits above ZSTD-3. Shuffled, both hash-like columns beat ZSTD-3,
+   and UserID also edges past ZSTD-19. The model's window turned far repeats
+   into duplicate literals; a part dictionary stores each value once, and
+   every repeat becomes a reference.
+2. **Unwindowed distances aren't the problem.** URLHash's references are
+   13–16 bits wide in most blocks: targets really are spread across the part.
+   Narrow references plus wide exceptions (patched-style, e ∈ {2, 8, 32})
+   would save 0.28 bits/row. The rest is the dictionary: 36.6 of 43.9 bits/row
+   on URLHash are its literals at about 63 bits, then 6.1 for references, 1.0
+   for flags and 0.5 for descriptors (`arrival/breakdown.py`). Closing the gap
+   to ZSTD needs multi-row matches or entropy over the literals, not a
+   different reference shape.
+3. **The bytes cost scan speed, mostly in gathers and per-edition work.** On
+   URLHash, SUM is 2.0× none and 1.3× sorted. In the reference loop, about 60%
+   of samples sit on the dictionary load (a gather from a ~40k-entry array),
+   and each part's dictionary is decoded once per call. COUNT ≥ is 3×: sorted
+   keeps a code threshold, while arrival builds a truth table over every
+   part's 40–50k entries and reads a bit per reference. Equality is 1.2× none,
+   but 2.3× sorted, whose binary search finds the code without scanning the
+   plane. Point reads are 1.3× sorted and 1.7× none (about 31 ns against
+   25 and 19), and 2.3× where shuffling leaves none and sorted as plain FOR.
+4. **Sparse selections pay for the whole edition.** Under a 10% mask, arrival
+   COUNT ≥ is 10–14× none, equality 5–7× and SUM 3.5–4×. The decoded
+   dictionary, truth table and equality code are rebuilt per call for every
+   part touched. They are immutable per edition, so a consumer that caches
+   them across calls (or keeps a sorted index for equality) removes most of
+   this; the material here doesn't yet.
+5. **Low-cardinality columns need no new kind.** They get 0–5 arrival blocks
+   and land between sorted and frequency, because first occurrence gives
+   frequent values small codes. RegionID's 4.20 is the best of the three.
+   Where dictionaries don't pay (WatchID, EventTime, IsRefresh), every part
+   drops its dictionary, and UserID and ClientIP stay within 0.01 bits.
+
+So the byte savings survive, but at 1.3–3× the scan cost of sorted codes on
+URLHash. For SUM the gather dominates. For range COUNT the cost is unordered
+codes, which need a truth table. Arrival suits hash-like columns where bytes
+matter more than scan speed. Sorted remains better for range predicates, and
+equality-heavy hash workloads would want both an arrival body and a sorted
+lookup per edition.
+
+**Verification.** `build/spikes/ikea-frame/arrival/check.sh` runs
+`borrowed/check.sh`'s nine option sets plus three arrival sets: default,
+packed + delta exceptions, and every64. The arrival sets cover OS, RegionID,
+URLHash, EventTime, WatchID, UserID, ClientIP, shuffled URLHash and UserID,
+and Jena window 0 and fault. The oracle derives arrival codes from the input
+by first occurrence, and equality is checked at present and absent values per
+block and over masks. That makes 417 runs, 992,334 blocks (313,754 coded,
+101,496 arrival bodies), 3.97M borrowed-block checks and 11,380 injected
+faults, all passing. An arrival body's last byte was read in 169 of 191
+sampled blocks; the rest end in a partially occupied reference tile.
+The driver's exactness checks (decode, SUM, COUNT, equality and every random
+point) pass under arrival on all 11 ClickBench columns, the two shuffled
+inputs and Jena window 0, with and without bindings. Its non-arrival output
+matches the frozen `catalogue-owner/bodies_after` on all 11,232 non-timing
+values of the 117 configurations, with and without bindings
+(`arrival/compare.sh`, `compare.py`; new keys are additions).
+`frame_encoding_masked_access_check` passes.
+
+**Consumer obligations.** point/, filter/ and execution/ don't handle
+`kind::arrival`. Their switches over kinds now warn (`-Wswitch`), and they
+reject dictionaries in the values domain. An arrival-coded block reads only its
+own body and its part's dictionary edition, as other coded blocks do.
+
 ## Row order in real bodies
 
 The same 11 ClickBench columns were encoded as real bodies (default options,
@@ -1030,8 +1172,11 @@ byte bound with no random access. Output is in `build/spikes/ikea-frame/repeat/`
 
 1. Convert the model's winners into real SeriesPack bytes for a sample of
    columns, checking the modelled-to-physical gap.
-2. Real recent-value reference bodies for hash-like columns (byte model
-   above), with gather costs for point, equality filter and SUM.
+2. Recent-value references are real as [arrival-order dictionaries](#arrival-order-dictionaries):
+   43.9 bits/row on URLHash, at 1.3–3× sorted's scan cost. Open: caching
+   decoded dictionaries, truth tables and equality codes per edition across
+   calls (most of the sparse-mask cost), and multi-row matches or entropy over
+   the literal plane for the last 2.5 bits to ZSTD-3.
 3. Re-clustered orders (by category, by time) beside original and shuffled, so
    Engine can price clustering against encoding effort.
 4. Bring in float/decimal and time-series corpora (TPC-H, TSBS, ALP's datasets).
