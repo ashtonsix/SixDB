@@ -8,7 +8,8 @@
 // dictionary access; a full S takes the existing full-256 operation unchanged.
 // Laws per kind (u0 the anchor or base, s_j stored residuals, s_0 = 0):
 //   constant       base * |S|.
-//   runs           sum over runs of value * popcount(S AND run).
+//   runs           sum over runs of value * popcount(S AND run), each
+//                  popcount a difference of two per-word prefix ranks.
 //   packed         |S| * base + the plane's masked native packet sum
 //                  (catalogue masked_sum, K <= 56; wider: split halves).
 //   patched        inliers S' = S AND NOT E: |S'| * base + masked plane sum
@@ -20,6 +21,10 @@
 //                  hold. A selected row's value depends on unselected rows'
 //                  residuals (c_j counts them), so the plane is read through
 //                  the last selected row: rows past it have c_j = 0.
+//                  Equivalently sum_{i in S} S(i), which for at most 64
+//                  selected rows is a walk of segment sums, and for at most 64
+//                  unselected rows U is the full SUM minus sum_{i in U} x_i
+//                  (that form reads the whole plane, still no checkpoints).
 //   delta_patched  as delta over S' = S AND NOT E with c'_j its suffix
 //                  counts, steps m(i) = |{j in (f, i] : j not in E}|, so
 //                  sum_{i in S'} m(i) = sum over step rows j of c'_j; selected
@@ -80,13 +85,31 @@ inline row_selection and_not(const row_selection &a, const row_selection &b) {
     return {a[0] & ~b[0], a[1] & ~b[1], a[2] & ~b[2], a[3] & ~b[3]};
 }
 
-// c_j = |{i in S : i >= j}| for j < take (take = last selected row + 1).
-inline void suffix_counts(const row_selection &s, unsigned take, std::uint16_t *c) {
-    std::uint16_t n = 0;
-    for (unsigned j = take; j-- > 0;) {
-        n = static_cast<std::uint16_t>(n + selected(s, j));
-        c[j] = n;
+// Selected rows before row r (r <= 256) in two operations, from per-word
+// prefix counts: run loops ask once per run boundary, and suffix counts once
+// per row without a serial chain.
+struct selection_rank {
+    const row_selection &s;
+    unsigned prefix[5];
+    explicit selection_rank(const row_selection &sel) : s(sel) {
+        prefix[0] = 0;
+        for (unsigned w = 0; w < 4; ++w)
+            prefix[w + 1] = prefix[w] + static_cast<unsigned>(std::popcount(sel[w]));
     }
+    unsigned at(unsigned r) const {
+        const unsigned w = r / 64, b = r % 64;
+        return w == 4 ? prefix[4] : prefix[w] + static_cast<unsigned>(std::popcount(s[w] & ((u64{1} << b) - 1)));
+    }
+    unsigned between(unsigned first, unsigned limit) const { return at(limit) - at(first); }
+};
+
+// c_j = |{i in S : i >= j}| = |S| - rank(j) for j < take (take = last
+// selected row + 1).
+inline void suffix_counts(const row_selection &s, unsigned take, std::uint16_t *c) {
+    const selection_rank ranks(s);
+    const unsigned total = ranks.prefix[4];
+    for (unsigned j = 0; j < take; ++j)
+        c[j] = static_cast<std::uint16_t>(total - ranks.at(j));
 }
 
 // sum_{j=1}^{take-1} c_j s_j over the plane's rows [0, take) in lane T.
@@ -125,6 +148,33 @@ inline i128 masked_weighted(const borrowed_block &k, const std::uint16_t *c, uns
     for (unsigned j = 1; j < take; ++j)
         t += static_cast<i128>(c[j]) * buffer[j];
     return t;
+}
+
+// sum_{i in rows} x_i over a delta block by segment sums of the residual
+// plane through the last such row: S(i) for ascending rows adds the residuals
+// since the previous one, in 32-bit halves (each half prefix is below 2^40 and
+// at most 256 held prefixes below 2^48), so long segments vectorise and the
+// sum is exact at any width. For sparse rows, or the complement of dense ones.
+// Selections with at most this many rows, or this many unselected, take
+// segments (paired sweep on Jena p and T over 0/32/64/96/128: 64 is best at
+// 1-10% NULL, and segments lose 2x at 50%, where the suffix counts stay).
+constexpr unsigned delta_segment_rows = 64;
+inline i128 delta_rows_sum(const borrowed_block &k, const row_selection &rows) {
+    const unsigned take = last_selected(rows) + 1;
+    alignas(64) u64 buffer[block_rows];
+    read_plane(k, 0, take, buffer);
+    u64 lo = 0, hi = 0, held_lo = 0, held_hi = 0, index = 0;
+    unsigned j = 0;
+    for (unsigned word = 0; word < 4; ++word)
+        for (u64 hit = rows[word]; hit; hit &= hit - 1) {
+            const unsigned r = word * 64 + static_cast<unsigned>(std::countr_zero(hit));
+            for (; j <= r; ++j)
+                lo += buffer[j] & 0xffffffffu, hi += buffer[j] >> 32;
+            held_lo += lo, held_hi += hi, index += r;
+        }
+    const u128 held = static_cast<u128>(held_lo) + (static_cast<u128>(held_hi) << 32);
+    return static_cast<i128>(k.d.base) * selected_count(rows) + static_cast<i128>(delta_rbase(k)) * static_cast<i128>(index) +
+           static_cast<i128>(held);
 }
 
 // Exact sum of the selected entries of a decoded 256-value buffer.
@@ -170,6 +220,15 @@ inline u128 masked_stored_sum_mixed(const borrowed_block &k, const row_selection
         return total;
     }
     case kind::delta: {
+        // Few selected rows: their prefixes by segments. Few unselected rows:
+        // the full SUM minus theirs. Otherwise suffix-count weights.
+        const unsigned n = selected_count(s);
+        if (n <= delta_segment_rows)
+            return static_cast<u128>(delta_rows_sum(k, s));
+        if (n >= block_rows - delta_segment_rows) {
+            const row_selection rest = and_not({~u64{0}, ~u64{0}, ~u64{0}, ~u64{0}}, s);
+            return static_cast<u128>(static_cast<i128>(stored_sum(k)) - delta_rows_sum(k, rest));
+        }
         const unsigned take = last_selected(s) + 1;
         alignas(64) std::uint16_t c[block_rows];
         suffix_counts(s, take, c);
@@ -209,8 +268,9 @@ inline u128 masked_stored_sum_mixed(const borrowed_block &k, const row_selection
         read_plane(k, 0, d.count, buffer);
         u128 total = 0;
         unsigned row = 0;
+        const selection_rank ranks(s);
         each_run(k, [&](unsigned rank, unsigned size) {
-            total += static_cast<u128>(buffer[rank] + d.base) * selected_in(s, row, row + size);
+            total += static_cast<u128>(buffer[rank] + d.base) * ranks.between(row, row + size);
             row += size;
         });
         return total;
@@ -257,9 +317,9 @@ inline u64 masked_stored_count_ge_mixed(const borrowed_block &k, const row_selec
         read_plane(k, 0, d.count, buffer);
         u64 total = 0;
         unsigned row = 0;
+        const selection_rank ranks(s);
         each_run(k, [&](unsigned rank, unsigned size) {
-            if (buffer[rank] >= rhs)
-                total += selected_in(s, row, row + size);
+            total += (buffer[rank] >= rhs) * ranks.between(row, row + size);
             row += size;
         });
         return total;
@@ -340,9 +400,9 @@ inline u64 masked_stored_count_eq_mixed(const borrowed_block &k, const row_selec
         read_plane(k, 0, d.count, buffer);
         u64 total = 0;
         unsigned row = 0;
+        const selection_rank ranks(s);
         each_run(k, [&](unsigned rank, unsigned size) {
-            if (buffer[rank] == rhs)
-                total += selected_in(s, row, row + size);
+            total += (buffer[rank] == rhs) * ranks.between(row, row + size);
             row += size;
         });
         return total;
@@ -415,8 +475,9 @@ template <class L> u128 masked_coded_sum(const borrowed_block &k, const row_sele
     if (d.type == kind::runs) {
         read_plane(k, 0, d.count, buffer);
         unsigned row = 0;
+        const selection_rank ranks(s);
         each_run(k, [&](unsigned rank, unsigned size) {
-            total += static_cast<u128>(lookup(d.base + buffer[rank])) * selected_in(s, row, row + size);
+            total += static_cast<u128>(lookup(d.base + buffer[rank])) * ranks.between(row, row + size);
             row += size;
         });
         return total;
@@ -478,9 +539,9 @@ inline u64 code_count::masked(const borrowed_block &k, const row_selection &s) {
     if (d.type == kind::runs) {
         read_plane(k, 0, d.count, buffer);
         unsigned row = 0;
+        const selection_rank ranks(s);
         each_run(k, [&](unsigned rank, unsigned size) {
-            if (holds(d.base + buffer[rank]))
-                total += selected_in(s, row, row + size);
+            total += holds(d.base + buffer[rank]) * ranks.between(row, row + size);
             row += size;
         });
         return total;
