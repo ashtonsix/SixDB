@@ -32,6 +32,7 @@ bring counterexamples, and revise the division as the work reveals strengths.
 | Real-column encoding and compression | Claude, Ikea frame design | [Encoding inventory](encoding/README.md): existing corpora and controls, useful stages/kinds, complete bytes and analysis cost; supply representative images to Engine early |
 | Representation algebra and structured intermediates | Claude, with Ikea/Engine | Masked and overridden reductions, weighted delta/checkpoint alternatives and dictionary/run results; use the same images and consumer witness as schema-fidelity work |
 | Mutation and representation lifecycle | Ikea LEAD | [Lifecycle investigation](lifecycle/README.md): repeated versus dispersed writes, novelty, selective folding, thaw/reseal and retained-reader economics |
+| Point reconstruction on encoded images | Ikea LEAD | [Point consumer](point/README.md): actual body readers, per-image checkpoints, retained readers and coarse masks; separate from geometry primitive redesign |
 | Schema fidelity and complete execution programs | Engine LEAD, jointly with Ikea/Claude | [Execution witness](execution/README.md): different programs over frozen images, interpreted through a real outside hash consumer and independent logical oracle |
 | Shared instruments and measurement scrutiny | Workbench LEAD | Existing datasets, native peers, capture/workers and [communication helper](../../tools/README.md#shared-peer-inboxes); build common machinery only where the experiments need it |
 
@@ -69,6 +70,14 @@ owns this map, `lifecycle/` and spike build integration; Engine owns `execution/
 Coordinate changes to the entry README, shared sources and native resources
 before editing or timing. Each owner retains source/evidence-qualified findings;
 the entry documents link them instead of collecting another chronological log.
+
+Ashton has separated continued Boundlist/Intervals work from Frame and assigned
+it to Ikea HELPER. That isolated investigation owns the rename, tombstone-free
+geometry/filter contract and sparse checkpoint design, including the handed-off
+`checkpoints/` prototypes. Frame supplies consumer needs and consumes qualified
+materials; it does not optimise those algorithms in parallel. The
+[point experiment](point/README.md) continues here on the existing encoding
+material and maintained Boundlist run source.
 
 The two-way shared inbox is implemented by `workbench/tools/peer_inbox.py`.
 Live session bindings, messages and watch status are ignored under

@@ -2,7 +2,8 @@
 
 Design spike for a proposed `ikea::frame` submodule: the container for
 SeriesPack and TuplePack that packages encodings and the operations Engine runs
-over them. Nothing here is implemented; no module code has changed.
+over them. Native encoding and operation prototypes live here; there is no
+maintained Frame module or settled public interface yet.
 
 ## The question
 

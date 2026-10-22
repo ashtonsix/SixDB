@@ -1,2 +1,3 @@
 add_subdirectory(execution)
 add_subdirectory(encoding)
+add_subdirectory(point)

@@ -1,0 +1,3 @@
+add_executable(frame_checkpoint_point_check point_check.cpp)
+sixdb_target(frame_checkpoint_point_check)
+target_link_libraries(frame_checkpoint_point_check PRIVATE frame_encoding_material)
