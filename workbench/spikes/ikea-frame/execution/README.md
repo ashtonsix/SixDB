@@ -19,6 +19,11 @@ the same image, then compare representations and their lifetimes. The
 [schema-fidelity supplement](FIDELITY.md) revisits those studies for what Frame
 should let Engine understand, and what this first witness cannot yet decide.
 
+The [physical-material study](MATERIAL.md) examines actual public Orbital
+composition and interpretation lifetimes, including a checked packed-FOR
+witness for Ikea's lifecycle work. It chooses no general Frame format or
+mutation policy and claims no lifecycle performance result.
+
 The consumer groups selected rows by nullable category C and returns COUNT/SUM
 of a nullable unsigned integer X. Different parts can assign different local
 dictionary codes to the same category. The output uses actual logical keys in
@@ -215,8 +220,9 @@ complete schema-fidelity comparison.
 The [first encoded report](ENCODED.md) retains the absolute complete-query
 measurements, memory/preparation accounting, failures and limits. Rich preparation
 has not demonstrated a broad runtime gain over the strong opaque control here.
-Prepared decoder capacity can exceed compressed body size. All five current
-kinds pass the independent oracle; a patched-kind extension exposed a parent's
+Prepared decoder capacity can exceed compressed body size. All five kinds in
+the measured source cut pass the independent oracle; a patched-kind extension
+exposed a parent's
 invalid delta assumption and all timings from that earlier source cut were
 discarded before the corrected measurements.
 
@@ -232,6 +238,14 @@ includes hash construction, complete output consumption and retirement, with
 reusable plans/scratch prepared separately. These costs are neither dependent
 point latency nor interleaved reciprocal throughput, and establish no cold/Loom
 result. `prepare_ns` and state capacities are separate observations.
+
+The live material now uses non-owning Intervals run geometry; obsolete owning
+run controls are removed from this consumer's footprint accounting. Body bytes
+come from the material owner's total, with allocated dictionary records/bits and
+prepared dictionary readers accounted separately. Historical measurements keep
+their original captured source and accounting. Encoding still uses default
+options: dictionary coding and prediction exceptions remain opt-in owner
+experiments, not newly qualified grouped-consumer shortcuts.
 
 Body bytes, buffer capacity, decoder storage, validity, dictionary and per-program
 plan/scratch are reported separately, not as complete RSS. Work counters describe

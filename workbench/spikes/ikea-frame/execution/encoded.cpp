@@ -357,16 +357,13 @@ int main(int argc, char** argv) {
             dictionaries += part.dictionary.capacity() * sizeof(Word);
             padded += image.x.rows - part.limit;
             for (const auto* c : {&image.category, &image.x}) {
-                bytes += c->descriptor_bytes() + c->payload.size() + c->run_geometry_bytes();
-                backing += c->blocks.capacity() * sizeof(e::descriptor) + c->payload.capacity();
+                bytes += c->total_bytes();
+                backing += c->blocks.capacity() * sizeof(e::descriptor) + c->payload.capacity() +
+                           c->parts.capacity() * sizeof(e::dictionary_part) + c->coded.capacity() * sizeof(Word);
                 readers += c->decoders.capacity() * sizeof(c->decoders[0]) +
                            c->d8.capacity() * sizeof(c->d8[0]) + c->d16.capacity() * sizeof(c->d16[0]) +
-                           c->d32.capacity() * sizeof(c->d32[0]) + c->exceptions.capacity() * sizeof(c->exceptions[0]);
-                controls += c->runs.capacity() * sizeof(c->runs[0]);
-                for (const auto& run : c->runs) if (run) {
-                    controls += sizeof(*run);
-                    backing += run->directory.capacity() + run->lengths.capacity() + run->control.capacity();
-                }
+                           c->d32.capacity() * sizeof(c->d32[0]) + c->exceptions.capacity() * sizeof(c->exceptions[0]) +
+                           c->dictionaries.capacity() * sizeof(c->dictionaries[0]);
                 for (const auto& d : c->blocks) ++kinds[unsigned(d.type)];
             }
             masks += image.live.size() * sizeof(Bits) * 3;

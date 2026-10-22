@@ -10,3 +10,11 @@ target_link_libraries(frame_execution_encoded PRIVATE
   ikea::hashtable frame_execution_input frame_encoding_material)
 add_library(frame_execution_input STATIC input.cpp)
 sixdb_target(frame_execution_input)
+
+add_library(frame_execution_material_owner STATIC material-witness/material.cpp)
+sixdb_target(frame_execution_material_owner)
+target_link_libraries(frame_execution_material_owner PUBLIC orbital::orbital PRIVATE frame_encoding_material)
+add_executable(frame_execution_material_check material-witness/check.cpp)
+sixdb_target(frame_execution_material_check)
+target_link_libraries(frame_execution_material_check PRIVATE frame_execution_material_owner frame_encoding_material)
+add_test(NAME frame_execution_material_check COMMAND frame_execution_material_check)

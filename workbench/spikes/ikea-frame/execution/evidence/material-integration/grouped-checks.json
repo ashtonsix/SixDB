@@ -1,0 +1,123 @@
+{
+  "qualification_only": true,
+  "timings": false,
+  "binaries": {
+    "frame_execution_hash_check": "60af463238090d90dd316cf2998c7577e29a02ba2fa8220e0954cefd1ebe5972",
+    "frame_execution_encoded": "6922d14aa895abbbb428fec1e7a10d6fcc54b485d1d8aac35ca6de039614f2e2"
+  },
+  "logs": [
+    {
+      "command": [
+        "python3",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/workbench/spikes/ikea-frame/execution/check.py",
+        "--binary",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/clang/frame-consumers-stable/workbench/spikes/ikea-frame/execution/frame_execution_hash_check"
+      ],
+      "output": "test_boundaries_and_recoded_editions (__main__.HashChecks.test_boundaries_and_recoded_editions) ... ok\ntest_coarse_skip_work_and_full_mixed_groups (__main__.HashChecks.test_coarse_skip_work_and_full_mixed_groups) ... ok\ntest_empty_parts_and_null_only_dictionary (__main__.HashChecks.test_empty_parts_and_null_only_dictionary) ... ok\ntest_full_population_count_and_maximum_value (__main__.HashChecks.test_full_population_count_and_maximum_value) ... ok\ntest_generated_populations_and_work_explanations (__main__.HashChecks.test_generated_populations_and_work_explanations) ... ok\ntest_wrong_code_to_dictionary_mapping_is_detected (__main__.HashChecks.test_wrong_code_to_dictionary_mapping_is_detected) ... ok\ntest_coarse_blocks_and_fine_selection_have_independent_coordinates (__main__.LogicalChecks.test_coarse_blocks_and_fine_selection_have_independent_coordinates) ... ok\ntest_corpus_provenance_is_retained_without_changing_semantics (__main__.LogicalChecks.test_corpus_provenance_is_retained_without_changing_semantics) ... ok\ntest_dictionary_editions_do_not_define_logical_identity (__main__.LogicalChecks.test_dictionary_editions_do_not_define_logical_identity) ... ok\ntest_hand_calculated_groups (__main__.LogicalChecks.test_hand_calculated_groups) ... ok\ntest_invalid_coarse_mask_refuses (__main__.LogicalChecks.test_invalid_coarse_mask_refuses) ... ok\ntest_mask_variants_reuse_original_rows (__main__.LogicalChecks.test_mask_variants_reuse_original_rows) ... ok\ntest_old_logical_input_survives_new_snapshot (__main__.LogicalChecks.test_old_logical_input_survives_new_snapshot) ... ok\ntest_repeatable_json_integer_roundtrip (__main__.LogicalChecks.test_repeatable_json_integer_roundtrip) ... ok\ntest_stale_selection_and_invalid_identity_refuse (__main__.LogicalChecks.test_stale_selection_and_invalid_identity_refuse) ... ok\n\n----------------------------------------------------------------------\nRan 15 tests in 0.857s\n\nOK\n"
+    },
+    {
+      "command": [
+        "python3",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/workbench/spikes/ikea-frame/execution/encoded_check.py",
+        "--binary",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/clang/frame-consumers-stable/workbench/spikes/ikea-frame/execution/frame_execution_encoded"
+      ],
+      "output": "Encoded consumers: 420 exact query/program comparisons; five current kinds, NULL/holes/tails, recoded dictionaries, coarse masks and consumed timing path pass.\n"
+    }
+  ],
+  "corpus_comparisons": 93,
+  "cases": [
+    {
+      "input": "build/spikes/ikea-frame/clickbench-os-resolution.json",
+      "input_sha256": "130d5b13c7f359b1a56a83123ccac857587f83d820b64b86ce11d81faa05d5c1",
+      "comparisons": 30,
+      "material": {
+        "type": "material",
+        "encoded_logical_bytes": 72267,
+        "validity_bytes": 73728,
+        "padded_positions": 0,
+        "encoded_buffer_capacity_bytes": 79876,
+        "prepared_decoder_capacity_bytes": 356352,
+        "image_control_bytes": 1752,
+        "dictionary_capacity_bytes": 736,
+        "occupied_rows": 196608,
+        "kind_blocks": {
+          "0": 15,
+          "1": 1521
+        },
+        "checkpoint_option": "native"
+      }
+    },
+    {
+      "input": "build/spikes/ikea-frame/clickbench-region-connect.json",
+      "input_sha256": "d448af998eaa6e369446bab52e9551e989db7d5e1c7ad9a139ba148de0341580",
+      "comparisons": 30,
+      "material": {
+        "type": "material",
+        "encoded_logical_bytes": 114322,
+        "validity_bytes": 73728,
+        "padded_positions": 0,
+        "encoded_buffer_capacity_bytes": 144856,
+        "prepared_decoder_capacity_bytes": 356352,
+        "image_control_bytes": 1752,
+        "dictionary_capacity_bytes": 7976,
+        "occupied_rows": 196608,
+        "kind_blocks": {
+          "0": 14,
+          "1": 1255,
+          "4": 267
+        },
+        "checkpoint_option": "native"
+      }
+    },
+    {
+      "input": "build/spikes/ikea-frame/imdb-title-year.json",
+      "input_sha256": "d59892393ae4a643da6c9666b2eb23bb749ad002cccd9e8b1839b975986d3aa8",
+      "comparisons": 33,
+      "material": {
+        "type": "material",
+        "encoded_logical_bytes": 5315,
+        "validity_bytes": 1536,
+        "padded_positions": 0,
+        "encoded_buffer_capacity_bytes": 7316,
+        "prepared_decoder_capacity_bytes": 7424,
+        "image_control_bytes": 1168,
+        "dictionary_capacity_bytes": 32,
+        "occupied_rows": 4096,
+        "kind_blocks": {
+          "1": 6,
+          "2": 10,
+          "4": 16
+        },
+        "checkpoint_option": "native"
+      }
+    }
+  ],
+  "base_capture": "frame-consumers-intervals-20261022",
+  "base_capture_digest": "4eea843d481c3470f4a382cd273f95dad5669b1633f91df19d0125c4d75775b8",
+  "encoding_core_commit": "f760ca393c0ae0756c075a01062726351760daae",
+  "consumer_sources_sha256": {
+    "workbench/spikes/ikea-frame/execution/CMakeLists.txt": "675db32dd2d9357680b9cb29d6a4cb654d0fd72a72a02b000b760b49f33632a2",
+    "workbench/spikes/ikea-frame/execution/encoded.cpp": "cd6f55f85f664e547df4004764529a1df4db1937ac2b6e3d96def542080b5f4b",
+    "workbench/spikes/ikea-frame/execution/input.h": "c6e0e3b91bc5ac631115ba81babe79aa20b125bfe8c2643ab94de0f4f73ee19b",
+    "workbench/spikes/ikea-frame/execution/input.cpp": "86004aa18401aa39ed525a544ada86f58db54e33689f17ca787ec54b60eef7cb",
+    "workbench/spikes/ikea-frame/execution/material-witness/material.h": "3b256102fd65da73a0de0382adcf5b3b67291e1f75e6a41b284fac641ce6e5f8",
+    "workbench/spikes/ikea-frame/execution/material-witness/material.cpp": "284a3ebdfa9d8245feb043dd51d7f7852abf712b578087d8b8c50431ae858507",
+    "workbench/spikes/ikea-frame/execution/material-witness/check.cpp": "25bc1c24e1485f7db3210585185b82d35823027ff14dfef8ded403f530b6741b"
+  },
+  "encoding_source_files_sha256": {
+    "workbench/spikes/ikea-frame/encoding/material.h": "95f693ed3372c4dc8a34518dee52c71617e3f591d74cdee05d5675bf05759543",
+    "workbench/spikes/ikea-frame/encoding/material.cpp": "b723f30794bff48361887fa7709d0598f026cd6bef38ad66d2571e589bc5ee74",
+    "workbench/spikes/ikea-frame/encoding/kernels.h": "d09d435f9f1df7be803b26af4bd978c1e6dd3bcf09d152650e606d0409aae68d",
+    "workbench/spikes/ikea-frame/encoding/kernels.cpp": "5232868d737ad987269c752c532cba897d5be3efa46f2601d1bffe24a3b7fa8c",
+    "workbench/spikes/ikea-frame/encoding/CMakeLists.txt": "e52c51cee724ba354cb1012ba0bca23d65c9d0166673b5b5c6875c8407f6949f"
+  },
+  "conditions": {
+    "compiler": "Clang21.1.8",
+    "mode": "O3 line tables, nativeISA/generic tuning",
+    "host": "localAArch64 OrbStackVM",
+    "cpu": 6,
+    "api": "publicOrbital ObjectStore/Representation, nativeAllocations",
+    "scope": "default uncoded grouped consumers, authored u32X/u64category exact law; no new timing claims"
+  }
+}
