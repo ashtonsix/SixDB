@@ -1,6 +1,13 @@
 {
   "include": ["."],
-  "exclude": ["build", ".git", "**/__pycache__", "**/.venv"],
+  "exclude": [
+    "**/build",
+    ".git",
+    "**/__pycache__",
+    "**/.venv",
+    "**/node_modules",
+    "**/evidence"
+  ],
   "extraPaths": ["workbench/tools"],
   "typeCheckingMode": "basic",
   "pythonPlatform": "Linux"

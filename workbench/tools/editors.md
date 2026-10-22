@@ -72,6 +72,18 @@ the VS Code task **SixDB: check C++ editor diagnostics** does the same. Optional
 dependencies and intentionally failing probes can produce expected diagnostics.
 This does not execute code or check every template/conditional branch.
 
+## Python analysis scope
+
 `pyrightconfig.json` provides Workbench imports and basic Linux type checking.
-Select a Linux Python interpreter with the study's dependencies. With Pyright
-installed, `pyright --pythonpath /usr/bin/python3` uses the same configuration.
+It excludes build output, dependency trees and captured evidence from background
+discovery. Authored tools and spike scripts remain included. Select a Linux
+Python interpreter with the study's dependencies; with Pyright installed,
+`pyright --pythonpath /usr/bin/python3` uses the same configuration.
+
+In a multi-root workspace, each root has its own analysis configuration. SixDB's
+exclusions do not cover sibling checkouts or archives. Workspace-level
+`python.analysis.exclude` can exclude generated trees across roots and entire
+historical archive roots. **Python: Show Language Server Output** identifies the
+root and source count behind a slow-enumeration warning.
+[Pylance exclusions](https://github.com/microsoft/pylance-release/blob/main/docs/settings/python_analysis_exclude.md)
+still allow analysis of opened files and their imports.
