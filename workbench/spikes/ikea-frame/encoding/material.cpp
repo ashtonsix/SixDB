@@ -50,13 +50,11 @@ column encode(std::span<const u64> values, encode_options options) {
     c.rows = values.size() / block_rows * block_rows;
     const auto &layout = run_layout();
     std::vector<u64> scratch(block_rows);
-    std::vector<unsigned> full_widths;  // per block: width of max - min
     for (std::size_t b = 0; b * block_rows < c.rows; ++b) {
         const auto block = values.subspan(b * block_rows, block_rows);
         const auto [lo, hi] = std::minmax_element(block.begin(), block.end());
         descriptor d{*lo, static_cast<std::uint32_t>(c.payload.size()), 0, kind::constant, 0};
         c.runs.emplace_back();
-        full_widths.push_back(width_of(*hi - *lo));
         if (*lo == *hi) {
             c.blocks.push_back(d);
             continue;
@@ -110,7 +108,7 @@ column encode(std::span<const u64> values, encode_options options) {
             std::size_t n = 0;
             for (u64 v : block)
                 n += v < best_base || v - best_base > limit;
-            const std::size_t cost = plane_bytes(pk, block_rows) + 8 + 1 + n +
+            const std::size_t cost = plane_bytes(pk, block_rows) + 8 + 2 + n +
                                      plane_bytes(full_width, n);
             if (n && cost < patched_cost) {
                 patched_cost = cost;
@@ -147,8 +145,9 @@ column encode(std::span<const u64> values, encode_options options) {
             pack(patched_k, scratch, at);
             std::memcpy(at + plane, &*lo, 8);
             at[plane + 8] = static_cast<std::uint8_t>(positions.size());
-            std::memcpy(at + plane + 9, positions.data(), positions.size());
-            pack(full_width, exceptional, at + plane + 9 + positions.size());
+            at[plane + 9] = static_cast<std::uint8_t>(full_width);
+            std::memcpy(at + plane + 10, positions.data(), positions.size());
+            pack(full_width, exceptional, at + plane + 10 + positions.size());
         } else if (delta_ok && delta_cost < std::min(packed_cost, runs_cost)) {
             d.type = kind::delta;
             d.base = block[0];
@@ -255,7 +254,7 @@ column encode(std::span<const u64> values, encode_options options) {
             // positions; recover that width from the block's own extremes.
             const std::size_t b = c.decoders.size() - 1;
             const auto p = patches(c, b);
-            const unsigned ew = full_widths[b];
+            const unsigned ew = p.value_width;  // stored in the body
             auto exc = sp::bind_decoder<u64>(sp::dense_input{
                 ew, sp::geometry::local,
                 std::span<const std::uint8_t>(p.values, plane_bytes(ew, p.n)), p.n});

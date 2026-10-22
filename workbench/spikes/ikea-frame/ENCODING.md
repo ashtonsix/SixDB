@@ -313,6 +313,30 @@ Bulk reads decode a block's stream, apply exceptions while the residuals are in
 registers (Calico's fused tier, survey §2), run inverse stages, then apply
 overrides by iterating the bitmap.
 
+### Separated filter heads (Ashton, 2026-10-22)
+
+Frame carries SeriesPack's separated leading one- or two-byte planes (H = 8 or
+16). They sit late enough in the pipeline to hold useful entropy, yet keep a
+predicate meaning that doesn't need the suffix. Ikea LEAD's
+[filter consumer](filter/README.md) owns the implementation. Which cut
+satisfies both conditions depends on the stage:
+
+- **After block frame of reference**, heads are the top bits of the K-bit
+  residual. Entropy is high, but the head's meaning varies per block (base
+  and K), so a threshold translates per block.
+- **After a part-level frame of reference (before block FOR)** is a middle
+  candidate: one interpretation across the part, so a contiguous head plane
+  scans with a single threshold. It costs entropy where block bases differ.
+- **Before prediction:** residual heads say nothing about values, so
+  predicted blocks need value heads from an earlier cut, a separate summary,
+  or a fallback.
+- **Dictionaries:** a sorted dictionary's code heads are order-preserving
+  (translate the threshold through the dictionary). A frequency dictionary's
+  code head identifies the most frequent values, which answers equality on
+  them without the suffix.
+- **Exceptions:** exception slots hold residual 0, so their heads mislead;
+  a head predicate must merge the exception list.
+
 ### Coarse masks
 
 Ashton's requirement (2026-10-22): most operations accept a filter mask at

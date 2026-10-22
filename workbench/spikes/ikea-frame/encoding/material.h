@@ -41,8 +41,10 @@ constexpr std::size_t block_rows = 256;
 // else u64). Checkpoints serve point reads; SUM and COUNT here don't need them.
 // patched: frame of reference with exceptions. The plane holds residuals over
 // d.base at width K with 0 in exception slots; after it come the block minimum
-// lo (u64), the exception count n (u8), n row positions (u8) and n exception
-// values relative to lo as a SeriesPack plane at the block's full width.
+// lo (u64), the exception count n (u8), the exception value width W (u8), n
+// ascending row positions (u8) and n exception values relative to lo as a
+// SeriesPack plane at width W. W is stored so the body is interpretable without
+// any retained decoder binding.
 enum class kind : std::uint8_t { constant, runs, packed, delta, patched };
 
 // Exception layout inside a patched block's payload.
@@ -163,9 +165,9 @@ inline patch_view patches(const column &c, std::size_t b) {
     patch_view p;
     std::memcpy(&p.lo, at, 8);
     p.n = at[8];
-    p.positions = at + 9;
-    p.values = at + 9 + p.n;
-    p.value_width = 0;
+    p.value_width = at[9];
+    p.positions = at + 10;
+    p.values = at + 10 + p.n;
     return p;
 }
 

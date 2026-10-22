@@ -50,6 +50,14 @@ Reading notes on the review (2026-10-22), where it needs qualifying:
 | Do linear and category predictors pay on SixDB's columns? | Experiment | Calico's predictive transform paid only on one telemetry corpus. | [Survey §2](SURVEY.md#2-calico) |
 | Should Boundlist be renamed for its third consumer? Its endpoint searches already accept wide ordered sources, so prototyping does not depend on it. | Design | Naming only; the review found no missing search law. | [Encoding §5](ENCODING.md#5-map-or-predict) |
 
+## Separated filter heads (Ashton, 2026-10-22)
+
+| Question | Kind | Why it matters | Source |
+| --- | --- | --- | --- |
+| Which transform cut gives filter heads both useful entropy and an independent predicate meaning: block-late FOR, a part-level FOR cut, or the early working value? | Experiment | Block-late heads carry the most entropy but need per-block threshold translation; part-level heads scan uniformly. | [Encoding, filter heads](ENCODING.md#separated-filter-heads-ashton-2026-10-22), [filter consumer](filter/README.md) |
+| What do heads mean for predicted, dictionary-coded and patched blocks (value heads from an earlier cut, order-preserving code heads, frequency-class heads, exception merging)? | Design / experiment | Residual heads don't describe values; exception slots mislead. | [Encoding, filter heads](ENCODING.md#separated-filter-heads-ashton-2026-10-22) |
+| How stable is a head's meaning across re-encodes, when block K and base change? | Experiment | Lifecycle re-encodes would invalidate any cached head predicates or statistics. | Ikea LEAD's lifecycle work |
+
 ## Coarse masks (Ashton, 2026-10-22)
 
 Most operations should accept a coarse filter mask (for example one bit per

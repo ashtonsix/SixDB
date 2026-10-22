@@ -348,8 +348,9 @@ exception test).
 A **patched** kind (separate from packed, so whole-block threshold shortcuts
 stay correct) keeps residuals over a base at width K, with 0 in exception
 slots. After the plane come the block minimum (u64), the exception count (u8),
-u8 positions and exception values relative to the minimum as a SeriesPack
-plane at the block's full width. The encoder tries the narrowest window of
+the exception value width (u8, so the body needs no retained decoder to be
+interpreted), ascending u8 positions and exception values relative to the
+minimum as a SeriesPack plane at that width. The encoder tries the narrowest window of
 256 − e sorted values for e ∈ {2, 8, 32}. SUM, COUNT and `decode_block` are
 exact against the plain control on every column.
 
