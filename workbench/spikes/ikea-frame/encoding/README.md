@@ -831,11 +831,51 @@ documents validate and pass the oracle (three parts each, in
 `build/spikes/ikea-frame/`): `OS × ResolutionWidth` with no nulls, and
 `RegionID × ConnectTiming` with synthetic nulls where ConnectTiming = 0.
 
+## Recent-value references (byte model)
+
+[`repeat_model.py`](repeat_model.py) tests the hash gap from the second pass
+with one new block kind. A row whose value was a literal within the last 2^R
+literals of the same part becomes an R-bit distance. Other rows are literals,
+held in a FOR plane, with a 256-bit flag plane. References point only at
+literals, so a point read is flag, then distance, then one literal point read.
+Parts stay independent. Each block takes the cheaper of this kind (best R in
+8/12/16 per part) and the lightweight kinds of `dictionary_model.block_cost`,
+which excludes delta. ZSTD compresses each part's raw u64 bytes, so it is a
+byte bound with no random access. Output is in `build/spikes/ikea-frame/repeat/`.
+
+| Bits/row | Lightweight | + references | ZSTD-3 | ZSTD-19 | Reference rows |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| URLHash | 59.1 | 45.3 | 41.4 | 40.6 | 41% |
+| URLHash, shuffled | 64.5 | 57.5 | 56.9 | 56.0 | 19% |
+| UserID, shuffled | 64.5 | 55.5 | 58.7 | 54.6 | 23% |
+| UserID | 14.6 | 14.6 | 13.3 | 13.1 | 1% |
+| RegionID | 5.4 | 5.2 | 3.4 | 2.7 | 13% |
+| WatchID, ClientIP, EventTime | unchanged | unchanged | | | ≤1% |
+
+1. **Recent-value references explain most of the hash gap.** URLHash closes
+   78% of its distance to ZSTD-3, and every block takes the kind. Most parts
+   choose R = 16, so useful repeats sit thousands of rows back, beyond any
+   block-local dictionary.
+2. **They work when order doesn't help.** Shuffled UserID beats ZSTD-3 by
+   3 bits/row. Under shuffle, clustering no longer narrows FOR, but a value
+   still recurs within its part.
+3. **They don't replace the other levers.** Clustered UserID, ClientIP and
+   EventTime already sit at or below ZSTD-3 through FOR, runs and delta.
+   RegionID's remaining gap is entropy (second pass), not repeats. WatchID
+   is unique.
+4. **Costs to price before building the kind.** This is a byte model. The
+   remaining 4 bits on URLHash are probably multi-row matches and entropy over
+   distances. Reads become gathers. Equality filters can test the literals,
+   then the references whose targets matched. SUM and range COUNT need the
+   gather. A point read crosses at most one block boundary, using a per-block
+   prefix of literal counts.
+
 ## Next questions
 
 1. Convert the model's winners into real SeriesPack bytes for a sample of
    columns, checking the modelled-to-physical gap.
-2. A "repeat of a recent value" arm for hash-like columns, against ZSTD.
+2. Real recent-value reference bodies for hash-like columns (byte model
+   above), with gather costs for point, equality filter and SUM.
 3. Re-clustered orders (by category, by time) beside original and shuffled, so
    Engine can price clustering against encoding effort.
 4. Bring in float/decimal and time-series corpora (TPC-H, TSBS, ALP's datasets).
