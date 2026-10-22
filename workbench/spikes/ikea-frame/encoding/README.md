@@ -296,6 +296,21 @@ bits per value. So the decided "checkpoints every 16 values" needs a compact
 checkpoint encoding, or a coarser spacing, to pay. This is now a question for
 Ashton in QUESTIONS.md.
 
+**Curated checkpoint options (Ashton: Engine decides, Ikea exposes curated
+options).** `bodies.cpp --checkpoints=native|packed|every64|none`; real bits per
+row over the 14 fields, with delta's block share:
+
+| Option | Window 0 | Window 196,608 | Window 355,015 |
+| --- | ---: | ---: | ---: |
+| native: 15 per block at u32/u64 | 147.3 (35%) | 146.4 (34%) | 147.8 (36%) |
+| packed: 15 at K + 8 bits | 139.2 (68%) | 138.5 (67%) | 140.1 (66%) |
+| every64: 3 at native width | 132.7 (85%) | 132.0 (85%) | 133.5 (84%) |
+| none | 128.2 (85%) | 127.6 (85%) | 129.1 (84%) |
+
+Bit-packing still costs about 1 bit/value at Jena's widths (K + 8 ≈ 18 bits ×
+15 / 256). Every-64 checkpoints get within 5 bits/row of none. Point-read cost
+per option is the measurement Engine needs next to choose.
+
 SUM and COUNT on Jena are 4–8× slower than the plain int16 control (about 0.06
 ns/row) on this VM: decoding through the runtime SeriesPack decoder into u64
 dominates. Same caveats as before: noisy local timings, an oracle selector, no

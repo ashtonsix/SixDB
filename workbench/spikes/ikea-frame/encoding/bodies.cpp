@@ -117,9 +117,36 @@ struct run_ends {
 // Which runs body to build: u8 run-end projection (default) or the compact
 // mutable Boundlist view as a control.
 bool compact_runs = false;
-// Store delta checkpoints (for point reads), or omit them (Sizes-style; reads
-// prefix-sum from the anchor).
-bool delta_checkpoints = true;
+// Delta checkpoint option, a curated choice for Engine (Ashton: Engine decides,
+// Ikea exposes curated options):
+//   native   15 checkpoints every 16 rows at u32 (u64 when K + 8 > 32)
+//   packed   the same 15 checkpoints bit-packed at K + 8 bits (SeriesPack plane)
+//   every64  3 checkpoints every 64 rows at native width
+//   none     no checkpoints; point reads prefix-sum from the anchor
+enum class checkpoints { native, packed, every64, none };
+checkpoints delta_checkpoints = checkpoints::native;
+
+const char *checkpoint_name() {
+    switch (delta_checkpoints) {
+    case checkpoints::native: return "native";
+    case checkpoints::packed: return "packed";
+    case checkpoints::every64: return "every64";
+    case checkpoints::none: return "none";
+    }
+    return "?";
+}
+
+// Bytes for one delta block's checkpoints at residual width k.
+std::size_t checkpoint_cost(unsigned k) {
+    const std::size_t native = k + 8 <= 32 ? 4 : 8;
+    switch (delta_checkpoints) {
+    case checkpoints::native: return 15 * native;
+    case checkpoints::packed: return k + 8 <= 64 ? plane_bytes(k + 8, 15) : 15 * 8;
+    case checkpoints::every64: return 3 * native;
+    case checkpoints::none: return 0;
+    }
+    return 0;
+}
 
 struct runs_geometry {
     std::vector<bl::byte> directory, lengths, control;
@@ -186,8 +213,7 @@ column encode(std::span<const u64> values) {
         }
         const unsigned dk = delta_ok ? std::max(1u, width_of(static_cast<u64>(dmax - dmin))) : 64;
         const std::size_t checkpoint_bytes = dk + 8 <= 32 ? 4 : 8;
-        const std::size_t delta_cost =
-            plane_bytes(dk, block_rows) + 8 + (delta_checkpoints ? 15 * checkpoint_bytes : 0);
+        const std::size_t delta_cost = plane_bytes(dk, block_rows) + 8 + checkpoint_cost(dk);
         const std::size_t runs_cost =
             plane_bytes(k, run_values.size()) +
             (compact_runs ? layout.directory_bytes() + layout.control_bytes() +
@@ -201,25 +227,31 @@ column encode(std::span<const u64> values) {
             const i64 rbase = static_cast<i64>(dmin);
             scratch[0] = 0;
             u64 cumulative = 0;
-            std::vector<u64> checkpoints;
+            std::vector<u64> marks;
             for (std::size_t i = 1; i < block_rows; ++i) {
                 scratch[i] = static_cast<u64>(
                     static_cast<i128>(block[i]) - static_cast<i128>(block[i - 1]) - dmin);
                 cumulative += scratch[i];
-                if (delta_checkpoints && i % 16 == 15 && i + 1 < block_rows)
-                    checkpoints.push_back(cumulative);  // sum through row i
+                const std::size_t every =
+                    delta_checkpoints == checkpoints::every64 ? 64 : 16;
+                if (delta_checkpoints != checkpoints::none && i % every == every - 1 &&
+                    i + 1 < block_rows)
+                    marks.push_back(cumulative);  // sum through row i
             }
             const std::size_t plane = plane_bytes(dk, block_rows);
             c.payload.resize(c.payload.size() + delta_cost);
             pack(dk, scratch, c.payload.data() + d.offset);
             std::memcpy(c.payload.data() + d.offset + plane, &rbase, 8);
-            for (std::size_t j = 0; j < checkpoints.size(); ++j) {
-                std::uint8_t *at = c.payload.data() + d.offset + plane + 8 + j * checkpoint_bytes;
+            std::uint8_t *stored = c.payload.data() + d.offset + plane + 8;
+            if (delta_checkpoints == checkpoints::packed && dk + 8 <= 64)
+                pack(dk + 8, marks, stored);
+            else for (std::size_t j = 0; j < marks.size(); ++j) {
+                std::uint8_t *at = stored + j * checkpoint_bytes;
                 if (checkpoint_bytes == 4) {
-                    const auto v = static_cast<std::uint32_t>(checkpoints[j]);
+                    const auto v = static_cast<std::uint32_t>(marks[j]);
                     std::memcpy(at, &v, 4);
                 } else {
-                    std::memcpy(at, &checkpoints[j], 8);
+                    std::memcpy(at, &marks[j], 8);
                 }
             }
         } else if (runs_cost < packed_cost && !compact_runs) {
@@ -585,10 +617,10 @@ void run(const char *name, std::span<const u64> values, u64 lo, u64 threshold) {
     for (const auto &d : c.blocks)
         ++counts[static_cast<int>(d.type)];
     const std::size_t total_bytes = c.descriptor_bytes() + c.payload.size() + c.run_geometry_bytes();
-    std::printf("{\"column\":\"%s\",\"delta_checkpoints\":%s,\"runs_body\":\"%s\",\"rows\":%zu,\"blocks\":%zu,\"constant\":%zu,\"runs\":%zu,"
+    std::printf("{\"column\":\"%s\",\"delta_checkpoints\":\"%s\",\"runs_body\":\"%s\",\"rows\":%zu,\"blocks\":%zu,\"constant\":%zu,\"runs\":%zu,"
                 "\"packed\":%zu,\"delta\":%zu,\"descriptor_bytes\":%zu,\"payload_bytes\":%zu,"
                 "\"run_geometry_bytes\":%zu,\"bits_per_value\":%.3f,\"plain_bytes_per_value\":%zu",
-                name, delta_checkpoints ? "true" : "false", compact_runs ? "boundlist-compact" : "u8-end-projection", c.rows, c.blocks.size(), counts[0], counts[1], counts[2], counts[3],
+                name, checkpoint_name(), compact_runs ? "boundlist-compact" : "u8-end-projection", c.rows, c.blocks.size(), counts[0], counts[1], counts[2], counts[3],
                 c.descriptor_bytes(), c.payload.size(), c.run_geometry_bytes(),
                 8.0 * total_bytes / c.rows, sizeof(T));
     const std::size_t n = c.blocks.size();
@@ -635,17 +667,25 @@ void run(const char *name, std::span<const u64> values, u64 lo, u64 threshold) {
 
 }  // namespace
 
+#ifndef FRAME_ENCODING_BODY_NO_MAIN
 int main(int argc, char **argv) {
     if (argc < 3) {
-        std::fprintf(stderr, "usage: %s NAME FILE.u64 [--compact-runs] [--no-checkpoints]\n",
+        std::fprintf(stderr, "usage: %s NAME FILE.u64 [--compact-runs] "
+                     "[--checkpoints=native|packed|every64|none]\n",
                      argv[0]);
         return 2;
     }
     for (int i = 3; i < argc; ++i) {
         if (std::strcmp(argv[i], "--compact-runs") == 0)
             compact_runs = true;
-        else if (std::strcmp(argv[i], "--no-checkpoints") == 0)
-            delta_checkpoints = false;
+        else if (std::strcmp(argv[i], "--checkpoints=native") == 0)
+            delta_checkpoints = checkpoints::native;
+        else if (std::strcmp(argv[i], "--checkpoints=packed") == 0)
+            delta_checkpoints = checkpoints::packed;
+        else if (std::strcmp(argv[i], "--checkpoints=every64") == 0)
+            delta_checkpoints = checkpoints::every64;
+        else if (std::strcmp(argv[i], "--checkpoints=none") == 0)
+            delta_checkpoints = checkpoints::none;
         else
             return 2;
     }
@@ -681,3 +721,4 @@ int main(int argc, char **argv) {
     else
         run<u64>(argv[1], values, *lo, threshold);
 }
+#endif  // FRAME_ENCODING_BODY_NO_MAIN
