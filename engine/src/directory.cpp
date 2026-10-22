@@ -5,9 +5,12 @@
 #include <cstdlib>
 #include <cstring>
 
+// Sections, top to bottom: the directory's Object format and row edits; the
+// publication workspace; tree mechanics (row planes, descent, settling, apply
+// and build), which are generic B+ tree apart from widen_separators; reads;
+// validation.
 namespace engine::directory {
 namespace {
-
 void require(bool ok,const char* what) {
   if(ok) return;
   std::fprintf(stderr,"engine::directory: %s\n",what);
@@ -41,7 +44,14 @@ struct KeySource {
   KeyRef at(unsigned r) const {return {data+std::size_t(r)*width,width};}
 };
 namespace bl=ikea::boundlist;
+// Visits each row plane of two nodes pairwise with its width in elements per row.
+template<class To,class From,class F> void planes(To& to,const From& from,std::size_t k,F f) {
+  f(to.prefix,from.prefix,1);f(to.min,from.min,k);f(to.max,from.max,k);f(to.dirent,from.dirent,1);
+  f(to.sep,from.sep,1);f(to.lsep,from.lsep,k);f(to.child,from.child,1);
 }
+}
+
+// Directory format and rows.
 
 Layer::Layer(loom::Worker& w,Store& s,std::pmr::memory_resource& m,std::uint64_t ns,Shape shape)
   :worker_(&w),store_(&s),memory_(&m),space_(ns),shape_(shape) {
@@ -106,6 +116,68 @@ Layer::Node Layer::decode(Selection s) const {
   return n;
 }
 
+void Layer::edit_leaf(Step& s,const Edit& ed) const {
+  const auto& e=ed.entry;
+  const auto k=shape_.key_bytes;
+  auto& leaf=s.node;
+  auto r=std::lower_bound(leaf.prefix.begin(),leaf.prefix.end(),e.prefix)-leaf.prefix.begin();
+  bool present=r<std::ptrdiff_t(leaf.prefix.size())&&leaf.prefix[r]==e.prefix;
+  if(shape_.fenced()&&ed.kind!=Edit::erase) require(e.min.size()==k&&e.max.size()==k,"fence width");
+  switch(ed.kind) {
+  case Edit::insert:
+    require(!present,"insert: present");
+    leaf.prefix.insert(leaf.prefix.begin()+r,e.prefix);
+    if(shape_.fenced()) {
+      leaf.min.insert(leaf.min.begin()+r*k,e.min.begin(),e.min.end());
+      leaf.max.insert(leaf.max.begin()+r*k,e.max.begin(),e.max.end());
+    }
+    leaf.dirent.insert(leaf.dirent.begin()+r,e.dirent);
+    break;
+  case Edit::erase:
+    require(present,"erase: absent");
+    leaf.prefix.erase(leaf.prefix.begin()+r);
+    if(shape_.fenced()) {
+      leaf.min.erase(leaf.min.begin()+r*k,leaf.min.begin()+(r+1)*k);
+      leaf.max.erase(leaf.max.begin()+r*k,leaf.max.begin()+(r+1)*k);
+    }
+    leaf.dirent.erase(leaf.dirent.begin()+r);
+    break;
+  case Edit::update:
+    require(present,"update: absent");
+    if(shape_.fenced()) {
+      std::copy_n(e.min.begin(),k,leaf.min.begin()+r*k);
+      std::copy_n(e.max.begin(),k,leaf.max.begin()+r*k);
+    }
+    leaf.dirent[r]=e.dirent;
+    break;
+  }
+}
+
+// Logical separators stay loose. Physical order is logical order, so only an
+// edit beside a boundary can violate one, and deaths never do; the leaf's new
+// first and last fences pull the two governing separators outward.
+void Layer::widen_separators(std::vector<Step>& path) const {
+  auto& leaf=path.back().node;
+  if(!leaf.size()||path.size()<2||!shape_.fenced()) return;
+  const auto k=shape_.key_bytes;
+  auto key_less=[&](const std::uint8_t* a,const std::uint8_t* b) {return std::memcmp(a,b,k)<0;};
+  for(auto i=path.size()-1;i-->0;) if(path[i].index>0) {
+    auto& s=path[i];
+    auto* sep=s.node.lsep.data()+std::size_t(s.index)*k;
+    if(key_less(leaf.min.data(),sep)) {std::copy_n(leaf.min.begin(),k,sep);s.dirty=true;}
+    break;
+  }
+  for(auto i=path.size()-1;i-->0;) if(path[i].index+1<path[i].node.size()) {
+    auto& s=path[i];
+    auto* sep=s.node.lsep.data()+std::size_t(s.index+1)*k;
+    auto* last=leaf.max.data()+leaf.max.size()-k;
+    if(key_less(sep,last)) {std::copy_n(last,k,sep);s.dirty=true;}
+    break;
+  }
+}
+
+// Publication workspace.
+
 Layer::Node Layer::load(Work& w,std::uint64_t name) const {
   if(auto it=w.nodes.find(name);it!=w.nodes.end()) return it->second;
   if(w.erased.contains(name)) return {};
@@ -167,6 +239,8 @@ orbital::Result<void> Layer::publish(Work& w) {
   return store_->install(packet);
 }
 
+// Tree mechanics.
+
 void Layer::set_row(Node& parent,unsigned i,const Node& child) const {
   const auto k=shape_.key_bytes;
   const auto& first_sep=child.height?child.sep:child.prefix;
@@ -200,11 +274,9 @@ std::vector<Layer::Node> Layer::split_at(const Node& n,const std::vector<std::si
     auto b=bounds[p],e=bounds[p+1];
     auto& o=out[p];
     o.height=n.height;
-    auto slice=[&](auto& to,const auto& from,std::size_t width) {
+    planes(o,n,k,[&](auto& to,const auto& from,std::size_t width) {
       if(!from.empty()) to.assign(from.begin()+b*width,from.begin()+e*width);
-    };
-    slice(o.prefix,n.prefix,1);slice(o.min,n.min,k);slice(o.max,n.max,k);slice(o.dirent,n.dirent,1);
-    slice(o.sep,n.sep,1);slice(o.lsep,n.lsep,k);slice(o.child,n.child,1);
+    });
   }
   return out;
 }
@@ -217,10 +289,8 @@ std::vector<Layer::Node> Layer::split(const Node& n,unsigned pieces) const {
 
 Layer::Node Layer::concat(Node left,const Node& right,const Node& parent,unsigned right_index) const {
   const auto k=shape_.key_bytes;
-  auto append=[](auto& to,const auto& from) {to.insert(to.end(),from.begin(),from.end());};
-  append(left.prefix,right.prefix);append(left.min,right.min);append(left.max,right.max);append(left.dirent,right.dirent);
   auto at=left.sep.size();
-  append(left.sep,right.sep);append(left.lsep,right.lsep);append(left.child,right.child);
+  planes(left,right,k,[](auto& to,const auto& from,std::size_t) {to.insert(to.end(),from.begin(),from.end());});
   // The right node's first separator is unused until it becomes an interior row.
   if(left.height) {
     left.sep[at]=parent.sep[right_index];
@@ -246,63 +316,11 @@ std::vector<Layer::Step> Layer::descend(Work& w,std::uint32_t p) const {
   return path;
 }
 
-void Layer::edit_leaf(Step& s,const Edit& ed) const {
-  const auto& e=ed.entry;
-  const auto k=shape_.key_bytes;
-  auto& leaf=s.node;
-  auto r=std::lower_bound(leaf.prefix.begin(),leaf.prefix.end(),e.prefix)-leaf.prefix.begin();
-  bool present=r<std::ptrdiff_t(leaf.prefix.size())&&leaf.prefix[r]==e.prefix;
-  if(shape_.fenced()&&ed.kind!=Edit::erase) require(e.min.size()==k&&e.max.size()==k,"fence width");
-  switch(ed.kind) {
-  case Edit::insert:
-    require(!present,"insert: present");
-    leaf.prefix.insert(leaf.prefix.begin()+r,e.prefix);
-    if(shape_.fenced()) {
-      leaf.min.insert(leaf.min.begin()+r*k,e.min.begin(),e.min.end());
-      leaf.max.insert(leaf.max.begin()+r*k,e.max.begin(),e.max.end());
-    }
-    leaf.dirent.insert(leaf.dirent.begin()+r,e.dirent);
-    break;
-  case Edit::erase:
-    require(present,"erase: absent");
-    leaf.prefix.erase(leaf.prefix.begin()+r);
-    if(shape_.fenced()) {
-      leaf.min.erase(leaf.min.begin()+r*k,leaf.min.begin()+(r+1)*k);
-      leaf.max.erase(leaf.max.begin()+r*k,leaf.max.begin()+(r+1)*k);
-    }
-    leaf.dirent.erase(leaf.dirent.begin()+r);
-    break;
-  case Edit::update:
-    require(present,"update: absent");
-    if(shape_.fenced()) {
-      std::copy_n(e.min.begin(),k,leaf.min.begin()+r*k);
-      std::copy_n(e.max.begin(),k,leaf.max.begin()+r*k);
-    }
-    leaf.dirent[r]=e.dirent;
-    break;
-  }
-}
-
+// Restores node bounds bottom-up along one edited path: splits overfull nodes
+// (the root keeps its name and deepens), removes empty ones, merges or
+// redistributes nodes that shrank below merge_below, and collapses a root
+// with one child.
 void Layer::settle(Work& w,std::vector<Step>& path) {
-  auto& leaf=path.back().node;
-  if(leaf.size()&&path.size()>1&&shape_.fenced()) {
-    const auto k=shape_.key_bytes;
-    // Only an edit beside a separator can violate it; deaths leave it loose.
-    auto key_less=[&](const std::uint8_t* a,const std::uint8_t* b) {return std::memcmp(a,b,k)<0;};
-    for(auto i=path.size()-1;i-->0;) if(path[i].index>0) {
-      auto& s=path[i];
-      auto* sep=s.node.lsep.data()+std::size_t(s.index)*k;
-      if(key_less(leaf.min.data(),sep)) {std::copy_n(leaf.min.begin(),k,sep);s.dirty=true;}
-      break;
-    }
-    for(auto i=path.size()-1;i-->0;) if(path[i].index+1<path[i].node.size()) {
-      auto& s=path[i];
-      auto* sep=s.node.lsep.data()+std::size_t(s.index+1)*k;
-      auto* last=leaf.max.data()+leaf.max.size()-k;
-      if(key_less(sep,last)) {std::copy_n(last,k,sep);s.dirty=true;}
-      break;
-    }
-  }
   // The rightmost node on each level takes appends; it splits off full
   // build-occupancy pieces instead of halves so appended runs stay dense.
   std::vector<bool> rightmost(path.size(),true);
@@ -399,6 +417,7 @@ orbital::Result<void> Layer::apply(std::span<const Edit> edits) {
       require(i==0||edits[i-1].entry.prefix<edits[i].entry.prefix,"apply: unsorted");
       edit_leaf(path.back(),edits[i]);
     }
+    widen_separators(path);
     settle(w,path);
   }
   return publish(w);
@@ -449,6 +468,8 @@ orbital::Result<void> Layer::build(std::span<const Entry> es) {
   }
   return publish(w);
 }
+
+// Reads.
 
 // Reads: every visit is one Scope::bind; ordered planes are Boundlist sources.
 // Row 0 of an interior node covers everything below row 1's separator.
@@ -539,12 +560,14 @@ std::span<const std::uint8_t> Layer::max(const Cursor& c) const {
   return {plane<std::uint8_t>(c.leaf,3)+std::size_t(c.rank)*shape_.key_bytes,shape_.key_bytes};
 }
 
+// Validation.
+
 void Layer::validate() const {
   Store::Scope scope(*store_);
   const auto k=shape_.key_bytes;
   struct Bounds {std::uint32_t first,last;std::vector<std::uint8_t> min,max;unsigned height;};
   std::unordered_set<std::uint64_t> reachable;
-  auto walk=[&](auto& self,std::uint64_t name,bool is_root)->Bounds {
+  auto walk=[&](auto& self,std::uint64_t name)->Bounds {
     reachable.insert(name);
     auto s=bind(scope,name);
     require(bool(s),"validate: missing child");
@@ -563,7 +586,7 @@ void Layer::validate() const {
       return b;
     }
     std::vector<Bounds> kids;
-    for(auto ch:n.child) kids.push_back(self(self,ch,false));
+    for(auto ch:n.child) kids.push_back(self(self,ch));
     for(std::size_t i=0;i<kids.size();++i) {
       require(kids[i].height+1==n.height,"validate: height");
       if(!i) continue;
@@ -574,10 +597,9 @@ void Layer::validate() const {
                 "validate: logical separator");
       }
     }
-    (void)is_root;
     return {kids[0].first,kids.back().last,kids[0].min,kids.back().max,n.height};
   };
-  if(bind(scope,root())) walk(walk,root(),true);
+  if(bind(scope,root())) walk(walk,root());
   // Every published name must be reachable: no orphaned Objects.
   for(std::uint64_t n=0;n<next_;++n)
     require(!bind(scope,root()|n)||reachable.contains(root()|n),"validate: orphaned Object");

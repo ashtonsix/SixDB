@@ -180,6 +180,7 @@ private:
   [[nodiscard]] orbital::Result<void> publish(Work&);
   std::vector<Step> descend(Work&,std::uint32_t prefix) const;
   void edit_leaf(Step&,const Edit&) const;
+  void widen_separators(std::vector<Step>&) const;
   void settle(Work&,std::vector<Step>&);
   std::vector<Node> split_at(const Node&,const std::vector<std::size_t>& bounds) const;
   std::vector<Node> split(const Node&,unsigned pieces) const;
