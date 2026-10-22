@@ -74,6 +74,24 @@ is a useful debt control, not a completed steady-state comparison.
 
 ## Keep semantics separate from physical work
 
+Carry block masks through reads, reductions, replacement and movement experiments
+wherever their semantics allow; derive whole-group skips from those block bits.
+Excluded regions must avoid payload reads, decoding and writes; locating the next selected variable-size
+region can still require addressing metadata. Keep row masks, presence and NULLs
+separate. Returning a compacted result must not silently change what later masks
+mean in original coordinates.
+
+Compare all/none, scattered blocks and contiguous selected runs at equal density,
+with and without fine selection inside active groups. Charge mask traversal and
+preparation, and check issued stores and copied bytes as well as result equality.
+An all mask should retain the unmasked path's throughput; a none mask should
+perform no input-payload access or payload mutation/copy stores, while still
+producing any required empty result. Native access checks and
+timings must establish this: logical counters alone cannot prove skipped memory
+traffic. Prediction/checkpoint, dictionary and presence dependencies may require
+material outside the selected output groups; expose those dependency halos and
+their costs rather than reading excluded regions unconditionally.
+
 The independent logical oracle must observe every published image and retained
 reader. A physical re-encode has zero logical contribution. The same update
 can have different stored deltas under dictionary, affine, split or predicted

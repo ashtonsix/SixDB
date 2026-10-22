@@ -12,6 +12,16 @@ Encoding, decoding and compression receive the initial emphasis. The wider
 operation families and the [review's architectural alternatives](REVIEW.md)
 remain open while those experiments develop.
 
+Ashton's coarse-selection requirement applies across all or most operation
+families. The working shape is one bit per block, with a whole group skipped
+when all its block bits are clear. Excluded regions avoid work and data movement;
+fully selected groups can retain the unmasked fast path. Derive group emptiness
+from the block selection without requiring a second caller-supplied mask.
+Preserve that selection at its own granularity rather than expanding it into
+row masks and traversing every row. Fine row selection,
+record presence and NULL validity remain independent. No fixed group size or
+public mask interface is selected by this requirement.
+
 Ashton asks Ikea LEAD to drive the effort collaboratively with Claude- and
 Codex-based peers. Responsibilities below are current working ownership, not a
 ranking of capability or a partition of future public APIs. Challenge framing,
