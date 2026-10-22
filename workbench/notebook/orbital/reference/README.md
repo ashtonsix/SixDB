@@ -31,7 +31,7 @@ current runtime contracts. Formal models establish only their stated assumptions
   [transactions and contention](BRIEF.md#transactions-and-contention),
   [memory views](PHYSICAL.md#memory-views).
 - **Experiments:** [views for the embedded profile](../../../spikes/orbital-views/README.md),
-  [earlier object/view composition](../../../spikes/orbital-objects/README.md),
+  [earlier object/view composition](../../../spikes/orbital-mvcc/history/objects.md),
   [lock/reservation policies](../../../spikes/orbital-reservation-policy/README.md),
   [prepared retention](../../../spikes/orbital-root-fusion/README.md).
 - **Current native composition:** [material/source guide](../../../../orbital/docs/material.md),

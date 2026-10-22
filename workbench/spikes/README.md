@@ -87,7 +87,6 @@ slack, retained versions, shared interpretation and current complete consumers.
 | [Live-tail allocation](allocation-live-tail/README.md) | Group reclamation, live tails and complete physical drain. |
 | [Object integration and MVCC history](orbital-mvcc/README.md) | Current production consequence checks, cross-module outcomes, metadata/ABI and historical performance negatives. Timing drivers are retired. |
 | [Embedded views](orbital-views/README.md) | Earlier copy/COW/take, readiness, growth and intent comparisons; current interfaces live in Orbital. |
-| [Earlier object/view composition](orbital-objects/README.md) | Real mapping, storage/socket use and delayed-reader comparisons under its historical fixture. |
 | [Local handoff](orbital-local-handoff/README.md) | Same-host thread/worker handoff and hardware calibration. |
 
 ## Durability and protocol models

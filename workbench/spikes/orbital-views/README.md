@@ -28,7 +28,7 @@ native leases and backend requests retain actual backing. The original sealed
 memfd sources, full journal snapshots and one admitted mutation are fixtures.
 Semantic admission and raw binding close later composition gaps. No consensus,
 WASM or Firecracker runtime is implemented. Earlier
-[object composition](../orbital-objects/FINDINGS.md) and
+[object composition](../orbital-mvcc/history/objects.md) and
 [allocation geometry](../memory-descriptors/README.md) remain useful prior experiments.
 
 The follow-up [design-space experiments](#run) compare publication and retained

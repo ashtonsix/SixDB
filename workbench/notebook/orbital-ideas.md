@@ -30,10 +30,12 @@ alongside design prose: some attractive descriptions were never implemented.
 ## Durable objects, memory and local execution
 
 The [physical brief](orbital/reference/PHYSICAL.md) records earlier object/view proposals.
-The [object/view study](../spikes/orbital-objects/README.md) now includes a composed
-native caller alongside the UFFD/COW probes. Its [findings](../spikes/orbital-objects/FINDINGS.md)
-record the tested lifetime, reconstruction and capacity histories and the remaining
-limits. These older questions remain reference material, not a current task list.
+The [earlier object/view findings](../spikes/orbital-mvcc/history/objects.md)
+retain copy/reuse, physical-use and reconstruction counterexamples, native
+measurements and standalone UFFD probe recovery. The prototype is retired;
+[Object integration](../spikes/orbital-mvcc/README.md) retains production
+consequence checks. These older questions remain reference material, not a
+current task list.
 
 - **Make durable memory usable by ordinary programs.** The
   [early narrative](https://github.com/ashtonsix/SixDB/blob/1957910e21c266ea642ab505abe923217364948f/orbital/stale-drafts/BRIEF.md), in its memory and closing design-lessons

@@ -16,7 +16,7 @@ with their current owners instead of preserving parallel implementations.
 | `orbital-scenarios/` | [Transaction workload repertoire](transactions/README.md), counterexamples and recovery questions in [Orbital research questions](orbital-ideas.md). Old arbitration/MVTO runtimes and browser are archived. |
 | `orbital-dataflow/` | [Distributed workload repertoire](dataflow-workloads.md), retained-state and progress questions in the mining guide. Four toy frameworks are archived; their unanswered questions are not declared solved. |
 | `orbital-dissemination/` | The full [223-entry source survey](dissemination/README.md) remains browsable in the notebook. Specialized routing, transport and resource comparisons remain recoverable from the checkpoint. |
-| `orbital-objects/{DESIGN,SCENARIOS,SOURCES}.md`, `probe.py`, `evidence/probe.json` | [Physical brief](orbital/reference/PHYSICAL.md) records the earlier scope. The [object/view study](../spikes/orbital-objects/README.md) retains native mapping and composition evidence. |
+| `orbital-objects/{DESIGN,SCENARIOS,SOURCES}.md`, `probe.py`, `evidence/probe.json` | [Physical brief](orbital/reference/PHYSICAL.md) records the earlier scope. The [object/view study](../spikes/orbital-mvcc/history/objects.md) retains native mapping and composition evidence. |
 
 Completed does not imply superseded. Aggregate maintenance, trie remapping,
 regexp lowering and row-filter signatures still preserve distinct unanswered
@@ -133,6 +133,16 @@ The old leaf suite is not a second verification plan.
 Links from retained findings to deleted source/evidence are pinned to that
 checkpoint. Original measured bundles still identify their own captured bytes.
 Recover into a separate directory, not over current modules.
+
+## Object/view retirement — October 22, 2026
+
+The earlier `orbital-objects/` composition is retired. All 34 tracked files
+matched `35e63b8416d377f216575d6f8d97668b9bce9ab3` byte for byte before removal.
+Its [findings](../spikes/orbital-mvcc/history/objects.md) preserve physical-use,
+padding/stability, stale-rebase and cached-mapping lessons, plus exact recovery
+of the standalone UFFD and capability probes. The [Object history receipt](../spikes/orbital-mvcc/history/recovery.json)
+records its original tree. Production consequence checks remain with Orbital
+integration; the old prototype did not establish durable commit or recovery.
 
 ## Recovery
 

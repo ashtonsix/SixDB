@@ -473,7 +473,7 @@ compiled once; native specialization remains local and evidence-led.
 ## Evidence behind the recommendation
 
 [Views](../../spikes/orbital-views/FINDINGS.md),
-[objects](../../spikes/orbital-objects/FINDINGS.md),
+[objects](../../spikes/orbital-mvcc/history/objects.md),
 [view control](../../spikes/orbital-views/control/README.md) and
 [compositions](../../spikes/orbital-views/systems/README.md) inform access protection
 and the separation of stored input, publication and physical completion.

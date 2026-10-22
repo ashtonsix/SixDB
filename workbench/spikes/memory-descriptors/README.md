@@ -35,9 +35,9 @@ retained raw read ────────────────────�
 The original `arena` probe separates descriptor retirement from raw-read
 completion and gates mutation through an experimental owner registry. The tuned
 `grouped` allocator instead requires quiescence before release. These and the
-virtual-growth comparison are separate implementations. The
-[object/view composition](../orbital-objects/FINDINGS.md) uses its own page-sized
-memfd homes; it does not call these allocators.
+virtual-growth comparison are separate implementations. The historical
+[object/view composition](../orbital-mvcc/history/objects.md) used its own page-sized
+memfd homes; it did not call these allocators.
 
 | Material | Question |
 | --- | --- |

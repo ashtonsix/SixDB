@@ -1,5 +1,13 @@
 # Durable object composition findings
 
+Historical comparison, retired October 22, 2026. Current interfaces belong in
+[Orbital material](../../../../orbital/docs/material.md); current consequences
+run in the [Object integration checks](../../../benchmarks/retired-drivers.md#current-integration-checks).
+The findings below retain their original workload and limits. [Recovery](README.md#exact-recovery)
+pins the complete source; the standalone Linux probes are described at the end.
+The [original brief](https://github.com/ashtonsix/SixDB/blob/35e63b8416d377f216575d6f8d97668b9bce9ab3/workbench/spikes/orbital-objects/BRIEF.md)
+records the alternatives and intended guarantees.
+
 The useful boundary is a prepared object operation built from independently
 retained state and physical bytes. Share stable material, replace changed
 material when a borrower needs its old bytes, and permit exclusive reuse through
@@ -8,7 +16,7 @@ select production types or a transaction protocol.
 
 ## What the caller establishes
 
-The [caller](composition_fixture.h) uses a directory and approximate signatures
+The [caller](https://github.com/ashtonsix/SixDB/blob/35e63b8416d377f216575d6f8d97668b9bce9ab3/workbench/spikes/orbital-objects/composition_fixture.h) uses a directory and approximate signatures
 to select three bodies from two pages, rejects a false positive, and publishes
 a 64-byte output and an eight-byte summary. Independently formed expected bytes
 check both the result and the surrounding representation. All strategies execute
@@ -28,7 +36,7 @@ uses without a durable identity. Closing an object context stops acquisition but
 does not release another user's captured bytes. A generation detects changed
 bindings; it does not identify historical state.
 
-The [probes](composition_probe.cpp) expose several consequences:
+The [probes](https://github.com/ashtonsix/SixDB/blob/35e63b8416d377f216575d6f8d97668b9bce9ab3/workbench/spikes/orbital-objects/composition_probe.cpp) expose several consequences:
 
 - A read-only projection is itself a physical user. Keeping its allocation alive
   did not prevent reuse from changing still-readable aliases; retaining its
@@ -56,7 +64,7 @@ when a cached replacement fits. Automatic cache eviction is not implemented.
 
 ## Native comparison
 
-[Retained evidence](evidence/zen5-composition/README.md), October 2, 2026:
+[Retained evidence](https://github.com/ashtonsix/SixDB/blob/35e63b8416d377f216575d6f8d97668b9bce9ab3/workbench/spikes/orbital-objects/evidence/zen5-composition/README.md), October 2, 2026:
 AMD EPYC 9R45 on a fresh c8a.large, Clang 21.1.8, 4 KiB pages, one pinned CPU.
 Each cell is the median of six **trial mean** times, three repetitions in each
 case order. These are neither latency percentiles nor throughput under contention.
@@ -114,3 +122,34 @@ initialization. The next useful refinement is an operation-scoped acquisition
 of selected bindings and backend uses, with independently retained reconstruction
 material. Its metadata cost and integration with descriptor allocation need
 measurement before adopting a wider type hierarchy.
+
+## Standalone Linux fault-path probes
+
+The retired tree also contains two independent runnable specimens:
+
+- [views.cpp](https://github.com/ashtonsix/SixDB/blob/35e63b8416d377f216575d6f8d97668b9bce9ab3/workbench/spikes/orbital-objects/views.cpp)
+  actually supplies a missing shmem page, maps a minor fault and performs
+  write-protect COW with an existing and late old reader. Its fourth case
+  reuses an exclusive projection, reconstructs from an in-memory recipe and
+  aborts. These are bounded native fault paths, not durable reconstruction.
+- [capabilities.cpp](https://github.com/ashtonsix/SixDB/blob/35e63b8416d377f216575d6f8d97668b9bce9ab3/workbench/spikes/orbital-objects/capabilities.cpp)
+  queries available UFFD features, checks a read-only protection trap and
+  accepts a NOP-only restriction on disabled io_uring. It does not exercise
+  the advertised fault paths or establish sandboxing.
+
+[Native observations](https://github.com/ashtonsix/SixDB/blob/35e63b8416d377f216575d6f8d97668b9bce9ab3/workbench/spikes/orbital-objects/evidence/README.md)
+retain kernel/platform qualifications and exact source/output identities.
+Current production and the later embedded-view work do not supply UFFD.
+Recover either specimen independently, from the repository root:
+
+```sh
+mkdir -p build/recovered/object-fault-probes
+git show 35e63b8416d377f216575d6f8d97668b9bce9ab3:workbench/spikes/orbital-objects/views.cpp \
+  > build/recovered/object-fault-probes/views.cpp
+git show 35e63b8416d377f216575d6f8d97668b9bce9ab3:workbench/spikes/orbital-objects/capabilities.cpp \
+  > build/recovered/object-fault-probes/capabilities.cpp
+```
+
+The [original build instructions](https://github.com/ashtonsix/SixDB/blob/35e63b8416d377f216575d6f8d97668b9bce9ab3/workbench/spikes/orbital-objects/README.md#prototype-and-checks)
+and complete checkpoint recover the composition separately. Missing optional
+kernel facilities remain unsupported outcomes, rather than successful tests.
