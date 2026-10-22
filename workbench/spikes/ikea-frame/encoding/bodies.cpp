@@ -79,25 +79,39 @@ u64 plain_count_eq(const plain<T> &p, const block_mask &mask, u64 value) {
 
 // Paired, rotated arms: every trial times each arm once, starting from a
 // different arm, so drift lands on all arms alike instead of on whichever arm
-// ran last. Raw whole-call nanoseconds are kept per arm.
+// ran last. Raw whole-call nanoseconds are kept per arm. Rotation keeps the
+// cyclic order, so each arm always follows the same predecessor; with
+// shuffled_arms (the default unless --cold-only) each trial instead takes a
+// fixed-seed random order, so no arm inherits one predecessor's cache state.
 struct arm {
     const char *name;
     std::function<void()> call;
     std::vector<double> ns;
 };
+bool shuffled_arms = true;
 
 void time_arms(std::vector<arm> &arms, int trials = 21) {
     for (auto &a : arms)
         a.call();  // warm
-    for (int t = 0; t < trials; ++t)
+    std::vector<std::size_t> order(arms.size());
+    u64 seed = 0x2545f4914f6cdd1du;
+    for (int t = 0; t < trials; ++t) {
+        for (std::size_t i = 0; i < order.size(); ++i)
+            order[i] = (i + t) % arms.size();
+        if (shuffled_arms)
+            for (std::size_t i = order.size(); i > 1; --i) {
+                seed = seed * 6364136223846793005u + 1442695040888963407u;
+                std::swap(order[i - 1], order[(seed >> 33) % i]);
+            }
         for (std::size_t i = 0; i < arms.size(); ++i) {
-            auto &a = arms[(i + t) % arms.size()];
+            auto &a = arms[order[i]];
             const auto start = std::chrono::steady_clock::now();
             a.call();
             a.ns.push_back(std::chrono::duration<double, std::nano>(
                                std::chrono::steady_clock::now() - start)
                                .count());
         }
+    }
 }
 
 std::string u128_text(u128 v) {
@@ -125,6 +139,10 @@ void print_arms(const std::vector<arm> &arms) {
                     sorted[sorted.size() / 2], sorted.back());
     }
 }
+
+// --cold-only: no dictionary cache and no cached_* arms, so the per-call arms
+// run exactly the arm set of the driver before the cache existed.
+bool cold_only = false;
 
 template <class T>
 void run(const char *name, std::span<const u64> values, u64 lo, u64 threshold,
@@ -180,6 +198,39 @@ void run(const char *name, std::span<const u64> values, u64 lo, u64 threshold,
                 coded_counts[5]);
     if (c.options.dictionary == dictionary_order::arrival)
         std::printf(",\"arrival\":%zu,\"coded_arrival\":%zu", counts[6], coded_counts[6]);
+    // Equality COUNT at the value of the middle row (present in the column).
+    const u64 equal = values[c.rows / 2];
+    // A dictionary cache built once here, outside every timed loop, and reused
+    // by the cached_* arms across trials and masks: decoded entries, the COUNT
+    // translation at the median, then the equality index, each over every part
+    // with a dictionary. Each build is timed once, cold.
+    dictionary_cache cache;
+    if (!cold_only) {
+        using clock = std::chrono::steady_clock;
+        double ns[3] = {};
+        std::size_t bytes[3] = {};
+        for (int step = 0; step < 3; ++step) {
+            const std::size_t before = cache.bytes();
+            const auto start = clock::now();
+            for (std::size_t part = 0; part < c.parts.size(); ++part) {
+                if (!c.parts[part].count)
+                    continue;
+                const auto view = dictionary_of(c, part);
+                if (step == 0)
+                    sink = cache.values(view)->size();
+                else if (step == 1)
+                    sink = cache.threshold(view, threshold).code_threshold;
+                else
+                    sink = cache.code_of(view, equal).value_or(0);
+            }
+            ns[step] = std::chrono::duration<double, std::nano>(clock::now() - start).count();
+            bytes[step] = cache.bytes() - before;
+        }
+        std::printf(",\"dictionary_cache\":{\"identities\":%zu,\"bytes\":%zu,\"values_bytes\":%zu,"
+                    "\"threshold_bytes\":%zu,\"index_bytes\":%zu,\"values_build_ns\":%.0f,"
+                    "\"threshold_build_ns\":%.0f,\"index_build_ns\":%.0f}",
+                    cache.identities(), cache.bytes(), bytes[0], bytes[1], bytes[2], ns[0], ns[1], ns[2]);
+    }
     // Random point reads: 65,536 rows from a fixed LCG, the same rows for every
     // arm and image of this input.
     {
@@ -190,20 +241,21 @@ void run(const char *name, std::span<const u64> values, u64 lo, u64 threshold,
             r = static_cast<std::uint32_t>((x >> 33) % c.rows);
         }
         for (auto r : rows)
-            if (value_at(c, r) != values[r]) {
+            if (value_at(c, r) != values[r] || (!cold_only && value_at(c, r, &cache) != values[r])) {
                 std::fprintf(stderr, "%s: value_at mismatch at row %u\n", name, r);
                 std::exit(1);
             }
         std::vector<arm> arms{
             {"encoded_point", [&] { u64 s = 0; for (auto r : rows) s += value_at(c, r); sink = s; }, {}},
-            {"plain_point", [&] { u64 s = 0; for (auto r : rows) s += p.values[r] + p.base; sink = s; }, {}}};
+            {"plain_point", [&] { u64 s = 0; for (auto r : rows) s += p.values[r] + p.base; sink = s; }, {}},
+            {"cached_point", [&] { u64 s = 0; for (auto r : rows) s += value_at(c, r, &cache); sink = s; }, {}}};
+        if (cold_only)
+            arms.pop_back();
         time_arms(arms);
         std::printf(",\"points\":{\"reads\":%zu", rows.size());
         print_arms(arms);
         std::printf("}");
     }
-    // Equality COUNT at the value of the middle row (present in the column).
-    const u64 equal = values[c.rows / 2];
     const std::size_t n = c.blocks.size();
     struct shape { const char *name; block_mask mask; };
     std::vector<shape> shapes{{"all", block_mask(n)}, {"clustered50", block_mask(n)},
@@ -234,6 +286,11 @@ void run(const char *name, std::span<const u64> values, u64 lo, u64 threshold,
             std::fprintf(stderr, "%s %s: equality COUNT mismatch\n", name, s.name);
             std::exit(1);
         }
+        if (!cold_only && (encoded_sum(c, s.mask, &cache) != ps || encoded_count_ge(c, s.mask, threshold, &cache) != pc ||
+            catalogue_count_ge(c, s.mask, threshold, &cache) != pc || encoded_count_eq(c, s.mask, equal, &cache) != eq)) {
+            std::fprintf(stderr, "%s %s: cached arm mismatch\n", name, s.name);
+            std::exit(1);
+        }
         std::vector<arm> arms{
             {"encoded_sum", [&] { consume(encoded_sum(c, s.mask)); }, {}},
             {"encoded_narrow_sum", [&] { consume(encoded_sum_narrow(c, s.mask)); }, {}},
@@ -243,7 +300,13 @@ void run(const char *name, std::span<const u64> values, u64 lo, u64 threshold,
             {"catalogue_count", [&] { sink = catalogue_count_ge(c, s.mask, threshold); }, {}},
             {"plain_count", [&] { sink = plain_count_ge(p, s.mask, threshold); }, {}},
             {"encoded_count_eq", [&] { sink = encoded_count_eq(c, s.mask, equal); }, {}},
-            {"plain_count_eq", [&] { sink = plain_count_eq(p, s.mask, equal); }, {}}};
+            {"plain_count_eq", [&] { sink = plain_count_eq(p, s.mask, equal); }, {}},
+            {"cached_sum", [&] { consume(encoded_sum(c, s.mask, &cache)); }, {}},
+            {"cached_count", [&] { sink = encoded_count_ge(c, s.mask, threshold, &cache); }, {}},
+            {"cached_catalogue_count", [&] { sink = catalogue_count_ge(c, s.mask, threshold, &cache); }, {}},
+            {"cached_count_eq", [&] { sink = encoded_count_eq(c, s.mask, equal, &cache); }, {}}};
+        if (cold_only)
+            arms.resize(arms.size() - 4);
         time_arms(arms);
         std::printf(",\"%s\":{\"physical_rows\":%zu,\"selected_rows\":%zu,\"sum\":\"%s\","
                     "\"count_ge\":%llu",
@@ -264,7 +327,7 @@ int main(int argc, char **argv) {
         std::fprintf(stderr, "usage: %s NAME FILE.u64 "
                      "[--checkpoints=native|packed|every64|none] [--delta-exceptions] "
                      "[--dictionary=none|sorted|frequency|arrival] [--dictionary-every-part] "
-                     "[--no-bindings]\n",
+                     "[--no-bindings] [--cold-only]\n",
                      argv[0]);
         return 2;
     }
@@ -284,6 +347,8 @@ int main(int argc, char **argv) {
             options.dictionary_every_part = true;
         else if (std::strcmp(argv[i], "--no-bindings") == 0)
             options.bind_decoders = false;
+        else if (std::strcmp(argv[i], "--cold-only") == 0)
+            cold_only = true, shuffled_arms = false;
         else if (std::strcmp(argv[i], "--checkpoints=native") == 0)
             options.delta_checkpoints = checkpoints::native;
         else if (std::strcmp(argv[i], "--checkpoints=packed") == 0)

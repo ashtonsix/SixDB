@@ -29,6 +29,7 @@
 #include <optional>
 #include <span>
 #include <string>
+#include <unordered_map>
 #include <vector>
 
 namespace frame_encoding {
@@ -831,18 +832,124 @@ inline u128 block_sum(const column &c, std::size_t b) {
     return block_sum(borrow(c, b));
 }
 
+// Derived dictionary material that a caller keeps across calls, keyed by
+// dictionary_identity. Its contract is the identity premise: one identity names
+// one content for as long as this cache lives (or until clear()), so nothing
+// is revalidated against a plane. It owns derived copies, never pointers into
+// borrowed bodies or planes, so its tables outlive the bytes they came from.
+// Per identity, each piece is built lazily on first use:
+//   values     decoded entries, min-relative, in code order: 8 B/entry. Feeds
+//              SUM, point reads, truth tables and the equality index.
+//   thresholds COUNT(u >= t): frequency and arrival keep a truth table, one bit
+//              per entry; sorted keeps only its code threshold. At most
+//              thresholds_per_identity per identity, replaced round-robin.
+//   index      COUNT(u == v): open addressing over u32 codes, probed by value
+//              and confirmed against values[code]. Slots are a power of two at
+//              load <= 2/3, 4 B each: 6-11 B/entry over values. A sorted
+//              (value, code) array cost 12 B/entry, built 6x slower, and took
+//              ~8x longer per cache-cold lookup on URLHash's parts.
+// bytes() counts the tables plus a fixed charge per identity. An insertion
+// that would exceed capacity_bytes clears the whole cache first. Holders
+// (code_sum, code_count) share ownership of the tables they read, so clearing
+// never invalidates a call in progress.
+class dictionary_cache {
+public:
+    static constexpr unsigned thresholds_per_identity = 4;
+    using table = std::shared_ptr<const std::vector<u64>>;
+    struct threshold_material {
+        u64 code_threshold = 0;  // sorted
+        table truth;             // frequency, arrival
+    };
+    std::size_t capacity_bytes = SIZE_MAX;
+
+    // The decoded entries of p's identity.
+    table values(const dictionary_view &p);
+    // COUNT(u >= t)'s translation for p's identity.
+    threshold_material threshold(const dictionary_view &p, u64 t);
+    // v's code in p's identity, or none when v isn't an entry.
+    std::optional<u64> code_of(const dictionary_view &p, u64 v);
+    // Entry code of p's identity (point reads); the last identity is memoized.
+    u64 entry(const dictionary_view &p, u64 code) {
+        if (last_values && p.edition == last_id)
+            return last_values[code];
+        return entry_slow(p, code);
+    }
+    std::size_t bytes() const { return charged; }
+    std::size_t identities() const { return entries.size(); }
+    void clear();
+
+private:
+    struct index_table {
+        std::vector<std::uint32_t> slots;  // UINT32_MAX = empty
+        unsigned shift;
+        table values;
+    };
+    struct slot {
+        u64 threshold;
+        threshold_material m;
+        std::size_t bytes;
+    };
+    struct material {
+        table values;
+        std::shared_ptr<const index_table> index;
+        std::array<slot, thresholds_per_identity> thresholds;
+        unsigned used = 0, next = 0;
+    };
+    struct identity_hash {
+        std::size_t operator()(const dictionary_identity &d) const {
+            return static_cast<std::size_t>((d.scope * 0x9e3779b97f4a7c15u ^ d.edition) * 0xff51afd7ed558ccdu >> 17);
+        }
+    };
+    static constexpr std::size_t identity_bytes = sizeof(material) + 64;  // node, key, bucket
+    std::unordered_map<dictionary_identity, material, identity_hash> entries;
+    dictionary_identity last_id{};
+    const u64 *last_values = nullptr;
+    std::size_t charged = 0;
+    // p's material, after making room for `adding` bytes (which may clear).
+    material &room(const dictionary_view &p, std::size_t adding);
+    u64 entry_slow(const dictionary_view &p, u64 code);
+};
+
+// A point read whose dictionary lookup goes through the cache's decoded entries.
+// Forced inline like the uncached form, which the compiler inlines on its own.
+[[gnu::always_inline]] inline u64 value_at(const borrowed_block &k, unsigned row, dictionary_cache *cache) {
+    const u64 v = stored_at(k, row);
+    if (!k.coded)
+        return v;
+    return k.dictionary.min + (cache ? cache->entry(k.dictionary, v) : dictionary_at(k.dictionary, v));
+}
+[[gnu::always_inline]] inline u64 value_at(const column &c, std::size_t row, dictionary_cache *cache) {
+    return value_at(borrow(c, row / block_rows), static_cast<unsigned>(row % block_rows), cache);
+}
+
 // Mask SUM over coded blocks: blocks arrive in ascending order, so the current
 // edition's dictionary is decoded once into a reused array and each lookup is a
 // load. This beat a plane point read per lookup on every column tried, even
 // URLHash under a sparse-10% mask (~40k entries decoded per part for ~6.6k
-// selected rows). Lazy: touches nothing until a coded block is visited.
+// selected rows). Lazy: touches nothing until a coded block is visited. With
+// a dictionary_cache, the decoded entries come from it instead and persist
+// across calls; without one this is the per-call path, unchanged.
 struct code_sum {
     bool ready = false;
     dictionary_identity edition{};
     std::vector<u64> values;
+    dictionary_cache *cache = nullptr;
+    dictionary_cache::table held;  // cached path
     code_sum() = default;
     explicit code_sum(const column &) {}
+    explicit code_sum(dictionary_cache *c) : cache(c) {}
+    u128 cached(const borrowed_block &k) {
+        if (!ready || k.dictionary.edition != edition) {
+            ready = true;
+            edition = k.dictionary.edition;
+            held = cache->values(k.dictionary);
+        }
+        const u64 *entries = held->data();
+        return coded_sum(k, [entries](u64 code) { return entries[code]; });
+    }
     u128 operator()(const borrowed_block &k) {
+        if (cache)
+            return cached(k);
         if (!ready || k.dictionary.edition != edition) {
             ready = true;
             edition = k.dictionary.edition;
@@ -854,9 +961,10 @@ struct code_sum {
 };
 
 // Exact SUM over the blocks selected by mask (one bit per block).
-inline u128 encoded_sum(const column &c, const block_mask &mask) {
+// cache (optional) keeps decoded dictionaries across calls.
+inline u128 encoded_sum(const column &c, const block_mask &mask, dictionary_cache *cache = nullptr) {
     u128 total = 0;
-    code_sum codes;
+    code_sum codes(cache);
     for_each_block(mask, [&](std::size_t b) {
         const auto k = borrow(c, b);
         total += k.coded ? codes(k) : stored_sum(k);
@@ -892,9 +1000,10 @@ inline u128 narrow_stored_sum(const borrowed_block &k) {
     return stored_sum(k);
 }
 
-inline u128 encoded_sum_narrow(const column &c, const block_mask &mask) {
+inline u128 encoded_sum_narrow(const column &c, const block_mask &mask,
+                               dictionary_cache *cache = nullptr) {
     u128 total = 0;
-    code_sum codes;
+    code_sum codes(cache);
     for_each_block(mask, [&](std::size_t b) {
         const auto k = borrow(c, b);
         total += k.coded ? codes(k) : narrow_stored_sum(k);
@@ -1033,23 +1142,51 @@ inline u64 stored_count_ge(const column &c, std::size_t b, u64 threshold) {
 //   frequency: codes don't keep order, so a truth table T (one bit per code,
 //     T[k] = m + D[k] >= t) built from the dictionary; COUNT = sum_i T[code_i],
 //     one lookup per run for runs and the whole block for constant.
+// With a dictionary_cache the translation for (identity, t) comes from it and
+// persists across calls; without one it is built per call as before.
 struct code_count {
     const column *c = nullptr;  // only for the column-indexed count(b)
     u64 threshold;
     bool ready = false;
     dictionary_identity edition{};
     u64 code_threshold = 0;  // sorted
-    std::vector<u64> truth;  // frequency
+    std::vector<u64> truth;  // frequency, arrival (per-call path)
+    const u64 *truth_bits = nullptr;  // the truth table read: truth's, or the cache's
+    dictionary_cache *cache = nullptr;
+    dictionary_cache::table held;  // cached path
     // Touches nothing until a coded block is visited, so an empty selection
     // still reads no owner state.
     explicit code_count(u64 t) : threshold(t) {}
     code_count(const column &column, u64 t) : c(&column), threshold(t) {}
+    code_count(u64 t, dictionary_cache *cache) : threshold(t), cache(cache) {}
+    // A copy reads its own truth table; a move keeps the buffer truth_bits names.
+    code_count(const code_count &o)
+        : c(o.c), threshold(o.threshold), ready(o.ready), edition(o.edition),
+          code_threshold(o.code_threshold), truth(o.truth), cache(o.cache), held(o.held) {
+        truth_bits = held ? held->data() : truth.data();
+    }
+    code_count &operator=(const code_count &o) {
+        if (this != &o) {
+            code_count copy(o);
+            *this = std::move(copy);
+        }
+        return *this;
+    }
+    code_count(code_count &&) = default;
+    code_count &operator=(code_count &&) = default;
 
     void prepare(const dictionary_view &p) {
         if (ready && p.edition == edition)
             return;
         ready = true;
         edition = p.edition;
+        if (cache) {
+            auto m = cache->threshold(p, threshold);
+            code_threshold = m.code_threshold;
+            held = std::move(m.truth);
+            truth_bits = held ? held->data() : nullptr;
+            return;
+        }
         code_threshold = 0;
         if (p.order == dictionary_order::sorted) {
             if (threshold <= p.min)
@@ -1082,14 +1219,15 @@ struct code_count {
                 truth[(first + g) / 64] = bits;
             }
         }
+        truth_bits = truth.data();
     }
-    bool holds(u64 code) const { return truth[code / 64] >> (code % 64) & 1; }
+    bool holds(u64 code) const { return truth_bits[code / 64] >> (code % 64) & 1; }
     // Codes in [first, first + n) whose truth bit is set.
     u64 holds_range(u64 first, u64 n) const {
         u64 total = 0;
         for (u64 limit = first + n; first < limit;) {
             const u64 bit = first % 64, take = std::min<u64>(64 - bit, limit - first);
-            const u64 word = truth[first / 64] >> bit;
+            const u64 word = truth_bits[first / 64] >> bit;
             total += static_cast<u64>(std::popcount(take == 64 ? word : word & ((u64{1} << take) - 1)));
             first += take;
         }
@@ -1143,9 +1281,10 @@ inline u64 block_count_ge(const column &c, std::size_t b, u64 threshold) {
 }
 
 // Exact COUNT(u >= threshold) over the selected blocks.
-inline u64 encoded_count_ge(const column &c, const block_mask &mask, u64 threshold) {
+inline u64 encoded_count_ge(const column &c, const block_mask &mask, u64 threshold,
+                            dictionary_cache *cache = nullptr) {
     u64 total = 0;
-    code_count codes(threshold);
+    code_count codes(threshold, cache);
     for_each_block(mask, [&](std::size_t b) {
         const auto k = borrow(c, b);
         total += k.coded ? codes.count(k) : stored_count_ge(k, threshold);
@@ -1166,19 +1305,27 @@ inline u64 stored_count_eq(const column &c, std::size_t b, u64 s) {
 // (lazily, as code_count does) and the block's stored equality COUNT at that
 // code is the answer; a value absent from the edition counts nothing. sorted:
 // binary search over the plane. frequency and arrival: a scan of the plane.
+// With a dictionary_cache, every order probes the cache's equality index.
 struct code_count_eq {
     u64 value;
     bool ready = false;
     dictionary_identity edition{};
     bool present = false;
     u64 code = 0;
-    explicit code_count_eq(u64 v) : value(v) {}
+    dictionary_cache *cache = nullptr;
+    explicit code_count_eq(u64 v, dictionary_cache *c = nullptr) : value(v), cache(c) {}
 
     void prepare(const dictionary_view &p) {
         if (ready && p.edition == edition)
             return;
         ready = true;
         edition = p.edition;
+        if (cache) {
+            const auto found = cache->code_of(p, value);
+            present = found.has_value();
+            code = found.value_or(0);
+            return;
+        }
         present = false;
         if (value < p.min)
             return;
@@ -1226,9 +1373,10 @@ inline u64 block_count_eq(const borrowed_block &k, u64 v) {
 inline u64 block_count_eq(const column &c, std::size_t b, u64 v) {
     return block_count_eq(borrow(c, b), v);
 }
-inline u64 encoded_count_eq(const column &c, const block_mask &mask, u64 v) {
+inline u64 encoded_count_eq(const column &c, const block_mask &mask, u64 v,
+                            dictionary_cache *cache = nullptr) {
     u64 total = 0;
-    code_count_eq codes(v);
+    code_count_eq codes(v, cache);
     for_each_block(mask, [&](std::size_t b) {
         const auto k = borrow(c, b);
         total += k.coded ? codes.count(k) : stored_count_eq(k, v);
@@ -1246,9 +1394,9 @@ inline u128 catalogue_stored_sum(const borrowed_block &k) {
         return static_cast<u128>(d.base) * block_rows + plane_kernels(d.width).sum(k.body, block_rows);
     return stored_sum(k);
 }
-inline u128 catalogue_sum(const column &c, const block_mask &mask) {
+inline u128 catalogue_sum(const column &c, const block_mask &mask, dictionary_cache *cache = nullptr) {
     u128 total = 0;
-    code_sum codes;
+    code_sum codes(cache);
     for_each_block(mask, [&](std::size_t b) {
         const auto k = borrow(c, b);
         total += k.coded ? codes(k) : catalogue_stored_sum(k);
@@ -1277,9 +1425,10 @@ inline u64 catalogue_block_count_ge(code_count &codes, const borrowed_block &k) 
         return 0;
     return catalogue_stored_count_ge(k, codes.code_threshold);
 }
-inline u64 catalogue_count_ge(const column &c, const block_mask &mask, u64 threshold) {
+inline u64 catalogue_count_ge(const column &c, const block_mask &mask, u64 threshold,
+                              dictionary_cache *cache = nullptr) {
     u64 total = 0;
-    code_count codes(threshold);
+    code_count codes(threshold, cache);
     for_each_block(mask, [&](std::size_t b) { total += catalogue_block_count_ge(codes, borrow(c, b)); });
     return total;
 }

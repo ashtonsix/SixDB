@@ -753,4 +753,129 @@ void decode_block(const borrowed_block &k, u64 *out) {
 void decode_block(const column &c, std::size_t b, u64 *out) {
     decode_block(borrow(c, b), out);
 }
+
+void dictionary_cache::clear() {
+    entries.clear();
+    last_values = nullptr;
+    charged = 0;
+}
+
+dictionary_cache::material &dictionary_cache::room(const dictionary_view &p, std::size_t adding) {
+    auto it = entries.find(p.edition);
+    const std::size_t fresh = it == entries.end() ? identity_bytes : 0;
+    if (charged + fresh + adding > capacity_bytes && charged) {
+        clear();  // holders keep their own tables alive
+        it = entries.end();
+    }
+    if (it == entries.end()) {
+        it = entries.try_emplace(p.edition).first;
+        charged += identity_bytes;
+    }
+    charged += adding;
+    return it->second;
+}
+
+dictionary_cache::table dictionary_cache::values(const dictionary_view &p) {
+    if (auto it = entries.find(p.edition); it != entries.end() && it->second.values)
+        return it->second.values;
+    auto decoded = std::make_shared<std::vector<u64>>(p.count);
+    read_dictionary(p, 0, p.count, decoded->data());
+    auto &m = room(p, p.count * sizeof(u64));
+    m.values = std::move(decoded);
+    last_id = p.edition;
+    last_values = m.values->data();
+    return m.values;
+}
+
+u64 dictionary_cache::entry_slow(const dictionary_view &p, u64 code) {
+    const auto held = values(p);
+    last_id = p.edition;
+    last_values = held->data();
+    return last_values[code];
+}
+
+dictionary_cache::threshold_material dictionary_cache::threshold(const dictionary_view &p, u64 t) {
+    if (auto it = entries.find(p.edition); it != entries.end()) {
+        const auto &m = it->second;
+        for (unsigned i = 0; i < m.used; ++i)
+            if (m.thresholds[i].threshold == t)
+                return m.thresholds[i].m;
+    }
+    threshold_material made;
+    std::size_t bytes = 0;
+    if (p.order == dictionary_order::sorted) {
+        // As code_count: lower_bound over the plane; no decode needed.
+        if (t > p.min) {
+            const u64 rhs = t - p.min;
+            u64 lo = 0, hi = p.count;
+            while (lo < hi) {
+                const u64 mid = lo + (hi - lo) / 2;
+                if (dictionary_at(p, mid) < rhs)
+                    lo = mid + 1;
+                else
+                    hi = mid;
+            }
+            made.code_threshold = lo;
+        }
+    } else {
+        const auto held = values(p);
+        const u64 *v = held->data();
+        auto truth = std::make_shared<std::vector<u64>>((p.count + 63) / 64, 0);
+        for (u64 first = 0; first < p.count; first += 64) {
+            u64 bits = 0;
+            const u64 n = std::min<u64>(64, p.count - first);
+            for (u64 i = 0; i < n; ++i)  // no overflow: at most the part maximum
+                bits |= static_cast<u64>(p.min + v[first + i] >= t) << i;
+            (*truth)[first / 64] = bits;
+        }
+        bytes = truth->size() * sizeof(u64);
+        made.truth = std::move(truth);
+    }
+    auto &m = room(p, bytes);
+    slot &s = m.used < thresholds_per_identity ? m.thresholds[m.used++] : m.thresholds[m.next++ % thresholds_per_identity];
+    charged -= s.m.truth ? s.bytes : 0;  // a replaced slot's table
+    s = {t, made, bytes};
+    return made;
+}
+
+std::optional<u64> dictionary_cache::code_of(const dictionary_view &p, u64 v) {
+    if (v < p.min)
+        return std::nullopt;
+    const u64 rhs = v - p.min;
+    if (p.width < 64 && rhs >> p.width)
+        return std::nullopt;
+    std::shared_ptr<const index_table> index;
+    if (auto it = entries.find(p.edition); it != entries.end())
+        index = it->second.index;
+    if (!index) {
+        auto made = std::make_shared<index_table>();
+        made->values = values(p);
+        const u64 *e = made->values->data();
+        const std::size_t slots = std::bit_ceil(std::max<std::size_t>(4, p.count + p.count / 2));
+        made->slots.assign(slots, UINT32_MAX);
+        made->shift = static_cast<unsigned>(64 - std::countr_zero(slots));
+        for (std::uint32_t code = 0; code < p.count; ++code)
+            for (u64 i = e[code] * 0x9e3779b97f4a7c15u >> made->shift;; i = (i + 1) & (slots - 1))
+                if (made->slots[i] == UINT32_MAX) {
+                    made->slots[i] = code;
+                    break;
+                }
+        auto &m = room(p, slots * sizeof(std::uint32_t));
+        if (!m.values) {  // cleared while building: keep the entries with their index
+            m.values = made->values;
+            charged += p.count * sizeof(u64);
+        }
+        m.index = made;
+        index = std::move(made);
+    }
+    const u64 *e = index->values->data();
+    const std::size_t mask = index->slots.size() - 1;
+    for (u64 i = rhs * 0x9e3779b97f4a7c15u >> index->shift;; i = (i + 1) & mask) {
+        const std::uint32_t code = index->slots[i];
+        if (code == UINT32_MAX)
+            return std::nullopt;
+        if (e[code] == rhs)
+            return code;
+    }
+}
 }  // namespace frame_encoding

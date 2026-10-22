@@ -519,7 +519,8 @@ int main(int argc, char **argv) {
     // negative control aliases new's image id to old's: the shared cache
     // should then go stale, which shows the check can see a collision.
     std::size_t identity_checks = 0;
-    int alias_stale = -1;  // -1: no coded block to try
+    int alias_stale = -1, alias_stale_cached = -1;  // -1: no coded block to try
+    std::size_t cached_checks = 0, cache_bytes = 0, cache_identities = 0;
     if (options.dictionary != dictionary_order::none && coded) {
         // Mirror within the column's range: same shape, different relative
         // dictionary content (a plain shift would leave min-relative entries
@@ -554,10 +555,103 @@ int main(int argc, char **argv) {
                     fail("dictionary cache reused across images", b);
                 ++identity_checks;
             }
-            next.image = c.image;  // negative control
+            break;
+        }
+        // The same sequence through one dictionary_cache shared across every
+        // block and image, so a cached table must serve its identity alone: SUM,
+        // COUNT at the median every block, COUNT at six column values (more
+        // than thresholds_per_identity, so slots are replaced) every eighth block,
+        // equality at a present and an absent value, and cached point reads. A
+        // second cache with capacity 1 clears on every insertion (every 64th block). Mask aggregates
+        // then run through the shared cache over every image in turn.
+        dictionary_cache shared, tiny;
+        tiny.capacity_bytes = 1;
+        std::vector<u64> quantiles;  // six column values spread through the rows
+        for (std::size_t q = 1; q <= 6; ++q)
+            quantiles.push_back(values[q * values.size() / 7]);
+        for (std::size_t b = 0; b < nblocks; ++b) {
+            if (!is_coded(c, b) || !is_coded(next, b))
+                continue;
+            const u64 *old_v = values.data() + b * block_rows, *new_v = shifted.data() + b * block_rows;
+            const u64 present = old_v[b % block_rows], absent = old_v[0] + 1;
+            const bool thresholds = b % 8 == 0;
+            for (dictionary_cache *cache : {&shared, &tiny}) {
+                if (cache == &tiny && b % 64)
+                    continue;
+                for (const column *image : {&c, static_cast<const column *>(&next), &c, &copy, static_cast<const column *>(&next)}) {
+                    const auto k = borrow(*image, b);
+                    const u64 *v = image == &next ? new_v : old_v;
+                    u128 sum = 0;
+                    for (std::size_t i = 0; i < block_rows; ++i)
+                        sum += v[i];
+                    auto count = [&](u64 t) { return static_cast<u64>(std::count_if(v, v + block_rows, [&](u64 x) { return x >= t; })); };
+                    auto equal = [&](u64 x) { return static_cast<u64>(std::count(v, v + block_rows, x)); };
+                    code_sum sums(cache);
+                    code_count at_median(median, cache);
+                    code_count_eq eq_present(present, cache), eq_absent(absent, cache);
+                    if (sums(k) != sum || at_median.count(k) != count(median) ||
+                        catalogue_block_count_ge(at_median, k) != count(median) ||
+                        eq_present.count(k) != equal(present) || eq_absent.count(k) != equal(absent))
+                        fail("shared dictionary cache answered from another identity", b);
+                    for (unsigned row : {0u, 1u, 77u, 200u, 255u})
+                        if (value_at(k, row, cache) != v[row])
+                            fail("cached value_at", b);
+                    if (thresholds)
+                        for (int pass = 0; pass < 2; ++pass)
+                            for (u64 t : quantiles) {
+                                code_count at(t, cache);
+                                if (at.count(k) != count(t))
+                                    fail("cached COUNT threshold", b);
+                            }
+                    ++cached_checks;
+                }
+            }
+        }
+        {
+            block_mask all(nblocks), sparse(nblocks);
+            for (std::size_t b = 0; b < nblocks; ++b) {
+                all.set(b);
+                if (b % 10 == 3)
+                    sparse.set(b);
+            }
+            const u64 probe = values[values.size() / 2];
+            for (const column *image : {&c, static_cast<const column *>(&next), &c, &copy, static_cast<const column *>(&next)}) {
+                const auto &v = image == &next ? shifted : values;
+                for (const block_mask *mask : {&all, &sparse}) {
+                    u128 sum = 0;
+                    u64 ge = 0, eq = 0;
+                    for (std::size_t b = 0; b < nblocks; ++b)
+                        if (mask->words[b / 64] >> (b % 64) & 1)
+                            for (std::size_t i = b * block_rows; i < (b + 1) * block_rows; ++i)
+                                sum += v[i], ge += v[i] >= median, eq += v[i] == probe;
+                    if (encoded_sum(*image, *mask, &shared) != sum || encoded_sum_narrow(*image, *mask, &shared) != sum ||
+                        catalogue_sum(*image, *mask, &shared) != sum ||
+                        encoded_count_ge(*image, *mask, median, &shared) != ge ||
+                        catalogue_count_ge(*image, *mask, median, &shared) != ge ||
+                        encoded_count_eq(*image, *mask, probe, &shared) != eq)
+                        fail("cached mask aggregate differs from the input", 0);
+                    ++cached_checks;
+                }
+            }
+        }
+        cache_bytes = shared.bytes();
+        cache_identities = shared.identities();
+        // Negative control: alias new's image id to old's. The per-call cache and
+        // the shared cache must both go stale.
+        for (std::size_t b = 0; b < nblocks; ++b) {
+            if (!is_coded(c, b) || !is_coded(next, b))
+                continue;
+            u128 new_sum = 0;
+            for (std::size_t i = 0; i < block_rows; ++i)
+                new_sum += shifted[b * block_rows + i];
+            next.image = c.image;
             code_sum aliased;
             aliased(borrow(c, b));
             alias_stale = aliased(borrow(next, b)) != new_sum;
+            dictionary_cache aliased_cache;
+            code_sum first(&aliased_cache), second(&aliased_cache);
+            first(borrow(c, b));
+            alias_stale_cached = second(borrow(next, b)) != new_sum;
             break;
         }
     }
@@ -590,5 +684,7 @@ int main(int argc, char **argv) {
         }
         std::printf("}");
     }
-    std::printf("},\"identity_checks\":%zu,\"identity_alias_stale\":%d}\n", identity_checks, alias_stale);
+    std::printf("},\"identity_checks\":%zu,\"identity_alias_stale\":%d,\"cached_checks\":%zu,"
+                "\"cache_identities\":%zu,\"cache_bytes\":%zu,\"identity_alias_stale_cached\":%d}\n",
+                identity_checks, alias_stale, cached_checks, cache_identities, cache_bytes, alias_stale_cached);
 }
