@@ -827,11 +827,23 @@ bodies start at any byte, and every start residue mod 8 was exercised (aarch64).
 **What a consumer constructs.** Engine or a point consumer retains, pointer-free,
 the 16-byte descriptor, the checkpoint option and the row count. For a coded block
 it also retains the part's `min`, `count`, `width`, order (sorted or frequency) and
-an edition id. At attach time it resolves its own spans into `body`/`grant` and
-`dictionary.plane`/`grant`, calls `admits` once, then calls the operations. The
-view owns nothing. A coded block must be read with the dictionary edition it was
-coded against. `code_sum` and `code_count` cache a decoded dictionary or
-translated threshold per edition, which `borrow` sets to the part index. Coarse
+a `dictionary_identity {scope, edition}`. At attach time it resolves its own spans
+into `body`/`grant` and `dictionary.plane`/`grant`, calls `admits` once, then
+calls the operations. The view owns nothing. A coded block must be read with the
+dictionary it was coded against. `code_sum`, `code_count` and `code_count_eq`
+cache a decoded dictionary, translated threshold or code per identity. A part
+index alone was not enough: one cache shared across `borrow(old)`, `borrow(new)`,
+`borrow(old)` returned stale answers when both images had part 0 (Ikea LEAD's
+case). `borrow` now uses `{column::image, part}`, where `image` is unique per
+`encode()` and never reused, so an unchanged copy keeps its identity. Other
+owners supply their own scope, so a retained unchanged dictionary can keep its
+identity and a changed one takes a new edition. The caller guarantees that one
+identity names one content while any cache keyed on it lives; no global
+registry is needed. `borrowed_check` shares each cache across old, new (values
+mirrored within the column's range), old, copy and new images: 270 checks
+across 417 runs. A negative control that aliases the two image ids goes stale
+in every run that has a coded block, so the check can see a collision. The
+column object grows by 8 bytes; nothing else in the driver changes. Coarse
 masks skip a block before any body or header parse. A selected coded block reads
 only its own part's dictionary; others can stay unreadable.
 

@@ -3,6 +3,7 @@
 #include "material.h"
 
 #include <array>
+#include <atomic>
 
 namespace frame_encoding {
 namespace {
@@ -364,8 +365,10 @@ candidate emit_arrival(std::span<const u64> codes, u64 frontier) {
 }  // namespace
 
 column encode(std::span<const u64> values, encode_options options) {
+    static std::atomic<u64> images{0};
     column c;
     c.options = options;
+    c.image = ++images;
     c.rows = values.size() / block_rows * block_rows;
     const std::size_t nblocks = c.rows / block_rows;
     const bool dictionary = options.dictionary != dictionary_order::none;

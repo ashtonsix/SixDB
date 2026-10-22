@@ -207,6 +207,9 @@ static_assert(sizeof(dictionary_part) == 24);
 
 struct column {
     encode_options options;  // how this image was built
+    // Unique per encode() in this process (never reused); the scope of this
+    // image's dictionary identities.
+    u64 image = 0;
     std::vector<descriptor> blocks;
     std::vector<std::uint8_t> payload;
     // Retained bindings, filled only under options.bind_decoders. Owner
@@ -332,11 +335,27 @@ inline std::optional<block_extent> extent_of(const descriptor &d, checkpoints mo
     return block_extent{bytes, bytes, scan};
 }
 
+// Who names a dictionary's content. scope is a caller-chosen namespace and
+// edition a dictionary within it; the caller guarantees that one identity
+// names one content for as long as any cache keyed on it lives (no reuse of
+// a scope while such a cache can still see it, so no ABA). A column image's
+// scope is its encode-time image id and its editions are part indices, so
+// equal identities across images can't collide; a copy of an unchanged
+// column keeps its identity. Other owners (Engine's borrowed Parts) supply
+// their own scope, so a retained unchanged dictionary keeps its identity and
+// a changed one takes a new edition. No global registry: only distinctness
+// within the caches a caller shares is required.
+struct dictionary_identity {
+    u64 scope;
+    u64 edition;
+    friend bool operator==(const dictionary_identity &, const dictionary_identity &) = default;
+};
+
 // A part dictionary as coded blocks read it: count entries in code order,
 // relative to min, as one exact-tail plane of plane_bytes(width, count) bytes.
-// edition names the dictionary's content: a coded block must be read with the
-// dictionary it was coded against, and the mask aggregates below reuse a
-// decoded dictionary or translated threshold while the edition is unchanged.
+// A coded block must be read with the dictionary it was coded against; the
+// code_* aggregates below reuse a decoded dictionary or translated threshold
+// while the identity is unchanged.
 struct dictionary_view {
     u64 min;
     std::uint32_t count;
@@ -344,7 +363,7 @@ struct dictionary_view {
     dictionary_order order;
     const std::uint8_t *plane;
     std::size_t grant;
-    u64 edition;
+    dictionary_identity edition;
     std::size_t bytes() const { return plane_bytes(width, count); }
 };
 
@@ -376,7 +395,7 @@ bool admits(const borrowed_block &k);
 inline dictionary_view dictionary_of(const column &c, std::size_t part) {
     const auto &p = c.parts[part];
     return {p.min,    p.count, p.width, c.options.dictionary, c.payload.data() + p.offset,
-            c.payload.size() - p.offset, part};
+            c.payload.size() - p.offset, {c.image, part}};
 }
 
 inline bool is_coded(const column &c, std::size_t b) {
@@ -387,8 +406,8 @@ inline const dictionary_part &part_of(const column &c, std::size_t b) {
 }
 
 // Block b of a column image, with its part's dictionary when coded. The
-// grant is the rest of the payload, which is readable; the edition is the
-// part index, unique within the image.
+// grant is the rest of the payload, which is readable; the identity is
+// {image id, part index}.
 inline borrowed_block borrow(const column &c, std::size_t b) {
     const auto &d = c.blocks[b];
     borrowed_block k;  // default-initialized: an uncoded view's dictionary stays unwritten
@@ -819,7 +838,7 @@ inline u128 block_sum(const column &c, std::size_t b) {
 // selected rows). Lazy: touches nothing until a coded block is visited.
 struct code_sum {
     bool ready = false;
-    u64 edition = 0;
+    dictionary_identity edition{};
     std::vector<u64> values;
     code_sum() = default;
     explicit code_sum(const column &) {}
@@ -1018,7 +1037,7 @@ struct code_count {
     const column *c = nullptr;  // only for the column-indexed count(b)
     u64 threshold;
     bool ready = false;
-    u64 edition = 0;
+    dictionary_identity edition{};
     u64 code_threshold = 0;  // sorted
     std::vector<u64> truth;  // frequency
     // Touches nothing until a coded block is visited, so an empty selection
@@ -1150,7 +1169,7 @@ inline u64 stored_count_eq(const column &c, std::size_t b, u64 s) {
 struct code_count_eq {
     u64 value;
     bool ready = false;
-    u64 edition = 0;
+    dictionary_identity edition{};
     bool present = false;
     u64 code = 0;
     explicit code_count_eq(u64 v) : value(v) {}

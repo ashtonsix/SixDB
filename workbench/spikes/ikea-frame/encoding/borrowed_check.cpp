@@ -15,6 +15,8 @@
 // Page placement is only for access checking, never for timing.
 #include "material.h"
 
+#include <algorithm>
+
 #include <cstdio>
 #include <cstring>
 #include <map>
@@ -509,6 +511,57 @@ int main(int argc, char **argv) {
     std::size_t kinds[7] = {}, coded = 0;
     for (std::size_t b = 0; b < nblocks; ++b)
         ++kinds[static_cast<int>(c.blocks[b].type)], coded += is_coded(c, b);
+    // Dictionary identity across images (Ikea LEAD's case): one cache shared
+    // over borrow(old), borrow(new), borrow(old), and an unchanged copy, must
+    // answer each from its own dictionary. new mirrors every value within the
+    // column's range, so its dictionaries differ in content at the same part
+    // indices. A
+    // negative control aliases new's image id to old's: the shared cache
+    // should then go stale, which shows the check can see a collision.
+    std::size_t identity_checks = 0;
+    int alias_stale = -1;  // -1: no coded block to try
+    if (options.dictionary != dictionary_order::none && coded) {
+        // Mirror within the column's range: same shape, different relative
+        // dictionary content (a plain shift would leave min-relative entries
+        // unchanged).
+        const u64 lo = *std::min_element(values.begin(), values.end());
+        const u64 hi = *std::max_element(values.begin(), values.end());
+        std::vector<u64> shifted(values);
+        for (auto &v : shifted)
+            v = lo + (hi - v);
+        column next = encode(shifted, options);
+        const column copy = c;
+        for (std::size_t b = 0; b < nblocks; ++b) {
+            if (!is_coded(c, b) || !is_coded(next, b))
+                continue;
+            u128 old_sum = 0, new_sum = 0;
+            u64 old_ge = 0, new_ge = 0, old_eq = 0, new_eq = 0;
+            const u64 probe = values[b * block_rows], shifted_probe = shifted[b * block_rows];
+            for (std::size_t i = 0; i < block_rows; ++i) {
+                old_sum += values[b * block_rows + i], new_sum += shifted[b * block_rows + i];
+                old_ge += values[b * block_rows + i] >= median, new_ge += shifted[b * block_rows + i] >= median;
+                old_eq += values[b * block_rows + i] == probe, new_eq += shifted[b * block_rows + i] == probe;
+            }
+            (void)shifted_probe;
+            code_sum sums;
+            code_count counts(median);
+            code_count_eq equal(probe);
+            for (const column *image : {&c, static_cast<const column *>(&next), &c, &copy, static_cast<const column *>(&next)}) {
+                const auto k = borrow(*image, b);
+                const bool is_old = image != &next;
+                if (sums(k) != (is_old ? old_sum : new_sum) || counts.count(k) != (is_old ? old_ge : new_ge) ||
+                    equal.count(k) != (is_old ? old_eq : new_eq))
+                    fail("dictionary cache reused across images", b);
+                ++identity_checks;
+            }
+            next.image = c.image;  // negative control
+            code_sum aliased;
+            aliased(borrow(c, b));
+            alias_stale = aliased(borrow(next, b)) != new_sum;
+            break;
+        }
+    }
+
     std::printf("{\"column\":\"%s\",\"delta_checkpoints\":\"%s\",\"delta_exceptions\":%s,\"dictionary\":\"%s\","
                 "\"blocks\":%zu,\"coded\":%zu,\"kinds\":[%zu,%zu,%zu,%zu,%zu,%zu,%zu],\"extent_gaps_checked\":%zu,"
                 "\"max_body\":%zu,\"max_dictionary\":%zu,\"page\":%zu,\"placements_checked\":%zu,\"scan_grants_checked\":%zu,"
@@ -537,5 +590,5 @@ int main(int argc, char **argv) {
         }
         std::printf("}");
     }
-    std::printf("}}\n");
+    std::printf("},\"identity_checks\":%zu,\"identity_alias_stale\":%d}\n", identity_checks, alias_stale);
 }
