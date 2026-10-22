@@ -14,6 +14,7 @@ from the Mac. Use the helpers independently or start from an existing runner.
 | Retain, revise or regenerate evidence | [Artifacts](artifacts.md): `artifacts.py`; [local storage](storage.md): `worker.py cache` |
 | Prototype in assembly with real module calls | [Assembly calls](../spikes/assembly-calls/README.md), [scheduling estimates](mca.md); `compile_probe.py --assembly`, `mca.py` |
 | Diagnose compilation or editor issues | [Compile probes](compilation.md), [editor setup](editors.md) |
+| Keep Git attribution with the checkout owner | [Commit identity hooks](#commit-attribution): `commit_identity.py install` |
 | Set up and qualify cache-sensitive workloads | [Memory residency tools](residency.md), independent [PMU probe and counter helper](pmu/README.md) |
 
 ## Captured experiment runs
@@ -70,3 +71,28 @@ relevant [offline check](tests/README.md) with `python3 workbench/tools/check.py
 run it with `check.py NAME`. For documentation edits, `check_docs.py` offers link
 and catalog hints, including notebook pages unreachable from its research map.
 Neither tool is a required experiment step.
+
+## Commit attribution
+
+Install once per local repository, from Linux:
+
+```sh
+python3 workbench/tools/commit_identity.py install \
+  --name 'Ashton Six' --email me@ashtonsix.com
+```
+
+The installer sets the local author/committer defaults and installs hooks in
+the shared Git directory. They apply to linked worktrees, including older
+checkouts without this helper. Existing unrelated hooks are never overwritten.
+Reinstall after changing the helper to refresh that shared copy.
+
+Message hooks remove Claude/Anthropic attribution lines while preserving
+substantive prose and human co-authors. After commit creation, explicit author
+or committer overrides are normalised to the installed identity. Amendments,
+rebases, cherry-picks, mail patches and merges are covered. Trees and both raw
+dates/timezones remain unchanged; a correction changes the commit ID and reports
+the replacement. Signed metadata is not rewritten; set the correct identity
+before signing.
+
+`python3 workbench/tools/check.py commit_identity` exercises these paths in
+disposable repositories without changing this checkout's history.
