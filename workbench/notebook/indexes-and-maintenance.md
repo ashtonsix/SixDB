@@ -1,10 +1,12 @@
 # Indexes and maintenance
 
-For the current index experiment, start with the
-[directory study](../spikes/directory/README.md), its
-[absolute scorecard](../spikes/directory/SCORECARD.md) and
-[coverage boundaries](../spikes/directory/COVERAGE.md). The routes below recover
-related work that is easy to miss when starting from a directory data structure.
+The directory structure is implemented in [`engine::directory`](../../engine/README.md#segment-directory);
+its evidence and rejected alternatives are in the
+[segment-directory study](../spikes/segment-directory/README.md). Links below
+into the earlier complete-consumer directory study now lead to its
+[archive notice](retired-spikes.md#index-directory-spikes--october-2026); the
+paths they name are inside that archive. The routes recover related work that
+is easy to miss when starting from a directory data structure.
 The [Engine guide](../../engine/README.md) owns what is actually implemented.
 
 ## Logical order, physical placement and duplicates
@@ -15,9 +17,9 @@ The [Engine guide](../../engine/README.md) owns what is actually implemented.
 | What does spare key space save if packed columns still move? | [Trie-remapping design](../spikes/trie-remapping/design.md) and [findings](../spikes/trie-remapping/FINDINGS.md): locator repair, column movement and conversion are different costs |
 | What ordering does a prefix name actually establish? | [Prefix addressing](prefix-addressing.md): routing name, stable identity, mapping domain and payload order |
 | How should bounds locate an ordered source? | [Maintained Boundlist usage](../../ikea/docs/boundlist/usage.md), [ownership study](../spikes/boundlist/OWNERSHIP.md) and [consumer portfolio](../spikes/boundlist/PORTFOLIO.md) |
-| What changes when equal logical keys cross storage boundaries? | [Directory query semantics](../spikes/directory/README.md#logical-requests-and-traversal), [owning multimap frontier](../spikes/hashtable/README.md) and [K-way merge](../spikes/hashtable-merge/README.md) |
-| Do wider natural partitions repay their copy-on-write edit cost? | [Native partition comparison](../spikes/directory/evidence/graduation-native/README.md#partition-geometry-must-pay-for-edits) and [population counterexamples](../spikes/directory/CONCENTRATION.md): natural24's small edit-copy result covers spread L4; spread L3 and concentrated L4 expose large copies (body counters, not timings) |
-| What sparse-scan cost remains after preparing boundaries? | [Native scan follow-up](../spikes/directory/evidence/graduation-native/README.md#scanning-substantial-improvement-a-real-sparse-limit), including one-row-Segment losses and independently fused controls |
+| What changes when equal logical keys cross storage boundaries? | [Directory query semantics](retired-spikes.md#index-directory-spikes--october-2026), [owning multimap frontier](../spikes/hashtable/README.md) and [K-way merge](../spikes/hashtable-merge/README.md) |
+| Do wider natural partitions repay their copy-on-write edit cost? | [Native partition comparison](retired-spikes.md#index-directory-spikes--october-2026) and [population counterexamples](retired-spikes.md#index-directory-spikes--october-2026): natural24's small edit-copy result covers spread L4; spread L3 and concentrated L4 expose large copies (body counters, not timings) |
+| What sparse-scan cost remains after preparing boundaries? | [Native scan follow-up](retired-spikes.md#index-directory-spikes--october-2026), including one-row-Segment losses and independently fused controls |
 
 The remapping probe kept both fully ordered gaps and order between blocks in
 play. Finding the remapped suffix is itself an index operation. Spare physical
@@ -39,8 +41,8 @@ cycle became about 24 times as costly. Construction, sorting, allocation and
 query correction must repay the logical work saved. The summary-only fixture
 does not establish physical write amplification or an MVCC policy.
 
-The later [directory buffered consumer](../spikes/directory/BUFFERED.md) and
-[native pending-aggregate comparisons](../spikes/directory/evidence/consumers-native/PENDING.md)
+The later [directory buffered consumer](retired-spikes.md#index-directory-spikes--october-2026) and
+[native pending-aggregate comparisons](retired-spikes.md#index-directory-spikes--october-2026)
 revisit this in a complete caller. Preserve the earlier no-filter win and
 dispersed-write losses beside later useful filtering regions. Read-only pending
 queries and a full mutation/drain cycle answer different cost questions.
@@ -65,25 +67,25 @@ are later changes; the Boost-adoption study is not the current lookup API.
 For several fields from one row, start with
 [Ikea consumers](../../ikea/docs/consumers.md) and
 [native payload transfers](../../ikea/docs/tuplepack/extending.md#keep-native-payloads-native).
-The [ordered directory consumer](../spikes/directory/evidence/consumers-native/ORDERED.md)
+The [ordered directory consumer](retired-spikes.md#index-directory-spikes--october-2026)
 shows why that existing seam matters. The
 [representation route](representations-and-planning.md) connects it to physical
 layout and conversion rather than assuming a wrapper automatically fuses decoding.
 
 ## Publication and complete costs
 
-The [selected directory evidence](../spikes/directory/PROGRESS.md#selected-evidence)
+The [selected directory evidence](retired-spikes.md#index-directory-spikes--october-2026)
 separates complete ownership cohorts, point storage, sparse scans, duplicates,
 allocation and causal drain. Follow the relevant panel rather than promoting
 one fast point result into an index-wide conclusion.
 
-The [native follow-up](../spikes/directory/evidence/graduation-native/README.md)
+The [native follow-up](retired-spikes.md#index-directory-spikes--october-2026)
 also compares prepared predicates and complete three-row placement cycles,
 retaining structural-edit losses beside qualified numeric updates. Earlier
-[Ring cohorts](../spikes/directory/evidence/complete/README.md) and
-[large point-storage/memory comparisons](../spikes/directory/evidence/segment-memory-native/README.md)
+[Ring cohorts](retired-spikes.md#index-directory-spikes--october-2026) and
+[large point-storage/memory comparisons](retired-spikes.md#index-directory-spikes--october-2026)
 retain their distinct scopes. The later
-[explicit-context API qualification](../spikes/directory/evidence/followup-qualification/README.md)
+[explicit-context API qualification](retired-spikes.md#index-directory-spikes--october-2026)
 checks numerical-state admission and paired complete pending reads on local
 NEON. The frozen native campaign qualifies its own source, rather than that
 subsequent API cleanup.

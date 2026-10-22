@@ -90,8 +90,8 @@ The examples include admission, useful work and complete cleanup:
 
 The allocation/MVCC timing drivers are [retired](../workbench/benchmarks/retired-drivers.md).
 [Retained Object checks](../workbench/benchmarks/retired-drivers.md#current-integration-checks)
-exercise real formats and Loom lifetimes; current complete index comparisons
-belong to the [directory study](../workbench/spikes/directory/README.md).
+exercise real formats and Loom lifetimes; the earlier complete index comparisons
+are [archived](../workbench/notebook/retired-spikes.md#index-directory-spikes--october-2026).
 The [execution research route](../workbench/notebook/execution-and-codegen.md)
 connects those consumers to memory overlap, codegen and earlier experiments.
 Optional `loom_ring_probe` and

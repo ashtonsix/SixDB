@@ -83,18 +83,18 @@ The earlier S3 evidence archives also recover their exact sources. The remaining
 harness uses the maintained getter/controller and emits byte-identical measured
 C++ after curation.
 
-## Engine consumer
+## Historical Engine consumer
 
-Engine's actual [shared-prefix HashLayer](../../../engine/include/engine/directory_hash.h)
-now supplies Scope-borrowed native groups to its
-[complete equality consumer](../../../engine/examples/segment_driver.cpp).
+At the captured checkpoint, Engine's [shared-prefix HashLayer](https://github.com/ashtonsix/SixDB/blob/a5f6a1a8/engine/include/engine/directory_hash.h)
+supplied Scope-borrowed native groups to its
+[complete equality consumer](https://github.com/ashtonsix/SixDB/blob/a5f6a1a8/engine/examples/segment_driver.cpp).
 `Producer::equality_selector` persists across calls. Each Scope64 invocation
 selects a compiled loop including `HashGroup::get<Hint>`, summary narrowing,
 record refinement, afterimage selection and full-row consumption. The Scope
 protects every borrowed pointer through completion. The static unpredictable
 consumer uses a readable zero-count header on absence.
 
-The [independent hash checks](../../../engine/test/directory_hash.cpp) cover
+The [independent hash checks](https://github.com/ashtonsix/SixDB/blob/a5f6a1a8/engine/test/directory_hash.cpp) cover
 197 consecutive 64-request batches, both methods, full 64-byte values, zero-valued hits,
 sparse misses, dense same-group cloning, old/fresh versions, late discovery,
 discard/abort and coupled Segment/locator publication. Normal and ASan/UBSan
@@ -107,10 +107,12 @@ Engine qualification source capture:
 `14d45d74f761ab52b886ce73dcf3c97f2b2828972e80895cc5d1bb719bf39887`.
 The consumer, hash implementation, test and three promoted runtime headers
 match its consumed-source identities. Engine committed the integration as
-`a5f6a1a8`; its [qualified evidence](../index-directories/evidence/logical-hash-20261021/README.md)
+`a5f6a1a8`; its [qualified evidence](https://github.com/ashtonsix/SixDB/blob/a5f6a1a8/workbench/spikes/index-directories/evidence/logical-hash-20261021/README.md)
 retains source/ELF identities, checks, complete-consumer comparisons and verified
-archive recovery. The [implementation record](../index-directories/IMPLEMENTATION.md)
-owns the broader Engine scope.
+archive recovery. The [implementation record](https://github.com/ashtonsix/SixDB/blob/a5f6a1a8/workbench/spikes/index-directories/IMPLEMENTATION.md)
+describes that checkpoint's broader scope. This directory implementation was
+subsequently removed ([archive notice](../../notebook/retired-spikes.md#index-directory-spikes--october-2026));
+[`engine::directory`](../../../engine/README.md#segment-directory) supersedes its integration status.
 
 The first Engine recipe is a bitmap with 64-byte values; both getters use the
 ordinary fallback there. The W32 map8 speedup above is a separate measured

@@ -18,7 +18,6 @@ physical order, duplicate keys, summary maintenance and complete index consumers
 
 | Study | What remains useful |
 | --- | --- |
-| [Directory](directory/README.md) | Earlier complete index experiment, superseded for structure by the segment-directory spike: layer-specific routing, sparse/duplicate traversal, packed Segments, mutation/publication, native peers and memory/drain evidence. |
 | [Segment directory](segment-directory/README.md) | Graduated into `engine::directory`. Evidence for ordered leaves at every layer and a deepening root, against flat roots, natural partitions and inline or index hash pages, on counters, flat-image and Orbital timings. |
 | [Trie remapping](trie-remapping/README.md) | Concluded comparison of natural regions, ordered gaps and block order; column movement and conversion remain consequential. |
 | [Aggregate maintenance](aggregate-maintenance/README.md) | Count/sum coalescing, construction costs, dirty buffers and no-filter controls. Connects directly to directory pending aggregates. |

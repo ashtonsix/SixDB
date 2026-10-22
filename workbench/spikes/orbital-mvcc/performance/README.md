@@ -30,7 +30,7 @@ for its consequential comparisons:
 | Smaller state that made the operation worse | [Schema reconstruction](FEEDBACK.md#transient-schema-construction-phase), [diagnostics removal](FEEDBACK.md#removing-diagnostics-rejected-complete-operation-tradeoff) and the retained-reader/fresh-reader maintenance tradeoff above |
 
 Each row refers to its own captured implementation. These do not form a combined
-final-build speedup. Current [directory consumers](../../directory/PROGRESS.md#selected-evidence)
+final-build speedup. Current [directory consumers](../../../notebook/retired-spikes.md#index-directory-spikes--october-2026)
 measure navigation, packed data and maintenance that the fixed-record study
 did not supply. [Execution](../../../notebook/execution-and-codegen.md) and
 [memory/lifetimes](../../../notebook/memory-and-lifetimes.md) connect related work

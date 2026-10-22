@@ -27,9 +27,9 @@ allocation size or available cycles counter into a residency claim.
 | --- | --- |
 | Descriptor addressing and independent growth | [Memory-descriptor findings](../spikes/memory-descriptors/FINDINGS.md), [virtual growth](../spikes/memory-descriptors/VIRTUAL.md) |
 | Page sharing, identity placement and compaction | [Placement findings](../spikes/memory-descriptors/FINDINGS.md#placement-and-compaction), [small-slot packing](../spikes/memory-descriptors/ALLOCATION.md#small-slot-packing), [palette geometry](../spikes/allocation-palettes/geometry.md) |
-| Class palettes, slack, growth and actual Part ownership | [Allocation palettes](../spikes/allocation-palettes/README.md), then [directory memory accounting](../spikes/directory/SEGMENT-MEMORY.md) and [native allocation/co-lifetime control](../spikes/directory/evidence/segment-memory-native/README.md) |
+| Class palettes, slack, growth and actual Part ownership | [Allocation palettes](../spikes/allocation-palettes/README.md), then [directory memory accounting](retired-spikes.md#index-directory-spikes--october-2026) and [native allocation/co-lifetime control](retired-spikes.md#index-directory-spikes--october-2026) |
 | Reuse preference versus cold-first reclamation | [Reuse-temperature findings](../spikes/allocation-reuse-temperature/FINDINGS.md): selection omitted temperature/CPU ranking; reclamation retained a different use for temperature |
-| Coarse Groups, live tails and physical drain | [Live-tail study](../spikes/allocation-live-tail/README.md), [directory drain evidence](../spikes/directory/evidence/drain-native/README.md) and [repeat qualification](../spikes/directory/evidence/drain-repeat-native/README.md) |
+| Coarse Groups, live tails and physical drain | [Live-tail study](../spikes/allocation-live-tail/README.md), [directory drain evidence](retired-spikes.md#index-directory-spikes--october-2026) and [repeat qualification](retired-spikes.md#index-directory-spikes--october-2026) |
 
 The modeled placement scripts and serialized descriptor prototypes are useful
 counterexamples, not interchangeable allocators. Grouping, class routing,

@@ -253,8 +253,8 @@ The [check inventory](../workbench/benchmarks/retired-drivers.md#current-integra
 names their targets. The allocation and MVCC timing drivers are
 [retired](../workbench/benchmarks/retired-drivers.md#historical-recovery);
 [historical performance findings](../workbench/spikes/orbital-mvcc/performance/README.md)
-remain readable and recoverable. Current complete index comparisons live with
-the [directory study](../workbench/spikes/directory/README.md).
+remain readable and recoverable. The earlier complete index comparisons are
+[archived](../workbench/notebook/retired-spikes.md#index-directory-spikes--october-2026).
 [Prior research](../workbench/notebook/orbital/reference/README.md)
 explains the allocation, access and execution choices without establishing runtime
 contracts from prototype behavior. The [memory/lifetime research route](../workbench/notebook/memory-and-lifetimes.md)

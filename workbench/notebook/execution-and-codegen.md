@@ -22,7 +22,7 @@ workload and methodology qualification.
 | Dependency depth, underfill, live scalar/vector state, direct/manual/Ring | [Loom execution findings](../spikes/loom-execution/FINDINGS.md) |
 | Generic hint selection and native specialization | [Hardware-hint study](../spikes/loom-hardware-policy/README.md), then [current hint guide](../../loom/docs/hardware.md) |
 | Whether overlap repays tracking, binding and sampling | [Locality findings](../spikes/loom-locality-execution/FINDINGS.md), [execution policy](../../loom/docs/execution.md) |
-| Work interleaved across requests and Objects | [MVCC interleaving evidence](../spikes/orbital-mvcc/performance/FEEDBACK.md#wider-request-interleaving-and-append-growth) and [current directory evidence map](../spikes/directory/PROGRESS.md#selected-evidence) |
+| Work interleaved across requests and Objects | [MVCC interleaving evidence](../spikes/orbital-mvcc/performance/FEEDBACK.md#wider-request-interleaving-and-append-growth) and [current directory evidence map](retired-spikes.md#index-directory-spikes--october-2026) |
 | Useful owner service while native work runs | [Loom service experiments](../spikes/loom-execution/README.md) and [ready-Message comparison](../spikes/orbital-mvcc/performance/FEEDBACK.md#ready-message-service-during-large-dependent-reads) |
 | Worker handoff, affinity crossings, placement and joins | [Local handoff](../spikes/orbital-local-handoff/README.md) and the messaging/affinity panels in [Loom execution](../spikes/loom-execution/README.md) |
 

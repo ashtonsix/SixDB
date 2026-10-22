@@ -109,6 +109,34 @@ tar -xzf ~/sixdb-archive/hashtable-20261017/old-and-promoted-designs.tar.gz \
   -C ~/sixdb-archive/recovered-hashtable
 ```
 
+## Index directory spikes — October 2026
+
+Two earlier directory studies are archived on Linux under `~/sixdb-archive/`.
+[`engine::directory`](../../engine/README.md#segment-directory) and the
+[segment-directory study](../spikes/segment-directory/README.md) succeed both.
+
+- **`index-directories/`, removed 21 October** with its Engine directory
+  implementation and API-bound drivers: `index-directories-20261021/`. The
+  archive holds the complete `f021d381` source checkpoint and an exact
+  pre-deletion overlay with the uncommitted audit. All 14,611 base Git blob
+  members and 187 overlay members were verified before removal; `receipt.json`
+  records archive hashes and retained oracle identities.
+- **`directory/`, removed 22 October**: `directory-spike-20261022/`. This was
+  the complete-consumer experiment that followed: layer-specific routing,
+  sparse and duplicate traversal, packed Segments, publication, native LMDB
+  peers, and memory and drain evidence. It was never committed and linked
+  against the since-deleted `engine::material` adapter. `directory.tar.gz`
+  holds all 4,272 files, `manifest.sha256` per-file hashes (all verified after
+  extraction before removal), and `base-commit.txt` the matching SixDB commit.
+  Notebook links to its documents name paths inside that archive; its evidence
+  READMEs reference further S3 archives of frozen sources, ELFs and raw results.
+
+```sh
+mkdir -p ~/sixdb-archive/recovered-directory
+tar -xzf ~/sixdb-archive/directory-spike-20261022/directory.tar.gz \
+  -C ~/sixdb-archive/recovered-directory
+```
+
 ## Object prototypes and first formal suite — October 21, 2026
 
 Four superseded source trees were removed from the live spike catalog:

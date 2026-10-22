@@ -8,7 +8,9 @@ interface or a new measurement campaign. Ashton's follow-up adds lookup by
 the prefix of a friendly box enclosing a remapped segment, and explicitly
 separates prefix addressing from the choice of hash-map implementation.
 
-For the current consumer, use the [directory study](../spikes/directory/README.md).
+For the current structure, use [`engine::directory`](../../engine/README.md#segment-directory)
+and the [segment-directory study](../spikes/segment-directory/README.md); the earlier
+consumer study is [archived](retired-spikes.md#index-directory-spikes--october-2026).
 [Indexes and maintenance](indexes-and-maintenance.md) connects this retrospective
 to remapping, buffered summaries and later complete-operation evidence.
 
