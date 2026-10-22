@@ -1,14 +1,13 @@
 // Private experimental Frame material for the ikea-frame spike: block
 // descriptors, constant/runs/frame-of-reference/delta bodies over real
-// SeriesPack planes and Boundlist geometry, block masks, and the exact
+// SeriesPack planes and Intervals run geometry, block masks, and the exact
 // operations over them (SUM, narrow SUM, COUNT, whole-block decode), with
 // optional part-wide dictionaries whose code blocks reuse those kinds. Shared by
 // the timing driver (bodies.cpp), Codex's access check and Engine's consumers.
 // Not a Frame API, wire format or registry; it changes with the research.
 #pragma once
 
-#include <ikea/boundlist.h>
-#include <ikea/effects.h>
+#include <ikea/intervals.h>
 #include <ikea/seriespack.h>
 
 #include "kernels.h"
@@ -30,7 +29,7 @@
 
 namespace frame_encoding {
 namespace sp = ikea::seriespack;
-namespace bl = ikea::boundlist;
+namespace iv = ikea::intervals;
 using u64 = std::uint64_t;
 using u128 = unsigned __int128;
 using i64 = std::int64_t;
@@ -96,11 +95,10 @@ inline std::size_t plane_bytes(unsigned k, std::size_t count) {
 // runtime width k, through the real typed mutation path.
 void pack(unsigned k, std::span<const u64> values, std::uint8_t *out);
 
-const bl::layout &run_layout();
 
 // Run ends stored as exclusive end minus one in u8 (0..255), projected into
-// Boundlist geometry as proper exclusive ends 1..256 (Codex's proposal). No
-// checkpoints, control or tombstones; Boundlist's ordinary algorithms apply.
+// Intervals geometry as proper exclusive ends 1..256 (Codex's proposal). No
+// checkpoints, control or tombstones; Intervals' ordinary algorithms apply.
 struct run_ends {
     const std::uint8_t *end_minus_one;
     unsigned n;
@@ -137,9 +135,6 @@ inline const char *dictionary_name(dictionary_order mode) {
 // Encoding choices, captured per column image at construction so a retained
 // image is never reinterpreted under another image's settings.
 struct encode_options {
-    // Runs body: u8 run-end projection (default) or the compact mutable
-    // Boundlist view as a control.
-    bool compact_runs = false;
     checkpoints delta_checkpoints = checkpoints::native;
     // Off by default until point/, filter/ and execution/ consumers handle
     // kind::delta_patched; the driver opts in with --delta-exceptions.
@@ -174,11 +169,6 @@ inline std::size_t checkpoint_cost(checkpoints mode, unsigned k) {
     return 0;
 }
 
-struct runs_geometry {
-    std::vector<bl::byte> directory, lengths, control;
-    std::optional<bl::view> view;
-};
-
 // Dictionary layout. Each part with a dictionary stores, in the column payload
 // before its blocks' bodies, one SeriesPack plane of count values in code order,
 // each relative to the part minimum, at width W = max(1, width(max - min)). The
@@ -201,7 +191,6 @@ struct column {
     encode_options options;  // how this image was built
     std::vector<descriptor> blocks;
     std::vector<std::uint8_t> payload;
-    std::vector<std::unique_ptr<runs_geometry>> runs;  // per block, null unless runs
     std::vector<sp::decoder<u64>> decoders;            // per block with a plane
     // Narrowest output lane per block (u8/u16/u32), for narrow-lane reduction.
     std::vector<std::optional<sp::decoder<std::uint8_t>>> d8;
@@ -213,13 +202,6 @@ struct column {
     std::vector<std::optional<sp::decoder<u64>>> dictionaries;  // per part with a dictionary
     std::size_t rows = 0;
     std::size_t descriptor_bytes() const { return blocks.size() * sizeof(descriptor); }
-    std::size_t run_geometry_bytes() const {
-        std::size_t total = 0;
-        for (const auto &r : runs)
-            if (r)
-                total += r->directory.size() + r->lengths.size() + r->control.size();
-        return total;
-    }
     // Dictionary planes (inside payload), per-part records and coded bits.
     std::size_t dictionary_bytes() const {
         std::size_t total = 0;
@@ -237,7 +219,7 @@ struct column {
     }
     // Every charged byte: dictionary planes are already inside payload.
     std::size_t total_bytes() const {
-        return descriptor_bytes() + payload.size() + run_geometry_bytes() + part_record_bytes() +
+        return descriptor_bytes() + payload.size() + part_record_bytes() +
                coded_bit_bytes();
     }
 };
@@ -298,20 +280,16 @@ inline void decode_delta_patched(const column &c, std::size_t b, u64 *out) {
         out[p.positions[e]] = p.lo + exc[e];
 }
 
-// Visit each run's (rank, size) through Boundlist range over the chosen body.
+// Visit each run's (rank, size) through Intervals range over the u8 run ends.
 template <class F> void each_run(const column &c, std::size_t b, F &&visit) {
     const auto &d = c.blocks[b];
     auto body = [&](unsigned rank, auto interval) { visit(rank, interval.limit - interval.first); };
-    bool ok;
-    if (c.runs[b])
-        ok = bl::range(*c.runs[b]->view, 0, d.count, body).has_value();
-    else
-        ok = bl::range(bl::from_ends(run_ends{c.payload.data() + d.offset +
-                                                  plane_bytes(d.width, d.count),
-                                              d.count},
-                                     0u),
-                       0, d.count, body)
-                 .has_value();
+    const bool ok =
+        iv::range(iv::from_ends(run_ends{c.payload.data() + d.offset + plane_bytes(d.width, d.count),
+                                         d.count},
+                                0u),
+                  0, d.count, body)
+            .has_value();
     if (!ok)
         std::abort();
 }

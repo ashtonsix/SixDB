@@ -3,7 +3,7 @@
 add_library(frame_encoding_material STATIC material.cpp kernels.cpp)
 sixdb_target(frame_encoding_material)
 target_include_directories(frame_encoding_material PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
-target_link_libraries(frame_encoding_material PUBLIC ikea::seriespack ikea::boundlist)
+target_link_libraries(frame_encoding_material PUBLIC ikea::seriespack ikea::intervals)
 
 add_executable(frame_encoding_bodies bodies.cpp)
 sixdb_target(frame_encoding_bodies)

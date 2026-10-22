@@ -35,26 +35,13 @@ void pack(unsigned k, std::span<const u64> values, std::uint8_t *out) {
         std::abort();
 }
 
-const bl::layout &run_layout() {
-    static const auto layout = bl::layout::prepare(
-        // A runs block never holds one 256-row run (that block is constant), so
-        // every run is at most 255 rows and sizes fit u8.
-        {.family = bl::geometry::sizes, .maximum = 255, .extent_limit = 256, .immortal = true});
-    if (!layout)
-        std::abort();
-    return *layout;
-}
-
 namespace {
 // One block's body under the existing kinds, appended to payload (the
 // descriptor's offset is into payload). Kind-agnostic about what the values
 // mean: a dictionary code block passes its codes here unchanged.
 descriptor emit_block(std::span<const u64> block, const encode_options &options,
-                      std::vector<std::uint8_t> &payload,
-                      std::unique_ptr<runs_geometry> &geometry) {
-    const bool compact_runs = options.compact_runs;
+                      std::vector<std::uint8_t> &payload) {
     const checkpoints delta_checkpoints = options.delta_checkpoints;
-    const auto &layout = run_layout();
     std::vector<u64> scratch(block_rows);
     const auto [lo, hi] = std::minmax_element(block.begin(), block.end());
     descriptor d{*lo, static_cast<std::uint32_t>(payload.size()), 0, kind::constant, 0};
@@ -117,11 +104,7 @@ descriptor emit_block(std::span<const u64> block, const encode_options &options,
             patched_k = pk;
         }
     }
-    const std::size_t runs_cost =
-        plane_bytes(k, run_values.size()) +
-        (compact_runs ? layout.directory_bytes() + layout.control_bytes() +
-                            layout.lengths_bytes(static_cast<unsigned>(run_sizes.size()))
-                      : run_sizes.size());
+    const std::size_t runs_cost = plane_bytes(k, run_values.size()) + run_sizes.size();
     // Delta-with-exceptions candidate: for e in {2, 8, 32}, two exception
     // sets, each priced exactly under the delta_patched law (material.h):
     //   values  rows outside the narrowest window of 256 - e sorted values
@@ -348,7 +331,7 @@ descriptor emit_block(std::span<const u64> block, const encode_options &options,
                 std::memcpy(at, &marks[j], 8);
             }
         }
-    } else if (runs_cost < packed_cost && !compact_runs) {
+    } else if (runs_cost < packed_cost) {
         d.type = kind::runs;
         d.count = static_cast<std::uint16_t>(run_values.size());
         d.width = static_cast<std::uint8_t>(k);
@@ -360,30 +343,6 @@ descriptor emit_block(std::span<const u64> block, const encode_options &options,
             end += run_sizes[r];
             payload[d.offset + values_bytes + r] = static_cast<std::uint8_t>(end - 1);
         }
-    } else if (runs_cost < packed_cost) {
-        auto g = std::make_unique<runs_geometry>();
-        g->directory.resize(layout.directory_bytes());
-        g->lengths.resize(layout.lengths_bytes(static_cast<unsigned>(run_sizes.size())));
-        g->control.resize(layout.control_bytes());
-        auto view = bl::view::bind(layout, {g->directory, g->lengths, g->control});
-        if (!view)
-            std::abort();
-        g->view.emplace(*view);
-        std::vector<ikea::owner_write> records(8 * (run_sizes.size() + 2));
-        ikea::source_write_journal effects{records};
-        if (!bl::initialize(*g->view, effects))
-            std::abort();
-        for (unsigned size : run_sizes) {
-            effects.used = 0;
-            if (!bl::append(*g->view, size, effects))
-                std::abort();
-        }
-        d.type = kind::runs;
-        d.count = static_cast<std::uint16_t>(run_values.size());
-        d.width = static_cast<std::uint8_t>(k);
-        payload.resize(payload.size() + plane_bytes(k, run_values.size()));
-        pack(k, run_values, payload.data() + d.offset);
-        geometry = std::move(g);
     } else {
         for (std::size_t i = 0; i < block_rows; ++i)
             scratch[i] = block[i] - *lo;
@@ -396,22 +355,16 @@ descriptor emit_block(std::span<const u64> block, const encode_options &options,
     return d;
 }
 
-std::size_t emitted_bytes(const std::vector<std::uint8_t> &payload,
-                          const std::unique_ptr<runs_geometry> &g) {
-    return payload.size() + (g ? g->directory.size() + g->lengths.size() + g->control.size() : 0);
-}
-
 // One block's candidate body, built into its own payload at offset 0.
 struct candidate {
     descriptor d;
     std::vector<std::uint8_t> payload;
-    std::unique_ptr<runs_geometry> geometry;
-    std::size_t bytes() const { return emitted_bytes(payload, geometry); }
+    std::size_t bytes() const { return payload.size(); }
 };
 
 candidate emit_candidate(std::span<const u64> block, const encode_options &options) {
     candidate k;
-    k.d = emit_block(block, options, k.payload, k.geometry);
+    k.d = emit_block(block, options, k.payload);
     return k;
 }
 }  // namespace
@@ -438,7 +391,6 @@ column encode(std::span<const u64> values, encode_options options) {
                 k.d.offset += static_cast<std::uint32_t>(c.payload.size());
                 c.payload.insert(c.payload.end(), k.payload.begin(), k.payload.end());
                 c.blocks.push_back(k.d);
-                c.runs.push_back(std::move(k.geometry));
             }
             continue;
         }
@@ -511,7 +463,6 @@ column encode(std::span<const u64> values, encode_options options) {
             w.d.offset += static_cast<std::uint32_t>(c.payload.size());
             c.payload.insert(c.payload.end(), w.payload.begin(), w.payload.end());
             c.blocks.push_back(w.d);
-            c.runs.push_back(std::move(w.geometry));
         }
     }
     for (const auto &p : c.parts) {

@@ -125,14 +125,14 @@ void run(const char *name, std::span<const u64> values, u64 lo, u64 threshold,
     std::size_t dictionary_parts = 0;
     for (const auto &part : c.parts)
         dictionary_parts += part.count != 0;
-    std::printf("{\"column\":\"%s\",\"delta_checkpoints\":\"%s\",\"runs_body\":\"%s\",\"rows\":%zu,\"blocks\":%zu,\"constant\":%zu,\"runs\":%zu,"
+    std::printf("{\"column\":\"%s\",\"delta_checkpoints\":\"%s\",\"rows\":%zu,\"blocks\":%zu,\"constant\":%zu,\"runs\":%zu,"
                 "\"packed\":%zu,\"delta\":%zu,\"patched\":%zu,\"delta_patched\":%zu,\"descriptor_bytes\":%zu,\"payload_bytes\":%zu,"
-                "\"run_geometry_bytes\":%zu,\"dictionary\":\"%s\",\"dictionary_every_part\":%s,"
+                "\"dictionary\":\"%s\",\"dictionary_every_part\":%s,"
                 "\"parts\":%zu,\"dictionary_parts\":%zu,\"dictionary_bytes\":%zu,\"part_record_bytes\":%zu,"
                 "\"coded_bit_bytes\":%zu,\"coded_blocks\":%zu,\"bits_per_value\":%.3f,\"plain_bytes_per_value\":%zu",
                 name, checkpoint_name(c.options.delta_checkpoints),
-                c.options.compact_runs ? "boundlist-compact" : "u8-end-projection", c.rows, c.blocks.size(), counts[0], counts[1], counts[2], counts[3], counts[4], counts[5],
-                c.descriptor_bytes(), c.payload.size(), c.run_geometry_bytes(),
+                c.rows, c.blocks.size(), counts[0], counts[1], counts[2], counts[3], counts[4], counts[5],
+                c.descriptor_bytes(), c.payload.size(),
                 dictionary_name(c.options.dictionary), c.options.dictionary_every_part ? "true" : "false",
                 c.parts.size(), dictionary_parts, c.dictionary_bytes(), c.part_record_bytes(),
                 c.coded_bit_bytes(), c.coded_blocks(), 8.0 * total_bytes / c.rows, sizeof(T));
@@ -199,7 +199,7 @@ void run(const char *name, std::span<const u64> values, u64 lo, u64 threshold,
 #ifndef FRAME_ENCODING_BODY_NO_MAIN
 int main(int argc, char **argv) {
     if (argc < 3) {
-        std::fprintf(stderr, "usage: %s NAME FILE.u64 [--compact-runs] "
+        std::fprintf(stderr, "usage: %s NAME FILE.u64 "
                      "[--checkpoints=native|packed|every64|none] [--delta-exceptions] "
                      "[--dictionary=none|sorted|frequency] [--dictionary-every-part]\n",
                      argv[0]);
@@ -207,9 +207,7 @@ int main(int argc, char **argv) {
     }
     encode_options options;
     for (int i = 3; i < argc; ++i) {
-        if (std::strcmp(argv[i], "--compact-runs") == 0)
-            options.compact_runs = true;
-        else if (std::strcmp(argv[i], "--delta-exceptions") == 0)
+        if (std::strcmp(argv[i], "--delta-exceptions") == 0)
             options.delta_exceptions = true;
         else if (std::strcmp(argv[i], "--dictionary=none") == 0)
             options.dictionary = dictionary_order::none;
