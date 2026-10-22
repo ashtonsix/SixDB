@@ -15,6 +15,25 @@ metadata/evidence, cross-column dependencies, mutation phase changes and physica
 ownership. They are alternatives to investigate, not an agreed architecture or
 a sequence of promotion gates. Encoding remains the initial emphasis.
 
+Reading notes on the review (2026-10-22), where it needs qualifying:
+
+- **Bit-plane masked SUM applies to Local residual planes only.** SeriesPack's
+  Local tail bits are bit planes, but body bytes are byte-wise and Striped
+  payloads interleave rows by stripe lane. A mixed-width tile needs a byte-plane
+  sum for its body plus the popcount sum for its tail; Striped needs its own
+  derivation. The experiment should sweep layout as well as K.
+- **Weighted predicted SUM and checkpoints.** The weighted form uses every
+  residual in the block, so checkpoints are redundant for it; it competes with
+  checkpoint-restarted prefix decode rather than depending on it. Wrapping
+  residuals need the review's wrap corrections for an exact wide sum.
+- **The writable plain state and the streaming tail are the same state.** The
+  review's thaw/reseal lifecycle and Ashton's streaming collection both hold
+  plain blocks awaiting re-encode, so one mechanism can serve both. Forced
+  compaction when slack runs out may produce plain blocks, not only encoded
+  ones; that keeps Ashton's slack rule while avoiding re-encode thrash.
+- **Taxonomy versus algorithms.** Agreed: ENCODING's "what each stage preserves"
+  table is a coarse summary, not a planning interface.
+
 ## Encoding
 
 | Question | Kind | Why it matters | Source |
@@ -26,8 +45,9 @@ a sequence of promotion gates. Encoding remains the initial emphasis.
 | Does frame of reference beat plain packing at real column widths under SeriesPack's tile geometry, once exceptions are counted? | Experiment | Narrower is not always smaller with ragged tiles. | [Residual bounds note](../../notebook/pfor-bounds.md#what-sixdb-composition-changes) |
 | Can exception application fuse with SeriesPack reads to avoid Calico's patch-decode penalty? | Experiment | Calico's patched decode was 1.9–4.7× slower until fused. | [Survey §2](SURVEY.md#2-calico) |
 | Relative Ends checkpoints or Sizes-style prefix sums inside predicted blocks? | Experiment | Point-read cost versus bytes per value. | [Encoding §5](ENCODING.md#5-map-or-predict) |
+| How should predicted-block checkpoints handle exceptions: widen to the largest cumulative exception, or exclude exception contributions and re-add them from the exception list? | Experiment | One full-width exception otherwise breaks the `K + 8` bound for every later checkpoint. | [Encoding §5](ENCODING.md#5-map-or-predict), [review cautions](REVIEW.md#arithmetic-and-ownership-cautions-for-the-prototypes) |
 | Do linear and category predictors pay on SixDB's columns? | Experiment | Calico's predictive transform paid only on one telemetry corpus. | [Survey §2](SURVEY.md#2-calico) |
-| What does Boundlist need to serve 64-bit value series as well as offsets, and what is it renamed to? | Design | Boundlist appears in four roles in the encoding. | [Encoding, Ikea primitives](ENCODING.md#reuse-of-ikea-primitives) |
+| Should Boundlist be renamed for its third consumer? Its endpoint searches already accept wide ordered sources, so prototyping does not depend on it. | Design | Naming only; the review found no missing search law. | [Encoding §5](ENCODING.md#5-map-or-predict) |
 
 ## Writes, overrides and compaction
 
@@ -36,6 +56,7 @@ a sequence of promotion gates. Encoding remains the initial emphasis.
 | What does an override cost on reads as its density rises, and how much slack should a group reserve? | Experiment | Sets the forced-compaction rate and the read tax of a hot group. | [Encoding, Overrides](ENCODING.md#overrides-mutable-outliers) |
 | What does re-encoding one group cost, and what should trigger it besides exhausted slack or a full streaming tail? | Experiment | Streaming re-encode and forced compaction share this operation. | [Encoding, Streaming](ENCODING.md#streaming) |
 | Should a routed column keep one override store per group, or one per route? | Design | Overrides hold logical values, but routes encode separately. | [Encoding §2](ENCODING.md#2-routing) |
+| How are category writes handled under routing: value overrides, immediate route repair, or a conditioned base that keeps original coordinates? | Experiment | A category change makes unchanged values decode against the wrong route. | [Encoding §2](ENCODING.md#2-routing), [review §5](REVIEW.md#5-put-cross-column-alternatives-beside-category-routing) |
 | For write-heavy sorted columns, is rewriting one 16-value sub-block cheaper than sending every write to a predicted block into overrides? | Experiment | Every write to a predicted block currently becomes an override. | [Encoding, Writes](ENCODING.md#writes) |
 | Do cold parts keep the group layer, or only part and block? | Design | Groups exist for mutation; cold parts may not need them. | [README](README.md#starting-context-from-discussion-with-ashton) |
 | What Part grain should a group's planes have, so an epoch republishes only touched groups (as `engine::directory` shares unchanged leaves) without per-Part metadata dominating? | Experiment | Decides publication and COW proportionality. | [Writes §2](WRITES.md#what-this-means-for-frames-encoding) |
@@ -48,6 +69,8 @@ a sequence of promotion gates. Encoding remains the initial emphasis.
 | Question | Kind | Why it matters | Source |
 | --- | --- | --- | --- |
 | Do block min/max live on the parent segment beside block sums, or in the part beside the descriptors? | Design | Block sums are already the parent's; pruning reads whichever holds extrema. | [Encoding, statistics](ENCODING.md#block-descriptor-and-statistics) |
+| Which logical contribution law feeds parent sums from each stage? `sum_change` is a packed-domain modulo-u64 delta: right for plain and frame-of-reference integers, wrong for dictionary codes, splits, floats and signed values. | Design | Parent summaries must stay exact through every encoding. | [Encoding, Writes](ENCODING.md#writes) |
+| Should block statistics carry precision levels (exact versus conservative) instead of a dirty bit? A shrinking write leaves the old bound safe for pruning. | Experiment | Keeps pruning useful under churn without forcing re-encode. | [Encoding, statistics](ENCODING.md#block-descriptor-and-statistics), [review §4](REVIEW.md#4-separate-compression-addressing-and-query-evidence) |
 | How should floating-point arithmetic be made deterministic? Ashton's expectation: a defined operation order at group level (perhaps a blocked tree for ILP) with native arithmetic, then Kulisch superaccumulation between groups or parts so replicas can reorder by local state (for example what each has mapped). Also: a correctly rounded library such as CORE-MATH for bit-identical results across platforms. | Experiment | Equivalent representations and replicas must give identical answers; this sets aggregate kernels' shape and cost. | Ashton, 2026-10-22; [kmath superaccumulators](../../../../calico/kmath/SPEC.md) |
 
 ## Representations and Engine's view

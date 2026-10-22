@@ -101,6 +101,16 @@ then runs its own stages 3–8 with its own priors, which is the point: value
 domains differ by category. Runs of one category become cheap through stage 6
 on each route.
 
+Routing makes the value column depend on the category column. A category
+write moves a row between routes even when its value is unchanged: with
+categories `[A,B]`, values `[10,20]` and routes `A:[10], B:[20]`, changing the
+first category to `B` makes the old route data decode wrongly unless the value
+is repaired. Category writes therefore become value overrides (or route
+repair), and the routing basis the data was encoded against is distinct from
+the current category until the group re-encodes. Conditioned bases, shared
+codes and other cross-column alternatives that keep original coordinates are
+compared in the [review](REVIEW.md#5-put-cross-column-alternatives-beside-category-routing).
+
 ### 3. Working domain
 
 Everything below this stage is unsigned, so all of Ikea's unsigned filters and
@@ -154,15 +164,22 @@ Each sub-block of 16 starts from a checkpoint, so a point read costs one
 checkpoint plus at most 15 residuals (**decided**: checkpoints every 16 values).
 Checkpoints are stored relative to the block's first value, in the Relative
 Ends style. Since `u_i = u_0 + i·base + Σ s_j`, a checkpoint need only hold the
-cumulative stored residual `Σ s_j`, which fits `K + 8` bits: about
-`0.06·(K + 8)` bits per value for 15 checkpoints. A Sizes-style form (no
-intra-block checkpoints, prefix sum on read) is the compact alternative.
+cumulative stored residual `Σ s_j`. Without exceptions this fits `K + 8` bits,
+about `0.06·(K + 8)` bits per value for 15 checkpoints. **Exceptions break that
+bound**: an exception carries a full-width residual into every later
+checkpoint (one patched delta of 2^40 in a K=1 block needs a 41-bit
+checkpoint). Checkpoint width therefore depends on the block's exceptions, or
+checkpoints exclude exception contributions and add them back from the
+exception list; which is cheaper is open. A Sizes-style form (no intra-block
+checkpoints, prefix sum on read) is the compact alternative.
 
 For non-decreasing data with the *previous* predictor, this is exactly
 Boundlist's geometry: residuals are sizes and checkpoints are group origins.
-Boundlist's search then answers predicates on the column directly. Boundlist's
-compact view is offset-shaped today (sizes ≤ 65,535, extent ≤ 256M), so a
-64-bit value series is the generalisation that motivates its rename.
+Boundlist's search then answers predicates on the column directly. Its
+endpoint searches already accept wide custom ordered sources (`from_ends`);
+only the compact *stored* view is offset-shaped (sizes ≤ 65,535, extent ≤ 256M).
+Search over monotone 64-bit values therefore needs a source adapter, not a new
+search law. General (non-monotone) prediction is not a Boundlist concern.
 
 ### 6. Block kind
 
@@ -233,11 +250,17 @@ A write is logical: `(position, value or null)`. The procedure is a pure functio
 of the representation's bytes and the write, so it is deterministic:
 
 1. If the position already has an override, update it.
-2. Otherwise, if the block is unpredicted, the position has no exception, and the
-   value passes stages 3–7 within the block's parameters (dictionary hit,
-   round trip holds, residual fits K), write the packed slot in place.
-   SeriesPack's replacement path provides the issued-byte journal and
-   `sum_change`.
+2. Otherwise, if the block is a plain or frame-of-reference block (not
+   constant, runs or predicted), the position has no exception, the column is
+   dense and unrouted (or the write keeps its category), and the value passes
+   stages 3–7 within the block's parameters (dictionary hit, round trip holds,
+   residual fits K), write the packed slot in place. A constant or run block
+   shares one stored value across rows, so changing one row is never a slot
+   write. SeriesPack's replacement path provides the issued-byte journal.
+   Its `sum_change` is a modulo-u64 delta in the *packed* domain: it equals the
+   logical delta for plain and frame-of-reference integers, but not for
+   dictionary codes, splits, floats or signed values, which need logical
+   contributions computed from before/after values.
 3. Otherwise, add an override. If that exhausts group slack, compact the group.
 
 Null writes to dense columns update the null mask. Writes that change presence
@@ -296,22 +319,28 @@ checkpoint origin) go in a parallel SeriesPack plane so descriptors stay small.
 Block statistics are separate planes so they scan contiguously: present count,
 min and max in the working domain (order-preserving, so comparisons are valid
 there). Sums over 256-value blocks are not Frame's: they are stored on the
-parent segment as summaries (**decided**), which Frame feeds through
-`sum_change` on writes and through block encoding. Any finer aggregates, such
+parent segment as summaries (**decided**), which Frame feeds with logical
+contributions on writes (see the `sum_change` caveat under Writes) and through
+block encoding. Any finer aggregates, such
 as over 16-value sub-blocks, would stay local to the part; checkpoints are the
 only such aggregate this design needs so far.
 Statistics cover all rows including exceptions and
 overrides, unlike frame-of-reference bounds, which cover only inliers. Writes
-widen min/max immediately; a write that
-could shrink an extreme marks the block's statistics dirty, and readers fall
-back to exact data until compaction refreshes them, as in Calico's fine
-summaries.
+widen min/max immediately. A write that could shrink an extreme leaves the old
+bound conservative: still safe for pruning, but no longer exact. Only exact
+MIN/MAX answers need the exact data until compaction refreshes the bound.
+Statistics may therefore carry a precision level (exact, conservative) rather
+than a single dirty bit.
 
 ## What each stage preserves
 
-The survey's matrix collapses into a few properties that compose along an
-expression. Engine's planner can read the intersection along a path to see what
-runs on encoded data.
+A coarse first summary of the survey's matrix. Intersecting properties along
+a path understates what encodings allow: a composition can introduce a new
+algorithm (a frequency dictionary still answers range predicates by
+classifying its entries, then scanning codes against that truth table). The
+[review](REVIEW.md#1-preserve-structure-across-the-execution-boundary) treats
+what cheaper problem each encoding creates as the real question; this table
+is not intended as Frame's planning interface.
 
 | Stage | Order | Linear sum | Positions | Point cost |
 | --- | --- | --- | --- | --- |
@@ -320,7 +349,7 @@ runs on encoded data.
 | Offset binary, float map | ✔ | needs bias (ints) / ✗ (floats) | ✔ | O(1) |
 | ALP decimal | ✔ within block | exact integer | ✔ | O(1) |
 | Split | high part first | `2^s·Σhi + Σlo` | ✔ | two reads |
-| Sorted / frequency dictionary | ✔ / ✗ | via code histogram | ✔ | O(1) + lookup |
+| Sorted / frequency dictionary | ✔ / via entry truth table | via code histogram | ✔ | O(1) + lookup |
 | Predict | ✗ (except monotone) | telescoping only | ✔ | ≤ 15 steps |
 | Constant, runs | ✔ | `v·n`, `Σ v·len` | ✔ | O(1) / search |
 | Frame of reference | ✔ | `n·base + Σs` | ✔ | O(1) |
@@ -351,8 +380,9 @@ runs on encoded data.
 | Dictionary search | Boundlist `lower_bound` over a SeriesPack endpoint source |
 | Route-local rank | SeriesPack `filter<equal>` plus popcount |
 
-Boundlist appears in four roles. Its rename and its generalisation to 64-bit
-value series are the main Ikea changes this design implies.
+Boundlist appears in four roles. Its existing endpoint sources cover wide
+monotone values; whether the third consumer warrants a rename is Ashton's call,
+not a prerequisite for prototyping.
 
 ## Open questions
 
