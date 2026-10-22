@@ -25,6 +25,7 @@ void need(bool ok, const char *message) {
 struct pages {
     std::size_t page, count;
     std::uint8_t *data;
+    bool owned = true;
     explicit pages(std::size_t n) : page(static_cast<std::size_t>(::sysconf(_SC_PAGESIZE))), count(n) {
         need(page >= block_rows && page <= (1u << 20), "invalid page size");
         void *mapping = ::mmap(nullptr, page * count, PROT_READ | PROT_WRITE,
@@ -32,8 +33,17 @@ struct pages {
         need(mapping != MAP_FAILED, "mmap failed");
         data = static_cast<std::uint8_t *>(mapping);
     }
+    pages(std::vector<std::uint8_t> &storage, std::size_t n)
+        : page(static_cast<std::size_t>(::sysconf(_SC_PAGESIZE))), count(n), owned(false) {
+        need(page >= block_rows && page <= (1u << 20), "invalid page size");
+        storage.resize((count + 2) * page);
+        const auto address = reinterpret_cast<std::uintptr_t>(storage.data());
+        const auto padding = (page - address % page) % page;
+        data = storage.data() + padding;
+        need(padding + count * page <= storage.size(), "protected pages exceed payload");
+    }
     pages(const pages &) = delete;
-    ~pages() { ::munmap(data, page * count); }
+    ~pages() { if (owned) ::munmap(data, page * count); }
     void all(int permissions) {
         need(::mprotect(data, page * count, permissions) == 0, "mprotect all failed");
     }
@@ -48,21 +58,25 @@ struct pages {
 // between 1 and 255 must access the selected payload rather than constant-fold.
 struct fixture {
     static constexpr std::size_t count = 37; // Empty, full and partial/mixed groups.
-    pages payload{count}, owner{1};
+    pages owner{1};
     column *material;
+    std::unique_ptr<pages> payload;
     fixture() {
         need(sizeof(column) <= owner.page, "column exceeds owner page");
         material = std::construct_at(reinterpret_cast<column *>(owner.data));
         material->rows = count * block_rows;
+        payload = std::make_unique<pages>(material->payload, count);
         for (std::size_t b = 0; b < count; ++b) {
-            auto *bytes = payload.data + b * payload.page;
+            auto *bytes = payload->data + b * payload->page;
             std::memset(bytes, static_cast<int>(b + 1), block_rows);
             const sp::dense_input input{8, sp::geometry::local,
                                        std::span<const std::uint8_t>(bytes, block_rows), block_rows};
             auto wide = sp::bind_decoder<u64>(input);
             auto narrow = sp::bind_decoder<std::uint8_t>(input);
             need(wide.has_value() && narrow.has_value(), "decoder binding failed");
-            material->blocks.push_back({0, 0, block_rows, kind::packed, 8});
+            const auto offset = bytes - material->payload.data();
+            need(offset >= 0 && static_cast<std::size_t>(offset) <= UINT32_MAX, "offset overflow");
+            material->blocks.push_back({0, static_cast<std::uint32_t>(offset), block_rows, kind::packed, 8});
             material->decoders.push_back(*wide);
             material->d8.emplace_back(*narrow);
             material->d16.emplace_back();
@@ -72,6 +86,7 @@ struct fixture {
     }
     ~fixture() {
         owner.all(PROT_READ | PROT_WRITE);
+        payload->all(PROT_READ | PROT_WRITE);
         std::destroy_at(material);
     }
 };
@@ -80,6 +95,8 @@ void verify(const column &c, const block_mask &mask, u128 sum, u64 count) {
     need(encoded_sum(c, mask) == sum, "SUM differs from literal expected values");
     need(encoded_sum_narrow(c, mask) == sum, "narrow SUM differs from literal expected values");
     need(encoded_count_ge(c, mask, 25) == count, "COUNT differs from literal expected values");
+    need(catalogue_sum(c, mask) == sum, "catalogue SUM differs from literal expected values");
+    need(catalogue_count_ge(c, mask, 25) == count, "catalogue COUNT differs from literal expected values");
 }
 
 template <class F> void must_fault(F &&read) {
@@ -110,13 +127,13 @@ int main() {
     // selected block contains 256 equal values; threshold is 25.
     verify(*f.material, all, 179968, 3328);
 
-    f.payload.all(PROT_NONE);
+    f.payload->all(PROT_NONE);
     f.owner.all(PROT_NONE);
     verify(*f.material, none, 0, 0); // Even the column object is inaccessible.
     f.owner.all(PROT_READ | PROT_WRITE);
 
-    for (std::size_t b = 16; b < 32; ++b) f.payload.one(b, PROT_READ);
-    for (auto b : {32u, 34u, 36u}) f.payload.one(b, PROT_READ);
+    for (std::size_t b = 16; b < 32; ++b) f.payload->one(b, PROT_READ);
+    for (auto b : {32u, 34u, 36u}) f.payload->one(b, PROT_READ);
     verify(*f.material, selected, 127232, 2816);
 
     block_mask broken(fixture::count);
@@ -124,6 +141,8 @@ int main() {
     must_fault([&] { return encoded_sum(*f.material, broken); });
     must_fault([&] { return encoded_sum_narrow(*f.material, broken); });
     must_fault([&] { return static_cast<u128>(encoded_count_ge(*f.material, broken, 25)); });
+    must_fault([&] { return catalogue_sum(*f.material, broken); });
+    must_fault([&] { return static_cast<u128>(catalogue_count_ge(*f.material, broken, 25)); });
     std::puts("Protected owner/payload checks passed: none, skipped/full/mixed groups, partial tail; "
-              "all three injected inactive reads faulted.");
+              "all five injected inactive reads faulted (bindings and catalogue).");
 }
