@@ -1,11 +1,10 @@
 # Intervals
 
-Isolated successor spike for `ikea::boundlist` → `ikea::intervals`, owned by Ikea
-HELPER. The candidate target and headers use the new name. Production Boundlist
-is the before control; this experiment does not silently migrate persisted bytes.
-
-The question is which geometry, storage and execution seams serve StreamPack,
-Engine directory projections and Frame without inheriting any one owner's policy.
+Research and qualification for the maintained `ikea::intervals` module. Common
+borrowed search/geometry now lives in Ikea; StreamPack owns compact image and
+retirement responsibilities. The [graduation account](GRADUATION.md) records the
+real ownership migration and consumer checks. The earlier frozen evidence remains
+valid for its original source; it is not rewritten as a current measurement.
 
 ## Starting evidence
 
@@ -24,16 +23,14 @@ unqualified at transfer; this spike freshly checks them before timing. The
 [Frame point study](../ikea-frame/point/README.md) owns prediction reconstruction,
 packed residuals and exception algebra. Those are not nonnegative interval sizes.
 
-## Candidate contract and module reassessment
+## Maintained contract and module split
 
-`include/ikea/intervals.h` and target `ikea::intervals` are opt-in with
-`SIXDB_SPIKES=intervals`. `geometry.h` reuses maintained non-owning bodies through
-explicit declarations, instead of copying all existing implementations. It exports
-no owning compact `layout`, `view`, `retire`, `immortal`, or `live_ranks` API.
-The temporary dependency on Boundlist is implementation reuse during the experiment;
-it is not the intended final dependency direction.
+The maintained target and headers are documented in
+[Ikea usage](../../../ikea/docs/intervals/usage.md). The spike no longer exports a
+shadow include directory or a facade depending on Boundlist. Transitional old
+Boundlist includes point to the new owners for historical controls.
 
-The proposed production split is:
+The production responsibilities are:
 
 | Layer | Owns | Consumer obligations |
 | --- | --- | --- |
@@ -50,13 +47,14 @@ owners return absent, never a later owner. Zero-size intervals retain ranks and
 can be visited; they own no points. Presence, NULL validity, tombstones and operation
 selection remain independent. Filters cover exactly ceil(count/8) readable bytes.
 
-Sources need `size()` as unsigned, `origin()` and ordered `at(rank)`. Optional
+Ordered search sources need only `size()` as unsigned and ordered `at(rank)`.
+Interval geometry separately adds `origin()` and its coordinate law. Optional
 `start`, `slot_size`, `extent`, carried traversal and admitted owner hooks remove
 redundant work. Generic count/domain are not restricted to 256. Sparse local fields
 are u8/u16 sizes or native relative ends; checkpoint carriers and working
 coordinates are separate. At least u32 arithmetic avoids a narrowing carry on
-every visited rank, while u64 origins remain u64. Native tail
-padding and phase read windows are explicit read obligations, not writable slack.
+every visited rank, while u64 origins remain u64. Native tail padding and phase
+read windows are explicit read obligations, not writable slack.
 
 Frame RLE's ≤256-position u8 end-minus-one projection is an important immutable
 control: endpoint 256 is projected into a wider domain, and no checkpoints,
@@ -70,12 +68,12 @@ Use the pinned Linux compiler with `orb -m ubuntu` on macOS:
 
 ```sh
 cmake -S . -B build/clang/intervals -G Ninja -DCMAKE_BUILD_TYPE=Release -DSIXDB_SPIKES=intervals
-cmake --build build/clang/intervals --target intervals_check intervals_consumer --parallel 2
-build/clang/intervals/workbench/spikes/intervals/intervals_check
+cmake --build build/clang/intervals --target ikea_intervals_sparse_check intervals_consumer --parallel 2
+build/clang/intervals/ikea/ikea_intervals_sparse_check
 build/clang/intervals/workbench/spikes/intervals/intervals_consumer --maximum 255 --count 256 --trials 11 --repeat 32
 ```
 
-`check.cpp` uses independent scalar endpoints/intersections across near-top origins,
+`ikea/test/intervals/sparse.cpp` uses independent scalar endpoints/intersections across near-top origins,
 zero groups, signed/wider queries, partial native tails and ordered replacements.
 `consumer.cpp` consumes payload/children after point, inverse, short/full-range work,
 with maintained typed compact and direct controls. It rotates arm order and retains
@@ -126,12 +124,10 @@ historical source remains in ignored immutable captures:
   `2583bde5d8f04c45683f8d65dbda5847e72b9f557847e950836e61723c3e688d`.
   This second capture includes the owner/start repair freshly checked here.
 
-This is an implemented candidate and measured design spike. Production promotion
-still requires moving common non-owning bodies into `ikea::intervals`, making
-StreamPack own its bitmap/retirement operations and compatibility decoding,
-updating all three callers and qualifying their persistent byte/admission laws.
-Re-exporting owning Boundlist state or retagging existing bytes would defeat the
-ownership split. No production migration is claimed by the candidate facade.
+The production move is recorded in [graduation](GRADUATION.md). Common bodies
+are physically owned by Intervals; StreamPack owns compact storage and retirement.
+No old persisted bytes are retagged. Historical comparisons retain their frozen
+sources and byte/admission context.
 
 For full local reproduction, configure as above, then run:
 

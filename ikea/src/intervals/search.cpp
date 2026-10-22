@@ -1,7 +1,7 @@
-#include <ikea/boundlist/detail/prediction.h>
+#include <ikea/intervals/detail/prediction.h>
 #include <bit>
 
-namespace ikea::boundlist::detail {
+namespace ikea::intervals::detail {
 numeric_preparation prepare_numeric(const void* address, unsigned count, unsigned bytes) {
     numeric_preparation p;
     if (!count)
@@ -43,4 +43,4 @@ numeric_preparation prepare_numeric(const void* address, unsigned count, unsigne
     }
     return p;
 }
-} // namespace ikea::boundlist::detail
+} // namespace ikea::intervals::detail

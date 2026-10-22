@@ -1,15 +1,15 @@
 #pragma once
-#include <ikea/boundlist/detail/prefix.h>
-#include <ikea/boundlist/detail/search.h>
+#include <ikea/intervals/detail/prefix.h>
+#include <ikea/intervals/detail/search.h>
 
 namespace ikea::intervals::native_detail {
 /// Low-latency exact-prefix path retained independently of the batch kernel.
 template<unsigned Spacing,class W>
 [[gnu::always_inline]] unsigned prefix_serial(const W *p,unsigned stride,unsigned take) {
     unsigned sum=0;
-    for(unsigned g=0;g<take/16;++g) sum+=boundlist::detail::prefix16_native(p+std::size_t(g)*stride,16);
+    for(unsigned g=0;g<take/16;++g) sum+=intervals::detail::prefix16_native(p+std::size_t(g)*stride,16);
     if(take%16==0) return sum;
-    return sum+boundlist::detail::prefix16_native(p+std::size_t(take/16)*stride,take%16);
+    return sum+intervals::detail::prefix16_native(p+std::size_t(take/16)*stride,take%16);
 }
 
 #if defined(__AVX2__)
@@ -26,7 +26,7 @@ template<class W>
 #if defined(__BMI2__)
         const auto mask=_bzhi_u64(~std::uint64_t{},take);
 #else
-        const auto mask=boundlist::detail::low_bits(take);
+        const auto mask=intervals::detail::low_bits(take);
 #endif
         const auto sums=_mm512_sad_epu8(_mm512_maskz_mov_epi8(mask,all),_mm512_setzero_si512());
         return unsigned(_mm512_reduce_add_epi64(sums));

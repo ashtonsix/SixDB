@@ -1,4 +1,8 @@
-# Using Boundlist
+# Using Boundlist (historical compatibility)
+
+The maintained module is now [Intervals](../intervals/usage.md). StreamPack owns
+compact geometry and retirement. This page records the old Boundlist surface
+retained for historical controls; it is not a new consumer contract.
 
 Boundlist partitions an ordered domain into contiguous half-open intervals.
 A rank identifies one interval. The same geometry operations work with existing

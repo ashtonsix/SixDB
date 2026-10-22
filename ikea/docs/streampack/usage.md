@@ -11,26 +11,22 @@ Link `ikea::streampack` and include `<ikea/streampack.h>`. The
 
 ## Understand the composition boundary
 
-[Boundlist](../boundlist/usage.md) supplies reservation geometry: sizes, starts, ends,
-checkpoints and an optional retirement companion. StreamPack selects live values and adds U, byte-value reads and edits,
-native value packets, and the traversal that packs or transfers values. The collection
-supplies allocation, retained versions, logical holders and publication.
+[Intervals](../intervals/usage.md) supplies borrowed ordered search and geometry
+kernels. StreamPack owns its compact reservation image, readable tails, tombstones,
+retirement, used lengths, fused byte-value operations and coordinated writes. The
+collection supplies allocation, retained versions, logical holders and publication.
 
-Use one StreamPack layout and one named view for a block. They compose geometry and
-values once; there is no second Boundlist attachment, allocation or lookup per rank.
-Geometry/U fields can share a lengths window while their implementation responsibilities
-remain separate. Call value operations through StreamPack so payload, U and geometry
-stay consistent.
+Use one StreamPack layout and one named view for a block. They compose geometry
+and values once; no second geometry attachment or per-rank wrapper is needed.
+Geometry and U can share a lengths window. Call value operations through StreamPack
+so payload, U, retirement and geometry remain consistent.
 
-Standalone Boundlist reads raw geometry unless given an explicit `selected_source`.
-StreamPack's value API already applies its value/retirement policy: `locate` and
-`value` reject retired ranks, while `reverse` returns `{rank,tombstone}` for any
-physical reservation. These value results are deliberately different from Boundlist's
-`interval{first,limit}` and rank-or-count geometry results.
-
-If U already belongs in a consumer's own record/tuple plane, compose that plane with
-Boundlist and the payload in the consumer. Stock StreamPack either stores U or derives
-`U=R` with `full`; omitting its companion does not read an external U plane.
+Intervals applies only explicit operation eligibility. StreamPack's value API
+applies its own retirement policy: `locate` and `value` reject retired ranks, while
+`reverse` returns `{rank,tombstone}` for any physical reservation. Intervals instead
+returns a half-open interval or a rank/count sentinel. If U belongs in a consumer's
+own record/tuple plane, compose that plane with Intervals and the payload there.
+Stock StreamPack stores U or derives `U=R`; it has no external U provider.
 
 ## Construct a small block
 
@@ -226,7 +222,7 @@ Choose omissions before field placement:
 The Sizes default stores narrow R and a checkpoint per 16 ranks. Absolute Ends stores
 exclusive ends in the directory and favors a short point path. Relative Ends stores
 local cumulative ends, avoiding a local prefix sum when finding starts. The
-[geometry tour](../boundlist/reference.md#three-geometry-encodings) shows the arithmetic;
+[geometry tour](reference.md#choose-reservation-geometry) shows the arithmetic;
 the [StreamPack schema reference](reference.md#prepare-a-schema) describes their value
 composition.
 
@@ -280,7 +276,7 @@ preparation at every lookup loses that benefit.
 `<ikea/streampack/author/native.h>` exposes `native::read16`: sixteen offsets and U
 lengths in registers plus an original-rank live mask. Keep decoding and its
 predicate/reduction in one typed body so the packet need not spill across an aggregate
-return. It shares geometry decoding with Boundlist and adds the value-length projection.
+return. It reuses Intervals kernels inside its owned compact geometry and value-length projection.
 The [composition example](../../examples/streampack/composition.cpp) shows scalar and
 native carriers in Ikea chains.
 

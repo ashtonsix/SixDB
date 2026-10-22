@@ -156,129 +156,30 @@ and can decline before count-tree construction or destination/effect access.
 `detail/write.h` adapts this to the ordinary result. Unconditional encoding has
 no heuristic branch; the statistical model is separate from exact write admission.
 
-## Boundlist and StreamPack source boundaries
+## Intervals and StreamPack source boundaries
 
-[Boundlist usage](boundlist/usage.md) presents one ordered search contract across
-native endpoints, narrow deltas, reservation metadata and custom packed/ordered
-sources. Selection is independent of endpoint encoding. Common kernels have no
-dependency on the curated reservation schema.
+[Intervals](intervals/usage.md) owns the common non-owning search and geometry
+contract. StreamPack owns its compact image and retirement/value interpretation.
 
-| Responsibility | Owning files under `include/ikea/` unless marked `src/` |
+| Work | Source |
 | --- | --- |
-| Ordered lower/upper boundary and explicit rank selection | `boundlist/{types,search}.h` |
-| Prepared local phases, numeric search bindings, opt-in scans and interleaved native queries | `boundlist/author/search.h` |
-| Explicit native comparison, prefix and SIMD bodies | `boundlist/detail/{search,prefix,simd}.h` |
-| Derived numeric prediction state and cold preparation | `boundlist/detail/prediction.h`; `src/boundlist/search.cpp` |
-| Curated geometry schema and portable encoding | `boundlist/description.h`; `src/boundlist/description.cpp` |
-| Payload-free metadata admission and validation | `boundlist/view.h`; `src/boundlist/view.cpp`; `boundlist/detail/validation.h` |
-| Typed geometry, physical reverse, original-coordinate traversal and encoding | `boundlist/author/{read,write}.h` |
-| Minimal geometry adapters and common locate/reverse/overlap/range | `boundlist/geometry.h`; `boundlist/read.h` |
-| Checked compact geometry commands | `boundlist/write.h` |
-| Geometry native packets and CPS carriers | `boundlist/author/{native,chain}.h` |
-| StreamPack schema and U placement | `streampack/description.h`; `src/streampack/description.cpp` |
-| StreamPack payload admission and complete value validation | `streampack/view.h`; `src/streampack/view.cpp` |
-| Value reads, mutation, packing and selected transfer | `streampack/{read,write,transfer}.h`; `streampack/author/{read,write}.h` |
+| Ordered lower/upper boundary and borrowed rank selection | `intervals/{types,search}.h` |
+| Minimal geometry, carried ranges, filters and staged prepared windows | `intervals/geometry.h` |
+| Direct, projected, sparse sources and borrowed checked edits | `intervals/{search,projected,sparse,edit}.h` |
+| Native comparison/prefix/SIMD bodies and explicit G64 prefix policy | `intervals/detail/` |
+| Prepared numeric binding, scans and independent native search | `intervals/author/search.h`; `src/intervals/search.cpp` |
+| StreamPack compact geometry/admission/encoding/retirement implementation | `streampack/detail/compact/`; `src/streampack/compact/` |
+| Complete value layout, admission, fused readers, writers and transfer | `streampack/`; `src/streampack/` |
 
-Boundlist owns geometry and optional explicit selection; StreamPack owns U and byte-value
-semantics. Their typed accesses retain only the original named source and shared
-immutable layout. StreamPack inherits geometry without another binding, allocation
-or stored descriptor. `rebind` borrows a new source under that same layout identity.
-Metadata effects map through one value hook to planes 1–3; payload stays plane 0.
-Effects never name a temporary geometry projection.
+The compact implementation is private to StreamPack, including historical
+standalone compact-description decoding used by compatibility controls. New
+Intervals consumers do not import that storage policy. Old Boundlist headers and
+target forward to the new owners for historical consumers; the dependency never
+points back from Intervals. No persisted bytes were retagged.
 
-Geometry preparation shares compact size facts with the value layout. Cold
-schema/placement/content validation stays in independent compiled TUs. Private
-prefix and search instructions live under Boundlist; StreamPack projects native
-U/R directly into the same group sink. A manually chosen typed value access must
-match its independent `used_type` as well as its geometry carriers; ordinary
-`dispatch` selects all of them once around the useful operation.
-
-One original-geometry walker captures coordinates before a sink rewrites them.
-One sequential geometry encoder carries new global/local positions without
-per-slot checkpoint reloads or count stores. StreamPack's temporary value encoder
-adds payload/U/retirement stores and finishes count/extent once per admitted run.
-Packing and transfer are value operations, with owner-selected movement and rank
-policy; there is no parallel Boundlist compaction/transfer implementation.
-
-Dispatch before the inner loop. Native decoding feeds its sink inline rather
-than handing off an obligatory stack packet. Checkpointed prepared searches drop
-global coordinate width from local completion; u8/u16/u32 Relative Ends handoffs
-fit 16 B. Their windows are hints, not complete protection grants. Keep the source,
-eligibility and backing coherent through completion and inspect complete consumers
-for aggregate spills, outlined helpers and repeated binding.
-The [Boundlist checks](../test/boundlist/README.md),
-[StreamPack checks](../test/streampack/README.md) and
-[qualification evidence](../../workbench/spikes/boundlist/README.md) cover these
-boundaries. Allocation, publication and scheduling remain caller responsibilities.
-
-## Hashtable source boundaries
-
-The [set/map guide](hashtable/usage.md) owns consumer obligations. Paths below are
-relative to `include/ikea/hashtable`; owning multimap remains in Workbench.
-
-| Surface | Owner |
-| --- | --- |
-| `table.h` | Concrete owner orchestration, direct/staged reads and mixed/existing mutations |
-| `detail/bucket.h`, `detail/representation.h`, `detail/hash.h` | Data-free physical access/matching, packed value layout and reversible routing |
-| `descriptor.h` | Once-bound function table, retained native/erased readers and replacement publication |
-| `rebuild.h` | Source-preserving same-seed growth; private destination until success |
-| `accumulate.h`, `capacity.h`, `detail/accumulation/` | Fixed-backing ordered accumulation and separate caller-requested Swiss preparation |
-| `geometry.h`, `encoding-selection.h` | One capacity/admission law and generated construction-time bindings; provenance stays in Workbench |
-| `mutation.h`, `storage.h` | Caller grants, before-store damage and substitutable packed allocation policy |
-| `author/table.h` | Exclusive coherent access for authored owner operations; not durable row handles |
-| `detail/packed30.h`, `detail/bucket-filter.h` | Whole-bucket SIMD loads under the owner's initialized access window |
-
-Reader and writer strategies share the same representation. Changing either must
-preserve the other through complete consumer comparisons. Rebuild mask changes
-need live/dead rows, encoding transitions, Swiss promotion, allocation refusal and
-retained-reader checks. `ikea_hashtable_validate` runs those histories and all key
-widths; [paired native controls](../../workbench/benchmarks/hashtable/README.md)
-retain the promotion baseline and real Abseil comparisons.
-
-## Shared execution entry
-
-The modules use `include/ikea/detail/native_chain.h`. A plan has a power-of-two
-number of slots, at least two: 1..Slots−1 stages plus completion. Unused slots also contain
-completion. Alignment is at least 64 bytes and at least the table size, allowing
-an early-completion cursor to locate the final slot arithmetically.
-
-Clang 21.1.8 and the selected ISA define the private `preserve_none`/`musttail`
-ABI. Native payloads are flattened into separate register arguments. Carrier
-changes need real typed bridges with admitted semantics. A terminating tail hop
-cannot retain stage-local stack addresses or pending destructors. Driver-owned
-plans and bindings survive the complete chain; explicit suspension follows return.
-
-TuplePack’s named vector endpoints use `IKEA_TUPLE_CC`: AVX2 needs regcall to
-avoid the default SysV aggregate return through memory. NEON uses a four-vector
-HVA, AVX2 a pair and AVX-512/VBMI one vector. GPR endpoints use the ordinary
-integer convention. Inline bodies share the same controls.
-
-On AArch64, `run` enters through a fixed-frame AAPCS shim that preserves caller
-registers and passes payloads separately. Keep this entry: Clang 21 can otherwise
-retain a realigned caller’s frame base in x19 across a `preserve_none` call that
-clobbers it. Only the shim excludes ASan/UBSan instrumentation so its frame stays
-fixed; stages and completion remain instrumented. The
-[execution regression](../test/tuplepack/execution.cpp) and
-[evidence note](../../workbench/spikes/tuple-layout/module-evidence/README.md#validation-abi-and-compilation)
-retain the check, reproducer and disassembly findings.
-
-## Compilation and validation
-
-Use the [pinned build](../../BUILDING.md) and preserve incremental TUs.
-SeriesPack’s mutation tests use behavior groups and eight-width TU shards to
-bound compiler memory. Test-only noinline wrappers limit repeated assertion
-instantiations without changing library or benchmark inlining.
-
-`ikea_validate` runs behavior checks and executable guides.
-`python3 ikea/test/headers.py BUILD` checks ordinary/author headers independently
-with that build’s profile. The [SeriesPack tests](../test/seriespack/README.md)
-and [TuplePack tests](../test/tuplepack/README.md) identify focused targets;
-[Bec256 checks](../test/bec256/README.md) cover its wire, replacement and pair composition.
-Use the [frozen SeriesPack fixture](../test/seriespack/reference/README.md) for its
-existing wire law; never change the reference just to agree with a changed kernel.
-
-The [SeriesPack](../../workbench/benchmarks/seriespack/README.md),
-[TuplePack](../../workbench/benchmarks/tuplepack/README.md) and
-[Bec256](../../workbench/benchmarks/bec256/README.md) benchmark guides own
-consumer comparisons and compilation probes. Owner adapters belong with their
-owners or in executable integration examples.
+Native packets and CPS stages remain visible inside complete owner operations.
+The retained [Intervals qualification](../../workbench/spikes/intervals/GRADUATION.md)
+and [Boundlist portfolio](../../workbench/spikes/boundlist/PORTFOLIO.md) explain why
+flattened generic value wrappers and default wider inverse routes were rejected.
+The owner retains coherent source/schema/backing/filter state through staged
+completion and coordinates allocation, locks, publication and old-image lifetime.

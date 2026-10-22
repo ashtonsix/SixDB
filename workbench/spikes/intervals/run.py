@@ -32,7 +32,8 @@ def main():
         subprocess.run(["cmake", "--build", str(build), "--target", *targets, "--parallel", "2"],
                        stdout=log, stderr=subprocess.STDOUT, check=True)
     sources = {}
-    for folder in ["ikea/include/ikea/boundlist", "ikea/src/boundlist", "ikea/include/ikea/streampack",
+    for folder in ["ikea/include/ikea/intervals", "ikea/src/intervals", "ikea/test/intervals",
+                   "ikea/include/ikea/boundlist", "ikea/include/ikea/streampack",
                    "ikea/src/streampack", "engine", "workbench/spikes/segment-directory", "workbench/spikes/intervals"]:
         for path in (root / folder).rglob("*"):
             if path.is_file() and "evidence" not in path.parts and path.suffix in {".h", ".cpp", ".py", ".txt"}:

@@ -1,8 +1,8 @@
 #pragma once
 // Shared complete-consumer fixtures and strong compact/frozen controls.
 #include <ikea/intervals.h>
-#include "control/sparse_before.h"
 #include <ikea/boundlist.h>
+#include "control/sparse_before.h"
 #include <ikea/boundlist/author/read.h>
 #include <ikea/effects.h>
 #include <array>

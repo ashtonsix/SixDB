@@ -1,4 +1,8 @@
-# Boundlist
+# Boundlist (historical compatibility)
+
+The maintained module is now [Intervals](../intervals/usage.md). StreamPack owns
+compact geometry and retirement. This page records the old Boundlist surface
+retained for historical controls; it is not a new consumer contract.
 
 Boundlist describes **contiguous intervals using ordered cuts**. It locates an
 interval by rank, finds the interval containing a point, and bounds the ranks

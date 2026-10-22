@@ -1,4 +1,5 @@
 #include <ikea/intervals.h>
+#include <ikea/boundlist/search.h>
 #include <ikea/streampack.h>
 #include <array>
 #include <chrono>

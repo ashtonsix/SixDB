@@ -1,6 +1,6 @@
 #pragma once
 #include <ikea/streampack/author/read.h>
-#include <ikea/boundlist/read.h>
+#include <ikea/streampack/detail/compact/read.h>
 
 namespace ikea::streampack {
 template <class Byte>
@@ -29,14 +29,14 @@ template <class Byte>
 /// First/last positive reservations overlapping [low,high). Physical by default;
 /// only_live excludes retirement, while holes inside the window remain holes.
 template <class Byte>
-boundlist::rank_window overlap(const basic_view<Byte>& source, std::uint32_t low,
+intervals::rank_window overlap(const basic_view<Byte>& source, std::uint32_t low,
                                std::uint32_t high, bool only_live = false) {
     return author::dispatch(source, [&](auto a) {
         if (only_live) {
-            const boundlist::selected_source selected{a, a.live_ranks()};
-            return boundlist::overlap(selected, low, high);
+            const intervals::selected_source selected{a, a.live_ranks()};
+            return intervals::overlap(selected, low, high);
         }
-        return boundlist::overlap(a, low, high);
+        return intervals::overlap(a, low, high);
     });
 }
 template <class Byte, class Sink>

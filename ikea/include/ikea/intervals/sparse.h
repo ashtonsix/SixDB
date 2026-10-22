@@ -1,5 +1,5 @@
-// Candidate Intervals representation: sparse directories, native 16-field kernels.
-// This is not a maintained byte format. The owner admits coherent checkpoints,
+// Intervals representation: sparse directories, native 16-field kernels.
+// This borrowed source defines no persisted byte format. The owner admits coherent checkpoints,
 // nonnegative widths, sums fitting Point and initialized final native padding.
 #pragma once
 #include <ikea/intervals/geometry.h>
@@ -11,7 +11,7 @@
 #include <type_traits>
 
 namespace ikea::intervals {
-namespace bl = ikea::boundlist;
+namespace bl = ikea::intervals;
 
 template <unsigned Spacing, class Width, std::unsigned_integral Point = std::uint32_t,
           unsigned CheckpointCapacity = 0, bool Independent = false>

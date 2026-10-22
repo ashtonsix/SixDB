@@ -1,7 +1,7 @@
 # StreamPack reference
 
 StreamPack stores variable-length byte values in caller-owned storage. It combines
-[Boundlist](../boundlist/reference.md) subdivision geometry with value lengths, payload
+[Intervals](../intervals/reference.md) search and subdivision kernels with value lengths, payload
 access and coordinated value edits. A block has up to 256 assigned ranks. StreamPack
 borrows its storage; the collection owns allocation, retained versions and publication.
 
@@ -37,16 +37,16 @@ so later starts and the extent remain unchanged. Retirement and a zero-size rese
 are independent. Packing can reclaim retired reservations; it does not remove their
 ranks.
 
-## What Boundlist, StreamPack and the owner do
+## What Intervals, StreamPack and the owner do
 
 | Layer | Responsibility |
 | --- | --- |
-| **Boundlist** | Reservation geometry: sizes, ends, checkpoints, an optional retirement companion, location/search kernels and bounded geometry writes. It has no knowledge of used lengths or value bytes. |
-| **StreamPack** | Values: optional U storage, value admission and reads, native offset/length packets, append/replace/retire, and coordinated payload/geometry packing and selected transfer. |
+| **Intervals** | Borrowed ordered search and interval geometry, native kernels, sparse sources, carried ranges and external operation filters. It owns no compact header, bitmap or retirement policy. |
+| **StreamPack** | Its compact geometry image and admission/decoding, tombstones and retirement, optional U storage, fused value reads, native packets and coordinated payload/geometry edits and transfer. |
 | **Collection / owner** | Storage and schema identity, coherent retained versions, read/write authority, allocation growth, logical holders and remaps, sorting/deduplication policy and transaction publication. |
 
 A StreamPack layout prepares the geometry and value rules together. One named view
-binds the payload and metadata; callers do not attach a second standalone Boundlist view.
+binds the payload and metadata; callers do not attach a second geometry view.
 The implementation reuses geometry bodies inside complete value operations. Sharing
 those bodies does not require another allocation or per-value indirect call.
 
@@ -55,7 +55,7 @@ can share a grouped lengths window even though different modules define their me
 StreamPack reports its complete writes, including the geometry/control stores it
 performs, under the StreamPack source identity.
 
-If a consumer stores U in its own record or tuple plane, it can compose Boundlist,
+If a consumer stores U in its own record or tuple plane, it can compose Intervals,
 that plane and a payload itself. The stock StreamPack recipe instead either manages U
 or derives `U=R`. Omitting U does not select an external length provider.
 
@@ -91,8 +91,8 @@ All three encodings describe the same starts and reservation sizes:
 
 There are `ceil(n/16)` meaningful checkpoints, including the first origin, and no
 terminal checkpoint. The final extent is stored separately for variable checkpointed
-geometry. [Boundlist's encoding tour](../boundlist/reference.md#three-geometry-encodings)
-explains the shared arithmetic.
+geometry. [The Intervals guide](../intervals/usage.md) describes the borrowed source contract;
+StreamPack owns the compact byte law here.
 
 Preparation chooses the smallest u8/u16/u32 geometry field that can hold its bound.
 Global ends/checkpoints use B, Sizes uses `min(M,B)`, and Relative Ends uses
@@ -163,7 +163,7 @@ fit both. A small span cannot narrow the schema's stored fields.
 | `select(source,ranks,sink)` | Live values in requested order, preserving duplicate ranks. |
 | `select(source,ranks,scratch,sink)` | The same result, paying once to decode all starts into caller scratch for that operation. |
 
-`overlap` returns `boundlist::rank_window{first,limit}`, including `first` and excluding
+`overlap` returns `intervals::rank_window{first,limit}`, including `first` and excluding
 `limit`. The limit is one past the last candidate, and an empty answer is `{n,n}`.
 Internal zero-size slots can remain; the live-only form can also contain internal
 retired holes. This operation concerns reservations, not comparisons against stored
@@ -196,7 +196,7 @@ offset zero, with extent 5 when keeping live slack, or 3 when shrinking it. Rank
 retired and rank 1 remains a live empty value.
 
 A reservation-changing logical replacement appends elsewhere; the owner retargets its
-holder and retires the old rank as appropriate. StreamPack does not expose Boundlist
+holder and retires the old rank as appropriate. StreamPack does not expose the historical compact geometry
 boundary/resize commands as uncoordinated value edits. It must coordinate geometry with
 payload movement and U.
 
@@ -271,7 +271,8 @@ The portable eight-byte **version 3** descriptor uses byte 0 bits 6–7=`3`, bit
 Bytes 1–2 hold M as u16, bytes 3–5 B as u24 and bytes 6–7 fixed R as u16, zero when
 absent. New noncanonical flags are rejected. Version 2 still decodes with its original
 carriers, placement, alignment and exact descriptor re-encoding. This descriptor is
-distinct from standalone Boundlist's descriptor. Convert by constructing/transferring
+distinct from the historical standalone Boundlist descriptor retained only for
+compatibility controls. Convert by constructing/transferring
 into a newly prepared layout; retagging bytes does not convert them.
 
 [Owner integration](../integration.md) explains Loom/Orbital visibility, retention and

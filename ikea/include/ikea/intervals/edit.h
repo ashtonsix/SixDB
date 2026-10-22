@@ -4,7 +4,7 @@
 #include <cstring>
 
 namespace ikea::intervals {
-/// Borrowed mutable Sizes candidate, with no portable format or bitmap. Placement
+/// Borrowed mutable Sizes source, with no portable format or bitmap. Placement
 /// and disjointness of all spans, controls, this object and effects are owner
 /// proofs. Keep this named source stable until effects have been resolved. Hooks
 /// cannot fail, allocate, suspend or mutate admitted inputs. Publication is external.

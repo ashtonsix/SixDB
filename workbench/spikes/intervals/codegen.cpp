@@ -1,5 +1,6 @@
 // Scheduling diagnostics for literal admitted paths, never benchmark results.
 #include <ikea/intervals/detail/native.h>
+#include <ikea/boundlist/detail/prefix.h>
 #include "control/rejected_native.h"
 extern "C" {
 unsigned prefix47_before(const std::uint8_t *p,unsigned stride) {

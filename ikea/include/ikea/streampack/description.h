@@ -1,12 +1,12 @@
 #pragma once
-#include <ikea/boundlist/description.h>
+#include <ikea/streampack/detail/compact/description.h>
 
 namespace ikea::streampack {
-using boundlist::byte;
-using boundlist::bytes;
-using boundlist::error;
-using boundlist::geometry;
-inline constexpr unsigned slot_capacity = boundlist::interval_capacity;
+using ikea::streampack::detail::compact::byte;
+using ikea::streampack::detail::compact::bytes;
+using ikea::streampack::detail::compact::error;
+using ikea::streampack::detail::compact::geometry;
+inline constexpr unsigned slot_capacity = ikea::streampack::detail::compact::interval_capacity;
 enum class placement : std::uint8_t { grouped, separated };
 
 /// Geometry plus an optional used-length companion. With full, U is derived
@@ -22,15 +22,15 @@ struct description {
     bool operator==(const description &) const = default;
 };
 
-/// Shared immutable value law. Geometry preparation is owned by Boundlist;
-/// StreamPack owns U, its colocation and the complete value interpretation.
+/// Shared immutable value law. StreamPack owns compact geometry preparation,
+/// retirement, U placement and the complete value interpretation.
 class layout {
     description description_;
-    boundlist::detail::geometry_sizes geometry_;
+    ikea::streampack::detail::compact::detail::geometry_sizes geometry_;
     unsigned used_offset_, stride_;
     std::uint8_t alignment_, used_bytes_;
     bool used_;
-    layout(description d, boundlist::detail::geometry_sizes g)
+    layout(description d, ikea::streampack::detail::compact::detail::geometry_sizes g)
         : description_(d), geometry_(g) {}
     [[nodiscard]] static std::expected<layout, error> prepare_impl(description, bool legacy);
 

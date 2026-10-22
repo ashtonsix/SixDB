@@ -1,14 +1,15 @@
 #include <ikea/streampack.h>
 #include <ikea/streampack/author/native.h>
-#include <ikea/boundlist/author/search.h>
+#include <ikea/intervals/author/search.h>
+#include <ikea/streampack/detail/compact/description.h>
 #include <cassert>
 #include <cstring>
 #include <iostream>
 #include <vector>
 
 namespace sp = ikea::streampack;
-namespace bl = ikea::boundlist;
-namespace sc = ikea::boundlist;
+namespace bl = ikea::intervals;
+namespace sc = ikea::streampack::detail::compact;
 struct fixture {
     sp::layout format;
     alignas(64) std::array<std::byte, 4096> directory{}, lengths{};

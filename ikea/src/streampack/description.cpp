@@ -1,5 +1,5 @@
 #include <ikea/streampack/description.h>
-#include <ikea/boundlist/detail/bytes.h>
+#include <ikea/intervals/detail/bytes.h>
 #include <algorithm>
 
 namespace ikea::streampack {
@@ -7,7 +7,7 @@ std::expected<layout, error> layout::prepare(description d) { return prepare_imp
 std::expected<layout, error> layout::prepare_impl(description d, bool legacy) {
     if (d.lengths != placement::grouped && d.lengths != placement::separated)
         return std::unexpected(error::description);
-    auto g = boundlist::detail::geometry_sizes::prepare(
+    auto g = ikea::streampack::detail::compact::detail::geometry_sizes::prepare(
         {d.family, d.maximum, d.byte_limit, d.fixed_reservation, d.immortal}, legacy);
     if (!g)
         return std::unexpected(g.error());
@@ -48,10 +48,10 @@ unsigned layout::lengths_bytes(unsigned n) const noexcept {
 }
 std::array<byte, 8> layout::encode() const noexcept {
     std::array<byte, 8> out{};
-    boundlist::detail::store(out.data() + 1, description_.maximum);
-    boundlist::detail::store(out.data() + 3, std::uint16_t(description_.byte_limit));
+    ikea::streampack::detail::compact::detail::store(out.data() + 1, description_.maximum);
+    ikea::streampack::detail::compact::detail::store(out.data() + 3, std::uint16_t(description_.byte_limit));
     out[5] = byte(description_.byte_limit >> 16);
-    boundlist::detail::store(out.data() + 6, description_.fixed_reservation.value_or(0));
+    ikea::streampack::detail::compact::detail::store(out.data() + 6, description_.fixed_reservation.value_or(0));
     const auto &d = description_;
     out[0] = byte(geometry_.legacy ? 0x40 | unsigned(d.family) | (unsigned(d.lengths) << 1) |
                                          (unsigned(d.full) << 2) | (unsigned(d.immortal) << 3) |
@@ -69,13 +69,13 @@ std::expected<layout, error> layout::decode(bytes in) {
     if ((!legacy && (flags >> 6) != 3) || (!legacy && (flags & 3) == 3))
         return std::unexpected(error::description);
     const auto fixed_bit = legacy ? 16u : 32u;
-    const auto fixed = boundlist::detail::load<std::uint16_t>(in.data() + 6);
+    const auto fixed = ikea::streampack::detail::compact::detail::load<std::uint16_t>(in.data() + 6);
     if (!(flags & fixed_bit) && fixed)
         return std::unexpected(error::description);
     auto result = prepare_impl({geometry(flags & (legacy ? 1 : 3)),
                                 placement((flags >> (legacy ? 1 : 2)) & 1),
-                                boundlist::detail::load<std::uint16_t>(in.data() + 1),
-                                boundlist::detail::load<std::uint16_t>(in.data() + 3) |
+                                ikea::streampack::detail::compact::detail::load<std::uint16_t>(in.data() + 1),
+                                ikea::streampack::detail::compact::detail::load<std::uint16_t>(in.data() + 3) |
                                     (std::to_integer<unsigned>(in[5]) << 16),
                                 flags & fixed_bit ? std::optional(fixed) : std::nullopt,
                                 bool(flags & (legacy ? 4 : 8)), bool(flags & (legacy ? 8 : 16))},

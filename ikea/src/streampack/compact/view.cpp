@@ -1,9 +1,9 @@
-#include <ikea/boundlist/author/read.h>
-#include <ikea/boundlist/view.h>
-#include <ikea/boundlist/detail/validation.h>
+#include <ikea/streampack/detail/compact/author/read.h>
+#include <ikea/streampack/detail/compact/view.h>
+#include <ikea/streampack/detail/compact/detail/validation.h>
 #include <limits>
 
-namespace ikea::boundlist::detail {
+namespace ikea::streampack::detail::compact::detail {
 std::expected<void, error> admit_metadata(unsigned directory_bytes, unsigned control_bytes,
                                           unsigned lengths_alignment, const void* format,
                                           std::size_t format_bytes, storage<const byte> s) {
@@ -29,12 +29,12 @@ std::expected<void, error> admit_storage(const layout& l, storage<const byte> s)
     return admit_metadata(l.directory_bytes(), l.control_bytes(), l.lengths_alignment(), &l,
                           sizeof(l), s);
 }
-} // namespace ikea::boundlist::detail
+} // namespace ikea::streampack::detail::compact::detail
 
-namespace ikea::boundlist {
+namespace ikea::streampack::detail::compact {
 template <class Byte> std::expected<void, error> basic_view<Byte>::validate() const {
     return detail::validate_geometry(*this, [](auto, unsigned, unsigned, bool) { return true; });
 }
 template class basic_view<byte>;
 template class basic_view<const byte>;
-} // namespace ikea::boundlist
+} // namespace ikea::streampack::detail::compact

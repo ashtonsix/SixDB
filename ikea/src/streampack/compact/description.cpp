@@ -1,8 +1,8 @@
 #include <algorithm>
-#include <ikea/boundlist/description.h>
-#include <ikea/boundlist/detail/bytes.h>
+#include <ikea/streampack/detail/compact/description.h>
+#include <ikea/intervals/detail/bytes.h>
 
-namespace ikea::boundlist {
+namespace ikea::streampack::detail::compact {
 std::expected<detail::geometry_sizes, error> detail::geometry_sizes::prepare(description d,
                                                                              bool legacy) {
     if ((d.family != geometry::absolute_ends && d.family != geometry::sizes &&
@@ -48,12 +48,12 @@ std::array<byte, 8> layout::encode() const noexcept {
     out[0] = byte((geometry_.legacy ? 0x60 : 0x80) | unsigned(description_.family) |
                   (unsigned(description_.immortal) << 3) |
                   (unsigned(description_.fixed_size.has_value()) << 4));
-    boundlist::detail::store(out.data() + 1, description_.maximum);
+    compact::detail::store(out.data() + 1, description_.maximum);
     // 256 reservations of at most 65535 bytes fit in 24 bits. This is cold
     // schema storage; hot geometry retains native one/two/four-byte lanes.
-    boundlist::detail::store(out.data() + 3, std::uint16_t(description_.extent_limit));
+    compact::detail::store(out.data() + 3, std::uint16_t(description_.extent_limit));
     out[5] = byte(description_.extent_limit >> 16);
-    boundlist::detail::store(out.data() + 6, description_.fixed_size.value_or(0));
+    compact::detail::store(out.data() + 6, description_.fixed_size.value_or(0));
     return out;
 }
 std::expected<layout, error> layout::decode(bytes in) {
@@ -63,13 +63,13 @@ std::expected<layout, error> layout::decode(bytes in) {
     const bool legacy = (flags >> 5) == 3;
     if ((!legacy && (flags >> 5) != 4) || (flags & 4) || (flags & 3) > (legacy ? 1u : 2u))
         return std::unexpected(error::description);
-    const auto fixed = boundlist::detail::load<std::uint16_t>(in.data() + 6);
+    const auto fixed = compact::detail::load<std::uint16_t>(in.data() + 6);
     if (!(flags & 16) && fixed != 0)
         return std::unexpected(error::description);
-    description d{geometry(flags & 3), boundlist::detail::load<std::uint16_t>(in.data() + 1),
-                  boundlist::detail::load<std::uint16_t>(in.data() + 3) |
+    description d{geometry(flags & 3), compact::detail::load<std::uint16_t>(in.data() + 1),
+                  compact::detail::load<std::uint16_t>(in.data() + 3) |
                       (std::to_integer<unsigned>(in[5]) << 16),
                   (flags & 16) ? std::optional(fixed) : std::nullopt, (flags & 8) != 0};
     return prepare_impl(d, legacy);
 }
-} // namespace ikea::boundlist
+} // namespace ikea::streampack::detail::compact

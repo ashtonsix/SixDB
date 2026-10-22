@@ -1,11 +1,11 @@
 #pragma once
 #include <ikea/streampack/author/write.h>
-#include <ikea/boundlist/write.h>
+#include <ikea/streampack/detail/compact/write.h>
 
 namespace ikea::streampack {
 namespace detail {
 inline bool accepts(const layout &l, unsigned length, unsigned reservation) {
-    return length <= reservation && boundlist::detail::accepts(l, reservation) &&
+    return length <= reservation && ikea::streampack::detail::compact::detail::accepts(l, reservation) &&
            (l.has_used() || length == reservation);
 }
 inline unsigned append_effects(const layout &l, unsigned n) {
@@ -17,7 +17,7 @@ inline unsigned append_effects(const layout &l, unsigned n) {
     return (!l.fixed() && (l.schema().family == geometry::absolute_ends || !(n % 16))) + fields +
            l.has_tombstones() + 1;
 }
-using boundlist::detail::room;
+using ikea::streampack::detail::compact::detail::room;
 /// Payload aliases are supported while the binding stays live. Metadata and
 /// effect-output aliases would let issued stores destroy remaining input.
 template <class Effects> bool input_alias(const view &dst, bytes input, const Effects &effects) {

@@ -1,3 +1,3 @@
 #pragma once
-#include <ikea/boundlist/author/read.h>
-#include <ikea/boundlist/geometry.h>
+#include <ikea/streampack/detail/compact/read.h>
+#include <ikea/boundlist/compat.h>
