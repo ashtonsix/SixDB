@@ -12,6 +12,16 @@ Encoding, decoding and compression receive the initial emphasis. The wider
 operation families and the [review's architectural alternatives](REVIEW.md)
 remain open while those experiments develop.
 
+Ashton's 23 October steer puts the next comparison on Frame's likely strengths:
+large scans, selective consumption and avoiding unnecessary materialisation.
+The Polars results so far are repeated local scans, not a controlled hot/cold
+comparison. Compare the same logical population where both images fit cache,
+where only the compressed image fits, and where both exceed it. Preserve that
+middle regime as a real benefit. Clustered and dispersed selections at equal
+density distinguish skipped data from a small output alone. Point work keeps
+strong native controls; hot scans remain controls and useful native-form cases.
+This changes research emphasis, not the operation-family scope or a public API.
+
 Ashton's coarse-selection requirement applies across all or most operation
 families. The working shape is one bit per block, with a whole group skipped
 when all its block bits are clear. Excluded regions avoid work and data movement;
@@ -183,3 +193,10 @@ masked/NULL core, tests inline repair storage, separates Pool-census accounting
 from timing and prices final fills through actual owners. Its larger-but-faster
 pressure image is a concrete representation/program tradeoff; native and
 immutable-base alternatives remain consequential.
+
+The [warm Zen 5 owner comparison](lifecycle/ZEN5.md) qualifies those programs on
+AVX2 and AVX-512. Native scans reverse several local ARM rankings; compressed
+warm forms lose most cells, while mixed UserID retains an AVX2 win with the final
+fold charged. Existing wider SeriesPack reductions are an unused execution seam,
+not yet an improvement. Native forms and sustained lifecycle costs remain active
+alternatives rather than a chosen compression policy.

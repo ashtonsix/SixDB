@@ -6,6 +6,10 @@ actual publication, queries,
 conversion and retained readers. No Frame public interface or transition policy
 is selected.
 
+The [warm Zen 5 comparison](ZEN5.md) repeats the qualified programs on AVX2 and
+AVX-512. Strong native scans reverse several ARM VM rankings; keep its losing
+compressed cases alongside the useful AVX2 UserID result.
+
 ## Starting point
 
 The [architectural review](../REVIEW.md#6-make-writable-plain-regions-a-deliberate-state)

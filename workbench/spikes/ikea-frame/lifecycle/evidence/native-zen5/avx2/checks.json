@@ -1,0 +1,13 @@
+{
+  "frame_phase_material_check": "190028 phase material checks pass: native8/16/32/64, exact u128, separate presence/validity, original coarse masks, dictionary/RHS cache changes, overlay corrections and protected none.",
+  "frame_phase_repair_check": "22528 repair plans / 6082560 independent points+aggregates pass: heap/inline/spill, widths 1..64, all CP modes, anchors/interiors/last, descriptor shifts, refusals and unaligned guards.",
+  "frame_phase_batch_check": "4830001 batch checks pass: ordered duplicates, masks/groups/blocks, immutable originals, exact removal, bounded base reads and protected none.",
+  "frame_measure_order_check": "11440 arm-position/predecessor checks pass for 1..32 arms.",
+  "--check-inline-repair": "inline-plan-sparse-repair: 328160 checks pass: four CP modes, raw/sorted/frequency, NULL-only reuse, original masks, repeated edits, retained neighbours/dictionaries and old readers.",
+  "--check-nullable-fold": "batch-overrides-predictor-fold: 984480 native batch checks pass: all CP/dictionaries, ordered assignments, immutable-base reuse, masked/old/folded readers and genuine successor publication.\nbatch-overrides-zero-fold: 984480 native batch checks pass: all CP/dictionaries, ordered assignments, immutable-base reuse, masked/old/folded readers and genuine successor publication.",
+  "--check-batch-overrides": "batch-overrides-debt: 984480 native batch checks pass: all CP/dictionaries, ordered assignments, immutable-base reuse, masked/old/folded readers and genuine successor publication.",
+  "--check-native-coalesced": "Native coalescing passes: latest assignment, no-op publication, no transient widening, flags-only reuse and old reader.",
+  "timed_histories": 51200,
+  "accounting_histories": 6400,
+  "original_point_checks": 11796480
+}
