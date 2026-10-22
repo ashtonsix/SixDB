@@ -309,6 +309,27 @@ Bulk reads decode a block's stream, apply exceptions while the residuals are in
 registers (Calico's fused tier, survey §2), run inverse stages, then apply
 overrides by iterating the bitmap.
 
+### Coarse masks
+
+Ashton's requirement (2026-10-22): most operations accept a filter mask at
+coarse granularity (for example one bit per block or group) and use it to skip
+work and data movement. A coarse mask stays coarse. It decides which
+descriptors, payloads, exceptions, override slices and statistics are touched
+at all, and it composes separately with row masks inside the admitted blocks.
+Coordinates and requested output order are preserved.
+
+Skipping has dependency halos, which the encoding must declare:
+- **Predicted blocks** need their predecessors only back to the nearest
+  checkpoint; with block-start anchors, a block is self-contained.
+- **Compacted presence and routing** need the rank prefix of skipped blocks
+  (per-block counts, not their bodies) to locate admitted rows.
+- **Dictionaries** are part-wide, so an admitted block needs the dictionary,
+  but only entries its codes reference.
+- **Overrides** are indexed per block, so skipped blocks' overrides are never
+  read.
+
+Grain and API stay open; QUESTIONS.md lists the experiments.
+
 ## Block descriptor and statistics
 
 Each block has a fixed-size descriptor, a TuplePack record of byte-contained

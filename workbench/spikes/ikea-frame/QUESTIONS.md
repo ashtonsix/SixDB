@@ -49,6 +49,19 @@ Reading notes on the review (2026-10-22), where it needs qualifying:
 | Do linear and category predictors pay on SixDB's columns? | Experiment | Calico's predictive transform paid only on one telemetry corpus. | [Survey §2](SURVEY.md#2-calico) |
 | Should Boundlist be renamed for its third consumer? Its endpoint searches already accept wide ordered sources, so prototyping does not depend on it. | Design | Naming only; the review found no missing search law. | [Encoding §5](ENCODING.md#5-map-or-predict) |
 
+## Coarse masks (Ashton, 2026-10-22)
+
+Most operations should accept a coarse filter mask (for example one bit per
+block or group) and skip descriptor, payload and downstream work where lawful.
+No fixed grain or API is chosen. See [Encoding, coarse masks](ENCODING.md#coarse-masks).
+
+| Question | Kind | Why it matters | Source |
+| --- | --- | --- | --- |
+| How much does a coarse mask save across all, none, sparse and clustered block masks, for scans, sums, gathers and decodes, against row-mask-only execution? | Experiment | The requirement is to skip data movement, not just computation. | Ashton via Codex |
+| What dependency halo does each stage impose on skipping (prediction back to its checkpoint, rank prefixes for compacted or routed rows, dictionary entries, override slices), and what does carrying it cost? | Design / experiment | A skipped block may still be needed by an admitted one. | [Encoding, coarse masks](ENCODING.md#coarse-masks) |
+| How do coarse and row masks compose, and can a coarse mask be reused across the phases of one operation or across queries? | Experiment | Recomputing or widening masks per phase gives away the saving. | Ashton via Codex |
+| Which grain is the knee (256 positions, a 4,096-position group, or several), given metadata, statistics and Orbital Part grain? | Experiment | Finer masks skip more but cost more to produce and consult. | [Writes §2](WRITES.md#what-this-means-for-frames-encoding) |
+
 ## Writes, overrides and compaction
 
 | Question | Kind | Why it matters | Source |
