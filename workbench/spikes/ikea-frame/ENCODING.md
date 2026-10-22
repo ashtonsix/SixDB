@@ -29,9 +29,10 @@ plans with.
    expression and the block alternatives it allows. Ikea's encoder chooses
    block parameters within that envelope, deterministically from the input,
    the expression and supplied priors. Presets are expressions worth curating.
-3. **One stage, one job; every stage can refuse.** A stage that cannot
-   represent a value hands it to a common exception or override mechanism
-   instead of growing a special case.
+3. **Blocks can opt out** (**decided**). Parts and groups mix block kinds: a
+   block where a stage is ineffective or invalid skips that stage, or skips
+   compression entirely. Encode-time refusals are resolved by opting out, not
+   by spending override slack. Overrides are for later writes.
 4. **Reuse Ikea's 256-position geometry.** A 256-position block aligns with
    every SeriesPack tile (8 rows Local, 32–256 rows Striped), Boundlist's compact
    view (≤256 intervals, 16-rank checkpoint groups), StreamPack (≤256 ranks)
@@ -42,9 +43,9 @@ plans with.
 
 | Level | Positions | Role |
 | --- | --- | --- |
-| Part | 65,536 | The Object. Fixes logical type, presence policy, routing, dictionary and the expression skeleton. One Orbital allocation when hot. |
+| Part | 65,536 | The Object. Fixes logical type, presence policy, routing, the part-wide dictionary (**decided**) and the expression skeleton. One Orbital allocation when hot. |
 | Group | 4,096 (16 blocks) | Unit of mutation slack, override storage, compaction and (when hot) page ownership and COW/remap. |
-| Block | 256 | Unit of encoding choice: kind, parameters, widths, exceptions, statistics. Independently decodable. |
+| Block | 256 | Unit of encoding choice: which stages apply, kind, parameters, widths, exceptions, statistics. Independently decodable. |
 | Sub-block | 16 | Checkpoint grain inside predicted blocks. |
 
 A block's payload size varies with its kind and width, so block bodies inside a
@@ -55,20 +56,23 @@ between them is a repack.
 
 ## The pipeline
 
-Encoding runs top to bottom; decoding runs bottom to top. Part-level stages
-apply to every block; block-level stages are chosen per block.
+Encoding runs top to bottom; decoding runs bottom to top. The part fixes which
+stages are available and their shared state (the dictionary, routes); each
+block records which of them it uses. A block that opts out of everything is
+**plain**: the working-domain values packed at full width, which every
+representation can always fall back to.
 
-| # | Stage | Scope | Choices | Refusal goes to |
+| # | Stage | Part fixes | Block chooses | On encode-time refusal |
 | --- | --- | --- | --- | --- |
-| 1 | Presence | Part | dense, dense + null mask, compacted | — |
-| 2 | Routing | Part | none, by category column | — |
-| 3 | Working domain | Part (float: block params) | identity, offset binary, float map, ALP decimal | Override |
-| 4 | Split | Part (point from priors) | none, high/low at bit s | — |
-| 5 | Map *or* predict | Part chooses map; block chooses predictor | dictionary (sorted or by frequency); predictor none / previous / linear / category | Override (dictionary miss) |
-| 6 | Block kind | Block | constant, runs, frame of reference | — |
-| 7 | Frame of reference | Block | base, width K | Exception |
-| 8 | Pack | Block | SeriesPack format (preset, optional head) | — |
-| — | Overrides | Group store, per-block index | logical value or null per position | — |
+| 1 | Presence | dense, dense + null mask, compacted | — | — |
+| 2 | Routing | none, by category column | — | — |
+| 3 | Working domain | logical type | floats: ALP (e,f) or float map | Opt out to float map |
+| 4 | Split | allowed, prior split point | apply or not, point | Opt out |
+| 5 | Map *or* predict | dictionary (sorted or by frequency) | use codes or not; predictor none / previous / linear / category | Opt out to unmapped values |
+| 6 | Block kind | allowed kinds | plain, constant, runs, frame of reference | — |
+| 7 | Frame of reference | — | base, width K | Exception (width outliers) |
+| 8 | Pack | preset policy | SeriesPack format, optional head | — |
+| — | Overrides | — | group store, per-block index | Later writes only |
 
 ### 1. Presence
 
@@ -104,9 +108,10 @@ packing apply.
 - **Floats, lossless default: float map.** The monotone bit map (as in kmath's
   `floatmap.h`) orders all IEEE patterns as unsigned integers.
 - **Floats, decimal: ALP-style.** Per block, an exponent/factor pair turns each
-  value into an integer whose round trip reproduces the exact bits. Values that
-  fail the round trip (including NaN, ±0 sign cases and infinities) become
-  overrides. Order is preserved within a block's (e,f), not across blocks.
+  value into an integer whose round trip reproduces the exact bits. A block
+  where any value fails the round trip (NaN, −0, infinities, excess precision)
+  opts out to the float map. Order is preserved within a block's (e,f), and
+  across blocks once values return to the float-map domain.
 - Decimal(p,s), dates and timestamps are already integers.
 
 ### 4. Split
@@ -128,10 +133,11 @@ needs.
 Sorted dictionaries preserve order, so range predicates become code ranges and
 code search can use Boundlist's endpoint `lower_bound` over the dictionary.
 Frequency-ranked dictionaries give frequent values short codes but support only
-equality. A write of a value not in the dictionary becomes an override; codes
-stay stable until compaction rebuilds the dictionary. A part-scope dictionary
-keeps codes comparable across the part's blocks; cross-part work needs
-translation (survey §5, lesson 6).
+equality. The dictionary is part-wide (**decided**), so codes are comparable
+across the part's blocks; cross-part work needs translation (survey §5,
+lesson 6). A block whose values the dictionary serves poorly opts out and
+stores unmapped values. A later write of a value not in the dictionary becomes
+an override; codes stay stable until compaction rebuilds the dictionary.
 
 **Predict.** Residual `r_i = (u_i − pred_i) mod 2^64`, with predictor *none*,
 *previous* (delta), *linear* (fixed-point, as in Calico's binding), or *category*
@@ -155,6 +161,8 @@ compact view is offset-shaped today (sizes ≤ 65,535, extent ≤ 256M), so a
 
 ### 6. Block kind
 
+- **Plain**: values packed at their full working-domain width, with no base
+  and no exceptions. The universal fallback when compression is ineffective.
 - **Constant**: the block stores only its value in the descriptor; no payload.
 - **Runs**: run lengths as a compact Boundlist Sizes geometry (a block has at
   most 256 runs, Boundlist's exact limit) plus run values as a nested series
@@ -192,7 +200,7 @@ from exceptions in kind:
 
 | | Exceptions | Overrides |
 | --- | --- | --- |
-| Created by | Encoding | Writes, and stage refusals (ALP round-trip, dictionary miss) |
+| Created by | Encoding (width outliers only) | Writes that cannot land in place |
 | Value domain | Stream value at stage 7 (feeds the chain) | Logical value, or null |
 | Order | Sorted by position, regular | Arrive in any order |
 | Storage | Block body, tight, immutable | Group store with slack |
@@ -251,7 +259,8 @@ overrides by iterating the bitmap.
 ## Block descriptor and statistics
 
 Each block has a fixed-size descriptor, a TuplePack record of byte-contained
-codes: kind, predictor, SeriesPack format and K, exception count and width,
+codes: which part stages the block uses (domain variant, split, codes), kind,
+predictor, SeriesPack format and K, exception count and width,
 override width, split and ALP parameters. Wide values (base, constant value,
 checkpoint origin) go in a parallel SeriesPack plane so descriptors stay small.
 
@@ -315,18 +324,17 @@ value series are the main Ikea changes this design implies.
 
 1. **Override domain under routing and splits.** Overrides hold logical values.
    Should a routed column keep one override store per group, or one per route?
-2. **Dictionary scope.** Part scope keeps codes comparable within a part but
-   makes every new value an override until compaction. Is group scope (smaller,
-   rebuilt with the group) worth codes that differ between groups?
-3. **Exceptions versus overrides for encode-time refusals.** ALP round-trip
-   failures are known at encode time. Storing them as overrides keeps one
-   mechanism; storing them as logical-level exceptions spends no slack.
-4. **Statistics in the working domain.** Min/max in offset-binary or float-map
+2. **How much may blocks differ?** Mixing kinds means a part's encoded-data
+   capabilities are the weakest block's, unless kernels dispatch per block.
+   Per-block dispatch for 256 values is cheap for scans but not for point
+   reads. Should the part record which kinds actually occur, so Engine can plan
+   against the part's real mix?
+3. **Statistics in the working domain.** Min/max in offset-binary or float-map
    order are cheap and order-correct; sums need the logical domain. Which sums
    does Engine want maintained, and with what float semantics?
-5. **Predicted blocks and writes.** Every write to a predicted block becomes an
+4. **Predicted blocks and writes.** Every write to a predicted block becomes an
    override. For write-heavy sorted columns, is a cheaper path (rewriting one
    sub-block of 16) worth its complexity?
-6. **First measurements.** Candidate experiments: override read overhead
+5. **First measurements.** Candidate experiments: override read overhead
    versus density; exception application fused with SeriesPack reads; FOR versus
    plain packing at real column widths under SeriesPack's tile geometry.
