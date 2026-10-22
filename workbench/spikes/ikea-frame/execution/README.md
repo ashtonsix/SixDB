@@ -53,6 +53,26 @@ positions; selecting an absent position creates no record. A missing part in a
 query's selection excludes it, `null` selects all its occupied positions, and an
 array selects those positions. An empty array selects none.
 
+An independent optional `coarse_selection` supplies **one bit per block**. In
+this private JSON witness its selected bits are listed as block indices:
+
+```json
+"coarse_selection": {
+  "part-0": {"positions_per_block": 256, "blocks_per_group": 16, "blocks": [0, 1, 17]}
+}
+```
+
+The numbers illustrate one experiment, not fixed Frame geometry. A block owns
+original positions `[block*positions_per_block, min(limit,(block+1)*positions_per_block))`.
+`blocks: null` selects all blocks; `[]` selects none. Omitted coarse entries
+select all. Row admission intersects this mask with the existing original-row
+selection; it does not renumber positions. Only the final physical block can
+be partial. `blocks_per_group` is experimental traversal grouping; if omitted,
+one group covers the part's blocks. **No independent group mask is required.**
+The consumer derives skipped groups, whole active groups and mixed groups from
+the block bits. It retains intervals through traversal rather than expanding
+the mask into per-row activity. An expanded mask exists only as a test oracle.
+
 A query admits a row exactly when it is selected, X is non-null and at least
 `min_x`, and its category is admitted. Non-null categories pass either `all` or
 membership in the explicit `categories` list. A null category passes exactly
@@ -102,9 +122,55 @@ or publication implementation.
 `rowwise` and `by-code`, both feeding the real hash table. They are scalar
 logical controls, not Frame kernels or strong performance baselines. The fixed
 hash geometry is not a tuning decision. Work counters explain row visits,
-dictionary entries examined, actual hash updates and null updates. The local
+dictionary entry accesses (classification and later logical-key translation),
+actual hash updates and null updates. Coarse work
+adds selected/excluded block bits, skipped/full/mixed groups, entered address
+ranges and probes into a separate prepared position directory. An all-zero
+mask bypasses rows, dictionary preparation, local counters and scratch hash
+construction. Full groups use whole ranges; mixed groups visit active blocks.
+Fine selection is checked against the position directory before reading a row
+body. A query can still pay directory probes outside the selected body ranges.
+
+The loader prepares that directory once and loads all logical fixture rows;
+those are input-preparation costs, not work avoided by a query. It is not an
+encoded Frame descriptor. `row_record_bytes_modeled` is the sum of visited C++
+record sizes, including padding, **not** issued load bytes, cache-line demand,
+resident bytes or measured traffic. Dictionary-entry and position-probe counts
+also describe logical accesses. Encoded-body experiments must record their
+actual plane/span demands before making physical-work claims. The local
 counter-vector peak excludes all other scratch, dictionary, plan and hash memory;
 it is not an RSS or complete footprint measurement.
+
+The eager `by-code` control classifies the whole part dictionary on its first
+use, even if only one block survives. This is a chosen program cost, not a law
+requiring every masked operation to visit every dictionary value. Lazy active-code
+classification is an alternative for sparse masks. Empty parts and wholly
+excluded parts need no dictionary classification.
+
+## Coarse masks across the research surface
+
+Ashton's requirement applies across most operation families, not only this
+reduction. Investigate whether a mask can stay coarse through filtering,
+projection, gather, transforms, reductions, packing/conversion and mutation,
+skipping descriptors and payload movement before the first native body read.
+Keep the empty/full fast paths beside sparse, clustered and mixed masks. Compare
+different row masks under the same block bits, and different block arrangements
+with the same active population. Preserve original coordinates and the declared
+output order; an omitted block does not become a different row number.
+
+Dependencies make some work necessary outside the output mask: predicted values
+may need preceding residuals/checkpoints, routed values may need prefix counts,
+and variable bodies may need earlier geometry. A shared dictionary or reused
+query preparation has its own lifetime and acquisition cost. Expose that halo
+and compare better restart/addressing/preparation choices rather than charging
+every inactive payload or claiming the whole dependency disappears.
+
+Masked writes exclude logical destinations, while preserving stores can still
+cover adjacent packed bits under an admitted physical grant. Reorder/compaction
+can change ranks and downstream geometry; a source block mask alone does not
+promise zero movement elsewhere. For conversion, define whether inactive target
+regions are retained, left unchanged or constructed separately. Carry these
+questions into lifecycle and encoded consumers before choosing a public mask API.
 
 From Linux at the repository root (prefix with `orb -m ubuntu` from macOS):
 
@@ -120,6 +186,11 @@ Generate a larger ordinary input in an existing ignored directory with
 `workload.py generate --output PATH`, then use `workload.py oracle PATH` or
 `workload.py transport PATH`. Pass `--input PATH...` to the compiled check command
 to compare lifecycle or encoding snapshots through both hash consumers.
+`workload.mask_variants(document, positions_per_block=..., blocks_per_group=...)`
+adds authored all/none/clustered/scattered/tail controls to one query while reusing
+unchanged logical rows and retaining their provenance. It selects no production
+block geometry. The private text bridge is versioned independently as
+`frame-execution-transport-v2`; rebuild the reader when changing that transport.
 A native fleet campaign has not been scheduled.
 No timings or encoded-execution wins are claimed by this preparation.
 
@@ -129,8 +200,14 @@ selected holes, full population and maximum values, out-of-domain thresholds,
 regrouping collisions, generated populations and deliberately wrong code mappings.
 They are evidence about the instrument's result boundary, not Frame graduation.
 
-Local qualification on 2026-10-22: all eleven checks passed with the pinned Clang
-21.1.8 development build. Both consumers also matched all eight queries in each
+Local qualification on 2026-10-22 passes fifteen checks with pinned Clang
+21.1.8, including coarse exact-output and skipped-work checks.
+Both original consumers also matched all eight queries in each
 of the lifecycle investigation's 13 generated snapshots: 208 query/program
 comparisons. These were ordinary local checks with no timing or physical
 retained-reader claim. Generated snapshots remain in ignored `build/` storage.
+The coarse follow-up also checked both ClickBench logical inputs and the small
+IMDb year input with real nulls, at 256 positions/block × 16 blocks/group and
+127 × 5: 124 query/program comparisons agreed. These are two experimental
+geometries, not a default selection. All-zero masks recorded zero row visits,
+dictionary accesses, address probes and hash updates in both controls.

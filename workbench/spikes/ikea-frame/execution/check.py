@@ -10,6 +10,10 @@ import unittest
 import workload as w
 
 BINARY = None
+COUNTERS = ("row_visits", "dictionary_values_examined", "hash_updates", "null_updates",
+            "counter_bytes_peak", "parts_skipped", "block_bits_selected", "block_bits_excluded",
+            "coarse_ranges_entered", "position_probes", "row_record_bytes_modeled",
+            "groups_skipped", "groups_full", "groups_mixed")
 
 
 def decode_output(output):
@@ -26,10 +30,9 @@ def decode_output(output):
                 raise ValueError("invalid output group")
             groups.append({"key": key if has_key else None, "count": count, "sum": summed})
         work = next(lines).split()
-        if len(work) != 6 or work[0] != "WORK":
+        if len(work) != len(COUNTERS) + 1 or work[0] != "WORK2":
             raise ValueError("missing work counters")
-        counters.append(dict(zip(("row_visits", "dictionary_values_examined", "hash_updates",
-                                  "null_updates", "counter_bytes_peak"), map(int, work[1:]))))
+        counters.append(dict(zip(COUNTERS, map(int, work[1:]))))
         answers.append({"query_id": header[1], "groups": groups})
     return answers, counters
 
@@ -49,7 +52,61 @@ def compare(document):
     return counters
 
 
+def coarse_example():
+    document = {"format": w.FORMAT, "kind": "authored-synthetic", "snapshot": "basis-0",
+                "parts": [{"part_id": "p", "dictionary_edition": "p-d0", "position_limit": 19,
+                           "dictionary": [10, 20], "rows": [
+                               {"position": p, "category": None if p == 18 else (20 if p % 2 else 10),
+                                "x": None if p == 7 else 2 * p}
+                               for p in range(19) if p not in (5, 13)]}], "queries": []}
+    for name, blocks in (("all", None), ("none", []), ("mixed-tail", [1, 2, 3, 6]),
+                         ("clustered", [0, 1]), ("scattered", [0, 2])):
+        document["queries"].append(w.query(name, {"p": None}, coarse={"p": {
+            "positions_per_block": 3, "blocks_per_group": 2, "blocks": blocks}}))
+    document["queries"].append(w.query("intersect", {"p": [0, 3, 4, 11, 18]}, coarse={"p": {
+        "positions_per_block": 3, "blocks_per_group": 2, "blocks": [6, 3, 1, 2]}}))
+    return document
+
+
 class LogicalChecks(unittest.TestCase):
+    def test_coarse_blocks_and_fine_selection_have_independent_coordinates(self):
+        document = coarse_example()
+        answers = w.oracle(document)
+        self.assertEqual(answers[1]["groups"], [])
+        self.assertEqual(answers[2]["groups"], [
+            {"key": None, "count": 1, "sum": 36}, {"key": 10, "count": 4, "sum": 56},
+            {"key": 20, "count": 3, "sum": 46}])
+        self.assertEqual(answers[-1]["groups"], [
+            {"key": None, "count": 1, "sum": 36}, {"key": 10, "count": 1, "sum": 8},
+            {"key": 20, "count": 2, "sum": 28}])
+        # An expanded fine mask is an independent correctness control, never the execution path.
+        expanded = copy.deepcopy(document)
+        for query in expanded["queries"]:
+            coarse = query.pop("coarse_selection")["p"]
+            positions = [p for p in range(19) if coarse["blocks"] is None or
+                         p // coarse["positions_per_block"] in coarse["blocks"]]
+            fine = query["selection"]["p"]
+            query["selection"]["p"] = positions if fine is None else sorted(set(fine) & set(positions))
+        self.assertEqual(answers, w.oracle(expanded))
+
+    def test_invalid_coarse_mask_refuses(self):
+        for replacement in ({"positions_per_block": 0, "blocks": []},
+                            {"positions_per_block": 3, "blocks": [7]},
+                            {"positions_per_block": 3, "blocks": [1, 1]},
+                            {"positions_per_block": 3, "blocks_per_group": 0, "blocks": None}):
+            document = coarse_example()
+            document["queries"][0]["coarse_selection"]["p"] = replacement
+            with self.assertRaises(ValueError):
+                w.validate(document)
+
+    def test_mask_variants_reuse_original_rows(self):
+        document = w.example()
+        masked = w.mask_variants(document, positions_per_block=127, blocks_per_group=5)
+        self.assertIs(masked["parts"], document["parts"])
+        self.assertNotIn("coarse_selection", document["queries"][0])
+        answers = w.oracle(masked)
+        self.assertEqual(answers[-5]["groups"], answers[0]["groups"])
+        self.assertEqual(answers[-4]["groups"], [])
     def test_hand_calculated_groups(self):
         def group(key, count, summed):
             return {"key": key, "count": count, "sum": summed}
@@ -113,6 +170,27 @@ class LogicalChecks(unittest.TestCase):
 
 @unittest.skipUnless(BINARY, "supply --binary to check the compiled Ikea handoff")
 class HashChecks(unittest.TestCase):
+    def test_coarse_skip_work_and_full_mixed_groups(self):
+        work = self.check_document(coarse_example())
+        for mode in ("rowwise", "by-code"):
+            all_rows, none, mixed, clustered, scattered, intersect = work[mode]
+            for name in ("row_visits", "dictionary_values_examined", "hash_updates", "null_updates",
+                         "counter_bytes_peak", "coarse_ranges_entered", "position_probes",
+                         "row_record_bytes_modeled"):
+                self.assertEqual(none[name], 0, (mode, name))
+            self.assertEqual(none["groups_skipped"], 4)
+            self.assertEqual(all_rows["row_visits"], 17)
+            self.assertEqual(all_rows["groups_full"], 4)
+            self.assertEqual(mixed["row_visits"], 9)
+            self.assertEqual((mixed["groups_skipped"], mixed["groups_full"], mixed["groups_mixed"]),
+                             (1, 2, 1))
+            self.assertEqual(mixed["coarse_ranges_entered"], 3)
+            self.assertEqual(clustered["coarse_ranges_entered"], 1)
+            self.assertEqual(scattered["coarse_ranges_entered"], 2)
+            self.assertEqual(intersect["row_visits"], 4)
+        for grain, group in ((1, 1), (4, 3), (127, 5), (256, 16), (65536, 2)):
+            self.check_document(w.mask_variants(w.example(), positions_per_block=grain,
+                                                blocks_per_group=group))
     def check_document(self, document):
         return compare(document)
 

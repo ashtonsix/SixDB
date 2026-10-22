@@ -1,6 +1,7 @@
 """Logical research input and independent exact oracle; no Frame format is implied."""
 
 import argparse
+import copy
 import json
 import random
 import sys
@@ -8,6 +9,7 @@ import sys
 U32 = (1 << 32) - 1
 U64 = (1 << 64) - 1
 FORMAT = "frame-execution-logical-v1"
+TRANSPORT = "frame-execution-transport-v2"
 
 
 def unsigned(value, maximum, name):
@@ -86,6 +88,24 @@ def validate(document):
                 for position in selection:
                     unsigned(position, parts[part_id]["position_limit"] - 1,
                              "selected position")
+        for part_id, coarse in query.get("coarse_selection", {}).items():
+            if part_id not in parts:
+                raise ValueError("coarse selection names an unknown part")
+            grain = coarse["positions_per_block"]
+            unsigned(grain, 65536, "coarse grain")
+            if not grain:
+                raise ValueError("coarse grain must be positive")
+            count = (parts[part_id]["position_limit"] + grain - 1) // grain
+            per_group = coarse.get("blocks_per_group", max(1, count))
+            unsigned(per_group, 65536, "blocks per group")
+            if not per_group:
+                raise ValueError("blocks per group must be positive")
+            blocks = coarse["blocks"]
+            if blocks is not None:
+                if len(set(blocks)) != len(blocks):
+                    raise ValueError("duplicate coarse block")
+                for block in blocks:
+                    unsigned(block, count - 1, "coarse block")
 
 
 def oracle(document):
@@ -99,8 +119,14 @@ def oracle(document):
                 continue
             chosen = query["selection"][part["part_id"]]
             chosen = None if chosen is None else set(chosen)
+            coarse = query.get("coarse_selection", {}).get(part["part_id"])
+            active_blocks = (None if coarse is None or coarse["blocks"] is None
+                             else set(coarse["blocks"]))
             for row in part["rows"]:
                 if chosen is not None and row["position"] not in chosen:
+                    continue
+                if (active_blocks is not None and
+                        row["position"] // coarse["positions_per_block"] not in active_blocks):
                     continue
                 value, category = row["x"], row["category"]
                 if value is None or value < query["min_x"]:
@@ -126,7 +152,7 @@ def oracle(document):
 def transport(document):
     """A private text bridge to the C++ hash witness, not a stored encoding."""
     validate(document)
-    lines = [FORMAT, json.dumps(document["snapshot"]),
+    lines = [TRANSPORT, json.dumps(document["snapshot"]),
              f'{len(document["parts"])} {len(document["queries"])}']
     for part in document["parts"]:
         dictionary = part["dictionary"]
@@ -149,14 +175,55 @@ def transport(document):
             selected = query["selection"].get(part["part_id"], [])
             lines.append("-1" if selected is None else
                          " ".join(map(str, [len(selected), *selected])))
+            coarse = query.get("coarse_selection", {}).get(part["part_id"],
+                         {"positions_per_block": max(1, part["position_limit"]), "blocks": None})
+            blocks = coarse["blocks"]
+            count = (part["position_limit"] + coarse["positions_per_block"] - 1) // coarse["positions_per_block"]
+            lines.append(f'COARSE {coarse["positions_per_block"]} '
+                         f'{coarse.get("blocks_per_group", max(1, count))} ' +
+                         ("-1" if blocks is None else
+                          " ".join(map(str, [len(blocks), *blocks]))))
     return "\n".join(lines) + "\n"
 
 
-def query(name, selection, *, min_x=0, categories=None, include_null=True, shift=0):
-    return {"query_id": name, "snapshot": "basis-0", "selection": selection,
+def query(name, selection, *, min_x=0, categories=None, include_null=True, shift=0, coarse=None):
+    result = {"query_id": name, "snapshot": "basis-0", "selection": selection,
             "min_x": min_x, "category_mode": "all" if categories is None else "in",
             "categories": [] if categories is None else categories,
             "include_null_category": include_null, "group_shift": shift}
+    if coarse is not None:
+        result["coarse_selection"] = coarse
+    return result
+
+
+def mask_variants(document, *, positions_per_block, blocks_per_group, query_index=0):
+    """Reuse unchanged logical rows; add authored coarse controls to one query."""
+    validate(document)
+    for value, name in ((positions_per_block, "positions per block"),
+                        (blocks_per_group, "blocks per group")):
+        unsigned(value, 65536, name)
+        if not value:
+            raise ValueError(f"{name} must be positive")
+    base = document["queries"][query_index]
+    result = {**document, "queries": list(document["queries"]),
+              "query_variants": {"kind": "authored-coarse-controls", "basis": base["query_id"],
+                                 "positions_per_block": positions_per_block,
+                                 "blocks_per_group": blocks_per_group}}
+    for name in ("all", "none", "clustered", "scattered", "tail"):
+        candidate = copy.deepcopy(base)
+        candidate["query_id"] += f"/coarse-{name}"
+        candidate["coarse_selection"] = {}
+        for part in document["parts"]:
+            count = (part["position_limit"] + positions_per_block - 1) // positions_per_block
+            blocks = {"all": None, "none": [], "clustered": list(range((count + 3) // 4)),
+                      "scattered": list(range(0, count, 4)),
+                      "tail": [count - 1] if count else []}[name]
+            candidate["coarse_selection"][part["part_id"]] = {
+                "positions_per_block": positions_per_block,
+                "blocks_per_group": blocks_per_group, "blocks": blocks}
+        result["queries"].append(candidate)
+    validate(result)
+    return result
 
 
 def example():
