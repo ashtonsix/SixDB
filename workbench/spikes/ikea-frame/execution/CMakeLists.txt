@@ -1,4 +1,12 @@
 add_executable(frame_execution_hash_check hash_check.cpp)
 sixdb_target(frame_execution_hash_check)
 target_compile_options(frame_execution_hash_check PRIVATE -fno-vectorize -fno-slp-vectorize)
-target_link_libraries(frame_execution_hash_check PRIVATE ikea::hashtable)
+target_link_libraries(frame_execution_hash_check PRIVATE ikea::hashtable frame_execution_input)
+
+add_executable(frame_execution_encoded encoded.cpp)
+sixdb_target(frame_execution_encoded)
+target_compile_options(frame_execution_encoded PRIVATE -fno-vectorize -fno-slp-vectorize)
+target_link_libraries(frame_execution_encoded PRIVATE
+  ikea::hashtable frame_execution_input frame_encoding_material)
+add_library(frame_execution_input STATIC input.cpp)
+sixdb_target(frame_execution_input)

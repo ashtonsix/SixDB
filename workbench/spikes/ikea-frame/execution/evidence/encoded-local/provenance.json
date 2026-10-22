@@ -1,0 +1,15 @@
+{
+  "files_sha256": {
+    "measurements.json": "08e7dc587c56762b5aa972f72e0ffe6ea64c58e1d4b4e195c546f9f44e471672"
+  },
+  "format": 2,
+  "full_bundle": "artifact.json",
+  "kind": "files",
+  "regenerate": [
+    "python3",
+    "workbench/spikes/ikea-frame/execution/report.py",
+    "{evidence}/raw.json",
+    "{evidence}/measurements.json"
+  ],
+  "regenerate_from": "archive"
+}

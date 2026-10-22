@@ -1,4 +1,5 @@
 #include <ikea/hashtable.h>
+#include "input.h"
 #include <algorithm>
 #include <cstdint>
 #include <cstring>
@@ -13,41 +14,10 @@
 
 // Untimed boundary controls over authored inputs, not Frame encoded kernels.
 namespace {
-using Word = std::uint64_t;
+using namespace frame_execution;
 struct Total { Word count{}, sum{}; };
 static_assert(sizeof(Total) == 16);
 using Map = ikea::hashtable::table<64, 6, 16>;
-struct Row { unsigned position{}; std::int64_t code{}; bool has_x{}; Word x{}; };
-struct Part {
-    std::string id, dictionary_edition;
-    unsigned limit{};
-    std::vector<Word> dictionary;
-    std::vector<Row> rows;
-    std::vector<unsigned> positions; // Prepared address directory, separate from row bodies.
-};
-struct Selection {
-    bool all{};
-    bool any{};
-    std::vector<bool> positions;
-    bool contains(unsigned p) const { return all || positions[p]; }
-};
-struct Coarse {
-    unsigned grain{}, per_group{}, count{};
-    bool all{};
-    std::vector<unsigned> blocks;
-    unsigned selected() const { return all ? count : unsigned(blocks.size()); }
-    unsigned group_count() const { return (count + per_group - 1) / per_group; }
-};
-struct Query {
-    std::string id;
-    Word threshold{};
-    bool all_categories{}, include_null{};
-    unsigned shift{};
-    std::unordered_set<Word> allowed;
-    std::vector<Selection> selection;
-    std::vector<Coarse> coarse;
-    bool accepts(Word key) const { return all_categories || allowed.contains(key); }
-};
 struct Work {
     Word rows{}, dictionary_values{}, hash_updates{}, null_updates{}, counter_bytes_peak{};
     Word parts_skipped{}, coarse_selected{}, coarse_excluded{}, coarse_ranges{}, position_probes{};
@@ -71,93 +41,6 @@ void add(Map& output, Word key, Total incoming, Work& work) {
         std::memcpy(bytes.data(), &total, sizeof(total));
     });
     ++work.hash_updates;
-}
-
-Part read_part() {
-    Part part;
-    std::string token;
-    std::size_t dictionary_count, row_count;
-    std::cin >> token >> std::quoted(part.id) >> std::quoted(part.dictionary_edition)
-             >> part.limit >> dictionary_count >> row_count;
-    require(bool(std::cin) && token == "PART" && !part.id.empty() &&
-            !part.dictionary_edition.empty() && part.limit <= 65536 &&
-            row_count <= part.limit, "invalid part header");
-    part.dictionary.resize(dictionary_count);
-    std::unordered_set<Word> keys;
-    for (auto& key : part.dictionary) {
-        std::cin >> key;
-        require(bool(std::cin) && keys.insert(key).second, "invalid dictionary");
-    }
-    std::vector<bool> occupied(part.limit);
-    for (std::size_t i = 0; i < row_count; ++i) {
-        Row row;
-        unsigned has_x;
-        std::cin >> row.position >> row.code >> has_x >> row.x;
-        require(bool(std::cin) && row.position < part.limit && !occupied[row.position] &&
-                row.code >= -1 && (row.code == -1 || Word(row.code) < dictionary_count) &&
-                has_x <= 1 && row.x <= std::numeric_limits<std::uint32_t>::max(),
-                "invalid coded row");
-        row.has_x = has_x;
-        occupied[row.position] = true;
-        part.rows.push_back(row);
-    }
-    std::ranges::sort(part.rows, {}, &Row::position);
-    for (const auto& row : part.rows) part.positions.push_back(row.position);
-    return part;
-}
-
-Query read_query(const std::vector<Part>& parts) {
-    Query query;
-    std::string token;
-    unsigned all, nulls;
-    std::size_t allowed;
-    std::cin >> token >> std::quoted(query.id) >> query.threshold >> all >> nulls
-             >> query.shift >> allowed;
-    require(bool(std::cin) && token == "QUERY" && !query.id.empty() && all <= 1 &&
-            nulls <= 1 && query.shift <= 63, "invalid query header");
-    query.all_categories = all;
-    query.include_null = nulls;
-    for (std::size_t i = 0; i < allowed; ++i) {
-        Word key;
-        std::cin >> key;
-        require(bool(std::cin), "invalid predicate value");
-        query.allowed.insert(key);
-    }
-    for (const auto& part : parts) {
-        std::int64_t count;
-        std::cin >> count;
-        require(bool(std::cin) && count >= -1 && count <= part.limit,
-                "invalid selection count");
-        Selection selected{count == -1, count == -1 ? part.limit != 0 : count != 0,
-                           std::vector<bool>(count > 0 ? part.limit : 0)};
-        for (std::int64_t i = 0; i < count; ++i) {
-            unsigned position;
-            std::cin >> position;
-            require(bool(std::cin) && position < part.limit && !selected.positions[position],
-                    "invalid selected position");
-            selected.positions[position] = true;
-        }
-        query.selection.push_back(std::move(selected));
-        Coarse coarse;
-        std::cin >> token >> coarse.grain >> coarse.per_group >> count;
-        require(bool(std::cin) && token == "COARSE" && coarse.grain &&
-                coarse.grain <= 65536 && coarse.per_group && coarse.per_group <= 65536 &&
-                count >= -1, "invalid coarse header");
-        coarse.count = (part.limit + coarse.grain - 1) / coarse.grain;
-        coarse.all = count == -1;
-        require(count <= coarse.count, "invalid coarse selection count");
-        for (std::int64_t i = 0; i < count; ++i) {
-            unsigned block;
-            std::cin >> block;
-            require(bool(std::cin) && block < coarse.count, "invalid coarse block");
-            coarse.blocks.push_back(block);
-        }
-        std::ranges::sort(coarse.blocks);
-        require(std::adjacent_find(coarse.blocks.begin(), coarse.blocks.end()) ==
-                coarse.blocks.end(), "duplicate coarse block");
-        query.coarse.push_back(std::move(coarse));
-    }
-    return query;
 }
 
 std::size_t first_at(const Part& part, unsigned position, Work& work) {
@@ -297,22 +180,9 @@ int main(int argc, char** argv) {
         require(argc == 2 && (std::string(argv[1]) == "rowwise" ||
                              std::string(argv[1]) == "by-code"),
                 "usage: frame_execution_hash_check rowwise|by-code < transport.txt");
-        std::string format, snapshot;
-        std::size_t part_count, query_count;
-        std::cin >> format >> std::quoted(snapshot) >> part_count >> query_count;
-        require(bool(std::cin) && format == "frame-execution-transport-v2" &&
-                !snapshot.empty(), "invalid workload header");
-        std::vector<Part> parts;
-        std::unordered_set<std::string> ids;
-        for (std::size_t i = 0; i < part_count; ++i) {
-            auto part = read_part();
-            require(ids.insert(part.id).second, "duplicate part identity");
-            parts.push_back(std::move(part));
-        }
-        for (std::size_t i = 0; i < query_count; ++i)
-            execute(parts, read_query(parts), std::string(argv[1]) == "by-code");
-        std::cin >> std::ws;
-        require(std::cin.eof(), "trailing workload content");
+        const auto input = read_input(std::cin);
+        for (const auto& query : input.queries)
+            execute(input.parts, query, std::string(argv[1]) == "by-code");
     } catch (const std::exception& error) {
         std::cerr << error.what() << '\n';
         return 1;

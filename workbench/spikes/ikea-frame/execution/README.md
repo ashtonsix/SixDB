@@ -15,7 +15,9 @@ representations and their operation programs together. Its
 bytes from migration. The [TuplePack mixed-workload results](../../tuple-layout/viability.md)
 show why isolated operation coefficients can choose a poor complete program.
 These findings set the starting point: compare useful complete consumers over
-the same image, then compare representations and their lifetimes.
+the same image, then compare representations and their lifetimes. The
+[schema-fidelity supplement](FIDELITY.md) revisits those studies for what Frame
+should let Engine understand, and what this first witness cannot yet decide.
 
 The consumer groups selected rows by nullable category C and returns COUNT/SUM
 of a nullable unsigned integer X. Different parts can assign different local
@@ -194,20 +196,46 @@ block geometry. The private text bridge is versioned independently as
 A native fleet campaign has not been scheduled.
 No timings or encoded-execution wins are claimed by this preparation.
 
-The checks compare full groups, not just totals/checksums. They cover a
-hand-calculated example, reversed dictionary editions, null-only and empty parts,
-selected holes, full population and maximum values, out-of-domain thresholds,
-regrouping collisions, generated populations and deliberately wrong code mappings.
-They are evidence about the instrument's result boundary, not Frame graduation.
+## Actual encoded grouped consumers
 
-Local qualification on 2026-10-22 passes fifteen checks with pinned Clang
-21.1.8, including coarse exact-output and skipped-work checks.
-Both original consumers also matched all eight queries in each
-of the lifecycle investigation's 13 generated snapshots: 208 query/program
-comparisons. These were ordinary local checks with no timing or physical
-retained-reader claim. Generated snapshots remain in ignored `build/` storage.
-The coarse follow-up also checked both ClickBench logical inputs and the small
-IMDb year input with real nulls, at 256 positions/block × 16 blocks/group and
-127 × 5: 124 query/program comparisons agreed. These are two experimental
-geometries, not a default selection. All-zero masks recorded zero row visits,
-dictionary accesses, address probes and hash updates in both controls.
+[`encoded.cpp`](encoded.cpp), target `frame_execution_encoded`, now uses the
+shared actual [`frame_encoding_material`](../encoding/material.h). It preserves
+original positions, nullable X/C and part-local dictionary editions into a real
+hash output, releasing the raw logical rows after encoding. Coarse block bits
+remain coarse; fine activity and validity intersect before useful body work.
+Whole-block reconstruction can still need inactive values. This is one dense
+position image candidate, not a decision against sparse/routed storage.
+
+Compare `opaque-complete` (kind-aware whole operation), `rich-prepared` (the same
+kernels selected during preparation) and `decode-scratch` (batched materialisation).
+All three currently share local-code aggregation, translating only touched groups.
+This is a preparation/dispatch comparison within one algorithm family, not a
+complete schema-fidelity comparison.
+
+The [first encoded report](ENCODED.md) retains the absolute complete-query
+measurements, memory/preparation accounting, failures and limits. Rich preparation
+has not demonstrated a broad runtime gain over the strong opaque control here.
+Prepared decoder capacity can exceed compressed body size. All five current
+kinds pass the independent oracle; a patched-kind extension exposed a parent's
+invalid delta assumption and all timings from that earlier source cut were
+discarded before the corrected measurements.
+
+```sh
+cmake --build build/clang/frame-execution --target frame_execution_encoded
+python3 workbench/spikes/ikea-frame/execution/encoded_check.py \
+  --binary build/clang/frame-execution/workbench/spikes/ikea-frame/execution/frame_execution_encoded
+```
+
+`encoded_check.py --input PATH... --trials N --output REPORT` checks every full
+result and retains rotated raw complete-call samples. `whole_query_warm_ns`
+includes hash construction, complete output consumption and retirement, with
+reusable plans/scratch prepared separately. These costs are neither dependent
+point latency nor interleaved reciprocal throughput, and establish no cold/Loom
+result. `prepare_ns` and state capacities are separate observations.
+
+Body bytes, buffer capacity, decoder storage, validity, dictionary and per-program
+plan/scratch are reported separately, not as complete RSS. Work counters describe
+requested outputs and delegated calls, not measured memory traffic. The
+[report](ENCODED.md#qualification-and-reproduction) owns the source-qualified
+correctness, assembly and recovery details. Point access, checkpoint algorithms,
+mutable overrides and actual Orbital publication remain with their owners.
