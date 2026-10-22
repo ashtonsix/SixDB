@@ -6,7 +6,9 @@ traversal and edits stay bounded as an index grows?**
 Started 22 October 2026 to take over `engine::directory`. The chosen structure
 has **graduated** into [`engine::directory`](../../../engine/README.md#segment-directory),
 on Orbital Objects with its own material. This spike keeps the evidence, the
-counter model and the controls that were rejected. This spike covers only
+counter model and the controls that were rejected. The graduated code
+searches its planes with `ikea::boundlist` and drops this spike's in-node
+summaries, which showed no measurable time benefit. This spike covers only
 the directory structure: how each layer is laid out, searched and maintained.
 Segment codecs, aggregates, consumers and peers are out of scope. The
 [previous directory spike](../directory/README.md) keeps that wider evidence.

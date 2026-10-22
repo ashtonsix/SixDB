@@ -1,4 +1,5 @@
 #include <engine/directory.h>
+#include <ikea/boundlist.h>
 #include <algorithm>
 #include <cstdio>
 #include <cstdlib>
@@ -6,7 +7,6 @@
 
 namespace engine::directory {
 namespace {
-constexpr unsigned block=16;
 
 void require(bool ok,const char* what) {
   if(ok) return;
@@ -28,19 +28,19 @@ template<class T> std::vector<T> typed(const std::byte* p,std::size_t n) {
   if(n) std::memcpy(out.data(),p,n*sizeof(T));
   return out;
 }
-// First index in [begin, n) where less() fails; the summary picks one block of 16.
-template<class SummaryLess,class Less>
-unsigned first_not(unsigned begin,unsigned n,SummaryLess sl,Less less) {
-  unsigned lo=begin,hi=n;
-  if(n>block) {
-    unsigned blo=1,bhi=(n+block-1)/block;
-    while(blo<bhi) {auto mid=(blo+bhi)/2;if(sl(mid)) blo=mid+1;else bhi=mid;}
-    lo=std::max(begin,(blo-1)*block);
-    hi=std::min(n,blo*block);
-  }
-  while(lo<hi) {auto mid=(lo+hi)/2;if(less(mid)) lo=mid+1;else hi=mid;}
-  return lo;
-}
+// K-byte logical keys as a Boundlist endpoint domain.
+struct KeyRef {
+  const std::uint8_t* bytes;
+  unsigned width;
+  friend bool operator<(KeyRef a,KeyRef b) {return std::memcmp(a.bytes,b.bytes,a.width)<0;}
+};
+struct KeySource {
+  const std::uint8_t* data;
+  unsigned count,width;
+  unsigned size() const {return count;}
+  KeyRef at(unsigned r) const {return {data+std::size_t(r)*width,width};}
+};
+namespace bl=ikea::boundlist;
 }
 
 Layer::Layer(loom::Worker& w,Store& s,std::pmr::memory_resource& m,std::uint64_t ns,Shape shape)
@@ -65,28 +65,16 @@ Control Layer::control(std::uint64_t name,const Node& n) const {
 
 std::vector<std::vector<std::byte>> Layer::encode(const Node& n) const {
   std::vector<std::vector<std::byte>> parts;
-  const auto k=shape_.key_bytes;
   const auto& routing=n.height?n.sep:n.prefix;
-  std::vector<std::uint32_t> header{std::uint32_t(n.size()),n.height};
-  for(std::size_t i=0;i<routing.size();i+=block) header.push_back(routing[i]);
-  parts.push_back(raw(header));
+  parts.push_back(raw(std::vector<std::uint32_t>{std::uint32_t(n.size()),n.height}));
   parts.push_back(raw(routing));
-  auto sampled=[&](const std::vector<std::uint8_t>& keys) {
-    std::vector<std::byte> out;
-    for(std::size_t i=0;i*k<keys.size();i+=block)
-      out.insert(out.end(),reinterpret_cast<const std::byte*>(keys.data()+i*k),
-                 reinterpret_cast<const std::byte*>(keys.data()+(i+1)*k));
-    return out;
-  };
   if(n.height) {
     if(shape_.fenced()) parts.push_back(raw(n.lsep));
     parts.push_back(raw(n.child));
-    if(shape_.fenced()) parts.push_back(sampled(n.lsep));
   } else {
     if(shape_.fenced()) {parts.push_back(raw(n.min));parts.push_back(raw(n.max));}
     for(std::size_t t=0;t<n.dirent.size();t+=shape_.tile)
       parts.push_back(raw(std::vector<Dirent>(n.dirent.begin()+t,n.dirent.begin()+std::min(n.dirent.size(),t+shape_.tile))));
-    if(shape_.fenced()) parts.push_back(sampled(n.max));
   }
   return parts;
 }
@@ -461,30 +449,21 @@ orbital::Result<void> Layer::build(std::span<const Entry> es) {
   return publish(w);
 }
 
-// Reads: every visit is one Scope::bind; searches use the header's summary.
+// Reads: every visit is one Scope::bind; ordered planes are Boundlist sources.
+// Row 0 of an interior node covers everything below row 1's separator.
 unsigned Layer::route(Selection o,std::uint32_t p) const {
-  auto* sum=plane<std::uint32_t>(o,0)+2;
-  auto* sep=plane<std::uint32_t>(o,1);
-  return first_not(1,rows(o),[&](unsigned b) {return sum[b]<=p;},[&](unsigned i) {return sep[i]<=p;})-1;
+  return bl::upper_bound(bl::direct_source<std::uint32_t>{plane<std::uint32_t>(o,1)+1,rows(o)-1},p);
 }
 unsigned Layer::lower(Selection o,std::uint32_t p) const {
-  auto* sum=plane<std::uint32_t>(o,0)+2;
-  auto* pre=plane<std::uint32_t>(o,1);
-  return first_not(0,rows(o),[&](unsigned b) {return sum[b]<p;},[&](unsigned i) {return pre[i]<p;});
+  return bl::lower_bound(bl::direct_source<std::uint32_t>{plane<std::uint32_t>(o,1),rows(o)},p);
 }
 unsigned Layer::route(Selection o,std::span<const std::uint8_t> low) const {
   const auto k=shape_.key_bytes;
-  auto* sum=address(o,o.part_count()-1);
-  auto* sep=address(o,2);
-  return first_not(1,rows(o),[&](unsigned b) {return std::memcmp(sum+b*k,low.data(),k)<0;},
-                   [&](unsigned i) {return std::memcmp(sep+std::size_t(i)*k,low.data(),k)<0;})-1;
+  return bl::lower_bound(KeySource{plane<std::uint8_t>(o,2)+k,rows(o)-1,k},KeyRef{low.data(),k});
 }
 unsigned Layer::lower(Selection o,std::span<const std::uint8_t> low) const {
   const auto k=shape_.key_bytes;
-  auto* sum=address(o,o.part_count()-1);
-  auto* max=address(o,3);
-  return first_not(0,rows(o),[&](unsigned b) {return std::memcmp(sum+b*k,low.data(),k)<0;},
-                   [&](unsigned i) {return std::memcmp(max+std::size_t(i)*k,low.data(),k)<0;});
+  return bl::lower_bound(KeySource{plane<std::uint8_t>(o,3),rows(o),k},KeyRef{low.data(),k});
 }
 
 const Dirent* Layer::find(const Store::Scope& scope,std::uint32_t p) const {
@@ -575,7 +554,7 @@ void Layer::validate() const {
       std::vector<std::vector<std::byte>> parts;
       for(std::size_t i=0;i<s.part_count();++i) parts.emplace_back(address(s,i),address(s,i)+*s.control().extent(i));
       return parts;
-    }(),"validate: summary or Part layout");
+    }(),"validate: Part layout");
     if(!n.height) {
       for(std::size_t i=1;i<n.size();++i) require(n.prefix[i-1]<n.prefix[i],"validate: leaf order");
       Bounds b{n.prefix[0],n.prefix.back(),{},{},0};

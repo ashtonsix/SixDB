@@ -26,8 +26,10 @@ merge. Each `apply` publishes one packet. Unchanged Parts are reused from the
 basis version, and identical replacements publish nothing. Readers borrow
 Parts under their own `Store::Scope`.
 
-The directory owns its Orbital material: a Control whose Part extents follow
-from row count and key width. The [segment-directory spike](../workbench/spikes/segment-directory/README.md)
+Ordered searches over separators, prefixes and fences use
+[Boundlist](../ikea/docs/boundlist/usage.md) endpoint searches; K-byte logical
+keys are a custom endpoint source. The directory owns its Orbital material: a
+Control whose Part extents follow from row count and key width. The [segment-directory spike](../workbench/spikes/segment-directory/README.md)
 holds the evidence, the rejected alternatives and the open questions. Those
 alternatives are flat roots, natural partitions, inline-dirent hash pages and
 a prefix-to-leaf hash.

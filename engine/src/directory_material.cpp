@@ -4,34 +4,26 @@
 
 // Orbital material for directory nodes. Part extents follow from the node's
 // row count and the layer's key width, so the Control carries no pointers
-// beyond its resource. Parts: header (count, height, every 16th prefix or
-// separator), prefixes or separators, [min/max fences | logical separators],
-// dirent tiles or child names, [every 16th max fence or logical separator].
+// beyond its resource. Parts: header (count, height), prefixes or separators,
+// [min/max fences | logical separators], dirent tiles or child names.
 namespace engine::directory {
 namespace {
-constexpr std::size_t block=16;
-std::size_t blocks(std::size_t n) {return (n+block-1)/block;}
 std::size_t rounded(std::size_t n) {return (n+63)/64*64;}
 }
 
 std::size_t Control::full_part_count() const noexcept {
-  if(height) return 3+(fenced?2:0);
-  return 2+(fenced?3:0)+(count+tile-1)/tile;
+  if(height) return 3+(fenced?1:0);
+  return 2+(fenced?2:0)+(count+tile-1)/tile;
 }
 
 std::size_t Control::full_extent(std::size_t i) const noexcept {
   const std::size_t n=count,k=key_bytes;
-  if(i==0) return 8+4*blocks(n);
+  if(i==0) return 8;
   if(i==1) return 4*n;
-  if(height) {
-    if(fenced&&i==2) return k*n;
-    if(i==(fenced?3u:2u)) return 8*n;
-    return k*blocks(n);
-  }
+  if(height) return fenced&&i==2?k*n:8*n;
   if(fenced&&(i==2||i==3)) return k*n;
-  auto t=i-(fenced?4:2),tiles=(n+tile-1)/tile;
-  if(t<tiles) return 64*std::min<std::size_t>(tile,n-t*tile);
-  return k*blocks(n);
+  auto t=i-(fenced?4:2);
+  return 64*std::min<std::size_t>(tile,n-t*tile);
 }
 
 std::size_t Control::part_count() const noexcept {return projected?1:full_part_count();}
