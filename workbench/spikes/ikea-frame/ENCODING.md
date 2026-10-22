@@ -162,8 +162,9 @@ whenever the residual spread is.
 
 Each sub-block of 16 starts from a checkpoint, so a point read costs one
 checkpoint plus at most 15 residuals. Checkpoint spacing and storage are a
-curated option Engine chooses (**decided**: Engine decides, Ikea exposes curated
-options; native or bit-packed every 16, every 64, or none, priced on Jena in
+curated option Engine chooses (**decided**: Engine decides and Ikea exposes curated
+options, unless one option is a single clear overall winner, in which case Ikea
+just uses it; native or bit-packed every 16, every 64, or none, priced on Jena in
 [the encoding inventory](encoding/README.md#jena-prediction-in-real-bodies)).
 Checkpoints are stored relative to the block's first value, in the Relative
 Ends style. Since `u_i = u_0 + i·base + Σ s_j`, a checkpoint need only hold the
