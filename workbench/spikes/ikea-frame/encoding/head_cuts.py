@@ -9,8 +9,10 @@ For each u64 working-domain column (whole 256-row blocks) this reports:
   width) and block-late (top byte of value - block minimum at the block's
   width). Entropy is measured per head plane over the part or block it covers,
   then averaged by rows.
-- Head resolution: the fraction of 16-row windows in which a head alone decides
-  x >= median for every row (no tie with the threshold's head), per cut.
+- Head resolution: the fraction of 16-row windows needing no suffix for
+  x >= median: every row's head differs from the threshold's head, or the head
+  is the whole value (width <= 8), or the base alone decides (q <= minimum).
+  Windows with any head tie are reported separately.
 - Window bounds: the fraction of 16-row windows settled by exact min/max, and
   by conservative 8-bit bounds quantised against the block's range
   (floor of min, ceiling of max, in 256 steps).
@@ -62,24 +64,30 @@ def analyse(values):
         cuts["block_late"].append((b, lo, int(b.max() - lo).bit_length()))
     for name, pieces in cuts.items():
         bits = 0.0
-        resolved = windows = 0
+        resolved = windows = tie_windows = 0
         for seg, lo, w in pieces:
             heads, shift = head(seg - lo, w)
             bits += entropy(heads) * len(seg)
             # Threshold head in this segment's coordinates.
-            if q < lo:
-                qh, below = None, True
-            else:
-                qh, below = (q - lo) >> np.uint64(shift), False
+            # x >= q holds for the whole segment when q <= lo (base alone).
+            below = q <= lo
+            qh = None if below else (q - lo) >> np.uint64(shift)
             for s in range(0, len(seg), WINDOW):
                 hw = heads[s:s + WINDOW]
                 windows += 1
-                if below or qh is None:
-                    resolved += 1          # whole segment above the threshold
-                elif (hw != qh).all():
-                    resolved += 1          # every row decided by its head
+                if below:
+                    resolved += 1          # decided from the base alone
+                    continue
+                ties = int((hw == qh).sum())
+                tie_windows += ties > 0
+                # A tied head needs the suffix only when the head is not the
+                # whole value (shift > 0); with shift == 0 the head is exact.
+                if ties == 0 or shift == 0:
+                    resolved += 1
         out[f"{name}_head_entropy_bits"] = bits / n
+        # Windows needing no suffix, and (separately) windows with any head tie.
         out[f"{name}_head_resolved_windows"] = resolved / windows
+        out[f"{name}_head_tie_windows"] = tie_windows / windows
     exact = quant = windows = 0
     for s in range(0, n, BLOCK):
         b = v[s:s + BLOCK]

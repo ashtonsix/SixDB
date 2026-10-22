@@ -466,12 +466,17 @@ part's width) and block-late (value − block minimum at the block's width). It
 reports head entropy and the fraction of 16-row windows in which every row is
 decided by its head alone for `x ≥ median`. Beside them are 16-row window
 min/max bounds, exact or quantised to 8 bits against the block range. Model
-only; Ikea LEAD owns the real [filter consumer](../filter/README.md).
+only; Ikea LEAD owns the real [filter consumer](../filter/README.md). A window
+counts as head-resolved when no row needs its suffix: every head differs from
+the threshold's head, the head is the whole value (width ≤ 8, as on OS after
+frequency of small widths), or the base alone decides (q ≤ minimum). Codex
+corrected the first version, which undercounted whole-value heads; tie windows
+are now reported separately in the JSON.
 
 | Column | Head entropy early / part / block | Windows head-resolved early / part / block | Windows settled by bounds, exact / 8-bit |
 | --- | --- | --- | --- |
-| OS | 0.0 / 1.9 / 1.5 | 0.00 / 0.17 / 0.17 | 0.43 / 0.43 |
-| ResolutionWidth | 0.0 / 3.1 / 2.3 | 0.00 / 0.44 / 0.44 | 0.48 / 0.36 |
+| OS | 0.0 / 1.9 / 1.5 | 0.00 / 1.00 / 1.00 (head is the whole value) | 0.43 / 0.43 |
+| ResolutionWidth | 0.0 / 3.1 / 2.3 | 0.00 / 0.44 / 0.45 | 0.48 / 0.36 |
 | RegionID | 0.0 / 1.0 / 1.3 | 0.00 / 0.03 / 0.42 | 0.43 / 0.31 |
 | EventTime | 0.0 / 6.9 / 5.4 | 0.00 / 0.94 / 0.97 | 0.55 / 0.55 |
 | ClientIP | 0.9 / 7.6 / 4.2 | 0.12 / 0.97 / 0.97 | 0.40 / 0.39 |

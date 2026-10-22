@@ -331,9 +331,11 @@ satisfies both conditions depends on the stage:
   predicted blocks need value heads from an earlier cut, a separate summary,
   or a fallback.
 - **Dictionaries:** a sorted dictionary's code heads are order-preserving
-  (translate the threshold through the dictionary). A frequency dictionary's
-  code head identifies the most frequent values, which answers equality on
-  them without the suffix.
+  (translate the threshold through the dictionary). Frequency ranking alone
+  does not make a leading head identify individual frequent values: at K = 16,
+  codes 0–255 all share head 0. That needs the whole code to fit the head, or
+  a short-code/escape scheme (0–254 direct, 255 continues), which is a
+  distinct representation with its own costs (Codex's correction).
 - **Exceptions:** exception slots hold residual 0, so their heads mislead;
   a head predicate must merge the exception list.
 
