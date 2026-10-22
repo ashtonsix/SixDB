@@ -89,6 +89,16 @@ passed every built check. Worker jobs `20261022T024330Z-1218c100` and
 `20261022T024416Z-b14b723e`. The saving is below the share of width shards in
 CPU because each shard's fixtures, includes and non-matrix checks remain.
 
+Sanitizer and Release builds keep full `-g`, so the pool reads the configured
+flags: ÷ 8 GiB when `-fsanitize=` is present, ÷ 1.75 GiB for line-table
+RelWithDebInfo and ÷ 3 GiB otherwise. `pool-memory.sh` measured full-scope
+peaks of 2.8 GiB per TU for Release `-O3 -g` and up to 10.9 GiB for Debug `-O1`
+ASan/UBSan (`mutation/widths_9_16.cpp`; `filters/tiles.cpp` 8.8 GiB, most
+others 4.6–5.1 GiB), job `20261022T034131Z-7a38d527`. With the flag-sized pool
+(3 on 32 GiB) and default `-j`, `asan-verify.sh` built and passed the three
+heavy checks in 18 min with at least 14.3 GiB available
+(`20261022T040130Z-803c750d`); 10 unpooled jobs had exhausted 32 GiB.
+
 ## Reproduce
 
 ```sh

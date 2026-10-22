@@ -49,19 +49,26 @@ function(sixdb_test_scope)
   endif()
 endfunction()
 
-# Some test TUs peak near 1.5 GiB (lines) or 3 GiB (full). Ninja runs their
-# targets in a memory-sized pool, leaving headroom for the ordinary -j jobs, so
-# the default job count cannot swap or OOM the host.
+# Heavy test TUs peak near 1.5 GiB with line tables, 3 GiB with full -g
+# (Release, Debug or SIXDB_DEBUG_INFO=full) and up to 11 GiB under sanitizers.
+# Ninja runs their targets in a pool sized from host memory and the configured
+# flags, leaving headroom for ordinary -j jobs so the default count cannot swap
+# or OOM the host. Multi-config generators size for full debug info.
 set(SIXDB_HEAVY_COMPILE_JOBS 0 CACHE STRING "Parallel heavy compiles; 0 sizes from host memory")
 if(SIXDB_HEAVY_COMPILE_JOBS)
   set(sixdb_heavy_jobs ${SIXDB_HEAVY_COMPILE_JOBS})
 else()
-  cmake_host_system_information(RESULT sixdb_memory_mib QUERY TOTAL_PHYSICAL_MEMORY)
-  if(SIXDB_DEBUG_INFO STREQUAL "lines")
-    math(EXPR sixdb_heavy_jobs "${sixdb_memory_mib} / 1792")
+  string(TOUPPER "${CMAKE_BUILD_TYPE}" sixdb_config)
+  set(sixdb_flags "${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_${sixdb_config}}")
+  if(sixdb_flags MATCHES "-fsanitize=")
+    set(sixdb_heavy_mib 8192)
+  elseif(sixdb_config STREQUAL "RELWITHDEBINFO" AND SIXDB_DEBUG_INFO STREQUAL "lines")
+    set(sixdb_heavy_mib 1792)
   else()
-    math(EXPR sixdb_heavy_jobs "${sixdb_memory_mib} / 3072")
+    set(sixdb_heavy_mib 3072)
   endif()
+  cmake_host_system_information(RESULT sixdb_memory_mib QUERY TOTAL_PHYSICAL_MEMORY)
+  math(EXPR sixdb_heavy_jobs "${sixdb_memory_mib} / ${sixdb_heavy_mib}")
   if(sixdb_heavy_jobs LESS 1)
     set(sixdb_heavy_jobs 1)
   endif()
