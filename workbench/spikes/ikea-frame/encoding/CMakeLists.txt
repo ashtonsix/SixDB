@@ -20,3 +20,12 @@ if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/masked_access_check.cpp)
     sixdb_target(frame_encoding_masked_access_check)
     target_link_libraries(frame_encoding_masked_access_check PRIVATE frame_encoding_material)
 endif()
+
+# NULL fill: boundary pins and real-column laws (null_check), then bits/row
+# and row-selected timings under synthetic NULLs (nulls).
+add_executable(frame_encoding_null_check null_check.cpp)
+sixdb_target(frame_encoding_null_check)
+target_link_libraries(frame_encoding_null_check PRIVATE frame_encoding_material)
+add_executable(frame_encoding_nulls nulls.cpp)
+sixdb_target(frame_encoding_nulls)
+target_link_libraries(frame_encoding_nulls PRIVATE frame_encoding_material)

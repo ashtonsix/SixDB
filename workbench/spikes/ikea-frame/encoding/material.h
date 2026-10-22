@@ -258,6 +258,38 @@ struct column {
 
 column encode(std::span<const u64> values, encode_options options = {});
 
+// Nullable images (opt-in). validity holds one bit per row, four u64 per
+// 256-row block (bit i % 64 of word 4b + i / 64; 1 = valid). It stays beside
+// the column as its own plane, charged at 32 B per block, and never enters a
+// body: original logical coordinates are unchanged, and logical results over
+// valid rows take validity (AND any selection) as the row selection of the
+// masked aggregates (selected.h). NULL rows take a filler and their input
+// values are never read.
+//   predictor  per block, the cheapest body of these fills: the valid minimum
+//              (FOR residual 0), the previous valid value (runs extend),
+//              previous + r with r the smallest step between adjacent valid
+//              rows (delta s = 0), and linear interpolation across each gap.
+//              Every filler lies within the block's valid [min, max], so no
+//              fill changes the span or wraps: a candidate whose
+//              previous + r would leave it is refused, never wrapped. A block
+//              with no valid row is constant 0; one valid value fills as a
+//              constant. A block with no NULL is encoded unchanged.
+//   zero       NULL rows take 0 (the naive control).
+// Fills are chosen in the value domain; with a dictionary option, an
+// interpolated filler can add a dictionary entry.
+enum class null_fill : std::uint8_t { predictor, zero };
+// The filled values (rows NULL-filled, valid rows unchanged).
+std::vector<u64> fill_nulls(std::span<const u64> values, std::span<const u64> validity,
+                            encode_options options = {}, null_fill fill = null_fill::predictor);
+struct nullable_column {
+    column values;
+    std::vector<u64> validity;  // four words per block
+    std::size_t validity_bytes() const { return validity.size() * sizeof(u64); }
+    std::size_t total_bytes() const { return values.total_bytes() + validity_bytes(); }
+};
+nullable_column encode_nullable(std::span<const u64> values, std::span<const u64> validity,
+                                encode_options options = {}, null_fill fill = null_fill::predictor);
+
 // Borrowed blocks: one block's body read from wherever its bytes live (an
 // Orbital Part, a copy, the column's own payload), with pointer-free
 // interpretation. Every owner operation below is written once over this view;

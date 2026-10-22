@@ -362,7 +362,103 @@ candidate emit_arrival(std::span<const u64> codes, u64 frontier) {
         pack(w, back, k.payload.data() + arrival_flag_bytes);
     return k;
 }
+
+// Predictor-consistent fills of one block (material.h, null_fill). valid has
+// the block's four validity words; values are read at valid rows only.
+void fill_block(const u64 *values, const u64 *valid, const encode_options &options, null_fill mode, u64 *out) {
+    auto is_valid = [&](unsigned i) { return valid[i / 64] >> (i % 64) & 1; };
+    unsigned n = 0, first = block_rows, last = 0;
+    u64 lo = UINT64_MAX, hi = 0;
+    for (unsigned i = 0; i < block_rows; ++i)
+        if (is_valid(i)) {
+            out[i] = values[i];
+            lo = std::min(lo, values[i]), hi = std::max(hi, values[i]);
+            first = std::min(first, i), last = i, ++n;
+        }
+    if (n == block_rows)
+        return;
+    if (mode == null_fill::zero || !n) {
+        for (unsigned i = 0; i < block_rows; ++i)
+            if (!is_valid(i))
+                out[i] = 0;
+        return;
+    }
+    std::vector<std::array<u64, block_rows>> candidates;
+    candidates.emplace_back();  // base: the valid minimum
+    candidates.emplace_back();  // previous valid value
+    for (unsigned i = 0; i < block_rows; ++i) {
+        candidates[0][i] = is_valid(i) ? out[i] : lo;
+        candidates[1][i] = is_valid(i) ? out[i] : i < first ? out[first] : candidates[1][i - 1];
+    }
+    // Interpolation across interior gaps; edges copy the nearest valid value.
+    candidates.emplace_back(candidates[1]);
+    for (unsigned p = first; p < last;) {
+        unsigned q = p + 1;
+        while (!is_valid(q))
+            ++q;
+        const i128 a = out[p], span = static_cast<i128>(out[q]) - a;
+        for (unsigned i = p + 1; i < q; ++i) {
+            // floor division towards -inf keeps a + step within [x_p, x_q]
+            const i128 num = span * (i - p), den = q - p;
+            const i128 quot = num >= 0 ? num / den : -((-num + den - 1) / den);
+            candidates.back()[i] = static_cast<u64>(a + quot);
+        }
+        p = q;
+    }
+    // previous + r (delta s = 0), r the smallest step between adjacent valid
+    // rows; refused when any filler would leave [lo, hi].
+    bool have_r = false;
+    i128 r = 0;
+    for (unsigned i = first; i < last; ++i)
+        if (is_valid(i) && is_valid(i + 1)) {
+            const i128 step = static_cast<i128>(out[i + 1]) - static_cast<i128>(out[i]);
+            r = have_r ? std::min(r, step) : step;
+            have_r = true;
+        }
+    if (have_r) {
+        std::array<u64, block_rows> c{};
+        bool inside = true;
+        for (unsigned i = 0; i < block_rows && inside; ++i) {
+            if (is_valid(i)) {
+                c[i] = out[i];
+                continue;
+            }
+            const i128 v = i < first ? static_cast<i128>(out[first]) - r * (first - i) : static_cast<i128>(c[i - 1]) + r;
+            inside = v >= static_cast<i128>(lo) && v <= static_cast<i128>(hi);
+            c[i] = inside ? static_cast<u64>(v) : 0;
+        }
+        if (inside)
+            candidates.push_back(c);
+    }
+    std::size_t best = SIZE_MAX, pick = 0;
+    for (std::size_t k = 0; k < candidates.size(); ++k) {
+        std::vector<std::uint8_t> payload;
+        emit_block(candidates[k], options, payload);
+        if (payload.size() < best)
+            best = payload.size(), pick = k;
+    }
+    std::copy(candidates[pick].begin(), candidates[pick].end(), out);
+}
 }  // namespace
+
+std::vector<u64> fill_nulls(std::span<const u64> values, std::span<const u64> validity, encode_options options,
+                            null_fill fill) {
+    const std::size_t nblocks = values.size() / block_rows;
+    if (validity.size() < 4 * nblocks)
+        std::abort();
+    std::vector<u64> out(nblocks * block_rows);
+    for (std::size_t b = 0; b < nblocks; ++b)
+        fill_block(values.data() + b * block_rows, validity.data() + 4 * b, options, fill, out.data() + b * block_rows);
+    return out;
+}
+
+nullable_column encode_nullable(std::span<const u64> values, std::span<const u64> validity, encode_options options,
+                                null_fill fill) {
+    const auto filled = fill_nulls(values, validity, options, fill);
+    nullable_column c{encode(filled, options), {}};
+    c.validity.assign(validity.begin(), validity.begin() + 4 * (filled.size() / block_rows));
+    return c;
+}
 
 column encode(std::span<const u64> values, encode_options options) {
     static std::atomic<u64> images{0};
