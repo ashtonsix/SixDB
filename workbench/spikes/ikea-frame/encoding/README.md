@@ -923,9 +923,9 @@ EventTime, COUNT(x >= median), local VM, medians in µs over 3M rows. The
 3. **Equivalence holds.** The full guard-page check passes (306 runs). Across
    all 117 driver configurations with and without bindings, the 10,296
    non-timing values match the frozen driver. Paired timing on OS, EventTime,
-   URLHash, WatchID and Jena (packed and native checkpoints) shows a SUM and
-   COUNT geomean within 1.006 of the old code, apart from EventTime, which
-   has few monotone blocks in original order.
+   URLHash, WatchID and Jena (packed and native checkpoints) puts the SUM and
+   COUNT geomeans within 1.006 of the old code. Those inputs have few
+   non-decreasing delta blocks in original order, so the search rarely runs.
 
 ## Row order in real bodies
 
