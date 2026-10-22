@@ -163,6 +163,36 @@ overlap.
 | tree | 4M | 443 | 581 | 5.4 |
 | tree, no summaries | 4M | 455 | 526 | 5.4 |
 
+## Edit grain beyond single edits
+
+From the `scenario-*` rows in `run.sh`. Each batch is one publication, charged
+against the versions it replaces. Mixed batches are one-third births, deaths
+and value edits at uniform positions. Churn alternates random births and
+deaths for N/2 operations. Appends go past the current maximum.
+
+| L4, J = 0, dense | Segments | B/edit, batch 1 | batch 256 | batch 4096 | churn | append, single | append, batch 256 | fill after appends |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| flat (old) | 64K | 9,384 | 6,152 | 1,504 | 8,252 | 50,210 | 327 | 0.83 |
+| tree, halves split | 1M | 4,577 | 4,544 | 4,087 | 6,355 | 3,415 | 116 | 0.68 |
+| tree | 1M | 4,577 | 4,544 | 4,087 | 6,355 | 2,904 | 111 | 0.75 |
+| tree, L3 J = 4 | 1M | 2,991 | 2,979 | 2,635 | 3,966 | 932 | 76 | 0.75 |
+
+- **Uniform batches barely help at 1M.** A batch of 4,096 touches about 3,400
+  of 11,000 leaves, so it saves only 11%. At 64K Segments the same batch cuts
+  per-edit bytes by 3.4×. Batching pays when edits cluster, not by count alone.
+- **Appends are where batching and the split rule matter.** Batches of 256 cost
+  111 B per append. Single appends with half splits leave the left leaf at 50%
+  forever, so fill decays to 0.68. The rightmost node now splits off
+  build-occupancy pieces instead, which holds fill at 0.75 and saves 15% of
+  bytes. The flat root's 50 KB per append is the root rewrite again.
+- **Births and deaths shift the dirent tiles after them.** That shift is most
+  of a churn edit's 6.3 KB, against 1 KB for a value edit. Slotted dirents
+  (stable slots plus a 1-byte rank permutation) would cut it, at the cost of
+  one indirection on scans. It's an option, not yet measured.
+- **Fixed: merges now happen only on shrink.** A leaf left small by an append
+  split could merge on a later identical replacement, which then published
+  something. Only nodes that shrank now merge, and the no-op check covers it.
+
 ## What this shows
 
 1. **A bounded, deepening root removes the flat root's growth for about 10%
@@ -190,15 +220,21 @@ overlap.
 6. **Hash layers don't need fences.** Leaving them out saves 24 of 92 bytes per
    Segment at K = 12.
 
+## Decision
+
+On 22 October Ashton chose **ordered leaves at every layer above L1**. At or
+below J the tree has no fences and routes by prefix alone; above J it adds
+logical fences and separators. The accepted cost is 2.5–2.6× slower independent
+point lookups at the hash layers than inline hash pages give, and about 1.2×
+slower dependent ones. In return, scans run 16–21× faster, seek+read is
+faster, edits are smaller, and one partition format serves every layer. The
+`tree-hash` and `tree-inlineN` variants stay as controls.
+
 ## Open next
 
-- Choose dirents in leaves or dirents inline at or below J. Queries start with
-  a seek and then descend in preorder, which favours leaves, unless point
-  lookups at the hash layers dominate some workload.
 - Visit cost dominates, so measure Orbital's real name resolution and decide
   whether parents can hold direct references to children.
-- Batched edits, steady churn, and runs of births at one hot spot
-  (append-heavy). Edits here are single and uniformly placed.
+- Slotted dirents for births and deaths, if churn-heavy layers matter.
 - Bind the chosen layout to `engine::material` Objects and Scopes.
 
 ## Reproduce
@@ -214,9 +250,10 @@ python3 workbench/tools/worker.py run workbench/spikes/segment-directory/bench.s
   --machine neoverse-v2 --instance-type c8g.2xlarge --env SIXDB_BUILD_JOBS=8
 ```
 
-`--check` compares 80 configurations against an ordered oracle. Each runs
-12,000 random births, deaths, fence changes, value edits and identical
-replacements. Capacities are small, so trees reach 3–5 levels, drain and
+`--check` compares 92 configurations against an ordered oracle. Each runs
+12,000 random single births, deaths, fence changes, value edits and identical
+replacements, then 150 batches of up to 96 edits, some of which empty the
+layer. Capacities are small, so trees reach 3–5 levels, drain and
 regrow, and some cases use nodes wide enough for summaries. It validates
 separators, hash pages, find, prefix and logical seeks, and that identical
 replacements publish nothing. Deliberately broken separator upkeep,

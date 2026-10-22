@@ -160,10 +160,15 @@ void Tree::remove_row(Node& parent,unsigned i) const {
 }
 
 std::vector<Tree::Node> Tree::split(const Node& n,unsigned pieces) const {
-  std::vector<Node> out(pieces);
-  auto size=n.size();
-  for(unsigned p=0;p<pieces;++p) {
-    auto b=size*p/pieces,e=size*(p+1)/pieces;
+  std::vector<std::size_t> bounds;
+  for(unsigned p=0;p<=pieces;++p) bounds.push_back(n.size()*p/pieces);
+  return split_at(n,bounds);
+}
+
+std::vector<Tree::Node> Tree::split_at(const Node& n,const std::vector<std::size_t>& bounds) const {
+  std::vector<Node> out(bounds.size()-1);
+  for(std::size_t p=0;p+1<bounds.size();++p) {
+    auto b=bounds[p],e=bounds[p+1];
     auto& o=out[p];
     o.height=n.height;
     auto slice=[&](auto& to,const auto& from) {if(!from.empty()) to.assign(from.begin()+b,from.begin()+e);};
@@ -201,11 +206,13 @@ std::vector<Tree::Step> Tree::descend(std::uint32_t p) const {
   while(node.height) {
     auto j=std::upper_bound(node.sep.begin()+1,node.sep.end(),p)-node.sep.begin();
     auto child=node.child[j-1];
-    path.push_back({name,std::move(node),unsigned(j-1)});
+    auto size=node.size();
+    path.push_back({name,std::move(node),unsigned(j-1),false,size});
     name=child;
     node=decode(store_->peek(name));
   }
-  path.push_back({name,std::move(node),0,true});
+  auto size=node.size();
+  path.push_back({name,std::move(node),0,true,size});
   return path;
 }
 
@@ -234,13 +241,27 @@ void Tree::settle(std::vector<Step>& path) {
       }
     }
   }
+  // The rightmost node on each level takes appends; it splits off full
+  // build-occupancy pieces instead of halves so appended runs stay dense.
+  std::vector<bool> rightmost(path.size(),true);
+  for(std::size_t i=1;i<path.size();++i)
+    rightmost[i]=rightmost[i-1]&&path[i-1].index+1==path[i-1].node.size();
   for(auto i=path.size();i-->0;) {
     auto& s=path[i];
     auto* parent=i?&path[i-1]:nullptr;
     unsigned cap=s.node.height?c_.inner_capacity:c_.leaf_capacity;
     bool may_split=parent||c_.bounded_root||!s.node.height;
     if(s.node.size()>cap&&may_split) {
-      auto pieces=split(s.node,unsigned(s.node.size()/cap+1));
+      std::vector<Node> pieces;
+      if(c_.append_split&&rightmost[i]) {
+        auto per=std::max<std::size_t>(1,std::size_t(cap*c_.fill));
+        std::vector<std::size_t> bounds{0};
+        while(s.node.size()-bounds.back()>cap) bounds.push_back(bounds.back()+per);
+        bounds.push_back(s.node.size());
+        pieces=split_at(s.node,bounds);
+      } else {
+        pieces=split(s.node,unsigned(s.node.size()/cap+1));
+      }
       if(!parent) {
         Node r;
         r.height=s.node.height+1;
@@ -252,6 +273,15 @@ void Tree::settle(std::vector<Step>& path) {
           names.push_back(name);
         }
         insert_rows(r,0,pieces,names);
+        while(c_.bounded_root&&r.size()>c_.inner_capacity) {
+          auto up=split(r,unsigned(r.size()/c_.inner_capacity+1));
+          names.clear();
+          for(auto& p:up) {auto name=fresh();write(name,p);names.push_back(name);}
+          Node top;
+          top.height=r.height+1;
+          insert_rows(top,0,up,names);
+          r=std::move(top);
+        }
         write(root(),r);
       } else {
         write(s.name,pieces[0]);
@@ -270,7 +300,7 @@ void Tree::settle(std::vector<Step>& path) {
     } else if(!s.node.size()) {
       store_->erase(s.name);
       if(parent) {remove_row(parent->node,parent->index);parent->dirty=true;}
-    } else if(parent&&s.node.size()<cap*c_.merge_below&&parent->node.size()>1) {
+    } else if(parent&&s.node.size()<s.before&&s.node.size()<cap*c_.merge_below&&parent->node.size()>1) {
       auto& pn=parent->node;
       unsigned li,ri;
       std::uint64_t ln,rn;
@@ -310,48 +340,59 @@ void Tree::settle(std::vector<Step>& path) {
   }
 }
 
-void Tree::insert(const Entry& e) {
-  auto path=descend(e.prefix);
-  auto& leaf=path.back().node;
+void Tree::edit_leaf(Step& s,const Edit& ed) {
+  auto& e=ed.entry;
+  auto& leaf=s.node;
   auto r=std::lower_bound(leaf.prefix.begin(),leaf.prefix.end(),e.prefix)-leaf.prefix.begin();
-  require(r==std::ptrdiff_t(leaf.prefix.size())||leaf.prefix[r]!=e.prefix,"insert: present");
-  leaf.prefix.insert(leaf.prefix.begin()+r,e.prefix);
-  if(c_.fenced()) {leaf.min.insert(leaf.min.begin()+r,e.min);leaf.max.insert(leaf.max.begin()+r,e.max);}
-  if(!c_.inline_hash) leaf.dirent.insert(leaf.dirent.begin()+r,e.dirent);
-  if(c_.hashed()) {
-    Dirent d{};
-    d.w[0]=path.back().name;
-    pending_[e.prefix]=c_.inline_hash?e.dirent:d;
-    ++entries_;
+  bool present=r<std::ptrdiff_t(leaf.prefix.size())&&leaf.prefix[r]==e.prefix;
+  switch(ed.kind) {
+  case Edit::insert:
+    require(!present,"insert: present");
+    leaf.prefix.insert(leaf.prefix.begin()+r,e.prefix);
+    if(c_.fenced()) {leaf.min.insert(leaf.min.begin()+r,e.min);leaf.max.insert(leaf.max.begin()+r,e.max);}
+    if(!c_.inline_hash) leaf.dirent.insert(leaf.dirent.begin()+r,e.dirent);
+    if(c_.hashed()) {
+      Dirent d{};
+      d.w[0]=s.name;
+      pending_[e.prefix]=c_.inline_hash?e.dirent:d;
+      ++entries_;
+    }
+    break;
+  case Edit::erase:
+    require(present,"erase: absent");
+    leaf.prefix.erase(leaf.prefix.begin()+r);
+    if(c_.fenced()) {leaf.min.erase(leaf.min.begin()+r);leaf.max.erase(leaf.max.begin()+r);}
+    if(!c_.inline_hash) leaf.dirent.erase(leaf.dirent.begin()+r);
+    if(c_.hashed()) {pending_[e.prefix]=std::nullopt;--entries_;}
+    break;
+  case Edit::update:
+    require(present,"update: absent");
+    if(c_.fenced()) {leaf.min[r]=e.min;leaf.max[r]=e.max;}
+    if(c_.inline_hash) pending_[e.prefix]=e.dirent;
+    else leaf.dirent[r]=e.dirent;
+    break;
   }
-  settle(path);
+}
+
+void Tree::apply(std::span<const Edit> edits) {
+  for(std::size_t i=0;i<edits.size();) {
+    auto path=descend(edits[i].entry.prefix);
+    // Edits below the leaf's right separator belong to it.
+    std::uint64_t upper=UINT64_C(1)<<32;
+    for(auto j=path.size()-1;j-->0;)
+      if(path[j].index+1<path[j].node.size()) {upper=path[j].node.sep[path[j].index+1];break;}
+    for(;i<edits.size()&&edits[i].entry.prefix<upper;++i) {
+      require(i==0||edits[i-1].entry.prefix<edits[i].entry.prefix,"apply: unsorted");
+      edit_leaf(path.back(),edits[i]);
+    }
+    settle(path);
+  }
   flush_pages();
 }
 
-void Tree::erase(std::uint32_t p) {
-  auto path=descend(p);
-  auto& leaf=path.back().node;
-  auto r=std::lower_bound(leaf.prefix.begin(),leaf.prefix.end(),p)-leaf.prefix.begin();
-  require(r<std::ptrdiff_t(leaf.prefix.size())&&leaf.prefix[r]==p,"erase: absent");
-  leaf.prefix.erase(leaf.prefix.begin()+r);
-  if(c_.fenced()) {leaf.min.erase(leaf.min.begin()+r);leaf.max.erase(leaf.max.begin()+r);}
-  if(!c_.inline_hash) leaf.dirent.erase(leaf.dirent.begin()+r);
-  if(c_.hashed()) {pending_[p]=std::nullopt;--entries_;}
-  settle(path);
-  flush_pages();
-}
-
-void Tree::update(const Entry& e) {
-  auto path=descend(e.prefix);
-  auto& leaf=path.back().node;
-  auto r=std::lower_bound(leaf.prefix.begin(),leaf.prefix.end(),e.prefix)-leaf.prefix.begin();
-  require(r<std::ptrdiff_t(leaf.prefix.size())&&leaf.prefix[r]==e.prefix,"update: absent");
-  if(c_.fenced()) {leaf.min[r]=e.min;leaf.max[r]=e.max;}
-  if(c_.inline_hash) pending_[e.prefix]=e.dirent;
-  else leaf.dirent[r]=e.dirent;
-  settle(path);
-  flush_pages();
-}
+void Tree::insert(const Entry& e) {Edit ed{Edit::insert,e};apply({&ed,1});}
+void Tree::erase(std::uint32_t p) {Edit ed{Edit::erase,{}};ed.entry.prefix=p;apply({&ed,1});}
+void Tree::update(const Entry& e) {Edit ed{Edit::update,e};apply({&ed,1});}
 
 void Tree::build(std::span<const Entry> es) {
   require(!store_->peek(root()),"build: not empty");
@@ -564,6 +605,17 @@ std::vector<Entry> Tree::dump() const {
   for(auto c=seek(0u);c;next(c)) out.push_back(read(c));
   trace=saved;
   return out;
+}
+
+std::pair<std::size_t,std::size_t> Tree::occupancy() const {
+  std::size_t leaves=0,entries=0;
+  auto walk=[&](auto& self,std::uint64_t name)->void {
+    auto n=decode(store_->peek(name));
+    if(!n.height) {++leaves;entries+=n.size();return;}
+    for(auto ch:n.child) self(self,ch);
+  };
+  if(store_->peek(root())) walk(walk,root());
+  return {leaves,entries};
 }
 
 void Tree::validate() const {

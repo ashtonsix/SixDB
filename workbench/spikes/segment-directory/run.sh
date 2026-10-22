@@ -25,3 +25,9 @@ for p in spread dense; do
   $b run 2 4 16384 $p tree tree-hash tree-inline24 tree-inline64
   SEGDIR_OPS=400 $b run 2 4 16384 $p natural24 natural8
 done
+# Edit grain beyond single uniform edits: batches, churn and appends.
+for p in spread dense; do
+  $b run 4 0 65536 $p scenario-tree scenario-halves scenario-flat
+  $b run 4 0 1048576 $p scenario-tree scenario-halves
+  $b run 3 4 1048576 $p scenario-tree
+done

@@ -89,6 +89,48 @@ template<class Layer> void churn(Layer& l,Store& store,std::map<std::uint32_t,En
   probe(l,o,w,rng);
 }
 
+// Batched edits with unique prefixes, published as one batch each. Some
+// batches empty the whole layer, and large ones split leaves into many pieces.
+void churn_batches(Tree& t,Store& store,std::map<std::uint32_t,Entry>& o,const Workload& w,Rng& rng,
+                   std::size_t batches,std::size_t max_batch,std::size_t target) {
+  std::uint64_t version=UINT64_C(1)<<32;
+  for(std::size_t b=0;b<batches;++b) {
+    std::map<std::uint32_t,Edit> edits;
+    if(rng()%40==0) {
+      for(auto& [p,e]:o) edits[p]={Edit::erase,e};
+      o.clear();
+    } else {
+      auto n=1+rng()%max_batch;
+      std::vector<std::uint32_t> keys;
+      for(auto& [p,e]:o) keys.push_back(p);
+      for(std::size_t i=0;i<n;++i) {
+        auto r=rng()%4;
+        bool grow=o.size()<target/2||(o.size()<target*2&&rng()%2);
+        if(o.empty()||(r<2&&grow)) {
+          auto p=absent(o,w,rng);
+          if(edits.contains(p)) continue;
+          auto e=born(o,p,version++);
+          o.emplace(p,e);edits[p]={Edit::insert,e};
+        } else {
+          if(keys.empty()) continue;
+          auto p=keys[rng()%keys.size()];
+          if(edits.contains(p)||!o.contains(p)) continue;
+          if(r<2) {o.erase(p);edits[p]={Edit::erase,{}};edits[p].entry.prefix=p;}
+          else {auto e=r==2?widened(o,p,version++):o[p];e.dirent=dirent(p,version++);o[p]=e;edits[p]={Edit::update,e};}
+        }
+      }
+    }
+    std::vector<Edit> sorted;
+    for(auto& [p,e]:edits) sorted.push_back(e);
+    store.begin();
+    t.apply(sorted);
+    store.commit();
+    if(b%7==0) {compare(t,o);probe(t,o,w,rng);}
+  }
+  compare(t,o);
+  probe(t,o,w,rng);
+}
+
 int check() {
   struct Case {const char* name;Config c;};
   std::vector<Case> cases;
@@ -99,7 +141,8 @@ int check() {
     auto u=c;u.tile=0;u.fill=1;cases.push_back({"tree untiled full",u});
     auto ns=c;ns.summary=false;cases.push_back({"tree no summary",ns});
     auto wide=c;wide.leaf_capacity=40;wide.inner_capacity=36;cases.push_back({"tree wide nodes",wide});
-    auto f=c;f.bounded_root=false;f.exact_bounds=true;f.merge_below=1.0/3;cases.push_back({"flat",f});
+    auto half=c;half.append_split=false;cases.push_back({"tree halves",half});
+    auto f=c;f.append_split=false;f.bounded_root=false;f.exact_bounds=true;f.merge_below=1.0/3;cases.push_back({"flat",f});
     if(!c.fenced()) {auto h=c;h.hash_index=true;h.page_target=6;cases.push_back({"hash",h});}
     if(!c.fenced()) {auto h=c;h.inline_hash=true;h.page_target=5;cases.push_back({"inline hash",h});}
   }
@@ -114,6 +157,7 @@ int check() {
     // Drain to empty and refill, crossing root collapse and regrowth.
     churn(t,s,o,w,rng,3000,53,8);
     churn(t,s,o,w,rng,3000,53,w.count);
+    churn_batches(t,s,o,w,rng,150,3*c.leaf_capacity*c.inner_capacity,w.count);
     std::printf("ok %-18s L%u J%u %s\n",name,c.layer,c.j,dense?"dense":"spread");
   }
   for(unsigned layer:{2u,3u}) for(unsigned bits:{8u,16u}) for(bool dense:{false,true}) {
@@ -211,6 +255,101 @@ template<class Layer> void measure(const char* name,Layer& l,Store& s,std::map<s
   std::fflush(stdout);
 }
 
+// Edit grain beyond single uniform edits: batch size, steady churn and
+// append-heavy hot spots. Each batch is one publication.
+void scenario(const Config& c,const char* name,Workload w,std::map<std::uint32_t,Entry> base) {
+  auto fill=[&](const Tree& t) {auto [l,e]=t.occupancy();return double(e)/double(l*c.leaf_capacity);};
+  auto entries=[&](const std::map<std::uint32_t,Entry>& o) {std::vector<Entry> v;for(auto& [p,e]:o) v.push_back(e);return v;};
+  for(std::size_t b:{1u,16u,256u,4096u}) {
+    Rng rng(b*31+w.count);
+    auto o=base;
+    Store s;
+    Tree t(s,c,1);
+    t.build(entries(o));
+    auto before=s.written;
+    std::size_t edits=0,batches=std::max<std::size_t>(4,16384/b);
+    std::uint64_t version=1;
+    for(std::size_t r=0;r<batches;++r) {
+      std::map<std::uint32_t,Edit> batch;
+      for(std::size_t i=0;i<b;++i) {
+        auto k=rng()%3;
+        if(k==0) {
+          auto p=absent(o,w,rng);
+          if(batch.contains(p)) continue;
+          auto e=born(o,p,version++);
+          o.emplace(p,e);batch[p]={Edit::insert,e};
+        } else {
+          auto it=o.lower_bound(std::uint32_t(w.lo+rng()%(w.hi-w.lo)));
+          if(it==o.end()) it=o.begin();
+          auto p=it->first;
+          if(batch.contains(p)) continue;
+          if(k==1) {o.erase(it);Edit e{Edit::erase,{}};e.entry.prefix=p;batch[p]=e;}
+          else {it->second.dirent=dirent(p,version++);batch[p]={Edit::update,it->second};}
+        }
+      }
+      std::vector<Edit> sorted;
+      for(auto& [p,e]:batch) sorted.push_back(e);
+      edits+=sorted.size();
+      s.begin();t.apply(sorted);s.commit();
+    }
+    auto d=s.written-before;
+    std::printf("%-6s L%u J%u %-6s %8zu batch %5zu: %8.0f B/edit %6.3f obj/edit  fill %.2f\n",name,c.layer,c.j,
+                w.dense?"dense":"spread",w.count,b,double(d.bytes)/double(edits),double(d.objects+d.erased)/double(edits),fill(t));
+  }
+  {
+    // Steady churn: alternate random births and deaths for N/2 operations.
+    Rng rng(w.count+5);
+    auto o=base;
+    Store s;
+    Tree t(s,c,1);
+    t.build(entries(o));
+    std::vector<std::uint32_t> keys;
+    for(auto& [p,e]:o) keys.push_back(p);
+    std::uint64_t version=1;
+    Written half{};
+    std::size_t ops=w.count/2;
+    for(std::size_t i=0;i<ops;++i) {
+      if(i==ops/2) half=s.written;
+      if(i%2==0) {auto p=absent(o,w,rng);auto e=born(o,p,version++);t.insert(e);o.emplace(p,e);keys.push_back(p);}
+      else {auto p=present(o,keys,rng);t.erase(p);o.erase(p);}
+      if(keys.size()>4*o.size()+64) {keys.clear();for(auto& [p,e]:o) keys.push_back(p);}
+    }
+    auto d=s.written-half;
+    std::printf("%-6s L%u J%u %-6s %8zu churn      : %8.0f B/edit %6.3f obj/edit  fill %.2f  %.1f B/seg\n",name,c.layer,c.j,
+                w.dense?"dense":"spread",w.count,double(d.bytes)/double(ops-ops/2),double(d.objects+d.erased)/double(ops-ops/2),
+                fill(t),double(t.resident_bytes())/double(o.size()));
+  }
+  // Appends past the current maximum, as with a growing time key. Spread
+  // populations already reach the top of the prefix domain, so only dense ones append.
+  if(w.dense) for(std::size_t b:{1u,256u}) {
+    Rng rng(w.count+b);
+    auto o=base;
+    Store s;
+    Tree t(s,c,1);
+    t.build(entries(o));
+    auto before=s.written;
+    std::uint64_t version=1;
+    std::size_t total=w.count/4;
+    auto limit=(std::uint64_t(1)<<(8*c.layer))-1;
+    for(std::size_t done=0;done<total;) {
+      std::vector<Edit> batch;
+      for(std::size_t i=0;i<b&&done<total;++i,++done) {
+        auto p=std::uint32_t(std::min<std::uint64_t>(limit,std::uint64_t(o.rbegin()->first)+1+rng()%3));
+        if(o.contains(p)) break;
+        auto e=born(o,p,version++);
+        o.emplace(p,e);batch.push_back({Edit::insert,e});
+      }
+      if(batch.empty()) break;
+      s.begin();t.apply(batch);s.commit();
+    }
+    auto d=s.written-before;
+    std::printf("%-6s L%u J%u %-6s %8zu append %4zu: %8.0f B/edit %6.3f obj/edit  fill %.2f  %.1f B/seg\n",name,c.layer,c.j,
+                w.dense?"dense":"spread",w.count,b,double(d.bytes)/double(total),double(d.objects+d.erased)/double(total),
+                fill(t),double(t.resident_bytes())/double(o.size()));
+  }
+  std::fflush(stdout);
+}
+
 int run(int argc,char** argv) {
   // run LAYER J COUNT dense|spread VARIANT...
   unsigned layer=unsigned(std::stoul(argv[2])),j=unsigned(std::stoul(argv[3]));
@@ -225,11 +364,19 @@ int run(int argc,char** argv) {
     Config c;c.layer=layer;c.j=j;
     if(v=="flat") {
       // Old count-balanced control: full leaves, one unbounded root of 64-byte rows.
-      c.fill=1;c.tile=0;c.bounded_root=false;c.exact_bounds=true;c.merge_below=1.0/3;c.summary=false;
+      c.fill=1;c.tile=0;c.bounded_root=false;c.exact_bounds=true;c.merge_below=1.0/3;c.summary=false;c.append_split=false;
       Tree t(s,c,1);measure("flat",t,s,o,w,rng);
     } else if(v.starts_with("natural")) {
       unsigned bits=unsigned(std::stoul(std::string(v.substr(7))));
       Natural n(s,c,bits,1);measure(std::string(v).c_str(),n,s,o,w,rng);
+    } else if(v=="scenario-tree") {
+      scenario(c,"tree",w,o);
+    } else if(v=="scenario-flat") {
+      c.fill=1;c.tile=0;c.bounded_root=false;c.exact_bounds=true;c.merge_below=1.0/3;c.summary=false;c.append_split=false;
+      scenario(c,"flat",w,o);
+    } else if(v=="scenario-halves") {
+      c.append_split=false;
+      scenario(c,"halves",w,o);
     } else if(v=="tree") {
       Tree t(s,c,1);measure("tree",t,s,o,w,rng);
     } else if(v=="tree-nosum") {

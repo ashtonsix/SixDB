@@ -18,6 +18,11 @@ struct Entry {
   Dirent dirent{};
 };
 
+struct Edit {
+  enum Kind {insert,erase,update} kind;
+  Entry entry;
+};
+
 struct Config {
   unsigned layer=4,k=12,j=0;
   unsigned leaf_capacity=128,inner_capacity=128;
@@ -29,6 +34,7 @@ struct Config {
   bool hash_index=false;     // prefix -> leaf pages at L <= J
   bool inline_hash=false;    // prefix -> dirent pages at L <= J; leaves keep only prefixes
   unsigned page_target=192;  // mean entries per hash page
+  bool append_split=true;    // rightmost nodes split at build occupancy, not in half
   bool summary=true;         // every 16th separator/prefix in the header line; keys in a last Part
   bool fenced() const {return layer>j;}
   bool hashed() const {return hash_index||inline_hash;}
@@ -64,6 +70,8 @@ public:
   void insert(const Entry&);
   void erase(std::uint32_t prefix);
   void update(const Entry&);
+  // Edits sorted by prefix, one per prefix. Each touched leaf settles once.
+  void apply(std::span<const Edit>);
   std::optional<Dirent> find(std::uint32_t prefix) const;
   Cursor seek(std::uint32_t prefix) const;
   Cursor seek(const Key& low) const;
@@ -74,6 +82,8 @@ public:
   const Config& config() const {return c_;}
   std::uint64_t resident_bytes() const {return store_->resident_bytes(ns_);}
   std::uint64_t resident_objects() const {return store_->resident_objects(ns_);}
+  // Leaves and the entries they hold, for occupancy.
+  std::pair<std::size_t,std::size_t> occupancy() const;
   // Layout facts a separate read path needs.
   std::uint64_t root() const {return ns_<<40;}
   std::uint64_t page_name(std::uint64_t page) const {return ns_<<40|std::uint64_t(1)<<39|page;}
@@ -81,7 +91,9 @@ public:
   std::uint64_t page_split() const {return split_;}
 
 private:
-  struct Step {std::uint64_t name{};Node node;unsigned index{};bool dirty{};};
+  // before: size at descent. Only a node that shrank merges, so an edit that
+  // leaves membership alone never restructures.
+  struct Step {std::uint64_t name{};Node node;unsigned index{};bool dirty{};std::size_t before{};};
   Store* store_;
   Config c_;
   std::uint64_t ns_,next_name_{1};
@@ -96,8 +108,10 @@ private:
   Node decode(const ObjectPtr&) const;
   void write(std::uint64_t name,const Node&);
   std::vector<Step> descend(std::uint32_t prefix) const;
+  void edit_leaf(Step& leaf,const Edit&);
   void settle(std::vector<Step>&);
-  std::vector<Node> split(const Node&,unsigned capacity) const;
+  std::vector<Node> split(const Node&,unsigned pieces) const;
+  std::vector<Node> split_at(const Node&,const std::vector<std::size_t>& bounds) const;
   void set_row(Node& parent,unsigned i,const Node& child) const;
   void insert_rows(Node& parent,unsigned at,const std::vector<Node>&,const std::vector<std::uint64_t>&) const;
   void remove_row(Node& parent,unsigned i) const;

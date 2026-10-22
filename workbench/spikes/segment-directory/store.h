@@ -69,6 +69,12 @@ template<class T> std::vector<T> decode(const Part& p) {
 class Store {
   std::unordered_map<std::uint64_t,ObjectPtr> objects_;
   std::uint64_t next_part_{1};
+  bool batch_{};
+  std::unordered_map<std::uint64_t,ObjectPtr> basis_;
+  void touch_basis(std::uint64_t name) {
+    if(!batch_||basis_.contains(name)) return;
+    basis_.emplace(name,peek(name));
+  }
 public:
   Written written;
   ObjectPtr get(std::uint64_t name) const {
@@ -83,8 +89,7 @@ public:
     return it==objects_.end()?nullptr:it->second;
   }
   PartPtr part(std::vector<std::byte> b) {
-    written.bytes+=b.size();
-    ++written.parts;
+    if(!batch_) {written.bytes+=b.size();++written.parts;}
     return std::make_shared<Part>(Part{next_part_++,std::move(b)});
   }
   // Keeps the basis Part at the same index when its bytes are unchanged.
@@ -93,17 +98,35 @@ public:
     return part(std::move(b));
   }
   void put(std::uint64_t name,std::vector<PartPtr> parts) {
+    touch_basis(name);
     auto& slot=objects_[name];
     if(slot&&slot->parts.size()==parts.size()) {
       bool same=true;
       for(std::size_t i=0;i<parts.size();++i) same&=slot->parts[i]==parts[i];
       if(same) return;
     }
-    ++written.objects;
+    if(!batch_) ++written.objects;
     slot=std::make_shared<Object>(Object{std::move(parts)});
   }
   void erase(std::uint64_t name) {
-    if(objects_.erase(name)) ++written.erased;
+    touch_basis(name);
+    if(objects_.erase(name)&&!batch_) ++written.erased;
+  }
+  // One publication: only the final version of each touched Object is charged,
+  // against the version it had before the batch.
+  void begin() {batch_=true;basis_.clear();}
+  void commit() {
+    batch_=false;
+    for(auto& [name,before]:basis_) {
+      auto after=peek(name);
+      if(!after) {if(before) ++written.erased;continue;}
+      std::unordered_set<std::uint64_t> old;
+      if(before) for(auto& p:before->parts) old.insert(p->id);
+      bool changed=!before||before->parts.size()!=after->parts.size();
+      for(auto& p:after->parts) if(!old.contains(p->id)) {written.bytes+=p->bytes.size();++written.parts;changed=true;}
+      written.objects+=changed;
+    }
+    basis_.clear();
   }
   template<class F> void each(F&& f) const {for(auto& [name,o]:objects_) f(name,*o);}
   std::uint64_t resident_bytes(std::uint64_t name_space) const {

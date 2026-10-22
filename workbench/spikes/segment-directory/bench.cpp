@@ -143,7 +143,7 @@ int main(int argc,char** argv) {
       else if(v=="tree-nosum") c.summary=false;
       else if(v=="tree-hash") c.hash_index=true;
       else if(v.starts_with("tree-inline")) {c.inline_hash=true;c.page_target=unsigned(std::stoul(std::string(v.substr(11))));}
-      else if(v=="flat") {c.fill=1;c.tile=0;c.bounded_root=false;c.exact_bounds=true;c.summary=false;}
+      else if(v=="flat") {c.fill=1;c.tile=0;c.bounded_root=false;c.exact_bounds=true;c.summary=false;c.append_split=false;}
       else {std::fprintf(stderr,"unknown variant %s\n",argv[a]);return 2;}
       x.tree=std::make_unique<Tree>(*x.store,c,1);
       x.tree->build(es);
