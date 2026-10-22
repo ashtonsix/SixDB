@@ -176,3 +176,11 @@ equality inverse does not. This gives a concrete reason to expose relations,
 operation applicability and interpretation identity independently of codec names.
 It does not establish a general optimiser, a universal shared layout or a
 completed lifecycle policy.
+
+The separate [native-domain follow-up](NATIVE-DOMAINS.md) fits logical-X and
+global-FOR lanes to actual admitted values, retaining complete native and encoded
+controls. The grouped OS win survives locally, while its isolated SUM moves to
+near parity with native u16. Native FOR substantially improves other isolated
+scans. This gives representation-domain choices a concrete place alongside
+cross-column relations; a shared-code grouped win cannot stand in for every
+field's access costs. Remaining calibration and ISA limits stay with that cohort.

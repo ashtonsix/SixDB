@@ -1,0 +1,89 @@
+{
+  "capture": "frame-cross-domains-20261023",
+  "source_digest": "c806dbe26573d7260d670f97ea50514a2fd8a814e6bd4a9396f2b1d36f8a24f6",
+  "binary_sha256": "4d58596b501044cf101e7d38419ef1eec0592e64b9356ec69931487345ea6a25",
+  "Ikea_byte_verified_commit": "2ce62539f33616881d77cc14b246771ed86fb747",
+  "encoding_byte_verified_commit": "3c3b58241a958e850488fce1f3e582fbf7f1b35c",
+  "compiled_source_files_verified": 1239,
+  "consumer_compile_commands": [
+    {
+      "directory": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/clang/frame-cross-columns",
+      "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=1 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN4=0 -DSIXDB_TUNE_ZEN5=0 -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-cross-columns/ikea/include -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-cross-columns/workbench/spikes/ikea-frame/encoding -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -fno-vectorize -fno-slp-vectorize -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-cross-columns=. -ffunction-sections -fdata-sections -march=native -mtune=generic -o workbench/spikes/ikea-frame/execution/CMakeFiles/frame_execution_columns_domains.dir/columns_domain_measure.cpp.o -c /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-cross-columns/workbench/spikes/ikea-frame/execution/columns_domain_measure.cpp",
+      "file": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-cross-columns/workbench/spikes/ikea-frame/execution/columns_domain_measure.cpp",
+      "output": "workbench/spikes/ikea-frame/execution/CMakeFiles/frame_execution_columns_domains.dir/columns_domain_measure.cpp.o"
+    },
+    {
+      "directory": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/clang/frame-cross-columns",
+      "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=1 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN4=0 -DSIXDB_TUNE_ZEN5=0 -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-cross-columns/ikea/include -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-cross-columns/workbench/spikes/ikea-frame/encoding -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -fno-vectorize -fno-slp-vectorize -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-cross-columns=. -ffunction-sections -fdata-sections -march=native -mtune=generic -o workbench/spikes/ikea-frame/execution/CMakeFiles/frame_execution_columns_domains.dir/columns_native.cpp.o -c /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-cross-columns/workbench/spikes/ikea-frame/execution/columns_native.cpp",
+      "file": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-cross-columns/workbench/spikes/ikea-frame/execution/columns_native.cpp",
+      "output": "workbench/spikes/ikea-frame/execution/CMakeFiles/frame_execution_columns_domains.dir/columns_native.cpp.o"
+    },
+    {
+      "directory": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/clang/frame-cross-columns",
+      "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=1 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN4=0 -DSIXDB_TUNE_ZEN5=0 -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-cross-columns/ikea/include -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-cross-columns/workbench/spikes/ikea-frame/encoding -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -fno-vectorize -fno-slp-vectorize -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-cross-columns=. -ffunction-sections -fdata-sections -march=native -mtune=generic -o workbench/spikes/ikea-frame/execution/CMakeFiles/frame_execution_columns_domains.dir/columns_domains.cpp.o -c /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-cross-columns/workbench/spikes/ikea-frame/execution/columns_domains.cpp",
+      "file": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-cross-columns/workbench/spikes/ikea-frame/execution/columns_domains.cpp",
+      "output": "workbench/spikes/ikea-frame/execution/CMakeFiles/frame_execution_columns_domains.dir/columns_domains.cpp.o"
+    }
+  ],
+  "build": "reuse existing own frozen-library build,3 consumer TUs compiled and linked separately; abandoned redundant cold build is not timing evidence",
+  "timing_cpu": 6,
+  "trials": 26,
+  "timing_scope": "ns per complete warmed query including real hash output creation/consume/retirement; preparation separate; not point latency/interleaved throughput/DRAM",
+  "compiler": "Ubuntu clang version 21.1.8 (++20251221033104+2078da43e25a-1~exp1~20251221153121.57)",
+  "uname": [
+    "Linux",
+    "ubuntu",
+    "7.0.14-orbstack-00380-ga7e0a2dc9535",
+    "#1 SMP PREEMPT Fri Aug  7 03:48:40 UTC 2026",
+    "aarch64",
+    ""
+  ],
+  "python": "3.13.7",
+  "authored_documents": 13,
+  "authored_reported_full_comparisons": 3432,
+  "corpus_and_counterexample": {
+    "reported_logical_comparisons": 624,
+    "query_rows": 624,
+    "raw_query_samples": 16224,
+    "private_repair_rows": 28,
+    "exact_duplicate_median_absolute_percent_difference": 2.3224703233663213,
+    "exact_duplicate_maximum_absolute_percent_difference": 22.675227031412646,
+    "selection": "all five inputs, all queries and measured programs, both operations; all parts for repair controls; duplicate/order calibration; raw samples in recovery archive"
+  },
+  "native_domains": "per-part min/max over live non-NULL admitted u32 X; logical native u8/u16/u32, or minimum + narrowest byte-aligned residual lane; not exact-bit packed FOR",
+  "prepared_native": "native X construction fits/copies X and reuses C indices; component clock excludes C-index construction, which is shared; standalone capacity charges C indices; no query-specific X weight map",
+  "correctness": "every grouped key/count/sum and X-only predicated SUM compared with original logical rows; native domain/threshold boundary cases; every live C/X checked around private repairs; exact original C sequence and per-part X multiset independently match authored coupling partners",
+  "footprint": "vector/control capacity inventories and requested mutable-index bytes, not RSS/allocator rounding/stack/code; common3-mask planes retained as controls, not required format",
+  "clock_controls": "13 programs x26 Williams rows balance156ordered within-row pairs twice; equal batching per query/operation; exact same-function/input/workspace duplicates and native X same-path controls retained",
+  "quiet_window": "root/Claude/HELPER paused active local compile/check/timing trees; observed processes stopped before start; all source/binary hashes frozen beforehand; peers released immediately on completion",
+  "attempts": {
+    "pilot2": "ignored timing diagnostic, not pooled",
+    "contended26": {
+      "reported_logical_comparisons": 624,
+      "query_rows": 624,
+      "raw_query_samples": 16224,
+      "private_repair_rows": 28,
+      "exact_duplicate_median_absolute_percent_difference": 3.8622123438451506,
+      "exact_duplicate_maximum_absolute_percent_difference": 32.614192198989954,
+      "selection": "all five inputs, all queries and measured programs, both operations; all parts for repair controls; duplicate/order calibration; raw samples in recovery archive"
+    },
+    "quiet26": {
+      "reported_logical_comparisons": 624,
+      "query_rows": 624,
+      "raw_query_samples": 16224,
+      "private_repair_rows": 28,
+      "exact_duplicate_median_absolute_percent_difference": 2.3224703233663213,
+      "exact_duplicate_maximum_absolute_percent_difference": 22.675227031412646,
+      "selection": "all five inputs, all queries and measured programs, both operations; all parts for repair controls; duplicate/order calibration; raw samples in recovery archive"
+    }
+  },
+  "limits": [
+    "one local AArch64 OrbStack VM; quiet cohort still has 2.322% median and22.675% worst exact-duplicate median delta; IMDb grouped all-row comparison is particularly noisy, so close rankings are unqualified",
+    "native X lane/global-FOR group loops differ in loop shape/base arithmetic from earlier native-u32 kernel; no isolated causal width effect or strongest-possible native kernel claim",
+    "all image/control inventories are separate; all coexisting alternatives affect residence; no cache-level/RSS/cold/Loom qualification",
+    "narrower exact-bit FOR, vector grouped accumulation, conditioned/factorized maps, full materialized projection and point operations remain outside this bounded case",
+    "native TU has explicit NEON; x86 fallback scalar only, no AVX2/AVX-512 claims",
+    "private C-edit repair is whole-part decode/re-encode/copy/retire, not a mandatory grain or real Orbital MVCC/growth cost"
+  ],
+  "offline_report_sha256": "11503c8777ec7c0d44cb9adca0ebba02812dd11c08d3875e292c50bf9be8e30c"
+}

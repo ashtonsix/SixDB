@@ -127,8 +127,10 @@ coalescing helps OS but slows unpredictable authored data; both paths are kept.
 The owner’s forward-map operation changes the X-only verdict on OS and narrows
 other losses. Treating the slower decode/map composition as an inherent shared
 format tax would have been wrong. Region, IMDb, functional and decorrelated
-inputs still retain important isolated-demand gaps. Narrower native/global-FOR
-X arrays and materialized X projection remain unmeasured.
+inputs still retain important isolated-demand gaps. This cohort did not measure
+narrower native/global-FOR X arrays. The separate
+[native-domain follow-up](NATIVE-DOMAINS.md) adds those controls without pooling
+these samples; materialized X projection remains unmeasured.
 
 ## Memory and preparation
 

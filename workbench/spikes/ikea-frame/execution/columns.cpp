@@ -1,5 +1,8 @@
 // Cross-column representation/program experiment; no Frame interface/optimizer.
 #include "columns_native.h"
+#if FRAME_CROSS_DOMAINS
+#include "columns_domains.h"
+#endif
 #include "../encoding/material.h"
 #include <ikea/hashtable.h>
 #include <algorithm>
@@ -19,6 +22,11 @@ using namespace frame_columns;
 namespace e = frame_encoding;
 using Clock = std::chrono::steady_clock;
 using Output = ikea::hashtable::table<64, 6, 16>;
+#if FRAME_CROSS_DOMAINS
+constexpr unsigned arm_count=13;
+#else
+constexpr unsigned arm_count=9;
+#endif
 void need(bool ok, const char* why) { if (!ok) throw std::runtime_error(why); }
 double elapsed(Clock::time_point a) { return std::chrono::duration<double,std::nano>(Clock::now()-a).count(); }
 template<class F> void each(const Bits& bits, F&& f) {
@@ -68,6 +76,10 @@ struct Data {
     std::vector<Joint> joint;
     std::vector<NativeRows> native;
     std::array<double,5> construction_ns{};
+#if FRAME_CROSS_DOMAINS
+    std::array<std::vector<NativeX>,2> domain_x;
+    std::array<double,2> domain_construction_ns{};
+#endif
 };
 Data build(const Input& input) {
     Data data;data.common.reserve(input.parts.size());data.joint.reserve(input.parts.size());data.native.reserve(input.parts.size());
@@ -110,6 +122,13 @@ Data build(const Input& input) {
             const auto rows_start=Clock::now();
             NativeRows native;native.category=native_codes(c,part.dictionary.size());native.x.assign(x.begin(),x.end());
             data.construction_ns[3]+=elapsed(rows_start);
+#if FRAME_CROSS_DOMAINS
+            for(unsigned kind=0;kind<2;++kind) {
+                const auto domain_start=Clock::now();
+                data.domain_x[kind].emplace_back(x,common.has_x,kind!=0);
+                data.domain_construction_ns[kind]+=elapsed(domain_start);
+            }
+#endif
             data.joint.push_back(std::move(image));data.native.push_back(std::move(native));
         }
         data.common.push_back(std::move(common));
@@ -233,6 +252,10 @@ Result group(const Data& data,const Query& query,const std::vector<Plan>& plan,s
         if(std::none_of(plan[i].allowed.begin(),plan[i].allowed.end(),[](auto a){return a!=0;}))continue;
         auto& w=work[i];std::fill(w.categories.begin(),w.categories.end(),Total{});
         const auto& common=data.common[i];
+#if FRAME_CROSS_DOMAINS
+        if(arm>=9)domain_group(data.native[i].category,data.domain_x[arm>=11][i],plan[i].selected,common.has_c,plan[i].allowed,query.threshold,w.categories,(arm%2)==0);
+        else
+#endif
         if(arm<=1)independent_group(data.independent[arm][i],common,plan[i],query.threshold,w);
         else if(arm==3||arm==5)native_group(data.native[i],plan[i].selected,common.has_c,plan[i].allowed,query.threshold,w.categories,arm==5);
         else {
@@ -294,6 +317,10 @@ struct Projection {
 Word x_sum(const Data& data,const Query& query,const std::vector<Plan>& plan,unsigned arm,std::vector<Projection>& projections,std::vector<Projection>& independent_projections) {
     Word sum=0;if(query.threshold>UINT32_MAX)return 0;
     for(unsigned i=0;i<data.common.size();++i) {
+#if FRAME_CROSS_DOMAINS
+        if(arm>=9)sum+=domain_x_sum(data.domain_x[arm>=11][i],plan[i].selected,query.threshold);
+        else
+#endif
         if(arm<=1)for(unsigned b=0;b<plan[i].selected.size();++b) {
             const auto& mask=plan[i].selected[b];if(!mask.count())continue;
             const auto& image=data.independent[arm][i];auto k=e::borrow(image.x,b);
@@ -334,7 +361,11 @@ Word digest(const Result& r) {
     if(r.output)r.output->visit([&](Word key,const auto& bytes){Total t;std::memcpy(&t,bytes.data(),16);sum+=(key*0x9e3779b97f4a7c15ULL)^(t.count*31337)^t.sum;});return sum;
 }
 volatile Word consumed;
-const char* names[]={"independent-plain","independent-dictionary","shared-pair","native-pair-fused","native-shared-fused","native-pair-coalesced","native-shared-coalesced","shared-pair-decode-X","independent-plain-duplicate"};
+const char* names[]={"independent-plain","independent-dictionary","shared-pair","native-pair-fused","native-shared-fused","native-pair-coalesced","native-shared-coalesced","shared-pair-decode-X","independent-plain-duplicate"
+#if FRAME_CROSS_DOMAINS
+    ,"native-lanes-flat","native-lanes-coalesced","native-global-FOR-flat","native-global-FOR-coalesced"
+#endif
+};
 std::size_t state_bytes(const std::vector<Scratch>& work,const std::vector<Plan>& plan) {
     std::size_t n=0;for(const auto& w:work)n+=w.bytes();for(const auto& p:plan)n+=sizeof(p)+p.selected.capacity()*sizeof(Bits)+p.allowed.capacity();return n;
 }
@@ -352,6 +383,20 @@ void material(const Data& d) {
         std::cout<<"{\"type\":\"material\",\"arm\":"<<std::quoted(names[arm])<<",\"body_and_geometry_bytes\":"<<body<<",\"image_capacity_bytes\":"<<capacity<<",\"common_keys_and_masks_bytes\":"<<common<<",\"prepared_x_dictionary_bytes\":"<<prepared<<",\"joint_entries\":"<<pairs<<",\"construction_component_ns_single_observation\":"<<d.construction_ns[arm]<<"}\n";
     }
 }
+#if FRAME_CROSS_DOMAINS
+void domain_material(const Data& d) {
+    for(unsigned kind=0;kind<2;++kind) {
+        std::size_t body=0,capacity=0,common=0;
+        for(unsigned i=0;i<d.common.size();++i) {
+            const auto& x=d.domain_x[kind][i];const auto& c=d.native[i].category;
+            body+=c.small.size()+c.large.size()*2+(x.bytes8.size()+x.bytes16.size()*2+x.bytes32.size()*4);
+            capacity+=sizeof(NativeCodes)+c.bytes()+x.bytes();common+=d.common[i].bytes();
+            std::cout<<"{\"type\":\"native-domain\",\"arm\":"<<std::quoted(names[kind?11:9])<<",\"part\":"<<i<<",\"minimum\":"<<x.minimum<<",\"maximum\":"<<x.maximum<<",\"base\":"<<x.base<<",\"X_lane_bits\":"<<x.lane_bits<<",\"X_capacity_bytes\":"<<x.bytes()<<"}\n";
+        }
+        std::cout<<"{\"type\":\"material\",\"arm\":"<<std::quoted(names[kind?11:9])<<",\"body_and_geometry_bytes\":"<<body<<",\"image_capacity_bytes\":"<<capacity<<",\"common_keys_and_masks_bytes\":"<<common<<",\"prepared_x_dictionary_bytes\":0,\"joint_entries\":0,\"construction_component_ns_single_observation\":"<<d.domain_construction_ns[kind]<<"}\n";
+    }
+}
+#endif
 struct CountMemory:std::pmr::memory_resource {
     std::size_t live=0,peak=0;
     void* do_allocate(std::size_t n,std::size_t a)override{auto* p=std::pmr::new_delete_resource()->allocate(n,a);live+=n;peak=std::max(peak,live);return p;}
@@ -420,6 +465,9 @@ int main(int argc,char** argv) {
         const unsigned trials=argc>1?unsigned(std::stoul(argv[1])):0;
         need(argc<=2&&trials<=100,"usage: frame_execution_columns [trials<=100]");
         const auto input=read_input(std::cin);const auto data=build(input);material(data);
+#if FRAME_CROSS_DOMAINS
+        domain_material(data);
+#endif
         unsigned checks=0;
         for(const auto& query:input.queries) {
             const auto begun=Clock::now();const auto plan=prepare(data,query);const auto prepare_ns=elapsed(begun);
@@ -440,12 +488,12 @@ int main(int argc,char** argv) {
             const auto projection_first=Clock::now();
             need(x_sum(data,query,plan,2,projections,independent_projections)==wanted_x,"owner-projected SUM differs");
             const auto projection_first_call_ns=elapsed(projection_first);
-            std::array<std::vector<Scratch>,9> states;
-            std::array<std::array<std::vector<double>,2>,9> times;
-            std::array<std::array<unsigned,2>,9> repeats{};
-            std::array<Word,9> digests{};
-            for(unsigned arm=0;arm<9;++arm) {
-                const unsigned actual=arm==8?0:arm,group_arm=actual==7?2:actual;if(arm<7)states[arm]=scratch(data,actual==2||actual==4||actual==6);
+            std::array<std::vector<Scratch>,arm_count> states;
+            std::array<std::array<std::vector<double>,2>,arm_count> times;
+            std::array<std::array<unsigned,2>,arm_count> repeats{};
+            std::array<Word,arm_count> digests{};
+            for(unsigned arm=0;arm<arm_count;++arm) {
+                const unsigned actual=arm==8?0:arm,group_arm=actual==7?2:actual;if(arm<7||arm>=9)states[arm]=scratch(data,actual==2||actual==4||actual==6);
                 auto got=group(data,query,plan,states[group_arm],group_arm);
                 need(equal(normal(got),wanted),"full grouped output differs from logical rows");
                 need(x_sum(data,query,plan,actual,projections,independent_projections)==wanted_x,"isolated X differs from logical rows");
@@ -462,10 +510,10 @@ int main(int argc,char** argv) {
                 unsigned common=1;for(const auto& r:repeats)common=std::max(common,r[op]);
                 for(auto& r:repeats)r[op]=common;
             }
-            for(unsigned t=0;t<trials;++t)for(unsigned step=0;step<9;++step) {
-                constexpr unsigned williams[9]={0,1,8,2,7,3,6,4,5};
-                const unsigned position=t/9%2?8-step:step;
-                const unsigned arm=(williams[position]+t%9)%9,actual=arm==8?0:arm,group_arm=actual==7?2:actual;
+            for(unsigned t=0;t<trials;++t)for(unsigned step=0;step<arm_count;++step) {
+                const unsigned position=t/arm_count%2?arm_count-1-step:step;
+                const unsigned treatment=position==0?0:position%2?(position+1)/2:arm_count-position/2;
+                const unsigned arm=(treatment+t%arm_count)%arm_count,actual=arm==8?0:arm,group_arm=actual==7?2:actual;
                 for(unsigned op=0;op<2;++op) {
                     const auto start=Clock::now();
                     for(unsigned k=0;k<repeats[arm][op];++k) {
@@ -475,7 +523,7 @@ int main(int argc,char** argv) {
                     times[arm][op].push_back(elapsed(start)/repeats[arm][op]);
                 }
             }
-            for(unsigned arm=0;arm<9;++arm) {
+            for(unsigned arm=0;arm<arm_count;++arm) {
                 const unsigned group_arm=(arm==7?2:arm==8?0:arm);
                 auto got=group(data,query,plan,states[group_arm],group_arm);
                 need(equal(normal(got),wanted)&&digest(got)==digests[arm],"timed work changed original logical outputs");
@@ -486,6 +534,6 @@ int main(int argc,char** argv) {
             }
         }
         repair(data,trials?6:1);
-        std::cout<<"{\"type\":\"checked\",\"comparisons\":"<<checks<<",\"arm_order\":\"18-row Williams first-order carryover balance; equal batching; exact duplicate independent arm\",\"timing_scope\":\"warmed complete queries; output create/consume/retire included, preparation separate; not point latency or interleaved throughput\"}\n";
+        std::cout<<"{\"type\":\"checked\",\"comparisons\":"<<checks<<",\"arm_order\":\"Williams first-order carryover balance at 2*arm_count trials; equal batching; exact duplicate independent arm\",\"timing_scope\":\"warmed complete queries; output create/consume/retire included, preparation separate; not point latency or interleaved throughput\"}\n";
     }catch(const std::exception& error){std::cerr<<error.what()<<'\n';return 1;}
 }

@@ -25,6 +25,11 @@ controls. It includes X-only SUM, C-only repair construction, preparation/state
 and an exact-marginal decorrelation counterexample. Its measured wins and losses
 extend the earlier same-image preparation/dispatch comparison.
 
+The separate [native-domain follow-up](NATIVE-DOMAINS.md) fits native logical-X
+and global-FOR lanes to the actual values. It preserves the original u32 cohort,
+strengthens native controls, and changes the isolated-field verdict while
+retaining the grouped OS win and the other source-qualified losses.
+
 The [physical-material study](MATERIAL.md) examines actual public Orbital
 composition and interpretation lifetimes, including six encoded body kinds,
 dictionary dependencies and old/current/exported Parts. It chooses no general

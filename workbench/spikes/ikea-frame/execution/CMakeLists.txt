@@ -23,3 +23,9 @@ add_executable(frame_execution_columns columns.cpp columns_native.cpp)
 sixdb_target(frame_execution_columns)
 target_compile_options(frame_execution_columns PRIVATE -fno-vectorize -fno-slp-vectorize)
 target_link_libraries(frame_execution_columns PRIVATE ikea::hashtable frame_execution_input frame_encoding_material)
+
+# Separate domain-sized native controls; original u32 evidence remains frozen.
+add_executable(frame_execution_columns_domains columns_domain_measure.cpp columns_native.cpp columns_domains.cpp)
+sixdb_target(frame_execution_columns_domains)
+target_compile_options(frame_execution_columns_domains PRIVATE -fno-vectorize -fno-slp-vectorize)
+target_link_libraries(frame_execution_columns_domains PRIVATE ikea::hashtable frame_execution_input frame_encoding_material)

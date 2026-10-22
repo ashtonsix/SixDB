@@ -1,0 +1,26 @@
+{
+  "files_sha256": {
+    "REPRODUCE.md": "89430b3654cfa1058666efe83d62d757cdc273360bb1f1dfdac94479b7881bb9",
+    "base-input-artifact.json": "617d7c8206a8674a710ab5560c2591e7a70f221b8908011249b2f26594299514",
+    "calibration.csv": "39d71afc8807b7719c500ef299f8072a390469815b04a6275198f8cdbd80dea2",
+    "codegen.json": "8b3fdab99cba16240e8c03fa2106cbc8fbb6513c1c1a988dba4a18a47f3361e8",
+    "coverage.json": "580ab8bd944670c1096d9707d382fee6e57dbdb31a2765485f58d4cf72396607",
+    "domains.csv": "45e49bad778a0b7bd0881a1f5b2beed1687776d25f93e38ec85c38c7770ae98f",
+    "inputs.json": "ef8f84fba948b9fc8faa2363022b215b41e0cca953e085c0ae82260627b7e62d",
+    "material.csv": "bda6241d116cd0f436680c0b0ef8334501062712de7cd4e0e0542a016d2d1f5d",
+    "prior-cross-columns-artifact.json": "600430069b887ca98b2876be82fc612f7d7b281f8647911857d0f4d9772d84f0",
+    "qualification.json": "1814c9e5ad43c76bd43d27166a9ce726468ad2d6ae6aacc4c231c254d01af68c",
+    "queries.csv": "953b82d51d1d0d9d3e08bbe80e1c50f4b05aabcb519c7422fc243dabe5502038",
+    "repairs.csv": "4b1663e1174500726ede27c47c11a9c793e879960e67c55c6931e5a1d8e5712d"
+  },
+  "format": 2,
+  "full_bundle": "artifact.json",
+  "kind": "files",
+  "regenerate": [
+    "python3",
+    "{evidence}/columns_domains_report.py",
+    "{evidence}/quiet26",
+    "{evidence}/selected"
+  ],
+  "regenerate_from": "archive"
+}
