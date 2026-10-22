@@ -276,6 +276,110 @@ std::vector<row_selection> selections_for(const borrowed_block &k, std::size_t b
     return out;
 }
 
+std::size_t fused_checked = 0;
+dictionary_cache fused_cache;  // shared by every block's cached fused programs
+
+// Fused requests over a block's thresholds and equality values (present,
+// absent and UINT64_MAX): SUM + COUNT, SUM + COUNT + EQ, counts only, MIN/MAX,
+// SUM only, EQ only, nothing, then every threshold four at a time with every
+// aggregate.
+std::vector<fused_request> fused_requests(const std::vector<u64> &t, const std::vector<u64> &eq) {
+    auto make = [](bool sum, std::initializer_list<u64> ge, const u64 *v, bool min, bool max) {
+        fused_request q;
+        q.sum = sum, q.min = min, q.max = max;
+        for (u64 x : ge)
+            q.ge[q.ge_count++] = x;
+        if (v)
+            q.eq = true, q.eq_value = *v;
+        return q;
+    };
+    const u64 top = UINT64_MAX;
+    std::vector<fused_request> out{make(true, {t[t.size() / 2]}, nullptr, false, false),
+                                   make(true, {t[1]}, &eq[0], false, false),
+                                   make(false, {t[0], t[1], t[2], t.back()}, &eq[1 % eq.size()], false, false),
+                                   make(false, {}, nullptr, true, true),
+                                   make(true, {}, nullptr, false, false),
+                                   make(false, {}, &eq.back(), false, false),
+                                   make(false, {}, &top, true, false),
+                                   fused_request{}};
+    for (std::size_t i = 0; i < t.size(); i += fused_thresholds) {
+        fused_request q = make(true, {}, &eq[i / fused_thresholds % eq.size()], true, true);
+        for (std::size_t j = i; j < std::min(t.size(), i + fused_thresholds); ++j)
+            q.ge[q.ge_count++] = t[j];
+        out.push_back(q);
+    }
+    return out;
+}
+fused_result fused_oracle(const u64 *v, const row_selection &s, const fused_request &q) {
+    fused_result r;
+    for (unsigned i = 0; i < block_rows; ++i) {
+        if (!selected(s, i))
+            continue;
+        ++r.rows;
+        if (q.sum)
+            r.sum += v[i];
+        for (unsigned j = 0; j < q.ge_count; ++j)
+            r.ge[j] += v[i] >= q.ge[j];
+        if (q.eq)
+            r.eq += v[i] == q.eq_value;
+        if (q.min)
+            r.min = std::min(r.min, v[i]);
+        if (q.max)
+            r.max = std::max(r.max, v[i]);
+    }
+    return r;
+}
+
+// Fused programs against the input oracle restricted to S and against the
+// separate row-selected operations: per call (a program per request and
+// block, so a coded block decodes its dictionary once per request), through
+// the run's shared cache, and the stored-domain form against stored values.
+std::size_t check_fused(const borrowed_block &k, const expected &e, std::size_t b,
+                        const std::vector<row_selection> &selections, dictionary_cache &cache) {
+    std::vector<u64> eq = {e.values[99], e.values[0], e.thresholds.back()};
+    std::vector<u64> stored_eq = {e.stored[99], e.stored[255], e.stored_thresholds.back()};
+    const auto requests = fused_requests(e.thresholds, eq);
+    const auto stored_requests = fused_requests(e.stored_thresholds, stored_eq);
+    std::size_t checks = 0;
+    for (std::size_t n = 0; n < requests.size(); ++n) {
+        const auto &q = requests[n];
+        fused_program per_call(q), cached(q, &cache);
+        for (const auto &s : selections) {
+            const fused_result want = fused_oracle(e.values, s, q);
+            fused_result a, c;
+            per_call.masked(a, k, s);
+            cached.masked(c, k, s);
+            if (a != want || c != want)
+                fail("fused aggregate", b);
+            // The lone-block forms (a coded block decodes per call: sampled).
+            if (!k.coded || n == 1) {
+                if (masked_fused_block(k, s, q) != want)
+                    fail("fused block aggregate", b);
+                if (selection_full(s) && fused_block(k, q) != want)
+                    fail("fused full aggregate", b);
+            }
+            ++checks;
+            // The separate operations agree field by field (SUM + COUNT and
+            // SUM + COUNT + EQ; the oracle covers the rest).
+            if (n >= 2)
+                continue;
+            if ((q.sum && masked_block_sum(k, s) != a.sum) ||
+                (q.eq && masked_block_count_eq(k, s, q.eq_value) != a.eq))
+                fail("fused differs from the separate operations", b);
+            for (unsigned j = 0; j < q.ge_count; ++j)
+                if (masked_block_count_ge(k, s, q.ge[j]) != a.ge[j])
+                    fail("fused COUNT differs from the separate operation", b);
+        }
+    }
+    for (const auto &q : stored_requests)
+        for (const auto &s : selections) {
+            if (fused_stored(k, s, q) != fused_oracle(e.stored, s, q))
+                fail("fused stored aggregate", b);
+            ++checks;
+        }
+    return checks;
+}
+
 // Every row-selected operation against the input oracle restricted to S, and
 // the decode-then-mask control against the same answers.
 std::size_t check_masked(const borrowed_block &k, const expected &e, std::size_t b, bool few) {
@@ -327,6 +431,7 @@ std::size_t check_masked(const borrowed_block &k, const expected &e, std::size_t
         }
         ++checks;
     }
+    fused_checked += check_fused(k, e, b, selections_for(k, b, few), fused_cache);
     return checks;
 }
 
@@ -368,6 +473,12 @@ const probe probes[] = {
     {"catalogue_count", [](const borrowed_block &k) { code_count c(k.d.base + 1); sink = catalogue_block_count_ge(c, k); }},
     {"code_sum", [](const borrowed_block &k) { if (k.coded) { code_sum c; consume(c(k)); } }},
     {"count_eq", [](const borrowed_block &k) { sink = block_count_eq(k, value_at(k, 0)); }},
+    {"fused", [](const borrowed_block &k) {
+         fused_request q;
+         q.sum = q.eq = q.min = q.max = true, q.ge_count = 2, q.ge = {k.d.base + 1, value_at(k, 9)}, q.eq_value = value_at(k, 0);
+         const auto r = fused_block(k, q);
+         consume(r.sum + r.ge[0] + r.ge[1] + r.eq + r.min + r.max);
+     }},
 };
 void battery(const borrowed_block &k) {
     for (const auto &p : probes)
@@ -451,6 +562,27 @@ int main(int argc, char **argv) {
                     }
         return std::tuple{sum, ge, eq, n};
     };
+    // Fused input oracle under a coarse mask and, when given, the row plane.
+    const row_selection every_row{~u64{0}, ~u64{0}, ~u64{0}, ~u64{0}};
+    auto fused_column_oracle = [&](const std::vector<u64> &v, const block_mask &mask, const std::vector<u64> *rows,
+                                   const fused_request &q) {
+        fused_result r;
+        for (std::size_t b = 0; b < c.blocks.size(); ++b) {
+            if (!(mask.words[b / 64] >> (b % 64) & 1))
+                continue;
+            const auto one = fused_oracle(v.data() + b * block_rows, rows ? selection_at(*rows, b) : every_row, q);
+            r.sum += one.sum, r.eq += one.eq, r.rows += one.rows;
+            for (unsigned j = 0; j < fused_thresholds; ++j)
+                r.ge[j] += one.ge[j];
+            r.min = std::min(r.min, one.min), r.max = std::max(r.max, one.max);
+        }
+        if (!q.min)
+            r.min = UINT64_MAX;
+        if (!q.max)
+            r.max = 0;
+        return r;
+    };
+    std::size_t fused_column_checked = 0;
     const std::size_t nblocks = c.blocks.size();
     const checkpoints mode = c.options.delta_checkpoints;
 
@@ -493,7 +625,7 @@ int main(int argc, char **argv) {
     const placement placements[] = {{"end", true, 0}, {"start", false, 0}, {"start+1", false, 1},
                                     {"start+3", false, 3}};
     std::size_t start_alignment[8] = {};
-    std::size_t checked = 0, scan_checked = 0, masked_checked = 0, masked_scan_checked = 0;
+    std::size_t checked = 0, scan_checked = 0, masked_checked = 0, masked_scan_checked = 0, fused_scan_checked = 0;
     for (const auto &where : placements) {
         std::size_t placed_part = SIZE_MAX;
         dictionary_view dictionary{};
@@ -568,6 +700,25 @@ int main(int argc, char **argv) {
                         }
                     ++masked_scan_checked;
                 }
+                // Fused programs inside the scan grant: SUM-only requests
+                // always, every request when the block is not searched.
+                {
+                    const bool searched =
+                        delta_rbase(scan) >= 0 && c.options.delta_checkpoints != checkpoints::none;
+                    const std::vector<u64> eqv = {e.values[99], e.values[0]};
+                    for (const auto &q : fused_requests(e.thresholds, eqv)) {
+                        if (searched && !q.sum_only())
+                            continue;
+                        fused_program program(q);
+                        for (const auto &sel : selections_for(scan, b, true)) {
+                            fused_result r;
+                            program.masked(r, scan, sel);
+                            if (r != fused_oracle(e.values, sel, q))
+                                fail("scan grant fused", b);
+                            ++fused_scan_checked;
+                        }
+                    }
+                }
                 for (u64 t : e.thresholds) {
                     code_count codes(t);
                     if (delta_rbase(scan) < 0 &&
@@ -610,6 +761,18 @@ int main(int argc, char **argv) {
                 reference_masked_count_ge(c, *mask, plane, median) != ge ||
                 masked_encoded_count_eq(c, *mask, plane, probe) != eq || masked_selected_rows(*mask, plane) != n)
                 fail("masked column aggregate differs from the input", 0);
+        }
+        // Fused column forms against the input, with and without the row plane.
+        {
+            const u64 probe = values[values.size() / 2];
+            const std::vector<u64> eqv = {probe, values[0] + 1};
+            for (const auto &q : fused_requests({0, median, values[7], values.back(), UINT64_MAX}, eqv))
+                for (const block_mask *mask : {&all, &sparse}) {
+                    if (encoded_fused(c, *mask, q) != fused_column_oracle(values, *mask, nullptr, q) ||
+                        masked_encoded_fused(c, *mask, plane, q) != fused_column_oracle(values, *mask, &plane, q))
+                        fail("fused column aggregate differs from the input", 0);
+                    ++fused_column_checked;
+                }
         }
         // Equality over all blocks at present values from several parts and
         // at one absent value, against the input.
@@ -686,6 +849,22 @@ int main(int argc, char **argv) {
                            reference_block_count_ge(none, empty, 1) + reference_block_count_eq(none, empty, 1) +
                            counts.masked(none, empty) + equal.masked(none, empty) +
                            cached_counts.masked(none, empty) + cached_equal.masked(none, empty);
+                    // Fused programs: every aggregate, and counts alone (the
+                    // translated or truth-table path), per call and cached.
+                    fused_request every, counts_only;
+                    every.sum = every.eq = every.min = every.max = true;
+                    every.ge_count = counts_only.ge_count = 2;
+                    every.ge = counts_only.ge = {1, 2};
+                    counts_only.eq = true;
+                    fused_result r;
+                    for (const auto &q : {every, counts_only}) {
+                        fused_program program(q), cached(q, &cache);
+                        program.masked(r, none, empty);
+                        cached.masked(r, none, empty);
+                        const auto a = masked_fused_block(none, empty, q), b2 = fused_stored(none, empty, q);
+                        r.sum += a.sum + b2.sum, r.rows += a.rows + b2.rows;
+                    }
+                    consume(r.sum + r.rows + r.ge[0] + r.eq);
                 }))
                 fail("an empty row selection read the body or dictionary", b);
             ++empty_guarded;
@@ -830,6 +1009,12 @@ int main(int argc, char **argv) {
                         masked_encoded_sum(*image, *mask, plane) != msum)
                         fail("cached masked aggregate differs from the input", 0);
                     (void)mn;
+                    const std::vector<u64> eqv = {probe, v[3]};
+                    for (const auto &q : fused_requests({0, median, v[7], v.back()}, eqv))
+                        if (encoded_fused(*image, *mask, q, &shared) != fused_column_oracle(v, *mask, nullptr, q) ||
+                            masked_encoded_fused(*image, *mask, plane, q, &shared) !=
+                                fused_column_oracle(v, *mask, &plane, q))
+                            fail("cached fused column aggregate differs from the input", 0);
                     ++cached_checks;
                 }
             }
@@ -886,7 +1071,9 @@ int main(int argc, char **argv) {
     }
     std::printf("},\"identity_checks\":%zu,\"identity_alias_stale\":%d,\"cached_checks\":%zu,"
                 "\"cache_identities\":%zu,\"cache_bytes\":%zu,\"identity_alias_stale_cached\":%d,"
-                "\"masked_checks\":%zu,\"masked_scan_checks\":%zu,\"empty_selection_guarded\":%d}\n",
+                "\"masked_checks\":%zu,\"masked_scan_checks\":%zu,\"empty_selection_guarded\":%d,"
+                "\"fused_checks\":%zu,\"fused_scan_checks\":%zu,\"fused_column_checks\":%zu}\n",
                 identity_checks, alias_stale, cached_checks, cache_identities, cache_bytes, alias_stale_cached,
-                masked_checked, masked_scan_checked, empty_guarded);
+                masked_checked, masked_scan_checked, empty_guarded, fused_checked, fused_scan_checked,
+                fused_column_checked);
 }

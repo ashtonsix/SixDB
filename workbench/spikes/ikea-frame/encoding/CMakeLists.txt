@@ -29,3 +29,9 @@ target_link_libraries(frame_encoding_null_check PRIVATE frame_encoding_material)
 add_executable(frame_encoding_nulls nulls.cpp)
 sixdb_target(frame_encoding_nulls)
 target_link_libraries(frame_encoding_nulls PRIVATE frame_encoding_material)
+
+# Fused multi-aggregate programs against separate owner calls and native
+# arrays (fused.h; correctness is in borrowed_check).
+add_executable(frame_encoding_fused fused.cpp)
+sixdb_target(frame_encoding_fused)
+target_link_libraries(frame_encoding_fused PRIVATE frame_encoding_material)
