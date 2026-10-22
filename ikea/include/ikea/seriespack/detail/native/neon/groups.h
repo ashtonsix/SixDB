@@ -28,15 +28,15 @@ template <class F, bool Dense, unsigned N>
                 neon::load128<std::min<unsigned>(16, 8 * R - c * 16)>(base + i / 8 * R + c * 16);
         });
         values<R, N> out;
-        detail::each<4>([&](auto pair) {
-            constexpr unsigned first = pair * 2 * R / 16, last = ((pair + 1) * 2 * R - 1) / 16;
-            auto table = [&](const std::array<std::uint8_t, 16>& map) {
-                if constexpr (first == last)
-                    return vqtbl1q_u8(raw[first], vld1q_u8(map.data()));
-                else
-                    return vqtbl2q_u8({{raw[first], raw[last]}}, vld1q_u8(map.data()));
-            };
-            if constexpr (R <= 2) {
+        if constexpr (R <= 2)
+            detail::each<4>([&](auto pair) {
+                constexpr unsigned first = pair * 2 * R / 16, last = ((pair + 1) * 2 * R - 1) / 16;
+                auto table = [&](const std::array<std::uint8_t, 16>& map) {
+                    if constexpr (first == last)
+                        return vqtbl1q_u8(raw[first], vld1q_u8(map.data()));
+                    else
+                        return vqtbl2q_u8({{raw[first], raw[last]}}, vld1q_u8(map.data()));
+                };
                 static constexpr std::array<std::uint8_t, 16> bits{1, 2, 4, 8, 16, 32, 64, 128,
                                                                    1, 2, 4, 8, 16, 32, 64, 128};
                 auto x = vdupq_n_u8(0);
@@ -52,18 +52,50 @@ template <class F, bool Dense, unsigned N>
                                              vdupq_n_u8(1u << b)));
                 });
                 out.block[pair].v[0] = x;
-            } else {
-                static constexpr auto map = [] {
-                    std::array<std::uint8_t, 16> a{};
-                    a.fill(255);
-                    for (unsigned j = 0; j < 16; ++j)
-                        if (j % 8 < R)
-                            a[j] = (decltype(pair)::value * 2 + j / 8) * R + j % 8 - first * 16;
-                    return a;
-                }();
-                out.block[pair].v[0] = neon::transpose128(vreinterpretq_u64_u8(table(map)));
-            }
-        });
+            });
+        else
+            // Gather planes 0..3 (and 4..7) of four tiles into 32-bit lanes.
+            // Two lane-local transpose stages leave each byte holding one row
+            // split across nibbles; shift-inserts finish the third stage and
+            // zips restore row order. Planes 4..7 are absent below five bits.
+            detail::each<2>([&](auto quad) {
+                constexpr unsigned q = decltype(quad)::value;
+                auto gather = [&]<unsigned Plane>() {
+                    constexpr unsigned lo = q * 4 * R + Plane,
+                                       hi = (q * 4 + 3) * R + std::min(R, Plane + 4) - 1;
+                    constexpr unsigned first = lo / 16, count = hi / 16 - first + 1;
+                    static constexpr auto map = [] {
+                        std::array<std::uint8_t, 16> a{};
+                        a.fill(255);
+                        for (unsigned t = 0; t < 4; ++t)
+                            for (unsigned b = 0; b < 4 && Plane + b < R; ++b)
+                                a[t * 4 + b] = (q * 4 + t) * R + Plane + b - first * 16;
+                        return a;
+                    }();
+                    const auto index = vld1q_u8(map.data());
+                    uint8x16_t x;
+                    if constexpr (count == 1)
+                        x = vqtbl1q_u8(raw[first], index);
+                    else if constexpr (count == 2)
+                        x = vqtbl2q_u8({{raw[first], raw[first + 1]}}, index);
+                    else
+                        x = vqtbl3q_u8({{raw[first], raw[first + 1], raw[first + 2]}}, index);
+                    return vreinterpretq_u8_u64(neon::transpose_quads(vreinterpretq_u64_u8(x)));
+                };
+                const auto low = gather.template operator()<0>();
+                uint8x16_t rows03, rows47;
+                if constexpr (R > 4) {
+                    const auto high = gather.template operator()<4>();
+                    rows03 = vsliq_n_u8(low, high, 4);
+                    rows47 = vsriq_n_u8(high, low, 4);
+                } else {
+                    rows03 = vandq_u8(low, vdupq_n_u8(15));
+                    rows47 = vshrq_n_u8(low, 4);
+                }
+                const auto a = vreinterpretq_u32_u8(rows03), b = vreinterpretq_u32_u8(rows47);
+                out.block[q * 2].v[0] = vreinterpretq_u8_u32(vzip1q_u32(a, b));
+                out.block[q * 2 + 1].v[0] = vreinterpretq_u8_u32(vzip2q_u32(a, b));
+            });
         return out;
     } else
         return packets<R, N>([&](unsigned offset) {

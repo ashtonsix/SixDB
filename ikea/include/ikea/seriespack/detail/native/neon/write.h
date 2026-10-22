@@ -244,19 +244,48 @@ template <class F, class Produce>
         vst1_u8(out, vget_low_u8(vpaddq_u8(pairs, pairs)));
         return;
     }
-    std::array<uint8x16_t, 4> packed;
-    detail::each<4>([&](auto p) {
-        packed[p] = transpose128(
-            vreinterpretq_u64_u8(produce(std::integral_constant<unsigned, p * 16>{}).v[0]));
+    // Rows 0..3 and 4..7 of four tiles occupy 32-bit lanes of two registers.
+    // Shift-inserts take the third transpose stage at nibble granularity and
+    // two lane-local stages finish it. For tile 4q+t, planes 0..3 become lane t
+    // of `packed[q * halves]` and planes 4..7 lane t of the next register;
+    // planes 4..7 are absent below five bits.
+    constexpr unsigned halves = R > 4 ? 2 : 1;
+    std::array<uint8x16_t, 2 * halves> packed;
+    detail::each<2>([&](auto quad) {
+        const auto a = vreinterpretq_u32_u8(
+                       produce(std::integral_constant<unsigned, quad * 32>{}).v[0]),
+                   b = vreinterpretq_u32_u8(
+                       produce(std::integral_constant<unsigned, quad * 32 + 16>{}).v[0]);
+        const auto rows03 = vreinterpretq_u8_u32(vuzp1q_u32(a, b)),
+                   rows47 = vreinterpretq_u8_u32(vuzp2q_u32(a, b));
+        auto finish = [](uint8x16_t x) {
+            return vreinterpretq_u8_u64(transpose_quads(vreinterpretq_u64_u8(x)));
+        };
+        packed[quad * halves] = finish(vsliq_n_u8(rows03, rows47, 4));
+        if constexpr (R > 4)
+            packed[quad * halves + 1] = finish(vsriq_n_u8(rows47, rows03, 4));
     });
     detail::each<(8 * R + 15) / 16>([&](auto c) {
         constexpr unsigned begin = c * 16, count = std::min<unsigned>(16, 8 * R - begin);
-        constexpr unsigned first = (begin / R) / 2, last = ((begin + count - 1) / R) / 2;
+        // Plane `byte % R` of tile `byte / R` within the `packed` registers.
+        static constexpr auto source = [](unsigned byte) {
+            const unsigned tile = byte / R, plane = byte % R;
+            return (tile / 4) * 16 * halves + (plane / 4) * 16 + (tile % 4) * 4 + plane % 4;
+        };
+        static constexpr auto span = [] {
+            std::array<unsigned, 2> x{~0u, 0};
+            for (unsigned j = 0; j < count; ++j) {
+                x[0] = std::min(x[0], source(begin + j) / 16);
+                x[1] = std::max(x[1], source(begin + j) / 16);
+            }
+            return x;
+        }();
+        constexpr unsigned first = span[0], last = span[1];
         static constexpr auto map = [] {
             std::array<std::uint8_t, 16> a{};
             a.fill(255);
             for (unsigned j = 0; j < count; ++j)
-                a[j] = (begin + j) / R * 8 + (begin + j) % R - first * 16;
+                a[j] = source(begin + j) - first * 16;
             return a;
         }();
         store_prefix<count>(out + begin, table<first, last - first + 1>(packed, map));

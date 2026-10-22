@@ -13,6 +13,7 @@ formats and proposed analysers are not additional production contracts.
 | Planes, projections, metadata and placement selected together | [Layout-analyser findings](../spikes/layout-analyser/findings.md), [connected case study](../spikes/layout-analyser/case-study.md), [executable reference](../spikes/layout-analyser/tuplepack-reference/README.md) |
 | Variable bytes, offsets, sidecars and mutation | [StreamPack recommendation](../spikes/streampack/RECOMMENDATION.md), [results](../spikes/streampack/RESULTS.md), [current usage](../../ikea/docs/streampack/usage.md) |
 | Ordered boundaries versus value storage | [Boundlist recommendation](../spikes/boundlist/RECOMMENDATION.md), [ownership](../spikes/boundlist/OWNERSHIP.md), [consumer portfolio](../spikes/boundlist/PORTFOLIO.md) |
+| NEON cost of Local bit-plane residuals | [NEON Local transpose](../spikes/neon-local-transpose/README.md), then the [preset policy](../../ikea/docs/seriespack/representation.md#preset-policy) it reopens |
 | Predictive coding and complete analysis/encoding work | [Bec256 composition](../spikes/bec256-composition/README.md), [residual-bound questions](pfor-bounds.md) |
 
 Physical tile size, execution grain, working lanes and result representation

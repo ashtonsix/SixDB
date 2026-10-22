@@ -12,19 +12,30 @@ template <unsigned N> [[gnu::always_inline]] inline uint8x16_t load128(const std
         return vreinterpretq_u8_u64(
             vcombine_u64(vcreate_u64(detail::load<8>(p)), vcreate_u64(detail::load<N - 8>(p + 8))));
 }
+/// Bitwise insert: bits of `from` where `mask` is set replace those of `into`.
+/// Clang 21 lowers a select with a constant or loop-invariant mask to
+/// AND/AND/ORR; emitting BIT keeps it one operation. Only the fresh `into`
+/// register is overwritten, so no mask copy is needed.
+[[gnu::always_inline]] inline uint64x2_t insert_bits(uint64x2_t into, uint64x2_t from,
+                                                     uint64x2_t mask) {
+    asm("bit %0.16b, %1.16b, %2.16b" : "+w"(into) : "w"(from), "w"(mask));
+    return into;
+}
+/// Exchange bit p in Mask with bit p+Shift: two shifts and two inserts, rather
+/// than the six-operation XOR delta swap. The masks never cross 32-bit lanes.
+template <unsigned Shift, std::uint64_t Mask>
+[[gnu::always_inline]] inline uint64x2_t exchange_bits(uint64x2_t x) {
+    const auto from_high = vdupq_n_u64(Mask), keep = vdupq_n_u64(~(Mask | (Mask << Shift)));
+    return insert_bits(insert_bits(vshlq_n_u64(x, Shift), vshrq_n_u64(x, Shift), from_high), x,
+                       keep);
+}
+/// Low two stages of the 8x8 bit transpose: swaps bits 0 and 1 of the byte and
+/// bit coordinates within every 32-bit group of four bytes.
+[[gnu::always_inline]] inline uint64x2_t transpose_quads(uint64x2_t x) {
+    return exchange_bits<14, 0x0000cccc0000ccccULL>(exchange_bits<7, 0x00aa00aa00aa00aaULL>(x));
+}
 [[gnu::always_inline]] inline uint8x16_t transpose128(uint64x2_t x) {
-    auto exchange = [&]<unsigned Shift, std::uint64_t Mask>() {
-        auto t = vandq_u64(veorq_u64(x, vshrq_n_u64(x, Shift)), vdupq_n_u64(Mask));
-        // Clang 21 otherwise extracts lanes and reinserts scalar ORs
-        // for known-zero bits. Keep the native exchange; no instruction
-        // or memory barrier is emitted by this constraint.
-        asm("" : "+w"(t));
-        x = veorq_u64(x, veorq_u64(t, vshlq_n_u64(t, Shift)));
-    };
-    exchange.template operator()<7, 0x00aa00aa00aa00aaULL>();
-    exchange.template operator()<14, 0x0000cccc0000ccccULL>();
-    exchange.template operator()<28, 0x00000000f0f0f0f0ULL>();
-    return vreinterpretq_u8_u64(x);
+    return vreinterpretq_u8_u64(exchange_bits<28, 0x00000000f0f0f0f0ULL>(transpose_quads(x)));
 }
 template <unsigned K> struct values {
     using vector = uint8x16_t;

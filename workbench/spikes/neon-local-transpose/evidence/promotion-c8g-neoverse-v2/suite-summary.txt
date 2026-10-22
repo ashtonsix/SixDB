@@ -1,0 +1,33 @@
+cases 150; speedup current/original: geomean 1.033, median 1.000, min 0.929, max 1.657
+faster >3%: 29; slower >3%: 2
+  0.929       6319.0 ->      6801.4 ns  ordinary/k64/local/point/bound
+  0.964       2466.1 ->      2557.3 ns  placed/k31h8/substituted/all/sum-materialized
+  1.033       6422.3 ->      6219.1 ns  pipeline-packet/n16/source1-map0-filter0-sink1-empty/cps
+  1.033      22421.0 ->     21710.7 ns  placed/k63h16/separated/partial/mutation-materialized
+  1.034      10281.6 ->      9944.0 ns  placed/k31h8/separated/partial/mutation-bound
+  1.043       9474.7 ->      9082.8 ns  pipeline-mutation/k31/depth7/fused
+  1.046       9611.6 ->      9187.6 ns  pipeline-mutation/k31/depth3/fused
+  1.047      20671.6 ->     19735.7 ns  placed/k63h16/interleaved/all/mutation-materialized
+  1.052      24856.3 ->     23637.0 ns  placed/k63h16/interleaved/partial/mutation-materialized
+  1.077      21375.6 ->     19844.6 ns  placed/k63h16/interleaved/partial/mutation-bound
+  1.078      29735.5 ->     27577.7 ns  pipeline-mutation/k7/depth7/cps
+  1.085      32361.2 ->     29836.9 ns  pipeline-mutation/k7/depth7/scratch-calls
+  1.089      21834.8 ->     20052.5 ns  pipeline-mutation/k7/depth7/inline
+  1.096      19796.9 ->     18058.3 ns  placed/k63h16/separated/partial/mutation-bound
+  1.106      19111.3 ->     17272.4 ns  placed/k63h16/interleaved/all/mutation-bound
+  1.127      17324.1 ->     15368.5 ns  placed/k63h16/separated/all/mutation-bound
+  1.133       7081.1 ->      6250.4 ns  pipeline-mutation/k12/depth3/fused
+  1.133      10421.8 ->      9198.0 ns  pipeline-mutation/k7/depth3/cps
+  1.144       4771.8 ->      4170.7 ns  ordinary/k28/local/maintained-write/bound
+  1.144       4772.3 ->      4170.9 ns  ordinary/k28/local/maintained-write/concrete
+  1.152      13790.4 ->     11967.6 ns  pipeline-mutation/k12/depth3/cps
+  1.180      11052.8 ->      9366.0 ns  pipeline-mutation/k7/depth3/scratch-calls
+  1.192      11267.0 ->      9454.9 ns  pipeline-mutation/k12/depth3/inline
+  1.198       8346.8 ->      6967.4 ns  pipeline-mutation/k7/depth3/inline
+  1.239      14695.1 ->     11858.0 ns  pipeline-mutation/k12/depth3/scratch-calls
+  1.372       6579.4 ->      4796.7 ns  pipeline-mutation/k7/depth7/fused
+  1.379       6580.8 ->      4772.0 ns  pipeline-mutation/k7/depth3/fused
+  1.554       3768.6 ->      2425.7 ns  ordinary/k7/local/maintained-write/bound
+  1.559       3773.6 ->      2420.7 ns  ordinary/k7/local/maintained-write/concrete
+  1.657       1378.4 ->       832.0 ns  ordinary/k7/local/read/bound
+  1.657       1378.6 ->       832.1 ns  ordinary/k7/local/read/concrete
