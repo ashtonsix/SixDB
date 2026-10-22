@@ -492,22 +492,99 @@ column encode(std::span<const u64> values, encode_options options) {
     return c;
 }
 
-void decode_stored(const column &c, std::size_t b, u64 *out) {
-    const auto &d = c.blocks[b];
+bool admits(const borrowed_block &k) {
+    const auto &d = k.d;
+    if (k.rows != block_rows || static_cast<unsigned>(d.type) > static_cast<unsigned>(kind::delta_patched))
+        return false;
+    if (d.type != kind::constant && !k.body)
+        return false;
+    const auto extent = extent_of(d, k.delta_checkpoints, k.body, k.grant);
+    if (!extent || extent->read_grant_bytes > k.grant)
+        return false;
+    if (d.type == kind::patched || d.type == kind::delta_patched) {
+        const auto p = patches(k);
+        for (unsigned e = 1; e < p.n; ++e)
+            if (p.positions[e] <= p.positions[e - 1])
+                return false;
+    }
+    if (!k.coded)
+        return true;
+    const auto &v = k.dictionary;
+    return v.count && v.width >= 1 && v.width <= 64 && v.order != dictionary_order::none &&
+           v.plane && v.bytes() <= v.grant;
+}
+
+u64 stored_at(const borrowed_block &k, unsigned row) {
+    const auto &d = k.d;
+    switch (d.type) {
+    case kind::constant: return d.base;
+    case kind::packed: return d.base + plane_kernels(d.width).point(k.body, row);
+    case kind::patched: {
+        const auto p = patches(k);
+        const auto *at = std::lower_bound(p.positions, p.positions + p.n, row);
+        if (at != p.positions + p.n && *at == row)
+            return p.lo + plane_kernels(p.value_width).point(p.values, at - p.positions);
+        return d.base + plane_kernels(d.width).point(k.body, row);
+    }
+    case kind::runs:
+        return d.base + plane_kernels(d.width).point(k.body, iv::upper_bound(runs_of(k), row));
+    case kind::delta:
+    case kind::delta_patched: {
+        // value = anchor + rbase * m(row) + S(row), with S from the nearest
+        // checkpoint at or before row plus the residuals since it.
+        unsigned steps = row;
+        if (d.type == kind::delta_patched) {
+            const auto p = patches(k);
+            const auto *at = std::lower_bound(p.positions, p.positions + p.n, row);
+            if (at != p.positions + p.n && *at == row)
+                return p.lo + plane_kernels(p.value_width).point(p.values, at - p.positions);
+            steps -= static_cast<unsigned>(at - p.positions);
+        }
+        if (!steps)
+            return d.base;  // S is 0 through the anchor
+        const auto mode = k.delta_checkpoints;
+        const unsigned spacing = mode == checkpoints::none ? 256 : mode == checkpoints::every64 ? 64 : 16;
+        const unsigned first = row / spacing * spacing;
+        const std::uint8_t *marks = k.body + plane_bytes(d.width, block_rows) + 8;
+        u64 sum = 0;
+        if (first) {
+            const unsigned mark = first / spacing - 1;
+            if (mode == checkpoints::packed && d.width + 8 <= 64)
+                sum = plane_kernels(d.width + 8).point(marks, mark);
+            else if (d.width + 8 <= 32) {
+                std::uint32_t v;
+                std::memcpy(&v, marks + mark * 4, 4);
+                sum = v;
+            } else {
+                std::memcpy(&sum, marks + mark * 8, 8);
+            }
+        }
+        alignas(64) u64 s[block_rows];
+        read_plane(k, first, row - first + 1, s);
+        for (unsigned i = 0; i < row - first + 1; ++i)
+            sum += s[i];
+        return d.base + static_cast<u64>(delta_rbase(k)) * steps + sum;
+    }
+    }
+    std::abort();
+}
+
+void decode_stored(const borrowed_block &k, u64 *out) {
+    const auto &d = k.d;
     switch (d.type) {
     case kind::constant:
         std::fill(out, out + block_rows, d.base);
         return;
     case kind::packed:
-        read_plane(c, b, 0, block_rows, out);
+        read_plane(k, 0, block_rows, out);
         for (std::size_t i = 0; i < block_rows; ++i)
             out[i] += d.base;
         return;
     case kind::patched: {
-        read_plane(c, b, 0, block_rows, out);
+        read_plane(k, 0, block_rows, out);
         for (std::size_t i = 0; i < block_rows; ++i)
             out[i] += d.base;
-        const auto p = patches(c, b);
+        const auto p = patches(k);
         alignas(64) u64 exc[block_rows];
         read_exceptions(p, exc);
         for (unsigned e = 0; e < p.n; ++e)
@@ -515,9 +592,8 @@ void decode_stored(const column &c, std::size_t b, u64 *out) {
         return;
     }
     case kind::delta: {
-        read_plane(c, b, 0, block_rows, out);
-        i64 rbase;
-        std::memcpy(&rbase, c.payload.data() + d.offset + plane_bytes(d.width, block_rows), 8);
+        read_plane(k, 0, block_rows, out);
+        const i64 rbase = delta_rbase(k);
         u64 x = d.base;
         out[0] = x;
         for (std::size_t i = 1; i < block_rows; ++i) {
@@ -527,13 +603,13 @@ void decode_stored(const column &c, std::size_t b, u64 *out) {
         return;
     }
     case kind::delta_patched:
-        decode_delta_patched(c, b, out);
+        decode_delta_patched(k, out);
         return;
     case kind::runs: {
         alignas(64) u64 values[block_rows];
-        read_plane(c, b, 0, d.count, values);
+        read_plane(k, 0, d.count, values);
         std::size_t row = 0;
-        each_run(c, b, [&](unsigned rank, unsigned size) {
+        each_run(k, [&](unsigned rank, unsigned size) {
             std::fill(out + row, out + row + size, values[rank] + d.base);
             row += size;
         });
@@ -542,16 +618,20 @@ void decode_stored(const column &c, std::size_t b, u64 *out) {
     }
     std::abort();
 }
+void decode_stored(const column &c, std::size_t b, u64 *out) {
+    decode_stored(borrow(c, b), out);
+}
 
 // A coded block's stored values are codes; each row's value is
-// part.min + dictionary[code].
-void decode_block(const column &c, std::size_t b, u64 *out) {
-    decode_stored(c, b, out);
-    if (!is_coded(c, b))
+// min + dictionary[code].
+void decode_block(const borrowed_block &k, u64 *out) {
+    decode_stored(k, out);
+    if (!k.coded)
         return;
-    const auto &p = part_of(c, b);
-    const std::size_t part = b / part_blocks;
     for (std::size_t i = 0; i < block_rows; ++i)
-        out[i] = p.min + dictionary_at(c, part, out[i]);
+        out[i] = k.dictionary.min + dictionary_at(k.dictionary, out[i]);
+}
+void decode_block(const column &c, std::size_t b, u64 *out) {
+    decode_block(borrow(c, b), out);
 }
 }  // namespace frame_encoding

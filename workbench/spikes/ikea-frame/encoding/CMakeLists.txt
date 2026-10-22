@@ -9,6 +9,11 @@ add_executable(frame_encoding_bodies bodies.cpp)
 sixdb_target(frame_encoding_bodies)
 target_link_libraries(frame_encoding_bodies PRIVATE frame_encoding_material)
 
+# Borrowed-block extents, guard-page grants and oracle results on real columns.
+add_executable(frame_encoding_borrowed_check borrowed_check.cpp)
+sixdb_target(frame_encoding_borrowed_check)
+target_link_libraries(frame_encoding_borrowed_check PRIVATE frame_encoding_material)
+
 # Codex's protected-payload correctness fixture.
 if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/masked_access_check.cpp)
     add_executable(frame_encoding_masked_access_check masked_access_check.cpp)
