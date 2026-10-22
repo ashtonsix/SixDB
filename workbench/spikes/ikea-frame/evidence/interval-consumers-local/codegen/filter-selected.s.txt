@@ -1,0 +1,1656 @@
+000000000000f3d8 <frame_filter::image::count_ge(frame_encoding::block_mask const&, unsigned long, bool) const>:
+    f3d8: d103c3ff     	sub	sp, sp, #0xf0
+    f3dc: a9097bfd     	stp	x29, x30, [sp, #0x90]
+    f3e0: a90a6ffc     	stp	x28, x27, [sp, #0xa0]
+    f3e4: a90b67fa     	stp	x26, x25, [sp, #0xb0]
+    f3e8: a90c5ff8     	stp	x24, x23, [sp, #0xc0]
+    f3ec: a90d57f6     	stp	x22, x21, [sp, #0xd0]
+    f3f0: a90e4ff4     	stp	x20, x19, [sp, #0xe0]
+    f3f4: 910243fd     	add	x29, sp, #0x90
+    f3f8: 3941b008     	ldrb	w8, [x0, #0x6c]
+    f3fc: aa0203f6     	mov	x22, x2
+    f400: aa0003f4     	mov	x20, x0
+    f404: b9002fe3     	str	w3, [sp, #0x2c]
+    f408: 7100051f     	cmp	w8, #0x1
+    f40c: 54000161     	b.ne	0xf438 <frame_filter::image::count_ge(frame_encoding::block_mask const&, unsigned long, bool) const+0x60>
+    f410: a940202c     	ldp	x12, x8, [x1]
+    f414: eb08019f     	cmp	x12, x8
+    f418: 54002a60     	b.eq	0xf964 <frame_filter::image::count_ge(frame_encoding::block_mask const&, unsigned long, bool) const+0x58c>
+    f41c: cb0c0109     	sub	x9, x8, x12
+    f420: d1002129     	sub	x9, x9, #0x8
+    f424: f100613f     	cmp	x9, #0x18
+    f428: 54002482     	b.hs	0xf8b8 <frame_filter::image::count_ge(frame_encoding::block_mask const&, unsigned long, bool) const+0x4e0>
+    f42c: aa1f03ea     	mov	x10, xzr
+    f430: aa0c03e9     	mov	x9, x12
+    f434: 1400013a     	b	0xf91c <frame_filter::image::count_ge(frame_encoding::block_mask const&, unsigned long, bool) const+0x544>
+    f438: f9400c28     	ldr	x8, [x1, #0x18]
+    f43c: 91003d08     	add	x8, x8, #0xf
+    f440: f100411f     	cmp	x8, #0x10
+    f444: 54002903     	b.lo	0xf964 <frame_filter::image::count_ge(frame_encoding::block_mask const&, unsigned long, bool) const+0x58c>
+    f448: d344fd08     	lsr	x8, x8, #4
+    f44c: aa1f03f7     	mov	x23, xzr
+    f450: aa1f03fb     	mov	x27, xzr
+    f454: f90013f6     	str	x22, [sp, #0x20]
+    f458: a90107e8     	stp	x8, x1, [sp, #0x10]
+    f45c: 52800108     	mov	w8, #0x8                // =8
+    f460: f9001be8     	str	x8, [sp, #0x30]
+    f464: 14000008     	b	0xf484 <frame_filter::image::count_ge(frame_encoding::block_mask const&, unsigned long, bool) const+0xac>
+    f468: a94107e8     	ldp	x8, x1, [sp, #0x10]
+    f46c: 9100077b     	add	x27, x27, #0x1
+    f470: eb08037f     	cmp	x27, x8
+    f474: f9401be8     	ldr	x8, [sp, #0x30]
+    f478: 91040108     	add	x8, x8, #0x100
+    f47c: f9001be8     	str	x8, [sp, #0x30]
+    f480: 54002740     	b.eq	0xf968 <frame_filter::image::count_ge(frame_encoding::block_mask const&, unsigned long, bool) const+0x590>
+    f484: d342ff68     	lsr	x8, x27, #2
+    f488: f9400029     	ldr	x9, [x1]
+    f48c: d37cef78     	lsl	x24, x27, #4
+    f490: f8687929     	ldr	x9, [x9, x8, lsl #3]
+    f494: f9400c28     	ldr	x8, [x1, #0x18]
+    f498: 927c070a     	and	x10, x24, #0x30
+    f49c: 9100430b     	add	x11, x24, #0x10
+    f4a0: 9aca2529     	lsr	x9, x9, x10
+    f4a4: eb0b011f     	cmp	x8, x11
+    f4a8: 9a8b311c     	csel	x28, x8, x11, lo
+    f4ac: 72003d35     	ands	w21, w9, #0xffff
+    f4b0: 54fffdc0     	b.eq	0xf468 <frame_filter::image::count_ge(frame_encoding::block_mask const&, unsigned long, bool) const+0x90>
+    f4b4: 529fffe9     	mov	w9, #0xffff             // =65535
+    f4b8: 6b0902bf     	cmp	w21, w9
+    f4bc: 54000ee1     	b.ne	0xf698 <frame_filter::image::count_ge(frame_encoding::block_mask const&, unsigned long, bool) const+0x2c0>
+    f4c0: cb180389     	sub	x9, x28, x24
+    f4c4: f100413f     	cmp	x9, #0x10
+    f4c8: 54000e81     	b.ne	0xf698 <frame_filter::image::count_ge(frame_encoding::block_mask const&, unsigned long, bool) const+0x2c0>
+    f4cc: eb18011f     	cmp	x8, x24
+    f4d0: 54fffcc9     	b.ls	0xf468 <frame_filter::image::count_ge(frame_encoding::block_mask const&, unsigned long, bool) const+0x90>
+    f4d4: f9401bf5     	ldr	x21, [sp, #0x30]
+    f4d8: 1400000a     	b	0xf500 <frame_filter::image::count_ge(frame_encoding::block_mask const&, unsigned long, bool) const+0x128>
+    f4dc: f85f8348     	ldur	x8, [x26, #-0x8]
+    f4e0: eb16011f     	cmp	x8, x22
+    f4e4: 52802008     	mov	w8, #0x100              // =256
+    f4e8: 9a8833e0     	csel	x0, xzr, x8, lo
+    f4ec: 8b170017     	add	x23, x0, x23
+    f4f0: 91000718     	add	x24, x24, #0x1
+    f4f4: 910042b5     	add	x21, x21, #0x10
+    f4f8: eb1c031f     	cmp	x24, x28
+    f4fc: 54fffb62     	b.hs	0xf468 <frame_filter::image::count_ge(frame_encoding::block_mask const&, unsigned long, bool) const+0x90>
+    f500: f9400280     	ldr	x0, [x20]
+    f504: f9400419     	ldr	x25, [x0, #0x8]
+    f508: 8b15033a     	add	x26, x25, x21
+    f50c: 39401b48     	ldrb	w8, [x26, #0x6]
+    f510: 51000509     	sub	w9, w8, #0x1
+    f514: 7100093f     	cmp	w9, #0x2
+    f518: 540004e2     	b.hs	0xf5b4 <frame_filter::image::count_ge(frame_encoding::block_mask const&, unsigned long, bool) const+0x1dc>
+    f51c: f85f8348     	ldur	x8, [x26, #-0x8]
+    f520: eb0802c8     	subs	x8, x22, x8
+    f524: 540005c9     	b.ls	0xf5dc <frame_filter::image::count_ge(frame_encoding::block_mask const&, unsigned long, bool) const+0x204>
+    f528: 8b150336     	add	x22, x25, x21
+    f52c: 39401ec9     	ldrb	w9, [x22, #0x7]
+    f530: 9ac9250a     	lsr	x10, x8, x9
+    f534: f100fd3f     	cmp	x9, #0x3f
+    f538: fa409944     	ccmp	x10, #0x0, #0x4, ls
+    f53c: 540005e1     	b.ne	0xf5f8 <frame_filter::image::count_ge(frame_encoding::block_mask const&, unsigned long, bool) const+0x220>
+    f540: f940068a     	ldr	x10, [x20, #0x8]
+    f544: b9406a89     	ldr	w9, [x20, #0x68]
+    f548: 8b150153     	add	x19, x10, x21
+    f54c: 7100013f     	cmp	w9, #0x0
+    f550: f94013e9     	ldr	x9, [sp, #0x20]
+    f554: 385f9260     	ldurb	w0, [x19, #-0x7]
+    f558: 385f8261     	ldurb	w1, [x19, #-0x8]
+    f55c: 9a890108     	csel	x8, x8, x9, eq
+    f560: a90023ea     	stp	x10, x8, [sp]
+    f564: 94000be7     	bl	0x12500 <frame_filter::kernels(unsigned int, unsigned int)>
+    f568: a9422688     	ldp	x8, x9, [x20, #0x20]
+    f56c: eb09011f     	cmp	x8, x9
+    f570: 54000500     	b.eq	0xf610 <frame_filter::image::count_ge(frame_encoding::block_mask const&, unsigned long, bool) const+0x238>
+    f574: b85fc269     	ldur	w9, [x19, #-0x4]
+    f578: 8b090108     	add	x8, x8, x9
+    f57c: 385f8269     	ldurb	w9, [x19, #-0x8]
+    f580: 7100213f     	cmp	w9, #0x8
+    f584: 540004e3     	b.lo	0xf620 <frame_filter::image::count_ge(frame_encoding::block_mask const&, unsigned long, bool) const+0x248>
+    f588: a94007ec     	ldp	x12, x1, [sp]
+    f58c: 7100413f     	cmp	w9, #0x10
+    f590: f9401e8a     	ldr	x10, [x20, #0x38]
+    f594: b875698b     	ldr	w11, [x12, x21]
+    f598: 8b0b0149     	add	x9, x10, x11
+    f59c: 54000461     	b.ne	0xf628 <frame_filter::image::count_ge(frame_encoding::block_mask const&, unsigned long, bool) const+0x250>
+    f5a0: 8b15018a     	add	x10, x12, x21
+    f5a4: f9402a8b     	ldr	x11, [x20, #0x50]
+    f5a8: b940054a     	ldr	w10, [x10, #0x4]
+    f5ac: 8b0a016a     	add	x10, x11, x10
+    f5b0: 1400001f     	b	0xf62c <frame_filter::image::count_ge(frame_encoding::block_mask const&, unsigned long, bool) const+0x254>
+    f5b4: 34fff948     	cbz	w8, 0xf4dc <frame_filter::image::count_ge(frame_encoding::block_mask const&, unsigned long, bool) const+0x104>
+    f5b8: aa1803e1     	mov	x1, x24
+    f5bc: aa1603e2     	mov	x2, x22
+    f5c0: 940001bd     	bl	0xfcb4 <frame_encoding::block_count_ge(frame_encoding::column const&, unsigned long, unsigned long)>
+    f5c4: 8b170017     	add	x23, x0, x23
+    f5c8: 91000718     	add	x24, x24, #0x1
+    f5cc: 910042b5     	add	x21, x21, #0x10
+    f5d0: eb1c031f     	cmp	x24, x28
+    f5d4: 54fff963     	b.lo	0xf500 <frame_filter::image::count_ge(frame_encoding::block_mask const&, unsigned long, bool) const+0x128>
+    f5d8: 17ffffa4     	b	0xf468 <frame_filter::image::count_ge(frame_encoding::block_mask const&, unsigned long, bool) const+0x90>
+    f5dc: 52802000     	mov	w0, #0x100              // =256
+    f5e0: 8b170017     	add	x23, x0, x23
+    f5e4: 91000718     	add	x24, x24, #0x1
+    f5e8: 910042b5     	add	x21, x21, #0x10
+    f5ec: eb1c031f     	cmp	x24, x28
+    f5f0: 54fff883     	b.lo	0xf500 <frame_filter::image::count_ge(frame_encoding::block_mask const&, unsigned long, bool) const+0x128>
+    f5f4: 17ffff9d     	b	0xf468 <frame_filter::image::count_ge(frame_encoding::block_mask const&, unsigned long, bool) const+0x90>
+    f5f8: f94013f6     	ldr	x22, [sp, #0x20]
+    f5fc: 91000718     	add	x24, x24, #0x1
+    f600: 910042b5     	add	x21, x21, #0x10
+    f604: eb1c031f     	cmp	x24, x28
+    f608: 54fff7c3     	b.lo	0xf500 <frame_filter::image::count_ge(frame_encoding::block_mask const&, unsigned long, bool) const+0x128>
+    f60c: 17ffff97     	b	0xf468 <frame_filter::image::count_ge(frame_encoding::block_mask const&, unsigned long, bool) const+0x90>
+    f610: aa1f03e8     	mov	x8, xzr
+    f614: 385f8269     	ldurb	w9, [x19, #-0x8]
+    f618: 7100213f     	cmp	w9, #0x8
+    f61c: 54fffb62     	b.hs	0xf588 <frame_filter::image::count_ge(frame_encoding::block_mask const&, unsigned long, bool) const+0x1b0>
+    f620: f94007e1     	ldr	x1, [sp, #0x8]
+    f624: aa1f03e9     	mov	x9, xzr
+    f628: aa1f03ea     	mov	x10, xzr
+    f62c: 8b15032b     	add	x11, x25, x21
+    f630: f940028d     	ldr	x13, [x20]
+    f634: 39401ece     	ldrb	w14, [x22, #0x7]
+    f638: 7940096c     	ldrh	w12, [x11, #0x4]
+    f63c: b940016b     	ldr	w11, [x11]
+    f640: a903a7e8     	stp	x8, x9, [sp, #0x38]
+    f644: f94011a8     	ldr	x8, [x13, #0x20]
+    f648: 91001d8d     	add	x13, x12, #0x7
+    f64c: d343fda9     	lsr	x9, x13, #3
+    f650: f940080d     	ldr	x13, [x0, #0x10]
+    f654: a904b3ea     	stp	x10, x12, [sp, #0x48]
+    f658: 8b0b0108     	add	x8, x8, x11
+    f65c: 9100e3e0     	add	x0, sp, #0x38
+    f660: 9bae2128     	umaddl	x8, w9, w14, x8
+    f664: 39401b49     	ldrb	w9, [x26, #0x6]
+    f668: 7100053f     	cmp	w9, #0x1
+    f66c: 9a9f0103     	csel	x3, x8, xzr, eq
+    f670: b9402fe8     	ldr	w8, [sp, #0x2c]
+    f674: 12000102     	and	w2, w8, #0x1
+    f678: d63f01a0     	blr	x13
+    f67c: f94013f6     	ldr	x22, [sp, #0x20]
+    f680: 8b170017     	add	x23, x0, x23
+    f684: 91000718     	add	x24, x24, #0x1
+    f688: 910042b5     	add	x21, x21, #0x10
+    f68c: eb1c031f     	cmp	x24, x28
+    f690: 54fff383     	b.lo	0xf500 <frame_filter::image::count_ge(frame_encoding::block_mask const&, unsigned long, bool) const+0x128>
+    f694: 17ffff75     	b	0xf468 <frame_filter::image::count_ge(frame_encoding::block_mask const&, unsigned long, bool) const+0x90>
+    f698: 35000155     	cbnz	w21, 0xf6c0 <frame_filter::image::count_ge(frame_encoding::block_mask const&, unsigned long, bool) const+0x2e8>
+    f69c: 17ffff73     	b	0xf468 <frame_filter::image::count_ge(frame_encoding::block_mask const&, unsigned long, bool) const+0x90>
+    f6a0: f9400348     	ldr	x8, [x26]
+    f6a4: eb16011f     	cmp	x8, x22
+    f6a8: 52802008     	mov	w8, #0x100              // =256
+    f6ac: 9a8833f9     	csel	x25, xzr, x8, lo
+    f6b0: 8b170337     	add	x23, x25, x23
+    f6b4: 510006a8     	sub	w8, w21, #0x1
+    f6b8: 6a150115     	ands	w21, w8, w21
+    f6bc: 54ffed60     	b.eq	0xf468 <frame_filter::image::count_ge(frame_encoding::block_mask const&, unsigned long, bool) const+0x90>
+    f6c0: 5ac002a8     	rbit	w8, w21
+    f6c4: 5ac01108     	clz	w8, w8
+    f6c8: 8b080301     	add	x1, x24, x8
+    f6cc: eb1c003f     	cmp	x1, x28
+    f6d0: 54ffff22     	b.hs	0xf6b4 <frame_filter::image::count_ge(frame_encoding::block_mask const&, unsigned long, bool) const+0x2dc>
+    f6d4: f9400280     	ldr	x0, [x20]
+    f6d8: f9400408     	ldr	x8, [x0, #0x8]
+    f6dc: 8b01111a     	add	x26, x8, x1, lsl #4
+    f6e0: 39403b48     	ldrb	w8, [x26, #0xe]
+    f6e4: 51000509     	sub	w9, w8, #0x1
+    f6e8: 7100093f     	cmp	w9, #0x2
+    f6ec: 54000442     	b.hs	0xf774 <frame_filter::image::count_ge(frame_encoding::block_mask const&, unsigned long, bool) const+0x39c>
+    f6f0: f9400348     	ldr	x8, [x26]
+    f6f4: eb0802c8     	subs	x8, x22, x8
+    f6f8: 54000989     	b.ls	0xf828 <frame_filter::image::count_ge(frame_encoding::block_mask const&, unsigned long, bool) const+0x450>
+    f6fc: 39403f49     	ldrb	w9, [x26, #0xf]
+    f700: 9ac9250a     	lsr	x10, x8, x9
+    f704: f100fd3f     	cmp	x9, #0x3f
+    f708: fa409944     	ccmp	x10, #0x0, #0x4, ls
+    f70c: 54fffd41     	b.ne	0xf6b4 <frame_filter::image::count_ge(frame_encoding::block_mask const&, unsigned long, bool) const+0x2dc>
+    f710: f9400689     	ldr	x9, [x20, #0x8]
+    f714: b9406a8a     	ldr	w10, [x20, #0x68]
+    f718: 8b011133     	add	x19, x9, x1, lsl #4
+    f71c: 7100015f     	cmp	w10, #0x0
+    f720: 9a960119     	csel	x25, x8, x22, eq
+    f724: 39400660     	ldrb	w0, [x19, #0x1]
+    f728: 39400261     	ldrb	w1, [x19]
+    f72c: 94000b75     	bl	0x12500 <frame_filter::kernels(unsigned int, unsigned int)>
+    f730: a9422688     	ldp	x8, x9, [x20, #0x20]
+    f734: eb09011f     	cmp	x8, x9
+    f738: 54000880     	b.eq	0xf848 <frame_filter::image::count_ge(frame_encoding::block_mask const&, unsigned long, bool) const+0x470>
+    f73c: b9400669     	ldr	w9, [x19, #0x4]
+    f740: 8b090108     	add	x8, x8, x9
+    f744: 39400269     	ldrb	w9, [x19]
+    f748: 7100213f     	cmp	w9, #0x8
+    f74c: 54000863     	b.lo	0xf858 <frame_filter::image::count_ge(frame_encoding::block_mask const&, unsigned long, bool) const+0x480>
+    f750: f9401e8a     	ldr	x10, [x20, #0x38]
+    f754: b9400a6b     	ldr	w11, [x19, #0x8]
+    f758: 7100413f     	cmp	w9, #0x10
+    f75c: 8b0b0149     	add	x9, x10, x11
+    f760: 540007e1     	b.ne	0xf85c <frame_filter::image::count_ge(frame_encoding::block_mask const&, unsigned long, bool) const+0x484>
+    f764: f9402a8a     	ldr	x10, [x20, #0x50]
+    f768: b9400e6b     	ldr	w11, [x19, #0xc]
+    f76c: 8b0b014a     	add	x10, x10, x11
+    f770: 1400003c     	b	0xf860 <frame_filter::image::count_ge(frame_encoding::block_mask const&, unsigned long, bool) const+0x488>
+    f774: 34fff968     	cbz	w8, 0xf6a0 <frame_filter::image::count_ge(frame_encoding::block_mask const&, unsigned long, bool) const+0x2c8>
+    f778: a94ca408     	ldp	x8, x9, [x0, #0xc8]
+    f77c: eb09011f     	cmp	x8, x9
+    f780: 54000580     	b.eq	0xf830 <frame_filter::image::count_ge(frame_encoding::block_mask const&, unsigned long, bool) const+0x458>
+    f784: d346fc29     	lsr	x9, x1, #6
+    f788: f8697908     	ldr	x8, [x8, x9, lsl #3]
+    f78c: 9ac12508     	lsr	x8, x8, x1
+    f790: 36000508     	tbz	w8, #0x0, 0xf830 <frame_filter::image::count_ge(frame_encoding::block_mask const&, unsigned long, bool) const+0x458>
+    f794: 6f00e400     	movi	v0.2d, #0000000000000000
+    f798: 9100e3e8     	add	x8, sp, #0x38
+    f79c: a903dbe0     	stp	x0, x22, [sp, #0x38]
+    f7a0: f805011f     	stur	xzr, [x8, #0x50]
+    f7a4: ad008100     	stp	q0, q0, [x8, #0x10]
+    f7a8: ad018100     	stp	q0, q0, [x8, #0x30]
+    f7ac: 9100e3e0     	add	x0, sp, #0x38
+    f7b0: 94000085     	bl	0xf9c4 <frame_encoding::code_count::count(unsigned long)>
+    f7b4: a947cffa     	ldp	x26, x19, [sp, #0x78]
+    f7b8: aa0003f9     	mov	x25, x0
+    f7bc: eb13035f     	cmp	x26, x19
+    f7c0: 54000281     	b.ne	0xf810 <frame_filter::image::count_ge(frame_encoding::block_mask const&, unsigned long, bool) const+0x438>
+    f7c4: b40000ba     	cbz	x26, 0xf7d8 <frame_filter::image::count_ge(frame_encoding::block_mask const&, unsigned long, bool) const+0x400>
+    f7c8: f94047e8     	ldr	x8, [sp, #0x88]
+    f7cc: aa1a03e0     	mov	x0, x26
+    f7d0: cb1a0101     	sub	x1, x8, x26
+    f7d4: 97ffd3ff     	bl	0x47d0 <_ZdlPvm@plt>
+    f7d8: f94033e0     	ldr	x0, [sp, #0x60]
+    f7dc: b4000080     	cbz	x0, 0xf7ec <frame_filter::image::count_ge(frame_encoding::block_mask const&, unsigned long, bool) const+0x414>
+    f7e0: f9403be8     	ldr	x8, [sp, #0x70]
+    f7e4: cb000101     	sub	x1, x8, x0
+    f7e8: 97ffd3fa     	bl	0x47d0 <_ZdlPvm@plt>
+    f7ec: f94027e0     	ldr	x0, [sp, #0x48]
+    f7f0: b4fff600     	cbz	x0, 0xf6b0 <frame_filter::image::count_ge(frame_encoding::block_mask const&, unsigned long, bool) const+0x2d8>
+    f7f4: f9402fe8     	ldr	x8, [sp, #0x58]
+    f7f8: cb000101     	sub	x1, x8, x0
+    f7fc: 97ffd3f5     	bl	0x47d0 <_ZdlPvm@plt>
+    f800: 17ffffac     	b	0xf6b0 <frame_filter::image::count_ge(frame_encoding::block_mask const&, unsigned long, bool) const+0x2d8>
+    f804: 9100635a     	add	x26, x26, #0x18
+    f808: eb13035f     	cmp	x26, x19
+    f80c: 54000180     	b.eq	0xf83c <frame_filter::image::count_ge(frame_encoding::block_mask const&, unsigned long, bool) const+0x464>
+    f810: f9400340     	ldr	x0, [x26]
+    f814: b4ffff80     	cbz	x0, 0xf804 <frame_filter::image::count_ge(frame_encoding::block_mask const&, unsigned long, bool) const+0x42c>
+    f818: f9400b48     	ldr	x8, [x26, #0x10]
+    f81c: cb000101     	sub	x1, x8, x0
+    f820: 97ffd3ec     	bl	0x47d0 <_ZdlPvm@plt>
+    f824: 17fffff8     	b	0xf804 <frame_filter::image::count_ge(frame_encoding::block_mask const&, unsigned long, bool) const+0x42c>
+    f828: 52802019     	mov	w25, #0x100             // =256
+    f82c: 17ffffa1     	b	0xf6b0 <frame_filter::image::count_ge(frame_encoding::block_mask const&, unsigned long, bool) const+0x2d8>
+    f830: aa1603e2     	mov	x2, x22
+    f834: 97ffe6e8     	bl	0x93d4 <frame_encoding::stored_count_ge(frame_encoding::column const&, unsigned long, unsigned long)>
+    f838: 1400001e     	b	0xf8b0 <frame_filter::image::count_ge(frame_encoding::block_mask const&, unsigned long, bool) const+0x4d8>
+    f83c: f9403ffa     	ldr	x26, [sp, #0x78]
+    f840: b5fffc5a     	cbnz	x26, 0xf7c8 <frame_filter::image::count_ge(frame_encoding::block_mask const&, unsigned long, bool) const+0x3f0>
+    f844: 17ffffe5     	b	0xf7d8 <frame_filter::image::count_ge(frame_encoding::block_mask const&, unsigned long, bool) const+0x400>
+    f848: aa1f03e8     	mov	x8, xzr
+    f84c: 39400269     	ldrb	w9, [x19]
+    f850: 7100213f     	cmp	w9, #0x8
+    f854: 54fff7e2     	b.hs	0xf750 <frame_filter::image::count_ge(frame_encoding::block_mask const&, unsigned long, bool) const+0x378>
+    f858: aa1f03e9     	mov	x9, xzr
+    f85c: aa1f03ea     	mov	x10, xzr
+    f860: 79401b4b     	ldrh	w11, [x26, #0xc]
+    f864: f940028c     	ldr	x12, [x20]
+    f868: aa1903e1     	mov	x1, x25
+    f86c: b9400b4d     	ldr	w13, [x26, #0x8]
+    f870: 39403f4e     	ldrb	w14, [x26, #0xf]
+    f874: a903a7e8     	stp	x8, x9, [sp, #0x38]
+    f878: f9401188     	ldr	x8, [x12, #0x20]
+    f87c: 91001d6c     	add	x12, x11, #0x7
+    f880: d343fd89     	lsr	x9, x12, #3
+    f884: f940080c     	ldr	x12, [x0, #0x10]
+    f888: a904afea     	stp	x10, x11, [sp, #0x48]
+    f88c: 8b0d0108     	add	x8, x8, x13
+    f890: 9100e3e0     	add	x0, sp, #0x38
+    f894: 9bae2128     	umaddl	x8, w9, w14, x8
+    f898: 39403b49     	ldrb	w9, [x26, #0xe]
+    f89c: 7100053f     	cmp	w9, #0x1
+    f8a0: 9a9f0103     	csel	x3, x8, xzr, eq
+    f8a4: b9402fe8     	ldr	w8, [sp, #0x2c]
+    f8a8: 12000102     	and	w2, w8, #0x1
+    f8ac: d63f0180     	blr	x12
+    f8b0: aa0003f9     	mov	x25, x0
+    f8b4: 17ffff7f     	b	0xf6b0 <frame_filter::image::count_ge(frame_encoding::block_mask const&, unsigned long, bool) const+0x2d8>
+    f8b8: d343fd29     	lsr	x9, x9, #3
+    f8bc: 6f00e400     	movi	v0.2d, #0000000000000000
+    f8c0: 6f00e401     	movi	v1.2d, #0000000000000000
+    f8c4: 9100052a     	add	x10, x9, #0x1
+    f8c8: 927eed4b     	and	x11, x10, #0x3ffffffffffffffc
+    f8cc: 8b0b0d89     	add	x9, x12, x11, lsl #3
+    f8d0: 9100418c     	add	x12, x12, #0x10
+    f8d4: aa0b03ed     	mov	x13, x11
+    f8d8: ad7f8d82     	ldp	q2, q3, [x12, #-0x10]
+    f8dc: f10011ad     	subs	x13, x13, #0x4
+    f8e0: 9100818c     	add	x12, x12, #0x20
+    f8e4: 4e205842     	cnt	v2.16b, v2.16b
+    f8e8: 4e205863     	cnt	v3.16b, v3.16b
+    f8ec: 6e202842     	uaddlp	v2.8h, v2.16b
+    f8f0: 6e202863     	uaddlp	v3.8h, v3.16b
+    f8f4: 6e602842     	uaddlp	v2.4s, v2.8h
+    f8f8: 6e602863     	uaddlp	v3.4s, v3.8h
+    f8fc: 6ea06840     	uadalp	v0.2d, v2.4s
+    f900: 6ea06861     	uadalp	v1.2d, v3.4s
+    f904: 54fffea1     	b.ne	0xf8d8 <frame_filter::image::count_ge(frame_encoding::block_mask const&, unsigned long, bool) const+0x500>
+    f908: 4ee08420     	add	v0.2d, v1.2d, v0.2d
+    f90c: eb0b015f     	cmp	x10, x11
+    f910: 5ef1b800     	addp	d0, v0.2d
+    f914: 9e66000a     	fmov	x10, d0
+    f918: 54000100     	b.eq	0xf938 <frame_filter::image::count_ge(frame_encoding::block_mask const&, unsigned long, bool) const+0x560>
+    f91c: fc408520     	ldr	d0, [x9], #0x8
+    f920: eb08013f     	cmp	x9, x8
+    f924: 0e205800     	cnt	v0.8b, v0.8b
+    f928: 0e31b800     	addv	b0, v0.8b
+    f92c: 9e66000b     	fmov	x11, d0
+    f930: 8b0a016a     	add	x10, x11, x10
+    f934: 54ffff41     	b.ne	0xf91c <frame_filter::image::count_ge(frame_encoding::block_mask const&, unsigned long, bool) const+0x544>
+    f938: b400016a     	cbz	x10, 0xf964 <frame_filter::image::count_ge(frame_encoding::block_mask const&, unsigned long, bool) const+0x58c>
+    f93c: f9400280     	ldr	x0, [x20]
+    f940: aa1603e2     	mov	x2, x22
+    f944: a94e4ff4     	ldp	x20, x19, [sp, #0xe0]
+    f948: a94d57f6     	ldp	x22, x21, [sp, #0xd0]
+    f94c: a94c5ff8     	ldp	x24, x23, [sp, #0xc0]
+    f950: a94b67fa     	ldp	x26, x25, [sp, #0xb0]
+    f954: a94a6ffc     	ldp	x28, x27, [sp, #0xa0]
+    f958: a9497bfd     	ldp	x29, x30, [sp, #0x90]
+    f95c: 9103c3ff     	add	sp, sp, #0xf0
+    f960: 17ffe4a3     	b	0x8bec <frame_encoding::encoded_count_ge(frame_encoding::column const&, frame_encoding::block_mask const&, unsigned long)>
+    f964: aa1f03f7     	mov	x23, xzr
+    f968: aa1703e0     	mov	x0, x23
+    f96c: a94e4ff4     	ldp	x20, x19, [sp, #0xe0]
+    f970: a94d57f6     	ldp	x22, x21, [sp, #0xd0]
+    f974: a94c5ff8     	ldp	x24, x23, [sp, #0xc0]
+    f978: a94b67fa     	ldp	x26, x25, [sp, #0xb0]
+    f97c: a94a6ffc     	ldp	x28, x27, [sp, #0xa0]
+    f980: a9497bfd     	ldp	x29, x30, [sp, #0x90]
+    f984: 9103c3ff     	add	sp, sp, #0xf0
+    f988: d65f03c0     	ret
+    f98c: aa0003f3     	mov	x19, x0
+    f990: 9100e3e0     	add	x0, sp, #0x38
+    f994: 97ffe666     	bl	0x932c <frame_encoding::code_count::~code_count()>
+    f998: aa1303e0     	mov	x0, x19
+    f99c: 97ffd3c9     	bl	0x48c0 <_Unwind_Resume@plt>
+
+00000000000104c0 <frame_filter::logical_heads::count_ge(frame_encoding::block_mask const&, unsigned long) const>:
+   104c0: d10343ff     	sub	sp, sp, #0xd0
+   104c4: a9077bfd     	stp	x29, x30, [sp, #0x70]
+   104c8: a9086ffc     	stp	x28, x27, [sp, #0x80]
+   104cc: a90967fa     	stp	x26, x25, [sp, #0x90]
+   104d0: a90a5ff8     	stp	x24, x23, [sp, #0xa0]
+   104d4: a90b57f6     	stp	x22, x21, [sp, #0xb0]
+   104d8: a90c4ff4     	stp	x20, x19, [sp, #0xc0]
+   104dc: 9101c3fd     	add	x29, sp, #0x70
+   104e0: f9400c28     	ldr	x8, [x1, #0x18]
+   104e4: 91003d08     	add	x8, x8, #0xf
+   104e8: f100411f     	cmp	x8, #0x10
+   104ec: 54000162     	b.hs	0x10518 <frame_filter::logical_heads::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x58>
+   104f0: aa1f03f6     	mov	x22, xzr
+   104f4: aa1603e0     	mov	x0, x22
+   104f8: a94c4ff4     	ldp	x20, x19, [sp, #0xc0]
+   104fc: a94b57f6     	ldp	x22, x21, [sp, #0xb0]
+   10500: a94a5ff8     	ldp	x24, x23, [sp, #0xa0]
+   10504: a94967fa     	ldp	x26, x25, [sp, #0x90]
+   10508: a9486ffc     	ldp	x28, x27, [sp, #0x80]
+   1050c: a9477bfd     	ldp	x29, x30, [sp, #0x70]
+   10510: 910343ff     	add	sp, sp, #0xd0
+   10514: d65f03c0     	ret
+   10518: b0003e69     	adrp	x9, 0x7dd000 <ikea::detail::overlaps(ikea::detail::occupied_run, ikea::detail::occupied_run)+0x7c>
+   1051c: d344fd08     	lsr	x8, x8, #4
+   10520: aa0203f3     	mov	x19, x2
+   10524: 3dc05926     	ldr	q6, [x9, #0x160]
+   10528: aa0103f9     	mov	x25, x1
+   1052c: aa0003f5     	mov	x21, x0
+   10530: aa1f03f6     	mov	x22, xzr
+   10534: aa1f03fa     	mov	x26, xzr
+   10538: 52800302     	mov	w2, #0x18               // =24
+   1053c: f90017ff     	str	xzr, [sp, #0x28]
+   10540: a90023e1     	stp	x1, x8, [sp]
+   10544: 3d8007e6     	str	q6, [sp, #0x10]
+   10548: 14000008     	b	0x10568 <frame_filter::logical_heads::count_ge(frame_encoding::block_mask const&, unsigned long) const+0xa8>
+   1054c: f94007e8     	ldr	x8, [sp, #0x8]
+   10550: 9100075a     	add	x26, x26, #0x1
+   10554: eb08035f     	cmp	x26, x8
+   10558: f94017e8     	ldr	x8, [sp, #0x28]
+   1055c: 91400508     	add	x8, x8, #0x1, lsl #12   // =0x1000
+   10560: f90017e8     	str	x8, [sp, #0x28]
+   10564: 54fffc80     	b.eq	0x104f4 <frame_filter::logical_heads::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x34>
+   10568: d342ff48     	lsr	x8, x26, #2
+   1056c: f9400329     	ldr	x9, [x25]
+   10570: d37cef57     	lsl	x23, x26, #4
+   10574: f8687929     	ldr	x9, [x9, x8, lsl #3]
+   10578: f9400f28     	ldr	x8, [x25, #0x18]
+   1057c: 927c06ea     	and	x10, x23, #0x30
+   10580: 910042eb     	add	x11, x23, #0x10
+   10584: 9aca2529     	lsr	x9, x9, x10
+   10588: eb0b011f     	cmp	x8, x11
+   1058c: 9a8b311b     	csel	x27, x8, x11, lo
+   10590: 72003d34     	ands	w20, w9, #0xffff
+   10594: 54fffdc0     	b.eq	0x1054c <frame_filter::logical_heads::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x8c>
+   10598: 529fffe9     	mov	w9, #0xffff             // =65535
+   1059c: 6b09029f     	cmp	w20, w9
+   105a0: 540017e1     	b.ne	0x1089c <frame_filter::logical_heads::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x3dc>
+   105a4: cb170369     	sub	x9, x27, x23
+   105a8: f100413f     	cmp	x9, #0x10
+   105ac: 54001781     	b.ne	0x1089c <frame_filter::logical_heads::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x3dc>
+   105b0: eb17011f     	cmp	x8, x23
+   105b4: 54fffcc9     	b.ls	0x1054c <frame_filter::logical_heads::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x8c>
+   105b8: f94017f4     	ldr	x20, [sp, #0x28]
+   105bc: 14000007     	b	0x105d8 <frame_filter::logical_heads::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x118>
+   105c0: 52802000     	mov	w0, #0x100              // =256
+   105c4: 8b160016     	add	x22, x0, x22
+   105c8: 910006f7     	add	x23, x23, #0x1
+   105cc: 91040294     	add	x20, x20, #0x100
+   105d0: eb1b02ff     	cmp	x23, x27
+   105d4: 54fffbc2     	b.hs	0x1054c <frame_filter::logical_heads::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x8c>
+   105d8: d348fee8     	lsr	x8, x23, #8
+   105dc: f94006a9     	ldr	x9, [x21, #0x8]
+   105e0: 9b022508     	madd	x8, x8, x2, x9
+   105e4: f9400109     	ldr	x9, [x8]
+   105e8: eb090269     	subs	x9, x19, x9
+   105ec: 54fffea9     	b.ls	0x105c0 <frame_filter::logical_heads::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x100>
+   105f0: f940050a     	ldr	x10, [x8, #0x8]
+   105f4: eb0a027f     	cmp	x19, x10
+   105f8: 54fffe88     	b.hi	0x105c8 <frame_filter::logical_heads::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x108>
+   105fc: 3940410a     	ldrb	w10, [x8, #0x10]
+   10600: 9280000b     	mov	x11, #-0x1              // =-1
+   10604: f94002a0     	ldr	x0, [x21]
+   10608: 9aca216b     	lsl	x11, x11, x10
+   1060c: 9aca2538     	lsr	x24, x9, x10
+   10610: ea2b013f     	bics	xzr, x9, x11
+   10614: 39404509     	ldrb	w9, [x8, #0x11]
+   10618: d378dee8     	lsl	x8, x23, #8
+   1061c: fa401944     	ccmp	x10, #0x0, #0x4, ne
+   10620: f94012aa     	ldr	x10, [x21, #0x20]
+   10624: 1a9f07eb     	cset	w11, ne
+   10628: 7100213f     	cmp	w9, #0x8
+   1062c: 8b08015c     	add	x28, x10, x8
+   10630: 54000101     	b.ne	0x10650 <frame_filter::logical_heads::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x190>
+   10634: 360009eb     	tbz	w11, #0x0, 0x10770 <frame_filter::logical_heads::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x2b0>
+   10638: 6f00e400     	movi	v0.2d, #0000000000000000
+   1063c: f103ff1f     	cmp	x24, #0xff
+   10640: ad0183e0     	stp	q0, q0, [sp, #0x30]
+   10644: 54000c89     	b.ls	0x107d4 <frame_filter::logical_heads::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x314>
+   10648: aa1f03fc     	mov	x28, xzr
+   1064c: 14000091     	b	0x10890 <frame_filter::logical_heads::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x3d0>
+   10650: f9401ea9     	ldr	x9, [x21, #0x38]
+   10654: 360009cb     	tbz	w11, #0x0, 0x1078c <frame_filter::logical_heads::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x2cc>
+   10658: 6f00e400     	movi	v0.2d, #0000000000000000
+   1065c: d350ff08     	lsr	x8, x24, #16
+   10660: aa1f03fc     	mov	x28, xzr
+   10664: ad3f03a0     	stp	q0, q0, [x29, #-0x20]
+   10668: b5001148     	cbnz	x8, 0x10890 <frame_filter::logical_heads::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x3d0>
+   1066c: d348ff0b     	lsr	x11, x24, #8
+   10670: 4e010f01     	dup	v1.16b, w24
+   10674: 8b140129     	add	x9, x9, x20
+   10678: 8b14014a     	add	x10, x10, x20
+   1067c: 5280010c     	mov	w12, #0x8               // =8
+   10680: 4e010d60     	dup	v0.16b, w11
+   10684: d10083ab     	sub	x11, x29, #0x20
+   10688: 14000023     	b	0x10714 <frame_filter::logical_heads::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x254>
+   1068c: 8b0c0130     	add	x16, x9, x12
+   10690: 6d7f8e02     	ldp	d2, d3, [x16, #-0x8]
+   10694: 6e180462     	mov	v2.d[1], v3.d[0]
+   10698: 6e213443     	cmhi	v3.16b, v2.16b, v1.16b
+   1069c: 6e218c42     	cmeq	v2.16b, v2.16b, v1.16b
+   106a0: 4e261c63     	and	v3.16b, v3.16b, v6.16b
+   106a4: 4e261c42     	and	v2.16b, v2.16b, v6.16b
+   106a8: 6e034064     	ext	v4.16b, v3.16b, v3.16b, #0x8
+   106ac: 6e024045     	ext	v5.16b, v2.16b, v2.16b, #0x8
+   106b0: 0e31b863     	addv	b3, v3.8b
+   106b4: 0e31b842     	addv	b2, v2.8b
+   106b8: 1e260070     	fmov	w16, s3
+   106bc: 0e31b884     	addv	b4, v4.8b
+   106c0: 0e31b8a5     	addv	b5, v5.8b
+   106c4: 1e260091     	fmov	w17, s4
+   106c8: 1e2600b2     	fmov	w18, s5
+   106cc: 33185e30     	bfi	w16, w17, #8, #24
+   106d0: 1e260051     	fmov	w17, s2
+   106d4: 0a0e020e     	and	w14, w16, w14
+   106d8: 33185e51     	bfi	w17, w18, #8, #24
+   106dc: 2a0d01cd     	orr	w13, w14, w13
+   106e0: 0a0f022e     	and	w14, w17, w15
+   106e4: 12003dad     	and	w13, w13, #0xffff
+   106e8: d100218f     	sub	x15, x12, #0x8
+   106ec: 9100418c     	add	x12, x12, #0x10
+   106f0: 1e2701a2     	fmov	s2, w13
+   106f4: f103c1ff     	cmp	x15, #0xf0
+   106f8: 2a0801c8     	orr	w8, w14, w8
+   106fc: 7800256e     	strh	w14, [x11], #0x2
+   10700: 0e205842     	cnt	v2.8b, v2.8b
+   10704: 0e31b842     	addv	b2, v2.8b
+   10708: 1e26004d     	fmov	w13, s2
+   1070c: 8b0d039c     	add	x28, x28, x13
+   10710: 54000b02     	b.hs	0x10870 <frame_filter::logical_heads::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x3b0>
+   10714: 8b0c014d     	add	x13, x10, x12
+   10718: 6d7f8da2     	ldp	d2, d3, [x13, #-0x8]
+   1071c: 6e180462     	mov	v2.d[1], v3.d[0]
+   10720: 6e208c43     	cmeq	v3.16b, v2.16b, v0.16b
+   10724: 6e203442     	cmhi	v2.16b, v2.16b, v0.16b
+   10728: 4e261c63     	and	v3.16b, v3.16b, v6.16b
+   1072c: 4e261c42     	and	v2.16b, v2.16b, v6.16b
+   10730: 6e034064     	ext	v4.16b, v3.16b, v3.16b, #0x8
+   10734: 6e024045     	ext	v5.16b, v2.16b, v2.16b, #0x8
+   10738: 0e31b863     	addv	b3, v3.8b
+   1073c: 0e31b842     	addv	b2, v2.8b
+   10740: 1e26006e     	fmov	w14, s3
+   10744: 0e31b884     	addv	b4, v4.8b
+   10748: 0e31b8a5     	addv	b5, v5.8b
+   1074c: 1e26008d     	fmov	w13, s4
+   10750: 1e2600af     	fmov	w15, s5
+   10754: 33185dae     	bfi	w14, w13, #8, #24
+   10758: 1e26004d     	fmov	w13, s2
+   1075c: 33185ded     	bfi	w13, w15, #8, #24
+   10760: 72003dcf     	ands	w15, w14, #0xffff
+   10764: 54fff941     	b.ne	0x1068c <frame_filter::logical_heads::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x1cc>
+   10768: 2a1f03ee     	mov	w14, wzr
+   1076c: 17ffffde     	b	0x106e4 <frame_filter::logical_heads::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x224>
+   10770: 52800100     	mov	w0, #0x8                // =8
+   10774: 52800101     	mov	w1, #0x8                // =8
+   10778: 94000762     	bl	0x12500 <frame_filter::kernels(unsigned int, unsigned int)>
+   1077c: f9400808     	ldr	x8, [x0, #0x10]
+   10780: a93e73bf     	stp	xzr, x28, [x29, #-0x20]
+   10784: f81f03bf     	stur	xzr, [x29, #-0x10]
+   10788: 14000009     	b	0x107ac <frame_filter::logical_heads::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x2ec>
+   1078c: 52800200     	mov	w0, #0x10               // =16
+   10790: 52800201     	mov	w1, #0x10               // =16
+   10794: 8b080139     	add	x25, x9, x8
+   10798: 9400075a     	bl	0x12500 <frame_filter::kernels(unsigned int, unsigned int)>
+   1079c: f9400808     	ldr	x8, [x0, #0x10]
+   107a0: f81f03b9     	stur	x25, [x29, #-0x10]
+   107a4: f94003f9     	ldr	x25, [sp]
+   107a8: a93e73bf     	stp	xzr, x28, [x29, #-0x20]
+   107ac: 52802009     	mov	w9, #0x100              // =256
+   107b0: d10083a0     	sub	x0, x29, #0x20
+   107b4: aa1803e1     	mov	x1, x24
+   107b8: 52800022     	mov	w2, #0x1                // =1
+   107bc: aa1f03e3     	mov	x3, xzr
+   107c0: f81f83a9     	stur	x9, [x29, #-0x8]
+   107c4: d63f0100     	blr	x8
+   107c8: 3dc007e6     	ldr	q6, [sp, #0x10]
+   107cc: 52800302     	mov	w2, #0x18               // =24
+   107d0: 17ffff7d     	b	0x105c4 <frame_filter::logical_heads::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x104>
+   107d4: 4e010f00     	dup	v0.16b, w24
+   107d8: aa1f03e9     	mov	x9, xzr
+   107dc: 2a1f03e8     	mov	w8, wzr
+   107e0: aa1f03fc     	mov	x28, xzr
+   107e4: 8b14014a     	add	x10, x10, x20
+   107e8: 9100c3eb     	add	x11, sp, #0x30
+   107ec: 8b09014c     	add	x12, x10, x9
+   107f0: f103c13f     	cmp	x9, #0xf0
+   107f4: 91004129     	add	x9, x9, #0x10
+   107f8: 6d400981     	ldp	d1, d2, [x12]
+   107fc: 6e180441     	mov	v1.d[1], v2.d[0]
+   10800: 6e203422     	cmhi	v2.16b, v1.16b, v0.16b
+   10804: 6e208c21     	cmeq	v1.16b, v1.16b, v0.16b
+   10808: 4e261c42     	and	v2.16b, v2.16b, v6.16b
+   1080c: 4e261c21     	and	v1.16b, v1.16b, v6.16b
+   10810: 6e024043     	ext	v3.16b, v2.16b, v2.16b, #0x8
+   10814: 0e31b842     	addv	b2, v2.8b
+   10818: 1e26004c     	fmov	w12, s2
+   1081c: 0e31b863     	addv	b3, v3.8b
+   10820: 1e26006d     	fmov	w13, s3
+   10824: 6e014023     	ext	v3.16b, v1.16b, v1.16b, #0x8
+   10828: 0e31b821     	addv	b1, v1.8b
+   1082c: 33181dac     	bfi	w12, w13, #8, #8
+   10830: 0e31b863     	addv	b3, v3.8b
+   10834: 1e270182     	fmov	s2, w12
+   10838: 1e26002c     	fmov	w12, s1
+   1083c: 1e26006d     	fmov	w13, s3
+   10840: 0e205842     	cnt	v2.8b, v2.8b
+   10844: 33185dac     	bfi	w12, w13, #8, #24
+   10848: 0e31b842     	addv	b2, v2.8b
+   1084c: 7800256c     	strh	w12, [x11], #0x2
+   10850: 12003d8c     	and	w12, w12, #0xffff
+   10854: 2a080188     	orr	w8, w12, w8
+   10858: 1e26004d     	fmov	w13, s2
+   1085c: 8b0d039c     	add	x28, x28, x13
+   10860: 54fffc63     	b.lo	0x107ec <frame_filter::logical_heads::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x32c>
+   10864: 34000168     	cbz	w8, 0x10890 <frame_filter::logical_heads::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x3d0>
+   10868: 9100c3e3     	add	x3, sp, #0x30
+   1086c: 14000003     	b	0x10878 <frame_filter::logical_heads::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x3b8>
+   10870: 34000108     	cbz	w8, 0x10890 <frame_filter::logical_heads::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x3d0>
+   10874: d10083a3     	sub	x3, x29, #0x20
+   10878: aa1703e1     	mov	x1, x23
+   1087c: aa1303e2     	mov	x2, x19
+   10880: 94000639     	bl	0x12164 <frame_filter::(anonymous namespace)::refine(frame_encoding::column const&, unsigned long, unsigned long, std::array<unsigned short, 16ul> const&)>
+   10884: 3dc007e6     	ldr	q6, [sp, #0x10]
+   10888: 52800302     	mov	w2, #0x18               // =24
+   1088c: 14000002     	b	0x10894 <frame_filter::logical_heads::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x3d4>
+   10890: aa1f03e0     	mov	x0, xzr
+   10894: 8b1c0000     	add	x0, x0, x28
+   10898: 17ffff4b     	b	0x105c4 <frame_filter::logical_heads::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x104>
+   1089c: 350000f4     	cbnz	w20, 0x108b8 <frame_filter::logical_heads::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x3f8>
+   108a0: 17ffff2b     	b	0x1054c <frame_filter::logical_heads::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x8c>
+   108a4: 52802000     	mov	w0, #0x100              // =256
+   108a8: 8b160016     	add	x22, x0, x22
+   108ac: 51000688     	sub	w8, w20, #0x1
+   108b0: 6a140114     	ands	w20, w8, w20
+   108b4: 54ffe4c0     	b.eq	0x1054c <frame_filter::logical_heads::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x8c>
+   108b8: 5ac00288     	rbit	w8, w20
+   108bc: 5ac0110a     	clz	w10, w8
+   108c0: 8b0a02e1     	add	x1, x23, x10
+   108c4: eb1b003f     	cmp	x1, x27
+   108c8: 54ffff22     	b.hs	0x108ac <frame_filter::logical_heads::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x3ec>
+   108cc: d348fc28     	lsr	x8, x1, #8
+   108d0: f94006a9     	ldr	x9, [x21, #0x8]
+   108d4: 9b022508     	madd	x8, x8, x2, x9
+   108d8: f9400109     	ldr	x9, [x8]
+   108dc: eb090269     	subs	x9, x19, x9
+   108e0: 54fffe29     	b.ls	0x108a4 <frame_filter::logical_heads::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x3e4>
+   108e4: f940050b     	ldr	x11, [x8, #0x8]
+   108e8: eb0b027f     	cmp	x19, x11
+   108ec: 54fffe08     	b.hi	0x108ac <frame_filter::logical_heads::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x3ec>
+   108f0: 3940410b     	ldrb	w11, [x8, #0x10]
+   108f4: 9280000c     	mov	x12, #-0x1              // =-1
+   108f8: f94002a0     	ldr	x0, [x21]
+   108fc: 9acb218c     	lsl	x12, x12, x11
+   10900: 9acb2538     	lsr	x24, x9, x11
+   10904: ea2c013f     	bics	xzr, x9, x12
+   10908: 39404509     	ldrb	w9, [x8, #0x11]
+   1090c: d378dc28     	lsl	x8, x1, #8
+   10910: fa401964     	ccmp	x11, #0x0, #0x4, ne
+   10914: f94012ab     	ldr	x11, [x21, #0x20]
+   10918: 1a9f07ec     	cset	w12, ne
+   1091c: 7100213f     	cmp	w9, #0x8
+   10920: 8b08017c     	add	x28, x11, x8
+   10924: 54000101     	b.ne	0x10944 <frame_filter::logical_heads::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x484>
+   10928: 36000a6c     	tbz	w12, #0x0, 0x10a74 <frame_filter::logical_heads::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x5b4>
+   1092c: 6f00e400     	movi	v0.2d, #0000000000000000
+   10930: f103ff1f     	cmp	x24, #0xff
+   10934: ad0183e0     	stp	q0, q0, [sp, #0x30]
+   10938: 54000d09     	b.ls	0x10ad8 <frame_filter::logical_heads::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x618>
+   1093c: aa1f03fc     	mov	x28, xzr
+   10940: 14000096     	b	0x10b98 <frame_filter::logical_heads::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x6d8>
+   10944: f9401ea9     	ldr	x9, [x21, #0x38]
+   10948: 36000a4c     	tbz	w12, #0x0, 0x10a90 <frame_filter::logical_heads::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x5d0>
+   1094c: 6f00e400     	movi	v0.2d, #0000000000000000
+   10950: d350ff08     	lsr	x8, x24, #16
+   10954: aa1f03fc     	mov	x28, xzr
+   10958: ad3f03a0     	stp	q0, q0, [x29, #-0x20]
+   1095c: b50011e8     	cbnz	x8, 0x10b98 <frame_filter::logical_heads::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x6d8>
+   10960: d348ff0c     	lsr	x12, x24, #8
+   10964: d378dd4a     	lsl	x10, x10, #8
+   10968: 4e010f01     	dup	v1.16b, w24
+   1096c: 4e010d80     	dup	v0.16b, w12
+   10970: f94017ec     	ldr	x12, [sp, #0x28]
+   10974: 8b0c0129     	add	x9, x9, x12
+   10978: 8b0c016b     	add	x11, x11, x12
+   1097c: 5280010c     	mov	w12, #0x8               // =8
+   10980: 8b0a0129     	add	x9, x9, x10
+   10984: 8b0a016a     	add	x10, x11, x10
+   10988: d10083ab     	sub	x11, x29, #0x20
+   1098c: 14000023     	b	0x10a18 <frame_filter::logical_heads::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x558>
+   10990: 8b0c0130     	add	x16, x9, x12
+   10994: 6d7f8e02     	ldp	d2, d3, [x16, #-0x8]
+   10998: 6e180462     	mov	v2.d[1], v3.d[0]
+   1099c: 6e213443     	cmhi	v3.16b, v2.16b, v1.16b
+   109a0: 6e218c42     	cmeq	v2.16b, v2.16b, v1.16b
+   109a4: 4e261c63     	and	v3.16b, v3.16b, v6.16b
+   109a8: 4e261c42     	and	v2.16b, v2.16b, v6.16b
+   109ac: 6e034064     	ext	v4.16b, v3.16b, v3.16b, #0x8
+   109b0: 6e024045     	ext	v5.16b, v2.16b, v2.16b, #0x8
+   109b4: 0e31b863     	addv	b3, v3.8b
+   109b8: 0e31b842     	addv	b2, v2.8b
+   109bc: 1e260070     	fmov	w16, s3
+   109c0: 0e31b884     	addv	b4, v4.8b
+   109c4: 0e31b8a5     	addv	b5, v5.8b
+   109c8: 1e260091     	fmov	w17, s4
+   109cc: 1e2600b2     	fmov	w18, s5
+   109d0: 33185e30     	bfi	w16, w17, #8, #24
+   109d4: 1e260051     	fmov	w17, s2
+   109d8: 0a0e020e     	and	w14, w16, w14
+   109dc: 33185e51     	bfi	w17, w18, #8, #24
+   109e0: 2a0d01cd     	orr	w13, w14, w13
+   109e4: 0a0f022e     	and	w14, w17, w15
+   109e8: 12003dad     	and	w13, w13, #0xffff
+   109ec: d100218f     	sub	x15, x12, #0x8
+   109f0: 9100418c     	add	x12, x12, #0x10
+   109f4: 1e2701a2     	fmov	s2, w13
+   109f8: f103c1ff     	cmp	x15, #0xf0
+   109fc: 2a0801c8     	orr	w8, w14, w8
+   10a00: 7800256e     	strh	w14, [x11], #0x2
+   10a04: 0e205842     	cnt	v2.8b, v2.8b
+   10a08: 0e31b842     	addv	b2, v2.8b
+   10a0c: 1e26004d     	fmov	w13, s2
+   10a10: 8b0d039c     	add	x28, x28, x13
+   10a14: 54000b42     	b.hs	0x10b7c <frame_filter::logical_heads::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x6bc>
+   10a18: 8b0c014d     	add	x13, x10, x12
+   10a1c: 6d7f8da2     	ldp	d2, d3, [x13, #-0x8]
+   10a20: 6e180462     	mov	v2.d[1], v3.d[0]
+   10a24: 6e208c43     	cmeq	v3.16b, v2.16b, v0.16b
+   10a28: 6e203442     	cmhi	v2.16b, v2.16b, v0.16b
+   10a2c: 4e261c63     	and	v3.16b, v3.16b, v6.16b
+   10a30: 4e261c42     	and	v2.16b, v2.16b, v6.16b
+   10a34: 6e034064     	ext	v4.16b, v3.16b, v3.16b, #0x8
+   10a38: 6e024045     	ext	v5.16b, v2.16b, v2.16b, #0x8
+   10a3c: 0e31b863     	addv	b3, v3.8b
+   10a40: 0e31b842     	addv	b2, v2.8b
+   10a44: 1e26006e     	fmov	w14, s3
+   10a48: 0e31b884     	addv	b4, v4.8b
+   10a4c: 0e31b8a5     	addv	b5, v5.8b
+   10a50: 1e26008d     	fmov	w13, s4
+   10a54: 1e2600af     	fmov	w15, s5
+   10a58: 33185dae     	bfi	w14, w13, #8, #24
+   10a5c: 1e26004d     	fmov	w13, s2
+   10a60: 33185ded     	bfi	w13, w15, #8, #24
+   10a64: 72003dcf     	ands	w15, w14, #0xffff
+   10a68: 54fff941     	b.ne	0x10990 <frame_filter::logical_heads::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x4d0>
+   10a6c: 2a1f03ee     	mov	w14, wzr
+   10a70: 17ffffde     	b	0x109e8 <frame_filter::logical_heads::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x528>
+   10a74: 52800100     	mov	w0, #0x8                // =8
+   10a78: 52800101     	mov	w1, #0x8                // =8
+   10a7c: 940006a1     	bl	0x12500 <frame_filter::kernels(unsigned int, unsigned int)>
+   10a80: f9400808     	ldr	x8, [x0, #0x10]
+   10a84: a93e73bf     	stp	xzr, x28, [x29, #-0x20]
+   10a88: f81f03bf     	stur	xzr, [x29, #-0x10]
+   10a8c: 14000009     	b	0x10ab0 <frame_filter::logical_heads::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x5f0>
+   10a90: 52800200     	mov	w0, #0x10               // =16
+   10a94: 52800201     	mov	w1, #0x10               // =16
+   10a98: 8b080139     	add	x25, x9, x8
+   10a9c: 94000699     	bl	0x12500 <frame_filter::kernels(unsigned int, unsigned int)>
+   10aa0: f9400808     	ldr	x8, [x0, #0x10]
+   10aa4: f81f03b9     	stur	x25, [x29, #-0x10]
+   10aa8: f94003f9     	ldr	x25, [sp]
+   10aac: a93e73bf     	stp	xzr, x28, [x29, #-0x20]
+   10ab0: 52802009     	mov	w9, #0x100              // =256
+   10ab4: d10083a0     	sub	x0, x29, #0x20
+   10ab8: aa1803e1     	mov	x1, x24
+   10abc: 52800022     	mov	w2, #0x1                // =1
+   10ac0: aa1f03e3     	mov	x3, xzr
+   10ac4: f81f83a9     	stur	x9, [x29, #-0x8]
+   10ac8: d63f0100     	blr	x8
+   10acc: 3dc007e6     	ldr	q6, [sp, #0x10]
+   10ad0: 52800302     	mov	w2, #0x18               // =24
+   10ad4: 17ffff75     	b	0x108a8 <frame_filter::logical_heads::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x3e8>
+   10ad8: f94017ec     	ldr	x12, [sp, #0x28]
+   10adc: 4e010f00     	dup	v0.16b, w24
+   10ae0: aa1f03e9     	mov	x9, xzr
+   10ae4: 2a1f03e8     	mov	w8, wzr
+   10ae8: aa1f03fc     	mov	x28, xzr
+   10aec: 8b0c016b     	add	x11, x11, x12
+   10af0: 8b0a216a     	add	x10, x11, x10, lsl #8
+   10af4: 9100c3eb     	add	x11, sp, #0x30
+   10af8: 8b09014c     	add	x12, x10, x9
+   10afc: f103c13f     	cmp	x9, #0xf0
+   10b00: 91004129     	add	x9, x9, #0x10
+   10b04: 6d400981     	ldp	d1, d2, [x12]
+   10b08: 6e180441     	mov	v1.d[1], v2.d[0]
+   10b0c: 6e203422     	cmhi	v2.16b, v1.16b, v0.16b
+   10b10: 6e208c21     	cmeq	v1.16b, v1.16b, v0.16b
+   10b14: 4e261c42     	and	v2.16b, v2.16b, v6.16b
+   10b18: 4e261c21     	and	v1.16b, v1.16b, v6.16b
+   10b1c: 6e024043     	ext	v3.16b, v2.16b, v2.16b, #0x8
+   10b20: 0e31b842     	addv	b2, v2.8b
+   10b24: 1e26004c     	fmov	w12, s2
+   10b28: 0e31b863     	addv	b3, v3.8b
+   10b2c: 1e26006d     	fmov	w13, s3
+   10b30: 6e014023     	ext	v3.16b, v1.16b, v1.16b, #0x8
+   10b34: 0e31b821     	addv	b1, v1.8b
+   10b38: 33181dac     	bfi	w12, w13, #8, #8
+   10b3c: 0e31b863     	addv	b3, v3.8b
+   10b40: 1e270182     	fmov	s2, w12
+   10b44: 1e26002c     	fmov	w12, s1
+   10b48: 1e26006d     	fmov	w13, s3
+   10b4c: 0e205842     	cnt	v2.8b, v2.8b
+   10b50: 33185dac     	bfi	w12, w13, #8, #24
+   10b54: 0e31b842     	addv	b2, v2.8b
+   10b58: 7800256c     	strh	w12, [x11], #0x2
+   10b5c: 12003d8c     	and	w12, w12, #0xffff
+   10b60: 2a080188     	orr	w8, w12, w8
+   10b64: 1e26004d     	fmov	w13, s2
+   10b68: 8b0d039c     	add	x28, x28, x13
+   10b6c: 54fffc63     	b.lo	0x10af8 <frame_filter::logical_heads::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x638>
+   10b70: 34000148     	cbz	w8, 0x10b98 <frame_filter::logical_heads::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x6d8>
+   10b74: 9100c3e3     	add	x3, sp, #0x30
+   10b78: 14000003     	b	0x10b84 <frame_filter::logical_heads::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x6c4>
+   10b7c: 340000e8     	cbz	w8, 0x10b98 <frame_filter::logical_heads::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x6d8>
+   10b80: d10083a3     	sub	x3, x29, #0x20
+   10b84: aa1303e2     	mov	x2, x19
+   10b88: 94000577     	bl	0x12164 <frame_filter::(anonymous namespace)::refine(frame_encoding::column const&, unsigned long, unsigned long, std::array<unsigned short, 16ul> const&)>
+   10b8c: 3dc007e6     	ldr	q6, [sp, #0x10]
+   10b90: 52800302     	mov	w2, #0x18               // =24
+   10b94: 14000002     	b	0x10b9c <frame_filter::logical_heads::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x6dc>
+   10b98: aa1f03e0     	mov	x0, xzr
+   10b9c: 8b1c0000     	add	x0, x0, x28
+   10ba0: 17ffff42     	b	0x108a8 <frame_filter::logical_heads::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x3e8>
+
+00000000000112b0 <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const>:
+   112b0: d10243ff     	sub	sp, sp, #0x90
+   112b4: a9037bfd     	stp	x29, x30, [sp, #0x30]
+   112b8: a9046ffc     	stp	x28, x27, [sp, #0x40]
+   112bc: a90567fa     	stp	x26, x25, [sp, #0x50]
+   112c0: a9065ff8     	stp	x24, x23, [sp, #0x60]
+   112c4: a90757f6     	stp	x22, x21, [sp, #0x70]
+   112c8: a9084ff4     	stp	x20, x19, [sp, #0x80]
+   112cc: 9100c3fd     	add	x29, sp, #0x30
+   112d0: f9400c28     	ldr	x8, [x1, #0x18]
+   112d4: 91003d08     	add	x8, x8, #0xf
+   112d8: f100411f     	cmp	x8, #0x10
+   112dc: 54000162     	b.hs	0x11308 <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x58>
+   112e0: aa1f03f5     	mov	x21, xzr
+   112e4: aa1503e0     	mov	x0, x21
+   112e8: a9484ff4     	ldp	x20, x19, [sp, #0x80]
+   112ec: a94757f6     	ldp	x22, x21, [sp, #0x70]
+   112f0: a9465ff8     	ldp	x24, x23, [sp, #0x60]
+   112f4: a94567fa     	ldp	x26, x25, [sp, #0x50]
+   112f8: a9446ffc     	ldp	x28, x27, [sp, #0x40]
+   112fc: a9437bfd     	ldp	x29, x30, [sp, #0x30]
+   11300: 910243ff     	add	sp, sp, #0x90
+   11304: d65f03c0     	ret
+   11308: d344fd08     	lsr	x8, x8, #4
+   1130c: aa0203f3     	mov	x19, x2
+   11310: aa0103f4     	mov	x20, x1
+   11314: aa0003f6     	mov	x22, x0
+   11318: aa1f03f5     	mov	x21, xzr
+   1131c: aa1f03f8     	mov	x24, xzr
+   11320: 5280031a     	mov	w26, #0x18              // =24
+   11324: 5280071b     	mov	w27, #0x38              // =56
+   11328: f90007e8     	str	x8, [sp, #0x8]
+   1132c: 14000006     	b	0x11344 <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x94>
+   11330: f94007e8     	ldr	x8, [sp, #0x8]
+   11334: 91000718     	add	x24, x24, #0x1
+   11338: 910e035a     	add	x26, x26, #0x380
+   1133c: eb08031f     	cmp	x24, x8
+   11340: 54fffd20     	b.eq	0x112e4 <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x34>
+   11344: d342ff08     	lsr	x8, x24, #2
+   11348: f9400289     	ldr	x9, [x20]
+   1134c: d37cef17     	lsl	x23, x24, #4
+   11350: f8687929     	ldr	x9, [x9, x8, lsl #3]
+   11354: f9400e88     	ldr	x8, [x20, #0x18]
+   11358: 927c06ea     	and	x10, x23, #0x30
+   1135c: 910042eb     	add	x11, x23, #0x10
+   11360: 9aca2529     	lsr	x9, x9, x10
+   11364: eb0b011f     	cmp	x8, x11
+   11368: 9a8b311c     	csel	x28, x8, x11, lo
+   1136c: 72003d39     	ands	w25, w9, #0xffff
+   11370: 54fffe00     	b.eq	0x11330 <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x80>
+   11374: 529fffe9     	mov	w9, #0xffff             // =65535
+   11378: 6b09033f     	cmp	w25, w9
+   1137c: 540028c1     	b.ne	0x11894 <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x5e4>
+   11380: cb170389     	sub	x9, x28, x23
+   11384: f100413f     	cmp	x9, #0x10
+   11388: 54002861     	b.ne	0x11894 <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x5e4>
+   1138c: eb17011f     	cmp	x8, x23
+   11390: 54fffd09     	b.ls	0x11330 <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x80>
+   11394: aa1a03f9     	mov	x25, x26
+   11398: 14000006     	b	0x113b0 <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x100>
+   1139c: 910402b5     	add	x21, x21, #0x100
+   113a0: 910006f7     	add	x23, x23, #0x1
+   113a4: 9100e339     	add	x25, x25, #0x38
+   113a8: eb1c02ff     	cmp	x23, x28
+   113ac: 54fffc22     	b.hs	0x11330 <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x80>
+   113b0: f94006c9     	ldr	x9, [x22, #0x8]
+   113b4: 8b19012a     	add	x10, x9, x25
+   113b8: f85e8148     	ldur	x8, [x10, #-0x18]
+   113bc: eb080268     	subs	x8, x19, x8
+   113c0: 54fffee9     	b.ls	0x1139c <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0xec>
+   113c4: f85f014a     	ldur	x10, [x10, #-0x10]
+   113c8: eb0a027f     	cmp	x19, x10
+   113cc: 54fffea8     	b.hi	0x113a0 <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0xf0>
+   113d0: 8b19012c     	add	x12, x9, x25
+   113d4: 9280000d     	mov	x13, #-0x1              // =-1
+   113d8: 6f00e400     	movi	v0.2d, #0000000000000000
+   113dc: 3940618a     	ldrb	w10, [x12, #0x18]
+   113e0: 385f818b     	ldurb	w11, [x12, #-0x8]
+   113e4: 9aca216b     	lsl	x11, x11, x10
+   113e8: 9aca21ad     	lsl	x13, x13, x10
+   113ec: ad0083e0     	stp	q0, q0, [sp, #0x10]
+   113f0: eb08017f     	cmp	x11, x8
+   113f4: aa2d03eb     	mvn	x11, x13
+   113f8: 540001a2     	b.hs	0x1142c <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x17c>
+   113fc: 3940218c     	ldrb	w12, [x12, #0x8]
+   11400: 9aca218c     	lsl	x12, x12, x10
+   11404: aa0b018c     	orr	x12, x12, x11
+   11408: eb08019f     	cmp	x12, x8
+   1140c: 540017e2     	b.hs	0x11708 <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x458>
+   11410: 2a1f03ec     	mov	w12, wzr
+   11414: 8b19012d     	add	x13, x9, x25
+   11418: 385f91ae     	ldurb	w14, [x13, #-0x7]
+   1141c: 9aca21ce     	lsl	x14, x14, x10
+   11420: eb0801df     	cmp	x14, x8
+   11424: 54000123     	b.lo	0x11448 <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x198>
+   11428: 140000bf     	b	0x11724 <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x474>
+   1142c: 2a1f03ec     	mov	w12, wzr
+   11430: 910042b5     	add	x21, x21, #0x10
+   11434: 8b19012d     	add	x13, x9, x25
+   11438: 385f91ae     	ldurb	w14, [x13, #-0x7]
+   1143c: 9aca21ce     	lsl	x14, x14, x10
+   11440: eb0801df     	cmp	x14, x8
+   11444: 54001702     	b.hs	0x11724 <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x474>
+   11448: 394025ad     	ldrb	w13, [x13, #0x9]
+   1144c: 9aca21ad     	lsl	x13, x13, x10
+   11450: aa0b01ad     	orr	x13, x13, x11
+   11454: eb0801bf     	cmp	x13, x8
+   11458: 54000063     	b.lo	0x11464 <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x1b4>
+   1145c: 529fffec     	mov	w12, #0xffff            // =65535
+   11460: 790027ec     	strh	w12, [sp, #0x12]
+   11464: 8b19012d     	add	x13, x9, x25
+   11468: 385fa1ae     	ldurb	w14, [x13, #-0x6]
+   1146c: 9aca21ce     	lsl	x14, x14, x10
+   11470: eb0801df     	cmp	x14, x8
+   11474: 54001642     	b.hs	0x1173c <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x48c>
+   11478: 394029ad     	ldrb	w13, [x13, #0xa]
+   1147c: 9aca21ad     	lsl	x13, x13, x10
+   11480: aa0b01ad     	orr	x13, x13, x11
+   11484: eb0801bf     	cmp	x13, x8
+   11488: 54000063     	b.lo	0x11494 <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x1e4>
+   1148c: 529fffec     	mov	w12, #0xffff            // =65535
+   11490: 79002bec     	strh	w12, [sp, #0x14]
+   11494: 8b19012d     	add	x13, x9, x25
+   11498: 385fb1ae     	ldurb	w14, [x13, #-0x5]
+   1149c: 9aca21ce     	lsl	x14, x14, x10
+   114a0: eb0801df     	cmp	x14, x8
+   114a4: 54001582     	b.hs	0x11754 <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x4a4>
+   114a8: 39402dad     	ldrb	w13, [x13, #0xb]
+   114ac: 9aca21ad     	lsl	x13, x13, x10
+   114b0: aa0b01ad     	orr	x13, x13, x11
+   114b4: eb0801bf     	cmp	x13, x8
+   114b8: 54000063     	b.lo	0x114c4 <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x214>
+   114bc: 529fffec     	mov	w12, #0xffff            // =65535
+   114c0: 79002fec     	strh	w12, [sp, #0x16]
+   114c4: 8b19012d     	add	x13, x9, x25
+   114c8: 385fc1ae     	ldurb	w14, [x13, #-0x4]
+   114cc: 9aca21ce     	lsl	x14, x14, x10
+   114d0: eb0801df     	cmp	x14, x8
+   114d4: 540014c2     	b.hs	0x1176c <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x4bc>
+   114d8: 394031ad     	ldrb	w13, [x13, #0xc]
+   114dc: 9aca21ad     	lsl	x13, x13, x10
+   114e0: aa0b01ad     	orr	x13, x13, x11
+   114e4: eb0801bf     	cmp	x13, x8
+   114e8: 54000063     	b.lo	0x114f4 <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x244>
+   114ec: 529fffec     	mov	w12, #0xffff            // =65535
+   114f0: 790033ec     	strh	w12, [sp, #0x18]
+   114f4: 8b19012d     	add	x13, x9, x25
+   114f8: 385fd1ae     	ldurb	w14, [x13, #-0x3]
+   114fc: 9aca21ce     	lsl	x14, x14, x10
+   11500: eb0801df     	cmp	x14, x8
+   11504: 54001402     	b.hs	0x11784 <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x4d4>
+   11508: 394035ad     	ldrb	w13, [x13, #0xd]
+   1150c: 9aca21ad     	lsl	x13, x13, x10
+   11510: aa0b01ad     	orr	x13, x13, x11
+   11514: eb0801bf     	cmp	x13, x8
+   11518: 54000063     	b.lo	0x11524 <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x274>
+   1151c: 529fffec     	mov	w12, #0xffff            // =65535
+   11520: 790037ec     	strh	w12, [sp, #0x1a]
+   11524: 8b19012d     	add	x13, x9, x25
+   11528: 385fe1ae     	ldurb	w14, [x13, #-0x2]
+   1152c: 9aca21ce     	lsl	x14, x14, x10
+   11530: eb0801df     	cmp	x14, x8
+   11534: 54001342     	b.hs	0x1179c <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x4ec>
+   11538: 394039ad     	ldrb	w13, [x13, #0xe]
+   1153c: 9aca21ad     	lsl	x13, x13, x10
+   11540: aa0b01ad     	orr	x13, x13, x11
+   11544: eb0801bf     	cmp	x13, x8
+   11548: 54000063     	b.lo	0x11554 <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x2a4>
+   1154c: 529fffec     	mov	w12, #0xffff            // =65535
+   11550: 79003bec     	strh	w12, [sp, #0x1c]
+   11554: 8b19012d     	add	x13, x9, x25
+   11558: 385ff1ae     	ldurb	w14, [x13, #-0x1]
+   1155c: 9aca21ce     	lsl	x14, x14, x10
+   11560: eb0801df     	cmp	x14, x8
+   11564: 54001282     	b.hs	0x117b4 <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x504>
+   11568: 39403dad     	ldrb	w13, [x13, #0xf]
+   1156c: 9aca21ad     	lsl	x13, x13, x10
+   11570: aa0b01ad     	orr	x13, x13, x11
+   11574: eb0801bf     	cmp	x13, x8
+   11578: 54000063     	b.lo	0x11584 <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x2d4>
+   1157c: 529fffec     	mov	w12, #0xffff            // =65535
+   11580: 79003fec     	strh	w12, [sp, #0x1e]
+   11584: 3879692d     	ldrb	w13, [x9, x25]
+   11588: 9aca21ad     	lsl	x13, x13, x10
+   1158c: eb0801bf     	cmp	x13, x8
+   11590: 540011c2     	b.hs	0x117c8 <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x518>
+   11594: 8b19012d     	add	x13, x9, x25
+   11598: 394041ad     	ldrb	w13, [x13, #0x10]
+   1159c: 9aca21ad     	lsl	x13, x13, x10
+   115a0: aa0b01ad     	orr	x13, x13, x11
+   115a4: eb0801bf     	cmp	x13, x8
+   115a8: 54000063     	b.lo	0x115b4 <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x304>
+   115ac: 529fffec     	mov	w12, #0xffff            // =65535
+   115b0: 790043ec     	strh	w12, [sp, #0x20]
+   115b4: 8b19012d     	add	x13, x9, x25
+   115b8: 394005ae     	ldrb	w14, [x13, #0x1]
+   115bc: 9aca21ce     	lsl	x14, x14, x10
+   115c0: eb0801df     	cmp	x14, x8
+   115c4: 540010e2     	b.hs	0x117e0 <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x530>
+   115c8: 394045ad     	ldrb	w13, [x13, #0x11]
+   115cc: 9aca21ad     	lsl	x13, x13, x10
+   115d0: aa0b01ad     	orr	x13, x13, x11
+   115d4: eb0801bf     	cmp	x13, x8
+   115d8: 54000063     	b.lo	0x115e4 <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x334>
+   115dc: 529fffec     	mov	w12, #0xffff            // =65535
+   115e0: 790047ec     	strh	w12, [sp, #0x22]
+   115e4: 8b19012d     	add	x13, x9, x25
+   115e8: 394009ae     	ldrb	w14, [x13, #0x2]
+   115ec: 9aca21ce     	lsl	x14, x14, x10
+   115f0: eb0801df     	cmp	x14, x8
+   115f4: 54001022     	b.hs	0x117f8 <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x548>
+   115f8: 394049ad     	ldrb	w13, [x13, #0x12]
+   115fc: 9aca21ad     	lsl	x13, x13, x10
+   11600: aa0b01ad     	orr	x13, x13, x11
+   11604: eb0801bf     	cmp	x13, x8
+   11608: 54000063     	b.lo	0x11614 <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x364>
+   1160c: 529fffec     	mov	w12, #0xffff            // =65535
+   11610: 79004bec     	strh	w12, [sp, #0x24]
+   11614: 8b19012d     	add	x13, x9, x25
+   11618: 39400dae     	ldrb	w14, [x13, #0x3]
+   1161c: 9aca21ce     	lsl	x14, x14, x10
+   11620: eb0801df     	cmp	x14, x8
+   11624: 54000f62     	b.hs	0x11810 <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x560>
+   11628: 39404dad     	ldrb	w13, [x13, #0x13]
+   1162c: 9aca21ad     	lsl	x13, x13, x10
+   11630: aa0b01ad     	orr	x13, x13, x11
+   11634: eb0801bf     	cmp	x13, x8
+   11638: 54000063     	b.lo	0x11644 <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x394>
+   1163c: 529fffec     	mov	w12, #0xffff            // =65535
+   11640: 79004fec     	strh	w12, [sp, #0x26]
+   11644: 8b19012d     	add	x13, x9, x25
+   11648: 394011ae     	ldrb	w14, [x13, #0x4]
+   1164c: 9aca21ce     	lsl	x14, x14, x10
+   11650: eb0801df     	cmp	x14, x8
+   11654: 54000ea2     	b.hs	0x11828 <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x578>
+   11658: 394051ad     	ldrb	w13, [x13, #0x14]
+   1165c: 9aca21ad     	lsl	x13, x13, x10
+   11660: aa0b01ad     	orr	x13, x13, x11
+   11664: eb0801bf     	cmp	x13, x8
+   11668: 54000063     	b.lo	0x11674 <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x3c4>
+   1166c: 529fffec     	mov	w12, #0xffff            // =65535
+   11670: 790053ec     	strh	w12, [sp, #0x28]
+   11674: 8b19012d     	add	x13, x9, x25
+   11678: 394015ae     	ldrb	w14, [x13, #0x5]
+   1167c: 9aca21ce     	lsl	x14, x14, x10
+   11680: eb0801df     	cmp	x14, x8
+   11684: 54000de2     	b.hs	0x11840 <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x590>
+   11688: 394055ad     	ldrb	w13, [x13, #0x15]
+   1168c: 9aca21ad     	lsl	x13, x13, x10
+   11690: aa0b01ad     	orr	x13, x13, x11
+   11694: eb0801bf     	cmp	x13, x8
+   11698: 54000063     	b.lo	0x116a4 <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x3f4>
+   1169c: 529fffec     	mov	w12, #0xffff            // =65535
+   116a0: 790057ec     	strh	w12, [sp, #0x2a]
+   116a4: 8b19012d     	add	x13, x9, x25
+   116a8: 394019ae     	ldrb	w14, [x13, #0x6]
+   116ac: 9aca21ce     	lsl	x14, x14, x10
+   116b0: eb0801df     	cmp	x14, x8
+   116b4: 54000d22     	b.hs	0x11858 <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x5a8>
+   116b8: 394059ad     	ldrb	w13, [x13, #0x16]
+   116bc: 9aca21ad     	lsl	x13, x13, x10
+   116c0: aa0b01ad     	orr	x13, x13, x11
+   116c4: eb0801bf     	cmp	x13, x8
+   116c8: 54000063     	b.lo	0x116d4 <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x424>
+   116cc: 529fffec     	mov	w12, #0xffff            // =65535
+   116d0: 79005bec     	strh	w12, [sp, #0x2c]
+   116d4: 8b190129     	add	x9, x9, x25
+   116d8: 39401d2d     	ldrb	w13, [x9, #0x7]
+   116dc: 9aca21ad     	lsl	x13, x13, x10
+   116e0: eb0801bf     	cmp	x13, x8
+   116e4: 54000c62     	b.hs	0x11870 <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x5c0>
+   116e8: 39405d29     	ldrb	w9, [x9, #0x17]
+   116ec: 9aca2129     	lsl	x9, x9, x10
+   116f0: aa0b0129     	orr	x9, x9, x11
+   116f4: eb08013f     	cmp	x9, x8
+   116f8: 54000be3     	b.lo	0x11874 <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x5c4>
+   116fc: 529fffe8     	mov	w8, #0xffff             // =65535
+   11700: 79005fe8     	strh	w8, [sp, #0x2e]
+   11704: 1400005d     	b	0x11878 <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x5c8>
+   11708: 529fffec     	mov	w12, #0xffff            // =65535
+   1170c: 790023ec     	strh	w12, [sp, #0x10]
+   11710: 8b19012d     	add	x13, x9, x25
+   11714: 385f91ae     	ldurb	w14, [x13, #-0x7]
+   11718: 9aca21ce     	lsl	x14, x14, x10
+   1171c: eb0801df     	cmp	x14, x8
+   11720: 54ffe943     	b.lo	0x11448 <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x198>
+   11724: 910042b5     	add	x21, x21, #0x10
+   11728: 8b19012d     	add	x13, x9, x25
+   1172c: 385fa1ae     	ldurb	w14, [x13, #-0x6]
+   11730: 9aca21ce     	lsl	x14, x14, x10
+   11734: eb0801df     	cmp	x14, x8
+   11738: 54ffea03     	b.lo	0x11478 <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x1c8>
+   1173c: 910042b5     	add	x21, x21, #0x10
+   11740: 8b19012d     	add	x13, x9, x25
+   11744: 385fb1ae     	ldurb	w14, [x13, #-0x5]
+   11748: 9aca21ce     	lsl	x14, x14, x10
+   1174c: eb0801df     	cmp	x14, x8
+   11750: 54ffeac3     	b.lo	0x114a8 <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x1f8>
+   11754: 910042b5     	add	x21, x21, #0x10
+   11758: 8b19012d     	add	x13, x9, x25
+   1175c: 385fc1ae     	ldurb	w14, [x13, #-0x4]
+   11760: 9aca21ce     	lsl	x14, x14, x10
+   11764: eb0801df     	cmp	x14, x8
+   11768: 54ffeb83     	b.lo	0x114d8 <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x228>
+   1176c: 910042b5     	add	x21, x21, #0x10
+   11770: 8b19012d     	add	x13, x9, x25
+   11774: 385fd1ae     	ldurb	w14, [x13, #-0x3]
+   11778: 9aca21ce     	lsl	x14, x14, x10
+   1177c: eb0801df     	cmp	x14, x8
+   11780: 54ffec43     	b.lo	0x11508 <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x258>
+   11784: 910042b5     	add	x21, x21, #0x10
+   11788: 8b19012d     	add	x13, x9, x25
+   1178c: 385fe1ae     	ldurb	w14, [x13, #-0x2]
+   11790: 9aca21ce     	lsl	x14, x14, x10
+   11794: eb0801df     	cmp	x14, x8
+   11798: 54ffed03     	b.lo	0x11538 <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x288>
+   1179c: 910042b5     	add	x21, x21, #0x10
+   117a0: 8b19012d     	add	x13, x9, x25
+   117a4: 385ff1ae     	ldurb	w14, [x13, #-0x1]
+   117a8: 9aca21ce     	lsl	x14, x14, x10
+   117ac: eb0801df     	cmp	x14, x8
+   117b0: 54ffedc3     	b.lo	0x11568 <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x2b8>
+   117b4: 910042b5     	add	x21, x21, #0x10
+   117b8: 3879692d     	ldrb	w13, [x9, x25]
+   117bc: 9aca21ad     	lsl	x13, x13, x10
+   117c0: eb0801bf     	cmp	x13, x8
+   117c4: 54ffee83     	b.lo	0x11594 <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x2e4>
+   117c8: 910042b5     	add	x21, x21, #0x10
+   117cc: 8b19012d     	add	x13, x9, x25
+   117d0: 394005ae     	ldrb	w14, [x13, #0x1]
+   117d4: 9aca21ce     	lsl	x14, x14, x10
+   117d8: eb0801df     	cmp	x14, x8
+   117dc: 54ffef63     	b.lo	0x115c8 <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x318>
+   117e0: 910042b5     	add	x21, x21, #0x10
+   117e4: 8b19012d     	add	x13, x9, x25
+   117e8: 394009ae     	ldrb	w14, [x13, #0x2]
+   117ec: 9aca21ce     	lsl	x14, x14, x10
+   117f0: eb0801df     	cmp	x14, x8
+   117f4: 54fff023     	b.lo	0x115f8 <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x348>
+   117f8: 910042b5     	add	x21, x21, #0x10
+   117fc: 8b19012d     	add	x13, x9, x25
+   11800: 39400dae     	ldrb	w14, [x13, #0x3]
+   11804: 9aca21ce     	lsl	x14, x14, x10
+   11808: eb0801df     	cmp	x14, x8
+   1180c: 54fff0e3     	b.lo	0x11628 <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x378>
+   11810: 910042b5     	add	x21, x21, #0x10
+   11814: 8b19012d     	add	x13, x9, x25
+   11818: 394011ae     	ldrb	w14, [x13, #0x4]
+   1181c: 9aca21ce     	lsl	x14, x14, x10
+   11820: eb0801df     	cmp	x14, x8
+   11824: 54fff1a3     	b.lo	0x11658 <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x3a8>
+   11828: 910042b5     	add	x21, x21, #0x10
+   1182c: 8b19012d     	add	x13, x9, x25
+   11830: 394015ae     	ldrb	w14, [x13, #0x5]
+   11834: 9aca21ce     	lsl	x14, x14, x10
+   11838: eb0801df     	cmp	x14, x8
+   1183c: 54fff263     	b.lo	0x11688 <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x3d8>
+   11840: 910042b5     	add	x21, x21, #0x10
+   11844: 8b19012d     	add	x13, x9, x25
+   11848: 394019ae     	ldrb	w14, [x13, #0x6]
+   1184c: 9aca21ce     	lsl	x14, x14, x10
+   11850: eb0801df     	cmp	x14, x8
+   11854: 54fff323     	b.lo	0x116b8 <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x408>
+   11858: 910042b5     	add	x21, x21, #0x10
+   1185c: 8b190129     	add	x9, x9, x25
+   11860: 39401d2d     	ldrb	w13, [x9, #0x7]
+   11864: 9aca21ad     	lsl	x13, x13, x10
+   11868: eb0801bf     	cmp	x13, x8
+   1186c: 54fff3e3     	b.lo	0x116e8 <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x438>
+   11870: 910042b5     	add	x21, x21, #0x10
+   11874: 34ffd96c     	cbz	w12, 0x113a0 <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0xf0>
+   11878: f94002c0     	ldr	x0, [x22]
+   1187c: 910043e3     	add	x3, sp, #0x10
+   11880: aa1703e1     	mov	x1, x23
+   11884: aa1303e2     	mov	x2, x19
+   11888: 94000237     	bl	0x12164 <frame_filter::(anonymous namespace)::refine(frame_encoding::column const&, unsigned long, unsigned long, std::array<unsigned short, 16ul> const&)>
+   1188c: 8b150015     	add	x21, x0, x21
+   11890: 17fffec4     	b	0x113a0 <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0xf0>
+   11894: 350000d9     	cbnz	w25, 0x118ac <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x5fc>
+   11898: 17fffea6     	b	0x11330 <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x80>
+   1189c: 910402b5     	add	x21, x21, #0x100
+   118a0: 51000728     	sub	w8, w25, #0x1
+   118a4: 6a190119     	ands	w25, w8, w25
+   118a8: 54ffd440     	b.eq	0x11330 <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x80>
+   118ac: 5ac00328     	rbit	w8, w25
+   118b0: 5ac01108     	clz	w8, w8
+   118b4: 8b0802e1     	add	x1, x23, x8
+   118b8: eb1c003f     	cmp	x1, x28
+   118bc: 54ffff22     	b.hs	0x118a0 <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x5f0>
+   118c0: f94006c8     	ldr	x8, [x22, #0x8]
+   118c4: 9b1b2029     	madd	x9, x1, x27, x8
+   118c8: f9400128     	ldr	x8, [x9]
+   118cc: eb080268     	subs	x8, x19, x8
+   118d0: 54fffe69     	b.ls	0x1189c <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x5ec>
+   118d4: f940052a     	ldr	x10, [x9, #0x8]
+   118d8: eb0a027f     	cmp	x19, x10
+   118dc: 54fffe28     	b.hi	0x118a0 <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x5f0>
+   118e0: 3940c12a     	ldrb	w10, [x9, #0x30]
+   118e4: 3940412b     	ldrb	w11, [x9, #0x10]
+   118e8: 9280000c     	mov	x12, #-0x1              // =-1
+   118ec: 6f00e400     	movi	v0.2d, #0000000000000000
+   118f0: 9aca216b     	lsl	x11, x11, x10
+   118f4: 9aca218c     	lsl	x12, x12, x10
+   118f8: eb08017f     	cmp	x11, x8
+   118fc: aa2c03eb     	mvn	x11, x12
+   11900: ad0083e0     	stp	q0, q0, [sp, #0x10]
+   11904: 54000182     	b.hs	0x11934 <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x684>
+   11908: 3940812c     	ldrb	w12, [x9, #0x20]
+   1190c: 9aca218c     	lsl	x12, x12, x10
+   11910: aa0b018c     	orr	x12, x12, x11
+   11914: eb08019f     	cmp	x12, x8
+   11918: 540015e2     	b.hs	0x11bd4 <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x924>
+   1191c: 2a1f03ec     	mov	w12, wzr
+   11920: 3940452d     	ldrb	w13, [x9, #0x11]
+   11924: 9aca21ad     	lsl	x13, x13, x10
+   11928: eb0801bf     	cmp	x13, x8
+   1192c: 54000103     	b.lo	0x1194c <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x69c>
+   11930: 140000af     	b	0x11bec <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x93c>
+   11934: 2a1f03ec     	mov	w12, wzr
+   11938: 910042b5     	add	x21, x21, #0x10
+   1193c: 3940452d     	ldrb	w13, [x9, #0x11]
+   11940: 9aca21ad     	lsl	x13, x13, x10
+   11944: eb0801bf     	cmp	x13, x8
+   11948: 54001522     	b.hs	0x11bec <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x93c>
+   1194c: 3940852d     	ldrb	w13, [x9, #0x21]
+   11950: 9aca21ad     	lsl	x13, x13, x10
+   11954: aa0b01ad     	orr	x13, x13, x11
+   11958: eb0801bf     	cmp	x13, x8
+   1195c: 54000063     	b.lo	0x11968 <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x6b8>
+   11960: 529fffec     	mov	w12, #0xffff            // =65535
+   11964: 790027ec     	strh	w12, [sp, #0x12]
+   11968: 3940492d     	ldrb	w13, [x9, #0x12]
+   1196c: 9aca21ad     	lsl	x13, x13, x10
+   11970: eb0801bf     	cmp	x13, x8
+   11974: 54001462     	b.hs	0x11c00 <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x950>
+   11978: 3940892d     	ldrb	w13, [x9, #0x22]
+   1197c: 9aca21ad     	lsl	x13, x13, x10
+   11980: aa0b01ad     	orr	x13, x13, x11
+   11984: eb0801bf     	cmp	x13, x8
+   11988: 54000063     	b.lo	0x11994 <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x6e4>
+   1198c: 529fffec     	mov	w12, #0xffff            // =65535
+   11990: 79002bec     	strh	w12, [sp, #0x14]
+   11994: 39404d2d     	ldrb	w13, [x9, #0x13]
+   11998: 9aca21ad     	lsl	x13, x13, x10
+   1199c: eb0801bf     	cmp	x13, x8
+   119a0: 540013a2     	b.hs	0x11c14 <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x964>
+   119a4: 39408d2d     	ldrb	w13, [x9, #0x23]
+   119a8: 9aca21ad     	lsl	x13, x13, x10
+   119ac: aa0b01ad     	orr	x13, x13, x11
+   119b0: eb0801bf     	cmp	x13, x8
+   119b4: 54000063     	b.lo	0x119c0 <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x710>
+   119b8: 529fffec     	mov	w12, #0xffff            // =65535
+   119bc: 79002fec     	strh	w12, [sp, #0x16]
+   119c0: 3940512d     	ldrb	w13, [x9, #0x14]
+   119c4: 9aca21ad     	lsl	x13, x13, x10
+   119c8: eb0801bf     	cmp	x13, x8
+   119cc: 540012e2     	b.hs	0x11c28 <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x978>
+   119d0: 3940912d     	ldrb	w13, [x9, #0x24]
+   119d4: 9aca21ad     	lsl	x13, x13, x10
+   119d8: aa0b01ad     	orr	x13, x13, x11
+   119dc: eb0801bf     	cmp	x13, x8
+   119e0: 54000063     	b.lo	0x119ec <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x73c>
+   119e4: 529fffec     	mov	w12, #0xffff            // =65535
+   119e8: 790033ec     	strh	w12, [sp, #0x18]
+   119ec: 3940552d     	ldrb	w13, [x9, #0x15]
+   119f0: 9aca21ad     	lsl	x13, x13, x10
+   119f4: eb0801bf     	cmp	x13, x8
+   119f8: 54001222     	b.hs	0x11c3c <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x98c>
+   119fc: 3940952d     	ldrb	w13, [x9, #0x25]
+   11a00: 9aca21ad     	lsl	x13, x13, x10
+   11a04: aa0b01ad     	orr	x13, x13, x11
+   11a08: eb0801bf     	cmp	x13, x8
+   11a0c: 54000063     	b.lo	0x11a18 <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x768>
+   11a10: 529fffec     	mov	w12, #0xffff            // =65535
+   11a14: 790037ec     	strh	w12, [sp, #0x1a]
+   11a18: 3940592d     	ldrb	w13, [x9, #0x16]
+   11a1c: 9aca21ad     	lsl	x13, x13, x10
+   11a20: eb0801bf     	cmp	x13, x8
+   11a24: 54001162     	b.hs	0x11c50 <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x9a0>
+   11a28: 3940992d     	ldrb	w13, [x9, #0x26]
+   11a2c: 9aca21ad     	lsl	x13, x13, x10
+   11a30: aa0b01ad     	orr	x13, x13, x11
+   11a34: eb0801bf     	cmp	x13, x8
+   11a38: 54000063     	b.lo	0x11a44 <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x794>
+   11a3c: 529fffec     	mov	w12, #0xffff            // =65535
+   11a40: 79003bec     	strh	w12, [sp, #0x1c]
+   11a44: 39405d2d     	ldrb	w13, [x9, #0x17]
+   11a48: 9aca21ad     	lsl	x13, x13, x10
+   11a4c: eb0801bf     	cmp	x13, x8
+   11a50: 540010a2     	b.hs	0x11c64 <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x9b4>
+   11a54: 39409d2d     	ldrb	w13, [x9, #0x27]
+   11a58: 9aca21ad     	lsl	x13, x13, x10
+   11a5c: aa0b01ad     	orr	x13, x13, x11
+   11a60: eb0801bf     	cmp	x13, x8
+   11a64: 54000063     	b.lo	0x11a70 <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x7c0>
+   11a68: 529fffec     	mov	w12, #0xffff            // =65535
+   11a6c: 79003fec     	strh	w12, [sp, #0x1e]
+   11a70: 3940612d     	ldrb	w13, [x9, #0x18]
+   11a74: 9aca21ad     	lsl	x13, x13, x10
+   11a78: eb0801bf     	cmp	x13, x8
+   11a7c: 54000fe2     	b.hs	0x11c78 <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x9c8>
+   11a80: 3940a12d     	ldrb	w13, [x9, #0x28]
+   11a84: 9aca21ad     	lsl	x13, x13, x10
+   11a88: aa0b01ad     	orr	x13, x13, x11
+   11a8c: eb0801bf     	cmp	x13, x8
+   11a90: 54000063     	b.lo	0x11a9c <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x7ec>
+   11a94: 529fffec     	mov	w12, #0xffff            // =65535
+   11a98: 790043ec     	strh	w12, [sp, #0x20]
+   11a9c: 3940652d     	ldrb	w13, [x9, #0x19]
+   11aa0: 9aca21ad     	lsl	x13, x13, x10
+   11aa4: eb0801bf     	cmp	x13, x8
+   11aa8: 54000f22     	b.hs	0x11c8c <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x9dc>
+   11aac: 3940a52d     	ldrb	w13, [x9, #0x29]
+   11ab0: 9aca21ad     	lsl	x13, x13, x10
+   11ab4: aa0b01ad     	orr	x13, x13, x11
+   11ab8: eb0801bf     	cmp	x13, x8
+   11abc: 54000063     	b.lo	0x11ac8 <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x818>
+   11ac0: 529fffec     	mov	w12, #0xffff            // =65535
+   11ac4: 790047ec     	strh	w12, [sp, #0x22]
+   11ac8: 3940692d     	ldrb	w13, [x9, #0x1a]
+   11acc: 9aca21ad     	lsl	x13, x13, x10
+   11ad0: eb0801bf     	cmp	x13, x8
+   11ad4: 54000e62     	b.hs	0x11ca0 <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x9f0>
+   11ad8: 3940a92d     	ldrb	w13, [x9, #0x2a]
+   11adc: 9aca21ad     	lsl	x13, x13, x10
+   11ae0: aa0b01ad     	orr	x13, x13, x11
+   11ae4: eb0801bf     	cmp	x13, x8
+   11ae8: 54000063     	b.lo	0x11af4 <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x844>
+   11aec: 529fffec     	mov	w12, #0xffff            // =65535
+   11af0: 79004bec     	strh	w12, [sp, #0x24]
+   11af4: 39406d2d     	ldrb	w13, [x9, #0x1b]
+   11af8: 9aca21ad     	lsl	x13, x13, x10
+   11afc: eb0801bf     	cmp	x13, x8
+   11b00: 54000da2     	b.hs	0x11cb4 <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0xa04>
+   11b04: 3940ad2d     	ldrb	w13, [x9, #0x2b]
+   11b08: 9aca21ad     	lsl	x13, x13, x10
+   11b0c: aa0b01ad     	orr	x13, x13, x11
+   11b10: eb0801bf     	cmp	x13, x8
+   11b14: 54000063     	b.lo	0x11b20 <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x870>
+   11b18: 529fffec     	mov	w12, #0xffff            // =65535
+   11b1c: 79004fec     	strh	w12, [sp, #0x26]
+   11b20: 3940712d     	ldrb	w13, [x9, #0x1c]
+   11b24: 9aca21ad     	lsl	x13, x13, x10
+   11b28: eb0801bf     	cmp	x13, x8
+   11b2c: 54000ce2     	b.hs	0x11cc8 <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0xa18>
+   11b30: 3940b12d     	ldrb	w13, [x9, #0x2c]
+   11b34: 9aca21ad     	lsl	x13, x13, x10
+   11b38: aa0b01ad     	orr	x13, x13, x11
+   11b3c: eb0801bf     	cmp	x13, x8
+   11b40: 54000063     	b.lo	0x11b4c <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x89c>
+   11b44: 529fffec     	mov	w12, #0xffff            // =65535
+   11b48: 790053ec     	strh	w12, [sp, #0x28]
+   11b4c: 3940752d     	ldrb	w13, [x9, #0x1d]
+   11b50: 9aca21ad     	lsl	x13, x13, x10
+   11b54: eb0801bf     	cmp	x13, x8
+   11b58: 54000c22     	b.hs	0x11cdc <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0xa2c>
+   11b5c: 3940b52d     	ldrb	w13, [x9, #0x2d]
+   11b60: 9aca21ad     	lsl	x13, x13, x10
+   11b64: aa0b01ad     	orr	x13, x13, x11
+   11b68: eb0801bf     	cmp	x13, x8
+   11b6c: 54000063     	b.lo	0x11b78 <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x8c8>
+   11b70: 529fffec     	mov	w12, #0xffff            // =65535
+   11b74: 790057ec     	strh	w12, [sp, #0x2a]
+   11b78: 3940792d     	ldrb	w13, [x9, #0x1e]
+   11b7c: 9aca21ad     	lsl	x13, x13, x10
+   11b80: eb0801bf     	cmp	x13, x8
+   11b84: 54000b62     	b.hs	0x11cf0 <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0xa40>
+   11b88: 3940b92d     	ldrb	w13, [x9, #0x2e]
+   11b8c: 9aca21ad     	lsl	x13, x13, x10
+   11b90: aa0b01ad     	orr	x13, x13, x11
+   11b94: eb0801bf     	cmp	x13, x8
+   11b98: 54000063     	b.lo	0x11ba4 <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x8f4>
+   11b9c: 529fffec     	mov	w12, #0xffff            // =65535
+   11ba0: 79005bec     	strh	w12, [sp, #0x2c]
+   11ba4: 39407d2d     	ldrb	w13, [x9, #0x1f]
+   11ba8: 9aca21ad     	lsl	x13, x13, x10
+   11bac: eb0801bf     	cmp	x13, x8
+   11bb0: 54000aa2     	b.hs	0x11d04 <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0xa54>
+   11bb4: 3940bd29     	ldrb	w9, [x9, #0x2f]
+   11bb8: 9aca2129     	lsl	x9, x9, x10
+   11bbc: aa0b0129     	orr	x9, x9, x11
+   11bc0: eb08013f     	cmp	x9, x8
+   11bc4: 54000a23     	b.lo	0x11d08 <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0xa58>
+   11bc8: 529fffe8     	mov	w8, #0xffff             // =65535
+   11bcc: 79005fe8     	strh	w8, [sp, #0x2e]
+   11bd0: 1400004f     	b	0x11d0c <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0xa5c>
+   11bd4: 529fffec     	mov	w12, #0xffff            // =65535
+   11bd8: 790023ec     	strh	w12, [sp, #0x10]
+   11bdc: 3940452d     	ldrb	w13, [x9, #0x11]
+   11be0: 9aca21ad     	lsl	x13, x13, x10
+   11be4: eb0801bf     	cmp	x13, x8
+   11be8: 54ffeb23     	b.lo	0x1194c <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x69c>
+   11bec: 910042b5     	add	x21, x21, #0x10
+   11bf0: 3940492d     	ldrb	w13, [x9, #0x12]
+   11bf4: 9aca21ad     	lsl	x13, x13, x10
+   11bf8: eb0801bf     	cmp	x13, x8
+   11bfc: 54ffebe3     	b.lo	0x11978 <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x6c8>
+   11c00: 910042b5     	add	x21, x21, #0x10
+   11c04: 39404d2d     	ldrb	w13, [x9, #0x13]
+   11c08: 9aca21ad     	lsl	x13, x13, x10
+   11c0c: eb0801bf     	cmp	x13, x8
+   11c10: 54ffeca3     	b.lo	0x119a4 <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x6f4>
+   11c14: 910042b5     	add	x21, x21, #0x10
+   11c18: 3940512d     	ldrb	w13, [x9, #0x14]
+   11c1c: 9aca21ad     	lsl	x13, x13, x10
+   11c20: eb0801bf     	cmp	x13, x8
+   11c24: 54ffed63     	b.lo	0x119d0 <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x720>
+   11c28: 910042b5     	add	x21, x21, #0x10
+   11c2c: 3940552d     	ldrb	w13, [x9, #0x15]
+   11c30: 9aca21ad     	lsl	x13, x13, x10
+   11c34: eb0801bf     	cmp	x13, x8
+   11c38: 54ffee23     	b.lo	0x119fc <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x74c>
+   11c3c: 910042b5     	add	x21, x21, #0x10
+   11c40: 3940592d     	ldrb	w13, [x9, #0x16]
+   11c44: 9aca21ad     	lsl	x13, x13, x10
+   11c48: eb0801bf     	cmp	x13, x8
+   11c4c: 54ffeee3     	b.lo	0x11a28 <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x778>
+   11c50: 910042b5     	add	x21, x21, #0x10
+   11c54: 39405d2d     	ldrb	w13, [x9, #0x17]
+   11c58: 9aca21ad     	lsl	x13, x13, x10
+   11c5c: eb0801bf     	cmp	x13, x8
+   11c60: 54ffefa3     	b.lo	0x11a54 <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x7a4>
+   11c64: 910042b5     	add	x21, x21, #0x10
+   11c68: 3940612d     	ldrb	w13, [x9, #0x18]
+   11c6c: 9aca21ad     	lsl	x13, x13, x10
+   11c70: eb0801bf     	cmp	x13, x8
+   11c74: 54fff063     	b.lo	0x11a80 <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x7d0>
+   11c78: 910042b5     	add	x21, x21, #0x10
+   11c7c: 3940652d     	ldrb	w13, [x9, #0x19]
+   11c80: 9aca21ad     	lsl	x13, x13, x10
+   11c84: eb0801bf     	cmp	x13, x8
+   11c88: 54fff123     	b.lo	0x11aac <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x7fc>
+   11c8c: 910042b5     	add	x21, x21, #0x10
+   11c90: 3940692d     	ldrb	w13, [x9, #0x1a]
+   11c94: 9aca21ad     	lsl	x13, x13, x10
+   11c98: eb0801bf     	cmp	x13, x8
+   11c9c: 54fff1e3     	b.lo	0x11ad8 <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x828>
+   11ca0: 910042b5     	add	x21, x21, #0x10
+   11ca4: 39406d2d     	ldrb	w13, [x9, #0x1b]
+   11ca8: 9aca21ad     	lsl	x13, x13, x10
+   11cac: eb0801bf     	cmp	x13, x8
+   11cb0: 54fff2a3     	b.lo	0x11b04 <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x854>
+   11cb4: 910042b5     	add	x21, x21, #0x10
+   11cb8: 3940712d     	ldrb	w13, [x9, #0x1c]
+   11cbc: 9aca21ad     	lsl	x13, x13, x10
+   11cc0: eb0801bf     	cmp	x13, x8
+   11cc4: 54fff363     	b.lo	0x11b30 <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x880>
+   11cc8: 910042b5     	add	x21, x21, #0x10
+   11ccc: 3940752d     	ldrb	w13, [x9, #0x1d]
+   11cd0: 9aca21ad     	lsl	x13, x13, x10
+   11cd4: eb0801bf     	cmp	x13, x8
+   11cd8: 54fff423     	b.lo	0x11b5c <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x8ac>
+   11cdc: 910042b5     	add	x21, x21, #0x10
+   11ce0: 3940792d     	ldrb	w13, [x9, #0x1e]
+   11ce4: 9aca21ad     	lsl	x13, x13, x10
+   11ce8: eb0801bf     	cmp	x13, x8
+   11cec: 54fff4e3     	b.lo	0x11b88 <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x8d8>
+   11cf0: 910042b5     	add	x21, x21, #0x10
+   11cf4: 39407d2d     	ldrb	w13, [x9, #0x1f]
+   11cf8: 9aca21ad     	lsl	x13, x13, x10
+   11cfc: eb0801bf     	cmp	x13, x8
+   11d00: 54fff5a3     	b.lo	0x11bb4 <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x904>
+   11d04: 910042b5     	add	x21, x21, #0x10
+   11d08: 34ffdccc     	cbz	w12, 0x118a0 <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x5f0>
+   11d0c: f94002c0     	ldr	x0, [x22]
+   11d10: 910043e3     	add	x3, sp, #0x10
+   11d14: aa1303e2     	mov	x2, x19
+   11d18: 94000113     	bl	0x12164 <frame_filter::(anonymous namespace)::refine(frame_encoding::column const&, unsigned long, unsigned long, std::array<unsigned short, 16ul> const&)>
+   11d1c: 8b150015     	add	x21, x0, x21
+   11d20: 17fffee0     	b	0x118a0 <frame_filter::window_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x5f0>
+
+0000000000011ec4 <frame_filter::block_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const>:
+   11ec4: d10303ff     	sub	sp, sp, #0xc0
+   11ec8: a9067bfd     	stp	x29, x30, [sp, #0x60]
+   11ecc: a9076ffc     	stp	x28, x27, [sp, #0x70]
+   11ed0: a90867fa     	stp	x26, x25, [sp, #0x80]
+   11ed4: a9095ff8     	stp	x24, x23, [sp, #0x90]
+   11ed8: a90a57f6     	stp	x22, x21, [sp, #0xa0]
+   11edc: a90b4ff4     	stp	x20, x19, [sp, #0xb0]
+   11ee0: 910183fd     	add	x29, sp, #0x60
+   11ee4: f9400008     	ldr	x8, [x0]
+   11ee8: 6f00e400     	movi	v0.2d, #0000000000000000
+   11eec: aa1f03f3     	mov	x19, xzr
+   11ef0: f9002fff     	str	xzr, [sp, #0x58]
+   11ef4: a9008be8     	stp	x8, x2, [sp, #0x8]
+   11ef8: f9400c28     	ldr	x8, [x1, #0x18]
+   11efc: 91003d08     	add	x8, x8, #0xf
+   11f00: 3c8183e0     	stur	q0, [sp, #0x18]
+   11f04: f100411f     	cmp	x8, #0x10
+   11f08: 3c8283e0     	stur	q0, [sp, #0x28]
+   11f0c: 3c8383e0     	stur	q0, [sp, #0x38]
+   11f10: 3c8483e0     	stur	q0, [sp, #0x48]
+   11f14: 54000d63     	b.lo	0x120c0 <frame_filter::block_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x1fc>
+   11f18: d344fd1a     	lsr	x26, x8, #4
+   11f1c: aa0203f4     	mov	x20, x2
+   11f20: aa0103f5     	mov	x21, x1
+   11f24: aa0003f6     	mov	x22, x0
+   11f28: aa1f03f8     	mov	x24, xzr
+   11f2c: aa1f03f3     	mov	x19, xzr
+   11f30: aa1f03f9     	mov	x25, xzr
+   11f34: 14000005     	b	0x11f48 <frame_filter::block_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x84>
+   11f38: 91000739     	add	x25, x25, #0x1
+   11f3c: 91040318     	add	x24, x24, #0x100
+   11f40: eb1a033f     	cmp	x25, x26
+   11f44: 54000ae0     	b.eq	0x120a0 <frame_filter::block_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x1dc>
+   11f48: d342ff28     	lsr	x8, x25, #2
+   11f4c: f94002a9     	ldr	x9, [x21]
+   11f50: d37cef37     	lsl	x23, x25, #4
+   11f54: f8687929     	ldr	x9, [x9, x8, lsl #3]
+   11f58: f9400ea8     	ldr	x8, [x21, #0x18]
+   11f5c: 927c06ea     	and	x10, x23, #0x30
+   11f60: 910042eb     	add	x11, x23, #0x10
+   11f64: 9aca2529     	lsr	x9, x9, x10
+   11f68: eb0b011f     	cmp	x8, x11
+   11f6c: 9a8b311c     	csel	x28, x8, x11, lo
+   11f70: 72003d3b     	ands	w27, w9, #0xffff
+   11f74: 54fffe20     	b.eq	0x11f38 <frame_filter::block_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x74>
+   11f78: 529fffe9     	mov	w9, #0xffff             // =65535
+   11f7c: 6b09037f     	cmp	w27, w9
+   11f80: 540004c1     	b.ne	0x12018 <frame_filter::block_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x154>
+   11f84: cb170389     	sub	x9, x28, x23
+   11f88: f100413f     	cmp	x9, #0x10
+   11f8c: 54000461     	b.ne	0x12018 <frame_filter::block_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x154>
+   11f90: eb17011f     	cmp	x8, x23
+   11f94: 54fffd29     	b.ls	0x11f38 <frame_filter::block_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x74>
+   11f98: aa1803fb     	mov	x27, x24
+   11f9c: 14000007     	b	0x11fb8 <frame_filter::block_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0xf4>
+   11fa0: 52802000     	mov	w0, #0x100              // =256
+   11fa4: 8b130013     	add	x19, x0, x19
+   11fa8: 910006f7     	add	x23, x23, #0x1
+   11fac: 9100437b     	add	x27, x27, #0x10
+   11fb0: eb1c02ff     	cmp	x23, x28
+   11fb4: 54fffc22     	b.hs	0x11f38 <frame_filter::block_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x74>
+   11fb8: f94006c8     	ldr	x8, [x22, #0x8]
+   11fbc: f87b6909     	ldr	x9, [x8, x27]
+   11fc0: eb09029f     	cmp	x20, x9
+   11fc4: 54fffee9     	b.ls	0x11fa0 <frame_filter::block_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0xdc>
+   11fc8: 8b1b0108     	add	x8, x8, x27
+   11fcc: f9400508     	ldr	x8, [x8, #0x8]
+   11fd0: eb08029f     	cmp	x20, x8
+   11fd4: 54fffea8     	b.hi	0x11fa8 <frame_filter::block_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0xe4>
+   11fd8: f94002c0     	ldr	x0, [x22]
+   11fdc: a94ca408     	ldp	x8, x9, [x0, #0xc8]
+   11fe0: eb09011f     	cmp	x8, x9
+   11fe4: 54000120     	b.eq	0x12008 <frame_filter::block_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x144>
+   11fe8: d346fee9     	lsr	x9, x23, #6
+   11fec: f8697908     	ldr	x8, [x8, x9, lsl #3]
+   11ff0: 9ad72508     	lsr	x8, x8, x23
+   11ff4: 360000a8     	tbz	w8, #0x0, 0x12008 <frame_filter::block_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x144>
+   11ff8: 910023e0     	add	x0, sp, #0x8
+   11ffc: aa1703e1     	mov	x1, x23
+   12000: 97fff671     	bl	0xf9c4 <frame_encoding::code_count::count(unsigned long)>
+   12004: 17ffffe8     	b	0x11fa4 <frame_filter::block_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0xe0>
+   12008: aa1703e1     	mov	x1, x23
+   1200c: aa1403e2     	mov	x2, x20
+   12010: 97ffdcf1     	bl	0x93d4 <frame_encoding::stored_count_ge(frame_encoding::column const&, unsigned long, unsigned long)>
+   12014: 17ffffe4     	b	0x11fa4 <frame_filter::block_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0xe0>
+   12018: 350000fb     	cbnz	w27, 0x12034 <frame_filter::block_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x170>
+   1201c: 17ffffc7     	b	0x11f38 <frame_filter::block_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x74>
+   12020: 52802000     	mov	w0, #0x100              // =256
+   12024: 8b130013     	add	x19, x0, x19
+   12028: 51000768     	sub	w8, w27, #0x1
+   1202c: 6a1b011b     	ands	w27, w8, w27
+   12030: 54fff840     	b.eq	0x11f38 <frame_filter::block_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x74>
+   12034: 5ac00368     	rbit	w8, w27
+   12038: 5ac01108     	clz	w8, w8
+   1203c: 8b0802e1     	add	x1, x23, x8
+   12040: eb1c003f     	cmp	x1, x28
+   12044: 54ffff22     	b.hs	0x12028 <frame_filter::block_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x164>
+   12048: f94006c8     	ldr	x8, [x22, #0x8]
+   1204c: 8b011108     	add	x8, x8, x1, lsl #4
+   12050: f9400109     	ldr	x9, [x8]
+   12054: eb09029f     	cmp	x20, x9
+   12058: 54fffe49     	b.ls	0x12020 <frame_filter::block_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x15c>
+   1205c: f9400508     	ldr	x8, [x8, #0x8]
+   12060: eb08029f     	cmp	x20, x8
+   12064: 54fffe28     	b.hi	0x12028 <frame_filter::block_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x164>
+   12068: f94002c0     	ldr	x0, [x22]
+   1206c: a94ca408     	ldp	x8, x9, [x0, #0xc8]
+   12070: eb09011f     	cmp	x8, x9
+   12074: 54000100     	b.eq	0x12094 <frame_filter::block_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x1d0>
+   12078: d346fc29     	lsr	x9, x1, #6
+   1207c: f8697908     	ldr	x8, [x8, x9, lsl #3]
+   12080: 9ac12508     	lsr	x8, x8, x1
+   12084: 36000088     	tbz	w8, #0x0, 0x12094 <frame_filter::block_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x1d0>
+   12088: 910023e0     	add	x0, sp, #0x8
+   1208c: 97fff64e     	bl	0xf9c4 <frame_encoding::code_count::count(unsigned long)>
+   12090: 17ffffe5     	b	0x12024 <frame_filter::block_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x160>
+   12094: aa1403e2     	mov	x2, x20
+   12098: 97ffdccf     	bl	0x93d4 <frame_encoding::stored_count_ge(frame_encoding::column const&, unsigned long, unsigned long)>
+   1209c: 17ffffe2     	b	0x12024 <frame_filter::block_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x160>
+   120a0: a944d7f4     	ldp	x20, x21, [sp, #0x48]
+   120a4: eb15029f     	cmp	x20, x21
+   120a8: 54000381     	b.ne	0x12118 <frame_filter::block_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x254>
+   120ac: b40000b4     	cbz	x20, 0x120c0 <frame_filter::block_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x1fc>
+   120b0: f9402fe8     	ldr	x8, [sp, #0x58]
+   120b4: aa1403e0     	mov	x0, x20
+   120b8: cb140101     	sub	x1, x8, x20
+   120bc: 97ffc9c5     	bl	0x47d0 <_ZdlPvm@plt>
+   120c0: f9401be0     	ldr	x0, [sp, #0x30]
+   120c4: b4000080     	cbz	x0, 0x120d4 <frame_filter::block_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x210>
+   120c8: f94023e8     	ldr	x8, [sp, #0x40]
+   120cc: cb000101     	sub	x1, x8, x0
+   120d0: 97ffc9c0     	bl	0x47d0 <_ZdlPvm@plt>
+   120d4: f9400fe0     	ldr	x0, [sp, #0x18]
+   120d8: b4000080     	cbz	x0, 0x120e8 <frame_filter::block_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x224>
+   120dc: f94017e8     	ldr	x8, [sp, #0x28]
+   120e0: cb000101     	sub	x1, x8, x0
+   120e4: 97ffc9bb     	bl	0x47d0 <_ZdlPvm@plt>
+   120e8: aa1303e0     	mov	x0, x19
+   120ec: a94b4ff4     	ldp	x20, x19, [sp, #0xb0]
+   120f0: a94a57f6     	ldp	x22, x21, [sp, #0xa0]
+   120f4: a9495ff8     	ldp	x24, x23, [sp, #0x90]
+   120f8: a94867fa     	ldp	x26, x25, [sp, #0x80]
+   120fc: a9476ffc     	ldp	x28, x27, [sp, #0x70]
+   12100: a9467bfd     	ldp	x29, x30, [sp, #0x60]
+   12104: 910303ff     	add	sp, sp, #0xc0
+   12108: d65f03c0     	ret
+   1210c: 91006294     	add	x20, x20, #0x18
+   12110: eb15029f     	cmp	x20, x21
+   12114: 540000e0     	b.eq	0x12130 <frame_filter::block_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x26c>
+   12118: f9400280     	ldr	x0, [x20]
+   1211c: b4ffff80     	cbz	x0, 0x1210c <frame_filter::block_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x248>
+   12120: f9400a88     	ldr	x8, [x20, #0x10]
+   12124: cb000101     	sub	x1, x8, x0
+   12128: 97ffc9aa     	bl	0x47d0 <_ZdlPvm@plt>
+   1212c: 17fffff8     	b	0x1210c <frame_filter::block_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x248>
+   12130: f94027f4     	ldr	x20, [sp, #0x48]
+   12134: b5fffbf4     	cbnz	x20, 0x120b0 <frame_filter::block_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x1ec>
+   12138: 17ffffe2     	b	0x120c0 <frame_filter::block_bounds::count_ge(frame_encoding::block_mask const&, unsigned long) const+0x1fc>
+   1213c: aa0003f3     	mov	x19, x0
+   12140: 910023e0     	add	x0, sp, #0x8
+   12144: 97ffdc7a     	bl	0x932c <frame_encoding::code_count::~code_count()>
+   12148: aa1303e0     	mov	x0, x19
+   1214c: 97ffc9dd     	bl	0x48c0 <_Unwind_Resume@plt>
+   12150: aa0003f3     	mov	x19, x0
+   12154: 910023e0     	add	x0, sp, #0x8
+   12158: 97ffdc75     	bl	0x932c <frame_encoding::code_count::~code_count()>
+   1215c: aa1303e0     	mov	x0, x19
+   12160: 97ffc9d8     	bl	0x48c0 <_Unwind_Resume@plt>
+

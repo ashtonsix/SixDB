@@ -34,8 +34,10 @@ Prediction residual heads do not mean reconstructed-value heads. A late split
 after prediction needs a prefix/checkpoint dependency, a separate logical-value
 summary, or a different ordering of the transforms. Dictionary codes likewise
 require the dictionary predicate law; arbitrary codes are not ordered values.
-Those alternatives remain open. Delta and patched kinds currently take an
-explicit complete-decode fallback, keeping the FOR law's applicability explicit.
+Those alternatives remain open. Other kinds reuse the owner's COUNT, keeping
+the FOR law's applicability explicit. Dictionary images use the complete
+dictionary-aware owner program; residual heads do not inherit logical ordering
+from arbitrary codes.
 
 SeriesPack already represents H=8 and H=16. Its maintained opt-in guard is H=8;
 the private H=16 experiment composes that guard twice, using the second head as
@@ -52,6 +54,10 @@ on a part base/width; the bounds have independent logical block minima/ranges.
 Only unresolved rows need exact refinement. The current simple fallback decodes
 an unresolved block once, then checks its unresolved rows. That dependency cost
 is part of the experiment rather than a claim of selective residual decoding.
+Exact logical block min/max is a smaller control: it can already skip many
+prediction blocks, so finer evidence must beat it as well as ordinary decoding.
+Retained-byte accounting includes C++ object/vector capacities, addressing and
+padding; allocator bookkeeping and shared executable code remain separate.
 
 This reuses the [head-cut model](../encoding/head_cuts.py), including its RegionID
 counterexample to part-wide precision, and Calico's
@@ -69,7 +75,7 @@ format, fixed summary-storage gate or new Frame default is inherited.
 `frame_filter_check` compares masks with original integers at every width 1–64,
 H=0/8/16 where legal, all five predicates, ordinary/guarded execution, out-of-domain
 thresholds and aligned/unaligned/tail windows. Whole-image COUNT comparisons cover
-actual five-kind images, both run geometries, the two transform cuts and
+all six body kinds, immutable run geometry, dictionary editions, the two transform cuts and
 all/none/alternating/clustered coarse block selections. Protected planes check
 that either head can reject without reading the suffix; deliberately unresolved
 predicates must fault. These are architectural-access checks, not proof about

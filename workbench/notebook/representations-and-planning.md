@@ -42,6 +42,13 @@ joint block summaries justify an extra filter. The
 [secondary-summary note](secondary-summaries.md) separates pruning from estimation
 and approximate answers.
 
+[Frame's complete head consumers](../spikes/ikea-frame/filter/FINDINGS.md) compare
+logical H8/H16, residual heads, exact block bounds and quantised window bounds
+with actual native/Polars controls. Logical H16 helps predicted Jena queries but
+adds two bytes/row; RegionID and the losing window-bound program rule out a
+universal evidence layout. [Point integration](../spikes/ikea-frame/point/INTEGRATION.md)
+preserves native-prefix gains while retaining the substantial native-array gap.
+
 ## Conversion, append growth and changing interpretation
 
 [Object integration outcomes](../spikes/orbital-mvcc/OUTCOMES.md) connect actual

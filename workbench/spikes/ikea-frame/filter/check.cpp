@@ -162,24 +162,28 @@ void protected_planes() {
     must_fault([&] { return k.count_ge(source, 0, false, ends); });
 }
 void protected_none() {
-    pages storage;
     std::array<u64, 256> values;
     for (unsigned r = 0; r < 256; ++r) values[r] = (r * 73) % 251;
-    auto *column = std::construct_at(reinterpret_cast<fe::column *>(storage.data), fe::encode(values));
-    {
+    for (auto dictionary : {fe::dictionary_order::none, fe::dictionary_order::sorted,
+                            fe::dictionary_order::frequency}) {
+        pages storage;
+        auto *column = std::construct_at(reinterpret_cast<fe::column *>(storage.data),
+            fe::encode(values, {.dictionary = dictionary, .dictionary_every_part = true}));
         ff::image image(*column, 8);
         ff::logical_heads part8(*column, 8), part16(*column, 16);
         ff::window_bounds bounds(*column);
+        ff::block_bounds coarse_bounds(*column);
         fe::block_mask none(1), broken(1);
         broken.set(0);
         storage.protect(0, PROT_NONE);
         need(image.count_ge(none, 100, true) == 0, "none predicate read column metadata");
         need(part8.count_ge(none, 100) == 0 && part16.count_ge(none, 100) == 0 &&
-                 bounds.count_ge(none, 100) == 0, "none evidence query read column metadata");
+                 bounds.count_ge(none, 100) == 0 && coarse_bounds.count_ge(none, 100) == 0,
+             "none evidence query read column metadata");
         must_fault([&] { return image.count_ge(broken, 100, true); });
         storage.protect(0, PROT_READ | PROT_WRITE);
+        std::destroy_at(column);
     }
-    std::destroy_at(column);
 }
 void protected_evidence() {
     pages storage;
@@ -192,12 +196,16 @@ void protected_evidence() {
     {
         ff::logical_heads h8(*column, 8), h16(*column, 16);
         ff::window_bounds bounds(*column);
+        ff::block_bounds coarse_bounds(*column);
         fe::block_mask all(1); all.set(0);
         storage.protect(0, PROT_NONE);
         need(h8.count_ge(all, 0x1a000000u) == 128 &&
                  h16.count_ge(all, 0x1a000000u) == 128 &&
                  bounds.count_ge(all, 0x1a000000u) == 128,
              "resolved evidence query read the encoded column");
+        need(coarse_bounds.count_ge(all, 0) == 256 && coarse_bounds.count_ge(all, UINT64_MAX) == 0,
+             "resolved block bounds read the encoded column");
+        must_fault([&] { return coarse_bounds.count_ge(all, 0x1a000000u); });
         // A tie at a nonzero suffix now genuinely requires the body.
         must_fault([&] { return h8.count_ge(all, values[1]); });
         must_fault([&] { return h16.count_ge(all, values[1]); });
@@ -216,43 +224,46 @@ std::vector<u64> load(const char *path) {
     need(bool(in.read(reinterpret_cast<char *>(values.data()), bytes)), "short read");
     return values;
 }
-std::size_t whole_image(const std::vector<u64> &values, bool delta_exceptions = false) {
+std::size_t whole_image(const std::vector<u64> &values, bool delta_exceptions = false,
+                       fe::dictionary_order dictionary = fe::dictionary_order::none) {
     std::size_t checks = 0;
-    for (bool compact : {false, true}) {
-        auto column = fe::encode(values, {compact, fe::checkpoints::native, delta_exceptions});
-        ff::image headless(column, 0), head8(column, 8), head16(column, 16);
-        ff::image early8(column, 8, ff::split_stage::working64);
-        ff::image early16(column, 16, ff::split_stage::working64);
-        ff::logical_heads part8(column, 8), part16(column, 16);
-        ff::window_bounds bounds(column);
-        const auto [lo, hi] = std::minmax_element(values.begin(), values.end());
-        for (auto rhs : {u64{0}, *lo, *lo + (*hi - *lo) / 2, *hi, UINT64_MAX})
-            for (unsigned pattern = 0; pattern < 4; ++pattern) {
-                fe::block_mask mask(column.blocks.size());
-                for (std::size_t b = 0; b < mask.blocks; ++b)
-                    if (!pattern || (pattern == 2 && b % 2) || (pattern == 3 && b / 16 % 2))
-                        mask.set(b);
-                u64 expected = 0;
-                for (std::size_t r = 0; r < values.size(); ++r)
-                    if ((mask.words[r / 256 / 64] >> (r / 256 % 64)) & 1)
-                        expected += values[r] >= rhs;
-                need(fe::encoded_count_ge(column, mask, rhs) == expected, "decode control differs");
-                need(part8.count_ge(mask, rhs) == expected && part16.count_ge(mask, rhs) == expected &&
-                         bounds.count_ge(mask, rhs) == expected,
-                     "logical heads/bounds differ from original values");
-                checks += 3;
-                for (const auto *image : {&headless, &head8, &head16, &early8, &early16})
-                    for (bool guard : {false, true}) {
-                        need(image->count_ge(mask, rhs, guard) == expected,
-                             "whole-image split predicate differs from original input");
-                        ++checks;
-                    }
-            }
-    }
+    auto column = fe::encode(values, {.delta_checkpoints = fe::checkpoints::native,
+        .delta_exceptions = delta_exceptions, .dictionary = dictionary});
+    ff::image headless(column, 0), head8(column, 8), head16(column, 16);
+    ff::image early8(column, 8, ff::split_stage::working64);
+    ff::image early16(column, 16, ff::split_stage::working64);
+    ff::logical_heads part8(column, 8), part16(column, 16);
+    ff::window_bounds bounds(column);
+    ff::block_bounds coarse_bounds(column);
+    const auto [lo, hi] = std::minmax_element(values.begin(), values.end());
+    for (auto rhs : {u64{0}, *lo, *lo + (*hi - *lo) / 2, *hi, UINT64_MAX})
+        for (unsigned pattern = 0; pattern < 4; ++pattern) {
+            fe::block_mask mask(column.blocks.size());
+            for (std::size_t b = 0; b < mask.blocks; ++b)
+                if (!pattern || (pattern == 2 && b % 2) || (pattern == 3 && b / 16 % 2))
+                    mask.set(b);
+            u64 expected = 0;
+            for (std::size_t r = 0; r < values.size(); ++r)
+                if ((mask.words[r / 256 / 64] >> (r / 256 % 64)) & 1)
+                    expected += values[r] >= rhs;
+            need(fe::encoded_count_ge(column, mask, rhs) == expected, "decode control differs");
+            need(part8.count_ge(mask, rhs) == expected && part16.count_ge(mask, rhs) == expected &&
+                     bounds.count_ge(mask, rhs) == expected && coarse_bounds.count_ge(mask, rhs) == expected,
+                 "logical heads/bounds differ from original values");
+            checks += 4;
+            for (const auto *image : {&headless, &head8, &head16, &early8, &early16})
+                for (bool guard : {false, true}) {
+                    need(image->count_ge(mask, rhs, guard) == expected,
+                         "whole-image split predicate differs from original input");
+                    ++checks;
+                }
+        }
     return checks;
 }
 } // namespace
 int main(int argc, char **argv) {
+    const bool dictionaries = std::any_of(argv + 1, argv + argc,
+        [](const char *arg) { return std::string_view(arg) == "--dictionaries"; });
     auto checks = all_widths();
     protected_planes();
     protected_none();
@@ -272,6 +283,8 @@ int main(int argc, char **argv) {
     authored[1280 + 199] = u64{1} << 61;
     checks += whole_image(authored);
     checks += whole_image(authored, true);
+    for (auto order : {fe::dictionary_order::sorted, fe::dictionary_order::frequency})
+        checks += whole_image(authored, true, order);
     // Boundaries through 64-bit values and multiple/partial parts. The expected
     // predicates use original integers rather than either summary's arithmetic.
     for (unsigned width = 1; width <= 64; ++width) {
@@ -282,9 +295,13 @@ int main(int argc, char **argv) {
         checks += whole_image(values);
     }
     for (int i = 1; i < argc; ++i) {
+        if (std::string_view(argv[i]) == "--dictionaries") continue;
         auto values = load(argv[i]);
         checks += whole_image(values);
         checks += whole_image(values, true);
+        if (dictionaries)
+            for (auto order : {fe::dictionary_order::sorted, fe::dictionary_order::frequency})
+                checks += whole_image(values, true, order);
     }
     std::printf("%zu exact split-plane/whole-image predicate checks; 64 widths, five predicates, "
                 "both guards, tails/coarse masks; protected heads/suffix and injected faults pass.\n", checks);

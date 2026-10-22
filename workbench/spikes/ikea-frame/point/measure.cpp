@@ -38,16 +38,14 @@ template <class T> std::size_t capacity_bytes(const std::vector<T> &v) {
 }
 template <class Reader> footprint bytes(const fe::column &c, const Reader &reader) {
     footprint f;
-    f.image = c.descriptor_bytes() + c.payload.size() + c.run_geometry_bytes();
-    f.image_capacity = capacity_bytes(c.blocks) + c.payload.capacity();
-    f.prepared = capacity_bytes(c.runs) + capacity_bytes(c.decoders) + capacity_bytes(c.d8) +
+    f.image = c.total_bytes();
+    f.image_capacity = capacity_bytes(c.blocks) + c.payload.capacity() +
+                       capacity_bytes(c.parts) + capacity_bytes(c.coded);
+    f.prepared = capacity_bytes(c.decoders) + capacity_bytes(c.d8) +
                  capacity_bytes(c.d16) + capacity_bytes(c.d32) + capacity_bytes(c.exceptions) +
+                 capacity_bytes(c.dictionaries) +
                  reader.prepared_bytes();
     f.owner = sizeof(c);
-    for (const auto &r : c.runs) if (r) {
-        f.image_capacity += r->directory.capacity() + r->lengths.capacity() + r->control.capacity();
-        f.owner += sizeof(*r);
-    }
     return f;
 }
 
@@ -80,7 +78,7 @@ u128 sum_points(std::span<const std::size_t> rows, const fe::block_mask &mask,
 struct arm {
     std::string name;
     footprint storage;
-    std::array<std::size_t, 5> kinds{};
+    std::array<std::size_t, 6> kinds{};
     u64 construct_ns{}, prepare_ns{};
     std::function<u128(std::span<const std::size_t>, const fe::block_mask &, bool)> read;
 };
@@ -116,7 +114,7 @@ struct native_for {
 };
 
 void experiment(std::vector<u64> &values, unsigned trials, unsigned repeat, bool reverse) {
-    std::array<fe::column, 8> images;
+    std::array<fe::column, 4> images;
     std::vector<frame_points::point_reader> readers;
     readers.reserve(images.size());
     std::vector<std::unique_ptr<frame_points::compact_image>> lean;
@@ -126,18 +124,17 @@ void experiment(std::vector<u64> &values, unsigned trials, unsigned repeat, bool
     lean_readers.reserve(images.size());
     prefix_readers.reserve(images.size());
     std::vector<arm> arms;
-    arms.reserve(26);
+    arms.reserve(14);
     for (unsigned i = 0; i < images.size(); ++i) {
         const auto mode = static_cast<fe::checkpoints>(i % 4);
-        const bool compact = i >= 4;
         const auto start = Clock::now();
-        images[i] = fe::encode(values, {compact, mode});
+        images[i] = fe::encode(values, {.delta_checkpoints = mode});
         const auto constructed = elapsed(start);
         const auto prepare = Clock::now();
         readers.emplace_back(images[i]);
         const auto prepared = elapsed(prepare);
         arm a;
-        a.name = std::string(compact ? "compact_" : "u8ends_") + fe::checkpoint_name(mode);
+        a.name = std::string("u8ends_") + fe::checkpoint_name(mode);
         a.storage = bytes(images[i], readers.back());
         for (const auto &d : images[i].blocks) {
             const auto kind = static_cast<unsigned>(d.type);
@@ -153,7 +150,7 @@ void experiment(std::vector<u64> &values, unsigned trials, unsigned repeat, bool
         arms.push_back(std::move(a));
 
         const auto lean_start = Clock::now();
-        auto candidate = fe::encode(values, {compact, mode});
+        auto candidate = fe::encode(values, {.delta_checkpoints = mode});
         const auto lean_constructed = elapsed(lean_start);
         const auto lean_prepare = Clock::now();
         lean.push_back(std::make_unique<frame_points::compact_image>(std::move(candidate)));
@@ -270,7 +267,7 @@ void experiment(std::vector<u64> &values, unsigned trials, unsigned repeat, bool
                         "\"image_capacity_bytes\":%zu,\"prepared_bytes\":%zu,\"owner_bytes\":%zu,"
                         "\"shared_catalogue_bytes_once_per_process\":%zu,"
                         "\"construct_observation_ns\":%llu,\"point_prepare_observation_ns\":%llu,"
-                        "\"kinds\":[%zu,%zu,%zu,%zu,%zu],\"answer_lo\":\"%llu\",\"answer_hi\":\"%llu\"}\n",
+                        "\"kinds\":[%zu,%zu,%zu,%zu,%zu,%zu],\"answer_lo\":\"%llu\",\"answer_hi\":\"%llu\"}\n",
                         a.name.c_str(), domain ? "common_delta" : "whole_image", selection, trial,
                         values.size(), common.size(), static_cast<unsigned long long>(ns),
                         static_cast<unsigned long long>(u64(repeat) * query_count),
@@ -279,7 +276,7 @@ void experiment(std::vector<u64> &values, unsigned trials, unsigned repeat, bool
                         frame_points::shared_kernel_bytes(),
                         static_cast<unsigned long long>(a.construct_ns),
                         static_cast<unsigned long long>(a.prepare_ns), a.kinds[0], a.kinds[1],
-                        a.kinds[2], a.kinds[3], a.kinds[4],
+                        a.kinds[2], a.kinds[3], a.kinds[4], a.kinds[5],
                         static_cast<unsigned long long>(expected),
                         static_cast<unsigned long long>(expected >> 64));
                 }

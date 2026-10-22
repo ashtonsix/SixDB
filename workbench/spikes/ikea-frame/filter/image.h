@@ -16,11 +16,16 @@ class image {
     std::vector<split_block> split_;
     std::vector<std::uint8_t> payload_, head0_, head1_;
     split_stage stage_;
+    bool dictionary_;
   public:
     image(const frame_encoding::column &, unsigned heads,
           split_stage = split_stage::after_for);
     u64 count_ge(const frame_encoding::block_mask &, u64 rhs, bool guard) const;
     std::size_t split_bytes() const;
     std::size_t split_metadata_bytes() const { return split_.size() * sizeof(split_block); }
+    std::size_t retained_bytes() const {
+        return sizeof(*this) + split_.capacity() * sizeof(split_block) +
+               payload_.capacity() + head0_.capacity() + head1_.capacity();
+    }
 };
 } // namespace frame_filter

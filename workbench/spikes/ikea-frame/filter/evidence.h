@@ -17,7 +17,8 @@ class logical_heads {
     logical_heads(const frame_encoding::column &, unsigned heads);
     u64 count_ge(const frame_encoding::block_mask &, u64 rhs) const;
     std::size_t bytes() const {
-        return parts_.size() * sizeof(part) + head0_.size() + head1_.size();
+        return sizeof(*this) + parts_.capacity() * sizeof(part) +
+               head0_.capacity() + head1_.capacity();
     }
 };
 
@@ -32,6 +33,18 @@ class window_bounds {
   public:
     explicit window_bounds(const frame_encoding::column &);
     u64 count_ge(const frame_encoding::block_mask &, u64 rhs) const;
-    std::size_t bytes() const { return blocks_.size() * sizeof(block); }
+    std::size_t bytes() const { return sizeof(*this) + blocks_.capacity() * sizeof(block); }
+};
+
+// Strong inexpensive control for finer evidence: logical bounds alone can
+// already skip many prediction blocks. Do not credit window summaries for it.
+class block_bounds {
+    struct bounds { u64 lower, upper; };
+    const frame_encoding::column &original_;
+    std::vector<bounds> blocks_;
+  public:
+    explicit block_bounds(const frame_encoding::column &);
+    u64 count_ge(const frame_encoding::block_mask &, u64 rhs) const;
+    std::size_t bytes() const { return sizeof(*this) + blocks_.capacity() * sizeof(bounds); }
 };
 } // namespace frame_filter

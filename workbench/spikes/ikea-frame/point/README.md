@@ -6,9 +6,11 @@ codec or materialising all 256 rows per point. Ikea LEAD owns this consumer.
 Ashton has separated the Boundlist/Intervals investigation and assigned it to
 Ikea HELPER; its geometry algorithms and checkpoint-spacing work are independent.
 
-The first reader reconstructs constants, packed FOR, runs, predicted deltas and
-patched FOR, plus opt-in predicted deltas with exceptions. Runs use either the compact mutable Boundlist control or the
-immutable u8 end-minus-one projection. Predicted points use the nearest stored
+The reader reconstructs constants, packed FOR, runs, predicted deltas and
+patched FOR, plus opt-in predicted deltas with exceptions. Runs use the immutable
+u8 end-minus-one projection through maintained [Intervals](../../../../ikea/docs/intervals/usage.md).
+The obsolete compact-run control is retired; its earlier measurements remain
+source-qualified in the retained findings. Predicted points use the nearest stored
 checkpoint and decode only the local residual prefix. Native every-16, packed
 every-16, every-64 and absent checkpoints are read from each image's own options.
 Retained images with different choices coexist. Packed checkpoint binding and
@@ -23,6 +25,10 @@ now expose substantial point cost and avoidable prepared-state overhead.
 Engine chooses among curated material options; no default or
 public Frame API follows from this reader.
 
+The [Intervals integration cohort](INTEGRATION.md) preserves the native-prefix
+gain, qualifies dictionary composition and retains the complete native-array
+gaps. Its samples are separate from the earlier preparation/prefix cohorts.
+
 Prediction with exceptions skips exception rows in the prediction chain. A point
 at an exception reads its explicit-width exception plane; an ordinary point uses
 the number of preceding ordinary steps, not its physical row number. Checkpoints
@@ -32,8 +38,8 @@ a point-consumer experiment, not a replacement for the shared column's other
 bindings or a selected checkpoint/codec policy.
 
 `frame_checkpoint_point_check` compares every point directly with original input
-values, independently of `decode_block`, across all four checkpoint modes and
-both run geometries. Its authored image exercises all five body kinds, signed
+values, independently of `decode_block`, across all four checkpoint modes.
+Its authored image exercises all five default body kinds, signed
 steps and high unsigned anchors. Coarse masks select original blocks without
 renumbering rows. A protected descriptor proves that a none mask touches no
 column material; deliberate selection in a child process faults as expected.
@@ -42,12 +48,23 @@ This proves architectural accesses, not speculative cache traffic.
 `frame_delta_patched_check` adds 303,104 exact original-value comparisons covering
 every residual width1..64, all four checkpoint choices, leading/trailing/scattered
 and 255 exceptions, wrapped checkpoint sums, independent closed-form values,
-coarse original coordinates and owner exact SUM/COUNT. The real-column check
-also accepts `--delta-exceptions`: all59 retained columns pass 282,364,480 point
-comparisons through eager/shared/native-prefix readers, both run geometries and
-all per-image checkpoint choices. The corresponding default check passes
-282,327,616 comparisons. These are local correctness checks, not new timings;
-dictionary-coded blocks remain a separate opt-in consumer extension.
+coarse original coordinates and owner exact SUM/COUNT.
+
+Dictionary access composes `dictionary_points` around an existing stored-point
+reader, using each block's coded bit and its own part's dictionary edition.
+Mixed raw/coded blocks stay in their original coordinates. The ordinary getter
+gains no per-point dictionary branch; its constructor requires explicit
+stored-code admission for dictionary images. Compact preparation also releases
+redundant dictionary bindings. These are private consumer choices, not a Frame API.
+
+On the isolated `f760ca39` material epoch with maintained Intervals, all59 retained
+original columns pass 142,828,096 point comparisons for the default encoder,
+142,846,528 with `--delta-exceptions`, and 142,864,960 each with that flag plus
+`--dictionary=sorted` or `--dictionary=frequency`. All four checkpoint choices,
+three readers, mixed part editions, coarse masks, all-width prefixes and
+protected-none/fault checks remain. The count drops from the earlier double-run-
+geometry check because the obsolete compact control is no longer constructed.
+These are correctness checks, not timings of the later shared-catalogue migration.
 
 The initial native check passed 70,057,984 point comparisons: the authored image,
 all 42 Jena default-window columns, the 14-column sentinel block, and the original

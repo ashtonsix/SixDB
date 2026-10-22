@@ -1,154 +1,145 @@
-# Useful heads need a predicate law and a complete consumer
+# Filter evidence must earn its bytes and refinement work
 
-Both one- and two-byte SeriesPack heads now flow through a private Frame image
-consumer. After FOR, the descriptor base translates the logical comparison
-without reading the suffix. Ordinary and guarded programs consume identical
-headed bytes. The two-byte program composes the maintained eight-bit guard twice.
-Prediction residuals currently retain their explicit decode fallback; their
-heads do not inherit the FOR predicate law.
+Logical H16 planes make the two examined Jena filters about 3.4–4.8× faster
+than the encoded owner operation. They reach the native FOR array's scan cost,
+but duplicate two bytes per original row. Exact block bounds are much smaller
+and about 2.3× faster than that owner operation. Neither result selects a
+universal Frame layout: RegionID and ResolutionWidth are strong counterexamples
+to always adding logical heads, and the current quantised window bounds lose.
 
-The results validate the placement concern, not a universal head default. On
-EventTime at its actual population median, early u64 heads tie in every tested
-complete16 window. Late FOR head8 ties in only 5,177/124,283 windows: about 96%
-are decided without the suffix. Head16 leaves just 43 unresolved among 124,129
-eligible windows. This is a descriptive logical trace, not measured cache traffic.
-Protected-plane checks separately prove the architectural skip.
+These are complete consumed COUNT queries over unchanged real encoded bodies,
+with original-value oracles. The implementation supports separated SeriesPack
+H8/H16 planes with independent logical interpretation; it does not make a
+prediction residual's leading bits mean a logical predicate.
 
-OS and ResolutionWidth are counterexamples to selecting by final hit rate.
-Their late first heads tie in 16,918/16,921 and 27,033/27,227 eligible windows.
-Many OS bodies have no suffix after H8, and neither column has H16-eligible
-FOR bodies in this query. The nominal H16 arm falls back to headless there;
-small timing differences are not two-byte-head gains. URLHash's first/second
-head ties fall to 8,065/59 among 166,053 windows, but avoiding suffixes still
-does not beat the strongest native array consumer.
+## Complete median-query result
 
-## Complete COUNT results
+Local Apple/OrbStack AArch64 VM, Clang 21.1.8, O3/native ISA/generic tuning,
+automatic vectorisation enabled, vCPU7. Two processes reverse input and arm
+order; 32 rotated trials per process give 64 samples per C++ cell. Each complete
+answer is consumed and checked. All blocks selected, `COUNT(value >= population
+median)`, median ns per original value:
 
-Local Apple/OrbStack AArch64 VM, Clang 21.1.8, release O3/native ISA/generic
-tuning, automatic vectorisation enabled, vCPU7. Original rows and working-domain
-exports are unchanged. ClickBench uses 2,999,808 complete rows; Jena uses 65,536.
-Every actual result is consumed and checked against a native original-value loop.
-Two processes reverse input/arm order; seven rotated trials per process retain
-all fourteen samples. One arm runs at a time; conversion is outside query timing.
-An earlier wrapper cohort ran separately and is not paired with these timings.
+| Column | Encoded owner | Direct FOR H0 | FOR H16 guarded | Logical H16 | Block bounds | Window q8 | Native FOR | Polars FOR |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| OS | .152 | .147 | .147¹ | .069 | .151 | 2.257 | .167 | .062 |
+| ResolutionWidth | .183 | .189 | .178¹ | .301 | .180 | 2.593 | .175 | .101 |
+| EventTime | .249 | .205 | .233 | .208 | .230 | .924 | .163 | .135 |
+| UserID | .136 | .019 | .014 | .062 | .005 | .017 | .245 | .265 |
+| URLHash | .330 | .473 | .445 | .274 | .334 | 1.305 | .258 | .238 |
+| ConnectTiming | .043 | .026 | .018 | .0024 | .0026 | .0061 | .0001² | .0005² |
+| RegionID | .235 | .238 | .254 | 1.935 | .246 | 2.987 | .200 | .129 |
+| WatchID | .446 | .566 | .295 | .265 | .440 | 1.127 | .247 | .253 |
+| Jena pressure | .855 | .848 | .859 | .179 | .368 | .430 | .175 | .221 |
+| Jena temperature | .586 | .581 | .596 | .171 | .256 | .347 | .170 | .137 |
 
-All blocks selected, `COUNT(value >= population median)`, ns per value:
+¹ No H16-eligible FOR/run bodies for this query: headless fallback, not a
+two-byte-head gain. ² Median zero is all-hit; global FOR bounds answer from
+metadata. These timer-dominated O(1) cases are not scan rates. The tiny 256-row
+fault case is retained in the samples, but is unsuitable for scan rankings.
 
-| Column | Existing decode control | Direct headless | Late H8 guarded | Late H16 guarded | Polars u64 | Polars native FOR |
-| --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| OS | 0.427 | 0.144 | 0.140 | 0.143¹ | 0.177 | 0.038 |
-| ResolutionWidth | 0.645 | 0.169 | 0.170 | 0.163¹ | 0.187 | 0.063 |
-| EventTime | 0.312 | 0.197 | 0.191 | 0.199 | 0.166 | 0.087 |
-| UserID | 0.155 | 0.015 | 0.011 | 0.009 | 0.164 | 0.176 |
-| URLHash | 0.723 | 0.361 | 0.476 | 0.356 | 0.193 | 0.180 |
-| ConnectTiming | 0.028 | 0.088 | 0.086 | 0.083 | 0.162 | 0.0002² |
-| Jena pressure | 0.739 | 0.792 | 0.798 | 0.794 | 0.170 | 0.106 |
-| Jena temperature | 0.503 | 0.505 | 0.500 | 0.507 | 0.161 | 0.101 |
+Actual Polars 1.42.1 runs single-threaded on the same CPU and original values,
+with 14 alternating samples per query. Native FOR controls subtract the global
+minimum, use the smallest native unsigned lane and retain the actual maximum
+for the same out-of-domain shortcuts. Preparation is outside all query timers.
+Polars covers all-mask queries; C++ also covers alternating original blocks.
+No cost-free gather is assumed for a Polars coarse-selection comparison.
 
-¹ Headless fallback, not an H16 result. ² Median zero is an all-hit query; global
-FOR bounds answer it from metadata. This is timer-dominated O(1) work, not a
-scan rate. UserID is sorted: nearly all blocks are settled without run scans.
-Its result cannot be generalised to shuffled IDs or other threshold distributions.
+The [complete samples](../evidence/interval-consumers-local/filter/summary.json)
+also retain minimum, quartile and U64MAX queries, H8, ordinary/guarded heads,
+early working-u64 cuts, native u64 and both coarse masks. Close VM rankings are
+not fleet policy. The earlier [head cohort](../evidence/heads-points-local/artifact.json)
+is historical; its timings are not pooled with the changed owner fallback,
+geometry and logical-evidence consumers here.
 
-Polars is the actual installed 1.42.1 library, pool limited to one thread and the
-same CPU, on the exact input values. Its u64 arm is direct; native FOR separately
-subtracts the global base and stores the smallest native unsigned lane. Casting
-and preparation are outside both query timers. Its FOR control retains the same
-out-of-domain/all-hit shortcuts as the C++ native FOR control. COUNT has no
-overflow-law mismatch. Each peer query has fourteen alternating samples; the
-retained identity and raw results include thresholds, answers, lanes and versions.
-Polars currently covers the all-mask queries; native C++ controls additionally
-cover alternating coarse blocks. No gathering cost is silently removed from a
-Polars coarse-selection comparison.
+## What to use, and what to reject
 
-The table exposes remaining losses. Native mask-weighted run reductions and
-removing wrapper costs cut OS/Resolution by roughly 3×/4×. They still trail
-Polars's narrow lanes by roughly 3.7×/2.6×. Wide high-entropy URLHash also trails
-native arrays. Conversely, sorted UserID's block decisions have a large useful
-advantage. The new path loses ConnectTiming because its patched fallback restores
-more than the existing count operation needs. Reuse of an owner block-count
-operation can close that seam without inventing a second patch algorithm.
+- **Exact logical block bounds are a useful small baseline.** They settle
+  clustered UserID almost entirely and substantially reduce predicted Jena
+  work. UserID is *locally clustered*, not globally sorted: there are 28 backward
+  adjacent transitions among 2,999,808 rows. An earlier version of this document
+  incorrectly called it sorted. No ordered-array shortcut applies to these
+  measured inputs. The implementation has a separately qualified ordered
+  control, enabled only after proving global order.
+- **Logical H16 earns further Jena query speed, at a substantial storage cost.**
+  OS's whole logical H8 plane also costs only .069 ns/value here; H16 adds no
+  useful gain. H8 is too coarse for several other columns: pressure .527,
+  temperature .419, ResolutionWidth 2.541 and RegionID 3.302 ns/value. The
+  unresolved equality bin matters as much as the final hit rate.
+- **Do not adopt the current q8 window-bounds candidate.** It loses broadly,
+  even where exact block bounds help. It branches across 16 windows and an
+  unresolved window still requires decoding its block once. Finer nominal
+  pruning has not paid for this consumer's traversal and reconstruction. This
+  rejects this implementation/program, not every possible smaller-region bound.
+- **A native/plain choice remains necessary.** Logical H16 on RegionID is over
+  8× slower than headless, and the native-array controls still beat encoded
+  consumers on several columns. EventTime's default bodies are largely packed;
+  evidence that helps predicted Jena does not automatically help EventTime.
 
-## What code inspection changed
+The regular residual-head image now reuses the owner's complete block COUNT for
+fallback kinds, instead of decoding all values merely to count them. This
+removes the earlier ConnectTiming seam. Complete packed/run consumers still
+pay descriptor lookup, width dispatch and run weighting; logical heads pay
+their own loads and any exact reconstruction. Linked assembly retains these
+costs and guarded suffix decisions. No branch or cache counter was inferred
+from timing alone.
 
-The first complete consumer called a 2 KB scratch-frame lambda on every block,
-then a runtime predicate dispatcher and another function for each window. The
-accepted consumer inlines the block visitor, so the scratch frame is set up
-once per query, and invokes a typed complete COUNT once per block. Packed bodies
-popcount native masks; run bodies weight complete16 masks with native byte-length
-reductions. A bounded scalar tail handles endpoints whose final window is not
-readable in full. No row expansion or u64 decoded run-value array is needed for
-these bodies. Generic five-predicate mask operations remain available separately.
+## Memory and preparation
 
-The linked whole consumer and its called K32 H8/H16 count bodies were inspected.
-The latter retain the two guarded head decisions before suffix loads; the native
-run reduction follows those predicates. The complete query still pays descriptor,
-format lookup, indirect block dispatch and fallback costs. This is not evidence
-of perfect inlining, a code-size optimum or ISA-wide policy. The first wrapper
-cohort is archived as a diagnostic, not selected as the only comparison baseline.
+These are deliberately extra evidence over the original image, not a compact
+replacement representation. Every unresolved logical-head block decodes once;
+only tied rows contribute through the exact fallback. Exact block bounds can
+reuse the owner's code-aware block operation. Dictionary editions remain the
+body's own immutable interpretation dependency.
 
-## Limits and next discriminating work
+Actual retained capacities, including vector/object storage, bytes:
 
-There is no universal head or guard recommendation yet. The measured late cut
-is appropriate for independently translated FOR/run predicates. Ordinary and
-guarded choices remain distinct; the [prior native investigation](../../packed-filters/EARLY-GRADUATION.md)
-already shows narrow and mixed-branch losses. Fleet hot/cold complete consumers,
-issued traffic and staged acquisition remain necessary before choosing policy.
+| Column | Original with bindings | Extra logical H16 | Extra block bounds | Native FOR |
+| --- | ---: | ---: | ---: | ---: |
+| OS | 4,849,936 | 6,001,232 | 187,520 | 2,999,928 |
+| ResolutionWidth | 5,546,238 | 6,001,232 | 187,520 | 5,999,736 |
+| RegionID | 6,115,492 | 6,001,232 | 187,520 | 11,999,352 |
+| UserID | 10,792,684 | 6,001,232 | 187,520 | 23,998,584 |
+| Jena pressure | 184,978 | 131,176 | 4,128 | 131,192 |
+| Jena temperature | 151,968 | 131,176 | 4,128 | 131,192 |
 
-For predicted bodies, compare query evidence independent of the residual codec
-with splitting logical high/low values before predicting the low part. As a
-diagnostic, exact logical block min/max would settle 60.2%/63.3% of blocks in
-pressure/temperature median queries, at 16 bytes per block (0.5 bits/value); it would
-settle almost no URLHash blocks. Finer logical-head bounds might cost less than
-a duplicated per-value head. Neither alternative is implemented or selected here.
-Its unresolved windows need checkpoint-restarted reconstruction, and writes must
-repair the dependent evidence. Claude is considering this with encoding work.
+Logical H8 adds 3,001,424 bytes to each large column, 65,640 to each Jena image.
+Window q8 costs 56 bytes/block plus its object: 656,240/14,368 bytes for those
+populations. Block bounds cost 16 bytes/block plus the object. All retained
+capacity and two construction observations are in
+[setup and queries](../evidence/interval-consumers-local/filter/setup-and-queries.json).
+Construction observations are not a paired encoding benchmark. The experiment
+retains original decoder bindings; later no-binding/borrowed-body work is not
+measured here. Neither a memory advantage over native FOR nor maintenance under
+writes follows from the query gains.
 
-The migration instrument retains the original image plus converted planes and
-16 bytes of new addressing metadata per block; conversion timings and all extra
-split bytes are recorded. It establishes neither final resident memory nor an
-in-place migration format. Native/plain representation choices, whole-operation
-cost and retained prepared state must remain in the decision.
+## Placement, access obligations and correctness
 
-## Correctness and identity
+After FOR, descriptor base/width translate comparisons before the suffix is
+read. Early u64 heads can be dominated by common leading bits. The earlier
+EventTime trace found all working-u64 windows tied, versus only 5,177/124,283
+late H8 windows and 43/124,129 late H16 windows. Those are descriptive logical
+traces, not measured traffic. Logical part heads instead carry their own
+base/width and can filter independently of prediction, exceptions or dictionaries;
+their wider part domain can lose useful entropy.
 
-727,520 exact checks cover all 64 widths, five predicates, H0/H8/H16, ordinary and
-guarded operations, fused weighted counts, both transform cuts, actual corpora,
-both run geometries, coarse masks and partial windows. Protected tests cover first-
-and second-head rejection, an exact seventeen-byte endpoint tail, a none mask
-with inaccessible column metadata, and four deliberately faulty live reads.
-This proves architectural access obligations, not speculative cache behaviour.
+753,760 exact checks cover all 64 widths, five predicates, H0/H8/H16,
+ordinary/guarded operations, weighted runs, all six examined kinds,
+prediction exceptions, sorted/frequency dictionaries, multiple/partial parts,
+original coarse coordinates and real-column counterexamples. Protected tests
+exercise rejected suffixes, the exact seventeen-byte run-end tail, none masks
+with inaccessible metadata, resolved evidence with an inaccessible encoded
+column, and deliberately unresolved queries that fault. The owner fixture
+separately protects actual payload pages and matching dictionary editions;
+all ten injected illegal reads fault. These prove architectural access
+obligations, not speculative cache traffic or cold-throughput gains.
 
 The accepted source capture is
-`2d26284fff5ccfe9af3fcb0e1d3429e422b8706e8848cf1ff10dd5aa5935ce82`;
-input/source/ELF hashes, complete samples, controls and disassembly accompany the
-[retained samples](../evidence/heads-points-local/filter/summary.json),
-[actual Polars controls](../evidence/heads-points-local/filter/polars.json) and
-[verified recovery bundle](../evidence/heads-points-local/artifact.json).
-It is local warm research; no DRAM, Loom or fleet win is claimed.
-
-## Logical evidence follow-up: checked, not yet timed
-
-The next implementation adds part-wide logical H8/H16 sidecars over unchanged
-encoded bodies, plus conservative byte-quantised min/max for each sixteen-row
-window. Both interpret the logical predicate independently of prediction,
-exceptions or the body's FOR anchor. Any unresolved block is decoded once;
-only its unresolved rows contribute through the exact fallback. Part heads may
-lose entropy relative to block heads; bounds may leave a whole window unresolved.
-Those costs are explicit, not claimed to disappear through selective decoding.
-
-All duplicated evidence is charged: one/two byte planes per original row plus
-part records, or 56 bytes per block for bounds including bases/ranges/alignment.
-No residency/default decision follows. The regular FOR-head image also reuses
-the owner's block-count operation for fallback kinds, removing its unnecessary
-complete-decode requirement on patched blocks. The earlier timing table is still
-the qualified historical cohort, not a timing of this changed implementation.
-
-767,200 exact checks pass with these consumers, all widths1..64, both historical
-run geometries, default and opt-in prediction-exception bodies, multiple/partial
-parts and the nine retained real columns. Independent original-value comparisons
-cover the whole query; protected-column checks show that resolved heads/bounds
-can finish while all encoded-column metadata is inaccessible. Three deliberately
-unresolved sidecar queries fault against that same protection. None masks avoid
-all column/evidence traversal. These are architectural accesses and correctness,
-not measured cache traffic, native fleet timings or write-maintenance results.
+`ed97e4bd447bc82e4f4df380002ef2ce85b6d9385cc233f57a3b6a8b641d2df0`,
+with encoding core f760ca39 and maintained Intervals. Exact commands,
+input/source/ELF hashes, raw results, source, binaries and linked assembly are
+recoverable from the [verified bundle](../evidence/interval-consumers-local/artifact.json)
+and [reproduction notes](../evidence/interval-consumers-local/REPRODUCE.md).
+Later borrowed-block and monotone-delta COUNT changes are a distinct source
+epoch. Native fleet/cold/Loom measurements, physical maintenance of evidence
+and complete lifecycle costs remain open before selecting a policy.

@@ -2,17 +2,21 @@
 // This is not a proposed Frame API. Retain the column and its placement.
 #pragma once
 #include "material.h"
+#include <ikea/intervals.h>
 
 namespace frame_points {
 namespace fe = frame_encoding;
+enum class point_domain { values, stored_codes };
 
 struct point_reader {
     const fe::column *source;
     std::size_t rows;
     std::vector<std::optional<fe::sp::decoder<fe::u64>>> packed_checkpoints;
 
-    explicit point_reader(const fe::column &c)
+    explicit point_reader(const fe::column &c, point_domain domain = point_domain::values)
         : source(&c), rows(c.rows) {
+        if (domain == point_domain::values && c.options.dictionary != fe::dictionary_order::none)
+            std::abort(); // Dictionary composition must be explicit, once around ready work.
         if (c.options.delta_checkpoints != fe::checkpoints::packed) return;
         if (std::none_of(c.blocks.begin(), c.blocks.end(), [](const auto &d) {
                 return (d.type == fe::kind::delta || d.type == fe::kind::delta_patched) &&
@@ -52,9 +56,7 @@ struct point_reader {
             return d.base + c.decoders[b].get_unchecked(local);
         }
         case fe::kind::runs: {
-            const unsigned rank = c.runs[b]
-                ? fe::bl::reverse(*c.runs[b]->view, local)
-                : fe::bl::upper_bound(fe::run_ends{
+            const unsigned rank = ikea::intervals::upper_bound(fe::run_ends{
                     c.payload.data() + d.offset + fe::plane_bytes(d.width, d.count), d.count}, local);
             return d.base + c.decoders[b].get_unchecked(rank);
         }
@@ -97,6 +99,26 @@ struct point_reader {
         }
         }
         std::abort();
+    }
+};
+
+// Restore a dictionary edition after any existing stored-value reader. The
+// unencoded getter remains the same body; no dictionary branch enters its hot
+// path. Each wrapper borrows its own coherent image, including mixed raw/coded
+// blocks in a part. Shared width operations need no new dictionary decoder.
+template <class Reader> struct dictionary_points {
+    const fe::column *source;
+    const Reader *stored;
+    std::size_t rows;
+    dictionary_points(const fe::column &column, const Reader &reader)
+        : source(&column), stored(&reader), rows(reader.rows) {}
+    fe::u64 get(std::size_t row) const {
+        const auto value = stored->get(row);
+        const auto block = row / fe::block_rows;
+        if (!fe::is_coded(*source, block)) return value;
+        const auto &p = fe::part_of(*source, block);
+        assert(value < p.count);
+        return p.min + fe::plane_kernels(p.width).point(source->payload.data() + p.offset, value);
     }
 };
 

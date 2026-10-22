@@ -1,0 +1,437 @@
+{
+  "binary_sha256": "3694805261fc8e65b864d5a78ff9ad4fd601e88fdc3ca576062e718c22a7e657",
+  "source_sha256": {
+    "workbench/spikes/ikea-frame/filter/CMakeLists.txt": "ae21f61502c5936500e0d22f8f193979ac621eb574d590fc05518f073cb6b066",
+    "workbench/spikes/ikea-frame/filter/FINDINGS.md": "9434e219375a4a3ca213d9fdaf20a55f1474c9faf3880ad41f73c810eacbe8c7",
+    "workbench/spikes/ikea-frame/filter/README.md": "e190f3ad9516620b8047409a2324c38151513fdefe3c1be443c2f82fcdd80241",
+    "workbench/spikes/ikea-frame/filter/catalogue.h": "8b3b36932dcbc7dfc52c3f872e6ebeef6512371722dc364f96020e1e241f160f",
+    "workbench/spikes/ikea-frame/filter/check.cpp": "348630c8042b9e6e701b8fa023b00b7647491587d4e8713672ee221dfb6d99a6",
+    "workbench/spikes/ikea-frame/filter/evidence.cpp": "5b2c7dcd44c3f9c8352c03c2fd96acd74a2fa8178e418191f8b07c7da88490d8",
+    "workbench/spikes/ikea-frame/filter/evidence.h": "dd3cec1290d0f59473d228dbaedcc848726d56677e3c25855af5bf6eb8739eae",
+    "workbench/spikes/ikea-frame/filter/image.cpp": "92c118aee36fd2c84db73ce20d8e579b91742d77def73424a7afa5b5d5ff1cec",
+    "workbench/spikes/ikea-frame/filter/image.h": "b06c2f1f3c0b6ff9214590e5bfd01108c8b503fd11ee89e6b364eef69a9b987b",
+    "workbench/spikes/ikea-frame/filter/implementation.h": "9a794265469906bdd77efccfd30ec9584912c2ef9a40446b2b517f43dad5a0e5",
+    "workbench/spikes/ikea-frame/filter/instantiate.cpp": "11f6d5c9b25c8607572dff97091fa73154c2d67bafcee71b598c47c4a26be6b4",
+    "workbench/spikes/ikea-frame/filter/kernels.cpp": "32e4cc90cbf73239bbc76d3b84ae8581877ffa54137eb6b16cb737513c2b8bb7",
+    "workbench/spikes/ikea-frame/filter/kernels.h": "b2240a1d1753d1a1364d06174272a51ea6eb3f1a6f9e15c1e39756c53b47688a",
+    "workbench/spikes/ikea-frame/filter/measure.cpp": "a13bf58a037e9ddcf49a6bd84ffa2d150ff88f6a7e4d263d9538f409e2ce3024",
+    "workbench/spikes/ikea-frame/filter/run.py": "c6a0ccd9b4c8379068e81269ce6cf1584f28a93f2e315aab201f1b81ae3c0cca",
+    "workbench/spikes/ikea-frame/encoding/material.h": "95f693ed3372c4dc8a34518dee52c71617e3f591d74cdee05d5675bf05759543",
+    "workbench/spikes/ikea-frame/encoding/material.cpp": "b723f30794bff48361887fa7709d0598f026cd6bef38ad66d2571e589bc5ee74",
+    "ikea/include/ikea/bec256/analysis.h": "e7fa7884f6a7942c199b2f34adf5942a02ca1276dd9ef2afc0402967471e1424",
+    "ikea/include/ikea/bec256/author/analysis.h": "0f0e9d4f093d5c7b635e04cfcea20d443e9ddf1ea923e3e18d43b8acd2acb8e5",
+    "ikea/include/ikea/bec256/author/chain.h": "8d65f67af3a1c53e912e89aa85211e774de61eaccc9a1eeb66789939311a5a1f",
+    "ikea/include/ikea/bec256/author/native.h": "2762506446048ee7514af77168c6f485b752ee4de18a7648831cafe7006e697a",
+    "ikea/include/ikea/bec256/author/write.h": "b3b49f78922fc60dffe7f4ff8617ebec09ff5f05688d89ab2194e63b19244d60",
+    "ikea/include/ikea/bec256/codec.h": "251a76fe37a9acb6c734f6cca0267573e5375798f360d9f1e62fcff8b614a1d2",
+    "ikea/include/ikea/bec256/detail/estimate.h": "7c07cb5708dff1843c68c20a126f31a3cec67a89c8f78f2b388d51283c0f3a32",
+    "ikea/include/ikea/bec256/detail/native/assemble.h": "8f004e28a28697fef30440a71aa530f62018f7cae786eea248ba15961be33750",
+    "ikea/include/ikea/bec256/detail/native/avx512.h": "0e2e092ca24d3404b4828bf3c94b240c24a8496af22b2d0feebaf594547f8819",
+    "ikea/include/ikea/bec256/detail/native/emit.h": "b24e104497505d703a71ab97fb95b301efce5744b9de3b4bcf1c1872a23fbe02",
+    "ikea/include/ikea/bec256/detail/native/neon.h": "55e5fb86d2e52f0a7bcf204d98c5a21669e4d57d44f45acf7e5e3f1cfc53f56b",
+    "ikea/include/ikea/bec256/detail/pack.h": "5d72ee4769b42ca30ec16244ff295762c782e1b19227af1d8bd4e874cacbae64",
+    "ikea/include/ikea/bec256/detail/scalar.h": "74ca49fd7941de284c95b22b89265e16cfebf19d66206227b1003b273486caf0",
+    "ikea/include/ikea/bec256/detail/tables.h": "ab71429079516f0691035b65e45f10ef69f98f6539de787db6266b803540f57f",
+    "ikea/include/ikea/bec256/detail/write.h": "705876a5cf5dc56b7a64af152157a0c5b272e6aa42ae65fbef915dbd44805efb",
+    "ikea/include/ikea/bec256.h": "3ccd02ece4d59c0373125bdca2f991d8e25383b0de833f4c0b18693b788e89ed",
+    "ikea/include/ikea/boundlist/author/chain.h": "57a2a4a9536ebd13dda702f8f9f1641b91df95b4f78742b58a01a354d6f8fadb",
+    "ikea/include/ikea/boundlist/author/native.h": "985e0701fa5dfcf9e1533e1e25176ed357a0b2b51d9cdf5e481afbdde80d5deb",
+    "ikea/include/ikea/boundlist/author/read.h": "fe5b30bd8e03df5da2fae303c2c3e2e6a7d825ee428609167d0a1ab713b1fb21",
+    "ikea/include/ikea/boundlist/author/search.h": "3dd8f1ed3bb67062c35387a900313aad5e323ad7bef2c94d2351815f715ccf63",
+    "ikea/include/ikea/boundlist/author/write.h": "43d3736295380c9b562fd22cc69277fdec661818f3c51cb7d0d899311583b50c",
+    "ikea/include/ikea/boundlist/compat.h": "ccdef3b1222761ab03de8bffba2a5e7512f61d7fb4a9edc0926a96a9189d43c6",
+    "ikea/include/ikea/boundlist/description.h": "236dd6269d944f0a6fc4286aae45670f08015b469db05a04aafeca69e0b995d1",
+    "ikea/include/ikea/boundlist/detail/bytes.h": "84319c9d8b0efcc380c9f368ef200aeb5dcd350b43651039f142aad3fa806a11",
+    "ikea/include/ikea/boundlist/detail/extent.h": "092bc2bb10ea3922d3c5536ec6b79a2c10185d755e9796fc0a0f022e45709e36",
+    "ikea/include/ikea/boundlist/detail/prediction.h": "157a41ff0d3dd533dfb07ba28e376b45f7d549aed3e4b8552baa6b03fb8eb793",
+    "ikea/include/ikea/boundlist/detail/prefix.h": "3d7344995d6a2fce589ddcbd6f337f7f457ce6306d60e369b84fd09fdf357e06",
+    "ikea/include/ikea/boundlist/detail/rewrite.h": "3b9f3caadbe8b138069c60cb6883ff9641832cc99023c6d49e0c9f0b3e7a4d5c",
+    "ikea/include/ikea/boundlist/detail/search.h": "f92d893ba4b03b38a5fba3d9226f2d26fb184d6f54e8924cebfd09a27a8fd6ef",
+    "ikea/include/ikea/boundlist/detail/simd.h": "288ae22d076b2c684f2cd62e4f8084a906aabc30eb8b8ba1e70f2ec817308a72",
+    "ikea/include/ikea/boundlist/detail/validation.h": "d60d0a00274e4e605b61d3cd5565ce51984e61c892829a0c7426b0990d4850af",
+    "ikea/include/ikea/boundlist/geometry.h": "b95bc686ab34cdb1d7f4ecd2dd74d1c20b92e56008d5ae6361b93477c60a750d",
+    "ikea/include/ikea/boundlist/read.h": "92bc96011773b6f5fb639610338d8011428e08ad30c12cdd1ccce90d1e5e74fa",
+    "ikea/include/ikea/boundlist/search.h": "986ed647e3256af5c73c81d2319225246b26592998b593ca4f922b7a92f5ac02",
+    "ikea/include/ikea/boundlist/types.h": "c19d7a3902bed75a1e1932b9b6445872d9af46be804bea4c1a088e37cb78688c",
+    "ikea/include/ikea/boundlist/view.h": "75e62e478e4fd7ca7a2fcda783ca5bd47d762cd170fcba1cba90c1bf718a3741",
+    "ikea/include/ikea/boundlist/write.h": "dc647bad1cc6ee34d16365b74e6e22d20c1b194d03a2a630e5489075daba6733",
+    "ikea/include/ikea/boundlist.h": "0ed9786e343384a210e33a3a49146495ce6098366acee1bde34db6c01a6f70cb",
+    "ikea/include/ikea/comparison.h": "f9f5f933116f37db76a1804c017f3fff24602db9cb87108d9d586f247594c50a",
+    "ikea/include/ikea/detail/filter/compare.h": "43e967fc6653fad34182b39e042a2d4d9bc107f1f8c14ff1449a7759cef7bde9",
+    "ikea/include/ikea/detail/native_chain.h": "11672b2ccf161079d30a279056c5b79d00c3859f5d41258bca30d91d2b589a86",
+    "ikea/include/ikea/detail/overlap.h": "69840846e1ca1ab5fdeb6fdcea21d9705ec566ade7e0abff7a6d94b7ff414e44",
+    "ikea/include/ikea/effects.h": "01c2e39782f985541027fe4d8eae6c09a981359847eb9638392cffc8f9c34208",
+    "ikea/include/ikea/hashtable/accumulate.h": "1e1c735fb9c886eb1cb7453befb64157a26ce89463f06d094cec22dfa478e58c",
+    "ikea/include/ikea/hashtable/author/table.h": "36f428ad5b7b7debf5926734b8036c4e01df5ed6d5dfd6380dd360e9a6fa44cd",
+    "ikea/include/ikea/hashtable/capacity.h": "bafe013dd6d7efda6168fddfa552d174c38b80672cb54dc81572b20840c60151",
+    "ikea/include/ikea/hashtable/descriptor.h": "41a910ec90aaa94350f78baae55270d0981772a76a6686b03d5bc2049c71a97f",
+    "ikea/include/ikea/hashtable/detail/accumulation/codec.h": "cf88fcc4d27c4d1e060398db613083c756a924e49f251ba3948207f5916e977f",
+    "ikea/include/ikea/hashtable/detail/accumulation/common.h": "01d4836359f14a5dd9442e6b327ee7ab0f3695b9ab0bad6ac789f1166e21c2b2",
+    "ikea/include/ikea/hashtable/detail/accumulation/engine.h": "f87dfb0b2b04783615190a5204141cf24f6c39f04eb4e2f03c4b402cc7732f2b",
+    "ikea/include/ikea/hashtable/detail/accumulation/flat.h": "ea40adc60f29e9daa5b1adda4b3273a0d0dca3b6f01647134a2b4dff251ef826",
+    "ikea/include/ikea/hashtable/detail/accumulation/packed32.h": "f7c6f4525fd72479a2cca0b3c21a106c334e4e4cb2e90b9129b4d814ec8fb951",
+    "ikea/include/ikea/hashtable/detail/accumulation/points.h": "8fea2d2de139c8262382eb55bc2a5b2b97f4cd0cda6e10b49c309a623665278d",
+    "ikea/include/ikea/hashtable/detail/accumulation/resolve.h": "9a336ab2963ccd43d825aec9c65c1aa21f03040ae9313bf8748cec9969216208",
+    "ikea/include/ikea/hashtable/detail/accumulation/swiss.h": "e6353865fec06f4ddf3bad1837eae65ced5c10dbc13cba2e4f044498f8638b13",
+    "ikea/include/ikea/hashtable/detail/accumulation/wide.h": "ddb4b5b457638c14774a84aae1bfa2820ea1b2ccd3ae522d43f65906f397d9c1",
+    "ikea/include/ikea/hashtable/detail/bits.h": "c5c5f657e3fc2eced276340fdcf68ca65b8c4cd5e8415c608799c1a5fb970c28",
+    "ikea/include/ikea/hashtable/detail/bucket-filter.h": "eacecc84e78f70ab759612a3ccc8ba16558abc86cd08186852ab5aa8e8d863d5",
+    "ikea/include/ikea/hashtable/detail/bucket-write.h": "b27c03d5b621fc771e6be5ffb8a3aed3dc1ed5fbf6323832b292a08f6fdf5293",
+    "ikea/include/ikea/hashtable/detail/bucket.h": "9235a26e43597444e9a0841bd52bc29bbb8ca17511b5fd7fac2bdc91fdf4f765",
+    "ikea/include/ikea/hashtable/detail/control.h": "8a9332eeb77a555761627d5a2a5deaf562cf4f69dae10f5ba36a43ebbfdf396c",
+    "ikea/include/ikea/hashtable/detail/hash.h": "85c3d4085deb20a909fbf879f1f282374fc13ca91a57c2bde55d7dd8f51abd57",
+    "ikea/include/ikea/hashtable/detail/packed30.h": "3011360caaf6ffcde9d21964b25c7ee399c639b995ca46c9046dcf92d8f2a641",
+    "ikea/include/ikea/hashtable/detail/read-batch.h": "bb8e59a28ca9e43a31f670e8bc30ab62cdc70f6b4291cf0cb0e95f9a14301bcf",
+    "ikea/include/ikea/hashtable/detail/representation.h": "ff9fac232858751d5407a1fb9733ecfd514f35a47fafd14f7e1aa1d3f8c31fb0",
+    "ikea/include/ikea/hashtable/encoding-profiles.h": "4a979637778706291144cd843b04d64b2d4cb3d96f0b15ca998fcbe9455100da",
+    "ikea/include/ikea/hashtable/encoding-selection.h": "78ca70af88b722df55649a7fc2659f6757a85dc765b2b744a29742ae9bd64d83",
+    "ikea/include/ikea/hashtable/geometry.h": "44d4a7638af4a861d39411d6f03a833fa9b1ece061c630152c29b9b2d3fba0bd",
+    "ikea/include/ikea/hashtable/kernel.h": "5ff1698fb4a5ae12aa13c23e080aa00a2c127dd97efe93c972c846b584ad3e05",
+    "ikea/include/ikea/hashtable/lookup.h": "e26b4c702f11c6b0b079d095929c587764ff54bc215011bd01ab715914f86a69",
+    "ikea/include/ikea/hashtable/mutation.h": "b23c253d2a74ca49774add84623a7416ddce60dda30e47b99eb249b6d17cdb68",
+    "ikea/include/ikea/hashtable/rebuild.h": "2988feb5eff757912f465dbddc542169c652868c4c2a1b59ce4baa06c280c36d",
+    "ikea/include/ikea/hashtable/storage.h": "36ab6ee0f31c72592b7ceaea800dd6ce6281fcce9a3cc440a00aeed0b3c84456",
+    "ikea/include/ikea/hashtable/table.h": "8314fd7e596d79a5b8623e70398f722f4207354fb1ebb421cfc080fc06ddaa2a",
+    "ikea/include/ikea/hashtable.h": "2d68d9f94ac67e4e6eb4d2dab7646976bbf67fded6d64a08c0fb5f293b3c316f",
+    "ikea/include/ikea/intervals/author/search.h": "3b6bb4f2e00b460cad930c6d9de7a39a2ad88678a2e74e26a3fc6ee7c4106919",
+    "ikea/include/ikea/intervals/detail/bytes.h": "7c9d303bf981ffe9da63574e4d451a6a0b3c16d7eaf00c8c8bdc344dc9d11835",
+    "ikea/include/ikea/intervals/detail/native.h": "2a4e0cad5dafec45f7de2b5d7f8046023ffe346a99bbf630e8dc6df97956c0b0",
+    "ikea/include/ikea/intervals/detail/prediction.h": "abb0905206f21d4c760c4bd1c7c9f6542a0e3a977c0642f1be300c48f1451b3c",
+    "ikea/include/ikea/intervals/detail/prefix.h": "c84f456e0e99615c10d0b75514fec8b42562a347c168a119261c8ca0e7c54e4a",
+    "ikea/include/ikea/intervals/detail/search.h": "81ab913c600adf59702179c80bb77f20136c9266dc37609f4d72ce2cfd0281e1",
+    "ikea/include/ikea/intervals/detail/simd.h": "9ba0675bbfe1ebe2621a974da01a440a4550836b4cbfbc4b40dd77528ccb70dc",
+    "ikea/include/ikea/intervals/edit.h": "119d779bb1f01593ec9d934824f3529ea735959e45d8207dde35ca8c797e5785",
+    "ikea/include/ikea/intervals/geometry.h": "4ee0b4fc637713c6208d8718afaa2896d034044fa4a3f2d98a6249898c372f12",
+    "ikea/include/ikea/intervals/projected.h": "63c4efa8e19a25035e95215545f7b4fdfa5ed3556d563c4259556909d921acb2",
+    "ikea/include/ikea/intervals/read.h": "9381e0835c32f5e615d37a3ce9a5d7e38027a9d7733e700a3b016ab081c63289",
+    "ikea/include/ikea/intervals/search.h": "e2b15da9d3854772d9387a74629ea8ca5bb50e4b49dfeb03cd66a089ec028a80",
+    "ikea/include/ikea/intervals/sparse.h": "6fb7ffae803b05dba959eb06e87bb56c9dec6cbcf43f4ca17a107ed71198690f",
+    "ikea/include/ikea/intervals/types.h": "2c7f46c1350c78b845d2f79704acf8d4038279978f825d09114e488dacaf925a",
+    "ikea/include/ikea/intervals.h": "07e516ec0dc0aba72fc2abac1655d7cbc9548a93774a47a6f7ea8f9b881223cb",
+    "ikea/include/ikea/seriespack/author/chain.h": "3d857ed41d2d93d328bd0b5fda6571684a9357ee9915e8e4c8311199ad3c947a",
+    "ikea/include/ikea/seriespack/author/expression.h": "4d5e1c79a203b8a937e876a91fba0ec9d68fb2aba9d2cf1c0f2f8bdf1e638e59",
+    "ikea/include/ikea/seriespack/author/filter.h": "61742f03607a2ccdf78aef0ea9d98e08cc9e9a78140e1e7b91773a70144822e1",
+    "ikea/include/ikea/seriespack/author/indexof.h": "84801b6c55671aafe35cd6e5137c469b145be43eda264c2d1c04eb7a7c36f7b5",
+    "ikea/include/ikea/seriespack/author/local_equal.h": "9647177deb3cafee59d6c52c1cb1edda602d5e0ac48e343b49306289cdf1a01a",
+    "ikea/include/ikea/seriespack/author/native.h": "789d3b86f07a7581ba47f9b2372fd3c864eb7516786740c6999806b4c607ca45",
+    "ikea/include/ikea/seriespack/author/read.h": "007cdc20db15bfec379906bb5801fc1a40a44e3cb7e26d6b6d95aec9e3f7c4c2",
+    "ikea/include/ikea/seriespack/author/record.h": "a36ae9f0d5d2a9a89117fe706a45774f88ec7d90a825d6216f836935e3a5aa20",
+    "ikea/include/ikea/seriespack/author/summaries.h": "119d03ef8404ad3f461518201962c6e8042cae43b0a50dcadf05ca5d2e4438a9",
+    "ikea/include/ikea/seriespack/author/write.h": "4b1324df2dfc085a9d3bb26e6c366585a13be2dd5436c3b6073fc8f9366a49cc",
+    "ikea/include/ikea/seriespack/detail/admission.h": "f3c04985ba39675ab9481f8e59b41dda90e928d0ec8c6df1ccc16af4c5c7d6a5",
+    "ikea/include/ikea/seriespack/detail/dense_read.h": "d0140e4ebc352a57ce7cd0081d27720d53da5cc4a5d57b3ce25737b9c355e858",
+    "ikea/include/ikea/seriespack/detail/filter8.h": "0121b020e1431170e06e37b98e27a151fe53736fe99594da360f370d1abee8e0",
+    "ikea/include/ikea/seriespack/detail/mutation/admission.h": "5fae5445b3c15402e8328a1c67acd1728760dc826f26b891d2be9dda5a71aaa9",
+    "ikea/include/ikea/seriespack/detail/mutation/admission_state.h": "49f19e40439ffa2dde9dfce51a8f5d627b97d9aa553fd5265683d8a2f8ac93e2",
+    "ikea/include/ikea/seriespack/detail/mutation/assignment.h": "c0d80a6fbe63af266af95eb38a87f96659ee8a9e85ab1cc11e16da78132118f5",
+    "ikea/include/ikea/seriespack/detail/mutation/composed.h": "b56c4d0c0d0ba2d70b559e331518fc34a98cef4f77e260028f9c1e712658658a",
+    "ikea/include/ikea/seriespack/detail/mutation/composed_construction.h": "0de20caeb5f339a864b9c18622bd3fc1ae7c1138bcb99da922cf4b9a8f60a2ab",
+    "ikea/include/ikea/seriespack/detail/mutation/construction.h": "12051f76112d1824e4a36866a660f13e12e3dfc53379a7ecd458f913a8a10b8a",
+    "ikea/include/ikea/seriespack/detail/mutation/fields.h": "54bcd05be66c76f4d6a1dde87afcd62fdcafa4481c71d9dbac423b8326267d2a",
+    "ikea/include/ikea/seriespack/detail/mutation/footprint.h": "8ad67182fbf1edd5535289cca5df12d6aa47b3de8942fe12e24838d6078d9a36",
+    "ikea/include/ikea/seriespack/detail/mutation/physical.h": "78968c3d7fed29dfbe9eef466fd43208489211ef245c2341e691bd941490bf99",
+    "ikea/include/ikea/seriespack/detail/native/avx2/read.h": "d84c2f019a7f84efeb1e729f5e9874fc0b9edecb52daa304b40ab05d94fa64ec",
+    "ikea/include/ikea/seriespack/detail/native/avx2/write.h": "81b9076d474fcfcb11b495bebf138878ad357449d53e7bfbdaf9362b4face721",
+    "ikea/include/ikea/seriespack/detail/native/avx512/read.h": "8e0d5abad1e06b5bcb1f7b9efa9358c02377292d0ff7934aa8281e90e74fbb03",
+    "ikea/include/ikea/seriespack/detail/native/avx512/write.h": "6d2dd532222ab80af7119a24af3e1b0d0017b733ad76851486d24e1cbd26318a",
+    "ikea/include/ikea/seriespack/detail/native/neon/groups.h": "006b9a203bfcaa35cd6dd55f0c510adb6f79061ea38dacb6a302dfad6bbb5107",
+    "ikea/include/ikea/seriespack/detail/native/neon/read.h": "8ec9c361e4e03970695f9f83af094ba494aab6fda9a292e5877cef0abaf57e3d",
+    "ikea/include/ikea/seriespack/detail/native/neon/write.h": "2b775818e4fd412c1ee836f1edc2cd2cfa8925b33364b79456fe8290238be3db",
+    "ikea/include/ikea/seriespack/detail/placed_read.h": "50c2339fe23527c578805665a32380f917de34bff208f8bb7a1b0e9e0d2328dc",
+    "ikea/include/ikea/seriespack/detail/point.h": "23451983f927641e1ace80175c06d1a65e1ce2543b688ef9abbfe08d98a9dbf3",
+    "ikea/include/ikea/seriespack/detail/wire.h": "05b92ca7dcb2864049aae1cf3105426798c46dbcd527f411ee480c3833d92b66",
+    "ikea/include/ikea/seriespack/effects.h": "3cf5a0b4fb80ff6c673357aa432319e2fcf009521f13d53b24c691353f767acb",
+    "ikea/include/ikea/seriespack/filter.h": "32a052e3cc0c21e177986213fcc70b2bb1aaf434036e95272fd9ba81b0c89b0b",
+    "ikea/include/ikea/seriespack/format.h": "adf284014207305ffbeb4d726fc93fa4020220beb7d627a26027ec92711f01b9",
+    "ikea/include/ikea/seriespack/indexof.h": "ef8c87d8d5e063455c9cb6857101b08788834846325afd008f2fe878fff4358c",
+    "ikea/include/ikea/seriespack/mutation_operation.h": "4a8a2c3d3f2858a57c11db7a860ce0bf2b9f593ea727711658d2b752689c4a8c",
+    "ikea/include/ikea/seriespack/presets.h": "a5c8b2061c83da4c40511b7f7797bfd2d2174097fa65d43171a26fe7d044e1e1",
+    "ikea/include/ikea/seriespack/read.h": "b8e860e444216912a308fd0ce47b8b38c29553606da1b458174c57e7726d16e4",
+    "ikea/include/ikea/seriespack/read_operation.h": "b52426a8019150d16c69d0c25173f16b5a2ac6bfd427d36749f888056bb0bb53",
+    "ikea/include/ikea/seriespack/representation.h": "236c3dfd832fb0151d98571f4334a38bb2e84a5a269bf4adca3f29e26ca42409",
+    "ikea/include/ikea/seriespack/selection.h": "7cbf31ee1fd649c6aaaa752f7a51b89eaabcc82944de9131de84f907f401e489",
+    "ikea/include/ikea/seriespack/status.h": "a19b016e4aad84e22e3f68cccd4aa87445f5595e25f4913dabba26133e44c74c",
+    "ikea/include/ikea/seriespack/view.h": "a4182644ea8da9c36dd7ee31b37167268e48d5b4b4080981c2f6609a8bf53348",
+    "ikea/include/ikea/seriespack/write.h": "8ec6830b81fbc70faee7cbb0c0ef0d82e5906fb0e314f72af308cc4426fdd7ec",
+    "ikea/include/ikea/seriespack.h": "e56538f15ee21b6a663ec97b3537fd37ffd1941ee1fdde071b621b4ce80fc47e",
+    "ikea/include/ikea/streampack/author/chain.h": "82bcfa7fa4c48b58875d4ca00838aa908bdcede363112d79b8d22c94bbb679f1",
+    "ikea/include/ikea/streampack/author/native.h": "468eccef2f4cafa8f35614dbe7449a519f429163d703d2140c505c205ead88d7",
+    "ikea/include/ikea/streampack/author/read.h": "68c98ddcb7d341e36a309e2d44175c2b80370dc20f0d09cb2f5ef349b57cd198",
+    "ikea/include/ikea/streampack/author/write.h": "41ca01884887645901f2ebdce963367d49008ee1761607a6fd53dff0c073c4a9",
+    "ikea/include/ikea/streampack/description.h": "2db79ea3aa02b577940eab445609f153c99c9e66eee275992fc3a67463390eef",
+    "ikea/include/ikea/streampack/detail/compact/author/chain.h": "c5c306e3471db8600d99846ab64fd2329c99982076723b44f83017f3f8260a1d",
+    "ikea/include/ikea/streampack/detail/compact/author/native.h": "6ede72340433c096ea8852c32353b4082c4bcb406e8e7ca7317eb626d2d78ef9",
+    "ikea/include/ikea/streampack/detail/compact/author/read.h": "96c6200616a43a6bb83298098877cd07b5fae27954a6094e5d6309215917689b",
+    "ikea/include/ikea/streampack/detail/compact/author/write.h": "339991ea85d12b1bc5a130eb5e942b4f9bc19d0d1151f771e01af514e90426ec",
+    "ikea/include/ikea/streampack/detail/compact/description.h": "1a0e641e741199849c4681efeb220faad4699779f2f53b560761f2384403d5d6",
+    "ikea/include/ikea/streampack/detail/compact/detail/extent.h": "fbbdc4ab1efba3657bb4c020654f7b89f114245d0eb4e87865dd1c33b654737e",
+    "ikea/include/ikea/streampack/detail/compact/detail/rewrite.h": "8ebbc8acac17d38a2d5efd66fe9ef9269356a18474ae72a9b2b10c28cbbe96c9",
+    "ikea/include/ikea/streampack/detail/compact/detail/validation.h": "8317601a75ce915ffadf0223ea4ef7167999f0898e7dc2d390af85d35d5f11c3",
+    "ikea/include/ikea/streampack/detail/compact/read.h": "56d609ed0deaa3f3b9aed0cf975178900806177e7a1ef85358a03df5aa1532be",
+    "ikea/include/ikea/streampack/detail/compact/view.h": "01cc81974f8f4e4b79ab9e8e850c65058b429cbf01bcf9ed90e6620a0c7632df",
+    "ikea/include/ikea/streampack/detail/compact/write.h": "c00331b42132f4369bb99e18f5c9d4fea118fe4e7367f897ff2c1fb1c36da5c7",
+    "ikea/include/ikea/streampack/read.h": "a98280b930bb834337015b38ea353f89dc375331b364aadb844e57af51ee27b5",
+    "ikea/include/ikea/streampack/transfer.h": "74a4a29303d9163e0638e1e3cc9bcb822fe9acc04dcad5348f9a7040f83d8755",
+    "ikea/include/ikea/streampack/view.h": "62d2fa385248ec530c9cfebe8e17ad23dd00e2c08b03e72f93a2c1f95c2c8dbc",
+    "ikea/include/ikea/streampack/write.h": "5242c428f5f3198ce027eac60b6138d4510d56d1d46ebd0375d12025522a43f8",
+    "ikea/include/ikea/streampack.h": "1ff428b0344ad56e1c301f81a63015d5738cfad6cba67bcd6068212100587554",
+    "ikea/include/ikea/tuplepack/author/composition.h": "331aa21f38feefe3065387fce648d376f411b5de047a5435a6483e3b133244a9",
+    "ikea/include/ikea/tuplepack/author/execution.h": "9e2f1f81d92ac2ed91c808dc80b619e71f01644f4f863447febae0fed4413bc0",
+    "ikea/include/ikea/tuplepack/author/maintenance.h": "ef57065c282bd28a2d5ad81f82af02609aa0d79241a817dd58a87d110450955c",
+    "ikea/include/ikea/tuplepack/author/native.h": "f10d26edaeef6781cb51beebb0d8419a636ea403b7b93a2bf9757da5b02cd3ec",
+    "ikea/include/ikea/tuplepack/author/routes.h": "18797df06c407bcbd472761fc00492604628642189ed9055d331c2f2d220b1ee",
+    "ikea/include/ikea/tuplepack/construction.h": "6fd8db04a4bbe9a818c9931e309d3def87c10cdc0df1dffd7055951a4f0aada8",
+    "ikea/include/ikea/tuplepack/description.h": "e12fd70c9234ce01466ce817098f1287893503325d2a48e9a11bf9d94e6dce4a",
+    "ikea/include/ikea/tuplepack/detail/gpr.h": "cefe2ee0fbd51b4a4391595d5015e13635331bf241a90f080d6a3ea40ca295d0",
+    "ikea/include/ikea/tuplepack/detail/mutation.h": "0d0b7a340de2c764355e8392d903fcd5b26f1b14d0ba1bb8f34ea9fbd2c8ba25",
+    "ikea/include/ikea/tuplepack/detail/native/memory.h": "d44dcd72d6c3dcfb0e160cd4fb568880ee825aacf69c7112e979c544a2fec951",
+    "ikea/include/ikea/tuplepack/detail/native/packet.h": "fc8ce06ed221451b17d4330fc543b63a2e844f3f6c89db510d3c2028112593e8",
+    "ikea/include/ikea/tuplepack/detail/native/routes.h": "83f3a2e73438e52f4e655968b411392bd83b46a06f291ed461d675723524b05c",
+    "ikea/include/ikea/tuplepack/detail/native/selection.h": "d495e9d02d2837ba26f6244b7e7732ce9a06890c15f35bee5a2f220546fadfc4",
+    "ikea/include/ikea/tuplepack/detail/native/shuffle.h": "c59956d48c1c53e68c255f3a99d98f474f343d7ede10b4cb71d3f491049e516f",
+    "ikea/include/ikea/tuplepack/detail/native/types.h": "bf39a6d3ef916f221211d523d881777fb184a5ff6803375f496ad8ff420b8cb0",
+    "ikea/include/ikea/tuplepack/detail/packet_plan.h": "c32c9c3b3e10e98b66acf8b230d35ac2cabf4f875cadfb9bdb2d804e981e6a48",
+    "ikea/include/ikea/tuplepack/detail/plan.h": "18f8059941a2bc648967a7d69b275d9a00de474ae83432c708497cce39264de5",
+    "ikea/include/ikea/tuplepack/detail/window.h": "106ba39b37d696e351b0748353e4a2c1d7e1bc493639cd703653ad860377d472",
+    "ikea/include/ikea/tuplepack/filter.h": "c09ea31da1b23c6df26b071efcea764e80ac87028212ead726c16154299ce698",
+    "ikea/include/ikea/tuplepack/packet_layout.h": "4f40cec54d800f2b0c84d5019d68141e30faa70d66fc240517320aee57127f1e",
+    "ikea/include/ikea/tuplepack/plan.h": "490c461bd668e840df31f7f94e74198aaf533694085c85341a1095388717de12",
+    "ikea/include/ikea/tuplepack/read.h": "2fad05c3b36b17c8f7825cbcb017995e2fd1503ecd26a01bf64cc7c6cc0d6252",
+    "ikea/include/ikea/tuplepack/selection.h": "b878acb433ba38f44b4fa386da13fabf3d5a964306e21a17fc0ee28ece2dde2b",
+    "ikea/include/ikea/tuplepack/transfer.h": "9975377267b3907e38e22ce4ccf5beb920d4a043c8e8a97f128e2caa49d3afb7",
+    "ikea/include/ikea/tuplepack/view.h": "ef0166a34353706ec51662c99ec8f4c6f1e8fb94c9d0b6ee83355c2ed5914979",
+    "ikea/include/ikea/tuplepack/write.h": "ee29ad753706db8c393e2e77440c15143a28216a5ce52146a84d0dc7ad82de0a",
+    "ikea/include/ikea/tuplepack.h": "15e0b362d7014cfd7575d1ed548e4cbab068e2946df53fbc1f5ff329c11f3222"
+  },
+  "platform": "Linux-7.0.14-orbstack-00380-ga7e0a2dc9535-aarch64-with-glibc2.42",
+  "cpu": 7,
+  "trials": 32,
+  "condition": "warm whole-image COUNT; ARM VM exploratory; not DRAM or stream throughput",
+  "inputs": {
+    "/home/ashtonsix/sixdb/build/spikes/ikea-frame/cols/OS.u64": {
+      "sha256": "62e798b644d78ddb19e557a9f4de91947553da4b3c5462fa9ecb2153b74404b7",
+      "bytes": 23998464
+    },
+    "/home/ashtonsix/sixdb/build/spikes/ikea-frame/cols/ResolutionWidth.u64": {
+      "sha256": "c8313ba16bc85ee2cadc5e256f653d8289ad38a39a9aae143164009af5aaa551",
+      "bytes": 23998464
+    },
+    "/home/ashtonsix/sixdb/build/spikes/ikea-frame/cols/EventTime.u64": {
+      "sha256": "8294fa21be93d959e1d8d612ac701f083187db033db98a647657f9309f39ce89",
+      "bytes": 23998464
+    },
+    "/home/ashtonsix/sixdb/build/spikes/ikea-frame/cols/UserID.u64": {
+      "sha256": "e2cdf04c3cc37533e904b019876eb29d2f5cb303748a2f668357dc587430bf1f",
+      "bytes": 23998464
+    },
+    "/home/ashtonsix/sixdb/build/spikes/ikea-frame/cols/URLHash.u64": {
+      "sha256": "5b57151bca1792f0bf0c65d21ab2a9d760faf1e77b039c65e668d922bc1dfc43",
+      "bytes": 23998464
+    },
+    "/home/ashtonsix/sixdb/build/spikes/ikea-frame/cols/ConnectTiming.u64": {
+      "sha256": "6fa19ea5959876523a2d5c601b5ac4e5cb59071de0846aec11ef71b09bc62ade",
+      "bytes": 23998464
+    },
+    "/home/ashtonsix/sixdb/build/spikes/ikea-frame/cols/RegionID.u64": {
+      "sha256": "be98d8e7c351d22ca531359e9a84ec7f1a4d711318ffb0d4b7518dea8817ba9e",
+      "bytes": 23998464
+    },
+    "/home/ashtonsix/sixdb/build/spikes/ikea-frame/cols/WatchID.u64": {
+      "sha256": "a39108f2e950d8ac101506c0fc645668668130df839aafe25f55aff5046e1e15",
+      "bytes": 23998464
+    },
+    "/home/ashtonsix/sixdb/build/spikes/ikea-frame/cols/ClientIP.u64": {
+      "sha256": "e1bf974be2bba11614b61b2676dc2df3ee36baf231e57700fb1fd4ee54a99cd6",
+      "bytes": 23998464
+    },
+    "/home/ashtonsix/sixdb/build/spikes/ikea-frame/jena-0/p__mbar.u64": {
+      "sha256": "ede7bd5fd8833828049817f56703d4cfaa29ef620ff7c73b9bbf32ae92e9054e",
+      "bytes": 524288
+    },
+    "/home/ashtonsix/sixdb/build/spikes/ikea-frame/jena-0/T__degC.u64": {
+      "sha256": "184bcae557de73c43757a3c8468a9178da86d787df08caa24526faec88a1149d",
+      "bytes": 524288
+    },
+    "/home/ashtonsix/sixdb/build/spikes/ikea-frame/jena-fault/wv__m_s.u64": {
+      "sha256": "5f996f15af61622a15eb9d56f354d8cdd56f3400bbc3b9acf70a585919a3fc51",
+      "bytes": 2048
+    }
+  },
+  "compile_commands": [
+    {
+      "directory": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/clang/frame-consumers-stable",
+      "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=1 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN4=0 -DSIXDB_TUNE_ZEN5=0 -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/workbench/spikes/ikea-frame/encoding -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/ikea/include -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals=. -ffunction-sections -fdata-sections -march=native -mtune=generic -gline-tables-only -o workbench/spikes/ikea-frame/filter/CMakeFiles/frame_filter_kernels.dir/kernels.cpp.o -c /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/workbench/spikes/ikea-frame/filter/kernels.cpp",
+      "file": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/workbench/spikes/ikea-frame/filter/kernels.cpp",
+      "output": "workbench/spikes/ikea-frame/filter/CMakeFiles/frame_filter_kernels.dir/kernels.cpp.o"
+    },
+    {
+      "directory": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/clang/frame-consumers-stable",
+      "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=1 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN4=0 -DSIXDB_TUNE_ZEN5=0 -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/workbench/spikes/ikea-frame/encoding -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/ikea/include -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals=. -ffunction-sections -fdata-sections -march=native -mtune=generic -gline-tables-only -o workbench/spikes/ikea-frame/filter/CMakeFiles/frame_filter_kernels.dir/image.cpp.o -c /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/workbench/spikes/ikea-frame/filter/image.cpp",
+      "file": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/workbench/spikes/ikea-frame/filter/image.cpp",
+      "output": "workbench/spikes/ikea-frame/filter/CMakeFiles/frame_filter_kernels.dir/image.cpp.o"
+    },
+    {
+      "directory": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/clang/frame-consumers-stable",
+      "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=1 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN4=0 -DSIXDB_TUNE_ZEN5=0 -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/workbench/spikes/ikea-frame/encoding -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/ikea/include -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals=. -ffunction-sections -fdata-sections -march=native -mtune=generic -gline-tables-only -o workbench/spikes/ikea-frame/filter/CMakeFiles/frame_filter_kernels.dir/evidence.cpp.o -c /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/workbench/spikes/ikea-frame/filter/evidence.cpp",
+      "file": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/workbench/spikes/ikea-frame/filter/evidence.cpp",
+      "output": "workbench/spikes/ikea-frame/filter/CMakeFiles/frame_filter_kernels.dir/evidence.cpp.o"
+    },
+    {
+      "directory": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/clang/frame-consumers-stable",
+      "command": "/usr/bin/clang++-21 -DFRAME_FIRST=1 -DFRAME_HEADS=0 -DSIXDB_TUNE_GENERIC=1 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN4=0 -DSIXDB_TUNE_ZEN5=0 -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/ikea/include -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals=. -ffunction-sections -fdata-sections -march=native -mtune=generic -gline-tables-only -o workbench/spikes/ikea-frame/filter/CMakeFiles/frame_filter_h0_k1.dir/instantiate.cpp.o -c /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/workbench/spikes/ikea-frame/filter/instantiate.cpp",
+      "file": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/workbench/spikes/ikea-frame/filter/instantiate.cpp",
+      "output": "workbench/spikes/ikea-frame/filter/CMakeFiles/frame_filter_h0_k1.dir/instantiate.cpp.o"
+    },
+    {
+      "directory": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/clang/frame-consumers-stable",
+      "command": "/usr/bin/clang++-21 -DFRAME_FIRST=9 -DFRAME_HEADS=0 -DSIXDB_TUNE_GENERIC=1 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN4=0 -DSIXDB_TUNE_ZEN5=0 -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/ikea/include -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals=. -ffunction-sections -fdata-sections -march=native -mtune=generic -gline-tables-only -o workbench/spikes/ikea-frame/filter/CMakeFiles/frame_filter_h0_k9.dir/instantiate.cpp.o -c /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/workbench/spikes/ikea-frame/filter/instantiate.cpp",
+      "file": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/workbench/spikes/ikea-frame/filter/instantiate.cpp",
+      "output": "workbench/spikes/ikea-frame/filter/CMakeFiles/frame_filter_h0_k9.dir/instantiate.cpp.o"
+    },
+    {
+      "directory": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/clang/frame-consumers-stable",
+      "command": "/usr/bin/clang++-21 -DFRAME_FIRST=17 -DFRAME_HEADS=0 -DSIXDB_TUNE_GENERIC=1 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN4=0 -DSIXDB_TUNE_ZEN5=0 -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/ikea/include -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals=. -ffunction-sections -fdata-sections -march=native -mtune=generic -gline-tables-only -o workbench/spikes/ikea-frame/filter/CMakeFiles/frame_filter_h0_k17.dir/instantiate.cpp.o -c /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/workbench/spikes/ikea-frame/filter/instantiate.cpp",
+      "file": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/workbench/spikes/ikea-frame/filter/instantiate.cpp",
+      "output": "workbench/spikes/ikea-frame/filter/CMakeFiles/frame_filter_h0_k17.dir/instantiate.cpp.o"
+    },
+    {
+      "directory": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/clang/frame-consumers-stable",
+      "command": "/usr/bin/clang++-21 -DFRAME_FIRST=25 -DFRAME_HEADS=0 -DSIXDB_TUNE_GENERIC=1 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN4=0 -DSIXDB_TUNE_ZEN5=0 -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/ikea/include -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals=. -ffunction-sections -fdata-sections -march=native -mtune=generic -gline-tables-only -o workbench/spikes/ikea-frame/filter/CMakeFiles/frame_filter_h0_k25.dir/instantiate.cpp.o -c /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/workbench/spikes/ikea-frame/filter/instantiate.cpp",
+      "file": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/workbench/spikes/ikea-frame/filter/instantiate.cpp",
+      "output": "workbench/spikes/ikea-frame/filter/CMakeFiles/frame_filter_h0_k25.dir/instantiate.cpp.o"
+    },
+    {
+      "directory": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/clang/frame-consumers-stable",
+      "command": "/usr/bin/clang++-21 -DFRAME_FIRST=33 -DFRAME_HEADS=0 -DSIXDB_TUNE_GENERIC=1 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN4=0 -DSIXDB_TUNE_ZEN5=0 -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/ikea/include -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals=. -ffunction-sections -fdata-sections -march=native -mtune=generic -gline-tables-only -o workbench/spikes/ikea-frame/filter/CMakeFiles/frame_filter_h0_k33.dir/instantiate.cpp.o -c /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/workbench/spikes/ikea-frame/filter/instantiate.cpp",
+      "file": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/workbench/spikes/ikea-frame/filter/instantiate.cpp",
+      "output": "workbench/spikes/ikea-frame/filter/CMakeFiles/frame_filter_h0_k33.dir/instantiate.cpp.o"
+    },
+    {
+      "directory": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/clang/frame-consumers-stable",
+      "command": "/usr/bin/clang++-21 -DFRAME_FIRST=41 -DFRAME_HEADS=0 -DSIXDB_TUNE_GENERIC=1 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN4=0 -DSIXDB_TUNE_ZEN5=0 -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/ikea/include -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals=. -ffunction-sections -fdata-sections -march=native -mtune=generic -gline-tables-only -o workbench/spikes/ikea-frame/filter/CMakeFiles/frame_filter_h0_k41.dir/instantiate.cpp.o -c /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/workbench/spikes/ikea-frame/filter/instantiate.cpp",
+      "file": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/workbench/spikes/ikea-frame/filter/instantiate.cpp",
+      "output": "workbench/spikes/ikea-frame/filter/CMakeFiles/frame_filter_h0_k41.dir/instantiate.cpp.o"
+    },
+    {
+      "directory": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/clang/frame-consumers-stable",
+      "command": "/usr/bin/clang++-21 -DFRAME_FIRST=49 -DFRAME_HEADS=0 -DSIXDB_TUNE_GENERIC=1 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN4=0 -DSIXDB_TUNE_ZEN5=0 -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/ikea/include -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals=. -ffunction-sections -fdata-sections -march=native -mtune=generic -gline-tables-only -o workbench/spikes/ikea-frame/filter/CMakeFiles/frame_filter_h0_k49.dir/instantiate.cpp.o -c /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/workbench/spikes/ikea-frame/filter/instantiate.cpp",
+      "file": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/workbench/spikes/ikea-frame/filter/instantiate.cpp",
+      "output": "workbench/spikes/ikea-frame/filter/CMakeFiles/frame_filter_h0_k49.dir/instantiate.cpp.o"
+    },
+    {
+      "directory": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/clang/frame-consumers-stable",
+      "command": "/usr/bin/clang++-21 -DFRAME_FIRST=57 -DFRAME_HEADS=0 -DSIXDB_TUNE_GENERIC=1 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN4=0 -DSIXDB_TUNE_ZEN5=0 -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/ikea/include -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals=. -ffunction-sections -fdata-sections -march=native -mtune=generic -gline-tables-only -o workbench/spikes/ikea-frame/filter/CMakeFiles/frame_filter_h0_k57.dir/instantiate.cpp.o -c /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/workbench/spikes/ikea-frame/filter/instantiate.cpp",
+      "file": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/workbench/spikes/ikea-frame/filter/instantiate.cpp",
+      "output": "workbench/spikes/ikea-frame/filter/CMakeFiles/frame_filter_h0_k57.dir/instantiate.cpp.o"
+    },
+    {
+      "directory": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/clang/frame-consumers-stable",
+      "command": "/usr/bin/clang++-21 -DFRAME_FIRST=1 -DFRAME_HEADS=8 -DSIXDB_TUNE_GENERIC=1 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN4=0 -DSIXDB_TUNE_ZEN5=0 -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/ikea/include -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals=. -ffunction-sections -fdata-sections -march=native -mtune=generic -gline-tables-only -o workbench/spikes/ikea-frame/filter/CMakeFiles/frame_filter_h8_k1.dir/instantiate.cpp.o -c /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/workbench/spikes/ikea-frame/filter/instantiate.cpp",
+      "file": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/workbench/spikes/ikea-frame/filter/instantiate.cpp",
+      "output": "workbench/spikes/ikea-frame/filter/CMakeFiles/frame_filter_h8_k1.dir/instantiate.cpp.o"
+    },
+    {
+      "directory": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/clang/frame-consumers-stable",
+      "command": "/usr/bin/clang++-21 -DFRAME_FIRST=9 -DFRAME_HEADS=8 -DSIXDB_TUNE_GENERIC=1 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN4=0 -DSIXDB_TUNE_ZEN5=0 -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/ikea/include -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals=. -ffunction-sections -fdata-sections -march=native -mtune=generic -gline-tables-only -o workbench/spikes/ikea-frame/filter/CMakeFiles/frame_filter_h8_k9.dir/instantiate.cpp.o -c /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/workbench/spikes/ikea-frame/filter/instantiate.cpp",
+      "file": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/workbench/spikes/ikea-frame/filter/instantiate.cpp",
+      "output": "workbench/spikes/ikea-frame/filter/CMakeFiles/frame_filter_h8_k9.dir/instantiate.cpp.o"
+    },
+    {
+      "directory": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/clang/frame-consumers-stable",
+      "command": "/usr/bin/clang++-21 -DFRAME_FIRST=17 -DFRAME_HEADS=8 -DSIXDB_TUNE_GENERIC=1 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN4=0 -DSIXDB_TUNE_ZEN5=0 -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/ikea/include -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals=. -ffunction-sections -fdata-sections -march=native -mtune=generic -gline-tables-only -o workbench/spikes/ikea-frame/filter/CMakeFiles/frame_filter_h8_k17.dir/instantiate.cpp.o -c /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/workbench/spikes/ikea-frame/filter/instantiate.cpp",
+      "file": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/workbench/spikes/ikea-frame/filter/instantiate.cpp",
+      "output": "workbench/spikes/ikea-frame/filter/CMakeFiles/frame_filter_h8_k17.dir/instantiate.cpp.o"
+    },
+    {
+      "directory": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/clang/frame-consumers-stable",
+      "command": "/usr/bin/clang++-21 -DFRAME_FIRST=25 -DFRAME_HEADS=8 -DSIXDB_TUNE_GENERIC=1 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN4=0 -DSIXDB_TUNE_ZEN5=0 -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/ikea/include -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals=. -ffunction-sections -fdata-sections -march=native -mtune=generic -gline-tables-only -o workbench/spikes/ikea-frame/filter/CMakeFiles/frame_filter_h8_k25.dir/instantiate.cpp.o -c /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/workbench/spikes/ikea-frame/filter/instantiate.cpp",
+      "file": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/workbench/spikes/ikea-frame/filter/instantiate.cpp",
+      "output": "workbench/spikes/ikea-frame/filter/CMakeFiles/frame_filter_h8_k25.dir/instantiate.cpp.o"
+    },
+    {
+      "directory": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/clang/frame-consumers-stable",
+      "command": "/usr/bin/clang++-21 -DFRAME_FIRST=33 -DFRAME_HEADS=8 -DSIXDB_TUNE_GENERIC=1 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN4=0 -DSIXDB_TUNE_ZEN5=0 -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/ikea/include -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals=. -ffunction-sections -fdata-sections -march=native -mtune=generic -gline-tables-only -o workbench/spikes/ikea-frame/filter/CMakeFiles/frame_filter_h8_k33.dir/instantiate.cpp.o -c /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/workbench/spikes/ikea-frame/filter/instantiate.cpp",
+      "file": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/workbench/spikes/ikea-frame/filter/instantiate.cpp",
+      "output": "workbench/spikes/ikea-frame/filter/CMakeFiles/frame_filter_h8_k33.dir/instantiate.cpp.o"
+    },
+    {
+      "directory": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/clang/frame-consumers-stable",
+      "command": "/usr/bin/clang++-21 -DFRAME_FIRST=41 -DFRAME_HEADS=8 -DSIXDB_TUNE_GENERIC=1 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN4=0 -DSIXDB_TUNE_ZEN5=0 -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/ikea/include -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals=. -ffunction-sections -fdata-sections -march=native -mtune=generic -gline-tables-only -o workbench/spikes/ikea-frame/filter/CMakeFiles/frame_filter_h8_k41.dir/instantiate.cpp.o -c /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/workbench/spikes/ikea-frame/filter/instantiate.cpp",
+      "file": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/workbench/spikes/ikea-frame/filter/instantiate.cpp",
+      "output": "workbench/spikes/ikea-frame/filter/CMakeFiles/frame_filter_h8_k41.dir/instantiate.cpp.o"
+    },
+    {
+      "directory": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/clang/frame-consumers-stable",
+      "command": "/usr/bin/clang++-21 -DFRAME_FIRST=49 -DFRAME_HEADS=8 -DSIXDB_TUNE_GENERIC=1 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN4=0 -DSIXDB_TUNE_ZEN5=0 -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/ikea/include -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals=. -ffunction-sections -fdata-sections -march=native -mtune=generic -gline-tables-only -o workbench/spikes/ikea-frame/filter/CMakeFiles/frame_filter_h8_k49.dir/instantiate.cpp.o -c /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/workbench/spikes/ikea-frame/filter/instantiate.cpp",
+      "file": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/workbench/spikes/ikea-frame/filter/instantiate.cpp",
+      "output": "workbench/spikes/ikea-frame/filter/CMakeFiles/frame_filter_h8_k49.dir/instantiate.cpp.o"
+    },
+    {
+      "directory": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/clang/frame-consumers-stable",
+      "command": "/usr/bin/clang++-21 -DFRAME_FIRST=57 -DFRAME_HEADS=8 -DSIXDB_TUNE_GENERIC=1 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN4=0 -DSIXDB_TUNE_ZEN5=0 -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/ikea/include -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals=. -ffunction-sections -fdata-sections -march=native -mtune=generic -gline-tables-only -o workbench/spikes/ikea-frame/filter/CMakeFiles/frame_filter_h8_k57.dir/instantiate.cpp.o -c /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/workbench/spikes/ikea-frame/filter/instantiate.cpp",
+      "file": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/workbench/spikes/ikea-frame/filter/instantiate.cpp",
+      "output": "workbench/spikes/ikea-frame/filter/CMakeFiles/frame_filter_h8_k57.dir/instantiate.cpp.o"
+    },
+    {
+      "directory": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/clang/frame-consumers-stable",
+      "command": "/usr/bin/clang++-21 -DFRAME_FIRST=1 -DFRAME_HEADS=16 -DSIXDB_TUNE_GENERIC=1 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN4=0 -DSIXDB_TUNE_ZEN5=0 -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/ikea/include -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals=. -ffunction-sections -fdata-sections -march=native -mtune=generic -gline-tables-only -o workbench/spikes/ikea-frame/filter/CMakeFiles/frame_filter_h16_k1.dir/instantiate.cpp.o -c /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/workbench/spikes/ikea-frame/filter/instantiate.cpp",
+      "file": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/workbench/spikes/ikea-frame/filter/instantiate.cpp",
+      "output": "workbench/spikes/ikea-frame/filter/CMakeFiles/frame_filter_h16_k1.dir/instantiate.cpp.o"
+    },
+    {
+      "directory": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/clang/frame-consumers-stable",
+      "command": "/usr/bin/clang++-21 -DFRAME_FIRST=9 -DFRAME_HEADS=16 -DSIXDB_TUNE_GENERIC=1 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN4=0 -DSIXDB_TUNE_ZEN5=0 -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/ikea/include -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals=. -ffunction-sections -fdata-sections -march=native -mtune=generic -gline-tables-only -o workbench/spikes/ikea-frame/filter/CMakeFiles/frame_filter_h16_k9.dir/instantiate.cpp.o -c /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/workbench/spikes/ikea-frame/filter/instantiate.cpp",
+      "file": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/workbench/spikes/ikea-frame/filter/instantiate.cpp",
+      "output": "workbench/spikes/ikea-frame/filter/CMakeFiles/frame_filter_h16_k9.dir/instantiate.cpp.o"
+    },
+    {
+      "directory": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/clang/frame-consumers-stable",
+      "command": "/usr/bin/clang++-21 -DFRAME_FIRST=17 -DFRAME_HEADS=16 -DSIXDB_TUNE_GENERIC=1 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN4=0 -DSIXDB_TUNE_ZEN5=0 -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/ikea/include -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals=. -ffunction-sections -fdata-sections -march=native -mtune=generic -gline-tables-only -o workbench/spikes/ikea-frame/filter/CMakeFiles/frame_filter_h16_k17.dir/instantiate.cpp.o -c /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/workbench/spikes/ikea-frame/filter/instantiate.cpp",
+      "file": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/workbench/spikes/ikea-frame/filter/instantiate.cpp",
+      "output": "workbench/spikes/ikea-frame/filter/CMakeFiles/frame_filter_h16_k17.dir/instantiate.cpp.o"
+    },
+    {
+      "directory": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/clang/frame-consumers-stable",
+      "command": "/usr/bin/clang++-21 -DFRAME_FIRST=25 -DFRAME_HEADS=16 -DSIXDB_TUNE_GENERIC=1 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN4=0 -DSIXDB_TUNE_ZEN5=0 -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/ikea/include -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals=. -ffunction-sections -fdata-sections -march=native -mtune=generic -gline-tables-only -o workbench/spikes/ikea-frame/filter/CMakeFiles/frame_filter_h16_k25.dir/instantiate.cpp.o -c /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/workbench/spikes/ikea-frame/filter/instantiate.cpp",
+      "file": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/workbench/spikes/ikea-frame/filter/instantiate.cpp",
+      "output": "workbench/spikes/ikea-frame/filter/CMakeFiles/frame_filter_h16_k25.dir/instantiate.cpp.o"
+    },
+    {
+      "directory": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/clang/frame-consumers-stable",
+      "command": "/usr/bin/clang++-21 -DFRAME_FIRST=33 -DFRAME_HEADS=16 -DSIXDB_TUNE_GENERIC=1 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN4=0 -DSIXDB_TUNE_ZEN5=0 -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/ikea/include -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals=. -ffunction-sections -fdata-sections -march=native -mtune=generic -gline-tables-only -o workbench/spikes/ikea-frame/filter/CMakeFiles/frame_filter_h16_k33.dir/instantiate.cpp.o -c /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/workbench/spikes/ikea-frame/filter/instantiate.cpp",
+      "file": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/workbench/spikes/ikea-frame/filter/instantiate.cpp",
+      "output": "workbench/spikes/ikea-frame/filter/CMakeFiles/frame_filter_h16_k33.dir/instantiate.cpp.o"
+    },
+    {
+      "directory": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/clang/frame-consumers-stable",
+      "command": "/usr/bin/clang++-21 -DFRAME_FIRST=41 -DFRAME_HEADS=16 -DSIXDB_TUNE_GENERIC=1 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN4=0 -DSIXDB_TUNE_ZEN5=0 -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/ikea/include -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals=. -ffunction-sections -fdata-sections -march=native -mtune=generic -gline-tables-only -o workbench/spikes/ikea-frame/filter/CMakeFiles/frame_filter_h16_k41.dir/instantiate.cpp.o -c /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/workbench/spikes/ikea-frame/filter/instantiate.cpp",
+      "file": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/workbench/spikes/ikea-frame/filter/instantiate.cpp",
+      "output": "workbench/spikes/ikea-frame/filter/CMakeFiles/frame_filter_h16_k41.dir/instantiate.cpp.o"
+    },
+    {
+      "directory": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/clang/frame-consumers-stable",
+      "command": "/usr/bin/clang++-21 -DFRAME_FIRST=49 -DFRAME_HEADS=16 -DSIXDB_TUNE_GENERIC=1 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN4=0 -DSIXDB_TUNE_ZEN5=0 -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/ikea/include -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals=. -ffunction-sections -fdata-sections -march=native -mtune=generic -gline-tables-only -o workbench/spikes/ikea-frame/filter/CMakeFiles/frame_filter_h16_k49.dir/instantiate.cpp.o -c /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/workbench/spikes/ikea-frame/filter/instantiate.cpp",
+      "file": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/workbench/spikes/ikea-frame/filter/instantiate.cpp",
+      "output": "workbench/spikes/ikea-frame/filter/CMakeFiles/frame_filter_h16_k49.dir/instantiate.cpp.o"
+    },
+    {
+      "directory": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/clang/frame-consumers-stable",
+      "command": "/usr/bin/clang++-21 -DFRAME_FIRST=57 -DFRAME_HEADS=16 -DSIXDB_TUNE_GENERIC=1 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN4=0 -DSIXDB_TUNE_ZEN5=0 -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/ikea/include -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals=. -ffunction-sections -fdata-sections -march=native -mtune=generic -gline-tables-only -o workbench/spikes/ikea-frame/filter/CMakeFiles/frame_filter_h16_k57.dir/instantiate.cpp.o -c /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/workbench/spikes/ikea-frame/filter/instantiate.cpp",
+      "file": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/workbench/spikes/ikea-frame/filter/instantiate.cpp",
+      "output": "workbench/spikes/ikea-frame/filter/CMakeFiles/frame_filter_h16_k57.dir/instantiate.cpp.o"
+    },
+    {
+      "directory": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/clang/frame-consumers-stable",
+      "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=1 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN4=0 -DSIXDB_TUNE_ZEN5=0 -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/workbench/spikes/ikea-frame/encoding -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/ikea/include -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals=. -ffunction-sections -fdata-sections -march=native -mtune=generic -gline-tables-only -o workbench/spikes/ikea-frame/filter/CMakeFiles/frame_filter_check.dir/check.cpp.o -c /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/workbench/spikes/ikea-frame/filter/check.cpp",
+      "file": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/workbench/spikes/ikea-frame/filter/check.cpp",
+      "output": "workbench/spikes/ikea-frame/filter/CMakeFiles/frame_filter_check.dir/check.cpp.o"
+    },
+    {
+      "directory": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/clang/frame-consumers-stable",
+      "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=1 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN4=0 -DSIXDB_TUNE_ZEN5=0 -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/workbench/spikes/ikea-frame/encoding -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/ikea/include -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals=. -ffunction-sections -fdata-sections -march=native -mtune=generic -gline-tables-only -o workbench/spikes/ikea-frame/filter/CMakeFiles/frame_filter_measure.dir/measure.cpp.o -c /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/workbench/spikes/ikea-frame/filter/measure.cpp",
+      "file": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/workbench/spikes/ikea-frame/filter/measure.cpp",
+      "output": "workbench/spikes/ikea-frame/filter/CMakeFiles/frame_filter_measure.dir/measure.cpp.o"
+    }
+  ],
+  "compiler": "Ubuntu clang version 21.1.8 (++20251221033104+2078da43e25a-1~exp1~20251221153121.57)\nTarget: aarch64-unknown-linux-gnu\nThread model: posix\nInstalledDir: /usr/lib/llvm-21/bin\n"
+}

@@ -78,8 +78,12 @@ geometry/filter contract and sparse checkpoint design, including the handed-off
 `checkpoints/` prototypes. Frame supplies consumer needs and consumes qualified
 materials; it does not optimise those algorithms in parallel. The
 [point experiment](point/README.md) continues here on the existing encoding
-material and maintained Boundlist run source.
-The isolated work now lives in [Intervals](../intervals/README.md).
+material and the simple Intervals run source.
+The maintained primitive is now [Intervals](../../../ikea/docs/intervals/usage.md),
+with its separate [research](../intervals/README.md) owned by Ikea HELPER.
+Frame uses its simple borrowed run-end projection; it does not adopt StreamPack's
+compact format or reader retirement. HELPER is auditing native caller choices
+and completing documentation/retirement of the old public Boundlist surface.
 
 Ashton also requires separated leading one/two-byte planes to be available through
 Frame. Split placement must provide useful entropy and enough independent
@@ -107,6 +111,17 @@ costs. The [head/filter findings](filter/FINDINGS.md) qualify separated planes,
 complete COUNT programs and actual Polars controls. Both retain material losses;
 neither selects a Frame default. Native/plain choices, fused reconstruction,
 predicate evidence and the physical write/lifecycle experiment remain active.
+
+The [Intervals-based point cohort](point/INTEGRATION.md) retains the native
+prefix gains and its large gap from native points. The latest filter cohort
+finds useful logical H16 programs on Jena, smaller useful block bounds, strong
+counterexamples to universal heads and a losing q8 window-bounds program.
+Their [shared recovery](evidence/interval-consumers-local/artifact.json) freezes
+f760-derived material; Claude's newer borrowed blocks and monotone COUNT remain
+a distinct source epoch. Engine's [actual material witness](execution/MATERIAL.md)
+connects real encoded planes to current native Orbital ownership and retained
+readers. Extending that witness across borrowed body kinds/dictionaries and
+pricing physical lifecycle policies remain active work.
 
 The [review](REVIEW.md) is source-based architectural judgement and arithmetic
 reasoning. New corpus observations, model checks and native timings belong to

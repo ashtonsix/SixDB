@@ -70,7 +70,7 @@ fe::column literal(const std::array<u64, 256> &values,
     const unsigned w = std::max(1u, fe::width_of(*std::max_element(exceptions.begin(), exceptions.end())));
     const auto plane = fe::plane_bytes(k, 256), cp_bytes = fe::checkpoint_cost(mode, k);
     fe::column c;
-    c.options = {false, mode, true};
+    c.options = {.delta_checkpoints = mode, .delta_exceptions = true};
     c.rows = 256;
     c.blocks.push_back({anchor, 0, 256, fe::kind::delta_patched, static_cast<std::uint8_t>(k)});
     c.payload.resize(plane + 8 + cp_bytes + 10 + positions.size() + fe::plane_bytes(w, positions.size()));
@@ -111,7 +111,7 @@ fe::column literal(const std::array<u64, 256> &values,
     need(plane_decoder && exception_decoder, "literal decoder binding failed");
     c.decoders.push_back(*plane_decoder);
     c.exceptions.emplace_back(*exception_decoder);
-    c.runs.resize(1); c.d8.resize(1); c.d16.resize(1); c.d32.resize(1);
+    c.d8.resize(1); c.d16.resize(1); c.d32.resize(1);
     return c;
 }
 

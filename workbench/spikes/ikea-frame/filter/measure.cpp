@@ -3,6 +3,7 @@
 #include <array>
 #include <functional>
 #include <iostream>
+#include <limits>
 #include <stdexcept>
 
 namespace {
@@ -23,18 +24,27 @@ std::vector<u64> load(const char *path) {
 }
 template <class T> u64 count_native(const std::vector<T> &values, const fe::block_mask &mask,
                                     u64 rhs) {
+    if (rhs > std::numeric_limits<T>::max()) return 0;
+    const T cutoff = static_cast<T>(rhs);
     u64 total = 0;
+    if (mask.popcount() == mask.blocks) {
+        // Strong unmasked control: don't impose Frame's block dispatch on a
+        // contiguous native array when the whole population is selected.
+        for (auto value : values) total += value >= cutoff;
+        return total;
+    }
     fe::for_each_block(mask, [&](std::size_t b) {
         u64 n = 0;
         const auto *p = values.data() + b * fe::block_rows;
-        for (unsigned i = 0; i < fe::block_rows; ++i) n += u64(p[i]) >= rhs;
+        for (unsigned i = 0; i < fe::block_rows; ++i) n += p[i] >= cutoff;
         total += n;
     });
     return total;
 }
 struct native_for {
-    u64 base;
+    u64 base, maximum;
     unsigned width;
+    bool ordered;
     std::vector<std::uint8_t> v8;
     std::vector<std::uint16_t> v16;
     std::vector<std::uint32_t> v32;
@@ -45,7 +55,8 @@ struct native_for {
     }
     explicit native_for(std::span<const u64> values) {
         const auto [lo, hi] = std::minmax_element(values.begin(), values.end());
-        base = *lo; width = fe::width_of(*hi - *lo);
+        base = *lo; maximum = *hi; width = fe::width_of(*hi - *lo);
+        ordered = std::is_sorted(values.begin(), values.end());
         if (width <= 8) fill(v8, values);
         else if (width <= 16) fill(v16, values);
         else if (width <= 32) fill(v32, values);
@@ -53,6 +64,7 @@ struct native_for {
     }
     u64 count(const fe::block_mask &mask, u64 rhs) const {
         if (rhs <= base) return mask.popcount() * fe::block_rows;
+        if (rhs > maximum) return 0;
         rhs -= base;
         if (width < 64 && rhs >> width) return 0;
         if (!v8.empty()) return count_native(v8, mask, rhs);
@@ -60,14 +72,49 @@ struct native_for {
         if (!v32.empty()) return count_native(v32, mask, rhs);
         return count_native(v64, mask, rhs);
     }
+    u64 count_ordered(const fe::block_mask &mask, u64 rhs) const {
+        assert(ordered);
+        if (rhs <= base) return mask.popcount() * fe::block_rows;
+        if (rhs > maximum) return 0;
+        rhs -= base;
+        const auto cut = [&](const auto &values) {
+            return std::size_t(std::lower_bound(values.begin(), values.end(), rhs) - values.begin());
+        };
+        const auto first = !v8.empty() ? cut(v8) : !v16.empty() ? cut(v16) :
+                           !v32.empty() ? cut(v32) : cut(v64);
+        u64 count = 0;
+        if (first % fe::block_rows) {
+            const auto block = first / fe::block_rows;
+            if ((mask.words[block / 64] >> (block % 64)) & 1)
+                count += fe::block_rows - first % fe::block_rows;
+        }
+        const auto full = (first + fe::block_rows - 1) / fe::block_rows;
+        for (auto word = full / 64; word < mask.words.size(); ++word) {
+            const auto selected = mask.words[word] &
+                (word == full / 64 ? UINT64_MAX << (full % 64) : UINT64_MAX);
+            count += std::popcount(selected) * fe::block_rows;
+        }
+        return count;
+    }
     std::size_t bytes() const {
-        return v8.size() + v16.size() * 2 + v32.size() * 4 + v64.size() * 8;
+        return sizeof(*this) + v8.capacity() + v16.capacity() * 2 +
+               v32.capacity() * 4 + v64.capacity() * 8;
     }
 };
 struct arm {
     std::string name;
     std::function<u64(const fe::block_mask &, u64)> count;
 };
+template <class T> std::size_t capacity_bytes(const std::vector<T> &values) {
+    return values.capacity() * sizeof(T);
+}
+std::size_t retained_bytes(const fe::column &column) {
+    return sizeof(column) + capacity_bytes(column.blocks) + capacity_bytes(column.payload) +
+           capacity_bytes(column.parts) + capacity_bytes(column.coded) +
+           capacity_bytes(column.decoders) + capacity_bytes(column.d8) +
+           capacity_bytes(column.d16) + capacity_bytes(column.d32) +
+           capacity_bytes(column.exceptions) + capacity_bytes(column.dictionaries);
+}
 // Independent descriptive trace of complete sixteen-run/value windows.
 // This is predicate topology, not measured traffic or branch counters.
 void topology(const fe::column &c, const fe::block_mask &mask, u64 threshold,
@@ -76,6 +123,7 @@ void topology(const fe::column &c, const fe::block_mask &mask, u64 threshold,
     std::array<u64, 256> values;
     fe::for_each_block(mask, [&](std::size_t b) {
         const auto &d = c.blocks[b];
+        if (fe::is_coded(c, b)) return;
         if (d.type != fe::kind::packed && d.type != fe::kind::runs) return;
         const unsigned width = stage == ff::split_stage::after_for ? d.width : 64;
         if (width < heads || d.base >= threshold) return;
@@ -108,6 +156,8 @@ void run(const std::vector<u64> &values, unsigned trials, bool reverse) {
     arms.push_back({"decode-control", [&](const auto &m, u64 q) { return fe::encoded_count_ge(column, m, q); }});
     arms.push_back({"native64", [&](const auto &m, u64 q) { return count_native(values, m, q); }});
     arms.push_back({"native-global-for", [&](const auto &m, u64 q) { return native.count(m, q); }});
+    if (native.ordered)
+        arms.push_back({"native-ordered-for", [&](const auto &m, u64 q) { return native.count_ordered(m, q); }});
     for (auto stage : {ff::split_stage::after_for, ff::split_stage::working64}) {
         for (auto heads : {0u, 8u, 16u}) {
             if (stage == ff::split_stage::working64 && !heads) continue;
@@ -118,7 +168,8 @@ void run(const std::vector<u64> &values, unsigned trials, bool reverse) {
             const auto name = std::string(stage == ff::split_stage::after_for ? "for-" : "working64-") + std::to_string(heads);
             std::cout << "{\"type\":\"conversion\",\"arm\":\"" << name << "\",\"ns\":"
                       << conversion_ns << ",\"extra_split_bytes\":" << image->split_bytes()
-                      << ",\"extra_split_metadata_bytes\":" << image->split_metadata_bytes() << "}\n";
+                      << ",\"extra_split_metadata_bytes\":" << image->split_metadata_bytes()
+                      << ",\"extra_retained_bytes\":" << image->retained_bytes() << "}\n";
             arms.push_back({name + "-ordinary", [image](const auto &m, u64 q) { return image->count_ge(m, q, false); }});
             if (heads) arms.push_back({name + "-guarded", [image](const auto &m, u64 q) { return image->count_ge(m, q, true); }});
         }
@@ -132,14 +183,19 @@ void run(const std::vector<u64> &values, unsigned trials, bool reverse) {
     const auto bounds_start = Clock::now();
     ff::window_bounds bounds(column);
     const auto bounds_ns = std::chrono::duration_cast<std::chrono::nanoseconds>(Clock::now() - bounds_start).count();
+    const auto block_start = Clock::now();
+    ff::block_bounds coarse_bounds(column);
+    const auto block_ns = std::chrono::duration_cast<std::chrono::nanoseconds>(Clock::now() - block_start).count();
     for (auto [name, ns, bytes] : {std::tuple{"part-head8", part8_ns, part8.bytes()},
                                   std::tuple{"part-head16", part16_ns, part16.bytes()},
-                                  std::tuple{"window-q8-bounds", bounds_ns, bounds.bytes()}})
+                                  std::tuple{"window-q8-bounds", bounds_ns, bounds.bytes()},
+                                  std::tuple{"block-bounds", block_ns, coarse_bounds.bytes()}})
         std::cout << "{\"type\":\"conversion\",\"arm\":\"" << name << "\",\"ns\":" << ns
-                  << ",\"extra_evidence_bytes\":" << bytes << "}\n";
+                  << ",\"extra_evidence_retained_bytes\":" << bytes << "}\n";
     arms.push_back({"part-head8", [&](const auto &m, u64 q) { return part8.count_ge(m, q); }});
     arms.push_back({"part-head16", [&](const auto &m, u64 q) { return part16.count_ge(m, q); }});
     arms.push_back({"window-q8-bounds", [&](const auto &m, u64 q) { return bounds.count_ge(m, q); }});
+    arms.push_back({"block-bounds", [&](const auto &m, u64 q) { return coarse_bounds.count_ge(m, q); }});
     if (reverse) std::reverse(arms.begin(), arms.end());
     std::array<std::size_t, 5> kinds{};
     for (const auto &d : column.blocks) {
@@ -149,7 +205,10 @@ void run(const std::vector<u64> &values, unsigned trials, bool reverse) {
     std::cout << "{\"type\":\"material\",\"rows\":" << values.size()
               << ",\"original_body_bytes\":" << column.payload.size()
               << ",\"descriptor_bytes\":" << column.descriptor_bytes()
-              << ",\"native_global_for_bytes\":" << native.bytes() << ",\"kind_blocks\":[";
+              << ",\"original_retained_bytes\":" << retained_bytes(column)
+              << ",\"native_global_for_retained_bytes\":" << native.bytes()
+              << ",\"native64_retained_bytes\":" << sizeof(values) + values.capacity() * sizeof(u64)
+              << ",\"kind_blocks\":[";
     for (unsigned i = 0; i < kinds.size(); ++i) std::cout << (i ? "," : "") << kinds[i];
     std::cout << "]}\n";
     std::vector<u64> sorted(values);

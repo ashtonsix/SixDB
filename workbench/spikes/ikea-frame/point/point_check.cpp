@@ -39,63 +39,86 @@ std::vector<fe::u64> authored() {
 }
 
 unsigned verify(const std::vector<fe::u64> &values, bool require_kinds,
-                bool delta_exceptions = false) {
+                bool delta_exceptions = false,
+                fe::dictionary_order dictionary = fe::dictionary_order::none,
+                bool every_part = false) {
     unsigned checks = 0;
     std::vector<std::size_t> rows(values.size());
     std::iota(rows.begin(), rows.end(), 0);
-    for (bool compact : {false, true}) {
-        std::vector<fe::column> retained;
-        retained.reserve(4);
-        for (auto mode : {fe::checkpoints::native, fe::checkpoints::packed,
-                          fe::checkpoints::every64, fe::checkpoints::none})
-            retained.push_back(fe::encode(values, {compact, mode, delta_exceptions}));
-        std::vector<std::unique_ptr<frame_points::compact_image>> lean;
-        for (const auto &column : retained)
-            lean.push_back(std::make_unique<frame_points::compact_image>(
-                fe::encode(values, column.options)));
-        // Construct every image before reading any: options and bytes must
-        // remain attached to each retained image, not a process-global switch.
-        for (unsigned image = 0; image < retained.size(); ++image) {
-            const auto &column = retained[image];
-            point_reader reader(column);
-            frame_points::compact_reader lean_reader(*lean[image]);
-            frame_points::compact_reader prefix_reader(*lean[image], true);
-            std::set<fe::kind> kinds;
-            for (const auto &d : column.blocks) kinds.insert(d.type);
-            if (require_kinds)
-                for (auto required : {fe::kind::constant, fe::kind::packed, fe::kind::runs,
-                                      fe::kind::delta, fe::kind::patched})
-                    need(kinds.contains(required), "authored fixture omitted a required kind");
-            for (std::size_t row = 0; row < values.size(); ++row) {
-                need(reader.get(row) == values[row], "point differs from original input");
-                need(lean_reader.get(row) == values[row], "shared-kernel point differs from input");
-                need(prefix_reader.get(row) == values[row], "native prefix point differs from input");
-                checks += 3;
-            }
-            for (unsigned pattern = 0; pattern < 4; ++pattern) {
-                fe::block_mask mask(column.blocks.size());
-                for (std::size_t b = 0; b < mask.blocks; ++b)
-                    if (pattern == 0 || (pattern == 2 && b % 2) ||
-                        (pattern == 3 && b / 16 % 2)) mask.set(b);
-                fe::u64 expected = 0;
-                std::size_t expected_count = 0;
-                for (auto row : rows)
-                    if ((mask.words[row / 256 / 64] >> (row / 256 % 64)) & 1) {
-                        expected += values[row];
-                        ++expected_count;
-                    }
-                const auto selected = [&](const auto &candidate) {
-                    fe::u64 actual = 0;
-                    std::size_t count = 0;
-                    frame_points::selected_points(candidate, mask, rows, [&](auto row, auto value) {
-                        need(value == values[row], "selected point changed original coordinates");
-                        actual += value; ++count;
-                    });
-                    need(actual == expected && count == expected_count, "coarse point selection mismatch");
-                };
-                selected(reader); selected(lean_reader); selected(prefix_reader);
-            }
+    std::vector<fe::column> retained;
+    retained.reserve(4);
+    for (auto mode : {fe::checkpoints::native, fe::checkpoints::packed,
+                      fe::checkpoints::every64, fe::checkpoints::none})
+        retained.push_back(fe::encode(values, {.delta_checkpoints = mode,
+            .delta_exceptions = delta_exceptions, .dictionary = dictionary,
+            .dictionary_every_part = every_part}));
+    std::vector<std::unique_ptr<frame_points::compact_image>> lean;
+    for (const auto &column : retained)
+        lean.push_back(std::make_unique<frame_points::compact_image>(
+            fe::encode(values, column.options)));
+    // Construct every image before reading any: options and bytes must
+    // remain attached to each retained image, not a process-global switch.
+    for (unsigned image = 0; image < retained.size(); ++image) {
+        const auto &column = retained[image];
+        point_reader stored(column, frame_points::point_domain::stored_codes);
+        frame_points::compact_reader lean_stored(*lean[image], false, frame_points::point_domain::stored_codes);
+        frame_points::compact_reader prefix_stored(*lean[image], true, frame_points::point_domain::stored_codes);
+        frame_points::dictionary_points reader(column, stored);
+        frame_points::dictionary_points lean_reader(lean[image]->body, lean_stored);
+        frame_points::dictionary_points prefix_reader(lean[image]->body, prefix_stored);
+        std::set<fe::kind> kinds;
+        for (const auto &d : column.blocks) kinds.insert(d.type);
+        if (require_kinds)
+            for (auto required : {fe::kind::constant, fe::kind::packed, fe::kind::runs,
+                                  fe::kind::delta, fe::kind::patched})
+                need(kinds.contains(required), "authored fixture omitted a required kind");
+        for (std::size_t row = 0; row < values.size(); ++row) {
+            need(reader.get(row) == values[row], "point differs from original input");
+            need(lean_reader.get(row) == values[row], "shared-kernel point differs from input");
+            need(prefix_reader.get(row) == values[row], "native prefix point differs from input");
+            checks += 3;
         }
+        for (unsigned pattern = 0; pattern < 4; ++pattern) {
+            fe::block_mask mask(column.blocks.size());
+            for (std::size_t b = 0; b < mask.blocks; ++b)
+                if (pattern == 0 || (pattern == 2 && b % 2) ||
+                    (pattern == 3 && b / 16 % 2)) mask.set(b);
+            fe::u64 expected = 0;
+            std::size_t expected_count = 0;
+            for (auto row : rows)
+                if ((mask.words[row / 256 / 64] >> (row / 256 % 64)) & 1) {
+                    expected += values[row];
+                    ++expected_count;
+                }
+            const auto selected = [&](const auto &candidate) {
+                fe::u64 actual = 0;
+                std::size_t count = 0;
+                frame_points::selected_points(candidate, mask, rows, [&](auto row, auto value) {
+                    need(value == values[row], "selected point changed original coordinates");
+                    actual += value; ++count;
+                });
+                need(actual == expected && count == expected_count, "coarse point selection mismatch");
+            };
+            selected(reader); selected(lean_reader); selected(prefix_reader);
+        }
+    }
+    return checks;
+}
+
+unsigned mixed_editions() {
+    std::vector<fe::u64> values(258 * 256);
+    const std::array<fe::u64, 4> first{0, 17, (fe::u64{1} << 63) + 13, UINT64_MAX};
+    const std::array<fe::u64, 4> next{9, 500, (fe::u64{1} << 63) - 7, UINT64_MAX - 100};
+    for (std::size_t r = 0; r < values.size(); ++r)
+        values[r] = r / 256 == 0 ? 7 : r < 65536 ? first[r % 4] : next[r % 4];
+    unsigned checks = 0;
+    for (auto order : {fe::dictionary_order::sorted, fe::dictionary_order::frequency}) {
+        const auto column = fe::encode(values, {.dictionary = order});
+        need(column.coded_blocks() && column.coded_blocks() < column.blocks.size(),
+             "mixed dictionary fixture lost its raw/coded distinction");
+        need(column.parts.size() == 2 && column.parts[0].count && column.parts[1].count,
+             "mixed dictionary fixture lost its distinct part editions");
+        checks += verify(values, false, true, order);
     }
     return checks;
 }
@@ -169,7 +192,6 @@ fe::column wide_prediction(fe::checkpoints mode) {
     c.options.delta_checkpoints = mode;
     c.rows = 256;
     c.blocks.push_back({fe::u64{1} << 62, 0, 256, fe::kind::delta, 63});
-    c.runs.resize(1);
     c.payload.resize(fe::plane_bytes(63, 256) + 8 + fe::checkpoint_cost(mode, 63));
     std::array<fe::u64, 256> residuals{};
     for (unsigned r = 1; r < 256; r += 2) residuals[r] = (fe::u64{1} << 63) - 1;
@@ -250,13 +272,25 @@ void protected_none() {
 int main(int argc, char **argv) {
     try {
         bool delta_exceptions = false;
-        for (int i = 1; i < argc; ++i)
-            if (std::string_view(argv[i]) == "--delta-exceptions") delta_exceptions = true;
-        unsigned checks = verify(authored(), true) + shared_kernel_widths() + wide_checkpoints();
+        auto dictionary = fe::dictionary_order::none;
+        for (int i = 1; i < argc; ++i) {
+            const std::string_view arg(argv[i]);
+            if (arg == "--delta-exceptions") delta_exceptions = true;
+            if (arg.starts_with("--dictionary=")) {
+                need(arg == "--dictionary=sorted" || arg == "--dictionary=frequency",
+                     "dictionary must be sorted or frequency");
+                dictionary = arg == "--dictionary=sorted" ? fe::dictionary_order::sorted
+                                                         : fe::dictionary_order::frequency;
+            }
+        }
+        unsigned checks = verify(authored(), true) + shared_kernel_widths() + wide_checkpoints() + mixed_editions();
         if (delta_exceptions) checks += verify(authored(), false, true);
+        if (dictionary != fe::dictionary_order::none)
+            checks += verify(authored(), false, delta_exceptions, dictionary, true);
         protected_none();
         for (int i = 1; i < argc; ++i) {
             if (std::string_view(argv[i]) == "--delta-exceptions") continue;
+            if (std::string_view(argv[i]).starts_with("--dictionary=")) continue;
             std::ifstream input(argv[i], std::ios::binary | std::ios::ate);
             need(bool(input), "cannot open input");
             const auto bytes = input.tellg();
@@ -265,12 +299,14 @@ int main(int argc, char **argv) {
             std::vector<fe::u64> values(static_cast<std::size_t>(bytes) / sizeof(fe::u64));
             input.seekg(0);
             need(bool(input.read(reinterpret_cast<char *>(values.data()), bytes)), "short input read");
-            checks += verify(values, false, delta_exceptions);
+            checks += verify(values, false, delta_exceptions, dictionary);
         }
         std::printf("%u exact point reads passed for eager/shared/native-prefix preparation; "
                     "authored five kinds and %s, four per-image checkpoint modes, "
-                    "two run geometries, coarse masks; protected none and fault injection passed.\n", checks,
-                    delta_exceptions ? "opt-in delta exceptions" : "default encoding");
+                    "immutable run ends, mixed dictionary editions (%s corpus), coarse masks; "
+                    "protected none and fault injection passed.\n", checks,
+                    delta_exceptions ? "opt-in delta exceptions" : "default encoding",
+                    fe::dictionary_name(dictionary));
     } catch (const std::exception &error) {
         std::fprintf(stderr, "%s\n", error.what());
         return 1;

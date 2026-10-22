@@ -81,7 +81,6 @@ struct fixture {
             material->d8.emplace_back(*narrow);
             material->d16.emplace_back();
             material->d32.emplace_back();
-            material->runs.emplace_back();
         }
     }
     ~fixture() {
@@ -91,13 +90,54 @@ struct fixture {
     }
 };
 
-void verify(const column &c, const block_mask &mask, u128 sum, u64 count) {
+void verify(const column &c, const block_mask &mask, u128 sum, u64 count, u64 threshold = 25) {
     need(encoded_sum(c, mask) == sum, "SUM differs from literal expected values");
     need(encoded_sum_narrow(c, mask) == sum, "narrow SUM differs from literal expected values");
-    need(encoded_count_ge(c, mask, 25) == count, "COUNT differs from literal expected values");
+    need(encoded_count_ge(c, mask, threshold) == count, "COUNT differs from literal expected values");
     need(catalogue_sum(c, mask) == sum, "catalogue SUM differs from literal expected values");
-    need(catalogue_count_ge(c, mask, 25) == count, "catalogue COUNT differs from literal expected values");
+    need(catalogue_count_ge(c, mask, threshold) == count, "catalogue COUNT differs from literal expected values");
 }
+
+struct dictionary_fixture {
+    static constexpr std::size_t count = 258; // Two editions, final partial group.
+    pages owner{1};
+    column *material;
+    std::unique_ptr<pages> payload;
+    dictionary_fixture() {
+        material = std::construct_at(reinterpret_cast<column *>(owner.data));
+        material->options.dictionary = dictionary_order::sorted;
+        material->rows = count * block_rows;
+        payload = std::make_unique<pages>(material->payload, count + 2);
+        const auto offset = [&](const std::uint8_t *p) {
+            return static_cast<std::uint32_t>(p - material->payload.data());
+        };
+        material->coded.resize((count + 63) / 64);
+        for (unsigned b = 0; b < count; ++b) {
+            auto *data = payload->data + b * payload->page;
+            std::memset(data, b % 2, block_rows);
+            material->blocks.push_back({0, offset(data), block_rows, kind::packed, 8});
+            const auto decoder = sp::bind_decoder<u64>(sp::dense_input{
+                8, sp::geometry::local, std::span<const std::uint8_t>(data, block_rows), block_rows});
+            need(decoder.has_value(), "code plane binding failed");
+            material->decoders.push_back(*decoder);
+            material->coded[b / 64] |= u64{1} << (b % 64);
+        }
+        for (unsigned p = 0; p < 2; ++p) {
+            auto *data = payload->data + (count + p) * payload->page;
+            data[0] = 7; data[1] = 19;
+            material->parts.push_back({1000u * (p + 1), offset(data), 2, 8});
+            const auto decoder = sp::bind_decoder<u64>(sp::dense_input{
+                8, sp::geometry::local, std::span<const std::uint8_t>(data, 8), 2});
+            need(decoder.has_value(), "dictionary plane binding failed");
+            material->dictionaries.emplace_back(*decoder);
+        }
+    }
+    ~dictionary_fixture() {
+        owner.all(PROT_READ | PROT_WRITE);
+        payload->all(PROT_READ | PROT_WRITE);
+        std::destroy_at(material);
+    }
+};
 
 template <class F> void must_fault(F &&read) {
     const auto child = ::fork();
@@ -143,6 +183,32 @@ int main() {
     must_fault([&] { return static_cast<u128>(encoded_count_ge(*f.material, broken, 25)); });
     must_fault([&] { return catalogue_sum(*f.material, broken); });
     must_fault([&] { return static_cast<u128>(catalogue_count_ge(*f.material, broken, 25)); });
+
+    dictionary_fixture dictionaries;
+    block_mask none_codes(dictionary_fixture::count), first_part(dictionary_fixture::count);
+    block_mask second_part(dictionary_fixture::count);
+    for (auto b : {0u, 17u, 63u, 64u, 255u}) first_part.set(b);
+    second_part.set(256); second_part.set(257);
+    dictionaries.payload->all(PROT_NONE);
+    dictionaries.owner.all(PROT_NONE);
+    verify(*dictionaries.material, none_codes, 0, 0, 1010);
+    dictionaries.owner.all(PROT_READ | PROT_WRITE);
+    for (auto b : {0u, 17u, 63u, 64u, 255u, 258u}) dictionaries.payload->one(b, PROT_READ);
+    // Five literal blocks: two at1007, three at1019. The other dictionary and
+    // every excluded block remain inaccessible, including the following part.
+    verify(*dictionaries.material, first_part, 1298176, 768, 1010);
+    dictionaries.payload->all(PROT_NONE);
+    for (auto b : {256u, 257u, 259u}) dictionaries.payload->one(b, PROT_READ);
+    verify(*dictionaries.material, second_part, 1030656, 512, 1010);
+    dictionaries.payload->all(PROT_NONE);
+    for (auto b : {0u, 17u, 63u, 64u, 255u}) dictionaries.payload->one(b, PROT_READ);
+    // A selected coded block genuinely requires its own edition. Removing that
+    // one dictionary must fault, rather than borrowing the neighboring edition.
+    must_fault([&] { return encoded_sum(*dictionaries.material, first_part); });
+    must_fault([&] { return encoded_sum_narrow(*dictionaries.material, first_part); });
+    must_fault([&] { return static_cast<u128>(encoded_count_ge(*dictionaries.material, first_part, 1010)); });
+    must_fault([&] { return catalogue_sum(*dictionaries.material, first_part); });
+    must_fault([&] { return static_cast<u128>(catalogue_count_ge(*dictionaries.material, first_part, 1010)); });
     std::puts("Protected owner/payload checks passed: none, skipped/full/mixed groups, partial tail; "
-              "all five injected inactive reads faulted (bindings and catalogue).");
+              "dictionary editions outside the selected body; all ten injected reads faulted.");
 }

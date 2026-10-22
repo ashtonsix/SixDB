@@ -41,6 +41,8 @@ def main():
     identity['compiler'] = subprocess.check_output(['clang++-21', '--version'], text=True)
     (a.output / 'identity.json').write_text(json.dumps(identity, indent=2) + '\n')
     groups = {}
+    query_times = {}
+    selected_rows = {}
     started = time.monotonic()
     for process in range(2):
         paths = a.input if process == 0 else reversed(a.input)
@@ -55,13 +57,21 @@ def main():
                 record = json.loads(line)
                 if record['type'] == 'sample':
                     key = label, record['mask'], record['query'], record['arm']
-                    groups.setdefault(key, []).append(record['ns'] / record['selected_rows'])
+                    rows = record['selected_rows']
+                    groups.setdefault(key, []).append(record['ns'] / rows if rows else None)
+                    query_times.setdefault(key, []).append(record['ns'])
+                    assert key not in selected_rows or selected_rows[key] == rows
+                    selected_rows[key] = rows
             print(process, label, 'exact consumed results', flush=True)
     assert sha(a.binary) == identity['binary_sha256'], 'ELF changed during comparison'
     for path, expected in identity['source_sha256'].items():
         assert sha(Path(path)) == expected, f'source changed: {path}'
     summary = [{'input': k[0], 'mask': k[1], 'query': k[2], 'arm': k[3],
-                'ns_per_selected_value': statistics.median(v), 'min': min(v), 'max': max(v), 'samples': v}
+                'selected_rows': selected_rows[k],
+                'ns_per_selected_value': statistics.median(v) if selected_rows[k] else None,
+                'min': min(v) if selected_rows[k] else None,
+                'max': max(v) if selected_rows[k] else None, 'samples': v,
+                'ns_per_query': statistics.median(query_times[k]), 'samples_ns': query_times[k]}
                for k, v in sorted(groups.items())]
     (a.output / 'summary.json').write_text(json.dumps(summary, indent=2) + '\n')
     if a.polars:
@@ -83,6 +93,7 @@ def polars_controls(a):
         width = (maximum - base).bit_length()
         lane = 8 if width <= 8 else 16 if width <= 16 else 32 if width <= 32 else 64
         raw = pl.Series('x', source)
+        ordered = bool(np.all(source[:-1] <= source[1:]))
         residuals = (source - base).astype(getattr(np, f'uint{lane}'))
         narrow = pl.Series('r', residuals)
         queries = [json.loads(s) for s in (a.output / f'p0-{label}.jsonl').read_text().splitlines()
@@ -95,10 +106,20 @@ def polars_controls(a):
             def native_for():
                 if rhs <= 0:
                     return len(source)
+                if threshold > maximum:
+                    return 0
                 if rhs >> width:
                     return 0
                 return int((narrow >= rhs).sum())
             arms = [('polars-u64', native), ('polars-native-for', native_for)]
+            if ordered:
+                def ordered_for():
+                    if rhs <= 0:
+                        return len(source)
+                    if threshold > maximum:
+                        return 0
+                    return len(source) - int(narrow.search_sorted(rhs, side='left'))
+                arms.append(('polars-ordered-for', ordered_for))
             samples = {name: [] for name, _ in arms}
             for name, fn in arms:
                 assert fn() == q['answer'], (label, name, q)
@@ -113,6 +134,7 @@ def polars_controls(a):
                 records.append({'input': label, 'query': q['query'], 'threshold': threshold,
                                 'arm': name, 'answer': q['answer'], 'rows': len(source),
                                 'polars': pl.__version__, 'threads': pl.thread_pool_size(),
+                                'source_ordered': ordered,
                                 'native_for_lane_bits': lane, 'native_for_base': base,
                                 'samples_ns': ns, 'median_ns_per_value': statistics.median(ns) / len(source)})
         print('Polars exact', label, flush=True)

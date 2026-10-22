@@ -26,7 +26,7 @@ struct compact_image {
         release(body.d16);
         release(body.d32);
         release(body.exceptions);
-        if (!body.options.compact_runs) release(body.runs);
+        release(body.dictionaries);
     }
     compact_image(const compact_image &) = delete;
     compact_image(compact_image &&) = delete;
@@ -36,8 +36,12 @@ struct compact_reader {
     const compact_image *source;
     std::size_t rows;
     bool native_prefix;
-    explicit compact_reader(const compact_image &image, bool native = false)
-        : source(&image), rows(image.body.rows), native_prefix(native) {}
+    explicit compact_reader(const compact_image &image, bool native = false,
+                            point_domain domain = point_domain::values)
+        : source(&image), rows(image.body.rows), native_prefix(native) {
+        if (domain == point_domain::values && image.body.options.dictionary != fe::dictionary_order::none)
+            std::abort();
+    }
     std::size_t prepared_bytes() const {
         return sizeof(*this);
     }
@@ -60,9 +64,7 @@ struct compact_reader {
             return d.base + local_kernels(d.width).point(data, local);
         }
         case fe::kind::runs: {
-            const unsigned rank = c.options.compact_runs
-                ? fe::bl::reverse(*c.runs[b]->view, local)
-                : fe::bl::upper_bound(fe::run_ends{
+            const unsigned rank = ikea::intervals::upper_bound(fe::run_ends{
                     data + fe::plane_bytes(d.width, d.count), d.count}, local);
             return d.base + local_kernels(d.width).point(data, rank);
         }

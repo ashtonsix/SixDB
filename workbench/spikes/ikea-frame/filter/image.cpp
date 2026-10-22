@@ -5,11 +5,13 @@
 namespace frame_filter {
 namespace fe = frame_encoding;
 image::image(const fe::column &original, unsigned heads, split_stage stage)
-    : original_(original), split_(original.blocks.size()), stage_(stage) {
+    : original_(original), split_(original.blocks.size()), stage_(stage),
+      dictionary_(original.options.dictionary != fe::dictionary_order::none) {
     assert(heads == 0 || heads == 8 || heads == 16);
     std::array<u64, fe::block_rows> residuals;
     for (std::size_t b = 0; b < split_.size(); ++b) {
         const auto &d = original.blocks[b];
+        if (fe::is_coded(original, b)) continue;
         if (d.type != fe::kind::packed && d.type != fe::kind::runs) continue;
         auto &s = split_[b];
         s.width = stage == split_stage::after_for ? d.width : 64;
@@ -32,6 +34,11 @@ image::image(const fe::column &original, unsigned heads, split_stage stage)
     }
 }
 u64 image::count_ge(const fe::block_mask &mask, u64 threshold, bool guard) const {
+    // These residual-head bodies implement a FOR/run law, not a dictionary
+    // law. Reuse the owner's complete code-aware operation; logical sidecars
+    // are a separate applicable program over any encoded body.
+    if (dictionary_)
+        return mask.popcount() ? fe::encoded_count_ge(original_, mask, threshold) : 0;
     u64 result = 0;
     fe::for_each_block(mask, [&](std::size_t b) __attribute__((always_inline)) {
         const auto &d = original_.blocks[b];
@@ -55,31 +62,8 @@ u64 image::count_ge(const fe::block_mask &mask, u64 threshold, bool guard) const
         const planes source{payload_.empty() ? nullptr : payload_.data() + s.payload_offset,
                             s.heads >= 8 ? head0_.data() + s.head0_offset : nullptr,
                             s.heads == 16 ? head1_.data() + s.head1_offset : nullptr, d.count};
-        std::array<unsigned, fe::block_rows> sizes;
-        const bool compact_runs = d.type == fe::kind::runs && bool(original_.runs[b]);
-        if (compact_runs)
-            fe::each_run(original_, b, [&](unsigned rank, unsigned n) { sizes[rank] = n; });
         const auto *ends = original_.payload.data() + d.offset + fe::plane_bytes(d.width, d.count);
-        if (!compact_runs) {
-            result += ops.count_ge(source, rhs, guard, d.type == fe::kind::runs ? ends : nullptr);
-            return;
-        }
-        for (unsigned first = 0; first < d.count; first += 64) {
-            const auto count = std::min(64u, unsigned(d.count) - first);
-            auto selected = ops.filter(source, first, count, rhs,
-                                       ikea::comparison::greater_equal, guard);
-            if (d.type == fe::kind::packed) result += std::popcount(selected);
-            else {
-                // Weight the selected run values with their original extents.
-                // No row-mask expansion or per-row payload movement.
-                while (selected) {
-                    const auto rank = first + std::countr_zero(selected);
-                    result += compact_runs ? sizes[rank]
-                        : unsigned(ends[rank]) + 1 - (rank ? unsigned(ends[rank - 1]) + 1 : 0);
-                    selected &= selected - 1;
-                }
-            }
-        }
+        result += ops.count_ge(source, rhs, guard, d.type == fe::kind::runs ? ends : nullptr);
     });
     return result;
 }

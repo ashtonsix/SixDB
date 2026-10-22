@@ -33,6 +33,8 @@ using unresolved_rows = std::array<std::uint16_t, 16>;
 template <unsigned H>
 u64 count_heads(const fe::column &column, std::size_t block, u64 rhs, u64 head_rhs,
                 bool needs_refinement, const std::uint8_t *head0, const std::uint8_t *head1) {
+    if (!needs_refinement)
+        return kernels(H, H).count_ge({nullptr, head0, head1, fe::block_rows}, head_rhs, true, nullptr);
     const auto source = detail::view<H, H>(fe::block_rows,
         static_cast<const std::uint8_t *>(nullptr), head0, head1);
     const auto expression = cp::describe(source);
@@ -58,12 +60,9 @@ u64 count_heads(const fe::column &column, std::size_t block, u64 rhs, u64 head_r
         above = cp::filter16_unchecked<C::greater>(expression, first, head_rhs);
         equal = cp::filter16_unchecked<C::equal>(expression, first, head_rhs);
 #endif
-        if (!needs_refinement) count += std::popcount(above | equal);
-        else {
-            count += std::popcount(above);
-            unresolved[first / 16] = equal;
-            any |= equal;
-        }
+        count += std::popcount(above);
+        unresolved[first / 16] = equal;
+        any |= equal;
     }
     return count + (any ? refine(column, block, rhs, unresolved) : 0);
 }
@@ -146,6 +145,27 @@ u64 window_bounds::count_ge(const fe::block_mask &mask, u64 rhs) const {
             else if (upper >= relative) any |= unresolved[window] = 0xffff;
         }
         if (any) count += refine(original_, b, rhs, unresolved);
+    });
+    return count;
+}
+block_bounds::block_bounds(const fe::column &column)
+    : original_(column), blocks_(column.blocks.size()) {
+    std::array<u64, fe::block_rows> values;
+    for (std::size_t b = 0; b < blocks_.size(); ++b) {
+        fe::decode_block(column, b, values.data());
+        const auto [lo, hi] = std::minmax_element(values.begin(), values.end());
+        blocks_[b] = {*lo, *hi};
+    }
+}
+u64 block_bounds::count_ge(const fe::block_mask &mask, u64 rhs) const {
+    u64 count = 0;
+    fe::code_count codes(original_, rhs); // Lazy, reused per part for coded fallbacks.
+    fe::for_each_block(mask, [&](std::size_t b) __attribute__((always_inline)) {
+        const auto &range = blocks_[b];
+        if (rhs <= range.lower) { count += fe::block_rows; return; }
+        if (rhs > range.upper) return;
+        count += fe::is_coded(original_, b) ? codes.count(b)
+                                          : fe::stored_count_ge(original_, b, rhs);
     });
     return count;
 }

@@ -1,0 +1,335 @@
+{
+  "source_capture": "ed97e4bd447bc82e4f4df380002ef2ce85b6d9385cc233f57a3b6a8b641d2df0",
+  "binary_sha256": "6db5369c40d026ff5c28f46e44c226ef65525477750c0c9dc56d14b45b27b009",
+  "platform": "Linux-7.0.14-orbstack-00380-ga7e0a2dc9535-aarch64-with-glibc2.42",
+  "cpu": 7,
+  "trials": 14,
+  "repeat": 4,
+  "queries_per_batch": 4096,
+  "seed": 713,
+  "condition": "warm independent points; complete consumed u128 result; local ARM VM, not cold or serial; reversed process/input/arm order",
+  "inputs": {
+    "/home/ashtonsix/sixdb/build/spikes/ikea-frame/cols/OS.u64": {
+      "bytes": 23998464,
+      "sha256": "62e798b644d78ddb19e557a9f4de91947553da4b3c5462fa9ecb2153b74404b7"
+    },
+    "/home/ashtonsix/sixdb/build/spikes/ikea-frame/cols/ResolutionWidth.u64": {
+      "bytes": 23998464,
+      "sha256": "c8313ba16bc85ee2cadc5e256f653d8289ad38a39a9aae143164009af5aaa551"
+    },
+    "/home/ashtonsix/sixdb/build/spikes/ikea-frame/cols/EventTime.u64": {
+      "bytes": 23998464,
+      "sha256": "8294fa21be93d959e1d8d612ac701f083187db033db98a647657f9309f39ce89"
+    },
+    "/home/ashtonsix/sixdb/build/spikes/ikea-frame/cols/UserID.u64": {
+      "bytes": 23998464,
+      "sha256": "e2cdf04c3cc37533e904b019876eb29d2f5cb303748a2f668357dc587430bf1f"
+    },
+    "/home/ashtonsix/sixdb/build/spikes/ikea-frame/cols/URLHash.u64": {
+      "bytes": 23998464,
+      "sha256": "5b57151bca1792f0bf0c65d21ab2a9d760faf1e77b039c65e668d922bc1dfc43"
+    },
+    "/home/ashtonsix/sixdb/build/spikes/ikea-frame/cols/ConnectTiming.u64": {
+      "bytes": 23998464,
+      "sha256": "6fa19ea5959876523a2d5c601b5ac4e5cb59071de0846aec11ef71b09bc62ade"
+    },
+    "/home/ashtonsix/sixdb/build/spikes/ikea-frame/cols/RegionID.u64": {
+      "bytes": 23998464,
+      "sha256": "be98d8e7c351d22ca531359e9a84ec7f1a4d711318ffb0d4b7518dea8817ba9e"
+    },
+    "/home/ashtonsix/sixdb/build/spikes/ikea-frame/cols/WatchID.u64": {
+      "bytes": 23998464,
+      "sha256": "a39108f2e950d8ac101506c0fc645668668130df839aafe25f55aff5046e1e15"
+    },
+    "/home/ashtonsix/sixdb/build/spikes/ikea-frame/cols/ClientIP.u64": {
+      "bytes": 23998464,
+      "sha256": "e1bf974be2bba11614b61b2676dc2df3ee36baf231e57700fb1fd4ee54a99cd6"
+    },
+    "/home/ashtonsix/sixdb/build/spikes/ikea-frame/jena-0/p__mbar.u64": {
+      "bytes": 524288,
+      "sha256": "ede7bd5fd8833828049817f56703d4cfaa29ef620ff7c73b9bbf32ae92e9054e"
+    },
+    "/home/ashtonsix/sixdb/build/spikes/ikea-frame/jena-0/T__degC.u64": {
+      "bytes": 524288,
+      "sha256": "184bcae557de73c43757a3c8468a9178da86d787df08caa24526faec88a1149d"
+    },
+    "/home/ashtonsix/sixdb/build/spikes/ikea-frame/jena-fault/wv__m_s.u64": {
+      "bytes": 2048,
+      "sha256": "5f996f15af61622a15eb9d56f354d8cdd56f3400bbc3b9acf70a585919a3fc51"
+    }
+  },
+  "commands": [
+    [
+      "taskset",
+      "-c",
+      "7",
+      "/home/ashtonsix/sixdb/build/clang/frame-consumers-stable/workbench/spikes/ikea-frame/point/frame_point_measure",
+      "/home/ashtonsix/sixdb/build/spikes/ikea-frame/cols/OS.u64",
+      "14",
+      "4",
+      "0"
+    ],
+    [
+      "taskset",
+      "-c",
+      "7",
+      "/home/ashtonsix/sixdb/build/clang/frame-consumers-stable/workbench/spikes/ikea-frame/point/frame_point_measure",
+      "/home/ashtonsix/sixdb/build/spikes/ikea-frame/cols/ResolutionWidth.u64",
+      "14",
+      "4",
+      "0"
+    ],
+    [
+      "taskset",
+      "-c",
+      "7",
+      "/home/ashtonsix/sixdb/build/clang/frame-consumers-stable/workbench/spikes/ikea-frame/point/frame_point_measure",
+      "/home/ashtonsix/sixdb/build/spikes/ikea-frame/cols/EventTime.u64",
+      "14",
+      "4",
+      "0"
+    ],
+    [
+      "taskset",
+      "-c",
+      "7",
+      "/home/ashtonsix/sixdb/build/clang/frame-consumers-stable/workbench/spikes/ikea-frame/point/frame_point_measure",
+      "/home/ashtonsix/sixdb/build/spikes/ikea-frame/cols/UserID.u64",
+      "14",
+      "4",
+      "0"
+    ],
+    [
+      "taskset",
+      "-c",
+      "7",
+      "/home/ashtonsix/sixdb/build/clang/frame-consumers-stable/workbench/spikes/ikea-frame/point/frame_point_measure",
+      "/home/ashtonsix/sixdb/build/spikes/ikea-frame/cols/URLHash.u64",
+      "14",
+      "4",
+      "0"
+    ],
+    [
+      "taskset",
+      "-c",
+      "7",
+      "/home/ashtonsix/sixdb/build/clang/frame-consumers-stable/workbench/spikes/ikea-frame/point/frame_point_measure",
+      "/home/ashtonsix/sixdb/build/spikes/ikea-frame/cols/ConnectTiming.u64",
+      "14",
+      "4",
+      "0"
+    ],
+    [
+      "taskset",
+      "-c",
+      "7",
+      "/home/ashtonsix/sixdb/build/clang/frame-consumers-stable/workbench/spikes/ikea-frame/point/frame_point_measure",
+      "/home/ashtonsix/sixdb/build/spikes/ikea-frame/cols/RegionID.u64",
+      "14",
+      "4",
+      "0"
+    ],
+    [
+      "taskset",
+      "-c",
+      "7",
+      "/home/ashtonsix/sixdb/build/clang/frame-consumers-stable/workbench/spikes/ikea-frame/point/frame_point_measure",
+      "/home/ashtonsix/sixdb/build/spikes/ikea-frame/cols/WatchID.u64",
+      "14",
+      "4",
+      "0"
+    ],
+    [
+      "taskset",
+      "-c",
+      "7",
+      "/home/ashtonsix/sixdb/build/clang/frame-consumers-stable/workbench/spikes/ikea-frame/point/frame_point_measure",
+      "/home/ashtonsix/sixdb/build/spikes/ikea-frame/cols/ClientIP.u64",
+      "14",
+      "4",
+      "0"
+    ],
+    [
+      "taskset",
+      "-c",
+      "7",
+      "/home/ashtonsix/sixdb/build/clang/frame-consumers-stable/workbench/spikes/ikea-frame/point/frame_point_measure",
+      "/home/ashtonsix/sixdb/build/spikes/ikea-frame/jena-0/p__mbar.u64",
+      "14",
+      "4",
+      "0"
+    ],
+    [
+      "taskset",
+      "-c",
+      "7",
+      "/home/ashtonsix/sixdb/build/clang/frame-consumers-stable/workbench/spikes/ikea-frame/point/frame_point_measure",
+      "/home/ashtonsix/sixdb/build/spikes/ikea-frame/jena-0/T__degC.u64",
+      "14",
+      "4",
+      "0"
+    ],
+    [
+      "taskset",
+      "-c",
+      "7",
+      "/home/ashtonsix/sixdb/build/clang/frame-consumers-stable/workbench/spikes/ikea-frame/point/frame_point_measure",
+      "/home/ashtonsix/sixdb/build/spikes/ikea-frame/jena-fault/wv__m_s.u64",
+      "14",
+      "4",
+      "0"
+    ],
+    [
+      "taskset",
+      "-c",
+      "7",
+      "/home/ashtonsix/sixdb/build/clang/frame-consumers-stable/workbench/spikes/ikea-frame/point/frame_point_measure",
+      "/home/ashtonsix/sixdb/build/spikes/ikea-frame/jena-fault/wv__m_s.u64",
+      "14",
+      "4",
+      "1"
+    ],
+    [
+      "taskset",
+      "-c",
+      "7",
+      "/home/ashtonsix/sixdb/build/clang/frame-consumers-stable/workbench/spikes/ikea-frame/point/frame_point_measure",
+      "/home/ashtonsix/sixdb/build/spikes/ikea-frame/jena-0/T__degC.u64",
+      "14",
+      "4",
+      "1"
+    ],
+    [
+      "taskset",
+      "-c",
+      "7",
+      "/home/ashtonsix/sixdb/build/clang/frame-consumers-stable/workbench/spikes/ikea-frame/point/frame_point_measure",
+      "/home/ashtonsix/sixdb/build/spikes/ikea-frame/jena-0/p__mbar.u64",
+      "14",
+      "4",
+      "1"
+    ],
+    [
+      "taskset",
+      "-c",
+      "7",
+      "/home/ashtonsix/sixdb/build/clang/frame-consumers-stable/workbench/spikes/ikea-frame/point/frame_point_measure",
+      "/home/ashtonsix/sixdb/build/spikes/ikea-frame/cols/ClientIP.u64",
+      "14",
+      "4",
+      "1"
+    ],
+    [
+      "taskset",
+      "-c",
+      "7",
+      "/home/ashtonsix/sixdb/build/clang/frame-consumers-stable/workbench/spikes/ikea-frame/point/frame_point_measure",
+      "/home/ashtonsix/sixdb/build/spikes/ikea-frame/cols/WatchID.u64",
+      "14",
+      "4",
+      "1"
+    ],
+    [
+      "taskset",
+      "-c",
+      "7",
+      "/home/ashtonsix/sixdb/build/clang/frame-consumers-stable/workbench/spikes/ikea-frame/point/frame_point_measure",
+      "/home/ashtonsix/sixdb/build/spikes/ikea-frame/cols/RegionID.u64",
+      "14",
+      "4",
+      "1"
+    ],
+    [
+      "taskset",
+      "-c",
+      "7",
+      "/home/ashtonsix/sixdb/build/clang/frame-consumers-stable/workbench/spikes/ikea-frame/point/frame_point_measure",
+      "/home/ashtonsix/sixdb/build/spikes/ikea-frame/cols/ConnectTiming.u64",
+      "14",
+      "4",
+      "1"
+    ],
+    [
+      "taskset",
+      "-c",
+      "7",
+      "/home/ashtonsix/sixdb/build/clang/frame-consumers-stable/workbench/spikes/ikea-frame/point/frame_point_measure",
+      "/home/ashtonsix/sixdb/build/spikes/ikea-frame/cols/URLHash.u64",
+      "14",
+      "4",
+      "1"
+    ],
+    [
+      "taskset",
+      "-c",
+      "7",
+      "/home/ashtonsix/sixdb/build/clang/frame-consumers-stable/workbench/spikes/ikea-frame/point/frame_point_measure",
+      "/home/ashtonsix/sixdb/build/spikes/ikea-frame/cols/UserID.u64",
+      "14",
+      "4",
+      "1"
+    ],
+    [
+      "taskset",
+      "-c",
+      "7",
+      "/home/ashtonsix/sixdb/build/clang/frame-consumers-stable/workbench/spikes/ikea-frame/point/frame_point_measure",
+      "/home/ashtonsix/sixdb/build/spikes/ikea-frame/cols/EventTime.u64",
+      "14",
+      "4",
+      "1"
+    ],
+    [
+      "taskset",
+      "-c",
+      "7",
+      "/home/ashtonsix/sixdb/build/clang/frame-consumers-stable/workbench/spikes/ikea-frame/point/frame_point_measure",
+      "/home/ashtonsix/sixdb/build/spikes/ikea-frame/cols/ResolutionWidth.u64",
+      "14",
+      "4",
+      "1"
+    ],
+    [
+      "taskset",
+      "-c",
+      "7",
+      "/home/ashtonsix/sixdb/build/clang/frame-consumers-stable/workbench/spikes/ikea-frame/point/frame_point_measure",
+      "/home/ashtonsix/sixdb/build/spikes/ikea-frame/cols/OS.u64",
+      "14",
+      "4",
+      "1"
+    ]
+  ],
+  "compile_commands": [
+    {
+      "directory": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/clang/frame-consumers-stable",
+      "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=1 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN4=0 -DSIXDB_TUNE_ZEN5=0 -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/workbench/spikes/ikea-frame/encoding -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/ikea/include -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals=. -ffunction-sections -fdata-sections -march=native -mtune=generic -gline-tables-only -o workbench/spikes/ikea-frame/encoding/CMakeFiles/frame_encoding_material.dir/material.cpp.o -c /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/workbench/spikes/ikea-frame/encoding/material.cpp",
+      "file": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/workbench/spikes/ikea-frame/encoding/material.cpp",
+      "output": "workbench/spikes/ikea-frame/encoding/CMakeFiles/frame_encoding_material.dir/material.cpp.o"
+    },
+    {
+      "directory": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/clang/frame-consumers-stable",
+      "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=1 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN4=0 -DSIXDB_TUNE_ZEN5=0 -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/ikea/include -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals=. -ffunction-sections -fdata-sections -march=native -mtune=generic -gline-tables-only -o workbench/spikes/ikea-frame/point/CMakeFiles/frame_point_kernels.dir/kernels.cpp.o -c /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/workbench/spikes/ikea-frame/point/kernels.cpp",
+      "file": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/workbench/spikes/ikea-frame/point/kernels.cpp",
+      "output": "workbench/spikes/ikea-frame/point/CMakeFiles/frame_point_kernels.dir/kernels.cpp.o"
+    },
+    {
+      "directory": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/clang/frame-consumers-stable",
+      "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=1 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN4=0 -DSIXDB_TUNE_ZEN5=0 -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/workbench/spikes/ikea-frame/encoding -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/ikea/include -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals=. -ffunction-sections -fdata-sections -march=native -mtune=generic -gline-tables-only -o workbench/spikes/ikea-frame/point/CMakeFiles/frame_checkpoint_point_check.dir/point_check.cpp.o -c /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/workbench/spikes/ikea-frame/point/point_check.cpp",
+      "file": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/workbench/spikes/ikea-frame/point/point_check.cpp",
+      "output": "workbench/spikes/ikea-frame/point/CMakeFiles/frame_checkpoint_point_check.dir/point_check.cpp.o"
+    },
+    {
+      "directory": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/clang/frame-consumers-stable",
+      "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=1 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN4=0 -DSIXDB_TUNE_ZEN5=0 -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/workbench/spikes/ikea-frame/encoding -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/ikea/include -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals=. -ffunction-sections -fdata-sections -march=native -mtune=generic -gline-tables-only -o workbench/spikes/ikea-frame/point/CMakeFiles/frame_point_measure.dir/measure.cpp.o -c /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/workbench/spikes/ikea-frame/point/measure.cpp",
+      "file": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/workbench/spikes/ikea-frame/point/measure.cpp",
+      "output": "workbench/spikes/ikea-frame/point/CMakeFiles/frame_point_measure.dir/measure.cpp.o"
+    },
+    {
+      "directory": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/clang/frame-consumers-stable",
+      "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=1 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN4=0 -DSIXDB_TUNE_ZEN5=0 -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/workbench/spikes/ikea-frame/encoding -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/ikea/include -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals=. -ffunction-sections -fdata-sections -march=native -mtune=generic -gline-tables-only -o workbench/spikes/ikea-frame/point/CMakeFiles/frame_delta_patched_check.dir/delta_patched_check.cpp.o -c /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/workbench/spikes/ikea-frame/point/delta_patched_check.cpp",
+      "file": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-consumers-intervals/workbench/spikes/ikea-frame/point/delta_patched_check.cpp",
+      "output": "workbench/spikes/ikea-frame/point/CMakeFiles/frame_delta_patched_check.dir/delta_patched_check.cpp.o"
+    }
+  ]
+}
