@@ -45,14 +45,14 @@ public:
   Image& operator=(const Image&)=delete;
   ~Image() {std::free(table_);std::free(arena_);}
 
-  const Record* get(std::uint64_t name) const {
+  // Source interface shared with OrbitalSource: a Handle per visited Object.
+  using Handle=const Record*;
+  Handle get(std::uint64_t name) const {
     auto& r=table_[probe(name)];
     return r.name==name?&r:nullptr;
   }
-  const std::byte* part(const Record& r,unsigned i) const {return arena_+std::size_t(r.offset[i])*64;}
-  template<class T> const T* plane(const Record& r,unsigned i) const {
-    return reinterpret_cast<const T*>(part(r,i));
-  }
+  const std::byte* part(Handle r,unsigned i) const {return arena_+std::size_t(r->offset[i])*64;}
+  unsigned parts(Handle r) const {return r->parts;}
 private:
   Record* table_{};
   std::byte* arena_{};
@@ -82,128 +82,132 @@ inline unsigned first_not(bool summary,unsigned begin,unsigned n,SummaryLess sl,
 }
 }
 
-class TreeView {
+template<class T> const T* plane(const std::byte* p) {return reinterpret_cast<const T*>(p);}
+
+// Source supplies Handle get(name), part(Handle, i) and parts(Handle); a null
+// Handle means absent. Image and OrbitalSource both qualify.
+template<class Source> class TreeView {
 public:
-  using Record=Image::Record;
+  using Handle=typename Source::Handle;
   struct Cursor {
-    const Record* stack[12];
+    Handle stack[12];
     unsigned index[12];
     unsigned depth{};
-    const Record* leaf{};
+    Handle leaf{};
     unsigned rank{},count{};
-    explicit operator bool() const {return leaf&&rank<count;}
+    explicit operator bool() const {return bool(leaf)&&rank<count;}
   };
-  TreeView(const Image& im,const Tree& t)
-    :im_(&im),c_(t.config()),root_(t.root()),page_base_(t.page_name(0)),
+  TreeView(const Source& src,const Tree& t)
+    :src_(&src),c_(t.config()),root_(t.root()),page_base_(t.page_name(0)),
      level_(t.page_level()),split_(t.page_split()),child_(c_.fenced()?3:2),dirent_(c_.fenced()?4:2),
      stride_(c_.inline_hash?72:16) {}
 
   const Dirent* find(std::uint32_t p) const {
     if(c_.inline_hash) return reinterpret_cast<const Dirent*>(page(p));
-    const Record* o;
+    Handle o;
     if(c_.hash_index) {
       auto* slot=page(p);
       if(!slot) return nullptr;
       std::uint64_t leaf;
       std::memcpy(&leaf,slot,8);
-      o=im_->get(leaf);
+      o=src_->get(leaf);
     } else {
-      o=im_->get(root_);
+      o=src_->get(root_);
       if(!o) return nullptr;
-      while(height(*o)) o=im_->get(child(*o,route(*o,p)));
+      while(height(o)) o=src_->get(child(o,route(o,p)));
     }
-    auto n=size(*o);
-    auto r=lower(*o,p);
-    if(r==n||im_->plane<std::uint32_t>(*o,1)[r]!=p) return nullptr;
-    return dirent(*o,r);
+    auto n=size(o);
+    auto r=lower(o,p);
+    if(r==n||plane<std::uint32_t>(src_->part(o,1))[r]!=p) return nullptr;
+    return dirent(o,r);
   }
   Cursor seek(std::uint32_t p) const {
     Cursor c;
-    auto* o=im_->get(root_);
+    auto o=src_->get(root_);
     if(!o) return c;
-    while(height(*o)) {
-      auto i=route(*o,p);
+    while(height(o)) {
+      auto i=route(o,p);
       push(c,o,i);
-      o=im_->get(child(*o,i));
+      o=src_->get(child(o,i));
     }
-    return settle(c,o,lower(*o,p));
+    return settle(c,o,lower(o,p));
   }
   Cursor seek(const Key& low) const {
     Cursor c;
-    auto* o=im_->get(root_);
+    auto o=src_->get(root_);
     if(!o) return c;
-    while(height(*o)) {
-      auto i=route(*o,low);
+    while(height(o)) {
+      auto i=route(o,low);
       push(c,o,i);
-      o=im_->get(child(*o,i));
+      o=src_->get(child(o,i));
     }
-    return settle(c,o,lower(*o,low));
+    return settle(c,o,lower(o,low));
   }
   bool next(Cursor& c) const {
     if(++c.rank<c.count) return true;
     while(c.depth) {
-      auto* o=c.stack[c.depth-1];
+      auto o=c.stack[c.depth-1];
       auto& i=c.index[c.depth-1];
-      if(++i<size(*o)) {
-        auto* ch=im_->get(child(*o,i));
-        while(height(*ch)) {push(c,ch,0);ch=im_->get(child(*ch,0));}
-        c.leaf=ch;c.rank=0;c.count=size(*ch);
+      if(++i<size(o)) {
+        auto ch=src_->get(child(o,i));
+        while(height(ch)) {push(c,ch,0);ch=src_->get(child(ch,0));}
+        c.leaf=ch;c.rank=0;c.count=size(ch);
         return true;
       }
       --c.depth;
     }
-    c.leaf=nullptr;
+    c.leaf=Handle{};
     return false;
   }
-  std::uint32_t prefix(const Cursor& c) const {return im_->plane<std::uint32_t>(*c.leaf,1)[c.rank];}
+  std::uint32_t prefix(const Cursor& c) const {return plane<std::uint32_t>(src_->part(c.leaf,1))[c.rank];}
   const Dirent* read(const Cursor& c) const {
     if(c_.inline_hash) return reinterpret_cast<const Dirent*>(page(prefix(c)));
-    return dirent(*c.leaf,c.rank);
+    return dirent(c.leaf,c.rank);
   }
 
 private:
-  const Image* im_;
+  const Source* src_;
   Config c_;
   std::uint64_t root_,page_base_;
   unsigned level_;
   std::uint64_t split_;
   unsigned child_,dirent_,stride_;
 
-  unsigned size(const Record& r) const {return im_->plane<std::uint32_t>(r,0)[0];}
-  unsigned height(const Record& r) const {return im_->plane<std::uint32_t>(r,0)[1];}
-  std::uint64_t child(const Record& r,unsigned i) const {return im_->plane<std::uint64_t>(r,child_)[i];}
-  const Dirent* dirent(const Record& r,unsigned i) const {
+  unsigned size(Handle r) const {return plane<std::uint32_t>(src_->part(r,0))[0];}
+  unsigned height(Handle r) const {return plane<std::uint32_t>(src_->part(r,0))[1];}
+  std::uint64_t child(Handle r,unsigned i) const {return plane<std::uint64_t>(src_->part(r,child_))[i];}
+  const Dirent* dirent(Handle r,unsigned i) const {
     auto t=c_.tile?i/c_.tile:0,o=c_.tile?i%c_.tile:i;
-    return im_->plane<Dirent>(r,dirent_+t)+o;
+    return plane<Dirent>(src_->part(r,dirent_+t))+o;
   }
-  static void push(Cursor& c,const Record* o,unsigned i) {c.stack[c.depth]=o;c.index[c.depth++]=i;}
-  Cursor& settle(Cursor& c,const Record* o,unsigned r) const {
-    c.leaf=o;c.rank=r;c.count=size(*o);
+  static void push(Cursor& c,Handle o,unsigned i) {c.stack[c.depth]=o;c.index[c.depth++]=i;}
+  Cursor& settle(Cursor& c,Handle o,unsigned r) const {
+    c.leaf=o;c.rank=r;c.count=size(o);
     if(r==c.count) {c.rank=c.count-1;next(c);}
     return c;
   }
-  unsigned route(const Record& o,std::uint32_t p) const {
-    auto* sum=im_->plane<std::uint32_t>(o,0)+2;
-    auto* sep=im_->plane<std::uint32_t>(o,1);
+  unsigned route(Handle o,std::uint32_t p) const {
+    auto* sum=plane<std::uint32_t>(src_->part(o,0))+2;
+    auto* sep=plane<std::uint32_t>(src_->part(o,1));
     return detail::first_not(c_.summary,1,size(o),[&](unsigned b) {return sum[b]<=p;},
                              [&](unsigned i) {return sep[i]<=p;})-1;
   }
-  unsigned lower(const Record& o,std::uint32_t p) const {
-    auto* sum=im_->plane<std::uint32_t>(o,0)+2;
-    auto* pre=im_->plane<std::uint32_t>(o,1);
+  unsigned lower(Handle o,std::uint32_t p) const {
+    auto* sum=plane<std::uint32_t>(src_->part(o,0))+2;
+    auto* pre=plane<std::uint32_t>(src_->part(o,1));
     return detail::first_not(c_.summary,0,size(o),[&](unsigned b) {return sum[b]<p;},
                              [&](unsigned i) {return pre[i]<p;});
   }
-  unsigned route(const Record& o,const Key& low) const {
-    auto* sum=im_->part(o,o.parts-1);
-    auto* sep=im_->part(o,2);
+  unsigned route(Handle o,const Key& low) const {
+    auto* sum=src_->part(o,src_->parts(o)-1);
+    auto* sep=src_->part(o,2);
     auto k=c_.k;
     return detail::first_not(c_.summary,1,size(o),[&](unsigned b) {return std::memcmp(sum+b*k,low.b.data(),k)<0;},
                              [&](unsigned i) {return std::memcmp(sep+i*k,low.b.data(),k)<0;})-1;
   }
-  unsigned lower(const Record& o,const Key& low) const {
-    auto* sum=im_->part(o,o.parts-1);
-    auto* max=im_->part(o,3);
+  unsigned lower(Handle o,const Key& low) const {
+    auto* sum=src_->part(o,src_->parts(o)-1);
+    auto* max=src_->part(o,3);
     auto k=c_.k;
     return detail::first_not(c_.summary,0,size(o),[&](unsigned b) {return std::memcmp(sum+b*k,low.b.data(),k)<0;},
                              [&](unsigned i) {return std::memcmp(max+i*k,low.b.data(),k)<0;});
@@ -212,10 +216,10 @@ private:
     auto h=bucket_hash(p);
     auto b=h&((std::uint64_t(1)<<level_)-1);
     if(b<split_) b=h&((std::uint64_t(2)<<level_)-1);
-    auto* o=im_->get(page_base_|b);
+    auto o=src_->get(page_base_|b);
     if(!o) return nullptr;
-    auto cap=im_->plane<std::uint32_t>(*o,0)[1];
-    auto* slots=im_->part(*o,1);
+    auto cap=plane<std::uint32_t>(src_->part(o,0))[1];
+    auto* slots=src_->part(o,1);
     for(auto s=slot_hash(p)&(cap-1);;s=(s+1)&(cap-1)) {
       auto* slot=slots+s*stride_;
       std::uint32_t key,used;
@@ -227,29 +231,29 @@ private:
   }
 };
 
-class NaturalView {
+template<class Source> class NaturalView {
 public:
-  using Record=Image::Record;
+  using Handle=typename Source::Handle;
   struct Cursor {
-    const Record* group{};
+    Handle group{};
     unsigned group_rank{},rank{},count{};
-    explicit operator bool() const {return group&&rank<count;}
+    explicit operator bool() const {return bool(group)&&rank<count;}
   };
-  NaturalView(const Image& im,const Natural& n):im_(&im),n_(&n),bits_(n.bits()) {
-    roster_=im.get(n.roster());
-    groups_=im.plane<std::uint32_t>(*roster_,0)[0];
-    ids_=im.plane<std::uint32_t>(*roster_,1);
+  NaturalView(const Source& src,const Natural& n):src_(&src),n_(&n),bits_(n.bits()) {
+    auto roster=src.get(n.roster());
+    groups_=plane<std::uint32_t>(src.part(roster,0))[0];
+    ids_=plane<std::uint32_t>(src.part(roster,1));
   }
   const Dirent* find(std::uint32_t p) const {
-    auto* o=im_->get(n_->name(std::uint32_t(std::uint64_t(p)>>bits_)));
-    return o?probe(*o,p):nullptr;
+    auto o=src_->get(n_->name(std::uint32_t(std::uint64_t(p)>>bits_)));
+    return o?probe(o,p):nullptr;
   }
   Cursor seek(std::uint32_t p) const {
     auto g=std::uint32_t(std::uint64_t(p)>>bits_);
     Cursor c;
     auto gr=unsigned(std::lower_bound(ids_,ids_+groups_,g)-ids_);
     if(!enter(c,gr)) return c;
-    auto* pre=im_->plane<std::uint32_t>(*c.group,1);
+    auto* pre=plane<std::uint32_t>(src_->part(c.group,1));
     c.rank=unsigned(std::lower_bound(pre,pre+c.count,p)-pre);
     if(c.rank==c.count) enter(c,gr+1);
     return c;
@@ -258,25 +262,24 @@ public:
     if(++c.rank<c.count) return true;
     return enter(c,c.group_rank+1);
   }
-  std::uint32_t prefix(const Cursor& c) const {return im_->plane<std::uint32_t>(*c.group,1)[c.rank];}
-  const Dirent* read(const Cursor& c) const {return probe(*c.group,prefix(c));}
+  std::uint32_t prefix(const Cursor& c) const {return plane<std::uint32_t>(src_->part(c.group,1))[c.rank];}
+  const Dirent* read(const Cursor& c) const {return probe(c.group,prefix(c));}
 private:
-  const Image* im_;
+  const Source* src_;
   const Natural* n_;
   unsigned bits_,groups_{};
-  const Record* roster_{};
   const std::uint32_t* ids_{};
   bool enter(Cursor& c,unsigned gr) const {
-    if(gr>=groups_) {c.group=nullptr;return false;}
+    if(gr>=groups_) {c.group=Handle{};return false;}
     c.group_rank=gr;
-    c.group=im_->get(n_->name(ids_[gr]));
+    c.group=src_->get(n_->name(ids_[gr]));
     c.rank=0;
-    c.count=im_->plane<std::uint32_t>(*c.group,0)[0];
+    c.count=plane<std::uint32_t>(src_->part(c.group,0))[0];
     return true;
   }
-  const Dirent* probe(const Record& o,std::uint32_t p) const {
-    auto cap=im_->plane<std::uint32_t>(o,0)[1];
-    auto* t=im_->part(o,2);
+  const Dirent* probe(Handle o,std::uint32_t p) const {
+    auto cap=plane<std::uint32_t>(src_->part(o,0))[1];
+    auto* t=src_->part(o,2);
     for(auto s=slot_hash(p)&(cap-1);;s=(s+1)&(cap-1)) {
       std::uint32_t used,key;
       std::memcpy(&used,t+s*72,4);

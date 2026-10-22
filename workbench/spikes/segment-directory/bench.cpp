@@ -1,4 +1,5 @@
 #include "image.h"
+#include "orbital_source.h"
 #include "workload.h"
 #include <chrono>
 #include <cstdio>
@@ -23,7 +24,8 @@ struct Variant {
   std::unique_ptr<Tree> tree;
   std::unique_ptr<Natural> natural;
   std::unique_ptr<Image> image;
-  std::variant<std::monostate,TreeView,NaturalView> view;
+  std::unique_ptr<OrbitalSource> orbital;
+  std::variant<std::monostate,TreeView<Image>,NaturalView<Image>,TreeView<OrbitalSource>,NaturalView<OrbitalSource>> view;
 };
 
 void require(bool ok,const char* what) {
@@ -106,7 +108,7 @@ template<class V> std::array<double,5> pass(const V& v,const std::vector<std::ui
 }
 }
 
-int main(int argc,char** argv) {
+int run(int argc,char** argv,loom::Worker& worker,std::pmr::memory_resource& memory) {
   if(argc<8) {
     std::fprintf(stderr,"usage: %s LAYER J COUNT dense|spread QUERIES REPS VARIANT...\n"
                         "variants: flat tree tree-nosum tree-hash tree-inline<page entries> natural<bits>\n",argv[0]);
@@ -130,26 +132,42 @@ int main(int argc,char** argv) {
   std::vector<Variant> vs;
   for(int a=7;a<argc;++a) {
     std::string_view v=argv[a];
+    // NAME@orbital reads through published engine::material Objects instead of an Image.
+    bool orbital=v.ends_with("@orbital");
+    if(orbital) v.remove_suffix(8);
     Config c;c.layer=layer;c.j=j;
-    Variant x{std::string(v),std::make_unique<Store>(),{},{},{},{}};
+    Variant x{std::string(argv[a]),std::make_unique<Store>(),{},{},{},{},{}};
     if(v.starts_with("natural")) {
       x.natural=std::make_unique<Natural>(*x.store,c,unsigned(std::stoul(std::string(v.substr(7)))),1);
       x.natural->build(es);
-      x.image=std::make_unique<Image>(*x.store);
-      x.view.emplace<NaturalView>(*x.image,*x.natural);
-      verify(std::get<NaturalView>(x.view),*x.natural,es,probes,false);
+      if(orbital) {
+        x.orbital=std::make_unique<OrbitalSource>(worker,memory,*x.store,UINT64_C(0x5e6d));
+        x.view.emplace<NaturalView<OrbitalSource>>(*x.orbital,*x.natural);
+        verify(std::get<NaturalView<OrbitalSource>>(x.view),*x.natural,es,probes,false);
+      } else {
+        x.image=std::make_unique<Image>(*x.store);
+        x.view.emplace<NaturalView<Image>>(*x.image,*x.natural);
+        verify(std::get<NaturalView<Image>>(x.view),*x.natural,es,probes,false);
+      }
     } else {
       if(v=="tree") {}
       else if(v=="tree-nosum") c.summary=false;
+      else if(v.starts_with("tree-inner")) c.inner_capacity=unsigned(std::stoul(std::string(v.substr(10))));
       else if(v=="tree-hash") c.hash_index=true;
       else if(v.starts_with("tree-inline")) {c.inline_hash=true;c.page_target=unsigned(std::stoul(std::string(v.substr(11))));}
       else if(v=="flat") {c.fill=1;c.tile=0;c.bounded_root=false;c.exact_bounds=true;c.summary=false;c.append_split=false;}
       else {std::fprintf(stderr,"unknown variant %s\n",argv[a]);return 2;}
       x.tree=std::make_unique<Tree>(*x.store,c,1);
       x.tree->build(es);
-      x.image=std::make_unique<Image>(*x.store);
-      x.view.emplace<TreeView>(*x.image,*x.tree);
-      verify(std::get<TreeView>(x.view),*x.tree,es,probes,fenced);
+      if(orbital) {
+        x.orbital=std::make_unique<OrbitalSource>(worker,memory,*x.store,UINT64_C(0x5e6d));
+        x.view.emplace<TreeView<OrbitalSource>>(*x.orbital,*x.tree);
+        verify(std::get<TreeView<OrbitalSource>>(x.view),*x.tree,es,probes,fenced);
+      } else {
+        x.image=std::make_unique<Image>(*x.store);
+        x.view.emplace<TreeView<Image>>(*x.image,*x.tree);
+        verify(std::get<TreeView<Image>>(x.view),*x.tree,es,probes,fenced);
+      }
     }
     vs.push_back(std::move(x));
   }
@@ -174,4 +192,26 @@ int main(int argc,char** argv) {
       std::printf("%s,%u,%u,%zu,%s,%s,%.2f,%.2f,%d\n",vs[v].name.c_str(),layer,j,count,dense?"dense":"spread",
                   metric[m],xs[xs.size()/2],xs[0],reps);
     }
+  return 0;
+}
+
+int main(int argc,char** argv) {
+  loom::Worker worker;
+  if(!loom::adopt(worker)) {std::fprintf(stderr,"worker adoption refused\n");return 1;}
+  auto mb=std::getenv("SEGDIR_ARENA_MB")?std::stoull(std::getenv("SEGDIR_ARENA_MB")):4096;
+  auto arena=orbital::allocation::open_arena(mb<<20);
+  if(!arena||!loom::configure(worker,std::move(*arena),0)) {std::fprintf(stderr,"arena refused\n");return 1;}
+  int status;
+  {
+    std::pmr::unsynchronized_pool_resource memory;
+    status=run(argc,argv,worker,memory);
+  }
+  for(;;) {
+    auto p=loom::shutdown(worker);
+    if(p.kind()==orbital::Progress::Kind::failed) {std::fprintf(stderr,"shutdown failed\n");return 1;}
+    if(p.kind()==orbital::Progress::Kind::done) break;
+    loom::poll(worker,{64,0});
+  }
+  loom::relinquish(worker);
+  return status;
 }

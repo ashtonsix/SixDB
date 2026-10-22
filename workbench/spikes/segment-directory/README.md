@@ -163,6 +163,51 @@ overlap.
 | tree | 4M | 443 | 581 | 5.4 |
 | tree, no summaries | 4M | 455 | 526 | 5.4 |
 
+## Through Orbital Objects
+
+[`orbital_source.h`](orbital_source.h) publishes each built layout as
+`engine::material` Objects, with one grouped allocation per Object and one
+Definition per distinct Part geometry. The same views then read through a
+`Store::Scope`: one `Scope::bind` per visit and `Selection::part` per Part.
+Graviton4, `c8g.4xlarge`, ns per operation
+([evidence](evidence/orbital-reads-neoverse-v2-20261022/README.md)):
+
+| L3, J = 4, spread | Segments | point, dependent | point, independent | seek + read | scan / entry |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| tree | 1M | 520 | 508 | 516 | **8.3** |
+| tree-inline24 | 1M | 583 | 298 | 1,241 | 303 |
+| natural16 (old) | 1M | 183 | 96 | 376 | 31 |
+| tree | 4M | 772 | 751 | 751 | **8.9** |
+| tree-inline24 | 4M | 764 | 402 | 1,642 | 420 |
+
+| L4, J = 0, spread | Segments | point, dependent | point, independent | logical seek + read | scan / entry |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| flat (old) | 1M | 440 | 387 | 583 | 7.3 |
+| tree, 128-row interior | 1M | 543 | 521 | 749 | 8.2 |
+| tree, 512-row interior | 1M | 508 | 484 | 712 | 8.2 |
+| flat (old) | 4M | 750 | 650 | 898 | 8.5 |
+| tree, 128-row interior | 4M | 831 | 814 | 1,076 | 9.6 |
+| tree, 512-row interior | 4M | 806 | 767 | 1,003 | 9.5 |
+
+- **The decision holds and gets stronger.** Under Orbital, inline hash pages
+  lose their dependent-point advantage: they are 12% slower than the tree at 1M
+  and level with it at 4M. They keep a 1.7–1.9× edge on independent points but
+  scan 36–47× slower.
+- **Each Orbital visit costs more than a flat-table probe,** and independent
+  tree lookups barely overlap: 508 ns independent against 520 dependent at 1M,
+  where the Image overlaps them to 227 against 416. One `bind` per visit
+  appears to keep lookups from overlapping, but this is not diagnosed. It
+  is worth raising with Orbital, because it limits every multi-visit structure.
+- **Wider interior nodes reclaim a visit.** With 512-row interior nodes the
+  tree is three Objects deep up to about 14M Segments, so reads get 3–7% faster.
+  Mean edit cost is unchanged; the largest separator rewrite grows from 4.6 to
+  8 KB. 512 is now the default. The counter tables above used 128.
+- **The deepening root's read cost is 7–15% under Orbital on dependent points**
+  (flat 440 vs tree 508 at 1M; 750 vs 806 at 4M), plus 18–25% on independent
+  points. That is the price of bounded root edits (721 KB → 6.3 KB per birth).
+  Holding upper levels as direct references rather than names would recover
+  most of it, if Orbital can offer that.
+
 ## Edit grain beyond single edits
 
 From the `scenario-*` rows in `run.sh`. Each batch is one publication, charged
@@ -232,10 +277,11 @@ faster, edits are smaller, and one partition format serves every layer. The
 
 ## Open next
 
-- Visit cost dominates, so measure Orbital's real name resolution and decide
-  whether parents can hold direct references to children.
+- Visit cost dominates. Ask Orbital why independent `Scope::bind` lookups
+  don't overlap, and whether a reader can hold direct references to upper
+  directory levels across a Scope.
 - Slotted dirents for births and deaths, if churn-heavy layers matter.
-- Bind the chosen layout to `engine::material` Objects and Scopes.
+- Write the edit path against `engine::material` (capture with retained Parts and a prepared packet per batch) and time it.
 
 ## Reproduce
 
@@ -247,7 +293,7 @@ cmake --build build/segment-directory --target segment_directory segment_directo
 build/segment-directory/workbench/spikes/segment-directory/segment_directory --check
 workbench/spikes/segment-directory/run.sh > build/segment-directory/counters.txt
 python3 workbench/tools/worker.py run workbench/spikes/segment-directory/bench.sh \
-  --machine neoverse-v2 --instance-type c8g.2xlarge --env SIXDB_BUILD_JOBS=8
+  --machine neoverse-v2 --instance-type c8g.4xlarge --env SIXDB_BUILD_JOBS=8
 ```
 
 `--check` compares 92 configurations against an ordered oracle. Each runs

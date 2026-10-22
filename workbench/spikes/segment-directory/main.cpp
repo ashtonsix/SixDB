@@ -389,6 +389,9 @@ int run(int argc,char** argv) {
       // Brief-faithful: dirents inline in hash pages bounded by hash bits.
       c.inline_hash=true;c.page_target=unsigned(std::stoul(std::string(v.substr(11))));
       Tree t(s,c,1);measure(std::string(v).c_str(),t,s,o,w,rng);
+    } else if(v.starts_with("tree-inner")) {
+      c.inner_capacity=unsigned(std::stoul(std::string(v.substr(10))));
+      Tree t(s,c,1);measure(std::string(v).c_str(),t,s,o,w,rng);
     } else if(v.starts_with("tree-leaf")) {
       c.leaf_capacity=unsigned(std::stoul(std::string(v.substr(9))));
       Tree t(s,c,1);measure(std::string(v).c_str(),t,s,o,w,rng);

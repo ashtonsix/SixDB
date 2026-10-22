@@ -25,7 +25,7 @@ struct Edit {
 
 struct Config {
   unsigned layer=4,k=12,j=0;
-  unsigned leaf_capacity=128,inner_capacity=128;
+  unsigned leaf_capacity=128,inner_capacity=512;
   double fill=0.75;          // bulk-build occupancy of leaves and interior nodes
   double merge_below=0.25;   // merge or redistribute below this occupancy
   unsigned tile=16;          // dirents per Part; 0 keeps one dirent Part
