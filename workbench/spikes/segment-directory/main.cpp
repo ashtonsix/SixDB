@@ -1,0 +1,345 @@
+#include "layer.h"
+#include <algorithm>
+#include <cstdio>
+#include <cstdlib>
+#include <map>
+#include <random>
+#include <string>
+#include <string_view>
+#include <unordered_set>
+
+using namespace segdir;
+
+namespace {
+using Rng=std::mt19937_64;
+
+Key key(std::uint64_t v) {
+  Key k;
+  for(int i=0;i<8;++i) k.b[i]=std::uint8_t(v>>(56-8*i));
+  return k;
+}
+std::uint64_t value(const Key& k) {
+  std::uint64_t v=0;
+  for(int i=0;i<8;++i) v=v<<8|k.b[i];
+  return v;
+}
+Dirent dirent(std::uint32_t prefix,std::uint64_t version) {
+  Dirent d;
+  for(unsigned i=0;i<8;++i) d.w[i]=(std::uint64_t(prefix)<<16|version)*(2*i+1);
+  return d;
+}
+
+struct Workload {
+  unsigned layer;
+  std::size_t count;
+  bool dense;  // half the prefixes of one region of 2*count, else spread over the layer
+  std::uint64_t lo{},hi{};  // birth domain [lo, hi)
+};
+
+// Prefixes in order with monotone logical fences. One gap in twenty is zero,
+// so equal keys cross Segment (and so partition) boundaries.
+std::map<std::uint32_t,Entry> populate(Workload& w,Rng& rng) {
+  auto domain=std::uint64_t(1)<<(8*w.layer);
+  std::vector<std::uint32_t> ps;
+  if(w.dense) {
+    w.lo=std::min<std::uint64_t>(domain-2*w.count,UINT64_C(0x12000000)>>(32-8*w.layer));
+    w.hi=w.lo+2*w.count;
+    std::vector<std::uint32_t> all(2*w.count);
+    for(std::size_t i=0;i<all.size();++i) all[i]=std::uint32_t(w.lo+i);
+    std::shuffle(all.begin(),all.end(),rng);
+    ps.assign(all.begin(),all.begin()+w.count);
+  } else {
+    w.lo=0;w.hi=domain;
+    std::unordered_set<std::uint32_t> seen;
+    while(seen.size()<w.count) seen.insert(std::uint32_t(rng()%domain));
+    ps.assign(seen.begin(),seen.end());
+  }
+  std::sort(ps.begin(),ps.end());
+  std::map<std::uint32_t,Entry> out;
+  std::uint64_t v=0;
+  for(auto p:ps) {
+    v+=rng()%20?1+rng()%(UINT64_C(1)<<30):0;
+    Entry e{p,key(v),{},dirent(p,0)};
+    v+=rng()%(UINT64_C(1)<<28);
+    e.max=key(v);
+    out.emplace(p,e);
+  }
+  return out;
+}
+
+// Fences for a new Segment between its ordered neighbours.
+Entry born(const std::map<std::uint32_t,Entry>& o,std::uint32_t p,std::uint64_t version) {
+  auto next=o.lower_bound(p);
+  std::uint64_t lo=next==o.begin()?0:value(std::prev(next)->second.max);
+  std::uint64_t hi=next==o.end()?lo+(UINT64_C(1)<<31):value(next->second.min);
+  return {p,key(lo+(hi-lo)/3),key(lo+2*(hi-lo)/3),dirent(p,version)};
+}
+// Widened fences for an existing Segment that gained records at both ends.
+Entry widened(const std::map<std::uint32_t,Entry>& o,std::uint32_t p,std::uint64_t version) {
+  auto it=o.find(p);
+  auto e=it->second;
+  std::uint64_t lo=it==o.begin()?0:value(std::prev(it)->second.max);
+  std::uint64_t hi=std::next(it)==o.end()?value(e.max)+(UINT64_C(1)<<31):value(std::next(it)->second.min);
+  e.min=key(lo+(value(e.min)-lo)/2);
+  e.max=key(value(e.max)+(hi-value(e.max))/2);
+  e.dirent=dirent(p,version);
+  return e;
+}
+std::uint32_t absent(const std::map<std::uint32_t,Entry>& o,const Workload& w,Rng& rng) {
+  for(;;) {
+    auto p=std::uint32_t(w.lo+rng()%(w.hi-w.lo));
+    if(!o.contains(p)) return p;
+  }
+}
+std::uint32_t present(const std::map<std::uint32_t,Entry>& o,const std::vector<std::uint32_t>& keys,Rng& rng) {
+  for(;;) {
+    auto p=keys[rng()%keys.size()];
+    if(o.contains(p)) return p;
+  }
+}
+
+void require(bool ok,const char* what) {
+  if(!ok) {std::fprintf(stderr,"check failed: %s\n",what);std::exit(1);}
+}
+bool same(const Entry& a,const Entry& b,bool fenced) {
+  return a.prefix==b.prefix&&std::memcmp(&a.dirent,&b.dirent,64)==0&&
+         (!fenced||(a.min.b==b.min.b&&a.max.b==b.max.b));
+}
+
+template<class Layer> void compare(const Layer& l,const std::map<std::uint32_t,Entry>& o) {
+  l.validate();
+  auto got=l.dump();
+  require(got.size()==o.size(),"dump size");
+  std::size_t i=0;
+  for(auto& [p,e]:o) require(same(got[i++],e,l.config().fenced()),"dump entry");
+}
+
+template<class Layer> void probe(const Layer& l,const std::map<std::uint32_t,Entry>& o,const Workload& w,Rng& rng) {
+  auto fenced=l.config().fenced();
+  for(int q=0;q<50;++q) {
+    auto p=std::uint32_t(w.lo+rng()%(w.hi-w.lo));
+    auto it=o.find(p);
+    auto d=l.find(p);
+    require(d.has_value()==(it!=o.end()),"find presence");
+    if(d) require(std::memcmp(&*d,&it->second.dirent,64)==0,"find dirent");
+    auto c=l.seek(p);
+    auto lb=o.lower_bound(p);
+    for(int s=0;s<5;++s,++lb) {
+      require(bool(c)==(lb!=o.end()),"seek end");
+      if(!c) break;
+      require(same(l.read(c),lb->second,fenced),"seek entry");
+      l.next(c);
+    }
+    if constexpr(requires {l.seek(Key{});}) if(fenced&&!o.empty()) {
+      auto low=key(rng()%(value(o.rbegin()->second.max)+2));
+      auto c=l.seek(low);
+      auto it=std::find_if(o.begin(),o.end(),[&](auto& kv) {return value(kv.second.max)>=value(low);});
+      require(bool(c)==(it!=o.end()),"logical seek end");
+      if(c) require(l.read(c).prefix==it->first,"logical seek entry");
+    }
+  }
+}
+
+template<class Layer> void churn(Layer& l,Store& store,std::map<std::uint32_t,Entry>& o,const Workload& w,Rng& rng,
+                                 std::size_t ops,unsigned check_every,std::size_t target) {
+  std::vector<std::uint32_t> keys;
+  for(auto& [p,e]:o) keys.push_back(p);
+  std::uint64_t version=1;
+  for(std::size_t i=0;i<ops;++i) {
+    auto r=rng()%8;
+    // Births and deaths hold the population near target; the layer may empty.
+    bool grow=o.size()<target/2||(o.size()<target*2&&rng()%2);
+    if(o.empty()||(r<4&&grow)) {
+      auto p=absent(o,w,rng);
+      auto e=born(o,p,version++);
+      l.insert(e);o.emplace(p,e);keys.push_back(p);
+    } else if(r<4||r==4) {
+      auto p=present(o,keys,rng);
+      l.erase(p);o.erase(p);
+    } else if(r==5) {
+      auto p=present(o,keys,rng);
+      auto e=widened(o,p,version++);
+      l.update(e);o[p]=e;
+    } else {
+      auto p=present(o,keys,rng);
+      auto e=o[p];
+      if(r==6) e.dirent=dirent(p,version++);
+      auto before=store.written;
+      l.update(e);o[p]=e;
+      // An identical replacement publishes nothing.
+      if(r==7) require((store.written-before).bytes==0&&(store.written-before).objects==0,"no-op edit wrote");
+    }
+    if(keys.size()>4*o.size()+64) {keys.clear();for(auto& [p,e]:o) keys.push_back(p);}
+    if(i%check_every==0) {compare(l,o);probe(l,o,w,rng);}
+  }
+  compare(l,o);
+  probe(l,o,w,rng);
+}
+
+int check() {
+  struct Case {const char* name;Config c;};
+  std::vector<Case> cases;
+  for(unsigned layer:{2u,3u,4u}) for(unsigned j:{0u,4u}) {
+    Config c;c.layer=layer;c.j=j;
+    c.leaf_capacity=8;c.inner_capacity=4;c.tile=3;c.merge_below=0.5;
+    cases.push_back({"tree",c});
+    auto u=c;u.tile=0;u.fill=1;cases.push_back({"tree untiled full",u});
+    auto f=c;f.bounded_root=false;f.exact_bounds=true;f.merge_below=1.0/3;cases.push_back({"flat",f});
+    if(!c.fenced()) {auto h=c;h.hash_index=true;h.page_target=6;cases.push_back({"hash",h});}
+    if(!c.fenced()) {auto h=c;h.inline_hash=true;h.page_target=5;cases.push_back({"inline hash",h});}
+  }
+  for(auto& [name,c]:cases) for(bool dense:{false,true}) {
+    Rng rng(c.layer*101+c.j*7+dense);
+    Workload w{c.layer,std::min<std::size_t>(300,(std::size_t(1)<<(8*c.layer))/4),dense};
+    auto o=populate(w,rng);
+    Store s;
+    Tree t(s,c,1);
+    t.build(std::vector<Entry>([&] {std::vector<Entry> v;for(auto& [p,e]:o) v.push_back(e);return v;}()));
+    churn(t,s,o,w,rng,6000,97,w.count);
+    // Drain to empty and refill, crossing root collapse and regrowth.
+    churn(t,s,o,w,rng,3000,53,8);
+    churn(t,s,o,w,rng,3000,53,w.count);
+    std::printf("ok %-18s L%u J%u %s\n",name,c.layer,c.j,dense?"dense":"spread");
+  }
+  for(unsigned layer:{2u,3u}) for(unsigned bits:{8u,16u}) for(bool dense:{false,true}) {
+    Config c;c.layer=layer;c.j=4;
+    Rng rng(layer*13+bits+dense);
+    Workload w{layer,300,dense};
+    auto o=populate(w,rng);
+    Store s;
+    Natural n(s,c,bits,1);
+    n.build(std::vector<Entry>([&] {std::vector<Entry> v;for(auto& [p,e]:o) v.push_back(e);return v;}()));
+    churn(n,s,o,w,rng,4000,97,w.count);
+    std::printf("ok natural%-2u         L%u J4 %s\n",bits,layer,dense?"dense":"spread");
+  }
+  return 0;
+}
+
+struct Stat {
+  double sum{};std::uint64_t max{},n{};
+  void add(std::uint64_t v) {sum+=double(v);max=std::max(max,v);++n;}
+  double mean() const {return n?sum/double(n):0;}
+};
+
+template<class Layer> void measure(const char* name,Layer& l,Store& s,std::map<std::uint32_t,Entry> o,
+                                   Workload w,Rng& rng) {
+  std::vector<Entry> es;
+  for(auto& [p,e]:o) es.push_back(e);
+  auto before=s.written;
+  l.build(es);
+  auto built=s.written-before;
+  std::vector<std::uint32_t> keys;
+  for(auto& [p,e]:o) keys.push_back(p);
+  Trace tr;
+  trace=&tr;
+  Stat find_lines,find_visits,seek_lines,seek_visits,lseek_lines,lseek_visits;
+  double scan_lines=0,scan_visits=0,scanned=0;
+  for(int q=0;q<2000;++q) {
+    tr.clear();
+    require(l.find(present(o,keys,rng)).has_value(),"measure find");
+    find_lines.add(tr.lines.size());find_visits.add(tr.visits);
+    tr.clear();
+    auto c=l.seek(std::uint32_t(w.lo+rng()%(w.hi-w.lo)));
+    if(c) l.read(c);
+    seek_lines.add(tr.lines.size());seek_visits.add(tr.visits);
+    if constexpr(requires {l.seek(Key{});}) if(l.config().fenced()) {
+      tr.clear();
+      auto c=l.seek(key(rng()%value(o.rbegin()->second.max)));
+      if(c) l.read(c);
+      lseek_lines.add(tr.lines.size());lseek_visits.add(tr.visits);
+    }
+  }
+  for(int q=0;q<100;++q) {
+    auto c=l.seek(std::uint32_t(w.lo+rng()%(w.hi-w.lo)));
+    tr.clear();
+    for(int i=0;i<1000&&c;++i,l.next(c)) {l.read(c);++scanned;}
+    scan_lines+=double(tr.lines.size());scan_visits+=double(tr.visits);
+  }
+  trace=nullptr;
+  auto resident=l.resident_bytes();
+  // Single edits applied in sequence from the built state, so the first births
+  // see bulk-build slack. Each kind starts from the state its predecessor left.
+  Stat value_b,value_o,birth_b,birth_o,death_b,death_o,widen_b,widen_o;
+  std::uint64_t version=1;
+  // Large-partition controls copy megabytes per edit; SEGDIR_OPS bounds the sample.
+  int ops=std::getenv("SEGDIR_OPS")?std::atoi(std::getenv("SEGDIR_OPS")):2000;
+  auto edit=[&](Stat& b,Stat& ob,auto&& f) {auto w0=s.written;f();auto d=s.written-w0;b.add(d.bytes);ob.add(d.objects+d.erased);};
+  for(int q=0;q<ops;++q) {
+    auto p=present(o,keys,rng);
+    auto e=o[p];e.dirent=dirent(p,version++);
+    edit(value_b,value_o,[&] {l.update(e);});o[p]=e;
+  }
+  for(int q=0;q<ops;++q) {
+    auto p=absent(o,w,rng);
+    auto e=born(o,p,version++);
+    edit(birth_b,birth_o,[&] {l.insert(e);});o.emplace(p,e);keys.push_back(p);
+  }
+  for(int q=0;q<ops;++q) {
+    auto p=present(o,keys,rng);
+    edit(death_b,death_o,[&] {l.erase(p);});o.erase(p);
+  }
+  if(l.config().fenced()) for(int q=0;q<ops;++q) {
+    auto p=present(o,keys,rng);
+    auto e=widened(o,p,version++);
+    edit(widen_b,widen_o,[&] {l.update(e);});o[p]=e;
+  }
+  auto n=double(w.count);
+  std::printf("%-12s L%u J%u %-6s %8zu | build %6.1f B/seg resident %6.1f B/seg %7.4f obj/seg"
+              " | find %4.1f ln %3.1f obj  seek %4.1f ln %3.1f obj  lseek %4.1f ln %3.1f obj  scan %5.2f ln %5.3f obj /entry"
+              " | value %8.0f B (max %8lu) %4.2f obj  birth %8.0f B (max %8lu) %4.2f obj  death %8.0f B (max %8lu) %4.2f obj  widen %8.0f B (max %8lu)\n",
+              name,w.layer,l.config().j,w.dense?"dense":"spread",w.count,
+              double(built.bytes)/n,double(resident)/n,double(l.resident_objects())/n,
+              find_lines.mean(),find_visits.mean(),seek_lines.mean(),seek_visits.mean(),lseek_lines.mean(),lseek_visits.mean(),
+              scan_lines/scanned,scan_visits/scanned,
+              value_b.mean(),(unsigned long)value_b.max,value_o.mean(),birth_b.mean(),(unsigned long)birth_b.max,birth_o.mean(),
+              death_b.mean(),(unsigned long)death_b.max,death_o.mean(),widen_b.mean(),(unsigned long)widen_b.max);
+  std::fflush(stdout);
+}
+
+int run(int argc,char** argv) {
+  // run LAYER J COUNT dense|spread VARIANT...
+  unsigned layer=unsigned(std::stoul(argv[2])),j=unsigned(std::stoul(argv[3]));
+  std::size_t count=std::stoull(argv[4]);
+  bool dense=std::string_view(argv[5])=="dense";
+  for(int a=6;a<argc;++a) {
+    std::string_view v=argv[a];
+    Rng rng(layer*1000003+count*7+dense);
+    Workload w{layer,count,dense};
+    auto o=populate(w,rng);
+    Store s;
+    Config c;c.layer=layer;c.j=j;
+    if(v=="flat") {
+      // Old count-balanced control: full leaves, one unbounded root of 64-byte rows.
+      c.fill=1;c.tile=0;c.bounded_root=false;c.exact_bounds=true;c.merge_below=1.0/3;
+      Tree t(s,c,1);measure("flat",t,s,o,w,rng);
+    } else if(v.starts_with("natural")) {
+      unsigned bits=unsigned(std::stoul(std::string(v.substr(7))));
+      Natural n(s,c,bits,1);measure(std::string(v).c_str(),n,s,o,w,rng);
+    } else if(v=="tree") {
+      Tree t(s,c,1);measure("tree",t,s,o,w,rng);
+    } else if(v=="tree-untiled") {
+      c.tile=0;Tree t(s,c,1);measure("tree-untiled",t,s,o,w,rng);
+    } else if(v=="tree-hash") {
+      c.hash_index=true;Tree t(s,c,1);measure("tree-hash",t,s,o,w,rng);
+    } else if(v.starts_with("tree-inline")) {
+      // Brief-faithful: dirents inline in hash pages bounded by hash bits.
+      c.inline_hash=true;c.page_target=unsigned(std::stoul(std::string(v.substr(11))));
+      Tree t(s,c,1);measure(std::string(v).c_str(),t,s,o,w,rng);
+    } else if(v.starts_with("tree-leaf")) {
+      c.leaf_capacity=unsigned(std::stoul(std::string(v.substr(9))));
+      Tree t(s,c,1);measure(std::string(v).c_str(),t,s,o,w,rng);
+    } else {
+      std::fprintf(stderr,"unknown variant %s\n",argv[a]);return 2;
+    }
+  }
+  return 0;
+}
+}
+
+int main(int argc,char** argv) {
+  if(argc>=2&&std::string_view(argv[1])=="--check") return check();
+  if(argc>=7&&std::string_view(argv[1])=="run") return run(argc,argv);
+  std::fprintf(stderr,"usage: %s --check | run LAYER J COUNT dense|spread VARIANT...\n"
+                      "variants: flat natural<bits> tree tree-untiled tree-hash tree-inline<page entries> tree-leaf<capacity>\n",argv[0]);
+  return 2;
+}
