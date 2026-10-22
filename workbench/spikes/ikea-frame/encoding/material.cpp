@@ -710,10 +710,12 @@ u64 stored_at(const borrowed_block &k, unsigned row) {
                 std::memcpy(&sum, marks + mark * 8, 8);
             }
         }
-        alignas(64) u64 s[block_rows];
-        read_plane(k, first, row - first + 1, s);
-        for (unsigned i = 0; i < row - first + 1; ++i)
-            sum += s[i];
+        // first is 16-aligned and first + ceil(take / 16) * 16 <= 256, so the
+        // catalogue's native-packet SUM (full 16-row windows of the residual
+        // plane, modulo 2^64) reads the plane advanced to row first: the same
+        // modular prefix, without materialising the residuals (Ikea LEAD's
+        // proposal; 0.48-0.73x point time on real delta columns).
+        sum += plane_kernels(d.width).sum(k.body + plane_bytes(d.width, first), row - first + 1);
         return d.base + static_cast<u64>(delta_rbase(k)) * steps + sum;
     }
     case kind::arrival: {

@@ -1521,6 +1521,36 @@ indicative only. **Remaining:**
 - point/, filter/ and execution/ consumers and Engine's witness can now take
   these operations in place of their decode fallbacks.
 
+## Delta point reads through the catalogue SUM
+
+Ikea LEAD's discriminator: a delta `stored_at` used to decode the residuals
+between its checkpoint and the row into a u64 array, then sum them. The row's
+checkpoint interval starts at a 16-aligned row, so first + ceil(take/16)·16 ≤
+256, and the catalogue's native-packet `sum` can read the residual plane
+advanced by `plane_bytes(K, first)`. That gives the same modulo-2^64 prefix,
+read inside the scan grant, with nothing materialised. The checkpoint, rbase
+and exception logic is unchanged. The A/B ran in an isolated snapshot build
+(`build/spikes/ikea-frame/dp/`): 65,536 random points, 5 paired rotated
+rounds, local VM, ns per point, old → new.
+
+| Input | native | packed | every64 | none |
+| --- | ---: | ---: | ---: | ---: |
+| EventTime, clustered by region/OS/time | 45.9 → 25.4 | 38.9 → 25.3 | 48.6 → 30.8 | 75.2 → 47.9 |
+| Jena p | 24.1 → 13.2 | 26.2 → 14.6 | 35.7 → 21.5 | 60.4 → 31.2 |
+| Jena T | 21.7 → 14.5 | 24.6 → 14.1 | 34.1 → 20.7 | 56.4 → 26.6 |
+| Synthetic 48–56-bit walk | 37.4 → 26.4 | 41.2 → 27.9 | 55.8 → 46.6 | 80.7 → 70.3 |
+
+1. **Real delta columns read points in 0.48–0.73× the time.** The longest
+   intervals gain most (no checkpoints: about 0.5×).
+2. **Wide residuals gain less.** The synthetic walk is 0.68–0.94×, and 57–63-bit
+   walks are 0.86×. Inputs with no delta blocks read 0.98–1.06×, which is the
+   noise floor. No input lost, so the old path was removed rather than kept
+   as an option.
+3. **Checks:** the point checks (2.83M exact reads, four checkpoint modes) and
+   the delta-exception check (residual widths 1–64, wrapping checkpoints) pass,
+   as does the 417-run borrowed check. A 57–63-bit walk under every64 and none
+   adds wide-prefix wrap coverage.
+
 ## Row order in real bodies
 
 The same 11 ClickBench columns were encoded as real bodies (default options,
