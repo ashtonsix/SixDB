@@ -38,6 +38,7 @@ author capabilities, mixed-workload layout choices, filtering, conversion and pl
 | [Boundlist](boundlist/README.md) | Ordered-source geometry, ownership, ISA search and complete consumer portfolio; implemented primitive is in Ikea. |
 | [Bec256 composition](bec256-composition/README.md) | Complete analysis/encoding consumers, prepared windows and alternatives to isolated refill comparisons. |
 | [NEON Local transpose](neon-local-transpose/README.md) | Promoted select-form and four-tile Local residual transposes: 1.5–2.9× NEON pure-tail reads, 1.1–1.8× writes; four-tile mixed reads 1.1–1.7× (k9–16); `bulk_arm` re-measured and kept. |
+| [NEON sparse TuplePack packets](neon-tuplepack-masked/README.md) | Promoted window load for half-selected 32/64-row NEON packets: one-byte sums 2.6–3.3×, trusted updates 1.8–2.2×; scatter side unchanged. |
 | [Packed filters](packed-filters/README.md) | Direct packed comparisons, native controls and early exits; production contracts in Ikea. |
 | [Filter composition](filter-composition/README.md) | Fused/shared/CPS alternatives, compiler expansion and runtime costs across AVX2, AVX-512 and NEON. |
 | [Ikea composition](ikea-composition/README.md) | Question map into integer/bitset/heterogeneous probes, ABI, grain, value reuse and SeriesPack history. |

@@ -1,0 +1,5 @@
+cases 61; speedup candidate over current: geomean 0.995, median 0.999, min 0.938, max 1.017
+faster >3%: 0; slower >3%: 3
+  0.938      37436.0 ->     39924.4 ns  point/4/write/body
+  0.941       9990.2 ->     10611.5 ns  point/2/write/body
+  0.969       8425.8 ->      8698.4 ns  wide/64/write/body

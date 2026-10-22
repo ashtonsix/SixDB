@@ -1,0 +1,35 @@
+--- a/ikea/tuplepack/detail/native/packet.h
++++ c/ikea/tuplepack/detail/native/packet.h
+@@ -351,6 +351,32 @@
+         };
+         return _mm512_maskz_loadu_epi8(mask(mask), base);
+     }
++#elif defined(__aarch64__)
++    // Narrow rows only: wider rows gather few words, and the larger body
++    // changed their callers' code generation for the worse.
++    if constexpr (Rows >= 32)
++    if (p.contiguous && p.count == p.grain && p.grain == 64 / Rows && stride == p.grain) {
++        // Rows from the first to the last active one lie in the promised common
++        // strided allocation: one bounded window load replaces per-row gathers,
++        // a table lookup moves it into place and the row mask clears the rest.
++        constexpr unsigned G = 64 / Rows;
++        const unsigned first = std::countr_zero(active), last = 63 - std::countl_zero(active);
++        const auto window = native::load_unit(address(first) + p.first, (last + 1 - first) * G);
++        const uint8x16x4_t table{{window.a, window.b, window.c, window.d}};
++        static constexpr auto iota = [] {
++            std::array<byte, 64> x{};
++            for (unsigned i = 0; i < 64; ++i)
++                x[i] = byte(i);
++            return x;
++        }();
++        const auto shift = vdupq_n_u8(byte(first * G));
++        const auto mask = native::row_mask<Rows>(active);
++        auto place = [&](unsigned part, uint8x16_t keep) __attribute__((always_inline)) {
++            return vandq_u8(vqtbl4q_u8(table, vsubq_u8(vld1q_u8(iota.data() + part * 16), shift)),
++                            keep);
++        };
++        return {place(0, mask.a), place(1, mask.b), place(2, mask.c), place(3, mask.d)};
++    }
+ #endif
+     return gather_grain<Rows>(p, address, active);
+ }

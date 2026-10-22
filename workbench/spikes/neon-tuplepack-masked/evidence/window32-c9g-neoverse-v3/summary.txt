@@ -1,0 +1,13 @@
+cases 61; speedup candidate over current: geomean 1.029, median 1.000, min 0.944, max 2.606
+faster >3%: 4; slower >3%: 7
+  0.944      10436.8 ->     11050.8 ns  point/1/write/body
+  0.949      10337.0 ->     10890.8 ns  point/1/write/control_effects
+  0.953       8418.7 ->      8833.7 ns  wide/64/write/control
+  0.957      37387.5 ->     39071.7 ns  point/4/write/body
+  0.958      44874.2 ->     46845.2 ns  point/4/write/ordinary
+  0.961       8417.8 ->      8760.7 ns  wide/64/write/body
+  0.966        108.3 ->       112.1 ns  packets/64/one_byte/all/update/body
+  1.215       1613.8 ->      1328.3 ns  packets/64/one_byte/half/update/ordinary
+  1.415       2265.3 ->      1600.9 ns  packets/64/one_byte/half/update/cps
+  1.808        729.6 ->       403.5 ns  packets/64/one_byte/half/update/body
+  2.606        233.7 ->        89.7 ns  packets/64/one_byte/half/sum

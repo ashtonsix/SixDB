@@ -9,7 +9,7 @@ formats and proposed analysers are not additional production contracts.
 
 | Question | Route through the evidence |
 | --- | --- |
-| Row layout, point access, mixed reads/writes and scan batching | [Tuple-layout viability](../spikes/tuple-layout/viability.md), [implementation decisions](../spikes/tuple-layout/implementation-decisions.md), then [current TuplePack](../../ikea/docs/tuplepack/usage.md) |
+| Row layout, point access, mixed reads/writes and scan batching | [Tuple-layout viability](../spikes/tuple-layout/viability.md), [implementation decisions](../spikes/tuple-layout/implementation-decisions.md), then [current TuplePack](../../ikea/docs/tuplepack/usage.md); NEON sparse packets in [NEON sparse TuplePack packets](../spikes/neon-tuplepack-masked/README.md) |
 | Planes, projections, metadata and placement selected together | [Layout-analyser findings](../spikes/layout-analyser/findings.md), [connected case study](../spikes/layout-analyser/case-study.md), [executable reference](../spikes/layout-analyser/tuplepack-reference/README.md) |
 | Variable bytes, offsets, sidecars and mutation | [StreamPack recommendation](../spikes/streampack/RECOMMENDATION.md), [results](../spikes/streampack/RESULTS.md), [current usage](../../ikea/docs/streampack/usage.md) |
 | Ordered boundaries versus value storage | [Boundlist recommendation](../spikes/boundlist/RECOMMENDATION.md), [ownership](../spikes/boundlist/OWNERSHIP.md), [consumer portfolio](../spikes/boundlist/PORTFOLIO.md) |
