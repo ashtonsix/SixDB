@@ -178,6 +178,64 @@ Hypotheses for the bar (to test, not established):
 5. The filtered MAX query is a query, not a decode-to-array-and-consume
    equivalent; a real decode control is still owed.
 
+## Real encoded bodies, first native pass
+
+[`bodies.cpp`](bodies.cpp) (target `frame_encoding_bodies`; columns exported
+by [`export_columns.py`](export_columns.py)) builds each 256-row block as
+constant, runs or frame-of-reference with real Ikea storage: Local SeriesPack
+planes through the typed mutation path, and Boundlist compact Sizes geometry
+for run lengths (M = 255, B = 256, immortal; a runs block never holds one
+256-row run). It charges a 16-byte descriptor per block and every Boundlist
+directory, length and control byte. Block choice is still an oracle (fewest
+bytes). There are no exceptions, dictionaries or overrides yet. Exact SUM and
+COUNT(u ≥ median) are checked against a plain control, the column relative to
+its minimum at the narrowest byte width, under all, clustered-50% and
+sparse-10% block masks.
+
+Local VM, single thread, one run; timings are indicative and the plain
+control itself moved between runs (EventTime 0.06 → 0.11 ns/row).
+
+| Column | Real bits/value | Model (128-bit desc.) | Run geometry share | Descriptor share | SUM ns/row: u64 decode / narrow / plain | COUNT ns/row: encoded / plain |
+| --- | ---: | ---: | ---: | ---: | --- | --- |
+| EventTime | 17.14 | 16.82 | 6% | 3% | 0.31 / 0.23 / 0.11 | 0.27 / 0.20 |
+| UserID | 16.01 | 11.81 | 20% | 3% | 0.32 / 0.28 / 0.35 | 0.11 / 0.30 |
+| OS | 4.17 | 2.21 | 59% | 12% | 0.16 / 0.16 / 0.06 | 0.37 / 0.15 |
+| RegionID | 6.82 | 4.14 | 43% | 7% | 0.24 / 0.23 / 0.07 | 0.73 / 0.20 |
+| ResolutionWidth | 5.19 | 3.02 | 50% | 10% | 0.19 / 0.19 / 0.06 | 0.56 / 0.15 |
+| IsRefresh | 1.44 | 0.85 | 0% | 35% | 0.18 / 0.06 / 0.07 | 0.003 / 0.001 |
+| CounterID | 0.50 | 0.08 | 0% | 99% | 0.007 / 0.009 / 0.06 | 0.003 / 0.14 |
+| WatchID | 62.50 | 62.50 | 0% | 1% | 0.68 / 0.68 / 0.29 | 0.44 / 0.29 |
+| URLHash | 59.45 | 49.63 | 2% | 1% | 0.51 / 0.53 / 0.24 | 0.74 / 0.28 |
+
+(ConnectTiming and ClientIP are in the JSON lines: 3.32 and 11.40 bits.) The
+model's dictionary arms aren't built yet, which explains part of the URLHash
+and RegionID gaps. Clustered and sparse masks scale both encoded and plain
+time roughly with the selected fraction; no coarse-mask overhead showed up.
+
+Findings:
+
+1. **Run geometry is the largest metadata cost**: 43–59% of bytes on the
+   run-heavy columns. Boundlist's compact view always reserves its full
+   directory (16 u16 checkpoints, 32 bytes) plus control, about 1.1
+   bits/value per runs block before any lengths. Moving lengths from u16
+   (M = 256) to u8 (M = 255) already took OS from 5.33 to 4.17 bits. Within a
+   256-row block, a runs body could use u8 ends with no checkpoints for few
+   runs. Whether Boundlist should gain a small-domain form, or Frame should
+   keep its own, is a question for its owner.
+2. **The 16-byte descriptor dominates near-constant columns** (CounterID 0.50
+   real vs 0.08 modelled; IsRefresh 35%). Constant blocks need a much smaller
+   representation, such as a run of constant blocks at group level.
+3. **Decode-then-reduce loses to plain arrays by 2–4×** on packed and runs
+   blocks, even with narrow lanes. SeriesPack decodes at about 0.16–0.3
+   ns/row here, against about 0.06 for a plain narrow sum. Narrow lanes help
+   when K is tiny (IsRefresh 0.18 → 0.06, beating plain).
+4. **Wins come only from algorithmic shortcuts**: constant blocks (CounterID
+   SUM 8×, COUNT 50×), runs for COUNT (UserID 2.6×), and base-versus-threshold
+   whole-block decisions (ConnectTiming, IsRefresh). This matches the review:
+   the gains are in less work, not faster decoding. The next arms are Ikea's
+   direct packed filters for COUNT, and fused or bit-plane sums that never
+   materialise lanes.
+
 ## Images to hand Engine's witness early
 
 Engine's witness is a selected grouped reduction over parts with different
