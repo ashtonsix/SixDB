@@ -82,8 +82,29 @@ def dictionary_codes(values):
     return codes, dict_bits / len(values)
 
 
-def characterise(name, series, nulls):
+def frequency_codes(values):
+    """Part-wide dictionary ranked by frequency (most common value = code 0),
+    its dictionary bits per value, and the part's zero-order entropy."""
+    codes = np.empty_like(values)
+    dict_bits = 0
+    entropy = 0.0
+    for start in range(0, len(values), PART):
+        part = values[start:start + PART]
+        uniq, inv, counts = np.unique(part, return_inverse=True, return_counts=True)
+        rank = np.empty(len(uniq), dtype=np.uint64)
+        rank[np.argsort(-counts, kind="stable")] = np.arange(len(uniq), dtype=np.uint64)
+        codes[start:start + PART] = rank[inv]
+        span = widths(np.array([uniq[-1] - uniq[0]], dtype=np.uint64))[0]
+        dict_bits += len(uniq) * max(int(span), 1)
+        p = counts / len(part)
+        entropy += float(-(p * np.log2(p)).sum()) * len(part)
+    return codes, dict_bits / len(values), entropy / len(values)
+
+
+def characterise(name, series, nulls, order=None):
     raw = series.to_numpy()
+    if order is not None:
+        raw = raw[order]
     if raw.dtype.kind == "M":
         raw = raw.astype("datetime64[s]").astype(np.int64)
     values = ordered(raw)
@@ -108,6 +129,10 @@ def characterise(name, series, nulls):
     candidates["dict_for"] = np.minimum.reduce(
         [for_payload(cb, e) for e in EXCEPTION_BUDGETS]) + dict_cost * BLOCK
     candidates["dict_runs"] = runs_payload(cb)[0] + dict_cost * BLOCK
+    fcodes, fdict_cost, h0 = frequency_codes(values[: nblocks * BLOCK])
+    fb = blocks(fcodes)
+    candidates["freq_for"] = np.minimum.reduce(
+        [for_payload(fb, e) for e in EXCEPTION_BUDGETS]) + fdict_cost * BLOCK
 
     row = {
         "column": name, "dtype": str(series.dtype), "rows": len(values) + nulls,
@@ -116,6 +141,7 @@ def characterise(name, series, nulls):
         "monotone_blocks": float((np.diff(b, axis=1) >= 0).all(axis=1).mean()),
         "mean_runs": float(runs.mean()),
         "dict_bits_per_value": dict_cost,
+        "part_entropy_bits": h0,
     }
     const_cost = CONSTANT_KIND_BITS + global_w
     for d in DESCRIPTOR_SWEEP:
@@ -142,8 +168,14 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("parquet")
     ap.add_argument("--out", required=True, help="JSON lines output")
+    ap.add_argument("--shuffle", type=int, metavar="SEED",
+                    help="apply one random row permutation to every column")
     args = ap.parse_args()
     schema = pl.read_parquet_schema(args.parquet)
+    order = None
+    if args.shuffle is not None:
+        rows = pl.scan_parquet(args.parquet).select(pl.len()).collect().item()
+        order = np.random.default_rng(args.shuffle).permutation(rows)
     with open(args.out, "w") as out:
         for name, dtype in schema.items():
             if not (dtype.is_integer() or dtype.is_temporal()):
@@ -152,7 +184,7 @@ def main():
             # Dense image: nulls keep their position with a forward-filled value
             # (a free filler); the presence mask is not charged here.
             dense = col.fill_null(strategy="forward").fill_null(strategy="backward")
-            row = characterise(name, dense, int(col.null_count()))
+            row = characterise(name, dense, int(col.null_count()), order)
             if row:
                 out.write(json.dumps(row) + "\n")
                 out.flush()

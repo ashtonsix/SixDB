@@ -87,6 +87,42 @@ What this suggests, before physical confirmation:
 6. **This row order is unusually run-friendly.** Results must be repeated on
    shuffled and differently clustered orders before they guide presets.
 
+### Second pass: frequency codes, entropy and row order
+
+Added arms: a frequency-ranked part dictionary with FOR+exceptions over its
+codes, the part's zero-order entropy, and one shared random row permutation
+(`--shuffle 1`; DuckDB/Parquet shuffled with `ORDER BY hash(file_row_number)`).
+These are still modelled logical bits with oracle selection, so they're an
+optimistic candidate estimate, not a bound or a measured Frame result.
+The entropy arm charges H0 plus the dictionary (sorted values at the part's
+value width) plus a quarter-bit descriptor.
+
+| Bits/row, 77 columns | Original order | Shuffled |
+| --- | ---: | ---: |
+| Frame model, lightweight mixed blocks (incl. frequency codes) | 365 | 670 |
+| + entropy-coded part dictionary where it's smaller | 355 | 602 |
+| DuckDB storage (est.) | 536 | 906 |
+| Parquet + ZSTD | 337 | 598 |
+
+1. **Frequency-ranked codes barely help lightweight FOR** (371 → 365). Skewed
+   tails still set the block width, and exceptions don't absorb them.
+2. **Entropy coding matters most when order doesn't help.** In original order
+   it saves only about 10 bits/row. Shuffled, it saves 68 and reaches ZSTD
+   parity (602 vs 598), mostly on mid-cardinality columns (Response*Timing,
+   Interests, Robotness, RegionID).
+3. **The hash gap isn't entropy.** URLHash has 37k distinct values per
+   65,536-row part (1.43M across 3M rows), so any dictionary costs about as
+   much as the values. ZSTD's 36–42 bits come from nearby repeats (LZ
+   matches), which no candidate here models. A "repeat of a recent value"
+   reference is the arm that could test this.
+4. **Row order changes everything else by 1.8×.** Under shuffle, runs fall from
+   38% to 7% of blocks and constant blocks from 41% to 19%. UserID, FUniqID and
+   the IPs revert to near full width. Clustering is Engine's choice, and it is
+   probably a bigger compression lever than any codec here.
+5. **The lightweight model holds against DuckDB in both orders**: about 1.47×
+   fewer bits in original order, 1.35× shuffled. Real SeriesPack bytes have to
+   confirm this.
+
 ## Images to hand Engine's witness early
 
 Engine's witness is a selected grouped reduction over parts with different
@@ -106,11 +142,13 @@ labelled as synthetic.
 
 ## Next questions
 
-1. Add frequency-ranked codes, and a dictionary over value pairs, to the model;
-   measure how much of the ZSTD gap closes.
-2. Repeat on shuffled and re-clustered row orders.
-3. Convert the model's winners into real SeriesPack bytes for a sample of
+1. Convert the model's winners into real SeriesPack bytes for a sample of
    columns, checking the modelled-to-physical gap.
+2. A "repeat of a recent value" arm for hash-like columns, against ZSTD.
+3. Re-clustered orders (by category, by time) beside original and shuffled, so
+   Engine can price clustering against encoding effort.
 4. Bring in float/decimal and time-series corpora (TPC-H, TSBS, ALP's datasets).
 5. Time DuckDB and Polars on sum, filter-count and decode for the same columns,
    with Python overhead separated, to set the speed bar per operation.
+6. Price an entropy-coded cold form against its decode, point-read and
+   conversion costs (Codex's caution: smaller bytes must repay operations).

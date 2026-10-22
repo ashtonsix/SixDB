@@ -27,6 +27,8 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("parquet")
     ap.add_argument("--out", required=True)
+    ap.add_argument("--shuffle", action="store_true",
+                    help="store rows in a pseudo-random order (hash of row number)")
     args = ap.parse_args()
     schema = pl.read_parquet_schema(args.parquet)
     cols = [n for n, t in schema.items() if t.is_integer() or t.is_temporal()]
@@ -35,8 +37,9 @@ def main():
     with tempfile.TemporaryDirectory() as tmp:
         db = duckdb.connect(os.path.join(tmp, "t.duckdb"))
         db.execute("SET threads = 1")
-        db.execute(f"CREATE TABLE t AS SELECT {select} FROM read_parquet(?)",
-                   [args.parquet])
+        order = " ORDER BY hash(file_row_number)" if args.shuffle else ""
+        db.execute(f"CREATE TABLE t AS SELECT {select} FROM "
+                   f"read_parquet(?, file_row_number = true){order}", [args.parquet])
         db.execute("CHECKPOINT")
         rows = db.execute("SELECT count(*) FROM t").fetchone()[0]
         segs = db.execute(
