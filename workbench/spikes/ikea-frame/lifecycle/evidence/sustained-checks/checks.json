@@ -1,0 +1,113 @@
+{
+  "binary_sha256": "82d9b9bd3ee91ec93d00880ccc4d1d455954c0bb540cd4fbd4b8278d040a41bf",
+  "cases": [
+    {
+      "input": "p__mbar",
+      "batches": 17,
+      "pattern": "dispersed",
+      "reader_age": 8,
+      "mask": "0xaaaaaaaa",
+      "histories": 162,
+      "original_points": 2580480,
+      "command": [
+        "taskset",
+        "-c",
+        "7",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/frame-collab/cycles-qualified-v2/frame_phase_measure",
+        "--sustained",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workers/20261022T224202Z-fe971489/results/recovered-inputs/inputs/p__mbar.u64",
+        "17",
+        "1",
+        "1",
+        "2",
+        "dispersed",
+        "8",
+        "mixed",
+        "verify",
+        "0xaaaaaaaa"
+      ]
+    },
+    {
+      "input": "URLHash",
+      "batches": 65,
+      "pattern": "novelty",
+      "reader_age": 0,
+      "mask": "0xffffffff",
+      "histories": 162,
+      "original_points": 9658368,
+      "command": [
+        "taskset",
+        "-c",
+        "7",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/frame-collab/cycles-qualified-v2/frame_phase_measure",
+        "--sustained",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workers/20261022T224202Z-fe971489/results/recovered-inputs/inputs/URLHash.u64",
+        "65",
+        "1",
+        "1",
+        "2",
+        "novelty",
+        "0",
+        "mixed",
+        "verify",
+        "0xffffffff"
+      ]
+    },
+    {
+      "input": "UserID",
+      "batches": 65,
+      "pattern": "moving-hot",
+      "reader_age": 1,
+      "mask": "0x0000ffff",
+      "histories": 162,
+      "original_points": 9658368,
+      "command": [
+        "taskset",
+        "-c",
+        "7",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/frame-collab/cycles-qualified-v2/frame_phase_measure",
+        "--sustained",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workers/20261022T224202Z-fe971489/results/recovered-inputs/inputs/UserID.u64",
+        "65",
+        "1",
+        "1",
+        "2",
+        "moving-hot",
+        "1",
+        "mixed",
+        "verify",
+        "0x0000ffff"
+      ]
+    },
+    {
+      "input": "p__mbar",
+      "batches": 9,
+      "pattern": "repeated-hot",
+      "reader_age": 1,
+      "mask": "0",
+      "histories": 162,
+      "original_points": 1400832,
+      "command": [
+        "taskset",
+        "-c",
+        "7",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/frame-collab/cycles-qualified-v2/frame_phase_measure",
+        "--sustained",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workers/20261022T224202Z-fe971489/results/recovered-inputs/inputs/p__mbar.u64",
+        "9",
+        "1",
+        "1",
+        "2",
+        "repeated-hot",
+        "1",
+        "mixed",
+        "verify",
+        "0"
+      ]
+    }
+  ],
+  "timing_claim": false,
+  "legacy_smoke_histories": 800,
+  "histories": 648,
+  "original_points": 23298048
+}

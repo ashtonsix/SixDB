@@ -1,0 +1,19 @@
+{
+  "source_digest": "816e564b47bf2fd252e566138b189bc4a793466be9f055e91edde0aac98a6b09",
+  "binary_sha256": "82d9b9bd3ee91ec93d00880ccc4d1d455954c0bb540cd4fbd4b8278d040a41bf",
+  "machine": "aarch64",
+  "cpu": 7,
+  "build_type": "Release",
+  "compiler": "Clang21.1.8",
+  "march": "native",
+  "tune": "generic",
+  "timing_claim": false,
+  "compile_commands": [
+    {
+      "directory": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/clang/frame-material-all-kinds",
+      "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=1 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN4=0 -DSIXDB_TUNE_ZEN5=0 -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-material-all-kinds/workbench/spikes/ikea-frame/encoding -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-material-all-kinds/ikea/include -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-material-all-kinds/orbital/include -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-material-all-kinds=. -ffunction-sections -fdata-sections -march=native -mtune=generic -o workbench/spikes/ikea-frame/lifecycle/CMakeFiles/frame_phase_measure.dir/phase_measure.cpp.o -c /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-material-all-kinds/workbench/spikes/ikea-frame/lifecycle/phase_measure.cpp",
+      "file": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/worksrc/frame-material-all-kinds/workbench/spikes/ikea-frame/lifecycle/phase_measure.cpp",
+      "output": "workbench/spikes/ikea-frame/lifecycle/CMakeFiles/frame_phase_measure.dir/phase_measure.cpp.o"
+    }
+  ]
+}

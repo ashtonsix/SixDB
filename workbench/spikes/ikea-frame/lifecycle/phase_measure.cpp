@@ -35,7 +35,7 @@ struct Costs {
     std::uint64_t max_update_ns{}, max_transition_ns{}, max_release_ns{};
     std::size_t copied_bytes{}, encoded_rows{}, peak_nonidle{}, peak_metadata{}, overlay_entries{}, repaired_blocks{};
     std::size_t write_materialized_rows{},repair_examined_rows{},eligible_dirty_blocks{};
-    std::size_t coalesced_away{},visible_noops{},publications{};
+    std::size_t coalesced_away{},visible_noops{},publications{},conversions{};
     std::array<std::size_t,7> dirty_kinds{};
     std::array<std::size_t,9> repair_reasons{};
 };
@@ -472,7 +472,7 @@ template<class C> struct Machine {
             construct(c, f, g, materialize(source, g), native);
         const auto owner = take(store.capture(c, f.source));
         const auto target = take(store.conversion(scope, p::object)); take(store.adopt(target, owner));
-        costs.conversion_ns += ns(start); observe();
+        costs.conversion_ns += ns(start); ++costs.conversions; observe();
     }
 };
 
@@ -482,10 +482,11 @@ struct Scenario {
     p::BlockSelection mask;
     std::string pattern;
 };
-Scenario scenario(const Data& initial, std::string pattern, p::BlockSelection mask,bool mixed=true) {
+Scenario scenario(const Data& initial, std::string pattern, p::BlockSelection mask,bool mixed=true,
+                  unsigned publications=8) {
     Scenario s; s.pattern = pattern; s.mask = mask; s.snapshots.push_back(initial);
     std::mt19937_64 random(713);
-    for (unsigned b = 0; b < 8; ++b) {
+    for (unsigned b = 0; b < publications; ++b) {
         std::vector<Edit> edits; auto current = s.snapshots.back();
         for (unsigned i = 0; i < 64; ++i) {
             const unsigned row = pattern == "repeated-hot" ? i % 8 :
@@ -684,10 +685,16 @@ void check_batch_overrides(Policy policy=Policy::overlay_batch) {
     std::printf("%s: %llu native batch checks pass: all CP/dictionaries, ordered assignments, immutable-base reuse, masked/old/folded readers and genuine successor publication.\n",name(policy),checks);
 }
 
+struct CycleOptions {
+    unsigned fold_every{};
+    // Zero retains the original reader throughout; positive ages renew it
+    // before the next update. These are real readers, not fake publications.
+    unsigned reader_age{};
+};
 template<class C> void run(Policy policy, const Data& initial, const Scenario& s, unsigned trial,
                            unsigned order, unsigned arm, bool keep_old, unsigned read_queries,
                            unsigned final_queries, bool verify_points, bool reference_queries, p::fe::encode_options options,
-                           bool capacity=false) {
+                           bool capacity=false, CycleOptions cycle={}) {
     Machine<C> m(policy, options);
     m.record_capacity=capacity || verify_points;
     const auto setup = Clock::now(); m.seed(initial); const auto setup_ns = ns(setup);
@@ -696,6 +703,8 @@ template<class C> void run(Policy policy, const Data& initial, const Scenario& s
     using Scope = typename Machine<C>::Store::Scope;
     std::unique_ptr<Scope> old;
     if (keep_old) old = std::make_unique<Scope>(m.store);
+    unsigned old_snapshot=0,reader_opened_at=0;
+    std::optional<std::size_t> folded_at;
     const auto threshold = initial[0].value[71];
     std::vector<p::QueryResult> answers;
     for (const auto& data : s.snapshots) answers.push_back(expected(data, s.mask, threshold));
@@ -726,19 +735,34 @@ template<class C> void run(Policy policy, const Data& initial, const Scenario& s
         const auto at=Clock::now(); m.convert(native,s.mask);
         m.costs.max_transition_ns=std::max(m.costs.max_transition_ns,ns(at));
     };
+    const bool fold_at_end=policy==Policy::overlay_fold || policy==Policy::overlay_batch_fold ||
+        policy==Policy::overlay_predictor_fold || policy==Policy::overlay_zero_fold || policy==Policy::thaw;
+    require(!cycle.fold_every || (fold_at_end && policy!=Policy::thaw),"periodic fold needs an override program");
     if (policy == Policy::thaw) transition(true);
     for (unsigned b = 0; b < s.batches.size(); ++b) {
+        if (old && cycle.reader_age && m.costs.publications-reader_opened_at>=cycle.reader_age) {
+            const auto release=Clock::now();old.reset();m.store.drain();
+            const auto duration=ns(release);m.costs.release_ns+=duration;
+            m.costs.max_release_ns=std::max(m.costs.max_release_ns,duration);
+            old=std::make_unique<Scope>(m.store);old_snapshot=b;reader_opened_at=m.costs.publications;
+        }
+        const auto previous_publications=m.costs.publications;
         const auto at=Clock::now();
         m.update(s.batches[b], s.mask);
         m.costs.max_update_ns=std::max(m.costs.max_update_ns,ns(at));
+        if (cycle.fold_every && m.costs.publications!=previous_publications &&
+            m.costs.publications%cycle.fold_every==0) {
+            transition(false);folded_at=m.costs.publications;
+        }
         { Scope current(m.store); verify(current, answers[b + 1], read_queries);
           if (verify_points && !trial) all_points(current, s.snapshots[b + 1]); }
-        if (old) { verify(*old, answers[0], 1); if (verify_points && !trial) all_points(*old, initial); }
+        if (old) { verify(*old, answers[old_snapshot], 1);
+          if (verify_points && !trial) all_points(*old, s.snapshots[old_snapshot]); }
         const auto release = Clock::now(); m.store.drain(); const auto duration=ns(release);
         m.costs.release_ns += duration; m.costs.max_release_ns=std::max(m.costs.max_release_ns,duration);
     }
-    if (policy == Policy::overlay_fold || policy == Policy::overlay_batch_fold || policy == Policy::thaw ||
-        policy==Policy::overlay_predictor_fold || policy==Policy::overlay_zero_fold) transition(false);
+    if (fold_at_end && (!cycle.fold_every ||
+        (m.costs.publications && folded_at!=m.costs.publications))) transition(false);
     { Scope current(m.store); verify(current, answers.back(), final_queries);
       if (verify_points && !trial) all_points(current, s.snapshots.back()); }
     const auto release = Clock::now(); old.reset(); m.store.drain(); const auto duration=ns(release);
@@ -748,6 +772,7 @@ template<class C> void run(Policy policy, const Data& initial, const Scenario& s
     const auto stats = a::statistics(*m.runtime.pool);
     std::printf("{\"policy\":\"%s\",\"pattern\":\"%s\",\"mask\":%u,\"retain_old\":%u,\"trial\":%u,\"order_position\":%u,"
         "\"reference_queries\":%u,\"capacity_accounting\":%u,\"arm\":%u,\"read_queries_per_batch\":%u,\"final_read_queries\":%u,\"verification_run\":%u,"
+        "\"fold_every\":%u,\"reader_age\":%u,\"batches\":%zu,\"conversions\":%zu,"
         "\"max_update_ns\":%llu,\"max_transition_ns\":%llu,\"max_release_ns\":%llu,"
         "\"total_ns\":%llu,\"setup_ns\":%llu,\"prepare_ns\":%llu,\"publish_ns\":%llu,\"query_ns\":%llu,\"conversion_ns\":%llu,\"release_ns\":%llu,"
         "\"copied_bytes\":%zu,\"encoded_rows\":%zu,\"repaired_blocks\":%zu,\"peak_nonidle_bytes\":%zu,\"peak_metadata_bytes\":%zu,\"overlay_entries\":%zu,"
@@ -757,6 +782,7 @@ template<class C> void run(Policy policy, const Data& initial, const Scenario& s
         "\"final_nonidle_bytes\":%llu,\"pool_mapped_bytes\":%llu,\"pool_idle_bytes\":%llu,\"final_metadata_bytes\":%zu}\n",
         name(policy),s.pattern.c_str(),s.mask.bits,unsigned(keep_old),trial,order,
         unsigned(reference_queries),unsigned(m.record_capacity),arm,read_queries,final_queries,unsigned(verify_points),
+        cycle.fold_every,cycle.reader_age,s.batches.size(),m.costs.conversions,
         (unsigned long long)m.costs.max_update_ns,(unsigned long long)m.costs.max_transition_ns,(unsigned long long)m.costs.max_release_ns,
         (unsigned long long)elapsed,(unsigned long long)setup_ns,(unsigned long long)m.costs.prepare_ns,
         (unsigned long long)m.costs.publish_ns,(unsigned long long)m.costs.query_ns,(unsigned long long)m.costs.conversion_ns,
@@ -770,6 +796,54 @@ template<class C> void run(Policy policy, const Data& initial, const Scenario& s
 }
 } // namespace
 int main(int argc,char** argv) {
+    if (argc>=2 && std::string_view(argv[1])=="--sustained") {
+        require(argc==11 || argc==12,
+            "--sustained INPUT PUBLICATIONS TRIALS QUERIES FINAL PATTERN READER_AGE TRACE MODE [MASK]");
+        Data initial;std::ifstream input(argv[2],std::ios::binary);
+        for (auto& g:initial) require(bool(input.read(reinterpret_cast<char*>(g.value.data()),sizeof(g.value))),
+            "short sustained input");
+        const auto publications=std::stoul(argv[3]),requested=std::stoul(argv[4]);
+        const auto queries=std::stoul(argv[5]),final=std::stoul(argv[6]);
+        const std::string pattern=argv[7];const auto age=std::stol(argv[8]);
+        const bool mixed=std::string_view(argv[9])=="mixed";
+        const std::string_view mode=argv[10];
+        require(publications && publications<=512 && requested && requested<=72,"invalid sustained count");
+        require(queries && queries<=4096 && final<=4096,"invalid sustained queries");
+        require(age>=-1 && age<=long(publications),"invalid reader age (-1 none,0 whole history,positive renewal age)");
+        require(mixed || std::string_view(argv[9])=="values-only","invalid sustained trace");
+        require(mode=="plain" || mode=="capacity" || mode=="verify","invalid sustained accounting mode");
+        require(pattern=="repeated-hot" || pattern=="dispersed" || pattern=="moving-hot" || pattern=="novelty",
+            "invalid sustained pattern");
+        const auto mask=argc==12?std::stoull(argv[11],nullptr,0):UINT32_MAX;
+        require(mask<=UINT32_MAX,"invalid block mask");
+        const auto s=scenario(initial,pattern,{std::uint32_t(mask)},mixed,publications);
+        // Same owner and operation bodies. Exact duplicate arms0/7 and5/8;
+        // odd Williams square balances position/predecessor twice in18 trials.
+        struct Arm {Policy policy;unsigned fold;};
+        constexpr std::array<Arm,9> arms{{{Policy::native_for,0},{Policy::native_coalesced,0},
+            {Policy::sparse_inline,0},{Policy::overlay_batch,0},{Policy::overlay_batch_fold,8},
+            {Policy::overlay_batch_fold,64},{Policy::thaw,0},{Policy::native_for,0},
+            {Policy::overlay_batch_fold,64}}};
+        const unsigned trials=(requested+17)/18*18;
+        std::mt19937 random(1729);std::vector<std::vector<unsigned>> orders;
+        for (unsigned trial=0;trial<trials;++trial) {
+            if (trial%18==0) orders=frame_measure::balanced_round(arms.size(),random);
+            for (unsigned position=0;position<arms.size();++position) {
+                const auto index=orders[trial%18][position];const auto arm=arms[index];
+                const CycleOptions cycle{arm.fold,unsigned(std::max(0l,age))};
+                const auto invoke=[&]<class C>() {
+                    run<C>(arm.policy,initial,s,trial,position,index,age>=0,queries,final,mode=="verify",
+                        false,{},mode=="capacity",cycle);
+                };
+                if (arm.policy==Policy::native_for || arm.policy==Policy::native_coalesced)
+                    invoke.template operator()<p::NativeLayout>();
+                else if (arm.policy==Policy::overlay_batch || arm.policy==Policy::overlay_batch_fold)
+                    invoke.template operator()<p::OverlayLayout>();
+                else invoke.template operator()<p::EncodedLayout>();
+            }
+        }
+        return 0;
+    }
     if (argc==4 && std::string_view(argv[1])=="--accounting-probe") {
         Data initial;std::ifstream input(argv[2],std::ios::binary);
         for (auto& g:initial) require(bool(input.read(reinterpret_cast<char*>(g.value.data()),sizeof(g.value))),"short accounting input");

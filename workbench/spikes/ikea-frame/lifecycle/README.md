@@ -10,6 +10,10 @@ The [warm Zen 5 comparison](ZEN5.md) repeats the qualified programs on AVX2 and
 AVX-512. Strong native scans reverse several ARM VM rankings; keep its losing
 compressed cases alongside the useful AVX2 UserID result.
 
+[Sustained histories](CYCLES.md) reuse that owner driver for periodic folding
+and reader ages. The first extension is correctness-qualified through 65 command
+batches; it does not yet select a cadence or claim performance.
+
 ## Starting point
 
 The [architectural review](../REVIEW.md#6-make-writable-plain-regions-a-deliberate-state)
