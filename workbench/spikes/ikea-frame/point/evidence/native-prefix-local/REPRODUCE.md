@@ -1,0 +1,5 @@
+# Recovery
+
+The accepted experiment is a derivative of the already retained Frame source. Fetch base-artifact.json with workbench/tools/artifacts.py; its source/ directory is capture2d26284fff5ccfe9af3fcb0e1d3429e422b8706e8848cf1ff10dd5aa5935ce82. Reconstruct each cohort with capture.py create NEW --base BASE/source and one --replace PATH=THIS/accepted-replacements/PATH for every source_changes entry in accepted-capture.json (diagnostic uses diagnostic-*). Verify every source_files_sha256 entry and source_digest against that receipt before building. Source replacement files include the exact stable58a material for the accepted cut.
+
+Binaries, raw paired samples, exact commands/flags/input hashes, and linked selected disassembly are retained here. Input .u64 files are referenced through the existing ClickBench/Jena export routes, not duplicated; verify identity.json hashes. The accepted getter has one shared emitted body; only its delta prefix leaf changes. The diagnostic template getter cohort remains a counterexample and is not mixed with accepted timings.

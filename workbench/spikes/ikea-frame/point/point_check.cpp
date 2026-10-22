@@ -57,6 +57,7 @@ unsigned verify(const std::vector<fe::u64> &values, bool require_kinds) {
             const auto &column = retained[image];
             point_reader reader(column);
             frame_points::compact_reader lean_reader(*lean[image]);
+            frame_points::compact_reader prefix_reader(*lean[image], true);
             std::set<fe::kind> kinds;
             for (const auto &d : column.blocks) kinds.insert(d.type);
             if (require_kinds)
@@ -66,35 +67,31 @@ unsigned verify(const std::vector<fe::u64> &values, bool require_kinds) {
             for (std::size_t row = 0; row < values.size(); ++row) {
                 need(reader.get(row) == values[row], "point differs from original input");
                 need(lean_reader.get(row) == values[row], "shared-kernel point differs from input");
-                checks += 2;
+                need(prefix_reader.get(row) == values[row], "native prefix point differs from input");
+                checks += 3;
             }
             for (unsigned pattern = 0; pattern < 4; ++pattern) {
                 fe::block_mask mask(column.blocks.size());
                 for (std::size_t b = 0; b < mask.blocks; ++b)
                     if (pattern == 0 || (pattern == 2 && b % 2) ||
                         (pattern == 3 && b / 16 % 2)) mask.set(b);
-                fe::u64 expected = 0, actual = 0;
-                std::size_t expected_count = 0, count = 0;
+                fe::u64 expected = 0;
+                std::size_t expected_count = 0;
                 for (auto row : rows)
                     if ((mask.words[row / 256 / 64] >> (row / 256 % 64)) & 1) {
                         expected += values[row];
                         ++expected_count;
                     }
-                frame_points::selected_points(reader, mask, rows, [&](auto row, auto value) {
-                    need(value == values[row], "selected point changed original coordinates");
-                    actual += value;
-                    ++count;
-                });
-                need(actual == expected && count == expected_count, "coarse point selection mismatch");
-                actual = 0;
-                count = 0;
-                frame_points::selected_points(lean_reader, mask, rows, [&](auto row, auto value) {
-                    need(value == values[row], "shared-kernel selected point changed coordinates");
-                    actual += value;
-                    ++count;
-                });
-                need(actual == expected && count == expected_count,
-                     "shared-kernel coarse point selection mismatch");
+                const auto selected = [&](const auto &candidate) {
+                    fe::u64 actual = 0;
+                    std::size_t count = 0;
+                    frame_points::selected_points(candidate, mask, rows, [&](auto row, auto value) {
+                        need(value == values[row], "selected point changed original coordinates");
+                        actual += value; ++count;
+                    });
+                    need(actual == expected && count == expected_count, "coarse point selection mismatch");
+                };
+                selected(reader); selected(lean_reader); selected(prefix_reader);
             }
         }
     }
@@ -112,6 +109,35 @@ unsigned shared_kernel_widths() {
         std::vector<std::uint8_t> packed(fe::plane_bytes(k, expected.size()));
         fe::pack(k, expected, packed.data());
         const auto &ops = frame_points::local_kernels(k);
+        for (auto first : {0u, 16u, 128u, 240u})
+            for (auto take : {0u, 1u, 2u, 7u, 8u, 15u, 16u, 17u, 31u, 32u, 63u, 64u, 128u, 256u}) {
+                if (first + take > 256) continue;
+                fe::u64 sum = 0;
+                for (unsigned r = 0; r < take; ++r) sum += expected[first + r];
+                need(ops.prefixes[0](packed.data(), first, take) == sum &&
+                         ops.prefixes[1](packed.data(), first, take) == sum,
+                     "native prefix differs from original modular sum");
+                ++checks;
+            }
+        const auto page = static_cast<std::size_t>(sysconf(_SC_PAGESIZE));
+        need(packed.size() <= page, "native prefix fixture exceeds page");
+        auto *mapping = static_cast<std::uint8_t *>(mmap(nullptr, 2 * page,
+            PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0));
+        need(mapping != MAP_FAILED && mprotect(mapping + page, page, PROT_NONE) == 0,
+             "native prefix guard mapping failed");
+        auto *edge = mapping + page - packed.size();
+        std::memcpy(edge, packed.data(), packed.size());
+        for (unsigned take = 1; take <= 16; ++take) {
+            fe::u64 sum = 0;
+            for (unsigned r = 0; r < take; ++r) sum += expected[240 + r];
+            need(ops.prefixes[0](edge, 240, take) == sum && ops.prefixes[1](edge, 240, take) == sum,
+                 "prefix exceeded final body grant");
+            ++checks;
+        }
+        need(mprotect(mapping, page, PROT_NONE) == 0, "prefix none protection failed");
+        need(ops.prefixes[0](edge, 240, 0) == 0 && ops.prefixes[1](edge, 240, 0) == 0,
+             "empty prefix read source");
+        need(munmap(mapping, 2 * page) == 0, "prefix unmap failed");
         for (unsigned r = 0; r < 256; ++r) {
             need(ops.point(packed.data(), r) == expected[r], "shared point width differs");
             ++checks;
@@ -170,12 +196,14 @@ unsigned wide_checkpoints() {
         point_reader reader(c);
         const frame_points::compact_image lean(wide_prediction(mode));
         frame_points::compact_reader compact(lean);
+        frame_points::compact_reader native(lean, true);
         for (unsigned r = 0; r < 256; ++r) {
             const fe::u64 expected = r % 2 ? (fe::u64{1} << 63) - 1 - r / 2
                                                 : (fe::u64{1} << 62) - r / 2;
             need(reader.get(r) == expected, "wide cumulative eager reconstruction differs");
             need(compact.get(r) == expected, "wide cumulative shared reconstruction differs");
-            checks += 2;
+            need(native.get(r) == expected, "wide cumulative native reconstruction differs");
+            checks += 3;
         }
     }
     return checks;
@@ -213,6 +241,7 @@ void protected_none() {
     protected_reader(point_reader(column), column.blocks.size());
     const frame_points::compact_image compact(fe::encode(values));
     protected_reader(frame_points::compact_reader(compact), compact.body.blocks.size());
+    protected_reader(frame_points::compact_reader(compact, true), compact.body.blocks.size());
 }
 } // namespace
 

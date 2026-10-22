@@ -5,20 +5,24 @@ Removing redundant per-block decoder bindings saves substantial resident capacit
 but does not remove prediction reconstruction or run search. Native global FOR
 is a necessary representation control, alongside an uncompressed u64 baseline.
 No checkpoint or Frame representation default follows from this experiment.
+The subsequent [native-prefix experiment](NATIVE-PREFIX.md) roughly halves
+predicted point cost with one common getter, while retaining a large native gap.
 
 ## Same bytes, different preparation
 
 `compact_image` moves the existing encoded bytes without repacking and drops
-redundant per-block erased decoders. A 65-entry, 1,040-byte point/range catalogue
-is shared across images. Each entry invokes maintained typed Local SeriesPack
+redundant per-block erased decoders. In this first preparation cohort a
+65-entry, 1,040-byte point/range catalogue is shared across images.
+Each entry invokes maintained typed Local SeriesPack
 operations; no packed-bit/ISA algorithm is copied. Readers retain their image's
 checkpoint choice and original coordinates.
 
 This is a **point-consumer** preparation experiment. It does not preserve the
 old `column`'s decoder-based whole-operation entry points and is not a drop-in
 replacement for the shared encoding material. Sparse exception bindings remain:
-the current private patched body retains exception width only in its decoder
-binding. That interpretation must survive until explicit metadata replaces it.
+that measured material cut retains exception width only in its decoder binding.
+The later `58a344ae` body stores width explicitly; the point control retains
+its sparse bindings pending migration to shared owner kernels.
 Source placement and image lifetime remain owner obligations; the prepared owner
 cannot be moved after borrowing.
 
@@ -67,11 +71,11 @@ memory; it is not uniformly a speed improvement. The small packed/native gap is
 not a fleet ranking on this VM. The large cost of reconstructing longer prefixes
 warrants a different complete prefix consumer.
 
-Source inspection identifies one candidate: the current point reader asks the
+Source inspection identified the next candidate: the first point reader asks the
 erased range decoder for fewer than sixteen values, then sums a u64 stack buffer.
 That partial range takes scalar point decoding. A native masked prefix reduction
 over the admitted block could remove the buffer and repeated scalar work. This
-is an unmeasured proposal, not an established explanation of every point cost.
+was an unmeasured proposal at this cut, now tested in the native-prefix sequel.
 It belongs to Frame reconstruction, independently of Intervals spacing design.
 
 ## Correctness and evidence boundary

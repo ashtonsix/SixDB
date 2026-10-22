@@ -5,8 +5,9 @@
 
 namespace frame_points {
 // Construct before borrowing. Encoded bytes and geometry keep their placement;
-// erase only redundant read bindings. Exception bindings remain sparse because
-// the current experimental body stores their width only in that binding.
+// erase only redundant read bindings. Sparse exception bindings preserve the
+// initial material cut's interpretation; the later explicit-W body permits
+// removing them during migration to the shared owner catalogue.
 struct compact_image {
     fe::column body;
     std::vector<std::uint32_t> exception_index;
@@ -43,7 +44,9 @@ struct compact_image {
 struct compact_reader {
     const compact_image *source;
     std::size_t rows;
-    explicit compact_reader(const compact_image &image) : source(&image), rows(image.body.rows) {}
+    bool native_prefix;
+    explicit compact_reader(const compact_image &image, bool native = false)
+        : source(&image), rows(image.body.rows), native_prefix(native) {}
     std::size_t prepared_bytes() const {
         return sizeof(*this) + source->exception_index.capacity() * sizeof(std::uint32_t) +
                source->exceptions.capacity() * sizeof(source->exceptions[0]);
@@ -95,9 +98,9 @@ struct compact_reader {
                 } else
                     std::memcpy(&sum, tail + 8 + mark * 8, 8);
             }
-            alignas(64) fe::u64 residuals[fe::block_rows];
-            local_kernels(d.width).range(data, first, local - first + 1, residuals);
-            for (unsigned i = 0; i <= local - first; ++i) sum += residuals[i];
+            // One getter body for both programs. Only this delta leaf changes;
+            // non-predicted reads do not get different prologues or branches.
+            sum += local_kernels(d.width).prefixes[native_prefix](data, first, local - first + 1);
             return d.base + static_cast<fe::u64>(rbase) * local + sum;
         }
         }

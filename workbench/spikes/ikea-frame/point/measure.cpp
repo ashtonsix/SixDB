@@ -121,10 +121,12 @@ void experiment(std::vector<u64> &values, unsigned trials, unsigned repeat, bool
     readers.reserve(images.size());
     std::vector<std::unique_ptr<frame_points::compact_image>> lean;
     std::vector<frame_points::compact_reader> lean_readers;
+    std::vector<frame_points::compact_reader> prefix_readers;
     lean.reserve(images.size());
     lean_readers.reserve(images.size());
+    prefix_readers.reserve(images.size());
     std::vector<arm> arms;
-    arms.reserve(18);
+    arms.reserve(26);
     for (unsigned i = 0; i < images.size(); ++i) {
         const auto mode = static_cast<fe::checkpoints>(i % 4);
         const bool compact = i >= 4;
@@ -170,6 +172,18 @@ void experiment(std::vector<u64> &values, unsigned trials, unsigned repeat, bool
             return sum_points(rows, mask, selected, [&](auto row) { return lean_reader->get(row); });
         };
         arms.push_back(std::move(shared));
+        prefix_readers.emplace_back(*lean.back(), true);
+        arm fused;
+        fused.name = "prefix_" + arms.back().name;
+        fused.storage = arms.back().storage;
+        fused.kinds = arms.back().kinds;
+        fused.construct_ns = arms.back().construct_ns;
+        fused.prepare_ns = arms.back().prepare_ns;
+        const auto *prefix_reader = &prefix_readers.back();
+        fused.read = [prefix_reader](auto rows, const auto &mask, bool selected) {
+            return sum_points(rows, mask, selected, [&](auto row) { return prefix_reader->get(row); });
+        };
+        arms.push_back(std::move(fused));
     }
     arm raw;
     raw.name = "native_u64";
