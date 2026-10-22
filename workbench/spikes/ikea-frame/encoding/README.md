@@ -831,7 +831,9 @@ a `dictionary_identity {scope, edition}`. At attach time it resolves its own spa
 into `body`/`grant` and `dictionary.plane`/`grant`, calls `admits` once, then
 calls the operations. The view owns nothing. A coded block must be read with the
 dictionary it was coded against. `code_sum`, `code_count` and `code_count_eq`
-cache a decoded dictionary, translated threshold or code per identity. A part
+cache a decoded dictionary, translated threshold or code per identity within
+a call; a [`dictionary_cache`](#dictionary-caches-across-calls) keeps them
+across calls under the same identity premise. A part
 index alone was not enough: one cache shared across `borrow(old)`, `borrow(new)`,
 `borrow(old)` returned stale answers when both images had part 0 (Ikea LEAD's
 case). `borrow` now uses `{column::image, part}`, where `image` is unique per
@@ -1081,6 +1083,131 @@ values of the 117 configurations, with and without bindings
 reject dictionaries in the values domain. An arrival-coded block reads only its
 own body and its part's dictionary edition, as other coded blocks do.
 
+## Dictionary caches across calls
+
+Most of arrival's scan cost, and nearly all of its sparse-mask cost, came from
+work repeated per call: decoding each part's ~40k-entry dictionary, building
+the COUNT truth table and finding the equality code. A caller-held
+`dictionary_cache` in [`material.h`](material.h) keeps that material across
+calls, keyed by `dictionary_identity`. Code at ed281d89. It has no public API.
+
+**Contract and structures.** The premise is the one from
+[borrowed blocks](#borrowed-blocks): one identity names one content while the
+cache lives, so nothing is revalidated. The cache owns derived copies and never
+points into borrowed bodies or planes. Each piece is built lazily per identity:
+
+- **Values:** the decoded min-relative entries in code order, 8 B/entry. They
+  serve SUM, point reads, truth tables and the equality index.
+- **Thresholds:** COUNT(u ≥ t) keeps a truth table per (identity, t) for
+  frequency and arrival, at one bit per entry. Sorted keeps only its code
+  threshold. Each identity holds at most four thresholds, replaced round-robin.
+- **Equality index:** open addressing over u32 codes, probed by value and
+  confirmed against `values[code]`. Slots are a power of two at load ≤ 2/3
+  and 4 B each, about 10 B/entry here. Sorted (value, code) pairs cost
+  12 B/entry, built 6–8× slower and took ~8× longer per cache-cold lookup
+  (50 against 6 µs for one lookup in each of URLHash's 46 parts;
+  `build/spikes/ikea-frame/dict-cache/index_bench.cpp`). A node-based hash
+  map cost ~40 B/entry.
+
+`bytes()` counts the tables plus a fixed charge per identity. An insertion that
+would pass `capacity_bytes` clears the whole cache first. Holders share
+ownership of the tables they read, so a clear never invalidates a call in
+progress. `code_sum`, `code_count`, `code_count_eq`, the `encoded_*` and
+`catalogue_*` mask aggregates and `value_at` take an optional
+`dictionary_cache *`. With null they take the per-call path.
+
+Paired timings, local VM, in median µs over 3M rows. Each of 5 rounds ran every
+dictionary back to back in rotated order, with 21 trials per run. Cold is the
+per-call path; warm uses a cache built once before the timed loop and reused
+across trials and masks. Under shuffling, sorted and frequency keep no
+dictionary, so those rows equal none.
+
+| Input, dictionary | bits/row | cache MB | SUM | COUNT ≥ median | COUNT = v | sparse SUM | sparse COUNT ≥ | sparse COUNT = | points |
+| --- | ---: | ---: | --- | --- | --- | --- | --- | --- | --- |
+| URLHash, none | 59.11 | 0 | 1,407 | 824 | 821 | 166 | 95 | 99 | 1,268 |
+| URLHash, sorted | 50.89 | 15.6 | 2,161 → 2,403 | 920 → 870 | 439 → 413 | 512 → 578 | 138 → 118 | 68 → 62 | 2,215 → 3,277 |
+| URLHash, frequency | 50.89 | 15.7 | 2,139 → 2,389 | 1,903 → 1,530 | 697 → 412 | 536 → 614 | 653 → 208 | 369 → 65 | 2,104 → 3,128 |
+| URLHash, arrival | **43.90** | 30.9 | 2,795 → 2,415 | 2,694 → 1,937 | 873 → **288** | 677 → 736 | 960 → **252** | 631 → **57** | 2,803 → 4,850 |
+| URLHash shuffled, none | 64.50 | 0 | 1,353 | 780 | 777 | 164 | 87 | 84 | 943 |
+| URLHash shuffled, arrival | **56.43** | 43.6 | 2,647 → 2,174 | 2,323 → 1,313 | 960 → **71** | 794 → 819 | 1,161 → **180** | 893 → **36** | 2,984 → 4,770 |
+| UserID shuffled, none | 64.50 | 0 | 1,362 | 777 | 778 | 168 | 89 | 87 | 931 |
+| UserID shuffled, arrival | **54.43** | 42.6 | 2,751 → 2,389 | 2,443 → 1,465 | 958 → **177** | 817 → 913 | 1,127 → **192** | 816 → **46** | 3,132 → 4,912 |
+
+1. **The cache pays for equality and sparse range COUNT.** Arrival's equality
+   falls 3–14× on all blocks and 11–25× on the sparse mask, and it then beats
+   sorted: 288 against 439 µs on URLHash, 57 against 68 sparse. A part without
+   v is skipped without reading its bodies. The cold path scanned each part's
+   plane to learn that, and none must scan every block (777 µs shuffled
+   against 71). Sparse COUNT ≥ falls 4–6×, to 1.8× sorted on URLHash (252
+   against 138 µs) from 7×. Frequency gains the same way: sparse COUNT ≥
+   653 → 208, and equality 697 → 412.
+2. **Full-scan range COUNT stays at 1.7–2.2× sorted.** Cached truth tables
+   remove 28–43% of arrival's COUNT ≥ (URLHash 2,694 → 1,937 µs against
+   sorted's 870). The rest is decoding references and reading a bit per row.
+   It is the body's cost, which caching can't remove. Sorted needs no table,
+   so it gains only 5–14%.
+3. **SUM barely gains, and sparse SUM loses.** Arrival's all-block SUM falls
+   13–18%, to 1.1× sorted's cold path on URLHash. Sparse SUM is 3–12% slower,
+   and sorted and frequency are 10–15% slower warm. A cache of 7–19 MB of
+   decoded entries doesn't stay resident through a scan, so warm gathers hit
+   cold memory. The per-call path streams the plane into one reused 320 KB
+   buffer that the gathers then hit. A 60-bit plane is nearly as large as its
+   decoded entries, so that decode costs about a copy.
+4. **Point reads get slower through the cache** (1.4–1.7× wherever most
+   blocks are coded, including OS and RegionID). Random rows change identity on almost
+   every read, so each read pays a hash lookup, which costs more than a plane
+   point read. `none` controls read 0.75–1.21 on points, so point timings are
+   the noisiest cells here. A consumer that resolves its part's entries once
+   could index them directly (untested).
+5. **Low-cardinality columns see no change.** On OS and RegionID (0.04–0.46 MB
+   of cache), cached scans are within 3% of cold, except frequency and arrival
+   sparse COUNT ≥ (0.87). UserID in original order keeps 3 arrival parts:
+   sparse COUNT ≥ is 25 → 11 µs, and equality 16 → 6.
+6. **The memory is about twice the column.** Arrival URLHash holds 18 B/entry
+   (8 values, 9.9 index and 0.125 per threshold): 30.9 MB for a 16.5 MB
+   column. Shuffled URLHash holds 43.6 MB for 21.2 MB. Values alone are 13.7 MB
+   and 19.5 MB. The first build on URLHash arrival took 1.7 ms for values,
+   0.5 ms for the median truth tables and 10 ms for the index, including first
+   touch. At ~0.6 ms saved per equality call, the index repays itself after
+   about 17 calls. So arrival keeps its bytes on disk and in the image, but a
+   full warm cache doesn't keep them in memory. Truth tables alone cost
+   0.125 B/entry per threshold, needing the values only while they are built,
+   and they carry finding 2 and sparse COUNT ≥. The equality index confirms
+   against the values, so equality costs the full 18 B/entry. SUM and points
+   gain little from the values (findings 3 and 4).
+
+So a warm cache brings arrival's equality below sorted's and its sparse range
+COUNT to within 2×. Full-scan COUNT ≥ stays at about 2× sorted and SUM at about
+1.1×, because those costs live in the arrival body itself.
+
+**Measurement.** Ratios are per-round paired medians. The first run used the
+driver's rotation, which keeps the cyclic arm order, so each arm always
+followed the same predecessor. Its `none` controls, where cold and cached arms
+do identical work, read 0.62–1.52. The driver now shuffles the arm order per
+trial with a fixed seed, and the controls read 0.95–1.01 on every scan. The
+null-cache path was checked against the frozen pre-cache driver (d2a81e80)
+with `--cold-only`, which uses the old arm set and rotation. Over 5 rounds on
+URLHash, RegionID and OS under all four dictionaries, the geometric-mean
+new/old ratio was 0.990, and every arm fell between 0.978 and 0.998
+(`dict-cache/regress.sh`, `summarise.py --regress`). Scripts and results are in
+`build/spikes/ikea-frame/dict-cache/`. Local VM numbers are indicative only.
+
+**Verification.** `borrowed_check` now shares one cache across the
+old, new, old, copy, new sequence and across every block coded in both images.
+Each step checks SUM, COUNT at the median, the catalogue COUNT, equality at a
+present and an absent value, and cached point reads. Every eighth block also
+checks six thresholds, twice over, so slots are replaced. A capacity-1 cache,
+which clears on every insertion, runs on every 64th block. Mask aggregates go
+through the shared cache over all five images on the all and sparse masks. All
+answers are exact against the input. Aliasing the two image ids makes the
+cached path go stale too, in every one of the 54 runs with a block coded in
+both images. `identity/check.sh` passes 417 runs (1.59M cached checks). The
+driver's non-timing output matches the frozen `catalogue-owner/bodies_after`
+on all 11,232 values. The only differences are the known +8 B in
+`column_object_bytes` and `retained_bytes`; the cache's keys are additions.
+`frame_encoding_masked_access_check` passes. The point/, filter/ and
+execution/ targets compile unchanged.
+
 ## Row order in real bodies
 
 The same 11 ClickBench columns were encoded as real bodies (default options,
@@ -1185,10 +1312,14 @@ byte bound with no random access. Output is in `build/spikes/ikea-frame/repeat/`
 1. Convert the model's winners into real SeriesPack bytes for a sample of
    columns, checking the modelled-to-physical gap.
 2. Recent-value references are real as [arrival-order dictionaries](#arrival-order-dictionaries):
-   43.9 bits/row on URLHash, at 1.3–3× sorted's scan cost. Open: caching
-   decoded dictionaries, truth tables and equality codes per edition across
-   calls (most of the sparse-mask cost), and multi-row matches or entropy over
-   the literal plane for the last 2.5 bits to ZSTD-3.
+   43.9 bits/row on URLHash, at 1.3–3× sorted's scan cost. A
+   [cross-call cache](#dictionary-caches-across-calls) brings equality below
+   sorted and sparse COUNT ≥ to 1.8× sorted, but full-scan COUNT ≥ stays at
+   ~2×, and the cache takes about twice the column's bytes. Open: a bounded
+   policy (truth tables only, or a smaller equality structure than values
+   plus index) priced on Engine's workloads; exact prefix sums over literal runs for SUM;
+   per-part resolved entries for point reads; multi-row matches or entropy
+   over the literal plane for the last 2.5 bits to ZSTD-3.
 3. Re-clustered orders (by category, by time) beside original and shuffled, so
    Engine can price clustering against encoding effort.
 4. Bring in float/decimal and time-series corpora (TPC-H, TSBS, ALP's datasets).
