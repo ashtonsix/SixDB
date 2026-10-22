@@ -228,7 +228,7 @@ but is not uniformly cheaper when the table is hot.
 
 ## What the existing performance evidence buys
 
-The [whole-table comparison at that source epoch](../hashtable-swiss-batch/GRADUATION.md)
+The [whole-table comparison at that source epoch](../hashtable-swiss/read-batches/GRADUATION.md)
 establishes stronger Boost hot reads and ordinary construction/churn in many
 K30 native-capacity cases. The subsequent [equal-budget study](MEMORY.md)
 changes the read ranking materially and retains those native controls. Ikea

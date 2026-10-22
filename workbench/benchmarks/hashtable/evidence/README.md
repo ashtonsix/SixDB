@@ -2,7 +2,7 @@
 
 [Broad results](../ACCUMULATION.md) owns the integration and maintenance
 comparison before the October 20 tag promotion. The later
-[overflow evidence](../../../spikes/hashtable-swiss-probes/README.md#evidence-and-recovery)
+[overflow evidence](../../../spikes/hashtable-swiss/logical-groups/README.md#evidence-and-recovery)
 owns the tag/width qualification and its recovery recipe. Start with these files
 for the broad panel:
 

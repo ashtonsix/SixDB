@@ -204,7 +204,7 @@ seven-eighths threshold.
 Larger vector registers do not make larger logical groups free. A wider group
 can skip several probing steps in a dense table, but it also presents more tags
 that might trigger unnecessary full-key reads. Those reads matter more when
-tuples are cold. The [Zen 5 width comparison](../../../workbench/spikes/hashtable-swiss-probes/RESULTS.md)
+tuples are cold. The [Zen 5 width comparison](../../../workbench/spikes/hashtable-swiss/logical-groups/RESULTS.md)
 retains 16-byte groups: dense hot-miss gains from 32/64-byte groups did not
 outweigh cold-read losses. Eight-bit tags were promoted; filtered continuation
 and a higher occupancy ceiling were not.
@@ -224,7 +224,7 @@ This policy stays inside the out-of-line ordinary read helper. Mutation and
 staged cursors retain one-group steps, and small stores use the scalar reader.
 Metadata lookahead can still fetch control regions that a scalar probe would
 not reach; masking candidates does not make all lookahead traffic free. The
-[batch qualification](../../../workbench/spikes/hashtable-swiss-batch/GRADUATION.md)
+[batch qualification](../../../workbench/spikes/hashtable-swiss/read-batches/GRADUATION.md)
 records whole-table reads/writes and the accepted tradeoffs of this ISA default.
 
 The primary bucket's overflow byte avoids consulting this store unnecessarily:

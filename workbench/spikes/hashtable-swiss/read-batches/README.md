@@ -32,7 +32,7 @@ From Linux with the pinned toolchain (prefix with `orb -m ubuntu` from macOS):
 
 ```sh
 python3 workbench/tools/artifacts.py report \
-  workbench/spikes/hashtable-swiss-batch/evidence/graduated build/swiss-batch-report
+  workbench/spikes/hashtable-swiss/read-batches/evidence/graduated build/swiss-batch-report
 ```
 
 The recipe restores the full S3 bundle and reproduces the audit and summaries.

@@ -44,24 +44,24 @@
   "regenerate": [
     [
       "python3",
-      "workbench/spikes/hashtable-swiss-batch/audit.py",
+      "workbench/spikes/hashtable-swiss/read-batches/audit.py",
       "{evidence}/avx512"
     ],
     [
       "python3",
-      "workbench/spikes/hashtable-swiss-batch/summarize.py",
+      "workbench/spikes/hashtable-swiss/read-batches/summarize.py",
       "{evidence}/avx512",
       "--output",
       "{evidence}/avx512/summary"
     ],
     [
       "python3",
-      "workbench/spikes/hashtable-swiss-batch/audit.py",
+      "workbench/spikes/hashtable-swiss/read-batches/audit.py",
       "{evidence}/avx2"
     ],
     [
       "python3",
-      "workbench/spikes/hashtable-swiss-batch/summarize.py",
+      "workbench/spikes/hashtable-swiss/read-batches/summarize.py",
       "{evidence}/avx2",
       "--output",
       "{evidence}/avx2/summary"

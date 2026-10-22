@@ -3,7 +3,7 @@
 Completed comparison of eight-bit tags, filtered continuation and Swiss density.
 Eight-bit tags are now promoted into Ikea at the unchanged 87.5% ceiling;
 filtered continuation and higher ceilings were not promoted. The completed
-[32/64-byte comparison](../hashtable-swiss-probes/README.md) retains 16-byte probes.
+[32/64-byte comparison](../logical-groups/README.md) retains 16-byte probes.
 
 See [results and decision](RESULTS.md). Those measurements describe the captured
 pre-promotion implementations. Multimaps, K-way merge and Loom scheduling were
@@ -47,9 +47,9 @@ are in its recoverable S3 bundles. For example:
 
 ```sh
 python3 workbench/tools/artifacts.py fetch \
-  workbench/spikes/hashtable-overflow/evidence/density-main build/overflow-recovered
-python3 workbench/spikes/hashtable-overflow/audit.py build/overflow-recovered --levels 925,980
-python3 workbench/spikes/hashtable-overflow/summarize.py build/overflow-recovered \
+  workbench/spikes/hashtable-swiss/tags/evidence/density-main build/overflow-recovered
+python3 workbench/spikes/hashtable-swiss/tags/audit.py build/overflow-recovered --levels 925,980
+python3 workbench/spikes/hashtable-swiss/tags/summarize.py build/overflow-recovered \
   --output build/overflow-report
 ```
 
@@ -64,4 +64,4 @@ promoted format. Only the offline audit and summarizer remain here.
 
 References: [Boost layout](https://www.boost.org/doc/libs/latest/libs/unordered/doc/html/unordered/structures.html),
 [implementation analysis](https://bannalia.blogspot.com/2022/11/inside-boostunorderedflatmap.html),
-[maintained Ikea comparison](../../benchmarks/hashtable/README.md).
+[maintained Ikea comparison](../../../benchmarks/hashtable/README.md).

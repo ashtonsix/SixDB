@@ -134,7 +134,7 @@ Links from retained findings to deleted source/evidence are pinned to that
 checkpoint. Original measured bundles still identify their own captured bytes.
 Recover into a separate directory, not over current modules.
 
-## Object/view retirement — October 22, 2026
+## Object/view retirement and Swiss consolidation — October 22, 2026
 
 The earlier `orbital-objects/` composition is retired. All 34 tracked files
 matched `35e63b8416d377f216575d6f8d97668b9bce9ab3` byte for byte before removal.
@@ -143,6 +143,15 @@ padding/stability, stale-rebase and cached-mapping lessons, plus exact recovery
 of the standalone UFFD and capability probes. The [Object history receipt](../spikes/orbital-mvcc/history/recovery.json)
 records its original tree. Production consequence checks remain with Orbital
 integration; the old prototype did not establish durable commit or recovery.
+
+`hashtable-overflow`, `hashtable-swiss-probes` and `hashtable-swiss-batch` are
+now chapters of [Swiss overflow decisions](../spikes/hashtable-swiss/README.md).
+The [merge receipt](../spikes/hashtable-swiss/recovery.json) pins their original
+Git trees at `1b9866b717a3911ae826ca16389d1257a56e38cd`. All 297 tracked files were verified before moving.
+Measured evidence and original archive references retain their exact bytes;
+current offline report recipes point to relocated, unchanged scripts.
+Eight-bit tags, 16-slot logical groups and 32/64-byte ISA reads remain distinct
+decisions, with their losing controls and source epochs preserved.
 
 ## Recovery
 

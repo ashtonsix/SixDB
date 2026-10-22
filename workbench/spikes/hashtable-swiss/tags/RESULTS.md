@@ -2,7 +2,7 @@
 
 Historical snapshot before eight-bit tags were promoted. The measurements and
 recommendation below describe that comparison. The subsequent
-[Swiss width experiment](../hashtable-swiss-probes/README.md) starts from the
+[Swiss width experiment](../logical-groups/README.md) starts from the
 promoted owner; it does not promote filtered continuation or a higher ceiling.
 
 **Keep the original Swiss ceiling. Eight-bit tags are a useful small refinement;

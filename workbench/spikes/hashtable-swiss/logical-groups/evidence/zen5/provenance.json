@@ -36,24 +36,24 @@
   "regenerate": [
     [
       "python3",
-      "workbench/spikes/hashtable-swiss-probes/audit.py",
+      "workbench/spikes/hashtable-swiss/logical-groups/audit.py",
       "{evidence}/avx512"
     ],
     [
       "python3",
-      "workbench/spikes/hashtable-swiss-probes/summarize.py",
+      "workbench/spikes/hashtable-swiss/logical-groups/summarize.py",
       "{evidence}/avx512",
       "--output",
       "{evidence}/avx512/summary"
     ],
     [
       "python3",
-      "workbench/spikes/hashtable-swiss-probes/audit.py",
+      "workbench/spikes/hashtable-swiss/logical-groups/audit.py",
       "{evidence}/avx2"
     ],
     [
       "python3",
-      "workbench/spikes/hashtable-swiss-probes/summarize.py",
+      "workbench/spikes/hashtable-swiss/logical-groups/summarize.py",
       "{evidence}/avx2",
       "--output",
       "{evidence}/avx2/summary"

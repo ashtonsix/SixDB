@@ -53,9 +53,7 @@ connects actual peers, memory budgets, construction, reads/writes and Loom consu
 | [Wide values](hashtable-wide-values/README.md) | Promoted borrowed-inline reads plus the remaining slot-backed alternative; retain staged ID/payload follow-up as well as synchronous losses. |
 | [Boost adoption assessment](hashtable-boost-adoption/README.md) | Dependency/footprint and ownership seams; memory-matched and mixed-hit diagnosis. No migration selected. |
 | [Predictability specialization](hashtable-primary-branchless/README.md) | Promoted predictable/unpredictable getters and caller-owned Auto; uniform branchlessness was rejected. |
-| [Swiss metadata batching](hashtable-swiss-batch/README.md) | Promoted 32/64-byte ISA reads over 16-slot logical groups, corrected comparison and construction evidence. |
-| [Swiss logical-group widths](hashtable-swiss-probes/README.md) | Completed 16/32/64-slot comparison: retain 16 logical slots. This differs from wider metadata loads. |
-| [Overflow and tags](hashtable-overflow/README.md) | Completed continuation/tag comparison; eight-bit tags adopted, losing alternatives archived. |
+| [Swiss overflow decisions](hashtable-swiss/README.md) | Completed tag/continuation, logical-group-width and ISA metadata-batch decisions; independent evidence, offline reports and recovery in one home. |
 
 ## Execution, code generation and hardware
 

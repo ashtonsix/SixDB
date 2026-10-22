@@ -9,7 +9,7 @@ dependent serial latency is outside this run's scope.
 
 These are the broad maintenance measurements, with the corrected RMW supplement.
 They predate the October 20 eight-bit overflow tag promotion. Its
-[separate Zen 5 qualification](../../spikes/hashtable-swiss-probes/RESULTS.md)
+[separate Zen 5 qualification](../../spikes/hashtable-swiss/logical-groups/RESULTS.md)
 checks that change against the seven-bit owner and actual Boost/Abseil controls;
 it does not replace this multi-CPU accumulation and growth panel. The full
 scorecards contain every cell and MAD:

@@ -15,7 +15,7 @@ The timings below measure complete tables, including primary lookup and value
 consumption. This is a K30/E30 overflow-change qualification, not a broad claim
 of superiority over peers. It omits the K14 cases with the earlier strongest
 hot-read leads, and adds dense Swiss populations and actual Boost controls.
-The [broad scorecard](../../benchmarks/hashtable/ACCUMULATION.md) retains the
+The [broad scorecard](../../../benchmarks/hashtable/ACCUMULATION.md) retains the
 earlier K14/K30, growth and accumulation measurements. Its cold fixture uses
 b18; this report uses b20, four times the bucket count, so their cold timings
 are not a before/after comparison.
