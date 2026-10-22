@@ -32,10 +32,17 @@ namespace sp = ikea::seriespack;
 namespace bl = ikea::boundlist;
 using u64 = std::uint64_t;
 using u128 = unsigned __int128;
+using i64 = std::int64_t;
 
 constexpr std::size_t block_rows = 256;
 
-enum class kind : std::uint8_t { constant, runs, packed };
+// delta: previous-value prediction. d.base is the block's first value (the
+// anchor, not its minimum); the payload holds 256 residuals s_i = r_i - rbase
+// (s_0 = 0) as a SeriesPack plane, then rbase (i64), then 15 checkpoints of the
+// cumulative stored residual at rows 16, 32, ..., 240 (u32 when K + 8 <= 32,
+// else u64). Checkpoints serve point reads; SUM and COUNT here don't need them.
+enum class kind : std::uint8_t { constant, runs, packed, delta };
+using i128 = __int128;
 
 // The per-block descriptor as stored; its size is charged to every block.
 struct descriptor {
@@ -109,6 +116,9 @@ struct run_ends {
 // Which runs body to build: u8 run-end projection (default) or the compact
 // mutable Boundlist view as a control.
 bool compact_runs = false;
+// Store delta checkpoints (for point reads), or omit them (Sizes-style; reads
+// prefix-sum from the anchor).
+bool delta_checkpoints = true;
 
 struct runs_geometry {
     std::vector<bl::byte> directory, lengths, control;
@@ -162,12 +172,56 @@ column encode(std::span<const u64> values) {
             i = j;
         }
         const std::size_t packed_cost = plane_bytes(k, block_rows);
+        // Delta candidate: every true step must fit i64 so wrapping u64
+        // reconstruction is exact.
+        bool delta_ok = true;
+        i128 dmin = 0, dmax = 0;
+        for (std::size_t i = 1; i < block_rows; ++i) {
+            const i128 step = static_cast<i128>(block[i]) - static_cast<i128>(block[i - 1]);
+            if (step < -(static_cast<i128>(1) << 63) || step >= (static_cast<i128>(1) << 63))
+                delta_ok = false;
+            dmin = i == 1 ? step : std::min(dmin, step);
+            dmax = i == 1 ? step : std::max(dmax, step);
+        }
+        const unsigned dk = delta_ok ? std::max(1u, width_of(static_cast<u64>(dmax - dmin))) : 64;
+        const std::size_t checkpoint_bytes = dk + 8 <= 32 ? 4 : 8;
+        const std::size_t delta_cost =
+            plane_bytes(dk, block_rows) + 8 + (delta_checkpoints ? 15 * checkpoint_bytes : 0);
         const std::size_t runs_cost =
             plane_bytes(k, run_values.size()) +
             (compact_runs ? layout.directory_bytes() + layout.control_bytes() +
                                 layout.lengths_bytes(static_cast<unsigned>(run_sizes.size()))
                           : run_sizes.size());
-        if (runs_cost < packed_cost && !compact_runs) {
+        if (delta_ok && delta_cost < std::min(packed_cost, runs_cost)) {
+            d.type = kind::delta;
+            d.base = block[0];
+            d.count = block_rows;
+            d.width = static_cast<std::uint8_t>(dk);
+            const i64 rbase = static_cast<i64>(dmin);
+            scratch[0] = 0;
+            u64 cumulative = 0;
+            std::vector<u64> checkpoints;
+            for (std::size_t i = 1; i < block_rows; ++i) {
+                scratch[i] = static_cast<u64>(
+                    static_cast<i128>(block[i]) - static_cast<i128>(block[i - 1]) - dmin);
+                cumulative += scratch[i];
+                if (delta_checkpoints && i % 16 == 15 && i + 1 < block_rows)
+                    checkpoints.push_back(cumulative);  // sum through row i
+            }
+            const std::size_t plane = plane_bytes(dk, block_rows);
+            c.payload.resize(c.payload.size() + delta_cost);
+            pack(dk, scratch, c.payload.data() + d.offset);
+            std::memcpy(c.payload.data() + d.offset + plane, &rbase, 8);
+            for (std::size_t j = 0; j < checkpoints.size(); ++j) {
+                std::uint8_t *at = c.payload.data() + d.offset + plane + 8 + j * checkpoint_bytes;
+                if (checkpoint_bytes == 4) {
+                    const auto v = static_cast<std::uint32_t>(checkpoints[j]);
+                    std::memcpy(at, &v, 4);
+                } else {
+                    std::memcpy(at, &checkpoints[j], 8);
+                }
+            }
+        } else if (runs_cost < packed_cost && !compact_runs) {
             d.type = kind::runs;
             d.count = static_cast<std::uint16_t>(run_values.size());
             d.width = static_cast<std::uint8_t>(k);
@@ -322,6 +376,24 @@ u128 block_sum(const column &c, std::size_t b) {
         }
         return total + static_cast<u128>(d.base) * block_rows;
     }
+    case kind::delta: {
+        // sum x_i = 256 u0 + rbase * 32640 + sum_j (256 - j) s_j  (s_0 = 0):
+        // a weighted reduction of the narrow residuals, no prefix decode.
+        c.decoders[b].read_unchecked(0, block_rows, buffer);
+        i64 rbase;
+        std::memcpy(&rbase, c.payload.data() + d.offset + plane_bytes(d.width, block_rows), 8);
+        i128 t = static_cast<i128>(d.base) * block_rows + static_cast<i128>(rbase) * 32640;
+        if (d.width <= 47) {
+            u64 w = 0;
+            for (std::size_t j = 1; j < block_rows; ++j)
+                w += (block_rows - j) * buffer[j];
+            t += w;
+        } else {
+            for (std::size_t j = 1; j < block_rows; ++j)
+                t += static_cast<i128>(block_rows - j) * buffer[j];
+        }
+        return static_cast<u128>(t);
+    }
     case kind::runs:
         c.decoders[b].read_unchecked(0, d.count, buffer);
         each_run(c, b, [&](unsigned rank, unsigned size) {
@@ -378,13 +450,26 @@ u64 encoded_count_ge(const column &c, const block_mask &mask, u64 threshold) {
     alignas(64) u64 buffer[block_rows];
     for_each_block(mask, [&](std::size_t b) {
         const auto &d = c.blocks[b];
-        if (d.base >= threshold) {  // the whole block is at or above the base
+        // Constant, runs and packed bases are block minima; a delta anchor isn't.
+        if (d.type != kind::delta && d.base >= threshold) {
             total += block_rows;
             return;
         }
         switch (d.type) {
         case kind::constant:
             return;
+        case kind::delta: {
+            c.decoders[b].read_unchecked(0, block_rows, buffer);
+            i64 rbase;
+            std::memcpy(&rbase, c.payload.data() + d.offset + plane_bytes(d.width, block_rows), 8);
+            u64 x = d.base;
+            total += x >= threshold;
+            for (std::size_t i = 1; i < block_rows; ++i) {
+                x += static_cast<u64>(rbase) + buffer[i];
+                total += x >= threshold;
+            }
+            break;
+        }
         case kind::packed: {
             const u64 rhs = threshold - d.base;
             if (d.width < 64 && rhs >> d.width)
@@ -486,14 +571,14 @@ void run(const char *name, std::span<const u64> values, u64 lo, u64 threshold) {
     plain<T> p{std::vector<T>(c.rows), lo};
     for (std::size_t i = 0; i < c.rows; ++i)
         p.values[i] = static_cast<T>(values[i] - lo);
-    std::size_t counts[3] = {};
+    std::size_t counts[4] = {};
     for (const auto &d : c.blocks)
         ++counts[static_cast<int>(d.type)];
     const std::size_t total_bytes = c.descriptor_bytes() + c.payload.size() + c.run_geometry_bytes();
-    std::printf("{\"column\":\"%s\",\"runs_body\":\"%s\",\"rows\":%zu,\"blocks\":%zu,\"constant\":%zu,\"runs\":%zu,"
-                "\"packed\":%zu,\"descriptor_bytes\":%zu,\"payload_bytes\":%zu,"
+    std::printf("{\"column\":\"%s\",\"delta_checkpoints\":%s,\"runs_body\":\"%s\",\"rows\":%zu,\"blocks\":%zu,\"constant\":%zu,\"runs\":%zu,"
+                "\"packed\":%zu,\"delta\":%zu,\"descriptor_bytes\":%zu,\"payload_bytes\":%zu,"
                 "\"run_geometry_bytes\":%zu,\"bits_per_value\":%.3f,\"plain_bytes_per_value\":%zu",
-                name, compact_runs ? "boundlist-compact" : "u8-end-projection", c.rows, c.blocks.size(), counts[0], counts[1], counts[2],
+                name, delta_checkpoints ? "true" : "false", compact_runs ? "boundlist-compact" : "u8-end-projection", c.rows, c.blocks.size(), counts[0], counts[1], counts[2], counts[3],
                 c.descriptor_bytes(), c.payload.size(), c.run_geometry_bytes(),
                 8.0 * total_bytes / c.rows, sizeof(T));
     const std::size_t n = c.blocks.size();
@@ -535,11 +620,18 @@ void run(const char *name, std::span<const u64> values, u64 lo, u64 threshold) {
 }  // namespace
 
 int main(int argc, char **argv) {
-    if (argc == 4 && std::strcmp(argv[3], "--compact-runs") == 0)
-        compact_runs = true;
-    else if (argc != 3) {
-        std::fprintf(stderr, "usage: %s NAME FILE.u64 [--compact-runs]\n", argv[0]);
+    if (argc < 3) {
+        std::fprintf(stderr, "usage: %s NAME FILE.u64 [--compact-runs] [--no-checkpoints]\n",
+                     argv[0]);
         return 2;
+    }
+    for (int i = 3; i < argc; ++i) {
+        if (std::strcmp(argv[i], "--compact-runs") == 0)
+            compact_runs = true;
+        else if (std::strcmp(argv[i], "--no-checkpoints") == 0)
+            delta_checkpoints = false;
+        else
+            return 2;
     }
     std::ifstream in(argv[2], std::ios::binary | std::ios::ate);
     const auto bytes = static_cast<std::size_t>(in.tellg());

@@ -138,7 +138,8 @@ def characterise(name, series, nulls, order=None):
         "column": name, "dtype": str(series.dtype), "rows": len(values) + nulls,
         "nulls": nulls, "native_bits": native_w, "global_for_bits": global_w,
         "constant_blocks": float(constant.mean()),
-        "monotone_blocks": float((np.diff(b, axis=1) >= 0).all(axis=1).mean()),
+        # Adjacent comparison: np.diff on uint64 wraps and is never negative.
+        "monotone_blocks": float((b[:, 1:] >= b[:, :-1]).all(axis=1).mean()),
         "mean_runs": float(runs.mean()),
         "dict_bits_per_value": dict_cost,
         "part_entropy_bits": h0,

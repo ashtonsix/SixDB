@@ -265,6 +265,43 @@ Findings:
    direct packed filters for COUNT, and fused or bit-plane sums that never
    materialise lanes.
 
+## Jena: prediction in real bodies
+
+Codex ran the model over Jena's three 65,536-row windows (14 exact ×100
+decimal fields) and the fault block: delta wins about 74% of blocks, with no
+constant blocks, the opposite of ClickBench. Results:
+`build/spikes/ikea-frame/jena-characterise.jsonl`. (Codex also found the
+model's `monotone_blocks` diagnostic was always true for unsigned diffs; it
+now compares adjacent values.)
+
+`bodies.cpp` now has a **delta** kind: anchor in the descriptor, 256 residuals
+over the minimum step as a SeriesPack plane, the step base (i64), and 15
+cumulative-residual checkpoints at u32 (u64 if K + 8 > 32). SUM uses the
+weighted form `256·u0 + rbase·32640 + Σ (256 − j)·s_j`, a narrow weighted
+reduction with no prefix decode. COUNT prefix-decodes. Both match the plain
+control exactly on all 42 window-fields.
+
+| Real bits/row, 14 fields | Window 0 | Window 196,608 | Window 355,015 |
+| --- | ---: | ---: | ---: |
+| Delta with native u32/u64 checkpoints | 147.3 (delta 35% of blocks) | 146.4 (34%) | 147.8 (36%) |
+| Delta without checkpoints | 128.2 (85%) | 127.6 (85%) | 129.1 (85%) |
+| Model (64-bit descriptor) | ~128 | ~129 | ~131 |
+| One global FOR per field | ~179 | ~177 | ~178 |
+
+**Checkpoint format decides whether prediction wins.** Fifteen native-width
+checkpoints cost about 2 bits per value, which makes delta lose most blocks to
+plain FOR. Without them, real bytes match the model, and delta takes 85% of
+blocks. Bit-packed checkpoints at K + 8 bits would cost about 0.06·(K + 8)
+bits per value. So the decided "checkpoints every 16 values" needs a compact
+checkpoint encoding, or a coarser spacing, to pay. This is now a question for
+Ashton in QUESTIONS.md.
+
+SUM and COUNT on Jena are 4–8× slower than the plain int16 control (about 0.06
+ns/row) on this VM: decoding through the runtime SeriesPack decoder into u64
+dominates. Same caveats as before: noisy local timings, an oracle selector, no
+exceptions yet (the fault block's −9999.00 sentinels are the obvious first
+exception test).
+
 ## Images to hand Engine's witness early
 
 Engine's witness is a selected grouped reduction over parts with different
