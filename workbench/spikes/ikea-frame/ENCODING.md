@@ -257,10 +257,11 @@ of the representation's bytes and the write, so it is deterministic:
    residual fits K), write the packed slot in place. A constant or run block
    shares one stored value across rows, so changing one row is never a slot
    write. SeriesPack's replacement path provides the issued-byte journal.
-   Its `sum_change` is a modulo-u64 delta in the *packed* domain: it equals the
-   logical delta for plain and frame-of-reference integers, but not for
-   dictionary codes, splits, floats or signed values, which need logical
-   contributions computed from before/after values.
+   Its `sum_change` is a modulo-u64 delta in the *packed* domain. Under a
+   fixed-population replacement and an affine integer map (plain, frame of
+   reference, offset-binary signed), the bias cancels and it equals the
+   logical delta modulo 2^64. Dictionary codes, splits, null-count changes,
+   floats and wide or checked sums need their own contribution laws.
 3. Otherwise, add an override. If that exhausts group slack, compact the group.
 
 Null writes to dense columns update the null mask. Writes that change presence
