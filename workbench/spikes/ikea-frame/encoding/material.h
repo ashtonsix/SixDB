@@ -1,7 +1,8 @@
 // Private experimental Frame material for the ikea-frame spike: block
 // descriptors, constant/runs/frame-of-reference/delta bodies over real
 // SeriesPack planes and Boundlist geometry, block masks, and the exact
-// operations over them (SUM, narrow SUM, COUNT, whole-block decode). Shared by
+// operations over them (SUM, narrow SUM, COUNT, whole-block decode), with
+// optional part-wide dictionaries whose code blocks reuse those kinds. Shared by
 // the timing driver (bodies.cpp), Codex's access check and Engine's consumers.
 // Not a Frame API, wire format or registry; it changes with the research.
 #pragma once
@@ -115,6 +116,24 @@ struct run_ends {
 //   none     no checkpoints; point reads prefix-sum from the anchor
 enum class checkpoints : std::uint8_t { native, packed, every64, none };
 
+// Part-wide dictionary option. A part is 65,536 rows (256 blocks; the last part
+// may be shorter, always whole blocks). sorted: codes are ranks of the part's
+// distinct values in ascending order, so they keep order. frequency: codes
+// rank values by descending frequency, ties by ascending value, so frequent
+// values get small codes; order is lost.
+enum class dictionary_order : std::uint8_t { none, sorted, frequency };
+constexpr std::size_t part_blocks = 256;
+constexpr std::size_t part_rows = part_blocks * block_rows;
+
+inline const char *dictionary_name(dictionary_order mode) {
+    switch (mode) {
+    case dictionary_order::none: return "none";
+    case dictionary_order::sorted: return "sorted";
+    case dictionary_order::frequency: return "frequency";
+    }
+    return "?";
+}
+
 // Encoding choices, captured per column image at construction so a retained
 // image is never reinterpreted under another image's settings.
 struct encode_options {
@@ -125,6 +144,12 @@ struct encode_options {
     // Off by default until point/, filter/ and execution/ consumers handle
     // kind::delta_patched; the driver opts in with --delta-exceptions.
     bool delta_exceptions = false;
+    // Off by default until point/, filter/ and execution/ consumers interpret
+    // coded blocks; the driver opts in with --dictionary=sorted|frequency.
+    dictionary_order dictionary = dictionary_order::none;
+    // Keep every part's dictionary even when it doesn't pay overall (the
+    // byte model's assumption); by default a part drops a losing dictionary.
+    bool dictionary_every_part = false;
 };
 
 inline const char *checkpoint_name(checkpoints mode) {
@@ -154,6 +179,24 @@ struct runs_geometry {
     std::optional<bl::view> view;
 };
 
+// Dictionary layout. Each part with a dictionary stores, in the column payload
+// before its blocks' bodies, one SeriesPack plane of count values in code order,
+// each relative to the part minimum, at width W = max(1, width(max - min)). The
+// metadata lives in this per-part record on the column, charged at its size.
+// count == 0 means the part has no dictionary (dropped because it didn't pay,
+// see encode) and none of its blocks is coded. One bit per block on the column
+// (column::coded, charged in 64-bit words) says whether that block's stored
+// values are codes. A coded block is an ordinary block of any kind over its
+// codes: descriptors, layouts and bodies are unchanged and only their
+// interpretation differs. Row i's value is part.min + dictionary[stored_i].
+struct dictionary_part {
+    u64 min;               // part minimum; dictionary values are relative to it
+    std::uint32_t offset;  // dictionary plane offset in the column payload
+    std::uint32_t count;   // distinct values (codes 0..count-1); 0 = no dictionary
+    std::uint8_t width;    // SeriesPack width of the dictionary plane
+};
+static_assert(sizeof(dictionary_part) == 24);
+
 struct column {
     encode_options options;  // how this image was built
     std::vector<descriptor> blocks;
@@ -165,6 +208,9 @@ struct column {
     std::vector<std::optional<sp::decoder<std::uint16_t>>> d16;
     std::vector<std::optional<sp::decoder<std::uint32_t>>> d32;
     std::vector<std::optional<sp::decoder<u64>>> exceptions;  // patched, delta_patched
+    std::vector<dictionary_part> parts;  // empty unless options.dictionary
+    std::vector<u64> coded;              // one bit per block; empty unless options.dictionary
+    std::vector<std::optional<sp::decoder<u64>>> dictionaries;  // per part with a dictionary
     std::size_t rows = 0;
     std::size_t descriptor_bytes() const { return blocks.size() * sizeof(descriptor); }
     std::size_t run_geometry_bytes() const {
@@ -173,6 +219,26 @@ struct column {
             if (r)
                 total += r->directory.size() + r->lengths.size() + r->control.size();
         return total;
+    }
+    // Dictionary planes (inside payload), per-part records and coded bits.
+    std::size_t dictionary_bytes() const {
+        std::size_t total = 0;
+        for (const auto &p : parts)
+            total += p.count ? plane_bytes(p.width, p.count) : 0;
+        return total;
+    }
+    std::size_t part_record_bytes() const { return parts.size() * sizeof(dictionary_part); }
+    std::size_t coded_bit_bytes() const { return coded.size() * sizeof(u64); }
+    std::size_t coded_blocks() const {
+        std::size_t n = 0;
+        for (u64 w : coded)
+            n += std::popcount(w);
+        return n;
+    }
+    // Every charged byte: dictionary planes are already inside payload.
+    std::size_t total_bytes() const {
+        return descriptor_bytes() + payload.size() + run_geometry_bytes() + part_record_bytes() +
+               coded_bit_bytes();
     }
 };
 
@@ -305,8 +371,18 @@ template <class T> u64 weighted_residuals(const sp::decoder<T> &decoder) {
     return w;
 }
 
-// Exact SUM of one block, decoding packed values into u64.
-inline u128 block_sum(const column &c, std::size_t b) {
+inline bool is_coded(const column &c, std::size_t b) {
+    return !c.coded.empty() && (c.coded[b / 64] >> (b % 64) & 1);
+}
+inline const dictionary_part &part_of(const column &c, std::size_t b) {
+    return c.parts[b / part_blocks];
+}
+
+// Reconstruct one block's stored values: its values, or its codes if coded.
+void decode_stored(const column &c, std::size_t b, u64 *out);
+
+// Exact SUM of one block's stored values, decoding packed values into u64.
+inline u128 stored_sum(const column &c, std::size_t b) {
     const auto &d = c.blocks[b];
     alignas(64) u64 buffer[block_rows];
     u128 total = 0;
@@ -415,10 +491,72 @@ inline u128 block_sum(const column &c, std::size_t b) {
     std::abort();
 }
 
+// Exact SUM of a coded block. With D the part's dictionary (relative to the part
+// minimum m), SUM = 256 m + sum_i D[code_i]. Constant: 256 (m + D[base]).
+// Runs: sum over runs of size * (m + D[base + run value]), one lookup per run.
+// Other kinds: decode the codes, then one lookup per row. lookup(code) = D[code].
+template <class L> u128 coded_sum(const column &c, std::size_t b, L &&lookup) {
+    const auto &d = c.blocks[b];
+    const auto &p = part_of(c, b);
+    const u128 rows_min = static_cast<u128>(p.min) * block_rows;
+    if (d.type == kind::constant)
+        return rows_min + static_cast<u128>(lookup(d.base)) * block_rows;
+    alignas(64) u64 buffer[block_rows];
+    u128 total = rows_min;
+    if (d.type == kind::runs) {
+        c.decoders[b].read_unchecked(0, d.count, buffer);
+        each_run(c, b, [&](unsigned rank, unsigned size) {
+            total += static_cast<u128>(lookup(d.base + buffer[rank])) * size;
+        });
+        return total;
+    }
+    decode_stored(c, b, buffer);
+    if (p.width <= 56) {  // 256 entries below 2^56 cannot overflow u64
+        u64 s = 0;
+        for (std::size_t i = 0; i < block_rows; ++i)
+            s += lookup(buffer[i]);
+        return total + s;
+    }
+    for (std::size_t i = 0; i < block_rows; ++i)
+        total += lookup(buffer[i]);
+    return total;
+}
+
+// Exact SUM of one block's values; a coded block reads D through its plane.
+inline u128 block_sum(const column &c, std::size_t b) {
+    if (!is_coded(c, b))
+        return stored_sum(c, b);
+    const auto &dictionary = *c.dictionaries[b / part_blocks];
+    return coded_sum(c, b, [&](u64 code) { return dictionary.get_unchecked(code); });
+}
+
+// Mask SUM over coded blocks: blocks arrive in ascending order, so the current
+// part's dictionary is decoded once into a reused array and each lookup is a
+// load. This beat a plane point read per lookup on every column tried, even
+// URLHash under a sparse-10% mask (~40k entries decoded per part for ~6.6k
+// selected rows). Lazy: touches nothing until a coded block is visited.
+struct code_sum {
+    const column &c;
+    std::size_t part = SIZE_MAX;
+    std::vector<u64> values;
+    explicit code_sum(const column &column) : c(column) {}
+    u128 operator()(std::size_t b) {
+        if (b / part_blocks != part) {
+            part = b / part_blocks;
+            values.resize(c.parts[part].count);
+            c.dictionaries[part]->read_unchecked(0, values.size(), values.data());
+        }
+        return coded_sum(c, b, [&](u64 code) { return values[code]; });
+    }
+};
+
 // Exact SUM over the blocks selected by mask (one bit per block).
 inline u128 encoded_sum(const column &c, const block_mask &mask) {
     u128 total = 0;
-    for_each_block(mask, [&](std::size_t b) { total += block_sum(c, b); });
+    code_sum codes(c);
+    for_each_block(mask, [&](std::size_t b) {
+        total += is_coded(c, b) ? codes(b) : stored_sum(c, b);
+    });
     return total;
 }
 
@@ -436,10 +574,15 @@ A narrow_block_sum(const sp::decoder<T> &decoder) {
 
 inline u128 encoded_sum_narrow(const column &c, const block_mask &mask) {
     u128 total = 0;
+    code_sum codes(c);
     for_each_block(mask, [&](std::size_t b) {
         const auto &d = c.blocks[b];
+        if (is_coded(c, b)) {
+            total += codes(b);
+            return;
+        }
         if (d.type != kind::packed) {
-            total += block_sum(c, b);
+            total += stored_sum(c, b);
             return;
         }
         total += static_cast<u128>(d.base) * block_rows;
@@ -450,14 +593,13 @@ inline u128 encoded_sum_narrow(const column &c, const block_mask &mask) {
         else if (c.d32[b])
             total += narrow_block_sum<std::uint32_t, u64>(*c.d32[b]);
         else
-            total += block_sum(c, b) - static_cast<u128>(d.base) * block_rows;
+            total += stored_sum(c, b) - static_cast<u128>(d.base) * block_rows;
     });
     return total;
 }
 
-// Exact COUNT(u >= threshold) over the selected blocks.
-// Exact COUNT(u >= threshold) within one block.
-inline u64 block_count_ge(const column &c, std::size_t b, u64 threshold) {
+// Exact COUNT(stored >= threshold) within one block (values, or codes if coded).
+inline u64 stored_count_ge(const column &c, std::size_t b, u64 threshold) {
     u64 total = 0;
     alignas(64) u64 buffer[block_rows];
     {
@@ -532,10 +674,109 @@ inline u64 block_count_ge(const column &c, std::size_t b, u64 threshold) {
     return total;
 }
 
+// COUNT(u >= t) for coded blocks, translated once per part per call (lazily,
+// on the first coded block visited in that part).
+//   sorted: the dictionary ascends, so value >= t iff code >= ct, where
+//     ct = lower_bound(D, t - m) (0 if t <= m; count if no value reaches t).
+//     The code block's ordinary stored COUNT at ct is the answer.
+//   frequency: codes don't keep order, so a truth table T (one bit per code,
+//     T[k] = m + D[k] >= t) built from the dictionary; COUNT = sum_i T[code_i],
+//     one lookup per run for runs and the whole block for constant.
+struct code_count {
+    const column &c;
+    u64 threshold;
+    std::vector<std::uint8_t> ready;
+    std::vector<u64> code_threshold;           // sorted
+    std::vector<std::vector<u64>> truth;       // frequency
+    // Touches nothing of the column until a coded block is visited, so an
+    // empty selection still reads no owner state.
+    code_count(const column &column, u64 t) : c(column), threshold(t) {}
+
+    void prepare(std::size_t part) {
+        if (ready.empty()) {
+            ready.resize(c.parts.size());
+            code_threshold.resize(c.parts.size());
+            truth.resize(c.parts.size());
+        }
+        if (ready[part])
+            return;
+        ready[part] = 1;
+        const auto &p = c.parts[part];
+        const auto &dictionary = *c.dictionaries[part];
+        if (c.options.dictionary == dictionary_order::sorted) {
+            if (threshold <= p.min)
+                return;  // code_threshold 0: every code counts
+            const u64 rhs = threshold - p.min;
+            u64 lo = 0, hi = p.count;
+            while (lo < hi) {
+                const u64 mid = lo + (hi - lo) / 2;
+                if (dictionary.get_unchecked(mid) < rhs)
+                    lo = mid + 1;
+                else
+                    hi = mid;
+            }
+            code_threshold[part] = lo;
+            return;
+        }
+        auto &t = truth[part];
+        t.assign((p.count + 63) / 64, 0);
+        alignas(64) u64 buffer[block_rows];
+        for (u64 first = 0; first < p.count; first += block_rows) {
+            const u64 n = std::min<u64>(block_rows, p.count - first);
+            dictionary.read_unchecked(first, n, buffer);
+            for (u64 i = 0; i < n; ++i)
+                if (p.min + buffer[i] >= threshold)  // no overflow: at most the part maximum
+                    t[(first + i) / 64] |= u64{1} << ((first + i) % 64);
+        }
+    }
+    bool holds(std::size_t part, u64 code) const {
+        return truth[part][code / 64] >> (code % 64) & 1;
+    }
+
+    u64 count(std::size_t b) {
+        const std::size_t part = b / part_blocks;
+        prepare(part);
+        if (c.options.dictionary == dictionary_order::sorted) {
+            const u64 ct = code_threshold[part];
+            return ct >= c.parts[part].count ? 0 : stored_count_ge(c, b, ct);
+        }
+        const auto &d = c.blocks[b];
+        if (d.type == kind::constant)
+            return holds(part, d.base) ? block_rows : 0;
+        alignas(64) u64 buffer[block_rows];
+        u64 total = 0;
+        if (d.type == kind::runs) {
+            c.decoders[b].read_unchecked(0, d.count, buffer);
+            each_run(c, b, [&](unsigned rank, unsigned size) {
+                if (holds(part, d.base + buffer[rank]))
+                    total += size;
+            });
+            return total;
+        }
+        decode_stored(c, b, buffer);
+        for (std::size_t i = 0; i < block_rows; ++i)
+            total += holds(part, buffer[i]);
+        return total;
+    }
+};
+
+// Exact COUNT(u >= threshold) within one block. A lone coded block translates
+// the threshold for its part on each call; the mask operations below translate
+// once per part.
+inline u64 block_count_ge(const column &c, std::size_t b, u64 threshold) {
+    if (!is_coded(c, b))
+        return stored_count_ge(c, b, threshold);
+    code_count codes(c, threshold);
+    return codes.count(b);
+}
+
 // Exact COUNT(u >= threshold) over the selected blocks.
 inline u64 encoded_count_ge(const column &c, const block_mask &mask, u64 threshold) {
     u64 total = 0;
-    for_each_block(mask, [&](std::size_t b) { total += block_count_ge(c, b, threshold); });
+    code_count codes(c, threshold);
+    for_each_block(mask, [&](std::size_t b) {
+        total += is_coded(c, b) ? codes.count(b) : stored_count_ge(c, b, threshold);
+    });
     return total;
 }
 
@@ -547,26 +788,43 @@ inline u64 encoded_count_ge(const column &c, const block_mask &mask, u64 thresho
 // places bodies that way.
 inline u128 catalogue_sum(const column &c, const block_mask &mask) {
     u128 total = 0;
+    code_sum codes(c);
     for_each_block(mask, [&](std::size_t b) {
         const auto &d = c.blocks[b];
-        if (d.type == kind::packed && d.width <= 56)
+        if (is_coded(c, b))
+            total += codes(b);
+        else if (d.type == kind::packed && d.width <= 56)
             total += static_cast<u128>(d.base) * block_rows +
                      plane_kernels(d.width).sum(c.payload.data() + d.offset, block_rows);
         else
-            total += block_sum(c, b);
+            total += stored_sum(c, b);
     });
     return total;
 }
 
+// A sorted coded packed block takes the same plane filter at the translated code
+// threshold; other coded blocks use the owner's code COUNT.
 inline u64 catalogue_count_ge(const column &c, const block_mask &mask, u64 threshold) {
     u64 total = 0;
+    code_count codes(c, threshold);
     for_each_block(mask, [&](std::size_t b) {
         const auto &d = c.blocks[b];
-        if (d.type != kind::packed || d.base >= threshold) {
-            total += block_count_ge(c, b, threshold);
+        u64 t = threshold;
+        if (is_coded(c, b)) {
+            if (c.options.dictionary != dictionary_order::sorted || d.type != kind::packed) {
+                total += codes.count(b);
+                return;
+            }
+            codes.prepare(b / part_blocks);
+            t = codes.code_threshold[b / part_blocks];
+            if (t >= part_of(c, b).count)
+                return;
+        }
+        if (d.type != kind::packed || d.base >= t) {
+            total += stored_count_ge(c, b, t);
             return;
         }
-        const u64 rhs = threshold - d.base;
+        const u64 rhs = t - d.base;
         if (d.width < 64 && rhs >> d.width)
             return;
         total += plane_kernels(d.width).count_ge(c.payload.data() + d.offset, block_rows, rhs);

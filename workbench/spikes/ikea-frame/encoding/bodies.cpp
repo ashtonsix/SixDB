@@ -6,8 +6,8 @@
 // binary for signed columns); results are exact in that domain.
 //
 // Research prototype: the block selector is an oracle (smallest bytes per
-// block), there are no exceptions or overrides yet, and nothing here is a
-// Frame interface.
+// block, and per block values or part dictionary codes), there are no
+// overrides yet, and nothing here is a Frame interface.
 
 #include "material.h"
 
@@ -115,17 +115,31 @@ void run(const char *name, std::span<const u64> values, u64 lo, u64 threshold,
             }
         }
     }
-    std::size_t counts[6] = {};
-    for (const auto &d : c.blocks)
-        ++counts[static_cast<int>(d.type)];
-    const std::size_t total_bytes = c.descriptor_bytes() + c.payload.size() + c.run_geometry_bytes();
+    std::size_t counts[6] = {}, coded_counts[6] = {};
+    for (std::size_t b = 0; b < c.blocks.size(); ++b) {
+        ++counts[static_cast<int>(c.blocks[b].type)];
+        if (is_coded(c, b))
+            ++coded_counts[static_cast<int>(c.blocks[b].type)];
+    }
+    const std::size_t total_bytes = c.total_bytes();
+    std::size_t dictionary_parts = 0;
+    for (const auto &part : c.parts)
+        dictionary_parts += part.count != 0;
     std::printf("{\"column\":\"%s\",\"delta_checkpoints\":\"%s\",\"runs_body\":\"%s\",\"rows\":%zu,\"blocks\":%zu,\"constant\":%zu,\"runs\":%zu,"
                 "\"packed\":%zu,\"delta\":%zu,\"patched\":%zu,\"delta_patched\":%zu,\"descriptor_bytes\":%zu,\"payload_bytes\":%zu,"
-                "\"run_geometry_bytes\":%zu,\"bits_per_value\":%.3f,\"plain_bytes_per_value\":%zu",
+                "\"run_geometry_bytes\":%zu,\"dictionary\":\"%s\",\"dictionary_every_part\":%s,"
+                "\"parts\":%zu,\"dictionary_parts\":%zu,\"dictionary_bytes\":%zu,\"part_record_bytes\":%zu,"
+                "\"coded_bit_bytes\":%zu,\"coded_blocks\":%zu,\"bits_per_value\":%.3f,\"plain_bytes_per_value\":%zu",
                 name, checkpoint_name(c.options.delta_checkpoints),
                 c.options.compact_runs ? "boundlist-compact" : "u8-end-projection", c.rows, c.blocks.size(), counts[0], counts[1], counts[2], counts[3], counts[4], counts[5],
                 c.descriptor_bytes(), c.payload.size(), c.run_geometry_bytes(),
-                8.0 * total_bytes / c.rows, sizeof(T));
+                dictionary_name(c.options.dictionary), c.options.dictionary_every_part ? "true" : "false",
+                c.parts.size(), dictionary_parts, c.dictionary_bytes(), c.part_record_bytes(),
+                c.coded_bit_bytes(), c.coded_blocks(), 8.0 * total_bytes / c.rows, sizeof(T));
+    std::printf(",\"coded_kinds\":{\"constant\":%zu,\"runs\":%zu,\"packed\":%zu,\"delta\":%zu,"
+                "\"patched\":%zu,\"delta_patched\":%zu}",
+                coded_counts[0], coded_counts[1], coded_counts[2], coded_counts[3], coded_counts[4],
+                coded_counts[5]);
     const std::size_t n = c.blocks.size();
     struct shape { const char *name; block_mask mask; };
     std::vector<shape> shapes{{"all", block_mask(n)}, {"clustered50", block_mask(n)},
@@ -186,7 +200,8 @@ void run(const char *name, std::span<const u64> values, u64 lo, u64 threshold,
 int main(int argc, char **argv) {
     if (argc < 3) {
         std::fprintf(stderr, "usage: %s NAME FILE.u64 [--compact-runs] "
-                     "[--checkpoints=native|packed|every64|none] [--delta-exceptions]\n",
+                     "[--checkpoints=native|packed|every64|none] [--delta-exceptions] "
+                     "[--dictionary=none|sorted|frequency] [--dictionary-every-part]\n",
                      argv[0]);
         return 2;
     }
@@ -196,6 +211,14 @@ int main(int argc, char **argv) {
             options.compact_runs = true;
         else if (std::strcmp(argv[i], "--delta-exceptions") == 0)
             options.delta_exceptions = true;
+        else if (std::strcmp(argv[i], "--dictionary=none") == 0)
+            options.dictionary = dictionary_order::none;
+        else if (std::strcmp(argv[i], "--dictionary=sorted") == 0)
+            options.dictionary = dictionary_order::sorted;
+        else if (std::strcmp(argv[i], "--dictionary=frequency") == 0)
+            options.dictionary = dictionary_order::frequency;
+        else if (std::strcmp(argv[i], "--dictionary-every-part") == 0)
+            options.dictionary_every_part = true;
         else if (std::strcmp(argv[i], "--checkpoints=native") == 0)
             options.delta_checkpoints = checkpoints::native;
         else if (std::strcmp(argv[i], "--checkpoints=packed") == 0)

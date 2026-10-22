@@ -456,7 +456,140 @@ in practice per-part) opt-out: a part-wide dictionary must be optional. On OS
 and ResolutionWidth, frequency ranking beats sorted codes by about 0.4 bits,
 because frequent values' small codes narrow FOR widths and run values. Sorted
 codes keep order for range predicates, so the choice is again a curated
-option for Engine.
+option for Engine. [Real bodies](#dictionary-bodies-real) now confirm these bytes.
+
+## Dictionary bodies, real
+
+`encode_options::dictionary` (`none` by default, `sorted`, `frequency`;
+driver `--dictionary=…`) builds what [`dictionary_model.py`](dictionary_model.py)
+priced, with real bytes. It stays off by default because point/, filter/ and
+execution/ don't interpret codes yet.
+
+**Layout.** A part is 65,536 rows (256 blocks; the last part is shorter, in
+whole blocks). Each part's dictionary is one SeriesPack plane in the column
+payload, ahead of that part's block bodies. It holds the distinct values in
+code order, relative to the part minimum, at W = max(1, width(max − min)).
+Sorted codes rank values ascending. Frequency codes rank by descending count,
+with ties broken by ascending value. The metadata sits on the column in a
+24-byte `dictionary_part` record per part (part minimum, plane offset, count,
+width; count 0 means no dictionary). `column::coded` holds one bit per block,
+charged as 64-bit words. A coded block is an ordinary block of any existing
+kind built over its codes, with descriptor, layout and body unchanged. Only
+the interpretation changes: row value = part.min + D[stored]. Both records and
+bits count toward `column::total_bytes()`. The JSON reports
+`dictionary_bytes`, `part_record_bytes`, `coded_bit_bytes`, `coded_blocks`,
+`dictionary_parts` and `coded_kinds`.
+
+**Choice.** The encoder runs the existing per-block encoder (`emit_block`,
+factored out unchanged) over each block's values and over its codes. A block
+is coded only when its code body is strictly smaller, which is Ashton's
+per-block opt-out. A part also drops its dictionary unless the plane plus
+min(value, code) per block beats values alone. The per-block choice ignores
+the plane's cost, so without this rule a high-cardinality part codes every
+block and loses overall. `--dictionary-every-part` keeps every dictionary,
+as the model assumed.
+
+**Laws** (comments in [`material.h`](material.h)):
+
+- SUM = 256·m + Σ D[code]. Constant is 256·(m + D[base]). Runs take one
+  lookup per run. Other kinds decode the codes, then look up once per row.
+  The mask arms (`encoded_sum`, narrow, catalogue) decode the current part's
+  dictionary once into a reused array. That beat a plane point read per
+  lookup everywhere tried: OS 1,248 → 642 µs, URLHash 3,930 → 2,408 µs, and
+  equal or better on URLHash's sparse-10% mask.
+- COUNT(u ≥ t), **sorted**: D ascends, so u ≥ t iff code ≥ ct = lower_bound(D,
+  t − m). The result is 0 when t ≤ m, and no rows when ct = count. The code
+  block's ordinary COUNT at ct is the answer, with every whole-block shortcut
+  intact. The catalogue arm runs the plane filter at ct on coded packed
+  blocks.
+- COUNT(u ≥ t), **frequency**: codes lose order, so the arm builds a truth
+  table of one bit per code (m + D[k] ≥ t). The count is Σ T[code]: one
+  lookup per run, or the whole constant block.
+- Both COUNT translations are built lazily, once per part per call, on the
+  first coded block visited. An empty selection still reads no column state,
+  which Codex's protected-owner check enforces: an eager first version
+  faulted on it. A lone `block_count_ge` translates on each call.
+- `decode_block` decodes the stored codes and maps them through D.
+
+All of these checks are exact on every run: SUM, narrow and catalogue SUM/COUNT
+against the plain control, and decode_block against the input. That covers the
+11 ClickBench columns under none/sorted/frequency/every-part (sorted
+every-part with `--delta-exceptions` included), four columns with
+frequency, every-part, delta exceptions and compact runs, and Jena window 0
+with packed checkpoints. Coded runs, packed, patched, delta and delta_patched
+blocks all occur. Coded constant blocks can't: a constant block has no body,
+so its codes never cost strictly less. The masked access check passes.
+
+Bits/value on the 3M-row ClickBench slice (46 parts, 11,718 blocks; records
+and bits add 0.007):
+
+| Column | none | sorted | model | frequency | model | frequency, every part | coded blocks s / f | parts with a dictionary | dictionary share (s) |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| OS | 2.78 | 2.50 | 2.49 | **2.17** | 2.17 | 2.17 | 11,537 / 11,529 | 46 | 0.01 |
+| ResolutionWidth | 3.91 | 3.41 | 3.41 | **3.02** | 3.02 | 3.02 | 10,705 / 10,705 | 44 | 0.04 |
+| RegionID | 5.37 | 4.30 | 4.29 | **4.22** | 4.22 | 4.22 | 11,532 / 11,362 | 46 | 0.14 |
+| URLHash | 59.11 | **50.89** | 51.86 | **50.89** | 51.86 | 51.86 | 7,618 / 7,618 | 30 | 18.84 |
+| ConnectTiming | 2.56 | 2.54 | 2.54 | 2.53 | 2.53 | 2.53 | 2,313 / 2,492 | 18 | 0.07 |
+| EventTime | 16.88 | 16.89 | 27.57 | 16.89 | 27.67 | 27.64 | 0 | 0 | 0 |
+| UserID | 14.60 | 14.60 | 17.01 | 14.61 | 18.77 | 18.77 | 250 / 0 | 1 / 0 | 0.08 |
+| ClientIP | 9.99 | 10.00 | 12.42 | 10.00 | 12.42 | 12.43 | 0 | 0 | 0 |
+| WatchID | 62.50 | 62.51 | 78.50 | 62.51 | 78.50 | 78.51 | 0 | 0 | 0 |
+| IsRefresh | 0.94 | 0.94 | 0.94 | 0.94 | 0.94 | 0.94 | 0 | 0 | 0 |
+| CounterID | 0.50 | 0.51 | 0.50 | 0.51 | 0.50 | 0.51 | 11 / 2 | 3 / 1 | 0.00 |
+
+1. **The model was right to within 0.01 bits** wherever every part keeps its
+   dictionary. Real bytes add only the 24-byte records and the coded bits.
+2. **Per-part opt-out makes the option safe to enable.** With it, no column
+   loses more than 0.01 bits (records and bits) against none. EventTime,
+   ClientIP and WatchID drop every dictionary rather than lose 2.4–16 bits.
+   URLHash drops 16 of 46 parts and lands 1 bit below the model, at 50.89:
+   in those 16 parts too few hashes repeat to repay the plane.
+3. Frequency is never worse than sorted here, and it is 0.33–0.39 bits better
+   on OS and ResolutionWidth. Sorted codes keep the code-threshold COUNT.
+
+Jena window 0, packed checkpoints, sorted: 138.90 → 137.49 bits/row over 14
+fields (−1.0%). Three fields keep a dictionary: rh 12.08 → 11.52, wd 15.97 →
+15.33, and max.wv 10.57 → 10.28. The other 11 drop it and stay within 0.01
+bits.
+
+Full-scan medians in µs per 3M rows, local OrbStack VM, 21 paired rotated
+trials (noisy and indicative only; the plain SUM control alone moved up to 1.7×
+between runs):
+
+| Column | SUM encoded / narrow / catalogue: none | sorted | frequency | plain |
+| --- | --- | --- | --- | ---: |
+| OS | 636 / 635 / 630 | 621 / 640 / 614 | 838 / 855 / 832 | 185 |
+| ResolutionWidth | 761 / 757 / 780 | 708 / 719 / 701 | 869 / 896 / 876 | 178 |
+| RegionID | 887 / 882 / 882 | 830 / 850 / 839 | 857 / 865 / 861 | 257 |
+| URLHash | 1,588 / 1,636 / 1,579 | 2,408 / 2,408 / 2,422 | 2,386 / 2,420 / 2,404 | 1,124 |
+
+| Column | COUNT encoded / catalogue: none | sorted | frequency | plain |
+| --- | --- | --- | --- | ---: |
+| OS | 1,255 / 1,261 | 1,292 / 1,299 | 1,677 / 1,718 | 462 |
+| ResolutionWidth | 1,911 / 1,900 | 1,857 / 1,852 | 2,086 / 2,103 | 444 |
+| RegionID | 2,299 / 2,295 | 2,358 / 2,355 | 3,346 / 3,387 | 557 |
+| URLHash | 2,167 / 2,165 | 1,759 / 1,620 | 3,984 / 4,014 | 690 |
+
+- **On low-cardinality columns, sorted codes cost no speed.** SUM takes one
+  array lookup per run, and the code-threshold COUNT reuses every shortcut.
+- **Frequency costs speed where it saves bytes.** On OS it turns 2,500 runs
+  blocks into patched code blocks, which decode and then look up per row. Its
+  COUNT reads a truth bit per row, so RegionID COUNT is 1.45× slower than
+  sorted.
+- **URLHash SUM is 1.5× slower coded** (a per-row gather from a ~40k-entry
+  array). COUNT is faster with sorted codes (2,165 → 1,620 catalogue),
+  because 16-bit codes filter faster than 64-bit values.
+
+**Consumer obligations** before the default can change: point reads,
+filters and execution must check the block's coded bit and, for a coded block,
+map stored values through the part's dictionary. A selected coded block reads
+its part's dictionary plane, which lies outside the block's own body: an
+access-shape fact for masked placement. Sorted dictionaries make value
+predicates code predicates via lower_bound. Equality becomes a binary search.
+Range bounds follow as above. Frequency dictionaries need a per-part truth
+table or a value lookup. Execution's dictionary editions are now real part
+dictionaries, but codes from different parts are not comparable: grouping
+across parts must go through values, or a cross-part code map.
 
 ## Filter heads by transform cut, and window bounds
 
