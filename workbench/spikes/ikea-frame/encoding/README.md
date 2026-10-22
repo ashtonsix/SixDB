@@ -1241,6 +1241,286 @@ synthetic inputs under four option sets, masked_access_check, and 11,232
 non-timing driver values, which are unchanged apart from the +8-byte column
 object.
 
+## Row-selected aggregates and NULL fill
+
+Owner operations used to take only coarse masks, one bit per block. A
+nullable consumer such as Ikea LEAD's lifecycle work then had to decode
+every block with mixed validity, which gives up the encoded-aggregate
+advantage. [`selected.h`](selected.h) adds exact operations over
+`borrowed_block` under a 256-bit row selection S, which is the caller's
+selection AND validity: stored and logical SUM (u128), COUNT(x ≥ t),
+COUNT(x = v) and |S|. Each has column wrappers and a decode-then-mask control.
+The NULL fill is an opt-in encoder option. Code: operations at 2c3bdf87, a
+standalone-member guard at e83f22b1, speed at 5b286591, fill at 3c3b5824.
+
+**Dispatch.** Column forms take a coarse block mask plus a row plane of four
+u64 per block. The coarse bit is tested before any descriptor. An empty S
+returns before the descriptor, body or dictionary, in the column forms and
+in every block form, including the direct `code_sum`, `code_count` and
+`code_count_eq` members. A full S takes the existing full-256 operation,
+unchanged. Only mixed blocks take the per-kind algebra:
+
+| Kind | SUM over S | COUNT over S | Reads |
+| --- | --- | --- | --- |
+| constant | base·\|S\| | \|S\| or 0 | descriptor |
+| runs | Σ value·popcount(S ∩ run), each popcount a difference of two per-word prefix ranks | per-run test × popcount, branch-free; bound shortcuts as unmasked | run values, ends |
+| packed | \|S\|·base + catalogue `masked_sum` (native packets under `mask16` of S; split halves above 56 bits) | catalogue `masked_count_ge`/`_eq` (64-row filters, S as active mask) | only 16-row packets or 64-row words with a selected row |
+| patched | inliers S′ = S ∖ E as packed (exception slots hold 0); exceptions by position test | the same split | plane for S′, all exceptions |
+| delta | \|S\|·u0 + rbase·Σ_{i∈S} i + Σ_j c_j s_j, c_j = \|{i ∈ S : i ≥ j}\| | monotone (rbase ≥ 0): popcount(S ∧ rows ≥ first); else prefix reconstruction through the last selected row | residuals through the last selected row; monotone COUNT reads checkpoints |
+| delta_patched | the delta law over S′ with m(i) steps; selected exceptions add lo + v_e | decode, then mask | body |
+| arrival | selected literals F + rank; references filtered in row order | per-edition truth bits for selected rows | all flag words and references |
+| coded | \|S\|·min + Σ D[code] through the edition's entries | sorted: stored COUNT at the code threshold; otherwise truth bits | as the kind, plus the dictionary |
+
+The delta law generalises the weighted SUM. Weights 256 − j become suffix
+counts c_j ≤ 256, so the same narrow-lane bounds hold, and Σ_{i∈S} i = Σ_{j≥1} c_j.
+Two equivalent forms are cheaper at the ends: for at most 64 selected rows,
+Σ_{i∈S} S(i) as a walk of segment sums in 32-bit halves; for at most 64
+unselected rows U, the full SUM minus Σ_{i∈U} x_i. A paired sweep on Jena `p`
+and `T` over thresholds 0, 32, 64, 96 and 128 chose 64. Segments lose 2× at
+50% NULL, where the suffix counts stay.
+
+**Laws and grants.**
+
+- Selected values aren't independent of unselected rows. A selected delta
+  row's value depends on unselected rows' residuals, so the plane is read
+  through the last selected row; c_j counts those rows. An arrival literal's
+  code is F plus the flagged rows before it, and a reference's index counts
+  every earlier reference. So masked arrival reads all four flag words and
+  enumerates every reference, filtering by S.
+- The monotone delta COUNT reads checkpoints, as the full one does. Every
+  other mixed SUM and COUNT stays inside the scan grant. borrowed_check runs
+  every selection's SUM on delta bodies granted only plane + rbase, and
+  COUNT where rbase < 0. The complement form reads the whole residual plane,
+  still without checkpoints.
+- Packed and patched SUM and COUNT skip 16-row packets and 64-row words with
+  no selected row. So a sparse S reads less than the extent, never more.
+- The first cut's direct coded members began dictionary preparation before
+  testing S. Ikea LEAD found this; e83f22b1 guards them.
+
+**Verification.** In borrowed_check, every block of every input takes
+adversarial selections: empty, full, row 0 alone, row 255 alone, rows 1 and
+254, every 16th row, rows either side of each checkpoint spacing,
+alternating both phases, rows [0, 100), rows [200, 256), all but row 0, all
+but row 255, only and all but the exception positions. It also takes random
+selections at 0.1, 1, 10, 50, 90 and 99% density, which are subsampled at
+unaligned placements. Each runs every block form, the coded members and the
+decode-then-mask control against the input oracle restricted to S. Column
+wrappers run over a mixed row plane (empty, full, sparse, dense and
+adversarial blocks), with and without the shared cache, across the
+old/new/old/copy/new image sequence. For empty S, the guard places the body
+and dictionary inside a `PROT_NONE` page and calls every operation and
+member, per call and cached. `identity/check.sh` passes all 417 runs: 47.9M
+masked checks, 396k scan-grant masked checks and 5,690 empty-selection
+guards. Seeded mutations were caught: an off-by-one Σ i, a dropped literal
+rank, and a member without its empty guard. The driver's 11,232 non-timing
+values match the frozen `bodies_after`, apart from the known +8 B
+`column_object_bytes` and `retained_bytes`. `masked_access_check` passes.
+
+### Predictor-consistent NULL fill
+
+`encode_nullable(values, validity, options, fill)` keeps validity beside the
+column as its own plane of four u64 per block, charged at 32 B per block
+(1 bit/row). Validity never enters a body, and original coordinates are
+unchanged. Logical results over valid rows pass validity (AND any selection)
+as S. NULL inputs are never read. For each block with NULLs, the predictor
+fill encodes four candidates and keeps the smallest body:
+
+- the valid minimum (FOR residual 0);
+- the previous valid value, so the run extends;
+- previous + r, with r the smallest step between adjacent valid rows (delta s = 0);
+- linear interpolation across each gap, copying the nearest valid value at the edges.
+
+Every filler lies within the block's valid [min, max], so no fill changes
+the span or wraps. A previous + r candidate that would leave the span is
+refused, never wrapped. That keeps the i128 delta law exact and the
+rbase ≥ 0 monotone premise intact. A block with no valid row is constant 0,
+and one with a single valid value is constant. A block with no NULL encodes
+exactly as `encode()` would. Zero fill (NULL → 0) is the naive control.
+Fills are chosen in the value domain, so with a dictionary an interpolated
+filler can add an entry. The tables below use default options.
+
+`frame_encoding_null_check` pins the unsigned boundaries:
+
+- walks rising from 0, falling to 0, rising to and falling from UINT64_MAX,
+  noisy, and in steps of 2^62 that exceed i64;
+- each with 0, 1 or 9 leading and 0, 1 or 13 trailing holes plus an
+  interior gap;
+- all-NULL blocks, one valid row (at 0, 77 or 255), two valid values at the
+  top of the range, alternating and run NULLs, sentinels, and no NULLs;
+- five option sets, including sorted and arrival dictionaries.
+
+Real columns add uniform and clustered NULLs at 0.1, 10 and 50%. Every image
+must:
+
+- keep its valid rows;
+- keep fillers inside the valid span;
+- give the same bytes whether NULL inputs are poisoned or zeroed;
+- equal `encode()` for blocks without NULL;
+- decode non-decreasing for every delta block with rbase ≥ 0;
+- give exact SUM, COUNT ≥ median and COUNT = v over the valid rows (and over
+  the valid rows AND a random selection) against the input.
+
+670 synthetic images and 730 per real column pass, on OS, RegionID,
+EventTime, URLHash, UserID, ClientIP and Jena `p`, `wv` and `T`. Removing
+the span refusal fails at once.
+
+Bits/row with synthetic NULLs, as predictor / zero / compacted. Every arm
+includes the 1.00 bit/row validity plane. Uniform NULLs are independent per
+row. Clustered NULLs form runs with a mean length of 64 rows. ClickBench uses
+3M rows; Jena uses window 0. The no-NULL column has no validity plane.
+**Compacted** is a byte model only: each block stores its NN valid rows,
+priced with `material.cpp`'s rules for the kind chosen on those values,
+plus its descriptor and the validity plane. It was calibrated exactly
+against real bodies on every no-NULL block. Output is in
+`build/spikes/ikea-frame/masked/bits.jsonl`.
+
+| Uniform | No NULL | 0.1% | 1% | 10% | 50% |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| OS | 2.78 | 3.78 / 4.90 / 3.78 | 3.77 / 8.87 / 3.77 | 3.67 / 17.72 / 3.67 | 3.12 / 40.94 / 3.12 |
+| RegionID | 5.37 | 6.37 / 7.72 / 6.37 | 6.35 / 12.48 / 6.35 | 6.14 / 21.99 / 6.12 | 4.93 / 42.09 / 4.79 |
+| EventTime | 16.88 | 17.88 / 18.52 / 17.88 | 17.87 / 20.60 / 17.87 | 17.82 / 30.07 / **16.60** | 13.66 / 54.91 / **10.19** |
+| URLHash | 59.11 | 60.11 / 60.13 / 60.11 | 60.06 / 60.27 / 60.05 | 58.04 / 61.37 / **55.45** | 34.62 / 53.87 / 33.01 |
+| UserID | 14.60 | 15.59 / 16.27 / 15.59 | 15.53 / 19.02 / 15.53 | 14.95 / 28.04 / 14.95 | 11.64 / 42.35 / 11.63 |
+| ClientIP | 9.99 | 10.99 / 12.75 / 10.99 | 10.95 / 18.81 / 10.95 | 10.54 / 28.25 / 10.54 | 8.27 / 42.52 / 8.26 |
+| Jena p | 8.88 | 9.88 / 10.79 / 9.88 | 9.88 / 13.71 / 9.92 | 9.83 / 25.30 / 9.61 | 9.45 / 54.88 / **6.66** |
+| Jena wv | 9.97 | 10.97 / 11.46 / 10.97 | 10.97 / 13.08 / 10.97 | 10.96 / 24.47 / **10.16** | 10.21 / 56.06 / **6.37** |
+
+| Clustered | No NULL | 0.1% | 1% | 10% | 50% |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| OS | 2.78 | 3.78 / 3.81 / 3.78 | 3.76 / 4.09 / 3.76 | 3.58 / 6.30 / 3.58 | 2.73 / 8.38 / 2.73 |
+| RegionID | 5.37 | 6.37 / 6.41 / 6.37 | 6.32 / 6.72 / 6.32 | 5.94 / 9.15 / 5.93 | 4.09 / 10.60 / 4.06 |
+| EventTime | 16.88 | 17.87 / 17.94 / 17.86 | 17.81 / 18.86 / 17.71 | 17.23 / 26.41 / 16.35 | 12.49 / 33.65 / **9.91** |
+| URLHash | 59.11 | 60.07 / 60.07 / 60.06 | 59.62 / 59.63 / 59.52 | 55.52 / 55.63 / 54.65 | 33.33 / 34.01 / 31.69 |
+| UserID | 14.60 | 15.59 / 15.60 / 15.59 | 15.46 / 15.58 / 15.46 | 14.36 / 15.34 / 14.36 | 9.18 / 11.39 / 9.18 |
+| ClientIP | 9.99 | 10.98 / 11.02 / 10.98 | 10.89 / 11.23 / 10.89 | 10.16 / 12.80 / 10.16 | 6.67 / 11.61 / 6.66 |
+| Jena p | 8.88 | 9.87 / 10.03 / 9.87 | 9.87 / 10.40 / 9.85 | 9.72 / 19.18 / 9.46 | 8.27 / 34.75 / **6.60** |
+| Jena wv | 9.97 | 10.97 / 11.15 / 10.96 | 10.96 / 11.50 / 10.92 | 10.78 / 20.45 / 10.19 | 8.94 / 36.63 / **6.48** |
+
+1. **Predictor fill costs the bodies nothing, and the validity plane is the
+   overhead.** At 0.1–1% every column grows by 0.93–1.00 bits/row, which is
+   the plane. NULL rows then lower body bytes. At 50%, previous-value fills
+   turn half the rows into run extensions, so five of the eight columns
+   become smaller than without NULLs. URLHash drops from 59.1 to 34.6, close to its modelled
+   compaction at 33.0.
+2. **Zero fill is the failure the predictor avoids.** Against predictor fill
+   it costs 0.2–7.9 bits/row more at 1% uniform (least on URLHash, already
+   59 bits wide) and 3.3–17.7 at 10%, because a 0 widens every FOR block and
+   breaks runs. At 50% it reaches 41–56 bits/row. Clustered NULLs touch few
+   blocks, so zero fill stays close at 0.1–1%.
+3. **Compaction would pay in packed- and delta-heavy blocks with many NULLs.**
+   This is an observation from the model, not a contract. At 50%, it saves
+   3.5 bits/row on EventTime, 2.8 on `p` and 3.8 on `wv` over predictor
+   fill. At 10% uniform it saves 1.2 on EventTime, 2.6 on URLHash and 0.8 on
+   `wv`. On the run-heavy OS, RegionID, UserID and ClientIP it saves at most
+   0.14 at any density. At ≤ 1% it saves at most 0.10 on any column, and
+   Jena `p` is 0.04 worse, because checkpoints aren't scaled to NN. The gain is where a
+   filler occupies a residual slot that no predictor makes free: a packed
+   plane slot at width K, or a delta row. NN bodies would need rank-based
+   point reads and would change every kind, so they stay modelled.
+4. **At low NULL density the plane is the remaining lever.** At 0.1% uniform,
+   2,628 of 11,718 blocks are mixed, yet every block pays 32 B. An all-valid
+   flag per block, or a position list, would remove most of that 1 bit/row
+   (untested).
+
+Timings are local VM medians in µs, as masked / decode-then-mask. Each run
+times 21 trials of all ten arms in a fixed-seed shuffled order. Arms are
+masked SUM and COUNT ≥ median, a duplicate of each, the control, the no-NULL
+image's full-mask aggregate and the filled image unmasked. Three rounds
+rotate the column order, and cells are medians over rounds. The filled image
+uses predictor fill under validity S. At 1% uniform, 92% of blocks are mixed
+(10,834 of 11,718); at 50% all are.
+
+| SUM | No NULL | 1% | 10% | 50% | 10% clustered |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| OS | 528 | 1,034 / 5,517 | 1,043 / 5,932 | 868 / 5,444 | 731 / 2,470 |
+| RegionID | 733 | 1,419 / 5,783 | 1,436 / 6,343 | 1,170 / 6,326 | 996 / 2,761 |
+| EventTime | 884 | 1,101 / 2,465 | 1,104 / 2,722 | 3,200 / 10,232 | 1,219 / 1,757 |
+| URLHash | 1,096 | 2,107 / 2,835 | 4,244 / 6,302 | 2,974 / 10,206 | 2,135 / 2,508 |
+| UserID | 837 | 1,626 / 6,171 | 1,663 / 6,929 | 1,304 / 6,836 | 1,116 / 2,905 |
+| ClientIP | 664 | 1,522 / 6,225 | 1,527 / 6,872 | 1,170 / 6,698 | 966 / 2,817 |
+| Jena p | 13 | 28 / 68 | 63 / 72 | 82 / 81 | 26 / 36 |
+| Jena wv | 18 | 12 / 44 | 12 / 46 | 64 / 187 | 18 / 30 |
+
+| COUNT ≥ median | No NULL | 1% | 10% | 50% | 10% clustered |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| OS | 441 | 985 / 5,365 | 999 / 5,795 | 817 / 5,296 | 669 / 2,353 |
+| RegionID | 594 | 1,332 / 5,650 | 1,349 / 6,221 | 1,110 / 6,189 | 895 / 2,598 |
+| EventTime | 654 | 820 / 2,317 | 812 / 2,583 | 2,242 / 10,088 | 891 / 1,567 |
+| URLHash | 806 | 1,477 / 2,662 | 3,789 / 6,110 | 2,727 / 10,062 | 1,820 / 2,268 |
+| UserID | 43 | 79 / 6,033 | 72 / 6,789 | 71 / 6,626 | 109 / 2,379 |
+| ClientIP | 488 | 1,412 / 6,109 | 1,422 / 6,721 | 1,107 / 6,567 | 833 / 2,646 |
+| Jena p | 50 | 59 / 68 | 60 / 69 | 56 / 78 | 52 / 57 |
+| Jena wv | 19 | 10 / 41 | 10 / 43 | 60 / 185 | 18 / 29 |
+
+5. **Per-kind algebra beats decode-then-mask by 3–6× on the run- and
+   packed-heavy columns.** Geometric means of paired masked/control ratios
+   are 0.32 (SUM) and 0.22 (COUNT) at 1% uniform, 0.27 and 0.17 at 50%, and
+   0.50 and 0.37 at 10% clustered. UserID's COUNT keeps its bound shortcuts
+   and needs about 1% of the control's time.
+6. **Masked aggregates cost 1.2–2.9× the no-NULL aggregate at 1% uniform**,
+   Jena `wv` aside (geometric means 1.67 SUM and 1.59 COUNT). Almost every block is mixed,
+   so almost none takes the full path, and a run-heavy block pays two ranks
+   per run. Clustered NULLs leave more blocks full, giving 0.9–2.6×
+   (geometric means 1.44 and 1.52). Jena `wv` is faster masked than
+   unmasked (12 against 18 µs): its packed blocks reach the catalogue's
+   native packet SUM, which beats the full path's range decode here, as in
+   the [catalogue table](#shared-plane-catalogue-first-cut).
+7. **Delta SUM gains most at the ends, with no gain in the middle.** Segment
+   sums bring Jena `p` at 1% to 28 µs against 68 for the control (13 with
+   no NULLs). At 10–50%, the suffix-count weights take about as long as the
+   control (63–82 against 72–81 µs), because computing c_j and the
+   reconstruction prefix are both one pass over 256 rows. Delta COUNT on `p`
+   reconstructs a prefix (most blocks are not non-decreasing) and runs at
+   0.7–0.9× the control.
+8. **Speed changes were paired.** Per-run ranks beat decoding at every
+   run-count crossover tried (16–256 runs). Branch-free run counts cut
+   URLHash COUNT at 10% from 7,899 to 4,018 µs, and OS SUM at 1% fell from
+   1,603 to 1,042 µs. The duplicate controls read 0.99–1.01 in every cell.
+
+**Encode cost.** The candidate encodings are paid at construction.
+`nulls --encode-cost` reports the median of 5 runs and one run's
+allocations (bytes requested from `operator new`) for `encode()` on the
+no-NULL column and for `encode_nullable` (fill, encode and validity copy) on
+the same column. Cells are ms (MB allocated), local VM:
+
+| Column | Plain encode | Predictor, 1% | 10% | 50% | 1% clustered | Zero fill, 50% |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| OS | 40.7 (72) | 159.2 (432) | 194.3 (467) | 241.7 (496) | 48.5 (114) | 87.0 (200) |
+| RegionID | 53.4 (86) | 201.8 (476) | 242.3 (517) | 302.2 (547) | 65.0 (130) | 101.7 (202) |
+| EventTime | 71.2 (169) | 262.6 (766) | 307.3 (815) | 349.1 (740) | 88.6 (223) | 102.6 (228) |
+| URLHash | 94.3 (195) | 336.5 (759) | 394.7 (807) | 389.2 (720) | 112.7 (249) | 104.9 (226) |
+| UserID | 41.4 (101) | 195.2 (576) | 236.8 (631) | 313.0 (661) | 51.8 (149) | 106.1 (201) |
+| ClientIP | 57.1 (90) | 219.2 (483) | 265.0 (521) | 298.6 (558) | 67.5 (134) | 99.9 (203) |
+| Jena p | 1.7 (3) | 6.7 (18) | 7.9 (17) | 7.5 (15) | 1.7 (4) | 2.1 (5) |
+| Jena wv | 2.0 (4) | 7.4 (17) | 8.1 (17) | 9.0 (16) | 2.1 (4) | 2.1 (5) |
+
+9. **Predictor fill makes construction 3.6–7.6× slower once most blocks
+   hold a NULL.** It allocates 3.7–6.9× the bytes. Each mixed block encodes up
+   to four candidate bodies, then `encode()` runs again on the filled
+   values: that second pass costs the plain encode, and the rest is the
+   fill. Clustered NULLs leave most blocks without NULL, so the cost is
+   1.0–1.25×. Zero fill costs 1.0–2.6×, all of it in the re-encode of wider
+   blocks. The allocations are per-candidate scratch vectors and payloads,
+   and nothing is reused yet. Pricing a candidate without emitting it, or
+   choosing the fill from the block's kind on valid rows (one emit), would
+   remove most of this (untested). These are encoder costs only: no write
+   or lifecycle gain is inferred from body bytes or scan timing.
+   `fill_nulls` returns plain filled values, which Engine's EncodedRegion
+   accepts as they stand.
+
+Scripts and results are in `build/spikes/ikea-frame/masked/` (`timing.sh`,
+`summarise.py`, `bits.jsonl`, `timing.jsonl`, `encode_cost.jsonl`). Local VM timings are
+indicative only. **Remaining:**
+
+- NN bodies are unbuilt, and so is a sparse validity form;
+- the fill's encode cost needs a cheaper chooser;
+- coded-block masked timing is unmeasured (the control's dictionary lookups
+  are point reads);
+- fill bytes under dictionaries are unmeasured;
+- delta SUM at middle densities has no faster form;
+- point/, filter/ and execution/ consumers and Engine's witness can now take
+  these operations in place of their decode fallbacks.
+
 ## Row order in real bodies
 
 The same 11 ClickBench columns were encoded as real bodies (default options,
