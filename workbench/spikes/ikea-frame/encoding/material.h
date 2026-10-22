@@ -45,7 +45,21 @@ constexpr std::size_t block_rows = 256;
 // ascending row positions (u8) and n exception values relative to lo as a
 // SeriesPack plane at width W. W is stored so the body is interpretable without
 // any retained decoder binding.
-enum class kind : std::uint8_t { constant, runs, packed, delta, patched };
+// delta_patched: delta with exceptions. The delta body (plane, rbase,
+// checkpoints, all as delta under the same checkpoint option) is followed by the
+// patched exception tail: lo (u64), n (u8), W (u8), n ascending u8 positions and
+// n values relative to lo at width W. Prediction law: exception rows are
+// excluded from the chain. Let f be the first non-exception row; d.base (the
+// anchor) is row f's value. Each later non-exception row i stores
+// s_i = (x_i - x_p) - rbase, where p is the previous non-exception row; row f
+// and every exception slot store 0 and take no step. So for any row i, with
+// S(i) = s_0 + ... + s_i and m(i) = max(0, i - |{e in E : e <= i}|) steps
+// taken, the chain value is anchor + rbase * m(i) + S(i): a non-exception
+// row's value, or for an exception row the last non-exception value before it
+// (the anchor before f). Checkpoints hold S(i) at the delta rows, i.e. the
+// cumulative stored residuals of non-exception rows; exception values are never
+// in them. A point reader adds rbase * m(i), counting positions <= i.
+enum class kind : std::uint8_t { constant, runs, packed, delta, patched, delta_patched };
 
 // Exception layout inside a patched block's payload.
 struct patch_view {
@@ -106,6 +120,9 @@ struct encode_options {
     // Boundlist view as a control.
     bool compact_runs = false;
     checkpoints delta_checkpoints = checkpoints::native;
+    // Whether the encoder may choose delta_patched blocks (consumers that
+    // don't read that kind yet can turn it off).
+    bool delta_exceptions = true;
 };
 
 inline const char *checkpoint_name(checkpoints mode) {
@@ -145,7 +162,7 @@ struct column {
     std::vector<std::optional<sp::decoder<std::uint8_t>>> d8;
     std::vector<std::optional<sp::decoder<std::uint16_t>>> d16;
     std::vector<std::optional<sp::decoder<std::uint32_t>>> d32;
-    std::vector<std::optional<sp::decoder<u64>>> exceptions;  // patched blocks only
+    std::vector<std::optional<sp::decoder<u64>>> exceptions;  // patched, delta_patched
     std::size_t rows = 0;
     std::size_t descriptor_bytes() const { return blocks.size() * sizeof(descriptor); }
     std::size_t run_geometry_bytes() const {
@@ -169,6 +186,48 @@ inline patch_view patches(const column &c, std::size_t b) {
     p.positions = at + 10;
     p.values = at + 10 + p.n;
     return p;
+}
+
+// The exception tail of a delta_patched block, after its delta checkpoints.
+inline patch_view delta_patches(const column &c, std::size_t b) {
+    const auto &d = c.blocks[b];
+    const std::uint8_t *at = c.payload.data() + d.offset + plane_bytes(d.width, block_rows) + 8 +
+                             checkpoint_cost(c.options.delta_checkpoints, d.width);
+    patch_view p;
+    std::memcpy(&p.lo, at, 8);
+    p.n = at[8];
+    p.value_width = at[9];
+    p.positions = at + 10;
+    p.values = at + 10 + p.n;
+    return p;
+}
+
+// Whole-block reconstruction of a delta_patched block under the law above.
+inline void decode_delta_patched(const column &c, std::size_t b, u64 *out) {
+    const auto &d = c.blocks[b];
+    c.decoders[b].read_unchecked(0, block_rows, out);
+    i64 rbase;
+    std::memcpy(&rbase, c.payload.data() + d.offset + plane_bytes(d.width, block_rows), 8);
+    const auto p = delta_patches(c, b);
+    // step[i] is all ones at rows that take a step, zero at exception slots.
+    alignas(64) u64 step[block_rows];
+    std::fill(step, step + block_rows, ~u64{0});
+    for (unsigned e = 0; e < p.n; ++e)
+        step[p.positions[e]] = 0;
+    unsigned f = 0;
+    while (f < p.n && p.positions[f] == f)
+        ++f;  // leading exceptions; row f is the anchor
+    u64 x = d.base;
+    for (std::size_t i = 0; i <= f; ++i)
+        out[i] = x;
+    for (std::size_t i = f + 1; i < block_rows; ++i) {
+        x += (static_cast<u64>(rbase) & step[i]) + out[i];
+        out[i] = x;
+    }
+    alignas(64) u64 exc[block_rows];
+    c.exceptions[b]->read_unchecked(0, p.n, exc);
+    for (unsigned e = 0; e < p.n; ++e)
+        out[p.positions[e]] = p.lo + exc[e];
 }
 
 // Visit each run's (rank, size) through Boundlist range over the chosen body.
@@ -282,6 +341,46 @@ inline u128 block_sum(const column &c, std::size_t b) {
         }
         return static_cast<u128>(t);
     }
+    case kind::delta_patched: {
+        // With N = 256 - n chain rows, their m values are 0..N-1, and
+        // sum_{i not in E} S(i) = sum_all S(i) - sum_{e in E} S(e), so
+        // sum x_i = N u0 + rbase * N(N-1)/2 + sum_j (256 - j) s_j
+        //           - sum_{e in E} S(e) + sum_{e in E} (lo + v_e).
+        // The weighted term is delta's; the correction scans only up to the
+        // last exception position.
+        c.decoders[b].read_unchecked(0, block_rows, buffer);
+        i64 rbase;
+        std::memcpy(&rbase, c.payload.data() + d.offset + plane_bytes(d.width, block_rows), 8);
+        const auto p = delta_patches(c, b);
+        const i128 chain = block_rows - p.n;
+        i128 t = static_cast<i128>(d.base) * chain + static_cast<i128>(rbase) * (chain * (chain - 1) / 2);
+        const unsigned last = p.positions[p.n - 1];
+        if (d.width <= 47) {  // S(i) < 2^55 and 32 of them fit u64
+            u64 w = 0, s = 0, held = 0;
+            for (std::size_t j = 1; j < block_rows; ++j)
+                w += (block_rows - j) * buffer[j];
+            for (unsigned j = 0, e = 0; j <= last; ++j) {
+                s += buffer[j];
+                if (p.positions[e] == j)
+                    held += s, ++e;
+            }
+            t += static_cast<i128>(w) - static_cast<i128>(held);
+        } else {
+            i128 s = 0;
+            for (std::size_t j = 1; j < block_rows; ++j)
+                t += static_cast<i128>(block_rows - j) * buffer[j];
+            for (unsigned j = 0, e = 0; j <= last; ++j) {
+                s += buffer[j];
+                if (p.positions[e] == j)
+                    t -= s, ++e;
+            }
+        }
+        alignas(64) u64 exc[block_rows];
+        c.exceptions[b]->read_unchecked(0, p.n, exc);
+        for (unsigned e = 0; e < p.n; ++e)
+            t += static_cast<i128>(p.lo) + exc[e];
+        return static_cast<u128>(t);
+    }
     case kind::runs:
         c.decoders[b].read_unchecked(0, d.count, buffer);
         each_run(c, b, [&](unsigned rank, unsigned size) {
@@ -338,8 +437,10 @@ inline u64 encoded_count_ge(const column &c, const block_mask &mask, u64 thresho
     alignas(64) u64 buffer[block_rows];
     for_each_block(mask, [&](std::size_t b) {
         const auto &d = c.blocks[b];
-        // Constant, runs and packed bases are block minima; a delta anchor isn't.
-        if (d.type != kind::delta && d.type != kind::patched && d.base >= threshold) {
+        // Constant, runs and packed bases are block minima; a delta anchor isn't,
+        // and patched or delta_patched exceptions can lie below the base.
+        if (d.type != kind::delta && d.type != kind::patched && d.type != kind::delta_patched &&
+            d.base >= threshold) {
             total += block_rows;
             return;
         }
@@ -356,6 +457,12 @@ inline u64 encoded_count_ge(const column &c, const block_mask &mask, u64 thresho
                 x += static_cast<u64>(rbase) + buffer[i];
                 total += x >= threshold;
             }
+            break;
+        }
+        case kind::delta_patched: {
+            decode_delta_patched(c, b, buffer);
+            for (std::size_t i = 0; i < block_rows; ++i)
+                total += buffer[i] >= threshold;
             break;
         }
         case kind::patched: {

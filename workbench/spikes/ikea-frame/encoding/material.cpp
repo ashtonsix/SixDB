@@ -2,6 +2,8 @@
 // block encoding and whole-block decode for the private Frame material.
 #include "material.h"
 
+#include <array>
+
 namespace frame_encoding {
 void pack(unsigned k, std::span<const u64> values, std::uint8_t *out) {
     bool done = false;
@@ -121,7 +123,171 @@ column encode(std::span<const u64> values, encode_options options) {
             (compact_runs ? layout.directory_bytes() + layout.control_bytes() +
                                 layout.lengths_bytes(static_cast<unsigned>(run_sizes.size()))
                           : run_sizes.size());
-        if (patched_cost < std::min({packed_cost, runs_cost, delta_ok ? delta_cost : SIZE_MAX})) {
+        // Delta-with-exceptions candidate: for e in {2, 8, 32}, two exception
+        // sets, each priced exactly under the delta_patched law (material.h):
+        //   values  rows outside the narrowest window of 256 - e sorted values
+        //           (sentinels, level outliers), as for patched;
+        //   steps   a left-to-right pass keeping steps inside the narrowest
+        //           window of 255 - e sorted steps: an out-of-window row
+        //           becomes an exception when, within the remaining budget,
+        //           a later row steps back into the window from the last kept
+        //           value (spikes and sentinel runs inside a smooth series).
+        std::size_t dp_cost = SIZE_MAX;
+        std::array<bool, block_rows> dp_flags{};
+        i128 dp_dmin = 0;
+        unsigned dp_k = 0, dp_vw = 0;
+        auto price = [&](const std::array<bool, block_rows> &flags) {
+            bool kept = false, first = true;
+            u64 prev = 0, emax = 0;
+            std::size_t n = 0;
+            i128 lo_step = 0, hi_step = 0;
+            for (std::size_t i = 0; i < block_rows; ++i) {
+                if (flags[i]) {
+                    ++n;
+                    emax = std::max(emax, block[i] - *lo);
+                    continue;
+                }
+                if (kept) {
+                    const i128 step = static_cast<i128>(block[i]) - static_cast<i128>(prev);
+                    if (step < -(static_cast<i128>(1) << 63) || step >= (static_cast<i128>(1) << 63))
+                        return;
+                    lo_step = first ? step : std::min(lo_step, step);
+                    hi_step = first ? step : std::max(hi_step, step);
+                    first = false;
+                }
+                prev = block[i];
+                kept = true;
+            }
+            if (!n || n > 32 || first)
+                return;
+            const unsigned pk = std::max(1u, width_of(static_cast<u64>(hi_step - lo_step)));
+            const unsigned vw = std::max(1u, width_of(emax));
+            const std::size_t cost = plane_bytes(pk, block_rows) + 8 +
+                                     checkpoint_cost(delta_checkpoints, pk) + 8 + 2 + n +
+                                     plane_bytes(vw, n);
+            if (cost < dp_cost) {
+                dp_cost = cost;
+                dp_flags = flags;
+                dp_dmin = lo_step;
+                dp_k = pk;
+                dp_vw = vw;
+            }
+        };
+        if (options.delta_exceptions) {
+            std::vector<i128> steps;
+            for (std::size_t i = 1; i < block_rows; ++i)
+                steps.push_back(static_cast<i128>(block[i]) - static_cast<i128>(block[i - 1]));
+            std::sort(steps.begin(), steps.end());
+            for (unsigned e : {2u, 8u, 32u}) {
+                std::array<bool, block_rows> flags{};
+                const std::size_t keep = block_rows - e;
+                u64 best_span = UINT64_MAX, best_base = 0;
+                for (std::size_t s = 0; s + keep <= block_rows; ++s)
+                    if (sorted[s + keep - 1] - sorted[s] < best_span) {
+                        best_span = sorted[s + keep - 1] - sorted[s];
+                        best_base = sorted[s];
+                    }
+                for (std::size_t i = 0; i < block_rows; ++i)
+                    flags[i] = block[i] < best_base || block[i] - best_base > best_span;
+                price(flags);
+                const std::size_t keep_steps = block_rows - 1 - e;
+                i128 ws = 0, we = 0;
+                for (std::size_t s = 0; s + keep_steps <= steps.size(); ++s)
+                    if (s == 0 || steps[s + keep_steps - 1] - steps[s] < we - ws) {
+                        ws = steps[s];
+                        we = steps[s + keep_steps - 1];
+                    }
+                auto inside = [&](u64 to, u64 from) {
+                    const i128 step = static_cast<i128>(to) - static_cast<i128>(from);
+                    return step >= ws && step <= we;
+                };
+                flags.fill(false);
+                unsigned budget = e;
+                // A leading outlier: row 0 is out of step with rows 1 and 2.
+                if (!inside(block[1], block[0]) && inside(block[2], block[1])) {
+                    flags[0] = true;
+                    --budget;
+                }
+                u64 prev = block[flags[0] ? 1 : 0];
+                for (std::size_t i = flags[0] ? 2 : 1; i < block_rows; ++i) {
+                    if (inside(block[i], prev)) {
+                        prev = block[i];
+                        continue;
+                    }
+                    std::size_t j = i + 1;
+                    while (j < block_rows && j - i <= budget && !inside(block[j], prev))
+                        ++j;
+                    if (j - i > budget) {  // no return within budget: keep the step
+                        prev = block[i];
+                        continue;
+                    }
+                    for (std::size_t r = i; r < j; ++r)
+                        flags[r] = true;  // a trailing outlier run returns at j = 256
+                    budget -= static_cast<unsigned>(j - i);
+                    if (j == block_rows)
+                        break;
+                    prev = block[j];
+                    i = j;
+                }
+                price(flags);
+            }
+        }
+        if (dp_cost < std::min({patched_cost, packed_cost, runs_cost,
+                                delta_ok ? delta_cost : SIZE_MAX})) {
+            d.type = kind::delta_patched;
+            d.count = block_rows;
+            d.width = static_cast<std::uint8_t>(dp_k);
+            std::vector<std::uint8_t> positions;
+            std::vector<u64> exceptional;
+            std::vector<u64> marks;
+            const std::size_t every = delta_checkpoints == checkpoints::every64 ? 64 : 16;
+            bool kept = false;
+            u64 prev = 0, cumulative = 0;
+            for (std::size_t i = 0; i < block_rows; ++i) {
+                scratch[i] = 0;
+                if (dp_flags[i]) {
+                    positions.push_back(static_cast<std::uint8_t>(i));
+                    exceptional.push_back(block[i] - *lo);
+                } else if (!kept) {
+                    d.base = block[i];  // the anchor: first non-exception row
+                    kept = true;
+                    prev = block[i];
+                } else {
+                    scratch[i] = static_cast<u64>(static_cast<i128>(block[i]) -
+                                                  static_cast<i128>(prev) - dp_dmin);
+                    prev = block[i];
+                }
+                cumulative += scratch[i];
+                if (delta_checkpoints != checkpoints::none && i % every == every - 1 &&
+                    i + 1 < block_rows)
+                    marks.push_back(cumulative);  // S(i): stored residuals through row i
+            }
+            const i64 rbase = static_cast<i64>(dp_dmin);
+            const std::size_t plane = plane_bytes(dp_k, block_rows);
+            const std::size_t marks_bytes = checkpoint_cost(delta_checkpoints, dp_k);
+            const std::size_t native = dp_k + 8 <= 32 ? 4 : 8;
+            c.payload.resize(c.payload.size() + dp_cost);
+            std::uint8_t *at = c.payload.data() + d.offset;
+            pack(dp_k, scratch, at);
+            std::memcpy(at + plane, &rbase, 8);
+            std::uint8_t *stored = at + plane + 8;
+            if (delta_checkpoints == checkpoints::packed && dp_k + 8 <= 64)
+                pack(dp_k + 8, marks, stored);
+            else for (std::size_t j = 0; j < marks.size(); ++j) {
+                if (native == 4) {
+                    const auto v = static_cast<std::uint32_t>(marks[j]);
+                    std::memcpy(stored + j * 4, &v, 4);
+                } else {
+                    std::memcpy(stored + j * 8, &marks[j], 8);
+                }
+            }
+            std::uint8_t *tail = stored + marks_bytes;
+            std::memcpy(tail, &*lo, 8);
+            tail[8] = static_cast<std::uint8_t>(positions.size());
+            tail[9] = static_cast<std::uint8_t>(dp_vw);
+            std::memcpy(tail + 10, positions.data(), positions.size());
+            pack(dp_vw, exceptional, tail + 10 + positions.size());
+        } else if (patched_cost < std::min({packed_cost, runs_cost, delta_ok ? delta_cost : SIZE_MAX})) {
             d.type = kind::patched;
             d.base = patched_base;
             d.count = block_rows;
@@ -249,11 +415,11 @@ column encode(std::span<const u64> values, encode_options options) {
         if (!decoder)
             std::abort();
         c.decoders.push_back(*decoder);
-        if (d.type == kind::patched) {
-            // Exception values sit at the block's full width, after the
-            // positions; recover that width from the block's own extremes.
+        if (d.type == kind::patched || d.type == kind::delta_patched) {
+            // Exception values sit after the positions at the width stored in
+            // the body.
             const std::size_t b = c.decoders.size() - 1;
-            const auto p = patches(c, b);
+            const auto p = d.type == kind::patched ? patches(c, b) : delta_patches(c, b);
             const unsigned ew = p.value_width;  // stored in the body
             auto exc = sp::bind_decoder<u64>(sp::dense_input{
                 ew, sp::geometry::local,
@@ -261,7 +427,7 @@ column encode(std::span<const u64> values, encode_options options) {
             if (!exc)
                 std::abort();
             c.exceptions.back() = *exc;
-            continue;  // patched sums use the u64 decoder
+            continue;  // patched and delta_patched sums use the u64 decoder
         }
         if (d.width <= 8)
             c.d8.back() = *sp::bind_decoder<std::uint8_t>(input);
@@ -307,6 +473,9 @@ void decode_block(const column &c, std::size_t b, u64 *out) {
         }
         return;
     }
+    case kind::delta_patched:
+        decode_delta_patched(c, b, out);
+        return;
     case kind::runs: {
         alignas(64) u64 values[block_rows];
         c.decoders[b].read_unchecked(0, d.count, values);

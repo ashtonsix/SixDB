@@ -364,8 +364,69 @@ exact against the plain control on every column.
 take about 10% of Jena blocks but save only 0.3% of bytes. On the fault block
 they cut the sentinel fields by ~40%, because without them two sentinels set
 the whole block's width. Delta blocks have no exceptions yet, so a sentinel
-inside a smooth series still pushes that block from delta to patched FOR.
-Delta-with-exceptions is the next arm.
+inside a smooth series still pushes that block from delta to patched FOR;
+[delta with exceptions](#delta-with-exceptions) tests that next.
+
+## Delta with exceptions
+
+A **delta_patched** kind keeps the delta body unchanged (residual plane at
+width K, step base `rbase` as i64, checkpoints under the image's
+`delta_checkpoints` option) and appends the patched exception tail: block
+minimum `lo` (u64), count n (u8), value width W (u8), n ascending u8 positions
+and n values relative to `lo` as a SeriesPack plane at W (the width of the
+largest exception offset, stored in the body). Delta and patched layouts are
+unchanged; `encode_options::delta_exceptions` (default on) turns the kind off
+for consumers that don't read it yet.
+
+- **Prediction law: exception rows are outside the chain.** Let f be the first
+  non-exception row; the descriptor anchor is row f's value. Every later
+  non-exception row i stores `s_i = (x_i − x_p) − rbase`, where p is the
+  previous non-exception row. Row f and every exception slot store 0 and take
+  no step. With `S(i) = s_0 + … + s_i` and `m(i) = max(0, i − |{e ≤ i}|)`,
+  the chain value at row i is `anchor + rbase·m(i) + S(i)`: the value of a
+  non-exception row, or for an exception row the last non-exception value
+  before it (the anchor before f).
+- **Checkpoint law.** Checkpoints hold `S(i)` at the same rows as delta, the
+  cumulative stored residuals of non-exception rows. Exception values are
+  never in them. A point read adds `rbase·m(i)`, counting positions ≤ i.
+- **SUM.** The N = 256 − n chain rows have m = 0 … N − 1, and summing S over
+  chain rows equals summing it over all rows minus its values at exceptions:
+  `Σx = N·u0 + rbase·N(N−1)/2 + Σ_j (256 − j)·s_j − Σ_{e∈E} S(e) + Σ_{e∈E} (lo + v_e)`.
+  The weighted term is delta's; the correction scans only to the last
+  exception. COUNT and `decode_block` reconstruct the chain and patch the
+  exceptions. There is no whole-block threshold shortcut.
+
+The encoder prices two exception sets exactly for each e ∈ {2, 8, 32}. The
+value set is the rows outside the narrowest window of 256 − e sorted values,
+as for patched. The step set comes from a left-to-right pass that keeps steps
+inside the narrowest window of 255 − e sorted steps. An out-of-window row
+becomes an exception when a later row, within the remaining budget, steps back
+into the window from the last kept value. Their union was tried and saved
+under 0.02 bits/row. All runs are exact against the plain control and the
+input on all 42 Jena window-fields, the fault block and five ClickBench
+columns under every checkpoint option, and on synthetic blocks with leading,
+trailing, scattered and run exceptions at widths above 47 bits.
+
+| Real bits/row, 14 fields, packed checkpoints | Window 0 | Window 196,608 | Window 355,015 | Fault block |
+| --- | ---: | ---: | ---: | ---: |
+| Before (with patched) | 138.9 | 138.1 | 139.7 | 154.9 |
+| With delta_patched | 138.5 | 137.7 | 139.3 | 154.2 |
+| delta_patched block share | 9.6% | 9.4% | 8.6% | 2 of 14 |
+
+Under the other checkpoint options the saving is similar: native −0.15,
+every64 −0.4 and none −0.5 bits/row per window, and 1.0 bits/row on the fault
+block under every64 and none. delta_patched takes 5–13% of Jena blocks,
+mostly from delta (230–270 blocks per window under packed checkpoints), plus
+about 80 from packed FOR. ClickBench is unchanged apart from EventTime (65 blocks,
+< 0.01 bits/value).
+
+**The sentinel case isn't where this pays.** On the fault block the −9999.00
+sentinels sit in `wv` and `max.wv`, in runs of 18–20 rows. Wind speed is noisy,
+so patched FOR still beats delta with exceptions there, and those fields stay
+patched. The fields that do move (`p` and `VPmax`, plus `T`, `Tpot` and `rho`
+without checkpoints) have no sentinels. They gain because dropping a few
+large-step rows narrows the residual width by a bit. Delta with exceptions is
+another narrow insurance arm, like patched, worth about 0.3% of Jena bytes.
 
 ## Dictionary bodies (byte model on the real layout rules)
 
