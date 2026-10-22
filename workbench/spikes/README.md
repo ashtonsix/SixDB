@@ -34,6 +34,7 @@ author capabilities, mixed-workload layout choices, filtering, conversion and pl
 | [Tuple layout](tuple-layout/README.md) | Point access, scans, checked mutation and layout search behind current TuplePack; analyser work remains experimental. |
 | [Layout analyser](layout-analyser/README.md) | Connected objectives, metadata/plane/placement alternatives, shortlists and worked consumer investigations. |
 | [StreamPack](streampack/README.md) | Variable-byte geometry and sidecars; comparative evidence plus production Ikea/Loom/Orbital consumers. |
+| [Intervals](intervals/README.md) | Successor seam across StreamPack, Directory and Frame; external filters, sparse checkpoints and complete consumer qualification. |
 | [Boundlist](boundlist/README.md) | Ordered-source geometry, ownership, ISA search and complete consumer portfolio; implemented primitive is in Ikea. |
 | [Bec256 composition](bec256-composition/README.md) | Complete analysis/encoding consumers, prepared windows and alternatives to isolated refill comparisons. |
 | [NEON Local transpose](neon-local-transpose/README.md) | Promoted select-form and four-tile Local residual transposes: 1.5–2.9× NEON pure-tail reads, 1.1–1.8× writes; four-tile mixed reads 1.1–1.7× (k9–16); `bulk_arm` re-measured and kept. |

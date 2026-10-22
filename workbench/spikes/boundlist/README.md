@@ -1,5 +1,9 @@
 # Boundlist
 
+The successor [Intervals spike](../intervals/README.md) reassesses the common seam
+for StreamPack, Directory and Frame, with external filters and sparse checkpoints.
+The maintained implementation below is its before control.
+
 Boundlist describes contiguous, half-open intervals using ordered cuts and maps
 points or ranges to their ranks. Equal consecutive cuts enclose a zero-size interval.
 Retirement leaves geometry unchanged. StreamPack composes that geometry with byte
