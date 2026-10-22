@@ -10,6 +10,14 @@ damage, and `engine::directory` must support coherent reads. These notes trace
 where each piece is documented; they are a reading, not a contract, and the
 area will be revisited to drive performance.
 
+**Implementation status:** the table mixes current mechanisms, experiments and
+future protocol proposals. Current Orbital supplies coherent local
+`Scope`/`Prepared` publication and exact-version conversion/`adopt`; durable
+epoch admission, a generic writable `Draft` and distributed lock projection
+remain proposed. See the [review](REVIEW.md#arithmetic-and-ownership-cautions-for-the-prototypes)
+and [current runtime](../../../orbital/README.md#embedded-objects) before using
+these notes as an implementation dependency.
+
 ## What is established, and where
 
 | Topic | Finding | Source |

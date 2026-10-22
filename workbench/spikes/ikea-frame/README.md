@@ -14,6 +14,12 @@ The goal is exploiting encoded structure, not only avoiding decode overhead:
 for 64-bit values sharing a 56-bit prefix P with 8-bit suffixes S,
 `Σ X_i = N·P + Σ S_i`.
 
+The [architectural review with Engine](REVIEW.md) broadens that question:
+what must Frame expose so Engine can discover, retain and change better programs
+over its data? It explores structured intermediates, selected residual algebra,
+separate query evidence, cross-column alternatives and changing writable forms.
+These are research directions alongside the encoding proposal, not a settled API.
+
 ## Starting context from discussion with Ashton
 
 These are working notes from the project chat (2026-10-22), not settled contracts.
@@ -77,15 +83,19 @@ Ashton's direction (2026-10-22):
 
 ## Contents
 
+- [Architectural review](REVIEW.md): Frame's place in SixDB, opportunities and
+  pitfalls from actual Calico sources, and competing experiments to raise the
+  ambition beyond a codec pipeline.
 - [Prior-art survey](SURVEY.md): what Calico exploited, what current Ikea
   already supplies, and the most relevant external work, organised as an
   encodings × operation-families capability matrix.
 - [Data encoding, rev 1](ENCODING.md): proposed pipeline, geometry, exceptions
   versus overrides, write and read paths, and the Ikea primitives each stage
-  reuses. The current step; full Frame scope is set aside.
+  reuses. Encoding is the initial emphasis; the review keeps its wider
+  computation and lifecycle questions open during that work.
 - [Writes and Orbital](WRITES.md): what Orbital, Ikea and `engine::directory`
-  already establish about epochs, drafts, take versus copy, byte damage, locks
-  and coherent reads, and what that means for the encoding.
+  currently supply, the wider epoch/Draft proposals, and consequences for byte
+  damage, locks, coherent reads and encoding.
 - [Research questions](QUESTIONS.md): every open experiment and design
   question, with why it matters and where it came from.
 

@@ -1,10 +1,19 @@
 # Frame research questions
 
-Every open question for the [Ikea Frame spike](README.md), in one place. Design
-notes link here instead of keeping their own lists. **Experiment** questions are
-settled by measurement on real workloads. **Design** questions are choices that
-need Ashton's direction, possibly informed by an experiment. Resolved questions
-move into the owning note and leave this list.
+Question index for the [Ikea Frame spike](README.md). **Experiment** questions
+are settled by measurement on real workloads. **Design** questions concern
+semantics, policy or ownership, informed by experiments and the owning module;
+the proposals here do not establish contracts. Resolved questions move into the
+owning note and leave this list.
+
+## Architectural research
+
+The [review with Engine](REVIEW.md) develops the broader questions before the
+encoding details below. Its [competing experiments](REVIEW.md#research-programme-to-discriminate-the-architectures)
+connect schema fidelity, retained structured results, selected residual algebra,
+metadata/evidence, cross-column dependencies, mutation phase changes and physical
+ownership. They are alternatives to investigate, not an agreed architecture or
+a sequence of promotion gates. Encoding remains the initial emphasis.
 
 ## Encoding
 

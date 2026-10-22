@@ -7,6 +7,11 @@ refines the rev 2 pipeline from the [README](README.md) using the
 text says **decided** it records Ashton's direction; everything else is a
 proposal to challenge.
 
+The [architectural review](REVIEW.md) keeps wider alternatives and arithmetic/
+ownership cautions visible while this proposal is explored. In particular, a
+one-column encoding experiment does not settle Frame's cross-column, operation
+or physical-owner boundary.
+
 ## Scope
 
 In scope: one column of one part (2^16 physical key positions) holding unsigned

@@ -29,8 +29,8 @@ re-encode. "Decode" means the stage's inverse, not necessarily all stages.
 | **High/low split** (heads, ALP_RD, byte planes) | ◐ point read touches both parts · I | ◐ high part decides most rows; low only for ties · C I X | ◐ high-part bounds narrow the range · I | ✗ hashing needs both | ✔ `2^s·Σhi + Σlo`; min/max via high then tied low · C | ◐ MSD radix/partition by high part |
 | **Null compaction / routing** | ◐ gather needs position → index rank · C | ✔ evaluate compacted values, expand mask by presence · C | ◐ rank over presence bitset · C | ✔ only on present values | ✔ count = popcount; aggregates skip nulls by construction · C | ✔ compact is free; partition by route |
 | **Dictionary, order-preserving** | ✔ codes fixed width; write may need a new code | ✔ range → code range; IN → code bitmap · C X | ✔ bounds on codes · C | ◐ f over dictionary entries (n_dict work), hash entries once | ✔ histogram of codes · values (`Σ count[c]·v[c]`); distinct/group on codes · C X | ✔ sort on codes; cross-segment merge needs translation · C |
-| **Dictionary, by frequency** | as above | ◐ equality/IN only · X | ◐ point lookup only | as above | as above, no min/max on codes | ✗ order lost |
-| **Prediction / delta** (Boundlist Sizes, Relative Ends) | ◐ point = checkpoint + local prefix; a value write changes two deltas; append cheap · I C | ◐ monotone data: predicate becomes a search · I; otherwise ✗ | ✔ monotone bounds via checkpoints · I | ✗ | ◐ `Σ d = last − first`; prefix scan *is* decode; monotone min/max = ends · C | ◐ sorted already when monotone; merge of sorted streams · C |
+| **Dictionary, by frequency** | as above | ◐ direct code comparisons: equality/IN; other predicates can classify dictionary values and test code membership · X | ◐ point lookup or accepted-code search | as above | as above, no min/max directly on codes | ✗ code order lost |
+| **Prediction / delta** (Boundlist Sizes, Relative Ends) | ◐ point = checkpoint + local prefix; a value write changes two deltas; append cheap · I C | ◐ monotone data: predicate becomes a search · I; otherwise needs reconstruction or a transform-specific algorithm | ✔ monotone bounds via checkpoints · I | ✗ | ◐ `Σ d = last − first`; prefix scan *is* decode; monotone min/max = ends · C. Weighted logical SUM is a new research candidate, not an implemented result (see review). | ◐ sorted already when monotone; merge of sorted streams · C |
 | **Frame of reference** | ✔ in-bounds point write in place; else outlier list · I C | ✔ subtract base from constant; block box decides PASS/FAIL · C | ✔ residual-domain bounds and indexof · C I | ◐ `x+c` changes base only; `x·c` widens residuals | ✔ `n·base + Σr`; min/max = base + residual extreme; second moments by base shift · C | ✔ within block; across blocks rebase · C |
 | **Patches** (outliers, sideband) | ◐ every read checks the sideband · C | ◐ evaluate patches separately, merge masks · C | ◐ search must consult patches | ◐ as main stage plus per patch | ◐ correct each patched slot · C | ◐ |
 | **Packing** (SeriesPack, TuplePack layouts) | ✔ point/range read, in-place write, packets · I C | ✔ direct packed compare, full-width rhs · I C X | ✔ indexof · I | ◐ narrow-lane arithmetic | ✔ narrow-lane sums; popcount counts · C | ◐ |
@@ -44,13 +44,17 @@ re-encode. "Decode" means the stage's inverse, not necessarily all stages.
   a correction term. Ashton's prefix example is the high/low row with the high
   part constant. Calico's measured win came from keeping lanes narrow, not from
   the algebra alone (§2).
-- **Comparison survives order-preserving stages and dies at delta and frequency
-  rerank.** That fixes which presets suit filter-heavy columns.
-- **Patches appear in every column as ◐.** The sideband cost is uniform across
-  families, so its layout (aligned with blocks, groups or neither) matters more
-  than any single kernel.
+- **Direct code comparison survives order-preserving stages.** Delta and
+  frequency rerank need other algorithms; dictionary-value classification can
+  retain encoded predicates even without code order. Their costs, not a binary
+  capability flag, decide which presets suit filter-heavy columns.
+- **Patches affect every operation family.** Their cost depends on topology,
+  selected outputs and the operation's reconstruction dependencies. The review
+  makes clean/dirty traversal and sideband layout part of the investigation.
 - **Delta is search-friendly but compare-hostile.** Boundlist already serves
-  the search column; prediction residuals would serve only decode and sums.
+  the monotone search column. The [architectural review](REVIEW.md#2-explore-algebra-that-changes-which-encodings-are-attractive)
+  adds selected weighted reductions as a hypothesis beyond prefix decoding;
+  this is algebraic opportunity, not a new kernel measurement.
 - **Reorder is mostly ✗ beyond order-preserving codes.** Sort and partition will
   usually run on decoded or code values; the useful encoded cases are
   partition-by-high-part and run merging.
