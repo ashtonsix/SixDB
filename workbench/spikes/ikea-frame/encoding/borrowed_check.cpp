@@ -316,7 +316,7 @@ std::size_t check_masked(const borrowed_block &k, const expected &e, std::size_t
             if (masked_block_count_eq(k, s, t) != eq || reference_block_count_eq(k, s, t) != eq)
                 fail("masked equality COUNT", b);
         }
-        if (k.coded && !selection_empty(s)) {
+        if (k.coded) {
             code_sum sums;
             code_count counts(e.thresholds[5]);
             code_count_eq equal(e.values[99]);
@@ -674,14 +674,18 @@ int main(int argc, char **argv) {
                 none.dictionary.plane = dictionary_pages.base, none.dictionary.grant = 0;
             const row_selection empty{};
             if (faults([&] {
-                    code_sum sums;
-                    code_count counts(1);
+                    // The direct coded members too, standalone and through a cache.
+                    dictionary_cache cache;
+                    code_sum sums, cached_sums(&cache);
+                    code_count counts(1), cached_counts(1, &cache);
+                    code_count_eq equal(1), cached_equal(1, &cache);
                     consume(masked_block_sum(none, empty) + masked_stored_sum(none, empty) +
-                            reference_block_sum(none, empty));
+                            reference_block_sum(none, empty) + sums.masked(none, empty) + cached_sums.masked(none, empty));
                     sink = masked_block_count_ge(none, empty, 1) + masked_block_count_eq(none, empty, 1) +
                            masked_stored_count_ge(none, empty, 1) + masked_stored_count_eq(none, empty, 1) +
-                           reference_block_count_ge(none, empty, 1) + reference_block_count_eq(none, empty, 1);
-                    (void)sums, (void)counts;
+                           reference_block_count_ge(none, empty, 1) + reference_block_count_eq(none, empty, 1) +
+                           counts.masked(none, empty) + equal.masked(none, empty) +
+                           cached_counts.masked(none, empty) + cached_equal.masked(none, empty);
                 }))
                 fail("an empty row selection read the body or dictionary", b);
             ++empty_guarded;

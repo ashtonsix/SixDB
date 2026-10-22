@@ -438,6 +438,10 @@ template <class L> u128 masked_coded_sum(const borrowed_block &k, const row_sele
 }
 
 inline u128 code_sum::masked(const borrowed_block &k, const row_selection &s) {
+    if (selection_empty(s))
+        return 0;  // before any dictionary preparation
+    if (selection_full(s))
+        return (*this)(k);
     if (!ready || k.dictionary.edition != edition) {
         ready = true;
         edition = k.dictionary.edition;
@@ -453,6 +457,10 @@ inline u128 code_sum::masked(const borrowed_block &k, const row_selection &s) {
 }
 
 inline u64 code_count::masked(const borrowed_block &k, const row_selection &s) {
+    if (selection_empty(s))
+        return 0;
+    if (selection_full(s))
+        return count(k);
     prepare(k.dictionary);
     if (k.dictionary.order == dictionary_order::sorted)
         return code_threshold >= k.dictionary.count ? 0 : masked_stored_count_ge_mixed(k, s, code_threshold);
@@ -485,6 +493,10 @@ inline u64 code_count::masked(const borrowed_block &k, const row_selection &s) {
 }
 
 inline u64 code_count_eq::masked(const borrowed_block &k, const row_selection &s) {
+    if (selection_empty(s))
+        return 0;
+    if (selection_full(s))
+        return count(k);
     prepare(k.dictionary);
     return present ? masked_stored_count_eq_mixed(k, s, code) : 0;
 }
