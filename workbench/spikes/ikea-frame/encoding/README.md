@@ -397,6 +397,44 @@ because frequent values' small codes narrow FOR widths and run values. Sorted
 codes keep order for range predicates, so the choice is again a curated
 option for Engine.
 
+## Filter heads by transform cut, and window bounds
+
+[`head_cuts.py`](head_cuts.py) models an 8-bit head under three cuts: early
+(top byte of the u64 working value), part-late (value − part minimum at the
+part's width) and block-late (value − block minimum at the block's width). It
+reports head entropy and the fraction of 16-row windows in which every row is
+decided by its head alone for `x ≥ median`. Beside them are 16-row window
+min/max bounds, exact or quantised to 8 bits against the block range. Model
+only; Ikea LEAD owns the real [filter consumer](../filter/README.md).
+
+| Column | Head entropy early / part / block | Windows head-resolved early / part / block | Windows settled by bounds, exact / 8-bit |
+| --- | --- | --- | --- |
+| OS | 0.0 / 1.9 / 1.5 | 0.00 / 0.17 / 0.17 | 0.43 / 0.43 |
+| ResolutionWidth | 0.0 / 3.1 / 2.3 | 0.00 / 0.44 / 0.44 | 0.48 / 0.36 |
+| RegionID | 0.0 / 1.0 / 1.3 | 0.00 / 0.03 / 0.42 | 0.43 / 0.31 |
+| EventTime | 0.0 / 6.9 / 5.4 | 0.00 / 0.94 / 0.97 | 0.55 / 0.55 |
+| ClientIP | 0.9 / 7.6 / 4.2 | 0.12 / 0.97 / 0.97 | 0.40 / 0.39 |
+| URLHash | 7.9 / 7.7 / 6.5 | 0.96 / 0.96 / 0.96 | 0.01 / 0.01 |
+| WatchID | 6.0 / 8.0 / 7.2 | 0.78 / 0.94 / 0.94 | 0.00 / 0.00 |
+| Jena p | 0.0 / 6.8 / 6.5 | 0.00 / 0.95 / 0.98 | 0.96 / 0.96 |
+| Jena T | 0.8 / 6.8 / 6.6 | 0.22 / 0.93 / 0.97 | 0.94 / 0.94 |
+| Jena wv | 0.0 / 6.1 / 6.5 | 0.00 / 0.74 / 0.88 | 0.45 / 0.45 |
+
+1. **Early heads are useless** except on full-width columns (hashes, WatchID,
+   UserID). Most working values share their top byte.
+2. **Part-late heads resolve nearly as many windows as block-late heads on
+   wide columns** (EventTime 0.94 vs 0.97, ClientIP equal, Jena 0.93–0.95 vs
+   0.97–0.98), with one interpretation per part. RegionID is the
+   counterexample (0.03 vs 0.42): a sparse 17-bit domain spreads the part's
+   range, so part-late heads are coarse there.
+3. **Heads and window bounds answer different columns.** Per-row heads decide
+   high-entropy columns that bounds can't touch (URLHash 0.96 vs 0.01;
+   WatchID 0.94 vs 0.00). Bounds decide smooth series (Jena p, T at 0.94–0.96)
+   at about 1 bit/value instead of a head's 8.
+4. **8-bit quantised bounds match exact bounds** on Jena and the wide
+   ClickBench columns, and lose 0.12 on the narrow ones (ResolutionWidth,
+   RegionID).
+
 ## Images to hand Engine's witness early
 
 Engine's witness is a selected grouped reduction over parts with different
