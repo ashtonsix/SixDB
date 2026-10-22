@@ -24,7 +24,7 @@ explore the Engine/Loom/Orbital seams; module guides own implemented contracts.
 | Should striped12 also centre its residual? | [Ordinary access and mutation comparison](placement/README.md) |
 | How do dependent metadata, independent sources and selected regions fit together? | [Heterogeneous structures](probes/ikea-heterogeneous/README.md), [masked operations](probes/ikea-heterogeneous/operations/README.md), [closing assessment](probes/ikea-heterogeneous/closing.md) |
 | Where should traversal and call boundaries sit? | [Surviving SeriesPack lessons](seriespack-history.md#composition-lessons), then the historical sources it identifies |
-| Which interface differences impede real composition? | [Interface cohesion](interface-cohesion.md): coordinate/grain distinctions, journal names, public point leaves, module-owned errors and parent framing |
+| Which interface differences impede real composition? | [Interface cohesion](interface-cohesion.md): coordinate/grain distinctions, journal names, public point leaves, module-owned errors and parent framing; [proposed unified interface](interface-proposal.md) |
 
 [Executable placement](../executable-placement/README.md) remains an independent
 measurement question. The retired kernel, range, head and metadata experiments
