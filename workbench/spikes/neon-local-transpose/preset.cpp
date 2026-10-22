@@ -26,7 +26,7 @@ template <unsigned K, sp::geometry G, unsigned Operation> void preset_case(bench
         packets[i] = data.queries[i] / 16 * 16;
     std::vector<sp::composition::owner_write> records(
         *prepared.effect_capacity(0, data.count, sp::row_selection::all()));
-    sp::composition::write_journal effects{records};
+    sp::composition::source_write_journal effects{records};
     sp::sum_change summary;
     const std::uint64_t cutoff = std::uint64_t{1} << (K - 1);
     auto run = [&]() -> std::uint64_t {

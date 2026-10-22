@@ -5,10 +5,12 @@
 #include <ikea/streampack/author/native.h>
 #include <iostream>
 #include <numeric>
+#include <type_traits>
 #include <vector>
 
 namespace sp = ikea::streampack;
 using sp::byte;
+static_assert(!std::is_same_v<sp::error, ikea::intervals::error>);
 struct fixture {
     sp::layout layout;
     alignas(64) std::array<byte, 4096> directory, lengths;

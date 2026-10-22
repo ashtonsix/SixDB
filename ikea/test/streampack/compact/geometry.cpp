@@ -69,16 +69,16 @@ void verify(fixture &f, const std::vector<model> &values) {
     unsigned offset = 0;
     for (unsigned r = 0; r < values.size(); ++r) {
         const auto &v = values[r];
-        const auto loc = sc::locate(f.view, r);
+        const auto loc = bl::locate(f.view, r);
         assert(loc && loc->first == offset && loc->limit == offset + v.reserved);
-        assert(bool(sc::locate(selected, r)) == !v.dead);
+        assert(bool(bl::locate(selected, r)) == !v.dead);
         for (unsigned x = 0; x < v.reserved; ++x) {
-            assert(sc::reverse(f.view, offset + x) == r);
-            assert(sc::reverse(selected, offset + x) == (v.dead ? f.view.size() : r));
+            assert(bl::reverse(f.view, offset + x) == r);
+            assert(bl::reverse(selected, offset + x) == (v.dead ? f.view.size() : r));
         }
         offset += v.reserved;
     }
-    assert(f.view.extent() == offset && sc::reverse(f.view, offset) == f.view.size());
+    assert(f.view.extent() == offset && bl::reverse(f.view, offset) == f.view.size());
 #if defined(__aarch64__) || defined(__AVX2__)
     sc::author::dispatch(f.view, [&](auto a) {
         for (unsigned g = 0; g < (values.size() + 15) / 16; ++g) {
@@ -150,7 +150,7 @@ void verify(fixture &f, const std::vector<model> &values) {
                     }
                     start = end;
                 }
-                assert(((live ? sc::overlap(selected, lo, lo + span) : sc::overlap(f.view, lo, lo + span)) == bl::rank_window{first, limit}));
+                assert(((live ? bl::overlap(selected, lo, lo + span) : bl::overlap(f.view, lo, lo + span)) == bl::rank_window{first, limit}));
             }
 }
 void history(sc::description d) {
@@ -238,7 +238,7 @@ void packed_geometry_checks() {
     f.directory[at + 4] = std::byte{9};
     f.control[0] = std::byte{3};
     assert(f.view.validate());
-    assert(sc::reverse(f.view, 3) == 2 && bl::lower_bound(f.view, 3u) == 0 &&
+    assert(bl::reverse(f.view, 3) == 2 && bl::lower_bound(f.view, 3u) == 0 &&
            bl::upper_bound(f.view, 3u) == 2);
     auto invalid = wire;
     invalid[0] = std::byte{0x40}; // StreamPack v2 is not a geometry-only schema.

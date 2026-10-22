@@ -208,6 +208,45 @@ This entry permits several predicates to share one projection and combine their
 masks without rereading the tuple. Comparing a multi-byte integer requires an
 explicit composition; byte-code comparison does not silently invent that meaning.
 
+### Convert a grouped packet's result to row coordinates
+
+Ordinary SeriesPack and bound TuplePack filters already agree: bit `r` names
+original row `first+r`. Intersect predicates over the same original rows, `first`
+and row window. A native packet's byte results need an explicit mapping
+before that intersection.
+
+Suppose TuplePack code 0 is field A and code 1 is field B. The projection map
+`{1, hole, 0}` with groups `{1, 2}` over 16 rows puts all B bytes first, then
+`hole, A` pairs. A is map slot 2, at packet bytes 17, 19, …, 47. Those positions
+are independent of `first`, the original row where this packet begins. Use the
+prepared plan's `ordering().offset(r, slot)` rather than assuming row-major order:
+
+```cpp
+const auto& order = grouped_plan.ordering();
+std::uint64_t byte_activity = 0;
+for (unsigned r = 0; r < 16; ++r)
+    if (incoming_rows >> r & 1)
+        byte_activity |= std::uint64_t{1} << order.offset(r, 2);
+
+const auto hits = tp::filter_values<comparison::greater_equal, 64>(
+    projected_packet, 4, byte_activity);
+std::uint64_t selected_rows = 0;
+for (unsigned r = 0; r < 16; ++r)
+    selected_rows |= ((hits >> order.offset(r, 2)) & 1) << r;
+// selected_rows bit r now names original row first+r.
+```
+
+The caller admits the named read for `first` and `incoming_rows` before obtaining
+`projected_packet`. The byte activity above includes only the chosen field:
+holes, unused packet capacity and inactive rows are excluded. Selecting a
+different field requires its map slot. Combining several fields requires an
+explicit predicate such as conjunction or disjunction; byte masks alone do not
+choose that meaning. The [ordinary example](../examples/filters/ordinary.cpp)
+uses one grouped projection for two fields, gathers both row masks, and
+intersects them with a SeriesPack result over the same nonzero-origin window.
+
+### Guard a later projection
+
 For a conjunction, the consumer can skip the next projection at an existing
 composition boundary:
 

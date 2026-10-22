@@ -3,6 +3,32 @@
 #include <algorithm>
 
 namespace ikea::streampack {
+std::string_view describe(error reason) noexcept {
+    switch (reason) {
+    case error::description:
+        return "unknown, inconsistent or unsupported value layout";
+    case error::capacity:
+        return "borrowed storage or slot capacity is insufficient";
+    case error::alignment:
+        return "length storage violates the layout's alignment requirement";
+    case error::alias:
+        return "storage planes, input or command/effect storage overlap";
+    case error::contents:
+        return "encoded geometry, lengths or control state are inconsistent";
+    case error::rank:
+        return "rank or rank range is outside assigned slots";
+    case error::retired:
+        return "the selected value has been retired";
+    case error::value:
+        return "value length or reservation violates the layout's bounds";
+    case error::effects:
+        return "effect journal has insufficient available entries";
+    case error::range:
+        return "operation range or selection coverage is invalid";
+    }
+    return "unknown StreamPack error";
+}
+
 std::expected<layout, error> layout::prepare(description d) { return prepare_impl(d, false); }
 std::expected<layout, error> layout::prepare_impl(description d, bool legacy) {
     if (d.lengths != placement::grouped && d.lengths != placement::separated)

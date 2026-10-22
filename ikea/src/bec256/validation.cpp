@@ -54,7 +54,7 @@ std::expected<source, error> source::admit(std::span<const byte> storage, unsign
         return std::unexpected(result.error());
     return source(storage, bytes, population);
 }
-const char *describe(error value) noexcept {
+std::string_view describe(error value) noexcept {
     switch (value) {
     case error::range:
         return "invalid pipeline stage count";

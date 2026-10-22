@@ -125,7 +125,7 @@ Empty regions skip input/data/effect work. A nonempty native region may read all
 sixteen input slots; only selected values must fit width K. Scalar edges read
 selected slots only. An activity mask does not grant permission to overread.
 
-`composition::write_journal` writes `{actual source, plane, byte offset, byte size}`
+`composition::source_write_journal` writes `{actual source, plane, byte offset, byte size}`
 into caller-provided storage. These are issued stores, including preserved
 neighbors, not a list of byte differences or beforeimages. Resolve source views
 to owner/partition offsets while those identities remain alive. Do not clear the

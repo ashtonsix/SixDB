@@ -258,5 +258,5 @@ other supported wiring uses the general lowering. General plans borrow at most
 `erased_mutation<Input, Maintenance, Rows>` erases a whole range while keeping
 concrete traversal inside it. Rows remains part of the erased contract even when
 two packet shapes have the same C++ payload type. Inline and CPS share bodies;
-the [source guide](../source.md#shared-execution-entry) owns private ABI and table
-requirements. Explicit suspension happens after returning to the owner.
+the [source guide](../source.md#shared-facilities) locates their shared private
+chain implementation. Explicit suspension happens after returning to the owner.

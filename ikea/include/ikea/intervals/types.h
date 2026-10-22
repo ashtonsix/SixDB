@@ -3,6 +3,7 @@
 #include <concepts>
 #include <cstdint>
 #include <limits>
+#include <string_view>
 #include <utility>
 #include <type_traits>
 
@@ -22,7 +23,9 @@ struct rank_window {
 template <class Point> struct interval {
     Point first, limit;
 };
-enum class error { description, capacity, alignment, alias, contents, rank, retired, value, effects, range };
+enum class error { description, capacity, alignment, alias, contents, rank, value, effects, range };
+/// Cold diagnostic text for this module's typed errors.
+std::string_view describe(error) noexcept;
 namespace detail {
 template <std::integral A, std::integral B> constexpr bool integer_less(A a, B b) {
     if constexpr (std::is_signed_v<A> == std::is_signed_v<B>)

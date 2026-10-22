@@ -19,7 +19,7 @@ void ordinary_benchmark(benchmark::State& state) {
         value ^= U(~std::uint64_t{0} >> (64 - K));
     std::vector<sp::composition::owner_write> records(
         *prepared.effect_capacity(0, data.count, sp::row_selection::all()));
-    sp::composition::write_journal effects{records};
+    sp::composition::source_write_journal effects{records};
     sp::sum_change summary;
     benchmark::DoNotOptimize(reader);
     benchmark::DoNotOptimize(writer);

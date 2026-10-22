@@ -8,26 +8,26 @@
 #include <vector>
 
 namespace {
-namespace bl = ikea::streampack::detail::compact;
+namespace sc = ikea::streampack::detail::compact;
 struct packed {
-    bl::layout format;
+    sc::layout format;
     alignas(64) std::array<std::byte, 4096> directory{}, lengths{};
     std::array<std::byte, 6> control{};
-    bl::view source;
-    packed(bl::geometry family, const std::vector<unsigned> &cuts, unsigned dead)
-        : format(*bl::layout::prepare({family, 2, 512, {}, false})),
-          source(*bl::view::bind(format, {std::span(directory).first(format.directory_bytes()),
+    sc::view source;
+    packed(sc::geometry family, const std::vector<unsigned> &cuts, unsigned dead)
+        : format(*sc::layout::prepare({family, 2, 512, {}, false})),
+          source(*sc::view::bind(format, {std::span(directory).first(format.directory_bytes()),
                                          std::span(lengths).first(format.lengths_bytes()), control})) {
         ikea::no_coverage effects;
-        assert(bl::initialize(source, effects));
+        assert(sc::initialize(source, effects));
         for (unsigned r = 0; r + 1 < cuts.size(); ++r)
-            assert(bl::append(source, cuts[r + 1] - cuts[r], effects));
+            assert(sc::append(source, cuts[r + 1] - cuts[r], effects));
         for (unsigned r = 0; r + 1 < cuts.size(); ++r)
-            if (dead & (1u << r)) assert(bl::retire(source, r, effects));
+            if (dead & (1u << r)) assert(sc::retire(source, r, effects));
     }
 };
 void exhaustive() {
-    for (auto family : {bl::geometry::absolute_ends, bl::geometry::sizes, bl::geometry::relative_ends})
+    for (auto family : {sc::geometry::absolute_ends, sc::geometry::sizes, sc::geometry::relative_ends})
         for (unsigned encoded = 0; encoded < 81; ++encoded) {
             unsigned value = encoded;
             std::vector<unsigned> cuts{0};
@@ -35,7 +35,7 @@ void exhaustive() {
             for (unsigned mask = 0; mask < 16; ++mask) {
                 packed f(family, cuts, mask);
                 cuts_model::check(f.source, cuts, 0); // retirement never changes raw geometry
-                const bl::selected_source live{f.source, f.source.live_ranks()};
+                const ikea::intervals::selected_source live{f.source, f.source.live_ranks()};
                 cuts_model::check(live, cuts, mask);
             }
         }

@@ -27,7 +27,7 @@ int main() {
         endpoints[r] = r * 3;
     const auto operation = writer->template erase<std::uint16_t, sp::sum_change>();
     std::array<sp::composition::owner_write, 32> records;
-    sp::composition::write_journal damage{records};
+    sp::composition::source_write_journal damage{records};
     assert(operation.initialize(endpoints, damage));
     const packed_bounds source{sp::bind_decoder<std::uint16_t>(*storage), n};
     assert(bl::lower_bound(source, 70u) == 24 && bl::upper_bound(source, 72u) == 25);

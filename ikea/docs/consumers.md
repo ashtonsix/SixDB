@@ -96,10 +96,13 @@ chain `run` and leave explicit waits to the owner after return.
 
 ## Treat masks and guards as execution choices
 
-Preserve original coordinates. A SeriesPack filter bit names a position in its
-requested window; a bound TuplePack filter bit names an original row; a native
-TuplePack `filter_values` bit names a packet byte. Grouped maps and holes require
-the plan's ordering and row-to-byte mask, not a cast between these masks.
+Preserve original coordinates. Ordinary SeriesPack and bound TuplePack filters
+both use bit `r` for original row `first+r`; combine them only over the same
+window. Native TuplePack `filter_values` uses packet-byte coordinates. Grouped
+maps and holes require the plan's ordering and an explicit chosen-field mapping,
+as in the [worked conversion](filters.md#convert-a-grouped-packets-result-to-row-coordinates).
+The [interface guide](interfaces.md#give-every-position-a-coordinate-system)
+separates row/rank selection, coarse block selection and storage word width.
 
 Sparse activity can select a different reader, notably for TuplePack projections.
 When a conjunction has already admitted the original input window, it can guard

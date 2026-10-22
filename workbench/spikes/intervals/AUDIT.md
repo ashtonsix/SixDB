@@ -24,9 +24,13 @@ follow-through; the original [graduation](GRADUATION.md) and
 The ownership split remains implemented: Intervals owns borrowed search, geometry,
 source interpretation and kernels; StreamPack owns its compact format, count/extent,
 bitmap/retirement, U, payload and coordinated writes. Sparse sources introduce no
-persisted schema. All 41 maintained Intervals/StreamPack implementation files are
-byte-identical to the qualified graduation source; this cleanup changes the public
-compatibility/build/documentation routes, not their read or mutation bodies.
+persisted schema. At this audit's qualification epoch, all 41 maintained
+Intervals/StreamPack implementation files were byte-identical to the graduation
+source; the cleanup changed compatibility/build/documentation routes, not read
+or mutation bodies. The later [interface-cohesion follow-through](../ikea-composition/interface-cohesion.md)
+separates StreamPack's public types/errors and adds cold diagnostics. It owns
+that source epoch's behavior and emitted-code checks; the receipts here retain
+their original qualified inputs.
 
 The audit checked signed/wider comparisons, exact K-byte logical domains,
 duplicate/zero-rank identity, excluded physical owners, exact bitmap tails,

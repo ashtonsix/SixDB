@@ -20,7 +20,7 @@ inline void require(bool ok) { if (!ok) std::abort(); }
 // Resolve named source identities while their views are alive. These are actual
 // coalesced issued-store envelopes, including any preserved neighbours.
 template <class View>
-void resolve(repair_result &out, const sp::composition::write_journal &journal,
+void resolve(repair_result &out, const sp::composition::source_write_journal &journal,
              const View &view, std::size_t origin) {
     for (const auto &entry : journal.entries()) {
         require(entry.source == &view && !entry.bytes.plane && out.count < out.writes.size());
@@ -38,7 +38,7 @@ void store_mark(std::uint8_t *body, std::size_t offset, unsigned n, unsigned row
     require(bool(prepared));
     sp::no_summary summary;
     std::array<sp::composition::owner_write, 16> records;
-    sp::composition::write_journal journal{records};
+    sp::composition::source_write_journal journal{records};
     require(bool(prepared->set(row, value, summary, journal)));
     resolve(out, journal, *view, offset);
 }
@@ -81,7 +81,7 @@ template <unsigned K>
         row + 1, row + 1 < fe::block_rows, sp::row_selection::all());
     require(first_capacity && second_capacity && *first_capacity + *second_capacity <= 16);
     std::array<sp::composition::owner_write, 16> records;
-    sp::composition::write_journal journal{records};
+    sp::composition::source_write_journal journal{records};
     sp::no_summary summary;
     require(bool(prepared->set(row, u64(replacement), summary, journal)));
     if (row + 1 < fe::block_rows)

@@ -15,16 +15,16 @@ template <class U, class Summary> class mutation_operation {
 
   public:
     using region_function = void (*)(const void*, std::size_t, const U*, std::uint16_t, Summary&,
-                                     write_journal&);
+                                     source_write_journal&);
     using range_function = void (*)(const void*, std::size_t, std::size_t, const U*, row_selection,
-                                    Summary&, write_journal&);
+                                    Summary&, source_write_journal&);
     using checked_function = std::expected<void, error> (*)(const void*, std::size_t,
                                                             std::span<const U>, row_selection,
-                                                            Summary&, write_journal&);
+                                                            Summary&, source_write_journal&);
     using point_function = std::expected<void, error> (*)(const void*, std::size_t, U, Summary&,
-                                                          write_journal&);
+                                                          source_write_journal&);
     using initialize_function = std::expected<void, error> (*)(const void*, std::span<const U>,
-                                                               write_journal&);
+                                                               source_write_journal&);
 
   private:
     const void* operation_;
@@ -50,14 +50,15 @@ template <class U, class Summary> class mutation_operation {
     /// Active slots fit the domain; a zero mask reads/writes nothing. Caller has
     /// reserved effect capacity and write isolation before entering.
     void replace16_unchecked(std::size_t first, const U* input, std::uint16_t active,
-                             Summary& summary, write_journal& effects) const {
+                             Summary& summary, source_write_journal& effects) const {
         region_(operation_, first, input, active, summary, effects);
     }
     /// Trusted range. Input, coordinates, stable selection coverage, disjointness
     /// and effect capacity are already admitted. Empty regions skip all work;
     /// nonempty interior regions may read all sixteen input slots.
     void replace_unchecked(std::size_t first, std::size_t count, const U* input,
-                           row_selection selected, Summary& summary, write_journal& effects) const {
+                           row_selection selected, Summary& summary,
+                           source_write_journal& effects) const {
         range_(operation_, first, count, input, selected, summary, effects);
     }
     /// Checked replacement of input.size() original positions. Range, selected
@@ -66,21 +67,21 @@ template <class U, class Summary> class mutation_operation {
     /// owner obligations; successful execution is not atomic publication.
     [[nodiscard]] std::expected<void, error> replace(std::size_t first, std::span<const U> input,
                                                      row_selection selected, Summary& summary,
-                                                     write_journal& effects) const {
+                                                     source_write_journal& effects) const {
         return checked_(operation_, first, input, selected, summary, effects);
     }
     /// Checked point replacement; passes value directly. Same failure guarantee
     /// and borrowed-owner obligations as replace(). Shared bytes may be written
     /// while preserving adjacent values; effects report issued byte spans.
     [[nodiscard]] std::expected<void, error> set(std::size_t row, U value, Summary& summary,
-                                                 write_journal& effects) const {
+                                                 source_write_journal& effects) const {
         return point_(operation_, row, value, summary, effects);
     }
     /// Checked complete initialization. Requires exact leaf extents; zeroes owned
     /// final-tile slack and preserves unrelated fields/gaps. No old-value summary
     /// law is applied. Any reported failure leaves bytes and effects unchanged.
     [[nodiscard]] std::expected<void, error> initialize(std::span<const U> input,
-                                                        write_journal& effects) const {
+                                                        source_write_journal& effects) const {
         return initialize_(operation_, input, effects);
     }
 };

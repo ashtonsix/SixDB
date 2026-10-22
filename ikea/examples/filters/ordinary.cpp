@@ -51,6 +51,42 @@ int main() {
     const auto range = tp::filter_values<C::greater_equal, 64>(values, 4, active) &
                        tp::filter_values<C::less, 64>(values, 18, active);
     assert(range == expected);
+
+    // A grouped map has different coordinates: lower bits first, then pairs
+    // (hole, upper bits). Compare one projection, then gather each field's
+    // packet-byte results back to the same original-row window as SeriesPack.
+    constexpr unsigned rows = 16;
+    const auto grouped_plan = *tp::reader<64, rows>::make(
+        layout, std::array<tp::byte, 3>{1, tp::hole, 0}, std::array<unsigned, 2>{1, 2});
+    const auto grouped_read = *tp::bind_reader(grouped_plan, source);
+    const auto grouped_native = tp::native_reader(grouped_read);
+    constexpr auto row_activity = active & 0xffff;
+    assert(grouped_native.admit(first, row_activity));
+    const auto grouped = grouped_native.get_unchecked(first, row_activity);
+    const auto& order = grouped_plan.ordering();
+    std::uint64_t byte_activity = 0;
+    for (unsigned r = 0; r < rows; ++r)
+        if (row_activity >> r & 1)
+            byte_activity |= (std::uint64_t{1} << order.offset(r, 0)) |
+                             (std::uint64_t{1} << order.offset(r, 2));
+    // Slot 1 is a hole. Trailing packet capacity is also excluded.
+    const auto upper_hits = tp::filter_values<C::greater_equal, 64>(grouped, 4, byte_activity);
+    const auto lower_hits = tp::filter_values<C::less, 64>(grouped, 4, byte_activity);
+    std::uint64_t upper_rows = 0, lower_rows = 0;
+    for (unsigned r = 0; r < rows; ++r) {
+        upper_rows |= ((upper_hits >> order.offset(r, 2)) & 1) << r;
+        lower_rows |= ((lower_hits >> order.offset(r, 0)) & 1) << r;
+    }
+    const auto series_rows = *sp::filter<C::less>(series, first, rows, 18, row_activity);
+    const auto grouped_selected = series_rows & upper_rows & lower_rows;
+    std::uint64_t grouped_expected = 0;
+    for (unsigned r = 0; r < rows; ++r) {
+        const auto original_row = first + r;
+        const auto value = (original_row * 7) % 32;
+        if ((row_activity >> r & 1) && value >= 4 && value < 18 && original_row % 8 < 4)
+            grouped_expected |= std::uint64_t{1} << r;
+    }
+    assert(grouped_selected == grouped_expected && grouped_expected == 0x18);
 #endif
 
     // The scalar operand is never narrowed to the stored width.

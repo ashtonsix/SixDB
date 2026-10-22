@@ -1,5 +1,6 @@
 #pragma once
 #include <ikea/intervals/search.h>
+#include <ikea/streampack/types.h>
 #include <array>
 #include <cstddef>
 #include <cstdint>
@@ -10,23 +11,23 @@
 // StreamPack owns this compact metadata/retirement image. Common borrowed
 // search/arithmetic bodies live in Intervals; no bitmap policy is exported there.
 namespace ikea::streampack::detail::compact {
-using namespace ikea::intervals;
+using ikea::intervals::delta_source;
+using ikea::intervals::direct_source;
+using ikea::intervals::edge;
+using ikea::intervals::interval;
+using ikea::intervals::rank_selection;
+using ikea::intervals::relative_end_source;
 namespace detail { using namespace ikea::intervals::detail; }
 namespace native { using namespace ikea::intervals::native; }
 }
 
 namespace ikea::streampack::detail::compact {
-using byte = std::byte;
-using bytes = std::span<const byte>;
-inline constexpr unsigned interval_capacity = 256;
+using ikea::streampack::byte;
+using ikea::streampack::bytes;
+using ikea::streampack::error;
+using ikea::streampack::geometry;
+inline constexpr unsigned interval_capacity = slot_capacity;
 inline constexpr unsigned maximum_interval_size = 65535;
-enum class geometry : std::uint8_t {
-    absolute_ends,
-    sizes,
-    relative_ends,
-    direct = absolute_ends,
-    width = sizes // Source-compatible names for the same two encodings.
-};
 
 /// Schema facts, independent of execution ISA. The extent limit can seal a source
 /// before its rank capacity. Omitted facts cannot subsequently be mutated.

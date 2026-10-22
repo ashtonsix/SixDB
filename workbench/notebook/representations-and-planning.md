@@ -5,6 +5,11 @@
 capabilities. Research below explains choices and alternatives; captured spike
 formats and proposed analysers are not additional production contracts.
 
+[Interface cohesion](../spikes/ikea-composition/interface-cohesion.md) checks shared
+vocabulary against actual consumers: selection grain versus storage words,
+row/packet coordinates, source-qualified effects, public point leaves and
+module-owned errors. It retains the cases against generic masks and descriptors.
+
 ## Match the representation to useful work
 
 | Question | Route through the evidence |

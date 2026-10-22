@@ -27,7 +27,7 @@ int main() {
     const auto needed = writer->construction_effect_capacity();
     assert(needed);
     std::vector<cp::owner_write> records(*needed);
-    cp::write_journal effects{records};
+    cp::source_write_journal effects{records};
     std::array<std::uint16_t, count> values;
     for (std::size_t i = 0; i < count; ++i)
         values[i] = i;

@@ -52,7 +52,7 @@ template <class F, unsigned Operation> void measure(benchmark::State &state) {
     for (unsigned i = 0; i < written; ++i)
         input[i] = value(i) ^ 4095;
     std::vector<sp::composition::owner_write> records(written);
-    sp::composition::write_journal effects{records};
+    sp::composition::source_write_journal effects{records};
     sp::no_summary summary;
     for (std::size_t row = 0; row < count; row += 16) {
         reader.read16_unchecked(row, output.data());

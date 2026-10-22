@@ -74,7 +74,7 @@ void placed_benchmark(benchmark::State& state) {
         std::abort();
     const auto operation = prepared->template erase<U, sp::sum_change>();
     std::vector<cp::owner_write> records(count * 2);
-    cp::write_journal effects{records};
+    cp::source_write_journal effects{records};
     sp::sum_change summary;
     constexpr std::uint16_t selected = Masked ? 0xb6db : 0xffff;
     auto mask = [](std::size_t) { return selected; };

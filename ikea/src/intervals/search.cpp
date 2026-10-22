@@ -1,5 +1,32 @@
 #include <ikea/intervals/detail/prediction.h>
+#include <ikea/intervals/types.h>
 #include <bit>
+
+namespace ikea::intervals {
+std::string_view describe(error reason) noexcept {
+    switch (reason) {
+    case error::description:
+        return "unknown or inconsistent source description";
+    case error::capacity:
+        return "borrowed capacity or extent bounds are insufficient";
+    case error::alignment:
+        return "storage or operation coordinates violate alignment requirements";
+    case error::alias:
+        return "borrowed storage overlaps command or effect storage";
+    case error::contents:
+        return "interval fields, checkpoints or readable tail are inconsistent";
+    case error::rank:
+        return "rank or rank range is outside assigned intervals";
+    case error::value:
+        return "interval size exceeds its field or total extent limit";
+    case error::effects:
+        return "effect journal has insufficient available entries";
+    case error::range:
+        return "operation range or selection coverage is invalid";
+    }
+    return "unknown Intervals error";
+}
+} // namespace ikea::intervals
 
 namespace ikea::intervals::detail {
 numeric_preparation prepare_numeric(const void* address, unsigned count, unsigned bytes) {

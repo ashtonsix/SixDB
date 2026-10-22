@@ -3,6 +3,8 @@
 Ikea separates ordinary caller contracts, supported `author/` surfaces and
 internal `detail/` implementation. Bodies stay in headers where caller context
 enables useful specialization; cold work belongs in compiled TUs.
+The [interface guide](interfaces.md) connects each module's placement/preparation
+phases, coordinates, effects and descriptors without imposing one container API.
 
 ## Define the operation before its execution
 
@@ -77,6 +79,7 @@ write instantiations through the ordinary umbrella.
 | --- | --- |
 | Ordinary calls and erasure | `{read,write,read_operation,mutation_operation}.h` |
 | Format, placement and recovery | `format.h`, `view.h`, `presets.h`, `representation.h` |
+| Scalar physical point building blocks, without effects or summaries | `point.h`; packed arithmetic stays in `detail/point.h` |
 | Logical expressions and evaluation | `author/{expression,read,record,native,summaries}.h` |
 | Predicate masks from storage or native values | `filter.h`; `author/filter.h` |
 | Typed mutation binding and preflight | `author/write.h` |

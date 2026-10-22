@@ -1,12 +1,8 @@
 #pragma once
+#include <ikea/streampack/types.h>
 #include <ikea/streampack/detail/compact/description.h>
 
 namespace ikea::streampack {
-using ikea::streampack::detail::compact::byte;
-using ikea::streampack::detail::compact::bytes;
-using ikea::streampack::detail::compact::error;
-using ikea::streampack::detail::compact::geometry;
-inline constexpr unsigned slot_capacity = ikea::streampack::detail::compact::interval_capacity;
 enum class placement : std::uint8_t { grouped, separated };
 
 /// Geometry plus an optional used-length companion. With full, U is derived

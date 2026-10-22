@@ -212,7 +212,7 @@ class attempt {
         // These native accumulators remain local throughout the ready work.
         // Retaining them in the frame happens only at an actual driver return.
         auto summary = summary_;
-        sp::composition::write_journal journal{effects_, used_};
+        sp::composition::source_write_journal journal{effects_, used_};
         static constexpr auto masks = [] {
             std::array<std::uint16_t, count / 16> words;
             words.fill(selected);

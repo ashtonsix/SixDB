@@ -52,6 +52,15 @@ readable extent and write footprint. Keep acquisition, publication and fallible
 work outside it. [Source boundaries](../source.md#seriespack-source-boundaries)
 locate native kernels, logical nodes and shared preparation.
 
+For scalar leaves, include `<ikea/seriespack/point.h>` for `get`/`set` and their
+unchecked forms. These physical building blocks avoid native-carrier machinery;
+raw point stores preserve packed neighbors but emit no effects or summaries.
+The [point contract](reference.md#scalar-point-building-blocks) states their
+initialization and byte-isolation requirements. Use the prepared mutation path
+when the enclosing operation needs source-qualified writes or maintenance.
+`<ikea/seriespack/author/native.h>` supplies the supported `native` carriers and
+ISA bodies when the composition should keep values in registers.
+
 `value_expression` and `payload_expression` describe bit-window joins.
 `composition::read(ops, expression, rows, mask)` traverses those joins;
 `selected_sum` is a shared body used with scalar, native or recording ops.
@@ -83,8 +92,9 @@ completion; it is not a scheduler suspension.
 `chain<K>` carries 16 values. `packet_chain<K,N>` carries 16/32/64 when its native
 carrier fits at most eight vector arguments; N counts logical values here.
 Native vectors are flattened at the call boundary to preserve register handoff.
-The [shared execution guide](../source.md#shared-execution-entry) owns the private
-ABI, table bounds and lifetime rules. Plans and bindings remain owned by the driver.
+The [source guide](../source.md#shared-facilities) locates the shared private
+chain implementation. Plans, bindings and native context remain owned by the
+driver through the complete synchronous chain.
 
 Choose grain and fusion using representative whole pipelines. Cheap repeated
 predicates in 16-row stages are a stress case; CPS need not be the best execution

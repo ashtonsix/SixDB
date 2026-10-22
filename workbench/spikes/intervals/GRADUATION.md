@@ -98,8 +98,8 @@ The after source is
 `36256e31c1b78d05d9553408b7766d067c72a5970cc05ae8f93bd033759df4c2`.
 The 53-file production/consumer identity receipt describes that exact qualification
 epoch. The subsequent [audit](AUDIT.md) changes harness bindings and build routes
-while removing compatibility; its 41-file receipt verifies the maintained
-Intervals/StreamPack implementation remains unchanged. Recover the original
+while removing compatibility; its 41-file receipt verified unchanged
+Intervals/StreamPack implementation for that audit. Recover the original
 source archive when reproducing the migration timings.
 
 `graduation-native.sh` compiles both source trees on each same worker with

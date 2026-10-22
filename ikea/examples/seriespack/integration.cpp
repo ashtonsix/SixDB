@@ -39,7 +39,7 @@ class mutation_work {
     cp::mutation_operation<std::uint16_t, sp::sum_change> operation_;
     std::array<std::uint16_t, count> input_{};
     std::array<cp::owner_write, count> records_{};
-    cp::write_journal effects_{records_};
+    cp::source_write_journal effects_{records_};
     sp::sum_change summary_;
     std::size_t next_ = 0;
 

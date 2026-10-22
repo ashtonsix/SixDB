@@ -6,6 +6,7 @@
 #include <expected>
 #include <optional>
 #include <span>
+#include <string_view>
 
 namespace ikea::bec256 {
 namespace detail {
@@ -28,7 +29,7 @@ enum class error {
     effects,
     overlap
 };
-const char *describe(error) noexcept;
+std::string_view describe(error) noexcept;
 
 /// Validates exact headless framing without reading beyond body. Population is
 /// caller-owned interpretation metadata, not authenticated original content.

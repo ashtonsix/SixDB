@@ -1,5 +1,11 @@
 # StreamPack reference
 
+`<ikea/streampack/types.h>` owns the public byte, geometry and error types.
+`streampack::error` is distinct from `intervals::error`; retirement is a
+StreamPack value condition. `describe(error)` returns cold diagnostic text as
+`std::string_view`. The [interface guide](../interfaces.md) connects these types
+to other packs without sharing their error domains or persistent descriptions.
+
 StreamPack stores variable-length byte values in caller-owned storage. It combines
 [Intervals](../intervals/reference.md) search and subdivision kernels with value lengths, payload
 access and coordinated value edits. A block has up to 256 assigned ranks. StreamPack

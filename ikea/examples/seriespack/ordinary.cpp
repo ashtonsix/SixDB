@@ -18,7 +18,7 @@ int main() {
     assert(prepared);
     const auto write = prepared->erase<std::uint32_t, sp::sum_change>();
     std::array<sp::composition::owner_write, 256> records;
-    sp::composition::write_journal effects{records};
+    sp::composition::source_write_journal effects{records};
     std::array<std::uint32_t, count> input;
     for (std::size_t i = 0; i < count; ++i)
         input[i] = i;
@@ -26,7 +26,7 @@ int main() {
     effects.used = 0;
     sp::sum_change summary;
     assert(write.set(7, 1000, summary, effects));
-    sp::composition::write_journal no_space{{}};
+    sp::composition::source_write_journal no_space{{}};
     const auto delta_before = summary.finish();
     const auto rejected = write.set(7, 123, summary, no_space);
     assert(!rejected && rejected.error() == sp::error::capacity);

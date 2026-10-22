@@ -62,6 +62,27 @@ neighbors. They do not promise minimal differences, beforeimages or a transactio
 barrier. Cancellation after a successful chunk needs owner resolution; it is not
 a failed command with an unchanged-effects guarantee.
 
+## Scalar point building blocks
+
+`<ikea/seriespack/point.h>` exposes `get`, `get_unchecked`, `set` and
+`set_unchecked` over an admitted physical `view`. These are scalar leaf operations
+for composition authors and private construction; they retain the same original
+row coordinates and packed bytes as the bound operations. The header works
+without a native execution profile.
+
+`get` checks the row. `set` checks the row and unsigned value width before any
+data access; refusal leaves bytes unchanged. The unchecked forms require those
+facts from the caller. Both forms borrow placement, accessible byte extents,
+owner lifetime and synchronization from the admitted view.
+
+Raw point stores preserve other fields sharing a packed byte. Those bytes must
+already be initialized, and the caller must isolate the complete bytes touched
+by the store from concurrent writers. A raw point store does not clear final-tile
+slack, emit write effects or contribute to summaries. For coordinated owner
+mutations, use `bind_mutation` and its prepared `set`/`replace`/`initialize`
+operations, which report issued source-qualified writes and apply the chosen
+summary law. A raw leaf store does not inherit those operation-level guarantees.
+
 ## Execution profiles
 
 | Profile | Supported execution |

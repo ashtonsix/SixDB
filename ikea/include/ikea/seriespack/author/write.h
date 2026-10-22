@@ -109,27 +109,27 @@ template <class Expression> class prepared_mutation {
             this,
             count_,
             [](const void* pointer, std::size_t first, const U* input, std::uint16_t active,
-               Summary& summary, write_journal& effects) {
+               Summary& summary, source_write_journal& effects) {
                 const auto& operation = *static_cast<const prepared_mutation*>(pointer);
                 composition::replace16_unchecked(operation.expression_, first, input, active,
                                                  summary, effects);
             },
             [](const void* pointer, std::size_t first, std::size_t count, const U* input,
-               row_selection selected, Summary& summary, write_journal& effects) {
+               row_selection selected, Summary& summary, source_write_journal& effects) {
                 const auto& operation = *static_cast<const prepared_mutation*>(pointer);
                 operation.replace_unchecked(first, count, input, selected, summary, effects);
             },
             [](const void* pointer, std::size_t first, std::span<const U> input,
-               row_selection selected, Summary& summary, write_journal& effects) {
+               row_selection selected, Summary& summary, source_write_journal& effects) {
                 const auto& operation = *static_cast<const prepared_mutation*>(pointer);
                 return operation.replace(first, input, selected, summary, effects);
             },
             [](const void* pointer, std::size_t row, U value, Summary& summary,
-               write_journal& effects) {
+               source_write_journal& effects) {
                 const auto& operation = *static_cast<const prepared_mutation*>(pointer);
                 return operation.set(row, value, summary, effects);
             },
-            [](const void* pointer, std::span<const U> input, write_journal& effects) {
+            [](const void* pointer, std::span<const U> input, source_write_journal& effects) {
                 const auto& operation = *static_cast<const prepared_mutation*>(pointer);
                 return operation.initialize(input, effects);
             }};
@@ -140,7 +140,7 @@ template <class Expression> class prepared_mutation {
     /// and effect storage must be disjoint from occupied destination fields.
     template <class U>
     [[nodiscard]] std::expected<void, error> initialize(std::span<const U> input,
-                                                        write_journal& effects) const {
+                                                        source_write_journal& effects) const {
         if (input.size() != count_)
             return std::unexpected(error::range);
         if (effects.used > effects.storage.size())
@@ -167,7 +167,8 @@ template <class Expression> class prepared_mutation {
     }
     template <class U, class Summary>
     void replace_unchecked(std::size_t first, std::size_t count, const U* input,
-                           row_selection selected, Summary& summary, write_journal& effects) const {
+                           row_selection selected, Summary& summary,
+                           source_write_journal& effects) const {
         if (selected.is_none() || !count)
             return;
         auto run = [&](auto mask) {
@@ -192,7 +193,7 @@ template <class Expression> class prepared_mutation {
     /// nonempty interior 16-row region are readable; selected values fit width.
     [[nodiscard]] std::expected<void, error> replace(std::size_t first, std::span<const U> input,
                                                      row_selection selected, Summary& summary,
-                                                     write_journal& effects) const {
+                                                     source_write_journal& effects) const {
         if (effects.used > effects.storage.size())
             return std::unexpected(error::capacity);
         const auto needed = preflight(first, input.size(), selected, [&](std::size_t offset) {
@@ -210,7 +211,7 @@ template <class Expression> class prepared_mutation {
     }
     template <class U, class Summary>
     [[nodiscard]] std::expected<void, error> set(std::size_t row, U value, Summary& summary,
-                                                 write_journal& effects) const {
+                                                 source_write_journal& effects) const {
         if (row >= count_)
             return std::unexpected(error::range);
         if constexpr (Expression::bit_width < sizeof(U) * 8)
@@ -227,7 +228,7 @@ template <class Expression> class prepared_mutation {
     template <class U, class Summary>
     [[nodiscard]] std::expected<void, error> replace16(std::size_t first, std::span<const U> input,
                                                        std::uint16_t active, Summary& summary,
-                                                       write_journal& effects) const {
+                                                       source_write_journal& effects) const {
         if (first % 16 || first > count_ || count_ - first < 16)
             return std::unexpected(error::range);
         if (input.size() < 16)

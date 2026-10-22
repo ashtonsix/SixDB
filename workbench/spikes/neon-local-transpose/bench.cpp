@@ -23,7 +23,7 @@ template <unsigned K, unsigned Operation> void transpose_case(benchmark::State& 
         packets[i] = data.queries[i] / 16 * 16;
     std::vector<sp::composition::owner_write> records(
         *prepared.effect_capacity(0, data.count, sp::row_selection::all()));
-    sp::composition::write_journal effects{records};
+    sp::composition::source_write_journal effects{records};
     sp::sum_change summary;
     auto run = [&]() -> std::uint64_t {
         if constexpr (Operation == 0)

@@ -38,36 +38,52 @@ template <unsigned N, unsigned Rows, C Op> void field_geometry() {
 
 template <unsigned N, unsigned Rows, C Op> void packet_coordinates() {
     auto layout = *tp::layout::make(2, std::array<tp::code, 2>{{{0, 3, 5}, {1, 0, 8}}});
-    std::array<tp::byte, 2 * Rows> bytes{};
+    std::array<tp::byte, 2 * (Rows + 7)> bytes{};
     for (unsigned i = 0; i < bytes.size(); ++i)
         bytes[i] = i * 71;
-    auto source = *tp::view::bind(layout, bytes, Rows, 2);
+    auto source = *tp::view::bind(layout, bytes, Rows + 7, 2);
     auto plan = *tp::reader<N, Rows>::make(layout, std::array<tp::byte, 3>{1, tp::hole, 0},
                                            std::array<unsigned, 2>{1, 2});
     auto read = *tp::bind_reader(plan, source);
     assert(!tp::bind_filter(read));
     const auto native = tp::native_reader(read);
-    for (auto active : {std::uint64_t{0}, std::uint64_t{1}, (std::uint64_t{1} << Rows) - 1}) {
-        assert(native.admit(0, active));
-        const auto packet = native.get_unchecked(0, active);
-        // Group 0: B0 B1 ...; group 1: hole A0 hole A1 ... .
-        // This independent expectation does not use the plan's offset function.
-        std::uint64_t eligible = 0;
-        for (unsigned r = 0; r < Rows; ++r)
-            if (active >> r & 1)
-                eligible |= (std::uint64_t{1} << r) | (std::uint64_t{1} << (Rows + 2 * r + 1));
-        for (auto rhs : {0ull, 15ull, 31ull, 128ull, 255ull, 256ull, ~0ull}) {
-            std::uint64_t expected = 0;
+    for (unsigned first : {0u, 7u})
+        for (auto active : {std::uint64_t{0}, std::uint64_t{1}, std::uint64_t{1} << (Rows - 1),
+                            (std::uint64_t{1} << Rows) - 1}) {
+            assert(native.admit(first, active));
+            const auto packet = native.get_unchecked(first, active);
+            // Group 0: B0 B1 ...; group 1: hole A0 hole A1 ... .
+            // This independent expectation does not use the plan's offset function.
+            std::uint64_t eligible = 0;
             for (unsigned r = 0; r < Rows; ++r)
-                if (active >> r & 1) {
-                    if (oracle(Op, bytes[2 * r + 1], rhs))
-                        expected |= std::uint64_t{1} << r;
-                    if (oracle(Op, bytes[2 * r] >> 3, rhs))
-                        expected |= std::uint64_t{1} << (Rows + 2 * r + 1);
+                if (active >> r & 1)
+                    eligible |= (std::uint64_t{1} << r) | (std::uint64_t{1} << (Rows + 2 * r + 1));
+            for (auto rhs : {0ull, 15ull, 31ull, 128ull, 255ull, 256ull, ~0ull}) {
+                std::uint64_t expected = 0, expected_a_rows = 0, expected_b_rows = 0;
+                for (unsigned r = 0; r < Rows; ++r)
+                    if (active >> r & 1) {
+                        if (oracle(Op, bytes[2 * (first + r) + 1], rhs)) {
+                            expected |= std::uint64_t{1} << r;
+                            expected_b_rows |= std::uint64_t{1} << r;
+                        }
+                        if (oracle(Op, bytes[2 * (first + r)] >> 3, rhs)) {
+                            expected |= std::uint64_t{1} << (Rows + 2 * r + 1);
+                            expected_a_rows |= std::uint64_t{1} << r;
+                        }
+                    }
+                const auto actual = tp::filter_values<Op, N>(packet, rhs, eligible);
+                assert(actual == expected);
+                // The supported ordering metadata maps a chosen code slot back to
+                // bit r for original row first+r. Expected rows above come directly
+                // from the input bytes, without using that mapping.
+                std::uint64_t actual_a_rows = 0, actual_b_rows = 0;
+                for (unsigned r = 0; r < Rows; ++r) {
+                    actual_a_rows |= ((actual >> plan.ordering().offset(r, 2)) & 1) << r;
+                    actual_b_rows |= ((actual >> plan.ordering().offset(r, 0)) & 1) << r;
                 }
-            assert((tp::filter_values<Op, N>(packet, rhs, eligible) == expected));
+                assert(actual_a_rows == expected_a_rows && actual_b_rows == expected_b_rows);
+            }
         }
-    }
     auto empty = *tp::reader<N, Rows>::make(layout, {});
     auto empty_read = *tp::bind_reader(empty, source);
     assert(!tp::bind_filter(empty_read));

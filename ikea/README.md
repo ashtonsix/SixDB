@@ -28,6 +28,10 @@ These modules support construction, reads and replacement, native composition
 and source-qualified byte effects. StreamPack also supplies retirement, reverse
 byte ownership, rank-preserving packing and selected transfer for owner rewrites.
 
+The [interface guide](docs/interfaces.md) connects placement and prepared calls
+across modules, with explicit row/packet coordinates, selection, byte types,
+source-qualified effects and portable child descriptions.
+
 Modules keep logical interpretation, physical placement and execution distinct.
 A parent can retain its logical contract across different child representations;
 different segments can choose different layouts. Bindings admit storage once and

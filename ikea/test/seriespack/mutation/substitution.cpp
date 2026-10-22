@@ -75,13 +75,13 @@ void check_composed_mutation() {
     sp::sum_change summary;
     std::uint64_t delta = 0;
     std::array<cp::owner_write, 32> owned_effects;
-    cp::write_journal owned{owned_effects};
+    cp::source_write_journal owned{owned_effects};
     input.fill(std::uint64_t{1} << 23);
     IKEA_CHECK(
         !prepared->replace16(0, std::span<const std::uint64_t>(input), 0xffff, summary, owned));
     IKEA_CHECK(!owned.used && !summary.finish());
     input.fill(123);
-    cp::write_journal no_capacity{{}};
+    cp::source_write_journal no_capacity{{}};
     IKEA_CHECK(!prepared->replace16(0, std::span<const std::uint64_t>(input), 0xffff, summary,
                                      no_capacity));
     IKEA_CHECK(
@@ -152,7 +152,7 @@ void check_composed_mutation() {
             const auto selected = pattern == 0   ? sp::row_selection::all()
                                   : pattern == 3 ? sp::row_selection::none()
                                                  : sp::row_selection::regions(0, mask_words);
-            cp::write_journal writes{range_records};
+            cp::source_write_journal writes{range_records};
             const auto count = a.count - first;
             IKEA_CHECK(erased.replace(first,
                                        std::span<const std::uint64_t>(range_input.data(), count),
@@ -181,7 +181,7 @@ void check_composed_mutation() {
         }
     }
     {
-        cp::write_journal writes{range_records};
+        cp::source_write_journal writes{range_records};
         const auto before = summary.finish();
         range_input.back() = std::uint64_t{1} << 23;
         IKEA_CHECK(!erased.replace(0, std::span<const std::uint64_t>(range_input),
@@ -229,7 +229,7 @@ void check_composed_mutation() {
             std::vector<std::uint8_t>(a.planes[1].bytes.begin(), a.planes[1].bytes.end()),
             std::vector<std::uint8_t>(b.planes[0].bytes.begin(), b.planes[0].bytes.end()),
             std::vector<std::uint8_t>(c.planes[1].bytes.begin(), c.planes[1].bytes.end())};
-        cp::write_journal writes{range_records};
+        cp::source_write_journal writes{range_records};
         range_input.back() = std::uint64_t{1} << 23;
         IKEA_CHECK(!erased.initialize(std::span<const std::uint64_t>(range_input), writes));
         range_input.back() = 42;
