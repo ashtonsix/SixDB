@@ -124,7 +124,7 @@ void experiment(std::vector<u64> &values, unsigned trials, unsigned repeat, bool
     lean_readers.reserve(images.size());
     prefix_readers.reserve(images.size());
     std::vector<arm> arms;
-    arms.reserve(14);
+    arms.reserve(16);
     for (unsigned i = 0; i < images.size(); ++i) {
         const auto mode = static_cast<fe::checkpoints>(i % 4);
         const auto start = Clock::now();
@@ -182,6 +182,26 @@ void experiment(std::vector<u64> &values, unsigned trials, unsigned repeat, bool
         };
         arms.push_back(std::move(fused));
     }
+    // Two curated programs reuse the existing native16 image. The run source
+    // is a compile-time property; no policy flag enters any plain lookup.
+    const auto independent_start = Clock::now();
+    frame_points::unpredictable_point_reader independent(images[0]);
+    const auto independent_prepare = elapsed(independent_start);
+    arm independent_arm = arms[0];
+    independent_arm.name = "unpredictable_u8ends_native";
+    independent_arm.storage = bytes(images[0], independent);
+    independent_arm.prepare_ns = independent_prepare;
+    independent_arm.read = [&independent](auto rows, const auto &mask, bool selected) {
+        return sum_points(rows, mask, selected, [&](auto row) { return independent.get(row); });
+    };
+    arms.push_back(std::move(independent_arm));
+    frame_points::unpredictable_compact_reader independent_prefix(*lean[0], true);
+    arm independent_fused = arms[2];
+    independent_fused.name = "unpredictable_prefix_shared_u8ends_native";
+    independent_fused.read = [&independent_prefix](auto rows, const auto &mask, bool selected) {
+        return sum_points(rows, mask, selected, [&](auto row) { return independent_prefix.get(row); });
+    };
+    arms.push_back(std::move(independent_fused));
     arm raw;
     raw.name = "native_u64";
     raw.storage = {values.size() * 8, values.capacity() * 8, 0, sizeof(values)};

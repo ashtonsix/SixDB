@@ -34,7 +34,7 @@ No reduction trick removes descriptor/width/kind dispatch, prediction
 dependencies or run search. Plain/native forms and larger execution grain
 remain essential alternatives.
 
-All twelve inputs, native controls, both coarse masks and all fourteen arms
+All twelve inputs, native controls, all/none/alternating/grouped block selections and all fourteen arms
 are retained, including the large whole-image gaps: native-prefix/native16
 OS 21.45, ResolutionWidth 24.55, RegionID 28.69 and UserID 30.03 ns/request,
 versus native FOR .84/.87/.92/1.43. These run-heavy cases are a real remaining

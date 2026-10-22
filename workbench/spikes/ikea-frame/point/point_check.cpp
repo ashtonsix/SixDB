@@ -63,9 +63,14 @@ unsigned verify(const std::vector<fe::u64> &values, bool require_kinds,
         point_reader stored(column, frame_points::point_domain::stored_codes);
         frame_points::compact_reader lean_stored(*lean[image], false, frame_points::point_domain::stored_codes);
         frame_points::compact_reader prefix_stored(*lean[image], true, frame_points::point_domain::stored_codes);
+        frame_points::unpredictable_point_reader independent_stored(column, frame_points::point_domain::stored_codes);
+        frame_points::unpredictable_compact_reader independent_prefix_stored(
+            *lean[image], true, frame_points::point_domain::stored_codes);
         frame_points::dictionary_points reader(column, stored);
         frame_points::dictionary_points lean_reader(lean[image]->body, lean_stored);
         frame_points::dictionary_points prefix_reader(lean[image]->body, prefix_stored);
+        frame_points::dictionary_points independent_reader(column, independent_stored);
+        frame_points::dictionary_points independent_prefix_reader(lean[image]->body, independent_prefix_stored);
         std::set<fe::kind> kinds;
         for (const auto &d : column.blocks) kinds.insert(d.type);
         if (require_kinds)
@@ -76,7 +81,9 @@ unsigned verify(const std::vector<fe::u64> &values, bool require_kinds,
             need(reader.get(row) == values[row], "point differs from original input");
             need(lean_reader.get(row) == values[row], "shared-kernel point differs from input");
             need(prefix_reader.get(row) == values[row], "native prefix point differs from input");
-            checks += 3;
+            need(independent_reader.get(row) == values[row], "native run-end point differs from input");
+            need(independent_prefix_reader.get(row) == values[row], "native run-end/prefix point differs from input");
+            checks += 5;
         }
         for (unsigned pattern = 0; pattern < 4; ++pattern) {
             fe::block_mask mask(column.blocks.size());
@@ -100,6 +107,7 @@ unsigned verify(const std::vector<fe::u64> &values, bool require_kinds,
                 need(actual == expected && count == expected_count, "coarse point selection mismatch");
             };
             selected(reader); selected(lean_reader); selected(prefix_reader);
+            selected(independent_reader); selected(independent_prefix_reader);
         }
     }
     return checks;

@@ -1,0 +1,1121 @@
+
+build/clang/frame-consumers-stable/workbench/spikes/ikea-frame/point/frame_point_measure:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+0000000000007e28 <_ZNK12frame_points20point_reader_programIN14frame_encoding8run_endsEE3getEm>:
+    7e28: a9bb7bfd     	stp	x29, x30, [sp, #-0x50]!
+    7e2c: a90167fc     	stp	x28, x25, [sp, #0x10]
+    7e30: a9025ff8     	stp	x24, x23, [sp, #0x20]
+    7e34: a90357f6     	stp	x22, x21, [sp, #0x30]
+    7e38: a9044ff4     	stp	x20, x19, [sp, #0x40]
+    7e3c: 910003fd     	mov	x29, sp
+    7e40: d120c3e9     	sub	x9, sp, #0x830
+    7e44: 927ae53f     	and	sp, x9, #0xffffffffffffffc0
+    7e48: f9400408     	ldr	x8, [x0, #0x8]
+    7e4c: eb08003f     	cmp	x1, x8
+    7e50: 54001e82     	b.hs	0x8220 <_ZNK12frame_points20point_reader_programIN14frame_encoding8run_endsEE3getEm+0x3f8>
+    7e54: f9400016     	ldr	x22, [x0]
+    7e58: d348fc35     	lsr	x21, x1, #8
+    7e5c: 12001c37     	and	w23, w1, #0xff
+    7e60: f94006c8     	ldr	x8, [x22, #0x8]
+    7e64: 8b151114     	add	x20, x8, x21, lsl #4
+    7e68: 39403a88     	ldrb	w8, [x20, #0xe]
+    7e6c: 7100091f     	cmp	w8, #0x2
+    7e70: 540000ec     	b.gt	0x7e8c <_ZNK12frame_points20point_reader_programIN14frame_encoding8run_endsEE3getEm+0x64>
+    7e74: 34001c68     	cbz	w8, 0x8200 <_ZNK12frame_points20point_reader_programIN14frame_encoding8run_endsEE3getEm+0x3d8>
+    7e78: 7100051f     	cmp	w8, #0x1
+    7e7c: 540002e0     	b.eq	0x7ed8 <_ZNK12frame_points20point_reader_programIN14frame_encoding8run_endsEE3getEm+0xb0>
+    7e80: 7100091f     	cmp	w8, #0x2
+    7e84: 540008a0     	b.eq	0x7f98 <_ZNK12frame_points20point_reader_programIN14frame_encoding8run_endsEE3getEm+0x170>
+    7e88: 140000ee     	b	0x8240 <_ZNK12frame_points20point_reader_programIN14frame_encoding8run_endsEE3getEm+0x418>
+    7e8c: 71000d1f     	cmp	w8, #0x3
+    7e90: 54000940     	b.eq	0x7fb8 <_ZNK12frame_points20point_reader_programIN14frame_encoding8run_endsEE3getEm+0x190>
+    7e94: 7100111f     	cmp	w8, #0x4
+    7e98: 54000460     	b.eq	0x7f24 <_ZNK12frame_points20point_reader_programIN14frame_encoding8run_endsEE3getEm+0xfc>
+    7e9c: 7100151f     	cmp	w8, #0x5
+    7ea0: 54001d01     	b.ne	0x8240 <_ZNK12frame_points20point_reader_programIN14frame_encoding8run_endsEE3getEm+0x418>
+    7ea4: 394002cb     	ldrb	w11, [x22]
+    7ea8: f94012c8     	ldr	x8, [x22, #0x20]
+    7eac: b9400a89     	ldr	w9, [x20, #0x8]
+    7eb0: 39403e8a     	ldrb	w10, [x20, #0xf]
+    7eb4: 7100097f     	cmp	w11, #0x2
+    7eb8: 540014a0     	b.eq	0x814c <_ZNK12frame_points20point_reader_programIN14frame_encoding8run_endsEE3getEm+0x324>
+    7ebc: 7100057f     	cmp	w11, #0x1
+    7ec0: 540013c0     	b.eq	0x8138 <_ZNK12frame_points20point_reader_programIN14frame_encoding8run_endsEE3getEm+0x310>
+    7ec4: 350014eb     	cbnz	w11, 0x8160 <_ZNK12frame_points20point_reader_programIN14frame_encoding8run_endsEE3getEm+0x338>
+    7ec8: 7100655f     	cmp	w10, #0x19
+    7ecc: 52800f0b     	mov	w11, #0x78              // =120
+    7ed0: 5280078c     	mov	w12, #0x3c              // =60
+    7ed4: 140000a1     	b	0x8158 <_ZNK12frame_points20point_reader_programIN14frame_encoding8run_endsEE3getEm+0x330>
+    7ed8: 79401a88     	ldrh	w8, [x20, #0xc]
+    7edc: b4000b88     	cbz	x8, 0x804c <_ZNK12frame_points20point_reader_programIN14frame_encoding8run_endsEE3getEm+0x224>
+    7ee0: f94012c9     	ldr	x9, [x22, #0x20]
+    7ee4: 91001d0a     	add	x10, x8, #0x7
+    7ee8: b9400a8b     	ldr	w11, [x20, #0x8]
+    7eec: 39403e8c     	ldrb	w12, [x20, #0xf]
+    7ef0: d343fd4a     	lsr	x10, x10, #3
+    7ef4: 2a1f03e1     	mov	w1, wzr
+    7ef8: 8b0b0129     	add	x9, x9, x11
+    7efc: 9bac2549     	umaddl	x9, w10, w12, x9
+    7f00: 4b01010a     	sub	w10, w8, w1
+    7f04: 0b4a042a     	add	w10, w1, w10, lsr #1
+    7f08: 386a492b     	ldrb	w11, [x9, w10, uxtw]
+    7f0c: 6b0b02ff     	cmp	w23, w11
+    7f10: 1a889148     	csel	w8, w10, w8, ls
+    7f14: 1a8a9421     	csinc	w1, w1, w10, ls
+    7f18: 6b08003f     	cmp	w1, w8
+    7f1c: 54ffff23     	b.lo	0x7f00 <_ZNK12frame_points20point_reader_programIN14frame_encoding8run_endsEE3getEm+0xd8>
+    7f20: 1400004c     	b	0x8050 <_ZNK12frame_points20point_reader_programIN14frame_encoding8run_endsEE3getEm+0x228>
+    7f24: f94012c8     	ldr	x8, [x22, #0x20]
+    7f28: b9400a89     	ldr	w9, [x20, #0x8]
+    7f2c: 39403e8a     	ldrb	w10, [x20, #0xf]
+    7f30: 8b090108     	add	x8, x8, x9
+    7f34: 8b0a1509     	add	x9, x8, x10, lsl #5
+    7f38: 3940212c     	ldrb	w12, [x9, #0x8]
+    7f3c: 91002928     	add	x8, x9, #0xa
+    7f40: aa0803ea     	mov	x10, x8
+    7f44: 8b0c010b     	add	x11, x8, x12
+    7f48: b400016c     	cbz	x12, 0x7f74 <_ZNK12frame_points20point_reader_programIN14frame_encoding8run_endsEE3getEm+0x14c>
+    7f4c: d341fd8d     	lsr	x13, x12, #1
+    7f50: 8b0d014e     	add	x14, x10, x13
+    7f54: aa2d03f0     	mvn	x16, x13
+    7f58: 384015cf     	ldrb	w15, [x14], #0x1
+    7f5c: 8b10018c     	add	x12, x12, x16
+    7f60: 6b0f02ff     	cmp	w23, w15
+    7f64: 9a8d818c     	csel	x12, x12, x13, hi
+    7f68: 9a8a81ca     	csel	x10, x14, x10, hi
+    7f6c: f100019f     	cmp	x12, #0x0
+    7f70: 54fffeec     	b.gt	0x7f4c <_ZNK12frame_points20point_reader_programIN14frame_encoding8run_endsEE3getEm+0x124>
+    7f74: eb0b015f     	cmp	x10, x11
+    7f78: 54000100     	b.eq	0x7f98 <_ZNK12frame_points20point_reader_programIN14frame_encoding8run_endsEE3getEm+0x170>
+    7f7c: 3940014b     	ldrb	w11, [x10]
+    7f80: 6b21017f     	cmp	w11, w1, uxtb
+    7f84: 540000a1     	b.ne	0x7f98 <_ZNK12frame_points20point_reader_programIN14frame_encoding8run_endsEE3getEm+0x170>
+    7f88: 5280060b     	mov	w11, #0x30              // =48
+    7f8c: f9404ecc     	ldr	x12, [x22, #0x98]
+    7f90: f9400133     	ldr	x19, [x9]
+    7f94: 14000091     	b	0x81d8 <_ZNK12frame_points20point_reader_programIN14frame_encoding8run_endsEE3getEm+0x3b0>
+    7f98: 52800508     	mov	w8, #0x28               // =40
+    7f9c: f9401ec9     	ldr	x9, [x22, #0x38]
+    7fa0: f9400293     	ldr	x19, [x20]
+    7fa4: 9b0826a8     	madd	x8, x21, x8, x9
+    7fa8: 92401c21     	and	x1, x1, #0xff
+    7fac: f9400d09     	ldr	x9, [x8, #0x18]
+    7fb0: f9400100     	ldr	x0, [x8]
+    7fb4: 1400008d     	b	0x81e8 <_ZNK12frame_points20point_reader_programIN14frame_encoding8run_endsEE3getEm+0x3c0>
+    7fb8: 2a1703f8     	mov	w24, w23
+    7fbc: 34001237     	cbz	w23, 0x8200 <_ZNK12frame_points20point_reader_programIN14frame_encoding8run_endsEE3getEm+0x3d8>
+    7fc0: 394002c8     	ldrb	w8, [x22]
+    7fc4: 52800089     	mov	w9, #0x4                // =4
+    7fc8: 528000ca     	mov	w10, #0x6               // =6
+    7fcc: f94012cb     	ldr	x11, [x22, #0x20]
+    7fd0: b9400a8c     	ldr	w12, [x20, #0x8]
+    7fd4: 5280010d     	mov	w13, #0x8               // =8
+    7fd8: 7100091f     	cmp	w8, #0x2
+    7fdc: 1a890149     	csel	w9, w10, w9, eq
+    7fe0: 71000d1f     	cmp	w8, #0x3
+    7fe4: 39403e8a     	ldrb	w10, [x20, #0xf]
+    7fe8: 1a8901ad     	csel	w13, w13, w9, eq
+    7fec: 8b0c0169     	add	x9, x11, x12
+    7ff0: 1acd26eb     	lsr	w11, w23, w13
+    7ff4: 8b0a1529     	add	x9, x9, x10, lsl #5
+    7ff8: 1acd2161     	lsl	w1, w11, w13
+    7ffc: f9400139     	ldr	x25, [x9]
+    8000: 3400022b     	cbz	w11, 0x8044 <_ZNK12frame_points20point_reader_programIN14frame_encoding8run_endsEE3getEm+0x21c>
+    8004: 7100051f     	cmp	w8, #0x1
+    8008: 51000568     	sub	w8, w11, #0x1
+    800c: 54000301     	b.ne	0x806c <_ZNK12frame_points20point_reader_programIN14frame_encoding8run_endsEE3getEm+0x244>
+    8010: 7100e15f     	cmp	w10, #0x38
+    8014: 54000368     	b.hi	0x8080 <_ZNK12frame_points20point_reader_programIN14frame_encoding8run_endsEE3getEm+0x258>
+    8018: 52800609     	mov	w9, #0x30               // =48
+    801c: f940080a     	ldr	x10, [x0, #0x10]
+    8020: aa0103f3     	mov	x19, x1
+    8024: 9b092aa9     	madd	x9, x21, x9, x10
+    8028: aa0803e1     	mov	x1, x8
+    802c: f9400d2a     	ldr	x10, [x9, #0x18]
+    8030: f9400120     	ldr	x0, [x9]
+    8034: d63f0140     	blr	x10
+    8038: aa1303e1     	mov	x1, x19
+    803c: aa0003f3     	mov	x19, x0
+    8040: 14000012     	b	0x8088 <_ZNK12frame_points20point_reader_programIN14frame_encoding8run_endsEE3getEm+0x260>
+    8044: aa1f03f3     	mov	x19, xzr
+    8048: 14000010     	b	0x8088 <_ZNK12frame_points20point_reader_programIN14frame_encoding8run_endsEE3getEm+0x260>
+    804c: aa1f03e1     	mov	x1, xzr
+    8050: 52800508     	mov	w8, #0x28               // =40
+    8054: f9401ec9     	ldr	x9, [x22, #0x38]
+    8058: f9400293     	ldr	x19, [x20]
+    805c: 9b0826a8     	madd	x8, x21, x8, x9
+    8060: f9400d09     	ldr	x9, [x8, #0x18]
+    8064: f9400100     	ldr	x0, [x8]
+    8068: 14000060     	b	0x81e8 <_ZNK12frame_points20point_reader_programIN14frame_encoding8run_endsEE3getEm+0x3c0>
+    806c: 7100615f     	cmp	w10, #0x18
+    8070: 54000088     	b.hi	0x8080 <_ZNK12frame_points20point_reader_programIN14frame_encoding8run_endsEE3getEm+0x258>
+    8074: 8b284928     	add	x8, x9, w8, uxtw #2
+    8078: b9400913     	ldr	w19, [x8, #0x8]
+    807c: 14000003     	b	0x8088 <_ZNK12frame_points20point_reader_programIN14frame_encoding8run_endsEE3getEm+0x260>
+    8080: 8b284d28     	add	x8, x9, w8, uxtw #3
+    8084: f9400513     	ldr	x19, [x8, #0x8]
+    8088: 52800508     	mov	w8, #0x28               // =40
+    808c: f9401ec9     	ldr	x9, [x22, #0x38]
+    8090: 910003e3     	mov	x3, sp
+    8094: 9b0826a8     	madd	x8, x21, x8, x9
+    8098: 4b0102f5     	sub	w21, w23, w1
+    809c: 910003f6     	mov	x22, sp
+    80a0: 110006a2     	add	w2, w21, #0x1
+    80a4: a9402500     	ldp	x0, x9, [x8]
+    80a8: d63f0120     	blr	x9
+    80ac: 71000ebf     	cmp	w21, #0x3
+    80b0: 54000062     	b.hs	0x80bc <_ZNK12frame_points20point_reader_programIN14frame_encoding8run_endsEE3getEm+0x294>
+    80b4: aa1f03e8     	mov	x8, xzr
+    80b8: 14000013     	b	0x8104 <_ZNK12frame_points20point_reader_programIN14frame_encoding8run_endsEE3getEm+0x2dc>
+    80bc: 6f00e400     	movi	v0.2d, #0000000000000000
+    80c0: 6f00e401     	movi	v1.2d, #0000000000000000
+    80c4: 910006a9     	add	x9, x21, #0x1
+    80c8: 927e7928     	and	x8, x9, #0x1fffffffc
+    80cc: b27c02ca     	orr	x10, x22, #0x10
+    80d0: aa0803eb     	mov	x11, x8
+    80d4: 4e081e60     	mov	v0.d[0], x19
+    80d8: ad7f8d42     	ldp	q2, q3, [x10, #-0x10]
+    80dc: f100116b     	subs	x11, x11, #0x4
+    80e0: 9100814a     	add	x10, x10, #0x20
+    80e4: 4ee08440     	add	v0.2d, v2.2d, v0.2d
+    80e8: 4ee18461     	add	v1.2d, v3.2d, v1.2d
+    80ec: 54ffff61     	b.ne	0x80d8 <_ZNK12frame_points20point_reader_programIN14frame_encoding8run_endsEE3getEm+0x2b0>
+    80f0: 4ee08420     	add	v0.2d, v1.2d, v0.2d
+    80f4: eb08013f     	cmp	x9, x8
+    80f8: 5ef1b800     	addp	d0, v0.2d
+    80fc: 9e660013     	fmov	x19, d0
+    8100: 54000100     	b.eq	0x8120 <_ZNK12frame_points20point_reader_programIN14frame_encoding8run_endsEE3getEm+0x2f8>
+    8104: 8b080ec9     	add	x9, x22, x8, lsl #3
+    8108: d1000508     	sub	x8, x8, #0x1
+    810c: f840852a     	ldr	x10, [x9], #0x8
+    8110: 91000508     	add	x8, x8, #0x1
+    8114: eb15011f     	cmp	x8, x21
+    8118: 8b130153     	add	x19, x10, x19
+    811c: 54ffff83     	b.lo	0x810c <_ZNK12frame_points20point_reader_programIN14frame_encoding8run_endsEE3getEm+0x2e4>
+    8120: 2a1803e8     	mov	w8, w24
+    8124: f9400289     	ldr	x9, [x20]
+    8128: 9b087f28     	mul	x8, x25, x8
+    812c: 8b090269     	add	x9, x19, x9
+    8130: 8b080120     	add	x0, x9, x8
+    8134: 14000034     	b	0x8204 <_ZNK12frame_points20point_reader_programIN14frame_encoding8run_endsEE3getEm+0x3dc>
+    8138: 7100e15f     	cmp	w10, #0x38
+    813c: 54000168     	b.hi	0x8168 <_ZNK12frame_points20point_reader_programIN14frame_encoding8run_endsEE3getEm+0x340>
+    8140: d37ff94b     	lsl	x11, x10, #1
+    8144: 9100416b     	add	x11, x11, #0x10
+    8148: 14000009     	b	0x816c <_ZNK12frame_points20point_reader_programIN14frame_encoding8run_endsEE3getEm+0x344>
+    814c: 7100655f     	cmp	w10, #0x19
+    8150: 5280030b     	mov	w11, #0x18              // =24
+    8154: 5280018c     	mov	w12, #0xc               // =12
+    8158: 9a8b318b     	csel	x11, x12, x11, lo
+    815c: 14000004     	b	0x816c <_ZNK12frame_points20point_reader_programIN14frame_encoding8run_endsEE3getEm+0x344>
+    8160: aa1f03eb     	mov	x11, xzr
+    8164: 14000002     	b	0x816c <_ZNK12frame_points20point_reader_programIN14frame_encoding8run_endsEE3getEm+0x344>
+    8168: 52800f0b     	mov	w11, #0x78              // =120
+    816c: 8b090108     	add	x8, x8, x9
+    8170: 8b0a1508     	add	x8, x8, x10, lsl #5
+    8174: 8b0b0109     	add	x9, x8, x11
+    8178: 3940412c     	ldrb	w12, [x9, #0x10]
+    817c: 91004928     	add	x8, x9, #0x12
+    8180: aa0803ea     	mov	x10, x8
+    8184: 8b0c010b     	add	x11, x8, x12
+    8188: b400018c     	cbz	x12, 0x81b8 <_ZNK12frame_points20point_reader_programIN14frame_encoding8run_endsEE3getEm+0x390>
+    818c: aa0803ea     	mov	x10, x8
+    8190: d341fd8d     	lsr	x13, x12, #1
+    8194: 8b0d014e     	add	x14, x10, x13
+    8198: aa2d03f0     	mvn	x16, x13
+    819c: 384015cf     	ldrb	w15, [x14], #0x1
+    81a0: 8b10018c     	add	x12, x12, x16
+    81a4: 6b0f02ff     	cmp	w23, w15
+    81a8: 9a8d818c     	csel	x12, x12, x13, hi
+    81ac: 9a8a81ca     	csel	x10, x14, x10, hi
+    81b0: f100019f     	cmp	x12, #0x0
+    81b4: 54fffeec     	b.gt	0x8190 <_ZNK12frame_points20point_reader_programIN14frame_encoding8run_endsEE3getEm+0x368>
+    81b8: eb0b015f     	cmp	x10, x11
+    81bc: 540001c0     	b.eq	0x81f4 <_ZNK12frame_points20point_reader_programIN14frame_encoding8run_endsEE3getEm+0x3cc>
+    81c0: 3940014b     	ldrb	w11, [x10]
+    81c4: 6b21017f     	cmp	w11, w1, uxtb
+    81c8: 54000161     	b.ne	0x81f4 <_ZNK12frame_points20point_reader_programIN14frame_encoding8run_endsEE3getEm+0x3cc>
+    81cc: 5280060b     	mov	w11, #0x30              // =48
+    81d0: f9400533     	ldr	x19, [x9, #0x8]
+    81d4: f9404ecc     	ldr	x12, [x22, #0x98]
+    81d8: 9b0b32ab     	madd	x11, x21, x11, x12
+    81dc: f9400d69     	ldr	x9, [x11, #0x18]
+    81e0: f9400160     	ldr	x0, [x11]
+    81e4: cb080141     	sub	x1, x10, x8
+    81e8: d63f0120     	blr	x9
+    81ec: 8b130000     	add	x0, x0, x19
+    81f0: 14000005     	b	0x8204 <_ZNK12frame_points20point_reader_programIN14frame_encoding8run_endsEE3getEm+0x3dc>
+    81f4: 4b0a0108     	sub	w8, w8, w10
+    81f8: 0b0802f8     	add	w24, w23, w8
+    81fc: 35ffee38     	cbnz	w24, 0x7fc0 <_ZNK12frame_points20point_reader_programIN14frame_encoding8run_endsEE3getEm+0x198>
+    8200: f9400280     	ldr	x0, [x20]
+    8204: 910003bf     	mov	sp, x29
+    8208: a9444ff4     	ldp	x20, x19, [sp, #0x40]
+    820c: a94357f6     	ldp	x22, x21, [sp, #0x30]
+    8210: a9425ff8     	ldp	x24, x23, [sp, #0x20]
+    8214: a94167fc     	ldp	x28, x25, [sp, #0x10]
+    8218: a8c57bfd     	ldp	x29, x30, [sp], #0x50
+    821c: d65f03c0     	ret
+    8220: d00004c0     	adrp	x0, 0xa2000 <_ZN4ikea10seriespack11composition6detail15writable_fields3addENS_6detail12occupied_runEPKvj+0x180>
+    8224: 91301c00     	add	x0, x0, #0xc07
+    8228: d00004c1     	adrp	x1, 0xa2000 <_ZN4ikea10seriespack11composition6detail15writable_fields3addENS_6detail12occupied_runEPKvj+0x180>
+    822c: 91304821     	add	x1, x1, #0xc12
+    8230: d00004c3     	adrp	x3, 0xa2000 <_ZN4ikea10seriespack11composition6detail15writable_fields3addENS_6detail12occupied_runEPKvj+0x180>
+    8234: 91310463     	add	x3, x3, #0xc41
+    8238: 52800562     	mov	w2, #0x2b               // =43
+    823c: 97ffea75     	bl	0x2c10 <__assert_fail@plt>
+    8240: 97ffeaac     	bl	0x2cf0 <abort@plt>
+
+0000000000008aa0 <_ZNK12frame_points22compact_reader_programIN14frame_encoding8run_endsEE3getEm>:
+    8aa0: a9bb7bfd     	stp	x29, x30, [sp, #-0x50]!
+    8aa4: f9000bf9     	str	x25, [sp, #0x10]
+    8aa8: a9025ff8     	stp	x24, x23, [sp, #0x20]
+    8aac: a90357f6     	stp	x22, x21, [sp, #0x30]
+    8ab0: a9044ff4     	stp	x20, x19, [sp, #0x40]
+    8ab4: 910003fd     	mov	x29, sp
+    8ab8: f9400408     	ldr	x8, [x0, #0x8]
+    8abc: eb08003f     	cmp	x1, x8
+    8ac0: 54001ba2     	b.hs	0x8e34 <_ZNK12frame_points22compact_reader_programIN14frame_encoding8run_endsEE3getEm+0x394>
+    8ac4: f9400009     	ldr	x9, [x0]
+    8ac8: d348fc2a     	lsr	x10, x1, #8
+    8acc: aa0003f3     	mov	x19, x0
+    8ad0: f9400528     	ldr	x8, [x9, #0x8]
+    8ad4: 8b0a1115     	add	x21, x8, x10, lsl #4
+    8ad8: 39403aa8     	ldrb	w8, [x21, #0xe]
+    8adc: 340019e8     	cbz	w8, 0x8e18 <_ZNK12frame_points22compact_reader_programIN14frame_encoding8run_endsEE3getEm+0x378>
+    8ae0: f940112a     	ldr	x10, [x9, #0x20]
+    8ae4: b9400aab     	ldr	w11, [x21, #0x8]
+    8ae8: 7100091f     	cmp	w8, #0x2
+    8aec: 12001c36     	and	w22, w1, #0xff
+    8af0: 8b0b0140     	add	x0, x10, x11
+    8af4: 5400024d     	b.le	0x8b3c <_ZNK12frame_points22compact_reader_programIN14frame_encoding8run_endsEE3getEm+0x9c>
+    8af8: 71000d1f     	cmp	w8, #0x3
+    8afc: 540002e0     	b.eq	0x8b58 <_ZNK12frame_points22compact_reader_programIN14frame_encoding8run_endsEE3getEm+0xb8>
+    8b00: 7100111f     	cmp	w8, #0x4
+    8b04: 54000700     	b.eq	0x8be4 <_ZNK12frame_points22compact_reader_programIN14frame_encoding8run_endsEE3getEm+0x144>
+    8b08: 7100151f     	cmp	w8, #0x5
+    8b0c: 54001a41     	b.ne	0x8e54 <_ZNK12frame_points22compact_reader_programIN14frame_encoding8run_endsEE3getEm+0x3b4>
+    8b10: 3940012a     	ldrb	w10, [x9]
+    8b14: 39403ea8     	ldrb	w8, [x21, #0xf]
+    8b18: 7100095f     	cmp	w10, #0x2
+    8b1c: 54001260     	b.eq	0x8d68 <_ZNK12frame_points22compact_reader_programIN14frame_encoding8run_endsEE3getEm+0x2c8>
+    8b20: 7100055f     	cmp	w10, #0x1
+    8b24: 54001180     	b.eq	0x8d54 <_ZNK12frame_points22compact_reader_programIN14frame_encoding8run_endsEE3getEm+0x2b4>
+    8b28: 350012aa     	cbnz	w10, 0x8d7c <_ZNK12frame_points22compact_reader_programIN14frame_encoding8run_endsEE3getEm+0x2dc>
+    8b2c: 7100651f     	cmp	w8, #0x19
+    8b30: 52800f0a     	mov	w10, #0x78              // =120
+    8b34: 5280078b     	mov	w11, #0x3c              // =60
+    8b38: 1400008f     	b	0x8d74 <_ZNK12frame_points22compact_reader_programIN14frame_encoding8run_endsEE3getEm+0x2d4>
+    8b3c: 7100051f     	cmp	w8, #0x1
+    8b40: 540008c0     	b.eq	0x8c58 <_ZNK12frame_points22compact_reader_programIN14frame_encoding8run_endsEE3getEm+0x1b8>
+    8b44: 7100091f     	cmp	w8, #0x2
+    8b48: 54001861     	b.ne	0x8e54 <_ZNK12frame_points22compact_reader_programIN14frame_encoding8run_endsEE3getEm+0x3b4>
+    8b4c: 39403ea8     	ldrb	w8, [x21, #0xf]
+    8b50: d37be908     	lsl	x8, x8, #5
+    8b54: 14000052     	b	0x8c9c <_ZNK12frame_points22compact_reader_programIN14frame_encoding8run_endsEE3getEm+0x1fc>
+    8b58: 2a1603f7     	mov	w23, w22
+    8b5c: 340015f6     	cbz	w22, 0x8e18 <_ZNK12frame_points22compact_reader_programIN14frame_encoding8run_endsEE3getEm+0x378>
+    8b60: 39400128     	ldrb	w8, [x9]
+    8b64: 52800089     	mov	w9, #0x4                // =4
+    8b68: 528000ca     	mov	w10, #0x6               // =6
+    8b6c: 5280010b     	mov	w11, #0x8               // =8
+    8b70: 7100091f     	cmp	w8, #0x2
+    8b74: 1a89014a     	csel	w10, w10, w9, eq
+    8b78: 71000d1f     	cmp	w8, #0x3
+    8b7c: 39403ea9     	ldrb	w9, [x21, #0xf]
+    8b80: 1a8a016c     	csel	w12, w11, w10, eq
+    8b84: 1acc26cb     	lsr	w11, w22, w12
+    8b88: 8b09140a     	add	x10, x0, x9, lsl #5
+    8b8c: 1acc2161     	lsl	w1, w11, w12
+    8b90: f9400158     	ldr	x24, [x10]
+    8b94: 340008ab     	cbz	w11, 0x8ca8 <_ZNK12frame_points22compact_reader_programIN14frame_encoding8run_endsEE3getEm+0x208>
+    8b98: 7100051f     	cmp	w8, #0x1
+    8b9c: 51000568     	sub	w8, w11, #0x1
+    8ba0: 54000a41     	b.ne	0x8ce8 <_ZNK12frame_points22compact_reader_programIN14frame_encoding8run_endsEE3getEm+0x248>
+    8ba4: 7100e13f     	cmp	w9, #0x38
+    8ba8: 54000aa8     	b.hi	0x8cfc <_ZNK12frame_points22compact_reader_programIN14frame_encoding8run_endsEE3getEm+0x25c>
+    8bac: f000062b     	adrp	x11, 0xcf000 <strlen@GLIBC_2.17+0xcf000>
+    8bb0: aa0003f9     	mov	x25, x0
+    8bb4: 91002140     	add	x0, x10, #0x8
+    8bb8: f947e16b     	ldr	x11, [x11, #0xfc0]
+    8bbc: 2a0103f4     	mov	w20, w1
+    8bc0: aa0803e1     	mov	x1, x8
+    8bc4: 8b091569     	add	x9, x11, x9, lsl #5
+    8bc8: f9408129     	ldr	x9, [x9, #0x100]
+    8bcc: d63f0120     	blr	x9
+    8bd0: 39403ea9     	ldrb	w9, [x21, #0xf]
+    8bd4: 2a1403e1     	mov	w1, w20
+    8bd8: aa0003f4     	mov	x20, x0
+    8bdc: aa1903e0     	mov	x0, x25
+    8be0: 14000049     	b	0x8d04 <_ZNK12frame_points22compact_reader_programIN14frame_encoding8run_endsEE3getEm+0x264>
+    8be4: 39403eab     	ldrb	w11, [x21, #0xf]
+    8be8: 8b0b1409     	add	x9, x0, x11, lsl #5
+    8bec: 3940212d     	ldrb	w13, [x9, #0x8]
+    8bf0: 9100292a     	add	x10, x9, #0xa
+    8bf4: aa0a03ec     	mov	x12, x10
+    8bf8: 8b0d0148     	add	x8, x10, x13
+    8bfc: b400016d     	cbz	x13, 0x8c28 <_ZNK12frame_points22compact_reader_programIN14frame_encoding8run_endsEE3getEm+0x188>
+    8c00: d341fdae     	lsr	x14, x13, #1
+    8c04: 8b0e018f     	add	x15, x12, x14
+    8c08: aa2e03f1     	mvn	x17, x14
+    8c0c: 384015f0     	ldrb	w16, [x15], #0x1
+    8c10: 8b1101ad     	add	x13, x13, x17
+    8c14: 6b1002df     	cmp	w22, w16
+    8c18: 9a8e81ad     	csel	x13, x13, x14, hi
+    8c1c: 9a8c81ec     	csel	x12, x15, x12, hi
+    8c20: f10001bf     	cmp	x13, #0x0
+    8c24: 54fffeec     	b.gt	0x8c00 <_ZNK12frame_points22compact_reader_programIN14frame_encoding8run_endsEE3getEm+0x160>
+    8c28: eb08019f     	cmp	x12, x8
+    8c2c: 54000360     	b.eq	0x8c98 <_ZNK12frame_points22compact_reader_programIN14frame_encoding8run_endsEE3getEm+0x1f8>
+    8c30: 3940018d     	ldrb	w13, [x12]
+    8c34: 6b2101bf     	cmp	w13, w1, uxtb
+    8c38: 54000301     	b.ne	0x8c98 <_ZNK12frame_points22compact_reader_programIN14frame_encoding8run_endsEE3getEm+0x1f8>
+    8c3c: 3940252b     	ldrb	w11, [x9, #0x9]
+    8c40: f000062d     	adrp	x13, 0xcf000 <strlen@GLIBC_2.17+0xcf000>
+    8c44: f947e1ad     	ldr	x13, [x13, #0xfc0]
+    8c48: f9400133     	ldr	x19, [x9]
+    8c4c: d37be96b     	lsl	x11, x11, #5
+    8c50: f86b69a9     	ldr	x9, [x13, x11]
+    8c54: 1400006a     	b	0x8dfc <_ZNK12frame_points22compact_reader_programIN14frame_encoding8run_endsEE3getEm+0x35c>
+    8c58: 79401aa9     	ldrh	w9, [x21, #0xc]
+    8c5c: 39403ea8     	ldrb	w8, [x21, #0xf]
+    8c60: b4000289     	cbz	x9, 0x8cb0 <_ZNK12frame_points22compact_reader_programIN14frame_encoding8run_endsEE3getEm+0x210>
+    8c64: 91001d2a     	add	x10, x9, #0x7
+    8c68: 2a1f03e1     	mov	w1, wzr
+    8c6c: d343fd4a     	lsr	x10, x10, #3
+    8c70: 9ba8014a     	umaddl	x10, w10, w8, x0
+    8c74: 4b01012b     	sub	w11, w9, w1
+    8c78: 0b4b042b     	add	w11, w1, w11, lsr #1
+    8c7c: 386b494c     	ldrb	w12, [x10, w11, uxtw]
+    8c80: 6b0c02df     	cmp	w22, w12
+    8c84: 1a899169     	csel	w9, w11, w9, ls
+    8c88: 1a8b9421     	csinc	w1, w1, w11, ls
+    8c8c: 6b09003f     	cmp	w1, w9
+    8c90: 54ffff23     	b.lo	0x8c74 <_ZNK12frame_points22compact_reader_programIN14frame_encoding8run_endsEE3getEm+0x1d4>
+    8c94: 14000008     	b	0x8cb4 <_ZNK12frame_points22compact_reader_programIN14frame_encoding8run_endsEE3getEm+0x214>
+    8c98: d37be968     	lsl	x8, x11, #5
+    8c9c: f0000629     	adrp	x9, 0xcf000 <strlen@GLIBC_2.17+0xcf000>
+    8ca0: 92401c21     	and	x1, x1, #0xff
+    8ca4: 14000006     	b	0x8cbc <_ZNK12frame_points22compact_reader_programIN14frame_encoding8run_endsEE3getEm+0x21c>
+    8ca8: aa1f03f4     	mov	x20, xzr
+    8cac: 14000016     	b	0x8d04 <_ZNK12frame_points22compact_reader_programIN14frame_encoding8run_endsEE3getEm+0x264>
+    8cb0: aa1f03e1     	mov	x1, xzr
+    8cb4: f0000629     	adrp	x9, 0xcf000 <strlen@GLIBC_2.17+0xcf000>
+    8cb8: d37be908     	lsl	x8, x8, #5
+    8cbc: f947e129     	ldr	x9, [x9, #0xfc0]
+    8cc0: f94002b3     	ldr	x19, [x21]
+    8cc4: f8686928     	ldr	x8, [x9, x8]
+    8cc8: d63f0100     	blr	x8
+    8ccc: 8b130000     	add	x0, x0, x19
+    8cd0: a9444ff4     	ldp	x20, x19, [sp, #0x40]
+    8cd4: f9400bf9     	ldr	x25, [sp, #0x10]
+    8cd8: a94357f6     	ldp	x22, x21, [sp, #0x30]
+    8cdc: a9425ff8     	ldp	x24, x23, [sp, #0x20]
+    8ce0: a8c57bfd     	ldp	x29, x30, [sp], #0x50
+    8ce4: d65f03c0     	ret
+    8ce8: 7100613f     	cmp	w9, #0x18
+    8cec: 54000088     	b.hi	0x8cfc <_ZNK12frame_points22compact_reader_programIN14frame_encoding8run_endsEE3getEm+0x25c>
+    8cf0: 8b284948     	add	x8, x10, w8, uxtw #2
+    8cf4: b9400914     	ldr	w20, [x8, #0x8]
+    8cf8: 14000003     	b	0x8d04 <_ZNK12frame_points22compact_reader_programIN14frame_encoding8run_endsEE3getEm+0x264>
+    8cfc: 8b284d48     	add	x8, x10, w8, uxtw #3
+    8d00: f9400514     	ldr	x20, [x8, #0x8]
+    8d04: f0000628     	adrp	x8, 0xcf000 <strlen@GLIBC_2.17+0xcf000>
+    8d08: f947e108     	ldr	x8, [x8, #0xfc0]
+    8d0c: 8b091508     	add	x8, x8, x9, lsl #5
+    8d10: 39404269     	ldrb	w9, [x19, #0x10]
+    8d14: 8b090d08     	add	x8, x8, x9, lsl #3
+    8d18: 4b0102c9     	sub	w9, w22, w1
+    8d1c: 11000522     	add	w2, w9, #0x1
+    8d20: f9400908     	ldr	x8, [x8, #0x10]
+    8d24: d63f0100     	blr	x8
+    8d28: 2a1703e8     	mov	w8, w23
+    8d2c: f94002a9     	ldr	x9, [x21]
+    8d30: 9b085308     	madd	x8, x24, x8, x20
+    8d34: 8b090009     	add	x9, x0, x9
+    8d38: 8b090100     	add	x0, x8, x9
+    8d3c: a9444ff4     	ldp	x20, x19, [sp, #0x40]
+    8d40: f9400bf9     	ldr	x25, [sp, #0x10]
+    8d44: a94357f6     	ldp	x22, x21, [sp, #0x30]
+    8d48: a9425ff8     	ldp	x24, x23, [sp, #0x20]
+    8d4c: a8c57bfd     	ldp	x29, x30, [sp], #0x50
+    8d50: d65f03c0     	ret
+    8d54: 7100e11f     	cmp	w8, #0x38
+    8d58: 54000168     	b.hi	0x8d84 <_ZNK12frame_points22compact_reader_programIN14frame_encoding8run_endsEE3getEm+0x2e4>
+    8d5c: d37ff90a     	lsl	x10, x8, #1
+    8d60: 9100414a     	add	x10, x10, #0x10
+    8d64: 14000009     	b	0x8d88 <_ZNK12frame_points22compact_reader_programIN14frame_encoding8run_endsEE3getEm+0x2e8>
+    8d68: 7100651f     	cmp	w8, #0x19
+    8d6c: 5280030a     	mov	w10, #0x18              // =24
+    8d70: 5280018b     	mov	w11, #0xc               // =12
+    8d74: 9a8a316a     	csel	x10, x11, x10, lo
+    8d78: 14000004     	b	0x8d88 <_ZNK12frame_points22compact_reader_programIN14frame_encoding8run_endsEE3getEm+0x2e8>
+    8d7c: aa1f03ea     	mov	x10, xzr
+    8d80: 14000002     	b	0x8d88 <_ZNK12frame_points22compact_reader_programIN14frame_encoding8run_endsEE3getEm+0x2e8>
+    8d84: 52800f0a     	mov	w10, #0x78              // =120
+    8d88: 8b081408     	add	x8, x0, x8, lsl #5
+    8d8c: 8b0a010b     	add	x11, x8, x10
+    8d90: 3940416d     	ldrb	w13, [x11, #0x10]
+    8d94: 9100496a     	add	x10, x11, #0x12
+    8d98: aa0a03ec     	mov	x12, x10
+    8d9c: 8b0d0148     	add	x8, x10, x13
+    8da0: b400018d     	cbz	x13, 0x8dd0 <_ZNK12frame_points22compact_reader_programIN14frame_encoding8run_endsEE3getEm+0x330>
+    8da4: aa0a03ec     	mov	x12, x10
+    8da8: d341fdae     	lsr	x14, x13, #1
+    8dac: 8b0e018f     	add	x15, x12, x14
+    8db0: aa2e03f1     	mvn	x17, x14
+    8db4: 384015f0     	ldrb	w16, [x15], #0x1
+    8db8: 8b1101ad     	add	x13, x13, x17
+    8dbc: 6b1002df     	cmp	w22, w16
+    8dc0: 9a8e81ad     	csel	x13, x13, x14, hi
+    8dc4: 9a8c81ec     	csel	x12, x15, x12, hi
+    8dc8: f10001bf     	cmp	x13, #0x0
+    8dcc: 54fffeec     	b.gt	0x8da8 <_ZNK12frame_points22compact_reader_programIN14frame_encoding8run_endsEE3getEm+0x308>
+    8dd0: eb08019f     	cmp	x12, x8
+    8dd4: 540001c0     	b.eq	0x8e0c <_ZNK12frame_points22compact_reader_programIN14frame_encoding8run_endsEE3getEm+0x36c>
+    8dd8: 3940018d     	ldrb	w13, [x12]
+    8ddc: 6b2101bf     	cmp	w13, w1, uxtb
+    8de0: 54000161     	b.ne	0x8e0c <_ZNK12frame_points22compact_reader_programIN14frame_encoding8run_endsEE3getEm+0x36c>
+    8de4: 39404569     	ldrb	w9, [x11, #0x11]
+    8de8: f000062d     	adrp	x13, 0xcf000 <strlen@GLIBC_2.17+0xcf000>
+    8dec: f947e1ad     	ldr	x13, [x13, #0xfc0]
+    8df0: f9400573     	ldr	x19, [x11, #0x8]
+    8df4: d37be929     	lsl	x9, x9, #5
+    8df8: f86969a9     	ldr	x9, [x13, x9]
+    8dfc: cb0a0181     	sub	x1, x12, x10
+    8e00: aa0803e0     	mov	x0, x8
+    8e04: d63f0120     	blr	x9
+    8e08: 17ffffb1     	b	0x8ccc <_ZNK12frame_points22compact_reader_programIN14frame_encoding8run_endsEE3getEm+0x22c>
+    8e0c: 4b0c0148     	sub	w8, w10, w12
+    8e10: 0b0802d7     	add	w23, w22, w8
+    8e14: 35ffea77     	cbnz	w23, 0x8b60 <_ZNK12frame_points22compact_reader_programIN14frame_encoding8run_endsEE3getEm+0xc0>
+    8e18: f94002a0     	ldr	x0, [x21]
+    8e1c: a9444ff4     	ldp	x20, x19, [sp, #0x40]
+    8e20: f9400bf9     	ldr	x25, [sp, #0x10]
+    8e24: a94357f6     	ldp	x22, x21, [sp, #0x30]
+    8e28: a9425ff8     	ldp	x24, x23, [sp, #0x20]
+    8e2c: a8c57bfd     	ldp	x29, x30, [sp], #0x50
+    8e30: d65f03c0     	ret
+    8e34: d00004c0     	adrp	x0, 0xa2000 <_ZN4ikea10seriespack11composition6detail15writable_fields3addENS_6detail12occupied_runEPKvj+0x180>
+    8e38: 91301c00     	add	x0, x0, #0xc07
+    8e3c: d00004c1     	adrp	x1, 0xa2000 <_ZN4ikea10seriespack11composition6detail15writable_fields3addENS_6detail12occupied_runEPKvj+0x180>
+    8e40: 91331421     	add	x1, x1, #0xcc5
+    8e44: d00004c3     	adrp	x3, 0xa2000 <_ZN4ikea10seriespack11composition6detail15writable_fields3addENS_6detail12occupied_runEPKvj+0x180>
+    8e48: 9133d863     	add	x3, x3, #0xcf6
+    8e4c: 52800622     	mov	w2, #0x31               // =49
+    8e50: 97ffe770     	bl	0x2c10 <__assert_fail@plt>
+    8e54: 97ffe7a7     	bl	0x2cf0 <abort@plt>
+
+00000000000096d0 <_ZNK12frame_points20point_reader_programIN4ikea9intervals14run_end_sourceEE3getEm>:
+    96d0: a9bb7bfd     	stp	x29, x30, [sp, #-0x50]!
+    96d4: a90167fc     	stp	x28, x25, [sp, #0x10]
+    96d8: a9025ff8     	stp	x24, x23, [sp, #0x20]
+    96dc: a90357f6     	stp	x22, x21, [sp, #0x30]
+    96e0: a9044ff4     	stp	x20, x19, [sp, #0x40]
+    96e4: 910003fd     	mov	x29, sp
+    96e8: d120c3e9     	sub	x9, sp, #0x830
+    96ec: 927ae53f     	and	sp, x9, #0xffffffffffffffc0
+    96f0: f9400408     	ldr	x8, [x0, #0x8]
+    96f4: eb08003f     	cmp	x1, x8
+    96f8: 54002522     	b.hs	0x9b9c <_ZNK12frame_points20point_reader_programIN4ikea9intervals14run_end_sourceEE3getEm+0x4cc>
+    96fc: f9400016     	ldr	x22, [x0]
+    9700: d348fc35     	lsr	x21, x1, #8
+    9704: 12001c37     	and	w23, w1, #0xff
+    9708: f94006c8     	ldr	x8, [x22, #0x8]
+    970c: 8b151114     	add	x20, x8, x21, lsl #4
+    9710: 39403a88     	ldrb	w8, [x20, #0xe]
+    9714: 7100091f     	cmp	w8, #0x2
+    9718: 540000ec     	b.gt	0x9734 <_ZNK12frame_points20point_reader_programIN4ikea9intervals14run_end_sourceEE3getEm+0x64>
+    971c: 34001c68     	cbz	w8, 0x9aa8 <_ZNK12frame_points20point_reader_programIN4ikea9intervals14run_end_sourceEE3getEm+0x3d8>
+    9720: 7100051f     	cmp	w8, #0x1
+    9724: 54000300     	b.eq	0x9784 <_ZNK12frame_points20point_reader_programIN4ikea9intervals14run_end_sourceEE3getEm+0xb4>
+    9728: 7100091f     	cmp	w8, #0x2
+    972c: 54000900     	b.eq	0x984c <_ZNK12frame_points20point_reader_programIN4ikea9intervals14run_end_sourceEE3getEm+0x17c>
+    9730: 14000123     	b	0x9bbc <_ZNK12frame_points20point_reader_programIN4ikea9intervals14run_end_sourceEE3getEm+0x4ec>
+    9734: 71000d1f     	cmp	w8, #0x3
+    9738: 2a1703f8     	mov	w24, w23
+    973c: 54001720     	b.eq	0x9a20 <_ZNK12frame_points20point_reader_programIN4ikea9intervals14run_end_sourceEE3getEm+0x350>
+    9740: 7100111f     	cmp	w8, #0x4
+    9744: 540004a0     	b.eq	0x97d8 <_ZNK12frame_points20point_reader_programIN4ikea9intervals14run_end_sourceEE3getEm+0x108>
+    9748: 7100151f     	cmp	w8, #0x5
+    974c: 54002381     	b.ne	0x9bbc <_ZNK12frame_points20point_reader_programIN4ikea9intervals14run_end_sourceEE3getEm+0x4ec>
+    9750: 394002cb     	ldrb	w11, [x22]
+    9754: f94012c8     	ldr	x8, [x22, #0x20]
+    9758: b9400a89     	ldr	w9, [x20, #0x8]
+    975c: 39403e8a     	ldrb	w10, [x20, #0xf]
+    9760: 7100097f     	cmp	w11, #0x2
+    9764: 540009c0     	b.eq	0x989c <_ZNK12frame_points20point_reader_programIN4ikea9intervals14run_end_sourceEE3getEm+0x1cc>
+    9768: 7100057f     	cmp	w11, #0x1
+    976c: 540008e0     	b.eq	0x9888 <_ZNK12frame_points20point_reader_programIN4ikea9intervals14run_end_sourceEE3getEm+0x1b8>
+    9770: 35000a0b     	cbnz	w11, 0x98b0 <_ZNK12frame_points20point_reader_programIN4ikea9intervals14run_end_sourceEE3getEm+0x1e0>
+    9774: 7100655f     	cmp	w10, #0x19
+    9778: 52800f0b     	mov	w11, #0x78              // =120
+    977c: 5280078c     	mov	w12, #0x3c              // =60
+    9780: 1400004a     	b	0x98a8 <_ZNK12frame_points20point_reader_programIN4ikea9intervals14run_end_sourceEE3getEm+0x1d8>
+    9784: 79401a8a     	ldrh	w10, [x20, #0xc]
+    9788: f94012c8     	ldr	x8, [x22, #0x20]
+    978c: b9400a8b     	ldr	w11, [x20, #0x8]
+    9790: 39403e8c     	ldrb	w12, [x20, #0xf]
+    9794: 91001d49     	add	x9, x10, #0x7
+    9798: 8b0b0108     	add	x8, x8, x11
+    979c: 71003d5f     	cmp	w10, #0xf
+    97a0: d343fd29     	lsr	x9, x9, #3
+    97a4: 9bac2129     	umaddl	x9, w9, w12, x8
+    97a8: 54000628     	b.hi	0x986c <_ZNK12frame_points20point_reader_programIN4ikea9intervals14run_end_sourceEE3getEm+0x19c>
+    97ac: 2a1f03e8     	mov	w8, wzr
+    97b0: 34000daa     	cbz	w10, 0x9964 <_ZNK12frame_points20point_reader_programIN4ikea9intervals14run_end_sourceEE3getEm+0x294>
+    97b4: 4b08014b     	sub	w11, w10, w8
+    97b8: 0b4b050b     	add	w11, w8, w11, lsr #1
+    97bc: 386b492c     	ldrb	w12, [x9, w11, uxtw]
+    97c0: 6b0c02ff     	cmp	w23, w12
+    97c4: 1a8b9508     	csinc	w8, w8, w11, ls
+    97c8: 1a8a916a     	csel	w10, w11, w10, ls
+    97cc: 6b0a011f     	cmp	w8, w10
+    97d0: 54ffff23     	b.lo	0x97b4 <_ZNK12frame_points20point_reader_programIN4ikea9intervals14run_end_sourceEE3getEm+0xe4>
+    97d4: 14000064     	b	0x9964 <_ZNK12frame_points20point_reader_programIN4ikea9intervals14run_end_sourceEE3getEm+0x294>
+    97d8: f94012c8     	ldr	x8, [x22, #0x20]
+    97dc: b9400a89     	ldr	w9, [x20, #0x8]
+    97e0: 39403e8a     	ldrb	w10, [x20, #0xf]
+    97e4: 8b090108     	add	x8, x8, x9
+    97e8: 8b0a1509     	add	x9, x8, x10, lsl #5
+    97ec: 3940212c     	ldrb	w12, [x9, #0x8]
+    97f0: 91002928     	add	x8, x9, #0xa
+    97f4: aa0803ea     	mov	x10, x8
+    97f8: 8b0c010b     	add	x11, x8, x12
+    97fc: b400016c     	cbz	x12, 0x9828 <_ZNK12frame_points20point_reader_programIN4ikea9intervals14run_end_sourceEE3getEm+0x158>
+    9800: d341fd8d     	lsr	x13, x12, #1
+    9804: 8b0d014e     	add	x14, x10, x13
+    9808: aa2d03f0     	mvn	x16, x13
+    980c: 384015cf     	ldrb	w15, [x14], #0x1
+    9810: 8b10018c     	add	x12, x12, x16
+    9814: 6b0f02ff     	cmp	w23, w15
+    9818: 9a8d818c     	csel	x12, x12, x13, hi
+    981c: 9a8a81ca     	csel	x10, x14, x10, hi
+    9820: f100019f     	cmp	x12, #0x0
+    9824: 54fffeec     	b.gt	0x9800 <_ZNK12frame_points20point_reader_programIN4ikea9intervals14run_end_sourceEE3getEm+0x130>
+    9828: eb0b015f     	cmp	x10, x11
+    982c: 54000100     	b.eq	0x984c <_ZNK12frame_points20point_reader_programIN4ikea9intervals14run_end_sourceEE3getEm+0x17c>
+    9830: 3940014b     	ldrb	w11, [x10]
+    9834: 6b21017f     	cmp	w11, w1, uxtb
+    9838: 540000a1     	b.ne	0x984c <_ZNK12frame_points20point_reader_programIN4ikea9intervals14run_end_sourceEE3getEm+0x17c>
+    983c: 5280060b     	mov	w11, #0x30              // =48
+    9840: f9404ecc     	ldr	x12, [x22, #0x98]
+    9844: f9400133     	ldr	x19, [x9]
+    9848: 1400006d     	b	0x99fc <_ZNK12frame_points20point_reader_programIN4ikea9intervals14run_end_sourceEE3getEm+0x32c>
+    984c: 52800508     	mov	w8, #0x28               // =40
+    9850: f9401ec9     	ldr	x9, [x22, #0x38]
+    9854: f9400293     	ldr	x19, [x20]
+    9858: 9b0826a8     	madd	x8, x21, x8, x9
+    985c: 92401c21     	and	x1, x1, #0xff
+    9860: f9400d09     	ldr	x9, [x8, #0x18]
+    9864: f9400100     	ldr	x0, [x8]
+    9868: 14000069     	b	0x9a0c <_ZNK12frame_points20point_reader_programIN4ikea9intervals14run_end_sourceEE3getEm+0x33c>
+    986c: 34000277     	cbz	w23, 0x98b8 <_ZNK12frame_points20point_reader_programIN4ikea9intervals14run_end_sourceEE3getEm+0x1e8>
+    9870: 7100414c     	subs	w12, w10, #0x10
+    9874: 5100042d     	sub	w13, w1, #0x1
+    9878: 2a1f03eb     	mov	w11, wzr
+    987c: 54000221     	b.ne	0x98c0 <_ZNK12frame_points20point_reader_programIN4ikea9intervals14run_end_sourceEE3getEm+0x1f0>
+    9880: 52800208     	mov	w8, #0x10               // =16
+    9884: 1400001a     	b	0x98ec <_ZNK12frame_points20point_reader_programIN4ikea9intervals14run_end_sourceEE3getEm+0x21c>
+    9888: 7100e15f     	cmp	w10, #0x38
+    988c: 54000808     	b.hi	0x998c <_ZNK12frame_points20point_reader_programIN4ikea9intervals14run_end_sourceEE3getEm+0x2bc>
+    9890: d37ff94b     	lsl	x11, x10, #1
+    9894: 9100416b     	add	x11, x11, #0x10
+    9898: 1400003e     	b	0x9990 <_ZNK12frame_points20point_reader_programIN4ikea9intervals14run_end_sourceEE3getEm+0x2c0>
+    989c: 7100655f     	cmp	w10, #0x19
+    98a0: 5280030b     	mov	w11, #0x18              // =24
+    98a4: 5280018c     	mov	w12, #0xc               // =12
+    98a8: 9a8b318b     	csel	x11, x12, x11, lo
+    98ac: 14000039     	b	0x9990 <_ZNK12frame_points20point_reader_programIN4ikea9intervals14run_end_sourceEE3getEm+0x2c0>
+    98b0: aa1f03eb     	mov	x11, xzr
+    98b4: 14000037     	b	0x9990 <_ZNK12frame_points20point_reader_programIN4ikea9intervals14run_end_sourceEE3getEm+0x2c0>
+    98b8: 2a1f03e8     	mov	w8, wzr
+    98bc: 1400002a     	b	0x9964 <_ZNK12frame_points20point_reader_programIN4ikea9intervals14run_end_sourceEE3getEm+0x294>
+    98c0: 92401da8     	and	x8, x13, #0xff
+    98c4: 53017d4e     	lsr	w14, w10, #1
+    98c8: 0b0e016f     	add	w15, w11, w14
+    98cc: 4b0e014a     	sub	w10, w10, w14
+    98d0: 386f4930     	ldrb	w16, [x9, w15, uxtw]
+    98d4: eb08021f     	cmp	x16, x8
+    98d8: 1a8b91eb     	csel	w11, w15, w11, ls
+    98dc: 7100415f     	cmp	w10, #0x10
+    98e0: 54ffff28     	b.hi	0x98c4 <_ZNK12frame_points20point_reader_programIN4ikea9intervals14run_end_sourceEE3getEm+0x1f4>
+    98e4: 0b0a0168     	add	w8, w11, w10
+    98e8: 340003ea     	cbz	w10, 0x9964 <_ZNK12frame_points20point_reader_programIN4ikea9intervals14run_end_sourceEE3getEm+0x294>
+    98ec: 6b0b019f     	cmp	w12, w11
+    98f0: 4e010da0     	dup	v0.16b, w13
+    98f4: 1a8b318a     	csel	w10, w12, w11, lo
+    98f8: 3cea4921     	ldr	q1, [x9, w10, uxtw]
+    98fc: b00004c9     	adrp	x9, 0xa2000 <_ZN4ikea10seriespack11composition6detail15writable_fields3addENS_6detail12occupied_runEPKvj+0x180>
+    9900: 4b0a010c     	sub	w12, w8, w10
+    9904: 4b0a016b     	sub	w11, w11, w10
+    9908: 6e203420     	cmhi	v0.16b, v1.16b, v0.16b
+    990c: 3dc07d21     	ldr	q1, [x9, #0x1f0]
+    9910: 92800009     	mov	x9, #-0x1               // =-1
+    9914: 9acc212d     	lsl	x13, x9, x12
+    9918: 9acb2129     	lsl	x9, x9, x11
+    991c: 7101017f     	cmp	w11, #0x40
+    9920: 4e211c00     	and	v0.16b, v0.16b, v1.16b
+    9924: 1a8903e9     	csel	w9, wzr, w9, eq
+    9928: 7101019f     	cmp	w12, #0x40
+    992c: 1280000c     	mov	w12, #-0x1              // =-1
+    9930: 5a8d018c     	csinv	w12, w12, w13, eq
+    9934: 6e004001     	ext	v1.16b, v0.16b, v0.16b, #0x8
+    9938: 0e31b800     	addv	b0, v0.8b
+    993c: 0a090189     	and	w9, w12, w9
+    9940: 1e26000b     	fmov	w11, s0
+    9944: 0e31b821     	addv	b1, v1.8b
+    9948: 1e26002e     	fmov	w14, s1
+    994c: 33181dcb     	bfi	w11, w14, #8, #8
+    9950: 6a090169     	ands	w9, w11, w9
+    9954: 54000080     	b.eq	0x9964 <_ZNK12frame_points20point_reader_programIN4ikea9intervals14run_end_sourceEE3getEm+0x294>
+    9958: 5ac00128     	rbit	w8, w9
+    995c: 5ac01108     	clz	w8, w8
+    9960: 0b0a0108     	add	w8, w8, w10
+    9964: 52800509     	mov	w9, #0x28               // =40
+    9968: f9401eca     	ldr	x10, [x22, #0x38]
+    996c: f9400293     	ldr	x19, [x20]
+    9970: 9b092aa9     	madd	x9, x21, x9, x10
+    9974: 2a0803e1     	mov	w1, w8
+    9978: f9400d2a     	ldr	x10, [x9, #0x18]
+    997c: f9400120     	ldr	x0, [x9]
+    9980: d63f0140     	blr	x10
+    9984: 8b130000     	add	x0, x0, x19
+    9988: 1400007e     	b	0x9b80 <_ZNK12frame_points20point_reader_programIN4ikea9intervals14run_end_sourceEE3getEm+0x4b0>
+    998c: 52800f0b     	mov	w11, #0x78              // =120
+    9990: 8b090108     	add	x8, x8, x9
+    9994: 8b0a1508     	add	x8, x8, x10, lsl #5
+    9998: 8b0b0109     	add	x9, x8, x11
+    999c: 3940412c     	ldrb	w12, [x9, #0x10]
+    99a0: 91004928     	add	x8, x9, #0x12
+    99a4: aa0803ea     	mov	x10, x8
+    99a8: 8b0c010b     	add	x11, x8, x12
+    99ac: b400018c     	cbz	x12, 0x99dc <_ZNK12frame_points20point_reader_programIN4ikea9intervals14run_end_sourceEE3getEm+0x30c>
+    99b0: aa0803ea     	mov	x10, x8
+    99b4: d341fd8d     	lsr	x13, x12, #1
+    99b8: 8b0d014e     	add	x14, x10, x13
+    99bc: aa2d03f0     	mvn	x16, x13
+    99c0: 384015cf     	ldrb	w15, [x14], #0x1
+    99c4: 8b10018c     	add	x12, x12, x16
+    99c8: 6b0f02ff     	cmp	w23, w15
+    99cc: 9a8d818c     	csel	x12, x12, x13, hi
+    99d0: 9a8a81ca     	csel	x10, x14, x10, hi
+    99d4: f100019f     	cmp	x12, #0x0
+    99d8: 54fffeec     	b.gt	0x99b4 <_ZNK12frame_points20point_reader_programIN4ikea9intervals14run_end_sourceEE3getEm+0x2e4>
+    99dc: eb0b015f     	cmp	x10, x11
+    99e0: 540001c0     	b.eq	0x9a18 <_ZNK12frame_points20point_reader_programIN4ikea9intervals14run_end_sourceEE3getEm+0x348>
+    99e4: 3940014b     	ldrb	w11, [x10]
+    99e8: 6b21017f     	cmp	w11, w1, uxtb
+    99ec: 54000161     	b.ne	0x9a18 <_ZNK12frame_points20point_reader_programIN4ikea9intervals14run_end_sourceEE3getEm+0x348>
+    99f0: 5280060b     	mov	w11, #0x30              // =48
+    99f4: f9400533     	ldr	x19, [x9, #0x8]
+    99f8: f9404ecc     	ldr	x12, [x22, #0x98]
+    99fc: 9b0b32ab     	madd	x11, x21, x11, x12
+    9a00: f9400d69     	ldr	x9, [x11, #0x18]
+    9a04: f9400160     	ldr	x0, [x11]
+    9a08: cb080141     	sub	x1, x10, x8
+    9a0c: d63f0120     	blr	x9
+    9a10: 8b130000     	add	x0, x0, x19
+    9a14: 1400005b     	b	0x9b80 <_ZNK12frame_points20point_reader_programIN4ikea9intervals14run_end_sourceEE3getEm+0x4b0>
+    9a18: 4b0a0108     	sub	w8, w8, w10
+    9a1c: 0b0802f8     	add	w24, w23, w8
+    9a20: 34000458     	cbz	w24, 0x9aa8 <_ZNK12frame_points20point_reader_programIN4ikea9intervals14run_end_sourceEE3getEm+0x3d8>
+    9a24: 394002c8     	ldrb	w8, [x22]
+    9a28: 52800089     	mov	w9, #0x4                // =4
+    9a2c: 528000ca     	mov	w10, #0x6               // =6
+    9a30: f94012cb     	ldr	x11, [x22, #0x20]
+    9a34: b9400a8c     	ldr	w12, [x20, #0x8]
+    9a38: 5280010d     	mov	w13, #0x8               // =8
+    9a3c: 7100091f     	cmp	w8, #0x2
+    9a40: 1a890149     	csel	w9, w10, w9, eq
+    9a44: 71000d1f     	cmp	w8, #0x3
+    9a48: 39403e8a     	ldrb	w10, [x20, #0xf]
+    9a4c: 1a8901ad     	csel	w13, w13, w9, eq
+    9a50: 8b0c0169     	add	x9, x11, x12
+    9a54: 1acd26eb     	lsr	w11, w23, w13
+    9a58: 8b0a1529     	add	x9, x9, x10, lsl #5
+    9a5c: 1acd2161     	lsl	w1, w11, w13
+    9a60: f9400139     	ldr	x25, [x9]
+    9a64: 3400026b     	cbz	w11, 0x9ab0 <_ZNK12frame_points20point_reader_programIN4ikea9intervals14run_end_sourceEE3getEm+0x3e0>
+    9a68: 7100051f     	cmp	w8, #0x1
+    9a6c: 51000568     	sub	w8, w11, #0x1
+    9a70: 54000241     	b.ne	0x9ab8 <_ZNK12frame_points20point_reader_programIN4ikea9intervals14run_end_sourceEE3getEm+0x3e8>
+    9a74: 7100e15f     	cmp	w10, #0x38
+    9a78: 540002a8     	b.hi	0x9acc <_ZNK12frame_points20point_reader_programIN4ikea9intervals14run_end_sourceEE3getEm+0x3fc>
+    9a7c: 52800609     	mov	w9, #0x30               // =48
+    9a80: f940080a     	ldr	x10, [x0, #0x10]
+    9a84: aa0103f3     	mov	x19, x1
+    9a88: 9b092aa9     	madd	x9, x21, x9, x10
+    9a8c: aa0803e1     	mov	x1, x8
+    9a90: f9400d2a     	ldr	x10, [x9, #0x18]
+    9a94: f9400120     	ldr	x0, [x9]
+    9a98: d63f0140     	blr	x10
+    9a9c: aa1303e1     	mov	x1, x19
+    9aa0: aa0003f3     	mov	x19, x0
+    9aa4: 1400000c     	b	0x9ad4 <_ZNK12frame_points20point_reader_programIN4ikea9intervals14run_end_sourceEE3getEm+0x404>
+    9aa8: f9400280     	ldr	x0, [x20]
+    9aac: 14000035     	b	0x9b80 <_ZNK12frame_points20point_reader_programIN4ikea9intervals14run_end_sourceEE3getEm+0x4b0>
+    9ab0: aa1f03f3     	mov	x19, xzr
+    9ab4: 14000008     	b	0x9ad4 <_ZNK12frame_points20point_reader_programIN4ikea9intervals14run_end_sourceEE3getEm+0x404>
+    9ab8: 7100615f     	cmp	w10, #0x18
+    9abc: 54000088     	b.hi	0x9acc <_ZNK12frame_points20point_reader_programIN4ikea9intervals14run_end_sourceEE3getEm+0x3fc>
+    9ac0: 8b284928     	add	x8, x9, w8, uxtw #2
+    9ac4: b9400913     	ldr	w19, [x8, #0x8]
+    9ac8: 14000003     	b	0x9ad4 <_ZNK12frame_points20point_reader_programIN4ikea9intervals14run_end_sourceEE3getEm+0x404>
+    9acc: 8b284d28     	add	x8, x9, w8, uxtw #3
+    9ad0: f9400513     	ldr	x19, [x8, #0x8]
+    9ad4: 52800508     	mov	w8, #0x28               // =40
+    9ad8: f9401ec9     	ldr	x9, [x22, #0x38]
+    9adc: 910003e3     	mov	x3, sp
+    9ae0: 9b0826a8     	madd	x8, x21, x8, x9
+    9ae4: 4b0102f5     	sub	w21, w23, w1
+    9ae8: 910003f6     	mov	x22, sp
+    9aec: 110006a2     	add	w2, w21, #0x1
+    9af0: a9402500     	ldp	x0, x9, [x8]
+    9af4: d63f0120     	blr	x9
+    9af8: 71000ebf     	cmp	w21, #0x3
+    9afc: 54000062     	b.hs	0x9b08 <_ZNK12frame_points20point_reader_programIN4ikea9intervals14run_end_sourceEE3getEm+0x438>
+    9b00: aa1f03e8     	mov	x8, xzr
+    9b04: 14000013     	b	0x9b50 <_ZNK12frame_points20point_reader_programIN4ikea9intervals14run_end_sourceEE3getEm+0x480>
+    9b08: 6f00e400     	movi	v0.2d, #0000000000000000
+    9b0c: 6f00e401     	movi	v1.2d, #0000000000000000
+    9b10: 910006a9     	add	x9, x21, #0x1
+    9b14: 927e7928     	and	x8, x9, #0x1fffffffc
+    9b18: b27c02ca     	orr	x10, x22, #0x10
+    9b1c: aa0803eb     	mov	x11, x8
+    9b20: 4e081e60     	mov	v0.d[0], x19
+    9b24: ad7f8d42     	ldp	q2, q3, [x10, #-0x10]
+    9b28: f100116b     	subs	x11, x11, #0x4
+    9b2c: 9100814a     	add	x10, x10, #0x20
+    9b30: 4ee08440     	add	v0.2d, v2.2d, v0.2d
+    9b34: 4ee18461     	add	v1.2d, v3.2d, v1.2d
+    9b38: 54ffff61     	b.ne	0x9b24 <_ZNK12frame_points20point_reader_programIN4ikea9intervals14run_end_sourceEE3getEm+0x454>
+    9b3c: 4ee08420     	add	v0.2d, v1.2d, v0.2d
+    9b40: eb08013f     	cmp	x9, x8
+    9b44: 5ef1b800     	addp	d0, v0.2d
+    9b48: 9e660013     	fmov	x19, d0
+    9b4c: 54000100     	b.eq	0x9b6c <_ZNK12frame_points20point_reader_programIN4ikea9intervals14run_end_sourceEE3getEm+0x49c>
+    9b50: 8b080ec9     	add	x9, x22, x8, lsl #3
+    9b54: d1000508     	sub	x8, x8, #0x1
+    9b58: f840852a     	ldr	x10, [x9], #0x8
+    9b5c: 91000508     	add	x8, x8, #0x1
+    9b60: eb15011f     	cmp	x8, x21
+    9b64: 8b130153     	add	x19, x10, x19
+    9b68: 54ffff83     	b.lo	0x9b58 <_ZNK12frame_points20point_reader_programIN4ikea9intervals14run_end_sourceEE3getEm+0x488>
+    9b6c: 2a1803e8     	mov	w8, w24
+    9b70: f9400289     	ldr	x9, [x20]
+    9b74: 9b087f28     	mul	x8, x25, x8
+    9b78: 8b090269     	add	x9, x19, x9
+    9b7c: 8b080120     	add	x0, x9, x8
+    9b80: 910003bf     	mov	sp, x29
+    9b84: a9444ff4     	ldp	x20, x19, [sp, #0x40]
+    9b88: a94357f6     	ldp	x22, x21, [sp, #0x30]
+    9b8c: a9425ff8     	ldp	x24, x23, [sp, #0x20]
+    9b90: a94167fc     	ldp	x28, x25, [sp, #0x10]
+    9b94: a8c57bfd     	ldp	x29, x30, [sp], #0x50
+    9b98: d65f03c0     	ret
+    9b9c: b00004c0     	adrp	x0, 0xa2000 <_ZN4ikea10seriespack11composition6detail15writable_fields3addENS_6detail12occupied_runEPKvj+0x180>
+    9ba0: 91301c00     	add	x0, x0, #0xc07
+    9ba4: b00004c1     	adrp	x1, 0xa2000 <_ZN4ikea10seriespack11composition6detail15writable_fields3addENS_6detail12occupied_runEPKvj+0x180>
+    9ba8: 91304821     	add	x1, x1, #0xc12
+    9bac: b00004c3     	adrp	x3, 0xa2000 <_ZN4ikea10seriespack11composition6detail15writable_fields3addENS_6detail12occupied_runEPKvj+0x180>
+    9bb0: 91365463     	add	x3, x3, #0xd95
+    9bb4: 52800562     	mov	w2, #0x2b               // =43
+    9bb8: 97ffe416     	bl	0x2c10 <__assert_fail@plt>
+    9bbc: 97ffe44d     	bl	0x2cf0 <abort@plt>
+
+0000000000009f60 <_ZNK12frame_points22compact_reader_programIN4ikea9intervals14run_end_sourceEE3getEm>:
+    9f60: a9bb7bfd     	stp	x29, x30, [sp, #-0x50]!
+    9f64: f9000bf9     	str	x25, [sp, #0x10]
+    9f68: a9025ff8     	stp	x24, x23, [sp, #0x20]
+    9f6c: a90357f6     	stp	x22, x21, [sp, #0x30]
+    9f70: a9044ff4     	stp	x20, x19, [sp, #0x40]
+    9f74: 910003fd     	mov	x29, sp
+    9f78: f9400408     	ldr	x8, [x0, #0x8]
+    9f7c: eb08003f     	cmp	x1, x8
+    9f80: 54002262     	b.hs	0xa3cc <_ZNK12frame_points22compact_reader_programIN4ikea9intervals14run_end_sourceEE3getEm+0x46c>
+    9f84: f9400009     	ldr	x9, [x0]
+    9f88: d348fc2a     	lsr	x10, x1, #8
+    9f8c: aa0003f3     	mov	x19, x0
+    9f90: f9400528     	ldr	x8, [x9, #0x8]
+    9f94: 8b0a1115     	add	x21, x8, x10, lsl #4
+    9f98: 39403aa8     	ldrb	w8, [x21, #0xe]
+    9f9c: 34001d08     	cbz	w8, 0xa33c <_ZNK12frame_points22compact_reader_programIN4ikea9intervals14run_end_sourceEE3getEm+0x3dc>
+    9fa0: f940112a     	ldr	x10, [x9, #0x20]
+    9fa4: b9400aab     	ldr	w11, [x21, #0x8]
+    9fa8: 7100091f     	cmp	w8, #0x2
+    9fac: 12001c36     	and	w22, w1, #0xff
+    9fb0: 8b0b0140     	add	x0, x10, x11
+    9fb4: 5400026d     	b.le	0xa000 <_ZNK12frame_points22compact_reader_programIN4ikea9intervals14run_end_sourceEE3getEm+0xa0>
+    9fb8: 71000d1f     	cmp	w8, #0x3
+    9fbc: 2a1603f7     	mov	w23, w22
+    9fc0: 540017a0     	b.eq	0xa2b4 <_ZNK12frame_points22compact_reader_programIN4ikea9intervals14run_end_sourceEE3getEm+0x354>
+    9fc4: 7100111f     	cmp	w8, #0x4
+    9fc8: 540002a0     	b.eq	0xa01c <_ZNK12frame_points22compact_reader_programIN4ikea9intervals14run_end_sourceEE3getEm+0xbc>
+    9fcc: 7100151f     	cmp	w8, #0x5
+    9fd0: 540020e1     	b.ne	0xa3ec <_ZNK12frame_points22compact_reader_programIN4ikea9intervals14run_end_sourceEE3getEm+0x48c>
+    9fd4: 3940012a     	ldrb	w10, [x9]
+    9fd8: 39403ea8     	ldrb	w8, [x21, #0xf]
+    9fdc: 7100095f     	cmp	w10, #0x2
+    9fe0: 54000a20     	b.eq	0xa124 <_ZNK12frame_points22compact_reader_programIN4ikea9intervals14run_end_sourceEE3getEm+0x1c4>
+    9fe4: 7100055f     	cmp	w10, #0x1
+    9fe8: 54000940     	b.eq	0xa110 <_ZNK12frame_points22compact_reader_programIN4ikea9intervals14run_end_sourceEE3getEm+0x1b0>
+    9fec: 35000a6a     	cbnz	w10, 0xa138 <_ZNK12frame_points22compact_reader_programIN4ikea9intervals14run_end_sourceEE3getEm+0x1d8>
+    9ff0: 7100651f     	cmp	w8, #0x19
+    9ff4: 52800f0a     	mov	w10, #0x78              // =120
+    9ff8: 5280078b     	mov	w11, #0x3c              // =60
+    9ffc: 1400004d     	b	0xa130 <_ZNK12frame_points22compact_reader_programIN4ikea9intervals14run_end_sourceEE3getEm+0x1d0>
+    a000: 7100051f     	cmp	w8, #0x1
+    a004: 54000460     	b.eq	0xa090 <_ZNK12frame_points22compact_reader_programIN4ikea9intervals14run_end_sourceEE3getEm+0x130>
+    a008: 7100091f     	cmp	w8, #0x2
+    a00c: 54001f01     	b.ne	0xa3ec <_ZNK12frame_points22compact_reader_programIN4ikea9intervals14run_end_sourceEE3getEm+0x48c>
+    a010: 39403ea8     	ldrb	w8, [x21, #0xf]
+    a014: d37be908     	lsl	x8, x8, #5
+    a018: 14000031     	b	0xa0dc <_ZNK12frame_points22compact_reader_programIN4ikea9intervals14run_end_sourceEE3getEm+0x17c>
+    a01c: 39403eab     	ldrb	w11, [x21, #0xf]
+    a020: 8b0b1409     	add	x9, x0, x11, lsl #5
+    a024: 3940212d     	ldrb	w13, [x9, #0x8]
+    a028: 9100292a     	add	x10, x9, #0xa
+    a02c: aa0a03ec     	mov	x12, x10
+    a030: 8b0d0148     	add	x8, x10, x13
+    a034: b400016d     	cbz	x13, 0xa060 <_ZNK12frame_points22compact_reader_programIN4ikea9intervals14run_end_sourceEE3getEm+0x100>
+    a038: d341fdae     	lsr	x14, x13, #1
+    a03c: 8b0e018f     	add	x15, x12, x14
+    a040: aa2e03f1     	mvn	x17, x14
+    a044: 384015f0     	ldrb	w16, [x15], #0x1
+    a048: 8b1101ad     	add	x13, x13, x17
+    a04c: 6b1002df     	cmp	w22, w16
+    a050: 9a8e81ad     	csel	x13, x13, x14, hi
+    a054: 9a8c81ec     	csel	x12, x15, x12, hi
+    a058: f10001bf     	cmp	x13, #0x0
+    a05c: 54fffeec     	b.gt	0xa038 <_ZNK12frame_points22compact_reader_programIN4ikea9intervals14run_end_sourceEE3getEm+0xd8>
+    a060: eb08019f     	cmp	x12, x8
+    a064: 540003a0     	b.eq	0xa0d8 <_ZNK12frame_points22compact_reader_programIN4ikea9intervals14run_end_sourceEE3getEm+0x178>
+    a068: 3940018d     	ldrb	w13, [x12]
+    a06c: 6b2101bf     	cmp	w13, w1, uxtb
+    a070: 54000341     	b.ne	0xa0d8 <_ZNK12frame_points22compact_reader_programIN4ikea9intervals14run_end_sourceEE3getEm+0x178>
+    a074: 3940252b     	ldrb	w11, [x9, #0x9]
+    a078: b000062d     	adrp	x13, 0xcf000 <strlen@GLIBC_2.17+0xcf000>
+    a07c: f947e1ad     	ldr	x13, [x13, #0xfc0]
+    a080: f9400133     	ldr	x19, [x9]
+    a084: d37be96b     	lsl	x11, x11, #5
+    a088: f86b69a9     	ldr	x9, [x13, x11]
+    a08c: 14000084     	b	0xa29c <_ZNK12frame_points22compact_reader_programIN4ikea9intervals14run_end_sourceEE3getEm+0x33c>
+    a090: 79401aab     	ldrh	w11, [x21, #0xc]
+    a094: 39403ea8     	ldrb	w8, [x21, #0xf]
+    a098: 91001d69     	add	x9, x11, #0x7
+    a09c: 71003d7f     	cmp	w11, #0xf
+    a0a0: d343fd29     	lsr	x9, x9, #3
+    a0a4: 9ba8012a     	umaddl	x10, w9, w8, x0
+    a0a8: 54000268     	b.hi	0xa0f4 <_ZNK12frame_points22compact_reader_programIN4ikea9intervals14run_end_sourceEE3getEm+0x194>
+    a0ac: 2a1f03e9     	mov	w9, wzr
+    a0b0: 340009eb     	cbz	w11, 0xa1ec <_ZNK12frame_points22compact_reader_programIN4ikea9intervals14run_end_sourceEE3getEm+0x28c>
+    a0b4: 4b09016c     	sub	w12, w11, w9
+    a0b8: 0b4c052c     	add	w12, w9, w12, lsr #1
+    a0bc: 386c494d     	ldrb	w13, [x10, w12, uxtw]
+    a0c0: 6b0d02df     	cmp	w22, w13
+    a0c4: 1a8c9529     	csinc	w9, w9, w12, ls
+    a0c8: 1a8b918b     	csel	w11, w12, w11, ls
+    a0cc: 6b0b013f     	cmp	w9, w11
+    a0d0: 54ffff23     	b.lo	0xa0b4 <_ZNK12frame_points22compact_reader_programIN4ikea9intervals14run_end_sourceEE3getEm+0x154>
+    a0d4: 14000046     	b	0xa1ec <_ZNK12frame_points22compact_reader_programIN4ikea9intervals14run_end_sourceEE3getEm+0x28c>
+    a0d8: d37be968     	lsl	x8, x11, #5
+    a0dc: b0000629     	adrp	x9, 0xcf000 <strlen@GLIBC_2.17+0xcf000>
+    a0e0: 92401c21     	and	x1, x1, #0xff
+    a0e4: f947e129     	ldr	x9, [x9, #0xfc0]
+    a0e8: f94002b3     	ldr	x19, [x21]
+    a0ec: f8686928     	ldr	x8, [x9, x8]
+    a0f0: 14000045     	b	0xa204 <_ZNK12frame_points22compact_reader_programIN4ikea9intervals14run_end_sourceEE3getEm+0x2a4>
+    a0f4: 34000276     	cbz	w22, 0xa140 <_ZNK12frame_points22compact_reader_programIN4ikea9intervals14run_end_sourceEE3getEm+0x1e0>
+    a0f8: 7100416d     	subs	w13, w11, #0x10
+    a0fc: 5100042e     	sub	w14, w1, #0x1
+    a100: 2a1f03ec     	mov	w12, wzr
+    a104: 54000221     	b.ne	0xa148 <_ZNK12frame_points22compact_reader_programIN4ikea9intervals14run_end_sourceEE3getEm+0x1e8>
+    a108: 52800209     	mov	w9, #0x10               // =16
+    a10c: 1400001a     	b	0xa174 <_ZNK12frame_points22compact_reader_programIN4ikea9intervals14run_end_sourceEE3getEm+0x214>
+    a110: 7100e11f     	cmp	w8, #0x38
+    a114: 54000888     	b.hi	0xa224 <_ZNK12frame_points22compact_reader_programIN4ikea9intervals14run_end_sourceEE3getEm+0x2c4>
+    a118: d37ff90a     	lsl	x10, x8, #1
+    a11c: 9100414a     	add	x10, x10, #0x10
+    a120: 14000042     	b	0xa228 <_ZNK12frame_points22compact_reader_programIN4ikea9intervals14run_end_sourceEE3getEm+0x2c8>
+    a124: 7100651f     	cmp	w8, #0x19
+    a128: 5280030a     	mov	w10, #0x18              // =24
+    a12c: 5280018b     	mov	w11, #0xc               // =12
+    a130: 9a8a316a     	csel	x10, x11, x10, lo
+    a134: 1400003d     	b	0xa228 <_ZNK12frame_points22compact_reader_programIN4ikea9intervals14run_end_sourceEE3getEm+0x2c8>
+    a138: aa1f03ea     	mov	x10, xzr
+    a13c: 1400003b     	b	0xa228 <_ZNK12frame_points22compact_reader_programIN4ikea9intervals14run_end_sourceEE3getEm+0x2c8>
+    a140: 2a1f03e9     	mov	w9, wzr
+    a144: 1400002a     	b	0xa1ec <_ZNK12frame_points22compact_reader_programIN4ikea9intervals14run_end_sourceEE3getEm+0x28c>
+    a148: 92401dc9     	and	x9, x14, #0xff
+    a14c: 53017d6f     	lsr	w15, w11, #1
+    a150: 0b0f0190     	add	w16, w12, w15
+    a154: 4b0f016b     	sub	w11, w11, w15
+    a158: 38704951     	ldrb	w17, [x10, w16, uxtw]
+    a15c: eb09023f     	cmp	x17, x9
+    a160: 1a8c920c     	csel	w12, w16, w12, ls
+    a164: 7100417f     	cmp	w11, #0x10
+    a168: 54ffff28     	b.hi	0xa14c <_ZNK12frame_points22compact_reader_programIN4ikea9intervals14run_end_sourceEE3getEm+0x1ec>
+    a16c: 0b0b0189     	add	w9, w12, w11
+    a170: 340003eb     	cbz	w11, 0xa1ec <_ZNK12frame_points22compact_reader_programIN4ikea9intervals14run_end_sourceEE3getEm+0x28c>
+    a174: 6b0c01bf     	cmp	w13, w12
+    a178: 4e010dc0     	dup	v0.16b, w14
+    a17c: 1a8c31ab     	csel	w11, w13, w12, lo
+    a180: 3ceb4941     	ldr	q1, [x10, w11, uxtw]
+    a184: 900004ca     	adrp	x10, 0xa2000 <_ZN4ikea10seriespack11composition6detail15writable_fields3addENS_6detail12occupied_runEPKvj+0x180>
+    a188: 4b0b012d     	sub	w13, w9, w11
+    a18c: 4b0b018c     	sub	w12, w12, w11
+    a190: 6e203420     	cmhi	v0.16b, v1.16b, v0.16b
+    a194: 3dc07d41     	ldr	q1, [x10, #0x1f0]
+    a198: 9280000a     	mov	x10, #-0x1              // =-1
+    a19c: 9acd214e     	lsl	x14, x10, x13
+    a1a0: 9acc214a     	lsl	x10, x10, x12
+    a1a4: 7101019f     	cmp	w12, #0x40
+    a1a8: 4e211c00     	and	v0.16b, v0.16b, v1.16b
+    a1ac: 1a8a03ea     	csel	w10, wzr, w10, eq
+    a1b0: 710101bf     	cmp	w13, #0x40
+    a1b4: 1280000d     	mov	w13, #-0x1              // =-1
+    a1b8: 5a8e01ad     	csinv	w13, w13, w14, eq
+    a1bc: 6e004001     	ext	v1.16b, v0.16b, v0.16b, #0x8
+    a1c0: 0e31b800     	addv	b0, v0.8b
+    a1c4: 0a0a01aa     	and	w10, w13, w10
+    a1c8: 1e26000c     	fmov	w12, s0
+    a1cc: 0e31b821     	addv	b1, v1.8b
+    a1d0: 1e26002f     	fmov	w15, s1
+    a1d4: 33181dec     	bfi	w12, w15, #8, #8
+    a1d8: 6a0a018a     	ands	w10, w12, w10
+    a1dc: 54000080     	b.eq	0xa1ec <_ZNK12frame_points22compact_reader_programIN4ikea9intervals14run_end_sourceEE3getEm+0x28c>
+    a1e0: 5ac00149     	rbit	w9, w10
+    a1e4: 5ac01129     	clz	w9, w9
+    a1e8: 0b0b0129     	add	w9, w9, w11
+    a1ec: b000062a     	adrp	x10, 0xcf000 <strlen@GLIBC_2.17+0xcf000>
+    a1f0: d37be908     	lsl	x8, x8, #5
+    a1f4: 2a0903e1     	mov	w1, w9
+    a1f8: f947e14a     	ldr	x10, [x10, #0xfc0]
+    a1fc: f94002b3     	ldr	x19, [x21]
+    a200: f8686948     	ldr	x8, [x10, x8]
+    a204: d63f0100     	blr	x8
+    a208: 8b130000     	add	x0, x0, x19
+    a20c: a9444ff4     	ldp	x20, x19, [sp, #0x40]
+    a210: f9400bf9     	ldr	x25, [sp, #0x10]
+    a214: a94357f6     	ldp	x22, x21, [sp, #0x30]
+    a218: a9425ff8     	ldp	x24, x23, [sp, #0x20]
+    a21c: a8c57bfd     	ldp	x29, x30, [sp], #0x50
+    a220: d65f03c0     	ret
+    a224: 52800f0a     	mov	w10, #0x78              // =120
+    a228: 8b081408     	add	x8, x0, x8, lsl #5
+    a22c: 8b0a010b     	add	x11, x8, x10
+    a230: 3940416d     	ldrb	w13, [x11, #0x10]
+    a234: 9100496a     	add	x10, x11, #0x12
+    a238: aa0a03ec     	mov	x12, x10
+    a23c: 8b0d0148     	add	x8, x10, x13
+    a240: b400018d     	cbz	x13, 0xa270 <_ZNK12frame_points22compact_reader_programIN4ikea9intervals14run_end_sourceEE3getEm+0x310>
+    a244: aa0a03ec     	mov	x12, x10
+    a248: d341fdae     	lsr	x14, x13, #1
+    a24c: 8b0e018f     	add	x15, x12, x14
+    a250: aa2e03f1     	mvn	x17, x14
+    a254: 384015f0     	ldrb	w16, [x15], #0x1
+    a258: 8b1101ad     	add	x13, x13, x17
+    a25c: 6b1002df     	cmp	w22, w16
+    a260: 9a8e81ad     	csel	x13, x13, x14, hi
+    a264: 9a8c81ec     	csel	x12, x15, x12, hi
+    a268: f10001bf     	cmp	x13, #0x0
+    a26c: 54fffeec     	b.gt	0xa248 <_ZNK12frame_points22compact_reader_programIN4ikea9intervals14run_end_sourceEE3getEm+0x2e8>
+    a270: eb08019f     	cmp	x12, x8
+    a274: 540001c0     	b.eq	0xa2ac <_ZNK12frame_points22compact_reader_programIN4ikea9intervals14run_end_sourceEE3getEm+0x34c>
+    a278: 3940018d     	ldrb	w13, [x12]
+    a27c: 6b2101bf     	cmp	w13, w1, uxtb
+    a280: 54000161     	b.ne	0xa2ac <_ZNK12frame_points22compact_reader_programIN4ikea9intervals14run_end_sourceEE3getEm+0x34c>
+    a284: 39404569     	ldrb	w9, [x11, #0x11]
+    a288: b000062d     	adrp	x13, 0xcf000 <strlen@GLIBC_2.17+0xcf000>
+    a28c: f947e1ad     	ldr	x13, [x13, #0xfc0]
+    a290: f9400573     	ldr	x19, [x11, #0x8]
+    a294: d37be929     	lsl	x9, x9, #5
+    a298: f86969a9     	ldr	x9, [x13, x9]
+    a29c: cb0a0181     	sub	x1, x12, x10
+    a2a0: aa0803e0     	mov	x0, x8
+    a2a4: d63f0120     	blr	x9
+    a2a8: 17ffffd8     	b	0xa208 <_ZNK12frame_points22compact_reader_programIN4ikea9intervals14run_end_sourceEE3getEm+0x2a8>
+    a2ac: 4b0c0148     	sub	w8, w10, w12
+    a2b0: 0b0802d7     	add	w23, w22, w8
+    a2b4: 34000457     	cbz	w23, 0xa33c <_ZNK12frame_points22compact_reader_programIN4ikea9intervals14run_end_sourceEE3getEm+0x3dc>
+    a2b8: 39400128     	ldrb	w8, [x9]
+    a2bc: 52800089     	mov	w9, #0x4                // =4
+    a2c0: 528000ca     	mov	w10, #0x6               // =6
+    a2c4: 5280010b     	mov	w11, #0x8               // =8
+    a2c8: 7100091f     	cmp	w8, #0x2
+    a2cc: 1a89014a     	csel	w10, w10, w9, eq
+    a2d0: 71000d1f     	cmp	w8, #0x3
+    a2d4: 39403ea9     	ldrb	w9, [x21, #0xf]
+    a2d8: 1a8a016c     	csel	w12, w11, w10, eq
+    a2dc: 1acc26cb     	lsr	w11, w22, w12
+    a2e0: 8b09140a     	add	x10, x0, x9, lsl #5
+    a2e4: 1acc2161     	lsl	w1, w11, w12
+    a2e8: f9400158     	ldr	x24, [x10]
+    a2ec: 3400036b     	cbz	w11, 0xa358 <_ZNK12frame_points22compact_reader_programIN4ikea9intervals14run_end_sourceEE3getEm+0x3f8>
+    a2f0: 7100051f     	cmp	w8, #0x1
+    a2f4: 51000568     	sub	w8, w11, #0x1
+    a2f8: 54000341     	b.ne	0xa360 <_ZNK12frame_points22compact_reader_programIN4ikea9intervals14run_end_sourceEE3getEm+0x400>
+    a2fc: 7100e13f     	cmp	w9, #0x38
+    a300: 540003a8     	b.hi	0xa374 <_ZNK12frame_points22compact_reader_programIN4ikea9intervals14run_end_sourceEE3getEm+0x414>
+    a304: b000062b     	adrp	x11, 0xcf000 <strlen@GLIBC_2.17+0xcf000>
+    a308: aa0003f9     	mov	x25, x0
+    a30c: 91002140     	add	x0, x10, #0x8
+    a310: f947e16b     	ldr	x11, [x11, #0xfc0]
+    a314: 2a0103f4     	mov	w20, w1
+    a318: aa0803e1     	mov	x1, x8
+    a31c: 8b091569     	add	x9, x11, x9, lsl #5
+    a320: f9408129     	ldr	x9, [x9, #0x100]
+    a324: d63f0120     	blr	x9
+    a328: 39403ea9     	ldrb	w9, [x21, #0xf]
+    a32c: 2a1403e1     	mov	w1, w20
+    a330: aa0003f4     	mov	x20, x0
+    a334: aa1903e0     	mov	x0, x25
+    a338: 14000011     	b	0xa37c <_ZNK12frame_points22compact_reader_programIN4ikea9intervals14run_end_sourceEE3getEm+0x41c>
+    a33c: f94002a0     	ldr	x0, [x21]
+    a340: a9444ff4     	ldp	x20, x19, [sp, #0x40]
+    a344: f9400bf9     	ldr	x25, [sp, #0x10]
+    a348: a94357f6     	ldp	x22, x21, [sp, #0x30]
+    a34c: a9425ff8     	ldp	x24, x23, [sp, #0x20]
+    a350: a8c57bfd     	ldp	x29, x30, [sp], #0x50
+    a354: d65f03c0     	ret
+    a358: aa1f03f4     	mov	x20, xzr
+    a35c: 14000008     	b	0xa37c <_ZNK12frame_points22compact_reader_programIN4ikea9intervals14run_end_sourceEE3getEm+0x41c>
+    a360: 7100613f     	cmp	w9, #0x18
+    a364: 54000088     	b.hi	0xa374 <_ZNK12frame_points22compact_reader_programIN4ikea9intervals14run_end_sourceEE3getEm+0x414>
+    a368: 8b284948     	add	x8, x10, w8, uxtw #2
+    a36c: b9400914     	ldr	w20, [x8, #0x8]
+    a370: 14000003     	b	0xa37c <_ZNK12frame_points22compact_reader_programIN4ikea9intervals14run_end_sourceEE3getEm+0x41c>
+    a374: 8b284d48     	add	x8, x10, w8, uxtw #3
+    a378: f9400514     	ldr	x20, [x8, #0x8]
+    a37c: b0000628     	adrp	x8, 0xcf000 <strlen@GLIBC_2.17+0xcf000>
+    a380: f947e108     	ldr	x8, [x8, #0xfc0]
+    a384: 8b091508     	add	x8, x8, x9, lsl #5
+    a388: 39404269     	ldrb	w9, [x19, #0x10]
+    a38c: 8b090d08     	add	x8, x8, x9, lsl #3
+    a390: 4b0102c9     	sub	w9, w22, w1
+    a394: 11000522     	add	w2, w9, #0x1
+    a398: f9400908     	ldr	x8, [x8, #0x10]
+    a39c: d63f0100     	blr	x8
+    a3a0: 2a1703e8     	mov	w8, w23
+    a3a4: f94002a9     	ldr	x9, [x21]
+    a3a8: 9b085308     	madd	x8, x24, x8, x20
+    a3ac: 8b090009     	add	x9, x0, x9
+    a3b0: 8b090100     	add	x0, x8, x9
+    a3b4: a9444ff4     	ldp	x20, x19, [sp, #0x40]
+    a3b8: f9400bf9     	ldr	x25, [sp, #0x10]
+    a3bc: a94357f6     	ldp	x22, x21, [sp, #0x30]
+    a3c0: a9425ff8     	ldp	x24, x23, [sp, #0x20]
+    a3c4: a8c57bfd     	ldp	x29, x30, [sp], #0x50
+    a3c8: d65f03c0     	ret
+    a3cc: 900004c0     	adrp	x0, 0xa2000 <_ZN4ikea10seriespack11composition6detail15writable_fields3addENS_6detail12occupied_runEPKvj+0x180>
+    a3d0: 91301c00     	add	x0, x0, #0xc07
+    a3d4: 900004c1     	adrp	x1, 0xa2000 <_ZN4ikea10seriespack11composition6detail15writable_fields3addENS_6detail12occupied_runEPKvj+0x180>
+    a3d8: 91331421     	add	x1, x1, #0xcc5
+    a3dc: 900004c3     	adrp	x3, 0xa2000 <_ZN4ikea10seriespack11composition6detail15writable_fields3addENS_6detail12occupied_runEPKvj+0x180>
+    a3e0: 91389c63     	add	x3, x3, #0xe27
+    a3e4: 52800622     	mov	w2, #0x31               // =49
+    a3e8: 97ffe20a     	bl	0x2c10 <__assert_fail@plt>
+    a3ec: 97ffe241     	bl	0x2cf0 <abort@plt>

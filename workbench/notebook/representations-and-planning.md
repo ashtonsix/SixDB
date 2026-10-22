@@ -48,6 +48,9 @@ with actual native/Polars controls. Logical H16 helps predicted Jena queries but
 adds two bytes/row; RegionID and the losing window-bound program rule out a
 universal evidence layout. [Point integration](../spikes/ikea-frame/point/INTEGRATION.md)
 preserves native-prefix gains while retaining the substantial native-array gap.
+Its [curated run-source follow-up](../spikes/ikea-frame/point/CURATED-RUNS.md)
+tests the maintained Intervals native source in the real point readers, while
+keeping the predictable projection and non-RLE controls.
 
 ## Conversion, append growth and changing interpretation
 

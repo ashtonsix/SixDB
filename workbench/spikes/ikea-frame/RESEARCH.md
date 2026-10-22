@@ -123,6 +123,13 @@ connects real encoded planes to current native Orbital ownership and retained
 readers. Extending that witness across borrowed body kinds/dictionaries and
 pricing physical lifecycle policies remain active work.
 
+The [curated run-source follow-up](point/CURATED-RUNS.md) consumes Ikea HELPER's
+native whole-getter finding without a runtime profile field: ordinary projection
+and unpredictable native-run programs share the same reader templates. Real
+run-heavy columns improve about 31–38% locally, with losing selections and
+the large native-array gap retained. This remains a private program choice;
+newer owner kinds and the borrowed material epoch need separate integration.
+
 The [first native delta repair](lifecycle/README.md#fitting-delta-replacement-before-folding)
 checks a narrower useful write law: a fitting interior change can repair two
 residuals and at most one checkpoint, with actual SeriesPack damage coverage.

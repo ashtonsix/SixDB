@@ -32,11 +32,11 @@ struct compact_image {
     compact_image(compact_image &&) = delete;
 };
 
-struct compact_reader {
+template <class RunSource> struct compact_reader_program {
     const compact_image *source;
     std::size_t rows;
     bool native_prefix;
-    explicit compact_reader(const compact_image &image, bool native = false,
+    explicit compact_reader_program(const compact_image &image, bool native = false,
                             point_domain domain = point_domain::values)
         : source(&image), rows(image.body.rows), native_prefix(native) {
         if (domain == point_domain::values && image.body.options.dictionary != fe::dictionary_order::none)
@@ -64,7 +64,7 @@ struct compact_reader {
             return d.base + local_kernels(d.width).point(data, local);
         }
         case fe::kind::runs: {
-            const unsigned rank = ikea::intervals::upper_bound(fe::run_ends{
+            const unsigned rank = ikea::intervals::upper_bound(RunSource{
                     data + fe::plane_bytes(d.width, d.count), d.count}, local);
             return d.base + local_kernels(d.width).point(data, rank);
         }
@@ -107,4 +107,7 @@ struct compact_reader {
         std::abort();
     }
 };
+using compact_reader = compact_reader_program<fe::run_ends>;
+using unpredictable_compact_reader = compact_reader_program<ikea::intervals::run_end_source>;
+
 } // namespace frame_points

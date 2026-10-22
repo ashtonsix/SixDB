@@ -8,12 +8,12 @@ namespace frame_points {
 namespace fe = frame_encoding;
 enum class point_domain { values, stored_codes };
 
-struct point_reader {
+template <class RunSource> struct point_reader_program {
     const fe::column *source;
     std::size_t rows;
     std::vector<std::optional<fe::sp::decoder<fe::u64>>> packed_checkpoints;
 
-    explicit point_reader(const fe::column &c, point_domain domain = point_domain::values)
+    explicit point_reader_program(const fe::column &c, point_domain domain = point_domain::values)
         : source(&c), rows(c.rows) {
         if (domain == point_domain::values && c.options.dictionary != fe::dictionary_order::none)
             std::abort(); // Dictionary composition must be explicit, once around ready work.
@@ -56,7 +56,7 @@ struct point_reader {
             return d.base + c.decoders[b].get_unchecked(local);
         }
         case fe::kind::runs: {
-            const unsigned rank = ikea::intervals::upper_bound(fe::run_ends{
+            const unsigned rank = ikea::intervals::upper_bound(RunSource{
                     c.payload.data() + d.offset + fe::plane_bytes(d.width, d.count), d.count}, local);
             return d.base + c.decoders[b].get_unchecked(rank);
         }
@@ -101,6 +101,10 @@ struct point_reader {
         std::abort();
     }
 };
+
+// Curated programs over the same bytes; no per-getter policy flag/load.
+using point_reader = point_reader_program<fe::run_ends>;
+using unpredictable_point_reader = point_reader_program<ikea::intervals::run_end_source>;
 
 // Restore a dictionary edition after any existing stored-value reader. The
 // unencoded getter remains the same body; no dictionary branch enters its hot

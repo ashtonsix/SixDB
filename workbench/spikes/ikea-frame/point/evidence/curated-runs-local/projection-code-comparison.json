@@ -1,0 +1,207 @@
+{
+  "prior_binary_sha256": "6db5369c40d026ff5c28f46e44c226ef65525477750c0c9dc56d14b45b27b009",
+  "current_binary_sha256": "5de884fe9beecefb947221f3a485f484c5c5a0773172eedc64baeba619c5d1a5",
+  "proof": [
+    {
+      "reader": "12point_reader",
+      "hot_instructions": 254,
+      "hot_bytes": 1016,
+      "sha256": "7a4de65be8cf34c1388ff586666a3dba776baae5fc7474831c8051dac1e7a39d",
+      "same_instruction_encodings_without_normalisation": true,
+      "excluded": "cold assertion/abort suffix; source strings and call addresses differ",
+      "function_placement": "different between executables"
+    },
+    {
+      "reader": "14compact_reader",
+      "hot_instructions": 229,
+      "hot_bytes": 916,
+      "sha256": "eb35a9a268463b40bd743e14fa5b4db0ed14440581d6f638979200dd9fadbf8f",
+      "same_instruction_encodings_without_normalisation": true,
+      "excluded": "cold assertion/abort suffix; source strings and call addresses differ",
+      "function_placement": "different between executables"
+    }
+  ],
+  "full_instruction_differences": [
+    {
+      "reader": "12point_reader",
+      "instructions": 263,
+      "differences": [
+        {
+          "instruction": 255,
+          "before": [
+            "9108a000",
+            "add",
+            "x0, x0, #0x228"
+          ],
+          "after": [
+            "91301c00",
+            "add",
+            "x0, x0, #0xc07"
+          ]
+        },
+        {
+          "instruction": 257,
+          "before": [
+            "9108cc21",
+            "add",
+            "x1, x1, #0x233"
+          ],
+          "after": [
+            "91304821",
+            "add",
+            "x1, x1, #0xc12"
+          ]
+        },
+        {
+          "instruction": 259,
+          "before": [
+            "91098863",
+            "add",
+            "x3, x3, #0x262"
+          ],
+          "after": [
+            "91310463",
+            "add",
+            "x3, x3, #0xc41"
+          ]
+        },
+        {
+          "instruction": 261,
+          "before": [
+            "97ffec94",
+            "bl",
+            "0x2bb0 <__assert_fail@plt>"
+          ],
+          "after": [
+            "97ffea75",
+            "bl",
+            "0x2c10 <__assert_fail@plt>"
+          ]
+        },
+        {
+          "instruction": 262,
+          "before": [
+            "97ffeccb",
+            "bl",
+            "0x2c90 <abort@plt>"
+          ],
+          "after": [
+            "97ffeaac",
+            "bl",
+            "0x2cf0 <abort@plt>"
+          ]
+        }
+      ]
+    },
+    {
+      "reader": "14compact_reader",
+      "instructions": 238,
+      "differences": [
+        {
+          "instruction": 229,
+          "before": [
+            "b00004c0",
+            "adrp",
+            "x0, 0xa1000 <strlen@GLIBC_2.17+0xa1000>"
+          ],
+          "after": [
+            "d00004c0",
+            "adrp",
+            "x0, 0xa2000 <_ZN4ikea10seriespack11composition6detail15writable_fields3addENS_6detail12occupied_runEPKvj+0x180>"
+          ]
+        },
+        {
+          "instruction": 230,
+          "before": [
+            "9108a000",
+            "add",
+            "x0, x0, #0x228"
+          ],
+          "after": [
+            "91301c00",
+            "add",
+            "x0, x0, #0xc07"
+          ]
+        },
+        {
+          "instruction": 231,
+          "before": [
+            "b00004c1",
+            "adrp",
+            "x1, 0xa1000 <strlen@GLIBC_2.17+0xa1000>"
+          ],
+          "after": [
+            "d00004c1",
+            "adrp",
+            "x1, 0xa2000 <_ZN4ikea10seriespack11composition6detail15writable_fields3addENS_6detail12occupied_runEPKvj+0x180>"
+          ]
+        },
+        {
+          "instruction": 232,
+          "before": [
+            "910a7421",
+            "add",
+            "x1, x1, #0x29d"
+          ],
+          "after": [
+            "91331421",
+            "add",
+            "x1, x1, #0xcc5"
+          ]
+        },
+        {
+          "instruction": 233,
+          "before": [
+            "b00004c3",
+            "adrp",
+            "x3, 0xa1000 <strlen@GLIBC_2.17+0xa1000>"
+          ],
+          "after": [
+            "d00004c3",
+            "adrp",
+            "x3, 0xa2000 <_ZN4ikea10seriespack11composition6detail15writable_fields3addENS_6detail12occupied_runEPKvj+0x180>"
+          ]
+        },
+        {
+          "instruction": 234,
+          "before": [
+            "910b3863",
+            "add",
+            "x3, x3, #0x2ce"
+          ],
+          "after": [
+            "9133d863",
+            "add",
+            "x3, x3, #0xcf6"
+          ]
+        },
+        {
+          "instruction": 236,
+          "before": [
+            "97ffe98f",
+            "bl",
+            "0x2bb0 <__assert_fail@plt>"
+          ],
+          "after": [
+            "97ffe770",
+            "bl",
+            "0x2c10 <__assert_fail@plt>"
+          ]
+        },
+        {
+          "instruction": 237,
+          "before": [
+            "97ffe9c6",
+            "bl",
+            "0x2c90 <abort@plt>"
+          ],
+          "after": [
+            "97ffe7a7",
+            "bl",
+            "0x2cf0 <abort@plt>"
+          ]
+        }
+      ]
+    }
+  ]
+}

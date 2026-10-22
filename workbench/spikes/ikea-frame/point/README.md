@@ -29,6 +29,20 @@ The [Intervals integration cohort](INTEGRATION.md) preserves the native-prefix
 gain, qualifies dictionary composition and retains the complete native-array
 gaps. Its samples are separate from the earlier preparation/prefix cohorts.
 
+Ikea HELPER's subsequent actual-getter audit found useful native-byte run search
+on unpredictable point traces with at least sixteen runs on Zen5 AVX2/AVX-512
+and Neoverse V2. `unpredictable_point_reader` and
+`unpredictable_compact_reader` select that maintained `run_end_source` in the
+same reader templates; the ordinary aliases retain the raw comparison projection.
+There is no runtime profile branch or extra prepared field. Tiny lists retain
+Intervals' existing projection fallback. This is a curated private experiment,
+not a new Frame default or public policy API. Predictable traces and non-RLE
+code placement remain controls; no winner follows from the type names.
+The [real-column integration](CURATED-RUNS.md) measures both programs on the same
+bytes, preserving the native-prefix gains and the remaining native-array gap.
+The newer opt-in arrival-code kind is not covered by these readers or this
+frozen cohort; adopting the owner's borrowed operations is separate work.
+
 Prediction with exceptions skips exception rows in the prediction chain. A point
 at an exception reads its explicit-width exception plane; an ordinary point uses
 the number of preceding ordinary steps, not its physical row number. Checkpoints
