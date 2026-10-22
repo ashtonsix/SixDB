@@ -141,3 +141,14 @@ retained as sanity checks; namespace changes cannot explain their fluctuations.
 The incoming [Directory evidence](../segment-directory/README.md) remains the
 owner's native complete-consumer account. No new tree policy or timing promise
 is inferred here.
+
+## Native performance follow-through
+
+The [bar-raiser study](RAISE-BAR.md) adds frozen controls, true C1/C4/C8 useful
+request chains, linked disassembly/MCA audits and three native qualification
+cohorts. It retains the serial default and a measured G64 prefix throughput
+option over the same bytes. Final M255/N256 random C8 rank→payload improves
+6.112→1.970 ns on Zen5 AVX2 and 6.148→3.316 on Neoverse V2. C1, clustered and
+several range cells lose; the inverse candidates were rejected. Read that study's
+comparison limits and full losing cells before choosing the binding. This extends
+the initial local evidence above and establishes no production migration.

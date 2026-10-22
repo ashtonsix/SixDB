@@ -1,0 +1,725 @@
+{
+  "assembly": "build/workers/20261022T160025Z-21d1e540/results/avx512/intervals_latency.s",
+  "pairs": [
+    {
+      "before": "unsigned long (anonymous namespace)::chain<0u, 1u, ikea::intervals_before::sparse_sizes<16u, unsigned char, unsigned short, 16u>>(ikea::intervals_before::sparse_sizes<16u, unsigned char, unsigned short, 16u> const&, intervals_probe::fixture const&, bool)",
+      "current": "unsigned long (anonymous namespace)::chain<0u, 1u, ikea::intervals::sparse_sizes<16u, unsigned char, unsigned short, 16u, false>>(ikea::intervals::sparse_sizes<16u, unsigned char, unsigned short, 16u, false> const&, intervals_probe::fixture const&, bool)",
+      "before_address": "0x100b0",
+      "current_address": "0x12110",
+      "before_instructions": 107,
+      "current_instructions": 107,
+      "before_calls": [
+        "callq 0x20e0 <abort@plt>",
+        "callq 0x20b0 <__cxa_allocate_exception@plt>",
+        "callq 0x2080 <_ZNSt13runtime_errorC1EPKc@plt>",
+        "callq 0x21b0 <__cxa_throw@plt>",
+        "callq 0x2110 <__cxa_free_exception@plt>",
+        "callq 0x21c0 <_Unwind_Resume@plt>"
+      ],
+      "current_calls": [
+        "callq 0x20e0 <abort@plt>",
+        "callq 0x20b0 <__cxa_allocate_exception@plt>",
+        "callq 0x2080 <_ZNSt13runtime_errorC1EPKc@plt>",
+        "callq 0x21b0 <__cxa_throw@plt>",
+        "callq 0x2110 <__cxa_free_exception@plt>",
+        "callq 0x21c0 <_Unwind_Resume@plt>"
+      ],
+      "diff": []
+    },
+    {
+      "before": "unsigned long (anonymous namespace)::chain<0u, 4u, ikea::intervals_before::sparse_sizes<16u, unsigned char, unsigned short, 16u>>(ikea::intervals_before::sparse_sizes<16u, unsigned char, unsigned short, 16u> const&, intervals_probe::fixture const&, bool)",
+      "current": "unsigned long (anonymous namespace)::chain<0u, 4u, ikea::intervals::sparse_sizes<16u, unsigned char, unsigned short, 16u, false>>(ikea::intervals::sparse_sizes<16u, unsigned char, unsigned short, 16u, false> const&, intervals_probe::fixture const&, bool)",
+      "before_address": "0x102b0",
+      "current_address": "0x12310",
+      "before_instructions": 216,
+      "current_instructions": 216,
+      "before_calls": [
+        "callq 0x20e0 <abort@plt>",
+        "callq 0x20b0 <__cxa_allocate_exception@plt>",
+        "callq 0x2080 <_ZNSt13runtime_errorC1EPKc@plt>",
+        "callq 0x21b0 <__cxa_throw@plt>",
+        "callq 0x2110 <__cxa_free_exception@plt>",
+        "callq 0x21c0 <_Unwind_Resume@plt>"
+      ],
+      "current_calls": [
+        "callq 0x20e0 <abort@plt>",
+        "callq 0x20b0 <__cxa_allocate_exception@plt>",
+        "callq 0x2080 <_ZNSt13runtime_errorC1EPKc@plt>",
+        "callq 0x21b0 <__cxa_throw@plt>",
+        "callq 0x2110 <__cxa_free_exception@plt>",
+        "callq 0x21c0 <_Unwind_Resume@plt>"
+      ],
+      "diff": []
+    },
+    {
+      "before": "unsigned long (anonymous namespace)::chain<0u, 8u, ikea::intervals_before::sparse_sizes<16u, unsigned char, unsigned short, 16u>>(ikea::intervals_before::sparse_sizes<16u, unsigned char, unsigned short, 16u> const&, intervals_probe::fixture const&, bool)",
+      "current": "unsigned long (anonymous namespace)::chain<0u, 8u, ikea::intervals::sparse_sizes<16u, unsigned char, unsigned short, 16u, false>>(ikea::intervals::sparse_sizes<16u, unsigned char, unsigned short, 16u, false> const&, intervals_probe::fixture const&, bool)",
+      "before_address": "0x10670",
+      "current_address": "0x126d0",
+      "before_instructions": 396,
+      "current_instructions": 396,
+      "before_calls": [
+        "callq 0x20e0 <abort@plt>",
+        "callq 0x20b0 <__cxa_allocate_exception@plt>",
+        "callq 0x2080 <_ZNSt13runtime_errorC1EPKc@plt>",
+        "callq 0x21b0 <__cxa_throw@plt>",
+        "callq 0x2110 <__cxa_free_exception@plt>",
+        "callq 0x21c0 <_Unwind_Resume@plt>"
+      ],
+      "current_calls": [
+        "callq 0x20e0 <abort@plt>",
+        "callq 0x20b0 <__cxa_allocate_exception@plt>",
+        "callq 0x2080 <_ZNSt13runtime_errorC1EPKc@plt>",
+        "callq 0x21b0 <__cxa_throw@plt>",
+        "callq 0x2110 <__cxa_free_exception@plt>",
+        "callq 0x21c0 <_Unwind_Resume@plt>"
+      ],
+      "diff": []
+    },
+    {
+      "before": "unsigned long (anonymous namespace)::chain<1u, 1u, ikea::intervals_before::sparse_sizes<16u, unsigned char, unsigned short, 16u>>(ikea::intervals_before::sparse_sizes<16u, unsigned char, unsigned short, 16u> const&, intervals_probe::fixture const&, bool)",
+      "current": "unsigned long (anonymous namespace)::chain<1u, 1u, ikea::intervals::sparse_sizes<16u, unsigned char, unsigned short, 16u, false>>(ikea::intervals::sparse_sizes<16u, unsigned char, unsigned short, 16u, false> const&, intervals_probe::fixture const&, bool)",
+      "before_address": "0x10d90",
+      "current_address": "0x12df0",
+      "before_instructions": 179,
+      "current_instructions": 179,
+      "before_calls": [
+        "callq 0x20e0 <abort@plt>",
+        "callq 0x20b0 <__cxa_allocate_exception@plt>",
+        "callq 0x2080 <_ZNSt13runtime_errorC1EPKc@plt>",
+        "callq 0x21b0 <__cxa_throw@plt>",
+        "callq 0x2110 <__cxa_free_exception@plt>",
+        "callq 0x21c0 <_Unwind_Resume@plt>"
+      ],
+      "current_calls": [
+        "callq 0x20e0 <abort@plt>",
+        "callq 0x20b0 <__cxa_allocate_exception@plt>",
+        "callq 0x2080 <_ZNSt13runtime_errorC1EPKc@plt>",
+        "callq 0x21b0 <__cxa_throw@plt>",
+        "callq 0x2110 <__cxa_free_exception@plt>",
+        "callq 0x21c0 <_Unwind_Resume@plt>"
+      ],
+      "diff": [
+        "--- \n",
+        "+++ \n",
+        "@@ -29,5 +29,5 @@\n",
+        " je LOCAL0x1a1",
+        " movq (%rdi), %rax",
+        "-vpbroadcastw DATA(%rip), %xmm0 # 0x86040 <strlen@GLIBC_2.2.5+0x86040>",
+        "+vpbroadcastw DATA(%rip), %xmm0 # 0x86046 <strlen@GLIBC_2.2.5+0x86046>",
+        " movzwl 0x14(%rdi), %r11d",
+        " movzwl 0x16(%rdi), %ebx"
+      ]
+    },
+    {
+      "before": "unsigned long (anonymous namespace)::chain<1u, 4u, ikea::intervals_before::sparse_sizes<16u, unsigned char, unsigned short, 16u>>(ikea::intervals_before::sparse_sizes<16u, unsigned char, unsigned short, 16u> const&, intervals_probe::fixture const&, bool)",
+      "current": "unsigned long (anonymous namespace)::chain<1u, 4u, ikea::intervals::sparse_sizes<16u, unsigned char, unsigned short, 16u, false>>(ikea::intervals::sparse_sizes<16u, unsigned char, unsigned short, 16u, false> const&, intervals_probe::fixture const&, bool)",
+      "before_address": "0x110f0",
+      "current_address": "0x13150",
+      "before_instructions": 307,
+      "current_instructions": 307,
+      "before_calls": [
+        "callq 0x20e0 <abort@plt>",
+        "callq 0x20b0 <__cxa_allocate_exception@plt>",
+        "callq 0x2080 <_ZNSt13runtime_errorC1EPKc@plt>",
+        "callq 0x21b0 <__cxa_throw@plt>",
+        "callq 0x2110 <__cxa_free_exception@plt>",
+        "callq 0x21c0 <_Unwind_Resume@plt>"
+      ],
+      "current_calls": [
+        "callq 0x20e0 <abort@plt>",
+        "callq 0x20b0 <__cxa_allocate_exception@plt>",
+        "callq 0x2080 <_ZNSt13runtime_errorC1EPKc@plt>",
+        "callq 0x21b0 <__cxa_throw@plt>",
+        "callq 0x2110 <__cxa_free_exception@plt>",
+        "callq 0x21c0 <_Unwind_Resume@plt>"
+      ],
+      "diff": [
+        "--- \n",
+        "+++ \n",
+        "@@ -20,5 +20,5 @@\n",
+        " movzwl 0x14(%rdi), %eax",
+        " movl 0x10(%rdi), %r15d",
+        "-vpbroadcastw DATA(%rip), %xmm0 # 0x86042 <strlen@GLIBC_2.2.5+0x86042>",
+        "+vpbroadcastw DATA(%rip), %xmm0 # 0x86048 <strlen@GLIBC_2.2.5+0x86048>",
+        " movabsq $0x713987abcd025721, %r8 # imm = 0x713987ABCD025721",
+        " movl $0x1000, %r14d          # imm = 0x1000"
+      ]
+    },
+    {
+      "before": "unsigned long (anonymous namespace)::chain<1u, 8u, ikea::intervals_before::sparse_sizes<16u, unsigned char, unsigned short, 16u>>(ikea::intervals_before::sparse_sizes<16u, unsigned char, unsigned short, 16u> const&, intervals_probe::fixture const&, bool)",
+      "current": "unsigned long (anonymous namespace)::chain<1u, 8u, ikea::intervals::sparse_sizes<16u, unsigned char, unsigned short, 16u, false>>(ikea::intervals::sparse_sizes<16u, unsigned char, unsigned short, 16u, false> const&, intervals_probe::fixture const&, bool)",
+      "before_address": "0x11670",
+      "current_address": "0x136d0",
+      "before_instructions": 555,
+      "current_instructions": 555,
+      "before_calls": [
+        "callq 0x20e0 <abort@plt>",
+        "callq 0x20b0 <__cxa_allocate_exception@plt>",
+        "callq 0x2080 <_ZNSt13runtime_errorC1EPKc@plt>",
+        "callq 0x21b0 <__cxa_throw@plt>",
+        "callq 0x2110 <__cxa_free_exception@plt>",
+        "callq 0x21c0 <_Unwind_Resume@plt>"
+      ],
+      "current_calls": [
+        "callq 0x20e0 <abort@plt>",
+        "callq 0x20b0 <__cxa_allocate_exception@plt>",
+        "callq 0x2080 <_ZNSt13runtime_errorC1EPKc@plt>",
+        "callq 0x21b0 <__cxa_throw@plt>",
+        "callq 0x2110 <__cxa_free_exception@plt>",
+        "callq 0x21c0 <_Unwind_Resume@plt>"
+      ],
+      "diff": [
+        "--- \n",
+        "+++ \n",
+        "@@ -23,5 +23,5 @@\n",
+        " movzwl 0x14(%rdi), %eax",
+        " movl 0x10(%rdi), %edx",
+        "-vpbroadcastw DATA(%rip), %xmm0 # 0x86044 <strlen@GLIBC_2.2.5+0x86044>",
+        "+vpbroadcastw DATA(%rip), %xmm0 # 0x8604a <strlen@GLIBC_2.2.5+0x8604a>",
+        " movabsq $0x713987abcd025721, %rsi # imm = 0x713987ABCD025721",
+        " movl $0x1000, %r8d           # imm = 0x1000"
+      ]
+    },
+    {
+      "before": "unsigned long (anonymous namespace)::chain<0u, 1u, ikea::intervals_before::sparse_sizes<64u, unsigned char, unsigned short, 4u>>(ikea::intervals_before::sparse_sizes<64u, unsigned char, unsigned short, 4u> const&, intervals_probe::fixture const&, bool)",
+      "current": "unsigned long (anonymous namespace)::chain<0u, 1u, ikea::intervals::sparse_sizes<64u, unsigned char, unsigned short, 4u, false>>(ikea::intervals::sparse_sizes<64u, unsigned char, unsigned short, 4u, false> const&, intervals_probe::fixture const&, bool)",
+      "before_address": "0x14170",
+      "current_address": "0x17660",
+      "before_instructions": 106,
+      "current_instructions": 106,
+      "before_calls": [
+        "callq 0x20e0 <abort@plt>",
+        "callq 0x20b0 <__cxa_allocate_exception@plt>",
+        "callq 0x2080 <_ZNSt13runtime_errorC1EPKc@plt>",
+        "callq 0x21b0 <__cxa_throw@plt>",
+        "callq 0x2110 <__cxa_free_exception@plt>",
+        "callq 0x21c0 <_Unwind_Resume@plt>"
+      ],
+      "current_calls": [
+        "callq 0x20e0 <abort@plt>",
+        "callq 0x20b0 <__cxa_allocate_exception@plt>",
+        "callq 0x2080 <_ZNSt13runtime_errorC1EPKc@plt>",
+        "callq 0x21b0 <__cxa_throw@plt>",
+        "callq 0x2110 <__cxa_free_exception@plt>",
+        "callq 0x21c0 <_Unwind_Resume@plt>"
+      ],
+      "diff": []
+    },
+    {
+      "before": "unsigned long (anonymous namespace)::chain<0u, 4u, ikea::intervals_before::sparse_sizes<64u, unsigned char, unsigned short, 4u>>(ikea::intervals_before::sparse_sizes<64u, unsigned char, unsigned short, 4u> const&, intervals_probe::fixture const&, bool)",
+      "current": "unsigned long (anonymous namespace)::chain<0u, 4u, ikea::intervals::sparse_sizes<64u, unsigned char, unsigned short, 4u, false>>(ikea::intervals::sparse_sizes<64u, unsigned char, unsigned short, 4u, false> const&, intervals_probe::fixture const&, bool)",
+      "before_address": "0x14380",
+      "current_address": "0x17870",
+      "before_instructions": 339,
+      "current_instructions": 339,
+      "before_calls": [
+        "callq 0x20e0 <abort@plt>",
+        "callq 0x20b0 <__cxa_allocate_exception@plt>",
+        "callq 0x2080 <_ZNSt13runtime_errorC1EPKc@plt>",
+        "callq 0x21b0 <__cxa_throw@plt>",
+        "callq 0x2110 <__cxa_free_exception@plt>",
+        "callq 0x21c0 <_Unwind_Resume@plt>"
+      ],
+      "current_calls": [
+        "callq 0x20e0 <abort@plt>",
+        "callq 0x20b0 <__cxa_allocate_exception@plt>",
+        "callq 0x2080 <_ZNSt13runtime_errorC1EPKc@plt>",
+        "callq 0x21b0 <__cxa_throw@plt>",
+        "callq 0x2110 <__cxa_free_exception@plt>",
+        "callq 0x21c0 <_Unwind_Resume@plt>"
+      ],
+      "diff": []
+    },
+    {
+      "before": "unsigned long (anonymous namespace)::chain<0u, 8u, ikea::intervals_before::sparse_sizes<64u, unsigned char, unsigned short, 4u>>(ikea::intervals_before::sparse_sizes<64u, unsigned char, unsigned short, 4u> const&, intervals_probe::fixture const&, bool)",
+      "current": "unsigned long (anonymous namespace)::chain<0u, 8u, ikea::intervals::sparse_sizes<64u, unsigned char, unsigned short, 4u, false>>(ikea::intervals::sparse_sizes<64u, unsigned char, unsigned short, 4u, false> const&, intervals_probe::fixture const&, bool)",
+      "before_address": "0x14930",
+      "current_address": "0x17e20",
+      "before_instructions": 663,
+      "current_instructions": 663,
+      "before_calls": [
+        "callq 0x20e0 <abort@plt>",
+        "callq 0x20b0 <__cxa_allocate_exception@plt>",
+        "callq 0x2080 <_ZNSt13runtime_errorC1EPKc@plt>",
+        "callq 0x21b0 <__cxa_throw@plt>",
+        "callq 0x2110 <__cxa_free_exception@plt>",
+        "callq 0x21c0 <_Unwind_Resume@plt>"
+      ],
+      "current_calls": [
+        "callq 0x20e0 <abort@plt>",
+        "callq 0x20b0 <__cxa_allocate_exception@plt>",
+        "callq 0x2080 <_ZNSt13runtime_errorC1EPKc@plt>",
+        "callq 0x21b0 <__cxa_throw@plt>",
+        "callq 0x2110 <__cxa_free_exception@plt>",
+        "callq 0x21c0 <_Unwind_Resume@plt>"
+      ],
+      "diff": []
+    },
+    {
+      "before": "unsigned long (anonymous namespace)::chain<1u, 1u, ikea::intervals_before::sparse_sizes<64u, unsigned char, unsigned short, 4u>>(ikea::intervals_before::sparse_sizes<64u, unsigned char, unsigned short, 4u> const&, intervals_probe::fixture const&, bool)",
+      "current": "unsigned long (anonymous namespace)::chain<1u, 1u, ikea::intervals::sparse_sizes<64u, unsigned char, unsigned short, 4u, false>>(ikea::intervals::sparse_sizes<64u, unsigned char, unsigned short, 4u, false> const&, intervals_probe::fixture const&, bool)",
+      "before_address": "0x15470",
+      "current_address": "0x18960",
+      "before_instructions": 260,
+      "current_instructions": 260,
+      "before_calls": [
+        "callq 0x20e0 <abort@plt>",
+        "callq 0x20b0 <__cxa_allocate_exception@plt>",
+        "callq 0x2080 <_ZNSt13runtime_errorC1EPKc@plt>",
+        "callq 0x21b0 <__cxa_throw@plt>",
+        "callq 0x2110 <__cxa_free_exception@plt>",
+        "callq 0x21c0 <_Unwind_Resume@plt>"
+      ],
+      "current_calls": [
+        "callq 0x20e0 <abort@plt>",
+        "callq 0x20b0 <__cxa_allocate_exception@plt>",
+        "callq 0x2080 <_ZNSt13runtime_errorC1EPKc@plt>",
+        "callq 0x21b0 <__cxa_throw@plt>",
+        "callq 0x2110 <__cxa_free_exception@plt>",
+        "callq 0x21c0 <_Unwind_Resume@plt>"
+      ],
+      "diff": [
+        "--- \n",
+        "+++ \n",
+        "@@ -29,5 +29,5 @@\n",
+        " je LOCAL0x2d8",
+        " movq (%rdi), %rax",
+        "-vpbroadcastw DATA(%rip), %xmm1 # 0x8604c <strlen@GLIBC_2.2.5+0x8604c>",
+        "+vpbroadcastw DATA(%rip), %xmm1 # 0x86052 <strlen@GLIBC_2.2.5+0x86052>",
+        " movzwl 0x16(%rdi), %ebx",
+        " movzwl 0x14(%rdi), %r11d"
+      ]
+    },
+    {
+      "before": "unsigned long (anonymous namespace)::chain<1u, 4u, ikea::intervals_before::sparse_sizes<64u, unsigned char, unsigned short, 4u>>(ikea::intervals_before::sparse_sizes<64u, unsigned char, unsigned short, 4u> const&, intervals_probe::fixture const&, bool)",
+      "current": "unsigned long (anonymous namespace)::chain<1u, 4u, ikea::intervals::sparse_sizes<64u, unsigned char, unsigned short, 4u, false>>(ikea::intervals::sparse_sizes<64u, unsigned char, unsigned short, 4u, false> const&, intervals_probe::fixture const&, bool)",
+      "before_address": "0x15900",
+      "current_address": "0x18df0",
+      "before_instructions": 584,
+      "current_instructions": 584,
+      "before_calls": [
+        "callq 0x20e0 <abort@plt>",
+        "callq 0x20b0 <__cxa_allocate_exception@plt>",
+        "callq 0x2080 <_ZNSt13runtime_errorC1EPKc@plt>",
+        "callq 0x21b0 <__cxa_throw@plt>",
+        "callq 0x2110 <__cxa_free_exception@plt>",
+        "callq 0x21c0 <_Unwind_Resume@plt>"
+      ],
+      "current_calls": [
+        "callq 0x20e0 <abort@plt>",
+        "callq 0x20b0 <__cxa_allocate_exception@plt>",
+        "callq 0x2080 <_ZNSt13runtime_errorC1EPKc@plt>",
+        "callq 0x21b0 <__cxa_throw@plt>",
+        "callq 0x2110 <__cxa_free_exception@plt>",
+        "callq 0x21c0 <_Unwind_Resume@plt>"
+      ],
+      "diff": [
+        "--- \n",
+        "+++ \n",
+        "@@ -22,5 +22,5 @@\n",
+        " movzwl 0x14(%rdi), %eax",
+        " movl 0x10(%rdi), %r9d",
+        "-vpbroadcastw DATA(%rip), %xmm1 # 0x8604e <strlen@GLIBC_2.2.5+0x8604e>",
+        "+vpbroadcastw DATA(%rip), %xmm1 # 0x86054 <strlen@GLIBC_2.2.5+0x86054>",
+        " movq 0x8(%rdi), %rsi",
+        " movabsq $0x713987abcd025721, %r8 # imm = 0x713987ABCD025721"
+      ]
+    },
+    {
+      "before": "unsigned long (anonymous namespace)::chain<1u, 8u, ikea::intervals_before::sparse_sizes<64u, unsigned char, unsigned short, 4u>>(ikea::intervals_before::sparse_sizes<64u, unsigned char, unsigned short, 4u> const&, intervals_probe::fixture const&, bool)",
+      "current": "unsigned long (anonymous namespace)::chain<1u, 8u, ikea::intervals::sparse_sizes<64u, unsigned char, unsigned short, 4u, false>>(ikea::intervals::sparse_sizes<64u, unsigned char, unsigned short, 4u, false> const&, intervals_probe::fixture const&, bool)",
+      "before_address": "0x162b0",
+      "current_address": "0x197a0",
+      "before_instructions": 1172,
+      "current_instructions": 1172,
+      "before_calls": [
+        "callq 0x20e0 <abort@plt>",
+        "callq 0x20b0 <__cxa_allocate_exception@plt>",
+        "callq 0x2080 <_ZNSt13runtime_errorC1EPKc@plt>",
+        "callq 0x21b0 <__cxa_throw@plt>",
+        "callq 0x2110 <__cxa_free_exception@plt>",
+        "callq 0x21c0 <_Unwind_Resume@plt>"
+      ],
+      "current_calls": [
+        "callq 0x20e0 <abort@plt>",
+        "callq 0x20b0 <__cxa_allocate_exception@plt>",
+        "callq 0x2080 <_ZNSt13runtime_errorC1EPKc@plt>",
+        "callq 0x21b0 <__cxa_throw@plt>",
+        "callq 0x2110 <__cxa_free_exception@plt>",
+        "callq 0x21c0 <_Unwind_Resume@plt>"
+      ],
+      "diff": [
+        "--- \n",
+        "+++ \n",
+        "@@ -22,5 +22,5 @@\n",
+        " movzwl 0x14(%rdi), %eax",
+        " movl 0x10(%rdi), %r11d",
+        "-vpbroadcastw DATA(%rip), %xmm1 # 0x86050 <strlen@GLIBC_2.2.5+0x86050>",
+        "+vpbroadcastw DATA(%rip), %xmm1 # 0x86056 <strlen@GLIBC_2.2.5+0x86056>",
+        " movabsq $0x713987abcd025721, %r8 # imm = 0x713987ABCD025721",
+        " movl $0x1000, %r14d          # imm = 0x1000"
+      ]
+    },
+    {
+      "before": "unsigned long (anonymous namespace)::chain<0u, 1u, ikea::intervals_before::sparse_sizes<16u, unsigned short, unsigned int, 16u>>(ikea::intervals_before::sparse_sizes<16u, unsigned short, unsigned int, 16u> const&, intervals_probe::fixture const&, bool)",
+      "current": "unsigned long (anonymous namespace)::chain<0u, 1u, ikea::intervals::sparse_sizes<16u, unsigned short, unsigned int, 16u, false>>(ikea::intervals::sparse_sizes<16u, unsigned short, unsigned int, 16u, false> const&, intervals_probe::fixture const&, bool)",
+      "before_address": "0x6a3e0",
+      "current_address": "0x6ce00",
+      "before_instructions": 121,
+      "current_instructions": 121,
+      "before_calls": [
+        "callq 0x20e0 <abort@plt>",
+        "callq 0x20b0 <__cxa_allocate_exception@plt>",
+        "callq 0x2080 <_ZNSt13runtime_errorC1EPKc@plt>",
+        "callq 0x21b0 <__cxa_throw@plt>",
+        "callq 0x2110 <__cxa_free_exception@plt>",
+        "callq 0x21c0 <_Unwind_Resume@plt>"
+      ],
+      "current_calls": [
+        "callq 0x20e0 <abort@plt>",
+        "callq 0x20b0 <__cxa_allocate_exception@plt>",
+        "callq 0x2080 <_ZNSt13runtime_errorC1EPKc@plt>",
+        "callq 0x21b0 <__cxa_throw@plt>",
+        "callq 0x2110 <__cxa_free_exception@plt>",
+        "callq 0x21c0 <_Unwind_Resume@plt>"
+      ],
+      "diff": []
+    },
+    {
+      "before": "unsigned long (anonymous namespace)::chain<0u, 4u, ikea::intervals_before::sparse_sizes<16u, unsigned short, unsigned int, 16u>>(ikea::intervals_before::sparse_sizes<16u, unsigned short, unsigned int, 16u> const&, intervals_probe::fixture const&, bool)",
+      "current": "unsigned long (anonymous namespace)::chain<0u, 4u, ikea::intervals::sparse_sizes<16u, unsigned short, unsigned int, 16u, false>>(ikea::intervals::sparse_sizes<16u, unsigned short, unsigned int, 16u, false> const&, intervals_probe::fixture const&, bool)",
+      "before_address": "0x6a610",
+      "current_address": "0x6d030",
+      "before_instructions": 241,
+      "current_instructions": 241,
+      "before_calls": [
+        "callq 0x20e0 <abort@plt>",
+        "callq 0x20b0 <__cxa_allocate_exception@plt>",
+        "callq 0x2080 <_ZNSt13runtime_errorC1EPKc@plt>",
+        "callq 0x21b0 <__cxa_throw@plt>",
+        "callq 0x2110 <__cxa_free_exception@plt>",
+        "callq 0x21c0 <_Unwind_Resume@plt>"
+      ],
+      "current_calls": [
+        "callq 0x20e0 <abort@plt>",
+        "callq 0x20b0 <__cxa_allocate_exception@plt>",
+        "callq 0x2080 <_ZNSt13runtime_errorC1EPKc@plt>",
+        "callq 0x21b0 <__cxa_throw@plt>",
+        "callq 0x2110 <__cxa_free_exception@plt>",
+        "callq 0x21c0 <_Unwind_Resume@plt>"
+      ],
+      "diff": []
+    },
+    {
+      "before": "unsigned long (anonymous namespace)::chain<0u, 8u, ikea::intervals_before::sparse_sizes<16u, unsigned short, unsigned int, 16u>>(ikea::intervals_before::sparse_sizes<16u, unsigned short, unsigned int, 16u> const&, intervals_probe::fixture const&, bool)",
+      "current": "unsigned long (anonymous namespace)::chain<0u, 8u, ikea::intervals::sparse_sizes<16u, unsigned short, unsigned int, 16u, false>>(ikea::intervals::sparse_sizes<16u, unsigned short, unsigned int, 16u, false> const&, intervals_probe::fixture const&, bool)",
+      "before_address": "0x6aa40",
+      "current_address": "0x6d460",
+      "before_instructions": 441,
+      "current_instructions": 441,
+      "before_calls": [
+        "callq 0x20e0 <abort@plt>",
+        "callq 0x20b0 <__cxa_allocate_exception@plt>",
+        "callq 0x2080 <_ZNSt13runtime_errorC1EPKc@plt>",
+        "callq 0x21b0 <__cxa_throw@plt>",
+        "callq 0x2110 <__cxa_free_exception@plt>",
+        "callq 0x21c0 <_Unwind_Resume@plt>"
+      ],
+      "current_calls": [
+        "callq 0x20e0 <abort@plt>",
+        "callq 0x20b0 <__cxa_allocate_exception@plt>",
+        "callq 0x2080 <_ZNSt13runtime_errorC1EPKc@plt>",
+        "callq 0x21b0 <__cxa_throw@plt>",
+        "callq 0x2110 <__cxa_free_exception@plt>",
+        "callq 0x21c0 <_Unwind_Resume@plt>"
+      ],
+      "diff": []
+    },
+    {
+      "before": "unsigned long (anonymous namespace)::chain<1u, 1u, ikea::intervals_before::sparse_sizes<16u, unsigned short, unsigned int, 16u>>(ikea::intervals_before::sparse_sizes<16u, unsigned short, unsigned int, 16u> const&, intervals_probe::fixture const&, bool)",
+      "current": "unsigned long (anonymous namespace)::chain<1u, 1u, ikea::intervals::sparse_sizes<16u, unsigned short, unsigned int, 16u, false>>(ikea::intervals::sparse_sizes<16u, unsigned short, unsigned int, 16u, false> const&, intervals_probe::fixture const&, bool)",
+      "before_address": "0x6b250",
+      "current_address": "0x6dc70",
+      "before_instructions": 220,
+      "current_instructions": 220,
+      "before_calls": [
+        "callq 0x20e0 <abort@plt>",
+        "callq 0x20b0 <__cxa_allocate_exception@plt>",
+        "callq 0x2080 <_ZNSt13runtime_errorC1EPKc@plt>",
+        "callq 0x21b0 <__cxa_throw@plt>",
+        "callq 0x2110 <__cxa_free_exception@plt>",
+        "callq 0x21c0 <_Unwind_Resume@plt>"
+      ],
+      "current_calls": [
+        "callq 0x20e0 <abort@plt>",
+        "callq 0x20b0 <__cxa_allocate_exception@plt>",
+        "callq 0x2080 <_ZNSt13runtime_errorC1EPKc@plt>",
+        "callq 0x21b0 <__cxa_throw@plt>",
+        "callq 0x2110 <__cxa_free_exception@plt>",
+        "callq 0x21c0 <_Unwind_Resume@plt>"
+      ],
+      "diff": [
+        "--- \n",
+        "+++ \n",
+        "@@ -28,5 +28,5 @@\n",
+        " testl %r10d, %r10d",
+        " je LOCAL0x26a",
+        "-vpbroadcastw DATA(%rip), %xmm0 # 0x86082 <strlen@GLIBC_2.2.5+0x86082>",
+        "+vpbroadcastw DATA(%rip), %xmm0 # 0x86088 <strlen@GLIBC_2.2.5+0x86088>",
+        " vbroadcasti128 DATA(%rip), %ymm2 # ymm2 = mem[0,1,0,1]",
+        " movl 0x1c(%rdi), %eax"
+      ]
+    },
+    {
+      "before": "unsigned long (anonymous namespace)::chain<1u, 4u, ikea::intervals_before::sparse_sizes<16u, unsigned short, unsigned int, 16u>>(ikea::intervals_before::sparse_sizes<16u, unsigned short, unsigned int, 16u> const&, intervals_probe::fixture const&, bool)",
+      "current": "unsigned long (anonymous namespace)::chain<1u, 4u, ikea::intervals::sparse_sizes<16u, unsigned short, unsigned int, 16u, false>>(ikea::intervals::sparse_sizes<16u, unsigned short, unsigned int, 16u, false> const&, intervals_probe::fixture const&, bool)",
+      "before_address": "0x6b670",
+      "current_address": "0x6e090",
+      "before_instructions": 406,
+      "current_instructions": 406,
+      "before_calls": [
+        "callq 0x20e0 <abort@plt>",
+        "callq 0x20b0 <__cxa_allocate_exception@plt>",
+        "callq 0x2080 <_ZNSt13runtime_errorC1EPKc@plt>",
+        "callq 0x21b0 <__cxa_throw@plt>",
+        "callq 0x2110 <__cxa_free_exception@plt>",
+        "callq 0x21c0 <_Unwind_Resume@plt>"
+      ],
+      "current_calls": [
+        "callq 0x20e0 <abort@plt>",
+        "callq 0x20b0 <__cxa_allocate_exception@plt>",
+        "callq 0x2080 <_ZNSt13runtime_errorC1EPKc@plt>",
+        "callq 0x21b0 <__cxa_throw@plt>",
+        "callq 0x2110 <__cxa_free_exception@plt>",
+        "callq 0x21c0 <_Unwind_Resume@plt>"
+      ],
+      "diff": [
+        "--- \n",
+        "+++ \n",
+        "@@ -23,5 +23,5 @@\n",
+        " movl 0x14(%rax), %ecx",
+        " movl 0x10(%rax), %r15d",
+        "-vpbroadcastw DATA(%rip), %xmm0 # 0x86084 <strlen@GLIBC_2.2.5+0x86084>",
+        "+vpbroadcastw DATA(%rip), %xmm0 # 0x8608a <strlen@GLIBC_2.2.5+0x8608a>",
+        " vbroadcasti128 DATA(%rip), %ymm2 # ymm2 = mem[0,1,0,1]",
+        " movl 0x18(%rax), %ebx"
+      ]
+    },
+    {
+      "before": "unsigned long (anonymous namespace)::chain<1u, 8u, ikea::intervals_before::sparse_sizes<16u, unsigned short, unsigned int, 16u>>(ikea::intervals_before::sparse_sizes<16u, unsigned short, unsigned int, 16u> const&, intervals_probe::fixture const&, bool)",
+      "current": "unsigned long (anonymous namespace)::chain<1u, 8u, ikea::intervals::sparse_sizes<16u, unsigned short, unsigned int, 16u, false>>(ikea::intervals::sparse_sizes<16u, unsigned short, unsigned int, 16u, false> const&, intervals_probe::fixture const&, bool)",
+      "before_address": "0x6be40",
+      "current_address": "0x6e860",
+      "before_instructions": 770,
+      "current_instructions": 770,
+      "before_calls": [
+        "callq 0x20e0 <abort@plt>",
+        "callq 0x20b0 <__cxa_allocate_exception@plt>",
+        "callq 0x2080 <_ZNSt13runtime_errorC1EPKc@plt>",
+        "callq 0x21b0 <__cxa_throw@plt>",
+        "callq 0x2110 <__cxa_free_exception@plt>",
+        "callq 0x21c0 <_Unwind_Resume@plt>"
+      ],
+      "current_calls": [
+        "callq 0x20e0 <abort@plt>",
+        "callq 0x20b0 <__cxa_allocate_exception@plt>",
+        "callq 0x2080 <_ZNSt13runtime_errorC1EPKc@plt>",
+        "callq 0x21b0 <__cxa_throw@plt>",
+        "callq 0x2110 <__cxa_free_exception@plt>",
+        "callq 0x21c0 <_Unwind_Resume@plt>"
+      ],
+      "diff": [
+        "--- \n",
+        "+++ \n",
+        "@@ -22,5 +22,5 @@\n",
+        " movl 0x14(%rdi), %eax",
+        " movl 0x10(%rdi), %r14d",
+        "-vpbroadcastw DATA(%rip), %xmm0 # 0x86086 <strlen@GLIBC_2.2.5+0x86086>",
+        "+vpbroadcastw DATA(%rip), %xmm0 # 0x8608c <strlen@GLIBC_2.2.5+0x8608c>",
+        " vbroadcasti128 DATA(%rip), %ymm2 # ymm2 = mem[0,1,0,1]",
+        " movabsq $0x713987abcd025721, %rsi # imm = 0x713987ABCD025721"
+      ]
+    },
+    {
+      "before": "unsigned long (anonymous namespace)::chain<0u, 1u, ikea::intervals_before::sparse_sizes<64u, unsigned short, unsigned int, 4u>>(ikea::intervals_before::sparse_sizes<64u, unsigned short, unsigned int, 4u> const&, intervals_probe::fixture const&, bool)",
+      "current": "unsigned long (anonymous namespace)::chain<0u, 1u, ikea::intervals::sparse_sizes<64u, unsigned short, unsigned int, 4u, false>>(ikea::intervals::sparse_sizes<64u, unsigned short, unsigned int, 4u, false> const&, intervals_probe::fixture const&, bool)",
+      "before_address": "0x6f820",
+      "current_address": "0x742d0",
+      "before_instructions": 133,
+      "current_instructions": 133,
+      "before_calls": [
+        "callq 0x20e0 <abort@plt>",
+        "callq 0x20b0 <__cxa_allocate_exception@plt>",
+        "callq 0x2080 <_ZNSt13runtime_errorC1EPKc@plt>",
+        "callq 0x21b0 <__cxa_throw@plt>",
+        "callq 0x2110 <__cxa_free_exception@plt>",
+        "callq 0x21c0 <_Unwind_Resume@plt>"
+      ],
+      "current_calls": [
+        "callq 0x20e0 <abort@plt>",
+        "callq 0x20b0 <__cxa_allocate_exception@plt>",
+        "callq 0x2080 <_ZNSt13runtime_errorC1EPKc@plt>",
+        "callq 0x21b0 <__cxa_throw@plt>",
+        "callq 0x2110 <__cxa_free_exception@plt>",
+        "callq 0x21c0 <_Unwind_Resume@plt>"
+      ],
+      "diff": []
+    },
+    {
+      "before": "unsigned long (anonymous namespace)::chain<0u, 4u, ikea::intervals_before::sparse_sizes<64u, unsigned short, unsigned int, 4u>>(ikea::intervals_before::sparse_sizes<64u, unsigned short, unsigned int, 4u> const&, intervals_probe::fixture const&, bool)",
+      "current": "unsigned long (anonymous namespace)::chain<0u, 4u, ikea::intervals::sparse_sizes<64u, unsigned short, unsigned int, 4u, false>>(ikea::intervals::sparse_sizes<64u, unsigned short, unsigned int, 4u, false> const&, intervals_probe::fixture const&, bool)",
+      "before_address": "0x6faa0",
+      "current_address": "0x74550",
+      "before_instructions": 441,
+      "current_instructions": 441,
+      "before_calls": [
+        "callq 0x20e0 <abort@plt>",
+        "callq 0x20b0 <__cxa_allocate_exception@plt>",
+        "callq 0x2080 <_ZNSt13runtime_errorC1EPKc@plt>",
+        "callq 0x21b0 <__cxa_throw@plt>",
+        "callq 0x2110 <__cxa_free_exception@plt>",
+        "callq 0x21c0 <_Unwind_Resume@plt>"
+      ],
+      "current_calls": [
+        "callq 0x20e0 <abort@plt>",
+        "callq 0x20b0 <__cxa_allocate_exception@plt>",
+        "callq 0x2080 <_ZNSt13runtime_errorC1EPKc@plt>",
+        "callq 0x21b0 <__cxa_throw@plt>",
+        "callq 0x2110 <__cxa_free_exception@plt>",
+        "callq 0x21c0 <_Unwind_Resume@plt>"
+      ],
+      "diff": []
+    },
+    {
+      "before": "unsigned long (anonymous namespace)::chain<0u, 8u, ikea::intervals_before::sparse_sizes<64u, unsigned short, unsigned int, 4u>>(ikea::intervals_before::sparse_sizes<64u, unsigned short, unsigned int, 4u> const&, intervals_probe::fixture const&, bool)",
+      "current": "unsigned long (anonymous namespace)::chain<0u, 8u, ikea::intervals::sparse_sizes<64u, unsigned short, unsigned int, 4u, false>>(ikea::intervals::sparse_sizes<64u, unsigned short, unsigned int, 4u, false> const&, intervals_probe::fixture const&, bool)",
+      "before_address": "0x702a0",
+      "current_address": "0x74d50",
+      "before_instructions": 848,
+      "current_instructions": 848,
+      "before_calls": [
+        "callq 0x20e0 <abort@plt>",
+        "callq 0x20b0 <__cxa_allocate_exception@plt>",
+        "callq 0x2080 <_ZNSt13runtime_errorC1EPKc@plt>",
+        "callq 0x21b0 <__cxa_throw@plt>",
+        "callq 0x2110 <__cxa_free_exception@plt>",
+        "callq 0x21c0 <_Unwind_Resume@plt>"
+      ],
+      "current_calls": [
+        "callq 0x20e0 <abort@plt>",
+        "callq 0x20b0 <__cxa_allocate_exception@plt>",
+        "callq 0x2080 <_ZNSt13runtime_errorC1EPKc@plt>",
+        "callq 0x21b0 <__cxa_throw@plt>",
+        "callq 0x2110 <__cxa_free_exception@plt>",
+        "callq 0x21c0 <_Unwind_Resume@plt>"
+      ],
+      "diff": []
+    },
+    {
+      "before": "unsigned long (anonymous namespace)::chain<1u, 1u, ikea::intervals_before::sparse_sizes<64u, unsigned short, unsigned int, 4u>>(ikea::intervals_before::sparse_sizes<64u, unsigned short, unsigned int, 4u> const&, intervals_probe::fixture const&, bool)",
+      "current": "unsigned long (anonymous namespace)::chain<1u, 1u, ikea::intervals::sparse_sizes<64u, unsigned short, unsigned int, 4u, false>>(ikea::intervals::sparse_sizes<64u, unsigned short, unsigned int, 4u, false> const&, intervals_probe::fixture const&, bool)",
+      "before_address": "0x711a0",
+      "current_address": "0x75c50",
+      "before_instructions": 321,
+      "current_instructions": 321,
+      "before_calls": [
+        "callq 0x20e0 <abort@plt>",
+        "callq 0x20b0 <__cxa_allocate_exception@plt>",
+        "callq 0x2080 <_ZNSt13runtime_errorC1EPKc@plt>",
+        "callq 0x21b0 <__cxa_throw@plt>",
+        "callq 0x2110 <__cxa_free_exception@plt>",
+        "callq 0x21c0 <_Unwind_Resume@plt>"
+      ],
+      "current_calls": [
+        "callq 0x20e0 <abort@plt>",
+        "callq 0x20b0 <__cxa_allocate_exception@plt>",
+        "callq 0x2080 <_ZNSt13runtime_errorC1EPKc@plt>",
+        "callq 0x21b0 <__cxa_throw@plt>",
+        "callq 0x2110 <__cxa_free_exception@plt>",
+        "callq 0x21c0 <_Unwind_Resume@plt>"
+      ],
+      "diff": [
+        "--- \n",
+        "+++ \n",
+        "@@ -29,5 +29,5 @@\n",
+        " je LOCAL0x429",
+        " movl 0x1c(%rdi), %eax",
+        "-vpbroadcastw DATA(%rip), %xmm0 # 0x8608e <strlen@GLIBC_2.2.5+0x8608e>",
+        "+vpbroadcastw DATA(%rip), %xmm0 # 0x86094 <strlen@GLIBC_2.2.5+0x86094>",
+        " vbroadcasti128 DATA(%rip), %ymm2 # ymm2 = mem[0,1,0,1]",
+        " movq (%rdi), %r8"
+      ]
+    },
+    {
+      "before": "unsigned long (anonymous namespace)::chain<1u, 4u, ikea::intervals_before::sparse_sizes<64u, unsigned short, unsigned int, 4u>>(ikea::intervals_before::sparse_sizes<64u, unsigned short, unsigned int, 4u> const&, intervals_probe::fixture const&, bool)",
+      "current": "unsigned long (anonymous namespace)::chain<1u, 4u, ikea::intervals::sparse_sizes<64u, unsigned short, unsigned int, 4u, false>>(ikea::intervals::sparse_sizes<64u, unsigned short, unsigned int, 4u, false> const&, intervals_probe::fixture const&, bool)",
+      "before_address": "0x71780",
+      "current_address": "0x76230",
+      "before_instructions": 799,
+      "current_instructions": 799,
+      "before_calls": [
+        "callq 0x20e0 <abort@plt>",
+        "callq 0x20b0 <__cxa_allocate_exception@plt>",
+        "callq 0x2080 <_ZNSt13runtime_errorC1EPKc@plt>",
+        "callq 0x21b0 <__cxa_throw@plt>",
+        "callq 0x2110 <__cxa_free_exception@plt>",
+        "callq 0x21c0 <_Unwind_Resume@plt>"
+      ],
+      "current_calls": [
+        "callq 0x20e0 <abort@plt>",
+        "callq 0x20b0 <__cxa_allocate_exception@plt>",
+        "callq 0x2080 <_ZNSt13runtime_errorC1EPKc@plt>",
+        "callq 0x21b0 <__cxa_throw@plt>",
+        "callq 0x2110 <__cxa_free_exception@plt>",
+        "callq 0x21c0 <_Unwind_Resume@plt>"
+      ],
+      "diff": [
+        "--- \n",
+        "+++ \n",
+        "@@ -22,5 +22,5 @@\n",
+        " movl 0x14(%rdi), %eax",
+        " movl 0x10(%rdi), %r15d",
+        "-vpbroadcastw DATA(%rip), %xmm0 # 0x86090 <strlen@GLIBC_2.2.5+0x86090>",
+        "+vpbroadcastw DATA(%rip), %xmm0 # 0x86096 <strlen@GLIBC_2.2.5+0x86096>",
+        " vbroadcasti128 DATA(%rip), %ymm2 # ymm2 = mem[0,1,0,1]",
+        " movabsq $0x713987abcd025721, %r8 # imm = 0x713987ABCD025721"
+      ]
+    },
+    {
+      "before": "unsigned long (anonymous namespace)::chain<1u, 8u, ikea::intervals_before::sparse_sizes<64u, unsigned short, unsigned int, 4u>>(ikea::intervals_before::sparse_sizes<64u, unsigned short, unsigned int, 4u> const&, intervals_probe::fixture const&, bool)",
+      "current": "unsigned long (anonymous namespace)::chain<1u, 8u, ikea::intervals::sparse_sizes<64u, unsigned short, unsigned int, 4u, false>>(ikea::intervals::sparse_sizes<64u, unsigned short, unsigned int, 4u, false> const&, intervals_probe::fixture const&, bool)",
+      "before_address": "0x72580",
+      "current_address": "0x77030",
+      "before_instructions": 1605,
+      "current_instructions": 1605,
+      "before_calls": [
+        "callq 0x20e0 <abort@plt>",
+        "callq 0x20b0 <__cxa_allocate_exception@plt>",
+        "callq 0x2080 <_ZNSt13runtime_errorC1EPKc@plt>",
+        "callq 0x21b0 <__cxa_throw@plt>",
+        "callq 0x2110 <__cxa_free_exception@plt>",
+        "callq 0x21c0 <_Unwind_Resume@plt>"
+      ],
+      "current_calls": [
+        "callq 0x20e0 <abort@plt>",
+        "callq 0x20b0 <__cxa_allocate_exception@plt>",
+        "callq 0x2080 <_ZNSt13runtime_errorC1EPKc@plt>",
+        "callq 0x21b0 <__cxa_throw@plt>",
+        "callq 0x2110 <__cxa_free_exception@plt>",
+        "callq 0x21c0 <_Unwind_Resume@plt>"
+      ],
+      "diff": [
+        "--- \n",
+        "+++ \n",
+        "@@ -23,5 +23,5 @@\n",
+        " movl 0x14(%rdi), %eax",
+        " movl 0x10(%rdi), %r12d",
+        "-vpbroadcastw DATA(%rip), %xmm0 # 0x86092 <strlen@GLIBC_2.2.5+0x86092>",
+        "+vpbroadcastw DATA(%rip), %xmm0 # 0x86098 <strlen@GLIBC_2.2.5+0x86098>",
+        " vbroadcasti128 DATA(%rip), %ymm2 # ymm2 = mem[0,1,0,1]",
+        " movabsq $0x713987abcd025721, %r8 # imm = 0x713987ABCD025721"
+      ]
+    }
+  ]
+}

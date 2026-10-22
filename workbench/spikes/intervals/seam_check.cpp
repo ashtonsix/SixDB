@@ -156,6 +156,21 @@ void strides_and_filters() {
         need(in::reverse(source,q)==rank,"strided inverse mismatch");
         need(in::reverse(source,q,live)==(rank%3==1?67:rank),"filter redirected point owner");
     }
+    auto sparse_stride=[&]<class W>() {
+        std::array<W,512> values;values.fill(std::numeric_limits<W>::max());
+        for(unsigned r=0;r<80;++r) values[r/16*32+r%16]=r<67?r%7:0;
+        const std::array<std::uint32_t,4> cp{0,ends[63],0xffffffffu,0xffffffffu};
+        const auto bound=in::sparse_sizes<64,W,std::uint32_t,4>{values.data(),cp.data(),67,0,total,6,32}.for_independent_reads();
+        for(unsigned r=0;r<67;++r) need(bound.at(r)==ends[r],"batch prefix consumed strided companion");
+        for(unsigned q=0;q<total;++q) {
+            unsigned upper=0,lower=0;while(ends[upper]<=q) ++upper;
+            while(lower<67&&ends[lower]<q) ++lower;
+            need(in::reverse(bound,q)==upper && in::prepare_upper_bound(bound,q).finish()==upper &&
+                 in::prepare_lower_bound(bound,q).finish()==lower,"strided batch owner/prepared mismatch");
+        }
+    };
+    sparse_stride.template operator()<std::uint8_t>();
+    sparse_stride.template operator()<std::uint16_t>();
     // A fully excluded range does not read geometry or invoke its callback.
     const auto page=std::size_t(sysconf(_SC_PAGESIZE));
     auto *mapping=static_cast<std::byte*>(mmap(nullptr,page*2,PROT_READ|PROT_WRITE,
@@ -176,6 +191,21 @@ void strides_and_filters() {
     std::memset(widths,1,32);const std::uint32_t origin=0;
     in::sparse_sizes<32,std::uint8_t> exact{widths,&origin,32,0,32,1};
     need(exact.at(31)==32,"exact native tail read mismatch");
+    for(unsigned n:{16u,32u,48u}) {
+        auto *tail=reinterpret_cast<std::uint8_t*>(mapping+page-n);
+        std::memset(tail,1,n);
+        in::sparse_sizes<64,std::uint8_t> sparse_exact{tail,&origin,n,0,n,1};
+        need(sparse_exact.at(n-1)==n && sparse_exact.for_independent_reads().at(n-1)==n &&
+             in::reverse(sparse_exact.for_independent_reads(),n-1)==n-1,
+             "sparse prefix crossed its exact native-tail grant");
+    }
+    // A full macrogroup may end at the guard page; it cannot load a fifth group.
+    auto *full_widths=reinterpret_cast<std::uint8_t*>(mapping+page-64);
+    std::memset(full_widths,1,64);
+    in::sparse_sizes<64,std::uint8_t> full_exact{full_widths,&origin,63,0,63,1};
+    full_widths[63]=0;
+    need(full_exact.for_independent_reads().at(62)==63 && in::reverse(full_exact.for_independent_reads(),62u)==62,
+         "full sparse macrogroup tail mismatch");
     munmap(mapping,page*2);
 }
 int main() {

@@ -148,8 +148,12 @@ void verify_source(const image<G, W, P> &data, const Source &source) {
 
 template <unsigned G, class W, class P> void verify(const image<G, W, P> &data) {
     verify_source(data, data.source());
+    verify_source(data, data.source().for_independent_reads());
     verify_source(data, ikea::intervals::sparse_sizes<G,W,P,256/G>{
         data.widths.data(),data.checkpoints.data(),data.count,data.origin,data.extent,data.maximum});
+    const auto ready=ikea::intervals::sparse_sizes<G,W,P,256/G>{
+        data.widths.data(),data.checkpoints.data(),data.count,data.origin,data.extent,data.maximum};
+    verify_source(data,ready.for_independent_reads());
     using Local = std::conditional_t<(u64(G) * std::numeric_limits<W>::max() <= 65535),
                                      std::uint16_t, std::uint32_t>;
     std::array<Local, 256> local_ends{};
@@ -168,7 +172,7 @@ template <unsigned G, class W, class P> void verify(const image<G, W, P> &data) 
 
 template <unsigned G, class W, class P> unsigned cases() {
     unsigned total_cases = 0;
-    for (unsigned n : {0u, 1u, 15u, 16u, 17u, 63u, 64u, 65u, 255u, 256u}) {
+    for (unsigned n : {0u, 1u, 15u, 16u, 17u, 31u, 32u, 33u, 47u, 48u, 49u, 63u, 64u, 65u, 255u, 256u}) {
         for (unsigned pattern = 0; pattern < 4; ++pattern) {
             image<G, W, P> data;
             data.count = n;

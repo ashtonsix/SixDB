@@ -79,8 +79,10 @@ build/clang/intervals/workbench/spikes/intervals/intervals_consumer --maximum 25
 zero groups, signed/wider queries, partial native tails and ordered replacements.
 `consumer.cpp` consumes payload/children after point, inverse, short/full-range work,
 with maintained typed compact and direct controls. It rotates arm order and retains
-all samples. Bytes distinguish actual readable data, controls, capacity and native
-binding/owner storage. Full ranges are ns per complete traversal, not ns per rank.
+all samples. Bytes distinguish assigned data with native field padding, controls,
+capacity and native binding/owner storage. At partial counts, the checkpoint
+capacity read grant also needs readable backing; see the accounting note in
+[the native study](RAISE-BAR.md#final-native-audit-and-qualification-limits). Full ranges are ns per complete traversal, not ns per rank.
 Local ARM VM warm measurements are exploratory; they establish neither DRAM
 residence nor a Zen 5 default. Cold checkpoint→local→payload service and fleet
 qualification remain separate from this first experiment.
@@ -145,3 +147,27 @@ Directory driver with real Objects; those rows contain seven-repetition medians
 and minima, not raw inner samples. Its fixed metric order and local VM noise remain
 limits. [Findings](FINDINGS.md) records selected options, rejected replacements and
 remaining qualification.
+
+## Performance follow-through
+
+[Raising the bar](RAISE-BAR.md) follows LEAD's plan through complete linked caller
+inspection, dependency/resource analysis, rejected algorithms and native Zen5/V2
+comparisons. `latency.cpp` separates true dependent C1 from independent C4/C8
+requests and clustered/random patterns; `consumer.cpp` keeps the precomputed
+useful-work witness. Their results are different contexts and are not pooled.
+`control/sparse_before.h` is the literal 66743fdf source with only its namespace
+changed; `python3 workbench/spikes/intervals/control/audit.py --git` verifies it.
+
+`source.for_independent_reads()` is a compile-time G64 prefix execution option
+over the same bytes. It may read all four admitted native windows and benefits
+some throughput workloads; it is not the C1/clustered default. Inverse keeps the
+serial route. Sparse endpoint reads now avoid a next-window load at exact16/32/48
+tails without adding that check to admitted start reads. All 1920 fixture cases,
+strided companions, prepared operations, external filters and protected tails
+remain part of validation.
+
+Native reproduction uses `raise-bar-native.sh` with the shared worker helper;
+`raise-bar-report.py RESULTS` preserves all arms and losses in separate chain,
+geometry, seam and edit panels. It records explicit ISA/tuning, source/binary
+identities, reversed case/process order and rotated arms. The retained evidence
+and recovery references are linked from the findings above.

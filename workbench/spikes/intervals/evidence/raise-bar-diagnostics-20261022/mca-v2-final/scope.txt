@@ -1,0 +1,35 @@
+Literal backend sequence estimates. No branch probabilities/PC traversal, cache hierarchy, store forwarding or callee execution.
+Recognized x86/AArch64 control-flow sites follow. Branches can be tail calls; inspect linked targets.
+Calls retain LLVM placeholders, NOT complete module costs. Unsupported instructions are never skipped.
+CPU selector: neoverse-v2; noalias=False
+Reported resources: ["V2UnitB.\u0000", "V2UnitB.\u0001", "V2UnitD.\u0000", "V2UnitD.\u0001", "V2UnitFlg.\u0000", "V2UnitFlg.\u0001", "V2UnitFlg.\u0002", "V2UnitL2", "V2UnitL01.\u0000", "V2UnitL01.\u0001", "V2UnitM0", "V2UnitM1", "V2UnitS0", "V2UnitS1", "V2UnitS2", "V2UnitS3", "V2UnitV0", "V2UnitV1", "V2UnitV2", "V2UnitV3"]
+
+Region: prefix47_before
+Model block reciprocal throughput: 3.3333333333333335 cycles; total 2005 synthetic cycles / 100 repetitions
+No recognized call/return/branch in selected region.
+LLVM hasUnmodeledSideEffects instruction indices: []
+
+Region: prefix47_accumulate
+Model block reciprocal throughput: 2.1666666666666665 cycles; total 2204 synthetic cycles / 100 repetitions
+No recognized call/return/branch in selected region.
+LLVM hasUnmodeledSideEffects instruction indices: []
+
+Region: prefix47_current
+Model block reciprocal throughput: 2.6666666666666665 cycles; total 2303 synthetic cycles / 100 repetitions
+No recognized call/return/branch in selected region.
+LLVM hasUnmodeledSideEffects instruction indices: []
+
+Region: owner64_tournament
+Model block reciprocal throughput: 10.5 cycles; total 7303 synthetic cycles / 100 repetitions
+No recognized call/return/branch in selected region.
+LLVM hasUnmodeledSideEffects instruction indices: []
+
+Region: directory4_before
+Model block reciprocal throughput: 4 cycles; total 1004 synthetic cycles / 100 repetitions
+No recognized call/return/branch in selected region.
+LLVM hasUnmodeledSideEffects instruction indices: []
+
+Region: directory4_current
+Model block reciprocal throughput: 2.1666666666666665 cycles; total 1703 synthetic cycles / 100 repetitions
+No recognized call/return/branch in selected region.
+LLVM hasUnmodeledSideEffects instruction indices: []

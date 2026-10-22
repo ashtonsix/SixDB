@@ -1,0 +1,22 @@
+{
+  "kind": "authored observation from completed tool sessions; not raw test output",
+  "source_capture": "c4377b00a50ca04ff41b02c1702aff5af35e5ce53f000d772510569f7bce404b",
+  "native_jobs": [
+    "20261022T160025Z-21d1e540",
+    "20261022T160025Z-a7772bab"
+  ],
+  "local_sanitizers": [
+    "AddressSanitizer",
+    "UndefinedBehaviorSanitizer"
+  ],
+  "local_check_commands": [
+    "cmake --build build/clang/intervals-sanitize --target intervals_check intervals_seam_check -j 2",
+    "build/clang/intervals-sanitize/workbench/spikes/intervals/intervals_check",
+    "build/clang/intervals-sanitize/workbench/spikes/intervals/intervals_seam_check"
+  ],
+  "result": "passed",
+  "fixture_states": 1920,
+  "checked_edits": 4536,
+  "native_validation": "all1920 fixtures/seams/40 Directory shapes/StreamPack histories and boundaries passed in all three ISA profiles",
+  "limits": "warm timings; no PMU stall attribution; placement residuals retained; production not promoted"
+}

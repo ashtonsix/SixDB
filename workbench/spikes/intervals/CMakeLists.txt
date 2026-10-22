@@ -64,3 +64,7 @@ add_custom_target(intervals_validate
   DEPENDS intervals_check intervals_seam_check intervals_directory_check
           ikea_streampack_check ikea_streampack_boundaries_check
   USES_TERMINAL)
+add_executable(intervals_latency latency.cpp)
+sixdb_target(intervals_latency)
+target_compile_options(intervals_latency PRIVATE -fno-vectorize -fno-slp-vectorize)
+target_link_libraries(intervals_latency PRIVATE ikea::intervals)

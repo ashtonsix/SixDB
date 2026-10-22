@@ -3,6 +3,7 @@
 // nonnegative widths, sums fitting Point and initialized final native padding.
 #pragma once
 #include <ikea/intervals/geometry.h>
+#include <ikea/intervals/detail/native.h>
 #include <algorithm>
 #include <concepts>
 #include <cstdint>
@@ -13,7 +14,7 @@ namespace ikea::intervals {
 namespace bl = ikea::boundlist;
 
 template <unsigned Spacing, class Width, std::unsigned_integral Point = std::uint32_t,
-          unsigned CheckpointCapacity = 0>
+          unsigned CheckpointCapacity = 0, bool Independent = false>
 struct sparse_sizes {
     static_assert(Spacing >= 16 && Spacing <= 256 && Spacing % 16 == 0);
     static_assert(std::same_as<Width, std::uint8_t> || std::same_as<Width, std::uint16_t>);
@@ -31,17 +32,33 @@ struct sparse_sizes {
     coordinate extent() const noexcept { return limit; }
     unsigned groups() const noexcept { return count / Spacing + unsigned(count % Spacing != 0); }
 
-    coordinate prefix(unsigned group, unsigned take) const {
-        coordinate result = bl::detail::read_element(checkpoints, group);
-        const Width *base = native_group(group * (Spacing / 16));
-        for (unsigned i = 0; i < take / 16; ++i)
-            result += bl::detail::prefix16_native(base + std::size_t(i) * stride, 16);
-        // A zero residual must not load the next native window (possibly past backing).
-        if (take == Spacing) return result;
-        return result + bl::detail::prefix16_native(base + std::size_t(take / 16) * stride, take % 16);
+    // Prefix execution policy for throughput-oriented rank/range callers.
+    // Inverse routing keeps the measured serial implementation.
+    auto for_independent_reads() const {
+        return sparse_sizes<Spacing,Width,Point,CheckpointCapacity,true>{
+            widths,checkpoints,count,first,limit,maximum,stride};
+    }
+    template<bool Start = false>
+    coordinate prefix(unsigned group,unsigned take) const {
+        coordinate result=bl::detail::read_element(checkpoints,group);
+        const Width *base=native_group(group*(Spacing/16));
+#if defined(__aarch64__) || defined(__AVX2__)
+        if constexpr(Spacing==64 && Independent) {
+            if(count-group*Spacing>48) return result+native_detail::prefix64(base,stride,take);
+        }
+#endif
+        // start(rank) admits rank<count: its final native window exists even
+        // at a zero residual. Endpoints instead use a one-based final window,
+        // so exact16/32/48/64 tails never read the following native group.
+        if constexpr(!Start) if(!take) return result;
+        const unsigned complete=Start ? take/16 : (take-1)/16;
+        for(unsigned i=0;i<complete;++i)
+            result+=bl::detail::prefix16_native(base+std::size_t(i)*stride,16);
+        return result+bl::detail::prefix16_native(base+std::size_t(complete)*stride,
+                                                 Start ? take%16 : (take-1)%16+1);
     }
     coordinate at(unsigned rank) const { return prefix(rank / Spacing, rank % Spacing + 1); }
-    coordinate start(unsigned rank) const { return prefix(rank / Spacing, rank % Spacing); }
+    coordinate start(unsigned rank) const { return prefix<true>(rank / Spacing, rank % Spacing); }
     Width slot_size(unsigned rank) const { return bl::detail::read_element(native_group(rank / 16), rank % 16); }
 
     template <class Sink>
@@ -61,8 +78,7 @@ struct sparse_sizes {
     template <std::integral Query>
     [[gnu::always_inline]] unsigned owner_rank(Query point) const {
         const Point value = static_cast<Point>(point);
-        const unsigned next = bl::detail::checkpoint_boundary<bl::edge::after, CheckpointCapacity>(
-            checkpoints, groups(), value);
+        const unsigned next = bl::detail::checkpoint_boundary<bl::edge::after,CheckpointCapacity>(checkpoints,groups(),value);
         const unsigned group = next - 1, begin = group * Spacing;
         const Point base = bl::detail::read_element(checkpoints, group);
         unsigned offset = static_cast<unsigned>(value - base);
@@ -134,7 +150,7 @@ struct sparse_sizes {
         const bl::detail::prepared_query<Point, Query> query(point);
         if (query.relation) return ready(query.relation < 0 ? 0u : count);
         if (!count || !bl::detail::meets<Edge>(limit, query.value)) return ready(count);
-        const unsigned next = bl::detail::checkpoint_boundary<Edge, CheckpointCapacity>(checkpoints, groups(), query.value);
+        const unsigned next = bl::detail::checkpoint_boundary<Edge,CheckpointCapacity>(checkpoints,groups(),query.value);
         const unsigned group = next ? next - 1 : 0, begin = group * Spacing;
         const Point base = bl::detail::read_element(checkpoints, group);
         if (query.value < base || (Edge == bl::edge::at_or_after && query.value == base)) return ready(begin);

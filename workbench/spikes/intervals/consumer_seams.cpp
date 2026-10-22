@@ -143,10 +143,10 @@ void stream() {
             // The value owner supplies U/liveness; geometry supplies only start.
 
             measure(tag,{
-                {"maintained_typed",[&] {u64 sum=0;for(auto r:ranks) {
+                {"maintained_typed",[&ranks,&access] {u64 sum=0;for(auto r:ranks) {
                     auto v=access.get(r);if(v) sum+=v->size()+(v->empty()?0:std::to_integer<unsigned>((*v)[0]));
                 }return sum;}},
-                {"intervals_fused_owner",[&] {
+                {"intervals_fused_owner",[&ranks,&access] {
                     return in::with_geometry(access,[&](const auto &bound) __attribute__((always_inline)) {
                         u64 sum=0;for(auto r:ranks) {
                             auto v=bound.get(r);
