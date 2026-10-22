@@ -61,6 +61,30 @@ bytes, choose a new format for future data, or migrate an existing image. An
 advice update must not reinterpret old bytes. An old reader and its dictionary,
 coordinate maps and dependent material retain one coherent interpretation.
 
+### Leading planes make the distinction concrete
+
+Ashton's additional requirement is to carry SeriesPack's separated leading
+one/two-byte planes through Frame. The split should occur late enough to expose
+useful entropy, while retaining a predicate that can be interpreted before
+fetching the suffix. This tests both representation structure and operation
+laws: the existence of a head plane alone does not establish its logical meaning.
+
+For an admitted unsigned FOR image, `x = base + residual`, a logical predicate
+can be translated into the residual domain. A comparison can settle rows from
+the residual head and request the suffix only where necessary. Splitting a
+zero-extended u64 working value earlier may expose much less useful information.
+Prediction residuals and arbitrary dictionary codes need different laws; their
+heads cannot inherit the FOR predicate interpretation merely because the same
+packing primitive stores them. Query preparation, exceptions and coordinate
+mapping must preserve the applicability of the chosen route.
+
+The [head-plane experiment](../filter/README.md) keeps two decisions distinct:
+where/how much to split changes the image; guarded versus ordinary filtering can
+change the program on identical bytes. Engine should be able to inspect the
+meaning and dependencies of these alternatives without knowing their native
+mask-reduction instructions. Complete-consumer measurements determine whether
+the extra interpretation and preparation earn their cost.
+
 ## How to investigate fidelity without deciding an interface first
 
 Compare several views of the same small, manually authored candidate universe:
