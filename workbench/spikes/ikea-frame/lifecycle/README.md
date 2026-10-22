@@ -103,6 +103,24 @@ pruning bound. Query demand determines whether tightening that evidence is worth
 doing now. Selected reductions should exclude overridden outputs from the base
 answer, while retaining predecessor residuals needed by later selected values.
 
+The head/bounds experiment suggests another concrete lifecycle comparison: keep
+evidence over the immutable **base**, and compose it with coalesced logical
+overrides. Under the existing exact bounded integer law, SUM is base SUM minus
+the old base contributions of distinct overridden positions plus their current
+contributions; COUNT similarly subtracts/adds the predicate bits (with presence
+and NULL handled explicitly). Repeated writes to one position change one current
+contribution, not several subtractions. Storing the old logical value in an
+override costs space but can avoid a predicted point read on every later query.
+
+That program need not rebase a whole part's head plane or extend/reorder its
+dictionary for each novel override. The old evidence and dictionary still mean
+exactly the old base; selected override contributions are separate exact work.
+Compare it with widening/dirty evidence over the combined image, and charge
+lookup/coalescing, override bytes, complete-query correction and eventual fold.
+After folding changes the base, evidence/editions and any retained old reader
+must remain coherent. This is a proposed discriminating program, not a measured
+lifecycle result or a selected mutation format.
+
 Dictionary, routing and compacted-presence editions are immutable decoding
 dependencies until replaced. The current query category need not be the routing
 basis for old bytes. A one-group conversion must either preserve those editions
