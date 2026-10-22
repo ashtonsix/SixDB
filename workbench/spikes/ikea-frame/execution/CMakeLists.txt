@@ -1,0 +1,4 @@
+add_executable(frame_execution_hash_check hash_check.cpp)
+sixdb_target(frame_execution_hash_check)
+target_compile_options(frame_execution_hash_check PRIVATE -fno-vectorize -fno-slp-vectorize)
+target_link_libraries(frame_execution_hash_check PRIVATE ikea::hashtable)

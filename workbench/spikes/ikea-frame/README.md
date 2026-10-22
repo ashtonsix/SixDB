@@ -83,6 +83,8 @@ Ashton's direction (2026-10-22):
 
 ## Contents
 
+- [Joint research](RESEARCH.md): current frontiers, peer ownership and shared
+  witnesses; the question index remains the single list of open questions.
 - [Architectural review](REVIEW.md): Frame's place in SixDB, opportunities and
   pitfalls from actual Calico sources, and competing experiments to raise the
   ambition beyond a codec pipeline.
