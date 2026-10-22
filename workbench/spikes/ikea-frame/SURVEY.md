@@ -89,10 +89,16 @@ partition on encoded data, and string predicates over compressed bodies. The
 is the main negative: LIKE over FSST or front-coded bodies ran 5–43× slower than
 the raw memchr sweep, widening with selectivity.
 
-Two Calico constraints shaped all of this and are not SixDB's by default:
-byte-identical state across ISAs and replicas, and **no in-band learning** (all
-fitting offline, artifacts version-bound). The rev 2 "priors with bad-guess
-fallback" is in-band adaptation, which Calico forbade.
+Two Calico constraints shaped all of this: byte-identical state across ISAs
+and replicas, and **no in-band learning** (all fitting offline, artifacts
+version-bound). SixDB does not inherit them. Following Orbital's data model
+([embedded Objects](../../../orbital/README.md#embedded-objects)), Frame formats
+are Representations of one Object: all Objects of the same identity must be
+logically identical, their representations convertible, and writes applied
+deterministically. Ashton confirmed this on 2026-10-22. In-band priors may
+therefore choose different bytes on different replicas. The constraint moves to
+logical results: an operation's answer must not depend on which representation
+served it (§5, lesson 5).
 
 ## 3. Current Ikea
 
@@ -155,7 +161,10 @@ SeriesPack's tile geometry.
 5. **Encoded comparison does not license encoded arithmetic.** SixDB's
    [semantics note](../../notebook/representations-and-planning.md#plans-that-keep-improving)
    already says so; floating sums over ALP integers are exact and deterministic
-   but differ from sequential IEEE addition. Engine must declare which it wants.
+   but differ from sequential IEEE addition. Because equivalent representations
+   must give logically identical results, an encoded kernel cannot return a
+   representation-dependent answer: floating aggregates need exact or
+   order-defined semantics, such as kmath's superaccumulators.
 6. **Segment-local codes complicate cross-segment work.** Grouping, merging and
    joins on codes need a translation or a stable fingerprint.
 7. **Possibility is not profit.** R6's compressed string predicates and
@@ -170,8 +179,11 @@ SeriesPack's tile geometry.
 
 - What does a matrix cell need to carry for Engine: a yes/no capability, a
   cost model, a measured cost per platform, or an executable kernel handle?
-- Is byte determinism across replicas and ISAs a SixDB requirement for Frame
-  formats? It decides whether in-band priors may reach stored bytes.
+- Conversion between Frame representations is now a first-class obligation
+  (Orbital `adopt` requires exact logical equivalence). Calico routed re-fits
+  through a canonical form (n encoders + n decoders, never n² converters);
+  MorphStore converts directly between compressed formats. Which pairs earn a
+  direct converter?
 - Should the patch sideband be keyed per block, per group or per part? Every
   family pays for its lookup.
 - Is access control a predicate composed like any filter (policy mask ANDed
