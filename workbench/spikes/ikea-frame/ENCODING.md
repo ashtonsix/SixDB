@@ -316,7 +316,9 @@ overrides by iterating the bitmap.
 ### Separated filter heads (Ashton, 2026-10-22)
 
 Frame carries SeriesPack's separated leading one- or two-byte planes (H = 8 or
-16). They sit late enough in the pipeline to hold useful entropy, yet keep a
+16). **The head split comes late** (Ashton, confirmed from the models): after
+frame of reference, at part or block level, not on the raw working value,
+whose top byte is mostly shared and nearly useless. They sit late enough in the pipeline to hold useful entropy, yet keep a
 predicate meaning that doesn't need the suffix. Ikea LEAD's
 [filter consumer](filter/README.md) owns the implementation. Which cut
 satisfies both conditions depends on the stage:
