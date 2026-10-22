@@ -5,6 +5,8 @@
 #include <span>
 
 namespace segdir {
+inline std::uint32_t bucket_hash(std::uint32_t p) {return std::uint32_t((p*UINT64_C(0x9e3779b97f4a7c15))>>32);}
+inline std::uint64_t slot_hash(std::uint32_t p) {return ((p^0x5bd1e995u)*UINT64_C(0xc2b2ae3d27d4eb4f))>>24;}
 struct Key {std::array<std::uint8_t,16> b{};};
 struct Dirent {std::array<std::uint64_t,8> w{};};
 static_assert(sizeof(Dirent)==64);
@@ -27,6 +29,7 @@ struct Config {
   bool hash_index=false;     // prefix -> leaf pages at L <= J
   bool inline_hash=false;    // prefix -> dirent pages at L <= J; leaves keep only prefixes
   unsigned page_target=192;  // mean entries per hash page
+  bool summary=true;         // every 16th separator/prefix in the header line; keys in a last Part
   bool fenced() const {return layer>j;}
   bool hashed() const {return hash_index||inline_hash;}
 };
@@ -71,6 +74,11 @@ public:
   const Config& config() const {return c_;}
   std::uint64_t resident_bytes() const {return store_->resident_bytes(ns_);}
   std::uint64_t resident_objects() const {return store_->resident_objects(ns_);}
+  // Layout facts a separate read path needs.
+  std::uint64_t root() const {return ns_<<40;}
+  std::uint64_t page_name(std::uint64_t page) const {return ns_<<40|std::uint64_t(1)<<39|page;}
+  unsigned page_level() const {return level_;}
+  std::uint64_t page_split() const {return split_;}
 
 private:
   struct Step {std::uint64_t name{};Node node;unsigned index{};bool dirty{};};
@@ -82,9 +90,7 @@ private:
   std::uint64_t split_{},entries_{};
   std::unordered_map<std::uint32_t,std::optional<Dirent>> pending_;  // empty erases
 
-  std::uint64_t root() const {return ns_<<40;}
   std::uint64_t fresh() {return ns_<<40|next_name_++;}
-  std::uint64_t page_name(std::uint64_t page) const {return ns_<<40|std::uint64_t(1)<<39|page;}
   int cmp(const Key& a,const Key& b) const;
   int cmp(const std::byte* a,const Key& b) const;
   Node decode(const ObjectPtr&) const;
@@ -98,6 +104,12 @@ private:
   void moved(const Node& leaf,std::uint64_t name);
   Node concat(Node left,const Node& right,const Node& parent,unsigned right_index) const;
   void leftmost(Cursor&,ObjectPtr) const;
+  template<class Less,class SummaryLess>
+  unsigned first_not(unsigned begin,unsigned n,SummaryLess,Less) const;
+  unsigned route(const Object&,unsigned n,std::uint32_t prefix) const;
+  unsigned route(const Object&,unsigned n,const Key& low) const;
+  unsigned lower(const Object&,unsigned n,std::uint32_t prefix) const;
+  unsigned lower(const Object&,unsigned n,const Key& low) const;
   // Hash pages
   std::uint64_t bucket(std::uint32_t prefix) const;
   std::uint64_t pages() const {return (std::uint64_t(1)<<level_)+split_;}
@@ -132,13 +144,14 @@ public:
   const Config& config() const {return c_;}
   std::uint64_t resident_bytes() const {return store_->resident_bytes(ns_);}
   std::uint64_t resident_objects() const {return store_->resident_objects(ns_);}
+  unsigned bits() const {return bits_;}
+  std::uint64_t name(std::uint32_t group) const {return ns_<<40|1|std::uint64_t(group)<<1;}
+  std::uint64_t roster() const {return ns_<<40;}
 private:
   Store* store_;
   Config c_;
   unsigned bits_;
   std::uint64_t ns_;
-  std::uint64_t name(std::uint32_t group) const {return ns_<<40|1|std::uint64_t(group)<<1;}
-  std::uint64_t roster() const {return ns_<<40;}
   std::vector<std::pair<std::uint32_t,Dirent>> entries(std::uint32_t group) const;
   void write(std::uint32_t group,const std::vector<std::pair<std::uint32_t,Dirent>>&);
   bool enter(Cursor&,unsigned group_rank) const;

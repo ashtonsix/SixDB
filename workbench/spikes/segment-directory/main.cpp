@@ -1,4 +1,4 @@
-#include "layer.h"
+#include "workload.h"
 #include <algorithm>
 #include <cstdio>
 #include <cstdlib>
@@ -11,93 +11,6 @@
 using namespace segdir;
 
 namespace {
-using Rng=std::mt19937_64;
-
-Key key(std::uint64_t v) {
-  Key k;
-  for(int i=0;i<8;++i) k.b[i]=std::uint8_t(v>>(56-8*i));
-  return k;
-}
-std::uint64_t value(const Key& k) {
-  std::uint64_t v=0;
-  for(int i=0;i<8;++i) v=v<<8|k.b[i];
-  return v;
-}
-Dirent dirent(std::uint32_t prefix,std::uint64_t version) {
-  Dirent d;
-  for(unsigned i=0;i<8;++i) d.w[i]=(std::uint64_t(prefix)<<16|version)*(2*i+1);
-  return d;
-}
-
-struct Workload {
-  unsigned layer;
-  std::size_t count;
-  bool dense;  // half the prefixes of one region of 2*count, else spread over the layer
-  std::uint64_t lo{},hi{};  // birth domain [lo, hi)
-};
-
-// Prefixes in order with monotone logical fences. One gap in twenty is zero,
-// so equal keys cross Segment (and so partition) boundaries.
-std::map<std::uint32_t,Entry> populate(Workload& w,Rng& rng) {
-  auto domain=std::uint64_t(1)<<(8*w.layer);
-  std::vector<std::uint32_t> ps;
-  if(w.dense) {
-    w.lo=std::min<std::uint64_t>(domain-2*w.count,UINT64_C(0x12000000)>>(32-8*w.layer));
-    w.hi=w.lo+2*w.count;
-    std::vector<std::uint32_t> all(2*w.count);
-    for(std::size_t i=0;i<all.size();++i) all[i]=std::uint32_t(w.lo+i);
-    std::shuffle(all.begin(),all.end(),rng);
-    ps.assign(all.begin(),all.begin()+w.count);
-  } else {
-    w.lo=0;w.hi=domain;
-    std::unordered_set<std::uint32_t> seen;
-    while(seen.size()<w.count) seen.insert(std::uint32_t(rng()%domain));
-    ps.assign(seen.begin(),seen.end());
-  }
-  std::sort(ps.begin(),ps.end());
-  std::map<std::uint32_t,Entry> out;
-  std::uint64_t v=0;
-  for(auto p:ps) {
-    v+=rng()%20?1+rng()%(UINT64_C(1)<<30):0;
-    Entry e{p,key(v),{},dirent(p,0)};
-    v+=rng()%(UINT64_C(1)<<28);
-    e.max=key(v);
-    out.emplace(p,e);
-  }
-  return out;
-}
-
-// Fences for a new Segment between its ordered neighbours.
-Entry born(const std::map<std::uint32_t,Entry>& o,std::uint32_t p,std::uint64_t version) {
-  auto next=o.lower_bound(p);
-  std::uint64_t lo=next==o.begin()?0:value(std::prev(next)->second.max);
-  std::uint64_t hi=next==o.end()?lo+(UINT64_C(1)<<31):value(next->second.min);
-  return {p,key(lo+(hi-lo)/3),key(lo+2*(hi-lo)/3),dirent(p,version)};
-}
-// Widened fences for an existing Segment that gained records at both ends.
-Entry widened(const std::map<std::uint32_t,Entry>& o,std::uint32_t p,std::uint64_t version) {
-  auto it=o.find(p);
-  auto e=it->second;
-  std::uint64_t lo=it==o.begin()?0:value(std::prev(it)->second.max);
-  std::uint64_t hi=std::next(it)==o.end()?value(e.max)+(UINT64_C(1)<<31):value(std::next(it)->second.min);
-  e.min=key(lo+(value(e.min)-lo)/2);
-  e.max=key(value(e.max)+(hi-value(e.max))/2);
-  e.dirent=dirent(p,version);
-  return e;
-}
-std::uint32_t absent(const std::map<std::uint32_t,Entry>& o,const Workload& w,Rng& rng) {
-  for(;;) {
-    auto p=std::uint32_t(w.lo+rng()%(w.hi-w.lo));
-    if(!o.contains(p)) return p;
-  }
-}
-std::uint32_t present(const std::map<std::uint32_t,Entry>& o,const std::vector<std::uint32_t>& keys,Rng& rng) {
-  for(;;) {
-    auto p=keys[rng()%keys.size()];
-    if(o.contains(p)) return p;
-  }
-}
-
 void require(bool ok,const char* what) {
   if(!ok) {std::fprintf(stderr,"check failed: %s\n",what);std::exit(1);}
 }
@@ -184,6 +97,8 @@ int check() {
     c.leaf_capacity=8;c.inner_capacity=4;c.tile=3;c.merge_below=0.5;
     cases.push_back({"tree",c});
     auto u=c;u.tile=0;u.fill=1;cases.push_back({"tree untiled full",u});
+    auto ns=c;ns.summary=false;cases.push_back({"tree no summary",ns});
+    auto wide=c;wide.leaf_capacity=40;wide.inner_capacity=36;cases.push_back({"tree wide nodes",wide});
     auto f=c;f.bounded_root=false;f.exact_bounds=true;f.merge_below=1.0/3;cases.push_back({"flat",f});
     if(!c.fenced()) {auto h=c;h.hash_index=true;h.page_target=6;cases.push_back({"hash",h});}
     if(!c.fenced()) {auto h=c;h.inline_hash=true;h.page_target=5;cases.push_back({"inline hash",h});}
@@ -310,13 +225,15 @@ int run(int argc,char** argv) {
     Config c;c.layer=layer;c.j=j;
     if(v=="flat") {
       // Old count-balanced control: full leaves, one unbounded root of 64-byte rows.
-      c.fill=1;c.tile=0;c.bounded_root=false;c.exact_bounds=true;c.merge_below=1.0/3;
+      c.fill=1;c.tile=0;c.bounded_root=false;c.exact_bounds=true;c.merge_below=1.0/3;c.summary=false;
       Tree t(s,c,1);measure("flat",t,s,o,w,rng);
     } else if(v.starts_with("natural")) {
       unsigned bits=unsigned(std::stoul(std::string(v.substr(7))));
       Natural n(s,c,bits,1);measure(std::string(v).c_str(),n,s,o,w,rng);
     } else if(v=="tree") {
       Tree t(s,c,1);measure("tree",t,s,o,w,rng);
+    } else if(v=="tree-nosum") {
+      c.summary=false;Tree t(s,c,1);measure("tree-nosum",t,s,o,w,rng);
     } else if(v=="tree-untiled") {
       c.tile=0;Tree t(s,c,1);measure("tree-untiled",t,s,o,w,rng);
     } else if(v=="tree-hash") {

@@ -68,14 +68,14 @@ The controls reproduce the previous spike's structures: `flat` has full
 leaves, one unbounded root and 64-byte exact-bound rows; `naturalB` has one
 inline-dirent hash per `prefix >> B`.
 
-## Counters, not timings
+## Counters
 
 [`store.h`](store.h) models Orbital Objects: stable names, versions made of
 immutable Parts, and unchanged Parts shared with the previous version. Edits
 count new Part bytes and published or erased Objects. Reads count Object visits
 and distinct 64-byte lines touched by the real search code, with each Part
 line-aligned. Every line is counted as a miss, so caching of upper levels is
-not modelled. There are no clocks here. Edits are single and applied in
+not modelled. Edits are single and applied in
 sequence from the bulk-built state, so the first births see build slack.
 K = 12. "Dense" means half the prefixes of one region of 2N; "spread" is
 uniform over the layer's domain.
@@ -114,43 +114,92 @@ birth. Flat goes from 7.7 KB to 721 KB. Reads pay two extra Object visits at
 At L4 with spread keys, natural24 behaves like natural16 at L3 above (590 KB
 per edit). With dense L4 keys it is the 151 MB row.
 
+These tables predate in-node summaries. Every 16th separator or prefix now sits
+in the node's header line, and every 16th key in a small Part. That cuts tree
+point lookups from 17.0 to 12.0 lines at 1M, and logical seeks from 23.7 to
+21.6. Edits grow by about 100 bytes because the header changes with each birth.
+
+## Read timings
+
+[`image.h`](image.h) flattens each variant's built layout into one aligned
+arena. Every Object is a 64-byte record in one name table holding its Part
+offsets, so a visit is one table probe, and every variant pays for visits the
+same way. That is a stand-in for Orbital's name resolution, not a measurement
+of it. The lean views in `image.h` read the published bytes directly, and are
+checked against the model before timing. Edits aren't timed, because the
+model's writer decodes and re-encodes vectors, which is nothing like a
+production writer.
+
+Graviton4 (`c8g.2xlarge`), one pinned CPU, medians of seven alternating
+repetitions, ns per operation ([evidence](evidence/reads-neoverse-v2-20261022/README.md)).
+"Dependent" chains each lookup on the previous result; "independent" lets them
+overlap.
+
+**At or below J, L3 spread** (dense and L4 agree within ~10%):
+
+| Variant | Segments | point, dependent | point, independent | seek + read | scan / entry |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| tree | 64K | 113 | 69 | 73 | **2.8** |
+| tree-hash | 64K | 121 | 58 | 77 | 3.0 |
+| tree-inline24 | 64K | 72 | 26 | 122 | 25.9 |
+| natural16 (old) | 64K | 50 | 16 | 72 | 8.1 |
+| tree | 1M | 298 | 177 | 183 | **4.2** |
+| tree-hash | 1M | 435 | 184 | 192 | 4.9 |
+| tree-inline24 | 1M | 240 | 68 | 302 | 68.2 |
+| natural16 (old) | 1M | 145 | 36 | 195 | 20.1 |
+| tree | 4M | 434 | 231 | 247 | **4.4** |
+| tree-hash | 4M | 626 | 278 | 258 | 4.5 |
+| tree-inline24 | 4M | 350 | 93 | 488 | 92.5 |
+| natural16 (old) | 4M | 168 | 38 | 300 | 21.0 |
+
+**Above J, L4 J = 0, spread:**
+
+| Variant | Segments | point, dependent | logical seek + read | scan / entry |
+| --- | ---: | ---: | ---: | ---: |
+| flat (old) | 1M | 277 | 333 | 4.6 |
+| tree | 1M | 310 | 388 | 5.2 |
+| tree, no summaries | 1M | 311 | 368 | 5.2 |
+| flat (old) | 4M | 413 | 494 | 5.1 |
+| tree | 4M | 443 | 581 | 5.4 |
+| tree, no summaries | 4M | 455 | 526 | 5.4 |
+
 ## What this shows
 
-1. **A bounded, deepening root removes the flat root's growth.** Births drop
-   from 721 KB to 6.3 KB at 1M Segments, and the drop holds at any
-   population. The cost is a deeper descent: 4 Objects instead of 2 at 1M,
-   with the same line count. Upper levels are small and hot, so those visits
-   are probably cheap, but that is an assumption until timed.
+1. **A bounded, deepening root removes the flat root's growth for about 10%
+   on reads.** Births drop from 721 KB to 6.3 KB at 1M Segments and stay
+   there. Two extra Object visits cost 7–12% on point reads and 15–18% on
+   logical seeks at 1M and 4M.
 2. **Slack and loose separators keep most edits to one leaf.** After a 75%
-   build, the first births don't split. Births mostly don't touch the parent.
-3. **Bounding hash pages by hash bits fixes the population problem, with
-   dirents inline or not.** `tree-inline24` keeps the brief's one-Object,
-   ~3.5-line point access and edits ~4 KB regardless of clustering. That is
-   40,000× less than natural24 at L3. The trade-off is in ordered scans, which
-   pay a hash probe and an Object visit per entry (3.5 lines vs 1.08).
-4. **Leaves with a hash index are the middle option.** They need 2 Objects and
-   ~7 lines per point lookup, scan at 1.08 lines, and keep value edits at one
-   1 KB tile. Births cost 2.7× more than the plain tree because the hash page
-   and leaf splits rewrite pages. Dropping the hash gives the cheapest edits and
-   smallest footprint (68 B/Segment), but 17 lines and 4 Objects per lookup at 1M.
-5. **Hash layers don't need fences.** Leaving them out saves 24 of 92
-   bytes per Segment at K = 12. Physical order is logical order here, so
-   seeks use the prefix directly. Nothing in this model needs suffix pruning.
-6. **Interior search is line-hungry.** At 96 rows per node, a binary search
-   over 4-byte separators touches about four lines per node. An in-node
-   summary line, or Eytzinger order, would likely halve descent lines for
-   every tree variant. It's the cheapest next improvement.
+   build, the first births don't split, and births mostly leave the parent
+   alone.
+3. **Object visits, not lines, set read time.** Natural partitions are the
+   fastest point path, most likely because there are only a few hundred of
+   them, so their name-table entries stay cached (inferred, not profiled). In-node summaries cut line counts by a third
+   but made no measurable difference to time: adjacent lines in one node are
+   cheap. Line counters overstate the cost inside a node and understate the
+   cost of visiting an Object.
+4. **The prefix→leaf hash index loses.** It is 45% slower than plain descent on
+   dependent points, because the descent's upper levels are hot and a hash
+   page is not. It also costs 2.7× more per birth. Dropped.
+5. **Your design (dirents inline in bounded hash pages) and dirents in leaves
+   trade point speed for scan speed.** Inline is 1.2× faster on dependent
+   points and 2.5–2.6× faster on independent points. Leaves are 16–21× faster
+   on scans and 1.6–2× faster on seek+read, edit 1–4 KB against ~4 KB, and
+   take 68 B/Segment against 145. Bounding inline pages by hash bits removes
+   natural24's 151 MB edits either way.
+6. **Hash layers don't need fences.** Leaving them out saves 24 of 92 bytes per
+   Segment at K = 12.
 
 ## Open next
 
-- Time the three treatments at or below J natively on point, scan and
-  edit loops, with upper levels warm. The counters can't say whether one extra
-  Object visit costs more than scanning 2.4 extra lines per entry.
-- Add in-node search summaries and re-measure descent.
+- Choose dirents in leaves or dirents inline at or below J. Queries start with
+  a seek and then descend in preorder, which favours leaves, unless point
+  lookups at the hash layers dominate some workload.
+- Visit cost dominates, so measure Orbital's real name resolution and decide
+  whether parents can hold direct references to children.
 - Batched edits, steady churn, and runs of births at one hot spot
   (append-heavy). Edits here are single and uniformly placed.
-- Bind the chosen layout to `engine::material` Objects and Scopes. The
-  counter model maps one Part to one material Part.
+- Bind the chosen layout to `engine::material` Objects and Scopes.
 
 ## Reproduce
 
@@ -158,16 +207,20 @@ On Linux from the SixDB root (prefix with `orb -m ubuntu` on macOS):
 
 ```sh
 cmake --preset dev -B build/segment-directory -DSIXDB_SPIKES=segment-directory
-cmake --build build/segment-directory --target segment_directory
+cmake --build build/segment-directory --target segment_directory segment_directory_bench
 build/segment-directory/workbench/spikes/segment-directory/segment_directory --check
 workbench/spikes/segment-directory/run.sh > build/segment-directory/counters.txt
+python3 workbench/tools/worker.py run workbench/spikes/segment-directory/bench.sh \
+  --machine neoverse-v2 --instance-type c8g.2xlarge --env SIXDB_BUILD_JOBS=8
 ```
 
-`--check` compares 56 configurations against an ordered oracle. Each runs
+`--check` compares 80 configurations against an ordered oracle. Each runs
 12,000 random births, deaths, fence changes, value edits and identical
-replacements, with small capacities so trees reach 3–5 levels, drain and
-regrow. It validates separators, hash pages, find, prefix and logical seeks,
-and that identical replacements publish nothing. Deliberately broken separator
-upkeep, exact-bound rows and hash-page moves each fail the check. The full
-matrix takes about two minutes. A single row is
-`segment_directory run LAYER J COUNT dense|spread VARIANT...`.
+replacements. Capacities are small, so trees reach 3–5 levels, drain and
+regrow, and some cases use nodes wide enough for summaries. It validates
+separators, hash pages, find, prefix and logical seeks, and that identical
+replacements publish nothing. Deliberately broken separator upkeep,
+exact-bound rows and hash-page moves each fail the check. The counter matrix
+takes about two minutes. Single rows
+are `segment_directory run LAYER J COUNT dense|spread VARIANT...` and
+`segment_directory_bench LAYER J COUNT dense|spread QUERIES REPS VARIANT...`.

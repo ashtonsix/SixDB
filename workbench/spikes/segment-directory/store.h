@@ -33,9 +33,16 @@ struct Trace {
 };
 inline Trace* trace=nullptr;
 
-inline void touch(const Part& p,std::size_t offset,std::size_t length) {
+// Timing builds define SEGDIR_TRACE=0 so reads carry no counting branches.
+#ifndef SEGDIR_TRACE
+#define SEGDIR_TRACE 1
+#endif
+
+inline void touch([[maybe_unused]] const Part& p,[[maybe_unused]] std::size_t offset,[[maybe_unused]] std::size_t length) {
+#if SEGDIR_TRACE
   if(!trace||!length) return;
   for(auto line=offset>>6;line<=(offset+length-1)>>6;++line) trace->lines.insert(p.id<<24|line);
+#endif
 }
 template<class T> T load(const Part& p,std::size_t index) {
   T value;
@@ -65,7 +72,9 @@ class Store {
 public:
   Written written;
   ObjectPtr get(std::uint64_t name) const {
+#if SEGDIR_TRACE
     if(trace) ++trace->visits;
+#endif
     return peek(name);
   }
   // Writers inspect their basis without charging read counters.
@@ -96,6 +105,7 @@ public:
   void erase(std::uint64_t name) {
     if(objects_.erase(name)) ++written.erased;
   }
+  template<class F> void each(F&& f) const {for(auto& [name,o]:objects_) f(name,*o);}
   std::uint64_t resident_bytes(std::uint64_t name_space) const {
     std::uint64_t total=0;
     for(auto& [name,o]:objects_) if(name>>40==name_space) for(auto& p:o->parts) total+=p->bytes.size();

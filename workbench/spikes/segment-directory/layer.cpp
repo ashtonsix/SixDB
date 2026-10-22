@@ -9,13 +9,12 @@
 namespace segdir {
 namespace {
 constexpr std::size_t row_bytes=64;
+constexpr unsigned summary_block=16;
 constexpr std::size_t natural_slot=72;
 
 void require(bool ok,const char* what) {
   if(!ok) throw std::logic_error(what);
 }
-std::uint32_t bucket_hash(std::uint32_t p) {return std::uint32_t((p*UINT64_C(0x9e3779b97f4a7c15))>>32);}
-std::uint64_t slot_hash(std::uint32_t p) {return ((p^0x5bd1e995u)*UINT64_C(0xc2b2ae3d27d4eb4f))>>24;}
 std::vector<std::byte> header(std::uint32_t a,std::uint32_t b) {
   std::vector<std::byte> h(8);
   std::memcpy(h.data(),&a,4);
@@ -53,7 +52,8 @@ Tree::Node Tree::decode(const ObjectPtr& o) const {
   if(!height) {
     n.prefix=segdir::decode<std::uint32_t>(*o->parts[i++]);
     if(c_.fenced()) {n.min=keys(*o->parts[i++]);n.max=keys(*o->parts[i++]);}
-    for(;i<o->parts.size();++i) {
+    auto end=o->parts.size()-(c_.summary&&c_.fenced());
+    for(;i<end;++i) {
       auto tile=segdir::decode<Dirent>(*o->parts[i]);
       n.dirent.insert(n.dirent.end(),tile.begin(),tile.end());
     }
@@ -83,7 +83,13 @@ void Tree::write(std::uint64_t name,const Node& n) {
     for(std::size_t i=0;i<ks.size();++i) std::memcpy(b.data()+i*c_.k,ks[i].b.data(),c_.k);
     return b;
   };
-  add(header(std::uint32_t(n.size()),n.height));
+  auto h=header(std::uint32_t(n.size()),n.height);
+  const auto& plane=n.height?n.sep:n.prefix;
+  if(c_.summary) for(std::size_t i=0;i<plane.size();i+=summary_block) {
+    h.resize(h.size()+4);
+    std::memcpy(h.data()+h.size()-4,&plane[i],4);
+  }
+  add(std::move(h));
   if(!n.height) {
     add(encode(n.prefix));
     if(c_.fenced()) {add(keys(n.min));add(keys(n.max));}
@@ -106,6 +112,12 @@ void Tree::write(std::uint64_t name,const Node& n) {
       }
       add(std::move(rows));
     }
+  }
+  if(c_.summary&&c_.fenced()) {
+    const auto& ks=n.height?n.lsep:n.max;
+    std::vector<Key> sampled;
+    for(std::size_t i=0;i<ks.size();i+=summary_block) sampled.push_back(ks[i]);
+    add(keys(sampled));
   }
   store_->put(name,std::move(parts));
 }
@@ -400,6 +412,43 @@ unsigned leaf_dirent_part(const Config& c) {return c.fenced()?4:2;}
 unsigned child_part(const Config& c) {return c.fenced()?3:2;}
 }
 
+// First index in [begin, n) where less() fails. With summaries, the header
+// line (or key summary Part) picks one 16-entry block first.
+template<class Less,class SummaryLess>
+unsigned Tree::first_not(unsigned begin,unsigned n,SummaryLess summary_less,Less less) const {
+  unsigned lo=begin,hi=n;
+  if(c_.summary&&n>summary_block) {
+    unsigned blocks=(n+summary_block-1)/summary_block,blo=1,bhi=blocks;
+    while(blo<bhi) {auto mid=(blo+bhi)/2;if(summary_less(mid)) blo=mid+1;else bhi=mid;}
+    // Every block before blo starts below the target; block blo does not.
+    lo=std::max(begin,(blo-1)*summary_block);
+    hi=std::min(n,blo*summary_block);
+  }
+  while(lo<hi) {auto mid=(lo+hi)/2;if(less(mid)) lo=mid+1;else hi=mid;}
+  return lo;
+}
+
+unsigned Tree::route(const Object& o,unsigned n,std::uint32_t p) const {
+  auto& h=*o.parts[0];
+  return first_not(1,n,[&](unsigned b) {return load<std::uint32_t>(h,2+b)<=p;},
+                   [&](unsigned i) {return load<std::uint32_t>(*o.parts[1],i)<=p;})-1;
+}
+unsigned Tree::lower(const Object& o,unsigned n,std::uint32_t p) const {
+  auto& h=*o.parts[0];
+  return first_not(0,n,[&](unsigned b) {return load<std::uint32_t>(h,2+b)<p;},
+                   [&](unsigned i) {return load<std::uint32_t>(*o.parts[1],i)<p;});
+}
+unsigned Tree::route(const Object& o,unsigned n,const Key& low) const {
+  auto& sum=*o.parts.back();
+  return first_not(1,n,[&](unsigned b) {return cmp(bytes(sum,b*c_.k,c_.k),low)<0;},
+                   [&](unsigned i) {return cmp(bytes(*o.parts[2],i*c_.k,c_.k),low)<0;})-1;
+}
+unsigned Tree::lower(const Object& o,unsigned n,const Key& low) const {
+  auto& sum=*o.parts.back();
+  return first_not(0,n,[&](unsigned b) {return cmp(bytes(sum,b*c_.k,c_.k),low)<0;},
+                   [&](unsigned i) {return cmp(bytes(*o.parts[3],i*c_.k,c_.k),low)<0;});
+}
+
 std::optional<Dirent> Tree::find(std::uint32_t p) const {
   ObjectPtr o;
   if(c_.inline_hash) {
@@ -419,14 +468,11 @@ std::optional<Dirent> Tree::find(std::uint32_t p) const {
     o=store_->get(root());
     if(!o) return std::nullopt;
     for(auto [n,h]=header(*o);h;std::tie(n,h)=header(*o)) {
-      std::uint32_t lo=1,hi=n;
-      while(lo<hi) {auto mid=(lo+hi)/2;if(load<std::uint32_t>(*o->parts[1],mid)<=p) lo=mid+1;else hi=mid;}
-      o=store_->get(load<std::uint64_t>(*o->parts[child_part(c_)],lo-1));
+      o=store_->get(load<std::uint64_t>(*o->parts[child_part(c_)],route(*o,n,p)));
     }
   }
   auto n=header(*o).first;
-  std::uint32_t lo=0,hi=n;
-  while(lo<hi) {auto mid=(lo+hi)/2;if(load<std::uint32_t>(*o->parts[1],mid)<p) lo=mid+1;else hi=mid;}
+  auto lo=lower(*o,n,p);
   if(lo==n||load<std::uint32_t>(*o->parts[1],lo)!=p) return std::nullopt;
   auto t=c_.tile?lo/c_.tile:0,r=c_.tile?lo%c_.tile:lo;
   Dirent d;
@@ -466,14 +512,12 @@ Tree::Cursor Tree::seek(std::uint32_t p) const {
   auto o=store_->get(root());
   if(!o) return c;
   for(auto [n,h]=header(*o);h;std::tie(n,h)=header(*o)) {
-    std::uint32_t lo=1,hi=n;
-    while(lo<hi) {auto mid=(lo+hi)/2;if(load<std::uint32_t>(*o->parts[1],mid)<=p) lo=mid+1;else hi=mid;}
-    c.path.push_back({o,lo-1});
-    o=store_->get(load<std::uint64_t>(*o->parts[child_part(c_)],lo-1));
+    auto i=route(*o,n,p);
+    c.path.push_back({o,i});
+    o=store_->get(load<std::uint64_t>(*o->parts[child_part(c_)],i));
   }
   auto n=header(*o).first;
-  std::uint32_t lo=0,hi=n;
-  while(lo<hi) {auto mid=(lo+hi)/2;if(load<std::uint32_t>(*o->parts[1],mid)<p) lo=mid+1;else hi=mid;}
+  auto lo=lower(*o,n,p);
   c.leaf=o;c.count=n;c.rank=lo;
   if(lo==n) {c.rank=n?n-1:0;if(n) next(c);else c.leaf=nullptr;}
   return c;
@@ -485,14 +529,12 @@ Tree::Cursor Tree::seek(const Key& low) const {
   auto o=store_->get(root());
   if(!o) return c;
   for(auto [n,h]=header(*o);h;std::tie(n,h)=header(*o)) {
-    std::uint32_t lo=1,hi=n;
-    while(lo<hi) {auto mid=(lo+hi)/2;if(cmp(bytes(*o->parts[2],mid*c_.k,c_.k),low)<0) lo=mid+1;else hi=mid;}
-    c.path.push_back({o,lo-1});
-    o=store_->get(load<std::uint64_t>(*o->parts[child_part(c_)],lo-1));
+    auto i=route(*o,n,low);
+    c.path.push_back({o,i});
+    o=store_->get(load<std::uint64_t>(*o->parts[child_part(c_)],i));
   }
   auto n=header(*o).first;
-  std::uint32_t lo=0,hi=n;
-  while(lo<hi) {auto mid=(lo+hi)/2;if(cmp(bytes(*o->parts[3],mid*c_.k,c_.k),low)<0) lo=mid+1;else hi=mid;}
+  auto lo=lower(*o,n,low);
   c.leaf=o;c.count=n;c.rank=lo;
   if(lo==n) {c.rank=n?n-1:0;if(n) next(c);else c.leaf=nullptr;}
   return c;
