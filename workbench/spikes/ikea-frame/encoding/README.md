@@ -1208,6 +1208,39 @@ on all 11,232 values. The only differences are the known +8 B in
 `frame_encoding_masked_access_check` passes. The point/, filter/ and
 execution/ targets compile unchanged.
 
+## Wide exact SUM by 32-bit halves
+
+Ikea LEAD's control law: x = lo32(x) + 2^32·hi32(x), with each half summed in
+u64. That keeps the exact u128 SUM without a u128 add per row. `split_sum`
+replaces the per-row u128 loop for packed blocks wider than 56 bits, and the
+prefix sums that delta_patched subtracts for its exceptions. Weighted delta
+SUM keeps its u64 × u64 → u128 multiply-accumulate. On 48–56-bit delta blocks
+the split form was 1.21× slower and a prefix-sum form 1.37× slower (paired
+A/B, aarch64), so the law pays only for unweighted sums. Synthetic inputs in
+`build/spikes/ikea-frame/wide/` cover the wide paths that the real columns
+rarely reach: uniform 64-bit values, and 48–56-bit random walks with injected
+outliers (delta and delta_patched).
+
+Paired against ed281d89, 7 rotated rounds, local VM, medians in µs, encoded
+SUM old / new (ratio):
+
+| Input | All blocks | Sparse 10% |
+| --- | ---: | ---: |
+| WatchID | 2,114 / 1,473 (0.71) | 340 / 304 (0.81) |
+| URLHash | 1,509 / 1,277 (0.79) | 262 / 253 (0.94) |
+| UserID, shuffled | 1,477 / 1,117 (0.72) | 324 / 248 (0.72) |
+| Random 64-bit | 258 / 185 (0.73) | 29 / 18 (0.61) |
+| Walk with exceptions | 745 / 560 (0.75) | 79 / 60 (0.74) |
+| Walk, no exceptions | 370 / 325 (0.88) | 40 / 37 (0.91) |
+
+Narrow and catalogue SUM follow, because their wide fallback is the same
+path. The plain-array control ratio is 0.96–1.02 for all blocks. WatchID's
+encoded SUM still trails the exact native array (1,141 µs) because it moves
+62 bits/row through a decode. Checks: the 417-run borrowed check, both
+synthetic inputs under four option sets, masked_access_check, and 11,232
+non-timing driver values, which are unchanged apart from the +8-byte column
+object.
+
 ## Row order in real bodies
 
 The same 11 ClickBench columns were encoded as real bodies (default options,

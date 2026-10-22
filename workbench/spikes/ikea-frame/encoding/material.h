@@ -655,6 +655,18 @@ inline u64 value_at(const column &c, std::size_t row) {
 void decode_stored(const borrowed_block &k, u64 *out);
 void decode_stored(const column &c, std::size_t b, u64 *out);
 
+// Exact wide sum without a u128 add per row (Ikea LEAD's split-half law):
+// x = lo32(x) + 2^32 hi32(x), and each half accumulates in u64. For n <= 2^32
+// rows every half sum fits, so the loop vectorises and the u128 law is
+// unchanged.
+inline u128 split_sum(const u64 *v, std::size_t n) {
+    u64 lo = 0, hi = 0;
+    for (std::size_t i = 0; i < n; ++i) {
+        lo += v[i] & 0xffffffffu;
+        hi += v[i] >> 32;
+    }
+    return static_cast<u128>(lo) + (static_cast<u128>(hi) << 32);
+}
 // Exact SUM of one block's stored values, decoding packed values into u64.
 inline u128 stored_sum(const borrowed_block &k) {
     const auto &d = k.d;
@@ -671,8 +683,7 @@ inline u128 stored_sum(const borrowed_block &k) {
                 residuals += buffer[i];
             total = residuals;
         } else {
-            for (std::size_t i = 0; i < block_rows; ++i)
-                total += buffer[i];
+            total = split_sum(buffer, block_rows);
         }
         return total + static_cast<u128>(d.base) * block_rows;
     }
@@ -709,6 +720,10 @@ inline u128 stored_sum(const borrowed_block &k) {
                 w += (block_rows - j) * buffer[j];
             t += w;
         } else {
+            // The u64 x u64 -> u128 multiply-accumulate beats the split-half
+            // form here (paired: split 1.21x, prefix-sum halves 1.37x slower
+            // on 48-56-bit delta blocks, aarch64); the split law wins only
+            // for unweighted sums.
             for (std::size_t j = 1; j < block_rows; ++j)
                 t += static_cast<i128>(block_rows - j) * buffer[j];
         }
@@ -738,14 +753,19 @@ inline u128 stored_sum(const borrowed_block &k) {
             }
             t += static_cast<i128>(w) - static_cast<i128>(held);
         } else {
-            i128 s = 0;
+            // Prefix sums S(e) by halves too: each half prefix is below 2^40
+            // and the at most 255 held prefixes below 2^48.
+            u64 s_lo = 0, s_hi = 0, held_lo = 0, held_hi = 0;
+            for (unsigned j = 0, e = 0; j <= last; ++j) {
+                s_lo += buffer[j] & 0xffffffffu;
+                s_hi += buffer[j] >> 32;
+                if (p.positions[e] == j)
+                    held_lo += s_lo, held_hi += s_hi, ++e;
+            }
+            const u128 held = static_cast<u128>(held_lo) + (static_cast<u128>(held_hi) << 32);
             for (std::size_t j = 1; j < block_rows; ++j)
                 t += static_cast<i128>(block_rows - j) * buffer[j];
-            for (unsigned j = 0, e = 0; j <= last; ++j) {
-                s += buffer[j];
-                if (p.positions[e] == j)
-                    t -= s, ++e;
-            }
+            t -= static_cast<i128>(held);
         }
         alignas(64) u64 exc[block_rows];
         read_exceptions(p, exc);
