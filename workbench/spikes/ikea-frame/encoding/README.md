@@ -140,6 +140,14 @@ ClickBench has no real nulls in these columns, so nullability will need
 injected or derived presence (for example ConnectTiming = 0 as absent),
 labelled as synthetic.
 
+[`clickbench_parts.py`](clickbench_parts.py) derives Engine's
+`frame-execution-logical-v1` documents (`kind: corpus-derived`, with source
+provenance) from consecutive 65,536-row slices in original order. Each part's
+dictionary is in first-occurrence order, so editions differ per part. Two
+documents validate and pass the oracle (three parts each, in
+`build/spikes/ikea-frame/`): `OS × ResolutionWidth` with no nulls, and
+`RegionID × ConnectTiming` with synthetic nulls where ConnectTiming = 0.
+
 ## Next questions
 
 1. Convert the model's winners into real SeriesPack bytes for a sample of
