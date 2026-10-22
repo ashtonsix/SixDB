@@ -11,7 +11,9 @@ baseline and compression investigations. It defines no interface.
 | --- | --- | --- |
 | Real integer/time columns | ClickBench `hits` slice: 3,000,000 rows, 105 columns, 77 integer/time ([provenance](../../../../../corpora/clickbench-rows/PROVENANCE.json), local at `~/corpora/clickbench-rows/`) | Not yet a registered [dataset](../../../datasets/README.md); its row order is ClickBench's (sorted by CounterID, date, UserID, time), which favours runs |
 | Floats and decimals | None in SixDB | TPC-H via DuckDB's `tpch` extension (not installed in the VM; installing fetches it from DuckDB's extension repository); IMDb ratings (Codex/Workbench locating a bounded slice); Calico's N-CMAPSS/PMU corpora in S3; ALP paper's float datasets. The VM volume has about 23 GiB free, so new corpora need explicit size bounds |
-| Time series | Calico's TSBS generator recipe | Not ported; needs the Go `tsbs` tool |
+| Time series and signed decimals | Jena climate: [`jena_parts.py`](jena_parts.py) (Codex) prepares three original 65,536-row windows of all 14 fields as exact ×100 int64, plus a separate targeted fault block (rows 343,552–343,807, all 18 `wv` and 20 `max.wv` −9999.00 sentinels). Under 19 MB; paths in its receipts under `build/datasets/prepared/` | The fault block is adversarial; don't blend it into population statistics |
+| Real nulls, unsorted keys | IMDb JOB snapshot (May 2013), 4,096-row `title` slice at `build/reviews/frame-corpora-20261022/imdb-title-first4096/` with 205 real NULL years; Engine document `build/spikes/ikea-frame/imdb-title-year.json` (Codex) | A smoke fixture only, too small for population claims |
+| Time series (synthetic) | Calico's TSBS generator recipe | Not ported; needs the Go `tsbs` tool |
 | Strings | Out of scope (Ashton); lengths and prefixes only | — |
 | Baselines | DuckDB 1.5.4 and Polars 1.42.1 (Python, in the Ubuntu VM); Calico Frame sources | No DuckDB/Polars C++ peers in [native peers](../../../peers/README.md); Python timings include interpreter edges |
 | Logical reference | None | A small independent oracle per study, as Codex proposed; not a shared semantic contract |
@@ -207,7 +209,15 @@ control itself moved between runs (EventTime 0.06 → 0.11 ns/row).
 | WatchID | 62.50 | 62.50 | 0% | 1% | 0.68 / 0.68 / 0.29 | 0.44 / 0.29 |
 | URLHash | 59.45 | 49.63 | 2% | 1% | 0.51 / 0.53 / 0.24 | 0.74 / 0.28 |
 
-(ConnectTiming and ClientIP are in the JSON lines: 3.32 and 11.40 bits.) The
+(ConnectTiming and ClientIP are in the JSON lines: 3.32 and 11.40 bits.)
+
+Block masks are one bit per block. Groups of 16 blocks are derived from the
+same bits, following Ashton's clarification: an empty group is skipped
+without touching its descriptors, a full group takes the unmasked path, and
+a mixed group visits only its set bits. An all-empty mask costs about 0.001
+ns/row, the walk over the mask words. This is bring-up code. A poisoned-memory
+fixture proving that skipped payloads are never loaded is still owed, as Codex
+suggested. The
 model's dictionary arms aren't built yet, which explains part of the URLHash
 and RegionID gaps. Clustered and sparse masks scale both encoded and plain
 time roughly with the selected fraction; no coarse-mask overhead showed up.

@@ -214,6 +214,47 @@ column encode(std::span<const u64> values) {
     return c;
 }
 
+// One bit per block, little-endian within 64-bit words. Groups of 16 blocks
+// (4,096 rows) are derived from the same bits: an empty group is skipped
+// without touching its descriptors, a full group takes the unmasked path, and a
+// mixed group visits only its set bits. Nothing here fixes Frame's geometry.
+constexpr std::size_t group_blocks = 16;
+
+struct block_mask {
+    std::vector<u64> words;
+    std::size_t blocks = 0;
+    explicit block_mask(std::size_t n) : words((n + 63) / 64), blocks(n) {}
+    void set(std::size_t b) { words[b / 64] |= u64{1} << (b % 64); }
+    std::size_t popcount() const {
+        std::size_t n = 0;
+        for (u64 w : words)
+            n += std::popcount(w);
+        return n;
+    }
+};
+
+template <class F> void for_each_block(const block_mask &m, F &&visit) {
+    const std::size_t groups = (m.blocks + group_blocks - 1) / group_blocks;
+    for (std::size_t g = 0; g < groups; ++g) {
+        const std::size_t first = g * group_blocks;
+        const std::size_t limit = std::min(first + group_blocks, m.blocks);
+        const unsigned bits =
+            static_cast<unsigned>(m.words[first / 64] >> (first % 64)) & 0xffffu;
+        if (!bits)
+            continue;
+        if (bits == 0xffffu && limit - first == group_blocks) {
+            for (std::size_t b = first; b < limit; ++b)
+                visit(b);
+            continue;
+        }
+        for (unsigned rest = bits; rest; rest &= rest - 1) {
+            const std::size_t b = first + static_cast<unsigned>(std::countr_zero(rest));
+            if (b < limit)
+                visit(b);
+        }
+    }
+}
+
 // Exact SUM of one block, decoding packed values into u64.
 u128 block_sum(const column &c, std::size_t b) {
     const auto &d = c.blocks[b];
@@ -248,11 +289,9 @@ u128 block_sum(const column &c, std::size_t b) {
 }
 
 // Exact SUM over the blocks selected by mask (one bit per block).
-u128 encoded_sum(const column &c, const std::vector<std::uint8_t> &mask) {
+u128 encoded_sum(const column &c, const block_mask &mask) {
     u128 total = 0;
-    for (std::size_t b = 0; b < c.blocks.size(); ++b)
-        if (mask[b])
-            total += block_sum(c, b);
+    for_each_block(mask, [&](std::size_t b) { total += block_sum(c, b); });
     return total;
 }
 
@@ -268,15 +307,13 @@ A narrow_block_sum(const sp::decoder<T> &decoder) {
     return s;
 }
 
-u128 encoded_sum_narrow(const column &c, const std::vector<std::uint8_t> &mask) {
+u128 encoded_sum_narrow(const column &c, const block_mask &mask) {
     u128 total = 0;
-    for (std::size_t b = 0; b < c.blocks.size(); ++b) {
-        if (!mask[b])
-            continue;
+    for_each_block(mask, [&](std::size_t b) {
         const auto &d = c.blocks[b];
         if (d.type != kind::packed) {
             total += block_sum(c, b);
-            continue;
+            return;
         }
         total += static_cast<u128>(d.base) * block_rows;
         if (c.d8[b])
@@ -287,29 +324,27 @@ u128 encoded_sum_narrow(const column &c, const std::vector<std::uint8_t> &mask) 
             total += narrow_block_sum<std::uint32_t, u64>(*c.d32[b]);
         else
             total += block_sum(c, b) - static_cast<u128>(d.base) * block_rows;
-    }
+    });
     return total;
 }
 
 // Exact COUNT(u >= threshold) over the selected blocks.
-u64 encoded_count_ge(const column &c, const std::vector<std::uint8_t> &mask, u64 threshold) {
+u64 encoded_count_ge(const column &c, const block_mask &mask, u64 threshold) {
     u64 total = 0;
     alignas(64) u64 buffer[block_rows];
-    for (std::size_t b = 0; b < c.blocks.size(); ++b) {
-        if (!mask[b])
-            continue;
+    for_each_block(mask, [&](std::size_t b) {
         const auto &d = c.blocks[b];
         if (d.base >= threshold) {  // the whole block is at or above the base
             total += block_rows;
-            continue;
+            return;
         }
         switch (d.type) {
         case kind::constant:
-            break;
+            return;
         case kind::packed: {
             const u64 rhs = threshold - d.base;
             if (d.width < 64 && rhs >> d.width)
-                break;  // the threshold exceeds every representable residual
+                return;  // the threshold exceeds every representable residual
             c.decoders[b].read_unchecked(0, block_rows, buffer);
             for (std::size_t i = 0; i < block_rows; ++i)
                 total += buffer[i] >= rhs;
@@ -326,7 +361,7 @@ u64 encoded_count_ge(const column &c, const std::vector<std::uint8_t> &mask, u64
             break;
         }
         }
-    }
+    });
     return total;
 }
 
@@ -337,11 +372,9 @@ template <class T> struct plain {
     u64 base;
 };
 
-template <class T> u128 plain_sum(const plain<T> &p, const std::vector<std::uint8_t> &mask) {
+template <class T> u128 plain_sum(const plain<T> &p, const block_mask &mask) {
     u128 total = 0;
-    for (std::size_t b = 0; b < mask.size(); ++b) {
-        if (!mask[b])
-            continue;
+    for_each_block(mask, [&](std::size_t b) {
         const T *v = p.values.data() + b * block_rows;
         u64 s = 0;
         if constexpr (sizeof(T) < 8) {
@@ -353,23 +386,21 @@ template <class T> u128 plain_sum(const plain<T> &p, const std::vector<std::uint
                 total += v[i];
         }
         total += static_cast<u128>(p.base) * block_rows;
-    }
+    });
     return total;
 }
 
 template <class T>
-u64 plain_count_ge(const plain<T> &p, const std::vector<std::uint8_t> &mask, u64 threshold) {
+u64 plain_count_ge(const plain<T> &p, const block_mask &mask, u64 threshold) {
     if (threshold <= p.base)
-        return std::count(mask.begin(), mask.end(), 1) * block_rows;
+        return mask.popcount() * block_rows;
     const u64 rhs = threshold - p.base;
     u64 total = 0;
-    for (std::size_t b = 0; b < mask.size(); ++b) {
-        if (!mask[b])
-            continue;
+    for_each_block(mask, [&](std::size_t b) {
         const T *v = p.values.data() + b * block_rows;
         for (std::size_t i = 0; i < block_rows; ++i)
             total += static_cast<u64>(v[i]) >= rhs;
-    }
+    });
     return total;
 }
 
@@ -417,14 +448,15 @@ void run(const char *name, std::span<const u64> values, u64 lo, u64 threshold) {
                 c.descriptor_bytes(), c.payload.size(), c.run_geometry_bytes(),
                 8.0 * total_bytes / c.rows, sizeof(T));
     const std::size_t n = c.blocks.size();
-    struct shape { const char *name; std::vector<std::uint8_t> mask; };
-    std::vector<shape> shapes{{"all", std::vector<std::uint8_t>(n, 1)},
-                              {"clustered50", std::vector<std::uint8_t>(n, 0)},
-                              {"sparse10", std::vector<std::uint8_t>(n, 0)}};
+    struct shape { const char *name; block_mask mask; };
+    std::vector<shape> shapes{{"all", block_mask(n)}, {"clustered50", block_mask(n)},
+                              {"sparse10", block_mask(n)}, {"none", block_mask(n)}};
+    for (std::size_t b = 0; b < n; ++b)
+        shapes[0].mask.set(b);
     for (std::size_t b = 0; b < n / 2; ++b)
-        shapes[1].mask[b] = 1;
+        shapes[1].mask.set(b);
     for (std::size_t b = 0; b < n; b += 10)
-        shapes[2].mask[b] = 1;
+        shapes[2].mask.set(b);
     for (const auto &s : shapes) {
         const u128 es = encoded_sum(c, s.mask), ps = plain_sum(p, s.mask);
         if (encoded_sum_narrow(c, s.mask) != ps) {
