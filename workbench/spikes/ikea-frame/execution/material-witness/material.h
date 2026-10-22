@@ -1,18 +1,39 @@
 #pragma once
+#include "../../encoding/material.h"
 #include <orbital/object.h>
 #include <orbital/representation.h>
 #include <array>
-#include <span>
+#include <optional>
 #include <type_traits>
 
-// Private lifetime witness, not a Frame format. Each region is an actual Local
-// SeriesPack FOR plane with its interpretation copied inline, independently of
-// the column/vector object that originally produced its values.
+// Private lifetime fixture, not a Frame format. Actual encoded bodies and an
+// optional dictionary live in each native Part. Interpretation is pointer-free;
+// only the attached, scope-bounded reader contains byte addresses.
 namespace frame_material_witness {
+namespace fe = frame_encoding;
+constexpr unsigned region_blocks = 16;
+struct Block {
+    fe::descriptor descriptor{};
+    std::uint32_t offset{}, body_bytes{}, grant_bytes{}, rows = fe::block_rows;
+    bool coded{};
+    fe::dictionary_identity dictionary_edition{};
+};
+struct Dictionary {
+    std::uint64_t min{};
+    fe::dictionary_identity edition{};
+    std::uint32_t offset{}, count{}, grant_bytes{};
+    std::uint8_t width{};
+    fe::dictionary_order order = fe::dictionary_order::none;
+    std::size_t bytes() const noexcept { return count ? fe::plane_bytes(width, count) : 0; }
+};
 struct Region {
-    std::uint64_t base{};
-    unsigned count{}, width{}, first_position{}, readable_padding{};
-    std::size_t bytes() const noexcept { return (std::size_t(count) + 7) / 8 * width; }
+    std::array<Block, region_blocks> blocks{};
+    Dictionary dictionary{};
+    unsigned block_count{}, first_position{}, body_bytes{}, readable_padding{};
+    fe::checkpoints checkpoints = fe::checkpoints::native;
+    unsigned rows() const noexcept { return block_count * fe::block_rows; }
+    std::size_t bytes() const noexcept { return body_bytes; }
+    bool valid() const noexcept;
 };
 struct Control {
     std::pmr::memory_resource* memory{};
@@ -55,6 +76,9 @@ struct Physical {
     static void release(Value*) noexcept;
     static Value* get(Selection s) noexcept { return s.realization; }
     static Selection selection(Value* p) noexcept { return {p}; }
+    // The owner admits initialized Frame contents before calling capture.
+    // Orbital validates and acquires physical sources; this does not parse an
+    // arbitrary source span before its ownership certificate is validated.
     static orbital::Result<Value*> capture(std::pmr::memory_resource&, const Control&,
                                          std::span<const PartSource>) noexcept;
     static bool accepts(Value*, orbital::ObjectId, std::uint64_t) noexcept { return true; }
@@ -66,9 +90,17 @@ struct Physical {
 };
 using Store = orbital::ObjectStore<Physical>;
 
-// The caller already selected a coherent Region and its certified byte view.
-std::uint64_t point(const Region&, orbital::View, unsigned row);
-void range(const Region&, orbital::View, unsigned first, std::span<std::uint64_t> out);
+struct BorrowedRegion {
+    const Region* interpretation;
+    orbital::Bytes material;
+    fe::borrowed_block block(unsigned index) const;
+    std::uint64_t point(unsigned row) const;
+    void range(unsigned first, std::span<std::uint64_t> out) const;
+};
+// Bytes are an actual initialized Allocation or certified Part body. Admit once
+// before capture/consumption; neither failure nor success owns or consumes them.
+std::optional<BorrowedRegion> attach(const Region&, orbital::Bytes);
+std::optional<BorrowedRegion> attach(const Region&&, orbital::Bytes) = delete;
 } // namespace frame_material_witness
 
 extern template class orbital::ObjectStore<frame_material_witness::Physical>;
