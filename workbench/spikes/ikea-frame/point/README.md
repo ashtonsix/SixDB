@@ -18,8 +18,9 @@ The starting evidence is the real Jena result in the encoding inventory: fewer
 checkpoints shrink each body and change which blocks choose prediction. Weighted
 SUM needs none of those checkpoint reads. Therefore compare point costs both on
 fixed body choices and on complete images chosen by construction, with bytes,
-analysis and reader preparation accounted separately. These costs are not yet
-measured here. Engine chooses among curated material options; no default or
+analysis and reader preparation accounted separately. The [first measurements](FINDINGS.md)
+now expose substantial point cost and avoidable prepared-state overhead.
+Engine chooses among curated material options; no default or
 public Frame API follows from this reader.
 
 `frame_checkpoint_point_check` compares every point directly with original input
@@ -35,7 +36,8 @@ all 42 Jena default-window columns, the 14-column sentinel block, and the origin
 ClickBench OS/UserID exports. All/none/alternating/clustered masks also agree.
 Inputs and working-domain transformations retain the encoding inventory's
 provenance; this is an exact u64 working-domain check, not a new signed/float
-arithmetic claim. The shared material cut is `6cbd12d9`; performance remains open.
+arithmetic claim. The shared material cut is `6cbd12d9`; the findings retain the
+first performance/prepared-state comparisons without choosing a representation policy.
 
 Build using the pinned Linux toolchain and spike selection, then run:
 

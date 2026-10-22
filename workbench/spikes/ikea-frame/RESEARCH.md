@@ -33,6 +33,7 @@ bring counterexamples, and revise the division as the work reveals strengths.
 | Representation algebra and structured intermediates | Claude, with Ikea/Engine | Masked and overridden reductions, weighted delta/checkpoint alternatives and dictionary/run results; use the same images and consumer witness as schema-fidelity work |
 | Mutation and representation lifecycle | Ikea LEAD | [Lifecycle investigation](lifecycle/README.md): repeated versus dispersed writes, novelty, selective folding, thaw/reseal and retained-reader economics |
 | Point reconstruction on encoded images | Ikea LEAD | [Point consumer](point/README.md): actual body readers, per-image checkpoints, retained readers and coarse masks; separate from geometry primitive redesign |
+| Separated filter heads and predicate programs | Ikea LEAD, with Claude | [Head-plane consumer](filter/README.md): head8/head16, transform cuts with independent predicate meaning, direct packed comparisons and complete masked consumers |
 | Schema fidelity and complete execution programs | Engine LEAD, jointly with Ikea/Claude | [Execution witness](execution/README.md): different programs over frozen images, interpreted through a real outside hash consumer and independent logical oracle |
 | Shared instruments and measurement scrutiny | Workbench LEAD | Existing datasets, native peers, capture/workers and [communication helper](../../tools/README.md#shared-peer-inboxes); build common machinery only where the experiments need it |
 
@@ -78,6 +79,14 @@ geometry/filter contract and sparse checkpoint design, including the handed-off
 materials; it does not optimise those algorithms in parallel. The
 [point experiment](point/README.md) continues here on the existing encoding
 material and maintained Boundlist run source.
+The isolated work now lives in [Intervals](../intervals/README.md).
+
+Ashton also requires separated leading one/two-byte planes to be available through
+Frame. Split placement must provide useful entropy and enough independent
+metadata to interpret predicates before fetching the suffix. The
+[filter experiment](filter/README.md) compares FOR-residual and u64-working-value
+cuts; prediction and dictionary stages need their own predicate laws. This is
+an operation/representation choice, not a rule to always split last.
 
 The two-way shared inbox is implemented by `workbench/tools/peer_inbox.py`.
 Live session bindings, messages and watch status are ignored under
@@ -92,12 +101,26 @@ research uses the verified file waits, and idle wakeup needs an available UI pat
 
 ## Current evidence boundary
 
+The [point findings](point/FINDINGS.md) price independent reconstruction and
+checkpoint choices on identical prediction bodies, including prepared-state
+costs. The [head/filter findings](filter/FINDINGS.md) qualify separated planes,
+complete COUNT programs and actual Polars controls. Both retain material losses;
+neither selects a Frame default. Native/plain choices, fused reconstruction,
+predicate evidence and the physical write/lifecycle experiment remain active.
+
 The [review](REVIEW.md) is source-based architectural judgement and arithmetic
 reasoning. New corpus observations, model checks and native timings belong to
 their respective instruments and must keep those labels. A logical oracle or
 compiling hash adapter does not demonstrate Frame throughput. Preserve the
 strong baseline bar in the [brief](README.md#how-this-spike-works), including
 same-work controls and actual consumption, as the experiments begin.
+
+Engine's [schema-fidelity analysis](execution/FIDELITY.md) keeps the broader
+question distinct from dispatch/preparation on the same algorithm. The
+[first encoded witness](execution/ENCODED.md) compares complete grouped consumers
+on identical real bodies; it also exposes decoder-state costs and a parent
+shortcut invalidated by a newly added codec. Those findings guide further
+cross-column and lifecycle work; similar dispatch costs do not settle that work.
 
 The first executable instruments check logical execution and mutation histories.
 Both real ClickBench inputs supplied by encoding research pass five queries

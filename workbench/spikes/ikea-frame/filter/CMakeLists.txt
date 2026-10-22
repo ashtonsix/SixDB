@@ -1,0 +1,23 @@
+add_library(frame_filter_kernels STATIC kernels.cpp image.cpp)
+sixdb_target(frame_filter_kernels)
+target_link_libraries(frame_filter_kernels PUBLIC frame_encoding_material)
+# Independent width slices keep each compiler below the full-matrix footprint.
+foreach(heads 0 8 16)
+  foreach(first 1 9 17 25 33 41 49 57)
+    set(part frame_filter_h${heads}_k${first})
+    add_library(${part} OBJECT instantiate.cpp)
+    sixdb_target(${part})
+    sixdb_heavy_compile(${part})
+    target_link_libraries(${part} PRIVATE ikea::seriespack)
+    target_compile_definitions(${part} PRIVATE FRAME_HEADS=${heads} FRAME_FIRST=${first})
+    target_link_libraries(frame_filter_kernels PRIVATE ${part})
+  endforeach()
+endforeach()
+
+add_executable(frame_filter_check check.cpp)
+sixdb_target(frame_filter_check)
+target_link_libraries(frame_filter_check PRIVATE frame_filter_kernels)
+
+add_executable(frame_filter_measure measure.cpp)
+sixdb_target(frame_filter_measure)
+target_link_libraries(frame_filter_measure PRIVATE frame_filter_kernels)

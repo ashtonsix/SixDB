@@ -1,3 +1,11 @@
+add_library(frame_point_kernels STATIC kernels.cpp)
+sixdb_target(frame_point_kernels)
+target_link_libraries(frame_point_kernels PUBLIC ikea::seriespack)
+
 add_executable(frame_checkpoint_point_check point_check.cpp)
 sixdb_target(frame_checkpoint_point_check)
-target_link_libraries(frame_checkpoint_point_check PRIVATE frame_encoding_material)
+target_link_libraries(frame_checkpoint_point_check PRIVATE frame_encoding_material frame_point_kernels)
+
+add_executable(frame_point_measure measure.cpp)
+sixdb_target(frame_point_measure)
+target_link_libraries(frame_point_measure PRIVATE frame_encoding_material frame_point_kernels)

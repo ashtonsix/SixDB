@@ -14,6 +14,9 @@ struct point_reader {
     explicit point_reader(const fe::column &c)
         : source(&c), rows(c.rows) {
         if (c.options.delta_checkpoints != fe::checkpoints::packed) return;
+        if (std::none_of(c.blocks.begin(), c.blocks.end(), [](const auto &d) {
+                return d.type == fe::kind::delta && d.width + 8 <= 64;
+            })) return;
         packed_checkpoints.resize(c.blocks.size());
         for (std::size_t b = 0; b < c.blocks.size(); ++b) {
             const auto &d = c.blocks[b];
@@ -88,8 +91,8 @@ struct point_reader {
 
 // Admitted original coordinates; coarse selection excludes complete blocks.
 // None consults only the mask and cached rows, never column descriptors/body.
-template <class Sink>
-void selected_points(const point_reader &reader, const fe::block_mask &mask,
+template <class Reader, class Sink>
+void selected_points(const Reader &reader, const fe::block_mask &mask,
                      std::span<const std::size_t> rows, Sink &&sink) {
     for (const auto row : rows) {
         assert(row < reader.rows);

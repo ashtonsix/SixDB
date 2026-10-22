@@ -1,0 +1,53 @@
+{
+  "binary_sha256": "53d1d2735490a46d17196e43de458c9e506b56f620cced13936b5020eb9e53b0",
+  "cpu": 7,
+  "trials": 18,
+  "repeat": 4,
+  "condition": "prepared warm independent points, paired reversed process order, local ARM VM exploratory; not DRAM/serial/fleet",
+  "source_sha256": {
+    "workbench/spikes/ikea-frame/point/point_read.h": "7593f53329659782cf6520e5e74e72cbddeca33f736cc420853e7262e769ea70",
+    "workbench/spikes/ikea-frame/point/point_check.cpp": "d61def56dd7550ad1dc002d66d388e86afff2dbc794742532c28232dabc2a51c",
+    "workbench/spikes/ikea-frame/point/CMakeLists.txt": "fc552686eb16cd5b090c445915cb97b5ef73f889c48d94210638c97c7dd1e986",
+    "workbench/spikes/ikea-frame/point/README.md": "37305ddf9d93dd34ca715f6a01df00b5117ee3c7c89e915a205ca7c2c1349f4b",
+    "workbench/spikes/ikea-frame/point/measure.cpp": "27cdde42933e8cb19409081514d929f295e1eedcca9342f6174f18ca732c5dac",
+    "workbench/spikes/ikea-frame/point/kernels.h": "1c2a8e3d478c285d111c0b92a3bacfeda51b7ff31a20e47690f472255643f28b",
+    "workbench/spikes/ikea-frame/point/kernels.cpp": "3695238d1aa735680e5a4eb2b4acf1f7a13b95fcbacc6fa441eec1e52195c135",
+    "workbench/spikes/ikea-frame/point/compact_read.h": "ba04623711e8604d30c3e4b04a808b0f3c575faa98236dcb458ca91ba2b05fee"
+  },
+  "inputs": {
+    "build/spikes/ikea-frame/jena-0/p__mbar.u64": {
+      "sha256": "ede7bd5fd8833828049817f56703d4cfaa29ef620ff7c73b9bbf32ae92e9054e",
+      "bytes": 524288
+    },
+    "build/spikes/ikea-frame/cols/OS.u64": {
+      "sha256": "62e798b644d78ddb19e557a9f4de91947553da4b3c5462fa9ecb2153b74404b7",
+      "bytes": 23998464
+    },
+    "build/spikes/ikea-frame/cols/URLHash.u64": {
+      "sha256": "5b57151bca1792f0bf0c65d21ab2a9d760faf1e77b039c65e668d922bc1dfc43",
+      "bytes": 23998464
+    }
+  },
+  "source_capture": "678145797b2f4bc09efe690093f4c09745f58a65901c4ca414a4dfe2d244d6e6",
+  "compile_commands": [
+    {
+      "directory": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/clang/frame-checkpoints",
+      "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=1 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN4=0 -DSIXDB_TUNE_ZEN5=0 -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/ikea/include -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb=. -ffunction-sections -fdata-sections -march=native -mtune=generic -o workbench/spikes/ikea-frame/point/CMakeFiles/frame_point_kernels.dir/kernels.cpp.o -c /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/workbench/spikes/ikea-frame/point/kernels.cpp",
+      "file": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/workbench/spikes/ikea-frame/point/kernels.cpp",
+      "output": "workbench/spikes/ikea-frame/point/CMakeFiles/frame_point_kernels.dir/kernels.cpp.o"
+    },
+    {
+      "directory": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/clang/frame-checkpoints",
+      "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=1 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN4=0 -DSIXDB_TUNE_ZEN5=0 -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/workbench/spikes/ikea-frame/encoding -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/ikea/include -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb=. -ffunction-sections -fdata-sections -march=native -mtune=generic -o workbench/spikes/ikea-frame/point/CMakeFiles/frame_checkpoint_point_check.dir/point_check.cpp.o -c /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/workbench/spikes/ikea-frame/point/point_check.cpp",
+      "file": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/workbench/spikes/ikea-frame/point/point_check.cpp",
+      "output": "workbench/spikes/ikea-frame/point/CMakeFiles/frame_checkpoint_point_check.dir/point_check.cpp.o"
+    },
+    {
+      "directory": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/clang/frame-checkpoints",
+      "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=1 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN4=0 -DSIXDB_TUNE_ZEN5=0 -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/workbench/spikes/ikea-frame/encoding -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/ikea/include -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb=. -ffunction-sections -fdata-sections -march=native -mtune=generic -o workbench/spikes/ikea-frame/point/CMakeFiles/frame_point_measure.dir/measure.cpp.o -c /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/workbench/spikes/ikea-frame/point/measure.cpp",
+      "file": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/workbench/spikes/ikea-frame/point/measure.cpp",
+      "output": "workbench/spikes/ikea-frame/point/CMakeFiles/frame_point_measure.dir/measure.cpp.o"
+    }
+  ],
+  "compiler": "Ubuntu clang version 21.1.8 (++20251221033104+2078da43e25a-1~exp1~20251221153121.57)\nTarget: aarch64-unknown-linux-gnu\nThread model: posix\nInstalledDir: /usr/lib/llvm-21/bin\n"
+}
