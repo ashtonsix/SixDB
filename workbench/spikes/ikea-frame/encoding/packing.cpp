@@ -30,7 +30,7 @@ void pack(unsigned k, std::span<const u64> values, std::uint8_t *out) {
         if (!capacity)
             std::abort();
         std::vector<sp::composition::owner_write> records(*capacity);
-        sp::composition::write_journal effects{records};
+        ikea::source_write_journal effects{records};
         if (!write.initialize(values, effects))
             std::abort();
         done = true;
