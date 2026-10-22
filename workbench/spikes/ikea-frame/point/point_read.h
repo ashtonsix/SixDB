@@ -97,8 +97,8 @@ template <class RunSource> struct point_reader_program {
             for (unsigned i = 0; i <= local - first; ++i) sum += residuals[i];
             return d.base + static_cast<fe::u64>(rbase) * steps + sum;
         }
+        default: std::abort(); // A new owner kind needs separate reader qualification.
         }
-        std::abort();
     }
 };
 

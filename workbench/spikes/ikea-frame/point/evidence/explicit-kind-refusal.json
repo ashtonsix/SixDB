@@ -1,0 +1,48 @@
+{
+  "before_sha256": "5de884fe9beecefb947221f3a485f484c5c5a0773172eedc64baeba619c5d1a5",
+  "after_sha256": "2014bbdf445775b7032b90f7e0c86e78d19a95e65beddf2271b86e128ecddc17",
+  "sections": {
+    ".text": {
+      "bytes": 652252,
+      "identical": true,
+      "sha256": "cb7dee25a55e11bc619be5c24aefadd0c13bacb763f6258c678ffe1af83d8b21",
+      "layout": {
+        "address": "0000000000002dc0",
+        "file_offset": "002dc0",
+        "bytes": 652252
+      }
+    },
+    ".rodata": {
+      "bytes": 7717,
+      "identical": true,
+      "sha256": "ad24e0cd20e1947fac0fa1e6a285f196253f980503f9dfb657f0b7e0eaa13534",
+      "layout": {
+        "address": "00000000000a21c0",
+        "file_offset": "0a21c0",
+        "bytes": 7717
+      }
+    },
+    ".data.rel.ro": {
+      "bytes": 2272,
+      "identical": true,
+      "sha256": "e5614c5d53dd5758b62e68f2b5477f43d4fd026886cb514b5ae8067e26ea72fb",
+      "layout": {
+        "address": "00000000000cf4a8",
+        "file_offset": "0bf4a8",
+        "bytes": 2272
+      }
+    },
+    ".rela.dyn": {
+      "layout": {
+        "address": "0000000000000c68",
+        "file_offset": "000c68",
+        "bytes": 7080
+      },
+      "identical": true,
+      "sha256": "049e937a3c93100c18a55dd0b85fdbcffa17eff71fef70ae4d38af651dda3b01"
+    }
+  },
+  "source_change": "Move existing unknown-kind abort into explicit default in both reader switches; no new kind admitted.",
+  "measured_source": "9ef15fa4649303193267d5287bbcd33f1664e8f947ffacf8284a32da5b386ce9",
+  "method": "llvm-objcopy-21 --dump-section each section from prior/current frame_point_measure; compare exact bytes; llvm-readelf-21 --sections --wide compares layout. No normalisation."
+}

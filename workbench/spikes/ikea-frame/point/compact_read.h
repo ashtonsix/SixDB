@@ -103,8 +103,8 @@ template <class RunSource> struct compact_reader_program {
             sum += local_kernels(d.width).prefixes[native_prefix](data, first, local - first + 1);
             return d.base + static_cast<fe::u64>(rbase) * steps + sum;
         }
+        default: std::abort(); // A new owner kind needs separate reader qualification.
         }
-        std::abort();
     }
 };
 using compact_reader = compact_reader_program<fe::run_ends>;
