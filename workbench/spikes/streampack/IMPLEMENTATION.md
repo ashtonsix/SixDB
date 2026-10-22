@@ -2,7 +2,7 @@
 
 StreamPack is implemented in [Ikea](../../../ikea/docs/streampack/usage.md), with
 caller-owned payload, directory, length and control windows. Reservation metadata
-now belongs to [Boundlist](../../../ikea/docs/boundlist/usage.md); its
+now belongs to [Boundlist](https://github.com/ashtonsix/SixDB/blob/719b0f5709c9190bd592888cf8fbbbd379bce960/ikea/docs/boundlist/usage.md); its
 [extraction qualification](../boundlist/GRADUATION.md) covers shared kernels and
 the later reverse/search changes. This note preserves the original qualification
 against its captured sources. It separates

@@ -1,0 +1,19 @@
+{
+  "scope": "independent logical replay of original input generator and unsalted next-address function; no hardware timing",
+  "matched_zen5_timing_records": 11648,
+  "model_cpp_sha256": "cca3d1240292176be577660f7d85caa5ba9abd31d41ca2f11cda4b8f7a486baa",
+  "one_block_distinct_rows": [
+    7,
+    81
+  ],
+  "blocks256_distinct_rows": [
+    77,
+    1283
+  ],
+  "raw_inputs_sha256": {
+    "build/workers/20261022T180938Z-9737e014/results/avx2/frame-p0.jsonl": "797ae8762202c612b970271712fad873bb1078d82229e25b748c0ebe2e0a84db",
+    "build/workers/20261022T180938Z-9737e014/results/avx2/frame-p1.jsonl": "4eeccc497e2ab5a863de6843b0a69878e81fc451dca5bc62eafa5c85aabfd24f",
+    "build/workers/20261022T180938Z-9737e014/results/avx512/frame-p0.jsonl": "26ed233ddc334ab4a6d21495879ddcd45377dbf96e456c8bd41a5d8b3223c3cf",
+    "build/workers/20261022T180938Z-9737e014/results/avx512/frame-p1.jsonl": "03dd869f6b729d7a795c4d664a93df89afc23b9c3b86753244f3b80956077f63"
+  }
+}

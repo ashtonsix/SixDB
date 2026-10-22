@@ -1,137 +1,55 @@
-# Boundlist
+# Boundlist: historical research
 
-Common borrowed search/geometry has graduated to maintained
-[Intervals](../../../ikea/docs/intervals/usage.md). StreamPack owns the compact image
-and retirement implementation. This study retains the earlier experimental and
-performance context; [Intervals graduation](../intervals/GRADUATION.md) records the
-ownership move and its actual consumer qualification.
+Common borrowed search and geometry now live in maintained
+[Intervals](../../../ikea/docs/intervals/usage.md). StreamPack owns compact
+reservation formats, admission, retirement and complete value operations.
+The public Boundlist headers, target, examples and obsolete runnable spike have
+been removed. This directory retains findings, negative results, offline reports
+and exact evidence recovery; it is not another maintained API.
 
+The original studies ran 19–21 October 2026. Their names and contracts describe
+those source epochs. [Intervals graduation](../intervals/GRADUATION.md) records
+the ownership move; its [follow-through audit](../intervals/AUDIT.md) records
+caller choices and the subsequent cleanup.
 
-The successor [Intervals spike](../intervals/README.md) reassesses the common seam
-for StreamPack, Directory and Frame, with external filters and sparse checkpoints.
-The maintained implementation below is its before control.
-
-Boundlist describes contiguous, half-open intervals using ordered cuts and maps
-points or ranges to their ranks. Equal consecutive cuts enclose a zero-size interval.
-Retirement leaves geometry unchanged. StreamPack composes that geometry with byte
-values, used lengths and value compaction. Other consumers supply their own data.
-
-Boundlist is implemented in Ikea. The study and graduation ran on
-19–20 October 2026. The
-[implementation report](GRADUATION.md) records the source/phase seams and measured
-algorithm choices; the [ordinary example](../../../ikea/examples/boundlist/ordinary.cpp)
-and [composition example](../../../ikea/examples/boundlist/composition.cpp) exercise
-the current API.
-The prototype algorithm menu and flattened adapter remain research controls.
-The [geometry/value ownership follow-up](OWNERSHIP.md) supersedes the original
-U-bearing sidecar boundary; generic ordered search is unchanged.
-The [retained design](DESIGN.md) records the three-codec portfolio and the final
-geometry/value seams. [Portfolio qualification](PORTFOLIO.md) supersedes earlier
-encoding recommendations and reports complete consumers, losing cases and real
-retained-reader tests. Public [usage](../../../ikea/docs/boundlist/usage.md) and
-[reference](../../../ikea/docs/boundlist/reference.md) describe the implementation.
-
-| Read next | Purpose |
+| Read next | What it established |
 | --- | --- |
-| [Retained design](DESIGN.md) | Curated formats, measured layout decisions and ownership seams |
-| [Portfolio qualification](PORTFOLIO.md) | Final before/current/fused comparisons, absolute metrics and recovery |
-| [Ownership follow-up](OWNERSHIP.md) | Current geometry/value boundary and codec comparison |
-| [Implementation](GRADUATION.md) | Production seams, qualification and selected defaults |
-| [Recommendation](RECOMMENDATION.md) | Historical prototype selection before implementation |
-| [Findings](FINDINGS.md) | Absolute latency, reciprocal throughput and memory; correctness and measurement limits |
-| [Production scorecard](evidence/graduation/scorecard.md) | Absolute latency, reciprocal throughput, setup, memory and counterexamples |
-| [Extraction parity](evidence/parity/README.md) | Frozen old/current readers, mutations and actual packing, with final cleanup qualification |
-| [Production evidence](evidence/graduation/README.md) | Selected matrices, source/host identities and raw recovery |
-| [Prototype evidence](evidence/native/README.md) | Earlier candidate comparisons and diagnosis |
-| [Original plan](PLAN.md) | Questions and candidate space explored; a research plan, not an implementation contract |
-| [Working state](STATUS.md) | Completion evidence and work belonging to implementation or other owners |
+| [API cleanup](API.md) | Unified cut/rank geometry, explicit selection, callable outlining and complete-reader consequences. |
+| [Portfolio qualification](PORTFOLIO.md) | Three-codec storage/read/write tradeoffs, strong fused controls, losing cases and retained readers. |
+| [Retained design](DESIGN.md) | Carrier bounds, geometry laws and the ownership split used by that epoch. |
+| [Ownership comparison](OWNERSHIP.md) | Why geometry-only improvements did not establish complete StreamPack value performance. |
+| [First graduation](GRADUATION.md) | Earlier production source/phase seams, qualification and algorithm selection. |
+| [Prototype findings](FINDINGS.md) and [recommendation](RECOMMENDATION.md) | Search, dependency-service and extraction candidates, including rejected universal replacements. |
+| [Production evidence](evidence/graduation/README.md), [API evidence](evidence/api/README.md), [parity](evidence/parity/README.md) | Selected comparisons with source/binary/raw recovery. |
 
-Engine owns complete directory policy. This spike supplies
-leaf search, extraction, read-grant and source-effect findings; it does not
-choose Engine's tree layout or implement a new B+ tree.
+Reuse the conclusions, not an obsolete launcher: flattened adapters and outlined
+callbacks lost complete-operation performance; narrower carriers and fewer
+checkpoints did not always repay their added prefix work; point-read windows did
+not grant all search reads. Carried traversal, explicit rank selection, typed
+consumer fusion and damage on the original named source survived into Intervals
+and StreamPack. Algorithm choices remain qualified by workload and ISA.
 
-## Geometry API cleanup — 21 October 2026
+## Recover the old implementation or a measured run
 
-The contract audit found contiguous stored geometry but two competing public
-interpretations of overlap and implicit retirement filtering on compact endpoint
-searches. The cleanup removes the paired-min/max helper and `sidecar` namespace.
-Consumer-owned occupied-extrema policy now composes ordinary boundary searches.
+The [recovery receipt](recovery.json) pins the exact Git objects before retirement.
+The complete source snapshot at
+`719b0f5709c9190bd592888cf8fbbbd379bce960` recovers public compatibility, the old
+spike, examples, diagrams and sibling modules together:
 
-Borrowed cuts, endpoint projections and compact geometry share interval-count,
-origin and exclusive-end operations: `locate`, `reverse`, `overlap` and `range`.
-`from_cuts` normalizes N+1 cuts to N interval ranks; `from_ends` adds an origin
-without requiring an encoding or other metadata. Selection is explicit through
-`selected_source`/`rank_selection`, including compact `live_ranks()`. A selected
-point owner is either the same rank or absent, never a later interval. Raw native
-packets have an assigned-rank mask; StreamPack supplies its own value/liveness policy.
-The 256-interval compact bytes, three codecs and schema omissions are unchanged.
+```sh
+mkdir -p build/recovered/boundlist-retirement
+git archive 719b0f5709c9190bd592888cf8fbbbd379bce960 | \
+  tar -x -C build/recovered/boundlist-retirement
+```
 
-The [API cleanup report](API.md) records complete-consumer before/current/fused
-qualification and the retained source identity. The prior literal-cut audit remains
-useful diagnosis; maintained checks now test the unified contract directly.
+For an **original measured binary**, use that cohort's `artifact.json` and source
+receipt instead: retirement's checkpoint is not the source of every earlier
+measurement. Full native sources, ELF files, disassembly and raw repetitions stay
+in their existing S3 bundles. Recover into a fresh directory, then run the original
+commands with the pinned Linux toolchain. Historical relative paths inside
+immutable evidence resolve in that recovered snapshot.
 
-## Code and reproduction
-
-`boundlist.h`, `geometry.h` and `metadata.h` are candidate bodies and compatibility
-adapters. `fused.h`, `scan-count.h` and `wide-control.h` are independent controls.
-`check.cpp` uses logical oracles; `material.cpp` exercises actual Loom allocations
-and Orbital retained-reader publication. `bench.cpp`, `search.cpp`, `packed.cpp`,
-`ranges.cpp`, `reads.cpp` and `cold.cpp` measure distinct complete consumers.
-
-Use the pinned [Linux build](../../../BUILDING.md), prefixing commands with
-`orb -m ubuntu` from macOS. Configure with `-DSIXDB_SPIKES=boundlist`, then build
-`boundlist_check` and `boundlist_material` for semantic and lifetime checks.
-Each benchmark accepts positional arguments documented at its `main`.
-
-The native runners keep loop/SLP vectorization disabled and audit linked
-consumers: `search-native.sh` covers isolated/search-envelope diagnosis,
-`qualification-native.sh` covers range and extraction consumers,
-`final-native.sh` covers complete-cycle readers and geometry, and
-`cold-native.sh` covers the final long-trace Loom/manual comparison.
-Their worker configurations select Zen 5, Granite Rapids and Neoverse V2.
-`evidence-inputs.json` and `consolidate.py` specify the retained comparisons.
-
-`graduation-native.sh` qualifies production search/reverse, shared mutation laws,
-complete readers and prepared Loom phases against frozen pre-change bodies and
-independent fused controls. Production tests/examples live under `ikea/`;
-`promotion.cpp` and `mutation.cpp` retain the before/after complete consumers.
-
-`binding-native.sh` qualifies numeric preparation and regular/compact owner frames;
-`adoption-native.sh` checks the final kernels, upper-bound duplicates and typed
-sidecar phases. `graduation-inputs.json` selects the production cohorts.
-`consolidate.py`, `supplements.py` and `scorecard.py` rebuild compact matrices,
-preparation/call accounting and readable slices. Use the recorded worker archives
-for the exact executed sources; the initial binding capture used the runner name
-`final-native.sh`, now restored to its earlier prototype purpose.
-
-`parity-native.sh` closes the direct pre-extraction reader/packing comparison:
-`legacy-read.h` and `legacy-write.h` contain actual frozen access/writer bodies,
-checked against their origin by `control-audit.py`. `reads.cpp`, `mutation.cpp`
-and `packing.cpp` include complete consumers and source-qualified effects.
-Packing restores a fragmented image outside each timed window; its independent
-block stream is distinct from per-slot reciprocal throughput. `parity-inputs.json`
-selects this follow-up cohort, keeping old/current/fused readers and old/current
-writers beside the earlier search and Loom evidence.
-
-`packing-native.sh` supplies the final packing follow-up: fixed journal placement,
-immutable count capture and seven repetitions. The first packing result remains
-in the [parity export](evidence/parity/README.md), together with the reader codegen
-comparison and all individual losing cells.
-
-`ownership-native.sh` and `ownership-workers.json` qualify the geometry/value
-ownership split against recovered old public headers/TUs, using `u-control.py`.
-`encoding.cpp` compares sizes, group-relative ends and Direct, including redundant
-checkpoints, explicit SIMD maintenance and stronger inverse controls. The current
-[ownership assessment](OWNERSHIP.md) records decisions, absolute results and recovery.
-
-`portfolio-final.sh` is the final three-codec reader/write/packet/Loom runner.
-`portfolio-search.cpp` retains generic search diagnostics; `portfolio-edits.cpp`
-compares distinct boundary and resize laws with independently fused SIMD updates.
-`portfolio-native.sh` and `portfolio-followup.sh` belong to earlier diagnostic
-captures, not an alternative final recipe. Recover those captures to reproduce
-them: intermediate descriptor order and prepared footprints differ.
-
-`orb -m ubuntu python3 workbench/spikes/boundlist/design-check.py` checks schema
-arithmetic and the independent mutation model against retained footprint rows.
-It is a model check; production literal fixtures and native consumers separately
-qualify the implemented bytes and kernels.
+Offline `*-report.py`, scorecards and consolidation inputs remain available to
+rebuild selected findings. `design-check.py` still checks independent schema and
+edit arithmetic against the retained footprint rows; it is not a native timing
+harness. No `SIXDB_SPIKES=boundlist` build route remains in the maintained tree.

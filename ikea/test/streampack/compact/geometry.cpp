@@ -1,0 +1,255 @@
+#include <ikea/intervals.h>
+#include <ikea/streampack/detail/compact/read.h>
+#include <ikea/streampack/detail/compact/write.h>
+#include <ikea/streampack/detail/compact/author/native.h>
+#include <ikea/intervals/author/search.h>
+#include <ikea/effects.h>
+#include <array>
+#include <cassert>
+#include <vector>
+#include <algorithm>
+
+namespace sc = ikea::streampack::detail::compact;
+namespace bl = ikea::intervals;
+struct fixture {
+    sc::layout format;
+    alignas(64) std::array<std::byte, 4096> directory{}, lengths{};
+    std::array<std::byte, 6> control{};
+    sc::view view;
+    explicit fixture(sc::description d)
+        : format(*sc::layout::prepare(d)),
+          view(*sc::view::bind(format, {std::span(directory).first(format.directory_bytes()),
+                                        std::span(lengths).first(format.lengths_bytes()),
+                                        std::span(control).first(format.control_bytes())})) {}
+};
+struct model {
+    unsigned reserved;
+    bool dead = false;
+};
+template <class T>
+concept carries_used = requires(T value) { value.length; };
+static_assert(!carries_used<sc::author::location>);
+struct audit {
+    const sc::view *source;
+    std::array<std::vector<std::byte>, 3> replay;
+    unsigned writes = 0, limit = 4096;
+    unsigned remaining() const { return limit - writes; }
+    explicit audit(const sc::view &s) : source(&s) { reset(); }
+    void reset() {
+        const auto p = source->windows().planes();
+        for (unsigned i = 0; i < 3; ++i)
+            replay[i] = {p[i].begin(), p[i].end()};
+    }
+    void before(const sc::view &s, ikea::byte_write w) {
+        assert(&s == source && writes < limit && w.size);
+        const auto p = s.windows().planes();
+        assert(w.plane < 3 && w.offset <= p[w.plane].size() &&
+               w.size <= p[w.plane].size() - w.offset);
+        // Mark the exact issued window. After each command, unmarked bytes must
+        // still match the snapshot, including complete readable tail groups.
+        for (unsigned i = 0; i < w.size; ++i)
+            replay[w.plane][w.offset + i] = std::byte{};
+        ranges.push_back(w);
+        ++writes;
+    }
+    std::vector<ikea::byte_write> ranges;
+    void verify() {
+        const auto p = source->windows().planes();
+        for (auto w : ranges)
+            std::copy_n(p[w.plane].data() + w.offset, w.size, replay[w.plane].data() + w.offset);
+        for (unsigned i = 0; i < 3; ++i)
+            assert(std::equal(replay[i].begin(), replay[i].end(), p[i].begin(), p[i].end()));
+        ranges.clear();
+        reset();
+    }
+};
+void verify(fixture &f, const std::vector<model> &values) {
+    assert(f.view.validate() && f.view.size() == values.size());
+    const bl::selected_source selected{f.view, f.view.live_ranks()};
+    unsigned offset = 0;
+    for (unsigned r = 0; r < values.size(); ++r) {
+        const auto &v = values[r];
+        const auto loc = sc::locate(f.view, r);
+        assert(loc && loc->first == offset && loc->limit == offset + v.reserved);
+        assert(bool(sc::locate(selected, r)) == !v.dead);
+        for (unsigned x = 0; x < v.reserved; ++x) {
+            assert(sc::reverse(f.view, offset + x) == r);
+            assert(sc::reverse(selected, offset + x) == (v.dead ? f.view.size() : r));
+        }
+        offset += v.reserved;
+    }
+    assert(f.view.extent() == offset && sc::reverse(f.view, offset) == f.view.size());
+#if defined(__aarch64__) || defined(__AVX2__)
+    sc::author::dispatch(f.view, [&](auto a) {
+        for (unsigned g = 0; g < (values.size() + 15) / 16; ++g) {
+            const auto packet = sc::native::read16(a, g);
+            const bl::selected_source chosen{a, a.live_ranks()};
+            const auto live_packet = sc::native::read16(chosen, g);
+            std::array<unsigned, 16> starts, reservations;
+            sc::native::each_chunk([&](auto i) {
+                sc::native::store(starts.data() + i * sc::native::lanes, packet.values.offsets(i));
+                sc::native::store(reservations.data() + i * sc::native::lanes,
+                                  packet.values.sizes(i));
+            });
+            unsigned position = 0;
+            for (unsigned r = 0; r < std::min<unsigned>(values.size(), g * 16); ++r)
+                position += values[r].reserved;
+            for (unsigned r = g * 16; r < std::min<unsigned>(values.size(), g * 16 + 16); ++r) {
+                assert(starts[r % 16] == position && reservations[r % 16] == values[r].reserved);
+                assert(bool(packet.active & (1u << (r % 16))));
+                assert(bool(live_packet.active & (1u << (r % 16))) == !values[r].dead);
+                position += values[r].reserved;
+            }
+        }
+    });
+#endif
+    sc::author::dispatch(f.view, [&](const auto &access) {
+        const bl::selected_source chosen{access, access.live_ranks()};
+        // A carried traversal includes zero and retired reservations. Exercise
+        // a partial window crossing both sides of a G16 boundary as well.
+        for (unsigned first : {0u, std::min(15u, unsigned(values.size()))}) {
+            const auto count = unsigned(values.size()) - first;
+            unsigned begin = 0;
+            for (unsigned r = 0; r < first; ++r)
+                begin += values[r].reserved;
+            unsigned expected_rank = first;
+            access.slots(first, count, begin, [&](unsigned rank, unsigned from, unsigned width) {
+                assert(rank == expected_rank++ && from == begin && width == values[rank].reserved);
+                begin += values[rank].reserved;
+            });
+            assert(expected_rank == values.size());
+        }
+        for (unsigned q = 0; q < offset + 3; q += 13) {
+            unsigned lower = values.size(), upper = values.size(), end = 0;
+            for (unsigned r = 0; r < values.size(); ++r) {
+                end += values[r].reserved;
+                if (!values[r].dead) {
+                    if (lower == values.size() && end >= q)
+                        lower = r;
+                    if (upper == values.size() && end > q)
+                        upper = r;
+                }
+            }
+            assert(bl::lower_bound(chosen, q) == lower && bl::upper_bound(chosen, q) == upper);
+            const auto l = bl::author::prepare_lower_bound(chosen, q);
+            const auto u = bl::author::prepare_upper_bound(chosen, q);
+            assert(l.finish() == lower && u.finish() == upper);
+        }
+    });
+    for (unsigned lo = 0; lo < offset + 3; lo += 11)
+        for (unsigned span : {0u, 1u, 27u, 4096u})
+            for (bool live : {false, true}) {
+                unsigned first = values.size(), limit = values.size(), start = 0;
+                for (unsigned r = 0; r < values.size(); ++r) {
+                    const auto end = start + values[r].reserved;
+                    if (span && lo < end && start < lo + span && start < end &&
+                        (!live || !values[r].dead)) {
+                        if (first == values.size())
+                            first = r;
+                        limit = r + 1;
+                    }
+                    start = end;
+                }
+                assert(((live ? sc::overlap(selected, lo, lo + span) : sc::overlap(f.view, lo, lo + span)) == bl::rank_window{first, limit}));
+            }
+}
+void history(sc::description d) {
+    fixture f(d);
+    audit log(f.view);
+    assert(sc::initialize(f.view, log));
+    log.verify();
+    std::vector<model> m;
+    for (unsigned r = 0; r < 65; ++r) {
+        const auto reserve = d.fixed_size.value_or(std::uint16_t(r % 7 ? r % 31 : 0));
+        assert(sc::append(f.view, reserve, log));
+        log.verify();
+        m.push_back({reserve});
+        if (r == 14 || r == 15 || r == 16 || r == 64)
+            verify(f, m);
+    }
+    if (!d.immortal)
+        for (unsigned r = 0; r < 65; r += 3) {
+            assert(sc::retire(f.view, r, log));
+            m[r].dead = true;
+            log.verify();
+        }
+    verify(f, m);
+    if (!f.format.fixed()) {
+        // An enclosing owner may rewrite the already-read slot. Verify original
+        // offsets against an independent model while earlier Direct ends and
+        // Width checkpoints have already changed underneath the traversal.
+        unsigned original = 0, destination = 0;
+        sc::author::dispatch(f.view, [&](auto a) {
+            sc::author::encoder encoder(a, 0, 0);
+            a.slots(0, m.size(), 0, [&](unsigned rank, unsigned from, unsigned reservation) {
+                assert(from == original && reservation == m[rank].reserved);
+                original += m[rank].reserved;
+                const auto chosen = m[rank].dead ? 0u : m[rank].reserved / 2;
+                encoder.append(chosen, log);
+                destination += chosen;
+                m[rank].reserved = chosen;
+            });
+            sc::author::finish_rewrite_unchecked(a, destination, log);
+        });
+        log.verify();
+        verify(f, m);
+    }
+    // Refused commands preserve metadata and journal output.
+    const auto count = log.writes;
+    log.limit = count;
+    assert(!sc::append(f.view, d.fixed_size.value_or(0), log));
+    assert(log.writes == count);
+    log.verify();
+    log.limit = 4096;
+    fixture dst(d);
+    audit output(dst.view);
+    std::vector<std::uint16_t> selected;
+    std::vector<model> ordered;
+    for (int r = 64; r >= 0; --r)
+        if (!m[r].dead) {
+            selected.push_back(r);
+            ordered.push_back(m[r]);
+        }
+    // Selection/remapping is consumer policy, not a compact-image compactor.
+    assert(sc::initialize(dst.view, output));
+    for (auto r : selected)
+        assert(sc::append(dst.view, m[r].reserved, output));
+    output.verify();
+    verify(dst, ordered);
+}
+void packed_geometry_checks() {
+    for (auto g : {sc::geometry::absolute_ends, sc::geometry::sizes, sc::geometry::relative_ends})
+        for (bool immortal : {false, true})
+            for (auto fixed : {std::optional<std::uint16_t>{}, std::optional<std::uint16_t>{0},
+                               std::optional<std::uint16_t>{8}})
+                history({g, 255, 65280, fixed, immortal});
+    // Frozen schema bytes and a hand-authored Direct interpretation.
+    fixture f({sc::geometry::absolute_ends, 255, 65280, {}, false});
+    const std::array<std::byte, 8> wire{std::byte{0x60}, std::byte{0xff}, std::byte{0},
+                                        std::byte{0},    std::byte{0xff}, std::byte{0},
+                                        std::byte{0},    std::byte{0}};
+    assert(sc::layout::decode(wire)->encode() == wire);
+    auto modern = wire;
+    modern[0] = std::byte{0x80};
+    assert(f.format.encode() == modern && sc::layout::decode(modern)->encode() == modern);
+    const auto at = f.format.geometry_offset();
+    f.directory[at] = std::byte{3};
+    f.directory[at + 2] = std::byte{3};
+    f.directory[at + 4] = std::byte{9};
+    f.control[0] = std::byte{3};
+    assert(f.view.validate());
+    assert(sc::reverse(f.view, 3) == 2 && bl::lower_bound(f.view, 3u) == 0 &&
+           bl::upper_bound(f.view, 3u) == 2);
+    auto invalid = wire;
+    invalid[0] = std::byte{0x40}; // StreamPack v2 is not a geometry-only schema.
+    assert(!sc::layout::decode(invalid));
+    invalid[0] = std::byte{0x62}; // Reserved former U-placement bit.
+    assert(!sc::layout::decode(invalid));
+    fixture w({sc::geometry::sizes, 255, 65280, {}, false});
+    ikea::no_coverage none;
+    assert(sc::initialize(w.view, none) && sc::append(w.view, 3, none));
+    w.lengths[15] = std::byte{1};
+    assert(!w.view.validate());
+}
+
+int main() { packed_geometry_checks(); }

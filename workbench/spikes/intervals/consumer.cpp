@@ -64,9 +64,9 @@ template <unsigned Maximum> void experiment(const settings &options) {
     add_sparse.template operator()<64, true>("ends64");
     add_sparse.template operator()<256, true>("ends256");
 
-    compact_image sizes(f, ikea::boundlist::geometry::sizes), ends(f, ikea::boundlist::geometry::relative_ends);
+    compact_image sizes(f, ikea::streampack::detail::compact::geometry::sizes), ends(f, ikea::streampack::detail::compact::geometry::relative_ends);
     auto add_compact = [&](const char *name, const compact_image &owner) {
-        ikea::boundlist::author::dispatch(*owner.view, [&](auto access) {
+        ikea::streampack::detail::compact::author::dispatch(*owner.view, [&](auto access) {
             add_arm(arms, name, owner.directory.size() + owner.lengths.size(), owner.control.size(),
                     owner.directory.size() + owner.lengths.size(), owner.bytes() + sizeof(owner),
                     owner.layout.width_bytes(), owner.layout.offset_bytes(), access, f);

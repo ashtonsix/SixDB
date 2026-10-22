@@ -1,0 +1,172 @@
+{
+  "frame_points::point_reader::get(unsigned long) const": {
+    "address": "00000000000049c0",
+    "instructions": 280,
+    "calls": [
+      "4bf8: d63f0100     \tblr\tx8",
+      "4c94: d63f0140     \tblr\tx10",
+      "4ce4: d63f0120     \tblr\tx9",
+      "4d2c: d63f0120     \tblr\tx9",
+      "4dfc: 97fff739     \tbl\t0x2ae0 <__assert_fail@plt>",
+      "4e00: 97fff778     \tbl\t0x2be0 <abort@plt>"
+    ],
+    "stack": [
+      "49c0: a9bb7bfd     \tstp\tx29, x30, [sp, #-0x50]!"
+    ]
+  },
+  "frame_points::point_reader_native_runs::get(unsigned long) const": {
+    "address": "0000000000004e20",
+    "instructions": 336,
+    "calls": [
+      "5078: d63f0100     \tblr\tx8",
+      "5118: d63f0140     \tblr\tx10",
+      "5190: d63f0120     \tblr\tx9",
+      "52fc: d63f0120     \tblr\tx9",
+      "533c: 97fff5e9     \tbl\t0x2ae0 <__assert_fail@plt>",
+      "5340: 97fff628     \tbl\t0x2be0 <abort@plt>"
+    ],
+    "stack": [
+      "4e20: a9bb7bfd     \tstp\tx29, x30, [sp, #-0x50]!"
+    ]
+  },
+  "frame_points::compact_reader::get(unsigned long) const": {
+    "address": "0000000000005360",
+    "instructions": 256,
+    "calls": [
+      "54a0: d63f0120     \tblr\tx9",
+      "553c: d63f0120     \tblr\tx9",
+      "55dc: d63f0140     \tblr\tx10",
+      "5694: d63f0100     \tblr\tx8",
+      "56f0: d63f0100     \tblr\tx8",
+      "573c: 97fff4e9     \tbl\t0x2ae0 <__assert_fail@plt>",
+      "5740: 97fff528     \tbl\t0x2be0 <abort@plt>"
+    ],
+    "stack": [
+      "5360: a9bb7bfd     \tstp\tx29, x30, [sp, #-0x50]!"
+    ]
+  },
+  "frame_points::compact_reader_native_runs::get(unsigned long) const": {
+    "address": "0000000000005760",
+    "instructions": 304,
+    "calls": [
+      "58a4: d63f0120     \tblr\tx9",
+      "5944: d63f0140     \tblr\tx10",
+      "5a38: d63f0120     \tblr\tx9",
+      "5acc: d63f0100     \tblr\tx8",
+      "5bc0: d63f0100     \tblr\tx8",
+      "5bfc: 97fff3b9     \tbl\t0x2ae0 <__assert_fail@plt>",
+      "5c00: 97fff3f8     \tbl\t0x2be0 <abort@plt>"
+    ],
+    "stack": [
+      "5760: a9bb7bfd     \tstp\tx29, x30, [sp, #-0x50]!"
+    ]
+  },
+  "unsigned long read<1u, frame_points::point_reader>(frame_points::point_reader const&)": {
+    "address": "00000000000071a0",
+    "instructions": 36,
+    "calls": [
+      "71e8: 97fff5f6     \tbl\t0x49c0 <frame_points::point_reader::get(unsigned long) const>"
+    ],
+    "stack": [
+      "71a0: a9bc7bfd     \tstp\tx29, x30, [sp, #-0x40]!"
+    ]
+  },
+  "unsigned long read<8u, frame_points::point_reader>(frame_points::point_reader const&)": {
+    "address": "0000000000007280",
+    "instructions": 156,
+    "calls": [
+      "7310: 97fff5ac     \tbl\t0x49c0 <frame_points::point_reader::get(unsigned long) const>",
+      "734c: 97fff59d     \tbl\t0x49c0 <frame_points::point_reader::get(unsigned long) const>",
+      "7380: 97fff590     \tbl\t0x49c0 <frame_points::point_reader::get(unsigned long) const>",
+      "73b8: 97fff582     \tbl\t0x49c0 <frame_points::point_reader::get(unsigned long) const>",
+      "73e8: 97fff576     \tbl\t0x49c0 <frame_points::point_reader::get(unsigned long) const>",
+      "7414: 97fff56b     \tbl\t0x49c0 <frame_points::point_reader::get(unsigned long) const>",
+      "7444: 97fff55f     \tbl\t0x49c0 <frame_points::point_reader::get(unsigned long) const>",
+      "7474: 97fff553     \tbl\t0x49c0 <frame_points::point_reader::get(unsigned long) const>"
+    ],
+    "stack": [
+      "7280: d10243ff     \tsub\tsp, sp, #0x90"
+    ]
+  },
+  "unsigned long read<1u, frame_points::point_reader_native_runs>(frame_points::point_reader_native_runs const&)": {
+    "address": "0000000000007540",
+    "instructions": 36,
+    "calls": [
+      "7588: 97fff626     \tbl\t0x4e20 <frame_points::point_reader_native_runs::get(unsigned long) const>"
+    ],
+    "stack": [
+      "7540: a9bc7bfd     \tstp\tx29, x30, [sp, #-0x40]!"
+    ]
+  },
+  "unsigned long read<8u, frame_points::point_reader_native_runs>(frame_points::point_reader_native_runs const&)": {
+    "address": "0000000000007620",
+    "instructions": 156,
+    "calls": [
+      "76b0: 97fff5dc     \tbl\t0x4e20 <frame_points::point_reader_native_runs::get(unsigned long) const>",
+      "76ec: 97fff5cd     \tbl\t0x4e20 <frame_points::point_reader_native_runs::get(unsigned long) const>",
+      "7720: 97fff5c0     \tbl\t0x4e20 <frame_points::point_reader_native_runs::get(unsigned long) const>",
+      "7758: 97fff5b2     \tbl\t0x4e20 <frame_points::point_reader_native_runs::get(unsigned long) const>",
+      "7788: 97fff5a6     \tbl\t0x4e20 <frame_points::point_reader_native_runs::get(unsigned long) const>",
+      "77b4: 97fff59b     \tbl\t0x4e20 <frame_points::point_reader_native_runs::get(unsigned long) const>",
+      "77e4: 97fff58f     \tbl\t0x4e20 <frame_points::point_reader_native_runs::get(unsigned long) const>",
+      "7814: 97fff583     \tbl\t0x4e20 <frame_points::point_reader_native_runs::get(unsigned long) const>"
+    ],
+    "stack": [
+      "7620: d10243ff     \tsub\tsp, sp, #0x90"
+    ]
+  },
+  "unsigned long read<1u, frame_points::compact_reader>(frame_points::compact_reader const&)": {
+    "address": "00000000000078e0",
+    "instructions": 36,
+    "calls": [
+      "7928: 97fff68e     \tbl\t0x5360 <frame_points::compact_reader::get(unsigned long) const>"
+    ],
+    "stack": [
+      "78e0: a9bc7bfd     \tstp\tx29, x30, [sp, #-0x40]!"
+    ]
+  },
+  "unsigned long read<8u, frame_points::compact_reader>(frame_points::compact_reader const&)": {
+    "address": "00000000000079c0",
+    "instructions": 156,
+    "calls": [
+      "7a50: 97fff644     \tbl\t0x5360 <frame_points::compact_reader::get(unsigned long) const>",
+      "7a8c: 97fff635     \tbl\t0x5360 <frame_points::compact_reader::get(unsigned long) const>",
+      "7ac0: 97fff628     \tbl\t0x5360 <frame_points::compact_reader::get(unsigned long) const>",
+      "7af8: 97fff61a     \tbl\t0x5360 <frame_points::compact_reader::get(unsigned long) const>",
+      "7b28: 97fff60e     \tbl\t0x5360 <frame_points::compact_reader::get(unsigned long) const>",
+      "7b54: 97fff603     \tbl\t0x5360 <frame_points::compact_reader::get(unsigned long) const>",
+      "7b84: 97fff5f7     \tbl\t0x5360 <frame_points::compact_reader::get(unsigned long) const>",
+      "7bb4: 97fff5eb     \tbl\t0x5360 <frame_points::compact_reader::get(unsigned long) const>"
+    ],
+    "stack": [
+      "79c0: d10243ff     \tsub\tsp, sp, #0x90"
+    ]
+  },
+  "unsigned long read<1u, frame_points::compact_reader_native_runs>(frame_points::compact_reader_native_runs const&)": {
+    "address": "0000000000007c80",
+    "instructions": 36,
+    "calls": [
+      "7cc8: 97fff6a6     \tbl\t0x5760 <frame_points::compact_reader_native_runs::get(unsigned long) const>"
+    ],
+    "stack": [
+      "7c80: a9bc7bfd     \tstp\tx29, x30, [sp, #-0x40]!"
+    ]
+  },
+  "unsigned long read<8u, frame_points::compact_reader_native_runs>(frame_points::compact_reader_native_runs const&)": {
+    "address": "0000000000007d60",
+    "instructions": 160,
+    "calls": [
+      "7df0: 97fff65c     \tbl\t0x5760 <frame_points::compact_reader_native_runs::get(unsigned long) const>",
+      "7e2c: 97fff64d     \tbl\t0x5760 <frame_points::compact_reader_native_runs::get(unsigned long) const>",
+      "7e60: 97fff640     \tbl\t0x5760 <frame_points::compact_reader_native_runs::get(unsigned long) const>",
+      "7e98: 97fff632     \tbl\t0x5760 <frame_points::compact_reader_native_runs::get(unsigned long) const>",
+      "7ec8: 97fff626     \tbl\t0x5760 <frame_points::compact_reader_native_runs::get(unsigned long) const>",
+      "7ef4: 97fff61b     \tbl\t0x5760 <frame_points::compact_reader_native_runs::get(unsigned long) const>",
+      "7f24: 97fff60f     \tbl\t0x5760 <frame_points::compact_reader_native_runs::get(unsigned long) const>",
+      "7f54: 97fff603     \tbl\t0x5760 <frame_points::compact_reader_native_runs::get(unsigned long) const>"
+    ],
+    "stack": [
+      "7d60: d10243ff     \tsub\tsp, sp, #0x90"
+    ]
+  }
+}

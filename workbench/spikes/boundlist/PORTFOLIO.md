@@ -11,8 +11,8 @@ The [absolute scorecard](evidence/portfolio/scorecard.md) separates dependent
 latency, reciprocal throughput and bytes. Every qualified cell, including losses,
 is retained with sample count and min/median/max. The [design record](DESIGN.md)
 explains what was adopted and rejected; the public
-[reference](../../../ikea/docs/boundlist/reference.md) and
-[usage](../../../ikea/docs/boundlist/usage.md) teach the resulting interface.
+[reference](https://github.com/ashtonsix/SixDB/blob/719b0f5709c9190bd592888cf8fbbbd379bce960/ikea/docs/boundlist/reference.md) and
+[usage](https://github.com/ashtonsix/SixDB/blob/719b0f5709c9190bd592888cf8fbbbd379bce960/ikea/docs/boundlist/usage.md) teach the resulting interface.
 This report supersedes the encoding recommendation in [OWNERSHIP.md](OWNERSHIP.md).
 Earlier search and extraction results remain historical evidence, not a second
 current format specification.

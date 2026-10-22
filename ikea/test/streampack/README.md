@@ -27,7 +27,12 @@ bounds, mixed carrier widths, wide-origin relative sources and live phase-state
 checks. It exercises literal version 2 values converted to version 3 without
 altering the original bytes, along with exact descriptor round trips.
 
-All three targets and executable guides disable both compiler vectorizers. The
+The [private compact-image checks](compact/README.md) preserve geometry/admission,
+literal-cut selection, legacy descriptors and boundary/resize damage coverage
+under the owning module. Generic ordered search and cuts are tested independently
+in Intervals.
+
+These targets and executable guides disable both compiler vectorizers. The
 composition guide instantiates the scalar and native register carriers through
 Ikea's real `preserve_none`/`musttail` chain. Run `ikea_validate`, or build these
 targets and use `ctest --test-dir BUILD -R '^ikea_.*streampack'`.

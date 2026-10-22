@@ -1,5 +1,6 @@
 #include <ikea/intervals.h>
-#include <ikea/boundlist.h>
+#include <ikea/streampack/detail/compact/read.h>
+#include <ikea/streampack/detail/compact/write.h>
 #include <array>
 #include <chrono>
 #include <cstdio>
@@ -8,7 +9,7 @@
 #include <vector>
 
 namespace in=ikea::intervals;
-namespace bl=ikea::boundlist;
+namespace bl=ikea::streampack::detail::compact;
 using u64=std::uint64_t;
 constexpr unsigned count=256,requests=4096,repeat=16;
 volatile u64 edit_sink;

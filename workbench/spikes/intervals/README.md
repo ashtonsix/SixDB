@@ -6,6 +6,9 @@ retirement responsibilities. The [graduation account](GRADUATION.md) records the
 real ownership migration and consumer checks. The earlier frozen evidence remains
 valid for its original source; it is not rewritten as a current measurement.
 
+The [follow-through audit](AUDIT.md) covers documentation, retired compatibility,
+maintained test ownership and live caller code/performance choices.
+
 ## Starting evidence
 
 The [Boundlist design](../boundlist/DESIGN.md) and
@@ -104,7 +107,7 @@ whole possible strided local window. A sparse G64 Sizes phase can need four
 native windows; it cannot advertise a G16 footprint. The original source/filter
 and their coherent retained image outlive completion.
 
-`size_editor` is a checked borrowed Sizes experiment: append and resize issue
+The maintained `size_editor` supplies checked borrowed Sizes edits: append and resize issue
 source-qualified damage for actual stores before writing. Owners admit disjoint
 placement, contents and exclusivity; effects capacity/value/rank/extent checks
 happen before stores. There is no allocator, portable descriptor or publication
@@ -112,11 +115,11 @@ protocol. Changing one boundary while preserving later endpoints remains a
 distinct maintained operation, not an alias for resize. Only these Sizes edits
 have a new candidate body; the retained production codecs remain the controls.
 
-## Handoff provenance and remaining production work
+## Handoff provenance and qualification
 
 The geometry-only `ikea-frame/checkpoints` prototype was transferred here and
 removed after build isolation. Frame retains its separate `point/` work. Exact
-historical source remains in ignored immutable captures:
+handoff provenance was recorded in these local immutable captures:
 
 - `build/captures/frame-checkpoints-20261022`, source digest
   `9ce4a8a80b785633eb4738122b5d30c980950cf198c93d86f2f41b3c89f7e6a8`.
@@ -129,15 +132,19 @@ are physically owned by Intervals; StreamPack owns compact storage and retiremen
 No old persisted bytes are retagged. Historical comparisons retain their frozen
 sources and byte/admission context.
 
-For full local reproduction, configure as above, then run:
+Measured source is recovered from each retained cohort's archive; reproduction
+does not depend on those local handoff paths.
+
+For a new local qualification, configure as above, then run:
 
 ```sh
 python3 workbench/spikes/intervals/run.py --cpu 8 --output build/intervals/new-run
 ```
 
 The runner builds/runs validation, records binary/source hashes, rotates primitive
-arms, reverses geometry case/process order and before/after Directory process order,
-and checks that measured sources did not change. `report.py` summarizes every arm
+arms and reverses geometry case/process order. Its Directory rows use the single
+current implementation; frozen before/after comparison belongs to `caller-native.sh`. It
+checks that measured sources did not change. `report.py` summarizes every arm
 with sample count and min/median/max, plus bytes. It reuses the existing complete
 Directory driver with real Objects; those rows contain seven-repetition medians
 and minima, not raw inner samples. Its fixed metric order and local VM noise remain

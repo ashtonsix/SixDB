@@ -10,7 +10,7 @@
 #include <type_traits>
 
 namespace ikea::intervals_before {
-namespace bl = ikea::boundlist;
+namespace bl = ikea::intervals;
 
 template <unsigned Spacing, class Width, std::unsigned_integral Point = std::uint32_t,
           unsigned CheckpointCapacity = 0>

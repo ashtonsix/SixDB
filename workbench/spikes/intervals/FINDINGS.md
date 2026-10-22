@@ -63,7 +63,7 @@ exact 9-byte inverted filters, no geometry access for an empty filter, protected
 native tails, 4,536 checked append/resize operations, refusal without byte/effect
 changes and a retained independent old image.
 
-The actual Directory implementation is compiled twice: the candidate transform
+In the initial candidate cohort, the actual Directory implementation was compiled twice: the candidate transform
 changes only the include and namespace binding. Both the existing and candidate
 40-shape tests pass through actual Objects, old Scopes, edits and no-op publication.
 Their complete implementation object disassemblies match. Namespace isolation has
@@ -83,11 +83,12 @@ DRAM residence, fleet rankings or a Zen 5 recommendation. Concurrent activity on
 other vCPUs and VM scheduling can affect results. Small differences do not prove
 an improvement or regression.
 
-Production rename/ownership migration, the full portable descriptor/byte law,
-cold dependency service, complete owner edit throughput and x86/native fleet
-qualification remain unpromoted. This spike implements and tests the candidate
-seam and exposes choices; it does not claim those remaining production changes
-or Frame's separate full-width prediction/exception algebra are complete.
+At this initial cohort, ownership migration and native qualification were still
+open. They are subsequently recorded in [graduation](GRADUATION.md) and the
+[native study](RAISE-BAR.md). Cold dependency service and Frame's separate
+full-width prediction/exception algebra are not established by this candidate
+sweep. Current runners use the actual Directory once, rather than relabeling
+two post-migration copies as before/after.
 
 ## Selected local results — 22 samples per cell
 

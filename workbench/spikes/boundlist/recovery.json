@@ -1,0 +1,18 @@
+{
+  "status": "historical Boundlist runnable source retired; maintained borrowed geometry is Intervals, compact ownership is StreamPack",
+  "commit": "719b0f5709c9190bd592888cf8fbbbd379bce960",
+  "git_objects": {
+    "ikea/include/ikea/boundlist": "64d8811dc6fdfb9a40d830da6e87a01fb427d7f4",
+    "ikea/include/ikea/boundlist.h": "3300c1f0e45fc9112d3bef32c0263365acfacfb7",
+    "ikea/docs/boundlist": "276ac471705cf53bba449ad35aab26b371983909",
+    "ikea/examples/boundlist": "4ecb790924bb8455440157825cf3d4b1da7d711d",
+    "ikea/test/boundlist": "d1a3bb5b5438f41be5950f552652df374c3dea10",
+    "workbench/spikes/boundlist": "09f2e94a7c8091b42d001d182c2e4ef3d3b8dc6b"
+  },
+  "verified_before_retirement": {
+    "files": 80,
+    "bytes": 547413
+  },
+  "recovery": "git archive COMMIT | tar -x -C NEW_DIRECTORY; recover the full source snapshot for historical native runners, not just their headers",
+  "measured_cohorts": "Existing evidence/artifact.json references recover each exact measured source/binary; evidence bytes are unchanged."
+}

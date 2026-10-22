@@ -172,10 +172,10 @@ contract. StreamPack owns its compact image and retirement/value interpretation.
 | Complete value layout, admission, fused readers, writers and transfer | `streampack/`; `src/streampack/` |
 
 The compact implementation is private to StreamPack, including historical
-standalone compact-description decoding used by compatibility controls. New
-Intervals consumers do not import that storage policy. Old Boundlist headers and
-target forward to the new owners for historical consumers; the dependency never
-points back from Intervals. No persisted bytes were retagged.
+standalone compact-description decoding used by owner-private controls.
+Intervals consumers do not import that storage policy, and Intervals has no
+reverse dependency. The old Boundlist public headers/target are removed; historical
+source recovery stays with the study. No persisted bytes were retagged.
 
 Native packets and CPS stages remain visible inside complete owner operations.
 The retained [Intervals qualification](../../workbench/spikes/intervals/GRADUATION.md)

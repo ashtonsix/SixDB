@@ -89,6 +89,8 @@ All three encodings describe the same starts and reservation sizes:
 | **Sizes** | R per rank and one group-origin checkpoint per 16 ranks. | Narrow fields and local size changes; random starts need a local prefix sum. |
 | **Relative Ends** | Group-local cumulative end per rank and the same checkpoints. | Direct local lookup; local ends can need wider fields than R. |
 
+![The same reservation boundaries stored as absolute ends, sizes and relative ends. All three locate rank 18 at start 37 with size 5.](../intervals/images/encodings.svg)
+
 There are `ceil(n/16)` meaningful checkpoints, including the first origin, and no
 terminal checkpoint. The final extent is stored separately for variable checkpointed
 geometry. [The Intervals guide](../intervals/usage.md) describes the borrowed source contract;

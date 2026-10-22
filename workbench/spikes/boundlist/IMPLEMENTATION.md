@@ -4,8 +4,8 @@ This records the original extraction. The [ownership follow-up](OWNERSHIP.md)
 supersedes its U-bearing schema/packet and compaction boundary; the original
 qualification below remains historical evidence.
 
-The Boundlist graduation and StreamPack cleanup were completed. [Usage](../../../ikea/docs/boundlist/usage.md),
-[reference](../../../ikea/docs/boundlist/reference.md),
+The Boundlist graduation and StreamPack cleanup were completed. [Usage](https://github.com/ashtonsix/SixDB/blob/719b0f5709c9190bd592888cf8fbbbd379bce960/ikea/docs/boundlist/usage.md),
+[reference](https://github.com/ashtonsix/SixDB/blob/719b0f5709c9190bd592888cf8fbbbd379bce960/ikea/docs/boundlist/reference.md),
 [implementation report](GRADUATION.md) and the retained
 [search](evidence/graduation/scorecard.md) / [parity](evidence/parity/scorecard.md)
 scorecards record decisions and evidence.

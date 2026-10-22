@@ -1,0 +1,82 @@
+{
+  "scope": "Compare linked actual Directory read functions, preserving operands/symbols.\n\nOnly historical namespace spelling, instruction addresses before named symbols,\ncomments and whitespace are normalized. Immediates and symbolic offsets remain.\nThis is a codegen diagnostic, not a semantic proof or a runtime measurement.\n",
+  "pairs": [
+    {
+      "function": "engine::directory::Layer::route(orbital::RepresentationSelection<engine::directory::Control>, unsigned int) const",
+      "before_address": "000000000000f7c0",
+      "after_address": "000000000000f7c0",
+      "before_instructions": 251,
+      "after_instructions": 251,
+      "exact_encoding_equal": true,
+      "normalized_instructions_equal": true,
+      "before_normalized_sha256": "1bbfd6f543e27fac35ba93e64f4d1724c5750869538583266b67d2768f361600",
+      "after_normalized_sha256": "1bbfd6f543e27fac35ba93e64f4d1724c5750869538583266b67d2768f361600"
+    },
+    {
+      "function": "engine::directory::Layer::lower(orbital::RepresentationSelection<engine::directory::Control>, unsigned int) const",
+      "before_address": "000000000000fbc0",
+      "after_address": "000000000000fbc0",
+      "before_instructions": 254,
+      "after_instructions": 254,
+      "exact_encoding_equal": true,
+      "normalized_instructions_equal": true,
+      "before_normalized_sha256": "e7142c4f35f2dbef61e64a0aba5aeda59951f3278bbb0d8b1486f4f9390a7fa2",
+      "after_normalized_sha256": "e7142c4f35f2dbef61e64a0aba5aeda59951f3278bbb0d8b1486f4f9390a7fa2"
+    },
+    {
+      "function": "engine::directory::Layer::find(orbital::ObjectStore<engine::directory::Physical>::Scope const&, unsigned int) const",
+      "before_address": "000000000000ffd0",
+      "after_address": "000000000000ffd0",
+      "before_instructions": 148,
+      "after_instructions": 148,
+      "exact_encoding_equal": true,
+      "normalized_instructions_equal": true,
+      "before_normalized_sha256": "dc7b237d5379152e7578391114da38b4c7e1856b424894cd95eb179fe0b874f0",
+      "after_normalized_sha256": "dc7b237d5379152e7578391114da38b4c7e1856b424894cd95eb179fe0b874f0"
+    },
+    {
+      "function": "engine::directory::Layer::next(orbital::ObjectStore<engine::directory::Physical>::Scope const&, engine::directory::Layer::Cursor&) const",
+      "before_address": "00000000000101d0",
+      "after_address": "00000000000101d0",
+      "before_instructions": 166,
+      "after_instructions": 166,
+      "exact_encoding_equal": true,
+      "normalized_instructions_equal": true,
+      "before_normalized_sha256": "de2eaeaf9684513c043ef4c5370311fc3da9ecdfcd130b16f90eff3d8a991c6f",
+      "after_normalized_sha256": "de2eaeaf9684513c043ef4c5370311fc3da9ecdfcd130b16f90eff3d8a991c6f"
+    },
+    {
+      "function": "engine::directory::Layer::seek(orbital::ObjectStore<engine::directory::Physical>::Scope const&, unsigned int) const",
+      "before_address": "0000000000010440",
+      "after_address": "0000000000010440",
+      "before_instructions": 129,
+      "after_instructions": 129,
+      "exact_encoding_equal": true,
+      "normalized_instructions_equal": true,
+      "before_normalized_sha256": "70ea3c01758ef1b9f3b4d27009499527c4b426bb15d07cd634024ef77d83cada",
+      "after_normalized_sha256": "70ea3c01758ef1b9f3b4d27009499527c4b426bb15d07cd634024ef77d83cada"
+    },
+    {
+      "function": "engine::directory::Layer::seek(orbital::ObjectStore<engine::directory::Physical>::Scope const&, std::span<unsigned char const, 18446744073709551615ul>) const",
+      "before_address": "0000000000010620",
+      "after_address": "0000000000010620",
+      "before_instructions": 249,
+      "after_instructions": 249,
+      "exact_encoding_equal": true,
+      "normalized_instructions_equal": true,
+      "before_normalized_sha256": "492ec53a5ae46287591cf795426405e72e05d745726c435f45ae9c278410aeba",
+      "after_normalized_sha256": "492ec53a5ae46287591cf795426405e72e05d745726c435f45ae9c278410aeba"
+    },
+    {
+      "function": "engine::directory::Layer::dirent(engine::directory::Layer::Cursor const&) const",
+      "before_address": "0000000000010a10",
+      "after_address": "0000000000010a10",
+      "before_instructions": 32,
+      "after_instructions": 32,
+      "exact_encoding_equal": true,
+      "normalized_instructions_equal": true,
+      "before_normalized_sha256": "f87045ba5e69b892de4b7e501b70699bf9e768c26c405a54e51648135277163e",
+      "after_normalized_sha256": "f87045ba5e69b892de4b7e501b70699bf9e768c26c405a54e51648135277163e"
+    }
+  ]
+}

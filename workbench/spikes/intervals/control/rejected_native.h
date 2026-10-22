@@ -1,11 +1,11 @@
 #pragma once
-#include <ikea/boundlist/detail/prefix.h>
-#include <ikea/boundlist/detail/search.h>
+#include <ikea/intervals/detail/prefix.h>
+#include <ikea/intervals/detail/search.h>
 
 // Rejected exploratory kernels, retained only as literal scheduling controls.
 // First native worker sources own their measured complete callers.
 namespace intervals_rejected {
-namespace boundlist = ikea::boundlist;
+namespace boundlist = ikea::intervals;
 /// Sorted checkpoint directory: count the assigned values before the query.
 /// Capacity grants actual readable lanes; n alone still defines logical ranks.
 template <boundlist::edge E, unsigned Capacity, std::unsigned_integral P>

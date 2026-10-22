@@ -59,7 +59,7 @@ checkpoint per sixteen ranks; Direct stores exclusive ends.
 
 [Typed reads](../../../ikea/include/ikea/streampack/author/read.h) already share
 point location, carried ranges, paid dense selection, liveness and reverse lookup.
-[Prefix bodies](../../../ikea/include/ikea/boundlist/detail/prefix.h) use explicit
+[Prefix bodies](https://github.com/ashtonsix/SixDB/blob/719b0f5709c9190bd592888cf8fbbbd379bce960/ikea/include/ikea/boundlist/detail/prefix.h) use explicit
 ISA operations. Current reverse uses binary search over Direct ends or Width
 checkpoints, then a native within-group search. It includes retired reservations
 and slack. [Content validation](../../../ikea/src/streampack/view.cpp) currently

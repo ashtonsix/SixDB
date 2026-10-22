@@ -11,43 +11,21 @@ sixdb_target(intervals_consumer_seams)
 target_compile_options(intervals_consumer_seams PRIVATE -fno-vectorize -fno-slp-vectorize)
 target_link_libraries(intervals_consumer_seams PRIVATE ikea::intervals ikea::streampack)
 
-# Compile the actual Directory implementation against each namespace boundary.
-# Only the include and namespace binding change; its Object/Part/material work is
-# deliberately identical. Generated source lives in the ignored build tree.
-set(directory_source "${PROJECT_SOURCE_DIR}/engine/src/directory.cpp")
-set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS "${directory_source}")
-file(READ "${directory_source}" intervals_directory_source)
-if(NOT intervals_directory_source MATCHES "namespace bl=ikea::(boundlist|intervals);")
-  message(FATAL_ERROR "Directory source binding changed; review the Intervals comparison transform")
-endif()
-string(REPLACE "#include <ikea/boundlist.h>" "#include <ikea/intervals.h>"
-  intervals_directory_source "${intervals_directory_source}")
-string(REPLACE "namespace bl=ikea::boundlist;" "namespace bl=ikea::intervals;"
-  intervals_directory_source "${intervals_directory_source}")
-file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/directory_intervals.cpp" "${intervals_directory_source}")
-add_library(intervals_directory STATIC "${CMAKE_CURRENT_BINARY_DIR}/directory_intervals.cpp"
-  "${PROJECT_SOURCE_DIR}/engine/src/directory_material.cpp")
-sixdb_target(intervals_directory)
-target_include_directories(intervals_directory PUBLIC "${PROJECT_SOURCE_DIR}/engine/include")
-target_link_libraries(intervals_directory PUBLIC orbital::orbital loom::loom PRIVATE ikea::intervals)
-add_executable(intervals_directory_check "${PROJECT_SOURCE_DIR}/engine/test/directory.cpp")
-sixdb_target(intervals_directory_check)
-target_link_libraries(intervals_directory_check PRIVATE intervals_directory)
-foreach(variant before after)
-  add_executable(intervals_directory_${variant}
-    "${PROJECT_SOURCE_DIR}/workbench/spikes/segment-directory/engine_reads.cpp"
-    "${PROJECT_SOURCE_DIR}/workbench/spikes/segment-directory/layer.cpp")
-  sixdb_target(intervals_directory_${variant})
-endforeach()
-target_link_libraries(intervals_directory_before PRIVATE engine::directory)
-target_link_libraries(intervals_directory_after PRIVATE intervals_directory)
+# The namespace migration is complete. Exercise the actual owner, not two
+# generated copies of today's identical implementation labeled before/after.
+add_executable(intervals_directory_check ALIAS engine_directory_check)
+add_executable(intervals_directory_reads
+  "${PROJECT_SOURCE_DIR}/workbench/spikes/segment-directory/engine_reads.cpp"
+  "${PROJECT_SOURCE_DIR}/workbench/spikes/segment-directory/layer.cpp")
+sixdb_target(intervals_directory_reads)
+target_link_libraries(intervals_directory_reads PRIVATE engine::directory)
 add_executable(intervals_consumer_edits consumer_edits.cpp)
 sixdb_target(intervals_consumer_edits)
 target_compile_options(intervals_consumer_edits PRIVATE -fno-vectorize -fno-slp-vectorize)
 target_link_libraries(intervals_consumer_edits PRIVATE ikea::intervals ikea::streampack)
 
 foreach(check intervals_check intervals_seam_check intervals_directory_check)
-  add_test(NAME ${check} COMMAND ${check})
+  add_test(NAME ${check} COMMAND $<TARGET_FILE:${check}>)
 endforeach()
 add_custom_target(intervals_validate
   COMMAND "$<TARGET_FILE:intervals_check>"
@@ -62,3 +40,22 @@ add_executable(intervals_latency latency.cpp)
 sixdb_target(intervals_latency)
 target_compile_options(intervals_latency PRIVATE -fno-vectorize -fno-slp-vectorize)
 target_link_libraries(intervals_latency PRIVATE ikea::intervals ikea::streampack)
+
+option(SIXDB_INTERVALS_FRAME_RUN_AUDIT "Compare run projection in actual Frame point readers" OFF)
+if(SIXDB_INTERVALS_FRAME_RUN_AUDIT)
+  if(NOT TARGET frame_encoding_material OR NOT TARGET frame_point_kernels)
+    message(FATAL_ERROR "Frame caller audit requires -DSIXDB_SPIKES=ikea-frame;intervals in that order")
+  endif()
+  set(frame_source "${PROJECT_SOURCE_DIR}/workbench/spikes/ikea-frame")
+  set(frame_generated "${CMAKE_CURRENT_BINARY_DIR}/frame-runs")
+  set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS
+    "${frame_source}/point/point_read.h" "${frame_source}/point/compact_read.h"
+    "${CMAKE_CURRENT_SOURCE_DIR}/frame-runs-generate.py")
+  execute_process(COMMAND python3 "${CMAKE_CURRENT_SOURCE_DIR}/frame-runs-generate.py"
+    "${frame_source}" "${frame_generated}" COMMAND_ERROR_IS_FATAL ANY)
+  add_executable(intervals_frame_runs frame-runs.cpp)
+  sixdb_target(intervals_frame_runs)
+  target_include_directories(intervals_frame_runs PRIVATE "${frame_source}/point" "${frame_generated}")
+  target_compile_options(intervals_frame_runs PRIVATE -fno-vectorize -fno-slp-vectorize)
+  target_link_libraries(intervals_frame_runs PRIVATE frame_encoding_material frame_point_kernels ikea::intervals)
+endif()

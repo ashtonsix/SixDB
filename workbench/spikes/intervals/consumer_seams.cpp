@@ -1,5 +1,4 @@
 #include <ikea/intervals.h>
-#include <ikea/boundlist/search.h>
 #include <ikea/streampack.h>
 #include <array>
 #include <chrono>
@@ -59,7 +58,6 @@ void directory() {
         }
         in::direct_source source{prefixes.data(),n};
         measure("directory_prefix_child_n"+std::to_string(n),{
-            {"maintained",[&] {u64 sum=0;for(auto q:queries) {auto r=ikea::boundlist::lower_bound(source,q);if(r<n) sum+=dirents[r][3];}return sum;}},
             {"intervals",[&] {u64 sum=0;for(auto q:queries) {auto r=in::lower_bound(source,q);if(r<n) sum+=dirents[r][3];}return sum;}}
         },expected);
         for(unsigned width:{4u,16u}) {
@@ -69,14 +67,13 @@ void directory() {
             for(unsigned q=0;q<requests;++q) for(unsigned j=0;j<4;++j)
                 points[(q+1)*width-1-j]=queries[q]>>(j*8);
             key_source logical{keys.data(),n,width};
-            auto run=[&]<bool Candidate>() {u64 sum=0;for(unsigned q=0;q<requests;++q) {
+            auto run=[&]() {u64 sum=0;for(unsigned q=0;q<requests;++q) {
                 key_ref p{points.data()+q*width,width};
-                auto r=Candidate?in::lower_bound(logical,p):ikea::boundlist::lower_bound(logical,p);
+                auto r=in::lower_bound(logical,p);
                 if(r<n) sum+=dirents[r][3];
             }return sum;};
             measure("directory_logical_child_n"+std::to_string(n)+"_k"+std::to_string(width),{
-                {"maintained",[&] {return run.template operator()<false>();}},
-                {"intervals",[&] {return run.template operator()<true>();}}
+                {"intervals",run}
             },expected);
         }
     }
@@ -96,7 +93,7 @@ void frame() {
         in::run_end_source candidate{bytes.data(),n};
         u64 expected=0;for(auto q:queries) {unsigned r=0;while(unsigned(bytes[r])+1<=q) ++r;expected+=values[r];}
         measure("frame_run_value_n"+std::to_string(n),{
-            {"maintained_projection",[&] {u64 sum=0;for(auto q:queries) sum+=values[ikea::boundlist::upper_bound(old,q)];return sum;}},
+            {"maintained_projection",[&] {u64 sum=0;for(auto q:queries) sum+=values[in::upper_bound(old,q)];return sum;}},
             {"intervals_native_bytes",[&] {u64 sum=0;for(auto q:queries) sum+=values[in::upper_bound(candidate,q)];return sum;}},
             {"intervals_bound_source",[&] {
                 return in::with_geometry(candidate,[&](const auto &bound) __attribute__((always_inline)) {

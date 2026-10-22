@@ -7,8 +7,8 @@ publication, sorting policy and rank repair. This record supersedes the proposed
 portfolio at `b6e4ebd5`; [qualification](PORTFOLIO.md) owns measurements and recovery.
 The [API cleanup](API.md) unifies borrowed and compact geometry and removes the
 paired-extrema helper; this record retains the encoding/composition decisions.
-The public [reference](../../../ikea/docs/boundlist/reference.md) and
-[usage](../../../ikea/docs/boundlist/usage.md) explain the resulting interface.
+The public [reference](https://github.com/ashtonsix/SixDB/blob/719b0f5709c9190bd592888cf8fbbbd379bce960/ikea/docs/boundlist/reference.md) and
+[usage](https://github.com/ashtonsix/SixDB/blob/719b0f5709c9190bd592888cf8fbbbd379bce960/ikea/docs/boundlist/usage.md) explain the resulting interface.
 
 ## Curated choices
 

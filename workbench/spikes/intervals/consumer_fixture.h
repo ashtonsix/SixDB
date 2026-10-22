@@ -1,9 +1,10 @@
 #pragma once
 // Shared complete-consumer fixtures and strong compact/frozen controls.
 #include <ikea/intervals.h>
-#include <ikea/boundlist.h>
+#include <ikea/streampack/detail/compact/read.h>
+#include <ikea/streampack/detail/compact/write.h>
 #include "control/sparse_before.h"
-#include <ikea/boundlist/author/read.h>
+
 #include <ikea/effects.h>
 #include <array>
 #include <chrono>
@@ -113,27 +114,27 @@ template <unsigned G, class W, class P, unsigned Maximum, bool Relative> struct 
 };
 
 struct compact_image {
-    ikea::boundlist::layout layout;
+    ikea::streampack::detail::compact::layout layout;
     std::vector<std::byte> directory, lengths, control;
-    std::optional<ikea::boundlist::view> view;
-    compact_image(const fixture &f, ikea::boundlist::geometry family)
-        : layout(*ikea::boundlist::layout::prepare({.family = family,
+    std::optional<ikea::streampack::detail::compact::view> view;
+    compact_image(const fixture &f, ikea::streampack::detail::compact::geometry family)
+        : layout(*ikea::streampack::detail::compact::layout::prepare({.family = family,
                                       .maximum = static_cast<std::uint16_t>(f.maximum),
                                       .extent_limit = capacity * f.maximum,
                                       .immortal = true})),
           directory(layout.directory_bytes()), lengths(layout.lengths_bytes(f.count)),
           control(layout.control_bytes()) {
-        auto bound = ikea::boundlist::view::bind(layout, {directory, lengths, control});
+        auto bound = ikea::streampack::detail::compact::view::bind(layout, {directory, lengths, control});
         need(bound.has_value(), "compact admission failed");
         view = *bound;
         std::array<ikea::owner_write, 16> records;
         {
             ikea::source_write_journal effects{records};
-            need(ikea::boundlist::initialize(*view, effects).has_value(), "compact initialization failed");
+            need(ikea::streampack::detail::compact::initialize(*view, effects).has_value(), "compact initialization failed");
         }
         for (unsigned i = 0; i < f.count; ++i) {
             ikea::source_write_journal effects{records};
-            need(ikea::boundlist::append(*view, f.widths[i], effects).has_value(), "compact append failed");
+            need(ikea::streampack::detail::compact::append(*view, f.widths[i], effects).has_value(), "compact append failed");
         }
         need(view->validate().has_value(), "compact image invalid");
     }

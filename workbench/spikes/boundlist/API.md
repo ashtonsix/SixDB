@@ -5,8 +5,8 @@ and compact encoded views supply an interval count, an origin and an exclusive
 end per rank. This removes the distinction between a general search source and a
 specially composed “sidecar” for ordinary geometry operations.
 
-The public [reference](../../../ikea/docs/boundlist/reference.md) owns exact
-contracts; [usage](../../../ikea/docs/boundlist/usage.md) teaches the interface.
+The public [reference](https://github.com/ashtonsix/SixDB/blob/719b0f5709c9190bd592888cf8fbbbd379bce960/ikea/docs/boundlist/reference.md) owns exact
+contracts; [usage](https://github.com/ashtonsix/SixDB/blob/719b0f5709c9190bd592888cf8fbbbd379bce960/ikea/docs/boundlist/usage.md) teaches the interface.
 The three compact encodings, field-width proofs, 256-interval capacity and
 portable bytes remain unchanged.
 

@@ -16,9 +16,10 @@ physical upper/lower distinctions and coherent Scope lifetimes.
 StreamPack owns its compact image preparation, readable tails, count/extent,
 bitmap allocation, retirement, legacy/current decoding and value operations.
 Existing compact typed bodies now live under its internal geometry implementation;
-Intervals does not gain an owning layout, bitmap or retirement API. Transitional
-Boundlist headers/target forward to the new owners so historical consumers and
-controls can compile; production consumers use the maintained names directly.
+Intervals does not gain an owning layout, bitmap or retirement API. The initial move retained transitional Boundlist headers/target. The subsequent
+[audit](AUDIT.md) removes that public compatibility and retires the old runnable
+spike; useful tests and controls use their actual owners. Historical measured
+source remains recoverable.
 Persisted bytes and format discriminants are preserved, not retagged.
 
 Frame's immutable u8 ends-minus-one projection retains exclusive endpoints up to

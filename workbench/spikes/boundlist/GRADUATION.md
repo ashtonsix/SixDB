@@ -66,9 +66,9 @@ its edges and can include dead storage. Logical occupied-extrema overlap returns
 a candidate rank window with holes/local gaps still requiring owner checks.
 Neither endpoint equality nor U==0 means an unpopulated keyspace rank.
 
-The maintained [usage](../../../ikea/docs/boundlist/usage.md),
-[reference](../../../ikea/docs/boundlist/reference.md) and
-[examples](../../../ikea/examples/boundlist/) explain these boundaries independently
+The maintained [usage](https://github.com/ashtonsix/SixDB/blob/719b0f5709c9190bd592888cf8fbbbd379bce960/ikea/docs/boundlist/usage.md),
+[reference](https://github.com/ashtonsix/SixDB/blob/719b0f5709c9190bd592888cf8fbbbd379bce960/ikea/docs/boundlist/reference.md) and
+[examples](https://github.com/ashtonsix/SixDB/tree/719b0f5709c9190bd592888cf8fbbbd379bce960/ikea/examples/boundlist/) explain these boundaries independently
 of the prototype. Engine owns directory policy, separator maintenance and full
 index assessment; this does not graduate an Engine tree representation.
 

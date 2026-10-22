@@ -8,7 +8,7 @@ import subprocess
 
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('build', type=Path)
-parser.add_argument('--module', choices=('seriespack', 'tuplepack', 'bec256', 'streampack', 'boundlist', 'hashtable'),
+parser.add_argument('--module', choices=('seriespack', 'tuplepack', 'bec256', 'streampack', 'intervals', 'hashtable'),
                     help='Check only this module; the default checks every supported header')
 args = parser.parse_args()
 entries = json.loads((args.build / 'compile_commands.json').read_text())

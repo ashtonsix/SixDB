@@ -1,0 +1,1910 @@
+{
+  "checks": {
+    "frame-p0.jsonl": 52,
+    "frame-p1.jsonl": 52
+  },
+  "skips": [
+    {
+      "skip": true,
+      "runs": 128,
+      "bits": 8,
+      "blocks": 1,
+      "actual_rle_blocks": 0
+    },
+    {
+      "skip": true,
+      "runs": 128,
+      "bits": 8,
+      "blocks": 256,
+      "actual_rle_blocks": 0
+    },
+    {
+      "skip": true,
+      "runs": 128,
+      "bits": 8,
+      "blocks": 1,
+      "actual_rle_blocks": 0
+    },
+    {
+      "skip": true,
+      "runs": 128,
+      "bits": 8,
+      "blocks": 256,
+      "actual_rle_blocks": 0
+    }
+  ],
+  "traces": [
+    {
+      "trace": true,
+      "runs": 0,
+      "bits": 8,
+      "blocks": 1,
+      "chains": 1,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 0,
+      "bits": 8,
+      "blocks": 1,
+      "chains": 8,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 4,
+      "bits": 8,
+      "blocks": 1,
+      "chains": 1,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 4,
+      "bits": 8,
+      "blocks": 1,
+      "chains": 8,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 8,
+      "bits": 8,
+      "blocks": 1,
+      "chains": 1,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 8,
+      "bits": 8,
+      "blocks": 1,
+      "chains": 8,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 15,
+      "bits": 8,
+      "blocks": 1,
+      "chains": 1,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 15,
+      "bits": 8,
+      "blocks": 1,
+      "chains": 8,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 16,
+      "bits": 8,
+      "blocks": 1,
+      "chains": 1,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 16,
+      "bits": 8,
+      "blocks": 1,
+      "chains": 8,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 17,
+      "bits": 8,
+      "blocks": 1,
+      "chains": 1,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 17,
+      "bits": 8,
+      "blocks": 1,
+      "chains": 8,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 32,
+      "bits": 8,
+      "blocks": 1,
+      "chains": 1,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 32,
+      "bits": 8,
+      "blocks": 1,
+      "chains": 8,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 64,
+      "bits": 8,
+      "blocks": 1,
+      "chains": 1,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 64,
+      "bits": 8,
+      "blocks": 1,
+      "chains": 8,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 0,
+      "bits": 32,
+      "blocks": 1,
+      "chains": 1,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 0,
+      "bits": 32,
+      "blocks": 1,
+      "chains": 8,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 4,
+      "bits": 32,
+      "blocks": 1,
+      "chains": 1,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 4,
+      "bits": 32,
+      "blocks": 1,
+      "chains": 8,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 8,
+      "bits": 32,
+      "blocks": 1,
+      "chains": 1,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 8,
+      "bits": 32,
+      "blocks": 1,
+      "chains": 8,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 15,
+      "bits": 32,
+      "blocks": 1,
+      "chains": 1,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 15,
+      "bits": 32,
+      "blocks": 1,
+      "chains": 8,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 16,
+      "bits": 32,
+      "blocks": 1,
+      "chains": 1,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 16,
+      "bits": 32,
+      "blocks": 1,
+      "chains": 8,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 17,
+      "bits": 32,
+      "blocks": 1,
+      "chains": 1,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 17,
+      "bits": 32,
+      "blocks": 1,
+      "chains": 8,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 32,
+      "bits": 32,
+      "blocks": 1,
+      "chains": 1,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 32,
+      "bits": 32,
+      "blocks": 1,
+      "chains": 8,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 64,
+      "bits": 32,
+      "blocks": 1,
+      "chains": 1,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 64,
+      "bits": 32,
+      "blocks": 1,
+      "chains": 8,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 128,
+      "bits": 32,
+      "blocks": 1,
+      "chains": 1,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 128,
+      "bits": 32,
+      "blocks": 1,
+      "chains": 8,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 0,
+      "bits": 64,
+      "blocks": 1,
+      "chains": 1,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 0,
+      "bits": 64,
+      "blocks": 1,
+      "chains": 8,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 4,
+      "bits": 64,
+      "blocks": 1,
+      "chains": 1,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 4,
+      "bits": 64,
+      "blocks": 1,
+      "chains": 8,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 8,
+      "bits": 64,
+      "blocks": 1,
+      "chains": 1,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 8,
+      "bits": 64,
+      "blocks": 1,
+      "chains": 8,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 15,
+      "bits": 64,
+      "blocks": 1,
+      "chains": 1,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 15,
+      "bits": 64,
+      "blocks": 1,
+      "chains": 8,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 16,
+      "bits": 64,
+      "blocks": 1,
+      "chains": 1,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 16,
+      "bits": 64,
+      "blocks": 1,
+      "chains": 8,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 17,
+      "bits": 64,
+      "blocks": 1,
+      "chains": 1,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 17,
+      "bits": 64,
+      "blocks": 1,
+      "chains": 8,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 32,
+      "bits": 64,
+      "blocks": 1,
+      "chains": 1,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 32,
+      "bits": 64,
+      "blocks": 1,
+      "chains": 8,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 64,
+      "bits": 64,
+      "blocks": 1,
+      "chains": 1,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 64,
+      "bits": 64,
+      "blocks": 1,
+      "chains": 8,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 128,
+      "bits": 64,
+      "blocks": 1,
+      "chains": 1,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 128,
+      "bits": 64,
+      "blocks": 1,
+      "chains": 8,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 0,
+      "bits": 8,
+      "blocks": 256,
+      "chains": 1,
+      "unique_rows": 7694,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 0,
+      "bits": 8,
+      "blocks": 256,
+      "chains": 8,
+      "unique_rows": 7706,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 4,
+      "bits": 8,
+      "blocks": 256,
+      "chains": 1,
+      "unique_rows": 7679,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 4,
+      "bits": 8,
+      "blocks": 256,
+      "chains": 8,
+      "unique_rows": 7710,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 8,
+      "bits": 8,
+      "blocks": 256,
+      "chains": 1,
+      "unique_rows": 7693,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 8,
+      "bits": 8,
+      "blocks": 256,
+      "chains": 8,
+      "unique_rows": 7705,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 15,
+      "bits": 8,
+      "blocks": 256,
+      "chains": 1,
+      "unique_rows": 7698,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 15,
+      "bits": 8,
+      "blocks": 256,
+      "chains": 8,
+      "unique_rows": 7695,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 16,
+      "bits": 8,
+      "blocks": 256,
+      "chains": 1,
+      "unique_rows": 7716,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 16,
+      "bits": 8,
+      "blocks": 256,
+      "chains": 8,
+      "unique_rows": 7713,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 17,
+      "bits": 8,
+      "blocks": 256,
+      "chains": 1,
+      "unique_rows": 7706,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 17,
+      "bits": 8,
+      "blocks": 256,
+      "chains": 8,
+      "unique_rows": 7693,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 32,
+      "bits": 8,
+      "blocks": 256,
+      "chains": 1,
+      "unique_rows": 7690,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 32,
+      "bits": 8,
+      "blocks": 256,
+      "chains": 8,
+      "unique_rows": 7702,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 64,
+      "bits": 8,
+      "blocks": 256,
+      "chains": 1,
+      "unique_rows": 7675,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 64,
+      "bits": 8,
+      "blocks": 256,
+      "chains": 8,
+      "unique_rows": 7717,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 0,
+      "bits": 32,
+      "blocks": 256,
+      "chains": 1,
+      "unique_rows": 7714,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 0,
+      "bits": 32,
+      "blocks": 256,
+      "chains": 8,
+      "unique_rows": 7680,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 4,
+      "bits": 32,
+      "blocks": 256,
+      "chains": 1,
+      "unique_rows": 7666,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 4,
+      "bits": 32,
+      "blocks": 256,
+      "chains": 8,
+      "unique_rows": 7705,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 8,
+      "bits": 32,
+      "blocks": 256,
+      "chains": 1,
+      "unique_rows": 7671,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 8,
+      "bits": 32,
+      "blocks": 256,
+      "chains": 8,
+      "unique_rows": 7659,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 15,
+      "bits": 32,
+      "blocks": 256,
+      "chains": 1,
+      "unique_rows": 7724,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 15,
+      "bits": 32,
+      "blocks": 256,
+      "chains": 8,
+      "unique_rows": 7690,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 16,
+      "bits": 32,
+      "blocks": 256,
+      "chains": 1,
+      "unique_rows": 7695,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 16,
+      "bits": 32,
+      "blocks": 256,
+      "chains": 8,
+      "unique_rows": 7694,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 17,
+      "bits": 32,
+      "blocks": 256,
+      "chains": 1,
+      "unique_rows": 7693,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 17,
+      "bits": 32,
+      "blocks": 256,
+      "chains": 8,
+      "unique_rows": 7685,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 32,
+      "bits": 32,
+      "blocks": 256,
+      "chains": 1,
+      "unique_rows": 7696,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 32,
+      "bits": 32,
+      "blocks": 256,
+      "chains": 8,
+      "unique_rows": 7697,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 64,
+      "bits": 32,
+      "blocks": 256,
+      "chains": 1,
+      "unique_rows": 7688,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 64,
+      "bits": 32,
+      "blocks": 256,
+      "chains": 8,
+      "unique_rows": 7717,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 128,
+      "bits": 32,
+      "blocks": 256,
+      "chains": 1,
+      "unique_rows": 7690,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 128,
+      "bits": 32,
+      "blocks": 256,
+      "chains": 8,
+      "unique_rows": 7694,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 0,
+      "bits": 64,
+      "blocks": 256,
+      "chains": 1,
+      "unique_rows": 7681,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 0,
+      "bits": 64,
+      "blocks": 256,
+      "chains": 8,
+      "unique_rows": 7726,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 4,
+      "bits": 64,
+      "blocks": 256,
+      "chains": 1,
+      "unique_rows": 7674,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 4,
+      "bits": 64,
+      "blocks": 256,
+      "chains": 8,
+      "unique_rows": 7673,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 8,
+      "bits": 64,
+      "blocks": 256,
+      "chains": 1,
+      "unique_rows": 7716,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 8,
+      "bits": 64,
+      "blocks": 256,
+      "chains": 8,
+      "unique_rows": 7752,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 15,
+      "bits": 64,
+      "blocks": 256,
+      "chains": 1,
+      "unique_rows": 7731,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 15,
+      "bits": 64,
+      "blocks": 256,
+      "chains": 8,
+      "unique_rows": 7672,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 16,
+      "bits": 64,
+      "blocks": 256,
+      "chains": 1,
+      "unique_rows": 7690,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 16,
+      "bits": 64,
+      "blocks": 256,
+      "chains": 8,
+      "unique_rows": 7723,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 17,
+      "bits": 64,
+      "blocks": 256,
+      "chains": 1,
+      "unique_rows": 7675,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 17,
+      "bits": 64,
+      "blocks": 256,
+      "chains": 8,
+      "unique_rows": 7677,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 32,
+      "bits": 64,
+      "blocks": 256,
+      "chains": 1,
+      "unique_rows": 7715,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 32,
+      "bits": 64,
+      "blocks": 256,
+      "chains": 8,
+      "unique_rows": 7712,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 64,
+      "bits": 64,
+      "blocks": 256,
+      "chains": 1,
+      "unique_rows": 7748,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 64,
+      "bits": 64,
+      "blocks": 256,
+      "chains": 8,
+      "unique_rows": 7689,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 128,
+      "bits": 64,
+      "blocks": 256,
+      "chains": 1,
+      "unique_rows": 7670,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 128,
+      "bits": 64,
+      "blocks": 256,
+      "chains": 8,
+      "unique_rows": 7715,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 0,
+      "bits": 8,
+      "blocks": 1,
+      "chains": 1,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 0,
+      "bits": 8,
+      "blocks": 1,
+      "chains": 8,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 4,
+      "bits": 8,
+      "blocks": 1,
+      "chains": 1,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 4,
+      "bits": 8,
+      "blocks": 1,
+      "chains": 8,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 8,
+      "bits": 8,
+      "blocks": 1,
+      "chains": 1,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 8,
+      "bits": 8,
+      "blocks": 1,
+      "chains": 8,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 15,
+      "bits": 8,
+      "blocks": 1,
+      "chains": 1,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 15,
+      "bits": 8,
+      "blocks": 1,
+      "chains": 8,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 16,
+      "bits": 8,
+      "blocks": 1,
+      "chains": 1,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 16,
+      "bits": 8,
+      "blocks": 1,
+      "chains": 8,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 17,
+      "bits": 8,
+      "blocks": 1,
+      "chains": 1,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 17,
+      "bits": 8,
+      "blocks": 1,
+      "chains": 8,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 32,
+      "bits": 8,
+      "blocks": 1,
+      "chains": 1,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 32,
+      "bits": 8,
+      "blocks": 1,
+      "chains": 8,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 64,
+      "bits": 8,
+      "blocks": 1,
+      "chains": 1,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 64,
+      "bits": 8,
+      "blocks": 1,
+      "chains": 8,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 0,
+      "bits": 32,
+      "blocks": 1,
+      "chains": 1,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 0,
+      "bits": 32,
+      "blocks": 1,
+      "chains": 8,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 4,
+      "bits": 32,
+      "blocks": 1,
+      "chains": 1,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 4,
+      "bits": 32,
+      "blocks": 1,
+      "chains": 8,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 8,
+      "bits": 32,
+      "blocks": 1,
+      "chains": 1,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 8,
+      "bits": 32,
+      "blocks": 1,
+      "chains": 8,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 15,
+      "bits": 32,
+      "blocks": 1,
+      "chains": 1,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 15,
+      "bits": 32,
+      "blocks": 1,
+      "chains": 8,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 16,
+      "bits": 32,
+      "blocks": 1,
+      "chains": 1,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 16,
+      "bits": 32,
+      "blocks": 1,
+      "chains": 8,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 17,
+      "bits": 32,
+      "blocks": 1,
+      "chains": 1,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 17,
+      "bits": 32,
+      "blocks": 1,
+      "chains": 8,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 32,
+      "bits": 32,
+      "blocks": 1,
+      "chains": 1,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 32,
+      "bits": 32,
+      "blocks": 1,
+      "chains": 8,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 64,
+      "bits": 32,
+      "blocks": 1,
+      "chains": 1,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 64,
+      "bits": 32,
+      "blocks": 1,
+      "chains": 8,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 128,
+      "bits": 32,
+      "blocks": 1,
+      "chains": 1,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 128,
+      "bits": 32,
+      "blocks": 1,
+      "chains": 8,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 0,
+      "bits": 64,
+      "blocks": 1,
+      "chains": 1,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 0,
+      "bits": 64,
+      "blocks": 1,
+      "chains": 8,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 4,
+      "bits": 64,
+      "blocks": 1,
+      "chains": 1,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 4,
+      "bits": 64,
+      "blocks": 1,
+      "chains": 8,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 8,
+      "bits": 64,
+      "blocks": 1,
+      "chains": 1,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 8,
+      "bits": 64,
+      "blocks": 1,
+      "chains": 8,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 15,
+      "bits": 64,
+      "blocks": 1,
+      "chains": 1,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 15,
+      "bits": 64,
+      "blocks": 1,
+      "chains": 8,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 16,
+      "bits": 64,
+      "blocks": 1,
+      "chains": 1,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 16,
+      "bits": 64,
+      "blocks": 1,
+      "chains": 8,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 17,
+      "bits": 64,
+      "blocks": 1,
+      "chains": 1,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 17,
+      "bits": 64,
+      "blocks": 1,
+      "chains": 8,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 32,
+      "bits": 64,
+      "blocks": 1,
+      "chains": 1,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 32,
+      "bits": 64,
+      "blocks": 1,
+      "chains": 8,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 64,
+      "bits": 64,
+      "blocks": 1,
+      "chains": 1,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 64,
+      "bits": 64,
+      "blocks": 1,
+      "chains": 8,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 128,
+      "bits": 64,
+      "blocks": 1,
+      "chains": 1,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 128,
+      "bits": 64,
+      "blocks": 1,
+      "chains": 8,
+      "unique_rows": 256,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 0,
+      "bits": 8,
+      "blocks": 256,
+      "chains": 1,
+      "unique_rows": 7694,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 0,
+      "bits": 8,
+      "blocks": 256,
+      "chains": 8,
+      "unique_rows": 7706,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 4,
+      "bits": 8,
+      "blocks": 256,
+      "chains": 1,
+      "unique_rows": 7679,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 4,
+      "bits": 8,
+      "blocks": 256,
+      "chains": 8,
+      "unique_rows": 7710,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 8,
+      "bits": 8,
+      "blocks": 256,
+      "chains": 1,
+      "unique_rows": 7693,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 8,
+      "bits": 8,
+      "blocks": 256,
+      "chains": 8,
+      "unique_rows": 7705,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 15,
+      "bits": 8,
+      "blocks": 256,
+      "chains": 1,
+      "unique_rows": 7698,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 15,
+      "bits": 8,
+      "blocks": 256,
+      "chains": 8,
+      "unique_rows": 7695,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 16,
+      "bits": 8,
+      "blocks": 256,
+      "chains": 1,
+      "unique_rows": 7716,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 16,
+      "bits": 8,
+      "blocks": 256,
+      "chains": 8,
+      "unique_rows": 7713,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 17,
+      "bits": 8,
+      "blocks": 256,
+      "chains": 1,
+      "unique_rows": 7706,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 17,
+      "bits": 8,
+      "blocks": 256,
+      "chains": 8,
+      "unique_rows": 7693,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 32,
+      "bits": 8,
+      "blocks": 256,
+      "chains": 1,
+      "unique_rows": 7690,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 32,
+      "bits": 8,
+      "blocks": 256,
+      "chains": 8,
+      "unique_rows": 7702,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 64,
+      "bits": 8,
+      "blocks": 256,
+      "chains": 1,
+      "unique_rows": 7675,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 64,
+      "bits": 8,
+      "blocks": 256,
+      "chains": 8,
+      "unique_rows": 7717,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 0,
+      "bits": 32,
+      "blocks": 256,
+      "chains": 1,
+      "unique_rows": 7714,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 0,
+      "bits": 32,
+      "blocks": 256,
+      "chains": 8,
+      "unique_rows": 7680,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 4,
+      "bits": 32,
+      "blocks": 256,
+      "chains": 1,
+      "unique_rows": 7666,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 4,
+      "bits": 32,
+      "blocks": 256,
+      "chains": 8,
+      "unique_rows": 7705,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 8,
+      "bits": 32,
+      "blocks": 256,
+      "chains": 1,
+      "unique_rows": 7671,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 8,
+      "bits": 32,
+      "blocks": 256,
+      "chains": 8,
+      "unique_rows": 7659,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 15,
+      "bits": 32,
+      "blocks": 256,
+      "chains": 1,
+      "unique_rows": 7724,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 15,
+      "bits": 32,
+      "blocks": 256,
+      "chains": 8,
+      "unique_rows": 7690,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 16,
+      "bits": 32,
+      "blocks": 256,
+      "chains": 1,
+      "unique_rows": 7695,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 16,
+      "bits": 32,
+      "blocks": 256,
+      "chains": 8,
+      "unique_rows": 7694,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 17,
+      "bits": 32,
+      "blocks": 256,
+      "chains": 1,
+      "unique_rows": 7693,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 17,
+      "bits": 32,
+      "blocks": 256,
+      "chains": 8,
+      "unique_rows": 7685,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 32,
+      "bits": 32,
+      "blocks": 256,
+      "chains": 1,
+      "unique_rows": 7696,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 32,
+      "bits": 32,
+      "blocks": 256,
+      "chains": 8,
+      "unique_rows": 7697,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 64,
+      "bits": 32,
+      "blocks": 256,
+      "chains": 1,
+      "unique_rows": 7688,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 64,
+      "bits": 32,
+      "blocks": 256,
+      "chains": 8,
+      "unique_rows": 7717,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 128,
+      "bits": 32,
+      "blocks": 256,
+      "chains": 1,
+      "unique_rows": 7690,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 128,
+      "bits": 32,
+      "blocks": 256,
+      "chains": 8,
+      "unique_rows": 7694,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 0,
+      "bits": 64,
+      "blocks": 256,
+      "chains": 1,
+      "unique_rows": 7681,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 0,
+      "bits": 64,
+      "blocks": 256,
+      "chains": 8,
+      "unique_rows": 7726,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 4,
+      "bits": 64,
+      "blocks": 256,
+      "chains": 1,
+      "unique_rows": 7674,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 4,
+      "bits": 64,
+      "blocks": 256,
+      "chains": 8,
+      "unique_rows": 7673,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 8,
+      "bits": 64,
+      "blocks": 256,
+      "chains": 1,
+      "unique_rows": 7716,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 8,
+      "bits": 64,
+      "blocks": 256,
+      "chains": 8,
+      "unique_rows": 7752,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 15,
+      "bits": 64,
+      "blocks": 256,
+      "chains": 1,
+      "unique_rows": 7731,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 15,
+      "bits": 64,
+      "blocks": 256,
+      "chains": 8,
+      "unique_rows": 7672,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 16,
+      "bits": 64,
+      "blocks": 256,
+      "chains": 1,
+      "unique_rows": 7690,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 16,
+      "bits": 64,
+      "blocks": 256,
+      "chains": 8,
+      "unique_rows": 7723,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 17,
+      "bits": 64,
+      "blocks": 256,
+      "chains": 1,
+      "unique_rows": 7675,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 17,
+      "bits": 64,
+      "blocks": 256,
+      "chains": 8,
+      "unique_rows": 7677,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 32,
+      "bits": 64,
+      "blocks": 256,
+      "chains": 1,
+      "unique_rows": 7715,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 32,
+      "bits": 64,
+      "blocks": 256,
+      "chains": 8,
+      "unique_rows": 7712,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 64,
+      "bits": 64,
+      "blocks": 256,
+      "chains": 1,
+      "unique_rows": 7748,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 64,
+      "bits": 64,
+      "blocks": 256,
+      "chains": 8,
+      "unique_rows": 7689,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 128,
+      "bits": 64,
+      "blocks": 256,
+      "chains": 1,
+      "unique_rows": 7670,
+      "salt_bytes": 65536
+    },
+    {
+      "trace": true,
+      "runs": 128,
+      "bits": 64,
+      "blocks": 256,
+      "chains": 8,
+      "unique_rows": 7715,
+      "salt_bytes": 65536
+    }
+  ]
+}

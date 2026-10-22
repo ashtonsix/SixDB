@@ -73,14 +73,14 @@ void experiment(unsigned n,unsigned trials) {
     fixture f(n,Maximum);
     sparse_image<16,W,P,Maximum,false> g16(f);
     sparse_image<64,W,P,Maximum,false> g64(f);
-    compact_image compact(f,ikea::boundlist::geometry::sizes);
+    compact_image compact(f,ikea::streampack::detail::compact::geometry::sizes);
     std::array<P,capacity> ends{};for(unsigned i=0;i<n;++i) ends[i]=f.ends[i];
     std::vector<arm> arms;
     add(arms,"before16",g16.before_source(),f);add(arms,"current16",g16.source(),f);
     add(arms,"before64",g64.before_source(),f);add(arms,"current64",g64.source(),f);
     add(arms,"batch64",g64.source().for_independent_reads(),f);
     add(arms,"direct",ikea::intervals::from_ends(ikea::intervals::direct_source<P>{ends.data(),n},P{0}),f);
-    ikea::boundlist::author::dispatch(*compact.view,[&](auto access) {add(arms,"maintained16",access,f);});
+    ikea::streampack::detail::compact::author::dispatch(*compact.view,[&](auto access) {add(arms,"maintained16",access,f);});
     for(unsigned op:{0u,1u}) for(unsigned chains:{1u,4u,8u}) for(bool clustered:{false,true}) {
         u64 expected;
         if(op==0) expected=chains==1?oracle<0,1>(f,clustered):chains==4?oracle<0,4>(f,clustered):oracle<0,8>(f,clustered);

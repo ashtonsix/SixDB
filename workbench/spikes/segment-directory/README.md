@@ -7,11 +7,12 @@ Started 22 October 2026 to take over `engine::directory`. The chosen structure
 has **graduated** into [`engine::directory`](../../../engine/README.md#segment-directory),
 on Orbital Objects with its own material. This spike keeps the evidence, the
 counter model and the controls that were rejected. The graduated code
-searches its planes with `ikea::boundlist` and drops this spike's in-node
+searches its planes with `ikea::intervals` and drops this spike's in-node
 summaries, which showed no measurable time benefit. This spike covers only
 the directory structure: how each layer is laid out, searched and maintained.
 Segment codecs, aggregates, consumers and peers are out of scope. The
-[previous directory spike](../directory/README.md) keeps that wider evidence.
+[previous directory spike](../../notebook/retired-spikes.md#index-directory-spikes--october-2026) is retired; its recovery route locates that wider evidence, including the
+archived CONCENTRATION, REVIEW and FINDINGS documents cited below.
 
 ## Starting point
 
@@ -28,10 +29,10 @@ What the earlier work established, and how it changes the start:
   The control below reproduces this: 721 KB.
 - **Natural partitions bound how many partitions there are, not how big they
   get.** At L3, natural24 is one partition, so a 64-byte edit copied 8.65 MB at
-  65K Segments ([CONCENTRATION.md](../directory/CONCENTRATION.md)). Clustered
+  65K Segments ([CONCENTRATION.md](../../notebook/retired-spikes.md#index-directory-spikes--october-2026)). Clustered
   L4 keys behave the same way.
 - **Dirents inside the hash** make ordered scans probe once per entry, and
-  value edits clone the hash ([REVIEW-20261022.md](../directory/REVIEW-20261022.md)).
+  value edits clone the hash ([REVIEW-20261022.md](../../notebook/retired-spikes.md#index-directory-spikes--october-2026)).
   That spike's suggested fix, a key-to-rank hash plus a tiled dirent plane,
   was never measured.
 - **No-op and mixed edits** were fixed in the previous spike after the review.
@@ -42,7 +43,7 @@ What the earlier work established, and how it changes the start:
   early-terminal and varlen handling is not reused.
 - **Copy volume alone does not choose the grain.** The previous spike's
   16-dirent tiles cut copied bytes but slowed some complete cycles
-  ([FINDINGS.md](../directory/FINDINGS.md)). The counters here rank layouts.
+  ([FINDINGS.md](../../notebook/retired-spikes.md#index-directory-spikes--october-2026)). The counters here rank layouts.
   They don't select one without native timings.
 
 ## The structure under test

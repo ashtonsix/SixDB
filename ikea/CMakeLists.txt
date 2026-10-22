@@ -8,31 +8,19 @@ sixdb_target(ikea_intervals)
 target_include_directories(ikea_intervals PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
 target_compile_features(ikea_intervals PUBLIC cxx_std_23)
 
-# Compatibility for historical compact-geometry consumers. Maintained borrowed
-# geometry is Intervals; the compact image/retirement implementation is StreamPack.
-add_library(ikea_boundlist INTERFACE)
-add_library(ikea::boundlist ALIAS ikea_boundlist)
-target_link_libraries(ikea_boundlist INTERFACE ikea::streampack)
+foreach(example ordinary composition)
+  add_executable(ikea_example_intervals_${example} EXCLUDE_FROM_ALL examples/intervals/${example}.cpp)
+  sixdb_target(ikea_example_intervals_${example})
+  target_link_libraries(ikea_example_intervals_${example} PRIVATE ikea::intervals)
+endforeach()
+target_link_libraries(ikea_example_intervals_composition PRIVATE ikea::seriespack)
 
-add_executable(ikea_example_intervals_ordinary EXCLUDE_FROM_ALL examples/intervals/ordinary.cpp)
-sixdb_target(ikea_example_intervals_ordinary)
-target_link_libraries(ikea_example_intervals_ordinary PRIVATE ikea::intervals)
-
-foreach(check search sparse seams)
+foreach(check search cuts sparse seams)
   add_executable(ikea_intervals_${check}_check EXCLUDE_FROM_ALL test/intervals/${check}.cpp)
   sixdb_target(ikea_intervals_${check}_check)
   target_compile_options(ikea_intervals_${check}_check PRIVATE -fno-vectorize -fno-slp-vectorize)
   target_link_libraries(ikea_intervals_${check}_check PRIVATE ikea::intervals)
 endforeach()
-
-add_executable(ikea_boundlist_check EXCLUDE_FROM_ALL test/boundlist/search.cpp test/boundlist/geometry.cpp test/boundlist/cuts.cpp)
-sixdb_target(ikea_boundlist_check)
-target_compile_options(ikea_boundlist_check PRIVATE -fno-vectorize -fno-slp-vectorize)
-target_link_libraries(ikea_boundlist_check PRIVATE ikea::boundlist)
-add_executable(ikea_boundlist_edits_check EXCLUDE_FROM_ALL test/boundlist/edits.cpp)
-sixdb_target(ikea_boundlist_edits_check)
-target_compile_options(ikea_boundlist_edits_check PRIVATE -fno-vectorize -fno-slp-vectorize)
-target_link_libraries(ikea_boundlist_edits_check PRIVATE ikea::boundlist)
 
 add_library(ikea_streampack STATIC src/streampack/description.cpp src/streampack/view.cpp
   src/streampack/compact/description.cpp src/streampack/compact/view.cpp)
@@ -53,6 +41,12 @@ add_executable(ikea_streampack_encodings_check EXCLUDE_FROM_ALL test/streampack/
 sixdb_target(ikea_streampack_encodings_check)
 target_compile_options(ikea_streampack_encodings_check PRIVATE -fno-vectorize -fno-slp-vectorize)
 target_link_libraries(ikea_streampack_encodings_check PRIVATE ikea::streampack)
+foreach(check geometry cuts edits)
+  add_executable(ikea_streampack_compact_${check}_check EXCLUDE_FROM_ALL test/streampack/compact/${check}.cpp)
+  sixdb_target(ikea_streampack_compact_${check}_check)
+  target_compile_options(ikea_streampack_compact_${check}_check PRIVATE -fno-vectorize -fno-slp-vectorize)
+  target_link_libraries(ikea_streampack_compact_${check}_check PRIVATE ikea::streampack)
+endforeach()
 foreach(example ordinary composition)
   add_executable(ikea_example_streampack_${example} EXCLUDE_FROM_ALL examples/streampack/${example}.cpp)
   sixdb_target(ikea_example_streampack_${example})
@@ -196,17 +190,8 @@ foreach(example ordinary composition integration packets words groups)
   sixdb_target(ikea_example_tuplepack_${example})
   target_link_libraries(ikea_example_tuplepack_${example} PRIVATE ikea::tuplepack)
 endforeach()
-foreach(example ordinary composition)
-  add_executable(ikea_example_boundlist_${example} EXCLUDE_FROM_ALL examples/boundlist/${example}.cpp)
-  sixdb_target(ikea_example_boundlist_${example})
-  target_compile_options(ikea_example_boundlist_${example} PRIVATE -fno-vectorize -fno-slp-vectorize)
-  target_link_libraries(ikea_example_boundlist_${example} PRIVATE ikea::boundlist)
-endforeach()
-target_link_libraries(ikea_example_boundlist_composition PRIVATE ikea::seriespack)
-
 set(ikea_example_targets
-  ikea_example_intervals_ordinary
-  ikea_example_boundlist_ordinary ikea_example_boundlist_composition
+  ikea_example_intervals_ordinary ikea_example_intervals_composition
   ikea_example_filters_ordinary ikea_example_filters_composition ikea_example_filters_guarded
   ikea_example_streampack_ordinary ikea_example_streampack_composition
   ikea_example_seriespack_ordinary ikea_example_seriespack_composition
@@ -216,8 +201,8 @@ set(ikea_example_targets
   ikea_example_tuplepack_words ikea_example_tuplepack_groups
   ikea_example_bec256_ordinary ikea_example_bec256_native ikea_example_bec256_integration)
 set(ikea_check_targets
-  ikea_intervals_search_check ikea_intervals_sparse_check ikea_intervals_seams_check
-  ikea_boundlist_check ikea_boundlist_edits_check
+  ikea_intervals_search_check ikea_intervals_cuts_check ikea_intervals_sparse_check ikea_intervals_seams_check
+  ikea_streampack_compact_geometry_check ikea_streampack_compact_cuts_check ikea_streampack_compact_edits_check
   ikea_streampack_check ikea_streampack_boundaries_check ikea_streampack_encodings_check
   ikea_seriespack_check ikea_seriespack_descriptor_check ikea_seriespack_ownership_check
   ikea_seriespack_admission_check ikea_filters_check
@@ -227,7 +212,7 @@ set(ikea_check_targets
   ikea_bec256_check ikea_bec256_composition_check)
 add_custom_target(ikea_examples DEPENDS ${ikea_example_targets})
 sixdb_heavy_compile(ikea_seriespack_check ikea_filters_check ikea_tuplepack_packets_check
-  ikea_intervals_sparse_check ikea_boundlist_check ikea_streampack_encodings_check)
+  ikea_intervals_sparse_check ikea_streampack_compact_geometry_check ikea_streampack_encodings_check)
 sixdb_test_scope(ikea_seriespack_check ikea_filters_check)
 foreach(target IN LISTS ikea_check_targets ikea_example_targets)
   add_test(NAME ${target} COMMAND $<TARGET_FILE:${target}>)

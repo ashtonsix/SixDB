@@ -206,3 +206,21 @@ Historical citations in surviving documents use commit-pinned links. Retained
 evidence keeps its original bytes and relative paths, which resolve within the
 recovered source snapshot. New investigations should use the owning live guide
 or start from the question, rather than revive an obsolete launcher by accident.
+
+## Boundlist retirement — October 22, 2026
+
+[Intervals](../../ikea/docs/intervals/usage.md) succeeds common borrowed ordered
+search/geometry; [StreamPack](../../ikea/docs/streampack/usage.md) owns compact
+image, admission, bitmap and retirement/value behavior. Public Boundlist headers,
+targets, docs and examples are removed. Useful literal-cut/domain tests run under
+Intervals; compact-image/edit checks run under StreamPack. Teaching diagrams and
+the packed composition example were rewritten into the maintained Intervals guide.
+
+The [historical study](../spikes/boundlist/README.md) keeps findings, losing
+controls, offline reports and measured cohort references. Its [recovery receipt](../spikes/boundlist/recovery.json)
+pins the complete pre-retirement snapshot at
+`719b0f5709c9190bd592888cf8fbbbd379bce960`, including original Git trees. All
+80 retired documentation/experimental source files (547,413 bytes) matched that
+checkpoint before removal. Original measured source epochs remain in their own
+S3 bundles, unchanged. Recover a full snapshot in a fresh directory for old native
+runners; the maintained tree no longer configures `SIXDB_SPIKES=boundlist`.

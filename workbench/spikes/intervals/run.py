@@ -11,6 +11,7 @@ import os
 from pathlib import Path
 import platform
 import subprocess
+import shutil
 
 
 def main():
@@ -27,17 +28,20 @@ def main():
     output.mkdir(parents=True)
     binary = build / "workbench/spikes/intervals"
     targets = ["intervals_validate", "intervals_consumer", "intervals_consumer_seams",
-               "intervals_consumer_edits", "intervals_directory_before", "intervals_directory_after"]
+               "intervals_consumer_edits", "intervals_directory_reads"]
     with (output / "build.log").open("w") as log:
         subprocess.run(["cmake", "--build", str(build), "--target", *targets, "--parallel", "2"],
                        stdout=log, stderr=subprocess.STDOUT, check=True)
     sources = {}
-    for folder in ["ikea/include/ikea/intervals", "ikea/src/intervals", "ikea/test/intervals",
-                   "ikea/include/ikea/boundlist", "ikea/include/ikea/streampack",
-                   "ikea/src/streampack", "engine", "workbench/spikes/segment-directory", "workbench/spikes/intervals"]:
-        for path in (root / folder).rglob("*"):
-            if path.is_file() and "evidence" not in path.parts and path.suffix in {".h", ".cpp", ".py", ".txt"}:
+    for name in ["ikea/include", "ikea/src", "ikea/CMakeLists.txt", "engine",
+                 "orbital/include", "orbital/src", "loom/include", "loom/src", "cmake", "CMakeLists.txt",
+                 "workbench/spikes/segment-directory", "workbench/spikes/intervals"]:
+        candidate = root / name
+        paths = [candidate] if candidate.is_file() else candidate.rglob("*")
+        for path in paths:
+            if path.is_file() and "evidence" not in path.parts and path.suffix in {".h", ".cpp", ".py", ".txt", ".cmake"}:
                 sources[str(path.relative_to(root))] = hashlib.sha256(path.read_bytes()).hexdigest()
+    shutil.copyfile(build / "compile_commands.json", output / "compile_commands.json")
     executables = {name: hashlib.sha256((binary / name).read_bytes()).hexdigest()
                    for name in targets if name != "intervals_validate"}
     identity = {"qualification": "exploratory warm local VM; no DRAM or fleet inference",
@@ -57,9 +61,8 @@ def main():
         commands.extend([(f"seams-p{process}.jsonl", ["intervals_consumer_seams"]),
                          (f"edits-p{process}.jsonl", ["intervals_consumer_edits"])])
         for layer, shared in [(4, 0), (3, 4)]:
-            for variant in (["before", "after"] if process == 0 else ["after", "before"]):
-                commands.append((f"directory-p{process}-l{layer}-{variant}.csv", [
-                    f"intervals_directory_{variant}", str(layer), str(shared), "16384", "spread", "32768", "7"]))
+            commands.append((f"directory-p{process}-l{layer}-current.csv", [
+                "intervals_directory_reads", str(layer), str(shared), "16384", "spread", "32768", "7"]))
     with (output / "commands.json").open("w") as stream:
         json.dump(commands, stream, indent=2)
     for filename, command in commands:
