@@ -98,8 +98,9 @@ std::string u128_text(u128 v) {
 
 
 template <class T>
-void run(const char *name, std::span<const u64> values, u64 lo, u64 threshold) {
-    const column c = encode(values);
+void run(const char *name, std::span<const u64> values, u64 lo, u64 threshold,
+         encode_options options) {
+    const column c = encode(values, options);
     plain<T> p{std::vector<T>(c.rows), lo};
     for (std::size_t i = 0; i < c.rows; ++i)
         p.values[i] = static_cast<T>(values[i] - lo);
@@ -121,7 +122,8 @@ void run(const char *name, std::span<const u64> values, u64 lo, u64 threshold) {
     std::printf("{\"column\":\"%s\",\"delta_checkpoints\":\"%s\",\"runs_body\":\"%s\",\"rows\":%zu,\"blocks\":%zu,\"constant\":%zu,\"runs\":%zu,"
                 "\"packed\":%zu,\"delta\":%zu,\"descriptor_bytes\":%zu,\"payload_bytes\":%zu,"
                 "\"run_geometry_bytes\":%zu,\"bits_per_value\":%.3f,\"plain_bytes_per_value\":%zu",
-                name, checkpoint_name(), compact_runs ? "boundlist-compact" : "u8-end-projection", c.rows, c.blocks.size(), counts[0], counts[1], counts[2], counts[3],
+                name, checkpoint_name(c.options.delta_checkpoints),
+                c.options.compact_runs ? "boundlist-compact" : "u8-end-projection", c.rows, c.blocks.size(), counts[0], counts[1], counts[2], counts[3],
                 c.descriptor_bytes(), c.payload.size(), c.run_geometry_bytes(),
                 8.0 * total_bytes / c.rows, sizeof(T));
     const std::size_t n = c.blocks.size();
@@ -182,17 +184,18 @@ int main(int argc, char **argv) {
                      argv[0]);
         return 2;
     }
+    encode_options options;
     for (int i = 3; i < argc; ++i) {
         if (std::strcmp(argv[i], "--compact-runs") == 0)
-            compact_runs = true;
+            options.compact_runs = true;
         else if (std::strcmp(argv[i], "--checkpoints=native") == 0)
-            delta_checkpoints = checkpoints::native;
+            options.delta_checkpoints = checkpoints::native;
         else if (std::strcmp(argv[i], "--checkpoints=packed") == 0)
-            delta_checkpoints = checkpoints::packed;
+            options.delta_checkpoints = checkpoints::packed;
         else if (std::strcmp(argv[i], "--checkpoints=every64") == 0)
-            delta_checkpoints = checkpoints::every64;
+            options.delta_checkpoints = checkpoints::every64;
         else if (std::strcmp(argv[i], "--checkpoints=none") == 0)
-            delta_checkpoints = checkpoints::none;
+            options.delta_checkpoints = checkpoints::none;
         else
             return 2;
     }
@@ -220,12 +223,12 @@ int main(int argc, char **argv) {
     const u64 threshold = sorted[sorted.size() / 2];
     const u64 span = *hi - *lo;
     if (span <= 0xff)
-        run<std::uint8_t>(argv[1], values, *lo, threshold);
+        run<std::uint8_t>(argv[1], values, *lo, threshold, options);
     else if (span <= 0xffff)
-        run<std::uint16_t>(argv[1], values, *lo, threshold);
+        run<std::uint16_t>(argv[1], values, *lo, threshold, options);
     else if (span <= 0xffffffffu)
-        run<std::uint32_t>(argv[1], values, *lo, threshold);
+        run<std::uint32_t>(argv[1], values, *lo, threshold, options);
     else
-        run<u64>(argv[1], values, *lo, threshold);
+        run<u64>(argv[1], values, *lo, threshold, options);
 }
 #endif  // FRAME_ENCODING_BODY_NO_MAIN

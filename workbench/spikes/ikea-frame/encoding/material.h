@@ -76,20 +76,25 @@ struct run_ends {
     unsigned at(unsigned rank) const { return unsigned{end_minus_one[rank]} + 1; }
 };
 
-// Which runs body to build: u8 run-end projection (default) or the compact
-// mutable Boundlist view as a control.
-inline bool compact_runs = false;
 // Delta checkpoint option, a curated choice for Engine (Ashton: Engine decides,
-// Ikea exposes curated options):
+// Ikea exposes curated options unless one is a clear overall winner):
 //   native   15 checkpoints every 16 rows at u32 (u64 when K + 8 > 32)
 //   packed   the same 15 checkpoints bit-packed at K + 8 bits (SeriesPack plane)
 //   every64  3 checkpoints every 64 rows at native width
 //   none     no checkpoints; point reads prefix-sum from the anchor
-enum class checkpoints { native, packed, every64, none };
-inline checkpoints delta_checkpoints = checkpoints::native;
+enum class checkpoints : std::uint8_t { native, packed, every64, none };
 
-inline const char *checkpoint_name() {
-    switch (delta_checkpoints) {
+// Encoding choices, captured per column image at construction so a retained
+// image is never reinterpreted under another image's settings.
+struct encode_options {
+    // Runs body: u8 run-end projection (default) or the compact mutable
+    // Boundlist view as a control.
+    bool compact_runs = false;
+    checkpoints delta_checkpoints = checkpoints::native;
+};
+
+inline const char *checkpoint_name(checkpoints mode) {
+    switch (mode) {
     case checkpoints::native: return "native";
     case checkpoints::packed: return "packed";
     case checkpoints::every64: return "every64";
@@ -99,9 +104,9 @@ inline const char *checkpoint_name() {
 }
 
 // Bytes for one delta block's checkpoints at residual width k.
-inline std::size_t checkpoint_cost(unsigned k) {
+inline std::size_t checkpoint_cost(checkpoints mode, unsigned k) {
     const std::size_t native = k + 8 <= 32 ? 4 : 8;
-    switch (delta_checkpoints) {
+    switch (mode) {
     case checkpoints::native: return 15 * native;
     case checkpoints::packed: return k + 8 <= 64 ? plane_bytes(k + 8, 15) : 15 * 8;
     case checkpoints::every64: return 3 * native;
@@ -116,6 +121,7 @@ struct runs_geometry {
 };
 
 struct column {
+    encode_options options;  // how this image was built
     std::vector<descriptor> blocks;
     std::vector<std::uint8_t> payload;
     std::vector<std::unique_ptr<runs_geometry>> runs;  // per block, null unless runs
@@ -135,7 +141,7 @@ struct column {
     }
 };
 
-column encode(std::span<const u64> values);
+column encode(std::span<const u64> values, encode_options options = {});
 
 // Visit each run's (rank, size) through Boundlist range over the chosen body.
 template <class F> void each_run(const column &c, std::size_t b, F &&visit) {

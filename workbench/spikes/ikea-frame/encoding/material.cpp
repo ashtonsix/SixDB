@@ -42,8 +42,11 @@ const bl::layout &run_layout() {
     return *layout;
 }
 
-column encode(std::span<const u64> values) {
+column encode(std::span<const u64> values, encode_options options) {
     column c;
+    c.options = options;
+    const bool compact_runs = options.compact_runs;
+    const checkpoints delta_checkpoints = options.delta_checkpoints;
     c.rows = values.size() / block_rows * block_rows;
     const auto &layout = run_layout();
     std::vector<u64> scratch(block_rows);
@@ -82,7 +85,7 @@ column encode(std::span<const u64> values) {
         }
         const unsigned dk = delta_ok ? std::max(1u, width_of(static_cast<u64>(dmax - dmin))) : 64;
         const std::size_t checkpoint_bytes = dk + 8 <= 32 ? 4 : 8;
-        const std::size_t delta_cost = plane_bytes(dk, block_rows) + 8 + checkpoint_cost(dk);
+        const std::size_t delta_cost = plane_bytes(dk, block_rows) + 8 + checkpoint_cost(delta_checkpoints, dk);
         const std::size_t runs_cost =
             plane_bytes(k, run_values.size()) +
             (compact_runs ? layout.directory_bytes() + layout.control_bytes() +
