@@ -242,6 +242,30 @@ inserting into a compacted series would shift its neighbours.
 Removing an override when its value would now fit in place is left to
 compaction, keeping writes monotone in the override store.
 
+## Streaming
+
+Streaming is the other place kinds mix (**decided**): data is collected in a
+simple format and re-encoded one group at a time.
+
+- **Collect.** The part's tail group takes appends as plain blocks: working
+  domain values at full width, presence mask, and statistics maintained per
+  append (min/max widen, count and sum accumulate). Appends need no analysis,
+  no exceptions and no overrides, and read like any other plain block.
+- **Re-encode.** When a tail group fills (or earlier, by Engine's choice), it is
+  analysed and encoded with the part's expression, using priors from the
+  groups already encoded. The new group replaces the plain one; logical
+  contents are unchanged, so in Orbital's terms this is a physical
+  representation change, not a new logical version.
+- **One mechanism.** Streaming re-encode and forced compaction are the same
+  operation on one group: encode its current logical contents (including
+  overrides) into fresh blocks. Only the trigger differs.
+
+A streaming part is therefore an encoded prefix plus a plain tail. The plain
+tail is also what lets the part-wide dictionary grow: new values arriving in
+the tail join the dictionary when their group re-encodes. Whether that changes
+existing codes (sorted dictionaries) or only appends them (frequency or
+insertion order) is open.
+
 ## Reads
 
 A point read at position *p*: block `p >> 8`, then
@@ -328,13 +352,18 @@ value series are the main Ikea changes this design implies.
    capabilities are the weakest block's, unless kernels dispatch per block.
    Per-block dispatch for 256 values is cheap for scans but not for point
    reads. Should the part record which kinds actually occur, so Engine can plan
-   against the part's real mix?
-3. **Statistics in the working domain.** Min/max in offset-binary or float-map
+   against the part's real mix? Streaming makes the common mix concrete: an
+   encoded prefix plus a plain tail, which a per-group kind summary would show.
+3. **Sorted dictionary growth.** Adding values to a sorted part-wide dictionary
+   at re-encode renumbers codes in groups already encoded. Options: re-encode
+   the whole part's codes, leave gaps in the code space, or let new values stay
+   unmapped (opted-out blocks) until a whole-part rebuild.
+4. **Statistics in the working domain.** Min/max in offset-binary or float-map
    order are cheap and order-correct; sums need the logical domain. Which sums
    does Engine want maintained, and with what float semantics?
-4. **Predicted blocks and writes.** Every write to a predicted block becomes an
+5. **Predicted blocks and writes.** Every write to a predicted block becomes an
    override. For write-heavy sorted columns, is a cheaper path (rewriting one
    sub-block of 16) worth its complexity?
-5. **First measurements.** Candidate experiments: override read overhead
+6. **First measurements.** Candidate experiments: override read overhead
    versus density; exception application fused with SeriesPack reads; FOR versus
    plain packing at real column widths under SeriesPack's tile geometry.
