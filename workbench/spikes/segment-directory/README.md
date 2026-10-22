@@ -3,7 +3,10 @@
 **What shape should each directory layer take so point access, ordered
 traversal and edits stay bounded as an index grows?**
 
-Started 22 October 2026 to take over `engine::directory`. This spike covers only
+Started 22 October 2026 to take over `engine::directory`. The chosen structure
+has **graduated** into [`engine::directory`](../../../engine/README.md#segment-directory),
+on Orbital Objects with its own material. This spike keeps the evidence, the
+counter model and the controls that were rejected. This spike covers only
 the directory structure: how each layer is laid out, searched and maintained.
 Segment codecs, aggregates, consumers and peers are out of scope. The
 [previous directory spike](../directory/README.md) keeps that wider evidence.
@@ -165,8 +168,8 @@ overlap.
 
 ## Through Orbital Objects
 
-[`orbital_source.h`](orbital_source.h) publishes each built layout as
-`engine::material` Objects, with one grouped allocation per Object and one
+A reader since removed (recoverable from commit `64cab102`) published each
+built layout as Objects through `engine::material`, with one grouped allocation per Object and one
 Definition per distinct Part geometry. The same views then read through a
 `Store::Scope`: one `Scope::bind` per visit and `Selection::part` per Part.
 Graviton4, `c8g.4xlarge`, ns per operation
@@ -281,7 +284,9 @@ faster, edits are smaller, and one partition format serves every layer. The
   don't overlap, and whether a reader can hold direct references to upper
   directory levels across a Scope.
 - Slotted dirents for births and deaths, if churn-heavy layers matter.
-- Write the edit path against `engine::material` (capture with retained Parts and a prepared packet per batch) and time it.
+- Time `engine::directory`'s edit path (capture with retained Parts and one
+  packet per batch) once callers exist. Validation beyond the oracle checks
+  waits on more of the architecture being connected.
 
 ## Reproduce
 

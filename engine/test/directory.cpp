@@ -1,191 +1,224 @@
 #include <engine/directory.h>
-#include <loom/worker.h>
+#include <algorithm>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#include <map>
 #include <optional>
-#include <vector>
+#include <random>
+#include <unordered_set>
 
+// Directory layers against an ordered oracle, through real Orbital Objects:
+// random single and batched births, deaths, fence changes, value edits and
+// identical replacements; draining and regrowth; small capacities so trees
+// reach several levels; and readers holding an older Scope across publication.
 namespace {
-using namespace engine;
-using Store=material::Store;
-void check(bool good,const char* why) {
-  if (good) return;
-  std::fprintf(stderr,"Engine directory: %s\n",why); std::abort();
+using namespace engine::directory;
+using Rng=std::mt19937_64;
+constexpr unsigned K=12;
+
+void check(bool ok,const char* what) {
+  if(ok) return;
+  std::fprintf(stderr,"engine directory check: %s\n",what);
+  std::abort();
 }
-template<class T> T take(orbital::Result<T> r) {
-  check(bool(r),"unexpected module refusal"); return std::move(*r);
+
+struct Row {
+  std::array<std::uint8_t,K> min{},max{};
+  Dirent dirent{};
+};
+using Oracle=std::map<std::uint32_t,Row>;
+
+std::array<std::uint8_t,K> key(std::uint64_t v) {
+  std::array<std::uint8_t,K> k{};
+  for(int i=0;i<8;++i) k[i]=std::uint8_t(v>>(56-8*i));
+  return k;
 }
-directory::Dirent value(std::uint32_t key) {
-  directory::Dirent d;
-  for (unsigned i=0;i<6;++i) d.parts[i]=(UINT64_C(0xeab91200)+key)*17+i;
-  d.representation=key^0xffu; d.mapped=0x1234; d.extra_rank=key;
-  d.extra_block=key^UINT32_MAX; d.reserved=0x4567;
+std::uint64_t value(std::span<const std::uint8_t> k) {
+  std::uint64_t v=0;
+  for(int i=0;i<8;++i) v=v<<8|k[i];
+  return v;
+}
+Dirent dirent(std::uint32_t p,std::uint64_t version) {
+  Dirent d;
+  for(unsigned i=0;i<8;++i) d.word[i]=(std::uint64_t(p)<<16|version)*(2*i+1);
   return d;
 }
-void publish(Store& store,const Store::Scope& basis,std::span<const Store::Change> changes) {
-  Store::Prepared packet(store);
-  check(bool(store.prepare(basis,changes,packet)),"prepare");
-  check(bool(store.install(packet)),"install");
+Entry entry(std::uint32_t p,const Row& r) {return {p,r.min,r.max,r.dirent};}
+
+struct Domain {std::uint64_t lo,hi;};
+
+// Fences between ordered neighbours, so physical order stays logical order;
+// one gap in twenty is zero, so equal keys cross Segment boundaries.
+Row born(const Oracle& o,std::uint32_t p,std::uint64_t version,Rng& rng) {
+  auto next=o.lower_bound(p);
+  std::uint64_t lo=next==o.begin()?0:value(std::prev(next)->second.max);
+  std::uint64_t hi=next==o.end()?lo+(UINT64_C(1)<<31):value(next->second.min);
+  if(rng()%20==0) return {key(lo),key(lo),dirent(p,version)};
+  return {key(lo+(hi-lo)/3),key(lo+2*(hi-lo)/3),dirent(p,version)};
 }
+Row widened(const Oracle& o,std::uint32_t p,std::uint64_t version) {
+  auto it=o.find(p);
+  auto r=it->second;
+  std::uint64_t lo=it==o.begin()?0:value(std::prev(it)->second.max);
+  std::uint64_t hi=std::next(it)==o.end()?value(r.max)+(UINT64_C(1)<<31):value(std::next(it)->second.min);
+  r.min=key(lo+(value(r.min)-lo)/2);
+  r.max=key(value(r.max)+(hi-value(r.max))/2);
+  r.dirent=dirent(p,version);
+  return r;
+}
+std::uint32_t absent(const Oracle& o,Domain d,Rng& rng) {
+  for(;;) {auto p=std::uint32_t(d.lo+rng()%(d.hi-d.lo));if(!o.contains(p)) return p;}
+}
+
+void compare(const Layer& l,const Store& store,const Oracle& o,Domain d,Rng& rng) {
+  l.validate();
+  Store::Scope scope(store);
+  const bool fenced=l.shape().fenced();
+  auto c=l.seek(scope,0u);
+  for(auto& [p,r]:o) {
+    check(bool(c)&&l.prefix(c)==p,"scan prefix");
+    check(!std::memcmp(&l.dirent(c),&r.dirent,64),"scan dirent");
+    if(fenced) check(std::ranges::equal(l.min(c),r.min)&&std::ranges::equal(l.max(c),r.max),"scan fences");
+    l.next(scope,c);
+  }
+  check(!c,"scan end");
+  for(int q=0;q<40;++q) {
+    auto p=std::uint32_t(d.lo+rng()%(d.hi-d.lo));
+    auto it=o.find(p);
+    auto* found=l.find(scope,p);
+    check(bool(found)==(it!=o.end()),"find presence");
+    if(found) check(!std::memcmp(found,&it->second.dirent,64),"find dirent");
+    auto s=l.seek(scope,p);
+    auto lb=o.lower_bound(p);
+    check(bool(s)==(lb!=o.end())&&(!s||l.prefix(s)==lb->first),"seek");
+    if(fenced&&!o.empty()) {
+      auto low=key(rng()%(value(o.rbegin()->second.max)+2));
+      auto lc=l.seek(scope,std::span<const std::uint8_t>(low));
+      auto jt=std::find_if(o.begin(),o.end(),[&](auto& kv) {return value(kv.second.max)>=value(low);});
+      check(bool(lc)==(jt!=o.end())&&(!lc||l.prefix(lc)==jt->first),"logical seek");
+    }
+  }
+}
+
+// One batch of edits with unique prefixes; occasionally empties the layer.
+std::vector<std::pair<Edit::Kind,std::pair<std::uint32_t,Row>>> batch(Oracle& o,Domain d,Rng& rng,
+    std::size_t max_batch,std::size_t target,std::uint64_t& version,bool& noop) {
+  std::map<std::uint32_t,std::pair<Edit::Kind,Row>> edits;
+  noop=false;
+  if(rng()%40==0) {
+    for(auto& [p,r]:o) edits[p]={Edit::erase,r};
+    o.clear();
+  } else if(rng()%10==0&&!o.empty()) {
+    // Identical replacements must publish nothing.
+    auto it=o.lower_bound(std::uint32_t(d.lo+rng()%(d.hi-d.lo)));
+    if(it==o.end()) it=o.begin();
+    edits[it->first]={Edit::update,it->second};
+    noop=true;
+  } else {
+    auto n=1+rng()%max_batch;
+    for(std::size_t i=0;i<n;++i) {
+      auto r=rng()%4;
+      bool grow=o.size()<target/2||(o.size()<target*2&&rng()%2);
+      if(o.size()>=d.hi-d.lo) grow=false;
+      if(o.empty()||(r<2&&grow)) {
+        auto p=absent(o,d,rng);
+        if(edits.contains(p)) continue;
+        auto row=born(o,p,version++,rng);
+        o.emplace(p,row);edits[p]={Edit::insert,row};
+      } else {
+        auto it=o.lower_bound(std::uint32_t(d.lo+rng()%(d.hi-d.lo)));
+        if(it==o.end()) it=o.begin();
+        auto p=it->first;
+        if(edits.contains(p)) continue;
+        if(r<2) {edits[p]={Edit::erase,it->second};o.erase(it);}
+        else {
+          auto row=r==2?widened(o,p,version++):it->second;
+          row.dirent=dirent(p,version++);
+          it->second=row;edits[p]={Edit::update,row};
+        }
+      }
+    }
+  }
+  std::vector<std::pair<Edit::Kind,std::pair<std::uint32_t,Row>>> out;
+  for(auto& [p,e]:edits) out.push_back({e.first,{p,e.second}});
+  return out;
+}
+
+void exercise(loom::Worker& worker,Shape shape,bool dense,std::size_t target,std::size_t singles,std::size_t batches) {
+  std::pmr::unsynchronized_pool_resource memory;
+  Store store(memory);
+  Layer layer(worker,store,memory,0xd1,shape);
+  Rng rng(shape.layer*101+shape.shared_prefix*7+dense+shape.leaf_capacity);
+  auto domain_size=std::uint64_t(1)<<(8*shape.layer);
+  target=std::min<std::size_t>(target,domain_size/4+1);
+  Domain d{0,domain_size};
+  if(dense&&shape.layer>=2) {d.lo=std::min<std::uint64_t>(domain_size-2*target,UINT64_C(0x12000000)>>(32-8*shape.layer));d.hi=d.lo+2*target;}
+  if(shape.layer==0) target=1;
+  Oracle o;
+  std::uint64_t version=1;
+  while(o.size()<target) {auto p=absent(o,d,rng);o.emplace(p,born(o,p,version++,rng));}
+  std::vector<Entry> es;
+  for(auto& [p,r]:o) es.push_back(entry(p,r));
+  check(bool(layer.build(es)),"build");
+  compare(layer,store,o,d,rng);
+  // Singles, with a reader holding the Scope from before each edit.
+  for(std::size_t i=0;i<singles;++i) {
+    bool noop=false;
+    auto edits=batch(o,d,rng,1,target,version,noop);
+    std::optional<Store::Scope> old;
+    old.emplace(store);
+    std::optional<std::pair<std::uint32_t,Dirent>> before;
+    if(!edits.empty())
+      if(auto* found=layer.find(*old,edits[0].second.first)) before=std::pair{edits[0].second.first,*found};
+    std::vector<Edit> es2;
+    for(auto& [kind,pr]:edits) es2.push_back({kind,entry(pr.first,pr.second)});
+    auto cut=Store::Scope(store).cut();
+    check(bool(layer.apply(es2)),"apply");
+    if(noop) check(Store::Scope(store).cut()==cut,"identical replacement published");
+    if(before) {
+      auto* again=layer.find(*old,before->first);
+      check(again&&!std::memcmp(again,&before->second,64),"older Scope lost its version");
+    }
+    if(i%53==0) compare(layer,store,o,d,rng);
+  }
+  for(std::size_t b=0;b<batches;++b) {
+    bool noop=false;
+    auto max_batch=std::size_t(3)*shape.leaf_capacity*std::max(1u,shape.inner_capacity/8);
+    auto edits=batch(o,d,rng,max_batch,target,version,noop);
+    std::vector<Edit> es2;
+    for(auto& [kind,pr]:edits) es2.push_back({kind,entry(pr.first,pr.second)});
+    // Keep the rows alive while edits borrow their fences.
+    check(bool(layer.apply(es2)),"apply batch");
+    if(b%7==0) compare(layer,store,o,d,rng);
+  }
+  compare(layer,store,o,d,rng);
+}
+
 void run(loom::Worker& worker) {
-  std::pmr::unsynchronized_pool_resource resource({1024,128});
-  Store store(resource),foreign(resource);
-  auto directory=take(directory::Directory::open(store,worker,resource,UINT64_C(0xfedcba9876543210)));
-  { Store::Scope empty(store),other(foreign);
-    auto read=take(directory->read(empty,4));
-    check(!read.find(0),"absent root");
-    directory::Dirent dummy;
-    const std::array keys{0u,UINT32_MAX}; std::array<const directory::Dirent*,2> output{&dummy,&dummy};
-    check(bool(read.find_many(keys,output)) && !output[0] && !output[1],"empty many output");
-    check(!directory->read(other,4) && !directory->read(empty,5),"foreign Scope/layer"); }
-  std::vector<directory::Entry> entries;
-  for (unsigned i=0;i<1300;++i) entries.push_back({i*17,value(i*17)});
-  entries.push_back({UINT32_MAX-1,value(UINT32_MAX-1)});
-  entries.push_back({UINT32_MAX,value(UINT32_MAX)});
-  auto owner=take(directory->build(4,entries));
-  { Store::Scope basis(store);
-    const std::array changes{Store::Change{directory->root_id(4),std::move(owner)}};
-    publish(store,basis,changes); }
-  std::optional<Store::Scope> old; old.emplace(store);
-  // Do not bind old root until AFTER all replacements, candidate destruction,
-  // catalog maintenance and fresh reads. This checks late first discovery.
-  const std::array keys{0u,17u,16*17u,32*17u,1299*17u,UINT32_MAX-1,UINT32_MAX};
-  for (auto key:keys) {
-    Store::Scope basis(store);
-    auto d=value(key); d.parts[5]^=0x9999; d.representation^=0xabc;
-    directory::Work work;
-    auto next=take(directory->replace(basis,4,key,d,&work));
-    check(work.allocations==1 && work.captures==1,
-        "replacement physical allocation/capture bound");
-    check(work.body_bytes==work.copied_bytes && work.body_bytes<=4480,
-        "bounded path backing/copy accounting");
-    const std::array changes{Store::Change{directory->root_id(4),std::move(next)}};
-    publish(store,basis,changes);
+  unsigned cases=0;
+  for(unsigned l=0;l<=4;++l) for(unsigned j:{0u,4u}) for(bool dense:{false,true}) {
+    Shape s{.layer=l,.key_bytes=K,.shared_prefix=j,.leaf_capacity=8,.inner_capacity=4,.fill=0.75,.merge_below=0.5,.tile=3};
+    exercise(worker,s,dense,300,3000,150);
+    auto wide=s;wide.leaf_capacity=40;wide.inner_capacity=36;
+    exercise(worker,wide,dense,600,1500,80);
+    cases+=2;
   }
-  store.drain();
-  {
-    Store::Scope fresh(store);
-    auto before=take(directory->read(*old,4)),after=take(directory->read(fresh,4));
-    for (const auto& e:entries) {
-      auto expected=e.value;
-      for (auto key:keys) if (key==e.prefix) { expected.parts[5]^=0x9999; expected.representation^=0xabc; }
-      check(before.find(e.prefix) && *before.find(e.prefix)==e.value,"old full dirent bytes");
-      check(after.find(e.prefix) && *after.find(e.prefix)==expected,"fresh full dirent bytes");
-    }
-    for (unsigned key=0;key<30000;++key)
-      if (key%17 || key>1299*17) check(!before.find(key) && !after.find(key),"sparse exact misses");
-    for (unsigned count:{0u,1u,31u,32u,33u,63u,64u,65u}) {
-      std::array<std::uint32_t,65> probes;
-      std::array<const directory::Dirent*,66> results{};
-      for (unsigned i=0;i<count;++i) probes[i]=i%5==0?UINT32_MAX:i%5==1?16u:(i*17)%1000;
-      check(bool(before.find_many(std::span(probes).first(count),results)),"many old probes");
-      for (unsigned i=0;i<count;++i) check(results[i]==before.find(probes[i]),"old many input association");
-      check(!results[count],"many wrote past offered count");
-      check(bool(after.find_many(std::span(probes).first(count),results)),"many fresh probes");
-      for (unsigned i=0;i<count;++i) check(results[i]==after.find(probes[i]),"fresh many input association");
-      if (count) {
-        auto saved=results;
-        check(!after.find_many(std::span(probes).first(count),std::span(results).first(count-1)),"many capacity refusal");
-        check(results==saved,"many refusal changed output");
-      }
-    }
-    check(!directory->replace(fresh,4,16,value(16)),"absent replacement admitted");
-    auto discarded=take(directory->replace(fresh,4,17,value(0))); discarded={};
-    check(*take(directory->read(fresh,4)).find(17)==*after.find(17),"discard published");
-    auto candidate=take(directory->replace(fresh,4,17,value(0)));
-    Store::Prepared aborted(store);
-    const std::array changes{Store::Change{directory->root_id(4),std::move(candidate)}};
-    check(bool(store.prepare(fresh,changes,aborted)),"abort preparation"); aborted.abort();
-    check(*take(directory->read(fresh,4)).find(17)==*after.find(17),"abort published");
-  }
-  old.reset(); store.drain();
-  std::vector<directory::Entry> dense;
-  for (unsigned i=0;i<1024;++i) dense.push_back({i,value(i)});
-  {
-    auto root=take(directory->build(2,dense)); Store::Scope basis(store);
-    const std::array c{Store::Change{directory->root_id(2),std::move(root)}}; publish(store,basis,c);
-  }
-  {
-    Store::Scope before(store);
-    auto expected=dense;
-    for (unsigned stride:{1u,15u}) {
-      std::array<directory::LocatorChange,64> batch;
-      for (unsigned i=0;i<64;++i) {
-        const auto key=i*stride; auto d=value(key); d.parts[2]^=stride;
-        batch[i]={key,d}; expected[key].value=d;
-      }
-      Store::Scope basis(store); directory::Work work;
-      auto root=take(directory->replace_many(basis,2,batch,&work));
-      check(work.captures==1 && work.body_bytes>=work.copied_bytes,"batch once per physical body");
-      if (stride==1) check(work.allocations==6 && work.copied_bytes==4*1024+2*576,"clustered union path");
-      const std::array c{Store::Change{directory->root_id(2),std::move(root)}}; publish(store,basis,c);
-    }
-    store.drain(); Store::Scope fresh(store);
-    auto a=take(directory->read(before,2)),b=take(directory->read(fresh,2));
-    for (unsigned i=0;i<dense.size();++i)
-      check(a.find(i) && *a.find(i)==dense[i].value && b.find(i) && *b.find(i)==expected[i].value,"batch old/fresh all bytes");
-    const std::array bad_batch{directory::LocatorChange{1,value(1)},directory::LocatorChange{1,value(2)}};
-    check(!directory->replace_many(fresh,2,bad_batch),"duplicate final intent admitted");
-  }
-  // Layer domains, compressed roots, empty setup and sorted/unique admission.
-  for (unsigned layer=0;layer<4;++layer) {
-    auto end=std::uint32_t((UINT64_C(1)<<(8*layer))-1);
-    std::array input{directory::Entry{end,value(end)}};
-    auto root=take(directory->build(layer,input));
-    Store::Scope basis(store);
-    const std::array changes{Store::Change{directory->root_id(layer),std::move(root)}};
-    publish(store,basis,changes);
-    Store::Scope fresh(store); auto read=take(directory->read(fresh,layer));
-    check(read.find(end) && *read.find(end)==input[0].value,"compressed/layer maximum");
-    check(!read.find(end+1),"outside-layer lookup");
-    input[0].prefix=end+1;
-    check(!directory->build(layer,input) && !directory->replace(fresh,layer,end+1,value(0)),"layer key domain");
-  }
-  std::array bad{directory::Entry{7,value(7)},directory::Entry{7,value(7)}};
-  check(!directory->build(4,bad) && !directory->build(4,{}) && !directory->build(5,entries),"build input admission");
-  {
-    Store::Scope basis(store); auto read=take(directory->read(basis,4)); const auto original=*read.find(0);
-    const std::array invalid{directory::LocatorChange{0,value(0)},directory::LocatorChange{16,value(16)},directory::LocatorChange{17,value(17)}};
-    check(!directory->replace_many(basis,4,invalid),"partial private batch membership refusal");
-    check(*take(directory->read(basis,4)).find(0)==original,"refused partial batch published");
-  }
-  // Escaped root Part preserves routing descendants after Directory/Store reset.
-  orbital::Part<material::Control>* exported;
-  {
-    Store::Scope basis(store);
-    exported=take(take(store.bound(basis,directory->root_id(4))).export_part(0,orbital::PartRetention::selected_copy));
-  }
-  directory.reset(); store={};
-  check(orbital::view(exported).address()!=nullptr,"exported graph lifetime");
-  orbital::release(exported);
-  // Force every admitted radix height. Expectations come from flat input,
-  // independently of either scalar find or the staged traversal.
-  Store shapes(resource);
-  auto shaped=take(directory::Directory::open(shapes,worker,resource,9876));
-  for (unsigned shift=0;shift<=25;shift+=5) {
-    const auto high=std::uint32_t(1u<<(shift+4));
-    const std::array input{directory::Entry{0,value(0)},directory::Entry{high,value(high)}};
-    auto root=take(shaped->build(4,input));
-    { Store::Scope basis(shapes); const std::array c{Store::Change{shaped->root_id(4),std::move(root)}}; publish(shapes,basis,c); }
-    Store::Scope basis(shapes); auto read=take(shaped->read(basis,4));
-    std::array<std::uint32_t,97> keys; std::array<const directory::Dirent*,97> output;
-    for (unsigned i=0;i<97;++i) keys[i]=i%4==0?0:i%4==1?high:i%4==2?high+1:UINT32_MAX;
-    check(bool(read.find_many(keys,output)),"staged radix height");
-    for (unsigned i=0;i<keys.size();++i) {
-      const directory::Dirent* expected=nullptr;
-      for (const auto& e:input) if (e.prefix==keys[i]) expected=&e.value;
-      check(bool(output[i])==bool(expected) && (!expected || *output[i]==*expected),"staged independent flat oracle");
-    }
-  }
+  std::printf("PASS: %u directory layer cases against an ordered oracle, with late readers and no-op publication\n",cases);
 }
 }
+
 int main() {
-  loom::Worker worker; check(bool(loom::adopt(worker)),"adopt");
-  check(bool(loom::configure(worker,take(orbital::allocation::open_arena(64u<<20)),0)),"configure");
+  loom::Worker worker;
+  check(bool(loom::adopt(worker)),"worker adoption");
+  auto arena=orbital::allocation::open_arena(std::size_t(1)<<30);
+  check(arena&&bool(loom::configure(worker,std::move(*arena),0)),"worker configuration");
   run(worker);
-  for (;;) { auto p=loom::shutdown(worker); check(p.kind()!=orbital::Progress::Kind::failed,"shutdown");
-    if (p.kind()==orbital::Progress::Kind::done) break; loom::poll(worker,{64,0}); }
+  for(;;) {
+    auto p=loom::shutdown(worker);
+    check(p.kind()!=orbital::Progress::Kind::failed,"shutdown");
+    if(p.kind()==orbital::Progress::Kind::done) break;
+    loom::poll(worker,{64,0});
+  }
   loom::relinquish(worker);
-  std::puts("PASS: native physical directory full-byte oracle, sparse/MAX/layer domains, late old/fresh snapshots, discard/abort, bounded single-path backing and physical lifetime");
 }

@@ -7,37 +7,38 @@ structures. Multi-shard transactions are in scope.
 Successor to Calico's `engine` and `foyer`, with database-structural concerns
 from `arbor`; see the [Calico reference map](../workbench/notebook/calico.md).
 
-## Native material support
+## Segment directory
 
-The [`material` adapter](include/engine/material.h) binds native material to
-Orbital using a 24-byte Control and retained immutable geometry and
-interpretation. Captures and exported Parts keep their selected layout alive;
-retained sources can be recaptured without retaining a chain of predecessor
-representations. The caller supplies the Store and metadata resource and follows
-the adapter's Scope, resource and owner-Lane lifetime requirements.
+[`engine::directory`](include/engine/directory.h) locates an index's Segments.
+Each of the five layers is a tree of Orbital Objects ordered by physical
+prefix:
+- **Leaves** hold the prefix plane, 64-byte dirents in Parts of 16, and the
+  min/max logical fences. Fences exist only above the shared prefix J.
+- **Interior rows** hold a physical separator, a logical separator above J, and
+  the child's name.
+- **The root keeps a fixed name.** The tree deepens instead of growing one flat
+  root.
+- **L0 and L1 are single leaves.**
 
-Build `engine_material_check` with the [pinned toolchain](../BUILDING.md), then
-run its same-named CTest entry for material lifetime and recapture checks.
+Bulk build leaves 25% slack, the rightmost node splits off build-occupancy
+pieces so appends stay dense, separators are loose, and only shrinking nodes
+merge. Each `apply` publishes one packet. Unchanged Parts are reused from the
+basis version, and identical replacements publish nothing. Readers borrow
+Parts under their own `Store::Scope`.
 
-## Directory and Segment experiments
+The directory owns its Orbital material: a Control whose Part extents follow
+from row count and key width. The [segment-directory spike](../workbench/spikes/segment-directory/README.md)
+holds the evidence, the rejected alternatives and the open questions. Those
+alternatives are flat roots, natural partitions, inline-dirent hash pages and
+a prefix-to-leaf hash.
 
-The native [`directory` increment](include/engine/directory.h) implements
-physical-prefix lookup, staged independent probes, full logical Boundlist
-seek/continuation and scalar/batched existing-member replacement. The shared-prefix
-[`HashLayer`](include/engine/directory_hash.h) uses actual Ikea inline dirents in
-separately versioned groups. The caller joins finished Segment and directory
-changes in one Orbital packet. Incremental membership/bound repair and balance,
-ordinary layer recipes, extras and schema remain unfinished.
+Build and run `engine_directory_check` with the [pinned toolchain](../BUILDING.md).
+It runs 40 layer shapes against an ordered oracle through real Objects. The
+shapes cover single and batched edits, draining and regrowth, readers holding
+older Scopes, no-op publication, and orphaned-Object detection.
 
-The opt-in `SIXDB_ENGINE_DIRECTORY_DRIVER` builds a moving-Part relocation
-driver and a multi-row Segment caller with real five-layer material, snapshot
-correct afterimages and exact aggregate checks. Logical equality returns all
-duplicates, through either ordered routing or a shared-prefix hash/summary plan;
-the latter retains Ikea's automatic selector around the complete useful consumer.
-Native LMDB is required only
-for those drivers. The [implementation and measurements](../workbench/spikes/index-directories/IMPLEMENTATION.md)
-describe their boundaries, byte ownership and unresolved performance costs.
-These experiments do not establish a complete Engine or persistent format.
+Not yet settled: durable allocation of node names (a Layer counts in memory),
+direct-slot indexing for L0/L1, and timing the edit path with real callers.
 Source frontend work remains planning-only.
 
 ## Provisional scope and seams

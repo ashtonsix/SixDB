@@ -1,559 +1,605 @@
 #include <engine/directory.h>
-#include <engine/directory_hash.h>
-#include "directory_admission.h"
-#include <ikea/boundlist/search.h>
-#include <loom/worker.h>
 #include <algorithm>
-#include <bit>
-#include <cassert>
+#include <cstdio>
+#include <cstdlib>
 #include <cstring>
-#include <vector>
 
 namespace engine::directory {
-namespace detail {
-using Store=material::Store;
-struct Key {
-  std::uint64_t prefix;
-  const std::byte* tail;
-  unsigned size;
-  friend bool operator<(Key a,Key b) noexcept {
-    return a.prefix!=b.prefix?a.prefix<b.prefix:a.size && std::memcmp(a.tail,b.tail,a.size)<0;
+namespace {
+constexpr unsigned block=16;
+
+void require(bool ok,const char* what) {
+  if(ok) return;
+  std::fprintf(stderr,"engine::directory: %s\n",what);
+  std::abort();
+}
+std::size_t rounded(std::size_t n) {return (n+63)/64*64;}
+const std::byte* address(Selection s,std::size_t i) {return s.part(i)->address();}
+template<class T> const T* plane(Selection s,std::size_t i) {return reinterpret_cast<const T*>(address(s,i));}
+std::uint32_t rows(Selection s) {return plane<std::uint32_t>(s,0)[0];}
+std::uint32_t height(Selection s) {return plane<std::uint32_t>(s,0)[1];}
+template<class T> std::vector<std::byte> raw(const std::vector<T>& v) {
+  std::vector<std::byte> out(v.size()*sizeof(T));
+  if(!v.empty()) std::memcpy(out.data(),v.data(),out.size());
+  return out;
+}
+template<class T> std::vector<T> typed(const std::byte* p,std::size_t n) {
+  std::vector<T> out(n);
+  if(n) std::memcpy(out.data(),p,n*sizeof(T));
+  return out;
+}
+// First index in [begin, n) where less() fails; the summary picks one block of 16.
+template<class SummaryLess,class Less>
+unsigned first_not(unsigned begin,unsigned n,SummaryLess sl,Less less) {
+  unsigned lo=begin,hi=n;
+  if(n>block) {
+    unsigned blo=1,bhi=(n+block-1)/block;
+    while(blo<bhi) {auto mid=(blo+bhi)/2;if(sl(mid)) blo=mid+1;else bhi=mid;}
+    lo=std::max(begin,(blo-1)*block);
+    hi=std::min(n,blo*block);
   }
-};
-Key key(std::span<const std::byte> bytes) noexcept {
-  std::uint64_t prefix=0; const unsigned n=std::min<std::size_t>(8,bytes.size());
-  if (n==8) {
-    std::memcpy(&prefix,bytes.data(),8);
-    if constexpr(std::endian::native==std::endian::little) prefix=std::byteswap(prefix);
+  while(lo<hi) {auto mid=(lo+hi)/2;if(less(mid)) lo=mid+1;else hi=mid;}
+  return lo;
+}
+}
+
+Layer::Layer(loom::Worker& w,Store& s,std::pmr::memory_resource& m,std::uint64_t ns,Shape shape)
+  :worker_(&w),store_(&s),memory_(&m),space_(ns),shape_(shape) {
+  require(shape.layer<=4&&shape.key_bytes&&shape.key_bytes<=255&&shape.tile&&shape.tile<=255,"shape");
+  require(shape.leaf_capacity>=4&&shape.inner_capacity>=4,"capacity");
+}
+
+unsigned Layer::leaf_capacity() const {return shape_.layer<=1?256:shape_.leaf_capacity;}
+
+Control Layer::control(std::uint64_t name,const Node& n) const {
+  Control c;
+  c.memory=memory_;
+  c.name=name;
+  c.count=std::uint32_t(n.size());
+  c.height=std::uint16_t(n.height);
+  c.key_bytes=std::uint8_t(shape_.key_bytes);
+  c.fenced=shape_.fenced();
+  c.tile=std::uint8_t(shape_.tile);
+  return c;
+}
+
+std::vector<std::vector<std::byte>> Layer::encode(const Node& n) const {
+  std::vector<std::vector<std::byte>> parts;
+  const auto k=shape_.key_bytes;
+  const auto& routing=n.height?n.sep:n.prefix;
+  std::vector<std::uint32_t> header{std::uint32_t(n.size()),n.height};
+  for(std::size_t i=0;i<routing.size();i+=block) header.push_back(routing[i]);
+  parts.push_back(raw(header));
+  parts.push_back(raw(routing));
+  auto sampled=[&](const std::vector<std::uint8_t>& keys) {
+    std::vector<std::byte> out;
+    for(std::size_t i=0;i*k<keys.size();i+=block)
+      out.insert(out.end(),reinterpret_cast<const std::byte*>(keys.data()+i*k),
+                 reinterpret_cast<const std::byte*>(keys.data()+(i+1)*k));
+    return out;
+  };
+  if(n.height) {
+    if(shape_.fenced()) parts.push_back(raw(n.lsep));
+    parts.push_back(raw(n.child));
+    if(shape_.fenced()) parts.push_back(sampled(n.lsep));
   } else {
-    for (unsigned i=0;i<n;++i) prefix=(prefix<<8)|std::to_integer<unsigned>(bytes[i]);
-    if (n) prefix<<=(8-n)*8;
+    if(shape_.fenced()) {parts.push_back(raw(n.min));parts.push_back(raw(n.max));}
+    for(std::size_t t=0;t<n.dirent.size();t+=shape_.tile)
+      parts.push_back(raw(std::vector<Dirent>(n.dirent.begin()+t,n.dirent.begin()+std::min(n.dirent.size(),t+shape_.tile))));
+    if(shape_.fenced()) parts.push_back(sampled(n.max));
   }
-  return {prefix,bytes.size()>8?bytes.data()+8:nullptr,unsigned(bytes.size()>8?bytes.size()-8:0)};
+  return parts;
 }
-struct Bounds {
-  std::pmr::memory_resource* memory;
-  mutable std::size_t references{1};
-  unsigned count,width;
-  std::array<std::uint8_t,32> slots{};
-  std::size_t tail() const noexcept { return width>8?width-8:0; }
-  std::uint64_t* minima() noexcept { return reinterpret_cast<std::uint64_t*>(this+1); }
-  const std::uint64_t* minima() const noexcept { return reinterpret_cast<const std::uint64_t*>(this+1); }
-  std::uint64_t* maxima() noexcept { return minima()+count; }
-  const std::uint64_t* maxima() const noexcept { return minima()+count; }
-  Key at(unsigned rank,bool maximum) const noexcept {
-    auto* tails=reinterpret_cast<const std::byte*>(minima()+2*count);
-    return {(maximum?maxima():minima())[rank],tails+(maximum?count:0)*tail()+rank*tail(),unsigned(tail())};
-  }
-  void set(unsigned rank,unsigned slot,Key low,Key high) noexcept {
-    slots[rank]=slot; minima()[rank]=low.prefix; maxima()[rank]=high.prefix;
-    if (tail()) {
-      auto* tails=reinterpret_cast<std::byte*>(minima()+2*count);
-      std::memcpy(tails+rank*tail(),low.tail,tail());
-      std::memcpy(tails+(count+rank)*tail(),high.tail,tail());
+
+Layer::Node Layer::decode(Selection s) const {
+  Node n;
+  if(!s) return n;
+  auto c=s.control();
+  const std::size_t rows=c.count,k=shape_.key_bytes;
+  n.height=c.height;
+  auto keys=[&](std::size_t i) {
+    auto* p=reinterpret_cast<const std::uint8_t*>(address(s,i));
+    return std::vector<std::uint8_t>(p,p+rows*k);
+  };
+  if(n.height) {
+    n.sep=typed<std::uint32_t>(address(s,1),rows);
+    if(shape_.fenced()) n.lsep=keys(2);
+    n.child=typed<std::uint64_t>(address(s,shape_.fenced()?3:2),rows);
+  } else {
+    n.prefix=typed<std::uint32_t>(address(s,1),rows);
+    if(shape_.fenced()) {n.min=keys(2);n.max=keys(3);}
+    std::size_t first=shape_.fenced()?4:2;
+    for(std::size_t t=0;t*shape_.tile<rows;++t) {
+      auto tile=typed<Dirent>(address(s,first+t),std::min<std::size_t>(shape_.tile,rows-t*shape_.tile));
+      n.dirent.insert(n.dirent.end(),tile.begin(),tile.end());
     }
   }
-  std::size_t bytes() const noexcept { return sizeof(Bounds)+count*(16+2*tail()); }
-  static Bounds* make(std::pmr::memory_resource& r,unsigned count,unsigned width) {
-    const auto n=sizeof(Bounds)+count*(16+2*(std::size_t(width)>8?width-8:0));
-    auto* p=new(r.allocate(n,alignof(Bounds))) Bounds{&r,1,count,width};
-    for (unsigned i=0;i<2*count;++i) std::construct_at(p->minima()+i,UINT64_C(0));
-    return p;
-  }
-  void retain() const noexcept { ++references; }
-  void release() noexcept {
-    if (--references) return;
-    auto* r=memory; const auto n=bytes(); std::destroy_at(this); r->deallocate(this,n,alignof(Bounds));
-  }
-};
-static_assert(sizeof(Bounds)==56);
-// The actual Ikea source handles each local count. Long keys first use its
-// native abbreviation search, then its generic ordered source inside ONLY
-// the equal-abbreviation run. No linear full-key repair or unique fence.
-struct BoundSource {
-  const Bounds* bounds;
-  bool maximum;
-  unsigned size() const noexcept { return bounds->count; }
-  Key at(unsigned rank) const noexcept { return bounds->at(rank,maximum); }
-  template<ikea::boundlist::edge E> unsigned boundary(const Key& point) const noexcept {
-    namespace bl=ikea::boundlist;
-    const bl::direct_source<std::uint64_t> abbreviated{maximum?bounds->maxima():bounds->minima(),size()};
-    if (!bounds->tail()) return abbreviated.template boundary<E>(point.prefix);
-    const auto first=bl::lower_bound(abbreviated,point.prefix),limit=bl::upper_bound(abbreviated,point.prefix);
-    if (first==limit) return first;
-    struct Full {
-      const BoundSource& source; unsigned first,count;
-      unsigned size() const noexcept { return count; }
-      Key at(unsigned i) const noexcept { return source.at(first+i); }
-    } full{*this,first,limit-first};
-    return first+(E==bl::edge::at_or_after?bl::lower_bound(full,point):bl::upper_bound(full,point));
-  }
-};
-struct Bundle;
-// Per-node lifetime, even when several node bodies/headers share one finite
-// allocation. Releasing a dead node immediately releases ITS outgoing edges.
-// Keeping a sibling's backing does not keep dead ancestors' dependencies.
-struct Proof {
-  Bundle* bundle;
-  std::size_t references{1};
-  unsigned count;
-  Bounds* bounds{};
-  Proof** children() noexcept { return reinterpret_cast<Proof**>(this+1); }
-  void retain() noexcept { ++references; }
-  void release() noexcept;
-};
-static_assert(sizeof(Proof)==32);
-struct Bundle {
-  std::pmr::memory_resource& memory;
-  orbital::allocation::Allocation bytes;
-  std::size_t live{1},extent,used{sizeof(Bundle)};
-  Bundle(std::pmr::memory_resource& m,orbital::allocation::Allocation a,std::size_t n)
-      :memory(m),bytes(std::move(a)),extent(n) {}
-  void release() noexcept {
-    if (--live) return;
-    auto& r=memory; const auto n=extent;
-    std::destroy_at(this); r.deallocate(this,n,alignof(Bundle));
-  }
-  Proof* make(unsigned children) noexcept {
-    const auto n=sizeof(Proof)+children*sizeof(Proof*);
-    assert(used+n<=extent);
-    auto* p=new(reinterpret_cast<std::byte*>(this)+used) Proof{this,1,children};
-    for (unsigned i=0;i<children;++i) std::construct_at(p->children()+i,nullptr);
-    used+=n; ++live; return p;
-  }
-};
-void Proof::release() noexcept {
-  if (--references) return;
-  if (bounds) bounds->release();
-  for (unsigned i=0;i<count;++i) if (auto* p=children()[i]) p->release();
-  auto* b=bundle; std::destroy_at(this); b->release();
+  return n;
 }
-struct Owner {
-  Proof* proof{};
-  Owner()=default;
-  explicit Owner(Proof* p):proof(p) {}
-  Owner(Owner&& other) noexcept :proof(std::exchange(other.proof,nullptr)) {}
-  Owner(const Owner& other) noexcept :proof(other.proof) { if (proof) proof->retain(); }
-  Owner& operator=(Owner other) noexcept { std::swap(proof,other.proof); return *this; }
-  ~Owner() { if (proof) proof->release(); }
-  Proof* take() noexcept { return std::exchange(proof,nullptr); }
-};
-struct Batch {
-  Bundle* bundle{};
-  explicit Batch(Bundle* p):bundle(p) {}
-  Batch(Batch&& other) noexcept :bundle(std::exchange(other.bundle,nullptr)) {}
-  ~Batch() { if (bundle) bundle->release(); }
-  Owner make(unsigned children,Work& work) {
-    work.proof_bytes+=sizeof(Proof)+children*sizeof(Proof*); return Owner(bundle->make(children));
-  }
-};
-struct Slot { const std::byte* bytes{}; std::uint16_t mask{}; std::byte reserved[6]{}; };
-struct alignas(64) Node {
-  std::uint16_t count{};
-  std::uint8_t shift{};
-  std::byte reserved0[5]{};
-  std::uint32_t low{},high{};
-  Proof* proof{};
-  const Bounds* bounds{};
-  std::uint32_t present{};
-  std::byte reserved1[28]{};
-  std::array<Slot,32> slots;
-};
-static_assert(sizeof(Node)==576 && offsetof(Node,slots)==64 && sizeof(Slot)==16);
-struct Private { Owner owner; const std::byte* bytes; };
-struct State {
-  Store& store;
-  loom::Worker& worker;
-  std::pmr::memory_resource& memory;
-  std::uint64_t space;
-  material::Definition node;
-  const std::optional<KeyShape> shape;
-  State(Store& s,loom::Worker& w,std::pmr::memory_resource& m,std::uint64_t ns,std::optional<KeyShape> k)
-      :store(s),worker(w),memory(m),space(ns),shape(k) {}
-  orbital::Result<Batch> allocate_metadata(std::size_t bytes,std::size_t proof_bytes,Work& work) {
-    auto allocation=loom::allocate(worker,{.bytes=bytes,.alignment=64});
-    if (!allocation) return std::unexpected(allocation.error());
-    ++work.allocations; work.body_bytes+=bytes;
-    const auto n=sizeof(Bundle)+proof_bytes;
-    auto* raw=memory.allocate(n,alignof(Bundle));
-    return Batch(new(raw) Bundle(memory,std::move(*allocation),n));
-  }
-  orbital::Result<Batch> allocate(std::size_t bytes,unsigned nodes,bool group,Work& work) {
-    return allocate_metadata(bytes,nodes*(sizeof(Proof)+32*sizeof(Proof*))+(group?sizeof(Proof):0),work);
-  }
-  orbital::Result<Store::Owner> finish(Private root,std::uint64_t name,Work& work) {
-    // One actual Orbital capture for the published root. All private nodes are
-    // physical interpretation dependencies, not separately versioned Objects.
-    auto backing=std::allocate_shared<Owner>(std::pmr::polymorphic_allocator<Owner>(&memory),std::move(root.owner));
-    const auto c=node.control(name,orbital::PartOwners::independent_shared);
-    const std::array sources{orbital::PartSource{c.id(0),{root.bytes,sizeof(Node)},std::move(backing)}};
-    ++work.captures; return store.capture(c,sources);
-  }
-  struct Group { std::uint32_t prefix; std::uint16_t mask; Private physical; };
-  orbital::Result<Private> tree(std::span<Group> input,unsigned shift,Work& work) {
-    auto batch=allocate(sizeof(Node),1,false,work);
-    if (!batch) return std::unexpected(batch.error());
-    auto proof=batch->make(32,work);
-    auto* body=new(batch->bundle->bytes.address) Node{};
-    body->proof=proof.proof; body->shift=shift;
-    body->low=input.front().prefix; body->high=input.back().prefix;
-    for (std::size_t first=0;first<input.size();) {
-      const auto slot=(input[first].prefix>>shift)&31;
-      auto last=first+1;
-      while (last<input.size() && ((input[last].prefix>>shift)&31)==slot) ++last;
-      Private child;
-      if (shift) {
-        auto result=tree(input.subspan(first,last-first),shift-5,work);
-        if (!result) return std::unexpected(result.error());
-        child=std::move(*result);
-      } else { child=std::move(input[first].physical); body->slots[slot].mask=input[first].mask; }
-      body->slots[slot].bytes=child.bytes;
-      proof.proof->children()[slot]=child.owner.take(); body->present|=UINT32_C(1)<<slot;
-      ++body->count; first=last;
-    }
-    if (shape) {
-      auto* b=Bounds::make(memory,body->count,shape->bytes); proof.proof->bounds=b; body->bounds=b;
-      unsigned rank=0;
-      for (unsigned slot=0;slot<32;++slot) if (auto* child=proof.proof->children()[slot]) {
-        auto* bounds=child->bounds; b->set(rank++,slot,bounds->at(0,false),bounds->at(bounds->count-1,true));
-      }
-    }
-    return Private{std::move(proof),reinterpret_cast<const std::byte*>(body)};
-  }
-  orbital::Result<Private> edit(const Node* before,std::span<const LocatorChange> input,Work& work) {
-    auto batch=allocate(sizeof(Node),1,false,work);
-    if (!batch) return std::unexpected(batch.error());
-    auto proof=batch->make(32,work);
-    if (auto* b=before->bounds) { b->retain(); proof.proof->bounds=const_cast<Bounds*>(b); }
-    auto* body=reinterpret_cast<Node*>(batch->bundle->bytes.address);
-    std::memcpy(body,before,sizeof(Node)); work.copied_bytes+=sizeof(Node);
-    body->proof=proof.proof;
-    std::size_t first=0;
-    for (unsigned slot=0;slot<32;++slot) {
-      auto last=first;
-      while (last<input.size() && (((input[last].prefix>>4)>>body->shift)&31)==slot) ++last;
-      if (last==first) {
-        if (auto* p=before->proof->children()[slot]) {
-          p->retain(); proof.proof->children()[slot]=p; ++work.child_retains;
-        }
+
+Layer::Node Layer::load(Work& w,std::uint64_t name) const {
+  if(auto it=w.nodes.find(name);it!=w.nodes.end()) return it->second;
+  if(w.erased.contains(name)) return {};
+  return decode(bind(*w.basis,name));
+}
+void Layer::write(Work& w,std::uint64_t name,Node n) const {
+  w.nodes[name]=std::move(n);
+  w.dirty.insert(name);
+  w.erased.erase(name);
+}
+void Layer::erase(Work& w,std::uint64_t name) const {
+  w.nodes.erase(name);
+  w.dirty.erase(name);
+  w.erased.insert(name);
+}
+
+// Captures the final version of each touched node, reusing every Part whose
+// bytes are unchanged, and installs them in one packet.
+orbital::Result<void> Layer::publish(Work& w) {
+  std::vector<Store::Change> changes;
+  for(auto name:w.dirty) {
+    auto& node=w.nodes.at(name);
+    auto ctl=control(name,node);
+    auto parts=encode(node);
+    require(parts.size()==ctl.full_part_count(),"part count");
+    auto basis=bind(*w.basis,name);
+    std::vector<orbital::allocation::Allocation> fresh;
+    fresh.reserve(parts.size());
+    std::vector<orbital::PartSource> sources;
+    bool unchanged=basis&&basis.part_count()==parts.size();
+    for(std::size_t i=0;i<parts.size();++i) {
+      require(parts[i].size()==ctl.full_extent(i),"part extent");
+      if(basis&&i<basis.part_count()&&*basis.control().extent(i)==parts[i].size()&&
+         !std::memcmp(address(basis,i),parts[i].data(),parts[i].size())) {
+        auto kept=orbital::source(basis,i);
+        if(!kept) return std::unexpected(kept.error());
+        kept->id=ctl.id(i);
+        sources.push_back(std::move(*kept));
         continue;
       }
-      Private child;
-      if (!before->slots[slot].bytes) return std::unexpected(orbital::Error::invalid_argument);
-      if (body->shift) {
-        auto result=edit(reinterpret_cast<const Node*>(before->slots[slot].bytes),input.subspan(first,last-first),work);
-        if (!result) return std::unexpected(result.error());
-        child=std::move(*result);
+      unchanged=false;
+      auto a=loom::allocate(*worker_,{.bytes=std::max<std::size_t>(64,rounded(parts[i].size())),.alignment=64});
+      if(!a) return std::unexpected(a.error());
+      fresh.push_back(std::move(*a));
+      auto* p=fresh.back().address;
+      std::memcpy(p,parts[i].data(),parts[i].size());
+      std::memset(p+parts[i].size(),0,rounded(parts[i].size())-parts[i].size());
+      sources.push_back({ctl.id(i),{p,parts[i].size()},{},&fresh.back()});
+    }
+    if(unchanged) continue;
+    auto owner=store_->capture(ctl,sources);
+    if(!owner) return std::unexpected(owner.error());
+    changes.push_back({{space_,name},std::move(*owner)});
+  }
+  for(auto name:w.erased) if(bind(*w.basis,name)) changes.push_back({{space_,name},Store::Owner{}});
+  if(changes.empty()) return {};
+  Store::Prepared packet(*store_);
+  if(auto r=store_->prepare(*w.basis,changes,packet);!r) return r;
+  return store_->install(packet);
+}
+
+void Layer::set_row(Node& parent,unsigned i,const Node& child) const {
+  const auto k=shape_.key_bytes;
+  const auto& first_sep=child.height?child.sep:child.prefix;
+  parent.sep[i]=first_sep[0];
+  if(shape_.fenced()) {
+    const auto& keys=child.height?child.lsep:child.min;
+    std::copy_n(keys.begin(),k,parent.lsep.begin()+std::size_t(i)*k);
+  }
+}
+
+void Layer::insert_rows(Node& parent,unsigned at,const std::vector<Node>& children,
+                        const std::vector<std::uint64_t>& names) const {
+  auto n=children.size();
+  parent.sep.insert(parent.sep.begin()+at,n,0);
+  if(shape_.fenced()) parent.lsep.insert(parent.lsep.begin()+std::size_t(at)*shape_.key_bytes,n*shape_.key_bytes,0);
+  parent.child.insert(parent.child.begin()+at,names.begin(),names.end());
+  for(std::size_t i=0;i<n;++i) set_row(parent,unsigned(at+i),children[i]);
+}
+
+void Layer::remove_row(Node& parent,unsigned i) const {
+  const auto k=shape_.key_bytes;
+  parent.sep.erase(parent.sep.begin()+i);
+  if(shape_.fenced()) parent.lsep.erase(parent.lsep.begin()+std::size_t(i)*k,parent.lsep.begin()+std::size_t(i+1)*k);
+  parent.child.erase(parent.child.begin()+i);
+}
+
+std::vector<Layer::Node> Layer::split_at(const Node& n,const std::vector<std::size_t>& bounds) const {
+  const auto k=shape_.key_bytes;
+  std::vector<Node> out(bounds.size()-1);
+  for(std::size_t p=0;p+1<bounds.size();++p) {
+    auto b=bounds[p],e=bounds[p+1];
+    auto& o=out[p];
+    o.height=n.height;
+    auto slice=[&](auto& to,const auto& from,std::size_t width) {
+      if(!from.empty()) to.assign(from.begin()+b*width,from.begin()+e*width);
+    };
+    slice(o.prefix,n.prefix,1);slice(o.min,n.min,k);slice(o.max,n.max,k);slice(o.dirent,n.dirent,1);
+    slice(o.sep,n.sep,1);slice(o.lsep,n.lsep,k);slice(o.child,n.child,1);
+  }
+  return out;
+}
+
+std::vector<Layer::Node> Layer::split(const Node& n,unsigned pieces) const {
+  std::vector<std::size_t> bounds;
+  for(unsigned p=0;p<=pieces;++p) bounds.push_back(n.size()*p/pieces);
+  return split_at(n,bounds);
+}
+
+Layer::Node Layer::concat(Node left,const Node& right,const Node& parent,unsigned right_index) const {
+  const auto k=shape_.key_bytes;
+  auto append=[](auto& to,const auto& from) {to.insert(to.end(),from.begin(),from.end());};
+  append(left.prefix,right.prefix);append(left.min,right.min);append(left.max,right.max);append(left.dirent,right.dirent);
+  auto at=left.sep.size();
+  append(left.sep,right.sep);append(left.lsep,right.lsep);append(left.child,right.child);
+  // The right node's first separator is unused until it becomes an interior row.
+  if(left.height) {
+    left.sep[at]=parent.sep[right_index];
+    if(shape_.fenced()) std::copy_n(parent.lsep.begin()+std::size_t(right_index)*k,k,left.lsep.begin()+at*k);
+  }
+  return left;
+}
+
+std::vector<Layer::Step> Layer::descend(Work& w,std::uint32_t p) const {
+  std::vector<Step> path;
+  auto name=root();
+  auto node=load(w,name);
+  while(node.height) {
+    auto j=std::upper_bound(node.sep.begin()+1,node.sep.end(),p)-node.sep.begin();
+    auto child=node.child[j-1];
+    auto size=node.size();
+    path.push_back({name,std::move(node),unsigned(j-1),false,size});
+    name=child;
+    node=load(w,name);
+  }
+  auto size=node.size();
+  path.push_back({name,std::move(node),0,true,size});
+  return path;
+}
+
+void Layer::edit_leaf(Step& s,const Edit& ed) const {
+  const auto& e=ed.entry;
+  const auto k=shape_.key_bytes;
+  auto& leaf=s.node;
+  auto r=std::lower_bound(leaf.prefix.begin(),leaf.prefix.end(),e.prefix)-leaf.prefix.begin();
+  bool present=r<std::ptrdiff_t(leaf.prefix.size())&&leaf.prefix[r]==e.prefix;
+  if(shape_.fenced()&&ed.kind!=Edit::erase) require(e.min.size()==k&&e.max.size()==k,"fence width");
+  switch(ed.kind) {
+  case Edit::insert:
+    require(!present,"insert: present");
+    leaf.prefix.insert(leaf.prefix.begin()+r,e.prefix);
+    if(shape_.fenced()) {
+      leaf.min.insert(leaf.min.begin()+r*k,e.min.begin(),e.min.end());
+      leaf.max.insert(leaf.max.begin()+r*k,e.max.begin(),e.max.end());
+    }
+    leaf.dirent.insert(leaf.dirent.begin()+r,e.dirent);
+    break;
+  case Edit::erase:
+    require(present,"erase: absent");
+    leaf.prefix.erase(leaf.prefix.begin()+r);
+    if(shape_.fenced()) {
+      leaf.min.erase(leaf.min.begin()+r*k,leaf.min.begin()+(r+1)*k);
+      leaf.max.erase(leaf.max.begin()+r*k,leaf.max.begin()+(r+1)*k);
+    }
+    leaf.dirent.erase(leaf.dirent.begin()+r);
+    break;
+  case Edit::update:
+    require(present,"update: absent");
+    if(shape_.fenced()) {
+      std::copy_n(e.min.begin(),k,leaf.min.begin()+r*k);
+      std::copy_n(e.max.begin(),k,leaf.max.begin()+r*k);
+    }
+    leaf.dirent[r]=e.dirent;
+    break;
+  }
+}
+
+void Layer::settle(Work& w,std::vector<Step>& path) {
+  auto& leaf=path.back().node;
+  if(leaf.size()&&path.size()>1&&shape_.fenced()) {
+    const auto k=shape_.key_bytes;
+    // Only an edit beside a separator can violate it; deaths leave it loose.
+    auto key_less=[&](const std::uint8_t* a,const std::uint8_t* b) {return std::memcmp(a,b,k)<0;};
+    for(auto i=path.size()-1;i-->0;) if(path[i].index>0) {
+      auto& s=path[i];
+      auto* sep=s.node.lsep.data()+std::size_t(s.index)*k;
+      if(key_less(leaf.min.data(),sep)) {std::copy_n(leaf.min.begin(),k,sep);s.dirty=true;}
+      break;
+    }
+    for(auto i=path.size()-1;i-->0;) if(path[i].index+1<path[i].node.size()) {
+      auto& s=path[i];
+      auto* sep=s.node.lsep.data()+std::size_t(s.index+1)*k;
+      auto* last=leaf.max.data()+leaf.max.size()-k;
+      if(key_less(sep,last)) {std::copy_n(last,k,sep);s.dirty=true;}
+      break;
+    }
+  }
+  // The rightmost node on each level takes appends; it splits off full
+  // build-occupancy pieces instead of halves so appended runs stay dense.
+  std::vector<bool> rightmost(path.size(),true);
+  for(std::size_t i=1;i<path.size();++i)
+    rightmost[i]=rightmost[i-1]&&path[i-1].index+1==path[i-1].node.size();
+  for(auto i=path.size();i-->0;) {
+    auto& s=path[i];
+    auto* parent=i?&path[i-1]:nullptr;
+    unsigned cap=s.node.height?shape_.inner_capacity:leaf_capacity();
+    if(s.node.size()>cap) {
+      std::vector<Node> pieces;
+      if(rightmost[i]) {
+        auto per=std::max<std::size_t>(1,std::size_t(cap*shape_.fill));
+        std::vector<std::size_t> bounds{0};
+        while(s.node.size()-bounds.back()>cap) bounds.push_back(bounds.back()+per);
+        bounds.push_back(s.node.size());
+        pieces=split_at(s.node,bounds);
       } else {
-        const unsigned count=std::popcount(body->slots[slot].mask);
-        for (auto i=first;i<last;++i)
-          if (!(body->slots[slot].mask&(1u<<(input[i].prefix&15)))) return std::unexpected(orbital::Error::invalid_argument);
-        auto group=allocate(count*64,0,true,work);
-        if (!group) return std::unexpected(group.error());
-        child={group->make(0,work),group->bundle->bytes.address};
-        if (auto* b=before->proof->children()[slot]->bounds) { b->retain(); child.owner.proof->bounds=b; }
-        auto* bytes=group->bundle->bytes.address;
-        std::memcpy(bytes,before->slots[slot].bytes,count*64); work.copied_bytes+=count*64;
-        for (auto i=first;i<last;++i) {
-          const unsigned rank=std::popcount(body->slots[slot].mask&((1u<<(input[i].prefix&15))-1));
-          std::memcpy(bytes+rank*64,&input[i].value,64);
+        pieces=split(s.node,unsigned(s.node.size()/cap+1));
+      }
+      if(!parent) {
+        // The root keeps its name; its contents move down a level.
+        std::vector<std::uint64_t> names;
+        for(auto& p:pieces) {auto name=fresh();write(w,name,p);names.push_back(name);}
+        Node r;
+        r.height=s.node.height+1;
+        insert_rows(r,0,pieces,names);
+        while(r.size()>shape_.inner_capacity) {
+          auto up=split(r,unsigned(r.size()/shape_.inner_capacity+1));
+          names.clear();
+          for(auto& p:up) {auto name=fresh();write(w,name,p);names.push_back(name);}
+          Node top;
+          top.height=r.height+1;
+          insert_rows(top,0,up,names);
+          r=std::move(top);
         }
+        write(w,root(),std::move(r));
+      } else {
+        write(w,s.name,pieces[0]);
+        std::vector<Node> rest(pieces.begin()+1,pieces.end());
+        std::vector<std::uint64_t> names;
+        for(auto& p:rest) {auto name=fresh();write(w,name,p);names.push_back(name);}
+        insert_rows(parent->node,parent->index+1,rest,names);
+        parent->dirty=true;
       }
-      body->slots[slot].bytes=child.bytes;
-      proof.proof->children()[slot]=child.owner.take(); first=last;
-    }
-    assert(first==input.size());
-    return Private{std::move(proof),reinterpret_cast<const std::byte*>(body)};
-  }
-};
-}
-static_assert(sizeof(detail::State)==56 && sizeof(Cursor)==168 && sizeof(Entry)==104 && sizeof(Range)==56);
-namespace detail {
-bool valid_prefix(unsigned layer,std::uint32_t prefix) noexcept {
-  return layer<=4 && (layer==4 || std::uint64_t(prefix)<(UINT64_C(1)<<(8*layer)));
-}
-orbital::Result<void> admit_entries(unsigned layer,std::span<const Entry> input,std::optional<KeyShape> shape) noexcept {
-  using orbital::Error;
-  if (layer>4) return std::unexpected(Error::invalid_argument);
-  for (std::size_t i=0;i<input.size();++i) {
-    const auto& e=input[i];
-    if (!valid_prefix(layer,e.prefix) || (i && input[i-1].prefix>=e.prefix))
-      return std::unexpected(Error::invalid_argument);
-    if (!shape) {
-      if (!e.minimum.empty() || !e.maximum.empty()) return std::unexpected(Error::invalid_argument);
-      continue;
-    }
-    if (e.minimum.size()!=shape->bytes || e.maximum.size()!=shape->bytes ||
-        key(e.maximum)<key(e.minimum) || (i && key(e.minimum)<key(input[i-1].maximum)))
-      return std::unexpected(Error::invalid_argument);
-    for (unsigned byte=0;byte<std::min(layer,shape->shared);++byte) {
-      const auto expected=std::byte(e.prefix>>(8*(layer-1-byte)));
-      if (e.minimum[byte]!=expected || e.maximum[byte]!=expected) return std::unexpected(Error::invalid_argument);
-    }
-  }
-  return {};
-}
-}
-namespace { using namespace detail; }
-const Dirent* Read::find(std::uint32_t prefix) const noexcept {
-  auto* node=root_; if (!node) return nullptr;
-  const auto group=prefix>>4;
-  if (group<node->low || group>node->high) return nullptr;
-  int shift=node->shift;
-  for (;;) {
-    const auto& slot=node->slots[(group>>shift)&31];
-    if (!slot.bytes) return nullptr;
-    if (shift) { node=reinterpret_cast<const detail::Node*>(slot.bytes); shift-=5; continue; }
-    const auto bit=1u<<(prefix&15);
-    if (!(slot.mask&bit)) return nullptr;
-    const auto rank=std::popcount(slot.mask&(bit-1));
-    return reinterpret_cast<const Dirent*>(slot.bytes)+rank;
-  }
-}
-orbital::Result<void> Read::find_many(std::span<const std::uint32_t> keys,
-    std::span<const Dirent*> output) const noexcept {
-  if (output.size()<keys.size()) return std::unexpected(orbital::Error::capacity);
-  if (!root_) { std::fill_n(output.begin(),keys.size(),nullptr); return {}; }
-  struct Lane { const detail::Node* node; std::uint32_t key; };
-  static_assert(sizeof(Lane)==16);
-  // Demand-load one whole independent bank per routing level, then compute
-  // original suffix rank. Caller owns the next locator/material stages under
-  // the same Scope. No prefetch, catalog re-selection or reader protocol here.
-  for (std::size_t first=0;first<keys.size();first+=32) {
-    std::array<Lane,32> bank;
-    const unsigned count=std::min<std::size_t>(32,keys.size()-first);
-    for (unsigned i=0;i<count;++i) {
-      const auto key=keys[first+i],group=key>>4;
-      bank[i]={group>=root_->low && group<=root_->high?root_:nullptr,key};
-    }
-    for (int shift=root_->shift;shift>0;shift-=5)
-      for (unsigned i=0;i<count;++i) if (auto* node=bank[i].node)
-        bank[i].node=reinterpret_cast<const detail::Node*>(node->slots[(bank[i].key>>(shift+4))&31].bytes);
-    for (unsigned i=0;i<count;++i) {
-      const Dirent* result=nullptr;
-      if (auto* node=bank[i].node) {
-        const auto& slot=node->slots[(bank[i].key>>4)&31];
-        const auto bit=1u<<(bank[i].key&15);
-        if (slot.bytes && (slot.mask&bit))
-          result=reinterpret_cast<const Dirent*>(slot.bytes)+std::popcount(slot.mask&(bit-1));
+    } else if(!s.node.size()) {
+      erase(w,s.name);
+      if(parent) {remove_row(parent->node,parent->index);parent->dirty=true;}
+    } else if(parent&&s.node.size()<s.before&&s.node.size()<cap*shape_.merge_below&&parent->node.size()>1) {
+      // Only a node that shrank merges, so edits that keep membership never restructure.
+      auto& pn=parent->node;
+      unsigned li,ri;
+      std::uint64_t ln,rn;
+      Node left,right;
+      if(parent->index+1<pn.size()) {
+        li=parent->index;ri=li+1;ln=s.name;rn=pn.child[ri];
+        left=std::move(s.node);right=load(w,rn);
+      } else {
+        ri=parent->index;li=ri-1;rn=s.name;ln=pn.child[li];
+        right=std::move(s.node);left=load(w,ln);
       }
-      output[first+i]=result;
+      auto both=concat(std::move(left),right,pn,ri);
+      if(both.size()<=cap) {
+        write(w,ln,std::move(both));
+        erase(w,rn);
+        remove_row(pn,ri);
+      } else {
+        auto halves=split(both,2);
+        write(w,ln,halves[0]);
+        write(w,rn,halves[1]);
+        set_row(pn,ri,halves[1]);
+      }
+      parent->dirty=true;
+    } else if(!parent&&s.node.height&&s.node.size()==1) {
+      auto child=s.node.child[0];
+      write(w,root(),load(w,child));
+      erase(w,child);
+    } else if(s.dirty) {
+      write(w,s.name,std::move(s.node));
     }
   }
-  return {};
 }
-namespace {
-constexpr unsigned has_low=1,has_high=2,low_closed=4,high_closed=8,pending_low=16;
-}
-unsigned Cursor::first(const detail::Bounds& bounds) const noexcept {
-  if ((flags_&(has_low|pending_low))!=(has_low|pending_low)) return 0;
-  if (bounds.width<=8) {
-    const ikea::boundlist::direct_source<std::uint64_t> maxima{bounds.maxima(),bounds.count};
-    return flags_&low_closed?ikea::boundlist::lower_bound(maxima,low_.word):ikea::boundlist::upper_bound(maxima,low_.word);
+
+orbital::Result<void> Layer::apply(std::span<const Edit> edits) {
+  Store::Scope basis(*store_);
+  Work w{&basis,{},{},{}};
+  for(std::size_t i=0;i<edits.size();) {
+    auto path=descend(w,edits[i].entry.prefix);
+    // Edits below the leaf's right separator belong to it.
+    std::uint64_t upper=std::uint64_t(1)<<32;
+    for(auto j=path.size()-1;j-->0;)
+      if(path[j].index+1<path[j].node.size()) {upper=path[j].node.sep[path[j].index+1];break;}
+    for(;i<edits.size()&&edits[i].entry.prefix<upper;++i) {
+      require(i==0||edits[i-1].entry.prefix<edits[i].entry.prefix,"apply: unsorted");
+      edit_leaf(path.back(),edits[i]);
+    }
+    settle(w,path);
   }
-  const detail::BoundSource maxima{&bounds,true}; const detail::Key point{low_.word,low_.tail,tail_bytes_};
-  return flags_&low_closed?ikea::boundlist::lower_bound(maxima,point):ikea::boundlist::upper_bound(maxima,point);
+  return publish(w);
 }
-bool Cursor::past_high(const detail::Bounds& bounds,unsigned rank) const noexcept {
-  if (!(flags_&has_high)) return false;
-  if (bounds.width<=8) return flags_&high_closed?high_.word<bounds.minima()[rank]:high_.word<=bounds.minima()[rank];
-  const auto minimum=bounds.at(rank,false); const detail::Key high{high_.word,high_.tail,tail_bytes_};
-  return flags_&high_closed?high<minimum:!(minimum<high);
-}
-void Cursor::setup(const detail::Node* root,detail::Key low,detail::Key high,unsigned flags) noexcept {
-  low_={low.prefix,low.tail}; high_={high.prefix,high.tail}; tail_bytes_=std::max(low.size,high.size); flags_=flags|pending_low;
-  depth_=0; rank_=limit_=0; group_=nullptr; bounds_=nullptr;
-  if (root && push(root)) advance();
-}
-bool Cursor::push(const detail::Node* node) noexcept {
-  const auto rank=first(*node->bounds);
-  if (rank==node->bounds->count) return false;
-  const auto slot=node->bounds->slots[rank];
-  assert(depth_<frames_.size()); frames_[depth_++]={node,node->present&(UINT32_MAX<<slot),rank}; return true;
-}
-bool Cursor::advance() noexcept {
-  while (depth_) {
-    auto& frame=frames_[depth_-1];
-    if (!frame.remaining) { --depth_; continue; }
-    const auto* node=frame.node;
-    if (past_high(*node->bounds,frame.rank)) { depth_=0; return false; }
-    const unsigned slot=std::countr_zero(frame.remaining); frame.remaining&=frame.remaining-1; ++frame.rank;
-    if (node->shift) { push(reinterpret_cast<const detail::Node*>(node->slots[slot].bytes)); continue; }
-    const auto* bounds=node->proof->children()[slot]->bounds;
-    const auto rank=first(*bounds);
-    if (rank==bounds->count) continue;
-    if (past_high(*bounds,rank)) { depth_=0; return false; }
-    group_=reinterpret_cast<const Dirent*>(node->slots[slot].bytes); bounds_=bounds;
-    group_index_=(node->low&~31u)|slot; rank_=rank; limit_=bounds->count;
-    return true;
+
+orbital::Result<void> Layer::build(std::span<const Entry> es) {
+  Store::Scope basis(*store_);
+  require(!bind(basis,root()),"build: layer not empty");
+  Work w{&basis,{},{},{}};
+  const auto k=shape_.key_bytes;
+  auto per=std::max<std::size_t>(1,std::size_t(leaf_capacity()*shape_.fill));
+  if(shape_.layer<=1) per=leaf_capacity();
+  std::vector<Node> level;
+  for(std::size_t i=0;i<es.size();i+=per) {
+    Node n;
+    for(auto j=i;j<std::min(es.size(),i+per);++j) {
+      require(!j||es[j-1].prefix<es[j].prefix,"build: unsorted");
+      n.prefix.push_back(es[j].prefix);
+      if(shape_.fenced()) {
+        require(es[j].min.size()==k&&es[j].max.size()==k,"fence width");
+        n.min.insert(n.min.end(),es[j].min.begin(),es[j].min.end());
+        n.max.insert(n.max.end(),es[j].max.begin(),es[j].max.end());
+      }
+      n.dirent.push_back(es[j].dirent);
+    }
+    level.push_back(std::move(n));
   }
+  if(level.size()==1) write(w,root(),std::move(level[0]));
+  if(level.size()>1) {
+    std::vector<std::uint64_t> names;
+    for(auto& n:level) {auto name=fresh();write(w,name,n);names.push_back(name);}
+    auto fan=std::max<std::size_t>(2,std::size_t(shape_.inner_capacity*shape_.fill));
+    for(unsigned h=1;;++h) {
+      std::vector<Node> up;
+      for(std::size_t i=0;i<level.size();i+=fan) {
+        auto e=std::min(level.size(),i+fan);
+        Node p;
+        p.height=h;
+        insert_rows(p,0,std::vector<Node>(level.begin()+i,level.begin()+e),
+                    std::vector<std::uint64_t>(names.begin()+i,names.begin()+e));
+        up.push_back(std::move(p));
+      }
+      if(up.size()==1) {write(w,root(),std::move(up[0]));break;}
+      names.clear();
+      for(auto& p:up) {auto name=fresh();write(w,name,p);names.push_back(name);}
+      level=std::move(up);
+    }
+  }
+  return publish(w);
+}
+
+// Reads: every visit is one Scope::bind; searches use the header's summary.
+unsigned Layer::route(Selection o,std::uint32_t p) const {
+  auto* sum=plane<std::uint32_t>(o,0)+2;
+  auto* sep=plane<std::uint32_t>(o,1);
+  return first_not(1,rows(o),[&](unsigned b) {return sum[b]<=p;},[&](unsigned i) {return sep[i]<=p;})-1;
+}
+unsigned Layer::lower(Selection o,std::uint32_t p) const {
+  auto* sum=plane<std::uint32_t>(o,0)+2;
+  auto* pre=plane<std::uint32_t>(o,1);
+  return first_not(0,rows(o),[&](unsigned b) {return sum[b]<p;},[&](unsigned i) {return pre[i]<p;});
+}
+unsigned Layer::route(Selection o,std::span<const std::uint8_t> low) const {
+  const auto k=shape_.key_bytes;
+  auto* sum=address(o,o.part_count()-1);
+  auto* sep=address(o,2);
+  return first_not(1,rows(o),[&](unsigned b) {return std::memcmp(sum+b*k,low.data(),k)<0;},
+                   [&](unsigned i) {return std::memcmp(sep+std::size_t(i)*k,low.data(),k)<0;})-1;
+}
+unsigned Layer::lower(Selection o,std::span<const std::uint8_t> low) const {
+  const auto k=shape_.key_bytes;
+  auto* sum=address(o,o.part_count()-1);
+  auto* max=address(o,3);
+  return first_not(0,rows(o),[&](unsigned b) {return std::memcmp(sum+b*k,low.data(),k)<0;},
+                   [&](unsigned i) {return std::memcmp(max+std::size_t(i)*k,low.data(),k)<0;});
+}
+
+const Dirent* Layer::find(const Store::Scope& scope,std::uint32_t p) const {
+  auto o=bind(scope,root());
+  if(!o) return nullptr;
+  const auto child=shape_.fenced()?3:2;
+  while(height(o)) o=bind(scope,plane<std::uint64_t>(o,child)[route(o,p)]);
+  auto r=lower(o,p);
+  if(r==rows(o)||plane<std::uint32_t>(o,1)[r]!=p) return nullptr;
+  return plane<Dirent>(o,(shape_.fenced()?4:2)+r/shape_.tile)+r%shape_.tile;
+}
+
+Layer::Cursor& Layer::settle_cursor(const Store::Scope& scope,Cursor& c,Selection leaf,unsigned r) const {
+  c.leaf=leaf;c.rank=r;c.count=rows(leaf);
+  if(r==c.count) {c.rank=c.count-1;next(scope,c);}
+  return c;
+}
+
+Layer::Cursor Layer::seek(const Store::Scope& scope,std::uint32_t p) const {
+  Cursor c;
+  auto o=bind(scope,root());
+  if(!o) return c;
+  const auto child=shape_.fenced()?3:2;
+  while(height(o)) {
+    auto i=route(o,p);
+    c.stack[c.depth]=o;c.index[c.depth++]=i;
+    o=bind(scope,plane<std::uint64_t>(o,child)[i]);
+  }
+  return settle_cursor(scope,c,o,lower(o,p));
+}
+
+Layer::Cursor Layer::seek(const Store::Scope& scope,std::span<const std::uint8_t> low) const {
+  require(shape_.fenced()&&low.size()==shape_.key_bytes,"logical seek above J");
+  Cursor c;
+  auto o=bind(scope,root());
+  if(!o) return c;
+  while(height(o)) {
+    auto i=route(o,low);
+    c.stack[c.depth]=o;c.index[c.depth++]=i;
+    o=bind(scope,plane<std::uint64_t>(o,3)[i]);
+  }
+  return settle_cursor(scope,c,o,lower(o,low));
+}
+
+bool Layer::next(const Store::Scope& scope,Cursor& c) const {
+  if(!c.leaf) return false;
+  if(++c.rank<c.count) return true;
+  const auto child=shape_.fenced()?3:2;
+  while(c.depth) {
+    auto o=c.stack[c.depth-1];
+    auto& i=c.index[c.depth-1];
+    if(++i<rows(o)) {
+      auto ch=bind(scope,plane<std::uint64_t>(o,child)[i]);
+      while(height(ch)) {c.stack[c.depth]=ch;c.index[c.depth++]=0;ch=bind(scope,plane<std::uint64_t>(ch,child)[0]);}
+      c.leaf=ch;c.rank=0;c.count=rows(ch);
+      return true;
+    }
+    --c.depth;
+  }
+  c.leaf={};
   return false;
 }
-bool Cursor::next(EntryRef& output) noexcept {
-  if (rank_==limit_ && !advance()) return false;
-  if (past_high(*bounds_,rank_)) { depth_=0; rank_=limit_; return false; }
-  output={(group_index_<<4)|bounds_->slots[rank_],group_+rank_}; ++rank_; flags_&=~pending_low; return true;
+
+std::uint32_t Layer::prefix(const Cursor& c) const {return plane<std::uint32_t>(c.leaf,1)[c.rank];}
+const Dirent& Layer::dirent(const Cursor& c) const {
+  return plane<Dirent>(c.leaf,(shape_.fenced()?4:2)+c.rank/shape_.tile)[c.rank%shape_.tile];
 }
-std::size_t Cursor::visit(std::span<EntryRef> output) noexcept {
-  std::size_t count=0;
-  while (count<output.size() && next(output[count])) ++count;
-  return count;
+std::span<const std::uint8_t> Layer::min(const Cursor& c) const {
+  return {plane<std::uint8_t>(c.leaf,2)+std::size_t(c.rank)*shape_.key_bytes,shape_.key_bytes};
 }
-orbital::Result<void> LogicalRead::equal(std::span<const std::byte> value,Cursor& cursor) const noexcept {
-  if (value.size()!=shape_.bytes) return std::unexpected(orbital::Error::invalid_argument);
-  const auto point=detail::key(value);
-  cursor.setup(root_,point,point,has_low|has_high|low_closed|high_closed); return {};
+std::span<const std::uint8_t> Layer::max(const Cursor& c) const {
+  return {plane<std::uint8_t>(c.leaf,3)+std::size_t(c.rank)*shape_.key_bytes,shape_.key_bytes};
 }
-orbital::Result<void> LogicalRead::seek(Range range,Cursor& cursor) const noexcept {
-  if ((range.low && range.low->size()!=shape_.bytes) || (range.high && range.high->size()!=shape_.bytes))
-    return std::unexpected(orbital::Error::invalid_argument);
-  const auto low=range.low?detail::key(*range.low):detail::Key{};
-  const auto high=range.high?detail::key(*range.high):detail::Key{};
-  bool empty=false;
-  if (range.low && range.high)
-    empty=high<low || (!(low<high) && (!range.low_closed || !range.high_closed));
-  const unsigned flags=(range.low?has_low:0)|(range.high?has_high:0)|(range.low_closed?low_closed:0)|(range.high_closed?high_closed:0);
-  cursor.setup(empty?nullptr:root_,low,high,flags); return {};
-}
-Directory::Directory(std::unique_ptr<detail::State> s):state_(std::move(s)) {}
-Directory::~Directory()=default;
-orbital::Result<std::unique_ptr<Directory>> Directory::open(material::Store& store,
-    loom::Worker& worker,std::pmr::memory_resource& memory,std::uint64_t ns,std::optional<KeyShape> shape) {
-  if (!ns || (shape && (shape->shared>6 || shape->shared>shape->bytes)))
-    return std::unexpected(orbital::Error::invalid_argument);
-  try {
-    auto s=std::make_unique<detail::State>(store,worker,memory,ns,shape);
-    const std::array geometry{material::Geometry{sizeof(detail::Node)}};
-    auto node=material::Definition::native(memory,ns,0,geometry);
-    if (!node) return std::unexpected(node.error());
-    s->node=std::move(*node);
-    return std::unique_ptr<Directory>(new Directory(std::move(s)));
-  } catch (const std::bad_alloc&) { return std::unexpected(orbital::Error::capacity); }
-}
-orbital::Result<std::unique_ptr<HashLayer>> Directory::hashed(unsigned layer) {
-  if (!state_->shape || layer<2 || layer>4 || layer>state_->shape->shared)
-    return std::unexpected(orbital::Error::invalid_argument);
-  return HashLayer::open(state_->store,state_->worker,state_->memory,state_->space,*state_->shape,layer);
-}
-orbital::ObjectId Directory::root_id(unsigned layer) const noexcept { return {state_->space,std::uint64_t(layer)+1}; }
-orbital::Result<material::Store::Owner> Directory::build(unsigned layer,std::span<const Entry> input,Work* observed) {
-  using orbital::Error;
-  if (layer>4 || input.empty()) return std::unexpected(Error::invalid_argument);
-  if (auto admission=detail::admit_entries(layer,input,state_->shape);!admission)
-    return std::unexpected(admission.error());
-  Work unused; auto& work=observed?*observed:unused;
-  try {
-    std::pmr::vector<detail::State::Group> groups(&state_->memory);
-    groups.reserve((input.size()+15)/16);
-    for (std::size_t first=0;first<input.size();) {
-      auto last=first+1;
-      while (last<input.size() && (input[last].prefix>>4)==(input[first].prefix>>4)) ++last;
-      const unsigned count=last-first;
-      auto batch=state_->allocate(count*64,0,true,work);
-      if (!batch) return std::unexpected(batch.error());
-      auto proof=batch->make(0,work);
-      if (state_->shape) {
-        auto* bounds=detail::Bounds::make(state_->memory,count,state_->shape->bytes); proof.proof->bounds=bounds;
-        for (unsigned i=0;i<count;++i)
-          bounds->set(i,input[first+i].prefix&15,detail::key(input[first+i].minimum),detail::key(input[first+i].maximum));
-      }
-      std::uint16_t mask=0;
-      for (auto i=first;i<last;++i) {
-        mask|=std::uint16_t(1u<<(input[i].prefix&15));
-        std::memcpy(batch->bundle->bytes.address+(i-first)*64,&input[i].value,64);
-      }
-      groups.push_back({input[first].prefix>>4,mask,{std::move(proof),batch->bundle->bytes.address}}); first=last;
+
+void Layer::validate() const {
+  Store::Scope scope(*store_);
+  const auto k=shape_.key_bytes;
+  struct Bounds {std::uint32_t first,last;std::vector<std::uint8_t> min,max;unsigned height;};
+  std::unordered_set<std::uint64_t> reachable;
+  auto walk=[&](auto& self,std::uint64_t name,bool is_root)->Bounds {
+    reachable.insert(name);
+    auto s=bind(scope,name);
+    require(bool(s),"validate: missing child");
+    auto n=decode(s);
+    require(n.size()>0,"validate: empty node");
+    require(n.size()<=(n.height?shape_.inner_capacity:leaf_capacity()),"validate: overfull");
+    require(encode(n)==[&] {
+      std::vector<std::vector<std::byte>> parts;
+      for(std::size_t i=0;i<s.part_count();++i) parts.emplace_back(address(s,i),address(s,i)+*s.control().extent(i));
+      return parts;
+    }(),"validate: summary or Part layout");
+    if(!n.height) {
+      for(std::size_t i=1;i<n.size();++i) require(n.prefix[i-1]<n.prefix[i],"validate: leaf order");
+      Bounds b{n.prefix[0],n.prefix.back(),{},{},0};
+      if(shape_.fenced()) {b.min.assign(n.min.begin(),n.min.begin()+k);b.max.assign(n.max.end()-k,n.max.end());}
+      return b;
     }
-    const auto bits=std::bit_width(groups.front().prefix^groups.back().prefix);
-    auto root=state_->tree(groups,bits?((bits-1)/5)*5:0,work);
-    if (!root) return std::unexpected(root.error());
-    return state_->finish(std::move(*root),root_id(layer).low,work);
-  } catch (const std::bad_alloc&) { return std::unexpected(Error::capacity); }
-}
-orbital::Result<Read> Directory::read(const material::Store::Scope& basis,unsigned layer) const noexcept {
-  if (layer>4) return std::unexpected(orbital::Error::invalid_argument);
-  const auto selected=state_->store.bound(basis,root_id(layer));
-  if (!selected) {
-    if (selected.error()==orbital::Error::absent) return Read(nullptr);
-    return std::unexpected(selected.error());
-  }
-  const auto s=selected->selection();
-  if (s.control().layout!=state_->node.get()) return std::unexpected(orbital::Error::invalid_argument);
-  return Read(reinterpret_cast<const detail::Node*>(s.part(0)->address()));
-}
-orbital::Result<LogicalRead> Directory::logical(const material::Store::Scope& basis,unsigned layer) const noexcept {
-  if (!state_->shape) return std::unexpected(orbital::Error::invalid_argument);
-  auto selected=read(basis,layer);
-  if (!selected) return std::unexpected(selected.error());
-  return LogicalRead(selected->root_,*state_->shape);
-}
-orbital::Result<material::Store::Owner> Directory::replace(const material::Store::Scope& basis,
-    unsigned layer,std::uint32_t prefix,const Dirent& replacement,Work* observed) {
-  using orbital::Error;
-  if (!detail::valid_prefix(layer,prefix)) return std::unexpected(Error::invalid_argument);
-  auto read=this->read(basis,layer);
-  if (!read) return std::unexpected(read.error());
-  if (!read->root_ || (prefix>>4)<read->root_->low || (prefix>>4)>read->root_->high)
-    return std::unexpected(Error::invalid_argument);
-  Work unused; auto& work=observed?*observed:unused;
-  try {
-    std::array<const detail::Node*,6> path;
-    std::array<unsigned,6> slots;
-    unsigned depth=0;
-    const auto group=prefix>>4; const auto* node=read->root_;
-    for (;;) {
-      const unsigned slot=(group>>node->shift)&31;
-      path[depth]=node; slots[depth++]=slot;
-      if (!node->slots[slot].bytes) return std::unexpected(Error::invalid_argument);
-      if (!node->shift) break;
-      node=reinterpret_cast<const detail::Node*>(node->slots[slot].bytes);
-    }
-    const auto& old_group=node->slots[slots[depth-1]];
-    if (!(old_group.mask&(1u<<(prefix&15)))) return std::unexpected(Error::invalid_argument);
-    const unsigned count=std::popcount(old_group.mask);
-    const unsigned rank=std::popcount(old_group.mask&((1u<<(prefix&15))-1));
-    auto batch=state_->allocate(count*64+depth*sizeof(detail::Node),depth,true,work);
-    if (!batch) return std::unexpected(batch.error());
-    auto* bytes=batch->bundle->bytes.address;
-    std::memcpy(bytes,old_group.bytes,count*64); work.copied_bytes+=count*64;
-    std::memcpy(bytes+rank*64,&replacement,64);
-    auto child=batch->make(0,work); bytes+=count*64;
-    if (auto* b=node->proof->children()[slots[depth-1]]->bounds) { b->retain(); child.proof->bounds=b; }
-    for (unsigned d=depth;d--;) {
-      auto proof=batch->make(32,work);
-      if (auto* b=path[d]->bounds) { b->retain(); proof.proof->bounds=const_cast<detail::Bounds*>(b); }
-      for (unsigned slot=0;slot<32;++slot) {
-        if (slot==slots[d]) proof.proof->children()[slot]=child.take();
-        else if (auto* p=path[d]->proof->children()[slot]) {
-          p->retain(); proof.proof->children()[slot]=p; ++work.child_retains;
-        }
+    std::vector<Bounds> kids;
+    for(auto ch:n.child) kids.push_back(self(self,ch,false));
+    for(std::size_t i=0;i<kids.size();++i) {
+      require(kids[i].height+1==n.height,"validate: height");
+      if(!i) continue;
+      require(kids[i-1].last<n.sep[i]&&n.sep[i]<=kids[i].first,"validate: physical separator");
+      if(shape_.fenced()) {
+        auto* sep=n.lsep.data()+i*k;
+        require(std::memcmp(kids[i-1].max.data(),sep,k)<=0&&std::memcmp(sep,kids[i].min.data(),k)<=0,
+                "validate: logical separator");
       }
-      auto* body=reinterpret_cast<detail::Node*>(bytes);
-      std::memcpy(body,path[d],sizeof(detail::Node)); work.copied_bytes+=sizeof(detail::Node);
-      body->proof=proof.proof;
-      body->slots[slots[d]].bytes=d==depth-1?batch->bundle->bytes.address:bytes-sizeof(detail::Node);
-      child=std::move(proof); bytes+=sizeof(detail::Node);
     }
-    return state_->finish({std::move(child),bytes-sizeof(detail::Node)},root_id(layer).low,work);
-  } catch (const std::bad_alloc&) { return std::unexpected(Error::capacity); }
-}
-orbital::Result<material::Store::Owner> Directory::replace_many(const material::Store::Scope& basis,
-    unsigned layer,std::span<const LocatorChange> input,Work* observed) {
-  using orbital::Error;
-  if (input.empty() || layer>4) return std::unexpected(Error::invalid_argument);
-  if (input.size()==1) return replace(basis,layer,input[0].prefix,input[0].value,observed);
-  auto read=this->read(basis,layer);
-  if (!read) return std::unexpected(read.error());
-  for (std::size_t i=0;i<input.size();++i)
-    if (!detail::valid_prefix(layer,input[i].prefix) || (i && input[i-1].prefix>=input[i].prefix))
-      return std::unexpected(Error::invalid_argument);
-  if (!read->root_ || (input.front().prefix>>4)<read->root_->low ||
-      (input.back().prefix>>4)>read->root_->high) return std::unexpected(Error::invalid_argument);
-  Work unused; auto& work=observed?*observed:unused;
-  try {
-    auto result=state_->edit(read->root_,input,work);
-    if (!result) return std::unexpected(result.error());
-    return state_->finish(std::move(*result),root_id(layer).low,work);
-  } catch (const std::bad_alloc&) { return std::unexpected(Error::capacity); }
+    (void)is_root;
+    return {kids[0].first,kids.back().last,kids[0].min,kids.back().max,n.height};
+  };
+  if(bind(scope,root())) walk(walk,root(),true);
+  // Every published name must be reachable: no orphaned Objects.
+  for(std::uint64_t n=0;n<next_;++n)
+    require(!bind(scope,root()|n)||reachable.contains(root()|n),"validate: orphaned Object");
 }
 }
