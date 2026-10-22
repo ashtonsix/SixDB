@@ -9,522 +9,19 @@
 // block), there are no exceptions or overrides yet, and nothing here is a
 // Frame interface.
 
-#include <ikea/boundlist.h>
-#include <ikea/effects.h>
-#include <ikea/seriespack.h>
+#include "material.h"
 
 #include <algorithm>
-#include <bit>
 #include <chrono>
-#include <cstdint>
 #include <cstdio>
-#include <cstdlib>
 #include <cstring>
 #include <fstream>
 #include <functional>
-#include <memory>
-#include <optional>
-#include <span>
 #include <string>
 #include <vector>
 
 namespace {
-namespace sp = ikea::seriespack;
-namespace bl = ikea::boundlist;
-using u64 = std::uint64_t;
-using u128 = unsigned __int128;
-using i64 = std::int64_t;
-
-constexpr std::size_t block_rows = 256;
-
-// delta: previous-value prediction. d.base is the block's first value (the
-// anchor, not its minimum); the payload holds 256 residuals s_i = r_i - rbase
-// (s_0 = 0) as a SeriesPack plane, then rbase (i64), then 15 checkpoints of the
-// cumulative stored residual at rows 16, 32, ..., 240 (u32 when K + 8 <= 32,
-// else u64). Checkpoints serve point reads; SUM and COUNT here don't need them.
-enum class kind : std::uint8_t { constant, runs, packed, delta };
-using i128 = __int128;
-
-// The per-block descriptor as stored; its size is charged to every block.
-struct descriptor {
-    u64 base;              // constant value, or frame-of-reference base
-    std::uint32_t offset;  // payload offset in the column body
-    std::uint16_t count;   // packed values (256, or the number of runs)
-    kind type;
-    std::uint8_t width;    // SeriesPack width of packed values (0 = none)
-};
-static_assert(sizeof(descriptor) == 16);
-
-unsigned width_of(u64 span) {
-    return span ? 64 - std::countl_zero(span) : 0;
-}
-
-std::size_t plane_bytes(unsigned k, std::size_t count) {
-    return (count + 7) / 8 * k;  // Local geometry: 8-row tiles of k bytes
-}
-
-// Encode values (already relative to the base) as a Local SeriesPack plane of
-// runtime width k, through the real typed mutation path.
-void pack(unsigned k, std::span<const u64> values, std::uint8_t *out) {
-    bool done = false;
-    sp::detail::each<64>([&](auto index) {
-        constexpr unsigned K = decltype(index)::value + 1;
-        if (k != K)
-            return;
-        using F = sp::format<K>;
-        const std::size_t bytes = plane_bytes(K, values.size());
-        auto v = sp::view<F, std::uint8_t>::attach(
-            values.size(), {{{std::span(out, bytes), F::tile_bytes}, {}, {}}});
-        if (!v)
-            std::abort();
-        auto prepared = sp::bind_mutation(*v);
-        if (!prepared)
-            std::abort();
-        auto write = prepared->template erase<u64, sp::no_summary>();
-        auto capacity = prepared->construction_effect_capacity();
-        if (!capacity)
-            std::abort();
-        std::vector<sp::composition::owner_write> records(*capacity);
-        sp::composition::write_journal effects{records};
-        if (!write.initialize(values, effects))
-            std::abort();
-        done = true;
-    });
-    if (!done)
-        std::abort();
-}
-
-const bl::layout &run_layout() {
-    static const auto layout = bl::layout::prepare(
-        // A runs block never holds one 256-row run (that block is constant), so
-        // every run is at most 255 rows and sizes fit u8.
-        {.family = bl::geometry::sizes, .maximum = 255, .extent_limit = 256, .immortal = true});
-    if (!layout)
-        std::abort();
-    return *layout;
-}
-
-// Run ends stored as exclusive end minus one in u8 (0..255), projected into
-// Boundlist geometry as proper exclusive ends 1..256 (Codex's proposal). No
-// checkpoints, control or tombstones; Boundlist's ordinary algorithms apply.
-struct run_ends {
-    const std::uint8_t *end_minus_one;
-    unsigned n;
-    unsigned size() const { return n; }
-    unsigned at(unsigned rank) const { return unsigned{end_minus_one[rank]} + 1; }
-};
-
-// Which runs body to build: u8 run-end projection (default) or the compact
-// mutable Boundlist view as a control.
-bool compact_runs = false;
-// Delta checkpoint option, a curated choice for Engine (Ashton: Engine decides,
-// Ikea exposes curated options):
-//   native   15 checkpoints every 16 rows at u32 (u64 when K + 8 > 32)
-//   packed   the same 15 checkpoints bit-packed at K + 8 bits (SeriesPack plane)
-//   every64  3 checkpoints every 64 rows at native width
-//   none     no checkpoints; point reads prefix-sum from the anchor
-enum class checkpoints { native, packed, every64, none };
-checkpoints delta_checkpoints = checkpoints::native;
-
-const char *checkpoint_name() {
-    switch (delta_checkpoints) {
-    case checkpoints::native: return "native";
-    case checkpoints::packed: return "packed";
-    case checkpoints::every64: return "every64";
-    case checkpoints::none: return "none";
-    }
-    return "?";
-}
-
-// Bytes for one delta block's checkpoints at residual width k.
-std::size_t checkpoint_cost(unsigned k) {
-    const std::size_t native = k + 8 <= 32 ? 4 : 8;
-    switch (delta_checkpoints) {
-    case checkpoints::native: return 15 * native;
-    case checkpoints::packed: return k + 8 <= 64 ? plane_bytes(k + 8, 15) : 15 * 8;
-    case checkpoints::every64: return 3 * native;
-    case checkpoints::none: return 0;
-    }
-    return 0;
-}
-
-struct runs_geometry {
-    std::vector<bl::byte> directory, lengths, control;
-    std::optional<bl::view> view;
-};
-
-struct column {
-    std::vector<descriptor> blocks;
-    std::vector<std::uint8_t> payload;
-    std::vector<std::unique_ptr<runs_geometry>> runs;  // per block, null unless runs
-    std::vector<sp::decoder<u64>> decoders;            // per block with a plane
-    // Narrowest output lane per block (u8/u16/u32), for narrow-lane reduction.
-    std::vector<std::optional<sp::decoder<std::uint8_t>>> d8;
-    std::vector<std::optional<sp::decoder<std::uint16_t>>> d16;
-    std::vector<std::optional<sp::decoder<std::uint32_t>>> d32;
-    std::size_t rows = 0;
-    std::size_t descriptor_bytes() const { return blocks.size() * sizeof(descriptor); }
-    std::size_t run_geometry_bytes() const {
-        std::size_t total = 0;
-        for (const auto &r : runs)
-            if (r)
-                total += r->directory.size() + r->lengths.size() + r->control.size();
-        return total;
-    }
-};
-
-column encode(std::span<const u64> values) {
-    column c;
-    c.rows = values.size() / block_rows * block_rows;
-    const auto &layout = run_layout();
-    std::vector<u64> scratch(block_rows);
-    std::vector<std::pair<std::size_t, std::size_t>> planes;  // (offset, block)
-    for (std::size_t b = 0; b * block_rows < c.rows; ++b) {
-        const auto block = values.subspan(b * block_rows, block_rows);
-        const auto [lo, hi] = std::minmax_element(block.begin(), block.end());
-        descriptor d{*lo, static_cast<std::uint32_t>(c.payload.size()), 0, kind::constant, 0};
-        c.runs.emplace_back();
-        if (*lo == *hi) {
-            c.blocks.push_back(d);
-            continue;
-        }
-        const unsigned k = width_of(*hi - *lo);
-        std::vector<u64> run_values;
-        std::vector<unsigned> run_sizes;
-        for (std::size_t i = 0; i < block_rows;) {
-            std::size_t j = i + 1;
-            while (j < block_rows && block[j] == block[i])
-                ++j;
-            run_values.push_back(block[i] - *lo);
-            run_sizes.push_back(static_cast<unsigned>(j - i));
-            i = j;
-        }
-        const std::size_t packed_cost = plane_bytes(k, block_rows);
-        // Delta candidate: every true step must fit i64 so wrapping u64
-        // reconstruction is exact.
-        bool delta_ok = true;
-        i128 dmin = 0, dmax = 0;
-        for (std::size_t i = 1; i < block_rows; ++i) {
-            const i128 step = static_cast<i128>(block[i]) - static_cast<i128>(block[i - 1]);
-            if (step < -(static_cast<i128>(1) << 63) || step >= (static_cast<i128>(1) << 63))
-                delta_ok = false;
-            dmin = i == 1 ? step : std::min(dmin, step);
-            dmax = i == 1 ? step : std::max(dmax, step);
-        }
-        const unsigned dk = delta_ok ? std::max(1u, width_of(static_cast<u64>(dmax - dmin))) : 64;
-        const std::size_t checkpoint_bytes = dk + 8 <= 32 ? 4 : 8;
-        const std::size_t delta_cost = plane_bytes(dk, block_rows) + 8 + checkpoint_cost(dk);
-        const std::size_t runs_cost =
-            plane_bytes(k, run_values.size()) +
-            (compact_runs ? layout.directory_bytes() + layout.control_bytes() +
-                                layout.lengths_bytes(static_cast<unsigned>(run_sizes.size()))
-                          : run_sizes.size());
-        if (delta_ok && delta_cost < std::min(packed_cost, runs_cost)) {
-            d.type = kind::delta;
-            d.base = block[0];
-            d.count = block_rows;
-            d.width = static_cast<std::uint8_t>(dk);
-            const i64 rbase = static_cast<i64>(dmin);
-            scratch[0] = 0;
-            u64 cumulative = 0;
-            std::vector<u64> marks;
-            for (std::size_t i = 1; i < block_rows; ++i) {
-                scratch[i] = static_cast<u64>(
-                    static_cast<i128>(block[i]) - static_cast<i128>(block[i - 1]) - dmin);
-                cumulative += scratch[i];
-                const std::size_t every =
-                    delta_checkpoints == checkpoints::every64 ? 64 : 16;
-                if (delta_checkpoints != checkpoints::none && i % every == every - 1 &&
-                    i + 1 < block_rows)
-                    marks.push_back(cumulative);  // sum through row i
-            }
-            const std::size_t plane = plane_bytes(dk, block_rows);
-            c.payload.resize(c.payload.size() + delta_cost);
-            pack(dk, scratch, c.payload.data() + d.offset);
-            std::memcpy(c.payload.data() + d.offset + plane, &rbase, 8);
-            std::uint8_t *stored = c.payload.data() + d.offset + plane + 8;
-            if (delta_checkpoints == checkpoints::packed && dk + 8 <= 64)
-                pack(dk + 8, marks, stored);
-            else for (std::size_t j = 0; j < marks.size(); ++j) {
-                std::uint8_t *at = stored + j * checkpoint_bytes;
-                if (checkpoint_bytes == 4) {
-                    const auto v = static_cast<std::uint32_t>(marks[j]);
-                    std::memcpy(at, &v, 4);
-                } else {
-                    std::memcpy(at, &marks[j], 8);
-                }
-            }
-        } else if (runs_cost < packed_cost && !compact_runs) {
-            d.type = kind::runs;
-            d.count = static_cast<std::uint16_t>(run_values.size());
-            d.width = static_cast<std::uint8_t>(k);
-            const std::size_t values_bytes = plane_bytes(k, run_values.size());
-            c.payload.resize(c.payload.size() + values_bytes + run_sizes.size());
-            pack(k, run_values, c.payload.data() + d.offset);
-            unsigned end = 0;
-            for (std::size_t r = 0; r < run_sizes.size(); ++r) {
-                end += run_sizes[r];
-                c.payload[d.offset + values_bytes + r] = static_cast<std::uint8_t>(end - 1);
-            }
-        } else if (runs_cost < packed_cost) {
-            auto g = std::make_unique<runs_geometry>();
-            g->directory.resize(layout.directory_bytes());
-            g->lengths.resize(layout.lengths_bytes(static_cast<unsigned>(run_sizes.size())));
-            g->control.resize(layout.control_bytes());
-            auto view = bl::view::bind(layout, {g->directory, g->lengths, g->control});
-            if (!view)
-                std::abort();
-            g->view.emplace(*view);
-            std::vector<ikea::owner_write> records(8 * (run_sizes.size() + 2));
-            ikea::source_write_journal effects{records};
-            if (!bl::initialize(*g->view, effects))
-                std::abort();
-            for (unsigned size : run_sizes) {
-                effects.used = 0;
-                if (!bl::append(*g->view, size, effects))
-                    std::abort();
-            }
-            d.type = kind::runs;
-            d.count = static_cast<std::uint16_t>(run_values.size());
-            d.width = static_cast<std::uint8_t>(k);
-            c.payload.resize(c.payload.size() + plane_bytes(k, run_values.size()));
-            pack(k, run_values, c.payload.data() + d.offset);
-            c.runs.back() = std::move(g);
-        } else {
-            for (std::size_t i = 0; i < block_rows; ++i)
-                scratch[i] = block[i] - *lo;
-            d.type = kind::packed;
-            d.count = block_rows;
-            d.width = static_cast<std::uint8_t>(k);
-            c.payload.resize(c.payload.size() + packed_cost);
-            pack(k, scratch, c.payload.data() + d.offset);
-        }
-        c.blocks.push_back(d);
-    }
-    // Bind decoders once, after the payload stops growing.
-    c.decoders.reserve(c.blocks.size());
-    for (const auto &d : c.blocks) {
-        c.d8.emplace_back();
-        c.d16.emplace_back();
-        c.d32.emplace_back();
-        if (d.type == kind::constant) {
-            c.decoders.emplace_back(nullptr, 0, nullptr, nullptr, nullptr);
-            continue;
-        }
-        const sp::dense_input input{
-            d.width, sp::geometry::local,
-            std::span<const std::uint8_t>(c.payload).subspan(d.offset, plane_bytes(d.width, d.count)),
-            d.count};
-        auto decoder = sp::bind_decoder<u64>(input);
-        if (!decoder)
-            std::abort();
-        c.decoders.push_back(*decoder);
-        if (d.width <= 8)
-            c.d8.back() = *sp::bind_decoder<std::uint8_t>(input);
-        else if (d.width <= 16)
-            c.d16.back() = *sp::bind_decoder<std::uint16_t>(input);
-        else if (d.width <= 32)
-            c.d32.back() = *sp::bind_decoder<std::uint32_t>(input);
-    }
-    return c;
-}
-
-// Visit each run's (rank, size) through Boundlist range over the chosen body.
-template <class F> void each_run(const column &c, std::size_t b, F &&visit) {
-    const auto &d = c.blocks[b];
-    auto body = [&](unsigned rank, auto interval) { visit(rank, interval.limit - interval.first); };
-    bool ok;
-    if (c.runs[b])
-        ok = bl::range(*c.runs[b]->view, 0, d.count, body).has_value();
-    else
-        ok = bl::range(bl::from_ends(run_ends{c.payload.data() + d.offset +
-                                                  plane_bytes(d.width, d.count),
-                                              d.count},
-                                     0u),
-                       0, d.count, body)
-                 .has_value();
-    if (!ok)
-        std::abort();
-}
-
-// One bit per block, little-endian within 64-bit words. Groups of 16 blocks
-// (4,096 rows) are derived from the same bits: an empty group is skipped
-// without touching its descriptors, a full group takes the unmasked path, and a
-// mixed group visits only its set bits. Nothing here fixes Frame's geometry.
-constexpr std::size_t group_blocks = 16;
-
-struct block_mask {
-    std::vector<u64> words;
-    std::size_t blocks = 0;
-    explicit block_mask(std::size_t n) : words((n + 63) / 64), blocks(n) {}
-    void set(std::size_t b) { words[b / 64] |= u64{1} << (b % 64); }
-    std::size_t popcount() const {
-        std::size_t n = 0;
-        for (u64 w : words)
-            n += std::popcount(w);
-        return n;
-    }
-};
-
-template <class F> void for_each_block(const block_mask &m, F &&visit) {
-    const std::size_t groups = (m.blocks + group_blocks - 1) / group_blocks;
-    for (std::size_t g = 0; g < groups; ++g) {
-        const std::size_t first = g * group_blocks;
-        const std::size_t limit = std::min(first + group_blocks, m.blocks);
-        const unsigned bits =
-            static_cast<unsigned>(m.words[first / 64] >> (first % 64)) & 0xffffu;
-        if (!bits)
-            continue;
-        if (bits == 0xffffu && limit - first == group_blocks) {
-            for (std::size_t b = first; b < limit; ++b)
-                visit(b);
-            continue;
-        }
-        for (unsigned rest = bits; rest; rest &= rest - 1) {
-            const std::size_t b = first + static_cast<unsigned>(std::countr_zero(rest));
-            if (b < limit)
-                visit(b);
-        }
-    }
-}
-
-// Exact SUM of one block, decoding packed values into u64.
-u128 block_sum(const column &c, std::size_t b) {
-    const auto &d = c.blocks[b];
-    alignas(64) u64 buffer[block_rows];
-    u128 total = 0;
-    switch (d.type) {
-    case kind::constant:
-        return static_cast<u128>(d.base) * block_rows;
-    case kind::packed: {
-        c.decoders[b].read_unchecked(0, block_rows, buffer);
-        if (d.width <= 56) {  // 256 residuals below 2^56 cannot overflow u64
-            u64 residuals = 0;
-            for (std::size_t i = 0; i < block_rows; ++i)
-                residuals += buffer[i];
-            total = residuals;
-        } else {
-            for (std::size_t i = 0; i < block_rows; ++i)
-                total += buffer[i];
-        }
-        return total + static_cast<u128>(d.base) * block_rows;
-    }
-    case kind::delta: {
-        // sum x_i = 256 u0 + rbase * 32640 + sum_j (256 - j) s_j  (s_0 = 0):
-        // a weighted reduction of the narrow residuals, no prefix decode.
-        c.decoders[b].read_unchecked(0, block_rows, buffer);
-        i64 rbase;
-        std::memcpy(&rbase, c.payload.data() + d.offset + plane_bytes(d.width, block_rows), 8);
-        i128 t = static_cast<i128>(d.base) * block_rows + static_cast<i128>(rbase) * 32640;
-        if (d.width <= 47) {
-            u64 w = 0;
-            for (std::size_t j = 1; j < block_rows; ++j)
-                w += (block_rows - j) * buffer[j];
-            t += w;
-        } else {
-            for (std::size_t j = 1; j < block_rows; ++j)
-                t += static_cast<i128>(block_rows - j) * buffer[j];
-        }
-        return static_cast<u128>(t);
-    }
-    case kind::runs:
-        c.decoders[b].read_unchecked(0, d.count, buffer);
-        each_run(c, b, [&](unsigned rank, unsigned size) {
-            total += static_cast<u128>(buffer[rank] + d.base) * size;
-        });
-        return total;
-    }
-    std::abort();
-}
-
-// Exact SUM over the blocks selected by mask (one bit per block).
-u128 encoded_sum(const column &c, const block_mask &mask) {
-    u128 total = 0;
-    for_each_block(mask, [&](std::size_t b) { total += block_sum(c, b); });
-    return total;
-}
-
-// The same SUM, decoding packed blocks into their narrowest lane and reducing
-// there before one widening add per block (Calico's split-arithmetic idea).
-template <class T, class A>
-A narrow_block_sum(const sp::decoder<T> &decoder) {
-    alignas(64) T buffer[block_rows];
-    decoder.read_unchecked(0, block_rows, buffer);
-    A s = 0;
-    for (std::size_t i = 0; i < block_rows; ++i)
-        s += buffer[i];
-    return s;
-}
-
-u128 encoded_sum_narrow(const column &c, const block_mask &mask) {
-    u128 total = 0;
-    for_each_block(mask, [&](std::size_t b) {
-        const auto &d = c.blocks[b];
-        if (d.type != kind::packed) {
-            total += block_sum(c, b);
-            return;
-        }
-        total += static_cast<u128>(d.base) * block_rows;
-        if (c.d8[b])
-            total += narrow_block_sum<std::uint8_t, std::uint32_t>(*c.d8[b]);
-        else if (c.d16[b])
-            total += narrow_block_sum<std::uint16_t, std::uint32_t>(*c.d16[b]);
-        else if (c.d32[b])
-            total += narrow_block_sum<std::uint32_t, u64>(*c.d32[b]);
-        else
-            total += block_sum(c, b) - static_cast<u128>(d.base) * block_rows;
-    });
-    return total;
-}
-
-// Exact COUNT(u >= threshold) over the selected blocks.
-u64 encoded_count_ge(const column &c, const block_mask &mask, u64 threshold) {
-    u64 total = 0;
-    alignas(64) u64 buffer[block_rows];
-    for_each_block(mask, [&](std::size_t b) {
-        const auto &d = c.blocks[b];
-        // Constant, runs and packed bases are block minima; a delta anchor isn't.
-        if (d.type != kind::delta && d.base >= threshold) {
-            total += block_rows;
-            return;
-        }
-        switch (d.type) {
-        case kind::constant:
-            return;
-        case kind::delta: {
-            c.decoders[b].read_unchecked(0, block_rows, buffer);
-            i64 rbase;
-            std::memcpy(&rbase, c.payload.data() + d.offset + plane_bytes(d.width, block_rows), 8);
-            u64 x = d.base;
-            total += x >= threshold;
-            for (std::size_t i = 1; i < block_rows; ++i) {
-                x += static_cast<u64>(rbase) + buffer[i];
-                total += x >= threshold;
-            }
-            break;
-        }
-        case kind::packed: {
-            const u64 rhs = threshold - d.base;
-            if (d.width < 64 && rhs >> d.width)
-                return;  // the threshold exceeds every representable residual
-            c.decoders[b].read_unchecked(0, block_rows, buffer);
-            for (std::size_t i = 0; i < block_rows; ++i)
-                total += buffer[i] >= rhs;
-            break;
-        }
-        case kind::runs: {
-            const u64 rhs = threshold - d.base;
-            c.decoders[b].read_unchecked(0, d.count, buffer);
-            each_run(c, b, [&](unsigned rank, unsigned size) {
-                if (buffer[rank] >= rhs)
-                    total += size;
-            });
-            break;
-        }
-        }
-    });
-    return total;
-}
+using namespace frame_encoding;
 
 // Plain control: values relative to the column minimum at the narrowest byte
 // width that holds them (the natural typed array a scan engine would use).
@@ -599,13 +96,6 @@ std::string u128_text(u128 v) {
     return s;
 }
 
-volatile u64 sink;
-volatile u64 sink_high;
-// Consume both halves of a wide result so timed code keeps the carry work.
-void consume(u128 v) {
-    sink = static_cast<u64>(v);
-    sink_high = static_cast<u64>(v >> 64);
-}
 
 template <class T>
 void run(const char *name, std::span<const u64> values, u64 lo, u64 threshold) {
@@ -613,6 +103,17 @@ void run(const char *name, std::span<const u64> values, u64 lo, u64 threshold) {
     plain<T> p{std::vector<T>(c.rows), lo};
     for (std::size_t i = 0; i < c.rows; ++i)
         p.values[i] = static_cast<T>(values[i] - lo);
+    // Whole-block decode must reproduce the input exactly.
+    {
+        alignas(64) u64 decoded[block_rows];
+        for (std::size_t b = 0; b < c.blocks.size(); ++b) {
+            decode_block(c, b, decoded);
+            if (std::memcmp(decoded, values.data() + b * block_rows, sizeof decoded) != 0) {
+                std::fprintf(stderr, "%s: decode_block mismatch at block %zu\n", name, b);
+                std::exit(1);
+            }
+        }
+    }
     std::size_t counts[4] = {};
     for (const auto &d : c.blocks)
         ++counts[static_cast<int>(d.type)];
@@ -656,9 +157,15 @@ void run(const char *name, std::span<const u64> values, u64 lo, u64 threshold) {
                     s.name, c.rows, s.mask.popcount() * block_rows, u128_text(es).c_str(),
                     static_cast<unsigned long long>(ec));
         for (auto &a : arms) {
-            std::sort(a.ns.begin(), a.ns.end());
-            std::printf(",\"%s_ns\":{\"min\":%.0f,\"median\":%.0f,\"max\":%.0f}", a.name,
-                        a.ns.front(), a.ns[a.ns.size() / 2], a.ns.back());
+            // Raw per-trial times in trial order, so paired ratios and drift
+            // can be reconstructed; summary statistics are derived from them.
+            std::printf(",\"%s_ns\":{\"trials\":[", a.name);
+            for (std::size_t t = 0; t < a.ns.size(); ++t)
+                std::printf("%s%.0f", t ? "," : "", a.ns[t]);
+            auto sorted = a.ns;
+            std::sort(sorted.begin(), sorted.end());
+            std::printf("],\"min\":%.0f,\"median\":%.0f,\"max\":%.0f}", sorted.front(),
+                        sorted[sorted.size() / 2], sorted.back());
         }
         std::printf("}");
     }

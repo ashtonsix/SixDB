@@ -1,7 +1,10 @@
 // Private research fixture: reuse the real body without creating a public API.
 // Page-per-block placement is only for access checking, never for timing.
-#define FRAME_ENCODING_BODY_NO_MAIN
-#include "bodies.cpp"
+#include "material.h"
+
+#include <cstdio>
+#include <cstring>
+#include <memory>
 
 #include <csignal>
 #include <sys/mman.h>
@@ -10,6 +13,8 @@
 #include <unistd.h>
 
 namespace {
+using namespace frame_encoding;
+
 void need(bool ok, const char *message) {
     if (!ok) {
         std::fprintf(stderr, "masked access check: %s\n", message);

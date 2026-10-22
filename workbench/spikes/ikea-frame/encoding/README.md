@@ -182,6 +182,16 @@ Hypotheses for the bar (to test, not established):
 
 ## Real encoded bodies, first native pass
 
+**Shared private material.** The codecs now live in
+[`material.h`](material.h) / [`material.cpp`](material.cpp) (target
+`frame_encoding_material`, namespace `frame_encoding`): descriptors and kinds,
+`encode`, run traversal, block masks, `block_sum`, narrow SUM, COUNT and
+`decode_block` (whole-block working-domain values, checked against the input
+on every run). [`bodies.cpp`](bodies.cpp) keeps the timing driver and plain
+controls. Codex's protected-payload check (`masked_access_check.cpp`, target
+`frame_encoding_masked_access_check`) and Engine's consumers link the same
+material. This is research material, not a Frame API.
+
 [`bodies.cpp`](bodies.cpp) (target `frame_encoding_bodies`; columns exported
 by [`export_columns.py`](export_columns.py)) builds each 256-row block as
 constant, runs or frame-of-reference with real Ikea storage: Local SeriesPack
