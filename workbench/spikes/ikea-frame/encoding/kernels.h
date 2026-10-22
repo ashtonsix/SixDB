@@ -17,8 +17,12 @@ struct plane_operations {
     std::uint64_t (*point)(const std::uint8_t *, std::size_t row);
     void (*range)(const std::uint8_t *, std::size_t first, std::size_t take, std::uint64_t *out);
     // Sum of rows [0, take), modulo 2^64; exact when take * (2^K - 1) < 2^64.
+    // Reads complete native 16-row windows: the owner must grant
+    // ceil(take / 16) * 16 occupied rows, as a full 256-row plane does. Not
+    // valid for short planes such as run values (Ikea LEAD's caution).
     std::uint64_t (*sum)(const std::uint8_t *, unsigned take);
-    // Count of rows in [0, take) with value >= rhs.
+    // Count of rows in [0, take) with value >= rhs; reads only the occupied
+    // tiles of those rows.
     std::uint64_t (*count_ge)(const std::uint8_t *, unsigned take, std::uint64_t rhs);
 };
 
