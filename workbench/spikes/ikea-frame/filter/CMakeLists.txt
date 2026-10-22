@@ -1,4 +1,4 @@
-add_library(frame_filter_kernels STATIC kernels.cpp image.cpp)
+add_library(frame_filter_kernels STATIC kernels.cpp image.cpp evidence.cpp)
 sixdb_target(frame_filter_kernels)
 target_link_libraries(frame_filter_kernels PUBLIC frame_encoding_material)
 # Independent width slices keep each compiler below the full-matrix footprint.

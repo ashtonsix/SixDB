@@ -1,5 +1,5 @@
 // Whole-image COUNT, actual result consumption; warm local exploration only.
-#include "image.h"
+#include "evidence.h"
 #include <array>
 #include <functional>
 #include <iostream>
@@ -123,6 +123,23 @@ void run(const std::vector<u64> &values, unsigned trials, bool reverse) {
             if (heads) arms.push_back({name + "-guarded", [image](const auto &m, u64 q) { return image->count_ge(m, q, true); }});
         }
     }
+    const auto part8_start = Clock::now();
+    ff::logical_heads part8(column, 8);
+    const auto part8_ns = std::chrono::duration_cast<std::chrono::nanoseconds>(Clock::now() - part8_start).count();
+    const auto part16_start = Clock::now();
+    ff::logical_heads part16(column, 16);
+    const auto part16_ns = std::chrono::duration_cast<std::chrono::nanoseconds>(Clock::now() - part16_start).count();
+    const auto bounds_start = Clock::now();
+    ff::window_bounds bounds(column);
+    const auto bounds_ns = std::chrono::duration_cast<std::chrono::nanoseconds>(Clock::now() - bounds_start).count();
+    for (auto [name, ns, bytes] : {std::tuple{"part-head8", part8_ns, part8.bytes()},
+                                  std::tuple{"part-head16", part16_ns, part16.bytes()},
+                                  std::tuple{"window-q8-bounds", bounds_ns, bounds.bytes()}})
+        std::cout << "{\"type\":\"conversion\",\"arm\":\"" << name << "\",\"ns\":" << ns
+                  << ",\"extra_evidence_bytes\":" << bytes << "}\n";
+    arms.push_back({"part-head8", [&](const auto &m, u64 q) { return part8.count_ge(m, q); }});
+    arms.push_back({"part-head16", [&](const auto &m, u64 q) { return part16.count_ge(m, q); }});
+    arms.push_back({"window-q8-bounds", [&](const auto &m, u64 q) { return bounds.count_ge(m, q); }});
     if (reverse) std::reverse(arms.begin(), arms.end());
     std::array<std::size_t, 5> kinds{};
     for (const auto &d : column.blocks) {

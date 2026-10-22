@@ -1,4 +1,4 @@
-#include "image.h"
+#include "evidence.h"
 #include <array>
 #include <csignal>
 #include <random>
@@ -168,11 +168,40 @@ void protected_none() {
     auto *column = std::construct_at(reinterpret_cast<fe::column *>(storage.data), fe::encode(values));
     {
         ff::image image(*column, 8);
+        ff::logical_heads part8(*column, 8), part16(*column, 16);
+        ff::window_bounds bounds(*column);
         fe::block_mask none(1), broken(1);
         broken.set(0);
         storage.protect(0, PROT_NONE);
         need(image.count_ge(none, 100, true) == 0, "none predicate read column metadata");
+        need(part8.count_ge(none, 100) == 0 && part16.count_ge(none, 100) == 0 &&
+                 bounds.count_ge(none, 100) == 0, "none evidence query read column metadata");
         must_fault([&] { return image.count_ge(broken, 100, true); });
+        storage.protect(0, PROT_READ | PROT_WRITE);
+    }
+    std::destroy_at(column);
+}
+void protected_evidence() {
+    pages storage;
+    std::array<u64, 256> values;
+    // Every native window lies wholly below or above the middle threshold.
+    // Both heads and bounds resolve it while the entire column is unreadable.
+    for (unsigned r = 0; r < 256; ++r)
+        values[r] = (r / 16 % 2 ? 0x22670000u : 0x12340000u) + r;
+    auto *column = std::construct_at(reinterpret_cast<fe::column *>(storage.data), fe::encode(values));
+    {
+        ff::logical_heads h8(*column, 8), h16(*column, 16);
+        ff::window_bounds bounds(*column);
+        fe::block_mask all(1); all.set(0);
+        storage.protect(0, PROT_NONE);
+        need(h8.count_ge(all, 0x1a000000u) == 128 &&
+                 h16.count_ge(all, 0x1a000000u) == 128 &&
+                 bounds.count_ge(all, 0x1a000000u) == 128,
+             "resolved evidence query read the encoded column");
+        // A tie at a nonzero suffix now genuinely requires the body.
+        must_fault([&] { return h8.count_ge(all, values[1]); });
+        must_fault([&] { return h16.count_ge(all, values[1]); });
+        must_fault([&] { return bounds.count_ge(all, values[1]); });
         storage.protect(0, PROT_READ | PROT_WRITE);
     }
     std::destroy_at(column);
@@ -187,13 +216,15 @@ std::vector<u64> load(const char *path) {
     need(bool(in.read(reinterpret_cast<char *>(values.data()), bytes)), "short read");
     return values;
 }
-std::size_t whole_image(const std::vector<u64> &values) {
+std::size_t whole_image(const std::vector<u64> &values, bool delta_exceptions = false) {
     std::size_t checks = 0;
     for (bool compact : {false, true}) {
-        auto column = fe::encode(values, {compact, fe::checkpoints::native});
+        auto column = fe::encode(values, {compact, fe::checkpoints::native, delta_exceptions});
         ff::image headless(column, 0), head8(column, 8), head16(column, 16);
         ff::image early8(column, 8, ff::split_stage::working64);
         ff::image early16(column, 16, ff::split_stage::working64);
+        ff::logical_heads part8(column, 8), part16(column, 16);
+        ff::window_bounds bounds(column);
         const auto [lo, hi] = std::minmax_element(values.begin(), values.end());
         for (auto rhs : {u64{0}, *lo, *lo + (*hi - *lo) / 2, *hi, UINT64_MAX})
             for (unsigned pattern = 0; pattern < 4; ++pattern) {
@@ -206,6 +237,10 @@ std::size_t whole_image(const std::vector<u64> &values) {
                     if ((mask.words[r / 256 / 64] >> (r / 256 % 64)) & 1)
                         expected += values[r] >= rhs;
                 need(fe::encoded_count_ge(column, mask, rhs) == expected, "decode control differs");
+                need(part8.count_ge(mask, rhs) == expected && part16.count_ge(mask, rhs) == expected &&
+                         bounds.count_ge(mask, rhs) == expected,
+                     "logical heads/bounds differ from original values");
+                checks += 3;
                 for (const auto *image : {&headless, &head8, &head16, &early8, &early16})
                     for (bool guard : {false, true}) {
                         need(image->count_ge(mask, rhs, guard) == expected,
@@ -221,6 +256,7 @@ int main(int argc, char **argv) {
     auto checks = all_widths();
     protected_planes();
     protected_none();
+    protected_evidence();
     std::vector<u64> authored(6 * 256);
     std::mt19937_64 rng(713);
     u64 up = 1000, down = UINT64_MAX - 1000;
@@ -235,7 +271,21 @@ int main(int argc, char **argv) {
     authored[1280 + 17] = u64{1} << 60;
     authored[1280 + 199] = u64{1} << 61;
     checks += whole_image(authored);
-    for (int i = 1; i < argc; ++i) checks += whole_image(load(argv[i]));
+    checks += whole_image(authored, true);
+    // Boundaries through 64-bit values and multiple/partial parts. The expected
+    // predicates use original integers rather than either summary's arithmetic.
+    for (unsigned width = 1; width <= 64; ++width) {
+        std::vector<u64> values((width == 64 ? 258 : 2) * 256);
+        const u64 max = UINT64_MAX >> (64 - width);
+        for (auto &value : values) value = rng() & max;
+        values[0] = 0; values[1] = max;
+        checks += whole_image(values);
+    }
+    for (int i = 1; i < argc; ++i) {
+        auto values = load(argv[i]);
+        checks += whole_image(values);
+        checks += whole_image(values, true);
+    }
     std::printf("%zu exact split-plane/whole-image predicate checks; 64 widths, five predicates, "
                 "both guards, tails/coarse masks; protected heads/suffix and injected faults pass.\n", checks);
 }

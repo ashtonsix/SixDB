@@ -41,10 +41,9 @@ u64 image::count_ge(const fe::block_mask &mask, u64 threshold, bool guard) const
         }
         if (d.type != fe::kind::packed && d.type != fe::kind::runs) {
             // Prediction residual heads are not logical-value heads. Keep the
-            // explicit complete decode until an independent predicate law exists.
-            std::array<u64, fe::block_rows> values;
-            fe::decode_block(original_, b, values.data());
-            for (auto value : values) result += value >= threshold;
+            // owner's actual operation; do not force complete reconstruction
+            // for a patched body its existing predicate can answer directly.
+            result += fe::block_count_ge(original_, b, threshold);
             return;
         }
         if (d.base >= threshold) { result += fe::block_rows; return; }

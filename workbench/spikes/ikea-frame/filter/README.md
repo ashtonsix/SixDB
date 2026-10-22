@@ -45,6 +45,25 @@ independent field placement and projection/filter composition; it has no matchin
 dedicated leading-head format option. Its physical grouping remains a separate
 cross-column experiment rather than another head flag here.
 
+The next private arms keep those encoded bodies unchanged and add logical-value
+evidence: part-wide H8/H16 heads after a part FOR, and conservative q8 min/max
+bounds for each sixteen-row window. The heads' predicate meaning depends only
+on a part base/width; the bounds have independent logical block minima/ranges.
+Only unresolved rows need exact refinement. The current simple fallback decodes
+an unresolved block once, then checks its unresolved rows. That dependency cost
+is part of the experiment rather than a claim of selective residual decoding.
+
+This reuses the [head-cut model](../encoding/head_cuts.py), including its RegionID
+counterexample to part-wide precision, and Calico's
+[fine summary](../../../../calico/frame/include/frame/fine_summary.h) distinction
+between valid evidence and a required exact fallback. The earlier
+[row-signature findings](../../row-filter-signatures/FINDINGS.md) show that cheap
+resident native predicates can beat progressive evidence even with excellent
+rejection. Therefore complete same-body consumers and strong native controls
+remain mandatory comparisons for this question. All sidecar bytes, including
+padding/addressing metadata and duplicated information, are charged. No Calico
+format, fixed summary-storage gate or new Frame default is inherited.
+
 ## Checks and limits
 
 `frame_filter_check` compares masks with original integers at every width 1–64,

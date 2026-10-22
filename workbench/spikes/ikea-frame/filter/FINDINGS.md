@@ -126,3 +126,29 @@ input/source/ELF hashes, complete samples, controls and disassembly accompany th
 [actual Polars controls](../evidence/heads-points-local/filter/polars.json) and
 [verified recovery bundle](../evidence/heads-points-local/artifact.json).
 It is local warm research; no DRAM, Loom or fleet win is claimed.
+
+## Logical evidence follow-up: checked, not yet timed
+
+The next implementation adds part-wide logical H8/H16 sidecars over unchanged
+encoded bodies, plus conservative byte-quantised min/max for each sixteen-row
+window. Both interpret the logical predicate independently of prediction,
+exceptions or the body's FOR anchor. Any unresolved block is decoded once;
+only its unresolved rows contribute through the exact fallback. Part heads may
+lose entropy relative to block heads; bounds may leave a whole window unresolved.
+Those costs are explicit, not claimed to disappear through selective decoding.
+
+All duplicated evidence is charged: one/two byte planes per original row plus
+part records, or 56 bytes per block for bounds including bases/ranges/alignment.
+No residency/default decision follows. The regular FOR-head image also reuses
+the owner's block-count operation for fallback kinds, removing its unnecessary
+complete-decode requirement on patched blocks. The earlier timing table is still
+the qualified historical cohort, not a timing of this changed implementation.
+
+767,200 exact checks pass with these consumers, all widths1..64, both historical
+run geometries, default and opt-in prediction-exception bodies, multiple/partial
+parts and the nine retained real columns. Independent original-value comparisons
+cover the whole query; protected-column checks show that resolved heads/bounds
+can finish while all encoded-column metadata is inaccessible. Three deliberately
+unresolved sidecar queries fault against that same protection. None masks avoid
+all column/evidence traversal. These are architectural accesses and correctness,
+not measured cache traffic, native fleet timings or write-maintenance results.
