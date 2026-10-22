@@ -4,15 +4,23 @@
 #include <ikea/seriespack.h>
 
 #include <cstdlib>
+#include <utility>
 #include <vector>
 
 namespace frame_encoding {
 namespace sp = ikea::seriespack;
 using u64 = std::uint64_t;
 
+namespace {
+// Calls f(integral_constant<I>) for each width index, in order.
+template <class F, std::size_t... I> void each_width(F &&f, std::index_sequence<I...>) {
+    (f(std::integral_constant<std::size_t, I>{}), ...);
+}
+}  // namespace
+
 void pack(unsigned k, std::span<const u64> values, std::uint8_t *out) {
     bool done = false;
-    sp::detail::each<64>([&](auto index) {
+    each_width([&](auto index) {
         constexpr unsigned K = decltype(index)::value + 1;
         if (k != K)
             return;
@@ -34,7 +42,7 @@ void pack(unsigned k, std::span<const u64> values, std::uint8_t *out) {
         if (!write.initialize(values, effects))
             std::abort();
         done = true;
-    });
+    }, std::make_index_sequence<64>{});
     if (!done)
         std::abort();
 }
