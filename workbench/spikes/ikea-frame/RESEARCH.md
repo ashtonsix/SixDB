@@ -160,3 +160,8 @@ The [read timing-order audit](ORDER-AUDIT.md) qualifies the point/filter ranking
 with identical-work controls, balanced predecessor order and same-arm warmup.
 Its large gains and negative cases survive; close historical rankings do not
 select a policy. Physical lifecycle costs remain a separate active experiment.
+
+The [native lifecycle baselines](lifecycle/NATIVE.md) now compare actual
+publication, retained readers, immutable-base overrides, folding and thaw/reseal
+against native arrays. They expose both the read value of preserving a base's
+algebra and the dispersed-write/folding costs; they do not choose a policy.

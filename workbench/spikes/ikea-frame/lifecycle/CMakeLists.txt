@@ -1,3 +1,13 @@
 add_executable(frame_delta_repair_check delta_repair_check.cpp)
 sixdb_target(frame_delta_repair_check)
 target_link_libraries(frame_delta_repair_check PRIVATE frame_encoding_material)
+
+add_library(frame_phase_material STATIC phase_material.cpp)
+sixdb_target(frame_phase_material)
+target_link_libraries(frame_phase_material PUBLIC frame_encoding_material orbital::orbital)
+add_executable(frame_phase_material_check phase_material_check.cpp)
+sixdb_target(frame_phase_material_check)
+target_link_libraries(frame_phase_material_check PRIVATE frame_phase_material frame_execution_material_owner)
+add_executable(frame_phase_measure phase_measure.cpp)
+sixdb_target(frame_phase_measure)
+target_link_libraries(frame_phase_measure PRIVATE frame_phase_material frame_execution_material_owner)

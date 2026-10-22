@@ -1,8 +1,10 @@
 # Frame under changing work
 
 Investigation owned by Ikea LEAD, with Claude's encoding/algebra work and
-Engine's execution witness. This is research planning and instrument preparation;
-no Frame implementation, transition policy or performance result is selected.
+Engine's execution witness. The [native phase baselines](NATIVE.md) now price
+actual publication, queries,
+conversion and retained readers. No Frame public interface or transition policy
+is selected.
 
 ## Starting point
 
@@ -226,4 +228,16 @@ selected hot writer interface or performance baseline.
 That adapter was also checked over all 13 initial snapshots: eight queries per
 snapshot agree with the logical oracle through each of the two hash programs
 (208 query/program comparisons). This checks the consumer handoff over changing
-logical inputs; physical old-reader preservation remains to be implemented.
+logical inputs; physical retained-reader and adoption checks now have their own native evidence
+in [the phase baselines](NATIVE.md).
+
+
+## Native physical baselines
+
+`frame_phase_material_check` verifies separate presence/validity, bounded owner
+borrows, exact masked aggregates, overrides, actual publication/adoption and
+escaping dependency bundles. `frame_phase_measure` compares native/raw/FOR,
+whole-group re-encode, base/overrides and thaw/reseal under identical traces.
+The [findings and limits](NATIVE.md) distinguish real phase timings from the
+older logical instrument and fixed-basis repair law. These controls are private
+research machinery, not a promoted Frame mutation API.
