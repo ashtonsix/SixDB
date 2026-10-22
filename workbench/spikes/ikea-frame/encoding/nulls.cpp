@@ -4,7 +4,10 @@
 // SUM and COUNT >= median over the predictor-filled image against the
 // decode-then-mask control and the no-NULL image.
 //
-//   nulls NAME FILE.u64 [--time=PER_MILLE[:clustered]]...
+//   nulls NAME FILE.u64 [--time=PER_MILLE10[:clustered]]... [--encode-cost]
+//
+// --encode-cost instead reports encoder time and allocations of NULL fill
+// against plain encode() on the same column.
 //
 // NULLs are synthetic: uniform (each row independently) or clustered (runs
 // with mean length 64 rows), at 0.1%, 1%, 10% and 50% of rows, from a fixed
@@ -21,6 +24,21 @@
 // every block it must equal the real body's bytes.
 #define FRAME_ENCODING_BODY_NO_MAIN
 #include "bodies.cpp"
+
+#include <new>
+
+// Allocation accounting for --encode-cost: every operator new in this binary.
+namespace {
+std::size_t allocations = 0, allocated_bytes = 0;
+}
+void *operator new(std::size_t n) {
+    ++allocations, allocated_bytes += n;
+    if (void *p = std::malloc(n ? n : 1))
+        return p;
+    throw std::bad_alloc();
+}
+void operator delete(void *p) noexcept { std::free(p); }
+void operator delete(void *p, std::size_t) noexcept { std::free(p); }
 
 namespace {
 using namespace frame_encoding;
@@ -120,8 +138,13 @@ int main(int argc, char **argv) {
         return 2;
     }
     std::vector<std::pair<unsigned, bool>> timed;
+    bool encode_cost = false;
     for (int i = 3; i < argc; ++i) {
         const std::string a = argv[i];
+        if (a == "--encode-cost") {
+            encode_cost = true;
+            continue;
+        }
         if (a.rfind("--time=", 0) != 0)
             return 2;
         timed.emplace_back(static_cast<unsigned>(std::stoul(a.substr(7))), a.find(":clustered") != std::string::npos);
@@ -138,6 +161,49 @@ int main(int argc, char **argv) {
     }
     const std::size_t rows = values.size(), nblocks = rows / block_rows;
     const encode_options options{};
+    if (encode_cost) {
+        // Encoder cost of NULL fill against plain encode() on the same column:
+        // median wall time of 5 runs and allocations (calls, bytes requested)
+        // of one run, for fill_nulls alone, encode() of its output, and
+        // encode_nullable (both plus the validity copy).
+        auto measure = [&](auto &&run) {
+            std::vector<double> ns;
+            std::size_t calls = 0, bytes = 0;
+            for (int t = 0; t < 5; ++t) {
+                const std::size_t c0 = allocations, b0 = allocated_bytes;
+                const auto start = std::chrono::steady_clock::now();
+                run();
+                ns.push_back(std::chrono::duration<double, std::nano>(std::chrono::steady_clock::now() - start).count());
+                calls = allocations - c0, bytes = allocated_bytes - b0;
+            }
+            std::sort(ns.begin(), ns.end());
+            return std::tuple{ns[2] / 1e6, calls, bytes};
+        };
+        const auto [plain_ms, plain_calls, plain_bytes] = measure([&] { sink = encode(values, options).payload.size(); });
+        for (unsigned per_mille10 : {10u, 100u, 1000u, 5000u})
+            for (bool clustered : {false, true}) {
+                const auto validity = make_validity(rows, per_mille10, clustered);
+                std::vector<u64> filled;
+                const auto [fill_ms, fill_calls, fill_bytes] =
+                    measure([&] { filled = fill_nulls(values, validity, options, null_fill::predictor); });
+                const auto [enc_ms, enc_calls, enc_bytes] = measure([&] { sink = encode(filled, options).payload.size(); });
+                const auto [all_ms, all_calls, all_bytes] = measure(
+                    [&] { sink = encode_nullable(values, validity, options, null_fill::predictor).values.payload.size(); });
+                const auto [zero_ms, zero_calls, zero_bytes] = measure(
+                    [&] { sink = encode_nullable(values, validity, options, null_fill::zero).values.payload.size(); });
+                std::printf("{\"column\":\"%s\",\"rows\":%zu,\"nulls_per_mille\":%.1f,\"pattern\":\"%s\","
+                            "\"plain_encode_ms\":%.2f,\"plain_allocs\":%zu,\"plain_alloc_bytes\":%zu,"
+                            "\"fill_ms\":%.2f,\"fill_allocs\":%zu,\"fill_alloc_bytes\":%zu,"
+                            "\"encode_filled_ms\":%.2f,\"encode_filled_allocs\":%zu,\"encode_filled_alloc_bytes\":%zu,"
+                            "\"encode_nullable_ms\":%.2f,\"encode_nullable_allocs\":%zu,\"encode_nullable_alloc_bytes\":%zu,"
+                            "\"zero_nullable_ms\":%.2f,\"zero_nullable_allocs\":%zu,\"zero_nullable_alloc_bytes\":%zu}\n",
+                            argv[1], rows, per_mille10 / 10.0, clustered ? "clustered" : "uniform", plain_ms, plain_calls,
+                            plain_bytes, fill_ms, fill_calls, fill_bytes, enc_ms, enc_calls, enc_bytes, all_ms, all_calls,
+                            all_bytes, zero_ms, zero_calls, zero_bytes);
+                std::fflush(stdout);
+            }
+        return 0;
+    }
     const column plain = encode(values, options);
     // Calibrate the compaction model on full blocks.
     for (std::size_t b = 0; b < nblocks; ++b) {
