@@ -548,6 +548,41 @@ Fields that are mostly FOR are unchanged at 17–20 µs. The plain int16
 control is about 4 µs, so prediction SUM is still about 3× behind plain.
 Exact on every field.
 
+## Row order in real bodies
+
+The same 11 ClickBench columns were encoded as real bodies (default options,
+binary built at 6aee1935), with one joint row permutation applied to every
+column: the original order (CounterID, date, UserID, time), a random shuffle,
+and a re-clustering by (RegionID, OS, EventTime).
+
+| Bits/value | Original | Shuffled | By RegionID, OS, EventTime |
+| --- | ---: | ---: | ---: |
+| OS | 2.78 | 8.24 | **0.57** |
+| RegionID | 5.37 | 11.96 | **0.52** |
+| EventTime | 16.88 | 21.50 | **10.24** |
+| ResolutionWidth | **3.91** | 11.88 | 9.88 |
+| CounterID | **0.50** | 11.50 | 8.37 |
+| UserID | **14.60** | 64.50 | 51.66 |
+| ClientIP | **9.99** | 32.50 | 27.77 |
+| URLHash | **59.11** | 64.50 | 62.61 |
+| WatchID | 62.50 | 62.50 | 62.50 |
+| **Total (11 columns)** | **179.1** | 293.6 | 238.1 |
+
+Block kinds go from 73% constant or runs (original) to 6% (shuffled) and 56%
+(re-clustered).
+
+1. **Real bytes confirm the model's row-order effect.** Shuffling costs 1.64×
+   in real bodies (the model said 1.8× over 77 columns).
+2. **Clustering trades columns, it doesn't simply help.** Re-clustering by
+   region and OS makes those columns nearly free (about 0.5 bits/value) and
+   halves EventTime. It wrecks the columns that rode the original sort key:
+   UserID 14.6 → 51.7, CounterID 0.5 → 8.4, ClientIP 10.0 → 27.8.
+3. So sort order is a table-level choice that Engine has to price against its
+   workload. It moves bytes more than any per-block codec choice measured
+   here, and it interacts with Ikea LEAD's lifecycle work: inserts that
+   disturb clustering erode exactly the run and constant blocks that make
+   these columns small.
+
 ## Images to hand Engine's witness early
 
 Engine's witness is a selected grouped reduction over parts with different
