@@ -16,10 +16,19 @@ template <unsigned K> std::uint64_t point(const std::uint8_t *data, std::size_t 
         .get_unchecked(row);
 }
 
-template <unsigned K>
-void range(const std::uint8_t *data, std::size_t first, std::size_t take, std::uint64_t *out) {
-    sp::bind_decoder<std::uint64_t>(sp::dense_source<sp::format<K>>{data, first + take})
+template <unsigned K, class U = std::uint64_t>
+void range(const std::uint8_t *data, std::size_t first, std::size_t take, U *out) {
+    sp::bind_decoder<U>(sp::dense_source<sp::format<K>>{data, first + take})
         .read_unchecked(first, take, out);
+}
+
+// The narrow-lane range for K, or null when the lane can't hold K bits.
+template <unsigned K, class U> constexpr auto lane() {
+    using function = void (*)(const std::uint8_t *, std::size_t, std::size_t, U *);
+    if constexpr (K <= 8 * sizeof(U))
+        return static_cast<function>(range<K, U>);
+    else
+        return static_cast<function>(nullptr);
 }
 
 template <unsigned K> std::uint64_t sum(const std::uint8_t *data, unsigned take) {
@@ -64,7 +73,9 @@ std::uint64_t count_ge(const std::uint8_t *data, unsigned take, std::uint64_t rh
 
 template <std::size_t... K> constexpr auto catalogue(std::index_sequence<K...>) {
     return std::array<plane_operations, 65>{
-        {{}, {point<K + 1>, range<K + 1>, sum<K + 1>, count_ge<K + 1>}...}};
+        {{},
+         {point<K + 1>, range<K + 1>, sum<K + 1>, count_ge<K + 1>, lane<K + 1, std::uint8_t>(),
+          lane<K + 1, std::uint16_t>(), lane<K + 1, std::uint32_t>()}...}};
 }
 }  // namespace
 

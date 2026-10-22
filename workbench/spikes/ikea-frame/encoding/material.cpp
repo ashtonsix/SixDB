@@ -465,6 +465,8 @@ column encode(std::span<const u64> values, encode_options options) {
             c.blocks.push_back(w.d);
         }
     }
+    if (!options.bind_decoders)
+        return c;  // owner operations read planes through the catalogue
     for (const auto &p : c.parts) {
         c.dictionaries.emplace_back();
         if (!p.count)
@@ -527,23 +529,23 @@ void decode_stored(const column &c, std::size_t b, u64 *out) {
         std::fill(out, out + block_rows, d.base);
         return;
     case kind::packed:
-        c.decoders[b].read_unchecked(0, block_rows, out);
+        read_plane(c, b, 0, block_rows, out);
         for (std::size_t i = 0; i < block_rows; ++i)
             out[i] += d.base;
         return;
     case kind::patched: {
-        c.decoders[b].read_unchecked(0, block_rows, out);
+        read_plane(c, b, 0, block_rows, out);
         for (std::size_t i = 0; i < block_rows; ++i)
             out[i] += d.base;
         const auto p = patches(c, b);
         alignas(64) u64 exc[block_rows];
-        c.exceptions[b]->read_unchecked(0, p.n, exc);
+        read_exceptions(p, exc);
         for (unsigned e = 0; e < p.n; ++e)
             out[p.positions[e]] = p.lo + exc[e];
         return;
     }
     case kind::delta: {
-        c.decoders[b].read_unchecked(0, block_rows, out);
+        read_plane(c, b, 0, block_rows, out);
         i64 rbase;
         std::memcpy(&rbase, c.payload.data() + d.offset + plane_bytes(d.width, block_rows), 8);
         u64 x = d.base;
@@ -559,7 +561,7 @@ void decode_stored(const column &c, std::size_t b, u64 *out) {
         return;
     case kind::runs: {
         alignas(64) u64 values[block_rows];
-        c.decoders[b].read_unchecked(0, d.count, values);
+        read_plane(c, b, 0, d.count, values);
         std::size_t row = 0;
         each_run(c, b, [&](unsigned rank, unsigned size) {
             std::fill(out + row, out + row + size, values[rank] + d.base);
@@ -578,8 +580,8 @@ void decode_block(const column &c, std::size_t b, u64 *out) {
     if (!is_coded(c, b))
         return;
     const auto &p = part_of(c, b);
-    const auto &dictionary = *c.dictionaries[b / part_blocks];
+    const std::size_t part = b / part_blocks;
     for (std::size_t i = 0; i < block_rows; ++i)
-        out[i] = p.min + dictionary.get_unchecked(out[i]);
+        out[i] = p.min + dictionary_at(c, part, out[i]);
 }
 }  // namespace frame_encoding

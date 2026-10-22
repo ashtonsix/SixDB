@@ -136,6 +136,15 @@ void run(const char *name, std::span<const u64> values, u64 lo, u64 threshold,
                 dictionary_name(c.options.dictionary), c.options.dictionary_every_part ? "true" : "false",
                 c.parts.size(), dictionary_parts, c.dictionary_bytes(), c.part_record_bytes(),
                 c.coded_bit_bytes(), c.coded_blocks(), 8.0 * total_bytes / c.rows, sizeof(T));
+    // Retained owner memory: the column object, every vector's capacity, and
+    // of that the binding vectors (zero under --no-bindings).
+    const std::size_t retained = sizeof(column) + c.blocks.capacity() * sizeof(descriptor) +
+                                 c.payload.capacity() + c.parts.capacity() * sizeof(dictionary_part) +
+                                 c.coded.capacity() * sizeof(u64) + c.binding_bytes();
+    std::printf(",\"bind_decoders\":%s,\"column_object_bytes\":%zu,\"binding_bytes\":%zu,"
+                "\"retained_bytes\":%zu",
+                c.options.bind_decoders ? "true" : "false", sizeof(column), c.binding_bytes(),
+                retained);
     std::printf(",\"coded_kinds\":{\"constant\":%zu,\"runs\":%zu,\"packed\":%zu,\"delta\":%zu,"
                 "\"patched\":%zu,\"delta_patched\":%zu}",
                 coded_counts[0], coded_counts[1], coded_counts[2], coded_counts[3], coded_counts[4],
@@ -201,7 +210,8 @@ int main(int argc, char **argv) {
     if (argc < 3) {
         std::fprintf(stderr, "usage: %s NAME FILE.u64 "
                      "[--checkpoints=native|packed|every64|none] [--delta-exceptions] "
-                     "[--dictionary=none|sorted|frequency] [--dictionary-every-part]\n",
+                     "[--dictionary=none|sorted|frequency] [--dictionary-every-part] "
+                     "[--no-bindings]\n",
                      argv[0]);
         return 2;
     }
@@ -217,6 +227,8 @@ int main(int argc, char **argv) {
             options.dictionary = dictionary_order::frequency;
         else if (std::strcmp(argv[i], "--dictionary-every-part") == 0)
             options.dictionary_every_part = true;
+        else if (std::strcmp(argv[i], "--no-bindings") == 0)
+            options.bind_decoders = false;
         else if (std::strcmp(argv[i], "--checkpoints=native") == 0)
             options.delta_checkpoints = checkpoints::native;
         else if (std::strcmp(argv[i], "--checkpoints=packed") == 0)

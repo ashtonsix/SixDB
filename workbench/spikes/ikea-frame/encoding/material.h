@@ -145,6 +145,12 @@ struct encode_options {
     // Keep every part's dictionary even when it doesn't pay overall (the
     // byte model's assumption); by default a part drops a losing dictionary.
     bool dictionary_every_part = false;
+    // Build column::decoders, d8, d16, d32, exceptions and dictionaries. Owner
+    // operations here don't read them (they derive planes from the payload
+    // through the shared catalogue); on by default for point/, filter/ and
+    // execution/ consumers that still do. The driver turns it off with
+    // --no-bindings.
+    bool bind_decoders = true;
 };
 
 inline const char *checkpoint_name(checkpoints mode) {
@@ -191,6 +197,8 @@ struct column {
     encode_options options;  // how this image was built
     std::vector<descriptor> blocks;
     std::vector<std::uint8_t> payload;
+    // Retained bindings, filled only under options.bind_decoders. Owner
+    // operations below never read them.
     std::vector<sp::decoder<u64>> decoders;            // per block with a plane
     // Narrowest output lane per block (u8/u16/u32), for narrow-lane reduction.
     std::vector<std::optional<sp::decoder<std::uint8_t>>> d8;
@@ -201,6 +209,14 @@ struct column {
     std::vector<u64> coded;              // one bit per block; empty unless options.dictionary
     std::vector<std::optional<sp::decoder<u64>>> dictionaries;  // per part with a dictionary
     std::size_t rows = 0;
+    // Retained binding state: the binding vectors' capacities (not charged to
+    // the image's bytes).
+    std::size_t binding_bytes() const {
+        return decoders.capacity() * sizeof(decoders[0]) + d8.capacity() * sizeof(d8[0]) +
+               d16.capacity() * sizeof(d16[0]) + d32.capacity() * sizeof(d32[0]) +
+               exceptions.capacity() * sizeof(exceptions[0]) +
+               dictionaries.capacity() * sizeof(dictionaries[0]);
+    }
     std::size_t descriptor_bytes() const { return blocks.size() * sizeof(descriptor); }
     // Dictionary planes (inside payload), per-part records and coded bits.
     std::size_t dictionary_bytes() const {
@@ -252,10 +268,40 @@ inline patch_view delta_patches(const column &c, std::size_t b) {
     return p;
 }
 
+// Owner planes, derived from the payload and descriptor or body metadata
+// through the shared catalogue (kernels.h). A block's own plane is full (256
+// residuals) for packed, patched, delta and delta_patched, and short (d.count
+// run values) for runs; exception and dictionary planes are short. Every read
+// here is exact tail unless it says otherwise.
+inline const std::uint8_t *body_of(const column &c, std::size_t b) {
+    return c.payload.data() + c.blocks[b].offset;
+}
+// Rows [first, first + take) of block b's own plane into u64 lanes.
+inline void read_plane(const column &c, std::size_t b, std::size_t first, std::size_t take,
+                       u64 *out) {
+    plane_kernels(c.blocks[b].width).range(body_of(c, b), first, take, out);
+}
+// All n exception values of a patch tail, relative to lo, at the body's width.
+inline void read_exceptions(const patch_view &p, u64 *out) {
+    if (p.n)
+        plane_kernels(p.value_width).range(p.values, 0, p.n, out);
+}
+// Entry code of part's dictionary plane (count > 0), relative to the part minimum.
+inline u64 dictionary_at(const column &c, std::size_t part, u64 code) {
+    const auto &p = c.parts[part];
+    return plane_kernels(p.width).point(c.payload.data() + p.offset, code);
+}
+// Entries [first, first + take) of part's dictionary plane.
+inline void read_dictionary(const column &c, std::size_t part, std::size_t first,
+                            std::size_t take, u64 *out) {
+    const auto &p = c.parts[part];
+    plane_kernels(p.width).range(c.payload.data() + p.offset, first, take, out);
+}
+
 // Whole-block reconstruction of a delta_patched block under the law above.
 inline void decode_delta_patched(const column &c, std::size_t b, u64 *out) {
     const auto &d = c.blocks[b];
-    c.decoders[b].read_unchecked(0, block_rows, out);
+    read_plane(c, b, 0, block_rows, out);
     i64 rbase;
     std::memcpy(&rbase, c.payload.data() + d.offset + plane_bytes(d.width, block_rows), 8);
     const auto p = delta_patches(c, b);
@@ -275,7 +321,7 @@ inline void decode_delta_patched(const column &c, std::size_t b, u64 *out) {
         out[i] = x;
     }
     alignas(64) u64 exc[block_rows];
-    c.exceptions[b]->read_unchecked(0, p.n, exc);
+    read_exceptions(p, exc);
     for (unsigned e = 0; e < p.n; ++e)
         out[p.positions[e]] = p.lo + exc[e];
 }
@@ -335,10 +381,14 @@ template <class F> void for_each_block(const block_mask &m, F &&visit) {
     }
 }
 
-// sum_j (256 - j) * s_j over one decoded narrow residual plane.
-template <class T> u64 weighted_residuals(const sp::decoder<T> &decoder) {
+// A catalogue narrow-lane range (range8/16/32).
+template <class T>
+using lane_range = void (*)(const std::uint8_t *, std::size_t, std::size_t, T *);
+
+// sum_j (256 - j) * s_j over one full residual plane decoded into lane T.
+template <class T> u64 weighted_residuals(lane_range<T> range, const std::uint8_t *plane) {
     alignas(64) T s[block_rows];
-    decoder.read_unchecked(0, block_rows, s);
+    range(plane, 0, block_rows, s);
     u64 w = 0;
     for (std::size_t j = 1; j < block_rows; ++j) {
         if constexpr (sizeof(T) <= 2)
@@ -368,7 +418,7 @@ inline u128 stored_sum(const column &c, std::size_t b) {
     case kind::constant:
         return static_cast<u128>(d.base) * block_rows;
     case kind::packed: {
-        c.decoders[b].read_unchecked(0, block_rows, buffer);
+        read_plane(c, b, 0, block_rows, buffer);
         if (d.width <= 56) {  // 256 residuals below 2^56 cannot overflow u64
             u64 residuals = 0;
             for (std::size_t i = 0; i < block_rows; ++i)
@@ -381,13 +431,13 @@ inline u128 stored_sum(const column &c, std::size_t b) {
         return total + static_cast<u128>(d.base) * block_rows;
     }
     case kind::patched: {
-        c.decoders[b].read_unchecked(0, block_rows, buffer);
+        read_plane(c, b, 0, block_rows, buffer);
         u64 residuals = 0;
         for (std::size_t i = 0; i < block_rows; ++i)
             residuals += buffer[i];  // K <= 56 for patched blocks
         const auto p = patches(c, b);
         alignas(64) u64 exc[block_rows];
-        c.exceptions[b]->read_unchecked(0, p.n, exc);
+        read_exceptions(p, exc);
         total = static_cast<u128>(d.base) * (block_rows - p.n) + residuals;
         for (unsigned e = 0; e < p.n; ++e)
             total += static_cast<u128>(p.lo) + exc[e];
@@ -401,13 +451,14 @@ inline u128 stored_sum(const column &c, std::size_t b) {
         i128 t = static_cast<i128>(d.base) * block_rows + static_cast<i128>(rbase) * 32640;
         // Decode into the narrowest lane and weight there; products fit u32
         // for K <= 16 and the sums fit u64 for K <= 47.
-        if (c.d8[b])
-            return static_cast<u128>(t + weighted_residuals<std::uint8_t>(*c.d8[b]));
-        if (c.d16[b])
-            return static_cast<u128>(t + weighted_residuals<std::uint16_t>(*c.d16[b]));
-        if (c.d32[b])
-            return static_cast<u128>(t + weighted_residuals<std::uint32_t>(*c.d32[b]));
-        c.decoders[b].read_unchecked(0, block_rows, buffer);
+        const auto &ops = plane_kernels(d.width);
+        if (ops.range8)
+            return static_cast<u128>(t + weighted_residuals(ops.range8, body_of(c, b)));
+        if (ops.range16)
+            return static_cast<u128>(t + weighted_residuals(ops.range16, body_of(c, b)));
+        if (ops.range32)
+            return static_cast<u128>(t + weighted_residuals(ops.range32, body_of(c, b)));
+        read_plane(c, b, 0, block_rows, buffer);
         if (d.width <= 47) {
             u64 w = 0;
             for (std::size_t j = 1; j < block_rows; ++j)
@@ -426,7 +477,7 @@ inline u128 stored_sum(const column &c, std::size_t b) {
         //           - sum_{e in E} S(e) + sum_{e in E} (lo + v_e).
         // The weighted term is delta's; the correction scans only up to the
         // last exception position.
-        c.decoders[b].read_unchecked(0, block_rows, buffer);
+        read_plane(c, b, 0, block_rows, buffer);
         i64 rbase;
         std::memcpy(&rbase, c.payload.data() + d.offset + plane_bytes(d.width, block_rows), 8);
         const auto p = delta_patches(c, b);
@@ -454,13 +505,13 @@ inline u128 stored_sum(const column &c, std::size_t b) {
             }
         }
         alignas(64) u64 exc[block_rows];
-        c.exceptions[b]->read_unchecked(0, p.n, exc);
+        read_exceptions(p, exc);
         for (unsigned e = 0; e < p.n; ++e)
             t += static_cast<i128>(p.lo) + exc[e];
         return static_cast<u128>(t);
     }
     case kind::runs:
-        c.decoders[b].read_unchecked(0, d.count, buffer);
+        read_plane(c, b, 0, d.count, buffer);
         each_run(c, b, [&](unsigned rank, unsigned size) {
             total += static_cast<u128>(buffer[rank] + d.base) * size;
         });
@@ -482,7 +533,7 @@ template <class L> u128 coded_sum(const column &c, std::size_t b, L &&lookup) {
     alignas(64) u64 buffer[block_rows];
     u128 total = rows_min;
     if (d.type == kind::runs) {
-        c.decoders[b].read_unchecked(0, d.count, buffer);
+        read_plane(c, b, 0, d.count, buffer);
         each_run(c, b, [&](unsigned rank, unsigned size) {
             total += static_cast<u128>(lookup(d.base + buffer[rank])) * size;
         });
@@ -504,8 +555,8 @@ template <class L> u128 coded_sum(const column &c, std::size_t b, L &&lookup) {
 inline u128 block_sum(const column &c, std::size_t b) {
     if (!is_coded(c, b))
         return stored_sum(c, b);
-    const auto &dictionary = *c.dictionaries[b / part_blocks];
-    return coded_sum(c, b, [&](u64 code) { return dictionary.get_unchecked(code); });
+    const std::size_t part = b / part_blocks;
+    return coded_sum(c, b, [&](u64 code) { return dictionary_at(c, part, code); });
 }
 
 // Mask SUM over coded blocks: blocks arrive in ascending order, so the current
@@ -522,7 +573,7 @@ struct code_sum {
         if (b / part_blocks != part) {
             part = b / part_blocks;
             values.resize(c.parts[part].count);
-            c.dictionaries[part]->read_unchecked(0, values.size(), values.data());
+            read_dictionary(c, part, 0, values.size(), values.data());
         }
         return coded_sum(c, b, [&](u64 code) { return values[code]; });
     }
@@ -540,10 +591,10 @@ inline u128 encoded_sum(const column &c, const block_mask &mask) {
 
 // The same SUM, decoding packed blocks into their narrowest lane and reducing
 // there before one widening add per block (Calico's split-arithmetic idea).
-template <class T, class A>
-A narrow_block_sum(const sp::decoder<T> &decoder) {
+template <class A, class T>
+A narrow_block_sum(lane_range<T> range, const std::uint8_t *plane) {
     alignas(64) T buffer[block_rows];
-    decoder.read_unchecked(0, block_rows, buffer);
+    range(plane, 0, block_rows, buffer);
     A s = 0;
     for (std::size_t i = 0; i < block_rows; ++i)
         s += buffer[i];
@@ -564,12 +615,13 @@ inline u128 encoded_sum_narrow(const column &c, const block_mask &mask) {
             return;
         }
         total += static_cast<u128>(d.base) * block_rows;
-        if (c.d8[b])
-            total += narrow_block_sum<std::uint8_t, std::uint32_t>(*c.d8[b]);
-        else if (c.d16[b])
-            total += narrow_block_sum<std::uint16_t, std::uint32_t>(*c.d16[b]);
-        else if (c.d32[b])
-            total += narrow_block_sum<std::uint32_t, u64>(*c.d32[b]);
+        const auto &ops = plane_kernels(d.width);
+        if (ops.range8)
+            total += narrow_block_sum<std::uint32_t>(ops.range8, body_of(c, b));
+        else if (ops.range16)
+            total += narrow_block_sum<std::uint32_t>(ops.range16, body_of(c, b));
+        else if (ops.range32)
+            total += narrow_block_sum<u64>(ops.range32, body_of(c, b));
         else
             total += stored_sum(c, b) - static_cast<u128>(d.base) * block_rows;
     });
@@ -592,7 +644,7 @@ inline u64 stored_count_ge(const column &c, std::size_t b, u64 threshold) {
         case kind::constant:
             return 0;
         case kind::delta: {
-            c.decoders[b].read_unchecked(0, block_rows, buffer);
+            read_plane(c, b, 0, block_rows, buffer);
             i64 rbase;
             std::memcpy(&rbase, c.payload.data() + d.offset + plane_bytes(d.width, block_rows), 8);
             u64 x = d.base;
@@ -613,7 +665,7 @@ inline u64 stored_count_ge(const column &c, std::size_t b, u64 threshold) {
             // Exceptions can lie below the base, so no whole-block shortcut.
             const auto p = patches(c, b);
             alignas(64) u64 exc[block_rows];
-            c.exceptions[b]->read_unchecked(0, p.n, exc);
+            read_exceptions(p, exc);
             for (unsigned e = 0; e < p.n; ++e)
                 total += p.lo + exc[e] >= threshold;
             if (d.base >= threshold)
@@ -621,7 +673,7 @@ inline u64 stored_count_ge(const column &c, std::size_t b, u64 threshold) {
             const u64 rhs = threshold - d.base;
             if (d.width < 64 && rhs >> d.width)
                 return total;
-            c.decoders[b].read_unchecked(0, block_rows, buffer);
+            read_plane(c, b, 0, block_rows, buffer);
             u64 inliers = 0;
             for (std::size_t i = 0; i < block_rows; ++i)
                 inliers += buffer[i] >= rhs;
@@ -633,14 +685,14 @@ inline u64 stored_count_ge(const column &c, std::size_t b, u64 threshold) {
             const u64 rhs = threshold - d.base;
             if (d.width < 64 && rhs >> d.width)
                 return 0;  // the threshold exceeds every representable residual
-            c.decoders[b].read_unchecked(0, block_rows, buffer);
+            read_plane(c, b, 0, block_rows, buffer);
             for (std::size_t i = 0; i < block_rows; ++i)
                 total += buffer[i] >= rhs;
             break;
         }
         case kind::runs: {
             const u64 rhs = threshold - d.base;
-            c.decoders[b].read_unchecked(0, d.count, buffer);
+            read_plane(c, b, 0, d.count, buffer);
             each_run(c, b, [&](unsigned rank, unsigned size) {
                 if (buffer[rank] >= rhs)
                     total += size;
@@ -680,7 +732,6 @@ struct code_count {
             return;
         ready[part] = 1;
         const auto &p = c.parts[part];
-        const auto &dictionary = *c.dictionaries[part];
         if (c.options.dictionary == dictionary_order::sorted) {
             if (threshold <= p.min)
                 return;  // code_threshold 0: every code counts
@@ -688,7 +739,7 @@ struct code_count {
             u64 lo = 0, hi = p.count;
             while (lo < hi) {
                 const u64 mid = lo + (hi - lo) / 2;
-                if (dictionary.get_unchecked(mid) < rhs)
+                if (dictionary_at(c, part, mid) < rhs)
                     lo = mid + 1;
                 else
                     hi = mid;
@@ -701,7 +752,7 @@ struct code_count {
         alignas(64) u64 buffer[block_rows];
         for (u64 first = 0; first < p.count; first += block_rows) {
             const u64 n = std::min<u64>(block_rows, p.count - first);
-            dictionary.read_unchecked(first, n, buffer);
+            read_dictionary(c, part, first, n, buffer);
             for (u64 i = 0; i < n; ++i)
                 if (p.min + buffer[i] >= threshold)  // no overflow: at most the part maximum
                     t[(first + i) / 64] |= u64{1} << ((first + i) % 64);
@@ -724,7 +775,7 @@ struct code_count {
         alignas(64) u64 buffer[block_rows];
         u64 total = 0;
         if (d.type == kind::runs) {
-            c.decoders[b].read_unchecked(0, d.count, buffer);
+            read_plane(c, b, 0, d.count, buffer);
             each_run(c, b, [&](unsigned rank, unsigned size) {
                 if (holds(part, d.base + buffer[rank]))
                     total += size;
@@ -758,12 +809,10 @@ inline u64 encoded_count_ge(const column &c, const block_mask &mask, u64 thresho
     return total;
 }
 
-// Catalogue arms: the same SUM and COUNT over packed blocks, deriving each
-// plane from the column payload and the descriptor alone (no per-block decoder
-// binding), with native packet reduction for SUM and SeriesPack filters for
-// COUNT. Other kinds use the owner operations above. These require the body to
-// live in c.payload, so they are measured separately until every consumer
-// places bodies that way.
+// Catalogue arms: the same SUM and COUNT, but packed blocks take the
+// catalogue's native packet SUM (full window over their 256-row plane) and
+// SeriesPack filters for COUNT instead of a range decode. Other kinds use the
+// owner operations above, which read the same catalogue.
 inline u128 catalogue_sum(const column &c, const block_mask &mask) {
     u128 total = 0;
     code_sum codes(c);
