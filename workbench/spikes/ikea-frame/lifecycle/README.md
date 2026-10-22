@@ -248,3 +248,7 @@ Current findings: [sparse proof, native coalescing and NULL-aware reads](REPAIR.
 copy-grain limitations. Sources and hardware conditions differ across these
 cohorts; their paired controls, rather than cross-cohort subtraction, own the
 comparisons.
+
+The [batch follow-up](BATCH.md) charges sorting/indexing and linear override
+merging. Dispersed override writes improve; repeated-hot edits and sparse block
+indexing do not justify a universal replacement. Fold debt remains explicit.

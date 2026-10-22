@@ -1,0 +1,10 @@
+{
+  "batch": "4830001 batch checks pass: ordered duplicates, masks/groups/blocks, immutable originals, exact removal, bounded base reads and protected none.",
+  "indexed": "indexed-sparse-repair: 328160 checks pass: four CP modes, raw/sorted/frequency, NULL-only reuse, original masks, repeated edits, retained neighbours/dictionaries and old readers.",
+  "owners": "984480 native batch checks pass: all CP/dictionaries, ordered assignments, immutable-base reuse, masked/old/folded readers and genuine successor publication.",
+  "sparse-control": "sparse-repair-or-fold: 328160 checks pass: four CP modes, raw/sorted/frequency, NULL-only reuse, original masks, repeated edits, retained neighbours/dictionaries and old readers.",
+  "native-control": "Native coalescing passes: latest assignment, no-op publication, no transient widening, flags-only reuse and old reader.",
+  "timed_histories": 32768,
+  "verification_histories": 20480,
+  "original_point_comparisons": 127926272
+}

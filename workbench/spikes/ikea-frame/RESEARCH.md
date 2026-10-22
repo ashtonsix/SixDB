@@ -173,3 +173,7 @@ fitting proof, rebuild work, physical NULL policy and source morphology. Sparse
 writes improve materially; row-selected reads win the mixed EventTime witness,
 while native remains ahead on its all-valid form. Stronger native coalescing and
 losing cases remain explicit controls.
+
+The [batch-program comparison](lifecycle/BATCH.md) preserves equal physical work
+while changing command organisation. Batch scans do not explain the principal
+sparse-writer gap here; linear override merging remains a conditional alternative.

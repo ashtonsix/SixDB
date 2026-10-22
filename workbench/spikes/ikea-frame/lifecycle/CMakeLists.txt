@@ -24,3 +24,6 @@ target_link_libraries(frame_phase_repair_check PRIVATE frame_phase_plane frame_p
 add_executable(frame_phase_profile phase_profile.cpp)
 sixdb_target(frame_phase_profile)
 target_link_libraries(frame_phase_profile PRIVATE frame_encoding_material)
+add_executable(frame_phase_batch_check phase_batch_check.cpp)
+sixdb_target(frame_phase_batch_check)
+target_link_libraries(frame_phase_batch_check PRIVATE frame_phase_material frame_execution_material_owner)

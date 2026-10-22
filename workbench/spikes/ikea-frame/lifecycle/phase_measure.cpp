@@ -2,6 +2,7 @@
 #include "phase_construction.h"
 #include "phase_owner.h"
 #include "phase_repair.h"
+#include "phase_batch.h"
 #include "../measure_order.h"
 #include <fstream>
 #include <functional>
@@ -18,7 +19,7 @@ std::uint64_t ns(Clock::time_point t) {
     return std::chrono::duration_cast<std::chrono::nanoseconds>(Clock::now() - t).count();
 }
 template<class T> T load(const std::byte* s) { T x; std::memcpy(&x, s, sizeof x); return x; }
-struct Edit { unsigned row; p::LogicalRow next; };
+using p::Edit;
 using Data = std::array<p::GroupData, p::groups>;
 p::QueryResult expected(const Data& d, p::BlockSelection mask, p::u64 threshold) {
     p::QueryResult r;
@@ -38,7 +39,8 @@ struct Costs {
     std::array<std::size_t,7> dirty_kinds{};
     std::array<std::size_t,9> repair_reasons{};
 };
-enum class Policy { native_raw, native_for, reencode, overlay, overlay_fold, thaw, block_fold, repair_fold, sparse_repair, native_coalesced };
+enum class Policy { native_raw, native_for, reencode, overlay, overlay_fold, thaw, block_fold, repair_fold, sparse_repair, native_coalesced,
+    sparse_indexed, overlay_batch, overlay_batch_fold };
 const char* name(Policy policy) {
     switch (policy) {
     case Policy::native_raw:return "native-raw64"; case Policy::native_for:return "native-for";
@@ -48,6 +50,9 @@ const char* name(Policy policy) {
     case Policy::repair_fold:return "repair-or-block-fold";
     case Policy::sparse_repair:return "sparse-repair-or-fold";
     case Policy::native_coalesced:return "native-for-coalesced";
+    case Policy::sparse_indexed:return "indexed-sparse-repair";
+    case Policy::overlay_batch:return "batch-overrides-debt";
+    case Policy::overlay_batch_fold:return "batch-overrides-fold";
     }
     std::abort();
 }
@@ -246,7 +251,7 @@ template<class C> struct Machine {
         h.identity = p::fresh_identity();
     }
     void fold_blocks(C& c, Fresh& f, Selection source, unsigned g, std::span<const Edit> edits,
-                     p::BlockSelection mask) {
+                     p::BlockSelection mask,const p::IndexedBatch* batch=nullptr) {
         if constexpr (!std::is_same_v<Group, p::EncodedBase>) std::abort();
         else {
             const auto& old = source.realization->control.group[g]; auto& out = c.group[g];
@@ -267,8 +272,9 @@ template<class C> struct Machine {
                 std::memcpy(changed_flags.data() + p::flag_bytes + b * 32, valid.data(), 32);
             };
             for (unsigned b = 0; b < p::blocks_per_group; ++b) {
+                const auto block_edits=batch?batch->block(g*p::blocks_per_group+b):edits;
                 bool dirty = false;
-                for (const auto& e : edits) dirty |= e.row / 256 == g * p::blocks_per_group + b && mask.row(e.row);
+                for (const auto& e : block_edits) dirty |= e.row / 256 == g * p::blocks_per_group + b && mask.row(e.row);
                 if (!dirty) continue;
                 ++costs.dirty_kinds[unsigned(old.blocks[b].type)];
                 costs.eligible_dirty_blocks+=!(old.coded>>b&1) &&
@@ -278,16 +284,16 @@ template<class C> struct Machine {
                 std::memcpy(valid.data(), flags.data + p::flag_bytes + b * 32, 32);
                 const auto old_present = present, old_valid = valid;
                 p::BlockAssignments assignments;
-                for (const auto& e : edits) if (e.row / 256 == g * p::blocks_per_group + b && mask.row(e.row)) {
+                for (const auto& e : block_edits) if (e.row / 256 == g * p::blocks_per_group + b && mask.row(e.row)) {
                     const auto row = e.row % 256, word = row / 64; const auto bit = p::u64{1} << (row % 64);
                     present[word] = (present[word] & ~bit) | (e.next.present ? bit : 0);
                     valid[word] = (valid[word] & ~bit) | (e.next.contributes() ? bit : 0);
-                    if (policy==Policy::sparse_repair) {
+                    if (policy==Policy::sparse_repair || policy==Policy::sparse_indexed) {
                         if (e.next.contributes()) assignments.set(row,e.next.value);
                         else assignments.clear(row);
                     }
                 }
-                if (policy==Policy::sparse_repair) {
+                if (policy==Policy::sparse_repair || policy==Policy::sparse_indexed) {
                     p::BlockRepair planned;
                     const bool fits=p::plan_sparse_repair(p::borrow(old,body,b),assignments,planned);
                     ++costs.repair_reasons[unsigned(planned.reason)];costs.repair_examined_rows+=planned.examined_positions;
@@ -315,7 +321,7 @@ template<class C> struct Machine {
                 std::array<p::u64, 256> before, after;
                 costs.write_materialized_rows+=256;
                 p::fe::decode_block(p::borrow(old, body, b), before.data()); after = before;
-                for (const auto& e : edits) if (e.row / 256 == g * p::blocks_per_group + b && mask.row(e.row) && e.next.contributes())
+                for (const auto& e : block_edits) if (e.row / 256 == g * p::blocks_per_group + b && mask.row(e.row) && e.next.contributes())
                     after[e.row%256]=e.next.value;
                 p::summarize_block(out.header, b, after, present, valid);
                 commit_flags(b,present,valid,old_present,old_valid);
@@ -368,6 +374,9 @@ template<class C> struct Machine {
         const auto t = Clock::now();
         typename Store::Scope scope(store); const auto source = selected(scope);
         auto c = source.realization->control; Fresh f;
+        std::optional<p::IndexedBatch> indexed;
+        if (policy==Policy::sparse_indexed || policy==Policy::overlay_batch || policy==Policy::overlay_batch_fold)
+            indexed.emplace(edits,mask);
         std::vector<Edit> coalesced;
         if (policy==Policy::native_coalesced) {
             // Sorting and allocation are charged. Original ordinal breaks ties
@@ -395,7 +404,12 @@ template<class C> struct Machine {
             if (!dirty) continue; changed = true;
             if constexpr (Group::parts == 3) {
                 auto& group = c.group[g]; const auto& b = group.frozen;
-                auto entries = overlays(group.changes, part(source, g * Group::parts + 2));
+                std::vector<p::OverrideRow> entries;
+                if (indexed) entries=p::merge_overrides(group.changes,part(source,g*Group::parts+2),
+                    indexed->group(g),g*p::rows_per_group,indexed->distinct[g],
+                    [&](unsigned row){return p::point(b,part(source,g*Group::parts),part(source,g*Group::parts+1),row);});
+                else {
+                entries = overlays(group.changes, part(source, g * Group::parts + 2));
                 for (const auto& e : edits) if (e.row / p::rows_per_group == g && mask.row(e.row)) {
                     const auto row = e.row % p::rows_per_group;
                     const auto it = std::lower_bound(entries.begin(), entries.end(), row,
@@ -410,12 +424,14 @@ template<class C> struct Machine {
                     return p::flags(e.original) == p::flags(e.current) &&
                         (!e.original.contributes() || e.original.value == e.current.value);
                 });
+                }
                 group.changes.count = entries.size();
                 auto bytes = allocate(f, c, g * Group::parts + 2, p::Overlay::bytes(entries.size()));
                 p::copy_overlay(entries, bytes, group.changes.basis); costs.copied_bytes += bytes.size();
                 costs.overlay_entries = std::max(costs.overlay_entries, entries.size());
             } else if (p::base(c.group[g]).header.native_bytes) update_native(c, f, source, g, edits, mask);
-            else if (policy == Policy::block_fold || policy==Policy::repair_fold || policy==Policy::sparse_repair) fold_blocks(c, f, source, g, edits, mask);
+            else if (policy == Policy::block_fold || policy==Policy::repair_fold || policy==Policy::sparse_repair || policy==Policy::sparse_indexed)
+                fold_blocks(c, f, source, g, edits, mask,indexed?&*indexed:nullptr);
             else {
                 auto data = materialize(source, g);
                 for (const auto& e : edits) if (e.row / p::rows_per_group == g && mask.row(e.row))
@@ -517,7 +533,7 @@ void check_block_fold(Policy policy=Policy::block_fold) {
               require(machine.part(first,0).data==machine.part(next,0).data &&
                       machine.costs.copied_bytes-copied_before==p::flag_bytes*2,
                       "NULL-only block fold copied a value Part"); verify(now,current); }
-            if ((policy==Policy::repair_fold || policy==Policy::sparse_repair) && dictionary==p::fe::dictionary_order::none) {
+            if ((policy==Policy::repair_fold || policy==Policy::sparse_repair || policy==Policy::sparse_indexed) && dictionary==p::fe::dictionary_order::none) {
                 const unsigned row=3*256;
                 require(first.realization->control.group[0].blocks[3].type==p::fe::kind::delta,
                         "fitting native fixture lost its delta block");
@@ -588,6 +604,67 @@ void check_native_coalesced() {
     std::puts("Native coalescing passes: latest assignment, no-op publication, no transient widening, flags-only reuse and old reader.");
 }
 
+void check_batch_overrides() {
+    unsigned long long checks=0;
+    Data initial;
+    for (unsigned g=0;g<p::groups;++g) for (unsigned row=0;row<p::rows_per_group;++row)
+        initial[g].value[row]=(row/19)*7+g*1000;
+    for (unsigned cp=0;cp<4;++cp) for (auto dictionary:{p::fe::dictionary_order::none,
+            p::fe::dictionary_order::sorted,p::fe::dictionary_order::frequency}) {
+        Machine<p::OverlayLayout> m(Policy::overlay_batch,{.delta_checkpoints=p::fe::checkpoints(cp),
+            .dictionary=dictionary,.dictionary_every_part=dictionary!=p::fe::dictionary_order::none});
+        m.seed(initial);using Scope=Machine<p::OverlayLayout>::Store::Scope;
+        Scope old(m.store);const auto original=m.selected(old);auto current=initial;
+        const auto verify=[&](const Scope& scope,const Data& wanted) {
+            const auto source=m.selected(scope);
+            for (unsigned g=0;g<p::groups;++g) {
+                const auto& group=source.realization->control.group[g];
+                require(p::admit(group.frozen,m.part(source,g*3),m.part(source,g*3+1)) &&
+                    p::admit(group.changes,m.part(source,g*3+2)),"batch overlay lost source admission");
+            }
+            for (unsigned row=0;row<p::rows;++row) {
+                require(p::same_logical(m.point(source,row),wanted[row/p::rows_per_group].row(row%p::rows_per_group)),
+                    "native batch overlay differs from sequential assignment");++checks;
+            }
+            for (auto bits:{UINT32_MAX,0xaaaaaaaau,0x0000ffffu,0u}) for (auto rhs:{p::u64{0},p::u64{127},UINT64_MAX}) {
+                p::QueryCache cache(rhs);
+                require(m.query(source,{bits},rhs,cache)==expected(wanted,{bits},rhs),"native batch correction differs");++checks;
+            }
+        };
+        for (unsigned batch=0;batch<3;++batch) {
+            std::vector<Edit> edits;
+            const p::BlockSelection mask{batch==1?0xaaaaaaaau:UINT32_MAX};
+            for (unsigned i=0;i<193;++i) {
+                const unsigned row=(i*1021+batch*17)%p::rows;
+                auto next=initial[row/p::rows_per_group].row(row%p::rows_per_group);
+                next.value+=i%7;next.present=i%13!=0;next.valid=next.present && i%17!=0;
+                edits.push_back({row,next});
+            }
+            edits.push_back({17,{UINT64_MAX,true,true}});
+            edits.push_back({17,{0,true,false}});
+            edits.push_back({17,initial[0].row(17)}); // Remove a correction to the immutable base.
+            for (const auto& e:edits) if (mask.row(e.row)) current[e.row/p::rows_per_group].set(e.row%p::rows_per_group,e.next);
+            m.update(edits,mask);
+            {Scope now(m.store);const auto source=m.selected(now);verify(now,current);
+             for (unsigned g=0;g<p::groups;++g) for (unsigned field=0;field<2;++field)
+                 require(m.part(source,g*3+field).data==m.part(original,g*3+field).data,
+                     "batch correction copied the immutable base or its flags");}
+            verify(old,initial);
+        }
+        const auto pubs=m.costs.publications,copies=m.costs.copied_bytes;
+        const std::array excluded{Edit{0,{123,true,true}}};m.update(excluded,{0});
+        require(m.costs.publications==pubs && m.costs.copied_bytes==copies,"excluded batch published or copied");
+        m.convert(false,{});
+        Scope folded(m.store);const auto before=current;verify(folded,before);
+        const std::array next{Edit{17,{1234,true,true}},Edit{p::rows-1,{5678,true,true}}};
+        for (const auto& e:next) current[e.row/p::rows_per_group].set(e.row%p::rows_per_group,e.next);
+        m.update(next,{}); // A genuine next publication clones the folded alternative.
+        {Scope now(m.store);require(now.cut()==5,"fold/successor changed logical publication count");verify(now,current);}
+        verify(folded,before);verify(old,initial);
+    }
+    std::printf("%llu native batch checks pass: all CP/dictionaries, ordered assignments, immutable-base reuse, masked/old/folded readers and genuine successor publication.\n",checks);
+}
+
 template<class C> void run(Policy policy, const Data& initial, const Scenario& s, unsigned trial,
                            unsigned order, unsigned arm, bool keep_old, unsigned read_queries,
                            unsigned final_queries, bool verify_points, bool reference_queries, p::fe::encode_options options) {
@@ -639,7 +716,7 @@ template<class C> void run(Policy policy, const Data& initial, const Scenario& s
         const auto release = Clock::now(); m.store.drain(); const auto duration=ns(release);
         m.costs.release_ns += duration; m.costs.max_release_ns=std::max(m.costs.max_release_ns,duration);
     }
-    if (policy == Policy::overlay_fold || policy == Policy::thaw) transition(false);
+    if (policy == Policy::overlay_fold || policy == Policy::overlay_batch_fold || policy == Policy::thaw) transition(false);
     { Scope current(m.store); verify(current, answers.back(), final_queries);
       if (verify_points && !trial) all_points(current, s.snapshots.back()); }
     const auto release = Clock::now(); old.reset(); m.store.drain(); const auto duration=ns(release);
@@ -673,6 +750,8 @@ int main(int argc,char** argv) {
     if (argc==2 && std::string_view(argv[1])=="--check-native-coalesced") {check_native_coalesced();return 0;}
     if (argc==2 && std::string_view(argv[1])=="--check-block-fold") { check_block_fold(); return 0; }
     if (argc==2 && std::string_view(argv[1])=="--check-sparse-repair") { check_block_fold(Policy::sparse_repair); return 0; }
+    if (argc==2 && std::string_view(argv[1])=="--check-indexed-repair") { check_block_fold(Policy::sparse_indexed); return 0; }
+    if (argc==2 && std::string_view(argv[1])=="--check-batch-overrides") { check_batch_overrides(); return 0; }
     if (argc==2 && std::string_view(argv[1])=="--check-repair-fold") { check_block_fold(Policy::repair_fold); return 0; }
     require(argc >= 2 && argc <= 9, "usage: frame_phase_measure INPUT.u64 [trials=8] [queries_per_batch=8] [final_queries=64] [verify=0] [mixed|values-only] [bounded] [masked|reference]");
     Data initial;
@@ -693,7 +772,8 @@ int main(int argc,char** argv) {
     // Last two arms repeat the exact policy and native implementation.
     const std::array policies{Policy::native_raw,Policy::native_for,Policy::reencode,Policy::overlay,
         Policy::overlay_fold,Policy::thaw,Policy::block_fold,Policy::repair_fold,Policy::sparse_repair,
-        Policy::native_coalesced,Policy::native_for,Policy::overlay_fold};
+        Policy::native_coalesced,Policy::native_for,Policy::overlay_fold,Policy::sparse_indexed,
+        Policy::overlay_batch,Policy::overlay_batch_fold,Policy::overlay_batch};
     std::mt19937 order_random(1729);
     const unsigned arms = policies.size(), round = arms * (arms % 2 ? 2 : 1);
     const unsigned trials = (requested + round - 1) / round * round;
@@ -708,7 +788,8 @@ int main(int argc,char** argv) {
                     if (trial % round == 0) orders = frame_measure::balanced_round(arms,order_random);
                     for (unsigned pos = 0; pos < policies.size(); ++pos) {
                         const auto arm = orders[trial % round][pos]; const auto policy = policies[arm];
-                        if (policy == Policy::overlay || policy == Policy::overlay_fold)
+                        if (policy == Policy::overlay || policy == Policy::overlay_fold ||
+                            policy==Policy::overlay_batch || policy==Policy::overlay_batch_fold)
                             run<p::OverlayLayout>(policy,initial,s,trial,pos,arm,old,read_queries,final_queries,verification,reference_queries,{});
                         else if (policy == Policy::native_raw || policy == Policy::native_for || policy==Policy::native_coalesced)
                             run<p::NativeLayout>(policy,initial,s,trial,pos,arm,old,read_queries,final_queries,verification,reference_queries,{});
