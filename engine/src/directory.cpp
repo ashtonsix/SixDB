@@ -1,5 +1,5 @@
 #include <engine/directory.h>
-#include <ikea/boundlist.h>
+#include <ikea/intervals.h>
 #include <algorithm>
 #include <cstdio>
 #include <cstdlib>
@@ -31,7 +31,7 @@ template<class T> std::vector<T> typed(const std::byte* p,std::size_t n) {
   if(n) std::memcpy(out.data(),p,n*sizeof(T));
   return out;
 }
-// K-byte logical keys as a Boundlist endpoint domain.
+// K-byte logical keys as an Intervals endpoint domain.
 struct KeyRef {
   const std::uint8_t* bytes;
   unsigned width;
@@ -43,7 +43,7 @@ struct KeySource {
   unsigned size() const {return count;}
   KeyRef at(unsigned r) const {return {data+std::size_t(r)*width,width};}
 };
-namespace bl=ikea::boundlist;
+namespace bl=ikea::intervals;
 // Visits each row plane of two nodes pairwise with its width in elements per row.
 template<class To,class From,class F> void planes(To& to,const From& from,std::size_t k,F f) {
   f(to.prefix,from.prefix,1);f(to.min,from.min,k);f(to.max,from.max,k);f(to.dirent,from.dirent,1);
@@ -471,7 +471,7 @@ orbital::Result<void> Layer::build(std::span<const Entry> es) {
 
 // Reads.
 
-// Reads: every visit is one Scope::bind; ordered planes are Boundlist sources.
+// Reads: every visit is one Scope::bind; ordered planes are Intervals sources.
 // Row 0 of an interior node covers everything below row 1's separator.
 unsigned Layer::route(Selection o,std::uint32_t p) const {
   return bl::upper_bound(bl::direct_source<std::uint32_t>{plane<std::uint32_t>(o,1)+1,rows(o)-1},p);

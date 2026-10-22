@@ -27,7 +27,7 @@ basis version, and identical replacements publish nothing. Readers borrow
 Parts under their own `Store::Scope`.
 
 Ordered searches over separators, prefixes and fences use
-[Boundlist](../ikea/docs/boundlist/usage.md) endpoint searches; K-byte logical
+[Intervals](../ikea/docs/intervals/usage.md) endpoint searches; K-byte logical
 keys are a custom endpoint source. The directory owns its Orbital material: a
 Control whose Part extents follow from row count and key width. The [segment-directory spike](../workbench/spikes/segment-directory/README.md)
 holds the evidence, the rejected alternatives and the open questions. Those
@@ -37,7 +37,10 @@ a prefix-to-leaf hash.
 Build and run `engine_directory_check` with the [pinned toolchain](../BUILDING.md).
 It runs 40 layer shapes against an ordered oracle through real Objects. The
 shapes cover single and batched edits, draining and regrowth, readers holding
-older Scopes, no-op publication, and orphaned-Object detection.
+older Scopes, no-op publication, and orphaned-Object detection. Additional
+9/12/31/255-byte key cases differ only after the first eight bytes, with equal
+fences crossing node boundaries and an old Scope retaining the first duplicate
+after its deletion from the current version.
 
 Not yet settled: durable allocation of node names (a Layer counts in memory),
 direct-slot indexing for L0/L1, and timing the edit path with real callers.
