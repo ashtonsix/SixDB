@@ -705,7 +705,8 @@ Exact tail reads only the occupied 8-row tiles of the requested rows (SeriesPack
 dense range: 16-row native windows only inside the requested count, then scalar
 points within a tile). So it is the path for short planes: run values,
 exception planes, dictionaries and packed checkpoints. No owner operation uses
-the full-window `sum` on a short plane. Owner code doesn't read checkpoints.
+the full-window `sum` on a short plane. Owner scans don't read checkpoints;
+the point read `stored_at` does (see [Borrowed blocks](#borrowed-blocks)).
 
 **`encode_options::bind_decoders`** (default true; driver `--no-bindings`) keeps
 `column::decoders`, `d8`, `d16`, `d32`, `exceptions` and `dictionaries` for the
@@ -770,6 +771,124 @@ per-block decoder's.
   `dictionary_at`/`read_dictionary`. Point/'s `compact_image` already
   releases the vectors. filter/image.cpp, filter/measure.cpp and
   execution/encoded.cpp still read `decoders` directly.
+
+## Borrowed blocks
+
+Engine's [material witness](../execution/MATERIAL.md#the-smallest-useful-encoding-owner-capability)
+needs to read a block whose bytes live in another allocation, such as an Orbital
+Part. Every owner operation in [`material.h`](material.h) now has one body over
+`borrowed_block`: a descriptor (its offset is ignored), a body pointer and grant,
+the image's checkpoint option, the original-coordinate row count (256 for every
+kind) and, when coded, a `dictionary_view`. Column operations are thin wrappers
+through `borrow(c, b)`, so the code path is shared and codecs aren't cloned. The
+operations are point (`stored_at`, `value_at`), `decode_stored`/`decode_block`,
+exact u128 stored and logical SUM, narrow SUM, COUNT(≥ t) and the catalogue arms.
+Stored-domain operations read values, or codes if coded, and never the
+dictionary. Logical operations map codes through it. Code at 39810ad0.
+
+**Extents** are reported by the owner (`extent_of`), never inferred from the next
+offset. K is the descriptor width, n and W the patch tail's count and value
+width, and CP is `checkpoint_cost(mode, K)`:
+
+| Kind | Body bytes | Scan grant (decode, SUM, COUNT) |
+| --- | --- | --- |
+| constant | 0 | 0 |
+| runs | `plane_bytes(K, count)` + count u8 ends | body |
+| packed | 32K | body |
+| delta | 32K + 8 (rbase) + CP | 32K + 8: checkpoints serve points only |
+| patched | 32K + 10 (lo, n, W) + n + `plane_bytes(W, n)` | body |
+| delta_patched | 32K + 8 + CP + 10 + n + `plane_bytes(W, n)` | body |
+| coded block | its kind's body over codes; dictionary `plane_bytes(width, count)` separately | same |
+
+CP is 15 × 4 or 15 × 8 (native), `plane_bytes(K + 8, 15)` (packed, else 15 × 8),
+3 marks at native width (every64) or 0. `delta_exceptions` doesn't enter: it only
+decides whether delta_patched occurs. The variable tails depend on bytes in the
+body. A bounded staged parse proves the fixed prefix fits the span, reads n and W
+from its last two bytes (n ≥ 1, 1 ≤ W ≤ 64), and then proves the positions and
+tile-rounded exception plane fit. `admits` also checks ascending positions, and
+the dictionary's width, count, order and plane against its own grant. On every
+block of every input below, the extent equals the gap to the next body, or to the
+next part's dictionary plane. Each dictionary ends exactly where its part's first
+body begins, so all payload bytes are accounted for. Nothing in a body depends on
+side material elsewhere in the payload.
+
+**Grant finding.** `read_grant_bytes` equals the body extent for every kind and
+operation. Nothing reads past it or before the body start, including every
+point, and no padding is needed. Short planes (run values, exception values,
+packed checkpoints, dictionaries) are read exact tail. Full-window reads only
+touch full 256-row planes. The extent is sufficient but not always necessary.
+Local tiles store a row's body bytes row by row, so a partially occupied final
+tile leaves its unoccupied rows' bytes unread. With the last byte withheld, 7–22%
+of sampled patched, delta_patched and packed-checkpoint delta bodies still read
+correctly, as did 204 of 527 dictionaries. Delta checkpoints are read only by
+point reads, hence the separate scan grant. No alignment is required: current
+bodies start at any byte, and every start residue mod 8 was exercised (aarch64).
+
+**What a consumer constructs.** Engine or a point consumer retains, pointer-free,
+the 16-byte descriptor, the checkpoint option and the row count. For a coded block
+it also retains the part's `min`, `count`, `width`, order (sorted or frequency) and
+an edition id. At attach time it resolves its own spans into `body`/`grant` and
+`dictionary.plane`/`grant`, calls `admits` once, then calls the operations. The
+view owns nothing. A coded block must be read with the dictionary edition it was
+coded against. `code_sum` and `code_count` cache a decoded dictionary or
+translated threshold per edition, which `borrow` sets to the part index. Coarse
+masks skip a block before any body or header parse. A selected coded block reads
+only its own part's dictionary; others can stay unreadable.
+
+**Verification.** `frame_encoding_borrowed_check NAME FILE.u64 [options]` encodes
+a column and copies every block's body into an mmap region. It runs four
+placements: the grant ending at a `PROT_NONE` page, starting right after one,
+and starting 1 or 3 bytes after one. The coded block's dictionary plane alone is
+copied the same way. Every borrowed operation is compared with the input
+values: every point (sampled in the unaligned placements), decode, SUM, narrow
+SUM, catalogue SUM and COUNT at block and column thresholds. For coded blocks,
+codes are derived independently from the input by the sorted and frequency
+laws. Column wrappers must equal the borrowed results, and mask aggregates must
+equal the input.
+
+Injected faults run in forked children, eight blocks per class and
+configuration. A body starting one byte inside a guard must fault. So must a
+body ending one byte short when it ends in a full plane, run ends or fixed delta
+fields. Per-operation fault outcomes are recorded.
+
+Inputs were OS, RegionID, URLHash, EventTime, WatchID, UserID and all 28 Jena
+window-0 and fault files. The nine option sets were default, sorted, frequency,
+packed + delta exceptions, packed + delta exceptions + frequency, none,
+none + delta exceptions, every64, and every64 + delta exceptions + sorted.
+There were 306 runs and 665,154 blocks (125,905 coded), giving 2.66M borrowed
+block checks, 14,241 scan-grant checks and 7,996 injected faults; all pass. The
+script is `build/spikes/ikea-frame/borrowed/check.sh`. The rebuilt
+`frame_encoding_bodies` matches the frozen `catalogue-owner/bodies_after` on
+all 11,232 non-timing values. That covers all 117 run.sh configurations, with and
+without bindings (`borrowed/compare.sh`). `frame_encoding_masked_access_check`
+passes.
+
+**Timings.** Paired rotated runs compared the frozen `bodies_after` with the new
+driver, `--no-bindings`, over 15 rounds. Local VM medians are in µs, all-block
+mask, old / new:
+
+| Column | encoded SUM | narrow SUM | encoded COUNT |
+| --- | --- | --- | --- |
+| OS | 535 / 530 | 543 / 544 | 429 / 435 |
+| EventTime | 880 / 883 | 637 / 631 | 654 / 657 |
+| URLHash | 1,412 / 1,432 | 1,426 / 1,422 | 804 / 825 |
+| WatchID | 1,957 / 1,963 | 1,994 / 1,981 | 1,164 / 1,165 |
+| Jena window 0, packed + delta exceptions (14 fields, sum) | 319 / 319 | 292 / 292 | 599 / 600 |
+
+Geometric-mean new/old ratios over all rounds and inputs were 1.001 for SUM,
+0.997 for narrow SUM, 1.011 for COUNT, 1.009 for catalogue SUM and 1.002 for
+catalogue COUNT. On the sparse-10% mask they were 1.008, 1.002, 1.026, 1.011 and
+1.021. SUM is unchanged. COUNT is 1–3% slower, consistently but within this VM's
+single-cell noise. The out-of-line `stored_count_ge` now takes a materialized
+view instead of `(c, b)`; `borrow` no longer zero-fills an uncoded view's
+dictionary. A cleaner measurement belongs on a quiet worker.
+
+**Remaining.** The column wrappers still go through `column`. A borrowed mask
+aggregate needs only a block-visit adapter over Engine's own selection, because
+`code_sum`/`code_count` already key on the edition. The consumers in point/,
+filter/ and execution/ are unchanged and still compile. They can move to
+`borrowed_block` as their owners choose. Engine's witness can use `admits` plus
+these operations for any kind, rather than its direct packed-FOR catalogue reads.
 
 ## Row order in real bodies
 
