@@ -130,6 +130,12 @@ expected expect(const u64 *values, const u64 *stored, u64 column_median) {
         slo = std::min(slo, stored[i]), shi = std::max(shi, stored[i]);
     }
     e.thresholds = {0, lo, values[100], values[255], hi, column_median};
+    // Rows either side of checkpoint spacings, for the non-decreasing delta
+    // COUNT's search, and one past a value (a strict step).
+    for (unsigned row : {1u, 15u, 16u, 17u, 63u, 64u, 65u, 129u, 240u, 254u})
+        e.thresholds.push_back(values[row]);
+    if (values[64] < UINT64_MAX)
+        e.thresholds.push_back(values[64] + 1);
     if (hi < UINT64_MAX)
         e.thresholds.push_back(hi + 1);
     if (lo)
@@ -360,7 +366,8 @@ int main(int argc, char **argv) {
                 stored_at(in_place, 77) != stored_at(k, 77))
                 fail("column wrapper differs from the borrowed result", b);
             // A delta body granted only its scan prefix, ending at the guard:
-            // decode, SUM and COUNT must not need the checkpoints.
+            // decode, SUM and the rbase < 0 COUNT must not need the
+            // checkpoints (a non-decreasing block's COUNT searches them).
             const auto x = *extent_of(in_place.d, mode, in_place.body, in_place.grant);
             if (where.at_end && x.scan_grant_bytes < x.read_grant_bytes) {
                 borrowed_block scan = k;
@@ -372,7 +379,8 @@ int main(int argc, char **argv) {
                     fail("scan grant SUM/decode", b);
                 for (u64 t : e.thresholds) {
                     code_count codes(t);
-                    if (block_count_ge(scan, t) != e.count(t) || catalogue_block_count_ge(codes, scan) != e.count(t))
+                    if (delta_rbase(scan) < 0 &&
+                        (block_count_ge(scan, t) != e.count(t) || catalogue_block_count_ge(codes, scan) != e.count(t)))
                         fail("scan grant COUNT", b);
                 }
                 ++scan_checked;

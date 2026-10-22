@@ -261,9 +261,10 @@ struct block_extent {
     // leave its unoccupied rows' bytes unread. borrowed_check establishes it
     // with guard pages on both sides.
     std::size_t read_grant_bytes;
-    // The prefix that decode, SUM and COUNT touch: a delta block's
-    // checkpoints serve point reads only, so its scans need plane + rbase.
-    // read_grant_bytes for every other kind.
+    // The prefix that decode and SUM touch: a delta block's checkpoints serve
+    // point reads and the non-decreasing (rbase >= 0) COUNT's binary search
+    // only, so those scans need plane + rbase. read_grant_bytes for every
+    // other kind.
     std::size_t scan_grant_bytes;
 };
 
@@ -790,6 +791,36 @@ inline u128 encoded_sum_narrow(const column &c, const block_mask &mask) {
 }
 
 // Exact COUNT(stored >= threshold) within one block (values, or codes if coded).
+// Residuals are non-negative, so a delta block with rbase >= 0 is
+// non-decreasing: COUNT(x >= t) is 256 minus the first row reaching t. Probe
+// the checkpoint rows by binary search (each is one checkpoint plus one
+// residual), then scan one checkpoint interval forward.
+inline u64 monotone_delta_count_ge(const borrowed_block &k, i64 rbase, u64 threshold) {
+    if (k.d.base >= threshold)
+        return block_rows;
+    const unsigned spacing = k.delta_checkpoints == checkpoints::every64 ? 64 : 16;
+    // First checkpoint index j in [1, 256 / spacing) with x(j * spacing) >= t,
+    // or 256 / spacing when none reaches it.
+    unsigned lo = 1, hi = block_rows / spacing;
+    while (lo < hi) {
+        const unsigned mid = (lo + hi) / 2;
+        if (stored_at(k, mid * spacing) >= threshold)
+            hi = mid;
+        else
+            lo = mid + 1;
+    }
+    const unsigned first = (lo - 1) * spacing, end = lo * spacing;
+    alignas(64) u64 s[64];
+    read_plane(k, first, end - first, s);
+    u64 x = first ? stored_at(k, first) : k.d.base;
+    for (unsigned i = first + 1; i < end; ++i) {
+        x += static_cast<u64>(rbase) + s[i - first];
+        if (x >= threshold)
+            return block_rows - i;
+    }
+    return block_rows - end;
+}
+
 inline u64 stored_count_ge(const borrowed_block &k, u64 threshold) {
     u64 total = 0;
     alignas(64) u64 buffer[block_rows];
@@ -804,8 +835,10 @@ inline u64 stored_count_ge(const borrowed_block &k, u64 threshold) {
     case kind::constant:
         return 0;
     case kind::delta: {
-        read_plane(k, 0, block_rows, buffer);
         const i64 rbase = delta_rbase(k);
+        if (rbase >= 0 && k.delta_checkpoints != checkpoints::none)
+            return monotone_delta_count_ge(k, rbase, threshold);
+        read_plane(k, 0, block_rows, buffer);
         u64 x = d.base;
         total += x >= threshold;
         for (std::size_t i = 1; i < block_rows; ++i) {
@@ -851,6 +884,8 @@ inline u64 stored_count_ge(const borrowed_block &k, u64 threshold) {
     }
     case kind::runs: {
         const u64 rhs = threshold - d.base;
+        if (d.width < 64 && rhs >> d.width)
+            return 0;  // as packed: above every representable run value
         read_plane(k, 0, d.count, buffer);
         each_run(k, [&](unsigned rank, unsigned size) {
             if (buffer[rank] >= rhs)

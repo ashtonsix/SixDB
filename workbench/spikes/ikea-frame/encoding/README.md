@@ -890,6 +890,43 @@ filter/ and execution/ are unchanged and still compile. They can move to
 `borrowed_block` as their owners choose. Engine's witness can use `admits` plus
 these operations for any kind, rather than its direct packed-FOR catalogue reads.
 
+## COUNT over non-decreasing delta blocks
+
+Residuals are non-negative, so a delta block with rbase >= 0 is
+non-decreasing. Its COUNT(x >= t) is 256 minus the first row that reaches t.
+`stored_count_ge` finds that row by binary search over the checkpoint rows,
+each probe being one checkpoint plus one residual, then scans one checkpoint
+interval. With no checkpoints it keeps the full scan. Runs gain the bound
+shortcut packed already had: a threshold above every representable run value
+returns 0 without decoding. As a result, COUNT on such a delta block reads its
+checkpoints, so its scan grant now covers only decode and SUM;
+`borrowed_check` exercises scan-grant COUNT only for rbase < 0. It also gained
+thresholds either side of each checkpoint spacing.
+
+EventTime, COUNT(x >= median), local VM, medians in µs over 3M rows. The
+"before" column is the frozen pre-change driver. Polars is single-threaded
+`(s >= t).sum()` from Python on the same order, so this is indicative only.
+
+| Order (dominant kinds) | Before | After | Polars |
+| --- | ---: | ---: | ---: |
+| Original (80% packed) | 639 | 638 | 995 |
+| By region, OS, time (73% delta) | 2,456 | 559 | 856 |
+| Sorted (all runs) | 205 | 39 | 704 |
+
+1. **Clustered time columns were COUNT's worst case, and are now its best
+   delta case.** Decoding the prefix of every delta block made the
+   time-clustered order 3.8× slower than the original and slower than Polars.
+   Now it is 4.4× faster than before and 1.5× faster than Polars.
+2. **Original-order EventTime is mostly packed, so it is unchanged.** Its
+   COUNT stays near the cost of scanning the plane. A 2× lead there needs
+   block evidence, such as Ikea LEAD's window bounds, not a codec change.
+3. **Equivalence holds.** The full guard-page check passes (306 runs). Across
+   all 117 driver configurations with and without bindings, the 10,296
+   non-timing values match the frozen driver. Paired timing on OS, EventTime,
+   URLHash, WatchID and Jena (packed and native checkpoints) shows a SUM and
+   COUNT geomean within 1.006 of the old code, apart from EventTime, which
+   has few monotone blocks in original order.
+
 ## Row order in real bodies
 
 The same 11 ClickBench columns were encoded as real bodies (default options,
