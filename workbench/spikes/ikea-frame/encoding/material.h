@@ -11,6 +11,7 @@
 #include <ikea/seriespack.h>
 
 #include "kernels.h"
+#include "packing.h"
 
 #include <algorithm>
 #include <bit>
@@ -86,14 +87,6 @@ static_assert(sizeof(descriptor) == 16);
 inline unsigned width_of(u64 span) {
     return span ? 64 - std::countl_zero(span) : 0;
 }
-
-inline std::size_t plane_bytes(unsigned k, std::size_t count) {
-    return (count + 7) / 8 * k;  // Local geometry: 8-row tiles of k bytes
-}
-
-// Encode values (already relative to the base) as a Local SeriesPack plane of
-// runtime width k, through the real typed mutation path.
-void pack(unsigned k, std::span<const u64> values, std::uint8_t *out);
 
 
 // Run ends stored as exclusive end minus one in u8 (0..255), projected into
