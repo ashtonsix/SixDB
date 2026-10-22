@@ -337,6 +337,30 @@ candidate emit_candidate(std::span<const u64> block, const encode_options &optio
     k.d = emit_block(block, options, k.payload);
     return k;
 }
+
+// The arrival body (material.h) of one block of arrival codes whose frontier
+// before the block is frontier.
+candidate emit_arrival(std::span<const u64> codes, u64 frontier) {
+    std::array<u64, 4> flags{};
+    std::vector<u64> back;
+    u64 at = frontier;
+    for (std::size_t i = 0; i < block_rows; ++i) {
+        if (codes[i] == at) {
+            flags[i / 64] |= u64{1} << (i % 64);
+            ++at;
+        } else {
+            back.push_back(at - 1 - codes[i]);  // codes[i] < at
+        }
+    }
+    const unsigned w = std::max(1u, width_of(back.empty() ? 0 : *std::max_element(back.begin(), back.end())));
+    candidate k;
+    k.d = {frontier, 0, static_cast<std::uint16_t>(back.size()), kind::arrival, static_cast<std::uint8_t>(w)};
+    k.payload.resize(arrival_flag_bytes + plane_bytes(w, back.size()));
+    std::memcpy(k.payload.data(), flags.data(), arrival_flag_bytes);
+    if (!back.empty())
+        pack(w, back, k.payload.data() + arrival_flag_bytes);
+    return k;
+}
 }  // namespace
 
 column encode(std::span<const u64> values, encode_options options) {
@@ -392,6 +416,15 @@ column encode(std::span<const u64> values, encode_options options) {
             });
             for (std::size_t r = 0; r < order.size(); ++r)
                 rank_of[order[r]] = static_cast<std::uint32_t>(r);
+        } else if (options.dictionary == dictionary_order::arrival) {
+            std::fill(rank_of.begin(), rank_of.end(), UINT32_MAX);
+            std::uint32_t next = 0;
+            for (u64 v : part) {
+                auto &r = rank_of[static_cast<std::size_t>(
+                    std::lower_bound(distinct.begin(), distinct.end(), v) - distinct.begin())];
+                if (r == UINT32_MAX)
+                    r = next++;
+            }
         }
         std::vector<u64> stored(distinct.size());  // dictionary in code order
         for (std::size_t i = 0; i < distinct.size(); ++i)
@@ -400,6 +433,7 @@ column encode(std::span<const u64> values, encode_options options) {
         const std::size_t dictionary_cost = plane_bytes(dw, stored.size());
         std::size_t without = 0, with = dictionary_cost;
         bool any = false;
+        u64 frontier = 0;  // arrival: entries introduced before block b
         for (std::size_t b = first; b < limit; ++b) {
             for (std::size_t i = 0; i < block_rows; ++i) {
                 const u64 v = values[b * block_rows + i];
@@ -407,6 +441,15 @@ column encode(std::span<const u64> values, encode_options options) {
                     std::lower_bound(distinct.begin(), distinct.end(), v) - distinct.begin())];
             }
             code_bodies.push_back(emit_candidate(codes, options));
+            if (options.dictionary == dictionary_order::arrival) {
+                // The frontier-relative body competes with the ordinary kinds
+                // over the same codes and wins only when strictly smaller.
+                auto arrival = emit_arrival(codes, frontier);
+                if (arrival.bytes() < code_bodies.back().bytes())
+                    code_bodies.back() = std::move(arrival);
+                for (u64 code : codes)
+                    frontier += code == frontier;
+            }
             const std::size_t v = plain_bodies[b - first].bytes(), k = code_bodies.back().bytes();
             without += v;
             with += std::min(v, k);
@@ -456,13 +499,15 @@ column encode(std::span<const u64> values, encode_options options) {
         c.d16.emplace_back();
         c.d32.emplace_back();
         c.exceptions.emplace_back();
-        if (d.type == kind::constant) {
+        if (d.type == kind::constant || (d.type == kind::arrival && !d.count)) {
             c.decoders.emplace_back(nullptr, 0, nullptr, nullptr, nullptr);
             continue;
         }
+        // An arrival block's plane (its references) follows the flags.
+        const std::size_t at = d.offset + (d.type == kind::arrival ? arrival_flag_bytes : 0);
         const sp::dense_input input{
             d.width, sp::geometry::local,
-            std::span<const std::uint8_t>(c.payload).subspan(d.offset, plane_bytes(d.width, d.count)),
+            std::span<const std::uint8_t>(c.payload).subspan(at, plane_bytes(d.width, d.count)),
             d.count};
         auto decoder = sp::bind_decoder<u64>(input);
         if (!decoder)
@@ -482,6 +527,8 @@ column encode(std::span<const u64> values, encode_options options) {
             c.exceptions.back() = *exc;
             continue;  // patched and delta_patched sums use the u64 decoder
         }
+        if (d.type == kind::arrival)
+            continue;
         if (d.width <= 8)
             c.d8.back() = *sp::bind_decoder<std::uint8_t>(input);
         else if (d.width <= 16)
@@ -494,7 +541,7 @@ column encode(std::span<const u64> values, encode_options options) {
 
 bool admits(const borrowed_block &k) {
     const auto &d = k.d;
-    if (k.rows != block_rows || static_cast<unsigned>(d.type) > static_cast<unsigned>(kind::delta_patched))
+    if (k.rows != block_rows || static_cast<unsigned>(d.type) > static_cast<unsigned>(kind::arrival))
         return false;
     if (d.type != kind::constant && !k.body)
         return false;
@@ -507,6 +554,11 @@ bool admits(const borrowed_block &k) {
             if (p.positions[e] <= p.positions[e - 1])
                 return false;
     }
+    if (d.type == kind::arrival &&
+        (!k.coded || k.dictionary.order != dictionary_order::arrival ||
+         arrival_literals(arrival_flags(k)) + d.count != block_rows ||
+         d.base + arrival_literals(arrival_flags(k)) > k.dictionary.count))
+        return false;
     if (!k.coded)
         return true;
     const auto &v = k.dictionary;
@@ -565,8 +617,69 @@ u64 stored_at(const borrowed_block &k, unsigned row) {
             sum += s[i];
         return d.base + static_cast<u64>(delta_rbase(k)) * steps + sum;
     }
+    case kind::arrival: {
+        // The frontier at row is F plus the flagged rows before it.
+        const auto w = arrival_flags(k);
+        const unsigned word = row / 64, bit = row % 64;
+        unsigned before = static_cast<unsigned>(std::popcount(w[word] & ((u64{1} << bit) - 1)));
+        for (unsigned i = 0; i < word; ++i)
+            before += static_cast<unsigned>(std::popcount(w[i]));
+        const u64 frontier = d.base + before;
+        if (w[word] >> bit & 1)
+            return frontier;
+        return frontier - 1 - plane_kernels(d.width).point(k.body + arrival_flag_bytes, row - before);
+    }
     }
     std::abort();
+}
+
+u64 stored_count_eq(const borrowed_block &k, u64 s) {
+    const auto &d = k.d;
+    alignas(64) u64 buffer[block_rows];
+    u64 total = 0;
+    switch (d.type) {
+    case kind::constant:
+        return d.base == s ? block_rows : 0;
+    case kind::packed:
+    case kind::runs: {
+        if (s < d.base)
+            return 0;
+        const u64 rhs = s - d.base;
+        if (d.width < 64 && rhs >> d.width)
+            return 0;
+        if (d.type == kind::packed) {
+            read_plane(k, 0, block_rows, buffer);
+            for (std::size_t i = 0; i < block_rows; ++i)
+                total += buffer[i] == rhs;
+            return total;
+        }
+        read_plane(k, 0, d.count, buffer);
+        each_run(k, [&](unsigned rank, unsigned size) {
+            if (buffer[rank] == rhs)
+                total += size;
+        });
+        return total;
+    }
+    case kind::arrival: {
+        // Every code of the block is below its final frontier; a code in
+        // [F, F + L) is introduced by exactly one literal row here.
+        const auto w = arrival_flags(k);
+        const u64 end = d.base + arrival_literals(w);
+        if (s >= end)
+            return 0;
+        total = s >= d.base;
+        each_arrival_reference(k, w, [&](unsigned, u64 code) { total += code == s; });
+        return total;
+    }
+    case kind::delta:
+    case kind::patched:
+    case kind::delta_patched:
+        break;
+    }
+    decode_stored(k, buffer);
+    for (std::size_t i = 0; i < block_rows; ++i)
+        total += buffer[i] == s;
+    return total;
 }
 
 void decode_stored(const borrowed_block &k, u64 *out) {
@@ -604,6 +717,9 @@ void decode_stored(const borrowed_block &k, u64 *out) {
     }
     case kind::delta_patched:
         decode_delta_patched(k, out);
+        return;
+    case kind::arrival:
+        decode_arrival(k, out);
         return;
     case kind::runs: {
         alignas(64) u64 values[block_rows];

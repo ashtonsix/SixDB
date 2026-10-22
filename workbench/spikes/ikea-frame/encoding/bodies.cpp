@@ -17,6 +17,7 @@
 #include <cstring>
 #include <fstream>
 #include <functional>
+#include <limits>
 #include <string>
 #include <vector>
 
@@ -62,6 +63,20 @@ u64 plain_count_ge(const plain<T> &p, const block_mask &mask, u64 threshold) {
     return total;
 }
 
+template <class T>
+u64 plain_count_eq(const plain<T> &p, const block_mask &mask, u64 value) {
+    if (value < p.base || value - p.base > std::numeric_limits<T>::max())
+        return 0;
+    const T rhs = static_cast<T>(value - p.base);
+    u64 total = 0;
+    for_each_block(mask, [&](std::size_t b) {
+        const T *v = p.values.data() + b * block_rows;
+        for (std::size_t i = 0; i < block_rows; ++i)
+            total += v[i] == rhs;
+    });
+    return total;
+}
+
 // Paired, rotated arms: every trial times each arm once, starting from a
 // different arm, so drift lands on all arms alike instead of on whichever arm
 // ran last. Raw whole-call nanoseconds are kept per arm.
@@ -97,6 +112,20 @@ std::string u128_text(u128 v) {
 }
 
 
+// Raw per-trial times in trial order, so paired ratios and drift can be
+// reconstructed; summary statistics are derived from them.
+void print_arms(const std::vector<arm> &arms) {
+    for (auto &a : arms) {
+        std::printf(",\"%s_ns\":{\"trials\":[", a.name);
+        for (std::size_t t = 0; t < a.ns.size(); ++t)
+            std::printf("%s%.0f", t ? "," : "", a.ns[t]);
+        auto sorted = a.ns;
+        std::sort(sorted.begin(), sorted.end());
+        std::printf("],\"min\":%.0f,\"median\":%.0f,\"max\":%.0f}", sorted.front(),
+                    sorted[sorted.size() / 2], sorted.back());
+    }
+}
+
 template <class T>
 void run(const char *name, std::span<const u64> values, u64 lo, u64 threshold,
          encode_options options) {
@@ -115,7 +144,7 @@ void run(const char *name, std::span<const u64> values, u64 lo, u64 threshold,
             }
         }
     }
-    std::size_t counts[6] = {}, coded_counts[6] = {};
+    std::size_t counts[7] = {}, coded_counts[7] = {};
     for (std::size_t b = 0; b < c.blocks.size(); ++b) {
         ++counts[static_cast<int>(c.blocks[b].type)];
         if (is_coded(c, b))
@@ -149,6 +178,32 @@ void run(const char *name, std::span<const u64> values, u64 lo, u64 threshold,
                 "\"patched\":%zu,\"delta_patched\":%zu}",
                 coded_counts[0], coded_counts[1], coded_counts[2], coded_counts[3], coded_counts[4],
                 coded_counts[5]);
+    if (c.options.dictionary == dictionary_order::arrival)
+        std::printf(",\"arrival\":%zu,\"coded_arrival\":%zu", counts[6], coded_counts[6]);
+    // Random point reads: 65,536 rows from a fixed LCG, the same rows for every
+    // arm and image of this input.
+    {
+        std::vector<std::uint32_t> rows(65536);
+        u64 x = 0x9e3779b97f4a7c15u;
+        for (auto &r : rows) {
+            x = x * 6364136223846793005u + 1442695040888963407u;
+            r = static_cast<std::uint32_t>((x >> 33) % c.rows);
+        }
+        for (auto r : rows)
+            if (value_at(c, r) != values[r]) {
+                std::fprintf(stderr, "%s: value_at mismatch at row %u\n", name, r);
+                std::exit(1);
+            }
+        std::vector<arm> arms{
+            {"encoded_point", [&] { u64 s = 0; for (auto r : rows) s += value_at(c, r); sink = s; }, {}},
+            {"plain_point", [&] { u64 s = 0; for (auto r : rows) s += p.values[r] + p.base; sink = s; }, {}}};
+        time_arms(arms);
+        std::printf(",\"points\":{\"reads\":%zu", rows.size());
+        print_arms(arms);
+        std::printf("}");
+    }
+    // Equality COUNT at the value of the middle row (present in the column).
+    const u64 equal = values[c.rows / 2];
     const std::size_t n = c.blocks.size();
     struct shape { const char *name; block_mask mask; };
     std::vector<shape> shapes{{"all", block_mask(n)}, {"clustered50", block_mask(n)},
@@ -174,6 +229,11 @@ void run(const char *name, std::span<const u64> values, u64 lo, u64 threshold,
             std::fprintf(stderr, "%s %s: encoded/plain mismatch\n", name, s.name);
             std::exit(1);
         }
+        const u64 eq = encoded_count_eq(c, s.mask, equal);
+        if (eq != plain_count_eq(p, s.mask, equal)) {
+            std::fprintf(stderr, "%s %s: equality COUNT mismatch\n", name, s.name);
+            std::exit(1);
+        }
         std::vector<arm> arms{
             {"encoded_sum", [&] { consume(encoded_sum(c, s.mask)); }, {}},
             {"encoded_narrow_sum", [&] { consume(encoded_sum_narrow(c, s.mask)); }, {}},
@@ -181,23 +241,16 @@ void run(const char *name, std::span<const u64> values, u64 lo, u64 threshold,
             {"catalogue_sum", [&] { consume(catalogue_sum(c, s.mask)); }, {}},
             {"encoded_count", [&] { sink = encoded_count_ge(c, s.mask, threshold); }, {}},
             {"catalogue_count", [&] { sink = catalogue_count_ge(c, s.mask, threshold); }, {}},
-            {"plain_count", [&] { sink = plain_count_ge(p, s.mask, threshold); }, {}}};
+            {"plain_count", [&] { sink = plain_count_ge(p, s.mask, threshold); }, {}},
+            {"encoded_count_eq", [&] { sink = encoded_count_eq(c, s.mask, equal); }, {}},
+            {"plain_count_eq", [&] { sink = plain_count_eq(p, s.mask, equal); }, {}}};
         time_arms(arms);
         std::printf(",\"%s\":{\"physical_rows\":%zu,\"selected_rows\":%zu,\"sum\":\"%s\","
                     "\"count_ge\":%llu",
                     s.name, c.rows, s.mask.popcount() * block_rows, u128_text(es).c_str(),
                     static_cast<unsigned long long>(ec));
-        for (auto &a : arms) {
-            // Raw per-trial times in trial order, so paired ratios and drift
-            // can be reconstructed; summary statistics are derived from them.
-            std::printf(",\"%s_ns\":{\"trials\":[", a.name);
-            for (std::size_t t = 0; t < a.ns.size(); ++t)
-                std::printf("%s%.0f", t ? "," : "", a.ns[t]);
-            auto sorted = a.ns;
-            std::sort(sorted.begin(), sorted.end());
-            std::printf("],\"min\":%.0f,\"median\":%.0f,\"max\":%.0f}", sorted.front(),
-                        sorted[sorted.size() / 2], sorted.back());
-        }
+        std::printf(",\"count_eq\":%llu", static_cast<unsigned long long>(eq));
+        print_arms(arms);
         std::printf("}");
     }
     std::printf("}\n");
@@ -210,7 +263,7 @@ int main(int argc, char **argv) {
     if (argc < 3) {
         std::fprintf(stderr, "usage: %s NAME FILE.u64 "
                      "[--checkpoints=native|packed|every64|none] [--delta-exceptions] "
-                     "[--dictionary=none|sorted|frequency] [--dictionary-every-part] "
+                     "[--dictionary=none|sorted|frequency|arrival] [--dictionary-every-part] "
                      "[--no-bindings]\n",
                      argv[0]);
         return 2;
@@ -225,6 +278,8 @@ int main(int argc, char **argv) {
             options.dictionary = dictionary_order::sorted;
         else if (std::strcmp(argv[i], "--dictionary=frequency") == 0)
             options.dictionary = dictionary_order::frequency;
+        else if (std::strcmp(argv[i], "--dictionary=arrival") == 0)
+            options.dictionary = dictionary_order::arrival;
         else if (std::strcmp(argv[i], "--dictionary-every-part") == 0)
             options.dictionary_every_part = true;
         else if (std::strcmp(argv[i], "--no-bindings") == 0)

@@ -74,7 +74,8 @@ std::uint8_t *place(const guarded &g, const placement &p, const std::uint8_t *sr
 // Stored values per block as the oracle sees them: the input, or for a coded
 // block its code, derived here from the input by the dictionary laws in
 // material.h (sorted: rank of the value among the part's distinct values;
-// frequency: rank by descending frequency, ties by ascending value).
+// frequency: rank by descending frequency, ties by ascending value; arrival:
+// order of first occurrence within the part).
 std::vector<u64> stored_oracle(const column &c, std::span<const u64> values) {
     std::vector<u64> stored(values.begin(), values.begin() + c.rows);
     if (c.options.dictionary == dictionary_order::none)
@@ -90,8 +91,13 @@ std::vector<u64> stored_oracle(const column &c, std::span<const u64> values) {
             std::stable_sort(order.begin(), order.end(),
                              [](auto a, auto b) { return a.second > b.second; });
         std::map<u64, u64> code;
-        for (std::size_t r = 0; r < order.size(); ++r)
-            code[order[r].first] = r;
+        if (c.options.dictionary == dictionary_order::arrival) {
+            for (std::size_t i = first * block_rows; i < limit * block_rows; ++i)
+                code.emplace(values[i], code.size());
+        } else {
+            for (std::size_t r = 0; r < order.size(); ++r)
+                code[order[r].first] = r;
+        }
         for (std::size_t b = first; b < limit; ++b)
             if (is_coded(c, b))
                 for (std::size_t i = b * block_rows; i < (b + 1) * block_rows; ++i)
@@ -115,6 +121,18 @@ struct expected {
         u64 n = 0;
         for (std::size_t i = 0; i < block_rows; ++i)
             n += stored[i] >= t;
+        return n;
+    }
+    u64 equal(u64 v) const {
+        u64 n = 0;
+        for (std::size_t i = 0; i < block_rows; ++i)
+            n += values[i] == v;
+        return n;
+    }
+    u64 stored_equal(u64 s) const {
+        u64 n = 0;
+        for (std::size_t i = 0; i < block_rows; ++i)
+            n += stored[i] == s;
         return n;
     }
 };
@@ -174,8 +192,18 @@ void check_block(const borrowed_block &k, const expected &e, std::size_t b, bool
     if (block_sum(k) != e.sum)
         fail("block_sum", b);
     for (u64 t : e.stored_thresholds)
-        if (stored_count_ge(k, t) != e.stored_count(t) || catalogue_stored_count_ge(k, t) != e.stored_count(t))
+        if (stored_count_ge(k, t) != e.stored_count(t) || catalogue_stored_count_ge(k, t) != e.stored_count(t) ||
+            stored_count_eq(k, t) != e.stored_equal(t))
             fail("stored COUNT", b);
+    // Equality at every threshold (present and absent values) and at stored
+    // values of rows either side of the arrival frontier's movement.
+    for (u64 t : e.thresholds)
+        if (block_count_eq(k, t) != e.equal(t))
+            fail("block_count_eq", b);
+    for (unsigned row : {0u, 7u, 99u, 200u, 255u})
+        if (stored_count_eq(k, e.stored[row]) != e.stored_equal(e.stored[row]) ||
+            stored_count_eq(k, e.stored[row] + 1) != e.stored_equal(e.stored[row] + 1))
+            fail("stored equality COUNT", b);
     for (u64 t : e.thresholds) {
         if (block_count_ge(k, t) != e.count(t))
             fail("block_count_ge", b);
@@ -227,6 +255,7 @@ const probe probes[] = {
     {"count", [](const borrowed_block &k) { sink = block_count_ge(k, k.d.base + 1); }},
     {"catalogue_count", [](const borrowed_block &k) { code_count c(k.d.base + 1); sink = catalogue_block_count_ge(c, k); }},
     {"code_sum", [](const borrowed_block &k) { if (k.coded) { code_sum c; consume(c(k)); } }},
+    {"count_eq", [](const borrowed_block &k) { sink = block_count_eq(k, value_at(k, 0)); }},
 };
 void battery(const borrowed_block &k) {
     for (const auto &p : probes)
@@ -234,7 +263,7 @@ void battery(const borrowed_block &k) {
 }
 
 std::string block_class(const borrowed_block &k) {
-    static const char *kinds[] = {"constant", "runs", "packed", "delta", "patched", "delta_patched"};
+    static const char *kinds[] = {"constant", "runs", "packed", "delta", "patched", "delta_patched", "arrival"};
     return std::string(k.coded ? "coded_" : "") + kinds[static_cast<int>(k.d.type)];
 }
 }  // namespace
@@ -242,7 +271,7 @@ std::string block_class(const borrowed_block &k) {
 int main(int argc, char **argv) {
     if (argc < 3) {
         std::fprintf(stderr, "usage: %s NAME FILE.u64 [--checkpoints=native|packed|every64|none] "
-                     "[--delta-exceptions] [--dictionary=none|sorted|frequency]\n", argv[0]);
+                     "[--delta-exceptions] [--dictionary=none|sorted|frequency|arrival]\n", argv[0]);
         return 2;
     }
     encode_options options;
@@ -253,6 +282,7 @@ int main(int argc, char **argv) {
         else if (a == "--dictionary=none") options.dictionary = dictionary_order::none;
         else if (a == "--dictionary=sorted") options.dictionary = dictionary_order::sorted;
         else if (a == "--dictionary=frequency") options.dictionary = dictionary_order::frequency;
+        else if (a == "--dictionary=arrival") options.dictionary = dictionary_order::arrival;
         else if (a == "--checkpoints=native") options.delta_checkpoints = checkpoints::native;
         else if (a == "--checkpoints=packed") options.delta_checkpoints = checkpoints::packed;
         else if (a == "--checkpoints=every64") options.delta_checkpoints = checkpoints::every64;
@@ -363,7 +393,9 @@ int main(int argc, char **argv) {
                 stored_sum(c, b) != stored_sum(k) || block_count_ge(c, b, median) != block_count_ge(k, median) ||
                 stored_count_ge(c, b, e.stored_thresholds[2]) != stored_count_ge(k, e.stored_thresholds[2]) ||
                 value_at(c, b * block_rows + 200) != value_at(k, 200) ||
-                stored_at(in_place, 77) != stored_at(k, 77))
+                stored_at(in_place, 77) != stored_at(k, 77) ||
+                block_count_eq(c, b, e.values[9]) != block_count_eq(k, e.values[9]) ||
+                stored_count_eq(c, b, e.stored[9]) != stored_count_eq(k, e.stored[9]))
                 fail("column wrapper differs from the borrowed result", b);
             // A delta body granted only its scan prefix, ending at the guard:
             // decode, SUM and the rbase < 0 COUNT must not need the
@@ -410,6 +442,17 @@ int main(int argc, char **argv) {
                 catalogue_sum(c, *mask) != sum || encoded_count_ge(c, *mask, median) != n ||
                 catalogue_count_ge(c, *mask, median) != n)
                 fail("mask aggregate differs from the input", 0);
+        // Equality over all blocks at present values from several parts and
+        // at one absent value, against the input.
+        for (std::size_t row : {std::size_t{0}, values.size() / 3, values.size() / 2, values.size() - 1}) {
+            for (u64 v : {values[row], values[row] + 1}) {
+                u64 n = 0;
+                for (std::size_t i = 0; i < nblocks * block_rows; ++i)
+                    n += values[i] == v;
+                if (encoded_count_eq(c, all, v) != n)
+                    fail("mask equality COUNT differs from the input", row / block_rows);
+            }
+        }
     }
 
     // Injected one-byte-short grants, on the first eight non-empty blocks of each
@@ -463,17 +506,17 @@ int main(int argc, char **argv) {
         }
     }
 
-    std::size_t kinds[6] = {}, coded = 0;
+    std::size_t kinds[7] = {}, coded = 0;
     for (std::size_t b = 0; b < nblocks; ++b)
         ++kinds[static_cast<int>(c.blocks[b].type)], coded += is_coded(c, b);
     std::printf("{\"column\":\"%s\",\"delta_checkpoints\":\"%s\",\"delta_exceptions\":%s,\"dictionary\":\"%s\","
-                "\"blocks\":%zu,\"coded\":%zu,\"kinds\":[%zu,%zu,%zu,%zu,%zu,%zu],\"extent_gaps_checked\":%zu,"
+                "\"blocks\":%zu,\"coded\":%zu,\"kinds\":[%zu,%zu,%zu,%zu,%zu,%zu,%zu],\"extent_gaps_checked\":%zu,"
                 "\"max_body\":%zu,\"max_dictionary\":%zu,\"page\":%zu,\"placements_checked\":%zu,\"scan_grants_checked\":%zu,"
                 "\"end_start_mod8\":[%zu,%zu,%zu,%zu,%zu,%zu,%zu,%zu],\"injected\":%d,"
                 "\"dictionary_injected\":%d,\"dictionary_short_faulted\":%d,\"end_short\":{",
                 argv[1], checkpoint_name(mode), options.delta_exceptions ? "true" : "false",
                 dictionary_name(options.dictionary), nblocks, coded, kinds[0], kinds[1], kinds[2], kinds[3],
-                kinds[4], kinds[5], gaps, max_body, max_dictionary, body_pages.page, checked, scan_checked,
+                kinds[4], kinds[5], kinds[6], gaps, max_body, max_dictionary, body_pages.page, checked, scan_checked,
                 start_alignment[0], start_alignment[1], start_alignment[2], start_alignment[3],
                 start_alignment[4], start_alignment[5], start_alignment[6], start_alignment[7], injected,
                 dictionary_injected, dictionary_faulted);

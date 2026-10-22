@@ -16,6 +16,7 @@
 #include "packing.h"
 
 #include <algorithm>
+#include <array>
 #include <bit>
 #include <chrono>
 #include <cstdint>
@@ -64,7 +65,19 @@ constexpr std::size_t block_rows = 256;
 // (the anchor before f). Checkpoints hold S(i) at the delta rows, i.e. the
 // cumulative stored residuals of non-exception rows; exception values are never
 // in them. A point reader adds rbase * m(i), counting positions <= i.
-enum class kind : std::uint8_t { constant, runs, packed, delta, patched, delta_patched };
+// arrival: frontier-relative codes, only in a block coded against an arrival
+// dictionary (dictionary_order::arrival, codes in first-occurrence order within
+// the part). d.base is the block's frontier F, the number of dictionary entries
+// introduced before the block. The body is a 256-bit flag plane (four u64
+// words, little-endian, bit i of word i / 64 for row i; 1 = the value's first
+// occurrence in the part) followed by one SeriesPack plane of d.count values at
+// width d.width (>= 1), one per unflagged row in row order. With F_i = F plus
+// the flagged rows before row i, a flagged row's code is F_i; an unflagged row's
+// code is F_i - 1 - stored, so it stores its distance back from the frontier
+// minus one. d.count = 256 - popcount(flags), and every code of the block is
+// below F + popcount(flags). A point read is a rank over the flags and at most
+// one plane point read; a decode enumerates the flag bits (each_arrival_reference).
+enum class kind : std::uint8_t { constant, runs, packed, delta, patched, delta_patched, arrival };
 
 // Exception layout inside a patched block's payload.
 struct patch_view {
@@ -80,7 +93,7 @@ using i128 = __int128;
 struct descriptor {
     u64 base;              // constant value, or frame-of-reference base
     std::uint32_t offset;  // payload offset in the column body
-    std::uint16_t count;   // packed values (256, or the number of runs)
+    std::uint16_t count;   // packed values (256, the number of runs, or arrival references)
     kind type;
     std::uint8_t width;    // SeriesPack width of packed values (0 = none)
 };
@@ -113,8 +126,11 @@ enum class checkpoints : std::uint8_t { native, packed, every64, none };
 // may be shorter, always whole blocks). sorted: codes are ranks of the part's
 // distinct values in ascending order, so they keep order. frequency: codes
 // rank values by descending frequency, ties by ascending value, so frequent
-// values get small codes; order is lost.
-enum class dictionary_order : std::uint8_t { none, sorted, frequency };
+// values get small codes; order is lost. arrival: codes number values in
+// order of first occurrence within the part, so a block's new values take the
+// next codes and repeats refer back from the frontier (kind::arrival); order
+// is lost.
+enum class dictionary_order : std::uint8_t { none, sorted, frequency, arrival };
 constexpr std::size_t part_blocks = 256;
 constexpr std::size_t part_rows = part_blocks * block_rows;
 
@@ -123,6 +139,7 @@ inline const char *dictionary_name(dictionary_order mode) {
     case dictionary_order::none: return "none";
     case dictionary_order::sorted: return "sorted";
     case dictionary_order::frequency: return "frequency";
+    case dictionary_order::arrival: return "arrival";
     }
     return "?";
 }
@@ -135,7 +152,7 @@ struct encode_options {
     // kind::delta_patched; the driver opts in with --delta-exceptions.
     bool delta_exceptions = false;
     // Off by default until point/, filter/ and execution/ consumers interpret
-    // coded blocks; the driver opts in with --dictionary=sorted|frequency.
+    // coded blocks; the driver opts in with --dictionary=sorted|frequency|arrival.
     dictionary_order dictionary = dictionary_order::none;
     // Keep every part's dictionary even when it doesn't pay overall (the
     // byte model's assumption); by default a part drops a losing dictionary.
@@ -245,7 +262,8 @@ column encode(std::span<const u64> values, encode_options options = {});
 //
 // Body layout extent, reported by the owner and never inferred from the next
 // descriptor's offset. fixed_body_bytes depends on the descriptor and the
-// image's checkpoint option alone; patched and delta_patched add a variable
+// image's checkpoint option alone (an arrival body is its 32-byte flag plane
+// plus d.count references at d.width); patched and delta_patched add a variable
 // tail of n positions and n values at width W, where n and W are the last two
 // bytes of that fixed prefix. delta_exceptions doesn't enter: it only decides
 // whether kind::delta_patched occurs. A coded block's body is its codes' body
@@ -268,6 +286,8 @@ struct block_extent {
     std::size_t scan_grant_bytes;
 };
 
+constexpr std::size_t arrival_flag_bytes = block_rows / 8;
+
 inline std::size_t fixed_body_bytes(const descriptor &d, checkpoints mode) {
     const std::size_t plane = plane_bytes(d.width, block_rows);
     switch (d.type) {
@@ -277,6 +297,7 @@ inline std::size_t fixed_body_bytes(const descriptor &d, checkpoints mode) {
     case kind::delta: return plane + 8 + checkpoint_cost(mode, d.width);
     case kind::patched: return plane + 10;  // + lo, n, W
     case kind::delta_patched: return plane + 8 + checkpoint_cost(mode, d.width) + 10;
+    case kind::arrival: return arrival_flag_bytes + plane_bytes(d.width, d.count);
     }
     std::abort();
 }
@@ -292,6 +313,8 @@ inline std::optional<block_extent> extent_of(const descriptor &d, checkpoints mo
     if (d.type != kind::constant && (d.width < 1 || d.width > 64))
         return std::nullopt;
     if (d.type == kind::runs && (d.count < 1 || d.count > block_rows))
+        return std::nullopt;
+    if (d.type == kind::arrival && d.count > block_rows)
         return std::nullopt;
     std::size_t bytes = fixed_body_bytes(d, mode);
     if (bytes > span)
@@ -407,6 +430,19 @@ inline i64 delta_rbase(const borrowed_block &k) {
     return rbase;
 }
 
+// The flag words of an arrival block (row i is bit i % 64 of word i / 64).
+inline std::array<u64, 4> arrival_flags(const borrowed_block &k) {
+    std::array<u64, 4> w;
+    std::memcpy(w.data(), k.body, arrival_flag_bytes);
+    return w;
+}
+// Literal (flagged) rows of an arrival block: its new dictionary entries are
+// codes [F, F + literals).
+inline unsigned arrival_literals(const std::array<u64, 4> &w) {
+    return static_cast<unsigned>(std::popcount(w[0]) + std::popcount(w[1]) +
+                                 std::popcount(w[2]) + std::popcount(w[3]));
+}
+
 // Owner planes, derived from the body and descriptor or body metadata through
 // the shared catalogue (kernels.h). A block's own plane is full (256
 // residuals) for packed, patched, delta and delta_patched, and short (d.count
@@ -473,6 +509,38 @@ inline void decode_delta_patched(const borrowed_block &k, u64 *out) {
 }
 inline void decode_delta_patched(const column &c, std::size_t b, u64 *out) {
     decode_delta_patched(borrow(c, b), out);
+}
+
+// An arrival block's references in row order: visit(row, code) for each
+// unflagged row. With j references before row i, F_i = F + i - j, so the code
+// is F + i - j - 1 - stored_j; enumerating the zero flag bits keeps j a
+// sequential counter rather than a data-dependent pointer (a per-row prefix
+// loop through the plane measured ~8 cycles/row on aarch64).
+template <class V>
+void each_arrival_reference(const borrowed_block &k, const std::array<u64, 4> &w, V &&visit) {
+    alignas(64) u64 back[block_rows];
+    if (!k.d.count)
+        return;
+    plane_kernels(k.d.width).range(k.body + arrival_flag_bytes, 0, k.d.count, back);
+    const u64 frontier = k.d.base - 1;
+    unsigned j = 0;
+    for (unsigned word = 0; word < 4; ++word)
+        for (u64 refs = ~w[word]; refs; refs &= refs - 1) {
+            const unsigned row = word * 64 + static_cast<unsigned>(std::countr_zero(refs));
+            visit(row, frontier + row - j - back[j]);
+            ++j;
+        }
+}
+
+// Whole-block codes of an arrival block: flagged rows take the next codes in
+// order, then each reference row is written from the frontier.
+inline void decode_arrival(const borrowed_block &k, u64 *out) {
+    const auto w = arrival_flags(k);
+    u64 code = k.d.base;
+    for (unsigned word = 0; word < 4; ++word)
+        for (u64 first = w[word]; first; first &= first - 1)
+            out[word * 64 + static_cast<unsigned>(std::countr_zero(first))] = code++;
+    each_arrival_reference(k, w, [&](unsigned row, u64 c) { out[row] = c; });
 }
 
 inline run_ends runs_of(const borrowed_block &k) {
@@ -671,6 +739,14 @@ inline u128 stored_sum(const borrowed_block &k) {
             total += static_cast<u128>(buffer[rank] + d.base) * size;
         });
         return total;
+    case kind::arrival: {
+        // Codes are below 2^32 (a part has at most 65,536 entries).
+        decode_arrival(k, buffer);
+        u64 s = 0;
+        for (std::size_t i = 0; i < block_rows; ++i)
+            s += buffer[i];
+        return s;
+    }
     }
     std::abort();
 }
@@ -695,6 +771,23 @@ template <class L> u128 coded_sum(const borrowed_block &k, L &&lookup) {
         each_run(k, [&](unsigned rank, unsigned size) {
             total += static_cast<u128>(lookup(d.base + buffer[rank])) * size;
         });
+        return total;
+    }
+    if (d.type == kind::arrival) {
+        // Literal rows hold the codes [F, F + L) in order, so their entries
+        // are read in sequence; only references gather.
+        const auto w = arrival_flags(k);
+        const u64 literals = arrival_literals(w);
+        if (p.width <= 56) {
+            u64 s = 0;
+            for (u64 i = 0; i < literals; ++i)
+                s += lookup(d.base + i);
+            each_arrival_reference(k, w, [&](unsigned, u64 code) { s += lookup(code); });
+            return total + s;
+        }
+        for (u64 i = 0; i < literals; ++i)
+            total += lookup(d.base + i);
+        each_arrival_reference(k, w, [&](unsigned, u64 code) { total += lookup(code); });
         return total;
     }
     decode_stored(k, buffer);
@@ -795,6 +888,11 @@ inline u128 encoded_sum_narrow(const column &c, const block_mask &mask) {
 // non-decreasing: COUNT(x >= t) is 256 minus the first row reaching t. Probe
 // the checkpoint rows by binary search (each is one checkpoint plus one
 // residual), then scan one checkpoint interval forward.
+// Premise: monotonicity rests on the trusted-image invariant that encode()
+// never wraps logically, because its residuals and rbase come from exact i128
+// differences of real u64 values. extent_of and admits check geometry only, so
+// a forged plane whose running sum wraps mod 2^64 could break the
+// non-decreasing law this search assumes.
 inline u64 monotone_delta_count_ge(const borrowed_block &k, i64 rbase, u64 threshold) {
     if (k.d.base >= threshold)
         return block_rows;
@@ -826,9 +924,10 @@ inline u64 stored_count_ge(const borrowed_block &k, u64 threshold) {
     alignas(64) u64 buffer[block_rows];
     const auto &d = k.d;
     // Constant, runs and packed bases are block minima; a delta anchor isn't,
-    // and patched or delta_patched exceptions can lie below the base.
+    // patched or delta_patched exceptions can lie below the base, and an
+    // arrival frontier lies above every reference.
     if (d.type != kind::delta && d.type != kind::patched && d.type != kind::delta_patched &&
-        d.base >= threshold) {
+        d.type != kind::arrival && d.base >= threshold) {
         return block_rows;
     }
     switch (d.type) {
@@ -893,6 +992,12 @@ inline u64 stored_count_ge(const borrowed_block &k, u64 threshold) {
         });
         break;
     }
+    case kind::arrival: {
+        decode_arrival(k, buffer);
+        for (std::size_t i = 0; i < block_rows; ++i)
+            total += buffer[i] >= threshold;
+        break;
+    }
     }
     return total;
 }
@@ -942,17 +1047,35 @@ struct code_count {
             code_threshold = lo;
             return;
         }
+        // Each word is built in a register (first is a multiple of 256, so
+        // chunks are word-aligned); a per-entry read-modify-write of the
+        // vector cost ~2x the table's decode.
         truth.assign((p.count + 63) / 64, 0);
         alignas(64) u64 buffer[block_rows];
         for (u64 first = 0; first < p.count; first += block_rows) {
             const u64 n = std::min<u64>(block_rows, p.count - first);
             read_dictionary(p, first, n, buffer);
-            for (u64 i = 0; i < n; ++i)
-                if (p.min + buffer[i] >= threshold)  // no overflow: at most the part maximum
-                    truth[(first + i) / 64] |= u64{1} << ((first + i) % 64);
+            for (u64 g = 0; g < n; g += 64) {
+                u64 bits = 0;
+                const u64 m = std::min<u64>(64, n - g);
+                for (u64 i = 0; i < m; ++i)  // no overflow: at most the part maximum
+                    bits |= static_cast<u64>(p.min + buffer[g + i] >= threshold) << i;
+                truth[(first + g) / 64] = bits;
+            }
         }
     }
     bool holds(u64 code) const { return truth[code / 64] >> (code % 64) & 1; }
+    // Codes in [first, first + n) whose truth bit is set.
+    u64 holds_range(u64 first, u64 n) const {
+        u64 total = 0;
+        for (u64 limit = first + n; first < limit;) {
+            const u64 bit = first % 64, take = std::min<u64>(64 - bit, limit - first);
+            const u64 word = truth[first / 64] >> bit;
+            total += static_cast<u64>(std::popcount(take == 64 ? word : word & ((u64{1} << take) - 1)));
+            first += take;
+        }
+        return total;
+    }
 
     u64 count(const borrowed_block &k) {
         prepare(k.dictionary);
@@ -963,6 +1086,14 @@ struct code_count {
             return holds(d.base) ? block_rows : 0;
         alignas(64) u64 buffer[block_rows];
         u64 total = 0;
+        if (d.type == kind::arrival) {
+            // Literal rows hold the codes [F, F + L): one popcount over truth
+            // bits. References look up one bit each.
+            const auto w = arrival_flags(k);
+            total = holds_range(d.base, arrival_literals(w));
+            each_arrival_reference(k, w, [&](unsigned, u64 code) { total += holds(code); });
+            return total;
+        }
         if (d.type == kind::runs) {
             read_plane(k, 0, d.count, buffer);
             each_run(k, [&](unsigned rank, unsigned size) {
@@ -999,6 +1130,89 @@ inline u64 encoded_count_ge(const column &c, const block_mask &mask, u64 thresho
     for_each_block(mask, [&](std::size_t b) {
         const auto k = borrow(c, b);
         total += k.coded ? codes.count(k) : stored_count_ge(k, threshold);
+    });
+    return total;
+}
+
+// Exact COUNT(stored == s) within one block (values, or codes if coded).
+// Constant, packed and runs reject an s outside their base and width without
+// decoding; an arrival block rejects a code at or past its final frontier
+// without decoding.
+u64 stored_count_eq(const borrowed_block &k, u64 s);
+inline u64 stored_count_eq(const column &c, std::size_t b, u64 s) {
+    return stored_count_eq(borrow(c, b), s);
+}
+
+// COUNT(u == v) for coded blocks: v's code is found once per dictionary edition
+// (lazily, as code_count does) and the block's stored equality COUNT at that
+// code is the answer; a value absent from the edition counts nothing. sorted:
+// binary search over the plane. frequency and arrival: a scan of the plane.
+struct code_count_eq {
+    u64 value;
+    bool ready = false;
+    u64 edition = 0;
+    bool present = false;
+    u64 code = 0;
+    explicit code_count_eq(u64 v) : value(v) {}
+
+    void prepare(const dictionary_view &p) {
+        if (ready && p.edition == edition)
+            return;
+        ready = true;
+        edition = p.edition;
+        present = false;
+        if (value < p.min)
+            return;
+        const u64 rhs = value - p.min;
+        if (p.width < 64 && rhs >> p.width)
+            return;
+        if (p.order == dictionary_order::sorted) {
+            u64 lo = 0, hi = p.count;
+            while (lo < hi) {
+                const u64 mid = lo + (hi - lo) / 2;
+                if (dictionary_at(p, mid) < rhs)
+                    lo = mid + 1;
+                else
+                    hi = mid;
+            }
+            present = lo < p.count && dictionary_at(p, lo) == rhs;
+            code = lo;
+            return;
+        }
+        alignas(64) u64 buffer[block_rows];
+        for (u64 first = 0; first < p.count; first += block_rows) {
+            const u64 n = std::min<u64>(block_rows, p.count - first);
+            read_dictionary(p, first, n, buffer);
+            for (u64 i = 0; i < n; ++i)
+                if (buffer[i] == rhs) {
+                    present = true;
+                    code = first + i;
+                    return;
+                }
+        }
+    }
+    u64 count(const borrowed_block &k) {
+        prepare(k.dictionary);
+        return present ? stored_count_eq(k, code) : 0;
+    }
+};
+
+// Exact COUNT(u == v) within one block, and over the selected blocks.
+inline u64 block_count_eq(const borrowed_block &k, u64 v) {
+    if (!k.coded)
+        return stored_count_eq(k, v);
+    code_count_eq codes(v);
+    return codes.count(k);
+}
+inline u64 block_count_eq(const column &c, std::size_t b, u64 v) {
+    return block_count_eq(borrow(c, b), v);
+}
+inline u64 encoded_count_eq(const column &c, const block_mask &mask, u64 v) {
+    u64 total = 0;
+    code_count_eq codes(v);
+    for_each_block(mask, [&](std::size_t b) {
+        const auto k = borrow(c, b);
+        total += k.coded ? codes.count(k) : stored_count_eq(k, v);
     });
     return total;
 }
