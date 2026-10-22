@@ -68,6 +68,9 @@ choices to its deeper integer, bitset and heterogeneous probes.
 calling protocol; [compile probes](../tools/compilation.md) expose time, memory,
 code size and emitted assembly. Use [LLVM-MCA](../tools/mca.md) for appropriate
 leaf scheduling questions, then explain the complete measured caller.
+The [build-speed survey](../spikes/build-speed/README.md) attributes current
+clean/incremental build time, per-TU compile memory and output size, mostly to
+combinatorial Ikea tests and full debug info.
 
 [Executable placement](../spikes/executable-placement/README.md) preserves the
 case where relinking changed costs without changing caller/kernel instructions.
