@@ -152,3 +152,14 @@ option over the same bytes. Final M255/N256 random C8 rank→payload improves
 several range cells lose; the inverse candidates were rejected. Read that study's
 comparison limits and full losing cells before choosing the binding. This extends
 the initial local evidence above and establishes no production migration.
+
+
+## Maintained ownership and consumer integration
+
+[Graduation](GRADUATION.md) records the production move in 8f710eb0, the actual
+Directory/Frame integrations and same-worker native pre/post verification. Common
+search/geometry/sparse sources are maintained Intervals; StreamPack owns compact
+image, retirement and decoding. G64 independent rank throughput survives the
+move, with identical linked complete StreamPack callback encodings/addresses
+across 180 before/after pairs. This promotes the common seam while retaining the
+previous workload/ISA limits and all losing controls.

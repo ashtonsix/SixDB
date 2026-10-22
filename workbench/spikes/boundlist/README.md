@@ -1,5 +1,12 @@
 # Boundlist
 
+Common borrowed search/geometry has graduated to maintained
+[Intervals](../../../ikea/docs/intervals/usage.md). StreamPack owns the compact image
+and retirement implementation. This study retains the earlier experimental and
+performance context; [Intervals graduation](../intervals/GRADUATION.md) records the
+ownership move and its actual consumer qualification.
+
+
 The successor [Intervals spike](../intervals/README.md) reassesses the common seam
 for StreamPack, Directory and Frame, with external filters and sparse checkpoints.
 The maintained implementation below is its before control.

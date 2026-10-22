@@ -34,8 +34,8 @@ author capabilities, mixed-workload layout choices, filtering, conversion and pl
 | [Tuple layout](tuple-layout/README.md) | Point access, scans, checked mutation and layout search behind current TuplePack; analyser work remains experimental. |
 | [Layout analyser](layout-analyser/README.md) | Connected objectives, metadata/plane/placement alternatives, shortlists and worked consumer investigations. |
 | [StreamPack](streampack/README.md) | Variable-byte geometry and sidecars; comparative evidence plus production Ikea/Loom/Orbital consumers. |
-| [Intervals](intervals/README.md) | Successor seam across StreamPack, Directory and Frame; external filters, sparse checkpoints and complete consumer qualification. |
-| [Boundlist](boundlist/README.md) | Ordered-source geometry, ownership, ISA search and complete consumer portfolio; implemented primitive is in Ikea. |
+| [Intervals](intervals/README.md) | Maintained Intervals graduation across StreamPack, Directory and Frame; external filters, sparse checkpoints and complete consumer qualification. |
+| [Boundlist](boundlist/README.md) | Historical ordered-source/compact geometry and ISA portfolio; common bodies are now Intervals and compact ownership is StreamPack. |
 | [Bec256 composition](bec256-composition/README.md) | Complete analysis/encoding consumers, prepared windows and alternatives to isolated refill comparisons. |
 | [NEON Local transpose](neon-local-transpose/README.md) | Promoted select-form and four-tile Local residual transposes: 1.5–2.9× NEON pure-tail reads, 1.1–1.8× writes; four-tile mixed reads 1.1–1.7× (k9–16); `bulk_arm` re-measured and kept. |
 | [NEON sparse TuplePack packets](neon-tuplepack-masked/README.md) | Promoted window load for half-selected 32/64-row NEON packets: one-byte sums 2.6–3.3×, trusted updates 1.8–2.2×; scatter side unchanged. |
