@@ -21,6 +21,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <fstream>
+#include <functional>
 #include <memory>
 #include <optional>
 #include <span>
@@ -532,18 +533,27 @@ u64 plain_count_ge(const plain<T> &p, const block_mask &mask, u64 threshold) {
     return total;
 }
 
-template <class F> double median_ns(F &&fn, int repeats = 21) {
-    std::vector<double> samples;
-    fn();
-    for (int r = 0; r < repeats; ++r) {
-        const auto start = std::chrono::steady_clock::now();
-        fn();
-        samples.push_back(std::chrono::duration<double, std::nano>(
-                              std::chrono::steady_clock::now() - start)
-                              .count());
-    }
-    std::nth_element(samples.begin(), samples.begin() + repeats / 2, samples.end());
-    return samples[repeats / 2];
+// Paired, rotated arms: every trial times each arm once, starting from a
+// different arm, so drift lands on all arms alike instead of on whichever arm
+// ran last. Raw whole-call nanoseconds are kept per arm.
+struct arm {
+    const char *name;
+    std::function<void()> call;
+    std::vector<double> ns;
+};
+
+void time_arms(std::vector<arm> &arms, int trials = 21) {
+    for (auto &a : arms)
+        a.call();  // warm
+    for (int t = 0; t < trials; ++t)
+        for (std::size_t i = 0; i < arms.size(); ++i) {
+            auto &a = arms[(i + t) % arms.size()];
+            const auto start = std::chrono::steady_clock::now();
+            a.call();
+            a.ns.push_back(std::chrono::duration<double, std::nano>(
+                               std::chrono::steady_clock::now() - start)
+                               .count());
+        }
 }
 
 std::string u128_text(u128 v) {
@@ -602,17 +612,23 @@ void run(const char *name, std::span<const u64> values, u64 lo, u64 threshold) {
             std::fprintf(stderr, "%s %s: encoded/plain mismatch\n", name, s.name);
             std::exit(1);
         }
-        const double t_es = median_ns([&] { consume(encoded_sum(c, s.mask)); });
-        const double t_ps = median_ns([&] { consume(plain_sum(p, s.mask)); });
-        const double t_en = median_ns([&] { consume(encoded_sum_narrow(c, s.mask)); });
-        const double t_ec = median_ns([&] { sink = encoded_count_ge(c, s.mask, threshold); });
-        const double t_pc = median_ns([&] { sink = plain_count_ge(p, s.mask, threshold); });
-        std::printf(",\"%s\":{\"sum\":\"%s\",\"count_ge\":%llu,"
-                    "\"encoded_sum_ns_per_row\":%.4f,\"encoded_narrow_sum_ns_per_row\":%.4f,"
-                    "\"plain_sum_ns_per_row\":%.4f,"
-                    "\"encoded_count_ns_per_row\":%.4f,\"plain_count_ns_per_row\":%.4f}",
-                    s.name, u128_text(es).c_str(), static_cast<unsigned long long>(ec),
-                    t_es / c.rows, t_en / c.rows, t_ps / c.rows, t_ec / c.rows, t_pc / c.rows);
+        std::vector<arm> arms{
+            {"encoded_sum", [&] { consume(encoded_sum(c, s.mask)); }, {}},
+            {"encoded_narrow_sum", [&] { consume(encoded_sum_narrow(c, s.mask)); }, {}},
+            {"plain_sum", [&] { consume(plain_sum(p, s.mask)); }, {}},
+            {"encoded_count", [&] { sink = encoded_count_ge(c, s.mask, threshold); }, {}},
+            {"plain_count", [&] { sink = plain_count_ge(p, s.mask, threshold); }, {}}};
+        time_arms(arms);
+        std::printf(",\"%s\":{\"physical_rows\":%zu,\"selected_rows\":%zu,\"sum\":\"%s\","
+                    "\"count_ge\":%llu",
+                    s.name, c.rows, s.mask.popcount() * block_rows, u128_text(es).c_str(),
+                    static_cast<unsigned long long>(ec));
+        for (auto &a : arms) {
+            std::sort(a.ns.begin(), a.ns.end());
+            std::printf(",\"%s_ns\":{\"min\":%.0f,\"median\":%.0f,\"max\":%.0f}", a.name,
+                        a.ns.front(), a.ns[a.ns.size() / 2], a.ns.back());
+        }
+        std::printf("}");
     }
     std::printf("}\n");
 }
@@ -634,10 +650,23 @@ int main(int argc, char **argv) {
             return 2;
     }
     std::ifstream in(argv[2], std::ios::binary | std::ios::ate);
-    const auto bytes = static_cast<std::size_t>(in.tellg());
+    if (!in) {
+        std::fprintf(stderr, "%s: cannot open\n", argv[2]);
+        return 2;
+    }
+    const auto end = in.tellg();
+    if (end <= 0 || end % 8 != 0 || (end / 8) % block_rows != 0) {
+        std::fprintf(stderr, "%s: need a non-empty whole number of 256-row u64 blocks\n",
+                     argv[2]);
+        return 2;
+    }
+    const auto bytes = static_cast<std::size_t>(end);
     std::vector<u64> values(bytes / 8);
     in.seekg(0);
-    in.read(reinterpret_cast<char *>(values.data()), static_cast<std::streamsize>(bytes));
+    if (!in.read(reinterpret_cast<char *>(values.data()), static_cast<std::streamsize>(bytes))) {
+        std::fprintf(stderr, "%s: short read\n", argv[2]);
+        return 2;
+    }
     const auto [lo, hi] = std::minmax_element(values.begin(), values.end());
     std::vector<u64> sorted(values);
     std::nth_element(sorted.begin(), sorted.begin() + sorted.size() / 2, sorted.end());

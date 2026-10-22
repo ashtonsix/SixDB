@@ -31,9 +31,15 @@ def main():
         u = (raw.astype(np.int64).view(np.uint64) ^ np.uint64(1 << 63)) if signed \
             else raw.astype(np.uint64)
         safe = "".join(ch if ch.isalnum() else "_" for ch in name).strip("_")
+        # Native probes take whole 256-row blocks; the partial tail is dropped
+        # here, explicitly, and recorded below.
+        whole = len(u) // 256 * 256
+        tail = len(u) - whole
+        u = u[:whole]
         u.astype("<u8").tofile(os.path.join(args.output, f"{safe}.u64"))
         with open(os.path.join(args.output, f"{safe}.json"), "w") as meta:
             json.dump({"column": name, "dtype": str(s.dtype), "rows": len(u),
+                       "dropped_tail_rows": tail,
                        "mapping": "offset-binary" if signed else "identity"}, meta)
 
 

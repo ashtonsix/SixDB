@@ -302,6 +302,22 @@ dominates. Same caveats as before: noisy local timings, an oracle selector, no
 exceptions yet (the fault block's −9999.00 sentinels are the obvious first
 exception test).
 
+### Measurement and input hygiene (Workbench and Codex review)
+
+- **Paired, rotated arms.** Each of 21 trials times every arm once, starting
+  from a different arm. The JSON keeps raw whole-call min/median/max
+  nanoseconds per arm, with `physical_rows` and `selected_rows` (the `none`
+  mask has no per-selected-row denominator). Medians reproduce the earlier
+  ranking; maximums still show large VM outliers (spread up to 20× on some
+  arms). So these remain local, indicative timings.
+- **Timed wide sums** consume both u128 halves. Codex checked the ARM64
+  disassembly: carry and both stores stay in the timed loop, and empty groups
+  branch past the block bodies.
+- **Inputs:** the native driver rejects missing, empty, non-multiple-of-8 or
+  non-whole-256-row files, instead of overrunning or silently truncating.
+  The exporter drops the partial tail explicitly and records
+  `dropped_tail_rows` (192 for the 3M-row ClickBench slice).
+
 ## Images to hand Engine's witness early
 
 Engine's witness is a selected grouped reduction over parts with different
