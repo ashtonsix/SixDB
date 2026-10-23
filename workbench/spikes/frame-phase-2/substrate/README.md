@@ -180,8 +180,23 @@ regrouped by kind, and the random order with a two-stage software prefetch
    16-block groups) and a plain set-bit walk stay within a few percent at
    every density; the mask walk is not where time goes.
 
+5. **Prefetching each body's real extent closes most of the rest on Zen 5.**
+   Covering the body to the next block's offset (`cea613bc`, jobs
+   `20261023T225749Z-ed9a8552` and `20261023T225825Z-147c1397`;
+   [evidence/masks-v2-summary.txt](evidence/masks-v2-summary.txt)) takes cold
+   random-order WatchID from 191.0 to 96.0 ns per block (address order 49.8),
+   UserID from 109.4 to 66.0, EventTime from 86.0 to 47.0 and URLHash from
+   145.4 to 101.3, which matches its address-order time. Frame then beats the
+   native array visited in the same random order without prefetch (UserID
+   66.0 vs 112.1) and is within 1.0–1.5× of native random with prefetch.
+   OS, with tiny bodies, gets slightly worse (39.6 → 47.9): the extra
+   descriptor reads cost more than they save. Graviton 4 gains less (UserID
+   161.0 → 126.5; WatchID unchanged).
+
 So the substrate's job under unpredictable access is staging, with prefetch
-extents taken from descriptors, not regrouping by kind.
+extents taken from descriptors, not regrouping by kind. The distances and the
+small-body cut-off are per host, which is where Loom's hardware knowledge and
+`IndependentStream` come in.
 
 ## Independent point reads
 
