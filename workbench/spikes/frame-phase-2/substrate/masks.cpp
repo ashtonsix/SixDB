@@ -17,6 +17,7 @@
 #include <fstream>
 #include <functional>
 #include <random>
+#include <utility>
 #include <string>
 #include <vector>
 
@@ -149,6 +150,16 @@ int main(int argc, char **argv) {
                 for (std::size_t w = 0; w < m.words.size(); ++w)
                     for (u64 x = m.words[w]; x; x &= x - 1)
                         ids.push_back(static_cast<std::uint32_t>(w * 64 + std::countr_zero(x)));
+                // The same blocks visited in an order no prefetcher can follow,
+                // and that order regrouped by (kind, width): does grouping
+                // matter once accesses are unpredictable? No software prefetch.
+                std::vector<std::uint32_t> random_ids = ids;
+                std::shuffle(random_ids.begin(), random_ids.end(), rng);
+                std::vector<std::uint32_t> kind_ids = random_ids;
+                std::stable_sort(kind_ids.begin(), kind_ids.end(), [&](std::uint32_t x, std::uint32_t y) {
+                    const auto &a = c.blocks[x], &b = c.blocks[y];
+                    return std::pair(a.type, a.width) < std::pair(b.type, b.width);
+                });
                 u128 oracle = 0;
                 for (std::uint32_t b : ids)
                     for (std::size_t i = b * fe::block_rows; i < (b + 1) * fe::block_rows; ++i)
@@ -174,6 +185,68 @@ int main(int argc, char **argv) {
                          flush(c.payload.data(), c.payload.size());
                          flush(c.blocks.data(), c.descriptor_bytes());
                      }},
+                    {"frame_bits_random", [&] {
+                         u128 t = 0;
+                         for (std::uint32_t b : random_ids)
+                             t += fe::block_sum(c, b);
+                         return t;
+                     },
+                     [&] {
+                         flush(c.payload.data(), c.payload.size());
+                         flush(c.blocks.data(), c.descriptor_bytes());
+                     }},
+                    {"frame_bits_random_by_kind", [&] {
+                         u128 t = 0;
+                         for (std::uint32_t b : kind_ids)
+                             t += fe::block_sum(c, b);
+                         return t;
+                     },
+                     [&] {
+                         flush(c.payload.data(), c.payload.size());
+                         flush(c.blocks.data(), c.descriptor_bytes());
+                     }},
+                    {"frame_bits_random_staged", [&] {
+                         // Two-stage software prefetch: descriptor 16 ahead,
+                         // then the body's first three lines 8 ahead.
+                         u128 t = 0;
+                         const std::size_t k = random_ids.size();
+                         for (std::size_t i = 0; i < k; ++i) {
+                             if (i + 16 < k)
+                                 __builtin_prefetch(c.blocks.data() + random_ids[i + 16]);
+                             if (i + 8 < k) {
+                                 const std::uint8_t *body = c.payload.data() + c.blocks[random_ids[i + 8]].offset;
+                                 __builtin_prefetch(body), __builtin_prefetch(body + 64), __builtin_prefetch(body + 128);
+                             }
+                             t += fe::block_sum(c, random_ids[i]);
+                         }
+                         return t;
+                     },
+                     [&] {
+                         flush(c.payload.data(), c.payload.size());
+                         flush(c.blocks.data(), c.descriptor_bytes());
+                     }},
+                    {"native_spans_random_staged", [&] {
+                         u128 t = 0;
+                         const std::size_t k = random_ids.size();
+                         const std::size_t bytes = fe::block_rows * lane;
+                         for (std::size_t i = 0; i < k; ++i) {
+                             if (i + 4 < k) {
+                                 const std::uint8_t *x = nat.data() + random_ids[i + 4] * bytes;
+                                 for (std::size_t o = 0; o < bytes; o += 64)
+                                     __builtin_prefetch(x + o);
+                             }
+                             t += native_block(random_ids[i]);
+                         }
+                         return t + static_cast<u128>(min) * ids.size() * fe::block_rows;
+                     },
+                     [&] { flush(nat.data(), nat.size()); }},
+                    {"native_spans_random", [&] {
+                         u128 t = 0;
+                         for (std::uint32_t b : random_ids)
+                             t += native_block(b);
+                         return t + static_cast<u128>(min) * ids.size() * fe::block_rows;
+                     },
+                     [&] { flush(nat.data(), nat.size()); }},
                     {"native_spans", [&] {
                          u128 t = 0;
                          for (std::uint32_t b : ids)
