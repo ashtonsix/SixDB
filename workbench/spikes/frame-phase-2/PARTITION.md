@@ -126,6 +126,11 @@ Ashton reviewed this proposal and the direction stands.
      context.
 
    This is a proposal to Ikea LEAD; the other fronts open as seams firm up.
+   Front C (integer body leaves) opened as its own Claude thread on
+   2026-10-23, after the [substrate probe](substrate/README.md) showed the
+   leaves, not dispatch, decide run, packed and selection cells. Its scope
+   includes predicate emission over run and packed blocks and masked plane
+   sums; front B keeps dispatch, selections, staging and residence.
 3. **Downloads are approved.** Datasets over 1 GB use only a small slice
    locally, because disk exhaustion recurs; larger slices run only on remote
    workers through the existing tooling.
