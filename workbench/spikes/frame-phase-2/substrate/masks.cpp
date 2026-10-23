@@ -56,6 +56,20 @@ void flush(const void *p, std::size_t n) {
 #endif
 }
 
+// Hint every cache line that [p, p + n) intersects: the first in-range
+// address, then each following line start below the end. Bodies are not
+// line-aligned, so stepping by 64 from p alone can miss the final line
+// (Ikea LEAD's counterexample). Logical body extent only; a leaf's wider
+// load halo is a separate envelope.
+inline void prefetch_range(const std::uint8_t *p, std::size_t n) {
+    if (!n)
+        return;
+    __builtin_prefetch(p);
+    const auto end = reinterpret_cast<std::uintptr_t>(p) + n;
+    for (auto a = (reinterpret_cast<std::uintptr_t>(p) | 63) + 1; a < end; a += 64)
+        __builtin_prefetch(reinterpret_cast<const void *>(a));
+}
+
 template <class F> double time_ns(F &&f) {
     const auto a = std::chrono::steady_clock::now();
     f();
@@ -242,9 +256,7 @@ int main(int argc, char **argv) {
                                  const std::uint32_t b = random_ids[i + 8];
                                  const std::size_t first = c.blocks[b].offset;
                                  const std::size_t limit = b + 1 < nb ? c.blocks[b + 1].offset : c.payload.size();
-                                 const std::uint8_t *body = c.payload.data() + first;
-                                 for (std::size_t o = 0; o < limit - first; o += 64)
-                                     __builtin_prefetch(body + o);
+                                 prefetch_range(c.payload.data() + first, limit - first);
                              }
                              t += fe::block_sum(c, random_ids[i]);
                          }
@@ -260,9 +272,7 @@ int main(int argc, char **argv) {
                          const std::size_t bytes = fe::block_rows * lane;
                          for (std::size_t i = 0; i < k; ++i) {
                              if (i + 4 < k) {
-                                 const std::uint8_t *x = nat.data() + random_ids[i + 4] * bytes;
-                                 for (std::size_t o = 0; o < bytes; o += 64)
-                                     __builtin_prefetch(x + o);
+                                 prefetch_range(nat.data() + random_ids[i + 4] * bytes, bytes);
                              }
                              t += native_block(random_ids[i]);
                          }
@@ -303,8 +313,7 @@ int main(int argc, char **argv) {
                                                 const std::uint32_t b = random_ids[i + d];
                                                 const std::size_t first = c.blocks[b].offset;
                                                 const std::size_t limit = b + 1 < nb ? c.blocks[b + 1].offset : c.payload.size();
-                                                for (std::size_t o = 0; o < limit - first; o += 64)
-                                                    __builtin_prefetch(c.payload.data() + first + o);
+                                                prefetch_range(c.payload.data() + first, limit - first);
                                             }
                                             t += fe::block_sum(c, random_ids[i]);
                                         }
