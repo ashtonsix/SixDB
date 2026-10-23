@@ -1,0 +1,506 @@
+{
+  "core_commit": "cd55974d",
+  "created_utc": "2026-10-23T12:15:31.824911+00:00",
+  "current_study_source_bridge": {
+    "all15_current_files_match_native_capture": true,
+    "later_offline_only_files": [
+      "workbench/spikes/ikea-composition/handle-boundaries/series-controls/results.py",
+      "workbench/spikes/ikea-composition/handle-boundaries/series-controls/linked.py"
+    ],
+    "limits": "Offline analysis added after source capture does not change emitted or timed code; guide text is separately edited after findings.",
+    "native_monitored_direct_files": 6,
+    "native_monitored_series_files": 9
+  },
+  "failed_preparation_attempt": {
+    "corrected_runner_sha256": "fa8481cfdb59dd3a157426e965debda43110985a955cf38dafa42db2597a4c87",
+    "correction": "save() converts its input to Path before parent access; unchanged study C++ in retry. Added physical.h oracle dependency to source map.",
+    "group": "20261023T113517Z-c7a899fd",
+    "jobs": [
+      {
+        "artifact": {
+          "bucket": "calico-fleet-artifacts",
+          "bytes": 10857096,
+          "files": 11,
+          "format": 1,
+          "key": "sixdb/artifacts/sha256/b3731e893a9a1ad48750470b4f7bd42aad2b655d67d929868fd640c4dbfc271b.tar.gz",
+          "kind": "files",
+          "region": "us-east-1",
+          "sha256": "b3731e893a9a1ad48750470b4f7bd42aad2b655d67d929868fd640c4dbfc271b",
+          "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/b3731e893a9a1ad48750470b4f7bd42aad2b655d67d929868fd640c4dbfc271b.tar.gz"
+        },
+        "finding": "CMake configuration completed; runner save() received str path and accessed .parent. Failure before study compilation; zero trials. Original attempted receipt persisted zero commands because saving failed.",
+        "instance_state": [
+          {
+            "id": "i-0d69f933f4eaa1e8e",
+            "state": "terminated"
+          }
+        ],
+        "job": "20261023T113530Z-f59d7833",
+        "receipt_sha256": "e8c8185138b53e8d279c527f9ddda13f9ba3d8494bff9956f7722a4276ede0cc",
+        "script_log_sha256": "a1e4064d94e79c971ee7769f964b6718757473854cf1835aac45f36340b053ef"
+      },
+      {
+        "artifact": {
+          "bucket": "calico-fleet-artifacts",
+          "bytes": 10857792,
+          "files": 11,
+          "format": 1,
+          "key": "sixdb/artifacts/sha256/8aecdd0931a81c822c30429ae786373476f6c34708c0b35bde83ac2d088ea05c.tar.gz",
+          "kind": "files",
+          "region": "us-east-1",
+          "sha256": "8aecdd0931a81c822c30429ae786373476f6c34708c0b35bde83ac2d088ea05c",
+          "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/8aecdd0931a81c822c30429ae786373476f6c34708c0b35bde83ac2d088ea05c.tar.gz"
+        },
+        "finding": "CMake configuration completed; runner save() received str path and accessed .parent. Failure before study compilation; zero trials. Original attempted receipt persisted zero commands because saving failed.",
+        "instance_state": [
+          {
+            "id": "i-06f6f5fdd160d1d72",
+            "state": "terminated"
+          }
+        ],
+        "job": "20261023T113524Z-b804341b",
+        "receipt_sha256": "94526851bdd013aec7da3112e9360c0b1538918b971707f401a004b949fe2bee",
+        "script_log_sha256": "a1e4064d94e79c971ee7769f964b6718757473854cf1835aac45f36340b053ef"
+      }
+    ],
+    "smoke_logs_sha256": {
+      "failure.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "success.log": "65fd5ffdf0a100a133e5caa02d7d4c25048b6bdf732c721139cfc5b0a9817e4d"
+    },
+    "smoke_receipt": {
+      "commands": [
+        {
+          "argv": [
+            "/usr/bin/python3",
+            "-c",
+            "print(\"runner success\")"
+          ],
+          "cwd": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb",
+          "log": "build/ikea-cohesion-v2/runner-path-smoke/success.log",
+          "log_sha256": "65fd5ffdf0a100a133e5caa02d7d4c25048b6bdf732c721139cfc5b0a9817e4d",
+          "returncode": 0,
+          "seconds": 0.009444319002795964
+        },
+        {
+          "argv": [
+            "/usr/bin/python3",
+            "-c",
+            "raise SystemExit(7)"
+          ],
+          "cwd": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb",
+          "log": "build/ikea-cohesion-v2/runner-path-smoke/failure.log",
+          "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "returncode": 7,
+          "seconds": 0.008548638026695698
+        }
+      ],
+      "path": "build/ikea-cohesion-v2/runner-path-smoke/receipt.json"
+    },
+    "smoke_receipt_sha256": "4c32ed379cebf32ef716bdfeaee970ed402cc8b16d1ef32a98203da98be01128"
+  },
+  "format": 1,
+  "frozen_ikea_core_entries": 193,
+  "frozen_ikea_core_matches_commit_and_current": true,
+  "group": "20261023T114216Z-a22afde0",
+  "independent_source_audit": {
+    "all210_map_entries_match_archive_and_manifest": true,
+    "both_archives_and_manifests_byte_identical": true,
+    "both_source_manifests_bind_job_metadata": true,
+    "command_logs_hashed": 210,
+    "explicit_check_only_or_lifetime_commands": 9,
+    "independent_member_hash_checks": 7240,
+    "measured_first_party_objects_sources_in210_map": true,
+    "native_iteration_records": 6120,
+    "per_profile_build_steps": 46,
+    "per_profile_checksum_pinned_google_benchmark_objects": 19,
+    "per_profile_compiled_objects": 39,
+    "per_profile_first_party_objects": 20,
+    "source_archive_files_per_job": 3620,
+    "successful_commands": 210,
+    "trial_json_hashed": 180
+  },
+  "jobs": {
+    "arm": {
+      "artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 22978050,
+        "files": 146,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/37d6689cbca0cb1feffd8f4999ca6ead5921c721303da9714b86d4290854f634.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "37d6689cbca0cb1feffd8f4999ca6ead5921c721303da9714b86d4290854f634",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/37d6689cbca0cb1feffd8f4999ca6ead5921c721303da9714b86d4290854f634.tar.gz"
+      },
+      "binaries": {
+        "neon": {
+          "direct": {
+            "bytes": 4854272,
+            "path": "/opt/sixdb/jobs/20261023T114232Z-c1ba2d45/results/neon/ikea_predicate_direct_commands",
+            "sha256": "c31a776868e714af7edf9c3d8d7a82a06636a857fb8cd8afc11f9052922650f3"
+          },
+          "predicate-check": {
+            "bytes": 3544184,
+            "path": "/opt/sixdb/jobs/20261023T114232Z-c1ba2d45/results/neon/ikea_tuplepack_predicate_check",
+            "sha256": "9d40f1d54174b070ce31d02150b21f9bbb2b9d337da7b8330a23e63db7898267"
+          },
+          "series": {
+            "bytes": 29005176,
+            "path": "/opt/sixdb/jobs/20261023T114232Z-c1ba2d45/results/neon/ikea_series_controls_commands",
+            "sha256": "c7f85ba7b6f416e7ae2716f8b4d552453cef89339fb4978af4edb873a43062bd"
+          }
+        }
+      },
+      "command_count": 70,
+      "compiler": "Ubuntu clang version 21.1.8 (++20251221032922+2078da43e25a-1~exp1~20251221153059.70)\nTarget: aarch64-unknown-linux-gnu\nThread model: posix\nInstalledDir: /usr/lib/llvm-21/bin\n",
+      "complete_compressed_and_all_member_hashes_verified": true,
+      "cpu": 0,
+      "instance_state": [
+        {
+          "id": "i-031735783d9eaab9e",
+          "state": "terminated"
+        }
+      ],
+      "job": "20261023T114232Z-c1ba2d45",
+      "preflight_commands": 10,
+      "profiles": [
+        "neon"
+      ],
+      "restore": [
+        "orb -m ubuntu python3 workbench/tools/worker.py fetch 20261023T114232Z-c1ba2d45 --full",
+        "orb -m ubuntu python3 workbench/tools/worker.py fetch 20261023T114232Z-c1ba2d45 --file PROFILE/direct-linked.txt --file PROFILE/ikea_predicate_direct_commands"
+      ],
+      "source_archive_sha256": "906c106821417d4282f11e6b89021b7ec7cf2836baf15bd6e99dbbc23a0f7829",
+      "source_manifest_sha256": "a2d5a9d29d219e9c19c945c550bfe2d93369455def2673695e83f3d56220f9ac",
+      "state_observation_sha256": "4fc25a9b316f5f0fa2ae135d64a0a35b464e9c1caa42979825618de8e3f20b0e",
+      "timed_processes": 60,
+      "trial_files": 60,
+      "worker_receipt_sha256": "e4c7856030e675a8d995961362b56716caa443124dbffadf9ea0d3edd39094a4"
+    },
+    "zen": {
+      "artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 37435014,
+        "files": 282,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/e2cf1c47f5a28a89a0d7d77824c6f7017631573e09c628273e17ff5c99eb78a5.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "e2cf1c47f5a28a89a0d7d77824c6f7017631573e09c628273e17ff5c99eb78a5",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/e2cf1c47f5a28a89a0d7d77824c6f7017631573e09c628273e17ff5c99eb78a5.tar.gz"
+      },
+      "binaries": {
+        "avx2": {
+          "direct": {
+            "bytes": 4866040,
+            "path": "/opt/sixdb/jobs/20261023T114225Z-27e9df4a/results/avx2/ikea_predicate_direct_commands",
+            "sha256": "c40a78f676f52b0129f8c3bc34c4a51bc08f83ad8c7c83ae0d7c1db58085b7ba"
+          },
+          "predicate-check": {
+            "bytes": 3875504,
+            "path": "/opt/sixdb/jobs/20261023T114225Z-27e9df4a/results/avx2/ikea_tuplepack_predicate_check",
+            "sha256": "d0cf5722e63d4b424f442a6fb30b742eedf179552eae095d2f293868c4299690"
+          },
+          "series": {
+            "bytes": 25919712,
+            "path": "/opt/sixdb/jobs/20261023T114225Z-27e9df4a/results/avx2/ikea_series_controls_commands",
+            "sha256": "9c99fe5555f6599412f9ec45db779d0dc8b543af2c95cc79958d5836736baa3d"
+          }
+        },
+        "avx512": {
+          "direct": {
+            "bytes": 4853928,
+            "path": "/opt/sixdb/jobs/20261023T114225Z-27e9df4a/results/avx512/ikea_predicate_direct_commands",
+            "sha256": "58ec89ddc9d6bfecc563ea9962967741ff416b3fea38f055863d88117e2228cf"
+          },
+          "predicate-check": {
+            "bytes": 3843984,
+            "path": "/opt/sixdb/jobs/20261023T114225Z-27e9df4a/results/avx512/ikea_tuplepack_predicate_check",
+            "sha256": "752fd834f33399b2fae5be6ef4dba5a77fe4d41505d972c8a024f1aebe267432"
+          },
+          "series": {
+            "bytes": 25390368,
+            "path": "/opt/sixdb/jobs/20261023T114225Z-27e9df4a/results/avx512/ikea_series_controls_commands",
+            "sha256": "6d6c5183d951e8966070fddf56e83ef84ad0a093b970f3f68485d8b6fcbf93fa"
+          }
+        }
+      },
+      "command_count": 140,
+      "compiler": "Ubuntu clang version 21.1.8 (++20251221032922+2078da43e25a-1~exp1~20251221153059.70)\nTarget: x86_64-pc-linux-gnu\nThread model: posix\nInstalledDir: /usr/lib/llvm-21/bin\n",
+      "complete_compressed_and_all_member_hashes_verified": true,
+      "cpu": 0,
+      "instance_state": [
+        {
+          "id": "i-0f347a6c68f49f341",
+          "state": "terminated"
+        }
+      ],
+      "job": "20261023T114225Z-27e9df4a",
+      "preflight_commands": 20,
+      "profiles": [
+        "avx2",
+        "avx512"
+      ],
+      "restore": [
+        "orb -m ubuntu python3 workbench/tools/worker.py fetch 20261023T114225Z-27e9df4a --full",
+        "orb -m ubuntu python3 workbench/tools/worker.py fetch 20261023T114225Z-27e9df4a --file PROFILE/direct-linked.txt --file PROFILE/ikea_predicate_direct_commands"
+      ],
+      "source_archive_sha256": "906c106821417d4282f11e6b89021b7ec7cf2836baf15bd6e99dbbc23a0f7829",
+      "source_manifest_sha256": "a2d5a9d29d219e9c19c945c550bfe2d93369455def2673695e83f3d56220f9ac",
+      "state_observation_sha256": "7d5c7d27804c84d13ac97e276e34a0c2d612dbe3c1234ab0f7aeb1cbd5d8618a",
+      "timed_processes": 120,
+      "trial_files": 120,
+      "worker_receipt_sha256": "b4d5236001cbd393fd664ae71b83cd71dbcdeddf6e4f7b827ffa2e25e234580b"
+    }
+  },
+  "limits": [
+    "210-file runtime before/after map is not per-object discovered system-header/CMake dependency hashing. Complete3620-file capture and actual compile_commands/cache/ninja are retained.",
+    "Focused nine native owner/oracle checks; prior full core and93header matrices retain their own source-qualified receipts. No rerun of that whole matrix is implied.",
+    "Warm resident validated-law fixtures, allocation outside timing, no cold-cache, allocator-speed, publication or actual Frame/Directory throughput qualification.",
+    "Other live Frame files in the broad source capture are not consumed by these targets and are not qualified by this cohort.",
+    "Direct and SeriesPack timing results and linked analyses retain separate observations. No multiplication into older f153/R4/projection cohorts."
+  ],
+  "predicate_header_sha256": "e634777e0b06e433066029e9ed4717ac5367177d7d537e59d41101c9a618381d",
+  "protocol": {
+    "all_profiles_built_checked_before_any_timing": true,
+    "binding_and_query_check_coverage": "Direct exhaustive physical-bit RHS/activity oracle and ordered traversals; guarded owning lifetime/admission fixture; SeriesPack76law boundary/oracle checks and300 command equivalences, each executed natively on3profiles.",
+    "compiler_overlap_timing": false,
+    "direct_cases_per_profile_per_route": 27,
+    "direct_duplicate_exact_argv_of_shared_plan": true,
+    "direct_routes": [
+      "construct_plan",
+      "shared_plan",
+      "direct",
+      "duplicate"
+    ],
+    "duplicate_noise_correction": false,
+    "five_explicit_route_orders_verified": true,
+    "minimum_seconds_per_case": 0.05,
+    "same_within_family_and_profile": [
+      "ELF",
+      "argv0",
+      "cwd",
+      "output_path",
+      "CPU0",
+      "min_time"
+    ],
+    "series_case_routes_per_profile": 300,
+    "series_duplicate_calls_same_run_columns_function": true,
+    "timed_processes": 180,
+    "trials": 5
+  },
+  "scope": "Shared native source/protocol/recovery qualification for final TuplePack direct binding and spike-only SeriesPack controls. Not a full core matrix or blanket no-regression qualification.",
+  "source_map_entries": 210,
+  "source_sha256": {
+    "ikea/include/ikea/author/chain.h": "c0ba7660a7d787b244f0833f942ac9099924380ef3336dce0a7beef4658f5c81",
+    "ikea/include/ikea/bec256.h": "3ccd02ece4d59c0373125bdca2f991d8e25383b0de833f4c0b18693b788e89ed",
+    "ikea/include/ikea/bec256/analysis.h": "fbef6035061a8a5c204a3417b278df11ea546ba93b470e5f060ad8c504540177",
+    "ikea/include/ikea/bec256/author/analysis.h": "0f0e9d4f093d5c7b635e04cfcea20d443e9ddf1ea923e3e18d43b8acd2acb8e5",
+    "ikea/include/ikea/bec256/author/chain.h": "b51156643e0de42a9e175168a50294a07c21adad6ed79b80ae6683fbf44fc053",
+    "ikea/include/ikea/bec256/author/native.h": "adafadcbb2301ac83e0b9694b14b7afcccea0cc030727f0633134c2e39d8f2a4",
+    "ikea/include/ikea/bec256/author/write.h": "076e5c0966bae758683792fcfa6f1cdb1e366c38acce24e63d68279cefa2c191",
+    "ikea/include/ikea/bec256/codec.h": "8c2a7e2e9ccfa9c364dd6f7a1662fe90e5c18b817f6e0154f5ded9786f84f131",
+    "ikea/include/ikea/bec256/detail/estimate.h": "7c07cb5708dff1843c68c20a126f31a3cec67a89c8f78f2b388d51283c0f3a32",
+    "ikea/include/ikea/bec256/detail/native/assemble.h": "8f004e28a28697fef30440a71aa530f62018f7cae786eea248ba15961be33750",
+    "ikea/include/ikea/bec256/detail/native/avx512.h": "0e2e092ca24d3404b4828bf3c94b240c24a8496af22b2d0feebaf594547f8819",
+    "ikea/include/ikea/bec256/detail/native/emit.h": "b24e104497505d703a71ab97fb95b301efce5744b9de3b4bcf1c1872a23fbe02",
+    "ikea/include/ikea/bec256/detail/native/neon.h": "55e5fb86d2e52f0a7bcf204d98c5a21669e4d57d44f45acf7e5e3f1cfc53f56b",
+    "ikea/include/ikea/bec256/detail/pack.h": "5d72ee4769b42ca30ec16244ff295762c782e1b19227af1d8bd4e874cacbae64",
+    "ikea/include/ikea/bec256/detail/scalar.h": "74ca49fd7941de284c95b22b89265e16cfebf19d66206227b1003b273486caf0",
+    "ikea/include/ikea/bec256/detail/tables.h": "ab71429079516f0691035b65e45f10ef69f98f6539de787db6266b803540f57f",
+    "ikea/include/ikea/bec256/detail/write.h": "56979f214ce97cde4765acc5e916788d594bacee46f707238677d3e87be45aa6",
+    "ikea/include/ikea/bitset256.h": "d1d3b5124de08e2eff367bb545d55afc735b6724567dff0292ed356680b240af",
+    "ikea/include/ikea/bytes.h": "30472394c26ba69348ddd9a270407276954073d0e7e44e0f508d116896858b19",
+    "ikea/include/ikea/comparison.h": "f9f5f933116f37db76a1804c017f3fff24602db9cb87108d9d586f247594c50a",
+    "ikea/include/ikea/config.h": "b04b0a2c7f317c879fa3e10a66401df47995e4c2dba0d0bb5ddbb398c3744dde",
+    "ikea/include/ikea/description.h": "a1a9679870d2a5a90a730222253c0c9bcf6ef90badd92deba1ab261191811409",
+    "ikea/include/ikea/detail/filter/compare.h": "43e967fc6653fad34182b39e042a2d4d9bc107f1f8c14ff1449a7759cef7bde9",
+    "ikea/include/ikea/detail/overlap.h": "69840846e1ca1ab5fdeb6fdcea21d9705ec566ade7e0abff7a6d94b7ff414e44",
+    "ikea/include/ikea/effects.h": "3bf481cde151bd0529af61789361c92f081f1ac5d9b42237f131aca822e8d9a8",
+    "ikea/include/ikea/hashtable.h": "6b2743274f3beb9f4057e8d9ac04657d59cb2cc3c1ee84371d4147313fe47931",
+    "ikea/include/ikea/hashtable/accumulate.h": "1e1c735fb9c886eb1cb7453befb64157a26ce89463f06d094cec22dfa478e58c",
+    "ikea/include/ikea/hashtable/author/table.h": "836111023bec7270d682a55cc444071e420ddc04b89190eef0cb15aa07ef82e7",
+    "ikea/include/ikea/hashtable/capacity.h": "a3a7f103ef40e512d1a7d190f42d3d86564c9b4718937eb94ae781bc5bfb1555",
+    "ikea/include/ikea/hashtable/detail/accumulation/codec.h": "5657bbf4029b2988d1229986926eefa929f054f321d8b7c5f34c649851f7472b",
+    "ikea/include/ikea/hashtable/detail/accumulation/common.h": "acc4dfa4a12cc4af087e21dbac7cb9f5fa4e2a950a3112604d5cc334b34adf35",
+    "ikea/include/ikea/hashtable/detail/accumulation/engine.h": "70cc18b3fba833278c78f9ad0e54e821b244d5e22cbddcd4492a7579f2df54db",
+    "ikea/include/ikea/hashtable/detail/accumulation/flat.h": "192404278cb1ed8d0628c013152867ebbcbba7fed43e1a7ce9b6e56929dea073",
+    "ikea/include/ikea/hashtable/detail/accumulation/packed32.h": "cb713d28f7f15925478b369d4300e3782b1eaec794122ec3fc9d736b8c07488a",
+    "ikea/include/ikea/hashtable/detail/accumulation/points.h": "c9023f5819ba2d58f796b50b38d67d58f5c4c41dd040647cd5f00ec1e5cb09c8",
+    "ikea/include/ikea/hashtable/detail/accumulation/resolve.h": "d7c8dc880aca723d33d0b2c0e791f5258967c7b807e765d7f26cb11c845d9ae4",
+    "ikea/include/ikea/hashtable/detail/accumulation/swiss.h": "9e59fb87c820aaeb946718c7326fbe9356f179ed5e68ab2e457de2f33e92793a",
+    "ikea/include/ikea/hashtable/detail/accumulation/wide.h": "d65edef5587e516cb6b027ea9ef6979daa09823097ad9db3167c4e3d0217523b",
+    "ikea/include/ikea/hashtable/detail/bits.h": "d10eb6de5b882305759005e0400a344a5863ee8f89eb3789f46a83a29f842cb6",
+    "ikea/include/ikea/hashtable/detail/bucket-filter.h": "86861d3a970234285da0bce8966e1b49415f75106d6806a39151855ad6a276e0",
+    "ikea/include/ikea/hashtable/detail/bucket-write.h": "b0ab22425dcdb6961c465d0f6c605271e31f8fe75909d5eadaef5498ceae7f21",
+    "ikea/include/ikea/hashtable/detail/bucket.h": "9d6ec6245786e45e499f0ce33f63d8148c1721ce01410332e2d74fde43170b87",
+    "ikea/include/ikea/hashtable/detail/control.h": "d1cfa365a44ca9bb8674f540f5d20df6bb53cae229ef4beca8ed8bdb9daddd66",
+    "ikea/include/ikea/hashtable/detail/hash.h": "9a66f5be1791c8e83b6a72ddb3539587ded3e047971f6914d2222b2c4147d9fc",
+    "ikea/include/ikea/hashtable/detail/packed30.h": "dc13d9393f90e26fd17dcf8a86bbb6a98ae607d963810a3702f34ee087548991",
+    "ikea/include/ikea/hashtable/detail/read-batch.h": "53555bcbc405479f8d459e7ef00b02edf7e28c5c3e2beccecf18d3ee72711802",
+    "ikea/include/ikea/hashtable/detail/representation.h": "3170e67d58070bcfadf019dacb381b25e0f9c4ef8916f501c481f3fe4f55ebfa",
+    "ikea/include/ikea/hashtable/encoding-profiles.h": "4a979637778706291144cd843b04d64b2d4cb3d96f0b15ca998fcbe9455100da",
+    "ikea/include/ikea/hashtable/encoding-selection.h": "78ca70af88b722df55649a7fc2659f6757a85dc765b2b744a29742ae9bd64d83",
+    "ikea/include/ikea/hashtable/erased_table.h": "115f98da3b0f8be9a1e2a86c92b38f15e6eb18db74e4a542216d468346a67e77",
+    "ikea/include/ikea/hashtable/geometry.h": "44d4a7638af4a861d39411d6f03a833fa9b1ece061c630152c29b9b2d3fba0bd",
+    "ikea/include/ikea/hashtable/kernel.h": "5ff1698fb4a5ae12aa13c23e080aa00a2c127dd97efe93c972c846b584ad3e05",
+    "ikea/include/ikea/hashtable/lookup.h": "e26b4c702f11c6b0b079d095929c587764ff54bc215011bd01ab715914f86a69",
+    "ikea/include/ikea/hashtable/mutation.h": "658341c0f837a0490d9f8d48d227c2510eaa3a4dfffd6807dd206f3e7adb7ef4",
+    "ikea/include/ikea/hashtable/rebuild.h": "a1b192e117ee4e6f523ef14ce7b43de1a28cb97e34d48d708a749af4f3925dbf",
+    "ikea/include/ikea/hashtable/storage.h": "ffe2180179d6dbfcccfe4fb7bb4a58734d4e67f7b6ec2c6541b9d4bfaea9fbc5",
+    "ikea/include/ikea/hashtable/table.h": "fa3827301ba63813e4f7c8c9b9bb39bd21980e37e721046a2680467f27fd4fbf",
+    "ikea/include/ikea/hashtable/types.h": "6abea17797b433e19decee76c6bc706f0dcb3d1b26a1fb64a567c94cdbd61794",
+    "ikea/include/ikea/intervals.h": "07e516ec0dc0aba72fc2abac1655d7cbc9548a93774a47a6f7ea8f9b881223cb",
+    "ikea/include/ikea/intervals/author/search.h": "3b6bb4f2e00b460cad930c6d9de7a39a2ad88678a2e74e26a3fc6ee7c4106919",
+    "ikea/include/ikea/intervals/detail/bytes.h": "7c9d303bf981ffe9da63574e4d451a6a0b3c16d7eaf00c8c8bdc344dc9d11835",
+    "ikea/include/ikea/intervals/detail/native.h": "2a4e0cad5dafec45f7de2b5d7f8046023ffe346a99bbf630e8dc6df97956c0b0",
+    "ikea/include/ikea/intervals/detail/prediction.h": "abb0905206f21d4c760c4bd1c7c9f6542a0e3a977c0642f1be300c48f1451b3c",
+    "ikea/include/ikea/intervals/detail/prefix.h": "c84f456e0e99615c10d0b75514fec8b42562a347c168a119261c8ca0e7c54e4a",
+    "ikea/include/ikea/intervals/detail/search.h": "81ab913c600adf59702179c80bb77f20136c9266dc37609f4d72ce2cfd0281e1",
+    "ikea/include/ikea/intervals/detail/simd.h": "9ba0675bbfe1ebe2621a974da01a440a4550836b4cbfbc4b40dd77528ccb70dc",
+    "ikea/include/ikea/intervals/edit.h": "aaec0a8e859d7507ddbfc1456fd6ef427b950cf8b086a108de2c5c9803dc56a9",
+    "ikea/include/ikea/intervals/geometry.h": "dbba1916caf1ef1d480e7ee5c90ae137a9f32d4c373dd39d7996b359a3212b0a",
+    "ikea/include/ikea/intervals/projected.h": "63c4efa8e19a25035e95215545f7b4fdfa5ed3556d563c4259556909d921acb2",
+    "ikea/include/ikea/intervals/read.h": "9381e0835c32f5e615d37a3ce9a5d7e38027a9d7733e700a3b016ab081c63289",
+    "ikea/include/ikea/intervals/search.h": "814a0ad87196e7e628f67b6ea724c240f8ea8e18f21bb699b47650bae38f1405",
+    "ikea/include/ikea/intervals/sparse.h": "65605f895f175ece549e5a70072be76628074a514bd371b5f1dacd5c10a565a2",
+    "ikea/include/ikea/intervals/types.h": "cde46145512289673bb8fd9e05724a6b8cbf0d93dbfc85b43a5eb8d9dd1a46f7",
+    "ikea/include/ikea/seriespack.h": "28217fab4bbebedf8a20e77352fbebc3911cc292473020ae8eb3636945a87ac6",
+    "ikea/include/ikea/seriespack/author/chain.h": "255c74b66506da5a252503ae26c9bbaf76fa42b5851a8f136860272c0f571f7e",
+    "ikea/include/ikea/seriespack/author/expression.h": "6894feabe25eeaa2814835d68134decf34a96867b1e339a11c7b6f67c39ad0be",
+    "ikea/include/ikea/seriespack/author/filter.h": "ae255f3a45780ee200259846cc2552547d5f4ce1390b40f76574d1285028c329",
+    "ikea/include/ikea/seriespack/author/indexof.h": "2643915d39eb19271f0ff42ccf6a8769b51194e95ec69eeb9a1c4d2b9b2f832e",
+    "ikea/include/ikea/seriespack/author/local_equal.h": "22f7c2c7f1b72edb18ef705000ce72d12c8464975f9952742156b4d5d9a31d81",
+    "ikea/include/ikea/seriespack/author/mutation.h": "4fed570e4b04786140ed173c102b66eeadb4c4a5a772d35b4956cbb75d5623ff",
+    "ikea/include/ikea/seriespack/author/native.h": "fb7feef8a08131536d03f40e25ab312c3f7b8d7e095f1e1b14a7d8aec063822f",
+    "ikea/include/ikea/seriespack/author/record.h": "42c37aebcd01350a71289c06c9f4ccc555a1e708883865e04dd461e26d620785",
+    "ikea/include/ikea/seriespack/author/store.h": "27eaffcdbba6eac3c197260f56e737cd06f8c8bf23cdc6c5911744e69a78c6d9",
+    "ikea/include/ikea/seriespack/author/summaries.h": "5fa83c2c583955099fff1a284446306c0b4a3ff47e86743b1509c711b985e3a9",
+    "ikea/include/ikea/seriespack/detail/admission.h": "f3c04985ba39675ab9481f8e59b41dda90e928d0ec8c6df1ccc16af4c5c7d6a5",
+    "ikea/include/ikea/seriespack/detail/dense_read.h": "6e7fc3da61456a93f881c03959540ba9d3cdb5065c91a807ccbdc88dcb0343ed",
+    "ikea/include/ikea/seriespack/detail/effects.h": "b71f7db70cc2132b075d78a6ab1dce3d53be5f4e84a21cf6aeea70b2a66a685d",
+    "ikea/include/ikea/seriespack/detail/filter8.h": "b89bd50fcbe6322769ebf9bdfb7e29e5ad979e116a40c9353852d3875b4acf6e",
+    "ikea/include/ikea/seriespack/detail/mutation/admission.h": "dfe17b5a507e3f3e4074a7caa8c7a26604e0584c93b6af04edbde76c756d4a73",
+    "ikea/include/ikea/seriespack/detail/mutation/admission_state.h": "4dc16d414fb0be164418d92e2efd6956f473621319fb0dfb4c6848bf3cd4eac6",
+    "ikea/include/ikea/seriespack/detail/mutation/assignment.h": "d5b1b8ed1a4d87f692c8ef1b72386139822ff47cb3e383b9eb9d020460ca2033",
+    "ikea/include/ikea/seriespack/detail/mutation/composed.h": "3f0bc7073215c6c0cf028161b048fc5c9c876ab8076d8c76a75c689230e26f3a",
+    "ikea/include/ikea/seriespack/detail/mutation/composed_construction.h": "e5e83a713e9333b6db48f19a3c85963612eb7e1c6d759b71370af38d07e76008",
+    "ikea/include/ikea/seriespack/detail/mutation/fields.h": "54bcd05be66c76f4d6a1dde87afcd62fdcafa4481c71d9dbac423b8326267d2a",
+    "ikea/include/ikea/seriespack/detail/native/avx2/read.h": "577a12ff831559d8284d30d1d9d345d090abbf9257749bbe28525d778c6f29fe",
+    "ikea/include/ikea/seriespack/detail/native/avx2/write.h": "b6fe857d4b6140de65f5ccd419d1a604824d06bc2b1accbb3bee6b15bdc32bb5",
+    "ikea/include/ikea/seriespack/detail/native/avx512/read.h": "8e0d5abad1e06b5bcb1f7b9efa9358c02377292d0ff7934aa8281e90e74fbb03",
+    "ikea/include/ikea/seriespack/detail/native/avx512/write.h": "6d2dd532222ab80af7119a24af3e1b0d0017b733ad76851486d24e1cbd26318a",
+    "ikea/include/ikea/seriespack/detail/native/neon/groups.h": "006b9a203bfcaa35cd6dd55f0c510adb6f79061ea38dacb6a302dfad6bbb5107",
+    "ikea/include/ikea/seriespack/detail/native/neon/read.h": "8ec9c361e4e03970695f9f83af094ba494aab6fda9a292e5877cef0abaf57e3d",
+    "ikea/include/ikea/seriespack/detail/native/neon/write.h": "6180c12f403137dde8ae31dbbedb429cb39e3a2143b34802d051aa43776dbee5",
+    "ikea/include/ikea/seriespack/detail/physical_source.h": "a79116d85b082e1848f4404e0edf72135877f02d8b291b7eeb4fa472be67e38e",
+    "ikea/include/ikea/seriespack/detail/placed_read.h": "0feeea6a0d838f84dd431cb0e20c1498ec93ba61764847a600b499fa648b1903",
+    "ikea/include/ikea/seriespack/detail/point.h": "124229fc8516abeba01aa010938386dcb08f8a4a09268b575f380d448df08f94",
+    "ikea/include/ikea/seriespack/detail/wire.h": "0e0e002323e319fc5f817bd4fe136435d0722539f7487b998597c971f631288d",
+    "ikea/include/ikea/seriespack/erased_reader.h": "1a19db339a91371ed7e8f833749a0eff018ef9d50ca2b7ec9825b6d362a8f259",
+    "ikea/include/ikea/seriespack/erased_writer.h": "9e2c890acf1e3b6d9a0a793d937a14a249e328f0600714f9b2b018c68e466b7f",
+    "ikea/include/ikea/seriespack/filter.h": "a18e402d63fb76c5905deef09b6c9f36d79f7a9e27f19be93bfe17f2ea3d4b1d",
+    "ikea/include/ikea/seriespack/indexof.h": "7de4a2ccf853eb99688b5d9c0c66d5c97f841a122dc547a002c7fa18c93bd900",
+    "ikea/include/ikea/seriespack/layout.h": "f29d77fa37da523e3c1893426aa8fccf6d2f3a1be9f9a770f902565228c5a09e",
+    "ikea/include/ikea/seriespack/layout_value.h": "9a338c94172055dfb5f273d417c68c2b5b17d6eddf21443ab2d115df8cddab24",
+    "ikea/include/ikea/seriespack/point.h": "52d736603fa6839086a110335f22b57c49c49080363ce203e51b23c3e82b7d96",
+    "ikea/include/ikea/seriespack/presets.h": "af4c432e840ed72119984d2236dfe68fa8f22748232ccb40e8d64bc6131650d3",
+    "ikea/include/ikea/seriespack/read.h": "60c6873b0b5de71ca11ac2a56b63833c36eaf753d155d30001e0c8c463a9ced9",
+    "ikea/include/ikea/seriespack/reader.h": "0e740cd5b04a215e5e09e1abe75ec1ef91516d04d0e63abc5e701b448f6deb37",
+    "ikea/include/ikea/seriespack/selection.h": "6dabe389cb5772b0ed2eaa8a8ce0f8a89c9ee54ea064c598db7e49e934a34e87",
+    "ikea/include/ikea/seriespack/status.h": "e0553cbb17aca0d843371cb1fe3baf8a34fc71cc9091f4b23730552203118cbf",
+    "ikea/include/ikea/seriespack/view.h": "b29c5c35d680c5251d33053b883694de8fb2576982cff95d065d572b78973bf5",
+    "ikea/include/ikea/seriespack/write.h": "a31c5acfaa5e52bd20ed40c8fbfa2d82dd9bf67462d1f324d7ad5f3b518679e5",
+    "ikea/include/ikea/seriespack/writer.h": "9025e30f51622e3ed0a3ee3164996257683608bd5af904de1d7df75a1602b8d3",
+    "ikea/include/ikea/streampack.h": "1ff428b0344ad56e1c301f81a63015d5738cfad6cba67bcd6068212100587554",
+    "ikea/include/ikea/streampack/author/chain.h": "ec06f88bc430c47cf2b90f98584ad159a87f44e667fc458c2fcbb9436ab79e78",
+    "ikea/include/ikea/streampack/author/native.h": "468eccef2f4cafa8f35614dbe7449a519f429163d703d2140c505c205ead88d7",
+    "ikea/include/ikea/streampack/author/read.h": "b69911e45144603b68fe891dabe995d843e0e3de7be852dfadbdf2dbe4810f56",
+    "ikea/include/ikea/streampack/author/write.h": "44099e5780e5bacc2a83f93d8468b22a1e440f6ad68bec690a12377ced2035fc",
+    "ikea/include/ikea/streampack/detail/compact/author/chain.h": "e0a3673da9ef634ed62ecdd643b6646300d26ed5aff87060e45ac6d4f7d6d65e",
+    "ikea/include/ikea/streampack/detail/compact/author/native.h": "6ede72340433c096ea8852c32353b4082c4bcb406e8e7ca7317eb626d2d78ef9",
+    "ikea/include/ikea/streampack/detail/compact/author/read.h": "72fd5a1daa64a8f912c35e554246bb46bf9519380aea26708c10ef2a5320f4c1",
+    "ikea/include/ikea/streampack/detail/compact/author/write.h": "c78536ccc82d794bf01b49ed2b8ae837b1a32adae9380ea839303ecf47fc75fe",
+    "ikea/include/ikea/streampack/detail/compact/description.h": "bf4b901f09966a4499421949cfedfb1a5c2ec25f66120fb14dcf2ab449623f91",
+    "ikea/include/ikea/streampack/detail/compact/detail/extent.h": "fbbdc4ab1efba3657bb4c020654f7b89f114245d0eb4e87865dd1c33b654737e",
+    "ikea/include/ikea/streampack/detail/compact/detail/rewrite.h": "8ebbc8acac17d38a2d5efd66fe9ef9269356a18474ae72a9b2b10c28cbbe96c9",
+    "ikea/include/ikea/streampack/detail/compact/detail/validation.h": "8317601a75ce915ffadf0223ea4ef7167999f0898e7dc2d390af85d35d5f11c3",
+    "ikea/include/ikea/streampack/detail/compact/read.h": "56d609ed0deaa3f3b9aed0cf975178900806177e7a1ef85358a03df5aa1532be",
+    "ikea/include/ikea/streampack/detail/compact/view.h": "98441fd11ee1139aee9572ed0f8024845ba2a80758d2bd4da6d3442c715732f8",
+    "ikea/include/ikea/streampack/detail/compact/write.h": "3d9f75de4fd18e3e7d26fd6a73e89e10b11d626486be96c100db1fcc93b5624d",
+    "ikea/include/ikea/streampack/layout.h": "92b7cd5773fb74fd8fd19a9994682d53c7105400c66941e29373da3922e92b37",
+    "ikea/include/ikea/streampack/read.h": "011ccff9b0a5559403860a81b67926007bf047dfaa50897695ba01f70d2537be",
+    "ikea/include/ikea/streampack/transfer.h": "1a4b66c0728b58544acabe89cc1a8e1baef984dcada7f0e465e35e498dd54434",
+    "ikea/include/ikea/streampack/types.h": "472c4edfcfe88e16f74688bc8834e68bce9b9707150be62b649c3675396c66bf",
+    "ikea/include/ikea/streampack/view.h": "034ad4974ff4c48f9e41e1d9ec674b9b7dbc27353a39b538f568306a0c1ac8e3",
+    "ikea/include/ikea/streampack/write.h": "aa98475d49c4c25e8fd94772a6b585622ac592d16e4879bfd10cfcc5b3e452d4",
+    "ikea/include/ikea/tuplepack.h": "aefd1e2473322e0e5aaa5660fcd3378f9d4ee2e8204d43889c167e2b41654b95",
+    "ikea/include/ikea/tuplepack/author/composition.h": "8015fec571837a0aacfcf8b54509bb45d259ddc6551bfbceb1f01eb1711ff7e1",
+    "ikea/include/ikea/tuplepack/author/execution.h": "9836d06d242ab571f77e69fa757d3a67315e9ef6546dd01b0c0eb169d871fcbe",
+    "ikea/include/ikea/tuplepack/author/filter.h": "18ba08ad5e8bba57cfd0f12f2346f52f4c381677db7ab8abe877eed4df9df9fe",
+    "ikea/include/ikea/tuplepack/author/maintenance.h": "1afbe4b3be240f53dd71bb6d813918f30a02ec025253b531b46f83099a258f11",
+    "ikea/include/ikea/tuplepack/author/native.h": "3e941538ec1aa82210edd7316d3982dfd96118fdf01303247bc9557743b50118",
+    "ikea/include/ikea/tuplepack/author/routes.h": "c17cdb434a90e1ccec9c94083f2856db55fbc87abce7ed9443d285d128772b11",
+    "ikea/include/ikea/tuplepack/detail/gpr.h": "30fcc483704acb4b7212415bf8ae07c92bad7a37c10f3345095a45aa9d2542ff",
+    "ikea/include/ikea/tuplepack/detail/mutation.h": "cbd19eab606d7fc5b2760b2941968534b4c1d4fdd19eebaf6bf7e2561bb16d5c",
+    "ikea/include/ikea/tuplepack/detail/native/memory.h": "e91fcd5e9d90e0f960b0004e1c3be17ad07ce0e58eb134038b67c23414354b28",
+    "ikea/include/ikea/tuplepack/detail/native/packet.h": "a31462a84217443e95cbe9c3994cb37367ca5843e30a7838bfd35506fa5ed8db",
+    "ikea/include/ikea/tuplepack/detail/native/read.h": "22072dd283041286d3e3d104f9ce7a00d287276a21d5ac4765647d3faf7d9dd9",
+    "ikea/include/ikea/tuplepack/detail/native/routes.h": "5e81e906ff37f997662200736611f7d810aaf9c6937fe1ab865fae9003137875",
+    "ikea/include/ikea/tuplepack/detail/native/selection.h": "274fce2bc9fd61c8f9f46b7c139f4b559f3095822d4b18b935f40d26a94e3d95",
+    "ikea/include/ikea/tuplepack/detail/native/shuffle.h": "c59956d48c1c53e68c255f3a99d98f474f343d7ede10b4cb71d3f491049e516f",
+    "ikea/include/ikea/tuplepack/detail/native/types.h": "79c5d5a71982c4839348958fe9e2a72d98c0dbca321b227e7208f9b20fab40c2",
+    "ikea/include/ikea/tuplepack/detail/packet_plan.h": "d77bb8473c0991d2c0acb6fbfdafadb6bfe25383c89fe6025a3b212a1ce235b1",
+    "ikea/include/ikea/tuplepack/detail/plan.h": "40d7efaeb771bef9207d89598cfe6c0ecc614e6d4c2edbc010ae19d16c36d5e9",
+    "ikea/include/ikea/tuplepack/detail/window.h": "106ba39b37d696e351b0748353e4a2c1d7e1bc493639cd703653ad860377d472",
+    "ikea/include/ikea/tuplepack/filter.h": "e634777e0b06e433066029e9ed4717ac5367177d7d537e59d41101c9a618381d",
+    "ikea/include/ikea/tuplepack/initialize.h": "23016ad6ac7ccd9860c74201dd135b56cb31acdb4835883fd0b45b0c100e2694",
+    "ikea/include/ikea/tuplepack/layout.h": "e69b31fc0cbb73b8426dbde3b7e25da1a8d8288f0c63dbde8d5b251e7426e194",
+    "ikea/include/ikea/tuplepack/packet.h": "d35afbc37fe37f5c1a4519b4f79468522672b73dd378f343162fe4f119cf67d1",
+    "ikea/include/ikea/tuplepack/packet_layout.h": "a47daca01d622f150273137e0448d9b2f304694076b78c9ebd08e86c94dfe28c",
+    "ikea/include/ikea/tuplepack/plan.h": "d9cc1690d0c8e98faa9053188c74ec5a0940f34a8cd618bf7e984ac167d880ca",
+    "ikea/include/ikea/tuplepack/read.h": "612999ebdc54d93bb7d9e5d68cf2327b2f2742dbbacf52f363dabaf095129876",
+    "ikea/include/ikea/tuplepack/selection.h": "cf43e637c46632ef25e22ab32ee2dc4965c4552d85049abbc8d1cd35fd30cc8f",
+    "ikea/include/ikea/tuplepack/transfer.h": "6269c460e67abc8379fe2b114f61509a5ee00861c2ab087086bea24eabf2cefe",
+    "ikea/include/ikea/tuplepack/view.h": "699b413ac19359fd31e031c82eb44b7d81f625ee83b6cf1e19c627a08348f2da",
+    "ikea/include/ikea/tuplepack/write.h": "a83491eaa4acb01c4115359c3bcc0b34facbf4305cc5f94f0f47e0ba9ba12fe9",
+    "ikea/src/bec256/analysis.cpp": "07c7cdb4e4f4202495add48edea368ad1328b3163e595753f8d49963113b7ab6",
+    "ikea/src/bec256/codec.cpp": "65cdf22c606dba6b4f27d01d3e66dd1133e873a5bf2eac7012eab57c2e3f2e7b",
+    "ikea/src/bec256/validation.cpp": "dea80e4012d583553ab0acdf38fdf7e92a45b4bc173ca9c1ea56cf7ab8e4ef8e",
+    "ikea/src/intervals/search.cpp": "3e7b689a087c9513a62d048dfde1cddcd743353111742ef9d48a0a06ddd627c1",
+    "ikea/src/overlap.cpp": "ed327d3c978b5503fad1eaf158964a93033d7c9c243171bd790afd0d1eb1a4a2",
+    "ikea/src/seriespack/admission.cpp": "0785bd7902e0315a04c67d742ea26c9e9383fca937abaf733831207a5255ea20",
+    "ikea/src/seriespack/layout.cpp": "a2b33a3c8d618a8c3a5621229bf226105bc358389603f79b243d47d2f5810349",
+    "ikea/src/seriespack/readers.cpp": "94262616d019a741e1f35c054b76269620dc9603a91597ea26d6a6fa3ae72e02",
+    "ikea/src/streampack/compact/description.cpp": "afb3431bd7a0726795bfa1fdbcc65c4db468a5eaa2803e68c4b95ec80b9a7927",
+    "ikea/src/streampack/compact/view.cpp": "071aebdcdcf52056a234d27955f7c02cf821dfe50305d32de310cbae1bd4123b",
+    "ikea/src/streampack/layout.cpp": "a826afdd07c81f256dcacebb961b4a67a062a2f30b728033fcbf8a58aa7ac2c8",
+    "ikea/src/streampack/view.cpp": "ad0f0f9a43073e7a3e19661386c2a59b4e162b896db436ed3c39a3700b95d998",
+    "ikea/src/tuplepack/gpr.cpp": "849a944daaafb1134a4ae07dbe2773a6d39132a8038580ed6eb49a9f581a3959",
+    "ikea/src/tuplepack/initialize.cpp": "448c3fc0e6a8df1d9eb851c984b5f3ddf4a8f8b65f5f7b4b134f53003f35d850",
+    "ikea/src/tuplepack/kernels.cpp": "138c06c62589ebc148702c100e5b6999edc4cdc488fb42671ae8204d4ddd7b33",
+    "ikea/src/tuplepack/layout.cpp": "819417145f50624dcc5394a837310370773cea79b04c34672fda7396e94bdb2d",
+    "ikea/src/tuplepack/packet.cpp": "44fe1f5682281ba659977d6ea1caa813187681427d44132a35c041cead329b89",
+    "ikea/src/tuplepack/packet_layout.cpp": "acb34f3cf1a133daa5a19a521174625d856091f5a0ab1da6cb6a6296d25950c9",
+    "ikea/src/tuplepack/packet_prepare.cpp": "fd0c402e7c33353c53403ab9ab5c6dea91f6522b46bb9b689f8d922fc43d3958",
+    "ikea/src/tuplepack/prepare.cpp": "818798321445b968e22b532190c17b85c4a2f420abadd4779360eabf5d5ae543",
+    "ikea/src/tuplepack/routes.cpp": "8335b5239e502838c7a7038410cb56651f777d0ccf08a12d56786c70eae702e2",
+    "ikea/test/seriespack/reference/physical.h": "1e3118d45f89a6419b7c5289dba0f213c5c56516bd7a24083c6aa9d6ec84e239",
+    "ikea/test/tuplepack/predicate.cpp": "1b17be98865eb38b746c42a92f391f0b024b881758ca446ce1f0a636ee37cccd",
+    "workbench/spikes/ikea-composition/handle-boundaries/direct-bind/CMakeLists.txt": "9e7313e08a7697fbd2471b160d974947250a95810553fe45c077dc1142ce215c",
+    "workbench/spikes/ikea-composition/handle-boundaries/direct-bind/codegen.py": "66cba4ccdb7cbcc714aa14592b978a60fff00ec8ed8f927d25b8a3d0c474b66b",
+    "workbench/spikes/ikea-composition/handle-boundaries/direct-bind/commands.cpp": "f9b18c565c1c95e76bea872431805e79196fe6f5ab2a146344dbe85ce3adcede",
+    "workbench/spikes/ikea-composition/handle-boundaries/direct-bind/results.py": "4babff69eb6a698a2bd0eed74bc2939c756ba4fa76d843d643b4ab32acc1f8b2",
+    "workbench/spikes/ikea-composition/handle-boundaries/direct-bind/run.py": "fa8481cfdb59dd3a157426e965debda43110985a955cf38dafa42db2597a4c87",
+    "workbench/spikes/ikea-composition/handle-boundaries/direct-bind/worker.sh": "c6260ab1e5bbb6b433390789354418435cacb0d8367cc33013efa74738d4bb11",
+    "workbench/spikes/ikea-composition/handle-boundaries/series-controls/CMakeLists.txt": "ba9415f60ffaea38bcfb23a4b5dd834a881a75a4be5a8d8a30b59d0ac3f696aa",
+    "workbench/spikes/ikea-composition/handle-boundaries/series-controls/check.cpp": "924a94ea247dae0191fa7172e14dcb91e97cb0aaa314612e87fa30adf2fac933",
+    "workbench/spikes/ikea-composition/handle-boundaries/series-controls/commands.cpp": "d99bfa84380f128c8a714bd98707d5c9102cce381fba4949db39a0ce8c4b07ed",
+    "workbench/spikes/ikea-composition/handle-boundaries/series-controls/controls.h": "2e3443746876e39f2291da11d89c664d40ddf3b5460f90a2f704d6bf21e9b991",
+    "workbench/spikes/ikea-composition/handle-boundaries/series-controls/initialize.cpp": "e2c030d016dfecf30fba7186ca8a29e5d51f3949d5ed55abac8899ed8c9ca6f2",
+    "workbench/spikes/ikea-composition/handle-boundaries/series-controls/oracle.cpp": "6a27ff37d1542ab1ec814ef62aaaa2aeb5c84419d46fcef7e54d3db6a4034447",
+    "workbench/spikes/ikea-composition/handle-boundaries/series-controls/oracle.h": "23e29e665573aea9979d8a2fb3690e9b307ee8aad987c20ae01f051eca09405a",
+    "workbench/spikes/ikea-composition/handle-boundaries/series-controls/reads.cpp": "872a6bf09fc37e3040dc19a54f458d0904e530fa287c4f9a24f204e587f3f99c",
+    "workbench/spikes/ikea-composition/handle-boundaries/series-controls/results.py": "9bc5ceb608bbaa641499330bd9b7e83fc8342eb424629154d063502a32ee2f18"
+  }
+}

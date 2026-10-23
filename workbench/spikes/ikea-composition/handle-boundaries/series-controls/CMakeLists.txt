@@ -1,0 +1,5 @@
+add_executable(ikea_series_controls_commands commands.cpp reads.cpp initialize.cpp check.cpp oracle.cpp)
+sixdb_target(ikea_series_controls_commands)
+target_link_libraries(ikea_series_controls_commands PRIVATE ikea::seriespack benchmark::benchmark)
+target_include_directories(ikea_series_controls_commands PRIVATE "${CMAKE_CURRENT_LIST_DIR}/../../../../../ikea/test/seriespack/reference")
+sixdb_heavy_compile(ikea_series_controls_commands)

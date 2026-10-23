@@ -1,0 +1,1250 @@
+{
+  "arm_loop_check": {
+    "direct_range": [
+      "0xdf40",
+      "0xdfa0"
+    ],
+    "limits": "Only mnemonic sequence equality; not byte/operand/data-address equality.",
+    "mnemonics": [
+      "mov",
+      "umull",
+      "ldp",
+      "add",
+      "add",
+      "tst",
+      "mov",
+      "lsr",
+      "sub",
+      "lsl",
+      "add",
+      "lsl",
+      "mvn",
+      "lsr",
+      "mvn",
+      "and",
+      "and",
+      "csinv",
+      "bl",
+      "tbz",
+      "add",
+      "add",
+      "madd",
+      "cmp",
+      "b.ne"
+    ],
+    "mnemonics_equal": true,
+    "shared_range": [
+      "0xdd60",
+      "0xddc0"
+    ]
+  },
+  "canonical_cases": 81,
+  "cases_file": "predicate-direct-native-cases.csv",
+  "cases_sha256": "55bb93729cc254bb31c7df29dc50bb1a359fd65fd6e8a10679117a496db84f64",
+  "common_qualification": "execution-controls-native.json",
+  "core_commit": "cd55974d",
+  "format": 1,
+  "limits": [
+    "Warm resident fixture, validated layouts, no layout validation/allocation/cold caches timed; no duplicate correction or comparison to old f153 cohorts.",
+    "Rows16, one code, eight widths, greater_equal and full/sparse activity, exact 13-row tails,64 blocks. No current Directory/Frame predicate owner performance claim.",
+    "Generic plan bank is resident in the common fixture even when unused. Actual fixture bytes and route-required control bytes are distinct counters. Validated laws and fixture allocation precede measurement.",
+    "CPU timings include exact view attachment, binding/preparation, queries and ordered complete checksum. CPU ns/command divides traversal by 64; ns/query further divides by q. Preparation is not subtracted.",
+    "Five explicit route orders use separate timed processes, one ELF/profile, fixed CPU0, identical argv0/cwd/output location within family/profile. Duplicate reruns exact shared-plan binary and arguments; no noise correction.",
+    "No PMU or causal microarchitecture discriminator in this comparison. Existing one-image/projection results remain separate source-qualified observations."
+  ],
+  "linked": {
+    "avx2": {
+      "dump_sha256": "48454d5ed996bf71e299cc0d3ca40b808880a65b3d537e8f2ce6c1df5032d6f3",
+      "elf_sha256": "c40a78f676f52b0129f8c3bc34c4a51bc08f83ad8c7c83ae0d7c1db58085b7ba",
+      "functions": [
+        {
+          "address": "0xe630",
+          "calls": [
+            {
+              "address": "e7ae",
+              "mnemonic": "callq",
+              "operands": "0x11f10 <ikea::tuplepack::detail::prepare_packet_read(ikea::tuplepack::layout const&, std::span<unsigned char const, 18446744073709551615ul>, unsigned int, std::span<unsigned int const, 18446744073709551615ul>)>"
+            },
+            {
+              "address": "ef32",
+              "mnemonic": "callq",
+              "operands": "0x68f0 <fwrite@plt>"
+            },
+            {
+              "address": "ef37",
+              "mnemonic": "callq",
+              "operands": "0x6230 <abort@plt>"
+            }
+          ],
+          "first15": [
+            {
+              "address": "e630",
+              "mnemonic": "pushq",
+              "operands": "%rbp"
+            },
+            {
+              "address": "e631",
+              "mnemonic": "movq",
+              "operands": "%rsp, %rbp"
+            },
+            {
+              "address": "e634",
+              "mnemonic": "pushq",
+              "operands": "%r15"
+            },
+            {
+              "address": "e636",
+              "mnemonic": "pushq",
+              "operands": "%r14"
+            },
+            {
+              "address": "e638",
+              "mnemonic": "pushq",
+              "operands": "%r13"
+            },
+            {
+              "address": "e63a",
+              "mnemonic": "pushq",
+              "operands": "%r12"
+            },
+            {
+              "address": "e63c",
+              "mnemonic": "pushq",
+              "operands": "%rbx"
+            },
+            {
+              "address": "e63d",
+              "mnemonic": "andq",
+              "operands": "$-0x40, %rsp"
+            },
+            {
+              "address": "e641",
+              "mnemonic": "subq",
+              "operands": "$0xc80, %rsp            # imm = 0xC80"
+            },
+            {
+              "address": "e648",
+              "mnemonic": "leaq",
+              "operands": "0x6480(%rdi), %rax"
+            },
+            {
+              "address": "e64f",
+              "mnemonic": "movl",
+              "operands": "$0x6e80, %r8d           # imm = 0x6E80"
+            },
+            {
+              "address": "e655",
+              "mnemonic": "movq",
+              "operands": "%rdx, 0xf0(%rsp)"
+            },
+            {
+              "address": "e65d",
+              "mnemonic": "movl",
+              "operands": "%esi, 0x64(%rsp)"
+            },
+            {
+              "address": "e661",
+              "mnemonic": "movl",
+              "operands": "%esi, %r15d"
+            },
+            {
+              "address": "e664",
+              "mnemonic": "xorl",
+              "operands": "%r9d, %r9d"
+            }
+          ],
+          "instructions_including_in_body_padding": 447,
+          "route": "construct_plan",
+          "symbol": "unsigned long (anonymous namespace)::traverse<((anonymous namespace)::Route)0>((anonymous namespace)::Fixture const&, unsigned int, unsigned long)",
+          "symbol_bytes": 2316
+        },
+        {
+          "address": "0xef40",
+          "calls": [
+            {
+              "address": "f7c7",
+              "mnemonic": "callq",
+              "operands": "0x68f0 <fwrite@plt>"
+            },
+            {
+              "address": "f7cc",
+              "mnemonic": "callq",
+              "operands": "0x6230 <abort@plt>"
+            }
+          ],
+          "first15": [
+            {
+              "address": "ef40",
+              "mnemonic": "pushq",
+              "operands": "%rbp"
+            },
+            {
+              "address": "ef41",
+              "mnemonic": "pushq",
+              "operands": "%r15"
+            },
+            {
+              "address": "ef43",
+              "mnemonic": "pushq",
+              "operands": "%r14"
+            },
+            {
+              "address": "ef45",
+              "mnemonic": "pushq",
+              "operands": "%r13"
+            },
+            {
+              "address": "ef47",
+              "mnemonic": "pushq",
+              "operands": "%r12"
+            },
+            {
+              "address": "ef49",
+              "mnemonic": "pushq",
+              "operands": "%rbx"
+            },
+            {
+              "address": "ef4a",
+              "mnemonic": "subq",
+              "operands": "$0x128, %rsp            # imm = 0x128"
+            },
+            {
+              "address": "ef51",
+              "mnemonic": "vpbroadcastb",
+              "operands": "0x3f68f(%rip), %xmm0 # 0x4e5e9 <vsnprintf@GLIBC_2.2.5+0x4e5e9>"
+            },
+            {
+              "address": "ef5a",
+              "mnemonic": "leaq",
+              "operands": "0x6480(%rdi), %r9"
+            },
+            {
+              "address": "ef61",
+              "mnemonic": "leaq",
+              "operands": "0xc80(%rdi), %r10"
+            },
+            {
+              "address": "ef68",
+              "mnemonic": "movl",
+              "operands": "$0x6e80, %ebx           # imm = 0x6E80"
+            },
+            {
+              "address": "ef6d",
+              "mnemonic": "movl",
+              "operands": "%esi, %eax"
+            },
+            {
+              "address": "ef6f",
+              "mnemonic": "xorl",
+              "operands": "%r14d, %r14d"
+            },
+            {
+              "address": "ef72",
+              "mnemonic": "movq",
+              "operands": "%rdx, 0xd0(%rsp)"
+            },
+            {
+              "address": "ef7a",
+              "mnemonic": "movq",
+              "operands": "%rdi, 0xe8(%rsp)"
+            }
+          ],
+          "instructions_including_in_body_padding": 429,
+          "route": "shared_plan",
+          "symbol": "unsigned long (anonymous namespace)::traverse<((anonymous namespace)::Route)1>((anonymous namespace)::Fixture const&, unsigned int, unsigned long)",
+          "symbol_bytes": 2193
+        },
+        {
+          "address": "0xf7e0",
+          "calls": [
+            {
+              "address": "101b8",
+              "mnemonic": "callq",
+              "operands": "0x68f0 <fwrite@plt>"
+            },
+            {
+              "address": "101bd",
+              "mnemonic": "callq",
+              "operands": "0x6230 <abort@plt>"
+            }
+          ],
+          "first15": [
+            {
+              "address": "f7e0",
+              "mnemonic": "pushq",
+              "operands": "%rbp"
+            },
+            {
+              "address": "f7e1",
+              "mnemonic": "pushq",
+              "operands": "%r15"
+            },
+            {
+              "address": "f7e3",
+              "mnemonic": "pushq",
+              "operands": "%r14"
+            },
+            {
+              "address": "f7e5",
+              "mnemonic": "pushq",
+              "operands": "%r13"
+            },
+            {
+              "address": "f7e7",
+              "mnemonic": "pushq",
+              "operands": "%r12"
+            },
+            {
+              "address": "f7e9",
+              "mnemonic": "pushq",
+              "operands": "%rbx"
+            },
+            {
+              "address": "f7ea",
+              "mnemonic": "subq",
+              "operands": "$0x118, %rsp            # imm = 0x118"
+            },
+            {
+              "address": "f7f1",
+              "mnemonic": "leaq",
+              "operands": "0x6480(%rdi), %rax"
+            },
+            {
+              "address": "f7f8",
+              "mnemonic": "movq",
+              "operands": "%rdx, 0xd8(%rsp)"
+            },
+            {
+              "address": "f800",
+              "mnemonic": "movq",
+              "operands": "%rdi, 0x8(%rsp)"
+            },
+            {
+              "address": "f805",
+              "mnemonic": "movq",
+              "operands": "%rax, 0x10(%rsp)"
+            },
+            {
+              "address": "f80a",
+              "mnemonic": "testl",
+              "operands": "%esi, %esi"
+            },
+            {
+              "address": "f80c",
+              "mnemonic": "je",
+              "operands": "0xfff3 <unsigned long (anonymous namespace)::traverse<((anonymous namespace)::Route)2>((anonymous namespace)::Fixture const&, unsigned int, unsigned long)+0x813>"
+            },
+            {
+              "address": "f812",
+              "mnemonic": "vpbroadcastb",
+              "operands": "0x3edcf(%rip), %xmm0 # 0x4e5ea <vsnprintf@GLIBC_2.2.5+0x4e5ea>"
+            },
+            {
+              "address": "f81b",
+              "mnemonic": "movl",
+              "operands": "$0x6e80, %r9d           # imm = 0x6E80"
+            }
+          ],
+          "instructions_including_in_body_padding": 518,
+          "route": "direct",
+          "symbol": "unsigned long (anonymous namespace)::traverse<((anonymous namespace)::Route)2>((anonymous namespace)::Fixture const&, unsigned int, unsigned long)",
+          "symbol_bytes": 2530
+        }
+      ],
+      "symbols_command": [
+        "llvm-nm-21",
+        "--print-size",
+        "--numeric-sort",
+        "--demangle",
+        "build/workers/20261023T114225Z-27e9df4a/results/avx2/ikea_predicate_direct_commands"
+      ],
+      "symbols_sha256": "0eb6b9bcb7bb6ba372b1c8da41cff2e6f0c141f358829b43d02247c42d0068a6"
+    },
+    "avx512": {
+      "dump_sha256": "8fe1348334de4bcac0f3c02e2db2ec0af7355be7784d4482c3281e8f58fe846b",
+      "elf_sha256": "58ec89ddc9d6bfecc563ea9962967741ff416b3fea38f055863d88117e2228cf",
+      "functions": [
+        {
+          "address": "0xef10",
+          "calls": [
+            {
+              "address": "f0a1",
+              "mnemonic": "callq",
+              "operands": "0x115f0 <ikea::tuplepack::detail::prepare_packet_read(ikea::tuplepack::layout const&, std::span<unsigned char const, 18446744073709551615ul>, unsigned int, std::span<unsigned int const, 18446744073709551615ul>)>"
+            },
+            {
+              "address": "f1a3",
+              "mnemonic": "callq",
+              "operands": "0xeb30 <std::expected<unsigned long, ikea::tuplepack::error> ikea::tuplepack::predicate<std::byte const, 16u>::filter<(ikea::comparison)4>(unsigned long, unsigned long, unsigned long) const>"
+            },
+            {
+              "address": "f1f4",
+              "mnemonic": "callq",
+              "operands": "0x68f0 <fwrite@plt>"
+            },
+            {
+              "address": "f1f9",
+              "mnemonic": "callq",
+              "operands": "0x6230 <abort@plt>"
+            }
+          ],
+          "first15": [
+            {
+              "address": "ef10",
+              "mnemonic": "pushq",
+              "operands": "%rbp"
+            },
+            {
+              "address": "ef11",
+              "mnemonic": "movq",
+              "operands": "%rsp, %rbp"
+            },
+            {
+              "address": "ef14",
+              "mnemonic": "pushq",
+              "operands": "%r15"
+            },
+            {
+              "address": "ef16",
+              "mnemonic": "pushq",
+              "operands": "%r14"
+            },
+            {
+              "address": "ef18",
+              "mnemonic": "pushq",
+              "operands": "%r13"
+            },
+            {
+              "address": "ef1a",
+              "mnemonic": "pushq",
+              "operands": "%r12"
+            },
+            {
+              "address": "ef1c",
+              "mnemonic": "pushq",
+              "operands": "%rbx"
+            },
+            {
+              "address": "ef1d",
+              "mnemonic": "andq",
+              "operands": "$-0x40, %rsp"
+            },
+            {
+              "address": "ef21",
+              "mnemonic": "subq",
+              "operands": "$0x840, %rsp            # imm = 0x840"
+            },
+            {
+              "address": "ef28",
+              "mnemonic": "leaq",
+              "operands": "0x4680(%rdi), %r14"
+            },
+            {
+              "address": "ef2f",
+              "mnemonic": "movl",
+              "operands": "$0x5080, %r12d          # imm = 0x5080"
+            },
+            {
+              "address": "ef35",
+              "mnemonic": "movl",
+              "operands": "%esi, %eax"
+            },
+            {
+              "address": "ef37",
+              "mnemonic": "movq",
+              "operands": "%rdx, 0x50(%rsp)"
+            },
+            {
+              "address": "ef3c",
+              "mnemonic": "movq",
+              "operands": "%rdi, %rbx"
+            },
+            {
+              "address": "ef3f",
+              "mnemonic": "xorl",
+              "operands": "%r13d, %r13d"
+            }
+          ],
+          "instructions_including_in_body_padding": 165,
+          "route": "construct_plan",
+          "symbol": "unsigned long (anonymous namespace)::traverse<((anonymous namespace)::Route)0>((anonymous namespace)::Fixture const&, unsigned int, unsigned long)",
+          "symbol_bytes": 750
+        },
+        {
+          "address": "0xf200",
+          "calls": [
+            {
+              "address": "f421",
+              "mnemonic": "callq",
+              "operands": "0xeb30 <std::expected<unsigned long, ikea::tuplepack::error> ikea::tuplepack::predicate<std::byte const, 16u>::filter<(ikea::comparison)4>(unsigned long, unsigned long, unsigned long) const>"
+            },
+            {
+              "address": "f473",
+              "mnemonic": "callq",
+              "operands": "0x68f0 <fwrite@plt>"
+            },
+            {
+              "address": "f478",
+              "mnemonic": "callq",
+              "operands": "0x6230 <abort@plt>"
+            }
+          ],
+          "first15": [
+            {
+              "address": "f200",
+              "mnemonic": "pushq",
+              "operands": "%rbp"
+            },
+            {
+              "address": "f201",
+              "mnemonic": "pushq",
+              "operands": "%r15"
+            },
+            {
+              "address": "f203",
+              "mnemonic": "pushq",
+              "operands": "%r14"
+            },
+            {
+              "address": "f205",
+              "mnemonic": "pushq",
+              "operands": "%r13"
+            },
+            {
+              "address": "f207",
+              "mnemonic": "pushq",
+              "operands": "%r12"
+            },
+            {
+              "address": "f209",
+              "mnemonic": "pushq",
+              "operands": "%rbx"
+            },
+            {
+              "address": "f20a",
+              "mnemonic": "subq",
+              "operands": "$0x88, %rsp"
+            },
+            {
+              "address": "f211",
+              "mnemonic": "leaq",
+              "operands": "0x4680(%rdi), %rbx"
+            },
+            {
+              "address": "f218",
+              "mnemonic": "leaq",
+              "operands": "0xc80(%rdi), %r14"
+            },
+            {
+              "address": "f21f",
+              "mnemonic": "movl",
+              "operands": "$0x5080, %r15d          # imm = 0x5080"
+            },
+            {
+              "address": "f225",
+              "mnemonic": "movq",
+              "operands": "%rdx, 0x18(%rsp)"
+            },
+            {
+              "address": "f22a",
+              "mnemonic": "movq",
+              "operands": "%rdi, 0x30(%rsp)"
+            },
+            {
+              "address": "f22f",
+              "mnemonic": "movl",
+              "operands": "%esi, 0xc(%rsp)"
+            },
+            {
+              "address": "f233",
+              "mnemonic": "movl",
+              "operands": "%esi, %ebp"
+            },
+            {
+              "address": "f235",
+              "mnemonic": "xorl",
+              "operands": "%r12d, %r12d"
+            }
+          ],
+          "instructions_including_in_body_padding": 152,
+          "route": "shared_plan",
+          "symbol": "unsigned long (anonymous namespace)::traverse<((anonymous namespace)::Route)1>((anonymous namespace)::Fixture const&, unsigned int, unsigned long)",
+          "symbol_bytes": 637
+        },
+        {
+          "address": "0xf480",
+          "calls": [
+            {
+              "address": "f620",
+              "mnemonic": "callq",
+              "operands": "0xeb30 <std::expected<unsigned long, ikea::tuplepack::error> ikea::tuplepack::predicate<std::byte const, 16u>::filter<(ikea::comparison)4>(unsigned long, unsigned long, unsigned long) const>"
+            },
+            {
+              "address": "f865",
+              "mnemonic": "callq",
+              "operands": "0x68f0 <fwrite@plt>"
+            },
+            {
+              "address": "f86a",
+              "mnemonic": "callq",
+              "operands": "0x6230 <abort@plt>"
+            }
+          ],
+          "first15": [
+            {
+              "address": "f480",
+              "mnemonic": "pushq",
+              "operands": "%rbp"
+            },
+            {
+              "address": "f481",
+              "mnemonic": "pushq",
+              "operands": "%r15"
+            },
+            {
+              "address": "f483",
+              "mnemonic": "pushq",
+              "operands": "%r14"
+            },
+            {
+              "address": "f485",
+              "mnemonic": "pushq",
+              "operands": "%r13"
+            },
+            {
+              "address": "f487",
+              "mnemonic": "pushq",
+              "operands": "%r12"
+            },
+            {
+              "address": "f489",
+              "mnemonic": "pushq",
+              "operands": "%rbx"
+            },
+            {
+              "address": "f48a",
+              "mnemonic": "subq",
+              "operands": "$0x78, %rsp"
+            },
+            {
+              "address": "f48e",
+              "mnemonic": "leaq",
+              "operands": "0x4680(%rdi), %r12"
+            },
+            {
+              "address": "f495",
+              "mnemonic": "movq",
+              "operands": "%rdx, 0x50(%rsp)"
+            },
+            {
+              "address": "f49a",
+              "mnemonic": "testl",
+              "operands": "%esi, %esi"
+            },
+            {
+              "address": "f49c",
+              "mnemonic": "je",
+              "operands": "0xf67b <unsigned long (anonymous namespace)::traverse<((anonymous namespace)::Route)2>((anonymous namespace)::Fixture const&, unsigned int, unsigned long)+0x1fb>"
+            },
+            {
+              "address": "f4a2",
+              "mnemonic": "movl",
+              "operands": "$0x5080, %r14d          # imm = 0x5080"
+            },
+            {
+              "address": "f4a8",
+              "mnemonic": "movl",
+              "operands": "%esi, %ebp"
+            },
+            {
+              "address": "f4aa",
+              "mnemonic": "xorl",
+              "operands": "%r13d, %r13d"
+            },
+            {
+              "address": "f4ad",
+              "mnemonic": "movq",
+              "operands": "%rdi, 0x48(%rsp)"
+            }
+          ],
+          "instructions_including_in_body_padding": 247,
+          "route": "direct",
+          "symbol": "unsigned long (anonymous namespace)::traverse<((anonymous namespace)::Route)2>((anonymous namespace)::Fixture const&, unsigned int, unsigned long)",
+          "symbol_bytes": 1007
+        }
+      ],
+      "symbols_command": [
+        "llvm-nm-21",
+        "--print-size",
+        "--numeric-sort",
+        "--demangle",
+        "build/workers/20261023T114225Z-27e9df4a/results/avx512/ikea_predicate_direct_commands"
+      ],
+      "symbols_sha256": "6bc531adea6a2d2d27cc9076b9630a8a7613c2d6edac2f3ec4bd4bee8489fe9b"
+    },
+    "neon": {
+      "dump_sha256": "fa107c4fec9a92d31ee120f7de4a8344334e02d51f4baf145650b0cf01bbc82f",
+      "elf_sha256": "c31a776868e714af7edf9c3d8d7a82a06636a857fb8cd8afc11f9052922650f3",
+      "functions": [
+        {
+          "address": "0xd9a0",
+          "calls": [
+            {
+              "address": "dab8",
+              "mnemonic": "bl",
+              "operands": "0x10100 <ikea::tuplepack::detail::prepare_packet_read(ikea::tuplepack::layout const&, std::span<unsigned char const, 18446744073709551615ul>, unsigned int, std::span<unsigned int const, 18446744073709551615ul>)>"
+            },
+            {
+              "address": "db74",
+              "mnemonic": "bl",
+              "operands": "0xd5d0 <std::expected<unsigned long, ikea::tuplepack::error> ikea::tuplepack::predicate<std::byte const, 16u>::filter<(ikea::comparison)4>(unsigned long, unsigned long, unsigned long) const>"
+            },
+            {
+              "address": "dbd4",
+              "mnemonic": "bl",
+              "operands": "0x6820 <fwrite@plt>"
+            },
+            {
+              "address": "dbd8",
+              "mnemonic": "bl",
+              "operands": "0x66e0 <abort@plt>"
+            }
+          ],
+          "first15": [
+            {
+              "address": "d9a0",
+              "mnemonic": "stp",
+              "operands": "x29, x30, [sp, #-0x60]!"
+            },
+            {
+              "address": "d9a4",
+              "mnemonic": "stp",
+              "operands": "x28, x27, [sp, #0x10]"
+            },
+            {
+              "address": "d9a8",
+              "mnemonic": "stp",
+              "operands": "x26, x25, [sp, #0x20]"
+            },
+            {
+              "address": "d9ac",
+              "mnemonic": "stp",
+              "operands": "x24, x23, [sp, #0x30]"
+            },
+            {
+              "address": "d9b0",
+              "mnemonic": "stp",
+              "operands": "x22, x21, [sp, #0x40]"
+            },
+            {
+              "address": "d9b4",
+              "mnemonic": "stp",
+              "operands": "x20, x19, [sp, #0x50]"
+            },
+            {
+              "address": "d9b8",
+              "mnemonic": "mov",
+              "operands": "x29, sp"
+            },
+            {
+              "address": "d9bc",
+              "mnemonic": "sub",
+              "operands": "x9, sp, #0x7e0"
+            },
+            {
+              "address": "d9c0",
+              "mnemonic": "and",
+              "operands": "sp, x9, #0xffffffffffffffc0"
+            },
+            {
+              "address": "d9c4",
+              "mnemonic": "mov",
+              "operands": "w8, #0x4680             // =18048"
+            },
+            {
+              "address": "d9c8",
+              "mnemonic": "mov",
+              "operands": "w27, #0xaaab            // =43691"
+            },
+            {
+              "address": "d9cc",
+              "mnemonic": "mov",
+              "operands": "w22, #0x5080            // =20608"
+            },
+            {
+              "address": "d9d0",
+              "mnemonic": "mov",
+              "operands": "w28, #-0x1              // =-1"
+            },
+            {
+              "address": "d9d4",
+              "mnemonic": "mov",
+              "operands": "x26, #-0x1              // =-1"
+            },
+            {
+              "address": "d9d8",
+              "mnemonic": "mov",
+              "operands": "w19, #0xa529            // =42281"
+            }
+          ],
+          "instructions_including_in_body_padding": 143,
+          "route": "construct_plan",
+          "symbol": "unsigned long (anonymous namespace)::traverse<((anonymous namespace)::Route)0>((anonymous namespace)::Fixture const&, unsigned int, unsigned long)",
+          "symbol_bytes": 572
+        },
+        {
+          "address": "0xdbe0",
+          "calls": [
+            {
+              "address": "dda8",
+              "mnemonic": "bl",
+              "operands": "0xd5d0 <std::expected<unsigned long, ikea::tuplepack::error> ikea::tuplepack::predicate<std::byte const, 16u>::filter<(ikea::comparison)4>(unsigned long, unsigned long, unsigned long) const>"
+            },
+            {
+              "address": "de04",
+              "mnemonic": "bl",
+              "operands": "0x6820 <fwrite@plt>"
+            },
+            {
+              "address": "de08",
+              "mnemonic": "bl",
+              "operands": "0x66e0 <abort@plt>"
+            }
+          ],
+          "first15": [
+            {
+              "address": "dbe0",
+              "mnemonic": "sub",
+              "operands": "sp, sp, #0xe0"
+            },
+            {
+              "address": "dbe4",
+              "mnemonic": "stp",
+              "operands": "x29, x30, [sp, #0x80]"
+            },
+            {
+              "address": "dbe8",
+              "mnemonic": "stp",
+              "operands": "x28, x27, [sp, #0x90]"
+            },
+            {
+              "address": "dbec",
+              "mnemonic": "stp",
+              "operands": "x26, x25, [sp, #0xa0]"
+            },
+            {
+              "address": "dbf0",
+              "mnemonic": "stp",
+              "operands": "x24, x23, [sp, #0xb0]"
+            },
+            {
+              "address": "dbf4",
+              "mnemonic": "stp",
+              "operands": "x22, x21, [sp, #0xc0]"
+            },
+            {
+              "address": "dbf8",
+              "mnemonic": "stp",
+              "operands": "x20, x19, [sp, #0xd0]"
+            },
+            {
+              "address": "dbfc",
+              "mnemonic": "add",
+              "operands": "x29, sp, #0x80"
+            },
+            {
+              "address": "dc00",
+              "mnemonic": "mov",
+              "operands": "w8, #0x4680             // =18048"
+            },
+            {
+              "address": "dc04",
+              "mnemonic": "mov",
+              "operands": "x9, x0"
+            },
+            {
+              "address": "dc08",
+              "mnemonic": "mov",
+              "operands": "w28, #0xaaab            // =43691"
+            },
+            {
+              "address": "dc0c",
+              "mnemonic": "mov",
+              "operands": "w16, #0x5080            // =20608"
+            },
+            {
+              "address": "dc10",
+              "mnemonic": "mov",
+              "operands": "w27, #-0x1              // =-1"
+            },
+            {
+              "address": "dc14",
+              "mnemonic": "mov",
+              "operands": "x19, #-0x1              // =-1"
+            },
+            {
+              "address": "dc18",
+              "mnemonic": "add",
+              "operands": "x8, x0, x8"
+            }
+          ],
+          "instructions_including_in_body_padding": 139,
+          "route": "shared_plan",
+          "symbol": "unsigned long (anonymous namespace)::traverse<((anonymous namespace)::Route)1>((anonymous namespace)::Fixture const&, unsigned int, unsigned long)",
+          "symbol_bytes": 556
+        },
+        {
+          "address": "0xde20",
+          "calls": [
+            {
+              "address": "df88",
+              "mnemonic": "bl",
+              "operands": "0xd5d0 <std::expected<unsigned long, ikea::tuplepack::error> ikea::tuplepack::predicate<std::byte const, 16u>::filter<(ikea::comparison)4>(unsigned long, unsigned long, unsigned long) const>"
+            },
+            {
+              "address": "e0b0",
+              "mnemonic": "bl",
+              "operands": "0x6820 <fwrite@plt>"
+            },
+            {
+              "address": "e0b4",
+              "mnemonic": "bl",
+              "operands": "0x66e0 <abort@plt>"
+            }
+          ],
+          "first15": [
+            {
+              "address": "de20",
+              "mnemonic": "sub",
+              "operands": "sp, sp, #0xd0"
+            },
+            {
+              "address": "de24",
+              "mnemonic": "stp",
+              "operands": "x29, x30, [sp, #0x70]"
+            },
+            {
+              "address": "de28",
+              "mnemonic": "stp",
+              "operands": "x28, x27, [sp, #0x80]"
+            },
+            {
+              "address": "de2c",
+              "mnemonic": "stp",
+              "operands": "x26, x25, [sp, #0x90]"
+            },
+            {
+              "address": "de30",
+              "mnemonic": "stp",
+              "operands": "x24, x23, [sp, #0xa0]"
+            },
+            {
+              "address": "de34",
+              "mnemonic": "stp",
+              "operands": "x22, x21, [sp, #0xb0]"
+            },
+            {
+              "address": "de38",
+              "mnemonic": "stp",
+              "operands": "x20, x19, [sp, #0xc0]"
+            },
+            {
+              "address": "de3c",
+              "mnemonic": "add",
+              "operands": "x29, sp, #0x70"
+            },
+            {
+              "address": "de40",
+              "mnemonic": "mov",
+              "operands": "w8, #0x4680             // =18048"
+            },
+            {
+              "address": "de44",
+              "mnemonic": "add",
+              "operands": "x8, x0, x8"
+            },
+            {
+              "address": "de48",
+              "mnemonic": "stp",
+              "operands": "x2, x8, [sp, #0x8]"
+            },
+            {
+              "address": "de4c",
+              "mnemonic": "cbz",
+              "operands": "w1, 0xdfd0 <unsigned long (anonymous namespace)::traverse<((anonymous namespace)::Route)2>((anonymous namespace)::Fixture const&, unsigned int, unsigned long)+0x1b0>"
+            },
+            {
+              "address": "de50",
+              "mnemonic": "mov",
+              "operands": "w28, #0xaaab            // =43691"
+            },
+            {
+              "address": "de54",
+              "mnemonic": "mov",
+              "operands": "w16, #0x5080            // =20608"
+            },
+            {
+              "address": "de58",
+              "mnemonic": "mov",
+              "operands": "w25, #-0x1              // =-1"
+            }
+          ],
+          "instructions_including_in_body_padding": 166,
+          "route": "direct",
+          "symbol": "unsigned long (anonymous namespace)::traverse<((anonymous namespace)::Route)2>((anonymous namespace)::Fixture const&, unsigned int, unsigned long)",
+          "symbol_bytes": 664
+        }
+      ],
+      "symbols_command": [
+        "llvm-nm-21",
+        "--print-size",
+        "--numeric-sort",
+        "--demangle",
+        "build/workers/20261023T114232Z-c1ba2d45/results/neon/ikea_predicate_direct_commands"
+      ],
+      "symbols_sha256": "826699bba2bc5d47e7df4eaad0a7fe0f22be1bca695e69f64feda15ec8f6743c"
+    }
+  },
+  "linked_method": "Read actual native ELF objdump -d -r --demangle and llvm-nm-21 --print-size --numeric-sort --demangle. Counts stop at exact ELF symbol end, retain in-body padding and all branches including untimed zero-query specializations; they are static facts, not modeled cycles.",
+  "observations": [
+    "All 81 paired-median direct/construct ratios improve by at least5%. Generic preparation includes a real prepare_packet_read call once per block on all three profiles; direct and shared routes do not call it.",
+    "Against shared-prepared plans no x86 paired-median case loses5%; ARM has nine wins at q1 and twelve losses at q8/q64. The twelve losses are all nine q64 cells and three tight q8 cells. Retain both results; direct binding does not dominate shared reuse.",
+    "ARM and AVX512 routes call the exact same out-of-line predicate<...,16>::filter<greater_equal> symbol in their respective ELF. AVX2 inlines filtering into each route, hoists mask/strided address work and has no successful-path call in shared/direct traverse.",
+    "ARM shared/direct query loops at0xdd60..0xddc0 and0xdf40..0xdfa0 have the same 25-mnemonic sequence, with changed registers/operands and stack placements. Shared reserves 224 stack bytes, direct 208. Predicate sits atsp+64 vs sp+48; view atsp+80 vs sp+64. These facts do not causally explain theARM reused-query timing losses.",
+    "Direct traverse is larger than shared on all three profiles partly because it separates a zero-query traversal, absent from timedq1/q8/q64. Whole-function byte/instruction counts are not repeated-query work counts.",
+    "AVX2 shared/direct reserve296/280 bytes after six pushes; AVX-512 136/120 after six pushes. Generic-plan routes align stack to64 and reserve0xc80 (AVX2),0x840 (AVX512), or0x7e0 plus96 saved bytes before alignment(ARM). A smaller emitted frame does not establish allocator-class or complete resident-memory savings."
+  ],
+  "predicate_header_sha256": "e634777e0b06e433066029e9ed4717ac5367177d7d537e59d41101c9a618381d",
+  "reader": "workbench/spikes/ikea-composition/handle-boundaries/direct-bind/results.py",
+  "reader_sha256": "4babff69eb6a698a2bd0eed74bc2939c756ba4fa76d843d643b4ab32acc1f8b2",
+  "routes_per_case": 4,
+  "scope": "Complete TuplePack predicate preparation and query commands from already validated layouts, direct vs generic-plan construction and shared-prepared plan. Separate cohort from f153/R4/projection timing.",
+  "sources": {
+    "arm": {
+      "orders": [
+        [
+          "construct_plan",
+          "direct",
+          "shared_plan",
+          "duplicate"
+        ],
+        [
+          "shared_plan",
+          "construct_plan",
+          "duplicate",
+          "direct"
+        ],
+        [
+          "duplicate",
+          "shared_plan",
+          "direct",
+          "construct_plan"
+        ],
+        [
+          "direct",
+          "duplicate",
+          "construct_plan",
+          "shared_plan"
+        ],
+        [
+          "duplicate",
+          "shared_plan",
+          "direct",
+          "construct_plan"
+        ]
+      ],
+      "predicate_header_sha256": "e634777e0b06e433066029e9ed4717ac5367177d7d537e59d41101c9a618381d",
+      "profiles": [
+        "neon"
+      ],
+      "receipt_sha256": "e4c7856030e675a8d995961362b56716caa443124dbffadf9ea0d3edd39094a4",
+      "trials_sha256": {
+        "build/workers/20261023T114232Z-c1ba2d45/results/neon/trial-0-construct_plan.json": "fa93fde9fbb149584cea0705a5af1266d29f58cf21d644406fb6ebc004ba2615",
+        "build/workers/20261023T114232Z-c1ba2d45/results/neon/trial-0-direct.json": "ec86e9dd32ee28342317c47acc71e5610673f96fc1fb3094cc93e27f05e8f65d",
+        "build/workers/20261023T114232Z-c1ba2d45/results/neon/trial-0-duplicate.json": "6dbb530e34938c6206692f77d809185973dfd4282bdafaee5fe8150d718c62cf",
+        "build/workers/20261023T114232Z-c1ba2d45/results/neon/trial-0-shared_plan.json": "ec09f86ac526cc40079b209a4bff88e41ae28f0336a9236caa41a02f26af6273",
+        "build/workers/20261023T114232Z-c1ba2d45/results/neon/trial-1-construct_plan.json": "ac3003807e5bcc1063d10d3aa30a178e4b0e6d9ba58342268fdde9e50720bf70",
+        "build/workers/20261023T114232Z-c1ba2d45/results/neon/trial-1-direct.json": "63e1fc6076e52d005a0e54a06d2e98e57e7f3f462ac6be203094e08a18e7d6cc",
+        "build/workers/20261023T114232Z-c1ba2d45/results/neon/trial-1-duplicate.json": "c6e594d6862f8416fb7b4d2dcf6be7596f49264f0550a29b0f33bb575f0882cd",
+        "build/workers/20261023T114232Z-c1ba2d45/results/neon/trial-1-shared_plan.json": "c46222e2cf612a61584b9852a22bc1c35711d6f835546b31a36c00b7809ad9b7",
+        "build/workers/20261023T114232Z-c1ba2d45/results/neon/trial-2-construct_plan.json": "6e5f64c9cbad747aed59f6c47027f80added1c4e644c14f5fcf6c850757530d6",
+        "build/workers/20261023T114232Z-c1ba2d45/results/neon/trial-2-direct.json": "a9805eca7d950a3f39b62d040ef67e2a6caa719b1e0b1e2c5564106402b48498",
+        "build/workers/20261023T114232Z-c1ba2d45/results/neon/trial-2-duplicate.json": "70f4441b6c47c779f1e878264cf71f90d874adfc5ff3276968571234fd2cdff8",
+        "build/workers/20261023T114232Z-c1ba2d45/results/neon/trial-2-shared_plan.json": "67f34aded5f54e67902fb5653d1f7b4060fcef8cd34f05065e116200c6e7900d",
+        "build/workers/20261023T114232Z-c1ba2d45/results/neon/trial-3-construct_plan.json": "85aafff956a62df35e97a88de8c33f3b3089e65189bdb05bbd0186f01a15c8cc",
+        "build/workers/20261023T114232Z-c1ba2d45/results/neon/trial-3-direct.json": "a4b6c28ddd267c8286b47260cf405cf923c2c0b5e2f0dbea1d43ab57e30c7cab",
+        "build/workers/20261023T114232Z-c1ba2d45/results/neon/trial-3-duplicate.json": "d2ec17387aaa91472610a92f0a0d77650dde44cbf57b41d7153ce8b2a8d31db3",
+        "build/workers/20261023T114232Z-c1ba2d45/results/neon/trial-3-shared_plan.json": "7d0c403be9b22b3d831edf7c3deb3d05bc1bbfe57e5d65b97dfdd8f28babd09c",
+        "build/workers/20261023T114232Z-c1ba2d45/results/neon/trial-4-construct_plan.json": "69f1b79c3cace6a3959574671b8298ae58967766978764b505f485817b444fe2",
+        "build/workers/20261023T114232Z-c1ba2d45/results/neon/trial-4-direct.json": "cce923b8774179cdab703c0b9884ade7e05b51a8bdc8391b3c355e7f261d564d",
+        "build/workers/20261023T114232Z-c1ba2d45/results/neon/trial-4-duplicate.json": "1be4b97510545b5031dfc02de23c55385990ed7e0877aa707ecfec818f7d517a",
+        "build/workers/20261023T114232Z-c1ba2d45/results/neon/trial-4-shared_plan.json": "13acaa49bb114cb88c768a8d8e0460e26a56d5ada27808fd6a0af94fa2318ce1"
+      }
+    },
+    "zen": {
+      "orders": [
+        [
+          "construct_plan",
+          "direct",
+          "shared_plan",
+          "duplicate"
+        ],
+        [
+          "shared_plan",
+          "construct_plan",
+          "duplicate",
+          "direct"
+        ],
+        [
+          "duplicate",
+          "shared_plan",
+          "direct",
+          "construct_plan"
+        ],
+        [
+          "direct",
+          "duplicate",
+          "construct_plan",
+          "shared_plan"
+        ],
+        [
+          "duplicate",
+          "shared_plan",
+          "direct",
+          "construct_plan"
+        ]
+      ],
+      "predicate_header_sha256": "e634777e0b06e433066029e9ed4717ac5367177d7d537e59d41101c9a618381d",
+      "profiles": [
+        "avx2",
+        "avx512"
+      ],
+      "receipt_sha256": "b4d5236001cbd393fd664ae71b83cd71dbcdeddf6e4f7b827ffa2e25e234580b",
+      "trials_sha256": {
+        "build/workers/20261023T114225Z-27e9df4a/results/avx2/trial-0-construct_plan.json": "183e607e4f6c1c64fc07fb7dee7501c9012d3da6669cafb2540021106f5d0998",
+        "build/workers/20261023T114225Z-27e9df4a/results/avx2/trial-0-direct.json": "4d8ece98b70f4b9c0af23127fa081a1d08087e950a9c6bad197779bb6ae66f81",
+        "build/workers/20261023T114225Z-27e9df4a/results/avx2/trial-0-duplicate.json": "873e72be83267186e90727b6c0e98881ec0f6d6b323aae9a8687e1d56f78bd78",
+        "build/workers/20261023T114225Z-27e9df4a/results/avx2/trial-0-shared_plan.json": "58650e6d3f647479201734f85fd6261c7b07d59f730c61a1ecedd80abe3b4cf0",
+        "build/workers/20261023T114225Z-27e9df4a/results/avx2/trial-1-construct_plan.json": "352920920b9c0e8da56cb811361eb8932a735bbb3f7b92c87d1e622d6838f71d",
+        "build/workers/20261023T114225Z-27e9df4a/results/avx2/trial-1-direct.json": "826dc10928d4a25ac81ed4e541bb0629de5563109e0e8472a266f8d9172d9361",
+        "build/workers/20261023T114225Z-27e9df4a/results/avx2/trial-1-duplicate.json": "fde03cdee8c9c9866e7fb84ed5366cf81c9df97aa10004a541e07bdd135b9c93",
+        "build/workers/20261023T114225Z-27e9df4a/results/avx2/trial-1-shared_plan.json": "621300d0afbc4edfac5c57517f1fb55c7b4a2686083e468ec23caa6806cd0d43",
+        "build/workers/20261023T114225Z-27e9df4a/results/avx2/trial-2-construct_plan.json": "0eb110180b2c38e46fba1cc8505ed33c3566aa7a6e318b335c300ef8c03c0bdd",
+        "build/workers/20261023T114225Z-27e9df4a/results/avx2/trial-2-direct.json": "b374b801c2fd6a44ad69e3392b28621b5ab8f71473513a155fe3aa4bbf273905",
+        "build/workers/20261023T114225Z-27e9df4a/results/avx2/trial-2-duplicate.json": "61e1146cb0b54c87f2e4e3ee67e465b511fa12de1949142a51fc4c006ad33ebf",
+        "build/workers/20261023T114225Z-27e9df4a/results/avx2/trial-2-shared_plan.json": "161b37646c0e5df7e2264bb0ab9435b2dc795b9f59ad88c567335949fbb531da",
+        "build/workers/20261023T114225Z-27e9df4a/results/avx2/trial-3-construct_plan.json": "8e6b7c5f184f4ec1aeab94b65311ee61cdc731c3ddc50bbc6f689e764a944be7",
+        "build/workers/20261023T114225Z-27e9df4a/results/avx2/trial-3-direct.json": "7f732a89b23a5915c6dfd883cf32659bee1407e300a9ecaea408954022f4e55c",
+        "build/workers/20261023T114225Z-27e9df4a/results/avx2/trial-3-duplicate.json": "42aa51ec4928875401f533ed93911879e7777422cc9d762d52dd25d13263a3ca",
+        "build/workers/20261023T114225Z-27e9df4a/results/avx2/trial-3-shared_plan.json": "43ce5d48a3b6486793ae22d792312a3fcc51ef87457c860ad09e5ccd840f594a",
+        "build/workers/20261023T114225Z-27e9df4a/results/avx2/trial-4-construct_plan.json": "f5a79bbe2961fad3fe97cffa024459e5b61b8070fdd170368552cc2742cd417e",
+        "build/workers/20261023T114225Z-27e9df4a/results/avx2/trial-4-direct.json": "5849f993c647ea212603f8ebfce686055fc67d70ae89b3a8f38d9caf69b7ee47",
+        "build/workers/20261023T114225Z-27e9df4a/results/avx2/trial-4-duplicate.json": "effaf38e579639fcc821a3d9d61e8784614c52f123912419113469fcc540bd12",
+        "build/workers/20261023T114225Z-27e9df4a/results/avx2/trial-4-shared_plan.json": "06ea8df758fb3ad7600272606d4949179714cc10eb14a5fc40ca895efcdf64f7",
+        "build/workers/20261023T114225Z-27e9df4a/results/avx512/trial-0-construct_plan.json": "cf14810b6345e06b20037e2e954d5948ac2bb4192c4aa12de1007257ec5425fe",
+        "build/workers/20261023T114225Z-27e9df4a/results/avx512/trial-0-direct.json": "1830caa55b9a185211de43858e4a6404677ee373471addba9cfdb3cc1755150d",
+        "build/workers/20261023T114225Z-27e9df4a/results/avx512/trial-0-duplicate.json": "d91e260f95df9f4e9b644c9db63584e47c225df65d6f8881f0f851ac9d2b9983",
+        "build/workers/20261023T114225Z-27e9df4a/results/avx512/trial-0-shared_plan.json": "a105c2a33cc4e0aa1ee2e2cbe10d508bb475bdcf2a0695d0127c40efab195430",
+        "build/workers/20261023T114225Z-27e9df4a/results/avx512/trial-1-construct_plan.json": "aa7fb4da105cf0a2a3f9df102031cf370a748d1a3874aa9ebb6492e06a03b803",
+        "build/workers/20261023T114225Z-27e9df4a/results/avx512/trial-1-direct.json": "5ea5219500bc550219037e8d1ef458e23f6c9c19665b0a0df3878c7c9bdbd19f",
+        "build/workers/20261023T114225Z-27e9df4a/results/avx512/trial-1-duplicate.json": "2d3cf2458cb426869b2c7b2e14cda40fa2ed4179c42dec3465ff84bd501c9128",
+        "build/workers/20261023T114225Z-27e9df4a/results/avx512/trial-1-shared_plan.json": "6c836046080e7095743d4afbadaa5320a7ef339bff9ee4c2e19a54bc7831d531",
+        "build/workers/20261023T114225Z-27e9df4a/results/avx512/trial-2-construct_plan.json": "d05708e0cba01392ff73dc09d7ae4b94351429522d9dcba01abea91640dc2c82",
+        "build/workers/20261023T114225Z-27e9df4a/results/avx512/trial-2-direct.json": "0c5018b2ac040de8931eb1d84eb686e4d377d5d5b2bd74d88600782a049836b0",
+        "build/workers/20261023T114225Z-27e9df4a/results/avx512/trial-2-duplicate.json": "bf97e1bdb0d25575963153bf32eda22700f695d98f8051d6a1edec5e32b38553",
+        "build/workers/20261023T114225Z-27e9df4a/results/avx512/trial-2-shared_plan.json": "e8289b1e5f9eaac3dafe29f48add43654010851eec14de73eaf1e6d9eb56a5e0",
+        "build/workers/20261023T114225Z-27e9df4a/results/avx512/trial-3-construct_plan.json": "65891542a3278748beea1d4d7ab462fa73b4f9422d809c49eed9aa45f8aeb6eb",
+        "build/workers/20261023T114225Z-27e9df4a/results/avx512/trial-3-direct.json": "a648998527c44cfb1eea72918100a4e5b90db46bb6b0c72d22734bcabb37f167",
+        "build/workers/20261023T114225Z-27e9df4a/results/avx512/trial-3-duplicate.json": "a4ecda337c704b5279b1d5291b69bf130149c8a32ae688ce7a1f18b920f5d781",
+        "build/workers/20261023T114225Z-27e9df4a/results/avx512/trial-3-shared_plan.json": "c83c5c84b173f3cfb937aad36c22607319ced02115f7ea826b2dfd5d3c3a6bf8",
+        "build/workers/20261023T114225Z-27e9df4a/results/avx512/trial-4-construct_plan.json": "b4e7392572dbf400b188f2773698c1cb394ab48aa93d09d094c910dc69235399",
+        "build/workers/20261023T114225Z-27e9df4a/results/avx512/trial-4-direct.json": "56ddba35eec5faef0ce5e238e9e4c65c14f2f76f1abd990512980e2bcecef7b2",
+        "build/workers/20261023T114225Z-27e9df4a/results/avx512/trial-4-duplicate.json": "7f75f8d7380472238cfc41b9dc31fce69e9f726c1fe6e8d87bcc04c95d4e2da2",
+        "build/workers/20261023T114225Z-27e9df4a/results/avx512/trial-4-shared_plan.json": "9b8c655905b2004caa6710a362463dd7c8fe83e7990bb611cc0b405d01b43dde"
+      }
+    }
+  },
+  "summary": {
+    "avx2": {
+      "direct_over_construct_plan": {
+        "losses_5pct": 0,
+        "range": [
+          0.05593056457331674,
+          0.5742200645591633
+        ],
+        "wins_5pct": 27
+      },
+      "direct_over_shared_plan": {
+        "losses_5pct": 0,
+        "range": [
+          0.9147329033972479,
+          1.006246780950671
+        ],
+        "wins_5pct": 6
+      },
+      "duplicate_over_shared_plan": {
+        "losses_5pct": 0,
+        "range": [
+          0.9861349428709861,
+          1.0062345248981261
+        ],
+        "wins_5pct": 0
+      }
+    },
+    "avx512": {
+      "direct_over_construct_plan": {
+        "losses_5pct": 0,
+        "range": [
+          0.044196628989485544,
+          0.7493702817984942
+        ],
+        "wins_5pct": 27
+      },
+      "direct_over_shared_plan": {
+        "losses_5pct": 0,
+        "range": [
+          0.9119857019780562,
+          1.0024745860365403
+        ],
+        "wins_5pct": 7
+      },
+      "duplicate_over_shared_plan": {
+        "losses_5pct": 0,
+        "range": [
+          0.9829125807386665,
+          1.0073118206094172
+        ],
+        "wins_5pct": 0
+      }
+    },
+    "neon": {
+      "direct_over_construct_plan": {
+        "losses_5pct": 0,
+        "range": [
+          0.0404814390052189,
+          0.7630474065292319
+        ],
+        "wins_5pct": 27
+      },
+      "direct_over_shared_plan": {
+        "losses_5pct": 12,
+        "range": [
+          0.6580695771181706,
+          1.121078814527052
+        ],
+        "wins_5pct": 9
+      },
+      "duplicate_over_shared_plan": {
+        "losses_5pct": 0,
+        "range": [
+          0.9992072500524991,
+          1.001230515010381
+        ],
+        "wins_5pct": 0
+      }
+    }
+  },
+  "timed_samples": 1620,
+  "trials_per_route": 5,
+  "units": "CPU ns per complete block command; all attached-view admission/preparation and q queries included."
+}
