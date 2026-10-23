@@ -40,6 +40,10 @@ struct Storage {
 static_assert(sizeof(Storage) == 4);
 
 namespace detail {
+inline std::size_t page_size() noexcept {
+  static const auto value = static_cast<std::size_t>(::sysconf(_SC_PAGESIZE));
+  return value;
+}
 constexpr std::uint32_t returning = std::uint32_t{1} << 23;
 constexpr std::uint16_t group_identities = 256;
 
@@ -144,6 +148,10 @@ struct Window {
 struct PoolState {
   // Per class, Groups with a free Home; the head serves new allocations.
   std::array<Group*, finite_classes> available{};
+  // The head Group's geometry, so the fast path skips one dependent load.
+  std::array<FiniteGroup*, finite_classes> head_geometry{};
+  std::size_t page{page_size()}; // Native page, fixed for the Pool's lifetime.
+  unsigned floor_class{first_class(page)};
   // Owner-managed Arena pin while any use is live or awaiting its owner return.
   std::size_t active_uses{};
   Ref<Arena> active_lifetime;
@@ -217,11 +225,6 @@ inline void verify(Result<void> result) noexcept { assert(result.has_value()); (
 
 constexpr auto maximum = std::numeric_limits<std::size_t>::max();
 
-inline std::size_t page_size() noexcept {
-  static const auto value = static_cast<std::size_t>(::sysconf(_SC_PAGESIZE));
-  return value;
-}
-
 inline bool round_up(std::size_t value, std::size_t unit, std::size_t& result) noexcept {
   if (value > maximum - (unit - 1)) return false;
   result = (value + unit - 1) & ~(unit - 1);
@@ -289,33 +292,49 @@ inline void remove_idle(Window& window) noexcept {
   window.previous_size = nullptr;
 }
 
+// Groups with a free Home, per class. A full head may linger until the slow
+// path visits it; the fast path only trusts its ready bits.
 inline void add_available(Group& group) noexcept {
   if (group.previous_available || group.retiring || group.control_preparing || !group.geometry->has_free()) return;
-  auto& head = group.uses.domain.pool->internal->available[group.geometry->cls()];
+  auto& state = *group.uses.domain.pool->internal;
+  const auto cls = group.geometry->cls();
+  auto& head = state.available[cls];
   group.next_available = head;
   group.previous_available = &head;
   if (head) head->previous_available = &group.next_available;
   head = &group;
+  state.head_geometry[cls] = group.geometry.get();
 }
 
 inline void remove_available(Group& group) noexcept {
   if (!group.previous_available) return;
+  auto& state = *group.uses.domain.pool->internal;
+  const auto cls = group.geometry->cls();
   *group.previous_available = group.next_available;
   if (group.next_available) group.next_available->previous_available = group.previous_available;
   group.next_available = nullptr;
   group.previous_available = nullptr;
+  const auto* head = state.available[cls];
+  state.head_geometry[cls] = head ? head->geometry.get() : nullptr;
+}
+
+// pulse() on the owner Lane without a call when nobody waits.
+[[gnu::always_inline]] inline void pulse_owner(Signal& source) noexcept {
+  assert(source.lane && worker::on_lane(*source.lane));
+  ++source.generation;
+  if (source.waiters) [[unlikely]] notify_waiters(source);
 }
 
 // Owner fast path: the lowest ready Home of the class's head Group.
 [[gnu::always_inline]] inline bool take_head(PoolState& state, unsigned cls,
     const AllocationRequest& request, Allocation& result) noexcept {
+  auto* geometry = state.head_geometry[cls];
+  if (!geometry) [[unlikely]] return false;
+  const auto home = geometry->take_ready();
+  if (home == finite_homes) [[unlikely]] return false;
   auto* group = state.available[cls];
-  if (!group || !group->geometry->has_ready()) [[unlikely]] return false;
-  auto& geometry = *group->geometry;
-  const auto home = geometry.take_ready();
-  if (!geometry.has_free()) [[unlikely]] remove_available(*group);
   result.storage = &group->uses[home];
-  result.address = geometry.address(home);
+  result.address = geometry->address(home);
   result.size = request.bytes;
   result.readable_padding = request.readable_padding;
   ++state.counts.reuses;

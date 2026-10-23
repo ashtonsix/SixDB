@@ -1,3 +1,68 @@
+diff --git b/orbital/include/orbital/allocation.h a/orbital/include/orbital/allocation.h
+index 2734489b..8ea715f8 100644
+--- b/orbital/include/orbital/allocation.h
++++ a/orbital/include/orbital/allocation.h
+@@ -8,7 +8,6 @@
+ #include <chrono>
+ #include <memory>
+ #include <optional>
+-#include <utility>
+ 
+ namespace orbital::allocation {
+ struct Arena;
+@@ -71,26 +70,17 @@ struct Pool {
+   Pool& operator=(const Pool&) = delete;
+ };
+ 
+-struct Allocation;
+-struct Hold;
+-/// Clear this use; final foreign returns are queued to the owning Lane.
+-/// Temperature guides reclamation; timestamps reject stale advice.
+-void release(Hold&, ReleaseHint = {}) noexcept;
+-void release(Allocation&, ReleaseHint = {}) noexcept;
+-
+ /// Move-only ownership of mutable storage. Destruction releases its physical use.
+ struct Allocation {
+   Storage* storage{};
+   std::byte* address{};
+   std::size_t size{}, readable_padding{};
+   Allocation() = default;
+-  Allocation(Allocation&& other) noexcept
+-      : storage(std::exchange(other.storage, nullptr)), address(std::exchange(other.address, nullptr)),
+-        size(std::exchange(other.size, 0)), readable_padding(std::exchange(other.readable_padding, 0)) {}
++  Allocation(Allocation&&) noexcept;
+   Allocation& operator=(Allocation&&) noexcept;
+   Allocation(const Allocation&) = delete;
+   Allocation& operator=(const Allocation&) = delete;
+-  ~Allocation() { if (storage) release(*this); }
++  ~Allocation();
+ 
+   explicit operator bool() const noexcept { return storage; }
+ };
+@@ -144,6 +134,10 @@ struct Statistics {
+ [[nodiscard]] Result<Hold> hold(const Allocation&, ByteRange footprint);
+ /// Duplicate a live Hold on its owner Lane; saturation refuses without mutation.
+ [[nodiscard]] Result<Hold> retain(const Hold&);
++/// Clear this use; final foreign returns are queued to the owning Lane.
++/// Temperature guides reclamation; timestamps reject stale advice.
++void release(Hold&, ReleaseHint = {}) noexcept;
++void release(Allocation&, ReleaseHint = {}) noexcept;
+ /// Starts asynchronous reclamation with a Pool-wide idle-payload floor of keep_bytes.
+ /// Includes relinquished tails not covered by Holds; done concerns currently
+ /// eligible work. Revisit after readers retire. Selects COLD first; poll completion.
+diff --git b/orbital/include/orbital/types.h a/orbital/include/orbital/types.h
+index c2527257..dc1bf40b 100644
+--- b/orbital/include/orbital/types.h
++++ a/orbital/include/orbital/types.h
+@@ -165,8 +165,6 @@ struct Signal {
+ /// On the assigned thread, detach and notify waiters after advancing generation.
+ /// State stays nonterminal; waking grants no resource. Recheck the condition.
+ void pulse(Signal&) noexcept;
+-/// Detach and notify current waiters; pulse's tail for owners that advance generation inline.
+-void notify_waiters(Signal&) noexcept;
+ /// Set a terminal result on the assigned thread, then advance generation and notify.
+ /// Use pulse for reusable capacity/publication changes; complete is permanent.
+ void complete(Signal&, Result<void>) noexcept;
 diff --git b/orbital/include/orbital/worker.h a/orbital/include/orbital/worker.h
 index 4bc482bb..803fa1b7 100644
 --- b/orbital/include/orbital/worker.h
@@ -18,10 +83,10 @@ index 4bc482bb..803fa1b7 100644
  /// Capture the optional route hint before publication, then invoke it after
  /// linking payload. Neither Lane nor Message is accessed after linkage. The
 diff --git b/orbital/src/allocation/allocation.cpp a/orbital/src/allocation/allocation.cpp
-index 75bf99b3..527cef0d 100644
+index 7f8842f3..527cef0d 100644
 --- b/orbital/src/allocation/allocation.cpp
 +++ a/orbital/src/allocation/allocation.cpp
-@@ -50,9 +50,15 @@ void clear_foreign_hint(Storage& use) noexcept {
+@@ -50,28 +50,40 @@ void clear_foreign_hint(Storage& use) noexcept {
  void activate(Storage& use) noexcept {
    auto& domain = *route(use);
    assert(worker::on_lane(*domain.pool->lane) && !use.users.load(std::memory_order_relaxed));
@@ -40,13 +105,17 @@ index 75bf99b3..527cef0d 100644
    use.users.store(1, std::memory_order_relaxed);
  }
  
-@@ -63,14 +69,20 @@ void recycle(Storage& use, bool notify = true) noexcept {
+-[[gnu::always_inline]] inline void recycle(Storage& use, bool notify = true) noexcept {
++void recycle(Storage& use, bool notify = true) noexcept {
+   auto& domain = *route(use);
+   auto& pool = *domain.pool;
+   assert(worker::on_lane(*pool.lane) && !use.users.load(std::memory_order_relaxed));
    // Detach before identity reuse or notification can grant the same record.
    // The old pin outlives every touch here, including a final local Hold release.
    Ref<Arena> retained;
 -  auto& state = *pool.internal;
 -  assert(state.active_uses);
--  if (!--state.active_uses) retained = std::move(state.active_lifetime);
+-  if (!--state.active_uses) [[unlikely]] retained = std::move(state.active_lifetime);
    if (domain.finite) {
      auto& group = *static_cast<Group*>(domain.context);
 -    group.geometry->give(use.identity());
@@ -58,14 +127,16 @@ index 75bf99b3..527cef0d 100644
 +    verify(group.geometry->release_home(*home));
      add_available(group);
 -  } else add_idle(*static_cast<Window*>(domain.context));
+-  if (notify) pulse_owner(pool.capacity_changed);
 +  } else {
 +    auto& window = *static_cast<Window*>(domain.context);
 +    retained = std::move(window.active_lifetime);
 +    add_idle(window);
 +  }
-   if (notify) pulse(pool.capacity_changed);
++  if (notify) pulse(pool.capacity_changed);
  }
  
+ bool returned(Domain& domain) noexcept {
 @@ -168,10 +180,7 @@ void drop(Storage& use, ReleaseHint value) noexcept {
        } else static_cast<Window*>(route(use)->context)->foreign_hint_pending.store(true, std::memory_order_release);
      }
@@ -78,23 +149,54 @@ index 75bf99b3..527cef0d 100644
      const auto users = state & UseState::user_mask;
      assert(users && users < returning);
      if (users == 1 && !local) {
-@@ -224,12 +233,9 @@ Result<Allocation> allocate(Pool& pool, const AllocationRequest& request) {
+@@ -216,33 +225,27 @@ void release_ref(Arena& arena) noexcept {
+ }
+ 
+ Result<Allocation> allocate(Pool& pool, const AllocationRequest& request) {
+-  if (!pool.lane || !worker::on_lane(*pool.lane)) [[unlikely]] return std::unexpected(Error::conflict);
+-  auto& state = *pool.internal;
+-  if (pool.state != Pool::State::open || state.close_requested) [[unlikely]]
++  if (!pool.lane || !worker::on_lane(*pool.lane)) return std::unexpected(Error::conflict);
++  if (pool.state != Pool::State::open || pool.internal->close_requested)
+     return std::unexpected(Error::unavailable);
+   auto size = extent(request);
+-  if (!size) [[unlikely]] return std::unexpected(size.error());
++  if (!size) return std::unexpected(size.error());
    const auto reserve = std::max(*size, request.reserved_bytes);
    Result<Allocation> result(std::in_place);
    auto& value = *result;
--  const auto cls = select_class(page_size(), reserve, request.alignment);
--  Result<void> acquired;
--  if (cls < finite_classes) {
--    if (!take_head(*pool.internal, cls, request, value)) [[unlikely]]
--      acquired = finite_allocate(pool, request, cls, value);
--  } else acquired = window_allocate(pool, request, *size, value);
+-  const auto cls = select_class(state.page, reserve, request.alignment, state.floor_class);
+-  if (cls < finite_classes && take_head(state, cls, request, value)) [[likely]] {
+-    // Owner fast path: the Pool pin and first use, without re-routing the Storage.
+-    if (!state.active_uses++) [[unlikely]] state.active_lifetime = Ref<Arena>::retain(*pool.arena);
+-    value.storage->users.store(1, std::memory_order_relaxed);
+-  } else {
+-    auto acquired = cls < finite_classes ? finite_allocate(pool, request, cls, value)
+-        : window_allocate(pool, request, *size, value);
+-    if (!acquired) {
+-      // Returning the same result permits direct payload construction in the caller's slot.
+-      result = std::unexpected(acquired.error());
+-      return result;
+-    }
+-    activate(*value.storage);
 +  auto acquired = reserve <= 3072 && request.alignment <= 3072
 +      ? finite_allocate(pool, request, reserve, value)
 +      : window_allocate(pool, request, *size, value);
-   if (!acquired) {
-     // Returning the same result permits direct payload construction in the caller's slot.
-     result = std::unexpected(acquired.error());
-@@ -257,9 +263,8 @@ Result<void> prepare(Pool& pool, Preparation& request,
++  if (!acquired) {
++    // Returning the same result permits direct payload construction in the caller's slot.
++    result = std::unexpected(acquired.error());
++    return result;
+   }
++  auto& use = *value.storage;
++  activate(use);
+   if (request.initialization == Initialization::zero) std::memset(value.address, 0, *size);
+   else if (request.readable_padding) std::memset(value.address + request.bytes, 0, request.readable_padding);
+-  ++state.counts.allocations;
++  ++pool.internal->counts.allocations;
+   return result;
+ }
+ 
+@@ -260,9 +263,8 @@ Result<void> prepare(Pool& pool, Preparation& request,
    const auto size = extent(allocation);
    if (!size) return std::unexpected(size.error());
    const auto reserve = std::max(*size, allocation.reserved_bytes);
@@ -106,7 +208,7 @@ index 75bf99b3..527cef0d 100644
        : prepare_window(pool, request, allocation, preparer);
  }
  
-@@ -295,7 +300,7 @@ std::size_t capacity(const Allocation& allocation) noexcept {
+@@ -298,7 +300,7 @@ std::size_t capacity(const Allocation& allocation) noexcept {
    if (!allocation) return 0;
    const auto& domain = *route(*allocation.storage);
    if (domain.finite)
@@ -115,7 +217,7 @@ index 75bf99b3..527cef0d 100644
    return static_cast<Window*>(domain.context)->prepared;
  }
  
-@@ -328,8 +333,13 @@ Result<void> grow(Allocation& allocation, const GrowthRequest& request) {
+@@ -331,8 +333,13 @@ Result<void> grow(Allocation& allocation, const GrowthRequest& request) {
    }
    if (!aligned || needed > reserved_bytes(allocation)) {
      if (held) return std::unexpected(Error::conflict);
@@ -131,7 +233,57 @@ index 75bf99b3..527cef0d 100644
      // Allocate uninitialized replacement bytes. Fresh-allocation padding policy
      // does not apply to growth; interpretation and initialization belong to its writer.
      auto replacement = allocate(pool, {.bytes = std::max(*size, previous_extent),
-@@ -543,7 +553,7 @@ Progress trim_cold(Pool& pool, std::uint64_t keep_bytes) {
+@@ -461,29 +468,9 @@ Result<Hold> retain(const Hold& original) {
+ 
+ void release(Allocation& allocation, ReleaseHint value) noexcept {
+   if (!allocation.storage) return;
+-  auto& use = *std::exchange(allocation.storage, nullptr);
++  auto* storage = std::exchange(allocation.storage, nullptr);
+   allocation.address = nullptr; allocation.size = allocation.readable_padding = 0;
+-  // Owner fast path: the sole use of a finite Home, released on its own Lane
+-  // without advice. No other holder exists to race the final store.
+-  const auto state = use.users.state.load(std::memory_order_relaxed);
+-  if ((state & UseState::user_mask) == 1 && !supplied(value)) [[likely]] {
+-    auto& domain = *route(use, state);
+-    auto& pool = *domain.pool;
+-    if (domain.finite && worker::on_lane(*pool.lane)) [[likely]] {
+-      // The checks above are recycle()'s preconditions; repeat none of them.
+-      use.users.state.store(state & ~UseState::user_mask, std::memory_order_relaxed);
+-      auto& internal = *pool.internal;
+-      Ref<Arena> retained;
+-      if (!--internal.active_uses) [[unlikely]] retained = std::move(internal.active_lifetime);
+-      auto& group = *static_cast<Group*>(domain.context);
+-      group.geometry->give(state >> 24);
+-      if (!group.previous_available) [[unlikely]] add_available(group);
+-      ++pool.capacity_changed.generation;
+-      if (pool.capacity_changed.waiters) [[unlikely]] notify_waiters(pool.capacity_changed);
+-      return;
+-    }
+-  }
+-  drop(use, value);
++  drop(*storage, value);
+ }
+ 
+ void release(Hold& hold, ReleaseHint value) noexcept {
+@@ -495,6 +482,8 @@ void release(Hold& hold, ReleaseHint value) noexcept {
+   drop(*storage, value);
+ }
+ 
++Allocation::Allocation(Allocation&& other) noexcept { *this = std::move(other); }
++
+ Allocation& Allocation::operator=(Allocation&& other) noexcept {
+   if (this == &other) return *this;
+   release(*this);
+@@ -504,6 +493,8 @@ Allocation& Allocation::operator=(Allocation&& other) noexcept {
+   return *this;
+ }
+ 
++Allocation::~Allocation() { release(*this); }
++
+ Hold::Hold(Hold&& other) noexcept { *this = std::move(other); }
+ 
+ Hold& Hold::operator=(Hold&& other) noexcept {
+@@ -562,7 +553,7 @@ Progress trim_cold(Pool& pool, std::uint64_t keep_bytes) {
        const bool cold = group->last_use.temperature.value_or(Temperature::cold) == Temperature::cold;
        if ((pass == 0) != cold) continue;
        bool empty = !group->uses.domain.queued.load(std::memory_order_acquire);
@@ -140,7 +292,7 @@ index 75bf99b3..527cef0d 100644
          empty = group->uses[i].users.load(std::memory_order_acquire) == 0;
        const auto mapped = group->geometry->mapped_pages() * group->geometry->native_page();
        if (empty && !group->preparations && mapped <= idle && idle - mapped >= keep_bytes) {
-@@ -624,7 +634,7 @@ Progress close(Pool& pool) {
+@@ -643,7 +634,7 @@ Progress close(Pool& pool) {
    for (auto& group : pool.internal->groups) {
      if (group->trim_pending || group->uses.domain.queued.load(std::memory_order_acquire)) return Progress::wait(pool.capacity_changed, observed);
      if (group->retiring) continue;
@@ -829,7 +981,7 @@ index a2bf2f13..f19c230f 100644
  }
  
 diff --git b/orbital/src/allocation/finite.h a/orbital/src/allocation/finite.h
-index 3c89f6ce..1a2fdae5 100644
+index 469d51a0..1a2fdae5 100644
 --- b/orbital/src/allocation/finite.h
 +++ a/orbital/src/allocation/finite.h
 @@ -1,15 +1,15 @@
@@ -852,7 +1004,7 @@ index 3c89f6ce..1a2fdae5 100644
  #include <cstddef>
  #include <cstdint>
  #include <memory>
-@@ -17,42 +17,42 @@
+@@ -17,47 +17,42 @@
  
  namespace orbital::allocation::detail {
  
@@ -901,12 +1053,17 @@ index 3c89f6ce..1a2fdae5 100644
 -/// Class for a request, or finite_classes when none fits. Homes sit at
 -/// page-aligned base + index × capacity, so alignment a ≤ page holds exactly
 -/// when capacity is a multiple of a.
--[[nodiscard]] inline unsigned select_class(std::size_t page, std::size_t bytes,
--    std::size_t alignment) noexcept {
--  if (!bytes || bytes > finite_cutoff || alignment > page) return finite_classes;
--  unsigned cls = std::max<unsigned>(finite_lookup[(bytes - 1) >> 4], first_class(page));
--  while (cls < finite_classes && (finite_capacities[cls] & (alignment - 1))) ++cls;
+-[[nodiscard, gnu::always_inline]] inline unsigned select_class(std::size_t page, std::size_t bytes,
+-    std::size_t alignment, unsigned floor) noexcept {
+-  if (!bytes || bytes > finite_cutoff || alignment > page) [[unlikely]] return finite_classes;
+-  unsigned cls = std::max<unsigned>(finite_lookup[(bytes - 1) >> 4], floor);
+-  // Every capacity is a multiple of 16; only stronger alignment can skip classes.
+-  if (alignment > 16) [[unlikely]]
+-    while (cls < finite_classes && (finite_capacities[cls] & (alignment - 1))) ++cls;
 -  return cls;
+-}
+-[[nodiscard]] inline unsigned select_class(std::size_t page, std::size_t bytes, std::size_t alignment) noexcept {
+-  return select_class(page, bytes, alignment, first_class(page));
 -}
 +struct FiniteConfig {
 +  Palette palette{Palette::a};
@@ -922,7 +1079,7 @@ index 3c89f6ce..1a2fdae5 100644
  
  struct PageSpan {
    std::size_t first{}, count{};
-@@ -92,15 +92,21 @@ inline void set_trim_span(std::span<std::uint64_t> bits, PageSpan span, bool set
+@@ -97,15 +92,21 @@ inline void set_trim_span(std::span<std::uint64_t> bits, PageSpan span, bool set
    }
  }
  
@@ -949,7 +1106,7 @@ index 3c89f6ce..1a2fdae5 100644
    [[nodiscard]] Result<void> prepare() noexcept;
    ~FiniteGroup();
    // The allocator ends helper work and quarantines the group before retirement. Partial
-@@ -109,62 +115,84 @@ public:
+@@ -114,62 +115,84 @@ public:
    FiniteGroup(const FiniteGroup&) = delete;
    FiniteGroup& operator=(const FiniteGroup&) = delete;
  
@@ -1084,7 +1241,7 @@ index 3c89f6ce..1a2fdae5 100644
    [[nodiscard]] std::span<std::uint64_t> trim_membership() noexcept {
      return {trim_scratch_ + live_words(), live_words()};
    }
-@@ -181,51 +209,45 @@ public:
+@@ -186,51 +209,45 @@ public:
    [[nodiscard]] Result<void> begin_trim() noexcept;
    [[nodiscard]] Result<void> finish_trim(PageSpan, bool discarded) noexcept;
    [[nodiscard]] std::size_t live_words() const noexcept { return (payload_pages_ + 63) / 64; }
@@ -1166,7 +1323,7 @@ index 3c89f6ce..1a2fdae5 100644
  
  } // namespace orbital::allocation::detail
 diff --git b/orbital/src/allocation/group.cpp a/orbital/src/allocation/group.cpp
-index 757f1555..77430b34 100644
+index 5e928fd6..77430b34 100644
 --- b/orbital/src/allocation/group.cpp
 +++ a/orbital/src/allocation/group.cpp
 @@ -24,7 +24,7 @@ void group_trim_run(Job& job) noexcept {
@@ -1214,7 +1371,7 @@ index 757f1555..77430b34 100644
        assert(!preparing);
        preparing = result;
        result->control_preparing = true;
-@@ -133,93 +137,6 @@ Result<Group*> make_group(Pool& pool, unsigned cls, bool deferred = false) {
+@@ -133,94 +137,6 @@ Result<Group*> make_group(Pool& pool, unsigned cls, bool deferred = false) {
    } catch (const std::bad_alloc&) { return std::unexpected(Error::capacity); }
  }
  
@@ -1261,7 +1418,6 @@ index 757f1555..77430b34 100644
 -
 -void bind_home(Pool& pool, Group& group, std::size_t home, const AllocationRequest& request,
 -    Allocation& result) noexcept {
--  if (!group.geometry->has_free()) remove_available(group);
 -  result.storage = &group.uses[home];
 -  result.address = group.geometry->address(home);
 -  result.size = request.bytes;
@@ -1274,7 +1430,9 @@ index 757f1555..77430b34 100644
 -Result<void> finite_allocate(Pool& pool, const AllocationRequest& request, unsigned cls,
 -    Allocation& result) {
 -  auto& state = *pool.internal;
--  for (auto* group = state.available[cls]; group; group = group->next_available) {
+-  for (auto* group = state.available[cls], *next = group; group; group = next) {
+-    next = group->next_available;
+-    if (!group->geometry->has_free()) { remove_available(*group); continue; } // Full head from the fast path.
 -    if (!group->geometry->has_ready()) continue;
 -    const auto home = group->geometry->take_ready();
 -    ++state.counts.reuses;
@@ -1308,7 +1466,7 @@ index 757f1555..77430b34 100644
  struct FinitePreparation {
    enum class Phase { control, material, cleanup };
    Preparation* request{};
-@@ -228,7 +145,8 @@ struct FinitePreparation {
+@@ -229,7 +145,8 @@ struct FinitePreparation {
    worker::Lane* preparer{};
    worker::Message message;
    Ref<Arena> lifetime;
@@ -1318,7 +1476,7 @@ index 757f1555..77430b34 100644
    std::array<PageSpan, 2> spans;
    std::array<bool, 2> discarded{};
    std::size_t span_count{};
-@@ -238,34 +156,126 @@ struct FinitePreparation {
+@@ -239,34 +156,126 @@ struct FinitePreparation {
  };
  
  void finite_prepare_post(FinitePreparation&) noexcept;
@@ -1462,7 +1620,7 @@ index 757f1555..77430b34 100644
  }
  
  void finite_prepare_handle(worker::Message& message, worker::Lane&) noexcept {
-@@ -297,24 +307,24 @@ void finite_prepare_handle(worker::Message& message, worker::Lane&) noexcept {
+@@ -298,24 +307,24 @@ void finite_prepare_handle(worker::Message& message, worker::Lane&) noexcept {
    }
    record.vm_ready = true;
    const auto& request = record.request->request;
@@ -1493,7 +1651,7 @@ index 757f1555..77430b34 100644
          record.request->context);
      record.initialized = result.has_value();
      if (!result) record.error = result.error();
-@@ -343,12 +353,6 @@ void finite_prepare_finish(FinitePreparation& record, Result<void> status) noexc
+@@ -344,12 +353,6 @@ void finite_prepare_finish(FinitePreparation& record, Result<void> status) noexc
    complete(request.changed, status);
  }
  
@@ -1506,7 +1664,7 @@ index 757f1555..77430b34 100644
  void finite_prepare_reply_release(worker::Message& message) noexcept {
    auto& record = *static_cast<FinitePreparation*>(message.context);
    auto& pool = *record.pool;
-@@ -356,7 +360,7 @@ void finite_prepare_reply_release(worker::Message& message) noexcept {
+@@ -357,7 +360,7 @@ void finite_prepare_reply_release(worker::Message& message) noexcept {
    auto& request = *record.request;
    const bool cancelled = request.discard || pool.internal->close_requested;
    if (record.phase == FinitePreparation::Phase::control) {
@@ -1515,7 +1673,7 @@ index 757f1555..77430b34 100644
      assert(preparing == &group);
      preparing = nullptr;
      group.control_preparing = false;
-@@ -394,7 +398,9 @@ void finite_prepare_reply_release(worker::Message& message) noexcept {
+@@ -395,7 +398,9 @@ void finite_prepare_reply_release(worker::Message& message) noexcept {
        pulse(pool.capacity_changed);
        return; // Explicit retry only; service stays useful under persistent failure.
      }
@@ -1526,7 +1684,7 @@ index 757f1555..77430b34 100644
      add_available(group);
      finite_prepare_finish(record, std::unexpected(record.error));
      return;
-@@ -419,15 +425,17 @@ void finite_prepare_reply_release(worker::Message& message) noexcept {
+@@ -420,15 +425,17 @@ void finite_prepare_reply_release(worker::Message& message) noexcept {
    }
    verify(group.geometry->finish_prepare(record.home, spans, true));
    if (cancelled || !record.initialized) {
@@ -1548,7 +1706,7 @@ index 757f1555..77430b34 100644
    request.value.size = request.request.bytes; request.value.readable_padding = request.request.readable_padding;
    request.reused = record.reused;
    ++pool.internal->counts.allocations;
-@@ -453,30 +461,47 @@ void finite_prepare_post(FinitePreparation& record) noexcept {
+@@ -454,30 +461,47 @@ void finite_prepare_post(FinitePreparation& record) noexcept {
  }
  
  Result<void> prepare_finite(Pool& pool, Preparation& request,
@@ -1607,7 +1765,7 @@ index 757f1555..77430b34 100644
        if (selected) break;
        record.group = nullptr;
        refusal = selected.error();
-@@ -496,6 +521,128 @@ Result<void> prepare_finite(Pool& pool, Preparation& request,
+@@ -497,6 +521,128 @@ Result<void> prepare_finite(Pool& pool, Preparation& request,
    return {};
  }
  
@@ -1737,7 +1895,7 @@ index 757f1555..77430b34 100644
  
  namespace orbital::allocation {
 diff --git b/orbital/src/allocation/internal.h a/orbital/src/allocation/internal.h
-index 636d41bd..fdcc0f3e 100644
+index f54e56dc..fdcc0f3e 100644
 --- b/orbital/src/allocation/internal.h
 +++ a/orbital/src/allocation/internal.h
 @@ -17,8 +17,8 @@
@@ -1751,7 +1909,18 @@ index 636d41bd..fdcc0f3e 100644
  struct UseState {
    static constexpr std::uint32_t user_mask = 0x00ffffffu;
    std::atomic<std::uint32_t> state{};
-@@ -88,6 +88,8 @@ struct Group {
+@@ -40,10 +40,6 @@ struct Storage {
+ static_assert(sizeof(Storage) == 4);
+ 
+ namespace detail {
+-inline std::size_t page_size() noexcept {
+-  static const auto value = static_cast<std::size_t>(::sysconf(_SC_PAGESIZE));
+-  return value;
+-}
+ constexpr std::uint32_t returning = std::uint32_t{1} << 23;
+ constexpr std::uint16_t group_identities = 256;
+ 
+@@ -92,6 +88,8 @@ struct Group {
    Group* next_available{};
    Group** previous_available{};
    std::unique_ptr<FiniteGroup> geometry;
@@ -1760,7 +1929,7 @@ index 636d41bd..fdcc0f3e 100644
    ReleaseHint foreign_use;
    bool advice_pending{};
    std::vector<std::uint64_t> live;
-@@ -98,6 +100,7 @@ struct Group {
+@@ -102,6 +100,7 @@ struct Group {
    Ref<Arena> trim_lifetime;
    bool trim_pending{}, retiring{};
    bool retired{}, control_preparing{};
@@ -1768,7 +1937,7 @@ index 636d41bd..fdcc0f3e 100644
    std::uint64_t preparations{};
    ReleaseHint last_use;
    std::uint64_t retire_charge{}, retire_mapped{}, retire_reserved{};
-@@ -113,6 +116,7 @@ using WindowSizes = std::map<std::size_t, IdleWindows>;
+@@ -117,6 +116,7 @@ using WindowSizes = std::map<std::size_t, IdleWindows>;
  struct Window {
    StorageOwner<1> uses;
    std::size_t owner_index{}; // Pool owning-vector position, not an allocation identity.
@@ -1776,7 +1945,7 @@ index 636d41bd..fdcc0f3e 100644
    Window* next_idle{};
    Window** previous_idle{};
    WindowSizes::value_type* size_entry{};
-@@ -141,17 +145,21 @@ struct Window {
+@@ -145,21 +145,21 @@ struct Window {
    ~Window();
  };
  
@@ -1789,6 +1958,10 @@ index 636d41bd..fdcc0f3e 100644
  struct PoolState {
 -  // Per class, Groups with a free Home; the head serves new allocations.
 -  std::array<Group*, finite_classes> available{};
+-  // The head Group's geometry, so the fast path skips one dependent load.
+-  std::array<FiniteGroup*, finite_classes> head_geometry{};
+-  std::size_t page{page_size()}; // Native page, fixed for the Pool's lifetime.
+-  unsigned floor_class{first_class(page)};
 -  // Owner-managed Arena pin while any use is live or awaiting its owner return.
 -  std::size_t active_uses{};
 -  Ref<Arena> active_lifetime;
@@ -1805,7 +1978,7 @@ index 636d41bd..fdcc0f3e 100644
    // Register sizes before VM publication; returns/reuse never allocate index nodes.
    // Index and intrusive heads outlive Window destruction, including final-pin teardown.
    WindowSizes window_sizes;
-@@ -201,16 +209,18 @@ void activate(Storage&) noexcept;
+@@ -209,22 +209,29 @@ void activate(Storage&) noexcept;
  
  // Fill a fresh output only on success; common allocation code establishes
  // its physical use before exposing the handle to callers.
@@ -1827,49 +2000,104 @@ index 636d41bd..fdcc0f3e 100644
  Result<void> prepare_window(Pool&, Preparation&, const AllocationRequest&, worker::Lane&);
  
  inline void verify(Result<void> result) noexcept { assert(result.has_value()); (void)result; }
-@@ -290,8 +300,8 @@ inline void remove_idle(Window& window) noexcept {
+ 
+ constexpr auto maximum = std::numeric_limits<std::size_t>::max();
+ 
++inline std::size_t page_size() noexcept {
++  static const auto value = static_cast<std::size_t>(::sysconf(_SC_PAGESIZE));
++  return value;
++}
++
+ inline bool round_up(std::size_t value, std::size_t unit, std::size_t& result) noexcept {
+   if (value > maximum - (unit - 1)) return false;
+   result = (value + unit - 1) & ~(unit - 1);
+@@ -292,53 +299,23 @@ inline void remove_idle(Window& window) noexcept {
+   window.previous_size = nullptr;
  }
  
+-// Groups with a free Home, per class. A full head may linger until the slow
+-// path visits it; the fast path only trusts its ready bits.
  inline void add_available(Group& group) noexcept {
 -  if (group.previous_available || group.retiring || group.control_preparing || !group.geometry->has_free()) return;
--  auto& head = group.uses.domain.pool->internal->available[group.geometry->cls()];
+-  auto& state = *group.uses.domain.pool->internal;
+-  const auto cls = group.geometry->cls();
+-  auto& head = state.available[cls];
 +  if (group.previous_available || group.retiring || group.control_preparing || !group.geometry->has_identity()) return;
 +  auto& head = group.uses.domain.pool->internal->available_groups;
    group.next_available = head;
    group.previous_available = &head;
    if (head) head->previous_available = &group.next_available;
-@@ -299,6 +309,8 @@ inline void add_available(Group& group) noexcept {
+   head = &group;
+-  state.head_geometry[cls] = group.geometry.get();
  }
  
  inline void remove_available(Group& group) noexcept {
 +  for (auto& candidate : group.uses.domain.pool->internal->ready_candidates)
 +    if (candidate.group == &group) candidate.group = nullptr;
    if (!group.previous_available) return;
+-  auto& state = *group.uses.domain.pool->internal;
+-  const auto cls = group.geometry->cls();
    *group.previous_available = group.next_available;
    if (group.next_available) group.next_available->previous_available = group.previous_available;
-@@ -306,22 +318,6 @@ inline void remove_available(Group& group) noexcept {
+   group.next_available = nullptr;
    group.previous_available = nullptr;
- }
- 
+-  const auto* head = state.available[cls];
+-  state.head_geometry[cls] = head ? head->geometry.get() : nullptr;
+-}
+-
+-// pulse() on the owner Lane without a call when nobody waits.
+-[[gnu::always_inline]] inline void pulse_owner(Signal& source) noexcept {
+-  assert(source.lane && worker::on_lane(*source.lane));
+-  ++source.generation;
+-  if (source.waiters) [[unlikely]] notify_waiters(source);
+-}
+-
 -// Owner fast path: the lowest ready Home of the class's head Group.
 -[[gnu::always_inline]] inline bool take_head(PoolState& state, unsigned cls,
 -    const AllocationRequest& request, Allocation& result) noexcept {
+-  auto* geometry = state.head_geometry[cls];
+-  if (!geometry) [[unlikely]] return false;
+-  const auto home = geometry->take_ready();
+-  if (home == finite_homes) [[unlikely]] return false;
 -  auto* group = state.available[cls];
--  if (!group || !group->geometry->has_ready()) [[unlikely]] return false;
--  auto& geometry = *group->geometry;
--  const auto home = geometry.take_ready();
--  if (!geometry.has_free()) [[unlikely]] remove_available(*group);
 -  result.storage = &group->uses[home];
--  result.address = geometry.address(home);
+-  result.address = geometry->address(home);
 -  result.size = request.bytes;
 -  result.readable_padding = request.readable_padding;
 -  ++state.counts.reuses;
 -  return true;
--}
--
+ }
+ 
  template<class T> void erase_owner(std::vector<std::unique_ptr<T>>& owners, T& retired) noexcept {
-   const auto index = retired.owner_index;
-   assert(index < owners.size() && owners[index].get() == &retired);
+diff --git b/orbital/src/types.cpp a/orbital/src/types.cpp
+index a4ec11d8..ec021b8b 100644
+--- b/orbital/src/types.cpp
++++ a/orbital/src/types.cpp
+@@ -4,7 +4,8 @@
+ #include <limits>
+ 
+ namespace orbital {
+-void notify_waiters(Signal& source) noexcept {
++namespace {
++void notify(Signal& source) noexcept {
+   while (source.waiters) {
+     auto* link = source.waiters;
+     source.waiters = link->next;
+@@ -13,12 +14,13 @@ void notify_waiters(Signal& source) noexcept {
+     if (link->notify) link->notify(link->waiter);
+   }
+ }
++}
+ 
+ void pulse(Signal& source) noexcept {
+   assert(source.lane && worker::on_lane(*source.lane));
+   assert(source.generation != std::numeric_limits<std::uint64_t>::max());
+   ++source.generation;
+-  notify_waiters(source);
++  notify(source);
+ }
+ 
+ void complete(Signal& source, Result<void> result) noexcept {
 diff --git b/orbital/src/worker.cpp a/orbital/src/worker.cpp
 index bb3ecf50..0f3b9bba 100644
 --- b/orbital/src/worker.cpp

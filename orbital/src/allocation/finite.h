@@ -46,12 +46,17 @@ inline constexpr auto finite_lookup = [] {
 /// Class for a request, or finite_classes when none fits. Homes sit at
 /// page-aligned base + index × capacity, so alignment a ≤ page holds exactly
 /// when capacity is a multiple of a.
-[[nodiscard]] inline unsigned select_class(std::size_t page, std::size_t bytes,
-    std::size_t alignment) noexcept {
-  if (!bytes || bytes > finite_cutoff || alignment > page) return finite_classes;
-  unsigned cls = std::max<unsigned>(finite_lookup[(bytes - 1) >> 4], first_class(page));
-  while (cls < finite_classes && (finite_capacities[cls] & (alignment - 1))) ++cls;
+[[nodiscard, gnu::always_inline]] inline unsigned select_class(std::size_t page, std::size_t bytes,
+    std::size_t alignment, unsigned floor) noexcept {
+  if (!bytes || bytes > finite_cutoff || alignment > page) [[unlikely]] return finite_classes;
+  unsigned cls = std::max<unsigned>(finite_lookup[(bytes - 1) >> 4], floor);
+  // Every capacity is a multiple of 16; only stronger alignment can skip classes.
+  if (alignment > 16) [[unlikely]]
+    while (cls < finite_classes && (finite_capacities[cls] & (alignment - 1))) ++cls;
   return cls;
+}
+[[nodiscard]] inline unsigned select_class(std::size_t page, std::size_t bytes, std::size_t alignment) noexcept {
+  return select_class(page, bytes, alignment, first_class(page));
 }
 
 struct PageSpan {

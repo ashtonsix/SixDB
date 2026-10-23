@@ -176,7 +176,6 @@ Result<void> map_home(Group& group, std::size_t home) noexcept {
 
 void bind_home(Pool& pool, Group& group, std::size_t home, const AllocationRequest& request,
     Allocation& result) noexcept {
-  if (!group.geometry->has_free()) remove_available(group);
   result.storage = &group.uses[home];
   result.address = group.geometry->address(home);
   result.size = request.bytes;
@@ -189,7 +188,9 @@ void bind_home(Pool& pool, Group& group, std::size_t home, const AllocationReque
 Result<void> finite_allocate(Pool& pool, const AllocationRequest& request, unsigned cls,
     Allocation& result) {
   auto& state = *pool.internal;
-  for (auto* group = state.available[cls]; group; group = group->next_available) {
+  for (auto* group = state.available[cls], *next = group; group; group = next) {
+    next = group->next_available;
+    if (!group->geometry->has_free()) { remove_available(*group); continue; } // Full head from the fast path.
     if (!group->geometry->has_ready()) continue;
     const auto home = group->geometry->take_ready();
     ++state.counts.reuses;

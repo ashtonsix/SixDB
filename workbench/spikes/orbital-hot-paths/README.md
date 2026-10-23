@@ -182,12 +182,30 @@ checks or dropped.
 | glibc malloc/free pair 64 B (control) | 4.5 | — | 9.6 | — |
 | glibc batch256 FIFO 64 B (control) | 15.0 | — | 28.6 | — |
 
-Batched allocate/release now matches glibc (16.5 vs 15.0 ns on Zen 5, 27.6 vs
-28.6 ns on Graviton). An isolated pair is still 5× (Zen 5) and 3.4× (Graviton)
-glibc: the remaining cost is API overhead (validation, Pool state, `Result`
-moves, pulse, use-count bookkeeping), not geometry.
 [Evidence](evidence/zen5-overhaul.csv), [Graviton](evidence/v2-overhaul.csv);
 jobs `20261023T023711Z-99ee07bd` and `20261023T023711Z-abf544b7`.
+
+A second pass trimmed the per-call path: inline `Allocation` moves and
+destructor guard, an owner-local release that skips repeated checks, the head
+Group's geometry cached per class, full head Groups dropped lazily by the slow
+path, and an inline `pulse` when nobody waits. Same harness, five processes,
+against the first overhaul commit and `main` ([Zen 5](evidence/zen5-tuned.csv),
+[Graviton](evidence/v2-tuned.csv); jobs `20261023T032231Z-89cde4d6`,
+`20261023T032231Z-812dadb4`):
+
+| Case | Zen 5: main / tuned / glibc | Graviton: main / tuned / glibc |
+| --- | ---: | ---: |
+| pair 64 B, otherwise empty Pool | 58.5 / 20.8 / 4.5 ns | 114.2 / 30.9 / 9.6 ns |
+| pair 64 B, Pool holds one other allocation | 58.2 / 16.2 / 4.5 | 114.2 / 16.2 / 9.6 |
+| batch256 FIFO 64 B | 63.2 / 12.1 / 15.0 | 114.4 / 19.0 / 28.7 |
+| churn256 64 B | 85.9 / 24.0 / — | 142.7 / 36.1 / — |
+
+Batched allocation is now faster than glibc (1.2× on Zen 5, 1.5× on
+Graviton). A single pair is 3.6× (Zen 5) and 1.7× (Graviton) glibc while the
+Pool holds anything else. In an otherwise empty Pool, each pair also takes and
+drops the Pool's Arena pin, two atomic read-modify-writes: 4.6 ns on Zen 5 and
+14.7 ns on Graviton. Caching that pin while the Pool is open removes it, but it
+changes the tested rule that an Arena's references count only live uses.
 
 The [footprint census](census.cpp) counts mapped, idle, metadata and reserved
 bytes for fixed live populations ([census.csv](evidence/census.csv), 4 KiB
@@ -205,6 +223,10 @@ Mixed-class Groups left pages partly used by several classes, so large mixed
 populations mapped 1.7–2.8× their capacity. Single-class Groups map about their
 capacity. The cost moves to Groups per class: a Pool touching every class pays
 one Group's metadata per class (25 KiB for 15 classes versus 8.3 KiB).
+
+[SHARED.md](SHARED.md) works through multi-worker access and shared growable
+memory: what the one-byte trampolines were for, what replaces them, and what
+to prototype next.
 
 ## Variants and checks
 

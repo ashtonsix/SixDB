@@ -8,6 +8,7 @@
 #include <chrono>
 #include <memory>
 #include <optional>
+#include <utility>
 
 namespace orbital::allocation {
 struct Arena;
@@ -70,17 +71,26 @@ struct Pool {
   Pool& operator=(const Pool&) = delete;
 };
 
+struct Allocation;
+struct Hold;
+/// Clear this use; final foreign returns are queued to the owning Lane.
+/// Temperature guides reclamation; timestamps reject stale advice.
+void release(Hold&, ReleaseHint = {}) noexcept;
+void release(Allocation&, ReleaseHint = {}) noexcept;
+
 /// Move-only ownership of mutable storage. Destruction releases its physical use.
 struct Allocation {
   Storage* storage{};
   std::byte* address{};
   std::size_t size{}, readable_padding{};
   Allocation() = default;
-  Allocation(Allocation&&) noexcept;
+  Allocation(Allocation&& other) noexcept
+      : storage(std::exchange(other.storage, nullptr)), address(std::exchange(other.address, nullptr)),
+        size(std::exchange(other.size, 0)), readable_padding(std::exchange(other.readable_padding, 0)) {}
   Allocation& operator=(Allocation&&) noexcept;
   Allocation(const Allocation&) = delete;
   Allocation& operator=(const Allocation&) = delete;
-  ~Allocation();
+  ~Allocation() { if (storage) release(*this); }
 
   explicit operator bool() const noexcept { return storage; }
 };
@@ -134,10 +144,6 @@ struct Statistics {
 [[nodiscard]] Result<Hold> hold(const Allocation&, ByteRange footprint);
 /// Duplicate a live Hold on its owner Lane; saturation refuses without mutation.
 [[nodiscard]] Result<Hold> retain(const Hold&);
-/// Clear this use; final foreign returns are queued to the owning Lane.
-/// Temperature guides reclamation; timestamps reject stale advice.
-void release(Hold&, ReleaseHint = {}) noexcept;
-void release(Allocation&, ReleaseHint = {}) noexcept;
 /// Starts asynchronous reclamation with a Pool-wide idle-payload floor of keep_bytes.
 /// Includes relinquished tails not covered by Holds; done concerns currently
 /// eligible work. Revisit after readers retire. Selects COLD first; poll completion.

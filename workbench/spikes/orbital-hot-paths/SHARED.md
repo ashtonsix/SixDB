@@ -1,0 +1,116 @@
+# Shared and growable memory across workers
+
+What should happen when several workers use the same memory and some of it
+grows? This note sets the single-class allocator against that question. It
+draws on Ashton's [descriptor brief](../memory-descriptors/BRIEF.md), the
+[descriptor findings](../memory-descriptors/FINDINGS.md) and
+[virtual growth](../memory-descriptors/VIRTUAL.md), the [views findings](../orbital-views/FINDINGS.md),
+the [TLB study](../orbital-views/tlb/README.md) and the
+[Orbital/Loom design](../../design/orbital/DESIGN.md). These are options with
+their known costs, not a selected protocol.
+
+## What the trampolines were for
+
+In the brief, a descriptor is a pointer. Single-choice (virtual) descriptors
+point at their payload; multi-choice descriptors point at a one-byte trampoline
+naming one of 256 slots, so an allocation can grow into a larger class *without
+changing its descriptor*. That is the mechanism for small shared growable
+memory: holders keep the descriptor, the owner moves the payload, and every
+access resolves through the trampoline.
+
+Production never used that resolution. Every caller holds the raw address, and
+Holds refuse relocation, so the only remaining job of the binding plane was
+moving a small allocation within its mixed Group during growth. Maintaining it
+cost most of the old allocate/release time. The single-class overhaul removes
+it, which also removes in-Group relocation: a small allocation now grows within
+its class or moves.
+
+The measured cost of resolving a descriptor, separately from maintaining it
+([findings](../memory-descriptors/FINDINGS.md#native-access-measurements), Zen 5, 4,096 allocations):
+
+| Access | Direct | Trampoline |
+| --- | ---: | ---: |
+| Independent 8-byte read | 0.59 ns | 1.99 ns |
+| Dependent 16-byte chase | 5.96 ns | 9.83 ns |
+| Same, with a busy metadata writer on another core (records layout) | — | 28.31 ns |
+
+So resolution itself is cheap when the binding plane is read-mostly and
+co-located with nothing written; it becomes expensive when other workers'
+writes share its lines.
+
+## The cases that need an answer
+
+1. **Large shared growable memory** (column chunks, logs, hash tables, scratch
+   arenas). Windows already reserve address space and grow in place, so every
+   worker's pointer stays valid with zero indirection. Growth is an `mprotect`
+   on the owner. Two costs remain: another worker can only read up to a size
+   the owner has published, and every protection change interrupts the other
+   workers in the address space (TLB study: 7.76 µs batched over 64 pages
+   versus 355 µs page by page with three workers). Prepare growth ahead, in
+   batches, on a service Lane.
+2. **Small memory read by several workers while its owner may grow it.** A Hold
+   keeps an address and its footprint; in-place growth stays legal and relocation
+   is refused until readers finish. That is the answer today, at the cost of
+   sometimes refusing growth.
+3. **Small memory that must move while other workers keep a stable handle.**
+   This is the case the trampolines served. It needs three things together:
+   an indirection the readers resolve, a publication order between the owner's
+   move and the readers' resolve (release store, acquire load), and retirement
+   of the old Home only after every reader that might have resolved to it has
+   finished. The trampoline byte supplied only the first.
+4. **Several workers writing and growing the same object.** No raw-memory
+   mechanism makes this safe on its own. The Object layer already has the
+   shape: private Drafts, one publication, old readers keep old bytes. Physical
+   growth belongs to whoever owns the Draft.
+
+## Options for case 3
+
+| Option | Reader cost | Owner cost | Retirement | Notes |
+| --- | --- | --- | --- | --- |
+| Hold and refuse relocation (today) | none beyond the Hold | growth may fail | existing physical-use counts | Simple; forces copy-to-new-Allocation plus a caller update when growth must happen. |
+| One-byte trampolines in mixed Groups (old design) | ~1.4 ns per independent access | full claim/bind on every allocate/release | needs grants/generations; not implemented | Makes every allocation pay for the few that move. |
+| Opt-in handle table: a Pool-owned array of 8-byte slots, one per relocatable allocation | one dependent load (≈ trampoline) | a store per move; nothing on ordinary allocations | epoch or Hold-based: old Home released after readers' epochs pass | General across classes, Groups and Windows. Slots can be grouped by owner to keep writes off readers' lines. |
+| Promote to a Window on first growth | none | one copy, then in-place growth | existing | Wastes a page minimum; fine for things that really grow. |
+| Version through the Object layer | Scope enrolment (3–7 ns) plus bind | publication | existing history reclamation | Right answer when growth is a logical change others must see atomically. |
+
+My reading: the per-allocation tax is what must go, not indirection itself.
+Readers who need a stable handle to movable small memory can pay one dependent
+load through an opt-in handle; everyone else holds a direct pointer. The handle
+table also covers moves the trampoline could not express (between Groups,
+between classes and into Windows), and a later compaction pass can use the same
+mechanism.
+
+## What multi-worker access asks of the allocator now
+
+- **Foreign release already works** and is now cheaper (32.8 ns on Zen 5,
+  108 ns on Graviton versus 77.6 and 181 ns on main). It costs a mutex and
+  one Message per Group on the owner, which is fine for occasional returns but
+  not for a worker that frees everything another worker allocates. A per-Group
+  atomic return list (one CAS per return, one Message per batch) is the usual
+  next step.
+- **Holds from other workers** go through owner-only `hold()`. Workers that take
+  many short read references to the same memory should take one Hold per batch,
+  or use Object Scopes, rather than one per access; each Hold is 17–37 ns.
+- **Retirement for movable memory** needs a reader-tracking primitive that does
+  not write shared lines on every access: per-worker epochs or reader slots, as
+  the views study recommended for cut tracking (23.1 versus 3.60 ns per
+  publication for shared versus per-producer progress).
+- **Shared address space has a TLB cost.** Every `mprotect`, `madvise` or
+  `munmap` on memory other workers touch interrupts them. Batch these (the
+  overhaul's mapping runs do), keep trim off hot shared Windows, and prepare
+  growth ahead.
+- **UFFD write-protect COW** (case 4 for large Parts) also needs memory the
+  workers can map twice, which means memfd/shmem backing for the Windows that
+  may become Views. Private anonymous memory, as now, cannot be shared that way.
+
+## What to prototype next
+
+1. An opt-in relocatable handle on the new allocator: a Pool handle table,
+   owner moves with a release store, reader resolve with an acquire load, and
+   epoch retirement of the old Home. Measure resolution, move and retirement
+   with one owner and one to three reading workers, against direct pointers
+   and Holds.
+2. Shared Window growth with readers on other cores: publish size, prepare
+   ahead, and measure the readers' slowdown from the owner's `mprotect`.
+3. A lock-free foreign-return list per Group, against today's mutex, with one
+   and three releasing workers.

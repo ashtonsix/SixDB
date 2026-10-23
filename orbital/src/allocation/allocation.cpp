@@ -56,7 +56,7 @@ void activate(Storage& use) noexcept {
   use.users.store(1, std::memory_order_relaxed);
 }
 
-void recycle(Storage& use, bool notify = true) noexcept {
+[[gnu::always_inline]] inline void recycle(Storage& use, bool notify = true) noexcept {
   auto& domain = *route(use);
   auto& pool = *domain.pool;
   assert(worker::on_lane(*pool.lane) && !use.users.load(std::memory_order_relaxed));
@@ -65,13 +65,13 @@ void recycle(Storage& use, bool notify = true) noexcept {
   Ref<Arena> retained;
   auto& state = *pool.internal;
   assert(state.active_uses);
-  if (!--state.active_uses) retained = std::move(state.active_lifetime);
+  if (!--state.active_uses) [[unlikely]] retained = std::move(state.active_lifetime);
   if (domain.finite) {
     auto& group = *static_cast<Group*>(domain.context);
     group.geometry->give(use.identity());
     add_available(group);
   } else add_idle(*static_cast<Window*>(domain.context));
-  if (notify) pulse(pool.capacity_changed);
+  if (notify) pulse_owner(pool.capacity_changed);
 }
 
 bool returned(Domain& domain) noexcept {
@@ -216,30 +216,33 @@ void release_ref(Arena& arena) noexcept {
 }
 
 Result<Allocation> allocate(Pool& pool, const AllocationRequest& request) {
-  if (!pool.lane || !worker::on_lane(*pool.lane)) return std::unexpected(Error::conflict);
-  if (pool.state != Pool::State::open || pool.internal->close_requested)
+  if (!pool.lane || !worker::on_lane(*pool.lane)) [[unlikely]] return std::unexpected(Error::conflict);
+  auto& state = *pool.internal;
+  if (pool.state != Pool::State::open || state.close_requested) [[unlikely]]
     return std::unexpected(Error::unavailable);
   auto size = extent(request);
-  if (!size) return std::unexpected(size.error());
+  if (!size) [[unlikely]] return std::unexpected(size.error());
   const auto reserve = std::max(*size, request.reserved_bytes);
   Result<Allocation> result(std::in_place);
   auto& value = *result;
-  const auto cls = select_class(page_size(), reserve, request.alignment);
-  Result<void> acquired;
-  if (cls < finite_classes) {
-    if (!take_head(*pool.internal, cls, request, value)) [[unlikely]]
-      acquired = finite_allocate(pool, request, cls, value);
-  } else acquired = window_allocate(pool, request, *size, value);
-  if (!acquired) {
-    // Returning the same result permits direct payload construction in the caller's slot.
-    result = std::unexpected(acquired.error());
-    return result;
+  const auto cls = select_class(state.page, reserve, request.alignment, state.floor_class);
+  if (cls < finite_classes && take_head(state, cls, request, value)) [[likely]] {
+    // Owner fast path: the Pool pin and first use, without re-routing the Storage.
+    if (!state.active_uses++) [[unlikely]] state.active_lifetime = Ref<Arena>::retain(*pool.arena);
+    value.storage->users.store(1, std::memory_order_relaxed);
+  } else {
+    auto acquired = cls < finite_classes ? finite_allocate(pool, request, cls, value)
+        : window_allocate(pool, request, *size, value);
+    if (!acquired) {
+      // Returning the same result permits direct payload construction in the caller's slot.
+      result = std::unexpected(acquired.error());
+      return result;
+    }
+    activate(*value.storage);
   }
-  auto& use = *value.storage;
-  activate(use);
   if (request.initialization == Initialization::zero) std::memset(value.address, 0, *size);
   else if (request.readable_padding) std::memset(value.address + request.bytes, 0, request.readable_padding);
-  ++pool.internal->counts.allocations;
+  ++state.counts.allocations;
   return result;
 }
 
@@ -458,9 +461,29 @@ Result<Hold> retain(const Hold& original) {
 
 void release(Allocation& allocation, ReleaseHint value) noexcept {
   if (!allocation.storage) return;
-  auto* storage = std::exchange(allocation.storage, nullptr);
+  auto& use = *std::exchange(allocation.storage, nullptr);
   allocation.address = nullptr; allocation.size = allocation.readable_padding = 0;
-  drop(*storage, value);
+  // Owner fast path: the sole use of a finite Home, released on its own Lane
+  // without advice. No other holder exists to race the final store.
+  const auto state = use.users.state.load(std::memory_order_relaxed);
+  if ((state & UseState::user_mask) == 1 && !supplied(value)) [[likely]] {
+    auto& domain = *route(use, state);
+    auto& pool = *domain.pool;
+    if (domain.finite && worker::on_lane(*pool.lane)) [[likely]] {
+      // The checks above are recycle()'s preconditions; repeat none of them.
+      use.users.state.store(state & ~UseState::user_mask, std::memory_order_relaxed);
+      auto& internal = *pool.internal;
+      Ref<Arena> retained;
+      if (!--internal.active_uses) [[unlikely]] retained = std::move(internal.active_lifetime);
+      auto& group = *static_cast<Group*>(domain.context);
+      group.geometry->give(state >> 24);
+      if (!group.previous_available) [[unlikely]] add_available(group);
+      ++pool.capacity_changed.generation;
+      if (pool.capacity_changed.waiters) [[unlikely]] notify_waiters(pool.capacity_changed);
+      return;
+    }
+  }
+  drop(use, value);
 }
 
 void release(Hold& hold, ReleaseHint value) noexcept {
@@ -472,8 +495,6 @@ void release(Hold& hold, ReleaseHint value) noexcept {
   drop(*storage, value);
 }
 
-Allocation::Allocation(Allocation&& other) noexcept { *this = std::move(other); }
-
 Allocation& Allocation::operator=(Allocation&& other) noexcept {
   if (this == &other) return *this;
   release(*this);
@@ -482,8 +503,6 @@ Allocation& Allocation::operator=(Allocation&& other) noexcept {
   size = std::exchange(other.size, 0); readable_padding = std::exchange(other.readable_padding, 0);
   return *this;
 }
-
-Allocation::~Allocation() { release(*this); }
 
 Hold::Hold(Hold&& other) noexcept { *this = std::move(other); }
 

@@ -165,6 +165,8 @@ struct Signal {
 /// On the assigned thread, detach and notify waiters after advancing generation.
 /// State stays nonterminal; waking grants no resource. Recheck the condition.
 void pulse(Signal&) noexcept;
+/// Detach and notify current waiters; pulse's tail for owners that advance generation inline.
+void notify_waiters(Signal&) noexcept;
 /// Set a terminal result on the assigned thread, then advance generation and notify.
 /// Use pulse for reusable capacity/publication changes; complete is permanent.
 void complete(Signal&, Result<void>) noexcept;

@@ -139,6 +139,20 @@ void allocation_cases() {
       }
     });
   }
+  {
+    // Same pair with one unrelated allocation kept live: the Pool never empties,
+    // so the per-Pool Arena pin is not retaken on every pair.
+    auto anchor = need(a::allocate(*owner.pool, {.bytes = 3072}));
+    const a::AllocationRequest request{.bytes = 64};
+    measure("alloc/pair-anchored/64", 2'000'000, [&](std::size_t n) {
+      for (std::size_t i = 0; i < n; ++i) {
+        auto value = need(a::allocate(*owner.pool, request));
+        value.address[0] = std::byte{1};
+        a::release(value);
+      }
+    });
+    a::release(anchor);
+  }
   for (std::size_t size : {64, 1024}) {
     const a::AllocationRequest request{.bytes = size};
     for (std::size_t live : {256, 4096}) {
