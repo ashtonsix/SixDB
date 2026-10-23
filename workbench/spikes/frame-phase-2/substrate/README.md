@@ -134,6 +134,37 @@ below 10% density, every predicate that spreads across blocks 0.3–0.5×.
    front A's); warm, the permuted layout mainly breaks sequential order for
    Frame's variable-size bodies.
 
+## Independent point reads
+
+[`points.cpp`](points.cpp) reads 65,536 random rows through phase 1's getter,
+directly and with the next requests' descriptors and bodies prefetched, beside
+the native narrow-FOR array with and without prefetch. Jobs
+`20261023T220919Z-0291e583` (Zen 5) and `20261023T220947Z-9edf003c`
+(Graviton 4), source `68dc725b`. Medians:
+[evidence/points-v1-summary.txt](evidence/points-v1-summary.txt).
+
+| Column (dominant kind) | Host | One part: native / Frame direct / staged | Full slice: native / Frame direct / staged |
+| --- | --- | --- | --- |
+| WatchID (packed) | AVX-512 | 0.59 / 4.7 / 5.4 ns | 1.18 / 9.4 / 8.4 ns |
+| OS (runs) | AVX-512 | 0.48 / 26.4 / 25.8 ns | 0.82 / 36.3 / 31.8 ns |
+| UserID (runs) | AVX-512 | 0.56 / 29.7 / 29.1 ns | 1.07 / 46.4 / 41.6 ns |
+| UserID (runs) | Graviton 4 | 0.88 / 32.0 / 34.4 ns | 7.63 / 120.0 / 101.6 ns |
+| URLHash | Graviton 4 | 0.98 / 37.7 / 37.9 ns | 7.53 / 92.7 / 70.0 ns |
+
+1. **Point cost is the in-block leaf, not acquisition.** With everything in
+   L1/L2, a run block's point read costs 26–38 ns against 0.5–1 ns native; a
+   packed block's costs about 5 ns. Run search and the getter's per-kind setup
+   dominate.
+2. **Staging helps only where misses exist.** Prefetching the next requests'
+   descriptors and bodies saves up to 1.3× on Graviton 4's full slice
+   (URLHash 92.7 → 70.0 ns) and about 1.1× on Zen 5, and costs a little when
+   resident. The native array gains similarly from prefetch.
+3. The 3M-row slices fit both hosts' LLC (32–36 MB), so none of these cells is
+   DRAM-resident; the DRAM tier needs larger slices on the workers.
+
+The point leaf belongs to front C. Staging stays here, to be re-measured once
+leaves are near their floor and on DRAM-resident slices.
+
 ## Next
 
 Ikea LEAD's review proposes separating the units before committing to
