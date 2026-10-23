@@ -18,8 +18,8 @@ template <unsigned N, unsigned Rows, C Op> void field_geometry() {
                 auto source = *tp::view::attach(layout, std::as_writable_bytes(std::span{bytes}), 65, stride);
                 auto plan = *tp::read_plan<N, Rows>::make(layout, std::array<std::uint8_t, 1>{0});
                 auto read = *tp::bind_reader(plan, source);
-                // Prepared predicates retain the shared plan/view, not this
-                // intermediate reader wrapper. Both forms use the same bytes.
+                // Prepared predicates copy the code and retain only the named
+                // view. Both forms use the same bytes after this reader expires.
                 auto filter = [&] {
                     auto transient = *tp::bind_reader(plan, source);
                     return *tp::bind_predicate(transient);

@@ -53,10 +53,10 @@ to a named physical view, without adding an intermediate retained operation.
 The [SeriesPack reference](seriespack/reference.md) states these lifetimes.
 
 TuplePack's general reader borrows its named plan and view. For repeated
-one-code filters, `bind_predicate(reader)` copies those pointers and the code
-projection; the intermediate reader wrapper may expire. The plan/view values
-and addresses must remain stable through every predicate call. The equivalent
-`bind_predicate(plan, view)` convenience needs no retained intermediate reader.
+one-code filters, `bind_predicate(reader)` copies the code projection and retains
+only the named view. Its preparation plan and intermediate reader may expire;
+the view's value, address and backing remain stable through every call. The
+equivalent `bind_predicate(plan, view)` convenience needs no retained intermediate reader.
 `reader.filter` remains the checked single-command convenience. The
 [TuplePack guide](tuplepack/usage.md#project-codes-into-a-packet) shows both forms.
 

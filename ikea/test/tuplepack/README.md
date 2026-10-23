@@ -9,6 +9,8 @@
 | `ikea_tuplepack_operations_check` | Whole-call rejection, shared-byte groups, nested writes, complete maintenance, sparse selections, 128-code construction, shared overlap proof |
 | `ikea_tuplepack_execution_check` | General/normalized routing against independent bits, native CPS completion, 2/4-row batch shapes, inactive-null lanes |
 | `ikea_tuplepack_packets_check` | All seven row shapes; independent buffered/native wire and group-order checks (including short maps and holes), tiny and scattered units, masks through bit 63, range tails, admission, effects and nested packet observations |
+| `ikea_tuplepack_access_check` | Active-only physical reads and preserving writes, poisoned inactive interior bytes under ASan, exact explicit common-window grants and protected empty commands |
+| `ikea_tuplepack_predicate_check` | All 11 packet shapes, every valid width/shift, tight and strided offset-63 fields, actual protected expired plans, exact tails, independent unsigned comparisons and admission before shortcuts |
 | `ikea_tuplepack_gpr_check` | All four GPR shapes; shared independent wire reference, every bounded word-transfer length/shift/width and mask at guard pages, failed admission, nested maintenance, erasure, CPS early completion and capacity-independent register bridges and grouped shared-byte observations |
 | `ikea_tuplepack_ownership_check` | In-place retained storage, generation checks, completed frontiers, cancellation, actual substituted sources, exact/conservative/bypass summary publication |
 

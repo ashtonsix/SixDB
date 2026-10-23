@@ -139,8 +139,9 @@ and separately accounts for summaries and visibility.
 | Resource | Required lifetime or proof |
 | --- | --- |
 | Layout, map and groups supplied to preparation | Can expire after their controls are copied |
-| Named view and prepared plan | Unchanged values at stable addresses through every bound invocation; rebind after assigning a new plan or placement |
-| Prepared predicate's source reader wrapper | Can expire after binding; its plan/view pointers and code projection are copied |
+| General reader/writer's named view and prepared plan | Unchanged values at stable addresses through every bound invocation; rebind after assigning a new plan or placement |
+| Prepared predicate's plan and intermediate reader | Can expire after binding; the code projection is copied |
+| Prepared predicate's named view | Unchanged value at a stable address, with live backing, through every invocation |
 | Source view identified by emitted effects | Resolvable until the owner consumes those effects; the prepared plan need not survive for this alone |
 | View storage | Live, with unchanged placement and the layout that encoded it |
 | Input, output, selection, effects and maintenance | Valid through admission and execution; retained across any owner stop that borrows them |
@@ -148,11 +149,13 @@ and separately accounts for summaries and visibility.
 | Erased operation's concrete source | Stable while the erased operation borrows it |
 | CPS plan and bindings | Live through the complete chain |
 
-`predicate<N, Byte, Rows>` prepares an ordinary single-code comparison with
+`predicate<Byte, Rows=1>` prepares an ordinary single-code comparison with
 `bind_predicate(reader)` or `bind_predicate(plan, view)`. Preparation rejects
 empty, hole-only and multi-code maps with `error::map`, without payload reads.
-It copies the reader handle and code projection, while continuing to borrow the
-named plan and view under the table above. The code is prepared once; comparison
+It copies the code projection and borrows only the named view under the table
+above. Rows is a power of two from 1 through 64; packet capacity N has no meaning
+for this operation. Binding from different packet capacities with the same Byte
+and Rows returns the same predicate type. The code is prepared once; comparison
 operator, right-hand side and row activity belong to each `filter<Op>` command.
 The general reader borrows only plan/view; its `filter` convenience prepares a
 predicate for one call. Keep a prepared predicate outside a repeated filter loop.

@@ -114,6 +114,10 @@ add_executable(ikea_tuplepack_access_check EXCLUDE_FROM_ALL test/tuplepack/acces
 sixdb_target(ikea_tuplepack_access_check)
 target_link_libraries(ikea_tuplepack_access_check PRIVATE ikea::tuplepack)
 
+add_executable(ikea_tuplepack_predicate_check EXCLUDE_FROM_ALL test/tuplepack/predicate.cpp)
+sixdb_target(ikea_tuplepack_predicate_check)
+target_link_libraries(ikea_tuplepack_predicate_check PRIVATE ikea::tuplepack)
+
 add_executable(ikea_tuplepack_gpr_check EXCLUDE_FROM_ALL
   test/tuplepack/gpr.cpp test/tuplepack/gpr_pipeline.cpp test/tuplepack/gpr_carriers.cpp)
 sixdb_target(ikea_tuplepack_gpr_check)
@@ -212,7 +216,8 @@ set(ikea_check_targets
   ikea_seriespack_admission_check ikea_filters_check
   ikea_tuplepack_wire_check ikea_tuplepack_transfer_check
   ikea_tuplepack_operations_check ikea_tuplepack_execution_check
-  ikea_tuplepack_packets_check ikea_tuplepack_access_check ikea_tuplepack_gpr_check ikea_tuplepack_ownership_check
+  ikea_tuplepack_packets_check ikea_tuplepack_access_check ikea_tuplepack_predicate_check
+  ikea_tuplepack_gpr_check ikea_tuplepack_ownership_check
   ikea_bec256_check ikea_bec256_composition_check)
 add_custom_target(ikea_examples DEPENDS ${ikea_example_targets})
 sixdb_heavy_compile(ikea_seriespack_check ikea_filters_check ikea_tuplepack_packets_check

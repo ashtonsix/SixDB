@@ -102,10 +102,11 @@ auto at_least_7 = predicate->filter<comparison::greater_equal>(0, 7, 0b11);
 auto at_least_20 = predicate->filter<comparison::greater_equal>(0, 20, 0b11);
 ```
 
-`bind_predicate(*read)` also prepares from an existing one-code reader; it copies
-that reader's plan/view pointers, so the intermediate reader wrapper may expire.
-The named plan and view remain borrowed. Empty, multi-code and hole-only maps
-reject with `error::map`. A tight column can compare encoded bytes without a
+`bind_predicate(*read)` also prepares from an existing one-code reader. It copies
+the code and retains only the named view, so its plan and intermediate reader
+may expire. Keep the view's value, address and backing stable through use.
+Empty, multi-code and hole-only maps reject with `error::map`.
+A tight column can compare encoded bytes without a
 general projection. For multiple
 predicates, reuse a projection only when its saved work outweighs that direct
 path. Keep original-row activity distinct from native packet-byte masks.
@@ -193,9 +194,9 @@ uses sparse rows in a wider carrier.
 
 Keep borrowed storage live and named views and plans unchanged at stable addresses.
 Bind again after assigning a different plan or placement. A prepared predicate
-copies its code projection and borrows the same plan/view as its source reader;
-prepare it again after either changes. The general reader carries no copied
-code projection. Its `filter` convenience prepares the predicate for that call.
+copies its code projection and borrows only the named view. Its plan may expire;
+to use another code or placement, bind a new predicate. The general reader carries
+no copied code projection. Its `filter` convenience prepares the predicate for that call.
 Prepare plans and bind readers/writers outside the row loop. Preparation copies
 layout, map and groups; those descriptions can then expire. An ordinary GPR plan
 already selects a transfer endpoint at preparation. A generic inline native

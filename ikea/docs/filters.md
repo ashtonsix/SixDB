@@ -193,17 +193,17 @@ predicate once outside a repeated filter loop instead:
 
 ```cpp
 auto predicate = tp::bind_predicate(*plan, source);
-// Check the factory result before use; plan and source remain named and stable.
+// Check the factory result before use; source remains named and stable.
 auto equal_7 = predicate->filter<comparison::equal>(first, 7, incoming_rows);
 auto below_12 = predicate->filter<comparison::less>(first, 12, incoming_rows);
 ```
 
 `tp::bind_predicate(*read)` is equivalent preparation from an existing reader.
-It copies the reader's pointers and code projection, so the intermediate reader
-wrapper may expire. The named plan and view must outlive the predicate and keep
-their values and addresses stable. Prepare again after assigning a new plan or
-placement. A general reader retains only its plan/view borrowing; it carries no
-copied code projection.
+It copies the code projection and borrows only the named view. The preparation
+plan and intermediate reader may expire. Keep the view's value, address and
+backing stable; bind another predicate to select a different code or placement.
+A general reader retains its plan/view borrowing and carries no copied code
+projection.
 
 Predicate preparation and the checked reader convenience reject empty,
 hole-only and multi-code maps with `error::map`. Bit `r` names original row `first+r`, just as in the bound
