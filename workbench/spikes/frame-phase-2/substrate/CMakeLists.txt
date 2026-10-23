@@ -15,3 +15,7 @@ target_link_libraries(frame_substrate_points PRIVATE frame_encoding_material ike
 add_executable(frame_substrate_masks masks.cpp)
 sixdb_target(frame_substrate_masks)
 target_link_libraries(frame_substrate_masks PRIVATE frame_encoding_material)
+# The shared image: substrate descriptor columns over front C's header leaves.
+add_executable(frame_substrate_image image_measure.cpp)
+sixdb_target(frame_substrate_image)
+target_link_libraries(frame_substrate_image PRIVATE frame_bodies)
