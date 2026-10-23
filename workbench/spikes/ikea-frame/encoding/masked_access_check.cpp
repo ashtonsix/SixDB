@@ -70,9 +70,9 @@ struct fixture {
             auto *bytes = payload->data + b * payload->page;
             std::memset(bytes, static_cast<int>(b + 1), block_rows);
             const sp::dense_input input{8, sp::geometry::local,
-                                       std::span<const std::uint8_t>(bytes, block_rows), block_rows};
-            auto wide = sp::bind_decoder<u64>(input);
-            auto narrow = sp::bind_decoder<std::uint8_t>(input);
+                                       std::as_bytes(std::span<const std::uint8_t>(bytes, block_rows)), block_rows};
+            auto wide = sp::bind_reader<u64>(input);
+            auto narrow = sp::bind_reader<std::uint8_t>(input);
             need(wide.has_value() && narrow.has_value(), "decoder binding failed");
             const auto offset = bytes - material->payload.data();
             need(offset >= 0 && static_cast<std::size_t>(offset) <= UINT32_MAX, "offset overflow");
@@ -116,8 +116,8 @@ struct dictionary_fixture {
             auto *data = payload->data + b * payload->page;
             std::memset(data, b % 2, block_rows);
             material->blocks.push_back({0, offset(data), block_rows, kind::packed, 8});
-            const auto decoder = sp::bind_decoder<u64>(sp::dense_input{
-                8, sp::geometry::local, std::span<const std::uint8_t>(data, block_rows), block_rows});
+            const auto decoder = sp::bind_reader<u64>(sp::dense_input{
+                8, sp::geometry::local, std::as_bytes(std::span<const std::uint8_t>(data, block_rows)), block_rows});
             need(decoder.has_value(), "code plane binding failed");
             material->decoders.push_back(*decoder);
             material->coded[b / 64] |= u64{1} << (b % 64);
@@ -126,8 +126,8 @@ struct dictionary_fixture {
             auto *data = payload->data + (count + p) * payload->page;
             data[0] = 7; data[1] = 19;
             material->parts.push_back({1000u * (p + 1), offset(data), 2, 8});
-            const auto decoder = sp::bind_decoder<u64>(sp::dense_input{
-                8, sp::geometry::local, std::span<const std::uint8_t>(data, 8), 2});
+            const auto decoder = sp::bind_reader<u64>(sp::dense_input{
+                8, sp::geometry::local, std::as_bytes(std::span<const std::uint8_t>(data, 8)), 2});
             need(decoder.has_value(), "dictionary plane binding failed");
             material->dictionaries.emplace_back(*decoder);
         }

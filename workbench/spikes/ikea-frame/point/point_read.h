@@ -11,7 +11,7 @@ enum class point_domain { values, stored_codes };
 template <class RunSource> struct point_reader_program {
     const fe::column *source;
     std::size_t rows;
-    std::vector<std::optional<fe::sp::decoder<fe::u64>>> packed_checkpoints;
+    std::vector<std::optional<fe::sp::erased_reader<fe::u64>>> packed_checkpoints;
 
     explicit point_reader_program(const fe::column &c, point_domain domain = point_domain::values)
         : source(&c), rows(c.rows) {
@@ -28,9 +28,9 @@ template <class RunSource> struct point_reader_program {
             if ((d.type != fe::kind::delta && d.type != fe::kind::delta_patched) ||
                 d.width + 8 > 64) continue;
             const auto *bytes = c.payload.data() + d.offset + fe::plane_bytes(d.width, 256) + 8;
-            auto bound = fe::sp::bind_decoder<fe::u64>(fe::sp::dense_input{
+            auto bound = fe::sp::bind_reader<fe::u64>(fe::sp::dense_input{
                 unsigned(d.width) + 8, fe::sp::geometry::local,
-                std::span(bytes, fe::plane_bytes(d.width + 8, 15)), 15});
+                std::as_bytes(std::span(bytes, fe::plane_bytes(d.width + 8, 15))), 15});
             if (!bound) std::abort();
             packed_checkpoints[b] = *bound;
         }

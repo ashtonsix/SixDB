@@ -1,0 +1,81 @@
+{
+  "scope": "API-only current Frame port after predicate cut3f31a329; no representation or numerical-program change",
+  "status": "NEON passed; AVX2 and AVX-512 qualification in progress",
+  "timings": "No qualification time is interpreted as a performance result; historical benchmark source cohorts remain separate.",
+  "frame_files_sha256": {
+    "workbench/spikes/ikea-frame/encoding/kernels.cpp": "8e839c8fd6ff5f578eeda5532fe2cfffec21cc59ff410b23ca8719807506f2db",
+    "workbench/spikes/ikea-frame/encoding/masked_access_check.cpp": "3dd60d0124234a19deea9cbf44d14ce9c09f1e87fc4041f67e378e0bc23967ab",
+    "workbench/spikes/ikea-frame/encoding/material.cpp": "d55b5665190f60fe5edc3f9d2f1f1c2540ba21dd3040f0a3d8486aa9cdff550c",
+    "workbench/spikes/ikea-frame/encoding/material.h": "c334f21b199fcd3eedea18cad6b35853c02e706fdfda7f4b78ad865f47513c07",
+    "workbench/spikes/ikea-frame/encoding/packing.cpp": "4cbdbc1b37e47e264ba89226071e7e38990798cb126da5c4ecad1cf386939599",
+    "workbench/spikes/ikea-frame/encoding/predicate.cpp": "ec17f3bb1d80a6379e7ff24fd441161ffa74390bdf573d61c3dfcab2daa0d361",
+    "workbench/spikes/ikea-frame/filter/evidence.cpp": "2e3ab77ce987de7aefe32117abc2b71e7cbad4d30c163926c89978f41b135aa8",
+    "workbench/spikes/ikea-frame/filter/implementation.h": "eb25a5327cf2fb5f5e7bf0f57d063ebf6d496cb75a586a50e718e6995190daee",
+    "workbench/spikes/ikea-frame/lifecycle/delta_repair.h": "e8c8fa013843e0558a0f355bdda672e9497462a4c8ac9fabc458e5ad70e9975c",
+    "workbench/spikes/ikea-frame/lifecycle/delta_repair_check.cpp": "0aa494051fde1bbee04f1153b5e0dcddb78dc099ea3d54f88ae31828a3c87652",
+    "workbench/spikes/ikea-frame/lifecycle/phase_plane.cpp": "0102abc0c14eaab81ef781985fd5f5bcdb303a2077940e76cc3ee5fe281ce6e1",
+    "workbench/spikes/ikea-frame/point/delta_patched_check.cpp": "2e48cc10c8d1bf4ffb0c9f35fd142aa0e569c593f223ab68f2e1f6a8ff6a5184",
+    "workbench/spikes/ikea-frame/point/kernels.cpp": "6a2bfa0f65ca799210fb4654f1d887a5da55701e6a993ab4b1f4d7ed2dbcca7c",
+    "workbench/spikes/ikea-frame/point/point_check.cpp": "0571e13cc98bff5a84d02c9eec9212d7c3712a919d34ebb85ef9d3fc42bf4314",
+    "workbench/spikes/ikea-frame/point/point_read.h": "83fe4d068dfd6a6f52b95c4a596ea84fae551619e9249d64418d48c1014be20a"
+  },
+  "profiles": {
+    "neon": {
+      "job": "20261023T014426Z-19ffb82e",
+      "capture_digest": "60d18fdb1d58a27d59b2912ecb8d53990a90e099f414d1f29f6b73f912019fd4",
+      "source_files_verified": 3569,
+      "base_commands": 82,
+      "extra_commands": 72,
+      "owner_verification": {
+        "p__mbar": {
+          "records": 800,
+          "log_sha256": "b89c400074ce2924fd5eca3af49d32028d775203368e2dc86c61b21328443aa1"
+        },
+        "EventTime-mid": {
+          "records": 800,
+          "log_sha256": "4085c709b4463134693a803b19ffa9120e9baeac42f373b3bdd413ed819753d4"
+        },
+        "UserID": {
+          "records": 800,
+          "log_sha256": "d774885d8dc645c40c58698ef9231979875b266087dcf5e57b3a75cf50ec2801"
+        },
+        "URLHash": {
+          "records": 800,
+          "log_sha256": "ea9c5f5a688ac068bfc5d855d245c66b66e6f513197e9acb1059404289708c1f"
+        }
+      },
+      "assertions_enabled": true,
+      "executables": {
+        "frame_encoding_masked_access_check": "2bd2bf334c02af878a774d04e68dc130c46913ec3aa0a32f147e4c04e5741cb7",
+        "frame_encoding_null_check": "304143ac7fe48f97978f2d4dcaf3d39b2588c7b15b9af3c5aa6c8ca7fbafac8b",
+        "frame_phase_material_check": "8fe053b8f752e1baa552846fbe4c8107d02db84c158431ee9a5c61679c106d84",
+        "frame_phase_plane_check": "e94dcbf4eb0e1e80202b481e8e2f57c91db3e963c472505dbbd40573e143751d",
+        "frame_phase_repair_check": "bdf1491e3d80878719731e9565c6196c684a2fb598de2221da0152f2a7b97227",
+        "frame_phase_batch_check": "9c7604625c5ee5a039c461cbe26caf8b873acc82e09a8f8edf264a27de771565",
+        "frame_encoding_borrowed_check": "2ab0933315a3fcc4d4a9cdbce777ab26769543bf8215f21a41ef25d047d366dd",
+        "frame_phase_measure": "e9d6875978e59a90259eb5ac4d2b9fe03dbaa6282552994957912e6d4cdf7f34",
+        "frame_delta_repair_check": "25113fc8ae79bdfbfa12d750a32725d9233cb4626493e5ffd8b126444a8cf3cf",
+        "frame_delta_patched_check": "9863ad1a48581aa9784d1eb21f973a01e37a1ff047f43ae77b89500dd03331ea",
+        "frame_checkpoint_point_check": "067db0d2004779db89c1ff3ff16b6deb9207153c74e7611e42ed02ac9d7cd5be",
+        "frame_filter_check": "5ad2f6aca5dc0c33229df7bfd7fdef1cfe4925dea4f151a2b69a56701baec054",
+        "frame_execution_material_check": "b2f3d237af1eb247e9877ca96b1a75795d08a9d09998b72c4bd4a689d4d4dace",
+        "frame_execution_hash_check": "7231b42be0b5e0027eac4cadb360c02b53517f2ccd3211c0e40687d08fef8dae",
+        "frame_encoding_predicate_check": "ccb493dc61486b001ecf0489e17b47b897d798592e89a485811bc899da91a9c7"
+      },
+      "artifact": {
+        "sha256": "53ee9fe74d6ab0c2e6adaa8921a2ee36d7c91e0a075fe1f70289fc416632a222",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/53ee9fe74d6ab0c2e6adaa8921a2ee36d7c91e0a075fe1f70289fc416632a222.tar.gz"
+      },
+      "instance_terminated": true
+    }
+  },
+  "pending_zen5_job": "20261023T015159Z-ccc9f247",
+  "zen5_capture_digest": "513cec9b62fddff9ec09d98f5db6cdbf0b6e1dab2730efeb7f3cf69901cbb061",
+  "first_zen5_attempt": {
+    "job": "20261023T014426Z-faee73a5",
+    "result": "AVX2 compilation succeeded; runner feature-report command used unsupported -mtune=zen5. No oracle checks ran. Retry changes runner only, to znver5.",
+    "artifact_sha256": "bcd48d623d78882ab8efb8fce752bda6dd7a2d056a24517108a4bc588073dcf9",
+    "instance_terminated": true
+  },
+  "known_limit": "Duplicate-valued projected dictionaries are supported by predicate emission, but generic code_count_eq/fused EQ need a separate duplicate-safe applicability/fallback correction; encoded owner dictionaries are injective."
+}

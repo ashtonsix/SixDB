@@ -215,15 +215,15 @@ struct column {
     std::vector<std::uint8_t> payload;
     // Retained bindings, filled only under options.bind_decoders. Owner
     // operations below never read them.
-    std::vector<sp::decoder<u64>> decoders;            // per block with a plane
+    std::vector<sp::erased_reader<u64>> decoders;            // per block with a plane
     // Narrowest output lane per block (u8/u16/u32), for narrow-lane reduction.
-    std::vector<std::optional<sp::decoder<std::uint8_t>>> d8;
-    std::vector<std::optional<sp::decoder<std::uint16_t>>> d16;
-    std::vector<std::optional<sp::decoder<std::uint32_t>>> d32;
-    std::vector<std::optional<sp::decoder<u64>>> exceptions;  // patched, delta_patched
+    std::vector<std::optional<sp::erased_reader<std::uint8_t>>> d8;
+    std::vector<std::optional<sp::erased_reader<std::uint16_t>>> d16;
+    std::vector<std::optional<sp::erased_reader<std::uint32_t>>> d32;
+    std::vector<std::optional<sp::erased_reader<u64>>> exceptions;  // patched, delta_patched
     std::vector<dictionary_part> parts;  // empty unless options.dictionary
     std::vector<u64> coded;              // one bit per block; empty unless options.dictionary
-    std::vector<std::optional<sp::decoder<u64>>> dictionaries;  // per part with a dictionary
+    std::vector<std::optional<sp::erased_reader<u64>>> dictionaries;  // per part with a dictionary
     std::size_t rows = 0;
     // Retained binding state: the binding vectors' capacities (not charged to
     // the image's bytes).

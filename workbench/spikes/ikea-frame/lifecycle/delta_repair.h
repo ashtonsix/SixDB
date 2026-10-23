@@ -20,26 +20,26 @@ inline void require(bool ok) { if (!ok) std::abort(); }
 // Resolve named source identities while their views are alive. These are actual
 // coalesced issued-store envelopes, including any preserved neighbours.
 template <class View>
-void resolve(repair_result &out, const sp::composition::source_write_journal &journal,
+void resolve(repair_result &out, const ikea::journal &journal,
              const View &view, std::size_t origin) {
     for (const auto &entry : journal.entries()) {
-        require(entry.source == &view && !entry.bytes.plane && out.count < out.writes.size());
-        out.writes[out.count++] = {origin + entry.bytes.offset, entry.bytes.size};
+        require(entry.source == &view && !entry.plane && out.count < out.writes.size());
+        out.writes[out.count++] = {origin + entry.offset, entry.size};
     }
 }
 template <unsigned K>
 void store_mark(std::uint8_t *body, std::size_t offset, unsigned n, unsigned row,
                 u64 value, repair_result &out) {
-    using F = sp::format<K>;
-    auto view = sp::view<F, std::uint8_t>::attach(n,
-        {{{std::span(body + offset, fe::plane_bytes(K, n)), F::tile_bytes}, {}, {}}});
+    using F = sp::layout<K>;
+    auto view = sp::view<F>::attach(n,
+        {{{std::as_writable_bytes(std::span(body + offset, fe::plane_bytes(K, n))), F::tile_bytes}, {}, {}}});
     require(bool(view));
-    auto prepared = sp::bind_mutation(*view);
+    auto prepared = sp::bind_writer(*view);
     require(bool(prepared));
-    sp::no_summary summary;
-    std::array<sp::composition::owner_write, 16> records;
-    sp::composition::source_write_journal journal{records};
-    require(bool(prepared->set(row, value, summary, journal)));
+    sp::author::no_summary summary;
+    std::array<ikea::journal::entry, 16> records;
+    ikea::journal journal{records};
+    require(bool(prepared->set(row, value, journal, summary)));
     resolve(out, journal, *view, offset);
 }
 
@@ -70,22 +70,22 @@ template <unsigned K>
         (row + 1 < fe::block_rows && (following < 0 || following > i128(maximum))))
         return out; // All value/capacity refusals precede any store.
 
-    using F = sp::format<K>;
-    auto view = sp::view<F, std::uint8_t>::attach(fe::block_rows,
-        {{{std::span(body, fe::plane_bytes(K, fe::block_rows)), F::tile_bytes}, {}, {}}});
+    using F = sp::layout<K>;
+    auto view = sp::view<F>::attach(fe::block_rows,
+        {{{std::as_writable_bytes(std::span(body, fe::plane_bytes(K, fe::block_rows))), F::tile_bytes}, {}, {}}});
     require(bool(view));
-    auto prepared = sp::bind_mutation(*view);
+    auto prepared = sp::bind_writer(*view);
     require(bool(prepared));
-    const auto first_capacity = prepared->effect_capacity(row, 1, sp::row_selection::all());
+    const auto first_capacity = prepared->effect_capacity(row, 1, sp::selection::all());
     const auto second_capacity = prepared->effect_capacity(
-        row + 1, row + 1 < fe::block_rows, sp::row_selection::all());
+        row + 1, row + 1 < fe::block_rows, sp::selection::all());
     require(first_capacity && second_capacity && *first_capacity + *second_capacity <= 16);
-    std::array<sp::composition::owner_write, 16> records;
-    sp::composition::source_write_journal journal{records};
-    sp::no_summary summary;
-    require(bool(prepared->set(row, u64(replacement), summary, journal)));
+    std::array<ikea::journal::entry, 16> records;
+    ikea::journal journal{records};
+    sp::author::no_summary summary;
+    require(bool(prepared->set(row, u64(replacement), journal, summary)));
     if (row + 1 < fe::block_rows)
-        require(bool(prepared->set(row + 1, u64(following), summary, journal)));
+        require(bool(prepared->set(row + 1, u64(following), journal, summary)));
     resolve(out, journal, *view, d.offset);
     out.residuals = 1 + unsigned(row + 1 < fe::block_rows);
 

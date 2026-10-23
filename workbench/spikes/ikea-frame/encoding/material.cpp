@@ -583,9 +583,9 @@ column encode(std::span<const u64> values, encode_options options) {
         c.dictionaries.emplace_back();
         if (!p.count)
             continue;
-        auto decoder = sp::bind_decoder<u64>(sp::dense_input{
+        auto decoder = sp::bind_reader<u64>(sp::dense_input{
             p.width, sp::geometry::local,
-            std::span<const std::uint8_t>(c.payload).subspan(p.offset, plane_bytes(p.width, p.count)),
+            std::as_bytes(std::span<const std::uint8_t>(c.payload).subspan(p.offset, plane_bytes(p.width, p.count))),
             p.count});
         if (!decoder)
             std::abort();
@@ -606,9 +606,9 @@ column encode(std::span<const u64> values, encode_options options) {
         const std::size_t at = d.offset + (d.type == kind::arrival ? arrival_flag_bytes : 0);
         const sp::dense_input input{
             d.width, sp::geometry::local,
-            std::span<const std::uint8_t>(c.payload).subspan(at, plane_bytes(d.width, d.count)),
+            std::as_bytes(std::span<const std::uint8_t>(c.payload).subspan(at, plane_bytes(d.width, d.count))),
             d.count};
-        auto decoder = sp::bind_decoder<u64>(input);
+        auto decoder = sp::bind_reader<u64>(input);
         if (!decoder)
             std::abort();
         c.decoders.push_back(*decoder);
@@ -618,9 +618,9 @@ column encode(std::span<const u64> values, encode_options options) {
             const std::size_t b = c.decoders.size() - 1;
             const auto p = d.type == kind::patched ? patches(c, b) : delta_patches(c, b);
             const unsigned ew = p.value_width;  // stored in the body
-            auto exc = sp::bind_decoder<u64>(sp::dense_input{
+            auto exc = sp::bind_reader<u64>(sp::dense_input{
                 ew, sp::geometry::local,
-                std::span<const std::uint8_t>(p.values, plane_bytes(ew, p.n)), p.n});
+                std::as_bytes(std::span<const std::uint8_t>(p.values, plane_bytes(ew, p.n))), p.n});
             if (!exc)
                 std::abort();
             c.exceptions.back() = *exc;
@@ -629,11 +629,11 @@ column encode(std::span<const u64> values, encode_options options) {
         if (d.type == kind::arrival)
             continue;
         if (d.width <= 8)
-            c.d8.back() = *sp::bind_decoder<std::uint8_t>(input);
+            c.d8.back() = *sp::bind_reader<std::uint8_t>(input);
         else if (d.width <= 16)
-            c.d16.back() = *sp::bind_decoder<std::uint16_t>(input);
+            c.d16.back() = *sp::bind_reader<std::uint16_t>(input);
         else if (d.width <= 32)
-            c.d32.back() = *sp::bind_decoder<std::uint32_t>(input);
+            c.d32.back() = *sp::bind_reader<std::uint32_t>(input);
     }
     return c;
 }

@@ -102,11 +102,11 @@ fe::column literal(const std::array<u64, 256> &values,
     tail[9] = static_cast<std::uint8_t>(w);
     std::memcpy(tail + 10, positions.data(), positions.size());
     fe::pack(w, exceptions, tail + 10 + positions.size());
-    auto plane_decoder = fe::sp::bind_decoder<u64>(fe::sp::dense_input{
-        k, fe::sp::geometry::local, std::span(c.payload.data(), plane), 256});
-    auto exception_decoder = fe::sp::bind_decoder<u64>(fe::sp::dense_input{
+    auto plane_decoder = fe::sp::bind_reader<u64>(fe::sp::dense_input{
+        k, fe::sp::geometry::local, std::as_bytes(std::span(c.payload.data(), plane)), 256});
+    auto exception_decoder = fe::sp::bind_reader<u64>(fe::sp::dense_input{
         w, fe::sp::geometry::local,
-        std::span<const std::uint8_t>(tail + 10 + positions.size(), fe::plane_bytes(w, positions.size())),
+        std::as_bytes(std::span<const std::uint8_t>(tail + 10 + positions.size(), fe::plane_bytes(w, positions.size()))),
         positions.size()});
     need(plane_decoder && exception_decoder, "literal decoder binding failed");
     c.decoders.push_back(*plane_decoder);

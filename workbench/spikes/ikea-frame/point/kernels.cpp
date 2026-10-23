@@ -14,13 +14,13 @@ template <unsigned K>
 std::uint64_t point(const std::uint8_t *data, std::size_t row) {
     // Borrow the logical prefix through row. Its complete final tile is
     // already part of the admitted body; the wrapper need not survive binding.
-    return sp::bind_decoder<std::uint64_t>(
-        sp::dense_source<sp::format<K>>{data, row + 1}).get_unchecked(row);
+    return sp::bind_reader<std::uint64_t>(
+        sp::dense_source<sp::layout<K>>{reinterpret_cast<const std::byte*>(data), row + 1}).get_unchecked(row);
 }
 template <unsigned K>
 void range(const std::uint8_t *data, std::size_t first, std::size_t take,
            std::uint64_t *out) {
-    sp::bind_decoder<std::uint64_t>(sp::dense_source<sp::format<K>>{data, first + take})
+    sp::bind_reader<std::uint64_t>(sp::dense_source<sp::layout<K>>{reinterpret_cast<const std::byte*>(data), first + take})
         .read_unchecked(first, take, out);
 }
 template <unsigned K>
@@ -29,10 +29,10 @@ std::uint64_t prefix(const std::uint8_t *data, unsigned first, unsigned take) {
     // and computes this aligned, bounded prefix inside its admitted block.
     __builtin_assume(first % 16 == 0 && first <= 256 && take <= 256 - first);
     if (!take) return 0;
-    const sp::dense_source<sp::format<K>> source{data, 256};
+    const sp::dense_source<sp::layout<K>> source{reinterpret_cast<const std::byte*>(data), 256};
 #if defined(__aarch64__) || defined(__AVX2__)
-    namespace cp = sp::composition;
-    const auto expression = cp::describe(source);
+    namespace cp = sp::author;
+    const auto expression = cp::expression(source);
     cp::native_ops ops;
     sp::native::sum_state total;
     for (unsigned done = 0; done < take; done += 16) {
@@ -45,7 +45,7 @@ std::uint64_t prefix(const std::uint8_t *data, unsigned first, unsigned take) {
     }
     return total.finish();
 #else
-    const auto decoder = sp::bind_decoder<std::uint64_t>(source);
+    const auto decoder = sp::bind_reader<std::uint64_t>(source);
     std::uint64_t total = 0;
     for (unsigned i = 0; i < take; ++i) total += decoder.get_unchecked(first + i);
     return total;

@@ -48,8 +48,8 @@ template <unsigned K> fixture make(fe::checkpoints mode, bool monotone = false) 
         for (unsigned i = 0; i < marks.size(); ++i)
             std::memcpy(data + offset + 8 + i * bytes, &marks[i], bytes);
     }
-    const auto decoder = fe::sp::bind_decoder<fe::u64>(fe::sp::dense_input{
-        K, fe::sp::geometry::local, std::span(data, offset), 256});
+    const auto decoder = fe::sp::bind_reader<fe::u64>(fe::sp::dense_input{
+        K, fe::sp::geometry::local, std::as_bytes(std::span(data, offset)), 256});
     need(bool(decoder), "fixture binding failed");
     f.body.decoders.push_back(*decoder);
     return f;

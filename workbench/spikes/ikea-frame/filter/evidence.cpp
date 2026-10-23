@@ -6,7 +6,7 @@ namespace frame_filter {
 namespace {
 namespace fe = frame_encoding;
 namespace sp = fe::sp;
-namespace cp = sp::composition;
+namespace cp = sp::author;
 using C = ikea::comparison;
 constexpr unsigned part_rows = 65536;
 constexpr unsigned part_blocks = part_rows / fe::block_rows;
@@ -37,7 +37,7 @@ u64 count_heads(const fe::column &column, std::size_t block, u64 rhs, u64 head_r
         return kernels(H, H).count_ge({nullptr, head0, head1, fe::block_rows}, head_rhs, true, nullptr);
     const auto source = detail::view<H, H>(fe::block_rows,
         static_cast<const std::uint8_t *>(nullptr), head0, head1);
-    const auto expression = cp::describe(source);
+    const auto expression = cp::expression(source);
     unresolved_rows unresolved{};
     unsigned any = 0;
     u64 count = 0;
@@ -47,13 +47,13 @@ u64 count_heads(const fe::column &column, std::size_t block, u64 rhs, u64 head_r
         cp::native_ops ops;
         const auto high = ops.read(expression.head0, first, 0xffff);
         constexpr unsigned low_bits = H - 8;
-        above = sp::filter_values<C::greater>(high, head_rhs >> low_bits);
-        equal = sp::filter_values<C::equal>(high, head_rhs >> low_bits);
+        above = sp::author::filter_values<C::greater>(high, head_rhs >> low_bits);
+        equal = sp::author::filter_values<C::equal>(high, head_rhs >> low_bits);
         if constexpr (H == 16) {
             if (equal) {
                 const auto low = ops.read(expression.head1, first, 0xffff);
-                above |= equal & sp::filter_values<C::greater>(low, head_rhs & 255);
-                equal &= sp::filter_values<C::equal>(low, head_rhs & 255);
+                above |= equal & sp::author::filter_values<C::greater>(low, head_rhs & 255);
+                equal &= sp::author::filter_values<C::equal>(low, head_rhs & 255);
             }
         }
 #else

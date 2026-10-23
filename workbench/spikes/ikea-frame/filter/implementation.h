@@ -1,6 +1,8 @@
 #pragma once
 #include "kernels.h"
 #include <ikea/seriespack.h>
+#include <ikea/seriespack/author/store.h>
+#include <type_traits>
 #include <array>
 #include <cassert>
 #include <utility>
@@ -8,24 +10,27 @@
 namespace frame_filter {
 namespace detail {
 namespace sp = ikea::seriespack;
-namespace cp = sp::composition;
+namespace cp = sp::author;
 using C = ikea::comparison;
 
-template <unsigned K, unsigned H> using format = sp::format<K, sp::geometry::local, H>;
+template <unsigned K, unsigned H> using format = sp::layout<K, sp::geometry::local, H>;
 template <unsigned K, unsigned H, class Byte>
 auto view(std::size_t n, Byte *payload, Byte *head0, Byte *head1) {
     using F = format<K, H>;
     const auto tiles = (n + 7) / 8;
-    return sp::view<F, Byte>::assume_valid(n, {{{{payload, tiles * F::tile_bytes}, F::tile_bytes},
-                                             {{head0, H >= 8 ? tiles * 8 : 0}, 8},
-                                             {{head1, H == 16 ? tiles * 8 : 0}, 8}}});
+    using Storage = std::conditional_t<std::is_const_v<Byte>, const std::byte, std::byte>;
+    using View = std::conditional_t<std::is_const_v<Byte>, sp::const_view<F>, sp::view<F>>;
+    return View::attach_unchecked(n,
+        {{{{reinterpret_cast<Storage*>(payload), tiles * F::tile_bytes}, F::tile_bytes},
+          {{reinterpret_cast<Storage*>(head0), H >= 8 ? tiles * 8 : 0}, 8},
+          {{reinterpret_cast<Storage*>(head1), H == 16 ? tiles * 8 : 0}, 8}}});
 }
 template <unsigned K, unsigned H>
 void pack(std::span<const u64> values, std::uint8_t *payload,
           std::uint8_t *head0, std::uint8_t *head1) {
     auto source = view<K, H>(values.size(), payload, head0, head1);
     for (std::size_t i = 0; i < values.size(); ++i)
-        sp::set_unchecked(source, i, values[i]);
+        sp::author::store_unchecked(source, i, values[i]);
 }
 
 // A two-byte head is two successive lexicographic decisions. Compose the
@@ -54,11 +59,11 @@ u64 filter(planes p, std::size_t first, unsigned count, u64 rhs, bool guard) {
     assert(count <= 64 && first <= p.count && count <= p.count - first);
     auto source = [&] {
         if constexpr (H == 0)
-            return sp::dense_source<format<K, H>>{p.payload, p.count};
+            return sp::dense_source<format<K, H>>{reinterpret_cast<const std::byte*>(p.payload), p.count};
         else
             return view<K, H>(p.count, p.payload, p.head0, p.head1);
     }();
-    const auto e = cp::describe(source);
+    const auto e = cp::expression(source);
     if (guard)
         return cp::filter_unchecked<Op>(guarded<K, H>(e), first, count, rhs);
     return cp::filter_unchecked<Op>(e, first, count, rhs);
@@ -133,10 +138,10 @@ template <unsigned K, unsigned H>
 u64 count_ge(planes p, u64 rhs, bool guard, const std::uint8_t *ends) {
     if (!p.count) return 0;
     auto source = [&] {
-        if constexpr (H == 0) return sp::dense_source<format<K, H>>{p.payload, p.count};
+        if constexpr (H == 0) return sp::dense_source<format<K, H>>{reinterpret_cast<const std::byte*>(p.payload), p.count};
         else return view<K, H>(p.count, p.payload, p.head0, p.head1);
     }();
-    const auto e = cp::describe(source);
+    const auto e = cp::expression(source);
     if (guard) return count_expression(guarded<K, H>(e), p.count, rhs, ends);
     return count_expression(e, p.count, rhs, ends);
 }

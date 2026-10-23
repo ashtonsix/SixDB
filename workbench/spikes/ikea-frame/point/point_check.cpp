@@ -214,8 +214,8 @@ fe::column wide_prediction(fe::checkpoints mode) {
         if (mode != fe::checkpoints::none && (r + 1) % spacing == 0 && r < 255)
             std::memcpy(tail + 8 + ((r + 1) / spacing - 1) * 8, &sum, 8);
     }
-    auto decoder = fe::sp::bind_decoder<fe::u64>(fe::sp::dense_input{
-        63, fe::sp::geometry::local, std::span(c.payload.data(), fe::plane_bytes(63, 256)), 256});
+    auto decoder = fe::sp::bind_reader<fe::u64>(fe::sp::dense_input{
+        63, fe::sp::geometry::local, std::as_bytes(std::span(c.payload.data(), fe::plane_bytes(63, 256))), 256});
     need(decoder.has_value(), "wide predictor binding failed");
     c.decoders.push_back(*decoder);
     return c;

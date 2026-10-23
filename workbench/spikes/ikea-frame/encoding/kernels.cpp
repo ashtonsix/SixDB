@@ -12,13 +12,13 @@ namespace {
 namespace sp = ikea::seriespack;
 
 template <unsigned K> std::uint64_t point(const std::uint8_t *data, std::size_t row) {
-    return sp::bind_decoder<std::uint64_t>(sp::dense_source<sp::format<K>>{data, row + 1})
+    return sp::bind_reader<std::uint64_t>(sp::dense_source<sp::layout<K>>{reinterpret_cast<const std::byte*>(data), row + 1})
         .get_unchecked(row);
 }
 
 template <unsigned K, class U = std::uint64_t>
 void range(const std::uint8_t *data, std::size_t first, std::size_t take, U *out) {
-    sp::bind_decoder<U>(sp::dense_source<sp::format<K>>{data, first + take})
+    sp::bind_reader<U>(sp::dense_source<sp::layout<K>>{reinterpret_cast<const std::byte*>(data), first + take})
         .read_unchecked(first, take, out);
 }
 
@@ -34,12 +34,12 @@ template <unsigned K, class U> constexpr auto lane() {
 template <unsigned K> std::uint64_t sum(const std::uint8_t *data, unsigned take) {
     if (!take)
         return 0;
-    const sp::dense_source<sp::format<K>> source{data, (take + 15) / 16 * 16};
+    const sp::dense_source<sp::layout<K>> source{reinterpret_cast<const std::byte*>(data), (take + 15) / 16 * 16};
 #if defined(__aarch64__) || defined(__AVX2__)
     // Reconstruct native 16-row packets and reduce them in registers; no
     // widened scratch array.
-    namespace cp = sp::composition;
-    const auto expression = cp::describe(source);
+    namespace cp = sp::author;
+    const auto expression = cp::expression(source);
     cp::native_ops ops;
     sp::native::sum_state total;
     for (unsigned done = 0; done < take; done += 16) {
@@ -50,7 +50,7 @@ template <unsigned K> std::uint64_t sum(const std::uint8_t *data, unsigned take)
     }
     return total.finish();
 #else
-    const auto decoder = sp::bind_decoder<std::uint64_t>(source);
+    const auto decoder = sp::bind_reader<std::uint64_t>(source);
     std::uint64_t total = 0;
     for (unsigned i = 0; i < take; ++i)
         total += decoder.get_unchecked(i);
@@ -60,13 +60,13 @@ template <unsigned K> std::uint64_t sum(const std::uint8_t *data, unsigned take)
 
 template <unsigned K>
 std::uint64_t count_ge(const std::uint8_t *data, unsigned take, std::uint64_t rhs) {
-    const sp::dense_source<sp::format<K>> source{data, take};
+    const sp::dense_source<sp::layout<K>> source{reinterpret_cast<const std::byte*>(data), take};
     std::uint64_t total = 0;
     for (unsigned first = 0; first < take; first += 64) {
         const unsigned n = std::min(64u, take - first);
         const std::uint64_t active = n == 64 ? ~std::uint64_t{0} : (std::uint64_t{1} << n) - 1;
-        total += std::popcount(sp::filter_unchecked<ikea::comparison::greater_equal>(
-            source, first, n, rhs, active));
+        total += std::popcount(sp::author::filter_unchecked<ikea::comparison::greater_equal>(
+            sp::author::expression(source), first, n, rhs, active));
     }
     return total;
 }
@@ -75,10 +75,10 @@ std::uint64_t count_ge(const std::uint8_t *data, unsigned take, std::uint64_t rh
 // with no selected row is not read; others reduce under mask16 of their
 // selection bits.
 template <unsigned K> std::uint64_t masked_sum(const std::uint8_t *data, const std::uint64_t *selected) {
-    const sp::dense_source<sp::format<K>> source{data, 256};
+    const sp::dense_source<sp::layout<K>> source{reinterpret_cast<const std::byte*>(data), 256};
 #if defined(__aarch64__) || defined(__AVX2__)
-    namespace cp = sp::composition;
-    const auto expression = cp::describe(source);
+    namespace cp = sp::author;
+    const auto expression = cp::expression(source);
     cp::native_ops ops;
     sp::native::sum_state total;
     for (unsigned done = 0; done < 256; done += 16) {
@@ -90,7 +90,7 @@ template <unsigned K> std::uint64_t masked_sum(const std::uint8_t *data, const s
     }
     return total.finish();
 #else
-    const auto decoder = sp::bind_decoder<std::uint64_t>(source);
+    const auto decoder = sp::bind_reader<std::uint64_t>(source);
     std::uint64_t total = 0;
     for (unsigned i = 0; i < 256; ++i)
         if (selected[i / 64] >> (i % 64) & 1)
@@ -101,11 +101,11 @@ template <unsigned K> std::uint64_t masked_sum(const std::uint8_t *data, const s
 
 template <ikea::comparison Op, unsigned K>
 std::uint64_t masked_count(const std::uint8_t *data, const std::uint64_t *selected, std::uint64_t rhs) {
-    const sp::dense_source<sp::format<K>> source{data, 256};
+    const sp::dense_source<sp::layout<K>> source{reinterpret_cast<const std::byte*>(data), 256};
     std::uint64_t total = 0;
     for (unsigned word = 0; word < 4; ++word)
         if (selected[word])
-            total += std::popcount(sp::filter_unchecked<Op>(source, word * 64, 64, rhs, selected[word]) &
+            total += std::popcount(sp::author::filter_unchecked<Op>(sp::author::expression(source), word * 64, 64, rhs, selected[word]) &
                                    selected[word]);
     return total;
 }
