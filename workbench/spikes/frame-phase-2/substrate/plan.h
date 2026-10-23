@@ -31,6 +31,10 @@ struct plan {
     std::array<std::vector<std::uint32_t>, 65> packed;  // by plane width
     std::array<std::vector<std::uint32_t>, 65> runs;    // by plane width
     std::vector<std::uint32_t> other;    // delta, patched, coded: phase 1 owner leaf
+    // Per-block class (constant, packed, runs, other) and plane width, for the
+    // address-order arms.
+    std::vector<std::uint8_t> cls;
+    std::vector<std::uint8_t> width;
     std::size_t bytes() const;
 };
 
@@ -38,6 +42,14 @@ plan build(const fe::column &c);
 
 // Stored-domain SUM and COUNT(x >= t) over every block, with the same answers
 // as phase 1's encoded_sum and encoded_count_ge.
+// Three units of batching over the same leaves (Ikea LEAD's decomposition):
+// per_block switches on each block's class in address order; segments runs
+// one hoisted loop per maximal address-order run of equal (class, width);
+// sum/count_ge visit a whole-image (class, width) index.
 u128 sum(const plan &p);
 u64 count_ge(const plan &p, u64 t);
+u128 sum_per_block(const plan &p);
+u64 count_ge_per_block(const plan &p, u64 t);
+u128 sum_segments(const plan &p);
+u64 count_ge_segments(const plan &p, u64 t);
 }  // namespace frame_substrate

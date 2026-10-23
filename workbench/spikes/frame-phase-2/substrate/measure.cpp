@@ -176,10 +176,14 @@ int main(int argc, char **argv) {
         static const arm arms[] = {
             {"sum", "phase1_owner", [](const void *v) { auto &x = *static_cast<const ctx *>(v); return fe::encoded_sum(*x.c, *x.all) == x.sum; }},
             {"sum", "phase1_catalogue", [](const void *v) { auto &x = *static_cast<const ctx *>(v); return fe::catalogue_sum(*x.c, *x.all) == x.sum; }},
+            {"sum", "per_block", [](const void *v) { auto &x = *static_cast<const ctx *>(v); return fs::sum_per_block(*x.p) == x.sum; }},
+            {"sum", "segments", [](const void *v) { auto &x = *static_cast<const ctx *>(v); return fs::sum_segments(*x.p) == x.sum; }},
             {"sum", "batched", [](const void *v) { auto &x = *static_cast<const ctx *>(v); return fs::sum(*x.p) == x.sum; }},
             {"sum", "native_for", [](const void *v) { auto &x = *static_cast<const ctx *>(v); return x.nat->sum() == x.sum; }},
             {"count_ge", "phase1_owner", [](const void *v) { auto &x = *static_cast<const ctx *>(v); return fe::encoded_count_ge(*x.c, *x.all, x.t) == x.count; }},
             {"count_ge", "phase1_catalogue", [](const void *v) { auto &x = *static_cast<const ctx *>(v); return fe::catalogue_count_ge(*x.c, *x.all, x.t) == x.count; }},
+            {"count_ge", "per_block", [](const void *v) { auto &x = *static_cast<const ctx *>(v); return fs::count_ge_per_block(*x.p, x.t) == x.count; }},
+            {"count_ge", "segments", [](const void *v) { auto &x = *static_cast<const ctx *>(v); return fs::count_ge_segments(*x.p, x.t) == x.count; }},
             {"count_ge", "batched", [](const void *v) { auto &x = *static_cast<const ctx *>(v); return fs::count_ge(*x.p, x.t) == x.count; }},
             {"count_ge", "native_for", [](const void *v) { auto &x = *static_cast<const ctx *>(v); return x.nat->count_ge(x.t) == x.count; }},
         };
