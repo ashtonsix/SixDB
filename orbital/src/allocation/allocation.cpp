@@ -47,12 +47,21 @@ void clear_foreign_hint(Storage& use) noexcept {
   else static_cast<Window*>(route(use)->context)->foreign_hint = {};
 }
 
+// An open Pool keeps its Arena pin across idle moments, so allocate/release
+// churn takes no atomic. The last use still drops it when the Pool is closing
+// or the pin is the Arena's only reference; close drops an idle pin.
+[[gnu::always_inline]] inline bool unpin(const Pool& pool) noexcept {
+  return pool.state != Pool::State::open || pool.internal->close_requested ||
+      pool.arena->references.load(std::memory_order_acquire) == 1;
+}
+
 void activate(Storage& use) noexcept {
   auto& domain = *route(use);
   assert(worker::on_lane(*domain.pool->lane) && !use.users.load(std::memory_order_relaxed));
   // One Arena pin per Pool while any finite or virtual use is live or returning.
   auto& state = *domain.pool->internal;
-  if (!state.active_uses++) state.active_lifetime = Ref<Arena>::retain(*domain.pool->arena);
+  if (!state.active_uses++ && !state.active_lifetime)
+    state.active_lifetime = Ref<Arena>::retain(*domain.pool->arena);
   use.users.store(1, std::memory_order_relaxed);
 }
 
@@ -65,7 +74,7 @@ void activate(Storage& use) noexcept {
   Ref<Arena> retained;
   auto& state = *pool.internal;
   assert(state.active_uses);
-  if (!--state.active_uses) [[unlikely]] retained = std::move(state.active_lifetime);
+  if (!--state.active_uses && unpin(pool)) [[unlikely]] retained = std::move(state.active_lifetime);
   if (domain.finite) {
     auto& group = *static_cast<Group*>(domain.context);
     group.geometry->give(use.identity());
@@ -228,7 +237,8 @@ Result<Allocation> allocate(Pool& pool, const AllocationRequest& request) {
   const auto cls = select_class(state.page, reserve, request.alignment, state.floor_class);
   if (cls < finite_classes && take_head(state, cls, request, value)) [[likely]] {
     // Owner fast path: the Pool pin and first use, without re-routing the Storage.
-    if (!state.active_uses++) [[unlikely]] state.active_lifetime = Ref<Arena>::retain(*pool.arena);
+    if (!state.active_uses++ && !state.active_lifetime) [[unlikely]]
+      state.active_lifetime = Ref<Arena>::retain(*pool.arena);
     value.storage->users.store(1, std::memory_order_relaxed);
   } else {
     auto acquired = cls < finite_classes ? finite_allocate(pool, request, cls, value)
@@ -474,7 +484,7 @@ void release(Allocation& allocation, ReleaseHint value) noexcept {
       use.users.state.store(state & ~UseState::user_mask, std::memory_order_relaxed);
       auto& internal = *pool.internal;
       Ref<Arena> retained;
-      if (!--internal.active_uses) [[unlikely]] retained = std::move(internal.active_lifetime);
+      if (!--internal.active_uses && unpin(pool)) [[unlikely]] retained = std::move(internal.active_lifetime);
       auto& group = *static_cast<Group*>(domain.context);
       group.geometry->give(state >> 24);
       if (!group.previous_available) [[unlikely]] add_available(group);
@@ -624,6 +634,11 @@ Progress close(Pool& pool) {
   if (pool.state == Pool::State::closed) return Progress::done();
   if (!pool.lane || !worker::on_lane(*pool.lane)) return Progress::fail(Error::conflict);
   pool.internal->close_requested = true;
+  // An idle Pool's cached pin ends with close. The caller keeps the Arena alive
+  // through close, so this is not its last reference.
+  if (!pool.internal->active_uses && pool.internal->active_lifetime &&
+      pool.arena->references.load(std::memory_order_acquire) > 1)
+    pool.internal->active_lifetime.reset();
   if (pool.state == Pool::State::open) {
     {
       std::unique_lock lock(pool.arena->state->registry, std::try_to_lock);
@@ -672,6 +687,7 @@ Progress close(Pool& pool) {
 Statistics statistics(const Pool& pool) noexcept {
   assert(pool.state == Pool::State::closed || worker::on_lane(*pool.lane));
   auto result = pool.internal->counts;
+  result.arena_pins = bool(pool.internal->active_lifetime);
   result.metadata_bytes += pool.internal->preparation_metadata;
   for (auto& group : pool.internal->groups) {
     if (group->control_preparing) {

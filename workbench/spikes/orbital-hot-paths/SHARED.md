@@ -103,14 +103,64 @@ mechanism.
   workers can map twice, which means memfd/shmem backing for the Windows that
   may become Views. Private anonymous memory, as now, cannot be shared that way.
 
-## What to prototype next
+## Prototype: opt-in relocatable handles
 
-1. An opt-in relocatable handle on the new allocator: a Pool handle table,
-   owner moves with a release store, reader resolve with an acquire load, and
-   epoch retirement of the old Home. Measure resolution, move and retirement
-   with one owner and one to three reading workers, against direct pointers
-   and Holds.
-2. Shared Window growth with readers on other cores: publish size, prepare
+[relocatable.h](relocatable.h) is built on the public allocation API, with no
+allocator changes:
+
+- **Table:** a fixed array of `{address, extent}` slots owned by one Pool's
+  Lane. Only allocations that need a stable handle use it.
+- **Owner:** moves copy-on-write. It fills a fresh Allocation, publishes it,
+  and retires the old one tagged with the current epoch. `grow` copies, or
+  grows in place within capacity.
+- **Publication order:** the smaller extent is published first. Readers
+  re-check the address after loading the extent, so every pair they observe
+  lies within that address's payload.
+- **Readers:** any worker resolves handles inside a `Section`, which announces
+  its epoch on the reader's own line, followed by one `seq_cst` fence.
+- **Collection:** `collect()` frees retired Allocations older than every active
+  reader's epoch.
+
+[relocatable_bench.cpp](relocatable_bench.cpp) uses 4,096 handles. Every read
+checks its payload's header and fill against the handle, so a premature free
+or a torn extent counts as an error. The owner replaces random payloads as
+fast as it can, alternating 64 and 200 bytes so every replacement moves
+between classes. Across 3 trials per host, 2 s each, on a dedicated core per
+thread, there were zero errors. The bench also runs clean under
+ThreadSanitizer locally. Medians, ns per access
+([Zen 5](evidence/zen5-relocatable.csv), [Graviton](evidence/v2-relocatable.csv);
+jobs `20261023T040318Z-c5245c7e`, `20261023T040318Z-d669ea2f`):
+
+| Reader access (validated read) | Zen 5 | Graviton |
+| --- | ---: | ---: |
+| Direct pointer, no indirection | 1.58 | 1.65 |
+| Handle, 64 resolves per Section | 2.05 | 2.75 |
+| Handle, one resolve per Section | 6.04 | 11.6 |
+| Handle, 64 per Section, owner moving ~10–15 M/s, 1 reader | 4.93 | 4.19 |
+| Same, 3 readers | 5.31 | 4.19 |
+| **Owner move** (allocate + fill + publish + retire + collect), 1 / 3 readers | 67 / 119 ns | 98 / 119 ns |
+
+- **Resolution:** with a batch per Section, a handle adds 0.5 ns (Zen 5) to
+  1.1 ns (Graviton) per access over a direct pointer. This is the trampoline's
+  cost, paid only by allocations that opt in.
+- **Sections:** each costs about 4 ns on Zen 5 and 9 ns on Graviton (the
+  fence). Readers should resolve many handles per Section, as a Ring visit or
+  a query batch naturally does.
+- **Moves:** under extreme move rates, readers slow because moved payloads are
+  cold, not because of the protocol. Retirement stayed bounded (peak backlog
+  264–2,213 Allocations) and drained to zero once readers left.
+
+Not covered yet:
+- readers that stall inside a Section, which hold back retirement;
+- a reader-count limit and how readers register with a table;
+- sharing tables across Pools, and moves into Windows;
+- integrating Holds with handles (a Hold is still owner-only).
+
+## Next
+
+1. Shared Window growth with readers on other cores: publish size, prepare
    ahead, and measure the readers' slowdown from the owner's `mprotect`.
-3. A lock-free foreign-return list per Group, against today's mutex, with one
+2. A lock-free foreign-return list per Group, against today's mutex, with one
    and three releasing workers.
+3. Reusable scratch: per-batch regions against Pool allocation for records
+   that share a lifetime.

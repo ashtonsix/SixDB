@@ -1,5 +1,5 @@
 diff --git b/orbital/include/orbital/allocation.h a/orbital/include/orbital/allocation.h
-index 2734489b..8ea715f8 100644
+index 489efd34..8ea715f8 100644
 --- b/orbital/include/orbital/allocation.h
 +++ a/orbital/include/orbital/allocation.h
 @@ -8,7 +8,6 @@
@@ -39,7 +39,17 @@ index 2734489b..8ea715f8 100644
  
    explicit operator bool() const noexcept { return storage; }
  };
-@@ -144,6 +134,10 @@ struct Statistics {
+@@ -117,9 +107,6 @@ struct Statistics {
+   std::uint64_t mapped_bytes{}, reserved_bytes{}, metadata_bytes{}, idle_bytes{};
+   std::uint64_t preparing_bytes{}, uncertain_bytes{}, preparing_reserved_bytes{};
+   std::uint64_t allocations{}, reuses{}, growths{}, relocations{}, foreign_returns{}, trim_pages{};
+-  /// Arena references this Pool holds: one while it is open and has been used,
+-  /// or while any use is live or returning; zero once closed and settled.
+-  std::uint64_t arena_pins{};
+ };
+ 
+ /// One retirement helper per Arena. An optional CPU selects its placement;
+@@ -147,6 +134,10 @@ struct Statistics {
  [[nodiscard]] Result<Hold> hold(const Allocation&, ByteRange footprint);
  /// Duplicate a live Hold on its owner Lane; saturation refuses without mutation.
  [[nodiscard]] Result<Hold> retain(const Hold&);
@@ -83,16 +93,28 @@ index 4bc482bb..803fa1b7 100644
  /// Capture the optional route hint before publication, then invoke it after
  /// linking payload. Neither Lane nor Message is accessed after linkage. The
 diff --git b/orbital/src/allocation/allocation.cpp a/orbital/src/allocation/allocation.cpp
-index 7f8842f3..527cef0d 100644
+index d70cb5e3..527cef0d 100644
 --- b/orbital/src/allocation/allocation.cpp
 +++ a/orbital/src/allocation/allocation.cpp
-@@ -50,28 +50,40 @@ void clear_foreign_hint(Storage& use) noexcept {
+@@ -47,40 +47,43 @@ void clear_foreign_hint(Storage& use) noexcept {
+   else static_cast<Window*>(route(use)->context)->foreign_hint = {};
+ }
+ 
+-// An open Pool keeps its Arena pin across idle moments, so allocate/release
+-// churn takes no atomic. The last use still drops it when the Pool is closing
+-// or the pin is the Arena's only reference; close drops an idle pin.
+-[[gnu::always_inline]] inline bool unpin(const Pool& pool) noexcept {
+-  return pool.state != Pool::State::open || pool.internal->close_requested ||
+-      pool.arena->references.load(std::memory_order_acquire) == 1;
+-}
+-
  void activate(Storage& use) noexcept {
    auto& domain = *route(use);
    assert(worker::on_lane(*domain.pool->lane) && !use.users.load(std::memory_order_relaxed));
 -  // One Arena pin per Pool while any finite or virtual use is live or returning.
 -  auto& state = *domain.pool->internal;
--  if (!state.active_uses++) state.active_lifetime = Ref<Arena>::retain(*domain.pool->arena);
+-  if (!state.active_uses++ && !state.active_lifetime)
+-    state.active_lifetime = Ref<Arena>::retain(*domain.pool->arena);
 +  if (domain.finite) {
 +    auto& group = *static_cast<Group*>(domain.context);
 +    assert(group.active_identities < group_identities);
@@ -115,7 +137,7 @@ index 7f8842f3..527cef0d 100644
    Ref<Arena> retained;
 -  auto& state = *pool.internal;
 -  assert(state.active_uses);
--  if (!--state.active_uses) [[unlikely]] retained = std::move(state.active_lifetime);
+-  if (!--state.active_uses && unpin(pool)) [[unlikely]] retained = std::move(state.active_lifetime);
    if (domain.finite) {
      auto& group = *static_cast<Group*>(domain.context);
 -    group.geometry->give(use.identity());
@@ -137,7 +159,7 @@ index 7f8842f3..527cef0d 100644
  }
  
  bool returned(Domain& domain) noexcept {
-@@ -168,10 +180,7 @@ void drop(Storage& use, ReleaseHint value) noexcept {
+@@ -177,10 +180,7 @@ void drop(Storage& use, ReleaseHint value) noexcept {
        } else static_cast<Window*>(route(use)->context)->foreign_hint_pending.store(true, std::memory_order_release);
      }
    }
@@ -149,7 +171,7 @@ index 7f8842f3..527cef0d 100644
      const auto users = state & UseState::user_mask;
      assert(users && users < returning);
      if (users == 1 && !local) {
-@@ -216,33 +225,27 @@ void release_ref(Arena& arena) noexcept {
+@@ -225,34 +225,27 @@ void release_ref(Arena& arena) noexcept {
  }
  
  Result<Allocation> allocate(Pool& pool, const AllocationRequest& request) {
@@ -168,7 +190,8 @@ index 7f8842f3..527cef0d 100644
 -  const auto cls = select_class(state.page, reserve, request.alignment, state.floor_class);
 -  if (cls < finite_classes && take_head(state, cls, request, value)) [[likely]] {
 -    // Owner fast path: the Pool pin and first use, without re-routing the Storage.
--    if (!state.active_uses++) [[unlikely]] state.active_lifetime = Ref<Arena>::retain(*pool.arena);
+-    if (!state.active_uses++ && !state.active_lifetime) [[unlikely]]
+-      state.active_lifetime = Ref<Arena>::retain(*pool.arena);
 -    value.storage->users.store(1, std::memory_order_relaxed);
 -  } else {
 -    auto acquired = cls < finite_classes ? finite_allocate(pool, request, cls, value)
@@ -196,7 +219,7 @@ index 7f8842f3..527cef0d 100644
    return result;
  }
  
-@@ -260,9 +263,8 @@ Result<void> prepare(Pool& pool, Preparation& request,
+@@ -270,9 +263,8 @@ Result<void> prepare(Pool& pool, Preparation& request,
    const auto size = extent(allocation);
    if (!size) return std::unexpected(size.error());
    const auto reserve = std::max(*size, allocation.reserved_bytes);
@@ -208,7 +231,7 @@ index 7f8842f3..527cef0d 100644
        : prepare_window(pool, request, allocation, preparer);
  }
  
-@@ -298,7 +300,7 @@ std::size_t capacity(const Allocation& allocation) noexcept {
+@@ -308,7 +300,7 @@ std::size_t capacity(const Allocation& allocation) noexcept {
    if (!allocation) return 0;
    const auto& domain = *route(*allocation.storage);
    if (domain.finite)
@@ -217,7 +240,7 @@ index 7f8842f3..527cef0d 100644
    return static_cast<Window*>(domain.context)->prepared;
  }
  
-@@ -331,8 +333,13 @@ Result<void> grow(Allocation& allocation, const GrowthRequest& request) {
+@@ -341,8 +333,13 @@ Result<void> grow(Allocation& allocation, const GrowthRequest& request) {
    }
    if (!aligned || needed > reserved_bytes(allocation)) {
      if (held) return std::unexpected(Error::conflict);
@@ -233,7 +256,7 @@ index 7f8842f3..527cef0d 100644
      // Allocate uninitialized replacement bytes. Fresh-allocation padding policy
      // does not apply to growth; interpretation and initialization belong to its writer.
      auto replacement = allocate(pool, {.bytes = std::max(*size, previous_extent),
-@@ -461,29 +468,9 @@ Result<Hold> retain(const Hold& original) {
+@@ -471,29 +468,9 @@ Result<Hold> retain(const Hold& original) {
  
  void release(Allocation& allocation, ReleaseHint value) noexcept {
    if (!allocation.storage) return;
@@ -251,7 +274,7 @@ index 7f8842f3..527cef0d 100644
 -      use.users.state.store(state & ~UseState::user_mask, std::memory_order_relaxed);
 -      auto& internal = *pool.internal;
 -      Ref<Arena> retained;
--      if (!--internal.active_uses) [[unlikely]] retained = std::move(internal.active_lifetime);
+-      if (!--internal.active_uses && unpin(pool)) [[unlikely]] retained = std::move(internal.active_lifetime);
 -      auto& group = *static_cast<Group*>(domain.context);
 -      group.geometry->give(state >> 24);
 -      if (!group.previous_available) [[unlikely]] add_available(group);
@@ -265,7 +288,7 @@ index 7f8842f3..527cef0d 100644
  }
  
  void release(Hold& hold, ReleaseHint value) noexcept {
-@@ -495,6 +482,8 @@ void release(Hold& hold, ReleaseHint value) noexcept {
+@@ -505,6 +482,8 @@ void release(Hold& hold, ReleaseHint value) noexcept {
    drop(*storage, value);
  }
  
@@ -274,7 +297,7 @@ index 7f8842f3..527cef0d 100644
  Allocation& Allocation::operator=(Allocation&& other) noexcept {
    if (this == &other) return *this;
    release(*this);
-@@ -504,6 +493,8 @@ Allocation& Allocation::operator=(Allocation&& other) noexcept {
+@@ -514,6 +493,8 @@ Allocation& Allocation::operator=(Allocation&& other) noexcept {
    return *this;
  }
  
@@ -283,7 +306,7 @@ index 7f8842f3..527cef0d 100644
  Hold::Hold(Hold&& other) noexcept { *this = std::move(other); }
  
  Hold& Hold::operator=(Hold&& other) noexcept {
-@@ -562,7 +553,7 @@ Progress trim_cold(Pool& pool, std::uint64_t keep_bytes) {
+@@ -572,7 +553,7 @@ Progress trim_cold(Pool& pool, std::uint64_t keep_bytes) {
        const bool cold = group->last_use.temperature.value_or(Temperature::cold) == Temperature::cold;
        if ((pass == 0) != cold) continue;
        bool empty = !group->uses.domain.queued.load(std::memory_order_acquire);
@@ -292,7 +315,19 @@ index 7f8842f3..527cef0d 100644
          empty = group->uses[i].users.load(std::memory_order_acquire) == 0;
        const auto mapped = group->geometry->mapped_pages() * group->geometry->native_page();
        if (empty && !group->preparations && mapped <= idle && idle - mapped >= keep_bytes) {
-@@ -643,7 +634,7 @@ Progress close(Pool& pool) {
+@@ -634,11 +615,6 @@ Progress close(Pool& pool) {
+   if (pool.state == Pool::State::closed) return Progress::done();
+   if (!pool.lane || !worker::on_lane(*pool.lane)) return Progress::fail(Error::conflict);
+   pool.internal->close_requested = true;
+-  // An idle Pool's cached pin ends with close. The caller keeps the Arena alive
+-  // through close, so this is not its last reference.
+-  if (!pool.internal->active_uses && pool.internal->active_lifetime &&
+-      pool.arena->references.load(std::memory_order_acquire) > 1)
+-    pool.internal->active_lifetime.reset();
+   if (pool.state == Pool::State::open) {
+     {
+       std::unique_lock lock(pool.arena->state->registry, std::try_to_lock);
+@@ -658,7 +634,7 @@ Progress close(Pool& pool) {
    for (auto& group : pool.internal->groups) {
      if (group->trim_pending || group->uses.domain.queued.load(std::memory_order_acquire)) return Progress::wait(pool.capacity_changed, observed);
      if (group->retiring) continue;
@@ -301,6 +336,14 @@ index 7f8842f3..527cef0d 100644
        if (group->uses[i].users.load(std::memory_order_acquire)) return Progress::wait(pool.capacity_changed, observed);
    }
    for (auto& window : pool.internal->windows)
+@@ -687,7 +663,6 @@ Progress close(Pool& pool) {
+ Statistics statistics(const Pool& pool) noexcept {
+   assert(pool.state == Pool::State::closed || worker::on_lane(*pool.lane));
+   auto result = pool.internal->counts;
+-  result.arena_pins = bool(pool.internal->active_lifetime);
+   result.metadata_bytes += pool.internal->preparation_metadata;
+   for (auto& group : pool.internal->groups) {
+     if (group->control_preparing) {
 diff --git b/orbital/src/allocation/finite.cpp a/orbital/src/allocation/finite.cpp
 index a2bf2f13..f19c230f 100644
 --- b/orbital/src/allocation/finite.cpp

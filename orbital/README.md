@@ -44,8 +44,10 @@ The caller selects a Pool for new allocation. Growth and capture follow the stor
 existing owner and run on its assigned thread. Release can run elsewhere: one
 reserved return Message per packing group or virtual window brings final returns
 back to the Lane. Actual users keep storage alive after Allocation release.
-A Pool keeps one active Arena pin while any of its uses is live or awaiting its
-owner return. Additional Holds update the
+A Pool takes one Arena pin at its first use and keeps it while open, so
+allocation churn takes no atomic. The last use drops it when the Pool is closing
+or the pin is the Arena's only reference; close drops an idle pin.
+`Statistics::arena_pins` reports it. Additional Holds update the
 identity's checked physical-use count and keep its address and captured footprint
 alive. A Hold supplies no immutability, selected version or access permission.
 

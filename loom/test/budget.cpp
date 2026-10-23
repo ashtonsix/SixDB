@@ -104,7 +104,11 @@ struct Fixture {
 
   std::uint64_t base_references() const {
     std::uint64_t expected = 1;
-    for (unsigned i = 0; i < count; ++i) expected += bool(endpoints[i].worker.arena);
+    for (unsigned i = 0; i < count; ++i) {
+      expected += bool(endpoints[i].worker.arena);
+      // A used, open Pool keeps one Arena pin, including across idle moments.
+      if (endpoints[i].worker.memory) expected += alloc::statistics(*endpoints[i].worker.memory).arena_pins;
+    }
     return expected;
   }
 
@@ -360,7 +364,7 @@ void smaller_claim_preserves_demand() {
     fixture.poll_all();
     const auto stats = alloc::statistics(fixture.pool(0));
     return stats.mapped_bytes == 0 && stats.metadata_bytes == 0 &&
-        fixture.arena->charged_bytes.load() == small_charge && waiter.notifications == 1 && fixture.routes_settled(1);
+        fixture.arena->charged_bytes.load() == small_charge && waiter.notifications == 1 && fixture.routes_settled();
   });
   CHECK(fixture.endpoints[1].posts.load() == 1 && !signal.waiters);
   CHECK(small.address[0] == std::byte{0x28} && small.address[small.size - 1] == std::byte{0x61});

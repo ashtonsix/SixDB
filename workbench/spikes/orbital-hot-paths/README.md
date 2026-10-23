@@ -201,11 +201,13 @@ against the first overhaul commit and `main` ([Zen 5](evidence/zen5-tuned.csv),
 | churn256 64 B | 85.9 / 24.0 / — | 142.7 / 36.1 / — |
 
 Batched allocation is now faster than glibc (1.2× on Zen 5, 1.5× on
-Graviton). A single pair is 3.6× (Zen 5) and 1.7× (Graviton) glibc while the
-Pool holds anything else. In an otherwise empty Pool, each pair also takes and
-drops the Pool's Arena pin, two atomic read-modify-writes: 4.6 ns on Zen 5 and
-14.7 ns on Graviton. Caching that pin while the Pool is open removes it, but it
-changes the tested rule that an Arena's references count only live uses.
+Graviton). In an otherwise empty Pool, each pair also took and dropped the
+Pool's Arena pin (two atomic read-modify-writes). An open Pool now keeps that
+pin after its first use (`Statistics::arena_pins` reports it), which brings a
+single pair to **15.2 ns on Zen 5 and 16.9 ns on Graviton** (3.4× and 1.8×
+glibc's 4.5 and 9.6 ns), with batches unchanged
+([Zen 5](evidence/zen5-pinned.csv), [Graviton](evidence/v2-pinned.csv);
+jobs `20261023T040318Z-e90f316d`, `20261023T040318Z-89655fd2`).
 
 The [footprint census](census.cpp) counts mapped, idle, metadata and reserved
 bytes for fixed live populations ([census.csv](evidence/census.csv), 4 KiB
