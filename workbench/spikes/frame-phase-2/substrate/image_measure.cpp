@@ -132,6 +132,7 @@ int main(int argc, char **argv) {
         const std::size_t n = bv.size(), blocks = n / fi::block_rows;
         const fi::image addr = fi::build(bv, fi::placement::address), grouped = fi::build(bv, fi::placement::by_kind);
         const native nat(bv);
+        const fi::kind_index addr_index = fi::index_by_kind(addr), grouped_index = fi::index_by_kind(grouped);
         u128 oracle = 0;
         for (u64 x : bv)
             oracle += x;
@@ -193,6 +194,8 @@ int main(int argc, char **argv) {
         std::vector<arm> arms = {
             {"sum", "frame_address", [&] { return fi::sum(addr); }, evict_image(addr)},
             {"sum", "frame_by_kind", [&] { return fi::sum(grouped); }, evict_image(grouped)},
+            {"sum", "frame_address_kind_index", [&] { return fi::sum_indexed(addr, addr_index); }, evict_image(addr)},
+            {"sum", "frame_by_kind_kind_index", [&] { return fi::sum_indexed(grouped, grouped_index); }, evict_image(grouped)},
             {"sum", "native", [&] {
                  // The strong control: lane-width u32 counters over 65,536-row
                  // chunks for u8/u16 lanes, split halves for wider lanes.

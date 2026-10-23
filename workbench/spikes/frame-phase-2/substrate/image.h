@@ -183,6 +183,61 @@ inline u128 sum(const image &f) {
     return total;
 }
 
+// The same SUM visiting blocks by a whole-image (kind, width) index: one
+// hoisted loop per kind and width over every such block, wherever it sits.
+struct kind_index {
+    std::vector<u32> ids;                                   // grouped block ids
+    std::vector<std::pair<std::size_t, std::size_t>> runs;  // [first, limit) into ids
+};
+inline kind_index index_by_kind(const image &f) {
+    kind_index x;
+    x.ids.resize(f.blocks);
+    for (std::size_t b = 0; b < f.blocks; ++b)
+        x.ids[b] = static_cast<u32>(b);
+    std::stable_sort(x.ids.begin(), x.ids.end(), [&](u32 a, u32 b) {
+        return std::pair(f.kind_of[a], f.width[a]) < std::pair(f.kind_of[b], f.width[b]);
+    });
+    for (std::size_t i = 0; i < x.ids.size();) {
+        std::size_t e = i + 1;
+        while (e < x.ids.size() && f.kind_of[x.ids[e]] == f.kind_of[x.ids[i]] && f.width[x.ids[e]] == f.width[x.ids[i]])
+            ++e;
+        x.runs.push_back({i, e});
+        i = e;
+    }
+    return x;
+}
+inline u128 sum_indexed(const image &f, const kind_index &x) {
+    u128 total = 0;
+    const u8 *img = f.bytes.data();
+    for (const auto [first, limit] : x.runs) {
+        const u32 b0 = x.ids[first];
+        const unsigned w = f.width[b0];
+        u128 bases = 0, s = 0;
+        for (std::size_t i = first; i < limit; ++i)
+            bases += f.base[x.ids[i]];
+        switch (f.kind_of[b0]) {
+        case constant: break;
+        case runs:
+            with_runs(w, [&](auto r) {
+                for (std::size_t i = first; i < limit; ++i)
+                    s += decltype(r)::sum(img + f.offset[x.ids[i]], f.n[x.ids[i]]);
+            });
+            break;
+        case plane:
+            with_plane(w, [&](auto K) {
+                for (std::size_t i = first; i < limit; ++i)
+                    s += P<K>::sum(img + f.offset[x.ids[i]]);
+            });
+            break;
+        default:
+            for (std::size_t i = first; i < limit; ++i)
+                s += wide_sum(img + f.offset[x.ids[i]]);
+        }
+        total += bases * block_rows + s;
+    }
+    return total;
+}
+
 // Row masks of x >= t for blocks [first, limit) (four words per block);
 // returns the selected count.
 inline u64 mask_ge(const image &f, u64 t, std::size_t first, std::size_t limit, u64 *out) {
