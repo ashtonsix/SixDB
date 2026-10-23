@@ -115,7 +115,7 @@ Read access is another operation fact, separate from placement geometry. The
 [promoted NEON sparse-packet study](../neon-tuplepack-masked/README.md) measured
 2.6–3.3× sparse-read gains by loading the bounded first-to-last selected window,
 including discarded inactive interior bytes. It explicitly documented that
-widening; current ordinary TuplePack comments promised active-only access.
+widening; R4's ordinary TuplePack comments promised active-only access.
 Neither an allocation extent nor a stride hint proves those interior bytes are
 initialized, coherent or isolated from writes. Result oracles and suffix guards
 miss this contradiction.
@@ -154,6 +154,30 @@ initialize entry selected by width could reduce selection/setup and text, but
 new-buffer admission, input fit and real effect coverage remain per-command.
 The dispatcher contains 309 static calls across all choices; that is not the
 dynamic call count of one pack operation.
+
+### Physical retention around reusable execution
+
+The merged [single-class allocator and relocatable-handle study](../orbital-hot-paths/SHARED.md)
+reinforces the owner boundary. Ordinary allocations expose direct pointers;
+Holds keep an address and captured footprint alive, while cross-class growth
+can relocate unheld storage. Rebuild address/extent-qualified bindings after an
+actual move or extent change. Faster allocation does not supply initialized
+body bytes, a selected logical version or wider read permission.
+
+The opt-in relocatable Table is a physical-lifetime prototype. Its Reader belongs
+to one `(Table, thread)` epoch domain. Resolve under a surviving Section, then
+bind a named view around useful repeated work. The measured batching result
+supports amortizing Section admission over many resolves; it does not authorize
+retaining raw addresses after protection ends or make a physical slot's address
+and extent a coherent layout/version publication. Ikea's operation binding and
+the Table's relocation identity therefore serve different facts.
+
+This survey's frozen filter/block comparison does not invoke Orbital allocation:
+Ikea has no allocator dependency, and its vectors are constructed before timing.
+The new allocator needs the existing live owners' padding, held-growth,
+relocation/rebind and capture/escape checks at their current source cut. It does
+not require restarting that same-allocator comparison or inserting an allocator
+framework into the hot filter loop.
 
 ### Writes across retargeted blocks
 
@@ -264,9 +288,22 @@ content-proof transitions and minimal resident-descriptor design separate.
 A further question is whether a single-code predicate needs the full plan at
 execution at all. Its three-byte code describes one field; a copied projection
 plus a named view could remove a borrow and fit two words on current targets.
-That requires a bounded one-code gather for every supported row count, exact
-strided/tail grants and documented inactive-row access semantics. It is a
-research hypothesis, with no implementation or performance claim yet.
+The isolated prototype reuses bounded one-byte gather machinery and drops
+irrelevant generic packet capacity from its predicate type. Its final source
+is being qualified across every supported row count, exact strided/tail grants,
+actual expired-plan protection and the corrected inactive-row contract. It is
+not a live performance claim or an adopted endpoint yet.
+
+Execution independence also exposes a cold-binding question: a predicate-only
+owner should not need generic shuffle preparation merely to select one validated
+code. There is no direct binder today. A binder taking a validated layout, code
+index and named view could copy the existing law's code without another raw-code
+validator or projection type. Transfer binding already permits its authoritative
+layouts to expire after admission; it retains the named views instead.
+It would check extent compatibility and code index before returning; only the
+view would remain borrowed. The present shared-plan block witness excludes this
+cold preparation/resident-control saving, so it needs separate complete-command
+costing. Fewer plan bytes alone would not establish a workload win.
 
 The strongest next generalization is SeriesPack's shared immutable dense
 execution control: Frame already supplies the concrete operation-column witness,

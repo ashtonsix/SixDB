@@ -306,3 +306,45 @@ controls. The candidate's ARM one-shot losses and preparation losses on every
 profile reject the global change. The [linked ARM validator](blocks-linked.py)
 checks the actual four-route bodies against the retained ELF hashes; fewer
 selected filter instructions did not establish a complete-command speedup.
+
+## Copied-projection qualification
+
+[The projection controller](projection-native.py) prepares a separate paired
+comparison for `predicate<Byte,Rows>`. Both arms share the strict active-unit
+access fixes, final writer API correction and factory-inferred harness types;
+only `filter.h` differs. The candidate copies its one-code projection and
+borrows the named view. The preparation plan and intermediate reader may
+expire after binding; the view's value, address and backing storage stay stable.
+The source manifest records every input hash, the exact header patch and the
+shared controller, fixture, benchmark and CMake wrapper hashes.
+
+Before timing, the controller runs the candidate's 96 core/owner checks and
+93 independent public headers on every profile supported by that worker. It
+then builds and runs [the candidate-only boundary fixture](projection-check.cpp)
+against the same configured library. That fixture destroys the actual
+mmap-placed plan and protects its pages, checks all 11 valid packet shapes,
+36 width/shift laws, offset 63, exact protected tails, sparse activity and all
+five unsigned comparisons against an independent byte oracle. Protected payload
+checks exercise empty/out-of-domain shortcuts and error admission order.
+Its `IKEA_PROJECTION_CANDIDATE=1` target is enabled only for the candidate arm.
+
+All native builds and both arms' ordinary oracles finish before the existing
+five-order timing phase. The controller reuses [the paired executor](predicate-native.py)
+for all 360 maintained filter cases and 108 complete block cases per profile,
+including the byte-identical duplicate control, common argv0 and common working
+directory. [The result reader](predicate-results.py) validates the original
+units and structural counters. This protocol establishes no performance result
+until the native output has been collected and checked.
+
+After the frozen pair's source and fixture checks have passed, prepare a fresh
+managed capture and run its entry point on the native workers:
+
+```sh
+python3 workbench/spikes/ikea-composition/handle-boundaries/projection-native.py \
+  prepare CAPTURE --source-pair FROZEN_PAIR --metadata FRESH_METADATA_DIRECTORY
+bash workbench/spikes/ikea-composition/handle-boundaries/projection-native.sh
+```
+
+The worker supplies `SIXDB_RESULTS`, `SIXDB_CPU` and `SIXDB_BUILD_JOBS=8` on the
+16-vCPU/32-GiB hosts. Add `run --dry-run --inputs INPUTS --profile PROFILE`
+to the Python controller to inspect commands without compiling or measuring.

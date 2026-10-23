@@ -1,0 +1,1970 @@
+{
+  "analysis_helper_sha256": {
+    "analyse": "5b3495c67d088ed28a936e44e2450deab8ffb63e4eec0ce4d601cf5135f77069",
+    "paths": "ab2b5931969069a90c93f5f59595fedfc11022a8fd144cb89957b66fe7b50f59"
+  },
+  "baseline_recovery": {
+    "new_outputs": "build/ikea-cohesion-v2/predicate-projection-r4",
+    "original_objects": "build/ikea-cohesion-v2/handle-boundaries/configured-release/{profile}/final16",
+    "reference": "local-objects-artifact.json",
+    "source": "R4 worker source recovery in local-objects-context.json"
+  },
+  "changed_files": {
+    "ikea/include/ikea/tuplepack/filter.h": [
+      "aa91ba8e4339a53d393c40a9c298665e6bbf80672a6540821bbbf221bbc52904",
+      "cb2ab9b2d9c4cb4b86fedee9bac36edca1b1a5758a95ed9b75ac0ef277843b8e"
+    ]
+  },
+  "compiler": "Ubuntu clang version 21.1.8 (++20251221033104+2078da43e25a-1~exp1~20251221153121.57)\nTarget: aarch64-unknown-linux-gnu\nThread model: posix\nInstalledDir: /usr/lib/llvm-21/bin\n",
+  "interpretation": [
+    "The one-byte placement aggregate is scalarized away: leaf consume_filter has no calls; NEON stack has only saved registers, x86 has one8B scalar spill, not a packet_placement object.",
+    "Generic fallback/control-route code shrinks substantially; whole-function totals include mutually exclusive paths and are not executed instruction counts.",
+    "The selected full-tight width5 path improves NEON/AVX2 static counts but regresses AVX512; preserve this negative rather than infer speed from16B.",
+    "Historical R4 sparse64 common-window behavior is retained only in this diagnostic. Final public endpoint sources share a separate strict access correction."
+  ],
+  "limits": [
+    "No live edit, native timing, worker launch or adoption decision.",
+    "One complete less_equal width5/8 fixture plus separate raw/checked/crowded caller/callee.",
+    "Existing qualified NEON common-window behavior retained, not an active-unit-only promise.",
+    "Raw16B and checked24B ABI differ; expected still uses a memory return.",
+    "Objects are unlinked; layout/predictor/cache/timing effects remain unqualified."
+  ],
+  "original_generation_runner_sha256": "d2acf1e4f9b0834775fefbba20cd252d06c97fa74fef47c642eaefb4cd3838b3",
+  "profiles": {
+    "avx2-zen5": {
+      "census": {
+        "after": {
+          "checked_filter": {
+            "alignment": 8,
+            "size": 24,
+            "standard_layout": 1,
+            "trivial_copy": 1,
+            "trivial_destructor": 1,
+            "trivial_move": 1
+          },
+          "checked_reader": {
+            "alignment": 8,
+            "size": 24,
+            "standard_layout": 1,
+            "trivial_copy": 1,
+            "trivial_destructor": 1,
+            "trivial_move": 1
+          },
+          "predicate": {
+            "alignment": 8,
+            "size": 16,
+            "standard_layout": 1,
+            "trivial_copy": 1,
+            "trivial_destructor": 1,
+            "trivial_move": 1
+          },
+          "reader": {
+            "alignment": 8,
+            "size": 16,
+            "standard_layout": 1,
+            "trivial_copy": 1,
+            "trivial_destructor": 1,
+            "trivial_move": 1
+          }
+        },
+        "before": {
+          "checked_filter": {
+            "alignment": 8,
+            "size": 32,
+            "standard_layout": 1,
+            "trivial_copy": 1,
+            "trivial_destructor": 1,
+            "trivial_move": 1
+          },
+          "checked_reader": {
+            "alignment": 8,
+            "size": 24,
+            "standard_layout": 1,
+            "trivial_copy": 1,
+            "trivial_destructor": 1,
+            "trivial_move": 1
+          },
+          "predicate": {
+            "alignment": 8,
+            "size": 24,
+            "standard_layout": 1,
+            "trivial_copy": 1,
+            "trivial_destructor": 1,
+            "trivial_move": 1
+          },
+          "reader": {
+            "alignment": 8,
+            "size": 16,
+            "standard_layout": 1,
+            "trivial_copy": 1,
+            "trivial_destructor": 1,
+            "trivial_move": 1
+          }
+        }
+      },
+      "full_tight_independent8_path": {
+        "after": {
+          "instructions": 339,
+          "literal_function_sha256": "d8ed3821e2d87841aabaaf7757fcaa999d9388d4c4478df7f307ac575c1b7097",
+          "opcodes": {
+            "addb": 8,
+            "addq": 8,
+            "andl": 8,
+            "cmpl": 1,
+            "cmpq": 16,
+            "cmpw": 8,
+            "imulq": 8,
+            "incl": 1,
+            "ja": 8,
+            "je": 17,
+            "jmp": 8,
+            "jne": 8,
+            "leal": 8,
+            "movl": 34,
+            "movq": 37,
+            "movzbl": 16,
+            "movzwl": 9,
+            "notl": 16,
+            "shlq": 8,
+            "shlxl": 16,
+            "shlxq": 8,
+            "shrq": 8,
+            "testq": 1,
+            "testw": 7,
+            "vmovd": 16,
+            "vpand": 8,
+            "vpbroadcastb": 16,
+            "vpcmpgtb": 8,
+            "vpmovmskb": 8,
+            "vpxor": 8,
+            "xorl": 8
+          }
+        },
+        "before": {
+          "instructions": 352,
+          "literal_function_sha256": "196044e233301530d9fdc7514e58e2b4f9880d9d6a3511eefd0435d1bb7104d5",
+          "opcodes": {
+            "addb": 8,
+            "addq": 8,
+            "andl": 8,
+            "cmpl": 1,
+            "cmpq": 16,
+            "cmpw": 8,
+            "imulq": 8,
+            "incl": 1,
+            "ja": 8,
+            "je": 17,
+            "jmp": 16,
+            "jne": 8,
+            "leal": 8,
+            "movl": 27,
+            "movq": 42,
+            "movzbl": 16,
+            "movzwl": 16,
+            "notl": 16,
+            "shlq": 8,
+            "shlxl": 16,
+            "shlxq": 8,
+            "shrq": 8,
+            "testq": 8,
+            "vmovd": 16,
+            "vpand": 8,
+            "vpbroadcastb": 16,
+            "vpcmpgtb": 8,
+            "vpmovmskb": 8,
+            "vpxor": 8,
+            "xorl": 8
+          }
+        },
+        "scope": "Trace one specified static fast path in the complete maintained caller.\n\nThis does not execute or model timing. The selected path is a nonterminal\nindependent8 iteration, full activity, tight placement and in-domain RHS. It\nkeeps all actual predicates and addresses in the receipt and refuses an\nunexpected control-flow shape instead of following a speculative fallback.\n"
+      },
+      "objects": {
+        "caller": {
+          "after_object_sha256": "1d64126c1ebe19c72a730a5e06a1dea8d034425f6120dcb097162ca9fe118167",
+          "before_object_sha256": "deb6914ed15341a0de71f8b2d120405485f0800a54d5eb63f37f70ea37d61dab",
+          "changed_project_dependencies": {
+            "ikea/include/ikea/tuplepack/filter.h": [
+              "aa91ba8e4339a53d393c40a9c298665e6bbf80672a6540821bbbf221bbc52904",
+              "cb2ab9b2d9c4cb4b86fedee9bac36edca1b1a5758a95ed9b75ac0ef277843b8e"
+            ]
+          },
+          "command": [
+            "clang++-21",
+            "-g",
+            "-Wall",
+            "-Wextra",
+            "-Wpedantic",
+            "-DHB_PREPARED_PREDICATE=1",
+            "--target=x86_64-linux-gnu",
+            "--gcc-toolchain=/usr",
+            "-std=c++23",
+            "-O3",
+            "-fno-fast-math",
+            "-ffp-contract=off",
+            "-fdenormal-fp-math=ieee",
+            "-fvisibility=hidden",
+            "-fvisibility-inlines-hidden",
+            "-ffunction-sections",
+            "-fdata-sections",
+            "-march=x86-64-v3",
+            "-mtune=znver5",
+            "-DSIXDB_TUNE_GENERIC=0",
+            "-DSIXDB_TUNE_GRANITE_RAPIDS=0",
+            "-DSIXDB_TUNE_ZEN4=0",
+            "-DSIXDB_TUNE_ZEN5=1",
+            "-DSIXDB_TUNE_NEOVERSE_V2=0",
+            "-DSIXDB_TUNE_NEOVERSE_V3=0",
+            "-ffile-prefix-map=/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-r4/source=/sixdb",
+            "-I",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-r4/source/ikea/include",
+            "-MD",
+            "-MF",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-r4/avx2-zen5/caller.d",
+            "-c",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-r4/source/workbench/spikes/ikea-composition/handle-boundaries/caller.cpp",
+            "-o",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-r4/avx2-zen5/caller.o"
+          ],
+          "dependency_digests": {
+            "after": {
+              "project": {
+                "count": 69,
+                "sha256": "c2762e179a1c027da123fd2fa03674a814f3dc12ec62e2ccab5a52ac5449f437"
+              },
+              "system": {
+                "count": 304,
+                "sha256": "3ca22837747b9943050083460e916031d4ffb0e4f931e3cce940c6094e43184d"
+              }
+            },
+            "before": {
+              "project": {
+                "count": 69,
+                "sha256": "59e9583da4d8ecce8f4fd92c0c0e89e3c46622ea0f1028671ddc6509cde5d3ac"
+              },
+              "system": {
+                "count": 304,
+                "sha256": "3ca22837747b9943050083460e916031d4ffb0e4f931e3cce940c6094e43184d"
+              }
+            }
+          },
+          "source_path_correspondence": {
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/handle-boundaries/sources/final16": "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/handle-boundaries/sources/final16"
+          },
+          "strict_counts": {
+            "constants": {
+              "changed": 0,
+              "same": 0
+            },
+            "functions": {
+              "changed": 2,
+              "same": 5
+            },
+            "unwind": {
+              "changed": 1,
+              "same": 0
+            }
+          }
+        },
+        "extra_tuple_2": {
+          "after_object_sha256": "cf16569723258e09e6b1c16628b8f9005a8fa19dd22d6e788ca4df9b2a5654b2",
+          "before_object_sha256": "a2c7051f15138e6ba939c0a28da9ddaa2269d18f8393d3ebe0236a93f60f58ec",
+          "changed_project_dependencies": {
+            "ikea/include/ikea/tuplepack/filter.h": [
+              "aa91ba8e4339a53d393c40a9c298665e6bbf80672a6540821bbbf221bbc52904",
+              "cb2ab9b2d9c4cb4b86fedee9bac36edca1b1a5758a95ed9b75ac0ef277843b8e"
+            ]
+          },
+          "command": [
+            "clang++-21",
+            "-DFILTER_SEAMS_NO_MAIN=1",
+            "-fno-vectorize",
+            "-fno-slp-vectorize",
+            "-g",
+            "-Wall",
+            "-Wextra",
+            "-Wpedantic",
+            "-DHB_PREPARED_PREDICATE=1",
+            "--target=x86_64-linux-gnu",
+            "--gcc-toolchain=/usr",
+            "-std=c++23",
+            "-O3",
+            "-fno-fast-math",
+            "-ffp-contract=off",
+            "-fdenormal-fp-math=ieee",
+            "-fvisibility=hidden",
+            "-fvisibility-inlines-hidden",
+            "-ffunction-sections",
+            "-fdata-sections",
+            "-march=x86-64-v3",
+            "-mtune=znver5",
+            "-DSIXDB_TUNE_GENERIC=0",
+            "-DSIXDB_TUNE_GRANITE_RAPIDS=0",
+            "-DSIXDB_TUNE_ZEN4=0",
+            "-DSIXDB_TUNE_ZEN5=1",
+            "-DSIXDB_TUNE_NEOVERSE_V2=0",
+            "-DSIXDB_TUNE_NEOVERSE_V3=0",
+            "-ffile-prefix-map=/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-r4/source=/sixdb",
+            "-I",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-r4/source/ikea/include",
+            "-MD",
+            "-MF",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-r4/avx2-zen5/extra_tuple_2.d",
+            "-c",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-r4/source/workbench/spikes/filter-composition/extra_tuple_2.cpp",
+            "-o",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-r4/avx2-zen5/extra_tuple_2.o"
+          ],
+          "dependency_digests": {
+            "after": {
+              "project": {
+                "count": 78,
+                "sha256": "54749c5e8fbb0056d5585c142f482fe420dbc7382dd52dfb31d61b52a557bf46"
+              },
+              "system": {
+                "count": 415,
+                "sha256": "d738e7a5d35faa9b140cb5583c2f59cf7801f37dbd74b38845f1934237466bb5"
+              }
+            },
+            "before": {
+              "project": {
+                "count": 78,
+                "sha256": "fcc309735c1f3a5f2c8711236e4accd7a230e9da9a6a7bb1a358826c27bb2ebe"
+              },
+              "system": {
+                "count": 415,
+                "sha256": "d738e7a5d35faa9b140cb5583c2f59cf7801f37dbd74b38845f1934237466bb5"
+              }
+            }
+          },
+          "source_path_correspondence": {
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/handle-boundaries/sources/final16": "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/handle-boundaries/sources/final16"
+          },
+          "strict_counts": {
+            "constants": {
+              "changed": 2,
+              "same": 7
+            },
+            "functions": {
+              "changed": 11,
+              "same": 5
+            },
+            "unwind": {
+              "changed": 4,
+              "same": 2
+            }
+          }
+        },
+        "producer": {
+          "after_object_sha256": "1274a8f9bd1eea79ce3e65fe6ce5e8b9825b9526070f8fd0baf88730729f1315",
+          "before_object_sha256": "f2faa8b9b337edaab4a9578c2ff6a59d47f954e83f0418392d9690a7e3cb620b",
+          "changed_project_dependencies": {
+            "ikea/include/ikea/tuplepack/filter.h": [
+              "aa91ba8e4339a53d393c40a9c298665e6bbf80672a6540821bbbf221bbc52904",
+              "cb2ab9b2d9c4cb4b86fedee9bac36edca1b1a5758a95ed9b75ac0ef277843b8e"
+            ]
+          },
+          "command": [
+            "clang++-21",
+            "-g",
+            "-Wall",
+            "-Wextra",
+            "-Wpedantic",
+            "-DHB_PREPARED_PREDICATE=1",
+            "--target=x86_64-linux-gnu",
+            "--gcc-toolchain=/usr",
+            "-std=c++23",
+            "-O3",
+            "-fno-fast-math",
+            "-ffp-contract=off",
+            "-fdenormal-fp-math=ieee",
+            "-fvisibility=hidden",
+            "-fvisibility-inlines-hidden",
+            "-ffunction-sections",
+            "-fdata-sections",
+            "-march=x86-64-v3",
+            "-mtune=znver5",
+            "-DSIXDB_TUNE_GENERIC=0",
+            "-DSIXDB_TUNE_GRANITE_RAPIDS=0",
+            "-DSIXDB_TUNE_ZEN4=0",
+            "-DSIXDB_TUNE_ZEN5=1",
+            "-DSIXDB_TUNE_NEOVERSE_V2=0",
+            "-DSIXDB_TUNE_NEOVERSE_V3=0",
+            "-ffile-prefix-map=/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-r4/source=/sixdb",
+            "-I",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-r4/source/ikea/include",
+            "-MD",
+            "-MF",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-r4/avx2-zen5/producer.d",
+            "-c",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-r4/source/workbench/spikes/ikea-composition/handle-boundaries/producer.cpp",
+            "-o",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-r4/avx2-zen5/producer.o"
+          ],
+          "dependency_digests": {
+            "after": {
+              "project": {
+                "count": 69,
+                "sha256": "d18d6414a43519a57d0605b1620de05a7ada730df3d26c5f57ae8a66c24abe33"
+              },
+              "system": {
+                "count": 304,
+                "sha256": "3ca22837747b9943050083460e916031d4ffb0e4f931e3cce940c6094e43184d"
+              }
+            },
+            "before": {
+              "project": {
+                "count": 69,
+                "sha256": "bb44c68efd30435b56e9c02fce0393b3a8afd159d151d500083c1d9dbe1001a6"
+              },
+              "system": {
+                "count": 304,
+                "sha256": "3ca22837747b9943050083460e916031d4ffb0e4f931e3cce940c6094e43184d"
+              }
+            }
+          },
+          "source_path_correspondence": {
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/handle-boundaries/sources/final16": "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/handle-boundaries/sources/final16"
+          },
+          "strict_counts": {
+            "constants": {
+              "changed": 3,
+              "same": 1
+            },
+            "functions": {
+              "changed": 3,
+              "same": 12
+            },
+            "unwind": {
+              "changed": 1,
+              "same": 0
+            }
+          }
+        }
+      },
+      "whole_functions": {
+        "hb::checked_filter_command(ikea::tuplepack::read_plan<64u, 16u> const&, ikea::tuplepack::basic_view<std::byte const> const&, unsigned long, unsigned long, unsigned long)": {
+          "after": {
+            "bytes": 166,
+            "instructions": 51,
+            "literal_function_sha256": "59b59273175cdff17128da7f9332f08b92f1702aeeeac3784c359390dd4057fe",
+            "ordinary_calls": 2,
+            "stack_adjustments": [
+              "pushq\t%r15",
+              "pushq\t%r14",
+              "pushq\t%rbx",
+              "subq\t$0x20, %rsp",
+              "addq\t$0x20, %rsp",
+              "popq\t%rbx",
+              "popq\t%r14",
+              "popq\t%r15"
+            ],
+            "static_stack_references": 7
+          },
+          "before": {
+            "bytes": 177,
+            "instructions": 53,
+            "literal_function_sha256": "a6c627cf5a21b75343bec91d1a2a9bbf99eef17fe45df21e7614ef67ec4f32ad",
+            "ordinary_calls": 2,
+            "stack_adjustments": [
+              "pushq\t%r15",
+              "pushq\t%r14",
+              "pushq\t%rbx",
+              "subq\t$0x40, %rsp",
+              "addq\t$0x40, %rsp",
+              "popq\t%rbx",
+              "popq\t%r14",
+              "popq\t%r15"
+            ],
+            "static_stack_references": 9
+          }
+        },
+        "hb::consume_filter(ikea::tuplepack::predicate<64u, std::byte const, 16u>, unsigned long, unsigned long, unsigned long)": {
+          "after": {
+            "bytes": 1147,
+            "instructions": 263,
+            "literal_function_sha256": "b8f02199a076cb5b02891116a41d8634da34099c708114892dce38dbb3366c28",
+            "ordinary_calls": 0,
+            "stack_adjustments": [
+              "pushq\t%rbp",
+              "pushq\t%r15",
+              "pushq\t%r14",
+              "pushq\t%r13",
+              "pushq\t%r12",
+              "pushq\t%rbx",
+              "popq\t%rbx",
+              "popq\t%r12",
+              "popq\t%r13",
+              "popq\t%r14",
+              "popq\t%r15",
+              "popq\t%rbp"
+            ],
+            "static_stack_references": 2
+          },
+          "before": {
+            "bytes": 13053,
+            "instructions": 2950,
+            "literal_function_sha256": "a463a45234734ebdf02900b899bf7102d926783e75e2bdad6ede4b3699749e00",
+            "ordinary_calls": 0,
+            "stack_adjustments": [
+              "pushq\t%rbp",
+              "pushq\t%r15",
+              "pushq\t%r14",
+              "pushq\t%r13",
+              "pushq\t%r12",
+              "pushq\t%rbx",
+              "popq\t%rbx",
+              "popq\t%r12",
+              "popq\t%r13",
+              "popq\t%r14",
+              "popq\t%r15",
+              "popq\t%rbp"
+            ],
+            "static_stack_references": 72
+          }
+        },
+        "hb::crowded_filters(std::array<ikea::tuplepack::predicate<64u, std::byte const, 16u>, 7ul> const&, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long)": {
+          "after": {
+            "bytes": 328,
+            "instructions": 87,
+            "literal_function_sha256": "0fd3965efa855fe59ca439f5e8c03fd237c290010aa610c887deccf1f2506f2a",
+            "ordinary_calls": 7,
+            "stack_adjustments": [
+              "pushq\t%rbp",
+              "pushq\t%r15",
+              "pushq\t%r14",
+              "pushq\t%r13",
+              "pushq\t%r12",
+              "pushq\t%rbx",
+              "subq\t$0x28, %rsp",
+              "addq\t$0x28, %rsp",
+              "popq\t%rbx",
+              "popq\t%r12",
+              "popq\t%r13",
+              "popq\t%r14",
+              "popq\t%r15",
+              "popq\t%rbp"
+            ],
+            "static_stack_references": 16
+          },
+          "before": {
+            "bytes": 425,
+            "instructions": 101,
+            "literal_function_sha256": "389caa02bea6fc916981bb9011fcad3b657a6ca4622e1f63731737a3b866eda6",
+            "ordinary_calls": 7,
+            "stack_adjustments": [
+              "pushq\t%rbp",
+              "pushq\t%r15",
+              "pushq\t%r14",
+              "pushq\t%r13",
+              "pushq\t%r12",
+              "pushq\t%rbx",
+              "subq\t$0x38, %rsp",
+              "addq\t$0x38, %rsp",
+              "popq\t%rbx",
+              "popq\t%r12",
+              "popq\t%r13",
+              "popq\t%r14",
+              "popq\t%r15",
+              "popq\t%rbp"
+            ],
+            "static_stack_references": 30
+          }
+        },
+        "hb::make_filter(ikea::tuplepack::read_plan<64u, 16u> const&, ikea::tuplepack::basic_view<std::byte const> const&)": {
+          "after": {
+            "bytes": 80,
+            "instructions": 24,
+            "literal_function_sha256": "6f38428f1b59a21f44196672855a508bce5567f5ee02a44ee8d85f08f8f7f5f9",
+            "ordinary_calls": 0,
+            "stack_adjustments": [],
+            "static_stack_references": 0
+          },
+          "before": {
+            "bytes": 84,
+            "instructions": 25,
+            "literal_function_sha256": "94d458ce63541738942960c2db3b980012a0ac464becb8067519a7777e0f30f0",
+            "ordinary_calls": 0,
+            "stack_adjustments": [],
+            "static_stack_references": 0
+          }
+        },
+        "hb::pass_predicate(ikea::tuplepack::predicate<64u, std::byte const, 16u>)": {
+          "after": {
+            "bytes": 7,
+            "instructions": 3,
+            "literal_function_sha256": "543b9fc92421aa14e6e2079c238b9b90a06066f2641c6a86a293ab1f60fa86b7",
+            "ordinary_calls": 0,
+            "stack_adjustments": [],
+            "static_stack_references": 0
+          },
+          "before": {
+            "bytes": 23,
+            "instructions": 6,
+            "literal_function_sha256": "be22cc81d3c3e81381726895d7dc90300083e3d505d5dde95637026d87dee5fc",
+            "ordinary_calls": 0,
+            "stack_adjustments": [],
+            "static_stack_references": 2
+          }
+        },
+        "void runtime::measure<void extras::run_extra<extras::Tuple<5u, (ikea::comparison)2>>(extras::Tuple<5u, (ikea::comparison)2>::Input const&, char const*)::'lambda'(unsigned int, unsigned int)>(runtime::Fixture const&, unsigned int, char const*, unsigned short, extras::Tuple<5u, (ikea::comparison)2>, char const*)": {
+          "after": {
+            "bytes": 13977,
+            "instructions": 2872,
+            "literal_function_sha256": "d8ed3821e2d87841aabaaf7757fcaa999d9388d4c4478df7f307ac575c1b7097",
+            "ordinary_calls": 3,
+            "stack_adjustments": [
+              "pushq\t%rbp",
+              "pushq\t%r15",
+              "pushq\t%r14",
+              "pushq\t%r13",
+              "pushq\t%r12",
+              "pushq\t%rbx",
+              "subq\t$0x118, %rsp            # imm = 0x118",
+              "pushq\t%rbx",
+              "pushq\t0xf8(%rsp)",
+              "addq\t$0x10, %rsp",
+              "addq\t$0x118, %rsp            # imm = 0x118",
+              "popq\t%rbx",
+              "popq\t%r12",
+              "popq\t%r13",
+              "popq\t%r14",
+              "popq\t%r15",
+              "popq\t%rbp"
+            ],
+            "static_stack_references": 440
+          },
+          "before": {
+            "bytes": 138566,
+            "instructions": 30877,
+            "literal_function_sha256": "196044e233301530d9fdc7514e58e2b4f9880d9d6a3511eefd0435d1bb7104d5",
+            "ordinary_calls": 3,
+            "stack_adjustments": [
+              "pushq\t%rbp",
+              "pushq\t%r15",
+              "pushq\t%r14",
+              "pushq\t%r13",
+              "pushq\t%r12",
+              "pushq\t%rbx",
+              "subq\t$0x118, %rsp            # imm = 0x118",
+              "pushq\t%r13",
+              "pushq\t0x100(%rsp)",
+              "addq\t$0x10, %rsp",
+              "addq\t$0x118, %rsp            # imm = 0x118",
+              "popq\t%rbx",
+              "popq\t%r12",
+              "popq\t%r13",
+              "popq\t%r14",
+              "popq\t%r15",
+              "popq\t%rbp"
+            ],
+            "static_stack_references": 2119
+          }
+        },
+        "void runtime::measure<void extras::run_extra<extras::Tuple<8u, (ikea::comparison)2>>(extras::Tuple<8u, (ikea::comparison)2>::Input const&, char const*)::'lambda'(unsigned int, unsigned int)>(runtime::Fixture const&, unsigned int, char const*, unsigned short, extras::Tuple<8u, (ikea::comparison)2>, char const*)": {
+          "after": {
+            "bytes": 13977,
+            "instructions": 2872,
+            "literal_function_sha256": "19e0fdc356112a7b6ea5d0923096cae616360c3850a1c7d66832afeae1292be5",
+            "ordinary_calls": 3,
+            "stack_adjustments": [
+              "pushq\t%rbp",
+              "pushq\t%r15",
+              "pushq\t%r14",
+              "pushq\t%r13",
+              "pushq\t%r12",
+              "pushq\t%rbx",
+              "subq\t$0x118, %rsp            # imm = 0x118",
+              "pushq\t%rbx",
+              "pushq\t0xf8(%rsp)",
+              "addq\t$0x10, %rsp",
+              "addq\t$0x118, %rsp            # imm = 0x118",
+              "popq\t%rbx",
+              "popq\t%r12",
+              "popq\t%r13",
+              "popq\t%r14",
+              "popq\t%r15",
+              "popq\t%rbp"
+            ],
+            "static_stack_references": 440
+          },
+          "before": {
+            "bytes": 138566,
+            "instructions": 30877,
+            "literal_function_sha256": "384afcf287cc058c55ea719e229454b539e8a144a2ba88212d584b634545558c",
+            "ordinary_calls": 3,
+            "stack_adjustments": [
+              "pushq\t%rbp",
+              "pushq\t%r15",
+              "pushq\t%r14",
+              "pushq\t%r13",
+              "pushq\t%r12",
+              "pushq\t%rbx",
+              "subq\t$0x118, %rsp            # imm = 0x118",
+              "pushq\t%r13",
+              "pushq\t0x100(%rsp)",
+              "addq\t$0x10, %rsp",
+              "addq\t$0x118, %rsp            # imm = 0x118",
+              "popq\t%rbx",
+              "popq\t%r12",
+              "popq\t%r13",
+              "popq\t%r14",
+              "popq\t%r15",
+              "popq\t%rbp"
+            ],
+            "static_stack_references": 2119
+          }
+        }
+      }
+    },
+    "avx512-zen5": {
+      "census": {
+        "after": {
+          "checked_filter": {
+            "alignment": 8,
+            "size": 24,
+            "standard_layout": 1,
+            "trivial_copy": 1,
+            "trivial_destructor": 1,
+            "trivial_move": 1
+          },
+          "checked_reader": {
+            "alignment": 8,
+            "size": 24,
+            "standard_layout": 1,
+            "trivial_copy": 1,
+            "trivial_destructor": 1,
+            "trivial_move": 1
+          },
+          "predicate": {
+            "alignment": 8,
+            "size": 16,
+            "standard_layout": 1,
+            "trivial_copy": 1,
+            "trivial_destructor": 1,
+            "trivial_move": 1
+          },
+          "reader": {
+            "alignment": 8,
+            "size": 16,
+            "standard_layout": 1,
+            "trivial_copy": 1,
+            "trivial_destructor": 1,
+            "trivial_move": 1
+          }
+        },
+        "before": {
+          "checked_filter": {
+            "alignment": 8,
+            "size": 32,
+            "standard_layout": 1,
+            "trivial_copy": 1,
+            "trivial_destructor": 1,
+            "trivial_move": 1
+          },
+          "checked_reader": {
+            "alignment": 8,
+            "size": 24,
+            "standard_layout": 1,
+            "trivial_copy": 1,
+            "trivial_destructor": 1,
+            "trivial_move": 1
+          },
+          "predicate": {
+            "alignment": 8,
+            "size": 24,
+            "standard_layout": 1,
+            "trivial_copy": 1,
+            "trivial_destructor": 1,
+            "trivial_move": 1
+          },
+          "reader": {
+            "alignment": 8,
+            "size": 16,
+            "standard_layout": 1,
+            "trivial_copy": 1,
+            "trivial_destructor": 1,
+            "trivial_move": 1
+          }
+        }
+      },
+      "full_tight_independent8_path": {
+        "after": {
+          "instructions": 322,
+          "literal_function_sha256": "727a5ace0cae638c1e857aa3296084e06bf2c0f495e58c2cb4eb1f32c2f4424b",
+          "opcodes": {
+            "addq": 8,
+            "andl": 8,
+            "cmpl": 1,
+            "cmpq": 16,
+            "cmpw": 8,
+            "imulq": 8,
+            "incl": 1,
+            "ja": 8,
+            "je": 17,
+            "jmp": 9,
+            "jne": 8,
+            "kmovd": 8,
+            "leal": 8,
+            "movabsq": 8,
+            "movl": 42,
+            "movq": 43,
+            "movzbl": 16,
+            "movzwl": 9,
+            "notl": 8,
+            "shlq": 8,
+            "shlxl": 16,
+            "shlxq": 8,
+            "shrq": 8,
+            "testq": 1,
+            "testw": 7,
+            "vpand": 8,
+            "vpbroadcastb": 16,
+            "vpcmpleub": 8,
+            "xorl": 8
+          }
+        },
+        "before": {
+          "instructions": 303,
+          "literal_function_sha256": "aa23ebff5559eaeb492a4860ed6e20f91a7b3009f6ae625514d70beaf2ccef61",
+          "opcodes": {
+            "addq": 8,
+            "andl": 8,
+            "cmpl": 9,
+            "cmpq": 16,
+            "imulq": 8,
+            "incl": 1,
+            "ja": 8,
+            "je": 17,
+            "jmp": 8,
+            "jne": 8,
+            "kmovw": 8,
+            "leal": 8,
+            "movl": 27,
+            "movq": 49,
+            "movzbl": 16,
+            "movzwl": 8,
+            "notl": 8,
+            "shlq": 8,
+            "shlxl": 16,
+            "shlxq": 8,
+            "shrq": 8,
+            "testq": 8,
+            "vpand": 8,
+            "vpbroadcastb": 16,
+            "vpcmpleub": 8,
+            "xorl": 8
+          }
+        },
+        "scope": "Trace one specified static fast path in the complete maintained caller.\n\nThis does not execute or model timing. The selected path is a nonterminal\nindependent8 iteration, full activity, tight placement and in-domain RHS. It\nkeeps all actual predicates and addresses in the receipt and refuses an\nunexpected control-flow shape instead of following a speculative fallback.\n"
+      },
+      "objects": {
+        "caller": {
+          "after_object_sha256": "80718183a39a2163aa64d5fb51db9c163ac23202f68a3f08ca29409c75d1e071",
+          "before_object_sha256": "eafc1aa8598bbc8c708f112f002c2c78b3ffeccd8dec6377ee52819a3999d355",
+          "changed_project_dependencies": {
+            "ikea/include/ikea/tuplepack/filter.h": [
+              "aa91ba8e4339a53d393c40a9c298665e6bbf80672a6540821bbbf221bbc52904",
+              "cb2ab9b2d9c4cb4b86fedee9bac36edca1b1a5758a95ed9b75ac0ef277843b8e"
+            ]
+          },
+          "command": [
+            "clang++-21",
+            "-g",
+            "-Wall",
+            "-Wextra",
+            "-Wpedantic",
+            "-DHB_PREPARED_PREDICATE=1",
+            "--target=x86_64-linux-gnu",
+            "--gcc-toolchain=/usr",
+            "-std=c++23",
+            "-O3",
+            "-fno-fast-math",
+            "-ffp-contract=off",
+            "-fdenormal-fp-math=ieee",
+            "-fvisibility=hidden",
+            "-fvisibility-inlines-hidden",
+            "-ffunction-sections",
+            "-fdata-sections",
+            "-march=znver5",
+            "-mtune=znver5",
+            "-DSIXDB_TUNE_GENERIC=0",
+            "-DSIXDB_TUNE_GRANITE_RAPIDS=0",
+            "-DSIXDB_TUNE_ZEN4=0",
+            "-DSIXDB_TUNE_ZEN5=1",
+            "-DSIXDB_TUNE_NEOVERSE_V2=0",
+            "-DSIXDB_TUNE_NEOVERSE_V3=0",
+            "-ffile-prefix-map=/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-r4/source=/sixdb",
+            "-I",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-r4/source/ikea/include",
+            "-MD",
+            "-MF",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-r4/avx512-zen5/caller.d",
+            "-c",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-r4/source/workbench/spikes/ikea-composition/handle-boundaries/caller.cpp",
+            "-o",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-r4/avx512-zen5/caller.o"
+          ],
+          "dependency_digests": {
+            "after": {
+              "project": {
+                "count": 71,
+                "sha256": "2cf143362494438d8a02a9635fb01a3bb66e66044d8401c23a2ef0198f547d62"
+              },
+              "system": {
+                "count": 304,
+                "sha256": "3ca22837747b9943050083460e916031d4ffb0e4f931e3cce940c6094e43184d"
+              }
+            },
+            "before": {
+              "project": {
+                "count": 71,
+                "sha256": "601043639790ab19d404b378000f4eaa2accfb76374d85420eefd3d14de84484"
+              },
+              "system": {
+                "count": 304,
+                "sha256": "3ca22837747b9943050083460e916031d4ffb0e4f931e3cce940c6094e43184d"
+              }
+            }
+          },
+          "source_path_correspondence": {
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/handle-boundaries/sources/final16": "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/handle-boundaries/sources/final16"
+          },
+          "strict_counts": {
+            "constants": {
+              "changed": 0,
+              "same": 0
+            },
+            "functions": {
+              "changed": 2,
+              "same": 5
+            },
+            "unwind": {
+              "changed": 1,
+              "same": 0
+            }
+          }
+        },
+        "extra_tuple_2": {
+          "after_object_sha256": "2911a75ba5206f696ec4bbd240fc0efd7fbfcd24e83279701919d6c0ff667e53",
+          "before_object_sha256": "99091613d35970d21806174b0ec949fe2020082ef140960e1996e2e24257ed67",
+          "changed_project_dependencies": {
+            "ikea/include/ikea/tuplepack/filter.h": [
+              "aa91ba8e4339a53d393c40a9c298665e6bbf80672a6540821bbbf221bbc52904",
+              "cb2ab9b2d9c4cb4b86fedee9bac36edca1b1a5758a95ed9b75ac0ef277843b8e"
+            ]
+          },
+          "command": [
+            "clang++-21",
+            "-DFILTER_SEAMS_NO_MAIN=1",
+            "-fno-vectorize",
+            "-fno-slp-vectorize",
+            "-g",
+            "-Wall",
+            "-Wextra",
+            "-Wpedantic",
+            "-DHB_PREPARED_PREDICATE=1",
+            "--target=x86_64-linux-gnu",
+            "--gcc-toolchain=/usr",
+            "-std=c++23",
+            "-O3",
+            "-fno-fast-math",
+            "-ffp-contract=off",
+            "-fdenormal-fp-math=ieee",
+            "-fvisibility=hidden",
+            "-fvisibility-inlines-hidden",
+            "-ffunction-sections",
+            "-fdata-sections",
+            "-march=znver5",
+            "-mtune=znver5",
+            "-DSIXDB_TUNE_GENERIC=0",
+            "-DSIXDB_TUNE_GRANITE_RAPIDS=0",
+            "-DSIXDB_TUNE_ZEN4=0",
+            "-DSIXDB_TUNE_ZEN5=1",
+            "-DSIXDB_TUNE_NEOVERSE_V2=0",
+            "-DSIXDB_TUNE_NEOVERSE_V3=0",
+            "-ffile-prefix-map=/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-r4/source=/sixdb",
+            "-I",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-r4/source/ikea/include",
+            "-MD",
+            "-MF",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-r4/avx512-zen5/extra_tuple_2.d",
+            "-c",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-r4/source/workbench/spikes/filter-composition/extra_tuple_2.cpp",
+            "-o",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-r4/avx512-zen5/extra_tuple_2.o"
+          ],
+          "dependency_digests": {
+            "after": {
+              "project": {
+                "count": 80,
+                "sha256": "1c96c6fb26d77d59651e6b66e155cfec96d374a92cfd27fd4895dc31d5ab45fd"
+              },
+              "system": {
+                "count": 415,
+                "sha256": "d738e7a5d35faa9b140cb5583c2f59cf7801f37dbd74b38845f1934237466bb5"
+              }
+            },
+            "before": {
+              "project": {
+                "count": 80,
+                "sha256": "b5bf1fea5cc19044e30e3d72946d9386897312b0078d314af4ae3e66800b4e37"
+              },
+              "system": {
+                "count": 415,
+                "sha256": "d738e7a5d35faa9b140cb5583c2f59cf7801f37dbd74b38845f1934237466bb5"
+              }
+            }
+          },
+          "source_path_correspondence": {
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/handle-boundaries/sources/final16": "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/handle-boundaries/sources/final16"
+          },
+          "strict_counts": {
+            "constants": {
+              "changed": 1,
+              "same": 8
+            },
+            "functions": {
+              "changed": 9,
+              "same": 7
+            },
+            "unwind": {
+              "changed": 4,
+              "same": 2
+            }
+          }
+        },
+        "producer": {
+          "after_object_sha256": "c91ceaaa3f76e64710ea7db6776d8e732d7704b22c01ccce03304f809a197e61",
+          "before_object_sha256": "89b89c33ec2b62174e41c865809f5516e0fcc919e1604f67882cb744d9c85a25",
+          "changed_project_dependencies": {
+            "ikea/include/ikea/tuplepack/filter.h": [
+              "aa91ba8e4339a53d393c40a9c298665e6bbf80672a6540821bbbf221bbc52904",
+              "cb2ab9b2d9c4cb4b86fedee9bac36edca1b1a5758a95ed9b75ac0ef277843b8e"
+            ]
+          },
+          "command": [
+            "clang++-21",
+            "-g",
+            "-Wall",
+            "-Wextra",
+            "-Wpedantic",
+            "-DHB_PREPARED_PREDICATE=1",
+            "--target=x86_64-linux-gnu",
+            "--gcc-toolchain=/usr",
+            "-std=c++23",
+            "-O3",
+            "-fno-fast-math",
+            "-ffp-contract=off",
+            "-fdenormal-fp-math=ieee",
+            "-fvisibility=hidden",
+            "-fvisibility-inlines-hidden",
+            "-ffunction-sections",
+            "-fdata-sections",
+            "-march=znver5",
+            "-mtune=znver5",
+            "-DSIXDB_TUNE_GENERIC=0",
+            "-DSIXDB_TUNE_GRANITE_RAPIDS=0",
+            "-DSIXDB_TUNE_ZEN4=0",
+            "-DSIXDB_TUNE_ZEN5=1",
+            "-DSIXDB_TUNE_NEOVERSE_V2=0",
+            "-DSIXDB_TUNE_NEOVERSE_V3=0",
+            "-ffile-prefix-map=/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-r4/source=/sixdb",
+            "-I",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-r4/source/ikea/include",
+            "-MD",
+            "-MF",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-r4/avx512-zen5/producer.d",
+            "-c",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-r4/source/workbench/spikes/ikea-composition/handle-boundaries/producer.cpp",
+            "-o",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-r4/avx512-zen5/producer.o"
+          ],
+          "dependency_digests": {
+            "after": {
+              "project": {
+                "count": 71,
+                "sha256": "385c311ab96d280d40f6c672b86e418cfcc19d1afc753f719d7ffa55a61506f2"
+              },
+              "system": {
+                "count": 304,
+                "sha256": "3ca22837747b9943050083460e916031d4ffb0e4f931e3cce940c6094e43184d"
+              }
+            },
+            "before": {
+              "project": {
+                "count": 71,
+                "sha256": "0b9b94b3aaf30b96c9caafec20c84695ba2229afd64f39a42afee92d4555162f"
+              },
+              "system": {
+                "count": 304,
+                "sha256": "3ca22837747b9943050083460e916031d4ffb0e4f931e3cce940c6094e43184d"
+              }
+            }
+          },
+          "source_path_correspondence": {
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/handle-boundaries/sources/final16": "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/handle-boundaries/sources/final16"
+          },
+          "strict_counts": {
+            "constants": {
+              "changed": 1,
+              "same": 0
+            },
+            "functions": {
+              "changed": 3,
+              "same": 12
+            },
+            "unwind": {
+              "changed": 1,
+              "same": 0
+            }
+          }
+        }
+      },
+      "whole_functions": {
+        "hb::checked_filter_command(ikea::tuplepack::read_plan<64u, 16u> const&, ikea::tuplepack::basic_view<std::byte const> const&, unsigned long, unsigned long, unsigned long)": {
+          "after": {
+            "bytes": 166,
+            "instructions": 51,
+            "literal_function_sha256": "59b59273175cdff17128da7f9332f08b92f1702aeeeac3784c359390dd4057fe",
+            "ordinary_calls": 2,
+            "stack_adjustments": [
+              "pushq\t%r15",
+              "pushq\t%r14",
+              "pushq\t%rbx",
+              "subq\t$0x20, %rsp",
+              "addq\t$0x20, %rsp",
+              "popq\t%rbx",
+              "popq\t%r14",
+              "popq\t%r15"
+            ],
+            "static_stack_references": 7
+          },
+          "before": {
+            "bytes": 177,
+            "instructions": 53,
+            "literal_function_sha256": "a6c627cf5a21b75343bec91d1a2a9bbf99eef17fe45df21e7614ef67ec4f32ad",
+            "ordinary_calls": 2,
+            "stack_adjustments": [
+              "pushq\t%r15",
+              "pushq\t%r14",
+              "pushq\t%rbx",
+              "subq\t$0x40, %rsp",
+              "addq\t$0x40, %rsp",
+              "popq\t%rbx",
+              "popq\t%r14",
+              "popq\t%r15"
+            ],
+            "static_stack_references": 9
+          }
+        },
+        "hb::consume_filter(ikea::tuplepack::predicate<64u, std::byte const, 16u>, unsigned long, unsigned long, unsigned long)": {
+          "after": {
+            "bytes": 1134,
+            "instructions": 259,
+            "literal_function_sha256": "e98fded81be7b917235c9b15759493954c1fe0bf341481d8e1e372eaae50bfff",
+            "ordinary_calls": 0,
+            "stack_adjustments": [
+              "pushq\t%rbp",
+              "pushq\t%r15",
+              "pushq\t%r14",
+              "pushq\t%r13",
+              "pushq\t%r12",
+              "pushq\t%rbx",
+              "popq\t%rbx",
+              "popq\t%r12",
+              "popq\t%r13",
+              "popq\t%r14",
+              "popq\t%r15",
+              "popq\t%rbp"
+            ],
+            "static_stack_references": 2
+          },
+          "before": {
+            "bytes": 11749,
+            "instructions": 2725,
+            "literal_function_sha256": "911204aed5e817b3cfe23917a5a04eb76a727c67e0e712403f551889bb0f2454",
+            "ordinary_calls": 0,
+            "stack_adjustments": [
+              "pushq\t%rbp",
+              "pushq\t%r15",
+              "pushq\t%r14",
+              "pushq\t%r13",
+              "pushq\t%r12",
+              "pushq\t%rbx",
+              "popq\t%rbx",
+              "popq\t%r12",
+              "popq\t%r13",
+              "popq\t%r14",
+              "popq\t%r15",
+              "popq\t%rbp"
+            ],
+            "static_stack_references": 22
+          }
+        },
+        "hb::crowded_filters(std::array<ikea::tuplepack::predicate<64u, std::byte const, 16u>, 7ul> const&, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long)": {
+          "after": {
+            "bytes": 328,
+            "instructions": 87,
+            "literal_function_sha256": "0fd3965efa855fe59ca439f5e8c03fd237c290010aa610c887deccf1f2506f2a",
+            "ordinary_calls": 7,
+            "stack_adjustments": [
+              "pushq\t%rbp",
+              "pushq\t%r15",
+              "pushq\t%r14",
+              "pushq\t%r13",
+              "pushq\t%r12",
+              "pushq\t%rbx",
+              "subq\t$0x28, %rsp",
+              "addq\t$0x28, %rsp",
+              "popq\t%rbx",
+              "popq\t%r12",
+              "popq\t%r13",
+              "popq\t%r14",
+              "popq\t%r15",
+              "popq\t%rbp"
+            ],
+            "static_stack_references": 16
+          },
+          "before": {
+            "bytes": 425,
+            "instructions": 101,
+            "literal_function_sha256": "389caa02bea6fc916981bb9011fcad3b657a6ca4622e1f63731737a3b866eda6",
+            "ordinary_calls": 7,
+            "stack_adjustments": [
+              "pushq\t%rbp",
+              "pushq\t%r15",
+              "pushq\t%r14",
+              "pushq\t%r13",
+              "pushq\t%r12",
+              "pushq\t%rbx",
+              "subq\t$0x38, %rsp",
+              "addq\t$0x38, %rsp",
+              "popq\t%rbx",
+              "popq\t%r12",
+              "popq\t%r13",
+              "popq\t%r14",
+              "popq\t%r15",
+              "popq\t%rbp"
+            ],
+            "static_stack_references": 30
+          }
+        },
+        "hb::make_filter(ikea::tuplepack::read_plan<64u, 16u> const&, ikea::tuplepack::basic_view<std::byte const> const&)": {
+          "after": {
+            "bytes": 80,
+            "instructions": 24,
+            "literal_function_sha256": "3bae537b2997738b7107b053d9567c38831d518c3fc5e569c944ca9339027def",
+            "ordinary_calls": 0,
+            "stack_adjustments": [],
+            "static_stack_references": 0
+          },
+          "before": {
+            "bytes": 84,
+            "instructions": 25,
+            "literal_function_sha256": "4af8572412d0e44aa5ed42fa8c3cf8ef42e0d8e79845c21e0fbfe95713446d89",
+            "ordinary_calls": 0,
+            "stack_adjustments": [],
+            "static_stack_references": 0
+          }
+        },
+        "hb::pass_predicate(ikea::tuplepack::predicate<64u, std::byte const, 16u>)": {
+          "after": {
+            "bytes": 7,
+            "instructions": 3,
+            "literal_function_sha256": "543b9fc92421aa14e6e2079c238b9b90a06066f2641c6a86a293ab1f60fa86b7",
+            "ordinary_calls": 0,
+            "stack_adjustments": [],
+            "static_stack_references": 0
+          },
+          "before": {
+            "bytes": 23,
+            "instructions": 6,
+            "literal_function_sha256": "be22cc81d3c3e81381726895d7dc90300083e3d505d5dde95637026d87dee5fc",
+            "ordinary_calls": 0,
+            "stack_adjustments": [],
+            "static_stack_references": 2
+          }
+        },
+        "void runtime::measure<void extras::run_extra<extras::Tuple<5u, (ikea::comparison)2>>(extras::Tuple<5u, (ikea::comparison)2>::Input const&, char const*)::'lambda'(unsigned int, unsigned int)>(runtime::Fixture const&, unsigned int, char const*, unsigned short, extras::Tuple<5u, (ikea::comparison)2>, char const*)": {
+          "after": {
+            "bytes": 13836,
+            "instructions": 2851,
+            "literal_function_sha256": "727a5ace0cae638c1e857aa3296084e06bf2c0f495e58c2cb4eb1f32c2f4424b",
+            "ordinary_calls": 3,
+            "stack_adjustments": [
+              "pushq\t%rbp",
+              "pushq\t%r15",
+              "pushq\t%r14",
+              "pushq\t%r13",
+              "pushq\t%r12",
+              "pushq\t%rbx",
+              "subq\t$0x108, %rsp            # imm = 0x108",
+              "pushq\t%rbx",
+              "pushq\t0xe8(%rsp)",
+              "addq\t$0x10, %rsp",
+              "addq\t$0x108, %rsp            # imm = 0x108",
+              "popq\t%rbx",
+              "popq\t%r12",
+              "popq\t%r13",
+              "popq\t%r14",
+              "popq\t%r15",
+              "popq\t%rbp"
+            ],
+            "static_stack_references": 444
+          },
+          "before": {
+            "bytes": 137225,
+            "instructions": 30128,
+            "literal_function_sha256": "aa23ebff5559eaeb492a4860ed6e20f91a7b3009f6ae625514d70beaf2ccef61",
+            "ordinary_calls": 3,
+            "stack_adjustments": [
+              "pushq\t%rbp",
+              "pushq\t%r15",
+              "pushq\t%r14",
+              "pushq\t%r13",
+              "pushq\t%r12",
+              "pushq\t%rbx",
+              "subq\t$0x108, %rsp            # imm = 0x108",
+              "pushq\t%rbx",
+              "pushq\t0xf0(%rsp)",
+              "addq\t$0x10, %rsp",
+              "addq\t$0x108, %rsp            # imm = 0x108",
+              "popq\t%rbx",
+              "popq\t%r12",
+              "popq\t%r13",
+              "popq\t%r14",
+              "popq\t%r15",
+              "popq\t%rbp"
+            ],
+            "static_stack_references": 2124
+          }
+        },
+        "void runtime::measure<void extras::run_extra<extras::Tuple<8u, (ikea::comparison)2>>(extras::Tuple<8u, (ikea::comparison)2>::Input const&, char const*)::'lambda'(unsigned int, unsigned int)>(runtime::Fixture const&, unsigned int, char const*, unsigned short, extras::Tuple<8u, (ikea::comparison)2>, char const*)": {
+          "after": {
+            "bytes": 13836,
+            "instructions": 2851,
+            "literal_function_sha256": "039744fce1c6ec69d29c085441d1de01291ad11fef9ba1e727c8aa460dafec99",
+            "ordinary_calls": 3,
+            "stack_adjustments": [
+              "pushq\t%rbp",
+              "pushq\t%r15",
+              "pushq\t%r14",
+              "pushq\t%r13",
+              "pushq\t%r12",
+              "pushq\t%rbx",
+              "subq\t$0x108, %rsp            # imm = 0x108",
+              "pushq\t%rbx",
+              "pushq\t0xe8(%rsp)",
+              "addq\t$0x10, %rsp",
+              "addq\t$0x108, %rsp            # imm = 0x108",
+              "popq\t%rbx",
+              "popq\t%r12",
+              "popq\t%r13",
+              "popq\t%r14",
+              "popq\t%r15",
+              "popq\t%rbp"
+            ],
+            "static_stack_references": 444
+          },
+          "before": {
+            "bytes": 137225,
+            "instructions": 30128,
+            "literal_function_sha256": "532e87947b991e2b581c91869d28515eb3930a8c7c44adc494a8ff3ee838dfec",
+            "ordinary_calls": 3,
+            "stack_adjustments": [
+              "pushq\t%rbp",
+              "pushq\t%r15",
+              "pushq\t%r14",
+              "pushq\t%r13",
+              "pushq\t%r12",
+              "pushq\t%rbx",
+              "subq\t$0x108, %rsp            # imm = 0x108",
+              "pushq\t%rbx",
+              "pushq\t0xf0(%rsp)",
+              "addq\t$0x10, %rsp",
+              "addq\t$0x108, %rsp            # imm = 0x108",
+              "popq\t%rbx",
+              "popq\t%r12",
+              "popq\t%r13",
+              "popq\t%r14",
+              "popq\t%r15",
+              "popq\t%rbp"
+            ],
+            "static_stack_references": 2124
+          }
+        }
+      }
+    },
+    "neon-v2": {
+      "census": {
+        "after": {
+          "checked_filter": {
+            "alignment": 8,
+            "size": 24,
+            "standard_layout": 1,
+            "trivial_copy": 1,
+            "trivial_destructor": 1,
+            "trivial_move": 1
+          },
+          "checked_reader": {
+            "alignment": 8,
+            "size": 24,
+            "standard_layout": 1,
+            "trivial_copy": 1,
+            "trivial_destructor": 1,
+            "trivial_move": 1
+          },
+          "predicate": {
+            "alignment": 8,
+            "size": 16,
+            "standard_layout": 1,
+            "trivial_copy": 1,
+            "trivial_destructor": 1,
+            "trivial_move": 1
+          },
+          "reader": {
+            "alignment": 8,
+            "size": 16,
+            "standard_layout": 1,
+            "trivial_copy": 1,
+            "trivial_destructor": 1,
+            "trivial_move": 1
+          }
+        },
+        "before": {
+          "checked_filter": {
+            "alignment": 8,
+            "size": 32,
+            "standard_layout": 1,
+            "trivial_copy": 1,
+            "trivial_destructor": 1,
+            "trivial_move": 1
+          },
+          "checked_reader": {
+            "alignment": 8,
+            "size": 24,
+            "standard_layout": 1,
+            "trivial_copy": 1,
+            "trivial_destructor": 1,
+            "trivial_move": 1
+          },
+          "predicate": {
+            "alignment": 8,
+            "size": 24,
+            "standard_layout": 1,
+            "trivial_copy": 1,
+            "trivial_destructor": 1,
+            "trivial_move": 1
+          },
+          "reader": {
+            "alignment": 8,
+            "size": 16,
+            "standard_layout": 1,
+            "trivial_copy": 1,
+            "trivial_destructor": 1,
+            "trivial_move": 1
+          }
+        }
+      },
+      "full_tight_independent8_path": {
+        "after": {
+          "instructions": 339,
+          "literal_function_sha256": "b71e1119a70a78f797c357754f01f6866ee27a57f2e73b8161b6ba4e307a0374",
+          "opcodes": {
+            "add": 12,
+            "addv": 16,
+            "and": 24,
+            "b": 8,
+            "b.eq": 1,
+            "b.hi": 8,
+            "b.ne": 16,
+            "bfi": 8,
+            "cbz": 8,
+            "cmhs": 8,
+            "cmp": 25,
+            "dup": 16,
+            "eor": 8,
+            "ext": 8,
+            "fmov": 16,
+            "ldp": 2,
+            "ldr": 52,
+            "ldrb": 16,
+            "ldrh": 2,
+            "ldur": 8,
+            "lsl": 24,
+            "lsr": 8,
+            "mov": 6,
+            "mul": 8,
+            "mvn": 8,
+            "stur": 8,
+            "sub": 7,
+            "ubfiz": 8
+          }
+        },
+        "before": {
+          "instructions": 379,
+          "literal_function_sha256": "c8c8f5171c0179bedbe210d88c1806ddf3fb26fb318da6b8e4a54fb2ccb8eee0",
+          "opcodes": {
+            "add": 18,
+            "addv": 16,
+            "and": 24,
+            "b": 16,
+            "b.eq": 1,
+            "b.hi": 8,
+            "b.ne": 16,
+            "bfi": 8,
+            "cbz": 8,
+            "cmhs": 8,
+            "cmp": 25,
+            "dup": 16,
+            "eor": 8,
+            "ext": 8,
+            "fmov": 16,
+            "ldp": 8,
+            "ldr": 72,
+            "ldrb": 16,
+            "ldrh": 8,
+            "ldur": 8,
+            "lsl": 24,
+            "lsr": 8,
+            "mul": 8,
+            "mvn": 8,
+            "stur": 8,
+            "sub": 7,
+            "ubfiz": 8
+          }
+        },
+        "scope": "Trace one specified static fast path in the complete maintained caller.\n\nThis does not execute or model timing. The selected path is a nonterminal\nindependent8 iteration, full activity, tight placement and in-domain RHS. It\nkeeps all actual predicates and addresses in the receipt and refuses an\nunexpected control-flow shape instead of following a speculative fallback.\n"
+      },
+      "objects": {
+        "caller": {
+          "after_object_sha256": "ef9e93eec7fd5f26e12db12eda5d33fab0879557ec10196cbae9d64e6f22b72a",
+          "before_object_sha256": "269c17155dab254d660d070c00e34becd460565ed98d50657339189a225c1125",
+          "changed_project_dependencies": {
+            "ikea/include/ikea/tuplepack/filter.h": [
+              "aa91ba8e4339a53d393c40a9c298665e6bbf80672a6540821bbbf221bbc52904",
+              "cb2ab9b2d9c4cb4b86fedee9bac36edca1b1a5758a95ed9b75ac0ef277843b8e"
+            ]
+          },
+          "command": [
+            "clang++-21",
+            "-g",
+            "-Wall",
+            "-Wextra",
+            "-Wpedantic",
+            "-DHB_PREPARED_PREDICATE=1",
+            "--target=aarch64-linux-gnu",
+            "--gcc-toolchain=/usr",
+            "-std=c++23",
+            "-O3",
+            "-fno-fast-math",
+            "-ffp-contract=off",
+            "-fdenormal-fp-math=ieee",
+            "-fvisibility=hidden",
+            "-fvisibility-inlines-hidden",
+            "-ffunction-sections",
+            "-fdata-sections",
+            "-march=armv8-a+simd",
+            "-mtune=neoverse-v2",
+            "-DSIXDB_TUNE_GENERIC=0",
+            "-DSIXDB_TUNE_GRANITE_RAPIDS=0",
+            "-DSIXDB_TUNE_ZEN4=0",
+            "-DSIXDB_TUNE_ZEN5=0",
+            "-DSIXDB_TUNE_NEOVERSE_V2=1",
+            "-DSIXDB_TUNE_NEOVERSE_V3=0",
+            "-ffile-prefix-map=/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-r4/source=/sixdb",
+            "-I",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-r4/source/ikea/include",
+            "-MD",
+            "-MF",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-r4/neon-v2/caller.d",
+            "-c",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-r4/source/workbench/spikes/ikea-composition/handle-boundaries/caller.cpp",
+            "-o",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-r4/neon-v2/caller.o"
+          ],
+          "dependency_digests": {
+            "after": {
+              "project": {
+                "count": 70,
+                "sha256": "0eedd7dcb17b0feba4a5f258cdd98bd0c58e42766c333163da78697fa1f2d375"
+              },
+              "system": {
+                "count": 185,
+                "sha256": "dacacc7e3e8948c4c5e725ab1122625ff5dbd35d569f50c3b569de7d703fbfaf"
+              }
+            },
+            "before": {
+              "project": {
+                "count": 70,
+                "sha256": "a6b21619e4489b45fa89d120ec232780e6db9d9b71c43ec7526002f16896c155"
+              },
+              "system": {
+                "count": 185,
+                "sha256": "dacacc7e3e8948c4c5e725ab1122625ff5dbd35d569f50c3b569de7d703fbfaf"
+              }
+            }
+          },
+          "source_path_correspondence": {
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/handle-boundaries/sources/final16": "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/handle-boundaries/sources/final16"
+          },
+          "strict_counts": {
+            "constants": {
+              "changed": 0,
+              "same": 0
+            },
+            "functions": {
+              "changed": 2,
+              "same": 5
+            },
+            "unwind": {
+              "changed": 1,
+              "same": 0
+            }
+          }
+        },
+        "extra_tuple_2": {
+          "after_object_sha256": "1852989e9fcf67d2f380722a14b03c8ad0a8f4d0418f86b0c45cadcad1b459fd",
+          "before_object_sha256": "027190d749627724c98bad397af9a222a351ff4d1c4669b9e7c1bf0a16c99a58",
+          "changed_project_dependencies": {
+            "ikea/include/ikea/tuplepack/filter.h": [
+              "aa91ba8e4339a53d393c40a9c298665e6bbf80672a6540821bbbf221bbc52904",
+              "cb2ab9b2d9c4cb4b86fedee9bac36edca1b1a5758a95ed9b75ac0ef277843b8e"
+            ]
+          },
+          "command": [
+            "clang++-21",
+            "-DFILTER_SEAMS_NO_MAIN=1",
+            "-fno-vectorize",
+            "-fno-slp-vectorize",
+            "-g",
+            "-Wall",
+            "-Wextra",
+            "-Wpedantic",
+            "-DHB_PREPARED_PREDICATE=1",
+            "--target=aarch64-linux-gnu",
+            "--gcc-toolchain=/usr",
+            "-std=c++23",
+            "-O3",
+            "-fno-fast-math",
+            "-ffp-contract=off",
+            "-fdenormal-fp-math=ieee",
+            "-fvisibility=hidden",
+            "-fvisibility-inlines-hidden",
+            "-ffunction-sections",
+            "-fdata-sections",
+            "-march=armv8-a+simd",
+            "-mtune=neoverse-v2",
+            "-DSIXDB_TUNE_GENERIC=0",
+            "-DSIXDB_TUNE_GRANITE_RAPIDS=0",
+            "-DSIXDB_TUNE_ZEN4=0",
+            "-DSIXDB_TUNE_ZEN5=0",
+            "-DSIXDB_TUNE_NEOVERSE_V2=1",
+            "-DSIXDB_TUNE_NEOVERSE_V3=0",
+            "-ffile-prefix-map=/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-r4/source=/sixdb",
+            "-I",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-r4/source/ikea/include",
+            "-MD",
+            "-MF",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-r4/neon-v2/extra_tuple_2.d",
+            "-c",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-r4/source/workbench/spikes/filter-composition/extra_tuple_2.cpp",
+            "-o",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-r4/neon-v2/extra_tuple_2.o"
+          ],
+          "dependency_digests": {
+            "after": {
+              "project": {
+                "count": 79,
+                "sha256": "c0d34be132bd0a76a6fb19583c5a760da6d4f7f2889992476f07734cfa38ca6d"
+              },
+              "system": {
+                "count": 295,
+                "sha256": "58fa8ac196d56bcac65e58fd2bd6c0f52e25a0839673083a9b0e9f3b86e7ef8c"
+              }
+            },
+            "before": {
+              "project": {
+                "count": 79,
+                "sha256": "2fccc0eadec0ffa6182f1ab96ff8421909de554e49b039b8753e78c41b4301b1"
+              },
+              "system": {
+                "count": 295,
+                "sha256": "58fa8ac196d56bcac65e58fd2bd6c0f52e25a0839673083a9b0e9f3b86e7ef8c"
+              }
+            }
+          },
+          "source_path_correspondence": {
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/handle-boundaries/sources/final16": "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/handle-boundaries/sources/final16"
+          },
+          "strict_counts": {
+            "constants": {
+              "changed": 0,
+              "same": 7
+            },
+            "functions": {
+              "changed": 9,
+              "same": 8
+            },
+            "unwind": {
+              "changed": 4,
+              "same": 2
+            }
+          }
+        },
+        "producer": {
+          "after_object_sha256": "c4fcd36fc59707c994c2d0361b4a4129d7426a9fabc5127e97b36c86fc7119bc",
+          "before_object_sha256": "881d9dbd972f7ae332d2f76861699f717952db5b687aac167fa761c239c7ea7b",
+          "changed_project_dependencies": {
+            "ikea/include/ikea/tuplepack/filter.h": [
+              "aa91ba8e4339a53d393c40a9c298665e6bbf80672a6540821bbbf221bbc52904",
+              "cb2ab9b2d9c4cb4b86fedee9bac36edca1b1a5758a95ed9b75ac0ef277843b8e"
+            ]
+          },
+          "command": [
+            "clang++-21",
+            "-g",
+            "-Wall",
+            "-Wextra",
+            "-Wpedantic",
+            "-DHB_PREPARED_PREDICATE=1",
+            "--target=aarch64-linux-gnu",
+            "--gcc-toolchain=/usr",
+            "-std=c++23",
+            "-O3",
+            "-fno-fast-math",
+            "-ffp-contract=off",
+            "-fdenormal-fp-math=ieee",
+            "-fvisibility=hidden",
+            "-fvisibility-inlines-hidden",
+            "-ffunction-sections",
+            "-fdata-sections",
+            "-march=armv8-a+simd",
+            "-mtune=neoverse-v2",
+            "-DSIXDB_TUNE_GENERIC=0",
+            "-DSIXDB_TUNE_GRANITE_RAPIDS=0",
+            "-DSIXDB_TUNE_ZEN4=0",
+            "-DSIXDB_TUNE_ZEN5=0",
+            "-DSIXDB_TUNE_NEOVERSE_V2=1",
+            "-DSIXDB_TUNE_NEOVERSE_V3=0",
+            "-ffile-prefix-map=/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-r4/source=/sixdb",
+            "-I",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-r4/source/ikea/include",
+            "-MD",
+            "-MF",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-r4/neon-v2/producer.d",
+            "-c",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-r4/source/workbench/spikes/ikea-composition/handle-boundaries/producer.cpp",
+            "-o",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-r4/neon-v2/producer.o"
+          ],
+          "dependency_digests": {
+            "after": {
+              "project": {
+                "count": 70,
+                "sha256": "5d600461dfa3693c3474cd1a90870fb3490548086e029131f2aaefbeb5b45b1e"
+              },
+              "system": {
+                "count": 185,
+                "sha256": "dacacc7e3e8948c4c5e725ab1122625ff5dbd35d569f50c3b569de7d703fbfaf"
+              }
+            },
+            "before": {
+              "project": {
+                "count": 70,
+                "sha256": "2b987123a829ef575f8418e1db8e1893b33e1d22ae42697c9e863b8aaca9844b"
+              },
+              "system": {
+                "count": 185,
+                "sha256": "dacacc7e3e8948c4c5e725ab1122625ff5dbd35d569f50c3b569de7d703fbfaf"
+              }
+            }
+          },
+          "source_path_correspondence": {
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/handle-boundaries/sources/final16": "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/handle-boundaries/sources/final16"
+          },
+          "strict_counts": {
+            "constants": {
+              "changed": 1,
+              "same": 1
+            },
+            "functions": {
+              "changed": 3,
+              "same": 12
+            },
+            "unwind": {
+              "changed": 1,
+              "same": 0
+            }
+          }
+        }
+      },
+      "whole_functions": {
+        "hb::checked_filter_command(ikea::tuplepack::read_plan<64u, 16u> const&, ikea::tuplepack::basic_view<std::byte const> const&, unsigned long, unsigned long, unsigned long)": {
+          "after": {
+            "bytes": 208,
+            "instructions": 52,
+            "literal_function_sha256": "b81655dccc3be51defb584e291c76553ad522789c5d1d6fffe414251c5811e5e",
+            "ordinary_calls": 2,
+            "stack_adjustments": [
+              "sub\tsp, sp, #0x50",
+              "add\tsp, sp, #0x50"
+            ],
+            "static_stack_references": 9
+          },
+          "before": {
+            "bytes": 224,
+            "instructions": 56,
+            "literal_function_sha256": "5c122137b801f5fa48174448565bb67bebe870d69a5ceaae30309f3c8e169bd5",
+            "ordinary_calls": 2,
+            "stack_adjustments": [
+              "sub\tsp, sp, #0x70",
+              "add\tsp, sp, #0x70"
+            ],
+            "static_stack_references": 12
+          }
+        },
+        "hb::consume_filter(ikea::tuplepack::predicate<64u, std::byte const, 16u>, unsigned long, unsigned long, unsigned long)": {
+          "after": {
+            "bytes": 884,
+            "instructions": 221,
+            "literal_function_sha256": "15c09abfa28b620f7975a6e8e18f3dbe91f5ca47b0f0d45f1b43ac4ca2154233",
+            "ordinary_calls": 0,
+            "stack_adjustments": [
+              "stp\tx20, x19, [sp, #-0x10]!",
+              "ldp\tx20, x19, [sp], #0x10",
+              "ldp\tx20, x19, [sp], #0x10"
+            ],
+            "static_stack_references": 3
+          },
+          "before": {
+            "bytes": 10352,
+            "instructions": 2588,
+            "literal_function_sha256": "27ed245737277b3212ae0436ae5d7b46a90a194d95a1d3a364e5b565d5354694",
+            "ordinary_calls": 0,
+            "stack_adjustments": [
+              "stp\tx20, x19, [sp, #-0x10]!",
+              "ldp\tx20, x19, [sp], #0x10",
+              "ldp\tx20, x19, [sp], #0x10",
+              "ldp\tx20, x19, [sp], #0x10"
+            ],
+            "static_stack_references": 4
+          }
+        },
+        "hb::crowded_filters(std::array<ikea::tuplepack::predicate<64u, std::byte const, 16u>, 7ul> const&, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long)": {
+          "after": {
+            "bytes": 308,
+            "instructions": 77,
+            "literal_function_sha256": "4f2d2cd655163eb289823b6f3f99972b2665329cf89e9878a75a9f7151430f2c",
+            "ordinary_calls": 7,
+            "stack_adjustments": [
+              "sub\tsp, sp, #0x70",
+              "add\tsp, sp, #0x70"
+            ],
+            "static_stack_references": 14
+          },
+          "before": {
+            "bytes": 404,
+            "instructions": 101,
+            "literal_function_sha256": "65b32614a9985747461df8105a1f16387398f2924e8601c174459d39f85a37e1",
+            "ordinary_calls": 7,
+            "stack_adjustments": [
+              "sub\tsp, sp, #0x150",
+              "add\tsp, sp, #0x150"
+            ],
+            "static_stack_references": 22
+          }
+        },
+        "hb::make_filter(ikea::tuplepack::read_plan<64u, 16u> const&, ikea::tuplepack::basic_view<std::byte const> const&)": {
+          "after": {
+            "bytes": 96,
+            "instructions": 24,
+            "literal_function_sha256": "7673cac9fa119307cebadca5ee913e2ab957cacd0464672d3d9c8a4b409508be",
+            "ordinary_calls": 0,
+            "stack_adjustments": [],
+            "static_stack_references": 0
+          },
+          "before": {
+            "bytes": 96,
+            "instructions": 24,
+            "literal_function_sha256": "168e10cf2cec4aaa984fdec8aad7b06329d0581ca4095b5e4abd9f6f113b4f22",
+            "ordinary_calls": 0,
+            "stack_adjustments": [],
+            "static_stack_references": 0
+          }
+        },
+        "hb::pass_predicate(ikea::tuplepack::predicate<64u, std::byte const, 16u>)": {
+          "after": {
+            "bytes": 4,
+            "instructions": 1,
+            "literal_function_sha256": "490b8dad91d2a9aa23883306fb487ecd50cc60c69db287b89aeaf1e5f9b2f1c6",
+            "ordinary_calls": 0,
+            "stack_adjustments": [],
+            "static_stack_references": 0
+          },
+          "before": {
+            "bytes": 20,
+            "instructions": 5,
+            "literal_function_sha256": "5c65807f319aa5939991cee6b29362c7228e75d9793ba4df4a1bab9e874b5f99",
+            "ordinary_calls": 0,
+            "stack_adjustments": [],
+            "static_stack_references": 0
+          }
+        },
+        "void runtime::measure<void extras::run_extra<extras::Tuple<5u, (ikea::comparison)2>>(extras::Tuple<5u, (ikea::comparison)2>::Input const&, char const*)::'lambda'(unsigned int, unsigned int)>(runtime::Fixture const&, unsigned int, char const*, unsigned short, extras::Tuple<5u, (ikea::comparison)2>, char const*)": {
+          "after": {
+            "bytes": 9660,
+            "instructions": 2415,
+            "literal_function_sha256": "b71e1119a70a78f797c357754f01f6866ee27a57f2e73b8161b6ba4e307a0374",
+            "ordinary_calls": 3,
+            "stack_adjustments": [
+              "sub\tsp, sp, #0x110",
+              "add\tsp, sp, #0x110"
+            ],
+            "static_stack_references": 36
+          },
+          "before": {
+            "bytes": 102968,
+            "instructions": 25742,
+            "literal_function_sha256": "c8c8f5171c0179bedbe210d88c1806ddf3fb26fb318da6b8e4a54fb2ccb8eee0",
+            "ordinary_calls": 3,
+            "stack_adjustments": [
+              "sub\tsp, sp, #0x110",
+              "add\tsp, sp, #0x110"
+            ],
+            "static_stack_references": 54
+          }
+        },
+        "void runtime::measure<void extras::run_extra<extras::Tuple<8u, (ikea::comparison)2>>(extras::Tuple<8u, (ikea::comparison)2>::Input const&, char const*)::'lambda'(unsigned int, unsigned int)>(runtime::Fixture const&, unsigned int, char const*, unsigned short, extras::Tuple<8u, (ikea::comparison)2>, char const*)": {
+          "after": {
+            "bytes": 9660,
+            "instructions": 2415,
+            "literal_function_sha256": "de8f547063e5fca666abfa61908c31242dce777143f689c62379ccf733d8e8ae",
+            "ordinary_calls": 3,
+            "stack_adjustments": [
+              "sub\tsp, sp, #0x110",
+              "add\tsp, sp, #0x110"
+            ],
+            "static_stack_references": 36
+          },
+          "before": {
+            "bytes": 102968,
+            "instructions": 25742,
+            "literal_function_sha256": "88843f4f78fe9098dc7740f053ed967d4d9d1051aec916726284268e369ac3cc",
+            "ordinary_calls": 3,
+            "stack_adjustments": [
+              "sub\tsp, sp, #0x110",
+              "add\tsp, sp, #0x110"
+            ],
+            "static_stack_references": 54
+          }
+        }
+      }
+    }
+  },
+  "retained_scope": "Historical R4 diagnostic keeps the N template and qualified sparse64 behavior. Final reduced type plus strict access are a separately frozen pair; no timing inference across endpoints.",
+  "runner_sha256": "8c55914e40b42e83b9f06309266fa6831174760d3e8c5d83edfa1c457cbb7f5a",
+  "scope": "Inspect a copied one-code predicate over frozen R4, without live API changes.\n\nThe isolated handle retains only its named view pointer and {offset,shift,width}.\nScalar and full-tight algorithms stay encoded; the fallback reuses the existing\none-byte gather and compares encoded bytes rather than generic decoded packets.\nCurrent qualified sparse64 NEON/common-allocation behavior is preserved pending\nthe independent access-contract audit. This is emitted-code evidence, not timing.\n",
+  "source_manifest_sha256": "8671fdabb8648f65b32d9a15155504333bba6ba428c8cbc82f173f8776ee5181",
+  "source_patch": "--- r4/ikea/include/ikea/tuplepack/filter.h\n+++ projection/ikea/include/ikea/tuplepack/filter.h\n@@ -6,15 +6,14 @@\n \n namespace ikea::tuplepack {\n /// Prepared single-code comparison in original-row coordinates. Copies the\n-/// reader's plan/view pointers and the code projection, so the reader wrapper\n-/// may expire. The named plan/view and their values stay stable through use.\n-/// Prepare once for repeated filters; general readers retain only two pointers.\n+/// code projection and named view pointer. Plan/reader may expire after bind;\n+/// the named view and its values stay stable through use. Isolated control.\n template <unsigned N, class Byte, unsigned Rows = 1> class predicate {\n-    reader<N, Byte, Rows> read_;\n+    const basic_view<Byte>* source_;\n     code code_;\n     template <unsigned, class, unsigned> friend class reader;\n     explicit predicate(const reader<N, Byte, Rows>& source)\n-        : read_(source), code_(source.plan().controls().codes[0]) {}\n+        : source_(&source.source()), code_(source.plan().controls().codes[0]) {}\n \n   public:\n     static constexpr unsigned rows = Rows;\n@@ -24,7 +23,7 @@\n             return std::unexpected(error::map);\n         return predicate(source);\n     }\n-    std::size_t size() const noexcept { return read_.size(); }\n+    std::size_t size() const noexcept { return source_->size(); }\n     template <comparison Op>\n     /// Requires first <= source size, activity within Rows, and every active\n     /// row in bounds. Empty activity requires no payload storage.\n@@ -38,15 +37,15 @@\n             return ikea::compare<Op>(0, rhs) ? active : 0;\n         if constexpr (Rows == 1) {\n             const unsigned encoded =\n-                ikea::to_u8(read_.source().row_unchecked(first))[code_.offset] & (limit << code_.shift);\n+                ikea::to_u8((*source_).row_unchecked(first))[code_.offset] & (limit << code_.shift);\n             return ikea::compare<Op>(encoded, rhs << code_.shift) ? active : 0;\n         }\n #if defined(__aarch64__) || defined(__AVX2__)\n         // A whole tight byte-column admits an encoded comparison. The shift\n         // is order-preserving; mask away neighboring fields, not the query.\n         if constexpr (Rows >= 16) {\n-            if (active == detail::all_rows<Rows> && read_.source().stride() == 1) {\n-                const auto* p = ikea::to_u8(read_.source().row_unchecked(first));\n+            if (active == detail::all_rows<Rows> && (*source_).stride() == 1) {\n+                const auto* p = ikea::to_u8((*source_).row_unchecked(first));\n                 const auto mask = limit << code_.shift;\n                 const auto query = rhs << code_.shift;\n #if defined(__aarch64__)\n@@ -86,13 +85,61 @@\n             }\n         }\n #endif\n-        return author::filter_values<Op, N>(detail::read_native(read_.plan(), read_.source(), first, active), rhs, active);\n+        // One admitted code needs no packet-order shuffle. The existing\n+        // transfer machinery retains tight/masked/common-window paths and\n+        // exact active-byte gathers for general strided placement.\n+        detail::packet_placement place;\n+        place.first = code_.offset;\n+        place.count = 1;\n+        const auto base = ikea::to_u8(source_->row_unchecked(first));\n+        const auto stride = source_->stride();\n+        const auto value = native::packet_detail::gather_bound<Rows>(\n+            place, [&](unsigned row) { return base + row * stride; }, active, stride);\n+        const auto mask = limit << code_.shift;\n+        const auto query = rhs << code_.shift;\n+#if defined(__aarch64__)\n+        std::uint64_t bits = ikea::detail::filter::bits<1, Op>(\n+            vandq_u8(value.a, vdupq_n_u8(mask)), query);\n+        if constexpr (Rows > 16)\n+            bits |= std::uint64_t(ikea::detail::filter::bits<1, Op>(\n+                vandq_u8(value.b, vdupq_n_u8(mask)), query)) << 16;\n+        if constexpr (Rows > 32) {\n+            bits |= std::uint64_t(ikea::detail::filter::bits<1, Op>(\n+                vandq_u8(value.c, vdupq_n_u8(mask)), query)) << 32;\n+            bits |= std::uint64_t(ikea::detail::filter::bits<1, Op>(\n+                vandq_u8(value.d, vdupq_n_u8(mask)), query)) << 48;\n+        }\n+#elif defined(__AVX512VBMI__)\n+        std::uint64_t bits;\n+        if constexpr (Rows <= 16)\n+            bits = ikea::detail::filter::bits<1, Op>(\n+                _mm_and_si128(_mm512_castsi512_si128(value), _mm_set1_epi8(mask)), query);\n+        else if constexpr (Rows <= 32)\n+            bits = ikea::detail::filter::bits<1, Op>(\n+                _mm256_and_si256(_mm512_castsi512_si256(value), _mm256_set1_epi8(mask)), query);\n+        else\n+            bits = ikea::detail::filter::bits<1, Op>(\n+                _mm512_and_si512(value, _mm512_set1_epi8(mask)), query);\n+#else\n+        std::uint64_t bits;\n+        if constexpr (Rows <= 16)\n+            bits = ikea::detail::filter::bits<1, Op>(\n+                _mm_and_si128(_mm256_castsi256_si128(value.a), _mm_set1_epi8(mask)), query);\n+        else {\n+            bits = ikea::detail::filter::bits<1, Op>(\n+                _mm256_and_si256(value.a, _mm256_set1_epi8(mask)), query);\n+            if constexpr (Rows > 32)\n+                bits |= std::uint64_t(ikea::detail::filter::bits<1, Op>(\n+                    _mm256_and_si256(value.b, _mm256_set1_epi8(mask)), query)) << 32;\n+        }\n+#endif\n+        return bits & active;\n     }\n     template <comparison Op>\n     [[nodiscard]] std::expected<std::uint64_t, error>\n     filter(std::size_t first, std::uint64_t rhs,\n            std::uint64_t active = detail::all_rows<Rows>) const {\n-        if (!detail::valid_window<Rows>(read_.size(), first, active))\n+        if (!detail::valid_window<Rows>(source_->size(), first, active))\n             return std::unexpected(error::range);\n         return filter_unchecked<Op>(first, rhs, active);\n     }\n"
+}

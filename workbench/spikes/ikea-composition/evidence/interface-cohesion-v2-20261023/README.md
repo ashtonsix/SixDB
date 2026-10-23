@@ -122,6 +122,24 @@ control, plus preserved granted codegen and explicit benchmark cases. R4's
 value/tail tests do not qualify that stronger physical-access promise; these
 historical receipts are not relabelled as proof of the correction.
 
+The [copied-projection candidate](predicate-projection-final.json) subsequently
+removes the predicate's plan borrow and irrelevant packet-capacity parameter.
+Its named view remains borrowed. On the three inspected targets the predicate
+shrinks from 24 to 16 bytes, while its checked result still uses return memory.
+The receipt retains 18 optimized producer/caller/maintained-fixture objects and
+the independent native NEON boundary proof, including actual protected expired
+plans, all 11 valid packet shapes, exact tails and unsigned query boundaries.
+Both final arms share the corrected strict access contract. Selected full-tight
+AVX-512 complete-caller work grows from 303 to 322 instructions. That includes
+eight rematerializations of the fixture's hash multiplier and changed mask
+extraction, while activity loads are hoisted across commands. It is not 19 extra
+predicate comparisons or a measured timing cause. Smaller state does not
+establish a speedup. The [earlier diagnostic](predicate-projection.json) used historical
+R4 access behavior and remains a separate source cut. The
+[native protocol](../../handle-boundaries/README.md#copied-projection-qualification)
+adds all core/header checks before timing; no native result or live adoption is
+claimed by these static receipts.
+
 The [unique local object archive](local-objects-artifact.json) preserves 195
 objects and their source/dependency/record context. Its
 [recovery account](local-objects-context.json) identifies the already durable

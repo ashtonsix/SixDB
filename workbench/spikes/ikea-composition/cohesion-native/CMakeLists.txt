@@ -20,3 +20,10 @@ target_link_libraries(ikea_cohesion_initialize PRIVATE ikea::tuplepack benchmark
 add_executable(ikea_predicate_blocks ../handle-boundaries/blocks.cpp)
 sixdb_target(ikea_predicate_blocks)
 target_link_libraries(ikea_predicate_blocks PRIVATE ikea::tuplepack benchmark::benchmark)
+
+if(COHESION_PROJECTION_CHECK)
+  add_executable(ikea_predicate_projection_check ../handle-boundaries/projection-check.cpp)
+  sixdb_target(ikea_predicate_projection_check)
+  target_compile_definitions(ikea_predicate_projection_check PRIVATE IKEA_PROJECTION_CANDIDATE=1)
+  target_link_libraries(ikea_predicate_projection_check PRIVATE ikea::tuplepack)
+endif()

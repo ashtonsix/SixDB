@@ -193,9 +193,9 @@ def plan(args, inputs, out, profiles):
     return {'builds': builds, 'duplicate_copies': copies, 'preflight': preflight, 'timings': timings}
 
 
-def run(args):
+def run(args, *, verify_inputs=verify, runner_path=None, scope=None):
     inputs, out = (ROOT / args.inputs).resolve(), args.output.resolve()
-    manifest = verify(inputs)
+    manifest = verify_inputs(inputs)
     assert manifest['timed_arms'] == ['before', 'after', 'duplicate']
     assert manifest['common_argv0'] == ARGV0 and manifest['trial_orders'] == [list(order) for order in ORDERS]
     profiles = args.profile or (['neon'] if os.uname().machine == 'aarch64' else ['avx2', 'avx512'])
@@ -206,8 +206,9 @@ def run(args):
     assert args.cpu in os.sched_getaffinity(0)
     assert args.jobs == 8 and args.trials == 5 and args.filter_iterations == 300000 and args.min_time >= 0.1
     out.mkdir(parents=True, exist_ok=True)
-    receipt = {'scope': __doc__, 'source_manifest_sha256': manifest['source_manifest_sha256'],
-        'candidate_sha256': CANDIDATE_SHA, 'runner_sha256': native.sha(Path(__file__).read_bytes()),
+    receipt = {'scope': scope or __doc__, 'source_manifest_sha256': manifest['source_manifest_sha256'],
+        'candidate_sha256': manifest['candidate_sha256'],
+        'runner_sha256': native.sha(Path(runner_path or __file__).read_bytes()),
         'timed_arms': manifest['timed_arms'], 'common_argv0': ARGV0, 'trial_orders': ORDERS,
         'shared_source_sha256': manifest['shared_source_sha256'], 'profiles': profiles, 'trials': args.trials,
         'cpu': args.cpu, 'allowed_cpus': sorted(os.sched_getaffinity(0)), 'build_jobs': args.jobs,

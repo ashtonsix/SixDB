@@ -1,0 +1,2440 @@
+{
+  "candidate_patch": "--- before/ikea/include/ikea/tuplepack/filter.h\n+++ after/ikea/include/ikea/tuplepack/filter.h\n@@ -1,30 +1,37 @@\n #pragma once\n+#include <bit>\n+#include <cstddef>\n+#include <cstdint>\n+#include <expected>\n+#include <utility>\n #include <ikea/comparison.h>\n-#include <ikea/tuplepack/author/filter.h>\n+#include <ikea/detail/filter/compare.h>\n #include <ikea/tuplepack/read.h>\n-#include <ikea/tuplepack/detail/native/read.h>\n+#include <ikea/tuplepack/detail/native/packet.h>\n \n namespace ikea::tuplepack {\n /// Prepared single-code comparison in original-row coordinates. Copies the\n-/// reader's plan/view pointers and the code projection, so the reader wrapper\n-/// may expire. The named plan/view and their values stay stable through use.\n-/// Prepare once for repeated filters; general readers retain only two pointers.\n-template <unsigned N, class Byte, unsigned Rows = 1> class predicate {\n-    reader<N, Byte, Rows> read_;\n+/// code projection and named view pointer. Plan/reader may expire after bind;\n+/// the named view and its values stay stable through use. No plan is retained.\n+template <class Byte, unsigned Rows = 1> class predicate {\n+    static_assert(Rows <= 64 && std::has_single_bit(Rows));\n+    const basic_view<Byte>* source_;\n     code code_;\n     template <unsigned, class, unsigned> friend class reader;\n+    template <unsigned N>\n     explicit predicate(const reader<N, Byte, Rows>& source)\n-        : read_(source), code_(source.plan().controls().codes[0]) {}\n+        : source_(&source.source()), code_(source.plan().controls().codes[0]) {}\n \n   public:\n     static constexpr unsigned rows = Rows;\n+    template <unsigned N>\n     [[nodiscard]] static std::expected<predicate, error>\n     bind(const reader<N, Byte, Rows>& source) {\n         if (source.plan().ordering().map_size() != 1 || !source.plan().read_bytes())\n             return std::unexpected(error::map);\n         return predicate(source);\n     }\n-    std::size_t size() const noexcept { return read_.size(); }\n+    std::size_t size() const noexcept { return source_->size(); }\n     template <comparison Op>\n     /// Requires first <= source size, activity within Rows, and every active\n     /// row in bounds. Empty activity requires no payload storage.\n@@ -38,15 +45,15 @@\n             return ikea::compare<Op>(0, rhs) ? active : 0;\n         if constexpr (Rows == 1) {\n             const unsigned encoded =\n-                ikea::to_u8(read_.source().row_unchecked(first))[code_.offset] & (limit << code_.shift);\n+                ikea::to_u8(source_->row_unchecked(first))[code_.offset] & (limit << code_.shift);\n             return ikea::compare<Op>(encoded, rhs << code_.shift) ? active : 0;\n         }\n #if defined(__aarch64__) || defined(__AVX2__)\n         // A whole tight byte-column admits an encoded comparison. The shift\n         // is order-preserving; mask away neighboring fields, not the query.\n         if constexpr (Rows >= 16) {\n-            if (active == detail::all_rows<Rows> && read_.source().stride() == 1) {\n-                const auto* p = ikea::to_u8(read_.source().row_unchecked(first));\n+            if (active == detail::all_rows<Rows> && source_->stride() == 1) {\n+                const auto* p = ikea::to_u8(source_->row_unchecked(first));\n                 const auto mask = limit << code_.shift;\n                 const auto query = rhs << code_.shift;\n #if defined(__aarch64__)\n@@ -86,13 +93,61 @@\n             }\n         }\n #endif\n-        return author::filter_values<Op, N>(detail::read_native(read_.plan(), read_.source(), first, active), rhs, active);\n+        // One admitted code needs no packet-order shuffle. The existing\n+        // transfer machinery retains tight and masked paths, with exact\n+        // active-byte gathers for strided placement and partial windows.\n+        detail::packet_placement place;\n+        place.first = code_.offset;\n+        place.count = 1;\n+        const auto base = ikea::to_u8(source_->row_unchecked(first));\n+        const auto stride = source_->stride();\n+        const auto value = native::packet_detail::gather_bound<Rows>(\n+            place, [&](unsigned row) { return base + row * stride; }, active, stride);\n+        const auto mask = limit << code_.shift;\n+        const auto query = rhs << code_.shift;\n+#if defined(__aarch64__)\n+        std::uint64_t bits = ikea::detail::filter::bits<1, Op>(\n+            vandq_u8(value.a, vdupq_n_u8(mask)), query);\n+        if constexpr (Rows > 16)\n+            bits |= std::uint64_t(ikea::detail::filter::bits<1, Op>(\n+                vandq_u8(value.b, vdupq_n_u8(mask)), query)) << 16;\n+        if constexpr (Rows > 32) {\n+            bits |= std::uint64_t(ikea::detail::filter::bits<1, Op>(\n+                vandq_u8(value.c, vdupq_n_u8(mask)), query)) << 32;\n+            bits |= std::uint64_t(ikea::detail::filter::bits<1, Op>(\n+                vandq_u8(value.d, vdupq_n_u8(mask)), query)) << 48;\n+        }\n+#elif defined(__AVX512VBMI__)\n+        std::uint64_t bits;\n+        if constexpr (Rows <= 16)\n+            bits = ikea::detail::filter::bits<1, Op>(\n+                _mm_and_si128(_mm512_castsi512_si128(value), _mm_set1_epi8(mask)), query);\n+        else if constexpr (Rows <= 32)\n+            bits = ikea::detail::filter::bits<1, Op>(\n+                _mm256_and_si256(_mm512_castsi512_si256(value), _mm256_set1_epi8(mask)), query);\n+        else\n+            bits = ikea::detail::filter::bits<1, Op>(\n+                _mm512_and_si512(value, _mm512_set1_epi8(mask)), query);\n+#else\n+        std::uint64_t bits;\n+        if constexpr (Rows <= 16)\n+            bits = ikea::detail::filter::bits<1, Op>(\n+                _mm_and_si128(_mm256_castsi256_si128(value.a), _mm_set1_epi8(mask)), query);\n+        else {\n+            bits = ikea::detail::filter::bits<1, Op>(\n+                _mm256_and_si256(value.a, _mm256_set1_epi8(mask)), query);\n+            if constexpr (Rows > 32)\n+                bits |= std::uint64_t(ikea::detail::filter::bits<1, Op>(\n+                    _mm256_and_si256(value.b, _mm256_set1_epi8(mask)), query)) << 32;\n+        }\n+#endif\n+        return bits & active;\n     }\n     template <comparison Op>\n     [[nodiscard]] std::expected<std::uint64_t, error>\n     filter(std::size_t first, std::uint64_t rhs,\n            std::uint64_t active = detail::all_rows<Rows>) const {\n-        if (!detail::valid_window<Rows>(read_.size(), first, active))\n+        if (!detail::valid_window<Rows>(source_->size(), first, active))\n             return std::unexpected(error::range);\n         return filter_unchecked<Op>(first, rhs, active);\n     }\n@@ -100,18 +155,16 @@\n \n template <unsigned N, class Byte, unsigned Rows>\n [[nodiscard]] auto bind_predicate(const reader<N, Byte, Rows>& source) {\n-    return predicate<N, Byte, Rows>::bind(source);\n+    return predicate<Byte, Rows>::bind(source);\n }\n template <unsigned N, class Byte, unsigned Rows>\n-[[nodiscard]] std::expected<predicate<N, Byte, Rows>, error>\n+[[nodiscard]] std::expected<predicate<Byte, Rows>, error>\n bind_predicate(const read_plan<N, Rows>& plan, const basic_view<Byte>& source) {\n     auto operation = bind_reader(plan, source);\n     if (!operation)\n         return std::unexpected(operation.error());\n     return bind_predicate(*operation);\n }\n-template <unsigned N, class Byte, unsigned Rows>\n-auto bind_predicate(const read_plan<N, Rows>&&, const basic_view<Byte>&) = delete;\n template <unsigned N, class Byte, unsigned Rows>\n auto bind_predicate(const read_plan<N, Rows>&, const basic_view<Byte>&&) = delete;\n \n@@ -128,6 +181,6 @@\n template <comparison Op>\n [[gnu::always_inline]] std::uint64_t reader<N, Byte, Rows>::filter_unchecked(\n     std::size_t first, std::uint64_t rhs, std::uint64_t active) const {\n-    return predicate<N, Byte, Rows>(*this).template filter_unchecked<Op>(first, rhs, active);\n+    return predicate<Byte, Rows>(*this).template filter_unchecked<Op>(first, rhs, active);\n }\n } // namespace ikea::tuplepack\n",
+  "compiler": "Ubuntu clang version 21.1.8 (++20251221033104+2078da43e25a-1~exp1~20251221153121.57)\nTarget: aarch64-unknown-linux-gnu\nThread model: posix\nInstalledDir: /usr/lib/llvm-21/bin\n",
+  "curation_helper_sha256": "6c968cf5c1713c835aa799e8726f3fcf078b5c3b203b62f9c4aec02ed94eeecb",
+  "different_files": {
+    "ikea/include/ikea/tuplepack/filter.h": [
+      "aa91ba8e4339a53d393c40a9c298665e6bbf80672a6540821bbbf221bbc52904",
+      "514e68275e3849bd58549b56f4f78fe81ee48ebce3df4cca830ba4091b568868"
+    ]
+  },
+  "limits": [
+    "18 paired object emissions plus10 native-check/library objects; configured Release O3/g, no NDEBUG or Werror. No compiler/timing overlap or worker launch by child.",
+    "Raw16B uses two general-purpose registers; expected24B continues to use a memory return.",
+    "Wholefunction counts include mutually exclusive paths; selected full-tight static trace is one nonterminal independent8 iteration, width5 less_equal.",
+    "AVX512 full-tight303 to322 static instructions remains a negative. No speed inference from smaller handles, code size or instruction counts.",
+    "Both final arms use strict active-unit access defaults. Historical R4 prototype common-window semantics and old N template are a separate diagnostic.",
+    "Views remain named/stable; copied plans may expire. Future direct layout/rank binder was researched separately, not implemented or measured."
+  ],
+  "native_check": {
+    "binary_sha256": "9eb84e04352abc631c17581689350582401fdff5386735883d087d91616d0c1a",
+    "flags_scope": "All ten objects freshly compiled with configured Release flags; local NEON correctness only.",
+    "link": [
+      "clang++-21",
+      "-Wl,--gc-sections",
+      "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-codegen/native-check/projection-check.o",
+      "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-codegen/native-check/tuplepack-layout.o",
+      "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-codegen/native-check/tuplepack-initialize.o",
+      "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-codegen/native-check/tuplepack-prepare.o",
+      "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-codegen/native-check/tuplepack-kernels.o",
+      "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-codegen/native-check/tuplepack-gpr.o",
+      "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-codegen/native-check/tuplepack-routes.o",
+      "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-codegen/native-check/tuplepack-packet_layout.o",
+      "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-codegen/native-check/tuplepack-packet_prepare.o",
+      "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-codegen/native-check/tuplepack-packet.o",
+      "-o",
+      "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-codegen/native-check/projection-check"
+    ],
+    "owning_objects": {
+      "projection-check.o": {
+        "command": [
+          "clang++-21",
+          "-g",
+          "-Wall",
+          "-Wextra",
+          "-Wpedantic",
+          "-DHB_PREPARED_PREDICATE=1",
+          "--target=aarch64-linux-gnu",
+          "--gcc-toolchain=/usr",
+          "-std=c++23",
+          "-O3",
+          "-fno-fast-math",
+          "-ffp-contract=off",
+          "-fdenormal-fp-math=ieee",
+          "-fvisibility=hidden",
+          "-fvisibility-inlines-hidden",
+          "-ffunction-sections",
+          "-fdata-sections",
+          "-march=armv8-a+simd",
+          "-mtune=neoverse-v2",
+          "-DSIXDB_TUNE_GENERIC=0",
+          "-DSIXDB_TUNE_GRANITE_RAPIDS=0",
+          "-DSIXDB_TUNE_ZEN4=0",
+          "-DSIXDB_TUNE_ZEN5=0",
+          "-DSIXDB_TUNE_NEOVERSE_V2=1",
+          "-DSIXDB_TUNE_NEOVERSE_V3=0",
+          "-ffile-prefix-map=/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-sources/after=/sixdb",
+          "-I",
+          "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-sources/after/ikea/include",
+          "-MD",
+          "-MF",
+          "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-codegen/native-check/projection-check.d",
+          "-c",
+          "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-codegen/native-check/projection-check-wrapper.cpp",
+          "-o",
+          "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-codegen/native-check/projection-check.o"
+        ],
+        "dependencies_sha256": "75860133247791228e6e8c37bde04bdefdd53e5dfebe72bb8c724a580341457c",
+        "dependency_count": 322,
+        "sha256": "79eff4790e6584dca2ba263fd1cf0d3cd94181ab416e08b230152b5f1f9e664d"
+      },
+      "tuplepack-gpr.o": {
+        "command": [
+          "clang++-21",
+          "-g",
+          "-Wall",
+          "-Wextra",
+          "-Wpedantic",
+          "--target=aarch64-linux-gnu",
+          "--gcc-toolchain=/usr",
+          "-std=c++23",
+          "-O3",
+          "-fno-fast-math",
+          "-ffp-contract=off",
+          "-fdenormal-fp-math=ieee",
+          "-fvisibility=hidden",
+          "-fvisibility-inlines-hidden",
+          "-ffunction-sections",
+          "-fdata-sections",
+          "-march=armv8-a+simd",
+          "-mtune=neoverse-v2",
+          "-DSIXDB_TUNE_GENERIC=0",
+          "-DSIXDB_TUNE_GRANITE_RAPIDS=0",
+          "-DSIXDB_TUNE_ZEN4=0",
+          "-DSIXDB_TUNE_ZEN5=0",
+          "-DSIXDB_TUNE_NEOVERSE_V2=1",
+          "-DSIXDB_TUNE_NEOVERSE_V3=0",
+          "-ffile-prefix-map=/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-sources/after=/sixdb",
+          "-I",
+          "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-sources/after/ikea/include",
+          "-MD",
+          "-MF",
+          "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-codegen/native-check/tuplepack-gpr.d",
+          "-c",
+          "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-sources/after/ikea/src/tuplepack/gpr.cpp",
+          "-o",
+          "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-codegen/native-check/tuplepack-gpr.o"
+        ],
+        "dependencies_sha256": "a1cc580644629d91f5819c186ff0494f13ab4ca661700d316a0a4b43eb3b05de",
+        "dependency_count": 172,
+        "sha256": "f2b6c93fa504da9095773536b67a292b96e28971ae10592a13092447dd4e4200"
+      },
+      "tuplepack-initialize.o": {
+        "command": [
+          "clang++-21",
+          "-g",
+          "-Wall",
+          "-Wextra",
+          "-Wpedantic",
+          "--target=aarch64-linux-gnu",
+          "--gcc-toolchain=/usr",
+          "-std=c++23",
+          "-O3",
+          "-fno-fast-math",
+          "-ffp-contract=off",
+          "-fdenormal-fp-math=ieee",
+          "-fvisibility=hidden",
+          "-fvisibility-inlines-hidden",
+          "-ffunction-sections",
+          "-fdata-sections",
+          "-march=armv8-a+simd",
+          "-mtune=neoverse-v2",
+          "-DSIXDB_TUNE_GENERIC=0",
+          "-DSIXDB_TUNE_GRANITE_RAPIDS=0",
+          "-DSIXDB_TUNE_ZEN4=0",
+          "-DSIXDB_TUNE_ZEN5=0",
+          "-DSIXDB_TUNE_NEOVERSE_V2=1",
+          "-DSIXDB_TUNE_NEOVERSE_V3=0",
+          "-ffile-prefix-map=/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-sources/after=/sixdb",
+          "-I",
+          "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-sources/after/ikea/include",
+          "-MD",
+          "-MF",
+          "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-codegen/native-check/tuplepack-initialize.d",
+          "-c",
+          "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-sources/after/ikea/src/tuplepack/initialize.cpp",
+          "-o",
+          "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-codegen/native-check/tuplepack-initialize.o"
+        ],
+        "dependencies_sha256": "bd8cf9fe22a5faf797f07abc93e1e19af705b79f3e642fdf6c6e10e026e8fe17",
+        "dependency_count": 192,
+        "sha256": "6d214064f8f0ea31e56ea0c2f5f3891fa84ed04cebfab4f54726bb28fbb0cb96"
+      },
+      "tuplepack-kernels.o": {
+        "command": [
+          "clang++-21",
+          "-g",
+          "-Wall",
+          "-Wextra",
+          "-Wpedantic",
+          "--target=aarch64-linux-gnu",
+          "--gcc-toolchain=/usr",
+          "-std=c++23",
+          "-O3",
+          "-fno-fast-math",
+          "-ffp-contract=off",
+          "-fdenormal-fp-math=ieee",
+          "-fvisibility=hidden",
+          "-fvisibility-inlines-hidden",
+          "-ffunction-sections",
+          "-fdata-sections",
+          "-march=armv8-a+simd",
+          "-mtune=neoverse-v2",
+          "-DSIXDB_TUNE_GENERIC=0",
+          "-DSIXDB_TUNE_GRANITE_RAPIDS=0",
+          "-DSIXDB_TUNE_ZEN4=0",
+          "-DSIXDB_TUNE_ZEN5=0",
+          "-DSIXDB_TUNE_NEOVERSE_V2=1",
+          "-DSIXDB_TUNE_NEOVERSE_V3=0",
+          "-ffile-prefix-map=/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-sources/after=/sixdb",
+          "-I",
+          "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-sources/after/ikea/include",
+          "-MD",
+          "-MF",
+          "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-codegen/native-check/tuplepack-kernels.d",
+          "-c",
+          "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-sources/after/ikea/src/tuplepack/kernels.cpp",
+          "-o",
+          "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-codegen/native-check/tuplepack-kernels.o"
+        ],
+        "dependencies_sha256": "10253511b35890dd482f23f22cfb0eef5bed91fa78091bd4d7a8d9acbcbd3ae1",
+        "dependency_count": 182,
+        "sha256": "48ab621cdf9c322b6685be0019089f146b6035d87dd39d36eb09a58cbd0b5cd3"
+      },
+      "tuplepack-layout.o": {
+        "command": [
+          "clang++-21",
+          "-g",
+          "-Wall",
+          "-Wextra",
+          "-Wpedantic",
+          "--target=aarch64-linux-gnu",
+          "--gcc-toolchain=/usr",
+          "-std=c++23",
+          "-O3",
+          "-fno-fast-math",
+          "-ffp-contract=off",
+          "-fdenormal-fp-math=ieee",
+          "-fvisibility=hidden",
+          "-fvisibility-inlines-hidden",
+          "-ffunction-sections",
+          "-fdata-sections",
+          "-march=armv8-a+simd",
+          "-mtune=neoverse-v2",
+          "-DSIXDB_TUNE_GENERIC=0",
+          "-DSIXDB_TUNE_GRANITE_RAPIDS=0",
+          "-DSIXDB_TUNE_ZEN4=0",
+          "-DSIXDB_TUNE_ZEN5=0",
+          "-DSIXDB_TUNE_NEOVERSE_V2=1",
+          "-DSIXDB_TUNE_NEOVERSE_V3=0",
+          "-ffile-prefix-map=/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-sources/after=/sixdb",
+          "-I",
+          "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-sources/after/ikea/include",
+          "-MD",
+          "-MF",
+          "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-codegen/native-check/tuplepack-layout.d",
+          "-c",
+          "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-sources/after/ikea/src/tuplepack/layout.cpp",
+          "-o",
+          "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-codegen/native-check/tuplepack-layout.o"
+        ],
+        "dependencies_sha256": "a6a71afb5137ded159689648c1c360f85d879cb68a69886dec1bdcef6103c24f",
+        "dependency_count": 158,
+        "sha256": "72914a2ae3ade2a1f6f7b86ae0a7179e3eeb37f899a95b64a4bdac80b11a5d53"
+      },
+      "tuplepack-packet.o": {
+        "command": [
+          "clang++-21",
+          "-g",
+          "-Wall",
+          "-Wextra",
+          "-Wpedantic",
+          "--target=aarch64-linux-gnu",
+          "--gcc-toolchain=/usr",
+          "-std=c++23",
+          "-O3",
+          "-fno-fast-math",
+          "-ffp-contract=off",
+          "-fdenormal-fp-math=ieee",
+          "-fvisibility=hidden",
+          "-fvisibility-inlines-hidden",
+          "-ffunction-sections",
+          "-fdata-sections",
+          "-march=armv8-a+simd",
+          "-mtune=neoverse-v2",
+          "-DSIXDB_TUNE_GENERIC=0",
+          "-DSIXDB_TUNE_GRANITE_RAPIDS=0",
+          "-DSIXDB_TUNE_ZEN4=0",
+          "-DSIXDB_TUNE_ZEN5=0",
+          "-DSIXDB_TUNE_NEOVERSE_V2=1",
+          "-DSIXDB_TUNE_NEOVERSE_V3=0",
+          "-ffile-prefix-map=/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-sources/after=/sixdb",
+          "-I",
+          "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-sources/after/ikea/include",
+          "-MD",
+          "-MF",
+          "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-codegen/native-check/tuplepack-packet.d",
+          "-c",
+          "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-sources/after/ikea/src/tuplepack/packet.cpp",
+          "-o",
+          "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-codegen/native-check/tuplepack-packet.o"
+        ],
+        "dependencies_sha256": "f0026a5f17e06645c24440aef0296b47014c9db2e68e5b7ea1a24b8f23ea9eb4",
+        "dependency_count": 182,
+        "sha256": "30531cd118e96896d6e672e1ad522519f8689d7164a171adeb367f3071a23eab"
+      },
+      "tuplepack-packet_layout.o": {
+        "command": [
+          "clang++-21",
+          "-g",
+          "-Wall",
+          "-Wextra",
+          "-Wpedantic",
+          "--target=aarch64-linux-gnu",
+          "--gcc-toolchain=/usr",
+          "-std=c++23",
+          "-O3",
+          "-fno-fast-math",
+          "-ffp-contract=off",
+          "-fdenormal-fp-math=ieee",
+          "-fvisibility=hidden",
+          "-fvisibility-inlines-hidden",
+          "-ffunction-sections",
+          "-fdata-sections",
+          "-march=armv8-a+simd",
+          "-mtune=neoverse-v2",
+          "-DSIXDB_TUNE_GENERIC=0",
+          "-DSIXDB_TUNE_GRANITE_RAPIDS=0",
+          "-DSIXDB_TUNE_ZEN4=0",
+          "-DSIXDB_TUNE_ZEN5=0",
+          "-DSIXDB_TUNE_NEOVERSE_V2=1",
+          "-DSIXDB_TUNE_NEOVERSE_V3=0",
+          "-ffile-prefix-map=/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-sources/after=/sixdb",
+          "-I",
+          "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-sources/after/ikea/include",
+          "-MD",
+          "-MF",
+          "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-codegen/native-check/tuplepack-packet_layout.d",
+          "-c",
+          "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-sources/after/ikea/src/tuplepack/packet_layout.cpp",
+          "-o",
+          "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-codegen/native-check/tuplepack-packet_layout.o"
+        ],
+        "dependencies_sha256": "a3d8a58e1436fa09647d294b033b489ed50cdff84643a40a81f7d31bc49f7c47",
+        "dependency_count": 110,
+        "sha256": "7013692bc879ebee5d708a1f312f456812d79ead0b67cce3bb708b70cd603aec"
+      },
+      "tuplepack-packet_prepare.o": {
+        "command": [
+          "clang++-21",
+          "-g",
+          "-Wall",
+          "-Wextra",
+          "-Wpedantic",
+          "--target=aarch64-linux-gnu",
+          "--gcc-toolchain=/usr",
+          "-std=c++23",
+          "-O3",
+          "-fno-fast-math",
+          "-ffp-contract=off",
+          "-fdenormal-fp-math=ieee",
+          "-fvisibility=hidden",
+          "-fvisibility-inlines-hidden",
+          "-ffunction-sections",
+          "-fdata-sections",
+          "-march=armv8-a+simd",
+          "-mtune=neoverse-v2",
+          "-DSIXDB_TUNE_GENERIC=0",
+          "-DSIXDB_TUNE_GRANITE_RAPIDS=0",
+          "-DSIXDB_TUNE_ZEN4=0",
+          "-DSIXDB_TUNE_ZEN5=0",
+          "-DSIXDB_TUNE_NEOVERSE_V2=1",
+          "-DSIXDB_TUNE_NEOVERSE_V3=0",
+          "-ffile-prefix-map=/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-sources/after=/sixdb",
+          "-I",
+          "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-sources/after/ikea/include",
+          "-MD",
+          "-MF",
+          "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-codegen/native-check/tuplepack-packet_prepare.d",
+          "-c",
+          "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-sources/after/ikea/src/tuplepack/packet_prepare.cpp",
+          "-o",
+          "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-codegen/native-check/tuplepack-packet_prepare.o"
+        ],
+        "dependencies_sha256": "f230a08c3855e9d8b6a06c8f422670fe8c9745fae4650aa490740bb1e1916d47",
+        "dependency_count": 161,
+        "sha256": "0fab1e6e5ffa0e265c17a2b8b17bd732243b2390a72910450e328b72462a4d7e"
+      },
+      "tuplepack-prepare.o": {
+        "command": [
+          "clang++-21",
+          "-g",
+          "-Wall",
+          "-Wextra",
+          "-Wpedantic",
+          "--target=aarch64-linux-gnu",
+          "--gcc-toolchain=/usr",
+          "-std=c++23",
+          "-O3",
+          "-fno-fast-math",
+          "-ffp-contract=off",
+          "-fdenormal-fp-math=ieee",
+          "-fvisibility=hidden",
+          "-fvisibility-inlines-hidden",
+          "-ffunction-sections",
+          "-fdata-sections",
+          "-march=armv8-a+simd",
+          "-mtune=neoverse-v2",
+          "-DSIXDB_TUNE_GENERIC=0",
+          "-DSIXDB_TUNE_GRANITE_RAPIDS=0",
+          "-DSIXDB_TUNE_ZEN4=0",
+          "-DSIXDB_TUNE_ZEN5=0",
+          "-DSIXDB_TUNE_NEOVERSE_V2=1",
+          "-DSIXDB_TUNE_NEOVERSE_V3=0",
+          "-ffile-prefix-map=/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-sources/after=/sixdb",
+          "-I",
+          "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-sources/after/ikea/include",
+          "-MD",
+          "-MF",
+          "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-codegen/native-check/tuplepack-prepare.d",
+          "-c",
+          "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-sources/after/ikea/src/tuplepack/prepare.cpp",
+          "-o",
+          "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-codegen/native-check/tuplepack-prepare.o"
+        ],
+        "dependencies_sha256": "c217d1e4f9da178a196c4c299ccf6fa422b636b1c31ea7d60a97772091e3fd8a",
+        "dependency_count": 161,
+        "sha256": "099560758fee34502a5b5f4998e6d059e51066f6636c8a5a91a293d9eec821ad"
+      },
+      "tuplepack-routes.o": {
+        "command": [
+          "clang++-21",
+          "-g",
+          "-Wall",
+          "-Wextra",
+          "-Wpedantic",
+          "--target=aarch64-linux-gnu",
+          "--gcc-toolchain=/usr",
+          "-std=c++23",
+          "-O3",
+          "-fno-fast-math",
+          "-ffp-contract=off",
+          "-fdenormal-fp-math=ieee",
+          "-fvisibility=hidden",
+          "-fvisibility-inlines-hidden",
+          "-ffunction-sections",
+          "-fdata-sections",
+          "-march=armv8-a+simd",
+          "-mtune=neoverse-v2",
+          "-DSIXDB_TUNE_GENERIC=0",
+          "-DSIXDB_TUNE_GRANITE_RAPIDS=0",
+          "-DSIXDB_TUNE_ZEN4=0",
+          "-DSIXDB_TUNE_ZEN5=0",
+          "-DSIXDB_TUNE_NEOVERSE_V2=1",
+          "-DSIXDB_TUNE_NEOVERSE_V3=0",
+          "-ffile-prefix-map=/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-sources/after=/sixdb",
+          "-I",
+          "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-sources/after/ikea/include",
+          "-MD",
+          "-MF",
+          "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-codegen/native-check/tuplepack-routes.d",
+          "-c",
+          "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-sources/after/ikea/src/tuplepack/routes.cpp",
+          "-o",
+          "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-codegen/native-check/tuplepack-routes.o"
+        ],
+        "dependencies_sha256": "abea05e02d97b3c404a1f1fa59046c544f0d0a11eb39ed2dbf495daa63b90e18",
+        "dependency_count": 184,
+        "sha256": "44a912a08a5ad73f472918468613fd3f01ee075c8f78219ec53b652d4cc1f157"
+      }
+    },
+    "returncode": 0,
+    "source": "/home/ashtonsix/sixdb/workbench/spikes/ikea-composition/handle-boundaries/projection-check.cpp",
+    "source_sha256": "632a37589189e7851a8b11812bd170f0a77313a2bc792e3444b4a543f93900d2",
+    "stderr": "",
+    "stdout": "projection-check: 11 shapes, 36 width/shift laws, 3 placements, 5 unsigned comparisons; expired plans, guarded exact tails, masks and admission passed\n"
+  },
+  "preparation_only": [
+    "Finalv1/v2/v3 were reviewed preparation revisions, with no timing.",
+    "Finalv4 afterproducer failed before codegen because author/execution.h lacked its owning read_native include; fixed once in sharedlive/v5, no algorithm change.",
+    "Initial external oracle used std::integer_sequence<enum>, a test compile error; owned comparisons<C...> fix changed no oracle cases or paired source."
+  ],
+  "profiles": {
+    "avx2-zen5": {
+      "assembly": {
+        "functions": {
+          "hb::checked_filter_command": {
+            "after": {
+              "bytes": 166,
+              "calls": [
+                "callq\t0x5f <hb::checked_filter_command(ikea::tuplepack::read_plan<64u, 16u> const&, ikea::tuplepack::basic_view<std::byte const> const&, unsigned long, unsigned long, unsigned long)+0x5f>",
+                "callq\t0x7e <hb::checked_filter_command(ikea::tuplepack::read_plan<64u, 16u> const&, ikea::tuplepack::basic_view<std::byte const> const&, unsigned long, unsigned long, unsigned long)+0x7e>"
+              ],
+              "instructions": 51,
+              "signature": "hb::checked_filter_command(ikea::tuplepack::read_plan<64u, 16u> const&, ikea::tuplepack::basic_view<std::byte const> const&, unsigned long, unsigned long, unsigned long)",
+              "stack_adjustments": [
+                "pushq\t%r15",
+                "pushq\t%r14",
+                "pushq\t%rbx",
+                "subq\t$0x20, %rsp",
+                "addq\t$0x20, %rsp",
+                "popq\t%rbx",
+                "popq\t%r14",
+                "popq\t%r15"
+              ]
+            },
+            "before": {
+              "bytes": 177,
+              "calls": [
+                "callq\t0x5f <hb::checked_filter_command(ikea::tuplepack::read_plan<64u, 16u> const&, ikea::tuplepack::basic_view<std::byte const> const&, unsigned long, unsigned long, unsigned long)+0x5f>",
+                "callq\t0x89 <hb::checked_filter_command(ikea::tuplepack::read_plan<64u, 16u> const&, ikea::tuplepack::basic_view<std::byte const> const&, unsigned long, unsigned long, unsigned long)+0x89>"
+              ],
+              "instructions": 53,
+              "signature": "hb::checked_filter_command(ikea::tuplepack::read_plan<64u, 16u> const&, ikea::tuplepack::basic_view<std::byte const> const&, unsigned long, unsigned long, unsigned long)",
+              "stack_adjustments": [
+                "pushq\t%r15",
+                "pushq\t%r14",
+                "pushq\t%rbx",
+                "subq\t$0x40, %rsp",
+                "addq\t$0x40, %rsp",
+                "popq\t%rbx",
+                "popq\t%r14",
+                "popq\t%r15"
+              ]
+            }
+          },
+          "hb::consume_filter": {
+            "after": {
+              "bytes": 1147,
+              "calls": [],
+              "instructions": 263,
+              "signature": "hb::consume_filter(ikea::tuplepack::predicate<std::byte const, 16u>, unsigned long, unsigned long, unsigned long)",
+              "stack_adjustments": [
+                "pushq\t%rbp",
+                "pushq\t%r15",
+                "pushq\t%r14",
+                "pushq\t%r13",
+                "pushq\t%r12",
+                "pushq\t%rbx",
+                "popq\t%rbx",
+                "popq\t%r12",
+                "popq\t%r13",
+                "popq\t%r14",
+                "popq\t%r15",
+                "popq\t%rbp"
+              ]
+            },
+            "before": {
+              "bytes": 13053,
+              "calls": [],
+              "instructions": 2950,
+              "signature": "hb::consume_filter(ikea::tuplepack::predicate<64u, std::byte const, 16u>, unsigned long, unsigned long, unsigned long)",
+              "stack_adjustments": [
+                "pushq\t%rbp",
+                "pushq\t%r15",
+                "pushq\t%r14",
+                "pushq\t%r13",
+                "pushq\t%r12",
+                "pushq\t%rbx",
+                "popq\t%rbx",
+                "popq\t%r12",
+                "popq\t%r13",
+                "popq\t%r14",
+                "popq\t%r15",
+                "popq\t%rbp"
+              ]
+            }
+          },
+          "hb::crowded_filters": {
+            "after": {
+              "bytes": 328,
+              "calls": [
+                "callq\t0x36 <hb::crowded_filters(std::array<ikea::tuplepack::predicate<std::byte const, 16u>, 7ul> const&, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long)+0x36>",
+                "callq\t0x56 <hb::crowded_filters(std::array<ikea::tuplepack::predicate<std::byte const, 16u>, 7ul> const&, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long)+0x56>",
+                "callq\t0x76 <hb::crowded_filters(std::array<ikea::tuplepack::predicate<std::byte const, 16u>, 7ul> const&, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long)+0x76>",
+                "callq\t0x98 <hb::crowded_filters(std::array<ikea::tuplepack::predicate<std::byte const, 16u>, 7ul> const&, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long)+0x98>",
+                "callq\t0xb8 <hb::crowded_filters(std::array<ikea::tuplepack::predicate<std::byte const, 16u>, 7ul> const&, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long)+0xb8>",
+                "callq\t0xd8 <hb::crowded_filters(std::array<ikea::tuplepack::predicate<std::byte const, 16u>, 7ul> const&, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long)+0xd8>",
+                "callq\t0x102 <hb::crowded_filters(std::array<ikea::tuplepack::predicate<std::byte const, 16u>, 7ul> const&, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long)+0x102>"
+              ],
+              "instructions": 87,
+              "signature": "hb::crowded_filters(std::array<ikea::tuplepack::predicate<std::byte const, 16u>, 7ul> const&, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long)",
+              "stack_adjustments": [
+                "pushq\t%rbp",
+                "pushq\t%r15",
+                "pushq\t%r14",
+                "pushq\t%r13",
+                "pushq\t%r12",
+                "pushq\t%rbx",
+                "subq\t$0x28, %rsp",
+                "addq\t$0x28, %rsp",
+                "popq\t%rbx",
+                "popq\t%r12",
+                "popq\t%r13",
+                "popq\t%r14",
+                "popq\t%r15",
+                "popq\t%rbp"
+              ]
+            },
+            "before": {
+              "bytes": 425,
+              "calls": [
+                "callq\t0x40 <hb::crowded_filters(std::array<ikea::tuplepack::predicate<64u, std::byte const, 16u>, 7ul> const&, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long)+0x40>",
+                "callq\t0x6c <hb::crowded_filters(std::array<ikea::tuplepack::predicate<64u, std::byte const, 16u>, 7ul> const&, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long)+0x6c>",
+                "callq\t0x98 <hb::crowded_filters(std::array<ikea::tuplepack::predicate<64u, std::byte const, 16u>, 7ul> const&, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long)+0x98>",
+                "callq\t0xc6 <hb::crowded_filters(std::array<ikea::tuplepack::predicate<64u, std::byte const, 16u>, 7ul> const&, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long)+0xc6>",
+                "callq\t0xf2 <hb::crowded_filters(std::array<ikea::tuplepack::predicate<64u, std::byte const, 16u>, 7ul> const&, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long)+0xf2>",
+                "callq\t0x124 <hb::crowded_filters(std::array<ikea::tuplepack::predicate<64u, std::byte const, 16u>, 7ul> const&, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long)+0x124>",
+                "callq\t0x160 <hb::crowded_filters(std::array<ikea::tuplepack::predicate<64u, std::byte const, 16u>, 7ul> const&, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long)+0x160>"
+              ],
+              "instructions": 101,
+              "signature": "hb::crowded_filters(std::array<ikea::tuplepack::predicate<64u, std::byte const, 16u>, 7ul> const&, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long)",
+              "stack_adjustments": [
+                "pushq\t%rbp",
+                "pushq\t%r15",
+                "pushq\t%r14",
+                "pushq\t%r13",
+                "pushq\t%r12",
+                "pushq\t%rbx",
+                "subq\t$0x38, %rsp",
+                "addq\t$0x38, %rsp",
+                "popq\t%rbx",
+                "popq\t%r12",
+                "popq\t%r13",
+                "popq\t%r14",
+                "popq\t%r15",
+                "popq\t%rbp"
+              ]
+            }
+          },
+          "hb::make_filter": {
+            "after": {
+              "bytes": 80,
+              "calls": [],
+              "instructions": 24,
+              "signature": "hb::make_filter(ikea::tuplepack::read_plan<64u, 16u> const&, ikea::tuplepack::basic_view<std::byte const> const&)",
+              "stack_adjustments": []
+            },
+            "before": {
+              "bytes": 84,
+              "calls": [],
+              "instructions": 25,
+              "signature": "hb::make_filter(ikea::tuplepack::read_plan<64u, 16u> const&, ikea::tuplepack::basic_view<std::byte const> const&)",
+              "stack_adjustments": []
+            }
+          },
+          "hb::pass_predicate": {
+            "after": {
+              "bytes": 7,
+              "calls": [],
+              "instructions": 3,
+              "signature": "hb::pass_predicate(ikea::tuplepack::predicate<std::byte const, 16u>)",
+              "stack_adjustments": []
+            },
+            "before": {
+              "bytes": 23,
+              "calls": [],
+              "instructions": 6,
+              "signature": "hb::pass_predicate(ikea::tuplepack::predicate<64u, std::byte const, 16u>)",
+              "stack_adjustments": []
+            }
+          }
+        },
+        "paths": {
+          "after": {
+            "instructions": 339,
+            "literal_function_sha256": "d8ed3821e2d87841aabaaf7757fcaa999d9388d4c4478df7f307ac575c1b7097",
+            "opcodes": {
+              "addb": 8,
+              "addq": 8,
+              "andl": 8,
+              "cmpl": 1,
+              "cmpq": 16,
+              "cmpw": 8,
+              "imulq": 8,
+              "incl": 1,
+              "ja": 8,
+              "je": 17,
+              "jmp": 8,
+              "jne": 8,
+              "leal": 8,
+              "movl": 34,
+              "movq": 37,
+              "movzbl": 16,
+              "movzwl": 9,
+              "notl": 16,
+              "shlq": 8,
+              "shlxl": 16,
+              "shlxq": 8,
+              "shrq": 8,
+              "testq": 1,
+              "testw": 7,
+              "vmovd": 16,
+              "vpand": 8,
+              "vpbroadcastb": 16,
+              "vpcmpgtb": 8,
+              "vpmovmskb": 8,
+              "vpxor": 8,
+              "xorl": 8
+            }
+          },
+          "before": {
+            "instructions": 352,
+            "literal_function_sha256": "196044e233301530d9fdc7514e58e2b4f9880d9d6a3511eefd0435d1bb7104d5",
+            "opcodes": {
+              "addb": 8,
+              "addq": 8,
+              "andl": 8,
+              "cmpl": 1,
+              "cmpq": 16,
+              "cmpw": 8,
+              "imulq": 8,
+              "incl": 1,
+              "ja": 8,
+              "je": 17,
+              "jmp": 16,
+              "jne": 8,
+              "leal": 8,
+              "movl": 27,
+              "movq": 42,
+              "movzbl": 16,
+              "movzwl": 16,
+              "notl": 16,
+              "shlq": 8,
+              "shlxl": 16,
+              "shlxq": 8,
+              "shrq": 8,
+              "testq": 8,
+              "vmovd": 16,
+              "vpand": 8,
+              "vpbroadcastb": 16,
+              "vpcmpgtb": 8,
+              "vpmovmskb": 8,
+              "vpxor": 8,
+              "xorl": 8
+            }
+          }
+        }
+      },
+      "census": {
+        "after": {
+          "checked_filter": {
+            "alignment": 8,
+            "size": 24,
+            "standard_layout": 1,
+            "trivial_copy": 1,
+            "trivial_destructor": 1,
+            "trivial_move": 1
+          },
+          "checked_reader": {
+            "alignment": 8,
+            "size": 24,
+            "standard_layout": 1,
+            "trivial_copy": 1,
+            "trivial_destructor": 1,
+            "trivial_move": 1
+          },
+          "predicate": {
+            "alignment": 8,
+            "size": 16,
+            "standard_layout": 1,
+            "trivial_copy": 1,
+            "trivial_destructor": 1,
+            "trivial_move": 1
+          },
+          "reader": {
+            "alignment": 8,
+            "size": 16,
+            "standard_layout": 1,
+            "trivial_copy": 1,
+            "trivial_destructor": 1,
+            "trivial_move": 1
+          }
+        },
+        "before": {
+          "checked_filter": {
+            "alignment": 8,
+            "size": 32,
+            "standard_layout": 1,
+            "trivial_copy": 1,
+            "trivial_destructor": 1,
+            "trivial_move": 1
+          },
+          "checked_reader": {
+            "alignment": 8,
+            "size": 24,
+            "standard_layout": 1,
+            "trivial_copy": 1,
+            "trivial_destructor": 1,
+            "trivial_move": 1
+          },
+          "predicate": {
+            "alignment": 8,
+            "size": 24,
+            "standard_layout": 1,
+            "trivial_copy": 1,
+            "trivial_destructor": 1,
+            "trivial_move": 1
+          },
+          "reader": {
+            "alignment": 8,
+            "size": 16,
+            "standard_layout": 1,
+            "trivial_copy": 1,
+            "trivial_destructor": 1,
+            "trivial_move": 1
+          }
+        }
+      },
+      "objects": {
+        "after/caller": {
+          "allocated_data_count": 0,
+          "command": [
+            "clang++-21",
+            "-g",
+            "-Wall",
+            "-Wextra",
+            "-Wpedantic",
+            "-DHB_PREPARED_PREDICATE=1",
+            "--target=x86_64-linux-gnu",
+            "--gcc-toolchain=/usr",
+            "-std=c++23",
+            "-O3",
+            "-fno-fast-math",
+            "-ffp-contract=off",
+            "-fdenormal-fp-math=ieee",
+            "-fvisibility=hidden",
+            "-fvisibility-inlines-hidden",
+            "-ffunction-sections",
+            "-fdata-sections",
+            "-march=x86-64-v3",
+            "-mtune=znver5",
+            "-DSIXDB_TUNE_GENERIC=0",
+            "-DSIXDB_TUNE_GRANITE_RAPIDS=0",
+            "-DSIXDB_TUNE_ZEN4=0",
+            "-DSIXDB_TUNE_ZEN5=1",
+            "-DSIXDB_TUNE_NEOVERSE_V2=0",
+            "-DSIXDB_TUNE_NEOVERSE_V3=0",
+            "-ffile-prefix-map=/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-sources/after=/sixdb",
+            "-I",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-sources/after/ikea/include",
+            "-MD",
+            "-MF",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-codegen/avx2-zen5/after/caller.d",
+            "-c",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-sources/after/workbench/spikes/ikea-composition/handle-boundaries/caller.cpp",
+            "-o",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-codegen/avx2-zen5/after/caller.o"
+          ],
+          "dependency_digests": {
+            "project": {
+              "count": 68,
+              "sha256": "a8d6f9b696fb953d86d8578753fe31414d1ec4f20a4a582dabbd3881e521e636"
+            },
+            "system": {
+              "count": 304,
+              "sha256": "3ca22837747b9943050083460e916031d4ffb0e4f931e3cce940c6094e43184d"
+            }
+          },
+          "function_count": 7,
+          "sha256": "90bb442c1fb778bda0d1048a60fcc7bd4c842751c4ac0889f3b5fc692e49da7d",
+          "strict_record_sha256": "80182739dc8b5724db144753f11f30267e2b2b61de106efa54548e89c8a9123e",
+          "unwind_count": 1
+        },
+        "after/extra_tuple_2": {
+          "allocated_data_count": 9,
+          "command": [
+            "clang++-21",
+            "-DFILTER_SEAMS_NO_MAIN=1",
+            "-fno-vectorize",
+            "-fno-slp-vectorize",
+            "-g",
+            "-Wall",
+            "-Wextra",
+            "-Wpedantic",
+            "-DHB_PREPARED_PREDICATE=1",
+            "--target=x86_64-linux-gnu",
+            "--gcc-toolchain=/usr",
+            "-std=c++23",
+            "-O3",
+            "-fno-fast-math",
+            "-ffp-contract=off",
+            "-fdenormal-fp-math=ieee",
+            "-fvisibility=hidden",
+            "-fvisibility-inlines-hidden",
+            "-ffunction-sections",
+            "-fdata-sections",
+            "-march=x86-64-v3",
+            "-mtune=znver5",
+            "-DSIXDB_TUNE_GENERIC=0",
+            "-DSIXDB_TUNE_GRANITE_RAPIDS=0",
+            "-DSIXDB_TUNE_ZEN4=0",
+            "-DSIXDB_TUNE_ZEN5=1",
+            "-DSIXDB_TUNE_NEOVERSE_V2=0",
+            "-DSIXDB_TUNE_NEOVERSE_V3=0",
+            "-ffile-prefix-map=/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-sources/after=/sixdb",
+            "-I",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-sources/after/ikea/include",
+            "-MD",
+            "-MF",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-codegen/avx2-zen5/after/extra_tuple_2.d",
+            "-c",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-sources/after/workbench/spikes/filter-composition/extra_tuple_2.cpp",
+            "-o",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-codegen/avx2-zen5/after/extra_tuple_2.o"
+          ],
+          "dependency_digests": {
+            "project": {
+              "count": 77,
+              "sha256": "d08ddc08869b5ee7bbcbc6be97f8ab0e615a2cdedea47e0b9ad3afc64281489a"
+            },
+            "system": {
+              "count": 415,
+              "sha256": "d738e7a5d35faa9b140cb5583c2f59cf7801f37dbd74b38845f1934237466bb5"
+            }
+          },
+          "function_count": 16,
+          "sha256": "2425c94f787d7c7544076fa7a4a5e02d8d523e99e870ef04d75abb7dccae80a5",
+          "strict_record_sha256": "fa7a07f59c7cdc758d18b41758605743d1741695226bbf08205f1ec73b315f30",
+          "unwind_count": 6
+        },
+        "after/producer": {
+          "allocated_data_count": 2,
+          "command": [
+            "clang++-21",
+            "-g",
+            "-Wall",
+            "-Wextra",
+            "-Wpedantic",
+            "-DHB_PREPARED_PREDICATE=1",
+            "--target=x86_64-linux-gnu",
+            "--gcc-toolchain=/usr",
+            "-std=c++23",
+            "-O3",
+            "-fno-fast-math",
+            "-ffp-contract=off",
+            "-fdenormal-fp-math=ieee",
+            "-fvisibility=hidden",
+            "-fvisibility-inlines-hidden",
+            "-ffunction-sections",
+            "-fdata-sections",
+            "-march=x86-64-v3",
+            "-mtune=znver5",
+            "-DSIXDB_TUNE_GENERIC=0",
+            "-DSIXDB_TUNE_GRANITE_RAPIDS=0",
+            "-DSIXDB_TUNE_ZEN4=0",
+            "-DSIXDB_TUNE_ZEN5=1",
+            "-DSIXDB_TUNE_NEOVERSE_V2=0",
+            "-DSIXDB_TUNE_NEOVERSE_V3=0",
+            "-ffile-prefix-map=/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-sources/after=/sixdb",
+            "-I",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-sources/after/ikea/include",
+            "-MD",
+            "-MF",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-codegen/avx2-zen5/after/producer.d",
+            "-c",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-sources/after/workbench/spikes/ikea-composition/handle-boundaries/producer.cpp",
+            "-o",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-codegen/avx2-zen5/after/producer.o"
+          ],
+          "dependency_digests": {
+            "project": {
+              "count": 68,
+              "sha256": "c88611183e01d37a91d742f177e05106618a7bc5b7bc98dca7ae06a162adb674"
+            },
+            "system": {
+              "count": 304,
+              "sha256": "3ca22837747b9943050083460e916031d4ffb0e4f931e3cce940c6094e43184d"
+            }
+          },
+          "function_count": 15,
+          "sha256": "dcda4a40e843807cb19055f346c1233813456eb2cf3e1699477c6fa2f741267b",
+          "strict_record_sha256": "377b1b9cfb0e1beff9322c0ca7182454a63f301ae5982df425e263bf4079d8f2",
+          "unwind_count": 1
+        },
+        "before/caller": {
+          "allocated_data_count": 0,
+          "command": [
+            "clang++-21",
+            "-g",
+            "-Wall",
+            "-Wextra",
+            "-Wpedantic",
+            "-DHB_PREPARED_PREDICATE=1",
+            "--target=x86_64-linux-gnu",
+            "--gcc-toolchain=/usr",
+            "-std=c++23",
+            "-O3",
+            "-fno-fast-math",
+            "-ffp-contract=off",
+            "-fdenormal-fp-math=ieee",
+            "-fvisibility=hidden",
+            "-fvisibility-inlines-hidden",
+            "-ffunction-sections",
+            "-fdata-sections",
+            "-march=x86-64-v3",
+            "-mtune=znver5",
+            "-DSIXDB_TUNE_GENERIC=0",
+            "-DSIXDB_TUNE_GRANITE_RAPIDS=0",
+            "-DSIXDB_TUNE_ZEN4=0",
+            "-DSIXDB_TUNE_ZEN5=1",
+            "-DSIXDB_TUNE_NEOVERSE_V2=0",
+            "-DSIXDB_TUNE_NEOVERSE_V3=0",
+            "-ffile-prefix-map=/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-sources/before=/sixdb",
+            "-I",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-sources/before/ikea/include",
+            "-MD",
+            "-MF",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-codegen/avx2-zen5/before/caller.d",
+            "-c",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-sources/before/workbench/spikes/ikea-composition/handle-boundaries/caller.cpp",
+            "-o",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-codegen/avx2-zen5/before/caller.o"
+          ],
+          "dependency_digests": {
+            "project": {
+              "count": 69,
+              "sha256": "02de9b8e1c4a296b20ee79e310d11661b547c0afab4a7ae1f363c189e5205a34"
+            },
+            "system": {
+              "count": 304,
+              "sha256": "3ca22837747b9943050083460e916031d4ffb0e4f931e3cce940c6094e43184d"
+            }
+          },
+          "function_count": 7,
+          "sha256": "ae75729574b8a29590fd3614ef873a45b77174aa5a8c4c3e1bebf983c59cae74",
+          "strict_record_sha256": "4e49d00e0855dd7625ab404abca9123168ccef7bb8bcfb5adcc9b5ae699988ad",
+          "unwind_count": 1
+        },
+        "before/extra_tuple_2": {
+          "allocated_data_count": 8,
+          "command": [
+            "clang++-21",
+            "-DFILTER_SEAMS_NO_MAIN=1",
+            "-fno-vectorize",
+            "-fno-slp-vectorize",
+            "-g",
+            "-Wall",
+            "-Wextra",
+            "-Wpedantic",
+            "-DHB_PREPARED_PREDICATE=1",
+            "--target=x86_64-linux-gnu",
+            "--gcc-toolchain=/usr",
+            "-std=c++23",
+            "-O3",
+            "-fno-fast-math",
+            "-ffp-contract=off",
+            "-fdenormal-fp-math=ieee",
+            "-fvisibility=hidden",
+            "-fvisibility-inlines-hidden",
+            "-ffunction-sections",
+            "-fdata-sections",
+            "-march=x86-64-v3",
+            "-mtune=znver5",
+            "-DSIXDB_TUNE_GENERIC=0",
+            "-DSIXDB_TUNE_GRANITE_RAPIDS=0",
+            "-DSIXDB_TUNE_ZEN4=0",
+            "-DSIXDB_TUNE_ZEN5=1",
+            "-DSIXDB_TUNE_NEOVERSE_V2=0",
+            "-DSIXDB_TUNE_NEOVERSE_V3=0",
+            "-ffile-prefix-map=/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-sources/before=/sixdb",
+            "-I",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-sources/before/ikea/include",
+            "-MD",
+            "-MF",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-codegen/avx2-zen5/before/extra_tuple_2.d",
+            "-c",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-sources/before/workbench/spikes/filter-composition/extra_tuple_2.cpp",
+            "-o",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-codegen/avx2-zen5/before/extra_tuple_2.o"
+          ],
+          "dependency_digests": {
+            "project": {
+              "count": 78,
+              "sha256": "4c525ef91ebe10d18ef9e97404d262424cf9e212948344a29c59017a4817da92"
+            },
+            "system": {
+              "count": 415,
+              "sha256": "d738e7a5d35faa9b140cb5583c2f59cf7801f37dbd74b38845f1934237466bb5"
+            }
+          },
+          "function_count": 16,
+          "sha256": "9d0c229934a4d5013580f3f8c1217033ff660b05dba0db81ed379bf4b77dbed7",
+          "strict_record_sha256": "d8c99e0558b7595cd92b68d07ca801f2355ba57ad3808a0cf1e97cd977e6f25f",
+          "unwind_count": 6
+        },
+        "before/producer": {
+          "allocated_data_count": 4,
+          "command": [
+            "clang++-21",
+            "-g",
+            "-Wall",
+            "-Wextra",
+            "-Wpedantic",
+            "-DHB_PREPARED_PREDICATE=1",
+            "--target=x86_64-linux-gnu",
+            "--gcc-toolchain=/usr",
+            "-std=c++23",
+            "-O3",
+            "-fno-fast-math",
+            "-ffp-contract=off",
+            "-fdenormal-fp-math=ieee",
+            "-fvisibility=hidden",
+            "-fvisibility-inlines-hidden",
+            "-ffunction-sections",
+            "-fdata-sections",
+            "-march=x86-64-v3",
+            "-mtune=znver5",
+            "-DSIXDB_TUNE_GENERIC=0",
+            "-DSIXDB_TUNE_GRANITE_RAPIDS=0",
+            "-DSIXDB_TUNE_ZEN4=0",
+            "-DSIXDB_TUNE_ZEN5=1",
+            "-DSIXDB_TUNE_NEOVERSE_V2=0",
+            "-DSIXDB_TUNE_NEOVERSE_V3=0",
+            "-ffile-prefix-map=/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-sources/before=/sixdb",
+            "-I",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-sources/before/ikea/include",
+            "-MD",
+            "-MF",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-codegen/avx2-zen5/before/producer.d",
+            "-c",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-sources/before/workbench/spikes/ikea-composition/handle-boundaries/producer.cpp",
+            "-o",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-codegen/avx2-zen5/before/producer.o"
+          ],
+          "dependency_digests": {
+            "project": {
+              "count": 69,
+              "sha256": "27b57b5f3df3335e182e232d846d60601bf390d9f70595245ef586b0ebd7cb7a"
+            },
+            "system": {
+              "count": 304,
+              "sha256": "3ca22837747b9943050083460e916031d4ffb0e4f931e3cce940c6094e43184d"
+            }
+          },
+          "function_count": 15,
+          "sha256": "2e74928cba24e0c876970c03fbe246bd66cbd5a90b3e640f72a0f3a57bccabf7",
+          "strict_record_sha256": "4f1a0aa2b413f2eaec364c62a1700b8c701a1055c4513c778a1998deecc235a9",
+          "unwind_count": 1
+        }
+      }
+    },
+    "avx512-zen5": {
+      "assembly": {
+        "functions": {
+          "hb::checked_filter_command": {
+            "after": {
+              "bytes": 166,
+              "calls": [
+                "callq\t0x5f <hb::checked_filter_command(ikea::tuplepack::read_plan<64u, 16u> const&, ikea::tuplepack::basic_view<std::byte const> const&, unsigned long, unsigned long, unsigned long)+0x5f>",
+                "callq\t0x7e <hb::checked_filter_command(ikea::tuplepack::read_plan<64u, 16u> const&, ikea::tuplepack::basic_view<std::byte const> const&, unsigned long, unsigned long, unsigned long)+0x7e>"
+              ],
+              "instructions": 51,
+              "signature": "hb::checked_filter_command(ikea::tuplepack::read_plan<64u, 16u> const&, ikea::tuplepack::basic_view<std::byte const> const&, unsigned long, unsigned long, unsigned long)",
+              "stack_adjustments": [
+                "pushq\t%r15",
+                "pushq\t%r14",
+                "pushq\t%rbx",
+                "subq\t$0x20, %rsp",
+                "addq\t$0x20, %rsp",
+                "popq\t%rbx",
+                "popq\t%r14",
+                "popq\t%r15"
+              ]
+            },
+            "before": {
+              "bytes": 177,
+              "calls": [
+                "callq\t0x5f <hb::checked_filter_command(ikea::tuplepack::read_plan<64u, 16u> const&, ikea::tuplepack::basic_view<std::byte const> const&, unsigned long, unsigned long, unsigned long)+0x5f>",
+                "callq\t0x89 <hb::checked_filter_command(ikea::tuplepack::read_plan<64u, 16u> const&, ikea::tuplepack::basic_view<std::byte const> const&, unsigned long, unsigned long, unsigned long)+0x89>"
+              ],
+              "instructions": 53,
+              "signature": "hb::checked_filter_command(ikea::tuplepack::read_plan<64u, 16u> const&, ikea::tuplepack::basic_view<std::byte const> const&, unsigned long, unsigned long, unsigned long)",
+              "stack_adjustments": [
+                "pushq\t%r15",
+                "pushq\t%r14",
+                "pushq\t%rbx",
+                "subq\t$0x40, %rsp",
+                "addq\t$0x40, %rsp",
+                "popq\t%rbx",
+                "popq\t%r14",
+                "popq\t%r15"
+              ]
+            }
+          },
+          "hb::consume_filter": {
+            "after": {
+              "bytes": 1134,
+              "calls": [],
+              "instructions": 259,
+              "signature": "hb::consume_filter(ikea::tuplepack::predicate<std::byte const, 16u>, unsigned long, unsigned long, unsigned long)",
+              "stack_adjustments": [
+                "pushq\t%rbp",
+                "pushq\t%r15",
+                "pushq\t%r14",
+                "pushq\t%r13",
+                "pushq\t%r12",
+                "pushq\t%rbx",
+                "popq\t%rbx",
+                "popq\t%r12",
+                "popq\t%r13",
+                "popq\t%r14",
+                "popq\t%r15",
+                "popq\t%rbp"
+              ]
+            },
+            "before": {
+              "bytes": 11749,
+              "calls": [],
+              "instructions": 2725,
+              "signature": "hb::consume_filter(ikea::tuplepack::predicate<64u, std::byte const, 16u>, unsigned long, unsigned long, unsigned long)",
+              "stack_adjustments": [
+                "pushq\t%rbp",
+                "pushq\t%r15",
+                "pushq\t%r14",
+                "pushq\t%r13",
+                "pushq\t%r12",
+                "pushq\t%rbx",
+                "popq\t%rbx",
+                "popq\t%r12",
+                "popq\t%r13",
+                "popq\t%r14",
+                "popq\t%r15",
+                "popq\t%rbp"
+              ]
+            }
+          },
+          "hb::crowded_filters": {
+            "after": {
+              "bytes": 328,
+              "calls": [
+                "callq\t0x36 <hb::crowded_filters(std::array<ikea::tuplepack::predicate<std::byte const, 16u>, 7ul> const&, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long)+0x36>",
+                "callq\t0x56 <hb::crowded_filters(std::array<ikea::tuplepack::predicate<std::byte const, 16u>, 7ul> const&, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long)+0x56>",
+                "callq\t0x76 <hb::crowded_filters(std::array<ikea::tuplepack::predicate<std::byte const, 16u>, 7ul> const&, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long)+0x76>",
+                "callq\t0x98 <hb::crowded_filters(std::array<ikea::tuplepack::predicate<std::byte const, 16u>, 7ul> const&, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long)+0x98>",
+                "callq\t0xb8 <hb::crowded_filters(std::array<ikea::tuplepack::predicate<std::byte const, 16u>, 7ul> const&, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long)+0xb8>",
+                "callq\t0xd8 <hb::crowded_filters(std::array<ikea::tuplepack::predicate<std::byte const, 16u>, 7ul> const&, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long)+0xd8>",
+                "callq\t0x102 <hb::crowded_filters(std::array<ikea::tuplepack::predicate<std::byte const, 16u>, 7ul> const&, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long)+0x102>"
+              ],
+              "instructions": 87,
+              "signature": "hb::crowded_filters(std::array<ikea::tuplepack::predicate<std::byte const, 16u>, 7ul> const&, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long)",
+              "stack_adjustments": [
+                "pushq\t%rbp",
+                "pushq\t%r15",
+                "pushq\t%r14",
+                "pushq\t%r13",
+                "pushq\t%r12",
+                "pushq\t%rbx",
+                "subq\t$0x28, %rsp",
+                "addq\t$0x28, %rsp",
+                "popq\t%rbx",
+                "popq\t%r12",
+                "popq\t%r13",
+                "popq\t%r14",
+                "popq\t%r15",
+                "popq\t%rbp"
+              ]
+            },
+            "before": {
+              "bytes": 425,
+              "calls": [
+                "callq\t0x40 <hb::crowded_filters(std::array<ikea::tuplepack::predicate<64u, std::byte const, 16u>, 7ul> const&, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long)+0x40>",
+                "callq\t0x6c <hb::crowded_filters(std::array<ikea::tuplepack::predicate<64u, std::byte const, 16u>, 7ul> const&, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long)+0x6c>",
+                "callq\t0x98 <hb::crowded_filters(std::array<ikea::tuplepack::predicate<64u, std::byte const, 16u>, 7ul> const&, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long)+0x98>",
+                "callq\t0xc6 <hb::crowded_filters(std::array<ikea::tuplepack::predicate<64u, std::byte const, 16u>, 7ul> const&, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long)+0xc6>",
+                "callq\t0xf2 <hb::crowded_filters(std::array<ikea::tuplepack::predicate<64u, std::byte const, 16u>, 7ul> const&, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long)+0xf2>",
+                "callq\t0x124 <hb::crowded_filters(std::array<ikea::tuplepack::predicate<64u, std::byte const, 16u>, 7ul> const&, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long)+0x124>",
+                "callq\t0x160 <hb::crowded_filters(std::array<ikea::tuplepack::predicate<64u, std::byte const, 16u>, 7ul> const&, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long)+0x160>"
+              ],
+              "instructions": 101,
+              "signature": "hb::crowded_filters(std::array<ikea::tuplepack::predicate<64u, std::byte const, 16u>, 7ul> const&, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long)",
+              "stack_adjustments": [
+                "pushq\t%rbp",
+                "pushq\t%r15",
+                "pushq\t%r14",
+                "pushq\t%r13",
+                "pushq\t%r12",
+                "pushq\t%rbx",
+                "subq\t$0x38, %rsp",
+                "addq\t$0x38, %rsp",
+                "popq\t%rbx",
+                "popq\t%r12",
+                "popq\t%r13",
+                "popq\t%r14",
+                "popq\t%r15",
+                "popq\t%rbp"
+              ]
+            }
+          },
+          "hb::make_filter": {
+            "after": {
+              "bytes": 80,
+              "calls": [],
+              "instructions": 24,
+              "signature": "hb::make_filter(ikea::tuplepack::read_plan<64u, 16u> const&, ikea::tuplepack::basic_view<std::byte const> const&)",
+              "stack_adjustments": []
+            },
+            "before": {
+              "bytes": 84,
+              "calls": [],
+              "instructions": 25,
+              "signature": "hb::make_filter(ikea::tuplepack::read_plan<64u, 16u> const&, ikea::tuplepack::basic_view<std::byte const> const&)",
+              "stack_adjustments": []
+            }
+          },
+          "hb::pass_predicate": {
+            "after": {
+              "bytes": 7,
+              "calls": [],
+              "instructions": 3,
+              "signature": "hb::pass_predicate(ikea::tuplepack::predicate<std::byte const, 16u>)",
+              "stack_adjustments": []
+            },
+            "before": {
+              "bytes": 23,
+              "calls": [],
+              "instructions": 6,
+              "signature": "hb::pass_predicate(ikea::tuplepack::predicate<64u, std::byte const, 16u>)",
+              "stack_adjustments": []
+            }
+          }
+        },
+        "paths": {
+          "after": {
+            "instructions": 322,
+            "literal_function_sha256": "727a5ace0cae638c1e857aa3296084e06bf2c0f495e58c2cb4eb1f32c2f4424b",
+            "opcodes": {
+              "addq": 8,
+              "andl": 8,
+              "cmpl": 1,
+              "cmpq": 16,
+              "cmpw": 8,
+              "imulq": 8,
+              "incl": 1,
+              "ja": 8,
+              "je": 17,
+              "jmp": 9,
+              "jne": 8,
+              "kmovd": 8,
+              "leal": 8,
+              "movabsq": 8,
+              "movl": 42,
+              "movq": 43,
+              "movzbl": 16,
+              "movzwl": 9,
+              "notl": 8,
+              "shlq": 8,
+              "shlxl": 16,
+              "shlxq": 8,
+              "shrq": 8,
+              "testq": 1,
+              "testw": 7,
+              "vpand": 8,
+              "vpbroadcastb": 16,
+              "vpcmpleub": 8,
+              "xorl": 8
+            }
+          },
+          "before": {
+            "instructions": 303,
+            "literal_function_sha256": "aa23ebff5559eaeb492a4860ed6e20f91a7b3009f6ae625514d70beaf2ccef61",
+            "opcodes": {
+              "addq": 8,
+              "andl": 8,
+              "cmpl": 9,
+              "cmpq": 16,
+              "imulq": 8,
+              "incl": 1,
+              "ja": 8,
+              "je": 17,
+              "jmp": 8,
+              "jne": 8,
+              "kmovw": 8,
+              "leal": 8,
+              "movl": 27,
+              "movq": 49,
+              "movzbl": 16,
+              "movzwl": 8,
+              "notl": 8,
+              "shlq": 8,
+              "shlxl": 16,
+              "shlxq": 8,
+              "shrq": 8,
+              "testq": 8,
+              "vpand": 8,
+              "vpbroadcastb": 16,
+              "vpcmpleub": 8,
+              "xorl": 8
+            }
+          }
+        }
+      },
+      "census": {
+        "after": {
+          "checked_filter": {
+            "alignment": 8,
+            "size": 24,
+            "standard_layout": 1,
+            "trivial_copy": 1,
+            "trivial_destructor": 1,
+            "trivial_move": 1
+          },
+          "checked_reader": {
+            "alignment": 8,
+            "size": 24,
+            "standard_layout": 1,
+            "trivial_copy": 1,
+            "trivial_destructor": 1,
+            "trivial_move": 1
+          },
+          "predicate": {
+            "alignment": 8,
+            "size": 16,
+            "standard_layout": 1,
+            "trivial_copy": 1,
+            "trivial_destructor": 1,
+            "trivial_move": 1
+          },
+          "reader": {
+            "alignment": 8,
+            "size": 16,
+            "standard_layout": 1,
+            "trivial_copy": 1,
+            "trivial_destructor": 1,
+            "trivial_move": 1
+          }
+        },
+        "before": {
+          "checked_filter": {
+            "alignment": 8,
+            "size": 32,
+            "standard_layout": 1,
+            "trivial_copy": 1,
+            "trivial_destructor": 1,
+            "trivial_move": 1
+          },
+          "checked_reader": {
+            "alignment": 8,
+            "size": 24,
+            "standard_layout": 1,
+            "trivial_copy": 1,
+            "trivial_destructor": 1,
+            "trivial_move": 1
+          },
+          "predicate": {
+            "alignment": 8,
+            "size": 24,
+            "standard_layout": 1,
+            "trivial_copy": 1,
+            "trivial_destructor": 1,
+            "trivial_move": 1
+          },
+          "reader": {
+            "alignment": 8,
+            "size": 16,
+            "standard_layout": 1,
+            "trivial_copy": 1,
+            "trivial_destructor": 1,
+            "trivial_move": 1
+          }
+        }
+      },
+      "objects": {
+        "after/caller": {
+          "allocated_data_count": 0,
+          "command": [
+            "clang++-21",
+            "-g",
+            "-Wall",
+            "-Wextra",
+            "-Wpedantic",
+            "-DHB_PREPARED_PREDICATE=1",
+            "--target=x86_64-linux-gnu",
+            "--gcc-toolchain=/usr",
+            "-std=c++23",
+            "-O3",
+            "-fno-fast-math",
+            "-ffp-contract=off",
+            "-fdenormal-fp-math=ieee",
+            "-fvisibility=hidden",
+            "-fvisibility-inlines-hidden",
+            "-ffunction-sections",
+            "-fdata-sections",
+            "-march=znver5",
+            "-mtune=znver5",
+            "-DSIXDB_TUNE_GENERIC=0",
+            "-DSIXDB_TUNE_GRANITE_RAPIDS=0",
+            "-DSIXDB_TUNE_ZEN4=0",
+            "-DSIXDB_TUNE_ZEN5=1",
+            "-DSIXDB_TUNE_NEOVERSE_V2=0",
+            "-DSIXDB_TUNE_NEOVERSE_V3=0",
+            "-ffile-prefix-map=/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-sources/after=/sixdb",
+            "-I",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-sources/after/ikea/include",
+            "-MD",
+            "-MF",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-codegen/avx512-zen5/after/caller.d",
+            "-c",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-sources/after/workbench/spikes/ikea-composition/handle-boundaries/caller.cpp",
+            "-o",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-codegen/avx512-zen5/after/caller.o"
+          ],
+          "dependency_digests": {
+            "project": {
+              "count": 70,
+              "sha256": "ad32b8e787b47c401529acd6e0a7e3e505857f64a61d575cbd4bcfcf4edb4038"
+            },
+            "system": {
+              "count": 304,
+              "sha256": "3ca22837747b9943050083460e916031d4ffb0e4f931e3cce940c6094e43184d"
+            }
+          },
+          "function_count": 7,
+          "sha256": "eb1e5c82fabad6be481706c82a9a834373f8b69307d19ffd23b775c884470a46",
+          "strict_record_sha256": "ab1860e5817d725ecfc03bcec7ea37f7ca1f81c1c433657171c6a8ec0e0b52b4",
+          "unwind_count": 1
+        },
+        "after/extra_tuple_2": {
+          "allocated_data_count": 9,
+          "command": [
+            "clang++-21",
+            "-DFILTER_SEAMS_NO_MAIN=1",
+            "-fno-vectorize",
+            "-fno-slp-vectorize",
+            "-g",
+            "-Wall",
+            "-Wextra",
+            "-Wpedantic",
+            "-DHB_PREPARED_PREDICATE=1",
+            "--target=x86_64-linux-gnu",
+            "--gcc-toolchain=/usr",
+            "-std=c++23",
+            "-O3",
+            "-fno-fast-math",
+            "-ffp-contract=off",
+            "-fdenormal-fp-math=ieee",
+            "-fvisibility=hidden",
+            "-fvisibility-inlines-hidden",
+            "-ffunction-sections",
+            "-fdata-sections",
+            "-march=znver5",
+            "-mtune=znver5",
+            "-DSIXDB_TUNE_GENERIC=0",
+            "-DSIXDB_TUNE_GRANITE_RAPIDS=0",
+            "-DSIXDB_TUNE_ZEN4=0",
+            "-DSIXDB_TUNE_ZEN5=1",
+            "-DSIXDB_TUNE_NEOVERSE_V2=0",
+            "-DSIXDB_TUNE_NEOVERSE_V3=0",
+            "-ffile-prefix-map=/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-sources/after=/sixdb",
+            "-I",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-sources/after/ikea/include",
+            "-MD",
+            "-MF",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-codegen/avx512-zen5/after/extra_tuple_2.d",
+            "-c",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-sources/after/workbench/spikes/filter-composition/extra_tuple_2.cpp",
+            "-o",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-codegen/avx512-zen5/after/extra_tuple_2.o"
+          ],
+          "dependency_digests": {
+            "project": {
+              "count": 79,
+              "sha256": "537068a99083c70b7bc1f20d2d75d39651895a9cc70fcda343efea22a178b352"
+            },
+            "system": {
+              "count": 415,
+              "sha256": "d738e7a5d35faa9b140cb5583c2f59cf7801f37dbd74b38845f1934237466bb5"
+            }
+          },
+          "function_count": 16,
+          "sha256": "41a4fbcf003fdc3d63197a7a863b8a3196e81e9a852515a3a4cf694b9729f72a",
+          "strict_record_sha256": "0b91eca5523aec600a6037259ca03ec05747e53dce0217992b560bb80f87083e",
+          "unwind_count": 6
+        },
+        "after/producer": {
+          "allocated_data_count": 1,
+          "command": [
+            "clang++-21",
+            "-g",
+            "-Wall",
+            "-Wextra",
+            "-Wpedantic",
+            "-DHB_PREPARED_PREDICATE=1",
+            "--target=x86_64-linux-gnu",
+            "--gcc-toolchain=/usr",
+            "-std=c++23",
+            "-O3",
+            "-fno-fast-math",
+            "-ffp-contract=off",
+            "-fdenormal-fp-math=ieee",
+            "-fvisibility=hidden",
+            "-fvisibility-inlines-hidden",
+            "-ffunction-sections",
+            "-fdata-sections",
+            "-march=znver5",
+            "-mtune=znver5",
+            "-DSIXDB_TUNE_GENERIC=0",
+            "-DSIXDB_TUNE_GRANITE_RAPIDS=0",
+            "-DSIXDB_TUNE_ZEN4=0",
+            "-DSIXDB_TUNE_ZEN5=1",
+            "-DSIXDB_TUNE_NEOVERSE_V2=0",
+            "-DSIXDB_TUNE_NEOVERSE_V3=0",
+            "-ffile-prefix-map=/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-sources/after=/sixdb",
+            "-I",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-sources/after/ikea/include",
+            "-MD",
+            "-MF",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-codegen/avx512-zen5/after/producer.d",
+            "-c",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-sources/after/workbench/spikes/ikea-composition/handle-boundaries/producer.cpp",
+            "-o",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-codegen/avx512-zen5/after/producer.o"
+          ],
+          "dependency_digests": {
+            "project": {
+              "count": 70,
+              "sha256": "1d0368c1f598e4f981b419d76face33c972c4ff85542572d206a76f7731e56e7"
+            },
+            "system": {
+              "count": 304,
+              "sha256": "3ca22837747b9943050083460e916031d4ffb0e4f931e3cce940c6094e43184d"
+            }
+          },
+          "function_count": 15,
+          "sha256": "509960c656ec9ac3a2e63ce02d7746539516349364e7ff60bee17167697ad41f",
+          "strict_record_sha256": "dfeb3ea5f61dae563647d91d06736d65265743c87979c2b7fc14d7a8241aaf4e",
+          "unwind_count": 1
+        },
+        "before/caller": {
+          "allocated_data_count": 0,
+          "command": [
+            "clang++-21",
+            "-g",
+            "-Wall",
+            "-Wextra",
+            "-Wpedantic",
+            "-DHB_PREPARED_PREDICATE=1",
+            "--target=x86_64-linux-gnu",
+            "--gcc-toolchain=/usr",
+            "-std=c++23",
+            "-O3",
+            "-fno-fast-math",
+            "-ffp-contract=off",
+            "-fdenormal-fp-math=ieee",
+            "-fvisibility=hidden",
+            "-fvisibility-inlines-hidden",
+            "-ffunction-sections",
+            "-fdata-sections",
+            "-march=znver5",
+            "-mtune=znver5",
+            "-DSIXDB_TUNE_GENERIC=0",
+            "-DSIXDB_TUNE_GRANITE_RAPIDS=0",
+            "-DSIXDB_TUNE_ZEN4=0",
+            "-DSIXDB_TUNE_ZEN5=1",
+            "-DSIXDB_TUNE_NEOVERSE_V2=0",
+            "-DSIXDB_TUNE_NEOVERSE_V3=0",
+            "-ffile-prefix-map=/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-sources/before=/sixdb",
+            "-I",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-sources/before/ikea/include",
+            "-MD",
+            "-MF",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-codegen/avx512-zen5/before/caller.d",
+            "-c",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-sources/before/workbench/spikes/ikea-composition/handle-boundaries/caller.cpp",
+            "-o",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-codegen/avx512-zen5/before/caller.o"
+          ],
+          "dependency_digests": {
+            "project": {
+              "count": 71,
+              "sha256": "242f3e5b1e65814da6175501a44798a73212028b639a85475e6e6ab6d9e2f9de"
+            },
+            "system": {
+              "count": 304,
+              "sha256": "3ca22837747b9943050083460e916031d4ffb0e4f931e3cce940c6094e43184d"
+            }
+          },
+          "function_count": 7,
+          "sha256": "0784fd10c911d4f01dc46d6e1426085233c2156916550bed2ad86198bcaaf867",
+          "strict_record_sha256": "d6c04c794b79610cc64535f4922b8800f40d7332ba90a9273fa7c7224001e4e7",
+          "unwind_count": 1
+        },
+        "before/extra_tuple_2": {
+          "allocated_data_count": 9,
+          "command": [
+            "clang++-21",
+            "-DFILTER_SEAMS_NO_MAIN=1",
+            "-fno-vectorize",
+            "-fno-slp-vectorize",
+            "-g",
+            "-Wall",
+            "-Wextra",
+            "-Wpedantic",
+            "-DHB_PREPARED_PREDICATE=1",
+            "--target=x86_64-linux-gnu",
+            "--gcc-toolchain=/usr",
+            "-std=c++23",
+            "-O3",
+            "-fno-fast-math",
+            "-ffp-contract=off",
+            "-fdenormal-fp-math=ieee",
+            "-fvisibility=hidden",
+            "-fvisibility-inlines-hidden",
+            "-ffunction-sections",
+            "-fdata-sections",
+            "-march=znver5",
+            "-mtune=znver5",
+            "-DSIXDB_TUNE_GENERIC=0",
+            "-DSIXDB_TUNE_GRANITE_RAPIDS=0",
+            "-DSIXDB_TUNE_ZEN4=0",
+            "-DSIXDB_TUNE_ZEN5=1",
+            "-DSIXDB_TUNE_NEOVERSE_V2=0",
+            "-DSIXDB_TUNE_NEOVERSE_V3=0",
+            "-ffile-prefix-map=/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-sources/before=/sixdb",
+            "-I",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-sources/before/ikea/include",
+            "-MD",
+            "-MF",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-codegen/avx512-zen5/before/extra_tuple_2.d",
+            "-c",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-sources/before/workbench/spikes/filter-composition/extra_tuple_2.cpp",
+            "-o",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-codegen/avx512-zen5/before/extra_tuple_2.o"
+          ],
+          "dependency_digests": {
+            "project": {
+              "count": 80,
+              "sha256": "55e8208daad8085abb7f91f1f9b480cc5b4ba820416a608e322af79429f0b29e"
+            },
+            "system": {
+              "count": 415,
+              "sha256": "d738e7a5d35faa9b140cb5583c2f59cf7801f37dbd74b38845f1934237466bb5"
+            }
+          },
+          "function_count": 16,
+          "sha256": "57ac0b6f60c1350727722452a5c7045744ae902a36ee30b8b6302689453f8061",
+          "strict_record_sha256": "8958cb683ffc2b44078d13c0eb4df63c542da0b739d8ba845dd7df27c3c60c3a",
+          "unwind_count": 6
+        },
+        "before/producer": {
+          "allocated_data_count": 1,
+          "command": [
+            "clang++-21",
+            "-g",
+            "-Wall",
+            "-Wextra",
+            "-Wpedantic",
+            "-DHB_PREPARED_PREDICATE=1",
+            "--target=x86_64-linux-gnu",
+            "--gcc-toolchain=/usr",
+            "-std=c++23",
+            "-O3",
+            "-fno-fast-math",
+            "-ffp-contract=off",
+            "-fdenormal-fp-math=ieee",
+            "-fvisibility=hidden",
+            "-fvisibility-inlines-hidden",
+            "-ffunction-sections",
+            "-fdata-sections",
+            "-march=znver5",
+            "-mtune=znver5",
+            "-DSIXDB_TUNE_GENERIC=0",
+            "-DSIXDB_TUNE_GRANITE_RAPIDS=0",
+            "-DSIXDB_TUNE_ZEN4=0",
+            "-DSIXDB_TUNE_ZEN5=1",
+            "-DSIXDB_TUNE_NEOVERSE_V2=0",
+            "-DSIXDB_TUNE_NEOVERSE_V3=0",
+            "-ffile-prefix-map=/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-sources/before=/sixdb",
+            "-I",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-sources/before/ikea/include",
+            "-MD",
+            "-MF",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-codegen/avx512-zen5/before/producer.d",
+            "-c",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-sources/before/workbench/spikes/ikea-composition/handle-boundaries/producer.cpp",
+            "-o",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-codegen/avx512-zen5/before/producer.o"
+          ],
+          "dependency_digests": {
+            "project": {
+              "count": 71,
+              "sha256": "ba1b5ff40d442c2f56c510b39e98e83c5345d4f3d7a7161d0cf04d1932ebf574"
+            },
+            "system": {
+              "count": 304,
+              "sha256": "3ca22837747b9943050083460e916031d4ffb0e4f931e3cce940c6094e43184d"
+            }
+          },
+          "function_count": 15,
+          "sha256": "06183340aadd9df8e2b59a338da1546a1a093baed4ab0d01df4d9eaa016c11e5",
+          "strict_record_sha256": "26b9741920c283d0803ca921b9e532507e5c7ceece77a632eb1e052024cb9e46",
+          "unwind_count": 1
+        }
+      }
+    },
+    "neon-v2": {
+      "assembly": {
+        "functions": {
+          "hb::checked_filter_command": {
+            "after": {
+              "bytes": 208,
+              "calls": [
+                "bl\t0x7c <hb::checked_filter_command(ikea::tuplepack::read_plan<64u, 16u> const&, ikea::tuplepack::basic_view<std::byte const> const&, unsigned long, unsigned long, unsigned long)+0x7c>",
+                "bl\t0x98 <hb::checked_filter_command(ikea::tuplepack::read_plan<64u, 16u> const&, ikea::tuplepack::basic_view<std::byte const> const&, unsigned long, unsigned long, unsigned long)+0x98>"
+              ],
+              "instructions": 52,
+              "signature": "hb::checked_filter_command(ikea::tuplepack::read_plan<64u, 16u> const&, ikea::tuplepack::basic_view<std::byte const> const&, unsigned long, unsigned long, unsigned long)",
+              "stack_adjustments": [
+                "sub\tsp, sp, #0x50",
+                "add\tsp, sp, #0x50"
+              ]
+            },
+            "before": {
+              "bytes": 224,
+              "calls": [
+                "bl\t0x7c <hb::checked_filter_command(ikea::tuplepack::read_plan<64u, 16u> const&, ikea::tuplepack::basic_view<std::byte const> const&, unsigned long, unsigned long, unsigned long)+0x7c>",
+                "bl\t0xa8 <hb::checked_filter_command(ikea::tuplepack::read_plan<64u, 16u> const&, ikea::tuplepack::basic_view<std::byte const> const&, unsigned long, unsigned long, unsigned long)+0xa8>"
+              ],
+              "instructions": 56,
+              "signature": "hb::checked_filter_command(ikea::tuplepack::read_plan<64u, 16u> const&, ikea::tuplepack::basic_view<std::byte const> const&, unsigned long, unsigned long, unsigned long)",
+              "stack_adjustments": [
+                "sub\tsp, sp, #0x70",
+                "add\tsp, sp, #0x70"
+              ]
+            }
+          },
+          "hb::consume_filter": {
+            "after": {
+              "bytes": 884,
+              "calls": [],
+              "instructions": 221,
+              "signature": "hb::consume_filter(ikea::tuplepack::predicate<std::byte const, 16u>, unsigned long, unsigned long, unsigned long)",
+              "stack_adjustments": [
+                "stp\tx20, x19, [sp, #-0x10]!",
+                "ldp\tx20, x19, [sp], #0x10",
+                "ldp\tx20, x19, [sp], #0x10"
+              ]
+            },
+            "before": {
+              "bytes": 10352,
+              "calls": [],
+              "instructions": 2588,
+              "signature": "hb::consume_filter(ikea::tuplepack::predicate<64u, std::byte const, 16u>, unsigned long, unsigned long, unsigned long)",
+              "stack_adjustments": [
+                "stp\tx20, x19, [sp, #-0x10]!",
+                "ldp\tx20, x19, [sp], #0x10",
+                "ldp\tx20, x19, [sp], #0x10",
+                "ldp\tx20, x19, [sp], #0x10"
+              ]
+            }
+          },
+          "hb::crowded_filters": {
+            "after": {
+              "bytes": 308,
+              "calls": [
+                "bl\t0x5c <hb::crowded_filters(std::array<ikea::tuplepack::predicate<std::byte const, 16u>, 7ul> const&, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long)+0x5c>",
+                "bl\t0x74 <hb::crowded_filters(std::array<ikea::tuplepack::predicate<std::byte const, 16u>, 7ul> const&, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long)+0x74>",
+                "bl\t0x8c <hb::crowded_filters(std::array<ikea::tuplepack::predicate<std::byte const, 16u>, 7ul> const&, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long)+0x8c>",
+                "bl\t0xa4 <hb::crowded_filters(std::array<ikea::tuplepack::predicate<std::byte const, 16u>, 7ul> const&, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long)+0xa4>",
+                "bl\t0xbc <hb::crowded_filters(std::array<ikea::tuplepack::predicate<std::byte const, 16u>, 7ul> const&, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long)+0xbc>",
+                "bl\t0xd4 <hb::crowded_filters(std::array<ikea::tuplepack::predicate<std::byte const, 16u>, 7ul> const&, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long)+0xd4>",
+                "bl\t0xf0 <hb::crowded_filters(std::array<ikea::tuplepack::predicate<std::byte const, 16u>, 7ul> const&, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long)+0xf0>"
+              ],
+              "instructions": 77,
+              "signature": "hb::crowded_filters(std::array<ikea::tuplepack::predicate<std::byte const, 16u>, 7ul> const&, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long)",
+              "stack_adjustments": [
+                "sub\tsp, sp, #0x70",
+                "add\tsp, sp, #0x70"
+              ]
+            },
+            "before": {
+              "bytes": 404,
+              "calls": [
+                "bl\t0x5c <hb::crowded_filters(std::array<ikea::tuplepack::predicate<64u, std::byte const, 16u>, 7ul> const&, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long)+0x5c>",
+                "bl\t0x84 <hb::crowded_filters(std::array<ikea::tuplepack::predicate<64u, std::byte const, 16u>, 7ul> const&, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long)+0x84>",
+                "bl\t0xac <hb::crowded_filters(std::array<ikea::tuplepack::predicate<64u, std::byte const, 16u>, 7ul> const&, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long)+0xac>",
+                "bl\t0xd4 <hb::crowded_filters(std::array<ikea::tuplepack::predicate<64u, std::byte const, 16u>, 7ul> const&, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long)+0xd4>",
+                "bl\t0xfc <hb::crowded_filters(std::array<ikea::tuplepack::predicate<64u, std::byte const, 16u>, 7ul> const&, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long)+0xfc>",
+                "bl\t0x124 <hb::crowded_filters(std::array<ikea::tuplepack::predicate<64u, std::byte const, 16u>, 7ul> const&, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long)+0x124>",
+                "bl\t0x150 <hb::crowded_filters(std::array<ikea::tuplepack::predicate<64u, std::byte const, 16u>, 7ul> const&, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long)+0x150>"
+              ],
+              "instructions": 101,
+              "signature": "hb::crowded_filters(std::array<ikea::tuplepack::predicate<64u, std::byte const, 16u>, 7ul> const&, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long)",
+              "stack_adjustments": [
+                "sub\tsp, sp, #0x150",
+                "add\tsp, sp, #0x150"
+              ]
+            }
+          },
+          "hb::make_filter": {
+            "after": {
+              "bytes": 96,
+              "calls": [],
+              "instructions": 24,
+              "signature": "hb::make_filter(ikea::tuplepack::read_plan<64u, 16u> const&, ikea::tuplepack::basic_view<std::byte const> const&)",
+              "stack_adjustments": []
+            },
+            "before": {
+              "bytes": 96,
+              "calls": [],
+              "instructions": 24,
+              "signature": "hb::make_filter(ikea::tuplepack::read_plan<64u, 16u> const&, ikea::tuplepack::basic_view<std::byte const> const&)",
+              "stack_adjustments": []
+            }
+          },
+          "hb::pass_predicate": {
+            "after": {
+              "bytes": 4,
+              "calls": [],
+              "instructions": 1,
+              "signature": "hb::pass_predicate(ikea::tuplepack::predicate<std::byte const, 16u>)",
+              "stack_adjustments": []
+            },
+            "before": {
+              "bytes": 20,
+              "calls": [],
+              "instructions": 5,
+              "signature": "hb::pass_predicate(ikea::tuplepack::predicate<64u, std::byte const, 16u>)",
+              "stack_adjustments": []
+            }
+          }
+        },
+        "paths": {
+          "after": {
+            "instructions": 339,
+            "literal_function_sha256": "b71e1119a70a78f797c357754f01f6866ee27a57f2e73b8161b6ba4e307a0374",
+            "opcodes": {
+              "add": 12,
+              "addv": 16,
+              "and": 24,
+              "b": 8,
+              "b.eq": 1,
+              "b.hi": 8,
+              "b.ne": 16,
+              "bfi": 8,
+              "cbz": 8,
+              "cmhs": 8,
+              "cmp": 25,
+              "dup": 16,
+              "eor": 8,
+              "ext": 8,
+              "fmov": 16,
+              "ldp": 2,
+              "ldr": 52,
+              "ldrb": 16,
+              "ldrh": 2,
+              "ldur": 8,
+              "lsl": 24,
+              "lsr": 8,
+              "mov": 6,
+              "mul": 8,
+              "mvn": 8,
+              "stur": 8,
+              "sub": 7,
+              "ubfiz": 8
+            }
+          },
+          "before": {
+            "instructions": 379,
+            "literal_function_sha256": "c8c8f5171c0179bedbe210d88c1806ddf3fb26fb318da6b8e4a54fb2ccb8eee0",
+            "opcodes": {
+              "add": 18,
+              "addv": 16,
+              "and": 24,
+              "b": 16,
+              "b.eq": 1,
+              "b.hi": 8,
+              "b.ne": 16,
+              "bfi": 8,
+              "cbz": 8,
+              "cmhs": 8,
+              "cmp": 25,
+              "dup": 16,
+              "eor": 8,
+              "ext": 8,
+              "fmov": 16,
+              "ldp": 8,
+              "ldr": 72,
+              "ldrb": 16,
+              "ldrh": 8,
+              "ldur": 8,
+              "lsl": 24,
+              "lsr": 8,
+              "mul": 8,
+              "mvn": 8,
+              "stur": 8,
+              "sub": 7,
+              "ubfiz": 8
+            }
+          }
+        }
+      },
+      "census": {
+        "after": {
+          "checked_filter": {
+            "alignment": 8,
+            "size": 24,
+            "standard_layout": 1,
+            "trivial_copy": 1,
+            "trivial_destructor": 1,
+            "trivial_move": 1
+          },
+          "checked_reader": {
+            "alignment": 8,
+            "size": 24,
+            "standard_layout": 1,
+            "trivial_copy": 1,
+            "trivial_destructor": 1,
+            "trivial_move": 1
+          },
+          "predicate": {
+            "alignment": 8,
+            "size": 16,
+            "standard_layout": 1,
+            "trivial_copy": 1,
+            "trivial_destructor": 1,
+            "trivial_move": 1
+          },
+          "reader": {
+            "alignment": 8,
+            "size": 16,
+            "standard_layout": 1,
+            "trivial_copy": 1,
+            "trivial_destructor": 1,
+            "trivial_move": 1
+          }
+        },
+        "before": {
+          "checked_filter": {
+            "alignment": 8,
+            "size": 32,
+            "standard_layout": 1,
+            "trivial_copy": 1,
+            "trivial_destructor": 1,
+            "trivial_move": 1
+          },
+          "checked_reader": {
+            "alignment": 8,
+            "size": 24,
+            "standard_layout": 1,
+            "trivial_copy": 1,
+            "trivial_destructor": 1,
+            "trivial_move": 1
+          },
+          "predicate": {
+            "alignment": 8,
+            "size": 24,
+            "standard_layout": 1,
+            "trivial_copy": 1,
+            "trivial_destructor": 1,
+            "trivial_move": 1
+          },
+          "reader": {
+            "alignment": 8,
+            "size": 16,
+            "standard_layout": 1,
+            "trivial_copy": 1,
+            "trivial_destructor": 1,
+            "trivial_move": 1
+          }
+        }
+      },
+      "objects": {
+        "after/caller": {
+          "allocated_data_count": 0,
+          "command": [
+            "clang++-21",
+            "-g",
+            "-Wall",
+            "-Wextra",
+            "-Wpedantic",
+            "-DHB_PREPARED_PREDICATE=1",
+            "--target=aarch64-linux-gnu",
+            "--gcc-toolchain=/usr",
+            "-std=c++23",
+            "-O3",
+            "-fno-fast-math",
+            "-ffp-contract=off",
+            "-fdenormal-fp-math=ieee",
+            "-fvisibility=hidden",
+            "-fvisibility-inlines-hidden",
+            "-ffunction-sections",
+            "-fdata-sections",
+            "-march=armv8-a+simd",
+            "-mtune=neoverse-v2",
+            "-DSIXDB_TUNE_GENERIC=0",
+            "-DSIXDB_TUNE_GRANITE_RAPIDS=0",
+            "-DSIXDB_TUNE_ZEN4=0",
+            "-DSIXDB_TUNE_ZEN5=0",
+            "-DSIXDB_TUNE_NEOVERSE_V2=1",
+            "-DSIXDB_TUNE_NEOVERSE_V3=0",
+            "-ffile-prefix-map=/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-sources/after=/sixdb",
+            "-I",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-sources/after/ikea/include",
+            "-MD",
+            "-MF",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-codegen/neon-v2/after/caller.d",
+            "-c",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-sources/after/workbench/spikes/ikea-composition/handle-boundaries/caller.cpp",
+            "-o",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-codegen/neon-v2/after/caller.o"
+          ],
+          "dependency_digests": {
+            "project": {
+              "count": 69,
+              "sha256": "4a803d4a920f57b0cd32c1a617b441ab5bd04aa4184d4f9c48adb346ec9168ef"
+            },
+            "system": {
+              "count": 185,
+              "sha256": "dacacc7e3e8948c4c5e725ab1122625ff5dbd35d569f50c3b569de7d703fbfaf"
+            }
+          },
+          "function_count": 7,
+          "sha256": "ddd4167ccb2e828f50bac12245a001e0236652665741f8ebed517dc866d93a54",
+          "strict_record_sha256": "9ebe07663742128aa7885c513850a3b4eebc8c6d4c0069ece4ad4ecfa835d33a",
+          "unwind_count": 1
+        },
+        "after/extra_tuple_2": {
+          "allocated_data_count": 7,
+          "command": [
+            "clang++-21",
+            "-DFILTER_SEAMS_NO_MAIN=1",
+            "-fno-vectorize",
+            "-fno-slp-vectorize",
+            "-g",
+            "-Wall",
+            "-Wextra",
+            "-Wpedantic",
+            "-DHB_PREPARED_PREDICATE=1",
+            "--target=aarch64-linux-gnu",
+            "--gcc-toolchain=/usr",
+            "-std=c++23",
+            "-O3",
+            "-fno-fast-math",
+            "-ffp-contract=off",
+            "-fdenormal-fp-math=ieee",
+            "-fvisibility=hidden",
+            "-fvisibility-inlines-hidden",
+            "-ffunction-sections",
+            "-fdata-sections",
+            "-march=armv8-a+simd",
+            "-mtune=neoverse-v2",
+            "-DSIXDB_TUNE_GENERIC=0",
+            "-DSIXDB_TUNE_GRANITE_RAPIDS=0",
+            "-DSIXDB_TUNE_ZEN4=0",
+            "-DSIXDB_TUNE_ZEN5=0",
+            "-DSIXDB_TUNE_NEOVERSE_V2=1",
+            "-DSIXDB_TUNE_NEOVERSE_V3=0",
+            "-ffile-prefix-map=/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-sources/after=/sixdb",
+            "-I",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-sources/after/ikea/include",
+            "-MD",
+            "-MF",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-codegen/neon-v2/after/extra_tuple_2.d",
+            "-c",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-sources/after/workbench/spikes/filter-composition/extra_tuple_2.cpp",
+            "-o",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-codegen/neon-v2/after/extra_tuple_2.o"
+          ],
+          "dependency_digests": {
+            "project": {
+              "count": 78,
+              "sha256": "bc4bbcc3f20d2479df617edc753dc83a246cb8c14ccbc4dc49546fa4fed1fa76"
+            },
+            "system": {
+              "count": 295,
+              "sha256": "58fa8ac196d56bcac65e58fd2bd6c0f52e25a0839673083a9b0e9f3b86e7ef8c"
+            }
+          },
+          "function_count": 17,
+          "sha256": "ebda471e641c7af4d5c14c94fde6f9c905ebeebb8fe3b04d37ab2b9efe33efe1",
+          "strict_record_sha256": "699341f7fdf68c38ba2726cf1f5ed39ff544c6e4012ded7e963ee164e333ee7f",
+          "unwind_count": 6
+        },
+        "after/producer": {
+          "allocated_data_count": 2,
+          "command": [
+            "clang++-21",
+            "-g",
+            "-Wall",
+            "-Wextra",
+            "-Wpedantic",
+            "-DHB_PREPARED_PREDICATE=1",
+            "--target=aarch64-linux-gnu",
+            "--gcc-toolchain=/usr",
+            "-std=c++23",
+            "-O3",
+            "-fno-fast-math",
+            "-ffp-contract=off",
+            "-fdenormal-fp-math=ieee",
+            "-fvisibility=hidden",
+            "-fvisibility-inlines-hidden",
+            "-ffunction-sections",
+            "-fdata-sections",
+            "-march=armv8-a+simd",
+            "-mtune=neoverse-v2",
+            "-DSIXDB_TUNE_GENERIC=0",
+            "-DSIXDB_TUNE_GRANITE_RAPIDS=0",
+            "-DSIXDB_TUNE_ZEN4=0",
+            "-DSIXDB_TUNE_ZEN5=0",
+            "-DSIXDB_TUNE_NEOVERSE_V2=1",
+            "-DSIXDB_TUNE_NEOVERSE_V3=0",
+            "-ffile-prefix-map=/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-sources/after=/sixdb",
+            "-I",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-sources/after/ikea/include",
+            "-MD",
+            "-MF",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-codegen/neon-v2/after/producer.d",
+            "-c",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-sources/after/workbench/spikes/ikea-composition/handle-boundaries/producer.cpp",
+            "-o",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-codegen/neon-v2/after/producer.o"
+          ],
+          "dependency_digests": {
+            "project": {
+              "count": 69,
+              "sha256": "00bcfad8c0c1b40b0586254668c06d5959556998d87b70886f6a0eaee8bdeb0b"
+            },
+            "system": {
+              "count": 185,
+              "sha256": "dacacc7e3e8948c4c5e725ab1122625ff5dbd35d569f50c3b569de7d703fbfaf"
+            }
+          },
+          "function_count": 15,
+          "sha256": "3a62f40e7f02ad2fa120b75bff4240cfe70b365fe463fcfcd0ac1fde7aa1b459",
+          "strict_record_sha256": "1a9ab12ac5765a32018e7662299bb96da9ddd59f2d06d9ca5bbb5d9eb72abe6a",
+          "unwind_count": 1
+        },
+        "before/caller": {
+          "allocated_data_count": 0,
+          "command": [
+            "clang++-21",
+            "-g",
+            "-Wall",
+            "-Wextra",
+            "-Wpedantic",
+            "-DHB_PREPARED_PREDICATE=1",
+            "--target=aarch64-linux-gnu",
+            "--gcc-toolchain=/usr",
+            "-std=c++23",
+            "-O3",
+            "-fno-fast-math",
+            "-ffp-contract=off",
+            "-fdenormal-fp-math=ieee",
+            "-fvisibility=hidden",
+            "-fvisibility-inlines-hidden",
+            "-ffunction-sections",
+            "-fdata-sections",
+            "-march=armv8-a+simd",
+            "-mtune=neoverse-v2",
+            "-DSIXDB_TUNE_GENERIC=0",
+            "-DSIXDB_TUNE_GRANITE_RAPIDS=0",
+            "-DSIXDB_TUNE_ZEN4=0",
+            "-DSIXDB_TUNE_ZEN5=0",
+            "-DSIXDB_TUNE_NEOVERSE_V2=1",
+            "-DSIXDB_TUNE_NEOVERSE_V3=0",
+            "-ffile-prefix-map=/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-sources/before=/sixdb",
+            "-I",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-sources/before/ikea/include",
+            "-MD",
+            "-MF",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-codegen/neon-v2/before/caller.d",
+            "-c",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-sources/before/workbench/spikes/ikea-composition/handle-boundaries/caller.cpp",
+            "-o",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-codegen/neon-v2/before/caller.o"
+          ],
+          "dependency_digests": {
+            "project": {
+              "count": 70,
+              "sha256": "a35239fe88b26bdbf008a445f2f12efba14e6bd1c753dc8d4f04e10c71ef70c4"
+            },
+            "system": {
+              "count": 185,
+              "sha256": "dacacc7e3e8948c4c5e725ab1122625ff5dbd35d569f50c3b569de7d703fbfaf"
+            }
+          },
+          "function_count": 7,
+          "sha256": "dc7159ad1c6747905daf3e594ce5685bec0f553e759c980fffcc6a940ee4b307",
+          "strict_record_sha256": "e0669ae7cb2b30fc865236a14426a471784000dcfff2c953085d825cb7c782fe",
+          "unwind_count": 1
+        },
+        "before/extra_tuple_2": {
+          "allocated_data_count": 7,
+          "command": [
+            "clang++-21",
+            "-DFILTER_SEAMS_NO_MAIN=1",
+            "-fno-vectorize",
+            "-fno-slp-vectorize",
+            "-g",
+            "-Wall",
+            "-Wextra",
+            "-Wpedantic",
+            "-DHB_PREPARED_PREDICATE=1",
+            "--target=aarch64-linux-gnu",
+            "--gcc-toolchain=/usr",
+            "-std=c++23",
+            "-O3",
+            "-fno-fast-math",
+            "-ffp-contract=off",
+            "-fdenormal-fp-math=ieee",
+            "-fvisibility=hidden",
+            "-fvisibility-inlines-hidden",
+            "-ffunction-sections",
+            "-fdata-sections",
+            "-march=armv8-a+simd",
+            "-mtune=neoverse-v2",
+            "-DSIXDB_TUNE_GENERIC=0",
+            "-DSIXDB_TUNE_GRANITE_RAPIDS=0",
+            "-DSIXDB_TUNE_ZEN4=0",
+            "-DSIXDB_TUNE_ZEN5=0",
+            "-DSIXDB_TUNE_NEOVERSE_V2=1",
+            "-DSIXDB_TUNE_NEOVERSE_V3=0",
+            "-ffile-prefix-map=/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-sources/before=/sixdb",
+            "-I",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-sources/before/ikea/include",
+            "-MD",
+            "-MF",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-codegen/neon-v2/before/extra_tuple_2.d",
+            "-c",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-sources/before/workbench/spikes/filter-composition/extra_tuple_2.cpp",
+            "-o",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-codegen/neon-v2/before/extra_tuple_2.o"
+          ],
+          "dependency_digests": {
+            "project": {
+              "count": 79,
+              "sha256": "0d7ceb430a9561710cc90b98d0c54678cc74efe8a36b8aff0c1e4e74d858aeea"
+            },
+            "system": {
+              "count": 295,
+              "sha256": "58fa8ac196d56bcac65e58fd2bd6c0f52e25a0839673083a9b0e9f3b86e7ef8c"
+            }
+          },
+          "function_count": 17,
+          "sha256": "bfa3acb59a54a62ac5fdedf142afb05bc71d63c54aa24263a3a31f19dc186b6d",
+          "strict_record_sha256": "1acc8bc0d905207e56e1827ba7899488ce05efafa6e158e24513de2b3477d94d",
+          "unwind_count": 6
+        },
+        "before/producer": {
+          "allocated_data_count": 2,
+          "command": [
+            "clang++-21",
+            "-g",
+            "-Wall",
+            "-Wextra",
+            "-Wpedantic",
+            "-DHB_PREPARED_PREDICATE=1",
+            "--target=aarch64-linux-gnu",
+            "--gcc-toolchain=/usr",
+            "-std=c++23",
+            "-O3",
+            "-fno-fast-math",
+            "-ffp-contract=off",
+            "-fdenormal-fp-math=ieee",
+            "-fvisibility=hidden",
+            "-fvisibility-inlines-hidden",
+            "-ffunction-sections",
+            "-fdata-sections",
+            "-march=armv8-a+simd",
+            "-mtune=neoverse-v2",
+            "-DSIXDB_TUNE_GENERIC=0",
+            "-DSIXDB_TUNE_GRANITE_RAPIDS=0",
+            "-DSIXDB_TUNE_ZEN4=0",
+            "-DSIXDB_TUNE_ZEN5=0",
+            "-DSIXDB_TUNE_NEOVERSE_V2=1",
+            "-DSIXDB_TUNE_NEOVERSE_V3=0",
+            "-ffile-prefix-map=/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-sources/before=/sixdb",
+            "-I",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-sources/before/ikea/include",
+            "-MD",
+            "-MF",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-codegen/neon-v2/before/producer.d",
+            "-c",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-sources/before/workbench/spikes/ikea-composition/handle-boundaries/producer.cpp",
+            "-o",
+            "/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-projection-final-v5-codegen/neon-v2/before/producer.o"
+          ],
+          "dependency_digests": {
+            "project": {
+              "count": 70,
+              "sha256": "8c9a271bb1b17b9cb5f40ed6fac5b293a8e233b4ac6aab53a2bd9771389529f9"
+            },
+            "system": {
+              "count": 185,
+              "sha256": "dacacc7e3e8948c4c5e725ab1122625ff5dbd35d569f50c3b569de7d703fbfaf"
+            }
+          },
+          "function_count": 15,
+          "sha256": "546b6927723fea43f412d95139d600ecf7ef1dc46be50552811d2aecb507dbeb",
+          "strict_record_sha256": "5634f94735d01b714052ad0c72f982ba64dad3ddca364f5c5437a8400b534f63",
+          "unwind_count": 1
+        }
+      }
+    }
+  },
+  "runner_sha256": "8c55914e40b42e83b9f06309266fa6831174760d3e8c5d83edfa1c457cbb7f5a",
+  "scope": "Final compact public predicate ABI, configured complete callers and independent local NEON boundary proof; no native timing/adoption claim.",
+  "shared_files": {
+    "ikea/CMakeLists.txt": {
+      "r4_sha256": "839d4220497f3535db925195fc2852ed95cecb1caa90ba99c460e519043be311",
+      "shared_sha256": "5352811e402a49f35f440c7abde52e9f36e19641f5b9fed175873fac559021f0"
+    },
+    "ikea/examples/filters/ordinary.cpp": {
+      "r4_sha256": "db7721aec6d4dd5392b8dd3ed3739135b85b7a63aed022108e5a56895825384b",
+      "shared_sha256": "602f5dff0e167ac61c77ae47d4dad9c51cd680354f63f12c95f30f4feb6b0f7d"
+    },
+    "ikea/include/ikea/streampack/write.h": {
+      "r4_sha256": "4d79cfd0099200c0c5e5d2644de788a2a4699653e915595ff26367abe6b7e55e",
+      "shared_sha256": "aa98475d49c4c25e8fd94772a6b585622ac592d16e4879bfd10cfcc5b3e452d4"
+    },
+    "ikea/include/ikea/tuplepack/author/execution.h": {
+      "r4_sha256": "f03389446e98e880c0f6240666bd3e4a4121981dd7049e03527b72d6743f7550",
+      "shared_sha256": "9836d06d242ab571f77e69fa757d3a67315e9ef6546dd01b0c0eb169d871fcbe"
+    },
+    "ikea/include/ikea/tuplepack/author/native.h": {
+      "r4_sha256": "60173eb6e223227a5cdcdc1d42c99a66218453202c1cac1110aed2e5c4fa07b9",
+      "shared_sha256": "3e941538ec1aa82210edd7316d3982dfd96118fdf01303247bc9557743b50118"
+    },
+    "ikea/include/ikea/tuplepack/detail/native/packet.h": {
+      "r4_sha256": "9cd3657bca9c6a6757a41ee30cdea0234b42b00702b29613a5a654839a69bb6b",
+      "shared_sha256": "a31462a84217443e95cbe9c3994cb37367ca5843e30a7838bfd35506fa5ed8db"
+    },
+    "ikea/include/ikea/tuplepack/detail/native/read.h": {
+      "r4_sha256": "498b2adc6c9f4641165be5e3e01b286d14056de0ddd0b4ffb3c580288a0fad00",
+      "shared_sha256": "22072dd283041286d3e3d104f9ce7a00d287276a21d5ac4765647d3faf7d9dd9"
+    },
+    "ikea/include/ikea/tuplepack/initialize.h": {
+      "r4_sha256": "8ba6932d153496ade7db1bd2dc6002918dfc8c0e8376740ee9ce2a8069ae5f4b",
+      "shared_sha256": "23016ad6ac7ccd9860c74201dd135b56cb31acdb4835883fd0b45b0c100e2694"
+    },
+    "ikea/test/filters/tuple.cpp": {
+      "r4_sha256": "bcb77a41a7a4a133e1c7657a28574c825dba1576aa56697781dd6824a6a78bea",
+      "shared_sha256": "23b8631c99b507b82e6f9913f62f9e949739874948e89b84f83b484b06516dfb"
+    },
+    "ikea/test/tuplepack/access.cpp": {
+      "r4_sha256": null,
+      "shared_sha256": "f81c9866aaf5ee2c1df8d0a9ac7621c2e1dde11a96c3127d6e16c862aec6ddf6"
+    },
+    "ikea/test/tuplepack/operations.cpp": {
+      "r4_sha256": "be71c65fd9e988e4421ee01a00daf565d75f7d6db0307c435fb1001901d342a2",
+      "shared_sha256": "558b381ae1d93cc3e4e9ccc5b89df415745f983db01179026d61dba1e093750c"
+    },
+    "workbench/spikes/filter-composition/mask-codegen.cpp": {
+      "r4_sha256": "03df44ddc7e9d5eabaf74a1aecef66250badbfcff2ff53ebb3fe2731eaf4dc5b",
+      "shared_sha256": "7f673bcc3d61ab95a6296ad9c9b0914c29705a70094e3567dd984d34ad95b4c6"
+    }
+  },
+  "shared_patches": {
+    "ikea/include/ikea/tuplepack/read.h": "--- r4/ikea/include/ikea/tuplepack/read.h\n+++ shared/ikea/include/ikea/tuplepack/read.h\n@@ -5,7 +5,6 @@\n #include <ikea/tuplepack/selection.h>\n \n namespace ikea::tuplepack {\n-template <unsigned N, class Byte, unsigned Rows> class predicate;\n /// Borrows a named plan and view. Their values and addresses remain stable;\n /// assigning a new plan or placement requires rebinding the operation.\n /// Output/plan/selection metadata must be disjoint from mutable source storage.\n",
+    "ikea/test/filters/tuple.cpp": "--- r4/ikea/test/filters/tuple.cpp\n+++ shared/ikea/test/filters/tuple.cpp\n@@ -18,8 +18,8 @@\n                 auto source = *tp::view::attach(layout, std::as_writable_bytes(std::span{bytes}), 65, stride);\n                 auto plan = *tp::read_plan<N, Rows>::make(layout, std::array<std::uint8_t, 1>{0});\n                 auto read = *tp::bind_reader(plan, source);\n-                // Prepared predicates retain the shared plan/view, not this\n-                // intermediate reader wrapper. Both forms use the same bytes.\n+                // The intermediate reader wrapper may expire after binding.\n+                // Both prepared forms use the same bytes.\n                 auto filter = [&] {\n                     auto transient = *tp::bind_reader(plan, source);\n                     return *tp::bind_predicate(transient);\n",
+    "workbench/spikes/filter-composition/extra.h": "--- r4/workbench/spikes/filter-composition/extra.h\n+++ shared/workbench/spikes/filter-composition/extra.h\n@@ -95,7 +95,7 @@\n     static word truth(const Input &in, unsigned i) { return in.truth[i]; }\n };\n using Reader = tp::author::native_reader<64, std::byte, 16>;\n-using Filter = tp::predicate<64, std::byte, 16>;\n+using Filter = typename decltype(tp::bind_predicate(std::declval<const tp::reader<64, std::byte, 16>&>()))::value_type;\n struct TupleInput {\n     const Reader *read;\n     const Filter *filter;\n",
+    "workbench/spikes/ikea-composition/handle-boundaries/probe.h": "--- r4/workbench/spikes/ikea-composition/handle-boundaries/probe.h\n+++ shared/workbench/spikes/ikea-composition/handle-boundaries/probe.h\n@@ -22,7 +22,7 @@\n using native_reader = tp::author::native_reader<8, const std::byte>;\n using native_writer = tp::author::native_writer<8>;\n using filter_reader = tp::reader<64, const std::byte, 16>;\n-using predicate = tp::detail::field_predicate<64, const std::byte, 16>;\n+using predicate = typename decltype(tp::bind_predicate(std::declval<const filter_reader&>()))::value_type;\n using filter = std::conditional_t<HB_PREPARED_PREDICATE, predicate, filter_reader>;\n using read_plan = tp::read_plan<8>;\n using write_plan = tp::write_plan<8>;\n"
+  },
+  "source_manifest_sha256": "3b4f6992bc7f256675534d70c5140eb8e2b540ac1b1ae1dfea45542daf24e937",
+  "source_map_sha256": {
+    "after": "a4388c9a6695826bec2703d1da8ff1e56062b8c9f81bfeb489b047a2d0ef1d7d",
+    "before": "929b17889f350d24e2e740c052fc28411fcfaf589261c0216cc9b881b9f2cde6"
+  },
+  "source_pair": "build/ikea-cohesion-v2/predicate-projection-final-v5-sources"
+}
