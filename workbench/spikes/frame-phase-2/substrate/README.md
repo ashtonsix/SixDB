@@ -93,6 +93,47 @@ both hosts); "full" is 2,999,808 rows (the image sits in LLC on both).
    Full-block SUM can also come from block summaries, which Ashton placed on
    the parent segment; body SUM matters for selected rows.
 
+## Predicate(A) → SUM(B)
+
+[`select.cpp`](select.cpp) computes `SUM(B) WHERE A >= t` on phase 1's images
+of two columns, at four selectivities, in original order and with A and B's
+blocks permuted together (same rows, same bytes). Frame staged emits A's row
+masks with phase 1's emitter, derives B's coarse mask from A's per-block
+counts and runs phase 1's masked SUM; Frame fused does both per block while
+the mask is live. Native staged builds a bitmap and sums its set rows; native
+fused is a branch-free pass over both arrays. Warm repeats, jobs
+`20261023T220316Z-475d558f` (Zen 5) and `20261023T220351Z-8137fae3`
+(Graviton 4), source `9ba76dd1`. Medians:
+[evidence/select-v1-summary.txt](evidence/select-v1-summary.txt).
+
+| Pair, AVX-512, original order | Density | Blocks touched | Frame fused µs | Best native µs | Native / Frame |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| UserID → URLHash | 0.1% | 0.2% | 76.0 | 432.0 | 5.7× |
+| UserID → URLHash | 10% | 10% | 140.6 | 620.6 | 4.4× |
+| UserID → URLHash | 50% | 50% | 577.1 | 1188.1 | 2.1× |
+| EventTime → WatchID | 1% | 45% | 919.7 | 324.1 | 0.35× |
+| EventTime → WatchID | 50% | 77% | 747.9 | 1035.9 | 1.4× |
+| OS → UserID | 2% | 58% | 1678.7 | 300.5 | 0.18× |
+| RegionID → ClientIP | 10% | 89% | 2304.0 | 231.6 | 0.10× |
+
+Graviton 4 shows the same split: UserID → URLHash 4.2–7.7× faster than native
+below 10% density, every predicate that spreads across blocks 0.3–0.5×.
+
+1. **Pruning is the win, and only where A's matches cluster by block.** When
+   the selected rows fill few blocks, Frame skips B's other blocks entirely
+   and beats the best native plan 2–7.7×. When A's matches touch most blocks,
+   Frame pays a full predicate pass over run-heavy A plus masked leaves over
+   B, and loses 3–10× to a native pass that streams both arrays.
+2. **Losing cells are leaf-bound again.** RegionID → ClientIP at 10% spends
+   2.3 ms against 0.23 ms native fused, with 89% of blocks touched. The same
+   leaf work as the full scans (run predicates, masked plane sums) dominates.
+3. **Fused per block beats staged by 5–35%.** Keeping the mask live removes
+   one pass over A's masks and the coarse derivation; it never lost.
+4. **Whole-block permutation costs Frame 0–60% warm, native almost nothing.**
+   This is not the phase 1 scattered cold loss (that needs a cold harness,
+   front A's); warm, the permuted layout mainly breaks sequential order for
+   Frame's variable-size bodies.
+
 ## Next
 
 Ikea LEAD's review proposes separating the units before committing to
@@ -111,4 +152,6 @@ raw-record audit.
   direct Local bit-plane SUM and COUNT for packed blocks (popcount per plane,
   no unpack), and a vectorised run leaf.
 - Attribute the leaves' residence sensitivity once counters are qualified.
-- Selected-row SUM and COUNT, where block summaries cannot answer.
+- Leaves for predicate emission over runs and for masked plane sums, which
+  decide every losing selection cell.
+- The same pairs cold, through front A's conditioning harness.
