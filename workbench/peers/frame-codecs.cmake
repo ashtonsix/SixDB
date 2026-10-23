@@ -1,4 +1,9 @@
 # Pinned upstream primitives only. No workload, Frame representation or timing policy.
+# Publish identities in each including directory, even when another consumer
+# already instantiated the globally shared targets.
+set(WORKBENCH_TURBOPFOR_REVISION "1f646d98d65ee91befd3066f351f2cf386593442")
+set(WORKBENCH_FASTLANES_REVISION "f0edc1020a538f1f8098640fce8347c9ac247a0d")
+set(WORKBENCH_ALP_REVISION "31ca0ed11c93c99d3f5b5c30e01a3e1c3832d3ce")
 include_guard(GLOBAL)
 include(FetchContent)
 
@@ -28,10 +33,6 @@ function(workbench_codec_settings target)
     target_compile_options(${target} PRIVATE "-mtune=${sixdb_clang_tune}")
   endif()
 endfunction()
-
-set(WORKBENCH_TURBOPFOR_REVISION "1f646d98d65ee91befd3066f351f2cf386593442")
-set(WORKBENCH_FASTLANES_REVISION "f0edc1020a538f1f8098640fce8347c9ac247a0d")
-set(WORKBENCH_ALP_REVISION "31ca0ed11c93c99d3f5b5c30e01a3e1c3832d3ce")
 
 workbench_codec_source(frame_turbopfor powturbo/TurboPFor-Integer-Compression
   ${WORKBENCH_TURBOPFOR_REVISION}
