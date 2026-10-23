@@ -1,0 +1,388 @@
+{
+  "study": "Frame phase 2: before-mutation physical envelopes",
+  "qualification": "bounded functional witness; no throughput or latency measurements",
+  "recorded_date": "2026-10-23",
+  "base_head": "6dad693b885e62f5e908193a18c22074ec7c0b96",
+  "host": "Linux ubuntu 7.0.14-orbstack-00380-ga7e0a2dc9535 #1 SMP PREEMPT Fri Aug  7 03:48:40 UTC 2026 aarch64 GNU/Linux",
+  "compiler": "Ubuntu clang version 21.1.8 (++20251221033104+2078da43e25a-1~exp1~20251221153121.57)\nTarget: aarch64-unknown-linux-gnu\nThread model: posix\nInstalledDir: /usr/lib/llvm-21/bin",
+  "source": {
+    "owned_inputs_sha256": {
+      "workbench/spikes/frame-phase-2/change/CMakeLists.txt": "7880efb8679690e8032ab9e6fc83936562c7a9007bf900ffa325ada7a0cd6733",
+      "workbench/spikes/frame-phase-2/change/check.cpp": "2e1f2c08fa1015f43910a4d4733d21d96850489650876fb5f28a862a2f8b5b58",
+      "workbench/spikes/frame-phase-2/change/envelope.h": "d78bc966568dcad16a3d097e8c04cd1ed3b78701dc5565b95c8b12564be68c32"
+    },
+    "ikea_snapshot_files": 198,
+    "ikea_snapshot_sha256": "46cd12cb1743a8a3230855efaf0ad5367847e85278ad909e2148c858cc8874ea",
+    "snapshot_digest_format": "SHA256 of sorted JSON path-to-file-SHA256 map, separators comma and colon, UTF-8; all Ikea .h/.cpp inputs at base_head",
+    "all_recorded_inputs_unchanged_through_qualification": true
+  },
+  "configure_argv": [
+    "cmake",
+    "-S",
+    "workbench/spikes/frame-phase-2/change",
+    "-B",
+    "build/frame-helper/envelope-neon",
+    "-G",
+    "Ninja",
+    "-DCMAKE_BUILD_TYPE=RelWithDebInfo",
+    "-DSIXDB_SPIKES=",
+    "-DSIXDB_BENCHMARKS=",
+    "-DSIXDB_MARCH=armv8-a+simd",
+    "-DSIXDB_TUNE=neoverse-v2"
+  ],
+  "build_argv": [
+    "taskset",
+    "-c",
+    "8",
+    "cmake",
+    "--build",
+    "build/frame-helper/envelope-neon",
+    "--target",
+    "frame_change_envelope_check",
+    "frame_change_envelope_sanitize",
+    "-j1"
+  ],
+  "native_compiles": [
+    {
+      "kind": "native",
+      "compile_command": {
+        "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=1 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN4=0 -DSIXDB_TUNE_ZEN5=0 -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/ikea/include -O2 -g -DNDEBUG -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb=. -ffunction-sections -fdata-sections -march=armv8-a+simd -mtune=neoverse-v2 -gline-tables-only -o CMakeFiles/frame_change_envelope_check.dir/check.cpp.o -c /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/workbench/spikes/frame-phase-2/change/check.cpp",
+        "directory": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/frame-helper/envelope-neon",
+        "file": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/workbench/spikes/frame-phase-2/change/check.cpp",
+        "output": "CMakeFiles/frame_change_envelope_check.dir/check.cpp.o"
+      },
+      "dependency_count": 409,
+      "dependencies_sha256": "995fe6dc5d0248e78c23b9c9b4429e18abd5f03951e61b693379eb18215259fd"
+    },
+    {
+      "kind": "sanitize",
+      "compile_command": {
+        "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=1 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN4=0 -DSIXDB_TUNE_ZEN5=0 -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/ikea/include -O2 -g -DNDEBUG -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -O1 -fsanitize=address,undefined -fno-omit-frame-pointer -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb=. -ffunction-sections -fdata-sections -march=armv8-a+simd -mtune=neoverse-v2 -gline-tables-only -o CMakeFiles/frame_change_envelope_sanitize.dir/check.cpp.o -c /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/workbench/spikes/frame-phase-2/change/check.cpp",
+        "directory": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/frame-helper/envelope-neon",
+        "file": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/workbench/spikes/frame-phase-2/change/check.cpp",
+        "output": "CMakeFiles/frame_change_envelope_sanitize.dir/check.cpp.o"
+      },
+      "dependency_count": 410,
+      "dependencies_sha256": "1b4e31cf142f80a9cabbf984bda514e7f29fed8940a13266b8410a3b79015137"
+    }
+  ],
+  "compiled_witness_project_dependencies_sha256": {
+    "ikea/include/ikea/bitset256.h": "d1d3b5124de08e2eff367bb545d55afc735b6724567dff0292ed356680b240af",
+    "ikea/include/ikea/bytes.h": "30472394c26ba69348ddd9a270407276954073d0e7e44e0f508d116896858b19",
+    "ikea/include/ikea/comparison.h": "f9f5f933116f37db76a1804c017f3fff24602db9cb87108d9d586f247594c50a",
+    "ikea/include/ikea/config.h": "b04b0a2c7f317c879fa3e10a66401df47995e4c2dba0d0bb5ddbb398c3744dde",
+    "ikea/include/ikea/detail/filter/compare.h": "43e967fc6653fad34182b39e042a2d4d9bc107f1f8c14ff1449a7759cef7bde9",
+    "ikea/include/ikea/detail/overlap.h": "69840846e1ca1ab5fdeb6fdcea21d9705ec566ade7e0abff7a6d94b7ff414e44",
+    "ikea/include/ikea/effects.h": "109623f9b32254ceaf43ad38ae2bc40a08ba5156197a2f1c9cbbc89334c5b74c",
+    "ikea/include/ikea/seriespack.h": "28217fab4bbebedf8a20e77352fbebc3911cc292473020ae8eb3636945a87ac6",
+    "ikea/include/ikea/seriespack/author/expression.h": "6894feabe25eeaa2814835d68134decf34a96867b1e339a11c7b6f67c39ad0be",
+    "ikea/include/ikea/seriespack/author/filter.h": "ae255f3a45780ee200259846cc2552547d5f4ce1390b40f76574d1285028c329",
+    "ikea/include/ikea/seriespack/author/indexof.h": "2643915d39eb19271f0ff42ccf6a8769b51194e95ec69eeb9a1c4d2b9b2f832e",
+    "ikea/include/ikea/seriespack/author/local_equal.h": "22f7c2c7f1b72edb18ef705000ce72d12c8464975f9952742156b4d5d9a31d81",
+    "ikea/include/ikea/seriespack/author/mutation.h": "4fed570e4b04786140ed173c102b66eeadb4c4a5a772d35b4956cbb75d5623ff",
+    "ikea/include/ikea/seriespack/author/native.h": "fb7feef8a08131536d03f40e25ab312c3f7b8d7e095f1e1b14a7d8aec063822f",
+    "ikea/include/ikea/seriespack/author/store.h": "27eaffcdbba6eac3c197260f56e737cd06f8c8bf23cdc6c5911744e69a78c6d9",
+    "ikea/include/ikea/seriespack/author/summaries.h": "5fa83c2c583955099fff1a284446306c0b4a3ff47e86743b1509c711b985e3a9",
+    "ikea/include/ikea/seriespack/detail/admission.h": "f3c04985ba39675ab9481f8e59b41dda90e928d0ec8c6df1ccc16af4c5c7d6a5",
+    "ikea/include/ikea/seriespack/detail/dense_read.h": "6e7fc3da61456a93f881c03959540ba9d3cdb5065c91a807ccbdc88dcb0343ed",
+    "ikea/include/ikea/seriespack/detail/effects.h": "b71f7db70cc2132b075d78a6ab1dce3d53be5f4e84a21cf6aeea70b2a66a685d",
+    "ikea/include/ikea/seriespack/detail/filter8.h": "b89bd50fcbe6322769ebf9bdfb7e29e5ad979e116a40c9353852d3875b4acf6e",
+    "ikea/include/ikea/seriespack/detail/mutation/admission.h": "dfe17b5a507e3f3e4074a7caa8c7a26604e0584c93b6af04edbde76c756d4a73",
+    "ikea/include/ikea/seriespack/detail/mutation/admission_state.h": "4dc16d414fb0be164418d92e2efd6956f473621319fb0dfb4c6848bf3cd4eac6",
+    "ikea/include/ikea/seriespack/detail/mutation/assignment.h": "d5b1b8ed1a4d87f692c8ef1b72386139822ff47cb3e383b9eb9d020460ca2033",
+    "ikea/include/ikea/seriespack/detail/mutation/composed.h": "3f0bc7073215c6c0cf028161b048fc5c9c876ab8076d8c76a75c689230e26f3a",
+    "ikea/include/ikea/seriespack/detail/mutation/composed_construction.h": "e5e83a713e9333b6db48f19a3c85963612eb7e1c6d759b71370af38d07e76008",
+    "ikea/include/ikea/seriespack/detail/mutation/fields.h": "54bcd05be66c76f4d6a1dde87afcd62fdcafa4481c71d9dbac423b8326267d2a",
+    "ikea/include/ikea/seriespack/detail/native/neon/groups.h": "006b9a203bfcaa35cd6dd55f0c510adb6f79061ea38dacb6a302dfad6bbb5107",
+    "ikea/include/ikea/seriespack/detail/native/neon/read.h": "8ec9c361e4e03970695f9f83af094ba494aab6fda9a292e5877cef0abaf57e3d",
+    "ikea/include/ikea/seriespack/detail/native/neon/write.h": "6180c12f403137dde8ae31dbbedb429cb39e3a2143b34802d051aa43776dbee5",
+    "ikea/include/ikea/seriespack/detail/physical_source.h": "a79116d85b082e1848f4404e0edf72135877f02d8b291b7eeb4fa472be67e38e",
+    "ikea/include/ikea/seriespack/detail/placed_read.h": "0feeea6a0d838f84dd431cb0e20c1498ec93ba61764847a600b499fa648b1903",
+    "ikea/include/ikea/seriespack/detail/point.h": "124229fc8516abeba01aa010938386dcb08f8a4a09268b575f380d448df08f94",
+    "ikea/include/ikea/seriespack/detail/wire.h": "0e0e002323e319fc5f817bd4fe136435d0722539f7487b998597c971f631288d",
+    "ikea/include/ikea/seriespack/erased_reader.h": "1a19db339a91371ed7e8f833749a0eff018ef9d50ca2b7ec9825b6d362a8f259",
+    "ikea/include/ikea/seriespack/erased_writer.h": "9e2c890acf1e3b6d9a0a793d937a14a249e328f0600714f9b2b018c68e466b7f",
+    "ikea/include/ikea/seriespack/filter.h": "a18e402d63fb76c5905deef09b6c9f36d79f7a9e27f19be93bfe17f2ea3d4b1d",
+    "ikea/include/ikea/seriespack/indexof.h": "7de4a2ccf853eb99688b5d9c0c66d5c97f841a122dc547a002c7fa18c93bd900",
+    "ikea/include/ikea/seriespack/layout.h": "f29d77fa37da523e3c1893426aa8fccf6d2f3a1be9f9a770f902565228c5a09e",
+    "ikea/include/ikea/seriespack/layout_value.h": "9a338c94172055dfb5f273d417c68c2b5b17d6eddf21443ab2d115df8cddab24",
+    "ikea/include/ikea/seriespack/point.h": "ec505314545cc8e664bbfc04756ccc60738bc6b9b41e34e3cc7b8bf2d9054115",
+    "ikea/include/ikea/seriespack/presets.h": "af4c432e840ed72119984d2236dfe68fa8f22748232ccb40e8d64bc6131650d3",
+    "ikea/include/ikea/seriespack/read.h": "60c6873b0b5de71ca11ac2a56b63833c36eaf753d155d30001e0c8c463a9ced9",
+    "ikea/include/ikea/seriespack/reader.h": "0e740cd5b04a215e5e09e1abe75ec1ef91516d04d0e63abc5e701b448f6deb37",
+    "ikea/include/ikea/seriespack/selection.h": "0f8db1ce4c7f1561a867bba2b5c3ed47caa923bc98dae48d5774bfce9588cbd9",
+    "ikea/include/ikea/seriespack/status.h": "e0553cbb17aca0d843371cb1fe3baf8a34fc71cc9091f4b23730552203118cbf",
+    "ikea/include/ikea/seriespack/view.h": "38fbf6627491eb0d2a77eec94da4802d5dbfe7a2295b8174570b1d5dc582b04a",
+    "ikea/include/ikea/seriespack/write.h": "a31c5acfaa5e52bd20ed40c8fbfa2d82dd9bf67462d1f324d7ad5f3b518679e5",
+    "ikea/include/ikea/seriespack/writer.h": "06312100be8d514ee18aaea9bca54a1601660aae254dd28cd325afc546626d4b",
+    "ikea/include/ikea/tuplepack.h": "aefd1e2473322e0e5aaa5660fcd3378f9d4ee2e8204d43889c167e2b41654b95",
+    "ikea/include/ikea/tuplepack/author/native.h": "891451b15d0abf580bd259b70f14c492d75e40da23a7295e992210bfedb78d84",
+    "ikea/include/ikea/tuplepack/detail/gpr.h": "30fcc483704acb4b7212415bf8ae07c92bad7a37c10f3345095a45aa9d2542ff",
+    "ikea/include/ikea/tuplepack/detail/mutation.h": "cbd19eab606d7fc5b2760b2941968534b4c1d4fdd19eebaf6bf7e2561bb16d5c",
+    "ikea/include/ikea/tuplepack/detail/native/memory.h": "e91fcd5e9d90e0f960b0004e1c3be17ad07ce0e58eb134038b67c23414354b28",
+    "ikea/include/ikea/tuplepack/detail/native/packet.h": "a31462a84217443e95cbe9c3994cb37367ca5843e30a7838bfd35506fa5ed8db",
+    "ikea/include/ikea/tuplepack/detail/native/selection.h": "274fce2bc9fd61c8f9f46b7c139f4b559f3095822d4b18b935f40d26a94e3d95",
+    "ikea/include/ikea/tuplepack/detail/native/shuffle.h": "c59956d48c1c53e68c255f3a99d98f474f343d7ede10b4cb71d3f491049e516f",
+    "ikea/include/ikea/tuplepack/detail/native/types.h": "79c5d5a71982c4839348958fe9e2a72d98c0dbca321b227e7208f9b20fab40c2",
+    "ikea/include/ikea/tuplepack/detail/packet_plan.h": "d77bb8473c0991d2c0acb6fbfdafadb6bfe25383c89fe6025a3b212a1ce235b1",
+    "ikea/include/ikea/tuplepack/detail/plan.h": "40d7efaeb771bef9207d89598cfe6c0ecc614e6d4c2edbc010ae19d16c36d5e9",
+    "ikea/include/ikea/tuplepack/detail/window.h": "106ba39b37d696e351b0748353e4a2c1d7e1bc493639cd703653ad860377d472",
+    "ikea/include/ikea/tuplepack/filter.h": "9f910bd47e85f363ef1d884fc98bb2f88a4ae3e679704ee5f2005468c5fca419",
+    "ikea/include/ikea/tuplepack/initialize.h": "fe440420070842297ca743b5b3a60273335d97ac3920c89a9f9f9d0ecf76d5b0",
+    "ikea/include/ikea/tuplepack/layout.h": "46fa564e31b692ddb6d1bbabadac4e840b9c630523cce96fe17d961d702220fc",
+    "ikea/include/ikea/tuplepack/packet.h": "d35afbc37fe37f5c1a4519b4f79468522672b73dd378f343162fe4f119cf67d1",
+    "ikea/include/ikea/tuplepack/packet_layout.h": "a47daca01d622f150273137e0448d9b2f304694076b78c9ebd08e86c94dfe28c",
+    "ikea/include/ikea/tuplepack/plan.h": "983d1f753748711864a04bcfc53c55a5b0e7949dcef58a55d8c399c38d48a51e",
+    "ikea/include/ikea/tuplepack/read.h": "a88b3d057d58fbbba71941c046d7aa68d73730af182681f7ebd5539cc568efb4",
+    "ikea/include/ikea/tuplepack/selection.h": "cf43e637c46632ef25e22ab32ee2dc4965c4552d85049abbc8d1cd35fd30cc8f",
+    "ikea/include/ikea/tuplepack/transfer.h": "9a7fd9a5e4558a54e807d89462db8e71fbe32ea84e4da682e7ee24ba227836a3",
+    "ikea/include/ikea/tuplepack/view.h": "7d49ace0a3b2502f16bb15b756b68f651e378d6f0abf4b0c76bcb6e84f8f4cad",
+    "ikea/include/ikea/tuplepack/write.h": "326ee19842d336fc4306a58e6344331835160d852fd4d2bd83da7facdcbc1a05",
+    "workbench/spikes/frame-phase-2/change/check.cpp": "2e1f2c08fa1015f43910a4d4733d21d96850489650876fb5f28a862a2f8b5b58",
+    "workbench/spikes/frame-phase-2/change/envelope.h": "d78bc966568dcad16a3d097e8c04cd1ed3b78701dc5565b95c8b12564be68c32"
+  },
+  "native_runs": [
+    {
+      "argv": [
+        "taskset",
+        "-c",
+        "8",
+        "build/frame-helper/envelope-neon/frame_change_envelope_check"
+      ],
+      "binary_sha256": "7f0234b5c6627d8c9d9c8c05866d4ace73fb40bf349950fe8624d4925f49f96c",
+      "kind": "check",
+      "output_sha256": "ddd9ff6f8393d284937a1f7969bc1f59a97b2595d0bd32b0fe17203c826ed7c7",
+      "returncode": 0
+    },
+    {
+      "argv": [
+        "taskset",
+        "-c",
+        "8",
+        "build/frame-helper/envelope-neon/frame_change_envelope_sanitize"
+      ],
+      "binary_sha256": "a6e1b65d2aca0c8237177fef7f60f659a291657487724e3ca0a847d07e530182",
+      "kind": "sanitize",
+      "output_sha256": "ddd9ff6f8393d284937a1f7969bc1f59a97b2595d0bd32b0fe17203c826ed7c7",
+      "returncode": 0
+    }
+  ],
+  "identical_native_results": [
+    {
+      "case": "Local13_point",
+      "declared_read_bytes": 6,
+      "possible_store_bytes": 6,
+      "read_spans": 2,
+      "record_bound": 2,
+      "serialization_bytes": 6,
+      "store_spans": 2
+    },
+    {
+      "case": "Striped12_point",
+      "declared_read_bytes": 2,
+      "possible_store_bytes": 2,
+      "read_spans": 2,
+      "record_bound": 2,
+      "serialization_bytes": 2,
+      "store_spans": 2
+    },
+    {
+      "case": "delta_row31_no_checkpoints",
+      "declared_read_bytes": 57,
+      "possible_store_bytes": 12,
+      "read_spans": 2,
+      "record_bound": 4,
+      "serialization_bytes": 57,
+      "store_spans": 2
+    },
+    {
+      "case": "delta_row31_checkpoints16",
+      "declared_read_bytes": 40,
+      "possible_store_bytes": 20,
+      "read_spans": 3,
+      "record_bound": 5,
+      "serialization_bytes": 48,
+      "store_spans": 3
+    },
+    {
+      "case": "TuplePack_native_partial",
+      "declared_read_bytes": 64,
+      "possible_store_bytes": 1,
+      "read_spans": 1,
+      "record_bound": 1,
+      "serialization_bytes": 64,
+      "store_spans": 1
+    },
+    {
+      "delta_repairs": 1020,
+      "independent_negative_controls": 4,
+      "packed_coarse_cases": 1536,
+      "pass": true,
+      "refusals": 18
+    }
+  ],
+  "sanitizer_scope": "ASan/UBSan instruments the witness and inline payload operations; linked library preparation code uses the normal build. Not a fully instrumented Ikea rebuild.",
+  "cross_compiles": [
+    {
+      "argv": [
+        "clang++-21",
+        "-g",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "--target=x86_64-linux-gnu",
+        "--gcc-toolchain=/usr",
+        "-std=c++23",
+        "-O3",
+        "-fno-fast-math",
+        "-ffp-contract=off",
+        "-fdenormal-fp-math=ieee",
+        "-fvisibility=hidden",
+        "-fvisibility-inlines-hidden",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-march=x86-64-v3",
+        "-mtune=znver5",
+        "-DSIXDB_TUNE_GENERIC=0",
+        "-DSIXDB_TUNE_GRANITE_RAPIDS=0",
+        "-DSIXDB_TUNE_ZEN4=0",
+        "-DSIXDB_TUNE_ZEN5=1",
+        "-DSIXDB_TUNE_NEOVERSE_V2=0",
+        "-DSIXDB_TUNE_NEOVERSE_V3=0",
+        "-I",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/ikea/include",
+        "-MD",
+        "-MF",
+        "build/frame-helper/qualification/avx2-zen5.d",
+        "-c",
+        "workbench/spikes/frame-phase-2/change/check.cpp",
+        "-o",
+        "build/frame-helper/qualification/avx2-zen5.o"
+      ],
+      "executed": false,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "object_bytes": 1189752,
+      "object_sha256": "87cdfeea680a88578f1af7eaeb8008e8a73374ed69cbfa2df45e0960d20df4a7",
+      "profile": "avx2-zen5",
+      "returncode": 0
+    },
+    {
+      "argv": [
+        "clang++-21",
+        "-g",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "--target=x86_64-linux-gnu",
+        "--gcc-toolchain=/usr",
+        "-std=c++23",
+        "-O3",
+        "-fno-fast-math",
+        "-ffp-contract=off",
+        "-fdenormal-fp-math=ieee",
+        "-fvisibility=hidden",
+        "-fvisibility-inlines-hidden",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-march=znver5",
+        "-mtune=znver5",
+        "-DSIXDB_TUNE_GENERIC=0",
+        "-DSIXDB_TUNE_GRANITE_RAPIDS=0",
+        "-DSIXDB_TUNE_ZEN4=0",
+        "-DSIXDB_TUNE_ZEN5=1",
+        "-DSIXDB_TUNE_NEOVERSE_V2=0",
+        "-DSIXDB_TUNE_NEOVERSE_V3=0",
+        "-I",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/ikea/include",
+        "-MD",
+        "-MF",
+        "build/frame-helper/qualification/avx512-zen5.d",
+        "-c",
+        "workbench/spikes/frame-phase-2/change/check.cpp",
+        "-o",
+        "build/frame-helper/qualification/avx512-zen5.o"
+      ],
+      "executed": false,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "object_bytes": 1168592,
+      "object_sha256": "7bdf1a1719bde621a2c76274f2e98768a8bcfef2881ed69cf8e9370ac65c7157",
+      "profile": "avx512-zen5",
+      "returncode": 0
+    }
+  ],
+  "cross_scope": "x86_64 ELF objects compiled only, not linked/executed and not foreign functional or performance qualification",
+  "linked_inspection": {
+    "binary_sha256": "7f0234b5c6627d8c9d9c8c05866d4ace73fb40bf349950fe8624d4925f49f96c",
+    "disassembly_sha256": "07bac844fae0befa11c747a95df0c8eb7cedf46aa78a8a32f8d3bafd6239c7a9",
+    "symbols_sha256": "55e95a32f400febf5cb8d2d71ccbefa10a3752fec6ffb9832a53b0ad2a7d1f3b",
+    "symbols": {
+      "delta_apply": {
+        "address": "0000000000006740",
+        "excerpt_sha256": "8768081d7e0d54606328a04be09f6213ca6f6255815bfd4fd5a992f5424ef722",
+        "name": "(anonymous namespace)::apply_delta((anonymous namespace)::delta_plan const&, frame_change::grant const&, ikea::journal&)",
+        "observations": [
+          "admission call 0x6788 and refusal branch precede checkpoint load 0x67b0 and residual loads 0x6814/0x6818/0x681c",
+          "both residual fits checked at 0x68dc..0x68fc before first setter path 0x69a8; second setter 0x69cc",
+          "checkpoint effect 0x69f4 precedes store 0x6a04",
+          "808-byte symbol, 256-byte stack frame; instruction facts, not measured execution cost"
+        ]
+      },
+      "native_tuple_store": {
+        "address": "0000000000008ba0",
+        "excerpt_sha256": "fd720875882414981029cc3d4266c206c4604ba67065fe907097cf7d2d00e78f",
+        "name": "(anonymous namespace)::tuplepack()::$_1::operator()(ikea::journal&) const",
+        "observations": [
+          "selected 64-byte native-unit path reads q5 at 0x8c38 (row+0), q6 at 0x8c58 (row+16), q16 at 0x9334 (row+32), q4 at 0x9358 (row+48)",
+          "guard and positive actual-effect checks distinguish 64-byte read envelope from one issued store byte",
+          "2788-byte generic symbol includes other-unit and tail paths; whole symbol is not issued-work count",
+          "ordinary buffered sparse setter may select a narrower scalar route"
+        ]
+      },
+      "packed_apply_local": {
+        "address": "0000000000009b60",
+        "excerpt_sha256": "bbe8074106ab80583efe3627317259a63d10a1e7f33c21903ae0de602e9c630d",
+        "name": "std::expected<__int128, frame_change::refusal> frame_change::apply_packed<(anonymous namespace)::block<ikea::seriespack::layout<13u, (ikea::seriespack::geometry)0, 0u>>>(frame_change::packed_plan<(anonymous namespace)::block<ikea::seriespack::layout<13u, (ikea::seriespack::geometry)0, 0u>>> const&, frame_change::grant const&, ikea::journal&)",
+        "observations": [
+          "admission call 0x9ba8 precedes payload loads 0x9c14/0x9c18/0x9c28",
+          "360-byte symbol; no latency claim"
+        ]
+      },
+      "packed_apply_striped": {
+        "address": "000000000000a320",
+        "excerpt_sha256": "86b8ad5e398b28385e45e9c54b49a19873b616eb9ccd7c295b02874c350358b1",
+        "name": "std::expected<__int128, frame_change::refusal> frame_change::apply_packed<(anonymous namespace)::block<ikea::seriespack::layout<12u, (ikea::seriespack::geometry)1, 0u>>>(frame_change::packed_plan<(anonymous namespace)::block<ikea::seriespack::layout<12u, (ikea::seriespack::geometry)1, 0u>>> const&, frame_change::grant const&, ikea::journal&)",
+        "observations": [
+          "336-byte symbol; admission precedes payload acquisition; no latency claim"
+        ]
+      }
+    },
+    "disassembly_argv": [
+      "llvm-objdump-21",
+      "-d",
+      "-r",
+      "--demangle",
+      "build/frame-helper/envelope-neon/frame_change_envelope_check"
+    ],
+    "symbol_argv": [
+      "llvm-nm-21",
+      "-S",
+      "-C",
+      "build/frame-helper/envelope-neon/frame_change_envelope_check"
+    ]
+  },
+  "limits": [
+    "stable initialized fixed-basis storage and named views; fresh initial journals",
+    "unique byte unions and conservative effect-slot bounds are not issued traffic or event counts",
+    "grant coverage is a fixture assertion, not lock acquisition, version authentication or retention",
+    "no anchor/exception/nullable/coded repair, old-reader or concurrent-execution qualification",
+    "prototype vector allocations and setters are not a production writer baseline; existing Frame read paths untouched"
+  ],
+  "rebuildable_local_artifacts": {
+    "directory": "build/frame-helper/qualification",
+    "receipt_sha256": "9dfec2cf9ebeec4187d54ce1b3e7e28db78eeeb4e178955f290dfe4db47cdbf3",
+    "source_snapshot_sha256": "63b7f509ba9cee3e189a34c118c790745adec04a856bc2da655293a9c5577dc2",
+    "runs_sha256": "aa358e032c01aba7f344d5f673c3857c0f599f02864f8635fbe598f1dad801a8",
+    "cross_results_sha256": "41cb51de9ea70366b643d46f6607653f81eac9ec77a9f0851be107e16cfebcdc",
+    "retention": "Ignored local dependency maps, logs, objects, binaries and full disassembly; commands and committed source reproduce the checks."
+  }
+}
