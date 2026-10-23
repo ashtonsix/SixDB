@@ -1,0 +1,12 @@
+--- sanitized-proof/ikea/include/ikea/tuplepack/detail/native/packet.h
++++ qualified-live/ikea/include/ikea/tuplepack/detail/native/packet.h
+@@ -355,8 +355,7 @@
+ #elif defined(__aarch64__)
+     // A common-window grant covers the initialized/read-isolated interior,
+     // independently of the geometric stride hint. One bounded load replaces
+-    // per-row gathers, a
+-    // table lookup moves it into place and the row mask clears the rest. Only
++    // per-row gathers, a table lookup places it and the row mask clears the rest. Only
+     // 32/64-row packets: wider rows gather few words, and the larger body
+     // changed their callers' code generation for the worse.
+     if constexpr (Access == author::read_access::common_window && Rows >= 32) {

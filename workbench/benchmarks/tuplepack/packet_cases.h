@@ -38,31 +38,31 @@ std::uint64_t reduce(native::packet v) {
          part(split<3>(v));
 }
 using pipeline = chain<8>;
-template <unsigned Rows> struct operation {
-  native_reader<64, std::byte, Rows> read;
-  native_writer<64, Rows> write;
+template <unsigned Rows, read_access Access> struct operation {
+  native_reader<64, std::byte, Rows, Access> read;
+  native_writer<64, Rows, Access> write;
   ikea::journal &effects;
   bool okay = true;
 };
-template <unsigned Rows>
+template <unsigned Rows, read_access Access>
 [[gnu::always_inline]] inline pipeline::result
 decode(void *context, std::size_t row, std::uint64_t active,
        native::pipeline_values, unsigned) {
-  auto &c = *static_cast<operation<Rows> *>(context);
+  auto &c = *static_cast<operation<Rows, Access> *>(context);
   return {native::pipeline_values::from(c.read.get_unchecked(row, active)),
           active, !active};
 }
-template <unsigned Rows>
+template <unsigned Rows, read_access Access>
 [[gnu::always_inline]] inline pipeline::result
 update(void *context, std::size_t row, std::uint64_t active,
        native::pipeline_values values, unsigned) {
-  auto &c = *static_cast<operation<Rows> *>(context);
+  auto &c = *static_cast<operation<Rows, Access> *>(context);
   c.okay &= bool(c.write.set(row, toggle(values.get()), c.effects, active));
   return {values, active, !c.okay};
 }
 void complete(void *, std::size_t, std::uint64_t, native::pipeline_values) {}
 
-template <unsigned Rows>
+template <unsigned Rows, read_access Access = read_access::active_units>
 void run(benchmark::State &state, unsigned layout_kind, bool sparse,
          unsigned mode, bool mutate) {
   constexpr unsigned B = 64 / Rows;
@@ -87,9 +87,12 @@ void run(benchmark::State &state, unsigned layout_kind, bool sparse,
   auto write = *bind_writer(wp, source);
   std::array<ikea::journal::entry, 4096> entries;
   ikea::journal effects{entries};
-  operation<Rows> c{native_reader(read), native_writer(write), effects};
-  std::array<pipeline::function, 2> stages{pipeline::stage<decode<Rows>>,
-                                           pipeline::stage<update<Rows>>};
+  // The window variant owns, initializes and isolates this complete image.
+  // Its grant changes reads only; selected stores and effects remain exact.
+  operation<Rows, Access> c{native_reader<64, std::byte, Rows, Access>(read),
+                             native_writer<64, Rows, Access>(write), effects};
+  std::array<pipeline::function, 2> stages{pipeline::stage<decode<Rows, Access>>,
+                                           pipeline::stage<update<Rows, Access>>};
   auto chain = *pipeline::make(stages, pipeline::completion<complete>);
   const auto empty = native::pipeline_values::from(native::row_mask<Rows>(0));
   const std::uint64_t active =
@@ -104,8 +107,8 @@ void run(benchmark::State &state, unsigned layout_kind, bool sparse,
       } else if (mode == 2)
         chain.run(&c, first, active, empty);
       else if (mode == 1) {
-        const auto decoded = decode<Rows>(&c, first, active, empty, 0);
-        update<Rows>(&c, first, active, decoded.values, 1);
+        const auto decoded = decode<Rows, Access>(&c, first, active, empty, 0);
+        update<Rows, Access>(&c, first, active, decoded.values, 1);
       } else {
         auto value = c.read.get_unchecked(first, active);
         auto address = [&](unsigned r) {
@@ -114,7 +117,7 @@ void run(benchmark::State &state, unsigned layout_kind, bool sparse,
         if constexpr (Rows == 1)
           native::write_body(wp.controls(), address(0), toggle(value));
         else
-          native::write_body<Rows>(wp.controls(), address, toggle(value),
+          native::write_body<Rows, Access>(wp.controls(), address, toggle(value),
                                    active, stride);
       }
     }
@@ -145,6 +148,21 @@ template <unsigned Rows> void cases(bool broad) {
         benchmark::RegisterBenchmark(
             (prefix + "/update/" + names[mode]).c_str(),
             [=](auto &s) { run<Rows>(s, layout, sparse, mode, true); });
+      }
+      if constexpr (Rows == 64) {
+        if (layout == 2 && sparse) {
+          benchmark::RegisterBenchmark((prefix + "/window/sum").c_str(), [=](auto &s) {
+            run<Rows, read_access::common_window>(s, layout, sparse, 0, false);
+          });
+          for (unsigned mode = 0; mode < 3; ++mode) {
+            constexpr const char *names[] = {"body", "ordinary", "cps"};
+            benchmark::RegisterBenchmark(
+                (prefix + "/window/update/" + names[mode]).c_str(),
+                [=](auto &s) {
+                  run<Rows, read_access::common_window>(s, layout, sparse, mode, true);
+                });
+          }
+        }
       }
     }
   }

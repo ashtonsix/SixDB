@@ -1,0 +1,779 @@
+{
+  "scope": "Explicit TuplePack native common-window read permission; ordinary defaults strict.",
+  "compiler": "Ubuntu clang version 21.1.8 (++20251221033104+2078da43e25a-1~exp1~20251221153121.57)\nTarget: aarch64-unknown-linux-gnu\nThread model: posix\nInstalledDir: /usr/lib/llvm-21/bin\n",
+  "native_profile": "armv8-a+simd,neoverse-v2",
+  "cpu_affinity": [
+    8
+  ],
+  "source_sha256": {
+    "access.cpp": "f81c9866aaf5ee2c1df8d0a9ac7621c2e1dde11a96c3127d6e16c862aec6ddf6",
+    "ikea/src/tuplepack/kernels.cpp": "138c06c62589ebc148702c100e5b6999edc4cdc488fb42671ae8204d4ddd7b33",
+    "ikea/src/tuplepack/routes.cpp": "8335b5239e502838c7a7038410cb56651f777d0ccf08a12d56786c70eae702e2",
+    "ikea/src/tuplepack/gpr.cpp": "849a944daaafb1134a4ae07dbe2773a6d39132a8038580ed6eb49a9f581a3959",
+    "ikea/src/tuplepack/packet.cpp": "44fe1f5682281ba659977d6ea1caa813187681427d44132a35c041cead329b89",
+    "ikea/src/tuplepack/packet_prepare.cpp": "fd0c402e7c33353c53403ab9ab5c6dea91f6522b46bb9b689f8d922fc43d3958",
+    "ikea/src/tuplepack/prepare.cpp": "818798321445b968e22b532190c17b85c4a2f420abadd4779360eabf5d5ae543",
+    "ikea/src/tuplepack/packet_layout.cpp": "acb34f3cf1a133daa5a19a521174625d856091f5a0ab1da6cb6a6296d25950c9",
+    "ikea/src/tuplepack/layout.cpp": "819417145f50624dcc5394a837310370773cea79b04c34672fda7396e94bdb2d",
+    "ikea/src/tuplepack/initialize.cpp": "448c3fc0e6a8df1d9eb851c984b5f3ddf4a8f8b65f5f7b4b134f53003f35d850",
+    "ikea/include/ikea/tuplepack/author/native.h": "3e941538ec1aa82210edd7316d3982dfd96118fdf01303247bc9557743b50118",
+    "ikea/include/ikea/tuplepack/author/execution.h": "1d930792efc985c8f6f217634de213c5f9256eda674b2f3b4b8443237d9d6ac0",
+    "ikea/include/ikea/tuplepack/detail/native/packet.h": "d20417ae8582328bb786c7a01fe4febd16228d8e2a774d1686939a3d0acb6c3e",
+    "ikea/include/ikea/tuplepack/detail/native/read.h": "22072dd283041286d3e3d104f9ce7a00d287276a21d5ac4765647d3faf7d9dd9"
+  },
+  "all_source_manifest_sha256": "35499036ff92245b7597bd811b6d6f1b5d300dbf2a8ccc98ac3cfd869dd14cfc",
+  "commands": [
+    {
+      "name": "normal-build",
+      "command": [
+        "clang++-21",
+        "-std=c++23",
+        "-gline-tables-only",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-Werror",
+        "-march=armv8-a+simd",
+        "-mtune=neoverse-v2",
+        "-DSIXDB_TUNE_NEOVERSE_V2=1",
+        "-fno-fast-math",
+        "-ffp-contract=off",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-O3",
+        "-I",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/access-contract-proof/source/ikea/include",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/access-contract-proof/source/access.cpp",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/access-contract-proof/source/ikea/src/tuplepack/layout.cpp",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/access-contract-proof/source/ikea/src/tuplepack/initialize.cpp",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/access-contract-proof/source/ikea/src/tuplepack/prepare.cpp",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/access-contract-proof/source/ikea/src/tuplepack/kernels.cpp",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/access-contract-proof/source/ikea/src/tuplepack/gpr.cpp",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/access-contract-proof/source/ikea/src/tuplepack/routes.cpp",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/access-contract-proof/source/ikea/src/tuplepack/packet_layout.cpp",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/access-contract-proof/source/ikea/src/tuplepack/packet_prepare.cpp",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/access-contract-proof/source/ikea/src/tuplepack/packet.cpp",
+        "-Wl,--gc-sections",
+        "-o",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/access-contract-proof/normal"
+      ],
+      "exit_code": 0,
+      "seconds": 34.24459691304946,
+      "output": "normal-build.log"
+    },
+    {
+      "name": "normal-run",
+      "command": [
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/access-contract-proof/normal"
+      ],
+      "exit_code": 0,
+      "seconds": 0.014456881966907531,
+      "output": "normal-run.log"
+    },
+    {
+      "name": "asan-build",
+      "command": [
+        "clang++-21",
+        "-std=c++23",
+        "-gline-tables-only",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-Werror",
+        "-march=armv8-a+simd",
+        "-mtune=neoverse-v2",
+        "-DSIXDB_TUNE_NEOVERSE_V2=1",
+        "-fno-fast-math",
+        "-ffp-contract=off",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-O2",
+        "-fsanitize=address,undefined",
+        "-fno-omit-frame-pointer",
+        "-I",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/access-contract-proof/source/ikea/include",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/access-contract-proof/source/access.cpp",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/access-contract-proof/source/ikea/src/tuplepack/layout.cpp",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/access-contract-proof/source/ikea/src/tuplepack/initialize.cpp",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/access-contract-proof/source/ikea/src/tuplepack/prepare.cpp",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/access-contract-proof/source/ikea/src/tuplepack/kernels.cpp",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/access-contract-proof/source/ikea/src/tuplepack/gpr.cpp",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/access-contract-proof/source/ikea/src/tuplepack/routes.cpp",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/access-contract-proof/source/ikea/src/tuplepack/packet_layout.cpp",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/access-contract-proof/source/ikea/src/tuplepack/packet_prepare.cpp",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/access-contract-proof/source/ikea/src/tuplepack/packet.cpp",
+        "-Wl,--gc-sections",
+        "-o",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/access-contract-proof/asan"
+      ],
+      "exit_code": 0,
+      "seconds": 146.98060112498933,
+      "output": "asan-build.log"
+    },
+    {
+      "name": "asan-run",
+      "command": [
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/access-contract-proof/asan"
+      ],
+      "exit_code": 0,
+      "seconds": 0.019023232045583427,
+      "output": "asan-run.log"
+    },
+    {
+      "name": "old-promoted-asan-build",
+      "command": [
+        "clang++-21",
+        "-std=c++23",
+        "-gline-tables-only",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-Werror",
+        "-march=armv8-a+simd",
+        "-mtune=neoverse-v2",
+        "-DSIXDB_TUNE_NEOVERSE_V2=1",
+        "-fno-fast-math",
+        "-ffp-contract=off",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-O2",
+        "-fsanitize=address,undefined",
+        "-fno-omit-frame-pointer",
+        "-I",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/access-contract-proof/old",
+        "-I",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/access-contract-proof/source/ikea/include",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/access-contract-proof/source/access.cpp",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/access-contract-proof/source/ikea/src/tuplepack/layout.cpp",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/access-contract-proof/source/ikea/src/tuplepack/initialize.cpp",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/access-contract-proof/source/ikea/src/tuplepack/prepare.cpp",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/access-contract-proof/source/ikea/src/tuplepack/kernels.cpp",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/access-contract-proof/source/ikea/src/tuplepack/gpr.cpp",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/access-contract-proof/source/ikea/src/tuplepack/routes.cpp",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/access-contract-proof/source/ikea/src/tuplepack/packet_layout.cpp",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/access-contract-proof/source/ikea/src/tuplepack/packet_prepare.cpp",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/access-contract-proof/source/ikea/src/tuplepack/packet.cpp",
+        "-Wl,--gc-sections",
+        "-o",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/access-contract-proof/old-promoted-asan"
+      ],
+      "exit_code": 0,
+      "seconds": 171.25064719299553,
+      "output": "old-promoted-asan-build.log"
+    },
+    {
+      "name": "old-promoted-asan-run",
+      "command": [
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/access-contract-proof/old-promoted-asan"
+      ],
+      "exit_code": 1,
+      "seconds": 0.5120822910103016,
+      "output": "old-promoted-asan-run.log"
+    },
+    {
+      "label": "neon-current",
+      "argv": [
+        "clang++-21",
+        "-std=c++23",
+        "-O3",
+        "-gline-tables-only",
+        "-fno-fast-math",
+        "-ffp-contract=off",
+        "-fdenormal-fp-math=ieee",
+        "-fvisibility=hidden",
+        "-fvisibility-inlines-hidden",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-Werror",
+        "-Wno-return-type-c-linkage",
+        "-march=armv8-a+simd",
+        "-mtune=neoverse-v2",
+        "-DSIXDB_TUNE_NEOVERSE_V2=1",
+        "-I",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/access-contract-proof/source/ikea/include",
+        "-c",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/access-contract-proof/codegen.cpp",
+        "-o",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/access-contract-proof/neon-current.o"
+      ],
+      "exit_code": 0,
+      "seconds": 1.7053153479937464
+    },
+    {
+      "label": "neon-current-disassembly",
+      "argv": [
+        "llvm-objdump-21",
+        "-d",
+        "-r",
+        "--demangle",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/access-contract-proof/neon-current.o"
+      ],
+      "exit_code": 0,
+      "seconds": 0.06424783798865974
+    },
+    {
+      "label": "neon-old",
+      "argv": [
+        "clang++-21",
+        "-std=c++23",
+        "-O3",
+        "-gline-tables-only",
+        "-fno-fast-math",
+        "-ffp-contract=off",
+        "-fdenormal-fp-math=ieee",
+        "-fvisibility=hidden",
+        "-fvisibility-inlines-hidden",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-Werror",
+        "-Wno-return-type-c-linkage",
+        "-march=armv8-a+simd",
+        "-mtune=neoverse-v2",
+        "-DSIXDB_TUNE_NEOVERSE_V2=1",
+        "-I",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/access-contract-proof/old",
+        "-I",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/access-contract-proof/source/ikea/include",
+        "-c",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/access-contract-proof/codegen.cpp",
+        "-o",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/access-contract-proof/neon-old.o"
+      ],
+      "exit_code": 0,
+      "seconds": 1.7750401539960876
+    },
+    {
+      "label": "neon-old-disassembly",
+      "argv": [
+        "llvm-objdump-21",
+        "-d",
+        "-r",
+        "--demangle",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/access-contract-proof/neon-old.o"
+      ],
+      "exit_code": 0,
+      "seconds": 0.07127915398450568
+    },
+    {
+      "label": "avx2-api",
+      "argv": [
+        "clang++-21",
+        "-std=c++23",
+        "-O3",
+        "-gline-tables-only",
+        "-fno-fast-math",
+        "-ffp-contract=off",
+        "-fdenormal-fp-math=ieee",
+        "-fvisibility=hidden",
+        "-fvisibility-inlines-hidden",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-Werror",
+        "-Wno-return-type-c-linkage",
+        "--target=x86_64-linux-gnu",
+        "--gcc-toolchain=/usr",
+        "-march=x86-64-v3",
+        "-mtune=znver5",
+        "-DSIXDB_TUNE_ZEN5=1",
+        "-I",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/access-contract-proof/source/ikea/include",
+        "-fsyntax-only",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/access-contract-proof/source/access.cpp"
+      ],
+      "exit_code": 0,
+      "seconds": 2.0541980320122093
+    },
+    {
+      "label": "avx2-current",
+      "argv": [
+        "clang++-21",
+        "-std=c++23",
+        "-O3",
+        "-gline-tables-only",
+        "-fno-fast-math",
+        "-ffp-contract=off",
+        "-fdenormal-fp-math=ieee",
+        "-fvisibility=hidden",
+        "-fvisibility-inlines-hidden",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-Werror",
+        "-Wno-return-type-c-linkage",
+        "--target=x86_64-linux-gnu",
+        "--gcc-toolchain=/usr",
+        "-march=x86-64-v3",
+        "-mtune=znver5",
+        "-DSIXDB_TUNE_ZEN5=1",
+        "-I",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/access-contract-proof/source/ikea/include",
+        "-c",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/access-contract-proof/codegen.cpp",
+        "-o",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/access-contract-proof/avx2-current.o"
+      ],
+      "exit_code": 0,
+      "seconds": 1.8633178930031136
+    },
+    {
+      "label": "avx2-current-disassembly",
+      "argv": [
+        "llvm-objdump-21",
+        "-d",
+        "-r",
+        "--demangle",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/access-contract-proof/avx2-current.o"
+      ],
+      "exit_code": 0,
+      "seconds": 0.05967308097751811
+    },
+    {
+      "label": "avx512-api",
+      "argv": [
+        "clang++-21",
+        "-std=c++23",
+        "-O3",
+        "-gline-tables-only",
+        "-fno-fast-math",
+        "-ffp-contract=off",
+        "-fdenormal-fp-math=ieee",
+        "-fvisibility=hidden",
+        "-fvisibility-inlines-hidden",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-Werror",
+        "-Wno-return-type-c-linkage",
+        "--target=x86_64-linux-gnu",
+        "--gcc-toolchain=/usr",
+        "-march=graniterapids",
+        "-mtune=znver5",
+        "-DSIXDB_TUNE_ZEN5=1",
+        "-I",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/access-contract-proof/source/ikea/include",
+        "-fsyntax-only",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/access-contract-proof/source/access.cpp"
+      ],
+      "exit_code": 0,
+      "seconds": 1.3718833340099081
+    },
+    {
+      "label": "avx512-current",
+      "argv": [
+        "clang++-21",
+        "-std=c++23",
+        "-O3",
+        "-gline-tables-only",
+        "-fno-fast-math",
+        "-ffp-contract=off",
+        "-fdenormal-fp-math=ieee",
+        "-fvisibility=hidden",
+        "-fvisibility-inlines-hidden",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-Werror",
+        "-Wno-return-type-c-linkage",
+        "--target=x86_64-linux-gnu",
+        "--gcc-toolchain=/usr",
+        "-march=graniterapids",
+        "-mtune=znver5",
+        "-DSIXDB_TUNE_ZEN5=1",
+        "-I",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/access-contract-proof/source/ikea/include",
+        "-c",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/access-contract-proof/codegen.cpp",
+        "-o",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/access-contract-proof/avx512-current.o"
+      ],
+      "exit_code": 0,
+      "seconds": 1.507591601985041
+    },
+    {
+      "label": "avx512-current-disassembly",
+      "argv": [
+        "llvm-objdump-21",
+        "-d",
+        "-r",
+        "--demangle",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/access-contract-proof/avx512-current.o"
+      ],
+      "exit_code": 0,
+      "seconds": 0.033565939986146986
+    }
+  ],
+  "codegen": {
+    "neon": {
+      "read_strict": {
+        "strict_bytes": 3980,
+        "window_bytes": 5216,
+        "instruction_payload_equal": false,
+        "relocations_equal": false
+      },
+      "read_full_strict": {
+        "strict_bytes": 1500,
+        "window_bytes": 1596,
+        "instruction_payload_equal": false,
+        "relocations_equal": false
+      },
+      "write_strict": {
+        "strict_bytes": 7540,
+        "window_bytes": 8732,
+        "instruction_payload_equal": false,
+        "relocations_equal": false
+      },
+      "read_window_versus_old_promoted": {
+        "instruction_payload_equal": true,
+        "resolved_read_constants_equal": true,
+        "bytes": 5216
+      },
+      "read_full_window_versus_old_promoted": {
+        "instruction_payload_equal": true,
+        "resolved_read_constants_equal": true,
+        "bytes": 1596
+      },
+      "write_window_versus_old_promoted": {
+        "instruction_payload_equal": true,
+        "resolved_read_constants_equal": true,
+        "bytes": 8732
+      }
+    },
+    "avx2": {
+      "read_strict": {
+        "strict_bytes": 5301,
+        "window_bytes": 5301,
+        "instruction_payload_equal": true,
+        "relocations_equal": false,
+        "resolved_read_constants_equal": true,
+        "strict_resolved_constants": [
+          [
+            4924,
+            2,
+            "ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00"
+          ],
+          [
+            4953,
+            2,
+            "00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff"
+          ],
+          [
+            5095,
+            2,
+            "ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00"
+          ],
+          [
+            5124,
+            2,
+            "00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff"
+          ],
+          [
+            5155,
+            2,
+            "ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00"
+          ],
+          [
+            5184,
+            2,
+            "00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff"
+          ],
+          [
+            5246,
+            2,
+            "ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00"
+          ],
+          [
+            5275,
+            2,
+            "00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff"
+          ]
+        ],
+        "window_resolved_constants": [
+          [
+            4924,
+            2,
+            "ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00"
+          ],
+          [
+            4953,
+            2,
+            "00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff"
+          ],
+          [
+            5095,
+            2,
+            "ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00"
+          ],
+          [
+            5124,
+            2,
+            "00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff"
+          ],
+          [
+            5155,
+            2,
+            "ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00"
+          ],
+          [
+            5184,
+            2,
+            "00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff"
+          ],
+          [
+            5246,
+            2,
+            "ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00"
+          ],
+          [
+            5275,
+            2,
+            "00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff"
+          ]
+        ]
+      },
+      "read_full_strict": {
+        "strict_bytes": 1669,
+        "window_bytes": 1669,
+        "instruction_payload_equal": true,
+        "relocations_equal": false,
+        "resolved_read_constants_equal": true,
+        "strict_resolved_constants": [
+          [
+            1292,
+            2,
+            "ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00"
+          ],
+          [
+            1321,
+            2,
+            "00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff"
+          ],
+          [
+            1463,
+            2,
+            "ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00"
+          ],
+          [
+            1492,
+            2,
+            "00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff"
+          ],
+          [
+            1523,
+            2,
+            "ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00"
+          ],
+          [
+            1552,
+            2,
+            "00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff"
+          ],
+          [
+            1614,
+            2,
+            "ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00"
+          ],
+          [
+            1643,
+            2,
+            "00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff"
+          ]
+        ],
+        "window_resolved_constants": [
+          [
+            1292,
+            2,
+            "ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00"
+          ],
+          [
+            1321,
+            2,
+            "00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff"
+          ],
+          [
+            1463,
+            2,
+            "ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00"
+          ],
+          [
+            1492,
+            2,
+            "00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff"
+          ],
+          [
+            1523,
+            2,
+            "ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00"
+          ],
+          [
+            1552,
+            2,
+            "00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff"
+          ],
+          [
+            1614,
+            2,
+            "ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00"
+          ],
+          [
+            1643,
+            2,
+            "00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff"
+          ]
+        ]
+      },
+      "write_strict": {
+        "strict_bytes": 10160,
+        "window_bytes": 10160,
+        "instruction_payload_equal": true,
+        "relocations_equal": false,
+        "resolved_read_constants_equal": true,
+        "strict_resolved_constants": [
+          [
+            6866,
+            2,
+            "ff00"
+          ],
+          [
+            6875,
+            2,
+            "00ff"
+          ],
+          [
+            9566,
+            2,
+            "ff00"
+          ],
+          [
+            9575,
+            2,
+            "00ff"
+          ],
+          [
+            10049,
+            2,
+            "00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff"
+          ],
+          [
+            10065,
+            2,
+            "ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00"
+          ],
+          [
+            10122,
+            2,
+            "00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff"
+          ],
+          [
+            10138,
+            2,
+            "ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00"
+          ]
+        ],
+        "window_resolved_constants": [
+          [
+            6866,
+            2,
+            "ff00"
+          ],
+          [
+            6875,
+            2,
+            "00ff"
+          ],
+          [
+            9566,
+            2,
+            "ff00"
+          ],
+          [
+            9575,
+            2,
+            "00ff"
+          ],
+          [
+            10049,
+            2,
+            "00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff"
+          ],
+          [
+            10065,
+            2,
+            "ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00"
+          ],
+          [
+            10122,
+            2,
+            "00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff"
+          ],
+          [
+            10138,
+            2,
+            "ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00"
+          ]
+        ]
+      }
+    },
+    "avx512": {
+      "read_strict": {
+        "strict_bytes": 4710,
+        "window_bytes": 4710,
+        "instruction_payload_equal": true,
+        "relocations_equal": true
+      },
+      "read_full_strict": {
+        "strict_bytes": 985,
+        "window_bytes": 985,
+        "instruction_payload_equal": true,
+        "relocations_equal": true
+      },
+      "write_strict": {
+        "strict_bytes": 10246,
+        "window_bytes": 10246,
+        "instruction_payload_equal": true,
+        "relocations_equal": true
+      }
+    }
+  },
+  "complete": true,
+  "results": {
+    "normal_O3_Werror": "passed",
+    "fully_instrumented_ASan_UBSan_O2": "passed",
+    "old_promoted_gate_fully_instrumented_ASan_UBSan_O2": "expected use-after-poison failure:16-byte inactive interior read in compiled Rows32 gather_bound\u2192read_packet_buffered",
+    "x86_API_syntax": "AVX2 and AVX512 passed; no native x86 execution"
+  },
+  "limits": "Static body equality is not native timing or complete caller/layout equality. Strict NEON sparse packets deliberately stop using the broader ungranted window. Explicit grant retains old payloads/resolved constants in these probes. No CPU mode branches or retained handle state added; two-pointer sizes asserted in executable witness. Only relevant sanitizers/builds were run locally; full functional/native qualification belongs to parent.",
+  "retained_files_sha256": {
+    "normal-run.log": "0c58472f4150478c4f9e3815f2db06119b9ab9eb83bd0722e71e339f84e0ac9a",
+    "asan-run.log": "126ee096d981f06a30d0fc91da5ca1d823aa6242cd0ed74315b8efc830902bfb",
+    "old-promoted-asan-run.log": "dfc18ba782868733335624caeeff6e86ec476cbfddccc71ce9af661665d2ed1f",
+    "codegen.cpp": "4d887ccbeec8504b5e148dc577d1d3715232bcf0465e95cea7edfa471a8a980d"
+  },
+  "object_sha256": {
+    "neon-current": "b3e95893575d2c2e9b4db8cacd2785cefda7aef0d09e6ea0a67f85c67974fe05",
+    "neon-old": "a023e4959b4961f8c27db125e6539ef17409dddaefda69067b323a42fcaac4b2",
+    "avx2-current": "b090e195de5901ddb29c7fda6d7ac6d8ca8e7a7b5720f8a62f27094ff1788741",
+    "avx512-current": "8ae31475c3c9bfeb01bdeb09cc1605c94c8ae665898b924f9bd56e2bf254aa91"
+  },
+  "native_binary_sha256": {
+    "normal": "b75c570f4c2d390510477909a49fb1e3b2b929e643c4ad7d8c5ce91d342c41cd",
+    "asan": "bde61970f0fc7963eb789b40a3ac2515500de059cfc56e87ef2cbc764ce9659d",
+    "old-promoted-asan": "d773d955c3829bbbba35275c3baf6c9de300a9363a123571e5dd3b86f86645a3"
+  },
+  "witness_source": "ikea/test/tuplepack/access.cpp",
+  "old_control_patch": "detail/native/packet.h: if constexpr (Access == author::read_access::common_window && Rows >= 32) -> if constexpr (Rows >= 32); all other source bytes identical."
+}

@@ -6,6 +6,18 @@
 #include <ikea/tuplepack/detail/native/types.h>
 #include <ikea/tuplepack/detail/packet_plan.h>
 #include <utility>
+namespace ikea::tuplepack::author {
+/// active_units reads only selected units. common_window additionally grants
+/// reads of initialized, readable and read-isolated bytes between the first
+/// and last selected physical transfers in one common strided allocation.
+/// For coalesced transfers filling their stride, the hull starts at
+/// address(first_active)+transfer.first and ends after
+/// address(last_active)+transfer.first+transfer.grain. It grants no prefix,
+/// suffix or stride padding; stride geometry alone is not this permission.
+/// Stores and effects remain selected-unit-only, including preserving writes
+/// whose old-data reads use this grant. Empty activity forms no address.
+enum class read_access { active_units, common_window };
+} // namespace ikea::tuplepack::author
 namespace ikea::tuplepack::native {
 template <unsigned N> struct packet_type;
 template <> struct packet_type<8> {
@@ -37,7 +49,8 @@ inline void write(const detail::gpr_write &p, std::uint8_t *row, std::uint64_t i
 }
 /// Active-only address callback; optional nonzero stride promises one common
 /// allocation. Trusted widths, addresses and mask; effects belong to the shell.
-template <unsigned Rows, class Address>
+template <unsigned Rows, author::read_access Access = author::read_access::active_units,
+          class Address>
 [[gnu::always_inline]] inline std::uint64_t read_body(const detail::gpr_read &p, Address &&address,
                                                       std::uint64_t active,
                                                       std::size_t stride = 0) {
@@ -55,7 +68,8 @@ read_transfer_body(const detail::gpr_read &p, Address &&address, std::uint64_t a
     return detail::read_gpr_transfer<Rows, Bytes>(p, std::forward<Address>(address), active,
                                                  stride);
 }
-template <unsigned Rows, class Address>
+template <unsigned Rows, author::read_access Access = author::read_access::active_units,
+          class Address>
 [[gnu::always_inline]] inline void write_body(const detail::gpr_write &p, Address &&address,
                                               std::uint64_t input, std::uint64_t active,
                                               std::size_t stride = 0) {

@@ -257,6 +257,32 @@ allocation with that byte stride; omit it for arbitrary addresses. Ordinary
 bindings supply that proof. Controls must match Rows; one-row bodies use a
 direct pointer. Access stays within active units, including with sparse masks.
 
+`author::read_access::common_window` explicitly grants wider reads to a native
+adapter. The default is `active_units`:
+
+```cpp
+using Access = tp::author::read_access;
+tp::author::native_reader<64, std::byte, 64, Access::common_window> read_window(read);
+tp::author::native_writer<64, 64, Access::common_window> write_window(write);
+```
+
+This is an owner promise, not another extent check: retain initialized, readable,
+read-isolated bytes throughout the command. When contiguous physical transfers
+fill their stride, the grant covers the hull from the first selected transfer's
+first byte through the last selected transfer's end, including inactive interior
+units. It grants no preceding/following bytes or stride padding. A named view's
+allocation extent and a nonzero stride hint alone do not supply initialization
+or isolation. Row admission still applies; an empty mask forms no address.
+The grant adds no stored state to either adapter.
+
+The same compile-time choice follows `Rows` in
+`native::read_body<Rows, Access>` and `native::write_body<Rows, Access>`.
+A zero stride hint retains active-only gathers, including with `common_window`.
+Ordinary and compiled/buffered operations keep `active_units`. GPR and point
+transfers are unchanged. Preserving writes can use the grant for old-data reads;
+issued stores and journal effects still cover active units only. Protecting those
+stores does not by itself isolate inactive old-data reads.
+
 `native::row_mask(plan, active)` expands original-row activity using the prepared
 packet order. Each map slot of an active row, including a hole, gets byte `0xff`;
 inactive slots and trailing capacity get zero. `row_mask_for<N, Rows>` describes

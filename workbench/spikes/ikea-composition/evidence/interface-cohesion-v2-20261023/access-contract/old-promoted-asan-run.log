@@ -1,0 +1,190 @@
+=================================================================
+==2536990==ERROR: AddressSanitizer: use-after-poison on address 0xfbffb040335f at pc 0xaaaab3fce6f8 bp 0xffffd5da66f0 sp 0xffffd5da66e8
+READ of size 16 at 0xfbffb040335f thread T0
+    #0 0xaaaab3fce6f4 in load16 /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/access-contract-proof/source/ikea/include/ikea/tuplepack/detail/native/memory.h:35:16
+    #1 0xaaaab3fce6f4 in row_part<0U> /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/access-contract-proof/source/ikea/include/ikea/tuplepack/detail/native/memory.h:135:12
+    #2 0xaaaab3fce6f4 in load_unit /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/access-contract-proof/source/ikea/include/ikea/tuplepack/author/native.h:96:17
+    #3 0xaaaab3fce6f4 in gather_bound<32U, (ikea::tuplepack::author::read_access)0, (lambda at /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/access-contract-proof/source/ikea/src/tuplepack/packet.cpp:67:33)> /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/access-contract-proof/old/ikea/tuplepack/detail/native/packet.h:366:33
+    #4 0xaaaab3fce6f4 in read<32U, (ikea::tuplepack::author::read_access)0, (lambda at /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/access-contract-proof/source/ikea/src/tuplepack/packet.cpp:67:33)> /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/access-contract-proof/old/ikea/tuplepack/detail/native/packet.h:464:18
+    #5 0xaaaab3fce6f4 in read_body<32U, (ikea::tuplepack::author::read_access)0, (lambda at /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/access-contract-proof/source/ikea/src/tuplepack/packet.cpp:67:33)> /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/access-contract-proof/old/ikea/tuplepack/detail/native/packet.h:521:12
+    #6 0xaaaab3fce6f4 in ikea::tuplepack::native::read(ikea::tuplepack::detail::packet_read const&, unsigned int, unsigned char const*, unsigned long, unsigned long) /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/access-contract-proof/source/ikea/src/tuplepack/packet.cpp:67:16
+    #7 0xaaaab3f80c4c in ikea::tuplepack::detail::read_packet_buffered(ikea::tuplepack::detail::packet_read const&, unsigned int, unsigned char const*, unsigned long, unsigned long) /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/access-contract-proof/source/ikea/src/tuplepack/packet.cpp:9:41
+    #8 0xaaaab3f04480 in get /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/access-contract-proof/source/ikea/include/ikea/tuplepack/read.h:37:16
+    #9 0xaaaab3f04480 in void (anonymous namespace)::access_contract<32u>() /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/access-contract-proof/source/access.cpp:60:5
+    #10 0xaaaab3efe67c in main /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/access-contract-proof/source/access.cpp:154:5
+    #11 0xffffb1f72598 in __libc_start_call_main csu/../sysdeps/nptl/libc_start_call_main.h:58:16
+    #12 0xffffb1f72678 in __libc_start_main csu/../csu/libc-start.c:360:3
+    #13 0xaaaab3e2036c in _start (/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/access-contract-proof/old-promoted-asan+0x4036c) (BuildId: a58923e0c2043d3cf4f7bb01b05857babc91e52a)
+
+Address 0xfbffb040335f is located in stack of thread T0 at offset 13151 in frame
+    #0 0xaaaab3f03494 in void (anonymous namespace)::access_contract<32u>() /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/access-contract-proof/source/access.cpp:25
+
+  This frame has 130 object(s):
+    [64, 4416) 'prepared'
+    [4672, 6528) 'prepared'
+    [6656, 8448) 'rp' (line 35)
+    [8576, 12864) 'wp' (line 36)
+    [13120, 13216) 'allocation' (line 37) <== Memory access at offset 13151 is inside this variable
+    [13248, 13312) 'ref.tmp'
+    [13344, 13408) '__p0'
+    [13440, 13504) '__p0'
+    [13536, 13600) '__p0'
+    [13632, 13696) '__p0'
+    [13728, 13792) '__p0'
+    [13824, 13888) '__p0'
+    [13920, 13984) '__p0'
+    [14016, 14080) '__p0'
+    [14112, 14160) '__p0'
+    [14192, 14240) '__p0'
+    [14272, 14320) '__p0'
+    [14352, 14400) '__p0'
+    [14432, 14464) '__p0'
+    [14496, 14528) '__p0'
+    [14560, 14592) '__p0'
+    [14624, 14656) '__p0'
+    [14688, 14752) '__p0'
+    [14784, 14848) '__p0'
+    [14880, 14944) '__p0'
+    [14976, 15040) '__p0'
+    [15072, 15120) '__p0'
+    [15152, 15200) '__p0'
+    [15232, 15280) '__p0'
+    [15312, 15360) '__p0'
+    [15392, 15424) '__p0'
+    [15456, 15488) '__p0'
+    [15520, 15552) '__p0'
+    [15584, 15616) '__p0'
+    [15648, 15712) '__p0'
+    [15744, 15808) '__p0'
+    [15840, 15904) '__p0'
+    [15936, 16000) '__p0'
+    [16032, 16040) 'base'
+    [16064, 16072) 'stride'
+    [16096, 16104) 'base'
+    [16128, 16136) 'stride'
+    [16160, 16224) '__p0'
+    [16256, 16320) '__p0'
+    [16352, 16416) '__p0'
+    [16448, 16512) '__p0'
+    [16544, 16608) '__p0'
+    [16640, 16704) '__p0'
+    [16736, 16800) '__p0'
+    [16832, 16896) '__p0'
+    [16928, 16976) '__p0'
+    [17008, 17056) '__p0'
+    [17088, 17136) '__p0'
+    [17168, 17216) '__p0'
+    [17248, 17312) '__p0'
+    [17344, 17408) '__p0'
+    [17440, 17504) '__p0'
+    [17536, 17600) '__p0'
+    [17632, 17680) '__p0'
+    [17712, 17760) '__p0'
+    [17792, 17840) '__p0'
+    [17872, 17920) '__p0'
+    [17952, 18016) '__p0'
+    [18048, 18112) '__p0'
+    [18144, 18208) '__p0'
+    [18240, 18304) '__p0'
+    [18336, 18400) '__p0'
+    [18432, 18496) '__p0'
+    [18528, 18592) '__p0'
+    [18624, 18688) '__p0'
+    [18720, 18768) '__p0'
+    [18800, 18848) '__p0'
+    [18880, 18928) '__p0'
+    [18960, 19008) '__p0'
+    [19040, 19072) '__p0'
+    [19104, 19136) '__p0'
+    [19168, 19200) '__p0'
+    [19232, 19264) '__p0'
+    [19296, 19360) '__p0'
+    [19392, 19456) '__p0'
+    [19488, 19552) '__p0'
+    [19584, 19648) '__p0'
+    [19680, 19688) 'base'
+    [19712, 19720) 'stride'
+    [19744, 19792) '__p0'
+    [19824, 19872) '__p0'
+    [19904, 19952) '__p0'
+    [19984, 20032) '__p0'
+    [20064, 20128) '__p0'
+    [20160, 20224) '__p0'
+    [20256, 20320) '__p0'
+    [20352, 20416) '__p0'
+    [20448, 20496) '__p0'
+    [20528, 20576) '__p0'
+    [20608, 20656) '__p0'
+    [20688, 20736) '__p0'
+    [20768, 20832) '__p0'
+    [20864, 20928) '__p0'
+    [20960, 21024) '__p0'
+    [21056, 21120) '__p0'
+    [21152, 21200) '__p0'
+    [21232, 21280) '__p0'
+    [21312, 21360) '__p0'
+    [21392, 21440) '__p0'
+    [21472, 21536) '__p0'
+    [21568, 21632) '__p0'
+    [21664, 21728) '__p0'
+    [21760, 21824) '__p0'
+    [21856, 21920) '__p0'
+    [21952, 22016) '__p0'
+    [22048, 22112) '__p0'
+    [22144, 22208) '__p0'
+    [22240, 22246) 'codes' (line 28)
+    [22272, 22274) 'map' (line 29)
+    [22288, 22680) 'layout' (line 34)
+    [22752, 23148) 'ref.tmp' (line 34)
+    [23216, 23264) 'view' (line 40)
+    [23296, 23312) 'write' (line 42)
+    [23328, 23344) 'strict_write' (line 44)
+    [23360, 23376) 'window_write' (line 46)
+    [23392, 23456) 'wanted' (line 50)
+    [23488, 23552) 'actual' (line 50)
+    [23584, 23648) 'replacement' (line 50)
+    [23680, 23748) 'ref.tmp' (line 60)
+    [23792, 24048) 'addresses' (line 63)
+    [24112, 25136) 'entries' (line 80)
+    [25264, 25332) 'ref.tmp' (line 87)
+    [25376, 25440) 'ref.tmp' (line 87)
+    [25472, 25536) 'ref.tmp' (line 89)
+    [25568, 25632) 'middle_wanted' (line 120)
+HINT: this may be a false positive if your program uses some custom stack unwind mechanism, swapcontext or vfork
+      (longjmp and C++ exceptions *are* supported)
+SUMMARY: AddressSanitizer: use-after-poison /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/access-contract-proof/source/ikea/include/ikea/tuplepack/detail/native/memory.h:35:16 in load16
+Shadow bytes around the buggy address:
+  0xfbffb0403080: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0xfbffb0403100: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0xfbffb0403180: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0xfbffb0403200: 00 00 00 00 00 00 00 00 f2 f2 f2 f2 f2 f2 f2 f2
+  0xfbffb0403280: f2 f2 f2 f2 f2 f2 f2 f2 f2 f2 f2 f2 f2 f2 f2 f2
+=>0xfbffb0403300: f2 f2 f2 f2 f2 f2 f2 f2 f7 f7 00[f7]f7 f7 f7 f7
+  0xfbffb0403380: f7 00 f7 f7 f2 f2 f2 f2 00 00 00 00 00 00 00 00
+  0xfbffb0403400: f2 f2 f2 f2 f8 f8 f8 f8 f8 f8 f8 f8 f2 f2 f2 f2
+  0xfbffb0403480: f8 f8 f8 f8 f8 f8 f8 f8 f2 f2 f2 f2 f8 f8 f8 f8
+  0xfbffb0403500: f8 f8 f8 f8 f2 f2 f2 f2 f8 f8 f8 f8 f8 f8 f8 f8
+  0xfbffb0403580: f2 f2 f2 f2 f8 f8 f8 f8 f8 f8 f8 f8 f2 f2 f2 f2
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07 
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+
+NOTE: the stack trace above identifies the code that *accessed* the poisoned memory.
+To identify the code that *poisoned* the memory, try the experimental setting ASAN_OPTIONS=poison_history_size=<size>.
+==2536990==ABORTING

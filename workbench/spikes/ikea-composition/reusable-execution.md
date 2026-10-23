@@ -111,6 +111,25 @@ identity. If interning is useful, measure lookup, resident memory, equality and
 eviction/lifetime costs rather than introducing a global registry by default.
 The block comparison uses eight shared plans directly, with no cache machinery.
 
+Read access is another operation fact, separate from placement geometry. The
+[promoted NEON sparse-packet study](../neon-tuplepack-masked/README.md) measured
+2.6–3.3× sparse-read gains by loading the bounded first-to-last selected window,
+including discarded inactive interior bytes. It explicitly documented that
+widening; current ordinary TuplePack comments promised active-only access.
+Neither an allocation extent nor a stride hint proves those interior bytes are
+initialized, coherent or isolated from writes. Result oracles and suffix guards
+miss this contradiction.
+
+Keep ordinary selected-row commands active-unit-only. Preserve the measured
+window implementation behind an explicit reusable `author::read_access::common_window`
+grant on native adapters. Its owner admits the initialized/read-isolated hull;
+there is no added handle field or runtime mode test. Full-active coalescing and
+AVX-512 masked loads need no relaxation. Preserving writes may use the grant for
+old-data reads, while their stores and effects remain active-only. The
+[physical-envelope check](../../../ikea/test/tuplepack/access.cpp) poisons inactive
+interior bytes, unlike the earlier output-only tests. This correction and its
+qualification are separate from frozen R4 and the old compact-predicate control.
+
 | Module / current mechanism | Candidate worth testing | Consequential limit |
 | --- | --- | --- |
 | TuplePack: shared prepared plan and named view; two-pointer general/native/writer bindings; separate prepared predicate owns its copied code | Qualify the implemented reader/predicate split against the earlier 24-byte cached-reader candidate and shared hot projection | Include generic reads, predicate-only and mixed read/write commands, map changes and checked factory handoff |

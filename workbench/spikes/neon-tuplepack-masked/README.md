@@ -2,7 +2,11 @@
 
 Why is a half-selected 64-row TuplePack packet of one-byte tuples 4–7× slower
 than a full one on Neoverse, when AVX-512 runs both at the same speed?
-Promoted to Ikea on 2026-10-22.
+Promoted to Ikea on 2026-10-22. A subsequent
+[access-contract correction](../ikea-composition/reusable-execution.md#a-common-separation-with-module-specific-execution)
+retains this optimization under explicit `author::read_access::common_window`;
+ordinary operations keep active-unit-only access. Results below describe the
+original source and permission, including discarded inactive interior reads.
 
 ## Starting point
 

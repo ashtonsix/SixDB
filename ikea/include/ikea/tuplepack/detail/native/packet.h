@@ -330,7 +330,8 @@ template <unsigned Rows, unsigned Grain = 64 / Rows, class Address>
     else
         scatter_selected<Rows, Grain, false>(p, address, active, value);
 }
-template <unsigned Rows, class Address>
+template <unsigned Rows, author::read_access Access = author::read_access::active_units,
+          class Address>
 [[gnu::always_inline]] inline packet gather_bound(const detail::packet_placement &p,
                                                   Address address, std::uint64_t active,
                                                   std::size_t stride) {
@@ -352,12 +353,12 @@ template <unsigned Rows, class Address>
         return _mm512_maskz_loadu_epi8(mask(mask), base);
     }
 #elif defined(__aarch64__)
-    // Rows from the first to the last active one lie in the promised common
-    // strided allocation: one bounded window load replaces per-row gathers, a
-    // table lookup moves it into place and the row mask clears the rest. Only
+    // A common-window grant covers the initialized/read-isolated interior,
+    // independently of the geometric stride hint. One bounded load replaces
+    // per-row gathers, a table lookup places it and the row mask clears the rest. Only
     // 32/64-row packets: wider rows gather few words, and the larger body
     // changed their callers' code generation for the worse.
-    if constexpr (Rows >= 32) {
+    if constexpr (Access == author::read_access::common_window && Rows >= 32) {
         constexpr unsigned G = 64 / Rows;
         if (p.contiguous && p.count == p.grain && p.grain == G && stride == p.grain) {
             const unsigned first = std::countr_zero(active), last = 63 - std::countl_zero(active);
@@ -426,7 +427,8 @@ template <unsigned Rows, class Address>
                                                packet input) {
     store_selected(row, encode(p, row, input), p.writes);
 }
-template <unsigned Rows, class Address>
+template <unsigned Rows, author::read_access Access = author::read_access::active_units,
+          class Address>
 [[gnu::always_inline]] inline packet read(const detail::packet_read &p, Address address,
                                           std::uint64_t active = all<Rows>,
                                           std::size_t stride = 0) {
@@ -458,12 +460,13 @@ template <unsigned Rows, class Address>
             return p.ordering.row_major() ? value : native::transform<false>(value, p.route);
         }
     }
-    auto value = gather_bound<Rows>(p.place, address, active, stride);
+    auto value = gather_bound<Rows, Access>(p.place, address, active, stride);
     return p.ordering.row_major() && p.place.grain == 64 / Rows
                ? transform<Rows, false>(value, p.route)
                : native::transform<false>(value, p.route);
 }
-template <unsigned Rows, class Address>
+template <unsigned Rows, author::read_access Access = author::read_access::active_units,
+          class Address>
 [[gnu::always_inline]] inline void write(const detail::packet_write &p, Address address,
                                          packet value, std::uint64_t active = all<Rows>,
                                          std::size_t stride = 0) {
@@ -493,7 +496,7 @@ template <unsigned Rows, class Address>
     }
     auto updated = join(zero16(), zero16(), zero16(), zero16());
     if (p.needs_old) {
-        updated = gather_bound<Rows>(p.place, address, active, stride);
+        updated = gather_bound<Rows, Access>(p.place, address, active, stride);
         updated = native::bit_and(updated, native::load_packet(p.preserve.data()));
     }
     for (unsigned round = 0; round < p.round_count; ++round)
@@ -506,17 +509,22 @@ template <unsigned Rows, class Address>
 } // namespace ikea::tuplepack::native::packet_detail
 
 namespace ikea::tuplepack::native {
-template <unsigned Rows, class Address>
+/// Active-address callback. A nonzero stride proves common allocation geometry;
+/// only explicit common_window grants interior inactive reads. No inactive
+/// stores are issued, regardless of Access.
+template <unsigned Rows, author::read_access Access = author::read_access::active_units,
+          class Address>
 [[gnu::always_inline]] inline packet read_body(const detail::packet_read &p, Address address,
                                                std::uint64_t active = packet_detail::all<Rows>,
                                                std::size_t stride = 0) {
-    return packet_detail::read<Rows>(p, address, active, stride);
+    return packet_detail::read<Rows, Access>(p, address, active, stride);
 }
-template <unsigned Rows, class Address>
+template <unsigned Rows, author::read_access Access = author::read_access::active_units,
+          class Address>
 [[gnu::always_inline]] inline void
 write_body(const detail::packet_write &p, Address address, packet input,
            std::uint64_t active = packet_detail::all<Rows>, std::size_t stride = 0) {
-    packet_detail::write<Rows>(p, address, input, active, stride);
+    packet_detail::write<Rows, Access>(p, address, input, active, stride);
 }
 } // namespace ikea::tuplepack::native
 #endif

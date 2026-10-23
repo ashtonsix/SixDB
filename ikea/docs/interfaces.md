@@ -104,6 +104,13 @@ Default construction means none; ordinary command defaults spell `all()`.
 Selections borrow backing and preserve original positions. They do not decide
 whether an excluded value is NULL, retired, absent or merely unnecessary.
 
+Logical selection and physical read permission remain separate. TuplePack's
+ordinary operations read active units only. An author can explicitly choose
+`read_access::common_window` when its owner grants initialized, read-isolated
+access through the bounded first-to-last selected window. That grant changes
+possible reads, including preserving writes' old-data reads; stores and effects
+remain active-only. Attachment and stride geometry alone do not supply it.
+
 | Backing | Origin and read grant |
 | --- | --- |
 | SeriesPack numeric u16 words | Origin divisible by 16; one bit per original row |

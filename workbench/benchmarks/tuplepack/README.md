@@ -37,6 +37,12 @@ compact and scattered placement. Use `--benchmark_filter` to select families.
 | `composition/128/{body,ordinary}` | Two native packets update disjoint nibble codes sharing 64 physical bytes | Ordinary includes both packets' width admission and qualified effects; body is the two underlying native writes |
 | `packets/<Rows>/<layout>/<all,half>/sum` | Native read and reduction over 1,024 original rows | Shape, physical extent and stride vary independently; time is normalized by original rows, including inactive rows |
 | `packets/<Rows>/<layout>/<all,half>/update/{body,ordinary,cps}` | Shared native decode/toggle/write bodies | Body excludes admission/effects; ordinary and CPS include identical width checks and qualified journals; maintenance/publication excluded |
+| `packets/64/one_byte/half/window/{sum,update/...}` | The same owned image with explicit common-window read access | Every byte is initialized and read-isolated; native reads may include inactive interior bytes, while stores and effects remain selected only |
+
+Unqualified packet cases use active-unit-only reads. The explicit `window`
+family retains the measured NEON bounded-window optimization under its stronger
+owner grant. Do not compare historical implicitly widened sparse cases as if
+they had the same physical access contract as today's strict default.
 
 Time is per benchmark iteration; `items_per_iteration` gives rows/operations for
 normalization. `point` controls use runtime masks/shifts rather than a fully

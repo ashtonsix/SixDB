@@ -1,0 +1,17 @@
+2026-10-23T05:44:25+01:00
+Running /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/access-owner-proof/owner-preflight
+Run on (10 X 2000 MHz CPU s)
+CPU Caches:
+  L1 Data 128 KiB (x10)
+  L1 Instruction 192 KiB (x10)
+  L2 Unified 12288 KiB (x2)
+  L3 Unified 65536 KiB (x1)
+Load Average: 8.26, 9.72, 8.36
+***WARNING*** ASLR is enabled, the results may have unreproducible noise in them.
+----------------------------------------------------------------------------------------------------------
+Benchmark                                                Time             CPU   Iterations UserCounters...
+----------------------------------------------------------------------------------------------------------
+packets/64/one_byte/half/window/sum                 336761 ns         4250 ns            1 items_per_iteration=1.024k items_per_second=240.941M/s
+packets/64/one_byte/half/window/update/body           7332 ns         3416 ns            1 items_per_iteration=1.024k items_per_second=299.766M/s
+packets/64/one_byte/half/window/update/ordinary       3458 ns         3416 ns            1 items_per_iteration=1.024k items_per_second=299.766M/s
+packets/64/one_byte/half/window/update/cps            4624 ns         4625 ns            1 items_per_iteration=1.024k items_per_second=221.405M/s

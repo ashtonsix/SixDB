@@ -43,7 +43,10 @@ namespace author {
 /// Native reader shares the exact decoded packet with inline authors. Unlike
 /// buffered access, the 64-byte shape does not materialize an output array.
 /// The 8-byte shape hands off a uint64_t, including on baseline x86.
-template <unsigned N, class Byte, unsigned Rows = 1> class native_reader {
+/// Explicit common_window is a reusable owner grant under read_access; admit()
+/// checks row coordinates, not initialization or read isolation of that hull.
+template <unsigned N, class Byte, unsigned Rows = 1,
+          read_access Access = read_access::active_units> class native_reader {
     const read_plan<N, Rows> *plan_;
     const basic_view<Byte> *source_;
 
@@ -87,14 +90,17 @@ template <unsigned N, class Byte, unsigned Rows = 1> class native_reader {
     }
     [[gnu::always_inline]] native::packet_for<N>
     get_unchecked(std::size_t first, std::uint64_t active = ikea::tuplepack::detail::all_rows<Rows>) const {
-        return ikea::tuplepack::detail::read_native(*plan_, *source_, first, active);
+        return ikea::tuplepack::detail::read_native<Access>(*plan_, *source_, first, active);
     }
 };
 /// Register-valued mutation operation and composition leaf. The shared shell
 /// admits widths/rows/effects, then native traversal handles the complete packet.
-template <unsigned N = 64, unsigned Rows = 1>
+/// common_window grants additional old-data reads, never inactive stores or
+/// effects. The owner secures read isolation separately from store coverage.
+template <unsigned N = 64, unsigned Rows = 1,
+          read_access Access = read_access::active_units>
 class native_writer
-    : public ikea::tuplepack::detail::mutation_commands<native_writer<N, Rows>, native::packet_for<N>, Rows> {
+    : public ikea::tuplepack::detail::mutation_commands<native_writer<N, Rows, Access>, native::packet_for<N>, Rows> {
     writer<N, Rows> operation_;
 
   public:
@@ -135,7 +141,7 @@ class native_writer
         else {
             const auto base = ikea::to_u8(destination().row_unchecked(row));
             const auto stride = destination().stride();
-            native::write_body<Rows>(plan().controls(),
+            native::write_body<Rows, Access>(plan().controls(),
                 [&](unsigned r) { return base + r * stride; }, input, active, stride);
         }
     }

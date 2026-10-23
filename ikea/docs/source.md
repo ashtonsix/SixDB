@@ -132,7 +132,10 @@ with a common shift permit bounded GPR transfers. Scattered maps use byte/word
 assembly or point bodies with a register permutation. Ordinary and inline native
 operations share controls and access only active units. The declared access masks
 and [contracts](tuplepack/reference.md) define caller obligations independently
-of the chosen lowering.
+of the chosen lowering. An explicit native `author::read_access::common_window`
+grant additionally permits bounded reads through initialized, read-isolated
+inactive interior units; stride geometry alone does not grant that access.
+Sparse stores and effects still exclude inactive units.
 
 ## Bec256 source boundaries
 

@@ -112,6 +112,16 @@ preparation/one-shot losses, duplicate control and emitted copies. This is a
 one-header comparison against R4, separate from the old-to-new cohesion cohort.
 The candidate was never applied to live Ikea.
 
+A subsequent access-contract audit found that R4's promoted NEON sparse packet
+read can fetch inactive interior units, despite public active-only promises.
+The [execution survey](../../reusable-execution.md) connects the original measured
+window permission to an explicit native read grant. The separate
+[access-contract qualification](access-contract/README.md) includes a passing
+fully instrumented poisoned-interior test and a failing restored-old-behavior
+control, plus preserved granted codegen and explicit benchmark cases. R4's
+value/tail tests do not qualify that stronger physical-access promise; these
+historical receipts are not relabelled as proof of the correction.
+
 The [unique local object archive](local-objects-artifact.json) preserves 195
 objects and their source/dependency/record context. Its
 [recovery account](local-objects-context.json) identifies the already durable

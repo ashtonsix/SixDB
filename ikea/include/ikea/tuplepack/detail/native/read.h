@@ -6,7 +6,8 @@
 namespace ikea::tuplepack::detail {
 // Shared register-valued body for ordinary predicates and authored readers.
 // Requires admitted active rows. Empty activity forms no source address.
-template <unsigned N, unsigned Rows, class Byte>
+template <author::read_access Access = author::read_access::active_units,
+          unsigned N, unsigned Rows, class Byte>
 [[gnu::always_inline]] inline native::packet_for<N>
 read_native(const read_plan<N, Rows>& plan, const basic_view<Byte>& source,
             std::size_t first, std::uint64_t active) {
@@ -17,7 +18,7 @@ read_native(const read_plan<N, Rows>& plan, const basic_view<Byte>& source,
     else {
         const auto base = ikea::to_u8(source.row_unchecked(first));
         const auto stride = source.stride();
-        return native::read_body<Rows>(plan.controls(),
+        return native::read_body<Rows, Access>(plan.controls(),
             [&](unsigned r) { return base + r * stride; }, active, stride);
     }
 }
