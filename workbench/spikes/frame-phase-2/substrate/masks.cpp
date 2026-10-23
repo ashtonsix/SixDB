@@ -225,6 +225,35 @@ int main(int argc, char **argv) {
                          flush(c.payload.data(), c.payload.size());
                          flush(c.blocks.data(), c.descriptor_bytes());
                      }},
+                    {"frame_bits_random_staged_extent", [&] {
+                         // As staged, but the body prefetch covers its actual
+                         // extent (to the next block's offset), from the
+                         // descriptor fetched 16 ahead.
+                         u128 t = 0;
+                         const std::size_t k = random_ids.size(), nb = c.blocks.size();
+                         for (std::size_t i = 0; i < k; ++i) {
+                             if (i + 16 < k) {
+                                 const std::uint32_t b = random_ids[i + 16];
+                                 __builtin_prefetch(c.blocks.data() + b);
+                                 if (b + 1 < nb)
+                                     __builtin_prefetch(c.blocks.data() + b + 1);
+                             }
+                             if (i + 8 < k) {
+                                 const std::uint32_t b = random_ids[i + 8];
+                                 const std::size_t first = c.blocks[b].offset;
+                                 const std::size_t limit = b + 1 < nb ? c.blocks[b + 1].offset : c.payload.size();
+                                 const std::uint8_t *body = c.payload.data() + first;
+                                 for (std::size_t o = 0; o < limit - first; o += 64)
+                                     __builtin_prefetch(body + o);
+                             }
+                             t += fe::block_sum(c, random_ids[i]);
+                         }
+                         return t;
+                     },
+                     [&] {
+                         flush(c.payload.data(), c.payload.size());
+                         flush(c.blocks.data(), c.descriptor_bytes());
+                     }},
                     {"native_spans_random_staged", [&] {
                          u128 t = 0;
                          const std::size_t k = random_ids.size();
