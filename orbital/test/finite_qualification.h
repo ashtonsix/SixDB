@@ -9,8 +9,8 @@ namespace orbital::allocation::detail {
 // emulate native-page performance. Zero selects the host page as usual.
 struct FiniteQualification {
   [[nodiscard]] static Result<std::unique_ptr<FiniteGroup>> create(
-      FiniteConfig config, std::size_t page_granule) noexcept {
-    return FiniteGroup::create_geometry(config, page_granule);
+      unsigned cls, std::size_t page_granule) noexcept {
+    return FiniteGroup::create(cls, page_granule);
   }
 };
 

@@ -297,7 +297,7 @@ Accounting Material::accounting() const {
     for (const auto& storage : storages(*group)) {
       // An empty retiring Group can already have released its geometry.
       if (!storage.users.load(std::memory_order_relaxed)) continue;
-      observe(storage, group->geometry->bound_capacity({identity(storage)}), held_extent(storage));
+      observe(storage, group->geometry->capacity(), held_extent(storage));
     }
   for (const auto& window : runtime.pool->internal->windows)
     observe(window_storage(*window), window->prepared, window_extent(*window));

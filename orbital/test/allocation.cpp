@@ -158,6 +158,8 @@ void finite_alignment_growth() {
   }
   auto& source = values[1];
   auto* original = source.address;
+  // 320 reserved bytes select the 320-byte class: its second Home is 64- but
+  // not 128-aligned, so a 128-byte alignment request must move it.
   CHECK(reinterpret_cast<std::uintptr_t>(original) % 128 == 64);
   auto held = hold(source, {0, 316}); CHECK(held);
   const GrowthRequest target{305, 320, 128, 15};
@@ -191,6 +193,7 @@ void finite_metadata_budget() {
     auto value = allocate(**pool, {64, 0, 64, 16, Initialization::zero}); CHECK(value);
     std::memset(value->address, 0x61 + round, value->size);
     auto captured = hold(*value, {0, 80}); CHECK(captured);
+    trim(**pool); // Return pages mapped ahead of the Home; only live pages remain.
     const auto charged = (*arena)->charged_bytes.load();
     CHECK(charged <= 32 * 1024 + 3 * page);
     release(*value);

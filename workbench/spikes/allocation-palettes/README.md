@@ -3,9 +3,10 @@
 The question was whether finer reservation classes and a **32-class / 8-home**
 byte partition improve Groups on 16 KiB and 64 KiB base pages. Native measurements
 favoured **15 classes / 16 homes**, with different fresh-allocation policies for
-4, 16 and 64 KiB pages. The chosen changes are implemented in
-[finite.cpp](../../../orbital/src/allocation/finite.cpp) and
-[group.cpp](../../../orbital/src/allocation/group.cpp).
+4, 16 and 64 KiB pages. Those mixed-class palettes were production until the
+[hot-path overhaul](../orbital-hot-paths/README.md) replaced them with
+single-class Groups; this study remains the evidence for the trade-offs between
+class count, page sharing and slack.
 
 ## Selected profiles
 

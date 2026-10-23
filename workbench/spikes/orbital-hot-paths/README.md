@@ -141,6 +141,71 @@ same multiplier. Locally, `{i·φ + 1, i}` gave ~240 ns per bind at 1K and ~30 �
 at 64K (OrbStack timing, so direction only; the effect is probe-chain length).
 Hashing each word independently before combining removes it.
 
+## Overhaul: single-class Groups
+
+The survey's variants pointed at the claim/bind transaction, not the Group or
+Hold design. The overhaul (branch `claude/project-thread-891kd8`) replaces the
+finite backend in [Orbital](../../../orbital/README.md#allocation):
+
+- Each Group holds 256 equal Homes of one class; identity *i* is Home *i*. The
+  one-byte bindings, mixed-class palettes and ready-candidate cache are gone.
+- Free, ready and pending Homes are 256-bit bitmaps. Allocation takes the lowest
+  ready Home of the class's head Group (inline); release sets two bits.
+- 26 classes from 16 to 3072 bytes, at most 25% apart. A class must be a
+  multiple of the alignment and fill a native page with 256 Homes (16 B at
+  4 KiB, 64 B at 16 KiB, 256 B at 64 KiB). Equal requests get equal capacity.
+- Mapping a Home maps following absent pages of its Group with one `mprotect`,
+  up to as many as the Group already maps and at most 15; budget refusal maps
+  only the Home, and trim returns idle pages.
+- One Arena pin per Pool instead of per Group; `on_lane` is an inline compare
+  against a trivially constructible TLS token; a sole local user releases
+  with a plain store.
+
+Holds, `Storage*` use tokens, foreign-return Messages, the shared budget, trim,
+Preparation, Windows and the public API are unchanged. All 21 Orbital, 21 Loom
+and 9 Object integration checks pass, and the Engine directory check. The finite
+and palette checks were rewritten for the new geometry (class oracle over every
+size/alignment/page, readiness, preparation, trim and exact charges); four
+preparation checks that depended on grid placement were replaced by geometry
+checks or dropped.
+
+| Case (median of 5 processes) | Zen 5 main → overhaul | speedup | Graviton main → overhaul | speedup |
+| --- | ---: | ---: | ---: | ---: |
+| pair 64 B | 58.7 → 24.1 ns | 2.4× | 114.7 → 32.3 ns | 3.5× |
+| batch256 FIFO 64 B | 63.5 → 16.5 | 3.9× | 114.8 → 27.6 | 4.2× |
+| churn256 64 B | 87.1 → 25.9 | 3.4× | 143.3 → 46.4 | 3.1× |
+| churn4096 1 KiB | 91.0 → 29.1 | 3.1× | 150.0 → 50.1 | 3.0× |
+| cold fill 64 B | 103.5 → 48.3 | 2.1× | 192.7 → 76.6 | 2.5× |
+| cold fill 1 KiB | 467.3 → 204.8 | 2.3× | 750.5 → 364.8 | 2.1× |
+| Window pair 64 KiB | 32.4 → 27.5 | 1.2× | 60.7 → 47.4 | 1.3× |
+| foreign final release 64 B | 77.6 → 32.8 | 2.4× | 180.7 → 108.3 | 1.7× |
+| glibc malloc/free pair 64 B (control) | 4.5 | — | 9.6 | — |
+| glibc batch256 FIFO 64 B (control) | 15.0 | — | 28.6 | — |
+
+Batched allocate/release now matches glibc (16.5 vs 15.0 ns on Zen 5, 27.6 vs
+28.6 ns on Graviton). An isolated pair is still 5× (Zen 5) and 3.4× (Graviton)
+glibc: the remaining cost is API overhead (validation, Pool state, `Result`
+moves, pulse, use-count bookkeeping), not geometry.
+[Evidence](evidence/zen5-overhaul.csv), [Graviton](evidence/v2-overhaul.csv);
+jobs `20261023T023711Z-99ee07bd` and `20261023T023711Z-abf544b7`.
+
+The [footprint census](census.cpp) counts mapped, idle, metadata and reserved
+bytes for fixed live populations ([census.csv](evidence/census.csv), 4 KiB
+OrbStack host; counters, not timings):
+
+| Population (after trim) | main mapped / metadata / reserved | overhaul mapped / metadata / reserved |
+| --- | ---: | ---: |
+| one per class (15) | 60 KiB / 8.3 KiB / 6.8 MiB | 60 KiB / 25 KiB / 2.5 MiB |
+| 64 × 64 B | 4 KiB / 3.8 KiB / 2.5 MiB | 4 KiB / 1.6 KiB / 16 KiB |
+| 100k uniform 16–3072 B | 280 MiB / 1.7 MiB / 1.6 GiB | 161 MiB / 0.7 MiB / 164 MiB |
+| 100k log-uniform 16–3072 B | 165 MiB / 1.6 MiB / 1.4 GiB | 60 MiB / 0.7 MiB / 62 MiB |
+| 20k × 200 B, 64-aligned | 4.9 MiB / 357 KiB / 338 MiB | 4.9 MiB / 129 KiB / 4.9 MiB |
+
+Mixed-class Groups left pages partly used by several classes, so large mixed
+populations mapped 1.7–2.8× their capacity. Single-class Groups map about their
+capacity. The cost moves to Groups per class: a Pool touching every class pays
+one Group's metadata per class (25 KiB for 15 classes versus 8.3 KiB).
+
 ## Variants and checks
 
 | Patch | Change | Production checks |
@@ -150,6 +215,11 @@ Hashing each word independently before combining removes it.
 | [premap](variants/premap.patch) | one `mprotect` + `MADV_POPULATE_WRITE` over a 16-page run | 16/20 (exact footprints) |
 | [chain](variants/chain.patch) | `worker::post_chain(first, last)` | 20/20 |
 | [tagged](variants/tagged.patch) | 32-bit tag per directory bucket | 20/20 |
+| [main](variants/main.patch) | reverse diff from the overhaul back to production `main`, for paired runs | — |
+
+On the overhaul branch only `chain`, `tagged` and `main` apply; configure skips
+the others with a warning. Regenerate `main.patch` with
+`git diff -R HEAD -- orbital/src orbital/include` after changing the allocator.
 
 CMake copies `orbital/src` and `orbital/include` per patch at configure time,
 applies it, and rebuilds 20 Orbital checks against the copy.

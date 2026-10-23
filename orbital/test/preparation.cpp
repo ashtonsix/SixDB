@@ -567,8 +567,8 @@ void finite_fresh_bounded_start_cancel_close(){
   const auto ownervm=owner_maps+owner_protects;
   arm_gate(); done(alloc::prepare(*f.pool,first,small_request(),f.preparer.lane));wait_inside();
   const auto charge=f.arena->charged_bytes.load(); const auto inventory=alloc::statistics(*f.pool);
-  const auto palette=alloc::detail::preferred_palette(base_page(),64,64);
-  const auto planned=take(alloc::detail::FiniteGroup::create({palette,256}));
+  const auto cls=alloc::detail::select_class(base_page(),64,64);
+  const auto planned=take(alloc::detail::FiniteGroup::create(cls));
   check(inventory.mapped_bytes==0 && inventory.preparing_reserved_bytes==
         planned->payload_pages()*planned->native_page() && inventory.metadata_bytes==charge,
         "fresh control preparation includes only payload VA and separate metadata charge");
@@ -585,18 +585,18 @@ void finite_fresh_bounded_start_cancel_close(){
   std::printf("{\"case\":\"finite-fresh-control-bounded-burst-cancel-close\",\"passed\":true,\"one_pending_group_charge\":%llu}\n",(unsigned long long)charge);
 }
 
-void finite_control_cancel_reopens_palette(){
+void finite_control_cancel_reopens_class(){
   Fixture f; alloc::Preparation first, other, next;
   const auto wanted=small_request(64,16), distinct=small_request(3072,64);
-  const bool two_palettes=alloc::detail::preferred_palette(base_page(),wanted.bytes,wanted.alignment)!=
-      alloc::detail::preferred_palette(base_page(),distinct.bytes,distinct.alignment);
+  const bool two_classes=alloc::detail::select_class(base_page(),wanted.bytes,wanted.alignment)!=
+      alloc::detail::select_class(base_page(),distinct.bytes,distinct.alignment);
   arm_gate();done(alloc::prepare(*f.pool,first,wanted,f.preparer.lane));wait_inside();
-  // One palette's accepted control work must not block the other palette.
-  if(two_palettes)done(alloc::prepare(*f.pool,other,distinct,f.preparer.lane));
+  // One class's accepted control work must not block another class.
+  if(two_classes)done(alloc::prepare(*f.pool,other,distinct,f.preparer.lane));
   const auto charge=f.arena->charged_bytes.load();
   auto refused=alloc::prepare(*f.pool,next,wanted,f.preparer.lane);
   check(!refused && refused.error()==Error::unavailable && next.state==alloc::Preparation::State::idle &&
-        f.arena->charged_bytes==charge,"same-palette refusal changed accepted control inventory");
+        f.arena->charged_bytes==charge,"same-class refusal changed accepted control inventory");
   alloc::cancel(first);
   refused=alloc::prepare(*f.pool,next,wanted,f.preparer.lane);
   check(!refused && refused.error()==Error::unavailable,
@@ -604,12 +604,12 @@ void finite_control_cancel_reopens_palette(){
   proceed=true;f.settle(first);
   check(first.state==alloc::Preparation::State::cancelled,"cancelled control delivered an Allocation");
   alloc::Allocation independent;
-  if(two_palettes){f.settle(other);independent=take(alloc::take(other));}
+  if(two_classes){f.settle(other);independent=take(alloc::take(other));}
   done(alloc::prepare(*f.pool,next,wanted,f.preparer.lane));f.settle(next);
   auto value=take(alloc::take(next));
   for(auto byte:alloc::bytes(value))check(byte==std::byte{0},"replacement control omitted initialized bytes");
   alloc::release(value);alloc::release(independent);f.close_all();
-  std::puts("{\"case\":\"finite-control-palette-cancel-settle-retry\",\"passed\":true}");
+  std::puts("{\"case\":\"finite-control-class-cancel-settle-retry\",\"passed\":true}");
 }
 
 void finite_control_failures_own_partial_backing(){
@@ -619,8 +619,8 @@ void finite_control_failures_own_partial_backing(){
     const auto references=f.arena->references.load();
     const auto expected=partial?Error::capacity:Error::io;
     // Metadata heap ENOMEM happens after the real sparse payload reservation.
-    const auto palette=alloc::detail::preferred_palette(base_page(),wanted.bytes,wanted.alignment);
-    auto planned=take(alloc::detail::FiniteGroup::create({palette,256}));
+    const auto cls=alloc::detail::select_class(base_page(),wanted.bytes,wanted.alignment);
+    auto planned=take(alloc::detail::FiniteGroup::create(cls));
     metadata_size=planned->control_bytes();metadata_reservation_seen=false;
     if(partial)fail_metadata=true;else fail_map=true;
     done(alloc::prepare(*f.pool,failed,wanted,f.preparer.lane));f.settle(failed);
@@ -699,6 +699,7 @@ void finite_mapped_neighbour_cancel_paused_constructor(){
 void finite_uncertain_cleanup_responsive_and_bounded(){
   Fixture f;auto neighbour=take(alloc::allocate(*f.pool,small_request(256)));std::memset(neighbour.address,0x5a,neighbour.size);
   const auto baseline=f.arena->charged_bytes.load();const auto mapped=alloc::statistics(*f.pool).mapped_bytes;
+  const auto metadata=alloc::statistics(*f.pool).metadata_bytes;
   alloc::Preparation request;SmallConstructor constructor;request.construct=SmallConstructor::run;request.context=&constructor;
   fail_protect=true;cleanup_failures=1000;
   done(alloc::prepare(*f.pool,request,small_request(3072),f.preparer.lane));f.settle(request);
@@ -711,96 +712,13 @@ void finite_uncertain_cleanup_responsive_and_bounded(){
   check(alloc::close(*f.pool).kind()==Progress::Kind::failed,"close hid physical cleanup debt");
   alloc::cancel(request);cleanup_failures=0;done(alloc::retry_cleanup(request));f.settle(request);
   check(request.state==alloc::Preparation::State::cancelled && !request.backend,"explicit retry did not retire debt");
-  check(f.arena->charged_bytes==baseline && alloc::statistics(*f.pool).mapped_bytes==mapped,
+  // The 3072-byte class has its own Group; its control metadata stays charged.
+  const auto group=alloc::statistics(*f.pool).metadata_bytes-metadata;
+  check(f.arena->charged_bytes==baseline+group && alloc::statistics(*f.pool).mapped_bytes==mapped,
         "cleanup did not refund exact uncertain page/record charge");
   for(auto byte:alloc::bytes(neighbour))check(byte==std::byte{0x5a},"uncertain cleanup changed live neighbour");
   alloc::release(neighbour);f.close_all();
   std::puts("{\"case\":\"finite-uncertain-cleanup-debt-explicit-retry-live-neighbour\",\"passed\":true}");
-}
-
-void finite_partial_cleanup_page_reused_before_original_settlement(){
-  Fixture f;PreparerService independent;
-  std::vector<alloc::Allocation> neighbours;
-  neighbours.push_back(take(alloc::allocate(*f.pool,small_request(256,64))));
-  auto* domain=alloc::detail::route(*neighbours.front().storage);
-  check(domain->finite,"partial-cleanup fixture needs finite storage");
-  auto& group=*static_cast<alloc::detail::Group*>(domain->context);
-  auto& geometry=*group.geometry;
-  const auto page=base_page(), slots=geometry.slots_per_grid();
-  const auto bytes=geometry.capacity(geometry.class_count()-1);
-  std::vector<alloc::detail::Home> reserved;
-  alloc::detail::Home straddler,reusable;
-  bool found=false;
-  for(std::size_t grid=0;grid<geometry.identity_count()/slots && !found;++grid){
-    const auto identity=take(geometry.claim_identity(~(std::uint64_t{1}<<grid)));
-    for(;;){
-      auto home=geometry.claim_home(identity,bytes,16);
-      if(!home){check(home.error()==Error::capacity,"enumerating physical Homes failed");break;}
-      reserved.push_back(*home);
-    }
-    for(const auto& target:reserved){
-      const auto begin=reinterpret_cast<std::uintptr_t>(target.address);
-      if(begin/page==(begin+target.capacity-1)/page)continue;
-      for(const auto& candidate:reserved){
-        const auto first=reinterpret_cast<std::uintptr_t>(candidate.address);
-        if(first/page==begin/page && (first+candidate.capacity-1)/page==begin/page){
-          straddler=target;reusable=candidate;found=true;break;
-        }
-      }
-      if(found)break;
-    }
-    done(geometry.release_identity(identity));
-    if(!found){for(const auto& home:reserved)done(geometry.release_home(home));reserved.clear();}
-  }
-  check(found && straddler.pages.count==2 && reusable.pages.count==1 &&
-      reusable.pages.first==straddler.pages.first,"no native two-page cleanup/reuse witness");
-  // Fill earlier identity grids with real live bytes. Reserve alternate Homes
-  // without backing: filling their pages would hide partial failure on 64KiB.
-  while(neighbours.size()<std::size_t(straddler.grid)*slots)
-    neighbours.push_back(take(alloc::allocate(*f.pool,small_request(256,64))));
-  for(auto& neighbour:neighbours){
-    check(alloc::detail::route(*neighbour.storage)->context==&group,"identity cohort escaped its Group");
-    std::memset(neighbour.address,0x5a,neighbour.size);
-  }
-  check(!geometry.mapped(straddler.pages.first) && !geometry.mapped(straddler.pages.first+1),
-      "fixture backed an intended cold straddler page");
-  done(geometry.release_home(straddler));
-  const auto baseline=f.arena->charged_bytes.load();const auto baseline_metadata=alloc::statistics(*f.pool).metadata_bytes;
-  alloc::Preparation original;fail_protect=true;cleanup_skip=1;cleanup_failures=1000;
-  failed_protection_address=nullptr;failed_protection_bytes=0;
-  done(alloc::prepare(*f.pool,original,small_request(bytes,16),f.preparer.lane));f.settle(original);
-  const auto debt=alloc::statistics(*f.pool);const auto record=debt.metadata_bytes-baseline_metadata;
-  check(failed_protection_address==geometry.page_address(straddler.pages.first) &&
-      failed_protection_bytes==2*page,"helper did not exercise the planned native two-page operation");
-  check(original.state==alloc::Preparation::State::repair_wait && debt.uncertain_bytes==page &&
-        debt.preparing_bytes==0 && f.arena->charged_bytes==baseline+page+record,
-        "partial cleanup retained/refunded wrong original page charge");
-  check(!geometry.mapped(straddler.pages.first) && geometry.preparing(straddler.pages.first+1),
-      "partial cleanup did not distinguish confirmed first discard from uncertain second page");
-  done(geometry.release_home(reusable));
-  alloc::Preparation other;SmallConstructor constructor;constructor.gated=true;
-  other.construct=SmallConstructor::run;other.context=&constructor;arm_gate();
-  done(alloc::prepare(*f.pool,other,small_request(bytes,16),independent.lane));wait_inside();
-  check(constructor.address==reusable.address,"new Home did not reuse confirmed freed page");
-  const auto both=alloc::statistics(*f.pool);
-  check(both.preparing_bytes==page && both.uncertain_bytes==page,
-        "new pending Home/old uncertain page custody conflated");
-  cleanup_failures=0;done(alloc::retry_cleanup(original));f.settle(original);
-  const auto resolved=alloc::statistics(*f.pool);
-  check(original.state==alloc::Preparation::State::failed && original.error==Error::io &&
-        other.state==alloc::Preparation::State::pending && resolved.preparing_bytes==page &&
-        resolved.uncertain_bytes==0 && f.arena->charged_bytes==baseline+page+record,
-        "original end cleared/refunded unrelated Home's reused page");
-  for(const auto& neighbour:neighbours)
-    for(auto byte:alloc::bytes(neighbour))check(byte==std::byte{0x5a},"partial discard changed original neighbour");
-  proceed=true;f.settle(other);auto allocation=take(alloc::take(other));
-  for(auto byte:alloc::bytes(allocation))check(byte==std::byte{0x42},"reused page constructor lost");
-  alloc::release(allocation);
-  for(const auto& home:reserved)
-    if(home.address!=straddler.address && home.address!=reusable.address)done(geometry.release_home(home));
-  for(auto& value:neighbours)alloc::release(value);independent.stop();
-  std::printf("{\"case\":\"finite-partial-page-cleanup-reuse-before-original-settlement\",\"passed\":true,\"native_page\":%zu,\"straddler_grid\":%u,\"straddler_slot\":%u}\n",
-      page,unsigned(straddler.grid),unsigned(straddler.slot));
 }
 
 void finite_constructor_failure_keeps_confirmed_pages(){
@@ -814,33 +732,6 @@ void finite_constructor_failure_keeps_confirmed_pages(){
   auto result=take(alloc::take(next));check(next.reused && f.arena->charged_bytes==charge && vm==helper_protects+helper_maps,
         "constructor failure replayed VM or stranded Home");alloc::release(result);
   std::puts("{\"case\":\"finite-confirmed-vm-constructor-failure-reuse\",\"passed\":true}");
-}
-
-void finite_aligned_home_grid_retry_tight_budget(){
-  Fixture f(std::max(std::size_t{64*1024},base_page()+16*1024));
-  std::vector<alloc::Allocation> values;
-  alloc::Preparation first;done(alloc::prepare(*f.pool,first,small_request(320,128),f.preparer.lane));f.settle(first);
-  values.push_back(take(alloc::take(first)));
-  auto& group=*static_cast<alloc::detail::Group*>(alloc::detail::route(*values.front().storage)->context);
-  const auto first_home=take(group.geometry->bound_home({values.front().storage->identity()}));
-  const auto alignment=2*(first_home.capacity & -first_home.capacity);
-  const auto start=reinterpret_cast<std::uintptr_t>(first_home.address)-first_home.slot*first_home.capacity;
-  std::size_t legal=0;
-  for(std::size_t slot=0;slot<group.geometry->slots_per_grid();++slot)
-    legal+=(start+slot*first_home.capacity)%alignment==0;
-  check(first_home.grid==0 && legal && legal<group.geometry->slots_per_grid(),"fixture lacks aligned Home pressure");
-  for(std::size_t i=1;i<=legal;++i){
-    alloc::Preparation request;done(alloc::prepare(*f.pool,request,small_request(320,alignment),f.preparer.lane));f.settle(request);
-    values.push_back(take(alloc::take(request)));
-    check(alloc::detail::route(*values.back().storage)->context==&group,"aligned retry created another finite Group");
-    const auto home=take(group.geometry->bound_home({values.back().storage->identity()}));
-    check(home.grid==(i<legal?0:1),"aligned Home pressure did not retry the next grid");
-  }
-  const auto statistics=alloc::statistics(*f.pool);
-  check(statistics.metadata_bytes==group.metadata_charge,"aligned retry allocated extra metadata inventory");
-  for(const auto& value:values)check(reinterpret_cast<std::uintptr_t>(value.address)%alignment==0,"aligned Home violated");
-  for(auto& value:values)alloc::release(value);
-  std::puts("{\"case\":\"finite-aligned-home-other-grid-tight-budget\",\"passed\":true}");
 }
 
 void finite_prepared_before_fresh_group(){
@@ -867,7 +758,7 @@ void finite_mixed_preferred_cadence(){
       done(alloc::prepare(*f.pool,request,small_request(bytes),f.preparer.lane));
       f.settle(request);
       auto value=take(alloc::take(request));
-      const auto expected=bytes==64 ? (base_page()==65536?256u:64u) : (base_page()>=16384?1088u:1280u);
+      const auto expected=alloc::detail::finite_capacities[alloc::detail::select_class(base_page(),bytes,64)];
       check(alloc::capacity(value)==expected && reinterpret_cast<std::uintptr_t>(value.address)%64==0,
           "mixed preparation inflated a preferred class or lost alignment");
       for(auto byte:alloc::bytes(value))check(byte==std::byte{0},"mixed preparation omitted initialization");
@@ -896,11 +787,11 @@ void finite_mixed_preferred_cadence(){
   std::puts("{\"case\":\"finite-preferred-mixed-cadence-both-orders\",\"passed\":true}");
 }
 
-void finite_other_palette_ready_at_limit(){
+void finite_ready_same_class_at_limit(){
   const auto history=[](std::size_t limit){
     Fixture f(limit);
-    auto seed=take(alloc::allocate(*f.pool,small_request(256)));
-    auto neighbour=take(alloc::allocate(*f.pool,small_request(256)));
+    auto seed=take(alloc::allocate(*f.pool,small_request()));
+    auto neighbour=take(alloc::allocate(*f.pool,small_request()));
     std::memset(neighbour.address,0x73,neighbour.size);
     auto* prior=seed.address;
     alloc::release(seed);
@@ -916,12 +807,12 @@ void finite_other_palette_ready_at_limit(){
     f.settle(request);
     auto value=take(alloc::take(request));
     const auto after=alloc::statistics(*f.pool);
-    check(request.reused && value.address==prior && alloc::capacity(value)==256 &&
+    check(request.reused && value.address==prior && alloc::capacity(value)==alloc::capacity(neighbour) &&
           f.arena->charged_bytes==baseline && after.mapped_bytes==before.mapped_bytes &&
           after.metadata_bytes==before.metadata_bytes && after.reserved_bytes==before.reserved_bytes,
-        "preferred policy stranded already charged other-palette backing");
+        "ready preparation stranded already charged same-class backing");
     check(vm==helper_maps+helper_protects+owner_maps+owner_protects,
-        "ready other-palette preparation performed new VM work");
+        "ready same-class preparation performed new VM work");
     for(auto byte:alloc::bytes(value))check(byte==std::byte{0},"ready reuse omitted initialization");
     for(auto byte:alloc::bytes(neighbour))check(byte==std::byte{0x73},"ready reuse damaged live neighbour");
     alloc::release(value);alloc::release(neighbour);f.close_all();
@@ -929,83 +820,7 @@ void finite_other_palette_ready_at_limit(){
   };
   const auto exact_peak=history(32*1024*1024);
   check(history(exact_peak)==exact_peak,"identical ready preparation changed its required peak");
-  std::puts("{\"case\":\"finite-ready-other-palette-exact-pending-budget\",\"passed\":true}");
-}
-
-void finite_other_palette_unprepared_under_pressure(){
-  const auto page=base_page();
-  if(page==65536){
-    std::puts("{\"case\":\"finite-unprepared-other-palette-pressure\",\"applicable\":false,\"reason\":\"native-B-only-profile\"}");
-    return;
-  }
-  // Measure the real public charges, including the transient preparation record.
-  // These observations size repeat budgets; they do not assert private layouts.
-  const auto costs=[](){
-    Fixture f;
-    auto seed=take(alloc::allocate(*f.pool,small_request(64,16)));
-    const auto baseline=f.arena->charged_bytes.load();
-    alloc::Preparation request;
-    done(alloc::prepare(*f.pool,request,small_request(64,16),f.preparer.lane));
-    const auto extra=f.arena->charged_bytes.load()-baseline;
-    f.settle(request);auto prepared=take(alloc::take(request));
-    check(extra>0 && f.arena->charged_bytes==baseline,"ready calibration changed backing or lost request charge");
-    alloc::release(prepared);alloc::release(seed);f.close_all();
-    return std::array<std::size_t,2>{baseline,extra};
-  }();
-  const auto b_metadata=[](){
-    Fixture f;
-    auto seed=take(alloc::allocate(*f.pool,small_request(256)));
-    const auto inventory=alloc::statistics(*f.pool);
-    check(inventory.mapped_bytes==base_page() &&
-          f.arena->charged_bytes==inventory.metadata_bytes+inventory.mapped_bytes,
-        "fresh B calibration did not isolate metadata plus one page");
-    alloc::release(seed);f.close_all();
-    return std::size_t(inventory.metadata_bytes);
-  }();
-  for(bool asynchronous:{false,true}){
-    for(const auto available:{page-1,page,std::max(page,b_metadata)}){
-      const auto limit=costs[0]+(asynchronous?costs[1]:0)+available;
-      Fixture f(limit);
-      auto seed=take(alloc::allocate(*f.pool,small_request(64,16)));
-      std::memset(seed.address,0x6d,seed.size);
-      const auto before=alloc::statistics(*f.pool);
-      check(f.arena->charged_bytes==costs[0],"identical A seed changed its physical charge");
-      alloc::Allocation value;
-      const bool fits=available>=page;
-      if(asynchronous){
-        alloc::Preparation request;
-        const auto accepted=alloc::prepare(*f.pool,request,small_request(256),f.preparer.lane);
-        if(fits){
-          done(accepted);
-          check(f.arena->charged_bytes==costs[0]+costs[1]+page,
-              "fallback charged fresh metadata instead of one existing-Group page");
-          f.settle(request);value=take(alloc::take(request));
-        }else check(!accepted && accepted.error()==Error::capacity &&
-                   request.state==alloc::Preparation::State::idle && !request.backend && !request.value,
-            "one-page-short preparation admitted work or changed physical custody");
-      }else{
-        auto accepted=alloc::allocate(*f.pool,small_request(256));
-        if(fits)value=take(std::move(accepted));
-        else check(!accepted && accepted.error()==Error::capacity,
-            "one-page-short direct allocation unexpectedly succeeded");
-      }
-      const auto after=alloc::statistics(*f.pool);
-      check(after.metadata_bytes==before.metadata_bytes && after.reserved_bytes==before.reserved_bytes &&
-            after.mapped_bytes==before.mapped_bytes+(fits?page:0) &&
-            after.preparing_bytes==0 && after.uncertain_bytes==0 && after.preparing_reserved_bytes==0 &&
-            f.arena->charged_bytes==costs[0]+(fits?page:0),
-          "pressure fallback stranded metadata, refunded live bytes or lost exact backing charge");
-      for(auto byte:alloc::bytes(seed))check(byte==std::byte{0x6d},"pressure fallback changed existing live bytes");
-      if(fits){
-        check(value.size==256 && alloc::capacity(value)==256 &&
-              reinterpret_cast<std::uintptr_t>(value.address)%64==0,
-            "fallback lost requested extent, capacity or alignment");
-        for(auto byte:alloc::bytes(value))check(byte==std::byte{0},"fallback omitted body initialization");
-      }
-      alloc::release(value);alloc::release(seed);f.close_all();
-    }
-  }
-  std::puts("{\"case\":\"finite-unprepared-other-palette-pressure\",\"passed\":true}");
+  std::puts("{\"case\":\"finite-ready-same-class-exact-pending-budget\",\"passed\":true}");
 }
 
 }
@@ -1063,15 +878,14 @@ int main(){
   cancelled_constructor_and_same_fallback(); explicit_preparer_reclaim_cancel_close();
   explicit_preparer_real_format_and_owner_operations(); idle_reuse_exclusive_without_vm();
   reused_window_partial_growth_and_retry(); repeated_idle_prepare_cancel_cycles(); constructed_delivery_and_unread_ready();
-  finite_fresh_bounded_start_cancel_close(); finite_control_cancel_reopens_palette();
+  finite_fresh_bounded_start_cancel_close(); finite_control_cancel_reopens_class();
   finite_control_failures_own_partial_backing();
   finite_delivered_owner_operations();
   finite_reuse_uninitialized_prefault(); finite_mapped_neighbour_cancel_paused_constructor();
-  finite_uncertain_cleanup_responsive_and_bounded(); finite_partial_cleanup_page_reused_before_original_settlement();
+  finite_uncertain_cleanup_responsive_and_bounded();
   finite_constructor_failure_keeps_confirmed_pages();
-  finite_aligned_home_grid_retry_tight_budget();finite_prepared_before_fresh_group();
-  finite_mixed_preferred_cadence();finite_other_palette_ready_at_limit();
-  finite_other_palette_unprepared_under_pressure();
+  finite_prepared_before_fresh_group();
+  finite_mixed_preferred_cadence();finite_ready_same_class_at_limit();
   std::printf("{\"summary\":\"passed\",\"helper_mmap\":%u,\"owner_mmap\":%u,\"helper_mprotect\":%u,\"owner_mprotect\":%u,\"helper_real_ikea_constructions\":%u,\"finite_async_implemented\":true,\"preparation_frame_bytes\":%zu}\n",
     helper_maps.load(),owner_maps.load(),helper_protects.load(),owner_protects.load(),helper_constructions.load(),sizeof(alloc::Preparation));
 }

@@ -44,30 +44,36 @@ The caller selects a Pool for new allocation. Growth and capture follow the stor
 existing owner and run on its assigned thread. Release can run elsewhere: one
 reserved return Message per packing group or virtual window brings final returns
 back to the Lane. Actual users keep storage alive after Allocation release.
-A Group keeps one active Arena pin while any identity is live or awaiting its
-owner return; each live Window keeps its own pin. Additional Holds update the
+A Pool keeps one active Arena pin while any of its uses is live or awaiting its
+owner return. Additional Holds update the
 identity's checked physical-use count and keep its address and captured footprint
 alive. A Hold supplies no immutability, selected version or access permission.
 
-Small allocations use finite Groups, each with a fixed palette of size classes.
-The one-byte binding selects a home whose address, capacity and page range derive
-from Group geometry. Quiescent growth can change the home without changing its
-binding identity. A large allocation uses a Window: private contiguous virtual
+Small allocations use finite Groups. Each Group holds 256 equal Homes of one
+size class; identity *i* is Home *i*, at the Group's page-aligned base plus
+*i* × capacity. Free, ready (free with every covering page mapped) and pending
+Homes are bitmaps, so ordinary allocation takes the lowest ready Home of the
+class's head Group and release returns it. Growth beyond a Home's class moves to
+another Home or a Window. A large allocation uses a Window: private contiguous virtual
 storage with a writable prefix and optional extra address space for growth.
 `size` is the caller's body, `capacity` is accessible bytes, and `reserved_bytes`
 is retained address space; neither capacity nor reservation measures resident RAM.
 Both backends expose an ordinary pointer; native access needs no repeated
-trampoline resolution or scheduler entry. Owner-local selection caches suggest candidates; geometry and actual page
-state authorize each claim. Owning records stay at stable addresses.
+resolution or scheduler entry. Owning records stay at stable addresses.
 Each Group embeds 256 four-byte identity records and shares release advice.
-The finite cutoff is 3 KiB. Native 4/16 KiB pages use A for small requests,
-including cache-line alignment when the smallest class supports it at every Home.
-16 KiB pages adjust two upper B classes; 64 KiB pages retain B's 256-byte minimum.
-The [palette study](../workbench/spikes/allocation-palettes/README.md) owns the
-class trade-offs. Reuse and pressure can select another palette, so equal
-requests need not have equal capacities. Natural alignment follows reserved capacity
-(`gcd(capacity, 64)`); explicit alignment is checked separately.
-Bindings, placement grids, page state and trim bitmaps share one stable heap
+The finite cutoff is 3 KiB, in 26 classes from 16 to 3072 bytes, spaced at
+most 25% apart. A class is
+the smallest capacity covering the request and its alignment (capacity must be a
+multiple of the alignment) whose 256 Homes fill at least one native page: the
+smallest class is 16 bytes on 4 KiB pages, 64 on 16 KiB and 256 on 64 KiB.
+Equal requests therefore always get equal capacities. Mapping a Home also maps
+following absent pages of the same Group with one `mprotect`, up to as many as
+the Group already maps and at most 15; they are charged idle capacity that trim
+returns, and a refused claim maps only the Home.
+The [hot-path study](../workbench/spikes/orbital-hot-paths/README.md) measures
+these choices; the earlier [palette study](../workbench/spikes/allocation-palettes/README.md)
+explains the mixed-class geometry they replaced.
+Page state and trim bitmaps share one stable heap
 block, sized to its contents without base-page rounding. Preparation allocates
 and initializes this control block before the owner exposes the Group. Payload
 reservation and protection still use virtual memory. Heap refusal reports
@@ -82,7 +88,7 @@ The private allocation submodule keeps each backend's transactions together:
 - [allocation.cpp](src/allocation/allocation.cpp): physical lifetimes, growth and Pool-wide trim/close.
 - [arena.cpp](src/allocation/arena.cpp): shared budget, notifications and the reclamation worker.
 - [group.cpp](src/allocation/group.cpp), [window.cpp](src/allocation/window.cpp): allocation, preparation and reclamation for each backend.
-- [finite.cpp](src/allocation/finite.cpp), [finite.h](src/allocation/finite.h): Group geometry, bindings and backing-page state.
+- [finite.cpp](src/allocation/finite.cpp), [finite.h](src/allocation/finite.h): class selection, Group geometry, Home bitmaps and backing-page state.
 
 Ordinary allocation confirms writable mapping and initializes readable padding;
 it does not prefault or initialize an uninitialized body. The caller separately
@@ -118,11 +124,9 @@ Failed finite cleanup keeps the request and charge in `repair_wait`;
 return to charged Pool inventory for trim or close. Cancellation ends demand
 without refunding unfinished physical work.
 
-Reuse takes the first compatible prepared Window. Finite claims prefer their
-selected palette, reusing other mapped Homes before mapping preferred pages.
-If a fresh preferred Group cannot be admitted, existing other-palette Homes can
-map pages instead. Direct and prepared claims use the same order; growth keeps
-the existing Group's geometry.
+Reuse takes the first compatible prepared Window. Finite claims reuse ready
+Homes of their class, then map pages in existing Groups of that class, then
+create one Group; direct and prepared claims use the same order.
 An exact reservation-size index skips undersized Windows while preserving their
 return order. Its nodes are admitted before a fresh mapping; returns allocate none.
 HOT/WARM/COLD advice guides reclamation; timestamps reject stale advice and

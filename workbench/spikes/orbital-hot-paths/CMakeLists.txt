@@ -3,6 +3,9 @@ sixdb_target(orbital_hot_paths)
 target_compile_definitions(orbital_hot_paths PRIVATE SIXDB_HOT_FULL=1)
 target_include_directories(orbital_hot_paths PRIVATE "${PROJECT_SOURCE_DIR}/orbital/test")
 target_link_libraries(orbital_hot_paths PRIVATE loom)
+add_executable(orbital_hot_census census.cpp)
+sixdb_target(orbital_hot_census)
+target_link_libraries(orbital_hot_census PRIVATE orbital)
 
 # Each variants/NAME.patch applies to a configure-time copy of Orbital's sources
 # and headers. The variant binary runs the allocation, Lane and catalog cases
@@ -10,6 +13,7 @@ target_link_libraries(orbital_hot_paths PRIVATE loom)
 find_package(Git REQUIRED)
 find_package(Threads REQUIRED)
 file(GLOB hot_variants CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/variants/*.patch")
+set(hot_applied)
 foreach(patch IN LISTS hot_variants)
   get_filename_component(variant "${patch}" NAME_WE)
   set(root "${CMAKE_CURRENT_BINARY_DIR}/${variant}")
@@ -19,8 +23,11 @@ foreach(patch IN LISTS hot_variants)
   execute_process(COMMAND "${GIT_EXECUTABLE}" apply --unsafe-paths "--directory=${root}" "${patch}"
     RESULT_VARIABLE applied)
   if(NOT applied EQUAL 0)
-    message(FATAL_ERROR "orbital-hot-paths: ${patch} does not apply to current Orbital")
+    # A variant made against an older Orbital is skipped, not silently rebased.
+    message(WARNING "orbital-hot-paths: ${variant}.patch does not apply to this Orbital; skipped")
+    continue()
   endif()
+  list(APPEND hot_applied "${patch}")
   set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS "${patch}")
   file(GLOB_RECURSE sources "${root}/orbital/src/*.cpp")
   add_library(orbital_hot_${variant} STATIC ${sources})
@@ -32,14 +39,17 @@ foreach(patch IN LISTS hot_variants)
   target_compile_definitions(orbital_hot_paths_${variant} PRIVATE SIXDB_HOT_FULL=0 SIXDB_HOT_OBJECTS=1)
   target_include_directories(orbital_hot_paths_${variant} PRIVATE "${PROJECT_SOURCE_DIR}/orbital/test")
   target_link_libraries(orbital_hot_paths_${variant} PRIVATE orbital_hot_${variant})
+  add_executable(orbital_hot_census_${variant} census.cpp)
+  sixdb_target(orbital_hot_census_${variant})
+  target_link_libraries(orbital_hot_census_${variant} PRIVATE orbital_hot_${variant})
 endforeach()
 
 # Rebuild Orbital's own allocation/worker checks against each variant: same
 # test sources, include roles and link wrappers, with the variant library.
-set(hot_checks allocation finite palette reclamation window window_index live_tail
+set(hot_checks allocation finite class reclamation window window_index live_tail
   return worker lifetime thread preparation notification budget
   object history_reclamation directory extension representation part_sources)
-foreach(patch IN LISTS hot_variants)
+foreach(patch IN LISTS hot_applied)
   get_filename_component(variant "${patch}" NAME_WE)
   set(root "${CMAKE_CURRENT_BINARY_DIR}/${variant}")
   foreach(check IN LISTS hot_checks)

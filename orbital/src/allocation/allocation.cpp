@@ -50,15 +50,9 @@ void clear_foreign_hint(Storage& use) noexcept {
 void activate(Storage& use) noexcept {
   auto& domain = *route(use);
   assert(worker::on_lane(*domain.pool->lane) && !use.users.load(std::memory_order_relaxed));
-  if (domain.finite) {
-    auto& group = *static_cast<Group*>(domain.context);
-    assert(group.active_identities < group_identities);
-    if (!group.active_identities++)
-      group.active_lifetime = Ref<Arena>::retain(*domain.pool->arena);
-  } else {
-    auto& window = *static_cast<Window*>(domain.context);
-    window.active_lifetime = Ref<Arena>::retain(*domain.pool->arena);
-  }
+  // One Arena pin per Pool while any finite or virtual use is live or returning.
+  auto& state = *domain.pool->internal;
+  if (!state.active_uses++) state.active_lifetime = Ref<Arena>::retain(*domain.pool->arena);
   use.users.store(1, std::memory_order_relaxed);
 }
 
@@ -69,20 +63,14 @@ void recycle(Storage& use, bool notify = true) noexcept {
   // Detach before identity reuse or notification can grant the same record.
   // The old pin outlives every touch here, including a final local Hold release.
   Ref<Arena> retained;
+  auto& state = *pool.internal;
+  assert(state.active_uses);
+  if (!--state.active_uses) retained = std::move(state.active_lifetime);
   if (domain.finite) {
     auto& group = *static_cast<Group*>(domain.context);
-    assert(group.active_identities);
-    if (!--group.active_identities) retained = std::move(group.active_lifetime);
-    const auto home = group.geometry->bound_home({use.identity()});
-    assert(home);
-    verify(group.geometry->release_identity({use.identity()}));
-    verify(group.geometry->release_home(*home));
+    group.geometry->give(use.identity());
     add_available(group);
-  } else {
-    auto& window = *static_cast<Window*>(domain.context);
-    retained = std::move(window.active_lifetime);
-    add_idle(window);
-  }
+  } else add_idle(*static_cast<Window*>(domain.context));
   if (notify) pulse(pool.capacity_changed);
 }
 
@@ -180,7 +168,10 @@ void drop(Storage& use, ReleaseHint value) noexcept {
       } else static_cast<Window*>(route(use)->context)->foreign_hint_pending.store(true, std::memory_order_release);
     }
   }
-  for (;;) {
+  if (local && (state & UseState::user_mask) == 1) {
+    // Sole user on the owner Lane: no other holder can race this final store.
+    use.users.state.store(state & ~UseState::user_mask, std::memory_order_relaxed);
+  } else for (;;) {
     const auto users = state & UseState::user_mask;
     assert(users && users < returning);
     if (users == 1 && !local) {
@@ -233,9 +224,12 @@ Result<Allocation> allocate(Pool& pool, const AllocationRequest& request) {
   const auto reserve = std::max(*size, request.reserved_bytes);
   Result<Allocation> result(std::in_place);
   auto& value = *result;
-  auto acquired = reserve <= 3072 && request.alignment <= 3072
-      ? finite_allocate(pool, request, reserve, value)
-      : window_allocate(pool, request, *size, value);
+  const auto cls = select_class(page_size(), reserve, request.alignment);
+  Result<void> acquired;
+  if (cls < finite_classes) {
+    if (!take_head(*pool.internal, cls, request, value)) [[unlikely]]
+      acquired = finite_allocate(pool, request, cls, value);
+  } else acquired = window_allocate(pool, request, *size, value);
   if (!acquired) {
     // Returning the same result permits direct payload construction in the caller's slot.
     result = std::unexpected(acquired.error());
@@ -263,8 +257,9 @@ Result<void> prepare(Pool& pool, Preparation& request,
   const auto size = extent(allocation);
   if (!size) return std::unexpected(size.error());
   const auto reserve = std::max(*size, allocation.reserved_bytes);
-  return reserve <= 3072 && allocation.alignment <= 3072
-      ? prepare_finite(pool, request, allocation, preparer)
+  const auto cls = select_class(page_size(), reserve, allocation.alignment);
+  return cls < finite_classes
+      ? prepare_finite(pool, request, allocation, cls, preparer)
       : prepare_window(pool, request, allocation, preparer);
 }
 
@@ -300,7 +295,7 @@ std::size_t capacity(const Allocation& allocation) noexcept {
   if (!allocation) return 0;
   const auto& domain = *route(*allocation.storage);
   if (domain.finite)
-    return static_cast<Group*>(domain.context)->geometry->bound_capacity({allocation.storage->identity()});
+    return static_cast<Group*>(domain.context)->geometry->capacity();
   return static_cast<Window*>(domain.context)->prepared;
 }
 
@@ -333,13 +328,8 @@ Result<void> grow(Allocation& allocation, const GrowthRequest& request) {
   }
   if (!aligned || needed > reserved_bytes(allocation)) {
     if (held) return std::unexpected(Error::conflict);
-    if (route(use)->finite && needed <= 3072 && request.alignment <= 3072) {
-      auto relocated = relocate_finite(allocation, request, needed);
-      if (!relocated) return std::unexpected(relocated.error());
-      if (*relocated) return {};
-      // Private identity is not a public address promise. With no live Holds,
-      // class pressure or local page cost can use ready backing elsewhere.
-    }
+    // A finite Home holds exactly one class; larger extents move to another
+    // Home or a Window. Identity is private, not a public address promise.
     // Allocate uninitialized replacement bytes. Fresh-allocation padding policy
     // does not apply to growth; interpretation and initialization belong to its writer.
     auto replacement = allocate(pool, {.bytes = std::max(*size, previous_extent),
@@ -553,7 +543,7 @@ Progress trim_cold(Pool& pool, std::uint64_t keep_bytes) {
       const bool cold = group->last_use.temperature.value_or(Temperature::cold) == Temperature::cold;
       if ((pass == 0) != cold) continue;
       bool empty = !group->uses.domain.queued.load(std::memory_order_acquire);
-      for (std::size_t i = 0; empty && i < group->geometry->identity_count(); ++i)
+      for (std::size_t i = 0; empty && i < finite_homes; ++i)
         empty = group->uses[i].users.load(std::memory_order_acquire) == 0;
       const auto mapped = group->geometry->mapped_pages() * group->geometry->native_page();
       if (empty && !group->preparations && mapped <= idle && idle - mapped >= keep_bytes) {
@@ -634,7 +624,7 @@ Progress close(Pool& pool) {
   for (auto& group : pool.internal->groups) {
     if (group->trim_pending || group->uses.domain.queued.load(std::memory_order_acquire)) return Progress::wait(pool.capacity_changed, observed);
     if (group->retiring) continue;
-    for (std::size_t i = 0; i < group->geometry->identity_count(); ++i)
+    for (std::size_t i = 0; i < finite_homes; ++i)
       if (group->uses[i].users.load(std::memory_order_acquire)) return Progress::wait(pool.capacity_changed, observed);
   }
   for (auto& window : pool.internal->windows)

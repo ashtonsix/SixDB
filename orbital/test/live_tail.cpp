@@ -315,6 +315,7 @@ void finite_neighbors() {
   std::memset(first.address, 0x35, 64);
   std::memset(neighbor.address, 0x6e, 64);
   auto held = take(alloc::hold(first, {0, 64}));
+  fixture.trim(); // Return pages mapped ahead of these Homes first.
   const auto before = alloc::statistics(*fixture.pool);
   const auto charge = fixture.arena->charged_bytes.load();
   check(alloc::relinquish_tail(first, 16, 8).has_value(), "finite logical relinquishment refused");

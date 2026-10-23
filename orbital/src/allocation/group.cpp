@@ -24,7 +24,7 @@ void group_trim_run(Job& job) noexcept {
   while (next_trim_span(membership, cursor, span)) {
     auto* address = group.geometry->page_address(span.first);
     const auto amount = group.geometry->native_page() * span.count;
-    // No active home overlaps a reserved trim page. Even failed protection
+    // No bound or pending Home overlaps a reserved trim page. Even failed protection
     // changes cannot invalidate readable contents: this was idle capacity.
     if (::madvise(address, amount, MADV_DONTNEED) == 0 &&
         ::mprotect(address, amount, PROT_NONE) == 0)
@@ -81,15 +81,12 @@ void group_trim_release(worker::Message& message) noexcept {
 
 const worker::MessageOps group_trim_ops{no_retain, group_trim_handle, group_trim_release};
 
-Result<Group*> make_group(Pool& pool, Palette palette, bool deferred = false) {
-  auto geometry = FiniteGroup::create({palette, group_identities});
+Result<Group*> make_group(Pool& pool, unsigned cls, bool deferred = false) {
+  auto geometry = FiniteGroup::create(cls);
   if (!geometry) return std::unexpected(geometry.error());
   try {
     auto group = std::make_unique<Group>();
-    group->palette = palette;
     group->geometry = std::move(*geometry);
-    const auto count = group->geometry->identity_count();
-    assert(count == group->uses.size());
     group->live.resize(group->geometry->live_words());
     // sizeof(Group) includes its fixed identity records and hints.
     // Account concrete prepared bookkeeping, separately from sparse VA/RSS.
@@ -110,15 +107,14 @@ Result<Group*> make_group(Pool& pool, Palette palette, bool deferred = false) {
     group->job = {nullptr, group.get(), group_trim_run};
     group->trimmed.context = group.get();
     group->trimmed.ops = &group_trim_ops;
-    for (std::size_t i = 0; i < count; ++i) {
+    for (std::size_t i = 0; i < finite_homes; ++i)
       group->uses[i].initialize_identity(static_cast<std::uint8_t>(i));
-    }
     auto* result = group.get();
     result->owner_index = pool.internal->groups.size();
     try { pool.internal->groups.push_back(std::move(group)); }
     catch (...) { refund(pool, result->metadata_charge); throw; }
     if (deferred) {
-      auto& preparing = pool.internal->preparing_groups[static_cast<std::size_t>(palette)];
+      auto& preparing = pool.internal->preparing_groups[cls];
       assert(!preparing);
       preparing = result;
       result->control_preparing = true;
@@ -137,6 +133,93 @@ Result<Group*> make_group(Pool& pool, Palette palette, bool deferred = false) {
   } catch (const std::bad_alloc&) { return std::unexpected(Error::capacity); }
 }
 
+// Map the Home's absent pages plus up to map_ahead following absent pages of
+// the same Group (no more than it already maps) with one mprotect per run. Every page belongs to this class,
+// so the run cannot strand another class's pages. Extra pages are charged idle
+// capacity that trim returns; a refused claim maps only the Home itself.
+constexpr std::size_t map_ahead = 15;
+Result<void> map_home(Group& group, std::size_t home) noexcept {
+  auto& pool = *group.uses.domain.pool;
+  auto& geometry = *group.geometry;
+  const auto page = geometry.native_page();
+  const auto span = geometry.pages(home);
+  std::size_t missing = 0;
+  for (auto p = span.first; p < span.first + span.count; ++p) missing += !geometry.mapped(p);
+  if (!missing) return {};
+  const auto end = span.first + span.count;
+  // Runs double with the Group's mapped inventory, so a sparsely used class
+  // does not map 16 pages for its first Home.
+  auto ahead = geometry.absent_run(end, std::min(map_ahead, geometry.mapped_pages()));
+  if (!ahead || !claim(pool, (missing + ahead) * page)) {
+    ahead = 0;
+    if (!claim(pool, missing * page)) return std::unexpected(Error::capacity);
+  }
+  auto remaining = missing + ahead;
+  for (auto p = span.first; p < end + ahead;) {
+    if (geometry.mapped(p)) { ++p; continue; }
+    auto q = p;
+    while (q < end + ahead && !geometry.mapped(q)) ++q;
+    auto* address = geometry.page_address(p);
+    if (::mprotect(address, (q - p) * page, PROT_READ | PROT_WRITE) != 0) {
+      refund(pool, remaining * page);
+      return std::unexpected(Error::io);
+    }
+#ifdef ORBITAL_FINITE_POPULATE
+    (void)::madvise(address, (q - p) * page, MADV_POPULATE_WRITE); // Advisory prefault.
+#endif
+    verify(geometry.mark_mapped({p, q - p}));
+    remaining -= q - p;
+    p = q;
+  }
+  return {};
+}
+
+void bind_home(Pool& pool, Group& group, std::size_t home, const AllocationRequest& request,
+    Allocation& result) noexcept {
+  if (!group.geometry->has_free()) remove_available(group);
+  result.storage = &group.uses[home];
+  result.address = group.geometry->address(home);
+  result.size = request.bytes;
+  result.readable_padding = request.readable_padding;
+  (void)pool;
+}
+
+// Ready Homes in any Group of this class, then unmapped Homes in existing
+// Groups, then a fresh Group. The inline fast path has already tried the head.
+Result<void> finite_allocate(Pool& pool, const AllocationRequest& request, unsigned cls,
+    Allocation& result) {
+  auto& state = *pool.internal;
+  for (auto* group = state.available[cls]; group; group = group->next_available) {
+    if (!group->geometry->has_ready()) continue;
+    const auto home = group->geometry->take_ready();
+    ++state.counts.reuses;
+    bind_home(pool, *group, home, request, result);
+    return {};
+  }
+  for (auto* group = state.available[cls]; group; group = group->next_available) {
+    const auto home = group->geometry->first_unready();
+    if (home == finite_homes) continue;
+    auto mapped = map_home(*group, home);
+    if (!mapped) {
+      if (mapped.error() != Error::capacity) return std::unexpected(mapped.error());
+      continue;
+    }
+    group->geometry->claim(home);
+    bind_home(pool, *group, home, request, result);
+    return {};
+  }
+  auto made = make_group(pool, cls);
+  if (!made) return std::unexpected(made.error());
+  auto& group = **made;
+  const auto home = group.geometry->first_unready();
+  assert(home == 0);
+  auto mapped = map_home(group, home);
+  if (!mapped) return std::unexpected(mapped.error());
+  group.geometry->claim(home);
+  bind_home(pool, group, home, request, result);
+  return {};
+}
+
 struct FinitePreparation {
   enum class Phase { control, material, cleanup };
   Preparation* request{};
@@ -145,8 +228,7 @@ struct FinitePreparation {
   worker::Lane* preparer{};
   worker::Message message;
   Ref<Arena> lifetime;
-  Identity identity;
-  Home home;
+  std::size_t home{finite_homes};
   std::array<PageSpan, 2> spans;
   std::array<bool, 2> discarded{};
   std::size_t span_count{};
@@ -156,126 +238,34 @@ struct FinitePreparation {
 };
 
 void finite_prepare_post(FinitePreparation&) noexcept;
-// Owner-only candidate traversal shared by direct and prepared allocation.
-// A class-blocked grid cannot hide legal Homes in later grids.
-Result<std::pair<Identity, Home>> claim_finite_candidate(Group& group,
-    std::size_t size, std::size_t alignment, std::uint64_t& excluded) noexcept {
-  const auto cls = group.geometry->class_for(size);
-  if (!cls) return std::unexpected(cls.error());
-  for (;;) {
-    auto identity = group.geometry->claim_identity(excluded);
-    if (!identity) return std::unexpected(identity.error());
-    auto home = group.geometry->claim_home_class(*identity, *cls, alignment);
-    if (home) return std::pair{*identity, *home};
-    excluded |= std::uint64_t{1} << (group.geometry->grid_of(*identity));
-    verify(group.geometry->release_identity(*identity));
-    if (home.error() != Error::capacity) return std::unexpected(home.error());
-  }
-}
 
-void release_finite_candidate(Group& group, const std::pair<Identity, Home>& candidate,
-    std::uint64_t& excluded) noexcept {
-  verify(group.geometry->release_home(candidate.second));
-  verify(group.geometry->release_identity(candidate.first));
-  excluded |= std::uint64_t{1} << (group.geometry->grid_of(candidate.first));
-}
-
-std::size_t missing_pages(const Group& group, const Home& home) noexcept {
-  std::size_t count = 0;
-  for (auto p = home.pages.first; p < home.pages.first + home.pages.count; ++p)
-    count += !group.geometry->mapped(p);
-  return count;
-}
-
-struct FiniteCandidate {
-  Group* group{};
-  Identity identity;
-  Home home;
-};
-
-// Positive selection hints only. Authority remains in the Group's identities,
-// occupied Homes and physical page state; a stale hint cannot hide a fallback.
-Result<std::optional<FiniteCandidate>> claim_ready_candidate(Pool& pool,
-    std::size_t size, std::size_t alignment, Palette palette) noexcept {
-  for (auto& cached : pool.internal->ready_candidates) {
-    if (!cached.group || size < cached.minimum || size > cached.maximum ||
-        alignment != cached.alignment || cached.group->palette != palette) continue;
-    auto& group = *cached.group;
-    if (group.retiring || group.control_preparing || !group.previous_available) {
-      cached.group = nullptr; continue;
-    }
-    auto identity = group.geometry->claim_identity(~(std::uint64_t{1} << cached.grid));
-    if (!identity) {
-      cached.group = nullptr;
-      if (identity.error() != Error::capacity) return std::unexpected(identity.error());
-      continue;
-    }
-    auto home = group.geometry->claim_home(*identity, size, alignment);
-    if (!home) {
-      verify(group.geometry->release_identity(*identity));
-      cached.group = nullptr;
-      if (home.error() != Error::capacity) return std::unexpected(home.error());
-      continue;
-    }
-    if (!missing_pages(group, *home)) return FiniteCandidate{&group, *identity, *home};
-    verify(group.geometry->release_home(*home));
-    verify(group.geometry->release_identity(*identity));
-    cached.group = nullptr;
-  }
-  return std::nullopt;
-}
-
-void remember_ready_candidate(Pool& pool, Group& group, const Home& home,
-    std::size_t alignment) noexcept {
-  if (!group.previous_available || group.retiring || group.control_preparing) return;
-  const auto minimum = static_cast<std::uint16_t>(group.geometry->class_minimum(home.cls));
-  const auto maximum = static_cast<std::uint16_t>(home.capacity);
-  auto& hints = pool.internal->ready_candidates;
-  for (auto& cached : hints) {
-    if (cached.minimum == minimum && cached.maximum == maximum && cached.alignment == alignment) {
-      cached = {&group, minimum, maximum, static_cast<std::uint16_t>(alignment), static_cast<std::uint8_t>(home.grid)};
-      return;
-    }
-  }
-  auto& next = pool.internal->next_candidate;
-  hints[next] = {&group, minimum, maximum, static_cast<std::uint16_t>(alignment), static_cast<std::uint8_t>(home.grid)};
-  next = static_cast<std::uint8_t>((next + 1) % hints.size());
-}
-
-Result<void> reserve_preparation_home(FinitePreparation& record,
-    const std::pair<Identity, Home>& candidate) noexcept {
+Result<void> reserve_preparation_home(FinitePreparation& record, std::size_t home) noexcept {
   auto& geometry = *record.group->geometry;
-  const auto& home = candidate.second;
-  if (home.pages.count > record.spans.size()) return std::unexpected(Error::unavailable);
-  const auto missing = missing_pages(*record.group, home);
+  const auto span = geometry.pages(home);
+  if (span.count > record.spans.size()) return std::unexpected(Error::unavailable);
+  std::size_t missing = 0;
+  for (auto p = span.first; p < span.first + span.count; ++p) missing += !geometry.mapped(p);
   const auto charge = missing * geometry.native_page();
   if (charge && !claim(*record.pool, charge)) return std::unexpected(Error::capacity);
   const auto reserved = geometry.begin_prepare(home, record.spans);
   if (!reserved) { refund(*record.pool, charge); return std::unexpected(reserved.error()); }
-  record.identity = candidate.first; record.home = home; record.span_count = *reserved;
+  record.home = home; record.span_count = *reserved;
   record.reused = missing == 0;
-  if (!geometry.has_identity()) remove_available(*record.group);
+  if (!geometry.has_free()) remove_available(*record.group);
   return {};
 }
 
-Result<void> select_preparation_home(FinitePreparation& record, bool ready) noexcept {
-  const auto& request = record.request->request;
-  std::uint64_t excluded = 0;
-  for (;;) {
-    auto candidate = claim_finite_candidate(*record.group,
-        std::max(request.bytes + request.readable_padding, request.reserved_bytes), request.alignment, excluded);
-    if (!candidate) return std::unexpected(candidate.error());
-    const auto release = [&] { release_finite_candidate(*record.group, *candidate, excluded); };
-    auto& home = candidate->second;
-    if ((missing_pages(*record.group, home) == 0) != ready) { release(); continue; }
-    const auto reserved = reserve_preparation_home(record, *candidate);
-    if (!reserved) {
-      release();
-      if (reserved.error() == Error::capacity) continue;
-      return std::unexpected(reserved.error());
+// Lowest free Home that is ready (or needs pages), without binding it.
+std::size_t candidate_home(FiniteGroup& geometry, bool ready) noexcept {
+  if (!ready) return geometry.first_unready();
+  for (std::size_t home = 0; home < finite_homes; ++home)
+    if (geometry.is_free(home)) {
+      const auto span = geometry.pages(home);
+      bool mapped = true;
+      for (auto p = span.first; mapped && p < span.first + span.count; ++p) mapped = geometry.mapped(p);
+      if (mapped) return home;
     }
-    return {};
-  }
+  return finite_homes;
 }
 
 void finite_prepare_handle(worker::Message& message, worker::Lane&) noexcept {
@@ -307,24 +297,24 @@ void finite_prepare_handle(worker::Message& message, worker::Lane&) noexcept {
   }
   record.vm_ready = true;
   const auto& request = record.request->request;
+  auto* address = geometry.address(record.home);
   // Legal RW pages may still be physically absent after an untouched direct
   // uninitialized allocation. Touch only this exclusive Home, never neighbours.
   if (request.initialization == Initialization::uninitialized) {
     const auto bytes = request.bytes + request.readable_padding;
     for (std::size_t offset = 0; offset < bytes;) {
-      auto* address = record.home.address + offset;
-      *static_cast<volatile std::byte*>(address) = std::byte{0};
-      const auto to_boundary = page - reinterpret_cast<std::uintptr_t>(address) % page;
+      *static_cast<volatile std::byte*>(address + offset) = std::byte{0};
+      const auto to_boundary = page - reinterpret_cast<std::uintptr_t>(address + offset) % page;
       offset += std::min(to_boundary, bytes - offset);
     }
   }
   if (request.initialization == Initialization::zero)
-    std::memset(record.home.address, 0, request.bytes + request.readable_padding);
+    std::memset(address, 0, request.bytes + request.readable_padding);
   else if (request.readable_padding)
-    std::memset(record.home.address + request.bytes, 0, request.readable_padding);
+    std::memset(address + request.bytes, 0, request.readable_padding);
   record.initialized = true;
   if (auto constructor = record.request->construct) {
-    const auto result = constructor({{record.home.address, request.bytes}, request.readable_padding},
+    const auto result = constructor({{address, request.bytes}, request.readable_padding},
         record.request->context);
     record.initialized = result.has_value();
     if (!result) record.error = result.error();
@@ -353,6 +343,12 @@ void finite_prepare_finish(FinitePreparation& record, Result<void> status) noexc
   complete(request.changed, status);
 }
 
+Result<void> select_preparation_home(FinitePreparation& record, bool ready) noexcept {
+  const auto home = candidate_home(*record.group->geometry, ready);
+  if (home == finite_homes) return std::unexpected(Error::capacity);
+  return reserve_preparation_home(record, home);
+}
+
 void finite_prepare_reply_release(worker::Message& message) noexcept {
   auto& record = *static_cast<FinitePreparation*>(message.context);
   auto& pool = *record.pool;
@@ -360,7 +356,7 @@ void finite_prepare_reply_release(worker::Message& message) noexcept {
   auto& request = *record.request;
   const bool cancelled = request.discard || pool.internal->close_requested;
   if (record.phase == FinitePreparation::Phase::control) {
-    auto& preparing = pool.internal->preparing_groups[static_cast<std::size_t>(group.palette)];
+    auto& preparing = pool.internal->preparing_groups[group.geometry->cls()];
     assert(preparing == &group);
     preparing = nullptr;
     group.control_preparing = false;
@@ -398,9 +394,7 @@ void finite_prepare_reply_release(worker::Message& message) noexcept {
       pulse(pool.capacity_changed);
       return; // Explicit retry only; service stays useful under persistent failure.
     }
-    verify(group.geometry->end_prepare(record.home));
-    verify(group.geometry->release_identity(record.identity));
-    verify(group.geometry->release_home(record.home));
+    group.geometry->end_prepare(record.home);
     add_available(group);
     finite_prepare_finish(record, std::unexpected(record.error));
     return;
@@ -425,17 +419,15 @@ void finite_prepare_reply_release(worker::Message& message) noexcept {
   }
   verify(group.geometry->finish_prepare(record.home, spans, true));
   if (cancelled || !record.initialized) {
-    verify(group.geometry->release_identity(record.identity));
-    verify(group.geometry->release_home(record.home));
+    group.geometry->end_prepare(record.home);
     add_available(group);
     finite_prepare_finish(record, std::unexpected(cancelled ? Error::rejected : record.error));
     return;
   }
-  verify(group.geometry->bind(record.identity, record.home));
-  remember_ready_candidate(pool, group, record.home, request.request.alignment);
-  auto& use = group.uses[record.identity.index];
+  group.geometry->bind_prepared(record.home);
+  auto& use = group.uses[record.home];
   activate(use);
-  request.value.storage = &use; request.value.address = record.home.address;
+  request.value.storage = &use; request.value.address = group.geometry->address(record.home);
   request.value.size = request.request.bytes; request.value.readable_padding = request.request.readable_padding;
   request.reused = record.reused;
   ++pool.internal->counts.allocations;
@@ -461,47 +453,30 @@ void finite_prepare_post(FinitePreparation& record) noexcept {
 }
 
 Result<void> prepare_finite(Pool& pool, Preparation& request,
-    const AllocationRequest& allocation, worker::Lane& preparer) {
+    const AllocationRequest& allocation, unsigned cls, worker::Lane& preparer) {
   auto owned = std::unique_ptr<FinitePreparation>(new (std::nothrow) FinitePreparation);
   if (!owned || !claim(pool, sizeof(FinitePreparation))) return std::unexpected(Error::capacity);
   auto& record = *owned;
   record.request = &request; record.pool = &pool; record.preparer = &preparer;
   request.request = allocation;
   Error refusal = Error::capacity;
-  const auto size = std::max(allocation.bytes + allocation.readable_padding, allocation.reserved_bytes);
-  const auto palette = preferred_palette(page_size(), size, allocation.alignment);
-  auto cached = claim_ready_candidate(pool, size, allocation.alignment, palette);
-  if (!cached) refusal = cached.error();
-  else if (*cached) {
-    const auto& choice = **cached;
-    record.group = choice.group;
-    const std::pair candidate{choice.identity, choice.home};
-    auto reserved = reserve_preparation_home(record, candidate);
-    if (!reserved) {
-      std::uint64_t excluded = 0;
-      release_finite_candidate(*record.group, candidate, excluded);
-      record.group = nullptr; refusal = reserved.error();
-    }
-  }
-  // Prefer dense geometry; reuse other ready backing before mapping pages.
-  // Only a refused fresh Group permits new pages in the other palette.
-  for (unsigned pass = 0; pass < 4 && !record.group && refusal == Error::capacity; ++pass) {
-    if (pass == 3) {
-      // One fresh control preparation per palette. Pending helper work is not
-      // budget pressure and must not scatter requests into another geometry.
-      if (pool.internal->preparing_groups[static_cast<std::size_t>(palette)]) {
+  // Same order as direct allocation: mapped Homes, then new pages in existing
+  // Groups, then one fresh control preparation per class.
+  for (unsigned pass = 0; pass < 3 && !record.group && refusal == Error::capacity; ++pass) {
+    if (pass == 2) {
+      // Pending helper work is not budget pressure; wait for that Group.
+      if (pool.internal->preparing_groups[cls]) {
         refund(pool, sizeof(FinitePreparation));
         return std::unexpected(Error::unavailable);
       }
-      auto made = make_group(pool, palette, true);
+      auto made = make_group(pool, cls, true);
       if (made) { record.group = *made; record.phase = FinitePreparation::Phase::control; break; }
       refusal = made.error();
-      if (refusal != Error::capacity) break;
+      break;
     }
-    for (auto* group = pool.internal->available_groups; group; group = group->next_available) {
-      if ((group->palette == palette) != (pass == 0 || pass == 2)) continue;
+    for (auto* group = pool.internal->available[cls]; group; group = group->next_available) {
       record.group = group;
-      auto selected = select_preparation_home(record, pass < 2);
+      auto selected = select_preparation_home(record, pass == 0);
       if (selected) break;
       record.group = nullptr;
       refusal = selected.error();
@@ -519,128 +494,6 @@ Result<void> prepare_finite(Pool& pool, Preparation& request,
   finite_prepare_post(record);
   owned.release();
   return {};
-}
-
-Result<void> map_home(Group& group, const Home& home) noexcept {
-  auto& pool = *group.uses.domain.pool;
-  const auto page = group.geometry->native_page();
-  std::size_t remaining = 0;
-  for (std::size_t p = home.pages.first; p < home.pages.first + home.pages.count; ++p)
-    remaining += !group.geometry->mapped(p);
-  // Claim the complete candidate before changing any page. Capacity refusal
-  // leaves the budget available to another legal home or packing group.
-  if (remaining && !claim(pool, remaining * page)) return std::unexpected(Error::capacity);
-  for (std::size_t p = home.pages.first; p < home.pages.first + home.pages.count; ++p) {
-    if (group.geometry->mapped(p)) continue;
-    if (::mprotect(group.geometry->page_address(p), page, PROT_READ | PROT_WRITE) != 0) {
-      refund(pool, remaining * page);
-      return std::unexpected(Error::io);
-    }
-    verify(group.geometry->mark_mapped({p, 1}));
-    --remaining;
-  }
-  return {};
-}
-
-Result<void> finite_allocate(Pool& pool, const AllocationRequest& request, std::size_t size,
-    Allocation& result) {
-  const auto alignment = request.alignment;
-  const auto palette = preferred_palette(page_size(), size, alignment);
-  Group* selected = nullptr;
-  Identity identity;
-  Home home;
-  bool prepared = false;
-  auto cached = claim_ready_candidate(pool, size, alignment, palette);
-  if (!cached) return std::unexpected(cached.error());
-  if (*cached) {
-    const auto& choice = **cached;
-    selected = choice.group; identity = choice.identity; home = choice.home;
-    prepared = true;
-  }
-  // Same order as preparation: preferred ready, other ready, preferred new
-  // pages, fresh preferred Group. Fall back to other new pages only on refusal.
-  for (unsigned pass = 0; pass < 4 && !selected; ++pass) {
-    if (pass == 3) {
-      auto made = make_group(pool, palette);
-      if (made) {
-        auto* group = *made;
-        auto id = group->geometry->claim_identity();
-        assert(id);
-        auto candidate = group->geometry->claim_home(*id, size, alignment);
-        if (!candidate) {
-          verify(group->geometry->release_identity(*id));
-          return std::unexpected(candidate.error());
-        }
-        auto mapped = map_home(*group, *candidate);
-        if (mapped) { selected = group; identity = *id; home = *candidate; break; }
-        verify(group->geometry->release_home(*candidate));
-        verify(group->geometry->release_identity(*id));
-        if (mapped.error() != Error::capacity) return std::unexpected(mapped.error());
-      } else if (made.error() != Error::capacity) return std::unexpected(made.error());
-    }
-    for (auto* group = pool.internal->available_groups; group; group = group->next_available) {
-      if ((group->palette == palette) != (pass == 0 || pass == 2)) continue;
-      std::uint64_t excluded = 0;
-      for (;;) {
-        auto candidate = claim_finite_candidate(*group, size, alignment, excluded);
-        if (!candidate) {
-          if (candidate.error() != Error::capacity) return std::unexpected(candidate.error());
-          break;
-        }
-        const bool ready = missing_pages(*group, candidate->second) == 0;
-        if (ready != (pass < 2)) { release_finite_candidate(*group, *candidate, excluded); continue; }
-        auto mapped = map_home(*group, candidate->second);
-        if (!mapped) {
-          release_finite_candidate(*group, *candidate, excluded);
-          if (mapped.error() != Error::capacity) return std::unexpected(mapped.error());
-          continue;
-        }
-        prepared = ready;
-        selected = group; identity = candidate->first; home = candidate->second; break;
-      }
-      if (selected) break;
-    }
-  }
-  if (!selected) return std::unexpected(Error::capacity);
-  if (prepared) ++pool.internal->counts.reuses;
-  verify(selected->geometry->bind(identity, home));
-  if (!selected->geometry->has_identity()) remove_available(*selected);
-  remember_ready_candidate(pool, *selected, home, alignment);
-  auto& use = selected->uses[identity.index];
-  result.storage = &use;
-  result.address = home.address;
-  result.size = request.bytes;
-  result.readable_padding = request.readable_padding;
-  return {};
-}
-
-Result<bool> relocate_finite(Allocation& allocation, const GrowthRequest& request,
-    std::size_t needed) {
-  auto& use = *allocation.storage;
-  auto& group = *static_cast<Group*>(route(use)->context);
-  auto& pool = *route(use)->pool;
-  const auto old = group.geometry->bound_home({use.identity()});
-  assert(old);
-  auto destination = group.geometry->claim_home({use.identity()}, needed, request.alignment);
-  if (!destination && destination.error() != Error::capacity)
-    return std::unexpected(destination.error());
-  if (destination) {
-    const auto mapped = map_home(group, *destination);
-    if (mapped) {
-      std::memcpy(destination->address, allocation.address,
-          allocation.size + allocation.readable_padding);
-      verify(group.geometry->bind({use.identity()}, *destination));
-      verify(group.geometry->release_home(*old));
-      allocation.address = destination->address;
-      allocation.size = request.bytes; allocation.readable_padding = request.readable_padding;
-      ++pool.internal->counts.relocations;
-      ++pool.internal->counts.growths;
-      return true;
-    }
-    verify(group.geometry->release_home(*destination));
-    if (mapped.error() != Error::capacity) return std::unexpected(mapped.error());
-  }
-  return false;
 }
 
 } // namespace orbital::allocation::detail

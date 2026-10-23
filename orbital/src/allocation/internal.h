@@ -17,8 +17,8 @@
 
 namespace orbital::allocation {
 namespace detail { struct Domain; struct Group; struct Window; }
-// Physical retention is independent of the dense one-byte binding plane.
-// One immutable identity byte and 24 use-state bits, including the return tag.
+// One immutable identity byte (the Home index within its Group or zero for a
+// Window) and 24 use-state bits, including the return tag.
 struct UseState {
   static constexpr std::uint32_t user_mask = 0x00ffffffu;
   std::atomic<std::uint32_t> state{};
@@ -88,8 +88,6 @@ struct Group {
   Group* next_available{};
   Group** previous_available{};
   std::unique_ptr<FiniteGroup> geometry;
-  Ref<Arena> active_lifetime; // Owner-managed pin while any finite identity is live/returning.
-  std::uint16_t active_identities{};
   ReleaseHint foreign_use;
   bool advice_pending{};
   std::vector<std::uint64_t> live;
@@ -100,7 +98,6 @@ struct Group {
   Ref<Arena> trim_lifetime;
   bool trim_pending{}, retiring{};
   bool retired{}, control_preparing{};
-  Palette palette{};
   std::uint64_t preparations{};
   ReleaseHint last_use;
   std::uint64_t retire_charge{}, retire_mapped{}, retire_reserved{};
@@ -116,7 +113,6 @@ using WindowSizes = std::map<std::size_t, IdleWindows>;
 struct Window {
   StorageOwner<1> uses;
   std::size_t owner_index{}; // Pool owning-vector position, not an allocation identity.
-  Ref<Arena> active_lifetime;
   Window* next_idle{};
   Window** previous_idle{};
   WindowSizes::value_type* size_entry{};
@@ -145,21 +141,17 @@ struct Window {
   ~Window();
 };
 
-struct ReadyCandidate {
-  Group* group{};
-  std::uint16_t minimum{}, maximum{}, alignment{};
-  std::uint8_t grid{};
-};
-
 struct PoolState {
-  std::array<ReadyCandidate, 4> ready_candidates;
-  std::uint8_t next_candidate{};
+  // Per class, Groups with a free Home; the head serves new allocations.
+  std::array<Group*, finite_classes> available{};
+  // Owner-managed Arena pin while any use is live or awaiting its owner return.
+  std::size_t active_uses{};
+  Ref<Arena> active_lifetime;
   Pool* next_interested{};
   Pool* previous_interested{};
   std::vector<std::unique_ptr<Group>> groups;
-  // Owner-only index of the one permitted control preparation per palette.
-  std::array<Group*, 2> preparing_groups{};
-  Group* available_groups{};
+  // Owner-only index of the one permitted control preparation per class.
+  std::array<Group*, finite_classes> preparing_groups{};
   // Register sizes before VM publication; returns/reuse never allocate index nodes.
   // Index and intrusive heads outlive Window destruction, including final-pin teardown.
   WindowSizes window_sizes;
@@ -209,18 +201,16 @@ void activate(Storage&) noexcept;
 
 // Fill a fresh output only on success; common allocation code establishes
 // its physical use before exposing the handle to callers.
-Result<void> finite_allocate(Pool&, const AllocationRequest&, std::size_t,
-    Allocation&);
+// Slow path after the inline head-Group attempt; cls comes from select_class.
+Result<void> finite_allocate(Pool&, const AllocationRequest&, unsigned cls, Allocation&);
 Result<void> window_allocate(Pool&, const AllocationRequest&, std::size_t,
     Allocation&);
-// False means local capacity was unavailable; common growth may try elsewhere.
-Result<bool> relocate_finite(Allocation&, const GrowthRequest&, std::size_t);
 Result<void> extend_window(Window&, std::size_t);
 Result<void> retain_window_range(Window&, ByteRange);
 void release_window_range(Window&, ByteRange) noexcept;
 std::size_t window_tail_floor(const Window&) noexcept;
 void trim_window_tail(Window&, std::size_t);
-Result<void> prepare_finite(Pool&, Preparation&, const AllocationRequest&, worker::Lane&);
+Result<void> prepare_finite(Pool&, Preparation&, const AllocationRequest&, unsigned cls, worker::Lane&);
 Result<void> prepare_window(Pool&, Preparation&, const AllocationRequest&, worker::Lane&);
 
 inline void verify(Result<void> result) noexcept { assert(result.has_value()); (void)result; }
@@ -300,8 +290,8 @@ inline void remove_idle(Window& window) noexcept {
 }
 
 inline void add_available(Group& group) noexcept {
-  if (group.previous_available || group.retiring || group.control_preparing || !group.geometry->has_identity()) return;
-  auto& head = group.uses.domain.pool->internal->available_groups;
+  if (group.previous_available || group.retiring || group.control_preparing || !group.geometry->has_free()) return;
+  auto& head = group.uses.domain.pool->internal->available[group.geometry->cls()];
   group.next_available = head;
   group.previous_available = &head;
   if (head) head->previous_available = &group.next_available;
@@ -309,13 +299,27 @@ inline void add_available(Group& group) noexcept {
 }
 
 inline void remove_available(Group& group) noexcept {
-  for (auto& candidate : group.uses.domain.pool->internal->ready_candidates)
-    if (candidate.group == &group) candidate.group = nullptr;
   if (!group.previous_available) return;
   *group.previous_available = group.next_available;
   if (group.next_available) group.next_available->previous_available = group.previous_available;
   group.next_available = nullptr;
   group.previous_available = nullptr;
+}
+
+// Owner fast path: the lowest ready Home of the class's head Group.
+[[gnu::always_inline]] inline bool take_head(PoolState& state, unsigned cls,
+    const AllocationRequest& request, Allocation& result) noexcept {
+  auto* group = state.available[cls];
+  if (!group || !group->geometry->has_ready()) [[unlikely]] return false;
+  auto& geometry = *group->geometry;
+  const auto home = geometry.take_ready();
+  if (!geometry.has_free()) [[unlikely]] remove_available(*group);
+  result.storage = &group->uses[home];
+  result.address = geometry.address(home);
+  result.size = request.bytes;
+  result.readable_padding = request.readable_padding;
+  ++state.counts.reuses;
+  return true;
 }
 
 template<class T> void erase_owner(std::vector<std::unique_ptr<T>>& owners, T& retired) noexcept {
