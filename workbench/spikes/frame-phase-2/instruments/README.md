@@ -8,6 +8,10 @@ The [calibration findings](FINDINGS.md) retain the fixed-work caveat, corrected
 common-window Zen 5 rates, PMU limits and the smaller-instance experiment plan.
 [Native codec controls](codecs/README.md) establish pinned functional baselines;
 their boot checks are not speed comparisons.
+The [change witness](../change/README.md) establishes pre-payload read/store
+admission for tested fixed-basis writers using current Ikea primitives. It
+keeps logical contribution and actual physical effects separate, without
+selecting a concurrency policy or changing query paths.
 
 The [phase-1 scans](../../frame-phase-1/scan/FINDINGS.md) supply exact native FOR
 and actual Polars controls, balanced treatment order and actual-buffer conditioning.
