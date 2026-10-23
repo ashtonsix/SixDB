@@ -1,0 +1,37 @@
+# Ikea Frame, phase 2
+
+Design spike for `ikea::frame`, reopened on 2026-10-23 after
+[phase 1](../frame-phase-1/README.md) fell short in breadth and quality. The
+philosophy carries over: an encoding pipeline broken into stages Engine can
+compose, primitive operations running directly on encoded data, priors that
+accelerate analysis, 2^16-row parts with groups and blocks below, and headless
+descriptions with damage, aggregates and effects published to the consumer.
+Engine's analyser will later solve (data distribution, access patterns) →
+(encoding, query plans); Frame curates the primitives it chooses from.
+
+## What changes from phase 1
+
+- **Every target has a mechanism.** A win must be explained by what it removes
+  and where that removal pays, at each residence tier, against the strongest
+  baseline for that operation. Polars is one baseline among several.
+- **The split starts from the encoding stages.** Fused stages (Ikea owns the
+  composition) and composed stages (Engine chooses per data and workload) set
+  the seams and the division of work.
+- **The execution substrate comes first.** Phase 1 paid about 40 ns per
+  256-row block and 10–20× native per point, so most of its representation
+  comparisons measured overhead.
+- **All operation families.** Phase 1 covered SUM and COUNT on integers.
+
+## Contents
+
+- [Stage classification](STAGES.md): which stages are fused, weighted or
+  composed, how sticky each is, and what phase 1 settles.
+- [Mechanisms and targets](MECHANISMS.md): residence tiers, hardware priors,
+  thirteen "how we win" mechanisms, the baseline roster and targets per
+  operation family, stage and tier, including accepted losses.
+- [Partition](PARTITION.md): seams, proposed internal packages and the research
+  threads, awaiting Ashton's review.
+
+Phase 1's findings and negative results remain the evidence base; this spike
+cites them rather than restating them. Strings, including FSST, are out of
+scope.
