@@ -22,7 +22,9 @@ directory's sections below are the evidence; read them by question, not in order
   identity as {scope, edition}. Cached dictionary material helps equality and
   sparse COUNT, not SUM or points.
 - **Open in this directory:** the run-block leaf cost behind the flushed OS SUM
-  loss (prototype in progress), fused aggregate timings (code at `6321ff6d`),
+  loss (prototype in progress), [fused aggregates](#fused-aggregates) (local
+  ARM: SUM + COUNT in 0.58–0.74× the separate calls on packed and run columns,
+  no gain where COUNT is a closed form, still 1.7–2.3× native fused; workers pending),
   the predicate mask emitter (in progress), and every family beyond SUM/COUNT.
   Detailed questions are in [QUESTIONS.md](../QUESTIONS.md).
 - **Comparison limits:** local timings are OrbStack direction only. Worker runs
@@ -1574,6 +1576,159 @@ rounds, local VM, ns per point, old → new.
    the delta-exception check (residual widths 1–64, wrapping checkpoints) pass,
    as does the 417-run borrowed check. A 57–63-bit walk under every64 and none
    adds wide-prefix wrap coverage.
+
+## Fused aggregates
+
+Ikea LEAD's lifecycle runs found the gap: native array controls fuse SUM and
+COUNT in one pass, while Frame ran each aggregate as its own full pass. On
+all-valid EventTime that left Frame at 4.65 ms against 2.39 ms native
+([REPAIR.md](../lifecycle/REPAIR.md#null-aware-reads-change-the-comparison)).
+[`fused.h`](fused.h) adds one owner program per request. A
+`fused_request` names the wanted aggregates: exact u128 SUM, COUNT(x ≥ t) for
+up to four thresholds, COUNT(x = v), MIN and MAX. Aggregates it leaves out
+cost no pass and no dictionary preparation. Code: 6321ff6d.
+
+There are full-256 and row-selected forms, over borrowed blocks
+(`fused_block`, `masked_fused_block`, `fused_stored`) and columns
+(`encoded_fused`, `masked_encoded_fused`), each with an optional
+`dictionary_cache`. The dispatch is the same as in [selected.h](selected.h).
+An empty S returns before any body or dictionary access, a full S takes the
+full program, and a SUM-only request runs the existing SUM unchanged. The
+per-kind algebra is reused:
+
+- **Packed and patched inliers:** one decode into the narrowest lane feeds
+  every reduction, with lane-width accumulators.
+- **Mixed S:** at most 64 unselected rows take the complement (all rows,
+  minus the unselected ones); otherwise only the 64-row words that hold a
+  selected row are decoded.
+- **Constant and runs:** closed forms. One Intervals pass writes per-run
+  weights, which are run sizes or rank popcounts. Branch-free loops over the
+  value and weight arrays follow; a select had compiled into a mispredicting
+  branch.
+- **Non-decreasing delta:** keeps its weighted SUM, and answers both COUNTs by
+  the checkpoint search. Rows [first_ge(v), first_ge(v + 1)) hold v.
+- **Other delta, delta_patched and arrival:** reconstruct once, then reduce.
+- **Coded blocks:** SUM, MIN or MAX gathers each entry once. A COUNT-only
+  request takes translated code thresholds under sorted dictionaries, and
+  truth bits from one code buffer otherwise.
+
+**Checks.** borrowed_check runs every block of every input against the input
+oracle restricted to S, under 16 requests (each of its thresholds four at a
+time with every aggregate, SUM + COUNT, counts only, MIN/MAX, EQ at
+UINT64_MAX, empty) and under every adversarial and random selection, in all
+four guard placements. Each request runs per call and through a shared cache.
+The stored-domain form is checked against stored codes, and SUM + COUNT
+(+ EQ) are also checked against the separate operations. Further coverage:
+
+- inside the scan grant, the unsearched delta blocks;
+- under the empty-S `PROT_NONE` guard;
+- the column forms over the old/new/old/copy/new image sequence;
+- a `fused` fault probe.
+
+The full `identity/check.sh` passes 417/417 runs (1.10G fused checks). The
+driver's 11,232 non-timing values match, apart from the known +8 B.
+`masked_access_check` passes. Eight seeded mutants were each caught:
+
+- a shifted equality search;
+- a dropped complement row;
+- an unweighted run MIN;
+- a code threshold off by one;
+- an absent equality code;
+- a lost lane keep mask;
+- an extra exception;
+- a missing empty guard.
+
+The mutants are in `build/spikes/ikea-frame/fused/mutants.sh`. Because the
+live `ikea/` tree held another task's edits, qualification ran from a snapshot
+of HEAD plus these files (`build/spikes/ikea-frame/fused-snap/`).
+
+**Timings.** `frame_encoding_fused` compares the existing owner calls (one
+per aggregate), the fastest separate arms (narrow SUM plus catalogue COUNT
+filters) and one fused program. Its native controls are arrays of the column
+minus its minimum at the narrowest byte width, with SUM over u64 in 32-bit
+halves and a per-row keep mask under validity. Each aggregate is native
+either in its own pass or in one fused pass. The column-wide threshold is
+the median, and v is the middle row's value.
+
+Arms run in bodies.cpp's fixed-seed shuffled order, 21 trials. An exact
+duplicate of the separate and fused arms is the noise control. Three rounds
+rotate the input order, and cells are medians over rounds. Ratios are paired
+per trial. All timings are from the local aarch64 OrbStack VM, under a load
+average of 5–6 from other tasks, so they are indicative only. Duplicates read
+0.98–1.02 on all-block and NULL shapes, but up to 1.14 on sparse10. Results
+are in `build/spikes/ikea-frame/fused/` (`timing.sh`, `summarise.py`,
+`timing.jsonl`).
+
+All blocks, SUM + COUNT(≥ median), µs, and paired ratios (the last two
+columns are SUM + COUNT + COUNT(=) and fused against native fused):
+
+| Input | Separate | Best separate | Fused | Native separate | Native fused | Fused / separate | Fused / best | 3 aggregates fused / separate | Fused / native fused |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| OS | 1,008 | 1,032 | 717 | 432 | 427 | 0.71 | 0.70 | 0.55 | 1.67 |
+| EventTime | 1,677 | 1,151 | 958 | 723 | 421 | 0.58 | 0.83 | 0.46 | 2.19 |
+| URLHash | 2,079 | 2,093 | 1,551 | 1,537 | 883 | 0.74 | 0.74 | 0.62 | 1.77 |
+| WatchID | 2,682 | 3,081 | 1,910 | 1,538 | 836 | 0.71 | 0.63 | 0.57 | 2.27 |
+| UserID | 952 | 966 | 983 | 1,623 | 924 | 1.03 | 1.02 | 1.00 | 1.10 |
+| OS, frequency dictionary | 1,841 | 1,886 | 1,369 | 440 | 434 | 0.74 | 0.74 | 0.59 | 3.15 |
+| URLHash, arrival dictionary | 5,977 | 6,035 | 5,573 | 1,607 | 890 | 0.92 | 0.92 | 0.85 | 6.28 |
+| Jena window 0, 14 fields (sum; geomean ratios) | 629 | 522 | 483 | 122 | 121 | 0.73 | 0.89 | 0.49 | 3.70 |
+
+Every 10th block, and every block under a 1% uniform NULL validity plane
+(`encode_nullable`, predictor fill; 92% of blocks are mixed). Paired fused /
+separate for two and three aggregates, then fused / native fused under NULLs:
+
+| Input | Sparse10 | Sparse10, 3 | 1% NULL | 1% NULL, 3 | 1% NULL, fused / native fused |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| OS | 0.70 | 0.54 | 0.65 | 0.47 | 1.05 |
+| EventTime | 0.55 | 0.45 | 0.78 | 0.62 | 1.35 |
+| URLHash | 0.63 | 0.60 | 0.65 | 0.52 | 1.41 |
+| WatchID | 0.65 | 0.53 | 0.62 | 0.54 | 1.28 |
+| UserID | 1.02 | 1.01 | 1.00 | 0.97 | 1.05 |
+| OS, frequency dictionary | 0.71 | 0.55 | 0.53 | 0.44 | 1.37 |
+| URLHash, arrival dictionary | 0.58 | 0.43 | 0.59 | 0.56 | 3.55 |
+| Jena window 0 (geomean) | 0.73 | 0.49 | 0.81 | 0.59 | 1.36 |
+
+1. **Fusion pays where both aggregates would scan the same plane.** On the
+   packed- and run-heavy columns, SUM + COUNT takes 0.58–0.74× the separate
+   calls, and adding COUNT(=) takes 0.46–0.62×. A third aggregate costs 12–24%
+   more fused, but a whole pass separately. EventTime drops from 1.68 to
+   0.96 ms. Against the fastest separate arms it is 0.63–0.83×, since the
+   catalogue COUNT filter is already cheap on packed planes (EventTime:
+   0.83×).
+2. **It doesn't pay where one aggregate is a closed form.** UserID's
+   COUNT(≥ median) is decided by run bounds, so the separate COUNT costs
+   almost nothing and the fused program is 1.00–1.03×. Jena's delta fields
+   are 0.89× against the best arms (geomean; delta-heavy fields 0.98–1.07).
+   Non-monotone delta keeps the weighted SUM separate, while the fused
+   program reconstructs once; monotone delta was already closed form both
+   ways.
+3. **Coded blocks gain under frequency dictionaries, barely under arrival.**
+   OS frequency reaches 0.74× (0.74 cached). URLHash arrival reaches only
+   0.92×, and through a warm cache the fused program is 1.08× slower. The
+   separate arrival SUM reads literal entries in sequence and its COUNT reads
+   L1 truth bits, while the fused gather fetches an 8 B entry per row for every
+   comparison. Under sparse masks and NULLs, arrival still gains (0.58–0.59×).
+4. **Masked fusion holds up under 1% NULL** (0.53–0.81×), with the complement
+   form taking the dense blocks. Fused masked SUM + COUNT is within 1.05–1.41×
+   of the native masked fused loop on ClickBench.
+5. **The native gap narrows but stays.** All-valid fused programs are
+   1.67–2.27× native fused on ClickBench, 3.7× on Jena and 6.3× under arrival
+   dictionaries. Native fusion gains 0.55–0.58× on 4- and 8-byte arrays, but
+   nothing on OS's u8 array. EventTime's SUM + COUNT drops from 4.0× native
+   fused to 2.2×. What is left is the plane decode, which SUM-only already
+   paid.
+
+**Remaining:**
+
+- worker timings on Graviton and Zen5 (local ARM only so far, and the AVX-512
+  gap is wider);
+- a native-packet fused leaf, one packet read per SUM and comparison (kernels
+  are Ikea LEAD's; the catalogue `sum` was slower than the narrow decode on
+  EventTime, 443 against 376 µs);
+- arrival-coded fusion that keeps the literal sequence and truth bits;
+- MIN/MAX timings (checked, not timed);
+- consumers: the lifecycle programs can call `masked_encoded_fused` in place of
+  two calls.
 
 ## Row order in real bodies
 
