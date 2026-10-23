@@ -6,7 +6,11 @@
 // Every batch's exact sum is checked.
 //
 // usage: frame_substrate_points COLS_DIR ROWS ROUNDS DISTANCE COLUMN...
+#include "kernels.h"
 #include "material.h"
+#include "packing.h"
+
+#include <ikea/intervals.h>
 
 #include <algorithm>
 #include <chrono>
@@ -107,6 +111,27 @@ int main(int argc, char **argv) {
                  u128 s = 0;
                  for (std::size_t i = 0; i < requests; ++i)
                      s += fe::value_at(c, idx[i]);
+                 return s;
+             }},
+            {"frame_native_runs", [&] {
+                 // Run blocks search their u8 (end - 1) plane through Intervals'
+                 // native direct source instead of phase 1's size()/at()
+                 // projection, which falls back to bisection.
+                 namespace iv = ikea::intervals;
+                 u128 s = 0;
+                 for (std::size_t i = 0; i < requests; ++i) {
+                     const std::size_t row = idx[i], b = row / fe::block_rows;
+                     const fe::descriptor &dd = desc[b];
+                     if (dd.type == fe::kind::runs && !fe::is_coded(c, b)) {
+                         const unsigned w = fe::plane_width(dd);
+                         const std::uint8_t *body = payload + dd.offset;
+                         const iv::direct_source<std::uint8_t> ends{body + fe::plane_bytes(w, dd.count), dd.count};
+                         const unsigned r = iv::lower_bound(ends, static_cast<unsigned>(row % fe::block_rows));
+                         s += dd.base + fe::plane_catalogue.point[w](body, r);
+                     } else {
+                         s += fe::value_at(c, row);
+                     }
+                 }
                  return s;
              }},
             {"frame_staged", [&] {
