@@ -16,9 +16,10 @@
 //              r is bytes [r K/8, (r + 1) K/8), inside the plane's exact
 //              grant. Other widths take the narrow path.
 // The program is a runtime choice, read once per runs block, so that one
-// binary times every arm. The default stays wide: narrow is exact and mostly
-// faster, but lost on two cells locally (README, "Run-value programs"), so
-// it and in_place are opt-in. Byte-multiple planes come from
+// binary times every arm. The default is narrow: exact, and in a
+// Williams-ordered paired run it never lost to wide beyond noise (README,
+// "Run-value programs"). wide stays as the comparison arm; in_place is
+// opt-in, since it only differs on byte-lane images. Byte-multiple planes come from
 // encode_options::run_values (byte_lanes), an opt-in encoding that rounds K
 // up to 8, 16 or 32; its descriptors keep the exact K, so width-derived
 // bounds stay base + 2^K - 1 (material.h, byte_lane_flag).
@@ -37,7 +38,7 @@ inline const char *run_program_name(run_program p) {
     }
     return "?";
 }
-inline run_program run_values_program = run_program::wide;
+inline run_program run_values_program = run_program::narrow;
 
 // How the predicate runs law (narrow and in_place programs) turns passing runs
 // into row bits: per_run ORs rows_between(first, limit) for each passing run
