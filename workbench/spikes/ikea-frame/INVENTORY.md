@@ -50,7 +50,7 @@ counterexamples stay with the linked owner.
 | Cross-column structure | OS grouping over shared codes takes 73.9 µs versus the best native shared-code control's 148.2 µs on local ARM. Projected forward maps need not be injective; local reductions can precede logical translation and actual hash output. | Isolated OS SUM becomes near parity with proper native lane widths. Region and functional shared forms beat independent encoding but lose stronger native complete controls. Decorrelation loses runtime and bytes against independent encoding too. Shared codes are one tested relationship, not coverage of routing, conditioned predictors or TuplePack. [Domain-sized controls](execution/NATIVE-DOMAINS.md). |
 | Mutation | Actual fitting packed/delta repair, byte damage, overrides, block folds, thaw/reseal, NULL changes and old readers work through native owners. A read-rich UserID AVX2 history including its final fold takes 1.69 versus native 2.98 ms. | The same UserID AVX-512 cell loses; most warm cells and every update-dominated mixed cell lose. Faster isolated repair and fewer allocations do not close the complete program gap. [Zen 5 phases](lifecycle/ZEN5.md), [program costs](lifecycle/PROGRAM-COSTS.md). |
 | Ownership and changes | Borrowed extents/grants, dictionary editions, actual Orbital Parts, same-version adoption, retained readers and retirement are executable. Sustained histories preserve answers through 65 command batches and real publication ages. | Sustained checks are **semantics**, not a fold cadence or tail-latency result. Physical reclaim grain has a functional witness, not a measured optimum. Durable/replay and concurrent-writer protocol questions remain with their owners. [Material](execution/MATERIAL.md), [cycles](lifecycle/CYCLES.md). |
-| Fusion | Selected consumers and in-place prefix sums demonstrate useful fusion. Multi-aggregate code at `6321ff6d` checks shared reconstruction plus specialised closed forms. Local SUM+COUNT timings take 0.58–0.74× ordinary separate calls on OS/EventTime/URLHash/WatchID. | These [fused timings](encoding/README.md#fused-aggregates) are local ARM direction only (`da1941b3`): native fused remains 1.67–2.27× faster on those columns; UserID's already-cheap COUNT gains nothing, and cached arrival can lose. MIN/MAX is checked, not timed. Predicate-mask emission, the runs prototype and wider ISA execution still need qualification. |
+| Fusion and predicate production | Selected consumers and in-place prefix sums demonstrate useful fusion. Multi-aggregate code at `6321ff6d` checks shared reconstruction plus specialised closed forms. Local SUM+COUNT timings take 0.58–0.74× ordinary separate calls on OS/EventTime/URLHash/WatchID. Five-predicate mask emission is now implemented at `3f31a329`, with guarded, duplicate-safe laws and A→B correctness pairs. | These [fused timings](encoding/README.md#fused-aggregates) are local ARM direction only (`da1941b3`): native fused remains 1.67–2.27× faster on those columns; UserID's already-cheap COUNT gains nothing, and cached arrival can lose. MIN/MAX is checked, not timed. Full predicate→payload system/cold comparisons, the runs prototype and wider execution-program timings remain open. |
 
 These cohorts are not interchangeable. Local ARM rankings, repeated worker
 scans, explicitly flushed Zen 5 inputs and lifecycle phase timings answer
@@ -75,7 +75,7 @@ maintenance bill as well as their read cost.
 | --- | --- | --- |
 | Encode / unpack / transcode | Real integer bodies, point/range reconstruction, several dictionaries, checkpoint choices, nullable fill, conversion through folds/thaw. | Priors and bad-guess costs; complete writer/decoder peer comparisons; streaming drift; useful direct converters; typed floating-point/ALP and high/low splits. |
 | Movement | Independent points, range reads, selected consumption, replacement/presence writes and private command batches. | General gather/scatter/append, streaming tail → seal → growth, output layouts and complete movement pipelines. |
-| Compare / selection | COUNT ≥ and equality, selected reductions, heads/bounds, empty/coarse grants; predicate-mask emitter in progress. | Complete multi-column predicate → payload programs, broader Boolean predicates, maintained evidence, all-family movement savings. |
+| Compare / selection | COUNT ≥ and equality, selected reductions, heads/bounds, empty/coarse grants; five-predicate mask emission and independently checked A→B pairs. | Strong-system/cold comparisons of complete multi-column predicate → payload programs, broader Boolean predicates, maintained evidence, all-family movement savings. |
 | Search / lookup | Run geometry and checkpoint searches inside particular consumers. | General Frame find/index-of/bounds/rank-to-offset programs and encoded lookup consumers. Existing Ikea primitives are ingredients, not evidence for these Frame operations. |
 | Transform | Specific FOR, dictionary and prediction laws; projected maps in the grouped witness. | General arithmetic, bitwise and hash transforms; partial/throwing function legality; map lifting and reusable transformed results. |
 | Reduction / scan | SUM/COUNT dominate; one grouped witness; MIN/MAX appear in the newly qualified fused implementation. | Segmented reductions, prefix/window scans, richer aggregate states and deterministic floating-point reductions. No performance claim yet for fused MIN/MAX. |
@@ -229,11 +229,13 @@ not a fallback outside Frame's ambitions.
 ## Working checkpoint
 
 Ikea LEAD owns this synthesis, scans/points/filter consumers and lifecycle;
-Claude owns encoding/algebra and the active fused/predicate/runs cuts; Engine
+Claude owns encoding/algebra and the numerical follow-ups; Engine
 owns execution witnesses and the interpretation of composition seams. The
 [working research map](RESEARCH.md) tracks that division. Ikea HELPER owns
-Intervals and current Ikea interface cohesion; a separately frozen Frame caller
-qualification is pending. Old source receipts do not qualify the migrating APIs.
+Intervals and current Ikea interface cohesion. The [current Frame API adaptation](evidence/api-migration-20261023/README.md)
+at `feb56ce1` passes native NEON/AVX2/AVX-512 correctness on its named frozen
+Ikea cut. Broader reusable-control research and later dependency cuts remain
+separate; this is not a new Frame throughput result.
 
 This stocktake adds no timings and pools no cohorts. It redirects investigation
 without retiring negative results, narrowing the original brief or promoting

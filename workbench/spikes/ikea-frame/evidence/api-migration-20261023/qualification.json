@@ -1,6 +1,6 @@
 {
   "scope": "API-only current Frame port after predicate cut3f31a329; no representation or numerical-program change",
-  "status": "NEON passed; AVX2 and AVX-512 qualification in progress",
+  "status": "NEON, AVX2 and AVX-512 passed;462commands and9600complete owner records",
   "timings": "No qualification time is interpreted as a performance result; historical benchmark source cohorts remain separate.",
   "frame_files_sha256": {
     "workbench/spikes/ikea-frame/encoding/kernels.cpp": "8e839c8fd6ff5f578eeda5532fe2cfffec21cc59ff410b23ca8719807506f2db",
@@ -64,12 +64,146 @@
       },
       "artifact": {
         "sha256": "53ee9fe74d6ab0c2e6adaa8921a2ee36d7c91e0a075fe1f70289fc416632a222",
-        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/53ee9fe74d6ab0c2e6adaa8921a2ee36d7c91e0a075fe1f70289fc416632a222.tar.gz"
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/53ee9fe74d6ab0c2e6adaa8921a2ee36d7c91e0a075fe1f70289fc416632a222.tar.gz",
+        "format": 1,
+        "bucket": "calico-fleet-artifacts",
+        "region": "us-east-1",
+        "key": "sixdb/artifacts/sha256/53ee9fe74d6ab0c2e6adaa8921a2ee36d7c91e0a075fe1f70289fc416632a222.tar.gz",
+        "bytes": 10955676,
+        "files": 181,
+        "kind": "files"
       },
-      "instance_terminated": true
+      "instance_terminated": true,
+      "base_receipt_sha256": "69d70173b74fc4e27346e5689f16f020463a2bb4f37af8bdab13eeb2159eed3b",
+      "extra_receipt_sha256": "eae397c09a3b5a8854be919516537ac0775411c91d3c9d0dd23e42bdc60b2447",
+      "compile_commands_sha256": "6e8ac3dec22fd038bfd23becf1460df6c6262c7f2feb4743140fbf7f9982d1e6",
+      "compiler_features_sha256": "da83191bf3fc81a2d97a3828246fdefef9fa0e99a060342a5efadc4b89622b59",
+      "compiler": "Clang21.1.8; C++23; O2 with line tables; assertions enabled",
+      "target": "armv8-a+simd/neoverse-v2"
+    },
+    "avx2": {
+      "job": "20261023T015159Z-ccc9f247",
+      "capture_digest": "513cec9b62fddff9ec09d98f5db6cdbf0b6e1dab2730efeb7f3cf69901cbb061",
+      "source_files_verified": 3569,
+      "base_commands": 82,
+      "extra_commands": 72,
+      "owner_verification": {
+        "p__mbar": {
+          "records": 800,
+          "log_sha256": "cf2c08ea87f285cba8976019c98e51dd05c1b3ee90076a879dc7d96f91c24610"
+        },
+        "EventTime-mid": {
+          "records": 800,
+          "log_sha256": "24f2e62c625f10db82e2a6569971b72a777003a7b6f20c6dcb3c15d20f876930"
+        },
+        "UserID": {
+          "records": 800,
+          "log_sha256": "436901d32f112db9c7c525dcaf0a04365851154a5021d47ee8897f08451f883c"
+        },
+        "URLHash": {
+          "records": 800,
+          "log_sha256": "0cf45ea484fad4df05582538c0457cc6440aae4175d5a2106bfe6c465cf54b06"
+        }
+      },
+      "assertions_enabled": true,
+      "executables": {
+        "frame_encoding_masked_access_check": "cdf84433d4215b9f3d5c8814dbfa84a0564e6ef7dcf6eec2eeb8be8b0de6f0f3",
+        "frame_encoding_null_check": "0d8ec51d7855a19b4bcf25bf0833f9eca779b5955844e1623eb64a4c181268dd",
+        "frame_phase_material_check": "c4201002c742fdc4c494388b28de8090666bae4398b9ad03c5da8b0723da2322",
+        "frame_phase_plane_check": "bf937bd5daafc50317e3a46c4dad809f2f6db5bc3e5561639626752f348c5f5e",
+        "frame_phase_repair_check": "09ad7f0d29b28288c1bfacc0d6c276d891be70b4b34dede1b3cf426b09816002",
+        "frame_phase_batch_check": "6859a7f383fb4f3d9d3cfe28618fd19e030e42d863fa7d7883e4c2aefa7af24e",
+        "frame_encoding_borrowed_check": "683595a143bdc5be55ec5043449a975c8e6deba279e6a4bf6098607e94d520df",
+        "frame_phase_measure": "482c543583164b3b21a2555be74869a4eb7631541b8efa705bf91180f5b6849e",
+        "frame_delta_repair_check": "a79800dc45f1e417553f5509a0914b8a7e03803139c4ae618891f494fdbc69fe",
+        "frame_delta_patched_check": "f6abe730c7b3c26ceaea0f15521559e387f683f4c4d7474ffb21c62e571421bb",
+        "frame_checkpoint_point_check": "b42ec1a39394b49a15a671598a5746347f1862d71a67ee75732bb3fa1a84f9ac",
+        "frame_filter_check": "2c9f2e01cc8fd31455c0c06c081c0164362e4d73700a13e110e8fd497dac0267",
+        "frame_execution_material_check": "cc2e3b384680f66e6f069482c86709a3a896339588ec8eac0dc08b359facd74e",
+        "frame_execution_hash_check": "3bb175def01c044bd2a51ca25ddf322b03926de5e10184ca1c8e161995b3a25b",
+        "frame_encoding_predicate_check": "1c039e5a48f5caa179b660b6b45a3ef8a17ee1a72d1dd93b54248e3a98499716"
+      },
+      "artifact": {
+        "sha256": "00b9dae3e3a96964e6f702b3ad6eb4c90c20351747833a4b23834aed147dbc2a",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/00b9dae3e3a96964e6f702b3ad6eb4c90c20351747833a4b23834aed147dbc2a.tar.gz",
+        "format": 1,
+        "bucket": "calico-fleet-artifacts",
+        "region": "us-east-1",
+        "key": "sixdb/artifacts/sha256/00b9dae3e3a96964e6f702b3ad6eb4c90c20351747833a4b23834aed147dbc2a.tar.gz",
+        "bytes": 11161574,
+        "files": 344,
+        "kind": "files"
+      },
+      "instance_terminated": true,
+      "base_receipt_sha256": "6726419bca58a9d882b220d3cce177f00a488d049d2de2fcf0b6454500f6b6e3",
+      "extra_receipt_sha256": "a5ac358d65d9edc43f03d5ff3b2783584fa711d47248ba6a1cb2b1d465eaad94",
+      "compile_commands_sha256": "f65e96dede9398202a4004022dac226def61bf476e90c8ed05124491ceefbce6",
+      "compiler_features_sha256": "99093133b90a4d0a8836981f8a82a1865dc6d1c7441bd5d4d4767ee05aa3e9a1",
+      "compiler": "Clang21.1.8; C++23; O2 with line tables; assertions enabled",
+      "target": "x86-64-v3/znver5"
+    },
+    "avx512": {
+      "job": "20261023T015159Z-ccc9f247",
+      "capture_digest": "513cec9b62fddff9ec09d98f5db6cdbf0b6e1dab2730efeb7f3cf69901cbb061",
+      "source_files_verified": 3569,
+      "base_commands": 82,
+      "extra_commands": 72,
+      "owner_verification": {
+        "p__mbar": {
+          "records": 800,
+          "log_sha256": "5904c95da9dd3ae40c01b965b2b4b44bae11c5b51d5fa35273dbc0ffa29dd47c"
+        },
+        "EventTime-mid": {
+          "records": 800,
+          "log_sha256": "975809d995f6282b9ae5c464990cb912fce2d01fc3fbe2728e49a566ffd7c6a2"
+        },
+        "UserID": {
+          "records": 800,
+          "log_sha256": "341c861ddf49c28716fab9e409f3d3fa686b9ae1328088871cb68031a6416a5b"
+        },
+        "URLHash": {
+          "records": 800,
+          "log_sha256": "660d4babebe416769c9d1216a69099eaf0ca323e7285c03e22d6371bd3edafcd"
+        }
+      },
+      "assertions_enabled": true,
+      "executables": {
+        "frame_encoding_masked_access_check": "238f45cefb64f0696e73292f4d94caaecd74056894966b0163b5f87987bcfe65",
+        "frame_encoding_null_check": "c84dd8118375e9cd720ae7417f4fb64fc494f7d485112026adec2eb3b71b26c6",
+        "frame_phase_material_check": "63f1e3c9af2cd2aad8dd3d299535e4bd8e0c922bcc745e5c3723987bb60bcdd0",
+        "frame_phase_plane_check": "5c66dbbd6f591039bfc9b28d088e96c2867f7ffc2d55df31956ba99afffff205",
+        "frame_phase_repair_check": "b43f8c8487e5fa352b621b1a6933b5887777ca206d6c2355c74330d521fa0e14",
+        "frame_phase_batch_check": "7d663a9093b706ae6e639cc8800a9790ea08d727b5490c010b66376aa38f01f4",
+        "frame_encoding_borrowed_check": "2ff18b7af4be6fe334cf12a77658971ee3dcd02ef23c95aeeea5576012190ada",
+        "frame_phase_measure": "2e3506d25857878d78093b3326ae0f20e0ea40300b9614fb7ab518c95d03a95e",
+        "frame_delta_repair_check": "b4916aa9ae42dd201dd9df1e24f9a013772339c72f5314facb50480c5cadfa0d",
+        "frame_delta_patched_check": "f62994d5c1915d0a2589c318e669967b18f3154ce9caf0984b17fb7fb08bbdc0",
+        "frame_checkpoint_point_check": "ab694d87b19a1c60fce1aacf51b0e4edf535d3dff991b50fb425ea93ed508bf6",
+        "frame_filter_check": "717ed4548350e2c3820de088c105b26949fcdec7e7ae4cae2260da31a158615b",
+        "frame_execution_material_check": "ca424cbb514cbb23a3fe45e59afe2b2d5b482f8af3f3fc123b9cd08aa3f1b8bd",
+        "frame_execution_hash_check": "42ef7727436b7ffe7ee3ec78b35bf0613b5d39329be1e3eb433ebb2b1f3fdc93",
+        "frame_encoding_predicate_check": "0806fd2a18c02e14c46879f9058bd07a1fd10c8563f94d990c34db35c119e402"
+      },
+      "artifact": {
+        "sha256": "00b9dae3e3a96964e6f702b3ad6eb4c90c20351747833a4b23834aed147dbc2a",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/00b9dae3e3a96964e6f702b3ad6eb4c90c20351747833a4b23834aed147dbc2a.tar.gz",
+        "format": 1,
+        "bucket": "calico-fleet-artifacts",
+        "region": "us-east-1",
+        "key": "sixdb/artifacts/sha256/00b9dae3e3a96964e6f702b3ad6eb4c90c20351747833a4b23834aed147dbc2a.tar.gz",
+        "bytes": 11161574,
+        "files": 344,
+        "kind": "files"
+      },
+      "instance_terminated": true,
+      "base_receipt_sha256": "e23b21ec4efc30a4291878d4c1574e27d6a6761550a77920a4f59508a858e326",
+      "extra_receipt_sha256": "b68ef6acaa98e2904d71dd40118209f4a2217e5f9485d86a99fe33692719bede",
+      "compile_commands_sha256": "ad1cf1f7449c53786c0846402e214ad206fb2e87fe087b359ec8c0792cba5d15",
+      "compiler_features_sha256": "bd077e41e5529386597994e8c9455c075e5d18b9873dc8c82a8304de59599211",
+      "compiler": "Clang21.1.8; C++23; O2 with line tables; assertions enabled",
+      "target": "znver5/znver5"
     }
   },
-  "pending_zen5_job": "20261023T015159Z-ccc9f247",
   "zen5_capture_digest": "513cec9b62fddff9ec09d98f5db6cdbf0b6e1dab2730efeb7f3cf69901cbb061",
   "first_zen5_attempt": {
     "job": "20261023T014426Z-faee73a5",
@@ -77,5 +211,8 @@
     "artifact_sha256": "bcd48d623d78882ab8efb8fce752bda6dd7a2d056a24517108a4bc588073dcf9",
     "instance_terminated": true
   },
-  "known_limit": "Duplicate-valued projected dictionaries are supported by predicate emission, but generic code_count_eq/fused EQ need a separate duplicate-safe applicability/fallback correction; encoded owner dictionaries are injective."
+  "known_limit": "Duplicate-valued projected dictionaries are supported by predicate emission, but generic code_count_eq/fused EQ need a separate duplicate-safe applicability/fallback correction; encoded owner dictionaries are injective.",
+  "source_commit": "feb56ce1",
+  "source_correspondence": "The two captures differ only in api-qualification/native.sh, fixing the runner tuning diagnostic. All Frame/Ikea code hashes match.",
+  "frame_code_build_files_verified_at_commit": 76
 }

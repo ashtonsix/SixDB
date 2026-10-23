@@ -14,12 +14,14 @@ calls; journals resolve while their source mapping is still valid. No operation
 state is added to published bytes.
 
 [Qualification](qualification.json) records exact source, input and executable
-identities. The frozen NEON run passes the existing 82 owner/oracle commands and
-72 additional commands: current predicate A→B pairs across checkpoint/dictionary
+identities. Each frozen NEON, AVX2 and AVX-512 run passes the existing 82
+owner/oracle commands and 72 additional commands: current predicate A→B pairs across checkpoint/dictionary
 options, point/delta repairs, protected filter planes and the actual hash-output
-oracle. Its 3,200 complete owner records all report verification. All 3,569
-captured source hashes match the worker. AVX2/AVX-512 qualification is still in
-progress in the named job; this note does not claim it has passed.
+oracle. All 462 commands pass; all 9,600 complete owner records report
+verification. All 3,569 source hashes match each worker's captured source;
+all Frame code/build files match the tested commit `feb56ce1`. The two native
+captures differ only in the runner diagnostic, not Frame or Ikea code. Both
+successful workers and the failed first attempt have terminated.
 
 The earlier live build and its local checks were diagnostic: seven shared Ikea
 headers changed during compilation. Qualified runs use frozen captures instead.
