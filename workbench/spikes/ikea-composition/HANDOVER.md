@@ -1,5 +1,10 @@
 # Ikea cohesion: handover account
 
+> **Superseded for performance and the open contract questions** by
+> [closing the cohesion regressions](cohesion-closure.md). That note re-measures
+> against `f1534200` with code-placement and harness controls, and records the
+> contract changes made since.
+
 Ashton asked for a useful stopping point and broad coverage of outstanding
 problems, without prescribing their solutions. This account separates observed
 failures, evidence gaps and consequential contract questions. It is not a new

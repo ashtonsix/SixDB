@@ -126,12 +126,41 @@ def prepare(args, amend=None):
         target.chmod(0o755 if mode == '100755' else 0o644)
         hashes['before'][name] = sha(body)
     assert offset == len(data)
-    for name, body in experiment.source_files(ROOT).items():
-        target = after / name
-        target.parent.mkdir(parents=True, exist_ok=True)
-        target.write_bytes(body)
-        target.chmod(0o755 if (ROOT / name).stat().st_mode & 0o111 else 0o644)
-        hashes['after'][name] = sha(body)
+    after_commit = os.environ.get('COHESION_AFTER_COMMIT')
+    if after_commit:
+        # A committed after arm, for a like-for-like control of an earlier cut.
+        # Study tooling still comes from the working tree so both cuts share it.
+        rows = subprocess.check_output(['git', 'ls-tree', '-rz', after_commit], cwd=ROOT).split(b'\0')
+        listed = []
+        for row in filter(None, rows):
+            prefix, path = row.split(b'\t', 1)
+            mode, kind, object_id = prefix.decode().split()
+            name = path.decode()
+            if kind == 'blob' and not experiment.source_output(name):
+                listed.append((name, object_id))
+        blob = subprocess.run(['git', 'cat-file', '--batch'], cwd=ROOT,
+                              input=''.join(o + '\n' for _, o in listed).encode(),
+                              stdout=subprocess.PIPE, check=True).stdout
+        current = experiment.source_files(ROOT)
+        at = 0
+        for name, object_id in listed:
+            end = blob.index(b'\n', at)
+            length = int(blob[at:end].split()[2])
+            body = blob[end + 1:end + 1 + length]
+            at = end + 2 + length
+            if name.startswith(str(STUDY) + '/') and name in current:
+                body = current[name]
+            target = after / name
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_bytes(body)
+            hashes['after'][name] = sha(body)
+    else:
+        for name, body in experiment.source_files(ROOT).items():
+            target = after / name
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_bytes(body)
+            target.chmod(0o755 if (ROOT / name).stat().st_mode & 0o111 else 0o644)
+            hashes['after'][name] = sha(body)
     harness_patch, patch_path = backport_point_oracle(before, after, scratch)
     hashes['before'][harness_patch['path']] = harness_patch['patched_sha256']
     manifest = {'baseline_commit': BASELINE,
@@ -155,18 +184,27 @@ def prepare(args, amend=None):
                       'baseline_commit':BASELINE, 'source_manifest_sha256':manifest['source_manifest_sha256']},indent=2))
 
 
-def run_command(cmd, *, cwd, log, receipt, stderr_log=None):
+# Environment bytes shift the initial stack, and with it every stack-resident
+# fixture. Each trial uses a different shift (the same for both arms), so a
+# median over trials does not inherit one arbitrary stack alignment.
+STACK_PADS = (0, 528, 1104, 2064, 3088, 3600, 272, 1552)
+
+
+def run_command(cmd, *, cwd, log, receipt, stderr_log=None, pad=None):
     log.parent.mkdir(parents=True, exist_ok=True)
     start = time.monotonic()
+    env = None
+    if pad is not None:
+        env = dict(os.environ, COHESION_STACK_PAD='x' * pad)
     with log.open('w') as out:
         if stderr_log is None:
-            process = subprocess.run(cmd, cwd=cwd, stdout=out, stderr=subprocess.STDOUT)
+            process = subprocess.run(cmd, cwd=cwd, stdout=out, stderr=subprocess.STDOUT, env=env)
         else:
             with stderr_log.open('w') as err:
-                process = subprocess.run(cmd, cwd=cwd, stdout=out, stderr=err)
+                process = subprocess.run(cmd, cwd=cwd, stdout=out, stderr=err, env=env)
     receipt.append({'command':list(map(str,cmd)), 'cwd':str(cwd), 'log':str(log),
                     'wall_seconds':time.monotonic()-start, 'exit_code':process.returncode,
-                    'stderr_log':str(stderr_log) if stderr_log else None})
+                    'stderr_log':str(stderr_log) if stderr_log else None, 'stack_pad':pad})
     if ACTIVE_RECEIPT is not None:
         json_file(RECEIPT_PATH, ACTIVE_RECEIPT)
     if process.returncode:
@@ -198,6 +236,7 @@ def run(args):
                'before_label':manifest['before_label'], 'harness_patches':manifest['harness_patches'],
                'shared_initialization_probe_sha256':manifest['shared_initialization_probe_sha256'],
                'shared_cmake_sha256':manifest['shared_cmake_sha256'],
+               'extra_cxxflags':os.environ.get('COHESION_CXXFLAGS', ''),
                'cpu':cpu, 'allowed_cpus':sorted(os.sched_getaffinity(0)), 'commands':commands,
                'google_filters':FILTERS, 'binaries':binaries,
                'limits':'Warm complete consumers, not cold-memory/publication behavior. Actual before/after callers and contracts differ where recorded; native results include linked code placement. No compiler runs concurrently with a timed trial.'}
@@ -216,10 +255,12 @@ def run(args):
             build = ROOT / 'build/ikea-cohesion-v2-native' / profile / arm
             logs = out / profile / arm
             logs.mkdir(parents=True, exist_ok=True)
+            # Optional placement control applied identically to both arms.
+            cxxflags = ' '.join(filter(None, [extra, os.environ.get('COHESION_CXXFLAGS', '')]))
             flags = ['-DCMAKE_BUILD_TYPE=Release','-DSIXDB_DEBUG_INFO=lines',
                      '-DSIXDB_BENCHMARKS=seriespack;tuplepack','-DSIXDB_SPIKES=filter-composition',
                      '-DIKEA_COMPARISONS=OFF',f'-DSIXDB_MARCH={march}',f'-DSIXDB_TUNE={tune}',
-                     f'-DCMAKE_CXX_FLAGS={extra}']
+                     f'-DCMAKE_CXX_FLAGS={cxxflags}']
             run_command(['cmake','-S',str(ROOT / STUDY / 'cohesion-native'),'-B',str(build),'-G','Ninja',
                          '-DCOHESION_SOURCE_ROOT='+str(source), '-DCOHESION_BEFORE='+str(int(arm=='before')),*flags],cwd=ROOT,
                         log=logs/'configure.log',receipt=commands)
@@ -261,11 +302,13 @@ def run(args):
                                  f'--benchmark_min_time={args.min_time}s','--benchmark_repetitions=1',
                                  '--benchmark_enable_random_interleaving=false','--benchmark_out_format=json',
                                  '--benchmark_out='+str(result)],cwd=inputs/arm,
-                                log=logs/f'{family}-trial-{trial}.log',receipt=commands)
+                                log=logs/f'{family}-trial-{trial}.log',receipt=commands,
+                                pad=STACK_PADS[trial % len(STACK_PADS)])
                 run_command(['taskset','-c',str(cpu),str(paths[arm]['filters']),
                              str(args.filter_iterations),'1'],cwd=inputs/arm,
                             log=logs/f'filters-trial-{trial}.csv',receipt=commands,
-                            stderr_log=logs/f'filters-trial-{trial}.stderr.txt')
+                            stderr_log=logs/f'filters-trial-{trial}.stderr.txt',
+                            pad=STACK_PADS[trial % len(STACK_PADS)])
                 json_file(out/'receipt.json',receipt)
             json_file(out/'progress.json',{'profile':profile,'completed_trial':trial+1,
                                           'trials':args.trials,'order':order})

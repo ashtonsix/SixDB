@@ -27,11 +27,8 @@ BEC_FILTER = r'^codec/(random|runs|terminal)/(read_exact|read_padded|encode_chec
 
 
 def amend(before, after, scratch, manifest):
-    # Reject drift in the actual Ikea implementation used by the primary cohort.
-    frozen = json.loads((ROOT / 'build/captures/ikea-cohesion-v2-native-r2/cohesion-inputs/manifest.json').read_text())
-    expected = {k:v for k,v in frozen['source_sha256']['after'].items() if k.startswith('ikea/')}
-    actual = {k:v for k,v in manifest['source_sha256']['after'].items() if k.startswith('ikea/')}
-    assert expected == actual, 'Ikea changed since primary frozen cut; review and recapture together'
+    # Identify the Ikea implementation so the primary cohort can be matched to it.
+    expected = {k:v for k,v in manifest['source_sha256']['after'].items() if k.startswith('ikea/')}
     name = 'workbench/benchmarks/bec256/fixture.h'
     oracle = '''            // Independent plain-value oracle, outside every timed loop.
             std::array<bc::byte, 32> roundtrip{};
@@ -52,7 +49,35 @@ def amend(before, after, scratch, manifest):
         manifest['harness_patches'].append({'arm':arm,'path':name,'original_sha256':native.sha(original.encode()),'patched_sha256':native.sha(patched.encode()),'patch_sha256':native.sha(patch.encode()),'scope':'same independent pre-timing decode/plain equality oracle; no timed-loop or Ikea change'})
         manifest['source_sha256'][arm][name] = native.sha(patched.encode())
         replacements.append(f'{native.INPUTS}/{output.name}={output}')
-    manifest['before_label'] += ' + Bec fixture oracle-only patch'
+    # The after StreamPack harness replaced its projection-order loop. Give the
+    # before arm the identical timed projection code so only Ikea differs.
+    name = 'workbench/spikes/streampack/implementation_bench.cpp'
+    target = before / name
+    original = target.read_text()
+    current = (after / name).read_text()
+    start = current.index('enum class projection_order')
+    end = current.index('volatile std::uint64_t observed;')
+    patched = original
+    old_projection = patched[patched.index('template <class Read> [[gnu::noinline]] std::uint64_t projection('):
+                             patched.index('volatile std::uint64_t observed;')]
+    patched = patched.replace(old_projection, current[start:end])
+    for a, b in [('projection(p.rows, rounds, false, ', 'projection(p.rows, rounds, projection_order::ordered, '),
+                 ('''    time(p, name, "shuffled", rep, std::uint64_t(rounds) * p.rows, projection_sum,
+        [&] { return projection(p.rows, rounds, true, read); });''',
+                  '''    time(p, name, "rotated", rep, std::uint64_t(rounds) * p.rows, projection_sum,
+        [&] { return projection(p.rows, rounds, projection_order::rotated, read); });
+    time(p, name, "permuted", rep, std::uint64_t(rounds) * p.rows, projection_sum,
+        [&] { return projection(p.rows, rounds, projection_order::permuted, read); });''')]:
+        assert a in patched, a
+        patched = patched.replace(a, b)
+    target.write_text(patched)
+    patch = ''.join(difflib.unified_diff(original.splitlines(True),patched.splitlines(True),fromfile='before/'+name,tofile='before-harness/'+name))
+    output = scratch / 'stream-harness-before.patch'
+    output.write_text(patch)
+    manifest['harness_patches'].append({'arm':'before','path':name,'original_sha256':native.sha(original.encode()),'patched_sha256':native.sha(patched.encode()),'patch_sha256':native.sha(patch.encode()),'scope':'after-arm projection-order timed loop transplanted; Ikea calls unchanged'})
+    manifest['source_sha256']['before'][name] = native.sha(patched.encode())
+    replacements.append(f'{native.INPUTS}/{output.name}={output}')
+    manifest['before_label'] += ' + Bec fixture oracle-only patch + StreamPack projection harness'
     manifest['primary_ikea_sha256'] = native.sha(json.dumps(expected,sort_keys=True).encode())
     manifest['scope'] = __doc__
     return replacements
@@ -77,8 +102,8 @@ def run(args):
     shutil.copy2(inputs/'manifest.json',out/'source-manifest.json')
     (out/'cpuinfo.txt').write_text(Path('/proc/cpuinfo').read_text())
     (out/'compiler.txt').write_text(subprocess.check_output(['clang++-21','--version'],text=True))
-    def command(argv,cwd,log):
-        native.run_command(argv,cwd=cwd,log=log,receipt=receipt['commands'])
+    def command(argv,cwd,log,pad=None):
+        native.run_command(argv,cwd=cwd,log=log,receipt=receipt['commands'],pad=pad)
     for profile in profiles:
         march,tune,_ = native.PROFILES[profile]
         binaries = {}
@@ -91,7 +116,8 @@ def run(args):
                      '-DCOHESION_SOURCE_ROOT='+str(source),'-DCOHESION_BEFORE='+str(int(arm=='before')),
                      '-DCMAKE_BUILD_TYPE=Release','-DSIXDB_BENCHMARKS=seriespack;tuplepack;bec256;hashtable',
                      '-DSIXDB_SPIKES=streampack','-DIKEA_COMPARISONS=OFF',
-                     '-DSIXDB_MARCH='+march,'-DSIXDB_TUNE='+tune],ROOT,logs/'configure.log')
+                     '-DSIXDB_MARCH='+march,'-DSIXDB_TUNE='+tune,
+                     '-DCMAKE_CXX_FLAGS='+os.environ.get('COHESION_CXXFLAGS','')],ROOT,logs/'configure.log')
             command(['cmake','--build',str(build),'--target',*[Path(p).name for p in TARGETS.values()],'-j',str(args.jobs)],ROOT,logs/'build.log')
             shutil.copy2(build/'compile_commands.json',logs/'compile_commands.json')
             shutil.copy2(build/'CMakeCache.txt',logs/'CMakeCache.txt')
@@ -111,16 +137,16 @@ def run(args):
                 source,logs = inputs/arm,out/profile/arm
                 command(['taskset','-c',str(cpu),str(binaries[arm]['bec256']),'--benchmark_filter='+BEC_FILTER,
                          '--benchmark_min_time=0.1s','--benchmark_repetitions=1','--benchmark_out_format=json',
-                         '--benchmark_out='+str(logs/f'bec-trial-{trial}.json')],source,logs/f'bec-trial-{trial}.log')
+                         '--benchmark_out='+str(logs/f'bec-trial-{trial}.json')],source,logs/f'bec-trial-{trial}.log',native.STACK_PADS[trial])
                 for family in ['htable8','htable64']:
                     for operation in ['read','write','modify','grow']:
                         command(['taskset','-c',str(cpu),str(binaries[arm][family]),'--operation',operation,
                                  '--owner','ikea','--requests','1048576','--occupancy-percent','85',
                                  '--new-percent','50','--seed','713','--rep',str(trial)],source,
-                                logs/f'{family}-{operation}-trial-{trial}.csv')
+                                logs/f'{family}-{operation}-trial-{trial}.csv',native.STACK_PADS[trial])
                 for rows in [256,65536]:
                     command(['taskset','-c',str(cpu),str(binaries[arm]['stream']),str(rows),'4095'],source,
-                            logs/f'stream-{rows}-trial-{trial}.csv')
+                            logs/f'stream-{rows}-trial-{trial}.csv',native.STACK_PADS[trial])
             native.json_file(out/'progress.json',{'profile':profile,'completed_trial':trial+1,'trials':5})
     native.json_file(out/'receipt.json',receipt)
 

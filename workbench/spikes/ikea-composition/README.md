@@ -16,7 +16,8 @@ choices. [Value semantics and owner integration](semantics-and-integration.md)
 explore the Engine/Loom/Orbital seams; module guides own implemented contracts.
 The [handover account](HANDOVER.md) records the current stopping point and broad
 outstanding problems, with evidence limits and recovery, without prescribing
-their solutions.
+their solutions. [Closing the cohesion regressions](cohesion-closure.md) re-measures
+its performance questions under placement controls and records the fixes since.
 
 ## Evidence by question
 
@@ -27,7 +28,7 @@ their solutions.
 | Should striped12 also centre its residual? | [Ordinary access and mutation comparison](placement/README.md) |
 | How do dependent metadata, independent sources and selected regions fit together? | [Heterogeneous structures](probes/ikea-heterogeneous/README.md), [masked operations](probes/ikea-heterogeneous/operations/README.md), [closing assessment](probes/ikea-heterogeneous/closing.md) |
 | Where should traversal and call boundaries sit? | [Surviving SeriesPack lessons](seriespack-history.md#composition-lessons), then the historical sources it identifies |
-| Which interface differences impede real composition? | [Interface cohesion](interface-cohesion.md): coordinate/grain distinctions, journal names, public point leaves, module-owned errors and parent framing; [broader cohesion decisions and qualification](interface-proposal.md), including the [settled Frame consumer port](evidence/interface-cohesion-v2-20261023/frame/README.md) |
+| Which interface differences impede real composition? | [Interface cohesion](interface-cohesion.md): coordinate/grain distinctions, journal names, public point leaves, module-owned errors and parent framing; [broader cohesion decisions and qualification](interface-proposal.md), including the [settled Frame consumer port](evidence/interface-cohesion-v2-20261023/frame/README.md); [closing its regressions and contract gaps](cohesion-closure.md) |
 | How can small bindings reuse controls across changing blocks and widths? | [Reusable execution survey and comparisons](reusable-execution.md): TuplePack ABI, shared controls, cheap retargeting, content proofs and complete mixed-block commands |
 
 [Executable placement](../executable-placement/README.md) remains an independent
