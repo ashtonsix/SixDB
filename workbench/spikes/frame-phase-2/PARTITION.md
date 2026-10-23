@@ -1,7 +1,7 @@
 # Seams, Frame's internal packages and the research split
 
-Proposal for Ashton's review, 2026-10-23. Nothing here is fanned out yet.
-The split follows the stage classification in [STAGES.md](STAGES.md) and the
+Proposal, 2026-10-23; Ashton's review is recorded under
+[Decisions](#decisions-2026-10-23). The split follows the stage classification in [STAGES.md](STAGES.md) and the
 targets in [MECHANISMS.md](MECHANISMS.md).
 
 ## Seams
@@ -43,15 +43,16 @@ Each reuses Ikea's maintained modules rather than reimplementing them.
 The public SeriesPack and TuplePack query surface would sit above `exec`,
 once the families show what it needs.
 
-## Research threads
+## Research fronts
 
-Ashton asked to start from the encoding stages, so five threads own stage
+These are research fronts, not threads to start at once (see
+[Decisions](#decisions-2026-10-23)). Ashton asked to start from the encoding stages, so five fronts own stage
 families end to end: the codec, every operation family's law over it, and the
-targets at every tier. Two threads own the shared substrate and instruments,
-and one owns analysis. Each thread's brief lists what it must disambiguate;
-none prescribes answers.
+targets at every tier. Two fronts own the shared substrate and instruments,
+and one owns analysis. Each front lists what it must disambiguate; none
+prescribes answers.
 
-| Thread | Owns (packages) | Operation families covered | Target rows | Must disambiguate |
+| Front | Owns (packages) | Operation families covered | Target rows | Must disambiguate |
 | --- | --- | --- | --- | --- |
 | **A. Instruments and baselines** | Workbench tools, peers | All, as measurement | All | Sequential and random bandwidth per tier, one core and saturated, on Zen 5 and Graviton 4; whether the guests expose LLC and DRAM counters; native peers for TurboPFor, FastLanes, ALP, DuckDB (C API), CRoaring, vqsort and a native Polars driver; a float and time-series corpus; the residency harness that runs a cell at every tier with the same trace |
 | **B. Execution substrate** | `layout`, `exec` | Movement (points, gathers), selection plumbing, every family's dispatch | Points, gathers, every "run and constant" row | Whether per-block fixed cost can reach about 10 cycles; kind-batched dispatch versus per-block dispatch; coarse-mask grain; staging descriptor → body → dictionary with Loom; adopting Ikea's `dense_output`, `bitset256` selections and `visit_point_reads` |
@@ -62,38 +63,62 @@ none prescribes answers.
 | **G. Presence, splitting and evidence** | `presence`, `evidence` | Selection, rank ↔ offset, MIN/MAX, pruning | Head-plane rows, rank rows, MIN/MAX, pruning | NULL forms; routing against conditioned bases; integer high/low split; head width and cut; statistics precision under writes |
 | **H. Analysis and priors** | `analyse` | Encode | Encode rows | Prior quality and bad-guess detection cost; sampling against BtrBlocks; which cheap part statistics rank programs for Engine's analyser |
 
-Mutation stays with the phase 1 lifecycle owner (Codex, Ikea LEAD) for now:
-`change` has substantial executable work already. Threads C to G each charge
-their body's write and repair laws through that owner rather than starting a
-second lifecycle study.
+### Change support inside Ikea
+
+The full MVCC and journal flow is out of scope. What Ikea must supply to it is
+in scope, as research questions for the body and substrate fronts:
+
+- how logical write locks project onto the physical envelope a store dirties;
+- publishing damage, updates, aggregate contributions and effects;
+- modifying bodies in place versus publishing afterimages applied on read or
+  at compaction;
+- per-group delta buffers, where a little group metadata marks blocks that are
+  not pristine and says where to look instead. This is Ashton's leaning, not a
+  decision.
+
+Phase 1's lifecycle work (Codex, Ikea LEAD) is the evidence base; each body
+front charges its write and repair laws there rather than starting a second
+lifecycle study.
 
 ### Ordering
 
-Threads A and B gate the others' measurements: without calibrated tiers and a
-substrate near its floor, every comparison repeats phase 1's problem of
-measuring overhead. They start first. Threads C to H can start their codecs,
-laws and correctness checks at the same time, then time against the substrate
-once its first cut lands. This sequences measurement, not scope: every family
-and stage stays in the spike.
+Fronts A and B gate everyone else's measurements: without calibrated tiers and
+a substrate near its floor, every comparison repeats phase 1's problem of
+measuring overhead. They start first. This sequences measurement, not scope:
+every family and stage stays in the spike.
+
+## Decisions (2026-10-23)
+
+Ashton reviewed this proposal and the direction stands.
+
+1. **Threads grow with confidence in seams.** Phase 2 starts with few
+   threads and partitions research further only when a seam is well
+   established. The fronts above are the candidate partition, not a fan-out
+   plan.
+2. **Divide work between Claude and Codex by strength.** Ashton's hunch:
+   Claude is stronger on creative solutions to well-defined problems, Codex on
+   reliability and wide context. The first division:
+   - **Claude (this thread):** front B, the execution substrate, with front C's
+     integer bodies as its first consumers. The problem is well defined (reach
+     the per-block and per-point floors) and needs new designs.
+   - **Codex (Ikea LEAD):** front A, instruments and baselines (peers, tier
+     calibration, the saturation and residency harness, corpora), plus the
+     change-support questions above, which lean on its phase 1 lifecycle
+     context.
+
+   This is a proposal to Ikea LEAD; the other fronts open as seams firm up.
+3. **Downloads are approved.** Datasets over 1 GB use only a small slice
+   locally, because disk exhaustion recurs; larger slices run only on remote
+   workers through the existing tooling.
+4. **Mutation:** as in [change support](#change-support-inside-ikea).
 
 ### Collaboration
 
-- Codex (Ikea LEAD) owns lifecycle and has the phase 1 scan and selection
-  harnesses. Thread B should consult it on the substrate before building, and
-  Codex's unfinished predicate(A) → payload(B) panel is the natural first
-  workload for B's measurements.
-- Engine LEAD owns the analyser that will consume the expression and evidence
-  descriptions; thread H and the composed-choice rows in STAGES.md are its
+- Messages to Codex go to Ikea LEAD (Codex thread
+  `01a1417e-d5ee-7642-afb6-3d2e6f821396`) with `codex queue`, alongside the
+  files in `build/frame-collab/`.
+- Engine LEAD owns the analyser that will consume the part expression and
+  evidence descriptions; front H and the composed rows in STAGES.md are its
   inputs.
-- Each thread keeps its findings in its own directory under this spike and
+- Each front keeps its findings in its own directory under this spike and
   links them from the [README](README.md).
-
-## Decisions for Ashton
-
-1. Whether this split by stage family (plus substrate, instruments and
-   analysis) is the partition to fan out, or whether some threads should merge
-   or split.
-2. Approval to download and build the missing native peers on the workers
-   (TurboPFor, FastLanes, ALP, DuckDB's C library, CRoaring, vqsort, a Rust
-   Polars driver), and a float and time-series corpus.
-3. Whether mutation stays with Codex's lifecycle work or gets a phase 2 thread.

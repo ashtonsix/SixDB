@@ -29,8 +29,8 @@ Engine's analyser will later solve (data distribution, access patterns) →
 - [Mechanisms and targets](MECHANISMS.md): residence tiers, hardware priors,
   thirteen "how we win" mechanisms, the baseline roster and targets per
   operation family, stage and tier, including accepted losses.
-- [Partition](PARTITION.md): seams, proposed internal packages and the research
-  threads, awaiting Ashton's review.
+- [Partition](PARTITION.md): seams, proposed internal packages, the research
+  fronts, Ashton's decisions and the first Claude/Codex division.
 
 Phase 1's findings and negative results remain the evidence base; this spike
 cites them rather than restating them. Strings, including FSST, are out of
