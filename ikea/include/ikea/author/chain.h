@@ -9,10 +9,11 @@
 #include <utility>
 #if defined(__aarch64__) || defined(__x86_64__)
 #define IKEA_CHAIN_CC __attribute__((preserve_none))
-namespace ikea::detail {
-template <class Native, class Mask, unsigned Slots, class Error, class Sequence> class native_chain;
-template <class Native, class Mask, unsigned Slots, class Error, std::size_t... I>
-class native_chain<Native, Mask, Slots, Error, std::index_sequence<I...>> {
+namespace ikea::author {
+enum class chain_error { stages, stage };
+template <class Native, class Mask, unsigned Slots, class Sequence> class chain;
+template <class Native, class Mask, unsigned Slots, std::size_t... I>
+class chain<Native, Mask, Slots, std::index_sequence<I...>> {
     static_assert(Slots >= 2 && std::has_single_bit(Slots));
     template <std::size_t> using argument = typename Native::vector;
 
@@ -35,18 +36,18 @@ class native_chain<Native, Mask, Slots, Error, std::index_sequence<I...>> {
 
   private:
     alignas(alignment) std::array<slot, Slots> slots_;
-    native_chain() = default;
+    chain() = default;
 
   public:
-    static std::expected<native_chain, Error> prepare(std::span<const function> stages,
+    static std::expected<chain, chain_error> make(std::span<const function> stages,
                                                       function completion) {
         if (stages.empty() || stages.size() >= Slots || !completion)
-            return std::unexpected(Error::range);
-        native_chain plan;
+            return std::unexpected(chain_error::stages);
+        chain plan;
         plan.slots_.fill({completion});
         for (std::size_t i = 0; i < stages.size(); ++i) {
             if (!stages[i])
-                return std::unexpected(Error::value);
+                return std::unexpected(chain_error::stage);
             plan.slots_[i] = {stages[i]};
         }
         return plan;
@@ -103,6 +104,6 @@ class native_chain<Native, Mask, Slots, Error, std::index_sequence<I...>> {
 #endif
     }
 };
-} // namespace ikea::detail
+} // namespace ikea::author
 #undef IKEA_CHAIN_CC
 #endif

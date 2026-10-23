@@ -16,15 +16,15 @@ struct fixture {
     std::array<std::byte, 6> control{};
     std::vector<std::byte> payload;
     sp::view source;
-    fixture(sp::description d, unsigned bytes) : fixture(*sp::layout::prepare(d), bytes) {}
+    fixture(sp::layout::options d, unsigned bytes) : fixture(*sp::layout::make(d), bytes) {}
     fixture(sp::layout layout, unsigned bytes)
         : format(layout), payload(bytes),
-          source(*sp::view::bind(format,
+          source(*sp::view::attach(format,
                                  {payload, std::span(directory).first(format.directory_bytes()),
                                   std::span(lengths).first(format.lengths_bytes()),
                                   std::span(control).first(format.control_bytes())})) {}
 };
-void history(sp::description d, unsigned n) {
+void history(sp::layout::options d, unsigned n) {
     std::vector<unsigned> sizes, used, ends{0};
     const unsigned bound = std::min(unsigned(d.maximum), d.byte_limit / std::max(1u, n));
     for (unsigned i = 0; i < n; ++i) {
@@ -35,13 +35,14 @@ void history(sp::description d, unsigned n) {
         ends.push_back(ends.back() + r);
     }
     fixture f(d, ends.back());
-    ikea::no_coverage effects;
+    std::array<ikea::journal::entry, 4096> effects_records;
+    ikea::journal effects{effects_records};
     assert(sp::initialize(f.source, effects));
     std::vector<std::byte> input(d.maximum, std::byte{0x71});
     for (unsigned r = 0; r < n; ++r)
         assert(sp::append(f.source, std::span(input).first(used[r]), sizes[r], effects));
     assert(f.source.validate() && f.source.extent() == ends.back());
-    sp::author::dispatch(f.source, [&](auto a) {
+    sp::author::visit(f.source, [&](auto a) {
         for (unsigned r = 0; r < n; ++r) {
             const auto p = a.locate(r);
             assert(p.offset == ends[r] && p.reservation == sizes[r] && p.length == used[r]);
@@ -82,7 +83,7 @@ void history(sp::description d, unsigned n) {
     if (!d.fixed_reservation || !*d.fixed_reservation) {
         assert(sp::soft_pack(f.source, true, effects) && f.source.validate());
         unsigned end = 0;
-        sp::author::dispatch(f.source, [&](auto a) {
+        sp::author::visit(f.source, [&](auto a) {
             for (unsigned r = 0; r < n; ++r) {
                 const bool live = d.immortal || r % 5;
                 assert(a.start(r) == end && a.reserved(r) == (live ? used[r] : 0));
@@ -129,58 +130,70 @@ void generic_relative() {
             assert(bl::lower_bound(source, -1) == 0);
         }
 }
-void legacy_conversion() {
-    const std::array<std::byte, 8> wire{std::byte{0x41}, std::byte{0xff}, std::byte{0xff},
-                                        std::byte{0xff}, std::byte{},     std::byte{},
-                                        std::byte{},     std::byte{}};
-    const auto legacy = *sp::layout::decode(wire);
-    fixture old(legacy, 3), modern(legacy.schema(), 3);
-    assert(old.format.encode() == wire && old.format.width_bytes() == 2 &&
-           old.format.lengths_bytes(1) == 64);
-    assert(modern.format.width_bytes() == 1 && modern.format.lengths_bytes(1) == 32);
-    old.lengths[0] = std::byte{3};
-    old.lengths[32] = std::byte{1};
-    old.control[0] = std::byte{1};
-    old.control[2] = std::byte{3};
-    old.payload[0] = std::byte{'x'};
-    assert(old.source.validate() && sp::value(old.source, 0)->size() == 1);
-    const std::array<std::uint16_t, 1> selected{0};
-    ikea::no_coverage effects;
-    const auto original = old.lengths;
-    assert(sp::transfer(old.source, selected, modern.source, false, effects));
-    assert(modern.source.validate() && sp::value(modern.source, 0)->size() == 1);
-    assert(sp::value(modern.source, 0)->front() == std::byte{'x'} && old.lengths == original);
-    auto current = wire;
-    current[0] = std::byte{0xc1};
-    assert(modern.format.encode() == current);
-    current[0] = std::byte{0xcd};
-    assert(!sp::layout::decode(current)); // U omitted: planar is not a choice.
-    auto geometry = wire;
-    geometry[0] = std::byte{0x61};
-    const auto old_geometry = *sc::layout::decode(geometry);
-    const auto new_geometry = *sc::layout::prepare(old_geometry.schema());
-    assert(old_geometry.width_bytes() == 2 && new_geometry.width_bytes() == 1);
-    assert(old_geometry.encode() == geometry);
-    geometry[0] = std::byte{0x81};
-    assert(new_geometry.encode() == geometry);
+void schema_framing() {
+    // Old standalone schema versions are deliberately rejected. Their exact
+    // bodies remain reproducible from the retired research source epoch.
+    const std::array<std::byte, 8> old{std::byte{0x41}, std::byte{255}, std::byte{255},
+                                      std::byte{255}, std::byte{}, std::byte{},
+                                      std::byte{}, std::byte{}};
+    assert(!sp::layout::decode(old) && !sc::layout::decode(old));
+    const std::array<std::byte, 13> current{
+        std::byte{'S'}, std::byte{'K'}, std::byte{1}, std::byte{8}, std::byte{0},
+        std::byte{1}, std::byte{255}, std::byte{255}, std::byte{255}, std::byte{0},
+        std::byte{0}, std::byte{0}, std::byte{0}};
+    const auto modern = sp::layout::decode(current);
+    assert(modern && modern->width_bytes() == 1 && modern->lengths_bytes(1) == 32);
+    std::array<std::byte, 13> encoded;
+    assert(modern->encode(encoded) && encoded == current);
+    for (unsigned at : {0u, 1u, 2u, 3u, 4u}) {
+        auto bad = current;
+        bad[at] = std::byte{255};
+        assert(!sp::layout::decode(bad));
+    }
+    for (unsigned flags : {3u, 64u, 128u, 13u}) {
+        auto bad = current;
+        bad[5] = std::byte(flags);
+        assert(!sp::layout::decode(bad)); // Unknown/reserved/noncanonical flags.
+    }
+    auto absent_fixed = current;
+    absent_fixed[11] = std::byte{1};
+    assert(!sp::layout::decode(absent_fixed));
+    for (unsigned length = 0; length < current.size(); ++length) {
+        assert(!sp::layout::decode(std::span(current).first(length)));
+        encoded.fill(std::byte{0xa5});
+        assert(!modern->encode(std::span(encoded).first(length)));
+        assert(std::ranges::all_of(encoded, [](auto b) { return b == std::byte{0xa5}; }));
+    }
+    auto trailing = std::vector<std::byte>(current.begin(), current.end());
+    trailing.push_back(std::byte{});
+    assert(!sp::layout::decode(trailing));
+    auto geometry = current;
+    geometry[1] = std::byte{'G'};
+    const auto compact = sc::layout::decode(geometry);
+    assert(compact && compact->width_bytes() == 1 && compact->encode(encoded) && encoded == geometry);
+    assert(!sp::layout::decode(geometry) && !sc::layout::decode(current));
 }
 void literal_planar_relative() {
-    // New v3 bytes are independently authored: R-first, u16 local ends,
+    // Headless body bytes are independently authored: R-first, u16 local ends,
     // u8 U, and a second checkpoint. Neither writer nor addressing helper
     // supplies the literal positions being checked.
-    const std::array<std::byte, 8> descriptor{std::byte{0xc6}, std::byte{255}, std::byte{0},
-                                              std::byte{0},    std::byte{255}, std::byte{0},
-                                              std::byte{0},    std::byte{0}};
+    const std::array<std::byte, 13> descriptor{
+        std::byte{'S'}, std::byte{'K'}, std::byte{1}, std::byte{8}, std::byte{0},
+        std::byte{6}, std::byte{255}, std::byte{0}, std::byte{0}, std::byte{255},
+        std::byte{0}, std::byte{0}, std::byte{0}};
     const auto layout = sp::layout::decode(descriptor);
     assert(layout);
     assert(layout->width_bytes() == 2 && layout->used_bytes() == 1 && layout->used_offset() == 512);
     assert(layout->geometry_lengths_offset() == 0 && layout->lengths_bytes(17) == 544);
     fixture f(*layout, 18);
-    auto word = [&](std::byte *p, std::uint16_t value) { std::memcpy(p, &value, 2); };
+    auto word = [&](std::byte *p, std::uint16_t value) {
+        p[0] = std::byte(value & 255); p[1] = std::byte(value >> 8);
+    };
     word(f.directory.data() + 34, 16);
     word(f.control.data(), 17);
     const std::uint32_t extent = 18;
-    std::memcpy(f.control.data() + 2, &extent, 4);
+    for (unsigned b = 0; b < 4; ++b)
+        f.control[2 + b] = std::byte((extent >> (8 * b)) & 255);
     for (unsigned r = 0; r < 16; ++r) {
         word(f.lengths.data() + r * 2, r + 1);
         f.lengths[512 + r] = std::byte(r % 2 ? 0 : 1);
@@ -217,7 +230,7 @@ int main() {
                         ++cases;
                     }
     generic_relative();
-    legacy_conversion();
+    schema_framing();
     for (auto family :
          {sp::geometry::absolute_ends, sp::geometry::sizes, sp::geometry::relative_ends})
         for (bool immortal : {false, true})

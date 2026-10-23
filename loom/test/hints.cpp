@@ -168,17 +168,17 @@ void profile_validation(Fixture& fixture) {
 #if defined(__aarch64__) || defined(__AVX2__)
 using Carrier = tp::native::pipeline_values;
 using Vector = Carrier::vector;
-using Reader = tp::native_reader<64, tp::byte>;
+using Reader = tp::author::native_reader<64, std::byte>;
 
 tp::layout format() {
   std::array<tp::code, 64> codes;
-  for (unsigned i = 0; i < 64; ++i) codes[i] = {tp::byte(i), 1, 7};
+  for (unsigned i = 0; i < 64; ++i) codes[i] = {std::uint8_t(i), 1, 7};
   return require(tp::layout::make(64, codes), "TuplePack format");
 }
-tp::reader<64> plan(const tp::layout& layout) {
-  std::array<tp::byte, 64> map;
+tp::read_plan<64> plan(const tp::layout& layout) {
+  std::array<std::uint8_t, 64> map;
   for (unsigned i = 0; i < map.size(); ++i) map[i] = i;
-  return require(tp::reader<64>::make(layout, map), "TuplePack reader plan");
+  return require(tp::read_plan<64>::make(layout, map), "TuplePack reader plan");
 }
 
 struct PackedInput {
@@ -186,9 +186,9 @@ struct PackedInput {
   orbital::allocation::Allocation allocation;
   orbital::allocation::Hold use;
   tp::layout layout;
-  tp::reader<64> prepared;
+  tp::read_plan<64> prepared;
   tp::view source;
-  tp::read_operation<64, tp::byte> operation;
+  tp::reader<64, std::byte> operation;
   Reader reader;
   unsigned seed;
 
@@ -196,15 +196,15 @@ struct PackedInput {
       : allocation(require(loom::allocate(worker, {.bytes = rows * stride}), "input allocation")),
         use(require(loom::hold(allocation, {0, rows * stride}), "input hold")),
         layout(format()), prepared(plan(layout)),
-        source(require(tp::view::bind(layout,
-            {reinterpret_cast<tp::byte*>(loom::bytes(use).data()), rows * stride}, rows, stride),
+        source(require(tp::view::attach(layout,
+            {loom::bytes(use).data(), rows * stride}, rows, stride),
             "TuplePack source")),
         operation(require(tp::bind_reader(prepared, source), "TuplePack operation")),
         reader(operation), seed(seed) {
     std::fill(loom::bytes(use).begin(), loom::bytes(use).end(), std::byte{0});
     for (unsigned row = 0; row < rows; ++row)
       for (unsigned byte = 0; byte < 64; ++byte)
-        source.row_unchecked(row)[byte] = (row * 17 + byte * 13 + seed) & 255;
+        source.row_unchecked(row)[byte] = std::byte((row * 17 + byte * 13 + seed) & 255);
     check(reader.admit(rows - 1), "TuplePack last row admission");
   }
 };
@@ -258,19 +258,19 @@ template<std::size_t... V> struct Family<std::index_sequence<V...>> {
 using Native = Family<std::make_index_sequence<Carrier::parts>>;
 
 void output(const Frame& frame) {
-  std::array<tp::byte, 64> expected{};
+  std::array<std::uint8_t, 64> expected{};
   std::uint64_t sum = 0;
   for (std::uint64_t step = 0; step < frame.steps; ++step) {
     const auto row = (frame.start + step) & 15;
     std::uint64_t first = 0;
     for (unsigned byte = 0; byte < 64; ++byte) {
-      const auto decoded = tp::byte(((row * 17 + byte * 13 + frame.input->seed) & 255) >> 1);
+      const auto decoded = std::uint8_t(((row * 17 + byte * 13 + frame.input->seed) & 255) >> 1);
       expected[byte] |= decoded;
       if (byte < 8) first |= std::uint64_t(decoded) << (byte * 8);
     }
     sum += first + row + frame.identity;
   }
-  std::array<tp::byte, 64> actual;
+  std::array<std::uint8_t, 64> actual;
   tp::native::store_packet(actual.data(), frame.output.get());
   check(actual == expected && frame.sum == sum && frame.done == 1 && frame.visits == frame.steps,
         "native scalar/vector output, once or visit count");
@@ -405,8 +405,8 @@ void gaps_and_activity(Fixture& fixture) {
       MAP_PRIVATE | MAP_ANONYMOUS, -1, 0));
   check(mapping != MAP_FAILED, "guarded mapping");
   check(::mprotect(mapping + page, page, PROT_NONE) == 0, "guarded gap");
-  auto* first = reinterpret_cast<tp::byte*>(mapping + page - 64);
-  auto* last = reinterpret_cast<tp::byte*>(mapping + 2 * page);
+  auto* first = reinterpret_cast<std::uint8_t*>(mapping + page - 64);
+  auto* last = reinterpret_cast<std::uint8_t*>(mapping + 2 * page);
   for (unsigned i = 0; i < 64; ++i) { first[i] = i + 17; last[i] = i + 93; }
   const auto low = loom::make_hint_policy(fixture.worker.hints.profile, loom::HintPressure::low);
   for (auto* source : {first, last}) {
@@ -424,8 +424,8 @@ void gaps_and_activity(Fixture& fixture) {
   // formed. The protected middle page would expose an accidental wide read.
   const auto layout = require(tp::layout::make(64,
       std::array<tp::code, 2>{tp::code{0, 0, 8}, tp::code{63, 0, 8}}), "gapped layout");
-  const auto prepared = require(tp::reader<64, 2>::make(layout,
-      std::array<tp::byte, 3>{0, tp::hole, 1}), "gapped packet plan");
+  const auto prepared = require(tp::read_plan<64, 2>::make(layout,
+      std::array<std::uint8_t, 3>{0, tp::hole, 1}), "gapped packet plan");
   for (const auto active : {0u, 1u, 2u, 3u}) {
     unsigned formed = 0;
     const auto decoded = tp::native::read_body<2>(prepared.controls(), [&](unsigned row) {
@@ -434,8 +434,8 @@ void gaps_and_activity(Fixture& fixture) {
       return row ? last : first;
     }, active, 0);
     check(formed == active, "active payload frontier lost");
-    const auto expected = prepared.get_unchecked(first, std::size_t(last - first), active);
-    std::array<tp::byte, 64> actual;
+    const auto expected = prepared.get_unchecked(reinterpret_cast<const std::byte*>(first), std::size_t(last - first), active);
+    std::array<std::uint8_t, 64> actual;
     tp::native::store_packet(actual.data(), decoded);
     check(actual == expected, "gapped packet mask/hole semantics changed");
   }

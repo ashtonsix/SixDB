@@ -2,7 +2,7 @@
 #include <cassert>
 
 // A same-named member is not permission to discard an authored node's meaning.
-namespace ikea::seriespack::composition {
+namespace ikea::seriespack::author {
 struct decoration {
     static constexpr unsigned bit_width = 12;
 };
@@ -20,11 +20,11 @@ inline scalar_value<12> read(scalar_ops&, const decoration&, std::size_t, bool) 
 inline scalar_value<12> read(scalar_ops&, const authored_values& source, std::size_t row, bool) {
     return {source.values[row]};
 }
-} // namespace ikea::seriespack::composition
+} // namespace ikea::seriespack::author
 #include <ikea/seriespack/author/indexof.h>
 
 void check_authored_filters() {
-    namespace cp = ikea::seriespack::composition;
+    namespace cp = ikea::seriespack::author;
     constexpr std::uint64_t values[]{0, 1, 15, 16, 255, 256, 4094, 4095};
     const cp::authored_values source{{}, values};
     assert(cp::filter8_unchecked<ikea::comparison::equal>(source, 0, 0) == 1);
@@ -40,11 +40,11 @@ void check_authored_filters() {
     namespace sp = ikea::seriespack;
     std::uint8_t bytes[51]{};
     for(unsigned i=0;i<24;++i) bytes[(i/8)*17+(i%8)*2]=i;
-    const sp::dense_source<sp::format<17>> dense{bytes,24};
-    const sp::dense_source<sp::format<16>> outer{nullptr,24};
+    const sp::dense_source<sp::layout<17>> dense{reinterpret_cast<const std::byte*>(bytes),24};
+    const sp::dense_source<sp::layout<16>> outer{nullptr,24};
     using Body = cp::leaf<decltype(dense),cp::field_kind::body>;
     const cp::payload_expression<16,Body,cp::absent_tail> body{{dense},{}};
-    const auto substituted=cp::with_payload(cp::describe(outer),body);
+    const auto substituted=cp::with_payload(cp::expression(outer),body);
     assert(cp::filter_unchecked<ikea::comparison::equal>(substituted,0,24,8)==256);
     assert(cp::filter_unchecked<ikea::comparison::less>(substituted,0,24,20)==0xfffff);
     assert(cp::indexof_unchecked(substituted,0,24,8)==8);

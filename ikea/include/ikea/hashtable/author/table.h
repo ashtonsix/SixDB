@@ -40,21 +40,21 @@ struct table_access {
         return table.insert_prepared_unchecked(key, position, value);
     }
     template <class Table>
-    [[gnu::always_inline]] static unsigned primary_find(const byte* p, word q) {
+    [[gnu::always_inline]] static unsigned primary_find(const std::uint8_t* p, word q) {
         return Table::primary_find(p, q);
     }
     template <class Table>
-    [[gnu::always_inline]] static word primary_matches(const byte* p, word q) {
+    [[gnu::always_inline]] static word primary_matches(const std::uint8_t* p, word q) {
         return Table::primary_matches(p, q);
     }
     template <class Table>
-    static typename Table::value_type primary_value(const byte* p, unsigned row) {
+    static typename Table::value_type primary_value(const std::uint8_t* p, unsigned row) {
         typename Table::value_type value{};
         Table::consume_primary(p, row, [&](const auto& v) { value = v; });
         return value;
     }
     template <class Table>
-    static void write_value(byte* p, unsigned row, const typename Table::value_type& value) {
+    static void write_value(std::uint8_t* p, unsigned row, const typename Table::value_type& value) {
         Table::write_value(p, row, value);
     }
 };

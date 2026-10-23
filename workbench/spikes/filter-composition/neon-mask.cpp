@@ -18,9 +18,9 @@ template <unsigned K, runtime::C Op, bool Control>
     else {
         if (!active) return 0;
         if (q >= (word{1} << K)) return ikea::compare<Op>(0, q) ? active : 0;
-        const Source<K> source{f.bytes.data(), windows * 16};
-        sp::composition::native_ops ops;
-        const auto x = sp::composition::read(ops, sp::composition::describe(source), w * 16, active);
+        const Source<K> source{std::as_bytes(std::span{f.bytes}).data(), windows * 16};
+        sp::author::native_ops ops;
+        const auto x = sp::author::read(ops, sp::author::expression(source), w * 16, active);
         unsigned result = 0;
         sp::detail::each<4>([&](auto part) {
             const auto p = ikea::detail::filter::lanes<4, Op>(x.v[part], q);

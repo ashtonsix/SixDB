@@ -1,8 +1,9 @@
 #pragma once
 #include <ikea/effects.h>
-#include <ikea/tuplepack/description.h>
+#include <ikea/tuplepack/layout.h>
 #include <ikea/tuplepack/detail/window.h>
 #include <type_traits>
+#include <limits>
 
 namespace ikea::tuplepack {
 struct no_maintenance {
@@ -61,7 +62,7 @@ template <class Derived, class Input, unsigned Rows> class mutation_commands {
         return static_cast<const Derived&>(*this);
     }
     bool reserve(std::size_t& capacity, std::uint64_t active) const {
-        const auto per_row = operation().effect_capacity();
+        const auto per_row = operation().store_runs();
         const unsigned count = std::popcount(active);
         if (per_row && count > capacity / per_row)
             return false;
@@ -72,6 +73,25 @@ template <class Derived, class Input, unsigned Rows> class mutation_commands {
   public:
     using input_type = Input;
     static constexpr unsigned rows = Rows;
+    /// Conservative additional records for original rows, before coalescing.
+    /// Invalid coordinates have no capacity value; storage and data are untouched.
+    [[nodiscard]] std::expected<std::size_t, error>
+    effect_capacity(std::size_t first, std::size_t count,
+                    selection selected = selection::all()) const {
+        if (first > operation().size() || count > operation().size() - first ||
+            !selected.covers(first, count))
+            return std::unexpected(error::range);
+        std::size_t active = 0;
+        for (std::size_t i = 0; i < count;) {
+            const auto n = unsigned(std::min<std::size_t>(64, count - i));
+            active += std::popcount(selected.mask(first + i, n));
+            i += n;
+        }
+        const auto runs = operation().store_runs();
+        if (runs && active > std::numeric_limits<std::size_t>::max() / runs)
+            return std::unexpected(error::overflow);
+        return active * runs;
+    }
     [[nodiscard]] std::expected<void, error> admit(std::size_t first, std::span<const Input> input,
                                                    selection selected, std::size_t capacity) const {
         const auto count = range_rows<Rows>(operation().size(), first, input.size());
@@ -83,7 +103,7 @@ template <class Derived, class Input, unsigned Rows> class mutation_commands {
             if (!detail::accepts(operation(), input[i], active))
                 return std::unexpected(error::value);
             if (!reserve(capacity, active))
-                return std::unexpected(error::capacity);
+                return std::unexpected(error::effects);
         }
         return {};
     }
@@ -91,7 +111,7 @@ template <class Derived, class Input, unsigned Rows> class mutation_commands {
     /// Bit r names first+r; inactive input slots need no valid code values.
     template <class Maintenance = no_maintenance>
     [[nodiscard, gnu::always_inline]] std::expected<void, error>
-    set(std::size_t first, const Input& input, source_write_journal& effects, std::uint64_t active,
+    set(std::size_t first, const Input& input, ikea::journal& effects, std::uint64_t active,
         Maintenance&& maintenance = {}) const {
         if (!valid_window<Rows>(operation().size(), first, active) ||
             !maintenance.covers(first, std::bit_width(active)))
@@ -100,7 +120,7 @@ template <class Derived, class Input, unsigned Rows> class mutation_commands {
             return std::unexpected(error::value);
         auto capacity = effects.remaining();
         if (effects.used > effects.storage.size() || !reserve(capacity, active))
-            return std::unexpected(error::capacity);
+            return std::unexpected(error::effects);
         maintain<Rows>(first, active, maintenance, [&]() __attribute__((always_inline)) {
             detail::assign(operation(), first, input, effects, active);
         });
@@ -109,7 +129,7 @@ template <class Derived, class Input, unsigned Rows> class mutation_commands {
     template <class Maintenance = no_maintenance>
         requires(!std::is_integral_v<std::remove_cvref_t<Maintenance>>)
     [[nodiscard, gnu::always_inline]] std::expected<void, error>
-    set(std::size_t first, const Input& input, source_write_journal& effects,
+    set(std::size_t first, const Input& input, ikea::journal& effects,
         Maintenance&& maintenance = {}) const {
         return set(first, input, effects, all_rows<Rows>, std::forward<Maintenance>(maintenance));
     }
@@ -118,21 +138,21 @@ template <class Derived, class Input, unsigned Rows> class mutation_commands {
     /// call unchanged, including effects and maintenance.
     template <class Maintenance = no_maintenance>
     [[nodiscard]] std::expected<void, error>
-    replace(std::size_t first, std::span<const Input> input, source_write_journal& effects,
+    replace(std::size_t first, std::span<const Input> input, ikea::journal& effects,
             selection selected = selection::all(), Maintenance&& maintenance = {}) const {
         if (effects.used > effects.storage.size())
-            return std::unexpected(error::capacity);
+            return std::unexpected(error::effects);
         if (auto valid = admit(first, input, selected, effects.remaining()); !valid)
             return valid;
         const auto count = *range_rows<Rows>(operation().size(), first, input.size());
         if (!maintenance.covers(first, count))
             return std::unexpected(error::range);
-        replace_unchecked(first, input, selected, effects, maintenance);
+        replace_unchecked(first, input, effects, selected, maintenance);
         return {};
     }
     template <class Coverage, class Maintenance = no_maintenance>
-    void replace_unchecked(std::size_t first, std::span<const Input> input, selection selected,
-                           Coverage& effects, Maintenance&& maintenance = {}) const {
+    void replace_unchecked(std::size_t first, std::span<const Input> input, Coverage& effects,
+                           selection selected, Maintenance&& maintenance = {}) const {
         const auto count = *range_rows<Rows>(operation().size(), first, input.size());
         for (std::size_t i = 0; i < input.size(); ++i) {
             const auto row = first + i * Rows;

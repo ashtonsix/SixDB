@@ -68,17 +68,17 @@ auto format() {
   const std::array<tp::code, 1> codes{{{0, 1, 3}}}; return get(tp::layout::make(1, codes));
 }
 unsigned value(const Unit& unit) {
-  const std::array<tp::byte, 1> ranks{0}; const auto f = format();
-  const auto reader = get(tp::reader<8>::make(f, ranks));
-  auto view = get(tp::view::bind(f, {const_cast<std::uint8_t*>(unit.bytes.data()), unit.bytes.size()}, 2, 3, unit.style ? 11 : 17));
+  const std::array<std::uint8_t, 1> ranks{0}; const auto f = format();
+  const auto reader = get(tp::read_plan<8>::make(f, ranks));
+  auto view = get(tp::const_view::attach(f, std::as_bytes(std::span{unit.bytes}), 2, 3, unit.style ? 11 : 17));
   return unsigned(get(get(tp::bind_reader(reader, view)).get(0)));
 }
 std::shared_ptr<const Unit> unit(U64 id, U64 source, unsigned style, unsigned x) {
   auto u = std::make_shared<Unit>(Unit{id, source, style, Bytes(31, 0xa1)});
-  const std::array<tp::byte, 1> ranks{0}; const auto f = format();
-  const auto writer = get(tp::writer<8>::make(f, ranks));
-  auto view = get(tp::view::bind(f, {u->bytes.data(), u->bytes.size()}, 2, 3, style ? 11 : 17));
-  std::array<ikea::owner_write, 1> slots; ikea::source_write_journal issued{slots};
+  const std::array<std::uint8_t, 1> ranks{0}; const auto f = format();
+  const auto writer = get(tp::write_plan<8>::make(f, ranks));
+  auto view = get(tp::view::attach(f, std::as_writable_bytes(std::span{u->bytes}), 2, 3, style ? 11 : 17));
+  std::array<ikea::journal::entry, 1> slots; ikea::journal issued{slots};
   check(bool(get(tp::bind_writer(writer, view)).set(0, x, issued)) && issued.used == 1);
   check(issued.entries()[0].source == &view);
   const auto offset = style ? 11U : 17U;

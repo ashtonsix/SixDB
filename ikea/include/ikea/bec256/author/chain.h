@@ -1,8 +1,8 @@
 #pragma once
 #include <ikea/bec256/author/native.h>
-#include <ikea/detail/native_chain.h>
+#include <ikea/author/chain.h>
 
-namespace ikea::bec256 {
+namespace ikea::bec256::author {
 #if defined(IKEA_BEC256_AVX512) || defined(__aarch64__)
 /// Two decoded blocks, flattened at continuation boundaries. The low/high
 /// halves have caller-defined original identities; adjacency is not required.
@@ -27,7 +27,7 @@ struct pipeline_bits {
 /// defines Mask semantics and retains source bindings through completion.
 /// Explicit owner suspension is after run returns, never inside a stage.
 template <unsigned Slots = 8, class Mask = std::uint64_t>
-using chain = ikea::detail::native_chain<pipeline_bits, Mask, Slots, error,
+using chain = ikea::author::chain<pipeline_bits, Mask, Slots,
                                          std::make_index_sequence<pipeline_bits::parts>>;
 #endif
-} // namespace ikea::bec256
+} // namespace ikea::bec256::author

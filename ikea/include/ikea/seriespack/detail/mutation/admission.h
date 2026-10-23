@@ -2,7 +2,7 @@
 #include <ikea/seriespack/detail/mutation/fields.h>
 #include <ikea/seriespack/detail/mutation/assignment.h>
 #include <ikea/seriespack/detail/mutation/admission_state.h>
-namespace ikea::seriespack::composition {
+namespace ikea::seriespack::author {
 namespace detail {
 struct write_admission : writable_fields {
     using writable_fields::writable_fields;
@@ -11,9 +11,9 @@ struct write_admission : writable_fields {
     }
     template <class S, field_kind Field>
     void write(const leaf<S, Field>& leaf, std::size_t, write_token) {
-        static_assert(std::is_same_v<typename S::byte_type, std::uint8_t>,
+        static_assert(std::is_same_v<typename S::byte_type, ikea::byte>,
                       "A writable expression needs mutable admitted leaf views");
-        using F = typename S::format_type;
+        using F = typename S::layout_type;
         const auto& source = leaf.source;
         if (count > source.size() && valid) {
             valid = false;
@@ -26,7 +26,7 @@ struct write_admission : writable_fields {
                                                                           std::size_t offset,
                                                                           std::size_t bytes) {
             const auto& stream = source.stream(plane);
-            writable_fields::add({reinterpret_cast<std::uintptr_t>(stream.bytes.data()) + offset,
+            writable_fields::add({reinterpret_cast<std::uintptr_t>(ikea::to_u8(stream.bytes).data()) + offset,
                                   stream.stride, bytes, tiles},
                                  &source, plane);
         });
@@ -34,10 +34,10 @@ struct write_admission : writable_fields {
 };
 struct count_writes {
     std::size_t count = 0;
-    template <class S> void before(const S&, byte_write) {
+    template <class S> void before(const S&, unsigned, std::size_t, std::size_t) noexcept {
         ++count;
     }
 };
 } // namespace detail
 
-} // namespace ikea::seriespack::composition
+} // namespace ikea::seriespack::author

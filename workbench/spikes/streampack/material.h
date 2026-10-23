@@ -124,16 +124,16 @@ struct Damage {
 // Resolve while the named source objects live, then own stable afterimages.
 Result<Damage> freeze_damage(Selection predecessor, Draft& completed,
     const sn::MutableDirect<std::uint32_t>& source, const HolderView&,
-    std::span<const ikea::owner_write> issued);
+    std::span<const ikea::journal::entry> issued);
 Result<Damage> freeze_damage(Selection predecessor, Draft& completed,
     std::span<const sn::MutableDirect<std::uint32_t>> sources, const HolderView&,
-    std::span<const ikea::owner_write> issued);
+    std::span<const ikea::journal::entry> issued);
 Result<Damage> freeze_damage(Selection predecessor, Draft& completed,
     const sn::MutableWidths<std::uint8_t>& source, const HolderView&,
-    std::span<const ikea::owner_write> issued);
+    std::span<const ikea::journal::entry> issued);
 Result<Damage> freeze_damage(Selection predecessor, Draft& completed,
     std::span<const sn::MutableWidths<std::uint8_t>> sources, const HolderView&,
-    std::span<const ikea::owner_write> issued);
+    std::span<const ikea::journal::entry> issued);
 // This consumer actually uses damage to reconstruct MVCC publication material.
 // The whole-copy predecessor is an explicit initial correctness control.
 Result<Draft> reconstruct(oa::Pool&, Selection exact_predecessor, const Damage&);

@@ -1,14 +1,14 @@
 #pragma once
 #include <ikea/seriespack/author/native.h>
 
-namespace ikea::seriespack::composition {
+namespace ikea::seriespack::author {
 enum class field_kind { body, tail, head0, head1 };
 template <class Source, field_kind Field> struct leaf {
-    using format_type = typename Source::format_type;
+    using layout_type = typename Source::layout_type;
     const Source& source;
     static constexpr auto kind = Field;
-    static constexpr unsigned bit_width = Field == field_kind::body   ? 8 * format_type::body
-                                          : Field == field_kind::tail ? format_type::tail
+    static constexpr unsigned bit_width = Field == field_kind::body   ? 8 * layout_type::body
+                                          : Field == field_kind::tail ? layout_type::tail
                                                                       : 8;
 };
 template <unsigned K, class Body, class Tail> struct payload_expression {
@@ -38,8 +38,8 @@ auto with_payload(const value_expression<K, H, P, H0, H1>& source, Replacement r
                                                        source.head1};
 }
 /// Source objects and their byte owners must outlive evaluation. No reads occur.
-template <class Source> auto describe(const Source& source) {
-    using F = typename Source::format_type;
+template <class Source> auto expression(const Source& source) {
+    using F = typename Source::layout_type;
     using B = leaf<Source, field_kind::body>;
     using T = leaf<Source, field_kind::tail>;
     using H0 = leaf<Source, field_kind::head0>;
@@ -48,7 +48,7 @@ template <class Source> auto describe(const Source& source) {
     return value_expression<F::width, F::heads, P, H0, H1>{
         {{source}, {source}}, {source}, {source}};
 }
-template <class Source> auto describe(const Source&&) = delete;
+template <class Source> auto expression(const Source&&) = delete;
 
 template <class Ops, class S, field_kind F, class Rows, class Mask>
 auto read(Ops& ops, const leaf<S, F>& source, Rows rows, Mask active) {
@@ -99,19 +99,19 @@ template <unsigned K> struct scalar_value {
 struct scalar_ops {
     template <class S, field_kind Field>
     auto read(const leaf<S, Field>& field, std::size_t row, bool) const {
-        using F = typename S::format_type;
+        using F = typename S::layout_type;
         constexpr bool Dense = requires { field.source.data; };
         const auto lane = row % F::tile_rows;
         if constexpr (Field == field_kind::head0 || Field == field_kind::head1) {
             constexpr unsigned p = Field == field_kind::head0 ? 1 : 2;
             const auto& stream = field.source.stream(p);
-            return scalar_value<8>{stream.bytes[(row / F::tile_rows) * stream.stride + lane]};
+            return scalar_value<8>{ikea::to_u8(stream.bytes)[(row / F::tile_rows) * stream.stride + lane]};
         } else {
             const auto* base = [&] {
                 if constexpr (Dense)
-                    return field.source.data;
+                    return ikea::to_u8(field.source.data);
                 else
-                    return field.source.stream(0).bytes.data();
+                    return ikea::to_u8(field.source.stream(0).bytes).data();
             }();
             const auto stride = [&] {
                 if constexpr (Dense)
@@ -146,14 +146,14 @@ struct native_ops {
     [[gnu::always_inline]] auto read(const leaf<S, Field>& field, std::size_t row,
                                      std::uint16_t) const {
         __builtin_assume(row % 16 == 0);
-        using F = typename S::format_type;
+        using F = typename S::layout_type;
         constexpr bool Dense = requires { field.source.data; };
         if constexpr (Field == field_kind::body || Field == field_kind::tail) {
             const auto* p = [&] {
                 if constexpr (Dense)
-                    return field.source.data;
+                    return ikea::to_u8(field.source.data);
                 else
-                    return field.source.stream(0).bytes.data();
+                    return ikea::to_u8(field.source.stream(0).bytes).data();
             }();
             const auto stride = [&] {
                 if constexpr (Dense)
@@ -169,9 +169,9 @@ struct native_ops {
             constexpr unsigned plane = Field == field_kind::head0 ? 1 : 2;
             static_assert(plane <= F::heads / 8);
             const auto& s = field.source.stream(plane);
-            // A head follows its owning format's tile boundaries, independently
+            // A head follows its owning layout's tile boundaries, independently
             // of the payload placement. Local heads can be gapped every8 rows.
-            const auto* p = s.bytes.data() + (row / F::tile_rows) * s.stride + row % F::tile_rows;
+            const auto* p = ikea::to_u8(s.bytes).data() + (row / F::tile_rows) * s.stride + row % F::tile_rows;
             native::values<8> out;
 #if defined(__aarch64__)
             if constexpr (F::tile_rows == 8)
@@ -208,14 +208,14 @@ template <unsigned N> struct wide_ops {
     template <class S, field_kind Field>
     [[gnu::always_inline]] auto read(const leaf<S, Field>& field, std::size_t row,
                                      std::uint64_t) const {
-        using F = typename S::format_type;
+        using F = typename S::layout_type;
         constexpr bool Dense = requires { field.source.data; };
         if constexpr (Field == field_kind::body || Field == field_kind::tail) {
             const auto* p = [&] {
                 if constexpr (Dense)
-                    return field.source.data;
+                    return ikea::to_u8(field.source.data);
                 else
-                    return field.source.stream(0).bytes.data();
+                    return ikea::to_u8(field.source.stream(0).bytes).data();
             }();
             const auto stride = [&] {
                 if constexpr (Dense)
@@ -308,4 +308,4 @@ std::uint64_t sum_regions(const Source& source, std::size_t count, std::uint64_t
     return sum_regions<Wide>(source, 0, count, cutoff, std::forward<Prefilter>(mask));
 }
 #endif
-} // namespace ikea::seriespack::composition
+} // namespace ikea::seriespack::author

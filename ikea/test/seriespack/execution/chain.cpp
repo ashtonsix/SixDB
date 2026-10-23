@@ -1,7 +1,7 @@
 #include "../support.h"
 #include "../fixture.h"
 #include <ikea/seriespack/author/chain.h>
-#include <ikea/seriespack/detail/mutation/physical.h>
+#include <ikea/seriespack/author/mutation.h>
 
 #if defined(__aarch64__) || defined(__AVX2__)
 template <unsigned K> void check_compact_predicate() {
@@ -23,15 +23,15 @@ template <unsigned K> void check_compact_predicate() {
 #endif
 }
 template <unsigned K> struct chain_fixture {
-    using F = sp::format<K>;
-    using Plan = sp::chain<K>;
+    using F = sp::layout<K>;
+    using Plan = sp::author::chain<K>;
     using Values = sp::native::values<K>;
     placed<F> storage;
-    sp::view<F, std::uint8_t> destination =
-        *sp::view<F, std::uint8_t>::attach(storage.count, storage.planes);
-    sp::sum_change summary;
-    std::array<sp::byte_write, 16> effects;
-    sp::write_journal journal{effects};
+    sp::view<F> destination =
+        *sp::view<F>::attach(storage.count, storage.planes);
+    sp::author::sum_change summary;
+    std::array<ikea::journal::entry, 16> effects;
+    ikea::journal journal{effects};
     unsigned calls = 0, finishes = 0, stop_at = 100;
     std::uint16_t final_mask = 0;
     std::array<sp::uint_for<K>, 16> expected;
@@ -49,7 +49,7 @@ template <unsigned K> struct chain_fixture {
                                           Values values, unsigned) {
         auto& frame = *static_cast<chain_fixture*>(opaque);
         ++frame.calls;
-        sp::replace_native16_unchecked(frame.destination, row, values, active, frame.summary,
+        sp::author::replace_native16_unchecked(frame.destination, row, values, active, frame.summary,
                                        frame.journal);
         return {values, active, false};
     }
@@ -77,23 +77,23 @@ template <unsigned K> void check_chain_width() {
     constexpr auto mutate = &Plan::template stage<&Frame::mutation>;
     constexpr auto finish = &Plan::template completion<&Frame::finish>;
     static_assert(sizeof(Plan) == 64 && alignof(Plan) == 64);
-    IKEA_CHECK(!Plan::prepare({}, finish));
+    IKEA_CHECK(!Plan::make({}, finish));
     std::array<typename Plan::function, 8> too_many;
     too_many.fill(step);
-    IKEA_CHECK(!Plan::prepare(too_many, finish));
+    IKEA_CHECK(!Plan::make(too_many, finish));
     for (unsigned depth = 1; depth <= 7; ++depth) {
         std::array<typename Plan::function, 7> stages;
         stages.fill(step);
         stages[depth - 1] = mutate;
-        auto plan = Plan::prepare(std::span(stages).first(depth), finish);
+        auto plan = Plan::make(std::span(stages).first(depth), finish);
         IKEA_CHECK(plan);
         for (unsigned stop = 0; stop < depth; ++stop) {
             frame.stop_at = stop;
             frame.calls = frame.finishes = 0;
             frame.journal.used = 0;
             const auto delta = frame.summary.finish();
-            const auto before = std::vector<std::uint8_t>(frame.storage.planes[0].bytes.begin(),
-                                                          frame.storage.planes[0].bytes.end());
+            const auto before = std::vector<std::uint8_t>(ikea::to_u8(frame.storage.planes[0].bytes).begin(),
+                                                          ikea::to_u8(frame.storage.planes[0].bytes).end());
             auto copied = *plan; // all early-return cursors must locate this copy
             copied.run(&frame, 32, 0xb6db, input);
             IKEA_CHECK(frame.finishes == 1);
@@ -102,7 +102,7 @@ template <unsigned K> void check_chain_width() {
                             frame.journal.used == 0);
                 IKEA_CHECK(frame.summary.finish() == delta);
                 IKEA_CHECK(std::equal(before.begin(), before.end(),
-                                       frame.storage.planes[0].bytes.begin()));
+                                       ikea::to_u8(frame.storage.planes[0].bytes).begin()));
             } else {
                 IKEA_CHECK(frame.final_mask == 0xb6db && frame.calls == depth);
                 std::uint64_t expected_delta = 0;

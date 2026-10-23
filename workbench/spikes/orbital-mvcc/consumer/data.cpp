@@ -22,7 +22,7 @@ template<class E> void take(std::expected<void, E> result) { require(result.has_
 
 constexpr std::array<unsigned, field_count> widths{64, 64, 20, 32};
 constexpr std::array<unsigned, field_count> map_counts{8, 8, 3, 4};
-constexpr std::array<std::array<tp::byte, 8>, field_count> maps{{
+constexpr std::array<std::array<std::uint8_t, 8>, field_count> maps{{
     {0,1,2,3,4,5,6,7}, {8,9,10,11,12,13,14,15}, {16,17,18}, {19,20,21,22}}};
 constexpr std::size_t parent_bytes = 24;
 constexpr std::uint64_t part_namespace = 0x56455253494f4e44ULL;
@@ -30,23 +30,23 @@ constexpr std::uint64_t part_namespace = 0x56455253494f4e44ULL;
 tp::layout make_tuple() {
   std::array<tp::code, tuple_bytes> codes;
   for (unsigned i = 0; i < codes.size(); ++i)
-    codes[i] = {tp::byte(i), 0, tp::byte(i == 18 ? 4 : 8)};
+    codes[i] = {std::uint8_t(i), 0, std::uint8_t(i == 18 ? 4 : 8)};
   return take(tp::layout::make(tuple_bytes, codes));
 }
-std::span<const tp::byte> field_map(unsigned field) {
-  return std::span<const tp::byte>{maps[field]}.first(map_counts[field]);
+std::span<const std::uint8_t> field_map(unsigned field) {
+  return std::span<const std::uint8_t>{maps[field]}.first(map_counts[field]);
 }
-std::array<tp::reader<8>, field_count> make_readers(const tp::layout& layout) {
-  return {take(tp::reader<8>::make(layout, field_map(0))),
-          take(tp::reader<8>::make(layout, field_map(1))),
-          take(tp::reader<8>::make(layout, field_map(2))),
-          take(tp::reader<8>::make(layout, field_map(3)))};
+std::array<tp::read_plan<8>, field_count> make_readers(const tp::layout& layout) {
+  return {take(tp::read_plan<8>::make(layout, field_map(0))),
+          take(tp::read_plan<8>::make(layout, field_map(1))),
+          take(tp::read_plan<8>::make(layout, field_map(2))),
+          take(tp::read_plan<8>::make(layout, field_map(3)))};
 }
-std::array<tp::writer<8>, field_count> make_writers(const tp::layout& layout) {
-  return {take(tp::writer<8>::make(layout, field_map(0))),
-          take(tp::writer<8>::make(layout, field_map(1))),
-          take(tp::writer<8>::make(layout, field_map(2))),
-          take(tp::writer<8>::make(layout, field_map(3)))};
+std::array<tp::write_plan<8>, field_count> make_writers(const tp::layout& layout) {
+  return {take(tp::write_plan<8>::make(layout, field_map(0))),
+          take(tp::write_plan<8>::make(layout, field_map(1))),
+          take(tp::write_plan<8>::make(layout, field_map(2))),
+          take(tp::write_plan<8>::make(layout, field_map(3)))};
 }
 
 std::size_t multiply(std::size_t a, std::size_t b) {
@@ -90,8 +90,8 @@ Parent parse_parent(orbital::Bytes interpretation) {
   require(equal(interpretation, canonical));
   return {format, static_cast<std::size_t>(records), parts(format)};
 }
-sp::representation column_description(unsigned field, std::size_t records) {
-  return {widths[field], 0, sp::geometry::local, records, {widths[field], 0, 0}};
+sp::layout_value column_description(unsigned field) {
+  return {widths[field], 0, sp::geometry::local};
 }
 void qualify_shape(const Schema& schema, const Shape& shape) {
   require(shape.part_count == parts(shape.format));
@@ -102,14 +102,12 @@ void qualify_shape(const Schema& schema, const Shape& shape) {
     require(part.id == part_id(shape.format, field) && part.readable_padding == 0);
     if (shape.format == Format::rows) {
       require(part.body_bytes == multiply(shape.records, tuple_bytes) && part.alignment == 1);
-      const auto layout = take(tp::layout::decode({
-          reinterpret_cast<const tp::byte*>(part.interpretation.data()), part.interpretation.size()}));
+      const auto layout = take(tp::layout::decode(part.interpretation));
       require(layout == schema.tuple);
     } else {
       require(part.body_bytes == column_bytes(field, shape.records) && part.alignment == 64);
-      const auto descriptor = take(sp::decode_descriptor({
-          reinterpret_cast<const std::uint8_t*>(part.interpretation.data()), part.interpretation.size()}));
-      require(descriptor == column_description(field, shape.records));
+      const auto descriptor = take(sp::layout_value::decode(part.interpretation));
+      require(descriptor == column_description(field));
     }
   }
   for (unsigned field = shape.part_count; field < field_count; ++field) {
@@ -120,15 +118,15 @@ void qualify_shape(const Schema& schema, const Shape& shape) {
 }
 
 template<unsigned K, class Byte, class Storage>
-sp::view<Column<K>, Byte> column_view(std::size_t records, Storage storage) {
+sp::basic_view<Column<K>, Byte> column_view(std::size_t records, Storage storage) {
   std::array<sp::plane<Byte>, 3> planes{};
-  planes[0] = {{reinterpret_cast<Byte*>(storage.data()), storage.size()}, Column<K>::tile_bytes};
-  return take(sp::view<Column<K>, Byte>::attach(records, planes));
+  planes[0] = {{static_cast<Byte*>(storage.data()), storage.size()}, Column<K>::tile_bytes};
+  return take(sp::basic_view<Column<K>, Byte>::attach(records, planes));
 }
 struct WriteColumns {
-  sp::view<Column<64>, std::uint8_t> key, next;
-  sp::view<Column<20>, std::uint8_t> value;
-  sp::view<Column<32>, std::uint8_t> tag;
+  sp::view<Column<64>> key, next;
+  sp::view<Column<20>> value;
+  sp::view<Column<32>> tag;
 };
 using WriteViews = std::variant<tp::view, WriteColumns>;
 
@@ -155,23 +153,23 @@ WriteViews write_views(const Schema& schema, const Shape& shape, std::span<const
       require(!overlap(ranges[earlier], ranges[field]));
   }
   if (shape.format == Format::rows)
-    return take(tp::view::bind(schema.tuple,
-        {reinterpret_cast<tp::byte*>(target[0].bytes.data()), target[0].bytes.size()},
+    return take(tp::view::attach(schema.tuple,
+        target[0].bytes,
         shape.records, tuple_bytes));
-  return WriteColumns{column_view<64, std::uint8_t>(shape.records, target[0].bytes),
-                      column_view<64, std::uint8_t>(shape.records, target[1].bytes),
-                      column_view<20, std::uint8_t>(shape.records, target[2].bytes),
-                      column_view<32, std::uint8_t>(shape.records, target[3].bytes)};
+  return WriteColumns{column_view<64, std::byte>(shape.records, target[0].bytes),
+                      column_view<64, std::byte>(shape.records, target[1].bytes),
+                      column_view<20, std::byte>(shape.records, target[2].bytes),
+                      column_view<32, std::byte>(shape.records, target[3].bytes)};
 }
 
-template<class View> void account(const ikea::source_write_journal& effects, const View& view,
+template<class View> void account(const ikea::journal& effects, const View& view,
                                   std::size_t extent, KernelCosts& costs) {
   costs.issued_spans += effects.used;
   for (const auto& effect : effects.entries()) {
     // Resolve every borrowed source identity before the named view expires.
-    require(effect.source == &view && effect.bytes.plane == 0 &&
-            effect.bytes.offset <= extent && effect.bytes.size <= extent - effect.bytes.offset);
-    costs.issued_bytes += effect.bytes.size;
+    require(effect.source == &view && effect.plane == 0 &&
+            effect.offset <= extent && effect.size <= extent - effect.offset);
+    costs.issued_bytes += effect.size;
   }
 }
 std::uint64_t field_value(const Row& row, unsigned field) {
@@ -183,11 +181,11 @@ std::uint64_t field_value(const Row& row, unsigned field) {
   default: throw Refusal{orbital::Error::invalid_argument};
   }
 }
-void construction_input(tp::construction_input& input, const Row& row) {
+void construction_input(tp::packet<128>& input, const Row& row) {
   for (unsigned field = 0; field < field_count; ++field) {
     auto value = field_value(row, field);
     for (unsigned slot = 0; slot < map_counts[field]; ++slot) {
-      input[maps[field][slot]] = tp::byte(value);
+      input[maps[field][slot]] = std::uint8_t(value);
       value >>= 8;
     }
   }
@@ -196,16 +194,16 @@ template<class Source>
 void construct_rows(const Schema& schema, const tp::view& view, Source&& source,
                     KernelCosts& costs, ConstructionOptions options) {
   require(options.fail_after_parts != 0, orbital::Error::rejected);
-  const auto operation = take(tp::bind_constructor(schema.constructor, view));
+  const auto operation = take(tp::bind_writer(schema.constructor, view));
   ++costs.bindings;
-  tp::construction_input input{}; // Unused slots cleared once, never per row.
-  std::array<ikea::owner_write, 1> journal;
+  tp::packet<128> input{}; // Unused slots cleared once, never per row.
+  std::array<ikea::journal::entry, 1> journal;
   costs.scratch_bound_bytes = std::max(costs.scratch_bound_bytes, sizeof(input) + sizeof(journal));
   for (std::size_t row = 0; row < view.size(); ++row) {
     require(row < options.fail_after_rows, orbital::Error::rejected);
     construction_input(input, source(row));
-    ikea::source_write_journal effects{journal};
-    take(operation.initialize(row, std::span<const tp::construction_input>{&input, 1}, effects));
+    ikea::journal effects{journal};
+    take(operation.initialize(row, std::span<const tp::packet<128>>{&input, 1}, effects));
     ++costs.constructor_calls;
     account(effects, view, view.storage().size(), costs);
     costs.encoded_values += field_count;
@@ -214,12 +212,12 @@ void construct_rows(const Schema& schema, const tp::view& view, Source&& source,
   ++costs.completed_parts;
 }
 template<unsigned K, class Source>
-void construct_column(const sp::view<Column<K>, std::uint8_t>& full, unsigned field,
+void construct_column(const sp::view<Column<K>>& full, unsigned field,
                       Source&& source, KernelCosts& costs, ConstructionOptions options) {
   std::array<std::uint64_t, conversion_chunk> values;
   // Local20 admission counts whole-byte/residual fields for every tile even
   // when the physical constructor later emits one contiguous body span.
-  std::array<ikea::owner_write, conversion_chunk / 8 * 2> journal;
+  std::array<ikea::journal::entry, conversion_chunk / 8 * 2> journal;
   costs.scratch_bound_bytes = std::max(costs.scratch_bound_bytes, sizeof(values) + sizeof(journal));
   const auto permitted = std::min(full.size(), options.fail_after_rows);
   for (std::size_t first = 0; first < permitted;) {
@@ -232,11 +230,11 @@ void construct_column(const sp::view<Column<K>, std::uint8_t>& full, unsigned fi
     const auto extent = multiply(count / Column<K>::tile_rows + (count % Column<K>::tile_rows != 0),
                                  Column<K>::tile_bytes);
     const auto bytes = full.stream(0).bytes.subspan(offset, extent);
-    const auto view = take(sp::view<Column<K>, std::uint8_t>::attach(count, {{{bytes, Column<K>::tile_bytes}, {}, {}}}));
-    const auto prepared = take(sp::bind_mutation(view));
-    require(take(prepared.construction_effect_capacity()) <= journal.size());
+    const auto view = take(sp::view<Column<K>>::attach(count, {{{bytes, Column<K>::tile_bytes},{},{}}}));
+    const auto prepared = take(sp::bind_writer(view));
+    require(take(prepared.effect_capacity_initialize()) <= journal.size());
     ++costs.bindings;
-    ikea::source_write_journal effects{journal};
+    ikea::journal effects{journal};
     take(prepared.initialize(std::span<const std::uint64_t>{values}.first(count), effects));
     ++costs.constructor_calls;
     account(effects, view, extent, costs);
@@ -271,7 +269,7 @@ std::array<TupleRead, field_count> checked_tuple_reads(const Schema& schema, con
 }
 } // namespace
 
-Schema::Schema() : tuple(make_tuple()), constructor(take(tp::constructor::make(tuple))),
+Schema::Schema() : tuple(make_tuple()), constructor(take(tp::write_plan<128>::make(tuple))),
                    readers(make_readers(tuple)), writers(make_writers(tuple)) {}
 
 orbital::Result<Shape> shape(const Schema& schema, Format format, std::size_t records) {
@@ -286,13 +284,11 @@ orbital::Result<Shape> shape(const Schema& schema, Format format, std::size_t re
       if (format == Format::rows) {
         part.body_bytes = multiply(records, tuple_bytes);
         part.interpretation.resize(schema.tuple.encoded_size());
-        take(schema.tuple.encode({reinterpret_cast<tp::byte*>(part.interpretation.data()),
-                                 part.interpretation.size()}));
+        take(schema.tuple.encode(part.interpretation));
       } else {
         part.body_bytes = column_bytes(field, records); part.alignment = 64;
-        const auto descriptor = take(sp::encode_descriptor(column_description(field, records)));
-        part.interpretation.resize(descriptor.size());
-        std::memcpy(part.interpretation.data(), descriptor.data(), descriptor.size());
+        part.interpretation.resize(sp::layout_value::encoded_size());
+        take(column_description(field).encode(part.interpretation));
       }
     }
     return result;
@@ -334,38 +330,36 @@ orbital::Result<ReadData> ReadData::bind(const Schema& schema, orbital::Bytes in
       (void)interval(part.bytes.data(), part.bytes.size());
       if (parsed.format == Format::rows) {
         require(part.bytes.size() == multiply(parsed.records, tuple_bytes));
-        const auto layout = take(tp::layout::decode({
-            reinterpret_cast<const tp::byte*>(part.interpretation.data()), part.interpretation.size()}));
+        const auto layout = take(tp::layout::decode(part.interpretation));
         require(layout == schema.tuple);
       } else {
         require(part.bytes.size() == column_bytes(field, parsed.records));
-        const auto descriptor = take(sp::decode_descriptor({
-            reinterpret_cast<const std::uint8_t*>(part.interpretation.data()), part.interpretation.size()}));
-        require(descriptor == column_description(field, parsed.records));
+        const auto descriptor = take(sp::layout_value::decode(part.interpretation));
+        require(descriptor == column_description(field));
       }
     }
     if (parsed.format == Format::rows) {
-      const auto view = take(tp::const_view::bind(schema.tuple,
-          {reinterpret_cast<const tp::byte*>(source[0].bytes.data()), source[0].bytes.size()},
+      const auto view = take(tp::const_view::attach(schema.tuple,
+          source[0].bytes,
           parsed.records, tuple_bytes));
       const auto operations = checked_tuple_reads(schema, view);
-      take(tp::native_reader(operations[0]).admit_transfer<8>());
-      take(tp::native_reader(operations[1]).admit_transfer<8>());
-      take(tp::native_reader(operations[2]).admit_transfer<3>());
-      take(tp::native_reader(operations[3]).admit_transfer<4>());
+      take(tp::author::native_reader(operations[0]).admit_transfer<8>());
+      take(tp::author::native_reader(operations[1]).admit_transfer<8>());
+      take(tp::author::native_reader(operations[2]).admit_transfer<3>());
+      take(tp::author::native_reader(operations[3]).admit_transfer<4>());
       return ReadData{schema, parsed.records, TupleCursor{view.storage().data()}};
     }
     // Preserve full placement admission, then keep only typed body pointers.
     // The shared count determines every exact tight headless Local extent.
-    (void)column_view<64, const std::uint8_t>(parsed.records, source[0].bytes);
-    (void)column_view<64, const std::uint8_t>(parsed.records, source[1].bytes);
-    (void)column_view<20, const std::uint8_t>(parsed.records, source[2].bytes);
-    (void)column_view<32, const std::uint8_t>(parsed.records, source[3].bytes);
+    (void)column_view<64, const std::byte>(parsed.records, source[0].bytes);
+    (void)column_view<64, const std::byte>(parsed.records, source[1].bytes);
+    (void)column_view<20, const std::byte>(parsed.records, source[2].bytes);
+    (void)column_view<32, const std::byte>(parsed.records, source[3].bytes);
     return ReadData{schema, parsed.records, ColumnCursors{
-        ColumnCursor<64>{reinterpret_cast<const std::uint8_t*>(source[0].bytes.data())},
-        ColumnCursor<64>{reinterpret_cast<const std::uint8_t*>(source[1].bytes.data())},
-        ColumnCursor<20>{reinterpret_cast<const std::uint8_t*>(source[2].bytes.data())},
-        ColumnCursor<32>{reinterpret_cast<const std::uint8_t*>(source[3].bytes.data())}}};
+        ColumnCursor<64>{source[0].bytes.data()},
+        ColumnCursor<64>{source[1].bytes.data()},
+        ColumnCursor<20>{source[2].bytes.data()},
+        ColumnCursor<32>{source[3].bytes.data()}}};
   } catch (Refusal error) { return std::unexpected(error.error); }
 }
 
@@ -457,11 +451,11 @@ orbital::Result<void> convert_into(const Schema& schema, const ReadData& source,
     auto views = write_views(schema, shape, target);
     if (const auto* rows = std::get_if<tp::view>(&views)) {
       require(options.fail_after_parts != 0, orbital::Error::rejected);
-      const auto operation = take(tp::bind_constructor(schema.constructor, *rows));
+      const auto operation = take(tp::bind_writer(schema.constructor, *rows));
       ++costs.bindings;
       std::array<std::array<std::uint64_t, conversion_chunk>, field_count> fields;
-      tp::construction_input input{};
-      std::array<ikea::owner_write, 1> journal;
+      tp::packet<128> input{};
+      std::array<ikea::journal::entry, 1> journal;
       costs.scratch_bound_bytes = std::max(costs.scratch_bound_bytes,
           sizeof(fields) + sizeof(input) + sizeof(journal));
       const auto permitted = std::min(source.size(), options.fail_after_rows);
@@ -474,8 +468,8 @@ orbital::Result<void> convert_into(const Schema& schema, const ReadData& source,
         for (std::size_t i = 0; i < count; ++i) {
           const Row row{fields[0][i], {fields[1][i], std::uint32_t(fields[2][i]), std::uint32_t(fields[3][i])}};
           construction_input(input, row);
-          ikea::source_write_journal effects{journal};
-          take(operation.initialize(first + i, std::span<const tp::construction_input>{&input, 1}, effects));
+          ikea::journal effects{journal};
+          take(operation.initialize(first + i, std::span<const tp::packet<128>>{&input, 1}, effects));
           ++costs.constructor_calls;
           account(effects, *rows, rows->storage().size(), costs);
           costs.encoded_values += field_count; ++costs.completed_rows;
@@ -500,17 +494,17 @@ orbital::Result<void> update_into(const Schema& schema, const Shape& shape,
   try {
     require(row < shape.records && value.value <= value_mask);
     auto views = write_views(schema, shape, target);
-    std::array<ikea::owner_write, 4> journal;
+    std::array<ikea::journal::entry, 4> journal;
     costs.scratch_bound_bytes = std::max(costs.scratch_bound_bytes, sizeof(journal));
-    ikea::source_write_journal effects{journal};
+    ikea::journal effects{journal};
     if (const auto* tuples = std::get_if<tp::view>(&views)) {
       const auto next = take(tp::bind_writer(schema.writers[1], *tuples));
       const auto encoded_value = take(tp::bind_writer(schema.writers[2], *tuples));
       const auto tag = take(tp::bind_writer(schema.writers[3], *tuples));
-      const tp::native_writer next_writer{next}, value_writer{encoded_value}, tag_writer{tag};
+      const tp::author::native_writer next_writer{next}, value_writer{encoded_value}, tag_writer{tag};
       // All value/range/capacity admission precedes the first preserving store.
       require(next_writer.accepts(value.next) && value_writer.accepts(value.value) && tag_writer.accepts(value.tag));
-      require(next.effect_capacity() + encoded_value.effect_capacity() + tag.effect_capacity() <= journal.size());
+      require(take(next.effect_capacity(row, 1)) + take(encoded_value.effect_capacity(row, 1)) + take(tag.effect_capacity(row, 1)) <= journal.size());
       costs.bindings += 3;
       take(next_writer.set(row, value.next, effects));
       take(value_writer.set(row, std::uint64_t(value.value), effects));
@@ -518,21 +512,21 @@ orbital::Result<void> update_into(const Schema& schema, const Shape& shape,
       account(effects, *tuples, tuples->storage().size(), costs);
     } else {
       const auto& columns = std::get<WriteColumns>(views);
-      const auto next = take(sp::bind_mutation(columns.next));
-      const auto encoded_value = take(sp::bind_mutation(columns.value));
-      const auto tag = take(sp::bind_mutation(columns.tag));
-      const auto needed = take(next.effect_capacity(row, 1, sp::row_selection::all())) +
-          take(encoded_value.effect_capacity(row, 1, sp::row_selection::all())) +
-          take(tag.effect_capacity(row, 1, sp::row_selection::all()));
+      const auto next = take(sp::bind_writer(columns.next));
+      const auto encoded_value = take(sp::bind_writer(columns.value));
+      const auto tag = take(sp::bind_writer(columns.tag));
+      const auto needed = take(next.effect_capacity(row, 1, sp::selection::all())) +
+          take(encoded_value.effect_capacity(row, 1, sp::selection::all())) +
+          take(tag.effect_capacity(row, 1, sp::selection::all()));
       require(needed <= journal.size());
       costs.bindings += 3;
-      sp::no_summary summary;
+      sp::author::no_summary summary;
       // Resolve each view's identities separately; mutation keeps its neighbors.
-      take(next.set(row, value.next, summary, effects));
+      take(next.set(row, value.next, effects, summary));
       account(effects, columns.next, columns.next.stream(0).bytes.size(), costs); effects.used = 0;
-      take(encoded_value.set(row, std::uint64_t(value.value), summary, effects));
+      take(encoded_value.set(row, std::uint64_t(value.value), effects, summary));
       account(effects, columns.value, columns.value.stream(0).bytes.size(), costs); effects.used = 0;
-      take(tag.set(row, std::uint64_t(value.tag), summary, effects));
+      take(tag.set(row, std::uint64_t(value.tag), effects, summary));
       account(effects, columns.tag, columns.tag.stream(0).bytes.size(), costs);
     }
     costs.encoded_values += 3;

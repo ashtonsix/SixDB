@@ -10,11 +10,11 @@
 using namespace ikea::tuplepack;
 #if defined(__aarch64__) || defined(__AVX2__)
 namespace {
-using pipeline = chain<8>;
+using pipeline = author::chain<8>;
 struct context {
     unsigned visits = 0;
     std::size_t row = 0;
-    std::array<byte, 64> result{};
+    std::array<std::uint8_t, 64> result{};
 };
 pipeline::result stage(void* p, std::size_t, std::uint64_t active, native::pipeline_values values,
                        unsigned ordinal) {
@@ -26,8 +26,8 @@ pipeline::result stage(void* p, std::size_t, std::uint64_t active, native::pipel
     auto& c = *static_cast<context*>(p);
     ++c.visits;
     // One authored native body can be called directly or through this shell.
-    std::array<byte, 64> mask;
-    mask.fill(byte(0xff >> (ordinal + 1)));
+    std::array<std::uint8_t, 64> mask;
+    mask.fill(std::uint8_t(0xff >> (ordinal + 1)));
     auto value = native::bit_and(values.get(), native::load_packet(mask.data()));
     return {native::pipeline_values::from(value), active, ordinal == 1};
 }
@@ -44,7 +44,7 @@ void finish(void* p, std::size_t row, std::uint64_t active, native::pipeline_val
         fixed[i] = i + 3;
     for (unsigned i = 0; i < count; ++i)
         dynamic[i] = i + 7;
-    std::array<byte, 64> input;
+    std::array<std::uint8_t, 64> input;
     input.fill(0xff);
     plan.run(&c, 70001, 5, native::pipeline_values::from(native::load_packet(input.data())));
     for (unsigned i = 0; i < 64; ++i)
@@ -57,22 +57,22 @@ template <unsigned Rows> void batch_check(std::mt19937& random) {
         std::array<code, 64> codes;
         for (unsigned i = 0; i < extent; ++i) {
             const auto width = 1 + i % 8;
-            codes[i] = {byte(i), byte(i % (9 - width)), byte(width)};
+            codes[i] = {std::uint8_t(i), std::uint8_t(i % (9 - width)), std::uint8_t(width)};
         }
         const auto format = *layout::make(extent, std::span(codes).first(extent));
         for (bool spread : {false, true}) {
-            std::array<byte, 64 / Rows> map;
+            std::array<std::uint8_t, 64 / Rows> map;
             for (unsigned i = 0; i < map.size(); ++i)
-                map[i] = i % 7 == 0 ? hole : byte((spread ? 11 * i + 3 : i) % extent);
-            const auto batch = *reader<64, Rows>::make(format, map);
+                map[i] = i % 7 == 0 ? hole : std::uint8_t((spread ? 11 * i + 3 : i) % extent);
+            const auto batch = *read_plan<64, Rows>::make(format, map);
             for (unsigned stride : {extent, 96u}) {
-                std::vector<byte> storage((Rows - 1) * stride + extent);
+                std::vector<std::uint8_t> storage((Rows - 1) * stride + extent);
                 for (auto& b : storage)
                     b = random();
-                const auto view = *const_view::bind(format, storage, Rows, stride);
+                const auto view = *const_view::attach(format, std::as_bytes(std::span{storage}), Rows, stride);
                 for (unsigned mask = 0; mask < (1u << Rows); ++mask) {
-                    std::array<const byte*, Rows> pointers{};
-                    std::array<byte, 64> wanted{}, actual{};
+                    std::array<const std::uint8_t*, Rows> pointers{};
+                    std::array<std::uint8_t, 64> wanted{}, actual{};
                     for (unsigned row = 0; row < Rows; ++row)
                         if (mask & (1u << row)) {
                             pointers[row] = storage.data() + row * stride;
@@ -92,7 +92,7 @@ template <unsigned Rows> void batch_check(std::mt19937& random) {
                     assert(actual == wanted);
                     native::store_packet(
                         actual.data(),
-                        native_reader(*bind_reader(batch, view)).get_unchecked(0, mask));
+                        author::native_reader(*bind_reader(batch, view)).get_unchecked(0, mask));
                     assert(actual == wanted);
                 }
             }
@@ -105,7 +105,7 @@ int main(int argc, char**) {
 #if defined(__aarch64__) || defined(__AVX2__)
     std::mt19937 random(391);
     for (unsigned trial = 0; trial < 512; ++trial) {
-        auto bits = composition::zero_routes();
+        auto bits = author::zero_routes();
         if (trial < 256) {
             for (unsigned i = 0; i < 64; ++i) {
                 unsigned source = random() % 64, rotation = random() % 8;
@@ -115,34 +115,34 @@ int main(int argc, char**) {
         } else
             for (auto& bit : bits)
                 bit = random() % 513 - 1;
-        std::array<composition::route_term, 16> terms;
-        auto route = composition::prepare_routes(bits, terms);
+        std::array<author::route_term, 16> terms;
+        auto route = author::prepare_routes(bits, terms);
         assert(route);
         assert(route->normalized == (trial < 256));
-        std::array<byte, 64> input{}, wanted{}, actual{};
+        std::array<std::uint8_t, 64> input{}, wanted{}, actual{};
         for (auto& b : input)
             b = random();
         for (unsigned b = 0; b < 512; ++b)
             if (bits[b] >= 0)
                 wanted[b / 8] |= ((input[bits[b] / 8] >> (bits[b] % 8)) & 1) << (b % 8);
         native::store_packet(actual.data(),
-                             composition::apply_routes(native::load_packet(input.data()), *route));
+                             author::apply_routes(native::load_packet(input.data()), *route));
         assert(actual == wanted);
-        assert(*composition::compose(composition::identity_routes(), bits) == bits);
-        assert(*composition::unite(composition::zero_routes(), bits) == bits);
+        assert(*author::compose(author::identity_routes(), bits) == bits);
+        assert(*author::unite(author::zero_routes(), bits) == bits);
     }
-    auto illegal = composition::identity_routes();
+    auto illegal = author::identity_routes();
     illegal[0] = 512;
-    std::array<composition::route_term, 16> terms;
-    assert(!composition::prepare_routes(illegal, terms));
-    auto other = composition::identity_routes();
+    std::array<author::route_term, 16> terms;
+    assert(!author::prepare_routes(illegal, terms));
+    auto other = author::identity_routes();
     other[0] = 1;
-    assert(!composition::unite(composition::identity_routes(), other));
+    assert(!author::unite(author::identity_routes(), other));
     std::array<pipeline::function, 3> stages{pipeline::stage<stage>, pipeline::stage<stage>,
                                              pipeline::stage<stage>};
-    auto chain = pipeline::prepare(stages, pipeline::completion<finish>);
+    auto chain = pipeline::make(stages, pipeline::completion<finish>);
     assert(chain);
-    std::array<byte, 64> input;
+    std::array<std::uint8_t, 64> input;
     input.fill(0xff);
     context c;
     chain->run(&c, 70001, 5, native::pipeline_values::from(native::load_packet(input.data())));
@@ -160,22 +160,22 @@ int main(int argc, char**) {
     // Two register-valued packets write disjoint nibble codes in shared bytes.
     // Width admission covers both packets before the first native store.
     std::array<code, 128> codes;
-    std::array<byte, 64> low_map, high_map, low_values, high_values, data;
+    std::array<std::uint8_t, 64> low_map, high_map, low_values, high_values, data;
     for (unsigned i = 0; i < 64; ++i) {
-        codes[i] = {byte(i), 0, 4};
-        codes[64 + i] = {byte(i), 4, 4};
+        codes[i] = {std::uint8_t(i), 0, 4};
+        codes[64 + i] = {std::uint8_t(i), 4, 4};
         low_map[i] = i;
         high_map[i] = 64 + i;
         low_values[i] = i % 16;
         high_values[i] = 15 - i % 16;
     }
     auto format = *layout::make(64, codes);
-    auto source = *view::bind(format, data, 1, 64);
-    auto lo = *writer<64>::make(format, low_map), hi = *writer<64>::make(format, high_map);
-    auto group = *composition::bind_group(native_writer(*bind_writer(lo, source)),
-                                          native_writer(*bind_writer(hi, source)));
-    std::array<ikea::owner_write, 2> records;
-    ikea::source_write_journal effects{records};
+    auto source = *view::attach(format, std::as_writable_bytes(std::span{data}), 1, 64);
+    auto lo = *write_plan<64>::make(format, low_map), hi = *write_plan<64>::make(format, high_map);
+    auto group = *author::bind_group(author::native_writer(*bind_writer(lo, source)),
+                                          author::native_writer(*bind_writer(hi, source)));
+    std::array<ikea::journal::entry, 2> records;
+    ikea::journal effects{records};
     data.fill(0x5a);
     auto bad_high = high_values;
     bad_high[63] = 16;
@@ -190,7 +190,7 @@ int main(int argc, char**) {
         effects));
     for (unsigned i = 0; i < 64; ++i)
         assert(data[i] == (low_values[i] | (high_values[i] << 4)));
-    assert(effects.used == 1 && records[0].source == &source && records[0].bytes.size == 64);
+    assert(effects.used == 1 && records[0].source == &source && records[0].size == 64);
     std::puts("TuplePack: 512 independent routes, CPS early completion, 2/4-row batch maps and "
               "inactive-null lanes passed");
 #endif

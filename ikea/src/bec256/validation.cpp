@@ -46,20 +46,33 @@ std::expected<void, error> validate(std::span<const byte> body, unsigned populat
         return std::unexpected(error::padding);
     return {};
 }
-std::expected<source, error> source::admit(std::span<const byte> storage, unsigned bytes,
-                                           unsigned population) noexcept {
+std::expected<const_view, error> const_view::attach(std::span<const byte> storage,
+                                                     unsigned bytes, unsigned population) noexcept {
     if (bytes > storage.size())
         return std::unexpected(error::capacity);
-    if (auto result = validate(storage.first(bytes), population); !result)
+    if (population > positions)
+        return std::unexpected(error::population);
+    if (bytes > max_bytes)
+        return std::unexpected(error::trailing);
+    return const_view(storage, bytes, population);
+}
+std::expected<void, error> const_view::validate() const noexcept {
+    return bec256::validate(storage_.first(bytes_), population_);
+}
+std::expected<reader, error> bind_reader(const_view input) noexcept {
+    if (auto result = input.validate(); !result)
         return std::unexpected(result.error());
-    return source(storage, bytes, population);
+    return reader(input);
+}
+std::expected<reader, error> bind_reader(std::span<const byte> storage, unsigned bytes,
+                                          unsigned population) noexcept {
+    const auto placed = const_view::attach(storage, bytes, population);
+    if (!placed)
+        return std::unexpected(placed.error());
+    return bind_reader(*placed);
 }
 std::string_view describe(error value) noexcept {
     switch (value) {
-    case error::range:
-        return "invalid pipeline stage count";
-    case error::value:
-        return "invalid pipeline stage function";
     case error::population:
         return "population is outside 0..256 or differs from input";
     case error::truncated:

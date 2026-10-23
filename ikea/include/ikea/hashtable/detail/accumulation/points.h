@@ -18,7 +18,7 @@ template <unsigned R> [[gnu::always_inline]] word spread_columns(word v) {
     return ((v & ht::mask<R>)*multiply) & columns;
 #endif
 }
-template <unsigned E> [[gnu::always_inline]] void assign_point(byte* p, unsigned row, word q) {
+template <unsigned E> [[gnu::always_inline]] void assign_point(std::uint8_t* p, unsigned row, word q) {
     constexpr unsigned B = E / 8, R = E % 8;
     const auto lane = row % 8;
     auto* tile = p + (row / 8) * E;
@@ -31,21 +31,21 @@ template <unsigned E> [[gnu::always_inline]] void assign_point(byte* p, unsigned
                      (ht::load<R>(tail) & ~(columns << lane)) | (spread_columns<R>(q) << lane));
     }
 }
-template <class D> [[gnu::always_inline]] void occupy_point(byte* p, unsigned row, word q) {
+template <class D> [[gnu::always_inline]] void occupy_point(std::uint8_t* p, unsigned row, word q) {
     if constexpr (D::bitmap)
         ht::detail::occupy<D>(p, row, q);
     else {
         assign_point<D::encoding>(p, row, q);
-        p[D::flags_offset + row / 8] &= byte(~(1u << (row % 8)));
+        p[D::flags_offset + row / 8] &= std::uint8_t(~(1u << (row % 8)));
     }
 }
 struct column_primary_store {
-    template <class D> [[gnu::always_inline]] static void occupy(byte* p, unsigned row, word q) {
+    template <class D> [[gnu::always_inline]] static void occupy(std::uint8_t* p, unsigned row, word q) {
         occupy_point<D>(p, row, q);
     }
 };
 template <class D, class Lazy, class Reduce>
-[[gnu::always_inline]] merge_status put_point(D& dst, byte* primary, word& added, word bucket,
+[[gnu::always_inline]] merge_status put_point(D& dst, std::uint8_t* primary, word& added, word bucket,
                                               word q, const typename D::value_type& value,
                                               Lazy&& lazy, Reduce& reduce) {
     return put_with_store<column_primary_store>(dst, primary, added, bucket, q, value,
@@ -57,8 +57,8 @@ template <class D, class S, class Reduce>
         return s;
     const auto from = access::get(src);
     auto to = access::get(dst);
-    const auto* source_primary = from.primary.data;
-    auto* target_primary = to.primary.data;
+    const auto* source_primary = ikea::to_u8(from.primary.data);
+    auto* target_primary = ikea::to_u8(to.primary.data);
     word added = 0;
     const auto source_mix = from.mix;
     const auto target_mix = to.mix;
@@ -85,8 +85,8 @@ template <class D, class S, class Reduce>
             }
     }
     for (std::size_t i = 0; i < from.groups * 16; ++i)
-        if (ht::detail::occupied_control(from.controls.data[i])) {
-            const auto* tuple = from.slots.data + i * S::tuple_bytes;
+        if (ht::detail::occupied_control(ikea::to_u8(from.controls.data)[i])) {
+            const auto* tuple = ikea::to_u8(from.slots.data) + i * S::tuple_bytes;
             const auto key = ht::load<S::key_bytes>(tuple);
             const auto h = target_mix(key);
             typename S::value_type value{};

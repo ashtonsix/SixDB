@@ -214,13 +214,13 @@ void matched(std::span<const Row> data, bool guard = false) {
 struct HistoryFrame {
   Catalog::Scope scope;
   cs::Selection selected;
-  const v::tp::byte* first{};
+  const std::byte* first{};
   Outcome result;
   unsigned visits{}, published{};
   bool cancelled{};
   HistoryFrame(const Catalog& store, bool cancel) : scope(store),selected(scope.bind(a)),cancelled(cancel) {
     CHECK(selected && scope.cut() == 1);
-    first = reinterpret_cast<const v::tp::byte*>(take(selected.part(0)).address());
+    first = reinterpret_cast<const std::byte*>(take(selected.part(0)).address());
   }
   HistoryFrame(const HistoryFrame&) = delete;
   HistoryFrame& operator=(const HistoryFrame&) = delete;
@@ -229,14 +229,14 @@ using HistoryRing = loom::Ring<HistoryFrame*,std::uint64_t>;
 LOOM_NATIVE_CC void history_visit(HistoryRing::Cursor ring, HistoryRing::Slot* slot, HistoryFrame* frame,
                                  std::uint64_t phase) {
   constexpr auto encoding = lr::law::ReadLaw::canonical();
-  const v::tp::byte* source{};
+  const std::byte* source{};
   if (phase == 0) source = frame->first;
   else if (phase == 1) {
-    source = reinterpret_cast<const v::tp::byte*>(take(frame->selected.part(0)).address()) + v::tuple_bytes;
+    source = reinterpret_cast<const std::byte*>(take(frame->selected.part(0)).address()) + v::tuple_bytes;
   } else {
     // First discovery happens after publication and even ObjectStore reset.
     const auto selected = frame->scope.bind(b); CHECK(selected && !frame->scope.bind(born));
-    source = reinterpret_cast<const v::tp::byte*>(take(selected.part(0)).address());
+    source = reinterpret_cast<const std::byte*>(take(selected.part(0)).address());
   }
   const Row row{encoding.read_unchecked<0>(source),{encoding.read_unchecked<1>(source),
       std::uint32_t(encoding.read_unchecked<2>(source)),std::uint32_t(encoding.read_unchecked<3>(source))}};
@@ -270,10 +270,10 @@ void consequence() {
   {
     Catalog::Scope fresh(store); CHECK(fresh.cut() == 2 && fresh.bind(born));
     const auto current_a = fresh.bind(a);
-    const auto* a_bytes = reinterpret_cast<const v::tp::byte*>(take(current_a.part(0)).address());
+    const auto* a_bytes = reinterpret_cast<const std::byte*>(take(current_a.part(0)).address());
     CHECK(cs::tuple_law(current_a.shape()).read_unchecked<2>(a_bytes) == new_a[0].record.value);
     const auto selected = fresh.bind(b);
-    const auto* bytes = reinterpret_cast<const v::tp::byte*>(take(selected.part(0)).address());
+    const auto* bytes = reinterpret_cast<const std::byte*>(take(selected.part(0)).address());
     CHECK(cs::tuple_law(selected.shape()).read_unchecked<2>(bytes) == new_b[0].record.value);
   }
   store = {};
@@ -291,7 +291,7 @@ void consequence() {
   frames[1].reset(); frames[3].reset();
   CHECK(memory.live > 0 && cs::records(escaped) == old_a.size());
   CHECK(orbital::binding(escaped).object == a && orbital::binding(escaped).version == 1);
-  const auto* bytes = reinterpret_cast<const v::tp::byte*>(orbital::view(escaped).address());
+  const auto* bytes = reinterpret_cast<const std::byte*>(orbital::view(escaped).address());
   CHECK(cs::tuple_law(escaped).read_unchecked<2>(bytes) == old_a[0].record.value);
   orbital::release(escaped); CHECK(memory.live == 0);
   CHECK(loom::shutdown(owner.worker).kind() == orbital::Progress::Kind::waiting); // empty Ring bank is live

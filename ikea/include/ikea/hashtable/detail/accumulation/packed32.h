@@ -3,18 +3,18 @@
 #include <array>
 namespace ikea::hashtable::detail::accumulation {
 #if defined(__AVX512VBMI__) && defined(__GFNI__)
-template <unsigned E> [[gnu::always_inline]] __m512i read_packed(const byte* p) {
+template <unsigned E> [[gnu::always_inline]] __m512i read_packed(const std::uint8_t* p) {
     static_assert(E >= 24 && E <= 30);
     constexpr auto R = E % 8;
     alignas(64) static constexpr auto body_order = [] {
-        std::array<byte, 64> a{};
+        std::array<std::uint8_t, 64> a{};
         for (unsigned r = 0; r < 16; ++r)
             for (unsigned j = 0; j < 3; ++j)
                 a[r * 4 + j] = (r / 8) * E + (r % 8) * 3 + j;
         return a;
     }();
     alignas(64) static constexpr auto tail_order = [] {
-        std::array<byte, 64> a{};
+        std::array<std::uint8_t, 64> a{};
         for (unsigned t = 0; t < 2; ++t)
             for (unsigned j = 0; j < 8; ++j)
                 a[t * 8 + j] = t * E + 31 - j;
@@ -35,11 +35,11 @@ template <unsigned E> [[gnu::always_inline]] __m512i read_packed(const byte* p) 
 // Commit two complete tiles once, retaining padding and overflow metadata.
 // Keys and flags remain in the admitted 64-byte key cache line.
 template <unsigned E>
-[[gnu::always_inline]] void write_packed_vector(byte* p, __m512i rows, unsigned live) {
+[[gnu::always_inline]] void write_packed_vector(std::uint8_t* p, __m512i rows, unsigned live) {
     static_assert(E >= 24 && E <= 30);
     constexpr auto R = E % 8;
     alignas(64) static constexpr auto body_order = [] {
-        std::array<byte, 64> a{};
+        std::array<std::uint8_t, 64> a{};
         for (unsigned t = 0; t < 2; ++t)
             for (unsigned r = 0; r < 8; ++r)
                 for (unsigned j = 0; j < 3; ++j)
@@ -47,7 +47,7 @@ template <unsigned E>
         return a;
     }();
     alignas(64) static constexpr auto tail_order = [] {
-        std::array<byte, 64> a{};
+        std::array<std::uint8_t, 64> a{};
         for (unsigned t = 0; t < 2; ++t)
             for (unsigned j = 0; j < R; ++j)
                 a[t * E + 24 + j] = t * 8 + j;
@@ -71,7 +71,7 @@ template <unsigned E>
     _mm512_storeu_si512(p, final);
 }
 template <unsigned E>
-[[gnu::always_inline]] void write_packed(byte* p, const std::uint32_t* q, unsigned live) {
+[[gnu::always_inline]] void write_packed(std::uint8_t* p, const std::uint32_t* q, unsigned live) {
     write_packed_vector<E>(p, _mm512_loadu_si512(q), live);
 }
 #endif

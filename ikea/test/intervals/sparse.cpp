@@ -105,7 +105,7 @@ void verify_source(const image<G, W, P> &data, const Source &source) {
     std::array<std::byte, 32> eligible{};
     for (unsigned rank = 0; rank < n; ++rank)
         if (rank % 3 != 1) eligible[rank / 8] |= std::byte(1u << (rank % 8));
-    const bl::selected_source selected{source, bl::rank_selection{eligible}};
+    const bl::selected_source selected{source, bl::selection::bits(0,eligible)};
     for (unsigned first : {0u, n / 3, n}) {
         for (unsigned take : {0u, (n - first) / 2, n - first}) {
             unsigned visited = 0;

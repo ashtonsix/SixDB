@@ -6,7 +6,7 @@
 #include <immintrin.h>
 #endif
 
-namespace ikea::seriespack::composition {
+namespace ikea::seriespack::author {
 /// Prepared equality for eight Local bitplane rows, with an in-domain query.
 /// The low K bytes of the supplied word hold the planes in wire order; upper
 /// bytes are ignored. This arithmetic body performs no memory access. The
@@ -85,4 +85,4 @@ template <unsigned K> class local_equal8 {
 #endif
     }
 };
-} // namespace ikea::seriespack::composition
+} // namespace ikea::seriespack::author

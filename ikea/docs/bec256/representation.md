@@ -1,7 +1,9 @@
 # Bec256 representation
 
 Bec256 (Bisection–Enumerative Code) represents a subset of positions 0..255.
-In the plain 32-byte bitset, position `8*j+b` is bit b of byte j.
+The ordinary value is `ikea::bitset256`: position i is numeric bit `i%64` of
+word `i/64`. Its canonical 32-byte bridge maps position `8*j+b` to bit b of
+byte j, on every endian target.
 The **population** is the number of set bits.
 Knowing the population limits the possible bitsets, but usually leaves their
 positions unknown.

@@ -49,7 +49,7 @@
 #endif
 
 namespace study {
-using ikea::hashtable::byte;
+using byte=std::byte;
 using ikea::hashtable::bytes;
 using ikea::hashtable::each;
 using ikea::hashtable::load;

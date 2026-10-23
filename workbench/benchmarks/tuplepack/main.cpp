@@ -1,67 +1,67 @@
 #include <ikea/tuplepack.h>
 #include <ikea/tuplepack/author/execution.h>
-#include <ikea/tuplepack/author/execution.h>
 #include <benchmark/benchmark.h>
 #include <cassert>
 #include <string>
 #include <vector>
 
 using namespace ikea::tuplepack;
+using namespace ikea::tuplepack::author;
 namespace {
 // Same-wire explicit control for the four-code fixture; mask/shift controls are
 // runtime, as in the point-layout experiment. It has the same width admission
 // and spare-bit preservation, but no range/effect shell. Comparison labels make
 // that boundary difference explicit rather than calling it a full-operation win.
 struct control {
-    std::array<byte, 4> shift{}, mask{}, offset{};
+    std::array<std::uint8_t, 4> shift{}, mask{}, offset{};
     std::uint64_t invalid = 0;
 };
 template <unsigned N>
-[[gnu::noinline]] std::uint64_t control_read(const control& p, const byte* row) {
+[[gnu::noinline]] std::uint64_t control_read(const control& p, const std::uint8_t* row) {
     std::uint64_t out = 0;
     for (unsigned i = 0; i < N; ++i)
         out |= std::uint64_t((row[p.offset[i]] >> p.shift[i]) & p.mask[i]) << (8 * i);
     return out;
 }
 template <unsigned N>
-[[gnu::noinline]] void control_write(const control& p, byte* row, std::uint64_t input) {
+[[gnu::noinline]] void control_write(const control& p, std::uint8_t* row, std::uint64_t input) {
     if (input & p.invalid)
         return;
     if constexpr (N == 1) {
         row[p.offset[0]] =
-            (row[p.offset[0]] & byte(~(p.mask[0] << p.shift[0]))) | (byte(input) << p.shift[0]);
+            (row[p.offset[0]] & std::uint8_t(~(p.mask[0] << p.shift[0]))) | (std::uint8_t(input) << p.shift[0]);
     } else {
         for (unsigned b = 0; b < 2; ++b) {
-            byte mask = 0, value = 0;
+            std::uint8_t mask = 0, value = 0;
             for (unsigned i = 0; i < N; ++i)
                 if (p.offset[i] == b) {
                     mask |= p.mask[i] << p.shift[i];
-                    value |= byte(input >> (8 * i)) << p.shift[i];
+                    value |= std::uint8_t(input >> (8 * i)) << p.shift[i];
                 }
             if (mask)
-                row[b] = (row[b] & byte(~mask)) | value;
+                row[b] = (row[b] & std::uint8_t(~mask)) | value;
         }
     }
 }
 template <unsigned N> void point(benchmark::State& state, bool writing, unsigned boundary) {
     const std::array<code, 4> codes{{{0, 0, 1}, {0, 1, 7}, {1, 0, 3}, {1, 3, 5}}};
-    const std::array<byte, 4> map{0, 2, 1, 3};
+    const std::array<std::uint8_t, 4> map{0, 2, 1, 3};
     auto format = *layout::make(2, codes);
-    auto r = *reader<8>::make(format, std::span(map).first(N));
-    auto w = *writer<8>::make(format, std::span(map).first(N));
-    std::vector<byte> bytes(1024 * 16, 0x5a);
-    auto v = *view::bind(format, bytes, 1024, 16);
+    auto r = *read_plan<8>::make(format, std::span(map).first(N));
+    auto w = *write_plan<8>::make(format, std::span(map).first(N));
+    std::vector<std::uint8_t> bytes(1024 * 16, 0x5a);
+    auto v = *view::attach(format, std::as_writable_bytes(std::span{bytes}), 1024, 16);
     auto read = *bind_reader(r, v);
     auto write = *bind_writer(w, v);
-    std::array<ikea::owner_write, 2> events;
-    ikea::source_write_journal effects{events};
+    std::array<ikea::journal::entry, 2> events;
+    ikea::journal effects{events};
     control p;
     for (unsigned i = 0; i < N; ++i) {
         auto c = codes[map[i]];
         p.shift[i] = c.shift;
         p.mask[i] = (1u << c.width) - 1;
         p.offset[i] = c.offset;
-        p.invalid |= std::uint64_t(byte(~p.mask[i])) << (8 * i);
+        p.invalid |= std::uint64_t(std::uint8_t(~p.mask[i])) << (8 * i);
     }
     std::array<unsigned, 8192> trace;
     std::uint64_t random = 317;
@@ -75,6 +75,63 @@ template <unsigned N> void point(benchmark::State& state, bool writing, unsigned
     auto cw = control_write<N>;
     benchmark::DoNotOptimize(cr);
     benchmark::DoNotOptimize(cw);
+    // Derive decoded slots and replacement bytes directly from the schema.
+    // Exercise the chosen competitor before timing, including source-qualified
+    // effects, then restore identical physical input for every boundary.
+    constexpr unsigned checked_row = 17;
+    const auto initial = bytes;
+    auto oracle_read = [&](unsigned row) {
+        std::uint64_t result = 0;
+        for (unsigned i = 0; i < N; ++i) {
+            const auto c = codes[map[i]];
+            for (unsigned bit = 0; bit < c.width; ++bit)
+                result |= std::uint64_t((bytes[row * 16 + c.offset] >> (c.shift + bit)) & 1)
+                          << (8 * i + bit);
+        }
+        return result;
+    };
+    const auto expected_read = oracle_read(checked_row);
+    const auto actual_read = boundary == 0 ? cr(p, bytes.data() + checked_row * 16)
+                            : boundary == 1
+                                ? r.get_unchecked(reinterpret_cast<const std::byte*>(
+                                      bytes.data() + checked_row * 16))
+                                : read.get_unchecked(checked_row);
+    if (actual_read != expected_read)
+        std::abort();
+    const std::uint64_t check_value = std::uint64_t{0x01030201} & ~p.invalid;
+    auto expected = initial;
+    for (unsigned i = 0; i < N; ++i) {
+        const auto c = codes[map[i]];
+        for (unsigned bit = 0; bit < c.width; ++bit) {
+            auto& target = expected[checked_row * 16 + c.offset];
+            const auto position = c.shift + bit;
+            target = (target & ~(1u << position)) |
+                     (((check_value >> (8 * i + bit)) & 1) << position);
+        }
+    }
+    effects.used = 0;
+    if (boundary == 0)
+        cw(p, bytes.data() + checked_row * 16, check_value);
+    else if (boundary == 1)
+        w.set_unchecked(reinterpret_cast<std::byte*>(bytes.data() + checked_row * 16), check_value);
+    else if (boundary == 3) {
+        effects.before(v, 0, checked_row * 16, N == 1 ? 1u : 2u);
+        cw(p, bytes.data() + checked_row * 16, check_value);
+    } else if (!write.set(checked_row, check_value, effects))
+        std::abort();
+    if (bytes != expected)
+        std::abort();
+    if (boundary >= 2) {
+        if (!effects.used)
+            std::abort();
+        for (const auto& event : effects.entries())
+            if (event.source != &v || event.plane ||
+                event.offset < checked_row * 16 ||
+                event.offset + event.size > checked_row * 16 + 2)
+                std::abort();
+    }
+    std::copy(initial.begin(), initial.end(), bytes.begin());
+    effects.used = 0;
     for (auto _ : state) {
         std::uint64_t result = 0;
         for (unsigned i = 0; i < trace.size(); ++i) {
@@ -85,14 +142,14 @@ template <unsigned N> void point(benchmark::State& state, bool writing, unsigned
                     cw(p, bytes.data() + row * 16, value);
                 else if (boundary == 1) {
                     if (w.accepts(value))
-                        w.set_unchecked(bytes.data() + row * 16, value);
+                        w.set_unchecked(reinterpret_cast<std::byte*>(bytes.data() + row * 16), value);
                 } else if (boundary == 3) {
                     effects.used = 0;
                     // Same range/domain/capacity and issued-source journal
                     // obligations as the ordinary command, around the control.
                     bool valid = row < v.size() && !(value & p.invalid) && effects.remaining() >= 1;
                     if (valid) {
-                        effects.before(v, ikea::byte_write{0, row * 16, N == 1 ? 1u : 2u});
+                        effects.before(v, 0, row * 16, N == 1 ? 1u : 2u);
                         cw(p, bytes.data() + row * 16, value);
                     }
                     benchmark::DoNotOptimize(valid);
@@ -105,7 +162,7 @@ template <unsigned N> void point(benchmark::State& state, bool writing, unsigned
                 if (boundary == 0)
                     result += cr(p, bytes.data() + row * 16);
                 else if (boundary == 1)
-                    result += r.get_unchecked(bytes.data() + row * 16);
+                    result += r.get_unchecked(reinterpret_cast<const std::byte*>(bytes.data() + row * 16));
                 else
                     result += read.get_unchecked(row);
             }
@@ -118,21 +175,21 @@ template <unsigned N> void point(benchmark::State& state, bool writing, unsigned
 }
 void wide(benchmark::State& state, bool writing, unsigned boundary) {
     std::array<code, 64> codes;
-    std::array<byte, 64> map, input;
+    std::array<std::uint8_t, 64> map, input;
     for (unsigned i = 0; i < 64; ++i) {
-        codes[i] = {byte(i), byte(i % 2), 7};
+        codes[i] = {std::uint8_t(i), std::uint8_t(i % 2), 7};
         map[i] = (5 * i + 3) % 64;
         input[i] = i;
     }
     auto format = *layout::make(64, codes);
-    auto r = *reader<64>::make(format, map);
-    auto w = *writer<64>::make(format, map);
-    std::vector<byte> bytes(1024 * 64, 0x5a);
-    auto v = *view::bind(format, bytes, 1024, 64);
+    auto r = *read_plan<64>::make(format, map);
+    auto w = *write_plan<64>::make(format, map);
+    std::vector<std::uint8_t> bytes(1024 * 64, 0x5a);
+    auto v = *view::attach(format, std::as_writable_bytes(std::span{bytes}), 1024, 64);
     auto read = *bind_reader(r, v);
     auto write = *bind_writer(w, v);
-    std::array<ikea::owner_write, 1> events;
-    ikea::source_write_journal effects{events};
+    std::array<ikea::journal::entry, 1> events;
+    ikea::journal effects{events};
 #if defined(__aarch64__) || defined(__AVX2__)
     auto value = native::load_packet(input.data());
 #endif
@@ -146,7 +203,7 @@ void wide(benchmark::State& state, bool writing, unsigned boundary) {
                 else
 #endif
                     if (boundary == 1)
-                    w.set_unchecked(data, input);
+                    w.set_unchecked(reinterpret_cast<std::byte*>(data), input);
                 else {
                     effects.used = 0;
                     auto ok = write.set(row, input, effects);
@@ -160,7 +217,7 @@ void wide(benchmark::State& state, bool writing, unsigned boundary) {
                 } else
 #endif
                     if (boundary == 1) {
-                    auto out = r.get_unchecked(data);
+                    auto out = r.get_unchecked(reinterpret_cast<const std::byte*>(data));
                     benchmark::DoNotOptimize(out);
                 } else {
                     auto out = read.get_unchecked(row);
@@ -189,19 +246,19 @@ std::uint64_t sum(native::packet values) {
 }
 void scan(benchmark::State& state, unsigned stride) {
     std::array<code, 16> codes;
-    std::array<byte, 16> map;
+    std::array<std::uint8_t, 16> map;
     for (unsigned i = 0; i < 16; ++i) {
         const auto width = 1 + i % 7;
-        codes[i] = {byte(i), byte(i % (9 - width)), byte(width)};
+        codes[i] = {std::uint8_t(i), std::uint8_t(i % (9 - width)), std::uint8_t(width)};
         map[i] = (5 * i + 3) % 16;
     }
     auto format = *layout::make(16, codes);
-    auto plan = *reader<64, 4>::make(format, map);
+    auto plan = *read_plan<64, 4>::make(format, map);
     const std::size_t rows = state.range(0);
-    std::vector<byte> data(rows * stride, 0x5a);
-    auto source = *const_view::bind(format, data, rows, stride);
+    std::vector<std::uint8_t> data(rows * stride, 0x5a);
+    auto source = *const_view::attach(format, std::as_bytes(std::span{data}), rows, stride);
     auto bound = *bind_reader(plan, source);
-    auto read = native_reader(bound);
+    auto read = author::native_reader(bound);
     for (auto _ : state) {
         std::uint64_t result = 0;
         for (std::size_t row = 0; row < rows; row += 4)
@@ -214,9 +271,9 @@ void scan(benchmark::State& state, unsigned stride) {
 }
 using pipeline = chain<8>;
 struct pipeline_context {
-    const reader<64>& reader;
-    const writer<64>& writer;
-    byte* data;
+    const read_plan<64>& reader;
+    const write_plan<64>& writer;
+    std::uint8_t* data;
     std::uint64_t checksum = 0;
 };
 pipeline::result decode_stage(void* opaque, std::size_t row, std::uint64_t active,
@@ -239,20 +296,20 @@ pipeline::result update_stage(void* opaque, std::size_t row, std::uint64_t activ
 void complete_stage(void*, std::size_t, std::uint64_t, native::pipeline_values) {}
 void pipeline_bench(benchmark::State& state, bool cps) {
     std::array<code, 64> codes;
-    std::array<byte, 64> map;
+    std::array<std::uint8_t, 64> map;
     for (unsigned i = 0; i < 64; ++i) {
-        codes[i] = {byte(i), byte(i % 2), 7};
+        codes[i] = {std::uint8_t(i), std::uint8_t(i % 2), 7};
         map[i] = (5 * i + 3) % 64;
     }
     auto format = *layout::make(64, codes);
-    auto r = *reader<64>::make(format, map);
-    auto w = *writer<64>::make(format, map);
-    std::vector<byte> data(1024 * 64, 0x5a);
+    auto r = *read_plan<64>::make(format, map);
+    auto w = *write_plan<64>::make(format, map);
+    std::vector<std::uint8_t> data(1024 * 64, 0x5a);
     pipeline_context c{r, w, data.data()};
     std::array<pipeline::function, 2> stages{pipeline::stage<decode_stage>,
                                              pipeline::stage<update_stage>};
-    auto plan = *pipeline::prepare(stages, pipeline::completion<complete_stage>);
-    std::array<byte, 64> zeros{};
+    auto plan = *pipeline::make(stages, pipeline::completion<complete_stage>);
+    std::array<std::uint8_t, 64> zeros{};
     auto zero = native::pipeline_values::from(native::load_packet(zeros.data()));
     for (auto _ : state) {
         c.checksum = 0;

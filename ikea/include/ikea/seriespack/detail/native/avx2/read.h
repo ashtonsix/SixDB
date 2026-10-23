@@ -252,7 +252,7 @@ template <class F, bool Dense>
     if constexpr (F::storage == geometry::local && !std::has_single_bit(Q)) {
         // Expand a whole eight-value body with its native byte permutation.
         // Residuals and stride gaps remain outside the masked load. Short
-        // composition and wider execution reuse this same reconstruction.
+        // author and wider execution reuse this same reconstruction.
         static constexpr auto map = [] {
             std::array<std::uint8_t, 8 * L> a{};
             for (unsigned v = 0; v < 8; ++v)

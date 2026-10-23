@@ -31,7 +31,7 @@ template <class E> void okay(std::expected<void, E> value, const char* reason) {
 }
 
 void series(loom::Worker& worker) {
-  using F = sp::format<20>;
+  using F = sp::layout<20>;
   constexpr std::size_t first_rows = 7, next_rows = 256;
   constexpr auto old_bytes = F::tile_bytes, next_bytes = next_rows * 20 / 8;
   auto allocation =
@@ -45,20 +45,17 @@ void series(loom::Worker& worker) {
     auto held = take(loom::hold(allocation, {0, old_bytes}), "initial Series Hold");
     auto bytes = loom::bytes(held);
     auto view =
-        take(sp::view<F, std::uint8_t>::attach(
-                 first_rows,
-                 {{{{reinterpret_cast<std::uint8_t*>(bytes.data()), bytes.size()}, F::tile_bytes},
-                   {},
-                   {}}}),
+        take(sp::view<F>::attach(
+                 first_rows, {{{bytes, F::tile_bytes},{},{}}}),
              "initial Series view");
-    auto prepared = take(sp::bind_mutation(view), "initial Series bind");
-    std::array<ikea::owner_write, 32> records;
-    ikea::source_write_journal effects{records};
+    auto prepared = take(sp::bind_writer(view), "initial Series bind");
+    std::array<ikea::journal::entry, 32> records;
+    ikea::journal effects{records};
     okay(prepared.initialize(std::span<const std::uint32_t>(first), effects),
          "initial Series construction");
     for (auto record : effects.entries())
-      require(record.source == &view && record.bytes.plane == 0 &&
-                  record.bytes.offset + record.bytes.size <= old_bytes,
+      require(record.source == &view && record.plane == 0 &&
+                  record.offset + record.size <= old_bytes,
               "initial Series effects");
     auto old_address = allocation.address;
     auto rejected = loom::grow(allocation,
@@ -67,7 +64,7 @@ void series(loom::Worker& worker) {
             "Series growth must refuse live physical Hold");
     require(allocation.address == old_address && allocation.size == old_bytes,
             "failed grow changed allocation");
-    auto reader = sp::bind_decoder<std::uint32_t>(view);
+    auto reader = sp::bind_reader<std::uint32_t>(view);
     for (std::size_t i = 0; i < first_rows; ++i)
       require(reader.get(i) == first[i], "failed grow changed Series values");
   }
@@ -79,14 +76,11 @@ void series(loom::Worker& worker) {
     auto held = take(loom::hold(allocation, {0, next_bytes}), "grown Series Hold");
     auto bytes = loom::bytes(held);
     auto view =
-        take(sp::view<F, std::uint8_t>::attach(
-                 next_rows,
-                 {{{{reinterpret_cast<std::uint8_t*>(bytes.data()), bytes.size()}, F::tile_bytes},
-                   {},
-                   {}}}),
+        take(sp::view<F>::attach(
+                 next_rows, {{{bytes, F::tile_bytes},{},{}}}),
              "grown Series view");
-    auto prepared = take(sp::bind_mutation(view), "grown Series bind");
-    auto reader = sp::bind_decoder<std::uint32_t>(view);
+    auto prepared = take(sp::bind_writer(view), "grown Series bind");
+    auto reader = sp::bind_reader<std::uint32_t>(view);
     for (std::size_t i = 0; i < next_rows; ++i)
       require(reader.get(i) == (i < first_rows ? first[i] : 0),
               "growth did not preserve prefix/initialize capacity");
@@ -94,11 +88,11 @@ void series(loom::Worker& worker) {
     std::uint64_t expected_delta = 0;
     for (std::size_t i = 0; i < appended.size(); ++i)
       expected_delta += (appended[i] = std::uint32_t(i * 73 + 1));
-    std::array<ikea::owner_write, 512> records;
-    ikea::source_write_journal effects{records};
-    sp::sum_change change;
+    std::array<ikea::journal::entry, 512> records;
+    ikea::journal effects{records};
+    sp::author::sum_change change;
     okay(prepared.replace(first_rows, std::span<const std::uint32_t>(appended),
-                          sp::row_selection::all(), change, effects),
+                          effects, sp::selection::all(), change),
          "append Series after growth");
     require(change.finish() == expected_delta, "Series append summary delta");
     std::uint64_t actual_sum = 0;
@@ -110,12 +104,12 @@ void series(loom::Worker& worker) {
     }
     require(actual_sum == sum + expected_delta, "grown Series complete summary");
     for (auto record : effects.entries())
-      require(record.source == &view && record.bytes.plane == 0 &&
-                  record.bytes.offset + record.bytes.size <= next_bytes,
+      require(record.source == &view && record.plane == 0 &&
+                  record.offset + record.size <= next_bytes,
               "grown Series effects");
     effects.used = 0;
-    sp::sum_change replacement;
-    okay(prepared.set(next_rows - 1, std::uint32_t{123}, replacement, effects),
+    sp::author::sum_change replacement;
+    okay(prepared.set(next_rows - 1, std::uint32_t{123}, effects, replacement),
          "replace grown Series last row");
     require(reader.get(next_rows - 2) == appended[appended.size() - 2] &&
                 reader.get(next_rows - 1) == 123,
@@ -129,9 +123,9 @@ void tuples(loom::Worker& worker) {
   constexpr std::size_t stride = 4, rows = 256;
   const std::array<tp::code, 4> codes{{{0, 0, 8}, {1, 0, 8}, {2, 0, 8}, {3, 0, 8}}};
   auto layout = take(tp::layout::make(stride, codes), "Tuple layout");
-  auto constructor = take(tp::constructor::make(layout), "Tuple constructor");
+  auto constructor = take(tp::write_plan<128>::make(layout), "Tuple constructor");
   auto reader_plan =
-      take(tp::reader<8>::make(layout, std::array<tp::byte, 4>{0, 1, 2, 3}), "Tuple reader plan");
+      take(tp::read_plan<8>::make(layout, std::array<std::uint8_t, 4>{0, 1, 2, 3}), "Tuple reader plan");
   auto allocation =
       take(loom::allocate(worker, {.bytes = stride, .alignment = 64}), "allocate Tuple");
   require(alloc::reserved_bytes(allocation) < rows * stride,
@@ -140,17 +134,17 @@ void tuples(loom::Worker& worker) {
     auto held = take(loom::hold(allocation, {0, stride}), "initial Tuple Hold");
     auto bytes = loom::bytes(held);
     auto view =
-        take(tp::view::bind(layout, {reinterpret_cast<tp::byte*>(bytes.data()), bytes.size()}, 1,
+        take(tp::view::attach(layout, bytes, 1,
                             stride),
              "initial Tuple view");
-    auto construct = take(tp::bind_constructor(constructor, view), "initial Tuple binding");
-    std::array<tp::construction_input, 1> input{};
+    auto construct = take(tp::bind_writer(constructor, view), "initial Tuple binding");
+    std::array<tp::packet<128>, 1> input{};
     input[0][0] = 0x34;
     input[0][1] = 0x12;
     input[0][2] = 0xcd;
     input[0][3] = 0xab;
-    std::array<ikea::owner_write, 1> records;
-    ikea::source_write_journal effects{records};
+    std::array<ikea::journal::entry, 1> records;
+    ikea::journal effects{records};
     okay(construct.initialize(0, input, effects), "initial Tuple construction");
     auto rejected = loom::grow(allocation,
         {.bytes = rows * stride, .alignment = 64});
@@ -168,27 +162,27 @@ void tuples(loom::Worker& worker) {
     auto held = take(loom::hold(allocation, {0, rows * stride}), "grown Tuple Hold");
     auto bytes = loom::bytes(held);
     auto view =
-        take(tp::view::bind(layout, {reinterpret_cast<tp::byte*>(bytes.data()), bytes.size()}, rows,
+        take(tp::view::attach(layout, bytes, rows,
                             stride),
              "grown Tuple view");
     auto construct =
-        take(tp::bind_constructor(constructor, view), "grown Tuple construction binding");
-    std::array<tp::construction_input, rows - 1> input{};
+        take(tp::bind_writer(constructor, view), "grown Tuple construction binding");
+    std::array<tp::packet<128>, rows - 1> input{};
     for (std::size_t i = 0; i < input.size(); ++i) {
       const auto value = std::uint32_t(0x10203000u + i);
       for (unsigned j = 0; j < 4; ++j)
         input[i][j] = value >> (8 * j);
     }
-    std::array<ikea::owner_write, rows> records;
-    ikea::source_write_journal effects{records};
+    std::array<ikea::journal::entry, rows> records;
+    ikea::journal effects{records};
     okay(construct.initialize(1, input, effects), "append Tuple construction");
     auto read = take(tp::bind_reader(reader_plan, view), "grown Tuple read");
     require(read.get(0) == 0xabcd1234u, "Tuple append damaged prefix");
     for (std::size_t i = 1; i < rows; ++i)
       require(read.get(i) == 0x10203000u + i - 1, "Tuple independent grown values");
     for (auto record : effects.entries())
-      require(record.source == &view && record.bytes.plane == 0 && record.bytes.offset >= stride &&
-                  record.bytes.offset + record.bytes.size <= rows * stride,
+      require(record.source == &view && record.plane == 0 && record.offset >= stride &&
+                  record.offset + record.size <= rows * stride,
               "grown Tuple effects");
   }
 }
@@ -196,9 +190,9 @@ void reserved_window(loom::Worker& worker) {
   constexpr std::size_t stride = 4;
   const std::array<tp::code, 4> codes{{{0, 0, 8}, {1, 0, 8}, {2, 0, 8}, {3, 0, 8}}};
   auto layout = take(tp::layout::make(stride, codes), "window Tuple layout");
-  auto constructor = take(tp::constructor::make(layout), "window Tuple constructor");
+  auto constructor = take(tp::write_plan<128>::make(layout), "window Tuple constructor");
   auto reader_plan =
-      take(tp::reader<8>::make(layout, std::array<tp::byte, 4>{0, 1, 2, 3}), "window Tuple reader");
+      take(tp::read_plan<8>::make(layout, std::array<std::uint8_t, 4>{0, 1, 2, 3}), "window Tuple reader");
   auto allocation =
       take(loom::allocate(
                worker,
@@ -212,14 +206,14 @@ void reserved_window(loom::Worker& worker) {
     auto held = take(loom::hold(allocation, {0, 64}), "window padding Hold");
     const auto bytes = loom::bytes(held);
     auto view =
-        take(tp::view::bind(layout, {reinterpret_cast<tp::byte*>(bytes.data()), bytes.size()}, 1,
+        take(tp::view::attach(layout, bytes, 1,
                             stride),
              "window Tuple view");
-    auto construct = take(tp::bind_constructor(constructor, view), "window construction binding");
-    std::array<tp::construction_input, 1> input{};
+    auto construct = take(tp::bind_writer(constructor, view), "window construction binding");
+    std::array<tp::packet<128>, 1> input{};
     input[0][0] = 0x71;
-    std::array<ikea::owner_write, 1> records;
-    ikea::source_write_journal effects{records};
+    std::array<ikea::journal::entry, 1> records;
+    ikea::journal effects{records};
     okay(construct.initialize(0, input, effects), "window initial construction");
     okay(loom::grow(allocation,
                    {.bytes = 4096, .reserved_bytes = 16384, .alignment = 64}),
@@ -237,7 +231,7 @@ void reserved_window(loom::Worker& worker) {
     auto held = take(loom::hold(allocation, {0, 4096}), "window body Hold");
     const auto bytes = loom::bytes(held);
     auto view =
-        take(tp::view::bind(layout, {reinterpret_cast<tp::byte*>(bytes.data()), bytes.size()}, 1024,
+        take(tp::view::attach(layout, bytes, 1024,
                             stride),
              "window body view");
     auto read = take(tp::bind_reader(reader_plan, view), "window body reader");
@@ -255,8 +249,8 @@ void reserved_window(loom::Worker& worker) {
     auto larger = take(loom::hold(allocation, {0, 8192}), "larger window Hold");
     auto larger_bytes = loom::bytes(larger);
     auto rebound =
-        take(tp::view::bind(layout,
-                            {reinterpret_cast<tp::byte*>(larger_bytes.data()), larger_bytes.size()},
+        take(tp::view::attach(layout,
+                            larger_bytes,
                             2048, stride),
              "larger window view");
     auto rebound_read = take(tp::bind_reader(reader_plan, rebound), "larger window binding");

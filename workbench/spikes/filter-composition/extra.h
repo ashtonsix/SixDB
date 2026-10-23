@@ -1,3 +1,4 @@
+#include <ikea/tuplepack/author/execution.h>
 #pragma once
 #include "runtime.h"
 #include <ikea/tuplepack.h>
@@ -40,19 +41,19 @@ template <unsigned B, bool Pair, C Op>
                                    unsigned) -> typename Chain<B>::result {
     auto &s = *static_cast<Context *>(p);
     if constexpr (Pair)
-        return {value, std::uint16_t(sp::filter_values<C::greater_equal>(value, s.lo, active) &
-                                     sp::filter_values<C::less>(value, s.hi, active))};
+        return {value, std::uint16_t(sp::author::filter_values<C::greater_equal>(value, s.lo, active) &
+                                     sp::author::filter_values<C::less>(value, s.hi, active))};
     else
-        return {value, sp::filter_values<Op>(value, s.lo, active)};
+        return {value, sp::author::filter_values<Op>(value, s.lo, active)};
 }
 template <unsigned B, bool Upper>
 [[gnu::always_inline]] auto separate(void *p, std::size_t, std::uint16_t active, Packet<B> value,
                                      unsigned) -> typename Chain<B>::result {
     auto &s = *static_cast<Context *>(p);
     if constexpr (Upper)
-        return {value, sp::filter_values<C::less>(value, s.hi, active)};
+        return {value, sp::author::filter_values<C::less>(value, s.hi, active)};
     else
-        return {value, sp::filter_values<C::greater_equal>(value, s.lo, active)};
+        return {value, sp::author::filter_values<C::greater_equal>(value, s.lo, active)};
 }
 template <class Spec>
 [[gnu::noinline]] std::uint16_t bound(Context &s, std::size_t row, word lo, word hi,
@@ -75,9 +76,9 @@ template <unsigned K> struct Pair {
     static constexpr C op = C::equal;
     [[gnu::always_inline]] static Packet<B> decoded(const Input &in, std::size_t row,
                                                     std::uint16_t active) {
-        Source<K> source{in.bytes.data(), windows * 16};
-        sp::composition::native_ops ops;
-        auto x = sp::composition::read(ops, sp::composition::describe(source), row, active);
+        Source<K> source{std::as_bytes(std::span{in.bytes}).data(), windows * 16};
+        sp::author::native_ops ops;
+        auto x = sp::author::read(ops, sp::author::expression(source), row, active);
         return {x.v};
     }
     [[gnu::always_inline]] static std::uint16_t fused(const Input &in, std::size_t row, word lo,
@@ -87,14 +88,14 @@ template <unsigned K> struct Pair {
                    inline_fused<K, C::less>(in.bytes.data(), row, hi, active);
         else {
             auto v = decoded(in, row, active);
-            return sp::filter_values<C::greater_equal>(v, lo, active) &
-                   sp::filter_values<C::less>(v, hi, active);
+            return sp::author::filter_values<C::greater_equal>(v, lo, active) &
+                   sp::author::filter_values<C::less>(v, hi, active);
         }
     }
     static word truth(const Input &in, unsigned i) { return in.truth[i]; }
 };
-using Reader = tp::native_reader<64, tp::byte, 16>;
-using Filter = tp::field_filter<64, tp::byte, 16>;
+using Reader = tp::author::native_reader<64, std::byte, 16>;
+using Filter = tp::predicate<64, std::byte, 16>;
 struct TupleInput {
     const Reader *read;
     const Filter *filter;
@@ -126,7 +127,7 @@ template <unsigned Width, C Op> struct Tuple : TupleDecode {
         return in.filter->template filter_unchecked<Op>(row, lo, active);
     }
     static word truth(const Input &in, unsigned i) {
-        return (in.view->row_unchecked(i)[0] >> in.shift) & ((1u << in.width) - 1);
+        return (std::to_integer<unsigned>(in.view->row_unchecked(i)[0]) >> in.shift) & ((1u << in.width) - 1);
     }
 };
 void measure_bound_extra(Call, Context, const Fixture &, const std::array<word, windows> &,
@@ -139,15 +140,15 @@ template <class Spec> void run_extra(const typename Spec::Input &input, const ch
     for (unsigned w = 0; w < windows; ++w)
         upper[w] =
             fixture.queries[w] + std::min(limit - fixture.queries[w], std::max(word{1}, limit / 4));
-    const auto shared = *Chain<B>::prepare(
+    const auto shared = *Chain<B>::make(
         std::array<typename Chain<B>::function, 2>{
             &Chain<B>::template stage<decode<typename Spec::Decoder>>,
             &Chain<B>::template stage<joined<B, Spec::pair, Spec::op>>},
         &Chain<B>::template completion<finish<B>>);
-    const auto single = *Chain<B>::prepare(
+    const auto single = *Chain<B>::make(
         std::array<typename Chain<B>::function, 1>{&Chain<B>::template stage<one<Spec>>},
         &Chain<B>::template completion<finish<B>>);
-    const auto split = *Chain<B>::prepare(
+    const auto split = *Chain<B>::make(
         std::array<typename Chain<B>::function, 3>{
             &Chain<B>::template stage<decode<typename Spec::Decoder>>,
             &Chain<B>::template stage<separate<B, false>>,
@@ -199,14 +200,14 @@ template <unsigned K> void run_pair() {
 }
 template <unsigned Width, unsigned Shift, unsigned Stride, C Op> void run_tuple() {
     auto layout = *tp::layout::make(1, std::array<tp::code, 1>{{{0, Shift, Width}}});
-    std::vector<tp::byte> bytes(windows * 16 * Stride);
+    std::vector<std::uint8_t> bytes(windows * 16 * Stride);
     for (unsigned i = 0; i < bytes.size(); ++i)
         bytes[i] = (i * 71 + (i >> 2) * 43) & 255;
-    auto view = *tp::view::bind(layout, bytes, windows * 16, Stride);
-    auto plan = *tp::reader<64, 16>::make(layout, std::array<tp::byte, 1>{0});
+    auto view = *tp::view::attach(layout, std::as_writable_bytes(std::span{bytes}), windows * 16, Stride);
+    auto plan = *tp::read_plan<64, 16>::make(layout, std::array<std::uint8_t, 1>{0});
     auto operation = *tp::bind_reader(plan, view);
     Reader read(operation);
-    auto filter = *tp::bind_filter(operation);
+    auto filter = *tp::bind_predicate(operation);
     TupleInput input{&read, &filter, &view, Shift, Width};
     const char *label = Stride == 1 ? "tuple_tight" : "tuple_strided";
     run_extra<Tuple<Width, Op>>(input, label);

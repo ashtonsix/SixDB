@@ -86,8 +86,8 @@ struct Population {
     std::uint64_t selected_payload_bytes{}, reserved_payload_bytes{}, allocation_bytes{}, oracle_bytes{};
     unsigned unaligned_tails{};
 
-    Population(loom::Worker& worker, sp::description d, unsigned block_count, unsigned assigned)
-        : layout(take(sp::layout::prepare(d), "prepare shared layout")) {
+    Population(loom::Worker& worker, sp::layout::options d, unsigned block_count, unsigned assigned)
+        : layout(take(sp::layout::make(d), "prepare shared layout")) {
         require(block_count && assigned <= sp::slot_capacity, "population dimensions");
         const auto begin = Clock::now();
         blocks.reserve(block_count); views.reserve(block_count);
@@ -108,8 +108,8 @@ struct Population {
             for (unsigned p = 0; p < 4; ++p)
                 planes[p] = {block.allocation.address + offsets[p], sizes[p]};
             block.windows = {planes[0], planes[1], planes[2], planes[3]};
-            auto writable = take(sp::view::bind(layout, block.windows), "bind aligned disjoint windows");
-            ikea::no_coverage effects;
+            auto writable = take(sp::view::attach(layout, block.windows), "bind aligned disjoint windows");
+            std::array<ikea::journal::entry, 16> records; ikea::journal effects{records};
             require(bool(sp::initialize(writable, effects)), "checked initialize");
             block.rows.resize(assigned);
             std::vector<unsigned> order(assigned);
@@ -135,6 +135,7 @@ struct Population {
                 } else row.reserved = row.length + (d.full ? 0u : tiny ? 1u : 3u + unsigned(h % 7));
                 require(row.reserved <= d.maximum, "application reservation within schema");
                 auto bytes = encode(row, b, r);
+                effects.used = 0;
                 require(bool(sp::append(writable, bytes, row.reserved, effects)), "checked append");
                 selected_payload_bytes += row.length;
                 reserved_payload_bytes += row.reserved;
@@ -163,14 +164,14 @@ struct Population {
     void change(unsigned source, unsigned rank, unsigned length, unsigned successor) {
         auto& block = blocks[source]; auto& row = block.rows[rank];
         row.length = length; row.successor = successor;
-        auto writable = take(sp::view::bind(layout, block.windows), "bind mutation source");
-        auto bytes = encode(row, source, rank); ikea::no_coverage effects;
+        auto writable = take(sp::view::attach(layout, block.windows), "bind mutation source");
+        auto bytes = encode(row, source, rank); std::array<ikea::journal::entry, 16> records; ikea::journal effects{records};
         require(bool(sp::replace(writable, rank, bytes, effects)), "checked fixture replacement");
         require(bool(writable.validate()), "validate changed contents");
     }
     void retire(unsigned source, unsigned rank) {
-        auto& block = blocks[source]; auto writable = take(sp::view::bind(layout, block.windows), "bind retirement");
-        ikea::no_coverage effects;
+        auto& block = blocks[source]; auto writable = take(sp::view::attach(layout, block.windows), "bind retirement");
+        std::array<ikea::journal::entry, 16> records; ikea::journal effects{records};
         require(bool(sp::retire(writable, rank, effects)), "checked fixture retirement");
         block.rows[rank].retired = true;
         require(bool(writable.validate()), "validate retired contents");
@@ -328,20 +329,22 @@ void same_counts(const lc::Sample& a, const lc::Sample& b) {
 void qualification() {
     Runtime runtime(256ull << 20);
     unsigned schema_index = 0;
-    // Cover both geometries/placements, W1/W2 and O1/O2/O4.
+    // Cover both geometries/placements, narrow/wide maxima and O1/O2/O4.
+    // The total extent also bounds each reservation: O1 narrows W2 to W1.
     // Variable W1 geometry cannot reach O4 at the fixed 256-slot capacity.
-    for (auto family : {sp::geometry::direct, sp::geometry::width})
+    for (auto family : {sp::geometry::absolute_ends, sp::geometry::sizes})
         for (auto placement : {sp::placement::grouped, sp::placement::separated})
             for (unsigned w : {1u, 2u})
                 for (unsigned o : {1u, 2u, 4u}) {
                     if (o == 4 && w == 1) continue;
-                    sp::description d{family, placement,
+                    sp::layout::options d{family, placement,
                         std::uint16_t(w == 1 ? 255 : 1023), o == 1 ? 255u : o == 2 ? 24000u : 100000u,
                         {}, bool(schema_index & 1), bool(schema_index & 2)};
                     const std::array<unsigned, 4> assigned{1, 15, 16, 17};
                     Population population(runtime.worker, d, 4, assigned[schema_index % assigned.size()]);
-                    require(population.layout.width_bytes() == w && population.layout.offset_bytes() == o,
-                        "requested schema width/offset class");
+                    const unsigned expected_width = o == 1 ? 1 : w;
+                    require(population.layout.width_bytes() == expected_width && population.layout.offset_bytes() == o,
+                        "reservation width bounded by maximum and total extent; requested offset class");
                     require(population.unaligned_tails != 0, "unaligned tail coverage");
                     population.release_allocations();
                     auto input = requests(population, 73);
@@ -362,7 +365,7 @@ void qualification() {
                 }
     // Complete scheduler option matrix on ragged overlapping requests with more
     // work than the inventory. Width changes neither requests nor their work.
-    sp::description d{sp::geometry::width, sp::placement::separated, 255, 24000, {}, false, false};
+    sp::layout::options d{sp::geometry::sizes, sp::placement::separated, 255, 24000, {}, false, false};
     {
         Population population(runtime.worker, d, 5, 127);
         population.release_allocations(); auto input = requests(population, 93);
@@ -406,8 +409,8 @@ void qualification() {
     }
     // Full immortal fixed-width blocks omit all value metadata. Hinted native
     // admission must accept an empty geometry dependency and reach payload work.
-    for (auto family : {sp::geometry::direct, sp::geometry::width}) {
-        sp::description fixed{family, sp::placement::grouped, 63, sp::slot_capacity * 12,
+    for (auto family : {sp::geometry::absolute_ends, sp::geometry::sizes}) {
+        sp::layout::options fixed{family, sp::placement::grouped, 63, sp::slot_capacity * 12,
             std::uint16_t(12), true, true};
         Population population(runtime.worker, fixed, 2, 17);
         require(!population.layout.directory_bytes() && !population.layout.lengths_bytes(),
@@ -429,7 +432,7 @@ void qualification() {
     }
     // Encoding remains valid; application validity deliberately fails at first
     // and later hops. Zero steps with an invalid rank still complete once.
-    for (auto family : {sp::geometry::direct, sp::geometry::width}) {
+    for (auto family : {sp::geometry::absolute_ends, sp::geometry::sizes}) {
         d.family = family;
         Population population(runtime.worker, d, 2, 17);
         population.retire(0, 0);
@@ -477,7 +480,7 @@ void bench(int argc, char** argv) {
         (width == 1 || width == 8 || width == 32) && repetitions >= 3 && repetitions <= 100 && hints <= 1,
         "bounded benchmark dimensions; width1/8/32 and at least3 repetitions");
     Runtime runtime((std::uint64_t(block_count) * 20000 * 4) + (64ull << 20));
-    sp::description d{family == "direct" ? sp::geometry::direct : sp::geometry::width,
+    sp::layout::options d{family == "direct" ? sp::geometry::absolute_ends : sp::geometry::sizes,
         placement == "grouped" ? sp::placement::grouped : sp::placement::separated,
         63, sp::slot_capacity * 63, {}, false, false};
     Population population(runtime.worker, d, block_count, 256);

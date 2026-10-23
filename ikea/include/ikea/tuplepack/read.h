@@ -1,27 +1,30 @@
 #pragma once
 #include <ikea/tuplepack/plan.h>
+#include <ikea/comparison.h>
 #include <ikea/tuplepack/view.h>
 #include <ikea/tuplepack/selection.h>
 
 namespace ikea::tuplepack {
-/// Borrows a named plan and view, both of which must remain at stable addresses.
+template <unsigned N, class Byte, unsigned Rows> class predicate;
+/// Borrows a named plan and view. Their values and addresses remain stable;
+/// assigning a new plan or placement requires rebinding the operation.
 /// Output/plan/selection metadata must be disjoint from mutable source storage.
-template <unsigned N, class Byte, unsigned Rows = 1> class read_operation {
-    const reader<N, Rows>* plan_;
+template <unsigned N, class Byte, unsigned Rows = 1> class reader {
+    const read_plan<N, Rows>* plan_;
     const basic_view<Byte>* source_;
-    read_operation(const reader<N, Rows>& plan, const basic_view<Byte>& source)
+    reader(const read_plan<N, Rows>& plan, const basic_view<Byte>& source)
         : plan_(&plan), source_(&source) {}
 
   public:
     static constexpr unsigned rows = Rows;
-    [[nodiscard]] static std::expected<read_operation, error> bind(const reader<N, Rows>& plan,
+    [[nodiscard]] static std::expected<reader, error> bind(const read_plan<N, Rows>& plan,
                                                                    const basic_view<Byte>& source) {
         if (plan.unit_bytes() != source.unit_bytes())
             return std::unexpected(error::description);
-        return read_operation(plan, source);
+        return reader(plan, source);
     }
-    static auto bind(const reader<N, Rows>&&, const basic_view<Byte>&) = delete;
-    static auto bind(const reader<N, Rows>&, const basic_view<Byte>&&) = delete;
+    static auto bind(const read_plan<N, Rows>&&, const basic_view<Byte>&) = delete;
+    static auto bind(const read_plan<N, Rows>&, const basic_view<Byte>&&) = delete;
     std::size_t size() const noexcept {
         return source_->size();
     }
@@ -58,19 +61,34 @@ template <unsigned N, class Byte, unsigned Rows = 1> class read_operation {
                 get_unchecked(row, detail::selected_window<Rows>(selected, row, count - i * Rows));
         }
     }
+    /// One-code predicate in original-row coordinates. A map with holes or
+    /// multiple fields rejects with map; no payload is read on rejection.
+    /// bind_predicate prepares the copied projection for repeated comparisons.
+    template <comparison Op>
+    [[nodiscard]] std::expected<std::uint64_t, error>
+    filter(std::size_t first, std::uint64_t rhs,
+           std::uint64_t active = detail::all_rows<Rows>) const;
+    /// Requires a one-code non-hole plan and an admitted active row window.
+    template <comparison Op>
+    [[gnu::always_inline]] std::uint64_t
+    filter_unchecked(std::size_t first, std::uint64_t rhs,
+                     std::uint64_t active = detail::all_rows<Rows>) const;
     const basic_view<Byte>& source() const noexcept {
         return *source_;
     }
-    const reader<N, Rows>& plan() const noexcept {
+    const read_plan<N, Rows>& plan() const noexcept {
         return *plan_;
     }
 };
 template <unsigned N, class Byte, unsigned Rows>
-auto bind_reader(const reader<N, Rows>& plan, const basic_view<Byte>& source) {
-    return read_operation<N, Byte, Rows>::bind(plan, source);
+[[nodiscard]] auto bind_reader(const read_plan<N, Rows>& plan, const basic_view<Byte>& source) {
+    return reader<N, Byte, Rows>::bind(plan, source);
 }
 template <unsigned N, class Byte, unsigned Rows>
-auto bind_reader(const reader<N, Rows>&&, const basic_view<Byte>&) = delete;
+auto bind_reader(const read_plan<N, Rows>&&, const basic_view<Byte>&) = delete;
 template <unsigned N, class Byte, unsigned Rows>
-auto bind_reader(const reader<N, Rows>&, const basic_view<Byte>&&) = delete;
+auto bind_reader(const read_plan<N, Rows>&, const basic_view<Byte>&&) = delete;
 } // namespace ikea::tuplepack
+
+// Reader predicates are part of this header's complete ordinary interface.
+#include <ikea/tuplepack/filter.h>

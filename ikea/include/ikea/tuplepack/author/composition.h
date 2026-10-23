@@ -4,12 +4,12 @@
 #include <tuple>
 #include <utility>
 
-namespace ikea::tuplepack::composition {
+namespace ikea::tuplepack::author {
 namespace detail {
 template <class A, class B> bool leaf_conflict(const A& a, const B& b) {
     bool conflict = false;
-    a.visit_fields([&](const view& av, unsigned x, byte xm) {
-        b.visit_fields([&](const view& bv, unsigned y, byte ym) {
+    a.visit_fields([&](const view& av, unsigned x, std::uint8_t xm) {
+        b.visit_fields([&](const view& bv, unsigned y, std::uint8_t ym) {
             if (!(xm & ym))
                 return;
             const ikea::detail::occupied_run ar{
@@ -43,7 +43,7 @@ template <std::size_t I = 0, std::size_t J = 1, class Tuple> bool conflicting(co
 
 /// Read composition retains each child's binding and logical coordinates.
 /// Rebuild this small parent after child substitution. Old parents retain their
-/// source bindings; aliases observe shared writes. The owner preserves reader
+/// source bindings; aliases observe shared writes. The owner preserves read_plan
 /// editions. Semantic struct assembly belongs to the caller.
 template <class... Read> class projection {
     static constexpr unsigned Rows = ikea::tuplepack::detail::common_rows<Read...>;
@@ -106,9 +106,9 @@ class mutation_group
                    children_);
         return count;
     }
-    std::size_t effect_capacity() const noexcept {
+    std::size_t store_runs() const noexcept {
         return std::apply(
-            [](const auto&... child) { return (std::size_t(0) + ... + child.effect_capacity()); },
+            [](const auto&... child) { return (std::size_t(0) + ... + child.store_runs()); },
             children_);
     }
     template <class Visit> void visit_leaves(Visit&& visit) const {
@@ -125,7 +125,7 @@ class mutation_group
                     ...);
         }(std::index_sequence_for<Operation...>{});
     }
-    template <class Coverage>
+    template <class Coverage> requires ikea::effects<Coverage, view>
     [[gnu::always_inline]] void
     set_unchecked(std::size_t row, const input_type& input, Coverage& effects,
                   std::uint64_t active = ikea::tuplepack::detail::all_rows<Rows>) const {
@@ -143,7 +143,8 @@ class mutation_group
         }
     }
 };
-template <class... Operation> auto bind_group(Operation... operations) {
+template <class... Operation>
+[[nodiscard]] auto bind_group(Operation... operations) {
     return mutation_group<Operation...>::bind(std::move(operations)...);
 }
-} // namespace ikea::tuplepack::composition
+} // namespace ikea::tuplepack::author

@@ -43,9 +43,9 @@ struct swiss_read_masks {
 // Caller supplies at least Groups logical groups. Every load stays within the
 // assigned controls, including wrap and custom unaligned backing.
 template <unsigned Groups>
-[[gnu::always_inline]] swiss_read_masks compare_swiss_read(const byte* controls, std::size_t first,
+[[gnu::always_inline]] swiss_read_masks compare_swiss_read(const std::uint8_t* controls, std::size_t first,
                                                            std::size_t step, std::size_t mask,
-                                                           byte tag) {
+                                                           std::uint8_t tag) {
     static_assert(Groups == 2 || Groups == 4);
     swiss_read_masks out{};
 #if defined(__AVX512BW__)

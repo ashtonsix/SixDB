@@ -51,8 +51,8 @@ ranks.
 | **StreamPack** | Its compact geometry image and admission/decoding, tombstones and retirement, optional U storage, fused value reads, native packets and coordinated payload/geometry edits and transfer. |
 | **Collection / owner** | Storage and schema identity, coherent retained versions, read/write authority, allocation growth, logical holders and remaps, sorting/deduplication policy and transaction publication. |
 
-A StreamPack layout prepares the geometry and value rules together. One named view
-binds the payload and metadata; callers do not attach a second geometry view.
+A StreamPack layout combines the geometry and value rules. One named view
+attaches the payload and metadata; callers do not attach a second geometry view.
 The implementation reuses geometry bodies inside complete value operations. Sharing
 those bodies does not require another allocation or per-value indirect call.
 
@@ -65,10 +65,11 @@ If a consumer stores U in its own record or tuple plane, it can compose Interval
 that plane and a payload itself. The stock StreamPack recipe instead either manages U
 or derives `U=R`. Omitting U does not select an external length provider.
 
-## Prepare a schema
+## Make a shared layout
 
-Prepare one immutable `layout` from a `description` and share it among blocks with
-that schema:
+Call `layout::make(layout::options)` once and share the immutable layout among
+blocks with that law. The options describe byte relationships and value promises;
+actual addresses, plane extents and owner identity belong to each attachment:
 
 | Schema fact | Meaning |
 | --- | --- |
@@ -117,9 +118,9 @@ followed by U groups. Geometry is always first; there is no second plane-order o
 Grouped is the default for complete value access. Planar can help U-only scans but pays
 for all 256 geometry fields even at partial occupancy. With Absolute Ends or fixed
 geometry, only U uses the lengths window. Without a geometry/U pair, new schemas
-normalize placement to grouped. Legacy layouts retain their original placement laws.
+normalize placement to grouped.
 
-## Bind storage and admit contents
+## Attach storage and validate contents
 
 A view borrows four disjoint byte windows, which may be spans of one owner allocation.
 The **effect plane** number names each window in reported writes:
@@ -144,8 +145,8 @@ retired reservations and slack. A sum of live used lengths cannot replace it.
 
 The setup sequence separates placement from contents:
 
-1. Prepare the immutable layout.
-2. `view::bind` checks directory/control minimum sizes, lengths alignment, pointer
+1. Make the immutable layout.
+2. `view::attach` checks directory/control minimum sizes, lengths alignment, pointer
    ranges and window disjointness, including nonoverlap with the layout object.
    It does not inspect encoded values.
 3. `initialize` constructs an empty block, resetting directory and control. It does
@@ -186,7 +187,7 @@ rules.
 
 ## Mutate values and pack reservations
 
-Checked mutations take an effects sink for issued writes. Before entry, the owner
+Checked mutations take `ikea::journal&` for issued writes. Before entry, the owner
 supplies exclusive authority, admitted contents and enough effect capacity. Every
 checked refusal preserves supplied bytes and effect state.
 
@@ -225,13 +226,16 @@ Conservative journal capacities are:
 
 | Operation | Entries |
 | --- | --- |
-| Initialize | At most 2 |
-| Append | `layout::append_effect_capacity()` |
-| Replace / retire | At most 2 / 1 |
-| Soft pack | `layout::pack_effect_capacity(count)` |
-| Transfer | `2 + selected_count * destination.format().append_effect_capacity()` |
+| Initialize | `effect_capacity_initialize(view)`, at most 2 |
+| Append | `effect_capacity_append(view,input,R)` |
+| Replace | `effect_capacity_replace(view,rank,input)`, at most 2 |
+| Retire | `effect_capacity_retire(view,rank)`, 1 |
+| Soft pack | `effect_capacity_soft_pack(view,shrink)` |
+| Transfer | `effect_capacity_transfer(destination,selected_count)` |
 
-Exact append/replace admission can accept a smaller grant. Never assume optional
+These are additional records, not total journal capacity; they neither reserve
+records nor admit the command. Checked append and replace require these command-specific
+bounds. Never assume optional
 coalescing makes an insufficient grant safe. Hooks cannot allocate, fail, suspend or
 invalidate admitted inputs between preflight and stores.
 
@@ -250,10 +254,19 @@ metadata together for old readers. Owning backing alone does not authorize chang
 
 ## Compose complete consumers
 
-`author::dispatch` resolves the schema once around a useful operation. Typed
-`author::access` assumes admitted contents and ranks, except `get` checks rank/liveness.
+`author::visit` resolves the schema once around a useful operation. Typed
+`author::visit(view,body)` selects a typed `author::access` once for a complete
+consumer. The view must be a named lvalue: the access borrows its identity and may
+escape the callback. Rvalue views are rejected; name an `as_const()` result before
+visiting it, and retain the view, layout and backing while any access uses them.
+One-shot free reads can still take `view.as_const()` directly. Access assumes
+admitted contents and ranks, except `get` checks rank/liveness.
 `rebind` requires the exact same shared layout object. Trusted mutations additionally
-require command, alias and effects-capacity proofs before entry.
+require command, overlap and effects-capacity proofs before entry. Public
+`initialize_unchecked`, `append_unchecked`, `replace_unchecked`, `retire_unchecked`
+and `soft_pack_unchecked` sit beside their checked peers. Their effects policy
+satisfies `ikea::effects`; `no_effects` is an explicit trusted choice. Typed-access
+overloads reuse a schema already selected by `author::visit`.
 
 `native::read16` returns sixteen offsets and used lengths in native registers plus
 an original-rank live mask. It reuses geometry decoding and adds U where present.
@@ -272,16 +285,38 @@ Explicit native execution is available for little-endian NEON, AVX2 and AVX-512.
 The stored byte law is ISA-independent. SVE2 and arbitrary-bit field codecs are not
 selected production recipes. CPS stages stay bounded; the owner decides any Loom wait.
 
-## Portable descriptor and further reading
+## Headless layout description
 
-The portable eight-byte **version 3** descriptor uses byte 0 bits 6–7=`3`, bits
-0–1=encoding 0/1/2, bit 2=planar, bit 3=full, bit 4=immortal and bit 5=fixed-present.
-Bytes 1–2 hold M as u16, bytes 3–5 B as u24 and bytes 6–7 fixed R as u16, zero when
-absent. New noncanonical flags are rejected. Version 2 still decodes with its original
-carriers, placement, alignment and exact descriptor re-encoding. This descriptor is
-distinct from the historical standalone Boundlist descriptor retained only for
-compatibility controls. Convert by constructing/transferring
-into a newly prepared layout; retagging bytes does not convert them.
+Data planes contain no per-block schema tag, version or description. The parent
+encodes a shared layout once, for example in a schema selected by a short group
+id. Assigned count and occupied extent remain mutable data in the caller-placed
+control plane. They are not part of the shared layout description.
+
+`layout::encoded_size()` is 13. `encode(span<std::byte>)` returns the written
+length or `error::capacity` without partial output. `layout::decode` requires
+exactly one complete description. The shared schema frame is:
+
+| Bytes | Meaning |
+| --- | --- |
+| 0–1 | Module tag `SK` |
+| 2 | Byte-law version 1 |
+| 3–4 | Little-endian body length, 8 |
+| 5 | Bits 0–1: geometry 0/1/2; bit 2: separated R/U; bit 3: full; bit 4: immortal; bit 5: fixed present; bits 6–7 zero |
+| 6–7 | M as little-endian u16 |
+| 8–10 | B as little-endian u24 |
+| 11–12 | Fixed R as little-endian u16, zero when absent |
+
+Decode rejects unknown tags/versions, truncated/trailing data, reserved bits,
+invalid bounds and noncanonical placement flags. Grouped/separated relationships
+inside the lengths plane belong to the byte law; the plane's actual address and
+accessible byte grant belong to attachment. Persist `encode`'s bytes, never the
+native `layout` object.
+
+The former eight-byte descriptors and their legacy geometry are retired. The
+[new schema checks](../../test/streampack/encodings.cpp) retain their rejection and
+independent current body fixtures. Historical readers and comparisons remain
+recoverable with their [source epoch](../../../workbench/spikes/intervals/GRADUATION.md).
+Retagging old data is not a format conversion.
 
 [Owner integration](../integration.md) explains Loom/Orbital visibility, retention and
 publication. The [current portfolio qualification](../../../workbench/spikes/boundlist/PORTFOLIO.md)

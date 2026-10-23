@@ -1,50 +1,12 @@
 #pragma once
+#include <ikea/seriespack/detail/physical_source.h>
 #include <ikea/seriespack/detail/mutation/assignment.h>
 
-namespace ikea::seriespack::composition {
+namespace ikea::seriespack::author {
 #if defined(__aarch64__) || defined(__AVX2__)
 namespace range_detail {
-template <class E> auto physical_source(const E&) {
-    return nullptr;
-}
-template <unsigned K, unsigned H, unsigned P, class S>
-const S*
-physical_source(const value_expression<
-                K, H, payload_expression<P, leaf<S, field_kind::body>, leaf<S, field_kind::tail>>,
-                leaf<S, field_kind::head0>, leaf<S, field_kind::head1>>& value) {
-    using F = typename S::format_type;
-    if constexpr (K != F::width || H != F::heads)
-        return nullptr;
-    const S* source;
-    if constexpr (P >= 8)
-        source = &value.payload.body.source;
-    else if constexpr (P)
-        source = &value.payload.tail.source;
-    else
-        source = &value.head0.source;
-    if constexpr (P >= 8)
-        if (source != &value.payload.body.source)
-            return nullptr;
-    if constexpr (P % 8)
-        if (source != &value.payload.tail.source)
-            return nullptr;
-    if constexpr (H >= 8)
-        if (source != &value.head0.source)
-            return nullptr;
-    if constexpr (H == 16)
-        if (source != &value.head1.source)
-            return nullptr;
-    return source;
-}
-template <class S, class Coverage> struct physical_coverage {
-    const S& source;
-    Coverage& coverage;
-    void before(byte_write bytes) const {
-        coverage.before(source, bytes);
-    }
-};
 template <class S, field_kind Field> auto striped_tail(const leaf<S, Field>& value) {
-    if constexpr (Field == field_kind::tail && S::format_type::storage == geometry::striped)
+    if constexpr (Field == field_kind::tail && S::layout_type::storage == geometry::striped)
         return &value;
     else
         return nullptr;
@@ -88,13 +50,30 @@ template <class Coverage, class Target> struct other_coverage {
         return {};
     }
     template <class S, field_kind Field>
+        requires(Field == field_kind::tail && std::is_same_v<S, Target>)
+    [[gnu::always_inline]] void write(const leaf<S, Field>& destination, std::size_t row,
+                                      write_token) const {
+        static_assert(ikea::effects<Coverage, S>);
+        // A batched tail is covered once by the enclosing tile. Keep this
+        // identity test visible before paying for an unmatched footprint call.
+        if (&destination.source != &target)
+            write_other_tail(destination, row);
+    }
+    template <class S, field_kind Field>
+        requires(!(Field == field_kind::tail && std::is_same_v<S, Target>))
     void write(const leaf<S, Field>& destination, std::size_t row, write_token) const {
-        if constexpr (Field == field_kind::tail && std::is_same_v<S, Target>)
-            if (&destination.source == &target)
-                return;
-        visit_writes16<typename S::format_type, write_field<Field>>(
+        static_assert(ikea::effects<Coverage, S>);
+        visit_writes16<typename S::layout_type, write_field<Field>>(
             destination.source, row,
-            [&](byte_write bytes) { coverage.before(destination.source, bytes); });
+            [&](ikea::detail::write_span bytes) { coverage.before(destination.source, bytes.plane, bytes.offset, bytes.size); });
+    }
+
+  private:
+    void write_other_tail(const leaf<Target, field_kind::tail>& destination,
+                          std::size_t row) const {
+        visit_writes16<typename Target::layout_type, write_field<field_kind::tail>>(
+            destination.source, row,
+            [&](ikea::detail::write_span bytes) { coverage.before(destination.source, bytes.plane, bytes.offset, bytes.size); });
     }
 };
 } // namespace range_detail
@@ -111,9 +90,9 @@ void replace_regions_unchecked(const Expression& destination, std::size_t first,
     std::size_t offset = 0;
     const auto tail = range_detail::striped_tail(destination);
     if constexpr (std::is_pointer_v<decltype(tail)>) {
-        using F = typename std::remove_pointer_t<decltype(tail)>::format_type;
+        using F = typename std::remove_pointer_t<decltype(tail)>::layout_type;
         while (offset < count && (first + offset) % F::tile_rows) {
-            composition::replace16_unchecked(destination, first + offset, input + offset,
+            author::replace16_unchecked(destination, first + offset, input + offset,
                                              mask(first + offset), summary, coverage);
             offset += 16;
         }
@@ -128,7 +107,7 @@ void replace_regions_unchecked(const Expression& destination, std::size_t first,
             });
             if (!complete) {
                 ikea::seriespack::detail::each<F::tile_rows / 16>([&](auto r) {
-                    composition::replace16_unchecked(destination, origin + r * 16,
+                    author::replace16_unchecked(destination, origin + r * 16,
                                                      input + offset + r * 16, masks[r], summary,
                                                      coverage);
                 });
@@ -140,7 +119,7 @@ void replace_regions_unchecked(const Expression& destination, std::size_t first,
             ikea::seriespack::detail::each<native::striped_tail_batch<F>::stripes>([&](auto s) {
                 coverage.before(
                     tail->source,
-                    {0, tile_offset + ikea::seriespack::detail::stripe_offset<F>(s), 32});
+                    0, tile_offset + ikea::seriespack::detail::stripe_offset<F>(s), 32);
             });
             using Target = std::remove_cvref_t<decltype(tail->source)>;
             range_detail::other_coverage<Coverage, Target> effects{coverage, tail->source};
@@ -150,18 +129,18 @@ void replace_regions_unchecked(const Expression& destination, std::size_t first,
                 native::striped_tail_batch<F> batch;
                 ikea::seriespack::detail::each<F::tile_rows / 32>([&](auto group) {
                     constexpr auto r = group * 32 + half * 16;
-                    const auto value = composition::replacement_values16(
+                    const auto value = author::replacement_values16(
                         destination, origin + r, input + offset + r, masks[group * 2 + half],
                         summary);
                     range_detail::batch_writer<F, group, Target> writer{{}, batch, tail->source};
                     assign(writer, destination, origin + r, value);
                 });
-                batch.store(plane.bytes.data() + tile_offset, half);
+                batch.store(ikea::to_u8(plane.bytes).data() + tile_offset, half);
             });
         }
     }
     for (; offset < count; offset += 16)
-        composition::replace16_unchecked(destination, first + offset, input + offset,
+        author::replace16_unchecked(destination, first + offset, input + offset,
                                          mask(first + offset), summary, coverage);
 }
 
@@ -172,22 +151,22 @@ void replace_unchecked(const Expression& destination, std::size_t first, std::si
     while (offset < count && (first + offset) % 16) {
         const auto row = first + offset;
         if (mask(row - row % 16) & (1u << (row % 16)))
-            composition::replace_point_unchecked(destination, row, input[offset], summary,
+            author::replace_point_unchecked(destination, row, input[offset], summary,
                                                  coverage);
         ++offset;
     }
     const auto regions = (count - offset) / 16 * 16;
     if (regions)
-        composition::replace_regions_unchecked(destination, first + offset, regions, input + offset,
+        author::replace_regions_unchecked(destination, first + offset, regions, input + offset,
                                                mask, summary, coverage);
     offset += regions;
     while (offset < count) {
         const auto row = first + offset;
         if (mask(row - row % 16) & (1u << (row % 16)))
-            composition::replace_point_unchecked(destination, row, input[offset], summary,
+            author::replace_point_unchecked(destination, row, input[offset], summary,
                                                  coverage);
         ++offset;
     }
 }
 #endif
-} // namespace ikea::seriespack::composition
+} // namespace ikea::seriespack::author

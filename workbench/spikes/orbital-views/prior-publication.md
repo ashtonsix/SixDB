@@ -34,7 +34,7 @@ Only the immediately preceding compatible span is coalesced. Substituted
 children report their actual sources, even when their parents or fields differ.
 
 Change granularity belongs with the data unit and its representation. SeriesPack's
-[footprints](../../../ikea/include/ikea/seriespack/detail/mutation/footprint.h)
+[footprints](../../../ikea/include/ikea/seriespack/author/mutation.h)
 depend on transposed residuals, tile geometry and separate head planes. Its
 [assignment](../../../ikea/include/ikea/seriespack/detail/mutation/assignment.h)
 walk shares the expression used for native stores and coverage. Packed stores
@@ -53,7 +53,7 @@ remain separate owner state. Unit reconstruction and certification must include
 the required interpretation, not simply a hash or diff of body bytes.
 
 Useful performance patterns are already implemented in
-[physical mutation](../../../ikea/include/ikea/seriespack/detail/mutation/physical.h)
+[physical mutation](../../../ikea/include/ikea/seriespack/author/mutation.h)
 and [composed mutation](../../../ikea/include/ikea/seriespack/detail/mutation/composed.h):
 freeze placement once, describe maximal contiguous store runs outside native
 loops, and assemble complete substituted striped tiles in registers before

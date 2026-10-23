@@ -70,7 +70,7 @@ options parse(int argc, char** argv) {
     word sum = 0;
     const volatile byte* data = memory.data();
     for (std::size_t i = 0; i < memory.size(); i += 64)
-        sum += data[i];
+        sum += std::to_integer<unsigned>(data[i]);
     asm volatile("" : "+r"(sum) : : "memory");
 }
 double elapsed(clock::time_point start) {

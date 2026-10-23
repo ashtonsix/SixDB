@@ -31,9 +31,9 @@ int main() {
     auto *memory = static_cast<bc::byte *>(
         mmap(nullptr, 2 * page, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0));
     assert(memory != MAP_FAILED && mprotect(memory + page, page, PROT_NONE) == 0);
-    bc::destination target{{memory, page}};
-    std::array<ikea::owner_write, 1> entries;
-    ikea::source_write_journal effects{entries};
+    bc::view target{{memory, page}};
+    std::array<ikea::journal::entry, 1> entries;
+    ikea::journal effects{entries};
     auto bound = bec_study::bound_encoder::bind(target, effects);
     assert(bound);
     std::mt19937_64 rng(0xbece);
@@ -44,7 +44,7 @@ int main() {
             for (unsigned i = 0; i < 256; ++i)
                 order[i] = i;
             std::shuffle(order.begin(), order.end(), rng);
-            bc::plain_block input{};
+            std::array<std::byte, 32> input{};
             for (unsigned i = 0; i < population; ++i)
                 input[order[i] / 8] |= bc::byte(1u << (order[i] % 8));
             std::array<bc::byte, 64> reference{};
@@ -70,17 +70,17 @@ int main() {
                     assert(effects.used == unsigned(size != 0));
                     if (size) {
                         assert(effects.entries()[0].source == &target);
-                        assert(effects.entries()[0].bytes.offset == offset);
-                        assert(effects.entries()[0].bytes.size == size);
+                        assert(effects.entries()[0].offset == offset);
+                        assert(effects.entries()[0].size == size);
                     }
                 };
                 std::fill(memory, memory + page, bc::byte{0xa5});
                 check(input, page - size);
                 for (unsigned i = 0; i < page - size; ++i)
                     assert(memory[i] == bc::byte{0xa5});
-                auto source = bc::source::admit({memory + page - size, size}, size, population);
+                auto source = bc::bind_reader({memory + page - size, size}, size, population);
                 assert(source);
-                bc::plain_block decoded;
+                std::array<std::byte, 32> decoded;
                 bc::decode(*source, decoded);
                 assert(decoded == input);
                 bc::native::store(decoded.data(), bc::native::read(*source));

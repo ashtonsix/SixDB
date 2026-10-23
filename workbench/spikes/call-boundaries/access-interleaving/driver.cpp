@@ -22,13 +22,13 @@ template<class T, class E> T require(std::expected<T, E> value, const char* mess
 
 tp::layout format(unsigned shift) {
   std::array<tp::code, 64> codes;
-  for (unsigned i = 0; i < codes.size(); ++i) codes[i] = {tp::byte(i), tp::byte(shift), 7};
+  for (unsigned i = 0; i < codes.size(); ++i) codes[i] = {std::uint8_t(i), std::uint8_t(shift), 7};
   return require(tp::layout::make(64, codes), "TuplePack layout");
 }
-tp::reader<64> plan(const tp::layout& layout) {
-  std::array<tp::byte, 64> map;
+tp::read_plan<64> plan(const tp::layout& layout) {
+  std::array<std::uint8_t, 64> map;
   for (unsigned i = 0; i < map.size(); ++i) map[i] = i;
-  return require(tp::reader<64>::make(layout, map), "TuplePack reader plan");
+  return require(tp::read_plan<64>::make(layout, map), "TuplePack reader plan");
 }
 
 Selected::Selected(loom::Worker& worker, std::size_t rows, Word version, Word representation,
@@ -36,14 +36,14 @@ Selected::Selected(loom::Worker& worker, std::size_t rows, Word version, Word re
     : allocation(require(loom::allocate(worker, {.bytes = rows * 64}), "fixture allocation")),
       held(require(loom::hold(allocation, {0, rows * 64}), "fixture Hold")),
       layout(format(shift)), prepared(plan(layout)),
-      source(require(tp::view::bind(layout,
-          {reinterpret_cast<tp::byte*>(loom::bytes(held).data()), rows * 64}, rows, 64), "source View")),
+      source(require(tp::view::attach(layout,
+          loom::bytes(held).first(rows * 64), rows, 64), "source View")),
       operation(require(tp::bind_reader(prepared, source), "bound reader")), reader(operation),
       mask(rows - 1), version(version), representation(representation), seed(seed), shift(shift) {
   check(std::has_single_bit(rows) && rows <= (1u << 20) && shift <= 1, "fixture shape");
   for (std::size_t row = 0; row < rows; ++row)
     for (unsigned byte = 0; byte < 64; ++byte)
-      source.row_unchecked(row)[byte] = decoded(row, byte) << shift;
+      source.row_unchecked(row)[byte] = std::byte(decoded(row, byte) << shift);
   check(reader.admit(rows - 1), "last native row admission");
 }
 Selected::~Selected() { loom::release(held); loom::release(allocation); }
@@ -53,7 +53,7 @@ Word Selected::link(Word row, Word mask, unsigned seed) {
   // discovered from the decoded row, rather than supplied by the loop counter.
   return (row * 5 + (seed | 1)) & mask;
 }
-tp::byte Selected::decoded(Word row, unsigned byte) const {
+std::uint8_t Selected::decoded(Word row, unsigned byte) const {
   if (byte < 3) return (link(row, mask, seed) >> (7 * byte)) & 127;
   return (row * 17 + byte * 13 + seed) & 127;
 }
@@ -106,13 +106,13 @@ void oracle(const Frame& frame, Word version, Word representation) {
         "fixture selected meaning changed");
   // Decode the declared logical fixture formula; never call Ikea or read its
   // encoded storage here. The next cursor and order-sensitive sum are independent.
-  std::array<tp::byte, 64> expected{};
+  std::array<std::uint8_t, 64> expected{};
   Word row = frame.start, sum = 0;
   for (Word step = 0; step < frame.steps; ++step) {
     const auto next = (row * 5 + (frame.selected->seed | 1)) & frame.selected->mask;
     Word first = 0;
     for (unsigned byte = 0; byte < 64; ++byte) {
-      const tp::byte value = byte < 3 ? (next >> (7 * byte)) & 127 :
+      const std::uint8_t value = byte < 3 ? (next >> (7 * byte)) & 127 :
           (row * 17 + byte * 13 + frame.selected->seed) & 127;
       expected[byte] |= value;
       if (byte < 8) first |= Word(value) << (8 * byte);
@@ -120,7 +120,7 @@ void oracle(const Frame& frame, Word version, Word representation) {
     sum = std::rotl(sum, 9) ^ (first + row + frame.identity);
     row = next;
   }
-  std::array<tp::byte, 64> actual;
+  std::array<std::uint8_t, 64> actual;
   tp::native::store_packet(actual.data(), frame.output.get());
   check(actual == expected && frame.sum == sum && frame.final_row == row &&
         frame.visits == frame.steps && frame.done == 1, "independent result/once oracle");

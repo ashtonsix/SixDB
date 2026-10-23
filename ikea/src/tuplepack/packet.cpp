@@ -2,9 +2,9 @@
 #include <ikea/tuplepack/detail/packet_plan.h>
 
 namespace ikea::tuplepack::detail {
-std::array<byte, 64> read_packet_buffered(const packet_read &p, unsigned rows, const byte *first,
+std::array<std::uint8_t, 64> read_packet_buffered(const packet_read &p, unsigned rows, const std::uint8_t *first,
                                           std::size_t stride, std::uint64_t active) {
-    std::array<byte, 64> result{};
+    std::array<std::uint8_t, 64> result{};
 #if defined(__aarch64__) || defined(__AVX2__)
     native::store_packet(result.data(), native::read(p, rows, first, stride, active));
 #else
@@ -22,8 +22,8 @@ std::array<byte, 64> read_packet_buffered(const packet_read &p, unsigned rows, c
 #endif
     return result;
 }
-void write_packet_buffered(const packet_write &p, unsigned rows, byte *first, std::size_t stride,
-                           const std::array<byte, 64> &input, std::uint64_t active) {
+void write_packet_buffered(const packet_write &p, unsigned rows, std::uint8_t *first, std::size_t stride,
+                           const std::array<std::uint8_t, 64> &input, std::uint64_t active) {
 #if defined(__aarch64__) || defined(__AVX2__)
     native::write(p, rows, first, stride, native::load_packet(input.data()), active);
 #else
@@ -33,7 +33,7 @@ void write_packet_buffered(const packet_write &p, unsigned rows, byte *first, st
         auto row = first + r * stride;
         for (unsigned i = 0; i < p.place.count; ++i) {
             const unsigned offset = p.place.offsets[i];
-            byte mask = 0, value = 0;
+            std::uint8_t mask = 0, value = 0;
             for (unsigned j = 0; j < p.count; ++j) {
                 const auto &b = p.stores[j];
                 if (b.offset != offset)
@@ -43,7 +43,7 @@ void write_packet_buffered(const packet_write &p, unsigned rows, byte *first, st
                     value |= input[p.read.ordering.offset(r, b.input[k])] << b.shift[k];
             }
             // Also reissue any preserved bytes inside the admitted compact span.
-            row[offset] = (mask == 255 ? 0 : row[offset] & byte(~mask)) | value;
+            row[offset] = (mask == 255 ? 0 : row[offset] & std::uint8_t(~mask)) | value;
         }
     }
 #endif
@@ -52,7 +52,7 @@ void write_packet_buffered(const packet_write &p, unsigned rows, byte *first, st
 
 #if defined(__aarch64__) || defined(__AVX2__)
 namespace ikea::tuplepack::native {
-IKEA_TUPLE_CC packet read(const detail::packet_read &p, unsigned rows, const byte *first,
+IKEA_TUPLE_CC packet read(const detail::packet_read &p, unsigned rows, const std::uint8_t *first,
                           std::size_t stride, std::uint64_t active) {
     switch (rows) {
     case 2:
@@ -71,7 +71,7 @@ IKEA_TUPLE_CC packet read(const detail::packet_read &p, unsigned rows, const byt
         __builtin_unreachable();
     }
 }
-IKEA_TUPLE_CC void write(const detail::packet_write &p, unsigned rows, byte *first,
+IKEA_TUPLE_CC void write(const detail::packet_write &p, unsigned rows, std::uint8_t *first,
                          std::size_t stride, packet input, std::uint64_t active) {
     switch (rows) {
     case 2:

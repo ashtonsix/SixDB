@@ -3,7 +3,7 @@
 #include <algorithm>
 #include <bit>
 
-namespace ikea::seriespack::composition {
+namespace ikea::seriespack::author {
 namespace detail {
 template <class E> inline constexpr bool local_index = false;
 template <unsigned K, class P, class H0, class H1>
@@ -60,8 +60,8 @@ indexof_unchecked(const Expression& expression, std::size_t first, unsigned coun
         }
     }
 #endif
-    const auto matches = composition::filter_unchecked<comparison::equal>(expression, first,
+    const auto matches = author::filter_unchecked<comparison::equal>(expression, first,
                                                                           count, rhs, active);
     return std::min(unsigned(std::countr_zero(matches)), count);
 }
-} // namespace ikea::seriespack::composition
+} // namespace ikea::seriespack::author

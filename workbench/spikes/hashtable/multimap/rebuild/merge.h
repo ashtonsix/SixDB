@@ -5,10 +5,10 @@
 namespace write_arch::rebuild {
 struct full_value_transfer {
     template<class Table> static auto read_primary(const byte* p,unsigned row) {
-        return access::primary_value<Table>(p,row);
+        return access::primary_value<Table>(ikea::to_u8(p),row);
     }
     template<class Table> static void write_primary(byte* p,unsigned row,const typename Table::value_type& value) {
-        access::write_value<Table>(p,row,value);
+        access::write_value<Table>(ikea::to_u8(p),row,value);
     }
 };
 // Private unpublished destination, same seed/domain and at least as many bucket
@@ -40,7 +40,7 @@ void merge_into(Destination& output,const SourceOwner& input,Reduce&& reduce,Tra
         const auto* source=from.primary.data+bucket*Source::stride;
         for(unsigned row=0;row<Source::N;++row)if(live_row<Source>(source,row)){
             const word q=[&]{if constexpr(Source::bitmap)return word(row);
-                else return ht::point<Source::encoding>(source,row,Source::N);}();
+                else return write_arch::point<Source::encoding>(source,row,Source::N);}();
             const word target_bucket=[&]{
                 const word prefix=[](word bucket){if constexpr(delta==64)return word{0};else return bucket<<delta;}(bucket);
                 if constexpr(Target::K==64)return prefix;else return prefix|(q>>Target::K);
@@ -59,10 +59,10 @@ void merge_into(Destination& output,const SourceOwner& input,Reduce&& reduce,Tra
                     to.size+=!present;occupy<Target>(target,target_row,reduced);Transfer::template write_primary<Target>(target,target_row,next);
                 }
             }else {
-                const auto found=access::primary_find<Target>(target,reduced);
+                const auto found=access::primary_find<Target>(ikea::to_u8(target),reduced);
                 if(found!=Target::N){Transfer::template write_primary<Target>(target,found,reduce(Transfer::template read_primary<Target>(target,found),value));continue;}
                 const auto free=ht::load<Target::T>(target+Target::flags_offset);
-                if(free&&!target[Target::overflow_offset]){
+                if(free&&target[Target::overflow_offset]==byte{0}){
                     const auto next_row=unsigned(std::countr_zero(free));occupy<Target>(target,next_row,reduced);
                     Transfer::template write_primary<Target>(target,next_row,value);++to.size;
                 }else {
@@ -73,7 +73,7 @@ void merge_into(Destination& output,const SourceOwner& input,Reduce&& reduce,Tra
             }
         }
     }
-    for(std::size_t slot=0;slot<from.groups*16;++slot)if(ht::detail::occupied_control(from.controls.data[slot])){
+    for(std::size_t slot=0;slot<from.groups*16;++slot)if(write_arch::occupied_control(from.controls.data[slot])){
         const auto* tuple=from.slots.data+slot*Source::tuple_bytes;
         if constexpr(requires{typename Transfer::borrowed_type;})
             hashed(ht::load<Source::key_bytes>(tuple),Transfer::template materialize<Target>(transform(Transfer::read_cell(tuple+Source::key_bytes))));

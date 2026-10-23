@@ -103,47 +103,49 @@ void resolve(const v::ReadData& source, std::span<const v::Update> input,
 }
 
 template<class View>
-void account(const ikea::source_write_journal& effects, const View& view,
+void account(const ikea::journal& effects, const View& view,
              std::size_t extent, v::KernelCosts& costs) {
   costs.issued_spans += effects.used;
   for (const auto& effect : effects.entries()) {
     // Trusted post-admission continuation: these are invariant checks, never
     // a fallible public return after stores have begun. Resolve before closure.
-    assert(effect.source == &view && effect.bytes.plane == 0 &&
-        effect.bytes.offset <= extent && effect.bytes.size <= extent - effect.bytes.offset);
-    costs.issued_bytes += effect.bytes.size;
+    assert(effect.source == &view && effect.plane == 0 &&
+        effect.offset <= extent && effect.size <= extent - effect.offset);
+    costs.issued_bytes += effect.size;
   }
 }
 template<unsigned K>
 auto column_view(std::size_t records, orbital::MutableBytes bytes) {
-  std::array<sp::plane<std::uint8_t>, 3> planes{};
-  planes[0] = {{reinterpret_cast<std::uint8_t*>(bytes.data()), bytes.size()}, v::Column<K>::tile_bytes};
-  return take(sp::view<v::Column<K>, std::uint8_t>::attach(records, planes));
+  std::array<sp::plane<std::byte>, 3> planes{};
+  planes[0] = {{reinterpret_cast<std::byte*>(bytes.data()), bytes.size()}, v::Column<K>::tile_bytes};
+  return take(sp::view<v::Column<K>>::attach(records, planes));
 }
 struct Columns {
-  sp::view<v::Column<64>, std::uint8_t> key, next;
-  sp::view<v::Column<20>, std::uint8_t> value;
-  sp::view<v::Column<32>, std::uint8_t> tag;
+  sp::view<v::Column<64>> key, next;
+  sp::view<v::Column<20>> value;
+  sp::view<v::Column<32>> tag;
 };
 
 void tuples(const v::Schema& schema, const v::Shape& shape,
     std::span<const v::WritePart> target, std::span<const v::Update> input,
     const Rows& rows, v::KernelCosts& costs) {
   // Named stationary view; returned/moved endpoint bundles would be unsafe.
-  const auto view = take(tp::view::bind(schema.tuple,
-      {reinterpret_cast<tp::byte*>(target[0].bytes.data()), target[0].bytes.size()},
+  const auto view = take(tp::view::attach(schema.tuple,
+      {reinterpret_cast<std::byte*>(target[0].bytes.data()), target[0].bytes.size()},
       shape.records, v::tuple_bytes));
-  const tp::native_writer next{take(tp::bind_writer(schema.writers[1], view))};
-  const tp::native_writer value{take(tp::bind_writer(schema.writers[2], view))};
-  const tp::native_writer tag{take(tp::bind_writer(schema.writers[3], view))};
-  std::array<ikea::owner_write, 4> journal;
-  require(next.effect_capacity() + value.effect_capacity() + tag.effect_capacity() <= journal.size());
+  const tp::author::native_writer next{take(tp::bind_writer(schema.writers[1], view))};
+  const tp::author::native_writer value{take(tp::bind_writer(schema.writers[2], view))};
+  const tp::author::native_writer tag{take(tp::bind_writer(schema.writers[3], view))};
+  std::array<ikea::journal::entry, 4> journal;
+  for (std::size_t i = 0; i < input.size(); ++i)
+    require(take(next.effect_capacity(rows[i], 1)) + take(value.effect_capacity(rows[i], 1)) +
+        take(tag.effect_capacity(rows[i], 1)) <= journal.size());
   for (const auto& update : input)
     require(next.accepts(update.record.next) && value.accepts(update.record.value) && tag.accepts(update.record.tag));
   costs.bindings += 3;
   costs.scratch_bound_bytes = std::max(costs.scratch_bound_bytes, sizeof(journal));
   for (std::size_t i = 0; i < input.size(); ++i) {
-    ikea::source_write_journal effects{journal};
+    ikea::journal effects{journal};
     // Full batch value/range/capacity admission precedes the first store.
     next.set_unchecked(rows[i], input[i].record.next, effects);
     value.set_unchecked(rows[i], std::uint64_t(input[i].record.value), effects);
@@ -159,28 +161,28 @@ void columns(const v::Shape& shape, std::span<const v::WritePart> target,
       column_view<64>(shape.records, target[1].bytes),
       column_view<20>(shape.records, target[2].bytes),
       column_view<32>(shape.records, target[3].bytes)};
-  const auto next = take(sp::bind_mutation(views.next));
-  const auto value = take(sp::bind_mutation(views.value));
-  const auto tag = take(sp::bind_mutation(views.tag));
-  std::array<ikea::owner_write, 4> journal;
+  const auto next = take(sp::bind_writer(views.next));
+  const auto value = take(sp::bind_writer(views.value));
+  const auto tag = take(sp::bind_writer(views.tag));
+  std::array<ikea::journal::entry, 4> journal;
   for (std::size_t i = 0; i < input.size(); ++i) {
-    const auto needed = take(next.effect_capacity(rows[i], 1, sp::row_selection::all())) +
-        take(value.effect_capacity(rows[i], 1, sp::row_selection::all())) +
-        take(tag.effect_capacity(rows[i], 1, sp::row_selection::all()));
+    const auto needed = take(next.effect_capacity(rows[i], 1, sp::selection::all())) +
+        take(value.effect_capacity(rows[i], 1, sp::selection::all())) +
+        take(tag.effect_capacity(rows[i], 1, sp::selection::all()));
     require(needed <= journal.size());
   }
   costs.bindings += 3;
   costs.scratch_bound_bytes = std::max(costs.scratch_bound_bytes, sizeof(journal));
-  sp::no_summary summary;
+  sp::author::no_summary summary;
   for (std::size_t i = 0; i < input.size(); ++i) {
-    ikea::source_write_journal effects{journal};
+    ikea::journal effects{journal};
     // The exact trusted continuation of prepared_mutation::set, preserving
     // the same point kernel/effect walk rather than switching to a range path.
-    sp::composition::replace_point_unchecked(next.expression(), rows[i], input[i].record.next, summary, effects);
+    sp::author::replace_point_unchecked(next.expression(), rows[i], input[i].record.next, summary, effects);
     account(effects, views.next, views.next.stream(0).bytes.size(), costs); effects.used = 0;
-    sp::composition::replace_point_unchecked(value.expression(), rows[i], std::uint64_t(input[i].record.value), summary, effects);
+    sp::author::replace_point_unchecked(value.expression(), rows[i], std::uint64_t(input[i].record.value), summary, effects);
     account(effects, views.value, views.value.stream(0).bytes.size(), costs); effects.used = 0;
-    sp::composition::replace_point_unchecked(tag.expression(), rows[i], std::uint64_t(input[i].record.tag), summary, effects);
+    sp::author::replace_point_unchecked(tag.expression(), rows[i], std::uint64_t(input[i].record.tag), summary, effects);
     account(effects, views.tag, views.tag.stream(0).bytes.size(), costs);
     costs.encoded_values += 3;
   }

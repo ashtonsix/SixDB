@@ -33,14 +33,14 @@ template <class D> struct swiss_key {
     typename D::mix_type::result hash;
 };
 struct maintained_primary_store {
-    template <class D> [[gnu::always_inline]] static void occupy(byte* p, unsigned row, word q) {
+    template <class D> [[gnu::always_inline]] static void occupy(std::uint8_t* p, unsigned row, word q) {
         ht::detail::occupy<D>(p, row, q);
     }
 };
 /// One primary/Swiss resolver. Store and counter location are compile-time data
 /// placement choices; hit/miss, overflow and failure semantics live here once.
 template <class Store, class D, class Lazy, class Reduce>
-[[gnu::always_inline]] merge_status put_with_store(D& dst, byte* primary, word& count, word bucket,
+[[gnu::always_inline]] merge_status put_with_store(D& dst, std::uint8_t* primary, word& count, word bucket,
                                                    word q, const typename D::value_type& value,
                                                    Lazy&& lazy, Reduce& reduce) {
     auto to = access::get(dst);
@@ -71,14 +71,14 @@ template <class Store, class D, class Lazy, class Reduce>
         auto group = key.hash.swiss & (to.groups - 1);
         std::size_t step = 0;
         for (std::size_t visited = 0; visited < to.groups; ++visited) {
-            const auto* controls = to.controls.data + group * 16;
+            const auto* controls = ikea::to_u8(to.controls.data) + group * 16;
             if (search) {
                 auto matches = ht::equal_controls(controls, key.hash.fingerprint());
                 while (matches) {
                     const auto i = std::countr_zero(matches);
                     matches &= matches - 1;
                     const auto index = group * 16 + i;
-                    if (ht::load<D::key_bytes>(to.slots.data + index * D::tuple_bytes) == key.key)
+                    if (ht::load<D::key_bytes>(ikea::to_u8(to.slots.data) + index * D::tuple_bytes) == key.key)
                         return index;
                 }
             }
@@ -99,11 +99,11 @@ template <class Store, class D, class Lazy, class Reduce>
                 typename D::value_type previous{};
                 if constexpr (previous.size())
                     std::memcpy(previous.data(),
-                                to.slots.data + found * D::tuple_bytes + D::key_bytes,
+                                ikea::to_u8(to.slots.data) + found * D::tuple_bytes + D::key_bytes,
                                 previous.size());
                 const auto next = reduce(previous, value);
                 if constexpr (next.size())
-                    std::memcpy(to.slots.data + found * D::tuple_bytes + D::key_bytes, next.data(),
+                    std::memcpy(ikea::to_u8(to.slots.data) + found * D::tuple_bytes + D::key_bytes, next.data(),
                                 next.size());
                 return merge_status::complete;
             }
@@ -121,12 +121,12 @@ template <class Store, class D, class Lazy, class Reduce>
             resolve(false);
         if (available == none)
             return merge_status::needs_overflow;
-        auto* tuple = to.slots.data + available * D::tuple_bytes;
+        auto* tuple = ikea::to_u8(to.slots.data) + available * D::tuple_bytes;
         ht::store<D::key_bytes>(tuple, key.key);
         if constexpr (value.size())
             std::memcpy(tuple + D::key_bytes, value.data(), value.size());
-        to.deleted -= to.controls.data[available] == control_tombstone;
-        to.controls.data[available] = key.hash.fingerprint();
+        to.deleted -= ikea::to_u8(to.controls.data)[available] == control_tombstone;
+        ikea::to_u8(to.controls.data)[available] = key.hash.fingerprint();
         ++to.spill;
         ++count;
         if (p[D::overflow_offset] != 255)
@@ -140,7 +140,7 @@ template <class D, class Lazy, class Reduce>
                                                const typename D::value_type& value, Lazy&& lazy,
                                                Reduce& reduce) {
     auto to = access::get(dst);
-    return put_with_store<maintained_primary_store>(dst, to.primary.data, to.size, bucket, q, value,
+    return put_with_store<maintained_primary_store>(dst, ikea::to_u8(to.primary.data), to.size, bucket, q, value,
                                                     std::forward<Lazy>(lazy), reduce);
 }
 template <class D, class S> merge_status compatible(D& dst, const S& src) {
@@ -148,7 +148,7 @@ template <class D, class S> merge_status compatible(D& dst, const S& src) {
                   std::is_same_v<typename D::value_type, typename S::value_type>);
     const auto a = access::get(dst);
     const auto b = access::get(src);
-    if (a.primary.data == b.primary.data)
+    if (ikea::to_u8(a.primary.data) == ikea::to_u8(b.primary.data))
         return merge_status::alias;
     return a.mix.seed == b.mix.seed ? merge_status::complete : merge_status::incompatible;
 }

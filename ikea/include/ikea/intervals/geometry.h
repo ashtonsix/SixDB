@@ -147,7 +147,7 @@ template <class Source, class Sink>
 [[nodiscard]] std::expected<void, error> range(const Source &source, unsigned first,
                                                unsigned count, Sink &&sink) {
     if (first > source.size() || count > source.size() - first)
-        return std::unexpected(error::rank);
+        return std::unexpected(error::range);
     detail::geometry_body(source, [&](const auto &g) __attribute__((always_inline)) {
         auto emit = [&](unsigned rank, auto bounds) __attribute__((always_inline)) {
             if (detail::selected(g, rank))
@@ -180,7 +180,7 @@ template <class Source, class Body>
 /// Start-only geometry projection for consumers with an independent used length.
 /// Avoids reconstructing an interval's size just to address its payload.
 template <class Source>
-[[gnu::always_inline]] auto start(const Source &source, unsigned rank, rank_selection filter = rank_selection::all())
+[[gnu::always_inline]] auto start(const Source &source, unsigned rank, selection filter = selection::all())
     -> std::optional<std::remove_cvref_t<decltype(source.at(0))>> {
     using Point = std::remove_cvref_t<decltype(source.at(0))>;
     if (rank >= source.size() || !filter.contains(rank) || !detail::selected(source, rank)) return {};
@@ -201,22 +201,22 @@ template <class Source>
 /// Operation-local borrowed selection. Invert a tombstone bitmap to select live
 /// ranks. Geometry never owns, updates, moves or reassigns the filter's ranks.
 template <class Source, class Q>
-unsigned reverse(const Source &source, const Q &point, rank_selection filter) {
+unsigned reverse(const Source &source, const Q &point, selection filter) {
     return intervals::reverse(selected_source{source, filter}, point);
 }
 template <class Source>
-auto locate(const Source &source, unsigned rank, rank_selection filter) {
+auto locate(const Source &source, unsigned rank, selection filter) {
     return intervals::locate(selected_source{source, filter}, rank);
 }
 template <class Source, class Low, class High>
-auto overlap(const Source &source, const Low &low, const High &high, rank_selection filter) {
+auto overlap(const Source &source, const Low &low, const High &high, selection filter) {
     return intervals::overlap(selected_source{source, filter}, low, high);
 }
 template <class Source, class Sink>
-auto range(const Source &source, unsigned first, unsigned count, Sink &&sink, rank_selection filter) {
+auto range(const Source &source, unsigned first, unsigned count, Sink &&sink, selection filter) {
     const auto n = source.size();
     if (first > n || count > n - first)
-        return std::expected<void, error>{std::unexpected(error::rank)};
+        return std::expected<void, error>{std::unexpected(error::range)};
     if (filter.next(first, first + count) == first + count)
         return std::expected<void, error>{};
     return intervals::range(selected_source{source, filter}, first, count, std::forward<Sink>(sink));

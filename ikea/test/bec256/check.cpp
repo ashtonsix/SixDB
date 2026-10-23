@@ -10,18 +10,19 @@
 
 namespace bc = ikea::bec256;
 unsigned cases = 0;
-void check(const bc::plain_block &input) {
+void check_block_values();
+void check(const std::array<std::byte, 32> &input) {
     const unsigned population = bec_reference::population(input.data());
     std::array<bc::byte, 64> reference{};
     const unsigned size = bec_reference::encode(input.data(), reference.data());
-    auto encoded = bc::prepare(input, population);
+    auto encoded = bc::encoding::make(input, population);
     assert(encoded && encoded->bytes() == size);
     assert(std::equal(encoded->body().begin(), encoded->body().end(), reference.begin()));
     std::array<bc::byte, 160> memory;
     memory.fill(bc::byte{0xa5});
-    bc::destination target{memory};
-    std::array<ikea::owner_write, 2> journal_storage{};
-    ikea::source_write_journal journal{journal_storage};
+    bc::view target{memory};
+    std::array<ikea::journal::entry, 2> journal_storage{};
+    ikea::journal journal{journal_storage};
     assert(encoded->write(target, 37, journal));
     assert(std::equal(memory.begin() + 37, memory.begin() + 37 + size, reference.begin()));
     for (unsigned i = 0; i < memory.size(); ++i)
@@ -30,7 +31,7 @@ void check(const bc::plain_block &input) {
     assert(journal.used == (size != 0));
     if (size) {
         assert(journal.entries()[0].source == &target);
-        assert(journal.entries()[0].bytes.offset == 37 && journal.entries()[0].bytes.size == size);
+        assert(journal.entries()[0].offset == 37 && journal.entries()[0].size == size);
     }
     memory.fill(bc::byte{0xa5});
     journal.used = 0;
@@ -41,16 +42,16 @@ void check(const bc::plain_block &input) {
         if (i < 37 || i >= 37 + size)
             assert(memory[i] == bc::byte{0xa5});
     for (unsigned extent : {size, 64u}) {
-        auto source = bc::source::admit(std::span(memory).subspan(37, extent), size, population);
+        auto source = bc::bind_reader(std::span(memory).subspan(37, extent), size, population);
         assert(source);
-        bc::plain_block output;
+        std::array<std::byte, 32> output;
         bc::decode(*source, output);
         assert(output == input);
 #if defined(IKEA_BEC256_AVX512) || defined(__aarch64__)
         bc::native::store(output.data(), bc::native::read(*source));
         assert(output == input);
         auto native_encoded =
-            bc::native::prepare_unchecked(bc::native::load(input.data()), population);
+            bc::native::encode_unchecked(bc::native::load(input.data()), population);
         assert(std::equal(native_encoded.body().begin(), native_encoded.body().end(),
                           reference.begin()));
 #endif
@@ -71,7 +72,7 @@ void check(const bc::plain_block &input) {
         const auto used = journal.used;
         assert(!encoded->write(target, memory.size() - size + 1, journal));
         assert(memory == before && journal.used == used);
-        ikea::source_write_journal empty{};
+        ikea::journal empty{};
         assert(!encoded->write(target, 37, empty));
         assert(memory == before && empty.used == 0);
         for (unsigned n = 0; n < size; ++n)
@@ -82,9 +83,10 @@ void check(const bc::plain_block &input) {
 }
 void check_analysis();
 int main() {
+    check_block_values();
     check_analysis();
     std::mt19937_64 random(0xbec25613);
-    bc::plain_block input{};
+    std::array<std::byte, 32> input{};
     for (unsigned position = 0; position < 256; ++position) {
         input.fill(bc::byte{0});
         input[position / 8] = bc::byte{static_cast<unsigned char>(1 << (position % 8))};
@@ -119,16 +121,16 @@ int main() {
     for (auto pattern : {0u, 255u, 15u, 1u}) {
         input.fill(bc::byte(pattern));
         const unsigned population = bec_reference::population(input.data());
-        auto encoded = bc::prepare(input, population);
+        auto encoded = bc::encoding::make(input, population);
         assert(encoded);
         const auto size = encoded->bytes();
-        bc::destination target{{memory, page}};
-        std::array<ikea::owner_write, 1> entries;
-        ikea::source_write_journal journal{entries};
+        bc::view target{{memory, page}};
+        std::array<ikea::journal::entry, 1> entries;
+        ikea::journal journal{entries};
         assert(encoded->write(target, page - size, journal));
-        auto source = bc::source::admit({memory + page - size, size}, size, population);
+        auto source = bc::bind_reader({memory + page - size, size}, size, population);
         assert(source);
-        bc::plain_block output;
+        std::array<std::byte, 32> output;
         bc::decode(*source, output);
         assert(output == input);
     }
@@ -138,14 +140,14 @@ int main() {
     assert(bc::estimate_bytes(bounded) == bc::estimate_bytes(input));
     assert(bc::enum_bits(bounded) == bc::enum_bits(input));
     std::array<bc::byte, 64> encoded_memory{};
-    bc::destination encoded_target{encoded_memory};
-    std::array<ikea::owner_write, 1> encoded_entries{};
-    ikea::source_write_journal encoded_effects{encoded_entries};
+    bc::view encoded_target{encoded_memory};
+    std::array<ikea::journal::entry, 1> encoded_entries{};
+    ikea::journal encoded_effects{encoded_entries};
     assert(bc::encode_if_promising(bounded, bec_reference::population(input.data()), 225,
                                    encoded_target, 0, encoded_effects));
     munmap(memory, page * 2);
     input.fill(bc::byte{0});
-    assert(!bc::prepare(input, 1));
+    assert(!bc::encoding::make(input, 1));
     assert(!bc::validate({}, 257));
     auto expect_error = [](const auto &result, bc::error error) {
         assert(!result && result.error() == error);
@@ -156,7 +158,7 @@ int main() {
     // rank, hence 22 bits. Rank 127 is invalid among the 70 population-4 bytes.
     input.fill(bc::byte{0});
     input[0] = bc::byte{15};
-    auto four = bc::prepare(input, 4);
+    auto four = bc::encoding::make(input, 4);
     assert(four && four->bytes() == 3);
     std::array<bc::byte, 3> malformed;
     std::copy(four->body().begin(), four->body().end(), malformed.begin());
@@ -169,21 +171,21 @@ int main() {
 
     input.fill(bc::byte{0});
     input[0] = bc::byte{1};
-    auto singleton = bc::prepare(input, 1);
+    auto singleton = bc::encoding::make(input, 1);
     assert(singleton);
-    std::array<ikea::owner_write, 1> records{};
-    ikea::source_write_journal effects{records};
-    bc::destination aliases_effects{std::as_writable_bytes(std::span(records))};
+    std::array<ikea::journal::entry, 1> records{};
+    ikea::journal effects{records};
+    bc::view aliases_effects{std::as_writable_bytes(std::span(records))};
     expect_error(bc::encode(input, 1, aliases_effects, 0, effects), bc::error::overlap);
     expect_error(bc::encode_if_promising(input, 1, 225, aliases_effects, 0, effects),
                  bc::error::overlap);
     assert(effects.used == 0 && records[0].source == nullptr);
-    bc::destination aliases_self{};
+    bc::view aliases_self{};
     aliases_self.storage = std::as_writable_bytes(std::span(&aliases_self, 1));
     const auto *original = aliases_self.storage.data();
     expect_error(bc::encode(input, 1, aliases_self, 0, effects), bc::error::overlap);
     assert(effects.used == 0 && aliases_self.storage.data() == original);
-    bc::destination aliases_candidate{{const_cast<bc::byte *>(singleton->body().data()), 1}};
+    bc::view aliases_candidate{{const_cast<bc::byte *>(singleton->body().data()), 1}};
     expect_error(singleton->write(aliases_candidate, 0, effects), bc::error::overlap);
     assert(effects.used == 0);
     std::printf("Bec256: %u independent wire/replacement cases and exact guard boundaries passed\n",

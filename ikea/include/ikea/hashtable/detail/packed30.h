@@ -26,8 +26,8 @@ template <unsigned R> struct plane_queries {
 // One bit per four-bit field, in primary row order. Four overlapping loads
 // stay within bytes 0..57 of the admitted 64-byte owner. Unlike a standalone
 // body leaf this lowering may read initialized residual bytes, but ignores them.
-inline word body30_neon_nibbles(const byte* p, word q) {
-    alignas(16) static constexpr std::array<byte, 16> order{0, 1, 2, 255, 3, 4,  5,  255,
+inline word body30_neon_nibbles(const std::uint8_t* p, word q) {
+    alignas(16) static constexpr std::array<std::uint8_t, 16> order{0, 1, 2, 255, 3, 4,  5,  255,
                                                             6, 7, 8, 255, 9, 10, 11, 255};
     const auto indices = vld1q_u8(order.data());
     const auto query = vdupq_n_u32(unsigned(q >> 6));
@@ -55,9 +55,9 @@ struct parts30 {
     __m512i packed;
     unsigned body;
 };
-template <bool ZeroPadding = false> inline parts30 prepare30(const byte* p, word q) {
+template <bool ZeroPadding = false> inline parts30 prepare30(const std::uint8_t* p, word q) {
     alignas(64) static constexpr auto order = [] {
-        std::array<byte, 64> a{};
+        std::array<std::uint8_t, 64> a{};
         for (unsigned r = 0; r < 16; ++r) {
             for (unsigned j = 0; j < 3; ++j)
                 a[4 * r + j] = (r / 8) * 30 + (r % 8) * 3 + j;
@@ -78,7 +78,7 @@ template <bool ZeroPadding = false> inline parts30 prepare30(const byte* p, word
 }
 template <bool ZeroPadding = false> inline unsigned residual30(__m512i packed, word q) {
     alignas(64) static constexpr auto order = [] {
-        std::array<byte, 64> a{};
+        std::array<std::uint8_t, 64> a{};
         for (unsigned t = 0; t < 2; ++t)
             for (unsigned j = 0; j < 8; ++j)
                 a[t * 8 + j] = ZeroPadding && j < 2 ? 62 : t * 30 + 31 - j;
@@ -97,7 +97,7 @@ template <bool ZeroPadding = false> inline unsigned residual30(__m512i packed, w
     return _mm_cmpeq_epi8_mask(bounded, _mm_set1_epi8(q & 63));
 }
 #endif
-inline unsigned body30_dword(const byte* p, word q) {
+inline unsigned body30_dword(const std::uint8_t* p, word q) {
 #if defined(__AVX2__) && !defined(__AVX512VBMI__)
     const auto order = _mm256_setr_epi32(0, 1, 2, 0, 3, 4, 5, 0);
     const auto shuffle = _mm256_setr_epi8(0, 1, 2, -1, 3, 4, 5, -1, 6, 7, 8, -1, 9, 10, 11, -1, 0,
@@ -118,10 +118,10 @@ inline unsigned body30_dword(const byte* p, word q) {
     return result;
 #endif
 }
-inline unsigned body30(const byte* p, word q) {
+inline unsigned body30(const std::uint8_t* p, word q) {
 #if defined(__AVX512VBMI__)
     alignas(64) static constexpr auto order = [] {
-        std::array<byte, 64> a{};
+        std::array<std::uint8_t, 64> a{};
         for (unsigned r = 0; r < 16; ++r)
             for (unsigned j = 0; j < 3; ++j)
                 a[4 * r + j] = (r / 8) * 30 + (r % 8) * 3 + j;
@@ -133,7 +133,7 @@ inline unsigned body30(const byte* p, word q) {
     return _mm512_cmpeq_epi32_mask(rows, _mm512_set1_epi32(unsigned(q >> 6)));
 #elif defined(__AVX2__) && defined(__BMI2__)
     alignas(32) static constexpr auto order = [] {
-        std::array<byte, 32> a{};
+        std::array<std::uint8_t, 32> a{};
         for (unsigned i = 0; i < 32; ++i)
             a[i] = i % 3;
         return a;
@@ -169,7 +169,7 @@ inline unsigned body30(const byte* p, word q) {
     return result;
 #endif
 }
-template <bool Gfni, bool ZeroPadding = false> inline unsigned exact30(const byte* p, word q) {
+template <bool Gfni, bool ZeroPadding = false> inline unsigned exact30(const std::uint8_t* p, word q) {
 #if defined(__AVX512VBMI__) && defined(__GFNI__)
     if constexpr (Gfni) {
         // ZeroPadding additionally requires the owner's unused byte 62 to be

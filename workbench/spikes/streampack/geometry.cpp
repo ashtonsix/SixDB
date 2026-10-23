@@ -32,7 +32,7 @@ template<class Width, bool Relative> struct Encoded {
   std::array<std::uint32_t, 33> bases{};
   std::uint16_t count{};
   template<class View> auto encode(const View& source) {
-    sn::GroupStorage<Width, Relative> into{entries, bases, count}; ikea::no_coverage ignored;
+    sn::GroupStorage<Width, Relative> into{entries, bases, count}; ikea::no_effects ignored;
     return into.encode(source, ignored);
   }
   template<bool Used, bool Dead, class View> sn::Grouped<Width, Relative, Used, Dead> view(const View& source) const {
@@ -96,7 +96,7 @@ template<class Width, bool Used, bool Dead> void native_mutation(unsigned cap) {
       Used ? std::span(lengths) : std::span<std::uint16_t>{}, Dead ? std::span(tombs) : std::span<std::uint64_t>{}, count};
   std::vector<unsigned> widths; std::vector<std::uint16_t> used; std::vector<bool> dead;
   std::vector<std::vector<std::byte>> values;
-  std::array<ikea::owner_write, 2048> journal{};
+  std::array<ikea::journal::entry, 2048> journal{};
   auto planes = [&] { return std::array<sn::Bytes, 6>{payload, std::as_bytes(std::span(storage)), std::as_bytes(std::span(lengths)),
       std::as_bytes(std::span(tombs)), std::as_bytes(std::span(&count, 1)), std::as_bytes(std::span(bases))}; };
   using Shadow = std::array<std::vector<std::byte>, 6>;
@@ -108,8 +108,8 @@ template<class Width, bool Used, bool Dead> void native_mutation(unsigned cap) {
     const auto apply = [&](std::optional<unsigned> omitted) {
       auto shadow = before; unsigned i = 0;
       for (const auto& e : effects.entries()) {
-        require(e.source == &dst && e.bytes.plane < after.size(), "native issued source and plane identity");
-        const auto p = e.bytes.plane; const auto offset = e.bytes.offset, n = e.bytes.size;
+        require(e.source == &dst && e.plane < after.size(), "native issued source and plane identity");
+        const auto p = e.plane; const auto offset = e.offset, n = e.size;
         if constexpr (!Used) require(p != 2, "omitted used plane issues no writes");
         if constexpr (!Dead) require(p != 3, "omitted dead plane issues no writes");
         require(offset <= after[p].size() && n <= after[p].size() - offset, "native issued extent");
@@ -123,10 +123,10 @@ template<class Width, bool Used, bool Dead> void native_mutation(unsigned cap) {
     require(apply(std::nullopt), "six-plane afterimage replay exactly reconstructs native mutation");
     unsigned i = 0;
     for (const auto& e : effects.entries()) {
-      const bool pack_candidate = packing && !missing_pack_checkpoint_caught && e.bytes.plane == 5;
-      const bool padding_candidate = appending && !missing_group_padding_caught && e.bytes.plane == 1 && e.bytes.size == 16 * sizeof(Width);
+      const bool pack_candidate = packing && !missing_pack_checkpoint_caught && e.plane == 5;
+      const bool padding_candidate = appending && !missing_group_padding_caught && e.plane == 1 && e.size == 16 * sizeof(Width);
       if (pack_candidate || padding_candidate) {
-        const auto p = e.bytes.plane; const auto offset = e.bytes.offset, n = e.bytes.size;
+        const auto p = e.plane; const auto offset = e.offset, n = e.size;
         if (!std::equal(after[p].begin() + offset, after[p].begin() + offset + n, before[p].begin() + offset)) {
           require(!apply(i), "omitted changed checkpoint/padding afterimage breaks reconstruction");
           if (pack_candidate) missing_pack_checkpoint_caught = true;
@@ -144,7 +144,7 @@ template<class Width, bool Used, bool Dead> void native_mutation(unsigned cap) {
     }
   };
   const auto initial = snapshot();
-  ikea::source_write_journal initialize{journal}; require(dst.initialize(initialize) == sn::Error::none, "native widths initialize"); replay(initial, initialize);
+  ikea::journal initialize{journal}; require(dst.initialize(initialize) == sn::Error::none, "native widths initialize"); replay(initial, initialize);
   verify();
   for (unsigned r = 0; r < cap; ++r) {
     if (r == 17) {
@@ -157,10 +157,10 @@ template<class Width, bool Used, bool Dead> void native_mutation(unsigned cap) {
         reservations.emplace_back(payload.begin() + offset, payload.begin() + offset + widths[row]); offset += widths[row];
       }
       if constexpr (Dead) for (unsigned row : {2u, 9u}) {
-        const auto before = snapshot(); ikea::source_write_journal effects{journal};
+        const auto before = snapshot(); ikea::journal effects{journal};
         require(dst.retire(row, effects) == sn::Error::none, "partial-group retirement"); replay(before, effects); dead[row] = true;
       }
-      const auto before = snapshot(); ikea::source_write_journal effects{journal};
+      const auto before = snapshot(); ikea::journal effects{journal};
       require(sn::soft_pack(dst, false, effects) == sn::Error::none, "partial-group reservation-preserving pack"); replay(before, effects, true);
       offset = 0;
       for (unsigned row = 0; row < count; ++row) {
@@ -176,7 +176,7 @@ template<class Width, bool Used, bool Dead> void native_mutation(unsigned cap) {
       for (unsigned row = 0; row < count; ++row) {
         if (dead[row]) continue;
         const auto before = snapshot();
-        ikea::source_write_journal effects{journal};
+        ikea::journal effects{journal};
         if constexpr (Dead) if (row % 3 == 0) {
           require(dst.retire(row, effects) == sn::Error::none, "native retirement"); dead[row] = true;
           replay(before, effects);
@@ -189,7 +189,7 @@ template<class Width, bool Used, bool Dead> void native_mutation(unsigned cap) {
         replay(before, effects);
         used[row] = replacement.size(); values[row] = std::move(replacement);
       }
-      verify(); const auto before = snapshot(); ikea::source_write_journal packing{journal};
+      verify(); const auto before = snapshot(); ikea::journal packing{journal};
       require(sn::soft_pack(dst, true, packing) == sn::Error::none, "native checkpoint soft packing");
       replay(before, packing, true);
       for (unsigned row = 0; row < count; ++row) {
@@ -203,31 +203,31 @@ template<class Width, bool Used, bool Dead> void native_mutation(unsigned cap) {
     std::vector<std::byte> input(n, std::byte(r & 255));
     const auto before = snapshot();
     if (r == 17) {
-      ikea::source_write_journal empty{std::span<ikea::owner_write>{}};
+      ikea::journal empty{std::span<ikea::journal::entry>{}};
       require(dst.append(input, reservation, empty) == sn::Error::effects && snapshot() == before && empty.entries().empty(),
           "insufficient append journal preserves every plane and count");
     }
-    ikea::source_write_journal effects{journal};
+    ikea::journal effects{journal};
     const auto before_count = count;
     require(dst.append(input, reservation, effects) == sn::Error::none, "native checkpoint append through group boundary");
     replay(before, effects, false, true);
     bool checkpoint = false;
     for (const auto& e : effects.entries()) {
       require(e.source == &dst, "native width source-qualified issued writes");
-      checkpoint |= e.bytes.plane == 5 && e.bytes.offset == (before_count / 16 + 1) * 4 && e.bytes.size == 4;
+      checkpoint |= e.plane == 5 && e.offset == (before_count / 16 + 1) * 4 && e.size == 4;
     }
     require(checkpoint, "append publishes checkpoint extent");
     widths.push_back(reservation); used.push_back(n); dead.push_back(false); values.push_back(std::move(input)); verify();
     if (r == 18) {
-      const auto all_before = snapshot(); ikea::source_write_journal empty{std::span<ikea::owner_write>{}};
+      const auto all_before = snapshot(); ikea::journal empty{std::span<ikea::journal::entry>{}};
       require(dst.replace(r, values[r], empty) == sn::Error::effects && snapshot() == all_before && empty.entries().empty(),
           "insufficient replacement journal preserves every plane and count");
     }
   }
   const auto all_before = snapshot();
-  ikea::source_write_journal effects{journal};
+  ikea::journal effects{journal};
   require(dst.append({}, 0, effects) == sn::Error::capacity && effects.entries().empty(), "native full-rank refusal");
-  ikea::source_write_journal empty{std::span<ikea::owner_write>{}};
+  ikea::journal empty{std::span<ikea::journal::entry>{}};
   require(sn::soft_pack(dst, false, empty) == sn::Error::effects && snapshot() == all_before && empty.entries().empty(),
       "native soft journal refusal is atomic");
   const unsigned row = cap - 2; // positive live reservation, never touched by earlier retirement
@@ -244,7 +244,7 @@ template<class Width> void maximum_body(unsigned cap) {
   std::vector<Width> widths(cap); std::vector<std::uint32_t> bases(cap / 16 + 1);
   std::vector<std::byte> body(std::size_t(cap) * maximum), input(maximum, std::byte{0xa7});
   std::vector<std::uint16_t> used(cap); std::vector<std::uint64_t> tombs(cap / 64); std::uint16_t count = 0;
-  sn::MutableWidths<Width> w{widths, bases, body, used, tombs, count}; ikea::no_coverage no;
+  sn::MutableWidths<Width> w{widths, bases, body, used, tombs, count}; ikea::no_effects no;
   require(w.initialize(no) == sn::Error::none, "maximum-body initialize");
   for (unsigned r = 0; r < cap; ++r) require(w.append(input, maximum, no) == sn::Error::none, "maximum-width append to full rank capacity");
   for (unsigned phase = 0; phase < 2; ++phase) {
@@ -345,7 +345,7 @@ void correctness() {
     std::fill(widths8.entries.begin() + 49, widths8.entries.begin() + 64, 255);
     std::fill(relative.entries.begin() + 49, relative.entries.begin() + 64, 65535);
     equal(widths8.view<true, true>(source), widths, used, dead); equal(relative.view<true, true>(source), widths, used, dead);
-    const auto before = widths8; std::array<ikea::owner_write, 2> records{}; ikea::source_write_journal effects{records};
+    const auto before = widths8; std::array<ikea::journal::entry, 2> records{}; ikea::journal effects{records};
     sn::GroupStorage<std::uint8_t, false> output{widths8.entries, widths8.bases, widths8.count};
     require(output.encode(source, effects) == sn::Error::effects && effects.entries().empty() && widths8.entries == before.entries &&
         widths8.bases == before.bases && widths8.count == before.count, "effect-capacity refusal preserves all destination planes");
@@ -355,7 +355,7 @@ void correctness() {
   for (unsigned capacity : {128, 256, 512}) {
     std::vector<std::uint32_t> e(capacity + 1); std::vector<std::uint16_t> u(capacity);
     std::vector<std::uint64_t> t(capacity / 64); std::vector<std::byte> b(capacity * 32);
-    std::uint16_t count{}; sn::MutableDirect<std::uint32_t> w{e, b, u, t, count}; ikea::no_coverage no;
+    std::uint16_t count{}; sn::MutableDirect<std::uint32_t> w{e, b, u, t, count}; ikea::no_effects no;
     require(w.initialize(no) == sn::Error::none, "history initialize");
     std::vector<unsigned> widths; std::vector<std::uint16_t> lengths; std::vector<bool> dead;
     Encoded<std::uint8_t, false> packed;

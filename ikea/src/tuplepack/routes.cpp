@@ -1,7 +1,7 @@
 #include <ikea/tuplepack/author/routes.h>
 #include <algorithm>
 
-namespace ikea::tuplepack::composition {
+namespace ikea::tuplepack::author {
 namespace {
 bool valid(const bit_routes& bits) {
     return std::ranges::all_of(bits, [](int b) { return b >= -1 && b < 512; });
@@ -37,7 +37,7 @@ std::expected<bit_routes, error> unite(const bit_routes& a, const bit_routes& b)
     }
     return result;
 }
-std::expected<bit_routes, error> decoding_routes(const layout& format, std::span<const byte> map) {
+std::expected<bit_routes, error> decoding_routes(const layout& format, std::span<const std::uint8_t> map) {
     if (map.size() > 64)
         return std::unexpected(error::map);
     auto result = zero_routes();
@@ -78,7 +78,7 @@ std::expected<route_plan, error> prepare_routes(const bit_routes& bits,
         minus.shift[i] = -rotation;
         minus.mask[i] = 255u >> rotation;
         plus.shift[i] = rotation ? 8 - rotation : 0;
-        plus.mask[i] = rotation ? byte(255u << (8 - rotation)) : 0;
+        plus.mask[i] = rotation ? std::uint8_t(255u << (8 - rotation)) : 0;
         identity &= source == int(i) && rotation == 0;
         rotating |= rotation != 0;
     }
@@ -120,4 +120,4 @@ std::expected<route_plan, error> prepare_routes(const bit_routes& bits,
         storage[i] = {compile_shuffle(descriptions[i], left[i]), left[i]};
     return route_plan{storage.first(count), normalized};
 }
-} // namespace ikea::tuplepack::composition
+} // namespace ikea::tuplepack::author

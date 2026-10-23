@@ -29,7 +29,7 @@ first predicate rejects the entire group.
 | First equality match | SeriesPack `indexof` | An owner-specific search can avoid work beyond the first useful match |
 | Several tests of the same values | One native read/projection and inline mask combination | Direct packed comparisons avoid enough reconstruction to win instead |
 | Repeated formats feeding the same substantial computation | A shared canonical consumer inside an existing composition | Keep the direct path for packed winners and small hot calls |
-| Existing eight-bit head plus expensive suffix | Opt-in `composition::guarded` | Heads often resolve entire active groups; test mixed and shared-prefix inputs too |
+| Existing eight-bit head plus expensive suffix | Opt-in `author::guarded` | Heads often resolve entire active groups; test mixed and shared-prefix inputs too |
 | Conjunction over different projections | Guard a later expensive projection on a nonzero mask | Unconditional fusion wins when the later work is cheap or branching is unpredictable |
 
 Use the examples above as complete call patterns. [Building fast consumers](consumers.md)
@@ -85,7 +85,7 @@ keep both metrics and those losses visible.
 
 For a consumer that already owns a Local bitplane word,
 `<ikea/seriespack/author/local_equal.h>` provides
-`composition::local_equal8<K> match(query)` and `match(word)`, returning an
+`author::local_equal8<K> match(query)` and `match(word)`, returning an
 eight-bit row mask. K is 1..7 and query must fit K bits. Construct once per query
 and reuse across tiles. The low K bytes of the word hold the planes in wire
 order; other bytes are ignored. The helper performs no loads. It does not grant
@@ -111,7 +111,7 @@ and dense placement visible to the inlined consumer when known.
 ### Reuse decoded values
 
 An authored consumer can include `<ikea/seriespack/author/filter.h>` and call
-`filter_values<Op>(native_values, rhs, incoming)` without reloading values.
+`author::filter_values<Op>(native_values, rhs, incoming)` without reloading values.
 The ordinary native carrier holds sixteen values; native group carriers support
 16/32/64 on NEON and AVX-512. Both return one bit per original lane. These bodies
 can be used inline or inside the existing CPS stages. Fuse cheap neighboring
@@ -124,7 +124,7 @@ justifies their measured cost; do not enter CPS solely to execute one small
 filter. Keep a range test's two comparisons together after one decode.
 
 For example, the composition example converts each decoder's `values<K>` into
-`native::values<16>{decoded.v}` and uses `chain<16, 4>` throughout. Its shared
+`native::values<16>{decoded.v}` and uses `author::chain<16, 4>` throughout. Its shared
 consumer sees unsigned 16-bit lanes and original-position activity. The source
 width no longer specializes the comparisons or reduction. This is a native
 carrier conversion, not a stored-format conversion; full-width queries retain
@@ -137,14 +137,14 @@ For an expression with an eight-bit head and a nonempty payload, opt in after
 selecting its children:
 
 ```cpp
-namespace cp = ikea::seriespack::composition;
-const auto expression = cp::guarded(cp::describe(source));
-const auto prepared = cp::prepare(expression, source.size());
+namespace cp = ikea::seriespack::author;
+const auto expression = cp::guarded(cp::expression(source));
+const auto prepared = ikea::seriespack::bind_reader(expression, source.size());
 auto selected = prepared->filter<comparison::equal>(first, count, query, incoming);
 ```
 
 `guarded` owns the small expression nodes and borrows the same named sources as
-`describe`. It changes filtering execution, not the stored format, unsigned
+`expression`. It changes filtering execution, not the stored format, unsigned
 meaning, admission or mask coordinates. It follows substituted payloads, gapped
 heads and the owning head's tile geometry. Construct the annotation after
 `with_payload`/`with_tail`; it is a read-composition choice, not a writable node.
@@ -180,27 +180,43 @@ mask-register tests. Sparse activity resolves only the active lanes.
 ## TuplePack
 
 A TuplePack code is an unsigned 1–8-bit value inside one physical byte. Prepare
-a one-code projection across the required rows and bind its filter:
+a one-code projection across the required rows and bind its reader:
 
 ```cpp
-auto plan = tp::reader<64, 32>::make(layout, std::array<tp::byte, 1>{code_rank});
+auto plan = tp::read_plan<64, 32>::make(layout, std::array<std::uint8_t, 1>{code_rank});
 auto read = tp::bind_reader(*plan, source);
-auto predicate = tp::bind_filter(*read);
-auto selected = predicate->filter<comparison::equal>(first, 7, incoming_rows);
+auto selected = read->filter<comparison::equal>(first, 7, incoming_rows);
 ```
 
-The named plan and view must outlive the filter. Binding rejects empty, hole-only
-and multi-code maps. Bit `r` names original row `first+r`, just as in the bound
+This convenience prepares the code projection for that command. Prepare a
+predicate once outside a repeated filter loop instead:
+
+```cpp
+auto predicate = tp::bind_predicate(*plan, source);
+// Check the factory result before use; plan and source remain named and stable.
+auto equal_7 = predicate->filter<comparison::equal>(first, 7, incoming_rows);
+auto below_12 = predicate->filter<comparison::less>(first, 12, incoming_rows);
+```
+
+`tp::bind_predicate(*read)` is equivalent preparation from an existing reader.
+It copies the reader's pointers and code projection, so the intermediate reader
+wrapper may expire. The named plan and view must outlive the predicate and keep
+their values and addresses stable. Prepare again after assigning a new plan or
+placement. A general reader retains only its plan/view borrowing; it carries no
+copied code projection.
+
+Predicate preparation and the checked reader convenience reject empty,
+hole-only and multi-code maps with `error::map`. Bit `r` names original row `first+r`, just as in the bound
 reader. Only active rows require storage; inactive rows perform no payload access.
 `filter_unchecked<Op>` skips window admission after the caller has established it.
-It requires `first <= source.size()`, activity confined to `Rows` bits, and every
+It requires a one-code map, `first <= source.size()`, activity confined to `Rows` bits, and every
 active row in bounds. Unlike SeriesPack's complete-window contract, inactive
 TuplePack tail rows need no storage. The checked entry rejects activity outside
 `Rows`, including for a query whose result is known without loading payload.
 Tight, fully active byte columns admit comparisons on encoded bits directly;
 other placements retain the prepared projection's access rules.
 
-For an already projected packet, `tp::filter_values<Op, N>(packet, rhs, active)`
+For an already projected packet, `tp::author::filter_values<Op, N>(packet, rhs, active)`
 returns one bit per **packet byte**. Here activity also uses packet-byte
 coordinates. The author excludes holes, inactive rows and unused packet capacity;
 `plan.ordering()` defines how groups, slots and original rows map to those bytes.
@@ -228,7 +244,7 @@ for (unsigned r = 0; r < 16; ++r)
     if (incoming_rows >> r & 1)
         byte_activity |= std::uint64_t{1} << order.offset(r, 2);
 
-const auto hits = tp::filter_values<comparison::greater_equal, 64>(
+const auto hits = tp::author::filter_values<comparison::greater_equal, 64>(
     projected_packet, 4, byte_activity);
 std::uint64_t selected_rows = 0;
 for (unsigned r = 0; r < 16; ++r)
@@ -268,8 +284,8 @@ predicates when their throughput wins; guarding cheap work is not automatically
 beneficial.
 
 Include the module umbrella or its `filter.h` for ordinary calls; link the
-corresponding Ikea library. SeriesPack's native author entry lives in
-`seriespack/author/filter.h`. Execution uses explicit AVX2, AVX-512 or NEON
+corresponding Ikea library. The native author entries live in
+`seriespack/author/filter.h` and `tuplepack/author/filter.h`. Execution uses explicit AVX2, AVX-512 or NEON
 bodies under the module's existing compile-time ISA selection; there is no
 additional runtime filter registry or stored layout to configure.
 

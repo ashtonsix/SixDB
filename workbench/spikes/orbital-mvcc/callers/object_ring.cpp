@@ -8,7 +8,7 @@ namespace sr = orbital_mvcc::metadata_consumer::shape_read;
 namespace {
 constexpr auto encoding = law::ReadLaw::canonical();
 
-[[gnu::always_inline]] inline const law::tp::byte* address(const Frame& frame, Word row) noexcept {
+[[gnu::always_inline]] inline const std::byte* address(const Frame& frame, Word row) noexcept {
   return frame.bytes + row * law::v::tuple_bytes;
 }
 template<bool Hints>
@@ -25,7 +25,7 @@ template<bool Hints>
   orbital_bench::detail::mix(state.digest, 0);
   finish(frame, state);
 }
-[[gnu::always_inline]] inline void consume(State& state, const law::tp::byte* source) noexcept {
+[[gnu::always_inline]] inline void consume(State& state, const std::byte* source) noexcept {
   const auto next = encoding.read_unchecked<1>(source);
   orbital_bench::detail::mix(state.digest, state.key);
   orbital_bench::detail::mix(state.digest, next);
@@ -142,7 +142,7 @@ orbital::Result<void> Frame::open(const Catalog& store, Proof proof, Request inp
   records = selected.records(); state.last = records;
   const auto part = selected.part(0);
   if (!part) return std::unexpected(part.error());
-  bytes = reinterpret_cast<const law::tp::byte*>(part->address());
+  bytes = reinterpret_cast<const std::byte*>(part->address());
   demand = {};
   if (done) return {}; // selection is still charged/validated, no payload access
   if (!records) { absent(*this, state); return {}; }

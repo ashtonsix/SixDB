@@ -18,14 +18,15 @@ Striped64 child. Reads, writes and effects follow the selected leaves.*
 The caller constructs or migrates the selected storage; this example initializes it.
 
 ```cpp
-const auto original = cp::describe(*parent);
+namespace cp = ikea::seriespack::author;
+const auto original = cp::expression(*parent);
 const auto expression = cp::with_payload(
-    original, cp::with_tail(original.payload, cp::describe(*child)));
-const auto writer = cp::prepare_mutation(expression, count);
+    original, cp::with_tail(original.payload, cp::expression(*child)));
+const auto writer = sp::bind_writer(expression, count);
 ```
 
 `with_tail` and `with_payload` preserve logical widths at compilation;
-admission checks actual leaf extents and writable overlap. Descriptions own their
+binding admission checks actual leaf extents and writable overlap. Expressions own their
 small nodes and borrow named source views. Keep every used source alive.
 
 Retired fields do not participate in admission, preservation reads or writes.
@@ -34,7 +35,7 @@ bytes inaccessible and replaces multiple owners, including a nested value node.
 A prefix-bound writable expression may replace that prefix; initialization requires
 exact extents in every used leaf so that clearing slack cannot damage a larger child.
 
-The physical format is one possible realization of a logical value. A compound
+The physical layout is one possible realization of a logical value. A compound
 container need not invent a new container-level contract for each nested layout,
 placement or execution choice. Engine can retain different bindings across segments.
 
@@ -52,17 +53,19 @@ readable extent and write footprint. Keep acquisition, publication and fallible
 work outside it. [Source boundaries](../source.md#seriespack-source-boundaries)
 locate native kernels, logical nodes and shared preparation.
 
-For scalar leaves, include `<ikea/seriespack/point.h>` for `get`/`set` and their
-unchecked forms. These physical building blocks avoid native-carrier machinery;
+For scalar leaves, include `<ikea/seriespack/point.h>` for ordinary `get` and
+`<ikea/seriespack/author/store.h>` for `author::store`, with their unchecked forms. These physical building blocks avoid native-carrier machinery;
 raw point stores preserve packed neighbors but emit no effects or summaries.
 The [point contract](reference.md#scalar-point-building-blocks) states their
-initialization and byte-isolation requirements. Use the prepared mutation path
+initialization and byte-isolation requirements. Use the bound writer path
 when the enclosing operation needs source-qualified writes or maintenance.
 `<ikea/seriespack/author/native.h>` supplies the supported `native` carriers and
 ISA bodies when the composition should keep values in registers.
+`<ikea/seriespack/author/filter.h>` owns `author::filter_values` over those native
+carriers; ordinary readers and `filter` accept logical sources instead.
 
 `value_expression` and `payload_expression` describe bit-window joins.
-`composition::read(ops, expression, rows, mask)` traverses those joins;
+`author::read(ops, expression, rows, mask)` traverses those joins;
 `selected_sum` is a shared body used with scalar, native or recording ops.
 New semantic transforms supply their own evaluators. For writable nodes,
 also define reverse projection/assignment, admission and
@@ -71,7 +74,12 @@ issued-byte coverage; a read-only transform is not automatically writable.
 Share reconstruction/projection/store bodies across ordinary and compound callers.
 Let the wrapping operation select traversal and finalize results. When a new body
 has different store widths, its footprint must cover the stores actually issued,
-including preserved neighbors. Coverage hooks must be infallible after admission.
+including preserved neighbors. `<ikea/seriespack/author/mutation.h>` owns advanced physical replacement,
+initialization and footprint visitors. These entries preserve the same concrete
+bodies used by bound writers. A custom effect hook implements
+`before(source,plane,offset,size) noexcept` and satisfies `ikea::effects` for each
+used source. Physical drivers may copy placement metadata privately; effects
+still name the caller's original view. A hook cannot fail after admission.
 [Mutation ownership](../integration.md) remains outside the body.
 
 ## Share inline and CPS execution
@@ -89,9 +97,10 @@ A stage receives borrowed bindings, original row, activity, native vectors and
 its ordinal. It returns updated values/activity and a stop flag. A stop jumps to
 completion; it is not a scheduler suspension.
 
-`chain<K>` carries 16 values. `packet_chain<K,N>` carries 16/32/64 when its native
+`author::chain<K>` carries 16 values. `author::packet_chain<K,N>` carries 16/32/64 when its native
 carrier fits at most eight vector arguments; N counts logical values here.
-Native vectors are flattened at the call boundary to preserve register handoff.
+`Plan::make(stages,completion)` validates the cold bounded table and reports
+shared `ikea::author::chain_error` values. Native vectors are flattened at the call boundary to preserve register handoff.
 The [source guide](../source.md#shared-facilities) locates the shared private
 chain implementation. Plans, bindings and native context remain owned by the
 driver through the complete synchronous chain.
@@ -104,12 +113,12 @@ whole pipelines at several grains for runtime, compile cost and code size.
 Changing execution style must preserve the logical operation's semantics.
 For shared filters, normalize decoded values once to a canonical lane width and
 use one matching chain type through the operation. Keep adjacent range tests
-in one consumer and direct packed filters with their format; the
+in one consumer and direct packed filters with their layout; the
 [filter example](../../examples/filters/composition.cpp) and
 [runtime comparison](../../../workbench/spikes/filter-composition/RUNTIME.md)
 show the selected boundary and its measured costs. Apply a
 [head guard](../filters.md#select-head-first-execution) after child substitution
-when the enclosing workload benefits; it does not change the physical format.
+when the enclosing workload benefits; it does not change the physical layout.
 
 ## Validate the extension
 

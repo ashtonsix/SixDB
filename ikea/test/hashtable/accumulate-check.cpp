@@ -118,10 +118,10 @@ template <unsigned E> void packed_roundtrip() {
     constexpr unsigned tail = E % 8;
     std::mt19937_64 random(0x873625 + E);
     for (unsigned trial = 0; trial < 200; ++trial) {
-        alignas(64) std::array<ht::byte, 64> actual, expected;
+        alignas(64) std::array<std::uint8_t, 64> actual, expected;
         alignas(64) std::array<std::uint32_t, 16> q, read;
         for (auto& b : actual)
-            b = ht::byte(random());
+            b = std::uint8_t(random());
         actual[63] = trial % 2 ? 255 : 0;
         expected = actual;
         for (unsigned r = 0; r < 16; ++r)
@@ -130,16 +130,16 @@ template <unsigned E> void packed_roundtrip() {
         for (unsigned t = 0; t < 2; ++t) {
             for (unsigned r = 0; r < 8; ++r)
                 for (unsigned j = 0; j < 3; ++j)
-                    expected[t * E + r * 3 + j] = ht::byte(q[t * 8 + r] >> (tail + j * 8));
+                    expected[t * E + r * 3 + j] = std::uint8_t(q[t * 8 + r] >> (tail + j * 8));
             for (unsigned bit = 0; bit < tail; ++bit) {
-                ht::byte plane = 0;
+                std::uint8_t plane = 0;
                 for (unsigned r = 0; r < 8; ++r)
-                    plane |= ht::byte(((q[t * 8 + r] >> bit) & 1) << r);
+                    plane |= std::uint8_t(((q[t * 8 + r] >> bit) & 1) << r);
                 expected[t * E + 24 + bit] = plane;
             }
         }
-        expected[2 * E] = ht::byte(~live);
-        expected[2 * E + 1] = ht::byte(~(live >> 8));
+        expected[2 * E] = std::uint8_t(~live);
+        expected[2 * E + 1] = std::uint8_t(~(live >> 8));
         ms::write_packed<E>(actual.data(), q.data(), live);
         ht::require(actual == expected,
                     "whole-bucket pack independent byte oracle and metadata preservation");
@@ -154,10 +154,10 @@ template <unsigned E, unsigned T> void wide_roundtrip() {
     constexpr unsigned N = T * 8, B = E / 8, R = E % 8;
     std::mt19937_64 rng(816273 + E * 19 + T);
     for (unsigned trial = 0; trial < 100; ++trial) {
-        std::array<ht::byte, 112> actual, expected;
+        std::array<std::uint8_t, 112> actual, expected;
         std::array<word, N> q, read;
         for (auto& x : actual)
-            x = ht::byte(rng());
+            x = std::uint8_t(rng());
         actual[8 + 95] = trial % 2 ? 255 : 0;
         expected = actual;
         const auto initial = actual;
@@ -167,14 +167,14 @@ template <unsigned E, unsigned T> void wide_roundtrip() {
         for (unsigned t = 0; t < T; ++t) {
             for (unsigned row = 0; row < 8; ++row)
                 for (unsigned j = 0; j < B; ++j)
-                    expected[8 + t * E + row * B + j] = ht::byte(q[t * 8 + row] >> (R + j * 8));
+                    expected[8 + t * E + row * B + j] = std::uint8_t(q[t * 8 + row] >> (R + j * 8));
             for (unsigned bit = 0; bit < R; ++bit) {
-                ht::byte plane = 0;
+                std::uint8_t plane = 0;
                 for (unsigned row = 0; row < 8; ++row)
-                    plane |= ht::byte(((q[t * 8 + row] >> bit) & 1) << row);
+                    plane |= std::uint8_t(((q[t * 8 + row] >> bit) & 1) << row);
                 expected[8 + t * E + 8 * B + bit] = plane;
             }
-            expected[8 + T * E + t] = ht::byte((~live) >> (t * 8));
+            expected[8 + T * E + t] = std::uint8_t((~live) >> (t * 8));
         }
         ms::wide_image<T> image;
         ht::each<T>([&](auto tile) { image[tile] = _mm512_loadu_si512(q.data() + tile * 8); });
@@ -217,10 +217,10 @@ template <unsigned E, unsigned T> void flat_roundtrip() {
     constexpr unsigned N = T * 8, B = E / 8, R = E % 8, Banks = (T + 1) / 2;
     std::mt19937_64 random(0x125783 + E * 17 + T);
     for (unsigned trial = 0; trial < 100; ++trial) {
-        alignas(64) std::array<ht::byte, 64> actual, expected;
+        alignas(64) std::array<std::uint8_t, 64> actual, expected;
         alignas(64) std::array<std::uint32_t, N> q, read;
         for (auto& b : actual)
-            b = ht::byte(random());
+            b = std::uint8_t(random());
         actual[63] = trial % 2 ? 255 : 0;
         expected = actual;
         for (unsigned r = 0; r < N; ++r)
@@ -229,16 +229,16 @@ template <unsigned E, unsigned T> void flat_roundtrip() {
         for (unsigned t = 0; t < T; ++t) {
             for (unsigned r = 0; r < 8; ++r)
                 for (unsigned j = 0; j < B; ++j)
-                    expected[t * E + r * B + j] = ht::byte(q[t * 8 + r] >> (R + j * 8));
+                    expected[t * E + r * B + j] = std::uint8_t(q[t * 8 + r] >> (R + j * 8));
             for (unsigned bit = 0; bit < R; ++bit) {
-                ht::byte plane = 0;
+                std::uint8_t plane = 0;
                 for (unsigned r = 0; r < 8; ++r)
-                    plane |= ht::byte(((q[t * 8 + r] >> bit) & 1) << r);
+                    plane |= std::uint8_t(((q[t * 8 + r] >> bit) & 1) << r);
                 expected[t * E + 8 * B + bit] = plane;
             }
         }
         for (unsigned t = 0; t < T; ++t)
-            expected[T * E + t] = ht::byte((~live) >> (t * 8));
+            expected[T * E + t] = std::uint8_t((~live) >> (t * 8));
         ms::flat_image<T> input;
         ht::each<Banks>([&](auto bank) __attribute__((always_inline)) {
             constexpr unsigned Bank = decltype(bank)::value;
@@ -272,15 +272,15 @@ template <unsigned E> void point_oracle() {
     std::mt19937_64 rng(E + 1821);
     for (unsigned row = 0; row < 8; ++row)
         for (unsigned trial = 0; trial < 40; ++trial) {
-            std::array<ht::byte, E + 16> actual, expected;
+            std::array<std::uint8_t, E + 16> actual, expected;
             for (auto& b : actual)
-                b = ht::byte(rng());
+                b = std::uint8_t(rng());
             expected = actual;
             const word q = trial == 0 ? 0 : trial == 1 ? ht::mask<E> : rng() & ht::mask<E>;
             for (unsigned j = 0; j < B; ++j)
-                expected[8 + row * B + j] = ht::byte(q >> (R + j * 8));
+                expected[8 + row * B + j] = std::uint8_t(q >> (R + j * 8));
             for (unsigned bit = 0; bit < R; ++bit)
-                expected[8 + 8 * B + bit] = ht::byte((expected[8 + 8 * B + bit] & ~(1u << row)) |
+                expected[8 + 8 * B + bit] = std::uint8_t((expected[8 + 8 * B + bit] & ~(1u << row)) |
                                                      (((q >> bit) & 1) << row));
             ms::assign_point<E>(actual.data() + 8, row, q);
             ht::require(actual == expected, "point key store exact bytes and row/extent guards");
@@ -324,15 +324,15 @@ template <unsigned V> void prefetch_layouts() {
     check.template operator()<ht::table<6, 1, V, 5>>();
 }
 void descriptor_accumulation() {
-    using Descriptor = ht::descriptor<24, 8>;
+    using Descriptor = ht::erased_table<24, 8>;
     auto first = Descriptor::explicit_encoding<10, 14>(713);
     auto second = Descriptor::explicit_encoding<10, 14>(713);
     auto result = Descriptor::explicit_encoding<13, 11>(713, nullptr, ht::write_strategy::existing);
     ht::bytes<8> initial{}, a{}, b{};
     for (unsigned i = 0; i < 8; ++i) {
-        initial[i] = ht::byte(i + 1);
-        a[i] = ht::byte(i + 3);
-        b[i] = ht::byte(i + 5);
+        initial[i] = std::byte(i + 1);
+        a[i] = std::byte(i + 3);
+        b[i] = std::byte(i + 5);
     }
     first.insert(42, a);
     second.insert(42, b);
@@ -344,7 +344,7 @@ void descriptor_accumulation() {
         ++calls;
         auto out = left;
         for (unsigned i = 0; i < 8; ++i)
-            out[i] = ht::byte(left[i] * 3 + right[i] * 5 + 7);
+            out[i] = std::byte(std::to_integer<unsigned>(left[i]) * 3 + std::to_integer<unsigned>(right[i]) * 5 + 7);
         return out;
     };
     ht::require(result.accumulate<13, 11, ht::search_kernel::generic, 10, 14>(first, reduce) ==
@@ -355,8 +355,8 @@ void descriptor_accumulation() {
                 "descriptor second ordered source");
     result.read().find(42, [&](const auto& value) {
         for (unsigned i = 0; i < 8; ++i) {
-            const auto intermediate = ht::byte((i + 1) * 3 + (i + 3) * 5 + 7);
-            ht::require(value[i] == ht::byte(intermediate * 3 + (i + 5) * 5 + 7),
+            const auto intermediate = std::byte((i + 1) * 3 + (i + 3) * 5 + 7);
+            ht::require(value[i] == std::byte(std::to_integer<unsigned>(intermediate) * 3 + (i + 5) * 5 + 7),
                         "descriptor independent non-associative source order");
         }
     });

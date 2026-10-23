@@ -85,10 +85,10 @@ flattened compact descriptor is required.
 
 ## External rank selection
 
-`rank_selection{bytes,inverted=false}` borrows a byte-readable bitmap. A nonempty
-bitmap supplies at least `ceil(n/8)` bytes. Set bits mean eligible, or ineligible
-when inverted. No word padding is required. Unused high bits are ignored.
-`rank_selection{}` selects none; `rank_selection::all()` selects all.
+`selection::bits(first,bytes)` borrows a byte-readable bitmap at its original
+rank origin. `selection::complement(first,bytes)` borrows exclusions. A nonempty
+bitmap supplies at least `ceil(n/8)` bytes. Set bits mean eligible for `bits` and ineligible for `complement`. No word padding is required. Unused high bits are ignored.
+`selection{}` selects none; `selection::all()` selects all.
 
 `selected_source{source,filter}` copies the source projection and intersects the
 filter with any existing selection. Nesting cannot re-enable a rank. It supports
@@ -264,9 +264,12 @@ and limit=origin. There is no allocating constructor or blanket initialize call.
 
 Commands require admitted contents and exclusive authority. Checked rank/value,
 capacity/extent and effect-capacity refusal happens before stores and preserves
-bytes/effect output. Every issued store calls `effects.before(*this,byte_write)`
+bytes/effect output. Every issued store calls `effects.before(*this,plane,offset,size)`
 on the **original editor** before writing, including tail initialization. The
-sink supplies `remaining()`; hooks cannot fail, allocate, suspend or mutate inputs.
+checked sink is `ikea::journal`; trusted hooks satisfy `ikea::effects` and cannot
+fail, allocate, suspend or mutate inputs. `effect_capacity_append` and
+`effect_capacity_resize` report additional record bounds. `plane_storage` resolves
+each plane on the named editor.
 Preserving stores still count as damage. Effects are neither beforeimages, reader
 protection nor a transaction.
 
@@ -278,7 +281,7 @@ rank remaps for reordering, publication and retained readers.
 ## Ownership, execution profiles and verification
 
 Intervals depends on neither StreamPack nor Frame. StreamPack owns its portable
-compact schema, legacy/current descriptor decoding, bitmap, retirement and value
+compact schema, encoded-layout validation, bitmap, retirement and value
 operations; Directory and Frame keep their own representations. Private compact
 controls are tested under StreamPack, not exposed as another public geometry
 owner. The old Boundlist public headers, target and examples are removed.

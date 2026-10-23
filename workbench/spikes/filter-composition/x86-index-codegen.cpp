@@ -17,10 +17,10 @@ extern "C" {
     return x86_index::lookup<30,16,6>(p,q,a);
 }
 [[gnu::noinline]] unsigned equal6_bounded(const std::uint8_t* p,std::uint64_t q) {
-    return ikea::seriespack::composition::local_equal8<6>(q)(x86_index::exact_load<6>(p));
+    return ikea::seriespack::author::local_equal8<6>(q)(x86_index::exact_load<6>(p));
 }
 [[gnu::noinline]] unsigned equal6_owner(const std::uint8_t* p,std::uint64_t q) {
     std::uint64_t raw; __builtin_memcpy(&raw,p,8);
-    return ikea::seriespack::composition::local_equal8<6>(q)(raw);
+    return ikea::seriespack::author::local_equal8<6>(q)(raw);
 }
 }

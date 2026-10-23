@@ -102,14 +102,14 @@ template <class D, class S> int accumulate(D* dst, const S* src) {
     return int(merge_study::accumulate_candidate(*dst, *src, [](const auto& a, const auto& b) {
         auto out = a;
         for (unsigned i = 0; i < out.size(); ++i)
-            out[i] = ht::byte(a[i] * 3 + b[i] * 5 + 7);
+            out[i] = std::byte(std::to_integer<unsigned>(a[i]) * 3 + std::to_integer<unsigned>(b[i]) * 5 + 7);
         return out;
     }));
 #else
     return int(ht::accumulate(*dst, *src, [](const auto& a, const auto& b) {
         auto out = a;
         for (unsigned i = 0; i < out.size(); ++i)
-            out[i] = ht::byte(a[i] * 3 + b[i] * 5 + 7);
+            out[i] = std::byte(std::to_integer<unsigned>(a[i]) * 3 + std::to_integer<unsigned>(b[i]) * 5 + 7);
         return out;
     }));
 #endif

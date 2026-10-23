@@ -22,7 +22,7 @@ foreach(check search cuts sparse seams)
   target_link_libraries(ikea_intervals_${check}_check PRIVATE ikea::intervals)
 endforeach()
 
-add_library(ikea_streampack STATIC src/streampack/description.cpp src/streampack/view.cpp
+add_library(ikea_streampack STATIC src/streampack/layout.cpp src/streampack/view.cpp
   src/streampack/compact/description.cpp src/streampack/compact/view.cpp)
 add_library(ikea::streampack ALIAS ikea_streampack)
 sixdb_target(ikea_streampack)
@@ -55,14 +55,14 @@ foreach(example ordinary composition)
 endforeach()
 
 add_library(ikea_seriespack STATIC
-  src/seriespack/readers.cpp src/seriespack/admission.cpp src/seriespack/representation.cpp)
+  src/seriespack/readers.cpp src/seriespack/admission.cpp src/seriespack/layout.cpp)
 add_library(ikea::seriespack ALIAS ikea_seriespack)
 sixdb_target(ikea_seriespack)
 target_include_directories(ikea_seriespack PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
 target_compile_features(ikea_seriespack PUBLIC cxx_std_23)
 target_link_libraries(ikea_seriespack PUBLIC ikea_core)
 
-add_library(ikea_tuplepack STATIC src/tuplepack/description.cpp src/tuplepack/construction.cpp
+add_library(ikea_tuplepack STATIC src/tuplepack/layout.cpp src/tuplepack/initialize.cpp
   src/tuplepack/prepare.cpp src/tuplepack/kernels.cpp src/tuplepack/gpr.cpp src/tuplepack/routes.cpp
   src/tuplepack/packet_layout.cpp src/tuplepack/packet_prepare.cpp src/tuplepack/packet.cpp)
 add_library(ikea::tuplepack ALIAS ikea_tuplepack)
@@ -77,7 +77,7 @@ sixdb_target(ikea_bec256)
 target_include_directories(ikea_bec256 PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
 target_compile_features(ikea_bec256 PUBLIC cxx_std_23)
 target_link_libraries(ikea_bec256 PUBLIC ikea_core)
-add_executable(ikea_bec256_check EXCLUDE_FROM_ALL test/bec256/check.cpp test/bec256/analysis.cpp)
+add_executable(ikea_bec256_check EXCLUDE_FROM_ALL test/bec256/check.cpp test/bec256/analysis.cpp test/bec256/block.cpp)
 sixdb_target(ikea_bec256_check)
 target_link_libraries(ikea_bec256_check PRIVATE ikea::bec256)
 add_executable(ikea_bec256_composition_check EXCLUDE_FROM_ALL test/bec256/composition.cpp)
@@ -226,3 +226,9 @@ add_custom_target(ikea_validate
   USES_TERMINAL)
 
 include(cmake/Hashtable.cmake)
+
+add_executable(ikea_selection_check EXCLUDE_FROM_ALL test/selection.cpp)
+sixdb_target(ikea_selection_check)
+target_link_libraries(ikea_selection_check PRIVATE ikea::intervals)
+add_test(NAME ikea_selection_check COMMAND $<TARGET_FILE:ikea_selection_check>)
+add_dependencies(ikea_validate ikea_selection_check)

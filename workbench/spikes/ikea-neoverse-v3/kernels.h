@@ -8,11 +8,11 @@ namespace v3_spike {
 namespace bc = ikea::bec256;
 using block = bc::native::block;
 using pair = bc::native::pair;
-using consumer = std::uint64_t (*)(const bc::source&, const bc::source&, const bc::byte*, const bc::byte*);
+using consumer = std::uint64_t (*)(const bc::reader&, const bc::reader&, const bc::byte*, const bc::byte*);
 struct candidate { const char* name; consumer consume; bool sve; };
 extern const std::array<candidate, 8> candidates;
-std::uint64_t consume_sve(const bc::source&, const bc::source&, const bc::byte*, const bc::byte*);
-std::uint64_t consume_sve_interleaved(const bc::source&, const bc::source&, const bc::byte*, const bc::byte*);
+std::uint64_t consume_sve(const bc::reader&, const bc::reader&, const bc::byte*, const bc::byte*);
+std::uint64_t consume_sve_interleaved(const bc::reader&, const bc::reader&, const bc::byte*, const bc::byte*);
 
 [[gnu::always_inline]] inline std::uint64_t finish(pair value, const bc::byte* qa, const bc::byte* qb) {
     return bc::native::population(bc::native::intersection(
@@ -43,7 +43,7 @@ template <unsigned Method>
     }
 }
 
-[[gnu::always_inline]] inline uint8x16x4_t load_scratch(const bc::source& input) {
+[[gnu::always_inline]] inline uint8x16x4_t load_scratch(const bc::reader& input) {
     if (input.storage().size() >= 64)
         return vld1q_u8_x4(reinterpret_cast<const std::uint8_t*>(input.storage().data()));
     alignas(64) std::uint8_t scratch[64]{};
@@ -59,7 +59,7 @@ struct tree {
     unsigned pos;
     uint16x8_t root;
 };
-[[gnu::always_inline]] inline tree start(uint8x16x4_t body, const bc::source& input) {
+[[gnu::always_inline]] inline tree start(uint8x16x4_t body, const bc::reader& input) {
     const unsigned population = input.population();
     unsigned n = std::bit_width(std::min(population, 256 - population));
     unsigned first = input.bytes() ? std::to_integer<unsigned>(input.storage()[0]) : 0;

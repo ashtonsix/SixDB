@@ -17,8 +17,8 @@ std::expected<packet_layout<N>, error> packet_layout<N>::make(unsigned rows, uns
         for (unsigned r = 0; r < rows; ++r)
             for (unsigned i = 0; i < length; ++i) {
                 const auto out = rows * begin + r * length + i;
-                p.offsets_[r * (N / rows) + begin + i] = byte(out);
-                p.owners_[out] = byte(r);
+                p.offsets_[r * (N / rows) + begin + i] = std::uint8_t(out);
+                p.owners_[out] = std::uint8_t(r);
                 p.row_major_ &= out == r * (N / rows) + begin + i;
             }
         begin += length;

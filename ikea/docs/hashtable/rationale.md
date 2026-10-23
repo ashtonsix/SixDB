@@ -334,6 +334,9 @@ separate spans for a partial final limb. This lets a containing representation
 preserve bytes at its chosen granularity. The enclosing owner resolves each
 live source to an incarnation and generation, and owns protection, publication
 and rollback policy. A pointer and byte offset alone are not an MVCC identity.
+The shared journal names the actual table and a plane ordinal; the owner resolves
+the current plane bytes through `plane_storage`. This keeps one effects protocol
+without discarding the table-specific `enter` and complete `prepare` duties.
 
 Packed rows share bytes, and operations also change counts and Swiss state.
 Logical locks on distinct keys therefore do not establish independent physical

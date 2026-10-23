@@ -33,7 +33,7 @@ template <unsigned Rows, unsigned Part>
 [[gnu::always_inline]] inline vector16 mask_part(std::uint64_t active) {
     constexpr unsigned B = 64 / Rows, first = Part * 16 / B;
     if constexpr (B >= 16) {
-        const byte value = active & (std::uint64_t(1) << first) ? 255 : 0;
+        const std::uint8_t value = active & (std::uint64_t(1) << first) ? 255 : 0;
 #if defined(__aarch64__)
         return vdupq_n_u8(value);
 #else
@@ -41,9 +41,9 @@ template <unsigned Rows, unsigned Part>
 #endif
     } else {
         constexpr auto bits = [] {
-            std::array<byte, 16> result{};
+            std::array<std::uint8_t, 16> result{};
             for (unsigned i = 0; i < 16; ++i)
-                result[i] = byte(1u << ((i / B) % 8));
+                result[i] = std::uint8_t(1u << ((i / B) % 8));
             return result;
         }();
         const auto selected = active >> first;

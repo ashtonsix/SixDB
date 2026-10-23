@@ -1,6 +1,6 @@
 #include "../support.h"
 #include "../fixture.h"
-#include <ikea/seriespack/detail/mutation/construction.h>
+#include <ikea/seriespack/author/mutation.h>
 
 template <class F> void check_construction_format() {
     ikea_test::format_scope<F> format_context{"construction"};
@@ -9,14 +9,14 @@ template <class F> void check_construction_format() {
                               63, 64, 65, 127, 128, 129, 255, 256, 257, 513, 529}) {
         ikea_test::scope scenario{"extent", 0, count};
         placed<F> storage;
-        const auto destination = *sp::view<F, std::uint8_t>::attach(count, storage.planes);
+        const auto destination = *sp::view<F>::attach(count, storage.planes);
         std::vector<std::uint64_t> input(count);
         for (std::size_t i = 0; i < count; ++i)
             input[i] = storage.truth[i] ^ (~std::uint64_t{0} >> (64 - F::width));
         std::array<std::vector<std::uint8_t>, 3> wanted, before;
         for (unsigned p = 0; p < 3; ++p)
-            wanted[p] = before[p] = std::vector<std::uint8_t>(storage.planes[p].bytes.begin(),
-                                                              storage.planes[p].bytes.end());
+            wanted[p] = before[p] = std::vector<std::uint8_t>(ikea::to_u8(storage.planes[p].bytes).begin(),
+                                                              ikea::to_u8(storage.planes[p].bytes).end());
         const auto tiles = count / F::tile_rows + (count % F::tile_rows != 0);
         // Independent wire oracle, with zero logical values in final slack.
         for (std::size_t t = 0; t < tiles; ++t) {
@@ -39,27 +39,29 @@ template <class F> void check_construction_format() {
                     values.data(), wanted[0].data() + t * storage.planes[0].stride);
             }
         }
-        std::vector<sp::byte_write> records(storage.truth.size() / 8 * 3 + 16);
-        sp::write_journal effects{records};
+        std::vector<ikea::journal::entry> records(storage.truth.size() / 8 * 3 + 16);
+        ikea::journal effects{records};
         if (count) {
-            sp::write_journal full{{}};
-            IKEA_CHECK(!sp::initialize(destination, std::span<const std::uint64_t>(input), full));
+            ikea::journal full{{}};
+            IKEA_CHECK(!sp::author::initialize(destination, std::span<const std::uint64_t>(input), full));
             if constexpr (F::width < 64) {
                 const auto last = input.back();
                 input.back() = std::uint64_t{1} << F::width;
                 IKEA_CHECK(
-                    !sp::initialize(destination, std::span<const std::uint64_t>(input), effects));
+                    !sp::author::initialize(destination, std::span<const std::uint64_t>(input), effects));
                 IKEA_CHECK(!effects.used);
                 input.back() = last;
             }
             for (unsigned p = 0; p < 3; ++p)
                 IKEA_CHECK(std::equal(before[p].begin(), before[p].end(),
-                                       storage.planes[p].bytes.begin()));
+                                       ikea::to_u8(storage.planes[p].bytes).begin()));
         }
-        IKEA_CHECK(sp::initialize(destination, std::span<const std::uint64_t>(input), effects));
+        IKEA_CHECK(sp::author::initialize(destination, std::span<const std::uint64_t>(input), effects));
+        for (const auto& write : effects.entries())
+            IKEA_CHECK(write.source == &destination);
         for (unsigned p = 0; p < 3; ++p) {
             IKEA_CHECK(
-                std::equal(wanted[p].begin(), wanted[p].end(), storage.planes[p].bytes.begin()));
+                std::equal(wanted[p].begin(), wanted[p].end(), ikea::to_u8(storage.planes[p].bytes).begin()));
             for (std::size_t b = 0; b < wanted[p].size(); ++b)
                 if (before[p][b] != wanted[p][b]) {
                     bool covered = false;
@@ -73,15 +75,15 @@ template <class F> void check_construction_format() {
 #endif
 }
 void check_construction() {
-    check_construction_format<sp::format<1>>();
-    check_construction_format<sp::format<7>>();
-    check_construction_format<sp::format<8>>();
-    check_construction_format<sp::format<31>>();
-    check_construction_format<sp::format<56>>();
-    check_construction_format<sp::format<64>>();
-    check_construction_format<sp::format<7, sp::geometry::striped>>();
-    check_construction_format<sp::format<12, sp::geometry::striped>>();
-    check_construction_format<sp::format<23, sp::geometry::local, 16>>();
-    check_construction_format<sp::format<8, sp::geometry::local, 8>>();
-    check_construction_format<sp::format<28, sp::geometry::striped, 16>>();
+    check_construction_format<sp::layout<1>>();
+    check_construction_format<sp::layout<7>>();
+    check_construction_format<sp::layout<8>>();
+    check_construction_format<sp::layout<31>>();
+    check_construction_format<sp::layout<56>>();
+    check_construction_format<sp::layout<64>>();
+    check_construction_format<sp::layout<7, sp::geometry::striped>>();
+    check_construction_format<sp::layout<12, sp::geometry::striped>>();
+    check_construction_format<sp::layout<23, sp::geometry::local, 16>>();
+    check_construction_format<sp::layout<8, sp::geometry::local, 8>>();
+    check_construction_format<sp::layout<28, sp::geometry::striped, 16>>();
 }

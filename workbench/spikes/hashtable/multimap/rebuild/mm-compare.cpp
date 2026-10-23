@@ -10,7 +10,7 @@
 namespace study {
 namespace ht=ikea::hashtable;
 using ht::word;
-using ht::byte;
+using byte=std::byte;
 constexpr unsigned K=REBUILD_K,b=REBUILD_B,W=K+b,V=REBUILD_V;
 using Value=ht::bytes<V>;
 using Key=std::conditional_t<W<=32,std::uint32_t,std::uint64_t>;

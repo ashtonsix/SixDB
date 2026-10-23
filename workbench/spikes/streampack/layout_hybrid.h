@@ -80,8 +80,8 @@ public:
   }
   template<class Journal> void update(unsigned row, unsigned used, bool dead, Journal& effects) {
     auto* u = used_address(row); auto* d = dead_address(row);
-    effects.before(*this, ikea::byte_write{0, std::size_t(u - data_), sizeof(W)}); store<W>(u, used);
-    effects.before(*this, ikea::byte_write{0, std::size_t(d - data_), 1});
+    effects.before(*this, 0, std::size_t(u - data_), sizeof(W)); store<W>(u, used);
+    effects.before(*this, 0, std::size_t(d - data_), 1);
     const auto mask = std::uint8_t(1u << (row % 8)); *d = (*d & ~mask) | (dead ? mask : 0);
   }
   std::optional<std::pair<unsigned, bool>> reverse(unsigned block, unsigned count, unsigned extent, unsigned offset) const {

@@ -28,15 +28,16 @@ inline constexpr std::array<unsigned, 4> widths{8, 8, 3, 4};
 inline constexpr std::array<std::uint64_t, 4> masks{
     UINT64_MAX, UINT64_MAX, orbital_bench::value_mask, UINT32_MAX};
 
-// The exact existing portable Tuple descriptor, including all codes. The
+// The exact current portable Tuple description, including all codes. Historical
+// v1 frozen controls remain recoverable from their recorded source recipe. The
 // canonical law is fixed to this description; arbitrary Tuple layouts reject.
-constexpr std::array<tp::byte, 75> descriptor() {
-  std::array<tp::byte, 75> result{};
-  result[0] = 'T'; result[1] = 'P'; result[2] = 1;
-  result[3] = v::tuple_bytes; result[4] = v::tuple_bytes;
+constexpr std::array<std::uint8_t, 75> descriptor() {
+  std::array<std::uint8_t, 75> result{};
+  result[0] = 'T'; result[1] = 'P'; result[2] = 2;
+  result[3] = 1 + 3 * v::tuple_bytes; result[4] = 0; result[5] = v::tuple_bytes;
   for (unsigned code = 0; code < v::tuple_bytes; ++code) {
-    result[6 + 3 * code] = tp::byte(code);
-    result[8 + 3 * code] = tp::byte(code == 18 ? 4 : 8);
+    result[6 + 3 * code] = std::uint8_t(code);
+    result[8 + 3 * code] = std::uint8_t(code == 18 ? 4 : 8);
   }
   return result;
 }
@@ -56,7 +57,7 @@ inline bool exact_descriptor(orbital::Bytes bytes) {
 constexpr std::array<tp::detail::word_transfer, 4> transfers() {
   std::array<tp::detail::word_transfer, 4> result{};
   for (unsigned field = 0; field < result.size(); ++field)
-    result[field] = {masks[field], tp::byte(offsets[field]), 0, tp::byte(widths[field])};
+    result[field] = {masks[field], std::uint8_t(offsets[field]), 0, std::uint8_t(widths[field])};
   return result;
 }
 inline bool exact_transfer(const tp::detail::word_transfer& transfer, unsigned field) {
@@ -86,11 +87,11 @@ public:
     const auto refused = [] { return std::unexpected(orbital::Error::invalid_argument); };
     if (schema.tuple.bytes() != v::tuple_bytes || schema.tuple.encoded_size() != 75)
       return refused();
-    std::array<tp::byte, 75> encoded{};
-    const auto serialized = schema.tuple.encode(encoded);
+    std::array<std::uint8_t, 75> encoded{};
+    const auto serialized = schema.tuple.encode(std::as_writable_bytes(std::span{encoded}));
     if (!serialized || *serialized != encoded.size() || encoded != detail::descriptor())
       return refused();
-    const auto placed = tp::const_view::bind(schema.tuple, {}, 0, v::tuple_bytes);
+    const auto placed = tp::const_view::attach(schema.tuple, {}, 0, v::tuple_bytes);
     if (!placed) return refused();
     const auto admit = [&]<unsigned Bytes>(unsigned field) {
       const auto& reader = schema.readers[field];
@@ -98,7 +99,7 @@ public:
       if (reader.unit_bytes() != v::tuple_bytes || controls.slots != Bytes ||
           !detail::exact_transfer(controls.transfer, field)) return false;
       const auto operation = tp::bind_reader(reader, *placed);
-      return operation && tp::native_reader(*operation).template admit_transfer<Bytes>().has_value();
+      return operation && tp::author::native_reader(*operation).template admit_transfer<Bytes>().has_value();
     };
     if (!admit.template operator()<8>(0) || !admit.template operator()<8>(1) ||
         !admit.template operator()<3>(2) || !admit.template operator()<4>(3)) return refused();
@@ -113,7 +114,7 @@ public:
 
   template<unsigned Field>
   // Trusted one complete row in the admitted fixed encoding; backing is live.
-  [[gnu::always_inline]] std::uint64_t read_unchecked(const tp::byte* row) const {
+  [[gnu::always_inline]] std::uint64_t read_unchecked(const std::byte* row) const {
     static_assert(Field < 4);
     constexpr unsigned bytes = detail::widths[Field];
     // Only slots and transfer participate in Rows=1's fixed transfer body. The
@@ -123,7 +124,7 @@ public:
     controls.slots = bytes;
     controls.transfer = transfers_[Field];
     return tp::detail::read_gpr_transfer<1, bytes>(controls,
-        [&](unsigned) { return row; }, tp::detail::all_rows<1>, v::tuple_bytes);
+        [&](unsigned) { return ikea::to_u8(row); }, tp::detail::all_rows<1>, v::tuple_bytes);
   }
 };
 
@@ -143,13 +144,13 @@ class Part;
 // address or preparation Schema is borrowed. Output spans must be disjoint
 // from encoded bytes and live law metadata, as in the existing native body.
 class Part {
-  const tp::byte* data_;
+  const std::byte* data_;
   std::size_t records_;
-  Part(const tp::byte* data, std::size_t records) : data_(data), records_(records) {}
+  Part(const std::byte* data, std::size_t records) : data_(data), records_(records) {}
   friend class Cursor;
   friend orbital::Result<Part> qualify_part(const Control&, orbital::Bytes, orbital::Bytes);
   friend orbital::Result<Cursor> qualify_cursor(const Control&, orbital::Bytes, orbital::Bytes);
-  [[gnu::always_inline]] const tp::byte* address(std::size_t row) const {
+  [[gnu::always_inline]] const std::byte* address(std::size_t row) const {
     return data_ + row * v::tuple_bytes;
   }
 public:
@@ -186,8 +187,8 @@ public:
 // immutable control used in qualification; replacing count is trusted misuse.
 // Returned Part retains no pointer into this cursor or the Control object.
 class Cursor {
-  const tp::byte* data_;
-  explicit Cursor(const tp::byte* data) : data_(data) {}
+  const std::byte* data_;
+  explicit Cursor(const std::byte* data) : data_(data) {}
   friend orbital::Result<Cursor> qualify_cursor(const Control&, orbital::Bytes, orbital::Bytes);
   friend struct orbital_mvcc::metadata_consumer::shape_read::detail::CursorAccess;
 public:
@@ -208,7 +209,7 @@ inline orbital::Result<Part> qualify_part(const Control& control, orbital::Bytes
   // The check keeps them explicit at this cold seam, including access bounds.
   for (unsigned field = 0; field < 4; ++field)
     if (!detail::exact_transfer(control.law.transfers()[field], field)) return refused();
-  return Part{reinterpret_cast<const tp::byte*>(body.data()), control.records};
+  return Part{reinterpret_cast<const std::byte*>(body.data()), control.records};
 }
 inline orbital::Result<Cursor> qualify_cursor(const Control& control, orbital::Bytes body,
                                              orbital::Bytes interpretation) {

@@ -41,7 +41,7 @@ template<bool Widths> Result<Rewrite> hard_as(oa::Pool& pool, sm::Selection sour
   auto created = sm::Draft::create(pool, target, extents);
   if (!created) return std::unexpected(created.error());
   result.draft = std::move(*created);
-  ikea::no_coverage ignored;
+  ikea::no_effects ignored;
   for (unsigned i = 0; i < result.sources.size(); ++i) {
     const auto x = result.sources[i]; const auto old = read(sm::block_of(x)); const auto r = sm::rank_of(x);
     auto dst = [&] { if constexpr (Widths) return result.draft.write_widths(i / cap); else return result.draft.write(i / cap); }();

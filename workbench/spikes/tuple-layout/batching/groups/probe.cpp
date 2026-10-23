@@ -15,8 +15,8 @@ namespace pd = tp::native::packet_detail;
 // Destination of every old row-major byte. Groups count decoded byte slots;
 // unused per-row capacity forms a final group. Application types play no part.
 template <unsigned N, unsigned Rows>
-std::array<tp::byte, N> grouping(std::span<const unsigned> sizes) {
-    std::array<tp::byte, N> out{};
+std::array<std::uint8_t, N> grouping(std::span<const unsigned> sizes) {
+    std::array<std::uint8_t, N> out{};
     unsigned first = 0;
     auto append = [&](unsigned width) {
         assert(width && first + width <= N / Rows);
@@ -35,12 +35,12 @@ struct plans {
     d::packet_read read;
     d::packet_write write;
     d::shuffle decode, encode, forward, inverse;
-    std::array<tp::byte, 64> mapping;
+    std::array<std::uint8_t, 64> mapping;
     plans() {
         const auto layout = *tp::layout::make(
             2, std::array<tp::code, 3>{tp::code{0, 0, 8}, tp::code{1, 0, 4}, tp::code{1, 4, 4}});
-        const std::array<tp::byte, 4> read_map{0, 1, 2, tp::hole};
-        const std::array<tp::byte, 4> write_map{0, 1, tp::hole, tp::hole};
+        const std::array<std::uint8_t, 4> read_map{0, 1, 2, tp::hole};
+        const std::array<std::uint8_t, 4> write_map{0, 1, tp::hole, tp::hole};
         read = *d::prepare_packet_read(layout, read_map, 16);
         write = *d::prepare_packet_write(layout, write_map, 16);
         mapping = grouping<64, 16>(std::array<unsigned, 2>{2, 1});
@@ -73,7 +73,7 @@ struct plans {
     }
 };
 template <bool Integrated>
-[[gnu::always_inline]] inline n::packet read(const plans &p, const tp::byte *data,
+[[gnu::always_inline]] inline n::packet read(const plans &p, const std::uint8_t *data,
                                              std::size_t stride, std::uint64_t active) {
     if (!active)
         return nd::join(nd::zero16(), nd::zero16(), nd::zero16(), nd::zero16());
@@ -88,7 +88,7 @@ template <bool Integrated>
         return n::transform<false>(n::read_body<16>(p.read, address, active, stride), p.forward);
 }
 template <bool Integrated>
-[[gnu::always_inline]] inline void write(const plans &p, tp::byte *data, std::size_t stride,
+[[gnu::always_inline]] inline void write(const plans &p, std::uint8_t *data, std::size_t stride,
                                          std::uint64_t active, n::packet input) {
     if (!active)
         return;
@@ -199,10 +199,10 @@ void check(const plans &p) {
         assert(sample[row * 16 + 2] == 8 + row);
     }
     const auto word = grouping<8, 2>(std::array<unsigned, 2>{2, 1});
-    assert((word == std::array<tp::byte, 8>{0, 1, 4, 6, 2, 3, 5, 7}));
+    assert((word == std::array<std::uint8_t, 8>{0, 1, 4, 6, 2, 3, 5, 7}));
     for (auto stride : {2, 3, 16, 64})
         for (auto active : {0xffffu, 0x5555u, 0xaaaau, 0x7fffu, 1u, 0u}) {
-            std::vector<tp::byte> before(16 * stride, 0xa6), a, b;
+            std::vector<std::uint8_t> before(16 * stride, 0xa6), a, b;
             for (unsigned row = 0; row < 16; ++row) {
                 before[row * stride] = row * 17;
                 before[row * stride + 1] = row * 31;
@@ -216,7 +216,7 @@ void check(const plans &p) {
             const auto rows = n::read_body<16>(p.read, address, active, stride);
             auto x = read<true>(p, a.data(), stride, active);
             auto y = read<false>(p, b.data(), stride, active);
-            std::array<tp::byte, 64> actual{}, control{}, expected{};
+            std::array<std::uint8_t, 64> actual{}, control{}, expected{};
             n::store_packet(actual.data(), x);
             n::store_packet(control.data(), y);
             std::uint64_t sum = 0;
@@ -249,23 +249,23 @@ void check(const plans &p) {
 template <unsigned Style, bool Mutate> void measure(benchmark::State &state) {
     plans p;
     const unsigned stride = state.range(0), active = state.range(1);
-    std::vector<tp::byte> bytes(8192 * stride);
+    std::vector<std::uint8_t> bytes(8192 * stride);
     std::iota(bytes.begin(), bytes.end(), 0);
     const auto format = *tp::layout::make(
         2, std::array<tp::code, 3>{tp::code{0, 0, 8}, tp::code{1, 0, 4}, tp::code{1, 4, 4}});
-    const std::array<tp::byte, 4> rm{0, 1, 2, tp::hole}, wm{0, 1, tp::hole, tp::hole};
+    const std::array<std::uint8_t, 4> rm{0, 1, 2, tp::hole}, wm{0, 1, tp::hole, tp::hole};
     const std::array<unsigned, 2> groups{2, 1};
     const auto used = Style >= 6 ? 4 : 3;
     const auto shape = Style >= 6 ? std::span<const unsigned>{} : std::span<const unsigned>(groups);
-    auto rp = *tp::reader<64, 16>::make(format, std::span(rm).first(used), shape);
-    auto wp = *tp::writer<64, 16>::make(format, std::span(wm).first(used), shape);
-    auto view = *tp::view::bind(format, bytes, 8192, stride);
+    auto rp = *tp::read_plan<64, 16>::make(format, std::span(rm).first(used), shape);
+    auto wp = *tp::write_plan<64, 16>::make(format, std::span(wm).first(used), shape);
+    auto view = *tp::view::attach(format, std::as_writable_bytes(std::span{bytes}), 8192, stride);
     auto br = *tp::bind_reader(rp, view);
     auto bw = *tp::bind_writer(wp, view);
-    auto nr = tp::native_reader(br);
-    auto nw = tp::native_writer(bw);
-    std::array<ikea::owner_write, 16> records;
-    ikea::source_write_journal effects{records};
+    auto nr = tp::author::native_reader(br);
+    auto nw = tp::author::native_writer(bw);
+    std::array<ikea::journal::entry, 16> records;
+    ikea::journal effects{records};
     benchmark::DoNotOptimize(p);
     for (auto _ : state) {
         std::uint64_t sum = 0;
@@ -288,7 +288,7 @@ template <unsigned Style, bool Mutate> void measure(benchmark::State &state) {
                             [&](unsigned r) { return bytes.data() + (row + r) * stride; }, next,
                             active, stride);
                     else if constexpr (Style == 4 || Style == 6) {
-                        std::array<tp::byte, 64> value;
+                        std::array<std::uint8_t, 64> value;
                         n::store_packet(value.data(), next);
                         auto status = bw.set(row, value, effects, active);
                         benchmark::DoNotOptimize(status);
@@ -322,20 +322,20 @@ template <unsigned Style, bool Mutate> void measure(benchmark::State &state) {
 template <bool Grouped, bool Mutate, bool Native> void measure_word(benchmark::State &state) {
     const auto format = *tp::layout::make(
         2, std::array<tp::code, 3>{tp::code{0, 0, 8}, tp::code{1, 0, 4}, tp::code{1, 4, 4}});
-    const std::array<tp::byte, 3> rm{0, 1, 2}, wm{0, 1, tp::hole};
+    const std::array<std::uint8_t, 3> rm{0, 1, 2}, wm{0, 1, tp::hole};
     const std::array<unsigned, 2> groups{2, 1};
     const auto grouping = Grouped ? std::span<const unsigned>(groups) : std::span<const unsigned>{};
-    const auto rp = *tp::reader<8, 2>::make(format, rm, grouping);
-    const auto wp = *tp::writer<8, 2>::make(format, wm, grouping);
+    const auto rp = *tp::read_plan<8, 2>::make(format, rm, grouping);
+    const auto wp = *tp::write_plan<8, 2>::make(format, wm, grouping);
     const unsigned stride = state.range(0), active = state.range(1);
-    std::vector<tp::byte> data(8192 * stride);
+    std::vector<std::uint8_t> data(8192 * stride);
     std::iota(data.begin(), data.end(), 0);
-    auto view = *tp::view::bind(format, data, 8192, stride);
+    auto view = *tp::view::attach(format, std::as_writable_bytes(std::span{data}), 8192, stride);
     auto br = *tp::bind_reader(rp, view);
     auto bw = *tp::bind_writer(wp, view);
-    auto nr = tp::native_reader(br);
-    std::array<ikea::owner_write, 2> records;
-    ikea::source_write_journal effects{records};
+    auto nr = tp::author::native_reader(br);
+    std::array<ikea::journal::entry, 2> records;
+    ikea::journal effects{records};
     auto operation = [&](unsigned first) __attribute__((always_inline)) {
         auto value = Native ? nr.get_unchecked(first, active) : br.get_unchecked(first, active);
         std::uint64_t sum = 0, next = 0;

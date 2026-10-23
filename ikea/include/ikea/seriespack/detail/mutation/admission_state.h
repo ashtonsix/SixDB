@@ -1,7 +1,7 @@
 #pragma once
 #include <ikea/seriespack/detail/admission.h>
 #include <vector>
-namespace ikea::seriespack::composition::detail {
+namespace ikea::seriespack::author::detail {
 using ikea::seriespack::detail::occupied_run;
 struct writable_fields {
     struct field {
@@ -16,4 +16,4 @@ struct writable_fields {
     explicit writable_fields(std::size_t rows) : count(rows) {}
     void add(occupied_run bytes, const void* source, unsigned plane);
 };
-} // namespace ikea::seriespack::composition::detail
+} // namespace ikea::seriespack::author::detail

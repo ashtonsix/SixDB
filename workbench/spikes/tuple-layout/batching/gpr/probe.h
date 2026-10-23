@@ -9,7 +9,7 @@ namespace tp = ikea::tuplepack;
 using word = std::uint64_t;
 
 template <unsigned Bytes>
-[[gnu::always_inline]] inline word load(const tp::byte* p) {
+[[gnu::always_inline]] inline word load(const std::uint8_t* p) {
     static_assert(Bytes == 1 || Bytes == 2 || Bytes == 4 || Bytes == 8);
     if constexpr (Bytes == 1)
         return *p;
@@ -28,10 +28,10 @@ template <unsigned Bytes>
     }
 }
 template <unsigned Bytes>
-[[gnu::always_inline]] inline void store(tp::byte* p, word value) {
+[[gnu::always_inline]] inline void store(std::uint8_t* p, word value) {
     __builtin_memcpy(p, &value, Bytes);
 }
-[[gnu::always_inline]] inline word short_load(const tp::byte* p, unsigned bytes) {
+[[gnu::always_inline]] inline word short_load(const std::uint8_t* p, unsigned bytes) {
     if (bytes == 8)
         return load<8>(p);
     word value = 0;
@@ -50,31 +50,31 @@ template <unsigned Bytes>
 }
 template <unsigned Count>
 [[gnu::always_inline]] inline void write_row(const tp::detail::scalar_write<8>& p,
-                                             tp::byte* row, word input) {
+                                             std::uint8_t* row, word input) {
     if constexpr (Count == 1) {
         const auto& b = p.stores[0];
-        row[b.offset] = (b.mask == 255 ? 0 : row[b.offset] & tp::byte(~b.mask)) |
-                        (tp::byte(input >> (8 * b.input[0])) << b.shift[0]);
+        row[b.offset] = (b.mask == 255 ? 0 : row[b.offset] & std::uint8_t(~b.mask)) |
+                        (std::uint8_t(input >> (8 * b.input[0])) << b.shift[0]);
     } else if (p.word.bytes) {
         const auto& w = p.word;
         auto next = short_load(row + w.offset, w.bytes) & ~w.changed;
         for (unsigned i = 0; i < Count; ++i)
-            next |= word(tp::byte(input >> w.input_shift[i])) << w.output_shift[i];
+            next |= word(std::uint8_t(input >> w.input_shift[i])) << w.output_shift[i];
         for (unsigned i = 0; i < p.count; ++i)
-            row[p.stores[i].offset] = tp::byte(next >> (8 * (p.stores[i].offset - w.offset)));
+            row[p.stores[i].offset] = std::uint8_t(next >> (8 * (p.stores[i].offset - w.offset)));
     } else
         tp::detail::write_body<8>(p, row, input);
 }
 
 template <unsigned Rows> struct plan {
     static constexpr unsigned slots = 8 / Rows;
-    tp::reader<8> read;
-    tp::writer<8> write;
+    tp::read_plan<8> read;
+    tp::write_plan<8> write;
     bool direct = true;
     unsigned offset = 0, shift = 0;
     word mask = 0, invalid = 0;
-    plan(const tp::layout& f, std::span<const tp::byte> map)
-        : read(*tp::reader<8>::make(f, map)), write(*tp::writer<8>::make(f, map)) {
+    plan(const tp::layout& f, std::span<const std::uint8_t> map)
+        : read(*tp::read_plan<8>::make(f, map)), write(*tp::write_plan<8>::make(f, map)) {
         assert(map.size() <= slots);
         const auto& p = read.controls();
         offset = p.codes[0].offset;
@@ -104,16 +104,16 @@ template <unsigned Rows>
     word value = 0;
     if (p.direct) {
         if (active == tp::detail::all_rows<Rows> && v.stride() == B)
-            value = load<8>(v.row_unchecked(first) + p.offset);
+            value = load<8>(ikea::to_u8(v.row_unchecked(first)) + p.offset);
         else
             for (unsigned r = 0; r < Rows; ++r)
                 if (active & (word(1) << r))
-                    value |= load<B>(v.row_unchecked(first + r) + p.offset) << (r * B * 8);
+                    value |= load<B>(ikea::to_u8(v.row_unchecked(first + r)) + p.offset) << (r * B * 8);
         return (value >> p.shift) & p.mask;
     }
     for (unsigned r = 0; r < Rows; ++r)
         if (active & (word(1) << r))
-            value |= tp::detail::read_body<8, B>(p.read.controls(), v.row_unchecked(first + r))
+            value |= tp::detail::read_body<8, B>(p.read.controls(), ikea::to_u8(v.row_unchecked(first + r)))
                      << (r * B * 8);
     return value;
 }
@@ -122,7 +122,7 @@ template <unsigned Rows, unsigned Count>
                                                  std::size_t first, word input, word active) {
     for (unsigned r = 0; r < Rows; ++r)
         if (active & (word(1) << r))
-            write_row<Count>(p.write.controls(), v.row_unchecked(first + r),
+            write_row<Count>(p.write.controls(), ikea::to_u8(v.row_unchecked(first + r)),
                              input >> (r * (64 / Rows)));
 }
 template <unsigned Rows>
@@ -133,12 +133,12 @@ template <unsigned Rows>
         const word changed = p.mask << p.shift;
         const word encoded = (input & p.mask) << p.shift;
         if (active == tp::detail::all_rows<Rows> && v.stride() == B) {
-            auto address = v.row_unchecked(first) + p.offset;
+            auto address = ikea::to_u8(v.row_unchecked(first)) + p.offset;
             store<8>(address, (changed == ~word(0) ? 0 : load<8>(address) & ~changed) | encoded);
         } else
             for (unsigned r = 0; r < Rows; ++r)
                 if (active & (word(1) << r)) {
-                    auto address = v.row_unchecked(first + r) + p.offset;
+                    auto address = ikea::to_u8(v.row_unchecked(first + r)) + p.offset;
                     store<B>(address, (load<B>(address) & ~(changed >> (r * B * 8))) |
                                           (encoded >> (r * B * 8)));
                 }
@@ -174,7 +174,7 @@ struct mutation : tp::detail::mutation_commands<mutation<Rows, Compiled>, word, 
     const tp::view& destination;
     mutation(const plan<Rows>& p, const tp::view& v) : controls(p), destination(v) {}
     std::size_t size() const { return destination.size(); }
-    unsigned effect_capacity() const { return controls.write.effect_capacity(); }
+    unsigned store_runs() const { return controls.write.store_runs(); }
     bool accepts(word input, word active) const {
         return !(input & controls.invalid & row_mask<Rows>(active));
     }

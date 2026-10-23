@@ -53,9 +53,9 @@ void publish(sm::Store& store, const sm::Store::Scope& basis, sm::Store::Owner o
   require(bool(store.prepare(basis, {&change, 1}, packet)), "prepare");
   require(bool(store.install(packet)), "install");
 }
-void set_holder(sm::HolderView& h, unsigned row, unsigned rank, ikea::source_write_journal& effects) {
+void set_holder(sm::HolderView& h, unsigned row, unsigned rank, ikea::journal& effects) {
   require(effects.remaining() != 0, "holder effects preadmitted");
-  effects.before(h, {0, row * 4, 4}); h.rows[row] = rank;
+  effects.before(h, 0, row * 4, 4); h.rows[row] = rank;
 }
 
 int main() {
@@ -74,7 +74,7 @@ int main() {
     sm::Control invalid{&memory, 0, 128, 0, {}}; invalid.selected = 1;
     require(!sm::Draft::create(*pool, invalid, 0), "selected Part is not a full writable material");
     auto initial = take(sm::Draft::create(*pool, {&memory, 0, 128, 3, {}}, 1024));
-    auto w = initial.write(); auto holders = initial.holder_view(); ikea::no_coverage ignored;
+    auto w = initial.write(); auto holders = initial.holder_view(); ikea::no_effects ignored;
     Model model{std::string("A"), std::string("bc"), std::string("tail")};
     std::vector<PhysicalSlot> geometry{{8, 1}, {2, 2}, {4, 4}};
     for (unsigned i = 0; i < model.size(); ++i) {
@@ -103,8 +103,8 @@ int main() {
       sm::Store::Scope basis(store); auto selected = basis.bind(id);
       auto candidate = take(sm::Draft::clone(*pool, selected, 1024));
       auto operation = candidate.write(); auto h = candidate.holder_view();
-      std::array<ikea::owner_write, 1024> records;
-      ikea::source_write_journal effects{records};
+      std::array<ikea::journal::entry, 1024> records;
+      ikea::journal effects{records};
       if (command == 0) { // same-reservation bytes invalidate the pruning bound
         std::string v = "Z"; require(operation.replace(0, bytes(v), effects) == sn::Error::none, "replace A to Z");
         model[0] = v;

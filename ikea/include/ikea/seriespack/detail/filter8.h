@@ -15,7 +15,7 @@ template <comparison Op, unsigned K>
     static_assert(K > 0 && K < 8);
 #if defined(__aarch64__)
     if constexpr (Op == comparison::equal && K >= 4)
-        return composition::local_equal8<K>(rhs)(load<K>(p));
+        return author::local_equal8<K>(rhs)(load<K>(p));
 #endif
     unsigned result = Op == comparison::equal ? 255 : 0;
     each<K>([&](auto bit) {
@@ -172,23 +172,23 @@ template <comparison Op, unsigned K>
 #endif
 } // namespace ikea::seriespack::detail
 
-namespace ikea::seriespack::composition {
+namespace ikea::seriespack::author {
 namespace detail {
 template <class E> inline constexpr bool guarded_filter = false;
 }
 namespace tile_filter {
-// Exact Local tail word, shared by ordinary filtering and prepared searches.
+// Exact Local tail word, shared by ordinary filtering and reader searches.
 template <class S>
 [[gnu::always_inline]] std::uint64_t
 local_plane_word(const leaf<S, field_kind::tail>& node, std::size_t row) {
-    using F = typename S::format_type;
+    using F = typename S::layout_type;
     static_assert(F::storage == geometry::local);
     const auto* tile = [&] {
         if constexpr (requires { node.source.data; })
-            return node.source.data + (row / F::tile_rows) * F::tile_bytes;
+            return ikea::to_u8(node.source.data) + (row / F::tile_rows) * F::tile_bytes;
         else {
             const auto& stream = node.source.stream(0);
-            return stream.bytes.data() + (row / F::tile_rows) * stream.stride;
+            return ikea::to_u8(stream.bytes).data() + (row / F::tile_rows) * stream.stride;
         }
     }();
     return ikea::seriespack::detail::load<F::tail>(tile + 8 * F::body);
@@ -197,7 +197,7 @@ template <class E> inline constexpr bool dense_words = false;
 template <unsigned K, class S, class T, class H0, class H1>
 inline constexpr bool dense_words<
     value_expression<K, 0, payload_expression<K, leaf<S, field_kind::body>, T>, H0, H1>> =
-    K >= 8 && std::has_single_bit(K) && S::format_type::width == K &&
+    K >= 8 && std::has_single_bit(K) && S::layout_type::width == K &&
     requires(const S& s) { s.data; };
 
 // Limit the default direct16 selection to native Local leaves. Authored
@@ -207,7 +207,7 @@ template <unsigned K, class B, class T>
 inline constexpr bool
     direct_local<payload_expression<K, leaf<B, field_kind::body>, leaf<T, field_kind::tail>>> =
         K > 8 && K % 8 != 0 &&
-        B::format_type::storage == geometry::local&& T::format_type::storage == geometry::local;
+        B::layout_type::storage == geometry::local&& T::layout_type::storage == geometry::local;
 
 template <comparison Op, class E>
 [[gnu::always_inline]] unsigned evaluate(const E& source, std::size_t row, std::uint64_t rhs);
@@ -277,18 +277,18 @@ template <comparison Op, class E>
     }
 #if defined(__aarch64__) || defined(__AVX2__)
     else if constexpr (requires { E::kind; }) {
-        using F = typename E::format_type;
+        using F = typename E::layout_type;
         constexpr auto Field = E::kind;
         if constexpr (Field == field_kind::head0 || Field == field_kind::head1) {
             const auto& plane = source.source.stream(Field == field_kind::head0 ? 1 : 2);
             return ikea::seriespack::detail::filter_body8<Op, 1>(
-                plane.bytes.data() + (row / F::tile_rows) * plane.stride + row % F::tile_rows, rhs);
+                ikea::to_u8(plane.bytes).data() + (row / F::tile_rows) * plane.stride + row % F::tile_rows, rhs);
         } else {
             const auto* base = [&] {
                 if constexpr (requires { source.source.data; })
-                    return source.source.data;
+                    return ikea::to_u8(source.source.data);
                 else
-                    return source.source.stream(0).bytes.data();
+                    return ikea::to_u8(source.source.stream(0).bytes).data();
             }();
             const auto stride = [&] {
                 if constexpr (requires { source.source.data; })
@@ -314,7 +314,7 @@ template <comparison Op, class E>
         unsigned result = 0;
         for (unsigned i = 0; i < 8; ++i)
             result |= unsigned(ikea::compare<Op>(
-                          composition::read(ops, source, row + i, true).value, rhs))
+                          author::read(ops, source, row + i, true).value, rhs))
                       << i;
         return result;
     }
@@ -335,4 +335,4 @@ template <comparison Op, class E>
             return ikea::compare<Op>(0, rhs) ? active : 0;
     return tile_filter::evaluate<Op>(source, first, rhs) & active;
 }
-} // namespace ikea::seriespack::composition
+} // namespace ikea::seriespack::author

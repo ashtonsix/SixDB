@@ -17,7 +17,7 @@ namespace old=ikea_predecessor::seriespack;
 struct free_bytes {void operator()(std::uint8_t* p)const{std::free(p);}};
 
 template<unsigned K,sp::geometry G> struct comparison_fixture {
-    using F=sp::format<K,G>;
+    using F=sp::layout<K,G>;
     static constexpr auto OG=G==sp::geometry::local?old::geometry::local8:old::geometry::striped;
     std::size_t count,bytes;
     std::unique_ptr<std::uint8_t,free_bytes> storage;
@@ -34,7 +34,7 @@ template<unsigned K,sp::geometry G> struct comparison_fixture {
         if(!v)std::abort();auto reader=old::bind_reader(*v);if(!reader)std::abort();return *reader;
     }
     template<class U> auto next()const {
-        auto reader=sp::bind_decoder<U>(sp::dense_input{K,G,{storage.get(),bytes},count});
+        auto reader=sp::bind_reader<U>(sp::dense_input{K,G,std::as_bytes(std::span{storage.get(),bytes}),count});
         if(!reader)std::abort();return *reader;
     }
 };

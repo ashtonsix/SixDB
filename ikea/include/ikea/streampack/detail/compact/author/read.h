@@ -44,10 +44,10 @@ template <geometry Family, class Width, class Offset, class Source> class access
     unsigned size() const noexcept { return source_->size(); }
     std::uint32_t origin() const noexcept { return 0; }
     std::uint32_t extent() const noexcept { return source_->extent(); }
-    rank_selection live_ranks() const noexcept {
+    selection live_ranks() const noexcept {
         return format().has_tombstones()
-                   ? rank_selection{source().windows().directory.first(format().tombstone_bytes()), true}
-                   : rank_selection::all();
+                   ? selection::complement(0, source().windows().directory.first(format().tombstone_bytes()))
+                   : selection::all();
     }
     unsigned width_offset(unsigned rank) const noexcept {
         return format().geometry_lengths_offset() + (rank / 16) * format().group_stride() +

@@ -13,14 +13,14 @@ struct work {
         return *tp::layout::make(1, codes);
     }
     tp::layout description = format();
-    std::array<tp::byte, 4> bytes{};
-    tp::view view = *tp::view::bind(description, bytes, 4, 1);
-    std::array<tp::byte, 1> map{0};
-    tp::writer<8> writer = *tp::writer<8>::make(description, map);
-    tp::mutation_operation<8> operation = *tp::bind_writer(writer, view);
+    std::array<std::uint8_t, 4> bytes{};
+    tp::view view = *tp::view::attach(description, std::as_writable_bytes(std::span{bytes}), 4, 1);
+    std::array<std::uint8_t, 1> map{0};
+    tp::write_plan<8> write_plan = *tp::write_plan<8>::make(description, map);
+    tp::writer<8> operation = *tp::bind_writer(write_plan, view);
     std::array<std::uint64_t, 4> input{1, 2, 3, 4};
-    std::array<ikea::owner_write, 4> records;
-    ikea::source_write_journal effects{records};
+    std::array<ikea::journal::entry, 4> records;
+    ikea::journal effects{records};
     unsigned generation = 1, completed = 0;
     bool lease_ready = false, cancelled = false, published = false;
     std::uint64_t invalid_rows = 0; // retained private contribution, not a persistent summary

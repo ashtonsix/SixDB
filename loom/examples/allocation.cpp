@@ -11,7 +11,7 @@
 namespace {
 namespace sp = ikea::seriespack;
 namespace alloc = orbital::allocation;
-using Format = sp::preset_format<20, sp::preset::compact>;
+using Format = sp::preset_layout<20, sp::preset::compact>;
 constexpr std::size_t first_rows = 16, final_rows = 32, padding = 64;
 
 constexpr std::size_t body_bytes(std::size_t rows) {
@@ -35,32 +35,30 @@ void write_half(loom::Worker& worker, alloc::Allocation& column, std::size_t fir
   check(orbital::worker::on_lane(worker.lane), "write ran on a foreign Lane");
   const auto rows = first + first_rows;
   auto bytes = loom::bytes(column).first(body_bytes(rows));
-  auto view = take(sp::view<Format, std::uint8_t>::attach(rows,
-      {{{{reinterpret_cast<std::uint8_t*>(bytes.data()), bytes.size()}, Format::tile_bytes}, {}, {}}}));
-  auto prepared = take(sp::bind_mutation(view));
-  auto writer = prepared.erase<std::uint32_t, sp::sum_change>();
+  auto view = take(sp::view<Format>::attach(rows, {{{bytes, Format::tile_bytes},{},{}}}));
+  auto prepared = take(sp::bind_writer(view));
+  auto writer = prepared.erase<std::uint32_t, sp::author::sum_change>();
   std::array<std::uint32_t, first_rows> input;
   for (std::size_t i = 0; i < input.size(); ++i) input[i] = first + i + 1;
-  std::array<ikea::owner_write, 64> records;
-  ikea::source_write_journal effects{records};
+  std::array<ikea::journal::entry, 64> records;
+  ikea::journal effects{records};
   if (!first) {
     check(writer.initialize(input, effects).has_value(), "initial SeriesPack write failed");
   } else {
-    sp::sum_change change;
-    check(writer.replace(first, input, sp::row_selection::all(), change, effects).has_value(),
+    sp::author::sum_change change;
+    check(writer.replace(first, input, effects, sp::selection::all(), change).has_value(),
         "SeriesPack append failed");
     check(change.finish() == 392, "new initialized slots were not zero before append");
   }
   for (const auto& effect : effects.entries()) {
-    check(effect.source == &view && !effect.bytes.plane, "unresolved source-qualified write");
-    check(effect.bytes.offset + effect.bytes.size <= bytes.size(), "write effect exceeds current storage");
+    check(effect.source == &view && !effect.plane, "unresolved source-qualified write");
+    check(effect.offset + effect.size <= bytes.size(), "write effect exceeds current storage");
   }
 }
 
 std::uint64_t read_sum(orbital::Bytes bytes, std::size_t rows) {
-  auto view = take(sp::view<Format>::attach(rows,
-      {{{{reinterpret_cast<const std::uint8_t*>(bytes.data()), body_bytes(rows)}, Format::tile_bytes}, {}, {}}}));
-  auto reader = sp::bind_decoder<std::uint32_t>(view);
+  auto view = take(sp::const_view<Format>::attach(rows, {{{bytes.first(body_bytes(rows)), Format::tile_bytes},{},{}}}));
+  auto reader = sp::bind_reader<std::uint32_t>(view);
   std::uint64_t sum = 0;
   for (std::size_t i = 0; i < rows; ++i) {
     auto value = take(reader.get(i));

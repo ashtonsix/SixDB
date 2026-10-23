@@ -1,15 +1,15 @@
 #pragma once
 #include <ikea/seriespack/detail/dense_read.h>
-#include <ikea/detail/native_chain.h>
+#include <ikea/author/chain.h>
 
-namespace ikea::seriespack {
+namespace ikea::seriespack::author {
 #if defined(__aarch64__) || defined(__AVX2__)
 
 /// Bounded synchronous chain, with a type-specific native carrier.
 /// Different carriers require a checked bridge; incompatible function casts are
 /// not an interface. Stopping/suspension occurs after returning to the owner.
 template <unsigned K, unsigned Slots = 8>
-using chain = ikea::detail::native_chain<native::values<K>, std::uint16_t, Slots, error,
+using chain = ikea::author::chain<native::values<K>, std::uint16_t, Slots,
                                          std::make_index_sequence<native::values<K>::parts>>;
 
 /// A native packet is an execution grain, independent of physical tiling. Keep
@@ -24,16 +24,16 @@ template <unsigned K, unsigned N> struct pipeline_packet {
     std::array<vector, parts> v;
     template <unsigned P> [[gnu::always_inline]] region get() const {
         region value;
-        detail::each<region::parts>([&](auto i) { value.v[i] = v[P * region::parts + i]; });
+        ikea::seriespack::detail::each<region::parts>([&](auto i) { value.v[i] = v[P * region::parts + i]; });
         return value;
     }
     template <unsigned P> [[gnu::always_inline]] void set(region value) {
-        detail::each<region::parts>([&](auto i) { v[P * region::parts + i] = value.v[i]; });
+        ikea::seriespack::detail::each<region::parts>([&](auto i) { v[P * region::parts + i] = value.v[i]; });
     }
 };
 template <unsigned K, unsigned N, unsigned Slots = 8>
 using packet_chain =
-    ikea::detail::native_chain<pipeline_packet<K, N>, std::uint64_t, Slots, error,
+    ikea::author::chain<pipeline_packet<K, N>, std::uint64_t, Slots,
                                std::make_index_sequence<pipeline_packet<K, N>::parts>>;
 #endif
-} // namespace ikea::seriespack
+} // namespace ikea::seriespack::author

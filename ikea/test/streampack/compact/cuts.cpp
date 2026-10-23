@@ -15,10 +15,10 @@ struct packed {
     std::array<std::byte, 6> control{};
     sc::view source;
     packed(sc::geometry family, const std::vector<unsigned> &cuts, unsigned dead)
-        : format(*sc::layout::prepare({family, 2, 512, {}, false})),
-          source(*sc::view::bind(format, {std::span(directory).first(format.directory_bytes()),
+        : format(*sc::layout::make({family, 2, 512, {}, false})),
+          source(*sc::view::attach(format, {std::span(directory).first(format.directory_bytes()),
                                          std::span(lengths).first(format.lengths_bytes()), control})) {
-        ikea::no_coverage effects;
+        ikea::no_effects effects;
         assert(sc::initialize(source, effects));
         for (unsigned r = 0; r + 1 < cuts.size(); ++r)
             assert(sc::append(source, cuts[r + 1] - cuts[r], effects));

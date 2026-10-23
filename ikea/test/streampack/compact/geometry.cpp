@@ -17,8 +17,8 @@ struct fixture {
     std::array<std::byte, 6> control{};
     sc::view view;
     explicit fixture(sc::description d)
-        : format(*sc::layout::prepare(d)),
-          view(*sc::view::bind(format, {std::span(directory).first(format.directory_bytes()),
+        : format(*sc::layout::make(d)),
+          view(*sc::view::attach(format, {std::span(directory).first(format.directory_bytes()),
                                         std::span(lengths).first(format.lengths_bytes()),
                                         std::span(control).first(format.control_bytes())})) {}
 };
@@ -40,7 +40,8 @@ struct audit {
         for (unsigned i = 0; i < 3; ++i)
             replay[i] = {p[i].begin(), p[i].end()};
     }
-    void before(const sc::view &s, ikea::byte_write w) {
+    void before(const sc::view &s, unsigned plane, std::size_t offset, std::size_t size) noexcept {
+        const ikea::detail::write_span w{plane, offset, size};
         assert(&s == source && writes < limit && w.size);
         const auto p = s.windows().planes();
         assert(w.plane < 3 && w.offset <= p[w.plane].size() &&
@@ -52,7 +53,7 @@ struct audit {
         ranges.push_back(w);
         ++writes;
     }
-    std::vector<ikea::byte_write> ranges;
+    std::vector<ikea::detail::write_span> ranges;
     void verify() {
         const auto p = source->windows().planes();
         for (auto w : ranges)
@@ -225,13 +226,14 @@ void packed_geometry_checks() {
                 history({g, 255, 65280, fixed, immortal});
     // Frozen schema bytes and a hand-authored Direct interpretation.
     fixture f({sc::geometry::absolute_ends, 255, 65280, {}, false});
-    const std::array<std::byte, 8> wire{std::byte{0x60}, std::byte{0xff}, std::byte{0},
-                                        std::byte{0},    std::byte{0xff}, std::byte{0},
-                                        std::byte{0},    std::byte{0}};
-    assert(sc::layout::decode(wire)->encode() == wire);
-    auto modern = wire;
-    modern[0] = std::byte{0x80};
-    assert(f.format.encode() == modern && sc::layout::decode(modern)->encode() == modern);
+    const std::array<std::byte, 13> modern{
+        std::byte{'S'}, std::byte{'G'}, std::byte{1}, std::byte{8}, std::byte{0},
+        std::byte{0}, std::byte{255}, std::byte{0}, std::byte{0}, std::byte{255},
+        std::byte{0}, std::byte{0}, std::byte{0}};
+    std::array<std::byte, 13> encoded;
+    assert(f.format.encode(encoded) && encoded == modern);
+    const auto decoded = sc::layout::decode(modern);
+    assert(decoded && decoded->encode(encoded) && encoded == modern);
     const auto at = f.format.geometry_offset();
     f.directory[at] = std::byte{3};
     f.directory[at + 2] = std::byte{3};
@@ -240,13 +242,13 @@ void packed_geometry_checks() {
     assert(f.view.validate());
     assert(bl::reverse(f.view, 3) == 2 && bl::lower_bound(f.view, 3u) == 0 &&
            bl::upper_bound(f.view, 3u) == 2);
-    auto invalid = wire;
-    invalid[0] = std::byte{0x40}; // StreamPack v2 is not a geometry-only schema.
+    auto invalid = modern;
+    invalid[1] = std::byte{'K'}; // Value layout is not a geometry-only schema.
     assert(!sc::layout::decode(invalid));
     invalid[0] = std::byte{0x62}; // Reserved former U-placement bit.
     assert(!sc::layout::decode(invalid));
     fixture w({sc::geometry::sizes, 255, 65280, {}, false});
-    ikea::no_coverage none;
+    ikea::no_effects none;
     assert(sc::initialize(w.view, none) && sc::append(w.view, 3, none));
     w.lengths[15] = std::byte{1};
     assert(!w.view.validate());

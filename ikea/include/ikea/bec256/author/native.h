@@ -141,10 +141,10 @@ namespace access_detail {
 #if defined(IKEA_BEC256_AVX512)
 // The scalar root count can start independently of the full-width load. Do not
 // route its first byte through the vector value. Empty bodies permit no load.
-[[gnu::always_inline]] inline unsigned first_byte(const source &input) {
+[[gnu::always_inline]] inline unsigned first_byte(const reader &input) {
     return input.bytes() ? std::to_integer<unsigned>(input.storage()[0]) : 0;
 }
-[[gnu::always_inline]] inline __m512i window(const source &input) {
+[[gnu::always_inline]] inline __m512i window(const reader &input) {
     if (input.storage().size() >= scratch_bytes)
         return _mm512_loadu_si512(input.storage().data());
     // A masked load grants no access to neighbouring bodies and avoids the
@@ -152,7 +152,7 @@ namespace access_detail {
     return _mm512_maskz_loadu_epi8((std::uint64_t{1} << input.bytes()) - 1, input.storage().data());
 }
 #else
-[[gnu::always_inline]] inline const byte *window(const source &input, byte *scratch64) {
+[[gnu::always_inline]] inline const byte *window(const reader &input, byte *scratch64) {
     if (input.storage().size() >= scratch_bytes)
         return input.storage().data();
     std::memset(scratch64, 0, scratch_bytes);
@@ -166,7 +166,7 @@ namespace access_detail {
 /// Native decoded values. Exact spans use masked register loads on AVX-512;
 /// NEON adapts short spans through bounded local scratch. Readable suffixes
 /// remove that adaptation without changing the logical body or its framing.
-[[gnu::always_inline]] inline block read(const source &input) {
+[[gnu::always_inline]] inline block read(const reader &input) {
 #if defined(IKEA_BEC256_AVX512)
     unsigned bits;
     return detail::avx512::decode_loaded(
@@ -176,7 +176,7 @@ namespace access_detail {
     return decode_unchecked(access_detail::window(input, scratch), input.population());
 #endif
 }
-[[gnu::always_inline]] inline pair read_pair(const source &a, const source &b) {
+[[gnu::always_inline]] inline pair read_pair(const reader &a, const reader &b) {
 #if defined(IKEA_BEC256_AVX512)
     unsigned bits_a, bits_b;
     return detail::avx512::decode2_loaded(

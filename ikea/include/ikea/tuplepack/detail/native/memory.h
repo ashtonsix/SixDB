@@ -8,7 +8,7 @@
 namespace ikea::tuplepack::native::native_detail {
 // Exact bounded scalar loads assemble a short final source chunk in registers.
 // Neither an adjacent tuple nor implicit allocation padding may be read.
-[[gnu::always_inline]] inline std::uint64_t tail8(const byte* p, unsigned n) {
+[[gnu::always_inline]] inline std::uint64_t tail8(const std::uint8_t* p, unsigned n) {
     std::uint64_t result = 0;
     unsigned shift = 0;
     if (n & 4) {
@@ -29,7 +29,7 @@ namespace ikea::tuplepack::native::native_detail {
         result |= std::uint64_t(*p) << shift;
     return result;
 }
-[[gnu::always_inline]] inline vector16 load16(const byte* p, unsigned n) {
+[[gnu::always_inline]] inline vector16 load16(const std::uint8_t* p, unsigned n) {
     if (n == 16) {
 #if defined(__aarch64__)
         return vld1q_u8(p);
@@ -56,7 +56,7 @@ namespace ikea::tuplepack::native::native_detail {
     return _mm_setzero_si128();
 #endif
 }
-[[gnu::always_inline]] inline void store_tail8(byte* p, unsigned n, std::uint64_t value) {
+[[gnu::always_inline]] inline void store_tail8(std::uint8_t* p, unsigned n, std::uint64_t value) {
     if (n & 4) {
         auto v = std::uint32_t(value);
         std::memcpy(p, &v, 4);
@@ -70,9 +70,9 @@ namespace ikea::tuplepack::native::native_detail {
         value >>= 16;
     }
     if (n & 1)
-        *p = byte(value);
+        *p = std::uint8_t(value);
 }
-[[gnu::always_inline]] inline void store16(byte* p, unsigned n, vector16 value) {
+[[gnu::always_inline]] inline void store16(std::uint8_t* p, unsigned n, vector16 value) {
     if (n == 16) {
 #if defined(__aarch64__)
         vst1q_u8(p, value);
@@ -108,7 +108,7 @@ namespace ikea::tuplepack::native::native_detail {
 #endif
 }
 template <unsigned I>
-[[gnu::always_inline]] inline vector16 load_chunk(const detail::read64& p, const byte* row) {
+[[gnu::always_inline]] inline vector16 load_chunk(const detail::read64& p, const std::uint8_t* row) {
     if (I >= p.count)
         return zero16();
     return load16(row + p.chunks[I].offset, p.chunks[I].bytes);
@@ -129,13 +129,13 @@ template <unsigned I> [[gnu::always_inline]] inline vector16 split(native_packet
 #endif
 }
 template <unsigned I>
-[[gnu::always_inline]] inline vector16 row_part(const byte* row, unsigned bytes) {
+[[gnu::always_inline]] inline vector16 row_part(const std::uint8_t* row, unsigned bytes) {
     if (bytes <= I * 16)
         return zero16();
     return load16(row + I * 16, std::min(16u, bytes - I * 16));
 }
 template <unsigned I>
-[[gnu::always_inline]] inline void store_part(byte* row, unsigned bytes, native_packet value) {
+[[gnu::always_inline]] inline void store_part(std::uint8_t* row, unsigned bytes, native_packet value) {
     if (bytes > I * 16)
         store16(row + I * 16, std::min(16u, bytes - I * 16), split<I>(value));
 }

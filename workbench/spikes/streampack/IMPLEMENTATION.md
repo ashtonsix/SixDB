@@ -95,10 +95,20 @@ corrupt geometry, U and count.
 a checked same-byte control and an eight-byte location/length descriptor over the
 same values. One dependent chain measures serial service time; eight independent
 chains measure achieved overlap, not a processor's peak reciprocal throughput.
-Ordered/shuffled projection, carried range and paid block selection measure whole
-consumers. Each path warms itself and proves its checksum before timing. All
+Ordered, rotated and permuted projection, carried range and paid block selection
+measure whole consumers. Each path warms itself and proves its checksum before timing. All
 candidates use the same forced-inline read-callable boundary and both compiler
 vectorizers are disabled. PMU reports preserve event availability and multiplexing.
+
+The maintained `rotated` projection visits `(i+17)&(rows-1)`. Its additional
+`permuted` projection uses an invertible xor-shift and odd multiplication, without
+loading a rank array; a cold property check proves each row is visited once and
+the traversal is not sequential. Both retain the full-population checksum and
+include their index arithmetic in the measured consumer. Historical captures
+named `shuffled` use `(i*65537+17)&(rows-1)`: this is a rotation at 256 and 65,536
+rows, and an affine permutation at larger populations. Those retained timings do
+not qualify the new permutation. The interface-cohesion study captures the
+projection-only harness change identically in both comparison arms.
 
 Populations are 256, 1,048,576 and 16,777,216 values, with maxima 255 and 4095. Pointer
 chases perform 1,048,576 visits over the population; projection traverses all rows.

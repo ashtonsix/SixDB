@@ -35,30 +35,30 @@ template<class MM> struct mm_observation:observation {
             auto get=[p=&b]{return std::vector<word>{word(p->data),p->size,p->capacity()};};
             fields.push_back({r,offset,sizeof(b),get,get()});};
         buffer(state.primary);buffer(state.controls);buffer(state.slots);
-        auto add=[&](ht::owner_part part,const auto& b){if(!b.size)return;
-            regions.push_back({{&mm,part,b.data,b.size},{b.data,b.data+b.size},std::vector<byte>(b.size),std::vector<byte>(b.size,1)});};
-        add(ht::owner_part::primary,state.primary);add(ht::owner_part::swiss_controls,state.controls);add(ht::owner_part::swiss_tuples,state.slots);
+        auto add=[&](ht::plane part,const auto& b){if(!b.size)return;
+            regions.push_back({{&index,part,b.data,b.size},{b.data,b.data+b.size},std::vector<std::uint8_t>(b.size),std::vector<std::uint8_t>(b.size,1)});};
+        add(ht::plane::primary,state.primary);add(ht::plane::swiss_controls,state.controls);add(ht::plane::swiss_tuples,state.slots);
     }
     void finish(){verify();verify_retirements(access::pool(owner),&owner);}
 };
 template<class MM> struct context: mm_observation<MM> {
     word key;
     bool allow_enter=true,allow_prepare=true,published=false;
-    std::vector<ht::mutation_source> retirements;
+    std::vector<write_arch::physical_region> retirements;
     context(MM& owner,word key):mm_observation<MM>(owner),key(key){}
     bool enter(const MM& owner,word k,ht::access_intent intent)const noexcept {
         return allow_enter&&&owner==&this->owner&&k==key&&intent==ht::access_intent::write;
     }
-    bool prepare(std::span<const ht::mutation_damage> writes,std::span<const ht::mutation_source> retired){
+    bool prepare(std::span<const ikea::journal::entry> writes,std::span<const write_arch::physical_region> retired){
         this->verify(true);if(!allow_prepare)return false;
         for(const auto& d:writes){
             auto it=std::find_if(this->regions.begin(),this->regions.end(),[&](const auto& r){return
-                r.source.owner==d.source.owner&&r.source.part==d.source.part&&r.source.base==d.source.base&&r.source.extent==d.source.extent;});
-            ht::require(it!=this->regions.end()&&!d.span.plane&&d.span.size&&d.span.offset<=d.source.extent&&d.span.size<=d.source.extent-d.span.offset,"MM source-qualified damage bound");
+                r.source.source==d.source&&r.source.plane==d.plane;});
+            ht::require(it!=this->regions.end()&&d.size&&d.offset<=it->source.storage.size()&&d.size<=it->source.storage.size()-d.offset,"MM source-qualified damage bound");
         }
         retirements.assign(retired.begin(),retired.end());return true;
     }
-    void before(ht::mutation_source source,ikea::byte_write span)noexcept {observation::before({source,span});published=true;}
+    void before(const void* source,unsigned plane,std::size_t offset,std::size_t size)noexcept {observation::before({source,plane,offset,size});published=true;}
     void finish(){if(published)for(auto s:retirements)this->retire(s);mm_observation<MM>::finish();}
 };
 template<unsigned W,unsigned Bits,unsigned V,bool Fused=false> void mm_check(bool extended){

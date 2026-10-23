@@ -46,7 +46,10 @@ The helpers themselves perform no publication. Read binding consumes actual
 Selections, Representations or a complete Tuple View, checks the retained
 interpretation on the stack and introduces no independent Hold or cache record.
 Cold qualification checks Tuple unit/transfer shapes, Series placement and the
-supplied control's row count once. Its Tuple cursor is one 8 B byte pointer.
+supplied control's row count once. The 24-byte parent description retains the
+LE64 logical count; each eight-byte SeriesPack description is only a shared law
+(width, head count and storage geometry). Counts and tight tile strides come from
+this parent recipe. The child law is identical across different row counts. Its Tuple cursor is one 8 B byte pointer.
 The immutable schema reference and row count belong to a shared 16 B control;
 opening the cursor forms a 24 B complete native Tuple body. Each column cursor
 is also 8 B: the four-column closure uses 32 B plus one shared 8 B count, forming
@@ -112,7 +115,9 @@ boundaries, and retained Part access after its Store and read context end.
 All allocation charges drain to zero. These checks use resident access; pending
 physical access is not simulated. Loom owns suspension/cancellation composition.
 
-The actual consumer required no new Ikea production change. It uses existing
+The original consumer required no new Ikea production change. The current retained
+checks now use Ikea's shared schema framing and byte storage interfaces; historical
+measurements and frozen source recipes retain their original qualification. It uses existing
 caller-owned views, prepared controls, bounded constructors and source effects;
 Orbital supplies ownership, coherent discovery and publication authority. Empty
 conversion did expose and help qualify Orbital's zero-byte Builder Part support.

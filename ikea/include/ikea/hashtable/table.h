@@ -54,12 +54,12 @@ class table : private detail::bucket_ops<W, b, V, E, Kernel> {
         bool found = false;
     };
     struct borrowed_value {
-        const byte* address = missing_value_.data();
+        const std::byte* address = missing_value_.data();
         bool found = false;
     };
     struct probe {
         typename mix_type::result hash;
-        const byte* primary;
+        const std::byte* primary;
     };
     // Private-owner mutation cursor. The enclosing owner keeps exclusive
     // access and invalidates it on every intervening mutation/preparation.
@@ -71,7 +71,7 @@ class table : private detail::bucket_ops<W, b, V, E, Kernel> {
     };
 
   public:
-    enum class staged_phase : byte { primary, controls, tuple, value };
+    enum class staged_phase : std::uint8_t { primary, controls, tuple, value };
     struct staged_probe {
         probe first;
         word key;
@@ -123,7 +123,7 @@ class table : private detail::bucket_ops<W, b, V, E, Kernel> {
           slots_(duplicate_buffer<Storage>(source.slots_, memory)), groups_(source.groups_),
           spill_size_(source.spill_size_), deleted_(source.deleted_), size_(source.size_),
           mix_(source.mix_) {}
-    static constexpr byte empty = detail::control_empty, tombstone = detail::control_tombstone;
+    static constexpr std::uint8_t empty = detail::control_empty, tombstone = detail::control_tombstone;
     static constexpr std::size_t absent = ~std::size_t{0};
     template <class Consume>
     [[gnu::always_inline]] static void consume_located(Consume&& consume, const value_type& value,
@@ -133,24 +133,24 @@ class table : private detail::bucket_ops<W, b, V, E, Kernel> {
         else
             consume(value);
     }
-    byte* bucket(word id) {
-        return primary_.data + id * stride;
+    std::uint8_t* bucket(word id) {
+        return ikea::to_u8(primary_.data) + id * stride;
     }
-    const byte* bucket(word id) const {
-        return primary_.data + id * stride;
+    const std::uint8_t* bucket(word id) const {
+        return ikea::to_u8(primary_.data) + id * stride;
     }
     std::size_t find_swiss(word key, const typename mix_type::result& h) const {
         if (!groups_)
             return absent;
         std::size_t g = h.swiss & (groups_ - 1), step = 0;
         for (;;) {
-            const byte* controls = control_.data + g * 16;
+            const std::uint8_t* controls = ikea::to_u8(control_.data) + g * 16;
             auto candidates = equal_controls(controls, h.fingerprint());
             while (candidates) {
                 const auto i = std::countr_zero(candidates);
                 candidates &= candidates - 1;
                 const auto index = g * 16 + i;
-                if (tuple_key(slots_.data + index * tuple_bytes) == key)
+                if (tuple_key(ikea::to_u8(slots_.data) + index * tuple_bytes) == key)
                     return index;
             }
             // All matches in this group precede the empty-group termination.
@@ -172,7 +172,7 @@ class table : private detail::bucket_ops<W, b, V, E, Kernel> {
             std::size_t step = 0;
             for (;;) {
                 const auto packet = detail::compare_swiss_read<width>(
-                    control_.data, group, step, mask, h.fingerprint());
+                    ikea::to_u8(control_.data), group, step, mask, h.fingerprint());
                 auto candidates = packet.candidates;
                 while (candidates) {
                     const auto lane = std::countr_zero(candidates);
@@ -180,7 +180,7 @@ class table : private detail::bucket_ops<W, b, V, E, Kernel> {
                     // Reconstruct only an actual candidate's slot. Keeping an
                     // array of all group addresses spills on every miss.
                     const auto slot = detail::swiss_read_slot<width>(group, step, lane, mask);
-                    if (tuple_key(slots_.data + slot * tuple_bytes) == key)
+                    if (tuple_key(ikea::to_u8(slots_.data) + slot * tuple_bytes) == key)
                         return slot;
                 }
                 if (packet.empties)
@@ -209,7 +209,7 @@ class table : private detail::bucket_ops<W, b, V, E, Kernel> {
         {
             overflow_result result;
             if (found != absent) {
-                consume_tuple(slots_.data + found * tuple_bytes,
+                consume_tuple(ikea::to_u8(slots_.data) + found * tuple_bytes,
                               [&](const auto& value) { result.value = value; });
                 result.found = true;
             }
@@ -218,23 +218,23 @@ class table : private detail::bucket_ops<W, b, V, E, Kernel> {
     }
     // Return an address so the caller can defer payload loads. Keep the same
     // Swiss traversal as ordinary reads, outside the primary loop's registers.
-    [[gnu::noinline, gnu::pure]] const byte* borrow_overflow(word key, word swiss) const {
+    [[gnu::noinline, gnu::pure]] const std::uint8_t* borrow_overflow(word key, word swiss) const {
         const typename mix_type::result h{0, 0, swiss};
         const auto found = find_swiss_read(key, h);
-        return found == absent ? nullptr : slots_.data + found * tuple_bytes + key_bytes;
+        return found == absent ? nullptr : ikea::to_u8(slots_.data) + found * tuple_bytes + key_bytes;
     }
     void insert_swiss_unchecked(word key, const value_type& v, const typename mix_type::result& h) {
         std::size_t g = h.swiss & (groups_ - 1), step = 0;
         for (;;) {
-            byte* controls = control_.data + g * 16;
+            std::uint8_t* controls = ikea::to_u8(control_.data) + g * 16;
             auto available = equal_controls(controls, empty) | equal_controls(controls, tombstone);
             if (available) {
                 const auto i = std::countr_zero(available);
                 const auto index = g * 16 + i;
                 deleted_ -= controls[i] == tombstone;
-                store<key_bytes>(slots_.data + index * tuple_bytes, key);
+                store<key_bytes>(ikea::to_u8(slots_.data) + index * tuple_bytes, key);
                 if constexpr (V)
-                    std::memcpy(slots_.data + index * tuple_bytes + key_bytes, v.data(), V);
+                    std::memcpy(ikea::to_u8(slots_.data) + index * tuple_bytes + key_bytes, v.data(), V);
                 controls[i] = h.fingerprint();
                 ++spill_size_;
                 return;
@@ -254,11 +254,11 @@ class table : private detail::bucket_ops<W, b, V, E, Kernel> {
         groups_ = groups;
         spill_size_ = deleted_ = 0;
         for (std::size_t i = 0; i < old_groups * 16; ++i)
-            if (detail::occupied_control(old_control.data[i])) {
-                const auto key = load<key_bytes>(old_slots.data + i * tuple_bytes);
+            if (detail::occupied_control(ikea::to_u8(old_control.data)[i])) {
+                const auto key = load<key_bytes>(ikea::to_u8(old_slots.data) + i * tuple_bytes);
                 value_type v{};
                 if constexpr (V)
-                    std::memcpy(v.data(), old_slots.data + i * tuple_bytes + key_bytes, V);
+                    std::memcpy(v.data(), ikea::to_u8(old_slots.data) + i * tuple_bytes + key_bytes, V);
                 insert_swiss_unchecked(key, v, mix_(key));
             }
     }
@@ -274,13 +274,13 @@ class table : private detail::bucket_ops<W, b, V, E, Kernel> {
         auto group = h.swiss & (groups_ - 1);
         std::size_t step = 0, available = absent;
         for (;;) {
-            const auto* control = control_.data + group * 16;
+            const auto* control = ikea::to_u8(control_.data) + group * 16;
             auto candidates = equal_controls(control, h.fingerprint());
             while (candidates) {
                 const auto lane = std::countr_zero(candidates);
                 candidates &= candidates - 1;
                 const auto slot = group * 16 + lane;
-                if (tuple_field<key_bytes>::read(slots_.data + slot * tuple_bytes) == key)
+                if (tuple_field<key_bytes>::read(ikea::to_u8(slots_.data) + slot * tuple_bytes) == key)
                     return {slot, true};
             }
             const auto empties = equal_controls(control, empty);
@@ -296,11 +296,11 @@ class table : private detail::bucket_ops<W, b, V, E, Kernel> {
     }
     void store_swiss(std::size_t slot, word key, const bytes<V>& v,
                      const typename mix_type::result& h) {
-        deleted_ -= control_.data[slot] == tombstone;
-        store<key_bytes>(slots_.data + slot * tuple_bytes, key);
+        deleted_ -= ikea::to_u8(control_.data)[slot] == tombstone;
+        store<key_bytes>(ikea::to_u8(slots_.data) + slot * tuple_bytes, key);
         if constexpr (V)
-            std::memcpy(slots_.data + slot * tuple_bytes + key_bytes, v.data(), V);
-        control_.data[slot] = h.fingerprint();
+            std::memcpy(ikea::to_u8(slots_.data) + slot * tuple_bytes + key_bytes, v.data(), V);
+        ikea::to_u8(control_.data)[slot] = h.fingerprint();
         ++spill_size_;
     }
     [[gnu::noinline]] bool insert_slow(word key, const bytes<V>& v,
@@ -309,7 +309,7 @@ class table : private detail::bucket_ops<W, b, V, E, Kernel> {
         auto found = p[overflow_offset] ? resolve_swiss(key, h) : swiss_position{absent, false};
         if (found.present) {
             if constexpr (V)
-                std::memcpy(slots_.data + found.slot * tuple_bytes + key_bytes, v.data(), V);
+                std::memcpy(ikea::to_u8(slots_.data) + found.slot * tuple_bytes + key_bytes, v.data(), V);
             return false;
         }
         if (free)
@@ -345,8 +345,8 @@ class table : private detail::bucket_ops<W, b, V, E, Kernel> {
             }
         // Validate the actual tile placement, including 96-byte bucket strides.
         if constexpr (!bitmap) {
-            using F = sp::format<E, sp::geometry::local, 0>;
-            auto view = sp::view<F, byte>::attach(N, {{{{primary_.data, T * E}, E}, {}, {}}});
+            using F = sp::layout<E, sp::geometry::local, 0>;
+            auto view = sp::view<F>::attach(N, {{{{primary_.data, T * E}, E}, {}, {}}});
             require(bool(view), "SeriesPack bucket admission");
         }
     }
@@ -385,18 +385,38 @@ class table : private detail::bucket_ops<W, b, V, E, Kernel> {
         return {};
     }
     template <class Visit> void allocations(Visit&& visit) const {
-        visit("primary", primary_.data, primary_.size);
+        visit("primary", static_cast<const std::byte*>(primary_.data), primary_.size);
         if (control_.size)
-            visit("swiss_controls", control_.data, control_.size);
+            visit("swiss_controls", static_cast<const std::byte*>(control_.data), control_.size);
         if (slots_.size)
-            visit("swiss_tuples", slots_.data, slots_.size);
+            visit("swiss_tuples", static_cast<const std::byte*>(slots_.data), slots_.size);
+    }
+    /// Current physical plane for owner preservation/generation checks. The
+    /// table and backing stay stable from enter through the complete command.
+    /// Header bytes include local owner metadata; pointers are not durable ids.
+    std::span<const std::byte> plane_storage(plane id) const noexcept {
+        switch (id) {
+        case plane::header: return std::as_bytes(std::span(this, 1));
+        case plane::primary: return {primary_.data, primary_.size};
+        case plane::swiss_controls: return {control_.data, control_.size};
+        case plane::swiss_tuples: return {slots_.data, slots_.size};
+        default: return {};
+        }
+    }
+    /// Conservative additional records for one guarded command. Actual record
+    /// count can be smaller; context.prepare still admits the complete list.
+    static constexpr std::size_t effect_capacity_insert() noexcept { return 4; }
+    static constexpr std::size_t effect_capacity_erase() noexcept { return 4; }
+    static constexpr std::size_t effect_capacity_modify() noexcept { return (V + 7) / 8 + 4; }
+    static constexpr std::size_t effect_capacity_modify_or_insert() noexcept {
+        return effect_capacity_modify();
     }
     std::size_t capacity() const {
         return bucket_count * N;
     }
     bool primary_contains(word key) const {
         const auto p = prepare(key);
-        return primary_find(p.primary, p.hash.quotient) != N;
+        return primary_find(ikea::to_u8(p.primary), p.hash.quotient) != N;
     }
 
   private:
@@ -413,7 +433,7 @@ class table : private detail::bucket_ops<W, b, V, E, Kernel> {
             if (p[overflow_offset]) {
                 const auto found = find_swiss(key, h);
                 if (found != absent) {
-                    consume_tuple(slots_.data + found * tuple_bytes,
+                    consume_tuple(ikea::to_u8(slots_.data) + found * tuple_bytes,
                                   [&](const auto& value) { previous = value; });
                     return {h, found, false, true};
                 }
@@ -432,7 +452,7 @@ class table : private detail::bucket_ops<W, b, V, E, Kernel> {
             rehash_swiss(groups_ ? groups_ * 2 : 1);
         std::size_t group = h.swiss & (groups_ - 1), step = 0;
         for (;;) {
-            const auto* controls = control_.data + group * 16;
+            const auto* controls = ikea::to_u8(control_.data) + group * 16;
             const auto available =
                 equal_controls(controls, empty) | equal_controls(controls, tombstone);
             if (available)
@@ -453,15 +473,15 @@ class table : private detail::bucket_ops<W, b, V, E, Kernel> {
             write_value(p, slot, value);
         } else {
             if (!position.present) {
-                store<key_bytes>(slots_.data + slot * tuple_bytes, key);
-                deleted_ -= control_.data[slot] == tombstone;
-                control_.data[slot] = position.hash.fingerprint();
+                store<key_bytes>(ikea::to_u8(slots_.data) + slot * tuple_bytes, key);
+                deleted_ -= ikea::to_u8(control_.data)[slot] == tombstone;
+                ikea::to_u8(control_.data)[slot] = position.hash.fingerprint();
                 ++spill_size_;
                 if (p[overflow_offset] != detail::unknown_overflow)
                     ++p[overflow_offset];
             }
             if constexpr (V)
-                std::memcpy(slots_.data + slot * tuple_bytes + key_bytes, value.data(), V);
+                std::memcpy(ikea::to_u8(slots_.data) + slot * tuple_bytes + key_bytes, value.data(), V);
         }
         size_ += !position.present;
         return !position.present;
@@ -477,7 +497,7 @@ class table : private detail::bucket_ops<W, b, V, E, Kernel> {
             slot = p.hash.quotient;
         else
             each<T>([&](auto tile) {
-                const auto flags = p.primary[flags_offset + tile];
+                const auto flags = ikea::to_u8(p.primary)[flags_offset + tile];
                 if (slot == N && flags)
                     slot = tile * 8 + std::countr_zero(unsigned(flags));
             });
@@ -488,9 +508,9 @@ class table : private detail::bucket_ops<W, b, V, E, Kernel> {
     void prepare_absent(word key) {
         require(!(key & ~mask<W>), "prepared key outside W-bit domain");
         const auto p = prepare(key);
-        require(primary_find(p.primary, p.hash.quotient) == N, "prepared key is present");
+        require(primary_find(ikea::to_u8(p.primary), p.hash.quotient) == N, "prepared key is present");
         if constexpr (!bitmap) {
-            require(!p.primary[overflow_offset] || find_swiss(key, p.hash) == absent,
+            require(!ikea::to_u8(p.primary)[overflow_offset] || find_swiss(key, p.hash) == absent,
                     "prepared spill key is present");
             if (!vacancy_for_absent(key).primary &&
                 (!groups_ || (spill_size_ + deleted_ + 1) * 8 > groups_ * 16 * 7))
@@ -499,11 +519,11 @@ class table : private detail::bucket_ops<W, b, V, E, Kernel> {
     }
     [[gnu::always_inline]] probe prepare(word key) const {
         auto h = mix_(key);
-        return {h, bucket(h.bucket)};
+        return {h, reinterpret_cast<const std::byte*>(bucket(h.bucket))};
     }
     template <bool Hint = true> [[gnu::always_inline]] void prefetch(const probe& p) const {
         if constexpr (Hint)
-            __builtin_prefetch(p.primary, 0, 3);
+            __builtin_prefetch(ikea::to_u8(p.primary), 0, 3);
     }
     /// Materialized result; missing values are zero. The default preserves the
     /// predictable primary-hit branch. Select the hint around the whole consumer.
@@ -516,14 +536,14 @@ class table : private detail::bucket_ops<W, b, V, E, Kernel> {
             const auto p = prepare(key);
             // Decide from bucket state before exact matching, so membership
             // does not speculate a Swiss traversal on the no-overflow path.
-            unsigned overflow = p.primary[overflow_offset];
+            unsigned overflow = ikea::to_u8(p.primary)[overflow_offset];
             asm("" : "+r"(overflow));
             if (overflow) [[unlikely]] {
                 lookup_value out;
                 out.found = find(key, [&](const auto& value) { out.value = value; });
                 return out;
             }
-            const word matches = primary_matches(p.primary, p.hash.quotient);
+            const word matches = primary_matches(ikea::to_u8(p.primary), p.hash.quotient);
             lookup_value out;
             out.found = matches != 0;
             if constexpr (V == 8) {
@@ -534,8 +554,8 @@ class table : private detail::bucket_ops<W, b, V, E, Kernel> {
                 // were costly, and C++ pointer selection reintroduced a branch.
                 asm("tzcntq %2, %0; leaq (%3,%0,8), %0; cmovcq %4, %0"
                     : "=&r"(address), "=@ccae"(out.found)
-                    : "r"(matches), "r"(p.primary + value_offset), "r"(&zero));
-                store<8>(out.value.data(), load<8>(reinterpret_cast<const byte*>(address)));
+                    : "r"(matches), "r"(ikea::to_u8(p.primary) + value_offset), "r"(&zero));
+                store<8>(out.value.data(), load<8>(reinterpret_cast<const std::uint8_t*>(address)));
             }
             return out;
         }
@@ -553,35 +573,35 @@ class table : private detail::bucket_ops<W, b, V, E, Kernel> {
     {
         const auto p = prepare(key);
         if constexpr (bitmap) {
-            const auto row = primary_find(p.primary, p.hash.quotient);
+            const auto row = primary_find(ikea::to_u8(p.primary), p.hash.quotient);
             return row == N ? borrowed_value{} :
-                              borrowed_value{p.primary + value_offset + row * V, true};
+                              borrowed_value{reinterpret_cast<const std::byte*>(ikea::to_u8(p.primary) + value_offset + row * V), true};
         } else {
             if constexpr (Hint == lookup_hint::unpredictable) {
-                unsigned overflow = p.primary[overflow_offset];
+                unsigned overflow = ikea::to_u8(p.primary)[overflow_offset];
                 asm("" : "+r"(overflow));
                 if (!overflow) {
-                    const auto matches = primary_matches(p.primary, p.hash.quotient);
+                    const auto matches = primary_matches(ikea::to_u8(p.primary), p.hash.quotient);
                     const auto row = unsigned(std::countr_zero(matches));
                     // An absent integer candidate is never dereferenced. Select
                     // actual initialized zero storage before returning a pointer.
-                    std::uintptr_t address = std::uintptr_t(p.primary) + value_offset + row * V;
+                    std::uintptr_t address = std::uintptr_t(ikea::to_u8(p.primary)) + value_offset + row * V;
 #if defined(__x86_64__)
                     asm("testq %1, %1; cmovzq %2, %0" : "+r"(address)
                         : "r"(matches), "r"(missing_value_.data()) : "cc");
 #else
                     address = matches ? address : std::uintptr_t(missing_value_.data());
 #endif
-                    return {reinterpret_cast<const byte*>(address), matches != 0};
+                    return {reinterpret_cast<const std::byte*>(address), matches != 0};
                 }
             }
-            const auto row = primary_find(p.primary, p.hash.quotient);
+            const auto row = primary_find(ikea::to_u8(p.primary), p.hash.quotient);
             if (row != N)
-                return {p.primary + value_offset + row * V, true};
-            if (!p.primary[overflow_offset])
+                return {reinterpret_cast<const std::byte*>(ikea::to_u8(p.primary) + value_offset + row * V), true};
+            if (!ikea::to_u8(p.primary)[overflow_offset])
                 return {};
             const auto* value = borrow_overflow(key, p.hash.swiss);
-            return value ? borrowed_value{value, true} : borrowed_value{};
+            return value ? borrowed_value{reinterpret_cast<const std::byte*>(value), true} : borrowed_value{};
         }
     }
     template <bool Eager = false, class Consume>
@@ -589,7 +609,7 @@ class table : private detail::bucket_ops<W, b, V, E, Kernel> {
         const auto p = prepare(key);
         if constexpr (Eager)
             if (groups_)
-                __builtin_prefetch(control_.data + (p.hash.swiss & (groups_ - 1)) * 16, 0, 3);
+                __builtin_prefetch(ikea::to_u8(control_.data) + (p.hash.swiss & (groups_ - 1)) * 16, 0, 3);
         return finish(p, key, std::forward<Consume>(consume));
     }
     template <class Consume>
@@ -599,24 +619,24 @@ class table : private detail::bucket_ops<W, b, V, E, Kernel> {
             // Membership-only consumers do not need a row index at all.
             bool found;
             if constexpr (E == K)
-                found = p.hash.quotient ? bool(equal64_neon(p.primary, p.hash.quotient))
-                                        : bool(primary_matches(p.primary, 0));
+                found = p.hash.quotient ? bool(equal64_neon(ikea::to_u8(p.primary), p.hash.quotient))
+                                        : bool(primary_matches(ikea::to_u8(p.primary), 0));
             else
-                found = bool(equal64_neon(p.primary, p.hash.quotient));
+                found = bool(equal64_neon(ikea::to_u8(p.primary), p.hash.quotient));
             if (found)
                 return true;
-            return p.primary[overflow_offset] && overflow_found(read_overflow(key, p.hash.swiss));
+            return ikea::to_u8(p.primary)[overflow_offset] && overflow_found(read_overflow(key, p.hash.swiss));
         }
 #endif
 #if defined(__AVX512VBMI__) && defined(__GFNI__)
         if constexpr (Kernel == search_kernel::fused64 && E == 64 && N == 8 && V == 8) {
-            auto values = _mm512_loadu_si512(p.primary + value_offset);
+            auto values = _mm512_loadu_si512(ikea::to_u8(p.primary) + value_offset);
             asm("" : "+v"(values));
-            __mmask8 exact = _mm512_cmpeq_epi64_mask(_mm512_loadu_si512(p.primary),
+            __mmask8 exact = _mm512_cmpeq_epi64_mask(_mm512_loadu_si512(ikea::to_u8(p.primary)),
                                                      _mm512_set1_epi64(p.hash.quotient));
             if constexpr (E == K)
                 if (p.hash.quotient == 0) [[unlikely]]
-                    exact &= __mmask8(occupied(p.primary));
+                    exact &= __mmask8(occupied(ikea::to_u8(p.primary)));
             asm("" : "+k"(exact));
             if (exact) {
                 const auto selected = _mm512_maskz_compress_epi64(exact, values);
@@ -632,20 +652,20 @@ class table : private detail::bucket_ops<W, b, V, E, Kernel> {
             if constexpr (bitmap || Kernel == search_kernel::neon64 ||
                           Kernel == search_kernel::neon30 ||
                           Kernel == search_kernel::body_small_neon) {
-                const auto slot = primary_find(p.primary, p.hash.quotient);
+                const auto slot = primary_find(ikea::to_u8(p.primary), p.hash.quotient);
                 if (slot != N) {
                     consume_primary(
-                        p.primary, slot, [&](const auto& value) __attribute__((always_inline)) {
+                        ikea::to_u8(p.primary), slot, [&](const auto& value) __attribute__((always_inline)) {
                             consume_located(consume, value, {p.hash.bucket, slot, true});
                         });
                     return true;
                 }
             } else {
-                const auto matches = primary_matches(p.primary, p.hash.quotient);
+                const auto matches = primary_matches(ikea::to_u8(p.primary), p.hash.quotient);
                 if (matches) {
                     const unsigned slot = std::countr_zero(matches);
                     consume_primary(
-                        p.primary, slot, [&](const auto& value) __attribute__((always_inline)) {
+                        ikea::to_u8(p.primary), slot, [&](const auto& value) __attribute__((always_inline)) {
                             consume_located(consume, value, {p.hash.bucket, slot, true});
                         });
                     return true;
@@ -655,7 +675,7 @@ class table : private detail::bucket_ops<W, b, V, E, Kernel> {
         if constexpr (bitmap)
             return false;
         else {
-            if (!p.primary[overflow_offset])
+            if (!ikea::to_u8(p.primary)[overflow_offset])
                 return false;
             const auto result = read_overflow(key, p.hash.swiss);
             if constexpr (V)
@@ -667,18 +687,24 @@ class table : private detail::bucket_ops<W, b, V, E, Kernel> {
     }
     template <staged_values Values = staged_values::dependent, class Emit>
     void prepare_staged(staged_probe& state, word key, Emit&& emit) const {
+        const auto issue = [&](const void* address, std::size_t size) {
+            emit(static_cast<const std::byte*>(address), size);
+        };
         state = {prepare(key), key};
         state.first.primary = std::assume_aligned<bucket_alignment>(state.first.primary);
-        emit(state.first.primary, B);
+        issue(state.first.primary, B);
         if constexpr (Values == staged_values::lookahead8 && V == 8 && !bitmap)
             each<value_rows / 8>(
-                [&](auto line) { emit(state.first.primary + value_offset + line * 64, 64); });
+                [&](auto line) { issue(state.first.primary + value_offset + line * 64, 64); });
     }
     // One call advances only to an address-dependent boundary. The caller owns
     // whether to prefetch, its cache tier, and the scheduling/yield operation.
     template <staged_values Values = staged_values::dependent, class Consume, class Emit>
     bool advance(staged_probe& s, bool& found, Consume&& consume, Emit&& emit) const {
-        auto* primary = std::assume_aligned<bucket_alignment>(s.first.primary);
+        const auto issue = [&](const void* address, std::size_t size) {
+            emit(static_cast<const std::byte*>(address), size);
+        };
+        auto* primary = std::assume_aligned<bucket_alignment>(ikea::to_u8(s.first.primary));
         if (s.phase == staged_phase::primary) {
             const auto slot = primary_find(primary, s.first.hash.quotient);
             if constexpr (!(Values == staged_values::lookahead8 && V == 8 && !bitmap))
@@ -691,11 +717,11 @@ class table : private detail::bucket_ops<W, b, V, E, Kernel> {
                         return true;
                     }
                     if constexpr (V % 8 == 0 || V < 8)
-                        emit(primary + value_offset + std::size_t(s.slot) * V, V);
+                        issue(primary + value_offset + std::size_t(s.slot) * V, V);
                     else
                         each<(V + 7) / 8>([&](auto c) {
                             constexpr unsigned width = std::min(8u, V - c * 8);
-                            emit(primary + value_offset + c * value_rows * 8 + s.slot * width,
+                            issue(primary + value_offset + c * value_rows * 8 + s.slot * width,
                                  width);
                         });
                     s.phase = staged_phase::value;
@@ -714,7 +740,7 @@ class table : private detail::bucket_ops<W, b, V, E, Kernel> {
             }
             s.group = s.first.hash.swiss & (groups_ - 1);
             s.phase = staged_phase::controls;
-            emit(std::assume_aligned<16>(control_.data + s.group * 16), 16);
+            issue(std::assume_aligned<16>(ikea::to_u8(control_.data) + s.group * 16), 16);
             return false;
         }
         if (s.phase == staged_phase::value) {
@@ -723,13 +749,13 @@ class table : private detail::bucket_ops<W, b, V, E, Kernel> {
             return true;
         }
         if (s.phase == staged_phase::controls) {
-            const auto* controls = control_.data + s.group * 16;
+            const auto* controls = ikea::to_u8(control_.data) + s.group * 16;
             s.candidates = equal_controls(controls, s.first.hash.fingerprint());
             s.empty_group = equal_controls(controls, empty) != 0;
         } else {
             const auto slot = s.group * 16 + std::countr_zero(s.candidates);
             s.candidates &= s.candidates - 1;
-            const auto* tuple = slots_.data + slot * tuple_bytes;
+            const auto* tuple = ikea::to_u8(slots_.data) + slot * tuple_bytes;
             if (tuple_key(tuple) == s.key) {
                 consume_tuple(tuple, consume);
                 found = true;
@@ -738,7 +764,7 @@ class table : private detail::bucket_ops<W, b, V, E, Kernel> {
         }
         if (s.candidates) {
             s.phase = staged_phase::tuple;
-            emit(slots_.data + (s.group * 16 + std::countr_zero(s.candidates)) * tuple_bytes,
+            issue(ikea::to_u8(slots_.data) + (s.group * 16 + std::countr_zero(s.candidates)) * tuple_bytes,
                  tuple_bytes);
             return false;
         }
@@ -748,7 +774,7 @@ class table : private detail::bucket_ops<W, b, V, E, Kernel> {
         }
         s.group = (s.group + (++s.step)) & (groups_ - 1);
         s.phase = staged_phase::controls;
-        emit(std::assume_aligned<16>(control_.data + s.group * 16), 16);
+        issue(std::assume_aligned<16>(ikea::to_u8(control_.data) + s.group * 16), 16);
         return false;
     }
     template <write_strategy Flow = write_strategy::mixed>
@@ -792,7 +818,7 @@ class table : private detail::bucket_ops<W, b, V, E, Kernel> {
                 } else {
                     if (fresh) {
                         assign_point<E>(p, destination, N, h.quotient);
-                        p[flags_offset + destination / 8] &= byte(~(1u << (destination % 8)));
+                        p[flags_offset + destination / 8] &= std::uint8_t(~(1u << (destination % 8)));
                         ++size_;
                     }
                     write_value(p, destination, v);
@@ -836,10 +862,10 @@ class table : private detail::bucket_ops<W, b, V, E, Kernel> {
                 const auto slot = find_swiss(key, h);
                 if (slot != absent) {
                     value_type next{};
-                    consume_tuple(slots_.data + slot * tuple_bytes,
+                    consume_tuple(ikea::to_u8(slots_.data) + slot * tuple_bytes,
                                   [&](const auto& value) { next = value; });
                     std::invoke(std::forward<Update>(update), next);
-                    std::memcpy(slots_.data + slot * tuple_bytes + key_bytes, next.data(), V);
+                    std::memcpy(ikea::to_u8(slots_.data) + slot * tuple_bytes + key_bytes, next.data(), V);
                     return true;
                 }
             }
@@ -875,14 +901,14 @@ class table : private detail::bucket_ops<W, b, V, E, Kernel> {
             const auto row = write_find(p, h.quotient);
             if (row != N) {
                 assign_point<E>(p, row, N, E > K ? mask<E> : 0);
-                p[flags_offset + row / 8] |= byte(1u << (row % 8));
+                p[flags_offset + row / 8] |= std::uint8_t(1u << (row % 8));
                 --size_;
                 return true;
             }
             if (p[overflow_offset]) {
                 const auto found = resolve_swiss(key, h);
                 if (found.present) {
-                    control_.data[found.slot] = tombstone;
+                    ikea::to_u8(control_.data)[found.slot] = tombstone;
                     --spill_size_;
                     ++deleted_;
                     --size_;
@@ -947,36 +973,35 @@ class table : private detail::bucket_ops<W, b, V, E, Kernel> {
                 }
             }
         }
-        std::array<mutation_damage, 4> damage{};
+        std::array<ikea::journal::entry, effect_capacity_insert()> damage{};
         unsigned count = 0;
-        auto add = [&](owner_part part, const byte* base, std::size_t extent, std::size_t offset,
-                       std::size_t bytes) {
-            damage[count++] = {{this, part, base, extent}, {0, offset, bytes}};
+        auto add = [&](plane part, std::size_t offset, std::size_t bytes) {
+            damage[count++] = {this, unsigned(part), offset, bytes};
         };
         if (row != N)
-            add(owner_part::primary, primary_.data, primary_.size, h.bucket * stride, stride);
+            add(plane::primary, h.bucket * stride, stride);
         else {
             if (!existing || !incoming) {
-                add(owner_part::swiss_controls, control_.data, control_.size, swiss.slot, 1);
+                add(plane::swiss_controls, swiss.slot, 1);
                 if (p[overflow_offset] != detail::unknown_overflow)
-                    add(owner_part::primary, primary_.data, primary_.size,
+                    add(plane::primary,
                         h.bucket * stride + overflow_offset, 1);
             }
             if (incoming)
-                add(owner_part::swiss_tuples, slots_.data, slots_.size,
+                add(plane::swiss_tuples,
                     swiss.slot * tuple_bytes + (existing ? key_bytes : 0),
                     existing ? V : tuple_bytes);
         }
         constexpr bool shared = Flow == write_strategy::mixed && !bitmap;
         if (!existing || !incoming || (shared && row != N))
-            add(owner_part::header, reinterpret_cast<const byte*>(this), sizeof(*this), 0,
+            add(plane::header, 0,
                 sizeof(*this));
-        const auto writes = std::span<const mutation_damage>(damage.data(), count);
+        const auto writes = std::span<const ikea::journal::entry>(damage.data(), count);
         if (!context.prepare(writes))
             return mutation_status::denied;
-        static_assert(noexcept(context.before(damage[0].source, damage[0].span)));
+        static_assert(ikea::effects<Context, table>);
         for (const auto& d : writes)
-            context.before(d.source, d.span);
+            context.before(*this, d.plane, d.offset, d.size);
         // Only owner-proven native stores follow; callbacks cannot invalidate
         // this operation's storage or reenter it under the Context contract.
         if (row != N) {
@@ -984,7 +1009,7 @@ class table : private detail::bucket_ops<W, b, V, E, Kernel> {
                 if constexpr (bitmap) {
                     write_value(p, row, snapshot);
                     if (!existing) {
-                        p[row / 8] |= byte(1u << (row % 8));
+                        p[row / 8] |= std::uint8_t(1u << (row % 8));
                         ++size_;
                     }
                 } else if constexpr (shared) {
@@ -993,24 +1018,24 @@ class table : private detail::bucket_ops<W, b, V, E, Kernel> {
                 } else {
                     if (!existing) {
                         assign_point<E>(p, row, N, h.quotient);
-                        p[flags_offset + row / 8] &= byte(~(1u << (row % 8)));
+                        p[flags_offset + row / 8] &= std::uint8_t(~(1u << (row % 8)));
                         ++size_;
                     }
                     write_value(p, row, snapshot);
                 }
             } else {
                 if constexpr (bitmap)
-                    p[row / 8] &= byte(~(1u << (row % 8)));
+                    p[row / 8] &= std::uint8_t(~(1u << (row % 8)));
                 else {
                     assign_point<E>(p, row, N, E > K ? mask<E> : 0);
-                    p[flags_offset + row / 8] |= byte(1u << (row % 8));
+                    p[flags_offset + row / 8] |= std::uint8_t(1u << (row % 8));
                 }
                 --size_;
             }
         } else if (incoming) {
             if (existing) {
                 if constexpr (V)
-                    std::memcpy(slots_.data + swiss.slot * tuple_bytes + key_bytes, snapshot.data(),
+                    std::memcpy(ikea::to_u8(slots_.data) + swiss.slot * tuple_bytes + key_bytes, snapshot.data(),
                                 V);
             } else {
                 store_swiss(swiss.slot, key, snapshot, h);
@@ -1019,7 +1044,7 @@ class table : private detail::bucket_ops<W, b, V, E, Kernel> {
                     ++p[overflow_offset];
             }
         } else {
-            control_.data[swiss.slot] = tombstone;
+            ikea::to_u8(control_.data)[swiss.slot] = tombstone;
             --spill_size_;
             ++deleted_;
             --size_;
@@ -1065,51 +1090,50 @@ class table : private detail::bucket_ops<W, b, V, E, Kernel> {
         } else if (row != N)
             consume_primary(p, row, [&](const auto& value) { next = value; });
         else
-            consume_tuple(slots_.data + swiss.slot * tuple_bytes,
+            consume_tuple(ikea::to_u8(slots_.data) + swiss.slot * tuple_bytes,
                           [&](const auto& value) { next = value; });
-        std::array<mutation_damage, (V + 7) / 8 + 4> damage{};
+        std::array<ikea::journal::entry, effect_capacity_modify()> damage{};
         unsigned count = 0;
-        auto add = [&](owner_part part, const byte* base, std::size_t extent, std::size_t offset,
-                       std::size_t bytes) {
-            damage[count++] = {{this, part, base, extent}, {0, offset, bytes}};
+        auto add = [&](plane part, std::size_t offset, std::size_t bytes) {
+            damage[count++] = {this, unsigned(part), offset, bytes};
         };
         if (row != N) {
             if (!existing)
-                add(owner_part::primary, primary_.data, primary_.size, h.bucket * stride, stride);
+                add(plane::primary, h.bucket * stride, stride);
             else if constexpr (V % 8 == 0)
-                add(owner_part::primary, primary_.data, primary_.size,
+                add(plane::primary,
                     h.bucket * stride + value_offset + row * V, V);
             else
                 each<(V + 7) / 8>([&](auto c) {
                     constexpr unsigned width = std::min(8u, V - c * 8);
-                    add(owner_part::primary, primary_.data, primary_.size,
+                    add(plane::primary,
                         h.bucket * stride + value_offset + std::size_t(c) * value_rows * 8 +
                             row * width,
                         width);
                 });
         } else {
             if (!existing) {
-                add(owner_part::swiss_controls, control_.data, control_.size, swiss.slot, 1);
+                add(plane::swiss_controls, swiss.slot, 1);
                 if (p[overflow_offset] != detail::unknown_overflow)
-                    add(owner_part::primary, primary_.data, primary_.size,
+                    add(plane::primary,
                         h.bucket * stride + overflow_offset, 1);
             }
-            add(owner_part::swiss_tuples, slots_.data, slots_.size,
+            add(plane::swiss_tuples,
                 swiss.slot * tuple_bytes + (existing ? key_bytes : 0), existing ? V : tuple_bytes);
         }
         if (!existing)
-            add(owner_part::header, reinterpret_cast<const byte*>(this), sizeof(*this), 0,
+            add(plane::header, 0,
                 sizeof(*this));
-        const auto writes = std::span<const mutation_damage>(damage.data(), count);
+        const auto writes = std::span<const ikea::journal::entry>(damage.data(), count);
         if (!context.prepare(writes))
             return mutation_status::denied;
         // Denied/capacity-refused calls never invoke user code. A throwing updater
         // precedes damage publication and every live store; prepared resources
         // must unwind safely. Effects on other objects remain caller-owned.
         std::invoke(std::forward<Update>(update), next, existing);
-        static_assert(noexcept(context.before(damage[0].source, damage[0].span)));
+        static_assert(ikea::effects<Context, table>);
         for (const auto& d : writes)
-            context.before(d.source, d.span);
+            context.before(*this, d.plane, d.offset, d.size);
         if (row != N) {
             if (!existing) {
                 if constexpr (!bitmap)
@@ -1119,7 +1143,7 @@ class table : private detail::bucket_ops<W, b, V, E, Kernel> {
             }
             write_value(p, row, next);
         } else if (existing)
-            std::memcpy(slots_.data + swiss.slot * tuple_bytes + key_bytes, next.data(), V);
+            std::memcpy(ikea::to_u8(slots_.data) + swiss.slot * tuple_bytes + key_bytes, next.data(), V);
         else {
             store_swiss(swiss.slot, key, next, h);
             ++size_;
@@ -1174,19 +1198,19 @@ class table : private detail::bucket_ops<W, b, V, E, Kernel> {
             }
         }
         for (std::size_t i = 0; i < groups_ * 16; ++i)
-            if (detail::occupied_control(control_.data[i])) {
+            if (detail::occupied_control(ikea::to_u8(control_.data)[i])) {
                 value_type v{};
                 if constexpr (V)
-                    std::memcpy(v.data(), slots_.data + i * tuple_bytes + key_bytes, V);
-                visitor(load<key_bytes>(slots_.data + i * tuple_bytes), v);
+                    std::memcpy(v.data(), ikea::to_u8(slots_.data) + i * tuple_bytes + key_bytes, V);
+                visitor(load<key_bytes>(ikea::to_u8(slots_.data) + i * tuple_bytes), v);
             }
     }
     void validate() const {
         std::size_t count = 0;
         std::vector<std::size_t> spills(bucket_count);
         for (std::size_t i = 0; i < groups_ * 16; ++i)
-            if (detail::occupied_control(control_.data[i]))
-                ++spills[mix_(load<key_bytes>(slots_.data + i * tuple_bytes)).bucket];
+            if (detail::occupied_control(ikea::to_u8(control_.data)[i]))
+                ++spills[mix_(load<key_bytes>(ikea::to_u8(slots_.data) + i * tuple_bytes)).bucket];
         if constexpr (!bitmap)
             for (std::size_t i = 0; i < bucket_count; ++i)
                 require(bucket(i)[overflow_offset] == detail::unknown_overflow ||

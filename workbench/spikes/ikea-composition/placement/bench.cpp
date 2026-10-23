@@ -10,14 +10,14 @@
 namespace sp = ikea::seriespack;
 // Probe-only physical type: identical kernels, different 12-bit byte offsets.
 // Never serialize it as the production format's descriptor.
-struct centred12 : sp::format<12, sp::geometry::striped> {};
+struct centred12 : sp::layout<12, sp::geometry::striped> {};
 namespace ikea::seriespack::detail {
 template <> constexpr std::size_t body_offset<centred12>(std::size_t row) {
     return row + (row >= 32 ? 32 : 0);
 }
 template <> constexpr std::size_t stripe_offset<centred12>(unsigned) { return 32; }
 } // namespace ikea::seriespack::detail
-using body_first12 = sp::format<12, sp::geometry::striped>;
+using body_first12 = sp::layout<12, sp::geometry::striped>;
 struct release {
     void operator()(std::uint8_t *p) const { std::free(p); }
 };
@@ -34,10 +34,11 @@ template <class F, unsigned Operation> void measure(benchmark::State &state) {
     for (std::size_t row = 0; row < count; ++row)
         sp::detail::put_payload<F>(memory.get() + row / 64 * stride, row % 64, value(row));
     const auto view =
-        *sp::view<F, std::uint8_t>::attach(count, {{{{memory.get(), bytes}, stride}, {}, {}}});
-    auto reader = sp::bind_decoder<std::uint16_t>(view);
-    const auto prepared = *sp::bind_mutation(view);
-    auto writer = prepared.template erase<std::uint16_t, sp::no_summary>();
+        *sp::view<F>::attach(count, {{{std::as_writable_bytes(std::span{memory.get(), bytes}), stride},{},{}}});
+    const auto concrete_reader = sp::bind_reader(view);
+    auto reader = concrete_reader.template erase<std::uint16_t>();
+    const auto prepared = *sp::bind_writer(view);
+    auto writer = prepared.template erase<std::uint16_t, sp::author::no_summary>();
     benchmark::DoNotOptimize(reader);
     benchmark::DoNotOptimize(writer);
     // Advance through a large query stream, rather than repeatedly warming a
@@ -51,9 +52,9 @@ template <class F, unsigned Operation> void measure(benchmark::State &state) {
     std::vector<std::uint16_t> input(written);
     for (unsigned i = 0; i < written; ++i)
         input[i] = value(i) ^ 4095;
-    std::vector<sp::composition::owner_write> records(written);
-    sp::composition::source_write_journal effects{records};
-    sp::no_summary summary;
+    std::vector<ikea::journal::entry> records(written);
+    ikea::journal effects{records};
+    sp::author::no_summary summary;
     for (std::size_t row = 0; row < count; row += 16) {
         reader.read16_unchecked(row, output.data());
         for (unsigned j = 0; j < 16; ++j)
@@ -82,8 +83,8 @@ template <class F, unsigned Operation> void measure(benchmark::State &state) {
             benchmark::ClobberMemory();
         } else {
             effects.used = 0;
-            writer.replace_unchecked(0, written, input.data(), sp::row_selection::all(), summary,
-                                     effects);
+            writer.replace_unchecked(0, written, input.data(), effects, sp::selection::all(),
+                                     summary);
             benchmark::DoNotOptimize(effects.used);
             benchmark::ClobberMemory();
         }

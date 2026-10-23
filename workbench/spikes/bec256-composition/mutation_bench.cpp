@@ -12,22 +12,22 @@ struct result {
 };
 
 struct context {
-    const bc::source &a, &b;
+    const bc::reader &a, &b;
     const bc::byte *mask;
-    bc::destination &target;
-    ikea::source_write_journal &effects;
+    bc::view &target;
+    ikea::journal &effects;
     result output{};
 };
-using chain = bc::chain<2>;
+using chain = bc::author::chain<2>;
 [[gnu::always_inline]] static chain::result
-read_filter(void *raw, std::size_t, std::uint64_t active, bc::pipeline_bits, unsigned) {
+read_filter(void *raw, std::size_t, std::uint64_t active, bc::author::pipeline_bits, unsigned) {
     auto &c = *static_cast<context *>(raw);
-    return {bc::pipeline_bits::from(bc::native::intersection(bc::native::read_pair(c.a, c.b),
+    return {bc::author::pipeline_bits::from(bc::native::intersection(bc::native::read_pair(c.a, c.b),
                                                              bc::native::load_pair(c.mask))),
             active};
 }
 [[gnu::always_inline]] static void write_result(void *raw, std::size_t, std::uint64_t,
-                                                bc::pipeline_bits values) {
+                                                bc::author::pipeline_bits values) {
     auto &c = *static_cast<context *>(raw);
     const auto bits = values.get();
     const auto pa = bc::native::population(bc::native::part<0>(bits));
@@ -37,7 +37,7 @@ read_filter(void *raw, std::size_t, std::uint64_t active, bc::pipeline_bits, uns
     c.output = {pa, pb, sizes.first, sizes.second};
 }
 static const auto pipeline =
-    *chain::prepare(std::array{&chain::stage<read_filter>}, &chain::completion<write_result>);
+    *chain::make(std::array{&chain::stage<read_filter>}, &chain::completion<write_result>);
 [[gnu::always_inline]] static result inline_mutation(context &c) {
     const auto filtered = read_filter(&c, 0, 3, {}, 0);
     write_result(&c, 0, filtered.active, filtered.values);
@@ -46,9 +46,9 @@ static const auto pipeline =
 [[gnu::noinline]] static result shared_mutation(context &c) { return inline_mutation(c); }
 
 template <path P>
-[[gnu::always_inline]] result replace_pair(const bc::source &a, const bc::source &b,
-                                           const bc::byte *mask, bc::destination &target,
-                                           ikea::source_write_journal &effects) {
+[[gnu::always_inline]] result replace_pair(const bc::reader &a, const bc::reader &b,
+                                           const bc::byte *mask, bc::view &target,
+                                           ikea::journal &effects) {
     if constexpr (P == path::native_admitted || P == path::native_shared || P == path::native_cps) {
         context c{a, b, mask, target, effects};
         if constexpr (P == path::native_admitted)
@@ -86,9 +86,9 @@ template <path P>
 
 template <path P> void mutation(benchmark::State &state, unsigned shape) {
     std::mt19937_64 rng(0xbecc0de);
-    std::array<bc::plain_block, 256> plain;
+    std::array<std::array<std::byte, 32>, 256> plain;
     std::array<std::array<bc::byte, 64>, 256> bodies{};
-    std::vector<bc::source> sources;
+    std::vector<bc::reader> sources;
     std::array<bc::byte, 64> mask;
     for (auto &b : mask)
         b = bc::byte(rng());
@@ -98,16 +98,16 @@ template <path P> void mutation(benchmark::State &state, unsigned shape) {
                           : shape == 1 ? bc::byte(j < i % 33 ? 255 : 0)
                                        : bc::byte(i % 2 ? 255 : 0);
         auto p = bec_reference::population(plain[i].data());
-        auto body = bc::prepare(plain[i], p);
+        auto body = bc::encoding::make(plain[i], p);
         assert(body);
         std::copy(body->body().begin(), body->body().end(), bodies[i].begin());
         sources.push_back(
-            *bc::source::admit(std::span(bodies[i]).first(body->bytes()), body->bytes(), p));
+            *bc::bind_reader(std::span(bodies[i]).first(body->bytes()), body->bytes(), p));
     }
     std::array<bc::byte, 128> output;
-    bc::destination target{output};
-    std::array<ikea::owner_write, 2> entries;
-    ikea::source_write_journal effects{entries};
+    bc::view target{output};
+    std::array<ikea::journal::entry, 2> entries;
+    ikea::journal effects{entries};
     benchmark::DoNotOptimize(output.data());
     benchmark::DoNotOptimize(entries.data());
     benchmark::DoNotOptimize(&effects);
@@ -119,7 +119,7 @@ template <path P> void mutation(benchmark::State &state, unsigned shape) {
             replace_pair<P>(sources[i], sources[(i + 73) % 256], mask.data(), target, effects);
         total_body_bytes += got.na + got.nb;
         for (unsigned half = 0; half < 2; ++half) {
-            bc::plain_block expected;
+            std::array<std::byte, 32> expected;
             for (unsigned j = 0; j < 32; ++j)
                 expected[j] = plain[(i + half * 73) % 256][j] & mask[half * 32 + j];
             std::array<bc::byte, 47> wire;

@@ -30,12 +30,15 @@ byte ownership, rank-preserving packing and selected transfer for owner rewrites
 
 The [interface guide](docs/interfaces.md) connects placement and prepared calls
 across modules, with explicit row/packet coordinates, selection, byte types,
-source-qualified effects and portable child descriptions.
+source-qualified effects and headless parent-schema descriptions.
+[Selections](docs/selection.md) explains borrowed activity maps and the shared
+`ikea::bitset256` value, including coordinate and byte-order rules.
 
 Modules keep logical interpretation, physical placement and execution distinct.
 A parent can retain its logical contract across different child representations;
-different segments can choose different layouts. Bindings admit storage once and
-checked calls validate each new command.
+different segments can choose different layouts. Attachment admits placement;
+content validation, where required, establishes a reader's content proof.
+Bindings retain reusable operation state and checked calls admit each new command.
 
 ![Logical expression, physical placement and execution recipe meet at preparation. Repeated calls reuse the binding and validate new checked commands. Different segments can realize the same field contract.](docs/images/architecture.svg)
 

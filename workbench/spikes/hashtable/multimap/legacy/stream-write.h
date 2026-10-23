@@ -17,15 +17,25 @@ struct cursor {
     operator const sp::view&()const{return *original;}
 };
 template<class Width,class Offset> struct append_access {
-    static constexpr auto family=sp::geometry::direct;
+    static constexpr auto family=sp::geometry::absolute_ends;
     using width_type=Width;
+    using used_type=Width;
     using offset_type=Offset;
     const cursor* state;
     const sp::layout* recipe;
     const cursor& source()const{return *state;}
+    unsigned size()const{return state->size();}
     const sp::layout& format()const{return *recipe;}
     unsigned width_offset(unsigned rank)const{return (rank/16)*recipe->group_stride()+(rank%16)*sizeof(Width);}
     unsigned used_offset(unsigned rank)const{return (rank/16)*recipe->group_stride()+recipe->used_offset()+(rank%16)*sizeof(Width);}
+};
+template<class Effects> requires ikea::effects<Effects,sp::view> struct original_effects {
+    Effects& output;
+    const sp::view& original;
+    template<class Source>
+    void before(const Source&,unsigned plane,std::size_t offset,std::size_t size)noexcept {
+        output.before(original,plane,offset,size);
+    }
 };
 // The arena constructor proves this exact Direct/fixed-or-U16 recipe and full
 // metadata capacity. The caller admits the whole command, input and effects
@@ -37,7 +47,8 @@ template<unsigned V,bool Fixed,class Offset> class writer {
   public:
     [[gnu::always_inline]] writer(const sp::view& destination,unsigned n,unsigned begin)
         :snapshot_(destination.format()),cursor_{&destination,n,begin}{}
-    template<class Effects> [[gnu::always_inline]] void append(sp::bytes input,unsigned reservation,Effects& effects) {
+    template<class Effects> requires ikea::effects<Effects,sp::view>
+    [[gnu::always_inline]] void append(sp::bytes input,unsigned reservation,Effects& effects) {
         const bool fixed=snapshot_.fixed(),used=snapshot_.has_used(),tombs=snapshot_.has_tombstones(),extent=snapshot_.has_extent();
         const auto width=snapshot_.fixed_width(),geometry=snapshot_.geometry_offset(),used_offset=snapshot_.used_offset(),stride=snapshot_.group_stride(),control=snapshot_.control_bytes();
         __builtin_assume(fixed==Fixed);__builtin_assume(used==!Fixed);
@@ -46,13 +57,15 @@ template<unsigned V,bool Fixed,class Offset> class writer {
         __builtin_assume(geometry==32);__builtin_assume(used_offset==0);__builtin_assume(stride==(Fixed?0:32));
         using Width=std::conditional_t<Fixed,std::uint8_t,std::uint16_t>;
         const append_access<Width,Offset> access{&cursor_,&snapshot_};
-        [[clang::always_inline]] sp::author::append_unchecked(access,input,reservation,effects);
+        original_effects<Effects> qualified{effects,*cursor_.original};
+        [[clang::always_inline]] sp::append_unchecked(access,input,reservation,qualified);
         ++cursor_.n;cursor_.begin+=reservation;
     }
     unsigned extent()const{return cursor_.begin;}
 };
 template<class Width> struct replacement_access {
     using width_type=Width;
+    using used_type=Width;
     const sp::view* original;
     const sp::layout* recipe;
     unsigned begin;
@@ -71,6 +84,6 @@ template<bool Fixed,class Effects> [[gnu::always_inline]] void replace(
     __builtin_assume(used==!Fixed);__builtin_assume(stride==(Fixed?0:32));__builtin_assume(offset==0);
     using Width=std::conditional_t<Fixed,std::uint8_t,std::uint16_t>;
     const replacement_access<Width> access{&destination,&snapshot,begin};
-    [[clang::always_inline]] sp::author::replace_unchecked(access,rank,input,effects);
+    [[clang::always_inline]] sp::replace_unchecked(access,rank,input,effects);
 }
 }

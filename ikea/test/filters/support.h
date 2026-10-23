@@ -1,6 +1,8 @@
+#include <ikea/tuplepack/author/execution.h>
+#include <ikea/seriespack/author/store.h>
 #pragma once
 #include <ikea/seriespack.h>
-#include <ikea/seriespack/author/read.h>
+#include <ikea/seriespack/reader.h>
 #include <ikea/tuplepack.h>
 #include "../scope.h"
 #include <cassert>
@@ -31,21 +33,20 @@ template <class F, C Op> void series_case() {
     constexpr unsigned n = 83;
     alignas(64) std::array<std::uint8_t, 16384> payload_storage{}, heads{}, heads2{};
     auto payload = std::span(payload_storage).subspan(1);
-    auto v = *sp::view<F, std::uint8_t>::attach(
-        n,
-        {{{payload, F::tile_bytes + 64}, {heads, F::tile_rows + 8}, {heads2, F::tile_rows + 16}}});
+    auto v = *sp::view<F>::attach(
+        n, {{{std::as_writable_bytes(std::span{payload}), F::tile_bytes + 64},{std::as_writable_bytes(std::span{heads}), F::tile_rows + 8},{std::as_writable_bytes(std::span{heads2}), F::tile_rows + 16}}});
     std::array<std::uint64_t, n> truth;
     std::mt19937_64 random(F::width + F::heads);
     constexpr auto limit = ~std::uint64_t{0} >> (64 - F::width);
     for (unsigned i = 0; i < n; ++i) {
         truth[i] = (i % 5 == 0 ? 0 : i % 5 == 1 ? limit : random() & limit);
-        sp::set_unchecked(v, i, truth[i]);
+        sp::author::store_unchecked(v, i, truth[i]);
     }
-    const auto composed = *sp::composition::prepare(sp::composition::describe(v), n);
+    const auto composed = *sp::bind_reader(sp::author::expression(v), n);
     const auto guarded = [&] {
         if constexpr (F::heads == 8 && F::width > 8)
-            return *sp::composition::prepare(
-                sp::composition::guarded(sp::composition::describe(v)), n);
+            return *sp::bind_reader(
+                sp::author::guarded(sp::author::expression(v)), n);
         else
             return composed;
     }();
@@ -80,24 +81,24 @@ template <class F, C Op> void series_case() {
 #if defined(__aarch64__) || defined(__AVX2__)
     // Normalization removes K from a downstream consumer, including its query
     // domain shortcut. Full-width queries must still have the same meaning.
-    sp::composition::native_ops ops;
-    const auto decoded = sp::composition::read(ops, sp::composition::describe(v), 0, 0xffff);
+    sp::author::native_ops ops;
+    const auto decoded = sp::author::read(ops, sp::author::expression(v), 0, 0xffff);
     const sp::native::values<8 * sizeof(sp::uint_for<F::width>)> canonical{decoded.v};
     for (auto rhs : {std::uint64_t{0}, limit / 2, limit, limit + 1, ~std::uint64_t{0}}) {
         unsigned expected = 0;
         for (unsigned i = 0; i < 16; ++i)
             if ((0xa53c >> i & 1) && oracle(Op, truth[i], rhs))
                 expected |= 1u << i;
-        assert(sp::filter_values<Op>(canonical, rhs, 0xa53c) == expected);
+        assert(sp::author::filter_values<Op>(canonical, rhs, 0xa53c) == expected);
     }
 #endif
 #if defined(__aarch64__) ||                                                                        \
     (defined(__AVX512BW__) && defined(__AVX512DQ__) && defined(__AVX512VL__))
     for (auto rhs : {std::uint64_t{0}, limit / 2, limit, ~std::uint64_t{0}}) {
-        sp::composition::wide_ops<64> ops;
+        sp::author::wide_ops<64> ops;
         auto native =
-            sp::composition::read(ops, sp::composition::describe(v), 0, ~std::uint64_t{0});
-        auto got = sp::filter_values<Op>(native, rhs, 0xfedcba9876543210ULL);
+            sp::author::read(ops, sp::author::expression(v), 0, ~std::uint64_t{0});
+        auto got = sp::author::filter_values<Op>(native, rhs, 0xfedcba9876543210ULL);
         std::uint64_t expected = 0;
         for (unsigned i = 0; i < 64; ++i)
             if ((0xfedcba9876543210ULL >> i & 1) && oracle(Op, truth[i], rhs))
@@ -125,25 +126,25 @@ template <class F, C Op> void series_case() {
 template <unsigned K> void width() {
     if constexpr (ikea::test::sampled_width(K))
     [&]<C... Ops>(operations<Ops...>) {
-        (series_case<sp::format<K>, Ops>(), ...);
+        (series_case<sp::layout<K>, Ops>(), ...);
         if constexpr (sp::striped_width(K))
-            (series_case<sp::format<K, sp::geometry::striped>, Ops>(), ...);
+            (series_case<sp::layout<K, sp::geometry::striped>, Ops>(), ...);
         if constexpr (K >= 8)
-            (series_case<sp::format<K, sp::geometry::local, 8>, Ops>(), ...);
+            (series_case<sp::layout<K, sp::geometry::local, 8>, Ops>(), ...);
         if constexpr (K >= 16)
-            (series_case<sp::format<K, sp::geometry::local, 16>, Ops>(), ...);
+            (series_case<sp::layout<K, sp::geometry::local, 16>, Ops>(), ...);
     }(operations<C::equal, C::less, C::less_equal, C::greater, C::greater_equal>{});
 }
 template <unsigned N, unsigned Rows, C Op> void tuple_case() {
     std::array<tp::code, 2> codes{{{0, 3, 5}, {0, 0, 3}}};
     auto layout = *tp::layout::make(1, codes);
-    std::array<tp::byte, 129> bytes;
+    std::array<std::uint8_t, 129> bytes;
     for (unsigned i = 0; i < bytes.size(); ++i)
         bytes[i] = i * 71;
-    auto source = *tp::view::bind(layout, bytes, 65, 2);
-    auto plan = *tp::reader<N, Rows>::make(layout, std::array<tp::byte, 1>{0});
+    auto source = *tp::view::attach(layout, std::as_writable_bytes(std::span{bytes}), 65, 2);
+    auto plan = *tp::read_plan<N, Rows>::make(layout, std::array<std::uint8_t, 1>{0});
     auto read = *tp::bind_reader(plan, source);
-    auto filter = *tp::bind_filter(read);
+    auto filter = read;
     constexpr auto live = ~std::uint64_t{0} >> (64 - Rows);
     for (auto rhs : {std::uint64_t{0}, std::uint64_t{15}, std::uint64_t{31}, std::uint64_t{32},
                      ~std::uint64_t{0}})
@@ -156,7 +157,7 @@ template <unsigned N, unsigned Rows, C Op> void tuple_case() {
         }
     assert(filter.template filter<Op>(65, 0, 0) == 0);
     assert(!filter.template filter<Op>(65, 0, 1));
-    auto hole = *tp::reader<N, Rows>::make(layout, std::array<tp::byte, 1>{tp::hole});
+    auto hole = *tp::read_plan<N, Rows>::make(layout, std::array<std::uint8_t, 1>{tp::hole});
     auto hole_read = *tp::bind_reader(hole, source);
-    assert(!tp::bind_filter(hole_read));
+    assert(([&] { const auto result = hole_read.template filter<C::equal>(0,0); return !result && result.error() == tp::error::map; }()));
 }

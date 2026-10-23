@@ -1,5 +1,6 @@
-#include <ikea/hashtable/descriptor.h>
+#include <ikea/hashtable/erased_table.h>
 #include <iostream>
+#include <system_error>
 using namespace ikea::hashtable;
 
 struct refusal {
@@ -90,11 +91,11 @@ unsigned count(unsigned i) {
 template <unsigned V> bytes<V> payload(unsigned i, unsigned j) {
     bytes<V> v{};
     for (unsigned x = 0; x < V; ++x)
-        v[x] = byte(i * 29 + j * 71 + x * 13);
+        v[x] = std::byte(i * 29 + j * 71 + x * 13);
     return v;
 }
 template <unsigned V, bool Multi> void history() {
-    using D = descriptor<24, V, fallible_heap>;
+    using D = erased_table<24, V, fallible_heap>;
     constexpr word seed = 311;
     const permutation<24, 19> mix{seed};
     fallible_heap::context context;
@@ -164,7 +165,7 @@ template <unsigned V, bool Multi> void history() {
 }
 void mutable_batch_growth() {
     using Owner = table<24, 5, 8, 19, search_kernel::generic, fallible_heap>;
-    using D = descriptor<24, 8, fallible_heap>;
+    using D = erased_table<24, 8, fallible_heap>;
     constexpr word seed = 311;
     permutation<24, 19> mix{seed};
     fallible_heap::context context;
@@ -199,7 +200,7 @@ int main() {
         {
             fallible_heap::context c;
             fallible_heap::buffer owned(64, &c);
-            owned.data[31] = 71;
+            owned.data[31] = std::byte{71};
             c.reject_growth = true;
             bool refused = false;
             try {
@@ -207,13 +208,13 @@ int main() {
             } catch (const refusal& failure) {
                 refused = failure.reason == std::errc::no_buffer_space;
             }
-            require(refused && owned.size == 64 && owned.data[31] == 71,
+            require(refused && owned.size == 64 && owned.data[31] == std::byte{71},
                     "typed growth refusal preserves storage");
         }
         heap_storage_policy::buffer buffer(64);
-        buffer.data[63] = 127;
+        buffer.data[63] = std::byte{127};
         buffer.grow(192, 256);
-        require(buffer.data[63] == 127 && buffer.data[191] == 0 && buffer.capacity() == 256,
+        require(buffer.data[63] == std::byte{127} && buffer.data[191] == std::byte{0} && buffer.capacity() == 256,
                 "heap growth preserves bytes and initializes new extent");
         require(!buffer.relinquish_tail(320) && buffer.size == 192,
                 "typed trim refusal preserves extent");

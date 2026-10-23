@@ -13,7 +13,7 @@ template <unsigned W, unsigned V, write_strategy Strategy> void width_case() {
         std::vector<bytes<V>> out(Multi ? 1 + unsigned(key % 5) : 1);
         for (unsigned j = 0; j < out.size(); ++j)
             for (unsigned k = 0; k < V; ++k)
-                out[j][k] = byte(key * 17 + epoch * 71 + j * 23 + k * 13);
+                out[j][k] = std::byte(key * 17 + epoch * 71 + j * 23 + k * 13);
         if constexpr (Multi)
             if (out.size() > 2)
                 out.back() = out.front(); // Repeated values are preserved.
@@ -57,10 +57,10 @@ template <unsigned W, unsigned V, write_strategy Strategy> void width_case() {
             auto staged = [&]<staged_values Values>() {
                 // Hints may be speculative, but their complete byte extents
                 // must still belong to one retained backing allocation.
-                auto emit = [&](const byte* p, std::size_t bytes) {
+                auto emit = [&](const std::byte* p, std::size_t bytes) {
                     bool contained = false;
                     const auto address = reinterpret_cast<std::uintptr_t>(p);
-                    owner.allocations([&](auto, const byte* base, std::size_t size) {
+                    owner.allocations([&](auto, const std::byte* base, std::size_t size) {
                         const auto begin = reinterpret_cast<std::uintptr_t>(base);
                         contained |= address >= begin && address - begin <= size &&
                                      bytes <= size - (address - begin);

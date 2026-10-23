@@ -52,7 +52,7 @@ Result automatic(View view, std::span<const ht::word> keys, ht::lookup_selector&
 }
 int main() {
     using Owner = ht::table<32, 11, 8, 24>;
-    auto owner = ht::descriptor<32, 8>::explicit_encoding<11, 24>(713);
+    auto owner = ht::erased_table<32, 8>::explicit_encoding<11, 24>(713);
     const Owner::mix_type mix{713};
     // Deliberate spills, zero quotient and a zero-valued hit. No presence hint
     // can skip an actual check, and zero alone does not indicate absence.

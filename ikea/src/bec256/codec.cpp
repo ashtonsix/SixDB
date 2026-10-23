@@ -6,7 +6,7 @@
 #include <cstring>
 
 namespace ikea::bec256 {
-void decode(const source &input, std::span<byte, 32> output) noexcept {
+void decode(const reader &input, std::span<byte, 32> output) noexcept {
     if (input.population() == 0 || input.population() == 256) {
         std::memset(output.data(), input.population() ? 255 : 0, 32);
         return;
@@ -15,13 +15,13 @@ void decode(const source &input, std::span<byte, 32> output) noexcept {
     native::store(output.data(), native::read(input));
 #else
     // The scalar fallback reads exact fields, so it needs no suffix.
-    plain_block values;
+    std::array<byte, 32> values;
     detail::decode_scalar(reinterpret_cast<const std::uint8_t *>(input.storage().data()),
                           input.population(), reinterpret_cast<std::uint8_t *>(values.data()));
     std::memcpy(output.data(), values.data(), 32);
 #endif
 }
-std::expected<encoding, error> prepare(std::span<const byte, 32> input,
+std::expected<encoding, error> encoding::make(std::span<const byte, 32> input,
                                        unsigned population) noexcept {
     unsigned actual = 0;
     for (auto value : input)
@@ -41,7 +41,7 @@ std::expected<encoding, error> prepare(std::span<const byte, 32> input,
 #endif
     return result;
 }
-void decode_pair(const source &a, const source &b, std::span<byte, 64> output) noexcept {
+void decode_pair(const reader &a, const reader &b, std::span<byte, 64> output) noexcept {
 #if defined(IKEA_BEC256_AVX512) || defined(__aarch64__)
     native::store_pair(output.data(), native::read_pair(a, b));
 #else
@@ -52,24 +52,24 @@ void decode_pair(const source &a, const source &b, std::span<byte, 64> output) n
 #endif
 }
 std::expected<void, error>
-encoding::admit_write(const destination &target, std::size_t offset,
-                      const source_write_journal &effects) const noexcept {
+encoding::admit_write(const view &target, std::size_t offset,
+                      const journal &effects) const noexcept {
     return detail::admit_write(target, offset, bytes_, effects, this, sizeof(*this));
 }
-std::expected<void, error> encoding::write(destination &target, std::size_t offset,
-                                           source_write_journal &effects) const noexcept {
+std::expected<void, error> encoding::write(view &target, std::size_t offset,
+                                           journal &effects) const noexcept {
     if (auto admitted = admit_write(target, offset, effects); !admitted)
         return admitted;
     write_unchecked(target, offset, effects);
     return {};
 }
 std::expected<unsigned, error> encode(std::span<const byte, 32> input, unsigned population,
-                                      destination &target, std::size_t offset,
-                                      source_write_journal &effects) noexcept {
+                                      view &target, std::size_t offset,
+                                      journal &effects) noexcept {
 #if defined(IKEA_BEC256_AVX512) || defined(__aarch64__)
     return native::encode(native::load(input.data()), population, target, offset, effects);
 #else
-    auto encoded = prepare(input, population);
+    auto encoded = encoding::make(input, population);
     if (!encoded)
         return std::unexpected(encoded.error());
     if (auto written = encoded->write(target, offset, effects); !written)
@@ -79,8 +79,8 @@ std::expected<unsigned, error> encode(std::span<const byte, 32> input, unsigned 
 }
 std::expected<std::optional<unsigned>, error>
 encode_if_promising(std::span<const byte, 32> input, unsigned population, unsigned enum_bit_cutoff,
-                    destination &target, std::size_t offset,
-                    source_write_journal &effects) noexcept {
+                    view &target, std::size_t offset,
+                    journal &effects) noexcept {
 #if defined(IKEA_BEC256_AVX512) || defined(__aarch64__)
     return native::encode_if_promising(native::load(input.data()), population, enum_bit_cutoff,
                                        target, offset, effects);

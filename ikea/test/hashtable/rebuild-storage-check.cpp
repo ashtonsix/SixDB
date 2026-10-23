@@ -47,7 +47,7 @@ struct counted_storage {
     };
 };
 template <unsigned V> void check() {
-    using D = ht::descriptor<24, V, counted_storage>;
+    using D = ht::erased_table<24, V, counted_storage>;
     counted_storage::context memory;
     auto descriptor =
         D::template explicit_encoding<10, 14>(713, &memory, ht::write_strategy::existing);
@@ -56,7 +56,7 @@ template <unsigned V> void check() {
     for (unsigned i = 0; i < 600; ++i) {
         ht::bytes<V> v{};
         for (unsigned j = 0; j < V; ++j)
-            v[j] = ht::byte(i * 13 + j * 7);
+            v[j] = std::byte(i * 13 + j * 7);
         auto k = mix.recover(0, i);
         descriptor.insert(k, v);
         expected[k] = v;

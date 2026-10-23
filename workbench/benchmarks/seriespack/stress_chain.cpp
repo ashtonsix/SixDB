@@ -1,15 +1,15 @@
 #include "fixture.h"
 #include <ikea/seriespack/author/chain.h>
-#include <ikea/seriespack/detail/mutation/physical.h>
+#include <ikea/seriespack/author/mutation.h>
 
 enum class chain_mode { inline_stages, cps, scratch_calls, fused };
 template <unsigned K> struct pipeline_frame {
-    using F = sp::format<K>;
-    using Plan = sp::chain<K>;
+    using F = sp::layout<K>;
+    using Plan = sp::author::chain<K>;
     using Values = sp::native::values<K>;
-    sp::view<F, std::uint8_t> destination;
-    sp::write_journal journal;
-    sp::sum_change summary;
+    sp::view<F> destination;
+    ikea::journal journal;
+    sp::author::sum_change summary;
     std::array<std::uint64_t, 7> cutoffs;
     std::uint64_t fused_cutoff;
     [[gnu::always_inline]] static std::uint16_t bits(Values mask) {
@@ -32,8 +32,8 @@ template <unsigned K> struct pipeline_frame {
     [[gnu::always_inline]] static typename Plan::result
     mutate(void* pointer, std::size_t row, std::uint16_t active, Values value, unsigned) {
         auto& frame = *static_cast<pipeline_frame*>(pointer);
-        const auto destination = frame.destination;
-        sp::replace_native16_unchecked(destination, row, value, active, frame.summary,
+        const auto& destination = frame.destination;
+        sp::author::replace_native16_unchecked(destination, row, value, active, frame.summary,
                                        frame.journal);
         return {value, active, false};
     }
@@ -107,14 +107,14 @@ void pipeline_benchmark(benchmark::State& state) {
     using Plan = typename Frame::Plan;
     using U = sp::uint_for<K>;
     fixture<K, sp::geometry::local> f(8192);
-    const auto destination = *sp::view<typename Frame::F, std::uint8_t>::attach(
-        f.count, {{{{f.storage.get(), f.bytes}, Frame::F::tile_bytes}, {}, {}}});
-    std::vector<sp::byte_write> effects(f.count / 8);
+    const auto destination = *sp::view<typename Frame::F>::attach(
+        f.count, {{{std::as_writable_bytes(std::span{f.storage.get(), f.bytes}), Frame::F::tile_bytes},{},{}}});
+    std::vector<ikea::journal::entry> effects(f.count / 8);
     Frame frame{destination, {effects}, {}, {}, ~std::uint64_t{0}};
     std::array<typename Plan::function, Depth> stages;
     stages.fill(&Plan::template stage<&Frame::filter>);
     stages.back() = &Plan::template stage<&Frame::mutate>;
-    const auto plan = Plan::prepare(stages, &Plan::template completion<&Frame::finish>);
+    const auto plan = Plan::make(stages, &Plan::template completion<&Frame::finish>);
     if (!plan)
         std::abort();
     std::array<typename Frame::ordinary_function, Depth> ordinary;

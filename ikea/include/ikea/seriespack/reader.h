@@ -1,0 +1,311 @@
+#pragma once
+#include <ikea/seriespack/author/indexof.h>
+#include <ikea/seriespack/detail/physical_source.h>
+#include <ikea/seriespack/detail/placed_read.h>
+
+namespace ikea::seriespack {
+namespace detail {
+template <class> inline constexpr bool is_dense_source = false;
+template <class L> inline constexpr bool is_dense_source<dense_source<L>> = true;
+struct read_admitted_value {};
+struct read_admission {
+    std::size_t count;
+    bool valid = true;
+    template <class S, author::field_kind F>
+    read_admitted_value read(const author::leaf<S, F>& source, std::size_t, bool) {
+        const auto extent = [&] {
+            if constexpr (requires { source.source.count; })
+                return source.source.count;
+            else
+                return source.source.size();
+        }();
+        valid &= count <= extent;
+        return {};
+    }
+    template <unsigned> read_admitted_value join(read_admitted_value, read_admitted_value) {
+        return {};
+    }
+};
+}
+
+/// Typed whole read operation. Owns its expression and borrows its named leaf
+/// views. Keep this object stationary while an erased operation borrows it.
+/// Physical whole-view reads retain the specialized dense/placed range bodies.
+template <class Expression> class reader {
+    Expression expression_;
+    std::size_t count_;
+    using physical_type = decltype(author::range_detail::physical_source(
+        std::declval<const Expression&>()));
+    physical_type physical_;
+    reader(Expression e, std::size_t count)
+        : expression_(std::move(e)), count_(count),
+          physical_(author::range_detail::physical_source(expression_)) {}
+
+    template <class U> void region_unchecked(std::size_t first, U* output) const {
+#if defined(__aarch64__) || defined(__AVX2__)
+        author::native_ops ops;
+        native::store16(output, author::read(ops, expression_, first, std::uint16_t{0xffff}));
+#else
+        for (unsigned i = 0; i < 16; ++i)
+            output[i] = get_unchecked(first + i);
+#endif
+    }
+
+  public:
+    using value_type = uint_for<Expression::bit_width>;
+    /// Owner-proved expression extents; no data access or allocation.
+    static reader bind_unchecked(Expression e, std::size_t count) {
+        return reader(std::move(e), count);
+    }
+    [[nodiscard]] static std::expected<reader, error> bind(Expression e, std::size_t count) {
+        detail::read_admission check{count};
+        author::read(check, e, std::size_t{0}, true);
+        if (!check.valid)
+            return std::unexpected(error::range);
+        return bind_unchecked(std::move(e), count);
+    }
+    std::size_t size() const noexcept { return count_; }
+    const Expression& expression() const noexcept { return expression_; }
+    value_type get_unchecked(std::size_t row) const {
+        if constexpr (std::is_pointer_v<physical_type>)
+            if (physical_) {
+                if constexpr (requires { physical_->data; }) {
+                    using V = std::remove_cv_t<std::remove_pointer_t<physical_type>>;
+                    return detail::dense_point<typename V::layout_type, value_type>(physical_->data, row);
+                }
+                else
+                    return seriespack::get_unchecked(*physical_, row);
+            }
+        author::scalar_ops ops;
+        return author::read(ops, expression_, row, true).value;
+    }
+    [[nodiscard]] std::expected<value_type, error> get(std::size_t row) const {
+        if (row >= count_)
+            return std::unexpected(error::range);
+        return get_unchecked(row);
+    }
+    template <class U>
+    void read_unchecked(std::size_t first, std::size_t count, U* __restrict output) const {
+        static_assert(std::is_unsigned_v<U> && !std::is_same_v<U, bool> &&
+                      sizeof(U) * 8 >= Expression::bit_width);
+        if constexpr (std::is_pointer_v<physical_type>) {
+            if (physical_) {
+                using V = std::remove_cv_t<std::remove_pointer_t<physical_type>>;
+                using L = typename V::layout_type;
+                if constexpr (requires { physical_->data; }) {
+                    detail::dense_range<L, U>(physical_->data, first, count, output);
+                    return;
+                } else {
+                    if constexpr (L::heads == 0)
+                        if (physical_->stream(0).stride == L::tile_bytes) {
+                            detail::dense_range<L, U>(physical_->stream(0).bytes.data(), first,
+                                                     count, output);
+                            return;
+                        }
+                    detail::placed_range<V, U>(physical_, first, count, output);
+                    return;
+                }
+            }
+        }
+        while (count && first % 16) {
+            *output++ = get_unchecked(first++);
+            --count;
+        }
+        while (count >= 16) {
+            region_unchecked(first, output);
+            first += 16;
+            output += 16;
+            count -= 16;
+        }
+        while (count--)
+            *output++ = get_unchecked(first++);
+    }
+    template <class U>
+    [[nodiscard]] std::expected<void, error> read(std::size_t first, std::span<U> output) const {
+        if (first > count_ || output.size() > count_ - first)
+            return std::unexpected(error::range);
+        read_unchecked(first, output.size(), output.data());
+        return {};
+    }
+    template <comparison Op>
+    std::uint64_t filter_unchecked(std::size_t first, unsigned count, std::uint64_t rhs,
+                                   std::uint64_t active = ~std::uint64_t{0}) const {
+        return author::filter_unchecked<Op>(expression_, first, count, rhs, active);
+    }
+    template <comparison Op>
+    [[nodiscard]] std::expected<std::uint64_t, error>
+    filter(std::size_t first, unsigned count, std::uint64_t rhs,
+           std::uint64_t active = ~std::uint64_t{0}) const {
+        if (count > 64 || first > count_ || count > count_ - first)
+            return std::unexpected(error::range);
+        return filter_unchecked<Op>(first, count, rhs, active);
+    }
+    unsigned indexof_unchecked(std::size_t first, unsigned count, std::uint64_t rhs,
+                              std::uint64_t active = ~std::uint64_t{0}) const {
+        return author::indexof_unchecked(expression_, first, count, rhs, active);
+    }
+    [[nodiscard]] std::expected<unsigned, error>
+    indexof(std::size_t first, unsigned count, std::uint64_t rhs,
+            std::uint64_t active = ~std::uint64_t{0}) const {
+        if (count > 64 || first > count_ || count > count_ - first)
+            return std::unexpected(error::range);
+        return indexof_unchecked(first, count, rhs, active);
+    }
+    template <class Prefilter>
+    std::uint64_t sum_unchecked(std::size_t first, std::size_t count, std::uint64_t cutoff,
+                                Prefilter&& mask) const {
+#if defined(__aarch64__) || defined(__AVX2__)
+        return author::sum_regions(expression_, first, count, cutoff,
+                                   std::forward<Prefilter>(mask));
+#else
+        std::uint64_t result = 0;
+        for (std::size_t row = first; row < first + count; ++row)
+            if (mask(row - row % 16) & (1u << (row % 16))) {
+                const auto value = get_unchecked(row);
+                result += value < cutoff ? value : 0;
+            }
+        return result;
+#endif
+    }
+    template <class Prefilter>
+    [[nodiscard]] std::expected<std::uint64_t, error>
+    sum(std::size_t first, std::size_t count, std::uint64_t cutoff, Prefilter&& mask) const {
+        if (first > count_ || count > count_ - first)
+            return std::unexpected(error::range);
+        return sum_unchecked(first, count, cutoff, std::forward<Prefilter>(mask));
+    }
+    template <class U> erased_reader<U> erase() const& {
+        static_assert(sizeof(U) * 8 >= Expression::bit_width);
+        if constexpr (std::is_pointer_v<physical_type>)
+            if (physical_) {
+                if constexpr (requires { physical_->data; }) {
+                    auto source = *physical_;
+                    source.count = count_;
+                    return detail::erase_dense_reader<U>(source);
+                } else
+                    return detail::erase_placed_reader<U>(*physical_, count_);
+            }
+        return {this, count_,
+                [](const void* p, std::size_t first, std::size_t count, U* out) {
+                    static_cast<const reader*>(p)->read_unchecked(first, count, out);
+                },
+                [](const void* p, std::size_t first, U* out) {
+                    static_cast<const reader*>(p)->region_unchecked(first, out);
+                },
+                [](const void* p, std::size_t row) -> U {
+                    return static_cast<const reader*>(p)->get_unchecked(row);
+                }};
+    }
+    template <class U> auto erase() const&& = delete;
+};
+
+template <class E>
+[[nodiscard]] auto bind_reader(E expression, std::size_t count) {
+    return reader<E>::bind(std::move(expression), count);
+}
+template <class L, class B> auto bind_reader(const basic_view<L, B>& source) {
+    using E = decltype(author::expression(source));
+    return reader<E>::bind_unchecked(author::expression(source), source.size());
+}
+template <class L, class B> auto bind_reader(const basic_view<L, B>&&) = delete;
+
+/// Explicit output type selects an erased physical operation directly. The
+/// placed form borrows the named view; the dense form copies its pointer/count.
+template <class U, class L, class B>
+erased_reader<U> bind_reader(const basic_view<L, B>& source) {
+    return detail::erase_placed_reader<U>(source);
+}
+template <class U, class L, class B>
+auto bind_reader(const basic_view<L, B>&&) = delete;
+template <class U, class L> erased_reader<U> bind_reader(dense_source<L> source) {
+    return detail::erase_dense_reader<U>(source);
+}
+
+/// Dense placement is a copied pointer/count proof, so no temporary source
+/// wrapper or reader object needs to survive its erased read operation.
+template <class L> class reader<dense_source<L>> {
+    dense_source<L> source_;
+    auto composed() const {
+        using E = decltype(author::expression(source_));
+        return reader<E>::bind_unchecked(author::expression(source_), source_.count);
+    }
+
+  public:
+    using value_type = uint_for<L::width>;
+    explicit reader(dense_source<L> source) : source_(source) {}
+    std::size_t size() const noexcept { return source_.count; }
+    value_type get_unchecked(std::size_t row) const {
+        return detail::dense_point<L, value_type>(source_.data, row);
+    }
+    [[nodiscard]] std::expected<value_type, error> get(std::size_t row) const {
+        if (row >= size())
+            return std::unexpected(error::range);
+        return get_unchecked(row);
+    }
+    template <class U>
+    void read_unchecked(std::size_t first, std::size_t count, U* __restrict output) const {
+        static_assert(std::is_unsigned_v<U> && !std::is_same_v<U, bool> && sizeof(U) * 8 >= L::width);
+        detail::dense_range<L, U>(source_.data, first, count, output);
+    }
+    template <class U>
+    [[nodiscard]] std::expected<void, error> read(std::size_t first, std::span<U> output) const {
+        if (first > size() || output.size() > size() - first)
+            return std::unexpected(error::range);
+        read_unchecked(first, output.size(), output.data());
+        return {};
+    }
+    template <comparison Op>
+    std::uint64_t filter_unchecked(std::size_t first, unsigned count, std::uint64_t rhs,
+                                   std::uint64_t active = ~std::uint64_t{0}) const {
+        return composed().template filter_unchecked<Op>(first, count, rhs, active);
+    }
+    template <comparison Op>
+    [[nodiscard]] std::expected<std::uint64_t, error>
+    filter(std::size_t first, unsigned count, std::uint64_t rhs,
+           std::uint64_t active = ~std::uint64_t{0}) const {
+        return composed().template filter<Op>(first, count, rhs, active);
+    }
+    unsigned indexof_unchecked(std::size_t first, unsigned count, std::uint64_t rhs,
+                              std::uint64_t active = ~std::uint64_t{0}) const {
+        return composed().indexof_unchecked(first, count, rhs, active);
+    }
+    [[nodiscard]] std::expected<unsigned, error>
+    indexof(std::size_t first, unsigned count, std::uint64_t rhs,
+            std::uint64_t active = ~std::uint64_t{0}) const {
+        return composed().indexof(first, count, rhs, active);
+    }
+    template <class Prefilter>
+    std::uint64_t sum_unchecked(std::size_t first, std::size_t count, std::uint64_t cutoff,
+                                Prefilter&& mask) const {
+        return composed().sum_unchecked(first, count, cutoff, std::forward<Prefilter>(mask));
+    }
+    template <class Prefilter>
+    [[nodiscard]] std::expected<std::uint64_t, error>
+    sum(std::size_t first, std::size_t count, std::uint64_t cutoff, Prefilter&& mask) const {
+        return composed().sum(first, count, cutoff, std::forward<Prefilter>(mask));
+    }
+    template <class U> erased_reader<U> erase() const {
+        return detail::erase_dense_reader<U>(source_);
+    }
+};
+template <class Source>
+    requires detail::is_dense_source<Source>
+auto bind_reader(Source source) {
+    return reader<Source>(source);
+}
+
+/// Runtime-width dense input; the parent supplies coherent bytes, layout and
+/// logical count. Binding validates placement and selects one compiled body.
+struct dense_input {
+    unsigned width;
+    geometry storage;
+    ikea::bytes bytes;
+    std::size_t count;
+};
+template <class U>
+[[nodiscard]] std::expected<erased_reader<U>, error> bind_reader(const dense_input& source);
+extern template std::expected<erased_reader<std::uint8_t>, error> bind_reader(const dense_input&);
+extern template std::expected<erased_reader<std::uint16_t>, error> bind_reader(const dense_input&);
+extern template std::expected<erased_reader<std::uint32_t>, error> bind_reader(const dense_input&);
+extern template std::expected<erased_reader<std::uint64_t>, error> bind_reader(const dense_input&);
+} // namespace ikea::seriespack

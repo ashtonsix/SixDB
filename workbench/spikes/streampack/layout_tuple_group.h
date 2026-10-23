@@ -1,3 +1,4 @@
+#include <ikea/tuplepack/author/execution.h>
 #pragma once
 #include "layout.h"
 
@@ -14,7 +15,7 @@ public:
   using W = std::conditional_t<bits == 8, std::uint8_t, std::uint16_t>;
 private:
   struct Field {
-    std::array<tp::byte, 3> codes{};
+    std::array<std::uint8_t, 3> codes{};
     std::array<unsigned, 3> shifts{}, masks{};
     unsigned size{};
   };
@@ -23,19 +24,19 @@ private:
   std::vector<tp::code> codes_;
   std::array<Field, 16> geometry_fields_, used_fields_;
   std::array<unsigned, 16> prefix_offsets_{};
-  std::array<std::optional<tp::reader<8>>, 16> geometry_, state_, used_, dead_;
-  std::array<std::optional<tp::writer<8>>, 16> writes_;
+  std::array<std::optional<tp::read_plan<8>>, 16> geometry_, state_, used_, dead_;
+  std::array<std::optional<tp::write_plan<8>>, 16> writes_;
   std::optional<tp::layout> layout_;
-  std::optional<tp::reader<64>> prefix_, used_group_;
+  std::optional<tp::read_plan<64>> prefix_, used_group_;
   std::optional<tp::view> view_;
-  std::optional<tp::native_reader<64, tp::byte>> native_, native_used_;
+  std::optional<tp::author::native_reader<64, std::byte>> native_, native_used_;
 
   Field field(unsigned origin, unsigned rank) {
     Field out;
     auto add = [&](unsigned byte, unsigned shift, unsigned width, unsigned result_shift) {
       out.codes[out.size] = codes_.size(); out.shifts[out.size] = result_shift;
       out.masks[out.size++] = (1u << width) - 1;
-      codes_.push_back({tp::byte(byte), tp::byte(shift), tp::byte(width)});
+      codes_.push_back({std::uint8_t(byte), std::uint8_t(shift), std::uint8_t(width)});
     };
     add(origin + rank, 0, 8, 0);
     if constexpr (bits > 8) {
@@ -78,28 +79,28 @@ public:
   explicit TupleGroup(unsigned rows) : rows_(rows) {
     static_assert((bits == 8 || bits == 12 || bits == 13) && group_bytes <= 64 && stride >= group_bytes);
     require(rows % capacity == 0, "whole capacity fixture");
-    for (unsigned i = 0; i < 4; ++i) codes_.push_back({tp::byte(i), 0, 8});
+    for (unsigned i = 0; i < 4; ++i) codes_.push_back({std::uint8_t(i), 0, 8});
     for (unsigned r = 0; r < group; ++r) geometry_fields_[r] = field(4, r);
     for (unsigned r = 0; r < group; ++r) used_fields_[r] = field(4 + plane_bytes, r);
     const auto dead_first = codes_.size();
-    for (unsigned r = 0; r < group; ++r) codes_.push_back({tp::byte(4 + 2 * plane_bytes + r / 8), tp::byte(r % 8), 1});
+    for (unsigned r = 0; r < group; ++r) codes_.push_back({std::uint8_t(4 + 2 * plane_bytes + r / 8), std::uint8_t(r % 8), 1});
     auto layout = tp::layout::make(group_bytes, codes_); require(bool(layout), "packed group description"); layout_ = *layout;
-    std::vector<tp::byte> prefix_map;
+    std::vector<std::uint8_t> prefix_map;
     for (unsigned r = 0; r < group; ++r) {
       const auto& g = geometry_fields_[r]; const auto& u = used_fields_[r];
       const auto gm = std::span(g.codes).first(g.size);
       prefix_offsets_[r] = prefix_map.size(); prefix_map.insert(prefix_map.end(), gm.begin(), gm.end());
-      geometry_[r] = *tp::reader<8>::make(*layout_, gm);
-      std::array<tp::byte, 4> map{}; std::copy_n(u.codes.begin(), u.size, map.begin()); map[u.size] = dead_first + r;
-      state_[r] = *tp::reader<8>::make(*layout_, std::span(map).first(u.size + 1));
-      used_[r] = *tp::reader<8>::make(*layout_, std::span(map).first(u.size));
-      writes_[r] = *tp::writer<8>::make(*layout_, std::span(map).first(u.size + 1));
-      dead_[r] = *tp::reader<8>::make(*layout_, std::span(map).subspan(u.size, 1));
+      geometry_[r] = *tp::read_plan<8>::make(*layout_, gm);
+      std::array<std::uint8_t, 4> map{}; std::copy_n(u.codes.begin(), u.size, map.begin()); map[u.size] = dead_first + r;
+      state_[r] = *tp::read_plan<8>::make(*layout_, std::span(map).first(u.size + 1));
+      used_[r] = *tp::read_plan<8>::make(*layout_, std::span(map).first(u.size));
+      writes_[r] = *tp::write_plan<8>::make(*layout_, std::span(map).first(u.size + 1));
+      dead_[r] = *tp::read_plan<8>::make(*layout_, std::span(map).subspan(u.size, 1));
     }
-    auto prefix = tp::reader<64>::make(*layout_, prefix_map); require(bool(prefix), "packed group prefix map"); prefix_ = *prefix;
-    std::vector<tp::byte> used_map;
+    auto prefix = tp::read_plan<64>::make(*layout_, prefix_map); require(bool(prefix), "packed group prefix map"); prefix_ = *prefix;
+    std::vector<std::uint8_t> used_map;
     for (const auto& f : used_fields_) used_map.insert(used_map.end(), f.codes.begin(), f.codes.begin() + f.size);
-    used_group_ = *tp::reader<64>::make(*layout_, used_map);
+    used_group_ = *tp::read_plan<64>::make(*layout_, used_map);
   }
   TupleGroup(const TupleGroup&) = delete;
   TupleGroup& operator=(const TupleGroup&) = delete;
@@ -114,7 +115,7 @@ public:
   }
   void attach(std::uint8_t* data) {
     data_ = data;
-    auto view = tp::view::bind(*layout_, {data_, bytes()}, rows_ / group, stride);
+    auto view = tp::view::attach(*layout_, std::as_writable_bytes(std::span{data_, bytes()}), rows_ / group, stride);
     require(bool(view), "packed group actual placement"); view_ = *view;
     auto read = tp::bind_reader(*prefix_, *view_); require(bool(read), "packed group native binding"); native_.emplace(*read);
     native_used_.emplace(*tp::bind_reader(*used_group_, *view_));
@@ -133,7 +134,7 @@ public:
   }
   unsigned base(unsigned g) const { return load<std::uint32_t>(data_ + g * stride); }
   [[gnu::always_inline]] void decode_widths(unsigned first, W* decoded) const {
-    alignas(64) std::array<tp::byte, 64> packet;
+    alignas(64) std::array<std::uint8_t, 64> packet;
     tp::native::store_packet(packet.data(), native_->get_unchecked(first / group));
     if constexpr (bits == 8 || bits == 12)
       std::memcpy(decoded, packet.data(), 16 * sizeof(W));
@@ -150,7 +151,7 @@ public:
     return base(row / group) + streampack_next::prefix16_native(decoded, row % group);
   }
   [[gnu::always_inline]] void decode_used(unsigned first, W* decoded) const {
-    alignas(64) std::array<tp::byte, 64> packet;
+    alignas(64) std::array<std::uint8_t, 64> packet;
     tp::native::store_packet(packet.data(), native_used_->get_unchecked(first / group));
     if constexpr (bits == 8 || bits == 12) std::memcpy(decoded, packet.data(), 16 * sizeof(W));
     else for (unsigned r = 0; r < group; ++r) {
@@ -182,7 +183,7 @@ public:
     for (unsigned i = 0; i < group_bytes;) {
       if (!(mask & (1ull << i))) { ++i; continue; }
       const auto first = i; while (i < group_bytes && (mask & (1ull << i))) ++i;
-      effects.before(*this, ikea::byte_write{0, std::size_t(p - data_) + first, i - first});
+      effects.before(*this, 0, std::size_t(p - data_) + first, i - first);
     }
     tp::native::write_body(writes_[r]->controls(), p, packet);
   }

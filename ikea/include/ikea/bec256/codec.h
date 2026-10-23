@@ -1,5 +1,8 @@
 #pragma once
 #include <ikea/effects.h>
+#include <ikea/bytes.h>
+#include <ikea/bitset256.h>
+#include <bit>
 #include <array>
 #include <cstddef>
 #include <cstdint>
@@ -12,13 +15,10 @@ namespace ikea::bec256 {
 namespace detail {
 struct encoding_access;
 }
-using byte = std::byte;
-using plain_block = std::array<byte, 32>;
+using ikea::byte;
 inline constexpr unsigned positions = 256, max_bytes = 47, scratch_bytes = 64;
 
 enum class error {
-    range, // Invalid pipeline stage count.
-    value, // Invalid pipeline stage function.
     population,
     truncated,
     split,
@@ -36,41 +36,64 @@ std::string_view describe(error) noexcept;
 [[nodiscard]] std::expected<void, error> validate(std::span<const byte> body,
                                                   unsigned population) noexcept;
 
-/// Borrowed admitted body. Keep its bytes and population/length association
-/// valid through every use; writes or owner remapping can invalidate this proof.
-/// storage includes any initialized readable suffix; bytes is the exact body
-/// length supplied by the caller. A suffix is optional, never stored per body.
-class source {
+/// Borrowed placement, before any encoded-content proof. The supplied suffix is
+/// initialized readable storage, not writable padding or part of the body.
+class const_view {
     std::span<const byte> storage_;
     unsigned bytes_, population_;
-    source(std::span<const byte> storage, unsigned bytes, unsigned population)
+    const_view(std::span<const byte> storage, unsigned bytes, unsigned population)
         : storage_(storage), bytes_(bytes), population_(population) {}
 
   public:
-    /// Trusted parent adapter. The caller has already proved admit()'s framing,
-    /// population, extent and initialized-storage requirements for this body.
-    /// No validation scan or allocation; the returned view borrows the bytes.
-    static source assume_valid(std::span<const byte> storage, unsigned bytes,
-                               unsigned population) noexcept {
-        return source(storage, bytes, population);
+    /// Checks population and byte extents without examining encoded contents.
+    [[nodiscard]] static std::expected<const_view, error>
+    attach(std::span<const byte> storage, unsigned bytes, unsigned population) noexcept;
+    /// Reuses only placement checks, never a content-validation proof.
+    static const_view attach_unchecked(std::span<const byte> storage, unsigned bytes,
+                                       unsigned population) noexcept {
+        return const_view(storage, bytes, population);
     }
-    [[nodiscard]] static std::expected<source, error>
-    admit(std::span<const byte> storage, unsigned bytes, unsigned population) noexcept;
     std::span<const byte> storage() const noexcept { return storage_; }
     unsigned bytes() const noexcept { return bytes_; }
     unsigned population() const noexcept { return population_; }
+    [[nodiscard]] std::expected<void, error> validate() const noexcept;
 };
+
+/// Reusable admitted decode operation. Placement/contents and their population
+/// association stay unchanged through every call. Metadata is retained by value;
+/// storage remains borrowed. Binding scans contents once; decode does not rescan.
+class reader {
+    const_view source_;
+    explicit reader(const_view input) : source_(input) {}
+    friend std::expected<reader, error> bind_reader(const_view) noexcept;
+    friend reader bind_reader_unchecked(const_view) noexcept;
+
+  public:
+    std::span<const byte> storage() const noexcept { return source_.storage(); }
+    unsigned bytes() const noexcept { return source_.bytes(); }
+    unsigned population() const noexcept { return source_.population(); }
+};
+[[nodiscard]] std::expected<reader, error> bind_reader(const_view) noexcept;
+/// Caller retains a content proof for this exact population, length and bytes.
+inline reader bind_reader_unchecked(const_view input) noexcept { return reader(input); }
+/// Complete binding convenience: checks placement, then validates exact contents.
+[[nodiscard]] std::expected<reader, error>
+bind_reader(std::span<const byte> storage, unsigned bytes, unsigned population) noexcept;
+inline reader bind_reader_unchecked(std::span<const byte> storage, unsigned bytes,
+                                    unsigned population) noexcept {
+    return bind_reader_unchecked(const_view::attach_unchecked(storage, bytes, population));
+}
 
 /// Materializes exactly 32 bytes. Output may overlap the source: decoding
 /// completes before output is written. No framing scan after source admission.
-void decode(const source &, std::span<byte, 32> output) noexcept;
+void decode(const reader &, std::span<byte, 32> output) noexcept;
 /// Low/high output halves correspond to the two independent input arguments.
 /// Both bodies are decoded before any output store, permitting byte overlap.
-void decode_pair(const source &, const source &, std::span<byte, 64> output) noexcept;
+void decode_pair(const reader &, const reader &, std::span<byte, 64> output) noexcept;
 
 /// Caller-owned destination plane. Effects use this named object's identity and
 /// byte offsets relative to storage. Keep it alive until effects are resolved.
-struct destination {
+struct view {
     std::span<byte> storage;
 };
 
@@ -82,39 +105,39 @@ class encoding {
     alignas(64) std::array<byte, scratch_bytes> data_;
     unsigned bytes_ = 0;
     friend struct detail::encoding_access;
-    friend std::expected<encoding, error> prepare(std::span<const byte, 32>, unsigned) noexcept;
 
   public:
+    /// Checks population and prepares exact bytes privately, without owner writes.
+    [[nodiscard]] static std::expected<encoding, error>
+    make(std::span<const byte, 32> input, unsigned population) noexcept;
+    [[nodiscard]] static std::expected<encoding, error>
+    make(const bitset256 &input, unsigned population) noexcept;
     unsigned bytes() const noexcept { return bytes_; }
+    unsigned effect_capacity() const noexcept { return bytes_ ? 1u : 0u; }
     std::span<const byte> body() const noexcept { return {data_.data(), bytes_}; }
     /// Checks capacity and command/effect aliasing before any write or effect.
     /// Writes exactly bytes() bytes; following bodies and slack are untouched.
     /// A zero-byte body needs no capacity or journal entry. Caller updates its
     /// population/length/address metadata under the enclosing owner protocol.
-    [[nodiscard]] std::expected<void, error> write(destination &, std::size_t offset,
-                                                   source_write_journal &) const noexcept;
+    [[nodiscard]] std::expected<void, error> write(view &, std::size_t offset,
+                                                   journal &) const noexcept;
     /// Separate cold admission for an enclosing multi-child mutation. Admission
     /// does not reserve capacity: the owner budgets every child before execution.
     [[nodiscard]] std::expected<void, error>
-    admit_write(const destination &, std::size_t offset,
-                const source_write_journal &) const noexcept;
+    admit_write(const view &, std::size_t offset,
+                const journal &) const noexcept;
     /// Trusted exact-store body shared by ordinary and native composition.
     /// Requires admitted capacity, disjoint command/effect storage, and a no-fail,
     /// nonsuspending coverage hook. Emits no effect for an empty body.
-    template <class Coverage>
-    [[gnu::always_inline]] void write_unchecked(destination &target, std::size_t offset,
+    template <class Coverage> requires ikea::effects<Coverage, view>
+    [[gnu::always_inline]] void write_unchecked(view &target, std::size_t offset,
                                                 Coverage &effects) const noexcept {
         if (!bytes_)
             return;
-        effects.before(target, {0, offset, bytes_});
+        effects.before(target, 0, offset, bytes_);
         __builtin_memcpy(target.storage.data() + offset, data_.data(), bytes_);
     }
 };
-
-/// Checks that supplied population equals the 256 input bits, then encodes into
-/// private bounded storage. No allocation or writes to caller storage/effects.
-[[nodiscard]] std::expected<encoding, error> prepare(std::span<const byte, 32> input,
-                                                     unsigned population) noexcept;
 
 /// Checked construction/replacement convenience. Returns emitted byte length;
 /// no population or length is written into the body. Rejection leaves destination
@@ -123,9 +146,9 @@ class encoding {
 /// disjoint. The transient prepare/write form is useful across owner waits;
 /// this immediate operation does not require that intermediate byte buffer.
 [[nodiscard]] std::expected<unsigned, error> encode(std::span<const byte, 32> input,
-                                                    unsigned population, destination &,
+                                                    unsigned population, view &,
                                                     std::size_t offset,
-                                                    source_write_journal &) noexcept;
+                                                    journal &) noexcept;
 
 /// Heuristic encode-or-decline. After checking population, a nonterminal block
 /// is declined when sum(byte-rank widths) >= enum_bit_cutoff (units: bits,
@@ -138,5 +161,59 @@ class encoding {
 /// The caller selects the cutoff and any alternative representation.
 [[nodiscard]] std::expected<std::optional<unsigned>, error>
 encode_if_promising(std::span<const byte, 32> input, unsigned population, unsigned enum_bit_cutoff,
-                    destination &, std::size_t offset, source_write_journal &) noexcept;
+                    view &, std::size_t offset, journal &) noexcept;
+// Ordinary bit values use numeric position words. Explicit byte-span overloads
+// remain the canonical little-endian wire bridge and support byte-overlap tests.
+inline void decode(const reader &input, bitset256 &output) noexcept {
+    if constexpr (std::endian::native == std::endian::little)
+        decode(input, std::as_writable_bytes(std::span{output.words}));
+    else {
+        std::array<byte, 32> wire;
+        decode(input, wire);
+        output = bitset256::load(wire);
+    }
+}
+inline void decode_pair(const reader &a, const reader &b, std::span<bitset256, 2> output) noexcept {
+    if constexpr (std::endian::native == std::endian::little)
+        decode_pair(a, b, std::as_writable_bytes(output));
+    else {
+        std::array<byte, 64> wire;
+        decode_pair(a, b, wire);
+        output[0] = bitset256::load(std::span<const byte, 32>(wire.data(), 32));
+        output[1] = bitset256::load(std::span<const byte, 32>(wire.data() + 32, 32));
+    }
+}
+inline std::expected<encoding, error>
+encoding::make(const bitset256 &input, unsigned population) noexcept {
+    if constexpr (std::endian::native == std::endian::little)
+        return make(std::as_bytes(std::span{input.words}), population);
+    else {
+        std::array<byte, 32> wire;
+        input.store(wire);
+        return make(wire, population);
+    }
+}
+[[nodiscard]] inline std::expected<unsigned, error>
+encode(const bitset256 &input, unsigned population, view &target, std::size_t offset,
+       journal &effects) noexcept {
+    if constexpr (std::endian::native == std::endian::little)
+        return encode(std::as_bytes(std::span{input.words}), population, target, offset, effects);
+    else {
+        std::array<byte, 32> wire;
+        input.store(wire);
+        return encode(wire, population, target, offset, effects);
+    }
+}
+[[nodiscard]] inline std::expected<std::optional<unsigned>, error>
+encode_if_promising(const bitset256 &input, unsigned population, unsigned enum_bit_cutoff,
+                    view &target, std::size_t offset, journal &effects) noexcept {
+    if constexpr (std::endian::native == std::endian::little)
+        return encode_if_promising(std::as_bytes(std::span{input.words}), population,
+                                   enum_bit_cutoff, target, offset, effects);
+    else {
+        std::array<byte, 32> wire;
+        input.store(wire);
+        return encode_if_promising(wire, population, enum_bit_cutoff, target, offset, effects);
+    }
+}
 } // namespace ikea::bec256

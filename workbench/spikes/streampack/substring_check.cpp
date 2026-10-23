@@ -39,7 +39,7 @@ void complete_schema(unsigned capacity, unsigned width, bool shared, bool split,
   std::vector<sn::Prefix> prefixes(capacity);
   std::vector<unsigned> refcounts(capacity);
   std::uint16_t count{};
-  sn::MutableDirect<std::uint32_t> w{ends, body, used, dead, count}; ikea::no_coverage effects;
+  sn::MutableDirect<std::uint32_t> w{ends, body, used, dead, count}; ikea::no_effects effects;
   require(w.initialize(effects) == sn::Error::none, "initialize schema");
   std::mt19937 rng(7145);
   for (unsigned r = 0; r < capacity; ++r) {

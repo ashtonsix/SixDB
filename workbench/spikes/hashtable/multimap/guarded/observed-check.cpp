@@ -21,8 +21,8 @@ template<unsigned W,unsigned Bits,unsigned V> void observed_check(){
     auto hint=[&](const auto& observation){return [&](const byte* pointer,std::size_t size)noexcept {
         const auto address=reinterpret_cast<std::uintptr_t>(pointer);
         const bool live=std::any_of(observation.regions.begin(),observation.regions.end(),[&](const auto& r){
-            const auto base=reinterpret_cast<std::uintptr_t>(r.source.base);
-            return address>=base&&address-base<=r.source.extent&&size&&size<=r.source.extent-(address-base);
+            const auto base=reinterpret_cast<std::uintptr_t>(r.source.storage.data());
+            return address>=base&&address-base<=r.source.storage.size()&&size&&size<=r.source.storage.size()-(address-base);
         });
         ht::require(live,"observed hint stays within a current live source");++hints;
     };};
@@ -128,8 +128,8 @@ template<unsigned V> void observed_storage_check(){
     using PA=write_arch::guarded_pool_test_access;
     struct lane {
         bool enter(const MM&,word,ht::access_intent)const noexcept{return true;}
-        bool prepare(std::span<const ht::mutation_damage>,std::span<const ht::mutation_source>)const noexcept{return true;}
-        void before(ht::mutation_source,ikea::byte_write)const noexcept{}
+        bool prepare(std::span<const ikea::journal::entry>,std::span<const write_arch::physical_region>)const noexcept{return true;}
+        void before(const void*,unsigned,std::size_t,std::size_t)const noexcept{}
     };
     for(bool relocate:{true,false}){
         auto initial=std::make_unique<MM>(13);std::map<word,std::vector<ht::bytes<V>>> expected;
@@ -140,19 +140,19 @@ template<unsigned V> void observed_storage_check(){
         Session session(std::move(initial));auto& owner=access::owner(session);auto& buffers=access::pool(owner);
         const auto old_directory=PA::directory(buffers);const auto [reference,payload]=access::bag(owner,0);
         const auto* directory_hint=PA::directory_slot(buffers,reference);
-        auto sources=[&]{std::vector<ht::mutation_source> list;
+        auto sources=[&]{std::vector<write_arch::physical_region> list;
             guarded_pool_access::sources(buffers,&owner,[&](auto source){list.push_back(source);});return list;};
-        const auto before=sources();ht::mutation_source old_payload_source{};
-        for(auto source:before){const auto base=reinterpret_cast<std::uintptr_t>(source.base),p=reinterpret_cast<std::uintptr_t>(payload);
-            if(p>=base&&p-base<source.extent)old_payload_source=source;}
-        ht::require(old_payload_source.extent,"physical fixture has a live payload source");
+        const auto before=sources();write_arch::physical_region old_payload_source{};
+        for(auto source:before){const auto base=reinterpret_cast<std::uintptr_t>(source.storage.data()),p=reinterpret_cast<std::uintptr_t>(payload);
+            if(p>=base&&p-base<source.storage.size())old_payload_source=source;}
+        ht::require(old_payload_source.storage.size(),"physical fixture has a live payload source");
         typename Session::observation h;bool directory_seen=false;const byte* last_hint=nullptr;
         auto step=[&](bool begin){context c(owner,0);
             auto emit=[&](const byte* pointer,std::size_t size)noexcept {
                 const auto address=reinterpret_cast<std::uintptr_t>(pointer);
                 const bool live=std::any_of(c.regions.begin(),c.regions.end(),[&](const auto& r){
-                    const auto base=reinterpret_cast<std::uintptr_t>(r.source.base);
-                    return address>=base&&address-base<=r.source.extent&&size&&size<=r.source.extent-(address-base);
+                    const auto base=reinterpret_cast<std::uintptr_t>(r.source.storage.data());
+                    return address>=base&&address-base<=r.source.storage.size()&&size&&size<=r.source.storage.size()-(address-base);
                 });
                 ht::require(live,"physical invalidation emits only current live addresses");
                 directory_seen|=pointer==directory_hint;last_hint=pointer;
@@ -176,7 +176,7 @@ template<unsigned V> void observed_storage_check(){
             ht::require(PA::directory(buffers)!=old_directory,"directory really relocated while the head was suspended");
         }else{
             append(0,200000);const auto after=sources();
-            ht::require(std::none_of(after.begin(),after.end(),[&](auto s){return s.base==old_payload_source.base;}),"old observed block really retired");
+            ht::require(std::none_of(after.begin(),after.end(),[&](auto s){return s.storage.data()==old_payload_source.storage.data();}),"old observed block really retired");
             ht::require(access::bag(owner,0).second!=payload,"promotion has a different live payload");
         }
         unsigned refresh=0;bool ready=false;

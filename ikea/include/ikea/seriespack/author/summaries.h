@@ -1,6 +1,6 @@
 #pragma once
 #include <ikea/seriespack/author/native.h>
-namespace ikea::seriespack {
+namespace ikea::seriespack::author {
 struct no_summary {
     static constexpr bool needs_before = false;
 };
@@ -41,4 +41,4 @@ struct sum_change {
 };
 
 #endif
-} // namespace ikea::seriespack
+} // namespace ikea::seriespack::author

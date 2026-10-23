@@ -23,7 +23,7 @@ struct State { Word key{}, first{}, last{}, remaining{}, digest{}; };
 /// Output is published once on completion. Retire Ring borrowers before clear().
 struct Frame {
   std::optional<Catalog::Scope> scope;
-  const law::tp::byte* bytes{};
+  const std::byte* bytes{};
   std::size_t records{};
   loom::DemandClass demand;
   Request request{};

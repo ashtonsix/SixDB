@@ -1,4 +1,5 @@
 #pragma once
+#include <ikea/bytes.h>
 #include <array>
 #include <cstddef>
 #include <cstdint>
@@ -7,13 +8,12 @@
 #include <string_view>
 
 namespace ikea::tuplepack {
-using byte = std::uint8_t;
-inline constexpr byte hole = 255;
+inline constexpr std::uint8_t hole = 255;
 struct code {
-    byte offset, shift, width;
+    std::uint8_t offset, shift, width;
     bool operator==(const code&) const = default;
 };
-enum class error { description, map, duplicate, value, range, stride, capacity, overflow, overlap };
+enum class error { description, map, duplicate, value, range, stride, capacity, effects, overflow, overlap };
 std::string_view describe(error) noexcept;
 
 /// Owned physical description. Ranks are code indices, with no field/type
@@ -33,13 +33,13 @@ class layout {
         return {codes_.data(), count_};
     }
     bool operator==(const layout&) const = default;
-    /// Portable v1 encoding: 'TP', version 1, unit bytes, LE16 code count,
-    /// then rank-ordered (byte offset, bit shift, width) triples. No native controls.
+    /// Shared 'TP' law version 2 framing, then unit bytes and rank-ordered
+    /// (byte offset, bit shift, width) triples. No placement or native controls.
     std::size_t encoded_size() const noexcept {
         return 6 + count_ * 3;
     }
-    [[nodiscard]] std::expected<std::size_t, error> encode(std::span<byte>) const;
+    [[nodiscard]] std::expected<std::size_t, error> encode(ikea::mutable_bytes) const;
     /// Requires exactly one complete description; rejects trailing/unknown data.
-    [[nodiscard]] static std::expected<layout, error> decode(std::span<const byte>);
+    [[nodiscard]] static std::expected<layout, error> decode(ikea::bytes);
 };
 } // namespace ikea::tuplepack

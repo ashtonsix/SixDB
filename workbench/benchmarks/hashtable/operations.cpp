@@ -2,7 +2,7 @@
 #include <map>
 namespace qualification {
 namespace ht = ikea::hashtable;
-using ht::byte;
+
 using ht::word;
 constexpr unsigned W = IKEA_HASHTABLE_W, b = IKEA_HASHTABLE_B, K = W - b, V = IKEA_HASHTABLE_V;
 #if SIXDB_TUNE_ZEN5 || SIXDB_TUNE_ZEN4
@@ -39,7 +39,7 @@ word bits(word x) {
 Value payload(word k, unsigned round) {
     Value v{};
     for (unsigned i = 0; i < V; ++i)
-        v[i] = byte(bits(k + word(round) * 65537 + i * 131));
+        v[i] = std::byte(bits(k + word(round) * 65537 + i * 131));
     return v;
 }
 struct row {
@@ -174,7 +174,7 @@ template <class Owner>
            0);
 }
 struct DescriptorRmw {
-    using D = ht::descriptor<W, V>;
+    using D = ht::erased_table<W, V>;
     D owner;
     explicit DescriptorRmw(word seed)
         : owner(D::template explicit_encoding<b, selected.width, selected.kernel>(seed)) {}
@@ -202,7 +202,7 @@ void increment(Value& value) {
         std::memcpy(value.data(), &x, 8);
     } else
         for (unsigned i = 0; i < V; ++i)
-            value[i] += byte(i * 2 + 1);
+            value[i] = std::byte(std::to_integer<unsigned>(value[i]) + i * 2 + 1);
 }
 template <class Owner>
 [[gnu::noinline]] void modifies(std::string_view name, const history& in, unsigned rep) {
@@ -227,13 +227,13 @@ template <class Owner>
                 if constexpr (V == 8) {
                     unsigned carry = 1;
                     for (auto& x : it->second) {
-                        const unsigned sum = unsigned(x) + carry;
-                        x = byte(sum);
+                        const unsigned sum = std::to_integer<unsigned>(x) + carry;
+                        x = std::byte(sum);
                         carry = sum >> 8;
                     }
                 } else
                     for (unsigned i = 0; i < V; ++i)
-                        it->second[i] = byte(unsigned(it->second[i]) + i * 2 + 1);
+                        it->second[i] = std::byte(std::to_integer<unsigned>(it->second[i]) + i * 2 + 1);
             }
             for (const auto& [key, value] : oracle)
                 expected.push_back({key, value});
@@ -286,7 +286,7 @@ template <class Owner>
     for (auto k : in.keys)
         put(*owner, k, screen::payload<V>(k, 0));
     screen::verify<V>(*owner, in);
-    std::vector<byte> conditioning(condition, 17);
+    std::vector<std::byte> conditioning(condition, std::byte{17});
     const auto expected = in.expected<V>();
     for (unsigned pass = 0; pass < 2; ++pass) {
         const bool prefetch = (pass + seed + rep) % 2;
@@ -337,7 +337,7 @@ template <class Owner>
     verify(*source, in.states[0]);
 }
 [[gnu::noinline]] void descriptor_growth(word seed, unsigned rep, unsigned load) {
-    using Descriptor = ht::descriptor<W, V>;
+    using Descriptor = ht::erased_table<W, V>;
     auto owner =
         Descriptor::template explicit_encoding<b, selected.width, selected.kernel>(bits(seed));
     history in(seed, load, 0, 0);

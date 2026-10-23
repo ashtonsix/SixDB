@@ -135,7 +135,7 @@ template<bool Widths> Result<void> initialize(sm::Store& store, oa::Pool& pool, 
   auto& memory = *std::pmr::new_delete_resource(); sm::Control c{&memory, 0, std::uint16_t(cap), std::uint16_t(cap), {}}; c.blocks = 2; c.geometry = Widths ? sm::Geometry::widths8 : sm::Geometry::direct32;
   auto draft = sm::Draft::create(pool, c, std::array<std::size_t, 2>{cap * 160, cap * 160});
   if (!draft) return std::unexpected(draft.error());
-  stats.sample(pool); auto writer = write<Widths>(*draft); auto holders = draft->holder_view(); ikea::no_coverage ignored;
+  stats.sample(pool); auto writer = write<Widths>(*draft); auto holders = draft->holder_view(); ikea::no_effects ignored;
   // Invert the logical-row permutation without an auxiliary resident model.
   unsigned inverse = 1; while ((inverse * 17) % cap != 1) ++inverse;
   for (unsigned rank = 0; rank < cap; ++rank) {
@@ -169,7 +169,7 @@ template<bool Widths> Result<void> edit(sm::Store& store, oa::Pool& pool, unsign
   if (!draft) return std::unexpected(draft.error());
   stats.sample(pool); stats.copies += extent(*source);
   std::array writes{write<Widths>(*draft, 0), write<Widths>(*draft, 1)}; auto holders = draft->holder_view();
-  std::array<ikea::owner_write, 256> entries{}; ikea::source_write_journal effects{entries};
+  std::array<ikea::journal::entry, 256> entries{}; ikea::journal effects{entries};
   const auto mutation_start = stats.time_phases ? Clock::now() : Clock::time_point{};
   const unsigned first = ((epoch - 1) % (cap / batch)) * batch;
   for (unsigned row = first; row < first + batch; ++row) {
@@ -180,12 +180,12 @@ template<bool Widths> Result<void> edit(sm::Store& store, oa::Pool& pool, unsign
     } else {
       const unsigned b = writes[1].count < cap ? 1 : 0, rank = writes[b].count;
       if (writes[b].append(bytes, 128 + (epoch % 3) * 16, effects) != sn::Error::none) return std::unexpected(Error::invalid_argument);
-      effects.before(holders, {0, row * 4, 4}); holders.rows[row] = sm::location(b, rank);
+      effects.before(holders, 0, row * 4, 4); holders.rows[row] = sm::location(b, rank);
       if (old.retire(sm::rank_of(previous), effects) != sn::Error::none) return std::unexpected(Error::invalid_argument);
     }
   }
   if (stats.time_phases) stats.phase_ns[1] += elapsed(mutation_start);
-  for (const auto& entry : effects.entries()) stats.issued += entry.bytes.size;
+  for (const auto& entry : effects.entries()) stats.issued += entry.size;
   sm::Store::Owner owner;
   if (damage_path) {
     auto damage = stats.measure(3, [&] { return sm::freeze_damage(*source, *draft, writes, holders, effects.entries()); });

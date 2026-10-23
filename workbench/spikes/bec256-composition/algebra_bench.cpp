@@ -44,9 +44,9 @@ void algebra_bench(benchmark::State &state, unsigned wi, unsigned ci, boolean_op
             ++selected;
         }
     std::vector<bc::byte> storage(n * 32, bc::byte{0xa5});
-    bc::destination output{storage};
-    std::vector<ikea::owner_write> records(n);
-    ikea::source_write_journal effects{records};
+    bc::view output{storage};
+    std::vector<ikea::journal::entry> records(n);
+    ikea::journal effects{records};
     const auto call = bind_algebra(op, kind, grain);
     auto invoke = [&](unsigned i) {
         const auto j = (i + 3) % w.inputs.size();
@@ -88,8 +88,8 @@ void algebra_bench(benchmark::State &state, unsigned wi, unsigned ci, boolean_op
 
 enum class analysis_method { full, sample32, checked_encode };
 template <analysis_method M>
-unsigned body_estimate(const bitset &bits, bc::destination &output,
-                       ikea::source_write_journal &effects) {
+unsigned body_estimate(const bitset &bits, bc::view &output,
+                       ikea::journal &effects) {
     unsigned total = 0;
     if constexpr (M == analysis_method::checked_encode) {
         for (unsigned i = 0; i < bits.size(); ++i) {
@@ -121,9 +121,9 @@ template <analysis_method M>
 void analysis_bench(benchmark::State &state, unsigned wi, layout kind, unsigned suffix) {
     const auto &w = workloads[wi];
     std::array<bc::byte, 64> storage{};
-    bc::destination output{storage};
-    std::array<ikea::owner_write, 1> records;
-    ikea::source_write_journal effects{records};
+    bc::view output{storage};
+    std::array<ikea::journal::entry, 1> records;
+    ikea::journal effects{records};
     benchmark::DoNotOptimize(storage.data());
     benchmark::DoNotOptimize(records.data());
     benchmark::DoNotOptimize(&effects);

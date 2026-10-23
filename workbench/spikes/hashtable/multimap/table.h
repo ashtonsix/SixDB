@@ -1,30 +1,45 @@
 #pragma once
 #include <ikea/hashtable/table.h>
+#include "effects.h"
 #if __has_feature(address_sanitizer)
 #include <sanitizer/asan_interface.h>
 #endif
 
 namespace write_arch {
 namespace ht=ikea::hashtable;
-using ht::byte;
+using byte=std::byte;
+inline unsigned number(byte value) noexcept { return std::to_integer<unsigned>(value); }
 using ht::word;
+template<unsigned Bits> [[gnu::always_inline]] inline word point(const byte* p,unsigned row,unsigned rows) {
+    return ht::point<Bits>(ikea::to_u8(p),row,rows);
+}
+template<unsigned Bits> [[gnu::always_inline]] inline word direct_point(const byte* p,unsigned row,unsigned rows) {
+    return ht::direct_point<Bits>(ikea::to_u8(p),row,rows);
+}
+template<unsigned Bytes> struct tuple_field {
+    [[gnu::always_inline]] static word read(const byte* p) { return ht::tuple_field<Bytes>::read(ikea::to_u8(p)); }
+};
+[[gnu::always_inline]] inline auto equal_controls(const byte* p,byte query) { return ht::equal_controls(ikea::to_u8(p),std::to_integer<std::uint8_t>(query)); }
+[[gnu::always_inline]] inline auto equal_controls(const byte* p,std::uint8_t query) { return ht::equal_controls(ikea::to_u8(p),query); }
+[[gnu::always_inline]] inline bool occupied_control(byte value) { return ht::detail::occupied_control(std::to_integer<std::uint8_t>(value)); }
+
 
 // With no residual plane, complete Local tiles are one contiguous byte array.
 // Preserve the SeriesPack assignment operation while making that address law
 // visible to the compiler, as the maintained reader already does.
 struct contiguous_write_ops:ht::word_tail_write_ops {
-    template<class S,ht::sp::composition::field_kind Field,unsigned Bits>
-    void write(const ht::sp::composition::leaf<S,Field>& destination,std::size_t row,
-            ht::sp::composition::scalar_value<Bits> value)const {
-        using F=typename S::format_type;
-        if constexpr(Field==ht::sp::composition::field_kind::body&&F::tail==0&&F::storage==ht::sp::geometry::local)
+    template<class S,ht::sp::author::field_kind Field,unsigned Bits>
+    void write(const ht::sp::author::leaf<S,Field>& destination,std::size_t row,
+            ht::sp::author::scalar_value<Bits> value)const {
+        using F=typename S::layout_type;
+        if constexpr(Field==ht::sp::author::field_kind::body&&F::tail==0&&F::storage==ht::sp::geometry::local)
             ht::store<F::body>(destination.source.stream(0).bytes.data()+row*F::body,value.value);
         else ht::word_tail_write_ops::write(destination,row,value);
     }
 };
 template<unsigned Bits> [[gnu::always_inline]] void assign(byte* p,unsigned row,unsigned rows,word value) {
-    auto view=ht::placed<Bits>(p,rows);contiguous_write_ops ops;
-    ht::sp::composition::assign(ops,ht::sp::composition::describe(view),row,ht::sp::composition::scalar_value<Bits>{value});
+    auto view=ht::placed<Bits>(ikea::to_u8(p),rows);contiguous_write_ops ops;
+    ht::sp::author::assign(ops,ht::sp::author::expression(view),row,ht::sp::author::scalar_value<Bits>{value});
 }
 
 // Independent mutable owner. The packed arm preserves the original primary
@@ -59,7 +74,7 @@ template<unsigned W,unsigned b,unsigned V,bool WholeBytes,bool LiveRows=false,
     static constexpr unsigned B=WholeBytes?((flags+T+1+31)/32)*32:base_B;
     static constexpr unsigned stride=B+8*T*V,key_bytes=(W+7)/8,tuple_bytes=key_bytes+V;
     static constexpr std::size_t absent=~std::size_t{0};
-    static constexpr byte empty=ht::detail::control_empty,tombstone=ht::detail::control_tombstone;
+    static constexpr byte empty=byte{ht::detail::control_empty},tombstone=byte{ht::detail::control_tombstone};
     using buffer=ht::heap_storage_policy::buffer;
     using hash_type=ht::permutation<W,K>;
     using hash_result=typename hash_type::result;
@@ -72,9 +87,9 @@ template<unsigned W,unsigned b,unsigned V,bool WholeBytes,bool LiveRows=false,
     static unsigned locate(const byte* p,word q) {
         word matches=0;
 #if defined(__AVX512VBMI__) && defined(__GFNI__)
-        if constexpr(E==14)matches=ht::detail::exact_small_bucket<E,T>(p,q);
+        if constexpr(E==14)matches=ht::detail::exact_small_bucket<E,T>(ikea::to_u8(p),q);
         else if constexpr(E==16)matches=_mm512_cmpeq_epi16_mask(_mm512_loadu_si512(p),_mm512_set1_epi16(short(q)));
-        else if constexpr(E==30)matches=ht::detail::exact30<true,false>(p,q);
+        else if constexpr(E==30)matches=ht::detail::exact30<true,false>(ikea::to_u8(p),q);
         else if constexpr(E==32)matches=_mm512_cmpeq_epi32_mask(_mm512_loadu_si512(p),_mm512_set1_epi32(int(q)));
         else
 #endif
@@ -85,7 +100,7 @@ template<unsigned W,unsigned b,unsigned V,bool WholeBytes,bool LiveRows=false,
                 const auto tails=ht::load<8>(p+(row/8)*E+8)>>(row%8);
                 return ((((tails&planes)*0x0102040810204080ULL)>>56)&63)==(q&63);
             };
-            const auto bodies=ht::detail::small_body_comparisons_neon<E>(p,q);
+            const auto bodies=ht::detail::small_body_comparisons_neon<E>(ikea::to_u8(p),q);
             if(q){const auto first=ht::detail::first_small_body_neon(bodies);if(first==255)return N;
                 if(exact(first))return first;
                 matches=ht::detail::small_body_mask_neon(bodies);matches&=matches-1;
@@ -95,7 +110,7 @@ template<unsigned W,unsigned b,unsigned V,bool WholeBytes,bool LiveRows=false,
         }else if constexpr(E==30){
             // Maintained NEON reader: pick a body row, then check its six
             // residual bits. Shared upserts retain their complete-mask path.
-            auto candidates=ht::detail::body30_neon_nibbles(p,q);
+            auto candidates=ht::detail::body30_neon_nibbles(ikea::to_u8(p),q);
             while(candidates){
                 const auto row=unsigned(std::countr_zero(candidates)/4);
                 const auto planes=ht::load<8>(p+(row/8)*30+24)>>(row%8);
@@ -115,10 +130,10 @@ template<unsigned W,unsigned b,unsigned V,bool WholeBytes,bool LiveRows=false,
         }else
 #endif
         {
-            using F=ht::sp::format<E,ht::sp::geometry::local,0>;
+            using F=ht::sp::layout<E,ht::sp::geometry::local,0>;
             const ht::sp::dense_source<F> source{p,N};
-            const auto expression=ht::sp::composition::describe(source);
-            ht::each<T>([&](auto tile){matches|=word(ht::sp::composition::filter8_unchecked<ikea::comparison::equal>(expression,tile*8,q))<<(tile*8);});
+            const auto expression=ht::sp::author::expression(source);
+            ht::each<T>([&](auto tile){matches|=word(ht::sp::author::filter8_unchecked<ikea::comparison::equal>(expression,tile*8,q))<<(tile*8);});
         }
         if constexpr(E==K)if(!q)matches&=~vacancies(p);
         return matches?unsigned(std::countr_zero(matches)):N;
@@ -126,9 +141,9 @@ template<unsigned W,unsigned b,unsigned V,bool WholeBytes,bool LiveRows=false,
     static unsigned matching_rows(const byte* p,word q) {
         word matches=0;
 #if defined(__AVX512VBMI__) && defined(__GFNI__)
-        if constexpr(E==14)matches=ht::detail::exact_small_bucket<E,T>(p,q);
+        if constexpr(E==14)matches=ht::detail::exact_small_bucket<E,T>(ikea::to_u8(p),q);
         else if constexpr(E==16)matches=_mm512_cmpeq_epi16_mask(_mm512_loadu_si512(p),_mm512_set1_epi16(short(q)));
-        else if constexpr(E==30)matches=ht::detail::exact30<true,false>(p,q);
+        else if constexpr(E==30)matches=ht::detail::exact30<true,false>(ikea::to_u8(p),q);
         else if constexpr(E==32)matches=_mm512_cmpeq_epi32_mask(_mm512_loadu_si512(p),_mm512_set1_epi32(int(q)));
         else
 #endif
@@ -136,9 +151,9 @@ template<unsigned W,unsigned b,unsigned V,bool WholeBytes,bool LiveRows=false,
             // Complete masks avoid retaining the first-body matcher's inner
             // presence/retry branches in the mixed-upsert control. The split
             // path still uses locate() and its first-row optimization.
-            using F=ht::sp::format<E,ht::sp::geometry::local,0>;
-            const ht::sp::dense_source<F> source{p,N};const auto expression=ht::sp::composition::describe(source);
-            ht::each<T>([&](auto tile){matches|=word(ht::sp::composition::filter8_unchecked<ikea::comparison::equal>(expression,tile*8,q))<<(tile*8);});
+            using F=ht::sp::layout<E,ht::sp::geometry::local,0>;
+            const ht::sp::dense_source<F> source{p,N};const auto expression=ht::sp::author::expression(source);
+            ht::each<T>([&](auto tile){matches|=word(ht::sp::author::filter8_unchecked<ikea::comparison::equal>(expression,tile*8,q))<<(tile*8);});
         }
         if constexpr(E==K)if(!q)matches&=~vacancies(p);
         return unsigned(matches);
@@ -146,9 +161,9 @@ template<unsigned W,unsigned b,unsigned V,bool WholeBytes,bool LiveRows=false,
     static word read_matches(const byte* p,word q) {
         word matches=0;
 #if defined(__AVX512VBMI__) && defined(__GFNI__)
-        if constexpr(E==14)matches=ht::detail::exact_small_bucket<E,T>(p,q);
+        if constexpr(E==14)matches=ht::detail::exact_small_bucket<E,T>(ikea::to_u8(p),q);
         else if constexpr(E==16)matches=_mm512_cmpeq_epi16_mask(_mm512_loadu_si512(p),_mm512_set1_epi16(short(q)));
-        else if constexpr(E==30)matches=ht::detail::exact30<true,false>(p,q);
+        else if constexpr(E==30)matches=ht::detail::exact30<true,false>(ikea::to_u8(p),q);
         else if constexpr(E==32)matches=_mm512_cmpeq_epi32_mask(_mm512_loadu_si512(p),_mm512_set1_epi32(int(q)));
         else
 #endif
@@ -156,9 +171,9 @@ template<unsigned W,unsigned b,unsigned V,bool WholeBytes,bool LiveRows=false,
             // Complete masks avoid retaining the first-body matcher's inner
             // presence/retry branches in the mixed-upsert control. The split
             // path still uses locate() and its first-row optimization.
-            using F=ht::sp::format<E,ht::sp::geometry::local,0>;
-            const ht::sp::dense_source<F> source{p,N};const auto expression=ht::sp::composition::describe(source);
-            ht::each<T>([&](auto tile){matches|=word(ht::sp::composition::filter8_unchecked<ikea::comparison::equal>(expression,tile*8,q))<<(tile*8);});
+            using F=ht::sp::layout<E,ht::sp::geometry::local,0>;
+            const ht::sp::dense_source<F> source{p,N};const auto expression=ht::sp::author::expression(source);
+            ht::each<T>([&](auto tile){matches|=word(ht::sp::author::filter8_unchecked<ikea::comparison::equal>(expression,tile*8,q))<<(tile*8);});
         }
         if constexpr(E==K)if(!q)[[unlikely]]matches&=~vacancies(p);
         return matches;
@@ -195,12 +210,12 @@ template<unsigned W,unsigned b,unsigned V,bool WholeBytes,bool LiveRows=false,
         if(!groups_)return absent;
         auto group=swiss&(groups_-1);std::size_t step=0;
         for(;;){const auto* control=controls_.data+group*16;
-            auto candidates=ht::equal_controls(control,hash_result{0,0,swiss}.fingerprint());
+            auto candidates=write_arch::equal_controls(control,hash_result{0,0,swiss}.fingerprint());
             while(candidates){const auto lane=std::countr_zero(candidates);candidates&=candidates-1;
                 const auto slot=group*16+lane;
-                if(ht::tuple_field<key_bytes>::read(slots_.data+slot*tuple_bytes)==key)return slot;
+                if(write_arch::tuple_field<key_bytes>::read(slots_.data+slot*tuple_bytes)==key)return slot;
             }
-            if(ht::equal_controls(control,empty))return absent;
+            if(write_arch::equal_controls(control,empty))return absent;
             group=(group+(++step))&(groups_-1);
         }
     }
@@ -210,13 +225,13 @@ template<unsigned W,unsigned b,unsigned V,bool WholeBytes,bool LiveRows=false,
         if(!groups_)return {absent,false};
         auto group=h.swiss&(groups_-1);std::size_t step=0,available=absent;
         for(;;){const auto* control=controls_.data+group*16;
-            auto candidates=ht::equal_controls(control,h.fingerprint());
+            auto candidates=write_arch::equal_controls(control,h.fingerprint());
             while(candidates){const auto lane=std::countr_zero(candidates);candidates&=candidates-1;
                 const auto slot=group*16+lane;
-                if(ht::tuple_field<key_bytes>::read(slots_.data+slot*tuple_bytes)==key)return {slot,true};
+                if(write_arch::tuple_field<key_bytes>::read(slots_.data+slot*tuple_bytes)==key)return {slot,true};
             }
-            const auto empties=ht::equal_controls(control,empty);
-            if(available==absent){const auto free=empties|ht::equal_controls(control,tombstone);
+            const auto empties=write_arch::equal_controls(control,empty);
+            if(available==absent){const auto free=empties|write_arch::equal_controls(control,tombstone);
                 if(free)available=group*16+std::countr_zero(free);}
             if(empties)return {available,false};
             group=(group+(++step))&(groups_-1);
@@ -226,33 +241,33 @@ template<unsigned W,unsigned b,unsigned V,bool WholeBytes,bool LiveRows=false,
         deleted_-=controls_.data[slot]==tombstone;
         ht::store<key_bytes>(slots_.data+slot*tuple_bytes,key);
         if constexpr(V)std::memcpy(slots_.data+slot*tuple_bytes+key_bytes,v.data(),V);
-        controls_.data[slot]=h.fingerprint();++spill_;
+        controls_.data[slot]=byte(h.fingerprint());++spill_;
     }
     [[gnu::noinline]] void grow_swiss() {
         const auto next=groups_?groups_*2:1;
         buffer controls(next*16),slots(next*16*tuple_bytes);
-        std::memset(controls.data,empty,next*16);
+        std::memset(controls.data,number(empty),next*16);
         auto old_controls=std::move(controls_);auto old_slots=std::move(slots_);const auto old_groups=groups_;
         controls_=std::move(controls);slots_=std::move(slots);groups_=next;spill_=deleted_=0;
-        for(std::size_t i=0;i<old_groups*16;++i)if(ht::detail::occupied_control(old_controls.data[i])){
+        for(std::size_t i=0;i<old_groups*16;++i)if(write_arch::occupied_control(old_controls.data[i])){
             const auto key=ht::load<key_bytes>(old_slots.data+i*tuple_bytes);const auto h=hash_(key);
             ht::bytes<V> v{};if constexpr(V)std::memcpy(v.data(),old_slots.data+i*tuple_bytes+key_bytes,V);
             store_swiss(resolve_swiss(key,h).slot,key,v,h);
         }
     }
     [[gnu::noinline]] bool insert_slow(word key,const ht::bytes<V>& v,const hash_result& h,word free) {
-        auto* p=bucket(h.bucket);auto found=p[B-1]?resolve_swiss(key,h):swiss_position{absent,false};
+        auto* p=bucket(h.bucket);auto found=(p[B-1]!=byte{0})?resolve_swiss(key,h):swiss_position{absent,false};
         if(found.present){if constexpr(V)std::memcpy(slots_.data+found.slot*tuple_bytes+key_bytes,v.data(),V);return false;}
         if(free)occupy(p,unsigned(std::countr_zero(free)),h.quotient,v);
         else {
             if(!groups_||(spill_+deleted_+1)*8>groups_*16*7){grow_swiss();found.slot=absent;}
             if(found.slot==absent)found=resolve_swiss(key,h);
-            store_swiss(found.slot,key,v,h);if(p[B-1]!=255)++p[B-1];
+            store_swiss(found.slot,key,v,h);if(p[B-1]!=byte{255})p[B-1]=byte(number(p[B-1])+1);
         }
         ++size_;return true;
     }
     template<class Edit> [[gnu::noinline]] bool edit_slow(word key,const hash_result& h,word free,Edit&& edit) {
-        auto* p=bucket(h.bucket);auto found=p[B-1]?resolve_swiss(key,h):swiss_position{absent,false};
+        auto* p=bucket(h.bucket);auto found=(p[B-1]!=byte{0})?resolve_swiss(key,h):swiss_position{absent,false};
         if(found.present){edit(slots_.data+found.slot*tuple_bytes+key_bytes,true);return false;}
         if(free){const auto row=unsigned(std::countr_zero(free));edit(p+B+row*V,false);
             assign<E>(p,row,N,h.quotient);p[flags+row/8]&=byte(~(1u<<(row%8)));
@@ -262,7 +277,7 @@ template<unsigned W,unsigned b,unsigned V,bool WholeBytes,bool LiveRows=false,
             edit(slots_.data+found.slot*tuple_bytes+key_bytes,false);
             deleted_-=controls_.data[found.slot]==tombstone;
             ht::store<key_bytes>(slots_.data+found.slot*tuple_bytes,key);
-            controls_.data[found.slot]=h.fingerprint();++spill_;if(p[B-1]!=255)++p[B-1];
+            controls_.data[found.slot]=byte(h.fingerprint());++spill_;if(p[B-1]!=byte{255})p[B-1]=byte(number(p[B-1])+1);
         }
         ++size_;return true;
     }
@@ -272,7 +287,7 @@ template<unsigned W,unsigned b,unsigned V,bool WholeBytes,bool LiveRows=false,
     static constexpr unsigned bucket_bytes=B;
     using value_type=ht::bytes<V>;
     struct probe {hash_result hash;const byte* primary;};
-    struct staged_probe {probe first;word key;std::size_t group=0,step=0;unsigned candidates=0,slot=0;byte phase=0;bool empty_group=false;};
+    struct staged_probe {probe first;word key;std::size_t group=0,step=0;unsigned candidates=0,slot=0;std::uint8_t phase=0;bool empty_group=false;};
     // LiveRows is an owner policy for point consumers: keys and all probed
     // control/padding bytes remain initialized, but absent value rows do not.
     // It cannot use duplicate_buffer or an unmasked group value reader. Swiss
@@ -297,7 +312,7 @@ template<unsigned W,unsigned b,unsigned V,bool WholeBytes,bool LiveRows=false,
         const auto h=hash_(key);auto* p=bucket(h.bucket);const auto row=locate(p,h.quotient);
         if(row!=N){edit(p+B+row*V,true);return false;}
         const auto free=vacancies(p);
-        if(free&&!p[B-1]){const auto at=unsigned(std::countr_zero(free));edit(p+B+at*V,false);
+        if(free&&p[B-1]==byte{0}){const auto at=unsigned(std::countr_zero(free));edit(p+B+at*V,false);
             assign<E>(p,at,N,h.quotient);p[flags+at/8]&=byte(~(1u<<(at%8)));++size_;return true;}
         return edit_slow(key,h,free,std::forward<Edit>(edit));
     }
@@ -306,9 +321,9 @@ template<unsigned W,unsigned b,unsigned V,bool WholeBytes,bool LiveRows=false,
         const auto h=hash_(key);auto* p=bucket(h.bucket);const auto row=locate(p,h.quotient);
         if(row!=N){retire(p+B+row*V);assign<E>(p,row,N,E>K?ht::mask<E>:0);
             p[flags+row/8]|=byte(1u<<(row%8));--size_;return true;}
-        if(p[B-1]){const auto found=resolve_swiss(key,h);if(found.present){
+        if(p[B-1]!=byte{0}){const auto found=resolve_swiss(key,h);if(found.present){
             retire(slots_.data+found.slot*tuple_bytes+key_bytes);
-            controls_.data[found.slot]=tombstone;--spill_;++deleted_;--size_;if(p[B-1]!=255)--p[B-1];return true;}}
+            controls_.data[found.slot]=tombstone;--spill_;++deleted_;--size_;if(p[B-1]!=byte{255})p[B-1]=byte(number(p[B-1])-1);return true;}}
         return false;
     }
     [[gnu::always_inline]] bool insert(word key,const value_type& v={}) {
@@ -320,7 +335,7 @@ template<unsigned W,unsigned b,unsigned V,bool WholeBytes,bool LiveRows=false,
             // An existing primary row wins over every vacancy. An absent key
             // needs a Swiss absence proof whenever this bucket has overflow,
             // even if erasure has since left a primary hole.
-            const auto admissible=free&(word{0}-word(p[B-1]==0));
+            const auto admissible=free&(word{0}-word(p[B-1]==byte{0}));
             const auto candidates=select_candidates(fresh,matching,unsigned(admissible));
             if(!candidates)[[unlikely]]return insert_slow(key,v,h,free);
             const auto destination=unsigned(std::countr_zero(candidates));
@@ -338,14 +353,14 @@ template<unsigned W,unsigned b,unsigned V,bool WholeBytes,bool LiveRows=false,
         const auto row=locate(p,h.quotient);
         if(row!=N){value(p,row,v);return false;}
         const auto free=vacancies(p);
-        if(free&&!p[B-1]){occupy(p,unsigned(std::countr_zero(free)),h.quotient,v);++size_;return true;}
+        if(free&&p[B-1]==byte{0}){occupy(p,unsigned(std::countr_zero(free)),h.quotient,v);++size_;return true;}
         return insert_slow(key,v,h,free);
     }
     bool erase(word key) {
         ht::require(!(key&~ht::mask<W>),"write architecture key domain");
         const auto h=hash_(key);auto* p=bucket(h.bucket);const auto row=locate(p,h.quotient);
         if(row!=N){assign<E>(p,row,N,E>K?ht::mask<E>:0);p[flags+row/8]|=byte(1u<<(row%8));hide_value(p,row);--size_;return true;}
-        if(p[B-1]){const auto found=resolve_swiss(key,h);if(found.present){controls_.data[found.slot]=tombstone;--spill_;++deleted_;--size_;if(p[B-1]!=255)--p[B-1];return true;}}
+        if(p[B-1]!=byte{0}){const auto found=resolve_swiss(key,h);if(found.present){controls_.data[found.slot]=tombstone;--spill_;++deleted_;--size_;if(p[B-1]!=byte{255})p[B-1]=byte(number(p[B-1])-1);return true;}}
         return false;
     }
     template<bool Primary> struct const_cell {
@@ -356,8 +371,8 @@ template<unsigned W,unsigned b,unsigned V,bool WholeBytes,bool LiveRows=false,
         }
         template<unsigned Limb> [[gnu::always_inline]] word read()const {
             static_assert(Limb<V/8);
-            if constexpr(Primary)return ht::direct_point<64>(source,row*(V/8)+Limb,N*(V/8));
-            else return ht::tuple_field<8>::read(source+Limb*8);
+            if constexpr(Primary)return write_arch::direct_point<64>(source,row*(V/8)+Limb,N*(V/8));
+            else return write_arch::tuple_field<8>::read(source+Limb*8);
         }
         template<unsigned Bytes,unsigned First> [[gnu::always_inline]] ht::bytes<Bytes> value()const {
             static_assert(Bytes%8==0&&First+Bytes/8<=V/8);ht::bytes<Bytes> result;
@@ -375,7 +390,7 @@ template<unsigned W,unsigned b,unsigned V,bool WholeBytes,bool LiveRows=false,
         if(read_primary(p.primary,p.hash.quotient,[&](unsigned row) __attribute__((always_inline)) {
             if constexpr(V)consume(const_cell<true>{p.primary+B,row});
         }))return true;
-        if(!p.primary[B-1])return false;const auto found=find_swiss(key,p.hash.swiss);if(found==absent)return false;
+        if(p.primary[B-1]==byte{0})return false;const auto found=find_swiss(key,p.hash.swiss);if(found==absent)return false;
         if constexpr(V)consume(const_cell<false>{slots_.data+found*tuple_bytes+key_bytes,0});return true;
     }
     template<class Consume> [[gnu::always_inline]] bool find_cell(word key,Consume&& consume)const {
@@ -408,16 +423,16 @@ template<unsigned W,unsigned b,unsigned V,bool WholeBytes,bool LiveRows=false,
                     emit(primary+B+std::size_t(slot)*V,FetchBytes);s.phase=3;return false;
                 }else {found=true;return true;}
             }
-            if(!primary[B-1]){found=false;return true;}
+            if(primary[B-1]==byte{0}){found=false;return true;}
             s.group=s.first.hash.swiss&(groups_-1);s.phase=1;emit(controls_.data+s.group*16,16);return false;
         }
         if(s.phase==3){if constexpr(V)consume(const_cell<true>{primary+B,s.slot});found=true;return true;}
         if(s.phase==1){const auto* control=controls_.data+s.group*16;
-            s.candidates=ht::equal_controls(control,s.first.hash.fingerprint());s.empty_group=ht::equal_controls(control,empty)!=0;
+            s.candidates=write_arch::equal_controls(control,s.first.hash.fingerprint());s.empty_group=write_arch::equal_controls(control,empty)!=0;
         }else {
             const auto slot=s.group*16+std::countr_zero(s.candidates);s.candidates&=s.candidates-1;
             const auto* tuple=slots_.data+slot*tuple_bytes;
-            if(ht::tuple_field<key_bytes>::read(tuple)==s.key){
+            if(write_arch::tuple_field<key_bytes>::read(tuple)==s.key){
                 if constexpr(V)consume(const_cell<false>{tuple+key_bytes,0});found=true;return true;
             }
         }
@@ -434,11 +449,11 @@ template<unsigned W,unsigned b,unsigned V,bool WholeBytes,bool LiveRows=false,
     template<class Visit> void visit_cells(Visit&& visit)const {
         static_assert(V>0);std::size_t count=0;
         for(std::size_t id=0;id<bucket_count;++id){const auto* p=bucket(id);
-            for(unsigned row=0;row<N;++row)if(!(p[flags+row/8]&(1u<<(row%8)))){
-                visit(hash_.recover(id,ht::point<E>(p,row,N)),p+B+row*V);++count;
+            for(unsigned row=0;row<N;++row)if(!(number(p[flags+row/8])&(1u<<(row%8)))){
+                visit(hash_.recover(id,write_arch::point<E>(p,row,N)),p+B+row*V);++count;
             }
         }
-        for(std::size_t slot=0;slot<groups_*16;++slot)if(ht::detail::occupied_control(controls_.data[slot])){
+        for(std::size_t slot=0;slot<groups_*16;++slot)if(write_arch::occupied_control(controls_.data[slot])){
             const auto* p=slots_.data+slot*tuple_bytes;visit(ht::load<key_bytes>(p),p+key_bytes);++count;
         }
         ht::require(count==size_,"mutable cell census");

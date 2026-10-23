@@ -16,29 +16,32 @@ namespace ikea::tuplepack {
 /// disjoint from both source and destination payload and from that metadata.
 /// Copy does not run replacement maintenance, acquire leases, allocate, suspend
 /// or publish. The enclosing owner supplies any semantic maintenance.
-template <unsigned Bytes, class Byte> class unit_transfer {
+template <unsigned Bytes, class Byte> class transfer {
     static_assert(Bytes >= 1 && Bytes <= 64);
     const basic_view<Byte>* source_;
     const view* destination_;
-    unit_transfer(const basic_view<Byte>& source, const view& destination)
+    transfer(const basic_view<Byte>& source, const view& destination)
         : source_(&source), destination_(&destination) {}
 
   public:
-    [[nodiscard]] static std::expected<unit_transfer, error> bind(const layout& source_format,
+    [[nodiscard]] static std::expected<transfer, error> bind(const layout& source_format,
                                                                   const basic_view<Byte>& source,
                                                                   const layout& destination_format,
                                                                   const view& destination) {
         if (source_format != destination_format || source_format.bytes() != Bytes ||
             source.unit_bytes() != Bytes || destination.unit_bytes() != Bytes)
             return std::unexpected(error::description);
-        return unit_transfer(source, destination);
+        return transfer(source, destination);
     }
     static auto bind(const layout&, const basic_view<Byte>&&, const layout&, const view&) = delete;
     static auto bind(const layout&, const basic_view<Byte>&, const layout&, const view&&) = delete;
 
     // Tight destination units issue one contiguous span. Strided units issue
     // one span per row; neither path includes gap bytes or trailing padding.
-    std::size_t effect_capacity(std::size_t count) const noexcept {
+    [[nodiscard]] std::expected<std::size_t, error>
+    effect_capacity(std::size_t first, std::size_t count) const noexcept {
+        if (first > destination_->size() || count > destination_->size() - first)
+            return std::unexpected(error::range);
         return count && destination_->stride() == Bytes ? 1 : count;
     }
     /// Admit the whole command before effects or stores. Source rows may repeat
@@ -51,8 +54,8 @@ template <unsigned Bytes, class Byte> class unit_transfer {
     admit(std::size_t first, std::span<const Row> source_rows, std::size_t remaining) const {
         if (first > destination_->size() || source_rows.size() > destination_->size() - first)
             return std::unexpected(error::range);
-        if (effect_capacity(source_rows.size()) > remaining)
-            return std::unexpected(error::capacity);
+        if (*effect_capacity(first, source_rows.size()) > remaining)
+            return std::unexpected(error::effects);
         if (source_rows.empty())
             return {};
         const auto begin = reinterpret_cast<std::uintptr_t>(destination_->row_unchecked(first));
@@ -74,9 +77,9 @@ template <unsigned Bytes, class Byte> class unit_transfer {
     /// An empty selection may start at the destination end and issues no access.
     template <std::unsigned_integral Row>
     [[nodiscard]] std::expected<void, error>
-    copy(std::size_t first, std::span<const Row> source_rows, source_write_journal& effects) const {
+    copy(std::size_t first, std::span<const Row> source_rows, ikea::journal& effects) const {
         if (effects.used > effects.storage.size())
-            return std::unexpected(error::capacity);
+            return std::unexpected(error::effects);
         if (auto accepted = admit(first, source_rows, effects.remaining()); !accepted)
             return accepted;
         copy_unchecked(first, source_rows, effects);
@@ -85,7 +88,7 @@ template <unsigned Bytes, class Byte> class unit_transfer {
     /// Requires successful admission for this unchanged command and enough
     /// coverage capacity. Hooks cannot allocate/fail/suspend or alter source, views or
     /// selection. No padding/gap access; each effect precedes its covered stores.
-    template <std::unsigned_integral Row, class Coverage>
+    template <std::unsigned_integral Row, class Coverage> requires ikea::effects<Coverage, view>
     void copy_unchecked(std::size_t first, std::span<const Row> source_rows,
                         Coverage& effects) const {
         if (source_rows.empty())
@@ -95,25 +98,23 @@ template <unsigned Bytes, class Byte> class unit_transfer {
                         source_->row_unchecked(source_rows[i]), Bytes);
         };
         if (destination_->stride() == Bytes) {
-            effects.before(*destination_, byte_write{0, destination_->offset() + first * Bytes,
-                                                     source_rows.size() * Bytes});
+            effects.before(*destination_, 0, destination_->offset() + first * Bytes,
+                                                     source_rows.size() * Bytes);
             for (std::size_t i = 0; i < source_rows.size(); ++i)
                 copy_row(i);
         } else {
             for (std::size_t i = 0; i < source_rows.size(); ++i) {
                 const auto row = first + i;
-                effects.before(
-                    *destination_,
-                    byte_write{0, destination_->offset() + row * destination_->stride(), Bytes});
+                effects.before(*destination_, 0, destination_->offset() + row * destination_->stride(), Bytes);
                 copy_row(i);
             }
         }
     }
 };
 template <unsigned Bytes, class Byte>
-auto bind_transfer(const layout& source_format, const basic_view<Byte>& source,
+[[nodiscard]] auto bind_transfer(const layout& source_format, const basic_view<Byte>& source,
                    const layout& destination_format, const view& destination) {
-    return unit_transfer<Bytes, Byte>::bind(source_format, source, destination_format, destination);
+    return transfer<Bytes, Byte>::bind(source_format, source, destination_format, destination);
 }
 template <unsigned Bytes, class Byte>
 auto bind_transfer(const layout&, const basic_view<Byte>&&, const layout&, const view&) = delete;

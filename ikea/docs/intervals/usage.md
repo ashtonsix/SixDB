@@ -78,7 +78,7 @@ boundaries:
 
 ```cpp
 const std::array bits{std::byte{0x3b}}; // eligible: 0, 1, 3, 4, 5
-const in::selected_source selected{geometry, in::rank_selection{bits}};
+const in::selected_source selected{geometry, in::selection::bits(0, bits)};
 assert(in::reverse(selected, 20u) == selected.size()); // rank 2 excluded
 assert(in::reverse(selected, 26u) == 3);
 assert((in::overlap(selected, 9u, 36u) == window));
@@ -92,12 +92,12 @@ The excluded rank still spans `[18,26)`; its coordinates are not reassigned.
 Selected overlap trims excluded or zero-size edge ranks, but internal holes can
 remain. Traverse through the same selection to skip them. `range` checks the
 complete rank interval before its first callback; eligible zero-size ranks are
-visited too. You can instead pass a `rank_selection` as the last argument to
+visited too. You can instead pass a `selection` as the last argument to
 `locate`, `reverse`, `overlap` or `range`, or to `start` after the rank.
 
 A nonempty selection supplies `ceil(n/8)` readable bytes. Set bits mean eligible;
-`inverted=true` borrows an owner's tombstone plane. Empty selection selects none;
-`rank_selection::all()` selects all. Intervals never allocates, mutates or
+`selection::complement(0, bytes)` borrows an owner's exclusion plane. Empty selection selects none;
+`selection::all()` selects all. Intervals never allocates, mutates or
 retires those bits. Retain them with the geometry they describe.
 
 Selected endpoint search can skip an excluded rank and return a later eligible
@@ -241,8 +241,8 @@ std::uint32_t extent = 0;
 const in::size_editor<64, std::uint8_t> editor{
     widths, origins, assigned, extent, 0, 4096, 255};
 assert(editor.validate());
-std::array<ikea::owner_write, 32> records;
-ikea::source_write_journal effects{records};
+std::array<ikea::journal::entry, 32> records;
+ikea::journal effects{records};
 assert(editor.append(3, effects));
 assert(editor.append(0, effects));
 assert(editor.append(5, effects)); // ends [3,3,8]
@@ -255,7 +255,7 @@ movement and publishes that with geometry. Reordering or removing middle ranks
 requires a replacement and an explicit rank remap.
 
 Checked refusal preserves bytes and effect output. Each issued store reports
-`before(editor, byte_write)` on the original named editor, including preserving
+`before(editor, plane, offset, size)` on the original named editor, including preserving
 and tail stores. Reserve effect capacity before execution and keep the editor
 stable until records are resolved. Hooks are infallible and cannot allocate,
 suspend or invalidate inputs. Effects do not retain readers or commit a transaction.

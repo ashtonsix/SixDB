@@ -1,11 +1,11 @@
 #pragma once
-#include <ikea/hashtable/detail/bits.h>
+#include <ikea/hashtable/types.h>
 #include <chrono>
 #include <span>
 #include <string>
 
 namespace screen {
-using ikea::hashtable::byte;
+using byte = std::byte;
 using ikea::hashtable::word;
 using clock = std::chrono::steady_clock;
 struct options {

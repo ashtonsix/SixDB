@@ -5,29 +5,29 @@
 namespace bec_bench {
 #if defined(IKEA_BEC256_AVX512) || defined(__aarch64__)
 namespace {
-using chain = bc::chain<4>;
+using chain = bc::author::chain<4>;
 struct context {
-    const bc::source &a, &b;
+    const bc::reader &a, &b;
     const bc::byte *qa, *qb;
     std::uint64_t count = 0;
 };
 [[gnu::always_inline]] chain::result read_body(void *raw, std::size_t, std::uint64_t active,
-                                               bc::pipeline_bits, unsigned) {
+                                               bc::author::pipeline_bits, unsigned) {
     auto &c = *static_cast<context *>(raw);
-    return {bc::pipeline_bits::from(bc::native::read_pair(c.a, c.b)), active};
+    return {bc::author::pipeline_bits::from(bc::native::read_pair(c.a, c.b)), active};
 }
 [[gnu::always_inline]] chain::result intersect_body(void *raw, std::size_t, std::uint64_t active,
-                                                    bc::pipeline_bits bits, unsigned) {
+                                                    bc::author::pipeline_bits bits, unsigned) {
     auto &c = *static_cast<context *>(raw);
-    return {bc::pipeline_bits::from(bc::native::intersection(
+    return {bc::author::pipeline_bits::from(bc::native::intersection(
                 bits.get(), bc::native::join(bc::native::load(c.qa), bc::native::load(c.qb)))),
             active};
 }
-[[gnu::always_inline]] void finish(void *raw, std::size_t, std::uint64_t, bc::pipeline_bits bits) {
+[[gnu::always_inline]] void finish(void *raw, std::size_t, std::uint64_t, bc::author::pipeline_bits bits) {
     static_cast<context *>(raw)->count = bc::native::population(bits.get());
 }
 const chain pipeline =
-    *chain::prepare(std::array{&chain::stage<read_body>, &chain::stage<intersect_body>},
+    *chain::make(std::array{&chain::stage<read_body>, &chain::stage<intersect_body>},
                     &chain::completion<finish>);
 [[gnu::always_inline]] void inline_pair(context &c) {
     const auto read = read_body(&c, 0, 3, {}, 0);

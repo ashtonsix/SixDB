@@ -12,6 +12,17 @@
 
 namespace sp = ikea::streampack;
 using sp::byte;
+// Whole-operation access can escape the callback, so its source identity must be
+// named; one-shot free reads may still take a temporary as_const() view.
+template <class V>
+concept author_visitable = requires(V &&source) {
+    sp::author::visit(static_cast<V &&>(source), [](auto) {});
+};
+static_assert(author_visitable<sp::view &> && author_visitable<const sp::view &>);
+static_assert(author_visitable<sp::const_view &> && author_visitable<const sp::const_view &>);
+static_assert(!author_visitable<sp::view> && !author_visitable<const sp::view>);
+static_assert(!author_visitable<sp::const_view> && !author_visitable<const sp::const_view>);
+static_assert(requires(sp::view &source) { sp::value(source.as_const(), 0); });
 struct guarded {
     byte *allocation;
     std::size_t page, size;
@@ -25,13 +36,14 @@ struct guarded {
     std::span<byte> bytes() { return {allocation + page - size, size}; }
 };
 void tails(sp::geometry family) {
-    auto l = *sp::layout::prepare(
+    auto l = *sp::layout::make(
         {family, sp::placement::grouped, 65535, sp::slot_capacity * 65535, {}, false, false});
     guarded directory(l.directory_bytes()), lengths(l.lengths_bytes(1)), control(l.control_bytes());
     std::vector<byte> payload(16 * 65535);
-    auto v = *sp::view::bind(l, {payload, directory.bytes(), lengths.bytes(), control.bytes()});
+    auto v = *sp::view::attach(l, {payload, directory.bytes(), lengths.bytes(), control.bytes()});
     std::vector<byte> maximal(65535, byte{0x91});
-    ikea::no_coverage effects;
+    std::array<ikea::journal::entry, 4096> effects_records;
+    ikea::journal effects{effects_records};
     assert(sp::initialize(v, effects));
     for (unsigned n = 1; n <= 16; ++n) {
         assert(sp::append(v, maximal, 65535, effects));
@@ -42,7 +54,7 @@ void tails(sp::geometry family) {
                 assert(sp::reverse(v, at)->rank == r);
         }
 #if defined(__aarch64__) || defined(__AVX2__)
-        sp::author::dispatch(v, [&](auto a) {
+        sp::author::visit(v, [&](auto a) {
             const auto group = sp::native::read16(a, 0);
             std::array<unsigned, 16> offsets;
             sp::native::each_chunk([&](auto i) {
@@ -58,16 +70,16 @@ void tails(sp::geometry family) {
     assert(v.size() == 16 && before == payload);
 }
 void limits(unsigned maximum, unsigned limit, sp::geometry family) {
-    auto l = *sp::layout::prepare(
+    auto l = *sp::layout::make(
         {family, sp::placement::grouped, std::uint16_t(maximum), limit, {}, false, false});
     alignas(64) std::array<byte, 4096> directory{}, lengths{};
     std::array<byte, 6> control{};
     std::vector<byte> payload(limit + 8, byte{0x72});
-    auto v = *sp::view::bind(l, {payload, std::span(directory).first(l.directory_bytes()),
+    auto v = *sp::view::attach(l, {payload, std::span(directory).first(l.directory_bytes()),
                                  std::span(lengths).first(l.lengths_bytes()),
                                  std::span(control).first(l.control_bytes())});
-    std::array<ikea::owner_write, 32> records;
-    ikea::source_write_journal journal{records};
+    std::array<ikea::journal::entry, 32> records;
+    ikea::journal journal{records};
     assert(sp::initialize(v, journal));
     journal.used = 0;
     auto remaining = limit;
@@ -89,14 +101,14 @@ void limits(unsigned maximum, unsigned limit, sp::geometry family) {
            control == old_control && journal.used == 0);
     // Even an identical payload store must publish damage; no-space refusal must
     // precede it. A one-slot journal cannot cover both payload and used metadata.
-    ikea::source_write_journal short_journal{std::span(records).first(1)};
+    ikea::journal short_journal{std::span(records).first(1)};
     const auto unchanged_input = *sp::value(v, 0);
     assert(!sp::replace(v, 0, unchanged_input, short_journal));
     assert(!short_journal.used && payload == old_payload && directory == old_dir &&
            lengths == old_lengths && control == old_control);
     assert(sp::replace(v, 0, unchanged_input, journal));
     assert(journal.used == 2 && journal.entries()[0].source == &v &&
-           journal.entries()[0].bytes.plane == 0);
+           journal.entries()[0].plane == 0);
     journal.used = 0;
     // Input inside metadata is rejected before any store or journal entry.
     assert(!sp::replace(v, 0, std::span<const byte>(control).first(1), journal));
@@ -105,19 +117,19 @@ void limits(unsigned maximum, unsigned limit, sp::geometry family) {
 }
 void zero_and_extent() {
     auto l =
-        *sp::layout::prepare({sp::geometry::sizes, sp::placement::grouped, 0, 0, {}, true, true});
+        *sp::layout::make({sp::geometry::sizes, sp::placement::grouped, 0, 0, {}, true, true});
     std::array<byte, 2> control{};
-    auto v = *sp::view::bind(l, {{}, {}, {}, control});
-    std::array<ikea::owner_write, 1> records;
-    ikea::source_write_journal effects{records};
+    auto v = *sp::view::attach(l, {{}, {}, {}, control});
+    std::array<ikea::journal::entry, 1> records;
+    ikea::journal effects{records};
     assert(sp::initialize(v, effects));
     effects.used = 0;
     assert(sp::append(v, {}, 0, effects));
-    assert(effects.used == 1 && effects.entries()[0].bytes.plane == unsigned(sp::plane::control));
+    assert(effects.used == 1 && effects.entries()[0].plane == unsigned(sp::plane::control));
     assert(v.size() == 1 && v.extent() == 0 && sp::value(v, 0)->empty() && v.validate());
     assert(!sp::retire(v, 0, effects));
 
-    auto width = *sp::layout::prepare({sp::geometry::sizes,
+    auto width = *sp::layout::make({sp::geometry::sizes,
                                        sp::placement::grouped,
                                        255,
                                        sp::slot_capacity * 255,
@@ -128,44 +140,46 @@ void zero_and_extent() {
     std::array<byte, 64> directory;
     alignas(64) std::array<byte, 32> lengths;
     std::array<byte, 6> wcontrol;
-    auto w = *sp::view::bind(width, {body, directory, lengths, wcontrol});
-    ikea::no_coverage private_write;
+    auto w = *sp::view::attach(width, {body, directory, lengths, wcontrol});
+    std::array<ikea::journal::entry, 4096> private_write_records;
+    ikea::journal private_write{private_write_records};
     assert(sp::initialize(w, private_write));
     const std::array data{byte{1}, byte{2}};
     assert(sp::append(w, data, 8, private_write));
     const auto checkpoint_before = directory;
-    std::array<ikea::owner_write, 16> changes;
-    ikea::source_write_journal log{changes};
+    std::array<ikea::journal::entry, 16> changes;
+    ikea::journal log{changes};
     assert(sp::soft_pack(w, true, log));
     assert(w.extent() == 2 && w.size() == 1 && directory == checkpoint_before);
     bool extent_written = false;
     for (auto e : log.entries())
-        if (e.bytes.plane == unsigned(sp::plane::control)) {
-            assert(e.bytes.offset == 2 && e.bytes.size == 4);
+        if (e.plane == unsigned(sp::plane::control)) {
+            assert(e.offset == 2 && e.size == 4);
             extent_written = true;
         }
     assert(extent_written && w.validate());
 }
 void transfer_effect_alias() {
-    const auto l = *sp::layout::prepare(
+    const auto l = *sp::layout::make(
         {sp::geometry::absolute_ends, sp::placement::grouped, 255, 32640, {}, false, false});
     alignas(64) std::array<byte, 1024> body{}, dbody{};
     alignas(64) std::array<byte, 4096> directory{}, lengths{}, ddirectory{}, dlengths{};
     std::array<byte, 2> control{}, dcontrol{};
-    auto src = *sp::view::bind(l, {body, directory, lengths, control});
-    auto dst = *sp::view::bind(l, {dbody, ddirectory, dlengths, dcontrol});
-    ikea::no_coverage no_effects;
+    auto src = *sp::view::attach(l, {body, directory, lengths, control});
+    auto dst = *sp::view::attach(l, {dbody, ddirectory, dlengths, dcontrol});
+    std::array<ikea::journal::entry, 4096> no_effects_records;
+    ikea::journal no_effects{no_effects_records};
     assert(sp::initialize(src, no_effects));
     const std::array value{byte{8}};
     assert(sp::append(src, value, 1, no_effects));
-    auto *record = std::construct_at(reinterpret_cast<ikea::owner_write *>(body.data() + 512));
-    ikea::source_write_journal effects{{record, 1}};
+    auto *record = std::construct_at(reinterpret_cast<ikea::journal::entry *>(body.data() + 512));
+    ikea::journal effects{{record, 1}};
     const auto old_source = body, old_destination = dbody;
     const auto old_dir = ddirectory, old_len = dlengths;
     const auto old_control = dcontrol;
     const std::array<std::uint16_t, 1> ranks{0};
     auto result = sp::transfer(src, ranks, dst, true, effects);
-    assert(!result && result.error() == sp::error::alias);
+    assert(!result && result.error() == sp::error::overlap);
     assert(!effects.used && body == old_source && dbody == old_destination &&
            ddirectory == old_dir && dlengths == old_len && dcontrol == old_control);
     std::destroy_at(record);
@@ -175,19 +189,14 @@ void transfer_effect_alias() {
 // exercise checkpoint, U, D and partial-tail laws without a terminal sentinel.
 void wire_fixture(sp::geometry family) {
     const auto format =
-        *sp::layout::prepare({family, sp::placement::grouped, 255, 255, {}, false, false});
-    const std::array<byte, 8> encoded{byte(0x40 | unsigned(family)),
-                                      byte{255},
-                                      byte{0},
-                                      byte{255},
-                                      byte{0},
-                                      byte{0},
-                                      byte{0},
-                                      byte{0}};
-    assert(sp::layout::decode(encoded)->encode() == encoded);
-    auto modern = encoded;
-    modern[0] = byte(0xc0 | unsigned(family));
-    assert(format.encode() == modern && sp::layout::decode(modern)->encode() == modern);
+        *sp::layout::make({family, sp::placement::grouped, 255, 255, {}, false, false});
+    const std::array<byte, 13> modern{byte{'S'}, byte{'K'}, byte{1}, byte{8}, byte{0},
+                                       byte(unsigned(family)), byte{255}, byte{0}, byte{255},
+                                       byte{0}, byte{0}, byte{0}, byte{0}};
+    std::array<byte, 13> encoded;
+    assert(format.encode(encoded) && encoded == modern);
+    const auto decoded = sp::layout::decode(modern);
+    assert(decoded && decoded->encode(encoded) && encoded == modern);
 
     std::array<byte, 9> body{byte{'a'}, byte{'b'}, byte{0},   byte{'c'}, byte{0},
                              byte{'d'}, byte{'e'}, byte{'f'}, byte{0}};
@@ -211,7 +220,7 @@ void wire_fixture(sp::geometry family) {
         lengths[2] = byte{1};
         lengths[16] = byte{3};
     }
-    auto v = *sp::view::bind(
+    auto v = *sp::view::attach(
         format, {body, directory, std::span(lengths).first(family == sp::geometry::sizes ? 64 : 32),
                  std::span(control).first(family == sp::geometry::sizes ? 6 : 2)});
     assert(v.validate() && v.size() == 17 && v.extent() == 9);
@@ -223,7 +232,8 @@ void wire_fixture(sp::geometry family) {
     const auto golden_lengths = lengths;
     const auto golden_control = control;
     const auto golden_directory = directory;
-    ikea::no_coverage effects;
+    std::array<ikea::journal::entry, 4096> effects_records;
+    ikea::journal effects{effects_records};
     assert(sp::initialize(v, effects));
     const std::array<byte, 3> value{byte{'d'}, byte{'e'}, byte{'f'}};
     for (unsigned rank = 0; rank < 17; ++rank) {
@@ -253,70 +263,71 @@ void wire_fixture(sp::geometry family) {
 
 void schema_encoding() {
     static_assert(sp::slot_capacity == 256 && sp::layout::capacity() == 256);
-    const std::array<byte, 8> maximal{byte{0x41}, byte{0xff}, byte{0xff}, byte{0},
-                                      byte{0xff}, byte{0xff}, byte{0},    byte{0}};
+    const std::array<byte, 13> maximal{
+        byte{'S'}, byte{'K'}, byte{1}, byte{8}, byte{0}, byte{1}, byte{255}, byte{255},
+        byte{0}, byte{255}, byte{255}, byte{0}, byte{0}};
     auto decoded = sp::layout::decode(maximal);
-    assert(decoded && decoded->schema() == sp::description{});
-    assert(decoded->schema().byte_limit == 16776960 && decoded->encode() == maximal);
-    // A schema may end exactly at a protected page; the u24 limit needs no overread.
-    guarded exact(8);
+    assert(decoded && decoded->schema() == sp::layout::options{});
+    std::array<byte, 13> encoded;
+    assert(decoded->schema().byte_limit == 16776960 && decoded->encode(encoded) && encoded == maximal);
+    // Schema ends at a protected page; its LE16 body length grants no overread.
+    guarded exact(maximal.size());
     std::copy(maximal.begin(), maximal.end(), exact.bytes().begin());
     assert(sp::layout::decode(exact.bytes()));
-    for (unsigned flags = 0; flags < 32; ++flags) {
-        const std::array<byte, 8> golden{
-            byte(0x40 | flags),          byte{255}, byte{0}, byte{0x34}, byte{0x12}, byte{0},
-            byte((flags & 16) ? 42 : 0), byte{0}};
-        auto result = sp::layout::decode(golden);
-        assert(result && result->encode() == golden);
+    for (unsigned flags = 0; flags < 256; ++flags) {
+        const std::array<byte, 13> golden{
+            byte{'S'}, byte{'K'}, byte{1}, byte{8}, byte{0}, byte(flags), byte{255}, byte{0},
+            byte{0x34}, byte{0x12}, byte{0}, byte((flags & 32) ? 42 : 0), byte{0}};
+        const unsigned family = flags & 3;
+        const bool separated = flags & 4, full = flags & 8, fixed = flags & 32;
+        // Authored law oracle: separated R/U requires a variable Sizes or
+        // Relative Ends pair. Reserved bits and family3 have no byte law.
+        const bool valid = !(flags & 0xc0) && family < 3 &&
+                           (!separated || (family != 0 && !full && !fixed));
+        const auto result = sp::layout::decode(golden);
+        assert(bool(result) == valid);
+        if (!valid) continue;
+        assert(result->encode(encoded) && encoded == golden);
         const auto &d = result->schema();
-        assert(d.family == ((flags & 1) ? sp::geometry::sizes : sp::geometry::absolute_ends));
-        assert(d.lengths == ((flags & 2) ? sp::placement::separated : sp::placement::grouped));
-        assert(d.full == bool(flags & 4) && d.immortal == bool(flags & 8));
+        assert(unsigned(d.family) == family);
+        assert(d.lengths == (separated ? sp::placement::separated : sp::placement::grouped));
+        assert(d.full == full && d.immortal == bool(flags & 16));
         assert(d.maximum == 255 && d.byte_limit == 4660);
-        assert(d.fixed_reservation ==
-               ((flags & 16) ? std::optional<std::uint16_t>(42) : std::nullopt));
+        assert(d.fixed_reservation == (fixed ? std::optional<std::uint16_t>(42) : std::nullopt));
     }
     auto fixed_zero = maximal;
-    fixed_zero[0] = byte{0x51};
+    fixed_zero[5] = byte{33};
     decoded = sp::layout::decode(fixed_zero);
     assert(decoded && decoded->fixed() && decoded->fixed_width() == 0);
-    fixed_zero[6] = fixed_zero[7] = byte{0xff};
+    fixed_zero[11] = fixed_zero[12] = byte{255};
     decoded = sp::layout::decode(fixed_zero);
-    assert(decoded && decoded->fixed_width() == 65535 && decoded->encode() == fixed_zero);
-    for (unsigned header = 0; header < 256; ++header) {
-        if (header >= 0x40 && header < 0x60)
-            continue;
-        if ((header >> 6) == 3 && (header & 3) != 3)
-            continue; // New descriptors have a separate tag and carrier law.
-        auto bad = maximal;
-        bad[0] = byte(header);
-        assert(!sp::layout::decode(bad));
-    }
-    std::array<byte, 16> legacy{byte{1}};
-    assert(!sp::layout::decode(legacy));
-    for (unsigned size = 0; size < 8; ++size)
+    assert(decoded && decoded->fixed_width() == 65535 && decoded->encode(encoded) && encoded == fixed_zero);
+    for (unsigned size = 0; size < maximal.size(); ++size)
         assert(!sp::layout::decode(std::span(maximal).first(size)));
-    std::array<byte, 9> extended{};
+    std::array<byte, 14> extended{};
     std::copy(maximal.begin(), maximal.end(), extended.begin());
     assert(!sp::layout::decode(extended));
     auto bad = maximal;
-    bad[3] = byte{1}; // One byte beyond 256 maximal reservations.
+    bad[8] = byte{1}; // One byte beyond 256 maximal reservations.
     assert(!sp::layout::decode(bad));
     bad = maximal;
-    bad[6] = byte{1}; // Absent fixed reservation must have zero payload.
+    bad[11] = byte{1}; // Absent fixed reservation must have zero payload.
     assert(!sp::layout::decode(bad));
-    bad = {byte{0x51}, byte{1}, byte{0}, byte{1}, byte{0}, byte{0}, byte{2}, byte{0}};
+    bad = {byte{'S'}, byte{'K'}, byte{1}, byte{8}, byte{0}, byte{33}, byte{1}, byte{0},
+           byte{1}, byte{0}, byte{0}, byte{2}, byte{0}};
     assert(!sp::layout::decode(bad)); // Fixed reservation exceeds maximum.
-    assert(!sp::layout::prepare({.family = sp::geometry(3)}));
-    assert(!sp::layout::prepare({.lengths = sp::placement(2)}));
+    assert(!sp::layout::make({.family = sp::geometry(3)}));
+    assert(!sp::layout::make({.lengths = sp::placement(2)}));
 }
 
+
 void maximal_block(sp::geometry family) {
-    auto l = *sp::layout::prepare({.family = family, .full = true});
+    auto l = *sp::layout::make({.family = family, .full = true});
     guarded directory(l.directory_bytes()), lengths(l.lengths_bytes()), control(l.control_bytes());
     std::vector<byte> payload(16776960), value(65535, byte{0xa7});
-    auto v = *sp::view::bind(l, {payload, directory.bytes(), lengths.bytes(), control.bytes()});
-    ikea::no_coverage effects;
+    auto v = *sp::view::attach(l, {payload, directory.bytes(), lengths.bytes(), control.bytes()});
+    std::array<ikea::journal::entry, 4096> effects_records;
+    ikea::journal effects{effects_records};
     assert(sp::initialize(v, effects));
     for (unsigned rank = 0; rank < 256; ++rank)
         assert(sp::append(v, value, 65535, effects));
@@ -337,9 +348,9 @@ int main() {
     wire_fixture(sp::geometry::absolute_ends);
     // Omitted byte limit follows the reservation maximum at the fixed capacity.
     // Designated schema construction must not accidentally inherit a 16 MiB cap.
-    const auto automatic = sp::layout::prepare({.maximum = 255});
+    const auto automatic = sp::layout::make({.maximum = 255});
     assert(automatic && automatic->schema().byte_limit == sp::slot_capacity * 255);
-    const auto empty = sp::layout::prepare({.maximum = 0});
+    const auto empty = sp::layout::make({.maximum = 0});
     assert(empty && !empty->schema().byte_limit && !empty->lengths_bytes());
     for (auto family : {sp::geometry::absolute_ends, sp::geometry::sizes}) {
         maximal_block(family);

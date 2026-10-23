@@ -3,10 +3,10 @@
 #include <ikea/tuplepack/detail/window.h>
 
 namespace ikea::tuplepack::detail {
-template <unsigned Bytes> [[gnu::always_inline]] inline std::uint64_t load_word(const byte* p) {
+template <unsigned Bytes> [[gnu::always_inline]] inline std::uint64_t load_word(const std::uint8_t* p) {
     static_assert(Bytes == 1 || Bytes == 2 || Bytes == 4 || Bytes == 8);
     using value_type = std::conditional_t<
-        Bytes == 1, byte,
+        Bytes == 1, std::uint8_t,
         std::conditional_t<Bytes == 2, std::uint16_t,
                            std::conditional_t<Bytes == 4, std::uint32_t, std::uint64_t>>>;
     value_type value;
@@ -14,7 +14,7 @@ template <unsigned Bytes> [[gnu::always_inline]] inline std::uint64_t load_word(
     return value;
 }
 /// Exact 0..8-byte loads/stores: a tuple may end at the allocation boundary.
-[[gnu::always_inline]] inline std::uint64_t load_short_word(const byte* p, unsigned bytes) {
+[[gnu::always_inline]] inline std::uint64_t load_short_word(const std::uint8_t* p, unsigned bytes) {
     if (bytes == 8)
         return load_word<8>(p);
     std::uint64_t value = 0;
@@ -31,7 +31,7 @@ template <unsigned Bytes> [[gnu::always_inline]] inline std::uint64_t load_word(
         value |= std::uint64_t(p[offset]) << (8 * offset);
     return value;
 }
-[[gnu::always_inline]] inline void store_short_word(byte* p, std::uint64_t value, unsigned bytes) {
+[[gnu::always_inline]] inline void store_short_word(std::uint8_t* p, std::uint64_t value, unsigned bytes) {
     if (bytes == 8) {
         __builtin_memcpy(p, &value, 8);
         return;
@@ -47,21 +47,21 @@ template <unsigned Bytes> [[gnu::always_inline]] inline std::uint64_t load_word(
         value >>= 16;
     }
     if (bytes & 1)
-        *p = byte(value);
+        *p = std::uint8_t(value);
 }
-[[gnu::always_inline]] inline void write_gpr_single(const gpr_write& p, byte* row,
+[[gnu::always_inline]] inline void write_gpr_single(const gpr_write& p, std::uint8_t* row,
                                                     std::uint64_t input) {
     const auto& b = p.stores[0];
-    row[b.offset] = (b.mask == 255 ? 0 : row[b.offset] & byte(~b.mask)) |
-                    (byte(input >> (8 * b.input[0])) << b.shift[0]);
+    row[b.offset] = (b.mask == 255 ? 0 : row[b.offset] & std::uint8_t(~b.mask)) |
+                    (std::uint8_t(input >> (8 * b.input[0])) << b.shift[0]);
 }
 /// Same point body serves every shape. Word assembly avoids one read/modify/write
 /// per contribution; stores still touch only the declared selected bytes.
 template <unsigned Slots, class GetByte>
-[[gnu::always_inline]] inline void write_gpr_row(const gpr_write& p, byte* row, GetByte get) {
+[[gnu::always_inline]] inline void write_gpr_row(const gpr_write& p, std::uint8_t* row, GetByte get) {
     if (p.word.selected == 1) {
         const auto& b = p.stores[0];
-        row[b.offset] = (b.mask == 255 ? 0 : row[b.offset] & byte(~b.mask)) |
+        row[b.offset] = (b.mask == 255 ? 0 : row[b.offset] & std::uint8_t(~b.mask)) |
                         (get(b.input[0]) << b.shift[0]);
     } else if (p.word.bytes && p.word.selected > 1) {
         const auto& w = p.word;
@@ -72,11 +72,11 @@ template <unsigned Slots, class GetByte>
             if (i < w.selected)
                 next |= std::uint64_t(get(w.input_shift[i] / 8)) << w.output_shift[i];
         for (unsigned i = 0; i < p.count; ++i)
-            row[p.stores[i].offset] = byte(next >> (8 * (p.stores[i].offset - w.offset)));
+            row[p.stores[i].offset] = std::uint8_t(next >> (8 * (p.stores[i].offset - w.offset)));
     } else {
         for (unsigned i = 0; i < p.count; ++i) {
             const auto& b = p.stores[i];
-            byte value = b.mask == 255 ? 0 : row[b.offset] & byte(~b.mask);
+            std::uint8_t value = b.mask == 255 ? 0 : row[b.offset] & std::uint8_t(~b.mask);
             for (unsigned j = 0; j < b.count; ++j)
                 value |= get(b.input[j]) << b.shift[j];
             row[b.offset] = value;
@@ -200,7 +200,7 @@ template <unsigned Rows, class Address>
                 if (active & (std::uint64_t(1) << r))
                     write_gpr_row<B>(
                         p, address(r), [&](unsigned slot) __attribute__((always_inline)) {
-                            return byte(input >>
+                            return std::uint8_t(input >>
                                         (8 * p.read.ordering.template offset<Rows>(r, slot)));
                         });
             return;
@@ -210,7 +210,7 @@ template <unsigned Rows, class Address>
         if (active & (std::uint64_t(1) << r)) {
             const auto row_input = input >> (r * p.read.slots * 8);
             write_gpr_row<B>(p, address(r), [&](unsigned slot) __attribute__((always_inline)) {
-                return byte(row_input >> (8 * slot));
+                return std::uint8_t(row_input >> (8 * slot));
             });
         }
 }

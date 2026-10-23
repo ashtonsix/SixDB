@@ -5,7 +5,7 @@ They preserve useful coverage from the retired Boundlist owner while generic
 search/cut/domain checks live under Intervals.
 
 - `ikea_streampack_compact_geometry_check`: Absolute Ends, Sizes and Relative
-  Ends, fixed/zero geometry, liveness, literal legacy/current descriptors,
+  Ends, fixed/zero geometry, liveness, literal shared layout descriptions,
   partial initialized G16 tails, native packets, original-coordinate rewrites
   and exact source-qualified issued stores.
 - `ikea_streampack_compact_cuts_check`: all four-slot 0..2-size geometries and

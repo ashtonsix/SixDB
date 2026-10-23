@@ -29,7 +29,7 @@ template<class End, bool Used = true, bool Dead = true> struct Fixture {
       : ends(capacity + 1, End{77}), storage(body + 2 * guard, std::byte{0x9d}),
         used(Used ? capacity : 0, 99), tombs(Dead ? capacity / 64 : 0, ~0ull),
         maximum(maximum) {
-    auto w = write(); ikea::no_coverage effects;
+    auto w = write(); ikea::no_effects effects;
     require(w.initialize(effects) == sn::Error::none, "initialize");
   }
   sn::MutableDirect<End, Used, Dead> write() {
@@ -38,7 +38,7 @@ template<class End, bool Used = true, bool Dead = true> struct Fixture {
   }
   auto read() { return write().read(); }
   void append(ByteVector value, unsigned reservation) {
-    auto w = write(); ikea::no_coverage effects;
+    auto w = write(); ikea::no_effects effects;
     require(w.append(value, reservation, effects) == sn::Error::none, "append");
     model.push_back({std::move(value), std::uint16_t(reservation)});
   }
@@ -102,7 +102,7 @@ template<class End> void histories() {
   std::mt19937 rng(724193);
   for (unsigned capacity : {128, 256, 512}) {
     Fixture<End> f(capacity, 60000, 255);
-    ikea::no_coverage effects;
+    ikea::no_effects effects;
     f.verify(); f.search(std::byte{0});
     for (unsigned i = 0; i < capacity; ++i) {
       auto reservation = i % 11 == 0 ? 0 : rng() % 70;
@@ -173,24 +173,24 @@ void aliases_and_effects() {
   for (unsigned i = 0; i < 40; ++i) bytes.push_back(std::byte(i));
   f.append(bytes, 64);
   auto w = f.write();
-  std::array<ikea::owner_write, 8> records;
-  ikea::source_write_journal effects{records};
+  std::array<ikea::journal::entry, 8> records;
+  ikea::journal effects{records};
   auto aliased = w.read().value(0).subspan(3, 20);
   ByteVector oracle(aliased.begin(), aliased.end());
   require(w.replace(0, aliased, effects) == sn::Error::none, "overlap edit");
   f.model[0].value = oracle;
   require(effects.used == 2 && effects.entries()[0].source == &w &&
-      effects.entries()[0].bytes.plane == 0 && effects.entries()[0].bytes.size == 20,
+      effects.entries()[0].plane == 0 && effects.entries()[0].size == 20,
       "source-qualified issued body writes");
   f.verify();
   effects.used = 0;
   auto input = w.read().value(0);
   require(w.append(input, 25, effects) == sn::Error::none, "self source append without grow");
   f.model.push_back({oracle, 25});
-  require(effects.used == 5 && effects.entries()[0].bytes.size == 25, "append plane coverage");
+  require(effects.used == 5 && effects.entries()[0].size == 25, "append plane coverage");
   f.verify();
   auto old_bytes = f.storage; auto old_ends = f.ends; auto old_used = f.used;
-  ikea::source_write_journal tiny{std::span(records).first(1)};
+  ikea::journal tiny{std::span(records).first(1)};
   require(w.replace<true>(0, {}, tiny) == sn::Error::effects, "effect refusal");
   require(tiny.used == 0 && old_bytes == f.storage && old_ends == f.ends && old_used == f.used,
       "effect refusal before stores");
@@ -203,7 +203,7 @@ void aliases_and_effects() {
 
 void continued_soft_history() {
   Fixture<std::uint32_t> f(128, 65536);
-  ikea::no_coverage effects;
+  ikea::no_effects effects;
   for (unsigned round = 0; round < 6; ++round) {
     for (unsigned i = 0; i < 12; ++i) {
       f.append(ByteVector(i, std::byte(i + round)), i + 8); f.verify();
@@ -238,7 +238,7 @@ void maxima_and_exact() {
   Fixture<std::uint16_t> narrow(128, 65536);
   ByteVector full(65535, std::byte{42});
   narrow.append(full, 65535); narrow.append({}, 0); narrow.verify();
-  auto w = narrow.write(); ikea::no_coverage effects;
+  auto w = narrow.write(); ikea::no_effects effects;
   std::array<std::byte, 1> one{std::byte{7}};
   require(w.append(one, 1, effects) == sn::Error::capacity, "u16 exclusive end cliff");
   Fixture<std::uint32_t> wide(512, 131071);
@@ -291,7 +291,7 @@ void orbital_growth() {
     std::array<std::uint64_t, 2> tombs{};
     std::uint16_t count{};
     sn::MutableDirect<std::uint16_t> w{ends, {body.address, body.size}, used, tombs, count};
-    ikea::no_coverage effects;
+    ikea::no_effects effects;
     require(w.initialize(effects) == sn::Error::none, "Orbital core initialize");
     const std::array<std::byte, 5> original{std::byte{1}, std::byte{2}, std::byte{3}, std::byte{4}, std::byte{5}};
     require(w.append(original, 8, effects) == sn::Error::none, "Orbital append");

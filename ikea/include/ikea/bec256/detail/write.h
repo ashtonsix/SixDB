@@ -13,8 +13,8 @@ namespace ikea::bec256::detail {
     return x <= y ? y - x < a_size : x - y < b_size;
 }
 [[gnu::always_inline]] inline std::expected<void, error>
-admit_write(const destination &target, std::size_t offset, unsigned bytes_,
-            const source_write_journal &effects, const void *protected_control,
+admit_write(const view &target, std::size_t offset, unsigned bytes_,
+            const journal &effects, const void *protected_control,
             std::size_t protected_bytes) noexcept {
     if (offset > target.storage.size() || bytes_ > target.storage.size() - offset)
         return std::unexpected(error::capacity);
@@ -37,9 +37,9 @@ admit_write(const destination &target, std::size_t offset, unsigned bytes_,
     return {};
 }
 struct checked_sink {
-    destination &target;
+    view &target;
     std::size_t offset;
-    source_write_journal &effects;
+    journal &effects;
     std::expected<unsigned, error> population_error() const noexcept {
         return std::unexpected(error::population);
     }
@@ -54,7 +54,7 @@ struct checked_sink {
         if (auto admitted = admit_write(target, offset, n, effects, nullptr, 0); !admitted)
             return std::unexpected(admitted.error());
         if (n) {
-            effects.before(target, {0, offset, n});
+            effects.before(target, 0, offset, n);
             emit_exact(values, widths,
                        reinterpret_cast<std::uint8_t *>(target.storage.data()) + offset, n);
         }
@@ -64,7 +64,7 @@ struct checked_sink {
     singleton(std::uint8_t value) const noexcept {
         if (auto admitted = admit_write(target, offset, 1, effects, nullptr, 0); !admitted)
             return std::unexpected(admitted.error());
-        effects.before(target, {0, offset, 1});
+        effects.before(target, 0, offset, 1);
         target.storage[offset] = byte{value};
         return 1;
     }

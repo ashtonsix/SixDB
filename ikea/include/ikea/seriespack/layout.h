@@ -15,10 +15,10 @@ constexpr bool striped_width(unsigned k) {
     return (k > 0 && k < 8) || k == 10 || k == 12 || k == 14 || k == 15 || k == 20;
 }
 
-template <unsigned K, geometry G = geometry::local, unsigned H = 0> struct format {
+template <unsigned K, geometry G = geometry::local, unsigned H = 0> struct layout {
     static_assert(K >= 1 && K <= 64);
     static_assert((H == 0 || H == 8 || H == 16) && H <= K);
-    static_assert(G == geometry::local || striped_width(K - H));
+    static_assert(G == geometry::local || (G == geometry::striped && striped_width(K - H)));
     static constexpr unsigned width = K, heads = H, payload = K - H;
     static constexpr unsigned body = payload / 8, tail = payload % 8;
     static constexpr geometry storage = G;

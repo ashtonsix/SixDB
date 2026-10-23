@@ -84,7 +84,7 @@ Catalog::Owner construct(Worker& worker, compact_version_probe::Memory& memory,
 void expect(cs::Selection selected, std::uint32_t value) {
   CHECK(selected && selected.records() == 2);
   const orbital::View view = take(selected.part(0));
-  const auto* bytes = reinterpret_cast<const v::tp::byte*>(view.address());
+  const auto* bytes = reinterpret_cast<const std::byte*>(view.address());
   const auto& law = cs::tuple_law(selected.shape());
   // Independent source rows, including the non-leading row and all fields.
   CHECK(law.read_unchecked<0>(bytes) == 11 && law.read_unchecked<1>(bytes) == 31);
@@ -112,13 +112,13 @@ void publish(Catalog& store, std::span<const Catalog::Change> changes) {
 struct PhysicalUse {
   orbital::Part<cs::Control>* part;
   orbital::worker::Lane* lane;
-  const v::tp::byte* bytes;
+  const std::byte* bytes;
   cs::ReadLaw law;
   std::atomic<unsigned> references{1};
   orbital::worker::Message returned;
   bool handled{};
   PhysicalUse(cs::Export* owned, loom::Worker& worker) : part(owned),lane(&worker.lane),
-      bytes(reinterpret_cast<const v::tp::byte*>(orbital::view(owned).address())),law(cs::tuple_law(owned)) {
+      bytes(reinterpret_cast<const std::byte*>(orbital::view(owned).address())),law(cs::tuple_law(owned)) {
     static const orbital::worker::MessageOps ops{
       [](auto& message) noexcept {
         auto& use = *static_cast<PhysicalUse*>(message.context);
@@ -269,7 +269,7 @@ void history(bool cancel) {
   caller.reset(); // Destroy Task, Signal and coherent Scope before physical use ends.
   CHECK(!owner.worker.first && !owner.worker.last && !owner.worker.active_tasks);
   // The primary selected-copy Part also survives its issuing Scope and caller.
-  const auto* primary_bytes = reinterpret_cast<const v::tp::byte*>(orbital::view(primary).address());
+  const auto* primary_bytes = reinterpret_cast<const std::byte*>(orbital::view(primary).address());
   CHECK(cs::tuple_law(primary).read_unchecked<2>(primary_bytes) == 101);
   CHECK(cs::tuple_law(primary).read_unchecked<2>(primary_bytes+v::tuple_bytes) == 102);
   CHECK(orbital::binding(primary).object == a && orbital::binding(primary).version == 1);

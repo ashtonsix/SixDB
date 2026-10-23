@@ -20,7 +20,7 @@ template <class D, bool Values = true, class Emit>
 template <bool Values = true, class D>
 [[gnu::always_inline]] void prefetch_primary(word bucket, D& dst) {
     const auto to = access::get(dst);
-    const auto* p = to.primary.data + bucket * D::stride;
+    const auto* p = ikea::to_u8(to.primary.data) + bucket * D::stride;
     // The complete span earns its extra request on larger owners. Small hot
     // owners retain the measured prefix plan; all selection is compile-time.
     if constexpr (std::size_t(D::bucket_count) * D::stride >= 4u * 1024u * 1024u) {
@@ -40,7 +40,7 @@ template <class D, class S, class Reduce>
     const auto from = access::get(src);
     auto to = access::get(dst);
     struct swiss_ref {
-        const byte* tuple;
+        const std::uint8_t* tuple;
         word key;
         typename D::mix_type::result hash;
     };
@@ -50,15 +50,15 @@ template <class D, class S, class Reduce>
         unsigned used = 0;
         while (scan < from.groups * 16 && used < spill.size()) {
             const auto i = scan++;
-            if (!ht::detail::occupied_control(from.controls.data[i]))
+            if (!ht::detail::occupied_control(ikea::to_u8(from.controls.data)[i]))
                 continue;
-            const auto* tuple = from.slots.data + i * S::tuple_bytes;
+            const auto* tuple = ikea::to_u8(from.slots.data) + i * S::tuple_bytes;
             const auto key = ht::load<S::key_bytes>(tuple);
             const auto h = to.mix(key);
             spill[used++] = {tuple, key, h};
             prefetch_primary(h.bucket, dst);
             if (to.groups)
-                __builtin_prefetch(to.controls.data + (h.swiss & (to.groups - 1)) * 16, 1, 3);
+                __builtin_prefetch(ikea::to_u8(to.controls.data) + (h.swiss & (to.groups - 1)) * 16, 1, 3);
         }
         for (unsigned i = 0; i < used; ++i) {
             const auto& r = spill[i];

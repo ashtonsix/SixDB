@@ -54,8 +54,8 @@ directory::directory(layout kind, std::span<const entry> entries, unsigned check
     assert(checkpoint == 16 || checkpoint == 64);
     if (count_ == 0)
         throw std::invalid_argument("empty test directory");
-    std::vector<ikea::owner_write> storage(capacity_ * 4);
-    ikea::source_write_journal effects{storage};
+    std::vector<ikea::journal::entry> storage(capacity_ * 4);
+    ikea::journal effects{storage};
     if (kind == layout::direct || kind == layout::direct32) {
         for (unsigned i = 0; i < count_; ++i) {
             const auto e = entries[i];
@@ -78,22 +78,22 @@ directory::directory(layout kind, std::span<const entry> entries, unsigned check
         }
         if (kind == layout::tuple_absolute)
             for (unsigned b = 0; b < 4; ++b)
-                codes.push_back({tp::byte(b + 2), 0, 8});
+                codes.push_back({std::uint8_t(b + 2), 0, 8});
         tuple_layout_ = *tp::layout::make(kind == layout::tuple_absolute ? 6 : 2, codes);
         tuple_view_ =
-            *tp::view::bind(*tuple_layout_, tuples_.span(), capacity_, tuple_layout_->bytes());
-        const std::array<tp::byte, 7> map{0, 1, 2, 3, 4, 5, 6};
+            *tp::view::attach(*tuple_layout_, std::as_writable_bytes(tuples_.span()), capacity_, tuple_layout_->bytes());
+        const std::array<std::uint8_t, 7> map{0, 1, 2, 3, 4, 5, 6};
         auto mapped = std::span(map).first(codes.size());
-        tuple_plan_ = *tp::reader<8>::make(*tuple_layout_, mapped);
-        tuple_writer_ = *tp::writer<8>::make(*tuple_layout_, mapped);
+        tuple_plan_ = *tp::read_plan<8>::make(*tuple_layout_, mapped);
+        tuple_writer_ = *tp::write_plan<8>::make(*tuple_layout_, mapped);
         tuple_read_ = *tp::bind_reader(*tuple_plan_, *tuple_view_);
         if (kind != layout::tuple_absolute) {
             // This consumer uses u32 lanes; its spare bytes are explicit map
             // holes, not implicit padding supplied by the packet carrier.
-            std::array<tp::byte, 4> frame_map;
+            std::array<std::uint8_t, 4> frame_map;
             frame_map.fill(tp::hole);
             std::copy(mapped.begin(), mapped.end(), frame_map.begin());
-            frame_plan_ = *tp::reader<64, 16>::make(*tuple_layout_, frame_map);
+            frame_plan_ = *tp::read_plan<64, 16>::make(*tuple_layout_, frame_map);
             frame_read_ = *tp::bind_reader(*frame_plan_, *tuple_view_);
         }
         tuple_write_ = *tp::bind_writer(*tuple_writer_, *tuple_view_);
@@ -116,36 +116,36 @@ directory::directory(layout kind, std::span<const entry> entries, unsigned check
             lengths[i] = entries[i].bytes;
         }
         if (folded(kind)) {
-            folded_view_ = *sp::view<folded_populations, std::uint8_t>::attach(
-                capacity_, {{{populations_.span(), folded_populations::tile_bytes}, {}, {}}});
-            folded_write_.emplace(*sp::bind_mutation(*folded_view_));
+            folded_view_ = *sp::view<folded_populations>::attach(
+                capacity_, {{{std::as_writable_bytes(std::span{populations_.span()}), folded_populations::tile_bytes},{},{}}});
+            folded_write_.emplace(*sp::bind_writer(*folded_view_));
             const auto &write = folded_write_;
             for (auto &value : input)
                 value = population_code(value);
             assert(write->initialize<std::uint16_t>(input, effects));
-            folded_reader_ = sp::bind_decoder<std::uint8_t>(*sp::dense(*folded_view_));
+            folded_reader_ = sp::bind_reader(*sp::dense(*folded_view_)).erase<std::uint8_t>();
         } else {
-            population_view_ = *sp::view<populations, std::uint8_t>::attach(
-                capacity_, {{{populations_.span(), populations::tile_bytes}, {}, {}}});
-            population_write_.emplace(*sp::bind_mutation(*population_view_));
+            population_view_ = *sp::view<populations>::attach(
+                capacity_, {{{std::as_writable_bytes(std::span{populations_.span()}), populations::tile_bytes},{},{}}});
+            population_write_.emplace(*sp::bind_writer(*population_view_));
             const auto &write = population_write_;
             assert(write->initialize<std::uint16_t>(input, effects));
-            population_reader_ = sp::bind_decoder<std::uint16_t>(*sp::dense(*population_view_));
+            population_reader_ = sp::bind_reader(*sp::dense(*population_view_)).erase<std::uint16_t>();
         }
         if (!scan(kind)) {
-            local_view_ = *sp::view<local_lengths, std::uint8_t>::attach(
-                capacity_, {{{lengths_.span(), local_lengths::tile_bytes}, {}, {}}});
-            local_write_.emplace(*sp::bind_mutation(*local_view_));
+            local_view_ = *sp::view<local_lengths>::attach(
+                capacity_, {{{std::as_writable_bytes(std::span{lengths_.span()}), local_lengths::tile_bytes},{},{}}});
+            local_write_.emplace(*sp::bind_writer(*local_view_));
             const auto &length_write = local_write_;
             assert(length_write->initialize<std::uint8_t>(lengths, effects));
-            length_reader_ = sp::bind_decoder<std::uint8_t>(*sp::dense(*local_view_));
+            length_reader_ = sp::bind_reader(*sp::dense(*local_view_)).erase<std::uint8_t>();
         } else {
-            scan_view_ = *sp::view<scan_lengths, std::uint8_t>::attach(
-                capacity_, {{{lengths_.span(), scan_lengths::tile_bytes}, {}, {}}});
-            scan_write_.emplace(*sp::bind_mutation(*scan_view_));
+            scan_view_ = *sp::view<scan_lengths>::attach(
+                capacity_, {{{std::as_writable_bytes(std::span{lengths_.span()}), scan_lengths::tile_bytes},{},{}}});
+            scan_write_.emplace(*sp::bind_writer(*scan_view_));
             const auto &length_write = scan_write_;
             assert(length_write->initialize<std::uint8_t>(lengths, effects));
-            length_reader_ = sp::bind_decoder<std::uint8_t>(*sp::dense(*scan_view_));
+            length_reader_ = sp::bind_reader(*sp::dense(*scan_view_)).erase<std::uint8_t>();
         }
     }
     for (unsigned i = 0; i < checkpoints_.size(); ++i) {
@@ -186,17 +186,17 @@ void directory::buffered(unsigned first, unsigned *pops, unsigned *lens) const {
 }
 std::size_t directory::update(unsigned row, entry replacement) {
     assert(row < count_ && replacement.population <= 256 && replacement.bytes <= 47);
-    std::array<ikea::owner_write, 16> storage;
-    ikea::source_write_journal effects{storage};
+    std::array<ikea::journal::entry, 16> storage;
+    ikea::journal effects{storage};
     if (kind_ == layout::direct || kind_ == layout::direct32) {
         const auto word = replacement.population | (std::uint64_t(replacement.bytes) << 9) |
                           (std::uint64_t(replacement.offset) << 15);
         if (kind_ == layout::direct32) {
             assert(replacement.offset < (1u << 17));
-            effects.before(*this, {0, row * 4u, 4});
+            effects.before(*this, 0, row * 4u, 4);
             direct32_[row] = word;
         } else {
-            effects.before(*this, {0, row * 8u, 8});
+            effects.before(*this, 0, row * 8u, 8);
             direct_[row] = word;
         }
     } else if (bec_study::tuple(kind_)) {
@@ -207,25 +207,25 @@ std::size_t directory::update(unsigned row, entry replacement) {
             (kind_ == layout::tuple_absolute ? std::uint64_t(replacement.offset) << 24 : 0);
         assert(write->set(row, value, effects));
     } else {
-        sp::no_summary summary;
+        sp::author::no_summary summary;
         if (folded(kind_)) {
             const auto &p = folded_write_;
-            assert(p->set(row, population_code(replacement.population), summary, effects));
+            assert(p->set(row, population_code(replacement.population), effects, summary));
         } else {
             const auto &p = population_write_;
-            assert(p->set(row, replacement.population, summary, effects));
+            assert(p->set(row, replacement.population, effects, summary));
         }
         if (!scan(kind_)) {
             const auto &l = local_write_;
-            assert(l->set(row, replacement.bytes, summary, effects));
+            assert(l->set(row, replacement.bytes, effects, summary));
         } else {
             const auto &l = scan_write_;
-            assert(l->set(row, replacement.bytes, summary, effects));
+            assert(l->set(row, replacement.bytes, effects, summary));
         }
     }
     std::size_t bytes = 0;
     for (const auto &e : effects.entries())
-        bytes += e.bytes.size;
+        bytes += e.size;
     return bytes;
 }
 #if defined(IKEA_BEC256_AVX512) || defined(__aarch64__)

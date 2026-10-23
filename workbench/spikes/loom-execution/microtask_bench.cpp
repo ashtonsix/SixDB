@@ -40,13 +40,13 @@ struct Dataset {
     std::vector<Entry> directory;
     std::unique_ptr<bec_study::directory> material_directory;
     std::vector<bc::byte> bodies;
-    std::vector<bc::plain_block> plain;
-    std::vector<bc::plain_block> query;
+    std::vector<std::array<std::byte, 32>> plain;
+    std::vector<std::array<std::byte, 32>> query;
     std::size_t range_lines = 0;
     std::size_t storage_bytes() const {
         return nodes.size() * sizeof(Node) + words.size() * sizeof(std::uint64_t) +
                directory.size() * sizeof(Entry) + bodies.size() +
-               (plain.size() + query.size()) * sizeof(bc::plain_block) +
+               (plain.size() + query.size()) * sizeof(std::array<std::byte, 32>) +
                (material_directory ? material_directory->storage_bytes() : 0);
     }
 
@@ -80,7 +80,7 @@ struct Dataset {
                     query[i][j] = bc::byte(random() & 255u);
                     population += std::popcount(raw);
                 }
-                const auto encoding = bc::prepare(plain[i], population);
+                const auto encoding = bc::encoding::make(plain[i], population);
                 if (!encoding)
                     throw std::runtime_error("Bec256 preparation failed");
                 catalog.push_back({population, encoding->bytes(), unsigned(bodies.size())});
@@ -158,14 +158,14 @@ std::uint64_t reference(Work& work, bool vector_live) {
                                    query.data(), data.query[second].data());
 #else
     // Other x86 ISA profiles keep the same operation through the ordinary codec.
-    bc::plain_block decoded;
-    const auto source = bc::source::assume_valid({body, 64}, entry.length, entry.population);
+    std::array<std::byte, 32> decoded;
+    const auto source = bc::bind_reader_unchecked({body, 64}, entry.length, entry.population);
     bc::decode(source, decoded);
     std::uint64_t result = 0;
     for (unsigned j = 0; j < 32; ++j)
         result += std::popcount(std::to_integer<unsigned>(decoded[j]) &
                                std::to_integer<unsigned>(query[j]));
-    const auto source_second = bc::source::assume_valid(
+    const auto source_second = bc::bind_reader_unchecked(
         {second_body, 64}, second_entry.length, second_entry.population);
     bc::decode(source_second, decoded);
     for (unsigned j = 0; j < 32; ++j)

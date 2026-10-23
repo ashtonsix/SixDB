@@ -30,8 +30,8 @@ including indefinitely cold segments undergoing lazy migration.
 | --- | --- |
 | Attached bytes | Every operation using the view; owner synchronizes concurrent access |
 | Named view used by a placed binding or expression | Until all borrowed invocations/effect identity resolution finish; placement stays stable |
-| Typed prepared mutation | Until erased endpoints finish; moving it requires rebinding |
-| Dense read descriptor wrapper | Can expire after binding; bytes remain borrowed |
+| Typed expression reader or writer | Until erased endpoints finish; moving it requires rebinding |
+| Dense source or typed dense reader wrapper | Can expire after erasure; pointer/count proof is copied and bytes remain borrowed |
 | Input, selection words, journal storage and summary | Through invocation; through a stop when retained by the driver |
 | CPS plan and bindings | Through the whole chain; no stage-local address crosses a tail hop |
 
@@ -62,24 +62,35 @@ neighbors. They do not promise minimal differences, beforeimages or a transactio
 barrier. Cancellation after a successful chunk needs owner resolution; it is not
 a failed command with an unchanged-effects guarantee.
 
+## Binding lifetimes
+
+`bind_reader(view)` and `bind_writer(view)` borrow the named admitted view.
+Bindings over expressions own their small node tree and borrow its named leaves.
+A general typed reader's `erase<U>()` and a writer's `erase<U,Summary>()` borrow
+the typed operation; temporary erasure is deleted. Direct
+`bind_reader<U>(view)` instead borrows the view itself and selects the physical
+range body at binding. Its rvalue-view overload is deleted. Dense sources copy
+a pointer/count proof into either form of erased reader and require only the
+bytes to survive. None of these forms extends the data owner's lifetime.
+
 ## Scalar point building blocks
 
-`<ikea/seriespack/point.h>` exposes `get`, `get_unchecked`, `set` and
-`set_unchecked` over an admitted physical `view`. These are scalar leaf operations
-for composition authors and private construction; they retain the same original
-row coordinates and packed bytes as the bound operations. The header works
-without a native execution profile.
+`<ikea/seriespack/point.h>` exposes ordinary `get` and `get_unchecked` over
+an admitted physical view. `<ikea/seriespack/author/store.h>` exposes the raw
+physical `author::store` and `author::store_unchecked` leaves for composition
+authors and private construction. They retain the original row coordinates and
+packed bytes of bound operations.
 
-`get` checks the row. `set` checks the row and unsigned value width before any
-data access; refusal leaves bytes unchanged. The unchecked forms require those
-facts from the caller. Both forms borrow placement, accessible byte extents,
-owner lifetime and synchronization from the admitted view.
+`get` checks the row. `author::store` checks the row and unsigned value width
+before data access; refusal leaves bytes unchanged. Their unchecked forms require
+those proofs from the caller. Both forms borrow placement, accessible byte
+extents, owner lifetime and synchronization from the admitted view.
 
 Raw point stores preserve other fields sharing a packed byte. Those bytes must
 already be initialized, and the caller must isolate the complete bytes touched
 by the store from concurrent writers. A raw point store does not clear final-tile
 slack, emit write effects or contribute to summaries. For coordinated owner
-mutations, use `bind_mutation` and its prepared `set`/`replace`/`initialize`
+mutations, use `bind_writer` and its bound `set`/`replace`/`initialize`
 operations, which report issued source-qualified writes and apply the chosen
 summary law. A raw leaf store does not inherit those operation-level guarantees.
 
@@ -92,9 +103,11 @@ summary law. A raw leaf store does not inherit those operation-level guarantees.
 | Linux x86 AVX-512 (`x86-64-v4`) | Wider grouped bodies where useful; VBMI/VBMI2/GFNI paths compile only with their feature flags |
 
 Select the ISA at build time. Headless dense reads have a compiled runtime
-width/layout binder; placed/composed operations bind concrete types. Full mutation
-and CPS require one of the native profiles above. Scalar wire/point functions
-are available as building blocks and correctness fallbacks.
+width/layout binder; placed/composed operations bind concrete types. The current
+Ikea minimum is AArch64 with SIMD or x86-64 with AVX2 (`x86-64-v3`). Ordinary
+operations are present on both supported targets. Scalar point/wire algorithms
+remain internal building blocks; they do not establish a lower public target
+minimum. ISA-specialized internals require their stated extra feature flags.
 
 Manual fusion, inline execution and CPS retain the same logical contract. CPS is
 straight-through with early completion, a bounded power-of-two function table and
@@ -105,4 +118,4 @@ Suspension happens after returning to the owning driver.
 
 The in-process recorder exposes loads, bit joins, predicates and reduction with
 source identity and selection. Its addresses refer to live bindings. Use
-[physical descriptors](representation.md#recovery-and-descriptor-v1) for recovery.
+[shared byte-law descriptions](representation.md#recovery-and-shared-byte-law) for recovery.

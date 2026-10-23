@@ -1,15 +1,14 @@
 #pragma once
+#include <ikea/hashtable/types.h>
 #include <cstdint>
 #include <cstring>
 #include <type_traits>
 #include <utility>
 
 namespace ikea::hashtable {
-using word = std::uint64_t;
-using byte = std::uint8_t;
 template <unsigned K> constexpr word mask = ~word{0} >> (64 - K);
 template <> inline constexpr word mask<0> = 0;
-template <unsigned N> inline word load(const byte* p) {
+template <unsigned N> inline word load(const std::uint8_t* p) {
     static_assert(N <= 8);
     word v = 0;
     std::memcpy(&v, p, N);

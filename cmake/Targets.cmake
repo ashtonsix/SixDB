@@ -1,4 +1,12 @@
-set(SIXDB_MARCH "" CACHE STRING "Explicit compiler -march value; empty uses the target baseline")
+# Current Ikea backends require NEON or AVX2. Choose that profile for a fresh
+# build; an explicitly supplied cache value still owns the target selection.
+set(sixdb_default_march "")
+if(CMAKE_SYSTEM_PROCESSOR MATCHES "^(x86_64|AMD64|amd64)$")
+  set(sixdb_default_march x86-64-v3)
+elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "^(aarch64|arm64)$")
+  set(sixdb_default_march armv8-a+simd)
+endif()
+set(SIXDB_MARCH "${sixdb_default_march}" CACHE STRING "Compiler -march profile; empty uses compiler flags")
 option(SIXDB_TIME_TRACE "Emit Clang compilation time traces" OFF)
 
 add_library(sixdb_build_options INTERFACE)

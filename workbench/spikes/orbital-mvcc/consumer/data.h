@@ -17,13 +17,13 @@ enum class Field : unsigned { key, next, value, tag };
 constexpr std::size_t field_count = 4;
 constexpr std::size_t conversion_chunk = 128;
 constexpr unsigned tuple_bytes = 23;
-template<unsigned K> using Column = sp::format<K, sp::geometry::local, 0>;
+template<unsigned K> using Column = sp::layout<K, sp::geometry::local, 0>;
 
 struct Schema {
   const tp::layout tuple;
-  const tp::constructor constructor;
-  const std::array<tp::reader<8>, field_count> readers;
-  const std::array<tp::writer<8>, field_count> writers;
+  const tp::write_plan<128> constructor;
+  const std::array<tp::read_plan<8>, field_count> readers;
+  const std::array<tp::write_plan<8>, field_count> writers;
   Schema();
 };
 
@@ -36,16 +36,16 @@ struct ColumnControl { const std::size_t records; };
 class TupleBody;
 class ColumnBody;
 class TupleCursor {
-  const tp::byte* data_;
-  explicit TupleCursor(const tp::byte* data) : data_(data) {}
+  const std::byte* data_;
+  explicit TupleCursor(const std::byte* data) : data_(data) {}
   friend class ReadData;
   friend class TupleBody;
 public:
   TupleBody open(const TupleControl&) const;
 };
 template<unsigned K> class ColumnCursor {
-  const std::uint8_t* data_;
-  explicit ColumnCursor(const std::uint8_t* data) : data_(data) {}
+  const std::byte* data_;
+  explicit ColumnCursor(const std::byte* data) : data_(data) {}
   friend class ReadData;
   friend class ColumnBody;
 };

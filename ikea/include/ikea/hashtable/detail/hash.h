@@ -16,9 +16,9 @@ template <unsigned W, unsigned K> struct permutation {
         word bucket, quotient, swiss;
         // Derived only after routing to overflow; primary reads/writes do not
         // pay the reserved-code remapping cost.
-        byte fingerprint() const {
-            const byte x = byte(swiss >> 56);
-            return byte(x + (x < 2 ? 8 : 0));
+        std::uint8_t fingerprint() const {
+            const std::uint8_t x = std::uint8_t(swiss >> 56);
+            return std::uint8_t(x + (x < 2 ? 8 : 0));
         }
     };
     [[gnu::always_inline]] result operator()(word key) const {
@@ -38,11 +38,16 @@ template <unsigned W, unsigned K> struct permutation {
         return {bucket, low_bits<K>(lo), h};
     }
     word recover(word bucket, word quotient) const {
-        const word y = K == 64 ? quotient : (bucket << K) | quotient;
+        const word y = [&] {
+            if constexpr (K == 64)
+                return quotient;
+            else
+                return (bucket << K) | quotient;
+        }();
         return ((y * inverse) ^ seed) & mask<W>;
     }
 };
-inline unsigned equal_controls(const byte* p, byte rhs) {
+inline unsigned equal_controls(const std::uint8_t* p, std::uint8_t rhs) {
 #if defined(__aarch64__)
     const auto lanes = vceqq_u8(vld1q_u8(p), vdupq_n_u8(rhs));
     return ikea::detail::filter::byte_bits(lanes);

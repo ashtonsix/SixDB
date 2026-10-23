@@ -14,8 +14,8 @@ namespace sp = ikea::seriespack;
 using C = ikea::comparison;
 using word = std::uint64_t;
 template<unsigned B> using Packet = sp::native::values<B * 8>;
-template<unsigned B> using Chain = sp::chain<B * 8, 4>;
-template<unsigned K> using Source = sp::dense_source<sp::format<K>>;
+template<unsigned B> using Chain = sp::author::chain<B * 8, 4>;
+template<unsigned K> using Source = sp::dense_source<sp::layout<K>>;
 struct Binding { const void* source; void* chain; word query{}; std::uint16_t result{}; };
 using Call = std::uint16_t(*)(Binding&, std::size_t, word, std::uint16_t);
 
@@ -24,14 +24,14 @@ template<unsigned K>
     std::uint16_t active, Packet<sizeof(sp::uint_for<K>)>, unsigned)
     -> typename Chain<sizeof(sp::uint_for<K>)>::result {
     const auto& source = *static_cast<const Source<K>*>(static_cast<Binding*>(opaque)->source);
-    sp::composition::native_ops ops;
-    auto decoded = sp::composition::read(ops, sp::composition::describe(source), row, active);
+    sp::author::native_ops ops;
+    auto decoded = sp::author::read(ops, sp::author::expression(source), row, active);
     return {Packet<sizeof(sp::uint_for<K>)>{decoded.v}, active};
 }
 template<unsigned B, C Op>
 [[gnu::always_inline]] auto compare_body(void* opaque, std::size_t,
     std::uint16_t active, Packet<B> value, unsigned) -> typename Chain<B>::result {
-    auto bits = sp::filter_values<Op>(value, static_cast<Binding*>(opaque)->query, active);
+    auto bits = sp::author::filter_values<Op>(value, static_cast<Binding*>(opaque)->query, active);
     return {value, bits};
 }
 template<unsigned B>
@@ -49,8 +49,8 @@ template<unsigned B>
 template<unsigned K, C Op>
 [[gnu::noinline]] std::uint16_t fused(Binding& state, std::size_t first,
     word rhs, std::uint16_t active) {
-    return sp::composition::filter16_unchecked<Op>(
-        sp::composition::describe(*static_cast<const Source<K>*>(state.source)),
+    return sp::author::filter16_unchecked<Op>(
+        sp::author::expression(*static_cast<const Source<K>*>(state.source)),
         first, rhs, active);
 }
 template<unsigned K, C Op> constexpr bool hot =
@@ -108,7 +108,7 @@ template<unsigned B> constexpr auto comparisons() {
 template<unsigned K> word run() {
     std::array<std::uint8_t,K*8> bytes{};
     std::array<word,64> truth{};encode(K,bytes.data(),truth.data());
-    Source<K> source{bytes.data(),64};Binding state{&source,nullptr};
+    Source<K> source{std::as_bytes(std::span{bytes}).data(),64};Binding state{&source,nullptr};
     word checksum=0;
     constexpr bool all_hot = K<=5 || K==8 || K==16 || K==32 || K==64;
     if constexpr (MODE == 0 || (MODE==2 && all_hot)) {
@@ -120,7 +120,7 @@ template<unsigned K> word run() {
         for(unsigned op=0;op<5;++op) {
             std::array<typename Chain<B>::function,2> stages{
                 &Chain<B>::template stage<decode_body<K>>,compare[op]};
-            auto chain=*Chain<B>::prepare(stages,&Chain<B>::template completion<finish<B>>);
+            auto chain=*Chain<B>::make(stages,&Chain<B>::template completion<finish<B>>);
             state.chain=&chain;Call call=&shared_entry<B>;
             if constexpr(MODE==2) {auto selected=fused_calls<K>();if(selected[op])call=selected[op];}
             checksum+=verify(call,state,K,C(op),truth.data());

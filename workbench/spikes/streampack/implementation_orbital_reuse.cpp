@@ -84,7 +84,7 @@ enum class Policy { full_copy, selected, exported };
 const char* name(Policy policy) {
     return policy == Policy::full_copy ? "full-copy" : policy == Policy::selected ? "retained-selection" : "retained-parts";
 }
-const char* name(sp::geometry geometry) { return geometry == sp::geometry::direct ? "direct" : "width"; }
+const char* name(sp::geometry geometry) { return geometry == sp::geometry::absolute_ends ? "direct" : "width"; }
 const char* name(om::Placement placement) { return placement == om::Placement::grouped ? "grouped" : "separate"; }
 
 Rows rows(unsigned count) {
@@ -109,8 +109,9 @@ om::Store::Owner initial(Runtime& runtime, om::Store& store, Memory& memory,
     const auto bytes = std::accumulate(input.begin(), input.end(), std::size_t{},
         [](std::size_t total, const auto& value) { return total + value.size() + 3; });
     auto draft = take(om::Draft::create(runtime.worker, format, memory, bytes, placement), "construct actual StreamPack");
-    ikea::no_coverage effects;
+    std::array<ikea::journal::entry, 16> records; ikea::journal effects{records};
     for (unsigned row = 0; row < input.size(); ++row) {
+        effects.used = 0;
         require(bool(sp::append(draft.write(), input[row], input[row].size() + 3, effects)), "append application value");
         draft.holders()[row] = row;
     }
@@ -419,7 +420,7 @@ void bench(sp::geometry geometry, om::Placement placement, Policy policy, const 
 int main(int argc, char** argv) {
     const auto args = options(argc, argv);
     if (args.check) {
-        for (auto geometry : {sp::geometry::direct, sp::geometry::width})
+        for (auto geometry : {sp::geometry::absolute_ends, sp::geometry::sizes})
             for (auto placement : {om::Placement::grouped, om::Placement::separate})
                 for (auto policy : {Policy::full_copy, Policy::selected, Policy::exported})
                     for (auto retention : {orbital::PartRetention::shared_control, orbital::PartRetention::selected_copy})
@@ -427,7 +428,7 @@ int main(int argc, char** argv) {
         std::puts("PASS: actual StreamPack, retained Parts/fresh Allocations, identities, refusal, generations and resource independence");
     } else {
         std::cout << "geometry,source_placement,policy,event,round,rows,total_ns,copied_bytes,fresh_parts,retained_parts,exported_parts,pool_mapped,pool_reserved,pool_metadata,catalog_metadata,consumed_bytes,checksum\n";
-        for (auto geometry : {sp::geometry::direct, sp::geometry::width})
+        for (auto geometry : {sp::geometry::absolute_ends, sp::geometry::sizes})
             for (auto placement : {om::Placement::grouped, om::Placement::separate})
                 for (auto policy : {Policy::full_copy, Policy::selected, Policy::exported}) bench(geometry, placement, policy, args);
     }

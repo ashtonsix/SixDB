@@ -8,10 +8,13 @@ using namespace ikea::hashtable;
 // the actual table may store anything.
 struct context {
     struct region {
-        mutation_source source;
-        std::vector<byte> old, covered;
+        unsigned plane;
+        std::span<const std::byte> storage;
+        std::vector<std::byte> old;
+        std::vector<std::uint8_t> covered;
     };
     const void* owner = nullptr;
+    std::span<const std::byte> (*current)(const void*, unsigned) noexcept = nullptr;
     word key = 0;
     unsigned object = 7, grant_object = 7, generation = 3, lease_generation = 3, budget = 4;
     bool live = true, write = true, exclusive = true, allow_prepare = true, before_ok = true;
@@ -19,25 +22,19 @@ struct context {
     std::vector<region> regions;
     template <class Table> void snapshot(const Table& table, word requested) {
         owner = &table;
+        current = [](const void* owner, unsigned id) noexcept {
+            return static_cast<const Table*>(owner)->plane_storage(plane(id));
+        };
         key = requested;
         observations = 0;
         before_ok = true;
         regions.clear();
-        auto add = [&](owner_part part, const byte* base, std::size_t extent) {
-            regions.push_back(
-                {{owner, part, base, extent}, {base, base + extent}, std::vector<byte>(extent)});
-        };
-        add(owner_part::header, reinterpret_cast<const byte*>(&table), sizeof(table));
-        table.allocations([&](const char* name, const byte* base, std::size_t extent) {
-            const auto label = std::string_view(name);
-            const auto part = label == "primary"               ? owner_part::primary
-                              : label == "swiss_controls"      ? owner_part::swiss_controls
-                              : label == "singleton_bags"      ? owner_part::singleton_bags
-                              : label == "small_variable_bags" ? owner_part::small_variable_bags
-                              : label == "large_variable_bags" ? owner_part::large_variable_bags
-                                                               : owner_part::swiss_tuples;
-            add(part, base, extent);
-        });
+        for (auto id : {plane::header, plane::primary, plane::swiss_controls, plane::swiss_tuples}) {
+            const auto storage = table.plane_storage(id);
+            std::vector<std::byte> old;
+            if (!storage.empty()) old.assign(storage.begin(),storage.end());
+            regions.push_back({unsigned(id),storage,std::move(old),std::vector<std::uint8_t>(storage.size())});
+        }
     }
     template <class Table>
     bool enter(const Table& table, word requested, access_intent intent) const {
@@ -45,30 +42,33 @@ struct context {
                generation == lease_generation && exclusive &&
                (intent == access_intent::read || write);
     }
-    region* resolve(mutation_source source) {
+    region* resolve(const void* source, unsigned id) {
+        if (source != owner || !current) return nullptr;
+        const auto storage = current(owner,id);
         for (auto& r : regions)
-            if (r.source.owner == source.owner && r.source.part == source.part &&
-                r.source.base == source.base && r.source.extent == source.extent)
-                return &r;
+            if (r.plane == id && r.storage.data() == storage.data() &&
+                r.storage.size() == storage.size()) return &r;
         return nullptr;
     }
-    bool prepare(std::span<const mutation_damage> writes) {
-        if (!allow_prepare || writes.size() > budget)
+    bool prepare(std::span<const ikea::journal::entry> writes) {
+        if (!allow_prepare || writes.size() > budget || generation != lease_generation)
             return false;
-        for (auto d : writes)
-            if (!resolve(d.source) || d.span.plane || d.span.offset > d.source.extent ||
-                d.span.size > d.source.extent - d.span.offset)
-                return false;
+        for (const auto& d : writes) {
+            const auto* r = resolve(d.source,d.plane);
+            if (!r || !d.size || d.offset > r->storage.size() ||
+                d.size > r->storage.size() - d.offset) return false;
+        }
         return true;
     }
-    void before(mutation_source source, ikea::byte_write span) noexcept {
-        auto* r = resolve(source);
-        if (!r) {
+    template<class Table>
+    void before(const Table& source, unsigned id, std::size_t offset, std::size_t size) noexcept {
+        auto* r = resolve(&source,id);
+        if (!r || offset > r->storage.size() || size > r->storage.size() - offset) {
             before_ok = false;
             return;
         }
-        for (std::size_t i = span.offset; i < span.offset + span.size; ++i) {
-            before_ok &= source.base[i] == r->old[i];
+        for (std::size_t i = offset; i < offset + size; ++i) {
+            before_ok &= r->storage[i] == r->old[i];
             r->covered[i] = 1;
         }
         ++observations;
@@ -77,15 +77,15 @@ struct context {
         require(before_ok, "damage did not precede stores");
         for (const auto& r : regions)
             for (std::size_t i = 0; i < r.old.size(); ++i)
-                if (r.old[i] != r.source.base[i])
+                if (r.old[i] != r.storage[i])
                     require(!unchanged && r.covered[i], "uncovered or refused store");
-        if (unchanged)
-            require(observations == 0, "refusal published damage");
+        if (unchanged) require(observations == 0, "refusal published damage");
     }
 };
 
 template <class Table, write_strategy Writes = write_strategy::mixed> void run() {
     Table table(713);
+    static_assert(ikea::effects<context,Table>);
     context c;
     std::unordered_map<word, word> expected;
     auto insert = [&](word key, word value) {
@@ -185,6 +185,7 @@ template <class Table, write_strategy Writes = write_strategy::mixed> void run()
 void concentrated() {
     using Table = table<20, 4, 8, 16>;
     Table table(713);
+    static_assert(ikea::effects<context,Table>);
     context c;
     typename Table::mix_type mix{713};
     std::vector<word> keys;
@@ -213,7 +214,55 @@ void concentrated() {
     require(table.guarded_erase(1u << 20, c) == mutation_status::denied, "invalid W key");
     c.verify(true);
 }
+void source_plane_contract() {
+    using Table = table<16,8,8,8>;
+    static_assert(ikea::effects<context,Table> && ikea::effects<ikea::journal,Table>);
+    static_assert(std::is_same_v<typename Table::value_type::value_type,std::byte>);
+    static_assert(std::is_same_v<decltype(Table::borrowed_value{}.address),const std::byte*>);
+    Table owner(713), other(713);
+    context c;
+    c.snapshot(owner,7);
+    const auto primary = owner.plane_storage(plane::primary);
+    require(!primary.empty() && owner.plane_storage(plane::header).size() == sizeof(owner),
+            "owner resolves current physical planes");
+    std::array<ikea::journal::entry,2> planned{{
+        {&owner,unsigned(plane::primary),0,1},
+        {&other,unsigned(plane::primary),0,1}}};
+    require(!c.prepare(planned), "late wrong source refuses whole preparation");
+    c.verify(true);
+    planned[1] = {&owner,99,0,1};
+    require(!c.prepare(planned), "unknown source plane refuses preparation");
+    planned[1] = {&owner,unsigned(plane::primary),primary.size(),1};
+    require(!c.prepare(planned), "plane-relative extent is checked");
+    planned[1] = {&owner,unsigned(plane::primary),1,std::numeric_limits<std::size_t>::max()};
+    require(!c.prepare(planned), "plane span arithmetic does not wrap");
+    c.verify(true);
+    planned[1] = {&owner,unsigned(plane::header),0,sizeof(owner)};
+    require(c.prepare(planned), "same stable owner identifies separate planes");
+    ++c.generation;
+    require(!c.prepare(planned), "preparation rechecks source generation");
+    --c.generation;
+    c.budget = 1;
+    require(!c.prepare(planned), "all records are budgeted before effects");
+    c.verify(true);
+    std::array<ikea::journal::entry,2> recorded{};
+    ikea::journal effects{recorded};
+    effects.before(owner,unsigned(plane::primary),0,1);
+    effects.before(owner,unsigned(plane::header),0,sizeof(owner));
+    require(effects.entries().size() == 2 && recorded[0].source == &owner &&
+                recorded[1].source == &owner && recorded[0].plane != recorded[1].plane,
+            "journal retains actual table identity rather than transient preflight state");
+    require(Table::effect_capacity_insert() >= planned.size() &&
+                Table::effect_capacity_modify() >= Table::effect_capacity_insert(),
+            "command capacity is a conservative additional-record bound");
+    heap_storage_policy::buffer buffer(64);
+    static_assert(std::is_same_v<decltype(buffer.data),std::byte*>);
+    const auto refused = buffer.relinquish_tail(128);
+    require(!refused && refused.error() == error::range && buffer.size == 64,
+            "storage extent failure remains distinct from mutation outcomes");
+}
 int main() {
+    source_plane_contract();
     run<table<16, 4, 2, 12>>();
     run<table<16, 4, 0, 12>>();
     run<table<16, 8, 2, 8>>();

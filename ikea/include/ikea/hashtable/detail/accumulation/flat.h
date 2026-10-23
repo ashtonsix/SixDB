@@ -5,7 +5,7 @@ namespace ikea::hashtable::detail::accumulation {
 template <unsigned T> using flat_image = std::array<__m512i, (T + 1) / 2>;
 // The complete 64-byte owner admits all reads, including flags/slack which
 // are removed by constant masks. Every tile still has the maintained Local law.
-template <unsigned E, unsigned T> [[gnu::always_inline]] flat_image<T> read_flat(const byte* p) {
+template <unsigned E, unsigned T> [[gnu::always_inline]] flat_image<T> read_flat(const std::uint8_t* p) {
     static_assert(E >= 10 && E <= 30 && T >= 2 && T <= 5 && T * (E + 1) <= 63);
     if constexpr (T == 2 && E >= 24)
         return {read_packed<E>(p)};
@@ -18,7 +18,7 @@ template <unsigned E, unsigned T> [[gnu::always_inline]] flat_image<T> read_flat
                 return _mm512_setzero_si512();
             else {
                 alignas(64) static constexpr auto order = [] {
-                    std::array<byte, 64> a{};
+                    std::array<std::uint8_t, 64> a{};
                     for (unsigned t = 0; t < T; ++t)
                         for (unsigned j = 0; j < 8; ++j)
                             a[t * 8 + j] = t * E + 8 * B + 7 - j;
@@ -34,7 +34,7 @@ template <unsigned E, unsigned T> [[gnu::always_inline]] flat_image<T> read_flat
         ht::each<(T + 1) / 2>([&](auto part) __attribute__((always_inline)) {
             constexpr unsigned Part = decltype(part)::value;
             alignas(64) static constexpr auto order = [] {
-                std::array<byte, 64> a{};
+                std::array<std::uint8_t, 64> a{};
                 for (unsigned r = 0; r < 16; ++r)
                     if (Part * 16 + r < N)
                         for (unsigned j = 0; j < B; ++j)
@@ -59,17 +59,17 @@ template <unsigned E, unsigned T> [[gnu::always_inline]] flat_image<T> read_flat
     }
 }
 template <unsigned E, unsigned T>
-[[gnu::always_inline]] void write_flat(byte* p, const flat_image<T>& keys, word live) {
+[[gnu::always_inline]] void write_flat(std::uint8_t* p, const flat_image<T>& keys, word live) {
     static_assert(E >= 10 && E <= 30 && T >= 2 && T <= 5 && T * (E + 1) <= 63);
     if constexpr (T == 2 && E >= 24)
         write_packed_vector<E>(p, keys[0], unsigned(live));
     else {
         constexpr unsigned B = E / 8, R = E % 8, N = T * 8, Banks = (T + 1) / 2;
         alignas(64) static constexpr auto body_order = [] {
-            std::array<byte, 64> a{};
+            std::array<std::uint8_t, 64> a{};
             for (unsigned r = 0; r < N; ++r)
                 for (unsigned j = 0; j < B; ++j)
-                    a[(r / 8) * E + (r % 8) * B + j] = byte(r * 4 + j);
+                    a[(r / 8) * E + (r % 8) * B + j] = std::uint8_t(r * 4 + j);
             return a;
         }();
         constexpr word body_mask = [] {
@@ -89,10 +89,10 @@ template <unsigned E, unsigned T>
         }();
         if constexpr (Banks == 3) {
             alignas(64) static constexpr auto third_order = [] {
-                std::array<byte, 64> a{};
+                std::array<std::uint8_t, 64> a{};
                 for (unsigned r = 32; r < N; ++r)
                     for (unsigned j = 0; j < B; ++j)
-                        a[(r / 8) * E + (r % 8) * B + j] = byte((r - 32) * 4 + j);
+                        a[(r / 8) * E + (r % 8) * B + j] = std::uint8_t((r - 32) * 4 + j);
                 return a;
             }();
             constexpr word third_mask = [] {
@@ -122,7 +122,7 @@ template <unsigned E, unsigned T>
                     _mm512_gf2p8affine_epi64_epi8(_mm512_set1_epi64(0x8040201008040201ULL),
                                                   _mm512_shuffle_epi8(rows, reverse), 0);
                 alignas(64) static constexpr auto order = [] {
-                    std::array<byte, 64> a{};
+                    std::array<std::uint8_t, 64> a{};
                     for (unsigned t = 0; t < T; ++t)
                         for (unsigned j = 0; j < R; ++j)
                             a[t * E + 8 * B + j] = t * 8 + j;
@@ -140,7 +140,7 @@ template <unsigned E, unsigned T>
             }
         }();
         alignas(64) static constexpr auto flag_order = [] {
-            std::array<byte, 64> a{};
+            std::array<std::uint8_t, 64> a{};
             for (unsigned j = 0; j < T; ++j)
                 a[E * T + j] = j;
             return a;
@@ -153,7 +153,7 @@ template <unsigned E, unsigned T>
         _mm512_storeu_si512(p, _mm512_mask_mov_epi8(_mm512_loadu_si512(p), changed, encoded));
     }
 }
-template <class S> [[gnu::always_inline]] void decode_flat_source(const byte* p, word* out) {
+template <class S> [[gnu::always_inline]] void decode_flat_source(const std::uint8_t* p, word* out) {
     if constexpr (!S::bitmap && S::B == 64 && S::T >= 2 && S::T <= 5 && S::encoding <= 30) {
         const auto keys = read_flat<S::encoding, S::T>(p);
         ht::each<(S::T + 1) / 2>([&](auto part) __attribute__((always_inline)) {

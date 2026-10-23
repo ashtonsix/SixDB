@@ -7,14 +7,14 @@ namespace ht = ikea::hashtable;
 using Requests = std::array<ht::word, 1031>;
 
 // Borrowed bytes need not be aligned or contain a C++ integer object.
-ht::word field(const ht::byte* p) {
+ht::word field(const std::byte* p) {
     ht::word value;
     std::memcpy(&value, p, sizeof(value));
     return value;
 }
 template <ht::lookup_hint Hint, class View>
 ht::word read_range(View view, const Requests& requests, std::size_t first, std::size_t count) {
-    struct Pending { const ht::byte* value; };
+    struct Pending { const std::byte* value; };
     std::array<Pending, 16> pending;
     ht::word sum = 0;
     const auto consume = [&](const Pending& item) {
@@ -36,7 +36,7 @@ ht::word read_range(View view, const Requests& requests, std::size_t first, std:
 }
 
 int main() {
-    auto owner = ht::descriptor<24, 64>::explicit_encoding<10>(713);
+    auto owner = ht::erased_table<24, 64>::explicit_encoding<10>(713);
     for (ht::word key = 0; key < 64; ++key) {
         ht::bytes<64> value{};
         const ht::word first = key + 1, last = first * 3;

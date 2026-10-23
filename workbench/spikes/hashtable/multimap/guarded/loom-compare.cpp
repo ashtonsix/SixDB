@@ -13,7 +13,7 @@
 
 namespace writes {
 namespace ht=ikea::hashtable;
-using ht::word;using ht::byte;
+using ht::word;using byte=std::byte;
 constexpr unsigned b=WRITE_ARCH_LOOM_WRITE_B,K=WRITE_ARCH_LOOM_WRITE_K,V=WRITE_ARCH_V,W=b+K;
 using MM=write_arch::multimap<W,b,V,false>;
 constexpr unsigned encoding=write_arch::read_profile<K,V,true>().width;
@@ -26,8 +26,8 @@ using Ring=loom::Ring<void*>;
 constexpr unsigned bank=32,lookahead=32,quantum=128;
 struct Context {
     bool enter(const MM&,word,ht::access_intent)const noexcept{return true;}
-    bool prepare(std::span<const ht::mutation_damage>,std::span<const ht::mutation_source>)const noexcept{return true;}
-    void before(ht::mutation_source,ikea::byte_write)const noexcept{}
+    bool prepare(std::span<const ikea::journal::entry>,std::span<const write_arch::physical_region>)const noexcept{return true;}
+    void before(const void*,unsigned,std::size_t,std::size_t)const noexcept{}
 };
 word mix(word x){x^=x>>30;x*=0xbf58476d1ce4e5b9ULL;x^=x>>27;x*=0x94d049bb133111ebULL;return x^(x>>31);}
 word key(word rank,word seed){word x=(rank^seed)&ht::mask<W>;x^=x>>(W/2);x=x*0xbf58476d1ce4e5b9ULL&ht::mask<W>;x^=x>>(W/3);return x*0x94d049bb133111ebULL&ht::mask<W>;}

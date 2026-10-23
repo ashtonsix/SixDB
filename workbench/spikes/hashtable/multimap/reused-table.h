@@ -38,7 +38,7 @@ class reused_table : public Reader {
     using Base::prepare_absent;
     using Base::vacancy_for_absent;
     static constexpr std::size_t absent=~std::size_t{0};
-    static constexpr byte empty=ht::detail::control_empty,tombstone=ht::detail::control_tombstone;
+    static constexpr byte empty=byte{ht::detail::control_empty},tombstone=byte{ht::detail::control_tombstone};
     using buffer=ht::heap_storage_policy::buffer;
     using hash_type=ht::permutation<W,K>;
     using hash_result=typename hash_type::result;
@@ -46,13 +46,13 @@ class reused_table : public Reader {
     const byte* bucket(word id)const{return state().primary.data+id*stride;}
     static word vacancies(const byte* p){return ht::load<T>(p+flags);}
     static unsigned locate(const byte* p,word q) {
-        if constexpr(Base::bitmap)return ht::author::table_access::primary_find<Base>(p,q);
+        if constexpr(Base::bitmap)return ht::author::table_access::primary_find<Base>(ikea::to_u8(p),q);
         else {
         word matches=0;
 #if defined(__AVX512VBMI__) && defined(__GFNI__)
-        if constexpr(E==14)matches=ht::detail::exact_small_bucket<E,T>(p,q);
+        if constexpr(E==14)matches=ht::detail::exact_small_bucket<E,T>(ikea::to_u8(p),q);
         else if constexpr(E==16)matches=_mm512_cmpeq_epi16_mask(_mm512_loadu_si512(p),_mm512_set1_epi16(short(q)))&ht::mask<Base::N>;
-        else if constexpr(E==30)matches=ht::detail::exact30<true,false>(p,q);
+        else if constexpr(E==30)matches=ht::detail::exact30<true,false>(ikea::to_u8(p),q);
         else if constexpr(E==32)matches=_mm512_cmpeq_epi32_mask(_mm512_loadu_si512(p),_mm512_set1_epi32(int(q)));
         else
 #endif
@@ -63,7 +63,7 @@ class reused_table : public Reader {
                 const auto tails=ht::load<8>(p+(row/8)*E+8)>>(row%8);
                 return ((((tails&planes)*0x0102040810204080ULL)>>56)&63)==(q&63);
             };
-            const auto bodies=ht::detail::small_body_comparisons_neon<E>(p,q);
+            const auto bodies=ht::detail::small_body_comparisons_neon<E>(ikea::to_u8(p),q);
             if(q){const auto first=ht::detail::first_small_body_neon(bodies);if(first==255)return N;
                 if(exact(first))return first;
                 matches=ht::detail::small_body_mask_neon(bodies);matches&=matches-1;
@@ -73,7 +73,7 @@ class reused_table : public Reader {
         }else if constexpr(E==30){
             // Maintained NEON reader: pick a body row, then check its six
             // residual bits. Shared upserts retain their complete-mask path.
-            auto candidates=ht::detail::body30_neon_nibbles(p,q);
+            auto candidates=ht::detail::body30_neon_nibbles(ikea::to_u8(p),q);
             while(candidates){
                 const auto row=unsigned(std::countr_zero(candidates)/4);
                 const auto planes=ht::load<8>(p+(row/8)*30+24)>>(row%8);
@@ -94,10 +94,10 @@ class reused_table : public Reader {
         }else
 #endif
         {
-            using F=ht::sp::format<E,ht::sp::geometry::local,0>;
+            using F=ht::sp::layout<E,ht::sp::geometry::local,0>;
             const ht::sp::dense_source<F> source{p,N};
-            const auto expression=ht::sp::composition::describe(source);
-            ht::each<T>([&](auto tile){matches|=word(ht::sp::composition::filter8_unchecked<ikea::comparison::equal>(expression,tile*8,q))<<(tile*8);});
+            const auto expression=ht::sp::author::expression(source);
+            ht::each<T>([&](auto tile){matches|=word(ht::sp::author::filter8_unchecked<ikea::comparison::equal>(expression,tile*8,q))<<(tile*8);});
         }
         if constexpr(E==K)if(!q)matches&=~vacancies(p);
         return matches?unsigned(std::countr_zero(matches)):N;
@@ -107,9 +107,9 @@ class reused_table : public Reader {
     static row_mask matching_rows(const byte* p,word q) {
         word matches=0;
 #if defined(__AVX512VBMI__) && defined(__GFNI__)
-        if constexpr(E==14)matches=ht::detail::exact_small_bucket<E,T>(p,q);
+        if constexpr(E==14)matches=ht::detail::exact_small_bucket<E,T>(ikea::to_u8(p),q);
         else if constexpr(E==16)matches=_mm512_cmpeq_epi16_mask(_mm512_loadu_si512(p),_mm512_set1_epi16(short(q)))&ht::mask<Base::N>;
-        else if constexpr(E==30)matches=ht::detail::exact30<true,false>(p,q);
+        else if constexpr(E==30)matches=ht::detail::exact30<true,false>(ikea::to_u8(p),q);
         else if constexpr(E==32)matches=_mm512_cmpeq_epi32_mask(_mm512_loadu_si512(p),_mm512_set1_epi32(int(q)));
         else
 #endif
@@ -117,9 +117,9 @@ class reused_table : public Reader {
             // Complete masks avoid retaining the first-body matcher's inner
             // presence/retry branches in the mixed-upsert control. The split
             // path still uses locate() and its first-row optimization.
-            using F=ht::sp::format<E,ht::sp::geometry::local,0>;
-            const ht::sp::dense_source<F> source{p,N};const auto expression=ht::sp::composition::describe(source);
-            ht::each<T>([&](auto tile){matches|=word(ht::sp::composition::filter8_unchecked<ikea::comparison::equal>(expression,tile*8,q))<<(tile*8);});
+            using F=ht::sp::layout<E,ht::sp::geometry::local,0>;
+            const ht::sp::dense_source<F> source{p,N};const auto expression=ht::sp::author::expression(source);
+            ht::each<T>([&](auto tile){matches|=word(ht::sp::author::filter8_unchecked<ikea::comparison::equal>(expression,tile*8,q))<<(tile*8);});
         }
         if constexpr(E==K)if(!q)matches&=~vacancies(p);
         return row_mask(matches);
@@ -129,10 +129,10 @@ class reused_table : public Reader {
     template<class Found> [[gnu::always_inline]] static bool read_primary(const byte* p,word q,Found&& found) {
         constexpr auto kernel=read_profile<W-b,ProfileV,ProfileMulti>().kernel;
         if constexpr(Base::bitmap||kernel==ht::search_kernel::neon64||kernel==ht::search_kernel::neon30||kernel==ht::search_kernel::body_small_neon){
-            const auto row=ht::author::table_access::primary_find<Base>(p,q);
+            const auto row=ht::author::table_access::primary_find<Base>(ikea::to_u8(p),q);
             if(row==N)return false;found(row);return true;
         }else {
-            const auto matches=ht::author::table_access::primary_matches<Base>(p,q);
+            const auto matches=ht::author::table_access::primary_matches<Base>(ikea::to_u8(p),q);
             if(!matches)return false;found(unsigned(std::countr_zero(matches)));return true;
         }
     }
@@ -147,7 +147,7 @@ class reused_table : public Reader {
 #if __has_feature(address_sanitizer)
         if constexpr(LiveRows)__asan_unpoison_memory_region(p+B+row*V,V);
 #endif
-        if constexpr(V%8!=0)ht::author::table_access::write_value<Base>(p,row,v);
+        if constexpr(V%8!=0)ht::author::table_access::write_value<Base>(ikea::to_u8(p),row,v);
         else if constexpr(V)ht::each<V/8>([&](auto limb){assign<64>(p+B,row*(V/8)+limb,Base::value_rows*(V/8),ht::load<8>(v.data()+limb*8));});
     }
     static void occupy(byte* p,unsigned row,word q,const ht::bytes<V>& v) {
@@ -162,12 +162,12 @@ class reused_table : public Reader {
         if(!state().groups)return absent;
         auto group=swiss&(state().groups-1);std::size_t step=0;
         for(;;){const auto* control=state().controls.data+group*16;
-            auto candidates=ht::equal_controls(control,hash_result{0,0,swiss}.fingerprint());
+            auto candidates=write_arch::equal_controls(control,hash_result{0,0,swiss}.fingerprint());
             while(candidates){const auto lane=std::countr_zero(candidates);candidates&=candidates-1;
                 const auto slot=group*16+lane;
-                if(ht::tuple_field<key_bytes>::read(state().slots.data+slot*tuple_bytes)==key)return slot;
+                if(write_arch::tuple_field<key_bytes>::read(state().slots.data+slot*tuple_bytes)==key)return slot;
             }
-            if(ht::equal_controls(control,empty))return absent;
+            if(write_arch::equal_controls(control,empty))return absent;
             group=(group+(++step))&(state().groups-1);
         }
     }
@@ -177,13 +177,13 @@ class reused_table : public Reader {
         if(!state().groups)return {absent,false};
         auto group=h.swiss&(state().groups-1);std::size_t step=0,available=absent;
         for(;;){const auto* control=state().controls.data+group*16;
-            auto candidates=ht::equal_controls(control,h.fingerprint());
+            auto candidates=write_arch::equal_controls(control,h.fingerprint());
             while(candidates){const auto lane=std::countr_zero(candidates);candidates&=candidates-1;
                 const auto slot=group*16+lane;
-                if(ht::tuple_field<key_bytes>::read(state().slots.data+slot*tuple_bytes)==key)return {slot,true};
+                if(write_arch::tuple_field<key_bytes>::read(state().slots.data+slot*tuple_bytes)==key)return {slot,true};
             }
-            const auto empties=ht::equal_controls(control,empty);
-            if(available==absent){const auto free=empties|ht::equal_controls(control,tombstone);
+            const auto empties=write_arch::equal_controls(control,empty);
+            if(available==absent){const auto free=empties|write_arch::equal_controls(control,tombstone);
                 if(free)available=group*16+std::countr_zero(free);}
             if(empties)return {available,false};
             group=(group+(++step))&(state().groups-1);
@@ -193,28 +193,28 @@ class reused_table : public Reader {
         state().deleted-=state().controls.data[slot]==tombstone;
         ht::store<key_bytes>(state().slots.data+slot*tuple_bytes,key);
         if constexpr(V)std::memcpy(state().slots.data+slot*tuple_bytes+key_bytes,v.data(),V);
-        state().controls.data[slot]=h.fingerprint();++state().spill;
+        state().controls.data[slot]=byte(h.fingerprint());++state().spill;
     }
     [[gnu::noinline]] void grow_swiss() {
         const auto next=state().groups?state().groups*2:1;
         buffer controls(next*16),slots(next*16*tuple_bytes);
-        std::memset(controls.data,empty,next*16);
+        std::memset(controls.data,number(empty),next*16);
         auto old_controls=std::move(state().controls);auto old_slots=std::move(state().slots);const auto old_groups=state().groups;
         state().controls=std::move(controls);state().slots=std::move(slots);state().groups=next;state().spill=state().deleted=0;
-        for(std::size_t i=0;i<old_groups*16;++i)if(ht::detail::occupied_control(old_controls.data[i])){
+        for(std::size_t i=0;i<old_groups*16;++i)if(write_arch::occupied_control(old_controls.data[i])){
             const auto key=ht::load<key_bytes>(old_slots.data+i*tuple_bytes);const auto h=state().mix(key);
             ht::bytes<V> v{};if constexpr(V)std::memcpy(v.data(),old_slots.data+i*tuple_bytes+key_bytes,V);
             store_swiss(resolve_swiss(key,h).slot,key,v,h);
         }
     }
     [[gnu::noinline]] bool insert_slow(word key,const ht::bytes<V>& v,const hash_result& h,word free) {
-        auto* p=bucket(h.bucket);auto found=p[B-1]?resolve_swiss(key,h):swiss_position{absent,false};
+        auto* p=bucket(h.bucket);auto found=(p[B-1]!=byte{0})?resolve_swiss(key,h):swiss_position{absent,false};
         if(found.present){if constexpr(V)std::memcpy(state().slots.data+found.slot*tuple_bytes+key_bytes,v.data(),V);return false;}
         if(free)occupy(p,unsigned(std::countr_zero(free)),h.quotient,v);
         else {
             if(!state().groups||(state().spill+state().deleted+1)*8>state().groups*16*7){grow_swiss();found.slot=absent;}
             if(found.slot==absent)found=resolve_swiss(key,h);
-            store_swiss(found.slot,key,v,h);if(p[B-1]!=255)++p[B-1];
+            store_swiss(found.slot,key,v,h);if(p[B-1]!=byte{255})p[B-1]=byte(number(p[B-1])+1);
         }
         ++state().size;return true;
     }
@@ -224,7 +224,7 @@ class reused_table : public Reader {
 #else
     template<class Edit> [[gnu::noinline]] bool edit_slow(word key,const hash_result& h,word free,Edit&& edit) {
 #endif
-        auto* p=bucket(h.bucket);auto found=p[B-1]?resolve_swiss(key,h):swiss_position{absent,false};
+        auto* p=bucket(h.bucket);auto found=(p[B-1]!=byte{0})?resolve_swiss(key,h):swiss_position{absent,false};
         if(found.present){edit(state().slots.data+found.slot*tuple_bytes+key_bytes,true);return false;}
         if(free){const auto row=unsigned(std::countr_zero(free));edit(p+B+row*V,false);
             assign<E>(p,row,N,h.quotient);p[flags+row/8]&=byte(~(1u<<(row%8)));
@@ -234,7 +234,7 @@ class reused_table : public Reader {
             edit(state().slots.data+found.slot*tuple_bytes+key_bytes,false);
             state().deleted-=state().controls.data[found.slot]==tombstone;
             ht::store<key_bytes>(state().slots.data+found.slot*tuple_bytes,key);
-            state().controls.data[found.slot]=h.fingerprint();++state().spill;if(p[B-1]!=255)++p[B-1];
+            state().controls.data[found.slot]=byte(h.fingerprint());++state().spill;if(p[B-1]!=byte{255})p[B-1]=byte(number(p[B-1])+1);
         }
         ++state().size;return true;
     }
@@ -243,7 +243,7 @@ class reused_table : public Reader {
     // exhausted Swiss tier asks the caller to prepare capacity and re-admit.
     // No route/head escapes this call and no reader implementation changes.
     template<class Context> ht::mutation_status guarded_mutate(word key,const ht::bytes<V>* incoming,Context& context) {
-        using ht::mutation_status;using ht::owner_part;
+        using ht::mutation_status;using ht::plane;
         if((key&~ht::mask<W>)||!context.enter(*this,key,ht::access_intent::write))return mutation_status::denied;
         // The input may refer to this owner. Preserve it before preparation or
         // idempotent packed-key writes can change any of its bytes.
@@ -254,7 +254,7 @@ class reused_table : public Reader {
             else {const auto mask=matching_rows(p,h.quotient);return mask?unsigned(std::countr_zero(mask)):N;}
         }();
         auto swiss=swiss_position{absent,false};
-        if constexpr(!Base::bitmap)if(row==N&&p[B-1])swiss=resolve_swiss(key,h);
+        if constexpr(!Base::bitmap)if(row==N&&p[B-1]!=byte{0})swiss=resolve_swiss(key,h);
         const bool existing=row!=N||swiss.present;
         if(!incoming&&!existing)return mutation_status::absent;
         if constexpr(!V)if(incoming&&existing&&
@@ -270,26 +270,26 @@ class reused_table : public Reader {
                 }
             }
         }
-        std::array<ht::mutation_damage,4> damage{};unsigned count=0;
-        auto add=[&](owner_part part,const byte* base,std::size_t extent,std::size_t offset,std::size_t bytes){
-            damage[count++]={{this,part,base,extent},{0,offset,bytes}};
+        std::array<ikea::journal::entry,4> damage{};unsigned count=0;
+        auto add=[&](plane part,const byte* base,std::size_t extent,std::size_t offset,std::size_t bytes){
+            damage[count++]={this,unsigned(part),offset,bytes};
         };
-        if(row!=N)add(owner_part::primary,state().primary.data,state().primary.size,h.bucket*stride,stride);
+        if(row!=N)add(plane::primary,state().primary.data,state().primary.size,h.bucket*stride,stride);
         else {
             if(!existing||!incoming){
-                add(owner_part::swiss_controls,state().controls.data,state().controls.size,swiss.slot,1);
-                if(p[B-1]!=255)add(owner_part::primary,state().primary.data,state().primary.size,h.bucket*stride+B-1,1);
+                add(plane::swiss_controls,state().controls.data,state().controls.size,swiss.slot,1);
+                if(p[B-1]!=byte{255})add(plane::primary,state().primary.data,state().primary.size,h.bucket*stride+B-1,1);
             }
-            if(incoming)add(owner_part::swiss_tuples,state().slots.data,state().slots.size,
+            if(incoming)add(plane::swiss_tuples,state().slots.data,state().slots.size,
                 swiss.slot*tuple_bytes+(existing?key_bytes:0),existing?V:tuple_bytes);
         }
         constexpr bool shared=Flow==upsert_flow::shared_stores&&!Base::bitmap;
         if(!existing||!incoming||(shared&&row!=N))
-            add(owner_part::header,reinterpret_cast<const byte*>(this),sizeof(*this),0,sizeof(*this));
-        const auto writes=std::span<const ht::mutation_damage>(damage.data(),count);
+            add(plane::header,reinterpret_cast<const byte*>(this),sizeof(*this),0,sizeof(*this));
+        const auto writes=std::span<const ikea::journal::entry>(damage.data(),count);
         if(!context.prepare(writes))return mutation_status::denied;
-        static_assert(noexcept(context.before(damage[0].source,damage[0].span)));
-        for(const auto& d:writes)context.before(d.source,d.span);
+        static_assert(noexcept(context.before(*this,damage[0].plane,damage[0].offset,damage[0].size)));
+        for(const auto& d:writes)context.before(*this,d.plane,d.offset,d.size);
         // Only owner-proven native stores follow; callbacks cannot invalidate
         // this operation's storage or reenter it under the Context contract.
         if(row!=N){
@@ -309,10 +309,10 @@ class reused_table : public Reader {
             }
         }else if(incoming){
             if(existing){if constexpr(V)std::memcpy(state().slots.data+swiss.slot*tuple_bytes+key_bytes,snapshot.data(),V);}
-            else {store_swiss(swiss.slot,key,snapshot,h);++state().size;if(p[B-1]!=255)++p[B-1];}
+            else {store_swiss(swiss.slot,key,snapshot,h);++state().size;if(p[B-1]!=byte{255})p[B-1]=byte(number(p[B-1])+1);}
         }else {
             state().controls.data[swiss.slot]=tombstone;--state().spill;++state().deleted;--state().size;
-            if(p[B-1]!=255)--p[B-1];
+            if(p[B-1]!=byte{255})p[B-1]=byte(number(p[B-1])-1);
         }
         return !incoming?mutation_status::erased:existing?(V?mutation_status::updated:mutation_status::unchanged):mutation_status::inserted;
     }
@@ -351,7 +351,7 @@ class reused_table : public Reader {
         static_assert(V>0&&V%8==0&&!LiveRows);ht::require(!(key&~ht::mask<W>),"mutable cell key domain");
         if constexpr(Base::bitmap){
             const auto h=state().mix(key);auto* p=bucket(h.bucket);const auto bit=byte(1u<<(h.quotient%8));
-            const bool present=p[h.quotient/8]&bit;
+            const bool present=(p[h.quotient/8]&bit)!=byte{0};
             edit(p+B+h.quotient*V,present);p[h.quotient/8]|=bit;state().size+=!present;return !present;
         }else {
         const auto h=state().mix(key);auto* p=bucket(h.bucket);
@@ -363,7 +363,7 @@ class reused_table : public Reader {
         if(row!=N){edit(p+B+row*V,true);return false;}
 #endif
         const auto free=vacancies(p);
-        if(free&&!p[B-1]){const auto at=unsigned(std::countr_zero(free));edit(p+B+at*V,false);
+        if(free&&p[B-1]==byte{0}){const auto at=unsigned(std::countr_zero(free));edit(p+B+at*V,false);
             assign<E>(p,at,N,h.quotient);p[flags+at/8]&=byte(~(1u<<(at%8)));++state().size;return true;}
 #if WRITE_ARCH_DEFER_CELL_HASH
         return edit_slow(key,free,std::forward<Edit>(edit));
@@ -377,15 +377,15 @@ class reused_table : public Reader {
         ht::require(!(key&~ht::mask<W>),"erase cell key domain");
         if constexpr(Base::bitmap){
             const auto h=state().mix(key);auto* p=bucket(h.bucket);const auto bit=byte(1u<<(h.quotient%8));
-            if(!(p[h.quotient/8]&bit))return false;
+            if((p[h.quotient/8]&bit)==byte{0})return false;
             retire(p+B+h.quotient*V);p[h.quotient/8]&=byte(~bit);--state().size;return true;
         }else {
         const auto h=state().mix(key);auto* p=bucket(h.bucket);const auto row=locate(p,h.quotient);
         if(row!=N){retire(p+B+row*V);assign<E>(p,row,N,E>K?ht::mask<E>:0);
             p[flags+row/8]|=byte(1u<<(row%8));--state().size;return true;}
-        if(p[B-1]){const auto found=resolve_swiss(key,h);if(found.present){
+        if(p[B-1]!=byte{0}){const auto found=resolve_swiss(key,h);if(found.present){
             retire(state().slots.data+found.slot*tuple_bytes+key_bytes);
-            state().controls.data[found.slot]=tombstone;--state().spill;++state().deleted;--state().size;if(p[B-1]!=255)--p[B-1];return true;}}
+            state().controls.data[found.slot]=tombstone;--state().spill;++state().deleted;--state().size;if(p[B-1]!=byte{255})p[B-1]=byte(number(p[B-1])-1);return true;}}
         return false;
         }
     }
@@ -400,7 +400,7 @@ class reused_table : public Reader {
             // An existing primary row wins over every vacancy. An absent key
             // needs a Swiss absence proof whenever this bucket has overflow,
             // even if erasure has since left a primary hole.
-            const auto admissible=free&(word{0}-word(p[B-1]==0));
+            const auto admissible=free&(word{0}-word(p[B-1]==byte{0}));
             const auto candidates=[&]{
                 if constexpr(Base::N<=32)return select_candidates(fresh,matching,unsigned(admissible));
                 else return matching|(admissible&(word{0}-word(fresh)));
@@ -421,7 +421,7 @@ class reused_table : public Reader {
         const auto row=locate(p,h.quotient);
         if(row!=N){value(p,row,v);return false;}
         const auto free=vacancies(p);
-        if(free&&!p[B-1]){occupy(p,unsigned(std::countr_zero(free)),h.quotient,v);++state().size;return true;}
+        if(free&&p[B-1]==byte{0}){occupy(p,unsigned(std::countr_zero(free)),h.quotient,v);++state().size;return true;}
         return insert_slow(key,v,h,free);
         }
     }
@@ -431,7 +431,7 @@ class reused_table : public Reader {
         ht::require(!(key&~ht::mask<W>),"write architecture key domain");
         const auto h=state().mix(key);auto* p=bucket(h.bucket);const auto row=locate(p,h.quotient);
         if(row!=N){assign<E>(p,row,N,E>K?ht::mask<E>:0);p[flags+row/8]|=byte(1u<<(row%8));hide_value(p,row);--state().size;return true;}
-        if(p[B-1]){const auto found=resolve_swiss(key,h);if(found.present){state().controls.data[found.slot]=tombstone;--state().spill;++state().deleted;--state().size;if(p[B-1]!=255)--p[B-1];return true;}}
+        if(p[B-1]!=byte{0}){const auto found=resolve_swiss(key,h);if(found.present){state().controls.data[found.slot]=tombstone;--state().spill;++state().deleted;--state().size;if(p[B-1]!=byte{255})p[B-1]=byte(number(p[B-1])-1);return true;}}
         return false;
         }
     }
@@ -443,8 +443,8 @@ class reused_table : public Reader {
         }
         template<unsigned Limb> [[gnu::always_inline]] word read()const {
             static_assert(Limb<V/8);
-            if constexpr(Primary)return ht::direct_point<64>(source,row*(V/8)+Limb,Base::value_rows*(V/8));
-            else return ht::tuple_field<8>::read(source+Limb*8);
+            if constexpr(Primary)return write_arch::direct_point<64>(source,row*(V/8)+Limb,Base::value_rows*(V/8));
+            else return write_arch::tuple_field<8>::read(source+Limb*8);
         }
         template<unsigned Bytes,unsigned First> [[gnu::always_inline]] ht::bytes<Bytes> value()const {
             static_assert(Bytes%8==0&&First+Bytes/8<=V/8);ht::bytes<Bytes> result;
@@ -460,7 +460,7 @@ class reused_table : public Reader {
         }))return true;
         if constexpr(Base::bitmap)return false;
         else {
-        if(!p.primary[B-1])return false;const auto found=find_swiss(key,p.hash.swiss);if(found==absent)return false;
+        if(p.primary[B-1]==byte{0})return false;const auto found=find_swiss(key,p.hash.swiss);if(found==absent)return false;
         if constexpr(V)consume(const_cell<false>{state().slots.data+found*tuple_bytes+key_bytes,0});return true;
         }
     }
@@ -481,16 +481,16 @@ class reused_table : public Reader {
                 }else {found=true;return true;}
             }
             if constexpr(Base::bitmap){found=false;return true;}
-            else if(!primary[B-1]){found=false;return true;}
+            else if(primary[B-1]==byte{0}){found=false;return true;}
             s.group=s.first.hash.swiss&(state().groups-1);s.phase=staged_phase::controls;emit(state().controls.data+s.group*16,16);return false;
         }
         if(s.phase==staged_phase::value){if constexpr(V)consume(const_cell<true>{primary+B,s.slot});found=true;return true;}
         if(s.phase==staged_phase::controls){const auto* control=state().controls.data+s.group*16;
-            s.candidates=ht::equal_controls(control,s.first.hash.fingerprint());s.empty_group=ht::equal_controls(control,empty)!=0;
+            s.candidates=write_arch::equal_controls(control,s.first.hash.fingerprint());s.empty_group=write_arch::equal_controls(control,empty)!=0;
         }else {
             const auto slot=s.group*16+std::countr_zero(s.candidates);s.candidates&=s.candidates-1;
             const auto* tuple=state().slots.data+slot*tuple_bytes;
-            if(ht::tuple_field<key_bytes>::read(tuple)==s.key){
+            if(write_arch::tuple_field<key_bytes>::read(tuple)==s.key){
                 if constexpr(V)consume(const_cell<false>{tuple+key_bytes,0});found=true;return true;
             }
         }
@@ -504,14 +504,14 @@ class reused_table : public Reader {
         static_assert(V>0);std::size_t count=0;
         for(std::size_t id=0;id<bucket_count;++id){const auto* p=bucket(id);
             for(unsigned row=0;row<N;++row){
-                const bool live=[&]{if constexpr(Base::bitmap)return bool(p[row/8]&(1u<<(row%8)));
-                    else return !(p[flags+row/8]&(1u<<(row%8)));}();
+                const bool live=[&]{if constexpr(Base::bitmap)return bool(number(p[row/8])&(1u<<(row%8)));
+                    else return !(number(p[flags+row/8])&(1u<<(row%8)));}();
                 if(!live)continue;
-                const word q=[&]{if constexpr(Base::bitmap)return word(row);else return ht::point<E>(p,row,N);}();
+                const word q=[&]{if constexpr(Base::bitmap)return word(row);else return write_arch::point<E>(p,row,N);}();
                 visit(state().mix.recover(id,q),p+B+row*V);++count;
             }
         }
-        for(std::size_t slot=0;slot<state().groups*16;++slot)if(ht::detail::occupied_control(state().controls.data[slot])){
+        for(std::size_t slot=0;slot<state().groups*16;++slot)if(write_arch::occupied_control(state().controls.data[slot])){
             const auto* p=state().slots.data+slot*tuple_bytes;visit(ht::load<key_bytes>(p),p+key_bytes);++count;
         }
         ht::require(count==state().size,"mutable cell census");

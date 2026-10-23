@@ -56,13 +56,13 @@ template <unsigned Bytes, unsigned I>
 }
 template <unsigned Bytes, unsigned Mode>
 [[gnu::always_inline]] inline std::uint64_t load_word(const detail::packet_placement &p,
-                                                      const byte *row) {
+                                                      const std::uint8_t *row) {
     if constexpr (Mode != 2) {
         if constexpr (Mode == 0) {
             using word = std::conditional_t<
                 Bytes == 8, std::uint64_t,
                 std::conditional_t<Bytes == 4, std::uint32_t,
-                                   std::conditional_t<Bytes == 2, std::uint16_t, byte>>>;
+                                   std::conditional_t<Bytes == 2, std::uint16_t, std::uint8_t>>>;
             word x;
             __builtin_memcpy(&x, row + p.first, Bytes);
             return x;
@@ -81,25 +81,25 @@ template <unsigned Bytes, unsigned Mode>
     return word;
 }
 template <unsigned Bytes, unsigned Mode>
-[[gnu::always_inline]] inline void store_word(const detail::packet_placement &p, byte *row,
+[[gnu::always_inline]] inline void store_word(const detail::packet_placement &p, std::uint8_t *row,
                                               std::uint64_t value) {
     if constexpr (Mode != 2) {
         if constexpr (Mode == 0) {
             __builtin_memcpy(row + p.first, &value, Bytes);
         } else if constexpr (Bytes == 4) {
             __builtin_memcpy(row + p.first, &value, 2);
-            row[p.first + 2] = byte(value >> 16);
+            row[p.first + 2] = std::uint8_t(value >> 16);
         } else
             store_tail8(row + p.first, p.count, value);
         return;
     }
     [&]<std::size_t... I>(std::index_sequence<I...>) __attribute__((always_inline)) {
-        ((I < p.count ? void(row[p.offsets[I]] = byte(value >> (8 * I))) : void()), ...);
+        ((I < p.count ? void(row[p.offsets[I]] = std::uint8_t(value >> (8 * I))) : void()), ...);
     }(std::make_index_sequence<Bytes>{});
 }
 template <unsigned Part, unsigned Mode>
 [[gnu::always_inline]] inline vector16 gather16(const detail::packet_placement &p,
-                                                const byte *row) {
+                                                const std::uint8_t *row) {
     if constexpr (Mode == 0)
         return load16(row + p.first + Part * 16, 16);
     if (p.count <= Part * 16)
@@ -115,7 +115,7 @@ template <unsigned Part, unsigned Mode>
     return result;
 }
 template <unsigned Part, unsigned Mode>
-[[gnu::always_inline]] inline void scatter16(const detail::packet_placement &p, byte *row,
+[[gnu::always_inline]] inline void scatter16(const detail::packet_placement &p, std::uint8_t *row,
                                              vector16 value) {
     if constexpr (Mode == 0) {
         store16(row + p.first + Part * 16, 16, value);
@@ -364,12 +364,12 @@ template <unsigned Rows, class Address>
             const auto window = native::load_unit(address(first) + p.first, (last + 1 - first) * G);
             const uint8x16x4_t table{{window.a, window.b, window.c, window.d}};
             static constexpr auto iota = [] {
-                std::array<byte, 64> x{};
+                std::array<std::uint8_t, 64> x{};
                 for (unsigned i = 0; i < 64; ++i)
-                    x[i] = byte(i);
+                    x[i] = std::uint8_t(i);
                 return x;
             }();
-            const auto shift = vdupq_n_u8(byte(first * G));
+            const auto shift = vdupq_n_u8(std::uint8_t(first * G));
             const auto mask = native::row_mask<Rows>(active);
             auto place = [&](unsigned part, uint8x16_t keep) __attribute__((always_inline)) {
                 return vandq_u8(
@@ -413,7 +413,7 @@ template <unsigned Rows, class Address>
 }
 // Packet fallbacks consume only 16/32 decoded bytes. Retain per-part dispatch
 // so their callers can eliminate unused outputs without full-packet branching.
-[[gnu::always_inline]] inline packet point_read(const detail::read64 &p, const byte *row) {
+[[gnu::always_inline]] inline packet point_read(const detail::read64 &p, const std::uint8_t *row) {
 #if defined(__aarch64__)
     return native::transform<false>(
         join(load_chunk<0>(p, row), load_chunk<1>(p, row),
@@ -422,7 +422,7 @@ template <unsigned Rows, class Address>
     return native::read_body(p, row);
 #endif
 }
-[[gnu::always_inline]] inline void point_write(const detail::packet_write &p, byte *row,
+[[gnu::always_inline]] inline void point_write(const detail::packet_write &p, std::uint8_t *row,
                                                packet input) {
     store_selected(row, encode(p, row, input), p.writes);
 }

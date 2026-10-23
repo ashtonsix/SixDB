@@ -26,10 +26,10 @@ static constexpr std::array<unsigned, 15> screened_populations{
     1, 2, 4, 8, 16, 32, 64, 128, 192, 224, 240, 248, 252, 254, 255};
 template <method mode> static void codec(benchmark::State &state, unsigned shape) {
     std::mt19937_64 rng(0xbec256);
-    std::array<bc::plain_block, 256> input;
+    std::array<std::array<std::byte, 32>, 256> input;
     std::array<std::array<bc::byte, 64>, 256> body;
     std::array<unsigned, 256> populations, sizes;
-    std::vector<bc::source> padded, exact;
+    std::vector<bc::reader> padded, exact;
     for (unsigned i = 0; i < 256; ++i) {
         for (unsigned j = 0; j < 32; ++j) {
             input[i][j] = shape == 0   ? bc::byte(rng())
@@ -46,19 +46,19 @@ template <method mode> static void codec(benchmark::State &state, unsigned shape
                 input[i][order[j] / 8] |= bc::byte(1u << (order[j] % 8));
         }
         populations[i] = bec_reference::population(input[i].data());
-        auto encoded = bc::prepare(input[i], populations[i]);
+        auto encoded = bc::encoding::make(input[i], populations[i]);
         assert(encoded);
         sizes[i] = encoded->bytes();
         body[i].fill(bc::byte{0});
         std::copy(encoded->body().begin(), encoded->body().end(), body[i].begin());
-        padded.push_back(*bc::source::admit(body[i], sizes[i], populations[i]));
+        padded.push_back(*bc::bind_reader(body[i], sizes[i], populations[i]));
         exact.push_back(
-            *bc::source::admit(std::span(body[i]).first(sizes[i]), sizes[i], populations[i]));
+            *bc::bind_reader(std::span(body[i]).first(sizes[i]), sizes[i], populations[i]));
     }
     alignas(64) std::array<bc::byte, 128> output{};
-    bc::destination target{output};
-    std::array<ikea::owner_write, 1> entries;
-    ikea::source_write_journal effects{entries};
+    bc::view target{output};
+    std::array<ikea::journal::entry, 1> entries;
+    ikea::journal effects{entries};
     benchmark::DoNotOptimize(output.data());
     benchmark::DoNotOptimize(entries.data());
     benchmark::DoNotOptimize(&effects);
@@ -77,7 +77,7 @@ template <method mode> static void codec(benchmark::State &state, unsigned shape
                                                                   populations[i], output.data()));
             break;
         case method::prepare: {
-            auto value = bc::prepare(input[i], populations[i]);
+            auto value = bc::encoding::make(input[i], populations[i]);
             benchmark::DoNotOptimize(value);
             break;
         }

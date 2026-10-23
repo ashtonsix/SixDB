@@ -46,7 +46,7 @@ template <unsigned V> contender baseline(const data& in) {
             {&run<V, Owner>, &run<V, Owner, true>}};
 }
 template <unsigned V>
-void surface(const data& in, const options& args, std::span<const byte> conditioning) {
+void surface(const data& in, const options& args, std::span<const std::byte> conditioning) {
     std::vector<contender> owners;
     owners.push_back(baseline<V>(in));
     owners.push_back(bind_measured_encoding<K>(
@@ -92,7 +92,7 @@ int main(int argc, char** argv) {
             args.conditioning_bytes = 0;
         }
         screen::data in(args.seed, args.requests, args.miss_percent);
-        std::vector<screen::byte> conditioning(args.conditioning_bytes, 17);
+        std::vector<screen::byte> conditioning(args.conditioning_bytes, std::byte{17});
         std::cout
             << "implementation,mode,W,b,K,E,V,kernel,B,T,N,n,requests,seed,rep,ns,bytes,spill,assigned,accessible,reserved,miss_percent,conditioning_bytes\n";
         screen::surface<0>(in, args, conditioning);

@@ -43,11 +43,11 @@ template<class Call> [[gnu::noinline]] void measure(const char* module,unsigned 
     }
 }
 template<unsigned K,int Op> void series() {
-    using F=sp::format<K>;
+    using F=sp::layout<K>;
     constexpr unsigned bytes=K*2;
     alignas(64) std::array<std::uint8_t,windows*bytes> storage{};
     std::array<std::uint64_t,windows> queries;
-    sp::dense_source<F> source{storage.data(),windows*16};
+    sp::dense_source<F> source{std::as_bytes(std::span{storage}).data(),windows*16};
     std::mt19937_64 random(K*7+Op);
     constexpr auto limit=~std::uint64_t{0}>>(64-K);
     // Independent Local wire encoder: row bytes then low-bit planes per tile.
@@ -103,10 +103,10 @@ template<unsigned Shift,unsigned Width,int Op> void tuple() {
     std::mt19937_64 random(Width+Op);
     for(auto& x:storage)x=random();
     for(auto& q:queries)q=random()&((1u<<Width)-1);
-    auto view=*tp::view::bind(layout,storage,storage.size(),1);
-    auto plan=*tp::reader<64,16>::make(layout,std::array<tp::byte,1>{0});
+    auto view=*tp::view::attach(layout,std::as_writable_bytes(std::span{storage}),storage.size(),1);
+    auto plan=*tp::read_plan<64,16>::make(layout,std::array<std::uint8_t,1>{0});
     auto read=*tp::bind_reader(plan,view);
-    auto filter=*tp::bind_filter(read);
+    const auto& filter=read;
     auto ours=[&](unsigned w) __attribute__((always_inline)) {asm("" : "+r"(w));return filter.template filter_unchecked<C(Op)>(std::size_t(w)*16,queries[w]);};
     // Independently fused packed byte control: compare in-place bits, avoiding
     // reconstruction. Other bits cannot affect the unsigned comparison.
@@ -135,14 +135,14 @@ template<unsigned Shift,unsigned Width,int Op> void tuple() {
 
 #if defined(__aarch64__) || (defined(__AVX512BW__) && defined(__AVX512DQ__) && defined(__AVX512VL__))
 template<unsigned K,int Op> void wide_series() {
-    using F=sp::format<K>;
+    using F=sp::layout<K>;
     alignas(64)std::array<std::uint8_t,windows*K*8> storage{};
     std::array<std::uint64_t,windows> queries;
     std::mt19937_64 random(K*17+Op);
     constexpr auto limit=~std::uint64_t{0}>>(64-K);
     for(auto& b:storage)b=random();
     for(auto& q:queries)q=random()&limit;
-    sp::dense_source<F> source{storage.data(),windows*64};
+    sp::dense_source<F> source{std::as_bytes(std::span{storage}).data(),windows*64};
     auto ours=[&](unsigned w) __attribute__((always_inline)) {
         asm("" : "+r"(w));
         return sp::filter_unchecked<C(Op)>(source,std::size_t(w)*64,64,queries[w]);

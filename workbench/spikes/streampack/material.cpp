@@ -93,7 +93,7 @@ Result<Draft> Draft::create(oa::Pool& pool, Control c, std::array<std::size_t, 2
   if (d.parts[c.holder_part()].size) std::memset(d.parts[c.holder_part()].address, 255, d.parts[c.holder_part()].size);
   for (unsigned b = 0; b < c.blocks; ++b) {
     auto& m = d.parts[b * 2 + 1]; std::memset(m.address, 0, m.size);
-    ikea::no_coverage effects;
+    ikea::no_effects effects;
     const auto error = c.geometry == Geometry::widths8 ? d.write_widths(b).initialize(effects) : d.write(b).initialize(effects);
     if (error != sn::Error::none) return std::unexpected(Error::invalid_argument);
   }
@@ -153,7 +153,7 @@ void Draft::finish() {
 }
 template<class Source> Result<Damage> freeze_as(Selection predecessor, Draft& completed,
     std::span<const Source> sources, const HolderView& holder,
-    std::span<const ikea::owner_write> issued) {
+    std::span<const ikea::journal::entry> issued) {
   constexpr bool widths = requires (Source s) { s.widths; };
   const auto& c = completed.control;
   if (!predecessor || predecessor.realization != completed.predecessor.get() || !c.memory || !c.valid(*c.memory) ||
@@ -183,7 +183,7 @@ template<class Source> Result<Damage> freeze_as(Selection predecessor, Draft& co
     unsigned b = 0; for (; b < sources.size(); ++b) if (e.source == &sources[b]) break;
     if (b < sources.size()) {
       const auto& source = sources[b];
-      switch (e.bytes.plane) {
+      switch (e.plane) {
         case 0: part = b * 2; origin = 0; extent = source.body.size(); break;
         case 1:
           part = b * 2 + 1; origin = l.ends();
@@ -197,26 +197,26 @@ template<class Source> Result<Damage> freeze_as(Selection predecessor, Draft& co
           else return std::unexpected(Error::invalid_argument);
         default: return std::unexpected(Error::invalid_argument);
       }
-    } else if (e.source == &holder && e.bytes.plane == 0) {
+    } else if (e.source == &holder && e.plane == 0) {
       part = c.holder_part(); origin = 0; extent = holder.rows.size_bytes();
     } else return std::unexpected(Error::invalid_argument);
-    if (e.bytes.offset > extent || e.bytes.size > extent - e.bytes.offset) return std::unexpected(Error::invalid_argument);
+    if (e.offset > extent || e.size > extent - e.offset) return std::unexpected(Error::invalid_argument);
     const auto target_extent = *c.extent(part);
-    if (origin + e.bytes.offset >= target_extent) continue;
-    const auto n = std::min(e.bytes.size, target_extent - origin - e.bytes.offset);
-    const auto* begin = completed.parts[part].address + origin + e.bytes.offset;
-    result.patches.push_back({part, origin + e.bytes.offset, {begin, begin + n}});
+    if (origin + e.offset >= target_extent) continue;
+    const auto n = std::min(e.size, target_extent - origin - e.offset);
+    const auto* begin = completed.parts[part].address + origin + e.offset;
+    result.patches.push_back({part, origin + e.offset, {begin, begin + n}});
   }
   return result;
 }
 Result<Damage> freeze_damage(Selection p, Draft& d, const sn::MutableDirect<std::uint32_t>& s,
-    const HolderView& h, std::span<const ikea::owner_write> e) { return freeze_as(p, d, std::span(&s, 1), h, e); }
+    const HolderView& h, std::span<const ikea::journal::entry> e) { return freeze_as(p, d, std::span(&s, 1), h, e); }
 Result<Damage> freeze_damage(Selection p, Draft& d, std::span<const sn::MutableDirect<std::uint32_t>> s,
-    const HolderView& h, std::span<const ikea::owner_write> e) { return freeze_as(p, d, s, h, e); }
+    const HolderView& h, std::span<const ikea::journal::entry> e) { return freeze_as(p, d, s, h, e); }
 Result<Damage> freeze_damage(Selection p, Draft& d, const sn::MutableWidths<std::uint8_t>& s,
-    const HolderView& h, std::span<const ikea::owner_write> e) { return freeze_as(p, d, std::span(&s, 1), h, e); }
+    const HolderView& h, std::span<const ikea::journal::entry> e) { return freeze_as(p, d, std::span(&s, 1), h, e); }
 Result<Damage> freeze_damage(Selection p, Draft& d, std::span<const sn::MutableWidths<std::uint8_t>> s,
-    const HolderView& h, std::span<const ikea::owner_write> e) { return freeze_as(p, d, s, h, e); }
+    const HolderView& h, std::span<const ikea::journal::entry> e) { return freeze_as(p, d, s, h, e); }
 Result<Draft> reconstruct(oa::Pool& pool, Selection exact, const Damage& damage) {
   return reconstruct(pool, exact, damage, {damage.target.body_extent, damage.target.second_body_extent});
 }

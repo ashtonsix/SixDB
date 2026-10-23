@@ -13,7 +13,8 @@ enum class error {
     overflow,
     description,
     unsupported,
-    allocation
+    allocation,
+    effects
 };
 /// Optional cold binding diagnostic. Pointers name borrowed source views, never
 /// data addresses to dereference. An overlap identifies both conflicting leaves;

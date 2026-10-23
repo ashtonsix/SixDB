@@ -117,7 +117,7 @@ one window call for 8, 16, 24, …, 64 rows instead of eight point calls or padd
 to sixteen. Byte-aligned payloads are supported. Do not widen reads merely for speed.
 
 For an existing SeriesPack eight-bit head with a nonempty payload,
-`composition::guarded(expression)` can skip suffix decoding when the head decides
+`author::guarded(expression)` can skip suffix decoding when the head decides
 every active lane. Apply it after child substitution. Keep ordinary defaults
 when suffix work is cheap or head ties are common/unpredictable. Final match
 selectivity alone cannot predict the saving: a zero-result window may still need

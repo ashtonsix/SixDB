@@ -44,8 +44,8 @@ template<unsigned K,int Op,unsigned Stride> void tuple_case() {
     if(!only_module.empty()&&only_module!=(Stride==1?"tuple_pair":"tuple_pair_stride4")) return;
     auto layout1=*tp::layout::make(1,std::array<tp::code,1>{{{0,8-K,K}}});
     auto layout2=*tp::layout::make(1,std::array<tp::code,1>{{{0,0,8}}});
-    auto plan1=*tp::reader<64,16>::make(layout1,std::array<tp::byte,1>{0});
-    auto plan2=*tp::reader<64,16>::make(layout2,std::array<tp::byte,1>{0});
+    auto plan1=*tp::read_plan<64,16>::make(layout1,std::array<std::uint8_t,1>{0});
+    auto plan2=*tp::read_plan<64,16>::make(layout2,std::array<std::uint8_t,1>{0});
     for(const char* pattern:{"uniform","reject_first","shared_prefix","all_equal","one_match","half_match",
                             "mixed10","mixed50","ordered1","ordered99"}) {
         if(!only_pattern.empty()&&only_pattern!=pattern) continue;
@@ -69,10 +69,10 @@ template<unsigned K,int Op,unsigned Stride> void tuple_case() {
             cursor=next(cursor,result,i);
         }
         f.selected=double(selected_count)/(32768*16);f.resolved=double(empty_count)/32768;
-        auto view1=*tp::view::bind(layout1,a,windows*16,Stride);
-        auto view2=*tp::view::bind(layout2,b,windows*16,Stride);
+        auto view1=*tp::view::attach(layout1,std::as_writable_bytes(std::span{a}),windows*16,Stride);
+        auto view2=*tp::view::attach(layout2,std::as_writable_bytes(std::span{b}),windows*16,Stride);
         auto read1=*tp::bind_reader(plan1,view1),read2=*tp::bind_reader(plan2,view2);
-        auto first=*tp::bind_filter(read1),second=*tp::bind_filter(read2);
+        const auto& first=read1; const auto& second=read2;
         sp::detail::each<5>([&](auto mode){tuple_variant<K,Op,Stride,mode>(f,a,b,first,second);});
     }
 }

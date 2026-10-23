@@ -69,7 +69,7 @@ template<unsigned W,unsigned b,unsigned V,bool WholeBytes,unsigned Inline=(V==8?
         const auto old_reference=is_external(meta)?ht::load<8>(cell+8):0;
         const auto* prefix=is_external(meta)?payload(old_reference,meta):cell+8;
         const auto reference=buffers_.create(which,{prefix,std::size_t(n)*V},incoming);
-        ikea::no_coverage effects;
+        ikea::no_effects effects;
         tuple_word::write(cell+8,reference,effects);
         tuple_word::write(cell,metadata(n+1,which),effects);
         if(is_external(meta))buffers_.release(old_reference);
@@ -79,7 +79,7 @@ template<unsigned W,unsigned b,unsigned V,bool WholeBytes,unsigned Inline=(V==8?
     using probe=typename index_type::probe;
     struct staged_probe {
         typename index_type::staged_probe index;
-        word reference=0;const byte* payload=nullptr;unsigned count=0,geometry=0;byte phase=0;
+        word reference=0;const byte* payload=nullptr;unsigned count=0,geometry=0;std::uint8_t phase=0;
     };
     static constexpr unsigned N=index_type::N;
     static constexpr auto bucket_count=index_type::bucket_count;
@@ -98,7 +98,7 @@ template<unsigned W,unsigned b,unsigned V,bool WholeBytes,unsigned Inline=(V==8?
     bool insert_bytes(word key,std::span<const byte,V> value) {
         value_type incoming;std::memcpy(incoming.data(),value.data(),V);
         return index_.edit_cell(key,[&](byte* cell,bool present) __attribute__((always_inline)) {
-            ikea::no_coverage effects;
+            ikea::no_effects effects;
             if(!present){
                 if constexpr(Inline){tuple_value<V,Coalesced>(cell+8,incoming,effects);tuple_word::write(cell,1,effects);}
                 else {const auto reference=buffers_.create(0,{},incoming);

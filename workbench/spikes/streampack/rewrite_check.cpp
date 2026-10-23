@@ -86,7 +86,7 @@ void history(oa::Pool& pool, unsigned cap, bool traversal, bool dedup) {
   auto& memory = *std::pmr::new_delete_resource(); sm::Store store(memory);
   sm::Control control{&memory, 0, std::uint16_t(cap), std::uint16_t(cap * 2), {}}; control.blocks = 2;
   auto initial = take(sm::Draft::create(pool, control, std::array<std::size_t, 2>{cap * 40, cap * 40}));
-  ikea::no_coverage ignored;
+  ikea::no_effects ignored;
   for (unsigned b = 0; b < 2; ++b) {
     auto w = initial.write(b);
     for (unsigned r = 0; r < cap; ++r) {
@@ -127,7 +127,7 @@ void history(oa::Pool& pool, unsigned cap, bool traversal, bool dedup) {
   const auto rewritten_before = sm::Store::Owner::retain(rewritten.realization);
   auto candidate = take(sm::Draft::clone(pool, rewritten, std::array<std::size_t, 2>{cap * 40, cap * 40}));
   std::array operations{candidate.write(0), candidate.write(1)}; auto holders = candidate.holder_view();
-  std::array<ikea::owner_write, 128> records{}; ikea::source_write_journal effects{records};
+  std::array<ikea::journal::entry, 128> records{}; ikea::journal effects{records};
   unsigned edited = 1; while (!model[edited]) ++edited;
   const auto previous = holders.rows[edited]; unsigned aliases = 0;
   for (auto x : holders.rows.first(candidate.control.holders)) aliases += x == previous;
@@ -137,13 +137,13 @@ void history(oa::Pool& pool, unsigned cap, bool traversal, bool dedup) {
   const std::string replacement = "detached";
   const unsigned block = operations[1].count < cap ? 1 : 0, rank = operations[block].count;
   require(operations[block].append(bytes(replacement), 24, effects) == sn::Error::none, "continued append after hard rewrite");
-  effects.before(holders, {0, edited * 4, 4}); holders.rows[edited] = sm::location(block, rank); model[edited] = replacement;
+  effects.before(holders, 0, edited * 4, 4); holders.rows[edited] = sm::location(block, rank); model[edited] = replacement;
   if (aliases == 1) require(operations[sm::block_of(previous)].retire(sm::rank_of(previous), effects) == sn::Error::none, "last holder retirement");
   if (dedup) {
     unsigned remaining = aliases - 1;
     for (unsigned row = 0; row < model.size(); ++row) if (holders.rows[row] == previous) {
       require(operations[sm::block_of(previous)].read().live(sm::rank_of(previous)), "shared reservation stays live before last removal");
-      effects.before(holders, {0, row * 4, 4}); holders.rows[row] = sm::absent; model[row].reset();
+      effects.before(holders, 0, row * 4, 4); holders.rows[row] = sm::absent; model[row].reset();
       if (--remaining == 0) require(operations[sm::block_of(previous)].retire(sm::rank_of(previous), effects) == sn::Error::none, "retire exactly after last shared holder");
     }
     require(!remaining && !operations[sm::block_of(previous)].read().live(sm::rank_of(previous)), "all aliases removed and old slot retired");
@@ -157,7 +157,7 @@ void history(oa::Pool& pool, unsigned cap, bool traversal, bool dedup) {
   require(operations[0].replace(first, bytes(bulk), effects) == sn::Error::none, "same batch changes block zero body");
   for (unsigned row = 0; row < model.size(); ++row) if (holders.rows[row] == sm::location(0, first)) model[row] = bulk;
   {
-    auto wrong = std::vector<ikea::owner_write>(effects.entries().begin(), effects.entries().end());
+    auto wrong = std::vector<ikea::journal::entry>(effects.entries().begin(), effects.entries().end());
     const auto copied_source = operations[1]; bool changed_source = false;
     for (auto& e : wrong) if (e.source == &operations[1]) { e.source = &copied_source; changed_source = true; break; }
     require(changed_source && !sm::freeze_damage(rewritten, candidate, operations, holders, wrong), "equal-shaped but unknown block source identity refuses");
@@ -193,9 +193,9 @@ void history(oa::Pool& pool, unsigned cap, bool traversal, bool dedup) {
   unsigned high_row = cap; while (!model[high_row]) ++high_row;
   const auto previous_high = many_holders.rows[high_row]; const auto new_rank = one_write.count;
   const std::string high_value = "high logical row after shrinking";
-  std::array<ikea::owner_write, 16> last_records{}; ikea::source_write_journal last_effects{last_records};
+  std::array<ikea::journal::entry, 16> last_records{}; ikea::journal last_effects{last_records};
   require(one_write.append(bytes(high_value), 40, last_effects) == sn::Error::none, "continued append after two-to-one repartition");
-  last_effects.before(many_holders, {0, high_row * 4, 4}); many_holders.rows[high_row] = sm::location(0, new_rank);
+  last_effects.before(many_holders, 0, high_row * 4, 4); many_holders.rows[high_row] = sm::location(0, new_rank);
   if (std::find(many_holders.rows.begin(), many_holders.rows.end(), previous_high) == many_holders.rows.end())
     require(one_write.retire(sm::rank_of(previous_high), last_effects) == sn::Error::none, "last owner after topology change");
   const Model before_high = model; model[high_row] = high_value;

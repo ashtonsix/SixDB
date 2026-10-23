@@ -4,7 +4,7 @@ Ikea separates ordinary caller contracts, supported `author/` surfaces and
 internal `detail/` implementation. Bodies stay in headers where caller context
 enables useful specialization; cold work belongs in compiled TUs.
 The [interface guide](interfaces.md) connects each module's placement/preparation
-phases, coordinates, effects and descriptors without imposing one container API.
+phases, coordinates, effects and parent-schema descriptions.
 
 ## Define the operation before its execution
 
@@ -13,7 +13,8 @@ coordinates, access bounds, borrowing and failure guarantees so different
 representations can serve the same logical contract. SeriesPack composes
 bit-window joins; TuplePack composes ordered code projections and mutation groups;
 Bec256 supplies headless bitset bodies and native pairs with independent addresses.
-Their value types, traversal and error vocabulary remain module-specific.
+Their value types and traversal remain module-specific. Shared error names
+identify shared conditions; module-specific conditions retain precise names.
 
 Keep three descriptions distinct: logical mutation destinations, issued byte
 writes, and maintenance dependencies. A summary can depend on untouched fields;
@@ -62,7 +63,9 @@ boundary. Keep direct packed alternatives available to ordinary callers.
 | --- | --- | --- |
 | `ikea/effects.h` | Issued byte spans qualified by named source views | Physical footprints, traversal and capacity bounds |
 | `detail/overlap.h`, `src/overlap.cpp` | Cold overlap analysis for repeating spans and interleaving | Semantic conflicts, view rules and diagnostics |
-| `detail/native_chain.h` | Bounded straight-through tables, native argument handoff and early completion | Carrier, mask meaning, stage grain and semantic body |
+| `author/chain.h` | Bounded straight-through tables, native argument handoff and early completion | Carrier, mask meaning, stage grain and semantic body |
+| `bytes.h`, `description.h` | Borrowed storage bytes and parent-schema framing | Numeric value types and each layout's encoded body |
+| `bitset256.h` | Fixed-size position set and portable byte conversion | Whether positions name rows, ranks or another domain |
 | `comparison.h`, `detail/filter/compare.h` | Unsigned predicates and explicit native lane-to-mask bodies | Stored-width admission, packed shortcuts and original-position coordinates |
 
 Shared mechanics need checks from affected modules. Hooks must remain
@@ -77,18 +80,18 @@ write instantiations through the ordinary umbrella.
 
 | Responsibility | Owning files |
 | --- | --- |
-| Ordinary calls and erasure | `{read,write,read_operation,mutation_operation}.h` |
-| Format, placement and recovery | `format.h`, `view.h`, `presets.h`, `representation.h` |
-| Scalar physical point building blocks, without effects or summaries | `point.h`; packed arithmetic stays in `detail/point.h` |
-| Logical expressions and evaluation | `author/{expression,read,record,native,summaries}.h` |
+| Ordinary calls and erasure | `{read,write,reader,writer,erased_reader,erased_writer}.h` |
+| Layout, placement and recovery | `layout.h`, `view.h`, `presets.h`, `layout_value.h` |
+| Scalar physical point building blocks, without effects or summaries | `point.h`, `author/store.h`; packed arithmetic stays in `detail/point.h` |
+| Logical expressions and evaluation | `author/{expression,record,native,summaries}.h`; `reader.h` |
 | Predicate masks from storage or native values | `filter.h`; `author/filter.h` |
-| Typed mutation binding and preflight | `author/write.h` |
+| Typed mutation binding and preflight | `writer.h` |
 | Runtime dense read dispatch | `src/seriespack/readers.cpp` |
 | Cold placement/alias rules and diagnostics | `src/seriespack/admission.cpp`; leaf walk in `detail/mutation/admission.h` |
-| Descriptor parsing and encoding | `src/seriespack/representation.cpp` |
+| Descriptor parsing and encoding | `src/seriespack/layout.cpp` |
 | Native reconstruction and stores | `detail/native/{avx2,avx512,neon}/{read,write}.h` |
-| Shared field geometry and store coverage | `detail/mutation/{fields,footprint}.h` |
-| Physical/composed traversal and reverse projection | `detail/mutation/{physical,composed,assignment}.h` |
+| Physical mutation traversal and store coverage | `author/mutation.h`; private geometry in `detail/mutation/fields.h` |
+| Composed traversal and reverse projection | `detail/mutation/{composed,assignment}.h` |
 | CPS authoring | `author/chain.h`; shared mechanism below |
 
 NEON’s grouped evaluator lives in `neon/groups.h`; AVX-512 grouping lives with
@@ -107,12 +110,12 @@ unless marked `src/`.
 
 | Responsibility | Owning files |
 | --- | --- |
-| Physical description and recovery | `description.h`; `src/tuplepack/description.cpp` |
-| Ordinary placement, plans and commands | `{view,plan,read,write,construction,transfer,selection}.h` |
-| Bound code predicates and native packet masks | `filter.h` |
+| Physical layout and recovery | `layout.h`; `src/tuplepack/layout.cpp` |
+| Ordinary placement, plans and commands | `{view,plan,packet,read,write,initialize,transfer,selection}.h` |
+| Reader code predicates and native packet masks | `filter.h`, `author/filter.h` |
 | Decoded packet grouping | `packet_layout.h`; `src/tuplepack/packet_layout.cpp` |
 | Code-map admission and ISA controls | `src/tuplepack/{prepare,packet_prepare}.cpp` |
-| Construction preparation | `src/tuplepack/construction.cpp` |
+| Construction preparation | `src/tuplepack/initialize.cpp` |
 | Recursive mutation groups | `author/composition.h` |
 | Independent observation projection/law | `author/maintenance.h` |
 | Erasure, native adapters and pipeline carriers | `author/execution.h`; bodies exposed by `author/native.h` |

@@ -27,14 +27,14 @@ template <bool DeferWide = false, class D, class S, class Reduce>
         constexpr auto live_mask = live_type(ht::mask<D::N>);
         const auto from = access::get(src);
         auto to = access::get(dst);
-        const auto* source_primary = from.primary.data;
-        auto* destination_primary = to.primary.data;
+        const auto* source_primary = ikea::to_u8(from.primary.data);
+        auto* destination_primary = ikea::to_u8(to.primary.data);
         word added = 0; // Private batch: counters need only be coherent on successful return.
         alignas(64) std::array<__m512i, children * banks> images;
         std::array<live_type, children> live;
         std::array<word, S::N> decoded;
         constexpr bool deferred = DeferWide && std::tuple_size_v<typename D::value_type> == 64;
-        std::array<byte*, deferred ? S::N : 1> value_targets;
+        std::array<std::uint8_t*, deferred ? S::N : 1> value_targets;
         for (std::size_t bucket = 0; bucket < S::bucket_count; ++bucket) {
             const auto* p = source_primary + bucket * S::stride;
             auto bits = (~ht::load<S::T>(p + S::flags_offset)) & ht::mask<S::N>;
@@ -55,7 +55,7 @@ template <bool DeferWide = false, class D, class S, class Reduce>
             }
             unsigned dirty = 0;
             word pending_values = 0, existing_values = 0;
-            auto queue_value = [&](unsigned row, unsigned slot, byte* out, bool existing) {
+            auto queue_value = [&](unsigned row, unsigned slot, std::uint8_t* out, bool existing) {
                 if constexpr (deferred) {
                     auto* value = out + D::value_offset + std::size_t(slot) * 64;
                     value_targets[row] = value;

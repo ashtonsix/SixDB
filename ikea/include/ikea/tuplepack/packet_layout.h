@@ -1,6 +1,6 @@
 #pragma once
 #include <bit>
-#include <ikea/tuplepack/description.h>
+#include <ikea/tuplepack/layout.h>
 
 namespace ikea::tuplepack {
 /// Byte order of a decoded packet, independent of its physical storage.
@@ -9,9 +9,9 @@ namespace ikea::tuplepack {
 /// unused packet capacity is trailing zero space, ignored on write.
 template <unsigned N> class packet_layout {
     static_assert(N == 8 || N == 64);
-    std::array<byte, N> offsets_{};
-    std::array<byte, N> owners_ = [] {
-        std::array<byte, N> result;
+    std::array<std::uint8_t, N> offsets_{};
+    std::array<std::uint8_t, N> owners_ = [] {
+        std::array<std::uint8_t, N> result;
         result.fill(255);
         return result;
     }();
@@ -41,7 +41,7 @@ template <unsigned N> class packet_layout {
         return offsets_[row * (N / Rows) + slot];
     }
     /// Authoring metadata: 0..rows-1 for mapped bytes, 255 for trailing capacity.
-    const std::array<byte, N>& row_indices() const noexcept {
+    const std::array<std::uint8_t, N>& row_indices() const noexcept {
         return owners_;
     }
     /// Lowering proof: mapped offsets equal row*(N/rows())+slot.

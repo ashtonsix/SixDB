@@ -31,12 +31,12 @@ template <class Byte> class basic_view {
     basic_view(const layout& l, storage<Byte> s) : layout_(&l), storage_(s) {}
 
   public:
-    [[nodiscard]] static std::expected<basic_view, error> bind(const layout& l, storage<Byte> s) {
+    [[nodiscard]] static std::expected<basic_view, error> attach(const layout& l, storage<Byte> s) {
         if (auto ok = detail::admit_storage(l, {s.directory, s.lengths, s.control}); !ok)
             return std::unexpected(ok.error());
         return basic_view(l, s);
     }
-    static auto bind(const layout&&, storage<Byte>) = delete;
+    static auto attach(const layout&&, storage<Byte>) = delete;
     const layout& format() const noexcept {
         return *layout_;
     }
@@ -44,15 +44,15 @@ template <class Byte> class basic_view {
         return storage_;
     }
     auto as_const() const noexcept {
-        return basic_view<const byte>::assume_valid(
+        return basic_view<const byte>::attach_unchecked(
             *layout_, {storage_.directory, storage_.lengths, storage_.control});
     }
     /// Reuse an owner's established placement proof; same lifetime and content
-    /// obligations as bind(). No encoded bytes are examined.
-    static basic_view assume_valid(const layout& l, storage<Byte> s) {
+    /// obligations as attach(). No encoded bytes are examined.
+    static basic_view attach_unchecked(const layout& l, storage<Byte> s) {
         return {l, s};
     }
-    static auto assume_valid(const layout&&, storage<Byte>) = delete;
+    static auto attach_unchecked(const layout&&, storage<Byte>) = delete;
     unsigned size() const noexcept {
         return detail::load<std::uint16_t>(storage_.control.data());
     }
@@ -64,10 +64,10 @@ template <class Byte> class basic_view {
     std::uint32_t origin() const noexcept { return 0; }
     std::uint32_t at(unsigned rank) const;
     /// Optional retirement companion, selected only when the caller attaches it.
-    rank_selection live_ranks() const noexcept {
+    selection live_ranks() const noexcept {
         return layout_->has_tombstones()
-                   ? rank_selection{storage_.directory.first(layout_->tombstone_bytes()), true}
-                   : rank_selection::all();
+                   ? selection::complement(0, storage_.directory.first(layout_->tombstone_bytes()))
+                   : selection::all();
     }
     template <class Body> decltype(auto) with_geometry(Body &&body) const;
     std::uint32_t extent() const noexcept {

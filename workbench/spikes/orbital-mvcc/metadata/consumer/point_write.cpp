@@ -1,3 +1,4 @@
+#include <ikea/tuplepack/author/execution.h>
 #include "point_write.h"
 #include "../orbital/shape/shape_private.h"
 #include "consumer/native.h"
@@ -98,31 +99,32 @@ void resolve(std::size_t count, std::span<const Command> input, Rows& rows,
   }
 }
 template<class View>
-void account(const ikea::source_write_journal& effects, const View& view,
+void account(const ikea::journal& effects, const View& view,
              std::size_t extent, v::KernelCosts& costs) {
   costs.issued_spans += effects.used;
   for (const auto& effect : effects.entries()) {
-    assert(effect.source == &view && effect.bytes.plane == 0 &&
-        effect.bytes.offset <= extent && effect.bytes.size <= extent - effect.bytes.offset);
-    costs.issued_bytes += effect.bytes.size;
+    assert(effect.source == &view && effect.plane == 0 &&
+        effect.offset <= extent && effect.size <= extent - effect.offset);
+    costs.issued_bytes += effect.size;
   }
 }
 
 void tuples(const TupleLaw& law, std::size_t count,
     std::span<const v::WritePart> target, std::span<const Command> input,
     const Rows& rows, v::KernelCosts& costs) {
-  const auto view = take(tp::view::bind(law.layout(),
-      {reinterpret_cast<tp::byte*>(target[0].bytes.data()), target[0].bytes.size()}, count, v::tuple_bytes));
-  const tp::native_writer value{take(tp::bind_writer(law.writers()[0], view))};
-  const tp::native_writer tag{take(tp::bind_writer(law.writers()[1], view))};
-  std::array<ikea::owner_write, 2> journal;
-  require(value.effect_capacity() + tag.effect_capacity() <= journal.size());
+  const auto view = take(tp::view::attach(law.layout(),
+      {reinterpret_cast<std::byte*>(target[0].bytes.data()), target[0].bytes.size()}, count, v::tuple_bytes));
+  const tp::author::native_writer value{take(tp::bind_writer(law.writers()[0], view))};
+  const tp::author::native_writer tag{take(tp::bind_writer(law.writers()[1], view))};
+  std::array<ikea::journal::entry, 2> journal;
+  for (std::size_t i = 0; i < input.size(); ++i)
+    require(take(value.effect_capacity(rows[i], 1)) + take(tag.effect_capacity(rows[i], 1)) <= journal.size());
   for (const auto& update : input)
     require(value.accepts(update.value) && tag.accepts(update.tag));
   costs.bindings += 2;
   costs.scratch_bound_bytes = std::max(costs.scratch_bound_bytes, sizeof(journal));
   for (std::size_t i = 0; i < input.size(); ++i) {
-    ikea::source_write_journal effects{journal};
+    ikea::journal effects{journal};
     value.set_unchecked(rows[i], std::uint64_t(input[i].value), effects);
     tag.set_unchecked(rows[i], std::uint64_t(input[i].tag), effects);
     account(effects, view, view.storage().size(), costs);
@@ -132,14 +134,14 @@ void tuples(const TupleLaw& law, std::size_t count,
 
 template<unsigned K>
 auto column_view(std::size_t count, orbital::MutableBytes bytes) {
-  std::array<sp::plane<std::uint8_t>, 3> planes{};
-  planes[0] = {{reinterpret_cast<std::uint8_t*>(bytes.data()), bytes.size()}, v::Column<K>::tile_bytes};
-  return take(sp::view<v::Column<K>, std::uint8_t>::attach(count, planes));
+  std::array<sp::plane<std::byte>, 3> planes{};
+  planes[0] = {{reinterpret_cast<std::byte*>(bytes.data()), bytes.size()}, v::Column<K>::tile_bytes};
+  return take(sp::view<v::Column<K>>::attach(count, planes));
 }
 template<unsigned K>
 auto decoder(const std::byte* pointer, std::size_t count) {
-  return sp::bind_decoder<std::uint64_t>(sp::dense_source<v::Column<K>>{
-      reinterpret_cast<const std::uint8_t*>(pointer), count});
+  return sp::bind_reader<std::uint64_t>(sp::dense_source<v::Column<K>>{
+      reinterpret_cast<const std::byte*>(pointer), count});
 }
 void columns(std::size_t count, std::span<const v::WritePart> target,
     std::span<const Command> input, const Rows& rows, v::KernelCosts& costs) {
@@ -147,22 +149,22 @@ void columns(std::size_t count, std::span<const v::WritePart> target,
   // resolution. Key is read through its typed decoder and never made mutable.
   const auto value_view = column_view<20>(count, target[2].bytes);
   const auto tag_view = column_view<32>(count, target[3].bytes);
-  const auto value = take(sp::bind_mutation(value_view));
-  const auto tag = take(sp::bind_mutation(tag_view));
-  std::array<ikea::owner_write, 3> journal;
+  const auto value = take(sp::bind_writer(value_view));
+  const auto tag = take(sp::bind_writer(tag_view));
+  std::array<ikea::journal::entry, 3> journal;
   for (std::size_t i = 0; i < input.size(); ++i) {
-    const auto needed = take(value.effect_capacity(rows[i], 1, sp::row_selection::all())) +
-        take(tag.effect_capacity(rows[i], 1, sp::row_selection::all()));
+    const auto needed = take(value.effect_capacity(rows[i], 1, sp::selection::all())) +
+        take(tag.effect_capacity(rows[i], 1, sp::selection::all()));
     require(needed <= journal.size());
   }
   costs.bindings += 2;
   costs.scratch_bound_bytes = std::max(costs.scratch_bound_bytes, sizeof(journal));
-  sp::no_summary summary;
+  sp::author::no_summary summary;
   for (std::size_t i = 0; i < input.size(); ++i) {
-    ikea::source_write_journal effects{journal};
-    sp::composition::replace_point_unchecked(value.expression(), rows[i], std::uint64_t(input[i].value), summary, effects);
+    ikea::journal effects{journal};
+    sp::author::replace_point_unchecked(value.expression(), rows[i], std::uint64_t(input[i].value), summary, effects);
     account(effects, value_view, value_view.stream(0).bytes.size(), costs); effects.used = 0;
-    sp::composition::replace_point_unchecked(tag.expression(), rows[i], std::uint64_t(input[i].tag), summary, effects);
+    sp::author::replace_point_unchecked(tag.expression(), rows[i], std::uint64_t(input[i].tag), summary, effects);
     account(effects, tag_view, tag_view.stream(0).bytes.size(), costs);
     costs.encoded_values += 2;
   }
@@ -171,29 +173,29 @@ void columns(std::size_t count, std::span<const v::WritePart> target,
 } // namespace
 
 TupleLaw::TupleLaw(Admission, const cs::Shape* shape, const tp::layout& layout,
-    std::span<const tp::writer<8>, 2> writers) noexcept
+    std::span<const tp::write_plan<8>, 2> writers) noexcept
     : shape_(shape), layout_(layout), writers_{writers[0], writers[1]} {}
 
 orbital::Result<void> TupleLaw::prepare(std::optional<TupleLaw>& destination,
-    const cs::Shape* shape, const tp::layout& layout, std::span<const tp::writer<8>, 2> writers,
+    const cs::Shape* shape, const tp::layout& layout, std::span<const tp::write_plan<8>, 2> writers,
     orbital::ProgramId program, orbital::PartId part) noexcept {
   const auto invalid = [] { return std::unexpected(orbital::Error::invalid_argument); };
   if (destination) return invalid();
   const auto read_proof = shape_read::admit_tuple_shape(shape, program, part);
   if (!read_proof || layout.bytes() != v::tuple_bytes || layout.encoded_size() != 75) return invalid();
-  std::array<tp::byte, 75> encoded{};
-  const auto serialized = layout.encode(encoded);
+  std::array<std::uint8_t, 75> encoded{};
+  const auto serialized = layout.encode(std::as_writable_bytes(std::span{encoded}));
   if (!serialized || *serialized != encoded.size() || encoded != compact_law::detail::descriptor()) return invalid();
   constexpr std::array<unsigned, 2> starts{16, 19}, widths{3, 4};
   for (unsigned field = 0; field < 2; ++field) {
-    std::array<tp::byte, 8> map{};
+    std::array<std::uint8_t, 8> map{};
     for (unsigned i = 0; i < widths[field]; ++i) map[i] = starts[field] + i;
-    const auto expected = tp::writer<8>::make(layout, std::span(map).first(widths[field]));
+    const auto expected = tp::write_plan<8>::make(layout, std::span(map).first(widths[field]));
     if (!expected || writers[field].unit_bytes() != expected->unit_bytes() ||
         !same(writers[field].controls(), expected->controls())) return invalid();
   }
   static_assert(std::is_nothrow_copy_constructible_v<tp::layout> &&
-      std::is_nothrow_copy_constructible_v<tp::writer<8>>);
+      std::is_nothrow_copy_constructible_v<tp::write_plan<8>>);
   destination.emplace(Admission{}, shape, layout, writers);
   return {};
 }
@@ -214,7 +216,7 @@ orbital::Result<void> apply(TupleProof proof, std::uint64_t count,
     auto costs = output; auto probes = output_probes; ++probes.private_admissions;
     Rows rows;
     const auto& read_law = *cs::law(const_cast<cs::Shape*>(law.shape()));
-    const auto* pointer = reinterpret_cast<const tp::byte*>(target[0].bytes.data());
+    const auto* pointer = reinterpret_cast<const std::byte*>(target[0].bytes.data());
     resolve(count, input, rows, [&](std::size_t i) { return read_law.read_unchecked<0>(pointer + i * v::tuple_bytes); }, probes);
     tuples(law, count, target, input, rows, costs);
     probes.applied_updates += input.size(); output = costs; output_probes = probes;

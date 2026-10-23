@@ -1,6 +1,6 @@
 #include "support.h"
 
-namespace cp = sp::composition;
+namespace cp = sp::author;
 
 // Write the Local wire format independently of SeriesPack's writer. Head rows
 // and payload rows deliberately have different tile strides.
@@ -13,7 +13,7 @@ template <unsigned K> void wire(std::uint8_t* p, unsigned stride, unsigned row, 
 }
 
 template <unsigned K> void bounded() {
-    using F = sp::format<K, sp::geometry::local, 8>;
+    using F = sp::layout<K, sp::geometry::local, 8>;
     constexpr unsigned n = 128, bytes = n * (K - 8) / 8;
     const auto page = std::size_t(sysconf(_SC_PAGESIZE));
     auto* memory = static_cast<std::uint8_t*>(
@@ -32,8 +32,8 @@ template <unsigned K> void bounded() {
     }
     asm volatile("" : "+r"(p), "+r"(h)::"memory");
     const auto source =
-        sp::view<F>::assume_valid(n, {{{{p, bytes}, F::tile_bytes}, {{h, n}, F::tile_rows}, {}}});
-    const auto guarded = cp::guarded(cp::describe(source));
+        sp::const_view<F>::attach_unchecked(n, {{{std::as_bytes(std::span{p, bytes}), F::tile_bytes},{std::as_bytes(std::span{h, n}), F::tile_rows},{}}});
+    const auto guarded = cp::guarded(cp::expression(source));
     [&]<C... Ops>(operations<Ops...>) {
         (
             [&] {
@@ -53,10 +53,10 @@ void check_guarded_filters() {
     bounded<12>();
     bounded<64>();
     [&]<C... Ops>(operations<Ops...>) {
-        (series_case<sp::format<20, sp::geometry::striped, 8>, Ops>(), ...);
+        (series_case<sp::layout<20, sp::geometry::striped, 8>, Ops>(), ...);
     }(operations<C::equal, C::less, C::less_equal, C::greater, C::greater_equal>{});
-    using F = sp::format<20, sp::geometry::local, 8>;
-    using R = sp::format<12>;
+    using F = sp::layout<20, sp::geometry::local, 8>;
+    using R = sp::layout<12>;
     constexpr unsigned n = 64;
     alignas(64) std::array<std::uint8_t, 1024> payload{}, heads{};
     std::array<std::uint64_t, n> truth{};
@@ -66,17 +66,17 @@ void check_guarded_filters() {
         heads[i / 8 * 16 + i % 8] = high;
         wire<12>(payload.data(), 32, i, truth[i] & 4095);
     }
-    auto child = *sp::view<R>::attach(n, {{{payload, 32}, {}, {}}});
+    auto child = *sp::const_view<R>::attach(n, {{{std::as_bytes(std::span{payload}), 32},{},{}}});
     const auto page = std::size_t(sysconf(_SC_PAGESIZE));
     auto* inaccessible = static_cast<std::uint8_t*>(
         mmap(nullptr, page, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0));
     assert(inaccessible != MAP_FAILED);
     auto parent =
-        sp::view<F>::assume_valid(n, {{{{inaccessible, page}, F::tile_bytes}, {heads, 16}, {}}});
-    const auto selected = cp::with_payload(cp::describe(parent), cp::describe(child));
+        sp::const_view<F>::attach_unchecked(n, {{{std::as_bytes(std::span{inaccessible, page}), F::tile_bytes},{std::as_bytes(std::span{heads}), 16},{}}});
+    const auto selected = cp::with_payload(cp::expression(parent), cp::expression(child));
     const auto expression = cp::guarded(selected);
-    const auto prepared = *cp::prepare(expression, n);
-    assert(!cp::prepare(expression, n + 1));
+    const auto prepared = *ikea::seriespack::bind_reader(expression, n);
+    assert(!ikea::seriespack::bind_reader(expression, n + 1));
     cp::scalar_ops scalar;
     assert(cp::read(scalar, expression, 63, true).value == truth[63]);
     // The wrapper must retain admission and substitution, including ordinary
@@ -107,9 +107,9 @@ void check_guarded_filters() {
     }(operations<C::equal, C::less, C::less_equal, C::greater, C::greater_equal>{});
 
 #if defined(__aarch64__) || defined(__AVX2__)
-    const auto absent = sp::view<F>::assume_valid(
-        n, {{{{inaccessible, page}, F::tile_bytes}, {{inaccessible, page}, F::tile_rows}, {}}});
-    const auto absent_guarded = cp::guarded(cp::describe(absent));
+    const auto absent = sp::const_view<F>::attach_unchecked(
+        n, {{{std::as_bytes(std::span{inaccessible, page}), F::tile_bytes},{std::as_bytes(std::span{inaccessible, page}), F::tile_rows},{}}});
+    const auto absent_guarded = cp::guarded(cp::expression(absent));
     [&]<C... Ops>(operations<Ops...>) {
         (assert(cp::filter16_unchecked<Ops>(absent_guarded, 0, 1u << 20, 0xa53c) ==
                 (oracle(Ops, 0, 1u << 20) ? 0xa53c : 0)),
@@ -119,7 +119,7 @@ void check_guarded_filters() {
     // Exercise the guard itself with a live but unreadable payload. Inactive
     // lanes tie the query, so rejecting only after a full-vector zero test would
     // incorrectly touch the suffix on sparse masks.
-    const auto guarded_parent = cp::guarded(cp::describe(parent));
+    const auto guarded_parent = cp::guarded(cp::expression(parent));
     for (unsigned i = 0; i < 64; ++i)
         heads[i / 8 * 16 + i % 8] = i % 2 ? 127 : i % 4 ? 1 : 254;
     asm volatile("" ::: "memory");

@@ -17,7 +17,7 @@ template <unsigned W, unsigned b, unsigned V, unsigned E = W - b> void check() {
     const auto key = [&](word q) { return mix.recover(0, q); };
     ht::bytes<V> initial{}, expected{};
     for (unsigned i = 0; i < V; ++i)
-        initial[i] = ht::byte(i * 13 + 7);
+        initial[i] = std::byte(i * 13 + 7);
     auto verify = [&](word k, const auto& value) {
         unsigned calls = 0;
         ht::require(owner.find(k,
@@ -43,12 +43,12 @@ template <unsigned W, unsigned b, unsigned V, unsigned E = W - b> void check() {
                                                        "initial admitted once");
                                            ++updates;
                                            for (auto& x : value)
-                                               x ^= 0x51;
+                                               x ^= std::byte{0x51};
                                        }),
                 "RMW inserts");
     expected = initial;
     for (auto& x : expected)
-        x ^= 0x51;
+        x ^= std::byte{0x51};
     verify(key(0), expected);
     ht::require(!owner.modify_or_insert(key(0), initial,
                                         [&](auto& value, bool present) {
@@ -56,14 +56,14 @@ template <unsigned W, unsigned b, unsigned V, unsigned E = W - b> void check() {
                                                         "existing snapshot");
                                             ++updates;
                                             for (auto& x : value)
-                                                x += 3;
+                                                x = std::byte(std::to_integer<unsigned>(x) + 3);
                                         }),
                 "RMW replaces");
     for (auto& x : expected)
-        x += 3;
+        x = std::byte(std::to_integer<unsigned>(x) + 3);
     verify(key(0), expected);
     const auto fail = [](auto& value) {
-        value[0] ^= 255;
+        value[0] ^= std::byte{255};
         throw std::runtime_error("updater");
     };
     try {
@@ -97,7 +97,7 @@ template <unsigned W, unsigned b, unsigned V, unsigned E = W - b> void check() {
                                      [&](auto& value) {
                                          ++updates;
                                          for (auto& x : value)
-                                             x ^= 0xa7;
+                                             x ^= std::byte{0xa7};
                                      }) == mutation_status::updated,
                 "guarded RMW");
     damage.verify();
@@ -105,7 +105,7 @@ template <unsigned W, unsigned b, unsigned V, unsigned E = W - b> void check() {
     ht::require(damage.observations() == (V % 8 == 0 ? 1u : (V + 7) / 8),
                 "value plane damage count");
     for (auto& x : expected)
-        x ^= 0xa7;
+        x ^= std::byte{0xa7};
     verify(key(0), expected);
     if constexpr (W < 64) {
         damage_check invalid(owner, word{1} << W);
@@ -121,14 +121,14 @@ template <unsigned W, unsigned b, unsigned V, unsigned E = W - b> void check() {
         ht::require(owner.guarded_modify(last, edge,
                                          [](auto& v) {
                                              for (auto& x : v)
-                                                 x ^= 0x23;
+                                                 x ^= std::byte{0x23};
                                          }) == mutation_status::updated,
                     "bitmap final-row RMW");
         edge.verify();
         ht::require(edge.covered_bytes() == V, "bitmap final-row value damage");
         auto value = initial;
         for (auto& x : value)
-            x ^= 0x23;
+            x ^= std::byte{0x23};
         verify(last, value);
     }
     if constexpr (!Owner::bitmap) {
@@ -139,14 +139,14 @@ template <unsigned W, unsigned b, unsigned V, unsigned E = W - b> void check() {
         ht::require(owner.guarded_modify(last, edge,
                                          [](auto& v) {
                                              for (auto& x : v)
-                                                 x ^= 0x23;
+                                                 x ^= std::byte{0x23};
                                          }) == mutation_status::updated,
                     "packed final-row RMW");
         edge.verify();
         ht::require(edge.covered_bytes() == V, "packed final-row value damage");
         auto value = initial;
         for (auto& x : value)
-            x ^= 0x23;
+            x ^= std::byte{0x23};
         verify(last, value);
         const auto incoming = key(Owner::N);
         damage_check capacity(owner, incoming);
@@ -163,7 +163,7 @@ template <unsigned W, unsigned b, unsigned V, unsigned E = W - b> void check() {
         bool failed = false;
         try {
             failure.modify_or_insert(incoming, initial, [](auto& v, bool) {
-                v[0] ^= 1;
+                v[0] ^= std::byte{1};
                 throw std::runtime_error("new updater");
             });
         } catch (const std::runtime_error&) {
@@ -177,12 +177,12 @@ template <unsigned W, unsigned b, unsigned V, unsigned E = W - b> void check() {
         ht::require(owner.guarded_modify_or_insert(incoming, initial, insert,
                                                    [&](auto& v, bool present) {
                                                        ht::require(!present, "new Swiss RMW");
-                                                       v[0] ^= 0xee;
+                                                       v[0] ^= std::byte{0xee};
                                                    }) == mutation_status::inserted,
                     "prepared Swiss RMW inserts");
         insert.verify();
         auto spilled = initial;
-        spilled[0] ^= 0xee;
+        spilled[0] ^= std::byte{0xee};
         verify(incoming, spilled);
         // A primary hole must not hide the existing Swiss entry.
         owner.erase(key(1));
@@ -193,13 +193,13 @@ template <unsigned W, unsigned b, unsigned V, unsigned E = W - b> void check() {
                                                        ht::require(
                                                            present && v == spilled,
                                                            "Swiss duplicate after primary hole");
-                                                       v.back() ^= 0x63;
+                                                       v.back() ^= std::byte{0x63};
                                                    }) == mutation_status::updated,
                     "Swiss RMW updates");
         swiss.verify();
         ht::require(swiss.covered_bytes() == V && owner.size() == size,
                     "Swiss only value/count unchanged");
-        spilled.back() ^= 0x63;
+        spilled.back() ^= std::byte{0x63};
         verify(incoming, spilled);
         damage_check refused_new(owner, key(Owner::N + 1));
         refused_new.allow_prepare = false;
@@ -214,7 +214,7 @@ template <unsigned W, unsigned b, unsigned V, unsigned E = W - b> void check() {
     std::cout << "RMW_PASS," << W << ',' << b << ',' << V << ',' << E << '\n';
 }
 void descriptor_and_reference() {
-    using D = ht::descriptor<24, 8>;
+    using D = ht::erased_table<24, 8>;
     auto owner = D::explicit_encoding<10, 14>(713, nullptr, ht::write_strategy::existing);
     const ht::bytes<8> zero{};
     unsigned callbacks = 0;
@@ -222,7 +222,7 @@ void descriptor_and_reference() {
     ht::require(owner.modify_or_insert(7, zero,
                                        [&](auto& v, bool present) {
                                            ht::require(!present, "descriptor insertion");
-                                           v[0] = 1;
+                                           v[0] = std::byte{1};
                                            ++callbacks;
                                        }),
                 "descriptor inserts");
@@ -232,12 +232,12 @@ void descriptor_and_reference() {
         ht::require(decltype(strategy)::value == ht::write_strategy::existing,
                     "batch exposes selected writer");
         for (unsigned i = 0; i < 100; ++i)
-            native.modify(7, [](auto& v) { ++v[0]; });
+            native.modify(7, [](auto& v) { v[0] = std::byte(std::to_integer<unsigned>(v[0]) + 1); });
         native.template insert<decltype(strategy)::value>(9, zero);
     });
     auto capture = owner.read_native<10, 14>();
     ht::require(capture.borrow().find(
-                    7, [](const auto& v) { ht::require(v[0] == 101, "native RMW loop"); }),
+                    7, [](const auto& v) { ht::require(v[0] == std::byte{101}, "native RMW loop"); }),
                 "descriptor changed");
     ht::require(callbacks == 1, "descriptor updater count");
     bool refused = false;

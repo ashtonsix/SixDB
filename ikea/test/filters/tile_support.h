@@ -1,18 +1,19 @@
+#include <ikea/seriespack/author/store.h>
 #pragma once
 #include "support.h"
 
 template <unsigned K> void tile_boundary_case(std::uint8_t* end) {
-    using F = sp::format<K>;
+    using F = sp::layout<K>;
     constexpr auto limit = ~std::uint64_t{0} >> (64 - K);
     for (unsigned n : {8u, 16u, 24u, 32u, 40u, 48u, 56u, 64u}) {
         auto* bytes = end - n * K / 8;
         std::fill_n(bytes, n * K / 8, 0);
-        auto admitted = sp::view<F, std::uint8_t>::attach(n, {{{{bytes, n * K / 8}, K}, {}, {}}});
+        auto admitted = sp::view<F>::attach(n, {{{std::as_writable_bytes(std::span{bytes, n * K / 8}), K},{},{}}});
         assert(admitted);
         std::array<std::uint64_t, 64> expected{};
         for (unsigned i = 0; i < n; ++i) {
             expected[i] = i % 3 ? ((std::uint64_t(i) * 0x918173179ULL) & limit) : limit;
-            sp::set_unchecked(*admitted, i, expected[i]);
+            sp::author::store_unchecked(*admitted, i, expected[i]);
         }
         // Actual exact-bound native consumers at an inaccessible page.
         for (auto rhs : {std::uint64_t{0}, limit / 2, limit, ~std::uint64_t{0}})

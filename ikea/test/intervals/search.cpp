@@ -57,10 +57,10 @@ template <class T> void native() {
         for (unsigned r = 0; r < n; ++r)
             if (r % 11 == 3)
                 bits[r / 8] |= std::byte(1u << (r % 8));
-        const bl::selected_source sparse{source, bl::rank_selection{bits}};
+        const bl::selected_source sparse{source, bl::selection::bits(0,bits)};
         for (int q = -1; q < 260; q += 7)
             check(sparse, q);
-        const bl::selected_source inverted{source, bl::rank_selection{bits, true}};
+        const bl::selected_source inverted{source, bl::selection::complement(0,bits)};
         for (int q = -1; q < 260; q += 17)
             check(inverted, q);
     }
@@ -191,7 +191,7 @@ template <class T> void tails() {
         auto *p = raw + page - bytes;
         std::memset(p, 0, bytes);
         p[(n - 1) / 8] |= std::byte(1u << ((n - 1) % 8));
-        bl::rank_selection pop{{p, bytes}};
+        auto pop = bl::selection::bits(0,{p,bytes});
         assert(pop.next(0, n) == n - 1 && pop.previous(n, n) == n - 1);
     }
     assert(!munmap(raw, page * 2));

@@ -81,9 +81,9 @@ struct cell {
     const bc::byte *data;
     unsigned population; // 257 means plain, with no population evidence.
 };
-alignas(64) constexpr bc::plain_block zero{};
-alignas(64) constexpr bc::plain_block full = [] {
-    bc::plain_block value;
+alignas(64) constexpr std::array<std::byte, 32> zero{};
+alignas(64) constexpr std::array<std::byte, 32> full = [] {
+    std::array<std::byte, 32> value;
     value.fill(bc::byte{255});
     return value;
 }();
@@ -130,15 +130,15 @@ template <boolean_op Op>
 #endif
 }
 template <boolean_op Op, output_kind Output, unsigned Grain>
-void apply(operand_view a, operand_view b, const std::uint64_t *active, bc::destination &output,
-           ikea::source_write_journal &effects) {
+void apply(operand_view a, operand_view b, const std::uint64_t *active, bc::view &output,
+           ikea::journal &effects) {
     const auto n = a.bits.size();
     assert(n == b.bits.size() && output.storage.size() >= n * 32);
     assert(effects.remaining() >= (Output == output_kind::complete ? 1 : n));
     // Complete output has one known contiguous footprint, including zeros at
     // inactive ordinals. Record it once instead of repeating journal work for each store.
     if constexpr (Output == output_kind::complete)
-        effects.before(output, {0, 0, n * 32});
+        effects.before(output, 0, 0, n * 32);
     std::optional<metadata_reader> ma, mb;
     if (a.metadata)
         ma.emplace(*a.metadata, a.lookup);
@@ -152,7 +152,7 @@ void apply(operand_view a, operand_view b, const std::uint64_t *active, bc::dest
     };
     auto store = [&] [[gnu::always_inline]] (unsigned i, bc::native::block bits) {
         if constexpr (Output == output_kind::selected_only)
-            effects.before(output, {0, i * 32, 32});
+            effects.before(output, 0, i * 32, 32);
         bc::native::store(output.storage.data() + i * 32, bits);
     };
     unsigned pending = n;

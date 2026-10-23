@@ -72,22 +72,22 @@ std::uint64_t first_value(cs::Selection selection) {
   if (selection.part_count() == 1) {
     auto part = take(selection.part(std::size_t{0}));
     return cs::tuple_law(selection.shape()).read_unchecked<2>(
-        static_cast<const v::tp::byte*>(static_cast<const void*>(part.address())));
+        static_cast<const std::byte*>(static_cast<const void*>(part.address())));
   }
   check(selection.part_count() == 4);
   auto part = take(selection.part(std::size_t{2}));
   auto source = v::sp::dense_source<v::Column<20>>{
-      static_cast<const std::uint8_t*>(static_cast<const void*>(part.address())), 3};
-  return v::sp::bind_decoder<std::uint64_t>(source).get_unchecked(0);
+      static_cast<const std::byte*>(static_cast<const void*>(part.address())), 3};
+  return v::sp::bind_reader<std::uint64_t>(source).get_unchecked(0);
 }
 
 std::uint64_t exported_value(cs::Export* exported, bool columns) {
   auto part = cs::view(exported);
   if (!columns) return cs::tuple_law(exported).read_unchecked<2>(
-      static_cast<const v::tp::byte*>(static_cast<const void*>(part.address())));
+      static_cast<const std::byte*>(static_cast<const void*>(part.address())));
   auto source = v::sp::dense_source<v::Column<20>>{
-      static_cast<const std::uint8_t*>(static_cast<const void*>(part.address())), cs::records(exported)};
-  return v::sp::bind_decoder<std::uint64_t>(source).get_unchecked(0);
+      static_cast<const std::byte*>(static_cast<const void*>(part.address())), cs::records(exported)};
+  return v::sp::bind_reader<std::uint64_t>(source).get_unchecked(0);
 }
 
 template<class Store> void publish(Store& store, std::span<const typename Store::Change> changes) {
@@ -363,7 +363,42 @@ template<class Store> void run(const char* label) {
   std::printf("%s: six actual encoded ownership/binding histories passed\n", label);
 }
 
+// Parent count and child byte law are independent evidence. Counts 3 and 7
+// occupy the same tile; a body extent cannot recover that logical distinction.
+void schema_only_columns() {
+  v::Schema schema;
+  const auto three = take(v::shape(schema, v::Format::columns, 3));
+  const auto seven = take(v::shape(schema, v::Format::columns, 7));
+  const auto nine = take(v::shape(schema, v::Format::columns, 9));
+  check(three.interpretation != seven.interpretation);
+  alignas(64) std::array<std::array<std::byte, 64>, 4> storage{};
+  std::array<v::ReadPart, 4> source;
+  constexpr std::array<unsigned, 4> widths{64, 64, 20, 32};
+  for (unsigned i = 0; i < 4; ++i) {
+    const std::array<std::byte, 8> law{std::byte{'S'}, std::byte{'P'}, std::byte{2},
+        std::byte{3}, std::byte{0}, std::byte(widths[i]), std::byte{0}, std::byte{0}};
+    check(three.parts[i].interpretation == seven.parts[i].interpretation &&
+        seven.parts[i].interpretation == nine.parts[i].interpretation);
+    check(std::equal(law.begin(), law.end(), three.parts[i].interpretation.begin(),
+        three.parts[i].interpretation.end()));
+    check(three.parts[i].body_bytes == seven.parts[i].body_bytes &&
+        nine.parts[i].body_bytes == 2 * three.parts[i].body_bytes);
+    source[i] = {three.parts[i].id, std::span(storage[i]).first(widths[i]),
+        three.parts[i].interpretation};
+  }
+  check(v::qualify_columns(schema, {3}, three.interpretation, source));
+  check(!v::qualify_columns(schema, {7}, three.interpretation, source));
+  const auto rebound = take(v::ReadData::bind(schema, seven.interpretation, source));
+  check(rebound.size() == 7 && rebound.row_unchecked(6) == orbital_bench::Row{});
+  check(!v::ReadData::bind(schema, nine.interpretation, source));
+  auto wrong = three.parts[0].interpretation;
+  wrong[5] = std::byte{63}; // A valid different byte law cannot attach as Local64.
+  source[0].interpretation = wrong;
+  check(!v::ReadData::bind(schema, three.interpretation, source));
+}
+
 int main() {
+  schema_only_columns();
 #if SIXDB_OBJECT_MODULE_TEST
   using Selected = object_module_test::Store<ch::ShapePhysical>;
   static_assert(!std::is_aggregate_v<Selected::BoundSelection>);

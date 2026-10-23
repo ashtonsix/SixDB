@@ -18,10 +18,10 @@ std::expected<void, error> admit_metadata(unsigned directory_bytes, unsigned con
                                           std::numeric_limits<std::uintptr_t>::max() - p.size()))
             return std::unexpected(error::capacity);
         if (overlaps(p.data(), p.size(), format, format_bytes))
-            return std::unexpected(error::alias);
+            return std::unexpected(error::overlap);
         for (unsigned j = 0; j < i; ++j)
             if (overlaps(p.data(), p.size(), planes[j].data(), planes[j].size()))
-                return std::unexpected(error::alias);
+                return std::unexpected(error::overlap);
     }
     return {};
 }

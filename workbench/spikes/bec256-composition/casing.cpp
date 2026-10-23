@@ -3,17 +3,17 @@
 
 namespace bec_study {
 [[gnu::noinline]] std::expected<unsigned, bc::error>
-staged_encode(std::span<const bc::byte, 32> input, unsigned population, bc::destination &target,
-              std::size_t offset, ikea::source_write_journal &effects) {
-    auto encoded = bc::prepare(input, population);
+staged_encode(std::span<const bc::byte, 32> input, unsigned population, bc::view &target,
+              std::size_t offset, ikea::journal &effects) {
+    auto encoded = bc::encoding::make(input, population);
     if (!encoded)
         return std::unexpected(encoded.error());
     if (auto written = encoded->write(target, offset, effects); !written)
         return std::unexpected(written.error());
     return encoded->bytes();
 }
-std::expected<bound_encoder, bc::error> bound_encoder::bind(bc::destination &target,
-                                                            ikea::source_write_journal &effects) {
+std::expected<bound_encoder, bc::error> bound_encoder::bind(bc::view &target,
+                                                            ikea::journal &effects) {
     // The prototype reuses the production alias checker over the entire plane.
     // Its unsigned footprint type bounds this experiment to <4 GiB planes.
     if (target.storage.size() > UINT32_MAX)
@@ -26,8 +26,8 @@ std::expected<bound_encoder, bc::error> bound_encoder::bind(bc::destination &tar
 }
 namespace {
 struct bound_sink {
-    bc::destination &target;
-    ikea::source_write_journal &effects;
+    bc::view &target;
+    ikea::journal &effects;
     std::size_t offset;
     std::expected<unsigned, bc::error> population_error() const {
         return std::unexpected(bc::error::population);
@@ -50,7 +50,7 @@ struct bound_sink {
         if (auto proof = admit(n); !proof)
             return std::unexpected(proof.error());
         if (n) {
-            effects.before(target, {0, offset, n});
+            effects.before(target, 0, offset, n);
             bc::detail::emit_exact(values, widths,
                                    reinterpret_cast<std::uint8_t *>(target.storage.data()) + offset,
                                    n);
@@ -60,7 +60,7 @@ struct bound_sink {
     std::expected<unsigned, bc::error> singleton(std::uint8_t value) const {
         if (auto proof = admit(1); !proof)
             return std::unexpected(proof.error());
-        effects.before(target, {0, offset, 1});
+        effects.before(target, 0, offset, 1);
         target.storage[offset] = bc::byte{value};
         return 1;
     }

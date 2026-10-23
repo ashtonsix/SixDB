@@ -7,7 +7,7 @@
 
 namespace orbital_bench::versioned {
 namespace native_detail {
-using TupleRead = tp::read_operation<8, const tp::byte>;
+using TupleRead = tp::reader<8, const std::byte>;
 [[gnu::always_inline]] inline TupleRead tuple_read(const Schema& schema,
     const tp::const_view& view, unsigned field) {
   // Qualification proved immutable plan/view unit and transfer shapes. Every
@@ -19,7 +19,7 @@ using TupleRead = tp::read_operation<8, const tp::byte>;
 template<unsigned Bytes>
 [[gnu::always_inline]] inline std::uint64_t tuple_value(const TupleRead& operation,
                                                       std::size_t row) {
-  return tp::native_reader(operation).template get_transfer_unchecked<Bytes>(row);
+  return tp::author::native_reader(operation).template get_transfer_unchecked<Bytes>(row);
 }
 [[gnu::always_inline]] inline auto tuple_reads(const Schema& schema, const tp::const_view& view) {
   return std::array{tuple_read(schema, view, 0), tuple_read(schema, view, 1),
@@ -56,7 +56,7 @@ class TupleBody {
   friend class TupleCursor;
   [[gnu::always_inline]] tp::const_view view() const {
     // Exact extent/overflow, zero offset and tight stride were already proved.
-    const auto placed = tp::const_view::bind(schema_->tuple,
+    const auto placed = tp::const_view::attach(schema_->tuple,
         {cursor_.data_, records_ * tuple_bytes}, records_, tuple_bytes);
     if (!placed) std::unreachable();
     return *placed;
@@ -143,7 +143,7 @@ class ColumnBody {
       : records_(control.records), cursors_(cursors) {}
   friend class ColumnCursors;
   template<unsigned K> auto decoder(ColumnCursor<K> cursor) const {
-    return sp::bind_decoder<std::uint64_t>(sp::dense_source<Column<K>>{cursor.data_, records_});
+    return sp::bind_reader<std::uint64_t>(sp::dense_source<Column<K>>{cursor.data_, records_});
   }
   template<unsigned K> std::uint64_t value(ColumnCursor<K> cursor, std::size_t row) const {
     return decoder(cursor).get_unchecked(row);

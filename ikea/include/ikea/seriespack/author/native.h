@@ -1,5 +1,5 @@
 #pragma once
-#include <ikea/seriespack/point.h>
+#include <ikea/seriespack/author/store.h>
 #if defined(__aarch64__)
 #include <ikea/seriespack/detail/native/neon/read.h>
 #include <ikea/seriespack/detail/native/neon/groups.h>

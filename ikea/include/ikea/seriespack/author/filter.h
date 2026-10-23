@@ -5,6 +5,7 @@
 #include <ikea/seriespack/detail/filter8.h>
 
 namespace ikea::seriespack {
+namespace author {
 #if defined(__aarch64__) || defined(__AVX2__)
 /// Sixteen reconstructed unsigned values; bit i names original lane i.
 /// No storage access, allocation or scheduling boundary. Values fit K bits.
@@ -21,7 +22,7 @@ filter_values(native::values<K> value, std::uint64_t rhs, std::uint16_t active =
     constexpr unsigned lanes = bytes == 1 ? 16 : 32 / bytes;
 #endif
     unsigned out = 0;
-    detail::each<native::values<K>::parts>([&](auto p) {
+    ikea::seriespack::detail::each<native::values<K>::parts>([&](auto p) {
         out |= ikea::detail::filter::bits<bytes, Op>(value.v[p], rhs) << (p * lanes);
     });
     return out & active;
@@ -40,18 +41,20 @@ filter_values(native_group::values<K, N> value, std::uint64_t rhs,
             return ikea::compare<Op>(0, rhs) ? active : 0;
     std::uint64_t result = 0;
 #if defined(__aarch64__)
-    detail::each<N / 16>([&](auto p) {
+    ikea::seriespack::detail::each<N / 16>([&](auto p) {
         result |= std::uint64_t(filter_values<Op>(value.block[p], rhs)) << (p * 16);
     });
 #else
     constexpr unsigned bytes = sizeof(uint_for<K>), lanes = 64 / bytes;
-    detail::each<native_group::values<K, N>::parts>([&](auto p) {
+    ikea::seriespack::detail::each<native_group::values<K, N>::parts>([&](auto p) {
         result |= ikea::detail::filter::bits<bytes, Op>(value.v[p], rhs) << (p * lanes);
     });
 #endif
     return result & active;
 }
 #endif
+
+} // namespace author
 
 namespace detail {
 // Native paired measurements favor bitplanes for equality and short ordered
@@ -66,7 +69,7 @@ inline constexpr bool use_packed_filter =
 
 } // namespace detail
 
-namespace composition {
+namespace author {
 /// Select head-first filtering without changing value meaning or ownership.
 /// Apply after child substitution. Other reads retain the expression's meaning.
 template <class Expression> struct guarded_expression {
@@ -81,7 +84,7 @@ auto guarded(value_expression<K, 8, P, H0, H1> expression) {
 template <class Ops, class E, class Rows, class Mask>
 [[gnu::always_inline]] auto read(Ops& ops, const guarded_expression<E>& source, Rows rows,
                                  Mask active) {
-    return composition::read(ops, source.expression, rows, active);
+    return author::read(ops, source.expression, rows, active);
 }
 namespace detail {
 template <class E> inline constexpr bool guarded_filter<guarded_expression<E>> = true;
@@ -154,14 +157,14 @@ template <comparison Op, class Expression>
                active;
 #endif
     if constexpr (requires { Expression::kind; }) {
-        using F = typename Expression::format_type;
+        using F = typename Expression::layout_type;
         if constexpr (Expression::kind == field_kind::tail && F::storage == geometry::local &&
                       ikea::seriespack::detail::use_packed_filter<Op, Expression::bit_width>) {
             const auto* base = [&] {
                 if constexpr (requires { expression.source.data; })
-                    return expression.source.data;
+                    return ikea::to_u8(expression.source.data);
                 else
-                    return expression.source.stream(0).bytes.data();
+                    return ikea::to_u8(expression.source.stream(0).bytes).data();
             }();
             const auto stride = [&] {
                 if constexpr (requires { expression.source.data; })
@@ -179,13 +182,13 @@ template <comparison Op, class Expression>
     }
 #if defined(__aarch64__) || defined(__AVX2__)
     native_ops ops;
-    return filter_values<Op>(composition::read(ops, expression, first, active), rhs, active);
+    return filter_values<Op>(author::read(ops, expression, first, active), rhs, active);
 #else
     scalar_ops ops;
     unsigned out = 0;
     for (unsigned i = 0; i < 16; ++i)
         if ((active & (1u << i)) &&
-            ikea::compare<Op>(composition::read(ops, expression, first + i, true).value, rhs))
+            ikea::compare<Op>(author::read(ops, expression, first + i, true).value, rhs))
             out |= 1u << i;
     return out;
 #endif
@@ -206,7 +209,7 @@ template <comparison Op, class E>
     const auto& expression = guarded.expression;
 #if defined(__aarch64__) || defined(__AVX2__)
     native_ops ops;
-    const auto high = composition::read(ops, expression.head0, first, active);
+    const auto high = author::read(ops, expression.head0, first, active);
     const auto query = rhs >> low_bits;
     unsigned resolved = 0;
     if constexpr (Op != comparison::equal) {
@@ -257,14 +260,14 @@ filter_unchecked(const Expression& expression, std::size_t first, unsigned count
         constexpr unsigned bytes = Expression::bit_width / 8;
         if (first % 8 == 0 && count % 8 == 0 && count * bytes > 32)
             return ikea::seriespack::detail::filter_words<Op, Expression::bit_width>(
-                       expression.payload.body.source.data + first * bytes, count, rhs) &
+                       ikea::to_u8(expression.payload.body.source.data) + first * bytes, count, rhs) &
                    active;
     }
     if constexpr (!detail::guarded_filter<Expression> && Expression::bit_width >= 8 &&
                   std::has_single_bit(Expression::bit_width)) {
         if (count == 64 && first % 16 == 0) {
             wide_ops<64> ops;
-            return filter_values<Op>(composition::read(ops, expression, first, ~std::uint64_t{0}),
+            return filter_values<Op>(author::read(ops, expression, first, ~std::uint64_t{0}),
                                      rhs, active);
         }
     }
@@ -274,7 +277,7 @@ filter_unchecked(const Expression& expression, std::size_t first, unsigned count
     scalar_ops ops;
     auto point = [&] __attribute__((always_inline)) {
         if ((active & (std::uint64_t{1} << i)) &&
-            ikea::compare<Op>(composition::read(ops, expression, first + i, true).value, rhs))
+            ikea::compare<Op>(author::read(ops, expression, first + i, true).value, rhs))
             result |= std::uint64_t{1} << i;
         ++i;
     };
@@ -305,5 +308,5 @@ filter_unchecked(const Expression& expression, std::size_t first, unsigned count
         point();
     return result & active;
 }
-} // namespace composition
+} // namespace author
 } // namespace ikea::seriespack

@@ -157,22 +157,22 @@ Result<PrivateParts> Material::append(cs::Selection selected, const v::Shape& ta
       (input_begin < destination_begin + destination.size() && destination_begin < input_begin + input_bytes) ||
       (source_begin < destination_begin + destination.size() && destination_begin < source_begin + *old_bytes))
     return std::unexpected(Error::invalid_argument);
-  const auto view = v::tp::view::bind(corpus_.schema.tuple,
-      {reinterpret_cast<v::tp::byte*>(destination.data()), destination.size()},
+  const auto view = v::tp::view::attach(corpus_.schema.tuple,
+      {reinterpret_cast<std::byte*>(destination.data()), destination.size()},
       target.records, v::tuple_bytes);
   if (!view) return std::unexpected(Error::invalid_argument);
-  std::array<ikea::owner_write, 1> journal;
-  ikea::source_write_journal effects{journal};
+  std::array<ikea::journal::entry, 1> journal;
+  ikea::journal effects{journal};
   if (*old_bytes) {
-    effects.before(*view, ikea::byte_write{0, 0, static_cast<std::size_t>(*old_bytes)});
+    effects.before(*view, 0, 0, static_cast<std::size_t>(*old_bytes));
     std::memcpy(destination.data(), source->address(), *old_bytes);
     costs.copied_bytes += *old_bytes; ++costs.copied_spans;
   }
   // Resolve prefix-copy coverage before its full-body view expires. Copy costs
   // stay separate from KernelCosts, which describe the tail initializer only.
   for (const auto& effect : effects.entries())
-    if (effect.source != &*view || effect.bytes.plane != 0 ||
-        effect.bytes.offset > destination.size() || effect.bytes.size > destination.size() - effect.bytes.offset)
+    if (effect.source != &*view || effect.plane != 0 ||
+        effect.offset > destination.size() || effect.size > destination.size() - effect.offset)
       std::terminate();
   const std::array<v::WritePart, 1> tail{{{tail_shape->parts[0].id,
       destination.subspan(static_cast<std::size_t>(*old_bytes))}}};

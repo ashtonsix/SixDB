@@ -1,3 +1,4 @@
+#include <ikea/seriespack/author/store.h>
 #pragma once
 #include "prefix.h"
 #include <ikea/seriespack.h>
@@ -44,21 +45,21 @@ public:
   static constexpr unsigned block_fields = capacity * (geometry_bytes + sizeof(U)) + capacity / 8 + (Widths ? capacity / group * 4 : 0);
   static constexpr unsigned block_stride = align64(block_fields);
   static constexpr bool valid = P != Placement::groups || stride >= group_bytes;
-  using GF = sp::format<geometry_bits, sp::geometry::local>;
-  using UF = sp::format<length_bits, sp::geometry::local>;
-  using BF = sp::format<base_bits, sp::geometry::local>;
+  using GF = sp::layout<geometry_bits, sp::geometry::local>;
+  using UF = sp::layout<length_bits, sp::geometry::local>;
+  using BF = sp::layout<base_bits, sp::geometry::local>;
   static constexpr unsigned tuple_bytes = (geometry_bits + length_bits + 1 + 7) / 8;
 private:
   std::uint8_t* data_{};
   std::size_t rows_{}, used_offset_{}, dead_offset_{}, base_offset_{}, bytes_{};
-  std::optional<sp::view<GF, std::uint8_t>> geometry_;
-  std::optional<sp::view<UF, std::uint8_t>> used_;
-  std::optional<sp::view<BF, std::uint8_t>> bases_;
-  std::optional<tp::reader<8>> tuple_read_, tuple_geometry_, tuple_used_, tuple_length_, tuple_dead_;
-  std::optional<tp::writer<8>> tuple_write_;
-  std::optional<tp::reader<64, 16>> tuple_group_, tuple_used_group_, tuple_dead_group_;
+  std::optional<sp::view<GF>> geometry_;
+  std::optional<sp::view<UF>> used_;
+  std::optional<sp::view<BF>> bases_;
+  std::optional<tp::read_plan<8>> tuple_read_, tuple_geometry_, tuple_used_, tuple_length_, tuple_dead_;
+  std::optional<tp::write_plan<8>> tuple_write_;
+  std::optional<tp::read_plan<64, 16>> tuple_group_, tuple_used_group_, tuple_dead_group_;
   std::optional<tp::view> tuple_view_;
-  std::optional<tp::native_reader<64, tp::byte, 16>> tuple_native_, tuple_used_native_, tuple_dead_native_;
+  std::optional<tp::author::native_reader<64, std::byte, 16>> tuple_native_, tuple_used_native_, tuple_dead_native_;
   std::optional<tp::layout> tuple_layout_;
   // Each output byte is one byte-contained code. Reassembly shifts are static
   // for this schema but plans remain ordinary TuplePack preparation products.
@@ -78,7 +79,7 @@ private:
     field(codes, geometry_bits + length_bits, 1); fields_ = codes.size();
     require(fields_ <= 8, "TuplePack point packet fits");
     auto layout = tp::layout::make(tuple_bytes, codes); require(bool(layout), "TuplePack layout");
-    std::array<tp::byte, 8> all{}, geom{}, used{}, update{};
+    std::array<std::uint8_t, 8> all{}, geom{}, used{}, update{};
     unsigned shift = 0, id = 0;
     for (unsigned i = 0; i < fields_; ++i) {
       if (i == geom_fields_) { shift = 0; id = 1; }
@@ -87,19 +88,19 @@ private:
       if (i < geom_fields_) geom[i] = i;
       else { update[i - geom_fields_] = i; used[i - geom_fields_] = i; }
     }
-    tuple_read_ = *tp::reader<8>::make(*layout, std::span(all).first(fields_));
-    tuple_geometry_ = *tp::reader<8>::make(*layout, std::span(geom).first(geom_fields_));
-    tuple_used_ = *tp::reader<8>::make(*layout, std::span(used).first(used_fields_ + 1));
-    tuple_length_ = *tp::reader<8>::make(*layout, std::span(used).first(used_fields_));
-    tuple_dead_ = *tp::reader<8>::make(*layout, std::span(all).subspan(fields_ - 1, 1));
-    tuple_write_ = *tp::writer<8>::make(*layout, std::span(update).first(used_fields_ + 1));
+    tuple_read_ = *tp::read_plan<8>::make(*layout, std::span(all).first(fields_));
+    tuple_geometry_ = *tp::read_plan<8>::make(*layout, std::span(geom).first(geom_fields_));
+    tuple_used_ = *tp::read_plan<8>::make(*layout, std::span(used).first(used_fields_ + 1));
+    tuple_length_ = *tp::read_plan<8>::make(*layout, std::span(used).first(used_fields_));
+    tuple_dead_ = *tp::read_plan<8>::make(*layout, std::span(all).subspan(fields_ - 1, 1));
+    tuple_write_ = *tp::write_plan<8>::make(*layout, std::span(update).first(used_fields_ + 1));
     tuple_layout_ = *layout;
     // One group per code yields sixteen-byte code planes. The explicit native
     // assembly handles fields beginning mid-byte and 3-code 13-bit lengths.
     const std::array<unsigned, 4> groups{1, 1, 1, 1};
-    tuple_group_ = *tp::reader<64, 16>::make(*layout, std::span(geom).first(geom_fields_), std::span(groups).first(geom_fields_));
-    tuple_used_group_ = *tp::reader<64, 16>::make(*layout, std::span(used).first(used_fields_), std::span(groups).first(used_fields_));
-    tuple_dead_group_ = *tp::reader<64, 16>::make(*layout, std::span(all).subspan(fields_ - 1, 1));
+    tuple_group_ = *tp::read_plan<64, 16>::make(*layout, std::span(geom).first(geom_fields_), std::span(groups).first(geom_fields_));
+    tuple_used_group_ = *tp::read_plan<64, 16>::make(*layout, std::span(used).first(used_fields_), std::span(groups).first(used_fields_));
+    tuple_dead_group_ = *tp::read_plan<64, 16>::make(*layout, std::span(all).subspan(fields_ - 1, 1));
   }
   std::array<unsigned, 3> unpack(std::uint64_t packet, unsigned first, unsigned count) const {
     std::array<unsigned, 3> values{};
@@ -124,7 +125,7 @@ private:
     return data_ + dead_offset_ + row / 8;
   }
   template<class Journal> void before(Journal& effects, std::uint8_t* p, std::size_t n) const {
-    if (n) effects.before(*this, ikea::byte_write{0, std::size_t(p - data_), n});
+    if (n) effects.before(*this, 0, std::size_t(p - data_), n);
   }
 public:
   explicit Metadata(unsigned rows) : rows_(rows) {
@@ -169,7 +170,7 @@ public:
   void attach(std::uint8_t* data) {
     data_ = data;
     if constexpr (P == Placement::tuple) {
-      auto view = tp::view::bind(*tuple_layout_, {data_, rows_ * tuple_bytes}, rows_, tuple_bytes);
+      auto view = tp::view::attach(*tuple_layout_, std::as_writable_bytes(std::span{data_, rows_ * tuple_bytes}), rows_, tuple_bytes);
       require(bool(view), "TuplePack actual strided view"); tuple_view_ = *view;
       auto read = tp::bind_reader(*tuple_group_, *tuple_view_); require(bool(read), "TuplePack native group binding");
       tuple_native_.emplace(*read);
@@ -177,11 +178,11 @@ public:
       tuple_dead_native_.emplace(*tp::bind_reader(*tuple_dead_group_, *tuple_view_));
     }
     if constexpr (P == Placement::series) {
-      auto g = sp::view<GF, std::uint8_t>::attach(rows_, {{{{data_, used_offset_}, GF::tile_bytes}, {}, {}}});
-      auto u = sp::view<UF, std::uint8_t>::attach(rows_, {{{{data_ + used_offset_, dead_offset_ - used_offset_}, UF::tile_bytes}, {}, {}}});
+      auto g = sp::view<GF>::attach(rows_, {{{std::as_writable_bytes(std::span{data_, used_offset_}), GF::tile_bytes},{},{}}});
+      auto u = sp::view<UF>::attach(rows_, {{{std::as_writable_bytes(std::span{data_ + used_offset_, dead_offset_ - used_offset_}), UF::tile_bytes},{},{}}});
       require(bool(g) && bool(u), "SeriesPack real placement admission"); geometry_ = *g; used_ = *u;
       if constexpr (Widths) {
-        auto b = sp::view<BF, std::uint8_t>::attach(rows_ / group, {{{{data_ + base_offset_, bytes_ - base_offset_}, BF::tile_bytes}, {}, {}}});
+        auto b = sp::view<BF>::attach(rows_ / group, {{{std::as_writable_bytes(std::span{data_ + base_offset_, bytes_ - base_offset_}), BF::tile_bytes},{},{}}});
         require(bool(b), "SeriesPack checkpoint admission"); bases_ = *b;
       }
     }
@@ -226,7 +227,7 @@ public:
       sp::native::store16(decoded, sp::native::read16<GF, true>(data_, GF::tile_bytes, first));
 #endif
     } else if constexpr (P == Placement::tuple) {
-      alignas(64) std::array<tp::byte, 64> packet;
+      alignas(64) std::array<std::uint8_t, 64> packet;
       tp::native::store_packet(packet.data(), tuple_native_->get_unchecked(first));
       streampack_next::assemble16_native<W, geometry_bits, 8>(packet.data(), decoded);
     } else streampack_next::copy16_native(decoded, reinterpret_cast<const W*>(geometry_address(first)));
@@ -239,7 +240,7 @@ public:
       sp::native::store16(decoded, sp::native::read16<GF, true>(data_, GF::tile_bytes, first));
 #endif
     } else if constexpr (P == Placement::tuple) {
-      alignas(64) std::array<tp::byte, 64> packet;
+      alignas(64) std::array<std::uint8_t, 64> packet;
       tp::native::store_packet(packet.data(), tuple_native_->get_unchecked(first));
       streampack_next::assemble16_native<G, geometry_bits, 8>(packet.data(), decoded);
     } else streampack_next::copy16_native(decoded, reinterpret_cast<const G*>(geometry_address(first)));
@@ -263,7 +264,7 @@ public:
       sp::native::store16(decoded, sp::native::read16<UF, true>(data_ + used_offset_, UF::tile_bytes, first));
 #endif
     } else if constexpr (P == Placement::tuple) {
-      alignas(64) std::array<tp::byte, 64> packet;
+      alignas(64) std::array<std::uint8_t, 64> packet;
       tp::native::store_packet(packet.data(), tuple_used_native_->get_unchecked(first));
       streampack_next::assemble16_native<W, length_bits, 8 - geometry_bits % 8>(packet.data(), decoded);
     } else if constexpr (WideUsed) {
@@ -293,7 +294,7 @@ public:
   }
   std::uint16_t dead_mask16(unsigned first) const {
     if constexpr (P == Placement::tuple) {
-      alignas(64) std::array<tp::byte, 64> packet;
+      alignas(64) std::array<std::uint8_t, 64> packet;
       tp::native::store_packet(packet.data(), tuple_dead_native_->get_unchecked(first));
 #if defined(__aarch64__)
       const auto bits = vld1q_u8(packet.data()); const int8x8_t shifts{0,1,2,3,4,5,6,7};
@@ -315,7 +316,7 @@ public:
   void encode(unsigned row, unsigned start, unsigned reservation, unsigned used, bool dead) {
     const auto g = Widths ? reservation : start + reservation;
     if constexpr (P == Placement::series) {
-      sp::set_unchecked(*geometry_, row, g); sp::set_unchecked(*used_, row, used);
+      sp::author::store_unchecked(*geometry_, row, g); sp::author::store_unchecked(*used_, row, used);
     } else if constexpr (P == Placement::tuple) {
       const std::uint64_t bits = std::uint64_t(g) | (std::uint64_t(used) << geometry_bits) | (std::uint64_t(dead) << (geometry_bits + length_bits));
       for (unsigned i = 0; i < tuple_bytes; ++i) data_[row * tuple_bytes + i] = bits >> (i * 8);
@@ -329,7 +330,7 @@ public:
     if (row % group == 0) {
       if constexpr (P == Placement::block_planes && Widths) store<std::uint32_t>(data_ + row / capacity * block_stride + capacity * (geometry_bytes + sizeof(U)) + capacity / 8 + row % capacity / group * 4, start);
       else if constexpr (P == Placement::groups) store<std::uint32_t>(unit(row), start);
-      else if constexpr (Widths && P == Placement::series) sp::set_unchecked(*bases_, row / group, start);
+      else if constexpr (Widths && P == Placement::series) sp::author::store_unchecked(*bases_, row / group, start);
       else if constexpr (Widths) store<std::uint32_t>(data_ + base_offset_ + row / group * 4, start);
     }
   }
@@ -361,7 +362,7 @@ public:
         auto* tile = data_ + used_offset_ + row / 8 * UF::tile_bytes;
         before(effects, tile + row % 8 * UF::body, UF::body);
         before(effects, tile + 8 * UF::body, UF::tail);
-        sp::set_unchecked(*used_, row, used);
+        sp::author::store_unchecked(*used_, row, used);
       } else { before(effects, used_address(row), sizeof(U)); store<U>(used_address(row), used); }
       auto* d = dead_address(row); before(effects, d, 1);
       const auto bit = std::uint8_t(1u << (row % 8)); *d = (*d & ~bit) | (dead ? bit : 0);

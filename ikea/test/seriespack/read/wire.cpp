@@ -11,7 +11,7 @@
 namespace sp = ikea::seriespack;
 namespace old = ikea2_reference::seriespack;
 template <unsigned K, sp::geometry G = sp::geometry::local> void check() {
-    using F = sp::format<K, G>;
+    using F = sp::layout<K, G>;
     ikea_test::format_scope<F> format_context{"independent wire read"};
     constexpr auto OG = G == sp::geometry::local ? old::geometry::local8 : old::geometry::striped;
     constexpr std::size_t N = 512;
@@ -27,11 +27,12 @@ template <unsigned K, sp::geometry G = sp::geometry::local> void check() {
     // Ikea neither encodes this oracle nor shares its native reader.
     for (std::size_t i = 0; i < N; i += F::tile_rows)
         old::detail::encode_tile<K, OG>(expected.data() + i, encoded.data() + i * K / 8);
-    auto v = sp::view<F>::attach(N, {{{encoded, F::tile_bytes}, {}, {}}});
+    auto v = sp::const_view<F>::attach(N, {{{std::as_bytes(std::span(encoded)), F::tile_bytes}, {}, {}}});
     IKEA_CHECK(v);
     auto dense = sp::dense(*v);
     IKEA_CHECK(dense);
-    auto decoder = sp::bind_decoder<std::uint64_t>(*dense);
+    auto typed_reader = sp::bind_reader(*dense);
+    auto decoder = typed_reader.template erase<std::uint64_t>();
     std::array<std::uint64_t, N + 2> output;
     for (std::size_t i = 0; i < N; i += 16) {
         output.fill(0xbad);
@@ -54,7 +55,7 @@ template <unsigned K, sp::geometry G = sp::geometry::local> void check() {
         IKEA_CHECK(decoder.get_unchecked(i) == expected[i]);
     }
 #if defined(__aarch64__) || defined(__AVX2__)
-    const auto expression = sp::composition::describe(*dense);
+    const auto expression = sp::author::expression(*dense);
     for (auto count : {std::size_t{0}, std::size_t{1}, std::size_t{17}, std::size_t{511}, N})
         for (auto cutoff :
              {std::uint64_t{0}, std::uint64_t{123}, std::uint64_t{65535}, std::uint64_t(-1)})
@@ -63,7 +64,7 @@ template <unsigned K, sp::geometry G = sp::geometry::local> void check() {
                 for (std::size_t i = 0; i < count; ++i)
                     if ((bits & (1u << (i % 16))) && expected[i] < cutoff)
                         want += expected[i];
-                const auto got = sp::composition::sum_regions(expression, count, cutoff,
+                const auto got = sp::author::sum_regions(expression, count, cutoff,
                                                               [&](std::size_t) { return bits; });
                 IKEA_CHECK(want == got);
             }

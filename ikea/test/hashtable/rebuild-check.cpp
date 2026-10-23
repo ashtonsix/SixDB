@@ -8,11 +8,10 @@ namespace study {
 namespace r = ikea::hashtable::detail;
 namespace ht = ikea::hashtable;
 using ht::word;
-using ht::byte;
 template <unsigned V> ht::bytes<V> value(word key, unsigned generation) {
     ht::bytes<V> result{};
     for (unsigned i = 0; i < V; ++i)
-        result[i] = byte((key >> (i % 8) * 8) ^ i * 137 ^ generation * 53);
+        result[i] = std::byte((key >> (i % 8) * 8) ^ i * 137 ^ generation * 53);
     return result;
 }
 template <class Owner, class Oracle> void verify(const Owner& owner, const Oracle& expected) {
@@ -35,7 +34,7 @@ template <class Owner, class Oracle> void verify(const Owner& owner, const Oracl
     const auto state = r::access::get(owner);
     if constexpr (!Owner::bitmap)
         for (std::size_t bucket = 0; bucket < Owner::bucket_count; ++bucket) {
-            const auto* p = state.primary.data + bucket * Owner::stride;
+            const auto* p = ikea::to_u8(state.primary.data) + bucket * Owner::stride;
             for (unsigned row = 0; row < Owner::N; ++row)
                 if (!r::live_row<Owner>(p, row))
                     ht::require(ht::point<Owner::encoding>(p, row, Owner::N) ==
@@ -75,15 +74,15 @@ template <unsigned K, unsigned E, unsigned NextE, unsigned V> void check() {
         source.erase(key);
         expected.erase(key);
     }
-    std::vector<std::vector<byte>> original;
+    std::vector<std::vector<std::byte>> original;
     source.allocations(
-        [&](auto, const byte* p, std::size_t n) { original.emplace_back(p, p + n); });
+        [&](auto, const std::byte* p, std::size_t n) { original.emplace_back(p, p + n); });
     auto run = [&]<bool Tiles, bool Swiss, bool Image = false>() {
         auto next = ht::grow<Destination>(source);
         verify(*next, expected);
         verify(source, expected);
         unsigned allocation = 0;
-        source.allocations([&](auto, const byte* p, std::size_t n) {
+        source.allocations([&](auto, const std::byte* p, std::size_t n) {
             ht::require(original[allocation].size() == n &&
                             std::equal(p, p + n, original[allocation].begin()),
                         "growth mutated source");
@@ -169,7 +168,7 @@ template <unsigned K, unsigned V> void check_merge() {
     auto combine = [](const auto& left, const auto& right) {
         auto result = left;
         for (unsigned i = 0; i < V; ++i)
-            result[i] = ht::byte(left[i] * 3 + right[i] * 5 + 7);
+            result[i] = std::byte(std::to_integer<unsigned>(left[i]) * 3 + std::to_integer<unsigned>(right[i]) * 5 + 7);
         return result;
     };
     auto expected = a;

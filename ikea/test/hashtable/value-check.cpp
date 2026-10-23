@@ -20,7 +20,7 @@ template <unsigned W, unsigned b, unsigned V, unsigned E> void exercise() {
     auto value_for = [](unsigned bucket, unsigned q, unsigned epoch) {
         bytes<V> value{};
         for (unsigned i = 0; i < V; ++i)
-            value[i] = byte((bucket * 137 + q * 71 + epoch * 29 + i * 43) ^ (i >> 2));
+            value[i] = std::byte((bucket * 137 + q * 71 + epoch * 29 + i * 43) ^ (i >> 2));
         return value;
     };
     auto verify = [&] {
@@ -56,7 +56,7 @@ template <unsigned W, unsigned b, unsigned V, unsigned E> void exercise() {
                                 "borrowed complete value and readable zero miss");
                         if (hit) {
                             bool contained = false;
-                            owner.allocations([&](auto, const byte* base, std::size_t size) {
+                            owner.allocations([&](auto, const std::byte* base, std::size_t size) {
                                 const auto at = std::uintptr_t(match.address);
                                 const auto begin = std::uintptr_t(base);
                                 contained |= at >= begin && at - begin <= size &&

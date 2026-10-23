@@ -9,13 +9,13 @@ template <unsigned Groups> void check_masks() {
     std::mt19937_64 rng(871 + Groups);
     for (unsigned count : {Groups, 8u, 64u}) {
         for (unsigned offset : {0u, 1u, 3u, 15u}) {
-            std::vector<ht::byte> backing(count * 16 + offset);
+            std::vector<std::uint8_t> backing(count * 16 + offset);
             auto* controls = backing.data() + offset;
             for (unsigned trial = 0; trial < 1200; ++trial) {
-                const ht::byte tag = ht::byte(2 + rng() % 254);
+                const std::uint8_t tag = std::uint8_t(2 + rng() % 254);
                 for (unsigned i = 0; i < count * 16; ++i) {
                     const auto kind = rng() % 16;
-                    controls[i] = kind < 3 ? tag : kind < 5 ? ht::byte(kind - 3) : 0x38;
+                    controls[i] = kind < 3 ? tag : kind < 5 ? std::uint8_t(kind - 3) : 0x38;
                 }
                 const std::size_t first = rng() % count, step = trial % count;
                 const auto got =
@@ -52,7 +52,7 @@ template <unsigned Groups> void check_masks() {
     }
     // Candidates after an empty in the SAME group remain visible; candidates
     // after an empty GROUP must disappear. Include the highest packed bit.
-    std::vector<ht::byte> controls(Groups * 16, 255);
+    std::vector<std::uint8_t> controls(Groups * 16, 255);
     controls[0] = 0;
     auto got = ht::detail::compare_swiss_read<Groups>(controls.data(), 0, 0, Groups - 1, 255);
     ht::require(got.candidates == 0xfffe, "whole terminating group retained");

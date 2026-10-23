@@ -7,13 +7,17 @@ higher-level spikes. The recommendations below preserve the ownership boundary
 in [Ikea integration](../../../ikea/docs/integration.md) while allowing TuplePack's
 code maps and native carriers to differ from SeriesPack's.
 
+This historical review retains its original type vocabulary. The current
+[interface guide](../../../ikea/docs/interfaces.md) owns the unified journal and
+author/writer names; source links below follow the corresponding maintained bodies.
+
 ## Reuse the ownership contract, keep the maintenance law explicit
 
 The reusable surface is small: issued byte spans, journals qualified by actual
 substituted source, whole-call admission, infallible/non-suspending hooks, and
 owner-controlled publication. Moving the span and qualified journal types into
 Ikea with SeriesPack aliases is consistent with their current meaning in
-[effects.h](../../../ikea/include/ikea/seriespack/effects.h). A source pointer is
+[effects.h](../../../ikea/include/ikea/effects.h). A source pointer is
 a borrowed execution identity; the owner resolves it into stable storage and
 generation coordinates before the named view expires.
 
@@ -153,7 +157,7 @@ merged store, whose full issued span is covered. Bounds must include wider
 preservation stores and exact tail behavior, without claiming ownership of
 stride gaps. Journal record capacity is distinct from byte coverage; coalescing
 can reduce actual records. SeriesPack's
-[capacity/admission interface](../../../ikea/include/ikea/seriespack/author/write.h)
+[capacity/admission interface](../../../ikea/include/ikea/seriespack/writer.h)
 is the useful precedent, rather than one fixed packet's footprint.
 
 That data journal does not account for arbitrary stores performed by maintenance.

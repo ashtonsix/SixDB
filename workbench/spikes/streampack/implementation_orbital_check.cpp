@@ -80,13 +80,14 @@ std::vector<sp::byte> encode(const Row& row) {
 }
 
 void fill(om::Draft& draft, std::span<const Row> input) {
-    ikea::no_coverage ignored;
+    std::array<ikea::journal::entry, 16> ignored_records; ikea::journal ignored{ignored_records};
     for (const auto& row : input) {
         const auto data = encode(row);
+        ignored.used = 0;
         check(bool(sp::append(draft.write(), data, row.reservation, ignored)), "append application row");
     }
     for (unsigned r = 0; r < input.size(); ++r)
-        if (input[r].retired) check(bool(sp::retire(draft.write(), r, ignored)), "retire application row");
+        if (input[r].retired) { ignored.used = 0; check(bool(sp::retire(draft.write(), r, ignored)), "retire application row"); }
 }
 
 void expect(const sp::const_view& source, std::span<const Row> expected) {
@@ -101,7 +102,7 @@ void expect(const sp::const_view& source, std::span<const Row> expected) {
         }
     }
     const auto outside = sp::value(source, unsigned(expected.size()));
-    check(!outside && outside.error() == sp::error::rank, "rank boundary refuses");
+    check(!outside && outside.error() == sp::error::range, "rank boundary refuses");
 }
 
 using Snapshot = std::array<std::vector<sp::byte>, 4>;
@@ -112,19 +113,19 @@ template <class V> Snapshot snapshot(const V& source) {
     return result;
 }
 
-void replay(Snapshot before, const sp::view& source, const ikea::source_write_journal& effects) {
+void replay(Snapshot before, const sp::view& source, const ikea::journal& effects) {
     const auto planes = source.windows().planes();
     for (const auto entry : effects.entries()) {
-        check(entry.source == &source && entry.bytes.plane < 4, "effect resolves actual named source");
-        const auto p = entry.bytes.plane;
-        const auto offset = entry.bytes.offset, size = entry.bytes.size;
+        check(entry.source == &source && entry.plane < 4, "effect resolves actual named source");
+        const auto p = entry.plane;
+        const auto offset = entry.offset, size = entry.size;
         check(offset <= planes[p].size() && size <= planes[p].size() - offset, "effect is bounded by Part");
         std::copy_n(planes[p].begin() + offset, size, before[p].begin() + offset);
     }
     check(before == snapshot(source), "issued afterimages reproduce all resulting bytes");
 }
 
-om::FormatOwner format(sp::geometry geometry = sp::geometry::width,
+om::FormatOwner format(sp::geometry geometry = sp::geometry::sizes,
     sp::placement placement = sp::placement::grouped) {
     return take(om::prepare_format({geometry, placement, 255, sp::slot_capacity * 255, {}, false, false}),
         "prepare shared format");
@@ -154,10 +155,11 @@ void publication(Runtime& runtime, om::Placement placement) {
     auto current_rows = original;
     current_rows[4].key += 400; current_rows[4].length = 21;
     auto next = take(om::Draft::clone(runtime.worker, selected, 2048, placement), "clone selected body");
-    ikea::no_coverage ignored;
+    std::array<ikea::journal::entry, 16> ignored_records; ikea::journal ignored{ignored_records};
     check(bool(sp::replace(next.write(), 4, encode(current_rows[4]), ignored)), "replace private clone");
     auto addition = rows(2, 19);
     for (const auto row : addition) {
+        ignored.used = 0;
         check(bool(sp::append(next.write(), encode(row), row.reservation, ignored)), "cross partial sixteen group");
         current_rows.push_back(row);
     }
@@ -216,18 +218,18 @@ void escaping_parts(Runtime& runtime, om::Placement placement) {
         check(part->control.original(part->index) == p, "selected copy retains original plane identity");
     }
     const auto& l = exports.parts[1]->control.format->layout;
-    const auto source = sp::const_view::assume_valid(l, {planes[0], planes[1], planes[2], planes[3]});
+    const auto source = sp::const_view::attach_unchecked(l, {planes[0], planes[1], planes[2], planes[3]});
     expect(source, original);
 }
 
 void boundary_and_refusal(Runtime& runtime) {
-    for (auto geometry : {sp::geometry::direct, sp::geometry::width})
+    for (auto geometry : {sp::geometry::absolute_ends, sp::geometry::sizes})
         for (auto placement : {sp::placement::grouped, sp::placement::separated}) {
             const auto f = format(geometry, placement);
             auto draft = take(om::Draft::create(runtime.worker, f, *std::pmr::new_delete_resource(), 2048), "create boundary");
             auto input = rows(33, 2);
-            std::array<ikea::owner_write, 512> entries{};
-            ikea::source_write_journal effects{entries};
+            std::array<ikea::journal::entry, 512> entries{};
+            ikea::journal effects{entries};
             for (unsigned n = 0; n < input.size(); ++n) {
                 const auto before = snapshot(draft.write());
                 effects.used = 0;
@@ -237,7 +239,7 @@ void boundary_and_refusal(Runtime& runtime) {
             }
             auto refusal = [&](auto command, sp::error expected_error) {
                 const auto before = snapshot(draft.write());
-                entries.fill({&draft, {3, 99, 101}});
+                entries.fill({&draft, 3, 99, 101});
                 const auto prior = entries;
                 effects.used = 1;
                 const auto result = command();
@@ -246,28 +248,28 @@ void boundary_and_refusal(Runtime& runtime) {
                 check(snapshot(draft.write()) == before, "refusal preserves every plane");
                 for (unsigned i = 0; i < entries.size(); ++i)
                     check(entries[i].source == prior[i].source &&
-                        entries[i].bytes.plane == prior[i].bytes.plane &&
-                        entries[i].bytes.offset == prior[i].bytes.offset &&
-                        entries[i].bytes.size == prior[i].bytes.size,
+                        entries[i].plane == prior[i].plane &&
+                        entries[i].offset == prior[i].offset &&
+                        entries[i].size == prior[i].size,
                         "refusal preserves every effect slot, including preexisting output");
             };
-            refusal([&] { return sp::replace(draft.write(), 33, encode(input[0]), effects); }, sp::error::rank);
+            refusal([&] { return sp::replace(draft.write(), 33, encode(input[0]), effects); }, sp::error::range);
             const std::array<sp::byte, 29> too_large{};
             refusal([&] { return sp::replace(draft.write(), 0, too_large, effects); }, sp::error::value);
-            refusal([&] { return sp::replace(draft.write(), 0, draft.write().windows().control.first(1), effects); }, sp::error::alias);
+            refusal([&] { return sp::replace(draft.write(), 0, draft.write().windows().control.first(1), effects); }, sp::error::overlap);
             effects.storage = std::span(entries).first(2);
             refusal([&] { return sp::replace(draft.write(), 0, encode(input[0]), effects); }, sp::error::effects);
             refusal([&] { return sp::soft_pack(draft.write(), true, effects); }, sp::error::effects);
         }
 
-    const auto zero = take(om::prepare_format({sp::geometry::direct, sp::placement::grouped,
+    const auto zero = take(om::prepare_format({sp::geometry::absolute_ends, sp::placement::grouped,
         0, 0, 0, true, true}), "prepare count-only format");
     auto z = take(om::Draft::create(runtime.worker, zero, *std::pmr::new_delete_resource(), 0), "allocate count-only object");
-    std::array<ikea::owner_write, 1> entry{};
-    ikea::source_write_journal effects{entry};
+    std::array<ikea::journal::entry, 1> entry{};
+    ikea::journal effects{entry};
     check(bool(sp::append(z.write(), {}, 0, effects)) && effects.used == 1,
         "maximum-zero append writes only count");
-    check(entry[0].source == &z.write() && entry[0].bytes.plane == unsigned(sp::plane::control), "count has named control effect");
+    check(entry[0].source == &z.write() && entry[0].plane == unsigned(sp::plane::control), "count has named control effect");
     om::Store store(*std::pmr::new_delete_resource());
     om::Store::Scope basis(store);
     check(bool(om::publish(store, basis, object, take(z.capture(store), "capture zero payload"))), "publish zero payload");
@@ -276,17 +278,17 @@ void boundary_and_refusal(Runtime& runtime) {
 
     auto packed = take(om::Draft::create(runtime.worker, format(), *std::pmr::new_delete_resource(), 64), "create soft pack");
     const std::array bytes{sp::byte{7}, sp::byte{8}};
-    ikea::no_coverage ignored;
+    std::array<ikea::journal::entry, 16> ignored_records; ikea::journal ignored{ignored_records};
     check(bool(sp::append(packed.write(), bytes, 8, ignored)), "append slack reservation");
     const auto before = snapshot(packed.write());
-    std::array<ikea::owner_write, 16> writes{};
-    ikea::source_write_journal log{writes};
+    std::array<ikea::journal::entry, 16> writes{};
+    ikea::journal log{writes};
     check(bool(sp::soft_pack(packed.write(), true, log)), "soft pack trailing slack");
     replay(before, packed.write(), log);
     check(packed.write().extent() == 2 && packed.write().size() == 1 &&
         snapshot(packed.write())[1] == before[1], "single-rank packing preserves count and checkpoint");
-    check(std::ranges::any_of(log.entries(), [](auto e) { return e.bytes.plane == unsigned(sp::plane::control) &&
-        e.bytes.offset == 2 && e.bytes.size == 4; }), "extent-only control effect survives integration");
+    check(std::ranges::any_of(log.entries(), [](auto e) { return e.plane == unsigned(sp::plane::control) &&
+        e.offset == 2 && e.size == 4; }), "extent-only control effect survives integration");
 }
 
 void transfer_and_repair(Runtime& runtime) {
@@ -320,15 +322,15 @@ void transfer_and_repair(Runtime& runtime) {
     remap.fill(om::absent);
     for (unsigned n = 0; n < order.size(); ++n) remap[order[n]] = n;
     const auto dst_before = snapshot(dst.write());
-    std::array<ikea::owner_write, 512> entries{};
-    ikea::source_write_journal effects{entries};
-    entries[0] = {&source, {0, 1, 2}};
+    std::array<ikea::journal::entry, 512> entries{};
+    ikea::journal effects{entries};
+    entries[0] = {&source, 0, 1, 2};
     effects.used = 1;
     const std::array<std::uint16_t, 2> invalid_order{2, 3};
     const auto refused = sp::transfer(source, invalid_order, dst.write(), true, effects);
     check(!refused && refused.error() == sp::error::retired && effects.used == 1 &&
-        entries[0].source == &source && entries[0].bytes.plane == 0 &&
-        entries[0].bytes.offset == 1 && entries[0].bytes.size == 2 &&
+        entries[0].source == &source && entries[0].plane == 0 &&
+        entries[0].offset == 1 && entries[0].size == 2 &&
         snapshot(source) == before && snapshot(dst.write()) == dst_before,
         "refused transfer preserves both physical selections and prior effects");
     effects.used = 0;
@@ -361,13 +363,13 @@ void growth(Runtime& runtime) {
     auto input = rows(3);
     fill(draft, input);
     const auto full = snapshot(draft.write());
-    std::array<ikea::owner_write, 8> writes{};
-    writes[0] = {&draft, {3, 7, 9}};
-    ikea::source_write_journal log{writes, 1};
+    std::array<ikea::journal::entry, 8> writes{};
+    writes[0] = {&draft, 3, 7, 9};
+    ikea::journal log{writes, 1};
     const auto no_room = sp::append(draft.write(), encode(input[1]), input[1].reservation, log);
     check(!no_room && no_room.error() == sp::error::capacity && snapshot(draft.write()) == full &&
-        log.used == 1 && writes[0].source == &draft && writes[0].bytes.plane == 3 &&
-        writes[0].bytes.offset == 7 && writes[0].bytes.size == 9,
+        log.used == 1 && writes[0].source == &draft && writes[0].plane == 3 &&
+        writes[0].offset == 7 && writes[0].size == 9,
         "payload exhaustion cannot alter partial-group metadata or prior effects");
     auto* first = draft.address(0);
     const auto in_place = oa::capacity(draft.allocations[0]);
@@ -386,8 +388,9 @@ void growth(Runtime& runtime) {
         draft.write().windows().lengths.data() == draft.address(2), "bindings use grown addresses");
     expect(draft.write().as_const(), input);
     const auto rest = rows(30, 9);
-    ikea::no_coverage ignored;
+    std::array<ikea::journal::entry, 16> ignored_records; ikea::journal ignored{ignored_records};
     for (const auto row : rest) {
+        ignored.used = 0;
         check(bool(sp::append(draft.write(), encode(row), row.reservation, ignored)), "append through expanded length groups");
         input.push_back(row);
     }
@@ -460,7 +463,7 @@ void live_tail(Runtime& runtime, sp::geometry geometry, orbital::PartRetention r
     check(allocation.size == wanted, "writer access contracts before backing maintenance");
     auto narrowed = draft.write().windows();
     narrowed.payload = narrowed.payload.first(used);
-    draft.source = take(sp::view::bind(f->layout, narrowed), "rebind contracted native windows");
+    draft.source = take(sp::view::attach(f->layout, narrowed), "rebind contracted native windows");
     draft.extents[0] = used;
     const auto settle = [&](std::size_t bound, bool reduced) {
         const auto deadline = Clock::now() + std::chrono::seconds(10);
@@ -541,7 +544,7 @@ void loom_publication(Runtime& runtime) {
     auto changed = original;
     changed[0].key += 9000; changed[0].next = 17;
     auto draft = take(om::Draft::clone(runtime.worker, selected), "clone pending Loom source");
-    ikea::no_coverage ignored;
+    std::array<ikea::journal::entry, 16> ignored_records; ikea::journal ignored{ignored_records};
     check(bool(sp::replace(draft.write(), 0, encode(changed[0]), ignored)), "edit private pending successor");
     auto replacement = take(draft.capture(store), "seal replacement before native region");
     struct Hook {
@@ -584,7 +587,7 @@ int main() {
     transfer_and_repair(runtime);
     growth(runtime);
     loom_publication(runtime);
-    for (auto geometry : {sp::geometry::direct, sp::geometry::width})
+    for (auto geometry : {sp::geometry::absolute_ends, sp::geometry::sizes})
         for (auto retention : {orbital::PartRetention::shared_control, orbital::PartRetention::selected_copy})
             live_tail(runtime, geometry, retention);
     std::puts("StreamPack Orbital check: publication, escaping Parts, effects, remap, growth, live tail and Loom passed");

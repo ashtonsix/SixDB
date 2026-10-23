@@ -18,8 +18,10 @@ that boundary requires no additional dispatch, indirection or metadata.
 `prove_fixture` admits the actual parent and every supplied Part through the
 existing Ikea consumer. Tuple preparation then extracts four read controls from
 the actual Schema and retains its exact 75-byte portable description. Columns
-share derived geometry; `prove_series` independently decodes every supplied
-40-byte description, requires one count and unique IDs, and admits every body.
+share derived geometry; `prove_series` takes the parent-owned count, independently
+decodes each eight-byte SeriesPack byte law, requires unique IDs, and admits every
+body against that count. Counts and actual strides are absent from child laws;
+this adapter selects tight Local placement from its parent recipe.
 This covers the existing four-field fixture and arbitrary counts of tight,
 nonzero-width, headless Local SeriesPack Parts. It does not support all Ikea
 encodings. A ProgramId denotes a caller-established semantic program: equal
@@ -28,7 +30,9 @@ program and count permit a conversion candidate, but do not prove equal content.
 A realization retains a 64-bit count. Count plus admitted geometry reconstructs
 each exact 64-bit body extent, with overflow checked; an additional per-body size
 is redundant for these formats. Cold Series interpretation reconstructs the
-original description, including count. Native Selection and View are trivial
+child byte law; the exported parent control supplies count separately through
+`records(export)`. Two logical counts can occupy the same final physical tile,
+so recovering count from body length would be incorrect. Native Selection and View are trivial
 8-byte borrows. Part resolution returns a 16-byte result, and count/proof control
 is 16 bytes. LLVM IR on local AArch64 returns both pairs in ordinary registers.
 Their validity comes from the protected catalog scope, not from per-read pins.

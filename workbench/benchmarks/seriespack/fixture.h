@@ -18,7 +18,7 @@ struct free_bytes {
 };
 
 template <unsigned K, sp::geometry G> struct fixture {
-    using F = sp::format<K, G>;
+    using F = sp::layout<K, G>;
     static constexpr auto OG =
         G == sp::geometry::local ? old::geometry::local8 : old::geometry::striped;
     std::size_t count, bytes;
@@ -43,7 +43,7 @@ template <unsigned K, sp::geometry G> struct fixture {
             q = random() % n;
     }
     template <class U> auto next() const {
-        auto reader = sp::bind_decoder<U>(sp::dense_input{K, G, {storage.get(), bytes}, count});
+        auto reader = sp::bind_reader<U>(sp::dense_input{K, G, std::as_bytes(std::span{storage.get(), bytes}), count});
         if (!reader)
             std::abort();
         return *reader;

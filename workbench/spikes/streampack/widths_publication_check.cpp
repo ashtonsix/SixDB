@@ -49,8 +49,8 @@ void publish(sm::Store& store, const sm::Store::Scope& basis, sm::Store::Owner o
   sm::Store::Change change{{43, 1}, std::move(owner)}; sm::Store::Prepared packet(store);
   require(bool(store.prepare(basis, {&change, 1}, packet)) && bool(store.install(packet)), "publish coherent width material");
 }
-void holder(sm::HolderView& h, unsigned row, std::uint32_t location, ikea::source_write_journal& e) {
-  require(e.remaining() != 0, "holder coverage capacity"); e.before(h, {0, row * 4, 4}); h.rows[row] = location;
+void holder(sm::HolderView& h, unsigned row, std::uint32_t location, ikea::journal& e) {
+  require(e.remaining() != 0, "holder coverage capacity"); e.before(h, 0, row * 4, 4); h.rows[row] = location;
 }
 void history(oa::Pool& pool, unsigned cap) {
   auto& memory = *std::pmr::new_delete_resource(); sm::Store store(memory);
@@ -65,7 +65,7 @@ void history(oa::Pool& pool, unsigned cap) {
     require(!sm::freeze_damage(predecessor.selection(), invalid, w, h, {}), "recipe change on empty predecessor refuses freezing");
   }
   auto initial = take(sm::Draft::create(pool, c, std::array<std::size_t, 2>{cap * 32, cap * 32}));
-  Model model; Geometry slots; ikea::no_coverage no;
+  Model model; Geometry slots; ikea::no_effects no;
   for (unsigned b = 0; b < 2; ++b) {
     auto w = initial.write_widths(b);
     for (unsigned r = 0; r < 17; ++r) {
@@ -83,7 +83,7 @@ void history(oa::Pool& pool, unsigned cap) {
     sm::Store::Scope basis(store); const auto prior = basis.bind({43, 1});
     auto d = take(sm::Draft::clone(pool, prior, std::array<std::size_t, 2>{cap * 32, cap * 32}));
     std::array writers{d.write_widths(0), d.write_widths(1)}; auto h = d.holder_view();
-    std::array<ikea::owner_write, 4096> storage; ikea::source_write_journal e{storage};
+    std::array<ikea::journal::entry, 4096> storage; ikea::journal e{storage};
     if (step == 0) {
       const std::string changed = "M";
       require(writers[0].replace(1, bytes(changed), e) == sn::Error::none && writers[1].retire(2, e) == sn::Error::none, "replace and retire across sources");
@@ -136,7 +136,7 @@ void history(oa::Pool& pool, unsigned cap) {
   auto conversion = take(store.conversion(basis, {43, 1})); require(bool(store.adopt(conversion, compact)), "adopt native width rewrite");
   const auto one = take(basis.bind_alternative({43, 1}));
   auto last = take(sm::Draft::clone(pool, one, cap * 32)); auto w = last.write_widths(); auto h = last.holder_view();
-  std::array<ikea::owner_write, 64> storage; ikea::source_write_journal e{storage};
+  std::array<ikea::journal::entry, 64> storage; ikea::journal e{storage};
   const auto new_rank = w.count; const std::string replacement = "detached after hard rewrite";
   require(w.append(bytes(replacement), 32, e) == sn::Error::none, "append after adopted width rewrite");
   // Old rank may have other aliases: detach only this holder, preserve others.

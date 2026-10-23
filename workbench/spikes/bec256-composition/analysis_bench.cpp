@@ -22,7 +22,7 @@ enum class method {
     statistic
 };
 struct sample {
-    bc::plain_block input;
+    std::array<std::byte, 32> input;
     unsigned population, bytes, cost;
 };
 struct data_set {
@@ -46,7 +46,7 @@ struct size_sink {
     return bc::detail::neon::encode_to(value, population, size_sink{});
 #endif
 }
-void add(std::string name, std::vector<bc::plain_block> blocks) {
+void add(std::string name, std::vector<std::array<std::byte, 32>> blocks) {
     data_set d{std::move(name), {}};
     for (auto &b : blocks) {
         std::array<bc::byte, 64> reference;
@@ -60,9 +60,9 @@ void add(std::string name, std::vector<bc::plain_block> blocks) {
 template <method M> void run(benchmark::State &state, unsigned index, unsigned cutoff) {
     const auto &d = inputs[index];
     std::array<bc::byte, 64> output;
-    bc::destination destination{output};
-    std::array<ikea::owner_write, 1> entries;
-    ikea::source_write_journal effects{entries};
+    bc::view destination{output};
+    std::array<ikea::journal::entry, 1> entries;
+    ikea::journal effects{entries};
     // ClobberMemory observes emitted bytes/events only after their addresses
     // escape; this matters for fully inlined native write controls.
     benchmark::DoNotOptimize(output.data());
@@ -141,7 +141,7 @@ template <std::size_t... I> auto callbacks(std::index_sequence<I...>) {
 void register_analysis_cases() {
     std::mt19937_64 rng(0xbec0512);
     for (unsigned shape = 0; shape < 7; ++shape) {
-        std::vector<bc::plain_block> blocks(256);
+        std::vector<std::array<std::byte, 32>> blocks(256);
         for (auto &b : blocks) {
             const bool dense =
                 shape == 0 || (shape >= 3 && shape <= 5 &&
@@ -162,7 +162,7 @@ void register_analysis_cases() {
         for (const char *name : {"census-income", "weather_sept_85", "wikileaks-noquotes"}) {
             std::ifstream f(std::filesystem::path(root) / (std::string(name) + ".windows"),
                             std::ios::binary);
-            std::vector<bc::plain_block> blocks(2048);
+            std::vector<std::array<std::byte, 32>> blocks(2048);
             if (!f.read(reinterpret_cast<char *>(blocks.data()), blocks.size() * 32))
                 throw std::runtime_error("missing analysis windows");
             add(name, std::move(blocks));

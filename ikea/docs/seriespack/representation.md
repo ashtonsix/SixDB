@@ -29,7 +29,7 @@ is 96 bytes, with independent origins. Row numbers connect the two arrays;
 payload tile boundaries do not interrupt the head array.
 
 A common head array across differently represented or ragged payload regions
-requires composition or multiple bindings: each view fixes its format and tile
+requires composition or multiple bindings: each view fixes its layout and tile
 strides. [ordinary.cpp](../../examples/seriespack/ordinary.cpp) demonstrates
 interleaved placement with siblings in the stride gaps.
 
@@ -60,7 +60,7 @@ phase 0. These are access bounds; heads, siblings and other strides need separat
 accounting. The 12-bit body-first layout already meets that bound, and
 [measurements](../../../workbench/spikes/ikea-composition/placement/README.md)
 found no broad benefit from centering its stripe. Within-tile offsets belong to
-the physical format; owners choose plane origins and strides.
+the physical layout; owners choose plane origins and strides.
 
 ## Striped residuals
 
@@ -70,7 +70,7 @@ mapping repeats independently at byte offsets 0..31 of each stripe. Its labels
 identify the source row group and residual bit, including the deliberately
 nonlinear R=3 and R=6 mappings.
 
-![One byte lane of each tail-only striped format for residual widths 1 through 7, mapping source row groups and bits into packed stripe bytes.](images/striped-tiles.svg)
+![One byte lane of each tail-only striped layout for residual widths 1 through 7, mapping source row groups and bits into packed stripe bytes.](images/striped-tiles.svg)
 
 For a tail-only payload, K−H=R with R=1..7 and there are no body bytes. Each tile holds
 `G = 8/gcd(R,8)` groups of 32 rows in `S = R/gcd(R,8)` stripes: **32G rows and
@@ -86,9 +86,9 @@ fields and preserves unowned stride gaps.
 ## Preset policy
 
 Presets select a physical geometry for each width. Persist the resolved
-descriptor for recovery, because preset policies can change. Head separation
+`layout_value` for recovery, because preset policies can change. Head separation
 is independent of the payload policy and defaults
-to zero: `preset_format<20, preset::bulk_x86, 8>` requests the physical tour's
+to zero: `preset_layout<20, preset::bulk_x86, 8>` requests the physical tour's
 eight-bit head and x86 bulk choice for its 12-bit payload.
 
 | Preset | Striped remaining widths K−H | Intended starting point |
@@ -120,47 +120,60 @@ interleaving frequently consumed pieces can reduce the distinct cache lines
 needed when reconstruction is common. These are competing access patterns, so
 head separation and placement remain independent choices.
 
-`describe_preset<F>(count, tile_spacing::tight)` suggests minimal independent
+`suggest_placement<F>(count, tile_spacing::tight)` suggests minimal independent
 plane strides; `cacheline` rounds each to 64 bytes. Padding can avoid an extra
 line on point access but increases storage and sometimes scan traffic. Owners
 can supply other strides and offsets. The [locality study](../../../workbench/spikes/ikea-composition/probes/ikea-integers/locality/README.md)
 records exact geometry, while the [preset selection notes](../../../workbench/spikes/ikea-composition/ikea2-campaign/preset-selection.md)
 link the comparative evidence and retained tradeoffs.
 
-## Recovery and descriptor v1
+## Recovery and shared byte law
 
-[representation.h](../../include/ikea/seriespack/representation.h) supplies a 40-byte,
-little-endian descriptor and checked parsing. It records the resolved physical
-choice, not a preset name. Unknown versions, tags and reserved fields fail closed.
+`layout<K,geometry,H>` is the compile-time byte law.
+[layout_value.h](../../include/ikea/seriespack/layout_value.h) supplies its
+runtime value, `layout_value {width,heads,storage}`. It contains no logical count,
+addresses or strides. Store one value in the enclosing shared schema, rather
+than adding a descriptor to every data block. `layout_value::of<L>()` obtains the
+runtime law for a compiled layout.
+
+`law.encode(ikea::mutable_bytes)` writes an eight-byte framed description and
+returns its encoded length. `layout_value::decode(ikea::bytes)` requires an exact
+frame and validates the module tag, version, body length, supported width/head
+combination and geometry. The shared description envelope is:
 
 | Bytes | Meaning |
 | --- | --- |
 | 0..1 | ASCII `SP` |
-| 2 | Descriptor/wire-law version, currently 1 |
-| 3 | Physical family: 0 Local, 1 striped |
-| 4, 5 | K and H in bits |
-| 6..7 | Reserved, zero |
-| 8..15 | Logical count, unsigned little-endian u64 |
-| 16..39 | Payload, head0, head1 tile strides, three little-endian u64 values; absent planes have stride zero |
+| 2 | Description version, currently 2 |
+| 3..4 | Body length, little-endian u16; exactly 3 |
+| 5, 6 | K and H in bits |
+| 7 | Physical family: 0 Local, 1 striped |
 
-The owner retains each plane's partition/object identity and offset, plus
-expression identities, transform semantics and edges for compound containers.
-Engine owns that persistence schema; in-process pointers cannot serve as stored
-identities. Segments may retain different descriptors indefinitely. Recovery
-uses those descriptors and owner mappings, never current preset policy.
+This description replaces the earlier 40-byte version-1 placement descriptor.
+The data bytes retain their existing law; version 2 changes description framing
+and removes per-instance placement. Unknown versions fail closed; recovery must
+know which schema version it is reading.
 
-`attach_representation<F>` checks an exact physical match before admitting the
-supplied plane spans. The descriptor identifies representation; actual residency,
-accessible extent and overlap still require view admission. Plane origins may
-have any byte alignment; this does not add padding to an occupied field.
+The parent retains logical count, each plane's partition/object identity and
+offset, and actual tile strides. It also retains expression identities, transform
+semantics and edges for compound containers. Engine owns that persistence schema;
+in-process pointers cannot serve as stored identities. Segments may retain
+different layouts indefinitely. Recovery uses the stored byte law and parent
+placement, never current preset policy.
+
+`view<L>::attach(law,count,planes)` checks an exact compiled-law match before
+admitting the parent's supplied placement. `const_view<L>` admits read-only
+bytes. Plane origins may have any byte alignment; every occupied final-tile byte
+must be accessible, and the usual extent, stride and overlap checks still apply.
 A runtime owner can choose a compiled typed binding or use the compiled dense
-headless binder.
+headless reader binder. `suggest_placement<L>` is a convenience for new storage,
+not recovery metadata.
 
-Version 1's byte law is executable in [wire.h](../../include/ikea/seriespack/detail/wire.h)
+The data byte law is executable in [wire.h](../../include/ikea/seriespack/detail/wire.h)
 and [point.h](../../include/ikea/seriespack/detail/point.h), with independent prior-wire
 tests. The layouts above, including head order, body endianness and slack policy,
-belong to that law. Changes need a new physical version, regardless of unchanged
-preset names.
+belong to that law. A change to those bytes needs a new byte-law identity, regardless of unchanged
+preset names or description framing.
 
 For exact striped recovery, let g = floor(row/32) and lane = row modulo 32
 within a physical tile. Residual bit b is stored at

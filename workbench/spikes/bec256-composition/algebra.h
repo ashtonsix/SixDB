@@ -19,7 +19,7 @@ struct operand_view {
 // No allocation, rejection or suspension after these owner proofs. Mask null
 // selects every original ordinal. Selected-only preserves inactive output bytes;
 // complete establishes zero there. Effects report every issued output span.
-using algebra_call = void (*)(operand_view, operand_view, const std::uint64_t *, bc::destination &,
-                              ikea::source_write_journal &);
+using algebra_call = void (*)(operand_view, operand_view, const std::uint64_t *, bc::view &,
+                              ikea::journal &);
 algebra_call bind_algebra(boolean_op, output_kind, unsigned output_grain = 2);
 } // namespace bec_study

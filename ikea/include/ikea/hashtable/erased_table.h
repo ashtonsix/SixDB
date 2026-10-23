@@ -10,7 +10,7 @@ namespace ikea::hashtable {
 // changes its contents for every reader; a capture is not a content snapshot. The borrowed storage
 // context (including a Pool) must outlive every escaped capture and final token
 // release. The policy covers packed backing, not STL metadata/input allocations.
-template <unsigned W, unsigned V, class Storage = heap_storage_policy> class descriptor {
+template <unsigned W, unsigned V, class Storage = heap_storage_policy> class erased_table {
     using allocation_context = typename Storage::context;
     static_assert(std::is_nothrow_move_constructible_v<typename Storage::retention>);
     static_assert(std::is_nothrow_swappable_v<typename Storage::retention>);
@@ -37,21 +37,21 @@ template <unsigned W, unsigned V, class Storage = heap_storage_policy> class des
         typename Storage::trim_result (*relinquish_surplus)(void*);
         std::shared_ptr<void> (*clone)(const void*, allocation_context*);
     };
-    class prepared_read {
+    class reader {
         std::shared_ptr<const void> owner_;
         const operations* functions_;
         typename Storage::retention holds_;
-        friend class descriptor;
-        prepared_read(std::shared_ptr<const void> owner, const operations* functions)
+        friend class erased_table;
+        reader(std::shared_ptr<const void> owner, const operations* functions)
             : owner_(std::move(owner)), functions_(functions) {
             functions_->retain_storage(owner_.get(), holds_);
         }
 
       public:
-        prepared_read(const prepared_read&) = delete;
-        prepared_read(prepared_read&&) noexcept = default;
-        prepared_read& operator=(prepared_read&& other) noexcept {
-            prepared_read incoming(std::move(other));
+        reader(const reader&) = delete;
+        reader(reader&&) noexcept = default;
+        reader& operator=(reader&& other) noexcept {
+            reader incoming(std::move(other));
             owner_.swap(incoming.owner_);
             std::swap(functions_, incoming.functions_);
             using std::swap;
@@ -72,25 +72,25 @@ template <unsigned W, unsigned V, class Storage = heap_storage_policy> class des
     // Capture lifetime once at the ordinary binding boundary. The borrowed
     // native view is one pointer, so a whole-batch kernel can inline Owner's
     // reads without per-point shared ownership or type-erased callbacks.
-    template <class Owner> class native_read {
+    template <class Owner> class native_reader {
         std::shared_ptr<const Owner> owner_;
         typename Storage::retention holds_;
-        friend class descriptor;
-        explicit native_read(std::shared_ptr<const Owner> owner) : owner_(std::move(owner)) {
+        friend class erased_table;
+        explicit native_reader(std::shared_ptr<const Owner> owner) : owner_(std::move(owner)) {
             owner_->retain_storage(holds_);
         }
 
       public:
-        native_read(const native_read&) = delete;
-        native_read(native_read&&) noexcept = default;
-        native_read& operator=(native_read&& other) noexcept {
-            native_read incoming(std::move(other));
+        native_reader(const native_reader&) = delete;
+        native_reader(native_reader&&) noexcept = default;
+        native_reader& operator=(native_reader&& other) noexcept {
+            native_reader incoming(std::move(other));
             owner_.swap(incoming.owner_);
             using std::swap;
             swap(holds_, incoming.holds_);
             return *this;
         }
-        template <staged_values Values> struct basic_view {
+        template <staged_values Values> struct staged_reader {
             const Owner* owner;
             using staged_probe = typename Owner::staged_probe;
             template <class Consume>
@@ -121,9 +121,8 @@ template <unsigned W, unsigned V, class Storage = heap_storage_policy> class des
                                                        std::forward<Emit>(emit));
             }
         };
-        using view = basic_view<staged_values::dependent>;
         template <staged_values Values = staged_values::dependent>
-        basic_view<Values> borrow() const {
+        staged_reader<Values> borrow() const {
             return {owner_.get()};
         }
         const void* owner_identity() const {
@@ -137,7 +136,7 @@ template <unsigned W, unsigned V, class Storage = heap_storage_policy> class des
     unsigned b_ = 0, e_ = 0;
     word seed_ = 0;
     allocation_context* memory_ = nullptr;
-    template <class Owner> inline static const byte owner_tag = 0;
+    template <class Owner> inline static const std::uint8_t owner_tag = 0;
     template <class Owner, write_strategy Writes>
     inline static const operations implementation{
         &owner_tag<Owner>,
@@ -177,12 +176,12 @@ template <unsigned W, unsigned V, class Storage = heap_storage_policy> class des
         [](const void* p, allocation_context* memory) -> std::shared_ptr<void> {
             return std::make_shared<Owner>(static_cast<const Owner*>(p)->clone(memory));
         }};
-    void replace_with(descriptor replacement) {
+    void replace_with(erased_table replacement) {
         // All fallible allocation, insertion and validation precede root swap.
         functions_->visit(
             owner_.get(),
             [](void* context, word key, const value_type& value) {
-                static_cast<descriptor*>(context)->insert(key, value);
+                static_cast<erased_table*>(context)->insert(key, value);
             },
             &replacement);
         replacement.validate();
@@ -190,22 +189,22 @@ template <unsigned W, unsigned V, class Storage = heap_storage_policy> class des
     }
 
   public:
-    descriptor() = delete;
-    descriptor(const descriptor&) = delete;
-    descriptor(descriptor&&) = default;
-    descriptor& operator=(descriptor&&) = default;
+    erased_table() = delete;
+    erased_table(const erased_table&) = delete;
+    erased_table(erased_table&&) = default;
+    erased_table& operator=(erased_table&&) = default;
     template <unsigned b, unsigned E = W - b, search_kernel Kernel = search_kernel::generic>
-    static descriptor explicit_encoding(word seed, allocation_context* memory = nullptr,
+    static erased_table explicit_encoding(word seed, allocation_context* memory = nullptr,
                                         write_strategy writes = write_strategy::mixed) {
         using Owner = table<W, b, V, E, Kernel, Storage>;
         const auto* functions = writes == write_strategy::mixed
                                     ? &implementation<Owner, write_strategy::mixed>
                                     : &implementation<Owner, write_strategy::existing>;
-        return descriptor(std::make_shared<Owner>(seed, memory), functions, b, E, seed & mask<W>,
+        return erased_table(std::make_shared<Owner>(seed, memory), functions, b, E, seed & mask<W>,
                           memory);
     }
     template <unsigned b>
-    static descriptor measured(word seed, std::string_view cpu, std::string_view isa,
+    static erased_table measured(word seed, std::string_view cpu, std::string_view isa,
                                allocation_context* memory = nullptr,
                                write_strategy writes = write_strategy::mixed) {
         return bind_measured_encoding<W - b>(
@@ -242,16 +241,16 @@ template <unsigned W, unsigned V, class Storage = heap_storage_policy> class des
         const auto* functions = functions_->writes == write_strategy::mixed
                                     ? &implementation<Target, write_strategy::mixed>
                                     : &implementation<Target, write_strategy::existing>;
-        descriptor replacement(std::shared_ptr<Target>(std::move(next)), functions, b + 1, NextE,
+        erased_table replacement(std::shared_ptr<Target>(std::move(next)), functions, b + 1, NextE,
                                seed_, memory_);
         *this = std::move(replacement);
     }
     /// Explicit caller-owned copy; no copying is hidden in accumulation.
-    descriptor clone(allocation_context* memory) const {
-        return descriptor(functions_->clone(owner_.get(), memory), functions_, b_, e_, seed_,
+    erased_table clone(allocation_context* memory) const {
+        return erased_table(functions_->clone(owner_.get(), memory), functions_, b_, e_, seed_,
                           memory);
     }
-    descriptor clone() const {
+    erased_table clone() const {
         return clone(memory_);
     }
     template <unsigned b, unsigned E = W - b, search_kernel Kernel = search_kernel::generic>
@@ -262,13 +261,13 @@ template <unsigned W, unsigned V, class Storage = heap_storage_policy> class des
         hashtable::reserve_overflow(*static_cast<Owner*>(owner_.get()), final_live_spill_bound,
                                     memory_);
     }
-    /// Destructively accumulate into exclusive backing; discard this descriptor
+    /// Destructively accumulate into exclusive backing; discard this erased_table
     /// on failure/exception. Existing captures observe writes to that backing.
     /// Source order is the order of these synchronous single-source calls.
     template <unsigned b, unsigned E = W - b, search_kernel Kernel = search_kernel::generic,
               unsigned SourceB = b, unsigned SourceE = E, search_kernel SourceKernel = Kernel,
               class Reduce>
-    [[nodiscard]] accumulation_status accumulate(const descriptor& source, Reduce&& reduce) {
+    [[nodiscard]] accumulation_status accumulate(const erased_table& source, Reduce&& reduce) {
         using D = table<W, b, V, E, Kernel, Storage>;
         using S = table<W, SourceB, V, SourceE, SourceKernel, Storage>;
         require(functions_->owner_type == &owner_tag<D> &&
@@ -280,7 +279,7 @@ template <unsigned W, unsigned V, class Storage = heap_storage_policy> class des
     }
     template <unsigned b, unsigned E = W - b, search_kernel Kernel = search_kernel::generic,
               unsigned SourceB = b, unsigned SourceE = E, search_kernel SourceKernel = Kernel>
-    [[nodiscard]] accumulation_status accumulate(const descriptor& source)
+    [[nodiscard]] accumulation_status accumulate(const erased_table& source)
         requires(V == 0)
     {
         return accumulate<b, E, Kernel, SourceB, SourceE, SourceKernel>(
@@ -289,7 +288,7 @@ template <unsigned W, unsigned V, class Storage = heap_storage_policy> class des
     write_strategy writes() const {
         return functions_->writes;
     }
-    prepared_read read() const {
+    reader read() const {
         return {owner_, functions_};
     }
     template <unsigned b, unsigned E = W - b, search_kernel Kernel = search_kernel::generic>
@@ -297,11 +296,11 @@ template <unsigned W, unsigned V, class Storage = heap_storage_policy> class des
         using Owner = table<W, b, V, E, Kernel, Storage>;
         require(functions_->owner_type == &owner_tag<Owner>,
                 "native reader geometry differs from captured owner");
-        return native_read<Owner>(std::static_pointer_cast<const Owner>(owner_));
+        return native_reader<Owner>(std::static_pointer_cast<const Owner>(owner_));
     }
     /// Bind a complete synchronous mutable batch once. The callback receives the
     /// concrete owner and a compile-time writer strategy; it must not replace
-    /// this descriptor, move the owner, reenter the binding or escape references.
+    /// this erased_table, move the owner, reenter the binding or escape references.
     template <unsigned b, unsigned E = W - b, search_kernel Kernel = search_kernel::generic,
               class Bind>
     void with_native_mutation(Bind&& bind) {
@@ -384,7 +383,7 @@ template <unsigned W, unsigned V, class Storage = heap_storage_policy> class des
     }
 
   private:
-    descriptor(std::shared_ptr<void> owner, const operations* functions, unsigned b, unsigned e,
+    erased_table(std::shared_ptr<void> owner, const operations* functions, unsigned b, unsigned e,
                word seed, allocation_context* memory)
         : owner_(std::move(owner)), functions_(functions), b_(b), e_(e), seed_(seed),
           memory_(memory) {}

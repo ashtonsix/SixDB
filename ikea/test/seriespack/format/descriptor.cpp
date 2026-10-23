@@ -1,83 +1,99 @@
 #include <ikea/seriespack/presets.h>
+#include <ikea/seriespack/view.h>
 #include "../support.h"
+#include <algorithm>
+#include <limits>
 #include <vector>
 namespace sp = ikea::seriespack;
 namespace {
-// Describe the wire directly; do not use the implementation's load/store helpers.
-sp::descriptor_bytes wire(const sp::representation& r) {
-    sp::descriptor_bytes bytes{'S', 'P', 1, std::uint8_t(r.storage == sp::geometry::striped),
-                               std::uint8_t(r.width), std::uint8_t(r.heads), 0, 0};
-    const std::array fields{r.count, r.strides[0], r.strides[1], r.strides[2]};
-    for (unsigned field = 0; field < fields.size(); ++field)
-        for (unsigned byte = 0; byte < 8; ++byte)
-            bytes[8 + field * 8 + byte] = fields[field] >> (byte * 8);
-    return bytes;
+using byte = std::byte;
+// Independent schema bytes; no implementation framing/load/store helpers.
+std::array<byte, 8> wire(const sp::layout_value& law) {
+    return {byte{'S'}, byte{'P'}, byte{2}, byte{3}, byte{0},
+            byte(law.width), byte(law.heads), byte(unsigned(law.storage))};
 }
 } // namespace
 
 int main() {
-    using F = sp::preset_format<12>;
-    static_assert(std::is_same_v<F, sp::format<12>>);
-    static_assert(std::is_same_v<sp::preset_format<20, sp::preset::bulk_x86, 8>,
-                                 sp::format<20, sp::geometry::striped, 8>>);
-    static_assert(std::is_same_v<sp::preset_format<20, sp::preset::compact, 8>,
-                                 sp::format<20, sp::geometry::local, 8>>);
-    static_assert(std::is_same_v<sp::preset_format<20, sp::preset::bulk_arm, 0>,
-                                 sp::format<20, sp::geometry::striped, 0>>);
-    static_assert(
-        sp::valid(sp::describe_preset<sp::preset_format<15, sp::preset::bulk_arm>>(70000)));
-    const auto expected = sp::describe_preset<F>(16, sp::tile_spacing::cacheline);
-    const auto encoded = sp::encode_descriptor(expected);
-    IKEA_CHECK(encoded);
-    sp::descriptor_bytes golden{'S', 'P', 1, 0, 12, 0, 0, 0, 16, 0, 0, 0, 0, 0, 0, 0, 64};
-    IKEA_CHECK(*encoded == golden);
-    const auto decoded = sp::decode_descriptor(golden);
+    using L = sp::preset_layout<12>;
+    static_assert(std::is_same_v<L, sp::layout<12>>);
+    static_assert(std::is_same_v<sp::preset_layout<20, sp::preset::bulk_x86, 8>,
+                                 sp::layout<20, sp::geometry::striped, 8>>);
+    static_assert(std::is_same_v<sp::preset_layout<20, sp::preset::compact, 8>,
+                                 sp::layout<20, sp::geometry::local, 8>>);
+    static_assert(std::is_same_v<sp::preset_layout<20, sp::preset::bulk_arm>,
+                                 sp::layout<20, sp::geometry::striped>>);
+    constexpr auto expected = sp::layout_value::of<L>();
+    constexpr std::array<byte, 8> golden{byte{'S'}, byte{'P'}, byte{2}, byte{3}, byte{0},
+                                         byte{12}, byte{0}, byte{0}};
+    std::array<byte, 16> output;
+    output.fill(byte{0xa5});
+    const auto encoded = expected.encode(output);
+    IKEA_CHECK(encoded && *encoded == 8 && expected.encoded_size() == 8);
+    IKEA_CHECK(std::equal(golden.begin(), golden.end(), output.begin()));
+    IKEA_CHECK(std::ranges::all_of(std::span(output).subspan(8),
+                                   [](byte b) { return b == byte{0xa5}; }));
+    const auto decoded = sp::layout_value::decode(golden);
     IKEA_CHECK(decoded && *decoded == expected);
-    alignas(64) std::array<std::uint8_t, 128> bytes{};
-    const auto recovered = sp::attach_representation<F, std::uint8_t>(*decoded, {{bytes, {}, {}}});
-    IKEA_CHECK(recovered);
-    IKEA_CHECK(sp::describe_storage(*recovered) == expected);
-    IKEA_CHECK(
-        (!sp::attach_representation<sp::format<13>, std::uint8_t>(*decoded, {{bytes, {}, {}}})));
-    // Large logical extents exercise persistence without allocating their storage.
-    const std::array<sp::representation, 8> cases{{
-        {1, 0, sp::geometry::local, 0, {1, 0, 0}},
-        {12, 0, sp::geometry::local, (1ull << 32) + 17, {12, 0, 0}},
-        {12, 0, sp::geometry::local, 9, {(1ull << 32) + 64, 0, 0}},
-        {8, 8, sp::geometry::local, 9, {0, (1ull << 32) + 7, 0}},
-        {16, 16, sp::geometry::local, 9, {0, (1ull << 32) + 9, (1ull << 40) + 11}},
-        {20, 8, sp::geometry::striped, 257, {128, 192, 0}},
-        {1, 0, sp::geometry::local, UINT64_MAX, {1, 0, 0}},
-        {8, 0, sp::geometry::local, 16, {UINT64_MAX - 8, 0, 0}},
+
+    // Counts/actual strides are parent placement. Two different realizations
+    // use exactly the same serialized law; the law does not store either count.
+    std::array<byte, 256> storage{};
+    const auto a = sp::view<L>::attach(*decoded, 16, {{{storage, 64}, {}, {}}});
+    const auto b = sp::view<L>::attach(*decoded, 24, {{{storage, 80}, {}, {}}});
+    IKEA_CHECK(a && b && a->size() == 16 && b->size() == 24);
+    IKEA_CHECK(a->stream(0).stride == 64 && b->stream(0).stride == 80);
+    IKEA_CHECK(!sp::view<sp::layout<13>>::attach(*decoded, 16, {{{storage, 64}, {}, {}}}));
+    IKEA_CHECK(!sp::view<L>::attach(*decoded, 16, {{{storage, 11}, {}, {}}}));
+    IKEA_CHECK(!sp::view<L>::attach(*decoded, std::numeric_limits<std::size_t>::max(),
+                                   {{{storage, 64}, {}, {}}}));
+
+    const std::array<sp::layout_value, 8> laws{{
+        {1, 0, sp::geometry::local}, {64, 0, sp::geometry::local},
+        {8, 8, sp::geometry::local}, {16, 16, sp::geometry::local},
+        {20, 8, sp::geometry::striped}, {36, 16, sp::geometry::striped},
+        {15, 0, sp::geometry::striped}, {64, 16, sp::geometry::local},
     }};
-    for (unsigned i = 0; i < cases.size(); ++i) {
-        ikea_test::scope scenario{"descriptor", i};
-        const auto bytes = wire(cases[i]);
-        const auto encoded_case = sp::encode_descriptor(cases[i]);
-        IKEA_CHECK(encoded_case && *encoded_case == bytes);
-        const auto decoded_case = sp::decode_descriptor(bytes);
-        IKEA_CHECK(decoded_case && *decoded_case == cases[i]);
+    for (unsigned i = 0; i < laws.size(); ++i) {
+        ikea_test::scope scenario{"layout law", i};
+        const auto golden_case = wire(laws[i]);
+        const auto encoded_case = laws[i].encode(output);
+        IKEA_CHECK(encoded_case && std::equal(golden_case.begin(), golden_case.end(), output.begin()));
+        const auto recovered = sp::layout_value::decode(golden_case);
+        IKEA_CHECK(recovered && *recovered == laws[i]);
     }
-    for (unsigned at : {0, 1, 2, 3, 4, 5, 6, 7, 24}) {
+    for (unsigned at = 0; at < golden.size(); ++at) {
         auto bad = golden;
-        bad[at] = 255;
-        IKEA_CHECK(!sp::decode_descriptor(bad));
+        bad[at] = byte{255};
+        IKEA_CHECK(!sp::layout_value::decode(bad));
     }
     for (std::size_t length = 0; length <= golden.size() + 8; ++length) {
-        if (length == golden.size())
-            continue;
-        ikea_test::scope scenario{"descriptor length", length};
-        std::vector<std::uint8_t> bytes(golden.begin(), golden.end());
-        bytes.resize(length);
-        IKEA_CHECK(!sp::decode_descriptor(bytes));
+        if (length == golden.size()) continue;
+        std::vector<byte> input(golden.begin(), golden.end());
+        input.resize(length);
+        IKEA_CHECK(!sp::layout_value::decode(input));
     }
-    auto overflow = expected;
-    overflow.count = UINT64_MAX;
-    overflow.strides[0] = UINT64_MAX;
-    IKEA_CHECK(!sp::encode_descriptor(overflow));
-    IKEA_CHECK(!sp::decode_descriptor(wire(overflow)));
-    auto insufficient = cases.back();
-    ++insufficient.strides[0]; // Exactly one byte beyond the representable extent.
-    IKEA_CHECK(!sp::encode_descriptor(insufficient));
-    IKEA_CHECK(!sp::decode_descriptor(wire(insufficient)));
+    for (std::size_t length = 0; length < golden.size(); ++length) {
+        output.fill(byte{0xa5});
+        const auto refused = expected.encode(std::span(output).first(length));
+        IKEA_CHECK(!refused && refused.error() == sp::error::capacity);
+        IKEA_CHECK(std::ranges::all_of(output, [](byte b) { return b == byte{0xa5}; }));
+    }
+    const std::array<sp::layout_value, 7> invalid{{
+        {0, 0, sp::geometry::local}, {65, 0, sp::geometry::local},
+        {8, 1, sp::geometry::local}, {8, 16, sp::geometry::local},
+        {12, 0, sp::geometry(7)}, {8, 0, sp::geometry::striped},
+        {16, 16, sp::geometry::striped},
+    }};
+    for (const auto law : invalid) {
+        output.fill(byte{0xa5});
+        const auto refused = law.encode(output);
+        IKEA_CHECK(!refused && refused.error() == sp::error::description);
+        IKEA_CHECK(std::ranges::all_of(output, [](byte b) { return b == byte{0xa5}; }));
+        IKEA_CHECK(!sp::layout_value::decode(wire(law)));
+    }
+    // The former SP v1 count/stride descriptor is not a headless layout law.
+    std::array<byte, 40> old{};
+    old[0] = byte{'S'}; old[1] = byte{'P'}; old[2] = byte{1};
+    IKEA_CHECK(!sp::layout_value::decode(old));
 }

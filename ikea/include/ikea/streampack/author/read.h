@@ -78,7 +78,7 @@ class access : public ikea::streampack::detail::compact::author::access<Family, 
     /// a hidden result buffer and prevents shared schema facts from hoisting.
     [[nodiscard, gnu::always_inline]] std::expected<bytes, error> get(unsigned rank) const {
         if (rank >= size())
-            return std::unexpected(error::rank);
+            return std::unexpected(error::range);
         if (!live(rank))
             return std::unexpected(error::retired);
         [[clang::always_inline]] return value(rank);
@@ -106,8 +106,10 @@ class access : public ikea::streampack::detail::compact::author::access<Family, 
 };
 /// Resolve schema-sized lanes once around a complete authored operation. The
 /// caller's body receives a concrete geometry; no erased per-rank callback.
+/// The access borrows this named view as its stable source identity. Keep the
+/// view, layout and bytes alive and stable until every retained access is done.
 template <class Byte, class Body>
-decltype(auto) dispatch(const basic_view<Byte> &source, Body &&body) {
+decltype(auto) visit(const basic_view<Byte> &source, Body &&body) {
     return ikea::streampack::detail::compact::detail::dispatch(
         source.format(), [&]<geometry G, class W, class O>() -> decltype(auto) {
             if constexpr (G != geometry::relative_ends || sizeof(W) == 1)
@@ -121,6 +123,8 @@ decltype(auto) dispatch(const basic_view<Byte> &source, Body &&body) {
             }
         });
 }
+template <class Byte, class Body>
+auto visit(const basic_view<Byte> &&, Body &&) = delete;
 } // namespace author
 
 } // namespace ikea::streampack

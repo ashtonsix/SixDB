@@ -6,7 +6,7 @@
 namespace orbital_mvcc::metadata_consumer::shape_read::detail {
 struct CursorAccess {
   static compact_law::Cursor admitted(const std::byte* pointer) noexcept {
-    return compact_law::Cursor{reinterpret_cast<const compact_law::tp::byte*>(pointer)};
+    return compact_law::Cursor{reinterpret_cast<const std::byte*>(pointer)};
   }
 };
 inline bool mapped_extent(std::uint64_t count, orbital::Bytes body) noexcept {

@@ -1,32 +1,32 @@
 #pragma once
 #include <ikea/seriespack/author/chain.h>
-#include <ikea/seriespack/detail/mutation/physical.h>
+#include <ikea/seriespack/author/mutation.h>
 
 namespace pipeline_probe {
 namespace sp = ikea::seriespack;
 enum class mode { inline_stages, cps, fused };
 template <unsigned N> struct frame {
-    using Packet = sp::pipeline_packet<32, N>;
-    using Plan = sp::packet_chain<32, N>;
+    using Packet = sp::author::pipeline_packet<32, N>;
+    using Plan = sp::author::packet_chain<32, N>;
     using V = sp::native::values<32>;
-    using A = sp::format<12, sp::geometry::striped>;
-    using B = sp::format<23>;
-    using D = sp::format<32>;
-    sp::view<A> a;
-    sp::view<B> b;
-    sp::view<D, std::uint8_t> destination;
-    sp::write_journal effects;
-    sp::sum_change summary;
+    using A = sp::layout<12, sp::geometry::striped>;
+    using B = sp::layout<23>;
+    using D = sp::layout<32>;
+    sp::const_view<A> a;
+    sp::const_view<B> b;
+    sp::view<D> destination;
+    ikea::journal effects;
+    sp::author::sum_change summary;
     std::uint64_t aggregate = 0;
     std::uint32_t parameter = 123, lower = 1000, upper = 4000000;
     static constexpr std::uint64_t incoming = 0xefbdefbdefbdefbdULL >> (64 - N);
 
     template <unsigned Which> [[gnu::always_inline]] static V load(frame& f, std::size_t row) {
         if constexpr (Which == 0)
-            return sp::native::widen<32>(sp::native::read16<A, false>(f.a.stream(0).bytes.data(),
+            return sp::native::widen<32>(sp::native::read16<A, false>(ikea::to_u8(f.a.stream(0).bytes.data()),
                                                                       f.a.stream(0).stride, row));
         else
-            return sp::native::widen<32>(sp::native::read16<B, false>(f.b.stream(0).bytes.data(),
+            return sp::native::widen<32>(sp::native::read16<B, false>(ikea::to_u8(f.b.stream(0).bytes.data()),
                                                                       f.b.stream(0).stride, row));
     }
     template <unsigned Which>
@@ -86,7 +86,7 @@ template <unsigned N> struct frame {
         if constexpr (Which == 0)
             f.aggregate += sp::native::sum(value, sp::native::mask16<32>(active)).finish();
         else
-            sp::replace_native16_unchecked(f.destination, row, value, active, f.summary, f.effects);
+            sp::author::replace_native16_unchecked(f.destination, row, value, active, f.summary, f.effects);
     }
     template <unsigned Which>
     [[gnu::always_inline]] static typename Plan::result
@@ -136,7 +136,7 @@ template <unsigned N> struct frame {
         const std::array<typename Plan::function, 4> stages{
             &Plan::template stage<&source<Source>>, &Plan::template stage<&map<Transform>>,
             &Plan::template stage<&filter<Predicate>>, &Plan::template stage<&sink<Sink>>};
-        return *Plan::prepare(stages, &Plan::template completion<&finish>);
+        return *Plan::make(stages, &Plan::template completion<&finish>);
     }
     void reset() {
         effects.used = 0;

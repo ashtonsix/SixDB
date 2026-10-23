@@ -1,3 +1,4 @@
+#include <ikea/tuplepack/author/execution.h>
 #include "support.h"
 
 template <unsigned N, unsigned Rows, C Op> void field_geometry() {
@@ -9,14 +10,20 @@ template <unsigned N, unsigned Rows, C Op> void field_geometry() {
                 const unsigned offset = stride - 1;
                 auto layout = *tp::layout::make(
                     stride, std::array<tp::code, 1>{
-                                {{tp::byte(offset), tp::byte(shift), tp::byte(width)}}});
-                std::array<tp::byte, 195> bytes{};
+                                {{std::uint8_t(offset), std::uint8_t(shift), std::uint8_t(width)}}});
+                std::array<std::uint8_t, 195> bytes{};
                 for (unsigned i = 0; i < bytes.size(); ++i)
                     bytes[i] = i * 71;
-                auto source = *tp::view::bind(layout, bytes, 65, stride);
-                auto plan = *tp::reader<N, Rows>::make(layout, std::array<tp::byte, 1>{0});
+                auto source = *tp::view::attach(layout, std::as_writable_bytes(std::span{bytes}), 65, stride);
+                auto plan = *tp::read_plan<N, Rows>::make(layout, std::array<std::uint8_t, 1>{0});
                 auto read = *tp::bind_reader(plan, source);
-                auto filter = *tp::bind_filter(read);
+                // Prepared predicates retain the shared plan/view, not this
+                // intermediate reader wrapper. Both forms use the same bytes.
+                auto filter = [&] {
+                    auto transient = *tp::bind_reader(plan, source);
+                    return *tp::bind_predicate(transient);
+                }();
+                const auto direct = *tp::bind_predicate(plan, source);
                 const auto limit = (std::uint64_t{1} << width) - 1;
                 for (auto rhs : {std::uint64_t{0}, limit / 2, limit, limit + 1, ~std::uint64_t{0}})
                     for (auto active :
@@ -28,6 +35,8 @@ template <unsigned N, unsigned Rows, C Op> void field_geometry() {
                                 expected |= std::uint64_t{1} << r;
                         }
                         assert(filter.template filter<Op>(1, rhs, active) == expected);
+                        assert(direct.template filter<Op>(1, rhs, active) == expected);
+                        assert(read.template filter<Op>(1, rhs, active) == expected);
                     }
                 // Admission precedes the constant-result shortcut too.
                 assert(!filter.template filter<Op>(65, limit + 1, 1));
@@ -38,15 +47,16 @@ template <unsigned N, unsigned Rows, C Op> void field_geometry() {
 
 template <unsigned N, unsigned Rows, C Op> void packet_coordinates() {
     auto layout = *tp::layout::make(2, std::array<tp::code, 2>{{{0, 3, 5}, {1, 0, 8}}});
-    std::array<tp::byte, 2 * (Rows + 7)> bytes{};
+    std::array<std::uint8_t, 2 * (Rows + 7)> bytes{};
     for (unsigned i = 0; i < bytes.size(); ++i)
         bytes[i] = i * 71;
-    auto source = *tp::view::bind(layout, bytes, Rows + 7, 2);
-    auto plan = *tp::reader<N, Rows>::make(layout, std::array<tp::byte, 3>{1, tp::hole, 0},
+    auto source = *tp::view::attach(layout, std::as_writable_bytes(std::span{bytes}), Rows + 7, 2);
+    auto plan = *tp::read_plan<N, Rows>::make(layout, std::array<std::uint8_t, 3>{1, tp::hole, 0},
                                            std::array<unsigned, 2>{1, 2});
     auto read = *tp::bind_reader(plan, source);
-    assert(!tp::bind_filter(read));
-    const auto native = tp::native_reader(read);
+    assert(!tp::bind_predicate(read) && tp::bind_predicate(read).error() == tp::error::map);
+    assert(([&] { const auto result = read.template filter<C::equal>(0,0); return !result && result.error() == tp::error::map; }()));
+    const auto native = tp::author::native_reader(read);
     for (unsigned first : {0u, 7u})
         for (auto active : {std::uint64_t{0}, std::uint64_t{1}, std::uint64_t{1} << (Rows - 1),
                             (std::uint64_t{1} << Rows) - 1}) {
@@ -71,7 +81,7 @@ template <unsigned N, unsigned Rows, C Op> void packet_coordinates() {
                             expected_a_rows |= std::uint64_t{1} << r;
                         }
                     }
-                const auto actual = tp::filter_values<Op, N>(packet, rhs, eligible);
+                const auto actual = tp::author::filter_values<Op, N>(packet, rhs, eligible);
                 assert(actual == expected);
                 // The supported ordering metadata maps a chosen code slot back to
                 // bit r for original row first+r. Expected rows above come directly
@@ -84,9 +94,10 @@ template <unsigned N, unsigned Rows, C Op> void packet_coordinates() {
                 assert(actual_a_rows == expected_a_rows && actual_b_rows == expected_b_rows);
             }
         }
-    auto empty = *tp::reader<N, Rows>::make(layout, {});
+    auto empty = *tp::read_plan<N, Rows>::make(layout, {});
     auto empty_read = *tp::bind_reader(empty, source);
-    assert(!tp::bind_filter(empty_read));
+    assert(!tp::bind_predicate(empty_read));
+    assert(([&] { const auto result = empty_read.template filter<C::equal>(0,0); return !result && result.error() == tp::error::map; }()));
 }
 
 void check_tuple_filters() {

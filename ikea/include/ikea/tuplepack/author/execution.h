@@ -1,5 +1,5 @@
 #pragma once
-#include <ikea/detail/native_chain.h>
+#include <ikea/author/chain.h>
 #include <ikea/tuplepack/author/native.h>
 #include <ikea/tuplepack/detail/native/packet.h>
 #include <ikea/tuplepack/detail/native/selection.h>
@@ -9,53 +9,54 @@ namespace ikea::tuplepack {
 /// Erases a complete range, retaining its concrete traversal and maintenance
 /// type. The named source operation outlives this handle; no ownership transfers.
 template <class Input, class Maintenance = no_maintenance, unsigned Rows = 1>
-class erased_mutation {
+class erased_writer {
     const void *operation_;
     std::size_t count_;
     using function = std::expected<void, error> (*)(const void *, std::size_t,
-                                                    std::span<const Input>, source_write_journal &,
+                                                    std::span<const Input>, ikea::journal &,
                                                     selection, Maintenance &);
     function call_;
 
   public:
     static constexpr unsigned rows = Rows;
     template <class Operation>
-    explicit erased_mutation(const Operation &operation)
+    explicit erased_writer(const Operation &operation)
         : operation_(&operation), count_(operation.size()),
           call_([](const void *p, std::size_t first, std::span<const Input> input,
-                   source_write_journal &effects, selection selected, Maintenance &maintenance) {
+                   ikea::journal &effects, selection selected, Maintenance &maintenance) {
               return static_cast<const Operation *>(p)->replace(first, input, effects, selected,
                                                                 maintenance);
           }) {
-        static_assert(detail::operation_rows<Operation> == Rows,
+        static_assert(ikea::tuplepack::detail::operation_rows<Operation> == Rows,
                       "Erasure must preserve the original-row packet shape");
     }
-    template <class Operation> erased_mutation(const Operation &&) = delete;
+    template <class Operation> erased_writer(const Operation &&) = delete;
     std::size_t size() const noexcept { return count_; }
     [[nodiscard]] std::expected<void, error>
-    replace(std::size_t first, std::span<const Input> input, source_write_journal &effects,
+    replace(std::size_t first, std::span<const Input> input, ikea::journal &effects,
             selection selected, Maintenance &maintenance) const {
         return call_(operation_, first, input, effects, selected, maintenance);
     }
 };
 
+namespace author {
 /// Native reader shares the exact decoded packet with inline authors. Unlike
 /// buffered access, the 64-byte shape does not materialize an output array.
 /// The 8-byte shape hands off a uint64_t, including on baseline x86.
 template <unsigned N, class Byte, unsigned Rows = 1> class native_reader {
-    const reader<N, Rows> *plan_;
+    const read_plan<N, Rows> *plan_;
     const basic_view<Byte> *source_;
 
   public:
     static constexpr unsigned rows = Rows;
-    explicit native_reader(const read_operation<N, Byte, Rows> &operation)
+    explicit native_reader(const reader<N, Byte, Rows> &operation)
         : plan_(&operation.plan()), source_(&operation.source()) {}
     std::size_t size() const noexcept { return source_->size(); }
     const auto &plan() const noexcept { return *plan_; }
     const auto &source() const noexcept { return *source_; }
     [[nodiscard]] std::expected<void, error>
-    admit(std::size_t first, std::uint64_t active = detail::all_rows<Rows>) const {
-        if (!detail::valid_window<Rows>(size(), first, active))
+    admit(std::size_t first, std::uint64_t active = ikea::tuplepack::detail::all_rows<Rows>) const {
+        if (!ikea::tuplepack::detail::valid_window<Rows>(size(), first, active))
             return std::unexpected(error::range);
         return {};
     }
@@ -75,49 +76,40 @@ template <unsigned N, class Byte, unsigned Rows = 1> class native_reader {
     /// transfer, shift and mask as the ordinary prepared endpoint.
     template <unsigned Bytes>
     [[gnu::always_inline]] std::uint64_t get_transfer_unchecked(
-        std::size_t first, std::uint64_t active = detail::all_rows<Rows>) const requires(N == 8) {
+        std::size_t first, std::uint64_t active = ikea::tuplepack::detail::all_rows<Rows>) const requires(N == 8) {
         static_assert(Bytes > 0 && Bytes <= 8 / Rows);
         if (!active)
             return 0;
-        const auto base = source_->row_unchecked(first);
+        const auto base = ikea::to_u8(source_->row_unchecked(first));
         const auto stride = source_->stride();
         return native::read_transfer_body<Rows, Bytes>(plan_->controls(),
             [&](unsigned r) { return base + r * stride; }, active, stride);
     }
     [[gnu::always_inline]] native::packet_for<N>
-    get_unchecked(std::size_t first, std::uint64_t active = detail::all_rows<Rows>) const {
-        if (!active)
-            return native::packet_for<N>{};
-        if constexpr (Rows == 1)
-            return native::read_body(plan_->controls(), source_->row_unchecked(first));
-        else {
-            const auto base = source_->row_unchecked(first);
-            const auto stride = source_->stride();
-            return native::read_body<Rows>(plan_->controls(),
-                [&](unsigned r) { return base + r * stride; }, active, stride);
-        }
+    get_unchecked(std::size_t first, std::uint64_t active = ikea::tuplepack::detail::all_rows<Rows>) const {
+        return ikea::tuplepack::detail::read_native(*plan_, *source_, first, active);
     }
 };
 /// Register-valued mutation operation and composition leaf. The shared shell
 /// admits widths/rows/effects, then native traversal handles the complete packet.
 template <unsigned N = 64, unsigned Rows = 1>
 class native_writer
-    : public detail::mutation_commands<native_writer<N, Rows>, native::packet_for<N>, Rows> {
-    mutation_operation<N, Rows> operation_;
+    : public ikea::tuplepack::detail::mutation_commands<native_writer<N, Rows>, native::packet_for<N>, Rows> {
+    writer<N, Rows> operation_;
 
   public:
     using input_type = native::packet_for<N>;
-    explicit native_writer(mutation_operation<N, Rows> operation) : operation_(operation) {}
+    explicit native_writer(writer<N, Rows> operation) : operation_(operation) {}
     std::size_t size() const noexcept { return operation_.size(); }
     const auto &plan() const noexcept { return operation_.plan(); }
     const auto &destination() const noexcept { return operation_.destination(); }
-    auto effect_capacity() const noexcept { return operation_.effect_capacity(); }
+    auto store_runs() const noexcept { return operation_.store_runs(); }
     template <class Visit> void visit_leaves(Visit &&visit) const { visit(*this); }
     template <class Visit> void visit_fields(Visit &&visit) const {
         operation_.visit_fields(visit);
     }
     [[gnu::always_inline]] bool
-    accepts(input_type input, std::uint64_t active = detail::all_rows<Rows>) const noexcept {
+    accepts(input_type input, std::uint64_t active = ikea::tuplepack::detail::all_rows<Rows>) const noexcept {
         if (!active)
             return true;
         if constexpr (N == 8)
@@ -126,28 +118,29 @@ class native_writer
         else {
             auto invalid =
                 native::bit_and(input, native::load_packet(plan().controls().invalid.data()));
-            if (active != detail::all_rows<Rows>)
+            if (active != ikea::tuplepack::detail::all_rows<Rows>)
                 invalid = native::bit_and(invalid, native::row_mask(plan(), active));
             return !native::nonzero(invalid);
         }
 #endif
     }
-    template <class Coverage>
+    template <class Coverage> requires ikea::effects<Coverage, view>
     [[gnu::always_inline]] void set_unchecked(std::size_t row, input_type input, Coverage &effects,
-                                              std::uint64_t active = detail::all_rows<Rows>) const {
+                                              std::uint64_t active = ikea::tuplepack::detail::all_rows<Rows>) const {
         if (!active)
             return;
-        detail::emit_window<Rows>(destination(), row, plan().controls(), effects, active);
+        ikea::tuplepack::detail::emit_window<Rows>(destination(), row, plan().controls(), effects, active);
         if constexpr (Rows == 1)
-            native::write_body(plan().controls(), destination().row_unchecked(row), input);
+            native::write_body(plan().controls(), ikea::to_u8(destination().row_unchecked(row)), input);
         else {
-            const auto base = destination().row_unchecked(row);
+            const auto base = ikea::to_u8(destination().row_unchecked(row));
             const auto stride = destination().stride();
             native::write_body<Rows>(plan().controls(),
                 [&](unsigned r) { return base + r * stride; }, input, active, stride);
         }
     }
 };
+} // namespace author
 namespace native {
 template <unsigned I> [[gnu::always_inline]] inline std::uint64_t word(std::uint64_t value) {
     static_assert(I == 0);
@@ -223,17 +216,19 @@ template <> struct pipeline_carrier<64> {
 #endif
 template <unsigned N> using pipeline_values_for = typename pipeline_carrier<N>::type;
 } // namespace native
+namespace author {
 /// Bounded straight-through CPS with early completion, sharing ordinary inline
 /// bodies. Owner suspension is after completion, never with vector state live
 /// in an arbitrary stage. The caller chooses mask meaning and stage granularity.
 #if defined(__aarch64__) || defined(__x86_64__)
 template <unsigned N, unsigned Slots = 8, class Mask = std::uint64_t>
 using packet_chain =
-    ikea::detail::native_chain<native::pipeline_values_for<N>, Mask, Slots, error,
+    ikea::author::chain<native::pipeline_values_for<N>, Mask, Slots,
                                std::make_index_sequence<native::pipeline_values_for<N>::parts>>;
 #if defined(__aarch64__) || defined(__AVX2__)
 template <unsigned Slots = 8, class Mask = std::uint64_t>
 using chain = packet_chain<64, Slots, Mask>;
 #endif
 #endif
+} // namespace author
 } // namespace ikea::tuplepack

@@ -1,143 +1,212 @@
 # Composing Ikea interfaces
 
-Compose operations by matching their value meaning, coordinates, accessible bytes
-and lifetime. A similarly named reader or a matching register width does not
-establish those facts. This guide connects the existing module interfaces; the
-module references specify their exact checks and access bounds.
+Ikea uses one vocabulary for layout, placement and operations. The modules keep
+their useful representations and specialized bodies; a caller should not have
+to relearn what `attach`, `make`, `reader` or `writer` means for each one.
+[Module guides](../README.md) own the detailed commands and access bounds.
 
-## Follow the work, then the names
+## Follow one lifecycle
 
-A **description** specifies how values mean bytes. **Placement** associates that
-law with actual addresses and accessible extents. A **binding** retains enough
-of that association or a prepared operation to reuse it. **Admission** is the
-validation that establishes a stated requirement, such as sufficient storage or
-a valid command. A **proof** here means those established facts, not an object
-that acquires locks or prevents the owner from changing storage.
-
-The modules divide this work differently:
-
-| Module | Describe and place | Prepare and execute |
+| Step | Interface | Established fact |
 | --- | --- | --- |
-| SeriesPack | `format<K, geometry, H>` is a compile-time byte law; `view<F, Byte>::attach` checks plane placement and count. | `bind_decoder` prepares reads; `bind_mutation` prepares source-aware writes. Reuse their point/range operations. |
-| TuplePack | `layout::make` validates code locations in one unit; `view::bind` checks the units' storage, count, stride and offset. | `reader::make` prepares a reusable code map and packet grouping; `bind_reader` associates it with a named view. Writer and construction plans have their own admitted commands. |
-| StreamPack | `layout::prepare` derives reservation and used-length geometry; `view::bind` checks the payload and metadata windows. | Initialize new storage or validate recovered contents, then use value operations. Author dispatch keeps schema selection outside repeated typed work. |
-| Intervals | A source projects ordered endpoints; geometry adds an origin. There need not be a layout or a stored descriptor. | Ordinary search needs no separate binding. Author search can retain numeric preparation or a staged local window when useful. |
-| Bec256 | A source has an exact body length and caller-supplied population; `source::admit` validates its framing and readable storage. | Decode an admitted source, or `prepare` a transient encoding before writing a named destination. |
-| Hashtable | The owning runtime `descriptor` retains storage and operation bindings. | Use its selected table operations and rebuild lifecycle. This descriptor is not a portable byte description. |
+| Describe | `layout::make(...)` or a compile-time layout | The byte law, independent of addresses and logical count |
+| Place | `view::attach(...)` / `const_view::attach(...)` | Addresses, extents and placement metadata satisfy that law |
+| Validate | `view.validate()` where encoded contents can be invalid | The recovered contents obey the law |
+| Plan | `read_plan::make(...)`, `write_plan::make(...)` or an author plan | Storage-independent maps, grouping or routes |
+| Bind | `bind_reader(...)`, `bind_writer(...)`, `bind_transfer(...)`, `bind_predicate(...)` | A reusable operation with its stated borrowing and admission |
+| Erase | `.erase<...>()` or an explicitly erased binding | A runtime-dispatched whole operation |
+| Run | `get`, `read`, `filter`, `set`, `replace`, `initialize`, `copy`, ... | One command, checked by default |
 
-For example, the [SeriesPack ordinary program](../examples/seriespack/ordinary.cpp)
-attaches planes once, binds mutation, initializes them, replaces a point and a
-range, then reuses a decoder. The [TuplePack ordinary program](../examples/tuplepack/ordinary.cpp)
-separates its reusable code plan from the concrete storage binding. Renaming
-both layout constructors would not make their input or retained state equivalent.
+A module can omit a step. Intervals projects borrowed endpoints and needs no
+layout object or operation binding for an ordinary search. StreamPack's free
+commands operate on a placed value owner; author dispatch binds its typed access
+for an enclosing consumer. Hashtable owns storage and exposes `table` or
+`erased_table`, rather than pretending to be another borrowed pack.
 
-`assume_valid` reuses an already established placement/content requirement stated
-by that entry. `_unchecked` reuses the command facts stated by its checked peer.
-Neither establishes initialization, lifetime, synchronization or permission to
-access additional bytes. The [owner integration guide](integration.md) follows
-one complete mutation through those responsibilities.
+`attach` checks placement metadata, not payload contents. `attach_unchecked`
+reuses exactly that placement proof. `validate` examines contents. Neither grants
+lifetime, initialization, isolation or bytes beyond the supplied extent.
+Bec256 makes the distinction explicit: place a `const_view`, then `bind_reader`
+validates once into a reader carrying its admitted interpretation. An owner with
+a surviving content proof can use `bind_reader_unchecked`.
+
+Plans copy the metadata documented by their module. A bound operation can borrow
+its named plan and view; copies retain that borrowing. Erased operations can
+borrow the concrete operation too. Name these objects before retaining a handle:
+
+```cpp
+namespace sp = ikea::seriespack;
+using L = sp::layout<12>;
+std::array<std::byte, 24> storage{};
+auto placed = sp::view<L>::attach(16, {{{storage, L::tile_bytes}, {}, {}}});
+// Check placed before dereferencing it.
+auto reader = sp::bind_reader(*placed);
+auto erased = reader.erase<std::uint32_t>();
+// Keep placed, reader and backing alive for erased's documented borrowing.
+```
+
+A general expression reader owns its expression and borrows its leaves. Erasing
+such a temporary is rejected. A dense source instead copies its admitted
+pointer/count proof; that wrapper need not survive its erased reader. The
+explicit `bind_reader<U>(view)` shortcut binds an erased buffered reader directly
+to a named physical view, without adding an intermediate retained operation.
+The [SeriesPack reference](seriespack/reference.md) states these lifetimes.
+
+TuplePack's general reader borrows its named plan and view. For repeated
+one-code filters, `bind_predicate(reader)` copies those pointers and the code
+projection; the intermediate reader wrapper may expire. The plan/view values
+and addresses must remain stable through every predicate call. The equivalent
+`bind_predicate(plan, view)` convenience needs no retained intermediate reader.
+`reader.filter` remains the checked single-command convenience. The
+[TuplePack guide](tuplepack/usage.md#project-codes-into-a-packet) shows both forms.
+
+`_unchecked` sits beside the checked command and reuses its command facts. Author
+physical stores are a separate building block: SeriesPack `author::store` and
+`store_unchecked` preserve neighbors but emit neither effects nor summary changes.
+Ordinary logical mutations use a bound writer. Their checked spelling must never
+silently imply owner admission or publication. SeriesPack and TuplePack writer
+commands put the required effects argument immediately after the input/value,
+then selection/activity and maintenance. Omitting a SeriesPack summary uses its
+stateless no-summary recipe; explicit stateful summaries remain borrowed lvalues.
+
+## Storage bytes and decoded values
+
+Borrowed physical storage and encoded descriptions use `std::byte` spans.
+`view` is writable; `const_view` is read-only. `basic_view<..., Byte>` underlies
+those aliases where useful. Native kernels use explicit `to_u8` bridges for
+unsigned-character arithmetic; those bridges preserve constness and extent.
+
+Decoded unsigned values, code-map indices and numeric fields remain integers.
+TuplePack's decoded packet slots are `uint8_t` values, not opaque storage bytes.
+Hashtable's opaque value payload is `std::byte`. A new target must preserve the
+specified numeric bit/byte order; serializing native objects is not a substitute.
 
 ## Give every position a coordinate system
 
 | Coordinate | Meaning |
 | --- | --- |
-| Row | An original logical value/record position in a pack view. |
-| Rank | An ordered local interval or StreamPack reservation identity; excluding it does not renumber later ranks. A TuplePack code rank instead indexes a layout's code description. |
-| Window bit | Bit `r` of an ordinary SeriesPack or bound TuplePack filter names original row `first+r`. Combine predicates over the same original rows, origin and window. |
-| Packet byte | One decoded byte slot in a native TuplePack packet. Grouping, repeated code slots and holes can separate this from a row position. |
-| Block bit | A consumer-defined coarse coordinate, such as one bit per 256-row block in the [Frame study](../../workbench/spikes/ikea-frame/README.md). It is separate from row activity within a selected block. |
-| Plane byte | An issued physical write offset relative to one admitted source plane. It is not a row, code or changed-bit index. |
+| Row | Original logical value/record position in a pack view |
+| Rank | Ordered interval/reservation identity, or a code index when explicitly qualified as code rank |
+| Window bit | Bit `r` names original row `first+r` in an ordinary filter result |
+| Packet byte | Decoded TuplePack slot; a plan's map and grouping determine its original row and code |
+| Block bit | An enclosing consumer's coarse block position, separate from rows within that block |
+| Plane byte | Issued physical store offset within a named source plane |
 
-The [grouped filter example](filters.md#convert-a-grouped-packets-result-to-row-coordinates)
-projects two TuplePack fields with a hole, compares their packet bytes and gathers
-each chosen map slot back to row bits using the plan's ordering. It then intersects
-those masks with a SeriesPack result over the same `first=7` window. A cast cannot
-perform that mapping; a consumer must also decide how several fields combine.
+Ordinary SeriesPack and bound TuplePack filters already agree on original-row
+bits. A native TuplePack predicate returns packet-byte bits; casts cannot map
+those to rows. Use `plan.ordering().offset(row, slot)` and decide how several
+fields combine. The [grouped filter example](filters.md#convert-a-grouped-packets-result-to-row-coordinates)
+performs that translation and intersects predicates over the same window.
 
-A **selection** says which original elements an operation includes. A filter
-**mask** can carry such a result, but does not say whether excluded elements are
-absent, NULL, retired or simply unnecessary to this command. Keep that meaning
-with the consumer.
+SeriesPack, TuplePack and Intervals call their bitmap argument `selection`, with the same operations:
+`all`, `none`, `bits`, `is_all`, `is_none`, `covers`, `contains` and `mask`.
+Default construction means none; ordinary command defaults spell `all()`.
+Selections borrow backing and preserve original positions. They do not decide
+whether an excluded value is NULL, retired, absent or merely unnecessary.
 
-SeriesPack `row_selection` stores sixteen row bits per u16 with an aligned origin;
-TuplePack `selection` stores row bits in u64 words with an arbitrary origin;
-Intervals `rank_selection` borrows exact bytes and can invert an owner's bitmap.
-All have one bit per logical element. Their storage widths are not selection
-grain, and widening one into another can read beyond the original grant.
-The Frame study's coarse block selection introduces another coordinate, rather than a
-fourth interchangeable fine bitmap format.
+| Backing | Origin and read grant |
+| --- | --- |
+| SeriesPack numeric u16 words | Origin divisible by 16; one bit per original row |
+| TuplePack numeric u64 words | Arbitrary origin; crossing-word windows stay bounded |
+| Intervals exact bitmap bytes | Arbitrary origin; exact last byte; `complement` accepts an owner's exclusion bitmap |
+| Shared `bitset256` | Numeric word `i/64`, bit `i%64`; 256 original positions |
 
-## Carry writes with their actual source
+Backing width is not logical grain. A wider load cannot read past a narrower
+backing grant. `contains`/`mask` require a covered window; checked commands admit
+that coverage first. [Selection](selection.md) owns exact tails, overflow,
+complement and typed-block contracts.
 
-`ikea::write_journal` records `{plane, offset, size}`. It suits a caller that already
-knows the single source to which all entries belong. `ikea::source_write_journal`
-records `{source, plane, offset, size}`. It distinguishes actual named leaf views
-when a composition substitutes children or writes several destinations.
-SeriesPack's composition namespace keeps the latter's name
-`source_write_journal`; it does not give it the other type's name.
+`bitset256` is a zero-initialized value with natural alignment, count/rank/window
+operations and explicit portable little-endian load/store bridges. Bec256 accepts
+it directly. It imposes neither Frame block semantics nor an execution packet
+width on another consumer.
 
-The [SeriesPack integration adapter](../examples/seriespack/integration.cpp)
-keeps its named view and journal storage inside a stable work object. It maps
-each reported source and plane to an owner offset before releasing those objects.
-An address identifying a local view cannot be retained after the view dies, even
-if its backing bytes remain allocated.
+## Use one effects protocol
 
-Both journals describe **issued bytes**, including neighbors preserved by packed
-stores. Logical destinations and maintenance dependencies serve different work:
-a two-row mutation can issue a wider byte store, and its summary can depend on
-untouched values. Hooks run before their associated local store group; reserve
-their capacity before execution. They cannot fail, allocate or suspend midway.
-They do not supply beforeimages or publish a transaction.
+`ikea::journal` records `{source, plane, offset, size}` in preallocated storage.
+A source is the actual named view or owner, including a substituted leaf. Resolve
+that identity to owner/partition/generation coordinates before the named object
+dies **or its placement changes**. A pointer to a copied metadata wrapper is not
+the original source identity.
+The journal can extend its last record when stores touch. `used` counts current
+coverage records, so it is not an append-only event cursor. Use a fresh journal
+for per-command resolution, or resolve the complete current coverage.
 
-SeriesPack's supported [scalar point header](seriespack/reference.md#scalar-point-building-blocks)
-also offers raw `get`/`set` leaves. Raw stores emit neither journals nor summary
-changes. Use the bound mutation operation when those consequences are required;
-calling a checked raw setter does not add them.
+A caller can bind the next block after resolving the previous command's complete
+journal against its original mapping. Existing bindings retain their module's
+plan/view stability requirements. A trusted
+effects adapter can instead translate each span immediately into pre-admitted
+owner coordinates. That mapping must retain the correct backing generation;
+keeping an owner pointer while replacing its storage is insufficient. Neither
+option grants isolation or publication authority.
 
-## Cross byte and error boundaries explicitly
+Checked mutations use the journal. Trusted mutations accept the `effects`
+concept: `before(source, plane, offset, size) noexcept`. `no_effects` explicitly
+opts out where the enclosing author already accounts for private writes. A hook
+cannot fail, allocate or suspend during execution. Hashtable retains its owner
+`enter`/`prepare` admission and resolves records through `plane_storage`; sharing
+the hook does not remove that protocol.
 
-SeriesPack and TuplePack expose unsigned bytes for packed arithmetic. StreamPack
-and Bec256 expose `std::byte` spans for object bytes. When an owner passes an
-unsigned-byte buffer to an object-byte operation, use the standard span view:
+Effects describe **issued bytes**, including preserved neighbors, rather than
+changed bits. Logical destinations, old-value dependencies and summary writes
+are different obligations. An owner must protect the physical read/store grant
+even if two logical mutations name different bits in one packed byte.
 
-```cpp
-#include <array>
-#include <cstdint>
-#include <span>
+Capacity queries count **additional records for a command**, conservatively,
+before opportunistic coalescing. They do not include existing journal entries.
+Invalid coordinates return an error where needed; a capacity bound is not command
+admission. Initialization has a separate query because it can write owned slack
+and omit old-value observation. Storage shortage uses `error::capacity`; a full
+journal uses `error::effects`.
 
-std::array<std::uint8_t, 256> buffer{};
-std::span<std::uint8_t> storage{buffer};
-std::span<std::byte> object_bytes = std::as_writable_bytes(storage);
-std::span<const std::byte> input_bytes = std::as_bytes(storage);
-```
+The [integration guide](integration.md) follows source resolution, maintenance and
+coherent publication. Ikea effects supply neither beforeimages nor a transaction.
 
-This preserves the byte extent and borrowing; it does not validate the target
-format, create integer objects, change endian order or acquire write permission.
-Keep any reverse interpretation at the owner's admitted placement boundary.
+## Keep data headless and frame shared descriptions
 
-Each pack owns its error domain. In particular, `streampack::error::retired`
-belongs to the value owner; Intervals only receives the owner's eligibility
-filter and cannot diagnose retirement. The five pack namespaces supply
-`describe(error) -> std::string_view` for cold diagnostics. A caller can attach
-its module/operation context when reporting or propagating an error. Error enum
-values are not a persistent format or a common cross-module status code.
-Hashtable's operation statuses and `std::errc` retain their distinct meanings.
+A layout describes the byte law only. Logical count, attach-time origins, strides,
+plane placement and semantic field identity belong to the parent. Internal code
+offsets or reservation geometry remain law facts. Per-block mutable state such
+as StreamPack assigned count is data in caller-placed planes.
 
-## Let the parent frame child descriptions
+A parent can persist one layout in a schema shared by many blocks. No Ikea data
+block requires a descriptor, tag or version header. Encoded layout descriptions
+share this schema envelope:
 
-Portable child descriptions describe different things: a SeriesPack descriptor
-includes array count and placement geometry; TuplePack encodes a unit layout;
-StreamPack encodes a shared value schema with assigned count in its control
-plane. Bec256 body interpretation needs population and length from its parent.
-Persist each module's encoded form with the parent's field identity and exact
-extent; validate it through that module's decoder. Never serialize a native
-layout, view, runtime Hashtable descriptor or operation table as its wire form.
+| Bytes | Meaning |
+| --- | --- |
+| 0–1 | Module tag |
+| 2 | Module byte-law version |
+| 3–4 | Little-endian body length |
+| 5 onward | Module-owned canonical body |
 
-The parent must still associate the children with one coherent logical version.
-Independent valid descriptions do not prove that values, geometry, validity or
-overrides belong together. Lifetime retention preserves backing; the owner's
-version and publication rules preserve that association.
+`encoded_size`, `encode(std::span<std::byte>)` and
+`decode(std::span<const std::byte>)` agree across the dynamic layouts. Decoders
+require exact length and reject unknown tags, versions and noncanonical bodies.
+SeriesPack decodes a `layout_value` containing K/H/geometry, checked against a
+compile-time `layout` during attachment. Its eight-byte schema contains no count
+or stride. TuplePack preserves all 128 code triples. Bec256 has one fixed law
+and no layout description; `erased_table` is a runtime owning binding with no wire
+form. Persist no native view, C++ layout object or function table.
 
-[Module usage](../README.md) supplies concrete operations. [Building consumers](consumers.md)
-explains where fusion, preparation and traversal earn their cost; [source guidance](source.md)
-locates the supported author entries and shared mechanics.
+Independent valid child descriptions do not prove that values, validity,
+geometry or overrides belong to one version. The parent retains and publishes
+that coherent interpretation.
+
+## Errors, authors and execution profiles
+
+Modules own typed errors and cold `describe(error) -> std::string_view` diagnostics.
+Shared conditions have shared meanings: `range`, `value`, `capacity`, `effects`,
+`overlap`, `description` and `contents`. Module-specific encoded-content errors
+remain meaningful; operation outcomes such as Hashtable `absent` are statuses.
+Error enum ordinals are not a persisted or cross-module status format.
+
+Ordinary names live in the module namespace. `author` holds expressions,
+substitution, observations and shared execution mechanisms; `native` holds
+ISA-shaped carriers and bodies; `detail` is private. Shared CPS lives in
+`ikea::author::chain`, with its own `chain_error` and `make` builder.
+
+Current supported execution profiles are x86-64-v3 and ARMv8 SIMD, checked once
+by `ikea/config.h`. All ordinary entries exist on those profiles. Ordinary
+signatures and wire laws are target-neutral so future backends can implement
+them without a new user vocabulary. Native carriers retain their ISA contracts.

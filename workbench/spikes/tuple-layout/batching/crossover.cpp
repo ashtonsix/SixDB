@@ -30,9 +30,9 @@ void run(benchmark::State &state, unsigned extent, unsigned draws,
   constexpr unsigned B = 64 / Rows;
   std::vector<code> codes(extent);
   for (unsigned i = 0; i < extent; ++i)
-    codes[i] = {byte(i), byte(i % 2), 7};
+    codes[i] = {std::uint8_t(i), std::uint8_t(i % 2), 7};
   const auto format = *layout::make(extent, codes);
-  std::vector<byte> map(draws);
+  std::vector<std::uint8_t> map(draws);
   for (unsigned i = 0; i < draws; ++i)
     map[i] = spread && draws > 1 ? i * (extent - 1) / (draws - 1) : i;
   // A runtime reversed map prevents identity-copy fixtures from deciding the
@@ -42,18 +42,18 @@ void run(benchmark::State &state, unsigned extent, unsigned draws,
   // now occupy a packed prefix of the packet.
   auto packet_map = map;
   packet_map.resize(B, hole);
-  const auto rp = *reader<64, Rows>::make(format, packet_map);
-  const auto wp = *writer<64, Rows>::make(format, packet_map);
-  const auto point_r = *reader<64>::make(format, map);
-  const auto point_w = *writer<64>::make(format, map);
+  const auto rp = *read_plan<64, Rows>::make(format, packet_map);
+  const auto wp = *write_plan<64, Rows>::make(format, packet_map);
+  const auto point_r = *read_plan<64>::make(format, map);
+  const auto point_w = *write_plan<64>::make(format, map);
   // Use the ordinary prepared scalar kernel when the actual projection fits
   // eight bytes, including its single-code/word writer specializations. Do
   // not charge a small map for the unused capacity of a wider packet shape.
-  std::optional<reader<8>> small_r;
-  std::optional<writer<8>> small_w;
+  std::optional<read_plan<8>> small_r;
+  std::optional<write_plan<8>> small_w;
   if (draws <= 8) {
-    small_r = *reader<8>::make(format, map);
-    small_w = *writer<8>::make(format, map);
+    small_r = *read_plan<8>::make(format, map);
+    small_w = *write_plan<8>::make(format, map);
   }
   detail::shuffle_description wiring;
   const unsigned first = *std::min_element(map.begin(), map.end());
@@ -73,16 +73,16 @@ void run(benchmark::State &state, unsigned extent, unsigned draws,
       }
   auto route = detail::compile_shuffle(wiring, false);
   constexpr std::size_t count = 1024;
-  std::vector<byte> data((count - 1) * stride + extent);
+  std::vector<std::uint8_t> data((count - 1) * stride + extent);
   for (std::size_t i = 0; i < data.size(); ++i)
-    data[i] = byte(i * 71 + 13);
-  std::array<byte, 64> mask_bytes;
+    data[i] = std::uint8_t(i * 71 + 13);
+  std::array<std::uint8_t, 64> mask_bytes;
   mask_bytes.fill(63);
   const auto mask = native::load_packet(mask_bytes.data());
   // Every retained competitor is checked against independent per-code bits
   // before timing; updates use identical destinations and preserve all
   // neighbors.
-  std::array<byte, 64> expected{}, actual{};
+  std::array<std::uint8_t, 64> expected{}, actual{};
   for (unsigned r = 0; r < Rows; ++r)
     for (unsigned i = 0; i < map.size(); ++i) {
       auto c = codes[map[i]];
@@ -98,10 +98,10 @@ void run(benchmark::State &state, unsigned extent, unsigned draws,
   if (method == 1) {
     for (unsigned r = 0; r < Rows; ++r) {
       if (small_r) {
-        auto v = small_r->get_unchecked(address(r));
+        auto v = small_r->get_unchecked(reinterpret_cast<const std::byte*>(address(r)));
         std::memcpy(actual.data() + r * B, &v, std::min(8u, B));
       } else {
-        std::array<byte, 64> point{};
+        std::array<std::uint8_t, 64> point{};
         native::store_packet(point.data(),
                              native::read_body(point_r.controls(), address(r)));
         std::copy_n(point.data(), B, actual.data() + r * B);
@@ -121,14 +121,14 @@ void run(benchmark::State &state, unsigned extent, unsigned draws,
         auto c = codes[map[i]];
         const auto pos = r * stride + c.offset;
         const auto bits = 127u << c.shift;
-        wanted[pos] = byte((wanted[pos] & ~bits) |
+        wanted[pos] = std::uint8_t((wanted[pos] & ~bits) |
                            ((expected[r * B + i] & 63u) << c.shift));
       }
     if (method == 1) {
       for (unsigned r = 0; r < Rows; ++r) {
         if (small_r)
-          small_w->set_unchecked(address(r),
-                                 small_r->get_unchecked(address(r)) &
+          small_w->set_unchecked(reinterpret_cast<std::byte*>(address(r)),
+                                 small_r->get_unchecked(reinterpret_cast<const std::byte*>(address(r))) &
                                      0x3f3f3f3f3f3f3f3full);
         else {
           auto v = native::read_body(point_r.controls(), address(r));
@@ -152,9 +152,9 @@ void run(benchmark::State &state, unsigned extent, unsigned draws,
       if (method == 1) {
         for (unsigned r = 0; r < Rows; ++r) {
           if (small_r) {
-            auto v = small_r->get_unchecked(at(r));
+            auto v = small_r->get_unchecked(reinterpret_cast<const std::byte*>(at(r)));
             if (update)
-              small_w->set_unchecked(at(r), v & 0x3f3f3f3f3f3f3f3full);
+              small_w->set_unchecked(reinterpret_cast<std::byte*>(at(r)), v & 0x3f3f3f3f3f3f3f3full);
             else if (draws == 1)
               result += v;
             else {

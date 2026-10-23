@@ -1,78 +1,54 @@
 #pragma once
 #include <algorithm>
+#include <concepts>
 #include <cstddef>
 #include <span>
+
 namespace ikea {
-/// Issued store coordinates within a source plane, in bytes. A bound operation
-/// proves offset + size fits the admitted storage; this is not a changed-bit set.
-struct byte_write {
-    unsigned plane;
-    std::size_t offset, size;
-};
-struct no_coverage {
-    void before(byte_write) const noexcept {}
-    template <class Source> void before(const Source&, byte_write) const noexcept {}
-};
-/// Borrowed, preallocated output. Offsets belong to the actual attached plane;
-/// an integration adapter maps them to partition/owner identities. These are
-/// issued writes, including preserved neighbors, not a byte-difference list.
-/// Keep used <= storage.size(); before() is a trusted no-fail hook requiring
-/// pre-admitted capacity. The storage must not alias the mutated bytes.
-struct write_journal {
-    std::span<byte_write> storage;
+/// Issued physical stores, including preserved neighbors. The named source
+/// and preallocated record storage outlive execution and owner resolution.
+/// These records neither capture beforeimages nor publish a transaction.
+struct journal {
+    struct entry {
+        const void* source;
+        unsigned plane;
+        std::size_t offset, size;
+    };
+    std::span<entry> storage;
     std::size_t used = 0;
-    void before(byte_write write) noexcept {
-        if (used && storage[used - 1].plane == write.plane) {
+    /// Trusted no-fail hook: capacity, disjointness and byte bounds were admitted
+    /// before execution. Coalesces only the last source/plane's touching spans.
+    template <class Source>
+    void before(const Source& source, unsigned plane, std::size_t offset,
+                std::size_t size) noexcept {
+        if (used && storage[used - 1].source == &source && storage[used - 1].plane == plane) {
             auto& previous = storage[used - 1];
-            const auto end = previous.offset + previous.size, next_end = write.offset + write.size;
-            if (previous.offset <= next_end && write.offset <= end) {
-                const auto begin = std::min(previous.offset, write.offset);
-                previous = {write.plane, begin, std::max(end, next_end) - begin};
+            const auto end = previous.offset + previous.size, next_end = offset + size;
+            if (previous.offset <= next_end && offset <= end) {
+                const auto begin = std::min(previous.offset, offset);
+                previous.offset = begin;
+                previous.size = std::max(end, next_end) - begin;
                 return;
             }
         }
-        storage[used++] = write;
+        storage[used++] = {&source, plane, offset, size};
     }
-    std::size_t remaining() const noexcept {
-        return storage.size() - used;
-    }
-    std::span<const byte_write> entries() const {
-        return storage.first(used);
-    }
+    std::size_t remaining() const noexcept { return storage.size() - used; }
+    std::span<const entry> entries() const noexcept { return storage.first(used); }
 };
-
-struct owner_write {
-    /// Borrowed named source identity; resolve it before that source expires.
-    const void* source;
-    byte_write bytes;
+struct no_effects {
+    template <class Source>
+    void before(const Source&, unsigned, std::size_t, std::size_t) const noexcept {}
 };
-/// Identities are the actual named leaf sources, not the original parent whose
-/// children may have been replaced. The owner resolves them to storage mappings.
-/// Source objects and this preallocated output outlive production/resolution.
-/// Keep used <= storage.size(); before() needs pre-admitted capacity and cannot
-/// allocate, fail or suspend. Coalescing only the last entry is opportunistic.
-struct source_write_journal {
-    std::span<owner_write> storage;
-    std::size_t used = 0;
-    template <class S> void before(const S& source, byte_write bytes) noexcept {
-        if (used && storage[used - 1].source == &source &&
-            storage[used - 1].bytes.plane == bytes.plane) {
-            auto& previous = storage[used - 1].bytes;
-            const auto end = previous.offset + previous.size, next_end = bytes.offset + bytes.size;
-            if (previous.offset <= next_end && bytes.offset <= end) {
-                const auto begin = std::min(previous.offset, bytes.offset);
-                previous = {bytes.plane, begin, std::max(end, next_end) - begin};
-                return;
-            }
-        }
-        storage[used++] = {&source, bytes};
-    }
-    std::size_t remaining() const noexcept {
-        return storage.size() - used;
-    }
-    std::span<const owner_write> entries() const {
-        return storage.first(used);
-    }
+/// No-fail, nonsuspending local mutation hook. Admission and owner isolation
+/// precede the first store group; execution uses only pre-admitted resources.
+template <class E, class Source>
+concept effects = requires(E& e, const Source& source, unsigned plane,
+                           std::size_t offset, std::size_t size) {
+    { e.before(source, plane, offset, size) } noexcept -> std::same_as<void>;
 };
-
+namespace detail {
+// Plane-local geometry for kernel visitors; effects always name a source too.
+struct write_span { unsigned plane; std::size_t offset, size; };
+}
 } // namespace ikea

@@ -75,7 +75,7 @@ template<unsigned G,class W> void edits() {
     unsigned n=0; std::uint32_t limit=700;
     in::size_editor<G,W> editor{fields,checkpoints,n,limit,700,20000000,
                               std::numeric_limits<W>::max()};
-    std::array<ikea::owner_write,8> entries;
+    std::array<ikea::journal::entry,8> entries;
     auto verify=[&] {
         need(bool(editor.validate()),"edited geometry failed validation");
         unsigned position=700;
@@ -89,9 +89,11 @@ template<unsigned G,class W> void edits() {
         need(position==limit&&tombstones==original_filter,"editor changed companion filter");
     };
     for(unsigned r=0;r<256;++r) {
-        ikea::source_write_journal effects{entries};
+        ikea::journal effects{entries};
+        const auto capacity = editor.effect_capacity_append();
         model[r]=r%5?std::min(17u,editor.maximum):0;
         need(bool(editor.append(model[r],effects)),"valid append refused");
+        need(effects.used <= capacity,"append exceeded reserved effects");
         for(auto record:effects.entries()) need(record.source==&editor,"effect lost source identity");
         verify();
     }
@@ -101,12 +103,15 @@ template<unsigned G,class W> void edits() {
     for(unsigned attempt=0;attempt<500;++attempt) {
         const unsigned rank=random()%n,value=random()%(editor.maximum+1);
         const auto before=fields; const auto before_cp=checkpoints; const auto before_limit=limit;
-        ikea::source_write_journal effects{entries};
+        ikea::journal effects{entries};
+        const auto capacity = editor.effect_capacity_resize(rank);
+        need(bool(capacity),"valid resize capacity refused");
         need(bool(editor.resize(rank,value,effects)),"valid resize refused");
+        need(effects.used <= *capacity,"resize exceeded reserved effects");
         model[rank]=value;
         auto covered=[&](unsigned plane,std::size_t offset) {
-            for(auto e:effects.entries()) if(e.source==&editor&&e.bytes.plane==plane&&
-                e.bytes.offset<=offset&&offset<e.bytes.offset+e.bytes.size) return true;
+            for(auto e:effects.entries()) if(e.source==&editor&&e.plane==plane&&
+                e.offset<=offset&&offset<e.offset+e.size) return true;
             return false;
         };
         auto changes=[&](const auto &a,const auto &b,unsigned plane) {
@@ -121,7 +126,8 @@ template<unsigned G,class W> void edits() {
                                                256,700,retained_limit,editor.maximum};
     need(retained.at(255)==retained_limit,"old reader changed after edits");
     const auto saved_fields=fields;const auto saved_cp=checkpoints;const auto saved_limit=limit;
-    ikea::source_write_journal none{{}};
+    ikea::journal none{{}};
+    need(!editor.effect_capacity_resize(256),"invalid resize capacity admitted");
     need(!editor.append(0,none)&&!editor.resize(256,1,none)&&
          !editor.resize(0,editor.maximum+1,none)&&!editor.resize(0,fields[0]?0:1,none),
          "checked refusal not enforced");
@@ -145,7 +151,7 @@ void strides_and_filters() {
         fields.data(),checkpoints.data(),67,0,total,6,32};
     std::array<std::byte,9> tombstones{};
     for(unsigned r=0;r<67;++r) if(r%3==1) tombstones[r/8]|=std::byte(1u<<(r%8));
-    in::rank_selection live{tombstones,true};
+    auto live = in::selection::complement(0,tombstones);
     for(unsigned r=0;r<67;++r) {
         need(source.at(r)==ends[r],"strided geometry read a sibling");
         need(bool(in::locate(source,r,live))==(r%3!=1),"operation filter ignored");
@@ -184,8 +190,8 @@ void strides_and_filters() {
         unsigned at(unsigned) const { return *p; }
     } inaccessible{reinterpret_cast<unsigned*>(mapping+page)};
     need(bool(in::range(inaccessible,0,67,[](auto,auto){throw std::runtime_error("empty filter emitted");},
-                        in::rank_selection{})),"empty filtered range refused");
-    need(!in::range(inaccessible,67,1,[](auto,auto){},in::rank_selection{}),"invalid empty-filter range accepted");
+                        in::selection{})),"empty filtered range refused");
+    need(!in::range(inaccessible,67,1,[](auto,auto){},in::selection{}),"invalid empty-filter range accepted");
     // Exact native tail, with no readable next window at a macrogroup boundary.
     auto *widths=reinterpret_cast<std::uint8_t*>(mapping+page-32);
     std::memset(widths,1,32);const std::uint32_t origin=0;

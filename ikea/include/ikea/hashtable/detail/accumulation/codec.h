@@ -12,7 +12,7 @@ template <class D> struct image_codec {
         ((D::B == 64 && D::T >= 2 && D::T <= 5 && D::encoding >= 10 && D::encoding <= 30) ||
          (D::B == 96 && D::T >= 1 && D::T <= 2 && D::encoding >= 31 && D::encoding <= 64));
     using image = std::array<__m512i, banks>;
-    [[gnu::always_inline]] static image read(const byte* p) {
+    [[gnu::always_inline]] static image read(const std::uint8_t* p) {
         if constexpr (D::B == 64)
             return read_flat<D::encoding, D::T>(p);
         else if constexpr (wide)
@@ -25,7 +25,7 @@ template <class D> struct image_codec {
                                        _mm512_cvtepi64_epi32(rows[1]), 1)};
         }
     }
-    [[gnu::always_inline]] static void write(byte* p, const image& value, word live) {
+    [[gnu::always_inline]] static void write(std::uint8_t* p, const image& value, word live) {
         if constexpr (D::B == 64)
             write_flat<D::encoding, D::T>(p, value, live);
         else if constexpr (wide)
@@ -61,7 +61,7 @@ template <class D> struct image_codec {
 // Source decoding depends on its representation, independently of destination
 // width. Widen 32-bit rows once before the destination loads; native words can
 // be consumed directly without a temporary expansion.
-template <class S> [[gnu::always_inline]] void prepare_source(const byte* p, word* decoded) {
+template <class S> [[gnu::always_inline]] void prepare_source(const std::uint8_t* p, word* decoded) {
     if constexpr (S::encoding == 64)
         return;
     else if constexpr (S::encoding == 32) {
@@ -79,7 +79,7 @@ template <class S> [[gnu::always_inline]] void prepare_source(const byte* p, wor
     }
 }
 template <class S>
-[[gnu::always_inline]] word source_quotient(const byte* p, const word* decoded, unsigned row) {
+[[gnu::always_inline]] word source_quotient(const std::uint8_t* p, const word* decoded, unsigned row) {
     if constexpr (S::encoding == 64)
         return ht::point<S::encoding>(p, row, S::N);
     else

@@ -44,9 +44,9 @@ template<unsigned K,C Op>
         return (sp::detail::filter_planes8<Op,K>(p,query) |
                (sp::detail::filter_planes8<Op,K>(p+K,query)<<8)) & active;
     else {
-        const sp::dense_source<sp::format<K>> source{p,16};
-        sp::composition::native_ops ops;
-        return sp::filter_values<Op>(sp::composition::read(ops,sp::composition::describe(source),0,active),query,active);
+        const sp::dense_source<sp::layout<K>> source{reinterpret_cast<const std::byte*>(p),16};
+        sp::author::native_ops ops;
+        return sp::author::filter_values<Op>(sp::author::read(ops,sp::author::expression(source),0,active),query,active);
     }
 }
 template<unsigned K,unsigned N,C Op,unsigned Arm>
@@ -54,7 +54,7 @@ template<unsigned K,unsigned N,C Op,unsigned Arm>
     active &= ~word{0}>>(64-N);
     if(!active) return 0;
     if constexpr(Arm==0) {
-        const sp::dense_source<sp::format<K>> source{p,N};
+        const sp::dense_source<sp::layout<K>> source{reinterpret_cast<const std::byte*>(p),N};
         return sp::filter_unchecked<Op>(source,0,N,query,active);
     } else if constexpr(Arm==1) {
         word out=0;
@@ -63,15 +63,15 @@ template<unsigned K,unsigned N,C Op,unsigned Arm>
             out|=word(old16<K,Op>(p+(i/8)*K,query,(active>>i)&65535))<<i;
         for(unsigned i=N/16*16;i<N;++i)
             if((active>>i)&1) out|=word(ikea::compare<Op>(sp::get_unchecked(
-                sp::view<sp::format<K>>::assume_valid(N,{{{{p,N*K/8},K},{},{}}}),i),query))<<i;
+                sp::const_view<sp::layout<K>>::attach_unchecked(N, {{{std::as_bytes(std::span{p,N*K/8}),K},{},{}}}),i),query))<<i;
         return out;
     } else if constexpr(Arm==2) {
         return tile_control::window<K,N,int(Op)>(p,query)&active;
     } else if constexpr(Arm==3) {
         word out=0;
-        const sp::dense_source<sp::format<K>> source{p,N};
-        const auto expr=sp::composition::describe(source);
-        for(unsigned i=0;i<N;i+=8) out|=word(sp::composition::filter8_unchecked<Op>(expr,i,query))<<i;
+        const sp::dense_source<sp::layout<K>> source{reinterpret_cast<const std::byte*>(p),N};
+        const auto expr=sp::author::expression(source);
+        for(unsigned i=0;i<N;i+=8) out|=word(sp::author::filter8_unchecked<Op>(expr,i,query))<<i;
         return out&active;
     } else {
         // Original complete16 algorithm with the new bounded traversal/native8
@@ -80,8 +80,8 @@ template<unsigned K,unsigned N,C Op,unsigned Arm>
         for(unsigned i=0;i<N/16*16;i+=16)
             out|=word(old16<K,Op>(p+(i/8)*K,query,65535))<<i;
         if constexpr(N%16) {
-            const sp::dense_source<sp::format<K>> source{p,N};
-            out|=word(sp::composition::filter8_unchecked<Op>(sp::composition::describe(source),N/16*16,query))<<(N/16*16);
+            const sp::dense_source<sp::layout<K>> source{reinterpret_cast<const std::byte*>(p),N};
+            out|=word(sp::author::filter8_unchecked<Op>(sp::author::expression(source),N/16*16,query))<<(N/16*16);
         }
         return out&active;
 

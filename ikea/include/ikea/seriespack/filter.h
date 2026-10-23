@@ -10,7 +10,7 @@ template <comparison Op, class Source>
 [[gnu::always_inline]] inline std::uint64_t
 filter_unchecked(const Source& source, std::size_t first, unsigned count, std::uint64_t rhs,
                  std::uint64_t active = ~std::uint64_t{0}) {
-    return composition::filter_unchecked<Op>(composition::describe(source), first, count, rhs,
+    return author::filter_unchecked<Op>(author::expression(source), first, count, rhs,
                                              active);
 }
 

@@ -25,7 +25,7 @@ template<unsigned V> class direct_capacity_buffers {
     static block* header(word reference){return reinterpret_cast<block*>(reference-sizeof(block));}
     stream::view view(block& p)const {
         auto* bytes=reinterpret_cast<stream::byte*>(payload(&p));
-        return stream::view::assume_valid(*families_[p.which].format,
+        return stream::view::attach_unchecked(*families_[p.which].format,
             {{bytes,std::size_t(families_[p.which].capacity)*V},{},{},
              {reinterpret_cast<stream::byte*>(p.control.data()),2}});
     }
@@ -34,9 +34,9 @@ template<unsigned V> class direct_capacity_buffers {
     static constexpr unsigned max_values=maximum;
     direct_capacity_buffers() {
         for(unsigned i=0;i<classes;++i){auto& f=families_[i];f.capacity=std::min(1u<<i,maximum);
-            stream::description d{.family=stream::geometry::direct,.maximum=std::uint16_t(f.capacity*V),
+            stream::layout::options d{.family=stream::geometry::absolute_ends,.maximum=std::uint16_t(f.capacity*V),
                 .byte_limit=f.capacity*V,.fixed_reservation=std::uint16_t(f.capacity*V),.full=true,.immortal=true};
-            f.format=stream::layout::prepare(d).value();
+            f.format=stream::layout::make(d).value();
             ht::require(f.format->directory_bytes()==0&&f.format->lengths_bytes()==0&&f.format->control_bytes()==2,"direct buffer recipe");
         }
     }
@@ -46,7 +46,7 @@ template<unsigned V> class direct_capacity_buffers {
     unsigned capacity(unsigned which)const{return families_[which].capacity;}
     byte* data(word reference,unsigned)const{return reinterpret_cast<byte*>(reference);}
     void append_fitting(word reference,unsigned,unsigned count,const ht::bytes<V>& incoming) {
-        ikea::no_coverage effects;tuple_value<V>(reinterpret_cast<byte*>(reference)+std::size_t(count)*V,incoming,effects);
+        ikea::no_effects effects;tuple_value<V>(reinterpret_cast<byte*>(reference)+std::size_t(count)*V,incoming,effects);
     }
     word create(unsigned which,std::span<const byte> prefix,const ht::bytes<V>& incoming) {
         const auto reservation=families_[which].capacity*V;
@@ -58,8 +58,8 @@ template<unsigned V> class direct_capacity_buffers {
         auto* storage=std::malloc(bytes);if(!storage)throw std::bad_alloc();
         std::unique_ptr<block,decltype(&destroy)> owned(new(storage) block{},&destroy);
         auto& next=*owned;next.which=which;next.allocated=bytes;
-        const auto source=view(next);ikea::no_coverage effects;
-        ht::require(bool(stream::initialize(source,effects)),"direct buffer initialize");
+        const auto source=view(next);ikea::no_effects effects;
+        stream::initialize_unchecked(source,effects);
         auto* p=payload(&next);
         if(prefix.size())std::memmove(p,prefix.data(),prefix.size());
         tuple_value<V>(p+prefix.size(),incoming,effects);

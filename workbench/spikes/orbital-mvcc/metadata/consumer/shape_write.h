@@ -29,16 +29,16 @@ class TupleLaw {
   class Admission { Admission() = default; friend class TupleLaw; };
   const cs::Shape* const shape_;
   const tp::layout layout_;
-  const std::array<tp::writer<8>, 3> writers_;
+  const std::array<tp::write_plan<8>, 3> writers_;
 public:
   TupleLaw(Admission, const cs::Shape*, const tp::layout&,
-      std::span<const tp::writer<8>, 3>) noexcept;
+      std::span<const tp::write_plan<8>, 3>) noexcept;
   TupleLaw(const TupleLaw&) = delete;
   TupleLaw(TupleLaw&&) = delete;
   TupleLaw& operator=(const TupleLaw&) = delete;
   TupleLaw& operator=(TupleLaw&&) = delete;
   [[nodiscard]] static orbital::Result<void> prepare(std::optional<TupleLaw>&,
-      const cs::Shape*, const tp::layout&, std::span<const tp::writer<8>, 3>,
+      const cs::Shape*, const tp::layout&, std::span<const tp::write_plan<8>, 3>,
       orbital::ProgramId expected_program, orbital::PartId expected_part) noexcept;
   TupleProof proof() const noexcept { return TupleProof{this}; }
   const cs::Shape* shape() const noexcept { return shape_; }

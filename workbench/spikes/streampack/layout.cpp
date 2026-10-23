@@ -199,15 +199,15 @@ template<class Meta, unsigned Maximum> void check() {
 
     for (unsigned row = 0; row < count; ++row) {
       const auto before = std::vector<std::uint8_t>(bytes, bytes + meta.bytes());
-      std::array<ikea::owner_write, 16> records{}; ikea::source_write_journal effects{records};
+      std::array<ikea::journal::entry, 16> records{}; ikea::journal effects{records};
       const auto length = (ends[row + 1] - ends[row]) / 2;
       meta.update(row, length, !dead[row], effects);
       auto replay = before; bool omission_observed = false;
       for (const auto& write : effects.entries()) {
-        require(write.source == &meta && write.bytes.plane == 0 && write.bytes.offset + write.bytes.size <= meta.bytes(), "qualified actual metadata write");
-        std::memcpy(replay.data() + write.bytes.offset, bytes + write.bytes.offset, write.bytes.size);
-        for (std::size_t i = 0; i < write.bytes.size; ++i)
-          omission_observed |= before[write.bytes.offset + i] != bytes[write.bytes.offset + i];
+        require(write.source == &meta && write.plane == 0 && write.offset + write.size <= meta.bytes(), "qualified actual metadata write");
+        std::memcpy(replay.data() + write.offset, bytes + write.offset, write.size);
+        for (std::size_t i = 0; i < write.size; ++i)
+          omission_observed |= before[write.offset + i] != bytes[write.offset + i];
       }
       require(omission_observed && std::equal(replay.begin(), replay.end(), bytes), "owned afterimages reconstruct sibling-preserving mutation");
       lengths[row] = length; dead[row] = !dead[row];
@@ -443,32 +443,32 @@ template<class Meta, unsigned Maximum> struct Population {
     return sum;
   }
   void check_bulk_state(std::span<std::byte> output) {
-    std::array<ikea::owner_write, 16> records{};
+    std::array<ikea::journal::entry, 16> records{};
     for (unsigned phase = 0; phase < 2; ++phase) {
       for (unsigned row = 0; row < rows; ++row) {
         const auto n = used(row, reservation(row, Maximum));
-        ikea::source_write_journal effects{records};
+        ikea::journal effects{records};
         metadata.update(row, !phase && row % 5 == 0 ? 0 : n, !phase && row % 7 == 0, effects);
       }
       verify_projection(output, !phase);
     }
   }
   void seed_field_state() {
-    std::array<ikea::owner_write, 16> records{};
+    std::array<ikea::journal::entry, 16> records{};
     for (unsigned row = 0; row < rows; ++row) {
-      ikea::source_write_journal effects{records}; metadata.update(row, used(row, reservation(row, Maximum)), row % 7 == 0, effects);
+      ikea::journal effects{records}; metadata.update(row, used(row, reservation(row, Maximum)), row % 7 == 0, effects);
       escape(records.data());
     }
   }
 #endif
   __attribute__((noinline)) std::uint64_t update() {
     std::uint64_t damage = 0;
-    std::array<ikea::owner_write, 16> records{};
+    std::array<ikea::journal::entry, 16> records{};
     for (unsigned i = 0; i < rows; ++i) {
       const auto row = permute(i, rows - 1);
       const auto was_dead = metadata.dead(row); const auto length = used(row, reservation(row, Maximum));
-      ikea::source_write_journal effects{records}; metadata.update(row, was_dead ? length : length / 2, !was_dead, effects);
-      for (const auto& e : effects.entries()) damage += e.bytes.size;
+      ikea::journal effects{records}; metadata.update(row, was_dead ? length : length / 2, !was_dead, effects);
+      for (const auto& e : effects.entries()) damage += e.size;
       escape(records.data());
     }
     return damage;

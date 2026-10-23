@@ -3,7 +3,7 @@
 
 namespace wide {
 namespace ht = ikea::hashtable;
-using ht::byte;
+using byte = std::byte;
 using ht::word;
 using Access = ht::author::table_access;
 

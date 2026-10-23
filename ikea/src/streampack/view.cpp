@@ -15,10 +15,10 @@ std::expected<void, error> admit_storage(const layout &l, storage<const byte> s)
                                   std::numeric_limits<std::uintptr_t>::max() - s.payload.size()))
         return std::unexpected(error::capacity);
     if (detail::overlaps(s.payload.data(), s.payload.size(), &l, sizeof(l)))
-        return std::unexpected(error::alias);
+        return std::unexpected(error::overlap);
     for (auto m : {s.directory, s.lengths, s.control})
         if (detail::overlaps(s.payload.data(), s.payload.size(), m.data(), m.size()))
-            return std::unexpected(error::alias);
+            return std::unexpected(error::overlap);
     return {};
 }
 } // namespace ikea::streampack::detail

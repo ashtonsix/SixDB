@@ -39,7 +39,7 @@ template<unsigned N, unsigned Maximum, Mode M> struct Block {
   unsigned cp_offset(unsigned group) const { return control_groups() * 2 + group * sizeof(C); }
   std::uint8_t* r(unsigned row) const { return lengths() + (row / 16 * 32 + row % 16) * sizeof(W); }
   std::uint8_t* u(unsigned row) const { return r(row) + 16 * sizeof(W); }
-  template<class Journal> void before(Journal& j, unsigned plane, unsigned offset, unsigned n) { if (n) { j.before(*this, ikea::byte_write{plane, offset, n}); total.issued += n; } }
+  template<class Journal> void before(Journal& j, unsigned plane, unsigned offset, unsigned n) { if (n) { j.before(*this, plane, offset, n); total.issued += n; } }
   template<class Journal> void zero(Journal& j, unsigned plane, unsigned offset, unsigned n) {
     before(j, plane, offset, n); std::memset(data(plane) + offset, 0, n); total.initialized += n;
   }
@@ -89,12 +89,12 @@ template<class B, unsigned N, unsigned Maximum> void check(oa::Pool& pool, unsig
   for (unsigned row = 0; row < N; ++row) {
     std::array<std::vector<std::uint8_t>, 2> before, replay;
     for (unsigned p = 0; p < 2; ++p) if (block.size(p)) before[p].assign(block.data(p), block.data(p) + block.size(p));
-    std::array<ikea::owner_write, 16> records{}; ikea::source_write_journal effects{records};
+    std::array<ikea::journal::entry, 16> records{}; ikea::journal effects{records};
     const auto r = reservation(row); block.append(pool, r, used(row, r), row % 7 == 0, effects);
     replay = before; for (unsigned p = 0; p < 2; ++p) replay[p].resize(block.size(p), 0xa5);
     for (auto e : effects.entries()) {
-      require(e.source == &block && e.bytes.plane < 2 && e.bytes.offset + e.bytes.size <= block.size(e.bytes.plane), "append source/physical damage bounds");
-      std::memcpy(replay[e.bytes.plane].data() + e.bytes.offset, block.data(e.bytes.plane) + e.bytes.offset, e.bytes.size);
+      require(e.source == &block && e.plane < 2 && e.offset + e.size <= block.size(e.plane), "append source/physical damage bounds");
+      std::memcpy(replay[e.plane].data() + e.offset, block.data(e.plane) + e.offset, e.size);
     }
     for (unsigned p = 0; p < 2; ++p) require(std::equal(replay[p].begin(), replay[p].end(), block.data(p)), "grow/append afterimage reconstruction");
     unsigned extent = 0;
@@ -113,9 +113,9 @@ template<unsigned N, unsigned Maximum, Mode M> void run(oa::Pool& pool, const ch
   auto execute = [&] {
     Totals total;
     for (unsigned b = 0; b < 256; ++b) {
-      B block; std::array<ikea::owner_write, 16> records{};
+      B block; std::array<ikea::journal::entry, 16> records{};
       for (unsigned row = 0; row < stop; ++row) {
-        ikea::source_write_journal effects{records}; const auto r = reserved(row, Maximum);
+        ikea::journal effects{records}; const auto r = reserved(row, Maximum);
         block.append(pool, r, used(row, r), row % 7 == 0, effects); escape(records.data());
       }
       escape(block.lengths_owner.address); escape(block.control_owner.address); total += block.finish();

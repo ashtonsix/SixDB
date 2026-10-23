@@ -1,6 +1,17 @@
+#ifndef WRITE_ARCH_W
+#define WRITE_ARCH_W 24
+#endif
+#ifndef WRITE_ARCH_MM_FOCUSED
+#define WRITE_ARCH_MM_FOCUSED 0
+#endif
 #include "multimap.h"
 #include "legacy/bags.h"
+#if WRITE_ARCH_W == 24 && !WRITE_ARCH_MM_FOCUSED
+// Historical uncurated matrix only. Current focused CMake targets compare the
+// packed owner with Abseil; recover the independent Iceberg control with the
+// original runnable snapshot rather than compiling it against current Ikea.
 #include "../reference/iceberg/bags.h"
+#endif
 #include <absl/container/flat_hash_map.h>
 #include <absl/container/inlined_vector.h>
 #include <absl/container/internal/hashtable_debug.h>
@@ -9,16 +20,10 @@
 #include <numeric>
 #include <random>
 
-#ifndef WRITE_ARCH_W
-#define WRITE_ARCH_W 24
-#endif
-#ifndef WRITE_ARCH_MM_FOCUSED
-#define WRITE_ARCH_MM_FOCUSED 0
-#endif
 
 namespace mm_study {
 namespace ht=ikea::hashtable;
-using ht::word;using ht::byte;
+using ht::word;using byte=std::byte;
 constexpr unsigned V=WRITE_ARCH_V,W=WRITE_ARCH_W,b=10,K=W-b;
 static_assert(W==24||W==40);
 using Key=std::conditional_t<(W<=32),std::uint32_t,word>;
@@ -31,7 +36,9 @@ constexpr auto kernel=ht::search_kernel::exact_small512;
 constexpr unsigned prior_kernel=20;
 #endif
 using Maintained=ht::multimap<W,b,V,K,kernel>;
+#if WRITE_ARCH_W == 24 && !WRITE_ARCH_MM_FOCUSED
 using Prior=iceberg::multimap<W,b,V,K,prior_kernel,iceberg::heap_storage_policy>;
+#endif
 using Packed=write_arch::multimap<W,b,V,false>;
 using Whole=write_arch::multimap<W,b,V,true>;
 using PackedCompact=write_arch::multimap<W,b,V,false,0>;

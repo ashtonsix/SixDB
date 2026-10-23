@@ -1,5 +1,5 @@
 #pragma once
-#include <ikea/seriespack/read_operation.h>
+#include <ikea/seriespack/erased_reader.h>
 #include <ikea/seriespack/author/native.h>
 namespace ikea::seriespack {
 namespace detail {
@@ -30,7 +30,7 @@ template <class F, class U> void dense_read16(const void* data, std::size_t i, U
 template <class F, class U>
 void dense_range(const void* source, std::size_t first, std::size_t count, U* __restrict out) {
     const auto* data = static_cast<const std::uint8_t*>(source);
-    // Shape selection is independent of format. The whole public range call is
+    // Shape selection is independent of layout. The whole public range call is
     // measured, including these branches and arbitrary prefix/suffix handling.
     if (first % 16 == 0 && count == 16)
         return dense_region<F>(data, first, out);
@@ -93,29 +93,14 @@ void dense_range(const void* source, std::size_t first, std::size_t count, U* __
     }
 }
 } // namespace detail
+namespace detail {
 /// Copies the admitted dense pointer/count proof. Only bytes need remain live;
 /// the temporary dense_source wrapper need not survive this binding.
-template <class U, class F> decoder<U> bind_decoder(dense_source<F> source) {
+template <class U, class F> erased_reader<U> erase_dense_reader(dense_source<F> source) {
     static_assert(sizeof(U) * 8 >= F::width);
     return {source.data, source.count, detail::dense_range<F, U>, detail::dense_read16<F, U>,
             detail::dense_point<F, U>};
 }
 
-struct dense_input {
-    unsigned width;
-    geometry storage;
-    std::span<const std::uint8_t> bytes;
-    std::size_t count;
-};
-/// Compiled binding for a runtime-described dense headless array. Validation and
-/// format selection happen once; output type is part of the requested operation.
-/// Compiled width/geometry selection for dense headless bytes. Admission checks
-/// output type width, layout and accessible extent; no data is read. The returned
-/// operation borrows the bytes, not this input descriptor. U is u8/u16/u32/u64.
-template <class U>
-[[nodiscard]] std::expected<decoder<U>, error> bind_decoder(const dense_input& source);
-extern template std::expected<decoder<std::uint8_t>, error> bind_decoder(const dense_input&);
-extern template std::expected<decoder<std::uint16_t>, error> bind_decoder(const dense_input&);
-extern template std::expected<decoder<std::uint32_t>, error> bind_decoder(const dense_input&);
-extern template std::expected<decoder<std::uint64_t>, error> bind_decoder(const dense_input&);
+} // namespace detail
 } // namespace ikea::seriespack

@@ -1,24 +1,24 @@
 #pragma once
 #include <ikea/seriespack/detail/mutation/fields.h>
 #include <ikea/seriespack/detail/mutation/composed.h>
-#include <ikea/seriespack/detail/mutation/construction.h>
+#include <ikea/seriespack/author/mutation.h>
 
-namespace ikea::seriespack::composition {
+namespace ikea::seriespack::author {
 #if defined(__aarch64__) || defined(__AVX2__)
 namespace construction_detail {
 template <class S, field_kind Field, class Emit>
 void field_tiles(const leaf<S, Field>& field, std::size_t first, std::size_t count, Emit&& emit) {
     if (!count)
         return;
-    using F = typename S::format_type;
+    using F = typename S::layout_type;
     ikea::seriespack::detail::tile_fields<F, write_field<Field>>(
         [&](unsigned p, std::size_t offset, std::size_t size) {
             const auto stride = field.source.stream(p).stride;
             if (stride == size)
-                emit(byte_write{p, first * stride + offset, count * size});
+                emit(ikea::detail::write_span{p, first * stride + offset, count * size});
             else
                 for (std::size_t t = first; t < first + count; ++t)
-                    emit(byte_write{p, t * stride + offset, size});
+                    emit(ikea::detail::write_span{p, t * stride + offset, size});
         });
 }
 struct extent_check {
@@ -40,10 +40,11 @@ template <class Coverage> struct storage_coverage {
     }
     template <class S, field_kind Field>
     void write(const leaf<S, Field>& field, std::size_t, write_token) const {
-        using F = typename S::format_type;
+        static_assert(ikea::effects<Coverage, S>);
+        using F = typename S::layout_type;
         const auto tiles = count / F::tile_rows + (count % F::tile_rows != 0);
         field_tiles(field, 0, tiles,
-                    [&](byte_write bytes) { coverage.before(field.source, bytes); });
+                    [&](ikea::detail::write_span bytes) { coverage.before(field.source, bytes.plane, bytes.offset, bytes.size); });
     }
 };
 struct clear_last {
@@ -53,16 +54,16 @@ struct clear_last {
     }
     template <class S, field_kind Field>
     void write(const leaf<S, Field>& field, std::size_t, write_token) const {
-        using F = typename S::format_type;
+        using F = typename S::layout_type;
         if (count && (count % F::tile_rows || (F::tile_rows == 8 && count % 16)))
-            field_tiles(field, (count - 1) / F::tile_rows, 1, [&](byte_write bytes) {
-                std::memset(field.source.stream(bytes.plane).bytes.data() + bytes.offset, 0,
+            field_tiles(field, (count - 1) / F::tile_rows, 1, [&](ikea::detail::write_span bytes) {
+                std::memset(ikea::to_u8(field.source.stream(bytes.plane).bytes).data() + bytes.offset, 0,
                             bytes.size);
             });
     }
 };
 struct no_effects {
-    template <class S> void before(const S&, byte_write) const noexcept {}
+    template <class S> void before(const S&, unsigned, std::size_t, std::size_t) const noexcept {}
 };
 } // namespace construction_detail
 
@@ -79,14 +80,14 @@ void initialize_unchecked(const E& expression, std::size_t count, const U* input
                           Coverage& coverage) {
     if (!count)
         return;
-    composition::visit_storage(expression, count, coverage);
+    author::visit_storage(expression, count, coverage);
     construction_detail::clear_last clear{count};
     assign(clear, expression, 0, write_token{});
     no_summary summary;
     construction_detail::no_effects recorded;
-    composition::replace_unchecked(
+    author::replace_unchecked(
         expression, 0, count, input, [](std::size_t) { return std::uint16_t{0xffff}; }, summary,
         recorded);
 }
 #endif
-} // namespace ikea::seriespack::composition
+} // namespace ikea::seriespack::author

@@ -8,7 +8,6 @@ enum class accumulation_status { complete, incompatible, alias, needs_overflow }
 namespace detail::accumulation {
 namespace ht = ikea::hashtable;
 using ht::word;
-using ht::byte;
 using access = ht::author::table_access;
 using merge_status = accumulation_status;
 using detail::control_empty;

@@ -6,7 +6,6 @@
 namespace ikea::hashtable {
 namespace detail {
 namespace ht = ikea::hashtable;
-using ht::byte;
 using ht::word;
 using access = ht::author::table_access;
 
@@ -14,14 +13,14 @@ using access = ht::author::table_access;
 // bit planes. This transforms a complete tile without unpacking/repacking its
 // eight keys. All excluded rows become the destination's all-ones sentinel.
 template <unsigned K, unsigned E>
-[[gnu::always_inline]] void split_tile(const byte* __restrict__ source, byte live,
-                                       byte* __restrict__ low, byte* __restrict__ high,
-                                       byte& low_empty, byte& high_empty) {
+[[gnu::always_inline]] void split_tile(const std::uint8_t* __restrict__ source, std::uint8_t live,
+                                       std::uint8_t* __restrict__ low, std::uint8_t* __restrict__ high,
+                                       std::uint8_t& low_empty, std::uint8_t& high_empty) {
     static_assert(K > 9 && E >= K);
     constexpr unsigned body = E / 8, tail = E % 8, split = K - 1;
 #if defined(__aarch64__)
     if constexpr ((K == 14 && E == 14) || (K == 30 && E == 30)) {
-        const byte weights[8] = {1, 2, 4, 8, 16, 32, 64, 128};
+        const std::uint8_t weights[8] = {1, 2, 4, 8, 16, 32, 64, 128};
         const auto live_bytes = vtst_u8(vdup_n_u8(live), vld1_u8(weights));
         auto source_bodies = [&] {
             if constexpr (body == 1) {
@@ -34,8 +33,8 @@ template <unsigned K, unsigned E>
         const auto upper = vtst_u8(source_bodies.val[body - 1], vdup_n_u8(128));
         const auto dead_low = vmvn_u8(vbic_u8(live_bytes, upper));
         const auto dead_high = vmvn_u8(vand_u8(live_bytes, upper));
-        low_empty = byte(ikea::detail::filter::byte_bits(vcombine_u8(dead_low, vdup_n_u8(0))));
-        high_empty = byte(ikea::detail::filter::byte_bits(vcombine_u8(dead_high, vdup_n_u8(0))));
+        low_empty = std::uint8_t(ikea::detail::filter::byte_bits(vcombine_u8(dead_low, vdup_n_u8(0))));
+        high_empty = std::uint8_t(ikea::detail::filter::byte_bits(vcombine_u8(dead_high, vdup_n_u8(0))));
         source_bodies.val[body - 1] = vand_u8(source_bodies.val[body - 1], vdup_n_u8(127));
         uint8x8x3_t a{}, b{};
         ht::each<body>([&](auto limb) __attribute__((always_inline)) {
@@ -55,8 +54,8 @@ template <unsigned K, unsigned E>
         const auto bytes = _mm256_maskz_loadu_epi8(0xffffffu, source);
         const unsigned upper = _pext_u32(unsigned(_mm256_movemask_epi8(bytes)), 0x924924u);
         const unsigned a = live & ~upper, b = live & upper;
-        low_empty = byte(~a);
-        high_empty = byte(~b);
+        low_empty = std::uint8_t(~a);
+        high_empty = std::uint8_t(~b);
         const auto reduced = _mm256_mask_and_epi32(
             bytes, 0xff, bytes,
             _mm256_setr_epi8(-1, -1, 127, -1, -1, 127, -1, -1, 127, -1, -1, 127, -1, -1, 127, -1,
@@ -73,9 +72,9 @@ template <unsigned K, unsigned E>
         if constexpr (K == 14 && E == 14) {
             const auto bytes = _mm_loadl_epi64(reinterpret_cast<const __m128i*>(source));
             const unsigned upper = unsigned(_mm_movemask_epi8(bytes));
-            const byte a = byte(live & ~upper), b = byte(live & upper);
-            low_empty = byte(~a);
-            high_empty = byte(~b);
+            const std::uint8_t a = std::uint8_t(live & ~upper), b = std::uint8_t(live & upper);
+            low_empty = std::uint8_t(~a);
+            high_empty = std::uint8_t(~b);
             const auto weights =
                 _mm_setr_epi8(1, 2, 4, 8, 16, 32, 64, char(128), 0, 0, 0, 0, 0, 0, 0, 0);
             const auto dead_a =
@@ -97,10 +96,10 @@ template <unsigned K, unsigned E>
                     upper |= ((source[row * body + bit / 8] >> (bit % 8)) & 1u) << row;
                 });
             }
-            const byte active[2] = {byte(live & ~upper), byte(live & upper)};
-            low_empty = byte(~active[0]);
-            high_empty = byte(~active[1]);
-            byte* targets[2] = {low, high};
+            const std::uint8_t active[2] = {std::uint8_t(live & ~upper), std::uint8_t(live & upper)};
+            low_empty = std::uint8_t(~active[0]);
+            high_empty = std::uint8_t(~active[1]);
+            std::uint8_t* targets[2] = {low, high};
             for (unsigned child = 0; child < 2; ++child) {
                 ht::each<8>([&](auto row) __attribute__((always_inline)) {
                     constexpr word keep = split < tail
@@ -152,8 +151,8 @@ std::unique_ptr<Destination> grow_image(const Owner& owner,
     }();
     auto to = access::get(*result);
     for (std::size_t i = 0; i < Source::bucket_count; ++i) {
-        const auto* p = from.primary.data + i * Source::stride;
-        auto* low = to.primary.data + (i * 2) * Target::stride;
+        const auto* p = ikea::to_u8(from.primary.data) + i * Source::stride;
+        auto* low = ikea::to_u8(to.primary.data) + (i * 2) * Target::stride;
         auto* high = low + Target::stride;
         if constexpr (CopyImage) {
             std::memcpy(low, p, Source::stride);
@@ -164,9 +163,9 @@ std::unique_ptr<Destination> grow_image(const Owner& owner,
             ht::each<Source::T>([&](auto tile) {
                 // Keep masks in registers through the packed stores. Passing flag
                 // bytes by reference can make codegen reload them after body stores.
-                byte low_empty, high_empty;
+                std::uint8_t low_empty, high_empty;
                 split_tile<Source::K, Source::encoding>(
-                    p + tile * Source::encoding, byte(~p[Source::flags_offset + tile]),
+                    p + tile * Source::encoding, std::uint8_t(~p[Source::flags_offset + tile]),
                     low + tile * Target::encoding, high + tile * Target::encoding, low_empty,
                     high_empty);
                 low[Target::flags_offset + tile] = low_empty;
@@ -208,12 +207,12 @@ std::unique_ptr<Destination> grow_image(const Owner& owner,
     }
     if constexpr (CopyImage) {
         constexpr auto used = Target::bucket_count * Target::stride;
-        std::memset(to.primary.data + used, 0, to.primary.size - used);
+        std::memset(ikea::to_u8(to.primary.data) + used, 0, to.primary.size - used);
     }
     to.size = from.size - from.spill;
     for (std::size_t slot = 0; slot < from.groups * 16; ++slot)
-        if (ht::detail::occupied_control(from.controls.data[slot])) {
-            const auto* tuple = from.slots.data + slot * Source::tuple_bytes;
+        if (ht::detail::occupied_control(ikea::to_u8(from.controls.data)[slot])) {
+            const auto* tuple = ikea::to_u8(from.slots.data) + slot * Source::tuple_bytes;
             const auto key = ht::load<Source::key_bytes>(tuple);
             typename Source::value_type value{};
             if constexpr (value.size())

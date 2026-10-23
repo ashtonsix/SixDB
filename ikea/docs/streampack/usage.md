@@ -22,7 +22,7 @@ Geometry and U can share a lengths window. Call value operations through StreamP
 so payload, U, retirement and geometry remain consistent.
 
 Intervals applies only explicit operation eligibility. StreamPack's value API
-applies its own retirement policy: `locate` and `value` reject retired ranks, while
+applies its own retirement policy: `length` and `value` reject retired ranks, while
 `reverse` returns `{rank,tombstone}` for any physical reservation. Intervals instead
 returns a half-open interval or a rank/count sentinel. If U belongs in a consumer's
 own record/tuple plane, compose that plane with Intervals and the payload there.
@@ -48,8 +48,9 @@ Use the layout's extent/alignment methods for general owner code. Lengths can gr
 16-rank groups; the example provides full metadata capacity to keep setup short.
 The windows may share an allocation, but their supplied spans must not overlap.
 
-`view::bind` checks placement without inspecting contents. New storage needs
-`initialize`; external content needs `validate`. Mutation calls take an effects sink:
+`view::attach` checks placement without inspecting contents. New storage needs
+`initialize`; external content needs `validate`. `attach_unchecked` reuses only
+placement checks and never validates contents. Checked mutation calls take `ikea::journal&`:
 the journal below records source-qualified byte writes for the owner to resolve.
 It does not commit a transaction or protect retained readers. Keep the layout and named
 view stable while accesses or effects borrow them.
@@ -61,17 +62,17 @@ view stable while accesses or effects borrow them.
 #include <cassert>
 
 namespace sp = ikea::streampack;
-const auto format = sp::layout::prepare({.maximum = 255, .byte_limit = 4096});
+const auto format = sp::layout::make({.maximum = 255, .byte_limit = 4096});
 assert(format);
 std::array<std::byte, 4096> payload;
 std::array<std::byte, 64> directory;
 std::array<std::byte, 512> lengths; // u8 fields need no extra alignment
 std::array<std::byte, 6> control;
-auto source = sp::view::bind(*format, {payload, directory, lengths, control});
+auto source = sp::view::attach(*format, {payload, directory, lengths, control});
 assert(source);
 auto& block = *source;
-std::array<ikea::owner_write, 64> writes;
-ikea::source_write_journal effects{writes};
+std::array<ikea::journal::entry, 64> writes;
+ikea::journal effects{writes};
 assert(sp::initialize(block, effects));
 ```
 
@@ -193,7 +194,7 @@ return pages to an allocator or wipe every old payload byte beyond the new exten
 every selection and destination bound before initialization. Unlike `select`, it refuses
 a retired requested rank. Duplicates are retained.
 
-Given an owner-supplied, bound destination `destination` and its separate
+Given an owner-supplied named `destination` view and its separate
 `rewrite_effects` journal, this creates three new ranks from the current example:
 
 ```cpp
@@ -223,15 +224,15 @@ The Sizes default stores narrow R and a checkpoint per 16 ranks. Absolute Ends s
 exclusive ends in the directory and favors a short point path. Relative Ends stores
 local cumulative ends, avoiding a local prefix sum when finding starts. The
 [geometry tour](reference.md#choose-reservation-geometry) shows the arithmetic;
-the [StreamPack schema reference](reference.md#prepare-a-schema) describes their value
+the [StreamPack schema reference](reference.md#make-a-shared-layout) describes their value
 composition.
 
 Maximum reservation and total byte limit can change which fields need widening.
 For example, common-short and long-tail dictionaries can use:
 
 ```cpp
-sp::description common{.maximum = 255, .byte_limit = 16384, .full = true};
-sp::description tail{.maximum = 65535, .byte_limit = 65535, .full = true};
+sp::layout::options common{.maximum = 255, .byte_limit = 16384, .full = true};
+sp::layout::options tail{.maximum = 65535, .byte_limit = 65535, .full = true};
 ```
 
 Both omit U. Global coordinates fit u16; Sizes uses u8 R in the common dictionary and
@@ -259,13 +260,18 @@ Use checked `reader.get` when ranks/liveness vary; admitted callers can use
 `reader.value` or `reader.locate` directly. Here `ranks` is a sparse request list:
 
 ```cpp
-sp::author::dispatch(block, [&](auto reader) {
+sp::author::visit(block, [&](auto reader) {
     for (unsigned rank : ranks) {
         const auto value = reader.get(rank);
         if (value) consume(rank, *value);
     }
 });
 ```
+
+The access borrows the named `block` view. Keep that view, its layout and storage
+stable while any copied access remains in use. `author::visit` rejects temporary
+views; name an `as_const()` result first when composing a const consumer. One-shot
+free reads such as `sp::value(block.as_const(), rank)` remain valid.
 
 For a sequential run, keep using `range`: it carries geometry rather than recomputing
 a prefix per rank. For many blocks sharing one exact immutable layout object,
@@ -314,7 +320,8 @@ settlement and accounting. Neither exhausting ranks nor packing automatically fr
 physical pages.
 
 Successful mutation reports issued byte spans, including preserved metadata stores and
-count/extent updates. Reserve effects capacity before execution; hooks cannot fail or
+count/extent updates. Use `effect_capacity_*` to budget additional journal records before execution;
+unchecked author hooks cannot fail or
 suspend. Checked refusal preserves bytes and effects. The owner resolves source identities,
 protects readers and publishes logical holder/summary changes separately from physical
 damage. [Owner integration](../integration.md) explains that publication boundary.

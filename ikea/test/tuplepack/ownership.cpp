@@ -12,8 +12,7 @@
 #include <type_traits>
 
 namespace tp = ikea::tuplepack;
-namespace cp = tp::composition;
-using tp::byte;
+namespace cp = tp::author;
 namespace {
 std::size_t checks = 0;
 void check(bool valid, const char* expression,
@@ -38,20 +37,20 @@ constexpr std::uint64_t primary_id = 101, replacement_id = 202, mapping_generati
 constexpr std::uint64_t encoding_edition = 19;
 enum class policy { exact, conservative, bypass };
 
-byte old_a(std::size_t row) {
-    return byte(row % 4);
+std::uint8_t old_a(std::size_t row) {
+    return std::uint8_t(row % 4);
 }
-byte old_b(std::size_t row) {
-    return byte((row * 3 + 2) % 4);
+std::uint8_t old_b(std::size_t row) {
+    return std::uint8_t((row * 3 + 2) % 4);
 }
-byte unchanged_c(std::size_t row) {
-    return byte(64 + row % 4);
+std::uint8_t unchanged_c(std::size_t row) {
+    return std::uint8_t(64 + row % 4);
 }
-byte new_a(std::size_t row) {
-    return old_a(row) == 3 ? 0 : byte(8 + old_a(row));
+std::uint8_t new_a(std::size_t row) {
+    return old_a(row) == 3 ? 0 : std::uint8_t(8 + old_a(row));
 }
-byte new_b(std::size_t row) {
-    return byte(12 + old_b(row));
+std::uint8_t new_b(std::size_t row) {
+    return std::uint8_t(12 + old_b(row));
 }
 bool selected(std::size_t row) {
     return row >= first && row < first + length && row % 3 != 2;
@@ -59,13 +58,13 @@ bool selected(std::size_t row) {
 bool completed(std::size_t row, std::size_t progress) {
     return selected(row) && row < first + progress;
 }
-byte seed(std::size_t offset, unsigned salt) {
-    return byte(offset * 37 + salt);
+std::uint8_t seed(std::size_t offset, unsigned salt) {
+    return std::uint8_t(offset * 37 + salt);
 }
-std::uint16_t token(byte value) {
+std::uint16_t token(std::uint8_t value) {
     return std::uint16_t(1u << (value % 16));
 }
-std::uint16_t signature(byte a, byte b, byte c) {
+std::uint16_t signature(std::uint8_t a, std::uint8_t b, std::uint8_t c) {
     return token(a) | token(b) | token(c);
 }
 
@@ -78,18 +77,18 @@ tp::layout replacement_layout() {
     return required(tp::layout::make(1, codes));
 }
 struct storage {
-    std::array<byte, primary_offset + rows * primary_stride> primary;
-    std::array<byte, replacement_offset + rows * replacement_stride> replacement;
+    std::array<std::uint8_t, primary_offset + rows * primary_stride> primary;
+    std::array<std::uint8_t, replacement_offset + rows * replacement_stride> replacement;
     storage() {
         for (std::size_t i = 0; i < primary.size(); ++i)
             primary[i] = seed(i, 17);
         for (std::size_t i = 0; i < replacement.size(); ++i)
             replacement[i] = seed(i, 93);
         for (std::size_t row = 0; row < rows; ++row) {
-            primary[primary_offset + row * primary_stride] = old_a(row) | byte(old_b(row) << 4);
+            primary[primary_offset + row * primary_stride] = old_a(row) | std::uint8_t(old_b(row) << 4);
             primary[primary_offset + row * primary_stride + 1] = unchanged_c(row);
             auto& b = replacement[replacement_offset + row * replacement_stride];
-            b = byte((b & 0xc3) | (old_b(row) << 2));
+            b = std::uint8_t((b & 0xc3) | (old_b(row) << 2));
         }
     }
 };
@@ -98,26 +97,26 @@ struct storage {
 // baseline, private data candidate or beforeimage is required by this adapter.
 void check_storage(const storage& data, bool substituted, std::size_t progress) {
     for (std::size_t i = 0; i < data.primary.size(); ++i) {
-        byte expected = seed(i, 17);
+        std::uint8_t expected = seed(i, 17);
         if (i >= primary_offset) {
             const auto row = (i - primary_offset) / primary_stride;
             const auto position = (i - primary_offset) % primary_stride;
             if (row < rows && position == 0) {
-                const byte a = completed(row, progress) ? new_a(row) : old_a(row);
-                const byte b = completed(row, progress) && !substituted ? new_b(row) : old_b(row);
-                expected = a | byte(b << 4);
+                const std::uint8_t a = completed(row, progress) ? new_a(row) : old_a(row);
+                const std::uint8_t b = completed(row, progress) && !substituted ? new_b(row) : old_b(row);
+                expected = a | std::uint8_t(b << 4);
             } else if (row < rows && position == 1)
                 expected = unchanged_c(row);
         }
         CHECK(data.primary[i] == expected);
     }
     for (std::size_t i = 0; i < data.replacement.size(); ++i) {
-        byte expected = seed(i, 93);
+        std::uint8_t expected = seed(i, 93);
         if (i >= replacement_offset) {
             const auto row = (i - replacement_offset) / replacement_stride;
             if (row < rows && (i - replacement_offset) % replacement_stride == 0) {
-                const byte b = completed(row, progress) && substituted ? new_b(row) : old_b(row);
-                expected = byte((expected & 0xc3) | (b << 2));
+                const std::uint8_t b = completed(row, progress) && substituted ? new_b(row) : old_b(row);
+                expected = std::uint8_t((expected & 0xc3) | (b << 2));
             }
         }
         CHECK(data.replacement[i] == expected);
@@ -158,7 +157,7 @@ metadata initial_metadata() {
 }
 struct resolved_write {
     std::uint64_t partition, generation;
-    ikea::byte_write bytes;
+    ikea::detail::write_span bytes;
 };
 constexpr std::size_t journal_capacity = rows * 4;
 
@@ -227,9 +226,9 @@ template <policy Policy> struct signature_law {
         mark(row);
         // O differs from both mutation maps: (C, hole, A), then (hole, B, B).
         const auto [ac, b_packet] = values;
-        const byte a = byte(ac >> 16), b = byte(b_packet >> 8), c = byte(ac);
+        const std::uint8_t a = std::uint8_t(ac >> 16), b = std::uint8_t(b_packet >> 8), c = std::uint8_t(ac);
         CHECK(a == new_a(row) && b == new_b(row) && c == unchanged_c(row));
-        CHECK(byte(ac >> 8) == 0 && byte(b_packet) == 0 && byte(b_packet >> 16) == b);
+        CHECK(std::uint8_t(ac >> 8) == 0 && std::uint8_t(b_packet) == 0 && std::uint8_t(b_packet >> 16) == b);
         CHECK((ac >> 24) == 0 && (b_packet >> 24) == 0);
         const auto fresh = signature(a, b, c);
         // C retains the old A token even when A changes. Clearing old A's hash
@@ -252,7 +251,7 @@ template <policy Policy> struct signature_law {
         state->staged.a_zero[row] = {false, true};
     }
 };
-using read8 = tp::read_operation<8, byte>;
+using read8 = tp::reader<8, std::byte>;
 using projection_type = cp::projection<read8, read8>;
 struct observed_projection {
     projection_type bound;
@@ -286,37 +285,37 @@ enum class phase { running, suspended, owner_resolution, complete, released };
 enum class cancellation { clean_released, dirty_retained };
 
 template <policy Policy> class retained_work {
-    using leaf = tp::mutation_operation<8>;
+    using leaf = tp::writer<8>;
     using group_type = cp::mutation_group<leaf, leaf>;
     owner* target_;
     std::unique_ptr<storage> residency_;
     tp::layout primary_format_ = primary_layout(), replacement_format_ = replacement_layout();
     tp::view primary_view_, replacement_view_;
-    tp::writer<8> a_plan_, original_b_plan_, replacement_b_plan_;
+    tp::write_plan<8> a_plan_, original_b_plan_, replacement_b_plan_;
     leaf a_, original_b_, replacement_b_;
     group_type operation_;
-    tp::reader<8> ac_plan_, original_b_read_plan_, replacement_b_read_plan_;
+    tp::read_plan<8> ac_plan_, original_b_read_plan_, replacement_b_read_plan_;
     read8 ac_, original_b_read_, replacement_b_read_;
     maintenance_state state_;
     observed_projection projection_;
     signature_law<Policy> law_;
-    tp::observation<observed_projection, signature_law<Policy>> maintenance_;
+    tp::author::observation<observed_projection, signature_law<Policy>> maintenance_;
     std::array<typename group_type::input_type, length> input_{};
     std::array<std::uint64_t, 2> selected_words_{};
-    std::array<ikea::owner_write, journal_capacity> records_{};
-    ikea::source_write_journal effects_{records_};
+    std::array<ikea::journal::entry, journal_capacity> records_{};
+    ikea::journal effects_{records_};
     std::unique_ptr<reply_lease> prefetched_;
     std::size_t next_ = 0;
     std::uint64_t request_generation_ = 11;
     phase phase_ = phase::running;
 
-    static auto reader(const tp::layout& format, std::span<const byte> map) {
+    static auto read_plan(const tp::layout& format, std::span<const std::uint8_t> map) {
         // Empty projection for invalidation is intentional: invocation is
         // independent of both old-value and new-value demand.
         if constexpr (Policy == policy::bypass)
-            return required(tp::reader<8>::make(format, {}));
+            return required(tp::read_plan<8>::make(format, {}));
         else
-            return required(tp::reader<8>::make(format, map));
+            return required(tp::read_plan<8>::make(format, map));
     }
     auto selection() const {
         return tp::selection::bits(0, selected_words_);
@@ -325,14 +324,14 @@ template <policy Policy> class retained_work {
   public:
     explicit retained_work(owner& target)
         : target_(&target), residency_(std::move(target.readable)),
-          primary_view_(required(tp::view::bind(primary_format_, residency_->primary, rows,
+          primary_view_(required(tp::view::attach(primary_format_, std::as_writable_bytes(std::span{residency_->primary}), rows,
                                                 primary_stride, primary_offset))),
-          replacement_view_(required(tp::view::bind(replacement_format_, residency_->replacement,
+          replacement_view_(required(tp::view::attach(replacement_format_, std::as_writable_bytes(std::span{residency_->replacement}),
                                                     rows, replacement_stride, replacement_offset))),
-          a_plan_(required(tp::writer<8>::make(primary_format_, std::array<byte, 2>{tp::hole, 0}))),
-          original_b_plan_(required(tp::writer<8>::make(primary_format_, std::array<byte, 1>{1}))),
+          a_plan_(required(tp::write_plan<8>::make(primary_format_, std::array<std::uint8_t, 2>{tp::hole, 0}))),
+          original_b_plan_(required(tp::write_plan<8>::make(primary_format_, std::array<std::uint8_t, 1>{1}))),
           replacement_b_plan_(
-              required(tp::writer<8>::make(replacement_format_, std::array<byte, 1>{0}))),
+              required(tp::write_plan<8>::make(replacement_format_, std::array<std::uint8_t, 1>{0}))),
           a_(required(tp::bind_writer(a_plan_, primary_view_))),
           original_b_(required(tp::bind_writer(original_b_plan_, primary_view_))),
           replacement_b_(required(tp::bind_writer(replacement_b_plan_, replacement_view_))),
@@ -340,10 +339,10 @@ template <policy Policy> class retained_work {
           // binding stays alive but must contribute neither reads nor effects.
           operation_(
               required(cp::bind_group(a_, target.substituted ? replacement_b_ : original_b_))),
-          ac_plan_(reader(primary_format_, std::array<byte, 3>{2, tp::hole, 0})),
-          original_b_read_plan_(reader(primary_format_, std::array<byte, 3>{tp::hole, 1, 1})),
+          ac_plan_(read_plan(primary_format_, std::array<std::uint8_t, 3>{2, tp::hole, 0})),
+          original_b_read_plan_(read_plan(primary_format_, std::array<std::uint8_t, 3>{tp::hole, 1, 1})),
           replacement_b_read_plan_(
-              reader(replacement_format_, std::array<byte, 3>{tp::hole, 0, 0})),
+              read_plan(replacement_format_, std::array<std::uint8_t, 3>{tp::hole, 0, 0})),
           ac_(required(tp::bind_reader(ac_plan_, primary_view_))),
           original_b_read_(required(tp::bind_reader(original_b_read_plan_, primary_view_))),
           replacement_b_read_(
@@ -461,13 +460,13 @@ template <policy Policy> class retained_work {
             const auto offset = primary ? primary_offset : replacement_offset;
             const auto stride = primary ? primary_stride : replacement_stride;
             const auto bytes = primary ? 2u : 1u;
-            CHECK(effect.bytes.plane == 0 && effect.bytes.size && effect.bytes.offset >= offset);
-            for (std::size_t at = effect.bytes.offset; at < effect.bytes.offset + effect.bytes.size;
+            CHECK(effect.plane == 0 && effect.size && effect.offset >= offset);
+            for (std::size_t at = effect.offset; at < effect.offset + effect.size;
                  ++at) {
                 const auto row = (at - offset) / stride;
                 CHECK(row < rows && selected(row) && (at - offset) % stride < bytes);
             }
-            resolved[i] = {primary ? primary_id : replacement_id, mapping_generation, effect.bytes};
+            resolved[i] = {primary ? primary_id : replacement_id, mapping_generation, {effect.plane, effect.offset, effect.size}};
         }
         CHECK(seen_partitions == (target_->substituted ? 3u : 1u));
         // Resolve borrowed source pointers while their named views are alive.
@@ -484,7 +483,7 @@ template <policy Policy> void check_published(const owner& target) {
     check_storage(*target.readable, target.substituted, length);
     for (std::size_t row = 0; row < rows; ++row) {
         const bool changed = selected(row);
-        const byte a = changed ? new_a(row) : old_a(row), b = changed ? new_b(row) : old_b(row);
+        const std::uint8_t a = changed ? new_a(row) : old_a(row), b = changed ? new_b(row) : old_b(row);
         const auto fresh = signature(a, b, unchanged_c(row));
         const auto original = signature(old_a(row), old_b(row), unchanged_c(row));
         const auto expected = Policy == policy::exact          ? fresh
@@ -492,7 +491,7 @@ template <policy Policy> void check_published(const owner& target) {
                                                                : original;
         CHECK(target.published.masks[row] == expected);
         CHECK(target.published.row_bypass[row] == (Policy == policy::bypass && changed));
-        // Check every consulted pruning level through the owner reader. New
+        // Check every consulted pruning level through the owner read_plan. New
         // high tokens were absent from the initial root and block summaries.
         for (auto value : {a, b, unchanged_c(row)})
             CHECK(target.may_contain(row, token(value)));

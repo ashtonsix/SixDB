@@ -9,11 +9,11 @@
 
 namespace sp = ikea::seriespack;
 namespace demo {
-using F = sp::format<23, sp::geometry::local, 8>;
+using F = sp::layout<23, sp::geometry::local, 8>;
 constexpr std::size_t count = 128, capacity = 512;
 constexpr std::uint16_t selected = 0xeeee;
 struct alignas(64) buffer {
-    std::array<std::uint8_t, capacity> bytes;
+    std::array<ikea::byte, capacity> bytes;
     std::uint64_t incarnation = 0;
 };
 using lease = std::shared_ptr<buffer>;
@@ -82,14 +82,14 @@ auto writable(const lease& bytes) {
     // Payloads and head bytes interleave in one Loom-owned partition. Their
     // envelopes overlap; their occupied spans and ownership do not.
     auto v =
-        sp::view<F, std::uint8_t>::attach(count, {{{{bytes->bytes.data(), capacity}, 32},
+        sp::view<F>::attach(count, {{{{bytes->bytes.data(), capacity}, 32},
                                                    {{bytes->bytes.data() + 16, capacity - 16}, 32},
                                                    {}}});
     IKEA_CHECK(v);
     return *v;
 }
 auto readable(const std::shared_ptr<const buffer>& bytes) {
-    auto v = sp::view<F>::attach(count, {{{{bytes->bytes.data(), capacity}, 32},
+    auto v = sp::const_view<F>::attach(count, {{{{bytes->bytes.data(), capacity}, 32},
                                           {{bytes->bytes.data() + 16, capacity - 16}, 32},
                                           {}}});
     IKEA_CHECK(v);
@@ -97,9 +97,11 @@ auto readable(const std::shared_ptr<const buffer>& bytes) {
 }
 struct version;
 using snapshot = std::shared_ptr<const version>;
+// Owner-resolved partition offsets survive after the temporary Ikea view.
+struct physical_write { std::size_t offset, size; };
 struct mutation_input {
     snapshot before;
-    std::array<sp::byte_write, 64> physical;
+    std::array<physical_write, 64> physical;
     std::size_t writes;
 };
 struct version {
@@ -112,11 +114,11 @@ struct version {
 snapshot initial(pool& buffers) {
     auto data = buffers.try_acquire();
     IKEA_CHECK(data);
-    data->bytes.fill(0xa7);
+    data->bytes.fill(ikea::byte{0xa7});
     const auto view = writable(data);
     std::uint64_t sum = 0;
     for (std::size_t i = 0; i < count; ++i) {
-        sp::set_unchecked(view, i, i + 1);
+        sp::author::store_unchecked(view, i, i + 1);
         sum += i + 1;
     }
     return std::make_shared<version>(version{std::move(data), 1, 7, sum, count});
@@ -125,7 +127,7 @@ struct sealed_change {
     lease bytes;
     snapshot before;
     std::uint64_t expected_revision, mapping, sum;
-    std::array<sp::byte_write, 64> physical;
+    std::array<physical_write, 64> physical;
     std::size_t writes;
     // Upper-bound repair is deferred. The bypass travels with the visible
     // version; merely queueing a repair would not make pruning sound.
@@ -134,7 +136,7 @@ struct sealed_change {
     sealed_change& operator=(sealed_change&&) = default;
     sealed_change(const sealed_change&) = delete;
     sealed_change(lease b, snapshot baseline, std::uint64_t total,
-                  const std::array<sp::byte_write, 64>& effects, std::size_t used)
+                  const std::array<physical_write, 64>& effects, std::size_t used)
         : bytes(std::move(b)), before(std::move(baseline)), expected_revision(before->revision),
           mapping(before->mapping), sum(total), physical(effects), writes(used) {}
 };
@@ -143,14 +145,14 @@ enum class phase { waiting, ready, cancelled, sealed, submitted };
 enum class progress { blocked, rotate, complete, cancelled };
 class attempt {
     using binding =
-        decltype(sp::bind_mutation(std::declval<const sp::view<F, std::uint8_t>&>()))::value_type;
+        decltype(sp::bind_writer(std::declval<const sp::view<F>&>()))::value_type;
     snapshot base_; // semantic version pin
     lease private_; // residency and private write ownership
-    std::optional<sp::view<F, std::uint8_t>> destination_;
+    std::optional<sp::view<F>> destination_;
     std::optional<binding> operation_;
     std::array<std::uint64_t, count> input_; // actual state needed after a stop
-    std::array<sp::composition::owner_write, 64> effects_;
-    sp::sum_change summary_;
+    std::array<ikea::journal::entry, 64> effects_;
+    sp::author::sum_change summary_;
     std::size_t used_ = 0, next_ = 0;
     std::uint64_t generation_;
     phase phase_ = phase::waiting;
@@ -158,7 +160,7 @@ class attempt {
         private_ = std::move(bytes);
         private_->bytes = base_->bytes->bytes;
         destination_ = writable(private_);
-        operation_.emplace(*sp::bind_mutation(*destination_));
+        operation_.emplace(*sp::bind_writer(*destination_));
         phase_ = phase::ready;
     }
 
@@ -212,7 +214,7 @@ class attempt {
         // These native accumulators remain local throughout the ready work.
         // Retaining them in the frame happens only at an actual driver return.
         auto summary = summary_;
-        sp::composition::source_write_journal journal{effects_, used_};
+        ikea::journal journal{effects_, used_};
         static constexpr auto masks = [] {
             std::array<std::uint16_t, count / 16> words;
             words.fill(selected);
@@ -220,9 +222,9 @@ class attempt {
         }();
         const auto length = std::min<std::size_t>(region_budget, count / 16) * 16;
         const auto work = std::min(length, count - next_);
-        const auto operation = operation_->erase<std::uint64_t, sp::sum_change>();
+        const auto operation = operation_->erase<std::uint64_t, sp::author::sum_change>();
         operation.replace_unchecked(next_, work, input_.data() + next_,
-                                    sp::row_selection::regions(0, masks), summary, journal);
+                                    journal, sp::selection::bits(0, masks), summary);
         next_ += work; // data, contribution and coverage share this frontier
         summary_ = summary;
         used_ = journal.used;
@@ -242,10 +244,12 @@ class attempt {
     std::optional<sealed_change> seal() {
         if (phase_ != phase::ready || next_ != count)
             return {};
-        std::array<sp::byte_write, 64> physical;
+        std::array<physical_write, 64> physical;
         for (std::size_t i = 0; i < used_; ++i) {
             IKEA_CHECK(effects_[i].source == &*destination_);
-            physical[i] = effects_[i].bytes;
+            IKEA_CHECK(effects_[i].plane <= 1);
+            physical[i] = {effects_[i].offset + (effects_[i].plane == 1 ? 16 : 0),
+                           effects_[i].size};
         }
         phase_ = phase::sealed;
         operation_.reset();
@@ -292,8 +296,8 @@ class engine {
             return outcome::conflict;
         for (std::size_t i = 0; i < change.writes; ++i) {
             const auto& span = change.physical[i];
-            const auto partition_offset = span.offset + (span.plane == 1 ? 16 : 0);
-            IKEA_CHECK(span.plane <= 1 && partition_offset + span.size <= capacity);
+            const auto partition_offset = span.offset;
+            IKEA_CHECK(partition_offset <= capacity && span.size <= capacity - partition_offset);
             for (std::size_t b = partition_offset; b < partition_offset + span.size; ++b)
                 IKEA_CHECK(b % 32 < 15 || (b % 32 >= 16 && b % 32 < 24));
         }
@@ -338,7 +342,7 @@ void check_visible(snapshot actual, bool updated) {
                 bool covered = false;
                 for (std::size_t n = 0; n < effects.writes; ++n) {
                     const auto& span = effects.physical[n];
-                    const auto offset = span.offset + (span.plane == 1 ? 16 : 0);
+                    const auto offset = span.offset;
                     covered |= b >= offset && b - offset < span.size;
                 }
                 IKEA_CHECK(covered);
@@ -422,20 +426,20 @@ void in_place_with_retained_state() {
     pool buffers(1);
     auto active = buffers.try_acquire();
     IKEA_CHECK(active);
-    active->bytes.fill(0xa7);
+    active->bytes.fill(ikea::byte{0xa7});
     const auto destination = writable(active);
     std::array<std::uint64_t, count> expected;
     std::uint64_t published_sum = 0;
     for (std::size_t i = 0; i < count; ++i) {
         expected[i] = i + 1;
         published_sum += expected[i];
-        sp::set_unchecked(destination, i, expected[i]);
+        sp::author::store_unchecked(destination, i, expected[i]);
     }
     const auto* address = active->bytes.data();
     struct retained {
         lease residency;
-        sp::sum_change summary;
-        std::array<sp::byte_write, 64> effects;
+        sp::author::sum_change summary;
+        std::array<ikea::journal::entry, 64> effects;
         std::size_t used = 0;
         bool publication_excluded = true, dirty = false;
         enum class cancellation { released, owner_resolution_required };
@@ -455,9 +459,9 @@ void in_place_with_retained_state() {
         for (std::size_t j = 0; j < 16; ++j)
             input[j] = 5000 + pass * 100 + j;
         auto summary = state.summary;
-        sp::write_journal journal{state.effects, state.used};
+        ikea::journal journal{state.effects, state.used};
         const auto mask = std::uint16_t(pass ? 0xcccc : 0xeeee);
-        sp::replace16_unchecked(destination, 16, input.data(), mask, summary, journal);
+        sp::author::replace16_unchecked(destination, 16, input.data(), mask, summary, journal);
         state.summary = summary;
         state.used = journal.used;
         state.dirty = true;

@@ -13,4 +13,22 @@ namespace ikea::bec256 {
 /// population tree, so it is neither total encoded size nor an incompressibility
 /// test. Useful to calibrate encode_if_promising()'s caller-selected cutoff.
 [[nodiscard]] unsigned enum_bits(std::span<const byte, 32> input) noexcept;
+[[nodiscard]] inline unsigned estimate_bytes(const bitset256 &input) noexcept {
+    if constexpr (std::endian::native == std::endian::little)
+        return estimate_bytes(std::as_bytes(std::span{input.words}));
+    else {
+        std::array<byte, 32> wire;
+        input.store(wire);
+        return estimate_bytes(wire);
+    }
+}
+[[nodiscard]] inline unsigned enum_bits(const bitset256 &input) noexcept {
+    if constexpr (std::endian::native == std::endian::little)
+        return enum_bits(std::as_bytes(std::span{input.words}));
+    else {
+        std::array<byte, 32> wire;
+        input.store(wire);
+        return enum_bits(wire);
+    }
+}
 } // namespace ikea::bec256

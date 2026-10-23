@@ -15,7 +15,7 @@ using ikea::intervals::delta_source;
 using ikea::intervals::direct_source;
 using ikea::intervals::edge;
 using ikea::intervals::interval;
-using ikea::intervals::rank_selection;
+using ikea::intervals::selection;
 using ikea::intervals::relative_end_source;
 namespace detail { using namespace ikea::intervals::detail; }
 namespace native { using namespace ikea::intervals::native; }
@@ -47,9 +47,8 @@ struct geometry_sizes {
     std::uint32_t directory;
     std::uint16_t tombstones;
     std::uint8_t width_bytes, offset_bytes, control_bytes, stride;
-    bool fixed, legacy;
-    [[nodiscard]] static std::expected<geometry_sizes, error> prepare(description,
-                                                                      bool legacy = false);
+    bool fixed;
+    [[nodiscard]] static std::expected<geometry_sizes, error> prepare(description);
 };
 } // namespace detail
 
@@ -59,10 +58,9 @@ class layout {
     description description_;
     detail::geometry_sizes geometry_;
     layout() = default;
-    [[nodiscard]] static std::expected<layout, error> prepare_impl(description, bool legacy);
 
   public:
-    [[nodiscard]] static std::expected<layout, error> prepare(description);
+    [[nodiscard]] static std::expected<layout, error> make(description);
     const description &schema() const noexcept { return description_; }
     static constexpr unsigned capacity() noexcept { return interval_capacity; }
     unsigned extent_limit() const noexcept { return description_.extent_limit; }
@@ -84,7 +82,8 @@ class layout {
     unsigned lengths_bytes() const noexcept { return lengths_bytes(interval_capacity); }
     /// Conservative journal slots; admission can accept a smaller exact bound.
     unsigned append_effect_capacity() const noexcept { return 8; }
-    std::array<byte, 8> encode() const noexcept;
+    static constexpr std::size_t encoded_size() noexcept { return 13; }
+    [[nodiscard]] std::expected<std::size_t, error> encode(ikea::mutable_bytes) const;
     [[nodiscard]] static std::expected<layout, error> decode(bytes);
 };
 } // namespace ikea::streampack::detail::compact

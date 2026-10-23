@@ -3,7 +3,7 @@
 
 namespace ikea::streampack::detail::compact {
 namespace detail {
-template <class Effects> bool room(const Effects &effects, unsigned n) {
+template <class Effects> bool room(const Effects &effects, std::size_t n) {
     if constexpr (requires {
                       effects.used;
                       effects.storage;
@@ -51,7 +51,7 @@ template <class Effects>
 template <class Effects>
 [[nodiscard]] std::expected<void, error> retire(const view &dst, unsigned rank, Effects &effects) {
     if (rank >= dst.size())
-        return std::unexpected(error::rank);
+        return std::unexpected(error::range);
     if (!dst.format().has_tombstones())
         return std::unexpected(error::description);
     if (!detail::room(effects, 1))
@@ -69,7 +69,7 @@ template <class Effects>
 [[nodiscard]] std::expected<void, error> set_boundary(const view &dst, unsigned rank,
                                                       std::uint32_t point, Effects &effects) {
     if (rank >= dst.size())
-        return std::unexpected(error::rank);
+        return std::unexpected(error::range);
     return author::dispatch(dst, [&](auto a) -> std::expected<void, error> {
         const auto old = a.at(rank);
         if (point == old)
@@ -104,7 +104,7 @@ template <class Effects>
 [[nodiscard]] std::expected<void, error> resize(const view &dst, unsigned rank, unsigned size,
                                                 Effects &effects) {
     if (rank >= dst.size())
-        return std::unexpected(error::rank);
+        return std::unexpected(error::range);
     if (!detail::accepts(dst.format(), size))
         return std::unexpected(error::value);
     return author::dispatch(dst, [&](auto a) -> std::expected<void, error> {

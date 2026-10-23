@@ -28,7 +28,7 @@ bitset::bitset(std::span<const bc::byte> input)
         for (unsigned j = 0; j < 32; ++j)
             population += std::popcount(std::to_integer<unsigned>(input[i * 32 + j]));
         auto encoded =
-            bc::prepare(std::span<const bc::byte, 32>(input.data() + i * 32, 32), population);
+            bc::encoding::make(std::span<const bc::byte, 32>(input.data() + i * 32, 32), population);
         assert(encoded);
         catalog.push_back({population, encoded->bytes(), offset});
         if (encoded->bytes())
@@ -106,35 +106,35 @@ struct pipeline_context {
     unsigned pa, pb;
     std::uint64_t count;
 };
-using chain = bc::chain<4>;
-static chain::result decode_stage(void *raw, std::size_t, std::uint64_t active, bc::pipeline_bits,
+using chain = bc::author::chain<4>;
+static chain::result decode_stage(void *raw, std::size_t, std::uint64_t active, bc::author::pipeline_bits,
                                   unsigned) {
     auto &c = *static_cast<pipeline_context *>(raw);
-    return {bc::pipeline_bits::from(bc::native::decode_pair_unchecked(c.a, c.pa, c.b, c.pb)),
+    return {bc::author::pipeline_bits::from(bc::native::decode_pair_unchecked(c.a, c.pa, c.b, c.pb)),
             active, false};
 }
 static chain::result intersect_stage(void *raw, std::size_t, std::uint64_t active,
-                                     bc::pipeline_bits bits, unsigned) {
+                                     bc::author::pipeline_bits bits, unsigned) {
     auto &c = *static_cast<pipeline_context *>(raw);
-    return {bc::pipeline_bits::from(bc::native::intersection(
+    return {bc::author::pipeline_bits::from(bc::native::intersection(
                 bits.get(), bc::native::join(bc::native::load(c.qa), bc::native::load(c.qb)))),
             active, false};
 }
-static void finish_stage(void *raw, std::size_t, std::uint64_t, bc::pipeline_bits bits) {
+static void finish_stage(void *raw, std::size_t, std::uint64_t, bc::author::pipeline_bits bits) {
     static_cast<pipeline_context *>(raw)->count = bc::native::population(bits.get());
 }
 // Plans belong to preparation, not a per-pair lazy-initialization guard.
-const auto pair_pipeline = *chain::prepare(
+const auto pair_pipeline = *chain::make(
     std::array<chain::function, 2>{chain::stage<decode_stage>, chain::stage<intersect_stage>},
     chain::completion<finish_stage>);
-using fused_chain = bc::chain<2>;
+using fused_chain = bc::author::chain<2>;
 static fused_chain::result filter_stage(void *raw, std::size_t, std::uint64_t active,
-                                        bc::pipeline_bits, unsigned) {
+                                        bc::author::pipeline_bits, unsigned) {
     auto &c = *static_cast<pipeline_context *>(raw);
-    return {bc::pipeline_bits::from(inline_pair_bits(c.a, c.pa, c.b, c.pb, c.qa, c.qb)), active,
+    return {bc::author::pipeline_bits::from(inline_pair_bits(c.a, c.pa, c.b, c.pb, c.qa, c.qb)), active,
             false};
 }
-const auto fused_pair_pipeline = *fused_chain::prepare(
+const auto fused_pair_pipeline = *fused_chain::make(
     std::array<fused_chain::function, 1>{fused_chain::stage<filter_stage>},
     fused_chain::completion<finish_stage>);
 template <execution E>

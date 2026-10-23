@@ -26,20 +26,20 @@ namespace tuple=ikea::tuplepack;
 // owner coordinates and protection published before the first payload store.
 struct tuple_word {
     inline static const auto format=[] {
-        std::array<tuple::code,8> codes;for(unsigned i=0;i<8;++i)codes[i]={byte(i),0,8};
+        std::array<tuple::code,8> codes;for(unsigned i=0;i<8;++i)codes[i]={std::uint8_t(i),0,8};
         auto result=tuple::layout::make(8,codes);ht::require(bool(result),"cell tuple format");return *result;
     }();
     inline static const auto plan=[] {
-        std::array<byte,8> map;for(unsigned i=0;i<8;++i)map[i]=byte(i);
-        auto result=tuple::writer<8>::make(format,map);ht::require(bool(result),"cell tuple writer");
+        std::array<std::uint8_t,8> map;for(unsigned i=0;i<8;++i)map[i]=std::uint8_t(i);
+        auto result=tuple::write_plan<8>::make(format,map);ht::require(bool(result),"cell tuple writer");
         const auto& p=result->controls();ht::require(p.word.selected==8&&p.transfer.bytes==8&&p.transfer.offset==0&&p.transfer.shift==0&&p.transfer.mask==~word{0},"cell tuple transfer");
         return *result;
     }();
-    [[gnu::always_inline]] static void write(byte* p,word value,ikea::no_coverage& effects) {
+    [[gnu::always_inline]] static void write(byte* p,word value,ikea::no_effects& effects) {
         // The actual owner proves this whole eight-byte object is addressable.
         const auto size=format.bytes();__builtin_assume(size==8);
         __builtin_assume(reinterpret_cast<std::uintptr_t>(p)<=~std::uintptr_t{0}-8);
-        auto bound=tuple::view::bind(format,{p,8},1,8);
+        auto bound=tuple::view::attach(format,{p,8},1,8);
         // The immutable admitted recipe and owner-proven eight-byte extent
         // establish every bind precondition. Restate that proof on the result:
         // Clang 21 misses the equivalent pointer-overflow assumption above.
@@ -47,13 +47,13 @@ struct tuple_word {
         if constexpr(WRITE_ARCH_ADMITTED_TUPLE)__builtin_assume(admitted);
         ht::require(admitted,"cell tuple placement");
         const auto& source=*bound;
-        effects.before(source,ikea::byte_write{0,0,8});
+        effects.before(source,0,0,8);
         const auto& controls=plan.controls();
         const auto selected=controls.word.selected;
         const auto bytes=controls.transfer.bytes,offset=controls.transfer.offset,shift=controls.transfer.shift;
         const auto mask=controls.transfer.mask;
         __builtin_assume(selected==8);__builtin_assume(bytes==8);__builtin_assume(offset==0);__builtin_assume(shift==0);__builtin_assume(mask==~word{0});
-        tuple::native::write_body(controls,p,value);
+        tuple::native::write_body(controls,ikea::to_u8(p),value);
     }
 };
 // One placed sequence of whole-word TuplePack units. Callers supply their
@@ -61,7 +61,7 @@ struct tuple_word {
 // Bind once for the entire physical write envelope, not through eight captured
 // closures with separate placement checks. This remains private no_coverage;
 // a deferred effect consumer needs an operation-lived source binding.
-template<unsigned V,bool Coalesced=true> [[gnu::always_inline]] void tuple_value(byte* p,const ht::bytes<V>& __restrict value,ikea::no_coverage& effects) {
+template<unsigned V,bool Coalesced=true> [[gnu::always_inline]] void tuple_value(byte* p,const ht::bytes<V>& __restrict value,ikea::no_effects& effects) {
     static_assert(V%8==0);
     if constexpr(!Coalesced){
         ht::each<V/8>([&](auto i){tuple_word::write(p+i*8,ht::load<8>(value.data()+i*8),effects);});
@@ -69,17 +69,17 @@ template<unsigned V,bool Coalesced=true> [[gnu::always_inline]] void tuple_value
     }
     const auto size=tuple_word::format.bytes();__builtin_assume(size==8);
     __builtin_assume(reinterpret_cast<std::uintptr_t>(p)<=~std::uintptr_t{0}-V);
-    auto bound=tuple::view::bind(tuple_word::format,{p,V},V/8,8);
+    auto bound=tuple::view::attach(tuple_word::format,{p,V},V/8,8);
     const bool admitted=bool(bound);
     if constexpr(WRITE_ARCH_ADMITTED_TUPLE)__builtin_assume(admitted);
     ht::require(admitted,"whole value tuple placement");const auto& source=*bound;
-    effects.before(source,ikea::byte_write{0,0,V});
+    effects.before(source,0,0,V);
 #if defined(__aarch64__) || defined(__AVX2__)
     if constexpr(V==64){
         // The admitted identity recipe selects every byte of all eight units.
         // Coalesce that exact physical envelope into one native packet write;
         // no padding, neighbouring tuple or old destination value is touched.
-        tuple::native::store_packet(source.row_unchecked(0),tuple::native::load_packet(value.data()));
+        tuple::native::store_packet(ikea::to_u8(source.row_unchecked(0)),tuple::native::load_packet(ikea::to_u8(value.data())));
         return;
     }
 #endif
@@ -91,7 +91,7 @@ template<unsigned V,bool Coalesced=true> [[gnu::always_inline]] void tuple_value
         const auto bytes=controls.transfer.bytes,offset=controls.transfer.offset,shift=controls.transfer.shift;
         const auto mask=controls.transfer.mask;
         __builtin_assume(selected==8);__builtin_assume(bytes==8);__builtin_assume(offset==0);__builtin_assume(shift==0);__builtin_assume(mask==~word{0});
-        tuple::native::write_body(controls,source.row_unchecked(i/8),ht::load<8>(value.data()+i));
+        tuple::native::write_body(controls,ikea::to_u8(source.row_unchecked(i/8)),ht::load<8>(value.data()+i));
     }
 }
 
@@ -116,7 +116,7 @@ template<unsigned V,buffer_representation Representation=buffer_representation::
     struct family {std::optional<stream::layout> format;std::size_t first=none;unsigned capacity=0,ranks=0;};
     struct block {
         buffer storage;
-        std::array<byte,256> returned{};
+        std::array<std::uint8_t,256> returned{};
         unsigned returned_count=0,live=0,which=0;
         std::size_t previous=none,next=none;
         bool listed=false;
@@ -148,7 +148,7 @@ template<unsigned V,buffer_representation Representation=buffer_representation::
     stream::view view(block& b)const requires(stream_capacity) {
         auto* bytes=reinterpret_cast<stream::byte*>(b.storage.data);
         const auto capacity=families_[b.which].capacity;
-        return stream::view::assume_valid(*families_[b.which].format,
+        return stream::view::attach_unchecked(*families_[b.which].format,
             {{bytes+64,std::size_t(capacity)*V*families_[b.which].ranks},{},{},{bytes,2}});
     }
     static unsigned assigned(const block& b){return unsigned(ht::load<2>(b.storage.data));}
@@ -156,7 +156,7 @@ template<unsigned V,buffer_representation Representation=buffer_representation::
     // The cursor and input describe the same bytes. The caller admits effects
     // before entry and keeps this source and its recipe stable through the call.
     [[gnu::always_inline]] static void assign_initialized(const stream::view& source,const stream::layout& format,
-            unsigned count,unsigned offset,unsigned reservation,ikea::no_coverage& effects) requires(stream_capacity) {
+            unsigned count,unsigned offset,unsigned reservation,ikea::no_effects& effects) requires(stream_capacity) {
         const auto fixed=format.fixed(),used=format.has_used(),tombs=format.has_tombstones(),extent=format.has_extent();
         const auto control=format.control_bytes();
         __builtin_assume(fixed);__builtin_assume(!used);__builtin_assume(!tombs);__builtin_assume(!extent);__builtin_assume(control==2);
@@ -179,8 +179,8 @@ template<unsigned V,buffer_representation Representation=buffer_representation::
     [[gnu::noinline]] std::size_t new_block(unsigned which) {
         const auto& f=families_[which];
         auto next=std::make_unique<block>(which,f.capacity*V*f.ranks);
-        if constexpr(stream_capacity){auto destination=view(*next);ikea::no_coverage effects;
-            ht::require(bool(stream::initialize(destination,effects)),"capacity block initialize");}
+        if constexpr(stream_capacity){auto destination=view(*next);ikea::no_effects effects;
+            stream::initialize_unchecked(destination,effects);}
         else ht::store<2>(next->storage.data,0);
         const auto id=first_free_==none?blocks_.size():first_free_;
         if(first_free_==none)blocks_.push_back({std::move(next)});
@@ -196,9 +196,9 @@ template<unsigned V,buffer_representation Representation=buffer_representation::
             // Bound each allocation to about 64 KiB, with whole reservations.
             f.ranks=std::clamp(65536u/(f.capacity*V),1u,256u);
             if constexpr(stream_capacity){
-                stream::description d{.family=stream::geometry::direct,.maximum=std::uint16_t(f.capacity*V),
+                stream::layout::options d{.family=stream::geometry::absolute_ends,.maximum=std::uint16_t(f.capacity*V),
                     .byte_limit=f.capacity*V*f.ranks,.fixed_reservation=std::uint16_t(f.capacity*V),.full=true,.immortal=true};
-                f.format=stream::layout::prepare(d).value();
+                f.format=stream::layout::make(d).value();
                 ht::require(f.format->directory_bytes()==0&&f.format->lengths_bytes()==0&&f.format->control_bytes()==2,"capacity buffer recipe");
             }
         }
@@ -222,11 +222,11 @@ template<unsigned V,buffer_representation Representation=buffer_representation::
     }
     void append_fitting_capacity(word reference,unsigned capacity,unsigned count,const ht::bytes<V>& incoming){
         auto* suffix=data_capacity(reference,capacity)+std::size_t(count)*V;
-        expose_prefix(suffix,V);ikea::no_coverage effects;tuple_value<V,Coalesced>(suffix,incoming,effects);
+        expose_prefix(suffix,V);ikea::no_effects effects;tuple_value<V,Coalesced>(suffix,incoming,effects);
     }
     void append_fitting(word reference,unsigned which,unsigned count,const ht::bytes<V>& incoming) {
         auto* suffix=data(reference,which)+std::size_t(count)*V;
-        expose_prefix(suffix,V);ikea::no_coverage effects;tuple_value<V,Coalesced>(suffix,incoming,effects);
+        expose_prefix(suffix,V);ikea::no_effects effects;tuple_value<V,Coalesced>(suffix,incoming,effects);
     }
     // All fallible allocation precedes any old-buffer or index-cell mutation.
     // Prefix may name another live buffer: block payload pointers stay stable
@@ -245,7 +245,7 @@ template<unsigned V,buffer_representation Representation=buffer_representation::
         auto* payload=b.storage.data+64+offset;
         expose_prefix(payload,prefix.size()+V);
         if(prefix.size())std::memmove(payload,prefix.data(),prefix.size());
-        ikea::no_coverage effects;tuple_value<V,Coalesced>(payload+prefix.size(),incoming,effects);
+        ikea::no_effects effects;tuple_value<V,Coalesced>(payload+prefix.size(),incoming,effects);
         if(!reuse){if constexpr(stream_capacity){
             const auto initialized=prefix.size()+V;
             if(initialized<reservation)std::memset(payload+initialized,0,reservation-initialized);
@@ -281,7 +281,7 @@ template<unsigned V,buffer_representation Representation=buffer_representation::
         std::memcpy(payload+left.size(),right.data(),right.size());
         if(!reuse){
             if(initialized<reservation)std::memset(payload+initialized,0,reservation-initialized);
-            ikea::no_coverage effects;
+            ikea::no_effects effects;
             const auto format=source.format();
             assign_initialized(source,format,count,offset,reservation,effects);
         }
@@ -294,7 +294,7 @@ template<unsigned V,buffer_representation Representation=buffer_representation::
         --b.live;--live_buffers_;
         if(!b.live){unlink(id);assigned_bytes_-=b.storage.capacity();slot.owner.reset();slot.payload=nullptr;
             slot.next_free=first_free_;first_free_=id;return;}
-        b.returned[b.returned_count++]=byte(reference&255);
+        b.returned[b.returned_count++]=std::uint8_t(reference&255);
         if(!b.listed)link(id);
     }
     std::size_t bytes_used()const {

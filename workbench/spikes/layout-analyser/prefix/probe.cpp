@@ -28,10 +28,10 @@ struct storage {
     unsigned core_width;
     tp::layout layout;
     tp::view view;
-    tp::reader<8> scalar_plan;
-    tp::read_operation<8,byte> scalar_read;
-    tp::writer<8> scalar_write_plan;
-    tp::mutation_operation<8> scalar_write;
+    tp::read_plan<8> scalar_plan;
+    tp::reader<8,std::byte> scalar_read;
+    tp::write_plan<8> scalar_write_plan;
+    tp::writer<8> scalar_write;
 
     static tp::layout format(unsigned bytes) {
         std::vector<tp::code> codes;
@@ -43,10 +43,10 @@ struct storage {
           side(c.side?data.size():1), prefixes(c.plane?data.size()*c.prefix:1), rows(data.size()),
           core_width(std::min<unsigned>(64,c.plane?c.fixed:c.fixed+c.prefix)),
           layout(format(core_width)),
-          view(*tp::view::bind(layout,std::span(core.get(),core.size),rows,c.stride,0)),
-          scalar_plan(*tp::reader<8>::make(layout,std::array<byte,8>{0,1,2,3,4,5,6,7})),
+          view(*tp::view::attach(layout,std::as_writable_bytes(std::span(core.get(),core.size)),rows,c.stride,0)),
+          scalar_plan(*tp::read_plan<8>::make(layout,std::array<byte,8>{0,1,2,3,4,5,6,7})),
           scalar_read(*tp::bind_reader(scalar_plan,view)),
-          scalar_write_plan(*tp::writer<8>::make(layout,std::array<byte,8>{0,1,2,3,4,5,6,7})),
+          scalar_write_plan(*tp::write_plan<8>::make(layout,std::array<byte,8>{0,1,2,3,4,5,6,7})),
           scalar_write(*tp::bind_writer(scalar_write_plan,view)) {
         assert(tails.size < (std::uint64_t{1}<<32));
         for (std::size_t r=0;r<rows;++r) {
@@ -107,8 +107,8 @@ struct query {std::size_t row; std::array<byte,16> text;};
     return sum;
 }
 [[gnu::noinline]] std::uint64_t updates(storage& s,const std::vector<std::size_t>& ids,bool ordinary,std::uint64_t salt=0) {
-    std::array<ikea::owner_write,8> records;
-    ikea::source_write_journal journal{records};
+    std::array<ikea::journal::entry,8> records;
+    ikea::journal journal{records};
     std::uint64_t sum=0;
     for(auto r:ids) {
         const auto x=lp::hash(r)^salt;

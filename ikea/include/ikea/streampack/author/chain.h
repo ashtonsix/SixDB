@@ -1,14 +1,14 @@
 #pragma once
-#include <ikea/detail/native_chain.h>
+#include <ikea/author/chain.h>
 #include <ikea/streampack/author/native.h>
 
-namespace ikea::streampack {
+namespace ikea::streampack::author {
 #if defined(__aarch64__) || defined(__AVX2__)
 /// Sixteen slot offsets/lengths plus a live mask. Stages share native::read16()
 /// with direct composition. The owner holds source/plan state through completion;
 /// suspension occurs after returning, never inside a bounded native stage.
 template <unsigned Slots = 8>
-using chain = ikea::detail::native_chain<native::packet, std::uint16_t, Slots, error,
+using chain = ikea::author::chain<native::packet, std::uint16_t, Slots,
                                          std::make_index_sequence<native::packet::parts>>;
 /// Scalar location handoff for a geometry→payload dependency. Offset and length
 /// stay in integer arguments; the owner retains the payload base and identity.
@@ -27,7 +27,7 @@ struct pipeline_location {
     }
 };
 template <unsigned Slots = 8>
-using point_chain = ikea::detail::native_chain<pipeline_location, bool, Slots, error,
+using point_chain = ikea::author::chain<pipeline_location, bool, Slots,
                                                std::make_index_sequence<pipeline_location::parts>>;
 #endif
-} // namespace ikea::streampack
+} // namespace ikea::streampack::author

@@ -12,7 +12,7 @@ void exhaustive() {
         cuts_model::check(borrowed, cuts, 0);
         for (unsigned mask = 0; mask < 16; ++mask) {
             const std::array bits{std::byte(mask)};
-            const bl::selected_source chosen{borrowed, bl::rank_selection{bits, true}};
+            const bl::selected_source chosen{borrowed, bl::selection::complement(0,bits)};
             cuts_model::check(chosen, cuts, mask);
         }
     }
@@ -63,21 +63,21 @@ void domains() {
     // Nested explicit selections intersect; neither can re-enable a rank.
     const std::array<std::byte, 1> a{std::byte{0x5}}, b{std::byte{0x6}};
     const auto small = bl::from_cuts(std::span(cuts));
-    const bl::selected_source first{small, bl::rank_selection{a}};
-    const bl::selected_source both{first, bl::rank_selection{b}};
+    const bl::selected_source first{small, bl::selection::bits(0,a)};
+    const bl::selected_source both{first, bl::selection::bits(0,b)};
     assert(bl::lower_bound(both, cuts[0]) == 2);
     assert(bl::reverse(both, UINT64_MAX - 7) == both.size());
     assert(bl::reverse(both, UINT64_MAX - 6) == 2);
     assert((bl::overlap(both, cuts[0], cuts.back()) == bl::rank_window{2, 3}));
     assert(both.selection_mask(0, 4) == 4);
-    const auto all = bl::rank_selection::all();
+    const auto all = bl::selection::all();
     assert(all.next(0, bl::maximum_count) == 0 && all.next(bl::maximum_count, bl::maximum_count) == bl::maximum_count);
     assert(all.previous(0, bl::maximum_count) == bl::maximum_count && all.previous(bl::maximum_count, bl::maximum_count) == bl::maximum_count - 1);
-    assert(bl::rank_selection{}.next(0, bl::maximum_count) == bl::maximum_count);
-    assert(bl::rank_selection{}.previous(bl::maximum_count, bl::maximum_count) == bl::maximum_count);
+    assert(bl::selection{}.next(0, bl::maximum_count) == bl::maximum_count);
+    assert(bl::selection{}.previous(bl::maximum_count, bl::maximum_count) == bl::maximum_count);
     const bl::selected_source universal{large, all};
     assert(bl::reverse(universal, many[1024]) == 1024);
-    const bl::selected_source none{large, bl::rank_selection{}};
+    const bl::selected_source none{large, bl::selection{}};
     assert(bl::reverse(none, many[1024]) == none.size() && bl::overlap(none, many[0], many.back()).empty());
 }
 }

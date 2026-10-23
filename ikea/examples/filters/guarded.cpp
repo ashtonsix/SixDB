@@ -1,40 +1,41 @@
+#include <ikea/seriespack/author/store.h>
 #include <ikea/seriespack.h>
-#include <ikea/seriespack/author/read.h>
+#include <ikea/seriespack/reader.h>
 #include <ikea/tuplepack.h>
 #include <array>
 #include <cassert>
 #include <bit>
 
 namespace sp = ikea::seriespack;
-namespace cp = sp::composition;
+namespace cp = sp::author;
 namespace tp = ikea::tuplepack;
 using C = ikea::comparison;
 
 int main() {
-    using F = sp::format<64, sp::geometry::local, 8>;
+    using F = sp::layout<64, sp::geometry::local, 8>;
     constexpr unsigned count = 64;
     constexpr std::uint64_t query = 0x4200000000000123ULL;
     alignas(64) std::array<std::uint8_t, 448> payload{};
     alignas(64) std::array<std::uint8_t, count> heads{};
     std::array<std::uint64_t, count> truth{};
     std::array<std::uint8_t, count * 4> flags{};
-    auto source = *sp::view<F, std::uint8_t>::attach(
-        count, {{{payload, F::tile_bytes}, {heads, F::tile_rows}, {}}});
+    auto source = *sp::view<F>::attach(
+        count, {{{std::as_writable_bytes(std::span{payload}), F::tile_bytes},{std::as_writable_bytes(std::span{heads}), F::tile_rows},{}}});
     for (unsigned i = 0; i < count; ++i) {
         truth[i] = i / 16 == 2 ? query : (std::uint64_t(i + 1) << 56) | (i * 17);
-        sp::set_unchecked(source, i, truth[i]);
+        sp::author::store_unchecked(source, i, truth[i]);
         flags[i * 4] = i * 71;
     }
 
     // Select execution after any with_payload/with_tail substitutions. This
     // owns the expression nodes and borrows source; it adds no stored metadata.
-    const auto expression = cp::guarded(cp::describe(source));
-    const auto prepared = *cp::prepare(expression, count);
+    const auto expression = cp::guarded(cp::expression(source));
+    const auto prepared = *ikea::seriespack::bind_reader(expression, count);
     auto layout = *tp::layout::make(1, std::array<tp::code, 1>{{{0, 0, 8}}});
-    auto tuples = *tp::view::bind(layout, flags, count, 4);
-    auto plan = *tp::reader<64, 16>::make(layout, std::array<tp::byte, 1>{0});
+    auto tuples = *tp::view::attach(layout, std::as_writable_bytes(std::span{flags}), count, 4);
+    auto plan = *tp::read_plan<64, 16>::make(layout, std::array<std::uint8_t, 1>{0});
     auto reader = *tp::bind_reader(plan, tuples);
-    auto second = *tp::bind_filter(reader);
+    auto second = reader;
 
     unsigned matches = 0;
     std::uint64_t expected = 0;

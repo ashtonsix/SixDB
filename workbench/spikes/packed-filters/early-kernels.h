@@ -125,8 +125,8 @@ template<unsigned K,int Op,bool Early> [[gnu::always_inline]] inline unsigned pr
     return descend<K,Op,Early>(p,q,a,0,a);
 }
 template<unsigned K,int Op> [[gnu::always_inline]] inline unsigned current(const std::uint8_t* p,word q,unsigned a) {
-    sp::dense_source<sp::format<K>> source{p,16};
-    return sp::composition::filter16_unchecked<C(Op)>(sp::composition::describe(source),0,q,a);
+    sp::dense_source<sp::layout<K>> source{reinterpret_cast<const std::byte*>(p),16};
+    return sp::author::filter16_unchecked<C(Op)>(sp::author::expression(source),0,q,a);
 }
 template<unsigned K,int Op> [[gnu::always_inline]] inline unsigned fused(const std::uint8_t* p,word q,unsigned a) {
     if(!a) return 0;
@@ -135,12 +135,11 @@ template<unsigned K,int Op> [[gnu::always_inline]] inline unsigned fused(const s
     else return progressive<K,Op,false>(p,q,a);
 }
 template<unsigned K,int Op> [[gnu::always_inline]] inline unsigned head_current(const std::uint8_t* p,const std::uint8_t* h,word q,unsigned a,unsigned w) {
-    using F=sp::format<K,sp::geometry::local,8>;
+    using F=sp::layout<K,sp::geometry::local,8>;
     // Reconstruct the admitted whole-source origin, which is 64B aligned;
     // an individual window need not start on that alignment.
-    auto source=sp::view<F>::assume_valid(256*16,
-        {{{{p-w*2*(K-8),256*2*(K-8)},K-8},{{h-w*16,256*16},8},{{},0}}});
-    return sp::composition::filter16_unchecked<C(Op)>(sp::composition::describe(source),w*16,q,a);
+    auto source=sp::const_view<F>::attach_unchecked(256*16, {{{std::as_bytes(std::span{p-w*2*(K-8),256*2*(K-8)}),K-8},{std::as_bytes(std::span{h-w*16,256*16}),8},{std::as_bytes(std::span{std::span<const std::byte>{}}),0}}});
+    return sp::author::filter16_unchecked<C(Op)>(sp::author::expression(source),w*16,q,a);
 }
 template<unsigned K,int Op,bool Early,bool Fused> [[gnu::always_inline]] inline unsigned head_split(const std::uint8_t* p,const std::uint8_t* h,word q,unsigned a) {
     if(!a) return 0;

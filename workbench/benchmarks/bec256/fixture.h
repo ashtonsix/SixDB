@@ -17,17 +17,17 @@ inline std::string shape_name(unsigned shape) {
     return shape < 3 ? std::array<std::string, 3>{"random", "runs", "terminal"}[shape]
                      : "population" + std::to_string(populations[shape - 3]);
 }
-inline unsigned population(const bc::plain_block &bits) {
+inline unsigned population(const std::array<std::byte, 32> &bits) {
     unsigned result = 0;
     for (auto value : bits)
         result += std::popcount(std::to_integer<unsigned>(value));
     return result;
 }
 struct fixture {
-    std::array<bc::plain_block, block_count> plain{}, query{};
+    std::array<std::array<std::byte, 32>, block_count> plain{}, query{};
     std::array<std::array<bc::byte, 64>, block_count> encoded{};
     std::array<unsigned, block_count> pop{};
-    std::vector<bc::source> exact, padded;
+    std::vector<bc::reader> exact, padded;
     double mean_bytes = 0;
 
     explicit fixture(unsigned shape) {
@@ -50,12 +50,12 @@ struct fixture {
                     plain[i][order[j] / 8] |= bc::byte(1u << (order[j] % 8));
             }
             pop[i] = population(plain[i]);
-            auto candidate = bc::prepare(plain[i], pop[i]);
+            auto candidate = bc::encoding::make(plain[i], pop[i]);
             assert(candidate);
             std::copy(candidate->body().begin(), candidate->body().end(), encoded[i].begin());
-            auto a = bc::source::admit(std::span(encoded[i]).first(candidate->bytes()),
+            auto a = bc::bind_reader(std::span(encoded[i]).first(candidate->bytes()),
                                        candidate->bytes(), pop[i]);
-            auto b = bc::source::admit(encoded[i], candidate->bytes(), pop[i]);
+            auto b = bc::bind_reader(encoded[i], candidate->bytes(), pop[i]);
             assert(a && b);
             exact.push_back(*a);
             padded.push_back(*b);

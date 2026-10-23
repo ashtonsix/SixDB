@@ -32,7 +32,7 @@ template<unsigned K,unsigned N> [[gnu::always_inline]] word previous_mask(const 
 template<unsigned K,unsigned N,unsigned Group,unsigned First=0>
 [[gnu::always_inline]] unsigned first(const std::uint8_t* p,word query,word active) {
     constexpr unsigned Count=std::min(Group,N-First);
-    const sp::dense_source<sp::format<K>> source{p,N};
+    const sp::dense_source<sp::layout<K>> source{reinterpret_cast<const std::byte*>(p),N};
     const auto m=sp::filter_unchecked<C::equal>(source,First,Count,query,active>>First);
     if constexpr(First+Count==N) {
         // The final group is branchless, including misses: preserve the
@@ -48,7 +48,7 @@ template<unsigned K,unsigned N,unsigned Arm>
 #if defined(FILTER_ARM_REDUCTION)
     if constexpr(Arm==0) return std::countr_zero(previous_mask<K,N>(p,query,active)|(N<64 ? word{1}<<N : 0));
     else if constexpr(Arm==11) {
-        const sp::dense_source<sp::format<K>> source{p,N};
+        const sp::dense_source<sp::layout<K>> source{reinterpret_cast<const std::byte*>(p),N};
         return sp::indexof_unchecked(source,0,N,query,active);
     } else if constexpr(Arm==12) {
         return std::countr_zero(call<K,N,C::equal,0>(p,query,active)|(N<64 ? word{1}<<N : 0));
@@ -59,9 +59,9 @@ template<unsigned K,unsigned N,unsigned Arm>
         for(unsigned base=0;base<N;base+=8) {
             unsigned body=255;
             if constexpr(K>8) {
-                const sp::dense_source<sp::format<K>> source{p,N};
-                const auto expr=sp::composition::describe(source);
-                body=sp::composition::filter8_unchecked<C::equal>(expr.payload.body,base,query>>R);
+                const sp::dense_source<sp::layout<K>> source{reinterpret_cast<const std::byte*>(p),N};
+                const auto expr=sp::author::expression(source);
+                body=sp::author::filter8_unchecked<C::equal>(expr.payload.body,base,query>>R);
             }
             body &= active>>base;
             const auto* tail=p+(base/8)*K+8*(K/8);
@@ -81,21 +81,21 @@ template<unsigned K,unsigned N,unsigned Arm>
     if constexpr((Arm>=4) && K>8 && K%8) {
         // Use the authored body projection to reject most rows, then compare
         // residuals only at candidates. Original rank order is preserved.
-        const sp::dense_source<sp::format<K>> source{p,N};
-        const auto expr=sp::composition::describe(source);
-        sp::composition::scalar_ops scalar;
+        const sp::dense_source<sp::layout<K>> source{reinterpret_cast<const std::byte*>(p),N};
+        const auto expr=sp::author::expression(source);
+        sp::author::scalar_ops scalar;
 #if defined(__GFNI__) && defined(__AVX512BW__) && defined(__AVX512VL__)
         const auto basis=_mm_set1_epi64x(0x8040201008040201ULL);
         const auto reversed=_mm_gf2p8affine_epi64_epi8(_mm_set1_epi8(query),basis,0);
         const auto significant=_mm_set1_epi8(static_cast<char>(255u<<(8-K%8)));
 #endif
         for(unsigned base=0;base<N;base+=8) {
-            auto matches=unsigned(sp::composition::filter8_unchecked<C::equal>(
+            auto matches=unsigned(sp::author::filter8_unchecked<C::equal>(
                 expr.payload.body,base,query>>(K%8),active>>base));
             if constexpr(Arm==4) {
                 while(matches) {
                     const auto rank=base+std::countr_zero(matches);
-                    if(sp::composition::read(scalar,expr.payload.tail,rank,true).value==(query&((word{1}<<(K%8))-1)))
+                    if(sp::author::read(scalar,expr.payload.tail,rank,true).value==(query&((word{1}<<(K%8))-1)))
                         return rank;
                     matches&=matches-1;
                 }
@@ -120,7 +120,7 @@ template<unsigned K,unsigned N,unsigned Arm>
                     if constexpr(Arm==5 || Arm==6)
                         return previous_planes<K%8>(p+(base/8)*K+8*(K/8),query)&matches;
 #endif
-                    return unsigned(sp::composition::filter8_unchecked<C::equal>(
+                    return unsigned(sp::author::filter8_unchecked<C::equal>(
                         expr.payload.tail,base,query&((word{1}<<(K%8))-1),matches));
                 }();
                 if(exact) return base+std::countr_zero(unsigned(exact));

@@ -6,19 +6,19 @@
 int main() {
     namespace bc = ikea::bec256;
 #if defined(IKEA_BEC256_AVX512) || defined(__aarch64__)
-    bc::plain_block a{}, b{};
+    std::array<std::byte, 32> a{}, b{};
     a[3] = bc::byte{0x20}; // Position 29.
     b[1] = bc::byte{2};
     b[25] = bc::byte{1}; // Positions 9 and 200.
     std::array<bc::byte, 128> input_storage{};
-    bc::destination input_plane{input_storage};
-    std::array<ikea::owner_write, 2> records;
-    ikea::source_write_journal effects{records};
+    bc::view input_plane{input_storage};
+    std::array<ikea::journal::entry, 2> records;
+    ikea::journal effects{records};
     auto a_size = bc::encode(a, 1, input_plane, 0, effects);
     auto b_size = bc::encode(b, 2, input_plane, 64, effects);
     assert(a_size && b_size);
-    auto source_a = bc::source::admit(std::span(input_storage).first(*a_size), *a_size, 1);
-    auto source_b = bc::source::admit(std::span(input_storage).subspan(64, *b_size), *b_size, 2);
+    auto source_a = bc::bind_reader(std::span(input_storage).first(*a_size), *a_size, 1);
+    auto source_b = bc::bind_reader(std::span(input_storage).subspan(64, *b_size), *b_size, 2);
     assert(source_a && source_b);
 
     std::array<bc::byte, 64> mask{};
@@ -36,7 +36,7 @@ int main() {
     // Independent owner grants cover any encoded body; no materialized plain
     // bitset is needed between reading, filtering, population and exact writing.
     std::array<bc::byte, bc::max_bytes> storage_a{}, storage_b{};
-    bc::destination output_a{storage_a}, output_b{storage_b};
+    bc::view output_a{storage_a}, output_b{storage_b};
     // Input construction above was private scratch; its records need no owner
     // publication. Discard those records before using this journal for outputs.
     effects.used = 0; // Two disjoint grants and two effect slots are already held.
@@ -47,9 +47,9 @@ int main() {
            effects.entries()[1].source == &output_b);
     // The owner retains each population/length/address and publishes them with
     // the body and dependent summaries under its enclosing integration protocol.
-    auto result = bc::source::admit(storage_b, lengths.second, pb);
+    auto result = bc::bind_reader(storage_b, lengths.second, pb);
     assert(result);
-    bc::plain_block decoded;
+    std::array<std::byte, 32> decoded;
     bc::decode(*result, decoded);
     b[1] = bc::byte{0};
     assert(decoded == b);

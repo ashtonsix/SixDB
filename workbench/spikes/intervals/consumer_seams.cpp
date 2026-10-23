@@ -109,16 +109,16 @@ void stream() {
     for(bool full:{false,true}) for(auto placement:{sp::placement::grouped,sp::placement::separated}) {
         if(full&&placement==sp::placement::separated) continue;
         constexpr unsigned n=256;
-        const auto format=sp::layout::prepare({.family=family,.lengths=placement,.maximum=255,
+        const auto format=sp::layout::make({.family=family,.lengths=placement,.maximum=255,
                                               .byte_limit=65280,.full=full});
         need(bool(format),"StreamPack preparation failed");
         std::vector<std::byte> payload(65280),directory(format->directory_bytes()),
                                lengths(format->lengths_bytes(n)),control(format->control_bytes());
-        auto binding=sp::view::bind(*format,{payload,directory,lengths,control});
+        auto binding=sp::view::attach(*format,{payload,directory,lengths,control});
         need(bool(binding),"StreamPack binding failed");
         const auto &source=*binding;
-        std::array<ikea::owner_write,16> records;
-        {ikea::source_write_journal e{records};need(bool(sp::initialize(source,e)),"StreamPack initialize failed");}
+        std::array<ikea::journal::entry,16> records;
+        {ikea::journal e{records};need(bool(sp::initialize(source,e)),"StreamPack initialize failed");}
         std::array<unsigned,n> used{},ends{};
         std::array<std::byte,255> value{};
         std::mt19937 random(713);
@@ -127,7 +127,7 @@ void stream() {
             const unsigned reserve=random()%256;
             used[r]=full?reserve:random()%(reserve+1);
             std::fill(value.begin(),value.end(),std::byte(r%251));
-            ikea::source_write_journal e{records};
+            ikea::journal e{records};
             need(bool(sp::append(source,std::span(value).first(used[r]),reserve,e)),"StreamPack append failed");
             ends[r]=position+=reserve;
             if(r%11==1) {e.used=0;need(bool(sp::retire(source,r,e)),"StreamPack retire failed");}
@@ -137,7 +137,7 @@ void stream() {
         for(auto &r:ranks) {r=random()%n;if(r%11!=1) expected+=used[r]+(used[r]?r%251:0);}
         const auto tag="streampack_value_f"+std::to_string(unsigned(family))+"_full"+
                         std::to_string(full)+"_planar"+std::to_string(placement==sp::placement::separated);
-        sp::author::dispatch(source,[&](auto access) {
+        sp::author::visit(source,[&](auto access) {
             // The value owner supplies U/liveness; geometry supplies only start.
 
             measure(tag,{

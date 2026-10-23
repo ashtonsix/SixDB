@@ -16,8 +16,8 @@ sp::storage<const sp::byte> windows(Selection s) {
 }
 }
 
-std::expected<FormatOwner, sp::error> prepare_format(sp::description d) {
-    auto layout = sp::layout::prepare(d);
+std::expected<FormatOwner, sp::error> prepare_format(sp::layout::options d) {
+    auto layout = sp::layout::make(d);
     if (!layout) return std::unexpected(layout.error());
     return FormatOwner::retain(*new Format{*layout});
 }
@@ -75,7 +75,7 @@ orbital::Result<orbital::Part<Control>*> Physical::export_part(Selection s, std:
 
 sp::const_view read(Selection s) {
     assert(s && s.control().selected == 5);
-    return sp::const_view::assume_valid(s.control().format->layout, windows(s));
+    return sp::const_view::attach_unchecked(s.control().format->layout, windows(s));
 }
 
 std::span<const std::uint32_t> holders(Selection s) {
@@ -91,7 +91,7 @@ std::byte* Draft::address(unsigned p) const noexcept {
 orbital::Result<void> Draft::rebind() {
     std::array<std::span<sp::byte>, 4> planes;
     for (unsigned p = 0; p < 4; ++p) planes[p] = {address(p), extents[p]};
-    auto result = sp::view::bind(format->layout, {planes[0], planes[1], planes[2], planes[3]});
+    auto result = sp::view::attach(format->layout, {planes[0], planes[1], planes[2], planes[3]});
     if (!result) return std::unexpected(orbital::Error::invalid_argument);
     source = *result;
     return {};
@@ -128,7 +128,8 @@ orbital::Result<Draft> Draft::create(loom::Worker& worker, FormatOwner f,
     }
     auto bound = d.rebind();
     if (!bound) return std::unexpected(bound.error());
-    ikea::no_coverage effects;
+    std::array<ikea::journal::entry, 2> records;
+    ikea::journal effects{records};
     if (!sp::initialize(d.write(), effects)) return std::unexpected(orbital::Error::invalid_argument);
     std::fill(d.holders().begin(), d.holders().end(), absent);
     return d;

@@ -13,14 +13,14 @@ template <class T> word identity(const T& owner) {
     word h = 17;
     owner.allocations([&](auto, const auto* p, std::size_t n) {
         for (std::size_t i = 0; i < n; ++i)
-            h = (h ^ p[i]) * 0x100000001b3ULL;
+            h = (h ^ std::to_integer<unsigned>(p[i])) * 0x100000001b3ULL;
     });
     return h;
 }
 template <unsigned V> ht::bytes<V> payload(word key, unsigned source) {
     ht::bytes<V> out{};
     for (unsigned i = 0; i < V; ++i)
-        out[i] = ht::byte(key * 19 + source * 47 + i * 11);
+        out[i] = std::byte(key * 19 + source * 47 + i * 11);
     return out;
 }
 template <unsigned W, unsigned sb, unsigned db, unsigned V, unsigned SE = W - sb,
@@ -50,7 +50,7 @@ void ordered_history(Run&& run) {
     auto reduce = [](const auto& a, const auto& b) {
         auto c = a;
         for (unsigned i = 0; i < V; ++i)
-            c[i] = ht::byte(a[i] * 3 + b[i] * 5 + 7);
+            c[i] = std::byte(std::to_integer<unsigned>(a[i]) * 3 + std::to_integer<unsigned>(b[i]) * 5 + 7);
         return c;
     };
     for (unsigned q = 0; q < count; ++q)

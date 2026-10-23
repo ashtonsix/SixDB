@@ -1,17 +1,17 @@
 #include "ikea/test/filters/tile_support.h"
 void check_local_equal();
 int main() {
-    series_case<sp::format<4>,C::equal>();
-    series_case<sp::format<5>,C::equal>();
-    series_case<sp::format<6>,C::equal>();
-    series_case<sp::format<7>,C::equal>();
-    series_case<sp::format<14>,C::equal>();
-    series_case<sp::format<30>,C::equal>();
-    series_case<sp::format<31>,C::equal>();
-    series_case<sp::format<62>,C::equal>();
-    series_case<sp::format<64>,C::equal>();
-    series_case<sp::format<30,sp::geometry::local,8>,C::equal>();
-    series_case<sp::format<14,sp::geometry::striped>,C::equal>();
+    series_case<sp::layout<4>,C::equal>();
+    series_case<sp::layout<5>,C::equal>();
+    series_case<sp::layout<6>,C::equal>();
+    series_case<sp::layout<7>,C::equal>();
+    series_case<sp::layout<14>,C::equal>();
+    series_case<sp::layout<30>,C::equal>();
+    series_case<sp::layout<31>,C::equal>();
+    series_case<sp::layout<62>,C::equal>();
+    series_case<sp::layout<64>,C::equal>();
+    series_case<sp::layout<30,sp::geometry::local,8>,C::equal>();
+    series_case<sp::layout<14,sp::geometry::striped>,C::equal>();
     check_local_equal();
     const auto page=std::size_t(sysconf(_SC_PAGESIZE));
     auto* p=static_cast<std::uint8_t*>(mmap(nullptr,page*2,PROT_NONE,MAP_PRIVATE|MAP_ANONYMOUS,-1,0));

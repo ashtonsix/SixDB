@@ -108,7 +108,7 @@ struct Case {
     unsigned assigned;
     bool zero{};
     std::string id() const {
-        return std::string(family == sp::geometry::width ? "width" : "direct") + "/" +
+        return std::string(family == sp::geometry::sizes ? "width" : "direct") + "/" +
             (placement == material::Placement::grouped ? "grouped" : "separate") + "/" +
             name(operation) + "/" + std::to_string(assigned) + (zero ? "/zero" : "");
     }
@@ -235,14 +235,16 @@ void run(const Case& c, const Options& o, unsigned repeat) {
     }
     std::vector<material::Store::Change> changes;
     changes.reserve(count);
-    ikea::no_coverage ignored;
+    std::array<ikea::journal::entry, 16> ignored_records; ikea::journal ignored{ignored_records};
     for (unsigned i = 0; i < count; ++i) {
         auto draft = take(material::Draft::create(worker, format, *std::pmr::new_delete_resource(),
             original_extent, c.placement), "create initial block");
-        for (const auto& row : original)
+        for (const auto& row : original) {
+            ignored.used = 0;
             require(bool(sp::append(draft.write(), std::span(row.data).first(row.used), row.reserved, ignored)), "initial append");
+        }
         for (unsigned r = 0; r < original.size(); ++r)
-            if (!original[r].live) require(bool(sp::retire(draft.write(), r, ignored)), "initial retire");
+            if (!original[r].live) { ignored.used = 0; require(bool(sp::retire(draft.write(), r, ignored)), "initial retire"); }
         std::ranges::copy(original_holders, draft.holders().begin());
         auto owner = take(draft.capture(store), "initial capture");
         changes.push_back({{0, i + 1}, std::move(owner)});
@@ -262,7 +264,7 @@ void run(const Case& c, const Options& o, unsigned repeat) {
     const unsigned reader_count = std::max(1u, o.retained);
     auto readers = std::make_unique<Reader[]>(reader_count);
     std::uint64_t retained = 0, retained_peak = 0;
-    std::vector<ikea::owner_write> writes(std::max(2u + 256 * format->layout.append_effect_capacity(),
+    std::vector<ikea::journal::entry> writes(std::max(2u + 256 * format->layout.append_effect_capacity(),
         format->layout.pack_effect_capacity(256)));
     std::vector<Sample> samples(o.samples);
     Clock::time_point measured_begin;
@@ -285,7 +287,7 @@ void run(const Case& c, const Options& o, unsigned repeat) {
                     extent(transferred), c.placement), "create transfer destination") :
                 take(material::Draft::clone(worker, reader.selected, 0, c.placement), "clone retained source");
             sample.cloned = draft.copied_bytes;
-            ikea::source_write_journal effects{writes};
+            ikea::journal effects{writes};
             const auto& plan = plans[i];
             if (c.operation == Operation::replace)
                 require(bool(sp::replace(draft.write(), plan.rank, std::span(plan.row.data).first(plan.row.used), effects)), "checked replace");
@@ -303,12 +305,12 @@ void run(const Case& c, const Options& o, unsigned repeat) {
                 sample.holder_issued = remapped_holders.size() * sizeof(std::uint32_t);
             }
             for (const auto& write : effects.entries()) {
-                require(write.source == &draft.write() && write.bytes.plane < 4, "resolve named effects");
-                const auto plane = draft.write().windows().planes()[write.bytes.plane];
-                require(write.bytes.offset <= plane.size() && write.bytes.size <= plane.size() - write.bytes.offset,
+                require(write.source == &draft.write() && write.plane < 4, "resolve named effects");
+                const auto plane = draft.write().windows().planes()[write.plane];
+                require(write.offset <= plane.size() && write.size <= plane.size() - write.offset,
                     "resolve admitted byte coordinates");
-                sample.issued += write.bytes.size;
-                if (write.bytes.plane == 0) sample.payload_issued += write.bytes.size;
+                sample.issued += write.size;
+                if (write.plane == 0) sample.payload_issued += write.size;
             }
             auto owner = take(draft.capture(store), "capture new physical source");
             require(bool(material::publish(store, *reader.scope, {0, i + 1}, owner)), "prepare/install publication");
@@ -399,7 +401,7 @@ int main(int argc, char** argv) {
         << ",\"clock_pair_p99_ns\":" << percentile(clock_samples, 99)
         << ",\"notes\":\"Single-operation wall-clock quantiles include clock overhead without subtraction. Operation-interval throughput excludes statistics gaps; population wall throughput includes them. Prepared warmed distinct Objects; clone or fresh destination, checked command, effect resolution, capture, prepare/install, reader-window closing, drain(128), poll(32,0) included. Remaining reader close reported separately. Pool stats include warmup and exclude catalog PMR allocation; retained footprint is selected plane bytes, not unique mapped pages or all history protected by the cut. Command issued bytes exclude clone, holder stores and allocator zeroing. --raw emits every measured sample; no discarded losses.\"}\n";
     std::vector<Case> cases;
-    for (auto family : {sp::geometry::direct, sp::geometry::width})
+    for (auto family : {sp::geometry::absolute_ends, sp::geometry::sizes})
         for (auto placement : {material::Placement::grouped, material::Placement::separate})
             for (unsigned assigned : {3u, 15u, 64u}) {
                 for (auto operation : {Operation::replace, Operation::append, Operation::soft_pack, Operation::transfer})

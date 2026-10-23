@@ -45,9 +45,23 @@ the superseded implementations and numbered launchers do not remain live.
 ## Current executable candidate
 
 `multimap/` contains the retained candidate and its ordinary, guarded, Loom,
-growth and merge checks. `reference/iceberg/` supplies the scalar comparator's
-earlier control. Both use the [pinned Abseil provider](../../benchmarks/hashtable/abseil.cmake).
+growth and merge checks. `reference/iceberg/` retains the earlier independent
+scalar control for [source recovery](#recovery). Current focused scalar targets run `packed_inline`
+and Abseil; the historical wider matrix uses its captured runnable project. The
+current targets use the [pinned Abseil provider](../../benchmarks/hashtable/abseil.cmake).
 Include-path curation and compatibility repairs carry no new timing claim.
+
+The current Ikea boundary uses `std::byte` for borrowed storage and opaque values.
+Guarded writes retain the session's grant, identity/revision and structural-epoch
+checks, then admit one complete list of `ikea::journal::entry` records before any
+store. Entries name the actual index, pool directory or heap block and its plane;
+they do not borrow a temporary source descriptor. Captured allocation extents
+remain separate retirement evidence. The context resolves current plane bindings
+and preservation during `prepare`/`before`, before a directory can be replaced or
+a block released; resolving the same plane after commit could find a new allocation. The archived Iceberg control keeps its
+own numeric image and independent mutation protocol; it is excluded from the
+current focused build graph. `multimap/legacy/` is still used by the live Loom read
+control; its directory name does not make those files frozen source.
 
 ```sh
 orb -m ubuntu cmake -S . -B build/hashtable-frontier -G Ninja \

@@ -14,11 +14,11 @@ constexpr bool has_native = N == 8
 #endif
     ;
 void require(bool, unsigned rows, unsigned trial, const char *scenario);
-template <unsigned N> tp::packet<N> buffered(const std::array<tp::byte, N> &bytes) {
+template <unsigned N> tp::packet<N> buffered(const std::array<std::uint8_t, N> &bytes) {
     return std::bit_cast<tp::packet<N>>(bytes);
 }
-template <unsigned N, class Value> std::array<tp::byte, N> unpack(Value value) {
-    std::array<tp::byte, N> bytes{};
+template <unsigned N, class Value> std::array<std::uint8_t, N> unpack(Value value) {
+    std::array<std::uint8_t, N> bytes{};
     if constexpr (N == 8)
         bytes = std::bit_cast<decltype(bytes)>(value);
 #if defined(__aarch64__) || defined(__AVX2__)
@@ -27,7 +27,7 @@ template <unsigned N, class Value> std::array<tp::byte, N> unpack(Value value) {
 #endif
     return bytes;
 }
-template <unsigned N> auto native_value(const std::array<tp::byte, N> &bytes) {
+template <unsigned N> auto native_value(const std::array<std::uint8_t, N> &bytes) {
     if constexpr (N == 8)
         return buffered<N>(bytes);
 #if defined(__aarch64__) || defined(__AVX2__)
@@ -39,17 +39,17 @@ template <unsigned N, unsigned Rows> void wire(std::mt19937 &random) {
     constexpr unsigned B = N / Rows;
     constexpr auto all = tp::detail::all_rows<Rows>;
     const auto simple = *tp::layout::make(1, std::array<tp::code, 1>{tp::code{0, 0, 8}});
-    const std::array<tp::byte, 1> singleton{0};
-    require(!tp::reader<N, Rows>::make(simple, singleton, std::array{0u, 1u}) &&
-                !tp::writer<N, Rows>::make(simple, singleton, std::array{2u}) &&
-                !tp::reader<N, Rows>::make(simple, singleton, std::array{1u, 1u}),
+    const std::array<std::uint8_t, 1> singleton{0};
+    require(!tp::read_plan<N, Rows>::make(simple, singleton, std::array{0u, 1u}) &&
+                !tp::write_plan<N, Rows>::make(simple, singleton, std::array{2u}) &&
+                !tp::read_plan<N, Rows>::make(simple, singleton, std::array{1u, 1u}),
             Rows, 0, "groups require positive exact coverage");
-    require(tp::reader<N, Rows>::make(simple, {}) && tp::writer<N, Rows>::make(simple, {}), Rows, 0,
+    require(tp::read_plan<N, Rows>::make(simple, {}) && tp::write_plan<N, Rows>::make(simple, {}), Rows, 0,
             "empty map uses empty packet prefix");
     if constexpr (B >= 2) {
-        const std::array<tp::byte, 2> duplicate{0, 0};
-        require(tp::reader<N, Rows>::make(simple, duplicate, std::array{1u, 1u}) &&
-                    !tp::writer<N, Rows>::make(simple, duplicate, std::array{1u, 1u}),
+        const std::array<std::uint8_t, 2> duplicate{0, 0};
+        require(tp::read_plan<N, Rows>::make(simple, duplicate, std::array{1u, 1u}) &&
+                    !tp::write_plan<N, Rows>::make(simple, duplicate, std::array{1u, 1u}),
                 Rows, 0, "groups do not change alias/duplicate rules");
     }
     for (unsigned trial = 0; trial < 120; ++trial) {
@@ -59,16 +59,16 @@ template <unsigned N, unsigned Rows> void wire(std::mt19937 &random) {
         std::vector<tp::code> codes;
         for (unsigned i = 0; i < extent; ++i) {
             const unsigned width = 1 + random() % 8;
-            codes.push_back({tp::byte(i), 0, tp::byte(width)});
+            codes.push_back({std::uint8_t(i), 0, std::uint8_t(width)});
             if (width < 8)
-                codes.push_back({tp::byte(i), tp::byte(width), tp::byte(8 - width)});
+                codes.push_back({std::uint8_t(i), std::uint8_t(width), std::uint8_t(8 - width)});
         }
         const auto format = *tp::layout::make(extent, codes);
         std::vector<unsigned> ranks(codes.size());
         for (unsigned i = 0; i < ranks.size(); ++i)
             ranks[i] = i;
         std::shuffle(ranks.begin(), ranks.end(), random);
-        std::array<tp::byte, B> map;
+        std::array<std::uint8_t, B> map;
         map.fill(tp::hole);
         for (unsigned i = 0; i < std::min(B, unsigned(ranks.size())); ++i)
             if (trial % 3 || i % 3)
@@ -97,18 +97,18 @@ template <unsigned N, unsigned Rows> void wire(std::mt19937 &random) {
         const auto selected_map = std::span(map).first(map_slots);
         const auto grouping =
             trial % 3 ? std::span<const unsigned>(groups) : std::span<const unsigned>{};
-        auto rp = *tp::reader<N, Rows>::make(format, selected_map, grouping);
-        auto wp = *tp::writer<N, Rows>::make(format, selected_map, grouping);
-        std::vector<tp::byte> data(offset + (count - 1) * stride + extent);
+        auto rp = *tp::read_plan<N, Rows>::make(format, selected_map, grouping);
+        auto wp = *tp::write_plan<N, Rows>::make(format, selected_map, grouping);
+        std::vector<std::uint8_t> data(offset + (count - 1) * stride + extent);
         for (auto &b : data)
             b = random();
-        auto view = *tp::view::bind(format, data, count, stride, offset);
+        auto view = *tp::view::attach(format, std::as_writable_bytes(std::span{data}), count, stride, offset);
         auto read = *tp::bind_reader(rp, view);
         auto write = *tp::bind_writer(wp, view);
         const std::uint64_t active =
             trial % 3 ? ((std::uint64_t(random()) << 32) | random()) & all : all;
         const std::size_t first = 1;
-        std::array<tp::byte, N> expected{}, values{};
+        std::array<std::uint8_t, N> expected{}, values{};
         auto wanted = data;
         for (unsigned r = 0; r < Rows; ++r)
             for (unsigned i = 0; i < map_slots; ++i) {
@@ -123,7 +123,7 @@ template <unsigned N, unsigned Rows> void wire(std::mt19937 &random) {
                 for (unsigned bit = 0; bit < c.width; ++bit) {
                     expected[position[r * B + i]] |= ((data[pos] >> (c.shift + bit)) & 1) << bit;
                     wanted[pos] =
-                        tp::byte((wanted[pos] & ~(1u << (c.shift + bit))) |
+                        std::uint8_t((wanted[pos] & ~(1u << (c.shift + bit))) |
                                  (((values[position[r * B + i]] >> bit) & 1) << (c.shift + bit)));
                 }
             }
@@ -133,7 +133,7 @@ template <unsigned N, unsigned Rows> void wire(std::mt19937 &random) {
             for (auto g : groups)
                 std::fprintf(stderr, " %u", g);
             std::fprintf(stderr, "\n");
-            auto actual = std::bit_cast<std::array<tp::byte, N>>(*read.get(first, active));
+            auto actual = std::bit_cast<std::array<std::uint8_t, N>>(*read.get(first, active));
             for (unsigned i = 0; i < N; ++i)
                 if (actual[i] != expected[i])
                     std::fprintf(stderr, "byte%u actual=%u expected=%u\n", i, actual[i],
@@ -146,8 +146,8 @@ template <unsigned N, unsigned Rows> void wire(std::mt19937 &random) {
         if constexpr (Rows < 64)
             require(!read.get(0, all + 1), Rows, trial, "high active bit rejected");
         if constexpr (has_native<N>) {
-            const auto native_read = tp::native_reader(read);
-            std::array<tp::byte, N> actual{};
+            const auto native_read = tp::author::native_reader(read);
+            std::array<std::uint8_t, N> actual{};
             actual = unpack<N>(native_read.get_unchecked(first, active));
             require(actual == expected, Rows, trial, "native read/reference");
             actual = unpack<N>(tp::native::row_mask(rp, active));
@@ -157,12 +157,12 @@ template <unsigned N, unsigned Rows> void wire(std::mt19937 &random) {
                         ((owner[i] < Rows && (active & (std::uint64_t(1) << owner[i]))) ? 255 : 0),
                     Rows, trial, "native row mask");
         }
-        std::array<ikea::owner_write, 4096> entries{};
-        ikea::source_write_journal effects{entries};
+        std::array<ikea::journal::entry, 4096> entries{};
+        ikea::journal effects{entries};
         auto saved = data;
-        if (active && wp.effect_capacity()) {
-            std::array<ikea::owner_write, 0> none;
-            ikea::source_write_journal too_small{none};
+        if (active && wp.store_runs()) {
+            std::array<ikea::journal::entry, 0> none;
+            ikea::journal too_small{none};
             require(!write.set(first, buffered<N>(values), too_small, active), Rows, trial,
                     "capacity before bytes");
             require(data == saved && !too_small.used, Rows, trial, "capacity unchanged");
@@ -180,7 +180,7 @@ template <unsigned N, unsigned Rows> void wire(std::mt19937 &random) {
                         "width before bytes");
                 require(data == saved && !effects.used, Rows, trial, "width unchanged");
                 if constexpr (has_native<N>) {
-                    const auto nw = tp::native_writer(write);
+                    const auto nw = tp::author::native_writer(write);
                     require(!nw.set(first, native_value<N>(bad), effects, active), Rows, trial,
                             "native width before bytes");
                     require(data == saved && !effects.used, Rows, trial, "native width unchanged");
@@ -196,14 +196,14 @@ template <unsigned N, unsigned Rows> void wire(std::mt19937 &random) {
         require(data == wanted, Rows, trial, "buffered write/reference");
         for (unsigned i = 0; i < effects.used; ++i) {
             const auto &e = entries[i];
-            require(e.source == &view && e.bytes.offset >= offset &&
-                        e.bytes.offset + e.bytes.size <= data.size(),
+            require(e.source == &view && e.offset >= offset &&
+                        e.offset + e.size <= data.size(),
                     Rows, trial, "qualified bounds");
         }
         if constexpr (has_native<N>) {
             std::copy(saved.begin(), saved.end(), data.begin());
             effects.used = 0;
-            const auto nw = tp::native_writer(write);
+            const auto nw = tp::author::native_writer(write);
             require(bool(nw.set(first, native_value<N>(values), effects, active)), Rows, trial,
                     "native set");
             require(data == wanted, Rows, trial, "native write/reference");
@@ -216,7 +216,7 @@ template <unsigned N, unsigned Rows> void wire(std::mt19937 &random) {
         require(bool(read.read(0, out, selected)), Rows, trial, "packet range tail");
         for (unsigned r = 0; r < 3 * Rows; ++r)
             for (unsigned i = 0; i < map_slots; ++i) {
-                tp::byte value = 0;
+                std::uint8_t value = 0;
                 if (r < count && selected.contains(r) && map[i] != tp::hole) {
                     const auto c = codes[map[i]];
                     value =

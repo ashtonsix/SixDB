@@ -8,28 +8,26 @@ namespace ikea::streampack::author {
 /// These bodies borrow an admitted writable named view. Command, capacity,
 /// aliasing, exclusion and infallible effects are proved before entry. Hooks
 /// cannot allocate, fail, suspend or invalidate any borrowed input.
-template <class Effects>
-inline void emit(const view &dst, Effects &effects, plane stream, unsigned offset, unsigned size) {
+template <class Effects> requires ikea::effects<Effects, view>
+inline void emit(const view &dst, Effects &effects, plane stream, unsigned offset, unsigned size) noexcept {
     if (size)
-        effects.before(dst, byte_write{unsigned(stream), offset, size});
+        effects.before(dst, unsigned(stream), offset, size);
 }
-template <class Effects> struct metadata_effects {
+template <class Effects> requires ikea::effects<Effects, view>
+struct metadata_effects {
     Effects &output;
-    template <class Source> void before(const Source &source, byte_write w) {
-        ++w.plane; // Sidecar metadata 0/1/2 -> StreamPack 1/2/3.
-        output.before(source, w);
+    template <class Source>
+    void before(const Source &source, unsigned plane, std::size_t offset,
+                std::size_t size) noexcept {
+        // Sidecar metadata 0/1/2 -> StreamPack 1/2/3.
+        output.before(source, plane + 1, offset, size);
     }
 };
-template <class Effects> void initialize_unchecked(const view &dst, Effects &effects) {
-    metadata_effects mapped{effects};
-    ikea::streampack::detail::compact::author::initialize_unchecked(dst, mapped);
-}
-template <class Effects> void initialize_unchecked(const view &&, Effects &) = delete;
 /// Temporary admitted append computation. Carries geometry/count across a
 /// complete unpublished run; it owns no storage or publication. Inputs, ranges,
 /// aliases and effect capacity are admitted before constructing it. Do not read
 /// the in-progress source or escape the cursor; finish publishes controls once.
-template <class Access, class Effects> class value_encoder {
+template <class Access, class Effects> requires ikea::effects<Effects, view> class value_encoder {
     // Borrow the owner policy directly. A mapped policy stored inside this cursor
     // and borrowed by geometry creates an address-escaped reference cycle.
     Effects &effects_;
@@ -93,14 +91,7 @@ template <class Access, class Effects> class value_encoder {
                                                            geometry_.position(), mapped);
     }
 };
-template <class Access, class Effects>
-[[gnu::always_inline]] void append_unchecked(Access a, bytes input, unsigned reservation,
-                                             Effects &effects) {
-    value_encoder encoder(a, a.size(), a.source().extent(), effects);
-    encoder.append(input, reservation);
-    encoder.finish();
-}
-template <class Access, class Effects>
+template <class Access, class Effects> requires ikea::effects<Effects, view>
 void append_fixed_run_unchecked(Access a, bytes input, unsigned count, Effects &effects) {
     // Admitted fixed() && !has_used() layout and nonempty in-capacity run;
     // input.size() == count * fixed_width() and the whole payload fits. The
@@ -117,7 +108,7 @@ void append_fixed_run_unchecked(Access a, bytes input, unsigned count, Effects &
     ikea::streampack::detail::compact::author::publish_size_unchecked(a, n + count,
                                                        begin + count * l.fixed_width(), mapped);
 }
-template <class Access, class Effects>
+template <class Access, class Effects> requires ikea::effects<Effects, view>
 void replace_fixed_run_unchecked(Access a, unsigned rank, bytes input, Effects &effects) {
     // Admitted nonempty contiguous live fixed() && !has_used() ranks. Input contains whole
     // values and fits this run; replacement does not alter its rank count.
@@ -127,7 +118,7 @@ void replace_fixed_run_unchecked(Access a, unsigned rank, bytes input, Effects &
     if (!input.empty())
         std::memmove(dst.windows().payload.data() + begin, input.data(), input.size());
 }
-template <class Access, class Effects>
+template <class Access, class Effects> requires ikea::effects<Effects, view>
 [[gnu::always_inline]] void set_used_unchecked(Access a, unsigned rank, unsigned length,
                                                Effects &effects) {
     using W = typename Access::used_type;
@@ -135,13 +126,13 @@ template <class Access, class Effects>
     emit(a.source(), effects, plane::lengths, offset, sizeof(W));
     detail::store(a.source().windows().lengths.data() + offset, W(length));
 }
-template <class Access, class Effects>
+template <class Access, class Effects> requires ikea::effects<Effects, view>
 [[gnu::always_inline]] void replace_used_unchecked(Access a, unsigned rank, unsigned length,
                                                    Effects &effects) {
     if (a.format().has_used())
         set_used_unchecked(a, rank, length, effects);
 }
-template <class Access, class Effects>
+template <class Access, class Effects> requires ikea::effects<Effects, view>
 void extend_unchecked(Access a, unsigned rank, bytes suffix, Effects &effects) {
     // An admitted live rank with has_used(), U <= R, and suffix.size() <= R-U.
     // U+suffix fits the schema maximum and width carrier. Source/effect alias
@@ -154,45 +145,5 @@ void extend_unchecked(Access a, unsigned rank, bytes suffix, Effects &effects) {
     emit(dst, effects, plane::payload, begin + used, suffix.size());
     std::memmove(dst.windows().payload.data() + begin + used, suffix.data(), suffix.size());
     set_used_unchecked(a, rank, used + suffix.size(), effects);
-}
-template <class Access, class Effects>
-void replace_unchecked(Access a, unsigned rank, bytes input, Effects &effects) {
-    const auto &dst = a.source();
-    const auto begin = a.start(rank);
-    emit(dst, effects, plane::payload, begin, input.size());
-    if (!input.empty())
-        std::memmove(dst.windows().payload.data() + begin, input.data(), input.size());
-    replace_used_unchecked(a, rank, input.size(), effects);
-}
-template <class Effects> void retire_unchecked(const view &dst, unsigned rank, Effects &effects) {
-    metadata_effects mapped{effects};
-    ikea::streampack::detail::compact::author::retire_unchecked(dst, rank, mapped);
-}
-template <class Effects> void retire_unchecked(const view &&, unsigned, Effects &) = delete;
-/// One fused value traversal. Capture original R before rewriting preceding
-/// endpoints; U determines shrinking only here, above the geometry kernels.
-template <class Access, class Effects>
-[[gnu::always_inline]] void soft_pack_unchecked(Access a, bool shrink, Effects &effects) {
-    const auto &dst = a.source();
-    metadata_effects mapped{effects};
-    if (a.format().fixed())
-        return;
-    const auto n = a.size();
-    ikea::streampack::detail::compact::author::encoder encoder(a, 0, 0);
-    a.slots(0, n, 0,
-            [&](unsigned rank, unsigned from, unsigned reservation) __attribute__((always_inline)) {
-                const auto used = a.format().has_used() ? a.length(rank) : reservation;
-                const auto width = a.live(rank) ? (shrink ? used : reservation) : 0;
-                const auto to = encoder.position();
-                if (width && from != to) {
-                    emit(dst, effects, plane::payload, to, width);
-                    std::memmove(dst.windows().payload.data() + to,
-                                 dst.windows().payload.data() + from, width);
-                }
-                encoder.append(width, mapped);
-                if (a.format().has_used() && !a.live(rank))
-                    set_used_unchecked(a, rank, 0, effects);
-            });
-    ikea::streampack::detail::compact::author::finish_rewrite_unchecked(a, encoder.position(), mapped);
 }
 } // namespace ikea::streampack::author

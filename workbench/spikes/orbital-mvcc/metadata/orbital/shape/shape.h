@@ -36,9 +36,9 @@ struct Geometry {
 
 // A separate SeriesPack shape control supports arbitrary Part counts, including
 // the 17-Part retention case. All Parts must be tight headless Local, have one
-// consistent 64-bit count and unique IDs; every descriptor is really decoded.
+// parent-supplied 64-bit count and unique IDs; every byte law is decoded.
 [[nodiscard]] Result<Shape*> prove_series(std::pmr::memory_resource&, ProgramId,
-    std::span<const compact_descriptor::PartSource>,
+    std::uint64_t records, std::span<const compact_descriptor::PartSource>,
     std::shared_ptr<const void> dependencies = {}) noexcept;
 void retain(Shape*) noexcept;
 void release(Shape*) noexcept;
@@ -107,7 +107,9 @@ std::uint64_t records(const Export*) noexcept;
 const Geometry& geometry(const Export*) noexcept;
 const ReadLaw& tuple_law(const Export*) noexcept;
 Bytes tuple_interpretation(const Export*) noexcept;
-[[nodiscard]] Result<fixture::sp::descriptor_bytes> series_interpretation(const Export*) noexcept;
+using SeriesDescription = std::array<std::byte, fixture::sp::layout_value::encoded_size()>;
+// Count remains records(export); this description contains only the child law.
+[[nodiscard]] Result<SeriesDescription> series_interpretation(const Export*) noexcept;
 
 struct Footprint { std::size_t requested_bytes{}, copied_metadata{}, shared_shape_bytes{}, owner_bytes{}; };
 Footprint footprint(const Realization*) noexcept;

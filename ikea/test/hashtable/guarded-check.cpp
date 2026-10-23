@@ -45,7 +45,7 @@ void check() {
                 if (existed) {
                     const auto state = ht::author::table_access::get(static_cast<Base&>(owner));
                     if (ht::author::table_access::primary_find<Base>(
-                            state.primary.data + selected_bucket * Base::stride, mix(k).quotient) !=
+                            ikea::to_u8(state.primary.data) + selected_bucket * Base::stride, mix(k).quotient) !=
                         Base::N)
                         ht::require(damage.covered_bytes() >= Base::stride + sizeof(owner),
                                     "shared idempotent primary/header stores covered");
@@ -104,7 +104,7 @@ void check() {
             // Capacity is prepared by ordinary private mutation outside this
             // guarded operation. Every later call obtains a fresh admission.
             const auto state = ht::author::table_access::get(static_cast<Base&>(owner));
-            auto* primary_bytes = state.primary.data + selected_bucket * Base::stride;
+            auto* primary_bytes = ikea::to_u8(state.primary.data) + selected_bucket * Base::stride;
             owner.insert(key(primary), v);
             expected[key(primary)] = v;
             ht::require(primary_bytes[Base::overflow_offset] == 1, "one live overflow");
@@ -148,12 +148,12 @@ void check() {
             ht::require(owner.size() == size, "Swiss duplicate behind primary hole");
             if constexpr (V) {
                 const auto target = key(primary + 1);
-                const ht::byte* tuple = nullptr;
+                const std::uint8_t* tuple = nullptr;
                 for (std::size_t slot = 0; slot < state.groups * 16; ++slot)
-                    if (ht::detail::occupied_control(state.controls.data[slot]) &&
-                        ht::load<Base::key_bytes>(state.slots.data + slot * Base::tuple_bytes) ==
+                    if (ht::detail::occupied_control(ikea::to_u8(state.controls.data)[slot]) &&
+                        ht::load<Base::key_bytes>(ikea::to_u8(state.slots.data) + slot * Base::tuple_bytes) ==
                             target)
-                        tuple = state.slots.data + slot * Base::tuple_bytes;
+                        tuple = ikea::to_u8(state.slots.data) + slot * Base::tuple_bytes;
                 ht::require(tuple, "Swiss alias fixture");
                 ht::bytes<V> before{};
                 std::memcpy(before.data(), tuple, V);

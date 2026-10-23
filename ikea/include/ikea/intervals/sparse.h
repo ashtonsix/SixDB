@@ -11,7 +11,6 @@
 #include <type_traits>
 
 namespace ikea::intervals {
-namespace bl = ikea::intervals;
 
 template <unsigned Spacing, class Width, std::unsigned_integral Point = std::uint32_t,
           unsigned CheckpointCapacity = 0, bool Independent = false>
@@ -40,7 +39,7 @@ struct sparse_sizes {
     }
     template<bool Start = false>
     coordinate prefix(unsigned group,unsigned take) const {
-        coordinate result=bl::detail::read_element(checkpoints,group);
+        coordinate result=detail::read_element(checkpoints,group);
         const Width *base=native_group(group*(Spacing/16));
 #if defined(__aarch64__) || defined(__AVX2__)
         if constexpr(Spacing==64 && Independent) {
@@ -53,13 +52,13 @@ struct sparse_sizes {
         if constexpr(!Start) if(!take) return result;
         const unsigned complete=Start ? take/16 : (take-1)/16;
         for(unsigned i=0;i<complete;++i)
-            result+=bl::detail::prefix16_native(base+std::size_t(i)*stride,16);
-        return result+bl::detail::prefix16_native(base+std::size_t(complete)*stride,
+            result+=detail::prefix16_native(base+std::size_t(i)*stride,16);
+        return result+detail::prefix16_native(base+std::size_t(complete)*stride,
                                                  Start ? take%16 : (take-1)%16+1);
     }
     coordinate at(unsigned rank) const { return prefix(rank / Spacing, rank % Spacing + 1); }
     coordinate start(unsigned rank) const { return prefix<true>(rank / Spacing, rank % Spacing); }
-    Width slot_size(unsigned rank) const { return bl::detail::read_element(native_group(rank / 16), rank % 16); }
+    Width slot_size(unsigned rank) const { return detail::read_element(native_group(rank / 16), rank % 16); }
 
     template <class Sink>
     [[gnu::always_inline]] void visit_intervals(unsigned begin, unsigned take, Sink &&sink) const {
@@ -68,7 +67,7 @@ struct sparse_sizes {
         for (unsigned i = 0; i < take; ++i) {
             const unsigned rank = begin + i;
             const coordinate next = position + slot_size(rank);
-            [[clang::always_inline]] sink(rank, bl::interval<coordinate>{position, next});
+            [[clang::always_inline]] sink(rank, interval<coordinate>{position, next});
             position = next;
         }
     }
@@ -78,9 +77,9 @@ struct sparse_sizes {
     template <std::integral Query>
     [[gnu::always_inline]] unsigned owner_rank(Query point) const {
         const Point value = static_cast<Point>(point);
-        const unsigned next = bl::detail::checkpoint_boundary<bl::edge::after,CheckpointCapacity>(checkpoints,groups(),value);
+        const unsigned next = detail::checkpoint_boundary<edge::after,CheckpointCapacity>(checkpoints,groups(),value);
         const unsigned group = next - 1, begin = group * Spacing;
-        const Point base = bl::detail::read_element(checkpoints, group);
+        const Point base = detail::read_element(checkpoints, group);
         unsigned offset = static_cast<unsigned>(value - base);
         Point position = base;
         const unsigned end = begin + std::min(Spacing, count - begin);
@@ -90,7 +89,7 @@ struct sparse_sizes {
             unsigned span_proof = static_cast<unsigned>(std::min<std::uint64_t>(
                 16ull * maximum, static_cast<std::uint64_t>(limit - position)));
             if (window + 16 < end - begin) {
-                const unsigned span = bl::detail::prefix16_native(local, 16);
+                const unsigned span = detail::prefix16_native(local, 16);
                 if (offset >= span) {
                     offset -= span;
                     position += span;
@@ -100,16 +99,16 @@ struct sparse_sizes {
             }
             const auto found = [&] {
                 if constexpr (sizeof(Width) == 1)
-                    return bl::detail::owner16_native(local, offset);
+                    return detail::owner16_native(local, offset);
                 else
-                    return bl::detail::owner16_native(local, offset, span_proof);
+                    return detail::owner16_native(local, offset, span_proof);
             }();
             return rank + found;
         }
         return count;
     }
 
-    template <bl::edge Edge> struct pending {
+    template <edge Edge> struct pending {
         const Width *fields;
         unsigned first, take, stride, maximum;
         Point offset, remaining;
@@ -128,43 +127,43 @@ struct sparse_sizes {
                 const unsigned count = std::min(16u, take - window);
                 unsigned span_proof = static_cast<unsigned>(std::min<std::uint64_t>(16ull * maximum, left));
                 if (window + 16 < take) {
-                    const unsigned span = bl::detail::prefix16_native(local, 16);
+                    const unsigned span = detail::prefix16_native(local, 16);
                     if (relative >= span) {relative -= span; left -= span; continue;}
                     span_proof = span;
                 }
                 if (relative > 16u * maximum) return first + take;
                 const unsigned found = [&] {
                     if constexpr (sizeof(Width) == 1)
-                        return bl::detail::owner16_native(local, unsigned(relative));
+                        return detail::owner16_native(local, unsigned(relative));
                     else
-                        return bl::detail::owner16_native(local, unsigned(relative), span_proof);
+                        return detail::owner16_native(local, unsigned(relative), span_proof);
                 }();
                 return first + window + std::min(found, count);
             }
             return first + take;
         }
     };
-    template <bl::edge Edge, std::integral Query>
+    template <edge Edge, std::integral Query>
     [[gnu::always_inline]] pending<Edge> prepare(Query point) const {
         auto ready = [](unsigned rank) -> pending<Edge> {return {nullptr,rank,0,0,0,0,0};};
-        const bl::detail::prepared_query<Point, Query> query(point);
+        const detail::prepared_query<Point, Query> query(point);
         if (query.relation) return ready(query.relation < 0 ? 0u : count);
-        if (!count || !bl::detail::meets<Edge>(limit, query.value)) return ready(count);
-        const unsigned next = bl::detail::checkpoint_boundary<Edge,CheckpointCapacity>(checkpoints,groups(),query.value);
+        if (!count || !detail::meets<Edge>(limit, query.value)) return ready(count);
+        const unsigned next = detail::checkpoint_boundary<Edge,CheckpointCapacity>(checkpoints,groups(),query.value);
         const unsigned group = next ? next - 1 : 0, begin = group * Spacing;
-        const Point base = bl::detail::read_element(checkpoints, group);
-        if (query.value < base || (Edge == bl::edge::at_or_after && query.value == base)) return ready(begin);
+        const Point base = detail::read_element(checkpoints, group);
+        if (query.value < base || (Edge == edge::at_or_after && query.value == base)) return ready(begin);
         return {native_group(begin / 16),begin,std::min(Spacing,count-begin),stride,maximum,
-                Point(query.value-base-unsigned(Edge==bl::edge::at_or_after)),Point(limit-base)};
+                Point(query.value-base-unsigned(Edge==edge::at_or_after)),Point(limit-base)};
     }
-    template <bl::edge Edge, class Query>
+    template <edge Edge, class Query>
     [[gnu::always_inline]] unsigned boundary(const Query &point) const {
         if constexpr (std::integral<Query>) return prepare<Edge>(point).finish();
         else {
             unsigned low = 0, high = count;
             while (low < high) {
                 const unsigned middle = low + (high - low) / 2;
-                if (bl::detail::meets<Edge>(at(middle), point)) high = middle;
+                if (detail::meets<Edge>(at(middle), point)) high = middle;
                 else low = middle + 1;
             }
             return low;
@@ -189,16 +188,16 @@ struct sparse_ends {
     coordinate extent() const noexcept { return limit; }
     unsigned groups() const noexcept { return count / Spacing + unsigned(count % Spacing != 0); }
     coordinate at(unsigned rank) const {
-        return bl::detail::read_element(checkpoints, rank / Spacing) +
-               bl::detail::read_element(ends, rank);
+        return detail::read_element(checkpoints, rank / Spacing) +
+               detail::read_element(ends, rank);
     }
     coordinate start(unsigned rank) const {
-        return bl::detail::read_element(checkpoints, rank / Spacing) +
-               (rank % Spacing ? bl::detail::read_element(ends, rank - 1) : 0);
+        return detail::read_element(checkpoints, rank / Spacing) +
+               (rank % Spacing ? detail::read_element(ends, rank - 1) : 0);
     }
     Local slot_size(unsigned rank) const {
-        return bl::detail::read_element(ends, rank) -
-               (rank % Spacing ? bl::detail::read_element(ends, rank - 1) : 0);
+        return detail::read_element(ends, rank) -
+               (rank % Spacing ? detail::read_element(ends, rank - 1) : 0);
     }
     template <class Sink>
     [[gnu::always_inline]] void visit_intervals(unsigned begin, unsigned take, Sink &&sink) const {
@@ -207,21 +206,21 @@ struct sparse_ends {
         for (unsigned i = 0; i < take; ++i) {
             const unsigned rank = begin + i;
             const coordinate next = at(rank);
-            [[clang::always_inline]] sink(rank, bl::interval<coordinate>{position, next});
+            [[clang::always_inline]] sink(rank, interval<coordinate>{position, next});
             position = next;
         }
     }
     template <std::integral Query>
     [[gnu::always_inline]] unsigned owner_rank(Query point) const {
         const Point value = static_cast<Point>(point);
-        const unsigned next = bl::detail::checkpoint_boundary<bl::edge::after, CheckpointCapacity>(
+        const unsigned next = detail::checkpoint_boundary<edge::after, CheckpointCapacity>(
             checkpoints, groups(), value);
         const unsigned group = next - 1, begin = group * Spacing;
-        const Point base = bl::detail::read_element(checkpoints, group);
-        return begin + bl::detail::hybrid_array<bl::edge::after, true>(
+        const Point base = detail::read_element(checkpoints, group);
+        return begin + detail::hybrid_array<edge::after, true>(
             ends + begin, std::min(Spacing, count - begin), Local(value - base));
     }
-    template <bl::edge Edge> struct pending {
+    template <edge Edge> struct pending {
         const Local *fields;
         unsigned first, take;
         Local relative;
@@ -231,31 +230,31 @@ struct sparse_ends {
                           : std::span<const std::byte>{};
         }
         unsigned finish() const {
-            return fields ? first + bl::detail::hybrid_array<Edge,true>(fields,take,relative) : first;
+            return fields ? first + detail::hybrid_array<Edge,true>(fields,take,relative) : first;
         }
     };
-    template <bl::edge Edge, std::integral Query>
+    template <edge Edge, std::integral Query>
     pending<Edge> prepare(Query point) const {
         auto ready=[](unsigned rank)->pending<Edge>{return {nullptr,rank,0,0};};
-        const bl::detail::prepared_query<Point, Query> query(point);
+        const detail::prepared_query<Point, Query> query(point);
         if (query.relation) return ready(query.relation < 0 ? 0u : count);
-        if (!count || !bl::detail::meets<Edge>(limit,query.value)) return ready(count);
-        const unsigned next=bl::detail::checkpoint_boundary<Edge,CheckpointCapacity>(checkpoints,groups(),query.value);
+        if (!count || !detail::meets<Edge>(limit,query.value)) return ready(count);
+        const unsigned next=detail::checkpoint_boundary<Edge,CheckpointCapacity>(checkpoints,groups(),query.value);
         const unsigned group=next?next-1:0,begin=group*Spacing;
-        const Point base=bl::detail::read_element(checkpoints,group);
-        if(query.value<base||(Edge==bl::edge::at_or_after&&query.value==base)) return ready(begin);
+        const Point base=detail::read_element(checkpoints,group);
+        if(query.value<base||(Edge==edge::at_or_after&&query.value==base)) return ready(begin);
         const Point relative=query.value-base;
         if(relative>std::numeric_limits<Local>::max()) return ready(count);
         return {ends+begin,begin,std::min(Spacing,count-begin),Local(relative)};
     }
-    template <bl::edge Edge, class Query>
+    template <edge Edge, class Query>
     [[gnu::always_inline]] unsigned boundary(const Query &point) const {
         if constexpr (std::integral<Query>) return prepare<Edge>(point).finish();
         else {
             unsigned low = 0, high = count;
             while (low < high) {
                 const unsigned middle = low + (high - low) / 2;
-                if (bl::detail::meets<Edge>(at(middle), point)) high = middle;
+                if (detail::meets<Edge>(at(middle), point)) high = middle;
                 else low = middle + 1;
             }
             return low;

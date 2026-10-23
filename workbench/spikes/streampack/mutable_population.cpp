@@ -189,12 +189,12 @@ struct WriteResult { std::uint64_t commands{}, records{}; bool operator==(const 
 // binding lives. This prices issued/materialized damage records, not resolution,
 // frozen afterimages or MVCC. The geometry check independently replays records.
 template<class F> __attribute__((noinline)) WriteResult write_trace(F& f, unsigned operation) {
-  std::array<ikea::owner_write, 2048> storage;
+  std::array<ikea::journal::entry, 2048> storage;
   WriteResult result;
   for (unsigned b = 0; b < f.blocks; ++b) {
     auto w = f.writer(b);
     const auto command = [&](auto run) {
-      ikea::source_write_journal effects{storage};
+      ikea::journal effects{storage};
       require(run(effects) == sn::Error::none, "issued mutation");
       escape(effects.entries().data()); result.records += effects.entries().size(); ++result.commands;
     };

@@ -1,4 +1,5 @@
 #pragma once
+#include <ikea/hashtable/types.h>
 #include <algorithm>
 #include <cstddef>
 #include <cstdint>
@@ -8,7 +9,7 @@
 #include <limits>
 #include <new>
 #include <stdexcept>
-#include <system_error>
+#include <string_view>
 #include <utility>
 
 namespace ikea::hashtable {
@@ -38,7 +39,7 @@ typename Storage::buffer duplicate_buffer(const typename Storage::buffer& source
 struct heap_storage_policy {
     struct context {};
     struct retention {};
-    using trim_result = std::expected<void, std::errc>;
+    using trim_result = std::expected<void, error>;
     class buffer {
         std::size_t capacity_ = 0;
         static std::size_t round64(std::size_t n) {
@@ -48,7 +49,7 @@ struct heap_storage_policy {
         }
 
       public:
-        std::uint8_t* data = nullptr;
+        std::byte* data = nullptr;
         std::size_t size = 0;
         buffer() = default;
         explicit buffer(std::size_t n, context* = nullptr, bool zero = true,
@@ -56,7 +57,7 @@ struct heap_storage_policy {
             n = round64(n);
             reserve = round64(std::max(n, reserve));
             if (reserve) {
-                data = static_cast<std::uint8_t*>(std::aligned_alloc(64, reserve));
+                data = static_cast<std::byte*>(std::aligned_alloc(64, reserve));
                 if (!data)
                     throw std::bad_alloc();
             }
@@ -110,7 +111,7 @@ struct heap_storage_policy {
         trim_result relinquish_tail(std::size_t n) {
             n = round64(n);
             if (n > size)
-                return std::unexpected(std::errc::invalid_argument);
+                return std::unexpected(error::range);
             size = n;
             return {};
         }

@@ -5,25 +5,25 @@
 #include <unistd.h>
 
 using namespace ikea::hashtable;
-template <unsigned Bits> void check(byte* end) {
+template <unsigned Bits> void check(std::uint8_t* end) {
     // A complete eight-row tile ends at an unreadable guard page. The oracle
     // describes the wire bits directly, independently of the pack readers.
     auto* tile = end - Bits;
-    std::array<byte, Bits> expected;
+    std::array<std::uint8_t, Bits> expected;
     std::mt19937_64 random(811 + Bits);
     for (unsigned repetition = 0; repetition < 100; ++repetition) {
         for (unsigned i = 0; i < Bits; ++i)
-            tile[i] = expected[i] = byte(random());
+            tile[i] = expected[i] = std::uint8_t(random());
         for (unsigned lane = 0; lane < 8; ++lane) {
             const auto value = repetition == 0   ? word{0}
                                : repetition == 1 ? mask<Bits>
                                                  : random() & mask<Bits>;
             constexpr auto body = Bits / 8, tail = Bits % 8;
             for (unsigned byte_index = 0; byte_index < body; ++byte_index)
-                expected[lane * body + byte_index] = byte(value >> (tail + 8 * byte_index));
+                expected[lane * body + byte_index] = std::uint8_t(value >> (tail + 8 * byte_index));
             for (unsigned bit = 0; bit < tail; ++bit) {
-                auto& byte = expected[8 * body + bit];
-                byte = static_cast<ikea::hashtable::byte>((byte & ~(1u << lane)) |
+                auto& plane_byte = expected[8 * body + bit];
+                plane_byte = static_cast<std::uint8_t>((plane_byte & ~(1u << lane)) |
                                                           (((value >> bit) & 1u) << lane));
             }
             set_point<Bits>(tile, lane, 8, value);
@@ -34,7 +34,7 @@ template <unsigned Bits> void check(byte* end) {
 }
 int main() {
     const auto page = std::size_t(sysconf(_SC_PAGESIZE));
-    auto* memory = static_cast<byte*>(
+    auto* memory = static_cast<std::uint8_t*>(
         mmap(nullptr, 2 * page, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0));
     require(memory != MAP_FAILED && mprotect(memory + page, page, PROT_NONE) == 0,
             "point guard allocation");

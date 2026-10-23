@@ -3,12 +3,12 @@
 #include <cassert>
 
 namespace sp = ikea::seriespack;
-using F = sp::format<8>;
-using Packet = sp::pipeline_packet<8, 32>;
-using Plan = sp::packet_chain<8, 32>;
+using F = sp::layout<8>;
+using Packet = sp::author::pipeline_packet<8, 32>;
+using Plan = sp::author::packet_chain<8, 32>;
 
 struct bindings {
-    const sp::view<F>& source;
+    const sp::const_view<F>& source;
     std::uint8_t rank_cutoff;
     std::uint64_t sum = 0;
 };
@@ -45,8 +45,8 @@ void finished(void*, std::size_t, std::uint64_t, Packet) {}
 Packet load(const bindings& bound, std::size_t row) {
     Packet values;
     const auto& plane = bound.source.stream(0);
-    values.set<0>(sp::native::read16<F, false>(plane.bytes.data(), plane.stride, row));
-    values.set<1>(sp::native::read16<F, false>(plane.bytes.data(), plane.stride, row + 16));
+    values.set<0>(sp::native::read16<F, false>(ikea::to_u8(plane.bytes).data(), plane.stride, row));
+    values.set<1>(sp::native::read16<F, false>(ikea::to_u8(plane.bytes).data(), plane.stride, row + 16));
     return values;
 }
 
@@ -54,12 +54,12 @@ int main() {
     alignas(64) std::array<std::uint8_t, 64> bytes{};
     for (unsigned i = 0; i < bytes.size(); ++i)
         bytes[i] = std::uint8_t(i + 96);
-    const auto source = sp::view<F>::attach(bytes.size(), {{{bytes, F::tile_bytes}, {}, {}}});
+    const auto source = sp::const_view<F>::attach(bytes.size(), {{{std::as_bytes(std::span(bytes)), F::tile_bytes}, {}, {}}});
     assert(source);
     bindings direct{*source, 128}, continued{*source, 128};
     const std::array<Plan::function, 2> stages{&Plan::stage<&rank_signed>,
                                                &Plan::stage<&selected_rank_sum>};
-    const auto plan = Plan::prepare(stages, &Plan::completion<&finished>);
+    const auto plan = Plan::make(stages, &Plan::completion<&finished>);
     assert(plan);
     for (std::size_t row = 0; row < bytes.size(); row += 32) {
         constexpr std::uint64_t active = 0xffffffff;

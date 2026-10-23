@@ -40,9 +40,9 @@ int main() {
                                 }
                                 for (unsigned grain : {1u, 2u}) {
                                     std::vector<bc::byte> storage(n * 32 + 17, bc::byte{0xa5});
-                                    bc::destination output{std::span(storage).first(n * 32)};
-                                    std::vector<ikea::owner_write> records(n);
-                                    ikea::source_write_journal effects{records};
+                                    bc::view output{std::span(storage).first(n * 32)};
+                                    std::vector<ikea::journal::entry> records(n);
+                                    ikea::journal effects{records};
                                     bind_algebra(op, out, grain)(
                                         {a, ai == layouts.size() ? nullptr : da[ai].get(), lookup},
                                         {b, bi == layouts.size() ? nullptr : db[bi].get(),
@@ -51,10 +51,10 @@ int main() {
                                         mask.data(), output, effects);
                                     std::vector<bool> covered(n * 32);
                                     for (auto e : effects.entries()) {
-                                        assert(e.source == &output && e.bytes.plane == 0);
-                                        assert(e.bytes.offset + e.bytes.size <= n * 32);
-                                        for (std::size_t j = e.bytes.offset;
-                                             j < e.bytes.offset + e.bytes.size; ++j)
+                                        assert(e.source == &output && e.plane == 0);
+                                        assert(e.offset + e.size <= n * 32);
+                                        for (std::size_t j = e.offset;
+                                             j < e.offset + e.size; ++j)
                                             covered[j] = true;
                                     }
                                     for (unsigned i = 0; i < n; ++i) {

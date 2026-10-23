@@ -9,13 +9,13 @@ void packet_benchmark(benchmark::State& state) {
     fixture<12, sp::geometry::striped> a(8192);
     fixture<23, sp::geometry::local> b(8192);
     fixture<32, sp::geometry::local> d(8192);
-    const auto av = *sp::view<typename Frame::A>::attach(
-        a.count, {{{{a.storage.get(), a.bytes}, Frame::A::tile_bytes}, {}, {}}});
-    const auto bv = *sp::view<typename Frame::B>::attach(
-        b.count, {{{{b.storage.get(), b.bytes}, Frame::B::tile_bytes}, {}, {}}});
-    const auto dv = *sp::view<typename Frame::D, std::uint8_t>::attach(
-        d.count, {{{{d.storage.get(), d.bytes}, Frame::D::tile_bytes}, {}, {}}});
-    std::vector<sp::byte_write> effects(d.count);
+    const auto av = *sp::const_view<typename Frame::A>::attach(
+        a.count, {{{std::as_bytes(std::span{a.storage.get(), a.bytes}), Frame::A::tile_bytes},{},{}}});
+    const auto bv = *sp::const_view<typename Frame::B>::attach(
+        b.count, {{{std::as_bytes(std::span{b.storage.get(), b.bytes}), Frame::B::tile_bytes},{},{}}});
+    const auto dv = *sp::view<typename Frame::D>::attach(
+        d.count, {{{std::as_writable_bytes(std::span{d.storage.get(), d.bytes}), Frame::D::tile_bytes},{},{}}});
+    std::vector<ikea::journal::entry> effects(d.count);
     Frame frame{av, bv, dv, {effects}, {}};
     // A nonzero cutoff produces empty packets from the actual data. Zero can
     // let an inline compiler eliminate the entire scan before loading values.

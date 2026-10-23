@@ -1,65 +1,30 @@
 #pragma once
 #include <ikea/comparison.h>
-#include <ikea/detail/filter/compare.h>
-#include <ikea/tuplepack/author/execution.h>
+#include <ikea/tuplepack/author/filter.h>
+#include <ikea/tuplepack/read.h>
+#include <ikea/tuplepack/detail/native/read.h>
 
 namespace ikea::tuplepack {
-/// One bit per decoded packet byte, in the plan's packet order. The caller
-/// supplies activity in those same coordinates, excluding holes/unused slots.
-/// Multi-byte number interpretation remains with the enclosing composition.
-template <comparison Op, unsigned N>
-[[gnu::always_inline]] inline std::uint64_t
-filter_values(native::packet_for<N> value, std::uint64_t rhs,
-              std::uint64_t active = ~std::uint64_t{0}) {
-    if (rhs > 255)
-        return ikea::compare<Op>(0, rhs) ? active & (~std::uint64_t{0} >> (64 - N)) : 0;
-    std::uint64_t out = 0;
-    if constexpr (N == 8) {
-#if defined(__aarch64__)
-        out = ikea::detail::filter::bits<1, Op>(
-            vreinterpretq_u8_u64(vcombine_u64(vcreate_u64(value), vdup_n_u64(0))), rhs);
-#elif defined(__AVX2__)
-        out = ikea::detail::filter::bits<1, Op>(_mm_cvtsi64_si128(value), rhs);
-#else
-        for (unsigned i = 0; i < 8; ++i)
-            out |= std::uint64_t(ikea::compare<Op>((value >> (i * 8)) & 255, rhs)) << i;
-#endif
-        out &= 255;
-    }
-#if defined(__aarch64__) || defined(__AVX2__)
-    else {
-#if defined(__aarch64__)
-        out = ikea::detail::filter::bits<1, Op>(value.a, rhs) |
-              (std::uint64_t(ikea::detail::filter::bits<1, Op>(value.b, rhs)) << 16) |
-              (std::uint64_t(ikea::detail::filter::bits<1, Op>(value.c, rhs)) << 32) |
-              (std::uint64_t(ikea::detail::filter::bits<1, Op>(value.d, rhs)) << 48);
-#elif defined(__AVX512VBMI__)
-        out = ikea::detail::filter::bits<1, Op>(value, rhs);
-#else
-        out = ikea::detail::filter::bits<1, Op>(value.a, rhs) |
-              (std::uint64_t(ikea::detail::filter::bits<1, Op>(value.b, rhs)) << 32);
-#endif
-    }
-#endif
-    return out & active;
-}
-
-/// A single-code projection gives one predicate result per original row.
-/// Borrows the named plan/view, as native_reader does; copies retain that
-/// borrowing. Prepare once outside the consumer's hot loop.
-template <unsigned N, class Byte, unsigned Rows = 1> class field_filter {
-    native_reader<N, Byte, Rows> read_;
+/// Prepared single-code comparison in original-row coordinates. Copies the
+/// reader's plan/view pointers and the code projection, so the reader wrapper
+/// may expire. The named plan/view and their values stay stable through use.
+/// Prepare once for repeated filters; general readers retain only two pointers.
+template <unsigned N, class Byte, unsigned Rows = 1> class predicate {
+    reader<N, Byte, Rows> read_;
     code code_;
-    explicit field_filter(const read_operation<N, Byte, Rows>& source)
+    template <unsigned, class, unsigned> friend class reader;
+    explicit predicate(const reader<N, Byte, Rows>& source)
         : read_(source), code_(source.plan().controls().codes[0]) {}
 
   public:
-    [[nodiscard]] static std::expected<field_filter, error>
-    bind(const read_operation<N, Byte, Rows>& source) {
+    static constexpr unsigned rows = Rows;
+    [[nodiscard]] static std::expected<predicate, error>
+    bind(const reader<N, Byte, Rows>& source) {
         if (source.plan().ordering().map_size() != 1 || !source.plan().read_bytes())
             return std::unexpected(error::map);
-        return field_filter(source);
+        return predicate(source);
     }
+    std::size_t size() const noexcept { return read_.size(); }
     template <comparison Op>
     /// Requires first <= source size, activity within Rows, and every active
     /// row in bounds. Empty activity requires no payload storage.
@@ -73,7 +38,7 @@ template <unsigned N, class Byte, unsigned Rows = 1> class field_filter {
             return ikea::compare<Op>(0, rhs) ? active : 0;
         if constexpr (Rows == 1) {
             const unsigned encoded =
-                read_.source().row_unchecked(first)[code_.offset] & (limit << code_.shift);
+                ikea::to_u8(read_.source().row_unchecked(first))[code_.offset] & (limit << code_.shift);
             return ikea::compare<Op>(encoded, rhs << code_.shift) ? active : 0;
         }
 #if defined(__aarch64__) || defined(__AVX2__)
@@ -81,7 +46,7 @@ template <unsigned N, class Byte, unsigned Rows = 1> class field_filter {
         // is order-preserving; mask away neighboring fields, not the query.
         if constexpr (Rows >= 16) {
             if (active == detail::all_rows<Rows> && read_.source().stride() == 1) {
-                const auto* p = read_.source().row_unchecked(first);
+                const auto* p = ikea::to_u8(read_.source().row_unchecked(first));
                 const auto mask = limit << code_.shift;
                 const auto query = rhs << code_.shift;
 #if defined(__aarch64__)
@@ -121,19 +86,48 @@ template <unsigned N, class Byte, unsigned Rows = 1> class field_filter {
             }
         }
 #endif
-        return filter_values<Op, N>(read_.get_unchecked(first, active), rhs, active);
+        return author::filter_values<Op, N>(detail::read_native(read_.plan(), read_.source(), first, active), rhs, active);
     }
     template <comparison Op>
     [[nodiscard]] std::expected<std::uint64_t, error>
     filter(std::size_t first, std::uint64_t rhs,
            std::uint64_t active = detail::all_rows<Rows>) const {
-        if (auto admitted = read_.admit(first, active); !admitted)
-            return std::unexpected(admitted.error());
+        if (!detail::valid_window<Rows>(read_.size(), first, active))
+            return std::unexpected(error::range);
         return filter_unchecked<Op>(first, rhs, active);
     }
 };
+
 template <unsigned N, class Byte, unsigned Rows>
-auto bind_filter(const read_operation<N, Byte, Rows>& source) {
-    return field_filter<N, Byte, Rows>::bind(source);
+[[nodiscard]] auto bind_predicate(const reader<N, Byte, Rows>& source) {
+    return predicate<N, Byte, Rows>::bind(source);
+}
+template <unsigned N, class Byte, unsigned Rows>
+[[nodiscard]] std::expected<predicate<N, Byte, Rows>, error>
+bind_predicate(const read_plan<N, Rows>& plan, const basic_view<Byte>& source) {
+    auto operation = bind_reader(plan, source);
+    if (!operation)
+        return std::unexpected(operation.error());
+    return bind_predicate(*operation);
+}
+template <unsigned N, class Byte, unsigned Rows>
+auto bind_predicate(const read_plan<N, Rows>&&, const basic_view<Byte>&) = delete;
+template <unsigned N, class Byte, unsigned Rows>
+auto bind_predicate(const read_plan<N, Rows>&, const basic_view<Byte>&&) = delete;
+
+template <unsigned N, class Byte, unsigned Rows>
+template <comparison Op>
+std::expected<std::uint64_t, error> reader<N, Byte, Rows>::filter(
+    std::size_t first, std::uint64_t rhs, std::uint64_t active) const {
+    auto prepared = bind_predicate(*this);
+    if (!prepared)
+        return std::unexpected(prepared.error());
+    return prepared->template filter<Op>(first, rhs, active);
+}
+template <unsigned N, class Byte, unsigned Rows>
+template <comparison Op>
+[[gnu::always_inline]] std::uint64_t reader<N, Byte, Rows>::filter_unchecked(
+    std::size_t first, std::uint64_t rhs, std::uint64_t active) const {
+    return predicate<N, Byte, Rows>(*this).template filter_unchecked<Op>(first, rhs, active);
 }
 } // namespace ikea::tuplepack

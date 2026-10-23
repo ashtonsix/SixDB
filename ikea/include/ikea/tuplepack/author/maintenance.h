@@ -1,7 +1,7 @@
 #pragma once
 #include <ikea/tuplepack/write.h>
 
-namespace ikea::tuplepack {
+namespace ikea::tuplepack::author {
 /// An observation projection is independent of the write map. It can include
 /// unchanged dependencies and read-only aliases. Law owns semantic identity,
 /// version and private accumulated state. Persistent outputs need their own
@@ -15,7 +15,7 @@ template <class Projection, class Law> class observation {
     struct empty {};
 
   public:
-    static constexpr unsigned rows = detail::operation_rows<Projection>;
+    static constexpr unsigned rows = ikea::tuplepack::detail::operation_rows<Projection>;
     observation(const Projection& projection, Law& law) : projection_(&projection), law_(&law) {}
     observation(const Projection&&, Law&) = delete;
     observation(const Projection&, Law&&) = delete;
@@ -23,7 +23,7 @@ template <class Projection, class Law> class observation {
         return first <= projection_->size() && count <= projection_->size() - first;
     }
     auto before(std::size_t row) const noexcept
-        requires(detail::operation_rows<Projection> == 1)
+        requires(ikea::tuplepack::detail::operation_rows<Projection> == 1)
     {
         if constexpr (Law::needs_before)
             return projection_->get_unchecked(row);
@@ -32,7 +32,7 @@ template <class Projection, class Law> class observation {
     }
     template <class Before>
     void after(std::size_t row, Before&& before) const noexcept
-        requires(detail::operation_rows<Projection> == 1)
+        requires(ikea::tuplepack::detail::operation_rows<Projection> == 1)
     {
         if constexpr (Law::needs_before && Law::needs_after)
             law_->observe(row, before, projection_->get_unchecked(row));
@@ -46,7 +46,7 @@ template <class Projection, class Law> class observation {
     /// Packet-shaped laws receive the original first row and active row mask.
     /// They can reduce/transform native projections without per-row extraction.
     auto before_batch(std::size_t first, std::uint64_t active) const noexcept
-        requires(detail::operation_rows<Projection> > 1)
+        requires(ikea::tuplepack::detail::operation_rows<Projection> > 1)
     {
         if constexpr (Law::needs_before)
             return projection_->get_unchecked(first, active);
@@ -55,7 +55,7 @@ template <class Projection, class Law> class observation {
     }
     template <class Before>
     void after_batch(std::size_t first, std::uint64_t active, Before&& before) const noexcept
-        requires(detail::operation_rows<Projection> > 1)
+        requires(ikea::tuplepack::detail::operation_rows<Projection> > 1)
     {
         if constexpr (Law::needs_before && Law::needs_after)
             law_->observe_batch(first, active, before, projection_->get_unchecked(first, active));

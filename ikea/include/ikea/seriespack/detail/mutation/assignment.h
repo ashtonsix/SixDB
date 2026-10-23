@@ -1,7 +1,7 @@
 #pragma once
-#include <ikea/seriespack/detail/mutation/physical.h>
+#include <ikea/seriespack/author/mutation.h>
 
-namespace ikea::seriespack::composition {
+namespace ikea::seriespack::author {
 #if defined(__aarch64__) || defined(__AVX2__)
 /// Reverse the same semantic joins used by reading. An execution backend owns
 /// native projection and physical stores; an effect backend can walk the same
@@ -41,7 +41,7 @@ struct native_write_ops {
     template <class S, field_kind Field, unsigned K>
     [[gnu::always_inline]] void write(const leaf<S, Field>& destination, std::size_t first,
                                       native::values<K> value) const {
-        using F = typename S::format_type;
+        using F = typename S::layout_type;
         static_assert(K == leaf<S, Field>::bit_width);
         constexpr unsigned shift = Field == field_kind::body    ? F::tail
                                    : Field == field_kind::head0 ? F::width - 8
@@ -61,16 +61,16 @@ struct scalar_write_ops {
     }
     template <class S, field_kind Field, unsigned K>
     void write(const leaf<S, Field>& destination, std::size_t row, scalar_value<K> value) const {
-        using F = typename S::format_type;
+        using F = typename S::layout_type;
         static_assert(K == leaf<S, Field>::bit_width);
         const auto tile = row / F::tile_rows, lane = row % F::tile_rows;
         if constexpr (Field == field_kind::head0 || Field == field_kind::head1) {
             constexpr unsigned p = Field == field_kind::head0 ? 1 : 2;
             const auto& plane = destination.source.stream(p);
-            plane.bytes[tile * plane.stride + lane] = value.value;
+            ikea::to_u8(plane.bytes)[tile * plane.stride + lane] = value.value;
         } else {
             const auto& plane = destination.source.stream(0);
-            auto* bytes = plane.bytes.data() + tile * plane.stride;
+            auto* bytes = ikea::to_u8(plane.bytes).data() + tile * plane.stride;
             if constexpr (Field == field_kind::body)
                 ikea::seriespack::detail::store<F::body>(
                     bytes + ikea::seriespack::detail::body_offset<F>(lane), value.value);
@@ -90,8 +90,9 @@ template <class Coverage, bool Point = false> struct coverage_ops {
     }
     template <class S, field_kind Field>
     void write(const leaf<S, Field>& destination, std::size_t first, write_token) const {
-        using F = typename S::format_type;
-        auto emit = [&](byte_write write) { coverage.before(destination.source, write); };
+        static_assert(ikea::effects<Coverage, S>);
+        using F = typename S::layout_type;
+        auto emit = [&](ikea::detail::write_span write) { coverage.before(destination.source, write.plane, write.offset, write.size); };
         if constexpr (Point)
             visit_writes_point<F, write_field<Field>>(destination.source, first, emit);
         else
@@ -158,7 +159,7 @@ replace16_unchecked(const Expression& destination, std::size_t first, const U* i
     if (!selected)
         return;
     const auto after =
-        composition::replacement_values16(destination, first, input, selected, summary);
+        author::replacement_values16(destination, first, input, selected, summary);
     // All effects are exposed before any destination is changed, including
     // fragments in other owners. Publication remains outside this local call.
     visit_assignment16(destination, first, coverage);
@@ -166,4 +167,4 @@ replace16_unchecked(const Expression& destination, std::size_t first, const U* i
     assign(writer, destination, first, after);
 }
 #endif
-} // namespace ikea::seriespack::composition
+} // namespace ikea::seriespack::author

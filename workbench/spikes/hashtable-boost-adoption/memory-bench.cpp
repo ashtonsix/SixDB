@@ -18,7 +18,7 @@
 #endif
 namespace ht = ikea::hashtable;
 using ht::word;
-using ht::byte;
+using byte = std::byte;
 std::size_t allocated = 0, peak_allocated = 0;
 void account_allocation(std::size_t n) {
     allocated += n;
@@ -190,7 +190,7 @@ void reorder_queries(std::vector<word>& queries, const std::vector<word>& hits,
 }
 [[gnu::noinline]] word condition(const std::vector<byte>& bytes) {
     word sum = 0;
-    for (std::size_t i = 0; i < bytes.size(); i += 64) sum += bytes[i];
+    for (std::size_t i = 0; i < bytes.size(); i += 64) sum += std::to_integer<unsigned>(bytes[i]);
     asm volatile("" : "+r"(sum) : : "memory");
     return sum;
 }

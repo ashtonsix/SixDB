@@ -51,7 +51,7 @@ template<unsigned R> [[gnu::always_inline]] unsigned fold(word raw,word q) {
 }
 template<unsigned K,unsigned N,unsigned Arm>
 [[gnu::always_inline]] unsigned lookup(const std::uint8_t* p,word q,word active) {
-    const sp::dense_source<sp::format<K>> source{p,N};
+    const sp::dense_source<sp::layout<K>> source{reinterpret_cast<const std::byte*>(p),N};
     if constexpr(Arm==0) return sp::indexof_unchecked(source,0,N,q,active);
     else if constexpr(Arm==10) return std::min(unsigned(std::countr_zero(sp::filter_unchecked<C::equal>(source,0,N,q,active))),N);
     else if constexpr(Arm==9) return std::countr_zero(tiles::call<K,N,C::equal,0>(p,q,active)|(N<64 ? word{1}<<N : 0));
@@ -61,7 +61,7 @@ template<unsigned K,unsigned N,unsigned Arm>
     else if constexpr(K%8) {
         if(q>>K || !active) return N;
         constexpr unsigned R=K%8;
-        const sp::composition::local_equal8<R> prepared(q&((word{1}<<R)-1));
+        const sp::author::local_equal8<R> prepared(q&((word{1}<<R)-1));
         // Independent GFNI query preparation or AVX2/BMI2 bit expansion.
 #if defined(__GFNI__)
         const auto basis=_mm_set1_epi64x(0x8040201008040201ULL);
@@ -75,7 +75,7 @@ template<unsigned K,unsigned N,unsigned Arm>
             unsigned candidates=255;
             if constexpr(K>8) {
                 if constexpr(Arm>=7 && Arm!=11) candidates=body<K/8>(p+(base/8)*K,q>>R);
-                else candidates=sp::composition::filter8_unchecked<C::equal>(sp::composition::describe(source).payload.body,base,q>>R);
+                else candidates=sp::author::filter8_unchecked<C::equal>(sp::author::expression(source).payload.body,base,q>>R);
             }
             candidates&=active>>base;
             if constexpr(Arm!=6 && Arm!=8 && Arm!=11 && Arm!=12) if(!candidates) continue;

@@ -9,7 +9,7 @@ template <class Source, class Effects>
 inline void emit(const Source &dst, Effects &effects, plane stream, unsigned offset,
                  unsigned size) {
     if (size)
-        effects.before(dst, byte_write{unsigned(stream), offset, size});
+        effects.before(dst, unsigned(stream), offset, size);
 }
 template <class Source, class Effects>
 void initialize_unchecked(const Source &dst, Effects &effects) {

@@ -217,13 +217,13 @@ template <unsigned N> [[gnu::always_inline]] inline void store_prefix(std::uint8
 }
 #endif
 template <class F, unsigned Fields = 15>
-[[gnu::always_inline]] inline void write16(const view<F, std::uint8_t>& destination, std::size_t i,
+[[gnu::always_inline]] inline void write16(const basic_view<F, ikea::byte>& destination, std::size_t i,
                                            values<F::width> x) {
     __builtin_assume(i % 16 == 0);
     constexpr unsigned Q = F::body, R = F::tail, L = sizeof(uint_for<F::width>);
     const auto& plane = destination.stream(0);
     const auto lane = i % F::tile_rows;
-    auto* tile = plane.bytes.data();
+    auto* tile = ikea::to_u8(plane.bytes).data();
     if constexpr (F::payload)
         tile += (i / F::tile_rows) * plane.stride;
     if constexpr (Q && (Fields & 1) && std::has_single_bit(Q)) {
@@ -308,7 +308,7 @@ template <class F, unsigned Fields = 15>
         if constexpr (Fields & (4u << p)) {
             const auto bytes = low_bytes(right<F::width - 8 * (p + 1)>(x));
             const auto& head = destination.stream(p + 1);
-            auto* out = head.bytes.data() + (i / F::tile_rows) * head.stride + lane;
+            auto* out = ikea::to_u8(head.bytes).data() + (i / F::tile_rows) * head.stride + lane;
             if constexpr (F::storage == geometry::local) {
                 detail::store<8>(out, _mm_cvtsi128_si64(bytes));
                 detail::store<8>(out + head.stride, _mm_extract_epi64(bytes, 1));
@@ -423,13 +423,13 @@ template <class F> struct striped_tail_batch {
 /// any preservation/maintenance), write bodies and heads, and assemble complete
 /// stripes without reading the old packed stripe for every contributing group.
 template <class F, class Produce>
-[[gnu::always_inline]] inline void write_striped_tile(const view<F, std::uint8_t>& destination,
+[[gnu::always_inline]] inline void write_striped_tile(const basic_view<F, ikea::byte>& destination,
                                                       std::size_t first, Produce&& produce) {
     static_assert(F::storage == geometry::striped);
     __builtin_assume(first % F::tile_rows == 0);
     constexpr unsigned groups = F::tile_rows / 32, stripes = F::tail / std::gcd(F::tail, 8u);
     auto* tile =
-        destination.stream(0).bytes.data() + (first / F::tile_rows) * destination.stream(0).stride;
+        ikea::to_u8(destination.stream(0).bytes).data() + (first / F::tile_rows) * destination.stream(0).stride;
     std::array<__m256i, groups> low;
     detail::each<groups>([&](auto g) {
         const auto a = produce(std::integral_constant<unsigned, g * 32>{});

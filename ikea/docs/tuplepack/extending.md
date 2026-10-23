@@ -15,8 +15,8 @@ The example moves A's role from a one-bit code in the original unit to a one-bit
 code at another offset in a different owner's unit. B keeps its source:
 
 ```cpp
-auto old_parent = tp::composition::bind_group(old_a, b);
-auto new_parent = tp::composition::bind_group(new_a, b);
+auto old_parent = tp::author::bind_group(old_a, b);
+auto new_parent = tp::author::bind_group(new_a, b);
 ```
 
 Both parents accept the same logical input type. A valid substitution also keeps
@@ -37,8 +37,8 @@ A signature of A, B and C needs C even when the command changes only A and B.
 Build that dependency set separately from the mutation group:
 
 ```cpp
-tp::composition::projection observe_row(a_read, b_read, c_read);
-tp::observation maintenance(observe_row, law);
+tp::author::projection observe_row(a_read, b_read, c_read);
+tp::author::observation maintenance(observe_row, law);
 ```
 
 ![A and B are mutation destinations, a shared-byte store preserves neighboring bits, and maintenance reads A, B and untouched C. Whole-call admission precedes per-window before, write and after brackets.](images/observation.svg)
@@ -55,7 +55,7 @@ witness counts, a contribution delta or invalidation. The
 explores these choices. The owner retains the projection's sources and reserves
 any persistent summary writes separately from the data journal.
 
-Bound constructors can join one-row mutation groups to initialize a larger
+Complete-record writers can join one-row mutation groups to initialize a larger
 record after all inputs pass admission. Their writes include spare bits. Use
 after-only observations or caller contributions when previous storage is
 uninitialized. The [reference](reference.md#observation-windows) owns callback
@@ -63,12 +63,12 @@ signatures, packet matching and the exact observation boundary.
 
 ## Keep native payloads native
 
-Ordinary plans can feed a fused register-valued consumer. `native_reader` and
-`native_writer` infer packet width and Rows from bound operations:
+Ordinary plans can feed a fused register-valued consumer. `author::native_reader` and
+`author::native_writer` infer packet width and Rows from bound operations:
 
 ```cpp
-auto native_read = tp::native_reader(*read);
-auto native_write = tp::native_writer(*write);
+auto native_read = tp::author::native_reader(*read);
+auto native_write = tp::author::native_writer(*write);
 ```
 
 The reader separates checked `admit(first, active)` from register-valued
@@ -110,7 +110,7 @@ converted packet for writes.
 The [grouped example](../../examples/tuplepack/groups.cpp) reads four A/B pairs
 followed by C with groups `{2,1}`. A/B hold a 12-bit value in two byte slots;
 `compact_word` collects the four pairs into a GPR. The body increments them
-modulo 4096 and a `writer<8,4>` maps only A/B, preserving C. Compare complete
+modulo 4096 and a `write_plan<8,4>` maps only A/B, preserving C. Compare complete
 consumers when choosing widths and groups; the [width](../../../workbench/benchmarks/tuplepack/words.md)
 and [grouping](../../../workbench/spikes/tuple-layout/batching/groups/README.md)
 studies retain benefits and counterexamples.
@@ -134,10 +134,10 @@ one predicate. Tight encoded-column filters keep their direct packed path.
 
 ## Share bodies across execution styles
 
-The same body can run inline or through `packet_chain<N, Slots, Mask>` stage
+The same body can run inline or through `author::packet_chain<N, Slots, Mask>` stage
 wrappers. A stage receives bindings, original row, activity, native values and
 its ordinal, and returns updated values, activity and an early-completion flag.
-`N=8` carries one GPR; `N=64` carries native vectors. `chain<Slots, Mask>` is the
+`N=8` carries one GPR; `N=64` carries native vectors. `author::chain<Slots, Mask>` is the
 64-byte shorthand used by the packet example.
 
 Enter with `chain::run`, which bridges the caller's ABI to the stages. Early

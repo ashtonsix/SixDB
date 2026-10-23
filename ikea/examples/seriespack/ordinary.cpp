@@ -3,51 +3,52 @@
 
 int main() {
     namespace sp = ikea::seriespack;
-    using F = sp::preset_format<20, sp::preset::bulk_x86, 8>;
+    using L = sp::preset_layout<20, sp::preset::bulk_x86, 8>;
     constexpr std::size_t count = 512;
-    constexpr auto stride = (F::tile_bytes + F::tile_rows + 63) & ~std::size_t{63};
-    alignas(64) std::array<std::uint8_t, count / F::tile_rows * stride> partition;
-    partition.fill(0xa5);
-    // Tile payload followed by its head; both planes share this partition.
-    // Unoccupied stride gaps can belong to another block.
-    auto destination = sp::view<F, std::uint8_t>::attach(
-        count, {{{partition, stride}, {std::span(partition).subspan(F::tile_bytes), stride}, {}}});
+    constexpr auto stride = (L::tile_bytes + L::tile_rows + 63) & ~std::size_t{63};
+    alignas(64) std::array<ikea::byte, count / L::tile_rows * stride> partition;
+    partition.fill(ikea::byte{0xa5});
+    // Payload followed by its head, with unrelated stride gaps preserved.
+    auto destination = sp::view<L>::attach(
+        count, {{{partition, stride}, {std::span(partition).subspan(L::tile_bytes), stride}, {}}});
     assert(destination);
-    // These objects and byte owners outlive the borrowed operation.
-    const auto prepared = sp::bind_mutation(*destination);
-    assert(prepared);
-    const auto write = prepared->erase<std::uint32_t, sp::sum_change>();
-    std::array<sp::composition::owner_write, 256> records;
-    sp::composition::source_write_journal effects{records};
+    const auto writer = sp::bind_writer(*destination);
+    assert(writer);
+    const auto write = writer->erase<std::uint32_t, sp::author::sum_change>();
+    std::array<ikea::journal::entry, 256> records;
+    ikea::journal effects{records};
     std::array<std::uint32_t, count> input;
     for (std::size_t i = 0; i < count; ++i)
         input[i] = i;
     assert(write.initialize(input, effects));
     effects.used = 0;
-    sp::sum_change summary;
-    assert(write.set(7, 1000, summary, effects));
-    sp::composition::source_write_journal no_space{{}};
+    sp::author::sum_change summary;
+    assert(write.set(7, 1000, effects, summary));
+    ikea::journal no_space{{}};
     const auto delta_before = summary.finish();
-    const auto rejected = write.set(7, 123, summary, no_space);
-    assert(!rejected && rejected.error() == sp::error::capacity);
+    const auto rejected = write.set(7, 123, no_space, summary);
+    assert(!rejected && rejected.error() == sp::error::effects);
     assert(summary.finish() == delta_before && !no_space.used);
     assert(write.replace(16, std::span<const std::uint32_t>(input).first(32),
-                         sp::row_selection::all(), summary, effects));
-    const auto reader = sp::bind_decoder<std::uint32_t>(*destination);
-    assert(reader.get(7) == 1000 && reader.get(16) == 0);
-    assert(!reader.get(count));
+                         effects, sp::selection::all(), summary));
+    const auto typed_reader = sp::bind_reader(*destination);
+    const auto read = typed_reader.erase<std::uint32_t>();
+    assert(read.get(7) == 1000 && read.get(16) == 0);
+    assert(!read.get(count));
     std::array<std::uint32_t, 4> output{9, 9, 9, 9};
-    assert(!reader.read(count - 1, output) && output[0] == 9);
-    assert(reader.read(16, output) && output[3] == 3);
+    assert(!read.read(count - 1, output) && output[0] == 9);
+    assert(read.read(16, output) && output[3] == 3);
     std::uint64_t actual = 0;
     for (std::size_t i = 0; i < count; ++i)
-        actual += reader.get_unchecked(i);
+        actual += typed_reader.get_unchecked(i);
     assert(actual == count * (count - 1) / 2 + summary.finish());
-    // Engine retains the plane-owner/offset mapping beside this descriptor.
-    const auto physical = sp::encode_descriptor(sp::describe_storage(*destination));
-    assert(physical);
-    assert(sp::decode_descriptor(*physical));
-    for (std::size_t tile = 0; tile < count / F::tile_rows; ++tile)
-        for (std::size_t byte = F::tile_bytes + F::tile_rows; byte < stride; ++byte)
-            assert(partition[tile * stride + byte] == 0xa5);
+    // Persist this law once; the parent retains count and plane placement.
+    std::array<ikea::byte, sp::layout_value::encoded_size()> encoded{};
+    assert(sp::layout_value::of<L>().encode(encoded));
+    const auto recovered = sp::layout_value::decode(encoded);
+    assert(recovered && sp::view<L>::attach(*recovered, count,
+        {{{partition, stride}, {std::span(partition).subspan(L::tile_bytes), stride}, {}}}));
+    for (std::size_t tile = 0; tile < count / L::tile_rows; ++tile)
+        for (std::size_t offset = L::tile_bytes + L::tile_rows; offset < stride; ++offset)
+            assert(partition[tile * stride + offset] == ikea::byte{0xa5});
 }

@@ -49,7 +49,7 @@ struct counted_storage {
 template <unsigned V> bytes<V> payload(word i, unsigned j) {
     bytes<V> result{};
     for (unsigned n = 0; n < V; ++n)
-        result[n] = byte(i * 29 + j * 71 + n * 13);
+        result[n] = std::byte(i * 29 + j * 71 + n * 13);
     return result;
 }
 template <unsigned V, class Owner>
@@ -119,11 +119,11 @@ template <unsigned W, unsigned B, unsigned V, bool Multi> void history() {
 
         auto copy = source.clone(&new_memory);
         require(new_memory.alive == allocations, "copy owns separate buffer identities");
-        std::vector<std::pair<const byte*, std::size_t>> old_bytes;
+        std::vector<std::pair<const std::byte*, std::size_t>> old_bytes;
         source.allocations(
-            [&](auto, const byte* p, std::size_t n) { old_bytes.emplace_back(p, n); });
+            [&](auto, const std::byte* p, std::size_t n) { old_bytes.emplace_back(p, n); });
         unsigned next = 0;
-        copy.allocations([&](auto, const byte* p, std::size_t n) {
+        copy.allocations([&](auto, const std::byte* p, std::size_t n) {
             const auto [old, size] = old_bytes.at(next++);
             require(p != old && n == size && std::memcmp(p, old, n) == 0,
                     "exact assigned representation in independent storage");

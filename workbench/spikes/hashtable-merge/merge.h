@@ -5,7 +5,7 @@
 namespace merge_study {
 namespace ht = ikea::hashtable;
 namespace impl = ht::detail::accumulation;
-using ht::byte;
+using byte = std::byte;
 using ht::word;
 using access = ht::author::table_access;
 using ht::reserve_overflow;
@@ -53,16 +53,16 @@ template <class D, class S, class Reduce>
     const auto from = access::get(src);
     const auto* p = from.primary.data + bucket * S::stride;
     for (unsigned row = 0; row < S::N; ++row)
-        if (ht::detail::live_row<S>(p, row)) {
+        if (ht::detail::live_row<S>(ikea::to_u8(p), row)) {
             const word q = [&] {
                 if constexpr (S::bitmap)
                     return word(row);
                 else
-                    return ht::point<S::encoding>(p, row, S::N);
+                    return ht::point<S::encoding>(ikea::to_u8(p), row, S::N);
             }();
             const auto status = put_routed(
                 dst, target_bucket<D, S>(bucket, q), target_quotient<D, S>(bucket, q),
-                access::primary_value<S>(p, row),
+                access::primary_value<S>(ikea::to_u8(p), row),
                 [&] {
                     const auto key = from.mix.recover(bucket, q);
                     return swiss_key<D>{key, access::get(dst).mix(key)};
@@ -83,7 +83,7 @@ template <class D, class S, class Reduce>
             return s;
     const auto from = access::get(src);
     for (std::size_t i = 0; i < from.groups * 16; ++i)
-        if (ht::detail::occupied_control(from.controls.data[i])) {
+        if (ht::detail::occupied_control(std::to_integer<std::uint8_t>(from.controls.data[i]))) {
             const auto* tuple = from.slots.data + i * S::tuple_bytes;
             const auto key = ht::load<S::key_bytes>(tuple);
             const auto h = access::get(dst).mix(key);
@@ -146,7 +146,7 @@ template <class D, class S, class Reduce>
     for (std::size_t n = sources.size(); n-- > 0;) {
         const auto from = access::get(*sources[n]);
         for (std::size_t i = 0; i < from.groups * 16; ++i)
-            if (ht::detail::occupied_control(from.controls.data[i])) {
+            if (ht::detail::occupied_control(std::to_integer<std::uint8_t>(from.controls.data[i]))) {
                 const auto* tuple = from.slots.data + i * S::tuple_bytes;
                 const auto h = access::get(dst).mix(ht::load<S::key_bytes>(tuple));
                 const auto group = h.bucket / (D::bucket_count / groups);

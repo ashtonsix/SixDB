@@ -40,8 +40,7 @@ struct guarded_index_access {
     template<class Index,class Emit> [[gnu::always_inline]] static void damage(const Index& index,
             const existing_primary<Index>& plan,const void* owner,Emit&& emit){
         const auto state=index.state();
-        emit(ht::mutation_damage{{owner,ht::owner_part::primary,state.primary.data,state.primary.size},
-            {0,plan.offset,sizeof(typename Index::value_type)}});
+        emit(ikea::journal::entry{&index,unsigned(ht::plane::primary),plan.offset,sizeof(typename Index::value_type)});
     }
     template<class Index,class Edit> [[gnu::always_inline]] static void commit(Index&,
             const existing_primary<Index>& plan,Edit&& edit)noexcept {
@@ -70,7 +69,7 @@ struct guarded_index_access {
         selection<Index> result;result.key=key;result.hash=hash;
         auto* bucket=index.bucket(result.hash.bucket);
         result.row=Index::locate(bucket,result.hash.quotient);
-        if constexpr(!Base::bitmap)if(result.row==Index::N&&bucket[Index::B-1])
+        if constexpr(!Base::bitmap)if(result.row==Index::N&&bucket[Index::B-1]!=byte{0})
             result.swiss=index.resolve_swiss(key,result.hash);
         result.present=result.row!=Index::N||result.swiss.present;
         if(!result.present){
@@ -133,7 +132,7 @@ struct guarded_index_access {
             }
 #endif
             const auto free=Index::vacancies(bucket);
-            if(free&&!bucket[Index::B-1]){
+            if(free&&bucket[Index::B-1]==byte{0}){
                 result.row=unsigned(std::countr_zero(free));
                 result.cell=bucket+Index::B+result.row*sizeof(typename Index::value_type);return result;
             }
@@ -153,22 +152,22 @@ struct guarded_index_access {
     }
     template<class Index,class Emit> [[gnu::always_inline]] static void damage(const Index& index,const selection<Index>& plan,const void* owner,Emit&& emit){
         const auto state=index.state();
-        auto add=[&](ht::owner_part part,const byte* base,std::size_t extent,std::size_t offset,std::size_t size) __attribute__((always_inline)) {
-            emit(ht::mutation_damage{{owner,part,base,extent},{0,offset,size}});
+        auto add=[&](ht::plane part,const byte* base,std::size_t extent,std::size_t offset,std::size_t size) __attribute__((always_inline)) {
+            emit(ikea::journal::entry{&index,unsigned(part),offset,size});
         };
         if(plan.row!=Index::N){
             const auto offset=plan.hash.bucket*Index::stride;
-            if(plan.present)add(ht::owner_part::primary,state.primary.data,state.primary.size,
+            if(plan.present)add(ht::plane::primary,state.primary.data,state.primary.size,
                 offset+Index::B+plan.row*sizeof(typename Index::value_type),sizeof(typename Index::value_type));
-            else add(ht::owner_part::primary,state.primary.data,state.primary.size,offset,Index::stride);
+            else add(ht::plane::primary,state.primary.data,state.primary.size,offset,Index::stride);
         }else {
-            add(ht::owner_part::swiss_tuples,state.slots.data,state.slots.size,
+            add(ht::plane::swiss_tuples,state.slots.data,state.slots.size,
                 plan.swiss.slot*Index::tuple_bytes+(plan.present?Index::key_bytes:0),
                 plan.present?sizeof(typename Index::value_type):Index::tuple_bytes);
             if(!plan.present){
-                add(ht::owner_part::swiss_controls,state.controls.data,state.controls.size,plan.swiss.slot,1);
-                if(index.bucket(plan.hash.bucket)[Index::B-1]!=255)
-                    add(ht::owner_part::primary,state.primary.data,state.primary.size,plan.hash.bucket*Index::stride+Index::B-1,1);
+                add(ht::plane::swiss_controls,state.controls.data,state.controls.size,plan.swiss.slot,1);
+                if(index.bucket(plan.hash.bucket)[Index::B-1]!=byte{255})
+                    add(ht::plane::primary,state.primary.data,state.primary.size,plan.hash.bucket*Index::stride+Index::B-1,1);
             }
         }
         // The enclosing MM header covers counters inside the embedded index.
@@ -186,8 +185,8 @@ struct guarded_index_access {
         }else {
             const auto state=index.state();state.deleted-=state.controls.data[plan.swiss.slot]==Index::tombstone;
             ht::store<Index::key_bytes>(state.slots.data+plan.swiss.slot*Index::tuple_bytes,plan.key);
-            state.controls.data[plan.swiss.slot]=plan.hash.fingerprint();++state.spill;
-            if(bucket[Index::B-1]!=255)++bucket[Index::B-1];
+            state.controls.data[plan.swiss.slot]=byte(plan.hash.fingerprint());++state.spill;
+            if(bucket[Index::B-1]!=byte{255})bucket[Index::B-1]=byte(number(bucket[Index::B-1])+1);
         }
         ++index.state().size;
     }

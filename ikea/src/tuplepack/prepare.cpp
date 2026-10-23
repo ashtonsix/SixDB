@@ -5,7 +5,7 @@
 namespace ikea::tuplepack::detail {
 namespace {
 template <unsigned N>
-std::expected<scalar_read<N>, error> read(const layout &format, std::span<const byte> map) {
+std::expected<scalar_read<N>, error> read(const layout &format, std::span<const std::uint8_t> map) {
     if (map.size() > N)
         return std::unexpected(error::map);
     scalar_read<N> p;
@@ -23,7 +23,7 @@ std::expected<scalar_read<N>, error> read(const layout &format, std::span<const 
     return p;
 }
 template <unsigned N>
-std::expected<scalar_write<N>, error> write(const layout &format, std::span<const byte> map) {
+std::expected<scalar_write<N>, error> write(const layout &format, std::span<const std::uint8_t> map) {
     auto r = read<N>(format, map);
     if (!r)
         return std::unexpected(r.error());
@@ -38,7 +38,7 @@ std::expected<scalar_write<N>, error> write(const layout &format, std::span<cons
             return std::unexpected(error::duplicate);
         seen[map[i]] = true;
         const auto c = p.read.codes[i];
-        p.invalid[i] = byte(~((1u << c.width) - 1));
+        p.invalid[i] = std::uint8_t(~((1u << c.width) - 1));
         auto &b = by_byte[c.offset];
         b.offset = c.offset;
         b.mask |= ((1u << c.width) - 1) << c.shift;
@@ -79,7 +79,7 @@ std::expected<scalar_write<N>, error> write(const layout &format, std::span<cons
     }
     return p;
 }
-void set_route(shuffle &p, unsigned out, unsigned in, int shift, byte mask, bool left) {
+void set_route(shuffle &p, unsigned out, unsigned in, int shift, std::uint8_t mask, bool left) {
     p.index[out] = in;
     p.mask[out] = mask;
     p.routes |= 1u << (in / 16);
@@ -103,7 +103,7 @@ void initialize(shuffle &p) {
     (void)p;
 }
 void finish(shuffle &p) {
-    p.masking = std::ranges::any_of(p.mask, [](byte b) { return b != 255; });
+    p.masking = std::ranges::any_of(p.mask, [](std::uint8_t b) { return b != 255; });
 }
 } // namespace
 shuffle compile_shuffle(const shuffle_description &description, bool left) {
@@ -116,11 +116,11 @@ shuffle compile_shuffle(const shuffle_description &description, bool left) {
     finish(result);
     return result;
 }
-std::expected<scalar_read<64>, error> prepare_read_codes(const layout &f, std::span<const byte> m) {
+std::expected<scalar_read<64>, error> prepare_read_codes(const layout &f, std::span<const std::uint8_t> m) {
     return read<64>(f, m);
 }
 std::expected<scalar_write<64>, error> prepare_write_codes(const layout &f,
-                                                           std::span<const byte> m) {
+                                                           std::span<const std::uint8_t> m) {
     return write<64>(f, m);
 }
 namespace {
@@ -143,7 +143,7 @@ word_transfer transfer(const scalar_read<8> &p, unsigned rows) {
     return t;
 }
 } // namespace
-std::expected<gpr_read, error> prepare_read8(const layout &f, std::span<const byte> m,
+std::expected<gpr_read, error> prepare_read8(const layout &f, std::span<const std::uint8_t> m,
                                              unsigned rows, std::span<const unsigned> groups) {
     if (!std::has_single_bit(rows) || rows > 8 || m.size() > 8 / rows)
         return std::unexpected(error::map);
@@ -159,7 +159,7 @@ std::expected<gpr_read, error> prepare_read8(const layout &f, std::span<const by
     p.transfer = transfer(p, rows);
     return p;
 }
-std::expected<gpr_write, error> prepare_write8(const layout &f, std::span<const byte> m,
+std::expected<gpr_write, error> prepare_write8(const layout &f, std::span<const std::uint8_t> m,
                                                unsigned rows, std::span<const unsigned> groups) {
     if (!std::has_single_bit(rows) || rows > 8 || m.size() > 8 / rows)
         return std::unexpected(error::map);
@@ -188,7 +188,7 @@ std::expected<gpr_write, error> prepare_write8(const layout &f, std::span<const 
                 p.native_reads |= std::uint64_t(1) << p.stores[i].offset;
     return p;
 }
-std::expected<read64, error> prepare_read64(const layout &f, std::span<const byte> m) {
+std::expected<read64, error> prepare_read64(const layout &f, std::span<const std::uint8_t> m) {
     auto scalar = read<64>(f, m);
     if (!scalar)
         return std::unexpected(scalar.error());
@@ -198,13 +198,13 @@ std::expected<read64, error> prepare_read64(const layout &f, std::span<const byt
     for (auto c : p.codes)
         if (c.width)
             chunks |= 1u << (c.offset / 16);
-    std::array<byte, 4> compact{};
+    std::array<std::uint8_t, 4> compact{};
     for (unsigned i = 0; i < 4; ++i) {
         if (!(chunks & (1u << i)))
             continue;
         compact[i] = p.count;
         const unsigned length = std::min(16u, p.bytes - i * 16);
-        p.chunks[p.count++] = {byte(i * 16), byte(length)};
+        p.chunks[p.count++] = {std::uint8_t(i * 16), std::uint8_t(length)};
         for (unsigned j = 0; j < length; ++j)
             p.native_reads |= std::uint64_t(1) << (i * 16 + j);
     }
@@ -218,7 +218,7 @@ std::expected<read64, error> prepare_read64(const layout &f, std::span<const byt
     finish(p.operation);
     return p;
 }
-std::expected<write64, error> prepare_write64(const layout &f, std::span<const byte> m) {
+std::expected<write64, error> prepare_write64(const layout &f, std::span<const std::uint8_t> m) {
     auto scalar = write<64>(f, m);
     if (!scalar)
         return std::unexpected(scalar.error());
@@ -229,7 +229,7 @@ std::expected<write64, error> prepare_write64(const layout &f, std::span<const b
         initialize(round);
     for (unsigned i = 0; i < p.count; ++i) {
         const auto &b = p.stores[i];
-        p.preserve[b.offset] = byte(~b.mask);
+        p.preserve[b.offset] = std::uint8_t(~b.mask);
         for (unsigned j = 0; j < b.count; ++j) {
             const auto c = p.read.codes[b.input[j]];
             set_route(p.rounds[j], b.offset, b.input[j], c.shift, ((1u << c.width) - 1) << c.shift,

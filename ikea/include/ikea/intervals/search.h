@@ -200,67 +200,8 @@ struct relative_end_source {
     }
 };
 
-/// Exact byte-readable rank-selection window. Unlike word-padded bitmaps, the final
-/// partial byte/word needs no extra readable grant. Set bits mean eligible unless
-/// inverted (a tombstone plane). The owner supplies ceil(count/8) bytes.
-struct rank_selection {
-    static rank_selection all() noexcept { return {{}, true}; }
-    std::span<const std::byte> bytes;
-    bool inverted = false;
-    [[gnu::always_inline]] bool contains(unsigned rank) const {
-        return bytes.empty()
-                   ? inverted
-                   : bool(std::to_integer<unsigned>(bytes[rank / 8]) & (1u << (rank % 8))) != inverted;
-    }
-    [[gnu::always_inline]] std::uint64_t mask(unsigned first, unsigned count) const {
-        assert(count <= 64 && first % 8 == 0);
-        if (bytes.empty()) return inverted ? detail::low_bits(count) : 0;
-        const auto take = (count + 7) / 8;
-        assert(first / 8 + take <= bytes.size());
-        std::uint64_t word = 0;
-        const auto *p = bytes.data() + first / 8;
-        if (take == 8)
-            word = detail::load<std::uint64_t>(p);
-        else {
-            unsigned i = 0;
-            if (take >= 4) {
-                word = detail::load<std::uint32_t>(p);
-                i = 4;
-            }
-            if (take - i >= 2) {
-                word |= std::uint64_t(detail::load<std::uint16_t>(p + i)) << (i * 8);
-                i += 2;
-            }
-            if (take - i)
-                word |= std::uint64_t(std::to_integer<unsigned>(p[i])) << (i * 8);
-        }
-        return (inverted ? ~word : word) & detail::low_bits(count);
-    }
-    [[gnu::always_inline]] unsigned next(unsigned first, unsigned n) const {
-        if (bytes.empty()) return inverted ? std::min(first, n) : n;
-        while (first < n) {
-            const auto base = first / 64 * 64, take = std::min(64u, n - base);
-            const auto bits = mask(base, take) & ~detail::low_bits(first - base);
-            if (bits)
-                return base + std::countr_zero(bits);
-            first = base + take;
-        }
-        return n;
-    }
-    [[gnu::always_inline]] unsigned previous(unsigned limit, unsigned n) const {
-        if (bytes.empty()) return inverted && limit ? limit - 1 : n;
-        while (limit) {
-            const auto base = (limit - 1) / 64 * 64;
-            const auto bits = mask(base, limit - base);
-            if (bits)
-                return base + 63 - std::countl_zero(bits);
-            limit = base;
-        }
-        return n;
-    }
-};
 template <class Source> struct selected_source : Source {
-    rank_selection eligible;
+    selection eligible;
     [[gnu::always_inline]] bool is_selected(unsigned rank) const {
         if (!eligible.contains(rank)) return false;
         if constexpr (requires { static_cast<const Source &>(*this).is_selected(rank); })

@@ -1,14 +1,14 @@
-#include <ikea/hashtable/descriptor.h>
+#include <ikea/hashtable/erased_table.h>
 #include <iostream>
 using namespace ikea::hashtable;
 template <unsigned V> bytes<V> value(unsigned i) {
     bytes<V> v{};
     for (unsigned j = 0; j < V; ++j)
-        v[j] = byte(i * 17 + j * 31);
+        v[j] = std::byte(i * 17 + j * 31);
     return v;
 }
 template <unsigned V> void staged_capture() {
-    using D = descriptor<32, V>;
+    using D = erased_table<32, V>;
     auto owner = D::template explicit_encoding<2>(23);
     permutation<32, 30> mix{23};
     for (unsigned i = 0; i < 97; ++i) {
@@ -22,7 +22,7 @@ template <unsigned V> void staged_capture() {
     auto captured = owner.template read_native<2>();
     auto dependent = captured.borrow();
     auto lookahead = captured.template borrow<staged_values::lookahead8>();
-    const byte* held_value = nullptr;
+    const std::byte* held_value = nullptr;
     if constexpr (V) {
         const auto match = dependent.get_borrowed(mix.recover(0, 0));
         require(match.found, "borrow before descriptor rebuild");
@@ -111,7 +111,7 @@ int main() {
         require(bool(measured_encoding(58, 8, "zen5", "avx2")), "measured AVX2 coverage");
         require(bool(measured_encoding(30, 8, "neoverse-v2", "neon")), "measured NEON coverage");
         {
-            using D = descriptor<64, 8>;
+            using D = erased_table<64, 8>;
             auto map = D::measured<6>(19, "zen5", "avx512");
             require(map.encoding() == 64 && map.bucket_bits() == 6, "corrected K58 selection");
             auto key = [](word i) { return i * 0x9e3779b97f4a7c15ULL; };
@@ -149,7 +149,7 @@ int main() {
             map.validate();
         }
         {
-            using D = descriptor<40, 8>;
+            using D = erased_table<40, 8>;
             auto map = D::explicit_encoding<9, 32>(31);
             for (unsigned i = 0; i < 6000; ++i)
                 map.insert(word(i) * 104729 & mask<40>, value<8>(i));
@@ -164,7 +164,7 @@ int main() {
             map.validate();
         }
         {
-            using D = descriptor<16, 0>;
+            using D = erased_table<16, 0>;
             auto set = D::measured<3>(17, "zen5", "avx512");
             for (unsigned i = 0; i < 500; ++i)
                 set.insert(i * 129u & 65535);

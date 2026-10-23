@@ -96,9 +96,9 @@ template<class Width, bool Relative> struct GroupStorage {
       if ((Relative ? within : source.reserved(r)) > std::numeric_limits<Width>::max()) return Error::length;
     }
     if (!MutableDirect<std::uint32_t>::room(effects, (groups != 0) + 2)) return Error::effects;
-    if (groups) effects.before(*this, {0, 0, groups * 16 * sizeof(Width)});
-    effects.before(*this, {1, 0, (groups + 1) * sizeof(std::uint32_t)});
-    effects.before(*this, {2, 0, sizeof(count)});
+    if (groups) effects.before(*this, 0, 0, groups * 16 * sizeof(Width));
+    effects.before(*this, 1, 0, (groups + 1) * sizeof(std::uint32_t));
+    effects.before(*this, 2, 0, sizeof(count));
     std::fill_n(values.begin(), groups * 16, 0);
     std::uint32_t offset = 0; within = 0;
     for (unsigned r = 0; r < n; ++r) {
@@ -143,7 +143,7 @@ template<class Width, bool Used = true, bool Dead = true> struct MutableWidths {
         overlaps(input.data(), input.size(), &count, sizeof(count));
   }
   template<class Effects> STREAMPACK_SMALL_INLINE void before(Effects& effects, unsigned plane, std::size_t offset, std::size_t size) const {
-    if (size) { STREAMPACK_EFFECT_CALL effects.before(*this, ikea::byte_write{plane, offset, size}); }
+    if (size) { STREAMPACK_EFFECT_CALL effects.before(*this, plane, offset, size); }
   }
   template<class Effects> Error initialize(Effects& effects) {
     if (auto error = shape(); error != Error::none) return error;

@@ -63,14 +63,14 @@ template<class MM> class prepared_multimap {
     // Counts start at zero and can only advance by one after this bound check.
     // Equality is sufficient: no accepted append can produce an over-bound count.
     struct damage_list {
-        std::array<ht::mutation_damage,24> writes;
-        std::array<ht::mutation_source,3> retired;
+        std::array<ikea::journal::entry,24> writes;
+        std::array<physical_region,3> retired;
         unsigned write_count=0,retired_count=0;
         damage_list()noexcept{}
         damage_list(const damage_list&)=delete;
         damage_list& operator=(const damage_list&)=delete;
-        [[gnu::always_inline]] void add(ht::mutation_damage write){if(write_count==writes.size())throw std::runtime_error("prepared MM damage bound");writes[write_count++]=write;}
-        [[gnu::always_inline]] void retire(ht::mutation_source source){if(retired_count==retired.size())throw std::runtime_error("prepared MM retirement bound");retired[retired_count++]=source;}
+        [[gnu::always_inline]] void add(ikea::journal::entry write){if(write_count==writes.size())throw std::runtime_error("prepared MM damage bound");writes[write_count++]=write;}
+        [[gnu::always_inline]] void retire(physical_region source){if(retired_count==retired.size())throw std::runtime_error("prepared MM retirement bound");retired[retired_count++]=source;}
     };
     struct head {
         guarded_index_access::selection<Index> index;
@@ -79,15 +79,15 @@ template<class MM> class prepared_multimap {
         unsigned count=0;
 #if !WRITE_ARCH_DEFER_DAMAGE
 #if WRITE_ARCH_INPLACE_HEAD
-        std::array<ht::mutation_damage,24> writes;
-        std::array<ht::mutation_source,3> retired;
+        std::array<ikea::journal::entry,24> writes;
+        std::array<physical_region,3> retired;
 #else
-        std::array<ht::mutation_damage,24> writes{};
-        std::array<ht::mutation_source,3> retired{};
+        std::array<ikea::journal::entry,24> writes{};
+        std::array<physical_region,3> retired{};
 #endif
         unsigned write_count=0,retired_count=0;
-        [[gnu::always_inline]] void add(ht::mutation_damage write){if(write_count==writes.size())throw std::runtime_error("prepared MM damage bound");writes[write_count++]=write;}
-        [[gnu::always_inline]] void retire(ht::mutation_source source){if(retired_count==retired.size())throw std::runtime_error("prepared MM retirement bound");retired[retired_count++]=source;}
+        [[gnu::always_inline]] void add(ikea::journal::entry write){if(write_count==writes.size())throw std::runtime_error("prepared MM damage bound");writes[write_count++]=write;}
+        [[gnu::always_inline]] void retire(physical_region source){if(retired_count==retired.size())throw std::runtime_error("prepared MM retirement bound");retired[retired_count++]=source;}
 #endif
 #if WRITE_ARCH_INPLACE_HEAD
         head()noexcept{}
@@ -163,7 +163,7 @@ template<class MM> class prepared_multimap {
         if(!reserved(plan)&&plan.external)guarded_pool_access::append_damage(owner_->buffers_,plan.reference,plan.count,owner_.get(),add);
         guarded_index_access::damage(owner_->index_,plan.index,owner_.get(),add);
         if(!plan.index.present||reserved(plan))
-            add(ht::mutation_damage{{owner_.get(),ht::owner_part::header,reinterpret_cast<const byte*>(owner_.get()),sizeof(MM)},{0,0,sizeof(MM)}});
+            add(ikea::journal::entry{owner_.get(),unsigned(ht::plane::header),0,sizeof(MM)});
     }
     [[gnu::always_inline]] status finish_discovery(head& next){
         if(next.index.needs_capacity)return status::needs_capacity;
@@ -199,13 +199,13 @@ template<class MM> class prepared_multimap {
 #else
         auto& effects=plan;
 #endif
-        const auto writes=std::span<const ht::mutation_damage>(effects.writes.data(),effects.write_count);
-        const auto retired=std::span<const ht::mutation_source>(effects.retired.data(),effects.retired_count);
+        const auto writes=std::span<const ikea::journal::entry>(effects.writes.data(),effects.write_count);
+        const auto retired=std::span<const physical_region>(effects.retired.data(),effects.retired_count);
         if(!context.prepare(writes,retired))return ht::mutation_status::denied;
-        static_assert(noexcept(context.before(writes[0].source,writes[0].span)));
-        for(const auto& d:writes)context.before(d.source,d.span);
+        static_assert(noexcept(context.before(writes[0].source,writes[0].plane,writes[0].offset,writes[0].size)));
+        for(const auto& d:writes)context.before(d.source,d.plane,d.offset,d.size);
         guarded_index_access::commit(owner_->index_,plan.index,[&](byte* cell) __attribute__((always_inline)) noexcept {
-            ikea::no_coverage effects;
+            ikea::no_effects effects;
             if constexpr(reservation_plan<Plan>) {
                 if(plan.reservation){
                     const auto reference=guarded_pool_access::commit<V,true>(*plan.reservation,incoming);

@@ -40,7 +40,7 @@ template<class End> void run(oa::Pool& pool, unsigned cap, unsigned budget,
   for (unsigned j = 0; j < input.size(); ++j) input[j] = std::byte((j * 31 + j / 251) & 255);
   std::vector<Block> blocks;
   std::uint64_t logical_bytes = 0, growths = 0, relocations = 0, preserved_on_relocation = 0;
-  ikea::no_coverage effects;
+  ikea::no_effects effects;
   const auto start = std::chrono::steady_clock::now();
   for (unsigned row = 0; row < rows; ++row) {
     const auto n = length(row, distribution);

@@ -12,9 +12,9 @@ namespace sp = ikea::seriespack;
 using C = ikea::comparison;
 using word = std::uint64_t;
 constexpr unsigned windows = 64;
-template <unsigned K> using Source = sp::dense_source<sp::format<K>>;
+template <unsigned K> using Source = sp::dense_source<sp::layout<K>>;
 template <unsigned B> using Packet = sp::native::values<B * 8>;
-template <unsigned B> using Chain = sp::chain<B * 8, 4>;
+template <unsigned B> using Chain = sp::author::chain<B * 8, 4>;
 struct State {
     const std::uint8_t *bytes{};
     const void *plan{};
@@ -87,15 +87,15 @@ template <unsigned K>
 [[gnu::always_inline]] auto decode(void *opaque, std::size_t row, std::uint16_t active,
                                    Packet<sizeof(sp::uint_for<K>)>, unsigned) ->
     typename Chain<sizeof(sp::uint_for<K>)>::result {
-    const Source<K> source{static_cast<State *>(opaque)->bytes, windows * 16};
-    sp::composition::native_ops ops;
-    auto x = sp::composition::read(ops, sp::composition::describe(source), row, active);
+    const Source<K> source{reinterpret_cast<const std::byte*>(static_cast<State *>(opaque)->bytes), windows * 16};
+    sp::author::native_ops ops;
+    auto x = sp::author::read(ops, sp::author::expression(source), row, active);
     return {Packet<sizeof(sp::uint_for<K>)>{x.v}, active};
 }
 template <unsigned B, C Op>
 [[gnu::always_inline]] auto compare(void *opaque, std::size_t, std::uint16_t active, Packet<B> x,
                                     unsigned) -> typename Chain<B>::result {
-    return {x, sp::filter_values<Op>(x, static_cast<State *>(opaque)->query, active)};
+    return {x, sp::author::filter_values<Op>(x, static_cast<State *>(opaque)->query, active)};
 }
 template <unsigned B>
 [[gnu::always_inline]] void finish(void *opaque, std::size_t, std::uint16_t mask, Packet<B>) {
@@ -113,8 +113,8 @@ template <unsigned B>
 template <unsigned K, C Op>
 [[gnu::always_inline]] std::uint16_t inline_fused(const std::uint8_t *bytes, std::size_t row,
                                                   word q, std::uint16_t active) {
-    const Source<K> source{bytes, windows * 16};
-    return sp::composition::filter16_unchecked<Op>(sp::composition::describe(source), row, q,
+    const Source<K> source{reinterpret_cast<const std::byte*>(bytes), windows * 16};
+    return sp::author::filter16_unchecked<Op>(sp::author::expression(source), row, q,
                                                    active);
 }
 template <unsigned K, C Op>
@@ -135,11 +135,11 @@ constexpr bool hot =
 
 template <unsigned K, C Op> void run_case(const Fixture &fixture) {
     constexpr unsigned B = sizeof(sp::uint_for<K>);
-    static const auto shared = *Chain<B>::prepare(
+    static const auto shared = *Chain<B>::make(
         std::array<typename Chain<B>::function, 2>{&Chain<B>::template stage<decode<K>>,
                                                    &Chain<B>::template stage<compare<B, Op>>},
         &Chain<B>::template completion<finish<B>>);
-    static const auto one = *Chain<B>::prepare(
+    static const auto one = *Chain<B>::make(
         std::array<typename Chain<B>::function, 1>{&Chain<B>::template stage<fused_stage<K, Op>>},
         &Chain<B>::template completion<finish<B>>);
     State s{fixture.bytes.data(), &shared};
@@ -166,11 +166,11 @@ template <unsigned K, C Op> void run_case(const Fixture &fixture) {
         if constexpr (K < 8) {
             auto decoded = [&](unsigned w, unsigned) __attribute__((always_inline)) {
                 asm("" : "+r"(w));
-                const Source<K> source{fixture.bytes.data(), windows * 16};
-                sp::composition::native_ops ops;
-                auto value = sp::composition::read(ops, sp::composition::describe(source),
+                const Source<K> source{std::as_bytes(std::span{fixture.bytes}).data(), windows * 16};
+                sp::author::native_ops ops;
+                auto value = sp::author::read(ops, sp::author::expression(source),
                                                    std::size_t(w) * 16, active);
-                return sp::filter_values<Op>(value, fixture.queries[w], active);
+                return sp::author::filter_values<Op>(value, fixture.queries[w], active);
             };
             for (unsigned w = 0; w < windows; ++w)
                 assert(decoded(w, 0) == direct(w, 0));

@@ -67,16 +67,13 @@ bool source_geometry(const compact_descriptor::PartSource& source) {
       valid(source.body, source.readable_padding) && valid(source.interpretation);
 }
 
-Result<Geometry> series_geometry(const compact_descriptor::PartSource& source, std::uint64_t& count) {
+Result<Geometry> series_geometry(const compact_descriptor::PartSource& source, std::uint64_t count) {
   if (!source_geometry(source)) return std::unexpected(Error::invalid_argument);
-  const auto decoded = fixture::sp::decode_descriptor(
-      {static_cast<const std::uint8_t*>(static_cast<const void*>(source.interpretation.data())), source.interpretation.size()});
-  if (!decoded || decoded->heads || decoded->storage != fixture::sp::geometry::local ||
-      decoded->strides != std::array<std::uint64_t, 3>{decoded->width, 0, 0})
+  const auto decoded = fixture::sp::layout_value::decode(source.interpretation);
+  if (!decoded || decoded->heads || decoded->storage != fixture::sp::geometry::local)
     return std::unexpected(Error::invalid_argument);
-  Geometry geometry{source.id, decoded->strides[0], static_cast<std::uint32_t>(source.readable_padding),
+  Geometry geometry{source.id, decoded->width, static_cast<std::uint32_t>(source.readable_padding),
       8, static_cast<std::uint8_t>(std::countr_zero(source.alignment)), 1};
-  count = decoded->count;
   if (!placement(source.body, geometry, count)) return std::unexpected(Error::invalid_argument);
   return geometry;
 }
@@ -103,7 +100,7 @@ Result<Shape*> prove_fixture(std::pmr::memory_resource& memory, const fixture::S
   if (!checked) return std::unexpected(checked.error());
   try {
     if (checked->format() == fixture::Format::columns)
-      return prove_series(memory, program, parts, std::move(dependencies));
+      return prove_series(memory, program, checked->size(), parts, std::move(dependencies));
     const auto& part = parts.front();
     Geometry geometry{part.id, schema.tuple.bytes(), static_cast<std::uint32_t>(part.readable_padding),
         1, static_cast<std::uint8_t>(std::countr_zero(part.alignment)), 0};
@@ -115,17 +112,14 @@ Result<Shape*> prove_fixture(std::pmr::memory_resource& memory, const fixture::S
 }
 
 Result<Shape*> prove_series(std::pmr::memory_resource& memory, ProgramId program,
-    std::span<const compact_descriptor::PartSource> parts, std::shared_ptr<const void> dependencies) noexcept {
+    std::uint64_t records, std::span<const compact_descriptor::PartSource> parts, std::shared_ptr<const void> dependencies) noexcept {
   try {
-    if (!unique(memory, parts)) return std::unexpected(Error::invalid_argument);
+    if ((parts.empty() && records) || !unique(memory, parts)) return std::unexpected(Error::invalid_argument);
     std::pmr::vector<Geometry> geometry(&memory);
     geometry.reserve(parts.size());
-    std::uint64_t records{};
     for (const auto& part : parts) {
-      std::uint64_t count;
-      auto decoded = series_geometry(part, count);
-      if (!decoded || (!geometry.empty() && count != records)) return std::unexpected(Error::invalid_argument);
-      records = count;
+      auto decoded = series_geometry(part, records);
+      if (!decoded) return std::unexpected(Error::invalid_argument);
       geometry.push_back(*decoded);
     }
     return make(memory, program, Kind::series, geometry, nullptr, {}, std::move(dependencies));
@@ -194,13 +188,13 @@ std::uint64_t records(const Export* value) noexcept { return value->control.reco
 const Geometry& geometry(const Export* value) noexcept { return geometries(value->control.shape)[value->index]; }
 const ReadLaw& tuple_law(const Export* value) noexcept { return tuple_law(value->control.shape); }
 Bytes tuple_interpretation(const Export* value) noexcept { return wire(value->control.shape); }
-Result<fixture::sp::descriptor_bytes> series_interpretation(const Export* value) noexcept {
+Result<SeriesDescription> series_interpretation(const Export* value) noexcept {
   if (value->control.shape->kind != Kind::series) return std::unexpected(Error::invalid_argument);
   const auto& part = geometry(value);
-  auto encoded = fixture::sp::encode_descriptor({static_cast<unsigned>(part.tile_bytes), 0,
-      fixture::sp::geometry::local, value->control.records, {part.tile_bytes, 0, 0}});
-  if (!encoded) return std::unexpected(Error::invalid_argument);
-  return *encoded;
+  const fixture::sp::layout_value law{static_cast<unsigned>(part.tile_bytes), 0, fixture::sp::geometry::local};
+  SeriesDescription encoded;
+  if (!law.encode(encoded)) return std::unexpected(Error::invalid_argument);
+  return encoded;
 }
 
 Footprint footprint(const Realization* value) noexcept {

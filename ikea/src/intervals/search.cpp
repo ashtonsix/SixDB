@@ -11,12 +11,10 @@ std::string_view describe(error reason) noexcept {
         return "borrowed capacity or extent bounds are insufficient";
     case error::alignment:
         return "storage or operation coordinates violate alignment requirements";
-    case error::alias:
+    case error::overlap:
         return "borrowed storage overlaps command or effect storage";
     case error::contents:
         return "interval fields, checkpoints or readable tail are inconsistent";
-    case error::rank:
-        return "rank or rank range is outside assigned intervals";
     case error::value:
         return "interval size exceeds its field or total extent limit";
     case error::effects:

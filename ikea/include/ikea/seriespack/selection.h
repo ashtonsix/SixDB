@@ -1,54 +1,88 @@
 #pragma once
+#include <ikea/bitset256.h>
 #include <cstddef>
 #include <cstdint>
+#include <limits>
 #include <span>
 
 namespace ikea::seriespack {
-/// Borrowed row evidence at the operation boundary. Each word describes sixteen
-/// original coordinates. It is stable through admission/execution, and does not
-/// grant permission to read an otherwise unreadable inactive input lane.
-class row_selection {
-    enum class kind { all, none, regions };
-    kind kind_;
-    std::size_t first_;
-    std::span<const std::uint16_t> words_;
-    row_selection(kind type, std::size_t first, std::span<const std::uint16_t> words)
-        : kind_(type), first_(first), words_(words) {}
+/// Borrowed selection of original rows. Each numeric u16 word holds sixteen
+/// consecutive row bits; origin is divisible by 16. A bitset256 holds 256 bits
+/// under the same coordinate law without reinterpreting its u64 objects as u16.
+/// Keep backing stable through admission/execution; selection is no read grant.
+class selection {
+    enum class kind { all, none, bits, block };
+    kind kind_ = kind::none;
+    std::size_t first_ = 0;
+    const void* data_ = nullptr;
+    std::size_t words_ = 0;
+    selection(kind type, std::size_t first, const void* data, std::size_t words) noexcept
+        : kind_(type), first_(first), data_(data), words_(words) {}
+    std::uint16_t word(std::size_t index) const noexcept {
+        std::uint16_t value;
+        std::memcpy(&value, static_cast<const std::byte*>(data_) + index * 2, 2);
+        return value;
+    }
 
   public:
-    static row_selection all() {
-        return {kind::all, 0, {}};
+    selection() = default;
+    static selection all() noexcept { return {kind::all, 0, nullptr, 0}; }
+    static selection none() noexcept { return {kind::none, 0, nullptr, 0}; }
+    /// Checked commands reject a misaligned origin or insufficient coverage.
+    static selection bits(std::size_t first, std::span<const std::uint16_t> words) noexcept {
+        return {kind::bits, first, words.data(), words.size()};
     }
-    static row_selection none() {
-        return {kind::none, 0, {}};
+    static selection bits(std::size_t first, const bitset256& block) noexcept {
+        if constexpr (std::endian::native == std::endian::little)
+            return {kind::bits, first, block.words.data(), 16};
+        else
+            return {kind::block, first, &block, 16};
     }
-    /// Checked operations reject a misaligned origin or insufficient coverage.
-    static row_selection regions(std::size_t first, std::span<const std::uint16_t> words) {
-        return {kind::regions, first, words};
-    }
-    bool is_all() const {
-        return kind_ == kind::all;
-    }
-    bool is_none() const {
-        return kind_ == kind::none;
-    }
-    bool covers(std::size_t first, std::size_t count) const {
-        if (kind_ != kind::regions)
-            return true;
-        if (first_ % 16)
+    static selection bits(std::size_t, const bitset256&&) = delete;
+    bool is_all() const noexcept { return kind_ == kind::all; }
+    bool is_none() const noexcept { return kind_ == kind::none; }
+    bool covers(std::size_t first, std::size_t count) const noexcept {
+        if ((kind_ == kind::bits || kind_ == kind::block) && first_ % 16)
             return false;
         if (!count)
             return true;
-        if (count - 1 > ~std::size_t{0} - first || first / 16 < first_ / 16)
+        if (count - 1 > std::numeric_limits<std::size_t>::max() - first)
             return false;
-        return (first + count - 1) / 16 - first_ / 16 < words_.size();
+        if (is_all() || is_none())
+            return true;
+        return first >= first_ && (first + (count - 1) - first_) / 16 < words_;
     }
-    std::uint16_t operator()(std::size_t origin) const {
-        if (kind_ == kind::all)
-            return 0xffff;
-        if (kind_ == kind::none)
+    /// Trusted covered original row, after covers(row,1).
+    bool contains(std::size_t row) const noexcept {
+        if (is_all() || is_none())
+            return is_all();
+        const auto offset = row - first_;
+        if constexpr (std::endian::native == std::endian::big)
+            if (kind_ == kind::block)
+                return static_cast<const bitset256*>(data_)->contains(unsigned(offset));
+        return word(offset / 16) >> (offset % 16) & 1;
+    }
+    /// Trusted covered window of 0..64 rows. Bit r names first+r. This does
+    /// not change the writer's native traversal or admit inactive input lanes.
+    std::uint64_t mask(std::size_t first, unsigned count) const noexcept {
+        assert(count <= 64);
+        if (!count || is_none())
             return 0;
-        return words_[origin / 16 - first_ / 16];
+        const auto limit = ~std::uint64_t{0} >> (64 - count);
+        if (is_all())
+            return limit;
+        const auto offset = first - first_;
+        if constexpr (std::endian::native == std::endian::big)
+            if (kind_ == kind::block)
+                return static_cast<const bitset256*>(data_)->mask(unsigned(offset), count);
+        // Existing native writers request complete aligned sixteen-row words.
+        if (count == 16 && first % 16 == 0)
+            return word(first / 16 - first_ / 16);
+        const unsigned shift = offset % 16;
+        std::uint64_t result = word(offset / 16) >> shift;
+        for (unsigned done = 16 - shift; done < count; done += 16)
+            result |= std::uint64_t(word((offset + done) / 16)) << done;
+        return result & limit;
     }
 };
 } // namespace ikea::seriespack

@@ -15,8 +15,8 @@ struct exact_signature {
     // Deliberately overlapping contributions: clearing the removed code's
     // bits would lose another field's witness. Recompute all dependencies.
     void observe(std::size_t row, std::uint64_t values) noexcept {
-        signatures[row] = (1u << (byte(values) % 7)) | (1u << (byte(values >> 8) % 7)) |
-                          (1u << (byte(values >> 16) % 7));
+        signatures[row] = (1u << (std::uint8_t(values) % 7)) | (1u << (std::uint8_t(values >> 8) % 7)) |
+                          (1u << (std::uint8_t(values >> 16) % 7));
         ++calls;
     }
 };
@@ -28,42 +28,55 @@ struct invalidate {
     }
 };
 namespace tp = ikea::tuplepack;
-using tp::byte;
+
+template <class Writer>
+concept has_preserving_set = requires(const Writer& writer, const typename Writer::input_type& input,
+                                      ikea::journal& effects) {
+    writer.set(0, input, effects);
+};
+template <class Writer>
+concept has_preserving_replace = requires(const Writer& writer,
+                                          std::span<const typename Writer::input_type> input,
+                                          ikea::journal& effects) {
+    writer.replace(0, input, effects);
+};
+static_assert(has_preserving_set<tp::writer<8>> && has_preserving_replace<tp::writer<8>>);
+static_assert(!has_preserving_set<tp::writer<128>> && !has_preserving_replace<tp::writer<128>>);
 
 void check_construction_packets(unsigned count) {
     const unsigned unit = (count + 1) / 2, stride = unit + 5;
     constexpr unsigned rows = 3, offset = 3;
     std::array<tp::code, 128> codes;
     for (unsigned i = 0; i < count; ++i)
-        codes[i] = {byte(i / 2), byte(i % 2 * 4), 3};
+        codes[i] = {std::uint8_t(i / 2), std::uint8_t(i % 2 * 4), 3};
     auto layout = tp::layout::make(unit, std::span(codes).first(count));
     assert(layout);
-    auto plan = tp::constructor::make(*layout);
+    auto plan = tp::write_plan<128>::make(*layout);
     assert(plan && plan->code_count() == count);
     // End the allocation exactly at the last unit; gaps and prefix remain owned
     // by somebody else. Poison ignored input slots, including the empty packet.
-    std::vector<byte> storage(offset + (rows - 1) * stride + unit, 0xa6);
-    auto view = tp::view::bind(*layout, storage, rows, stride, offset);
+    std::vector<std::uint8_t> storage(offset + (rows - 1) * stride + unit, 0xa6);
+    auto view = tp::view::attach(*layout, std::as_writable_bytes(std::span{storage}), rows, stride, offset);
     assert(view);
-    auto op = tp::bind_constructor(*plan, *view);
+    auto op = tp::bind_writer(*plan, *view);
     assert(op);
-    std::array<tp::construction_input, rows> values;
+    std::array<tp::packet<128>, rows> values;
     for (unsigned row = 0; row < rows; ++row) {
         values[row].fill(255);
         for (unsigned i = 0; i < count; ++i)
             values[row][i] = (i * 5 + row * 3) % 8;
         assert(plan->accepts(values[row]));
     }
-    std::array<ikea::owner_write, rows> records;
-    ikea::source_write_journal effects{records};
+    std::array<ikea::journal::entry, rows> records;
+    ikea::journal effects{records};
     const auto before = storage;
     auto bad = values;
     bad.back()[count - 1] = 8;
     auto result = op->initialize(0, bad, effects);
     assert(!result && result.error() == tp::error::value && !effects.used && storage == before);
-    ikea::source_write_journal short_effects{std::span(records).first(rows - 1)};
+    ikea::journal short_effects{std::span(records).first(rows - 1)};
     result = op->initialize(0, values, short_effects);
-    assert(!result && result.error() == tp::error::capacity && !short_effects.used && storage == before);
+    assert(!result && result.error() == tp::error::effects && !short_effects.used && storage == before);
     result = op->initialize(1, values, effects);
     assert(!result && result.error() == tp::error::range && !effects.used && storage == before);
     assert(op->initialize(0, values, effects));
@@ -72,18 +85,19 @@ void check_construction_packets(unsigned count) {
         const auto start = offset + row * stride;
         std::fill_n(expected.begin() + start, unit, 0);
         for (unsigned i = 0; i < count; ++i)
-            expected[start + i / 2] |= byte(((i * 5 + row * 3) % 8) << (i % 2 * 4));
+            expected[start + i / 2] |= std::uint8_t(((i * 5 + row * 3) % 8) << (i % 2 * 4));
         const auto& effect = effects.storage[row];
-        assert(effect.source == &*view && effect.bytes.plane == 0 &&
-               effect.bytes.offset == start && effect.bytes.size == unit);
+        assert(effect.source == &*view && effect.plane == 0 &&
+               effect.offset == start && effect.size == unit);
     }
     assert(storage == expected && effects.used == rows);
     std::fill(storage.begin(), storage.end(), 0xa6);
     struct Coverage {
         const tp::view& destination;
-        std::span<const byte> bytes;
+        std::span<const std::uint8_t> bytes;
         unsigned next = 0, stride, unit;
-        void before(const tp::view& source, ikea::byte_write write) {
+        void before(const tp::view& source, unsigned plane, std::size_t write_offset, std::size_t size) noexcept {
+            const ikea::detail::write_span write{plane, write_offset, size};
             assert(&source == &destination && write.offset == offset + next * stride &&
                    write.plane == 0 && write.size == unit);
             for (unsigned i = 0; i < unit; ++i)
@@ -117,26 +131,26 @@ int main() {
     const std::array<code, 3> codes{{{0, 0, 3}, {0, 3, 3}, {1, 0, 8}}};
     auto format = layout::make(2, codes);
     assert(format);
-    std::array<byte, 14> storage;
+    std::array<std::uint8_t, 14> storage;
     storage.fill(0xd5);
-    auto placement = view::bind(*format, storage, 3, 4, 1);
+    auto placement = view::attach(*format, std::as_writable_bytes(std::span{storage}), 3, 4, 1);
     assert(placement);
-    const std::array<byte, 1> ma{0}, mb{1};
-    const std::array<byte, 3> all{0, 1, 2};
-    auto wa = writer<8>::make(*format, ma), wb = writer<8>::make(*format, mb);
-    auto rd = reader<8>::make(*format, all);
+    const std::array<std::uint8_t, 1> ma{0}, mb{1};
+    const std::array<std::uint8_t, 3> all{0, 1, 2};
+    auto wa = write_plan<8>::make(*format, ma), wb = write_plan<8>::make(*format, mb);
+    auto rd = read_plan<8>::make(*format, all);
     assert(wa && wb && rd);
     auto a = bind_writer(*wa, *placement), b = bind_writer(*wb, *placement);
     auto read = bind_reader(*rd, *placement);
     assert(a && b && read);
-    auto group = composition::bind_group(*a, *b);
+    auto group = author::bind_group(*a, *b);
     assert(group);
-    auto duplicate = composition::bind_group(*a, *a);
+    auto duplicate = author::bind_group(*a, *a);
     assert(!duplicate && duplicate.error() == error::overlap);
-    std::array<ikea::owner_write, 12> entries;
-    ikea::source_write_journal effects{entries};
+    std::array<ikea::journal::entry, 12> entries;
+    ikea::journal effects{entries};
     exact_signature signature;
-    observation observe(*read, signature);
+    author::observation observe(*read, signature);
     using input = decltype(group)::value_type::input_type;
     const std::array<input, 3> input_rows{input{1, 2}, input{3, 4}, input{5, 6}};
     auto original = storage;
@@ -144,55 +158,55 @@ int main() {
     std::get<1>(bad.back()) = 8;
     assert(!group->replace(0, bad, effects, selection::all(), observe));
     assert(storage == original && effects.used == 0 && signature.calls == 0);
-    ikea::source_write_journal short_effects{std::span(entries).first(5)};
+    ikea::journal short_effects{std::span(entries).first(5)};
     assert(!group->replace(0, input_rows, short_effects, selection::all(), observe));
     assert(storage == original && signature.calls == 0);
     assert(group->replace(0, input_rows, effects, selection::all(), observe));
     assert(signature.calls == 3);
     for (unsigned row = 0; row < 3; ++row) {
         const auto value = read->get_unchecked(row);
-        assert(byte(value) == 1 + row * 2 && byte(value >> 8) == 2 + row * 2 &&
-               byte(value >> 16) == 0xd5);
+        assert(std::uint8_t(value) == 1 + row * 2 && std::uint8_t(value >> 8) == 2 + row * 2 &&
+               std::uint8_t(value >> 16) == 0xd5);
         assert(signature.signatures[row] ==
                ((1u << ((1 + row * 2) % 7)) | (1u << ((2 + row * 2) % 7)) | (1u << (0xd5 % 7))));
         assert((storage[1 + row * 4] & 0xc0) == (original[1 + row * 4] & 0xc0));
     }
     for (auto effect : effects.entries()) {
-        assert(effect.source == &*placement && effect.bytes.plane == 0 && effect.bytes.size == 1);
-        assert((effect.bytes.offset - 1) % 4 == 0);
+        assert(effect.source == &*placement && effect.plane == 0 && effect.size == 1);
+        assert((effect.offset - 1) % 4 == 0);
     }
-    auto empty_reader = reader<8>::make(*format, {});
+    auto empty_reader = read_plan<8>::make(*format, {});
     assert(empty_reader);
     auto empty_op = bind_reader(*empty_reader, *placement);
     assert(empty_op);
     invalidate invalidation;
-    observation no_values(*empty_op, invalidation);
+    author::observation no_values(*empty_op, invalidation);
     effects.used = 0;
     std::array<std::uint64_t, 1> selected{0b101};
     assert(group->replace(0, input_rows, effects, selection::bits(0, selected), no_values));
     assert(invalidation.rows == 0b101);
-    // A two-level write retains whole-call admission and final-row observation.
-    auto nested = composition::bind_group(*group);
+    // A two-level write retains whole-call admission and final-row author::observation.
+    auto nested = author::bind_group(*group);
     assert(nested);
     using nested_input = decltype(nested)::value_type::input_type;
     effects.used = 0;
     assert(nested->set(1, nested_input{input{7, 0}}, effects, observe));
-    assert(byte(read->get_unchecked(1)) == 7);
+    assert(std::uint8_t(read->get_unchecked(1)) == 7);
     // Full construction admits both packets before clearing any caller bytes.
     std::array<code, 128> many;
     for (unsigned i = 0; i < 128; ++i)
-        many[i] = {byte(i / 2), byte(i % 2 * 4), 4};
+        many[i] = {std::uint8_t(i / 2), std::uint8_t(i % 2 * 4), 4};
     auto large = layout::make(64, many);
     assert(large);
-    std::array<byte, 66> raw;
+    std::array<std::uint8_t, 66> raw;
     raw.fill(0xaa);
-    auto large_view = view::bind(*large, raw, 1, 64, 1);
+    auto large_view = view::attach(*large, std::as_writable_bytes(std::span{raw}), 1, 64, 1);
     assert(large_view);
-    auto build = constructor::make(*large);
+    auto build = write_plan<128>::make(*large);
     assert(build);
-    auto initialize = bind_constructor(*build, *large_view);
+    auto initialize = bind_writer(*build, *large_view);
     assert(initialize);
-    construction_input values;
+    packet<128> values;
     values.fill(5);
     values[127] = 16;
     effects.used = 0;
@@ -205,15 +219,15 @@ int main() {
     assert(raw.front() == 0xaa && raw.back() == 0xaa && raw[64] == 0x65);
     for (unsigned i = 1; i < 64; ++i)
         assert(raw[i] == 0x55);
-    assert(effects.used == 1 && entries[0].bytes.offset == 1 && entries[0].bytes.size == 64);
-    std::array<byte, 3> other_raw{0xaa, 0xaa, 0xaa};
-    auto other_view = *view::bind(*format, other_raw, 1, 2);
-    auto other_plan = *constructor::make(*format);
-    auto other_build = *bind_constructor(other_plan, other_view);
-    auto both = composition::bind_group(*initialize, other_build);
+    assert(effects.used == 1 && entries[0].offset == 1 && entries[0].size == 64);
+    std::array<std::uint8_t, 3> other_raw{0xaa, 0xaa, 0xaa};
+    auto other_view = *view::attach(*format, std::as_writable_bytes(std::span{other_raw}), 1, 2);
+    auto other_plan = *write_plan<128>::make(*format);
+    auto other_build = *bind_writer(other_plan, other_view);
+    auto both = author::bind_group(*initialize, other_build);
     assert(both);
     using both_input = decltype(both)::value_type::input_type;
-    construction_input short_values{};
+    packet<128> short_values{};
     short_values[0] = 8;
     effects.used = 0;
     auto before_large = raw;

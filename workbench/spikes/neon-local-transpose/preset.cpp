@@ -12,22 +12,22 @@
 //   write:  prepared maintained replacement of all rows with sum and coverage
 //   filter: 128 complete 64-row less-than windows (cutoff at half range), popcount
 template <unsigned K, sp::geometry G, unsigned Operation> void preset_case(benchmark::State& state) {
-    using F = sp::format<K, G>;
+    using F = sp::layout<K, G>;
     using U = sp::uint_for<K>;
     fixture<K, G> data(8192);
-    const auto view = *sp::view<F, std::uint8_t>::attach(
-        data.count, {{{{data.storage.get(), data.bytes}, F::tile_bytes}, {}, {}}});
-    const auto prepared = *sp::bind_mutation(view);
+    const auto view = *sp::view<F>::attach(
+        data.count, {{{std::as_writable_bytes(std::span{data.storage.get(), data.bytes}), F::tile_bytes},{},{}}});
+    const auto prepared = *sp::bind_writer(view);
     std::vector<U> output(data.count), input(data.values.begin(), data.values.end());
     for (auto& value : input)
         value ^= U(~std::uint64_t{0} >> (64 - K));
     std::vector<std::size_t> packets(data.queries.size());
     for (std::size_t i = 0; i < packets.size(); ++i)
         packets[i] = data.queries[i] / 16 * 16;
-    std::vector<sp::composition::owner_write> records(
-        *prepared.effect_capacity(0, data.count, sp::row_selection::all()));
-    sp::composition::source_write_journal effects{records};
-    sp::sum_change summary;
+    std::vector<ikea::journal::entry> records(
+        *prepared.effect_capacity(0, data.count, sp::selection::all()));
+    ikea::journal effects{records};
+    sp::author::sum_change summary;
     const std::uint64_t cutoff = std::uint64_t{1} << (K - 1);
     auto run = [&]() -> std::uint64_t {
         if constexpr (Operation == 0)
@@ -47,8 +47,8 @@ template <unsigned K, sp::geometry G, unsigned Operation> void preset_case(bench
         } else if constexpr (Operation == 3) {
             effects.used = 0;
             summary = {};
-            prepared.replace_unchecked(0, data.count, input.data(), sp::row_selection::all(),
-                                       summary, effects);
+            prepared.replace_unchecked(0, data.count, input.data(), effects,
+                                       sp::selection::all(), summary);
             benchmark::DoNotOptimize(effects.used);
             return summary.finish();
         } else {

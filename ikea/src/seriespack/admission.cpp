@@ -7,7 +7,9 @@ namespace ikea::seriespack {
 std::string_view describe(error reason) noexcept {
     switch (reason) {
     case error::capacity:
-        return "insufficient accessible bytes, input/output extent, or effect capacity";
+        return "insufficient accessible bytes or input/output extent";
+    case error::effects:
+        return "effect journal has insufficient available entries";
     case error::stride:
         return "tile stride is too small or violates the physical alignment rule";
     case error::alignment:
@@ -61,7 +63,7 @@ std::expected<void, error> admit_view(std::size_t count, std::size_t rows,
 } // namespace detail
 } // namespace ikea::seriespack
 
-namespace ikea::seriespack::composition::detail {
+namespace ikea::seriespack::author::detail {
 void writable_fields::add(occupied_run next, const void* source, unsigned plane) {
     if (allocation_failed || aliased)
         return;
@@ -78,4 +80,4 @@ void writable_fields::add(occupied_run next, const void* source, unsigned plane)
         diagnostic = {source, nullptr, plane};
     }
 }
-} // namespace ikea::seriespack::composition::detail
+} // namespace ikea::seriespack::author::detail

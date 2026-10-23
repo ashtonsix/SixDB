@@ -25,7 +25,7 @@ struct Format {
 inline void retain_ref(Format& format) noexcept { format.retain(); }
 inline void release_ref(Format& format) noexcept { format.release(); }
 using FormatOwner = orbital::Ref<Format>;
-std::expected<FormatOwner, sp::error> prepare_format(sp::description);
+std::expected<FormatOwner, sp::error> prepare_format(sp::layout::options);
 
 struct Control {
     std::pmr::memory_resource* memory{};

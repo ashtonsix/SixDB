@@ -320,19 +320,19 @@ void bounded_charge_refusal() {
   std::puts("{\"case\":\"bounded-inflight-charge-refusal\",\"passed\":true}");
 }
 
-using Format=sp::preset_format<20,sp::preset::compact>;
+using Format=sp::preset_layout<20,sp::preset::compact>;
 constexpr std::size_t rows=256, series_bytes=640, tuple_offset=640, tuple_stride=20;
 
 struct Constructor {
   tp::layout layout;
-  tp::constructor tuple;
+  tp::write_plan<128> tuple;
   std::uint64_t written_bytes{};
   std::size_t issued_spans{}, completions{};
   Constructor() : layout([]{
     std::array<tp::code,tuple_stride> codes;
-    for(std::size_t i=0;i<codes.size();++i)codes[i]={tp::byte(i),0,8};
+    for(std::size_t i=0;i<codes.size();++i)codes[i]={std::uint8_t(i),0,8};
     return take(tp::layout::make(tuple_stride,codes));
-  }()),tuple(take(tp::constructor::make(layout))){}
+  }()),tuple(take(tp::write_plan<128>::make(layout))){}
   static Result<void> initialize(alloc::PreparedBytes destination,void* context)noexcept{
     const auto storage=destination.body;
     check(destination.readable_padding==64,"constructor did not receive readable padding contract");
@@ -340,27 +340,26 @@ struct Constructor {
       check(storage.data()[storage.size()+i]==std::byte{0},"constructor padding not initialized");
     auto& own=*static_cast<Constructor*>(context);
     if(!owner_thread)++helper_constructions;
-    auto series=take(sp::view<Format,std::uint8_t>::attach(rows,{{{
-      {reinterpret_cast<std::uint8_t*>(storage.data()),series_bytes},Format::tile_bytes},{},{}}}));
-    auto prepared=take(sp::bind_mutation(series));
-    auto write=prepared.erase<std::uint32_t,sp::sum_change>();
-    auto tuples=take(tp::view::bind(own.layout,
-        {reinterpret_cast<tp::byte*>(storage.data()+tuple_offset),rows*tuple_stride},rows,tuple_stride));
-    auto construct=take(tp::bind_constructor(own.tuple,tuples));
+    auto series=take(sp::view<Format>::attach(rows, {{{storage.first(series_bytes),Format::tile_bytes},{},{}}}));
+    auto prepared=take(sp::bind_writer(series));
+    auto write=prepared.erase<std::uint32_t,sp::author::sum_change>();
+    auto tuples=take(tp::view::attach(own.layout,
+        storage.subspan(tuple_offset,rows*tuple_stride),rows,tuple_stride));
+    auto construct=take(tp::bind_writer(own.tuple,tuples));
     std::array<std::uint32_t,rows> values{};
     for(std::size_t i=0;i<rows;++i)values[i]=std::uint32_t(11*i+5);
-    std::array<tp::construction_input,rows> records{};
-    for(std::size_t i=0;i<rows;++i){ records[i][0]=tp::byte(i); records[i][8]=tp::byte(255-i); }
-    std::array<ikea::owner_write,rows*4> effects_storage;
-    ikea::source_write_journal effects{effects_storage};
+    std::array<tp::packet<128>,rows> records{};
+    for(std::size_t i=0;i<rows;++i){ records[i][0]=std::uint8_t(i); records[i][8]=std::uint8_t(255-i); }
+    std::array<ikea::journal::entry,rows*4> effects_storage;
+    ikea::journal effects{effects_storage};
     check(bool(write.initialize(values,effects)),"SeriesPack initialize");
     const auto capture=[&]{
       for(const auto& effect:effects.entries()){
         const auto limit=effect.source==&series ? series_bytes :
                          effect.source==&tuples ? rows*tuple_stride : 0;
-        check(limit && !effect.bytes.plane && effect.bytes.offset<=limit && effect.bytes.size<=limit-effect.bytes.offset,
+        check(limit && !effect.plane && effect.offset<=limit && effect.size<=limit-effect.offset,
             "constructor effect not source-qualified");
-        own.written_bytes+=effect.bytes.size; ++own.issued_spans;
+        own.written_bytes+=effect.size; ++own.issued_spans;
       }
       effects.used=0;
     };
@@ -368,13 +367,12 @@ struct Constructor {
     return {};
   }
   void verify(MutableBytes storage){
-    auto series=take(sp::view<Format,std::uint8_t>::attach(rows,{{{
-      {reinterpret_cast<std::uint8_t*>(storage.data()),series_bytes},Format::tile_bytes},{},{}}}));
-    auto decoder=sp::bind_decoder<std::uint32_t>(series);
-    auto tuples=take(tp::view::bind(layout,
-        {reinterpret_cast<tp::byte*>(storage.data()+tuple_offset),rows*tuple_stride},rows,tuple_stride));
-    const std::array<tp::byte,8> map{0,1,2,3,4,5,6,7};
-    auto reader=take(tp::reader<8>::make(layout,map));
+    auto series=take(sp::view<Format>::attach(rows, {{{storage.first(series_bytes),Format::tile_bytes},{},{}}}));
+    auto decoder=sp::bind_reader<std::uint32_t>(series);
+    auto tuples=take(tp::view::attach(layout,
+        storage.subspan(tuple_offset,rows*tuple_stride),rows,tuple_stride));
+    const std::array<std::uint8_t,8> map{0,1,2,3,4,5,6,7};
+    auto reader=take(tp::read_plan<8>::make(layout,map));
     auto read=take(tp::bind_reader(reader,tuples));
     for(std::size_t i=0;i<rows;++i){
       check(decoder.get(i)==11*i+5,"prepared SeriesPack contents");

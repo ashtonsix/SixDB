@@ -39,9 +39,9 @@ void verify(const Bytes& image, bool full) {
   for (unsigned i = 0; i < 8; ++i) count |= std::uint64_t(image[summary_at + i]) << (i * 8);
   assert(population == (full ? 256U : 0U) && length == 0 && address == body_at);
   assert(count == population && image[summary_at + 8] == 1);
-  auto source = get(bc::source::admit(
+  auto source = get(bc::bind_reader(
       {reinterpret_cast<const bc::byte*>(image.data() + address), image.size() - address}, length, population));
-  bc::plain_block decoded;
+  std::array<std::byte, 32> decoded;
   bc::decode(source, decoded);
   for (auto byte : decoded) assert(byte == (full ? bc::byte{0xff} : bc::byte{0}));
 }
@@ -53,10 +53,10 @@ int main() {
   const auto path = std::filesystem::temp_directory_path() /
       ("sixdb-unit-boundary-" + std::to_string(::getpid()));
   auto home = expected(false);
-  bc::destination body{{reinterpret_cast<bc::byte*>(home.data() + body_at), bc::scratch_bytes}};
-  std::array<ikea::owner_write, 1> slots;
-  ikea::source_write_journal effects{slots};
-  bc::plain_block empty{}, full;
+  bc::view body{{reinterpret_cast<bc::byte*>(home.data() + body_at), bc::scratch_bytes}};
+  std::array<ikea::journal::entry, 1> slots;
+  ikea::journal effects{slots};
+  std::array<std::byte, 32> empty{}, full;
   full.fill(bc::byte{0xff});
   assert(get(bc::encode(empty, 0, body, 0, effects)) == 0 && effects.used == 0);
   assert(get(bc::encode(full, 256, body, 0, effects)) == 0 && effects.used == 0);

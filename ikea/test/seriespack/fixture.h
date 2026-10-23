@@ -1,7 +1,7 @@
 #pragma once
 #include <ikea/seriespack/author/record.h>
 #include <ikea/seriespack/detail/placed_read.h>
-#include <ikea/seriespack/author/read.h>
+#include <ikea/seriespack/reader.h>
 #include "reference/physical.h"
 #include "support.h"
 #include <cstdlib>
@@ -12,7 +12,7 @@
 #include <unistd.h>
 
 namespace sp = ikea::seriespack;
-namespace cp = sp::composition;
+namespace cp = sp::author;
 namespace old = ikea2_reference::seriespack;
 struct release {
     void operator()(std::uint8_t* p) const {
@@ -23,7 +23,7 @@ template <class F> struct placed {
     static constexpr std::size_t count = 529;
     static constexpr auto tiles = (count + F::tile_rows - 1) / F::tile_rows;
     std::array<std::unique_ptr<std::uint8_t, release>, 3> memory;
-    std::array<sp::plane<std::uint8_t>, 3> planes;
+    std::array<sp::plane<ikea::byte>, 3> planes;
     std::vector<std::uint64_t> truth;
     placed() : truth(tiles * F::tile_rows) {
         constexpr std::array<std::size_t, 3> used{F::tile_bytes, F::heads >= 8 ? F::tile_rows : 0,
@@ -43,7 +43,7 @@ template <class F> struct placed {
                     std::aligned_alloc(64, (bytes + 63) & ~std::size_t{63})));
                 IKEA_CHECK(memory[p]);
                 std::memset(memory[p].get(), 0x96, bytes);
-                planes[p] = {{memory[p].get(), bytes}, stride};
+                planes[p] = {std::as_writable_bytes(std::span(memory[p].get(), bytes)), stride};
             }
         for (std::size_t t = 0; t < tiles; ++t) {
             if constexpr (F::payload != 0) {
@@ -55,21 +55,21 @@ template <class F> struct placed {
                 }
                 constexpr auto G = F::storage == sp::geometry::local ? old::geometry::local8
                                                                      : old::geometry::striped;
-                old::detail::encode_tile<F::payload, G>(payload.data(), planes[0].bytes.data() +
+                old::detail::encode_tile<F::payload, G>(payload.data(), ikea::to_u8(planes[0].bytes).data() +
                                                                             t * planes[0].stride);
             }
             if constexpr (F::heads >= 8)
                 for (unsigned j = 0; j < F::tile_rows; ++j)
-                    planes[1].bytes[t * planes[1].stride + j] =
+                    ikea::to_u8(planes[1].bytes)[t * planes[1].stride + j] =
                         truth[t * F::tile_rows + j] >> (F::width - 8);
             if constexpr (F::heads == 16)
                 for (unsigned j = 0; j < F::tile_rows; ++j)
-                    planes[2].bytes[t * planes[2].stride + j] =
+                    ikea::to_u8(planes[2].bytes)[t * planes[2].stride + j] =
                         truth[t * F::tile_rows + j] >> (F::width - 16);
         }
     }
     auto source() const {
-        auto v = sp::view<F>::attach(count, {{{planes[0].bytes, planes[0].stride},
+        auto v = sp::const_view<F>::attach(count, {{{planes[0].bytes, planes[0].stride},
                                               {planes[1].bytes, planes[1].stride},
                                               {planes[2].bytes, planes[2].stride}}});
         IKEA_CHECK(v);

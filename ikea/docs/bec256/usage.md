@@ -1,6 +1,6 @@
 # Using Bec256
 
-Bec256 (Bisection–Enumerative Code) encodes a 32-byte bitset of 256 positions
+Bec256 (Bisection–Enumerative Code) encodes an `ikea::bitset256` value of 256 positions
 into a body of at most 47 bytes.
 The caller owns the storage and retains each body's **population** (number of set
 bits), exact byte length and address. Reading requires that association because
@@ -18,7 +18,7 @@ and decode it when plain bits are needed.
 | Plain bits for an external caller | Ordinary `decode` or `decode_pair` |
 | Boolean operation followed by a count or another encode | Native pair composition; consume/reduce before returning |
 | Encode and write now | Immediate checked encode, or an admitted exact native write inside a composed owner operation |
-| Owner must wait for allocation or coordinate destinations | `prepare`, retain its owned candidate, then admit and write |
+| Owner must wait for allocation or coordinate destinations | `encoding::make`, retain its owned candidate, then admit and write |
 
 Pairs accept independent addresses; do not copy bodies together just to use them.
 Native pair composition is supported on NEON and the required AVX-512 profile;
@@ -39,26 +39,26 @@ inline execution, shared stages and owner waits.
 
 ## Encode a block and read it back
 
-A named `destination` describes writable storage; a write journal records the
+A named `view` describes writable storage; a write journal records the
 operation's stores for the owner's storage protocol. The [ordinary example](../../examples/bec256/ordinary.cpp)
 sets position 29 and places its one-byte body at offset 17:
 
 ```cpp
 namespace bc = ikea::bec256;
-bc::plain_block bits{};
-bits[3] = bc::byte{0x20};
+ikea::bitset256 bits;
+bits.set(29);
 std::array<bc::byte, 128> storage{};
-bc::destination target{storage};
-std::array<ikea::owner_write, 1> records;
-ikea::source_write_journal effects{records};
+bc::view target{storage};
+std::array<ikea::journal::entry, 1> records;
+ikea::journal effects{records};
 auto bytes = bc::encode(bits, 1, target, 17, effects);
 assert(bytes && *bytes == 1);
 assert(storage[17] == bc::byte{0xa7});
 
-auto source = bc::source::admit(
+auto source = bc::bind_reader(
     std::span(storage).subspan(17, *bytes), *bytes, 1);
 assert(source);
-bc::plain_block decoded;
+ikea::bitset256 decoded;
 bc::decode(*source, decoded);
 assert(decoded == bits);
 ```
@@ -79,20 +79,26 @@ Examples assert success; applications should handle errors before dereferencing
 results. Report `bc::describe(result.error())` with population, length and supplied
 extents to diagnose rejection.
 
-## Admit the body, then reuse its interpretation
+## Attach bytes, validate contents, then reuse a reader
 
-`source::admit(storage, bytes, population)` validates the exact body prefix and
-returns a borrowed source for repeated reads without another framing scan.
-It rejects impossible populations, truncated fields, invalid splits or leaf ranks,
-nonzero final padding bits and trailing body bytes. Another supplied population
-can describe different valid content: admission does not authenticate the
-population/length/address association. The owner keeps that association and the
-bytes valid; writes or remapping can invalidate admission.
+`const_view::attach(storage, bytes, population)` checks placement metadata
+without reading encoded contents. `view.validate()` checks the complete body
+without creating a reusable operation. `bind_reader(view)` performs that content
+validation and returns a `reader` which retains its admitted metadata by value.
+The three-argument `bind_reader(storage, bytes, population)` convenience composes
+attachment and reader binding. Repeated decode calls do not rescan the framing.
 
-`decode` materializes exactly 32 plain bytes. `decode_pair`
-materializes 64: its first half comes from its first argument, its second from
-its second argument. Both inputs are decoded before any output store, so output
-may overlap either body. Input addresses need not be adjacent.
+Validation rejects impossible populations, truncated fields, invalid splits or
+leaf ranks, nonzero final padding bits and trailing body bytes. Another supplied
+population can describe different valid content: validation does not authenticate
+the population/length/address association. The owner keeps that association and
+the bytes valid; writes or remapping can invalidate the reader's proof.
+
+`decode(reader, block)` produces an `ikea::bitset256`; bit `i%64` in word `i/64`
+names position i independently of host endian order. `decode_pair` accepts two
+independent readers and an output span of two blocks. Both inputs are decoded
+before output is written, so output may overlap either body. Explicit byte-span
+overloads expose the canonical 32/64-byte little-endian bridge for wire work.
 
 An exact body span, as used above, is sufficient for admitted ordinary and native
 reads. The [memory access bounds](#memory-access-bounds) below explain the optional
@@ -104,7 +110,7 @@ Prepare a candidate when the owner must acquire space or coordinate several
 writes before admitting a destination:
 
 ```cpp
-auto candidate = bc::prepare(replacement, population);
+auto candidate = bc::encoding::make(replacement, population);
 assert(candidate);
 // The owner may wait here.
 auto admitted = candidate->admit_write(target, offset, effects);
@@ -112,9 +118,10 @@ assert(admitted);
 candidate->write_unchecked(target, offset, effects);
 ```
 
-`prepare` validates population and encodes without allocation or caller-storage
+`encoding::make` validates population and encodes without allocation or caller-storage
 writes. Its `encoding` owns transient bytes that survive owner waits; `bytes()`
-gives the exact storage need. `candidate->write(...)` combines admission and
+gives the exact storage need; `effect_capacity()` gives the additional journal
+capacity, zero or one record. `candidate->write(...)` combines admission and
 writing when separate steps are unnecessary.
 
 `admit_write` checks a proposed write; it reserves nothing. Two children can each
@@ -127,7 +134,7 @@ body issues no store or effect, though a checked write still validates its offse
 
 `estimate_bytes(bits)` uses a fixed statistical model to predict headless body
 bytes in 0..47, with zero for empty/full inputs. It is **not an allocation bound**;
-use `prepare` and `bytes()` for an exact size. Estimates exclude owner metadata
+use `encoding::make` and `bytes()` for an exact size. Estimates exclude owner metadata
 and may have correlated errors across related blocks.
 
 `encode_if_promising` compares a cutoff with `enum_bits(bits)`: the exact sum of
@@ -216,14 +223,15 @@ prerequisites. There is no checked all-or-nothing pair command. If admission
 depends on the result sizes, prepare both candidates, budget and admit both, then
 execute trusted writes under the owner protocol. Separate checked writes have
 separate rejection boundaries. For one native block, `native::encode` checks
-population, capacity and effects before an exact write; `prepare_unchecked`
+population, capacity and effects before an exact write; `native::encode_unchecked(value, population)`
 creates a retained candidate with caller-proved population.
 
-A parent that has validated a collection can use
-`source::assume_valid(storage, bytes, population)` when resolving each child.
-This borrows without rescanning; all `source::admit` framing, population, extent
-and initialized-storage requirements must already be proved and remain valid.
-Readable bounds are unchanged. Otherwise, use `source::admit`.
+A parent that retains a content proof can use
+`bind_reader_unchecked(view)` or `bind_reader_unchecked(storage, bytes, population)`
+when resolving each child. This borrows without rescanning; framing, population,
+extent and initialized-storage requirements must remain proved for these exact
+bytes. `const_view::attach_unchecked` skips placement checks only and never
+supplies a content proof. Otherwise, use checked `bind_reader`.
 
 The native surface supports AVX-512 and NEON. AVX-512 requires VBMI, BITALG, VL,
 BW and DQ; VPOPCNTDQ is optional. x86 builds without those required AVX-512
@@ -253,7 +261,7 @@ native entries distinguish exact output from a raw 64-byte access grant:
 | `encode_exact_unchecked` | Correct population, capacity for the resulting body and one coverage event; writes exactly that body. 47 bytes suffice universally; tighter proofs are valid |
 | `encode_pair_exact_unchecked` | Correct populations, capacity for each body, disjoint output bodies and room for two events; writes two exact bodies |
 | Raw `decode_unchecked` / `decode_pair_unchecked` | Valid body/population and 64 initialized readable bytes per input, including empty/full blocks |
-| Raw `encode_unchecked` / `encode_pair_unchecked` | Correct populations and exclusive 64-byte writable windows; may write past returned body lengths and record no effects |
+| Raw `encode_unchecked(value,population,output64)` / `encode_pair_unchecked` | Correct populations and exclusive 64-byte writable windows; may write past returned body lengths and record no effects |
 
 All entries in this table are in `bc::native`. Raw encoder input/output storage
 must not overlap. Use the exact entries for bodies placed beside other live bytes

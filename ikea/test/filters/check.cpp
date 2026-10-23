@@ -1,4 +1,5 @@
 #include "support.h"
+#include <ikea/seriespack/author/store.h>
 void check_widths_1();
 void check_widths_9();
 void check_widths_17();
@@ -24,26 +25,26 @@ void guards() {
         memory[page * 2 - 64 + i] = i * 7;
     // Tight full-window fast paths end exactly at an inaccessible page.
     auto layout = *tp::layout::make(1, std::array<tp::code, 1>{{{0, 3, 5}}});
-    auto source = *tp::view::bind(layout, {memory + page * 2 - 64, 64}, 64, 1);
-    auto plan = *tp::reader<64, 64>::make(layout, std::array<tp::byte, 1>{0});
+    auto source = *tp::view::attach(layout, std::as_writable_bytes(std::span{memory + page * 2 - 64, 64}), 64, 1);
+    auto plan = *tp::read_plan<64, 64>::make(layout, std::array<std::uint8_t, 1>{0});
     auto read = *tp::bind_reader(plan, source);
-    auto filter = *tp::bind_filter(read);
+    auto filter = *tp::bind_predicate(read);
     auto bits = filter.filter<C::less>(0, 15);
     assert(bits);
     std::uint64_t wanted = 0;
     for (unsigned i = 0; i < 64; ++i)
-        if (source.row_unchecked(i)[0] >> 3 < 15)
+        if (std::to_integer<unsigned>(source.row_unchecked(i)[0]) >> 3 < 15)
             wanted |= std::uint64_t{1} << i;
     assert(*bits == wanted);
     // Only the first row exists in a wide sparse packet. Inactive rows must
     // never access the next page, even when comparing against zero.
-    auto short_source = *tp::view::bind(layout, {memory + page * 2 - 1, 1}, 1, 1);
+    auto short_source = *tp::view::attach(layout, std::as_writable_bytes(std::span{memory + page * 2 - 1, 1}), 1, 1);
     auto short_read = *tp::bind_reader(plan, short_source);
-    auto short_filter = *tp::bind_filter(short_read);
+    auto short_filter = *tp::bind_predicate(short_read);
     assert(short_filter.filter<C::equal>(0, 0, 1) == unsigned(memory[page * 2 - 1] >> 3 == 0));
     assert(short_filter.filter<C::equal>(1, 0, 0) == 0);
-    auto dense = sp::dense_source<sp::format<7>>{memory + page * 2 - 14, 16};
-    auto empty = sp::dense_source<sp::format<7>>{memory + page * 2, 16};
+    auto dense = sp::dense_source<sp::layout<7>>{reinterpret_cast<const std::byte*>(memory + page * 2 - 14), 16};
+    auto empty = sp::dense_source<sp::layout<7>>{reinterpret_cast<const std::byte*>(memory + page * 2), 16};
     assert(sp::filter<C::equal>(empty, 0, 16, 0, 0) == 0);
     assert(sp::indexof(empty, 0, 16, 0, 0) == 16);
     assert(sp::indexof(empty, 0, 16, 1ull << 63) == 16);
@@ -51,7 +52,7 @@ void guards() {
     // Runtime guards on both selected x86 mixed-width families. Constant
     // activity would let an inlined caller erase even an unwanted load.
     const auto absent_local = [&]<unsigned K>() {
-        const sp::dense_source<sp::format<K>> absent{memory + page * 2, 16};
+        const sp::dense_source<sp::layout<K>> absent{reinterpret_cast<const std::byte*>(memory + page * 2), 16};
         volatile std::uint64_t inactive = 0, outside = std::uint64_t{1} << K;
         assert(sp::indexof(absent, 0, 16, 0, inactive) == 16);
         assert(sp::indexof(absent, 0, 16, outside) == 16);
@@ -65,19 +66,19 @@ void guards() {
 }
 
 void substitution() {
-    using F = sp::format<12>;
-    using R = sp::format<4>;
+    using F = sp::layout<12>;
+    using R = sp::layout<4>;
     alignas(64) std::array<std::uint8_t, 128> parent{}, child{};
-    auto p = *sp::view<F, std::uint8_t>::attach(64, {{{parent, F::tile_bytes}, {}, {}}});
-    auto c = *sp::view<R, std::uint8_t>::attach(64, {{{child, R::tile_bytes}, {}, {}}});
+    auto p = *sp::view<F>::attach(64, {{{std::as_writable_bytes(std::span{parent}), F::tile_bytes},{},{}}});
+    auto c = *sp::view<R>::attach(64, {{{std::as_writable_bytes(std::span{child}), R::tile_bytes},{},{}}});
     for (unsigned i = 0; i < 64; ++i) {
-        sp::set_unchecked(p, i, i * 37);
-        sp::set_unchecked(c, i, i % 16);
+        sp::author::store_unchecked(p, i, i * 37);
+        sp::author::store_unchecked(c, i, i % 16);
     }
-    auto original = sp::composition::describe(p);
-    auto expression = sp::composition::with_payload(
-        original, sp::composition::with_tail(original.payload, sp::composition::describe(c)));
-    auto filter = *sp::composition::prepare(expression, 64);
+    auto original = sp::author::expression(p);
+    auto expression = sp::author::with_payload(
+        original, sp::author::with_tail(original.payload, sp::author::expression(c)));
+    auto filter = *sp::bind_reader(expression, 64);
     for (unsigned first : {0u, 8u})
         for (unsigned count : {8u, 16u, 24u, 40u, 56u}) {
             std::uint64_t expected = 0;

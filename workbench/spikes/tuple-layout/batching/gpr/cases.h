@@ -1,3 +1,4 @@
+#include <ikea/tuplepack/author/execution.h>
 #pragma once
 #include "probe.h"
 #include <benchmark/benchmark.h>
@@ -66,11 +67,11 @@ void run(benchmark::State& state, unsigned extent, unsigned stride, unsigned pat
     constexpr unsigned Step = Method == method::full_simd ? Rows * 8 : Rows;
     std::vector<tp::code> codes(extent == 1 ? 8 : extent);
     for (unsigned i = 0; i < codes.size(); ++i)
-        codes[i] = extent == 1 ? tp::code{0, tp::byte(i), 1}
-                              : tp::code{tp::byte(i), tp::byte(pattern ? i % 2 : 0), 7};
+        codes[i] = extent == 1 ? tp::code{0, std::uint8_t(i), 1}
+                              : tp::code{std::uint8_t(i), std::uint8_t(pattern ? i % 2 : 0), 7};
     const auto format = *tp::layout::make(extent, codes);
     const unsigned drawn = std::min(B, unsigned(codes.size()));
-    std::vector<tp::byte> map(drawn);
+    std::vector<std::uint8_t> map(drawn);
     for (unsigned i = 0; i < drawn; ++i)
         map[i] = pattern == 2 && drawn > 1 ? i * (codes.size() - 1) / (drawn - 1)
                  : pattern == 1 ? drawn - 1 - i : i;
@@ -79,22 +80,22 @@ void run(benchmark::State& state, unsigned extent, unsigned stride, unsigned pat
     // in the map, independently of the new packed-prefix default.
     auto simd_map = map;
     simd_map.resize(64 / Step, tp::hole);
-    const auto rp = *tp::reader<64, Step>::make(format, simd_map);
-    const auto wp = *tp::writer<64, Step>::make(format, simd_map);
-    std::vector<tp::byte> bytes((count - 1) * stride + extent);
+    const auto rp = *tp::read_plan<64, Step>::make(format, simd_map);
+    const auto wp = *tp::write_plan<64, Step>::make(format, simd_map);
+    std::vector<std::uint8_t> bytes((count - 1) * stride + extent);
     for (unsigned i = 0; i < bytes.size(); ++i)
-        bytes[i] = tp::byte(i * 113 + i / 7 + 91);
+        bytes[i] = std::uint8_t(i * 113 + i / 7 + 91);
     const auto initial = bytes;
-    auto view = *tp::view::bind(format, bytes, count, stride);
+    auto view = *tp::view::attach(format, std::as_writable_bytes(std::span{bytes}), count, stride);
     const auto pr = *tp::bind_reader(gp.read, view);
     const auto pw = *tp::bind_writer(gp.write, view);
     const auto br = *tp::bind_reader(rp, view);
     const auto bw = *tp::bind_writer(wp, view);
-    const auto nr = tp::native_reader(br);
-    const auto nw = tp::native_writer(bw);
+    const auto nr = tp::author::native_reader(br);
+    const auto nw = tp::author::native_writer(bw);
     const gpr_probe::mutation<Rows, Method == method::compiled> gw(gp, view);
-    std::array<ikea::owner_write, 512> entries;
-    ikea::source_write_journal effects{entries};
+    std::array<ikea::journal::entry, 512> entries;
+    ikea::journal effects{entries};
     word active = tp::detail::all_rows<Rows> & (sparse ? 0x55 : ~word(0));
     if constexpr (Method == method::full_simd) {
         const auto part = active;
@@ -171,13 +172,13 @@ void run(benchmark::State& state, unsigned extent, unsigned stride, unsigned pat
                 for (unsigned i = 0; i < drawn; ++i) {
                     const auto c = codes[map[i]];
                     const auto offset = (first + local) * stride + c.offset;
-                    tp::byte decoded = 0;
+                    std::uint8_t decoded = 0;
                     for (unsigned bit = 0; bit < c.width; ++bit)
                         decoded |= ((initial[offset] >> (c.shift + bit)) & 1) << bit;
                     value |= word(decoded) << (8 * (r * B + i));
                     const unsigned replacement = (decoded & 1) ^ 1;
                     for (unsigned bit = 0; bit < c.width; ++bit)
-                        expected[offset] = tp::byte((expected[offset] & ~(1u << (c.shift + bit))) |
+                        expected[offset] = std::uint8_t((expected[offset] & ~(1u << (c.shift + bit))) |
                                                    (((replacement >> bit) & 1) << (c.shift + bit)));
                 }
             }

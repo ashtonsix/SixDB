@@ -3,7 +3,7 @@
 #include <source_location>
 
 namespace ikea_test {
-// Diagnostic state is outside timed kernels. Nested scopes retain the format
+// Diagnostic state is outside timed kernels. Nested scopes retain the layout
 // when a shared verification helper reports the failed byte or event.
 struct scope {
     const char* label;

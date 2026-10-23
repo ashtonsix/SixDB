@@ -1,5 +1,6 @@
 #pragma once
 #include <ikea/hashtable/table.h>
+#include <ikea/hashtable/author/table.h>
 #include <ikea/streampack/read.h>
 #include <ikea/streampack/write.h>
 #include <optional>
@@ -43,10 +44,10 @@ template<unsigned V,bool Singleton,unsigned Payload=Singleton?256*V:65536,class 
     static constexpr unsigned directory_bytes_=32+(Singleton?0:256*sizeof(offset_type));
     static constexpr unsigned lengths_bytes_=Singleton?0:512;
     stream::layout format_=[] {
-        stream::description d{.family=stream::geometry::direct,.maximum=Singleton?V:65535,
+        stream::layout::options d{.family=stream::geometry::absolute_ends,.maximum=Singleton?V:65535,
             .byte_limit=payload_bytes,.fixed_reservation=Singleton?std::optional<std::uint16_t>(V):std::nullopt,
             .full=Singleton,.immortal=false};
-        auto f=stream::layout::prepare(d);require(bool(f),"StreamPack layout");
+        auto f=stream::layout::make(d);require(bool(f),"StreamPack layout");
         require(f->directory_bytes()==directory_bytes_&&f->lengths_bytes()==lengths_bytes_&&
             f->geometry_offset()==32&&f->used_offset()==0&&f->group_stride()==(Singleton?0:32)&&
             f->control_bytes()==2,"admitted Direct block recipe");return *f;
@@ -96,8 +97,8 @@ template<unsigned V,bool Singleton,unsigned Payload=Singleton?256*V:65536,class 
             require(retired_>=reclaimed,"retired block accounting");
             // Initialization belongs to private preparation. No prepared view or
             // staged reader from this mutable owner survives this mutation.
-            ikea::no_coverage effects;
-            require(bool(stream::initialize(destination,effects)),"StreamPack block reset");
+            ikea::no_effects effects;
+            stream::initialize_unchecked(destination,effects);
             retired_-=reclaimed;active_block_=block;has_recycled_=true;return true;
         }
         return false;
@@ -123,11 +124,11 @@ template<unsigned V,bool Singleton,unsigned Payload=Singleton?256*V:65536,class 
         result.payload=result.payload.first(std::min(result.payload.size(),physical_capacity(block)));
         return result;
     }
-    auto view(std::size_t block)const{return stream::view::assume_valid(format_,windows(block));}
+    auto view(std::size_t block)const{return stream::view::attach_unchecked(format_,windows(block));}
     unsigned extent(const stream::view& source)const {
         {
             admit_read_recipe();
-            using Access=stream::author::access<stream::geometry::direct,
+            using Access=stream::author::access<stream::geometry::absolute_ends,
                 std::conditional_t<Singleton,std::uint8_t,std::uint16_t>,offset_type,stream::byte>;
             return Access(source).start(source.size());
         }
@@ -136,11 +137,11 @@ template<unsigned V,bool Singleton,unsigned Payload=Singleton?256*V:65536,class 
         auto parts=windows(block);
         const auto end=block+1<block_offsets_.size()?block_offsets_[block+1]-payload_offset:used_end_;
         parts.payload=parts.payload.first(std::min<std::size_t>(payload_bytes,end-block_offsets_[block]));
-        return stream::view::assume_valid(format_,parts);
+        return stream::view::attach_unchecked(format_,parts);
     }
     // The ID names the payload's cache-line offset. Metadata is at fixed
     // negative offsets, so variable-size sealed blocks add no lookup hop.
-    auto reference_view(word ref)const{return stream::view::assume_valid(format_,windows_at((ref>>8)*64));}
+    auto reference_view(word ref)const{return stream::view::attach_unchecked(format_,windows_at((ref>>8)*64));}
     // Keep the common capacity check visible without pulling allocator growth
     // and its exception paths into every prepared append.
     [[gnu::always_inline]] void ensure(std::size_t needed) {
@@ -163,8 +164,8 @@ template<unsigned V,bool Singleton,unsigned Payload=Singleton?256*V:65536,class 
         if(block_offsets_.size()==block_offsets_.capacity())
             block_offsets_.reserve(std::max<std::size_t>(1,block_offsets_.size()*2));
         ensure(offset+reservation);
-        auto admitted=stream::view::bind(format_,windows_at(offset));require(bool(admitted),"StreamPack block placement");
-        ikea::no_coverage effects;require(bool(stream::initialize(*admitted,effects)),"StreamPack initialization");
+        auto admitted=stream::view::attach(format_,windows_at(offset));require(bool(admitted),"StreamPack block placement");
+        ikea::no_effects effects;stream::initialize_unchecked(*admitted,effects);
         block_offsets_.push_back(offset);used_end_=offset;
         active_block_=block_offsets_.size()-1;
     }
@@ -220,9 +221,8 @@ template<unsigned V,bool Singleton,unsigned Payload=Singleton?256*V:65536,class 
         require(valid(head),"stale StreamPack damage plan");
         const auto payload=block_offsets_[head.block],meta=payload-payload_offset;
         const auto n=head.destination.size(),begin=extent(head.destination);
-        const mutation_source source{this,Singleton?owner_part::singleton_bags:
-            Payload<65536?owner_part::small_variable_bags:owner_part::large_variable_bags,bytes_.data,bytes_.size};
-        auto add=[&](std::size_t offset,std::size_t length){emit(mutation_damage{source,{0,offset,length}});};
+        const write_arch::physical_region source{this,1,bytes_.data,bytes_.size};
+        auto add=[&](std::size_t offset,std::size_t length){emit(write_arch::write_effect(source,offset,length));};
         add(payload+begin,reservation);
         if constexpr(!Singleton){
             add(meta+32+n*sizeof(offset_type),sizeof(offset_type));
@@ -232,26 +232,25 @@ template<unsigned V,bool Singleton,unsigned Payload=Singleton?256*V:65536,class 
         add(meta+directory_bytes_+lengths_bytes_,2);
     }
     template<class Emit> void retire_damage(word ref,Emit&& emit,unsigned count=1)const {
-        const mutation_source source{this,Singleton?owner_part::singleton_bags:
-            Payload<65536?owner_part::small_variable_bags:owner_part::large_variable_bags,bytes_.data,bytes_.size};
+        const write_arch::physical_region source{this,1,bytes_.data,bytes_.size};
         const auto rank=unsigned(ref&255);
-        emit(mutation_damage{source,{0,(ref>>8)*64-payload_offset+rank/8,(rank+count-1)/8-rank/8+1}});
+        emit(write_arch::write_effect(source,(ref>>8)*64-payload_offset+rank/8,(rank+count-1)/8-rank/8+1));
     }
     template<class Emit> void replace_damage(word ref,unsigned length,Emit&& emit,unsigned count=1)const {
         const auto payload=(ref>>8)*64,meta=payload-payload_offset;
-        const mutation_source source{this,Singleton?owner_part::singleton_bags:
-            Payload<65536?owner_part::small_variable_bags:owner_part::large_variable_bags,bytes_.data,bytes_.size};
+        const write_arch::physical_region source{this,1,bytes_.data,bytes_.size};
         auto source_view=reference_view(ref);
         const auto begin=[&]{
             {admit_read_recipe();
-                using Access=stream::author::access<stream::geometry::direct,std::conditional_t<Singleton,std::uint8_t,std::uint16_t>,offset_type,stream::byte>;
+                using Access=stream::author::access<stream::geometry::absolute_ends,std::conditional_t<Singleton,std::uint8_t,std::uint16_t>,offset_type,stream::byte>;
                 return Access(source_view).start(unsigned(ref&255));
             }
         }();
         require(count&&((Singleton&&length==count*V)||(!Singleton&&count==1)),"replacement span recipe");
-        emit(mutation_damage{source,{0,payload+begin,length}});
-        if constexpr(!Singleton)emit(mutation_damage{source,{0,meta+directory_bytes_+2*unsigned(ref&255),2}});
+        emit(write_arch::write_effect(source,payload+begin,length));
+        if constexpr(!Singleton)emit(write_arch::write_effect(source,meta+directory_bytes_+2*unsigned(ref&255),2));
     }
+    ikea::bytes effect_storage(unsigned plane)const noexcept {return plane==1?ikea::bytes{bytes_.data,bytes_.size}:ikea::bytes{};}
     std::size_t bytes_used()const{return bytes_.capacity()+block_offsets_.capacity()*sizeof(std::size_t)+sizeof(*this);}
     storage_usage storage()const{return bytes_.usage();}
     std::size_t metadata_bytes()const{return block_offsets_.capacity()*sizeof(std::size_t)+sizeof(*this);}
@@ -291,7 +290,8 @@ template<unsigned V,bool Singleton,unsigned Payload=Singleton?256*V:65536,class 
             require(rank<256&&begin<=payload_bytes&&reservation<=payload_bytes-begin&&
                 begin<=head.destination.windows().payload.size()&&reservation<=head.destination.windows().payload.size()-begin,"prepared StreamPack room");
             require(!stream::detail::input_alias(head.destination,std::as_bytes(input),effects),"prepared StreamPack source admission");
-            require(stream::detail::room(effects,(reservation!=0)+(Singleton?0:2)+2),"prepared StreamPack effects");
+            if constexpr(std::same_as<Effects,ikea::journal>)
+                require(stream::detail::room(effects,(reservation!=0)+(Singleton?0:2)+2),"prepared StreamPack effects");
             bag_write::writer<V,Singleton,offset_type> write(head.destination,rank,begin);
             write.append(std::as_bytes(input),reservation,effects);
             used_end_=std::max(used_end_,block_offsets_[head.block]+write.extent());
@@ -300,7 +300,7 @@ template<unsigned V,bool Singleton,unsigned Payload=Singleton?256*V:65536,class 
         return (block_id<<8)|rank;
     }
     word append(prepared_head& head,std::span<const byte> input,unsigned reservation) {
-        ikea::no_coverage effects;return append(head,input,reservation,effects);
+        ikea::no_effects effects;return append(head,input,reservation,effects);
     }
     word append(std::span<const byte> input,unsigned reservation) {auto head=prepare(input.size(),reservation);return append(head,input,reservation);}
     template<class Effects> word append_run(prepared_head& head,std::span<const byte> input,Effects& effects) requires(Singleton) {
@@ -308,7 +308,8 @@ template<unsigned V,bool Singleton,unsigned Payload=Singleton?256*V:65536,class 
         const auto count=input.size()/V;
         const auto begin=extent(head.destination);
         require(head.destination.size()+count<=256&&begin+input.size()<=payload_bytes&&begin+input.size()<=head.destination.windows().payload.size(),"fixed run room");
-        require(!stream::detail::input_alias(head.destination,std::as_bytes(input),effects)&&stream::detail::room(effects,3*count),"fixed run effects admission");
+        require(!stream::detail::input_alias(head.destination,std::as_bytes(input),effects),"fixed run source admission");
+        if constexpr(std::same_as<Effects,ikea::journal>)require(stream::detail::room(effects,3*count),"fixed run effects admission");
         const auto first=prepared_reference(head);
         {
             bytes<2*V> copy;std::memcpy(copy.data(),input.data(),V);
@@ -320,7 +321,7 @@ template<unsigned V,bool Singleton,unsigned Payload=Singleton?256*V:65536,class 
         return first;
     }
     word append_run(prepared_head& head,std::span<const byte> input) requires(Singleton) {
-        ikea::no_coverage effects;return append_run(head,input,effects);
+        ikea::no_effects effects;return append_run(head,input,effects);
     }
     template<class Consume> [[gnu::always_inline]] void consume(word ref,Consume&& consume_value)const {
         const auto value=locate(ref);
@@ -333,7 +334,7 @@ template<unsigned V,bool Singleton,unsigned Payload=Singleton?256*V:65536,class 
         // runtime geometry branches (and the singleton's variable-length loop).
         admit_read_recipe();
         auto source=reference_view(ref);
-        using Access=stream::author::access<stream::geometry::direct,
+        using Access=stream::author::access<stream::geometry::absolute_ends,
             std::conditional_t<Singleton,std::uint8_t,std::uint16_t>,offset_type,stream::byte>;
         const Access read(source);return read.value(unsigned(ref&255));
     }
@@ -341,12 +342,12 @@ template<unsigned V,bool Singleton,unsigned Payload=Singleton?256*V:65536,class 
     // crossing rank256. This is a run of values, not one widened leaf value.
     [[gnu::always_inline]] stream::bytes locate_run(word ref,unsigned count)const requires(Singleton) {
         admit_read_recipe();auto source=reference_view(ref);
-        const stream::author::access<stream::geometry::direct,std::uint8_t,offset_type,stream::byte> read(source);
+        const stream::author::access<stream::geometry::absolute_ends,std::uint8_t,offset_type,stream::byte> read(source);
         return source.windows().payload.subspan(read.start(unsigned(ref&255)),count*V);
     }
     template<class Emit> void metadata(word ref,Emit&& emit)const {
         admit_read_recipe();
-        auto source=reference_view(ref);using Access=stream::author::access<stream::geometry::direct,
+        auto source=reference_view(ref);using Access=stream::author::access<stream::geometry::absolute_ends,
             std::conditional_t<Singleton,std::uint8_t,std::uint16_t>,offset_type,stream::byte>;
         const Access read(source);read.visit_value_metadata(unsigned(ref&255),[&](auto bytes){emit(reinterpret_cast<const byte*>(bytes.data()),bytes.size());});
     }
@@ -355,16 +356,16 @@ template<unsigned V,bool Singleton,unsigned Payload=Singleton?256*V:65536,class 
     }
     unsigned reserved(word ref)const {auto source=reference_view(ref);
         {admit_read_recipe();
-            using Access=stream::author::access<stream::geometry::direct,std::conditional_t<Singleton,std::uint8_t,std::uint16_t>,offset_type,stream::byte>;
+            using Access=stream::author::access<stream::geometry::absolute_ends,std::conditional_t<Singleton,std::uint8_t,std::uint16_t>,offset_type,stream::byte>;
             return Access(source).reserved(unsigned(ref&255));
         }
     }
-    void replace(word ref,std::span<const byte> value) {auto source=reference_view(ref);ikea::no_coverage effects;
+    void replace(word ref,std::span<const byte> value) {auto source=reference_view(ref);ikea::no_effects effects;
         {
             const auto rank=unsigned(ref&255);
             require(rank<source.size()&&source.live_unchecked(rank),"live replacement rank");
             admit_read_recipe();
-            using Access=stream::author::access<stream::geometry::direct,std::conditional_t<Singleton,std::uint8_t,std::uint16_t>,offset_type,stream::byte>;
+            using Access=stream::author::access<stream::geometry::absolute_ends,std::conditional_t<Singleton,std::uint8_t,std::uint16_t>,offset_type,stream::byte>;
             const Access access(source);const auto begin=access.start(rank),reservation=access.reserved(rank);
             require(value.size()<=65535&&value.size()<=reservation,"replacement fits reservation");
             if constexpr(Singleton)require(value.size()==V,"complete fixed replacement");
@@ -375,8 +376,8 @@ template<unsigned V,bool Singleton,unsigned Payload=Singleton?256*V:65536,class 
     }
     void retire(word ref) {auto source=reference_view(ref);
         if(source.live_unchecked(unsigned(ref&255)))retired_+=reserved(ref);
-        ikea::no_coverage effects;
-        require(bool(stream::retire(source,unsigned(ref&255),effects)),"StreamPack retirement");++head_generation_;}
+        ikea::no_effects effects;
+        stream::retire_unchecked(source,unsigned(ref&255),effects);++head_generation_;}
     void validate()const {for(std::size_t b=0;b<block_offsets_.size();++b)require(bool(bounded_view(b).validate()),"StreamPack contents");}
     // Owner run validation compares its complete rank partition with the leaf's
     // independently recorded liveness. Sorting happens only in cold validation.
@@ -482,6 +483,15 @@ template<unsigned W,unsigned b,unsigned V,unsigned E=W-b,search_kernel Kernel=se
         else singletons_.retire_damage(tiny_id(ref),emit,tiny_count(ref));
     }
   public:
+    ikea::bytes effect_storage(const void* source,unsigned plane)const noexcept {
+        if(source==this&&plane==unsigned(hashtable::plane::header))
+            return {reinterpret_cast<const byte*>(this),sizeof(*this)};
+        if(source==&index_)return index_.plane_storage(hashtable::plane(plane));
+        if(source==&singletons_)return singletons_.effect_storage(plane);
+        if(source==&bags_)return bags_.effect_storage(plane);
+        if(source==&large_bags_)return large_bags_.effect_storage(plane);
+        return {};
+    }
     static constexpr unsigned K=Index::K,N=Index::N,B=Index::B,encoding=E;
     static constexpr bool bitmap=Index::bitmap;
     static constexpr std::size_t bucket_count=Index::bucket_count;
@@ -493,7 +503,7 @@ template<unsigned W,unsigned b,unsigned V,unsigned E=W-b,search_kernel Kernel=se
         std::optional<word> old_reference;
         bool reuse=false;
         typename Index::location primary{};
-        typename Index::write_position index;
+        decltype(author::table_access::prepare_write(std::declval<Index&>(),word{},std::declval<typename Index::value_type&>())) index;
         // Mutually exclusive fresh destination, including reuse's late-input
         // fallback. Its checked owner provenance is the arena discriminator.
         std::optional<prepared_stream_head> destination;
@@ -512,7 +522,7 @@ template<unsigned W,unsigned b,unsigned V,unsigned E=W-b,search_kernel Kernel=se
     }
   public:
     using storage_policy=Storage;
-    struct staged_probe {typename Index::staged_probe index;word reference=0;stream::bytes value{};byte phase=0;};
+    struct staged_probe {typename Index::staged_probe index;word reference=0;stream::bytes value{};std::uint8_t phase=0;};
     multimap clone(allocation_context* memory=nullptr)const{return multimap(*this,memory);}
     template<unsigned OldB,unsigned OldE,search_kernel OldFilter>
     static multimap rebuild_index(const multimap<W,OldB,V,OldE,OldFilter,Storage>& source,
@@ -589,7 +599,7 @@ template<unsigned W,unsigned b,unsigned V,unsigned E=W-b,search_kernel Kernel=se
         ++mutation_generation_;
         word old=0;
         typename Index::value_type previous{};
-        const auto position=index_.prepare_write(key,previous);
+        const auto position=author::table_access::prepare_write(index_,key,previous);
         const bool present=position.present;if(present)old=load<8>(previous.data());
         require(present==replace,"prepared bag membership");
         prepared_bag head;head.owner=this;head.generation=mutation_generation_;head.key=key;
@@ -632,8 +642,8 @@ template<unsigned W,unsigned b,unsigned V,unsigned E=W-b,search_kernel Kernel=se
         const bool admitted=old&external?variable(old,[&](const auto& arena,word id){return arena.admits_replacement_input(id,raw);}):
             singletons_.admits_replacement_input(tiny_id(old),raw);
         if(!admitted)return false;
-        bool overlap=false;replacement_damage(head,[&](mutation_damage d){
-            overlap|=input_overlaps(raw,d.source.base+d.span.offset,d.span.size);
+        bool overlap=false;replacement_damage(head,[&](ikea::journal::entry d){
+            overlap|=input_overlaps(raw,effect_storage(d.source,d.plane).data()+d.offset,d.size);
         });
         return !overlap;
     }
@@ -668,7 +678,7 @@ template<unsigned W,unsigned b,unsigned V,unsigned E=W-b,search_kernel Kernel=se
         }
     }
     bool publish_reference(const prepared_bag& head,word ref) {
-        return index_.insert_prepared_unchecked(head.key,head.index,encode(ref));
+        return author::table_access::insert_prepared(index_,head.key,head.index,encode(ref));
     }
   public:
     // Complete whole-bag replacement on private/exclusive storage. Payload
@@ -720,7 +730,7 @@ template<unsigned W,unsigned b,unsigned V,unsigned E=W-b,search_kernel Kernel=se
         const bool reuse=use_replacement(head,raw);
         if(!admit_prepared_input(head,raw,reuse))return mutation_status::denied;
         compound_damage joined(context,*this,index_,raw);
-        auto add=[&](mutation_damage d){joined.add(d);};
+        auto add=[&](ikea::journal::entry d){joined.add(d);};
         if(reuse){
             replacement_damage(head,add);const auto ref=reused_reference(head);
             const auto result=ref==*head.old_reference?
@@ -757,7 +767,7 @@ template<unsigned W,unsigned b,unsigned V,unsigned E=W-b,search_kernel Kernel=se
         if((key&~mask<W>)||!context.enter(*this,key,access_intent::write))return mutation_status::denied;
         word ref;if(!reference(key,ref))return mutation_status::absent;
         compound_damage joined(context,*this,index_);
-        retirement_damage(ref,[&](mutation_damage d){joined.add(d);});
+        retirement_damage(ref,[&](ikea::journal::entry d){joined.add(d);});
         const auto result=index_.guarded_erase(key,joined);
         if(result==mutation_status::erased){retire_reference(ref);++mutation_generation_;}
         return result;

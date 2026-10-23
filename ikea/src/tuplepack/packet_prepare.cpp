@@ -28,7 +28,7 @@ unsigned slot(const packet_placement &p, unsigned offset) {
     __builtin_unreachable();
 }
 } // namespace
-std::expected<packet_read, error> prepare_packet_read(const layout &f, std::span<const byte> map,
+std::expected<packet_read, error> prepare_packet_read(const layout &f, std::span<const std::uint8_t> map,
                                                       unsigned rows,
                                                       std::span<const unsigned> groups) {
     if (!rows || rows > 64 || !std::has_single_bit(rows) || map.size() > 64 / rows)
@@ -93,7 +93,7 @@ std::expected<packet_read, error> prepare_packet_read(const layout &f, std::span
     }
     return p;
 }
-std::expected<packet_write, error> prepare_packet_write(const layout &f, std::span<const byte> map,
+std::expected<packet_write, error> prepare_packet_write(const layout &f, std::span<const std::uint8_t> map,
                                                         unsigned rows,
                                                         std::span<const unsigned> groups) {
     if (!rows || rows > 64 || !std::has_single_bit(rows) || map.size() > 64 / rows)
@@ -138,7 +138,7 @@ std::expected<packet_write, error> prepare_packet_write(const layout &f, std::sp
     // can reissue preserved bytes between selected codes in a compact window.
     if (p.place.contiguous && p.place.count) {
         p.runs = 1;
-        p.footprint[0] = {byte(p.place.first), byte(p.place.count)};
+        p.footprint[0] = {std::uint8_t(p.place.first), std::uint8_t(p.place.count)};
         p.writes = 0;
         for (unsigned i = 0; i < p.place.count; ++i)
             p.writes |= std::uint64_t(1) << p.place.offsets[i];
@@ -151,7 +151,7 @@ std::expected<packet_write, error> prepare_packet_write(const layout &f, std::sp
         for (unsigned i = 0; i < scalar.count; ++i) {
             const auto &b = scalar.stores[i];
             const auto out = r * p.place.grain + slot(p.place, b.offset);
-            p.preserve[out] = byte(~b.mask);
+            p.preserve[out] = std::uint8_t(~b.mask);
             for (unsigned j = 0; j < b.count; ++j) {
                 const auto c = scalar.read.codes[b.input[j]];
                 routes[j].index[out] = ordering->offset(r, b.input[j]);

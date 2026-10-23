@@ -1,5 +1,5 @@
 #pragma once
-#include <ikea/seriespack/format.h>
+#include <ikea/seriespack/layout.h>
 namespace ikea::seriespack {
 namespace detail {
 template <std::size_t N, class F> [[gnu::always_inline]] constexpr void each(F&& fn) {

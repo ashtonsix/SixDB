@@ -17,10 +17,14 @@ are little-endian within the byte on every ISA. Spare bits have no value semanti
 | Offset | Meaning |
 | --- | --- |
 | 0–1 | ASCII `TP` |
-| 2 | Version 1 |
-| 3 | Unit extent in bytes |
-| 4–5 | Little-endian code count |
-| 6 onward | Three bytes per code in rank order: offset, shift, width |
+| 2 | Byte-law version 2 |
+| 3–4 | Little-endian body length: `1 + 3 * code_count` |
+| 5 | Unit extent in bytes |
+| 6 onward | Three numeric bytes per code in rank order: offset, shift, width |
+
+The shared five-byte envelope lives in the parent schema, with no per-unit
+header. Code count is inferred from the body length; all 128 codes remain
+supported (390 encoded bytes). `encode`/`decode` take `std::byte` spans.
 
 `decode` requires exactly one description. It rejects trailing data, unknown
 versions, malformed widths/extents and overlapping codes. Persist the description
@@ -30,16 +34,16 @@ Rebinding does not migrate bytes or retain an earlier data version.
 
 ## Packet shape and coordinates
 
-`reader<N, Rows=1>` and `writer<N, Rows=1>` own prepared maps and controls.
+`read_plan<N, Rows=1>` and `write_plan<N, Rows=1>` own prepared maps and controls.
 N is decoded packet capacity in bytes. Rows is original rows per packet.
 
 | N | Supported Rows | Maximum map slots per row | Ordinary packet type |
 | --- | --- | --- | --- |
 | 8 | 1, 2, 4, 8 | 8/Rows | `uint64_t` |
-| 64 | 1, 2, 4, 8, 16, 32, 64 | 64/Rows | `std::array<byte, 64>` |
+| 64 | 1, 2, 4, 8, 16, 32, 64 | 64/Rows | `std::array<std::uint8_t, 64>` |
 
 The map has at most `N/Rows` entries and repeats for every row. Entries name code
-ranks or `hole`. `reader::make(layout, map, groups = {})` and the matching writer
+ranks or `hole`. `read_plan::make(layout, map, groups = {})` and the matching writer
 call accept `std::span<const unsigned>` group lengths. Explicit lengths must be
 positive and sum exactly to `map.size()`; holes count toward that size. Invalid
 groups reject with `error::map`. Omitted groups mean one group of `map.size()`,
@@ -82,7 +86,7 @@ always count original rows. `selection::bits(origin, words)` borrows 64 bits per
 word with bit zero naming origin; origin need not be a multiple of 64. Words
 must cover the requested range and remain stable. Selection does not renumber rows.
 
-`constructor` uses one `construction_input` per original row, independently of
+The complete-record `write_plan<128>` / `writer<128>` family uses one `packet<128>` per original row, independently of
 packet shape. This is a 128-byte rank-ordered input; only defined codes are
 consumed. Construction validates them all before writing, zeroes spare bits
 and preserves bytes outside each unit. It needs no prior initialized contents.
@@ -90,9 +94,10 @@ and preserves bytes outside each unit. It needs no prior initialized contents.
 ## Complete-unit transfer
 
 `bind_transfer<Bytes>(source_layout, source_view, destination_layout, destination_view)`
-returns a borrowed `unit_transfer<Bytes, Byte>`. `Bytes` is 1–64; both descriptions
+returns a borrowed `transfer<Bytes, Byte>`. `Bytes` is 1–64; both descriptions
 must compare equal, including code rank order, offsets, shifts, widths and unit
-extent, and both view extents must match. Views do not retain layout identity:
+extent. Source and destination may have different row counts; each command
+admits its selected source rows and destination window. Views do not retain layout identity:
 the caller supplies authoritative descriptions for the bytes. The operation
 retains the named views; it does not retain the supplied layout objects.
 
@@ -113,8 +118,10 @@ self-copy, overlapping permutations and sources inside destination gaps.
 Rejection preserves destination bytes and the journal, including existing entries.
 Empty selection may start at the destination end and forms no payload address.
 
-`effect_capacity(count)` bounds additional journal records: zero for no rows,
-one for a tight destination, otherwise one per row. Tight output reports the
+`effect_capacity(first, count)` bounds additional journal records: zero for no rows,
+one for a tight destination, otherwise one per row. The result rejects an
+out-of-view command with `range`; a full journal rejects checked copying with
+`effects`, while placement storage failures use `capacity`. Tight output reports the
 complete contiguous span before any store; gapped output reports each exact unit
 before storing it. Effects name the destination view and storage-relative offsets;
 no prefix, stride gap or trailing padding is read or written.
@@ -132,7 +139,8 @@ and separately accounts for summaries and visibility.
 | Resource | Required lifetime or proof |
 | --- | --- |
 | Layout, map and groups supplied to preparation | Can expire after their controls are copied |
-| Named view and prepared plan | Stable addresses through every bound invocation |
+| Named view and prepared plan | Unchanged values at stable addresses through every bound invocation; rebind after assigning a new plan or placement |
+| Prepared predicate's source reader wrapper | Can expire after binding; its plan/view pointers and code projection are copied |
 | Source view identified by emitted effects | Resolvable until the owner consumes those effects; the prepared plan need not survive for this alone |
 | View storage | Live, with unchanged placement and the layout that encoded it |
 | Input, output, selection, effects and maintenance | Valid through admission and execution; retained across any owner stop that borrows them |
@@ -140,9 +148,20 @@ and separately accounts for summaries and visibility.
 | Erased operation's concrete source | Stable while the erased operation borrows it |
 | CPS plan and bindings | Live through the complete chain |
 
+`predicate<N, Byte, Rows>` prepares an ordinary single-code comparison with
+`bind_predicate(reader)` or `bind_predicate(plan, view)`. Preparation rejects
+empty, hole-only and multi-code maps with `error::map`, without payload reads.
+It copies the reader handle and code projection, while continuing to borrow the
+named plan and view under the table above. The code is prepared once; comparison
+operator, right-hand side and row activity belong to each `filter<Op>` command.
+The general reader borrows only plan/view; its `filter` convenience prepares a
+predicate for one call. Keep a prepared predicate outside a repeated filter loop.
+Its checked filter admits the original-row window even when a query can be
+decided without loading payload. `_unchecked` requires that window proof.
+
 A view admits `count` units at `storage + offset + row × stride`. Stride must
 cover the unit. The final row requires only its occupied unit, with no padding
-beyond it. Binding checks extent and address arithmetic, not existing byte
+beyond it. Attachment checks extent and address arithmetic, not existing byte
 semantics. Array size is bounded by addressable storage and checked arithmetic;
 Engine owns segment size and representation policy.
 
@@ -169,13 +188,14 @@ commands would change disjoint logical bits.
 
 Bound mutations emit source-qualified, storage-relative byte spans, including
 the view's unit offset. These are issued stores, not minimal differences or
-beforeimages. `writer::effect_capacity()` bounds journal records per active row
-before coalescing. Sum the bound over active rows and composed children;
-construction requires one record per initialized row. Persistent summary writes
-need separately reserved resources. Raw plan `set_unchecked(byte*, ...)` emits
+beforeimages. `writer::effect_capacity(first, count, selection)` returns a
+conservative bound on additional records for that original-row command. Invalid
+coordinates return an error rather than a misleading capacity. Initialization
+uses `effect_capacity_initialize(first, count)`, one record per row. Persistent summary writes
+need separately reserved resources. Raw plan `set_unchecked(std::byte*, ...)` emits
 no effects; bound trusted entries retain pre-write coverage.
 
-`composition::bind_group(children...)` supports recursive mutation groups.
+`author::bind_group(children...)` supports recursive mutation groups.
 All children share Rows. Preparation rejects overlapping destination bits in
 actual repeating placements, including aliases across rows and strides.
 Disjoint codes can share a byte and preserve each other sequentially. Read-only
@@ -190,7 +210,7 @@ The owner coordinates atomic visibility, persistence and transaction outcome.
 An observation consists of a dependency projection and a semantic law. A point
 projection provides `size()` and `get_unchecked(row)`; a packet projection also
 provides `rows` and `get_unchecked(first, active)`. The supplied
-`composition::projection(readers...)` returns a tuple of packets. Projection
+`author::projection(readers...)` returns a tuple of packets. Projection
 sources can alias mutable leaves and include untouched dependencies.
 
 The law independently declares `needs_before` and `needs_after`. Point laws
@@ -212,14 +232,15 @@ coordinated visibility remain owner responsibilities.
 
 ## Routes and native execution
 
-`native_reader<N, Byte, Rows>` and `native_writer<N, Rows>` normally deduce
+`author::native_reader<N, Byte, Rows>` and `author::native_writer<N, Rows>` normally deduce
 their arguments from bound ordinary operations. `native::packet_for<8>` is
 `uint64_t`; `packet_for<64>` is the compiled ISA's vector carrier. Native calls
 require matching carrier types and calling conventions. Controls are ISA-specific.
-An x86 build without AVX2 supports native GPR packets and buffered 64-byte packets;
-optimized native AVX-512 requires VBMI.
+Current execution profiles are x86-64-v3 or ARMv8 SIMD; unsupported profiles
+fail at the shared configuration boundary. Native AVX-512 requires VBMI.
+Ordinary view/storage signatures remain independent of the ISA.
 
-For `native_reader<8, Byte, Rows>`, `admit_transfer<Bytes>()` accepts
+For `author::native_reader<8, Byte, Rows>`, `admit_transfer<Bytes>()` accepts
 `1 <= Bytes <= 8 / Rows` at compile time and returns `description` unless the
 prepared projection has exactly that contiguous transfer width in one group.
 It changes neither the plan nor the binding. Offsets, equal shifts and masks
@@ -255,8 +276,8 @@ each output byte to be a complete permutation/rotation of one input byte;
 other supported wiring uses the general lowering. General plans borrow at most
 16 caller-owned terms.
 
-`erased_mutation<Input, Maintenance, Rows>` erases a whole range while keeping
+`erased_writer<Input, Maintenance, Rows>` erases a whole range while keeping
 concrete traversal inside it. Rows remains part of the erased contract even when
 two packet shapes have the same C++ payload type. Inline and CPS share bodies;
-the [source guide](../source.md#shared-facilities) locates their shared private
-chain implementation. Explicit suspension happens after returning to the owner.
+the [source guide](../source.md#shared-facilities) locates their shared supported
+`ikea::author::chain` implementation. Explicit suspension happens after returning to the owner.

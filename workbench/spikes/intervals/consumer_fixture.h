@@ -124,16 +124,16 @@ struct compact_image {
                                       .immortal = true})),
           directory(layout.directory_bytes()), lengths(layout.lengths_bytes(f.count)),
           control(layout.control_bytes()) {
-        auto bound = ikea::streampack::detail::compact::view::bind(layout, {directory, lengths, control});
+        auto bound = ikea::streampack::detail::compact::view::attach(layout, {directory, lengths, control});
         need(bound.has_value(), "compact admission failed");
         view = *bound;
-        std::array<ikea::owner_write, 16> records;
+        std::array<ikea::journal::entry, 16> records;
         {
-            ikea::source_write_journal effects{records};
+            ikea::journal effects{records};
             need(ikea::streampack::detail::compact::initialize(*view, effects).has_value(), "compact initialization failed");
         }
         for (unsigned i = 0; i < f.count; ++i) {
-            ikea::source_write_journal effects{records};
+            ikea::journal effects{records};
             need(ikea::streampack::detail::compact::append(*view, f.widths[i], effects).has_value(), "compact append failed");
         }
         need(view->validate().has_value(), "compact image invalid");

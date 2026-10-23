@@ -8,7 +8,7 @@ template <class Source>
 [[gnu::always_inline]] inline unsigned
 indexof_unchecked(const Source& source, std::size_t first, unsigned count, std::uint64_t rhs,
                   std::uint64_t active = ~std::uint64_t{0}) {
-    return composition::indexof_unchecked(composition::describe(source), first, count, rhs, active);
+    return author::indexof_unchecked(author::expression(source), first, count, rhs, active);
 }
 
 template <class Source>

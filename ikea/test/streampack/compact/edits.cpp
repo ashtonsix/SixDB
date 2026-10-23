@@ -13,8 +13,8 @@ struct fixture {
     std::array<std::byte, 6> control{};
     sc::view source;
     fixture(sc::description d)
-        : format(*sc::layout::prepare(d)),
-          source(*sc::view::bind(format, {std::span(directory).first(format.directory_bytes()),
+        : format(*sc::layout::make(d)),
+          source(*sc::view::attach(format, {std::span(directory).first(format.directory_bytes()),
                                           std::span(lengths).first(format.lengths_bytes()),
                                           std::span(control).first(format.control_bytes())})) {}
 };
@@ -29,7 +29,7 @@ struct audit {
             std::copy(p[s].begin(), p[s].end(), before[s].begin());
     }
     unsigned remaining() const noexcept { return limit - writes; }
-    void before_write(const sc::view &source, ikea::byte_write w) noexcept {
+    void before_write(const sc::view &source, ikea::detail::write_span w) noexcept {
         assert(&source == &named && writes < limit && w.plane < 3 && w.size);
         const auto p = source.windows().planes()[w.plane];
         assert(w.offset <= p.size() && w.size <= p.size() - w.offset);
@@ -46,7 +46,7 @@ struct audit {
 struct effects {
     audit &out;
     unsigned remaining() const noexcept { return out.remaining(); }
-    void before(const sc::view &s, ikea::byte_write w) noexcept { out.before_write(s, w); }
+    void before(const sc::view &s, unsigned plane, std::size_t offset, std::size_t size) noexcept { out.before_write(s, {plane, offset, size}); }
 };
 void verify(fixture &f, const std::vector<unsigned> &ends) {
     assert(f.source.validate() && f.source.size() == ends.size());
@@ -62,7 +62,7 @@ void verify(fixture &f, const std::vector<unsigned> &ends) {
 }
 unsigned history(sc::geometry family, unsigned maximum, unsigned n) {
     fixture f({family, std::uint16_t(maximum), 256 * maximum, {}, false});
-    ikea::no_coverage scratch;
+    ikea::no_effects scratch;
     assert(sc::initialize(f.source, scratch));
     std::vector<unsigned> sizes, ends;
     unsigned total = 0, cases = 0;
@@ -123,7 +123,7 @@ void phase_lifetime() {
     for (auto family :
          {sc::geometry::absolute_ends, sc::geometry::sizes, sc::geometry::relative_ends}) {
         fixture f({family, 31, 256 * 31, {}, false});
-        ikea::no_coverage effects;
+        ikea::no_effects effects;
         assert(sc::initialize(f.source, effects));
         for (unsigned r = 0; r < 33; ++r)
             assert(sc::append(f.source, 3, effects));

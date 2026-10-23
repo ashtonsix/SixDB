@@ -74,13 +74,13 @@ class bytes {
     std::size_t size() const { return size_; }
     std::span<std::uint8_t> span() { return {data(), size_}; }
 };
-using populations = sp::format<9>;
-using folded_populations = sp::format<8>;
-using local_lengths = sp::format<6>;
-using scan_lengths = sp::format<6, sp::geometry::striped>;
+using populations = sp::layout<9>;
+using folded_populations = sp::layout<8>;
+using local_lengths = sp::layout<6>;
+using scan_lengths = sp::layout<6, sp::geometry::striped>;
 template <class F>
-using write_binding = typename decltype(sp::bind_mutation(
-    std::declval<const sp::view<F, std::uint8_t> &>()))::value_type;
+using write_binding = typename decltype(sp::bind_writer(
+    std::declval<const sp::view<F> &>()))::value_type;
 
 // This experimental owner is deliberately immovable: plans borrow named views
 // within it. No owner catalogue is consulted by timed reads.
@@ -93,19 +93,19 @@ class directory {
     std::vector<std::uint32_t> checkpoints_;
     std::optional<tp::layout> tuple_layout_;
     std::optional<tp::view> tuple_view_;
-    std::optional<tp::reader<8>> tuple_plan_;
-    std::optional<tp::reader<64, 16>> frame_plan_;
-    std::optional<tp::writer<8>> tuple_writer_;
-    std::optional<tp::read_operation<8, tp::byte>> tuple_read_;
-    std::optional<tp::read_operation<64, tp::byte, 16>> frame_read_;
-    std::optional<sp::view<populations, std::uint8_t>> population_view_;
-    std::optional<sp::view<folded_populations, std::uint8_t>> folded_view_;
-    std::optional<sp::view<local_lengths, std::uint8_t>> local_view_;
-    std::optional<sp::view<scan_lengths, std::uint8_t>> scan_view_;
-    std::optional<sp::decoder<std::uint16_t>> population_reader_;
-    std::optional<sp::decoder<std::uint8_t>> folded_reader_;
-    std::optional<sp::decoder<std::uint8_t>> length_reader_;
-    std::optional<tp::mutation_operation<8>> tuple_write_;
+    std::optional<tp::read_plan<8>> tuple_plan_;
+    std::optional<tp::read_plan<64, 16>> frame_plan_;
+    std::optional<tp::write_plan<8>> tuple_writer_;
+    std::optional<tp::reader<8, std::byte>> tuple_read_;
+    std::optional<tp::reader<64, std::byte, 16>> frame_read_;
+    std::optional<sp::view<populations>> population_view_;
+    std::optional<sp::view<folded_populations>> folded_view_;
+    std::optional<sp::view<local_lengths>> local_view_;
+    std::optional<sp::view<scan_lengths>> scan_view_;
+    std::optional<sp::erased_reader<std::uint16_t>> population_reader_;
+    std::optional<sp::erased_reader<std::uint8_t>> folded_reader_;
+    std::optional<sp::erased_reader<std::uint8_t>> length_reader_;
+    std::optional<tp::writer<8>> tuple_write_;
     std::optional<write_binding<populations>> population_write_;
     std::optional<write_binding<folded_populations>> folded_write_;
     std::optional<write_binding<local_lengths>> local_write_;
@@ -223,7 +223,7 @@ template <layout L>
 #if defined(IKEA_BEC256_AVX512)
     __m256i pops, lengths;
     if constexpr (tuple(L)) {
-        auto words = tp::native_reader(d.frame_read()).get_unchecked(first);
+        auto words = tp::author::native_reader(d.frame_read()).get_unchecked(first);
         pops = _mm512_cvtepi32_epi16(
             _mm512_and_si512(words, _mm512_set1_epi32(folded(L) ? 255 : 511)));
         lengths = _mm512_cvtepi32_epi16(_mm512_srli_epi32(words, folded(L) ? 8 : 16));
@@ -255,7 +255,7 @@ template <layout L>
 #else
     uint16x8_t p0, p1, l0, l1;
     if constexpr (tuple(L)) {
-        auto words = tp::native_reader(d.frame_read()).get_unchecked(first);
+        auto words = tp::author::native_reader(d.frame_read()).get_unchecked(first);
         auto pop = [](uint8x16_t v) {
             return vmovn_u32(
                 vandq_u32(vreinterpretq_u32_u8(v), vdupq_n_u32(folded(L) ? 255 : 511)));

@@ -21,7 +21,7 @@ WIDTHS(512, __m512i)
 
 #define TUPLE(N, O) \
 extern "C" [[gnu::noinline]] std::uint64_t tuple_##N##_##O(ikea::tuplepack::native::packet_for<N> x, std::uint64_t q, std::uint64_t active) { \
-    return ikea::tuplepack::filter_values<ikea::comparison(O), N>(x, q, active); \
+    return ikea::tuplepack::author::filter_values<ikea::comparison(O), N>(x, q, active); \
 }
 TUPLE(8,0) TUPLE(8,1) TUPLE(8,2) TUPLE(8,3) TUPLE(8,4)
 TUPLE(64,0) TUPLE(64,1) TUPLE(64,2) TUPLE(64,3) TUPLE(64,4)

@@ -73,7 +73,7 @@ struct NativeIndex {
   void read(unsigned first, unsigned count, unsigned* out) const { std::memcpy(out, rows + first, count * sizeof(unsigned)); }
 };
 struct PackedIndex {
-  ikea::seriespack::decoder<unsigned> decoder;
+  ikea::seriespack::erased_reader<unsigned> decoder;
   unsigned get(unsigned r) const { return decoder.get_unchecked(r); }
   void read(unsigned first, unsigned count, unsigned* out) const { decoder.read_unchecked(first, count, out); }
 };
@@ -296,15 +296,14 @@ void holder_suite(oa::Pool& pool, unsigned repeats) {
   // Some shared physical values: the logical oracle follows each actual holder.
   for (unsigned i = 0; i < count; i += 7) mapping[i] = mapping[0];
   auto encoded = take(oa::allocate(pool, {.bytes = count / F::tile_rows * F::tile_bytes, .alignment = 64}));
-  auto placed = sp::view<F, std::uint8_t>::attach(count,
-      {{{{reinterpret_cast<std::uint8_t*>(encoded.address), encoded.size}, F::tile_bytes}, {}, {}}});
+  auto placed = sp::view<F>::attach(count, {{{std::as_writable_bytes(std::span{reinterpret_cast<std::uint8_t*>(encoded.address), encoded.size}), F::tile_bytes},{},{}}});
   require(bool(placed), "actual packed holder placement");
-  auto prepared = sp::bind_mutation(*placed); require(bool(prepared), "packed holder writer");
-  auto write = prepared->erase<unsigned, sp::sum_change>();
-  std::vector<ikea::owner_write> records(count * 2);
-  ikea::source_write_journal effects{records};
+  auto prepared = sp::bind_writer(*placed); require(bool(prepared), "packed holder writer");
+  auto write = prepared->erase<unsigned, sp::author::sum_change>();
+  std::vector<ikea::journal::entry> records(count * 2);
+  ikea::journal effects{records};
   require(bool(write.initialize(mapping, effects)), "packed holder initialize");
-  auto decoded = sp::bind_decoder<unsigned>(*placed);
+  auto decoded = sp::bind_reader<unsigned>(*placed);
   for (unsigned i = 0; i < count; ++i) require(decoded.get_unchecked(i) == mapping[i], "exact holder identity");
   for (unsigned capacity : {128, 256, 512}) for (bool tiny : {true, false}) {
     ReadFixture f(pool, count, capacity, tiny);

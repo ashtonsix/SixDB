@@ -18,8 +18,8 @@ bool has_sve() {
            (getauxval(AT_HWCAP2) & HWCAP2_SVE2) != 0 &&
            (prctl(PR_SVE_GET_VL) & PR_SVE_VL_LEN_MASK) == 16;
 }
-unsigned expected(const bc::plain_block& a, const bc::plain_block& b,
-                  const bc::plain_block& qa, const bc::plain_block& qb) {
+unsigned expected(const std::array<std::byte, 32>& a, const std::array<std::byte, 32>& b,
+                  const std::array<std::byte, 32>& qa, const std::array<std::byte, 32>& qb) {
     unsigned n = 0;
     for (unsigned i = 0; i < 32; ++i)
         n += std::popcount(std::to_integer<unsigned>(a[i] & qa[i])) +
@@ -39,7 +39,7 @@ void verify_guards() {
     std::array<bool, 48> lengths{};
     for (unsigned population = 0; population <= 256; ++population) {
         std::shuffle(order.begin(), order.end(), rng);
-        bc::plain_block plain{}, query{}, zero{};
+        std::array<std::byte, 32> plain{}, query{}, zero{};
         for (unsigned j = 0; j < population; ++j)
             plain[order[j] / 8] |= bc::byte(1u << (order[j] % 8));
         auto encoded = bc::prepare(plain, population);

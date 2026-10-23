@@ -3,7 +3,7 @@
 namespace ikea::hashtable::detail::accumulation {
 #if defined(__AVX512VBMI__) && defined(__GFNI__)
 template <unsigned T> using wide_image = std::array<__m512i, T>;
-template <unsigned E, unsigned T> [[gnu::always_inline]] wide_image<T> read_wide(const byte* p) {
+template <unsigned E, unsigned T> [[gnu::always_inline]] wide_image<T> read_wide(const std::uint8_t* p) {
     static_assert(E >= 31 && E <= 64 && T >= 1 && T <= 2 && T * (E + 1) <= 95);
     const auto lo = _mm512_loadu_si512(p);
     if constexpr (E == 64 && T == 1)
@@ -23,7 +23,7 @@ template <unsigned E, unsigned T> [[gnu::always_inline]] wide_image<T> read_wide
                 return _mm512_setzero_si512();
             else {
                 alignas(64) static constexpr auto order = [] {
-                    std::array<byte, 64> a{};
+                    std::array<std::uint8_t, 64> a{};
                     for (unsigned t = 0; t < T; ++t)
                         for (unsigned j = 0; j < 8; ++j)
                             a[t * 8 + j] = t * E + 8 * B + 7 - j;
@@ -39,7 +39,7 @@ template <unsigned E, unsigned T> [[gnu::always_inline]] wide_image<T> read_wide
         ht::each<T>([&](auto tile) __attribute__((always_inline)) {
             constexpr unsigned Tile = decltype(tile)::value;
             alignas(64) static constexpr auto order = [] {
-                std::array<byte, 64> a{};
+                std::array<std::uint8_t, 64> a{};
                 for (unsigned r = 0; r < 8; ++r)
                     for (unsigned j = 0; j < B; ++j)
                         a[r * 8 + j] = Tile * E + r * B + j;
@@ -62,13 +62,13 @@ template <unsigned E, unsigned T> [[gnu::always_inline]] wide_image<T> read_wide
     }
 }
 struct wide_orders {
-    std::array<byte, 64> body{}, tail{}, flags{};
+    std::array<std::uint8_t, 64> body{}, tail{}, flags{};
     word bodies = 0, tails = 0, flag_bits = 0, changed = 0;
 };
 template <unsigned E, unsigned T, unsigned Part> consteval wide_orders wide_encode_orders() {
     wide_orders a;
     constexpr unsigned B = E / 8, R = E % 8;
-    auto mark = [&](unsigned pos, byte index, auto& order, word& mask) {
+    auto mark = [&](unsigned pos, std::uint8_t index, auto& order, word& mask) {
         if (pos / 64 == Part) {
             order[pos % 64] = index;
             mask |= word{1} << (pos % 64);
@@ -77,20 +77,20 @@ template <unsigned E, unsigned T, unsigned Part> consteval wide_orders wide_enco
     for (unsigned t = 0; t < T; ++t) {
         for (unsigned row = 0; row < 8; ++row)
             for (unsigned j = 0; j < B; ++j)
-                mark(t * E + row * B + j, byte((t * 8 + row) * 8 + j), a.body, a.bodies);
+                mark(t * E + row * B + j, std::uint8_t((t * 8 + row) * 8 + j), a.body, a.bodies);
         for (unsigned j = 0; j < R; ++j)
-            mark(t * E + 8 * B + j, byte(t * 8 + j), a.tail, a.tails);
-        mark(T * E + t, byte(t), a.flags, a.flag_bits);
+            mark(t * E + 8 * B + j, std::uint8_t(t * 8 + j), a.tail, a.tails);
+        mark(T * E + t, std::uint8_t(t), a.flags, a.flag_bits);
     }
     a.changed = a.bodies | a.tails | a.flag_bits;
     return a;
 }
 template <unsigned E, unsigned T>
-[[gnu::always_inline]] void write_wide(byte* p, const wide_image<T>& keys, word live) {
+[[gnu::always_inline]] void write_wide(std::uint8_t* p, const wide_image<T>& keys, word live) {
     static_assert(E >= 31 && E <= 64 && T >= 1 && T <= 2 && T * (E + 1) <= 95);
     if constexpr (E == 64 && T == 1) {
         _mm512_storeu_si512(p, keys[0]);
-        p[64] = byte(~live);
+        p[64] = std::uint8_t(~live);
     } else {
         constexpr unsigned R = E % 8;
         const auto first = _mm512_srli_epi64(keys[0], R);

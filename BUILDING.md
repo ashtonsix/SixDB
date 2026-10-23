@@ -43,7 +43,14 @@ Pinned and unique output remains visible in accounting. Scheduled maintenance
 is disabled on this device; the storage guide covers explicit pruning and recovery.
 
 Floating-point settings disable fast-math and implicit contraction.
-`SIXDB_MARCH` selects the ISA; `SIXDB_TUNE` independently selects `generic`,
+`SIXDB_MARCH` selects the ISA. Fresh configurations default to `x86-64-v3`
+(AVX2) on x86-64 and `armv8-a+simd` (NEON) on AArch64, the current Ikea
+execution profiles. Existing cache values are preserved; update an old empty
+x86 cache with `-DSIXDB_MARCH=x86-64-v3`. An explicitly empty value leaves ISA
+selection to compiler flags, which must still enable the required backend.
+Other architectures need an Ikea backend before building its operations;
+ordinary contracts and portable wire formats do not depend on these ISA names.
+`SIXDB_TUNE` independently selects `generic`,
 `granite-rapids`, `zen4`, `zen5`, `neoverse-v2`, or `neoverse-v3`. See [tuning flags](workbench/design/tuning.md)
 for compiler options and source-level flags. [Build conventions](workbench/design/conventions.md)
 cover other settings and remaining decisions.

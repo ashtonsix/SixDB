@@ -46,9 +46,9 @@ void check_analysis() {
                 std::array<bc::byte, 128> output;
                 output.fill(bc::byte{0xa5});
                 const auto before = output;
-                bc::destination target{output};
-                std::array<ikea::owner_write, 2> entries{};
-                ikea::source_write_journal effects{entries};
+                bc::view target{output};
+                std::array<ikea::journal::entry, 2> entries{};
+                ikea::journal effects{entries};
                 auto result = bc::encode_if_promising(input, p, cutoff, target, 19, effects);
                 assert(result);
                 const bool decline = p && p != 256 && cost >= cutoff;
@@ -56,8 +56,8 @@ void check_analysis() {
                 if (decline) {
                     assert(output == before && effects.used == 0);
                     // A full, pre-existing journal is untouched by a decline.
-                    effects.before(target, {0, 100, 1});
-                    effects.before(target, {0, 103, 1});
+                    effects.before(target, 0, 100, 1);
+                    effects.before(target, 0, 103, 1);
                     std::array<bc::byte, sizeof(entries)> full;
                     std::memcpy(full.data(), entries.data(), sizeof(entries));
                     auto skipped_full =
@@ -66,8 +66,8 @@ void check_analysis() {
                            output == before &&
                            !std::memcmp(entries.data(), full.data(), sizeof(entries)));
                     // Declines neither require nor reserve destination/effect capacity.
-                    bc::destination none{{}};
-                    ikea::source_write_journal no_effects{};
+                    bc::view none{{}};
+                    ikea::journal no_effects{};
                     auto skipped = bc::encode_if_promising(input, p, cutoff, none, 999, no_effects);
                     assert(skipped && !*skipped && no_effects.used == 0);
                 } else {
@@ -77,8 +77,8 @@ void check_analysis() {
                         if (j < 19 || j >= 19 + bytes)
                             assert(output[j] == bc::byte{0xa5});
                     if (bytes) {
-                        assert(entries[0].source == &target && entries[0].bytes.offset == 19 &&
-                               entries[0].bytes.size == bytes);
+                        assert(entries[0].source == &target && entries[0].offset == 19 &&
+                               entries[0].size == bytes);
                     }
                 }
                 // Population checking precedes even an unconditional heuristic decline.
@@ -105,12 +105,12 @@ void check_analysis() {
             }
             // Accepted path still rejects insufficient capacity/effects atomically.
             std::array<bc::byte, 64> output{};
-            bc::destination none{{}};
-            ikea::source_write_journal no_effects{};
+            bc::view none{{}};
+            ikea::journal no_effects{};
             auto failed = bc::encode_if_promising(input, p, 225, none, 1, no_effects);
             assert(!failed && failed.error() == bc::error::capacity);
             if (bytes) {
-                bc::destination target{output};
+                bc::view target{output};
                 failed = bc::encode_if_promising(input, p, 225, target, 0, no_effects);
                 assert(!failed && failed.error() == bc::error::effects &&
                        std::all_of(output.begin(), output.end(),

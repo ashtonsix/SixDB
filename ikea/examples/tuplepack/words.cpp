@@ -8,14 +8,14 @@ int main() {
     // Four byte-contained codes per physical tuple. Low bits remain outside
     // this map; the caller can give them a separate meaning and operation.
     const std::array<tp::code, 4> codes{{{0, 1, 7}, {1, 1, 7}, {2, 1, 7}, {3, 1, 7}}};
-    const std::array<tp::byte, 4> map{0, 1, 2, 3};
+    const std::array<std::uint8_t, 4> map{0, 1, 2, 3};
     const auto format = tp::layout::make(4, codes);
     assert(format);
-    const auto rp = tp::reader<8, 2>::make(*format, map);
-    const auto wp = tp::writer<8, 2>::make(*format, map);
+    const auto rp = tp::read_plan<8, 2>::make(*format, map);
+    const auto wp = tp::write_plan<8, 2>::make(*format, map);
     assert(rp && wp);
-    std::array<tp::byte, 12> bytes{3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25};
-    auto view = tp::view::bind(*format, bytes, 3, 4);
+    std::array<std::uint8_t, 12> bytes{3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25};
+    auto view = tp::view::attach(*format, std::as_writable_bytes(std::span{bytes}), 3, 4);
     assert(view);
     const auto read = tp::bind_reader(*rp, *view);
     const auto write = tp::bind_writer(*wp, *view);
@@ -28,11 +28,11 @@ int main() {
     assert(first == 0x04030201 && second == 0x08070605);
 
     // The native adapter inlines the same prepared lowering into a consumer.
-    // uint64_t also stays in a GPR across packet_chain<8> continuation hops.
-    const auto nr = tp::native_reader(*read);
-    const auto nw = tp::native_writer(*write);
-    std::array<ikea::owner_write, 3> entries;
-    ikea::source_write_journal effects{entries};
+    // uint64_t also stays in a GPR across author::packet_chain<8> continuation hops.
+    const auto nr = tp::author::native_reader(*read);
+    const auto nw = tp::author::native_writer(*write);
+    std::array<ikea::journal::entry, 3> entries;
+    ikea::journal effects{entries};
     for (std::size_t row = 0; row < 3; row += 2) {
         const std::uint64_t active = row == 0 ? 3 : 1;
         assert(nr.admit(row, active));

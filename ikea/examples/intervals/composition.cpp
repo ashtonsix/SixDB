@@ -15,21 +15,21 @@ int main() {
     // Compare an already-bound packed reader directly, without decoding a
     // temporary endpoint array or reattaching/checking a pack at every probe.
     namespace sp = ikea::seriespack;
-    using F = sp::format<12, sp::geometry::local>;
+    using F = sp::layout<12, sp::geometry::local>;
     constexpr unsigned n = 64;
     alignas(64) std::array<std::uint8_t, n / F::tile_rows * F::tile_bytes> payload{};
-    const auto storage = sp::view<F, std::uint8_t>::attach(n, {{{payload, F::tile_bytes}, {}, {}}});
+    const auto storage = sp::view<F>::attach(n, {{{std::as_writable_bytes(std::span{payload}), F::tile_bytes},{},{}}});
     assert(storage);
-    const auto writer = sp::bind_mutation(*storage);
+    const auto writer = sp::bind_writer(*storage);
     assert(writer);
     std::array<std::uint16_t, n> endpoints;
     for (unsigned r = 0; r < n; ++r)
         endpoints[r] = r * 3;
-    const auto operation = writer->template erase<std::uint16_t, sp::sum_change>();
-    std::array<sp::composition::owner_write, 32> records;
-    sp::composition::source_write_journal damage{records};
+    const auto operation = writer->template erase<std::uint16_t, sp::author::sum_change>();
+    std::array<ikea::journal::entry, 32> records;
+    ikea::journal damage{records};
     assert(operation.initialize(endpoints, damage));
-    const packed_bounds source{sp::bind_decoder<std::uint16_t>(*storage), n};
+    const packed_bounds source{sp::bind_reader<std::uint16_t>(*storage), n};
     assert(bl::lower_bound(source, 70u) == 24 && bl::upper_bound(source, 72u) == 25);
 
     // Header/checkpoints are already available; one local width group remains.
@@ -49,7 +49,7 @@ int main() {
 
     // Selection stays independent of the endpoint encoding.
     const std::array<std::byte, 4> live{std::byte{0}, std::byte{0}, std::byte{0}, std::byte{1}};
-    const bl::selected_source eligible{bounds, bl::rank_selection{live}};
+    const bl::selected_source eligible{bounds, bl::selection::bits(0,live)};
     const auto selected = bl::author::prepare_lower_bound(eligible, checkpoints[0] + 130);
     assert(selected.finish() == 24);
 

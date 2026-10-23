@@ -40,14 +40,14 @@ template <unsigned W, unsigned b, unsigned V, unsigned E, search_kernel Kernel> 
         unsigned slot;
         bool primary;
     };
-    static unsigned present(const byte* p, unsigned tile) {
-        return unsigned(byte(~p[flags_offset + tile]));
+    static unsigned present(const std::uint8_t* p, unsigned tile) {
+        return unsigned(std::uint8_t(~p[flags_offset + tile]));
     }
-    static word occupied(const byte* p) {
+    static word occupied(const std::uint8_t* p) {
         static_assert(!bitmap && T <= 8);
         return ~load<T>(p + flags_offset) & mask<N>;
     }
-    static word live_matches(const byte* p, word q, word matches) {
+    static word live_matches(const std::uint8_t* p, word q, word matches) {
         // Empty slots contain all-ones when E>K, otherwise zero. Zero remains
         // a legal quotient: only that query needs the independent flags mask.
         if constexpr (E == K)
@@ -55,7 +55,7 @@ template <unsigned W, unsigned b, unsigned V, unsigned E, search_kernel Kernel> 
                 return matches & occupied(p);
         return matches;
     }
-    [[gnu::always_inline]] static bool residual_matches(const byte* p, unsigned row, word q) {
+    [[gnu::always_inline]] static bool residual_matches(const std::uint8_t* p, unsigned row, word q) {
         constexpr unsigned R = E % 8;
         constexpr word plane_bits = [] {
             word bits = 0;
@@ -67,25 +67,25 @@ template <unsigned W, unsigned b, unsigned V, unsigned E, search_kernel Kernel> 
         const auto residual = (((planes & plane_bits) * 0x0102040810204080ULL) >> 56) & mask<R>;
         return residual == (q & mask<R>);
     }
-    static bool has(const byte* p, unsigned q) {
+    static bool has(const std::uint8_t* p, unsigned q) {
         return p[q / 8] & (1u << (q % 8));
     }
-    static void mark(byte* p, unsigned slot, bool occupied) {
+    static void mark(std::uint8_t* p, unsigned slot, bool occupied) {
         if constexpr (bitmap) {
             if (occupied)
-                p[slot / 8] |= byte(1u << (slot % 8));
+                p[slot / 8] |= std::uint8_t(1u << (slot % 8));
             else
-                p[slot / 8] &= byte(~(1u << (slot % 8)));
+                p[slot / 8] &= std::uint8_t(~(1u << (slot % 8)));
         } else {
-            const byte bit = byte(1u << (slot % 8));
+            const std::uint8_t bit = std::uint8_t(1u << (slot % 8));
             auto& flags = p[flags_offset + slot / 8];
             if (occupied)
-                flags &= byte(~bit);
+                flags &= std::uint8_t(~bit);
             else
                 flags |= bit;
         }
     }
-    static word primary_matches(const byte* p, word q) {
+    static word primary_matches(const std::uint8_t* p, word q) {
         static_assert(!bitmap);
 #if defined(__AVX512VBMI__) && defined(__GFNI__)
         if constexpr (Kernel == search_kernel::exact_small512 && B == 64 && E >= 10 && E <= 20)
@@ -117,7 +117,7 @@ template <unsigned W, unsigned b, unsigned V, unsigned E, search_kernel Kernel> 
         }
 #endif
         if constexpr (Kernel == search_kernel::body30 && B == 64 && T == 2 && E == 30) {
-            const sp::composition::local_equal8<6> match(q & 63);
+            const sp::author::local_equal8<6> match(q & 63);
             unsigned residual = 0;
             each<2>([&](auto tile) {
                 residual |= unsigned(match(load<8>(p + tile * 30 + 24))) << (tile * 8);
@@ -136,12 +136,12 @@ template <unsigned W, unsigned b, unsigned V, unsigned E, search_kernel Kernel> 
                              B == 64 && T == 2 && E == 30)
             return live_matches(p, q, exact30<true, Kernel == search_kernel::zero30>(p, q));
         else {
-            using F = sp::format<E, sp::geometry::local, 0>;
-            const sp::dense_source<F> source{p, N};
-            const auto expression = sp::composition::describe(source);
+            using F = sp::layout<E, sp::geometry::local, 0>;
+            const sp::dense_source<F> source{reinterpret_cast<const std::byte*>(p), N};
+            const auto expression = sp::author::expression(source);
             word matches = 0;
             each<T>([&](auto tile) {
-                matches |= word(sp::composition::filter8_unchecked<ikea::comparison::equal>(
+                matches |= word(sp::author::filter8_unchecked<ikea::comparison::equal>(
                                expression, tile * 8, q))
                            << (tile * 8);
             });
@@ -152,7 +152,7 @@ template <unsigned W, unsigned b, unsigned V, unsigned E, search_kernel Kernel> 
     // E64 is an eight-qword SeriesPack tile. Preserve the native comparison
     // lanes until a single byte per row remains, then find the first row.
     // This avoids four independent SIMD-to-GPR bitmap reductions.
-    [[gnu::always_inline]] static word equal64_neon(const byte* p, word q) {
+    [[gnu::always_inline]] static word equal64_neon(const std::uint8_t* p, word q) {
         const auto query = vdupq_n_u64(q);
         const auto eq0 = vceqq_u64(vld1q_u64(reinterpret_cast<const word*>(p)), query);
         const auto eq1 = vceqq_u64(vld1q_u64(reinterpret_cast<const word*>(p + 16)), query);
@@ -165,7 +165,7 @@ template <unsigned W, unsigned b, unsigned V, unsigned E, search_kernel Kernel> 
         return vget_lane_u64(vreinterpret_u64_u8(lanes), 0);
     }
 #endif
-    static unsigned primary_find(const byte* p, word q) {
+    static unsigned primary_find(const std::uint8_t* p, word q) {
         if constexpr (bitmap)
             return has(p, unsigned(q)) ? unsigned(q) : N;
 #if defined(__aarch64__)
@@ -227,7 +227,7 @@ template <unsigned W, unsigned b, unsigned V, unsigned E, search_kernel Kernel> 
         }
     }
     template <class Consume>
-    [[gnu::always_inline]] static void consume_primary(const byte* p, unsigned slot,
+    [[gnu::always_inline]] static void consume_primary(const std::uint8_t* p, unsigned slot,
                                                        Consume&& consume) {
         if constexpr (V > 0) {
             // Wide byte values are consecutive 64-bit SeriesPack limbs. Their
@@ -249,7 +249,7 @@ template <unsigned W, unsigned b, unsigned V, unsigned E, search_kernel Kernel> 
             consume(value);
         }
     }
-    static void write_value(byte* p, unsigned slot, const value_type& value) {
+    static void write_value(std::uint8_t* p, unsigned slot, const value_type& value) {
         if constexpr (V > 0)
             each<(V + 7) / 8>([&](auto c) {
                 constexpr unsigned width = std::min(8u, V - c * 8);
@@ -261,10 +261,10 @@ template <unsigned W, unsigned b, unsigned V, unsigned E, search_kernel Kernel> 
                                             slot, value_rows, load<width>(value.data() + c * 8));
             });
     }
-    static word tuple_key(const byte* p) {
+    static word tuple_key(const std::uint8_t* p) {
         return tuple_field<key_bytes>::read(p);
     }
-    template <class Consume> static void consume_tuple(const byte* p, Consume&& consume) {
+    template <class Consume> static void consume_tuple(const std::uint8_t* p, Consume&& consume) {
         if constexpr (V) {
             value_type value;
             each<(V + 7) / 8>([&](auto c) {
@@ -274,14 +274,14 @@ template <unsigned W, unsigned b, unsigned V, unsigned E, search_kernel Kernel> 
             consume(value);
         }
     }
-    static word vacancies(const byte* p) {
+    static word vacancies(const std::uint8_t* p) {
         return load<T>(p + flags_offset);
     }
 #if defined(__AVX512VBMI__) && defined(__GFNI__)
     static constexpr bool vector_write_supported = E == 14 || E == 16 || E == 30 || E == 32;
     // Share physical SIMD comparisons, retaining each caller's logical mask
     // width and liveness/first-row handling. First-match historically uses word.
-    [[gnu::always_inline]] static word vector_write_matches(const byte* p, word q) {
+    [[gnu::always_inline]] static word vector_write_matches(const std::uint8_t* p, word q) {
         if constexpr (E == 14)
             return exact_small_bucket<E, T>(p, q);
         else if constexpr (E == 16)
@@ -295,7 +295,7 @@ template <unsigned W, unsigned b, unsigned V, unsigned E, search_kernel Kernel> 
         }
     }
 #endif
-    static unsigned write_find(const byte* p, word q) {
+    static unsigned write_find(const std::uint8_t* p, word q) {
         if constexpr (bitmap)
             return primary_find(p, q);
         else {
@@ -359,11 +359,11 @@ template <unsigned W, unsigned b, unsigned V, unsigned E, search_kernel Kernel> 
                 // Keep this stack-backed SeriesPack expression in its caller's
                 // scope. A generic helper increased AVX2 K14 register spills; the
                 // comparison primitive and its geometry remain owned by SeriesPack.
-                using F = sp::format<E, sp::geometry::local, 0>;
-                const sp::dense_source<F> source{p, N};
-                const auto expression = sp::composition::describe(source);
+                using F = sp::layout<E, sp::geometry::local, 0>;
+                const sp::dense_source<F> source{reinterpret_cast<const std::byte*>(p), N};
+                const auto expression = sp::author::expression(source);
                 each<T>([&](auto tile) {
-                    matches |= word(sp::composition::filter8_unchecked<ikea::comparison::equal>(
+                    matches |= word(sp::author::filter8_unchecked<ikea::comparison::equal>(
                                    expression, tile * 8, q))
                                << (tile * 8);
                 });
@@ -375,7 +375,7 @@ template <unsigned W, unsigned b, unsigned V, unsigned E, search_kernel Kernel> 
         }
     }
     using row_mask = std::conditional_t<(N <= 32), unsigned, word>;
-    static row_mask matching_rows(const byte* p, word q) {
+    static row_mask matching_rows(const std::uint8_t* p, word q) {
         word matches = 0;
 #if defined(__AVX512VBMI__) && defined(__GFNI__)
         if constexpr (vector_write_supported)
@@ -389,11 +389,11 @@ template <unsigned W, unsigned b, unsigned V, unsigned E, search_kernel Kernel> 
             // Keep this stack-backed SeriesPack expression in its caller's
             // scope. A generic helper increased AVX2 K14 register spills; the
             // comparison primitive and its geometry remain owned by SeriesPack.
-            using F = sp::format<E, sp::geometry::local, 0>;
-            const sp::dense_source<F> source{p, N};
-            const auto expression = sp::composition::describe(source);
+            using F = sp::layout<E, sp::geometry::local, 0>;
+            const sp::dense_source<F> source{reinterpret_cast<const std::byte*>(p), N};
+            const auto expression = sp::author::expression(source);
             each<T>([&](auto tile) {
-                matches |= word(sp::composition::filter8_unchecked<ikea::comparison::equal>(
+                matches |= word(sp::author::filter8_unchecked<ikea::comparison::equal>(
                                expression, tile * 8, q))
                            << (tile * 8);
             });
@@ -403,10 +403,10 @@ template <unsigned W, unsigned b, unsigned V, unsigned E, search_kernel Kernel> 
                 matches &= ~vacancies(p);
         return row_mask(matches);
     }
-    static void occupy(byte* p, unsigned row, word q, const bytes<V>& v) {
+    static void occupy(std::uint8_t* p, unsigned row, word q, const bytes<V>& v) {
         assign_point<E>(p, row, N, q);
         write_value(p, row, v);
-        p[flags_offset + row / 8] &= byte(~(1u << (row % 8)));
+        p[flags_offset + row / 8] &= std::uint8_t(~(1u << (row % 8)));
     }
 };
 } // namespace ikea::hashtable::detail

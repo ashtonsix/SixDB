@@ -50,8 +50,8 @@ template<unsigned V> struct ring_case {
         ht::require(lane.grants==1&&lane.current,"hint inside current owner grant");
         const auto address=reinterpret_cast<std::uintptr_t>(pointer);
         const bool live=std::any_of(lane.current->regions.begin(),lane.current->regions.end(),[&](const auto& r){
-            const auto base=reinterpret_cast<std::uintptr_t>(r.source.base);
-            return address>=base&&address-base<=r.source.extent&&size&&size<=r.source.extent-(address-base);
+            const auto base=reinterpret_cast<std::uintptr_t>(r.source.storage.data());
+            return address>=base&&address-base<=r.source.storage.size()&&size&&size<=r.source.storage.size()-(address-base);
         });
         ht::require(live,"native hint stays within current physical source");++lane.hints;
         if(ring)ring->prefetch(lane.demand,pointer);
@@ -125,8 +125,8 @@ template<unsigned V> struct ring_case {
         const auto before_hints=lane.hints;
         struct FixtureGrant {
             bool enter(const MM&,word,ht::access_intent)const noexcept{return true;}
-            bool prepare(std::span<const ht::mutation_damage>,std::span<const ht::mutation_source>)const noexcept{return true;}
-            void before(ht::mutation_source,ikea::byte_write)const noexcept{}
+            bool prepare(std::span<const ikea::journal::entry>,std::span<const write_arch::physical_region>)const noexcept{return true;}
+            void before(const void*,unsigned,std::size_t,std::size_t)const noexcept{}
         };
         // Fixture churn runs while no native frame is executing. Its complete
         // ordered result is checked below; byte-by-byte publication checks are

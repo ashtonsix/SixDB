@@ -1,16 +1,14 @@
 #pragma once
-#include <ikea/seriespack/author/write.h>
+#include <ikea/seriespack/writer.h>
 
 namespace ikea::seriespack {
-#if defined(__aarch64__) || defined(__AVX2__)
 /// The named admitted view and its byte owners outlive the returned binding.
 template <class F>
-[[nodiscard]] auto bind_mutation(const view<F, std::uint8_t>& destination,
+[[nodiscard]] auto bind_writer(const basic_view<F, ikea::byte>& destination,
                                  mutation_diagnostic* diagnostic = nullptr) {
-    return composition::prepare_mutation(composition::describe(destination), destination.size(),
+    return bind_writer(author::expression(destination), destination.size(),
                                          diagnostic);
 }
 template <class F>
-auto bind_mutation(const view<F, std::uint8_t>&&, mutation_diagnostic* = nullptr) = delete;
-#endif
+auto bind_writer(const basic_view<F, ikea::byte>&&, mutation_diagnostic* = nullptr) = delete;
 } // namespace ikea::seriespack

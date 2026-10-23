@@ -6,7 +6,7 @@ namespace study {
 namespace ht=ikea::hashtable;
 using ht::word;
 template<unsigned V> ht::bytes<V> payload(word key,unsigned rank){
-    ht::bytes<V> v;for(unsigned i=0;i<V;++i)v[i]=ht::byte((key>>(i%8)*8)^rank*131^i*79);return v;
+    ht::bytes<V> v;for(unsigned i=0;i<V;++i)v[i]=std::byte((key>>(i%8)*8)^rank*131^i*79);return v;
 }
 template<class MM,class Oracle> void verify(const MM& owner,const Oracle& expected){
     owner.validate();ht::require(owner.size()==expected.size(),"multimap grow distinct count");
@@ -44,16 +44,16 @@ template<unsigned W,unsigned V> void check(){
     verify(*image,image_expected);verify(source,expected);
     auto consuming=std::make_unique<MM>(713);
     for(const auto& [key,bag]:expected)for(const auto& value:bag)consuming->insert(key,value);
-    std::map<word,const ht::byte*> before;
-    write_arch::multimap_rebuild::visit_bags(*consuming,[&](word key,std::span<const ht::byte> values){
+    std::map<word,const std::byte*> before;
+    write_arch::multimap_rebuild::visit_bags(*consuming,[&](word key,std::span<const std::byte> values){
         if(values.size()>2*V)before[key]=values.data();});
     auto moved=write_arch::multimap_rebuild::grow_consuming(consuming);
     ht::require(!consuming,"consuming growth clears source owner");verify(*moved,expected);
-    write_arch::multimap_rebuild::visit_bags(*moved,[&](word key,std::span<const ht::byte> values){
+    write_arch::multimap_rebuild::visit_bags(*moved,[&](word key,std::span<const std::byte> values){
         if(before.contains(key))ht::require(before[key]==values.data(),"consuming growth preserves payload addresses");});
     if constexpr(K>=2){auto image_moved=write_arch::multimap_rebuild::grow_consuming<true>(moved);
         ht::require(!moved,"image consuming growth clears source owner");verify(*image_moved,expected);
-        write_arch::multimap_rebuild::visit_bags(*image_moved,[&](word key,std::span<const ht::byte> values){
+        write_arch::multimap_rebuild::visit_bags(*image_moved,[&](word key,std::span<const std::byte> values){
             if(before.contains(key))ht::require(before[key]==values.data(),"image consuming growth preserves payload addresses");});}
     std::cout<<"MM_GROW_PASS,"<<W<<','<<V<<'\n';
 }

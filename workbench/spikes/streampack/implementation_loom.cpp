@@ -141,23 +141,23 @@ template<class Access, bool Hints> struct Native {
         [[clang::musttail]] return Ring::yield(ring, slot, f, next.row, next.left, next.digest, offset, length);
     }
 #if defined(__aarch64__) || defined(__AVX2__)
-    using Chain = sp::point_chain<4>;
+    using Chain = sp::author::point_chain<4>;
     static typename Chain::result chain_geometry(void* binding, std::size_t row, bool,
-        sp::pipeline_location, unsigned) {
+        sp::author::pipeline_location, unsigned) {
         auto& f = *static_cast<F*>(binding);
         const auto p = geometry_body(f, row, f.left, f.digest);
         if (p.live) payload_hints<Hints>(f, *f.policy, p.value.offset, p.value.length);
-        return {sp::pipeline_location::from(p.value), p.live, !p.live};
+        return {sp::author::pipeline_location::from(p.value), p.live, !p.live};
     }
     static typename Chain::result chain_payload(void* binding, std::size_t row, bool,
-        sp::pipeline_location p, unsigned) {
+        sp::author::pipeline_location p, unsigned) {
         auto& f = *static_cast<F*>(binding);
         const auto next = payload_body(f, row, f.left, f.digest, p.offset(), p.length());
         f.row = next.row; f.left = next.left; f.digest = next.digest;
         if (!next.done) metadata_hints<Hints>(f, *f.policy, next.row);
         return {p, true, true};
     }
-    static void chain_finish(void*, std::size_t, bool, sp::pipeline_location) {}
+    static void chain_finish(void*, std::size_t, bool, sp::author::pipeline_location) {}
 #endif
 };
 
@@ -248,7 +248,7 @@ template<class Access, bool Hints>
 #if defined(__aarch64__) || defined(__AVX2__)
     const std::array<typename N::Chain::function, 2> stages{
         N::Chain::template stage<N::chain_geometry>, N::Chain::template stage<N::chain_payload>};
-    const auto chain = N::Chain::prepare(stages, N::Chain::template completion<N::chain_finish>);
+    const auto chain = N::Chain::make(stages, N::Chain::template completion<N::chain_finish>);
     require(bool(chain), "production point-chain preparation");
 #else
     require(options.route != Route::point_chain, "point chain requires its native ISA");
@@ -370,7 +370,7 @@ Report assess(loom::Worker& worker, std::span<const sp::const_view> sources,
         options.quantum && options.repetitions && options.repetitions <= 1000, "bounded execution options");
     for (const auto& source : sources)
         require(&source.format() == &sources.front().format(), "shared stable layout identity");
-    return sp::author::dispatch(sources.front(), [&](auto prototype) {
+    return sp::author::visit(sources.front(), [&](auto prototype) {
         if (options.hints) return typed<decltype(prototype), true>(worker, prototype, sources, requests, options, boundary, context, setup_begin);
         return typed<decltype(prototype), false>(worker, prototype, sources, requests, options, boundary, context, setup_begin);
     });

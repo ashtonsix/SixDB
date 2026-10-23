@@ -46,7 +46,7 @@ struct reducer {
 #else
         auto v = a;
         for (unsigned i = 0; i < V; ++i)
-            v[i] = ht::byte(a[i] * 3 + b[i] * 5 + 7);
+            v[i] = std::byte(std::to_integer<unsigned>(a[i]) * 3 + std::to_integer<unsigned>(b[i]) * 5 + 7);
         return v;
 #endif
     }
@@ -68,14 +68,14 @@ template <unsigned W> word key(word rank, word seed) {
 Value payload(word k, unsigned source) {
     Value v{};
     for (unsigned i = 0; i < V; ++i)
-        v[i] = ht::byte(scramble(k + i * 131 + source * 65537));
+        v[i] = std::byte(scramble(k + i * 131 + source * 65537));
     return v;
 }
 template <class S> word identity(const S& src) {
     word h = 17;
     src.allocations([&](auto, const auto* p, std::size_t n) {
         for (std::size_t i = 0; i < n; ++i)
-            h = (h ^ p[i]) * 0x100000001b3ULL;
+            h = (h ^ std::to_integer<unsigned>(p[i])) * 0x100000001b3ULL;
     });
     return h;
 }
@@ -158,7 +158,7 @@ template <unsigned K, unsigned B> struct fixture {
                             "union membership");
             checksum += scramble(k);
             for (auto x : want)
-                checksum = checksum * 3 + x;
+                checksum = checksum * 3 + std::to_integer<unsigned>(x);
         }
         if constexpr (!std::is_same_v<D, Abseil>)
             dst.validate();
@@ -172,7 +172,7 @@ template <unsigned K, unsigned B> struct fixture {
         auto consume = [&](word k, const auto& value) {
             sum += k;
             for (auto b : value)
-                sum += b;
+                sum += std::to_integer<unsigned>(b);
         };
         for (unsigned i = 1; i < m; ++i) {
             if (abseil) {

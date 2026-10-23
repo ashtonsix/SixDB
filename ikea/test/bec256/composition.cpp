@@ -11,27 +11,27 @@
 
 namespace bc = ikea::bec256;
 #if defined(IKEA_BEC256_AVX512) || defined(__aarch64__)
-using chain = bc::chain<8>;
+using chain = bc::author::chain<8>;
 struct context {
-    const bc::source *a, *b;
+    const bc::reader *a, *b;
     std::array<bc::byte, 64> mask, output;
     unsigned calls = 0;
 };
-chain::result read_stage(void *p, std::size_t, std::uint64_t active, bc::pipeline_bits, unsigned) {
+chain::result read_stage(void *p, std::size_t, std::uint64_t active, bc::author::pipeline_bits, unsigned) {
     auto &c = *static_cast<context *>(p);
     if (!active)
         return {{}, 0, true};
     ++c.calls;
-    return {bc::pipeline_bits::from(bc::native::read_pair(*c.a, *c.b)), active, false};
+    return {bc::author::pipeline_bits::from(bc::native::read_pair(*c.a, *c.b)), active, false};
 }
-chain::result filter(void *p, std::size_t, std::uint64_t active, bc::pipeline_bits v, unsigned) {
+chain::result filter(void *p, std::size_t, std::uint64_t active, bc::author::pipeline_bits v, unsigned) {
     auto &c = *static_cast<context *>(p);
     ++c.calls;
-    return {bc::pipeline_bits::from(
+    return {bc::author::pipeline_bits::from(
                 bc::native::intersection(v.get(), bc::native::load_pair(c.mask.data()))),
             active, false};
 }
-void done(void *p, std::size_t, std::uint64_t active, bc::pipeline_bits v) {
+void done(void *p, std::size_t, std::uint64_t active, bc::author::pipeline_bits v) {
     auto &c = *static_cast<context *>(p);
     if (active)
         bc::native::store_pair(c.output.data(), v.get());
@@ -49,7 +49,7 @@ void guarded_pairs(const chain &pipeline) {
         return p;
     };
     auto *left = allocate(), *right = allocate();
-    auto verify = [&](const bc::plain_block &a, const bc::plain_block &b) {
+    auto verify = [&](const std::array<std::byte, 32> &a, const std::array<std::byte, 32> &b) {
         std::array<bc::byte, 64> ea{}, eb{}, expected{}, actual{};
         const unsigned na = bec_reference::encode(a.data(), ea.data()),
                        nb = bec_reference::encode(b.data(), eb.data());
@@ -63,8 +63,8 @@ void guarded_pairs(const chain &pipeline) {
                 auto *bp = right + (end_b ? 2 * page - nb : page);
                 std::copy_n(ea.data(), na, ap);
                 std::copy_n(eb.data(), nb, bp);
-                auto sa = bc::source::admit({ap, na}, na, pa);
-                auto sb = bc::source::admit({bp, nb}, nb, pb);
+                auto sa = bc::bind_reader({ap, na}, na, pa);
+                auto sb = bc::bind_reader({bp, nb}, nb, pb);
                 assert(sa && sb);
                 bc::native::store_pair(actual.data(), bc::native::read_pair(*sa, *sb));
                 assert(actual == expected);
@@ -75,27 +75,27 @@ void guarded_pairs(const chain &pipeline) {
                 pipeline.run(&c, 0, 3, {});
                 assert(c.output == expected && c.calls == 2);
                 if (!na) {
-                    auto empty = bc::source::admit({}, 0, pa);
+                    auto empty = bc::bind_reader({}, 0, pa);
                     assert(empty);
                     bc::native::store_pair(actual.data(), bc::native::read_pair(*empty, *sb));
                     assert(actual == expected);
                 }
                 if (!nb) {
-                    auto empty = bc::source::admit({}, 0, pb);
+                    auto empty = bc::bind_reader({}, 0, pb);
                     assert(empty);
                     bc::native::store_pair(actual.data(), bc::native::read_pair(*sa, *empty));
                     assert(actual == expected);
                 }
             }
     };
-    bc::plain_block empty{}, full{}, maximum{};
+    std::array<std::byte, 32> empty{}, full{}, maximum{};
     full.fill(bc::byte{255});
     maximum.fill(bc::byte{15});
     std::array<bc::byte, 64> encoded{};
     assert(bec_reference::encode(maximum.data(), encoded.data()) == 47);
     std::mt19937_64 rng(0xbec25a);
     for (unsigned population = 0; population <= 256; ++population) {
-        bc::plain_block value{};
+        std::array<std::byte, 32> value{};
         std::array<unsigned, 256> bits{};
         for (unsigned i = 0; i < bits.size(); ++i)
             bits[i] = i;
@@ -115,7 +115,7 @@ int main() {
     std::mt19937_64 rng(0xbec2512);
 #if defined(IKEA_BEC256_AVX512) || defined(__aarch64__)
     auto pipeline =
-        chain::prepare(std::array<chain::function, 2>{chain::stage<read_stage>, chain::stage<filter>},
+        chain::make(std::array<chain::function, 2>{chain::stage<read_stage>, chain::stage<filter>},
                        chain::completion<done>);
     assert(pipeline);
     guarded_pairs(*pipeline);
@@ -125,7 +125,7 @@ int main() {
     assert(stopped.calls == 0 && stopped.output[0] == bc::byte{0xa5});
 #endif
     for (unsigned r = 0; r < 1024; ++r) {
-        bc::plain_block a, b;
+        std::array<std::byte, 32> a, b;
         for (auto &v : a)
             v = bc::byte(rng());
         for (auto &v : b)
@@ -136,19 +136,19 @@ int main() {
             b.fill(bc::byte{255});
         const auto pa = bec_reference::population(a.data()),
                    pb = bec_reference::population(b.data());
-        auto ea = bc::prepare(a, pa), eb = bc::prepare(b, pb);
+        auto ea = bc::encoding::make(a, pa), eb = bc::encoding::make(b, pb);
         assert(ea && eb);
         // Independent owners in one case, a dense succession in the other.
         for (bool dense : {false, true}) {
             std::array<bc::byte, 192> memory{};
             unsigned offset = dense ? ea->bytes() : 96;
-            bc::destination dest{memory};
-            std::array<ikea::owner_write, 4> entries;
-            ikea::source_write_journal journal{entries};
+            bc::view dest{memory};
+            std::array<ikea::journal::entry, 4> entries;
+            ikea::journal journal{entries};
             assert(ea->write(dest, 0, journal) && eb->write(dest, offset, journal));
-            auto sa = bc::source::admit(std::span(memory).first(r % 2 ? ea->bytes() : 64),
+            auto sa = bc::bind_reader(std::span(memory).first(r % 2 ? ea->bytes() : 64),
                                         ea->bytes(), pa);
-            auto sb = bc::source::admit(std::span(memory).subspan(offset, r % 2 ? eb->bytes() : 64),
+            auto sb = bc::bind_reader(std::span(memory).subspan(offset, r % 2 ? eb->bytes() : 64),
                                         eb->bytes(), pb);
             assert(sa && sb);
             std::array<bc::byte, 64> output;
@@ -175,7 +175,7 @@ int main() {
             assert(std::equal(ea->body().begin(), ea->body().end(), encoded.begin()));
             assert(std::equal(eb->body().begin(), eb->body().end(), encoded.begin() + 64));
             encoded.fill(bc::byte{0xa5});
-            bc::destination replacement{encoded};
+            bc::view replacement{encoded};
             journal.used = 0;
             sizes = bc::native::encode_pair_exact_unchecked(
                 bc::native::read_pair(*sa, *sb), pa, replacement, 0, pb, replacement, 64, journal);

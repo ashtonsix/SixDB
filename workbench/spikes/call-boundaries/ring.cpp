@@ -13,7 +13,7 @@ namespace cb {
 namespace tp = ikea::tuplepack;
 using Carrier = tp::native::pipeline_values;
 using Vector = Carrier::vector;
-using Reader = tp::native_reader<64, tp::byte>;
+using Reader = tp::author::native_reader<64, std::byte>;
 namespace {
 void check(bool x) { if (!x) std::abort(); }
 template<std::size_t> using Scalar = Word;
@@ -70,7 +70,7 @@ struct Family<Copies, Metadata, std::index_sequence<G...>, std::index_sequence<V
   [[gnu::noinline]] static bool enqueue(Ring& ring, Job* job, Word row, Word rounds) {
     return ring.push(callback,typename Ring::Arguments{job,row,rounds,0,Word(G+11)...,Part<V>{}...});
   }
-  static void run(loom::Worker& worker,const Reader& reader,const tp::byte* source,
+  static void run(loom::Worker& worker,const Reader& reader,const std::uint8_t* source,
       std::size_t active, std::size_t jobs, Word rounds) {
     Ring ring;
     check(bool(ring.configure(worker,{active,jobs-active})));
@@ -78,7 +78,7 @@ struct Family<Copies, Metadata, std::index_sequence<G...>, std::index_sequence<V
     for(std::size_t j=0;j<jobs;++j) { work[j].reader=&reader; check(enqueue(ring,&work[j],j,rounds)); }
     while(ring.pending()) spin_live(&ring,Part<V>{}...);
     for(std::size_t j=0;j<jobs;++j) {
-      std::array<tp::byte,64> expected{}; Word sum=0;
+      std::array<std::uint8_t,64> expected{}; Word sum=0;
       for(Word step=0;step<rounds;++step) {
         const auto row=(j+step)&15; Word first=0;
         for(unsigned i=0;i<64;++i) {
@@ -89,7 +89,7 @@ struct Family<Copies, Metadata, std::index_sequence<G...>, std::index_sequence<V
       }
       check(work[j].sum==sum);
       for(unsigned c=0;c<Copies;++c) {
-        std::array<tp::byte,64> actual;
+        std::array<std::uint8_t,64> actual;
         tp::native::store_packet(actual.data(),work[j].results[c].get());
         check(actual==expected);
       }
@@ -111,13 +111,13 @@ unsigned ring_checks() {
   loom::Worker worker; check(bool(loom::adopt(worker))); check(bool(loom::configure(worker,*arena,0)));
   auto storage=loom::allocate(worker,{.bytes=16*64}); check(bool(storage));
   auto held=loom::hold(*storage,{0,16*64}); check(bool(held));
-  auto* source=reinterpret_cast<tp::byte*>(storage->address);
+  auto* source=reinterpret_cast<std::uint8_t*>(storage->address);
   for(unsigned row=0;row<16;++row) for(unsigned i=0;i<64;++i) source[row*64+i]=(row*17+i*13)&255;
-  std::array<tp::code,64> codes; std::array<tp::byte,64> map;
-  for(unsigned i=0;i<64;++i) { codes[i]={tp::byte(i),1,7}; map[i]=i; }
+  std::array<tp::code,64> codes; std::array<std::uint8_t,64> map;
+  for(unsigned i=0;i<64;++i) { codes[i]={std::uint8_t(i),1,7}; map[i]=i; }
   const auto layout=tp::layout::make(64,codes); check(bool(layout));
-  const auto plan=tp::reader<64>::make(*layout,map); check(bool(plan));
-  const auto view=tp::view::bind(*layout,{source,16*64},16,64); check(bool(view));
+  const auto plan=tp::read_plan<64>::make(*layout,map); check(bool(plan));
+  const auto view=tp::view::attach(*layout,std::as_writable_bytes(std::span{source,std::size_t(16*64)}),16,64); check(bool(view));
   const auto operation=tp::bind_reader(*plan,*view); check(bool(operation));
   const Reader reader(*operation); check(bool(reader.admit(15)));
   unsigned cases=0;

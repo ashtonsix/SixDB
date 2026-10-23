@@ -136,7 +136,7 @@ reported location as a stable entry handle.
 
 Ordinary writes validate keys. Concrete/native reads, including `prepare`,
 `find`, `get`, `get_borrowed` and staged reads, trust the `W`-bit domain; admitting untrusted keys is
-the caller's job. `descriptor::read().find` validates it, and guarded reads
+the caller's job. `erased_table::read().find` validates it, and guarded reads
 report invalid keys as `denied`.
 
 ## Choose geometry and native execution together
@@ -190,7 +190,7 @@ number of distinct keys stays small. On promotion, derive expected distinct work
 from that map's role: offered definitions, distinct intents or affected nodes,
 not automatically the number of commands or all historical records. Dispatch
 the selected `b` over the consumer's supported palette once, then use
-`descriptor<W,V>::measured<b>` or `bind_measured_encoding<W-b>` for encoding and
+`erased_table<W,V>::measured<b>` or `bind_measured_encoding<W-b>` for encoding and
 kernel admission. Keep the complete native batch inside that binding when
 possible. Account for constructing/replaying inline entries, allocation,
 refusal, fallback and cleanup; no fixed bucket count guarantees no spill.
@@ -210,7 +210,7 @@ AVX2, and one otherwise. This is selected by the compiled ISA and adds no caller
 setting. Writes and staged reads retain one-group steps.
 
 The generic encoding is a portable starting point. For a measured deployment,
-`descriptor<W,V>::measured<b>(seed, cpu, isa)` chooses an encoding and kernel
+`erased_table<W,V>::measured<b>(seed, cpu, isa)` chooses an encoding and kernel
 at construction. Current profiles cover sets and values of 8 or 64 bytes:
 
 | CPU name | ISA names |
@@ -231,7 +231,7 @@ absent, but that does not reproduce their measured performance.
 
 ## Bind once around a complete hot loop
 
-A concrete owner exposes inline operations directly. A `descriptor<W,V,Storage>`
+A concrete owner exposes inline operations directly. An `erased_table<W,V,Storage>`
 holds a runtime-selected concrete owner and operation table, making replacement
 and ordinary point calls convenient. For a repeated loop, capture a typed reader
 once and borrow its one-pointer native view:
@@ -244,9 +244,9 @@ once and borrow its one-pointer native view:
 namespace ht = ikea::hashtable;
 
 int main() {
-    auto values = ht::descriptor<24, 8>::explicit_encoding<10, 14>(713);
+    auto values = ht::erased_table<24, 8>::explicit_encoding<10, 14>(713);
     ht::bytes<8> payload{};
-    payload[0] = 7;
+    payload[0] = std::byte{7};
     for (auto key : {11u, 22u, 33u})
         values.insert(key, payload);
 
@@ -255,7 +255,9 @@ int main() {
     const std::array<std::uint64_t, 4> requests{11, 44, 22, 33};
     unsigned sum = 0;
     for (auto key : requests)
-        view.find(key, [&](const auto& value) { sum += value[0]; });
+        view.find(key, [&](const auto& value) {
+            sum += std::to_integer<unsigned>(value[0]);
+        });
     assert(sum == 21);
 }
 ```
@@ -288,7 +290,7 @@ the complete value already fits in a register. The existing small-value getter
 and all layouts are unchanged.
 
 ```cpp
-// view = held.borrow(), from a matching descriptor<W,64>::read_native<b,...>().
+// view = held.borrow(), from a matching erased_table<W,64>::read_native<b,...>().
 const auto value = view.get_borrowed(key);
 std::uint64_t locator = 0;
 std::memcpy(&locator, value.address + 8, sizeof(locator)); // Also safe on a miss.
@@ -579,14 +581,29 @@ must authorize access and preserve or journal bytes. Supply a context with:
 | Hook | Required behavior |
 | --- | --- |
 | `enter(owner, key, intent) -> bool` | Establish stable readable storage or private/exclusively writable storage, retaining permission through the call |
-| `prepare(span<mutation_damage>) -> bool` | Resolve live sources/generations and reserve preservation or journal capacity for **all** spans; refusal leaves no published effects |
-| `before(source, byte_write) noexcept` | Publish the prepared byte effect before stores; cannot invalidate sources or fail |
+| `prepare(span<const ikea::journal::entry>) -> bool` | Resolve live sources/generations and reserve preservation or journal capacity for **all** spans; refusal leaves no published effects |
+| `before(owner, unsigned plane, offset, size) noexcept` | Publish the prepared byte effect before stores; cannot invalidate sources or fail |
 
-Each damage item identifies a live owner part, base and extent, plus an
-offset/length span. Resolve it to the enclosing object's stable incarnation,
-part and generation while valid. Do not persist the raw pointers as identities.
+Each journal entry names the actual table as `source`, an ordinal from
+`hashtable::plane`, and a plane-relative byte offset and size. Resolve the
+current bytes with `owner.plane_storage(plane(entry.plane))`, and validate the
+enclosing object's incarnation and physical generation while those bytes remain
+stable. Header, primary buckets, Swiss controls and Swiss tuples are separate
+planes. No entry points to temporary preflight metadata. Do not persist raw
+pointers as identities. Keep the named table and its admitted backing generation
+valid until the owner has resolved every retained journal entry.
 The same context must provide the physical protection required by its readers;
 the hooks are not locks or snapshots by themselves.
+
+`effect_capacity_insert()`, `effect_capacity_erase()`, `effect_capacity_modify()`
+and `effect_capacity_modify_or_insert()` give conservative additional-record
+bounds for one guarded command. The owner still admits its actual complete
+record list through `prepare`; a budget alone does not preserve a generation.
+The nonthrowing `before` hook implements the shared `ikea::effects` protocol.
+Opaque values (`bytes<V>`), borrowed value addresses, allocation addresses and
+storage buffers use `std::byte`. Decode numerical meaning explicitly, for
+example with `load<N>`/`store<N>` or `memcpy`; packed key/control lanes remain
+unsigned integers inside native bodies.
 
 Guarded operations do not allocate table backing or rehash overflow.
 `needs_capacity` means prepare capacity under exclusive/private ownership,

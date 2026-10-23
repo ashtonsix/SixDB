@@ -1,13 +1,14 @@
 #include "verify.h"
 #include "../support.h"
 
-void verify_mutation_coverage(const std::array<ikea::seriespack::plane<std::uint8_t>, 3>& planes,
+void verify_mutation_coverage(const void* source, const std::array<ikea::seriespack::plane<ikea::byte>, 3>& planes,
                               const std::array<std::vector<std::uint8_t>, 3>& before,
-                              std::span<const ikea::seriespack::byte_write> writes,
+                              std::span<const ikea::journal::entry> writes,
                               std::array<std::size_t, 3> occupied) {
     // Compile the byte-level oracle once, independently of the native kernels
-    // exercised by the 206 format-specific mutation checks.
+    // exercised by the 206 layout-specific mutation checks.
     for (const auto& write : writes) {
+        IKEA_CHECK(write.source == source);
         IKEA_CHECK(write.plane < 3 && occupied[write.plane]);
         const auto& plane = planes[write.plane];
         IKEA_CHECK(write.offset <= plane.bytes.size() &&
@@ -16,7 +17,7 @@ void verify_mutation_coverage(const std::array<ikea::seriespack::plane<std::uint
     for (unsigned p = 0; p < 3; ++p) {
         if (!occupied[p])
             continue;
-        const auto bytes = planes[p].bytes;
+        const auto bytes = ikea::to_u8(planes[p].bytes);
         const auto stride = planes[p].stride;
         for (std::size_t b = 0; b < bytes.size(); ++b) {
             bool covered = false;

@@ -1,7 +1,7 @@
 #pragma once
 #include <ikea/tuplepack/author/native.h>
 #if defined(__aarch64__) || defined(__AVX2__)
-namespace ikea::tuplepack::composition::detail {
+namespace ikea::tuplepack::author::detail {
 using namespace ikea::tuplepack::native;
 [[gnu::always_inline]] inline native_packet
 permute_full(native_packet source, const ikea::tuplepack::detail::shuffle& p) {
@@ -65,5 +65,5 @@ template <bool Left>
     return {part(source.a, 0), part(source.b, 16)};
 #endif
 }
-} // namespace ikea::tuplepack::composition::detail
+} // namespace ikea::tuplepack::author::detail
 #endif

@@ -19,9 +19,9 @@ enum class method {
 template <method M> void run(benchmark::State &state, unsigned shape) {
     fixture data(shape);
     std::array<bc::byte, 64> output{};
-    bc::destination target{output};
-    std::array<ikea::owner_write, 1> entries;
-    ikea::source_write_journal effects{entries};
+    bc::view target{output};
+    std::array<ikea::journal::entry, 1> entries;
+    ikea::journal effects{entries};
     // The pointer escape plus the loop barrier makes issued writes observable;
     // consuming just a returned length can silently turn an encoder into sizing.
     benchmark::DoNotOptimize(output.data());
@@ -36,7 +36,7 @@ template <method M> void run(benchmark::State &state, unsigned shape) {
         if constexpr (M == method::encode)
             benchmark::DoNotOptimize(bc::encode(data.plain[i], data.pop[i], target, 0, effects));
         if constexpr (M == method::prepare_write) {
-            auto candidate = bc::prepare(data.plain[i], data.pop[i]);
+            auto candidate = bc::encoding::make(data.plain[i], data.pop[i]);
             benchmark::DoNotOptimize(candidate->write(target, 0, effects));
         }
         if constexpr (M == method::estimate)

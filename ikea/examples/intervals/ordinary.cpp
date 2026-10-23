@@ -14,7 +14,7 @@ int main() {
     const auto window = in::overlap(geometry, 9u, 36u);
     assert((window == in::rank_window{1, 5}));
     const std::array eligible{std::byte{0x3b}}; // rank 2 excluded
-    const in::selected_source selected{geometry, in::rank_selection{eligible}};
+    const in::selected_source selected{geometry, in::selection::bits(0,eligible)};
     assert(in::reverse(selected, 20u) == 6 && in::reverse(selected, 26u) == 3);
     unsigned rank_sum = 0;
     assert(in::range(selected, window.first, window.limit - window.first,
@@ -31,14 +31,14 @@ int main() {
     const in::size_editor<64, std::uint8_t> editor{
         widths, checkpoints, assigned, extent, 0, 4096, 255};
     assert(editor.validate());
-    std::array<ikea::owner_write, 32> records;
-    ikea::source_write_journal effects{records};
+    std::array<ikea::journal::entry, 32> records;
+    ikea::journal effects{records};
     assert(editor.append(3, effects) && editor.append(0, effects) && editor.append(5, effects));
     assert(editor.validate());
     const auto source = editor.source();
     assert(in::reverse(source, 3) == 2); // Zero-size rank 1 retains its identity.
     const std::array live{std::byte{0b011}};
-    assert(in::reverse(source, 3, in::rank_selection{live}) == 3); // Owner excluded.
+    assert(in::reverse(source, 3, in::selection::bits(0,live)) == 3); // Owner excluded.
     unsigned visited = 0;
     assert(in::range(source, 0, 3, [&](unsigned, auto) { ++visited; }));
     assert(visited == 3);

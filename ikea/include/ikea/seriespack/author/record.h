@@ -2,7 +2,7 @@
 #include <ikea/seriespack/author/expression.h>
 #include <vector>
 
-namespace ikea::seriespack::composition {
+namespace ikea::seriespack::author {
 /// Provisional in-process inspection of an authored operation. Engine owns
 /// persistent schema/plan identities and serialization; this is not that schema.
 enum class instruction { rows, active, load, join, unsigned_less, modulo_sum };
@@ -68,4 +68,4 @@ class recorder {
         return {append({instruction::modulo_sum, 64, x.id, 0, selected.id})};
     }
 };
-} // namespace ikea::seriespack::composition
+} // namespace ikea::seriespack::author

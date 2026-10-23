@@ -15,7 +15,7 @@ transfer journal/source overlap, count-only and extent-only changes.
 `boundaries.cpp` also consumes and reproduces a literal byte fixture independently
 of the writer/reader pair, including a second checkpoint, retired reservation,
 empty ranks and partial-tail padding; corrupt geometry/U/count is refused. The
-eight-byte schema fixtures cover every flag combination, fixed zero versus absent,
+thirteen-byte schema fixtures cover every flag combination, fixed zero versus absent,
 maximal bounds, noncanonical/legacy rejection and a protected-page boundary. A full
 256 × 65,535-byte block checks rank 255, count 256, final-byte reverse ownership,
 last tombstone and refusal of the next append; oversized transfer also preserves
@@ -24,11 +24,11 @@ bytes and effects.
 `ikea_streampack_encodings_check` adds 1,056 cross-encoding histories with
 independent R/U/end models, plus fixed/full/immortal omissions, tight extent
 bounds, mixed carrier widths, wide-origin relative sources and live phase-state
-checks. It exercises literal version 2 values converted to version 3 without
-altering the original bytes, along with exact descriptor round trips.
+checks. It exercises literal shared layout descriptions, exact round trips, rejected
+retired descriptors, unknown versions and framing, and no partial schema writes.
 
 The [private compact-image checks](compact/README.md) preserve geometry/admission,
-literal-cut selection, legacy descriptors and boundary/resize damage coverage
+literal-cut selection, shared layout descriptions and boundary/resize damage coverage
 under the owning module. Generic ordered search and cuts are tested independently
 in Intervals.
 

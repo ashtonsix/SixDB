@@ -60,14 +60,14 @@ template<unsigned W,unsigned V> void check_merge(){
     auto consuming_left=std::make_unique<MM>(713),consuming_right=std::make_unique<MM>(713);
     for(const auto& [key,bag]:a)for(const auto& value:bag)consuming_left->insert(key,value);
     for(const auto& [key,bag]:z)for(const auto& value:bag)consuming_right->insert(key,value);
-    std::map<word,const ht::byte*> unique_addresses;
-    write_arch::multimap_rebuild::visit_bags(*consuming_left,[&](word key,std::span<const ht::byte> bag){
+    std::map<word,const std::byte*> unique_addresses;
+    write_arch::multimap_rebuild::visit_bags(*consuming_left,[&](word key,std::span<const std::byte> bag){
         if(!z.contains(key)&&bag.size()>2*V)unique_addresses[key]=bag.data();});
-    write_arch::multimap_rebuild::visit_bags(*consuming_right,[&](word key,std::span<const ht::byte> bag){
+    write_arch::multimap_rebuild::visit_bags(*consuming_right,[&](word key,std::span<const std::byte> bag){
         if(!a.contains(key)&&bag.size()>2*V)unique_addresses[key]=bag.data();});
     auto consumed=write_arch::multimap_rebuild::merge_consuming<true,MM_MERGE_REUSE_FITTING,MM_MERGE_BULK_JOIN,MM_MERGE_KEEP_BUCKETS,MM_MERGE_REUSE_RIGHT,MM_MERGE_LIVE_CELLS>(consuming_left,consuming_right);
     ht::require(!consuming_left&&!consuming_right,"consuming merge clears both sources");study::verify(*consumed,expected);
-    write_arch::multimap_rebuild::visit_bags(*consumed,[&](word key,std::span<const ht::byte> bag){
+    write_arch::multimap_rebuild::visit_bags(*consumed,[&](word key,std::span<const std::byte> bag){
         if(unique_addresses.contains(key))ht::require(bag.data()==unique_addresses[key],"unique worker payload address survives merge");});
     auto consumed_expected=expected;
     for(auto it=consumed_expected.begin();it!=consumed_expected.end();){consumed->erase(it->first);it=consumed_expected.erase(it);if(it!=consumed_expected.end())++it;}
@@ -121,14 +121,14 @@ template<unsigned W,unsigned V> void check_merge(){
         auto joined=write_arch::multimap_rebuild::merge(a,z);study::verify(*joined,wanted);study::verify(a,aa);study::verify(z,zz);
         auto ca=std::make_unique<MM>(713),cz=std::make_unique<MM>(713);
         for(const auto& value:aa[key])ca->insert(key,value);for(const auto& value:zz[key])cz->insert(key,value);
-        const ht::byte* old_payload=nullptr;const ht::byte* right_payload=nullptr;
-        write_arch::multimap_rebuild::visit_bags(*ca,[&](word,std::span<const ht::byte> bag){old_payload=bag.data();});
-        write_arch::multimap_rebuild::visit_bags(*cz,[&](word,std::span<const ht::byte> bag){right_payload=bag.data();});
+        const std::byte* old_payload=nullptr;const std::byte* right_payload=nullptr;
+        write_arch::multimap_rebuild::visit_bags(*ca,[&](word,std::span<const std::byte> bag){old_payload=bag.data();});
+        write_arch::multimap_rebuild::visit_bags(*cz,[&](word,std::span<const std::byte> bag){right_payload=bag.data();});
         auto cj=write_arch::multimap_rebuild::merge_consuming<true,MM_MERGE_REUSE_FITTING,MM_MERGE_BULK_JOIN,MM_MERGE_KEEP_BUCKETS,MM_MERGE_REUSE_RIGHT,MM_MERGE_LIVE_CELLS>(ca,cz);study::verify(*cj,wanted);
         constexpr unsigned inline_values=V==8?2:1;
         const bool left_fits=MM_MERGE_REUSE_FITTING&&lengths[0]>inline_values&&std::bit_ceil(lengths[0])>=lengths[0]+lengths[1];
         const bool right_fits=MM_MERGE_REUSE_RIGHT&&!left_fits&&lengths[1]>inline_values&&std::bit_ceil(lengths[1])>=lengths[0]+lengths[1];
-        if(left_fits||right_fits)write_arch::multimap_rebuild::visit_bags(*cj,[&](word,std::span<const ht::byte> bag){
+        if(left_fits||right_fits)write_arch::multimap_rebuild::visit_bags(*cj,[&](word,std::span<const std::byte> bag){
             ht::require(bag.data()==(left_fits?old_payload:right_payload),"fitting merged reservation keeps selected payload address");});
     }
     if constexpr(MM_MERGE_REUSE_RIGHT){
@@ -145,16 +145,16 @@ template<unsigned W,unsigned V> void check_merge(){
         fill(*r,ka,5,100);fill(*r,kb,5,100);fill(*r,kc,5,100);
         const auto refs=write_arch::multimap_probe::references(*r);
         ht::require(refs.size()==3&&(*refs.begin()>>8)==(*refs.rbegin()>>8),"right-reuse fixture shares a block");
-        std::map<word,const ht::byte*> la,ra;
-        write_arch::multimap_rebuild::visit_bags(*l,[&](word k,std::span<const ht::byte> bag){la[k]=bag.data();});
-        write_arch::multimap_rebuild::visit_bags(*r,[&](word k,std::span<const ht::byte> bag){ra[k]=bag.data();});
+        std::map<word,const std::byte*> la,ra;
+        write_arch::multimap_rebuild::visit_bags(*l,[&](word k,std::span<const std::byte> bag){la[k]=bag.data();});
+        write_arch::multimap_rebuild::visit_bags(*r,[&](word k,std::span<const std::byte> bag){ra[k]=bag.data();});
         auto joined=write_arch::multimap_rebuild::merge_consuming<true,true,true,MM_MERGE_KEEP_BUCKETS,true,MM_MERGE_LIVE_CELLS>(l,r);
         study::verify(*joined,expected);
-        write_arch::multimap_rebuild::visit_bags(*joined,[&](word k,std::span<const ht::byte> bag){
+        write_arch::multimap_rebuild::visit_bags(*joined,[&](word k,std::span<const std::byte> bag){
             ht::require(bag.data()==(k==kb?la[k]:ra[k]),"mixed right block retains the chosen addresses");
         });
         fill(*joined,kd,5,200);study::verify(*joined,expected);
-        write_arch::multimap_rebuild::visit_bags(*joined,[&](word k,std::span<const ht::byte> bag){
+        write_arch::multimap_rebuild::visit_bags(*joined,[&](word k,std::span<const std::byte> bag){
             if(k==kd)ht::require(bag.data()==ra[kb],"displaced right rank is reusable with surviving neighbours");
         });
         for(word k:{ka,kb,kd}){ht::require(joined->erase(k),"mixed reuse erase");expected.erase(k);}

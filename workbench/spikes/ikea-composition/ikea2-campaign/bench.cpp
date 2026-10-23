@@ -67,18 +67,18 @@ template<unsigned K,sp::geometry G,reader_kind Kind> void bulk(benchmark::State&
 
 enum class consumer_kind { composed,composed16,next_materialized,current_materialized,current_grouped };
 template<unsigned K,sp::geometry G,consumer_kind Kind,bool Masked> void consumer(benchmark::State& state) {
-    using F=sp::format<K,G>;using U=sp::uint_for<K>;
+    using F=sp::layout<K,G>;using U=sp::uint_for<K>;
     comparison_fixture<K,G> f(8192);auto next=f.template next<U>();auto current=f.current();
-    const auto source=sp::dense_source<F>{f.storage.get(),f.count};
-    const auto expression=sp::composition::describe(source);
+    const auto source=sp::dense_source<F>{std::as_bytes(std::span{f.storage.get(),f.bytes}).data(),f.count};
+    const auto expression=sp::author::expression(source);
     std::vector<U> scratch(f.count);
     const std::uint64_t cutoff=K==64?0x9123456789abcdefULL:((std::uint64_t{1}<<(K-1))+3);
     constexpr std::uint16_t mask=Masked?0xeeee:0xffff;
     auto run=[&] {
         if constexpr(Kind==consumer_kind::composed)
-            return sp::composition::sum_regions(expression,f.count,cutoff,[](std::size_t){return mask;});
+            return sp::author::sum_regions(expression,f.count,cutoff,[](std::size_t){return mask;});
         else if constexpr(Kind==consumer_kind::composed16)
-            return sp::composition::sum_regions<false>(expression,f.count,cutoff,[](std::size_t){return mask;});
+            return sp::author::sum_regions<false>(expression,f.count,cutoff,[](std::size_t){return mask;});
 #if defined(__AVX512BW__) && defined(__AVX512VBMI__)
         else if constexpr(Kind==consumer_kind::current_grouped) {
             using OF=old::static_format<K,old::geometry::local8>;

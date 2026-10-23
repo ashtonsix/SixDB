@@ -6,6 +6,7 @@
 #include <vector>
 
 using namespace ikea::tuplepack;
+using namespace ikea::tuplepack::author;
 #if defined(__aarch64__) || defined(__AVX2__)
 namespace {
 [[gnu::always_inline]] inline native::packet toggle(native::packet v) {
@@ -38,9 +39,9 @@ std::uint64_t reduce(native::packet v) {
 }
 using pipeline = chain<8>;
 template <unsigned Rows> struct operation {
-  native_reader<64, byte, Rows> read;
+  native_reader<64, std::byte, Rows> read;
   native_writer<64, Rows> write;
-  ikea::source_write_journal &effects;
+  ikea::journal &effects;
   bool okay = true;
 };
 template <unsigned Rows>
@@ -69,27 +70,27 @@ void run(benchmark::State &state, unsigned layout_kind, bool sparse,
   std::vector<code> codes(layout_kind >= 2 ? 8 : 64);
   for (unsigned i = 0; i < codes.size(); ++i)
     codes[i] =
-        layout_kind >= 2 ? code{0, byte(i), 1} : code{byte(i), byte(i % 2), 7};
+        layout_kind >= 2 ? code{0, std::uint8_t(i), 1} : code{std::uint8_t(i), std::uint8_t(i % 2), 7};
   auto format = *layout::make(extent, codes);
-  std::array<byte, B> map;
+  std::array<std::uint8_t, B> map;
   map.fill(hole);
   for (unsigned i = 0; i < std::min(B, unsigned(codes.size())); ++i)
     map[i] = layout_kind == 1
                  ? (i * 13 + 17) % 64
                  : (i * 5 + 3) % std::min(B, unsigned(codes.size()));
-  auto rp = *reader<64, Rows>::make(format, map);
-  auto wp = *writer<64, Rows>::make(format, map);
+  auto rp = *read_plan<64, Rows>::make(format, map);
+  auto wp = *write_plan<64, Rows>::make(format, map);
   const std::size_t count = 1024, stride = layout_kind == 2 ? 1 : 64;
-  std::vector<byte> bytes((count - 1) * stride + extent, 0x55);
-  auto source = *view::bind(format, bytes, count, stride);
+  std::vector<std::byte> bytes((count - 1) * stride + extent, std::byte{0x55});
+  auto source = *view::attach(format, bytes, count, stride);
   auto read = *bind_reader(rp, source);
   auto write = *bind_writer(wp, source);
-  std::array<ikea::owner_write, 4096> entries;
-  ikea::source_write_journal effects{entries};
+  std::array<ikea::journal::entry, 4096> entries;
+  ikea::journal effects{entries};
   operation<Rows> c{native_reader(read), native_writer(write), effects};
   std::array<pipeline::function, 2> stages{pipeline::stage<decode<Rows>>,
                                            pipeline::stage<update<Rows>>};
-  auto chain = *pipeline::prepare(stages, pipeline::completion<complete>);
+  auto chain = *pipeline::make(stages, pipeline::completion<complete>);
   const auto empty = native::pipeline_values::from(native::row_mask<Rows>(0));
   const std::uint64_t active =
       detail::all_rows<Rows> & (sparse ? 0x5555555555555555ull : ~0ull);
@@ -108,7 +109,7 @@ void run(benchmark::State &state, unsigned layout_kind, bool sparse,
       } else {
         auto value = c.read.get_unchecked(first, active);
         auto address = [&](unsigned r) {
-          return source.row_unchecked(first + r);
+          return ikea::to_u8(source.row_unchecked(first + r));
         };
         if constexpr (Rows == 1)
           native::write_body(wp.controls(), address(0), toggle(value));

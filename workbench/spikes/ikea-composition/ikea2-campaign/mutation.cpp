@@ -1,27 +1,27 @@
 #include "fixture.h"
-#include <ikea/seriespack/detail/mutation/physical.h>
+#include <ikea/seriespack/author/mutation.h>
 
 enum class mutation_kind {raw,coverage,maintenance,current,prior,materialized_maintenance,control_coverage};
 template<unsigned K,sp::geometry G,mutation_kind Kind,bool Masked>
-[[gnu::noinline]] std::uint64_t write_bound(const sp::view<sp::format<K,G>,std::uint8_t>& destination,
-    const sp::uint_for<K>* input,sp::write_journal& journal) {
+[[gnu::noinline]] std::uint64_t write_bound(const sp::view<sp::layout<K,G>>& destination,
+    const sp::uint_for<K>* input,ikea::journal& journal) {
     constexpr std::uint16_t mask=Masked?0xeeee:0xffff;
     auto active=[](std::size_t){return mask;};
     if constexpr(Kind==mutation_kind::maintenance) {
-        sp::sum_change summary;
-        sp::replace_regions_unchecked(destination,0,destination.size(),input,active,summary,journal);
+        sp::author::sum_change summary;
+        sp::author::replace_unchecked(destination,0,destination.size(),input,active,summary,journal);
         return summary.finish();
     } else {
-        sp::no_summary summary;
-        if constexpr(Kind==mutation_kind::coverage)sp::replace_regions_unchecked(destination,0,destination.size(),input,active,summary,journal);
-        else {sp::no_coverage nothing;sp::replace_regions_unchecked(destination,0,destination.size(),input,active,summary,nothing);}
+        sp::author::no_summary summary;
+        if constexpr(Kind==mutation_kind::coverage)sp::author::replace_unchecked(destination,0,destination.size(),input,active,summary,journal);
+        else {ikea::no_effects nothing;sp::author::replace_unchecked(destination,0,destination.size(),input,active,summary,nothing);}
         return 0;
     }
 }
 template<unsigned K,sp::geometry G,mutation_kind Kind,bool Masked> void mutation(benchmark::State& state) {
-    using U=sp::uint_for<K>;using F=sp::format<K,G>;
+    using U=sp::uint_for<K>;using F=sp::layout<K,G>;
     comparison_fixture<K,G> f(8192);
-    const auto destination=sp::view<F,std::uint8_t>::attach(f.count,{{{{f.storage.get(),f.bytes},F::tile_bytes},{},{}}});
+    const auto destination=sp::view<F>::attach(f.count,{{{std::as_writable_bytes(std::span{f.storage.get(),f.bytes}),F::tile_bytes},{},{}}});
     if(!destination)std::abort();
     auto current_view=old::mutable_view::attach({K,0,comparison_fixture<K,G>::OG},f.count,
         {{{reinterpret_cast<std::byte*>(f.storage.get()),f.bytes},F::tile_bytes},{}});
@@ -30,7 +30,7 @@ template<unsigned K,sp::geometry G,mutation_kind Kind,bool Masked> void mutation
         else return seriespack_measurement::predecessor(K,G==sp::geometry::striped).encode;}();
     std::array<std::vector<U>,2> input{std::vector<U>(f.count),std::vector<U>(f.count)};
     for(std::size_t i=0;i<f.count;++i){input[0][i]=f.values[i];input[1][i]=f.values[i]^(~std::uint64_t{0}>>(64-K));}
-    std::vector<sp::byte_write> records(f.count/16*6);sp::write_journal journal{records};
+    std::vector<ikea::journal::entry> records(f.count/16*6);ikea::journal journal{records};
     auto before_reader=f.current();std::vector<U> before(f.count);
 
     auto run=[&](unsigned which) {
@@ -38,7 +38,7 @@ template<unsigned K,sp::geometry G,mutation_kind Kind,bool Masked> void mutation
         if constexpr(Kind==mutation_kind::current){current->encode(old::input_values(std::span<const U>(input[which])));return std::uint64_t{0};}
         else if constexpr(Kind==mutation_kind::prior){if(!prior)std::abort();prior(input[which].data(),f.storage.get(),f.count);return std::uint64_t{0};}
         else if constexpr(Kind==mutation_kind::control_coverage) {
-            journal.before({0,0,f.bytes});
+            journal.before(*destination,0,0,f.bytes);
             if constexpr(K<=7 || K==56){if(!prior)std::abort();prior(input[which].data(),f.storage.get(),f.count);}
             else current->encode(old::input_values(std::span<const U>(input[which])));
             return std::uint64_t{0};
@@ -49,7 +49,7 @@ template<unsigned K,sp::geometry G,mutation_kind Kind,bool Masked> void mutation
             for(std::size_t i=0;i<f.count;++i)if(!Masked || i%4!=0) {
                 delta+=std::uint64_t(input[which][i])-before[i];before[i]=input[which][i];
             }
-            journal.before({0,0,f.bytes});
+            journal.before(*destination,0,0,f.bytes);
             current->encode(old::input_values(std::span<const U>(before)));
             return delta;
         } else return write_bound<K,G,Kind,Masked>(*destination,input[which].data(),journal);

@@ -1,7 +1,7 @@
 #pragma once
 #include "fixture.h"
-#include <ikea/seriespack/author/write.h>
-namespace cp = sp::composition;
+#include <ikea/seriespack/writer.h>
+namespace cp = sp::author;
 
 struct placed_bytes {
     std::unique_ptr<std::uint8_t, free_bytes> data;
@@ -13,34 +13,34 @@ struct placed_bytes {
             std::abort();
         std::memset(data.get(), 0, n);
     }
-    std::span<std::uint8_t> span() {
-        return {data.get(), size};
+    std::span<std::byte> span() {
+        return std::as_writable_bytes(std::span{data.get(), size});
     }
 };
 enum class placed_mode { sum_native, sum_materialized, mutation_bound, mutation_materialized };
 template <class F, unsigned Placement, placed_mode Mode, bool Masked>
 void placed_benchmark(benchmark::State& state) {
     using U = sp::uint_for<F::width>;
-    using T = sp::format<F::tail, sp::geometry::striped>;
+    using T = sp::layout<F::tail, sp::geometry::striped>;
     constexpr std::size_t count = 8192, tiles = count / F::tile_rows;
     constexpr auto stride =
         Placement ? ((F::tile_bytes + F::heads / 8 * F::tile_rows + 63) & ~std::size_t{63})
                   : F::tile_bytes;
     placed_bytes packed(tiles * stride), heads0(count), heads1(count), tails(count * T::width / 8);
-    std::array<sp::plane<std::uint8_t>, 3> planes{};
+    std::array<sp::plane<std::byte>, 3> planes{};
     planes[0] = {packed.span(), stride};
     if constexpr (F::heads >= 8)
         planes[1] = Placement
-                        ? sp::plane<std::uint8_t>{packed.span().subspan(F::tile_bytes), stride}
-                        : sp::plane<std::uint8_t>{heads0.span(), F::tile_rows};
+                        ? sp::plane<std::byte>{packed.span().subspan(F::tile_bytes), stride}
+                        : sp::plane<std::byte>{heads0.span(), F::tile_rows};
     if constexpr (F::heads == 16)
         planes[2] =
-            Placement ? sp::plane<std::uint8_t>{packed.span().subspan(F::tile_bytes + F::tile_rows),
+            Placement ? sp::plane<std::byte>{packed.span().subspan(F::tile_bytes + F::tile_rows),
                                                 stride}
-                      : sp::plane<std::uint8_t>{heads1.span(), F::tile_rows};
-    const auto original = *sp::view<F, std::uint8_t>::attach(count, planes);
+                      : sp::plane<std::byte>{heads1.span(), F::tile_rows};
+    const auto original = *sp::view<F>::attach(count, planes);
     const auto tail =
-        *sp::view<T, std::uint8_t>::attach(count, {{{tails.span(), T::tile_bytes}, {}, {}}});
+        *sp::view<T>::attach(count, {{{std::as_writable_bytes(std::span{tails.span()}), T::tile_bytes},{},{}}});
     std::vector<U> input(count), scratch(count), truth(count);
     std::vector<std::uint8_t> low(count);
     std::mt19937_64 random(42);
@@ -51,11 +51,11 @@ void placed_benchmark(benchmark::State& state) {
         input[i] = truth[i] ^ domain;
         low[i] = (truth[i] ^ tail_mask) & tail_mask;
     }
-    sp::no_coverage none;
-    sp::initialize_unchecked(original, truth.data(), none);
-    sp::initialize_unchecked(tail, low.data(), none);
-    const auto base = cp::describe(original);
-    const auto replacement = cp::describe(tail);
+    ikea::no_effects none;
+    sp::author::initialize_unchecked(original, truth.data(), none);
+    sp::author::initialize_unchecked(tail, low.data(), none);
+    const auto base = cp::expression(original);
+    const auto replacement = cp::expression(tail);
     const auto expression = [&] {
         if constexpr (Placement == 2) {
             using P = cp::payload_expression<F::payload, decltype(base.payload.body),
@@ -69,18 +69,18 @@ void placed_benchmark(benchmark::State& state) {
     if constexpr (Placement == 2)
         for (std::size_t i = 0; i < count; ++i)
             truth[i] = (truth[i] & ~tail_mask) | low[i];
-    const auto prepared = cp::prepare_mutation(expression, count);
+    const auto prepared = sp::bind_writer(expression, count);
     if (!prepared)
         std::abort();
-    const auto operation = prepared->template erase<U, sp::sum_change>();
-    std::vector<cp::owner_write> records(count * 2);
-    cp::source_write_journal effects{records};
-    sp::sum_change summary;
+    const auto operation = prepared->template erase<U, sp::author::sum_change>();
+    std::vector<ikea::journal::entry> records(count * 2);
+    ikea::journal effects{records};
+    sp::author::sum_change summary;
     constexpr std::uint16_t selected = Masked ? 0xb6db : 0xffff;
     auto mask = [](std::size_t) { return selected; };
     std::array<std::uint16_t, count / 16> words;
     words.fill(selected);
-    const auto selection = Masked ? sp::row_selection::regions(0, words) : sp::row_selection::all();
+    const auto selection = Masked ? sp::selection::bits(0, words) : sp::selection::all();
     const std::uint64_t cutoff = domain - domain / 3;
     auto run = [&]() {
         effects.used = 0;
@@ -88,7 +88,7 @@ void placed_benchmark(benchmark::State& state) {
         if constexpr (Mode == placed_mode::sum_native)
             return cp::sum_regions(expression, 0, count, cutoff, mask);
         else if constexpr (Mode == placed_mode::mutation_bound) {
-            operation.replace_unchecked(0, count, input.data(), selection, summary, effects);
+            operation.replace_unchecked(0, count, input.data(), effects, selection, summary);
             return summary.finish();
         } else {
             // Materialize the same admitted expression using its native reads.
@@ -117,9 +117,9 @@ void placed_benchmark(benchmark::State& state) {
                     }
                 }
             if constexpr (Mode == placed_mode::mutation_materialized) {
-                sp::no_summary no_summary;
-                prepared->replace_unchecked(0, count, scratch.data(), sp::row_selection::all(),
-                                            no_summary, effects);
+                sp::author::no_summary no_summary;
+                prepared->replace_unchecked(0, count, scratch.data(), effects,
+                                            sp::selection::all(), no_summary);
             }
             return result;
         }

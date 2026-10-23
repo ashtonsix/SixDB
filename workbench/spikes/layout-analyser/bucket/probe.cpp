@@ -17,7 +17,7 @@ std::uint32_t value_for(std::uint32_t key) {return std::uint32_t(lp::hash(key))&
 struct stats {std::size_t blocks=0,keys=0,false_keys=0;};
 
 template<unsigned B> struct table {
-    using F=sp::format<B>;
+    using F=sp::layout<B>;
     unsigned n, tiles, fp_bytes, stride, entry_offset;
     std::size_t heads, blocks, keys, overflow;
     bool separate, skew;
@@ -25,15 +25,15 @@ template<unsigned B> struct table {
     tp::layout entry_layout;
     tp::layout metadata_layout;
     tp::view metadata_view;
-    tp::reader<8> metadata_plan;
-    tp::read_operation<8,byte> metadata_read;
-    tp::reader<8> key_plan,value_plan;
-    tp::writer<8> value_write_plan;
+    tp::read_plan<8> metadata_plan;
+    tp::reader<8,std::byte> metadata_read;
+    tp::read_plan<8> key_plan,value_plan;
+    tp::write_plan<8> value_write_plan;
     std::vector<tp::view> entry_views;
-    std::vector<tp::read_operation<8,byte>> key_read,value_read;
-    std::vector<tp::mutation_operation<8>> value_write;
-    std::optional<sp::view<F,byte>> fp_view;
-    std::optional<sp::decoder<std::uint32_t>> fp_read;
+    std::vector<tp::reader<8,std::byte>> key_read,value_read;
+    std::vector<tp::writer<8>> value_write;
+    std::optional<sp::view<F>> fp_view;
+    std::optional<sp::erased_reader<std::uint32_t>> fp_read;
     std::vector<std::vector<std::uint32_t>> initial;
 
     static tp::layout format() {
@@ -70,12 +70,12 @@ template<unsigned B> struct table {
          heads(distribution.size()),blocks(block_count(distribution,n)),keys(key_count),overflow(blocks-heads),
          separate(split),skew(skewed),bytes(blocks*stride),fingerprints(split?blocks*fp_bytes:1),
          entry_layout(format()),metadata_layout(metadata_format()),
-         metadata_view(*tp::view::bind(metadata_layout,std::span(bytes.get(),bytes.size),blocks,stride,entry_offset+n*6)),
-         metadata_plan(*tp::reader<8>::make(metadata_layout,std::array<byte,8>{0,1,2,3,4,5,6,7})),
+         metadata_view(*tp::view::attach(metadata_layout,std::as_writable_bytes(std::span(bytes.get(),bytes.size)),blocks,stride,entry_offset+n*6)),
+         metadata_plan(*tp::read_plan<8>::make(metadata_layout,std::array<byte,8>{0,1,2,3,4,5,6,7})),
          metadata_read(*tp::bind_reader(metadata_plan,metadata_view)),
-         key_plan(*tp::reader<8>::make(entry_layout,std::array<byte,3>{0,1,2})),
-         value_plan(*tp::reader<8>::make(entry_layout,std::array<byte,4>{3,4,5,6})),
-         value_write_plan(*tp::writer<8>::make(entry_layout,std::array<byte,4>{3,4,5,6})),
+         key_plan(*tp::read_plan<8>::make(entry_layout,std::array<byte,3>{0,1,2})),
+         value_plan(*tp::read_plan<8>::make(entry_layout,std::array<byte,4>{3,4,5,6})),
+         value_write_plan(*tp::write_plan<8>::make(entry_layout,std::array<byte,4>{3,4,5,6})),
          initial(std::move(distribution)) {
         assert(blocks<none && keys*2<(1u<<20));
         std::size_t next=heads;
@@ -99,7 +99,7 @@ template<unsigned B> struct table {
         assert(next==blocks);
         entry_views.reserve(n);key_read.reserve(n);value_read.reserve(n);value_write.reserve(n);
         for(unsigned j=0;j<n;++j) {
-            auto v=tp::view::bind(entry_layout,std::span(bytes.get(),bytes.size),blocks,stride,entry_offset+j*6);
+            auto v=tp::view::attach(entry_layout,std::as_writable_bytes(std::span(bytes.get(),bytes.size)),blocks,stride,entry_offset+j*6);
             assert(v);entry_views.push_back(*v);
         }
         for(auto& v:entry_views) {
@@ -111,8 +111,8 @@ template<unsigned B> struct table {
             byte* origin=separate?fingerprints.get():bytes.get();
             std::size_t extent=separate?fingerprints.size:bytes.size;
             std::size_t tile_stride=separate?B:stride;
-            auto v=sp::view<F,byte>::attach(blocks*tiles*8,{{{std::span(origin,extent),tile_stride},{},{}}});
-            assert(v);fp_view=*v;fp_read=sp::bind_decoder<std::uint32_t>(*fp_view);
+            auto v=sp::view<F>::attach(blocks*tiles*8, {{{std::as_writable_bytes(std::span{std::span(origin,extent)}),tile_stride},{},{}}});
+            assert(v);fp_view=*v;fp_read=sp::bind_reader<std::uint32_t>(*fp_view);
         }
         initial.clear();initial.shrink_to_fit();
     }
@@ -142,8 +142,8 @@ template<unsigned B> struct table {
         std::size_t block=(key_hash(key)>>16)%(skew?std::max<std::size_t>(1,heads/8):heads);
         const auto wanted=std::uint32_t(key_hash(key))&((1u<<B)-1);
         std::array<std::uint32_t,16> decoded;
-        std::array<ikea::owner_write,8> records;
-        ikea::source_write_journal journal{records};
+        std::array<ikea::journal::entry,8> records;
+        ikea::journal journal{records};
         while(block!=none) {
             if constexpr(Count)++counters.blocks;
             auto* meta=bytes.get()+block*stride+entry_offset+n*6;
@@ -189,8 +189,7 @@ void run(lp::options o,unsigned n,unsigned pad,bool split,unsigned occupancy,boo
         // tile stride; binding each bucket also hits the aligned-origin rule.
         bool rejected=false;
         for(std::size_t block=1;block<std::min<std::size_t>(t.blocks,8);++block) {
-            auto v=sp::view<typename table<B>::F,byte>::attach(n,{{{
-                std::span(t.fp(block),t.fp_bytes),B},{},{}}});
+            auto v=sp::basic_view<typename table<B>::F,byte>::attach(n, {{{std::as_writable_bytes(std::span{std::span(t.fp(block),t.fp_bytes)}),B},{},{}}});
             if(reinterpret_cast<std::uintptr_t>(t.fp(block))%64) {assert(!v);rejected=true;}
         }
         if(t.stride%64)assert(rejected);

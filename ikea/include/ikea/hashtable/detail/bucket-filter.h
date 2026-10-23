@@ -7,9 +7,9 @@
 namespace ikea::hashtable::detail {
 #if defined(__aarch64__)
 template <unsigned E>
-inline std::array<uint8x16_t, 2> small_body_comparisons_neon(const byte* p, word query) {
+inline std::array<uint8x16_t, 2> small_body_comparisons_neon(const std::uint8_t* p, word query) {
     static_assert(E > 8 && E < 16 && 4 * E + 5 <= 64);
-    const auto needle = vdupq_n_u8(byte(query >> (E % 8)));
+    const auto needle = vdupq_n_u8(std::uint8_t(query >> (E % 8)));
     return {vceqq_u8(vcombine_u8(vld1_u8(p), vld1_u8(p + E)), needle),
             vceqq_u8(vcombine_u8(vld1_u8(p + 2 * E), vld1_u8(p + 3 * E)), needle)};
 }
@@ -28,9 +28,9 @@ inline word small_body_mask_neon(const std::array<uint8x16_t, 2>& equality) {
 // Compress all byte-body comparisons together, rather than paying one
 // SIMD-to-scalar reduction for each eight-row tile. Each reduction byte sums
 // distinct powers of two, so pairwise byte addition cannot carry across rows.
-template <unsigned E, unsigned T> inline word small_body_matches_neon(const byte* p, word query) {
+template <unsigned E, unsigned T> inline word small_body_matches_neon(const std::uint8_t* p, word query) {
     static_assert(E > 8 && E < 16 && T >= 3 && T <= 5 && T * E + T + 1 <= 64);
-    const auto needle = vdupq_n_u8(byte(query >> (E % 8)));
+    const auto needle = vdupq_n_u8(std::uint8_t(query >> (E % 8)));
     const auto weights = vreinterpretq_u8_u64(vdupq_n_u64(0x8040201008040201ULL));
     auto pair = [&]<unsigned Tile>() {
         const auto lo = vld1_u8(p + Tile * E);
@@ -54,14 +54,14 @@ template <unsigned E, unsigned T> inline word small_body_matches_neon(const byte
 }
 #endif
 #if defined(__AVX512VBMI__) && defined(__GFNI__)
-template <unsigned E, unsigned T> inline word exact_small_bucket(const byte* p, word query) {
+template <unsigned E, unsigned T> inline word exact_small_bucket(const std::uint8_t* p, word query) {
     constexpr unsigned Q = E / 8, R = E % 8, N = T * 8;
     static_assert(Q >= 1 && Q <= 2 && T * E + T + 1 <= 64 && N * Q <= 64);
     alignas(64) static constexpr auto bodies = [] {
-        std::array<byte, 64> order{};
+        std::array<std::uint8_t, 64> order{};
         for (unsigned row = 0; row < N; ++row)
             for (unsigned j = 0; j < Q; ++j)
-                order[row * Q + j] = byte((row / 8) * E + (row % 8) * Q + j);
+                order[row * Q + j] = std::uint8_t((row / 8) * E + (row % 8) * Q + j);
         return order;
     }();
     const auto packed = _mm512_loadu_si512(p);
@@ -78,10 +78,10 @@ template <unsigned E, unsigned T> inline word exact_small_bucket(const byte* p, 
         return body_mask;
     else {
         alignas(64) static constexpr auto planes = [] {
-            std::array<byte, 64> order{};
+            std::array<std::uint8_t, 64> order{};
             for (unsigned tile = 0; tile < T; ++tile)
                 for (unsigned bit = 0; bit < R; ++bit)
-                    order[tile * 8 + 7 - bit] = byte(tile * E + 8 * Q + bit);
+                    order[tile * 8 + 7 - bit] = std::uint8_t(tile * E + 8 * Q + bit);
             return order;
         }();
         constexpr word active = [] {
@@ -106,15 +106,15 @@ template <unsigned E, unsigned T> inline word exact_small_bucket(const byte* p, 
 // Two exact eight-row tiles per AVX2 register. Each 16-byte lane loads its
 // own tile origin, so PSHUFB never needs to cross a lane boundary. GFNI
 // transposes the admitted residual planes; PEXT packs the live row coordinates.
-template <unsigned E, unsigned T> inline word exact_small_bucket_avx2(const byte* p, word query) {
+template <unsigned E, unsigned T> inline word exact_small_bucket_avx2(const std::uint8_t* p, word query) {
     constexpr unsigned R = E % 8;
     static_assert(E > 8 && E < 16 && T >= 3 && T <= 5 && (T - 1) * E + 16 <= 64);
     alignas(32) static constexpr auto planes = [] {
-        std::array<byte, 32> order{};
+        std::array<std::uint8_t, 32> order{};
         order.fill(0x80);
         for (unsigned lane = 0; lane < 2; ++lane)
             for (unsigned bit = 0; bit < R; ++bit)
-                order[lane * 16 + 7 - bit] = byte(8 + bit);
+                order[lane * 16 + 7 - bit] = std::uint8_t(8 + bit);
         return order;
     }();
     if constexpr (T == 4) {
@@ -127,11 +127,11 @@ template <unsigned E, unsigned T> inline word exact_small_bucket_avx2(const byte
         const auto tails = _mm256_inserti128_si256(_mm256_castsi128_si256(_mm_unpackhi_epi64(a, b)),
                                                    _mm_unpackhi_epi64(c, d), 1);
         alignas(32) static constexpr auto tail_order = [] {
-            std::array<byte, 32> order{};
+            std::array<std::uint8_t, 32> order{};
             order.fill(0x80);
             for (unsigned tile = 0; tile < 4; ++tile)
                 for (unsigned bit = 0; bit < R; ++bit)
-                    order[tile * 8 + 7 - bit] = byte((tile % 2) * 8 + bit);
+                    order[tile * 8 + 7 - bit] = std::uint8_t((tile % 2) * 8 + bit);
             return order;
         }();
         const auto matrix = _mm256_shuffle_epi8(
@@ -175,7 +175,7 @@ template <unsigned E, unsigned T> inline word exact_small_bucket_avx2(const byte
 #endif
 // First body match, with exact residual verification by the caller. The body
 // positions stay sparse in storage; PEXT restores the original row order.
-template <unsigned E, unsigned T> inline word small_body_matches(const byte* p, word query) {
+template <unsigned E, unsigned T> inline word small_body_matches(const std::uint8_t* p, word query) {
     static_assert(E > 8 && E < 16 && T * E + T + 1 <= 64);
     constexpr word positions = [] {
         word bits = 0;

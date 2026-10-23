@@ -11,13 +11,13 @@ template <unsigned K, int Op> void graduate_case() {
         run_variant<K, Op, 8, 2>(f);
         run_variant<K, Op, 8, 3>(f);
         run_variant<K, Op, 8, 4>(f);
-        using F = sp::format<K, sp::geometry::local, 8>;
-        const auto source = sp::view<F>::assume_valid(
-            windows * 16, {{{f.bytes, F::tile_bytes}, {f.heads, F::tile_rows}, {}}});
-        const auto expression = sp::composition::guarded(sp::composition::describe(source));
+        using F = sp::layout<K, sp::geometry::local, 8>;
+        const auto source = sp::const_view<F>::attach_unchecked(
+            windows * 16, {{{std::as_bytes(std::span{f.bytes}), F::tile_bytes},{std::as_bytes(std::span{f.heads}), F::tile_rows},{}}});
+        const auto expression = sp::author::guarded(sp::author::expression(source));
         auto call = [&](unsigned w) __attribute__((always_inline)) {
             asm("" : "+r"(w));
-            return sp::composition::filter16_unchecked<C(Op)>(expression, w * 16, f.queries[w]);
+            return sp::author::filter16_unchecked<C(Op)>(expression, w * 16, f.queries[w]);
         };
         for (unsigned w = 0; w < windows; ++w) {
             unsigned expected = 0;
@@ -31,10 +31,10 @@ template <unsigned K, int Op> void graduate_case() {
         // consumer, matching the independent controls' contiguous binding.
         auto inlined = [&](unsigned w) __attribute__((always_inline)) {
             asm("" : "+r"(w));
-            const auto dense = sp::view<F>::assume_valid(
-                windows * 16, {{{f.bytes, F::tile_bytes}, {f.heads, F::tile_rows}, {}}});
-            return sp::composition::filter16_unchecked<C(Op)>(
-                sp::composition::guarded(sp::composition::describe(dense)), w * 16, f.queries[w]);
+            const auto dense = sp::const_view<F>::attach_unchecked(
+                windows * 16, {{{std::as_bytes(std::span{f.bytes}), F::tile_bytes},{std::as_bytes(std::span{f.heads}), F::tile_rows},{}}});
+            return sp::author::filter16_unchecked<C(Op)>(
+                sp::author::guarded(sp::author::expression(dense)), w * 16, f.queries[w]);
         };
         for (unsigned w = 0; w < windows; ++w)
             if (inlined(w) != call(w))

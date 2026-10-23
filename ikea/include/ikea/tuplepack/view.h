@@ -1,6 +1,7 @@
 #pragma once
-#include <ikea/tuplepack/description.h>
+#include <ikea/tuplepack/layout.h>
 #include <limits>
+#include <ikea/bytes.h>
 #include <type_traits>
 
 namespace ikea::tuplepack {
@@ -8,7 +9,7 @@ namespace ikea::tuplepack {
 /// unit offset. Keep this named view and its bytes alive through bound calls.
 /// Stride covers a whole unit; adjacent units may share the same larger stride.
 template <class Byte> class basic_view {
-    static_assert(std::is_same_v<std::remove_const_t<Byte>, byte>);
+    static_assert(std::is_same_v<std::remove_const_t<Byte>, std::byte>);
     std::span<Byte> storage_;
     std::size_t count_, stride_, offset_;
     unsigned bytes_;
@@ -18,7 +19,7 @@ template <class Byte> class basic_view {
 
   public:
     [[nodiscard]] static std::expected<basic_view, error>
-    bind(const layout& format, std::span<Byte> storage, std::size_t count, std::size_t stride,
+    attach(const layout& format, std::span<Byte> storage, std::size_t count, std::size_t stride,
          std::size_t offset = 0) {
         if (stride < format.bytes())
             return std::unexpected(error::stride);
@@ -34,6 +35,17 @@ template <class Byte> class basic_view {
         }
         return basic_view(storage, count, stride, offset, format.bytes());
     }
+    /// Reuses attach()'s established extent/stride/overflow proof. This says
+    /// nothing about initialization, owner lifetime or synchronization.
+    static basic_view attach_unchecked(const layout& format, std::span<Byte> storage,
+                                       std::size_t count, std::size_t stride,
+                                       std::size_t offset = 0) noexcept {
+        return basic_view(storage, count, stride, offset, format.bytes());
+    }
+    auto as_const() const noexcept {
+        return basic_view<const std::byte>(storage_, count_, stride_, offset_, bytes_);
+    }
+    template <class> friend class basic_view;
     std::span<Byte> storage() const noexcept {
         return storage_;
     }
@@ -54,6 +66,6 @@ template <class Byte> class basic_view {
         return storage_.data() + offset_ + row * stride_;
     }
 };
-using view = basic_view<byte>;
-using const_view = basic_view<const byte>;
+using view = basic_view<std::byte>;
+using const_view = basic_view<const std::byte>;
 } // namespace ikea::tuplepack

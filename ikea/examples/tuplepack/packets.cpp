@@ -7,11 +7,11 @@ namespace tp = ikea::tuplepack;
 #if defined(__aarch64__) || defined(__AVX2__)
 namespace {
 constexpr unsigned rows = 32;
-using pipeline = tp::chain<8>;
+using pipeline = tp::author::chain<8>;
 struct context {
-    const tp::native_reader<64, tp::byte, rows> &read;
-    const tp::native_writer<64, rows> &write;
-    ikea::source_write_journal &effects;
+    const tp::author::native_reader<64, std::byte, rows> &read;
+    const tp::author::native_writer<64, rows> &write;
+    ikea::journal &effects;
     bool okay = true;
     std::size_t completed = 0;
 };
@@ -59,34 +59,34 @@ int main() {
     std::array<tp::code, 3> codes{{{0, 0, 3}, {0, 3, 2}, {0, 5, 3}}};
     auto format = tp::layout::make(1, codes);
     assert(format);
-    std::array<tp::byte, 2> map{0, 1};
+    std::array<std::uint8_t, 2> map{0, 1};
     // One byte-code group at a time: all first codes, then all second codes.
-    // The same reader/writer interface defaults to interleaved rows.
+    // The same read_plan/write_plan interface defaults to interleaved rows.
     const std::array<unsigned, 2> groups{1, 1};
-    auto read_plan = tp::reader<64, rows>::make(*format, map, groups);
+    auto read_plan = tp::read_plan<64, rows>::make(*format, map, groups);
     assert(read_plan);
-    auto write_plan = tp::writer<64, rows>::make(*format, map, groups);
+    auto write_plan = tp::write_plan<64, rows>::make(*format, map, groups);
     assert(write_plan);
-    std::array<tp::byte, 65> bytes{}, initial{}, expected{};
+    std::array<std::uint8_t, 65> bytes{}, initial{}, expected{};
     for (unsigned r = 0; r < bytes.size(); ++r) {
-        initial[r] = expected[r] = tp::byte(r * 7);
+        initial[r] = expected[r] = std::uint8_t(r * 7);
         if (r < 32 || r % 2 == 0)
             expected[r] =
                 (initial[r] & 0xe0) | ((initial[r] & 1) ^ 1) | ((((initial[r] >> 3) & 1) ^ 1) << 3);
     }
-    auto source = tp::view::bind(*format, bytes, bytes.size(), 1);
+    auto source = tp::view::attach(*format, std::as_writable_bytes(std::span{bytes}), bytes.size(), 1);
     assert(source);
     auto bound_read = tp::bind_reader(*read_plan, *source);
     assert(bound_read);
     auto bound_write = tp::bind_writer(*write_plan, *source);
     assert(bound_write);
-    const auto read = tp::native_reader(*bound_read);
-    const auto write = tp::native_writer(*bound_write);
-    std::array<ikea::owner_write, 65> entries{};
-    ikea::source_write_journal effects{entries};
+    const auto read = tp::author::native_reader(*bound_read);
+    const auto write = tp::author::native_writer(*bound_write);
+    std::array<ikea::journal::entry, 65> entries{};
+    ikea::journal effects{entries};
     context state{read, write, effects};
     std::array<pipeline::function, 2> stages{pipeline::stage<decode>, pipeline::stage<update>};
-    auto chain = pipeline::prepare(stages, pipeline::completion<complete>);
+    auto chain = pipeline::make(stages, pipeline::completion<complete>);
     assert(chain);
     auto empty = tp::native::pipeline_values::from(tp::native::row_mask<rows>(0));
     for (bool cps : {false, true}) {

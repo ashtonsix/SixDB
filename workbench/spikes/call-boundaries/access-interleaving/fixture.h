@@ -12,7 +12,7 @@ namespace tp = ikea::tuplepack;
 using Word = std::uint64_t;
 using Carrier = tp::native::pipeline_values;
 using Vector = Carrier::vector;
-using Reader = tp::native_reader<64, tp::byte>;
+using Reader = tp::author::native_reader<64, std::byte>;
 
 // Version selection, publication, interpretation ownership and immutability
 // below are fixture scaffolding. Allocation/Hold and Ikea decoding are actual.
@@ -21,9 +21,9 @@ struct Selected {
   orbital::allocation::Allocation allocation;
   orbital::allocation::Hold held;
   tp::layout layout;
-  tp::reader<64> prepared;
+  tp::read_plan<64> prepared;
   tp::view source;
-  tp::read_operation<64, tp::byte> operation;
+  tp::reader<64, std::byte> operation;
   Reader reader;
   std::size_t mask;
   Word version, representation;
@@ -34,7 +34,7 @@ struct Selected {
   Selected(const Selected&) = delete;
   void release_owner();
   static Word link(Word row, Word mask, unsigned seed);
-  tp::byte decoded(Word row, unsigned byte) const;
+  std::uint8_t decoded(Word row, unsigned byte) const;
 };
 
 struct Frame {

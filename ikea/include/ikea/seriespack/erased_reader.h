@@ -10,7 +10,7 @@ namespace ikea::seriespack {
 /// remain alive and unchanged in placement through each call. Coordinates count
 /// original logical values, not bytes or filtered ranks. Output is disjoint from
 /// occupied source bytes and binding metadata. No call allocates or suspends.
-template <class U> class decoder {
+template <class U> class erased_reader {
     static_assert(std::is_integral_v<U> && std::is_unsigned_v<U> && !std::is_same_v<U, bool> &&
                   sizeof(U) <= 8);
 
@@ -19,8 +19,8 @@ template <class U> class decoder {
     using point_function = U (*)(const void*, std::size_t);
     using region_function = void (*)(const void*, std::size_t, U*);
     /// Adapter construction after placement, readable extents and kernel
-    /// contracts have been admitted. Prefer bind_decoder at ordinary call sites.
-    decoder(const void* resource, std::size_t count, function range, region_function region,
+    /// contracts have been admitted. Prefer bind_reader at ordinary call sites.
+    erased_reader(const void* resource, std::size_t count, function range, region_function region,
             point_function point)
         : resource_(resource), range_(range), region_(region), point_(point), count_(count) {}
     std::size_t size() const {

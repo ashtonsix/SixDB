@@ -13,7 +13,7 @@ template <unsigned K> void check_local_equal(std::mt19937_64& rng) {
                     value |= ((packed >> (8 * bit + row)) & 1) << bit;
                 expected |= unsigned(value == query) << row;
             }
-            const ikea::seriespack::composition::local_equal8<K> match(query);
+            const ikea::seriespack::author::local_equal8<K> match(query);
             assert(match(packed) == expected);
         }
     }

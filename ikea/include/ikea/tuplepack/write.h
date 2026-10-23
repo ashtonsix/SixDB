@@ -15,7 +15,7 @@ template <class Plan, class Coverage>
     const auto base = destination.offset() + row * destination.stride();
     for (unsigned i = 0; i < plan.runs; ++i) {
         const auto span = plan.footprint[i];
-        coverage.before(destination, byte_write{0, base + span.offset, span.size});
+        coverage.before(destination, 0, base + span.offset, span.size);
     }
 }
 template <unsigned Rows, class Plan, class Coverage>
@@ -29,7 +29,7 @@ template <unsigned Rows, class Plan, class Coverage>
             p.footprint[0].size == destination.stride()) {
             const auto base =
                 destination.offset() + first * destination.stride() + p.footprint[0].offset;
-            effects.before(destination, byte_write{0, base, Rows * destination.stride()});
+            effects.before(destination, 0, base, Rows * destination.stride());
             return;
         }
         for (unsigned r = 0; r < Rows; ++r)
@@ -45,28 +45,28 @@ template <unsigned Rows, class Plan, class Coverage>
 /// input/selection/plans/effect storage disjoint from mutable outputs and secures
 /// exclusion for issued bytes, including preserved neighboring bits.
 template <unsigned N, unsigned Rows = 1>
-class mutation_operation
-    : public detail::mutation_commands<mutation_operation<N, Rows>, packet<N>, Rows> {
-    const writer<N, Rows>* plan_;
+class writer
+    : public detail::mutation_commands<writer<N, Rows>, packet<N>, Rows> {
+    const write_plan<N, Rows>* plan_;
     const view* destination_;
-    mutation_operation(const writer<N, Rows>& plan, const view& destination)
+    writer(const write_plan<N, Rows>& plan, const view& destination)
         : plan_(&plan), destination_(&destination) {}
 
   public:
     static constexpr unsigned slots = N;
     using input_type = packet<N>;
-    [[nodiscard]] static std::expected<mutation_operation, error> bind(const writer<N, Rows>& plan,
+    [[nodiscard]] static std::expected<writer, error> bind(const write_plan<N, Rows>& plan,
                                                                        const view& destination) {
         if (plan.unit_bytes() != destination.unit_bytes())
             return std::unexpected(error::description);
-        return mutation_operation(plan, destination);
+        return writer(plan, destination);
     }
-    static auto bind(const writer<N, Rows>&&, const view&) = delete;
-    static auto bind(const writer<N, Rows>&, const view&&) = delete;
+    static auto bind(const write_plan<N, Rows>&&, const view&) = delete;
+    static auto bind(const write_plan<N, Rows>&, const view&&) = delete;
     std::size_t size() const noexcept {
         return destination_->size();
     }
-    const writer<N, Rows>& plan() const noexcept {
+    const write_plan<N, Rows>& plan() const noexcept {
         return *plan_;
     }
     const view& destination() const noexcept {
@@ -87,12 +87,12 @@ class mutation_operation
         return plan_->accepts(input, active);
     }
     /// Conservative slots needed per selected row; a journal can coalesce them.
-    unsigned effect_capacity() const noexcept {
-        return plan_->effect_capacity();
+    unsigned store_runs() const noexcept {
+        return plan_->store_runs();
     }
     /// Trusted local group: coverage capacity and input widths were admitted.
     /// Hooks must be no-fail/no-suspend and may only use pre-admitted resources.
-    template <class Coverage>
+    template <class Coverage> requires ikea::effects<Coverage, view>
     [[gnu::always_inline]] void set_unchecked(std::size_t first, const packet<N>& input,
                                               Coverage& effects,
                                               std::uint64_t active = detail::all_rows<Rows>) const {
@@ -104,11 +104,11 @@ class mutation_operation
     }
 };
 template <unsigned N, unsigned Rows>
-auto bind_writer(const writer<N, Rows>& plan, const view& destination) {
-    return mutation_operation<N, Rows>::bind(plan, destination);
+[[nodiscard]] auto bind_writer(const write_plan<N, Rows>& plan, const view& destination) {
+    return writer<N, Rows>::bind(plan, destination);
 }
 template <unsigned N, unsigned Rows>
-auto bind_writer(const writer<N, Rows>&&, const view&) = delete;
+auto bind_writer(const write_plan<N, Rows>&&, const view&) = delete;
 template <unsigned N, unsigned Rows>
-auto bind_writer(const writer<N, Rows>&, const view&&) = delete;
+auto bind_writer(const write_plan<N, Rows>&, const view&&) = delete;
 } // namespace ikea::tuplepack

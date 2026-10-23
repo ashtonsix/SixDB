@@ -69,38 +69,38 @@ void run(benchmark::State &state, unsigned extent, unsigned stride,
   std::vector<tp::code> codes(extent == 1 ? 8 : extent);
   for (unsigned i = 0; i < codes.size(); ++i)
     codes[i] = extent == 1
-                   ? tp::code{0, tp::byte(i), 1}
-                   : tp::code{tp::byte(i), tp::byte(pattern ? i % 2 : 0), 7};
+                   ? tp::code{0, std::uint8_t(i), 1}
+                   : tp::code{std::uint8_t(i), std::uint8_t(pattern ? i % 2 : 0), 7};
   const auto format = *tp::layout::make(extent, codes);
   const unsigned drawn = std::min(B, unsigned(codes.size()));
-  std::vector<tp::byte> map(drawn);
+  std::vector<std::uint8_t> map(drawn);
   for (unsigned i = 0; i < drawn; ++i)
     map[i] = pattern == 2 && drawn > 1 ? i * (codes.size() - 1) / (drawn - 1)
              : pattern == 1            ? drawn - 1 - i
                                        : i;
-  const auto gr = *tp::reader<8, Rows>::make(format, map);
-  const auto gw = *tp::writer<8, Rows>::make(format, map);
-  const auto prp = *tp::reader<8>::make(format, map);
-  const auto pwp = *tp::writer<8>::make(format, map);
-  const auto rp = *tp::reader<64, Step>::make(format, map);
-  const auto wp = *tp::writer<64, Step>::make(format, map);
-  std::vector<tp::byte> bytes((count - 1) * stride + extent);
+  const auto gr = *tp::read_plan<8, Rows>::make(format, map);
+  const auto gw = *tp::write_plan<8, Rows>::make(format, map);
+  const auto prp = *tp::read_plan<8>::make(format, map);
+  const auto pwp = *tp::write_plan<8>::make(format, map);
+  const auto rp = *tp::read_plan<64, Step>::make(format, map);
+  const auto wp = *tp::write_plan<64, Step>::make(format, map);
+  std::vector<std::uint8_t> bytes((count - 1) * stride + extent);
   for (unsigned i = 0; i < bytes.size(); ++i)
-    bytes[i] = tp::byte(i * 113 + i / 7 + 91);
+    bytes[i] = std::uint8_t(i * 113 + i / 7 + 91);
   const auto initial = bytes;
-  auto view = *tp::view::bind(format, bytes, count, stride);
+  auto view = *tp::view::attach(format, std::as_writable_bytes(std::span{bytes}), count, stride);
   const auto pr = *tp::bind_reader(prp, view);
   const auto pw = *tp::bind_writer(pwp, view);
   const auto br = *tp::bind_reader(rp, view);
   const auto bw = *tp::bind_writer(wp, view);
-  const auto nr = tp::native_reader(br);
-  const auto nw = tp::native_writer(bw);
+  const auto nr = tp::author::native_reader(br);
+  const auto nw = tp::author::native_writer(bw);
   const auto grb = *tp::bind_reader(gr, view);
   const auto gwb = *tp::bind_writer(gw, view);
-  const auto gnr = tp::native_reader(grb);
-  const auto gnw = tp::native_writer(gwb);
-  std::array<ikea::owner_write, 512> entries;
-  ikea::source_write_journal effects{entries};
+  const auto gnr = tp::author::native_reader(grb);
+  const auto gnw = tp::author::native_writer(gwb);
+  std::array<ikea::journal::entry, 512> entries;
+  ikea::journal effects{entries};
   word active = tp::detail::all_rows<Rows> & (sparse ? 0x55 : ~word(0));
   if constexpr (Method == method::full_simd) {
     const auto part = active;
@@ -167,7 +167,7 @@ void run(benchmark::State &state, unsigned extent, unsigned stride,
   word expected_result = 0, actual_result = 0;
   auto expected = bytes;
   for (auto first : trace) {
-    std::array<tp::byte, 64> expected_packet{};
+    std::array<std::uint8_t, 64> expected_packet{};
     for (unsigned group = 0; group < Step / Rows; ++group) {
       word value = 0;
       for (unsigned r = 0; r < Rows; ++r) {
@@ -177,7 +177,7 @@ void run(benchmark::State &state, unsigned extent, unsigned stride,
         for (unsigned i = 0; i < drawn; ++i) {
           const auto c = codes[map[i]];
           const auto offset = (first + local) * stride + c.offset;
-          tp::byte decoded = 0;
+          std::uint8_t decoded = 0;
           for (unsigned bit = 0; bit < c.width; ++bit)
             decoded |= ((initial[offset] >> (c.shift + bit)) & 1) << bit;
           value |= word(decoded) << (8 * (r * drawn + i));
@@ -185,7 +185,7 @@ void run(benchmark::State &state, unsigned extent, unsigned stride,
           const unsigned replacement = (decoded & 1) ^ 1;
           for (unsigned bit = 0; bit < c.width; ++bit)
             expected[offset] =
-                tp::byte((expected[offset] & ~(1u << (c.shift + bit))) |
+                std::uint8_t((expected[offset] & ~(1u << (c.shift + bit))) |
                          (((replacement >> bit) & 1) << (c.shift + bit)));
         }
       }

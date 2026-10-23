@@ -1,8 +1,8 @@
 #pragma once
 #include "bits.h"
 #include "../kernel.h"
-#include <ikea/seriespack/author/read.h>
-#include <ikea/seriespack/author/write.h>
+#include <ikea/seriespack/reader.h>
+#include <ikea/seriespack/writer.h>
 #include <ikea/seriespack/author/local_equal.h>
 #include <ikea/seriespack/author/indexof.h>
 #include <ikea/tuplepack/author/execution.h>
@@ -42,52 +42,51 @@ inline void require(bool ok, const char* why) {
     if (!ok)
         throw std::runtime_error(why);
 }
-template <std::size_t N> using bytes = std::array<byte, N>;
-template <unsigned N> inline void store(byte* p, word v) {
+template <unsigned N> inline void store(std::uint8_t* p, word v) {
     std::memcpy(p, &v, N);
 }
 // A primary bucket contains complete eight-row SeriesPack tiles. Construction
 // initializes the assigned bucket; tile accesses stay within its byte extent.
-template <unsigned Bits> auto placed(byte* p, unsigned rows) {
-    using F = sp::format<Bits, sp::geometry::local, 0>;
-    return sp::view<F, byte>::assume_valid(rows,
-                                           {{{{p, std::size_t(rows / 8) * Bits}, Bits}, {}, {}}});
+template <unsigned Bits> auto placed(std::uint8_t* p, unsigned rows) {
+    using F = sp::layout<Bits, sp::geometry::local, 0>;
+    return sp::view<F>::attach_unchecked(rows,
+                                           {{{{reinterpret_cast<std::byte*>(p), std::size_t(rows / 8) * Bits}, Bits}, {}, {}}});
 }
-template <unsigned Bits> inline word point(const byte* p, unsigned row, unsigned rows) {
-    using F = sp::format<Bits, sp::geometry::local, 0>;
-    const sp::dense_source<F> source{p, rows};
-    sp::composition::scalar_ops ops;
-    return sp::composition::read(ops, sp::composition::describe(source), row, true).value;
+template <unsigned Bits> inline word point(const std::uint8_t* p, unsigned row, unsigned rows) {
+    using F = sp::layout<Bits, sp::geometry::local, 0>;
+    const sp::dense_source<F> source{reinterpret_cast<const std::byte*>(p), rows};
+    sp::author::scalar_ops ops;
+    return sp::author::read(ops, sp::author::expression(source), row, true).value;
 }
-struct fused_scalar_ops : sp::composition::scalar_ops {
-    template <class S, sp::composition::field_kind Field>
-    auto read(const sp::composition::leaf<S, Field>& field, std::size_t row, bool active) const {
-        using F = typename S::format_type;
+struct fused_scalar_ops : sp::author::scalar_ops {
+    template <class S, sp::author::field_kind Field>
+    auto read(const sp::author::leaf<S, Field>& field, std::size_t row, bool active) const {
+        using F = typename S::layout_type;
         if constexpr (requires { field.source.data; } &&
-                      Field == sp::composition::field_kind::body && F::tail == 0 &&
+                      Field == sp::author::field_kind::body && F::tail == 0 &&
                       F::storage == sp::geometry::local)
-            return sp::composition::scalar_value<F::width>{
+            return sp::author::scalar_value<F::width>{
                 load<F::body>(field.source.data + row * F::body)};
         else
-            return sp::composition::scalar_ops::read(field, row, active);
+            return sp::author::scalar_ops::read(field, row, active);
     }
 };
-template <unsigned Bits> inline word direct_point(const byte* p, unsigned row, unsigned rows) {
-    using F = sp::format<Bits, sp::geometry::local, 0>;
-    const sp::dense_source<F> source{p, rows};
+template <unsigned Bits> inline word direct_point(const std::uint8_t* p, unsigned row, unsigned rows) {
+    using F = sp::layout<Bits, sp::geometry::local, 0>;
+    const sp::dense_source<F> source{reinterpret_cast<const std::byte*>(p), rows};
     fused_scalar_ops ops;
-    return sp::composition::read(ops, sp::composition::describe(source), row, true).value;
+    return sp::author::read(ops, sp::author::expression(source), row, true).value;
 }
 // The Local residual consists of R adjacent bytes, one bit per row in each.
 // Update exactly those bytes together; no readable padding or extra issued
 // footprint is assumed. Other lane bits survive the read/modify/write.
-struct word_tail_write_ops : sp::composition::scalar_write_ops {
-    template <class S, sp::composition::field_kind Field, unsigned Bits>
-    void write(const sp::composition::leaf<S, Field>& destination, std::size_t row,
-               sp::composition::scalar_value<Bits> value) const {
+struct word_tail_write_ops : sp::author::scalar_write_ops {
+    template <class S, sp::author::field_kind Field, unsigned Bits>
+    void write(const sp::author::leaf<S, Field>& destination, std::size_t row,
+               sp::author::scalar_value<Bits> value) const {
 #if defined(__BMI2__) && defined(__x86_64__)
-        using F = typename S::format_type;
-        if constexpr (Field == sp::composition::field_kind::tail &&
+        using F = typename S::layout_type;
+        if constexpr (Field == sp::author::field_kind::tail &&
                       F::storage == sp::geometry::local) {
             constexpr auto R = F::tail;
             constexpr word columns = 0x0101010101010101ULL >> (8 * (8 - R));
@@ -98,24 +97,24 @@ struct word_tail_write_ops : sp::composition::scalar_write_ops {
             store<R>(tail, (load<R>(tail) & ~(columns << lane)) | expanded);
         } else
 #endif
-            sp::composition::scalar_write_ops::write(destination, row, value);
+            sp::author::scalar_write_ops::write(destination, row, value);
     }
 };
-template <unsigned Bits> void set_point(byte* p, unsigned row, unsigned rows, word v) {
+template <unsigned Bits> void set_point(std::uint8_t* p, unsigned row, unsigned rows, word v) {
     auto view = placed<Bits>(p, rows);
     word_tail_write_ops ops;
-    sp::composition::assign(ops, sp::composition::describe(view), row,
-                            sp::composition::scalar_value<Bits>{v});
+    sp::author::assign(ops, sp::author::expression(view), row,
+                            sp::author::scalar_value<Bits>{v});
 }
 // With no residual plane, complete Local tiles are one contiguous byte array.
 // Preserve the SeriesPack assignment operation while making that address law
 // visible to the compiler, as the maintained reader already does.
 struct contiguous_write_ops : word_tail_write_ops {
-    template <class S, sp::composition::field_kind Field, unsigned Bits>
-    void write(const sp::composition::leaf<S, Field>& destination, std::size_t row,
-               sp::composition::scalar_value<Bits> value) const {
-        using F = typename S::format_type;
-        if constexpr (Field == sp::composition::field_kind::body && F::tail == 0 &&
+    template <class S, sp::author::field_kind Field, unsigned Bits>
+    void write(const sp::author::leaf<S, Field>& destination, std::size_t row,
+               sp::author::scalar_value<Bits> value) const {
+        using F = typename S::layout_type;
+        if constexpr (Field == sp::author::field_kind::body && F::tail == 0 &&
                       F::storage == sp::geometry::local)
             store<F::body>(destination.source.stream(0).bytes.data() + row * F::body, value.value);
         else
@@ -123,11 +122,11 @@ struct contiguous_write_ops : word_tail_write_ops {
     }
 };
 template <unsigned Bits>
-[[gnu::always_inline]] void assign_point(byte* p, unsigned row, unsigned rows, word value) {
+[[gnu::always_inline]] void assign_point(std::uint8_t* p, unsigned row, unsigned rows, word value) {
     auto view = placed<Bits>(p, rows);
     contiguous_write_ops ops;
-    sp::composition::assign(ops, sp::composition::describe(view), row,
-                            sp::composition::scalar_value<Bits>{value});
+    sp::author::assign(ops, sp::author::expression(view), row,
+                            sp::author::scalar_value<Bits>{value});
 }
 
 /// Mixed upserts share key/value stores; existing-heavy upserts avoid them.
@@ -149,20 +148,20 @@ enum class write_strategy { mixed, existing };
 template <unsigned Bytes> struct tuple_field {
     inline static const auto plan = [] {
         std::array<ikea::tuplepack::code, Bytes> codes;
-        std::array<byte, Bytes> map;
+        std::array<std::uint8_t, Bytes> map;
         for (unsigned i = 0; i < Bytes; ++i) {
-            codes[i] = {byte(i), 0, 8};
-            map[i] = byte(i);
+            codes[i] = {std::uint8_t(i), 0, 8};
+            map[i] = std::uint8_t(i);
         }
         auto layout = ikea::tuplepack::layout::make(Bytes, codes);
         require(bool(layout), "TuplePack layout");
-        auto read = ikea::tuplepack::reader<8>::make(*layout, map);
+        auto read = ikea::tuplepack::read_plan<8>::make(*layout, map);
         require(bool(read), "TuplePack projection");
         const auto& transfer = read->controls().transfer;
         require(transfer.bytes == Bytes, "TuplePack contiguous transfer");
         return *read;
     }();
-    [[gnu::always_inline]] static word read(const byte* p) {
+    [[gnu::always_inline]] static word read(const std::uint8_t* p) {
         return ikea::tuplepack::native::read_transfer_body<1, Bytes>(
             plan.controls(), [&](unsigned) { return p; }, 1, Bytes);
     }

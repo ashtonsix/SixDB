@@ -14,13 +14,13 @@ namespace write_arch {
 // source identity/revision and full damage admission belong to that session.
 struct guarded_pool_access {
     template<class Pool,class Visit> static void sources(const Pool& pool,const void* owner,Visit&& visit) {
-        auto add=[&](const void* base,std::size_t extent){
-            if(extent)visit(ht::mutation_source{owner,ht::owner_part::large_variable_bags,static_cast<const byte*>(base),extent});
+        auto add=[&](const void* source,unsigned plane,const void* base,std::size_t extent){
+            if(extent)visit(physical_region{source,plane,base,extent});
         };
-        add(pool.blocks_.data(),pool.blocks_.capacity()*sizeof(typename Pool::entry));
+        add(&pool,1,pool.blocks_.data(),pool.blocks_.capacity()*sizeof(typename Pool::entry));
         for(const auto& slot:pool.blocks_)if(slot.owner){
-            add(slot.owner.get(),sizeof(typename Pool::block));
-            add(slot.owner->storage.data,slot.owner->storage.size);
+            add(slot.owner.get(),0,slot.owner.get(),sizeof(typename Pool::block));
+            add(slot.owner.get(),1,slot.owner->storage.data,slot.owner->storage.size);
         }
     }
     template<class Pool> struct reservation {
@@ -86,14 +86,14 @@ struct guarded_pool_access {
     template<class Pool,class Emit> [[gnu::always_inline]] static void damage(
             const borrowed_reservation<Pool>& plan,const void* owner,Emit&& emit){
         const auto& pool=*plan.owner;const auto& b=*plan.destination;
-        auto add=[&](const void* base,std::size_t extent,std::size_t offset,std::size_t size) __attribute__((always_inline)) {
-            emit(ht::mutation_damage{{owner,ht::owner_part::large_variable_bags,static_cast<const byte*>(base),extent},{0,offset,size}});
+        auto add=[&](const void* source,unsigned plane,const void* base,std::size_t extent,std::size_t offset,std::size_t size) __attribute__((always_inline)) {
+            emit(write_effect({source,plane,base,extent},offset,size));
         };
-        add(&b,sizeof(b),0,sizeof(b));add(b.storage.data,b.storage.size,64+plan.rank*plan.bytes,plan.bytes);
-        if(!plan.reused)add(b.storage.data,b.storage.size,0,2);
+        add(&b,0,&b,sizeof(b),0,sizeof(b));add(&b,1,b.storage.data,b.storage.size,64+plan.rank*plan.bytes,plan.bytes);
+        if(!plan.reused)add(&b,1,b.storage.data,b.storage.size,0,2);
         if(b.returned_count<=1&&plan.assigned+unsigned(!plan.reused)==pool.families_[plan.which].ranks){
             auto metadata=[&](std::size_t id) __attribute__((always_inline)) {
-                const auto& neighbor=*pool.blocks_[id].owner;add(&neighbor,sizeof(neighbor),0,sizeof(neighbor));
+                const auto& neighbor=*pool.blocks_[id].owner;add(&neighbor,0,&neighbor,sizeof(neighbor),0,sizeof(neighbor));
             };
             if(b.previous!=Pool::none)metadata(b.previous);
             if(b.next!=Pool::none)metadata(b.next);
@@ -113,8 +113,8 @@ struct guarded_pool_access {
         result.id=family.first;
         if(result.id==Pool::none){
             result.detached=std::make_unique<typename Pool::block>(which,result.bytes*family.ranks);
-            auto source=pool.view(*result.detached);ikea::no_coverage effects;
-            ht::require(bool(stream::initialize(source,effects)),"detached capacity initialization");
+            auto source=pool.view(*result.detached);ikea::no_effects effects;
+            stream::initialize_unchecked(source,effects);
             result.id=pool.first_free_==Pool::none?pool.blocks_.size():pool.first_free_;
             result.new_slot=result.id==pool.blocks_.size();
             if(result.new_slot&&pool.blocks_.size()==pool.blocks_.capacity()){
@@ -135,27 +135,27 @@ struct guarded_pool_access {
         return result;
     }
 
-    // Damage coordinates stay relative to the actual MM owner. Whole metadata
+    // Effects identify the actual pool directory or heap block and its plane. Whole metadata
     // objects are conservative physical envelopes; detached allocations are
     // unpublished construction and are carried by the pending operation.
     template<class Pool,class Emit> [[gnu::always_inline]] static void damage(const reservation<Pool>& plan,const void* owner,Emit&& emit) {
         const auto& pool=*plan.owner;
-        auto add=[&](const void* base,std::size_t extent,std::size_t offset,std::size_t size) __attribute__((always_inline)) {
-            emit(ht::mutation_damage{{owner,ht::owner_part::large_variable_bags,static_cast<const byte*>(base),extent},{0,offset,size}});
+        auto add=[&](const void* source,unsigned plane,const void* base,std::size_t extent,std::size_t offset,std::size_t size) __attribute__((always_inline)) {
+            emit(write_effect({source,plane,base,extent},offset,size));
         };
-        auto metadata=[&](std::size_t id) __attribute__((always_inline)) {const auto& b=*pool.blocks_[id].owner;add(&b,sizeof(b),0,sizeof(b));};
+        auto metadata=[&](std::size_t id) __attribute__((always_inline)) {const auto& b=*pool.blocks_[id].owner;add(&b,0,&b,sizeof(b),0,sizeof(b));};
         // The outer operation covers its enclosing owner header separately;
         // that header contains families_, counts and the vector descriptor.
         if(plan.detached){
             if(!plan.directory.empty()){
-                if(!pool.blocks_.empty())add(pool.blocks_.data(),pool.blocks_.size()*sizeof(typename Pool::entry),0,pool.blocks_.size()*sizeof(typename Pool::entry));
-            }else add(pool.blocks_.data(),pool.blocks_.capacity()*sizeof(typename Pool::entry),plan.id*sizeof(typename Pool::entry),sizeof(typename Pool::entry));
+                if(!pool.blocks_.empty())add(&pool,1,pool.blocks_.data(),pool.blocks_.size()*sizeof(typename Pool::entry),0,pool.blocks_.size()*sizeof(typename Pool::entry));
+            }else add(&pool,1,pool.blocks_.data(),pool.blocks_.capacity()*sizeof(typename Pool::entry),plan.id*sizeof(typename Pool::entry),sizeof(typename Pool::entry));
             if(pool.families_[plan.which].first!=Pool::none)metadata(pool.families_[plan.which].first);
         }else {
             const auto& b=*plan.destination;
-            add(&b,sizeof(b),0,sizeof(b));
-            add(b.storage.data,b.storage.size,64+plan.rank*plan.bytes,plan.bytes);
-            if(!plan.reused)add(b.storage.data,b.storage.size,0,2);
+            add(&b,0,&b,sizeof(b),0,sizeof(b));
+            add(&b,1,b.storage.data,b.storage.size,64+plan.rank*plan.bytes,plan.bytes);
+            if(!plan.reused)add(&b,1,b.storage.data,b.storage.size,0,2);
             // A full block is unlinked after assigning this reservation.
             if(b.returned_count<=1&&plan.assigned+unsigned(!plan.reused)==pool.families_[plan.which].ranks){
                 if(b.previous!=Pool::none)metadata(b.previous);
@@ -167,15 +167,14 @@ struct guarded_pool_access {
     template<class Pool,class Retire> [[gnu::always_inline]] static void directory_retirement(const reservation<Pool>& plan,const void* owner,Retire&& retire){
         const auto& pool=*plan.owner;
         if(!plan.directory.empty()&&!pool.blocks_.empty())
-            retire(ht::mutation_source{owner,ht::owner_part::large_variable_bags,
-                reinterpret_cast<const byte*>(pool.blocks_.data()),pool.blocks_.capacity()*sizeof(typename Pool::entry)});
+            retire(physical_region{&pool,1,pool.blocks_.data(),pool.blocks_.capacity()*sizeof(typename Pool::entry)});
     }
     template<unsigned V,bool Coalesced,class Emit>
     [[gnu::always_inline]] static void append_damage(const capacity_buffers<V,buffer_representation::streampack_capacity,Coalesced>& pool,
             word reference,unsigned count,const void* owner,Emit&& emit){
         const auto& b=*pool.blocks_[reference>>8].owner;
         const auto offset=64+(std::size_t(reference&255)*pool.families_[b.which].capacity+count)*V;
-        emit(ht::mutation_damage{{owner,ht::owner_part::large_variable_bags,b.storage.data,b.storage.size},{0,offset,V}});
+        emit(ikea::journal::entry{&b,1,offset,V});
     }
 
     // Standalone release, or a joined append into a DIFFERENT family. A same-
@@ -189,17 +188,17 @@ struct guarded_pool_access {
             word reference,const void* owner,Emit&& emit,Retire&& retire){
         using Pool=capacity_buffers<V,buffer_representation::streampack_capacity,Coalesced>;
         const auto id=std::size_t(reference>>8);const auto& slot=pool.blocks_[id];const auto& b=*slot.owner;
-        auto source=[&](const void* base,std::size_t extent) __attribute__((always_inline)) {return ht::mutation_source{owner,ht::owner_part::large_variable_bags,static_cast<const byte*>(base),extent};};
-        auto add=[&](const void* base,std::size_t extent,std::size_t offset,std::size_t size) __attribute__((always_inline)) {if(size)emit(ht::mutation_damage{source(base,extent),{0,offset,size}});};
-        auto metadata=[&](std::size_t next) __attribute__((always_inline)) {const auto& target=*pool.blocks_[next].owner;add(&target,sizeof(target),0,sizeof(target));};
-        add(&b,sizeof(b),0,sizeof(b));
+        auto source=[&](const void* stable,unsigned plane,const void* base,std::size_t extent) __attribute__((always_inline)) {return physical_region{stable,plane,base,extent};};
+        auto add=[&](const void* stable,unsigned plane,const void* base,std::size_t extent,std::size_t offset,std::size_t size) __attribute__((always_inline)) {if(size)emit(write_effect(source(stable,plane,base,extent),offset,size));};
+        auto metadata=[&](std::size_t next) __attribute__((always_inline)) {const auto& target=*pool.blocks_[next].owner;add(&target,0,&target,sizeof(target),0,sizeof(target));};
+        add(&b,0,&b,sizeof(b),0,sizeof(b));
         if(b.live==1){
-            add(pool.blocks_.data(),pool.blocks_.capacity()*sizeof(typename Pool::entry),id*sizeof(typename Pool::entry),sizeof(typename Pool::entry));
+            add(&pool,1,pool.blocks_.data(),pool.blocks_.capacity()*sizeof(typename Pool::entry),id*sizeof(typename Pool::entry),sizeof(typename Pool::entry));
             if(b.listed){if(b.previous!=Pool::none)metadata(b.previous);if(b.next!=Pool::none)metadata(b.next);}
-            add(b.storage.data,b.storage.size,0,2);
+            add(&b,1,b.storage.data,b.storage.size,0,2);
             const auto assigned_bytes=std::size_t(Pool::assigned(b))*pool.families_[b.which].capacity*V;
-            add(b.storage.data,b.storage.size,64,assigned_bytes);
-            retire(source(&b,sizeof(b)));retire(source(b.storage.data,b.storage.size));
+            add(&b,1,b.storage.data,b.storage.size,64,assigned_bytes);
+            retire(source(&b,0,&b,sizeof(b)));retire(source(&b,1,b.storage.data,b.storage.size));
         }else if(!b.listed&&pool.families_[b.which].first!=Pool::none)
             metadata(pool.families_[b.which].first);
     }
@@ -239,7 +238,7 @@ struct guarded_pool_access {
 #endif
         // Extent and destination disjointness were checked during preparation;
         // source liveness/stability is the enclosing session's witness.
-        ikea::no_coverage effects;
+        ikea::no_effects effects;
 #if WRITE_ARCH_POOL_ASSIGNMENT
         if(prefix.size())std::memmove(payload,prefix.data(),prefix.size());
         tuple_value<V,Coalesced>(payload+prefix.size(),incoming,effects);

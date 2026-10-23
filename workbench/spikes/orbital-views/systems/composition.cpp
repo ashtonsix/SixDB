@@ -58,9 +58,9 @@ int main(int argc,char** argv) {
   auto* home=static_cast<std::uint8_t*>(::mmap(nullptr,size,PROT_READ|PROT_WRITE,MAP_PRIVATE|MAP_ANONYMOUS,-1,0));
   check(home!=MAP_FAILED);
   auto initial=expected(0);std::copy(initial.begin(),initial.end(),home);
-  const std::array<tp::code,1> codes{{{0,1,3}}};const std::array<tp::byte,1> ranks{0};
-  const auto format=get(tp::layout::make(1,codes));const auto writer=get(tp::writer<8>::make(format,ranks));
-  const auto reader=get(tp::reader<8>::make(format,ranks));
+  const std::array<tp::code,1> codes{{{0,1,3}}};const std::array<std::uint8_t,1> ranks{0};
+  const auto format=get(tp::layout::make(1,codes));const auto writer=get(tp::write_plan<8>::make(format,ranks));
+  const auto reader=get(tp::read_plan<8>::make(format,ranks));
   Counts counts;Material material(Kind::radix_pages,size,true,0,counts);
   std::vector<Head> retained;retained.reserve(6);
   retained.push_back({0,material.seed(initial),std::uint64_t(((initial[base_a+17]>>1)&7)+((initial[base_b+11]>>1)&7))});
@@ -71,19 +71,19 @@ int main(int argc,char** argv) {
   {
     Journal journal(path,initial);
     for(unsigned e=1;e<=5;++e) {
-      auto a=get(tp::view::bind(format,{home+base_a,31},2,3,17));
-      auto b=get(tp::view::bind(format,{home+base_b,31},2,3,11));
+      auto a=get(tp::view::attach(format,std::as_writable_bytes(std::span{home+base_a,std::size_t(31)}),2,3,17));
+      auto b=get(tp::view::attach(format,std::as_writable_bytes(std::span{home+base_b,std::size_t(31)}),2,3,11));
       auto oa=get(tp::bind_writer(writer,a)),ob=get(tp::bind_writer(writer,b));
-      auto group=get(tp::composition::bind_group(oa,ob));
+      auto group=get(tp::author::bind_group(oa,ob));
       const decltype(group)::input_type input{(e+2)%8,(2*e+1)%8};
-      std::array<ikea::owner_write,2> slots{};ikea::source_write_journal damage{slots};
+      std::array<ikea::journal::entry,2> slots{};ikea::journal damage{slots};
       check(bool(group.set(0,input,damage)) && damage.used==2);
       Batch patches;
       for(auto effect:damage.entries()) {
         const auto base=effect.source==&a?base_a:base_b;
-        check((effect.source==&a || effect.source==&b) && effect.bytes.plane==0);
-        const auto offset=base+effect.bytes.offset;
-        patches.push_back({offset,Bytes(home+offset,home+offset+effect.bytes.size)});
+        check((effect.source==&a || effect.source==&b) && effect.plane==0);
+        const auto offset=base+effect.offset;
+        patches.push_back({offset,Bytes(home+offset,home+offset+effect.size)});
       }
       auto ra=get(tp::bind_reader(reader,a)),rb=get(tp::bind_reader(reader,b));
       const auto sum=get(ra.get(0))+get(rb.get(0));

@@ -121,7 +121,7 @@ template<class End, bool Used = true, bool Dead = true> struct MutableDirect {
   }
   template<class Effects> STREAMPACK_SMALL_INLINE void before(Effects& effects, unsigned plane,
                                        std::size_t offset, std::size_t bytes) const {
-    if (bytes) { STREAMPACK_EFFECT_CALL effects.before(*this, ikea::byte_write{plane, offset, bytes}); }
+    if (bytes) { STREAMPACK_EFFECT_CALL effects.before(*this, plane, offset, bytes); }
   }
   /// Planes: body=0, endpoints=1, used=2, tombstones=3, assigned count=4.
   /// Hooks report issued stores and require preadmitted no-fail capacity.

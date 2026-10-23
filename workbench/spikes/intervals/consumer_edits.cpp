@@ -23,18 +23,18 @@ template<unsigned G> struct sparse_image {
     in::size_editor<G,std::uint8_t,std::uint16_t> editor{
         fields,checkpoints,n,extent,0,65280,255};
     sparse_image() {
-        std::array<ikea::owner_write,8> records;
-        for(unsigned r=0;r<count;++r) {ikea::source_write_journal e{records};need(bool(editor.append(100+r%100,e)),"initial sparse append refused");}
+        std::array<ikea::journal::entry,8> records;
+        for(unsigned r=0;r<count;++r) {ikea::journal e{records};need(bool(editor.append(100+r%100,e)),"initial sparse append refused");}
     }
     result run() {
-        result answer{};std::array<ikea::owner_write,8> records;
+        result answer{};std::array<ikea::journal::entry,8> records;
         for(unsigned q=0;q<requests;++q) {
             const unsigned rank=(q*713)%count,old=fields[rank];
             for(unsigned value:{old+1,old}) {
-                ikea::source_write_journal e{records};
+                ikea::journal e{records};
                 need(bool(editor.resize(rank,value,e)),"sparse edit refused");
                 asm volatile("" ::: "memory");answer.checksum+=extent;
-                for(auto effect:e.entries()) answer.bytes+=effect.bytes.size;
+                for(auto effect:e.entries()) answer.bytes+=effect.size;
             }
         }
         return answer;
@@ -45,21 +45,21 @@ struct compact_image {
     std::vector<std::byte> directory,lengths,control;
     bl::view source;
     compact_image(bl::geometry family)
-      :format(*bl::layout::prepare({.family=family,.maximum=255,.extent_limit=65280,.immortal=true})),
+      :format(*bl::layout::make({.family=family,.maximum=255,.extent_limit=65280,.immortal=true})),
        directory(format.directory_bytes()),lengths(format.lengths_bytes(count)),control(format.control_bytes()),
-       source(*bl::view::bind(format,{directory,lengths,control})) {
-        std::array<ikea::owner_write,16> records;
-        {ikea::source_write_journal e{records};need(bool(bl::initialize(source,e)),"compact init refused");}
-        for(unsigned r=0;r<count;++r) {ikea::source_write_journal e{records};need(bool(bl::append(source,100+r%100,e)),"initial compact append refused");}
+       source(*bl::view::attach(format,{directory,lengths,control})) {
+        std::array<ikea::journal::entry,16> records;
+        {ikea::journal e{records};need(bool(bl::initialize(source,e)),"compact init refused");}
+        for(unsigned r=0;r<count;++r) {ikea::journal e{records};need(bool(bl::append(source,100+r%100,e)),"initial compact append refused");}
     }
     result run() {
-        result answer{};std::array<ikea::owner_write,16> records;
+        result answer{};std::array<ikea::journal::entry,16> records;
         for(unsigned q=0;q<requests;++q) {
             const unsigned rank=(q*713)%count,old=100+rank%100;
             for(unsigned value:{old+1,old}) {
-                ikea::source_write_journal e{records};need(bool(bl::resize(source,rank,value,e)),"compact edit refused");
+                ikea::journal e{records};need(bool(bl::resize(source,rank,value,e)),"compact edit refused");
                 asm volatile("" ::: "memory");answer.checksum+=source.extent();
-                for(auto effect:e.entries()) answer.bytes+=effect.bytes.size;
+                for(auto effect:e.entries()) answer.bytes+=effect.size;
             }
         }
         return answer;
