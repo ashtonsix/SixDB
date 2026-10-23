@@ -1,7 +1,9 @@
 # Cached unit stride: rejected native control
 
-The cached `stride()==1` predicate candidate is rejected. Keep the R4
-two-pointer general reader and its separately prepared predicate. Caching a
+The cached `stride()==1` predicate candidate was rejected against R4, retaining
+its two-pointer general reader and separately prepared predicate at that cut.
+The later [copied-projection comparison](PROJECTION-NATIVE.md) supports the
+current plan-independent predicate without adopting this cached flag. Caching a
 flag in predicate padding preserves their observed 16/24-byte sizes and saves
 one instruction per selected full-tight filter window, but complete native
 commands expose substantial preparation and one-shot losses. The candidate

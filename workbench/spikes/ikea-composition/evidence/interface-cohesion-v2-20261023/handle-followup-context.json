@@ -1,0 +1,157 @@
+{
+  "artifact_reference": "workbench/spikes/ikea-composition/evidence/interface-cohesion-v2-20261023/handle-followup-artifact.json",
+  "artifact_tool_sha256": "930f5fbe6e3b1b2ed85bcb4a2c580bd8cdef441b97d1df8dc892e867214480d0",
+  "cleanup_status": "No deletion or pin release. Root coordinates subsequent cleanup. The seven selected output roots and final-v5 source aliases are recoverable; unrelated intermediates and mutable final integration are not admitted by this reference.",
+  "limits": "Durable recovery only; no new correctness, timing or performance result.",
+  "local_directories_preserved": [
+    "build/ikea-cohesion-v2/predicate-projection-final-v5-codegen",
+    "build/ikea-cohesion-v2/predicate-projection-final-v5-access",
+    "build/ikea-cohesion-v2/projection-filter-linked",
+    "build/ikea-cohesion-v2/projection-blocks-linked-arm",
+    "build/ikea-cohesion-v2/journal-local-cursor",
+    "build/ikea-cohesion-v2/access-contract-proof",
+    "build/ikea-cohesion-v2/access-owner-proof"
+  ],
+  "local_staging_preserved": "build/ikea-cohesion-v2/handle-followup-archive-20261023",
+  "recoverable_source_aliases": {
+    "build/ikea-cohesion-v2/predicate-projection-final-v5-sources/after": {
+      "recovery_prefix": "projection-inputs/after/",
+      "source_arm": "after",
+      "source_manifest_sha256": "a4388c9a6695826bec2703d1da8ff1e56062b8c9f81bfeb489b047a2d0ef1d7d",
+      "verified_local_files": 3567,
+      "verified_local_raw_bytes": 29143705,
+      "verified_no_extra_or_differing_files": true
+    },
+    "build/ikea-cohesion-v2/predicate-projection-final-v5-sources/before": {
+      "recovery_prefix": "projection-inputs/before/",
+      "source_arm": "before",
+      "source_manifest_sha256": "929b17889f350d24e2e740c052fc28411fcfaf589261c0216cc9b881b9f2cde6",
+      "verified_local_files": 3567,
+      "verified_local_raw_bytes": 29141359,
+      "verified_no_extra_or_differing_files": true
+    }
+  },
+  "recovery_manifest_sha256": "65b5edc1d1d868de2dae38f2821a1c6e411cba77e12c21d92dd830af186024c3",
+  "scope": "Select unique local handle follow-up proofs for artifacts.py put.\n\nThis stages immutable local output and small producing helpers, never builds,\nmeasures, publishes or evicts. Native binaries and the final-v5 source trees\nare already durable. Their exact recovery paths are recorded by reference.\n",
+  "selection_script_sha256": "73b446c04740579412b12af745f38483b5c9a73fd41ebdde993eedb830ea1d96",
+  "source_recovery": {
+    "native_references": {
+      "neon": {
+        "artifact": {
+          "bucket": "calico-fleet-artifacts",
+          "bytes": 176584251,
+          "files": 140,
+          "format": 1,
+          "key": "sixdb/artifacts/sha256/25e42e1efb8a223dd1d1c47cfb2fc493936c8f3e4f285c734198dc4797b85524.tar.gz",
+          "kind": "files",
+          "region": "us-east-1",
+          "sha256": "25e42e1efb8a223dd1d1c47cfb2fc493936c8f3e4f285c734198dc4797b85524",
+          "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/25e42e1efb8a223dd1d1c47cfb2fc493936c8f3e4f285c734198dc4797b85524.tar.gz"
+        },
+        "collection_record_sha256": "e8634beb0fde80705a20eb8a0f74717bc0b6c74403e517d5d263a0397372720a",
+        "job": "20261023T045507Z-9380ce67",
+        "job_record_sha256": "00c2eeb7d5633e2d625b54c65815ab8c09ff1ba9f892df043cd80c4c48b25d76",
+        "recovery": "artifacts.py fetch ARTIFACT NEW --file source.tar.gz; extract source.tar.gz; projection-inputs/{before,after}/ contains the qualified source arms.",
+        "source_archive_bytes": 31890351,
+        "source_archive_member": "source.tar.gz",
+        "source_archive_sha256": "807ca82e8e10568d5c840ed3508a4ef3c594ea92d708b41de3bcf60d92d74c71"
+      },
+      "zen": {
+        "artifact": {
+          "bucket": "calico-fleet-artifacts",
+          "bytes": 331126263,
+          "files": 264,
+          "format": 1,
+          "key": "sixdb/artifacts/sha256/e332d186e209dbfb3a6c8da82c1ca831df5802bf1ba7c068493407ac8cfeae7b.tar.gz",
+          "kind": "files",
+          "region": "us-east-1",
+          "sha256": "e332d186e209dbfb3a6c8da82c1ca831df5802bf1ba7c068493407ac8cfeae7b",
+          "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/e332d186e209dbfb3a6c8da82c1ca831df5802bf1ba7c068493407ac8cfeae7b.tar.gz"
+        },
+        "collection_record_sha256": "9f302a55bfa07a955cdf06ad7b45a241589bd4b6f2b3f3b7a8a3fa996d269569",
+        "job": "20261023T045513Z-1f952ffa",
+        "job_record_sha256": "def81f937d56e6733b7a36f64df54cf62352182aff73e4c975a357d4add4bc6c",
+        "recovery": "artifacts.py fetch ARTIFACT NEW --file source.tar.gz; extract source.tar.gz; projection-inputs/{before,after}/ contains the qualified source arms.",
+        "source_archive_bytes": 31890351,
+        "source_archive_member": "source.tar.gz",
+        "source_archive_sha256": "807ca82e8e10568d5c840ed3508a4ef3c594ea92d708b41de3bcf60d92d74c71"
+      }
+    },
+    "source_archive_sha256": "807ca82e8e10568d5c840ed3508a4ef3c594ea92d708b41de3bcf60d92d74c71",
+    "source_manifest_file_sha256": "b2e6372c81b16fa5945e3810cd78476c61435b6c23353b81965a4ead4821520a",
+    "source_maps": {
+      "after": {
+        "source_manifest_sha256": "a4388c9a6695826bec2703d1da8ff1e56062b8c9f81bfeb489b047a2d0ef1d7d",
+        "source_prefix": "projection-inputs/after/"
+      },
+      "before": {
+        "source_manifest_sha256": "929b17889f350d24e2e740c052fc28411fcfaf589261c0216cc9b881b9f2cde6",
+        "source_prefix": "projection-inputs/before/"
+      }
+    },
+    "verification_scope": "Existing collected source archive matches job and collection hashes; all members match the worker source manifest. No native archive or ELF is duplicated.",
+    "verified_source_archive_members": 10721
+  },
+  "staging": "build/ikea-cohesion-v2/handle-followup-archive-20261023",
+  "still_outside_this_retention": [
+    "build/ikea-cohesion-v2/allocator-callers-final-integration (mutable; root owns completion/selection)",
+    "Earlier source copies/intermediate probes outside the seven explicit roots (not inspected or admitted for cleanup)",
+    "Worker collections and task/Workbench pins (root coordinates separately)"
+  ],
+  "summary": {
+    "by_root": {
+      "access-contract-proof/bytes": 16460110,
+      "access-contract-proof/files": 34,
+      "access-contract-proof/objects": 4,
+      "access-contract-proof/sources": 5,
+      "access-owner-proof/bytes": 8891001,
+      "access-owner-proof/files": 18,
+      "access-owner-proof/objects": 3,
+      "access-owner-proof/sources": 3,
+      "helpers-and-context/bytes": 1216270,
+      "helpers-and-context/files": 33,
+      "helpers-and-context/objects": 0,
+      "helpers-and-context/sources": 30,
+      "journal-local-cursor/bytes": 14726684,
+      "journal-local-cursor/files": 16,
+      "journal-local-cursor/objects": 1,
+      "journal-local-cursor/sources": 3,
+      "predicate-projection-final-v5-access/bytes": 12008295,
+      "predicate-projection-final-v5-access/files": 34,
+      "predicate-projection-final-v5-access/objects": 10,
+      "predicate-projection-final-v5-access/sources": 0,
+      "predicate-projection-final-v5-codegen/bytes": 90412666,
+      "predicate-projection-final-v5-codegen/files": 192,
+      "predicate-projection-final-v5-codegen/objects": 28,
+      "predicate-projection-final-v5-codegen/sources": 1,
+      "projection-blocks-linked-arm/bytes": 1061513,
+      "projection-blocks-linked-arm/files": 21,
+      "projection-blocks-linked-arm/objects": 0,
+      "projection-blocks-linked-arm/sources": 2,
+      "projection-filter-linked/bytes": 11211160,
+      "projection-filter-linked/files": 189,
+      "projection-filter-linked/objects": 0,
+      "projection-filter-linked/sources": 0
+    },
+    "objects": 46,
+    "omitted_source_bytes": 2050798,
+    "omitted_source_files": 351,
+    "selected_files": 537,
+    "selected_raw_bytes": 155987699,
+    "sources": 44
+  },
+  "verification": {
+    "archive_sha256": "a4819bb69d0964c511e94d41f902178b405ff0afc91949522840464aaa23d02b",
+    "artifact_reference_sha256": "59e3520928cbdd49ceb2d6cdb8ee8e97126b14a8b59cdf9f6fbeda3f75906074",
+    "complete": true,
+    "compressed_bytes": 25161108,
+    "files": 538,
+    "limits": "Recovery proof only. No original file deletion, pin release, compiler execution, benchmark run or new native result.",
+    "member_map_sha256": "67626144b7504a8daf026b0e980a5fd94b99be758e5f7c88eea173b3596750e2",
+    "method": "artifacts.py put uploaded and downloaded the entire compressed object with size/SHA equality; artifacts.remote_manifest then streamed the entire S3 object again, verified compressed size/SHA/file count and every member size/SHA, all exactly equal to immutable staging and original selected files.",
+    "recovery_manifest_sha256": "65b5edc1d1d868de2dae38f2821a1c6e411cba77e12c21d92dd830af186024c3",
+    "source_archives_verified_locally": 10721,
+    "tool_sha256": "930f5fbe6e3b1b2ed85bcb4a2c580bd8cdef441b97d1df8dc892e867214480d0",
+    "uncompressed_bytes": 156250898
+  }
+}

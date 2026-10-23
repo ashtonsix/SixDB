@@ -1,0 +1,715 @@
+{
+  "arms": {
+    "baseline": {
+      "function_bytes": 262569,
+      "functions": 80,
+      "helpers": {
+        "body": {
+          "bytes": 347,
+          "function_payload_sha256": "1aced5b970f1e60502dfc33b4cfdc7d3b74d583f31d286176085d81d5dabb81f",
+          "paths": {
+            "regular_trace": {
+              "branch_decisions": [
+                {
+                  "address": "0x21",
+                  "op": "je\t0x3f",
+                  "reason": "journal is nonempty",
+                  "taken": false
+                },
+                {
+                  "address": "0x2f",
+                  "op": "jne\t0x3f",
+                  "reason": "same original source as previous entry",
+                  "taken": false
+                },
+                {
+                  "address": "0x39",
+                  "op": "je\t0x103",
+                  "reason": "previous head plane differs from body plane0",
+                  "taken": false
+                },
+                {
+                  "address": "0x7d",
+                  "op": "je\t0x9e",
+                  "reason": "journal remains nonempty",
+                  "taken": false
+                },
+                {
+                  "address": "0x8e",
+                  "op": "jne\t0x99",
+                  "reason": "second span has same original source",
+                  "taken": false
+                },
+                {
+                  "address": "0x97",
+                  "op": "je\t0xcb",
+                  "reason": "second span uses same body plane0",
+                  "taken": true
+                },
+                {
+                  "address": "0xd6",
+                  "op": "ja\t0x99",
+                  "reason": "previous start precedes next end",
+                  "taken": false
+                },
+                {
+                  "address": "0xe2",
+                  "op": "ja\t0x99",
+                  "reason": "stride64 leaves gap; next start exceeds previous end",
+                  "taken": true
+                }
+              ],
+              "conditional_branches": 8,
+              "instructions": 63,
+              "opcode_counts": {
+                "addq": 4,
+                "cmpl": 2,
+                "cmpq": 4,
+                "imulq": 1,
+                "ja": 2,
+                "je": 4,
+                "jmp": 1,
+                "jne": 2,
+                "leaq": 4,
+                "movl": 2,
+                "movq": 23,
+                "popq": 3,
+                "pushq": 3,
+                "retq": 1,
+                "shlq": 4,
+                "shrq": 1,
+                "testq": 2
+              },
+              "opcode_schedule_sha256": "86fc532494d663b43a2cdf26f9791ed7eb130f60ba5655430d23571c4ab5a5af",
+              "push_pop": 6,
+              "unconditional_branches": 1
+            },
+            "source_mismatch_trace": {
+              "branch_decisions": [
+                {
+                  "address": "0x21",
+                  "op": "je\t0x3f",
+                  "reason": "journal nonempty",
+                  "taken": false
+                },
+                {
+                  "address": "0x2f",
+                  "op": "jne\t0x3f",
+                  "reason": "previous entry names the substituted tail source",
+                  "taken": true
+                },
+                {
+                  "address": "0x7d",
+                  "op": "je\t0x9e",
+                  "reason": "journal remains nonempty",
+                  "taken": false
+                },
+                {
+                  "address": "0x8e",
+                  "op": "jne\t0x99",
+                  "reason": "second span names the appended original source",
+                  "taken": false
+                },
+                {
+                  "address": "0x97",
+                  "op": "je\t0xcb",
+                  "reason": "same body plane0",
+                  "taken": true
+                },
+                {
+                  "address": "0xd6",
+                  "op": "ja\t0x99",
+                  "reason": "previous start precedes next end",
+                  "taken": false
+                },
+                {
+                  "address": "0xe2",
+                  "op": "ja\t0x99",
+                  "reason": "stride64 leaves a gap",
+                  "taken": true
+                }
+              ],
+              "conditional_branches": 7,
+              "instructions": 60,
+              "opcode_counts": {
+                "addq": 3,
+                "cmpl": 1,
+                "cmpq": 4,
+                "imulq": 1,
+                "ja": 2,
+                "je": 3,
+                "jmp": 1,
+                "jne": 2,
+                "leaq": 4,
+                "movl": 2,
+                "movq": 23,
+                "popq": 3,
+                "pushq": 3,
+                "retq": 1,
+                "shlq": 4,
+                "shrq": 1,
+                "testq": 2
+              },
+              "opcode_schedule_sha256": "b66fed982ab4681e9e271ff2205b04aac8cad77229e141681b7ff1c9a8e41bf8",
+              "push_pop": 6,
+              "unconditional_branches": 1
+            }
+          },
+          "static_instructions": 97,
+          "symbol_sha256": "a9ae8ac7c041e78d08bd268ebdbb9cc6f2d280e52fe4a1280284c18a02e2d321"
+        },
+        "head0": {
+          "bytes": 340,
+          "function_payload_sha256": "6f9d9a1c879c2c60d83782e5e9c7ef01a8fdd9605e9d8d38e0a858bb120ee46b",
+          "paths": {
+            "regular_trace": {
+              "branch_decisions": [
+                {
+                  "address": "0x29",
+                  "op": "je\t0x90",
+                  "reason": "journal is nonempty",
+                  "taken": false
+                },
+                {
+                  "address": "0x37",
+                  "op": "jne\t0x90",
+                  "reason": "same original source as previous entry",
+                  "taken": false
+                },
+                {
+                  "address": "0x41",
+                  "op": "jne\t0x90",
+                  "reason": "previous original-source plane differs from this head plane",
+                  "taken": true
+                },
+                {
+                  "address": "0xce",
+                  "op": "je\t0x127",
+                  "reason": "journal remains nonempty",
+                  "taken": false
+                },
+                {
+                  "address": "0xdf",
+                  "op": "jne\t0x122",
+                  "reason": "second span has same original source",
+                  "taken": false
+                },
+                {
+                  "address": "0xe8",
+                  "op": "jne\t0x122",
+                  "reason": "second span uses same head plane",
+                  "taken": false
+                },
+                {
+                  "address": "0xf5",
+                  "op": "ja\t0x122",
+                  "reason": "previous start precedes next end",
+                  "taken": false
+                },
+                {
+                  "address": "0x101",
+                  "op": "ja\t0x122",
+                  "reason": "stride64 leaves gap; next start exceeds previous end",
+                  "taken": true
+                }
+              ],
+              "conditional_branches": 8,
+              "instructions": 66,
+              "opcode_counts": {
+                "addq": 5,
+                "andl": 1,
+                "cmpl": 2,
+                "cmpq": 4,
+                "imulq": 1,
+                "ja": 2,
+                "je": 2,
+                "jmp": 1,
+                "jne": 4,
+                "leaq": 4,
+                "movl": 3,
+                "movq": 23,
+                "popq": 3,
+                "pushq": 3,
+                "retq": 1,
+                "shlq": 4,
+                "shrq": 1,
+                "testq": 2
+              },
+              "opcode_schedule_sha256": "7309dc130f71e0cabecf081c9c1d64b2f7e3e8706fb428ef20166c6b0f12263b",
+              "push_pop": 6,
+              "unconditional_branches": 1
+            }
+          },
+          "static_instructions": 100,
+          "symbol_sha256": "b250739461d439a28d9b813cde625f1d4afa3108d49026d10c20593f6b37f878"
+        }
+      },
+      "regions": [
+        {
+          "bytes": 19559,
+          "calls": 54,
+          "function_payload_sha256": "7d8753857ebd294467f52092b9054ace333712e1f77145925d7fe153a0ed4da0",
+          "instructions": 4260,
+          "role": "all",
+          "stack_allocation": [
+            "subq\t$0x1f8, %rsp            # imm = 0x1F8"
+          ],
+          "symbol_sha256": "ead1694f68813905f83eaa7a1d57633a545c8b3326c85fa2118580afb445d1bb"
+        },
+        {
+          "bytes": 39829,
+          "calls": 102,
+          "function_payload_sha256": "b112aa2ec8771aff41ba441ede4f29e7f8d4b8cf9bc03d5c283260549b2866a0",
+          "instructions": 8639,
+          "role": "partial",
+          "stack_allocation": [
+            "subq\t$0x2f8, %rsp            # imm = 0x2F8"
+          ],
+          "symbol_sha256": "63d63de9f1de73769a78abc1ae3f008a499abf8a805c76072fca47f929613f82"
+        }
+      ]
+    },
+    "candidate": {
+      "function_bytes": 262354,
+      "functions": 80,
+      "helpers": {
+        "body": {
+          "bytes": 353,
+          "function_payload_sha256": "bc1ac90ede9b579a314f34993151c3c4917427490e89636bbb47b19610366e85",
+          "paths": {
+            "regular_trace": {
+              "branch_decisions": [
+                {
+                  "address": "0x21",
+                  "op": "je\t0x3f",
+                  "reason": "journal is nonempty",
+                  "taken": false
+                },
+                {
+                  "address": "0x2f",
+                  "op": "jne\t0x3f",
+                  "reason": "same original source as previous entry",
+                  "taken": false
+                },
+                {
+                  "address": "0x39",
+                  "op": "je\t0x109",
+                  "reason": "previous head plane differs from body plane0",
+                  "taken": false
+                },
+                {
+                  "address": "0x80",
+                  "op": "je\t0xa1",
+                  "reason": "journal remains nonempty",
+                  "taken": false
+                },
+                {
+                  "address": "0x91",
+                  "op": "jne\t0x9c",
+                  "reason": "second span has same original source",
+                  "taken": false
+                },
+                {
+                  "address": "0x9a",
+                  "op": "je\t0xd1",
+                  "reason": "second span uses same body plane0",
+                  "taken": true
+                },
+                {
+                  "address": "0xdc",
+                  "op": "ja\t0x9c",
+                  "reason": "previous start precedes next end",
+                  "taken": false
+                },
+                {
+                  "address": "0xe8",
+                  "op": "ja\t0x9c",
+                  "reason": "stride64 leaves gap; next start exceeds previous end",
+                  "taken": true
+                }
+              ],
+              "conditional_branches": 8,
+              "instructions": 65,
+              "opcode_counts": {
+                "addq": 4,
+                "cmpl": 2,
+                "cmpq": 4,
+                "imulq": 1,
+                "incq": 2,
+                "ja": 2,
+                "je": 4,
+                "jmp": 1,
+                "jne": 2,
+                "leaq": 2,
+                "movl": 2,
+                "movq": 25,
+                "popq": 3,
+                "pushq": 3,
+                "retq": 1,
+                "shlq": 4,
+                "shrq": 1,
+                "testq": 2
+              },
+              "opcode_schedule_sha256": "068330ac6796a6a95b19376d0a4d10e4e183ce64a495cf12979543cf2376a075",
+              "push_pop": 6,
+              "unconditional_branches": 1
+            },
+            "source_mismatch_trace": {
+              "branch_decisions": [
+                {
+                  "address": "0x21",
+                  "op": "je\t0x3f",
+                  "reason": "journal nonempty",
+                  "taken": false
+                },
+                {
+                  "address": "0x2f",
+                  "op": "jne\t0x3f",
+                  "reason": "previous entry names the substituted tail source",
+                  "taken": true
+                },
+                {
+                  "address": "0x80",
+                  "op": "je\t0xa1",
+                  "reason": "journal remains nonempty",
+                  "taken": false
+                },
+                {
+                  "address": "0x91",
+                  "op": "jne\t0x9c",
+                  "reason": "second span names the appended original source",
+                  "taken": false
+                },
+                {
+                  "address": "0x9a",
+                  "op": "je\t0xd1",
+                  "reason": "same body plane0",
+                  "taken": true
+                },
+                {
+                  "address": "0xdc",
+                  "op": "ja\t0x9c",
+                  "reason": "previous start precedes next end",
+                  "taken": false
+                },
+                {
+                  "address": "0xe8",
+                  "op": "ja\t0x9c",
+                  "reason": "stride64 leaves a gap",
+                  "taken": true
+                }
+              ],
+              "conditional_branches": 7,
+              "instructions": 62,
+              "opcode_counts": {
+                "addq": 3,
+                "cmpl": 1,
+                "cmpq": 4,
+                "imulq": 1,
+                "incq": 2,
+                "ja": 2,
+                "je": 3,
+                "jmp": 1,
+                "jne": 2,
+                "leaq": 2,
+                "movl": 2,
+                "movq": 25,
+                "popq": 3,
+                "pushq": 3,
+                "retq": 1,
+                "shlq": 4,
+                "shrq": 1,
+                "testq": 2
+              },
+              "opcode_schedule_sha256": "77c91708cadc7b5a9f02bd9a34aa0c97607ddd587518c2c99c0f1cc401e2a1c0",
+              "push_pop": 6,
+              "unconditional_branches": 1
+            }
+          },
+          "static_instructions": 99,
+          "symbol_sha256": "a9ae8ac7c041e78d08bd268ebdbb9cc6f2d280e52fe4a1280284c18a02e2d321"
+        },
+        "head0": {
+          "bytes": 346,
+          "function_payload_sha256": "16b33778ff4604c61af78e791b0d13a0b1b4deccac9d0888a870e1af04d80059",
+          "paths": {
+            "regular_trace": {
+              "branch_decisions": [
+                {
+                  "address": "0x29",
+                  "op": "je\t0x90",
+                  "reason": "journal is nonempty",
+                  "taken": false
+                },
+                {
+                  "address": "0x37",
+                  "op": "jne\t0x90",
+                  "reason": "same original source as previous entry",
+                  "taken": false
+                },
+                {
+                  "address": "0x41",
+                  "op": "jne\t0x90",
+                  "reason": "previous original-source plane differs from this head plane",
+                  "taken": true
+                },
+                {
+                  "address": "0xd1",
+                  "op": "je\t0x12a",
+                  "reason": "journal remains nonempty",
+                  "taken": false
+                },
+                {
+                  "address": "0xe2",
+                  "op": "jne\t0x125",
+                  "reason": "second span has same original source",
+                  "taken": false
+                },
+                {
+                  "address": "0xeb",
+                  "op": "jne\t0x125",
+                  "reason": "second span uses same head plane",
+                  "taken": false
+                },
+                {
+                  "address": "0xf8",
+                  "op": "ja\t0x125",
+                  "reason": "previous start precedes next end",
+                  "taken": false
+                },
+                {
+                  "address": "0x104",
+                  "op": "ja\t0x125",
+                  "reason": "stride64 leaves gap; next start exceeds previous end",
+                  "taken": true
+                }
+              ],
+              "conditional_branches": 8,
+              "instructions": 68,
+              "opcode_counts": {
+                "addq": 5,
+                "andl": 1,
+                "cmpl": 2,
+                "cmpq": 4,
+                "imulq": 1,
+                "incq": 2,
+                "ja": 2,
+                "je": 2,
+                "jmp": 1,
+                "jne": 4,
+                "leaq": 2,
+                "movl": 3,
+                "movq": 25,
+                "popq": 3,
+                "pushq": 3,
+                "retq": 1,
+                "shlq": 4,
+                "shrq": 1,
+                "testq": 2
+              },
+              "opcode_schedule_sha256": "c4b80aec6fc374908a3a8854dbb21b6b214370668f3c3a44278d706924b78334",
+              "push_pop": 6,
+              "unconditional_branches": 1
+            }
+          },
+          "static_instructions": 102,
+          "symbol_sha256": "b250739461d439a28d9b813cde625f1d4afa3108d49026d10c20593f6b37f878"
+        }
+      },
+      "regions": [
+        {
+          "bytes": 19543,
+          "calls": 54,
+          "function_payload_sha256": "dcfefafcaeb9d6c6ddf93761ac59a510139506397d427721b521a51b9d772a98",
+          "instructions": 4257,
+          "role": "all",
+          "stack_allocation": [
+            "subq\t$0x1f8, %rsp            # imm = 0x1F8"
+          ],
+          "symbol_sha256": "ead1694f68813905f83eaa7a1d57633a545c8b3326c85fa2118580afb445d1bb"
+        },
+        {
+          "bytes": 39813,
+          "calls": 102,
+          "function_payload_sha256": "2b32d1b8a4d32b4494f6e3e857b28aa59c8cf2f5e72bb77d021c025853bdcf7c",
+          "instructions": 8633,
+          "role": "partial",
+          "stack_allocation": [
+            "subq\t$0x2f8, %rsp            # imm = 0x2F8"
+          ],
+          "symbol_sha256": "63d63de9f1de73769a78abc1ae3f008a499abf8a805c76072fca47f929613f82"
+        }
+      ]
+    }
+  },
+  "baseline": {
+    "command": [
+      "clang++-21",
+      "-DBENCHMARK_STATIC_DEFINE",
+      "-I",
+      "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/clang/dev/_deps/googlebenchmark-src/include",
+      "--target=x86_64-linux-gnu",
+      "--gcc-toolchain=/usr",
+      "-std=c++23",
+      "-O3",
+      "-fno-fast-math",
+      "-ffp-contract=off",
+      "-fdenormal-fp-math=ieee",
+      "-fvisibility=hidden",
+      "-fvisibility-inlines-hidden",
+      "-ffunction-sections",
+      "-fdata-sections",
+      "-march=x86-64-v3",
+      "-mtune=znver5",
+      "-DSIXDB_TUNE_GENERIC=0",
+      "-DSIXDB_TUNE_GRANITE_RAPIDS=0",
+      "-DSIXDB_TUNE_ZEN4=0",
+      "-DSIXDB_TUNE_ZEN5=1",
+      "-DSIXDB_TUNE_NEOVERSE_V2=0",
+      "-DSIXDB_TUNE_NEOVERSE_V3=0",
+      "-ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/native-r4-sources/after=/sixdb",
+      "-I",
+      "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/native-r4-sources/after/ikea/include",
+      "-MD",
+      "-MF",
+      "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/journal-lowering-ablation/r4-after-avx2-mid.d",
+      "-c",
+      "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/native-r4-sources/after/workbench/benchmarks/seriespack/placed_mid.cpp",
+      "-o",
+      "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/journal-lowering-ablation/r4-after-avx2-mid.o"
+    ],
+    "dependency_count": 509,
+    "dependency_map_sha256": "c880bf9d9e2f72a85fe0912f2fa297cb2f605a1ac537fd0a25a459bb7e0d94b1",
+    "effects_sha256": "3bf481cde151bd0529af61789361c92f081f1ac5d9b42237f131aca822e8d9a8",
+    "object_sha256": "99175b91251aaeecaad5057db6ddd0abee583c9aea05416cfecba7594c6f67ef",
+    "reuse_admission": "All 509 consumed dependencies and the exact object hash verified; strict record reparsed with the same current parser.",
+    "source_manifest_file_sha256": "054472e7d34517099ed6bfc191c503a87e4afbaad3966ff1ba7e7eb59cc45d9c",
+    "source_manifest_sha256": "288ff39e2c0d1e4396f34dac1b59262f9e49bfe15fa3b8928ad8c51fb855bd72"
+  },
+  "candidate": {
+    "command": [
+      "clang++-21",
+      "-I",
+      "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/journal-local-cursor/overlay/ikea/include",
+      "-DBENCHMARK_STATIC_DEFINE",
+      "-I",
+      "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/clang/dev/_deps/googlebenchmark-src/include",
+      "--target=x86_64-linux-gnu",
+      "--gcc-toolchain=/usr",
+      "-std=c++23",
+      "-O3",
+      "-fno-fast-math",
+      "-ffp-contract=off",
+      "-fdenormal-fp-math=ieee",
+      "-fvisibility=hidden",
+      "-fvisibility-inlines-hidden",
+      "-ffunction-sections",
+      "-fdata-sections",
+      "-march=x86-64-v3",
+      "-mtune=znver5",
+      "-DSIXDB_TUNE_GENERIC=0",
+      "-DSIXDB_TUNE_GRANITE_RAPIDS=0",
+      "-DSIXDB_TUNE_ZEN4=0",
+      "-DSIXDB_TUNE_ZEN5=1",
+      "-DSIXDB_TUNE_NEOVERSE_V2=0",
+      "-DSIXDB_TUNE_NEOVERSE_V3=0",
+      "-ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/native-r4-sources/after=/sixdb",
+      "-I",
+      "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/native-r4-sources/after/ikea/include",
+      "-MD",
+      "-MF",
+      "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/journal-local-cursor/candidate-avx2-mid.d",
+      "-c",
+      "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/native-r4-sources/after/workbench/benchmarks/seriespack/placed_mid.cpp",
+      "-o",
+      "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/journal-local-cursor/candidate-avx2-mid.o"
+    ],
+    "compile_exit_code": 0,
+    "dependency_count": 509,
+    "dependency_map_sha256": "ac125406d6efc523f0e67caf9db353aa48109e8ee8df3b0fc6c1f5b0908c1983",
+    "effects_sha256": "72058b1a323fcc2973296034f8276e7f47fefd8b1a7edfb5fd3a63a3a5b3972b",
+    "object_sha256": "be948f72ab0b1d1865d7cf3ec65dc907c95c21a9f058e7a0b99f04a145241f7c",
+    "only_changed_project_header": "ikea/include/ikea/effects.h",
+    "patch_sha256": "ed2bc2db8cfa00457e725019b33398b39824cda545e577fbb1b3d6fdc99a53a2"
+  },
+  "decision": "Rejected as a static candidate: the targeted append paths gain two instructions. No native timing or live adoption.",
+  "findings": [
+    "The regular body/head traces grow from 63/66 to 65/68 instructions, with unchanged eight conditional branches, one unconditional branch and six executed pushes/pops.",
+    "The first body with a different previous source grows from 60 to 62 instructions.",
+    "Across either regular helper trace, two movq and two incq replace two leaq: a net increase of two instructions.",
+    "Whole-TU function bytes fall from 262,569 to 262,354; all/partial caller regions each shrink 16 bytes and three/six static instructions, but retain 54/102 calls and the same 0x1f8/0x2f8 frames. Those totals do not establish a useful issued-path improvement.",
+    "This rejects this local cursor/publication lowering. It leaves the known AVX2 regression open and supplies no measured cycles, retired-event or timing claim."
+  ],
+  "format": 1,
+  "hypothesis": "Read journal.used and storage.data() into locals at entry; append the plain entry at the previous cursor and publish used=previous_used+1 afterward. Leave merge logic and flat public effects protocol unchanged.",
+  "limits": [
+    "Actual unchanged placed_mid.cpp k31h8 caller only, unlinked AVX2/Zen5 object; no new width/profile/performance matrix.",
+    "Semantic witness executed at O3 on local NEON using the unchanged independent source and candidate header.",
+    "Path counts are source-qualified disassembly traces, not measured retired instructions or cycle estimates.",
+    "No public protocol, consumer, selection or physical kernel change; no live header edits."
+  ],
+  "live_header_unchanged": true,
+  "recovery": {
+    "analysis_sha256": "2c9a77d8de43b26d19a8a692cd4cde06b7dd770d2f543e0744f9fb91d371294b",
+    "baseline_and_prior_tools": "journal-artifact.json",
+    "compile_controller_sha256": "d7b9f6d2db7cb71ea7c35d24786fc6a9274c953ac3b9bf859e6c22daaec0c080",
+    "independent_witness": "journal_witness.cpp",
+    "local_output": "build/ikea-cohesion-v2/journal-local-cursor",
+    "patch": "journal-local-cursor.patch",
+    "r4_worker_artifact": {
+      "bucket": "calico-fleet-artifacts",
+      "bytes": 138015924,
+      "files": 254,
+      "format": 1,
+      "key": "sixdb/artifacts/sha256/5e6792cd78b5512e570484a6474f7f5706b19ded26b70f9c682be4d4e678cdf9.tar.gz",
+      "kind": "files",
+      "region": "us-east-1",
+      "sha256": "5e6792cd78b5512e570484a6474f7f5706b19ded26b70f9c682be4d4e678cdf9",
+      "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/5e6792cd78b5512e570484a6474f7f5706b19ded26b70f9c682be4d4e678cdf9.tar.gz"
+    },
+    "raw_receipt_sha256": "4a11fc705ff37b6e1ed0763d60f167578d807d886705b453a5be2f1607447077",
+    "tools": "Reuse the prior compile.py flags, sp-linked-review.py parse/trace and owning cohesion-codegen.py strict ELF parser; all actual commands and hashes are recorded here."
+  },
+  "scope": "Isolated flat journal cursor/publication lowering; unchanged actual placed_mid.cpp; static AVX2/Zen5 emission only, no timings or live edits.",
+  "semantics": "Uses the existing admitted capacity, bounds and record-storage disjointness requirements. No callbacks or legal concurrent observer occur inside the plain append; final records/used and last-entry coalescing are unchanged.",
+  "strict_comparison": {
+    "baseline_record_sha256": "11f3ddc334f98afa426fd59ad1466df3f0089c39b1d3c389bb2b6b5b667cf1f5",
+    "candidate_record_sha256": "c91973af813fa848b90652acdf1c40241868bf1c65de013967b09d54757fc59b",
+    "changed_function_payloads": 16,
+    "constants_exact": true,
+    "functions_per_arm": 80,
+    "new_or_removed_functions": [],
+    "parser_sha256": "3ca00733fbe15e5d70adccbd3f2ab900d658633299df263e5886d4c61a0e320e",
+    "unwind_exact": false
+  },
+  "symbol_selection": {
+    "helpers": "other_coverage<journal, substituted striped layout7>::write<original local layout31/heads8, field_kind0(body) or2(head0)>; exact symbol and literal function payload hashes recorded by role.",
+    "regions": "replace_regions_unchecked with original local layout31/heads8, substituted striped layout7 and sum_change; lambda0 denotes partial selection. No symbol/type normalization."
+  },
+  "witness": {
+    "binary_sha256": "889a17e82a81ec732b1f0fd4d0f255908d32f2119995611b15995a01034ec2dc",
+    "command": [
+      "clang++-21",
+      "-std=c++23",
+      "-O3",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-march=armv8-a+simd",
+      "-mtune=neoverse-v2",
+      "-I",
+      "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/journal-local-cursor/overlay/ikea/include",
+      "-I",
+      "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/native-r4-sources/after/ikea/include",
+      "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/workbench/spikes/ikea-composition/evidence/interface-cohesion-v2-20261023/coverage-guard/journal_witness.cpp",
+      "-o",
+      "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/journal-local-cursor/local-cursor-journal-witness"
+    ],
+    "compile_exit_code": 0,
+    "compile_log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "exit_code": 0,
+    "run_log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "source": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/workbench/spikes/ikea-composition/evidence/interface-cohesion-v2-20261023/coverage-guard/journal_witness.cpp",
+    "source_sha256": "e88bde6283a062c405f9953db86dcae0e2b02516824d173e568ea1188ca8685c"
+  }
+}

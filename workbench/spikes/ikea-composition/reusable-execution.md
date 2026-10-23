@@ -30,18 +30,22 @@ candidate copied a code projection into every ordinary reader, increasing it
 from two pointers to 24 bytes on the current 64-bit targets. This attempted to
 remove a dependent plan/control load in repeated encoded predicates.
 
-The implemented endpoint restores the general reader to two pointers and moves
-that copied projection into public `predicate<N, Byte, Rows>` in `filter.h`.
-On the current 64-bit targets the reader is 16 bytes and predicate 24 bytes;
-these are source/ABI facts, not portable size contracts or performance results.
-`bind_predicate(reader)` copies the reader's two plan/view pointers and the code,
-so that reader wrapper may expire. `bind_predicate(plan, view)` provides the
-same preparation directly. Plan/view values and addresses remain stable through
-use, including the general projection fallback. Operator, RHS and activity stay
-per-command. Reader `filter` remains a one-call convenience; repeated-filter
-callers prepare the predicate once. Writers and native bindings retain their
-two-pointer representation. The 24-byte unconditional reader is candidate
-history rather than the current interface.
+The first correction restored the general reader to two pointers and moved the
+projection into a separate 24-byte predicate. The
+[completed copied-projection comparison](handle-boundaries/PROJECTION-NATIVE.md)
+supports a smaller endpoint: public `predicate<Byte, Rows>` copies its code and
+retains only the named view. The plan and intermediate reader may expire after
+binding, including through the strided/sparse fallback. Packet capacity N no
+longer appears in an operation that does not use it.
+
+On the inspected targets both reader and predicate are now 16 bytes; these are
+ABI observations, not portable size contracts. `bind_predicate(reader)` and
+`bind_predicate(plan, view)` provide the same preparation. The named view's
+value, address and backing stay stable through use. Operator, RHS and activity
+remain per-command. Reader `filter` is the one-call convenience; repeated callers
+can prepare once. Writers and native bindings retain their two-pointer
+representation. The unconditional 24-byte reader and plan-borrowing 24-byte
+predicate remain source-qualified history.
 
 The [actual call-boundary study](../call-boundaries/README.md#returns-the-actual-boundary)
 shows why `sizeof` alone is inadequate. A trivial two-word return can use two
@@ -132,7 +136,7 @@ qualification are separate from frozen R4 and the old compact-predicate control.
 
 | Module / current mechanism | Candidate worth testing | Consequential limit |
 | --- | --- | --- |
-| TuplePack: shared prepared plan and named view; two-pointer general/native/writer bindings; separate prepared predicate owns its copied code | Qualify the implemented reader/predicate split against the earlier 24-byte cached-reader candidate and shared hot projection | Include generic reads, predicate-only and mixed read/write commands, map changes and checked factory handoff |
+| TuplePack: shared plan and named view for general/native/writer bindings; separate predicate copies one code and borrows only its view | Reuse the compact predicate across useful work; investigate direct validated-law binding for predicate-only owners | Keep checked factory handoff, new view admission and unrelated general read/write costs visible |
 | SeriesPack: small typed dense readers, larger expression and erased handles, runtime width catalogue | Share operation-major compiled controls; bind a resource cheaply or supply placement per whole operation | Count, output type, geometry, exact tails and writes remain explicit; copying all function pointers is an alternative to measure |
 | StreamPack: two-pointer authored access and exact-layout `rebind` | Explicit compatible-law retarget outside the point loop; reuse G/W/O/Used specialization | Existing rebind retains the original layout identity to hoist format loads. New layout/count/extent/sidecar facts require fresh admission |
 | Bec256: a span plus population/length execution proof | A naturally aligned compact execution capsule, retaining a separate full placement view if needed | A proposed pointer/u16 population/u8 length/u8 grant fits two words, but clamping public `storage().size()` would change its contract |
@@ -248,15 +252,16 @@ contracts; a common mechanism may justify disruptive changes now.
 ## Decisions supported so far
 
 The [handle-boundary comparison](handle-boundaries/README.md) supports keeping
-the general TuplePack reader small and caching predicate controls separately.
+the general TuplePack reader small and preparing predicates separately.
 Raw two-word returns use two GPRs; the checked `expected` factories still return
 through memory. Stored/reloaded and crowded callers also improve their emitted
-work. Repeated predicates keep their copied code and avoid a new plan-to-code
-dependency. Neither a universal 16-byte budget nor one larger catch-all binding
+work. Repeated predicates keep their copied code and avoid a plan-to-code
+dependency. The compact predicate also removes the fallback's plan borrow.
+Neither a universal 16-byte budget nor one larger catch-all binding
 follows from these results.
 
 The [R4 native comparison](evidence/interface-cohesion-v2-20261023/native-r4.json)
-measures the actual public endpoint. It leaves x86 losses in some predicates,
+measures that source cut's public endpoint. It leaves x86 losses in some predicates,
 SeriesPack writes and a TuplePack body write. Those are separate from the ABI
 improvement. The [point-write inspection](evidence/interface-cohesion-v2-20261023/tuple-point-codegen.json)
 finds identical loop/kernel bytes with changed kernel placement; the filter
@@ -285,14 +290,21 @@ The [block witness](handle-boundaries/README.md#complete-block-commands) compare
 retained, per-block prepared, one-shot and fresh placement/binding routes over
 eight shared plans. Its warm read comparison leaves plan construction, writes,
 content-proof transitions and minimal resident-descriptor design separate.
-A further question is whether a single-code predicate needs the full plan at
-execution at all. Its three-byte code describes one field; a copied projection
-plus a named view could remove a borrow and fit two words on current targets.
-The isolated prototype reuses bounded one-byte gather machinery and drops
-irrelevant generic packet capacity from its predicate type. Its final source
-is being qualified across every supported row count, exact strided/tail grants,
-actual expired-plan protection and the corrected inactive-row contract. It is
-not a live performance claim or an adopted endpoint yet.
+The completed [copied-projection comparison](handle-boundaries/PROJECTION-NATIVE.md)
+shows that a single-code predicate does not need the full plan at execution.
+It reuses bounded one-byte gathers and drops irrelevant packet capacity from
+its type. All 324 complete block cases improve across the three profiles;
+seven x86 predicate-route filter cases still lose over 5%, alongside twelve
+shared-decode control losses. Actual linked audit finds less selected work in
+those seven paths, not a timing explanation. This supports adopting the simpler
+plan-independent endpoint while retaining the measured exceptions.
+
+After-only full core/header checks pass on all three profiles. Independent
+expired-plan protection covers all 11 packet shapes, and the compact Rows64
+predicate passes a fresh fully instrumented poisoned-interior check. The owning
+TuplePack lifetime fixture preserves those consequential boundaries after the
+spike. These qualifications do not establish that the earlier f153-to-R4
+SeriesPack, TuplePack write or StreamPack losses are closed.
 
 Execution independence also exposes a cold-binding question: a predicate-only
 owner should not need generic shuffle preparation merely to select one validated

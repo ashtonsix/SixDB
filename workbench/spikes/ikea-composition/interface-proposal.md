@@ -69,8 +69,9 @@ TuplePack's former `reader` and `writer` were plans. They become `read_plan`
 and `write_plan`; the bound operations take the simpler nouns. Filtering is a
 reader command with the existing encoded one-code shortcut. Repeated filters
 use `bind_predicate(reader)` or `bind_predicate(plan, view)` to copy the code
-projection once. The predicate borrows the named plan/view; its intermediate
-reader wrapper may expire. A checked filter
+projection once. The predicate borrows only its named view; its preparation
+plan and intermediate reader may expire. Its type is `predicate<Byte, Rows>`,
+independent of unused packet capacity. A checked filter
 rejects a hole-only, empty or multi-code map. The unchecked peer requires that
 map proof as well as its activity/window proof. Full-record initialization is a
 writer command over `write_plan<128>`, retaining the two 64-slot bodies, zeroed

@@ -1,0 +1,285 @@
+{
+  "build": {
+    "allowed_cpus": [
+      8
+    ],
+    "build_jobs": 2,
+    "compiled_commands_file_sha256": "9d67792d93269e2b2bbb76fe09aeb06a1cd6731b1503596c7ba58babb7bce135",
+    "compiled_target_objects": 168,
+    "consumed_input_map_file_sha256": "5e29895e848458aa3a33bac22cba036c541cda542ba1a8d674fbf1e8fe9cec85",
+    "consumed_inputs": 1298,
+    "frame_objects": 0,
+    "fresh": true,
+    "heavy_compile_jobs": 1,
+    "ninja_steps": 246,
+    "reused_target_objects": 0,
+    "spikes": [
+      "orbital-mvcc",
+      "hashtable"
+    ]
+  },
+  "checks": {
+    "binaries": {
+      "engine_directory_check": {
+        "bytes": 5406232,
+        "sha256": "d2494828b2338b171bc4a273bb08673fd96d2c7cd487a782b3078502f4bc8461"
+      },
+      "hashtable_mm_loom_read_check": {
+        "bytes": 17849016,
+        "sha256": "4c6b115431b29db46e69c26d31fae3bfb9bcc991178e2a61428336bb555ab0d0"
+      },
+      "hashtable_mm_ring_check": {
+        "bytes": 6162952,
+        "sha256": "faadaec39e4802fca557300b7188f0e09bedbe62daca518218bed90dbc5af724"
+      },
+      "loom_budget_check": {
+        "bytes": 2821440,
+        "sha256": "dcc7feb5d8dd444c548012e3b57ac5864ed126cc147bd06771ba6ddae7e97297"
+      },
+      "loom_example_allocation": {
+        "bytes": 3209872,
+        "sha256": "6200a58c5063dfaada477dff67df94dbe1608bfd533215f6f203905834d934d8"
+      },
+      "loom_hint_check": {
+        "bytes": 5214864,
+        "sha256": "01c4819e9a1eaf026fb21a122be3e4a351bd1047a292d924ea3405c49df25527"
+      },
+      "loom_object_module_check": {
+        "bytes": 5934296,
+        "sha256": "f62787ba41827a39b3cfb69d14b12f1ec2394380672a1ef68f84e15774021fd5"
+      },
+      "loom_object_ring_check": {
+        "bytes": 6469440,
+        "sha256": "9275642cfcd7dd0c3945308737a5bc76af5d3fe8cdd1fc0d54cb572f2a1ca507"
+      },
+      "orbital_mvcc_composed_append_check": {
+        "bytes": 6157960,
+        "sha256": "1df2d6da761721e290c131bff9f64266630e1effcf2bedab7b2b18139d18b0c0"
+      },
+      "orbital_mvcc_composed_check": {
+        "bytes": 6079400,
+        "sha256": "4e44f78889120ff8c17abf2119b4c207cc4d9af837840f3556940b537c491d24"
+      },
+      "orbital_mvcc_composed_read_fusion_check": {
+        "bytes": 5976048,
+        "sha256": "a30909faa2030cd06072a8a8f39f296bf54732ca4dea003590a97eb5ce60f5a6"
+      },
+      "orbital_object_bounded_check": {
+        "bytes": 1631328,
+        "sha256": "db1e044672555419e07537c4716daf46b555fd5643e26698cab7b34b129a2894"
+      },
+      "orbital_object_catalog_check": {
+        "bytes": 1757552,
+        "sha256": "233be3586a96223666b7b931863f836a7f08772dddfc6a5c42ba80311b855d2d"
+      },
+      "orbital_object_shape_check": {
+        "bytes": 4451448,
+        "sha256": "c6378be31ebedb19ae5ea5e6532d6ae345d57e6f1eecb2d2b8ab8a9f58a17202"
+      },
+      "orbital_pack_growth_check": {
+        "bytes": 3753648,
+        "sha256": "1afeb032580337c14659503a1f86cfee48895059d8a43f4ee526d3bd7c64959c"
+      },
+      "orbital_preparation_check": {
+        "bytes": 2487336,
+        "sha256": "470f220a88f8e134ef657e0b2de355d6d952d8132a163f5e53943db080e2e568"
+      }
+    },
+    "count": 16,
+    "ctest_stdout": "Internal ctest changing into directory: /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/allocator-callers/cmake\nTest project /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/allocator-callers/cmake\n      Start  95: orbital_preparation_check\n 1/16 Test  #95: orbital_preparation_check .................   Passed    0.01 sec\n      Start 110: loom_hint_check\n 2/16 Test #110: loom_hint_check ...........................   Passed    0.01 sec\n      Start 114: loom_example_allocation\n 3/16 Test #114: loom_example_allocation ...................   Passed    0.00 sec\n      Start 119: loom_budget_check\n 4/16 Test #119: loom_budget_check .........................   Passed    0.00 sec\n      Start 120: engine_directory_check\n 5/16 Test #120: engine_directory_check ....................   Passed    0.53 sec\n      Start 121: orbital_pack_growth_check\n 6/16 Test #121: orbital_pack_growth_check .................   Passed    0.01 sec\n      Start 122: orbital_mvcc_composed_read_fusion_check\n 7/16 Test #122: orbital_mvcc_composed_read_fusion_check ...   Passed    0.00 sec\n      Start 123: orbital_mvcc_composed_check\n 8/16 Test #123: orbital_mvcc_composed_check ...............   Passed    0.00 sec\n      Start 124: orbital_mvcc_composed_append_check\n 9/16 Test #124: orbital_mvcc_composed_append_check ........   Passed    0.00 sec\n      Start 125: loom_object_module_check\n10/16 Test #125: loom_object_module_check ..................   Passed    0.00 sec\n      Start 126: loom_object_ring_check\n11/16 Test #126: loom_object_ring_check ....................   Passed    0.08 sec\n      Start 127: orbital_object_catalog_check\n12/16 Test #127: orbital_object_catalog_check ..............   Passed    0.02 sec\n      Start 128: orbital_object_shape_check\n13/16 Test #128: orbital_object_shape_check ................   Passed    0.01 sec\n      Start 129: orbital_object_bounded_check\n14/16 Test #129: orbital_object_bounded_check ..............   Passed    0.01 sec\n      Start 132: hashtable_mm_ring_check\n15/16 Test #132: hashtable_mm_ring_check ...................   Passed    0.60 sec\n      Start 135: hashtable_mm_loom_read_check\n16/16 Test #135: hashtable_mm_loom_read_check ..............   Passed    0.16 sec\n\n100% tests passed, 0 tests failed out of 16\n\nLabel Time Summary:\nloom-runtime             =   0.01 sec*proc (3 tests)\norbital-mvcc-metadata    =   0.15 sec*proc (9 tests)\norbital-runtime          =   0.01 sec*proc (1 test)\n\nTotal Test time (real) =   1.48 sec\n",
+    "failed": 0,
+    "passed": [
+      "orbital_preparation_check",
+      "loom_hint_check",
+      "loom_example_allocation",
+      "loom_budget_check",
+      "engine_directory_check",
+      "orbital_pack_growth_check",
+      "orbital_mvcc_composed_read_fusion_check",
+      "orbital_mvcc_composed_check",
+      "orbital_mvcc_composed_append_check",
+      "loom_object_module_check",
+      "loom_object_ring_check",
+      "orbital_object_catalog_check",
+      "orbital_object_shape_check",
+      "orbital_object_bounded_check",
+      "hashtable_mm_ring_check",
+      "hashtable_mm_loom_read_check"
+    ],
+    "selected": [
+      "orbital_preparation_check",
+      "loom_budget_check",
+      "loom_hint_check",
+      "loom_example_allocation",
+      "engine_directory_check",
+      "orbital_pack_growth_check",
+      "orbital_mvcc_composed_read_fusion_check",
+      "orbital_mvcc_composed_check",
+      "orbital_mvcc_composed_append_check",
+      "loom_object_module_check",
+      "loom_object_ring_check",
+      "orbital_object_catalog_check",
+      "orbital_object_shape_check",
+      "orbital_object_bounded_check",
+      "hashtable_mm_ring_check",
+      "hashtable_mm_loom_read_check"
+    ],
+    "selected_test_receipt_sha256": "9e0dc83b30670d9638d5ff16d9e10c4dc029703728fe11968b1232871c22ac56"
+  },
+  "commands": [
+    {
+      "command": [
+        "cmake",
+        "-S",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb",
+        "-B",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/allocator-callers/cmake",
+        "-G",
+        "Ninja",
+        "-DCMAKE_CXX_COMPILER=clang++-21",
+        "-DCMAKE_BUILD_TYPE=Release",
+        "-DSIXDB_MARCH=armv8-a+simd",
+        "-DSIXDB_TUNE=neoverse-v2",
+        "-DSIXDB_SPIKES=orbital-mvcc;hashtable",
+        "-DSIXDB_TEST_SCOPE=full",
+        "-DSIXDB_HEAVY_COMPILE_JOBS=1"
+      ],
+      "cwd": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb",
+      "exit_code": 0,
+      "label": "configure",
+      "log": "logs/configure.log",
+      "log_sha256": "ed185ad1c9b398e6874e86d0b41d2eff0cccf8edea4b29d220b75454da097f56"
+    },
+    {
+      "command": [
+        "cmake",
+        "--build",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/allocator-callers/cmake",
+        "--target",
+        "orbital_preparation_check",
+        "loom_budget_check",
+        "loom_hint_check",
+        "loom_example_allocation",
+        "engine_directory_check",
+        "orbital_pack_growth_check",
+        "orbital_mvcc_composed_read_fusion_check",
+        "orbital_mvcc_composed_check",
+        "orbital_mvcc_composed_append_check",
+        "loom_object_module_check",
+        "loom_object_ring_check",
+        "orbital_object_catalog_check",
+        "orbital_object_shape_check",
+        "orbital_object_bounded_check",
+        "hashtable_mm_ring_check",
+        "hashtable_mm_loom_read_check",
+        "-j",
+        "2"
+      ],
+      "cwd": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb",
+      "exit_code": 0,
+      "label": "build",
+      "log": "logs/build.log",
+      "log_sha256": "47796bd0c37fcdacc1346bb4312d59630cde56028ad0a13ddb6a6366d021a327"
+    },
+    {
+      "command": [
+        "ctest",
+        "--test-dir",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/allocator-callers/cmake",
+        "--output-on-failure",
+        "--no-tests=error",
+        "-j",
+        "1",
+        "-R",
+        "^(orbital_preparation_check|loom_budget_check|loom_hint_check|loom_example_allocation|engine_directory_check|orbital_pack_growth_check|orbital_mvcc_composed_read_fusion_check|orbital_mvcc_composed_check|orbital_mvcc_composed_append_check|loom_object_module_check|loom_object_ring_check|orbital_object_catalog_check|orbital_object_shape_check|orbital_object_bounded_check|hashtable_mm_ring_check|hashtable_mm_loom_read_check)$"
+      ],
+      "cwd": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb",
+      "exit_code": 0,
+      "label": "check",
+      "log": "logs/check.log",
+      "log_sha256": "5125d782334b1e3b02f0cc117485c6f5df5b54c70b76ada5f3b4d57462b6d02d"
+    }
+  ],
+  "complete": true,
+  "format": 1,
+  "limits": [
+    "Local NEON correctness only; no x86 requalification or timing claim.",
+    "Frame owner closure was skipped because its owner is paused; none of its sources were compiled.",
+    "This does not replace Orbital/Loom module-wide validation.",
+    "Earlier native captures and comparisons retain their original frozen source-cut scope; these owner checks do not alter or restart that cohort."
+  ],
+  "metadata": {
+    "checks": [
+      "orbital_pack_growth_check",
+      "orbital_mvcc_composed_read_fusion_check",
+      "orbital_mvcc_composed_check",
+      "orbital_mvcc_composed_append_check",
+      "loom_object_module_check",
+      "loom_object_ring_check",
+      "orbital_object_catalog_check",
+      "orbital_object_shape_check",
+      "orbital_object_bounded_check"
+    ],
+    "relation": "Parent DEPENDS names eight checks; CTest label also includes orbital_pack_growth_check from the shape subdirectory. Build all nine labeled executables before one exact sixteen-test run."
+  },
+  "raw_provenance": {
+    "controller_sha256": "c5f37e661e0b19acd984f5c4e13c4296f1928ccf8d91563aa23ac06b931516fc",
+    "local_directory": "build/ikea-cohesion-v2/allocator-callers",
+    "note": "Bulky object files, dependency maps and build logs remain ignored; exact commands, selected source identities, binary hashes and the complete check report are retained here.",
+    "receipt_sha256": "83f6b57ab79bca56eaec4f98aedc82dd8f4409b1d6def2cc7b32f7247da8a8f4",
+    "source_at_start_file_sha256": "196a3f532b329e469a602e93ca0fb58a3aabddffa816a1af2840e92899f551b6"
+  },
+  "scope": "Fresh normal dependency build and one exact current-source non-Frame integration check run after the single-class allocator merge. Behavioral qualification only.",
+  "source": {
+    "all_first_party_consumed_bytes_equal_head": true,
+    "allocator_merge": "e74baf3482a858ffbdfd37165cced883b6c1c2d4",
+    "consumed_source_changed_during_build": [],
+    "first_party_consumed_files": 312,
+    "first_party_consumed_map_sha256": "92aceda4bb38078fe3a0038e9c5cfce1f03e6004348161436fa8b27ccba4409a",
+    "head": "80b93a5f840525b359578882dd5ddad0b3b6b75e",
+    "merge_is_ancestor": true,
+    "recovery": "All consumed first-party bytes are recoverable directly from the recorded Git HEAD; no working-tree overlay was consumed.",
+    "selected_source_sha256": {
+      "CMakeLists.txt": "dc9798382cd1ac56d668ca6e28827a8f915d9f14fd7ddda3ed25eba19b10b1ac",
+      "cmake/ClangVersion.cmake": "cde279b39294bfa37d02f80ff13d19f6489b0e7ee407958a734d54381cc0a20f",
+      "cmake/Targets.cmake": "1c1f3989a4214a8b5deec18a8c542395232155e3fcbeb2e423c7e0165f20c5c8",
+      "cmake/Tuning.cmake": "ea80b3a2057fe98b7ac01c3e490ceffbc8524cc50788b29c80baf31857e6cc76",
+      "engine/src/directory.cpp": "a6d3a0468c7800e3a5376d8644937c3f4282d7de9a76a20994ff7b13cc6b8187",
+      "engine/src/directory_material.cpp": "1bb90a4a55ec35ed61b21f0dba4377d9a0a1995fe6b3acd498e085840f180fde",
+      "ikea/include/ikea/streampack/view.h": "034ad4974ff4c48f9e41e1d9ec674b9b7dbc27353a39b538f568306a0c1ac8e3",
+      "ikea/include/ikea/tuplepack/author/execution.h": "9836d06d242ab571f77e69fa757d3a67315e9ef6546dd01b0c0eb169d871fcbe",
+      "ikea/include/ikea/tuplepack/read.h": "612999ebdc54d93bb7d9e5d68cf2327b2f2742dbbacf52f363dabaf095129876",
+      "loom/examples/allocation.cpp": "215e6012152556fe499367c3df6e1f0acac230c7afc8043559dccc6353150c21",
+      "loom/test/budget.cpp": "4c1c6c114d7746f7fa1da62e5aed443cc54ff8b5169310d86c9aaf1abe847483",
+      "loom/test/hints.cpp": "ceb4f0561e13afba9f6a89f74fcc2b7635ef8822acb235add5ded65d881d05e1",
+      "orbital/include/orbital/allocation.h": "3ce6a5eb08c7dc969ee63436cec12b98948380cded1206aa384dea132b1cbc66",
+      "orbital/include/orbital/types.h": "e4b17166e48ba62a8932fa6c91c9791d2a5b357cac27a5003293eb972ebe4db8",
+      "orbital/include/orbital/worker.h": "81952484835101e0dfde66a75908e9b8787b0cb1f7ab2fb3d1b9c1bd4ef11d04",
+      "orbital/test/preparation.cpp": "2d94320cd950c87c6fcf485fc2276f833a9cda5eb15adc12a1426e87048d695e",
+      "workbench/spikes/hashtable/CMakeLists.txt": "319da0cc197fe4776877ff4aa014a47c149e0839523e2412c64503a8a019531c",
+      "workbench/spikes/hashtable/multimap/guarded/ring-check.cpp": "b378634f97a30fc8153f773cf8fb60db8ac362aaa61285eb97ff247ea4861592",
+      "workbench/spikes/hashtable/multimap/loom-composition/check.cpp": "433d51b9cfe47c73ed2050486b8d3e9af33b29a04903ff12242b6e4baaa92a90",
+      "workbench/spikes/orbital-mvcc/metadata/CMakeLists.txt": "90c87f0b1a273368f6676df1f3989401c2e0f8082dc1a5dbed604fe134c81cb2",
+      "workbench/spikes/orbital-mvcc/metadata/composed/material.cpp": "5736ea2b217dd677c3654f76bbfc7fdd311f823aa1529ecbed0aa75f0f144168",
+      "workbench/spikes/orbital-mvcc/metadata/orbital/shape/CMakeLists.txt": "35bcdbcae448eabf102a8770888e7e85009ce438d3c8155a2a845d37a35cf29e"
+    }
+  },
+  "study": "merged-allocator-callers",
+  "toolchain": {
+    "assertions_enabled_all_first_party_objects": true,
+    "compiler": "Ubuntu clang version 21.1.8 (++20251221033104+2078da43e25a-1~exp1~20251221153121.57)\nTarget: aarch64-unknown-linux-gnu\nThread model: posix\nInstalledDir: /usr/lib/llvm-21/bin\n",
+    "configuration": "Release",
+    "first_party_flags": [
+      "-O3",
+      "-g",
+      "-std=c++23",
+      "-march=armv8-a+simd",
+      "-mtune=neoverse-v2"
+    ],
+    "march": "armv8-a+simd",
+    "profile": "neon",
+    "system_libraries": "System standard library and linker packages are not pinned by BUILDING.md; all consumed header identities are included in the full ignored input-map digest.",
+    "tune": "neoverse-v2",
+    "verified_first_party_objects": 67
+  }
+}

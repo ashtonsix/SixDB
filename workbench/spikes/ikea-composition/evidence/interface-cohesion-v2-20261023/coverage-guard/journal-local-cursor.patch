@@ -1,0 +1,25 @@
+--- r4-after/ikea/include/ikea/effects.h
++++ local-cursor/ikea/include/ikea/effects.h
+@@ -21,8 +21,10 @@
+     template <class Source>
+     void before(const Source& source, unsigned plane, std::size_t offset,
+                 std::size_t size) noexcept {
+-        if (used && storage[used - 1].source == &source && storage[used - 1].plane == plane) {
+-            auto& previous = storage[used - 1];
++        const auto previous_used = used;
++        auto* const entries = storage.data();
++        if (previous_used && entries[previous_used - 1].source == &source && entries[previous_used - 1].plane == plane) {
++            auto& previous = entries[previous_used - 1];
+             const auto end = previous.offset + previous.size, next_end = offset + size;
+             if (previous.offset <= next_end && offset <= end) {
+                 const auto begin = std::min(previous.offset, offset);
+@@ -31,7 +33,8 @@
+                 return;
+             }
+         }
+-        storage[used++] = {&source, plane, offset, size};
++        entries[previous_used] = {&source, plane, offset, size};
++        used = previous_used + 1;
+     }
+     std::size_t remaining() const noexcept { return storage.size() - used; }
+     std::span<const entry> entries() const noexcept { return storage.first(used); }

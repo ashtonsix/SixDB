@@ -1,0 +1,1370 @@
+{
+  "format": 1,
+  "scope": "Actual final copied-projection linked NEON complete block commands; source-selected in-domain branch paths, not a cycle model.",
+  "job": "20261023T045507Z-9380ce67",
+  "variant": "copied-projection-final",
+  "source": "workbench/spikes/ikea-composition/handle-boundaries/blocks.cpp",
+  "source_sha256": "00e11dc42c1710b04b905fc5de6db30522059bcd2f9bb2c15e8d449d399b08a1",
+  "candidate_header_sha256": "514e68275e3849bd58549b56f4f78fe81ee48ebce3df4cca830ba4091b568868",
+  "source_manifest_sha256": {
+    "after": "a4388c9a6695826bec2703d1da8ff1e56062b8c9f81bfeb489b047a2d0ef1d7d",
+    "before": "929b17889f350d24e2e740c052fc28411fcfaf589261c0216cc9b881b9f2cde6"
+  },
+  "receipt_sha256": "83e680d9e81798eb4fea620ac634228beaf79fa8deb096e85914ea3de91b8eb5",
+  "validation": {
+    "evidence_sha256": "c87500a6a7c270bd92fb8f67c3cd76f388bae6ba858576d85f90aee311eb3292",
+    "parser_sha256": "f4212dba6570da71aafde2fd10d1577289f797ac52e7c3e87ab15efde01704ee",
+    "helper_sha256": "fd2d59c208ec999fb11a310d954e786af79f2ccb8b3446639dcab0f631dd0319",
+    "verified": {
+      "before": {
+        "function_symbols": 6,
+        "literal_instructions": 5172
+      },
+      "after": {
+        "function_symbols": 6,
+        "literal_instructions": 2924
+      }
+    },
+    "limits": "Exact annotated ARM pair only; no new timing or causal inference."
+  },
+  "historical_default_validation": {
+    "evidence_sha256": "a72c1350dff6d3e1d148b07550d9f2c544dc8b231fcdc1a69f9da64073c5b98d",
+    "parser_sha256": "f4212dba6570da71aafde2fd10d1577289f797ac52e7c3e87ab15efde01704ee",
+    "helper_sha256": "fd2d59c208ec999fb11a310d954e786af79f2ccb8b3446639dcab0f631dd0319",
+    "verified": {
+      "before": {
+        "function_symbols": 6,
+        "literal_instructions": 5172
+      },
+      "after": {
+        "function_symbols": 7,
+        "literal_instructions": 5184
+      }
+    },
+    "limits": "Exact annotated ARM pair only; no new timing or causal inference."
+  },
+  "source_manifest_file_sha256": "b2e6372c81b16fa5945e3810cd78476c61435b6c23353b81965a4ead4821520a",
+  "qualification": {
+    "complete": true,
+    "path": "projection-qualification.json",
+    "sha256": "3fb0efe3afa93ae30d9fd4b0d4f5ea266a8cff71ce26cc735039e8788077dcce"
+  },
+  "protocol_validation": {
+    "reader": "workbench/spikes/ikea-composition/handle-boundaries/predicate-results.py",
+    "reader_sha256": "623875d7b35e1d675771e330cd773565c70765fe77a22b8c0dd69ecd72767977",
+    "source_function_validated": true,
+    "blocks108cases_all3arms_all5trials_validated": true,
+    "full_cross_profile_CLI": "pending Zen; not run by this audit"
+  },
+  "compiler": "Ubuntu clang version 21.1.8 (++20251221032922+2078da43e25a-1~exp1~20251221153059.70)\nTarget: aarch64-unknown-linux-gnu\nThread model: posix\nInstalledDir: /usr/lib/llvm-21/bin\n",
+  "disassembly_command": "llvm-objdump-21 -d -r --demangle BINARY (worker command, exit0)",
+  "files": {
+    "before": {
+      "blocks": {
+        "binary_sha256": "565c417c3e2d9f4774289e05a87c3b203bc0e0e8e05a62499bd64e2f16c2c024",
+        "binary_bytes": 5071816,
+        "disassembly_sha256": "56f69fe98d6bd01848fe107803423c6c570935e056d01ed26496470f6804fdae",
+        "disassembly_bytes": 5725850,
+        "matches_native_receipt": true
+      },
+      "filters": {
+        "binary_sha256": "da1ebf7c8c7d86004d6e5764525016f6144c14c37167ffde1b6be411f7d96757",
+        "binary_bytes": 11725536,
+        "disassembly_sha256": "d8587d14a838a9f90be703a7ed6b82270818066bf6cb71ab39dcb2ceb3b5a1e9",
+        "disassembly_bytes": 36191726,
+        "matches_native_receipt": true
+      }
+    },
+    "after": {
+      "blocks": {
+        "binary_sha256": "161b3e27ff426054870d603f540b79c6e2d523ac2c662ef5838eba67b574787d",
+        "binary_bytes": 4970040,
+        "disassembly_sha256": "841b54d0b59a4682470dc77cda2a8080e960a3a493555bd3389113782218de2a",
+        "disassembly_bytes": 5510676,
+        "matches_native_receipt": true
+      },
+      "filters": {
+        "binary_sha256": "2e6d851f523b401016390c4fe64898030098609205d9d2a019df1a874387996d",
+        "binary_bytes": 3650448,
+        "disassembly_sha256": "d5326c07c135725bd00a4da8432b75b58863fccaef88f663258247c4f486cb9d",
+        "disassembly_bytes": 4713285,
+        "matches_native_receipt": true
+      }
+    }
+  },
+  "arms": {
+    "before": {
+      "compile_command": "/usr/bin/clang++-21 -DBENCHMARK_STATIC_DEFINE -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=1 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN4=0 -DSIXDB_TUNE_ZEN5=0 -I/opt/sixdb/source/projection-inputs/before/ikea/include -I/opt/sixdb/source/build/ikea-predicate-native/neon/before/_deps/googlebenchmark-src/include -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source/projection-inputs/before=. -ffunction-sections -fdata-sections -march=armv8-a+simd -mtune=neoverse-v2 -o CMakeFiles/ikea_predicate_blocks.dir/opt/sixdb/source/workbench/spikes/ikea-composition/handle-boundaries/blocks.cpp.o -c /opt/sixdb/source/workbench/spikes/ikea-composition/handle-boundaries/blocks.cpp",
+      "text": {
+        "address": "0x6a00",
+        "bytes": 281456,
+        "sha256": "7914b2546b0d54b24dad09e781664a0af47d591372471fa568a88b56d6bb8888"
+      },
+      "functions": [
+        {
+          "role": "predicate",
+          "name": "std::expected<unsigned long, ikea::tuplepack::error> ikea::tuplepack::predicate<64u, std::byte const, 16u>::filter<(ikea::comparison)4>(unsigned long, unsigned long, unsigned long) const",
+          "size": 9852,
+          "sha256": "ab0ada9eac8f2395129cda08273eb88a139500a0b0629c47d8824bb9248f9e0a",
+          "instructions": 2463,
+          "address": "0xe060"
+        },
+        {
+          "role": "fresh_traverse",
+          "name": "unsigned long (anonymous namespace)::traverse<((anonymous namespace)::Route)3>((anonymous namespace)::Fixture const&, unsigned int, unsigned long)",
+          "size": 556,
+          "sha256": "aad7aec0e04d82ad1724bed7dcc7f0d82fb98a7f5cf629d8fd39065ac7d10633",
+          "instructions": 139,
+          "address": "0x106e0"
+        },
+        {
+          "role": "retained",
+          "name": "benchmark::internal::LambdaBenchmark<void (anonymous namespace)::register_route<((anonymous namespace)::Route)0>(char const*)::'lambda'(benchmark::State&)>::Run(benchmark::State&)",
+          "size": 2540,
+          "sha256": "5cd6d2e8047b9fcca159d92858abbc8cb7331f914ed63208fb3fa3f1f64708fe",
+          "instructions": 635,
+          "address": "0x10a80"
+        },
+        {
+          "role": "reprepare",
+          "name": "benchmark::internal::LambdaBenchmark<void (anonymous namespace)::register_route<((anonymous namespace)::Route)1>(char const*)::'lambda'(benchmark::State&)>::Run(benchmark::State&)",
+          "size": 2740,
+          "sha256": "a8a7aa0698cb667d4493024c1cf20aa796e4708957eb2aa126d48510aa31941b",
+          "instructions": 685,
+          "address": "0x11b60"
+        },
+        {
+          "role": "oneshot",
+          "name": "benchmark::internal::LambdaBenchmark<void (anonymous namespace)::register_route<((anonymous namespace)::Route)2>(char const*)::'lambda'(benchmark::State&)>::Run(benchmark::State&)",
+          "size": 2732,
+          "sha256": "7f00dba585786a552250ef2f44dd281bdfd442a4674df43335393ef0e0988c7a",
+          "instructions": 683,
+          "address": "0x12660"
+        },
+        {
+          "role": "fresh",
+          "name": "benchmark::internal::LambdaBenchmark<void (anonymous namespace)::register_route<((anonymous namespace)::Route)3>(char const*)::'lambda'(benchmark::State&)>::Run(benchmark::State&)",
+          "size": 2268,
+          "sha256": "5fac03191f7cdafac3debda61c7686d0a35977d76cff328ec06ababcc76742a9",
+          "instructions": 567,
+          "address": "0x13140"
+        }
+      ],
+      "selected_paths": {
+        "full_tight": {
+          "scope": {
+            "first": 0,
+            "source_rows": 16,
+            "active": "0xffff",
+            "stride": 1,
+            "code_offset": 0,
+            "code_width": 5,
+            "code_shift": 3,
+            "rhs": "in domain",
+            "before_plan": "single row-major code; first=0,count=grain=1,contiguous=true,tight_bytes=0,route.routes=1,route.shifting=true,route.masking=true"
+          },
+          "instruction_count": 54,
+          "conditional_branches": 7,
+          "vector_comparisons": 1,
+          "vector_payload_loads": 1,
+          "opcode_counts": {
+            "mov": 8,
+            "lsr": 1,
+            "cbnz": 1,
+            "stp": 1,
+            "ldr": 7,
+            "subs": 1,
+            "b.lo": 1,
+            "clz": 1,
+            "sub": 1,
+            "cmp": 4,
+            "b.hs": 1,
+            "cbz": 1,
+            "ldrb": 2,
+            "lsl": 3,
+            "mvn": 1,
+            "b.ls": 1,
+            "b.ne": 2,
+            "add": 1,
+            "dup": 2,
+            "and": 2,
+            "b": 2,
+            "adrp": 1,
+            "cmhs": 1,
+            "addv": 2,
+            "ext": 1,
+            "fmov": 2,
+            "bfi": 1,
+            "ldp": 1,
+            "ret": 1
+          },
+          "movemask_constant_address": "0x4b930",
+          "movemask_constant_bytes": "01020408102040800102040810204080",
+          "trace_sha256": "fbe6b961f40f8dccfbed82623870bfe19ce7190722d9cc5c47d4af4a9329a68a"
+        },
+        "full_strided": {
+          "scope": {
+            "first": 0,
+            "source_rows": 16,
+            "active": "0xffff",
+            "stride": 2,
+            "code_offset": 0,
+            "code_width": 5,
+            "code_shift": 3,
+            "rhs": "in domain",
+            "before_plan": "single row-major code; first=0,count=grain=1,contiguous=true,tight_bytes=0,route.routes=1,route.shifting=true,route.masking=true"
+          },
+          "instruction_count": 140,
+          "conditional_branches": 20,
+          "vector_comparisons": 1,
+          "vector_payload_loads": 0,
+          "opcode_counts": {
+            "mov": 13,
+            "lsr": 1,
+            "cbnz": 1,
+            "stp": 1,
+            "ldr": 17,
+            "subs": 1,
+            "b.lo": 1,
+            "clz": 1,
+            "sub": 3,
+            "cmp": 15,
+            "b.hs": 1,
+            "cbz": 3,
+            "ldrb": 5,
+            "lsl": 2,
+            "mvn": 1,
+            "b.ls": 1,
+            "b.ne": 10,
+            "add": 18,
+            "madd": 5,
+            "b.eq": 1,
+            "movi": 3,
+            "ld1": 15,
+            "b": 4,
+            "b.hi": 2,
+            "tbl": 1,
+            "ushl": 1,
+            "and": 2,
+            "dup": 1,
+            "adrp": 1,
+            "cmhs": 1,
+            "addv": 2,
+            "ext": 1,
+            "fmov": 2,
+            "bfi": 1,
+            "ldp": 1,
+            "ret": 1
+          },
+          "movemask_constant_address": "0x4b930",
+          "movemask_constant_bytes": "01020408102040800102040810204080",
+          "trace_sha256": "60c5caa6bf5ec5eacaf101d253da1547c2cca224c6bfc32829068e884a9c642c"
+        },
+        "partial_tight": {
+          "scope": {
+            "first": 0,
+            "source_rows": 16,
+            "active": "0xa529",
+            "stride": 1,
+            "code_offset": 0,
+            "code_width": 5,
+            "code_shift": 3,
+            "rhs": "in domain",
+            "before_plan": "single row-major code; first=0,count=grain=1,contiguous=true,tight_bytes=0,route.routes=1,route.shifting=true,route.masking=true"
+          },
+          "instruction_count": 161,
+          "conditional_branches": 31,
+          "vector_comparisons": 1,
+          "vector_payload_loads": 0,
+          "opcode_counts": {
+            "mov": 34,
+            "lsr": 1,
+            "cbnz": 1,
+            "stp": 1,
+            "ldr": 19,
+            "subs": 1,
+            "b.lo": 1,
+            "clz": 1,
+            "sub": 2,
+            "cmp": 12,
+            "b.hs": 2,
+            "cbz": 2,
+            "ldrb": 12,
+            "lsl": 1,
+            "mvn": 1,
+            "b.ls": 1,
+            "b.ne": 6,
+            "ldp": 2,
+            "add": 10,
+            "madd": 2,
+            "b.eq": 1,
+            "tbnz": 15,
+            "movi": 4,
+            "b": 12,
+            "b.hi": 2,
+            "tbl": 1,
+            "ushl": 1,
+            "and": 3,
+            "dup": 1,
+            "adrp": 1,
+            "cmhs": 1,
+            "addv": 2,
+            "ext": 1,
+            "fmov": 2,
+            "bfi": 1,
+            "ret": 1
+          },
+          "movemask_constant_address": "0x4b930",
+          "movemask_constant_bytes": "01020408102040800102040810204080",
+          "trace_sha256": "0b6c189d0764ee971c11766dbe950d626647d29f813c3c9ee2286cd17ac19231"
+        },
+        "partial_strided": {
+          "scope": {
+            "first": 0,
+            "source_rows": 16,
+            "active": "0xa529",
+            "stride": 2,
+            "code_offset": 0,
+            "code_width": 5,
+            "code_shift": 3,
+            "rhs": "in domain",
+            "before_plan": "single row-major code; first=0,count=grain=1,contiguous=true,tight_bytes=0,route.routes=1,route.shifting=true,route.masking=true"
+          },
+          "instruction_count": 161,
+          "conditional_branches": 31,
+          "vector_comparisons": 1,
+          "vector_payload_loads": 0,
+          "opcode_counts": {
+            "mov": 34,
+            "lsr": 1,
+            "cbnz": 1,
+            "stp": 1,
+            "ldr": 19,
+            "subs": 1,
+            "b.lo": 1,
+            "clz": 1,
+            "sub": 2,
+            "cmp": 12,
+            "b.hs": 2,
+            "cbz": 2,
+            "ldrb": 12,
+            "lsl": 1,
+            "mvn": 1,
+            "b.ls": 1,
+            "b.ne": 6,
+            "ldp": 2,
+            "add": 10,
+            "madd": 2,
+            "b.eq": 1,
+            "tbnz": 15,
+            "movi": 4,
+            "b": 12,
+            "b.hi": 2,
+            "tbl": 1,
+            "ushl": 1,
+            "and": 3,
+            "dup": 1,
+            "adrp": 1,
+            "cmhs": 1,
+            "addv": 2,
+            "ext": 1,
+            "fmov": 2,
+            "bfi": 1,
+            "ret": 1
+          },
+          "movemask_constant_address": "0x4b930",
+          "movemask_constant_bytes": "01020408102040800102040810204080",
+          "trace_sha256": "0b6c189d0764ee971c11766dbe950d626647d29f813c3c9ee2286cd17ac19231"
+        },
+        "tail_tight": {
+          "scope": {
+            "first": 0,
+            "source_rows": 13,
+            "active": "0x1fff",
+            "stride": 1,
+            "code_offset": 0,
+            "code_width": 5,
+            "code_shift": 3,
+            "rhs": "in domain",
+            "before_plan": "single row-major code; first=0,count=grain=1,contiguous=true,tight_bytes=0,route.routes=1,route.shifting=true,route.masking=true"
+          },
+          "instruction_count": 170,
+          "conditional_branches": 31,
+          "vector_comparisons": 1,
+          "vector_payload_loads": 0,
+          "opcode_counts": {
+            "mov": 30,
+            "lsr": 1,
+            "cbnz": 1,
+            "stp": 1,
+            "ldr": 25,
+            "subs": 1,
+            "b.lo": 1,
+            "clz": 1,
+            "sub": 2,
+            "cmp": 12,
+            "b.hs": 2,
+            "cbz": 2,
+            "ldrb": 18,
+            "lsl": 1,
+            "mvn": 1,
+            "b.ls": 1,
+            "b.ne": 6,
+            "ldp": 2,
+            "add": 15,
+            "madd": 4,
+            "b.eq": 1,
+            "tbnz": 15,
+            "movi": 4,
+            "b": 6,
+            "b.hi": 2,
+            "tbl": 1,
+            "ushl": 1,
+            "and": 3,
+            "dup": 1,
+            "adrp": 1,
+            "cmhs": 1,
+            "addv": 2,
+            "ext": 1,
+            "fmov": 2,
+            "bfi": 1,
+            "ret": 1
+          },
+          "movemask_constant_address": "0x4b930",
+          "movemask_constant_bytes": "01020408102040800102040810204080",
+          "trace_sha256": "30f3811c6de44a733fd3127a9105f8ffeba06ee9577a38a3d569db2254cbdabb"
+        }
+      }
+    },
+    "after": {
+      "compile_command": "/usr/bin/clang++-21 -DBENCHMARK_STATIC_DEFINE -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=1 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN4=0 -DSIXDB_TUNE_ZEN5=0 -I/opt/sixdb/source/projection-inputs/after/ikea/include -I/opt/sixdb/source/build/ikea-predicate-native/neon/after/_deps/googlebenchmark-src/include -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source/projection-inputs/after=. -ffunction-sections -fdata-sections -march=armv8-a+simd -mtune=neoverse-v2 -o CMakeFiles/ikea_predicate_blocks.dir/opt/sixdb/source/workbench/spikes/ikea-composition/handle-boundaries/blocks.cpp.o -c /opt/sixdb/source/workbench/spikes/ikea-composition/handle-boundaries/blocks.cpp",
+      "text": {
+        "address": "0x6a00",
+        "bytes": 272144,
+        "sha256": "132d4d0f554b25422acad1b4943540e95e759292e579565c2090a8c7751869eb"
+      },
+      "functions": [
+        {
+          "role": "predicate",
+          "name": "std::expected<unsigned long, ikea::tuplepack::error> ikea::tuplepack::predicate<std::byte const, 16u>::filter<(ikea::comparison)4>(unsigned long, unsigned long, unsigned long) const",
+          "size": 960,
+          "sha256": "b45f15731793f775ee8d238b84ee5e592bb38e1b43f06e386f4d06a7f5027877",
+          "instructions": 240,
+          "address": "0xdf40"
+        },
+        {
+          "role": "fresh_traverse",
+          "name": "unsigned long (anonymous namespace)::traverse<((anonymous namespace)::Route)3>((anonymous namespace)::Fixture const&, unsigned int, unsigned long)",
+          "size": 556,
+          "sha256": "5ae1690185cfcd6068dd3653eb083af42b75e04a49565f6cfafeebcc66f787ba",
+          "instructions": 139,
+          "address": "0xe300"
+        },
+        {
+          "role": "retained",
+          "name": "benchmark::internal::LambdaBenchmark<void (anonymous namespace)::register_route<((anonymous namespace)::Route)0>(char const*)::'lambda'(benchmark::State&)>::Run(benchmark::State&)",
+          "size": 2508,
+          "sha256": "ad558f2b72b9ae51a7426d2edbb47022369250bc310828336c1ed48b724cd986",
+          "instructions": 627,
+          "address": "0xe6a0"
+        },
+        {
+          "role": "reprepare",
+          "name": "benchmark::internal::LambdaBenchmark<void (anonymous namespace)::register_route<((anonymous namespace)::Route)1>(char const*)::'lambda'(benchmark::State&)>::Run(benchmark::State&)",
+          "size": 2672,
+          "sha256": "50c15d238cca18c06bdb0dc9e238211dd48b9806aaa7a2ce0f8b76f31599afb5",
+          "instructions": 668,
+          "address": "0xf760"
+        },
+        {
+          "role": "oneshot",
+          "name": "benchmark::internal::LambdaBenchmark<void (anonymous namespace)::register_route<((anonymous namespace)::Route)2>(char const*)::'lambda'(benchmark::State&)>::Run(benchmark::State&)",
+          "size": 2732,
+          "sha256": "80a90d6f09da58adf65223847a315c6dd0eabd002f95fccbea569204326a6e77",
+          "instructions": 683,
+          "address": "0x10200"
+        },
+        {
+          "role": "fresh",
+          "name": "benchmark::internal::LambdaBenchmark<void (anonymous namespace)::register_route<((anonymous namespace)::Route)3>(char const*)::'lambda'(benchmark::State&)>::Run(benchmark::State&)",
+          "size": 2268,
+          "sha256": "6275d36016a35b4d2e3514ca46b0f9c62849aabb29e34d11e8cd97e54a3db2a3",
+          "instructions": 567,
+          "address": "0x10ce0"
+        }
+      ],
+      "selected_paths": {
+        "full_tight": {
+          "scope": {
+            "first": 0,
+            "source_rows": 16,
+            "active": "0xffff",
+            "stride": 1,
+            "code_offset": 0,
+            "code_width": 5,
+            "code_shift": 3,
+            "rhs": "in domain",
+            "before_plan": "single row-major code; first=0,count=grain=1,contiguous=true,tight_bytes=0,route.routes=1,route.shifting=true,route.masking=true"
+          },
+          "instruction_count": 53,
+          "conditional_branches": 7,
+          "vector_comparisons": 1,
+          "vector_payload_loads": 1,
+          "opcode_counts": {
+            "mov": 8,
+            "lsr": 1,
+            "cbnz": 1,
+            "stp": 1,
+            "ldr": 7,
+            "subs": 1,
+            "b.lo": 1,
+            "clz": 1,
+            "sub": 1,
+            "cmp": 4,
+            "b.hs": 1,
+            "cbz": 1,
+            "ldrb": 2,
+            "lsl": 3,
+            "mvn": 1,
+            "b.ls": 1,
+            "b.ne": 2,
+            "add": 1,
+            "dup": 2,
+            "adrp": 1,
+            "and": 2,
+            "cmhs": 1,
+            "addv": 2,
+            "ext": 1,
+            "fmov": 2,
+            "bfi": 1,
+            "b": 1,
+            "ldp": 1,
+            "ret": 1
+          },
+          "movemask_constant_address": "0x494d0",
+          "movemask_constant_bytes": "01020408102040800102040810204080",
+          "trace_sha256": "ca178a2a0a9e3f9de8738bc14af54d512a29d239a81e04d372b042b98a897350"
+        },
+        "full_strided": {
+          "scope": {
+            "first": 0,
+            "source_rows": 16,
+            "active": "0xffff",
+            "stride": 2,
+            "code_offset": 0,
+            "code_width": 5,
+            "code_shift": 3,
+            "rhs": "in domain",
+            "before_plan": "single row-major code; first=0,count=grain=1,contiguous=true,tight_bytes=0,route.routes=1,route.shifting=true,route.masking=true"
+          },
+          "instruction_count": 99,
+          "conditional_branches": 7,
+          "vector_comparisons": 1,
+          "vector_payload_loads": 0,
+          "opcode_counts": {
+            "mov": 12,
+            "lsr": 1,
+            "cbnz": 1,
+            "stp": 1,
+            "ldr": 7,
+            "subs": 1,
+            "b.lo": 1,
+            "clz": 1,
+            "sub": 3,
+            "cmp": 4,
+            "b.hs": 1,
+            "cbz": 1,
+            "ldrb": 3,
+            "lsl": 4,
+            "mvn": 1,
+            "b.ls": 1,
+            "b.ne": 2,
+            "add": 18,
+            "madd": 5,
+            "ld1": 15,
+            "b": 1,
+            "dup": 2,
+            "adrp": 1,
+            "and": 3,
+            "cmhs": 1,
+            "addv": 2,
+            "ext": 1,
+            "fmov": 2,
+            "bfi": 1,
+            "ldp": 1,
+            "ret": 1
+          },
+          "movemask_constant_address": "0x494d0",
+          "movemask_constant_bytes": "01020408102040800102040810204080",
+          "trace_sha256": "0575e08fe80651b8a8d80a3b80f3b1fde69040f47490444b9c516975949143b6"
+        },
+        "partial_tight": {
+          "scope": {
+            "first": 0,
+            "source_rows": 16,
+            "active": "0xa529",
+            "stride": 1,
+            "code_offset": 0,
+            "code_width": 5,
+            "code_shift": 3,
+            "rhs": "in domain",
+            "before_plan": "single row-major code; first=0,count=grain=1,contiguous=true,tight_bytes=0,route.routes=1,route.shifting=true,route.masking=true"
+          },
+          "instruction_count": 123,
+          "conditional_branches": 22,
+          "vector_comparisons": 1,
+          "vector_payload_loads": 0,
+          "opcode_counts": {
+            "mov": 34,
+            "lsr": 1,
+            "cbnz": 1,
+            "stp": 1,
+            "ldr": 6,
+            "subs": 1,
+            "b.lo": 1,
+            "clz": 1,
+            "sub": 2,
+            "cmp": 4,
+            "b.hs": 2,
+            "cbz": 1,
+            "ldrb": 10,
+            "lsl": 3,
+            "mvn": 1,
+            "b.ls": 1,
+            "b.ne": 1,
+            "add": 10,
+            "madd": 2,
+            "tbnz": 15,
+            "movi": 1,
+            "b": 9,
+            "dup": 2,
+            "adrp": 1,
+            "and": 3,
+            "cmhs": 1,
+            "addv": 2,
+            "ext": 1,
+            "fmov": 2,
+            "bfi": 1,
+            "ldp": 1,
+            "ret": 1
+          },
+          "movemask_constant_address": "0x494d0",
+          "movemask_constant_bytes": "01020408102040800102040810204080",
+          "trace_sha256": "3f170649bf411dd44762c172cf3ecb35bd8b44bab1462cc680b190b5b6aed0f4"
+        },
+        "partial_strided": {
+          "scope": {
+            "first": 0,
+            "source_rows": 16,
+            "active": "0xa529",
+            "stride": 2,
+            "code_offset": 0,
+            "code_width": 5,
+            "code_shift": 3,
+            "rhs": "in domain",
+            "before_plan": "single row-major code; first=0,count=grain=1,contiguous=true,tight_bytes=0,route.routes=1,route.shifting=true,route.masking=true"
+          },
+          "instruction_count": 123,
+          "conditional_branches": 22,
+          "vector_comparisons": 1,
+          "vector_payload_loads": 0,
+          "opcode_counts": {
+            "mov": 34,
+            "lsr": 1,
+            "cbnz": 1,
+            "stp": 1,
+            "ldr": 6,
+            "subs": 1,
+            "b.lo": 1,
+            "clz": 1,
+            "sub": 2,
+            "cmp": 4,
+            "b.hs": 2,
+            "cbz": 1,
+            "ldrb": 10,
+            "lsl": 3,
+            "mvn": 1,
+            "b.ls": 1,
+            "b.ne": 1,
+            "add": 10,
+            "madd": 2,
+            "tbnz": 15,
+            "movi": 1,
+            "b": 9,
+            "dup": 2,
+            "adrp": 1,
+            "and": 3,
+            "cmhs": 1,
+            "addv": 2,
+            "ext": 1,
+            "fmov": 2,
+            "bfi": 1,
+            "ldp": 1,
+            "ret": 1
+          },
+          "movemask_constant_address": "0x494d0",
+          "movemask_constant_bytes": "01020408102040800102040810204080",
+          "trace_sha256": "3f170649bf411dd44762c172cf3ecb35bd8b44bab1462cc680b190b5b6aed0f4"
+        },
+        "tail_tight": {
+          "scope": {
+            "first": 0,
+            "source_rows": 13,
+            "active": "0x1fff",
+            "stride": 1,
+            "code_offset": 0,
+            "code_width": 5,
+            "code_shift": 3,
+            "rhs": "in domain",
+            "before_plan": "single row-major code; first=0,count=grain=1,contiguous=true,tight_bytes=0,route.routes=1,route.shifting=true,route.masking=true"
+          },
+          "instruction_count": 126,
+          "conditional_branches": 22,
+          "vector_comparisons": 1,
+          "vector_payload_loads": 0,
+          "opcode_counts": {
+            "mov": 30,
+            "lsr": 1,
+            "cbnz": 1,
+            "stp": 1,
+            "ldr": 6,
+            "subs": 1,
+            "b.lo": 1,
+            "clz": 1,
+            "sub": 2,
+            "cmp": 4,
+            "b.hs": 2,
+            "cbz": 1,
+            "ldrb": 16,
+            "lsl": 3,
+            "mvn": 1,
+            "b.ls": 1,
+            "b.ne": 1,
+            "add": 15,
+            "madd": 4,
+            "tbnz": 15,
+            "movi": 1,
+            "b": 3,
+            "dup": 2,
+            "adrp": 1,
+            "and": 3,
+            "cmhs": 1,
+            "addv": 2,
+            "ext": 1,
+            "fmov": 2,
+            "bfi": 1,
+            "ldp": 1,
+            "ret": 1
+          },
+          "movemask_constant_address": "0x494d0",
+          "movemask_constant_bytes": "01020408102040800102040810204080",
+          "trace_sha256": "b30a7bb3e98494bf1e3a2b8f07f4c02a6fa1e0f2f63acf65581e4615d23e3f6f"
+        }
+      }
+    }
+  },
+  "query_loops": {
+    "before": {
+      "retained": {
+        "start": "0x10ba0",
+        "backedge": "0x10c04",
+        "predicate_call": "0x10be8",
+        "static_instructions_including_call": 26,
+        "opcode_counts": {
+          "mov": 3,
+          "umull": 1,
+          "ldp": 1,
+          "add": 4,
+          "tst": 1,
+          "lsr": 2,
+          "sub": 1,
+          "lsl": 2,
+          "mvn": 2,
+          "and": 2,
+          "csinv": 1,
+          "bl": 1,
+          "tbz": 1,
+          "ldr": 1,
+          "madd": 1,
+          "cmp": 1,
+          "b.ne": 1
+        }
+      },
+      "reprepare": {
+        "start": "0x11d00",
+        "backedge": "0x11d68",
+        "predicate_call": "0x11d4c",
+        "static_instructions_including_call": 27,
+        "opcode_counts": {
+          "mov": 2,
+          "umull": 1,
+          "ldp": 1,
+          "add": 6,
+          "tst": 1,
+          "lsr": 2,
+          "sub": 1,
+          "lsl": 2,
+          "mvn": 2,
+          "and": 2,
+          "csinv": 1,
+          "bl": 1,
+          "tbz": 1,
+          "ldr": 1,
+          "madd": 1,
+          "cmp": 1,
+          "b.ne": 1
+        }
+      },
+      "oneshot": {
+        "start": "0x127a0",
+        "backedge": "0x12858",
+        "predicate_call": "0x1283c",
+        "static_instructions_including_call": 47,
+        "opcode_counts": {
+          "mov": 3,
+          "add": 8,
+          "movk": 1,
+          "tst": 1,
+          "umull": 1,
+          "ldr": 6,
+          "lsr": 2,
+          "sub": 1,
+          "lsl": 2,
+          "mvn": 2,
+          "and": 2,
+          "csinv": 1,
+          "ldur": 2,
+          "cmp": 2,
+          "b.ne": 2,
+          "cbz": 1,
+          "ldrh": 1,
+          "ldrb": 1,
+          "sturh": 1,
+          "sturb": 1,
+          "str": 2,
+          "strb": 1,
+          "bl": 1,
+          "tbz": 1,
+          "madd": 1
+        }
+      },
+      "fresh_traverse": {
+        "start": "0x10860",
+        "backedge": "0x108c0",
+        "predicate_call": "0x108a8",
+        "static_instructions_including_call": 25,
+        "opcode_counts": {
+          "mov": 2,
+          "umull": 1,
+          "ldp": 1,
+          "add": 5,
+          "tst": 1,
+          "lsr": 2,
+          "sub": 1,
+          "lsl": 2,
+          "mvn": 2,
+          "and": 2,
+          "csinv": 1,
+          "bl": 1,
+          "tbz": 1,
+          "madd": 1,
+          "cmp": 1,
+          "b.ne": 1
+        }
+      }
+    },
+    "after": {
+      "retained": {
+        "start": "0xe7a0",
+        "backedge": "0xe80c",
+        "predicate_call": "0xe7f0",
+        "static_instructions_including_call": 28,
+        "opcode_counts": {
+          "mov": 3,
+          "add": 5,
+          "movk": 1,
+          "tst": 1,
+          "umull": 1,
+          "ldp": 1,
+          "lsr": 2,
+          "sub": 1,
+          "lsl": 2,
+          "mvn": 2,
+          "and": 2,
+          "csinv": 1,
+          "bl": 1,
+          "tbz": 1,
+          "ldr": 1,
+          "madd": 1,
+          "cmp": 1,
+          "b.ne": 1
+        }
+      },
+      "reprepare": {
+        "start": "0xf8c4",
+        "backedge": "0xf92c",
+        "predicate_call": "0xf910",
+        "static_instructions_including_call": 27,
+        "opcode_counts": {
+          "mov": 2,
+          "umull": 1,
+          "ldp": 1,
+          "add": 6,
+          "tst": 1,
+          "lsr": 2,
+          "sub": 1,
+          "lsl": 2,
+          "mvn": 2,
+          "and": 2,
+          "csinv": 1,
+          "bl": 1,
+          "tbz": 1,
+          "ldr": 1,
+          "madd": 1,
+          "cmp": 1,
+          "b.ne": 1
+        }
+      },
+      "oneshot": {
+        "start": "0x10340",
+        "backedge": "0x103f0",
+        "predicate_call": "0x103d4",
+        "static_instructions_including_call": 45,
+        "opcode_counts": {
+          "mov": 3,
+          "add": 8,
+          "movk": 1,
+          "tst": 1,
+          "umull": 1,
+          "ldr": 7,
+          "lsr": 2,
+          "sub": 1,
+          "lsl": 2,
+          "mvn": 2,
+          "and": 2,
+          "csinv": 1,
+          "cmp": 2,
+          "b.ne": 2,
+          "cbz": 1,
+          "ldrb": 1,
+          "ldrh": 1,
+          "sturh": 1,
+          "sturb": 1,
+          "str": 1,
+          "strb": 1,
+          "bl": 1,
+          "tbz": 1,
+          "madd": 1
+        }
+      },
+      "fresh_traverse": {
+        "start": "0xe480",
+        "backedge": "0xe4e0",
+        "predicate_call": "0xe4c8",
+        "static_instructions_including_call": 25,
+        "opcode_counts": {
+          "mov": 2,
+          "umull": 1,
+          "ldp": 1,
+          "add": 5,
+          "tst": 1,
+          "lsr": 2,
+          "sub": 1,
+          "lsl": 2,
+          "mvn": 2,
+          "and": 2,
+          "csinv": 1,
+          "bl": 1,
+          "tbz": 1,
+          "madd": 1,
+          "cmp": 1,
+          "b.ne": 1
+        }
+      }
+    }
+  },
+  "limits": [
+    "Warm read commands only: eight prebuilt width laws/plans,64 initialized blocks,56 full16-row and8 exact13-row tails,full and partial activity; no writes/effects/cold-content/plan-construction claim.",
+    "Static selected branch paths are manual source-derived annotations, with exact decoded bytes/extents checked against the linked ELF. They are not hardware traces or a cycle-cost model.",
+    "Five paired samples retain D/B negative control without correction; ns_per_block/query derive from CPU ns/traversal. Wall filter ns/window remains a separate metric.",
+    "Removing general packet controls and aggregate copies is concrete issued work; how much each contributes to timing is not isolated. Store forwarding/cache/frontend details can still contribute.",
+    "Only the shared predicate, four complete benchmark Run functions and outlined fresh traversal are audited; benchmark library internals and untimed fixture preparation are outside this static audit."
+  ],
+  "timing_examples": {
+    "units": "CPU ns per complete64-block traversal",
+    "full108case_file": "build/ikea-cohesion-v2/projection-blocks-linked-arm/block-timings.json",
+    "full108case_sha256": "426217de1d883fb49f9025c56983cb7f4198715467a2d939a6c15d6e3c747da2",
+    "cases": [
+      {
+        "case": "blocks/reprepare/shuffled/strided/q1",
+        "samples": {
+          "before": [
+            2342.784026638999,
+            2342.5421638356584,
+            2342.1500937772103,
+            2342.8874213204876,
+            2342.593617697739
+          ],
+          "after": [
+            1098.3766465045846,
+            1098.640252371869,
+            1098.4586442566456,
+            1098.5025216849049,
+            1098.587760992674
+          ],
+          "duplicate": [
+            2342.9090390647384,
+            2341.759927707238,
+            2342.7652622240034,
+            2342.798764770862,
+            2343.620657905762
+          ]
+        },
+        "after_over_before": [
+          0.46883393177318866,
+          0.46899486776919524,
+          0.468995837275804,
+          0.4688669680362925,
+          0.46896215916115547
+        ],
+        "duplicate_over_before": [
+          1.000053360627492,
+          0.9996660738318838,
+          1.0002626511633168,
+          0.9999621592788374,
+          1.0004384201341043
+        ],
+        "median_ratio": 0.46896215916115547
+      },
+      {
+        "case": "blocks/reprepare/shuffled/tight/q64",
+        "samples": {
+          "before": [
+            30576.600174786945,
+            30514.478658536606,
+            30588.430288461426,
+            30564.6917868064,
+            30522.75480769226
+          ],
+          "after": [
+            28055.604851643875,
+            28030.19114405936,
+            28056.323841989182,
+            28035.188350680575,
+            28045.065078093663
+          ],
+          "duplicate": [
+            30577.036478811773,
+            30575.031447914494,
+            30516.385922859114,
+            30580.26261743489,
+            30503.52993686046
+          ]
+        },
+        "after_over_before": [
+          0.9175514835288375,
+          0.9185865981104596,
+          0.9172201246486517,
+          0.9172409964487941,
+          0.9188248326466857
+        ],
+        "duplicate_over_before": [
+          1.0000142692131346,
+          1.001984395344108,
+          0.9976447184467164,
+          1.0005094384964552,
+          0.9993701462743804
+        ],
+        "median_ratio": 0.9175514835288375
+      },
+      {
+        "case": "blocks/oneshot/clustered/tight/q8",
+        "samples": {
+          "before": [
+            8647.087541671848,
+            8649.04706899747,
+            8647.84208250997,
+            8645.57667840153,
+            8644.491066460523
+          ],
+          "after": [
+            4148.755764329299,
+            4147.550111094659,
+            4157.985242591605,
+            4149.027010217721,
+            4148.054103703676
+          ],
+          "duplicate": [
+            8643.822734008383,
+            8645.651945645413,
+            8647.416810770757,
+            8646.659544247479,
+            8648.361301475532
+          ]
+        },
+        "after_over_before": [
+          0.47978648814825914,
+          0.4795383905310866,
+          0.4808118838109937,
+          0.47990170749197836,
+          0.4798494291697027
+        ],
+        "duplicate_over_before": [
+          0.9996224384629239,
+          0.9996074569458379,
+          0.9999508233689799,
+          1.0001252508521097,
+          1.0004477111475105
+        ],
+        "median_ratio": 0.4798494291697027
+      },
+      {
+        "case": "blocks/oneshot/clustered/strided/q1",
+        "samples": {
+          "before": [
+            1175.8003107024438,
+            1175.1228743138156,
+            1180.5700788730028,
+            1176.4012262209649,
+            1179.3909241772078
+          ],
+          "after": [
+            1119.565484141912,
+            1120.0786850358436,
+            1119.8269015301848,
+            1120.1790556484298,
+            1119.6999456147864
+          ],
+          "duplicate": [
+            1175.9841652525959,
+            1176.389768278131,
+            1175.2475815845808,
+            1176.3655840829183,
+            1175.1980134841235
+          ]
+        },
+        "after_over_before": [
+          0.9521731487492667,
+          0.9531587798338844,
+          0.9485475886354797,
+          0.9522083373262527,
+          0.9493883009112825
+        ],
+        "duplicate_over_before": [
+          1.0001563654546428,
+          1.0010780948886346,
+          0.9954915871715951,
+          0.999969702396383,
+          0.996444850806352
+        ],
+        "median_ratio": 0.9521731487492667
+      },
+      {
+        "case": "blocks/fresh/shuffled/tight/q1",
+        "samples": {
+          "before": [
+            952.3507995431186,
+            952.2958494208442,
+            952.1779537729375,
+            952.2505186263298,
+            952.1578203367965
+          ],
+          "after": [
+            926.514685249892,
+            926.4582332744583,
+            926.8217420080579,
+            926.4198317681405,
+            926.4237476587854
+          ],
+          "duplicate": [
+            952.2053457323871,
+            952.3944354186353,
+            952.1487318963852,
+            954.1855502607058,
+            952.353595779828
+          ]
+        },
+        "after_over_before": [
+          0.9728712210819571,
+          0.972868078589128,
+          0.9733703015655767,
+          0.9728740637543034,
+          0.9729728915434329
+        ],
+        "duplicate_over_before": [
+          0.9998472686631845,
+          1.0001035245484384,
+          0.9999693104881956,
+          1.0020320615179787,
+          1.0002056123878311
+        ],
+        "median_ratio": 0.9728740637543034
+      },
+      {
+        "case": "blocks/fresh/bursty/strided/q64",
+        "samples": {
+          "before": [
+            44600.09429754708,
+            44609.7029955381,
+            44618.394200128336,
+            44593.47339917178,
+            44605.47339917207
+          ],
+          "after": [
+            38747.35508849473,
+            38708.89662797165,
+            38732.400829876235,
+            38730.68234643058,
+            38725.444413640085
+          ],
+          "duplicate": [
+            44621.23606243988,
+            44599.36178343974,
+            44615.11599745081,
+            44627.12488053538,
+            44597.937878304554
+          ]
+        },
+        "after_over_before": [
+          0.8687729409268482,
+          0.8677237019902003,
+          0.8680814611155331,
+          0.868528046688328,
+          0.8681769626585529
+        ],
+        "duplicate_over_before": [
+          1.0004740296007393,
+          0.999768184690685,
+          0.9999265279995775,
+          1.0007546279488564,
+          0.9998310628653106
+        ],
+        "median_ratio": 0.8681769626585529
+      },
+      {
+        "case": "blocks/retained/clustered/strided/q1",
+        "samples": {
+          "before": [
+            1083.592086932295,
+            1082.661621671812,
+            1084.0204590702367,
+            1083.0291357528006,
+            1084.3024813223403
+          ],
+          "after": [
+            1050.1039401256867,
+            1050.6790062298262,
+            1049.8512298799747,
+            1090.6551972509421,
+            1049.7758266322624
+          ],
+          "duplicate": [
+            1083.3866626447314,
+            1083.631023828147,
+            1082.6659321968366,
+            1083.0877687370808,
+            1082.4442458567378
+          ]
+        },
+        "after_over_before": [
+          0.9690952460704887,
+          0.9704592692658678,
+          0.9684791657718629,
+          1.007041418597516,
+          0.9681577278620891
+        ],
+        "duplicate_over_before": [
+          0.9998104228611109,
+          1.0008953879374036,
+          0.9987504600470716,
+          1.0000541379565375,
+          0.9982862388516013
+        ],
+        "median_ratio": 0.9690952460704887
+      }
+    ]
+  },
+  "preparation_landmarks": {
+    "reprepare": {
+      "before_success_region": [
+        "0x11c60",
+        "0x11cfc"
+      ],
+      "after_success_region": [
+        "0xf860",
+        "0xf8c0"
+      ],
+      "before_instructions_with_alignment_nops": 40,
+      "after_instructions_with_alignment_nops": 25,
+      "before_partial_loads": [
+        [
+          "0x11c88",
+          "8-byte load from reader+0x64, straddling plan/view pointers"
+        ],
+        [
+          "0x11cb0",
+          "4-byte load from reader+0x6c"
+        ],
+        [
+          "0x11ce4",
+          "16-byte reload from stack+0x6668 after component stores"
+        ],
+        [
+          "0x11cec",
+          "4-byte tail store to predicate+20"
+        ],
+        [
+          "0x11cf0",
+          "16-byte store to predicate+4, overlapping adjacent predicate field boundaries"
+        ]
+      ],
+      "after": "One8-byte view-pointer load/store plus code halfword/byte stores. General plan admission still checks map_size1 and nonzero read_bytes once per block.",
+      "microarch": "Old wider reload following partial component stores creates a store-forwarding hazard once per block. Timing attribution is not isolated."
+    },
+    "oneshot": {
+      "before": [
+        [
+          "0x12808",
+          "store2-byte code prefix to stack+0x6670"
+        ],
+        [
+          "0x1280c",
+          "store1-byte code width to stack+0x6672"
+        ],
+        [
+          "0x12818",
+          "8-byte reload from stack+0x6670"
+        ],
+        [
+          "0x12828",
+          "8-byte copy to consumed predicate code at stack+0x6650"
+        ]
+      ],
+      "after": [
+        [
+          "0x103a4",
+          "store2-byte code prefix directly to consumed predicate+8"
+        ],
+        [
+          "0x103a8",
+          "store1-byte width directly to consumed predicate+10"
+        ]
+      ],
+      "microarch": "Wider load overlapping separate2/1-byte stores is removed on every query; both routes retain plan admission per query."
+    },
+    "fresh": {
+      "before_frame_bytes": 240,
+      "after_frame_bytes": 224,
+      "query_loop_instructions": 25,
+      "placement_admission": "Width law lookup, stride/overflow/extent bounds (including udiv), shared plan compatibility/map/read_bytes guards all stay within each visited block. Both before/after named local view lifetimes encompass all q calls.",
+      "gain_limit": "~3% tight q1 does not establish cheap general rebind/writes/content admission; all plans are prebuilt and data warm."
+    },
+    "retained": {
+      "predicate_array_bytes_before": 1536,
+      "predicate_array_bytes_after": 1024,
+      "query_loop_instructions_before": 26,
+      "query_loop_instructions_after": 28,
+      "negative_static_control": "Candidate materializes the division-by3 reciprocal with MOV/MOVK each query instead of retaining it in a register; loop grows2 instructions even though native cases improve. Do not infer speed from static instruction count alone."
+    }
+  }
+}

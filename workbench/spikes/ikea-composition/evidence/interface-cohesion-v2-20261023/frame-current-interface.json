@@ -1,0 +1,524 @@
+{
+  "build": {
+    "actual_five_target_closure_objects": 27,
+    "allowed_cpus": [
+      8
+    ],
+    "build_jobs": 2,
+    "closure_method": "ninja -t commands for exactly five targets identifies object outputs; only those objects' discovered Ninja dependencies plus explicit target inputs are included. CMake regeneration inputs are retained separately. Counts exclude unrelated objects left in the shared cache.",
+    "cmake_input_map_file_sha256": "0d8d2305136ebebb708896b3c5a184ec07448867719aedcaae21b95548cb8108",
+    "cmake_inputs": 107,
+    "compile_steps": 12,
+    "compiled_commands_file_sha256": "4f7e9f80d1a1ea18c86961b4b79ff7ce8498b454b87d6a6a5a4ee0919c6c6bc2",
+    "consumed_input_map_file_sha256": "7597c81383adeaf0be8722d125e94ed7fe4a549433fbd51ad84852d9c1558b54",
+    "consumed_inputs": 594,
+    "heavy_compile_jobs": 1,
+    "incremental_cache": "build/ikea-cohesion-v2/allocator-callers/cmake",
+    "ninja_steps": 21,
+    "object_source_modules": {
+      "ikea": 5,
+      "orbital": 10,
+      "workbench": 12
+    },
+    "spikes": [
+      "orbital-mvcc",
+      "hashtable",
+      "ikea-frame"
+    ],
+    "target_commands_sha256": "a6b0e29a5a5da5ee28cfc513a8b26c651cc881e81be532a8fd711cf30a5aa813",
+    "target_explicit_inputs_sha256": "c5b4a14b03ea117724ea2fe3756dfae637848c2cbf9d62e3612f9940ca4e1ca2"
+  },
+  "checks": {
+    "binaries": {
+      "frame_execution_material_check": {
+        "bytes": 27418240,
+        "path": "workbench/spikes/ikea-frame/execution/frame_execution_material_check",
+        "sha256": "cfe46911f8639bc931b71ce6dc989a2e30243bc5938246c20b185522a8605c94"
+      },
+      "frame_phase_batch_check": {
+        "bytes": 365000,
+        "path": "workbench/spikes/ikea-frame/lifecycle/frame_phase_batch_check",
+        "sha256": "063df39f535b8ef27ad72e670f1f465fa2825667d2525c249f24ed5fbe51a212"
+      },
+      "frame_phase_material_check": {
+        "bytes": 30329168,
+        "path": "workbench/spikes/ikea-frame/lifecycle/frame_phase_material_check",
+        "sha256": "a0540f998c131a7b512202135b739ba26b650ae8c5ef50871e5032c4702b3382"
+      },
+      "frame_phase_plane_check": {
+        "bytes": 19752032,
+        "path": "workbench/spikes/ikea-frame/lifecycle/frame_phase_plane_check",
+        "sha256": "9c28b7983928976f500ae9b38d0a8af77099de59ff80502341266ca03a765811"
+      },
+      "frame_phase_repair_check": {
+        "bytes": 24727960,
+        "path": "workbench/spikes/ikea-frame/lifecycle/frame_phase_repair_check",
+        "sha256": "b29b8b704aeda8508bc2ff6b0e60797e551d56e166d97e5c6f6cd5d662ed1ebd"
+      }
+    },
+    "count": 5,
+    "coverage": {
+      "frame_execution_material_check": "Fifteen scenarios and both native ownership modes: actual borrowed Frame bodies, dictionary editions, old/current/escaped readers and refusals.",
+      "frame_phase_batch_check": "4830001 checks: ordered duplicates, masks/groups/blocks, immutable originals, exact removal, bounded base reads and protected none.",
+      "frame_phase_material_check": "190028 checks: native8/16/32/64, exact u128, separate presence/validity, coarse masks, dictionary/RHS changes, overlay corrections and protected none.",
+      "frame_phase_plane_check": "33856 points: all 64 widths, partial/full tiles, unaligned guards, repeated edits and empty/active protection.",
+      "frame_phase_repair_check": "22528 plans and 6082560 independent points+aggregates: heap/inline/spill, widths 1..64, all checkpoint modes, anchors/interiors/last, descriptor shifts, refusals and guards."
+    },
+    "execution_owner_captured_stdout_sha256": "a900c49d810f31049ff9582198d2739715a57c572c7181ef83313ed5b60f7e64",
+    "execution_owner_logical_counter_rows": 120,
+    "execution_owner_modes": [
+      "independent-owners",
+      "same-owner-slices"
+    ],
+    "execution_owner_phases": [
+      "all-released",
+      "escaped-region-only",
+      "old-reader-held",
+      "old-reader-released"
+    ],
+    "execution_owner_report": "PASS: 15 scenarios, both native ownership modes, actual borrowed Frame bodies, dictionary editions, old/current/escaped readers and refusals",
+    "execution_owner_scenarios": [
+      [
+        "constant",
+        "native",
+        "none"
+      ],
+      [
+        "delta",
+        "every64",
+        "none"
+      ],
+      [
+        "delta",
+        "native",
+        "none"
+      ],
+      [
+        "delta",
+        "none",
+        "none"
+      ],
+      [
+        "delta",
+        "packed",
+        "none"
+      ],
+      [
+        "delta-descending",
+        "native",
+        "none"
+      ],
+      [
+        "delta-patched",
+        "every64",
+        "none"
+      ],
+      [
+        "delta-patched",
+        "native",
+        "none"
+      ],
+      [
+        "delta-patched",
+        "none",
+        "none"
+      ],
+      [
+        "delta-patched",
+        "packed",
+        "none"
+      ],
+      [
+        "dictionary-frequency",
+        "native",
+        "frequency"
+      ],
+      [
+        "dictionary-sorted",
+        "native",
+        "sorted"
+      ],
+      [
+        "packed",
+        "native",
+        "none"
+      ],
+      [
+        "patched",
+        "native",
+        "none"
+      ],
+      [
+        "runs",
+        "native",
+        "none"
+      ]
+    ],
+    "failed": 0,
+    "passed": [
+      {
+        "exit_code": 0,
+        "method": "ctest",
+        "name": "frame_execution_material_check"
+      },
+      {
+        "exit_code": 0,
+        "method": "direct executable; not registered in CTest by owner",
+        "name": "frame_phase_material_check"
+      },
+      {
+        "exit_code": 0,
+        "method": "direct executable; not registered in CTest by owner",
+        "name": "frame_phase_plane_check"
+      },
+      {
+        "exit_code": 0,
+        "method": "direct executable; not registered in CTest by owner",
+        "name": "frame_phase_repair_check"
+      },
+      {
+        "exit_code": 0,
+        "method": "direct executable; not registered in CTest by owner",
+        "name": "frame_phase_batch_check"
+      }
+    ],
+    "registration": "Execution material is owner-registered with CTest and ran once through CTest. Four lifecycle checks are unregistered and each ran once directly; no owner CMake/source edits were made.",
+    "stdout": {
+      "frame_execution_material_check": "Internal ctest changing into directory: /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/allocator-callers/cmake\nTest project /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/allocator-callers/cmake\n    Start 137: frame_execution_material_check\n1/1 Test #137: frame_execution_material_check ...   Passed    0.06 sec\n\n100% tests passed, 0 tests failed out of 1\n\nTotal Test time (real) =   0.07 sec\n",
+      "frame_phase_batch_check": "4830001 batch checks pass: ordered duplicates, masks/groups/blocks, immutable originals, exact removal, bounded base reads and protected none.\n",
+      "frame_phase_material_check": "190028 phase material checks pass: native8/16/32/64, exact u128, separate presence/validity, original coarse masks, dictionary/RHS cache changes, overlay corrections and protected none.\n",
+      "frame_phase_plane_check": "33856 private plane points pass: all 64 widths, partial/full tiles, unaligned guards, repeated edits, empty/active protection.\n",
+      "frame_phase_repair_check": "22528 repair plans / 6082560 independent points+aggregates pass: heap/inline/spill, widths 1..64, all CP modes, anchors/interiors/last, descriptor shifts, refusals and unaligned guards.\n"
+    }
+  },
+  "commands": [
+    {
+      "command": [
+        "cmake",
+        "-S",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb",
+        "-B",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/allocator-callers/cmake",
+        "-G",
+        "Ninja",
+        "-DCMAKE_CXX_COMPILER=clang++-21",
+        "-DCMAKE_BUILD_TYPE=Release",
+        "-DSIXDB_MARCH=armv8-a+simd",
+        "-DSIXDB_TUNE=neoverse-v2",
+        "-DSIXDB_SPIKES=orbital-mvcc;hashtable;ikea-frame",
+        "-DSIXDB_TEST_SCOPE=full",
+        "-DSIXDB_HEAVY_COMPILE_JOBS=1"
+      ],
+      "cwd": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb",
+      "exit_code": 0,
+      "label": "configure",
+      "log": "logs/configure.log",
+      "log_sha256": "8e52c087fc70a932fce27048fbba5cd91bfc77ddae6c9afbd914d42b90da5886"
+    },
+    {
+      "command": [
+        "cmake",
+        "--build",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/allocator-callers/cmake",
+        "--target",
+        "frame_execution_material_check",
+        "frame_phase_material_check",
+        "frame_phase_plane_check",
+        "frame_phase_repair_check",
+        "frame_phase_batch_check",
+        "-j",
+        "2"
+      ],
+      "cwd": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb",
+      "exit_code": 0,
+      "label": "build",
+      "log": "logs/build.log",
+      "log_sha256": "ed4a4eedf34c412ba6bea77fa1bd835ef5cf809019bd04af8647d08299dc34e8"
+    },
+    {
+      "command": [
+        "ctest",
+        "--test-dir",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/allocator-callers/cmake",
+        "--output-on-failure",
+        "--no-tests=error",
+        "-j",
+        "1",
+        "-R",
+        "^frame_execution_material_check$"
+      ],
+      "cwd": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb",
+      "exit_code": 0,
+      "label": "frame_execution_material_check",
+      "log": "logs/frame_execution_material_check.log",
+      "log_sha256": "2987829765cc7cb8bff11eee3909254a9170f5c5c4531f338f66e95d7a728f42"
+    },
+    {
+      "command": [
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/allocator-callers/cmake/workbench/spikes/ikea-frame/lifecycle/frame_phase_material_check"
+      ],
+      "cwd": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb",
+      "exit_code": 0,
+      "label": "frame_phase_material_check",
+      "log": "logs/frame_phase_material_check.log",
+      "log_sha256": "11a2c6cbfbd52324f5dc46965c3020e4c67883db074839be0cf1c203b2f41426"
+    },
+    {
+      "command": [
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/allocator-callers/cmake/workbench/spikes/ikea-frame/lifecycle/frame_phase_plane_check"
+      ],
+      "cwd": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb",
+      "exit_code": 0,
+      "label": "frame_phase_plane_check",
+      "log": "logs/frame_phase_plane_check.log",
+      "log_sha256": "889a8416b4ca97b0932c61cdeb6556ac4a74675b58477b98792bd08769b6432e"
+    },
+    {
+      "command": [
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/allocator-callers/cmake/workbench/spikes/ikea-frame/lifecycle/frame_phase_repair_check"
+      ],
+      "cwd": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb",
+      "exit_code": 0,
+      "label": "frame_phase_repair_check",
+      "log": "logs/frame_phase_repair_check.log",
+      "log_sha256": "9f32efeb04f6c96209edadbc2b563f3cb9b0e06356e89ab3d89d4af04683ae2b"
+    },
+    {
+      "command": [
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/allocator-callers/cmake/workbench/spikes/ikea-frame/lifecycle/frame_phase_batch_check"
+      ],
+      "cwd": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb",
+      "exit_code": 0,
+      "label": "frame_phase_batch_check",
+      "log": "logs/frame_phase_batch_check.log",
+      "log_sha256": "144982c87775a14e797cb985d1ba08e1bd12d0af3f2344491216c6bf19c4877e"
+    }
+  ],
+  "complete": true,
+  "format": 1,
+  "limits": [
+    "Local NEON behavioral qualification of the exact five named existing checks; no foreign-profile requalification or Frame throughput claim.",
+    "No Frame or allocator source edits, new algorithm, benchmark or cloud job. All twelve Frame translation units in this closure were compiled normally against current dependencies.",
+    "Current encoding implementations were freshly compiled, but passing these existing owner checks does not establish exhaustive correctness or performance of every new run-value program or byte-lane option.",
+    "The older isolated Frame port/native cohorts remain scoped to their frozen source cuts. Their result is not relabeled as qualification of this later algorithm.",
+    "Bulky objects/logs and full platform dependency maps remain ignored. This compact receipt retains exact commands, complete five result reports, source hashes, HEAD-blob verification, logical owner-case counts and binary/map/log hashes."
+  ],
+  "local_context": {
+    "captured_output_sha256": "a900c49d810f31049ff9582198d2739715a57c572c7181ef83313ed5b60f7e64",
+    "controller_sha256": "0d8a193eb4a839507b07cf0b38072f1ac7e7e440f6541d969c4be4205228c71d",
+    "directory": "build/ikea-cohesion-v2/frame-current-interface",
+    "raw_receipt_sha256": "bad76806ca58175217249b64e0ac34b386617543ba8f59874bf201c954a355b4"
+  },
+  "prior_receipts": {
+    "curated": [
+      "merged-allocator-callers.json",
+      "predicate-projection-adoption.json"
+    ],
+    "raw_files_unchanged": {
+      "allocator-callers": "83f6b57ab79bca56eaec4f98aedc82dd8f4409b1d6def2cc7b32f7247da8a8f4",
+      "allocator-callers-final-integration": "41119104f58337495134ce3b9a6e6644f8ff660618e94b30168d3720a864321a"
+    },
+    "scope": "These prior sixteen- and nineteen-check records remain immutable. This separate current Frame source result supersedes the paused-Frame exclusion only for the five named owner checks."
+  },
+  "profile": {
+    "actual_first_party_commands_verified": true,
+    "assertions_enabled": true,
+    "compiler": "Ubuntu clang version 21.1.8 (++20251221033104+2078da43e25a-1~exp1~20251221153121.57)\nTarget: aarch64-unknown-linux-gnu\nThread model: posix\nInstalledDir: /usr/lib/llvm-21/bin\n",
+    "flags": [
+      "-O3",
+      "-g",
+      "-std=c++23",
+      "-march=armv8-a+simd",
+      "-mtune=neoverse-v2"
+    ],
+    "march": "armv8-a+simd",
+    "name": "neon",
+    "tune": "neoverse-v2"
+  },
+  "scope": "Five settled current Frame owner integration checks against merged allocator and current Ikea, using normal CMake dependency compilation.",
+  "source": {
+    "adopted_ikea_filter_sha256": "514e68275e3849bd58549b56f4f78fe81ee48ebce3df4cca830ba4091b568868",
+    "consumed_source_changed": [],
+    "current_frame_commits": [
+      "05463eae5542011ba41c40c922946f808cc2e9de",
+      "4d0c7b326b26fe252d54ca23b40cf4ae2d290d2f"
+    ],
+    "filter_dependency": "The selected Frame owners consume SeriesPack and Intervals, not TuplePack predicate/filter.h. The new copied-predicate header is recorded as current integration context, not claimed as exercised by these Frame commands.",
+    "frame_consumed_files": 34,
+    "head_at_end": "4d0c7b326b26fe252d54ca23b40cf4ae2d290d2f",
+    "head_at_start": "4d0c7b326b26fe252d54ca23b40cf4ae2d290d2f",
+    "head_exceptions": {
+      "ikea/CMakeLists.txt": {
+        "blob": "fdb6a6ab07adbccb1a126295d866f46f48400f01",
+        "consumed_sha256": "3418af742e4f98f749627b7444fd8694cda76531ef3cbea9eebb8eda58192635",
+        "head_sha256": "5352811e402a49f35f440c7abde52e9f36e19641f5b9fed175873fac559021f0"
+      }
+    },
+    "head_unchanged": true,
+    "head_verification_receipt_sha256": "98da5e21a4e7caca5864e866078df6b9745fd216ec517ae8d23f2b6365a52024",
+    "head_verified_inputs": 155,
+    "merged_allocator_ancestor": "e74baf34",
+    "repository_consumed_inputs": 156,
+    "repository_consumed_map_sha256": "d0e57d4c8fb3d99afb9182f8aa33cd7238d1d1863ff1c87c0f0c0f877bbc2ad8",
+    "repository_consumed_sha256": {
+      "CMakeLists.txt": "dc9798382cd1ac56d668ca6e28827a8f915d9f14fd7ddda3ed25eba19b10b1ac",
+      "cmake/ClangVersion.cmake": "cde279b39294bfa37d02f80ff13d19f6489b0e7ee407958a734d54381cc0a20f",
+      "cmake/Targets.cmake": "1c1f3989a4214a8b5deec18a8c542395232155e3fcbeb2e423c7e0165f20c5c8",
+      "cmake/Tuning.cmake": "ea80b3a2057fe98b7ac01c3e490ceffbc8524cc50788b29c80baf31857e6cc76",
+      "engine/CMakeLists.txt": "f62462724e37020434d138c14700002b0a7f54254cda2132f58c6b4abc3232da",
+      "ikea/CMakeLists.txt": "3418af742e4f98f749627b7444fd8694cda76531ef3cbea9eebb8eda58192635",
+      "ikea/cmake/Hashtable.cmake": "6abed9071d300fcddb5b48f27dfdd39f4405476d2f01b1459b764a28414275d6",
+      "ikea/include/ikea/bitset256.h": "d1d3b5124de08e2eff367bb545d55afc735b6724567dff0292ed356680b240af",
+      "ikea/include/ikea/bytes.h": "30472394c26ba69348ddd9a270407276954073d0e7e44e0f508d116896858b19",
+      "ikea/include/ikea/comparison.h": "f9f5f933116f37db76a1804c017f3fff24602db9cb87108d9d586f247594c50a",
+      "ikea/include/ikea/config.h": "b04b0a2c7f317c879fa3e10a66401df47995e4c2dba0d0bb5ddbb398c3744dde",
+      "ikea/include/ikea/description.h": "a1a9679870d2a5a90a730222253c0c9bcf6ef90badd92deba1ab261191811409",
+      "ikea/include/ikea/detail/filter/compare.h": "43e967fc6653fad34182b39e042a2d4d9bc107f1f8c14ff1449a7759cef7bde9",
+      "ikea/include/ikea/detail/overlap.h": "69840846e1ca1ab5fdeb6fdcea21d9705ec566ade7e0abff7a6d94b7ff414e44",
+      "ikea/include/ikea/effects.h": "3bf481cde151bd0529af61789361c92f081f1ac5d9b42237f131aca822e8d9a8",
+      "ikea/include/ikea/intervals.h": "07e516ec0dc0aba72fc2abac1655d7cbc9548a93774a47a6f7ea8f9b881223cb",
+      "ikea/include/ikea/intervals/detail/bytes.h": "7c9d303bf981ffe9da63574e4d451a6a0b3c16d7eaf00c8c8bdc344dc9d11835",
+      "ikea/include/ikea/intervals/detail/native.h": "2a4e0cad5dafec45f7de2b5d7f8046023ffe346a99bbf630e8dc6df97956c0b0",
+      "ikea/include/ikea/intervals/detail/prediction.h": "abb0905206f21d4c760c4bd1c7c9f6542a0e3a977c0642f1be300c48f1451b3c",
+      "ikea/include/ikea/intervals/detail/prefix.h": "c84f456e0e99615c10d0b75514fec8b42562a347c168a119261c8ca0e7c54e4a",
+      "ikea/include/ikea/intervals/detail/search.h": "81ab913c600adf59702179c80bb77f20136c9266dc37609f4d72ce2cfd0281e1",
+      "ikea/include/ikea/intervals/detail/simd.h": "9ba0675bbfe1ebe2621a974da01a440a4550836b4cbfbc4b40dd77528ccb70dc",
+      "ikea/include/ikea/intervals/edit.h": "aaec0a8e859d7507ddbfc1456fd6ef427b950cf8b086a108de2c5c9803dc56a9",
+      "ikea/include/ikea/intervals/geometry.h": "dbba1916caf1ef1d480e7ee5c90ae137a9f32d4c373dd39d7996b359a3212b0a",
+      "ikea/include/ikea/intervals/projected.h": "63c4efa8e19a25035e95215545f7b4fdfa5ed3556d563c4259556909d921acb2",
+      "ikea/include/ikea/intervals/search.h": "814a0ad87196e7e628f67b6ea724c240f8ea8e18f21bb699b47650bae38f1405",
+      "ikea/include/ikea/intervals/sparse.h": "65605f895f175ece549e5a70072be76628074a514bd371b5f1dacd5c10a565a2",
+      "ikea/include/ikea/intervals/types.h": "cde46145512289673bb8fd9e05724a6b8cbf0d93dbfc85b43a5eb8d9dd1a46f7",
+      "ikea/include/ikea/seriespack.h": "28217fab4bbebedf8a20e77352fbebc3911cc292473020ae8eb3636945a87ac6",
+      "ikea/include/ikea/seriespack/author/expression.h": "6894feabe25eeaa2814835d68134decf34a96867b1e339a11c7b6f67c39ad0be",
+      "ikea/include/ikea/seriespack/author/filter.h": "ae255f3a45780ee200259846cc2552547d5f4ce1390b40f76574d1285028c329",
+      "ikea/include/ikea/seriespack/author/indexof.h": "2643915d39eb19271f0ff42ccf6a8769b51194e95ec69eeb9a1c4d2b9b2f832e",
+      "ikea/include/ikea/seriespack/author/local_equal.h": "22f7c2c7f1b72edb18ef705000ce72d12c8464975f9952742156b4d5d9a31d81",
+      "ikea/include/ikea/seriespack/author/mutation.h": "4fed570e4b04786140ed173c102b66eeadb4c4a5a772d35b4956cbb75d5623ff",
+      "ikea/include/ikea/seriespack/author/native.h": "fb7feef8a08131536d03f40e25ab312c3f7b8d7e095f1e1b14a7d8aec063822f",
+      "ikea/include/ikea/seriespack/author/store.h": "27eaffcdbba6eac3c197260f56e737cd06f8c8bf23cdc6c5911744e69a78c6d9",
+      "ikea/include/ikea/seriespack/author/summaries.h": "5fa83c2c583955099fff1a284446306c0b4a3ff47e86743b1509c711b985e3a9",
+      "ikea/include/ikea/seriespack/detail/admission.h": "f3c04985ba39675ab9481f8e59b41dda90e928d0ec8c6df1ccc16af4c5c7d6a5",
+      "ikea/include/ikea/seriespack/detail/dense_read.h": "6e7fc3da61456a93f881c03959540ba9d3cdb5065c91a807ccbdc88dcb0343ed",
+      "ikea/include/ikea/seriespack/detail/effects.h": "b71f7db70cc2132b075d78a6ab1dce3d53be5f4e84a21cf6aeea70b2a66a685d",
+      "ikea/include/ikea/seriespack/detail/filter8.h": "b89bd50fcbe6322769ebf9bdfb7e29e5ad979e116a40c9353852d3875b4acf6e",
+      "ikea/include/ikea/seriespack/detail/mutation/admission.h": "dfe17b5a507e3f3e4074a7caa8c7a26604e0584c93b6af04edbde76c756d4a73",
+      "ikea/include/ikea/seriespack/detail/mutation/admission_state.h": "4dc16d414fb0be164418d92e2efd6956f473621319fb0dfb4c6848bf3cd4eac6",
+      "ikea/include/ikea/seriespack/detail/mutation/assignment.h": "d5b1b8ed1a4d87f692c8ef1b72386139822ff47cb3e383b9eb9d020460ca2033",
+      "ikea/include/ikea/seriespack/detail/mutation/composed.h": "3f0bc7073215c6c0cf028161b048fc5c9c876ab8076d8c76a75c689230e26f3a",
+      "ikea/include/ikea/seriespack/detail/mutation/composed_construction.h": "e5e83a713e9333b6db48f19a3c85963612eb7e1c6d759b71370af38d07e76008",
+      "ikea/include/ikea/seriespack/detail/mutation/fields.h": "54bcd05be66c76f4d6a1dde87afcd62fdcafa4481c71d9dbac423b8326267d2a",
+      "ikea/include/ikea/seriespack/detail/native/neon/groups.h": "006b9a203bfcaa35cd6dd55f0c510adb6f79061ea38dacb6a302dfad6bbb5107",
+      "ikea/include/ikea/seriespack/detail/native/neon/read.h": "8ec9c361e4e03970695f9f83af094ba494aab6fda9a292e5877cef0abaf57e3d",
+      "ikea/include/ikea/seriespack/detail/native/neon/write.h": "6180c12f403137dde8ae31dbbedb429cb39e3a2143b34802d051aa43776dbee5",
+      "ikea/include/ikea/seriespack/detail/physical_source.h": "a79116d85b082e1848f4404e0edf72135877f02d8b291b7eeb4fa472be67e38e",
+      "ikea/include/ikea/seriespack/detail/placed_read.h": "0feeea6a0d838f84dd431cb0e20c1498ec93ba61764847a600b499fa648b1903",
+      "ikea/include/ikea/seriespack/detail/point.h": "124229fc8516abeba01aa010938386dcb08f8a4a09268b575f380d448df08f94",
+      "ikea/include/ikea/seriespack/detail/wire.h": "0e0e002323e319fc5f817bd4fe136435d0722539f7487b998597c971f631288d",
+      "ikea/include/ikea/seriespack/erased_reader.h": "1a19db339a91371ed7e8f833749a0eff018ef9d50ca2b7ec9825b6d362a8f259",
+      "ikea/include/ikea/seriespack/erased_writer.h": "9e2c890acf1e3b6d9a0a793d937a14a249e328f0600714f9b2b018c68e466b7f",
+      "ikea/include/ikea/seriespack/filter.h": "a18e402d63fb76c5905deef09b6c9f36d79f7a9e27f19be93bfe17f2ea3d4b1d",
+      "ikea/include/ikea/seriespack/indexof.h": "7de4a2ccf853eb99688b5d9c0c66d5c97f841a122dc547a002c7fa18c93bd900",
+      "ikea/include/ikea/seriespack/layout.h": "f29d77fa37da523e3c1893426aa8fccf6d2f3a1be9f9a770f902565228c5a09e",
+      "ikea/include/ikea/seriespack/layout_value.h": "9a338c94172055dfb5f273d417c68c2b5b17d6eddf21443ab2d115df8cddab24",
+      "ikea/include/ikea/seriespack/point.h": "52d736603fa6839086a110335f22b57c49c49080363ce203e51b23c3e82b7d96",
+      "ikea/include/ikea/seriespack/presets.h": "af4c432e840ed72119984d2236dfe68fa8f22748232ccb40e8d64bc6131650d3",
+      "ikea/include/ikea/seriespack/read.h": "60c6873b0b5de71ca11ac2a56b63833c36eaf753d155d30001e0c8c463a9ced9",
+      "ikea/include/ikea/seriespack/reader.h": "0e740cd5b04a215e5e09e1abe75ec1ef91516d04d0e63abc5e701b448f6deb37",
+      "ikea/include/ikea/seriespack/selection.h": "6dabe389cb5772b0ed2eaa8a8ce0f8a89c9ee54ea064c598db7e49e934a34e87",
+      "ikea/include/ikea/seriespack/status.h": "e0553cbb17aca0d843371cb1fe3baf8a34fc71cc9091f4b23730552203118cbf",
+      "ikea/include/ikea/seriespack/view.h": "b29c5c35d680c5251d33053b883694de8fb2576982cff95d065d572b78973bf5",
+      "ikea/include/ikea/seriespack/write.h": "a31c5acfaa5e52bd20ed40c8fbfa2d82dd9bf67462d1f324d7ad5f3b518679e5",
+      "ikea/include/ikea/seriespack/writer.h": "9025e30f51622e3ed0a3ee3164996257683608bd5af904de1d7df75a1602b8d3",
+      "ikea/src/intervals/search.cpp": "3e7b689a087c9513a62d048dfde1cddcd743353111742ef9d48a0a06ddd627c1",
+      "ikea/src/overlap.cpp": "ed327d3c978b5503fad1eaf158964a93033d7c9c243171bd790afd0d1eb1a4a2",
+      "ikea/src/seriespack/admission.cpp": "0785bd7902e0315a04c67d742ea26c9e9383fca937abaf733831207a5255ea20",
+      "ikea/src/seriespack/layout.cpp": "a2b33a3c8d618a8c3a5621229bf226105bc358389603f79b243d47d2f5810349",
+      "ikea/src/seriespack/readers.cpp": "94262616d019a741e1f35c054b76269620dc9603a91597ea26d6a6fa3ae72e02",
+      "loom/CMakeLists.txt": "b5d7c284ad39fc83b0f68f1c6debd9e25a07318039a85a580fa27f128b93aa4c",
+      "orbital/CMakeLists.txt": "56c95b0bbfb2988bd226460d26dfa52f9b23148ea17a1e8c1d480bee970c6a57",
+      "orbital/include/orbital/allocation.h": "3ce6a5eb08c7dc969ee63436cec12b98948380cded1206aa384dea132b1cbc66",
+      "orbital/include/orbital/detail/allocation/capture.h": "21450e20bd863445a1413fd5938c2c0cf57bb46f5451272cf978562e827328ef",
+      "orbital/include/orbital/detail/object/binding.h": "b8aa265e1b42e266572123042ec52efb308686100fb3b6188689366b13013891",
+      "orbital/include/orbital/detail/object/debt_queue.h": "3aa5f56d8e20d64f0817da4368e9885b0f99e9d0b105ce19d05e50aefe413397",
+      "orbital/include/orbital/detail/object/directory.h": "c68f7b0bd03b784a8a7bbe927fe403e8854d4e59aefa7a720337c5466789ac5b",
+      "orbital/include/orbital/detail/object/history.h": "548aa06bc961686feff21a262754ec6e2a97c5f18de9c45f7fda863a09d3a1a7",
+      "orbital/include/orbital/detail/object/history_impl.h": "341db5b85b9d7385e11939c73c0975e429ef79b112330cd130dba055bf08aff0",
+      "orbital/include/orbital/detail/object/memory.h": "cf42ddd687f93c139b152d874789baf3a31e72dcedc863b31b076cd18fa6b51d",
+      "orbital/include/orbital/detail/object/physical.h": "2ab5b7d8eb0e75e8b48978980f349fe22eb27b0de754f73a8ec9c77b7511ac4a",
+      "orbital/include/orbital/detail/object/representation.h": "51dedf97bdbd55780561593b92ccce24ecd7fc5a82689f54604ac4e833a9bd6d",
+      "orbital/include/orbital/detail/object/representation_ops.h": "56620057f4a46679bc69807b0938bb59ac55e5aad11e1aece0db56360496d6f4",
+      "orbital/include/orbital/detail/object/versions.h": "91326ec0bf97543bf841316b9e9078c187feb8e545249ef0c498067d4c09ab3c",
+      "orbital/include/orbital/instantiate/object.h": "1116dfb1088e34a6d653f0558ba0dede5fd125725734a11a480e9243a4fc9fea",
+      "orbital/include/orbital/instantiate/representation.h": "981f44ec41091ddb94f08c4544687693afdefdbf0184cecd837fc0e3d1f8c1bf",
+      "orbital/include/orbital/object.h": "d753538f1d50f25bd14d6babc21542417ded97259532b176ef0f0129c8fc087b",
+      "orbital/include/orbital/platform.h": "905ad05f4667fdcf63fa2379c761c5ac6f8f9669c141aecb53929d669da1b78b",
+      "orbital/include/orbital/preparation.h": "5a50bb22b0e719a6f98be8b97eb57196e2a703324ea9f383a222edfe12110e38",
+      "orbital/include/orbital/representation.h": "814ca58685dfbc9007fc6780128cfa940f4aee9bc5df09529505ff5338401a57",
+      "orbital/include/orbital/types.h": "e4b17166e48ba62a8932fa6c91c9791d2a5b357cac27a5003293eb972ebe4db8",
+      "orbital/include/orbital/worker.h": "81952484835101e0dfde66a75908e9b8787b0cb1f7ab2fb3d1b9c1bd4ef11d04",
+      "orbital/src/allocation/allocation.cpp": "75f1813a3a3c769df924cb0011353653eb4804202b34d43afc44840b2dd3911e",
+      "orbital/src/allocation/arena.cpp": "5c884a6b17e2d272c4790ac2db729e054c3c086cec4197104bfad00798ca5fb2",
+      "orbital/src/allocation/finite.cpp": "361986f75d45e80417002f8d468915ae52f7559846d67d5339cdb52771e3a6fc",
+      "orbital/src/allocation/finite.h": "e32f9592ca528449d1813ec7deb70f1e91f95a8ddffd3bae4007fc06fa9cbaab",
+      "orbital/src/allocation/group.cpp": "6092773cb9b8da072ff8939801ad0c4fdba532a8a9fe6003db8299ba41c8c459",
+      "orbital/src/allocation/internal.h": "6bd566c4693e1f9a8771c73de9e077a4e8f5fafb024029d06ea198a81cfab92e",
+      "orbital/src/allocation/window.cpp": "4d2613f8534fb0f8e0d05f006c078f183b9ca0337d7395dd7d4ea78e23f7e266",
+      "orbital/src/object/representation.cpp": "33c605138c46f49fe24d1fc03e7194c21d706e90ad4a780325271dfeb9e5aa3b",
+      "orbital/src/object/storage.cpp": "13486c54f7fa04435d2e74b72da37b29f943477c21366270a12c35b2f97b4f18",
+      "orbital/src/platform.cpp": "b1583c4e1d76d03cc15e3c98dcd03a36a94837caf032d564f9e8c15a73f4d30c",
+      "orbital/src/types.cpp": "2f1a8768284d071b3679588ce3cd7df379ded7333934a82b45877a38394c599b",
+      "orbital/src/worker.cpp": "5df51f9cea07cc8b420d8091c85dba9adb9358b2d1cab08fd1f12e696df9b70c",
+      "shore/CMakeLists.txt": "05fcf97d776276e0e8827483164b8b5ce938860d2ae64212a3e23d5efdf212d9",
+      "workbench/CMakeLists.txt": "21057925177622f9d43342faeb0511e460aed690b1e7f8ad5da7951f6c185c98",
+      "workbench/benchmarks/CMakeLists.txt": "c586af071adbad59e481d504deb5374c32cd66c55b0d5975e8dddf1341a86d53",
+      "workbench/benchmarks/hashtable/abseil.cmake": "8786a624f13af117984e80728677a61f2acf9ad106ab381cadded9bfc52bd1ba",
+      "workbench/design/orbital/CMakeLists.txt": "c3f981f929d18e7c8bcfa6da531aab2aa3bb8226c36e860c884c88a039027158",
+      "workbench/simulator/CMakeLists.txt": "d4524029fcad4a90306a699d858afb08b2e4800230ab4c5e6132f8c31cc3a476",
+      "workbench/spikes/CMakeLists.txt": "cb7440e03678dc1f8be03c42acec62c6a1f4589cfee756515c1836fad3cc3815",
+      "workbench/spikes/hashtable/CMakeLists.txt": "319da0cc197fe4776877ff4aa014a47c149e0839523e2412c64503a8a019531c",
+      "workbench/spikes/ikea-frame/CMakeLists.txt": "18bcfb45042a8085baf946ddc00a30c0380b2dcfeb0f614265ffc6cf9b9c7ae1",
+      "workbench/spikes/ikea-frame/encoding/CMakeLists.txt": "3e791ff506c161f9a75bd1fdca12908c9d2d296aa00f7159ef86ddbb8eff1ff5",
+      "workbench/spikes/ikea-frame/encoding/fused.h": "a6e59fcfbcd535dc13d599ca8ac685516b413a44ed6ef828db842b7df323b0cd",
+      "workbench/spikes/ikea-frame/encoding/kernels.cpp": "8e839c8fd6ff5f578eeda5532fe2cfffec21cc59ff410b23ca8719807506f2db",
+      "workbench/spikes/ikea-frame/encoding/kernels.h": "975016dd222aa022fa7abbbb771603a01cc6e67aec390f33130926ad69a9053e",
+      "workbench/spikes/ikea-frame/encoding/material.cpp": "dcc96de2584675a82f043d006bdddb09962d6afdeeb5eca5c23e80017466e61d",
+      "workbench/spikes/ikea-frame/encoding/material.h": "765d544f2c314e27a157af10ccd398e2d534ef117b229faa944be26c02c5442e",
+      "workbench/spikes/ikea-frame/encoding/packing.cpp": "4cbdbc1b37e47e264ba89226071e7e38990798cb126da5c4ecad1cf386939599",
+      "workbench/spikes/ikea-frame/encoding/packing.h": "4edbb808bb3cfc09570db0d6677af3a05ad77201178a9fbda380225cccce9159",
+      "workbench/spikes/ikea-frame/encoding/predicate.cpp": "ec17f3bb1d80a6379e7ff24fd441161ffa74390bdf573d61c3dfcab2daa0d361",
+      "workbench/spikes/ikea-frame/encoding/predicate.h": "79403c8b17a629e190d2a0332c1689512d8e96f870f1297e3482860d27ffcc80",
+      "workbench/spikes/ikea-frame/encoding/runs.h": "9d50daf7eb6b80a8c5d2f47aef8a7b48b30e90f15fa8d72e25f228940c5f1511",
+      "workbench/spikes/ikea-frame/encoding/selected.h": "72447ce4e1581978047fcf8b5d6a9402263627ff82013397ea116549d0be7402",
+      "workbench/spikes/ikea-frame/execution/CMakeLists.txt": "ee49061639fa317c131d7b116fa1cf8286df7111dc93430aa7076db1603a06a5",
+      "workbench/spikes/ikea-frame/execution/material-witness/check.cpp": "89adbc41e282e4204a51d3e26ce81639c0b5243133634c13579ed987fee172f3",
+      "workbench/spikes/ikea-frame/execution/material-witness/encoded_region.h": "8a2cc9bc5b7bba240f6e939c552cace25f69788fd98d7f89c612ce063b9a585e",
+      "workbench/spikes/ikea-frame/execution/material-witness/material.cpp": "03b3e6a28f262c22807655d3f23f0e96f7a643c77fd73c269f5729c48e3616be",
+      "workbench/spikes/ikea-frame/execution/material-witness/material.h": "5bce2dac6693ac72c07ef2a2d76574cc9d934fe2b54ac6eee20cfee2a0679041",
+      "workbench/spikes/ikea-frame/filter/CMakeLists.txt": "ae21f61502c5936500e0d22f8f193979ac621eb574d590fc05518f073cb6b066",
+      "workbench/spikes/ikea-frame/lifecycle/CMakeLists.txt": "2170faa37ff2df3c2eaa635437db6d5c1eb38f25b1115f8f5c7d0cc26fc30a48",
+      "workbench/spikes/ikea-frame/lifecycle/phase_batch.h": "2662bdb05539958fc078b0934bc3854039737bab1f478accdea0f162fc5e5d2e",
+      "workbench/spikes/ikea-frame/lifecycle/phase_batch_check.cpp": "9d8565204c472a6a630be14b1a068870e23a644ed84a941d1f1e0040b18af2ac",
+      "workbench/spikes/ikea-frame/lifecycle/phase_construction.h": "83bf7df0cdb89bc706d3c53c8ccd48a0f5471274d43493a43e9d59b7f3606e86",
+      "workbench/spikes/ikea-frame/lifecycle/phase_material.cpp": "f3a95aac796667bd943890a06859a73c672b673464cca97688cd9a98c2783bea",
+      "workbench/spikes/ikea-frame/lifecycle/phase_material.h": "cb9c997e15b7b58d635d8f6969356587ea7884aa130a4db9dd6e4ad3193e1b19",
+      "workbench/spikes/ikea-frame/lifecycle/phase_material_check.cpp": "429d3982fd335628067b3c9616f4677cd1e5b352ebacbc9f96a2fb231f094306",
+      "workbench/spikes/ikea-frame/lifecycle/phase_owner.h": "e0b8615fe6cc719b82c4d4d9a7a557676770afaa858dbb91495b3cc168c81562",
+      "workbench/spikes/ikea-frame/lifecycle/phase_plane.cpp": "0102abc0c14eaab81ef781985fd5f5bcdb303a2077940e76cc3ee5fe281ce6e1",
+      "workbench/spikes/ikea-frame/lifecycle/phase_plane.h": "74ac09331954a5a7168d7eb2d91617ce8b7fc259546e0a8366b32dc748cb52a2",
+      "workbench/spikes/ikea-frame/lifecycle/phase_plane_check.cpp": "3d95d1e30a4a18f777054044f4bd1f4e362b638f4361821ce5bc8b4c4807489a",
+      "workbench/spikes/ikea-frame/lifecycle/phase_repair.h": "325bff36fdaeb55340766d9f1046f219399a214a45b3e74c7b989329c3647746",
+      "workbench/spikes/ikea-frame/lifecycle/phase_repair_check.cpp": "f988f99f64eadd13b7169536040f6b215faf3ae8c73df0721c6cebd564743984",
+      "workbench/spikes/ikea-frame/point/CMakeLists.txt": "de6cf3cdae039898e318f14b23c374ff2838f462c3fcf28c09a45bb736d23bd7",
+      "workbench/spikes/ikea-frame/scan/CMakeLists.txt": "b5f461454cf2c8d74f2392d6883174d8c2111aa9cb0f46d435907e94847ce740",
+      "workbench/spikes/orbital-mvcc/CMakeLists.txt": "5994537a86dee5208e02108094058788f21e300d0a73f99541143b73de289877",
+      "workbench/spikes/orbital-mvcc/consumer/CMakeLists.txt": "577362cd403d46d366084ef85c7d8cfc85f6c1d713c0cf1b0d442aa1cb0e1cf6",
+      "workbench/spikes/orbital-mvcc/metadata/CMakeLists.txt": "90c87f0b1a273368f6676df1f3989401c2e0f8082dc1a5dbed604fe134c81cb2",
+      "workbench/spikes/orbital-mvcc/metadata/orbital/descriptor/CMakeLists.txt": "fa87cb47853f8e5f08c0263e47899514f5cf6c86a0cbaf66c241144bfacca236",
+      "workbench/spikes/orbital-mvcc/metadata/orbital/shape/CMakeLists.txt": "35bcdbcae448eabf102a8770888e7e85009ce438d3c8155a2a845d37a35cf29e",
+      "workbench/tools/pmu/CMakeLists.txt": "e7fd54593ae05f01de46ade72c6febad6277da2179d19f6ac744ae37430e2a9a"
+    },
+    "source_at_start_map_file_sha256": "0bcc21eb7387d7e312554f232349c5a1a40b474d754295670990f1328da775a7",
+    "working_tree": "Ikea adoption was uncommitted. Every consumed repository source and configuration input matched the stated HEAD blob except ikea/CMakeLists.txt, whose only implementation delta registers the new owning predicate test; the exact delta is preserved adjacent to predicate-projection-adoption.json. Frame sources had no consumed dirty edits."
+  }
+}

@@ -1,9 +1,9 @@
 # Cohesion evidence and remaining qualification
 
-These receipts qualify particular source cuts. The working interface now restores
-TuplePack's two-pointer general reader and supplies a separately prepared
-predicate. The earlier 24-byte reader was a diagnostic candidate. Its timings
-must not be presented as the final endpoint's qualification.
+These receipts qualify particular source cuts. The working interface uses
+TuplePack's two-pointer general reader and a plan-independent copied predicate.
+Earlier 24-byte reader/predicate representations remain separately qualified
+history; their timings do not become the current endpoint's qualification.
 
 ## Correctness and actual callers
 
@@ -129,8 +129,8 @@ shrinks from 24 to 16 bytes, while its checked result still uses return memory.
 The receipt retains 18 optimized producer/caller/maintained-fixture objects and
 the independent native NEON boundary proof, including actual protected expired
 plans, all 11 valid packet shapes, exact tails and unsigned query boundaries.
-Both final arms share the corrected strict access contract. Selected full-tight
-AVX-512 complete-caller work grows from 303 to 322 instructions. That includes
+Both final arms share the corrected strict access contract. In the unlinked
+object, selected full-tight AVX-512 complete-caller work grows from 303 to 322 instructions. That includes
 eight rematerializations of the fixture's hash multiplier and changed mask
 extraction, while activity loads are hoisted across commands. It is not 19 extra
 predicate comparisons or a measured timing cause. Smaller state does not
@@ -140,6 +140,45 @@ R4 access behavior and remains a separate source cut. The
 adds all core/header checks before timing; no native result or live adoption is
 claimed by these static receipts.
 
+The completed [native comparison](../../handle-boundaries/PROJECTION-NATIVE.md)
+supports the adopted plan-independent predicate. The
+[source/qualification receipt](projection-native.json) and
+[1,404 canonical records](projection-native-cases.csv) retain all five samples,
+the duplicate control and every case. All 324 complete block cases improve;
+nineteen x86 filter cases still lose over 5%, including seven predicate routes
+and twelve shared-decode controls. Those losses remain explicit. The
+[actual linked NEON audit](projection-blocks-linked-arm.json) verifies the
+smaller fallback and removed overlapping aggregate copies. The
+[actual linked x86 audit](projection-linked-filter.json) verifies less selected
+work in the seven affected predicate paths and equal instructions/addressed
+data in shared controls; it leaves the measured losses unresolved. Its actual
+AVX-512 independent-eight path is 303 to 298 instructions, distinct from the
+unlinked object's 303 to 322. The
+[fresh sanitizer proof](predicate-projection-access.json) checks the candidate's
+poisoned inactive interior directly, separately from the earlier 24-byte proof.
+
+The [adoption bridge](predicate-projection-adoption.json) verifies all 193 live
+Ikea header/source files against that native-qualified after tree. The regular
+owning lifetime fixture matches the protected experimental fixture's body.
+Nineteen current integration/core checks pass after dependency rebuilding, and
+the new fixture also compiles for AVX2 and AVX-512; these two cross objects are
+not presented as executed tests. The [four-file delta](predicate-projection-adoption.patch)
+retains the exact header, CMake, fixture and neutral comment changes.
+
+The [merged-allocator caller checks](merged-allocator-callers.json) refresh 16
+existing owner checks at source 80b93a5f: Directory, Loom packing, metadata
+growth/publication and Hashtable/Loom integration. All pass after fresh
+dependency compilation. They establish local NEON behavior, not allocator speed
+or a new qualification of Frame's subsequent algorithms. The frozen native
+predicate comparison does not use Orbital allocation.
+
+The [current Frame interface checks](frame-current-interface.json) separately
+qualify its settled 4d0c7b32 source: execution material and four phase-owner
+checks all pass after rebuilding their dependency closure. Consumed source bytes
+remain stable through the run. These callers exercise SeriesPack and Intervals,
+not TuplePack's predicate header. This closes current boundary integration at
+that source cut; it does not qualify later Frame edits or measure throughput.
+
 The [unique local object archive](local-objects-artifact.json) preserves 195
 objects and their source/dependency/record context. Its
 [recovery account](local-objects-context.json) identifies the already durable
@@ -148,7 +187,15 @@ object and every member hash were verified after publication. This is recovery,
 not an additional correctness or performance qualification; native worker
 artifacts retain their own executables and source captures.
 
-The final source's functional and object qualification includes the restored
+The later [handle follow-up archive](handle-followup-artifact.json) retains 46
+additional local objects and their raw command/dependency/assembly context,
+including the compact predicate, direct sanitizer proof and rejected journal
+cursor control. Its [recovery mapping](handle-followup-context.json) verifies
+omitted source files against the newer native source archive. Complete remote
+compressed bytes and every member were checked; this is recovery rather than
+another correctness or performance result.
+
+The R4 source's functional and object qualification includes the restored
 reader/prepared predicate, coverage guard and corrected Loom fixture. Native
 losses and their diagnostic limits remain explicit; these receipts do not
 establish a blanket regression-free claim. Later live Frame owner qualification

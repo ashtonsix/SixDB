@@ -223,6 +223,16 @@ Every function byte/relocation, constant and unwind payload is identical
 between A and B. The private span therefore adds no recovery in this control.
 Both candidates are rejected; neither was applied or timed natively.
 
+A third [local-cursor control](journal-local-cursor.json) copies `used` and the
+record pointer into locals, stores the appended entry, then publishes the new
+cursor. The [effects-only patch](journal-local-cursor.patch) preserves the
+disjoint-metadata/no-fail contract and passes the existing independent journal
+witness. It makes the target paths worse: body/head 63/66 to 65/68 instructions,
+with the same branches and saved-register work. The complete TU shrinks 215
+function bytes, while all/partial regions shrink 16 bytes each with unchanged
+calls and frames. Those totals hide the worse issued append paths. This control
+is also rejected without native timing or a live change; the AVX2 gap remains.
+
 The [independent journal witness](journal_witness.cpp) passes at O3 on NEON for
 all three variants. It checks exact source/plane/offset/size outputs, equal-valued
 distinct objects and source types, forward/reverse touching-span merges,

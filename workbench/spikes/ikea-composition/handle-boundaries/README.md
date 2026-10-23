@@ -1,15 +1,18 @@
 # Actual handle boundaries
 
 This is the bounded TuplePack/SeriesPack witness in the
-[reusable execution investigation](../reusable-execution.md). It changes no live
-Ikea API. Its original ABI witnesses contain no timing loop; the later
+[reusable execution investigation](../reusable-execution.md). Its isolated
+controls retain frozen sources; endpoint decisions are recorded separately.
+The original ABI witnesses contain no timing loop; the later
 [complete block commands](#complete-block-commands) include native measurements.
 Independent translation units expose raw handle return/pass, checked factories,
 stationary storage/reload, and crowded callers around the existing operations.
 
 The completed [three-profile native comparison](PREDICATE-NATIVE.md) rejects
-the cached unit-stride predicate candidate. The general two-pointer reader and
-separately prepared predicate remain the endpoint.
+the cached unit-stride predicate candidate. The subsequent
+[copied-projection comparison](PROJECTION-NATIVE.md) supports the adopted
+plan-independent predicate while retaining its measured x86 filter exceptions.
+The general reader remains a two-pointer binding.
 
 The controls freeze the R3 diagnostic source, then change only the reader and
 predicate cache placement:
@@ -76,7 +79,8 @@ object is presented as an executed native check.
 
 ## Observed boundaries
 
-The census agrees across NEON/V2, AVX2/Zen 5 and AVX-512/Zen 5: the generic
+At the R4 source cut the census agrees across NEON/V2, AVX2/Zen 5 and
+AVX-512/Zen 5: the generic
 reader is 16 bytes, prepared predicate 24, ordinary/native writers 16, and
 `expected<reader,error>` 24. The old unconditional cache made reader 24 and its
 checked result 32. All measured handles have alignment eight and trivial copy
@@ -130,7 +134,7 @@ independently gives the same path counts above. The records preserve those
 differences. The pinned target/tuning and source-prefix-map substitutions remain
 explicit in every command.
 
-The separately frozen final public endpoint matches all 49 corresponding
+The separately frozen R4 public endpoint matches all 49 corresponding
 complete fixture functions across the three targets, including their literal
 bytes and relocations, plus every allocated data and unwind record. Its raw
 producer/caller matches the isolated prepared-predicate control after the sole
@@ -333,8 +337,9 @@ five-order timing phase. The controller reuses [the paired executor](predicate-n
 for all 360 maintained filter cases and 108 complete block cases per profile,
 including the byte-identical duplicate control, common argv0 and common working
 directory. [The result reader](predicate-results.py) validates the original
-units and structural counters. This protocol establishes no performance result
-until the native output has been collected and checked.
+units and structural counters. The completed [native findings](PROJECTION-NATIVE.md)
+retain block gains, x86 filter losses, actual linked callers and the adoption
+decision; these protocol details are not themselves performance results.
 
 After the frozen pair's source and fixture checks have passed, prepare a fresh
 managed capture and run its entry point on the native workers:

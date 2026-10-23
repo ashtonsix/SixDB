@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
-"""Revalidate the annotated linked ARM block-command witness, without building.
+"""Revalidate an annotated linked ARM block-command witness, without building.
 
-This deliberately admits only the qualified R4/cached-tight ELF pair. Source
-meaning and the store-forwarding hypothesis are manual annotations, not a
-general instruction-cost model. Exact hashes, symbol extents, disassembly,
-selected branch paths and query loops are checked against the actual ELFs.
+The default evidence remains the qualified R4/cached-tight pair. --evidence
+selects a separate exact-pair annotation without replacing that proof. Source
+meaning and branch choices are manual annotations, not an instruction-cost
+model. Hashes, symbol extents, disassembly, selected paths and query loops are
+checked against the actual ELFs.
 """
 import argparse
+from collections import Counter
 import hashlib
 import importlib.util
 import json
@@ -25,8 +27,8 @@ def digest(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def inspect(results):
-    expected = json.loads(EVIDENCE.read_text())
+def inspect(results, evidence=EVIDENCE):
+    expected = json.loads(evidence.read_text())
     receipt = json.loads((results / 'receipt.json').read_text())
     manifest = json.loads((results / 'source-manifest.json').read_text())
     assert digest(results / 'receipt.json') == expected['receipt_sha256']
@@ -34,6 +36,8 @@ def inspect(results):
     assert 'clang version 21.1.8 ' in (results / 'compiler.txt').read_text()
     assert receipt['source_manifest_sha256'] == expected['source_manifest_sha256']
     assert receipt['candidate_sha256'] == expected['candidate_header_sha256']
+    if 'variant' in expected:
+        assert receipt['variant'] == expected['variant']
     assert receipt['shared_source_sha256'][expected['source']] == expected['source_sha256']
     old, new = manifest['source_sha256']['before'], manifest['source_sha256']['after']
     assert old.keys() == new.keys()
@@ -69,33 +73,36 @@ def inspect(results):
             start, end = int(loop['start'], 16), int(loop['backedge'], 16)
             assert (end - start) // 4 + 1 == loop['static_instructions_including_call']
             body = [instructions[a][1] for a in range(start, end + 1, 4)]
-            assert sum(s.startswith('bl\t') and 'predicate<64u' in s for s in body) == 1
+            assert sum(s.startswith('bl\t') and '::predicate<' in s for s in body) == 1
             assert body[-1].startswith('b.ne\t0x' + format(start, 'x') + ' ')
-        selected = record['checked_full_tight_path']
-        path = selected['trace']
-        assert len(path) == selected['instruction_count']
-        for index, row in enumerate(path):
-            address = int(row['address'], 16)
-            assembly = instructions[address][1]
-            assert assembly == row['assembly']
-            mnemonic = assembly.split('\t')[0]
-            if mnemonic == 'ret':
-                assert index + 1 == len(path)
-                continue
-            following = int(path[index + 1]['address'], 16)
-            if mnemonic == 'b' or mnemonic.startswith('b.') or mnemonic in ('cbz', 'cbnz', 'tbz', 'tbnz'):
-                target = int(re.search(r'\b0x([0-9a-f]+)', assembly)[1], 16)
-                assert following in ({target} if mnemonic == 'b' else {target, address + 4})
-            else:
-                assert following == address + 4
-        assert sum('cmhs\t' in row['assembly'] for row in path) == selected['vector_comparisons'] == 1
-        assert sum(row['assembly'].startswith('ldr\tq0,') for row in path) == selected['vector_payload_loads'] == 1
-        assert sum(row['assembly'].split('\t')[0].startswith('b.') or row['assembly'].split('\t')[0]
-                   in ('cbz', 'cbnz', 'tbz', 'tbnz') for row in path) == selected['conditional_branches'] == 7
-        constant = elf.read(int(selected['movemask_constant_address'], 16), 16).hex()
-        assert constant == selected['movemask_constant_bytes']
+        paths = record.get('checked_paths') or {'full_tight': record['checked_full_tight_path']}
+        for selected in paths.values():
+            path = selected['trace']
+            assert len(path) == selected['instruction_count']
+            for index, row in enumerate(path):
+                address = int(row['address'], 16)
+                assembly = instructions[address][1]
+                assert assembly == row['assembly']
+                mnemonic = assembly.split('\t')[0]
+                if mnemonic == 'ret':
+                    assert index + 1 == len(path)
+                    continue
+                following = int(path[index + 1]['address'], 16)
+                if mnemonic == 'b' or mnemonic.startswith('b.') or mnemonic in ('cbz', 'cbnz', 'tbz', 'tbnz'):
+                    target = int(re.search(r'\b0x([0-9a-f]+) <', assembly)[1], 16)
+                    assert following in ({target} if mnemonic == 'b' else {target, address + 4})
+                else:
+                    assert following == address + 4
+            assert sum('cmhs\t' in row['assembly'] for row in path) == selected['vector_comparisons']
+            assert sum(row['assembly'].startswith('ldr\tq0,') for row in path) == selected['vector_payload_loads']
+            assert sum(row['assembly'].split('\t')[0].startswith('b.') or row['assembly'].split('\t')[0]
+                       in ('cbz', 'cbnz', 'tbz', 'tbnz') for row in path) == selected['conditional_branches']
+            if 'opcode_counts' in selected:
+                assert dict(Counter(row['assembly'].split('\t')[0] for row in path)) == selected['opcode_counts']
+            constant = elf.read(int(selected['movemask_constant_address'], 16), 16).hex()
+            assert constant == selected['movemask_constant_bytes']
         verified[arm] = {'function_symbols': len(record['functions']), 'literal_instructions': checked}
-    return {'evidence_sha256': digest(EVIDENCE), 'parser_sha256': digest(HERE / 'linked-filter.py'),
+    return {'evidence_sha256': digest(evidence), 'parser_sha256': digest(HERE / 'linked-filter.py'),
             'helper_sha256': digest(Path(__file__)), 'verified': verified,
             'limits': 'Exact annotated ARM pair only; no new timing or causal inference.'}
 
@@ -103,9 +110,10 @@ def inspect(results):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--results', type=Path, required=True)
+    parser.add_argument('--evidence', type=Path, default=EVIDENCE)
     parser.add_argument('--output', type=Path, required=True)
     args = parser.parse_args()
-    result = inspect(args.results)
+    result = inspect(args.results, args.evidence)
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(result, indent=2) + '\n')
     print(json.dumps(result, indent=2))

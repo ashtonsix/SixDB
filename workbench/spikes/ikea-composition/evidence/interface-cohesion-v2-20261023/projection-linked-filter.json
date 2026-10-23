@@ -1,0 +1,6200 @@
+{
+  "boundary_pattern_counterexample": {
+    "after_mad": 0.0013420000000001764,
+    "after_max": 3.57388,
+    "after_median": 3.569853,
+    "after_min": 3.568511,
+    "after_over_before_mad": 0.0007030904285779682,
+    "after_over_before_max": 0.9416648751310678,
+    "after_over_before_median": 0.9409617847024898,
+    "after_over_before_min": 0.9329563546613674,
+    "after_over_before_samples": [
+      0.9412440166184923,
+      0.9416648751310678,
+      0.9401202850159847,
+      0.9329563546613674,
+      0.9409617847024898
+    ],
+    "after_ratio_of_medians": 0.9401834354979951,
+    "after_samples": [
+      3.57388,
+      3.569828,
+      3.57384,
+      3.569853,
+      3.568511
+    ],
+    "before_mad": 0.00456700000000021,
+    "before_max": 3.826388,
+    "before_median": 3.796975,
+    "before_min": 3.790975,
+    "before_samples": [
+      3.796975,
+      3.790975,
+      3.801471,
+      3.826388,
+      3.792408
+    ],
+    "case": "tuple_tight/8/2/65535/one_stage/independent8",
+    "duplicate_mad": 0.002170999999999701,
+    "duplicate_max": 3.799454,
+    "duplicate_median": 3.796587,
+    "duplicate_min": 3.794062,
+    "duplicate_over_before_mad": 0.0018427517030615848,
+    "duplicate_over_before_max": 1.0016743979023353,
+    "duplicate_over_before_median": 0.9996376062523457,
+    "duplicate_over_before_min": 0.9929609856606282,
+    "duplicate_over_before_samples": [
+      0.9996376062523457,
+      1.0014803579554072,
+      0.9980510176192321,
+      0.9929609856606282,
+      1.0016743979023353
+    ],
+    "duplicate_ratio_of_medians": 0.999897813390923,
+    "duplicate_samples": [
+      3.795599,
+      3.796587,
+      3.794062,
+      3.799454,
+      3.798758
+    ],
+    "family": "filters",
+    "member": "zen",
+    "metric": "wall_ns_per_window",
+    "profile": "avx512",
+    "trials": 5
+  },
+  "candidate_sha256": "514e68275e3849bd58549b56f4f78fe81ee48ebce3df4cca830ba4091b568868",
+  "full_receipt": {
+    "path": "build/ikea-cohesion-v2/projection-filter-linked/receipt.json",
+    "sha256": "21341d9e39ab01cfaca6ee3ca708596dd45c9e26ec8a5e70cdff39ca564f63ab"
+  },
+  "historical_helper_sha256": "f4212dba6570da71aafde2fd10d1577289f797ac52e7c3e87ab15efde01704ee",
+  "limits": [
+    "Static paths are not a timing model, \u00b5op count or causal proof.",
+    "Complete symbol-sized function bytes verified against ELF; no alignment padding enters function counts.",
+    "Payload equality covers initial allocated bytes at addressed symbols, not mutable runtime state.",
+    "Paired native medians and duplicate ratios remain observations; no duplicate correction factor."
+  ],
+  "measured_losses_ge_5_percent": [
+    {
+      "after_mad": 0.002867000000000175,
+      "after_max": 4.80883,
+      "after_median": 4.779467,
+      "after_min": 4.7715,
+      "after_over_before_mad": 0.0005196230041244476,
+      "after_over_before_max": 1.0614588522815993,
+      "after_over_before_median": 1.0553956248342515,
+      "after_over_before_min": 1.0542498431826834,
+      "after_over_before_samples": [
+        1.0542498431826834,
+        1.0553956248342515,
+        1.054876001830127,
+        1.0614588522815993,
+        1.0554862813962755
+      ],
+      "after_ratio_of_medians": 1.0553735434276128,
+      "after_samples": [
+        4.7715,
+        4.779567,
+        4.779467,
+        4.80883,
+        4.7766
+      ],
+      "before_mad": 0.002136000000000138,
+      "before_max": 4.530833,
+      "before_median": 4.528697,
+      "before_min": 4.525497,
+      "before_samples": [
+        4.525967,
+        4.528697,
+        4.530833,
+        4.530397,
+        4.525497
+      ],
+      "case": "tuple_tight/5/0/65535/inline_fused/dependent",
+      "classification": "prepared predicate full-tight path",
+      "duplicate_mad": 0.0042999999999997485,
+      "duplicate_max": 4.547,
+      "duplicate_median": 4.537463,
+      "duplicate_min": 4.525063,
+      "duplicate_over_before_mad": 0.0006688093269231477,
+      "duplicate_over_before_max": 1.0040415598570624,
+      "duplicate_over_before_median": 1.001589936471035,
+      "duplicate_over_before_min": 0.9999040989310126,
+      "duplicate_over_before_samples": [
+        1.001589936471035,
+        1.0040415598570624,
+        1.0022587457979582,
+        1.0015596867117826,
+        0.9999040989310126
+      ],
+      "duplicate_ratio_of_medians": 1.0019356561059394,
+      "duplicate_samples": [
+        4.533163,
+        4.547,
+        4.541067,
+        4.537463,
+        4.525063
+      ],
+      "family": "filters",
+      "member": "zen",
+      "metric": "wall_ns_per_window",
+      "profile": "avx2",
+      "trials": 5
+    },
+    {
+      "after_mad": 0.004996999999999474,
+      "after_max": 6.061322,
+      "after_median": 6.055521,
+      "after_min": 6.04515,
+      "after_over_before_mad": 0.004896362605086857,
+      "after_over_before_max": 1.1126723497860247,
+      "after_over_before_median": 1.1077759871809378,
+      "after_over_before_min": 1.0624205665521584,
+      "after_over_before_samples": [
+        1.0985097597434323,
+        1.111456153453261,
+        1.0624205665521584,
+        1.1077759871809378,
+        1.1126723497860247
+      ],
+      "after_ratio_of_medians": 1.1086908759753535,
+      "after_samples": [
+        6.061322,
+        6.04515,
+        6.055521,
+        6.050524,
+        6.058778
+      ],
+      "before_mad": 0.02292000000000005,
+      "before_max": 5.69974,
+      "before_median": 5.461866,
+      "before_min": 5.438946,
+      "before_samples": [
+        5.517768,
+        5.438946,
+        5.69974,
+        5.461866,
+        5.445249
+      ],
+      "case": "tuple_tight/5/1/65535/shared/independent8",
+      "classification": "shared native decode/compare route; prepared predicate bypassed",
+      "duplicate_mad": 0.0027480000000004168,
+      "duplicate_max": 5.452684,
+      "duplicate_median": 5.444853,
+      "duplicate_min": 5.437221,
+      "duplicate_over_before_mad": 0.0053346040791131255,
+      "duplicate_over_before_max": 1.0025258570318587,
+      "duplicate_over_before_median": 0.9971912529527456,
+      "duplicate_over_before_min": 0.9539419341934895,
+      "duplicate_over_before_samples": [
+        0.9862873901186131,
+        1.0025258570318587,
+        0.9539419341934895,
+        0.9971912529527456,
+        0.999927276052941
+      ],
+      "duplicate_ratio_of_medians": 0.9968851304664011,
+      "duplicate_samples": [
+        5.442105,
+        5.452684,
+        5.437221,
+        5.446525,
+        5.444853
+      ],
+      "family": "filters",
+      "member": "zen",
+      "metric": "wall_ns_per_window",
+      "profile": "avx2",
+      "trials": 5
+    },
+    {
+      "after_mad": 0.003066999999999709,
+      "after_max": 5.430803,
+      "after_median": 5.42337,
+      "after_min": 5.403837,
+      "after_over_before_mad": 0.0028408443296061847,
+      "after_over_before_max": 1.081165377942707,
+      "after_over_before_median": 1.0761380954617268,
+      "after_over_before_min": 1.072984902472465,
+      "after_over_before_samples": [
+        1.081165377942707,
+        1.0761472509388756,
+        1.072984902472465,
+        1.0732972511321206,
+        1.0761380954617268
+      ],
+      "after_ratio_of_medians": 1.0755390169137449,
+      "after_samples": [
+        5.421107,
+        5.426437,
+        5.42337,
+        5.403837,
+        5.430803
+      ],
+      "before_mad": 0.0076670000000005345,
+      "before_max": 5.05447,
+      "before_median": 5.042467,
+      "before_min": 5.014133,
+      "before_samples": [
+        5.014133,
+        5.042467,
+        5.05447,
+        5.0348,
+        5.046567
+      ],
+      "case": "tuple_tight/5/2/65535/inline_fused/dependent",
+      "classification": "prepared predicate full-tight path",
+      "duplicate_mad": 0.0098969999999996,
+      "duplicate_max": 5.043903,
+      "duplicate_median": 5.025167,
+      "duplicate_min": 5.01527,
+      "duplicate_over_before_mad": 0.002198064785540743,
+      "duplicate_over_before_max": 1.0011242222733223,
+      "duplicate_over_before_median": 0.9980867164534838,
+      "duplicate_over_before_min": 0.9937983583691647,
+      "duplicate_over_before_samples": [
+        1.0011242222733223,
+        1.0002847812390245,
+        0.9966095357178893,
+        0.9980867164534838,
+        0.9937983583691647
+      ],
+      "duplicate_ratio_of_medians": 0.9965691396691341,
+      "duplicate_samples": [
+        5.01977,
+        5.043903,
+        5.037333,
+        5.025167,
+        5.01527
+      ],
+      "family": "filters",
+      "member": "zen",
+      "metric": "wall_ns_per_window",
+      "profile": "avx2",
+      "trials": 5
+    },
+    {
+      "after_mad": 0.0011809999999998766,
+      "after_max": 6.084961,
+      "after_median": 6.08378,
+      "after_min": 6.079851,
+      "after_over_before_mad": 0.005602688640202302,
+      "after_over_before_max": 1.1288493063159872,
+      "after_over_before_median": 1.123246617675785,
+      "after_over_before_min": 1.066561468741597,
+      "after_over_before_samples": [
+        1.066561468741597,
+        1.123246617675785,
+        1.0894901938999597,
+        1.124657171431196,
+        1.1288493063159872
+      ],
+      "after_ratio_of_medians": 1.123246617675785,
+      "after_samples": [
+        6.084522,
+        6.08378,
+        6.079851,
+        6.084961,
+        6.081232
+      ],
+      "before_mad": 0.029138999999999804,
+      "before_max": 5.704802,
+      "before_median": 5.416246,
+      "before_min": 5.387107,
+      "before_samples": [
+        5.704802,
+        5.416246,
+        5.580455,
+        5.410503,
+        5.387107
+      ],
+      "case": "tuple_tight/5/3/65535/shared/independent8",
+      "classification": "shared native decode/compare route; prepared predicate bypassed",
+      "duplicate_mad": 0.003993000000000357,
+      "duplicate_max": 5.426963,
+      "duplicate_median": 5.409029,
+      "duplicate_min": 5.402746,
+      "duplicate_over_before_mad": 0.0036005644877010745,
+      "duplicate_over_before_max": 1.0033281314070799,
+      "duplicate_over_before_median": 0.9997275669193788,
+      "duplicate_over_before_min": 0.9483247621915712,
+      "duplicate_over_before_samples": [
+        0.9483247621915712,
+        1.001978676744003,
+        0.9681551056320676,
+        0.9997275669193788,
+        1.0033281314070799
+      ],
+      "duplicate_ratio_of_medians": 0.99866752728735,
+      "duplicate_samples": [
+        5.410005,
+        5.426963,
+        5.402746,
+        5.409029,
+        5.405036
+      ],
+      "family": "filters",
+      "member": "zen",
+      "metric": "wall_ns_per_window",
+      "profile": "avx2",
+      "trials": 5
+    },
+    {
+      "after_mad": 0.006166000000000338,
+      "after_max": 4.9339,
+      "after_median": 4.784367,
+      "after_min": 4.7781,
+      "after_over_before_mad": 0.002793993090570268,
+      "after_over_before_max": 1.0939831260658182,
+      "after_over_before_median": 1.0571984005764643,
+      "after_over_before_min": 1.054404407485894,
+      "after_over_before_samples": [
+        1.0571984005764643,
+        1.0562605460651242,
+        1.0939831260658182,
+        1.054404407485894,
+        1.060682441104909
+      ],
+      "after_ratio_of_medians": 1.057521998704723,
+      "after_samples": [
+        4.782903,
+        4.784367,
+        4.9339,
+        4.7781,
+        4.790533
+      ],
+      "before_mad": 0.007432999999999801,
+      "before_max": 4.531563,
+      "before_median": 4.52413,
+      "before_min": 4.510033,
+      "before_samples": [
+        4.52413,
+        4.529533,
+        4.510033,
+        4.531563,
+        4.516463
+      ],
+      "case": "tuple_tight/8/0/65535/inline_fused/dependent",
+      "classification": "prepared predicate full-tight path",
+      "duplicate_mad": 0.006063999999999403,
+      "duplicate_max": 4.53203,
+      "duplicate_median": 4.519397,
+      "duplicate_min": 4.51163,
+      "duplicate_over_before_mad": 0.0006414474693051675,
+      "duplicate_over_before_max": 1.0005512709588384,
+      "duplicate_over_before_median": 0.9997126519352891,
+      "duplicate_over_before_min": 0.9973152751048588,
+      "duplicate_over_before_samples": [
+        0.9997126519352891,
+        1.0005512709588384,
+        1.0003540994045943,
+        0.9973152751048588,
+        0.999306979820271
+      ],
+      "duplicate_ratio_of_medians": 0.9989538320074797,
+      "duplicate_samples": [
+        4.52283,
+        4.53203,
+        4.51163,
+        4.519397,
+        4.513333
+      ],
+      "family": "filters",
+      "member": "zen",
+      "metric": "wall_ns_per_window",
+      "profile": "avx2",
+      "trials": 5
+    },
+    {
+      "after_mad": 0.009833999999999676,
+      "after_max": 5.878205,
+      "after_median": 5.842257,
+      "after_min": 5.832423,
+      "after_over_before_mad": 0.002660560853388949,
+      "after_over_before_max": 1.0870074957999665,
+      "after_over_before_median": 1.082192215460867,
+      "after_over_before_min": 1.079531654607478,
+      "after_over_before_samples": [
+        1.079531654607478,
+        1.0861247061379493,
+        1.0801791591169618,
+        1.0870074957999665,
+        1.082192215460867
+      ],
+      "after_ratio_of_medians": 1.0803723181658222,
+      "after_samples": [
+        5.837711,
+        5.859141,
+        5.842257,
+        5.878205,
+        5.832423
+      ],
+      "before_mad": 0.0009670000000001622,
+      "before_max": 5.4086,
+      "before_median": 5.407633,
+      "before_min": 5.389452,
+      "before_samples": [
+        5.407633,
+        5.394538,
+        5.4086,
+        5.407695,
+        5.389452
+      ],
+      "case": "tuple_tight/8/1/65535/shared/independent8",
+      "classification": "shared native decode/compare route; prepared predicate bypassed",
+      "duplicate_mad": 0.001679000000000208,
+      "duplicate_max": 5.389049,
+      "duplicate_median": 5.38737,
+      "duplicate_min": 5.380929,
+      "duplicate_over_before_mad": 0.0012513831606763004,
+      "duplicate_over_before_max": 0.9996136898519552,
+      "duplicate_over_before_median": 0.9965519505075637,
+      "duplicate_over_before_min": 0.9950617950589473,
+      "duplicate_over_before_samples": [
+        0.9950617950589473,
+        0.99780333366824,
+        0.9963515512332213,
+        0.9965519505075637,
+        0.9996136898519552
+      ],
+      "duplicate_ratio_of_medians": 0.996252889203095,
+      "duplicate_samples": [
+        5.380929,
+        5.382688,
+        5.388867,
+        5.389049,
+        5.38737
+      ],
+      "family": "filters",
+      "member": "zen",
+      "metric": "wall_ns_per_window",
+      "profile": "avx2",
+      "trials": 5
+    },
+    {
+      "after_mad": 0.0018299999999999983,
+      "after_max": 5.43917,
+      "after_median": 5.423873,
+      "after_min": 5.405137,
+      "after_over_before_mad": 0.0011265990434607964,
+      "after_over_before_max": 1.0667078877005347,
+      "after_over_before_median": 1.064241300123653,
+      "after_over_before_min": 1.0581433568781393,
+      "after_over_before_samples": [
+        1.065132406957551,
+        1.0631147010801922,
+        1.064241300123653,
+        1.0581433568781393,
+        1.0667078877005347
+      ],
+      "after_ratio_of_medians": 1.0631147010801922,
+      "after_samples": [
+        5.43917,
+        5.423873,
+        5.422203,
+        5.405137,
+        5.425703
+      ],
+      "before_mad": 0.0062629999999996855,
+      "before_max": 5.108133,
+      "before_median": 5.10187,
+      "before_min": 5.0864,
+      "before_samples": [
+        5.106567,
+        5.10187,
+        5.0949,
+        5.108133,
+        5.0864
+      ],
+      "case": "tuple_tight/8/2/65535/inline_fused/dependent",
+      "classification": "prepared predicate full-tight path",
+      "duplicate_mad": 0.002566999999999986,
+      "duplicate_max": 5.092437,
+      "duplicate_median": 5.0885,
+      "duplicate_min": 5.080837,
+      "duplicate_over_before_mad": 0.0016890634307256125,
+      "duplicate_over_before_max": 0.9999081865366467,
+      "duplicate_over_before_median": 0.998151070097827,
+      "duplicate_over_before_min": 0.9946563646639585,
+      "duplicate_over_before_samples": [
+        0.9964620066671014,
+        0.998151070097827,
+        0.9991173526467645,
+        0.9946563646639585,
+        0.9999081865366467
+      ],
+      "duplicate_ratio_of_medians": 0.997379392262053,
+      "duplicate_samples": [
+        5.0885,
+        5.092437,
+        5.090403,
+        5.080837,
+        5.085933
+      ],
+      "family": "filters",
+      "member": "zen",
+      "metric": "wall_ns_per_window",
+      "profile": "avx2",
+      "trials": 5
+    },
+    {
+      "after_mad": 0.0028369999999995343,
+      "after_max": 5.816286,
+      "after_median": 5.806986,
+      "after_min": 5.803158,
+      "after_over_before_mad": 0.0009609924179496687,
+      "after_over_before_max": 1.0778778358863463,
+      "after_over_before_median": 1.075693348068868,
+      "after_over_before_min": 1.0740448932249285,
+      "after_over_before_samples": [
+        1.0747323556509183,
+        1.0740448932249285,
+        1.0778778358863463,
+        1.0766518284598698,
+        1.075693348068868
+      ],
+      "after_ratio_of_medians": 1.0751680752630577,
+      "after_samples": [
+        5.816286,
+        5.803158,
+        5.806986,
+        5.80548,
+        5.809823
+      ],
+      "before_mad": 0.00884200000000046,
+      "before_max": 5.411846,
+      "before_median": 5.401003,
+      "before_min": 5.387425,
+      "before_samples": [
+        5.411846,
+        5.403087,
+        5.387425,
+        5.392161,
+        5.401003
+      ],
+      "case": "tuple_tight/8/2/65535/shared/independent8",
+      "classification": "shared native decode/compare route; prepared predicate bypassed",
+      "duplicate_mad": 0.0030320000000001457,
+      "duplicate_max": 5.400184,
+      "duplicate_median": 5.388615,
+      "duplicate_min": 5.385583,
+      "duplicate_over_before_mad": 0.0005791981395278922,
+      "duplicate_over_before_max": 1.0000419126951143,
+      "duplicate_over_before_median": 0.9994627145555864,
+      "duplicate_over_before_min": 0.9951471272464146,
+      "duplicate_over_before_samples": [
+        0.9951471272464146,
+        0.9994627145555864,
+        0.999812897627345,
+        1.0000419126951143,
+        0.9977063519498137
+      ],
+      "duplicate_ratio_of_medians": 0.9977063519498137,
+      "duplicate_samples": [
+        5.385583,
+        5.400184,
+        5.386417,
+        5.392387,
+        5.388615
+      ],
+      "family": "filters",
+      "member": "zen",
+      "metric": "wall_ns_per_window",
+      "profile": "avx2",
+      "trials": 5
+    },
+    {
+      "after_mad": 0.0016180000000005634,
+      "after_max": 5.922008,
+      "after_median": 5.916914,
+      "after_min": 5.912115,
+      "after_over_before_mad": 0.00024538324222644903,
+      "after_over_before_max": 1.1405793656806111,
+      "after_over_before_median": 1.1397412933178572,
+      "after_over_before_min": 1.0936546797758147,
+      "after_over_before_samples": [
+        1.0936546797758147,
+        1.1397894983376278,
+        1.1397412933178572,
+        1.1405793656806111,
+        1.1394959100756308
+      ],
+      "after_ratio_of_medians": 1.1396261694483298,
+      "after_samples": [
+        5.915296,
+        5.917762,
+        5.922008,
+        5.916914,
+        5.912115
+      ],
+      "before_mad": 0.003944999999999865,
+      "before_max": 5.408742,
+      "before_median": 5.191978,
+      "before_min": 5.187639,
+      "before_samples": [
+        5.408742,
+        5.191978,
+        5.195923,
+        5.187639,
+        5.18836
+      ],
+      "case": "tuple_tight/8/3/65535/shared/independent8",
+      "classification": "shared native decode/compare route; prepared predicate bypassed",
+      "duplicate_mad": 0.002081999999999695,
+      "duplicate_max": 5.190477,
+      "duplicate_median": 5.188395,
+      "duplicate_min": 5.161981,
+      "duplicate_over_before_mad": 0.0017201047677602999,
+      "duplicate_over_before_max": 1.0005470696785184,
+      "duplicate_over_before_median": 0.9988269649107581,
+      "duplicate_over_before_min": 0.9585737311929465,
+      "duplicate_over_before_samples": [
+        0.9585737311929465,
+        0.9993098969217512,
+        0.9988269649107581,
+        1.0005470696785184,
+        0.9949157344517342
+      ],
+      "duplicate_ratio_of_medians": 0.9993098969217512,
+      "duplicate_samples": [
+        5.184678,
+        5.188395,
+        5.189828,
+        5.190477,
+        5.161981
+      ],
+      "family": "filters",
+      "member": "zen",
+      "metric": "wall_ns_per_window",
+      "profile": "avx2",
+      "trials": 5
+    },
+    {
+      "after_mad": 0.0018540000000002443,
+      "after_max": 3.580478,
+      "after_median": 3.574927,
+      "after_min": 3.568125,
+      "after_over_before_mad": 0.0022909278664235977,
+      "after_over_before_max": 1.069927457845107,
+      "after_over_before_median": 1.0676365299786834,
+      "after_over_before_min": 0.992341380678872,
+      "after_over_before_samples": [
+        1.064308149367791,
+        1.069927457845107,
+        1.0682342190943819,
+        0.992341380678872,
+        1.0676365299786834
+      ],
+      "after_ratio_of_medians": 1.0674409528874196,
+      "after_samples": [
+        3.568125,
+        3.580478,
+        3.574927,
+        3.573073,
+        3.575582
+      ],
+      "before_mad": 0.002594999999999903,
+      "before_max": 3.600649,
+      "before_median": 3.349063,
+      "before_min": 3.346468,
+      "before_samples": [
+        3.35253,
+        3.346468,
+        3.346576,
+        3.600649,
+        3.349063
+      ],
+      "case": "tuple_tight/5/1/65535/one_stage/independent8",
+      "classification": "prepared predicate full-tight path",
+      "duplicate_mad": 0.0009619999999999074,
+      "duplicate_max": 3.350105,
+      "duplicate_median": 3.349135,
+      "duplicate_min": 3.347389,
+      "duplicate_over_before_mad": 0.0010330120896389072,
+      "duplicate_over_before_max": 1.001054510640129,
+      "duplicate_over_before_median": 1.00002149855049,
+      "duplicate_over_before_min": 0.9304147668934127,
+      "duplicate_over_before_samples": [
+        0.9988402788341939,
+        1.0002752155406835,
+        1.001054510640129,
+        0.9304147668934127,
+        1.00002149855049
+      ],
+      "duplicate_ratio_of_medians": 1.00002149855049,
+      "duplicate_samples": [
+        3.348642,
+        3.347389,
+        3.350105,
+        3.350097,
+        3.349135
+      ],
+      "family": "filters",
+      "member": "zen",
+      "metric": "wall_ns_per_window",
+      "profile": "avx512",
+      "trials": 5
+    },
+    {
+      "after_mad": 0.0007999999999999119,
+      "after_max": 3.576098,
+      "after_median": 3.572798,
+      "after_min": 3.570842,
+      "after_over_before_mad": 0.0011172789102542602,
+      "after_over_before_max": 1.068195673985817,
+      "after_over_before_median": 1.0670321002786147,
+      "after_over_before_min": 0.9917047084909353,
+      "after_over_before_samples": [
+        1.0670508737743387,
+        1.0670321002786147,
+        1.0659148213683605,
+        0.9917047084909353,
+        1.068195673985817
+      ],
+      "after_ratio_of_medians": 1.0670321002786147,
+      "after_samples": [
+        3.570842,
+        3.572798,
+        3.572211,
+        3.573598,
+        3.576098
+      ],
+      "before_mad": 0.0018920000000002268,
+      "before_max": 3.60349,
+      "before_median": 3.348351,
+      "before_min": 3.346459,
+      "before_samples": [
+        3.346459,
+        3.348351,
+        3.35131,
+        3.60349,
+        3.347793
+      ],
+      "case": "tuple_tight/5/2/65535/one_stage/independent8",
+      "classification": "prepared predicate full-tight path",
+      "duplicate_mad": 0.0012159999999998838,
+      "duplicate_max": 3.356605,
+      "duplicate_median": 3.348226,
+      "duplicate_min": 3.346714,
+      "duplicate_over_before_mad": 0.001320522679696512,
+      "duplicate_over_before_max": 1.0026321818583168,
+      "duplicate_over_before_median": 0.9995111026293241,
+      "duplicate_over_before_min": 0.9288245561941341,
+      "duplicate_over_before_samples": [
+        1.0008316253090206,
+        0.9995111026293241,
+        0.9990797628390092,
+        0.9288245561941341,
+        1.0026321818583168
+      ],
+      "duplicate_ratio_of_medians": 0.999962668190999,
+      "duplicate_samples": [
+        3.349242,
+        3.346714,
+        3.348226,
+        3.34701,
+        3.356605
+      ],
+      "family": "filters",
+      "member": "zen",
+      "metric": "wall_ns_per_window",
+      "profile": "avx512",
+      "trials": 5
+    },
+    {
+      "after_mad": 0.0008869999999996381,
+      "after_max": 5.360373,
+      "after_median": 5.358427,
+      "after_min": 5.35754,
+      "after_over_before_mad": 0.00016568262719740545,
+      "after_over_before_max": 1.1291857992704497,
+      "after_over_before_median": 1.1290201166432523,
+      "after_over_before_min": 1.084293349583265,
+      "after_over_before_samples": [
+        1.1276693148894388,
+        1.1290201166432523,
+        1.1290902453046459,
+        1.084293349583265,
+        1.1291857992704497
+      ],
+      "after_ratio_of_medians": 1.128610243459616,
+      "after_samples": [
+        5.35754,
+        5.360373,
+        5.359648,
+        5.357655,
+        5.358427
+      ],
+      "before_mad": 0.0024199999999998667,
+      "before_max": 4.941149,
+      "before_median": 4.74781,
+      "before_min": 4.74539,
+      "before_samples": [
+        4.750985,
+        4.74781,
+        4.746873,
+        4.941149,
+        4.74539
+      ],
+      "case": "tuple_tight/5/2/65535/shared/independent8",
+      "classification": "shared native decode/compare route; prepared predicate bypassed",
+      "duplicate_mad": 0.007061000000000206,
+      "duplicate_max": 4.781219,
+      "duplicate_median": 4.754213,
+      "duplicate_min": 4.738902,
+      "duplicate_over_before_mad": 0.0020505184464311155,
+      "duplicate_over_before_max": 1.0070367179815536,
+      "duplicate_over_before_median": 1.0003713077323464,
+      "duplicate_over_before_min": 0.96233062390954,
+      "duplicate_over_before_samples": [
+        1.0006794380533721,
+        1.0070367179815536,
+        0.9983207892859153,
+        0.96233062390954,
+        1.0003713077323464
+      ],
+      "duplicate_ratio_of_medians": 1.0013486217856231,
+      "duplicate_samples": [
+        4.754213,
+        4.781219,
+        4.738902,
+        4.755019,
+        4.747152
+      ],
+      "family": "filters",
+      "member": "zen",
+      "metric": "wall_ns_per_window",
+      "profile": "avx512",
+      "trials": 5
+    },
+    {
+      "after_mad": 0.0019499999999998963,
+      "after_max": 5.369585,
+      "after_median": 5.359606,
+      "after_min": 5.356677,
+      "after_over_before_mad": 0.0014629256347284958,
+      "after_over_before_max": 1.1329487932486026,
+      "after_over_before_median": 1.1314858676138742,
+      "after_over_before_min": 1.0868967206378572,
+      "after_over_before_samples": [
+        1.1329487932486026,
+        1.1324057060063448,
+        1.1314858676138742,
+        1.0868967206378572,
+        1.1288454916051742
+      ],
+      "after_ratio_of_medians": 1.1319938496111654,
+      "after_samples": [
+        5.358628,
+        5.361556,
+        5.356677,
+        5.369585,
+        5.359606
+      ],
+      "before_mad": 0.004853999999999914,
+      "before_max": 4.94029,
+      "before_median": 4.73466,
+      "before_min": 4.729806,
+      "before_samples": [
+        4.729806,
+        4.73466,
+        4.734197,
+        4.94029,
+        4.747865
+      ],
+      "case": "tuple_tight/5/3/65535/shared/independent8",
+      "classification": "shared native decode/compare route; prepared predicate bypassed",
+      "duplicate_mad": 0.0036629999999995277,
+      "duplicate_max": 5.164897,
+      "duplicate_median": 4.738981,
+      "duplicate_min": 4.735318,
+      "duplicate_over_before_mad": 0.003320053460732497,
+      "duplicate_over_before_max": 1.0454643350896404,
+      "duplicate_over_before_median": 1.0014488966355068,
+      "duplicate_over_before_min": 0.9981288431747743,
+      "duplicate_over_before_samples": [
+        1.0014488966355068,
+        1.0063003468042058,
+        1.0002367877804832,
+        1.0454643350896404,
+        0.9981288431747743
+      ],
+      "duplicate_ratio_of_medians": 1.0009126315300358,
+      "duplicate_samples": [
+        4.736659,
+        4.76449,
+        4.735318,
+        5.164897,
+        4.738981
+      ],
+      "family": "filters",
+      "member": "zen",
+      "metric": "wall_ns_per_window",
+      "profile": "avx512",
+      "trials": 5
+    },
+    {
+      "after_mad": 0.0038229999999996878,
+      "after_max": 5.147542,
+      "after_median": 5.139088,
+      "after_min": 5.133896,
+      "after_over_before_mad": 0.0029464366126303876,
+      "after_over_before_max": 1.085734961903503,
+      "after_over_before_median": 1.0827885252908727,
+      "after_over_before_min": 1.0378052581850614,
+      "after_over_before_samples": [
+        1.0789038230512558,
+        1.0855513456571615,
+        1.085734961903503,
+        1.0378052581850614,
+        1.0827885252908727
+      ],
+      "after_ratio_of_medians": 1.0810102213561386,
+      "after_samples": [
+        5.135265,
+        5.139088,
+        5.141613,
+        5.133896,
+        5.147542
+      ],
+      "before_mad": 0.018362000000000656,
+      "before_max": 4.946878,
+      "before_median": 4.753968,
+      "before_min": 4.734081,
+      "before_samples": [
+        4.759706,
+        4.734081,
+        4.735606,
+        4.946878,
+        4.753968
+      ],
+      "case": "tuple_tight/5/4/65535/shared/independent8",
+      "classification": "shared native decode/compare route; prepared predicate bypassed",
+      "duplicate_mad": 0.009079999999999977,
+      "duplicate_max": 5.165071,
+      "duplicate_median": 4.745256,
+      "duplicate_min": 4.732048,
+      "duplicate_over_before_mad": 0.0037517005354723576,
+      "duplicate_over_before_max": 1.0441072126702944,
+      "duplicate_over_before_median": 0.9992486706030865,
+      "duplicate_over_before_min": 0.9950564173501473,
+      "duplicate_over_before_samples": [
+        0.9950564173501473,
+        1.0030003711385589,
+        0.9992486706030865,
+        1.0441072126702944,
+        0.9981674256116154
+      ],
+      "duplicate_ratio_of_medians": 0.9981674256116154,
+      "duplicate_samples": [
+        4.736176,
+        4.748285,
+        4.732048,
+        5.165071,
+        4.745256
+      ],
+      "family": "filters",
+      "member": "zen",
+      "metric": "wall_ns_per_window",
+      "profile": "avx512",
+      "trials": 5
+    },
+    {
+      "after_mad": 0.002097999999999711,
+      "after_max": 3.582378,
+      "after_median": 3.576751,
+      "after_min": 3.57139,
+      "after_over_before_mad": 0.0017210027683824958,
+      "after_over_before_max": 1.0702793397234596,
+      "after_over_before_median": 1.068558336955077,
+      "after_over_before_min": 0.9936566584377423,
+      "after_over_before_samples": [
+        1.0685608527571804,
+        1.068558336955077,
+        1.066805626001048,
+        0.9936566584377423,
+        1.0702793397234596
+      ],
+      "after_ratio_of_medians": 1.0684070038850066,
+      "after_samples": [
+        3.576751,
+        3.577357,
+        3.57139,
+        3.574653,
+        3.582378
+      ],
+      "before_mad": 0.0004820000000003155,
+      "before_max": 3.597473,
+      "before_median": 3.347742,
+      "before_min": 3.347143,
+      "before_samples": [
+        3.34726,
+        3.347835,
+        3.347742,
+        3.597473,
+        3.347143
+      ],
+      "case": "tuple_tight/8/1/65535/one_stage/independent8",
+      "classification": "prepared predicate full-tight path",
+      "duplicate_mad": 0.0023970000000002045,
+      "duplicate_max": 3.35651,
+      "duplicate_median": 3.349417,
+      "duplicate_min": 3.346893,
+      "duplicate_over_before_mad": 0.0005441216384898251,
+      "duplicate_over_before_max": 1.002798506069206,
+      "duplicate_over_before_median": 1.0006444076647765,
+      "duplicate_over_before_min": 0.9303455508908615,
+      "duplicate_over_before_samples": [
+        1.0006444076647765,
+        1.0011885293032663,
+        1.0002392657498695,
+        0.9303455508908615,
+        1.002798506069206
+      ],
+      "duplicate_ratio_of_medians": 1.0005003372422365,
+      "duplicate_samples": [
+        3.349417,
+        3.351814,
+        3.348543,
+        3.346893,
+        3.35651
+      ],
+      "family": "filters",
+      "member": "zen",
+      "metric": "wall_ns_per_window",
+      "profile": "avx512",
+      "trials": 5
+    },
+    {
+      "after_mad": 0.0006659999999998334,
+      "after_max": 5.366322,
+      "after_median": 5.359531,
+      "after_min": 5.358865,
+      "after_over_before_mad": 0.000956132763477946,
+      "after_over_before_max": 1.0928540270048677,
+      "after_over_before_median": 1.091376851026669,
+      "after_over_before_min": 1.084165509919971,
+      "after_over_before_samples": [
+        1.0908209148144907,
+        1.092332983790147,
+        1.091376851026669,
+        1.084165509919971,
+        1.0928540270048677
+      ],
+      "after_ratio_of_medians": 1.0914710366257234,
+      "after_samples": [
+        5.358865,
+        5.36151,
+        5.358931,
+        5.359531,
+        5.366322
+      ],
+      "before_mad": 0.002062999999999704,
+      "before_max": 4.943462,
+      "before_median": 4.910374,
+      "before_min": 4.908311,
+      "before_samples": [
+        4.91269,
+        4.908311,
+        4.910248,
+        4.943462,
+        4.910374
+      ],
+      "case": "tuple_tight/8/1/65535/shared/independent8",
+      "classification": "shared native decode/compare route; prepared predicate bypassed",
+      "duplicate_mad": 0.0008569999999998856,
+      "duplicate_max": 4.91987,
+      "duplicate_median": 4.917143,
+      "duplicate_min": 4.910399,
+      "duplicate_over_before_mad": 0.0008756760356525284,
+      "duplicate_over_before_max": 1.0023549852484899,
+      "duplicate_over_before_median": 1.000906428046549,
+      "duplicate_over_before_min": 0.994791099840557,
+      "duplicate_over_before_samples": [
+        1.000906428046549,
+        1.0023549852484899,
+        1.0000307520108964,
+        0.994791099840557,
+        1.0012039816111766
+      ],
+      "duplicate_ratio_of_medians": 1.0013785100686832,
+      "duplicate_samples": [
+        4.917143,
+        4.91987,
+        4.910399,
+        4.917712,
+        4.916286
+      ],
+      "family": "filters",
+      "member": "zen",
+      "metric": "wall_ns_per_window",
+      "profile": "avx512",
+      "trials": 5
+    },
+    {
+      "after_mad": 0.0006289999999999907,
+      "after_max": 5.36106,
+      "after_median": 5.358873,
+      "after_min": 5.358244,
+      "after_over_before_mad": 0.0011652932228216617,
+      "after_over_before_max": 1.1426995741196089,
+      "after_over_before_median": 1.139620889626791,
+      "after_over_before_min": 1.0852359162306846,
+      "after_over_before_samples": [
+        1.1407861828496126,
+        1.139620889626791,
+        1.1384654507168106,
+        1.0852359162306846,
+        1.1426995741196089
+      ],
+      "after_ratio_of_medians": 1.1396476854863629,
+      "after_samples": [
+        5.36039,
+        5.358747,
+        5.358873,
+        5.36106,
+        5.358244
+      ],
+      "before_mad": 0.004882999999999527,
+      "before_max": 4.939995,
+      "before_median": 4.702219,
+      "before_min": 4.68911,
+      "before_samples": [
+        4.698856,
+        4.702219,
+        4.707102,
+        4.939995,
+        4.68911
+      ],
+      "case": "tuple_tight/8/2/65535/shared/independent8",
+      "classification": "shared native decode/compare route; prepared predicate bypassed",
+      "duplicate_mad": 0.0009290000000001797,
+      "duplicate_max": 5.361171,
+      "duplicate_median": 5.358719,
+      "duplicate_min": 4.916528,
+      "duplicate_over_before_mad": 0.004565499813027785,
+      "duplicate_over_before_max": 1.14280087266027,
+      "duplicate_over_before_median": 1.1382353728472423,
+      "duplicate_over_before_min": 1.0455761418172993,
+      "duplicate_over_before_samples": [
+        1.1409523935187627,
+        1.0455761418172993,
+        1.1382353728472423,
+        1.0847678995626515,
+        1.14280087266027
+      ],
+      "duplicate_ratio_of_medians": 1.1396149349913305,
+      "duplicate_samples": [
+        5.361171,
+        4.916528,
+        5.35779,
+        5.358748,
+        5.358719
+      ],
+      "family": "filters",
+      "member": "zen",
+      "metric": "wall_ns_per_window",
+      "profile": "avx512",
+      "trials": 5
+    },
+    {
+      "after_mad": 0.004445999999999728,
+      "after_max": 5.366073,
+      "after_median": 5.360594,
+      "after_min": 5.356148,
+      "after_over_before_mad": 0.0017968968449089129,
+      "after_over_before_max": 1.14433453352475,
+      "after_over_before_median": 1.141677494824652,
+      "after_over_before_min": 1.0855541382202067,
+      "after_over_before_samples": [
+        1.1422378088059935,
+        1.139880597979743,
+        1.141677494824652,
+        1.0855541382202067,
+        1.14433453352475
+      ],
+      "after_ratio_of_medians": 1.1426251718010891,
+      "after_samples": [
+        5.358482,
+        5.360594,
+        5.356148,
+        5.365639,
+        5.366073
+      ],
+      "before_mad": 0.002220000000000333,
+      "before_max": 4.942765,
+      "before_median": 4.691472,
+      "before_min": 4.689252,
+      "before_samples": [
+        4.691214,
+        4.702768,
+        4.691472,
+        4.942765,
+        4.689252
+      ],
+      "case": "tuple_tight/8/3/65535/shared/independent8",
+      "classification": "shared native decode/compare route; prepared predicate bypassed",
+      "duplicate_mad": 0.0011820000000000164,
+      "duplicate_max": 5.165309,
+      "duplicate_median": 4.690551,
+      "duplicate_min": 4.686671,
+      "duplicate_over_before_mad": 0.000725276624595983,
+      "duplicate_over_before_max": 1.045024191924965,
+      "duplicate_over_before_median": 0.9995517398377312,
+      "duplicate_over_before_min": 0.9974608570952256,
+      "duplicate_over_before_samples": [
+        0.9990315939541448,
+        0.9974608570952256,
+        0.9995517398377312,
+        1.045024191924965,
+        1.0002770164623271
+      ],
+      "duplicate_ratio_of_medians": 0.9998036863483358,
+      "duplicate_samples": [
+        4.686671,
+        4.690827,
+        4.689369,
+        5.165309,
+        4.690551
+      ],
+      "family": "filters",
+      "member": "zen",
+      "metric": "wall_ns_per_window",
+      "profile": "avx512",
+      "trials": 5
+    },
+    {
+      "after_mad": 0.0012059999999998183,
+      "after_max": 5.138781,
+      "after_median": 5.137575,
+      "after_min": 5.134059,
+      "after_over_before_mad": 0.001211469347901284,
+      "after_over_before_max": 1.095603288014872,
+      "after_over_before_median": 1.094218183761917,
+      "after_over_before_min": 1.0401907646581239,
+      "after_over_before_samples": [
+        1.0954296531098182,
+        1.093991638539429,
+        1.094218183761917,
+        1.0401907646581239,
+        1.095603288014872
+      ],
+      "after_ratio_of_medians": 1.094740845862739,
+      "after_samples": [
+        5.138781,
+        5.134059,
+        5.138163,
+        5.137575,
+        5.136117
+      ],
+      "before_mad": 0.002778999999999421,
+      "before_max": 4.93907,
+      "before_median": 4.69296,
+      "before_min": 4.687935,
+      "before_samples": [
+        4.69111,
+        4.69296,
+        4.695739,
+        4.93907,
+        4.687935
+      ],
+      "case": "tuple_tight/8/4/65535/shared/independent8",
+      "classification": "shared native decode/compare route; prepared predicate bypassed",
+      "duplicate_mad": 0.002075000000000493,
+      "duplicate_max": 5.1669,
+      "duplicate_median": 4.692168,
+      "duplicate_min": 4.689988,
+      "duplicate_over_before_mad": 0.00012392126179738838,
+      "duplicate_over_before_max": 1.0461281172366457,
+      "duplicate_over_before_median": 0.9997608241972581,
+      "duplicate_over_before_min": 0.9996369029354607,
+      "duplicate_over_before_samples": [
+        0.9997608241972581,
+        0.9996369029354607,
+        0.9996814132983116,
+        1.0461281172366457,
+        1.000902956205664
+      ],
+      "duplicate_ratio_of_medians": 0.9998312365756366,
+      "duplicate_samples": [
+        4.689988,
+        4.691256,
+        4.694243,
+        5.1669,
+        4.692168
+      ],
+      "family": "filters",
+      "member": "zen",
+      "metric": "wall_ns_per_window",
+      "profile": "avx512",
+      "trials": 5
+    }
+  ],
+  "native_provenance_sha256": "b814d999c08b22c2c43a070c35b0138c888e22d818d7083280c9f66d7f470be0",
+  "observations": [
+    "All39selected complete functions/profile are verified against symbol-sized ELF extents; all19 x86 >=5% native paired-median losses are retained, including4AVX2 inline/dependent,3AVX512 one_stage/independent8 and12shared controls.",
+    "Common entry and completion are raw-byte exact at unchanged addresses. The indirect timer has equal instruction skeletons/offsets and13 RIP data references to equal initial payloads per profile.",
+    "AVX512 native decode and all5 joined comparisons are raw-byte exact at moved addresses. AVX2 counterparts retain exact instruction skeletons/offsets, with6decode and4joined RIP constant references verified equal.",
+    "The shared route bypasses the prepared predicate. Its measured losses occur through unchanged instructions/data with different linked layout/context; that is not evidence of newly added predicate work or a reason to dismiss the losses as noise.",
+    "Full-tight execution already used copied code before the change: no full plan access is removed from that path. Its generic-fallback, lifetime and residence benefit must be interpreted separately.",
+    "AVX2 dependent equal43to39 and less_equal45to41 preserve5conditions and one vector comparison. Activity reload/view metadata traffic and one long back-jump decrease; the cursor store disappears in these callers. Equal adds a limit-register rematerialization. Less_equal hoists a verified0x80 scalar broadcast instead of reading the equivalent16-byte sign mask on each selected iteration.",
+    "AVX512 affected one_stage paths36to35/150to137instructionbytes retain4guards, one encoded compare, one existing save/restore and the same musttail completion. kmovw becomes kmovd and a register copy disappears; these counts are not latency or \u00b5op estimates.",
+    "All3slowAVX512 one_stage candidates place kmovd across a64byte boundary, but w8/op2 has the same boundary pattern and improves A/B0.94096. That counterexample prevents treating the boundary as a causal explanation or justification for an alignment change.",
+    "Actual linked AVX512 w5/op2 independent8 is303to298 instructions. The separately retained unlinked witness303to322 used a different complete-caller allocation and cannot substitute for the native ELF.",
+    "One AVX512 shared w8/op2 identical-binary duplicate has D/B1.13824 versus A/B1.13962. Other slow rows have duplicate medians near1; the exception neither corrects nor dismisses their measured losses.",
+    "No bound/access/contract failure or extra comparison/admission/packet work was found in these selected routes. Known x86 full-tight native losses remain unresolved; linked branch/call-target placement, code/data residence and register scheduling differ, with no PMU or controlled placement experiment here."
+  ],
+  "paired_cases_sha256": "0c2a6701e26318231adc09b6e3e73e06919de85bb8af2c95ec874792c4837744",
+  "profiles": {
+    "avx2": {
+      "functions": {
+        "columns": [
+          "route",
+          "before_address",
+          "after_address",
+          "before_size",
+          "after_size",
+          "before_instructions",
+          "after_instructions",
+          "before_sha256",
+          "after_sha256",
+          "raw_bytes_equal"
+        ],
+        "rows": [
+          [
+            "common/indirect_timer",
+            7088,
+            7088,
+            2154,
+            2154,
+            473,
+            473,
+            "59ef18b5146a1216e76ba7959f029a58222260a911a5bf26b142ad39b711c5a0",
+            "ceae25b3e3fb59774c5d628bfe648eee863570faaba79c5c5906d1a06cecea10",
+            false
+          ],
+          [
+            "common/completion1",
+            14000,
+            14000,
+            6,
+            6,
+            2,
+            2,
+            "5a28ae8daa27650c73c285bf7063eca72f84dbf6295c15598a71c1ebe38dd4a0",
+            "5a28ae8daa27650c73c285bf7063eca72f84dbf6295c15598a71c1ebe38dd4a0",
+            true
+          ],
+          [
+            "common/entry1",
+            14992,
+            14992,
+            75,
+            75,
+            31,
+            31,
+            "2e0e774190196ac6effb32118e3d12a9800c8432eb4bcb49edccfc9f3724837f",
+            "2e0e774190196ac6effb32118e3d12a9800c8432eb4bcb49edccfc9f3724837f",
+            true
+          ],
+          [
+            "shared/native_decode",
+            64704,
+            64560,
+            12163,
+            12163,
+            2871,
+            2871,
+            "2d6a441a826ecb1b03482f236059beb15e2fb38bd92ab56ad86eaca85d68fb87",
+            "b5fa579f9ad1bd7fc12bf5bb0690c7313ae1b66c943e051815f4e1bd4ed76b22",
+            false
+          ],
+          [
+            "shared/joined/op0",
+            76880,
+            76736,
+            59,
+            59,
+            17,
+            17,
+            "5b623666d2f8379acd132ee63ae01eba4d438a0db765d245056a699e15d16af3",
+            "5b623666d2f8379acd132ee63ae01eba4d438a0db765d245056a699e15d16af3",
+            true
+          ],
+          [
+            "w5/op0/one_stage",
+            76944,
+            76800,
+            13004,
+            1231,
+            2992,
+            266,
+            "a559831473bfc44ac6da48792fd0d6e4e8ad81574da1f54af97dc956ce79f324",
+            "27bd119cf4e24eeee3ba4f1c2bf01af756bc1ccfc0159d71b5cb87ea8572ceaf",
+            false
+          ],
+          [
+            "w5/op0/bound",
+            89952,
+            78032,
+            12861,
+            1207,
+            2891,
+            262,
+            "68dd0e12ffa9e500812d28fa325727b85d351e13933915fe7fe3cc1bc7764461",
+            "b67e61d096f3e2d74dbb8a3eea55eb823dd102c4ff0bcd4a18db49d7ce0600e4",
+            false
+          ],
+          [
+            "w5/op0/inline_measure",
+            102816,
+            79248,
+            138943,
+            13484,
+            31178,
+            2819,
+            "e595c4f5cc3b15b11408e2fcbe33aca96abfc3ab43e7e8b86f29ad8d3888789d",
+            "8ec1daa483a72cfcc9b4ebcd790b8a0888ab8c180350628947eb74f8363eafb6",
+            false
+          ],
+          [
+            "w8/op0/one_stage",
+            244736,
+            95712,
+            13004,
+            1231,
+            2992,
+            266,
+            "9c98795b1dab794b29422a2b4504bc2f93ca824c0ee8a93ca2d183abc873a628",
+            "27bd119cf4e24eeee3ba4f1c2bf01af756bc1ccfc0159d71b5cb87ea8572ceaf",
+            false
+          ],
+          [
+            "w8/op0/bound",
+            257744,
+            96944,
+            12861,
+            1207,
+            2891,
+            262,
+            "ba0dc57068578553aaacb45e244394ebe4010871335373637541e83f3164f037",
+            "b67e61d096f3e2d74dbb8a3eea55eb823dd102c4ff0bcd4a18db49d7ce0600e4",
+            false
+          ],
+          [
+            "w8/op0/inline_measure",
+            270608,
+            98160,
+            138943,
+            13484,
+            31178,
+            2819,
+            "3a35f69c3c5c72520b0d13102b1ba050de6b700144228198645bd9167ba97376",
+            "b732a95797d1eec9c1d3e4bfbf41ca7d6b48b30e6816cfada90d92e09a43d020",
+            false
+          ],
+          [
+            "shared/joined/op1",
+            414672,
+            116624,
+            54,
+            54,
+            14,
+            14,
+            "3fb4b494b88b3d9b2c746e9279e2961faa1a04f1e50c697c602ede7c0c4e277c",
+            "0c2d3a4bac38637e198223b9413abd2c6812be4cc0f141dc30f516611df904b5",
+            false
+          ],
+          [
+            "w5/op1/one_stage",
+            414736,
+            116688,
+            13167,
+            1252,
+            2991,
+            268,
+            "561fde24bc1abffb5be14037aa4b895f8c95daa736d9680b2d2c4e571cd0a5fc",
+            "9e1232c350651706caae4ca72a45084c4d7ccae4c7b2547040f405b9d1cb559c",
+            false
+          ],
+          [
+            "w5/op1/bound",
+            427904,
+            117952,
+            12890,
+            1230,
+            2895,
+            264,
+            "1540c4b897f127ae9fb83152cb8ebb2fec78f4d275b65754745795fae7c61bcf",
+            "6b55d673c971056c3e178c0172607c39557b6fdd8c485c44768fed31eae678f3",
+            false
+          ],
+          [
+            "w5/op1/inline_measure",
+            440800,
+            119184,
+            139493,
+            13663,
+            31087,
+            2861,
+            "10c8f4877f4a7cda283968cd537df0c8ee5a849b3e765577df9f350b683dba6e",
+            "4e907c3a99f244d89294edd224adbb71dc6f0c099958cd8e8e9be024c6919bd5",
+            false
+          ],
+          [
+            "w8/op1/one_stage",
+            583312,
+            135856,
+            13167,
+            1252,
+            2991,
+            268,
+            "35eadfebfd97c054360aa82fb03e0cd15484af5b673f59f82b5827d8c0fe4188",
+            "a25ab59dce2444dceacbb42417694504ff9f6249d169b622ce1bf370de3b4fb6",
+            false
+          ],
+          [
+            "w8/op1/bound",
+            596480,
+            137120,
+            12890,
+            1230,
+            2895,
+            264,
+            "8bb268abd6d26da3f636439050633f3f1ffa51319c07f5758c92841c7edf6e75",
+            "feb870e8775f370fbd80bcf129b0a9c4fafeaed0281a06c0841c70d6a8bd17cd",
+            false
+          ],
+          [
+            "w8/op1/inline_measure",
+            609376,
+            138352,
+            139493,
+            13663,
+            31087,
+            2861,
+            "1b7a88dbbfcabb188b7a799a683064eea1032e1333b7c1c9a8c8f2145d805a9d",
+            "010eafdeb8b7572d1516ca59494b5e3a608b375df9e030f4d5837ef805731a9d",
+            false
+          ],
+          [
+            "shared/joined/op2",
+            754000,
+            156992,
+            57,
+            57,
+            14,
+            14,
+            "96262f40621808c0be6de6866713fcc38c7ac6000a4fe6a0b9d81320e64930b9",
+            "291ed4d097705da6081de4119aa84c2a4a385ffd664ba14038b21fa38998cc84",
+            false
+          ],
+          [
+            "w5/op2/one_stage",
+            754064,
+            157056,
+            13172,
+            1257,
+            2992,
+            269,
+            "fe8798d81f34464f00dcc18baa77c17b2e9705512d6dca48e138b8158745630a",
+            "720229b50374fa408ba6482582317649212238275e3e9714804b374fd8758241",
+            false
+          ],
+          [
+            "w5/op2/bound",
+            767248,
+            158320,
+            12895,
+            1235,
+            2896,
+            265,
+            "5a1d286f95efccad317b20e36a645f5fe22b5d7736d5777597c6da66403fc2d7",
+            "b934daf8bb0299b313419249d33e46d27f876762b1a0720718919281f27b1f83",
+            false
+          ],
+          [
+            "w5/op2/inline_measure",
+            780144,
+            159568,
+            139626,
+            13785,
+            31097,
+            2875,
+            "f2742c368122ce70c5ce5742c0c2bc1e63edaee083008aff127fe6cdcd5e46ed",
+            "4f04570530a542b59523049fd2746526b2eb9962aab23a4f636446a2f742d58f",
+            false
+          ],
+          [
+            "w8/op2/one_stage",
+            922784,
+            176368,
+            13172,
+            1257,
+            2992,
+            269,
+            "da34c3faa1b4126bc3c745c4a005758febf1ade08c44b095cf4a22259683892c",
+            "77aed162032add84c43671bf6f5fcc27fa1d2b7dd80285e3901bdb94c397f839",
+            false
+          ],
+          [
+            "w8/op2/bound",
+            935968,
+            177632,
+            12895,
+            1235,
+            2896,
+            265,
+            "0c22095b5bcff6a6ad89365f6a6ed423ef025a4794948206a9b66ebf2035dc3e",
+            "960ad945bee92ea0750ffc276d38b94ae702a4c801d7ee39879563776bf84132",
+            false
+          ],
+          [
+            "w8/op2/inline_measure",
+            948864,
+            178880,
+            139626,
+            13785,
+            31097,
+            2875,
+            "40cc7bd0315485036fad17b8de2ab39a47e382c65d36cf6bc41ee942206c9fb7",
+            "a56b4ca7637db3fdbd01b28e6100943ddbe74c1a6713d7317e6826c9f49ec9e9",
+            false
+          ],
+          [
+            "shared/joined/op3",
+            1093616,
+            197648,
+            69,
+            69,
+            19,
+            19,
+            "fdf7b95b3ec14aa4857d1059e8a884af8c83ddc0c35198b194cbc9d34d04e245",
+            "1e02990a7a55cfddf5d0a91a7b577d55d253ba6deac24c0ae023705b8237ae8f",
+            false
+          ],
+          [
+            "w5/op3/one_stage",
+            1093696,
+            197728,
+            13167,
+            1251,
+            2992,
+            270,
+            "4a7f87e0e2496325f44c46c158ff122ac94b3a6b31a5a6a3affcf1ecfa542f9a",
+            "2821a8173778ac2e9f212908e14481e271a74b3bfd323aa4383e4b3f824b1d73",
+            false
+          ],
+          [
+            "w5/op3/bound",
+            1106864,
+            198992,
+            12894,
+            1229,
+            2897,
+            266,
+            "788fcb58109e9463c905fe6afa41ce4321e03891bec9e49bed8f6674189378c7",
+            "5fc037335939a72b6f75a84fe1b2d2e19b72930f0e547cd61bd6c5d9771006eb",
+            false
+          ],
+          [
+            "w5/op3/inline_measure",
+            1119760,
+            200224,
+            139163,
+            13668,
+            30954,
+            2862,
+            "9b88e98f3ee737eea2813417872565b7737543d77ba61af7473cd602b52a0489",
+            "4dd5ad0fa63a9402a875c03d7ecaa7993ba22c9e98b33e4b02bae8432d185d5b",
+            false
+          ],
+          [
+            "w8/op3/one_stage",
+            1261936,
+            216912,
+            13167,
+            1251,
+            2992,
+            270,
+            "8873df89bdc4ea07abba10028f161933f358cf08202b624682303051343608ef",
+            "384c7fb3913ad6884e46e498480c9a40979f9c9cefb7fbcff88a0c0bc6e6d8d5",
+            false
+          ],
+          [
+            "w8/op3/bound",
+            1275104,
+            218176,
+            12894,
+            1229,
+            2897,
+            266,
+            "61ff9840a891320294b8cfd0d8aa92d2c5ae75c3b30336c4b5daf468071ac455",
+            "c4973d315977a51cd9a171d63461e0fab86f061fc05286e5080fdb468e43621f",
+            false
+          ],
+          [
+            "w8/op3/inline_measure",
+            1288000,
+            219408,
+            139163,
+            13668,
+            30954,
+            2862,
+            "cff64ba7e1cede9f62b102e7b44954fff71d3263d3e7b331d7b5fbc9c38dfae3",
+            "128d619ac138e6719d488ebcf3de5792cda9204401675b7e25dcc2b592d2489c",
+            false
+          ],
+          [
+            "shared/joined/op4",
+            1432288,
+            238064,
+            72,
+            72,
+            19,
+            19,
+            "27e2984981dbb032bf919acbeb32b0ca0bf06f4228b2c4fcee1b9e4d81888e75",
+            "ffcee75cac824e016b81bccfd4156fe5fa50be26185c82bdfbd9f146ac2e099e",
+            false
+          ],
+          [
+            "w5/op4/one_stage",
+            1432368,
+            238144,
+            13172,
+            1256,
+            2993,
+            271,
+            "1653dd22446c9de8a09adf1028a99577ca93f011ea61467ce069df0e9f22e202",
+            "d4a00bb59edfc42a409a709307189ee7ec27504dac4ab6b369858758fc3c97e9",
+            false
+          ],
+          [
+            "w5/op4/bound",
+            1445552,
+            239408,
+            12801,
+            1231,
+            2893,
+            266,
+            "69b9afc66344c134dbec03b6d0f137efcfb2214b4b944e40d2f0ffb90190fdf6",
+            "53ff6439939e6a3a385d2994fc19887adaa214b26587929c836cfe1bdf3a3241",
+            false
+          ],
+          [
+            "w5/op4/inline_measure",
+            1458368,
+            240640,
+            139267,
+            13694,
+            30964,
+            2872,
+            "5cae459bfd90472bee8c2a82fb77b0412f0bd23dc77579dfbbd8d63826cdd5c0",
+            "83d5dcd676db4dcc84ae7b5b1f1f59c0453bf10638bb354d719c9db1fcafded6",
+            false
+          ],
+          [
+            "w8/op4/one_stage",
+            1600656,
+            257344,
+            13172,
+            1256,
+            2993,
+            271,
+            "b987c51af731fd8b4213ebf577edf3c7553db060d68f9a476da98a2accaba693",
+            "f8f10ab77392356a18232ce7da0ee29ec23d47caec9c05e7eba5e377d8390e9c",
+            false
+          ],
+          [
+            "w8/op4/bound",
+            1613840,
+            258608,
+            12801,
+            1231,
+            2893,
+            266,
+            "6b4cf2016f5b4b865aeb4e655592707bb0adace5a2aa99eff39d759dfdf50356",
+            "a6800bdd65c536b745ec8e20fd06906a706723c3bcbfd72907de50b570253074",
+            false
+          ],
+          [
+            "w8/op4/inline_measure",
+            1626656,
+            259840,
+            139267,
+            13694,
+            30964,
+            2872,
+            "4625d72f6ae13e803619b0f888689c3ee430caa9d7b8642aa261a2fb74440d36",
+            "f1124e271da3037b7d0be7631c3b6b53ef34a3fac6fd6ee986942ed0f2e58fab",
+            false
+          ]
+        ]
+      },
+      "hoisted_sign_broadcasts": {
+        "w5/op2/inline_measure": [
+          {
+            "instruction": "vpbroadcastb\t0x1fe4d(%rip), %xmm2 # 0x46e08 <strlen@GLIBC_2.2.5+0x46e08>",
+            "instruction_address": "0x26fb2",
+            "payload": {
+              "address": "0x46e08",
+              "bytes": "80",
+              "kind": "exact scalar broadcast operand",
+              "section": ".rodata",
+              "sha256": "76be8b528d0075f7aae98d6fa57a6d3c83ae480a8469e668d7b0af968995ac71",
+              "size": 1,
+              "symbols": []
+            }
+          },
+          {
+            "instruction": "vpbroadcastb\t0x1fca4(%rip), %xmm2 # 0x46e08 <strlen@GLIBC_2.2.5+0x46e08>",
+            "instruction_address": "0x2715b",
+            "payload": {
+              "address": "0x46e08",
+              "bytes": "80",
+              "kind": "exact scalar broadcast operand",
+              "section": ".rodata",
+              "sha256": "76be8b528d0075f7aae98d6fa57a6d3c83ae480a8469e668d7b0af968995ac71",
+              "size": 1,
+              "symbols": []
+            }
+          },
+          {
+            "instruction": "vpbroadcastb\t0x1f648(%rip), %xmm2 # 0x46e08 <strlen@GLIBC_2.2.5+0x46e08>",
+            "instruction_address": "0x277b7",
+            "payload": {
+              "address": "0x46e08",
+              "bytes": "80",
+              "kind": "exact scalar broadcast operand",
+              "section": ".rodata",
+              "sha256": "76be8b528d0075f7aae98d6fa57a6d3c83ae480a8469e668d7b0af968995ac71",
+              "size": 1,
+              "symbols": []
+            }
+          }
+        ],
+        "w8/op2/inline_measure": [
+          {
+            "instruction": "vpbroadcastb\t0x1b2de(%rip), %xmm2 # 0x46e09 <strlen@GLIBC_2.2.5+0x46e09>",
+            "instruction_address": "0x2bb22",
+            "payload": {
+              "address": "0x46e09",
+              "bytes": "80",
+              "kind": "exact scalar broadcast operand",
+              "section": ".rodata",
+              "sha256": "76be8b528d0075f7aae98d6fa57a6d3c83ae480a8469e668d7b0af968995ac71",
+              "size": 1,
+              "symbols": []
+            }
+          },
+          {
+            "instruction": "vpbroadcastb\t0x1b135(%rip), %xmm2 # 0x46e09 <strlen@GLIBC_2.2.5+0x46e09>",
+            "instruction_address": "0x2bccb",
+            "payload": {
+              "address": "0x46e09",
+              "bytes": "80",
+              "kind": "exact scalar broadcast operand",
+              "section": ".rodata",
+              "sha256": "76be8b528d0075f7aae98d6fa57a6d3c83ae480a8469e668d7b0af968995ac71",
+              "size": 1,
+              "symbols": []
+            }
+          },
+          {
+            "instruction": "vpbroadcastb\t0x1aad9(%rip), %xmm2 # 0x46e09 <strlen@GLIBC_2.2.5+0x46e09>",
+            "instruction_address": "0x2c327",
+            "payload": {
+              "address": "0x46e09",
+              "bytes": "80",
+              "kind": "exact scalar broadcast operand",
+              "section": ".rodata",
+              "sha256": "76be8b528d0075f7aae98d6fa57a6d3c83ae480a8469e668d7b0af968995ac71",
+              "size": 1,
+              "symbols": []
+            }
+          }
+        ]
+      },
+      "inputs": {
+        "after": {
+          "bytes": 3606680,
+          "compile_commands_sha256": "a751f0d7bfc42a1f3af2dcfab75c2055af90f3cb0dcf99615721c93e11273cbd",
+          "configured_filter_command_count": 9,
+          "configured_filter_commands_digest": "826a1507864245cff002194e116ad36534b7a27c3b8f3096d953f9419b6dc5b2",
+          "direct_source_sha256": {
+            "workbench/spikes/filter-composition/extra.cpp": "ef10c8e66e526334a51a830220f07155633d40c7ef04993747af72c353dea00d",
+            "workbench/spikes/filter-composition/extra_pair_0.cpp": "1eca6926fc866f263324ce105ba56c46d1d1781f2668de502d7d49b38181831c",
+            "workbench/spikes/filter-composition/extra_pair_1.cpp": "0dc8ec0a967da533babcc7daafa795873948fee183dc72ff910e69b1821a181c",
+            "workbench/spikes/filter-composition/extra_tuple_0.cpp": "0443c5e05d23fccd834127c2e37e9aa5310803b5ac33d3444d4ed5d30e434716",
+            "workbench/spikes/filter-composition/extra_tuple_1.cpp": "878b1b542867cbbdcd205ce8478a8660d1c463e7b13f0c1f0919331348e11df3",
+            "workbench/spikes/filter-composition/extra_tuple_2.cpp": "ab1020c62567475c865d3aa15105425aa791fa0821207f5c40ebbd64c1cc8bfd",
+            "workbench/spikes/filter-composition/extra_tuple_3.cpp": "362a9b1f5a919dcef1abdd6164cd914e8073e0d701f6a0f7c0e318947c84bf48",
+            "workbench/spikes/filter-composition/extra_tuple_4.cpp": "f32c2f3387b4ef22e81c53a449be1dfe87ef4fb25428548fe1873532163c7d19",
+            "workbench/spikes/filter-composition/runtime.cpp": "e0dda336fc87c57fe8e7c5744d8c54866edc2353e902bc53fdecf269cc308e8e"
+          },
+          "disassembly_sha256": "f054f16fd44235ad363cb118c882f8df52937fe3cb5cb6f940514153f1a3cf0e",
+          "elf_sha256": "62a593e09fb3e73b928366404aa46d2db3b1388b3845704c378baac3bf5f1c9e"
+        },
+        "before": {
+          "bytes": 11475464,
+          "compile_commands_sha256": "944309ed5a9c4c328260b6b2fbd7b67d6ad41bd8476a19c000de77accddc5a28",
+          "configured_filter_command_count": 9,
+          "configured_filter_commands_digest": "c1f2197dc049ecd375894c0d445097c939f77419492d5cc2df76c88fe5041167",
+          "direct_source_sha256": {
+            "workbench/spikes/filter-composition/extra.cpp": "ef10c8e66e526334a51a830220f07155633d40c7ef04993747af72c353dea00d",
+            "workbench/spikes/filter-composition/extra_pair_0.cpp": "1eca6926fc866f263324ce105ba56c46d1d1781f2668de502d7d49b38181831c",
+            "workbench/spikes/filter-composition/extra_pair_1.cpp": "0dc8ec0a967da533babcc7daafa795873948fee183dc72ff910e69b1821a181c",
+            "workbench/spikes/filter-composition/extra_tuple_0.cpp": "0443c5e05d23fccd834127c2e37e9aa5310803b5ac33d3444d4ed5d30e434716",
+            "workbench/spikes/filter-composition/extra_tuple_1.cpp": "878b1b542867cbbdcd205ce8478a8660d1c463e7b13f0c1f0919331348e11df3",
+            "workbench/spikes/filter-composition/extra_tuple_2.cpp": "ab1020c62567475c865d3aa15105425aa791fa0821207f5c40ebbd64c1cc8bfd",
+            "workbench/spikes/filter-composition/extra_tuple_3.cpp": "362a9b1f5a919dcef1abdd6164cd914e8073e0d701f6a0f7c0e318947c84bf48",
+            "workbench/spikes/filter-composition/extra_tuple_4.cpp": "f32c2f3387b4ef22e81c53a449be1dfe87ef4fb25428548fe1873532163c7d19",
+            "workbench/spikes/filter-composition/runtime.cpp": "e0dda336fc87c57fe8e7c5744d8c54866edc2353e902bc53fdecf269cc308e8e"
+          },
+          "disassembly_sha256": "ea0ae2e51d3d0d173e036d43b40f9db950698cadb8f3b206574f7ca1437681e9",
+          "elf_sha256": "69195a753d53153a3e2a6df891cb46b9fc84d88ce14c00ebcbd963606dec5bec"
+        }
+      },
+      "paths": {
+        "columns": [
+          "route",
+          "kind",
+          "before_entry",
+          "after_entry",
+          "before_instructions",
+          "after_instructions",
+          "before_instruction_bytes",
+          "after_instruction_bytes",
+          "before_conditions",
+          "after_conditions",
+          "before_trace_sha256",
+          "after_trace_sha256",
+          "opcode_differences"
+        ],
+        "rows": [
+          [
+            "w5/op0/one_stage",
+            "full_tight_in_domain",
+            "0x12c90",
+            "0x12c00",
+            38,
+            36,
+            150,
+            137,
+            4,
+            4,
+            "ad06f75b34ad05dba9c923de911da6b1102d83ceff12cc15a61e42c7027dcd62",
+            "a6bd11cf7c0eab8333f91b932bd3c2ab6373924553fa5a1028eeca7c2265dd79",
+            {
+              "ja": [
+                1,
+                0
+              ],
+              "jbe": [
+                0,
+                1
+              ],
+              "jmp": [
+                2,
+                1
+              ],
+              "vzeroupper": [
+                1,
+                0
+              ]
+            }
+          ],
+          [
+            "w5/op0/bound",
+            "full_tight_in_domain",
+            "0x15f60",
+            "0x130d0",
+            44,
+            43,
+            151,
+            145,
+            4,
+            4,
+            "256c6787d55f3f598ebe60e90c8c84bfe31fa6e191fc50191f4d380c6dd4e232",
+            "f38754d6a70250d7029026ce101d4078ad60db0cfbbfefbb6d0db8d82ae6154f",
+            {
+              "ja": [
+                1,
+                0
+              ],
+              "jbe": [
+                0,
+                1
+              ],
+              "vzeroupper": [
+                1,
+                0
+              ]
+            }
+          ],
+          [
+            "w5/op0/inline_measure",
+            "dependent",
+            "0x1cc77",
+            "0x13e30",
+            43,
+            39,
+            173,
+            159,
+            5,
+            5,
+            "2e051c10609cd636fa30015e7f895142f99480f793e362f14118af2813ec481b",
+            "a8a68b22372167e7e9c63c5589d9a6c369340b9bfc992e9c5076ad196f6431f2",
+            {
+              "jmp": [
+                2,
+                1
+              ],
+              "movq": [
+                6,
+                4
+              ],
+              "movzwl": [
+                2,
+                1
+              ]
+            }
+          ],
+          [
+            "w5/op0/inline_measure",
+            "independent8",
+            "0x2046c",
+            "0x14395",
+            342,
+            308,
+            1480,
+            1259,
+            33,
+            33,
+            "0955565c45d899ac461edcaad9073c4fc587e431df7800be9e739e40a00fb742",
+            "2fee104f8c0ede0ed7fc9e63dd441cb0cf0651667837999fff2f6fbd9ee4a56d",
+            {
+              "addl": [
+                6,
+                0
+              ],
+              "ja": [
+                8,
+                1
+              ],
+              "jbe": [
+                0,
+                7
+              ],
+              "jmp": [
+                16,
+                8
+              ],
+              "leal": [
+                2,
+                8
+              ],
+              "movl": [
+                25,
+                28
+              ],
+              "movq": [
+                58,
+                36
+              ],
+              "movzwl": [
+                16,
+                9
+              ]
+            }
+          ],
+          [
+            "w8/op0/one_stage",
+            "full_tight_in_domain",
+            "0x3bc00",
+            "0x175e0",
+            38,
+            36,
+            150,
+            137,
+            4,
+            4,
+            "10d8f3884383840324e2e4c28a2b623d909eab3dce7fb09b54b81fbfab18fa1b",
+            "0c2d6a4b9036184efd51c1ddb9e4f24b8c04f888ff22b99d7af28ce2a9d69583",
+            {
+              "ja": [
+                1,
+                0
+              ],
+              "jbe": [
+                0,
+                1
+              ],
+              "jmp": [
+                2,
+                1
+              ],
+              "vzeroupper": [
+                1,
+                0
+              ]
+            }
+          ],
+          [
+            "w8/op0/bound",
+            "full_tight_in_domain",
+            "0x3eed0",
+            "0x17ab0",
+            44,
+            43,
+            151,
+            145,
+            4,
+            4,
+            "beee0f2fd65563bc8f31918da2ec2bb6999b919dd3b09f47796b26d38af6ee3f",
+            "450b028382490f31e71f18b1e179ba25c53e24c279604a3d92f8fc14a3032ae0",
+            {
+              "ja": [
+                1,
+                0
+              ],
+              "jbe": [
+                0,
+                1
+              ],
+              "vzeroupper": [
+                1,
+                0
+              ]
+            }
+          ],
+          [
+            "w8/op0/inline_measure",
+            "dependent",
+            "0x45be7",
+            "0x18810",
+            43,
+            39,
+            173,
+            159,
+            5,
+            5,
+            "5246980e26c918b4a288b9da11bee93030ad876e23bb2fea3b00d82a09c77c61",
+            "59b9872d8cd36c4267d5904cd3fd074b250b012f3568a06d38d90ffbcdaf0eea",
+            {
+              "jmp": [
+                2,
+                1
+              ],
+              "movq": [
+                6,
+                4
+              ],
+              "movzwl": [
+                2,
+                1
+              ]
+            }
+          ],
+          [
+            "w8/op0/inline_measure",
+            "independent8",
+            "0x493dc",
+            "0x18d75",
+            342,
+            308,
+            1480,
+            1259,
+            33,
+            33,
+            "cef1aff01b539ce4ed76713d0c2b01165020eb1a725aaef037dfe7ac8b0d4518",
+            "569bec3d8eb522a384f3971d5cbc034ce45f075bb4584382faa3cf615e21e01b",
+            {
+              "addl": [
+                6,
+                0
+              ],
+              "ja": [
+                8,
+                1
+              ],
+              "jbe": [
+                0,
+                7
+              ],
+              "jmp": [
+                16,
+                8
+              ],
+              "leal": [
+                2,
+                8
+              ],
+              "movl": [
+                25,
+                28
+              ],
+              "movq": [
+                58,
+                36
+              ],
+              "movzwl": [
+                16,
+                9
+              ]
+            }
+          ],
+          [
+            "w5/op1/one_stage",
+            "full_tight_in_domain",
+            "0x65410",
+            "0x1c7d0",
+            40,
+            38,
+            160,
+            155,
+            4,
+            4,
+            "b8103a6391e1a5433c2655e9f68a7388beb9254bec737c0429a44848a9255747",
+            "dca12aa11281548e65f58369613fa99e568c355e1bd47db94db484e1391b05e7",
+            {
+              "jmp": [
+                2,
+                1
+              ],
+              "vzeroupper": [
+                1,
+                0
+              ]
+            }
+          ],
+          [
+            "w5/op1/bound",
+            "full_tight_in_domain",
+            "0x68780",
+            "0x1ccc0",
+            47,
+            45,
+            167,
+            164,
+            4,
+            4,
+            "5b62b58c2c04cb8eba54bafb854baf7c98a613d101e8704690c19a1387be3ce4",
+            "0782ab9760c602d9b92602fef988826e91aeb404a544b58c807eda95770a59c6",
+            {
+              "jmp": [
+                2,
+                1
+              ],
+              "vzeroupper": [
+                1,
+                0
+              ]
+            }
+          ],
+          [
+            "w5/op1/inline_measure",
+            "dependent",
+            "0x6f577",
+            "0x1da60",
+            44,
+            40,
+            173,
+            158,
+            5,
+            5,
+            "7d29d078f9f0f2d43b267916c6bd30cc3fa8988f0ec4f09f433f1bba8193395a",
+            "8bbff58a6006ed9ae5caa0d4d85c5f420f99aac15a927f483d644e191a3a807b",
+            {
+              "ja": [
+                1,
+                0
+              ],
+              "jbe": [
+                0,
+                1
+              ],
+              "jmp": [
+                2,
+                1
+              ],
+              "movl": [
+                3,
+                2
+              ],
+              "movq": [
+                5,
+                4
+              ],
+              "movzwl": [
+                2,
+                1
+              ]
+            }
+          ],
+          [
+            "w5/op1/inline_measure",
+            "independent8",
+            "0x72c58",
+            "0x1dfd5",
+            344,
+            330,
+            1455,
+            1356,
+            33,
+            33,
+            "6469a101df34fb2848a67d8dd382ea935fdcd60bd959c154cf29041809b7bf8a",
+            "cd955d04a60e94a9ff9856d84c8dc0c049473a45138c7be6e2baf0b4223b816b",
+            {
+              "jmp": [
+                16,
+                8
+              ],
+              "movl": [
+                27,
+                34
+              ],
+              "movq": [
+                42,
+                36
+              ],
+              "movzwl": [
+                16,
+                9
+              ],
+              "testq": [
+                8,
+                1
+              ],
+              "testw": [
+                0,
+                7
+              ]
+            }
+          ],
+          [
+            "w8/op1/one_stage",
+            "full_tight_in_domain",
+            "0x8e690",
+            "0x212b0",
+            40,
+            38,
+            160,
+            155,
+            4,
+            4,
+            "26a69aaaac2a6587a7b6dc6689c3d74b9f2d2ad4ca9efd4cfb256b3011f377f6",
+            "afd8882c81637fc002ab5e3bba84368d8f7f305d0a300ca277e72f60d3d2f664",
+            {
+              "jmp": [
+                2,
+                1
+              ],
+              "vzeroupper": [
+                1,
+                0
+              ]
+            }
+          ],
+          [
+            "w8/op1/bound",
+            "full_tight_in_domain",
+            "0x91a00",
+            "0x217a0",
+            47,
+            45,
+            167,
+            164,
+            4,
+            4,
+            "8e1bf84f6fb61049d95c5795f60d8e5fc7ba92580d6108a8da93394c9dda634a",
+            "78f38641420469ce9d75237ddef1f0cdec0a21f36dab30cd75d74b53de5b93c9",
+            {
+              "jmp": [
+                2,
+                1
+              ],
+              "vzeroupper": [
+                1,
+                0
+              ]
+            }
+          ],
+          [
+            "w8/op1/inline_measure",
+            "dependent",
+            "0x987f7",
+            "0x22540",
+            44,
+            40,
+            173,
+            158,
+            5,
+            5,
+            "eb56a758b319d2c237bb7ea87dbb6ad89c4eb64ef022f4de06194410a62de8bd",
+            "3a1c6cf6da9c192a6d335d823b3737f57a9d20c5badb0d5f79762d1f0892b783",
+            {
+              "ja": [
+                1,
+                0
+              ],
+              "jbe": [
+                0,
+                1
+              ],
+              "jmp": [
+                2,
+                1
+              ],
+              "movl": [
+                3,
+                2
+              ],
+              "movq": [
+                5,
+                4
+              ],
+              "movzwl": [
+                2,
+                1
+              ]
+            }
+          ],
+          [
+            "w8/op1/inline_measure",
+            "independent8",
+            "0x9bed8",
+            "0x22ab5",
+            344,
+            330,
+            1455,
+            1356,
+            33,
+            33,
+            "a9f5a557b27d056d159698493e105210bde91ce71613a14e7ed42e9ddfd73122",
+            "468c152d1be3d2a6a81a95b572187f20a4141ab164f453a3d06dadc4a920aaa0",
+            {
+              "jmp": [
+                16,
+                8
+              ],
+              "movl": [
+                27,
+                34
+              ],
+              "movq": [
+                42,
+                36
+              ],
+              "movzwl": [
+                16,
+                9
+              ],
+              "testq": [
+                8,
+                1
+              ],
+              "testw": [
+                0,
+                7
+              ]
+            }
+          ],
+          [
+            "w5/op2/one_stage",
+            "full_tight_in_domain",
+            "0xb8190",
+            "0x26580",
+            41,
+            39,
+            162,
+            157,
+            4,
+            4,
+            "129e81a6a338b9e9e25bf71b7da9e9eefde9c3ef65d44aebcb7d5102b45f144c",
+            "13f84cd1b80038dfc4cb5b0c92dabeba7f6f524b92f0002dedc5d3f0118de6d0",
+            {
+              "jmp": [
+                2,
+                1
+              ],
+              "vzeroupper": [
+                1,
+                0
+              ]
+            }
+          ],
+          [
+            "w5/op2/bound",
+            "full_tight_in_domain",
+            "0xbb510",
+            "0x26a70",
+            48,
+            46,
+            169,
+            166,
+            4,
+            4,
+            "189cc7895212cd562df1ae3a25908850d1e507766b39088c30481ee4e84a9d88",
+            "18596d59394f6f435fcb20c450e0eb094e2f386b6dfeb5890854f4b99e84c7f2",
+            {
+              "jmp": [
+                2,
+                1
+              ],
+              "vzeroupper": [
+                1,
+                0
+              ]
+            }
+          ],
+          [
+            "w5/op2/inline_measure",
+            "dependent",
+            "0xc2317",
+            "0x27830",
+            45,
+            41,
+            175,
+            160,
+            5,
+            5,
+            "5826b8d7a286df6540067dcfd1047670941a322c5b617967f04c153549394305",
+            "8e2b3d47be1d748758550e4a9ddc7c263c6d5e963b120305b9c0576ee1fbeb7c",
+            {
+              "ja": [
+                1,
+                0
+              ],
+              "jbe": [
+                0,
+                1
+              ],
+              "jmp": [
+                2,
+                1
+              ],
+              "movl": [
+                3,
+                2
+              ],
+              "movq": [
+                5,
+                4
+              ],
+              "movzwl": [
+                2,
+                1
+              ]
+            }
+          ],
+          [
+            "w5/op2/inline_measure",
+            "independent8",
+            "0xc59f8",
+            "0x27da5",
+            352,
+            338,
+            1471,
+            1372,
+            33,
+            33,
+            "fa46ddf6db6b330f0948832c00660d22451cec2b3f6ad3af9ccbbdb79e16ced5",
+            "187f017cc42845996e1f0b56a73243180f165714856976eb36eeb4b13fe49000",
+            {
+              "jmp": [
+                16,
+                8
+              ],
+              "movl": [
+                27,
+                34
+              ],
+              "movq": [
+                42,
+                36
+              ],
+              "movzwl": [
+                16,
+                9
+              ],
+              "testq": [
+                8,
+                1
+              ],
+              "testw": [
+                0,
+                7
+              ]
+            }
+          ],
+          [
+            "w8/op2/one_stage",
+            "full_tight_in_domain",
+            "0xe14a0",
+            "0x2b0f0",
+            41,
+            39,
+            162,
+            157,
+            4,
+            4,
+            "18924fc1e83ad0dfb898352996d713a71fd1981e7ad436ac1883e5f675a6738f",
+            "999caf05cd91fe51a4482ee545f15f6441ed1d76eb99b0de365192fc55608a05",
+            {
+              "jmp": [
+                2,
+                1
+              ],
+              "vzeroupper": [
+                1,
+                0
+              ]
+            }
+          ],
+          [
+            "w8/op2/bound",
+            "full_tight_in_domain",
+            "0xe4820",
+            "0x2b5e0",
+            48,
+            46,
+            169,
+            166,
+            4,
+            4,
+            "92e81360d01969ece7c980ac96ed5ff4c015db257a1b9b24737a5b369a62480f",
+            "13224bf02125069f7eb96a2ab26a4c99489029746b24e7be25c67f06127c7028",
+            {
+              "jmp": [
+                2,
+                1
+              ],
+              "vzeroupper": [
+                1,
+                0
+              ]
+            }
+          ],
+          [
+            "w8/op2/inline_measure",
+            "dependent",
+            "0xeb627",
+            "0x2c3a0",
+            45,
+            41,
+            175,
+            160,
+            5,
+            5,
+            "15d080c07f36cc0e5e443dc7d612fa955e81606e9012067cbb5e14220907c437",
+            "80026d1971b1ee7b75c21e4a6eb61208ff30274e5a86da9b600ca7a6ed701730",
+            {
+              "ja": [
+                1,
+                0
+              ],
+              "jbe": [
+                0,
+                1
+              ],
+              "jmp": [
+                2,
+                1
+              ],
+              "movl": [
+                3,
+                2
+              ],
+              "movq": [
+                5,
+                4
+              ],
+              "movzwl": [
+                2,
+                1
+              ]
+            }
+          ],
+          [
+            "w8/op2/inline_measure",
+            "independent8",
+            "0xeed08",
+            "0x2c915",
+            352,
+            338,
+            1471,
+            1372,
+            33,
+            33,
+            "ca8ce08bc5cdade263f91e4a5f1ac27f980d38f08e84d1fba7dacdd9921c9cf9",
+            "1d48b1178750511ecd1df8b9bac657a45ed83f1b7792c13765b7ebd557cc5824",
+            {
+              "jmp": [
+                16,
+                8
+              ],
+              "movl": [
+                27,
+                34
+              ],
+              "movq": [
+                42,
+                36
+              ],
+              "movzwl": [
+                16,
+                9
+              ],
+              "testq": [
+                8,
+                1
+              ],
+              "testw": [
+                0,
+                7
+              ]
+            }
+          ],
+          [
+            "w5/op3/one_stage",
+            "full_tight_in_domain",
+            "0x10b040",
+            "0x30460",
+            40,
+            38,
+            160,
+            147,
+            4,
+            4,
+            "40666a591c6ef660596144c62bd09db65ddfaff09d0fd1e3941a0eeadf9a7a43",
+            "6c03fad6079068266ad867f9572b4e0d6a4af60c14ff624c05bec7e91e1cfdef",
+            {
+              "ja": [
+                1,
+                0
+              ],
+              "jbe": [
+                0,
+                1
+              ],
+              "jmp": [
+                2,
+                1
+              ],
+              "vzeroupper": [
+                1,
+                0
+              ]
+            }
+          ],
+          [
+            "w5/op3/bound",
+            "full_tight_in_domain",
+            "0x10e3b0",
+            "0x30950",
+            46,
+            45,
+            162,
+            156,
+            4,
+            4,
+            "dc16b067bfe6cd3c25c9212d863f9262f9b200f65dec6262827088732acfb893",
+            "9e6335ffbb45aad3967bc4034aa1ca6d51f6edcb37a6d60fb8a4f856cdb4f1e6",
+            {
+              "ja": [
+                1,
+                0
+              ],
+              "jbe": [
+                0,
+                1
+              ],
+              "vzeroupper": [
+                1,
+                0
+              ]
+            }
+          ],
+          [
+            "w5/op3/inline_measure",
+            "dependent",
+            "0x1151d7",
+            "0x31700",
+            45,
+            41,
+            183,
+            165,
+            5,
+            5,
+            "f1ccab32e19e72879d51af1c5ebb605bdb2445674aaaeaa9d76ef5c64fcb5df7",
+            "18ca31da20fd7b2df957fbe0544170811d8866ecd0f0e58085aa33a2cd3d9bc3",
+            {
+              "jmp": [
+                2,
+                1
+              ],
+              "movq": [
+                6,
+                4
+              ],
+              "movzwl": [
+                2,
+                1
+              ]
+            }
+          ],
+          [
+            "w5/op3/inline_measure",
+            "independent8",
+            "0x118918",
+            "0x31c75",
+            352,
+            324,
+            1535,
+            1307,
+            33,
+            33,
+            "0dccfa0da98b6dc87629a47ae27a20c457ce93b401b390d073dcb90ea373dd00",
+            "d3b6a181e76986368f0aa234df82c260f934eea1f3c838be3ef27e7602b3907b",
+            {
+              "ja": [
+                8,
+                1
+              ],
+              "jbe": [
+                0,
+                7
+              ],
+              "jmp": [
+                16,
+                8
+              ],
+              "movl": [
+                27,
+                28
+              ],
+              "movq": [
+                50,
+                36
+              ],
+              "movzwl": [
+                16,
+                9
+              ]
+            }
+          ],
+          [
+            "w8/op3/one_stage",
+            "full_tight_in_domain",
+            "0x134170",
+            "0x34f50",
+            40,
+            38,
+            160,
+            147,
+            4,
+            4,
+            "c5a8240b72bf2ebc0cb8069de944dc9fad5728bd514d12342cf5969ae1fef317",
+            "97f8079622bc05120dfa5f3f0a5376232479aa1c14332fb54e421d58ffb5c65b",
+            {
+              "ja": [
+                1,
+                0
+              ],
+              "jbe": [
+                0,
+                1
+              ],
+              "jmp": [
+                2,
+                1
+              ],
+              "vzeroupper": [
+                1,
+                0
+              ]
+            }
+          ],
+          [
+            "w8/op3/bound",
+            "full_tight_in_domain",
+            "0x1374e0",
+            "0x35440",
+            46,
+            45,
+            162,
+            156,
+            4,
+            4,
+            "8c96f3e41aa523c28e5c8d340d88087e6a4c48ddf84b562be9fd533f8c0eb022",
+            "f5569974ae384af5587a6bd8eac6a5d05a100d31efb37ab8e6a0f4672f2629ed",
+            {
+              "ja": [
+                1,
+                0
+              ],
+              "jbe": [
+                0,
+                1
+              ],
+              "vzeroupper": [
+                1,
+                0
+              ]
+            }
+          ],
+          [
+            "w8/op3/inline_measure",
+            "dependent",
+            "0x13e307",
+            "0x361f0",
+            45,
+            41,
+            183,
+            165,
+            5,
+            5,
+            "d9b287f0d3094cb386fc065511641165c454f2fb23dedf2c6c2b45978f70c72a",
+            "d84341777f5d181de3c09abc8b77c7b5106edf625b49aee4b7a3a35eef43d6e3",
+            {
+              "jmp": [
+                2,
+                1
+              ],
+              "movq": [
+                6,
+                4
+              ],
+              "movzwl": [
+                2,
+                1
+              ]
+            }
+          ],
+          [
+            "w8/op3/inline_measure",
+            "independent8",
+            "0x141a48",
+            "0x36765",
+            352,
+            324,
+            1535,
+            1307,
+            33,
+            33,
+            "600362c2b15b30321af21f14c0563163ac5bd0ca99360676b510d28fdc44c8c2",
+            "95b1edd291979436d814126deed7a122520a11c7c0db77e86b34c01888fdea3a",
+            {
+              "ja": [
+                8,
+                1
+              ],
+              "jbe": [
+                0,
+                7
+              ],
+              "jmp": [
+                16,
+                8
+              ],
+              "movl": [
+                27,
+                28
+              ],
+              "movq": [
+                50,
+                36
+              ],
+              "movzwl": [
+                16,
+                9
+              ]
+            }
+          ],
+          [
+            "w5/op4/one_stage",
+            "full_tight_in_domain",
+            "0x15db30",
+            "0x3a240",
+            41,
+            39,
+            162,
+            149,
+            4,
+            4,
+            "104b0ba01ed2e0ceb8870292c005341e791f34484b1880b241e90930a9f91fa4",
+            "dcc6ebb3c7a3b0623719172804d314457d3cbeeefc3a5b5c4af2310be6a9a050",
+            {
+              "ja": [
+                1,
+                0
+              ],
+              "jbe": [
+                0,
+                1
+              ],
+              "jmp": [
+                2,
+                1
+              ],
+              "vzeroupper": [
+                1,
+                0
+              ]
+            }
+          ],
+          [
+            "w5/op4/bound",
+            "full_tight_in_domain",
+            "0x160eb0",
+            "0x3a730",
+            47,
+            45,
+            167,
+            154,
+            4,
+            4,
+            "05f66539ae06d824a9e361293abf7bb98fc96aa4a0d779ac632105bec74dad08",
+            "cc206fc4727fc8bd330b32c56a009f42866777214cd884795f80c33b1bb1e62c",
+            {
+              "ja": [
+                1,
+                0
+              ],
+              "jbe": [
+                0,
+                1
+              ],
+              "jmp": [
+                2,
+                1
+              ],
+              "vzeroupper": [
+                1,
+                0
+              ]
+            }
+          ],
+          [
+            "w5/op4/inline_measure",
+            "dependent",
+            "0x167c87",
+            "0x3b4e0",
+            46,
+            42,
+            185,
+            167,
+            5,
+            5,
+            "d2a677dadf6a12f71f2b723cb74dace036524d58654ecb6e7b2d40d8c0f44dbc",
+            "2613ae1c9051c8a2ff6efe9675c45bc3e2d59f6e5c481fdee333ddefa6a58381",
+            {
+              "jmp": [
+                2,
+                1
+              ],
+              "movq": [
+                6,
+                4
+              ],
+              "movzwl": [
+                2,
+                1
+              ]
+            }
+          ],
+          [
+            "w5/op4/inline_measure",
+            "independent8",
+            "0x16b3c8",
+            "0x3ba55",
+            360,
+            332,
+            1551,
+            1323,
+            33,
+            33,
+            "5f3a01842e235b9efdea1fe75d71939bf92e5bf4268ec03172dd4d3e558a0ba5",
+            "1560d0becf85482849c9a543eb4f57bffbf60ae23e7defd1fc38480847f9f871",
+            {
+              "ja": [
+                8,
+                1
+              ],
+              "jbe": [
+                0,
+                7
+              ],
+              "jmp": [
+                16,
+                8
+              ],
+              "movl": [
+                27,
+                28
+              ],
+              "movq": [
+                50,
+                36
+              ],
+              "movzwl": [
+                16,
+                9
+              ]
+            }
+          ],
+          [
+            "w8/op4/one_stage",
+            "full_tight_in_domain",
+            "0x186c90",
+            "0x3ed40",
+            41,
+            39,
+            162,
+            149,
+            4,
+            4,
+            "5e6e7bdc1db5f9596d7166ee189654695eaa3af6b655ae309572b3672adfb998",
+            "2e2d1528de6c0ddb0bf1f0e7c4d1c2e46ec7502aef862214d71ee2786e2fee95",
+            {
+              "ja": [
+                1,
+                0
+              ],
+              "jbe": [
+                0,
+                1
+              ],
+              "jmp": [
+                2,
+                1
+              ],
+              "vzeroupper": [
+                1,
+                0
+              ]
+            }
+          ],
+          [
+            "w8/op4/bound",
+            "full_tight_in_domain",
+            "0x18a010",
+            "0x3f230",
+            47,
+            45,
+            167,
+            154,
+            4,
+            4,
+            "54daff8acab46c52fb3e7cc7139ca36b0104566e4d7b3d86ff34e8846d5cc946",
+            "c1a9d92dedc2bbc87b9e16fe4031d742e411e6d906e43d35713e3608e3e4997d",
+            {
+              "ja": [
+                1,
+                0
+              ],
+              "jbe": [
+                0,
+                1
+              ],
+              "jmp": [
+                2,
+                1
+              ],
+              "vzeroupper": [
+                1,
+                0
+              ]
+            }
+          ],
+          [
+            "w8/op4/inline_measure",
+            "dependent",
+            "0x190de7",
+            "0x3ffe0",
+            46,
+            42,
+            185,
+            167,
+            5,
+            5,
+            "9cf87c3df1ae0103f04dcc91cdce2d1acedfbf80a5d10ca0746e4639b1c6805e",
+            "69f71c7e12f4ca410819d5a7c110086044f1928ac685e80bb3b2b1646241d46d",
+            {
+              "jmp": [
+                2,
+                1
+              ],
+              "movq": [
+                6,
+                4
+              ],
+              "movzwl": [
+                2,
+                1
+              ]
+            }
+          ],
+          [
+            "w8/op4/inline_measure",
+            "independent8",
+            "0x194528",
+            "0x40555",
+            360,
+            332,
+            1551,
+            1323,
+            33,
+            33,
+            "000f34278e9719341f9f04c8028ed756e084c21c265c9c98a9f624c9709952ee",
+            "f860b3c92ccf3e8a04edaaaaa12ea7894b1ef32407087547261f9860da73496c",
+            {
+              "ja": [
+                8,
+                1
+              ],
+              "jbe": [
+                0,
+                7
+              ],
+              "jmp": [
+                16,
+                8
+              ],
+              "movl": [
+                27,
+                28
+              ],
+              "movq": [
+                50,
+                36
+              ],
+              "movzwl": [
+                16,
+                9
+              ]
+            }
+          ]
+        ]
+      },
+      "payloads": {
+        "00350cc83ab02d2681f546a00b03bdd82866fc07e832df5b84f006a5e8a4969e": {
+          "bytes": "25732c25752c25752c25752c25732c25732c25752c252e36660a00",
+          "kind": "complete nul-terminated string",
+          "size": 27
+        },
+        "1fce70c028536c62aaa3e70132da38a719f84da916015c1fb278f3dba0587176": {
+          "bytes": "a0860100",
+          "kind": "complete object initial bytes",
+          "size": 4
+        },
+        "2594b6a92ebfb1c3312deb7d01c015fb95e9fbe9bd7bc6b527af07813ec7b910": {
+          "bytes": "05000000",
+          "kind": "complete object initial bytes",
+          "size": 4
+        },
+        "2d311251337c35e4d3628720f349d4133233ed476372432e57314e0ab316bc35": {
+          "bytes": "0000000000002040",
+          "kind": "scalar double operand",
+          "size": 8
+        },
+        "4e972baaee2ad54f78153134ef6484cd1a8e383d21582a21a481d4d214161916": {
+          "bytes": "80808080808080808080808080808080",
+          "kind": "full vector operand",
+          "size": 16
+        },
+        "542cf202103ad5d765051b58bb88f66f4e7c1718aed775cc06a02cdfcd965c9d": {
+          "bytes": "646570656e64656e7400",
+          "kind": "complete nul-terminated string",
+          "size": 10
+        },
+        "65a0a97a1358563d971036c6533a7c5ac8768cd18cdee9f470b36a1226ea5a7a": {
+          "bytes": "696e646570656e64656e743800",
+          "kind": "complete nul-terminated string",
+          "size": 13
+        },
+        "6bd25f5d5bc8ca90d74d76e96509d85351800e38ce101abf0ffa81c8a7e755a7": {
+          "bytes": "00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff",
+          "kind": "full vector operand",
+          "size": 32
+        },
+        "6c3c396ed6b5c36dcae172271f462051b1266b851e92df3deea8ac65478fd712": {
+          "bytes": "000000000000f03f",
+          "kind": "scalar double operand",
+          "size": 8
+        },
+        "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d": {
+          "bytes": "00",
+          "kind": "complete object initial bytes",
+          "size": 1
+        },
+        "af5570f5a1810b7af78caf4bc70a660f0df51e42baf91d4de5b2328de0e83dfc": {
+          "bytes": "0000000000000000",
+          "kind": "complete object initial bytes",
+          "size": 8
+        },
+        "baffcd215de983f19567ff94e047f03d430dd635f9751d2f46f1077e7e3dda0c": {
+          "bytes": "ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00",
+          "kind": "full vector operand",
+          "size": 32
+        }
+      },
+      "selected_path_details": {
+        "w5/op0/inline_measure/dependent": {
+          "after": {
+            "boundary_crossings": [
+              {
+                "address": "0x13e3d",
+                "bytes": "4b8b7ccf38",
+                "offset_mod64": 61
+              },
+              {
+                "address": "0x1407f",
+                "bytes": "c44279f7c0",
+                "offset_mod64": 63
+              }
+            ],
+            "occupied_64byte_code_regions": 4,
+            "payloads": []
+          },
+          "before": {
+            "boundary_crossings": [
+              {
+                "address": "0x1cfbf",
+                "bytes": "e9fd310000",
+                "offset_mod64": 63
+              }
+            ],
+            "occupied_64byte_code_regions": 5,
+            "payloads": []
+          }
+        },
+        "w5/op2/inline_measure/dependent": {
+          "after": {
+            "boundary_crossings": [
+              {
+                "address": "0x2783d",
+                "bytes": "4b8b7ccf38",
+                "offset_mod64": 61
+              },
+              {
+                "address": "0x27abc",
+                "bytes": "e951fdffff",
+                "offset_mod64": 60
+              }
+            ],
+            "occupied_64byte_code_regions": 5,
+            "payloads": []
+          },
+          "before": {
+            "boundary_crossings": [
+              {
+                "address": "0xc233f",
+                "bytes": "6683ffff",
+                "offset_mod64": 63
+              },
+              {
+                "address": "0xc25bf",
+                "bytes": "c4e279f7d2",
+                "offset_mod64": 63
+              }
+            ],
+            "occupied_64byte_code_regions": 6,
+            "payloads": [
+              {
+                "address": "0x1b28e0",
+                "bytes": "80808080808080808080808080808080",
+                "kind": "full vector operand",
+                "section": ".rodata",
+                "sha256": "4e972baaee2ad54f78153134ef6484cd1a8e383d21582a21a481d4d214161916",
+                "size": 16,
+                "symbols": []
+              }
+            ]
+          }
+        },
+        "w8/op0/inline_measure/dependent": {
+          "after": {
+            "boundary_crossings": [
+              {
+                "address": "0x18a7d",
+                "bytes": "c4e27978c9",
+                "offset_mod64": 61
+              }
+            ],
+            "occupied_64byte_code_regions": 5,
+            "payloads": []
+          },
+          "before": {
+            "boundary_crossings": [
+              {
+                "address": "0x45bff",
+                "bytes": "498b4008",
+                "offset_mod64": 63
+              },
+              {
+                "address": "0x45eff",
+                "bytes": "0fb64011",
+                "offset_mod64": 63
+              }
+            ],
+            "occupied_64byte_code_regions": 5,
+            "payloads": []
+          }
+        },
+        "w8/op2/inline_measure/dependent": {
+          "after": {
+            "boundary_crossings": [
+              {
+                "address": "0x2c5fe",
+                "bytes": "c4e2f9f7c7",
+                "offset_mod64": 62
+              }
+            ],
+            "occupied_64byte_code_regions": 4,
+            "payloads": []
+          },
+          "before": {
+            "boundary_crossings": [
+              {
+                "address": "0xeb63f",
+                "bytes": "c4e269f7d3",
+                "offset_mod64": 63
+              },
+              {
+                "address": "0xeb8be",
+                "bytes": "4983f801",
+                "offset_mod64": 62
+              },
+              {
+                "address": "0xeb8fe",
+                "bytes": "e964310000",
+                "offset_mod64": 62
+              }
+            ],
+            "occupied_64byte_code_regions": 6,
+            "payloads": [
+              {
+                "address": "0x1b28e0",
+                "bytes": "80808080808080808080808080808080",
+                "kind": "full vector operand",
+                "section": ".rodata",
+                "sha256": "4e972baaee2ad54f78153134ef6484cd1a8e383d21582a21a481d4d214161916",
+                "size": 16,
+                "symbols": []
+              }
+            ]
+          }
+        }
+      },
+      "shared_route_proofs": {
+        "common/completion1": {
+          "all_addressed_payloads_equal": true,
+          "instruction_skeletons_equal": true,
+          "references": {
+            "columns": [
+              "function_offset",
+              "before_address",
+              "after_address",
+              "before_payload_sha256",
+              "after_payload_sha256"
+            ],
+            "rows": []
+          },
+          "same_relative_offsets": true
+        },
+        "common/entry1": {
+          "all_addressed_payloads_equal": true,
+          "instruction_skeletons_equal": true,
+          "references": {
+            "columns": [
+              "function_offset",
+              "before_address",
+              "after_address",
+              "before_payload_sha256",
+              "after_payload_sha256"
+            ],
+            "rows": []
+          },
+          "same_relative_offsets": true
+        },
+        "common/indirect_timer": {
+          "all_addressed_payloads_equal": true,
+          "instruction_skeletons_equal": true,
+          "references": {
+            "columns": [
+              "function_offset",
+              "before_address",
+              "after_address",
+              "before_payload_sha256",
+              "after_payload_sha256"
+            ],
+            "rows": [
+              [
+                17,
+                "0x1b70d8",
+                "0x4b0d8",
+                "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d",
+                "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+              ],
+              [
+                61,
+                "0x1b70a4",
+                "0x4b0a4",
+                "2594b6a92ebfb1c3312deb7d01c015fb95e9fbe9bd7bc6b527af07813ec7b910",
+                "2594b6a92ebfb1c3312deb7d01c015fb95e9fbe9bd7bc6b527af07813ec7b910"
+              ],
+              [
+                293,
+                "0x1b2010",
+                "0x46010",
+                "6c3c396ed6b5c36dcae172271f462051b1266b851e92df3deea8ac65478fd712",
+                "6c3c396ed6b5c36dcae172271f462051b1266b851e92df3deea8ac65478fd712"
+              ],
+              [
+                320,
+                "0x1b2018",
+                "0x46018",
+                "2d311251337c35e4d3628720f349d4133233ed476372432e57314e0ab316bc35",
+                "2d311251337c35e4d3628720f349d4133233ed476372432e57314e0ab316bc35"
+              ],
+              [
+                334,
+                "0x1b2140",
+                "0x46140",
+                "65a0a97a1358563d971036c6533a7c5ac8768cd18cdee9f470b36a1226ea5a7a",
+                "65a0a97a1358563d971036c6533a7c5ac8768cd18cdee9f470b36a1226ea5a7a"
+              ],
+              [
+                341,
+                "0x1b2136",
+                "0x46136",
+                "542cf202103ad5d765051b58bb88f66f4e7c1718aed775cc06a02cdfcd965c9d",
+                "542cf202103ad5d765051b58bb88f66f4e7c1718aed775cc06a02cdfcd965c9d"
+              ],
+              [
+                398,
+                "0x1b70d0",
+                "0x4b0d0",
+                "af5570f5a1810b7af78caf4bc70a660f0df51e42baf91d4de5b2328de0e83dfc",
+                "af5570f5a1810b7af78caf4bc70a660f0df51e42baf91d4de5b2328de0e83dfc"
+              ],
+              [
+                480,
+                "0x1b70a0",
+                "0x4b0a0",
+                "1fce70c028536c62aaa3e70132da38a719f84da916015c1fb278f3dba0587176",
+                "1fce70c028536c62aaa3e70132da38a719f84da916015c1fb278f3dba0587176"
+              ],
+              [
+                494,
+                "0x1b211b",
+                "0x4611b",
+                "00350cc83ab02d2681f546a00b03bdd82866fc07e832df5b84f006a5e8a4969e",
+                "00350cc83ab02d2681f546a00b03bdd82866fc07e832df5b84f006a5e8a4969e"
+              ],
+              [
+                555,
+                "0x1b70a4",
+                "0x4b0a4",
+                "2594b6a92ebfb1c3312deb7d01c015fb95e9fbe9bd7bc6b527af07813ec7b910",
+                "2594b6a92ebfb1c3312deb7d01c015fb95e9fbe9bd7bc6b527af07813ec7b910"
+              ],
+              [
+                1324,
+                "0x1b70a0",
+                "0x4b0a0",
+                "1fce70c028536c62aaa3e70132da38a719f84da916015c1fb278f3dba0587176",
+                "1fce70c028536c62aaa3e70132da38a719f84da916015c1fb278f3dba0587176"
+              ],
+              [
+                1441,
+                "0x1b70a0",
+                "0x4b0a0",
+                "1fce70c028536c62aaa3e70132da38a719f84da916015c1fb278f3dba0587176",
+                "1fce70c028536c62aaa3e70132da38a719f84da916015c1fb278f3dba0587176"
+              ],
+              [
+                2105,
+                "0x1b70a0",
+                "0x4b0a0",
+                "1fce70c028536c62aaa3e70132da38a719f84da916015c1fb278f3dba0587176",
+                "1fce70c028536c62aaa3e70132da38a719f84da916015c1fb278f3dba0587176"
+              ]
+            ]
+          },
+          "same_relative_offsets": true
+        },
+        "shared/joined/op0": {
+          "all_addressed_payloads_equal": true,
+          "instruction_skeletons_equal": true,
+          "references": {
+            "columns": [
+              "function_offset",
+              "before_address",
+              "after_address",
+              "before_payload_sha256",
+              "after_payload_sha256"
+            ],
+            "rows": []
+          },
+          "same_relative_offsets": true
+        },
+        "shared/joined/op1": {
+          "all_addressed_payloads_equal": true,
+          "instruction_skeletons_equal": true,
+          "references": {
+            "columns": [
+              "function_offset",
+              "before_address",
+              "after_address",
+              "before_payload_sha256",
+              "after_payload_sha256"
+            ],
+            "rows": [
+              [
+                12,
+                "0x1b28e0",
+                "0x468e0",
+                "4e972baaee2ad54f78153134ef6484cd1a8e383d21582a21a481d4d214161916",
+                "4e972baaee2ad54f78153134ef6484cd1a8e383d21582a21a481d4d214161916"
+              ]
+            ]
+          },
+          "same_relative_offsets": true
+        },
+        "shared/joined/op2": {
+          "all_addressed_payloads_equal": true,
+          "instruction_skeletons_equal": true,
+          "references": {
+            "columns": [
+              "function_offset",
+              "before_address",
+              "after_address",
+              "before_payload_sha256",
+              "after_payload_sha256"
+            ],
+            "rows": [
+              [
+                12,
+                "0x1b28e0",
+                "0x468e0",
+                "4e972baaee2ad54f78153134ef6484cd1a8e383d21582a21a481d4d214161916",
+                "4e972baaee2ad54f78153134ef6484cd1a8e383d21582a21a481d4d214161916"
+              ]
+            ]
+          },
+          "same_relative_offsets": true
+        },
+        "shared/joined/op3": {
+          "all_addressed_payloads_equal": true,
+          "instruction_skeletons_equal": true,
+          "references": {
+            "columns": [
+              "function_offset",
+              "before_address",
+              "after_address",
+              "before_payload_sha256",
+              "after_payload_sha256"
+            ],
+            "rows": [
+              [
+                27,
+                "0x1b28e0",
+                "0x468e0",
+                "4e972baaee2ad54f78153134ef6484cd1a8e383d21582a21a481d4d214161916",
+                "4e972baaee2ad54f78153134ef6484cd1a8e383d21582a21a481d4d214161916"
+              ]
+            ]
+          },
+          "same_relative_offsets": true
+        },
+        "shared/joined/op4": {
+          "all_addressed_payloads_equal": true,
+          "instruction_skeletons_equal": true,
+          "references": {
+            "columns": [
+              "function_offset",
+              "before_address",
+              "after_address",
+              "before_payload_sha256",
+              "after_payload_sha256"
+            ],
+            "rows": [
+              [
+                27,
+                "0x1b28e0",
+                "0x468e0",
+                "4e972baaee2ad54f78153134ef6484cd1a8e383d21582a21a481d4d214161916",
+                "4e972baaee2ad54f78153134ef6484cd1a8e383d21582a21a481d4d214161916"
+              ]
+            ]
+          },
+          "same_relative_offsets": true
+        },
+        "shared/native_decode": {
+          "all_addressed_payloads_equal": true,
+          "instruction_skeletons_equal": true,
+          "references": {
+            "columns": [
+              "function_offset",
+              "before_address",
+              "after_address",
+              "before_payload_sha256",
+              "after_payload_sha256"
+            ],
+            "rows": [
+              [
+                1163,
+                "0x1b2b20",
+                "0x46b20",
+                "baffcd215de983f19567ff94e047f03d430dd635f9751d2f46f1077e7e3dda0c",
+                "baffcd215de983f19567ff94e047f03d430dd635f9751d2f46f1077e7e3dda0c"
+              ],
+              [
+                1192,
+                "0x1b2b40",
+                "0x46b40",
+                "6bd25f5d5bc8ca90d74d76e96509d85351800e38ce101abf0ffa81c8a7e755a7",
+                "6bd25f5d5bc8ca90d74d76e96509d85351800e38ce101abf0ffa81c8a7e755a7"
+              ],
+              [
+                10542,
+                "0x1b2b20",
+                "0x46b20",
+                "baffcd215de983f19567ff94e047f03d430dd635f9751d2f46f1077e7e3dda0c",
+                "baffcd215de983f19567ff94e047f03d430dd635f9751d2f46f1077e7e3dda0c"
+              ],
+              [
+                10571,
+                "0x1b2b40",
+                "0x46b40",
+                "6bd25f5d5bc8ca90d74d76e96509d85351800e38ce101abf0ffa81c8a7e755a7",
+                "6bd25f5d5bc8ca90d74d76e96509d85351800e38ce101abf0ffa81c8a7e755a7"
+              ],
+              [
+                10662,
+                "0x1b2b20",
+                "0x46b20",
+                "baffcd215de983f19567ff94e047f03d430dd635f9751d2f46f1077e7e3dda0c",
+                "baffcd215de983f19567ff94e047f03d430dd635f9751d2f46f1077e7e3dda0c"
+              ],
+              [
+                10691,
+                "0x1b2b40",
+                "0x46b40",
+                "6bd25f5d5bc8ca90d74d76e96509d85351800e38ce101abf0ffa81c8a7e755a7",
+                "6bd25f5d5bc8ca90d74d76e96509d85351800e38ce101abf0ffa81c8a7e755a7"
+              ]
+            ]
+          },
+          "same_relative_offsets": true
+        }
+      }
+    },
+    "avx512": {
+      "functions": {
+        "columns": [
+          "route",
+          "before_address",
+          "after_address",
+          "before_size",
+          "after_size",
+          "before_instructions",
+          "after_instructions",
+          "before_sha256",
+          "after_sha256",
+          "raw_bytes_equal"
+        ],
+        "rows": [
+          [
+            "common/indirect_timer",
+            7088,
+            7088,
+            2151,
+            2151,
+            470,
+            470,
+            "1d5b72da5d9ead315271c10066dcf32dd309890ee167bf0447269e35f4975321",
+            "81112367063fcbce9714e355cf9ebd58e6d8ff6e55c23b0906dc297d6b2bb08e",
+            false
+          ],
+          [
+            "common/completion1",
+            13792,
+            13792,
+            6,
+            6,
+            2,
+            2,
+            "5a28ae8daa27650c73c285bf7063eca72f84dbf6295c15598a71c1ebe38dd4a0",
+            "5a28ae8daa27650c73c285bf7063eca72f84dbf6295c15598a71c1ebe38dd4a0",
+            true
+          ],
+          [
+            "common/entry1",
+            14224,
+            14224,
+            75,
+            75,
+            31,
+            31,
+            "2e0e774190196ac6effb32118e3d12a9800c8432eb4bcb49edccfc9f3724837f",
+            "2e0e774190196ac6effb32118e3d12a9800c8432eb4bcb49edccfc9f3724837f",
+            true
+          ],
+          [
+            "shared/native_decode",
+            56320,
+            56176,
+            12154,
+            12154,
+            2874,
+            2874,
+            "195034df0779beb6f5b6000b0e9dbc2bc564e6c91a9d5253a915fe347fd7bff7",
+            "195034df0779beb6f5b6000b0e9dbc2bc564e6c91a9d5253a915fe347fd7bff7",
+            true
+          ],
+          [
+            "shared/joined/op0",
+            68480,
+            68336,
+            58,
+            58,
+            16,
+            16,
+            "aad5eb06bd599f8db398ae4c1227c9c8ebd6cf59599c5e54398c500c55ed9d6e",
+            "aad5eb06bd599f8db398ae4c1227c9c8ebd6cf59599c5e54398c500c55ed9d6e",
+            true
+          ],
+          [
+            "w5/op0/one_stage",
+            68544,
+            68400,
+            12307,
+            1262,
+            2909,
+            268,
+            "3fa5fb8d6f3b6c2f81496b2b796575c7c239d905fdeb9cf67e56e8676170eae2",
+            "9d0b6b03a132683222b7c7c58a4b76daaa1f59117c10e315a383f8d0519ea90c",
+            false
+          ],
+          [
+            "w5/op0/bound",
+            80864,
+            69664,
+            12014,
+            1237,
+            2787,
+            264,
+            "432dff474163340d8ef9476bf4e6a9af307844e0ae7d4668cb73dee7a8825f6c",
+            "82a3924ba240e83918e6f72e78a01f33de5cff71a72ca85f64ebe49ebc3212e0",
+            false
+          ],
+          [
+            "w5/op0/inline_measure",
+            92880,
+            70912,
+            138620,
+            13860,
+            30663,
+            2864,
+            "4c5e03d34b4be1d311b720721e76e23d471abb08740ed0ff6697601c1486d7c4",
+            "eb78042e3680ddb01f6db263fc236cc44b2207dbaeb74c59dfb28100f50a22c4",
+            false
+          ],
+          [
+            "w8/op0/one_stage",
+            234480,
+            87760,
+            12307,
+            1262,
+            2909,
+            268,
+            "3fa5fb8d6f3b6c2f81496b2b796575c7c239d905fdeb9cf67e56e8676170eae2",
+            "9d0b6b03a132683222b7c7c58a4b76daaa1f59117c10e315a383f8d0519ea90c",
+            false
+          ],
+          [
+            "w8/op0/bound",
+            246800,
+            89024,
+            12014,
+            1237,
+            2787,
+            264,
+            "432dff474163340d8ef9476bf4e6a9af307844e0ae7d4668cb73dee7a8825f6c",
+            "82a3924ba240e83918e6f72e78a01f33de5cff71a72ca85f64ebe49ebc3212e0",
+            false
+          ],
+          [
+            "w8/op0/inline_measure",
+            258816,
+            90272,
+            138620,
+            13860,
+            30663,
+            2864,
+            "65aeca99b920f51db0d7f90672c6777553713f8a8a24ab72289fb0f6671204b2",
+            "7c31d5cdb9d07026d2294a0596e6024ea5bb228e47c102732bba10b0319f41ef",
+            false
+          ],
+          [
+            "shared/joined/op1",
+            403040,
+            109600,
+            44,
+            44,
+            11,
+            11,
+            "fb855ab788d6820f6e412f0089d53ad9bc3a4d544e3c798795c3a769f98f8058",
+            "fb855ab788d6820f6e412f0089d53ad9bc3a4d544e3c798795c3a769f98f8058",
+            true
+          ],
+          [
+            "w5/op1/one_stage",
+            403088,
+            109648,
+            12291,
+            1261,
+            2901,
+            266,
+            "24b22d37b6831830bfde83d74311dd9b0018f4dcc097f14d4d8085980117bbb9",
+            "d3ee0fd7fafd7549a988b42770eacf808c1c89c65722e31c9962dbd9b98892b2",
+            false
+          ],
+          [
+            "w5/op1/bound",
+            415392,
+            110912,
+            12020,
+            1236,
+            2786,
+            262,
+            "0731f53edb56fd8b537245f99fe30633b4121778662d263fe8eb18e27f44e5af",
+            "d3273dbf98f4c817452fdd41ea09dc0d59e3dab929dfc92116b7ff28f49fbbba",
+            false
+          ],
+          [
+            "w5/op1/inline_measure",
+            427424,
+            112160,
+            138650,
+            13804,
+            30680,
+            2845,
+            "faeaf464d9269195d191666a71f9200bd7622c56f283ac00020fb58e6b4ec57e",
+            "0f58e09a848d0b780ac2c8704fc96b9ef2e59e07313a7bf8b8f6e2b14a388138",
+            false
+          ],
+          [
+            "w8/op1/one_stage",
+            569088,
+            128976,
+            12291,
+            1261,
+            2901,
+            266,
+            "24b22d37b6831830bfde83d74311dd9b0018f4dcc097f14d4d8085980117bbb9",
+            "d3ee0fd7fafd7549a988b42770eacf808c1c89c65722e31c9962dbd9b98892b2",
+            false
+          ],
+          [
+            "w8/op1/bound",
+            581392,
+            130240,
+            12020,
+            1236,
+            2786,
+            262,
+            "0731f53edb56fd8b537245f99fe30633b4121778662d263fe8eb18e27f44e5af",
+            "d3273dbf98f4c817452fdd41ea09dc0d59e3dab929dfc92116b7ff28f49fbbba",
+            false
+          ],
+          [
+            "w8/op1/inline_measure",
+            593424,
+            131488,
+            138650,
+            13804,
+            30680,
+            2845,
+            "c7b69f53eeb08e0e606354d79641bf5d8156faa778824d8206255d503c2c65b5",
+            "1f698efbd7aec669461cf3cfbfb22d83cdd1b4eed22da4dbef4d5de0b44f0ba7",
+            false
+          ],
+          [
+            "shared/joined/op2",
+            737680,
+            150752,
+            44,
+            44,
+            11,
+            11,
+            "71b12e255f0df3b8f07304da91748bc6a788fa9783eabf04a1a045c57c46f005",
+            "71b12e255f0df3b8f07304da91748bc6a788fa9783eabf04a1a045c57c46f005",
+            true
+          ],
+          [
+            "w5/op2/one_stage",
+            737728,
+            150800,
+            12291,
+            1261,
+            2901,
+            266,
+            "fb2051bd42b5b5253e03d6174cc861f26ff004f4f463b356675834d2519bed22",
+            "ff028ddbe2939684f24025fb3f77dc700ba55b5eab21b9ef7a3131eaeca0791c",
+            false
+          ],
+          [
+            "w5/op2/bound",
+            750032,
+            152064,
+            12020,
+            1236,
+            2786,
+            262,
+            "e34983a19e5abe138cee5d89976a3f29b3c6817eb40265b8dad8d2b68f68ed75",
+            "d1f8989c30ee30277ca6a71f007e89b99c3c60f26bbe3a4836fb04882b2adce5",
+            false
+          ],
+          [
+            "w5/op2/inline_measure",
+            762064,
+            153312,
+            138650,
+            13804,
+            30680,
+            2845,
+            "468bc10045cf3d9acc178a1627174697bf6b9ab29d2d2a45c76dc3dbfaddd70e",
+            "9d8508aeef9a64858678afa0f69faf88780d0fb35c7c1a38ba5bb0ae2428f263",
+            false
+          ],
+          [
+            "w8/op2/one_stage",
+            903728,
+            170128,
+            12291,
+            1261,
+            2901,
+            266,
+            "fb2051bd42b5b5253e03d6174cc861f26ff004f4f463b356675834d2519bed22",
+            "ff028ddbe2939684f24025fb3f77dc700ba55b5eab21b9ef7a3131eaeca0791c",
+            false
+          ],
+          [
+            "w8/op2/bound",
+            916032,
+            171392,
+            12020,
+            1236,
+            2786,
+            262,
+            "e34983a19e5abe138cee5d89976a3f29b3c6817eb40265b8dad8d2b68f68ed75",
+            "d1f8989c30ee30277ca6a71f007e89b99c3c60f26bbe3a4836fb04882b2adce5",
+            false
+          ],
+          [
+            "w8/op2/inline_measure",
+            928064,
+            172640,
+            138650,
+            13804,
+            30680,
+            2845,
+            "2706884da1bc406f5eac03e9d9793e0f369bcc8b09b60ee442cf466774704236",
+            "7c3e7c42e47968c9b3e1000ff36df9a5157fed59f052ad8a9438e197c616780f",
+            false
+          ],
+          [
+            "shared/joined/op3",
+            1072320,
+            191904,
+            59,
+            59,
+            16,
+            16,
+            "f5e2a30d30f25d15bdaf753186f25344593f8001fa16dfed07bd8916f090481f",
+            "f5e2a30d30f25d15bdaf753186f25344593f8001fa16dfed07bd8916f090481f",
+            true
+          ],
+          [
+            "w5/op3/one_stage",
+            1072384,
+            191968,
+            12310,
+            1264,
+            2909,
+            268,
+            "992043229ab44f40cf9c468b3c817a5f7f6c4065ad62ff2f74f091d153a01ff1",
+            "4d0f834ddcaa16f8e12c67c6ff539916cf56dedd20394dc438a1f245b401dde1",
+            false
+          ],
+          [
+            "w5/op3/bound",
+            1084704,
+            193232,
+            12017,
+            1239,
+            2787,
+            264,
+            "4fa60692f620b3fa6b212e37faca3822cf53531febc070f562fc3d0378b30cb0",
+            "83f66d766dfb8c0aaf80903b27163776578e7c9d741642874a769ae9938268c6",
+            false
+          ],
+          [
+            "w5/op3/inline_measure",
+            1096736,
+            194480,
+            138640,
+            13864,
+            30663,
+            2860,
+            "012dd81855819a2e9d7e2ef02325c55f12d17cea1b91348ff9351344857776b7",
+            "e24c64eb9daba7dbab18e0edf3a2cd26a3088f34ff5be28da1d5b7c6e45aede1",
+            false
+          ],
+          [
+            "w8/op3/one_stage",
+            1238384,
+            211360,
+            12310,
+            1264,
+            2909,
+            268,
+            "992043229ab44f40cf9c468b3c817a5f7f6c4065ad62ff2f74f091d153a01ff1",
+            "4d0f834ddcaa16f8e12c67c6ff539916cf56dedd20394dc438a1f245b401dde1",
+            false
+          ],
+          [
+            "w8/op3/bound",
+            1250704,
+            212624,
+            12017,
+            1239,
+            2787,
+            264,
+            "4fa60692f620b3fa6b212e37faca3822cf53531febc070f562fc3d0378b30cb0",
+            "83f66d766dfb8c0aaf80903b27163776578e7c9d741642874a769ae9938268c6",
+            false
+          ],
+          [
+            "w8/op3/inline_measure",
+            1262736,
+            213872,
+            138640,
+            13864,
+            30663,
+            2860,
+            "005c682ed4fb404354e7fee5c06bb37fd391720c2e63d094427b1bf9e0519e4f",
+            "0d56168090e911db1175620d6f15851d4c0f7c333bf3834e03f2f6bcb7ae7a23",
+            false
+          ],
+          [
+            "shared/joined/op4",
+            1406976,
+            233200,
+            59,
+            59,
+            16,
+            16,
+            "13351ae044cc108bea8e99e339bf1e8a2647d34a5523b3fa9b1a801c27d10bbd",
+            "13351ae044cc108bea8e99e339bf1e8a2647d34a5523b3fa9b1a801c27d10bbd",
+            true
+          ],
+          [
+            "w5/op4/one_stage",
+            1407040,
+            233264,
+            12310,
+            1264,
+            2909,
+            268,
+            "ae93704de247030670661adbc863f93aec5dda9331b31b565560a866b4c86679",
+            "a5b5c0e5ae6d28e931c066b825979a8a89ad428afc66031e07dfebe4085c6e41",
+            false
+          ],
+          [
+            "w5/op4/bound",
+            1419360,
+            234528,
+            12017,
+            1239,
+            2787,
+            264,
+            "28d7a0c8c96398168d2b144011548c08f8b6f0a26ddddcc39649c2d79328fbdf",
+            "5917b78898ea73e2abba70dccb0b7679cf0cfc842c165cd00676e5f9b700ca39",
+            false
+          ],
+          [
+            "w5/op4/inline_measure",
+            1431392,
+            235776,
+            138640,
+            13864,
+            30663,
+            2860,
+            "73e7ff792485ab29f09c60f3e49e88288095fefd4fa8bd4fb17d6b40e9ce627b",
+            "5afc8cb9d6049af45f407fbe2158c8cbc1e3cda99271f9710f2f2eefc4c0d6ca",
+            false
+          ],
+          [
+            "w8/op4/one_stage",
+            1573040,
+            252656,
+            12310,
+            1264,
+            2909,
+            268,
+            "ae93704de247030670661adbc863f93aec5dda9331b31b565560a866b4c86679",
+            "a5b5c0e5ae6d28e931c066b825979a8a89ad428afc66031e07dfebe4085c6e41",
+            false
+          ],
+          [
+            "w8/op4/bound",
+            1585360,
+            253920,
+            12017,
+            1239,
+            2787,
+            264,
+            "28d7a0c8c96398168d2b144011548c08f8b6f0a26ddddcc39649c2d79328fbdf",
+            "5917b78898ea73e2abba70dccb0b7679cf0cfc842c165cd00676e5f9b700ca39",
+            false
+          ],
+          [
+            "w8/op4/inline_measure",
+            1597392,
+            255168,
+            138640,
+            13864,
+            30663,
+            2860,
+            "ed91002deb338e924ef3c9ea20b335d8c4558646003cea7e01b75a635e4532bf",
+            "b888875e1f0d14086c015459a8b8d51ba0bbac5905b84ca8c2a94eb55df5807f",
+            false
+          ]
+        ]
+      },
+      "hoisted_sign_broadcasts": {},
+      "inputs": {
+        "after": {
+          "bytes": 3548752,
+          "compile_commands_sha256": "c7fd501c9e12e3b1344fb6a890ef5e16523589dd9764120680d9c1610091eb73",
+          "configured_filter_command_count": 9,
+          "configured_filter_commands_digest": "846689c4972b0078eeeceeaa11d3d3f6ca1c00fc4737f8efe79c9e63856c9263",
+          "direct_source_sha256": {
+            "workbench/spikes/filter-composition/extra.cpp": "ef10c8e66e526334a51a830220f07155633d40c7ef04993747af72c353dea00d",
+            "workbench/spikes/filter-composition/extra_pair_0.cpp": "1eca6926fc866f263324ce105ba56c46d1d1781f2668de502d7d49b38181831c",
+            "workbench/spikes/filter-composition/extra_pair_1.cpp": "0dc8ec0a967da533babcc7daafa795873948fee183dc72ff910e69b1821a181c",
+            "workbench/spikes/filter-composition/extra_tuple_0.cpp": "0443c5e05d23fccd834127c2e37e9aa5310803b5ac33d3444d4ed5d30e434716",
+            "workbench/spikes/filter-composition/extra_tuple_1.cpp": "878b1b542867cbbdcd205ce8478a8660d1c463e7b13f0c1f0919331348e11df3",
+            "workbench/spikes/filter-composition/extra_tuple_2.cpp": "ab1020c62567475c865d3aa15105425aa791fa0821207f5c40ebbd64c1cc8bfd",
+            "workbench/spikes/filter-composition/extra_tuple_3.cpp": "362a9b1f5a919dcef1abdd6164cd914e8073e0d701f6a0f7c0e318947c84bf48",
+            "workbench/spikes/filter-composition/extra_tuple_4.cpp": "f32c2f3387b4ef22e81c53a449be1dfe87ef4fb25428548fe1873532163c7d19",
+            "workbench/spikes/filter-composition/runtime.cpp": "e0dda336fc87c57fe8e7c5744d8c54866edc2353e902bc53fdecf269cc308e8e"
+          },
+          "disassembly_sha256": "a3931db5dae327e7eee0550967d0e0f1eccde60db83a28689ac08953de1b6b27",
+          "elf_sha256": "dd39129301ead20c70cc444bae51fede7fb3414b473d4b1f68a7fcf77fba9502"
+        },
+        "before": {
+          "bytes": 11200480,
+          "compile_commands_sha256": "61e17114fd3d36ec3a487c6113ef5bfed7ca3dba32bced4f38f236e97c2de069",
+          "configured_filter_command_count": 9,
+          "configured_filter_commands_digest": "ccc8d46553839da2ca52fd14bb4056c4f3287b541c0797f41dec6aa6ff60a64b",
+          "direct_source_sha256": {
+            "workbench/spikes/filter-composition/extra.cpp": "ef10c8e66e526334a51a830220f07155633d40c7ef04993747af72c353dea00d",
+            "workbench/spikes/filter-composition/extra_pair_0.cpp": "1eca6926fc866f263324ce105ba56c46d1d1781f2668de502d7d49b38181831c",
+            "workbench/spikes/filter-composition/extra_pair_1.cpp": "0dc8ec0a967da533babcc7daafa795873948fee183dc72ff910e69b1821a181c",
+            "workbench/spikes/filter-composition/extra_tuple_0.cpp": "0443c5e05d23fccd834127c2e37e9aa5310803b5ac33d3444d4ed5d30e434716",
+            "workbench/spikes/filter-composition/extra_tuple_1.cpp": "878b1b542867cbbdcd205ce8478a8660d1c463e7b13f0c1f0919331348e11df3",
+            "workbench/spikes/filter-composition/extra_tuple_2.cpp": "ab1020c62567475c865d3aa15105425aa791fa0821207f5c40ebbd64c1cc8bfd",
+            "workbench/spikes/filter-composition/extra_tuple_3.cpp": "362a9b1f5a919dcef1abdd6164cd914e8073e0d701f6a0f7c0e318947c84bf48",
+            "workbench/spikes/filter-composition/extra_tuple_4.cpp": "f32c2f3387b4ef22e81c53a449be1dfe87ef4fb25428548fe1873532163c7d19",
+            "workbench/spikes/filter-composition/runtime.cpp": "e0dda336fc87c57fe8e7c5744d8c54866edc2353e902bc53fdecf269cc308e8e"
+          },
+          "disassembly_sha256": "affc05e39e0f9a294a4fec0f4bee62e209489159281bf2f27a3f67463343525e",
+          "elf_sha256": "8a673f764fb9d58205e0ce55fa83011432b0789574e264852731c1ac29196b79"
+        }
+      },
+      "paths": {
+        "columns": [
+          "route",
+          "kind",
+          "before_entry",
+          "after_entry",
+          "before_instructions",
+          "after_instructions",
+          "before_instruction_bytes",
+          "after_instruction_bytes",
+          "before_conditions",
+          "after_conditions",
+          "before_trace_sha256",
+          "after_trace_sha256",
+          "opcode_differences"
+        ],
+        "rows": [
+          [
+            "w5/op0/one_stage",
+            "full_tight_in_domain",
+            "0x10bc0",
+            "0x10b30",
+            35,
+            35,
+            147,
+            132,
+            4,
+            4,
+            "a07055e9bf1d46a41466eb4e10c499e59fbb54b06ae57d0552bc17ab370363d7",
+            "9d2d8654dcb1b16a1b76b50ce5032aeb7aa48e4be480e1b8732fa805886ffb30",
+            {
+              "ja": [
+                1,
+                0
+              ],
+              "jbe": [
+                0,
+                1
+              ],
+              "kmovd": [
+                0,
+                1
+              ],
+              "kmovw": [
+                1,
+                0
+              ]
+            }
+          ],
+          [
+            "w5/op0/bound",
+            "full_tight_in_domain",
+            "0x13be0",
+            "0x11020",
+            41,
+            42,
+            147,
+            137,
+            4,
+            4,
+            "4ddc5dc8bfe598826e54338988bca916706e6402c59f4a41e11bdeaff5280daa",
+            "73f5605e0da4495970de338b61eac833827cc86d2d59c16fb3539ce7b365a78a",
+            {
+              "ja": [
+                1,
+                0
+              ],
+              "jbe": [
+                0,
+                1
+              ],
+              "kmovd": [
+                0,
+                1
+              ],
+              "kmovw": [
+                1,
+                0
+              ],
+              "movl": [
+                1,
+                2
+              ]
+            }
+          ],
+          [
+            "w5/op0/inline_measure",
+            "dependent",
+            "0x1a5f2",
+            "0x11daf",
+            38,
+            36,
+            155,
+            144,
+            5,
+            5,
+            "ce72cb3b8505f72748e421d219786b41aeab27599718880aefc4dc24e8924be4",
+            "49f470623a346ccb8e39b6d879197c2c9f80f59b9cfbfadb176c8242cfd77872",
+            {
+              "kmovd": [
+                0,
+                1
+              ],
+              "kmovw": [
+                1,
+                0
+              ],
+              "movl": [
+                3,
+                2
+              ],
+              "movq": [
+                5,
+                4
+              ]
+            }
+          ],
+          [
+            "w5/op0/inline_measure",
+            "independent8",
+            "0x1dc00",
+            "0x1231d",
+            303,
+            290,
+            1378,
+            1167,
+            33,
+            33,
+            "034d6cda9d3bd796aa37da50a9ce85713488412b05aa0e37e68bbfdf49594f94",
+            "5e0a5837122ed5da705f32cd819fb236125054ebf9e87c267bf6b7af8813d7ee",
+            {
+              "ja": [
+                8,
+                1
+              ],
+              "jbe": [
+                0,
+                7
+              ],
+              "kmovd": [
+                0,
+                8
+              ],
+              "kmovw": [
+                8,
+                0
+              ],
+              "movq": [
+                49,
+                35
+              ],
+              "movzwl": [
+                8,
+                9
+              ]
+            }
+          ],
+          [
+            "w8/op0/one_stage",
+            "full_tight_in_domain",
+            "0x393f0",
+            "0x156d0",
+            35,
+            35,
+            147,
+            132,
+            4,
+            4,
+            "1c50ad9b41aab0aa6f49aa6007f2f9e3d41128339825e51e4f4140ba98cdb41c",
+            "d5fa5a97d9d17bbb2f386c5f4e0549849dba672b7ee2bcd6afd95ce38a301311",
+            {
+              "ja": [
+                1,
+                0
+              ],
+              "jbe": [
+                0,
+                1
+              ],
+              "kmovd": [
+                0,
+                1
+              ],
+              "kmovw": [
+                1,
+                0
+              ]
+            }
+          ],
+          [
+            "w8/op0/bound",
+            "full_tight_in_domain",
+            "0x3c410",
+            "0x15bc0",
+            41,
+            42,
+            147,
+            137,
+            4,
+            4,
+            "600ad7c92e2522cd894799855d14a367f78aa03c54c2cdab747bd2dcc483d29a",
+            "53d3e3fab805132bea7dc96f859dbd06b9e9b4b5d51223dc0220aa0563c987a6",
+            {
+              "ja": [
+                1,
+                0
+              ],
+              "jbe": [
+                0,
+                1
+              ],
+              "kmovd": [
+                0,
+                1
+              ],
+              "kmovw": [
+                1,
+                0
+              ],
+              "movl": [
+                1,
+                2
+              ]
+            }
+          ],
+          [
+            "w8/op0/inline_measure",
+            "dependent",
+            "0x42e22",
+            "0x1694f",
+            38,
+            36,
+            155,
+            144,
+            5,
+            5,
+            "f347e781bd0f662f52eb69938fb0c6b3b6b88172b3aeca0891abe37bfd440d2b",
+            "ee855d9442d869ae9de461875ef727831486622b2e935984fb6398d72f9c0520",
+            {
+              "kmovd": [
+                0,
+                1
+              ],
+              "kmovw": [
+                1,
+                0
+              ],
+              "movl": [
+                3,
+                2
+              ],
+              "movq": [
+                5,
+                4
+              ]
+            }
+          ],
+          [
+            "w8/op0/inline_measure",
+            "independent8",
+            "0x46430",
+            "0x16ebd",
+            303,
+            290,
+            1378,
+            1167,
+            33,
+            33,
+            "0509c55649cbe1e03445f10939012056a7922547eb62b75567457835aa144732",
+            "30555a24860f96b55fea6f8e80f6f3dcfedae902153333650c95728db39c56ae",
+            {
+              "ja": [
+                8,
+                1
+              ],
+              "jbe": [
+                0,
+                7
+              ],
+              "kmovd": [
+                0,
+                8
+              ],
+              "kmovw": [
+                8,
+                0
+              ],
+              "movq": [
+                49,
+                35
+              ],
+              "movzwl": [
+                8,
+                9
+              ]
+            }
+          ],
+          [
+            "w5/op1/one_stage",
+            "full_tight_in_domain",
+            "0x62690",
+            "0x1ac50",
+            36,
+            35,
+            150,
+            137,
+            4,
+            4,
+            "4fa0f44b7772b952a8b7a1c1f5d5529a5fc885a732d55214907c7f7b3985848d",
+            "c0eaf4b3fb588d9c43683e63da43a221e91469ed636caf6f56da2fb52035b628",
+            {
+              "kmovd": [
+                0,
+                1
+              ],
+              "kmovw": [
+                1,
+                0
+              ],
+              "movl": [
+                2,
+                1
+              ]
+            }
+          ],
+          [
+            "w5/op1/bound",
+            "full_tight_in_domain",
+            "0x656a0",
+            "0x1b140",
+            42,
+            42,
+            153,
+            142,
+            4,
+            4,
+            "bfe5344c3b494c20298e5ce65cab4a8c509a04b6a8e3ee6258b3381b11e57cec",
+            "74b0a155331a97ab71d8711fb8343e79f2a53428effbeb3ef98c430e2746b896",
+            {
+              "kmovd": [
+                0,
+                1
+              ],
+              "kmovw": [
+                1,
+                0
+              ]
+            }
+          ],
+          [
+            "w5/op1/inline_measure",
+            "dependent",
+            "0x6c0d2",
+            "0x1be8f",
+            38,
+            38,
+            156,
+            153,
+            5,
+            5,
+            "e32b27527c8563bb47feb0c3ca764eccc04c5f0477391509761efc5d227b54ef",
+            "0a7c5f936800328f1abfa16200cddd0b3b7f01c7e0e77d4358da571219037354",
+            {
+              "cmpl": [
+                2,
+                1
+              ],
+              "cmpw": [
+                0,
+                1
+              ],
+              "ja": [
+                1,
+                0
+              ],
+              "jbe": [
+                0,
+                1
+              ],
+              "kmovd": [
+                0,
+                1
+              ],
+              "kmovw": [
+                1,
+                0
+              ]
+            }
+          ],
+          [
+            "w5/op1/inline_measure",
+            "independent8",
+            "0x6f6e0",
+            "0x1c40d",
+            303,
+            298,
+            1386,
+            1206,
+            33,
+            33,
+            "2a7fc3588c3139f5c13a347f6dbba03f16dd3194810da9ad2733b107ea5cb039",
+            "68409407b1f4545e6feb1b555341bb6501f1fdf83d9bddae161af499c71419c5",
+            {
+              "cmpl": [
+                9,
+                1
+              ],
+              "cmpw": [
+                0,
+                8
+              ],
+              "kmovd": [
+                0,
+                8
+              ],
+              "kmovw": [
+                8,
+                0
+              ],
+              "movl": [
+                27,
+                34
+              ],
+              "movq": [
+                49,
+                36
+              ],
+              "movzwl": [
+                8,
+                9
+              ],
+              "testq": [
+                8,
+                1
+              ],
+              "testw": [
+                0,
+                7
+              ]
+            }
+          ],
+          [
+            "w8/op1/one_stage",
+            "full_tight_in_domain",
+            "0x8af00",
+            "0x1f7d0",
+            36,
+            35,
+            150,
+            137,
+            4,
+            4,
+            "38c024120d81fbf27a2897994153fee6fad071cd723a244f33389d991d2f32fb",
+            "aa7d41b493f89339c0aee0707143dae3b18ec60dbedd64394d12b495a286b0ec",
+            {
+              "kmovd": [
+                0,
+                1
+              ],
+              "kmovw": [
+                1,
+                0
+              ],
+              "movl": [
+                2,
+                1
+              ]
+            }
+          ],
+          [
+            "w8/op1/bound",
+            "full_tight_in_domain",
+            "0x8df10",
+            "0x1fcc0",
+            42,
+            42,
+            153,
+            142,
+            4,
+            4,
+            "a0c14e34e27e700b3bcea94955f7625c16d046b8ec152b5d29869c43e3787605",
+            "7b289db3285e1fbffe1d6ec55d9ef2ce392864a2d5e588a46d2c17eaea3ef3d1",
+            {
+              "kmovd": [
+                0,
+                1
+              ],
+              "kmovw": [
+                1,
+                0
+              ]
+            }
+          ],
+          [
+            "w8/op1/inline_measure",
+            "dependent",
+            "0x94942",
+            "0x20a0f",
+            38,
+            38,
+            156,
+            153,
+            5,
+            5,
+            "810df937facdc002e0e3790b9074c590dbe9824f3b364556862eae8726011eb8",
+            "e9dd9d363ac4080c80ee72d2ca5a99c7e870293ac8a871a7668a497f1a4480cf",
+            {
+              "cmpl": [
+                2,
+                1
+              ],
+              "cmpw": [
+                0,
+                1
+              ],
+              "ja": [
+                1,
+                0
+              ],
+              "jbe": [
+                0,
+                1
+              ],
+              "kmovd": [
+                0,
+                1
+              ],
+              "kmovw": [
+                1,
+                0
+              ]
+            }
+          ],
+          [
+            "w8/op1/inline_measure",
+            "independent8",
+            "0x97f50",
+            "0x20f8d",
+            303,
+            298,
+            1386,
+            1206,
+            33,
+            33,
+            "c62edf928051911a58da3e2c2fb4cb8466a6091989c3500646374effd376fd22",
+            "b8138c20113b19f918622cbdf837e73fb350dcc14d770c72cb971ca44b6a7f97",
+            {
+              "cmpl": [
+                9,
+                1
+              ],
+              "cmpw": [
+                0,
+                8
+              ],
+              "kmovd": [
+                0,
+                8
+              ],
+              "kmovw": [
+                8,
+                0
+              ],
+              "movl": [
+                27,
+                34
+              ],
+              "movq": [
+                49,
+                36
+              ],
+              "movzwl": [
+                8,
+                9
+              ],
+              "testq": [
+                8,
+                1
+              ],
+              "testw": [
+                0,
+                7
+              ]
+            }
+          ],
+          [
+            "w5/op2/one_stage",
+            "full_tight_in_domain",
+            "0xb41c0",
+            "0x24d10",
+            36,
+            35,
+            150,
+            137,
+            4,
+            4,
+            "fcc90af25e9d77a1516b46cc1573d43888845335be31ff2e8f712b66b24e5f7d",
+            "1b4b1e80cb84482d63979ba0fa5ef9a2dcaac2f0bfe6e7d5fb0a8c2b3a82e38e",
+            {
+              "kmovd": [
+                0,
+                1
+              ],
+              "kmovw": [
+                1,
+                0
+              ],
+              "movl": [
+                2,
+                1
+              ]
+            }
+          ],
+          [
+            "w5/op2/bound",
+            "full_tight_in_domain",
+            "0xb71d0",
+            "0x25200",
+            42,
+            42,
+            153,
+            142,
+            4,
+            4,
+            "697aa4af35b74292480f579814f5f25eec63dcfb0f0d219574c3ceb6287b490d",
+            "46242112bd3588c9d5255257db66a4c1bf602f8c6de8a580148761396073c1aa",
+            {
+              "kmovd": [
+                0,
+                1
+              ],
+              "kmovw": [
+                1,
+                0
+              ]
+            }
+          ],
+          [
+            "w5/op2/inline_measure",
+            "dependent",
+            "0xbdc02",
+            "0x25f4f",
+            38,
+            38,
+            156,
+            153,
+            5,
+            5,
+            "4d7b4f9932b6a4ff61645e3426811d04e496e3b1ba9338349c9e5c5bedff1b7b",
+            "49d5e584ab5b21145ea07d152066d375531b92c1cc95c2ef3bb8e7711a3b58b3",
+            {
+              "cmpl": [
+                2,
+                1
+              ],
+              "cmpw": [
+                0,
+                1
+              ],
+              "ja": [
+                1,
+                0
+              ],
+              "jbe": [
+                0,
+                1
+              ],
+              "kmovd": [
+                0,
+                1
+              ],
+              "kmovw": [
+                1,
+                0
+              ]
+            }
+          ],
+          [
+            "w5/op2/inline_measure",
+            "independent8",
+            "0xc1210",
+            "0x264cd",
+            303,
+            298,
+            1386,
+            1206,
+            33,
+            33,
+            "a5daab9fca63b61ebc72d5aac7fe45262f9dfa1c8a2b1eaf9f04a4fd2a6c9f45",
+            "79757118f28197b6f91d897ed5ef5dcc7b1942816bbd13abf0e59d2b40b878f3",
+            {
+              "cmpl": [
+                9,
+                1
+              ],
+              "cmpw": [
+                0,
+                8
+              ],
+              "kmovd": [
+                0,
+                8
+              ],
+              "kmovw": [
+                8,
+                0
+              ],
+              "movl": [
+                27,
+                34
+              ],
+              "movq": [
+                49,
+                36
+              ],
+              "movzwl": [
+                8,
+                9
+              ],
+              "testq": [
+                8,
+                1
+              ],
+              "testw": [
+                0,
+                7
+              ]
+            }
+          ],
+          [
+            "w8/op2/one_stage",
+            "full_tight_in_domain",
+            "0xdca30",
+            "0x29890",
+            36,
+            35,
+            150,
+            137,
+            4,
+            4,
+            "7202f59882dc4b6680613cfaa5ee7760f72f5f5470077f40c5404cd33d80e796",
+            "3ba44feaa883592e7441a9a433986e68a4741796a51ef6add2763653cfa79435",
+            {
+              "kmovd": [
+                0,
+                1
+              ],
+              "kmovw": [
+                1,
+                0
+              ],
+              "movl": [
+                2,
+                1
+              ]
+            }
+          ],
+          [
+            "w8/op2/bound",
+            "full_tight_in_domain",
+            "0xdfa40",
+            "0x29d80",
+            42,
+            42,
+            153,
+            142,
+            4,
+            4,
+            "9ee56dcc784299180358de9298428a6e10164dcf5fdb1fd59a905e728c9515a8",
+            "0a32856a739845342451991276d1a790f94c93fdb870c1e92ef704976a80c9c6",
+            {
+              "kmovd": [
+                0,
+                1
+              ],
+              "kmovw": [
+                1,
+                0
+              ]
+            }
+          ],
+          [
+            "w8/op2/inline_measure",
+            "dependent",
+            "0xe6472",
+            "0x2aacf",
+            38,
+            38,
+            156,
+            153,
+            5,
+            5,
+            "1f1ba73bbdc59a7f193b3909f1774b0d572e213434606c76630fd6c5336abcf8",
+            "5b0218cfa9e9e191f04352da2611081678cf75427e3a242369129f673c9ef91d",
+            {
+              "cmpl": [
+                2,
+                1
+              ],
+              "cmpw": [
+                0,
+                1
+              ],
+              "ja": [
+                1,
+                0
+              ],
+              "jbe": [
+                0,
+                1
+              ],
+              "kmovd": [
+                0,
+                1
+              ],
+              "kmovw": [
+                1,
+                0
+              ]
+            }
+          ],
+          [
+            "w8/op2/inline_measure",
+            "independent8",
+            "0xe9a80",
+            "0x2b04d",
+            303,
+            298,
+            1386,
+            1206,
+            33,
+            33,
+            "2a59f807a24583e2f988bbd7d991326f8eb4a0bd57e9f40b4e62f78b92697903",
+            "554c18cebc6b7ccef181ff9d4064de3b5693fa11896b67dffbf83aca95a9fbb7",
+            {
+              "cmpl": [
+                9,
+                1
+              ],
+              "cmpw": [
+                0,
+                8
+              ],
+              "kmovd": [
+                0,
+                8
+              ],
+              "kmovw": [
+                8,
+                0
+              ],
+              "movl": [
+                27,
+                34
+              ],
+              "movq": [
+                49,
+                36
+              ],
+              "movzwl": [
+                8,
+                9
+              ],
+              "testq": [
+                8,
+                1
+              ],
+              "testw": [
+                0,
+                7
+              ]
+            }
+          ],
+          [
+            "w5/op3/one_stage",
+            "full_tight_in_domain",
+            "0x105d00",
+            "0x2ede0",
+            35,
+            35,
+            148,
+            133,
+            4,
+            4,
+            "5928bb3b5948747311058ca3f1c7802c352c5d45973038b483e38abff0999e77",
+            "db5da3e636c619277eada8a55c9eb75d2ba3ffa5e837b0f5d32a1c9eb9c9f3be",
+            {
+              "ja": [
+                1,
+                0
+              ],
+              "jbe": [
+                0,
+                1
+              ],
+              "kmovd": [
+                0,
+                1
+              ],
+              "kmovw": [
+                1,
+                0
+              ]
+            }
+          ],
+          [
+            "w5/op3/bound",
+            "full_tight_in_domain",
+            "0x108d20",
+            "0x2f2d0",
+            41,
+            42,
+            148,
+            138,
+            4,
+            4,
+            "074612ff0fdf8215d96f5f0ed6d3660eb5b4b2feb52ad6ee7e77333f70fe5f65",
+            "f7abbb36a04afeddb08869db05f6dfe6a96537f18fca7e2052d39f7230b94766",
+            {
+              "ja": [
+                1,
+                0
+              ],
+              "jbe": [
+                0,
+                1
+              ],
+              "kmovd": [
+                0,
+                1
+              ],
+              "kmovw": [
+                1,
+                0
+              ],
+              "movl": [
+                1,
+                2
+              ]
+            }
+          ],
+          [
+            "w5/op3/inline_measure",
+            "dependent",
+            "0x10f752",
+            "0x3005f",
+            38,
+            36,
+            156,
+            145,
+            5,
+            5,
+            "fc0aa30af6a7e4ee4fb3b3a6e1f20e27be5e956cb540a005dd9d5a2f39d6bc1e",
+            "597cd55597880ffc5b8769c7f5e9a6d3e22569b8c8811ecd30694d5dbede8c29",
+            {
+              "kmovd": [
+                0,
+                1
+              ],
+              "kmovw": [
+                1,
+                0
+              ],
+              "movl": [
+                3,
+                2
+              ],
+              "movq": [
+                5,
+                4
+              ]
+            }
+          ],
+          [
+            "w5/op3/inline_measure",
+            "independent8",
+            "0x112d60",
+            "0x305cd",
+            303,
+            290,
+            1386,
+            1175,
+            33,
+            33,
+            "7120f9e96d308d5d1e71e5da7d0df6aea8c253ed4d9d820c2f7da5be9a23a475",
+            "8911d3f6823d9dbbb744237f8c9e95f44bdcbbf29ca4b30a86ff6c0b52ba76a0",
+            {
+              "ja": [
+                8,
+                1
+              ],
+              "jbe": [
+                0,
+                7
+              ],
+              "kmovd": [
+                0,
+                8
+              ],
+              "kmovw": [
+                8,
+                0
+              ],
+              "movq": [
+                49,
+                35
+              ],
+              "movzwl": [
+                8,
+                9
+              ]
+            }
+          ],
+          [
+            "w8/op3/one_stage",
+            "full_tight_in_domain",
+            "0x12e570",
+            "0x339a0",
+            35,
+            35,
+            148,
+            133,
+            4,
+            4,
+            "e8507dcbee578ab29f6760afc2c7b6153e59ee097ade47b3d37fb7d3d506cdf3",
+            "a1efa4c81c151b19d6337ad8d3b5c2928923e017d97f858de25c7a0e6842d316",
+            {
+              "ja": [
+                1,
+                0
+              ],
+              "jbe": [
+                0,
+                1
+              ],
+              "kmovd": [
+                0,
+                1
+              ],
+              "kmovw": [
+                1,
+                0
+              ]
+            }
+          ],
+          [
+            "w8/op3/bound",
+            "full_tight_in_domain",
+            "0x131590",
+            "0x33e90",
+            41,
+            42,
+            148,
+            138,
+            4,
+            4,
+            "92b462cdecf1ea0f186e0858f9638f5bad388e7f01468fd7a4df32466c0c941a",
+            "2c25b4385ac0a1d36b56972b91a22e673db52a041d45360ff80e413fb7aadd72",
+            {
+              "ja": [
+                1,
+                0
+              ],
+              "jbe": [
+                0,
+                1
+              ],
+              "kmovd": [
+                0,
+                1
+              ],
+              "kmovw": [
+                1,
+                0
+              ],
+              "movl": [
+                1,
+                2
+              ]
+            }
+          ],
+          [
+            "w8/op3/inline_measure",
+            "dependent",
+            "0x137fc2",
+            "0x34c1f",
+            38,
+            36,
+            156,
+            145,
+            5,
+            5,
+            "c5073cbd34132baa91c681cd7cbf343c86ff442b4b34d311aabbfc1f281c8a74",
+            "686451f0b6012282ae14fd522e0a28b755ee220f617e33808f105bc46a9f1c2a",
+            {
+              "kmovd": [
+                0,
+                1
+              ],
+              "kmovw": [
+                1,
+                0
+              ],
+              "movl": [
+                3,
+                2
+              ],
+              "movq": [
+                5,
+                4
+              ]
+            }
+          ],
+          [
+            "w8/op3/inline_measure",
+            "independent8",
+            "0x13b5d0",
+            "0x3518d",
+            303,
+            290,
+            1386,
+            1175,
+            33,
+            33,
+            "f1763530b8b34a01f906c5a86484c12c90305fde626dcd3716b433cc63b9a86d",
+            "0741ce0b86bc2fd127bd84c2cfd9a22add8d8b52f74b0e5fb761e9dd08982c4e",
+            {
+              "ja": [
+                8,
+                1
+              ],
+              "jbe": [
+                0,
+                7
+              ],
+              "kmovd": [
+                0,
+                8
+              ],
+              "kmovw": [
+                8,
+                0
+              ],
+              "movq": [
+                49,
+                35
+              ],
+              "movzwl": [
+                8,
+                9
+              ]
+            }
+          ],
+          [
+            "w5/op4/one_stage",
+            "full_tight_in_domain",
+            "0x157840",
+            "0x38f30",
+            35,
+            35,
+            148,
+            133,
+            4,
+            4,
+            "17ac163a462c3e02dc3c4fad052e8e11fcd25e5587b15628a2fd4163f0b4e8f7",
+            "1a4671b484c23934efe25e95330f735036588e9b3106c28a0b98d7b72dc03e40",
+            {
+              "ja": [
+                1,
+                0
+              ],
+              "jbe": [
+                0,
+                1
+              ],
+              "kmovd": [
+                0,
+                1
+              ],
+              "kmovw": [
+                1,
+                0
+              ]
+            }
+          ],
+          [
+            "w5/op4/bound",
+            "full_tight_in_domain",
+            "0x15a860",
+            "0x39420",
+            41,
+            42,
+            148,
+            138,
+            4,
+            4,
+            "940530bf83da45d4d2cd5f889abbf5f7aa55813e9e06a4ed196ca74fa0d6ce51",
+            "ce4e7e95a7750f615e4f2a0de35e1ef59be0ab4085bb9dc933ab2b668942e941",
+            {
+              "ja": [
+                1,
+                0
+              ],
+              "jbe": [
+                0,
+                1
+              ],
+              "kmovd": [
+                0,
+                1
+              ],
+              "kmovw": [
+                1,
+                0
+              ],
+              "movl": [
+                1,
+                2
+              ]
+            }
+          ],
+          [
+            "w5/op4/inline_measure",
+            "dependent",
+            "0x161292",
+            "0x3a1af",
+            38,
+            36,
+            156,
+            145,
+            5,
+            5,
+            "b63ecfaaa4ef3a5ddd5bf16b5a1cf433dd89c27edab085ca07a1ce4dbf96b50e",
+            "69f6b0a0cbf2800a612ccc650386764aa33684061172f2dcafd4ee26fa9a5f48",
+            {
+              "kmovd": [
+                0,
+                1
+              ],
+              "kmovw": [
+                1,
+                0
+              ],
+              "movl": [
+                3,
+                2
+              ],
+              "movq": [
+                5,
+                4
+              ]
+            }
+          ],
+          [
+            "w5/op4/inline_measure",
+            "independent8",
+            "0x1648a0",
+            "0x3a71d",
+            303,
+            290,
+            1386,
+            1175,
+            33,
+            33,
+            "87bc38a2f39c3801aaeb8f50b685942c42a1fd62b0f8949823a759df862f870d",
+            "6d3e0b2dbf6c5d2b50cdf8997b96857eeff0ab566ccda925a9e2f783a6f8428b",
+            {
+              "ja": [
+                8,
+                1
+              ],
+              "jbe": [
+                0,
+                7
+              ],
+              "kmovd": [
+                0,
+                8
+              ],
+              "kmovw": [
+                8,
+                0
+              ],
+              "movq": [
+                49,
+                35
+              ],
+              "movzwl": [
+                8,
+                9
+              ]
+            }
+          ],
+          [
+            "w8/op4/one_stage",
+            "full_tight_in_domain",
+            "0x1800b0",
+            "0x3daf0",
+            35,
+            35,
+            148,
+            133,
+            4,
+            4,
+            "ef676005d6cb7c9452b15470387983dd0a046cdba7fcff6ffe8a0861e0258b1d",
+            "d17a2ed6502b7ed56fcf03954f08e69ad0152a8c0cde9a291af880786ccd63cc",
+            {
+              "ja": [
+                1,
+                0
+              ],
+              "jbe": [
+                0,
+                1
+              ],
+              "kmovd": [
+                0,
+                1
+              ],
+              "kmovw": [
+                1,
+                0
+              ]
+            }
+          ],
+          [
+            "w8/op4/bound",
+            "full_tight_in_domain",
+            "0x1830d0",
+            "0x3dfe0",
+            41,
+            42,
+            148,
+            138,
+            4,
+            4,
+            "4dbb12a74c7d45d6ea62004ab79754c8320f166d4293116c00788d6a419ac993",
+            "f84cc6b24bbc4f6b94853c51421f7c9ef453a8f904667579e3d74d1db658cb18",
+            {
+              "ja": [
+                1,
+                0
+              ],
+              "jbe": [
+                0,
+                1
+              ],
+              "kmovd": [
+                0,
+                1
+              ],
+              "kmovw": [
+                1,
+                0
+              ],
+              "movl": [
+                1,
+                2
+              ]
+            }
+          ],
+          [
+            "w8/op4/inline_measure",
+            "dependent",
+            "0x189b02",
+            "0x3ed6f",
+            38,
+            36,
+            156,
+            145,
+            5,
+            5,
+            "a5636a9b718e90b00d4ee3f3657b00fdf87a6830f09b26db27023d8355191d4c",
+            "c3e10b316aec179275a00c978c5602f12f731f8e448f5f9779262b918f8e2649",
+            {
+              "kmovd": [
+                0,
+                1
+              ],
+              "kmovw": [
+                1,
+                0
+              ],
+              "movl": [
+                3,
+                2
+              ],
+              "movq": [
+                5,
+                4
+              ]
+            }
+          ],
+          [
+            "w8/op4/inline_measure",
+            "independent8",
+            "0x18d110",
+            "0x3f2dd",
+            303,
+            290,
+            1386,
+            1175,
+            33,
+            33,
+            "423f96abfa9eba0ba035bbcc2919eb62d773a9ed76729262cecbe0fe213dbb10",
+            "ea84b2b3b8fab5c48bb0239b53ce2069de3f71bf5b061715cbc307bc18880f6c",
+            {
+              "ja": [
+                8,
+                1
+              ],
+              "jbe": [
+                0,
+                7
+              ],
+              "kmovd": [
+                0,
+                8
+              ],
+              "kmovw": [
+                8,
+                0
+              ],
+              "movq": [
+                49,
+                35
+              ],
+              "movzwl": [
+                8,
+                9
+              ]
+            }
+          ]
+        ]
+      },
+      "payloads": {
+        "00350cc83ab02d2681f546a00b03bdd82866fc07e832df5b84f006a5e8a4969e": {
+          "bytes": "25732c25752c25752c25752c25732c25732c25752c252e36660a00",
+          "kind": "complete nul-terminated string",
+          "size": 27
+        },
+        "1fce70c028536c62aaa3e70132da38a719f84da916015c1fb278f3dba0587176": {
+          "bytes": "a0860100",
+          "kind": "complete object initial bytes",
+          "size": 4
+        },
+        "2594b6a92ebfb1c3312deb7d01c015fb95e9fbe9bd7bc6b527af07813ec7b910": {
+          "bytes": "05000000",
+          "kind": "complete object initial bytes",
+          "size": 4
+        },
+        "2d311251337c35e4d3628720f349d4133233ed476372432e57314e0ab316bc35": {
+          "bytes": "0000000000002040",
+          "kind": "scalar double operand",
+          "size": 8
+        },
+        "542cf202103ad5d765051b58bb88f66f4e7c1718aed775cc06a02cdfcd965c9d": {
+          "bytes": "646570656e64656e7400",
+          "kind": "complete nul-terminated string",
+          "size": 10
+        },
+        "65a0a97a1358563d971036c6533a7c5ac8768cd18cdee9f470b36a1226ea5a7a": {
+          "bytes": "696e646570656e64656e743800",
+          "kind": "complete nul-terminated string",
+          "size": 13
+        },
+        "6c3c396ed6b5c36dcae172271f462051b1266b851e92df3deea8ac65478fd712": {
+          "bytes": "000000000000f03f",
+          "kind": "scalar double operand",
+          "size": 8
+        },
+        "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d": {
+          "bytes": "00",
+          "kind": "complete object initial bytes",
+          "size": 1
+        },
+        "af5570f5a1810b7af78caf4bc70a660f0df51e42baf91d4de5b2328de0e83dfc": {
+          "bytes": "0000000000000000",
+          "kind": "complete object initial bytes",
+          "size": 8
+        }
+      },
+      "selected_path_details": {
+        "w5/op1/one_stage/full_tight_in_domain": {
+          "after": {
+            "boundary_crossings": [
+              {
+                "address": "0x1ac7d",
+                "bytes": "498b6918",
+                "offset_mod64": 61
+              },
+              {
+                "address": "0x1acfe",
+                "bytes": "c5fb93f8",
+                "offset_mod64": 62
+              }
+            ],
+            "occupied_64byte_code_regions": 5,
+            "payloads": []
+          },
+          "before": {
+            "boundary_crossings": [
+              {
+                "address": "0x626bb",
+                "bytes": "0f871b240000",
+                "offset_mod64": 59
+              },
+              {
+                "address": "0x6277e",
+                "bytes": "c4e2f1f7cd",
+                "offset_mod64": 62
+              }
+            ],
+            "occupied_64byte_code_regions": 5,
+            "payloads": []
+          }
+        },
+        "w5/op2/one_stage/full_tight_in_domain": {
+          "after": {
+            "boundary_crossings": [
+              {
+                "address": "0x24d3d",
+                "bytes": "498b6918",
+                "offset_mod64": 61
+              },
+              {
+                "address": "0x24dbe",
+                "bytes": "c5fb93f8",
+                "offset_mod64": 62
+              }
+            ],
+            "occupied_64byte_code_regions": 5,
+            "payloads": []
+          },
+          "before": {
+            "boundary_crossings": [
+              {
+                "address": "0xb42bf",
+                "bytes": "62f27d087ad1",
+                "offset_mod64": 63
+              }
+            ],
+            "occupied_64byte_code_regions": 4,
+            "payloads": []
+          }
+        },
+        "w8/op1/one_stage/full_tight_in_domain": {
+          "after": {
+            "boundary_crossings": [
+              {
+                "address": "0x1f7fd",
+                "bytes": "498b6918",
+                "offset_mod64": 61
+              },
+              {
+                "address": "0x1f87e",
+                "bytes": "c5fb93f8",
+                "offset_mod64": 62
+              }
+            ],
+            "occupied_64byte_code_regions": 5,
+            "payloads": []
+          },
+          "before": {
+            "boundary_crossings": [
+              {
+                "address": "0x8afff",
+                "bytes": "62f27d087ad1",
+                "offset_mod64": 63
+              }
+            ],
+            "occupied_64byte_code_regions": 4,
+            "payloads": []
+          }
+        },
+        "w8/op2/one_stage/full_tight_in_domain": {
+          "after": {
+            "boundary_crossings": [
+              {
+                "address": "0x298bd",
+                "bytes": "498b6918",
+                "offset_mod64": 61
+              },
+              {
+                "address": "0x2993e",
+                "bytes": "c5fb93f8",
+                "offset_mod64": 62
+              }
+            ],
+            "occupied_64byte_code_regions": 5,
+            "payloads": []
+          },
+          "before": {
+            "boundary_crossings": [
+              {
+                "address": "0xdca3d",
+                "bytes": "498b6d10",
+                "offset_mod64": 61
+              },
+              {
+                "address": "0xdcaff",
+                "bytes": "488b4f18",
+                "offset_mod64": 63
+              },
+              {
+                "address": "0xdee7d",
+                "bytes": "498b0424",
+                "offset_mod64": 61
+              }
+            ],
+            "occupied_64byte_code_regions": 7,
+            "payloads": []
+          }
+        }
+      },
+      "shared_route_proofs": {
+        "common/completion1": {
+          "all_addressed_payloads_equal": true,
+          "instruction_skeletons_equal": true,
+          "references": {
+            "columns": [
+              "function_offset",
+              "before_address",
+              "after_address",
+              "before_payload_sha256",
+              "after_payload_sha256"
+            ],
+            "rows": []
+          },
+          "same_relative_offsets": true
+        },
+        "common/entry1": {
+          "all_addressed_payloads_equal": true,
+          "instruction_skeletons_equal": true,
+          "references": {
+            "columns": [
+              "function_offset",
+              "before_address",
+              "after_address",
+              "before_payload_sha256",
+              "after_payload_sha256"
+            ],
+            "rows": []
+          },
+          "same_relative_offsets": true
+        },
+        "common/indirect_timer": {
+          "all_addressed_payloads_equal": true,
+          "instruction_skeletons_equal": true,
+          "references": {
+            "columns": [
+              "function_offset",
+              "before_address",
+              "after_address",
+              "before_payload_sha256",
+              "after_payload_sha256"
+            ],
+            "rows": [
+              [
+                17,
+                "0x1b00d8",
+                "0x4a0d8",
+                "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d",
+                "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+              ],
+              [
+                61,
+                "0x1b00a4",
+                "0x4a0a4",
+                "2594b6a92ebfb1c3312deb7d01c015fb95e9fbe9bd7bc6b527af07813ec7b910",
+                "2594b6a92ebfb1c3312deb7d01c015fb95e9fbe9bd7bc6b527af07813ec7b910"
+              ],
+              [
+                293,
+                "0x1ab010",
+                "0x45010",
+                "2d311251337c35e4d3628720f349d4133233ed476372432e57314e0ab316bc35",
+                "2d311251337c35e4d3628720f349d4133233ed476372432e57314e0ab316bc35"
+              ],
+              [
+                301,
+                "0x1ab160",
+                "0x45160",
+                "65a0a97a1358563d971036c6533a7c5ac8768cd18cdee9f470b36a1226ea5a7a",
+                "65a0a97a1358563d971036c6533a7c5ac8768cd18cdee9f470b36a1226ea5a7a"
+              ],
+              [
+                323,
+                "0x1ab156",
+                "0x45156",
+                "542cf202103ad5d765051b58bb88f66f4e7c1718aed775cc06a02cdfcd965c9d",
+                "542cf202103ad5d765051b58bb88f66f4e7c1718aed775cc06a02cdfcd965c9d"
+              ],
+              [
+                330,
+                "0x1ab018",
+                "0x45018",
+                "6c3c396ed6b5c36dcae172271f462051b1266b851e92df3deea8ac65478fd712",
+                "6c3c396ed6b5c36dcae172271f462051b1266b851e92df3deea8ac65478fd712"
+              ],
+              [
+                398,
+                "0x1b00d0",
+                "0x4a0d0",
+                "af5570f5a1810b7af78caf4bc70a660f0df51e42baf91d4de5b2328de0e83dfc",
+                "af5570f5a1810b7af78caf4bc70a660f0df51e42baf91d4de5b2328de0e83dfc"
+              ],
+              [
+                453,
+                "0x1b00a0",
+                "0x4a0a0",
+                "1fce70c028536c62aaa3e70132da38a719f84da916015c1fb278f3dba0587176",
+                "1fce70c028536c62aaa3e70132da38a719f84da916015c1fb278f3dba0587176"
+              ],
+              [
+                529,
+                "0x1ab13b",
+                "0x4513b",
+                "00350cc83ab02d2681f546a00b03bdd82866fc07e832df5b84f006a5e8a4969e",
+                "00350cc83ab02d2681f546a00b03bdd82866fc07e832df5b84f006a5e8a4969e"
+              ],
+              [
+                557,
+                "0x1b00a4",
+                "0x4a0a4",
+                "2594b6a92ebfb1c3312deb7d01c015fb95e9fbe9bd7bc6b527af07813ec7b910",
+                "2594b6a92ebfb1c3312deb7d01c015fb95e9fbe9bd7bc6b527af07813ec7b910"
+              ],
+              [
+                1321,
+                "0x1b00a0",
+                "0x4a0a0",
+                "1fce70c028536c62aaa3e70132da38a719f84da916015c1fb278f3dba0587176",
+                "1fce70c028536c62aaa3e70132da38a719f84da916015c1fb278f3dba0587176"
+              ],
+              [
+                1441,
+                "0x1b00a0",
+                "0x4a0a0",
+                "1fce70c028536c62aaa3e70132da38a719f84da916015c1fb278f3dba0587176",
+                "1fce70c028536c62aaa3e70132da38a719f84da916015c1fb278f3dba0587176"
+              ],
+              [
+                2102,
+                "0x1b00a0",
+                "0x4a0a0",
+                "1fce70c028536c62aaa3e70132da38a719f84da916015c1fb278f3dba0587176",
+                "1fce70c028536c62aaa3e70132da38a719f84da916015c1fb278f3dba0587176"
+              ]
+            ]
+          },
+          "same_relative_offsets": true
+        },
+        "shared/joined/op0": {
+          "all_addressed_payloads_equal": true,
+          "instruction_skeletons_equal": true,
+          "references": {
+            "columns": [
+              "function_offset",
+              "before_address",
+              "after_address",
+              "before_payload_sha256",
+              "after_payload_sha256"
+            ],
+            "rows": []
+          },
+          "same_relative_offsets": true
+        },
+        "shared/joined/op1": {
+          "all_addressed_payloads_equal": true,
+          "instruction_skeletons_equal": true,
+          "references": {
+            "columns": [
+              "function_offset",
+              "before_address",
+              "after_address",
+              "before_payload_sha256",
+              "after_payload_sha256"
+            ],
+            "rows": []
+          },
+          "same_relative_offsets": true
+        },
+        "shared/joined/op2": {
+          "all_addressed_payloads_equal": true,
+          "instruction_skeletons_equal": true,
+          "references": {
+            "columns": [
+              "function_offset",
+              "before_address",
+              "after_address",
+              "before_payload_sha256",
+              "after_payload_sha256"
+            ],
+            "rows": []
+          },
+          "same_relative_offsets": true
+        },
+        "shared/joined/op3": {
+          "all_addressed_payloads_equal": true,
+          "instruction_skeletons_equal": true,
+          "references": {
+            "columns": [
+              "function_offset",
+              "before_address",
+              "after_address",
+              "before_payload_sha256",
+              "after_payload_sha256"
+            ],
+            "rows": []
+          },
+          "same_relative_offsets": true
+        },
+        "shared/joined/op4": {
+          "all_addressed_payloads_equal": true,
+          "instruction_skeletons_equal": true,
+          "references": {
+            "columns": [
+              "function_offset",
+              "before_address",
+              "after_address",
+              "before_payload_sha256",
+              "after_payload_sha256"
+            ],
+            "rows": []
+          },
+          "same_relative_offsets": true
+        },
+        "shared/native_decode": {
+          "all_addressed_payloads_equal": true,
+          "instruction_skeletons_equal": true,
+          "references": {
+            "columns": [
+              "function_offset",
+              "before_address",
+              "after_address",
+              "before_payload_sha256",
+              "after_payload_sha256"
+            ],
+            "rows": []
+          },
+          "same_relative_offsets": true
+        }
+      }
+    }
+  },
+  "receipt_sha256": "167d9ed401482e5742c94fabfd7d69f3f2217b14e66df61664410b1b7acb7f59",
+  "runner_sha256": "130d9e6a8eb38430451960806e77d5b0b2be203be9d0c9a3eefb4afa8e3a7219",
+  "scope": "Offline linked projection filter audit; preserves the historical R4 helper.\n\nTrace admitted full/tight/in-domain nonterminal dependent and independent8\niterations in actual optimized benchmark functions. Unknown branches fail.\nNo compiler, timing, source mutation or inferred microarchitecture causality.\n",
+  "source_epochs": {
+    "ikea/include/ikea/tuplepack/author/execution.h": {
+      "after": "9836d06d242ab571f77e69fa757d3a67315e9ef6546dd01b0c0eb169d871fcbe",
+      "before": "9836d06d242ab571f77e69fa757d3a67315e9ef6546dd01b0c0eb169d871fcbe"
+    },
+    "ikea/include/ikea/tuplepack/author/native.h": {
+      "after": "3e941538ec1aa82210edd7316d3982dfd96118fdf01303247bc9557743b50118",
+      "before": "3e941538ec1aa82210edd7316d3982dfd96118fdf01303247bc9557743b50118"
+    },
+    "ikea/include/ikea/tuplepack/detail/native/packet.h": {
+      "after": "a31462a84217443e95cbe9c3994cb37367ca5843e30a7838bfd35506fa5ed8db",
+      "before": "a31462a84217443e95cbe9c3994cb37367ca5843e30a7838bfd35506fa5ed8db"
+    },
+    "ikea/include/ikea/tuplepack/detail/native/read.h": {
+      "after": "22072dd283041286d3e3d104f9ce7a00d287276a21d5ac4765647d3faf7d9dd9",
+      "before": "22072dd283041286d3e3d104f9ce7a00d287276a21d5ac4765647d3faf7d9dd9"
+    },
+    "ikea/include/ikea/tuplepack/filter.h": {
+      "after": "514e68275e3849bd58549b56f4f78fe81ee48ebce3df4cca830ba4091b568868",
+      "before": "aa91ba8e4339a53d393c40a9c298665e6bbf80672a6540821bbbf221bbc52904"
+    }
+  },
+  "source_manifest_file_sha256": "b2e6372c81b16fa5945e3810cd78476c61435b6c23353b81965a4ead4821520a",
+  "source_manifest_sha256": {
+    "after": "a4388c9a6695826bec2703d1da8ff1e56062b8c9f81bfeb489b047a2d0ef1d7d",
+    "before": "929b17889f350d24e2e740c052fc28411fcfaf589261c0216cc9b881b9f2cde6"
+  }
+}
