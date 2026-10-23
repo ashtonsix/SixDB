@@ -22,15 +22,15 @@ directory's sections below are the evidence; read them by question, not in order
   identity as {scope, edition}. Cached dictionary material helps equality and
   sparse COUNT, not SUM or points.
 - **Open in this directory:** [run-value programs](#run-value-programs) (the
-  run leaf's cost was the u64 lane: a narrow-lane program takes run-heavy SUM
-  to 0.65–0.78× and COUNT to 0.19–0.37× locally, and byte-lane widths read in
-  place reach 0.47–0.60× on SUM; neither is the default yet, since narrow lost
-  two cells and byte lanes cost up to 24% bytes and weaken bounds),
-  [fused aggregates](#fused-aggregates) (local
+  run leaf's cost was the u64 lane; the narrow-lane program is now the default
+  and locally takes run-heavy SUM to 0.63–0.79×, COUNT to 0.19–0.37× and masks
+  to 0.26–0.70×, never losing a cell; byte-lane widths read in place reach
+  0.45–0.61× on SUM and keep exact bounds at no byte cost, but stay opt-in at
+  up to 24% bytes; workers pending), [fused aggregates](#fused-aggregates) (local
   ARM: SUM + COUNT in 0.58–0.74× the separate calls on packed and run columns,
   no gain where COUNT is a closed form, still 1.7–2.3× native fused; workers pending),
-  [predicate masks](#predicate-masks) (emitter landed; run-heavy masks still
-  trail a plain array), and every family beyond SUM/COUNT.
+  [predicate masks](#predicate-masks) (emitter landed; run-heavy dense masks
+  still trail a plain array 1.3–1.9×), and every family beyond SUM/COUNT.
   Detailed questions are in [QUESTIONS.md](../QUESTIONS.md).
 - **Comparison limits:** local timings are OrbStack direction only. Worker runs
   in [`worker.sh`](worker.sh) are repeated and in-memory, with cache residence
@@ -360,10 +360,15 @@ exception test).
 
 ### Measurement and input hygiene (Workbench and Codex review)
 
-- **Paired, rotated arms.** Each of 21 trials times every arm once, starting
-  from a different arm. The JSON keeps raw whole-call min/median/max
-  nanoseconds per arm, with `physical_rows` and `selected_rows` (the `none`
-  mask has no per-selected-row denominator). Medians reproduce the earlier
+- **Paired, balanced arms.** Each trial times every arm once. Since
+  c3be9d8e, bodies.cpp's `time_arms` walks a Williams design: every arm
+  follows every other arm, and holds every position, equally often per design,
+  and trials round up to whole designs. The earlier fixed-seed shuffle took the
+  same orders every call and biased one cell ([run-value
+  programs](#run-value-programs), finding 2). The first measurements here
+  rotated 21 trials, each starting from a different arm. The JSON keeps raw
+  whole-call min/median/max nanoseconds per arm, with `physical_rows` and
+  `selected_rows` (the `none` mask has no per-selected-row denominator). Medians reproduce the earlier
   ranking; maximums still show large VM outliers (spread up to 20× on some
   arms). So these remain local, indicative timings.
 - **Timed wide sums** consume both u128 halves. Codex checked the ARM64
@@ -1875,7 +1880,8 @@ into the same plane. The exact duplicate emit arm's paired median ratio was
 5. **< costs no more than ≥** (complement under active), and the empty and
    always-true identities (e.g. ≠ an absent value) answer without bodies.
 
-Remaining: the run-boundary mask arm; a filter-or-decode choice for wide packed
+Remaining: the run-boundary mask arm landed under [run-value
+programs](#run-value-programs) (finding 3); a filter-or-decode choice for wide packed
 planes; worker timings (local VM only here); a fused predicate-then-aggregate
 over the same block when A = B; and Engine's block source adapting
 `emit_predicate_masks` to its Parts.
@@ -1888,46 +1894,70 @@ ruled out the u128 accumulation and the Intervals walk as the cost. A prototype
 that decoded the short run-value plane into the narrowest catalogue lane gained
 25–35% on SUM. [`runs.h`](runs.h) turns that into run-value programs, one
 runtime choice per runs block, for every runs leaf: SUM, COUNT(≥), COUNT(=),
-the predicate-mask runs law, the row-selected forms and fused programs.
-Code: 05463eae.
+the predicate-mask runs law, the row-selected forms, fused programs and coded
+(dictionary) runs. **`narrow` is the default** (cb4022b6); `wide` stays as the
+comparison arm. Code: 05463eae, 93636c2b, dedaf99d.
 
 | Arm | Image | Program |
 | --- | --- | --- |
 | (a) | default | `wide`: plane into u64 lanes, run sizes from an Intervals pass (the original leaf) |
-| (b) | default | `narrow`: catalogue `range8/16/32` (u64 past 32 bits), one walk over the u8 ends, u64 v·len |
+| (b) | default | `narrow`: catalogue `range8/16/32` (u64 past 32 bits), K = 1 read in place as bits, one walk over the u8 ends, u64 v·len |
 | (c) | `run_values = byte_lanes` | `narrow` |
 | (d) | `run_values = byte_lanes` | `in_place`: a K' = 8, 16 or 32 plane read where it lies, by memcpy lane loads |
 | control | byte_lanes runs and packed planes | `in_place` |
 
 `byte_lanes` is an encode option, off by default. It rounds a run block's K
-up to 8, 16 or 32 (wider planes stay exact) and writes the physical width into
-the descriptor, so width-derived bounds become base + 2^K' − 1. The in-place
-premise is Ikea LEAD's: at a byte-multiple width a Local SeriesPack plane is a
-row-major little-endian array (R = 0, H = 0), so value r is bytes
-[rK'/8, (r + 1)K'/8), inside the plane's exact grant.
+up to 8, 16 or 32 (wider planes stay exact). The in-place premise is Ikea
+LEAD's: at a byte-multiple width a Local SeriesPack plane is a row-major
+little-endian array (R = 0, H = 0), so value r is bytes [rK'/8, (r + 1)K'/8),
+inside the plane's exact grant. At K = 1 the plane is a row-major LSB-first
+bit array, which both narrow programs read in place.
+
+**Exact bounds beside byte lanes.** A rounded runs or packed descriptor keeps
+the exact K in the low seven bits of its width byte and sets 0x80
+(`byte_lane_flag`). The plane width K' = byte_lane_width(K) follows from K, so
+this costs **0 bytes**: byte_lanes images are byte-identical to the previous
+cut's, and default descriptors never carry the flag. Views split the byte
+(`view_descriptor`): `d.width` is the physical width, and `bound_width(k)` is
+the exact width every width-derived decision reads. Those decisions are
+COUNT(≥) and COUNT(=) above the max, their masked forms, predicate intervals
+(the empty and whole-selection shortcuts) and fused plans. `extent_of` and
+`admits` refuse inconsistent flags.
+
+**Mask fill from run boundaries.** The predicate runs law (`toggled_runs` in
+[`predicate.h`](predicate.h)) first counts passing runs in a loop the compiler
+can vectorise; none or all settles the block. Otherwise it XORs one bit at each
+run start where the pass state changes into four register words and
+prefix-XORs the 256 bits (six shift-XORs per word, carried across words).
+`run_fill::per_run`, the previous OR of `rows_between` per passing run, stays
+as an arm. An indexed XOR into memory was 1.2–1.4× slower than register words,
+and the count costs dense masks about 10% but halves sparse ones.
 
 **Checks.** `frame_encoding_run_check` builds runs blocks by hand at every
 K = 1..64, with 1 to 256 runs and three bases, each body ending at a
-`PROT_NONE` page. All three programs must match an oracle built from the run
-values and lengths, never from the operations:
+`PROT_NONE` page. Every program must match an oracle built from the run values
+and lengths, never from the operations. Probes cover decode, SUM, COUNT(≥) and
+COUNT(=) around every run value and the width bound; the row-selected forms;
+predicate rows for ≥, = and a range under both fills; and fused SUM + COUNT +
+EQ + MIN + MAX. Wherever byte_lane_width(K) > K, byte-lane twins (the same
+runs, and 256 packed values, under flagged descriptors) pass the same oracle.
+A bound law runs in forked children: with the body pointed at a `PROT_NONE`
+page and no grant, every decision the exact bound settles must answer without
+reading a byte, including the whole-selection interval [base, base + 2^K − 1].
+That is 4,464 blocks and 1.99M probes, 986 bound laws and 1,392 flag
+refusals. Layouts are checked byte for byte at K = 8, 16 and 32 and bit for
+bit at K = 1 (240), and planes one byte short fault (105/105).
+predicate_check also requires each runs or packed block's bound_width to be
+its exact width. On real columns, borrowed_check passes 417/417 and
+predicate_check 447/447 under the default (narrow), explicit `wide`,
+`in_place` on byte_lanes images and the packed control (qualified from
+capture 60d18fdb plus these files). The driver matches frozen `bodies_after`,
+and masked_access_check and null_check pass. 18 seeded mutants are caught;
+they cover the bound, flag, encoder, admission, toggle, early-settle, bit
+order and coded-lookup laws (`t3/mutants.py`, `mutants.txt`).
 
-- decode, SUM, COUNT(≥) and COUNT(=), probed around every run value and the
-  width bound;
-- the row-selected forms under adversarial and random selections, plus
-  predicate rows for ≥, = and a range;
-- fused SUM + COUNT + EQ + MIN + MAX, and counts alone.
-
-That is 3,072 blocks and 1.36M probes. The planes at K = 8, 16 and 32 equal
-their little-endian arrays byte for byte, with zero tile padding (192
-layouts). The in-place guard reads a plane granted exactly plane_bytes(K, n)
-at the page edge. The same plane one byte short faults in a forked child
-(84/84 where n is a multiple of 8). On real columns, borrowed_check passes
-417/417 and predicate_check 447/447, both under `narrow` on default images and
-under `in_place` on byte_lanes images (qualified from capture 60d18fdb plus
-these files). The driver still matches frozen `bodies_after` (defaults
-unchanged), and masked_access_check and null_check pass.
-
-**Bytes and encode time** (11,718 blocks, 3.0M rows; encode median of 7, ms):
+**Bytes and encode time** (11,718 blocks, 3.0M rows; encode median of 7, ms;
+unchanged by the exact-bound flag):
 
 | Column | Runs blocks | Default bytes | byte_lanes | Control (packed too) | Run-value plane bytes | Encode ms |
 | --- | ---: | ---: | ---: | ---: | --- | --- |
@@ -1940,114 +1970,108 @@ unchanged), and masked_access_check and null_check pass.
 | IsRefresh | 75% | 351,469 | +24.2% | +88.0% | 13,910 → 88,264 | 30 / 30 / 30 |
 
 **Timings.** `frame_encoding_run_programs` checks every arm's answer against
-arm (a) before timing. Runs are in-process, 21 trials in bodies.cpp's
-fixed-seed shuffled arm order, three rounds in shuffled column order, all on
-the local aarch64 OrbStack VM (direction only). Cells are paired per-trial
+arm (a) before timing. Runs are in-process on the local aarch64 OrbStack VM
+(direction only), three rounds in shuffled column order. Trials follow
+bodies.cpp's Williams-balanced arm order, 24–32 trials per call (c3be9d8e).
+Each round has its own seed (`ARM_SEED`), and each timed call follows an
+untimed call of the same arm (`ARM_PREWARM=1`). Cells are paired per-trial
 ratios against (a), median over trials and then over rounds. The exact
-duplicate of (a) read 0.97–1.05 in every cell except EventTime's rare
-equality (1.13), so cells within about ±5% are noise. Thresholds are the
-median, max + 1 (above every value), the mode, the least frequent value
-(rare) and [p99, max]. 1% NULL uses the nullable image (predictor fill) with
-validity as the row selection.
+duplicate of (a) read 0.97–1.04 in every cell. Thresholds are the median,
+max + 1 (above every value), the mode, the least frequent value (rare) and
+[p99, max]. 1% NULL uses the nullable image (predictor fill) with validity as
+the row selection. Data: `build/spikes/ikea-frame/eqruns-snap/t3/`
+(`timing.sh`, `final_prewarm.jsonl`, `tables.py`, `tables_final.md`).
 
-(b) / (a), default images:
-
-| Operation | OS | RegionID | ClientIP | ResolutionWidth | UserID | EventTime | IsRefresh |
-| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| SUM | 0.78 | 0.74 | 0.65 | 0.74 | 1.00 | 0.86 | 1.02 |
-| COUNT ≥ median | 0.37 | 0.27 | 0.19 | 0.27 | 0.95 | 0.74 | 1.00 |
-| COUNT ≥ max + 1 | 0.88 | 0.84 | 0.77 | 1.00 | 0.99 | 0.88 | 1.00 |
-| COUNT = mode | 0.39 | 0.50 | 0.73 | 0.37 | 0.97 | 0.87 | 0.94 |
-| COUNT = rare | 0.88 | 0.81 | 0.98 | 0.90 | 1.01 | 1.00 | 0.93 |
-| mask ≥ median | 0.78 | 0.78 | 0.77 | 0.77 | 0.94 | 0.79 | 1.00 |
-| mask = rare | 0.57 | 0.56 | 1.00 | 0.75 | 1.00 | 1.00 | 0.82 |
-| mask ≥ max + 1 | 0.55 | 0.62 | 0.50 | 0.99 | 0.96 | 0.62 | 1.00 |
-| mask [p99, max] | 0.66 | 0.58 | 0.51 | 0.59 | 0.95 | 0.68 | 0.83 |
-| fused SUM + COUNT | 0.91 | 0.89 | 0.79 | 0.87 | 1.00 | 0.91 | 1.02 |
-| 1% NULL SUM | 0.88 | 0.84 | 0.82 | 0.85 | 0.84 | 0.88 | 0.97 |
-| 1% NULL COUNT ≥ median | 0.85 | 0.79 | 0.77 | 0.80 | 0.98 | 0.88 | 1.00 |
-| 1% NULL COUNT = rare | 0.89 | 0.85 | 1.00 | 0.91 | 1.00 | **1.20** | 0.94 |
-| 1% NULL fused | 0.88 | 0.87 | 0.84 | 0.88 | 0.87 | 0.92 | 0.96 |
-
-(d) / (a), byte_lanes images read in place, and (c) / (a) where it differs
-from (d) by more than noise:
+(b) / (a), default images (each cell's rounds lie within 0.04 of each other):
 
 | Operation | OS | RegionID | ClientIP | ResolutionWidth | UserID | EventTime | IsRefresh |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| SUM | 0.53 (c 0.70) | 0.60 (0.71) | 0.47 (0.65) | 0.49 (0.62) | 0.99 | 0.90 | 1.04 (1.09) |
-| COUNT ≥ median | 0.27 | 0.21 | 0.15 | 0.19 | 0.95 | 0.73 | 1.01 |
-| COUNT ≥ max + 1 | 0.94 (1.14) | 0.70 | 0.59 (0.76) | **7.41** (9.02) | 0.98 | 0.88 | **3.65** (4.14) |
-| COUNT = mode | 0.28 | 0.44 | 0.56 | 0.26 | 0.99 | 0.92 | 0.96 |
-| COUNT = rare | 0.64 | 0.72 | 1.00 | 0.85 | 1.01 | **1.32** | 0.96 |
-| mask ≥ median | 0.69 | 0.61 | 0.72 | 0.70 | 0.94 | 0.33 | 1.08 |
-| mask = rare | 0.46 | 0.46 | 1.00 | 0.69 | 1.00 | **1.21** | 0.67 |
-| mask ≥ max + 1 | 0.59 | 0.61 | 0.42 | **5.11** | 0.97 | 0.43 | **2.19** |
-| fused SUM + COUNT | 0.77 | 0.88 | 0.73 | 0.69 | 1.00 | 0.83 | 0.96 |
-| 1% NULL SUM | 0.72 | 0.67 | 0.72 | 0.68 | 0.86 | 0.60 | 0.86 |
-| 1% NULL COUNT = rare | 0.73 | 0.67 | 0.99 | 0.84 | 1.01 | 1.09 | 0.78 |
+| SUM | 0.79 | 0.75 | 0.63 | 0.73 | 0.98 | 0.86 | 0.92 |
+| COUNT ≥ median | 0.37 | 0.26 | 0.19 | 0.26 | 0.95 | 0.74 | 1.00 |
+| COUNT ≥ max + 1 | 0.90 | 0.83 | 0.76 | 1.00 | 0.97 | 0.87 | 1.00 |
+| COUNT = mode | 0.38 | 0.47 | 0.74 | 0.36 | 0.97 | 0.88 | 0.85 |
+| COUNT = rare | 0.89 | 0.80 | 1.00 | 0.88 | 1.00 | 1.00 | 0.85 |
+| mask ≥ median | 0.37 | 0.31 | 0.26 | 0.30 | 0.92 | 0.54 | 1.00 |
+| mask = rare | 0.44 | 0.39 | 1.00 | 0.65 | 1.00 | 1.00 | 0.65 |
+| mask ≥ max + 1 | 0.41 | 0.47 | 0.29 | 0.99 | 0.95 | 0.47 | 1.00 |
+| mask [p99, max] | 0.70 | 0.66 | 0.56 | 0.67 | 0.94 | 0.64 | 0.66 |
+| fused SUM + COUNT | 0.91 | 0.87 | 0.79 | 0.85 | 0.99 | 0.90 | 0.97 |
+| 1% NULL SUM | 0.87 | 0.84 | 0.82 | 0.83 | 0.86 | 0.88 | 0.90 |
+| 1% NULL COUNT ≥ median | 0.82 | 0.80 | 0.77 | 0.80 | 0.98 | 0.87 | 1.00 |
+| 1% NULL COUNT = rare | 0.87 | 0.88 | 0.99 | 0.91 | 1.00 | 1.00 | 0.86 |
+| 1% NULL fused | 0.90 | 0.88 | 0.83 | 0.87 | 0.89 | 0.92 | 0.96 |
 
-Absolute medians, µs, (a) / (b) / (d) / plain array:
+(d) / (a), byte_lanes images read in place:
+
+| Operation | OS | RegionID | ClientIP | ResolutionWidth | UserID | EventTime | IsRefresh |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| SUM | 0.59 | 0.61 | 0.45 | 0.49 | 0.97 | 0.89 | 1.02 |
+| COUNT ≥ median | 0.29 | 0.22 | 0.15 | 0.19 | 0.95 | 0.72 | **1.33** |
+| COUNT ≥ max + 1 | 0.76 | 0.74 | 0.61 | 1.11 | 0.98 | 0.85 | 1.21 |
+| COUNT = mode | 0.29 | 0.44 | 0.57 | 0.26 | 0.96 | 0.88 | 0.94 |
+| COUNT = rare | 0.67 | 0.74 | 1.02 | 0.82 | 1.00 | **1.21** | 0.93 |
+| mask ≥ median | 0.36 | 0.27 | 0.25 | 0.27 | 0.92 | 0.30 | 1.16 |
+| mask = rare | 0.37 | 0.35 | 1.01 | 0.63 | 1.00 | 1.05 | 0.63 |
+| mask ≥ max + 1 | 0.36 | 0.54 | 0.24 | 1.06 | 0.95 | 0.42 | 1.16 |
+| fused SUM + COUNT | 0.81 | 0.91 | 0.72 | 0.69 | 1.00 | 0.83 | 0.98 |
+| 1% NULL SUM | 0.75 | 0.68 | 0.73 | 0.69 | 0.86 | 0.60 | 0.87 |
+
+Absolute medians, µs, (a) / (b) / (d) / plain array, and the mask fills,
+(a) / per_run under narrow / toggle under narrow (b) / plain:
 
 | Operation | OS | RegionID | ClientIP | ResolutionWidth |
 | --- | --- | --- | --- | --- |
-| SUM | 527 / 410 / 275 / 188 | 737 / 554 / 452 / 373 | 715 / 465 / 344 / 437 | 625 / 461 / 298 / 196 |
-| COUNT ≥ median | 1,298 / 477 / 349 / 467 | 2,329 / 629 / 493 / 578 | 3,070 / 585 / 448 / 657 | 1,975 / 522 / 370 / 448 |
-| mask ≥ median | 2,675 / 2,047 / 1,846 / 727 | 4,190 / 3,264 / 2,546 / 666 | 4,981 / 3,845 / 3,592 / 659 | 3,648 / 2,834 / 2,553 / 714 |
+| SUM | 529 / 416 / 314 / 183 | 734 / 530 / 452 / 230 | 678 / 422 / 305 / 236 | 610 / 441 / 294 / 178 |
+| COUNT ≥ median | 1,268 / 470 / 376 / 460 | 2,352 / 603 / 507 / 576 | 2,743 / 514 / 406 / 562 | 1,911 / 501 / 366 / 440 |
+| mask ≥ median (fills) | 2,656 / 2,087 / 980 / 729 | 4,096 / 3,206 / 1,256 / 669 | 4,881 / 3,765 / 1,271 / 662 | 3,637 / 2,868 / 1,098 / 707 |
+| mask = rare (fills) | 1,071 / 609 / 468 / 719 | 1,475 / 830 / 582 / 667 | 100 / 99 / 100 / 664 | 210 / 156 / 138 / 695 |
+| mask ≥ max + 1 (fills) | 845 / 458 / 347 / 727 | 561 / 349 / 262 / 658 | 1,614 / 801 / 475 / 661 | 102 / 103 / 102 / 701 |
+| mask [p99, max] (fills) | 1,055 / 714 / 741 / 726 | 1,290 / 752 / 845 / 667 | 1,697 / 885 / 949 / 660 | 1,428 / 840 / 950 / 707 |
 
-The control (packed planes rounded as well) reads like (d) on run-only
-columns. It costs EventTime 17% more bytes and 1.3–24× the time (packed
-K = 17 → 32 loses its bounds and narrow lanes), and costs IsRefresh 88% more
-bytes and up to 13× the time.
+1. **The leaf was the lane, not the arithmetic.** (b) takes run-heavy SUM
+   to 0.63–0.79× of (a) and COUNT ≥ median to 0.19–0.37×. COUNT ≥ median
+   is then 0.91–1.14× a plain array; SUM is still 1.8–2.5× plain.
+2. **The two earlier (b) losses are gone; narrow is the default.** EventTime's
+   1% NULL rare equality (1.05–1.32×) was an arm-order artefact, not leaf cost.
+   The old fixed-seed shuffle restarted every call, so every round took the
+   same orders. That cell touches little memory (about 90 µs), and it ran at
+   about 165 µs after a different image's arm (ctl, c, d) against about 93 µs
+   after a same-image arm. b followed another image 45 times in 63 against
+   36 for a. In isolation, and in the Williams-ordered run, it reads 1.00.
+   IsRefresh (K = 1) SUM's 1.01–1.02× was real. perf put it in the
+   catalogue's `range<1, u8>`: at the few runs such blocks hold, that kernel
+   is a scalar bit loop, no faster than the wide u64 decode. Reading K = 1
+   in place as bits takes it to 0.92×. In 98 cells (b) never reads above
+   1.00× of (a), so `run_values_program` defaults to `narrow` (cb4022b6).
+3. **Boundary fill takes run-heavy masks to 0.26–0.70× of (a).** Dense
+   masks fall to 0.34–0.47× of the per-run fill (mask ≥ median 980–1,271 µs,
+   now 1.3–1.9× plain, from 2.8–5.8×). With the pass count, sparse masks
+   (= rare, above max) on OS, RegionID and ClientIP fall to 0.29–0.47× of (a).
+   On [p99, max], per_run is still 4–12% faster on these four columns
+   (714–885 against 741–950 µs).
+4. **Exact bounds restore the above-max decisions at no byte cost.**
+   ResolutionWidth COUNT ≥ max + 1 on the byte_lanes image now reads 55 µs
+   (was 341–424, 7.4–9.0× (a)), and its mask 110 µs (was 528–603). IsRefresh's
+   reads 64 µs (was 186–212). The remaining 1.06–1.21× is the other blocks'
+   wider in-place planes, not a bound.
+5. **In-place byte lanes stay opt-in.** (d) reaches 0.45–0.61× of (a) on
+   run-heavy SUM and 0.15–0.29× on COUNT ≥ median (SUM 1.3–2.0× plain), at
+   +0–24% bytes. It still loses on IsRefresh, where K = 1 → 8 costs COUNT ≥
+   median 1.33×, and on EventTime's rare equality (1.21×), where rounding
+   K = 17 to 32 changes most runs blocks' kind.
+6. **Coded runs** (unordered dictionary SUM, truth COUNT, their masked forms,
+   fused programs and truth masks) take the narrow leaf, one dictionary
+   lookup per run. They are exact under the checks and seeded mutants above;
+   run_programs has no dictionary images, so they are not timed.
 
-1. **The leaf was the lane, not the arithmetic.** On default images, (b) takes
-   0.65–0.78× of (a) on run-heavy SUM and 0.19–0.37× on COUNT ≥ median
-   and = mode. COUNT ≥ median comes to 0.89–1.17× a plain array on OS,
-   RegionID, ClientIP and ResolutionWidth (ClientIP 585 against 657 µs), but
-   SUM is still 1.1–2.4× plain. Masks gain 0.5–0.8×, yet stay 2.8–5.8× plain.
-   Their per-run range fill is now the cost, which is the run-boundary arm
-   proposed in finding 3 of [predicate masks](#predicate-masks).
-2. **(b) is exact everywhere, but it does not win everywhere, so it is not the
-   default.** EventTime's 1% NULL COUNT = rare reads 1.05–1.32× in every round
-   and in three isolated repeats, against a duplicate at 0.94–1.00. Only 23
-   runs blocks reach the leaf there, so the loss is per block and not yet
-   attributed. IsRefresh (K = 1) SUM and fused read 1.02 in every round. The
-   bar was "never loses beyond noise", so `run_values_program` stays `wide`;
-   `narrow` is an opt-in program. A branchy count (skip non-matching runs)
-   halved RegionID rare equality, but made ≥ median 1.45× slower
-   (mispredictions), so the branch-free form stays.
-3. **In-place reads take a further 0.65–0.82× of (b) on SUM.** (d) reaches
-   0.47–0.60× of (a) on run-heavy SUM and 0.15–0.27× on COUNT ≥ median; 1%
-   NULL SUM drops to 0.67–0.72×. SUM is then 1.2–1.5× plain, and ClientIP's is
-   below plain (344 against 437 µs); COUNT ≥ median is 0.68–0.85× plain.
-   (c), the same image through the narrow decode, sits between (b) and (d):
-   the remaining cost is the decode, not the bytes it reads.
-4. **Bytes are not count/8 per block on low-K columns.** Rounding costs
-   (K' − K) · ⌈n/8⌉ bytes per runs block. That is +1.4% on OS (K is 6–8 in
-   99% of its runs blocks) and nothing on ClientIP and UserID (K is 32, or
-   above it), but +15% on RegionID (K = 14–17 rounds to 16 or 32), +22% on
-   ResolutionWidth (K = 10–12) and +24% on IsRefresh (K = 1).
-   On EventTime, rounding K = 17 to 32 makes most runs blocks lose to packed
-   or delta on bytes (1,976 → 137 runs blocks), so its timings mostly measure
-   the kind change: masks get faster (0.33), and rare equality slower.
-   Encode time does not change (42–78 ms per column either way).
-5. **Weaker width-derived bounds cost what they should.** An above-max
-   threshold that the exact bound rejected without reading the body now reads
-   it: ResolutionWidth COUNT ≥ max + 1 goes from 47 to 341–424 µs (7.4–9.0×)
-   and its mask from 103 to 528–603 µs, and IsRefresh's (K = 1 → 8) from 51 to
-   186–212 µs. Where the exact width was already loose (OS, RegionID), there
-   is no loss. Equality and selective masks inside the range are unaffected.
-   A byte-lane image would need a block max (or the exact K kept beside K') to
-   keep these rejections.
+Remaining work:
 
-Measurements: `build/spikes/ikea-frame/eqruns-snap/t2/` (`timing.sh`,
-`timing.jsonl`, `summarise.py`, `tables.py`). Remaining work:
-
-- attribute EventTime's masked rare-equality loss and the K = 1 SUM cost
-  before (b) can become the default (perhaps a width gate);
-- keep the exact bound beside a byte-lane width;
-- a run-boundary mask fill (the mask leaf is now the fill);
-- coded runs (dictionary lookups per run) still read the wide plane;
-- worker timings on Graviton and Zen 5.
+- worker timings on Graviton and Zen 5 (narrow's default rests on local
+  OrbStack direction);
+- the SUM gap to plain (1.8–2.5× under narrow), and the [p99, max] fill;
+- timing coded runs on dictionary images;
+- predicates.cpp keeps its own fixed-seed shuffled `time_arms`; its tables
+  predate the Williams order.
 
 ## Row order in real bodies
 
