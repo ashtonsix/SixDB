@@ -21,6 +21,12 @@ middle regime as a real benefit. Clustered and dispersed selections at equal
 density distinguish skipped data from a small output alone. Point work keeps
 strong native controls; hot scans remain controls and useful native-form cases.
 This changes research emphasis, not the operation-family scope or a public API.
+The [controlled scan comparison](scan/README.md) owns this next measurement:
+actual Polars logical dtypes and compact native controls, explicit input-cache
+conditioning, selected spans and separately charged preparation. Its findings
+establish a large clustered COUNT win and a contiguous cold selective win,
+alongside full-SUM and scattered-cold losses. This is single-core input
+conditioning, not a claim about saturated memory-bus throughput.
 
 Ashton's coarse-selection requirement applies across all or most operation
 families. The working shape is one bit per block, with a whole group skipped
@@ -44,6 +50,7 @@ bring counterexamples, and revise the division as the work reveals strengths.
 | Mutation and representation lifecycle | Ikea LEAD | [Lifecycle investigation](lifecycle/README.md): repeated versus dispersed writes, novelty, selective folding, thaw/reseal and retained-reader economics |
 | Point reconstruction on encoded images | Ikea LEAD | [Point consumer](point/README.md): actual body readers, per-image checkpoints, retained readers and coarse masks; separate from geometry primitive redesign |
 | Separated filter heads and predicate programs | Ikea LEAD, with Claude | [Head-plane consumer](filter/README.md): head8/head16, transform cuts with independent predicate meaning, direct packed comparisons and complete masked consumers |
+| Scan residency and selective consumption | Ikea LEAD, with Claude | [Controlled scans](scan/README.md): same-population Frame/native/Polars comparisons; predicate emission stays with the encoding owner |
 | Schema fidelity and complete execution programs | Engine LEAD, jointly with Ikea/Claude | [Execution witness](execution/README.md): different programs over frozen images, interpreted through a real outside hash consumer and independent logical oracle |
 | Shared instruments and measurement scrutiny | Workbench LEAD | Existing datasets, native peers, capture/workers and [communication helper](../../tools/README.md#shared-peer-inboxes); build common machinery only where the experiments need it |
 
@@ -167,6 +174,13 @@ Both real ClickBench inputs supplied by encoding research pass five queries
 through each actual hash-output program. Thirteen authored lifecycle snapshots
 also agree through both programs on all eight queries. These validate the result
 boundary and shared coordinates; they do not yet compare encoded Frame kernels.
+
+The later [domain-sized cross-column comparison](execution/NATIVE-DOMAINS.md)
+retains strong native logical-lane, global-FOR and shared-code controls. OS's
+complete grouped-query win survives, while its isolated SUM advantage becomes
+near parity. Region and the functional/decorrelated counterexamples preserve
+substantial native advantages. These are local ARM results with explicit
+duplicate-control limits, separate from both Polars and cache-cold qualification.
 
 The [read timing-order audit](ORDER-AUDIT.md) qualifies the point/filter rankings
 with identical-work controls, balanced predecessor order and same-arm warmup.

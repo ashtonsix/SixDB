@@ -1,0 +1,69 @@
+{
+  "job": "20261022T234612Z-69a539dc",
+  "source_digest": "f482aa9fb313fddeb9cdb0214770323aa81ab40810ef720a4913931e07e834e1",
+  "all_source_files_match": 3494,
+  "library_sha256": "88d7435c95cad2024d3561ef1946fa77f4408703535c994bb0973d3caeb61056",
+  "checked_images": 21,
+  "independent_checks": 861,
+  "samples": 18432,
+  "executed_schedule_groups": 144,
+  "executed_position_and_predecessor_balance": true,
+  "all_raw_answers_agree": true,
+  "compile_commands": [
+    {
+      "directory": "/opt/sixdb/source/build/clang/frame-scan-avx512",
+      "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN4=0 -DSIXDB_TUNE_ZEN5=1 -I/opt/sixdb/source/workbench/spikes/ikea-frame/encoding -I/opt/sixdb/source/ikea/include -O3 -g -std=c++23 -fPIC -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=znver5 -mtune=znver5 -o workbench/spikes/ikea-frame/encoding/CMakeFiles/frame_encoding_material.dir/material.cpp.o -c /opt/sixdb/source/workbench/spikes/ikea-frame/encoding/material.cpp",
+      "file": "/opt/sixdb/source/workbench/spikes/ikea-frame/encoding/material.cpp",
+      "output": "workbench/spikes/ikea-frame/encoding/CMakeFiles/frame_encoding_material.dir/material.cpp.o"
+    },
+    {
+      "directory": "/opt/sixdb/source/build/clang/frame-scan-avx512",
+      "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN4=0 -DSIXDB_TUNE_ZEN5=1 -I/opt/sixdb/source/workbench/spikes/ikea-frame/encoding -I/opt/sixdb/source/ikea/include -O3 -g -std=c++23 -fPIC -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=znver5 -mtune=znver5 -o workbench/spikes/ikea-frame/encoding/CMakeFiles/frame_encoding_material.dir/kernels.cpp.o -c /opt/sixdb/source/workbench/spikes/ikea-frame/encoding/kernels.cpp",
+      "file": "/opt/sixdb/source/workbench/spikes/ikea-frame/encoding/kernels.cpp",
+      "output": "workbench/spikes/ikea-frame/encoding/CMakeFiles/frame_encoding_material.dir/kernels.cpp.o"
+    },
+    {
+      "directory": "/opt/sixdb/source/build/clang/frame-scan-avx512",
+      "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN4=0 -DSIXDB_TUNE_ZEN5=1 -I/opt/sixdb/source/workbench/spikes/ikea-frame/encoding -I/opt/sixdb/source/ikea/include -O3 -g -std=c++23 -fPIC -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=znver5 -mtune=znver5 -o workbench/spikes/ikea-frame/encoding/CMakeFiles/frame_encoding_material.dir/packing.cpp.o -c /opt/sixdb/source/workbench/spikes/ikea-frame/encoding/packing.cpp",
+      "file": "/opt/sixdb/source/workbench/spikes/ikea-frame/encoding/packing.cpp",
+      "output": "workbench/spikes/ikea-frame/encoding/CMakeFiles/frame_encoding_material.dir/packing.cpp.o"
+    },
+    {
+      "directory": "/opt/sixdb/source/build/clang/frame-scan-avx512",
+      "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN4=0 -DSIXDB_TUNE_ZEN5=1 -I/opt/sixdb/source/workbench/spikes/ikea-frame/encoding -I/opt/sixdb/source/ikea/include -O3 -g -std=c++23 -fPIE -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=znver5 -mtune=znver5 -o workbench/spikes/ikea-frame/encoding/CMakeFiles/frame_encoding_bodies.dir/bodies.cpp.o -c /opt/sixdb/source/workbench/spikes/ikea-frame/encoding/bodies.cpp",
+      "file": "/opt/sixdb/source/workbench/spikes/ikea-frame/encoding/bodies.cpp",
+      "output": "workbench/spikes/ikea-frame/encoding/CMakeFiles/frame_encoding_bodies.dir/bodies.cpp.o"
+    },
+    {
+      "directory": "/opt/sixdb/source/build/clang/frame-scan-avx512",
+      "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN4=0 -DSIXDB_TUNE_ZEN5=1 -I/opt/sixdb/source/workbench/spikes/ikea-frame/encoding -I/opt/sixdb/source/ikea/include -O3 -g -std=c++23 -fPIE -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=znver5 -mtune=znver5 -o workbench/spikes/ikea-frame/encoding/CMakeFiles/frame_encoding_borrowed_check.dir/borrowed_check.cpp.o -c /opt/sixdb/source/workbench/spikes/ikea-frame/encoding/borrowed_check.cpp",
+      "file": "/opt/sixdb/source/workbench/spikes/ikea-frame/encoding/borrowed_check.cpp",
+      "output": "workbench/spikes/ikea-frame/encoding/CMakeFiles/frame_encoding_borrowed_check.dir/borrowed_check.cpp.o"
+    },
+    {
+      "directory": "/opt/sixdb/source/build/clang/frame-scan-avx512",
+      "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN4=0 -DSIXDB_TUNE_ZEN5=1 -I/opt/sixdb/source/workbench/spikes/ikea-frame/encoding -I/opt/sixdb/source/ikea/include -O3 -g -std=c++23 -fPIE -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=znver5 -mtune=znver5 -o workbench/spikes/ikea-frame/encoding/CMakeFiles/frame_encoding_masked_access_check.dir/masked_access_check.cpp.o -c /opt/sixdb/source/workbench/spikes/ikea-frame/encoding/masked_access_check.cpp",
+      "file": "/opt/sixdb/source/workbench/spikes/ikea-frame/encoding/masked_access_check.cpp",
+      "output": "workbench/spikes/ikea-frame/encoding/CMakeFiles/frame_encoding_masked_access_check.dir/masked_access_check.cpp.o"
+    },
+    {
+      "directory": "/opt/sixdb/source/build/clang/frame-scan-avx512",
+      "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN4=0 -DSIXDB_TUNE_ZEN5=1 -I/opt/sixdb/source/workbench/spikes/ikea-frame/encoding -I/opt/sixdb/source/ikea/include -O3 -g -std=c++23 -fPIE -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=znver5 -mtune=znver5 -o workbench/spikes/ikea-frame/encoding/CMakeFiles/frame_encoding_null_check.dir/null_check.cpp.o -c /opt/sixdb/source/workbench/spikes/ikea-frame/encoding/null_check.cpp",
+      "file": "/opt/sixdb/source/workbench/spikes/ikea-frame/encoding/null_check.cpp",
+      "output": "workbench/spikes/ikea-frame/encoding/CMakeFiles/frame_encoding_null_check.dir/null_check.cpp.o"
+    },
+    {
+      "directory": "/opt/sixdb/source/build/clang/frame-scan-avx512",
+      "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN4=0 -DSIXDB_TUNE_ZEN5=1 -I/opt/sixdb/source/workbench/spikes/ikea-frame/encoding -I/opt/sixdb/source/ikea/include -O3 -g -std=c++23 -fPIE -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=znver5 -mtune=znver5 -o workbench/spikes/ikea-frame/encoding/CMakeFiles/frame_encoding_nulls.dir/nulls.cpp.o -c /opt/sixdb/source/workbench/spikes/ikea-frame/encoding/nulls.cpp",
+      "file": "/opt/sixdb/source/workbench/spikes/ikea-frame/encoding/nulls.cpp",
+      "output": "workbench/spikes/ikea-frame/encoding/CMakeFiles/frame_encoding_nulls.dir/nulls.cpp.o"
+    },
+    {
+      "directory": "/opt/sixdb/source/build/clang/frame-scan-avx512",
+      "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN4=0 -DSIXDB_TUNE_ZEN5=1 -Dframe_scan_bridge_EXPORTS -I/opt/sixdb/source/workbench/spikes/ikea-frame/encoding -I/opt/sixdb/source/ikea/include -O3 -g -std=c++23 -fPIC -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=znver5 -mtune=znver5 -o workbench/spikes/ikea-frame/scan/CMakeFiles/frame_scan_bridge.dir/bridge.cpp.o -c /opt/sixdb/source/workbench/spikes/ikea-frame/scan/bridge.cpp",
+      "file": "/opt/sixdb/source/workbench/spikes/ikea-frame/scan/bridge.cpp",
+      "output": "workbench/spikes/ikea-frame/scan/CMakeFiles/frame_scan_bridge.dir/bridge.cpp.o"
+    }
+  ],
+  "scope": "Single-core complete Python calls; no DRAM traffic or cache residency inference."
+}

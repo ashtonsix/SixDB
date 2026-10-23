@@ -1,0 +1,71 @@
+Exact duplicate ratios: cells 432 min 0.9439214835346367 median 1.0 max 1.086026184349932
+
+ count-ge all original rows 2999808 (complete call microseconds)
+EventTime flushed-image Frame 295.03 catalogue 270.23 nativeFOR 280.05 Polars-best 569.13 PolarsFOR 292.57 span-request -
+EventTime warm-repeat Frame 261.68 catalogue 226.45 nativeFOR 219.79 Polars-best 460.98 PolarsFOR 196.35 span-request -
+OS flushed-image Frame 360.48 catalogue 360.44 nativeFOR 107.83 Polars-best 157.63 PolarsFOR 88.98 span-request -
+OS warm-repeat Frame 347.58 catalogue 349.68 nativeFOR 106.49 Polars-best 69.05 PolarsFOR 37.29 span-request -
+ResolutionWidth flushed-image Frame 384.61 catalogue 386.08 nativeFOR 150.86 Polars-best 151.72 PolarsFOR 165.12 span-request -
+ResolutionWidth warm-repeat Frame 373.86 catalogue 375.82 nativeFOR 107.23 Polars-best 62.29 PolarsFOR 63.77 span-request -
+URLHash flushed-image Frame 828.98 catalogue 1724.17 nativeFOR 543.32 Polars-best 571.63 PolarsFOR 568.87 span-request -
+URLHash warm-repeat Frame 738.43 catalogue 1494.04 nativeFOR 450.45 Polars-best 469.36 PolarsFOR 501.38 span-request -
+UserID flushed-image Frame 52.36 catalogue 53.3 nativeFOR 541.69 Polars-best 562.83 PolarsFOR 566.35 span-request -
+UserID warm-repeat Frame 41.81 catalogue 43.06 nativeFOR 459.89 Polars-best 446.56 PolarsFOR 422.85 span-request -
+WatchID flushed-image Frame 618.17 catalogue 661.95 nativeFOR 560.76 Polars-best 578.61 PolarsFOR 608.29 span-request -
+WatchID warm-repeat Frame 543.82 catalogue 606.78 nativeFOR 466.87 Polars-best 478.97 PolarsFOR 482.67 span-request -
+
+ sum all original rows 2999808 (complete call microseconds)
+EventTime flushed-image Frame 454.81 catalogue 518.01 nativeFOR 269.01 Polars-best 533.38 PolarsFOR 901.65 span-request -
+EventTime warm-repeat Frame 445.04 catalogue 503.06 nativeFOR 187.36 Polars-best 380.15 PolarsFOR 833.96 span-request -
+OS flushed-image Frame 482.88 catalogue 486.57 nativeFOR 81.22 Polars-best 158.14 PolarsFOR 102.77 span-request -
+OS warm-repeat Frame 474.75 catalogue 471.99 nativeFOR 59.25 Polars-best 98.65 PolarsFOR 98.37 span-request -
+ResolutionWidth flushed-image Frame 552.45 catalogue 549.3 nativeFOR 149.2 Polars-best 154.43 PolarsFOR 153.97 span-request -
+ResolutionWidth warm-repeat Frame 534.96 catalogue 536.06 nativeFOR 61.27 Polars-best 96.6 PolarsFOR 97.92 span-request -
+URLHash flushed-image Frame 938.94 catalogue 944.32 nativeFOR 582.13 Polars-best 2570.4 PolarsFOR 2556.76 span-request -
+URLHash warm-repeat Frame 840.01 catalogue 917.11 nativeFOR 568.29 Polars-best 2592.75 PolarsFOR 2615.03 span-request -
+UserID flushed-image Frame 788.17 catalogue 787.23 nativeFOR 595.82 Polars-best 2672.34 PolarsFOR 2725.98 span-request -
+UserID warm-repeat Frame 764.45 catalogue 764.44 nativeFOR 583.93 Polars-best 2660.64 PolarsFOR 2656.0 span-request -
+WatchID flushed-image Frame 625.68 catalogue 622.95 nativeFOR 583.21 Polars-best 2633.84 PolarsFOR 2560.76 span-request -
+WatchID warm-repeat Frame 615.55 catalogue 616.25 nativeFOR 563.73 Polars-best 2584.63 PolarsFOR 2627.46 span-request -
+
+ sum one-sixteenth-blocks original rows 2999808 (complete call microseconds)
+EventTime flushed-image Frame 63.66 catalogue 64.21 nativeFOR 18.16 Polars-best 33.72 PolarsFOR - span-request 45.73
+EventTime warm-repeat Frame 62.08 catalogue 62.12 nativeFOR 6.83 Polars-best 11.06 PolarsFOR - span-request 22.68
+OS flushed-image Frame 16.93 catalogue 17.36 nativeFOR 6.92 Polars-best 10.31 PolarsFOR - span-request 22.38
+OS warm-repeat Frame 15.93 catalogue 16.38 nativeFOR 4.67 Polars-best 6.31 PolarsFOR - span-request 17.84
+ResolutionWidth flushed-image Frame 19.68 catalogue 20.2 nativeFOR 10.76 Polars-best 10.33 PolarsFOR - span-request 22.09
+ResolutionWidth warm-repeat Frame 18.37 catalogue 18.78 nativeFOR 4.92 Polars-best 6.37 PolarsFOR - span-request 17.93
+URLHash flushed-image Frame 68.77 catalogue 63.31 nativeFOR 40.16 Polars-best 117.85 PolarsFOR - span-request 267.57
+URLHash warm-repeat Frame 55.66 catalogue 55.67 nativeFOR 16.43 Polars-best 105.61 PolarsFOR - span-request 263.21
+UserID flushed-image Frame 23.3 catalogue 23.62 nativeFOR 40.46 Polars-best 120.76 PolarsFOR - span-request 267.6
+UserID warm-repeat Frame 21.31 catalogue 21.66 nativeFOR 19.9 Polars-best 111.16 PolarsFOR - span-request 264.25
+WatchID flushed-image Frame 39.56 catalogue 39.96 nativeFOR 42.21 Polars-best 117.42 PolarsFOR - span-request 266.96
+WatchID warm-repeat Frame 29.75 catalogue 30.02 nativeFOR 15.51 Polars-best 105.01 PolarsFOR - span-request 266.48
+
+ sum one-sixteenth-blocks block-scattered rows 2999808 (complete call microseconds)
+EventTime flushed-image Frame 179.66 catalogue 179.82 nativeFOR 24.14 Polars-best 81.2 PolarsFOR - span-request 449.19
+EventTime warm-repeat Frame 67.28 catalogue 67.07 nativeFOR 11.1 Polars-best 21.39 PolarsFOR - span-request 378.18
+OS flushed-image Frame 97.64 catalogue 98.78 nativeFOR 10.19 Polars-best 43.97 PolarsFOR - span-request 402.07
+OS warm-repeat Frame 17.89 catalogue 17.93 nativeFOR 5.22 Polars-best 10.25 PolarsFOR - span-request 363.08
+ResolutionWidth flushed-image Frame 105.89 catalogue 107.24 nativeFOR 11.64 Polars-best 43.53 PolarsFOR - span-request 404.99
+ResolutionWidth warm-repeat Frame 20.36 catalogue 20.89 nativeFOR 8.16 Polars-best 10.77 PolarsFOR - span-request 365.81
+URLHash flushed-image Frame 185.35 catalogue 184.55 nativeFOR 49.91 Polars-best 405.66 PolarsFOR - span-request 1017.73
+URLHash warm-repeat Frame 65.14 catalogue 66.21 nativeFOR 28.59 Polars-best 270.05 PolarsFOR - span-request 828.19
+UserID flushed-image Frame 131.55 catalogue 130.02 nativeFOR 51.1 Polars-best 431.37 PolarsFOR - span-request 1055.38
+UserID warm-repeat Frame 25.05 catalogue 24.76 nativeFOR 27.58 Polars-best 254.92 PolarsFOR - span-request 824.11
+WatchID flushed-image Frame 108.3 catalogue 107.22 nativeFOR 53.13 Polars-best 403.97 PolarsFOR - span-request 1027.52
+WatchID warm-repeat Frame 37.51 catalogue 37.02 nativeFOR 37.25 Polars-best 264.59 PolarsFOR - span-request 830.37
+
+Largest input isolated capacities and prepared selection costs:
+OS original Frame 1235496 nativeFOR 2999864 Polars 5999616 PolarsFOR 2999808 span-chunks 1 span-bind-us 24.68
+OS block-scattered Frame 1471150 nativeFOR 2999864 Polars 5999616 PolarsFOR 2999808 span-chunks 732 span-bind-us 546.154
+ResolutionWidth original Frame 1931798 nativeFOR 5999672 Polars 5999616 PolarsFOR 5999616 span-chunks 1 span-bind-us 25.97
+ResolutionWidth block-scattered Frame 2129396 nativeFOR 5999672 Polars 5999616 PolarsFOR 5999616 span-chunks 732 span-bind-us 522.824
+EventTime original Frame 7208118 nativeFOR 11999288 Polars 23998464 PolarsFOR 11999232 span-chunks 1 span-bind-us 31.621
+EventTime block-scattered Frame 8920832 nativeFOR 11999288 Polars 23998464 PolarsFOR 11999232 span-chunks 732 span-bind-us 504.574
+UserID original Frame 7178244 nativeFOR 23998520 Polars 23998464 PolarsFOR 23998464 span-chunks 1 span-bind-us 36.84
+UserID block-scattered Frame 8292412 nativeFOR 23998520 Polars 23998464 PolarsFOR 23998464 span-chunks 732 span-bind-us 517.374
+URLHash original Frame 26075502 nativeFOR 23998520 Polars 23998464 PolarsFOR 23998464 span-chunks 1 span-bind-us 36.02
+URLHash block-scattered Frame 33286634 nativeFOR 23998520 Polars 23998464 PolarsFOR 23998464 span-chunks 732 span-bind-us 521.654
+WatchID original Frame 32768264 nativeFOR 23998520 Polars 23998464 PolarsFOR 23998464 span-chunks 1 span-bind-us 31.03
+WatchID block-scattered Frame 32768264 nativeFOR 23998520 Polars 23998464 PolarsFOR 23998464 span-chunks 732 span-bind-us 503.884

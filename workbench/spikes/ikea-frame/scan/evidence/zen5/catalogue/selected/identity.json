@@ -1,0 +1,92 @@
+{
+  "polars": "1.42.1",
+  "threads": 1,
+  "cpu": 0,
+  "cache_line": 64,
+  "flush_available": true,
+  "source_commit": "b4914ec9cd605f64637618c482e1c733a66347ea",
+  "library_sha256": "fd87813f1b0412025d8145837014d2fcc51f81d1369e16fb2673f48962687035",
+  "polars_runtime": [
+    {
+      "package": "polars-runtime-32",
+      "version": "1.42.1",
+      "file": "_polars_runtime_32/_polars_runtime.abi3.so",
+      "sha256": "42613cec7fbf84b048749bd79e490816d177550bf140ebdc947280c94a943df7",
+      "bytes": 213720256
+    }
+  ],
+  "numpy": "2.3.4",
+  "conditions": [
+    "warm-repeat",
+    "flushed-image"
+  ],
+  "metadata": {
+    "OS": {
+      "dtype": "Int16",
+      "rows": 2999808,
+      "dropped_tail_rows": 192,
+      "mapping": "offset-binary"
+    },
+    "ResolutionWidth": {
+      "dtype": "Int16",
+      "rows": 2999808,
+      "dropped_tail_rows": 192,
+      "mapping": "offset-binary"
+    },
+    "EventTime": {
+      "dtype": "Int64",
+      "rows": 2999808,
+      "dropped_tail_rows": 192,
+      "mapping": "offset-binary"
+    },
+    "UserID": {
+      "dtype": "Int64",
+      "rows": 2999808,
+      "dropped_tail_rows": 192,
+      "mapping": "offset-binary"
+    },
+    "URLHash": {
+      "dtype": "Int64",
+      "rows": 2999808,
+      "dropped_tail_rows": 192,
+      "mapping": "offset-binary"
+    },
+    "WatchID": {
+      "dtype": "Int64",
+      "rows": 2999808,
+      "dropped_tail_rows": 192,
+      "mapping": "offset-binary"
+    }
+  },
+  "rows_requested": "65536,524288,2999808",
+  "inputs": {
+    "OS": {
+      "sha256": "62e798b644d78ddb19e557a9f4de91947553da4b3c5462fa9ecb2153b74404b7",
+      "bytes": 23998464
+    },
+    "ResolutionWidth": {
+      "sha256": "c8313ba16bc85ee2cadc5e256f653d8289ad38a39a9aae143164009af5aaa551",
+      "bytes": 23998464
+    },
+    "EventTime": {
+      "sha256": "8294fa21be93d959e1d8d612ac701f083187db033db98a647657f9309f39ce89",
+      "bytes": 23998464
+    },
+    "UserID": {
+      "sha256": "e2cdf04c3cc37533e904b019876eb29d2f5cb303748a2f668357dc587430bf1f",
+      "bytes": 23998464
+    },
+    "URLHash": {
+      "sha256": "5b57151bca1792f0bf0c65d21ab2a9d760faf1e77b039c65e668d922bc1dfc43",
+      "bytes": 23998464
+    },
+    "WatchID": {
+      "sha256": "a39108f2e950d8ac101506c0fc645668668130df839aafe25f55aff5046e1e15",
+      "bytes": 23998464
+    }
+  },
+  "scope": "Prepared complete Python calls including scalar extraction. No measured DRAM-traffic claim.",
+  "python": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]",
+  "platform": "Linux-7.0.0-1012-aws-x86_64-with-glibc2.39",
+  "cold_scope": "Frame payload/descriptors/parts/coded arrays or actual Polars numeric buffers. Prepared selections remain warm."
+}
