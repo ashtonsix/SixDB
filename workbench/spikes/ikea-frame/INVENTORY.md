@@ -186,6 +186,20 @@ measured comparison here. Keep the choice of recipe, its resolved parameters
 and its emission distinguishable; do not turn a speculative stage list into
 mandatory intermediate arrays or pretend its fusion benefits are established.
 
+The earlier [residual-bounds investigation](../../notebook/pfor-bounds.md)
+sharpens this seam. Estimation can supply one cheap proposal, several
+width/exception alternatives or refinement of a prior; its enclosing program
+must define the useful objective. A fixed exception budget and minimum bit
+width do not price physical layout, metadata, reserve or subsequent operations.
+Ragged geometry can even make a narrower width occupy more bytes. A guess may
+pass its exception budget while wasting many bits, so recognition must detect
+poor compression as well as invalid guesses. Base and width priors deserve
+separate treatment across distribution changes. Low exceptions can absorb later
+below-base writes without rebasing, making reserve a lifecycle choice; inlier
+bounds still do not substitute for all-row query summaries. These are retained
+qualitative lessons: the discontinued spike's artifacts were deleted and it did
+not establish a performance win. They do not select an estimator or patch format.
+
 ## Map for the remaining investigation
 
 The following are connected research fronts, not sequential gates or a demand
@@ -195,6 +209,7 @@ a choice; repeating hot SUM rankings alone will not cover the missing ground.
 
 | Front | Discriminating next work | Decision the result can change |
 | --- | --- | --- |
+| Construction and fitting | Compare cheap proposals, separately informed base/width priors and refinement against an exact quality oracle and actual physical/program costs. Charge analysis, bad-guess recognition, fallback, packing and later writes/reads; include real distribution changes. | Does the caller need one fitted choice, a small set of useful alternatives or incremental refinement? Which analysis/emission boundaries earn fusion, and when is a small byte penalty worth much cheaper construction? |
 | Useful execution programs | Finish the bounded fused-aggregate measurement and runs prototype; test existing wider execution grain on unchanged images. Retain compact native controls and closed-form arms. | Which costs are replaceable leaf programs, and which require a different representation? Avoid another kernel library or a wholesale catalogue default. |
 | Selection and data acquisition | Complete predicate(A) → consumed SUM/COUNT(B), contrasting clustered/scattered selections and independent/correlated fields. Compare retained-mask and fused execution; then stage dependent acquisition, enlarge real inputs and test shared-bus load. | Is the useful seam a block mask, fine mask, retained evidence or fused query? When do compressed bytes become a real cold/bandwidth advantage? |
 | Multi-field choices | Put independent columns beside shared codes, conditioned bases, routing and actual TuplePack field groups. Include isolated-field demand, duplicate projections, category-only changes and unseen category/dictionary values; retain old routing bases and reader ages. | Which dependencies should Engine know and choose? When does coupled encoding save work versus merely shrink a joint query while taxing everything else? |

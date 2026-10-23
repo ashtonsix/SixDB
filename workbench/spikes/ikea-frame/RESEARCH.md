@@ -44,9 +44,10 @@ resources before changing or timing them.
 | Instruments and measurement scrutiny | Workbench LEAD | Existing datasets, native peers, capture/workers and [peer inboxes](../../tools/README.md#shared-peer-inboxes). Reuse these instead of building an experiment framework in advance. |
 
 The [remaining research fronts](INVENTORY.md#map-for-the-remaining-investigation)
-connect program costs, selective acquisition, multi-field alternatives, change,
-broader operation families/types and planning information. They are not a demand
-for every dimension in one benchmark. Encoding/ingest and floats need dedicated
+connect construction/fitting, program costs, selective acquisition, multi-field
+alternatives, change, broader operation families/types and planning information.
+They are not a demand for every dimension in one benchmark. Encoding/ingest
+and floats need dedicated
 work; further SUM tuning cannot stand in for them.
 
 ## Requirements carried across the fronts
