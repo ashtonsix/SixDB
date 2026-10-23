@@ -21,6 +21,13 @@ peer entry points and their natural block sizes.
 [Native system controls](systems/README.md) begin with DuckDB's actual C API
 over owned typed tables. External-source and compressed-storage cells retain
 separate ownership and residence limits.
+[Native set and sort controls](selection-controls/README.md) supply pinned
+CRoaring32 and Highway vqsort primitives. Their local qualification distinguishes
+the selected vector route from the upstream AArch64 ASan compatibility fallback;
+it does not establish Frame mask storage, sort policy or speed.
+Enable `SIXDB_FRAME_SELECTION_CONTROLS` with the phase-1/phase-2 root spike
+configuration to expose `frame_roaring_check` and `frame_vqsort_check`. The
+default is off; the standalone reproduction remains with the controls.
 
 The [phase-1 scans](../../frame-phase-1/scan/FINDINGS.md) supply exact native FOR
 and actual Polars controls, balanced treatment order and actual-buffer conditioning.
@@ -32,7 +39,7 @@ has a separate corrected study; none of that old training is used here.
 [Residency tools](../../../tools/residency.md) record the counter sensitivity
 limits: advertised/opened events need not respond to real misses.
 
-The missing measurement is concurrent sequential and random read throughput,
+The read calibration covers concurrent sequential and random throughput,
 from one physical core through a cache domain and the available guest CPUs.
 `frame_bandwidth_probe` measures useful read work, with private mappings first
 touched by their pinned worker. Random reads use independent pointer cycles,

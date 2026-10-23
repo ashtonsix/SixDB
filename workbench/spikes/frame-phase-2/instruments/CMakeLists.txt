@@ -18,3 +18,8 @@ option(SIXDB_FRAME_SYSTEM_CONTROLS "Build native Frame query-engine controls" OF
 if(SIXDB_FRAME_SYSTEM_CONTROLS)
   add_subdirectory(systems)
 endif()
+
+option(SIXDB_FRAME_SELECTION_CONTROLS "Build pinned native Frame set and sort controls" OFF)
+if(SIXDB_FRAME_SELECTION_CONTROLS)
+  add_subdirectory(selection-controls)
+endif()

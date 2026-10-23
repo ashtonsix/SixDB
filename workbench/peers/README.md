@@ -42,3 +42,11 @@ release. Its [native typed-table check](../spikes/frame-phase-2/instruments/syst
 keeps ingestion and retained table ownership separate from complete prepared
 queries. The engine is prebuilt: the caller's compiler and march/tune flags do
 not identify the engine build or its selected kernel ISA.
+
+[Frame selection primitives](frame-selection.cmake) provide pinned CRoaring32
+and Highway vqsort targets. Their [native controls](../spikes/frame-phase-2/instruments/selection-controls/README.md)
+check sets, portable images, integer order and key/payload association against
+independent expectations, and identify the actual selected dispatch target.
+The AArch64 ASan compatibility route differs from the optimized vector sort;
+keep that distinction with any qualification claim. These optional targets
+choose no Frame representation or ordering policy.
