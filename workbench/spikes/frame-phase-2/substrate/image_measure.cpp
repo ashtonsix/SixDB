@@ -232,6 +232,13 @@ int main(int argc, char **argv) {
                  return s;
              },
              evict_image(addr)},
+            {"points", "frame_by_kind", [&] {
+                 u128 s = 0;
+                 for (u32 r : rows)
+                     s += fi::point(grouped, r);
+                 return s;
+             },
+             evict_image(grouped)},
             {"points", "native", [&] {
                  u128 s = 0;
                  for (u32 r : rows)
@@ -247,12 +254,13 @@ int main(int argc, char **argv) {
 
         // SUM(B) WHERE A >= t, fused per block on the address image.
         std::vector<u64> av;
-        fi::image aimg;
+        fi::image aimg, agrouped;
         std::vector<u64> masks;
         u64 t = 0;
         if (!an.empty()) {
             av = load(dir + "/" + an + ".u64", n);
             aimg = fi::build(av, fi::placement::address);
+            agrouped = fi::build(av, fi::placement::by_kind);
             std::vector<u64> sorted = av;
             std::nth_element(sorted.begin(), sorted.begin() + static_cast<long>(0.9 * n), sorted.end());
             t = sorted[static_cast<std::size_t>(0.9 * n)];  // about 10% of rows
@@ -272,6 +280,16 @@ int main(int argc, char **argv) {
                                 return s;
                             },
                             [&] { evict_image(aimg)(), evict_image(addr)(); }});
+            arms.push_back({"pair_sum", "frame_fused_by_kind", [&] {
+                                u128 s = 0;
+                                for (std::size_t b = 0; b < blocks; ++b) {
+                                    if (!fi::mask_ge(agrouped, t, b, b + 1, masks.data()))
+                                        continue;
+                                    s += fi::block_masked_sum(grouped, b, masks.data() + 4 * b);
+                                }
+                                return s;
+                            },
+                            [&] { evict_image(agrouped)(), evict_image(grouped)(); }});
             arms.push_back({"pair_sum", "native_fused", [&, anat] {
                                 const u64 rhs = t <= anat.min ? 0 : t - anat.min;
                                 return anat.with([&](const auto *x) {
@@ -287,6 +305,7 @@ int main(int argc, char **argv) {
                                 });
                             },
                             [&, anat] { flush(anat.bytes.data(), anat.bytes.size()), evict_native(); }});
+            expect.push_back(pair_oracle);
             expect.push_back(pair_oracle);
             expect.push_back(pair_oracle);
         }
