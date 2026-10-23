@@ -38,6 +38,10 @@ template <class Byte> class basic_view {
     static auto attach(const layout &&, storage<Byte>) = delete;
     const layout &format() const noexcept { return *layout_; }
     const storage<Byte> &windows() const noexcept { return storage_; }
+    using plane_type = plane;
+    std::span<const byte> plane_storage(plane p) const noexcept {
+        return storage_.planes()[unsigned(p)];
+    }
     auto as_const() const noexcept {
         return basic_view<const byte>::attach_unchecked(
             *layout_, {storage_.payload, storage_.directory, storage_.lengths, storage_.control});

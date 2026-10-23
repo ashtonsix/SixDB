@@ -241,7 +241,7 @@ template<class Access, bool Hints>
     frames.reserve(requests.size());
     for (const auto request : requests) {
         require(request.source < sources.size(), "source admission");
-        frames.emplace_back(prototype.rebind(sources[request.source]), request, *demand);
+        frames.emplace_back(prototype.rebind_unchecked(sources[request.source]), request, *demand);
     }
     typename N::Ring ring;
     if (options.route == Route::ring) require(bool(ring.configure(worker, {options.width, options.overflow})), "Ring configuration");

@@ -103,9 +103,10 @@ auto at_least_20 = predicate->filter<comparison::greater_equal>(0, 20, 0b11);
 
 The template argument is the number of original rows, a power of two in 1–64
 (default 1). The code index is a rank in `format`, not a packet slot. The owner
-supplies the layout that encoded this view; the binder checks equal unit extents
-before checking the code index. A mismatch returns `error::description`, and an
-invalid index returns `error::map`, without reading payload.
+supplies the layout that encoded this view; the binder checks it is the same law
+the view was attached with (`layout::identity()`) before checking the code index.
+A different law returns `error::description` even when its unit extent matches,
+and an invalid index returns `error::map`, without reading payload.
 
 `bind_predicate(*read)` and `bind_predicate(*one_code_plan, *placed)` reuse an
 existing one-code projection. Empty, multi-code and hole-only maps reject with

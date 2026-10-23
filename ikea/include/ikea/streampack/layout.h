@@ -34,6 +34,8 @@ class layout {
   public:
     [[nodiscard]] static std::expected<layout, error> make(options);
     const options &schema() const noexcept { return description_; }
+    /// Layouts made or decoded from equal options are the same law.
+    bool operator==(const layout &other) const noexcept { return description_ == other.description_; }
     static constexpr unsigned capacity() noexcept { return slot_capacity; }
     unsigned extent_limit() const noexcept { return description_.byte_limit; }
     bool fixed() const noexcept { return geometry_.fixed; }

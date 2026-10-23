@@ -1,6 +1,9 @@
 #pragma once
 #include <ikea/bitset256.h>
+#include <bit>
+#include <cassert>
 #include <cstddef>
+#include <cstring>
 #include <cstdint>
 #include <limits>
 #include <span>
@@ -25,6 +28,33 @@ class selection {
     }
 
   public:
+    /// Sixteen-row region words with the selection's kind resolved once. Native
+    /// writers read one word per complete region without re-dispatching.
+    class regions {
+        const selection* selection_;
+        const std::byte* words_;
+        std::size_t base_;
+        friend class selection;
+        regions(const selection& s, const std::byte* words, std::size_t base) noexcept
+            : selection_(&s), words_(words), base_(base) {}
+
+      public:
+        /// Trusted covered origin divisible by sixteen.
+        std::uint16_t operator()(std::size_t origin) const noexcept {
+            if (words_) {
+                std::uint16_t value;
+                std::memcpy(&value, words_ + (origin / 16 - base_) * 2, 2);
+                return value;
+            }
+            return std::uint16_t(selection_->mask(origin, 16));
+        }
+    };
+    /// Borrows this selection and its backing for the region reader's use.
+    regions region_words() const noexcept {
+        if (kind_ == kind::bits)
+            return {*this, static_cast<const std::byte*>(data_), first_ / 16};
+        return {*this, nullptr, 0};
+    }
     selection() = default;
     static selection all() noexcept { return {kind::all, 0, nullptr, 0}; }
     static selection none() noexcept { return {kind::none, 0, nullptr, 0}; }

@@ -95,6 +95,7 @@ void decode_pair(const reader &, const reader &, std::span<byte, 64> output) noe
 /// byte offsets relative to storage. Keep it alive until effects are resolved.
 struct view {
     std::span<byte> storage;
+    std::span<const byte> plane_storage(unsigned) const noexcept { return storage; }
 };
 
 /// Transient encoded bytes for one complete block, not a persisted header or a

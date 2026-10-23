@@ -19,6 +19,19 @@ std::expected<layout, error> layout::make(unsigned bytes, std::span<const code> 
     result.bytes_ = bytes;
     result.count_ = codes.size();
     std::copy(codes.begin(), codes.end(), result.codes_.begin());
+    // FNV-1a over the canonical law, then a splitmix64 finalizer.
+    std::uint64_t h = 0xcbf29ce484222325;
+    auto mix = [&](unsigned value) { h = (h ^ value) * 0x100000001b3; };
+    mix(bytes);
+    mix(unsigned(codes.size()));
+    for (auto c : codes) {
+        mix(c.offset);
+        mix(c.shift);
+        mix(c.width);
+    }
+    h = (h ^ (h >> 30)) * 0xbf58476d1ce4e5b9;
+    h = (h ^ (h >> 27)) * 0x94d049bb133111eb;
+    result.identity_ = h ^ (h >> 31);
     return result;
 }
 std::expected<std::size_t, error> layout::encode(ikea::mutable_bytes out) const {

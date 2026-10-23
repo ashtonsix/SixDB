@@ -164,8 +164,8 @@ void run(population& p, unsigned rep) {
     auto flat = [&] { measurements(p, "location8", rep, [&](unsigned r) { return p.flat_value(r); }); };
     auto ordinary = [&] { measurements(p, "ordinary", rep, [&](unsigned r) { const auto value = sp::value(p.views[r / 256], r % 256); if (!value) std::abort(); return *value; }); };
     auto typed = [&] { sp::author::visit(p.views[0], [&](auto prototype) {
-        measurements(p, "typed", rep, [&](unsigned r) { return prototype.rebind(p.views[r / 256]).value(r % 256); });
-        measurements(p, "typed-checked", rep, [&](unsigned r) { const auto value = prototype.rebind(p.views[r / 256]).get(r % 256); if (!value) std::abort(); return *value; });
+        measurements(p, "typed", rep, [&](unsigned r) { return prototype.rebind_unchecked(p.views[r / 256]).value(r % 256); });
+        measurements(p, "typed-checked", rep, [&](unsigned r) { const auto value = prototype.rebind_unchecked(p.views[r / 256]).get(r % 256); if (!value) std::abort(); return *value; });
     }); };
     // Matched spike kernels over the SAME bytes and owner windows. This control
     // removes only the public binding/schema route; it is not an external format.
@@ -198,7 +198,7 @@ void run(population& p, unsigned rep) {
         return sp::author::visit(p.views[0], [&](auto prototype) {
             std::uint64_t sum = 0;
             for (unsigned round = 0; round < rounds; ++round)
-                for (const auto& v : p.views) prototype.rebind(v).range(0, 256, [&](unsigned, sp::bytes b) { sum += tail(b); });
+                for (const auto& v : p.views) prototype.rebind_unchecked(v).range(0, 256, [&](unsigned, sp::bytes b) { sum += tail(b); });
             return sum;
         });
     });

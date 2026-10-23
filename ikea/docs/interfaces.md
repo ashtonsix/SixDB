@@ -135,10 +135,19 @@ width on another consumer.
 ## Use one effects protocol
 
 `ikea::journal` records `{source, plane, offset, size}` in preallocated storage.
-A source is the actual named view or owner, including a substituted leaf. Resolve
+A source is the actual named view or owner, including a substituted leaf. Every
+Ikea effect source (views, the Intervals editor, Hashtable tables, StreamPack
+blocks, Bec256 destinations and `seriespack::dense_output`) exposes
+`plane_storage(plane)`. A record resolves uniformly as that span's
+`data() + offset`. Resolve
 that identity to owner/partition/generation coordinates before the named object
-dies **or its placement changes**. A pointer to a copied metadata wrapper is not
-the original source identity.
+dies **or its placement changes**: a record does not carry its plane origin. An
+owner that may retarget a view before resolving should keep the
+`plane_storage(plane).data()` it issued against and compare it at resolution.
+Measured on single-row TuplePack writes, carrying that origin in every record
+cost 8–33% on NEON and 5–17% on SeriesPack substituted writes on x86, so the
+check belongs to the owner rather than the hot hook. A pointer to a copied
+metadata wrapper is not the original source identity.
 The journal can extend its last record when stores touch. `used` counts current
 coverage records, so it is not an append-only event cursor. Use a fresh journal
 for per-command resolution, or resolve the complete current coverage.

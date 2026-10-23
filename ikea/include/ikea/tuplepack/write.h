@@ -57,7 +57,7 @@ class writer
     using input_type = packet<N>;
     [[nodiscard]] static std::expected<writer, error> bind(const write_plan<N, Rows>& plan,
                                                                        const view& destination) {
-        if (plan.unit_bytes() != destination.unit_bytes())
+        if (plan.layout_identity() != destination.layout_identity())
             return std::unexpected(error::description);
         return writer(plan, destination);
     }

@@ -29,7 +29,8 @@ template <unsigned Bytes, class Byte> class transfer {
                                                                   const layout& destination_format,
                                                                   const view& destination) {
         if (source_format != destination_format || source_format.bytes() != Bytes ||
-            source.unit_bytes() != Bytes || destination.unit_bytes() != Bytes)
+            source.layout_identity() != source_format.identity() ||
+            destination.layout_identity() != destination_format.identity())
             return std::unexpected(error::description);
         return transfer(source, destination);
     }

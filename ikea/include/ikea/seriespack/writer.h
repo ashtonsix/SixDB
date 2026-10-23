@@ -27,9 +27,10 @@ template <class Expression> class writer {
             return std::unexpected(error::range);
         author::detail::count_writes needed;
         std::size_t offset = 0;
+        const auto regions = selected.region_words();
         while (offset < count) {
             const auto row = first + offset, origin = row - row % 16;
-            const auto active = std::uint16_t(selected.mask(origin, 16));
+            const auto active = regions(origin);
             const auto n = std::min<std::size_t>(16 - row % 16, count - offset);
             for (std::size_t j = 0; j < n; ++j)
                 if ((active & (1u << (row % 16 + j))) && !valid_value(offset + j))
@@ -181,7 +182,7 @@ template <class Expression> class writer {
         if (selected.is_all())
             run([](std::size_t) { return std::uint16_t{0xffff}; });
         else
-            run([&](std::size_t origin) { return std::uint16_t(selected.mask(origin, 16)); });
+            run([regions = selected.region_words()](std::size_t origin) { return regions(origin); });
     }
     template <class U, class Summary>
     /// Checked original-row range, preserving unselected values. Returned
@@ -279,4 +280,28 @@ template <class E>
                                     mutation_diagnostic* diagnostic = nullptr) {
     return writer<E>::bind(std::move(expression), count, diagnostic);
 }
+
+/// Runtime-width dense headless destination, the writable peer of dense_input.
+/// It is also the effect source for construction through it: records name this
+/// object and its single plane, so keep it named until they are resolved.
+struct dense_output {
+    unsigned width;
+    geometry storage;
+    ikea::mutable_bytes bytes;
+    std::size_t count;
+    std::span<const ikea::byte> plane_storage(unsigned) const noexcept { return bytes; }
+};
+/// Additional records construction through target needs, or the placement error
+/// that would refuse it. Reads only the description; no bytes are touched.
+[[nodiscard]] std::expected<std::size_t, error> effect_capacity_initialize(const dense_output& target);
+/// Compiled complete construction for a runtime width: the same checks, wire
+/// and effects as attaching a view, binding a writer and calling initialize.
+/// Exactly target.count inputs; failure leaves bytes and effects unchanged.
+template <class U>
+[[nodiscard]] std::expected<void, error> initialize(const dense_output& target,
+                                                    std::span<const U> input, journal& effects);
+extern template std::expected<void, error> initialize(const dense_output&, std::span<const std::uint8_t>, journal&);
+extern template std::expected<void, error> initialize(const dense_output&, std::span<const std::uint16_t>, journal&);
+extern template std::expected<void, error> initialize(const dense_output&, std::span<const std::uint32_t>, journal&);
+extern template std::expected<void, error> initialize(const dense_output&, std::span<const std::uint64_t>, journal&);
 } // namespace ikea::seriespack

@@ -22,6 +22,7 @@ struct size_editor {
     P origin, extent_limit;
     unsigned maximum;
 
+    using plane_type = plane;
     /// Resolve issued plane bytes while this named editor and its backing live.
     std::span<const std::byte> plane_storage(plane p) const noexcept {
         switch (p) {

@@ -7,6 +7,8 @@
 namespace ikea {
 /// Issued physical stores, including preserved neighbors. The named source
 /// and preallocated record storage outlive execution and owner resolution.
+/// Every Ikea effect source exposes plane_storage(plane): resolve a record as
+/// that span's data() + offset before the source is retargeted or destroyed.
 /// These records neither capture beforeimages nor publish a transaction.
 struct journal {
     struct entry {

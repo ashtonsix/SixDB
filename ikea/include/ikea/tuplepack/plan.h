@@ -28,6 +28,7 @@ template <unsigned N, unsigned Rows = 1> class read_plan {
     detail::read_control<N, Rows> controls_;
     [[no_unique_address]] std::conditional_t<N == 8, detail::gpr_reader<Rows>,
                                              detail::no_kernel_entry> entry_{};
+    std::uint64_t layout_ = 0;
     explicit read_plan(detail::read_control<N, Rows> controls) : controls_(std::move(controls)) {
         if constexpr (N == 8)
             entry_ = detail::select_gpr_reader<Rows>(controls_);
@@ -52,7 +53,13 @@ template <unsigned N, unsigned Rows = 1> class read_plan {
         }();
         if (!prepared)
             return std::unexpected(prepared.error());
-        return read_plan(std::move(*prepared));
+        read_plan plan(std::move(*prepared));
+        plan.layout_ = format.identity();
+        return plan;
+    }
+    /// identity() of the layout this plan was prepared from.
+    std::uint64_t layout_identity() const noexcept {
+        return layout_;
     }
     /// Possible read bytes relative to one physical unit. SIMD may read preserved
     /// neighbors within the unit; allocation padding is never required.
@@ -104,6 +111,7 @@ template <unsigned N, unsigned Rows = 1> class write_plan {
     detail::write_control<N, Rows> controls_;
     [[no_unique_address]] std::conditional_t<N == 8, detail::gpr_writer<Rows>,
                                              detail::no_kernel_entry> entry_{};
+    std::uint64_t layout_ = 0;
     explicit write_plan(detail::write_control<N, Rows> controls) : controls_(std::move(controls)) {
         if constexpr (N == 8)
             entry_ = detail::select_gpr_writer<Rows>(controls_);
@@ -128,7 +136,12 @@ template <unsigned N, unsigned Rows = 1> class write_plan {
         }();
         if (!prepared)
             return std::unexpected(prepared.error());
-        return write_plan(std::move(*prepared));
+        write_plan plan(std::move(*prepared));
+        plan.layout_ = format.identity();
+        return plan;
+    }
+    std::uint64_t layout_identity() const noexcept {
+        return layout_;
     }
     /// Borrowed ordering metadata; its address is stable while this plan is.
     const packet_layout<N>& ordering() const noexcept {

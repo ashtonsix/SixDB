@@ -53,8 +53,18 @@ class access : public ikea::streampack::detail::compact::author::access<Family, 
         return {p.offset, std::uint16_t(used), p.size};
     }
 
-    access rebind(const basic_view<Byte> &source) const { return {source, format()}; }
-    access rebind(const basic_view<Byte> &&) const = delete;
+    /// Retarget this typed access to another block attached with an equal
+    /// layout, reusing the prepared schema facts. A different law rejects with
+    /// description; an identical layout object costs one pointer comparison.
+    [[nodiscard]] std::expected<access, error> rebind(const basic_view<Byte> &source) const {
+        if (&source.format() != &format() && !(source.format() == format()))
+            return std::unexpected(error::description);
+        return access{source, format()};
+    }
+    /// The owner proves source.format() equals format(); no layout is compared.
+    access rebind_unchecked(const basic_view<Byte> &source) const { return {source, format()}; }
+    auto rebind(const basic_view<Byte> &&) const = delete;
+    auto rebind_unchecked(const basic_view<Byte> &&) const = delete;
     /// Value read windows retain Direct's start+U fast path. Geometry owns
     /// its read projection; the companion contributes only its own field.
     template <class Visit> void visit_value_metadata(unsigned rank, Visit &&visit) const {

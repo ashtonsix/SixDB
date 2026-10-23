@@ -81,6 +81,20 @@ expected erased reader. A general typed reader's `erase<U>()` borrows that named
 reader, and `writer.erase<U,Summary>()` borrows that named writer. Their rvalue
 erasure is deleted. The dense typed reader also copies its proof when erased.
 
+When the width is only known at run time, construction has the same shape as
+reading. `initialize(dense_output{width, geometry, bytes, count}, values, effects)`
+selects a compiled body, applies the typed writer's checks and wire, and names
+the `dense_output` as the effect source; `effect_capacity_initialize(target)`
+sizes the journal. A consumer that packs many runtime widths needs no width
+dispatch of its own:
+
+```cpp
+const sp::dense_output target{width, sp::geometry::local, bytes, values.size()};
+std::vector<ikea::journal::entry> records(*sp::effect_capacity_initialize(target));
+ikea::journal effects{records};
+assert(sp::initialize(target, std::span<const std::uint64_t>(values), effects));
+```
+
 Keep named views, byte owners and any borrowed reader/writer at stable addresses
 until the last invocation and effect-identity resolution. Copying a view copies
 a borrow. Replacing placement or moving a borrowed operation requires rebinding.

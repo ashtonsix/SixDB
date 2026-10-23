@@ -33,6 +33,10 @@ template <class F, class Byte = const ikea::byte> class basic_view {
     const plane<Byte>& stream(unsigned s) const {
         return planes_[s];
     }
+    /// Effect plane p: 0 payload, 1 and 2 head bytes. Includes stride gaps.
+    std::span<const ikea::byte> plane_storage(unsigned p) const noexcept {
+        return planes_[p].bytes;
+    }
     auto as_const() const {
         return basic_view<F, const ikea::byte>::attach_unchecked(count_, {{{planes_[0].bytes, planes_[0].stride},
                                                {planes_[1].bytes, planes_[1].stride},

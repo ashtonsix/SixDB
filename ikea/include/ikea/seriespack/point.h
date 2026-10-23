@@ -19,6 +19,34 @@ template <class F, class B>
     }
     return x;
 }
+/// Exact bytes get_unchecked(v, i) reads, as (address, size) spans in plane
+/// order: payload body, residual fragments, then head bytes. Nothing is read.
+/// A caller can prefetch them, or hand them to a scheduler, before the point
+/// read itself; emitting a span is neither a lease nor proof of readiness.
+template <class F, class B, class Emit>
+[[gnu::always_inline]] inline void visit_point_reads(const basic_view<F, B>& v, std::size_t i,
+                                                     Emit&& emit) {
+    const auto tile = i / F::tile_rows, lane = i % F::tile_rows;
+    if constexpr (F::payload) {
+        const auto* base = v.stream(0).bytes.data() + tile * v.stream(0).stride;
+        if constexpr (F::body)
+            emit(static_cast<const ikea::byte*>(base + detail::body_offset<F>(lane)),
+                 std::size_t{F::body});
+        if constexpr (F::tail) {
+            if constexpr (F::storage == geometry::local)
+                emit(static_cast<const ikea::byte*>(base + 8 * F::body), std::size_t{F::tail});
+            else
+                detail::tail_fragments<F::tail>(unsigned(lane / 32), [&](unsigned stripe, unsigned, unsigned) {
+                    emit(static_cast<const ikea::byte*>(base + detail::stripe_offset<F>(stripe) + lane % 32),
+                         std::size_t{1});
+                });
+        }
+    }
+    detail::each<F::heads / 8>([&](auto p) {
+        const auto& head = v.stream(p + 1);
+        emit(static_cast<const ikea::byte*>(head.bytes.data() + tile * head.stride + lane), std::size_t{1});
+    });
+}
 /// Checked scalar point read. An out-of-range row reads no source bytes.
 /// Placement, readable extent, owner lifetime and synchronization remain borrowed
 /// obligations of the admitted view; no allocation or suspension occurs.

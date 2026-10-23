@@ -89,7 +89,9 @@ must cover the requested range and remain stable. Selection does not renumber ro
 The complete-record `write_plan<128>` / `writer<128>` family uses one `packet<128>` per original row, independently of
 packet shape. This is a 128-byte rank-ordered input; only defined codes are
 consumed. Construction validates them all before writing, zeroes spare bits
-and preserves bytes outside each unit. It needs no prior initialized contents.
+and preserves bytes outside each unit. It needs no prior initialized contents:
+each unit is assembled in registers from both halves of the packet and stored
+once, without clearing it first or reading it back.
 
 ## Complete-unit transfer
 
@@ -97,9 +99,10 @@ and preserves bytes outside each unit. It needs no prior initialized contents.
 returns a borrowed `transfer<Bytes, Byte>`. `Bytes` is 1–64; both descriptions
 must compare equal, including code rank order, offsets, shifts, widths and unit
 extent. Source and destination may have different row counts; each command
-admits its selected source rows and destination window. Views do not retain layout identity:
-the caller supplies authoritative descriptions for the bytes. The operation
-retains the named views; it does not retain the supplied layout objects.
+admits its selected source rows and destination window. Each view must have been
+attached with its supplied layout (equal `identity()`); a law that merely shares
+the unit extent rejects with `error::description`. The operation retains the
+named views; it does not retain the supplied layout objects.
 
 `copy(first, source_rows, effects)` copies selected physical source rows into
 consecutive original destination rows. Source rows may repeat or be reordered.
@@ -151,10 +154,11 @@ and separately accounts for summaries and visibility.
 
 `predicate<Byte, Rows=1>` prepares an ordinary single-code comparison.
 `bind_predicate<Rows=1>(layout, std::size_t code_index, view)` selects a code from
-an existing validated layout without preparing packet controls. The layout is
-authoritative for these bytes: the view retains extent, not layout identity.
-The binder checks equal unit extents first (`error::description`), then the code
-index (`error::map`), without payload reads. It borrows the layout only through
+an existing validated layout without preparing packet controls. The layout must
+equal the one the view was attached with: views and plans retain
+`layout::identity()`, a digest of the unit extent and every code. The binder
+checks that identity first (`error::description`), then the code index
+(`error::map`), without payload reads. It borrows the layout only through
 binding and accepts a temporary layout. Temporary views are rejected.
 
 `bind_predicate(reader)` and `bind_predicate(plan, view)` reuse existing plans.
@@ -192,7 +196,9 @@ Trusted `_unchecked` entries require those proofs in advance.
 ## Access and mutation boundaries
 
 A plan's `read_bytes()` and `write_bytes()` are 64-bit masks of byte positions
-within one physical unit. They describe possible access envelopes. Reads can
+within one physical unit. They describe possible access envelopes.
+`reader::visit_reads(first, active, emit)` turns the read envelope into one
+`(address, size)` span per active row without reading, for prefetch or scheduling. Reads can
 include unselected bytes; preserving updates can read and reissue neighboring
 bits. The owner must protect the issued physical bytes even when concurrent
 commands would change disjoint logical bits.

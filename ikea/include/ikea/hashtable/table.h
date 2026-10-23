@@ -394,6 +394,7 @@ class table : private detail::bucket_ops<W, b, V, E, Kernel> {
     /// Current physical plane for owner preservation/generation checks. The
     /// table and backing stay stable from enter through the complete command.
     /// Header bytes include local owner metadata; pointers are not durable ids.
+    using plane_type = plane;
     std::span<const std::byte> plane_storage(plane id) const noexcept {
         switch (id) {
         case plane::header: return std::as_bytes(std::span(this, 1));

@@ -55,7 +55,9 @@ foreach(example ordinary composition)
 endforeach()
 
 add_library(ikea_seriespack STATIC
-  src/seriespack/readers.cpp src/seriespack/admission.cpp src/seriespack/layout.cpp)
+  src/seriespack/readers.cpp src/seriespack/admission.cpp src/seriespack/layout.cpp
+  src/seriespack/writers_u8.cpp src/seriespack/writers_u16.cpp
+  src/seriespack/writers_u32.cpp src/seriespack/writers_u64.cpp)
 add_library(ikea::seriespack ALIAS ikea_seriespack)
 sixdb_target(ikea_seriespack)
 target_include_directories(ikea_seriespack PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
@@ -235,6 +237,12 @@ add_custom_target(ikea_validate
   USES_TERMINAL)
 
 include(cmake/Hashtable.cmake)
+
+add_executable(ikea_contracts_check EXCLUDE_FROM_ALL test/contracts.cpp)
+sixdb_target(ikea_contracts_check)
+target_link_libraries(ikea_contracts_check PRIVATE ikea::seriespack ikea::tuplepack ikea::streampack ikea::bec256)
+add_test(NAME ikea_contracts_check COMMAND $<TARGET_FILE:ikea_contracts_check>)
+add_dependencies(ikea_validate ikea_contracts_check)
 
 add_executable(ikea_selection_check EXCLUDE_FROM_ALL test/selection.cpp)
 sixdb_target(ikea_selection_check)

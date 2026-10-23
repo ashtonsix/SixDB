@@ -26,13 +26,12 @@ template <class Byte, unsigned Rows = 1> class predicate {
 
   public:
     static constexpr unsigned rows = Rows;
-    /// Copies one code from the authoritative layout for these bytes. Views
-    /// retain extent, not layout identity; the owner supplies that association.
-    /// The layout may expire after binding. No payload is accessed. Extent
-    /// mismatch rejects with description before an invalid code index with map.
+    /// Copies one code from a layout equal to the one attached to these bytes;
+    /// the layout may expire after binding. No payload is accessed. A different
+    /// law rejects with description before an invalid code index with map.
     [[nodiscard]] static std::expected<predicate, error>
     bind(const layout& format, std::size_t code_index, const basic_view<Byte>& source) {
-        if (format.bytes() != source.unit_bytes())
+        if (format.identity() != source.layout_identity())
             return std::unexpected(error::description);
         if (code_index >= format.codes().size())
             return std::unexpected(error::map);

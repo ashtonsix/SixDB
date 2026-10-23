@@ -261,7 +261,10 @@ escape the callback. Rvalue views are rejected; name an `as_const()` result befo
 visiting it, and retain the view, layout and backing while any access uses them.
 One-shot free reads can still take `view.as_const()` directly. Access assumes
 admitted contents and ranks, except `get` checks rank/liveness.
-`rebind` requires the exact same shared layout object. Trusted mutations additionally
+`rebind(view)` retargets a typed access to another block whose layout equals its
+own, returning `error::description` otherwise; an identical layout object costs
+one pointer comparison. `rebind_unchecked` skips the comparison when the owner
+already proves the layouts equal, for example inside a per-value loop. Trusted mutations additionally
 require command, overlap and effects-capacity proofs before entry. Public
 `initialize_unchecked`, `append_unchecked`, `replace_unchecked`, `retire_unchecked`
 and `soft_pack_unchecked` sit beside their checked peers. Their effects policy

@@ -86,5 +86,6 @@ public:
 
 static_assert(sizeof(TupleProof) == 8 && sizeof(SeriesProof) == 8);
 static_assert(std::is_trivially_copyable_v<TupleProof> && std::is_trivially_copyable_v<SeriesProof>);
-static_assert(sizeof(TupleLaw) == 1408);
+// No padding beyond the owned law and plans, whatever their current sizes.
+static_assert(sizeof(TupleLaw) == sizeof(void*) + sizeof(tp::layout) + 3 * sizeof(tp::write_plan<8>));
 } // namespace orbital_mvcc::metadata_consumer::shape_write

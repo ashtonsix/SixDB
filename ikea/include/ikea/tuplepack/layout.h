@@ -21,6 +21,7 @@ std::string_view describe(error) noexcept;
 class layout {
     std::array<code, 128> codes_{};
     unsigned bytes_ = 0, count_ = 0;
+    std::uint64_t identity_ = 0;
     layout() = default;
 
   public:
@@ -31,6 +32,12 @@ class layout {
     }
     std::span<const code> codes() const noexcept {
         return {codes_.data(), count_};
+    }
+    /// Content digest of this law. Layouts with equal units and codes share it,
+    /// however they were made or decoded. Views and plans retain it, so binding
+    /// rejects a plan for another law even when unit extents happen to match.
+    std::uint64_t identity() const noexcept {
+        return identity_;
     }
     bool operator==(const layout&) const = default;
     /// Shared 'TP' law version 2 framing, then unit bytes and rank-ordered

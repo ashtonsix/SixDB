@@ -39,7 +39,8 @@ The module guides turn these starting points into concrete calls:
 Preparation chooses controls; binding qualifies those controls against named
 storage. Keep layouts, maps, groups, native transfer qualification and expression
 selection outside repeated work. For StreamPack, dispatch around the complete
-typed consumer and use `rebind` only with its required shared layout identity.
+typed consumer and `rebind` it across blocks with an equal layout (`rebind_unchecked`
+inside a loop whose layouts are already proven equal).
 Use range or packet calls when the operation naturally covers several rows.
 
 Checked calls remain useful when commands vary. Trusted `_unchecked` entries

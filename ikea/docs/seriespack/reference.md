@@ -81,6 +81,12 @@ physical `author::store` and `author::store_unchecked` leaves for composition
 authors and private construction. They retain the original row coordinates and
 packed bytes of bound operations.
 
+`visit_point_reads(view, row, emit)` reports the exact bytes `get_unchecked`
+reads for that row, as `(address, size)` spans: body bytes, residual fragments,
+then head bytes. It reads nothing, so a caller with independent future rows can
+prefetch or schedule those spans ahead of the read, as Hashtable's staged probes
+do. A span is neither a lease nor evidence that the bytes are ready.
+
 `get` checks the row. `author::store` checks the row and unsigned value width
 before data access; refusal leaves bytes unchanged. Their unchecked forms require
 those proofs from the caller. Both forms borrow placement, accessible byte

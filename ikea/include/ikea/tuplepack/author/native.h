@@ -218,6 +218,31 @@ template <class Plan>
     store_part<3>(row, p.read.bytes, encoded);
 #endif
 }
+/// Complete construction of one unit from up to two rank-ordered packets: code
+/// values from the inputs, every other bit of the unit zero. Reads no
+/// destination byte and stores exactly the unit, in place of a clear followed
+/// by preserving writes. Input widths were admitted.
+[[gnu::always_inline]] inline void construct_body(const detail::write64 &low,
+                                                  const detail::write64 *high, std::uint8_t *row,
+                                                  packet a, packet b) {
+    using namespace native_detail;
+    auto encoded = join(zero16(), zero16(), zero16(), zero16());
+    for (unsigned i = 0; i < low.round_count; ++i)
+        encoded = bit_or(encoded, transform<true>(a, low.rounds[i]));
+    if (high)
+        for (unsigned i = 0; i < high->round_count; ++i)
+            encoded = bit_or(encoded, transform<true>(b, high->rounds[i]));
+    const unsigned bytes = low.read.bytes;
+#if defined(__AVX512VBMI__)
+    _mm512_mask_storeu_epi8(row, bytes == 64 ? ~std::uint64_t(0) : (std::uint64_t(1) << bytes) - 1,
+                            encoded);
+#else
+    store_part<0>(row, bytes, encoded);
+    store_part<1>(row, bytes, encoded);
+    store_part<2>(row, bytes, encoded);
+    store_part<3>(row, bytes, encoded);
+#endif
+}
 /// Trusted in-register endpoints. Input widths, extents, isolation and effects
 /// are admitted by the operation shell. No allocation, checks or suspension.
 IKEA_TUPLE_CC packet read(const detail::read64 &, const std::uint8_t *row);

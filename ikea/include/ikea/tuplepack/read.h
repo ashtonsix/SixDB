@@ -1,4 +1,5 @@
 #pragma once
+#include <bit>
 #include <ikea/tuplepack/plan.h>
 #include <ikea/comparison.h>
 #include <ikea/tuplepack/view.h>
@@ -18,7 +19,7 @@ template <unsigned N, class Byte, unsigned Rows = 1> class reader {
     static constexpr unsigned rows = Rows;
     [[nodiscard]] static std::expected<reader, error> bind(const read_plan<N, Rows>& plan,
                                                                    const basic_view<Byte>& source) {
-        if (plan.unit_bytes() != source.unit_bytes())
+        if (plan.layout_identity() != source.layout_identity())
             return std::unexpected(error::description);
         return reader(plan, source);
     }
@@ -40,6 +41,22 @@ template <unsigned N, class Byte, unsigned Rows = 1> class reader {
         if (!active)
             return {};
         return plan_->get_unchecked(source_->row_unchecked(first), source_->stride(), active);
+    }
+    /// Bytes get_unchecked(first, active) may read, one (address, size) span per
+    /// active row covering the plan's read envelope within its unit. Nothing is
+    /// read; a caller can prefetch or schedule them before the packet read.
+    template <class Emit>
+    [[gnu::always_inline]] void visit_reads(std::size_t first, std::uint64_t active,
+                                            Emit&& emit) const {
+        const auto reads = plan_->read_bytes();
+        if (!reads)
+            return;
+        const unsigned begin = std::countr_zero(reads), end = 64 - std::countl_zero(reads);
+        for (; active; active &= active - 1) {
+            const auto row = first + std::countr_zero(active);
+            emit(static_cast<const std::byte*>(source_->row_unchecked(row) + begin),
+                 std::size_t(end - begin));
+        }
     }
     /// Packet i starts at first+i*Rows. The last packet may cover a short tail;
     /// selection uses original rows. Failure leaves every output packet unchanged.

@@ -1,5 +1,6 @@
 #pragma once
 #include <ikea/tuplepack/write.h>
+#include <ikea/tuplepack/author/native.h>
 #include <cstring>
 
 namespace ikea::tuplepack {
@@ -16,6 +17,9 @@ template <> class write_plan<128> {
     [[nodiscard]] static std::expected<write_plan<128>, error> make(const layout& format);
     unsigned unit_bytes() const noexcept {
         return first_.unit_bytes();
+    }
+    std::uint64_t layout_identity() const noexcept {
+        return first_.layout_identity();
     }
     unsigned code_count() const noexcept {
         return count_;
@@ -34,6 +38,11 @@ template <> class write_plan<128> {
     /// Trusted complete initialization. Does not read old destination bytes;
     /// spare bits become zero, bytes outside the unit remain untouched.
     void initialize_unchecked(std::byte* destination, const packet<128>& input) const {
+#if defined(__aarch64__) || defined(__AVX2__)
+        native::construct_body(first_.controls(), count_ > 64 ? &second_.controls() : nullptr,
+                               ikea::to_u8(destination), native::load_packet(input.data()),
+                               native::load_packet(input.data() + 64));
+#else
         std::array<std::uint8_t, 64> lo, hi;
         std::memcpy(lo.data(), input.data(), 64);
         if (count_ > 64)
@@ -42,6 +51,7 @@ template <> class write_plan<128> {
         first_.set_unchecked(destination, lo);
         if (count_ > 64)
             second_.set_unchecked(destination, hi);
+#endif
     }
 };
 /// Complete initialization only: unlike mapped writers this clears spare bits
@@ -79,7 +89,7 @@ template <> class writer<128> {
     }
     [[nodiscard]] static std::expected<writer<128>, error>
     bind(const write_plan<128>& plan, const view& destination) {
-        if (plan.unit_bytes() != destination.unit_bytes())
+        if (plan.layout_identity() != destination.layout_identity())
             return std::unexpected(error::description);
         return writer<128>(plan, destination);
     }
