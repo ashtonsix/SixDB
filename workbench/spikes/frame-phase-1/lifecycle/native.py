@@ -8,7 +8,7 @@ p.add_argument('--build',type=Path,required=True);p.add_argument('--inputs',type
 p.add_argument('--output',type=Path,required=True);p.add_argument('--cpu',type=int,required=True)
 p.add_argument('--isa',required=True);a=p.parse_args()
 root=Path.cwd();build=a.build.resolve();out=a.output.resolve();out.mkdir(exist_ok=True,parents=True)
-inputs=a.inputs.resolve();binary=build/'workbench/spikes/ikea-frame/lifecycle/frame_phase_measure'
+inputs=a.inputs.resolve();binary=build/'workbench/spikes/frame-phase-1/lifecycle/frame_phase_measure'
 reference=json.loads((Path(__file__).parent/'native-inputs.json').read_text())
 def sha(path):
     with path.open('rb') as f:return hashlib.file_digest(f,'sha256').hexdigest()
@@ -20,9 +20,9 @@ identity={'isa':a.isa,'cpu':a.cpu,'platform':platform.platform(),'affinity':sort
           'commands':[],'inputs':reference,'conditions':'Warm fixed2x4096-row owner histories; no cold/DRAM/Loom claim.',
           'trials':'20 arms; bounded40 and full20 balanced samples/cell; exact duplicate arms1/10,4/11,13/15,16/17.'}
 identity['compile_commands']=[v for v in json.loads((build/'compile_commands.json').read_text())
-    if '/ikea-frame/lifecycle/phase_' in v['file'] or '/ikea-frame/encoding/' in v['file']]
+    if '/frame-phase-1/lifecycle/phase_' in v['file'] or '/frame-phase-1/encoding/' in v['file']]
 executables=[binary]+[binary.parent/v for v in ['frame_phase_material_check','frame_phase_repair_check','frame_phase_batch_check']]
-executables+=[build/'workbench/spikes/ikea-frame/frame_measure_order_check']
+executables+=[build/'workbench/spikes/frame-phase-1/frame_measure_order_check']
 (out/'binaries').mkdir(exist_ok=True);identity['executables']={}
 for exe in executables:
     identity['executables'][exe.name]=sha(exe);shutil.copy2(exe,out/'binaries'/exe.name)

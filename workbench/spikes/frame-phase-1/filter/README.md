@@ -96,7 +96,7 @@ result selectivity.
 
 ```sh
 cmake --build build/clang/frame-checkpoints --target frame_filter_check --parallel 1
-build/clang/frame-checkpoints/workbench/spikes/ikea-frame/filter/frame_filter_check \
+build/clang/frame-checkpoints/workbench/spikes/frame-phase-1/filter/frame_filter_check \
   build/spikes/ikea-frame/cols/OS.u64 \
   build/spikes/ikea-frame/cols/ResolutionWidth.u64
 ```

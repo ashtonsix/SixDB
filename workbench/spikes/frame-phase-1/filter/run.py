@@ -28,8 +28,8 @@ def main():
         p.error('positive trials and an allowed CPU required')
     os.sched_setaffinity(0, {a.cpu})
     a.output.mkdir(parents=True, exist_ok=False)
-    files = sorted(Path('workbench/spikes/ikea-frame/filter').glob('*'))
-    files += [Path('workbench/spikes/ikea-frame/encoding') / n for n in ['material.h', 'material.cpp']]
+    files = sorted(Path('workbench/spikes/frame-phase-1/filter').glob('*'))
+    files += [Path('workbench/spikes/frame-phase-1/encoding') / n for n in ['material.h', 'material.cpp']]
     files += sorted(Path('ikea/include').rglob('*.h'))
     identity = {'binary_sha256': sha(a.binary), 'source_sha256': {str(f): sha(f) for f in files if f.is_file()},
                 'platform': platform.platform(), 'cpu': a.cpu, 'trials': a.trials,
@@ -37,7 +37,7 @@ def main():
                 'inputs': {str(f): {'sha256': sha(f), 'bytes': f.stat().st_size} for f in a.input}}
     build = a.binary.parents[4]
     commands = json.loads((build / 'compile_commands.json').read_text())
-    identity['compile_commands'] = [c for c in commands if '/ikea-frame/filter/' in c['file']]
+    identity['compile_commands'] = [c for c in commands if '/frame-phase-1/filter/' in c['file']]
     identity['compiler'] = subprocess.check_output(['clang++-21', '--version'], text=True)
     (a.output / 'identity.json').write_text(json.dumps(identity, indent=2) + '\n')
     groups = {}

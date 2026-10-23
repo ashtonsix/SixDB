@@ -92,7 +92,7 @@ Build using the pinned Linux toolchain and spike selection, then run:
 
 ```sh
 cmake --build build/clang/frame-checkpoints --target frame_checkpoint_point_check --parallel 1
-build/clang/frame-checkpoints/workbench/spikes/ikea-frame/point/frame_checkpoint_point_check \
+build/clang/frame-checkpoints/workbench/spikes/frame-phase-1/point/frame_checkpoint_point_check \
   build/spikes/ikea-frame/jena-0/p__mbar.u64
 ```
 

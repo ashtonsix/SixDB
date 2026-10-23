@@ -1,4 +1,10 @@
-# Ikea Frame
+# Ikea Frame, phase 1 (closed)
+
+Phase 1 closed on 2026-10-23; [phase 2](../frame-phase-2/README.md) reopens
+the research with a different approach. Keep this directory as evidence: its
+findings, negative results and executable laws remain citable. Retained
+evidence receipts and ignored `build/spikes/ikea-frame/` outputs still name the
+old `workbench/spikes/ikea-frame` path.
 
 Design spike for a proposed `ikea::frame` submodule: the container for
 SeriesPack and TuplePack that packages encodings and the operations Engine runs

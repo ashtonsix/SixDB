@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
-phase=workbench/spikes/ikea-frame/lifecycle
+phase=workbench/spikes/frame-phase-1/lifecycle
 mkdir -p "$SIXDB_RESULTS/inputs"
 python3 - "$phase/native-inputs.json" "$SIXDB_RESULTS/input-artifact.json" <<'PY'
 from pathlib import Path
@@ -28,7 +28,7 @@ assert 'avx2' in flags
 if sys.argv[1]=='avx512':assert {'avx512f','avx512bw','avx512vl','avx512vbmi'} <= flags
 PY
   cmake -S . -B "$build" -G Ninja -DCMAKE_BUILD_TYPE=Release \
-    -DSIXDB_SPIKES=ikea-frame -DSIXDB_MARCH="$march" -DSIXDB_TUNE=zen5 \
+    -DSIXDB_SPIKES=frame-phase-1 -DSIXDB_MARCH="$march" -DSIXDB_TUNE=zen5 \
     > "$out/configure.txt" 2>&1
   cmake --build "$build" --target frame_phase_measure frame_phase_material_check \
     frame_phase_repair_check frame_phase_batch_check frame_measure_order_check \

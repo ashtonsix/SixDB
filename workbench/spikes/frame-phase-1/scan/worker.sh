@@ -1,7 +1,7 @@
 #!/bin/bash
 # Same logical populations, exact current owner core, actual Polars calls.
 set -euo pipefail
-scan=workbench/spikes/ikea-frame/scan
+scan=workbench/spikes/frame-phase-1/scan
 apt-get install -y -qq python3-venv > "$SIXDB_RESULTS/python-setup.txt" 2>&1
 python3 -m venv build/frame-scan-python
 py="$PWD/build/frame-scan-python/bin/python"
@@ -9,9 +9,9 @@ py="$PWD/build/frame-scan-python/bin/python"
   > "$SIXDB_RESULTS/python-install.txt" 2>&1
 "$py" -m pip freeze > "$SIXDB_RESULTS/python-packages.txt"
 python3 workbench/tools/artifacts.py fetch \
-  workbench/spikes/ikea-frame/encoding/worker-inputs.json "$SIXDB_RESULTS/in" \
+  workbench/spikes/frame-phase-1/encoding/worker-inputs.json "$SIXDB_RESULTS/in" \
   > "$SIXDB_RESULTS/input-fetch.txt" 2>&1
-cp workbench/spikes/ikea-frame/encoding/worker-inputs.json "$SIXDB_RESULTS/input-artifact.json"
+cp workbench/spikes/frame-phase-1/encoding/worker-inputs.json "$SIXDB_RESULTS/input-artifact.json"
 lscpu -J > "$SIXDB_RESULTS/lscpu.json"
 clang++-21 --version > "$SIXDB_RESULTS/compiler.txt"
 find /sys/devices/system/cpu/cpu"$SIXDB_CPU"/cache -type f \
@@ -31,7 +31,7 @@ for isa in $isas; do
   out="$SIXDB_RESULTS/$isa"
   mkdir -p "$out/binaries"
   cmake -S . -B "$build" -G Ninja -DCMAKE_BUILD_TYPE=Release \
-    -DSIXDB_SPIKES=ikea-frame -DCMAKE_POSITION_INDEPENDENT_CODE=ON $flags \
+    -DSIXDB_SPIKES=frame-phase-1 -DCMAKE_POSITION_INDEPENDENT_CODE=ON $flags \
     > "$out/configure.txt" 2>&1
   cmake --build "$build" --target frame_scan_bridge -j "$SIXDB_BUILD_JOBS" \
     > "$out/build.txt" 2>&1

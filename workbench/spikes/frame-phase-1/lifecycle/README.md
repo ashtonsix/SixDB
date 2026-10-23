@@ -175,8 +175,8 @@ dictionary rather than add an override.
 Run from the repository root on Linux (prefix `orb -m ubuntu` from the Mac):
 
 ```sh
-python3 workbench/spikes/ikea-frame/lifecycle/history.py check
-python3 workbench/spikes/ikea-frame/lifecycle/history.py generate \
+python3 workbench/spikes/frame-phase-1/lifecycle/history.py check
+python3 workbench/spikes/frame-phase-1/lifecycle/history.py generate \
   --output build/ikea-frame/lifecycle/first-trace --rows 256 --batches 4 --updates 128
 ```
 

@@ -210,7 +210,7 @@ The old 417-function cohesion receipt proves its old cut only. Broader effect
 records, initialization and integrated filtering require a new receipt. The isolated
 [settled Frame port](evidence/interface-cohesion-v2-20261023/frame/README.md)
 keeps the same parent algorithms and controls in both arms. The later
-[owner-qualified live port](../ikea-frame/evidence/api-migration-20261023/qualification.json)
+[owner-qualified live port](../frame-phase-1/evidence/api-migration-20261023/qualification.json)
 passed 462 commands and 9,600 complete owner records on its recorded source cut
 in commits `feb56ce1` and `772efec7`. Neither proof qualifies subsequent Frame
 algorithm changes or supplies a throughput result for them.

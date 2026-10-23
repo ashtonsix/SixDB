@@ -23,7 +23,7 @@ G16 for StreamPack's old format, not generic sources. The old prototype already
 parameterised spacing. Frame's transferred checkpoint experiment keeps native G16
 execution inside G16/32/64/128/256 storage regions. Its last owner/start edits were
 unqualified at transfer; this spike freshly checks them before timing. The
-[Frame point study](../ikea-frame/point/README.md) owns prediction reconstruction,
+[Frame point study](../frame-phase-1/point/README.md) owns prediction reconstruction,
 packed residuals and exception algebra. Those are not nonnegative interval sizes.
 
 ## Maintained contract and module split

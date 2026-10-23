@@ -1,9 +1,9 @@
 #!/bin/bash
 # Encoding driver on a worker: real columns from the input artifact, one build
 # per ISA, every column under its default options plus a few option sets.
-# Usage: worker.py run workbench/spikes/ikea-frame/encoding/worker.sh --machine zen5|neoverse-v2
+# Usage: worker.py run workbench/spikes/frame-phase-1/encoding/worker.sh --machine zen5|neoverse-v2
 set -euo pipefail
-enc=workbench/spikes/ikea-frame/encoding
+enc=workbench/spikes/frame-phase-1/encoding
 python3 - "$enc/worker-inputs.json" "$SIXDB_RESULTS/input-artifact.json" <<'PY'
 import json, sys
 from pathlib import Path
@@ -27,7 +27,7 @@ for isa in $isas; do
   build="build/clang/frame-encoding-$isa"
   out="$SIXDB_RESULTS/$isa"
   mkdir -p "$out"
-  cmake -S . -B "$build" -G Ninja -DCMAKE_BUILD_TYPE=Release -DSIXDB_SPIKES=ikea-frame $flags \
+  cmake -S . -B "$build" -G Ninja -DCMAKE_BUILD_TYPE=Release -DSIXDB_SPIKES=frame-phase-1 $flags \
     > "$out/configure.txt" 2>&1
   cmake --build "$build" --target frame_encoding_bodies frame_encoding_borrowed_check \
     -j "$SIXDB_BUILD_JOBS" > "$out/build.txt" 2>&1

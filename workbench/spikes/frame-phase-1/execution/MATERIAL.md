@@ -244,5 +244,5 @@ configuration and run it on Linux. From macOS prefix commands with `orb -m ubunt
 
 ```sh
 cmake --build build/clang/frame-execution --target frame_execution_material_check --parallel 1
-build/clang/frame-execution/workbench/spikes/ikea-frame/execution/frame_execution_material_check
+build/clang/frame-execution/workbench/spikes/frame-phase-1/execution/frame_execution_material_check
 ```

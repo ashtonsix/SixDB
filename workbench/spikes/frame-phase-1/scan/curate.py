@@ -53,7 +53,7 @@ for item in a.cohort:
     for file in ['checks.json','report.txt']:shutil.copy2(full/file,selected/file)
     for file in ['lscpu.json','cache.txt','compiler.txt','input-artifact.json']:shutil.copy2(dest/file,selected/file)
     commands=[r for r in read(full/'compile_commands.json')
-        if '/ikea-frame/encoding/' in r['file'] or '/ikea-frame/scan/' in r['file']]
+        if '/frame-phase-1/encoding/' in r['file'] or '/frame-phase-1/scan/' in r['file']]
     qualification=dict(job=job,source_digest=read(receipt)['source_digest'],
         all_source_files_match=len(wanted),library_sha256=identity['library_sha256'],
         checked_images=read(full/'checks.json')['images'],independent_checks=read(full/'checks.json')['checks'],

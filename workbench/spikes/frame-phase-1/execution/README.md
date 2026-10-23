@@ -194,11 +194,11 @@ questions into lifecycle and encoded consumers before choosing a public mask API
 From Linux at the repository root (prefix with `orb -m ubuntu` from macOS):
 
 ```sh
-python3 workbench/spikes/ikea-frame/execution/check.py
-cmake --preset dev -B build/clang/frame-execution -DSIXDB_SPIKES=ikea-frame
+python3 workbench/spikes/frame-phase-1/execution/check.py
+cmake --preset dev -B build/clang/frame-execution -DSIXDB_SPIKES=frame-phase-1
 cmake --build build/clang/frame-execution --target frame_execution_hash_check
-python3 workbench/spikes/ikea-frame/execution/check.py \
-  --binary build/clang/frame-execution/workbench/spikes/ikea-frame/execution/frame_execution_hash_check
+python3 workbench/spikes/frame-phase-1/execution/check.py \
+  --binary build/clang/frame-execution/workbench/spikes/frame-phase-1/execution/frame_execution_hash_check
 ```
 
 Generate a larger ordinary input in an existing ignored directory with
@@ -240,8 +240,8 @@ discarded before the corrected measurements.
 
 ```sh
 cmake --build build/clang/frame-execution --target frame_execution_encoded
-python3 workbench/spikes/ikea-frame/execution/encoded_check.py \
-  --binary build/clang/frame-execution/workbench/spikes/ikea-frame/execution/frame_execution_encoded
+python3 workbench/spikes/frame-phase-1/execution/encoded_check.py \
+  --binary build/clang/frame-execution/workbench/spikes/frame-phase-1/execution/frame_execution_encoded
 ```
 
 `encoded_check.py --input PATH... --trials N --output REPORT` checks every full

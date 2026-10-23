@@ -33,7 +33,7 @@ for profile in $profiles; do
  oldbuild="${before:-}/build/caller-audit/$profile"
  mkdir -p "$out"
  cmake -S "$root" -B "$build" -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS_RELEASE='-O3 -gline-tables-only' \
-   -DSIXDB_MARCH="$march" -DSIXDB_TUNE="$tune" '-DSIXDB_SPIKES=ikea-frame;intervals' -DSIXDB_INTERVALS_FRAME_RUN_AUDIT=ON > "$out/configure.log"
+   -DSIXDB_MARCH="$march" -DSIXDB_TUNE="$tune" '-DSIXDB_SPIKES=frame-phase-1;intervals' -DSIXDB_INTERVALS_FRAME_RUN_AUDIT=ON > "$out/configure.log"
  targets=intervals_frame_runs
  if [ "$frame_only" = 0 ]; then targets="$targets intervals_directory_reads intervals_consumer_seams engine_directory_check"; fi
  cmake --build "$build" --target $targets -j "$SIXDB_BUILD_JOBS" > "$out/build.log" 2>&1

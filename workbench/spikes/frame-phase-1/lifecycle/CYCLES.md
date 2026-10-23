@@ -21,7 +21,7 @@ after periodic conversion without fake publication. The final folded version
 still retains its primary/alternative under the existing owner contract.
 
 ```sh
-orb -m ubuntu BUILD/workbench/spikes/ikea-frame/lifecycle/frame_phase_measure \
+orb -m ubuntu BUILD/workbench/spikes/frame-phase-1/lifecycle/frame_phase_measure \
   --sustained INPUT 65 1 1 2 moving-hot 1 mixed verify 0xffff
 ```
 

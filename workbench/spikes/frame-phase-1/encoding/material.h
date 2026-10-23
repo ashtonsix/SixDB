@@ -1,4 +1,4 @@
-// Private experimental Frame material for the ikea-frame spike: block
+// Private experimental Frame material for the frame-phase-1 spike: block
 // descriptors, constant/runs/frame-of-reference/delta bodies over real
 // SeriesPack planes and Intervals run geometry, block masks, and the exact
 // operations over them (SUM, narrow SUM, COUNT, whole-block decode), with

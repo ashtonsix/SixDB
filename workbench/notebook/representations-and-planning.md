@@ -23,15 +23,15 @@ and experimental shared controls retain separate qualification.
 
 | Question | Route through the evidence |
 | --- | --- |
-| What should Frame expose for computation over encoded data? | [Frame's architectural review with Engine](../spikes/ikea-frame/REVIEW.md): retained structure, selected residual algebra, schema fidelity, cross-column alternatives and mutation lifecycles; research directions, not an implemented module |
-| Do compressed Frame programs repay their cost through real writes and reads? | [Owner program costs](../spikes/ikea-frame/lifecycle/PROGRAM-COSTS.md) and [warm Zen 5 AVX2/AVX-512](../spikes/ikea-frame/lifecycle/ZEN5.md): native scans reverse several ARM rankings; retain final-fold costs, strong native forms and losing cases |
+| What should Frame expose for computation over encoded data? | [Frame's architectural review with Engine](../spikes/frame-phase-1/REVIEW.md): retained structure, selected residual algebra, schema fidelity, cross-column alternatives and mutation lifecycles; research directions, not an implemented module |
+| Do compressed Frame programs repay their cost through real writes and reads? | [Owner program costs](../spikes/frame-phase-1/lifecycle/PROGRAM-COSTS.md) and [warm Zen 5 AVX2/AVX-512](../spikes/frame-phase-1/lifecycle/ZEN5.md): native scans reverse several ARM rankings; retain final-fold costs, strong native forms and losing cases |
 | Row layout, point access, mixed reads/writes and scan batching | [Tuple-layout viability](../spikes/tuple-layout/viability.md), [implementation decisions](../spikes/tuple-layout/implementation-decisions.md), then [current TuplePack](../../ikea/docs/tuplepack/usage.md); NEON sparse packets in [NEON sparse TuplePack packets](../spikes/neon-tuplepack-masked/README.md) |
 | Planes, projections, metadata and placement selected together | [Layout-analyser findings](../spikes/layout-analyser/findings.md), [connected case study](../spikes/layout-analyser/case-study.md), [executable reference](../spikes/layout-analyser/tuplepack-reference/README.md) |
 | Variable bytes, offsets, sidecars and mutation | [StreamPack recommendation](../spikes/streampack/RECOMMENDATION.md), [results](../spikes/streampack/RESULTS.md), [current usage](../../ikea/docs/streampack/usage.md) |
 | Shared interval geometry across value storage, routing and encoded frames | [Maintained Intervals](../../ikea/docs/intervals/usage.md) and [graduation](../spikes/intervals/GRADUATION.md), with the [live caller audit](../spikes/intervals/AUDIT.md): StreamPack owns compact retirement; sparse spacing is independent of execution grain |
 | Ordered boundaries versus value storage | [Boundlist recommendation](../spikes/boundlist/RECOMMENDATION.md), [ownership](../spikes/boundlist/OWNERSHIP.md), [consumer portfolio](../spikes/boundlist/PORTFOLIO.md) |
 | NEON cost of Local bit-plane residuals | [NEON Local transpose](../spikes/neon-local-transpose/README.md), including its [preset re-measure](../spikes/neon-local-transpose/README.md#preset-follow-up) (keep `bulk_arm`) and [mixed reads](../spikes/neon-local-transpose/README.md#mixed-local-reads) |
-| Real encoded column bodies: block kinds, dictionaries, checkpoints, bytes against DuckDB/Parquet/ZSTD, encoded SUM/COUNT | [Frame encoding findings](../spikes/ikea-frame/encoding/README.md): run-end bodies, delta checkpoint options, exceptions as insurance, real part dictionaries, the [non-decreasing delta COUNT](../spikes/ikea-frame/encoding/README.md#count-over-non-decreasing-delta-blocks), [borrowed block extents](../spikes/ikea-frame/encoding/README.md#borrowed-blocks), [arrival-order dictionaries](../spikes/ikea-frame/encoding/README.md#arrival-order-dictionaries) with their [cross-call caches](../spikes/ikea-frame/encoding/README.md#dictionary-caches-across-calls) (hash bytes near ZSTD-3, at higher scan cost), [wide exact SUM by halves](../spikes/ikea-frame/encoding/README.md#wide-exact-sum-by-32-bit-halves), and [row-selected aggregates with NULL fill](../spikes/ikea-frame/encoding/README.md#row-selected-aggregates-and-null-fill) (predictor fill costs bodies nothing; compaction pays only in packed/delta-heavy, NULL-heavy blocks), and [fused aggregates](../spikes/ikea-frame/encoding/README.md#fused-aggregates) (one pass for SUM + COUNT: 0.58–0.74× separate on packed/run columns, no gain where COUNT is closed form) |
+| Real encoded column bodies: block kinds, dictionaries, checkpoints, bytes against DuckDB/Parquet/ZSTD, encoded SUM/COUNT | [Frame encoding findings](../spikes/frame-phase-1/encoding/README.md): run-end bodies, delta checkpoint options, exceptions as insurance, real part dictionaries, the [non-decreasing delta COUNT](../spikes/frame-phase-1/encoding/README.md#count-over-non-decreasing-delta-blocks), [borrowed block extents](../spikes/frame-phase-1/encoding/README.md#borrowed-blocks), [arrival-order dictionaries](../spikes/frame-phase-1/encoding/README.md#arrival-order-dictionaries) with their [cross-call caches](../spikes/frame-phase-1/encoding/README.md#dictionary-caches-across-calls) (hash bytes near ZSTD-3, at higher scan cost), [wide exact SUM by halves](../spikes/frame-phase-1/encoding/README.md#wide-exact-sum-by-32-bit-halves), and [row-selected aggregates with NULL fill](../spikes/frame-phase-1/encoding/README.md#row-selected-aggregates-and-null-fill) (predictor fill costs bodies nothing; compaction pays only in packed/delta-heavy, NULL-heavy blocks), and [fused aggregates](../spikes/frame-phase-1/encoding/README.md#fused-aggregates) (one pass for SUM + COUNT: 0.58–0.74× separate on packed/run columns, no gain where COUNT is closed form) |
 | Predictive coding and complete analysis/encoding work | [Bec256 composition](../spikes/bec256-composition/README.md), [residual-bound questions](pfor-bounds.md) |
 
 Physical tile size, execution grain, working lanes and result representation
@@ -58,13 +58,13 @@ joint block summaries justify an extra filter. The
 [secondary-summary note](secondary-summaries.md) separates pruning from estimation
 and approximate answers.
 
-[Frame's complete head consumers](../spikes/ikea-frame/filter/FINDINGS.md) compare
+[Frame's complete head consumers](../spikes/frame-phase-1/filter/FINDINGS.md) compare
 logical H8/H16, residual heads, exact block bounds and quantised window bounds
 with actual native/Polars controls. Logical H16 helps predicted Jena queries but
 adds two bytes/row; RegionID and the losing window-bound program rule out a
-universal evidence layout. [Point integration](../spikes/ikea-frame/point/INTEGRATION.md)
+universal evidence layout. [Point integration](../spikes/frame-phase-1/point/INTEGRATION.md)
 preserves native-prefix gains while retaining the substantial native-array gap.
-Its [curated run-source follow-up](../spikes/ikea-frame/point/CURATED-RUNS.md)
+Its [curated run-source follow-up](../spikes/frame-phase-1/point/CURATED-RUNS.md)
 tests the maintained Intervals native source in the real point readers, while
 keeping the predictable projection and non-RLE controls.
 

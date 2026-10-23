@@ -44,9 +44,9 @@ target_link_libraries(intervals_latency PRIVATE ikea::intervals ikea::streampack
 option(SIXDB_INTERVALS_FRAME_RUN_AUDIT "Compare run projection in actual Frame point readers" OFF)
 if(SIXDB_INTERVALS_FRAME_RUN_AUDIT)
   if(NOT TARGET frame_encoding_material OR NOT TARGET frame_point_kernels)
-    message(FATAL_ERROR "Frame caller audit requires -DSIXDB_SPIKES=ikea-frame;intervals in that order")
+    message(FATAL_ERROR "Frame caller audit requires -DSIXDB_SPIKES=frame-phase-1;intervals in that order")
   endif()
-  set(frame_source "${PROJECT_SOURCE_DIR}/workbench/spikes/ikea-frame")
+  set(frame_source "${PROJECT_SOURCE_DIR}/workbench/spikes/frame-phase-1")
   set(frame_generated "${CMAKE_CURRENT_BINARY_DIR}/frame-runs")
   set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS
     "${frame_source}/point/point_read.h" "${frame_source}/point/compact_read.h"

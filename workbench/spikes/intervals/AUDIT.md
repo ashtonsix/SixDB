@@ -54,7 +54,7 @@ and `compact_reader_program<RunSource>` bodies: ordinary aliases use `fe::run_en
 `run_end_source`. This adds no runtime policy field/branch and no new Intervals
 API. The native measurements below predate that spelling change and the separate
 arrival-dictionary work. They measure projection-only literal actual getters;
-new [Frame program qualification](../ikea-frame/point/README.md) stays with its
+new [Frame program qualification](../frame-phase-1/point/README.md) stays with its
 owner and source epoch. Ikea
 LEAD subsequently reports all59-column input oracles and32 samples/cell; the
 ordinary admitted getter paths retain their prior encoded bytes (bound1016 B,
@@ -203,7 +203,7 @@ Use `artifacts.py fetch` on a cohort into fresh ignored storage for the exact
 source/binaries/raw data. Recover that source epoch to reproduce historical
 results. Current `caller-native.sh` defaults to the complete caller audit;
 `INTERVALS_FRAME_ONLY=1` runs only the Frame policy panel. Configure current local
-checks with `-DSIXDB_SPIKES='ikea-frame;intervals'` and
+checks with `-DSIXDB_SPIKES='frame-phase-1;intervals'` and
 `-DSIXDB_INTERVALS_FRAME_RUN_AUDIT=ON`, then build `intervals_frame_runs` and run
 `--check`. The caller report retains every arm; there is no pooled score or
 universal representation recommendation.

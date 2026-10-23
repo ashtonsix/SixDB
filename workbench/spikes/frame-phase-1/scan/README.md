@@ -70,7 +70,7 @@ presence and A/B validity remain distinct. Clustered/dispersed selections at
 equal density must survive through actual payload consumption.
 
 Configure the private shared bridge with the pinned compiler and
-`-DSIXDB_SPIKES=ikea-frame -DCMAKE_POSITION_INDEPENDENT_CODE=ON`, then build
+`-DSIXDB_SPIKES=frame-phase-1 -DCMAKE_POSITION_INDEPENDENT_CODE=ON`, then build
 `frame_scan_bridge`. Frozen-source identity remains explicit while Ikea's
 interface migration is in flight. The findings preserve each measured source cut.
 `worker.sh` installs pinned actual Polars, recovers the existing input artifact,
