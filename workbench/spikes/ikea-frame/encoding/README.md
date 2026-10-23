@@ -25,7 +25,8 @@ directory's sections below are the evidence; read them by question, not in order
   loss (prototype in progress), [fused aggregates](#fused-aggregates) (local
   ARM: SUM + COUNT in 0.58–0.74× the separate calls on packed and run columns,
   no gain where COUNT is a closed form, still 1.7–2.3× native fused; workers pending),
-  the predicate mask emitter (in progress), and every family beyond SUM/COUNT.
+  [predicate masks](#predicate-masks) (emitter landed; run-heavy masks still
+  trail a plain array), and every family beyond SUM/COUNT.
   Detailed questions are in [QUESTIONS.md](../QUESTIONS.md).
 - **Comparison limits:** local timings are OrbStack direction only. Worker runs
   in [`worker.sh`](worker.sh) are repeated and in-memory, with cache residence
@@ -1729,6 +1730,149 @@ separate for two and three aggregates, then fused / native fused under NULLs:
 - MIN/MAX timings (checked, not timed);
 - consumers: the lifecycle programs can call `masked_encoded_fused` in place of
   two calls.
+
+## Predicate masks
+
+filter(A) → SUM/COUNT(B) needs A's predicate as an original-row mask that B's
+[row-selected aggregates](#row-selected-aggregates-and-null-fill) can consume.
+[`predicate.h`](predicate.h) emits one 256-bit `row_selection` per block for
+x ≥ t, x < t, t1 ≤ x < t2, x = v and x ≠ v. Code at 3f31a329.
+
+**API.** `predicate_masks(column, coarse, predicate, out, {selection, validity},
+cache, counts)` returns the selected row total, and `counts` takes |mask| per
+block. `emit_predicate_masks` does the same over any block source, such as
+Engine's borrowed Parts. The `predicate_mask` evaluator answers one
+`borrowed_block` under an active selection. `reference_predicate_*` is the
+decode-then-compare control. Four inputs stay distinct:
+
+- The coarse mask: a skipped block is never visited, so its descriptor, body and
+  dictionary are not read, and its `out` words and counts stay as the caller
+  supplied them.
+- The fine input selection.
+- A's validity.
+- The predicate.
+
+The mask is predicate ∧ selection ∧ validity(A). B's validity belongs to the
+consumer, which ANDs it into the plane before aggregating. A visited block whose
+active rows are empty is written 0 before any read.
+
+**Laws.** Every predicate is x ∈ [lo, last], its complement (≠), or empty:
+
+| Kind | Law | Reads |
+| --- | --- | --- |
+| constant | one compare: all active rows or none | descriptor |
+| runs | one compare per run value; passing runs filled as word-level ranges | run values, ends |
+| packed | residual interval clipped to [0, 2^K); bounds decide whole blocks; else SeriesPack `filter_unchecked` over 64-row windows with the active word as their active mask (≥ and = one filter, < the complement of ≥ under active, a range two) | 64-row words with an active row |
+| patched | the packed law over inliers (active ∖ E), plus each active exception compared | plane, exceptions only if one is active |
+| delta, rbase ≥ 0, checkpoints | non-decreasing: rows [first_ge(lo), first_ge(last + 1)), one checkpoint search per finite bound | checkpoints, one interval of residuals |
+| delta, otherwise | prefix reconstructed through the last active row and compared; a non-decreasing block stops past the interval | residuals through the last active row |
+| delta_patched, arrival | decode, then compare | body |
+| coded, sorted | code range [lb(lo), lb(last + 1)) through the stored laws above; equality is a code range too | dictionary bounds, then as the kind |
+| coded, other orders | one truth bit per code, T[k] = pred(min + D[k]): constant one bit, runs one per run, arrival literals by rank and references in row order, others decode codes | whole dictionary once per identity, then as the kind |
+
+Translation happens once per dictionary identity, lazily. An identity whose
+translation admits every code, or none, answers its blocks without reading
+them. With a `dictionary_cache`, sorted bounds and unordered threshold tables
+(T_lo ∧ ¬T_{last+1}) persist across calls. Sorted needs only a non-decreasing
+plane, so a projected view with equal neighbours stays correct. Unordered
+truth tables give each duplicated value its own bit. Neither assumes one code
+per value, unlike `code_count_eq`'s first-match search: a projected
+frequency-ordered view with duplicates would be wrong there (fused.h inherits
+this). Grants: every predicate stays within `scan_grant_bytes` except the
+monotone delta search, which reads checkpoints, as monotone COUNT does.
+Packed filters live in [`predicate.cpp`](predicate.cpp), the catalogue's
+`filter_unchecked` call returning bits.
+
+**Verification** (`frame_encoding_predicate_check`,
+`build/spikes/ikea-frame/pred-snap/check.sh`). The check builds the expected
+mask from the input values by the predicate's own comparison, never through
+the owner's laws, and compares it complete. Runs cover the 417 configurations
+of `identity/check.sh` and 30 end-to-end pairs (447 runs, 1.34M blocks, 386k
+of them coded, every kind and coded kind):
+
+- **Blocks:** each body ends at a `PROT_NONE` page, as does each dictionary
+  plane. Delta bodies outside the monotone law are also read with only their
+  scan grant. Thresholds cover 0, UINT64_MAX, the block min − 1 and max + 1,
+  row values and their successors around each checkpoint spacing, the base and
+  its first unrepresentable residual, and random values. Every predicate runs,
+  including empty and reversed ranges, under full, adversarial and random active
+  selections, in per-call, cached and control forms: 599M masks each, plus 12.9M
+  scan-grant masks. An empty active selection on a `PROT_NONE` body and
+  dictionary reads nothing (1.18M guards).
+- **Columns:** coarse masks all, sparse and none, crossed with fine inputs none,
+  a mixed row plane, a validity plane with all-NULL blocks, and both. Output
+  words are pre-filled with a sentinel. The block source fails if asked for a
+  skipped or empty block, and skipped blocks must keep their sentinel (1.03M
+  column masks, 1.13G skipped blocks checked).
+- **Editions and projections:** old, mirrored new, old, copy and new images run
+  through one cache. Duplicate-valued projected dictionaries are built by hand:
+  D ≫ 3 labelled sorted, and D mod 7 labelled frequency or arrival (174M
+  masks).
+- **Pairs:** RegionID → UserID, OS → URLHash and EventTime (quantile windows)
+  → WatchID, in original and region/OS/time order, under five option sets. A's
+  mask, with A's validity, ANDed with B's validity feeds `masked_encoded_sum`,
+  `_count_ge`, `_count_eq` and `masked_selected_rows` (6,600 aggregates against
+  the input).
+
+Seeded mutations were caught: a range end off by one in the plane filter, a
+sorted code range one too long, the monotone bound at last instead of
+last + 1, and arrival references set without their truth bit. All pass.
+`masked_access_check` passes. The qualification ran from a HEAD snapshot build
+(`build/spikes/ikea-frame/pred-snap`), not the live ikea/ tree, which is
+mid-migration.
+
+**Timings.** Local VM, all blocks selected, no fine input, medians in µs per
+3M rows over 21 trials in a fixed-seed shuffled arm order. "Emit" is the per-call
+emitter. "Control" is decode-then-compare. "Plain" compares a native u64 array
+into the same plane. The exact duplicate emit arm's paired median ratio was
+0.87–1.26, and 0.95–1.05 in 108 of 126 cells, so single cells move about 10%.
+`pred-snap/timing.jsonl`; `summarise.py`.
+
+| Column (dominant kinds) | ≥ median: emit / control / plain | [p25, p75) | = mode | = rare point |
+| --- | --- | --- | --- | --- |
+| OS (98% runs) | 4,218 / 11,385 / 2,112 | 2,738 / 7,691 / 1,154 | 2,618 / 7,889 / 1,248 | 773 / 6,175 / 908 |
+| OS, sorted (97% coded runs) | 2,810 / 12,568 / 1,145 | 2,397 / 11,361 / 971 | 2,084 / 9,177 / 867 | 791 / 10,251 / 979 |
+| RegionID (95% runs) | 5,131 / 8,233 / 1,111 | 3,231 / 6,155 / 871 | 1,805 / 6,063 / 903 | (the mode) |
+| RegionID, frequency | 5,528 / 10,205 / 904 | 7,015 / 13,041 / 1,603 | 4,709 / 15,051 / 1,277 | |
+| EventTime (80% packed) | 1,175 / 2,137 / 842 | 1,391 / 2,169 / 830 | 562 / 2,114 / 874 | 552 / 2,079 / 820 |
+| EventTime, by region/OS/time (73% delta) | 789 / 3,995 / 951 | 1,185 / 3,944 / 1,164 | 681 / 3,503 / 864 | 810 / 4,075 / 908 |
+| URLHash (75% packed) | 4,007 / 2,631 / 923 | 4,039 / 2,811 / 917 | 1,514 / 2,801 / 1,052 | 1,351 / 2,685 / 841 |
+| URLHash, sorted | 3,365 / 7,756 / 962 | 2,712 / 6,344 / 896 | 653 / 6,130 / 920 | 493 / 5,824 / 917 |
+| URLHash, frequency: cold / cached | 5,058 / 4,387 | 4,849 / 4,366 | 1,601 / 1,154 | 976 / 589 |
+| UserID (99% runs) | 133 / 6,822 / 847 | 149 / 7,241 / 882 | 128 / 7,583 / 912 | 121 / 6,592 / 828 |
+
+1. **The laws beat decode-then-compare in 123 of 126 cells, by 1.2–59×.** The
+   exception is unsorted URLHash ≥, < and range (0.7–0.8×). Its 59–64-bit packed
+   planes filter more slowly than they decode, which matches catalogue COUNT on
+   WatchID (finding 2 of the [shared catalogue](#shared-plane-catalogue-first-cut)).
+   Equality on the same blocks is 2× faster than the control. Mixed blocks
+   there call for a width-dependent choice between filter and decode.
+2. **Masks beat a plain native array where blocks decide whole.** UserID's long
+   runs emit in 121–150 µs, 6–7× below plain. Rare equality is at or below
+   plain wherever bounds or code ranges reject blocks: EventTime 552–681,
+   URLHash sorted 493, OS 773–791. On time-clustered EventTime, ≥ and <
+   (non-decreasing delta, two checkpoint searches) run at 0.8–0.9× plain.
+3. **Run-heavy categorical masks lose to plain by 2–6×** (OS, RegionID,
+   RegionID frequency up to 7 ms against about 1 ms). They pay per run for a
+   value compare, an Intervals visit and a four-word range fill, and OS and
+   RegionID blocks carry tens of runs. That is the same run-leaf cost that
+   loses flushed OS SUM (digest). A mask built from run-end boundaries (a bit
+   per passing run start and end, then a prefix XOR) is the next arm. Sorted
+   codes help OS (4.2 → 2.8 ms) through narrower run values. Frequency truth
+   bits make RegionID slower.
+4. **Dictionary translation is cheap except for unordered high-cardinality
+   parts.** Sorted URLHash needs two lower bounds per part, and equality
+   becomes a code range that bounds reject (493 µs). Frequency builds a
+   ~40k-entry truth table per part per call. A warm cache reuses its threshold
+   tables and cuts rare equality 976 → 589 µs and ≥ 5,058 → 4,387. Low-
+   cardinality columns see no cache effect.
+5. **< costs no more than ≥** (complement under active), and the empty and
+   always-true identities (e.g. ≠ an absent value) answer without bodies.
+
+Remaining: the run-boundary mask arm; a filter-or-decode choice for wide packed
+planes; worker timings (local VM only here); a fused predicate-then-aggregate
+over the same block when A = B; and Engine's block source adapting
+`emit_predicate_masks` to its Parts.
 
 ## Row order in real bodies
 
